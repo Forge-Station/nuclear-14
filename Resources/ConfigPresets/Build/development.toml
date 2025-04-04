@@ -8,6 +8,9 @@ defaultpreset = "N14"
 [gateway]
 generator_enabled = false
 
+[movement]
+mob_pushing = true
+
 [physics]
 # Makes mapping annoying
 grid_splitting = false

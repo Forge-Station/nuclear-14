@@ -91,7 +91,7 @@ namespace Content.Client.Physics.Controllers
         {
             base.UpdateBeforeSolve(prediction, frameTime);
 
-            if (_playerManager.LocalEntity is not {Valid: true} player)
+            if (_playerManager.LocalEntity is not { Valid: true } player)
                 return;
 
             if (RelayQuery.TryGetComponent(player, out var relayMover))
