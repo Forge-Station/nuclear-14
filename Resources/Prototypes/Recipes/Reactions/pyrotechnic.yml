@@ -10,24 +10,24 @@
   products:
     Napalm: 3
 
-- type: reaction
-  id: Phlogiston
-  reactants:
-    Phosphorus:
-      amount: 1
-    SulfuricAcid:
-      amount: 1
-    Plasma:
-      amount: 1
-  effects:
-  - !type:CreateGas
-    gas: Plasma
-  - !type:PopupMessage
-    visualType: LargeCaution
-    messages: [ "phlogiston-plasma-created" ]
-    type: Pvs
-  products:
-    Phlogiston: 3
+#- type: reaction # Corvax-Change
+#  id: Phlogiston
+#  reactants:
+#    Phosphorus:
+#      amount: 1
+#    SulfuricAcid:
+#      amount: 1
+#    Plasma:
+#      amount: 1
+#  effects:
+#  - !type:CreateGas
+#    gas: Plasma
+#  - !type:PopupMessage
+#    visualType: LargeCaution
+#    messages: [ "phlogiston-plasma-created" ]
+#    type: Pvs
+#  products:
+#    Phlogiston: 3
 
 - type: reaction
   id: ChlorineTrifluoride

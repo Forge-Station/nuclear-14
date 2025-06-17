@@ -41,7 +41,9 @@
         Piercing: 0.5
         Heat: 0.5
   - type: ExplosionResistance
-    damageCoefficient: 0.60
+    damageCoefficient: 0.65
+  - type: StaminaDamageResistance
+    coefficient: 0.85 # 15%
 #  - type: ClothingSpecialModifier
 #    strengthModifier: 2
 
