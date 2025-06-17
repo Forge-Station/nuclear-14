@@ -131,6 +131,11 @@
     sprite: _Nuclear14/Clothing/Belt/ropebelt.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/Belt/ropebelt.rsi
+  - type: Storage
+    maxItemSize: Normal
+    defaultStorageOrientation: Vertical
+    grid:
+    - 0,0,5,1
 
 - type: entity
   parent: N14ClothingBeltStorageBase
