@@ -10,7 +10,7 @@ public sealed partial class LayingDownComponent : Component
     public TimeSpan StandingUpTime = TimeSpan.FromSeconds(1);
 
     [DataField, AutoNetworkedField]
-    public float LyingSpeedModifier = 0.35f,
+    public float LyingSpeedModifier = 0.10f, // Corvax-Change
                  CrawlingUnderSpeedModifier = 0.5f;
 
     [DataField, AutoNetworkedField]
