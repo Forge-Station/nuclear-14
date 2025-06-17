@@ -97,7 +97,7 @@
         map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
     minAngle: 24
-    maxAngle: 47 # Corvax-Change
+    maxAngle: 46 # Corvax-Change
     angleIncrease: 4
     angleDecay: 16
     fireRate: 4
@@ -513,8 +513,8 @@
       map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
     minAngle: 24
-    maxAngle: 45
-    angleIncrease: 4
+    maxAngle: 46 # Corvax-Change
+    angleIncrease: 5 # Corvax-Change
     angleDecay: 16
     soundGunshot:
       collection: N14MarksmanGunshot
