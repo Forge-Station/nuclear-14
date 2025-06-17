@@ -364,7 +364,7 @@
   unit: materials-unit-bill
   stackEntity: N14CurrencyLegionAureus
   icon: { sprite: /Textures/_Nuclear14/Objects/Misc/currency.rsi, state: aurelius3 }
-  price: 100    
+  price: 50
 
 # Legion Denarius
 - type: entity
@@ -438,4 +438,4 @@
   unit: materials-unit-bill
   stackEntity: N14CurrencyLegionDenarius
   icon: { sprite: /Textures/_Nuclear14/Objects/Misc/currency.rsi, state: denarius3 }
-  price: 4    
+  price: 1
