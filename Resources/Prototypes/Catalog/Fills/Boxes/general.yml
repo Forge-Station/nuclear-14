@@ -479,7 +479,7 @@
     - 0,0,5,3
     whitelist: # Corvax-Add
       tags:
-      - Dart
+      - Darts
   - type: Sprite
     layers:
       - state: box

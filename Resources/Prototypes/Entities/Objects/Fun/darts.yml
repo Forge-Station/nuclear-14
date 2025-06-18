@@ -90,7 +90,7 @@
     fillBaseName: dart
   - type: Tag # Corvax-Add
     tags:
-    - Dart
+    - Darts
 
 - type: entity
   parent: Dart
