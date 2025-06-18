@@ -4,15 +4,26 @@
   name: job-name-chaplain
   description: job-description-chaplain
   playTimeTracker: WastelandChaplain
+  requirements:
+    - !type:CharacterSpeciesRequirement # Corvax-Add
+      species:
+      - Human
+      - Ghoul
+    - !type:CharacterDepartmentTimeRequirement # Corvax-Add
+      department: Townsfolk
+      min: 7200 # 2 hours
   startingGear: WastelandChaplainGear
   icon: "JobIconWastelandChaplain" # Corvax-Change
-  supervisors: job-supervisors-wastelander
+  supervisors: job-supervisors-townsfolk
   access:
   - WastelandChaplain
   special:
   - !type:AddComponentSpecial
     components:
     - type: BibleUser #Lets them heal with bibles
+    - type: NpcFactionMember # Corvax-Add
+      factions:
+        - Townsfolk
 
 - type: startingGear
   id: WastelandChaplainGear
@@ -20,6 +31,7 @@
     jumpsuit: N14ClothingUniformJumpsuitFollowers
     back: N14ClothingBackpackTrekker # Corvax-Change
     shoes: N14ClothingBootsBlack
+    id: N14IDPassportWasteChaplain # Corvax-Change
   innerClothingSkirt: N14ClothingUniformJumpsuitFollowers
   satchel: N14ClothingBackpackSatchelChaplainFilled
   duffelbag: N14ClothingBackpackDuffelChaplainFilled

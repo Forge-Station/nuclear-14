@@ -567,7 +567,6 @@
   - type: PresetIdCard
     job: TownMayor
 
-# Wastelanders
 - type: entity
   parent: N14IDPassportPhoto
   id: N14IDPassportWasteChaplain
@@ -580,6 +579,7 @@
   - type: PresetIdCard
     job: WastelandChaplain
 
+# Wastelanders
 - type: entity
   parent: N14IDPassportPhoto
   id: N14IDPassportWasteFarmer

@@ -477,6 +477,9 @@
   - type: Storage
     grid:
     - 0,0,5,3
+    whitelist: # Corvax-Add
+      tags:
+      - Dart
   - type: Sprite
     layers:
       - state: box

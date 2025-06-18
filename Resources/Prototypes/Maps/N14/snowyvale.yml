@@ -21,7 +21,7 @@
             WastelandReporter: [ 1, 2 ]
             # WastelandMusician: [ 2, 3 ]
             WastelandFarmer: [ 2, 3 ]
-            WastelandChaplain: [ 1, 2 ]
+            WastelandChaplain: [ 1, 1 ]
             WastelandBartender: [ 1, 2 ]
             TribalElder: [ 1, 1 ]
             Tribal: [ 2, 4 ]

@@ -34,16 +34,6 @@
     sprite: Objects/Fun/Darts/target.rsi
     state: target_dart
   product: N14CrateBreakPlainFilledDartboard
-  cost: 50
-  category: Fun
-  group: market
-
-- type: cargoProduct
-  id: DartboardCrate
-  icon:
-    sprite: Objects/Fun/Darts/dart_red.rsi
-    state: icon
-  product: TargetDarts
-  cost: 30
+  cost: 80 # Corvax-Change
   category: Fun
   group: market

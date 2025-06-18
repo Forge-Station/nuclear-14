@@ -164,7 +164,7 @@
     damage:
       types:
         Heat: -1.25
-        Radiation: 0.08
+        Radiation: 0.12 # Corvax-Change
       groups:
         Brute: -1.25
         Toxin: -0.125

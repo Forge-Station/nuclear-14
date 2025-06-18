@@ -596,7 +596,7 @@
         amount: 3
 
 - type: entity
-  parent: N14CrateBreakPlain
+  parent: N14CrateArmy # Corvax-Change
   id: N14CrateBreakPlainFilledDartboard
   name: Dart box crate
   description: Crate containing the needed board to play the game of darts.
@@ -605,6 +605,9 @@
     contents:
       - id: TargetDarts
         amount: 1
+      - id: BoxDarts # Corvax-Change
+        amount: 1
+
 
 - type: entity
   parent: N14CrateBreakPlain

@@ -82,7 +82,6 @@
   roles:
   - Survivor
   - Wastelander
-  - WastelandChaplain
   - WastelandFarmer
   - WastelandMusician
   - WastelandScavenger
@@ -96,6 +95,7 @@
   - TownDoctor
   - TownMechanic
   - TownShopkeeper
+  - WastelandChaplain # Corvax-Change
   - WastelandBartender # Moved from the Wastelander department, ID unchanged to avoid glitches for players who have it selected.
   - WastelandReporter # Moved from the Wastelander department, ID unchanged to avoid glitches for players who have it selected.
   - TownDeputy
