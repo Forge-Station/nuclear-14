@@ -1,2 +1,2 @@
-ent-CrateHolyWaterKit = DIY holy water crate
-    .desc = For when undeads or vampires becomes a real problem and you'd rather keep them at bay.
+ent-CrateHolyWaterKit = ящик с элементами для святой воды
+    .desc = На случай, если нежить или вампиры станут настоящей проблемой, и вы предпочтёте держать их подальше.

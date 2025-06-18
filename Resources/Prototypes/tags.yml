@@ -1456,3 +1456,6 @@
 
 - type: Tag
   id: UnathiEmotes
+
+- type: Tag # Corvax-Add
+  id: Darts
