@@ -93,6 +93,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRanger
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRanger
+      min: 216000 # 60 hours veterancy unlock "First Tour"
   items:
     - ClothingMaskGasRangerDesert
 
@@ -117,6 +120,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRanger
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRanger
+      min: 72000 # 1200 minutes
   items:
     - ClothingMaskGasRangerPrice
 
@@ -129,6 +135,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRanger
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRanger
+      min: 216000 # 60 hours veterancy unlock "First Tour"
   items:
     - ClothingMaskGasRangerElite
 
@@ -141,6 +150,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRanger
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRanger
+      min: 72000 # 1200 minutes
   items:
     - ClothingMaskGasRangerModif
 
@@ -153,6 +165,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRanger
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRanger
+      min: 36000 # 600 minutes
   items:
     - ClothingMaskGasRangerWeathered
 
@@ -165,6 +180,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRanger
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRanger
+      min: 216000 # 60 hours veterancy unlock "First Tour"
   items:
     - N14ClothingHeadHatRangerHelmetDesert
 
@@ -189,6 +207,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRanger
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRanger
+      min: 72000 # 1200 minutes
   items:
     - N14ClothingHeadHatRangerHelmetPrice
 
@@ -201,6 +222,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRanger
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRanger
+      min: 72000 # 1200 minutes
   items:
     - N14ClothingHeadHatRangerHelmetFox
 
@@ -213,6 +237,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRanger
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRanger
+      min: 216000 # 60 hours veterancy unlock "First Tour"
   items:
     - N14ClothingHeadHatRangerHelmetModif
 
@@ -476,6 +503,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 216000 # 60 hours veterancy unlock "First Tour"
   items:
     - N14ClothingHeadHatRangerHelmetDesert
 
@@ -488,6 +518,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 216000 # 60 hours veterancy unlock "First Tour"
   items:
     - ClothingMaskGasRangerDesert
 
@@ -500,6 +533,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 216000 # 60 hours veterancy unlock "First Tour"
   items:
     - N14ClothingOuterRangerCombatDesert
 
@@ -558,6 +594,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 72000 # 1200 minutes
   items:
     - ClothingMaskGasRangerPrice
 
@@ -570,6 +609,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 72000 # 1200 minutes
   items:
     - ClothingMaskGasRangerModif
 
@@ -582,6 +624,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 72000 # 1200 minutes
   items:
     - N14ClothingHeadHatRangerHelmetFox
 
@@ -594,6 +639,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 72000 # 1200 minutes
   items:
     - N14ClothingHeadHatRangerHelmetPrice
 
@@ -606,6 +654,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 216000 # 60 hours veterancy unlock "First Tour"
   items:
     - N14ClothingHeadHatRangerHelmetModif
 
@@ -630,6 +681,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 72000 # 1200 minutes
   items:
     - N14ClothingOuterRangerWeathered
 
@@ -642,6 +696,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 72000 # 1200 minutes
   items:
     - N14ClothingOuterRangerFox
 
@@ -654,6 +711,9 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 72000 # 1200 minutes
   items:
     - N14ClothingOuterRangerPrice
 
