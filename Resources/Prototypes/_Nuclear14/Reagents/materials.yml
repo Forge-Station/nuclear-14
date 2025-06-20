@@ -77,7 +77,7 @@
   unit: materials-unit-bar
   icon: { sprite: /Textures/_Nuclear14/Objects/Misc/materials.rsi, state: ingot_silver }
   color: "#C0C0C0"
-  price: 0.1
+  price: 0.05 # Corvax-Change
 
 # Materials
 # - type: material
