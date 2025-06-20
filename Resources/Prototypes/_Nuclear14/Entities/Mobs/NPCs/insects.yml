@@ -415,4 +415,4 @@
   - type: MobThresholds
     thresholds:
       0: Alive
-      150: Dead
+      100: Dead # Corvax-Change

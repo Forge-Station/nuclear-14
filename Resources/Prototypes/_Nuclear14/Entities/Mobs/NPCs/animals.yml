@@ -834,14 +834,14 @@
     animation: WeaponArcClaw
     wideAnimation: WeaponArcClaw
     damage:
-      types:
+      types: 
         Slash: 25
         Structural: 20
   - type: MobThresholds
     thresholds:
       0: Alive
-      250: Critical
-      300: Dead
+      300: Critical # Corvax-Change
+      350: Dead # Corvax-Change
   - type: Stamina
     critThreshold: 350
   - type: SlowOnDamage
@@ -906,6 +906,13 @@
       types:
         Slash: 20
         Structural: 10
+  - type: Reflect # Corvax-Add-Start
+    reflectProb: 0.1
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      400: Critical
+      450: Dead # Corvax-Add-End
 
 #MARK: Passive Animals
 #MARK: Brahmin
