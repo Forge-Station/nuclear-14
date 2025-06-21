@@ -19,5 +19,3 @@
     sprite: Corvax/Clothing/Hands/Gloves/centuriongloves.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Hands/Gloves/centuriongloves.rsi
-  - type: GloveHeatResistance
-    heatResistance: 1000
