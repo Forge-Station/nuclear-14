@@ -1,7 +1,6 @@
-#MARK: Wasteland
 
 - type: tile
-  id: CorvaxFloorWasteland # Corvax-Tiles
+  id: ForgeFloorWasteland # Forge-Tiles
   name: пустошь
   sprite: /Textures/Corvax/Tiles/wasteland.png
   variants: 4
@@ -17,7 +16,7 @@
   indestructible: true
 
 - type: tile
-  id: CorvaxFloorSwamplandBottom # Corvax-Tiles
+  id: ForgeFloorSwamplandBottom # Forge-Tiles
   name: пустошь болотистая низ
   sprite: /Textures/Corvax/Tiles/wasteswampbottom.png
   baseTurf: space
@@ -31,7 +30,7 @@
   indestructible: true
 
 - type: tile
-  id: CorvaxFloorSwamplandTop # Corvax-Tiles
+  id: ForgeFloorSwamplandTop # Forge-Tiles
   name: пустошь болотистая верх
   sprite: /Textures/Corvax/Tiles/wasteswamptop.png
   baseTurf: space
@@ -45,7 +44,7 @@
   indestructible: true
 
 - type: tile
-  id: CorvaxFloorSwamplandRight # Corvax-Tiles
+  id: ForgeFloorSwamplandRight # Forge-Tiles
   name: пустошь болотистая прав
   sprite: /Textures/Corvax/Tiles/wasteswampright.png
   baseTurf: space
@@ -59,7 +58,7 @@
   indestructible: true
 
 - type: tile
-  id: CorvaxFloorSwamplandLeft # Corvax-Tiles
+  id: ForgeFloorSwamplandLeft # Forge-Tiles
   name: пустошь болотистая лев
   sprite: /Textures/Corvax/Tiles/wasteswampleft.png
   baseTurf: space
@@ -73,7 +72,7 @@
   indestructible: true
 
 - type: tile
-  id: CorvaxFloorSwamplandTopRight # Corvax-Tiles
+  id: ForgeFloorSwamplandTopRight # Forge-Tiles
   name: пустошь болотистая верх прав
   sprite: /Textures/Corvax/Tiles/wasteswamptopright.png
   baseTurf: space
@@ -87,7 +86,7 @@
   indestructible: true
 
 - type: tile
-  id: CorvaxFloorSwamplandTopLeft # Corvax-Tiles
+  id: ForgeFloorSwamplandTopLeft # Forge-Tiles
   name: пустошь болотистая верх лев
   sprite: /Textures/Corvax/Tiles/wasteswamptopleft.png
   baseTurf: space
@@ -101,7 +100,7 @@
   indestructible: true
 
 - type: tile
-  id: CorvaxFloorSwamplandTopRightCorner # Corvax-Tiles
+  id: ForgeFloorSwamplandTopRightCorner # Forge-Tiles
   name: пустошь угол болотистой верх прав
   sprite: /Textures/Corvax/Tiles/wasteswamptoprightcorner.png
   baseTurf: space
@@ -115,7 +114,7 @@
   indestructible: true
 
 - type: tile
-  id: CorvaxFloorSwamplandTopLeftCorner # Corvax-Tiles
+  id: ForgeFloorSwamplandTopLeftCorner # Forge-Tiles
   name: пустошь угол болотистой верх лев
   sprite: /Textures/Corvax/Tiles/wasteswamptopleftcorner.png
   baseTurf: space
@@ -129,7 +128,7 @@
   indestructible: true
 
 - type: tile
-  id: CorvaxFloorSwamplandBottomRight # Corvax-Tiles
+  id: ForgeFloorSwamplandBottomRight # Forge-Tiles
   name: пустошь болотистая низ прав
   sprite: /Textures/Corvax/Tiles/wasteswampbottomright.png
   baseTurf: space
@@ -143,7 +142,7 @@
   indestructible: true
 
 - type: tile
-  id: CorvaxFloorSwamplandBottomLeft # Corvax-Tiles
+  id: ForgeFloorSwamplandBottomLeft # Forge-Tiles
   name: пустошь болотистая низ лев
   sprite: /Textures/Corvax/Tiles/wasteswampbottomleft.png
   baseTurf: space
@@ -157,7 +156,7 @@
   indestructible: true
 
 - type: tile
-  id: CorvaxFloorSwamplandBottomRightCorner # Corvax-Tiles
+  id: ForgeFloorSwamplandBottomRightCorner # Forge-Tiles
   name: пустошь угол болотистой низ прав
   sprite: /Textures/Corvax/Tiles/wasteswampbottomrightcorner.png
   baseTurf: space
@@ -171,9 +170,94 @@
   indestructible: true
 
 - type: tile
-  id: CorvaxFloorSwamplandBottomLeftCorner # Corvax-Tiles
+  id: ForgeFloorSwamplandBottomLeftCorner # Forge-Tiles
   name: пустошь угол болотистой низ лев
   sprite: /Textures/Corvax/Tiles/wasteswampbottomleftcorner.png
+  baseTurf: space
+  isSubfloor: true
+  footstepSounds:
+    collection: N14FootstepDirt
+  friction: 0.30
+  thermalConductivity: 0.04
+  heatCapacity: 10000
+  weather: true
+  indestructible: true
+
+- type: tile
+  id: ForgeFloorWastelandDesertVariative # Forge-Tiles
+  name: Сухая пустыня
+  sprite: /Textures/Corvax/Tiles/wastelanddesertvariative.png
+  variants: 3
+  placementVariants: [0, 1, 2]
+  baseTurf: space
+  isSubfloor: true
+  footstepSounds:
+    collection: N14FootstepDirt
+  friction: 0.30
+  thermalConductivity: 0.04
+  heatCapacity: 10000
+  weather: true
+  indestructible: true
+
+- type: tile
+  id: ForgeFloorWastelandSavansmall # Forge-Tiles
+  name: Малая саванна трава
+  sprite: /Textures/Corvax/Tiles/savansmall.png
+  baseTurf: space
+  isSubfloor: true
+  footstepSounds:
+    collection: N14FootstepDirt
+  friction: 0.30
+  thermalConductivity: 0.04
+  heatCapacity: 10000
+  weather: true
+  indestructible: true
+
+- type: tile
+  id: ForgeFloorWastelandSavanbig # Forge-Tiles
+  name: Большая саванна трава
+  sprite: /Textures/Corvax/Tiles/savanbig.png
+  baseTurf: space
+  isSubfloor: true
+  footstepSounds:
+    collection: N14FootstepDirt
+  friction: 0.30
+  thermalConductivity: 0.04
+  heatCapacity: 10000
+  weather: true
+  indestructible: true
+
+- type: tile
+  id: ForgeFloorCaveDesert # Forge-Tiles
+  name: Пещера пустынная
+  sprite: /Textures/Corvax/Tiles/cavedesert.png
+  baseTurf: FloorWasteland
+  isSubfloor: true
+  footstepSounds:
+    collection: FootstepAsteroid
+  friction: 0.30
+  thermalConductivity: 0.04
+  heatCapacity: 10000
+  weather: true
+
+- type: tile
+  id: ForgeFloorWastelandDesert # Forge-Tiles
+  name: Пустыня
+  sprite: /Textures/Corvax/Tiles/wastelanddesert.png
+  baseTurf: space
+  isSubfloor: true
+  footstepSounds:
+    collection: N14FootstepDirt
+  friction: 0.30
+  thermalConductivity: 0.04
+  heatCapacity: 10000
+  weather: true
+  indestructible: true
+
+- type: tile
+  id: ForgeFloorGroundDesert # Forge-Tiles
+  name: Земля пустынная
+  sprite: /Textures/Corvax/Tiles/grounddesert.png
   baseTurf: space
   isSubfloor: true
   footstepSounds:
