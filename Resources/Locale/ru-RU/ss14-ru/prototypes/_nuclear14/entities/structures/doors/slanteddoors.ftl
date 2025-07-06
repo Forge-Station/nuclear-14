@@ -18,7 +18,7 @@ ent-N14DoorMetalBarSlanted = металлическая дверь
     .desc = Еще одна дверь из металлической решетки. Видимо, в пустоши очень ценят свежий воздух (или просто не хватает металла на полноценные двери).
 ent-N14DoorMetalFenceSlanted = металлическая дверь
     .suffix = Наклонная, Забор
-    .desc = Дверь, сделанная из секции забора. Дешево и сердито. 
+    .desc = Дверь, сделанная из секции забора. Дешево и сердито.
 ent-N14DoorMetalFenceBarbedSlanted = металлическая дверь
     .suffix = Наклонная, Забор, Колючая проволка
     .desc = Дверь из забора, обмотанная колючей проволокой. Неприятный сюрприз для незваных гостей.
@@ -40,3 +40,15 @@ ent-N14DoorWoodWhiteSlanted = деревянная дверь
 ent-N14DoorAirlockSlanted = воздушный шлюз
     .suffix = Наклонный
     .desc = Герметичный воздушный шлюз. Необходим для защиты от опасностей внешнего мира (или для сохранения ценного воздуха внутри).
+
+ent-N14DoorMetalBlueSlantedLoced = металлическая дверь c замком
+    .desc = { ent-N14DoorMetalBlueSlanted.desc}
+
+ent-N14DoorMetalRedSlantedLoced = { ent-N14DoorMetalBlueSlantedLoced}
+    .desc = { ent-N14DoorMetalRedSlanted.desc}
+
+ent-N14DoorMetalBlueAltSlantedLoced = { ent-N14DoorMetalBlueSlantedLoced}
+    .desc = { ent-N14DoorMetalBlueAltSlanted.desc}
+
+ent-N14DoorMetalBlueWindowSlantedLoced = { ent-N14DoorMetalBlueSlantedLoced}
+    .desc = { ent-N14DoorMetalBlueWindowSlanted.desc}

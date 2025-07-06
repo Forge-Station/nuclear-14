@@ -1,0 +1,129 @@
+# MARK: Двери Метал
+- type: construction
+  id: N14DoorMetalBlueSlanted
+  graph: N14DoorGraph
+  startNode: start
+  targetNode: MetalBlue
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/metalblue.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DoorMetalRedSlanted
+  graph: N14DoorGraph
+  startNode: start
+  targetNode: MetalRed
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/metalred.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DoorMetalBlueAltSlanted
+  graph: N14DoorGraph
+  startNode: start
+  targetNode: MetalBlueAlt
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/metalbluealt.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DoorMetalBlueWindowSlanted
+  graph: N14DoorGraph
+  startNode: start
+  targetNode: MetalBlueWindow
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/metalbluewindow.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+# MARK: Двери Замок
+- type: construction
+  id: N14DoorMetalBlueSlantedLoced
+  graph: N14DoorGraph
+  startNode: start
+  targetNode: MetalBlueLoced
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/metalblue.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DoorMetalRedSlantedLoced
+  graph: N14DoorGraph
+  startNode: start
+  targetNode: MetalRedLoced
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/metalred.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DoorMetalBlueAltSlantedLoced
+  graph: N14DoorGraph
+  startNode: start
+  targetNode: MetalBlueAltLoced
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/metalbluealt.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DoorMetalBlueWindowSlantedLoced
+  graph: N14DoorGraph
+  startNode: start
+  targetNode: MetalBlueWindowLoced
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/metalbluewindow.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked

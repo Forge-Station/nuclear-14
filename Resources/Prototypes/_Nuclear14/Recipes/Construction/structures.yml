@@ -2,7 +2,7 @@
 # Walls
 - type: construction
   name: log wall
-  id: N14WoodWallLog
+  id: N14WallWoodLog # Forge-Change
   graph: N14WoodWall
   startNode: start
   targetNode: logWall
@@ -22,7 +22,7 @@
 # # Doors
 - type: construction
   name: wooden door
-  id: N14DoorWood
+  id: N14DoorMakeshift # Forge-Change
   graph: N14DoorGraph
   startNode: start
   targetNode: woodDoorMakeshift
@@ -119,7 +119,7 @@
 ## Half Walls
 - type: construction
   name: wooden half wall
-  id: N14WallWoodHalfSlanted
+  id: N14WallWoodHalf # Forge-Change
   graph: N14HalfWall
   startNode: start
   targetNode: Wood
@@ -139,7 +139,7 @@
 ## Doors
 - type: construction
   name: wooden door
-  id: N14DoorWooden
+  id: N14DoorWoodSlanted # Forge-Change
   graph: N14DoorGraph
   startNode: start
   targetNode: WoodDoor
@@ -158,7 +158,7 @@
 ## Windows
 - type: construction
   name: window pane
-  id: N14Window
+  id: N14WindowSlanted # Forge-Change
   graph: N14WindowPane
   startNode: start
   targetNode: N14WindowSlanted

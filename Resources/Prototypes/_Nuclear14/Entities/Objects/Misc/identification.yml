@@ -108,7 +108,7 @@
     job: CaravanGuard
   - type: ClothingAddFaction
     faction: CaravanCompany
-    
+
 - type: entity
   parent: N14IDPassportCaravan
   id: N14IDPassportCaravanTrader
@@ -117,7 +117,7 @@
   components:
   - type: PresetIdCard
     job: CaravanTrader
-    
+
 - type: entity
   parent: N14IDPassportCaravan
   id: N14IDPassportCaravanLeader
@@ -172,7 +172,7 @@
     job: BoSMidScribe
   - type: ClothingAddFaction
     faction: BrotherhoodMidwest
-    
+
 - type: entity
   parent: N14IDBrotherhoodHolotag
   id: N14IDBrotherhoodHolotagSquire
@@ -476,7 +476,7 @@
     state: passport_presidential
   - type: PresetIdCard
     job: TownShopkeeper
-    
+
 - type: entity
   parent: N14IDPassportTownsfolk
   id: N14IDPassportTownMechanic

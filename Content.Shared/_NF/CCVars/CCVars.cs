@@ -9,7 +9,7 @@ public sealed class NF14CVars
     /// Whether or not respawning is enabled.
     /// </summary>
     public static readonly CVarDef<bool> RespawnEnabled =
-        CVarDef.Create("nf14.respawn.enabled", true, CVar.SERVER | CVar.REPLICATED);
+        CVarDef.Create("nf14.respawn.enabled", false, CVar.SERVER | CVar.REPLICATED); // Forge-Change
 
     /// <summary>
     /// Respawn time, how long the player has to wait in seconds after death.

@@ -1,3 +1,4 @@
+using Content.Shared._NC.RandomAccessKey;
 using Robust.Shared.Prototypes;
 
 namespace Content.Shared.Access
@@ -10,7 +11,7 @@ namespace Content.Shared.Access
     {
         [ViewVariables]
         [IdDataField]
-        public string ID { get; private set; } = default!;
+        public string ID { get; set; } = default!; // Forge-Change
 
         /// <summary>
         ///     The player-visible name of the access level, in the ID card console and such.

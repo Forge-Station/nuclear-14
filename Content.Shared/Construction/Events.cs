@@ -132,3 +132,17 @@ public sealed partial class ConstructionInteractDoAfterEvent : DoAfterEvent
 public sealed partial class WelderRefineDoAfterEvent : SimpleDoAfterEvent
 {
 }
+
+// Forge-Change-Start
+public sealed class ConstructionCompletedEvent : EntityEventArgs
+{
+    public EntityUid EntityUid { get; }
+    public EntityUid? UserUid { get; }
+
+    public ConstructionCompletedEvent(EntityUid entityUid, EntityUid? userUid)
+    {
+        EntityUid = entityUid;
+        UserUid = userUid;
+    }
+}
+// Forge-Change-End

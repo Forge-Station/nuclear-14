@@ -530,6 +530,9 @@ namespace Content.Server.Construction
             xform.LocalRotation = constructionPrototype.CanRotate ? ev.Angle : Angle.Zero;
             xform.Anchored = wasAnchored;
 
+            var entComplEv = new ConstructionCompletedEvent(structure, user); // Forge-Change
+            RaiseLocalEvent(structure, entComplEv); // Forge-Change
+
             RaiseNetworkEvent(new AckStructureConstructionMessage(ev.Ack, GetNetEntity(structure)));
             _adminLogger.Add(LogType.Construction, LogImpact.Low, $"{ToPrettyString(user):player} has turned a {ev.PrototypeName} construction ghost into {ToPrettyString(structure)} at {Transform(structure).Coordinates}");
             Cleanup();

@@ -1,4 +1,4 @@
-# Legion
+#MARK: Legion
 - type: entity
   parent: N14IDPassportBlank
   id: N14IDLegionaryBadge
@@ -103,7 +103,7 @@
   - type: PresetIdCard
     job: BoSWashingtonInitiate
 
-# Washington BoS
+#MARK: Washington BoS
 
 - type: entity
   parent: N14IDPassportBlank
@@ -169,3 +169,14 @@
     state: bos_holotag
   - type: PresetIdCard
     job: BoSWashingtonCommander
+
+#MARK: Key
+- type: entity
+  parent: N14IDCard
+  id: N14IDKeyIronEmpty
+  name: iron key
+  description: A worn out iron key. I wonder where it goes?
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: iron

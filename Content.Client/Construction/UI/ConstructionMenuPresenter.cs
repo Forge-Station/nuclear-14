@@ -164,16 +164,16 @@ namespace Content.Client.Construction.UI
                 || _whitelistSystem.IsWhitelistFail(recipe.EntityWhitelist, _playerManager.LocalEntity.Value))
                     continue;
 
-                // Corvax-Change-start
+                // Forge-Change-start
                 var recipeName = recipe.Name.ToLowerInvariant();
-                var localizedRecipeName = Loc.GetString($"recipe-{recipe.ID}-name").ToLowerInvariant();
+                var localizedRecipeName = Loc.GetString($"ent-{recipe.ID}").ToLowerInvariant();
 
                 if (!string.IsNullOrEmpty(search))
                 {
                     var searchLower = search.Trim().ToLowerInvariant();
                     if (!recipeName.Contains(searchLower) && !localizedRecipeName.Contains(searchLower))
                         continue;
-                } // Corvax-Change-end
+                } // Forge-Change-end
 
                 if (!string.IsNullOrEmpty(category) && category != "construction-category-all")
                 {
@@ -228,12 +228,12 @@ namespace Content.Client.Construction.UI
             var spriteSys = _systemManager.GetEntitySystem<SpriteSystem>();
             _constructionView.ClearRecipeInfo();
 
-            // Corvax-Change-start
+            // Forge-Change-start
             var localizedName = Loc.TryGetString($"ent-{prototype.ID}", out var name) ? name : prototype.Name;
             var localizedDescription = Loc.TryGetString($"ent-{prototype.ID}.desc", out var desc) ? desc : prototype.Description;
 
             _constructionView.SetRecipeInfo(localizedName, localizedDescription, spriteSys.Frame0(prototype.Icon), prototype.Type != ConstructionType.Item);
-            // Corvax-Change-end
+            // Forge-Change-end
             var stepList = _constructionView.RecipeStepList;
             GenerateStepList(prototype, stepList);
         }
@@ -266,12 +266,12 @@ namespace Content.Client.Construction.UI
 
         private static ItemList.Item GetItem(ConstructionPrototype recipe, ItemList itemList)
         {
-            var localizedName = Loc.TryGetString($"ent-{recipe.ID}", out var name) ? name : recipe.Name; // Corvax-Change
+            var localizedName = Loc.TryGetString($"ent-{recipe.ID}", out var name) ? name : recipe.Name; // Forge-Change
 
             return new(itemList)
             {
                 Metadata = recipe,
-                Text = localizedName, // Corvax-Change
+                Text = localizedName, // Forge-Change
                 Icon = recipe.Icon.Frame0(),
                 TooltipEnabled = true,
                 TooltipText = recipe.Description

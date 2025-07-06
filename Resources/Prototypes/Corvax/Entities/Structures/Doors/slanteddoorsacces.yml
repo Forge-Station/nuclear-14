@@ -1,0 +1,39 @@
+- type: entity
+  parent: N14DoorMetalBlueSlanted
+  id: N14DoorMetalBlueSlantedLoced
+  categories: [HideSpawnMenu]
+  components:
+  - type: RandomAccessKey
+  - type: Construction
+    graph: N14DoorGraph
+    node: MetalBlueLoced
+
+- type: entity
+  parent: N14DoorMetalRedSlanted
+  id: N14DoorMetalRedSlantedLoced
+  categories: [HideSpawnMenu]
+  components:
+  - type: RandomAccessKey
+  - type: Construction
+    graph: N14DoorGraph
+    node: MetalRedLoced
+
+- type: entity
+  parent: N14DoorMetalBlueAltSlanted
+  id: N14DoorMetalBlueAltSlantedLoced
+  categories: [HideSpawnMenu]
+  components:
+  - type: RandomAccessKey
+  - type: Construction
+    graph: N14DoorGraph
+    node: MetalBlueAltLoced
+
+- type: entity
+  parent: N14DoorMetalBlueWindowSlanted
+  id: N14DoorMetalBlueWindowSlantedLoced
+  categories: [HideSpawnMenu]
+  components:
+  - type: RandomAccessKey
+  - type: Construction
+    graph: N14DoorGraph
+    node: MetalBlueWindowLoced
