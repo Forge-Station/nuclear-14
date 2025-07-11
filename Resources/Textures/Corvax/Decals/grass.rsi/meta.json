@@ -1,0 +1,21 @@
+{
+    "version": 1,
+    "size": {
+        "x": 32,
+        "y": 32
+    },
+    "states": [
+        {
+            "name": "grass-1"
+        },
+        {
+            "name": "grass-2"
+        },
+        {
+            "name": "grass-3"
+        },
+        {
+            "name": "grass-4"
+        }
+    ]
+}

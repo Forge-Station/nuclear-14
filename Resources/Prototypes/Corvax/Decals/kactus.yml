@@ -1,0 +1,24 @@
+- type: decal
+  id: ForgeKactus
+  abstract: true
+
+- type: decal
+  id: ForgeKactus1
+  parent: ForgeKactus
+  sprite:
+    sprite: Corvax/Decals/kactus.rsi
+    state: kactus-1
+
+- type: decal
+  id: ForgeKactus2
+  parent: ForgeKactus
+  sprite:
+    sprite: Corvax/Decals/kactus.rsi
+    state: kactus-2
+
+- type: decal
+  id: ForgeKactus3
+  parent: ForgeKactus
+  sprite:
+    sprite: Corvax/Decals/kactus.rsi
+    state: kactus-3

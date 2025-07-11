@@ -1,0 +1,17 @@
+- type: decal
+  id: ForgeBones
+  abstract: true
+
+- type: decal
+  id: ForgeBonesSkull
+  parent: ForgeBones
+  sprite:
+    sprite: Corvax/Decals/bones.rsi
+    state: skull
+
+- type: decal
+  id: ForgeBonesSkullDeathclaw
+  parent: ForgeBones
+  sprite:
+    sprite: Corvax/Decals/bones.rsi
+    state: skullDeathclaw
