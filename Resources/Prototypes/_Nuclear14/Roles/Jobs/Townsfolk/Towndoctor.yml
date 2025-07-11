@@ -17,6 +17,7 @@
   supervisors: job-supervisors-townsfolk
   access:
   - TownieDoctor
+  - TownsPerson # Corvax-Change
   special:
   - !type:AddComponentSpecial
     components:

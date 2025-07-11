@@ -1,0 +1,23 @@
+- type: accessLevel
+  id: CaesarLegionCenturion
+  name: id-card-access-level-legion-centurion
+
+- type: accessLevel
+  id: CaesarLegionDean
+  name: id-card-access-level-legion-dean
+
+- type: accessLevel
+  id: CaesarLegionLegionnaireRecruit
+  name: id-card-access-level-legion-recruit
+
+- type: accessLevel
+  id: CaesarLegionLegionnaireVeteran
+  name: id-card-access-level-legion-veteran
+
+- type: accessLevel
+  id: CaesarLegionLegionnaireWarrior
+  name: id-card-access-level-legion-warrior
+
+- type: accessLevel
+  id: CaesarLegionVenator
+  name: id-card-access-level-legion-venator

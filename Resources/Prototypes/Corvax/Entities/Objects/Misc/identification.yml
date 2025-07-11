@@ -8,6 +8,8 @@
   - type: Sprite
     sprite: Corvax/Objects/Misc/identification.rsi
     state: sign
+  - type: PresetIdCard
+    job: CaesarLegionLegionnaireRecruit
 
 - type: entity
   parent: N14IDPassportBlank
@@ -18,6 +20,8 @@
   - type: Sprite
     sprite: Corvax/Objects/Misc/identification.rsi
     state: medal-silver
+  - type: PresetIdCard
+    job: CaesarLegionLegionnaireWarrior
 
 - type: entity
   parent: N14IDPassportBlank
@@ -28,6 +32,8 @@
   - type: Sprite
     sprite: Corvax/Objects/Misc/identification.rsi
     state: medal-silver-2
+  - type: PresetIdCard
+    job: CaesarLegionLegionnaireVeteran
 
 - type: entity
   parent: N14IDPassportBlank
@@ -38,6 +44,8 @@
   - type: Sprite
     sprite: Corvax/Objects/Misc/identification.rsi
     state: medal-silver-3
+  - type: PresetIdCard
+    job: CaesarLegionDean
 
 - type: entity
   parent: N14IDPassportBlank
@@ -48,6 +56,8 @@
   - type: Sprite
     sprite: Corvax/Objects/Misc/identification.rsi
     state: medal-gold
+  - type: PresetIdCard
+    job: CaesarLegionCenturion
 
 ### Frumentaria
 

@@ -23,6 +23,7 @@
   - TownieMechanic
   - TownieDoctor
   - WastelandReporter
+  - TownsPerson # Corvax-Change
   special:
   - !type:AddComponentSpecial
     components:

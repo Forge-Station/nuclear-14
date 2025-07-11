@@ -18,6 +18,7 @@
   access:
   - TownieLaw
   - TownieMechanic
+  - TownsPerson # Corvax-Change
   special:
   - !type:AddComponentSpecial
     components:

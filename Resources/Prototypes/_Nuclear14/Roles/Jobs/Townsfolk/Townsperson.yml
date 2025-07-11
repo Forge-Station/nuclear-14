@@ -14,6 +14,8 @@
   startingGear: TownspersonGear
   icon: "JobIconTownPerson" # Corvax-Change
   supervisors: job-supervisors-townsfolk
+  access:
+  - TownsPerson # Corvax-Change
   special:
   - !type:AddComponentSpecial
     components:

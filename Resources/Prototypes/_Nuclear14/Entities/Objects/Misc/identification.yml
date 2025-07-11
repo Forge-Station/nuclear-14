@@ -464,6 +464,8 @@
   components:
   - type: ClothingAddFaction
     faction: Townsfolk
+  - type: PresetIdCard # Corvax-Change
+    job: Townsperson # Corvax-Change
 
 - type: entity
   parent: N14IDPassportTownsfolk
