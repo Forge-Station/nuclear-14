@@ -25,10 +25,7 @@
   canBeAntag: false
   access:
   - CaesarLegionCenturion
-  - CaesarLegionLegionnaireVeteran
-  - CaesarLegionLegionnaireWarrior
-  - CaesarLegionLegionnaireRecruit
-  - CaesarLegionVenator
+  - CaesarLegion
   - CaesarLegionDean
   special:
   - !type:AddComponentSpecial

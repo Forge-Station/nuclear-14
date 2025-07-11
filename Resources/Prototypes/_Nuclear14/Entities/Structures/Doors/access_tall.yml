@@ -286,37 +286,6 @@
     access: [["TownieMayor"]]
   - type: Wires
     layoutId: AirlockService
-
-- type: entity # Corvax-Change Begin
-  parent: N14DoorWoodWhiteTall
-  id: N14DoorWoodSecureLockedPersonTall
-  suffix: Townie, Locked, Person
-  components:
-  - type: AccessReader
-    access: [["TownsPerson"]]
-  - type: Wires
-    layoutId: AirlockService
-
-- type: entity
-  parent: N14DoorMetalBarTall
-  id: N14DoorCellMetalLockedPersonTall
-  suffix: Townie, Locked, Person
-  components:
-  - type: AccessReader
-    access: [["TownsPerson"]]
-  - type: Wires
-    layoutId: AirlockService
-
-- type: entity
-  parent: N14DoorMetalRedTall
-  id: N14DoorMetalSecureLockedPersonTall
-  suffix: Townie, Locked, Person
-  components:
-  - type: AccessReader
-    access: [["TownsPerson"]]
-  - type: Wires
-    layoutId: HighSec  # Corvax-Change End
-
 #MARK: Vault
 - type: entity
   parent: N14DoorAirlockTall

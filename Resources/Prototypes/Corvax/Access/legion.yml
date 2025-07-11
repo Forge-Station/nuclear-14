@@ -21,3 +21,15 @@
 - type: accessLevel
   id: CaesarLegionVenator
   name: id-card-access-level-legion-venator
+
+- type: accessLevel
+  id: CaesarLegion
+  name: id-card-access-level-west
+
+- type: accessGroup
+  id: CaesarLegion
+  tags:
+  - CaesarLegionLegionnaireRecruit
+  - CaesarLegionLegionnaireVeteran
+  - CaesarLegionLegionnaireWarrior
+  - CaesarLegionVenator

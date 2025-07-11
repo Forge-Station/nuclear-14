@@ -21,9 +21,7 @@
   supervisors: job-name-caesar-legion-other
   canBeAntag: false
   access:
-  - CaesarLegionLegionnaireVeteran
-  - CaesarLegionLegionnaireWarrior
-  - CaesarLegionLegionnaireRecruit
+  - CaesarLegion
   special:
   - !type:AddComponentSpecial
     components:

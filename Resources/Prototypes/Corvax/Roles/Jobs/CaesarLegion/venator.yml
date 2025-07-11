@@ -22,12 +22,7 @@
   supervisors: job-name-caesar-legion-supervisors
   canBeAntag: false
   access:
-  - CaesarLegionCenturion
-  - CaesarLegionLegionnaireVeteran
-  - CaesarLegionLegionnaireWarrior
-  - CaesarLegionLegionnaireRecruit
-  - CaesarLegionVenator
-  - CaesarLegionDean
+  - CaesarLegion
   special:
   - !type:AddComponentSpecial
     components:
