@@ -7,6 +7,7 @@ using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Content.Shared._NC.CorvaxVars;
+using Content.Shared._NC.Sponsors;
 
 namespace Content.Shared.Customization.Systems;
 
@@ -86,5 +87,40 @@ public sealed partial class MinPlayersRequirement : CharacterRequirement
             return true;
 
         return playerCount >= Min;
+    }
+}
+
+[UsedImplicitly, Serializable, NetSerializable]
+public sealed partial class SponsorRequirement : CharacterRequirement
+{
+    [DataField(required: true)]
+    public int Level;
+    public override bool IsValid(
+        JobPrototype job,
+        HumanoidCharacterProfile profile,
+        Dictionary<string, TimeSpan> playTimes,
+        bool whitelisted,
+        IPrototype prototype,
+        IEntityManager entityManager,
+        IPrototypeManager prototypeManager,
+        IConfigurationManager configManager,
+        out string? reason,
+        int depth = 0)
+    {
+        var sponsorManager = IoCManager.Resolve<ISponsorsManager>();
+        var playerManager = IoCManager.Resolve<ISharedPlayerManager>();
+        var user = playerManager.LocalUser;
+
+        if (user != null
+            && sponsorManager.TryGetSponsorData(user.Value, out SponsorData? data)
+            && data != null
+            && (int) data.Level >= Level)
+        {
+            reason = null;
+            return true;
+        }
+
+        reason = Loc.GetString("character-sponsor-requirement", ("level", Level));
+        return false;
     }
 }

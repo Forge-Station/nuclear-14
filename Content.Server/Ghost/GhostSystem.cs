@@ -1,10 +1,12 @@
 using System.Linq;
 using System.Numerics;
+using Content.Server._NC.Sponsors;
 using Content.Server.GameTicking;
 using Content.Server.Ghost.Components;
 using Content.Server.Mind;
 using Content.Server.Roles.Jobs;
 using Content.Server.Warps;
+using Content.Shared._NC.Sponsors;
 using Content.Shared.Actions;
 using Content.Shared.Examine;
 using Content.Shared.Eye;
@@ -44,6 +46,7 @@ namespace Content.Server.Ghost
         [Dependency] private readonly TransformSystem _transformSystem = default!;
         [Dependency] private readonly VisibilitySystem _visibilitySystem = default!;
         [Dependency] private readonly MetaDataSystem _metaData = default!;
+        [Dependency] private readonly SponsorsManager _sponsors = default!;
 
         private EntityQuery<GhostComponent> _ghostQuery;
         private EntityQuery<PhysicsComponent> _physicsQuery;
@@ -437,7 +440,21 @@ namespace Content.Server.Ghost
                 return null;
             }
 
-            var ghost = SpawnAtPosition(GameTicker.ObserverPrototypeName, spawnPosition.Value);
+            var user = mind.Comp.UserId;
+            EntityUid ghost;
+
+            if (user != null
+                && _sponsors.TryGetSponsorData(user.Value, out SponsorData? data)
+                && _sponsors.TryGetSponsorGhost(data.Level, out var sponsorGhost))
+            {
+                ghost = SpawnAtPosition(sponsorGhost, spawnPosition.Value);
+            }
+
+            else
+            {
+                ghost = SpawnAtPosition(GameTicker.ObserverPrototypeName, spawnPosition.Value);
+            }
+
             var ghostComponent = Comp<GhostComponent>(ghost);
 
             // Try setting the ghost entity name to either the character name or the player name.

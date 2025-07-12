@@ -7,10 +7,11 @@ using Content.Server._NC.CCCvars;
 using Robust.Shared.Configuration;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
+using Content.Shared._NC.Sponsors;
 
 namespace Content.Server._NC.Sponsors;
 
-public sealed class SponsorsManager
+public sealed class SponsorsManager : ISponsorsManager
 {
     [Dependency] private readonly IConfigurationManager _configuration = default!;
     [Dependency] private readonly DiscordAuthManager _discordAuthManager = default!;
@@ -55,7 +56,7 @@ public sealed class SponsorsManager
         var data = new SponsorData(level, e.UserId);
         _cachedSponsors.Add(e.UserId, data);
 
-        _sawmill.Info($"{e.UserId} is sponsor now.\nUserId: {e.UserId}. Level: {Enum.GetName(data.Level)}:{(int)data.Level}");
+        _sawmill.Info($"{e.UserId} is sponsor now.\nUserId: {e.UserId}. Level: {Enum.GetName(data.Level)}:{(int) data.Level}");
     }
 
     private async Task<List<string>?> GetRoles(NetUserId userId)
@@ -86,40 +87,14 @@ public sealed class SponsorsManager
     {
         return _cachedSponsors.TryGetValue(userId, out sponsorData);
     }
-}
 
-public sealed class SponsorData
-{
-    public static readonly Dictionary<string, SponsorLevel> RolesMap = new()
+    public bool TryGetSponsorColor(SponsorLevel level, [NotNullWhen(true)] out string? color)
     {
-        { "1237790603601776710", SponsorLevel.Normal },
-    };
-
-    public static SponsorLevel ParseRoles(List<string> roles)
-    {
-        var highestRole = SponsorLevel.None;
-        foreach (var role in roles)
-        {
-            if (RolesMap.ContainsKey(role))
-                if ((int)RolesMap[role] > (int)highestRole)
-                    highestRole = RolesMap[role];
-        }
-
-        return highestRole;
+        return SponsorData.SponsorColor.TryGetValue(level, out color);
     }
 
-    public SponsorData(SponsorLevel level, NetUserId userId)
+    public bool TryGetSponsorGhost(SponsorLevel level, [NotNullWhen(true)] out string? ghost)
     {
-        Level = level;
-        UserId = userId;
+        return SponsorData.SponsorGhost.TryGetValue(level, out ghost);
     }
-
-    public SponsorLevel Level;
-    public NetUserId UserId;
-}
-
-public enum SponsorLevel
-{
-    None = 0,
-    Normal = 1,
 }
