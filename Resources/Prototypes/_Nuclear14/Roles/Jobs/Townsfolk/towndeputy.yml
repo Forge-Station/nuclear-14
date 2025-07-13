@@ -15,12 +15,12 @@
       department: Townsfolk
       min: 14400 # 4 hours
   startingGear: TownDeputyGear
-  icon: "JobIconTownDeputy" # Corvax-Change
+  icon: "JobIconTownDeputy" # Forge-Change
   supervisors: job-supervisors-townsfolk
   access:
   - TownieLaw
   - TownieMechanic
-  - TownsPerson # Corvax-Change
+  - TownsPerson # Forge-Change
   special:
   - !type:AddComponentSpecial
     components:
@@ -29,21 +29,22 @@
           - Wastelander
           - Townsfolk
 
-#- type: startingGear
-#  id: TownDeputyGear
-#  equipment:
-#    jumpsuit: N14ClothingUniformJumpsuitCowboyBrown
-#    head: N14ClothingHeadHatDeputy
-#    eyes: N14ClothingEyesSunGlasses
-#    back: N14ClothingBackpackDeputyFilled
-#    shoes: N14ClothingShoesBlack
-#    id: N14IDBadgeTownDeputy
-#    outerClothing: N14ClothingOuterPoliceVest
-#    belt: ClothingBeltRevolverfilled
-#    pocket1: RadioHandheld
-#    pocket2: Handcuffs
-#  satchel: N14ClothingBackpackSatchelDeputyFilled
-#  duffelbag: N14ClothingBackpackDuffelDeputyFilled
+- type: startingGear
+  id: TownDeputyGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitTownGuard
+    back: N14ClothingBackpackSatchelMilitary # Forge-Change
+    shoes: N14ClothingBootsLeatherFilled
+    id: N14IDBadgeTownDeputy
+    belt: ClothingBeltRevolverfilled # Forge-Change
+    pocket1: TownGuardKits
+    pocket2: Handcuffs
+  storage: # Forge-Change
+    back:
+    - N14BoxPlasticFilledWastelander
+    - N14CombatKnife
+    - MagazineBox10mm
+    - MagazineBox44
 
 - type: playTimeTracker
   id: TownDeputy
