@@ -191,7 +191,6 @@
   id: N14ClothingOuterPowerArmorAdvanced2
   name: X-02 power armor
   description: A mass-produced version of the original APA. It sports less plating but is easier to repair and maintain.
-  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/advanced2.rsi
