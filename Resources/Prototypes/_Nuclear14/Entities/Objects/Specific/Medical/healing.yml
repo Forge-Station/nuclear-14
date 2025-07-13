@@ -44,7 +44,7 @@
     stackType: N14DirtyGauze10
     count: 10
   - type: StackPrice
-    price: 6
+    price: 2 # Forge-Change
   - type: Butcherable
     butcheringType: Knife
     spawned:
@@ -94,7 +94,7 @@
     stackType: N14CleanGauze10
     count: 10
   - type: StackPrice
-    price: 10
+    price: 2 # Forge-Change
   - type: Butcherable
     butcheringType: Knife
     spawned:
@@ -142,7 +142,7 @@
     stackType: N14Ointment10
     count: 10
   - type: StackPrice
-    price: 15
+    price: 2 # Forge-Change
 
 - type: entity
   id: N14Ointment1
