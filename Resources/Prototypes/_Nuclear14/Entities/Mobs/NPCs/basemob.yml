@@ -272,6 +272,14 @@
   - type: Clumsy
     clumsySound:
       collection: BodyFall
+  - type: PassiveDamage
+    allowedStates:
+    - Alive
+    - Critical
+    damageCap: 100
+    damage:
+      types:
+        Radiation: -5
 
 # Wave Defence Base Hostile
 #MARK: WAVE

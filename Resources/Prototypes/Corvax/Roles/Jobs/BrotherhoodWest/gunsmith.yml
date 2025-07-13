@@ -34,7 +34,7 @@
     shoes: N14ClothingBootsCombatFilled
     head: N14ClothingHeadHatArmyCap
     outerClothing: N14ClothingOuterMidwestArmor
-    pocket1: NCRBoSMidwestkits
+    # pocket1: NCRBoSMidwestkits
     id: N14IDBrotherhoodWestHolotagGunsmith
     belt: ClothingBeltMilitary
   storage:

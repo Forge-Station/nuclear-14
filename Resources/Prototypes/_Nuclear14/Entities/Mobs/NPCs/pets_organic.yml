@@ -162,7 +162,6 @@
     grid:
     - 0,0,3,2
     maxItemSize: Normal
-    clickInsert: false # Corvax-Change
   - type: UserInterface
     interfaces:
       enum.StorageUiKey.Key:
@@ -259,50 +258,6 @@
   id: N14MobPetDogNCRMedicK9
   parent: N14MobPetDog
   description: A rather normal dog, seems to have a whole vest with a name on it.
-  components:
-  - type: RadiationReceiver
-  - type: RandomMetadata
-    nameSegments: [names_N14pet_dog]
-  - type: NpcFactionMember
-    factions:
-      - NCR
-  - type: Sprite
-    scale: 0.9, 0.9
-    drawdepth: Mobs
-    layers:
-    - map: ["enum.DamageStateVisualLayers.Base"]
-      state: k9_medic
-      sprite: _Nuclear14/Mobs/Animals/dog_ncra_medic.rsi
-  - type: MobThresholds
-    thresholds:
-      0: Alive
-      80: Critical
-      160: Dead
-  - type: DamageStateVisuals
-    states:
-      Alive:
-        Base: k9_medic
-      Critical:
-        Base: k9_medic_dead
-      Dead:
-        Base: k9_medic_dead
-  - type: Storage
-    grid:
-    - 0,0,4,3
-    maxItemSize: Small
-  - type: UserInterface
-    interfaces:
-      enum.StorageUiKey.Key:
-        type: StorageBoundUserInterface
-  - type: ContainerContainer
-    containers:
-      storagebase: !type:Container
-
-- type: entity
-  name: NCR Medical K9
-  id: N14MobPetDogNCRMedicK9
-  parent: N14MobPetDog
-  description: A rather healthy dog, seems to have a collar with a name on it.
   components:
   - type: RadiationReceiver
   - type: RandomMetadata
@@ -476,6 +431,7 @@
   - type: NpcFactionMember
     factions:
       - CaravanCompany
+      - Passive
   - type: DamageStateVisuals
     states:
       Alive:
@@ -507,7 +463,6 @@
     - 3,0,6,3
     - 8,0,9,3
     maxItemSize: Large
-    clickInsert: false # Corvax-Change
   - type: UserInterface
     interfaces:
       enum.StorageUiKey.Key:
@@ -534,9 +489,6 @@
         Blunt: 6
         Slash: 6
         Radiation: 2
-  - type: NpcFactionMember # Corvax-Change
-    factions:
-    - Passive
 
 - type: entity
   name: Pet Rat

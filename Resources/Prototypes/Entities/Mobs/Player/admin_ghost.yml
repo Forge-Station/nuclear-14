@@ -105,8 +105,8 @@
   - type: Inventory
     templateId: aghost
   - type: InventorySlots
-  # - type: Loadout
-    # prototypes: [ MobAghostGear ]
+  - type: Loadout
+    prototypes: [ MobAghostGear ]
   - type: SupermatterImmune
   - type: BypassInteractionChecks
 

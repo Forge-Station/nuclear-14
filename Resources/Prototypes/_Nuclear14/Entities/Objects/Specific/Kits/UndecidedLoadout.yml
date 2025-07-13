@@ -228,20 +228,6 @@
     - MBoS_ScrFld_Set
     - MBoS_ScrEng_Set
 
-- type: entity
-  id: BoSWashingtonScribeKits
-  name: Undecided Washington Scribe Kit
-  parent: BaseLoadoutKit
-  components:
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Misc/kits.rsi
-    state: rifleman
-  - type: UndecidedLoadoutBackpack
-    possibleSets:
-    - WBoS_ScrMed_Set
-    - WBoS_ScrFld_Set
-    - WBoS_ScrEng_Set
-
 # Brotherhood Paladins
 - type: entity
   id: BoSMidwestPaladinKits

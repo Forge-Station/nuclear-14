@@ -655,9 +655,9 @@
   name: gunpowder
   description: An explosive compound.
   components:
-  - type: Stack
-    stackType: Gunpowder
-    count: 1
+  # - type: Stack // Forge-Change
+  #   stackType: Gunpowder
+  #   count: 1
   - type: Sprite
     sprite: Objects/Misc/reagent_fillings.rsi
     state: powderpile

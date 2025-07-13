@@ -73,27 +73,27 @@
   items:
     - N14ClothingUniformJumpsuitBOSFieldScribe
 
-- type: loadout
-  id: LoadoutBoSMidwestPA
-  category: Outer
-  cost: 9
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - BoSMidPaladin
-        - BoSMidPaladinCommander
-  items:
-    - N14ClothingOuterPowerArmorMidwest
+# - type: loadout #! Forge-Change
+#   id: LoadoutBoSMidwestPA
+#   category: Outer
+#   cost: 9
+#   exclusive: true
+#   requirements:
+#     - !type:CharacterJobRequirement
+#       jobs:
+#         - BoSMidPaladin
+#         - BoSMidPaladinCommander
+#   items:
+#     - N14ClothingOuterPowerArmorMidwest
 
-- type: loadout
-  id: LoadoutBoSMidwestPACommander
-  category: Outer
-  cost: 10
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - BoSMidPaladinCommander
-  items:
-    - N14ClothingOuterPowerArmorMidwestCommander
+# - type: loadout #! Forge-Change
+#   id: LoadoutBoSMidwestPACommander
+#   category: Outer
+#   cost: 10
+#   exclusive: true
+#   requirements:
+#     - !type:CharacterJobRequirement
+#       jobs:
+#         - BoSMidPaladinCommander
+#   items:
+#     - N14ClothingOuterPowerArmorMidwestCommander

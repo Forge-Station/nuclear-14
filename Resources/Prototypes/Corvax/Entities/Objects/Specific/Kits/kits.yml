@@ -670,7 +670,6 @@
       - id: N14WeaponLaserPistol
       - id: N14PowerCellSmall
         amount: 2
-      - id: N14WeaponPlasmaMultiplas
       - id: N14PlasmaCartridge
         amount: 3
       - id: N14Stimpak

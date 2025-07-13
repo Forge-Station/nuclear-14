@@ -17,7 +17,6 @@
   weight: 10
   startingGear: CaravanLeaderGear
   icon: "JobIconCaravanLeader" # Corvax-Change
-  canBeAntag: false
   supervisors: job-supervisors-caravan-leader
   alwaysUseSpawner: true
   accessGroups:
