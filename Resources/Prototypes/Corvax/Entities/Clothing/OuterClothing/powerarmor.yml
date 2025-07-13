@@ -11,8 +11,6 @@
     equipDelay: 3
     unequipDelay: 6
   - type: ToggleableClothing
-    clothingPrototype: N14ClothingHeadHelmetPowerArmorT51China
-  - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorT51China
       gloves: N14ClothingPAGauntlets
@@ -37,9 +35,7 @@
   - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorT51NCR
-      gloves: N14ClothingPAGauntlets
-      shoes: N14ClothingPABoots
-      back: N14ClothingPowerSystemsBack
+
 
 - type: entity
   parent: N14ClothingOuterPowerArmorT60
@@ -59,9 +55,7 @@
   - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorT60NCR
-      gloves: N14ClothingPAGauntlets
-      shoes: N14ClothingPABoots
-      back: N14ClothingPowerSystemsBack
+
 
 - type: entity
   parent: N14ClothingOuterPowerArmorAdvanced1
@@ -81,9 +75,7 @@
   - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorX01NCR
-      gloves: N14ClothingPAGauntlets
-      shoes: N14ClothingPABoots
-      back: N14ClothingPowerSystemsBack
+
 
 - type: entity
   parent: N14ClothingOuterPowerArmorAdvanced2
@@ -101,9 +93,7 @@
   - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorX02Tesla
-      gloves: N14ClothingPAGauntlets
-      shoes: N14ClothingPABoots
-      back: N14ClothingPowerSystemsBack
+
 
 - type: entity
   parent: N14ClothingOuterPowerArmorT45
@@ -118,6 +108,3 @@
   - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorT45Sierra
-      gloves: N14ClothingPAGauntlets
-      shoes: N14ClothingPABoots
-      back: N14ClothingPowerSystemsBack
