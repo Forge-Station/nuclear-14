@@ -289,30 +289,6 @@
         - NCRSGT
   items:
     - N14ClothingHeadHatNCRHelmetMetalGhillie
-    
-- type: loadout
-  id: LoadoutNCRWoodsHelmetRadioWood
-  category: Roles
-  cost: 1
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRSGT
-  items:
-    - N14ClothingHeadHatNCRHelmetMetalRadioWood
-
-- type: loadout
-  id: LoadoutNCRWoodsHelmetRadioSnow
-  category: Roles
-  cost: 1
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRSGT
-  items:
-    - N14ClothingHeadHatNCRHelmetMetalRadioSnow
 
 - type: loadout
   id: LoadoutNCRWhiteBoonie

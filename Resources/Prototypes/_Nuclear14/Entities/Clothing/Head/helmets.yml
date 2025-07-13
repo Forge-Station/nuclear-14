@@ -276,7 +276,6 @@
   id: N14ClothingHeadHatEnclaveHelmet
   name: Enclave helmet
   description: A combat helmet worn by Enclave soldiers.
-  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Nuclear14/Clothing/Head/FalloutHelmets/enclavehelmet.rsi
@@ -288,7 +287,6 @@
   id: N14ClothingHeadHatEnclaveHelmetHood
   name: Enclave hooded helmet
   description: A combat helmet worn by Enclave soldiers. This one has a hood covering it.
-  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Nuclear14/Clothing/Head/FalloutHelmets/enclavehelmethood.rsi
@@ -300,7 +298,6 @@
   id: N14ClothingHeadHatEnclaveHelmetMarine
   name: Enclave marine helmet
   description: A marine helmet worn by elite Enclave soldiers.
-  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Nuclear14/Clothing/Head/FalloutHelmets/enclavehelmetmarine.rsi
@@ -341,7 +338,6 @@
   id: N14ClothingHeadHatNCRHelmetMetalRadioWood
   name: NCR radio helmet
   description: A rounded NCR helmet offering some protection, this one is commonly used by radio operators and NCOs.
-  categories: [ HideSpawnMenu ] # Unused for now
   components:
   - type: Sprite
     sprite: _Nuclear14/Clothing/Head/FalloutHelmets/ncrsergeanthelmet.rsi
@@ -364,7 +360,6 @@
   id: N14ClothingHeadHatNCRHelmetMetalRadioSnow
   name: NCR radio helmet
   description: A rounded NCR helmet offering some protection, this one is commonly used by radio operators and NCOs.
-  categories: [ HideSpawnMenu ] #Unused for now
   components:
   - type: Sprite
     sprite: _Nuclear14/Clothing/Head/FalloutHelmets/ncrsergeanthelmet2.rsi
