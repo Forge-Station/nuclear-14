@@ -1,5 +1,5 @@
 # Midwest Brotherhood
-job-name-bos-mid-paladin-comm = Midwest BoS Paladin Commander
+job-name-bos-mid-paladin-comm = Midwest BoS Commander
 job-description-bos-mid-paladin-comm = Lead the Midwestern Brotherhood of Steel on their mission.
 job-name-bos-mid-paladin = Midwest BoS Paladin
 job-description-bos-mid-paladin = Assist the Paladin Commander as their second in command & heavy infantry.
@@ -7,11 +7,11 @@ job-name-bos-mid-knight = Midwest BoS Knight
 job-description-bos-mid-knight = Follow the Paladins on their mission for the chapter.
 job-name-bos-mid-scribe = Midwest BoS Scribe
 job-description-bos-mid-scribe = Conduct scientific missions and research for your chapter.
-job-name-bos-mid-squire = Midwest BoS Squire
+job-name-bos-mid-squire = Midwest BoS Initiate
 job-description-bos-mid-squire = Follow the orders of your superiors and prove your worth.
 
 # Washington Brotherhood
-job-name-bos-washington-commander = Washington BoS Paladin Commander
+job-name-bos-washington-commander = Washington BoS Commander
 job-description-bos-washington-commander = Lead the Washington Brotherhood of Steel on their mission.
 job-name-bos-washington-initiate = Washington BoS Initiate
 job-description-bos-washington-initiate = Follow the orders of your superiors and prove your worth.
@@ -101,9 +101,9 @@ job-name-townmechanic = Town Mechanic
 job-description-townmechanic = Maintain the towns services and infrastructure and do what you can on the side for others for money.
 job-name-townshopkeeper = Town Shopkeeper
 job-description-townshopkeeper = Setup shop in town, organise trade partnerships, and sell your wares to the wanderers of the wastes. Beware the tax man.
-job-name-towndeputy = Town Deputy
-job-description-towndeputy = Deputy peacekeeper for the town. Keep the peace and provide backup to your Sheriff.
-job-name-townsheriff = Town Sheriff
+job-name-towndeputy = Town's Guard
+job-description-towndeputy = A law enforcement worker for the town. Keep the peace and provide backup to your Marshal.
+job-name-townsheriff = Town Marshal
 job-description-townsheriff = Maintain law and order within the town and support the Mayor in their rule.
 job-name-townmayor = Town Mayor
 job-description-townmayor = Maintain civilisation in the town. Set taxes and laws and try not to be thrown out or taken over.

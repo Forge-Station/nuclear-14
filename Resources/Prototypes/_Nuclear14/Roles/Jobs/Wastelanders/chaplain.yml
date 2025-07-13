@@ -1,6 +1,8 @@
 - type: job
   id: WastelandChaplain
   setPreference: true
+  overrideConsoleVisibility: false
+  canBeAntag: false
   name: job-name-chaplain
   description: job-description-chaplain
   playTimeTracker: WastelandChaplain
@@ -31,7 +33,7 @@
     jumpsuit: N14ClothingUniformJumpsuitFollowers
     back: N14ClothingBackpackTrekker # Corvax-Change
     shoes: N14ClothingBootsBlack
-    id: N14IDPassportWasteChaplain # Corvax-Change
+    id: N14IDPassportWasteChaplain
   innerClothingSkirt: N14ClothingUniformJumpsuitFollowers
   satchel: N14ClothingBackpackSatchelChaplainFilled
   duffelbag: N14ClothingBackpackDuffelChaplainFilled

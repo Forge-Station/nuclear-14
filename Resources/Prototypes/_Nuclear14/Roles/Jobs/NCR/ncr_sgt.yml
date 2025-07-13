@@ -1,6 +1,8 @@
 - type: job
   id: NCRSGT
   setPreference: true
+  overrideConsoleVisibility: false
+  canBeAntag: false
   name: job-name-ncr-sgt
   description: job-description-ncr-sgt
   playTimeTracker: NCRNCO
@@ -18,7 +20,6 @@
   startingGear: NCRSGTGear
   icon: "JobIconNcrSerg" # Corvax-Change
   supervisors: job-supervisors-ncr-sgt
-  canBeAntag: false
   alwaysUseSpawner: true
   access:
   - NCR
@@ -28,6 +29,7 @@
     components:
       - type: NpcFactionMember
         factions:
+          - Wastelander
           - NCR
 
 - type: startingGear

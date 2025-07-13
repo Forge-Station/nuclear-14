@@ -235,7 +235,7 @@ internal sealed class ChargerSystem : EntitySystem
 
         return CellChargerStatus.Charging;
     }
-    
+
     private void TransferPower(EntityUid uid, EntityUid targetEntity, ChargerComponent component, float frameTime)
     {
         if (!TryComp(uid, out ApcPowerReceiverComponent? receiverComponent))

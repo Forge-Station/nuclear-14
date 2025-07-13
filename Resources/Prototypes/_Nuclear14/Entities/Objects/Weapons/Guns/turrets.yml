@@ -112,7 +112,7 @@
       capacity: 500
     - type: HTN
       rootTask:
-        task: TurretCompound
+        task: N14TurretCompound
       blackboard:
         RotateSpeed: !type:Single
           3.141
@@ -277,7 +277,7 @@
       capacity: 50000
     - type: HTN
       rootTask:
-        task: TurretCompound
+        task: N14TurretCompound
       blackboard:
         RotateSpeed: !type:Single
           10

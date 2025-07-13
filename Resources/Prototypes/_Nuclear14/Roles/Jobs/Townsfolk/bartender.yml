@@ -1,6 +1,8 @@
 - type: job
   id: WastelandBartender
   setPreference: true
+  overrideConsoleVisibility: false
+  canBeAntag: false
   name: job-name-townbartender
   description: job-description-townbartender
   playTimeTracker: WastelandBartender
@@ -18,11 +20,15 @@
   access:
   - WastelandBartender
   - TownsPerson # Corvax-Change
+  - InnRoomOne
+  - InnRoomTwo
+  - InnRoomThree
   special:
   - !type:AddComponentSpecial
     components:
       - type: NpcFactionMember
         factions:
+          - Wastelander
           - Townsfolk
       - type: ProfessionalChef
 

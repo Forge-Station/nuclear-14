@@ -18,6 +18,11 @@
       inverted: true
       departments:
         - Tribe
+    - !type:CharacterJobRequirement
+      inverted: true
+      jobs:
+        - NCRRanger
+        - NCRRangerVeteran
   functions:
     - !type:TraitModifyLanguages
       languagesSpoken:
@@ -29,6 +34,12 @@
   id: N14SignLanguage
   category: Speech
   points: -2
+  requirements:
+    - !type:CharacterJobRequirement
+      inverted: true
+      jobs:
+        - NCRRanger
+        - NCRRangerVeteran
   functions:
     - !type:TraitModifyLanguages
       languagesSpoken:

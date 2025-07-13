@@ -1,6 +1,8 @@
 - type: job
-  id: TownDeputy
+  id: TownDeputy # Renamed to "Guard", don't touch the prototype ID
   setPreference: true
+  overrideConsoleVisibility: true
+  canBeAntag: false
   name: job-name-towndeputy
   description: job-description-towndeputy
   playTimeTracker: TownDeputy
@@ -24,6 +26,7 @@
     components:
       - type: NpcFactionMember
         factions:
+          - Wastelander
           - Townsfolk
 
 #- type: startingGear

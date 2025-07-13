@@ -1,6 +1,8 @@
 - type: job
   id: Tribal
   setPreference: true
+  overrideConsoleVisibility: false
+  canBeAntag: false
   name: job-name-tribal
   description: job-description-tribal
   playTimeTracker: Tribal
@@ -22,6 +24,7 @@
     components:
       - type: NpcFactionMember
         factions:
+          - Wastelander
           - Tribal
   - !type:AddTraitSpecial
     traits: [ LanguageTribal ]
@@ -35,6 +38,7 @@
     gloves: N14ClothingHandsGlovesTribal
     back: N14ClothingBackpackTrekker # Corvax-Change
     pocket1: N14TribalKnife
+    pocket2: Triballoadoutkits
     id: N14IDTribeBulletsPendant
   innerClothingSkirt: N14ClothingUniformJumpskirtTribal
   satchel: N14ClothingBackpackSatchelTribalFilled

@@ -31,6 +31,7 @@
     - Stutter
     - Electrocution
   - type: MovedByPressure
+  - type: Examiner
   - type: Physics
     bodyType: KinematicController
   - type: NameIdentifier
@@ -89,6 +90,8 @@
   - type: HTN
     rootTask:
       task: SimpleRangedHostileCompound
+  - type: InputMover
+  - type: MobMover
   - type: NpcFactionMember
     factions:
     - Wastelander
@@ -153,26 +156,75 @@
     enabled: true
     toggleOnInteract: true
     IsSpeaker: true
-  - type: UniversalLanguageSpeaker
   - type: LanguageKnowledge
     speaks:
-    - N14BrotherBeep
+    - N14Robot
     understands:
-    - N14BrotherBeep
-    - Dog
-    - Universal
+    - N14Dog
+    - N14Insect
+    - N14Robot
     - English
+    - Tribal
+    - Chinese
+    - Sign
+  - type: HandheldLight
+    toggleOnInteract: false
+    addPrefix: true
+    blinkingBehaviourId: blinking
+    radiatingBehaviourId: radiating
+  - type: ToggleableLightVisuals
+  - type: PointLight
+    enabled: false
+    radius: 4.5
+    energy: 1
+    mask: /Textures/Effects/LightMasks/cone.png
+    autoRot: true
+    netsync: false
+  - type: LightBehaviour
+    behaviours:
+      - !type:FadeBehaviour
+        id: radiating
+        interpolate: Linear
+        maxDuration: 2.0
+        startValue: 3.0
+        endValue: 2.0
+        isLooped: true
+        reverseWhenFinished: true
+      - !type:PulseBehaviour
+        id: blinking
+        interpolate: Nearest
+        maxDuration: 1.0
+        minValue: 0.1
+        maxValue: 2.0
+        isLooped: true
+  - type: Battery
+    maxCharge: 600 # lights drain 3/s but recharge of 2 makes this 1/s. Therefore 600 is 10 minutes of light.
+    startingCharge: 600
+  - type: BatterySelfRecharger
+    autoRecharge: true
+    autoRechargeRate: 2
+  - type: NoSlip
+  - type: StepTriggerImmune
+    whitelist:
+      types:
+      - Shard
+      - Landmine
+      - Mousetrap
+      - SlipTile
+      - SlipEntity
+      - Chasm
   - type: Damageable
     damageContainer: Biological
   - type: PassiveDamage
     allowedStates:
     - Alive
     - Critical
-    damageCap: 50
+    damageCap: 75
     damage:
       groups:
-        Brute: -0.25
-        Burn: -0.25
+        Brute: -0.5
+        Burn: -0.5
+        Airloss: -3 # Bandaid fix, soon they'll be non-organic and this will be removed
   - type: Speech # Corvax-Change
     speechSounds: Borg
   - type: TypingIndicator # Corvax-Change

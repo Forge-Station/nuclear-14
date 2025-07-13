@@ -20,7 +20,7 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Network;
 using Robust.Shared.Player; // Nuclear-14
 using Robust.Shared.Prototypes;
-using Robust.Shared.Utility; // Corvax-Change
+using Content.Shared.IdentityManagement;
 
 namespace Content.Server.Radio.EntitySystems;
 
@@ -38,6 +38,7 @@ public sealed class RadioDeviceSystem : EntitySystem
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
     [Dependency] private readonly INetManager _netMan = default!;
     [Dependency] private readonly LanguageSystem _language = default!;
+    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
 
     // Used to prevent a shitter from using a bunch of radios to spam chat.
     private HashSet<(string, EntityUid)> _recentlySent = new();
@@ -242,7 +243,6 @@ public sealed class RadioDeviceSystem : EntitySystem
         var chatType = component.IsSpeaker ? InGameICChatType.Speak : InGameICChatType.Whisper;
         _chat.TrySendInGameICMessage(uid, message, chatType, ChatTransmitRange.GhostRangeLimit, nameOverride: name, checkRadioPrefix: false, languageOverride: args.Language);
         // Corvax-Change-End
-
     }
 
     private void OnIntercomEncryptionChannelsChanged(Entity<IntercomComponent> ent, ref EncryptionChannelsChangedEvent args)

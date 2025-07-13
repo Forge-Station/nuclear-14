@@ -615,6 +615,7 @@
     damageCoefficient: 0.8
   - type: ToggleableClothing
     clothingPrototype: N14ClothingHeadHatHoodScribeTabard
+    slot: head
 
 - type: entity
   parent: N14ClothingOuterCoatWinterArmored
@@ -718,6 +719,28 @@
         Piercing: 0.8
         Heat: 0.8
     priceMultiplier: 0.5
+
+- type: entity
+  parent: N14ClothingOuterTribalCoat
+  id: N14ClothingOuterElderwintercoat
+  name: tribal elders winter coat
+  description: A long winters coat with ballistic inserts, hanging an ornamental animal skull from the back.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Clothing/OuterClothing/Coats/Tribalelderswintercoat.rsi
+  - type: Clothing
+    sprite: _Nuclear14/Clothing/OuterClothing/Coats/Tribalelderswintercoat.rsi
+
+- type: entity
+  parent: N14ClothingOuterTribalCoat
+  id: N14ClothingOuterdrylandelder
+  name: tribal elders robe
+  description: Tribal robes in the style of the drylanders with ballistic inserts for protection.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Clothing/OuterClothing/Armor/drylander-chief.rsi
+  - type: Clothing
+    sprite: _Nuclear14/Clothing/OuterClothing/Armor/drylander-chief.rsi
 
 #MARK: Town
 - type: entity
@@ -835,6 +858,7 @@
         Radiation: 0.001
   - type: ToggleableClothing
     clothingPrototype: N14ClothingHeadHatHelmetRadHelmet
+    slot: head
 
 - type: entity
   parent: ClothingOuterHardsuitBase
@@ -851,8 +875,8 @@
       coefficients:
         Radiation: 0.60
   - type: ToggleableClothing
-    slot: mask
     clothingPrototype: N14ClothingMaskHazmatHelmet
+    slot: mask
 
 - type: entity
   parent: ClothingOuterHardsuitBase
@@ -869,6 +893,7 @@
     lowPressureMultiplier: 1000
   - type: ToggleableClothing
     clothingPrototype: N14ClothingHeadHatHelmetSpaceHelmet
+    slot: head
 
 - type: entity
   parent: ClothingOuterHardsuitBase
@@ -886,4 +911,27 @@
         Heat: 0.30
   - type: ToggleableClothing
     clothingPrototype: N14ClothingHeadHatHelmetFirefighterHelmet
+    slot: head
 
+# Town's Guard
+- type: entity
+  parent: N14ClothingOuterBase
+  id: N14ClothingOuterTownGuardCoat
+  name: the Guard's coat
+  description: An old coat from a war, or a replica of one. It was designed to be highly useful with pockets and provide some protection too.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Clothing/OuterClothing/Coats/towngreatcoat.rsi
+  - type: Clothing
+    sprite: _Nuclear14/Clothing/OuterClothing/Coats/towngreatcoat.rsi
+  - type: Armor
+    modifiers:
+     coefficients:
+        Blunt: 0.875
+        Slash: 0.875
+        Piercing: 0.9
+        Heat: 0.9
+  - type: ExplosionResistance
+    damageCoefficient: 0.9
+  - type: StaticPrice
+    price: 75

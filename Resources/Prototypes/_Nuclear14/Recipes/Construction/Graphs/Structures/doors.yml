@@ -116,14 +116,21 @@
       edges:
         - to: start
           completed:
-            - !type:SpawnPrototype
-              prototype: MaterialWoodPlank1
-              amount: 4
-            - !type:SpawnPrototype
-              prototype: N14ScrapBrass1
-              amount: 2
+            - !type:SnapToGrid { }
           steps:
-            - tool: Anchoring
+            - material: WoodPlank
+              amount: 3
+            - material: N14ScrapBrass
+              amount: 2
+              doAfter: 15
+        - to: woodDoorSecureNCR
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: WoodPlank
+              amount: 3
+            - material: N14ScrapBrass
+              amount: 2
               doAfter: 15
 
     - node: woodDoorMakeshift

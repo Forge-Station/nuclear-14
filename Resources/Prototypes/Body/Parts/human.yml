@@ -29,8 +29,10 @@
         Quantity: 10
       - ReagentId: Blood
         Quantity: 20
-  - type: StaticPrice # Corvax-Add
-    price: 0
+  - type: StaticPrice
+    price: 0 # Forge-Change
+  - type: Item
+    size: Large
 
 - type: entity
   id: HeadHuman
@@ -47,8 +49,10 @@
         Quantity: 5
       - ReagentId: Blood
         Quantity: 10
-  - type: StaticPrice # Corvax-Add
+  - type: StaticPrice
     price: 15
+  - type: Item
+    size: Normal
 
 - type: entity
   id: LeftArmHuman
@@ -58,8 +62,10 @@
   - type: Sprite
     sprite: Mobs/Species/Human/parts.rsi
     state: "l_arm"
-  - type: StaticPrice # Corvax-Add
-    price: 0
+  - type: StaticPrice
+    price: 0 # Forge-Change
+  - type: Item
+    size: Normal
 
 - type: entity
   id: RightArmHuman
@@ -69,8 +75,10 @@
   - type: Sprite
     sprite: Mobs/Species/Human/parts.rsi
     state: "r_arm"
-  - type: StaticPrice # Corvax-Add
-    price: 0
+  - type: StaticPrice
+    price: 0 # Forge-Change
+  - type: Item
+    size: Normal
 
 - type: entity
   id: LeftHandHuman
@@ -80,8 +88,10 @@
   - type: Sprite
     sprite: Mobs/Species/Human/parts.rsi
     state: "l_hand"
-  - type: StaticPrice # Corvax-Add
-    price: 0
+  - type: StaticPrice
+    price: 0 # Forge-Change
+  - type: Item
+    size: Small
 
 - type: entity
   id: RightHandHuman
@@ -91,8 +101,10 @@
   - type: Sprite
     sprite: Mobs/Species/Human/parts.rsi
     state: "r_hand"
-  - type: StaticPrice # Corvax-Add
-    price: 0
+  - type: StaticPrice
+    price: 0 # Forge-Change
+  - type: Item
+    size: Small
 
 - type: entity
   id: LeftLegHuman
@@ -102,8 +114,10 @@
   - type: Sprite
     sprite: Mobs/Species/Human/parts.rsi
     state: "l_leg"
-  - type: StaticPrice # Corvax-Add
-    price: 0
+  - type: StaticPrice
+    price: 0 # Forge-Change
+  - type: Item
+    size: Normal
 
 - type: entity
   id: RightLegHuman
@@ -113,8 +127,10 @@
   - type: Sprite
     sprite: Mobs/Species/Human/parts.rsi
     state: "r_leg"
-  - type: StaticPrice # Corvax-Add
-    price: 0
+  - type: StaticPrice
+    price: 0 # Forge-Change
+  - type: Item
+    size: Normal
 
 - type: entity
   id: LeftFootHuman
@@ -124,8 +140,10 @@
   - type: Sprite
     sprite: Mobs/Species/Human/parts.rsi
     state: "l_foot"
-  - type: StaticPrice # Corvax-Add
-    price: 0
+  - type: StaticPrice
+    price: 0 # Forge-Change
+  - type: Item
+    size: Small
 
 - type: entity
   id: RightFootHuman
@@ -135,5 +153,7 @@
   - type: Sprite
     sprite: Mobs/Species/Human/parts.rsi
     state: "r_foot"
-  - type: StaticPrice # Corvax-Add
-    price: 0
+  - type: StaticPrice
+    price: 0 # Forge-Change
+  - type: Item
+    size: Small

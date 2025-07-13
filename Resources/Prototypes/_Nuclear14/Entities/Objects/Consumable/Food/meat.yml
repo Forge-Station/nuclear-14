@@ -6,6 +6,7 @@
   components:
   - type: Food
   - type: Sprite
+    scale: 0.75, 0.75
     sprite: _Nuclear14/Objects/Consumable/Food/meat.rsi
     state: brahminmeat
     netsync: false
@@ -140,7 +141,7 @@
     defaultTarget: SteakCooked
 
 - type: entity
-  name: raw yao-guai meat
+  name: raw Yao Guai meat
   parent: N14FoodMeatBrahmin
   id: N14FoodMeatYaoguai
   description: A very muscular slab of raw yao-guai meat.

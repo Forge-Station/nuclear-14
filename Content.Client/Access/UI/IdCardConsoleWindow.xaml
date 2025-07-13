@@ -2,15 +2,15 @@
             MinSize="650 290">
     <BoxContainer Orientation="Vertical">
         <GridContainer Columns="2">
-            <GridContainer Columns="3" HorizontalExpand="True">
-                <Label Text="{Loc 'id-card-console-window-privileged-id'}" />
-                <Button Name="PrivilegedIdButton" Access="Public"/>
-                <Label Name="PrivilegedIdLabel" />
+        <GridContainer Columns="3" HorizontalExpand="True">
+            <Label Text="{Loc 'id-card-console-window-privileged-id'}" />
+            <Button Name="PrivilegedIdButton" Access="Public"/>
+            <Label Name="PrivilegedIdLabel" />
 
-                <Label Text="{Loc 'id-card-console-window-target-id'}" />
-                <Button Name="TargetIdButton" Access="Public"/>
-                <Label Name="TargetIdLabel" />
-            </GridContainer>
+            <Label Text="{Loc 'id-card-console-window-target-id'}" />
+            <Button Name="TargetIdButton" Access="Public"/>
+            <Label Name="TargetIdLabel" />
+        </GridContainer>
             <BoxContainer Orientation="Vertical">
                 <Button Name="CrewManifestButton" Access="Public" Text="{Loc 'crew-manifest-button-label'}" />
             </BoxContainer>

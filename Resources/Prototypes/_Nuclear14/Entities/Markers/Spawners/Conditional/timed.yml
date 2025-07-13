@@ -2,6 +2,7 @@
 - type: entity
   name: Molerat Timed Spawner
   id: N14TimedSpawnerMolerat
+  categories: [ HideSpawnMenu ]
   parent: MarkerBase
   components:
     - type: Sprite
@@ -22,6 +23,7 @@
 - type: entity
   name: Pigrat Timed Spawner
   id: N14TimedSpawnerPigrat
+  categories: [ HideSpawnMenu ]
   parent: MarkerBase
   components:
     - type: Sprite
@@ -42,6 +44,7 @@
 - type: entity
   name: Radhog Timed Spawner
   id: N14TimedSpawnerRadhog
+  categories: [ HideSpawnMenu ]
   parent: MarkerBase
   components:
     - type: Sprite
@@ -62,6 +65,7 @@
 - type: entity
   parent: N14TimedSpawnerMolerat
   id: N14TimedSpawnerDogFeral
+  categories: [ HideSpawnMenu ]
   name: Feral Dog Timed Spawner
   components:
     - type: Sprite
@@ -82,6 +86,7 @@
 - type: entity
   parent: N14TimedSpawnerMolerat
   id: N14TimedSpawnerGecko
+  categories: [ HideSpawnMenu ]
   name: Gecko Timed Spawner
   components:
     - type: Sprite
@@ -102,6 +107,7 @@
 - type: entity
   parent: N14TimedSpawnerMolerat
   id: N14TimedSpawnerGeckoFire
+  categories: [ HideSpawnMenu ]
   name: Fire Gecko Timed Spawner
   components:
     - type: Sprite
@@ -122,6 +128,7 @@
 - type: entity
   parent: N14TimedSpawnerMolerat
   id: N14TimedSpawnerGeckoGolden
+  categories: [ HideSpawnMenu ]
   name: Golden Gecko Timed Spawner
   components:
     - type: Sprite
@@ -142,6 +149,7 @@
 - type: entity
   parent: N14TimedSpawnerMolerat
   id: N14TimedSpawnerNightstalkerCub
+  categories: [ HideSpawnMenu ]
   name: Nightstalker Cub Timed Spawner
   components:
     - type: Sprite
@@ -162,6 +170,7 @@
 - type: entity
   parent: N14TimedSpawnerMolerat
   id: N14TimedSpawnerNightstalker
+  categories: [ HideSpawnMenu ]
   name: Nightstalker Timed Spawner
   components:
     - type: Sprite
@@ -182,7 +191,8 @@
 - type: entity
   parent: N14TimedSpawnerMolerat
   id: N14TimedSpawnerYaoguai
-  name: Yaoguai Timed Spawner
+  categories: [ HideSpawnMenu ]
+  name: Yao Guai Timed Spawner
   components:
     - type: Sprite
       layers:
@@ -203,6 +213,7 @@
 - type: entity
   parent: N14TimedSpawnerMolerat
   id: N14TimedSpawnerDeathclaw
+  categories: [ HideSpawnMenu ]
   name: Deathclaw Timed Spawner
   components:
     - type: Sprite
@@ -223,6 +234,7 @@
 - type: entity
   parent: N14TimedSpawnerMolerat
   id: N14TimedSpawnerDeathclawAlbino
+  categories: [ HideSpawnMenu ]
   name: Deathclaw Albino Timed Spawner
   components:
     - type: Sprite
@@ -243,6 +255,7 @@
 - type: entity
   parent: N14TimedSpawnerMolerat
   id: N14TimedSpawnerDeathclawMetal
+  categories: [ HideSpawnMenu ]
   name: Deathclaw Metal Timed Spawner
   components:
     - type: Sprite
@@ -264,6 +277,7 @@
 - type: entity
   parent: N14TimedSpawnerMolerat
   id: N14TimedSpawnerBloatfly
+  categories: [ HideSpawnMenu ]
   name: Bloatfly Timed Spawner
   components:
     - type: Sprite
@@ -284,6 +298,7 @@
 - type: entity
   parent: N14TimedSpawnerMolerat
   id: N14TimedSpawnerAnt
+  categories: [ HideSpawnMenu ]
   name: Ant Timed Spawner
   components:
     - type: Sprite
@@ -304,6 +319,7 @@
 - type: entity
   parent: N14TimedSpawnerMolerat
   id: N14TimedSpawnerFireant
+  categories: [ HideSpawnMenu ]
   name: Fire Ant Timed Spawner
   components:
     - type: Sprite
@@ -319,11 +335,12 @@
       chance: 0.75
       intervalSeconds: 2400
       minimumEntitiesSpawned: 1
-      maximumEntitiesSpawned: 2 
+      maximumEntitiesSpawned: 2
 
 - type: entity
   parent: N14TimedSpawnerMolerat
   id: N14TimedSpawnerRadroach
+  categories: [ HideSpawnMenu ]
   name: Radroach Timed Spawner
   components:
     - type: Sprite
@@ -344,6 +361,7 @@
 - type: entity
   parent: N14TimedSpawnerMolerat
   id: N14TimedSpawnerRadscorpion
+  categories: [ HideSpawnMenu ]
   name: Radscorpion Timed Spawner
   components:
     - type: Sprite
@@ -364,6 +382,7 @@
 - type: entity
   parent: N14TimedSpawnerMolerat
   id: N14TimedSpawnerRadscorpionBark
+  categories: [ HideSpawnMenu ]
   name: Radscorpion Bark Timed Spawner
   components:
     - type: Sprite
@@ -985,10 +1004,11 @@
       minimumEntitiesSpawned: 1
       maximumEntitiesSpawned: 3
 
-# Domesticated / Friendly    
+# Domesticated / Friendly
 - type: entity
   parent: N14TimedSpawnerMolerat
   id: N14TimedSpawnerRadstag
+  categories: [ HideSpawnMenu ]
   name: Radstag Timed Spawner
   components:
     - type: Sprite
@@ -1009,6 +1029,7 @@
 - type: entity
   parent: N14TimedSpawnerMolerat
   id: N14TimedSpawnerChicken
+  categories: [ HideSpawnMenu ]
   name: Chicken Timed Spawner
   components:
     - type: Sprite

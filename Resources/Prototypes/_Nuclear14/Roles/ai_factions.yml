@@ -9,6 +9,8 @@
 
 - type: npcFaction
   id: BrotherhoodMidwest
+  friendly:
+  - BrotherhoodMidwestSecureArea
   hostile:
   - WastelandInsect
   - WastelandAnimal
@@ -18,15 +20,23 @@
 
 - type: npcFaction
   id: BrotherhoodMidwestSecureArea
+  friendly:
+  - BrotherhoodMidwest
   hostile:
   - Wastelander
   - BrotherhoodWashington
+  - BrotherhoodWashingtonSecureArea
   - CaravanCompany
+  - CaravanCompanySecureArea
   - NCR
+  - NCRSecureArea
   - Rangers
   - Townsfolk
+  - TownsfolkSecureArea
   - Tribal
+  - TribalSecureArea
   - Vault
+  - VaultSecureArea
   - Zetan
   - WastelandAnimal
   - WastelandInsect
@@ -38,6 +48,8 @@
 
 - type: npcFaction
   id: BrotherhoodWashington
+  friendly:
+  - BrotherhoodWashingtonSecureArea
   hostile:
   - WastelandInsect
   - WastelandAnimal
@@ -48,15 +60,23 @@
 
 - type: npcFaction
   id: BrotherhoodWashingtonSecureArea
+  friendly:
+  - BrotherhoodWashington
   hostile:
   - Wastelander
   - BrotherhoodMidwest
+  - BrotherhoodMidwestSecureArea
   - CaravanCompany
+  - CaravanCompanySecureArea
   - NCR
+  - NCRSecureArea
   - Rangers
   - Townsfolk
+  - TownsfolkSecureArea
   - Tribal
+  - TribalSecureArea
   - Vault
+  - VaultSecureArea
   - Zetan
   - WastelandAnimal
   - WastelandInsect
@@ -68,6 +88,8 @@
 
 - type: npcFaction
   id: CaravanCompany
+  friendly:
+  - CaravanCompanySecureArea
   hostile:
   - WastelandInsect
   - WastelandAnimal
@@ -76,15 +98,23 @@
 
 - type: npcFaction
   id: CaravanCompanySecureArea
+  friendly:
+  - CaravanCompany
   hostile:
   - Wastelander
   - BrotherhoodMidwest
+  - BrotherhoodMidwestSecureArea
   - BrotherhoodWashington
+  - BrotherhoodWashingtonSecureArea
   - NCR
+  - NCRSecureArea
   - Rangers
   - Townsfolk
+  - TownsfolkSecureArea
   - Tribal
+  - TribalSecureArea
   - Vault
+  - VaultSecureArea
   - Zetan
   - WastelandAnimal
   - WastelandInsect
@@ -96,6 +126,8 @@
 
 - type: npcFaction
   id: NCR
+  friendly:
+  - NCRSecureArea
   hostile:
   - WastelandInsect
   - WastelandAnimal
@@ -105,14 +137,22 @@
 
 - type: npcFaction
   id: NCRSecureArea
+  friendly:
+  - NCR
   hostile:
   - Wastelander
   - BrotherhoodMidwest
+  - BrotherhoodMidwestSecureArea
   - BrotherhoodWashington
+  - BrotherhoodWashingtonSecureArea
   - CaravanCompany
+  - CaravanCompanySecureArea
   - Townsfolk
+  - TownsfolkSecureArea
   - Tribal
+  - TribalSecureArea
   - Vault
+  - VaultSecureArea
   - Zetan
   - WastelandAnimal
   - WastelandInsect
@@ -135,7 +175,33 @@
 
 - type: npcFaction
   id: Townsfolk
+  friendly:
+  - TownsfolkSecureArea
   hostile:
+  - WastelandAnimal
+  - WastelandInsect
+  - Raider
+  - HostileRobot
+  - Feral
+
+- type: npcFaction
+  id: TownsfolkSecureArea
+  friendly:
+  - Townsfolk
+  hostile:
+  - Wastelander
+  - BrotherhoodMidwest
+  - BrotherhoodWashington
+  - BrotherhoodMidwestSecureArea
+  - BrotherhoodWashingtonSecureArea
+  - CaravanCompany
+  - CaravanCompanySecureArea
+  - Rangers
+  - Tribal
+  - TribalSecureArea
+  - Vault
+  - VaultSecureArea
+  - Zetan
   - WastelandAnimal
   - WastelandInsect
   - Raider
@@ -144,6 +210,8 @@
 
 - type: npcFaction
   id: Tribal
+  friendly:
+  - TribalSecureArea
   hostile:
   - WastelandAnimal
   - WastelandInsect
@@ -152,7 +220,33 @@
   - Feral
 
 - type: npcFaction
+  id: TribalSecureArea
+  friendly:
+  - Tribal
+  hostile:
+  - Wastelander
+  - BrotherhoodMidwest
+  - BrotherhoodWashington
+  - BrotherhoodMidwestSecureArea
+  - BrotherhoodWashingtonSecureArea
+  - CaravanCompany
+  - CaravanCompanySecureArea
+  - Rangers
+  - Townsfolk
+  - TownsfolkSecureArea
+  - Vault
+  - VaultSecureArea
+  - Zetan
+  - WastelandAnimal
+  - WastelandInsect
+  - Raider
+  - HostileRobot
+  - Feral
+
+- type: npcFaction
   id: Vault
+  friendly:
+  - VaultSecureArea
   hostile:
   - Zetan
   - WastelandAnimal
@@ -163,15 +257,21 @@
 
 - type: npcFaction
   id: VaultSecureArea
+  friendly:
+  - Vault
   hostile:
   - Wastelander
   - BrotherhoodMidwest
   - BrotherhoodWashington
+  - BrotherhoodMidwestSecureArea
+  - BrotherhoodWashingtonSecureArea
   - CaravanCompany
-  - NCR
+  - CaravanCompanySecureArea
   - Rangers
   - Townsfolk
+  - TownsfolkSecureArea
   - Tribal
+  - TribalSecureArea
   - Zetan
   - WastelandAnimal
   - WastelandInsect
@@ -191,8 +291,10 @@
   - NCR
   - Rangers
   - Townsfolk
+  - TownsfolkSecureArea
   - Tribal
   - Vault
+  - VaultSecureArea
   - WastelandAnimal
   - WastelandInsect
   - Raider
@@ -210,11 +312,16 @@
   - BrotherhoodMidwestSecureArea # turrets
   - BrotherhoodWashingtonSecureArea # turrets
   - CaravanCompany
+  - CaravanCompanySecureArea
   - NCR
+  - NCRSecureArea
   - Rangers
   - Townsfolk
+  - TownsfolkSecureArea
   - Tribal
+  - TribalSecureArea
   - Vault
+  - VaultSecureArea
   - WastelandInsect
   - WastelandAnimal
   - Zetan
@@ -232,11 +339,16 @@
   - BrotherhoodMidwestSecureArea # turrets
   - BrotherhoodWashingtonSecureArea # turrets
   - CaravanCompany
+  - CaravanCompanySecureArea
   - NCR
+  - NCRSecureArea
   - Rangers
   - Townsfolk
+  - TownsfolkSecureArea
   - Tribal
+  - TribalSecureArea
   - Vault
+  - VaultSecureArea
   - WastelandInsect
   - WastelandAnimal
   - Zetan
@@ -254,11 +366,16 @@
   - BrotherhoodMidwestSecureArea # turrets
   - BrotherhoodWashingtonSecureArea # turrets
   - CaravanCompany
+  - CaravanCompanySecureArea
   - NCR
+  - NCRSecureArea
   - Rangers
   - Townsfolk
+  - TownsfolkSecureArea
   - Tribal
+  - TribalSecureArea
   - Vault
+  - VaultSecureArea
   - WastelandInsect
   - Raider
   - HostileRobot
@@ -275,11 +392,16 @@
   - BrotherhoodMidwestSecureArea # turrets
   - BrotherhoodWashingtonSecureArea # turrets
   - CaravanCompany
+  - CaravanCompanySecureArea
   - NCR
+  - NCRSecureArea
   - Rangers
   - Townsfolk
+  - TownsfolkSecureArea
   - Tribal
+  - TribalSecureArea
   - Vault
+  - VaultSecureArea
   - WastelandAnimal
   - Raider
   - HostileRobot
@@ -296,11 +418,16 @@
   - BrotherhoodMidwestSecureArea
   - BrotherhoodWashingtonSecureArea
   - CaravanCompany
+  - CaravanCompanySecureArea
   - NCR
+  - NCRSecureArea
   - Rangers
   - Townsfolk
+  - TownsfolkSecureArea
   - Tribal
+  - TribalSecureArea
   - Vault
+  - VaultSecureArea
   - WastelandInsect
   - Raider
   - WastelandAnimal

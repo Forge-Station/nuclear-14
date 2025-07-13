@@ -131,6 +131,8 @@
       - MagazineBox556
       - N14MagazineMinigun5mm
       - Magazine762Rifle
+      - Magazine762AmmoShort
+      - Magazine762AmmoBelt
       - MagazineBox762
       - SpeedLoader9
       - N14MagazinePistol9mm
@@ -159,6 +161,7 @@
       - Magazine45SubMachineGun
       - MagazineBox45
       - Magazine308Rifle
+      - Magazine308RifleLong
       - ClipMagazine308Rifle
       - MagazineBox308
       - SpeedLoader45-70
@@ -267,6 +270,8 @@
       #Misc
       - N14FlashlightLantern
       - N14GlowstickRed
+      - N14CleanGauze1
+      - DoorElectronics
 
 - type: entity
   parent: BaseStructure
@@ -564,7 +569,7 @@
 # ID Printer
 - type: entity
   parent: BaseLathe
-  id: N14WorkbenchIDPrinter
+  id: N14WorkbenchIDPrinter # Circuit imprinter parent of this
   description: An ID printer.
   name: ID Printer
   abstract: true # Base off of this per faction.

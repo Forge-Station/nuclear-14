@@ -1,6 +1,8 @@
 - type: job
   id: Townsperson
   setPreference: true
+  overrideConsoleVisibility: false
+  canBeAntag: false
   name: job-name-townsperson
   description: job-description-townsperson
   playTimeTracker: Townsperson
@@ -21,6 +23,7 @@
     components:
       - type: NpcFactionMember
         factions:
+          - Wastelander
           - Townsfolk
 
 - type: startingGear

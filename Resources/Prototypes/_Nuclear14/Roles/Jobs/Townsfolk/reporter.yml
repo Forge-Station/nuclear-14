@@ -1,6 +1,8 @@
 - type: job
   id: WastelandReporter
   setPreference: true
+  overrideConsoleVisibility: false
+  canBeAntag: false
   name: job-name-townreporter
   description: job-description-townreporter
   playTimeTracker: WastelandReporter
@@ -23,6 +25,7 @@
     components:
       - type: NpcFactionMember
         factions:
+          - Wastelander
           - Townsfolk
 
 - type: startingGear

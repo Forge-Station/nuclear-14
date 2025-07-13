@@ -1,6 +1,8 @@
 - type: job
   id: CaravanLeader
   setPreference: true
+  overrideConsoleVisibility: false
+  canBeAntag: false
   name: job-name-caravan-leader
   description: job-description-caravan-leader
   playTimeTracker: CaravanLeader
@@ -25,6 +27,7 @@
     components:
       - type: NpcFactionMember
         factions:
+          - Wastelander
           - CaravanCompany
       - type: CPRTraining
 

@@ -1,6 +1,8 @@
 - type: job
-  id: TownSheriff
+  id: TownSheriff # Renamed to "Marshal", don't touch the prototype ID
   setPreference: true
+  overrideConsoleVisibility: false
+  canBeAntag: false
   name: job-name-townsheriff
   description: job-description-townsheriff
   playTimeTracker: TownSheriff
@@ -29,6 +31,7 @@
     components:
       - type: NpcFactionMember
         factions:
+          - Wastelander
           - Townsfolk
 
 #- type: startingGear
