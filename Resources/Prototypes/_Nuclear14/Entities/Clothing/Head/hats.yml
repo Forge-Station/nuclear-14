@@ -276,7 +276,6 @@
   id: N14ClothingHeadHatEnclaveIntel
   name: enclave recon beret
   description: A sharp-looking beret worn by Enclave intelligence officers.
-  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Nuclear14/Clothing/Head/FalloutHats/enclaveintel.rsi
@@ -290,7 +289,6 @@
   id: N14ClothingHeadHatEnclaveOfficer
   name: enclave officer cap
   description: A decorative looking cap worn by Enclave officers.
-  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Nuclear14/Clothing/Head/FalloutHats/enclaveofficer.rsi
@@ -304,7 +302,6 @@
   id: N14ClothingHeadHatEnclavePeacekeeperCap
   name: enclave peacekeeper cap
   description: A military cap worn by Enclave Peacekeepers.
-  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Nuclear14/Clothing/Head/FalloutHats/enclavepeacekeeper.rsi
@@ -318,7 +315,6 @@
   id: N14ClothingHeadHatEnclaveScientist
   name: enclave scientist beret
   description: A blue beret worn by Enclave Scientists.
-  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Nuclear14/Clothing/Head/FalloutHats/enclavescience.rsi

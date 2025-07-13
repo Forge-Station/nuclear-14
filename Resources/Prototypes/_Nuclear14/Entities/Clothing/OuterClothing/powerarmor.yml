@@ -228,7 +228,6 @@
   id: N14ClothingOuterPowerArmorAdvanced2Hellfire
   name: hellfire power armor
   description: A deep black suit of Enclave-manufactured heavy power armor based on pre-war designs such as the T-51 and improving off of data gathered by post-war designs such as the X-01. Most commonly fielded on the East Coast, no suit rivals its strength.
-  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/hellfire.rsi
@@ -283,7 +282,7 @@
         type: ToggleableClothingBoundUserInterface
   - type: ToggleableClothing
     clothingPrototypes:
-      head: N14ClothingHeadHelmetPowerArmorHellfire
+      head: N14ClothingHeadHelmetPowerArmorT45 # Forge-Change
       gloves: N14ClothingPAGauntletsDark
       shoes: N14ClothingPABootsDark
       back: N14ClothingPowerSystemsBack

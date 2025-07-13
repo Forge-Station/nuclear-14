@@ -161,4 +161,9 @@ ent-N14ClothingOuterDeanLegionnaireVeteranArmor = {ent-N14ClothingOuterDeanLegio
     .desc = {ent-N14ClothingOuterDeanLegionnairePrimeArmor.desc}
 ent-N14ClothingOuterDeanLegionnaireRecruitArmor = {ent-N14ClothingOuterDeanLegionnairePrimeArmor}
     .desc = {ent-N14ClothingOuterDeanLegionnairePrimeArmor.desc}
-
+ent-N14ClothingOuterMBoSPaladinArmor = броня паладина СЗБС
+    .desc = Прочный доспех, используемый паладинами Среднезападного Братства. Кажется, он был выкован искусными мастерами специально для ВОЙНЫ!
+ent-N14ClothingOuterTownGuardLight = броня стражи
+    .desc = Старый кусок брони или, возможно, реплика чего либо. Всего лишь листы металла, скреплённые кожаными ремнями, но удивительно прочная вещь.
+ent-N14ClothingOuterTownGuardRiot = { ent-N14ClothingOuterTownGuardLight }
+    .desc = Старый кусок брони или, возможно, реплика чего либо, удивительно прочен. Дополнительные пластины на левом предплечье обеспечивают лучшую защиту в рукопашном бою.
