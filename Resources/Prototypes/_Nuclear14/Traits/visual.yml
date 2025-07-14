@@ -1,9 +1,9 @@
 - type: trait
   id: N14Blindness
   category: Visual
-  points: 10
+  points: 5 # Forge-Change
   requirements:
-    - !type:CharacterJobRequirement # Corvax-Change
+    - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
         - WastelandReporter

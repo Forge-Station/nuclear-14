@@ -288,6 +288,9 @@
       back: N14ClothingPowerSystemsBack
   - type: Reflect
     reflectProb: 0.075
+  - type: ClothingSpeedModifier # Forge-Change
+    walkModifier: 0.15
+    sprintModifier: 0.15
 
 - type: entity
   parent: N14ClothingOuterPowerArmorT45

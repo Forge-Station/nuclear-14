@@ -24,3 +24,8 @@ ent-N14ClothingNeckTownGuardMantle = армейская плащ-накидка
     .desc = Предмет одежды, предназначенный для того, чтобы солдаты оставались относительно сухими до Великой Войны.
 ent-N14ClothingNeckCloakGhillie = маскировочный плащ
     .desc = Плащ из лесного маскировочного камуфляжа.
+ent-N14ClothingNeckTribalCloak = племенной плащ
+    .desc = Самодельный плащ местного племени. Он согреет вас в холодную зиму.
+
+ent-N14ClothingNeckTribalCloakBr = { ent-N14ClothingNeckTribalCloak }
+    .desc = Коричневый самодельный плащ местного племени. Он согреет вас в холодную зиму.

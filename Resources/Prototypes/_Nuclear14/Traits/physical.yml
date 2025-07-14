@@ -240,14 +240,14 @@
       components:
         - type: PassiveDamage
           allowedStates:
-          - Alive # Corvax-Change
+          - Alive # Forge-Change
           damageCap: 200
           damage:
             groups:
-              Brute: -0.035 # Corvax-Change
-              Burn: -0.035 # Corvax-Change
+              Brute: -0.035 # Forge-Change
+              Burn: -0.035 # Forge-Change
               Airloss: -0.035
-              Toxin: -0.015 # Corvax-Change
+              Toxin: -0.015 # Forge-Change
 
 - type: trait
   id: N14WorldChampion
