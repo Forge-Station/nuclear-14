@@ -1,12 +1,12 @@
 - type: loadout
   id: LoadoutBoSMidwestSquire
   category: Outer
-  cost: 1
+  cost: 6 # Forge-Change
   exclusive: true
   requirements:
     - !type:CharacterJobRequirement
       jobs:
-        - BoSMidSquire
+        - BoSMidPaladin # Forge-Change
     - !type:CharacterPlaytimeRequirement
       tracker: BoSMidPaladin
       min: 54000 # 15 hours veterancy unlock
@@ -29,16 +29,16 @@
     - N14ClothingHeadHatBrotherhoodMidwestHelmetRecon
 
 - type: loadout
-  id: LoadoutBoSMidwestT60
+  id: LoadoutClothingOuterMBoSSquireArmor
   category: Roles
   cost: 10
   exclusive: true
   requirements:
     - !type:CharacterJobRequirement
       jobs:
-        - BoSMidPaladin
+        - BoSMidSquire
     - !type:CharacterPlaytimeRequirement
-      tracker: BoSMidPaladin
+      tracker: BoSMidSquire
       min: 72000 # 20 hours veterancy unlock
   items:
     - N14ClothingOuterMBoSSquireArmor
@@ -46,7 +46,7 @@
 - type: loadout
   id: LoadoutBoSMidwestSeniorKnight
   category: Outer
-  cost: 1
+  cost: 6 # Forge-Change
   exclusive: true
   requirements:
     - !type:CharacterJobRequirement
