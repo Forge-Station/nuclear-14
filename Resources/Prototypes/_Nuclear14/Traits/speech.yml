@@ -18,6 +18,10 @@
       inverted: true
       departments:
         - Tribe
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRanger
+        - NCRRangerVeteran
   functions:
     - !type:TraitModifyLanguages
       languagesSpoken:

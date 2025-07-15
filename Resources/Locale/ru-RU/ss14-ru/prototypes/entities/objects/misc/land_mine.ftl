@@ -6,3 +6,5 @@ ent-LandMineModular = модульная мина
     .desc = Этот плохиш может скрывать в себе множество опасностей. Или велосипедный клаксон.
 ent-LandMineExplosive = взрывная мина
     .desc = { ent-BaseLandMine.desc }
+ent-N14LandMine = противопехотная мина
+    .desc = { ent-BaseLandMine.desc }
