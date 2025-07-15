@@ -30,8 +30,8 @@
     equipDelay: 3
     unequipDelay: 6
   - type: ClothingSpeedModifier
-    walkModifier: 0.85
-    sprintModifier: 0.85
+    walkModifier: 0.15
+    sprintModifier: 0.15
   - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorT51NCR
@@ -53,8 +53,8 @@
     equipDelay: 3
     unequipDelay: 6
   - type: ClothingSpeedModifier
-    walkModifier: 0.9
-    sprintModifier: 0.9
+    walkModifier: 0.15
+    sprintModifier: 0.15
   - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorT60NCR
@@ -76,8 +76,8 @@
     equipDelay: 3
     unequipDelay: 6
   - type: ClothingSpeedModifier
-    walkModifier: 0.870
-    sprintModifier: 0.870
+    walkModifier: 0.17
+    sprintModifier: 0.17
   - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorX01NCR

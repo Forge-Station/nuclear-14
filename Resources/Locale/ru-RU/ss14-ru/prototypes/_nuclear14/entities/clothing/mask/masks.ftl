@@ -10,3 +10,5 @@ ent-N14ClothingMaskSkirmisher = маска стрелка
     .desc = Кожаная маска со свисающей кольчугой для защиты области рта, не самая лучшая, но она неплохо защищает от острых предметов.
 ent-N14ClothingMaskWhiteBalaclava = белая балаклава
     .desc = { ent-N14ClothingMaskBrownBalaclava.desc }
+ent-N14ClothingMaskBlackBalaclava = чёрная балаклава
+    .desc = { ent-N14ClothingMaskWhiteBalaclava.desc }
