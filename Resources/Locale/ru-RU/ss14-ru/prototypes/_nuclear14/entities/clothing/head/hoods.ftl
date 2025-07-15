@@ -14,3 +14,7 @@ ent-N14ClothingHeadTribalCloakHood = капюшон племенного пла�
     .desc = Капюшон для племенного плаща.
 ent-N14ClothingHeadTribalCloakHoodBr = { ent-N14ClothingHeadTribalCloakHood }
     .desc = { ent-N14ClothingHeadTribalCloakHood.desc }
+ent-N14ClothingTribalHood = племенной капюшон
+    .desc = Большой капюшон, который носят представители племени.
+ent-N14ClothingTribalHunterHood = охотничий капюшон племени
+    .desc = Головной убор, который часто носят охотники племени.
