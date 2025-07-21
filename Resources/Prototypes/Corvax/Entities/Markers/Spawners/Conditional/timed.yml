@@ -1,0 +1,41 @@
+- type: entity
+  parent: N14TimedSpawnerMolerat
+  id: N14TimedSpawnerSwamper
+  categories: [ HideSpawnMenu ]
+  name: периодический спавнер болотника
+  components:
+    - type: Sprite
+      layers:
+        - state: blue
+        - sprite: Corvax/Mobs/Animals/swamper.rsi
+          state: swamper
+        - state: timed
+    - type: Timer
+    - type: TimedSpawner
+      prototypes:
+        - N14MobSwamper
+      chance: 0.75
+      intervalSeconds: 2400
+      minimumEntitiesSpawned: 1
+      maximumEntitiesSpawned: 2
+
+- type: entity
+  parent: N14TimedSpawnerMolerat
+  id: N14TimedSpawnerRadSwamper
+  categories: [ HideSpawnMenu ]
+  name: периодический спавнер радболотника
+  components:
+    - type: Sprite
+      layers:
+        - state: blue
+        - sprite: Corvax/Mobs/Animals/radswamper.rsi
+          state: radswamper
+        - state: timed
+    - type: Timer
+    - type: TimedSpawner
+      prototypes:
+        - N14MobRadSwamper
+      chance: 0.75
+      intervalSeconds: 2400
+      minimumEntitiesSpawned: 1
+      maximumEntitiesSpawned: 2

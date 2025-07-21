@@ -70,7 +70,7 @@
 # Swampers
 
 - type: entity
-  name: Swamper Spawner
+  name: спавнер болотника
   id: N14SpawnMobSwamper
   parent: MarkerBase
   components:
@@ -85,7 +85,7 @@
       - N14MobSwamper
 
 - type: entity
-  name: RadSwamper Spawner
+  name: спавнер радболотника
   id: N14SpawnMobRadSwamper
   parent: MarkerBase
   components:
