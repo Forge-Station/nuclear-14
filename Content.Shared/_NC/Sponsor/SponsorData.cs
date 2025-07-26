@@ -19,19 +19,19 @@ public sealed class SponsorData
         { SponsorLevel.Level1, "#6bb9f0" },
         { SponsorLevel.Level2, "#8a9eff" },
         { SponsorLevel.Level3, "#bdbe6b" },
-        { SponsorLevel.Level4, "#c7c066" },
+        { SponsorLevel.Level4, "#bdbe6b" },
         { SponsorLevel.Level5, "#ff9e2c" },
         { SponsorLevel.Level6, "#ffd700" }
     };
 
     public static readonly Dictionary<SponsorLevel, string> SponsorGhost = new()
     {
-        { SponsorLevel.Level1, "" },
-        { SponsorLevel.Level2, "" },
-        { SponsorLevel.Level3, "" },
-        { SponsorLevel.Level4, "" },
-        { SponsorLevel.Level5, "" },
-        { SponsorLevel.Level6, "" }
+        { SponsorLevel.Level1, "MobObserver" },
+        { SponsorLevel.Level2, "MobObserver" },
+        { SponsorLevel.Level3, "MobObserver" },
+        { SponsorLevel.Level4, "MobObserver" },
+        { SponsorLevel.Level5, "MobObserver" },
+        { SponsorLevel.Level6, "MobObserver" }
     };
 
     public static SponsorLevel ParseRoles(List<string> roles)
