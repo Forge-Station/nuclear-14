@@ -1,35 +1,32 @@
-﻿using System.Net;
+﻿using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Content.Server._NC.CCCvars;
 using Content.Shared._NC.DiscordAuth;
-using Lidgren.Network;
 using Robust.Server.Player;
 using Robust.Shared.Configuration;
 using Robust.Shared.Enums;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
-using Robust.Shared.Serialization;
-using Timer = Robust.Shared.Timing.Timer;
 
 namespace Content.Server._NC.Discord;
 
-public sealed class DiscordAuthManager : IPostInjectInit
+public sealed partial class DiscordAuthManager : IPostInjectInit
 {
-    [Dependency] private INetManager _net = default!;
-    [Dependency] private readonly IPlayerManager _playerManager = default!;
-    [Dependency] private readonly IConfigurationManager _configuration = default!;
+    [Dependency] private readonly IServerNetManager _netMgr = default!;
+    [Dependency] private readonly IPlayerManager _playerMgr = default!;
+    [Dependency] private readonly IConfigurationManager _cfg = default!;
 
     private ISawmill _sawmill = default!;
 
-    private string _apiUrl = default!;
-    private string _apiKey = default!;
-    private bool _enabled = true;
-
     private readonly HttpClient _httpClient = new();
-    private readonly Dictionary<NetUserId, DiscordUserData> _cachedDiscordUsers = new();
+
+    private bool _enabled = false;
+    private string _apiUrl = string.Empty;
+    private string _apiKey = string.Empty;
+    private string _discordGuild = String.Empty;
     public event EventHandler<ICommonSession>? PlayerVerified;
 
     public void PostInject()
@@ -39,34 +36,29 @@ public sealed class DiscordAuthManager : IPostInjectInit
 
     public void Initialize()
     {
-        _configuration.OnValueChanged(CCCVars.DiscordAuthEnabled, value => _enabled = value, true);
-        _configuration.OnValueChanged(CCCVars.DiscordApiUrl, (value) => _apiUrl = value, true);
-        _configuration.OnValueChanged(CCCVars.ApiKey, (value) => _apiKey = value, true);
-        _sawmill = Logger.GetSawmill("discord_auth");
-        _net.RegisterNetMessage<MsgDiscordAuthCheck>(OnAuthCheck);
-        _net.Disconnect += OnDisconnect;
-        _playerManager.PlayerStatusChanged += OnPlayerStatusChanged;
-        PlayerVerified += OnPlayerVerified;
+        _sawmill = Logger.GetSawmill("discordAuth");
+
+        _cfg.OnValueChanged(CCCVars.DiscordAuthEnabled, v => _enabled = v, true);
+        _cfg.OnValueChanged(CCCVars.DiscordApiUrl, v => _apiUrl = v, true);
+        _cfg.OnValueChanged(CCCVars.ApiKey, v => _apiKey = v, true);
+        _cfg.OnValueChanged(CCCVars.DiscordGuildID, v => _discordGuild = v, true);
+
+        _netMgr.RegisterNetMessage<MsgDiscordAuthRequired>();
+        _netMgr.RegisterNetMessage<MsgDiscordAuthCheck>(OnAuthCheck);
+
+        _playerMgr.PlayerStatusChanged += OnPlayerStatusChanged;
+
+        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _apiKey);
     }
 
-    private void OnPlayerVerified(object? sender, ICommonSession e)
-    {
-        Timer.Spawn(0, () => _playerManager.JoinGame(e));
-    }
-
-    private void OnDisconnect(object? sender, NetDisconnectedArgs e)
-    {
-        _cachedDiscordUsers.Remove(e.Channel.UserId);
-    }
 
     private async void OnAuthCheck(MsgDiscordAuthCheck msg)
     {
         var data = await IsVerified(msg.MsgChannel.UserId);
-        if (data is null)
+        if (!data.Status)
             return;
 
-        var session = _playerManager.GetSessionById(msg.MsgChannel.UserId);
-        _cachedDiscordUsers.TryAdd(session.UserId, data);
+        var session = _playerMgr.GetSessionById(msg.MsgChannel.UserId);
         PlayerVerified?.Invoke(this, session);
     }
 
@@ -81,49 +73,99 @@ public sealed class DiscordAuthManager : IPostInjectInit
             return;
         }
 
+
         var data = await IsVerified(args.Session.UserId);
-        if (data is not null)
+        if (data.Status && data.UserData is not null)
         {
-            _cachedDiscordUsers.TryAdd(args.Session.UserId, data);
             PlayerVerified?.Invoke(this, args.Session);
             return;
         }
 
         var link = await GenerateLink(args.Session.UserId);
-        var message = new MsgDiscordAuthRequired() {Link = link};
+        var message = new MsgDiscordAuthRequired
+        {
+            Link = link ?? "",
+            ErrorMessage = data.ErrorMessage ?? "",
+        };
         args.Session.Channel.SendMessage(message);
     }
 
-    public async Task<DiscordUserData?> IsVerified(NetUserId userId, CancellationToken cancel = default)
+    public async Task<DiscordData> IsVerified(NetUserId userId, CancellationToken cancel = default)
     {
         _sawmill.Debug($"Player {userId} check Discord verification");
 
-        var requestUrl = $"{_apiUrl}/check?userid={userId}&api_token={_apiKey}";
-        var response = await _httpClient.GetAsync(requestUrl, cancel);
-        if (!response.IsSuccessStatusCode)
-            return null;
-        var discordData = await response.Content.ReadFromJsonAsync<DiscordUserData>(cancel);
+        var requestUrl = $"{_apiUrl}/uuid?method=uid&id={userId}";
+        var request = new HttpRequestMessage(HttpMethod.Get, requestUrl);
 
-        return discordData;
+        // try catch block to catch HttpRequestExceptions due to remote service unavailability
+        try
+        {
+            var response = await _httpClient.SendAsync(request, cancel);
+            if (!response.IsSuccessStatusCode)
+                return UnauthorizedErrorData();
+
+            var discordUuid = await response.Content.ReadFromJsonAsync<DiscordUuidResponse>(cancel);
+
+            var isInGuild = await CheckGuild(userId, cancel);
+            if (!isInGuild)
+                return NotInGuildErrorData();
+
+            if (discordUuid is null)
+                return EmptyResponseErrorData();
+
+            return new DiscordData(true, new DiscordUserData(userId, discordUuid.DiscordId));
+        }
+        catch (HttpRequestException)
+        {
+            _sawmill.Error("Remote auth service is unreachable. Check if its online!");
+            return ServiceUnreachableErrorData();
+        }
+        catch (Exception e)
+        {
+            _sawmill.Error($"Unexpected error verifying user via auth service. Error: {e.Message}. Stack: \n{e.StackTrace}");
+            return UnexpectedErrorData();
+        }
     }
 
-    public async Task<string> GenerateLink(NetUserId userId, CancellationToken cancel = default)
+    private async Task<bool> CheckGuild(NetUserId userId, CancellationToken cancel = default)
+    {
+        var requestUrl = $"{_apiUrl}/guilds?method=uid&id={userId}";
+        var request = new HttpRequestMessage(HttpMethod.Get, requestUrl);
+        var response = await _httpClient.SendAsync(request, cancel);
+        if (!response.IsSuccessStatusCode)
+            return false;
+
+        var guilds = await response.Content.ReadFromJsonAsync<DiscordGuildsResponse>(cancel);
+        if (guilds is null)
+            return false;
+
+        return guilds.Guilds.Any(guild => guild.Id == _discordGuild);
+    }
+
+    public async Task<string?> GenerateLink(NetUserId userId, CancellationToken cancel = default)
     {
         _sawmill.Debug($"Generating link for {userId}");
-        var requestUrl = $"{_apiUrl}/link?userid={userId}&api_token={_apiKey}";
-        var response = await _httpClient.GetAsync(requestUrl, cancel);
-        var link = await response.Content.ReadFromJsonAsync<DiscordLinkResponse>(cancel);
-        return link!.Link;
+        var requestUrl = $"{_apiUrl}/link?uid={userId}";
+
+        // try catch block to catch HttpRequestExceptions due to remote service unavailability
+        try
+        {
+            var response = await _httpClient.GetAsync(requestUrl, cancel);
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            var link = await response.Content.ReadFromJsonAsync<DiscordLinkResponse>(cancel);
+            return link!.Link;
+        }
+        catch (HttpRequestException)
+        {
+            _sawmill.Error("Remote auth service is unreachable. Check if its online!");
+            return null;
+        }
+        catch (Exception e)
+        {
+            _sawmill.Error($"Unexpected error verifying user via auth service. Error: {e.Message}. Stack: \n{e.StackTrace}");
+            return null;
+        }
     }
-}
-
-public sealed class DiscordUserData()
-{
-    public NetUserId UserId { get; set; }
-    public string DiscordId { get; set; } = default!;
-}
-
-public sealed class DiscordLinkResponse()
-{
-    public string Link { get; set; } = default!;
 }
