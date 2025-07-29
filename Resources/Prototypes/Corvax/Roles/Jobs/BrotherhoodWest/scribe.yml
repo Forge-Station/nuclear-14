@@ -30,10 +30,10 @@
 - type: startingGear
   id: BoSWestScribeGear
   equipment:
-    jumpsuit: N14ClothingUniformJumpsuitBOSScribe
+    jumpsuit: N14ClothingUniformJumpsuitBOSWestScribe
     back: N14ClothingBackpackSatchelMilitary
     shoes: N14ClothingBootsLeather
-    # pocket1: NCRBoSMidwestScribekits
+    pocket1: BoSMidwestScribeKits
     id: N14IDBrotherhoodWestHolotag
     ears: N14ClothingHeadsetBOSWest
   storage:
