@@ -25,7 +25,7 @@
     - belt
     - suitStorage
   - type: StaticPrice
-    price: 30
+    price: 8 # Forge-Change
 
 - type: entity
   name: tribal club

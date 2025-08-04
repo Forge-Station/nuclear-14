@@ -14,7 +14,7 @@
     - !type:CharacterOverallTimeRequirement
       min: 7200
   startingGear: CaravanTraderGear
-  icon: "JobIconCaravanTrader" # Corvax-Change
+  icon: "JobIconCaravanTrader" # Forge-Change
   supervisors: job-supervisors-caravan
   alwaysUseSpawner: true
   access:
@@ -34,15 +34,15 @@
   equipment:
     head: N14ClothingHeadHatCaravanUniform
     jumpsuit: N14ClothingUniformJumpsuitCaravanShirt
-    back: N14ClothingBackpackHiking # Corvax-Change
+    back: N14ClothingBackpackHiking # Forge-Change
     shoes: N14ClothingShoesBrown
     id: N14IDPassportCaravanTrader
     outerClothing: ClothingOuterVest
-    suitstorage: N14WeaponSMG45 # Corvax-Change
+    suitstorage: N14WeaponSMG45 # Forge-Change
   innerClothingSkirt: N14ClothingUniformJumpsuitTrader #placeholder
   satchel: N14ClothingBackpackSatchelCaravanFilled
   duffelbag: N14ClothingBackpackDuffelCaravanFilled
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledWastelander
     - Magazine45SubMachineGun

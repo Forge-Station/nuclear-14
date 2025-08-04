@@ -1,0 +1,82 @@
+- type: entity
+  name: M7 Spear Rifle Scope
+  parent: N14WeaponRifleBase
+  id: N14WeaponRifleM7SpearScope
+  description: Prototype of a next-generation rifle that never made it into service with the US Army. Only a few units were delivered for special operations testing just days before the Great War began. Finding one in the wasteland is a real jackpot. It uses a unique caliber, so finding ammunition for it is an even greater stroke of luck.
+  suffix: DO NOT SPAWN
+  components:
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Guns/Rifles/m7spearscope.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Guns/Rifles/m7spearscope.rsi
+    layers:
+      - state: base
+        map: ["enum.GunVisualLayers.Base"]
+      - state: mag-0
+        map: ["enum.GunVisualLayers.Mag"]
+  - type: Gun
+    minAngle: 24
+    maxAngle: 45
+    angleIncrease: 4
+    angleDecay: 12
+    fireRate: 4.1
+    projectilespeed: 40
+    soundGunshot:
+      collection: N14PistolSpyGunshot
+    selectedMode: Fullauto
+    availableModes:
+    - Fullauto
+    - SemiAuto
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Magazine
+        startingItem: Magazine68Rifle
+        insertSound: /Audio/Weapons/Guns/MagIn/ltrifle_magin.ogg
+        ejectSound: /Audio/Weapons/Guns/MagOut/ltrifle_magout.ogg
+        priority: 2
+        whitelist:
+          tags:
+            - N14Magazine68Rifle
+      gun_chamber:
+        name: Chamber
+        startingItem: N14Cartridge68Rifle
+        priority: 1
+        whitelist:
+          tags:
+            - N14Cartridge68Rifle
+  - type: StaticPrice
+    price: 100
+
+- type: entity
+  name: M7 Spear Rifle 
+  parent: N14WeaponRifleM7SpearScope
+  id: N14WeaponRifleM7Spear
+  description: Prototype of a next-generation rifle that never made it into service with the US Army. Only a few units were delivered for special operations testing just days before the Great War began. Finding one in the wasteland is a real jackpot. It uses a unique caliber, so finding ammunition for it is an even greater stroke of luck.
+  suffix: DO NOT SPAWN
+  components:
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Guns/Rifles/m7spear.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Guns/Rifles/m7spear.rsi
+    layers:
+      - state: base
+        map: ["enum.GunVisualLayers.Base"]
+      - state: mag-0
+        map: ["enum.GunVisualLayers.Mag"]
+  - type: Gun
+    minAngle: 24
+    maxAngle: 45
+    angleIncrease: 4
+    angleDecay: 16
+    fireRate: 4.1
+    soundGunshot:
+      collection: N14PistolSpyGunshot

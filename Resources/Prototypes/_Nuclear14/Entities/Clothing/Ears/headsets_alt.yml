@@ -159,7 +159,6 @@
   parent: N14ClothingHeadsetAlt
   id: N14ClothingHeadsetEnclave
   name: enclave radio earpiece
-  categories: [ HideSpawnMenu ]
   components:
   - type: ContainerFill
     containers:

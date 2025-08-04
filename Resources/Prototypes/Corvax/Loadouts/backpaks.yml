@@ -200,3 +200,24 @@
     - N14ClothingBackpackVaultRed
   functions:
   - !type:LoadoutFiledStorage
+
+- type: loadout
+  id: N14ClothingBackpackRadioNCR
+  category: Backpacks
+  cost: 3
+  exclusive: true
+  customName: false
+  customDescription: false
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRSGT
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRNCO
+      min: 36000 # 600 minutes
+    - !type:CharacterItemGroupRequirement
+      group: N14LodaoutBags
+  items:
+    - N14ClothingBackpackRadioNCR
+  functions:
+  - !type:LoadoutFiledStorage

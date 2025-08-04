@@ -22,7 +22,7 @@ public sealed partial class ArmorComponent : Component
     /// to determine the monetary value of the armor
     /// </summary>
     [DataField, AutoNetworkedField]
-    public float PriceMultiplier = 1;
+    public float PriceMultiplier = 0; // Forge-Change
 }
 
 /// <summary>

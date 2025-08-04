@@ -40,6 +40,8 @@
   - type: Clothing
     sprite: _Nuclear14/Clothing/Shoes/FalloutBoots/combatbootsmk2.rsi
   - type: NoSlip
+  - type: ClothingSlowOnDamageModifier # Forge-Add
+    modifier: 0.85
 
 - type: entity
   parent: ClothingShoesBase

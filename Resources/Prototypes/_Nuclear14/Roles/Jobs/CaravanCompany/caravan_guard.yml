@@ -14,10 +14,11 @@
     - !type:CharacterOverallTimeRequirement
       min: 3600
   startingGear: CaravanGuardGear
-  icon: "JobIconCaravanGuard" # Corvax-Change
+  icon: "JobIconCaravanGuard" # Forge-Change
   supervisors: job-supervisors-caravan
   alwaysUseSpawner: true
   access:
+  - CaravanCompanyTrader # Forge-Add
   - CaravanCompanyGuard
   - Orders # DeltaV - Orders, see Resources/Prototypes/DeltaV/Access/cargo.yml
   special:
@@ -34,7 +35,7 @@
     head: N14ClothingHeadHatCaravanUniform
     jumpsuit: N14ClothingUniformJumpsuitCaravanShirt
     gloves: N14ClothingHandsGlovesBlackBiker
-    back: N14ClothingBackpackHiking # Corvax-Change
+    back: N14ClothingBackpackHiking # Forge-Change
     shoes: N14ClothingBootsLeather
     id: N14IDPassportCaravan
     pocket2: N14WeaponPistol10mm
@@ -42,7 +43,7 @@
     suitstorage: N14WeaponRifle556R91
   satchel: N14ClothingBackpackSatchelCaravanFilled
   duffelbag: N14ClothingBackpackDuffelCaravanFilled
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledWastelander
     - Magazine556Rifle

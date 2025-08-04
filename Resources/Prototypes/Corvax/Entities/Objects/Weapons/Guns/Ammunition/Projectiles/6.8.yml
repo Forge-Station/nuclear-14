@@ -1,0 +1,10 @@
+- type: entity
+  id: N14Bullet68
+  name: bullet (6.8mm)
+  parent: BaseBullet
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Projectile
+    damage:
+      types:
+        Piercing: 26

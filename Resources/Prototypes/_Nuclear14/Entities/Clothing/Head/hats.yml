@@ -626,7 +626,7 @@
         Slash: 0.9
         Piercing: 0.9
         Heat: 0.9
-    priceMultiplier: 0.5
+    priceMultiplier: 0.1
 
 # Craftable
 - type: entity

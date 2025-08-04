@@ -1,0 +1,40 @@
+- type: entity
+  id: BaseMagazine68Rifle
+  name: "magazine (6.8mm)"
+  parent: BaseItem
+  abstract: true
+  components:
+  - type: Tag
+    tags:
+      - N14Magazine68Rifle
+  - type: BallisticAmmoProvider
+    mayTransfer: true
+    whitelist:
+      tags:
+        - N14Cartridge68Rifle
+    proto: N14Cartridge68Rifle
+    capacity: 20
+  - type: ContainerContainer
+    containers:
+      ballistic-ammo: !type:Container
+  - type: Sprite
+    netsync: false
+    sprite: Corvax/Objects/Weapons/Guns/Ammunition/Magazines/6.8/m7mag.rsi
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: mag-1
+      map: ["enum.GunVisualLayers.Mag"]
+  - type: MagazineVisuals
+    magState: mag
+    steps: 2
+    zeroVisible: false
+  - type: Appearance
+
+- type: entity
+  id: Magazine68Rifle
+  name: "magazine (6.8mm)"
+  parent: BaseMagazine68Rifle
+  components:
+  - type: BallisticAmmoProvider
+    proto: N14Cartridge68Rifle

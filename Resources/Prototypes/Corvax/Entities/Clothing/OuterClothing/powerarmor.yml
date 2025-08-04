@@ -123,3 +123,6 @@
       gloves: N14ClothingPAGauntlets
       shoes: N14ClothingPABoots
       back: N14ClothingPowerSystemsBack
+  - type: Storage
+    grid:
+    - 0,0,2,1

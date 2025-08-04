@@ -1,0 +1,23 @@
+- type: entity
+  id: N14Cartridge68Rifle
+  name: cartridge (6.8mm)
+  parent: BaseCartridgeLightRifle
+  components:
+  - type: CartridgeAmmo
+    proto: N14Bullet68
+    soundEject:
+      collection: N14RifleCasingEject
+  - type: Tag
+    tags:
+      - Cartridge
+      - N14Cartridge68Rifle
+  - type: EmitSoundOnLand
+    sound:
+      collection: N14RifleCasingEject
+      params:
+        volume: -1
+  - type: EmitSoundOnCollide
+    sound:
+      collection: N14RifleCasingEject
+      params:
+        volume: -1

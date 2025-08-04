@@ -55,7 +55,7 @@
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/ross.rsi
     state: base
   product: N14CrateRedFilledRoss
-  cost: 250 # Corvax-Change
+  cost: 250 # Forge-Change
   category: Armory
   group: market
 
@@ -95,7 +95,7 @@
     sprite: _Nuclear14/Objects/Weapons/Guns/LMGs/canadianhmg.rsi
     state: base
   product: N14CrateBreakPlainFilledHMG
-  cost: 1755 # Corvax-Change
+  cost: 1755 # Forge-Change
   category: Armory
   group: market
 
@@ -105,7 +105,7 @@
     sprite: _Nuclear14/Objects/Weapons/Guns/LMGs/bren.rsi
     state: base
   product: N14CrateBreakPlainFilledBren
-  cost: 950 # Corvax-Change
+  cost: 950 # Forge-Change
   category: Armory
   group: market
 
@@ -115,7 +115,7 @@
     sprite: Objects/Weapons/Bombs/c4.rsi
     state: icon
   product: N14CrateBreakPlainFilledC4
-  cost: 500 # Corvax-Change
+  cost: 500 # Forge-Change
   category: Armory
   group: market
 
@@ -145,19 +145,19 @@
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombat.rsi
     state: icon
   product: N14CrateRedFilledMk1
-  cost: 560 # Corvax-Change
+  cost: 560 # Forge-Change
   category: Armory
   group: market
 
-- type: cargoProduct
-  id: CombatArmorMK2Crate
-  icon:
-    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatmk2.rsi
-    state: icon
-  product: N14CrateRedFilledMk2
-  cost: 845 #Corvax-Change
-  category: Armory
-  group: market
+#- type: cargoProduct
+#  id: CombatArmorMK2Crate
+#  icon:
+#    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatmk2.rsi
+#    state: icon
+#  product: N14CrateRedFilledMk2
+#  cost: 845 #Forge-Change
+#  category: Armory
+#  group: market
 
 - type: cargoProduct
   id: PoliceVestCrate
@@ -165,7 +165,7 @@
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutpolicevest.rsi
     state: icon
   product: N14CrateBreakPlainFilledPoliceVest
-  cost: 440 # Corvax-Change
+  cost: 440 # Forge-Change
   category: Armory
   group: market
 
@@ -185,6 +185,6 @@
     sprite: Objects/Weapons/Guns/Ammunition/Explosives/explosives.rsi
     state: frag
   product: N14CrateBreakPlainFilledGrenadier
-  cost: 275 # Corvax-Change
+  cost: 275 # Forge-Change
   category: Armory
   group: market

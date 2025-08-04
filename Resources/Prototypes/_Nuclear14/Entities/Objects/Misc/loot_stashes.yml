@@ -20,9 +20,6 @@
       - id: N14CurrencyCap10
         prob: 0.3
         orGroup: StashCash
-      - id: N14CurrencyCap50
-        prob: 0.1
-        orGroup: StashCash
       - id: N14DirtyGauze1 # Let's also give them some medicine or chems.
         prob: 0.25
         orGroup: StashMeds
