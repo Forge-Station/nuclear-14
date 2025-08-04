@@ -24,7 +24,7 @@
     angleIncrease: 4
     angleDecay: 12
     fireRate: 4.1
-    projectilespeed: 40
+    projectileSpeed: 40
     soundGunshot:
       collection: N14PistolSpyGunshot
     selectedMode: Fullauto
