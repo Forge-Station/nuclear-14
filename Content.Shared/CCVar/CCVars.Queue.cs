@@ -9,5 +9,5 @@ public sealed partial class CCVars
     ///     If enabled plyaers will be added to a queue instead of being kicked after SoftMaxPlayers is reached
     /// </summary>
     public static readonly CVarDef<bool> QueueEnabled =
-        CVarDef.Create("queue.enabled", true, CVar.SERVERONLY); // Corvax-Change
+        CVarDef.Create("queue.enabled", true, CVar.SERVERONLY); // Forge-Change
 }

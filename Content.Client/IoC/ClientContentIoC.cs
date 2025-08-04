@@ -22,12 +22,12 @@ using Content.Client.Voting;
 using Content.Shared.Administration.Logs;
 using Content.Client.Lobby;
 using Content.Client.Players.RateLimiting;
-using Content.Client.Replay;
 using Content.Shared.Administration.Managers;
 using Content.Shared.Chat;
 using Content.Shared.Players.PlayTimeTracking;
 using Content.Shared.Players.RateLimiting;
-using Robust.Client.GameObjects;
+using Content.Client._NC.Sponsors; // Forge-Change
+using Content.Shared._NC.Sponsors; // Forge-Change
 
 namespace Content.Client.IoC
 {
@@ -65,6 +65,8 @@ namespace Content.Client.IoC
             collection.Register<NanoChatSystem>();
             collection.Register<MappingManager>();
             collection.Register<DebugMonitorManager>();
+            collection.Register<SponsorManager>(); // Forge-Change
+            collection.Register<ISharedSponsorManager, SponsorManager>(); // Forge-Change
         }
     }
 }

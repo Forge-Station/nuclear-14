@@ -52,3 +52,36 @@
     sprite: Corvax/Clothing/Uniforms/Jumpsuit/westernBoS.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Uniforms/Jumpsuit/westernBoS.rsi
+
+- type: entity
+  parent: N14ClothingUniformBase
+  id: N14ClothingUniformJumpsuitBOSWest
+  name: West brotherhood uniform
+  description: A uniform worn by members of The Midwest Brotherhood of Steel. This one is green.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/westernwest.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/westernwest.rsi
+
+- type: entity
+  parent: N14ClothingUniformBase
+  id: N14ClothingUniformBosReconWest
+  name: West brotherhood uniform
+  description: A uniform worn by members of The Midwest Brotherhood of Steel. This one is green.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/westernwestelder.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/westernwestelder.rsi
+
+- type: entity
+  parent: N14ClothingUniformBase
+  id: N14ClothingUniformJumpsuitBOSWestScribe
+  name: West brotherhood uniform
+  description: A uniform worn by members of The Midwest Brotherhood of Steel. This one is green.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/westernwestscribe.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/westernwestscribe.rsi

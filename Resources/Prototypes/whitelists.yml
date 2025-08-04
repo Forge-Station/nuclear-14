@@ -15,7 +15,7 @@
     minimumPlayers: 0
     maximumPlayers: 100
     action: Allow
-  - !type:ConditionManualWhitelistMembership # Allow whitelisted players
+  - !type:ConditionManualSponsorMembership
     action: Allow
   - !type:ConditionAlwaysMatch # Condition that always matches
     action: Deny # Deny connection if matched

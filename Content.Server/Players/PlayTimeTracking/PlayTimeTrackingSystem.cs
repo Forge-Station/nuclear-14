@@ -23,6 +23,7 @@ using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Content.Server._NC.Sponsors; // Forge-Change
 
 namespace Content.Server.Players.PlayTimeTracking;
 
@@ -41,6 +42,7 @@ public sealed class PlayTimeTrackingSystem : EntitySystem
     [Dependency] private readonly CharacterRequirementsSystem _characterRequirements = default!;
     [Dependency] private readonly IServerPreferencesManager _prefs = default!;
     [Dependency] private readonly IConfigurationManager _config = default!;
+    [Dependency] private readonly SponsorManager _sponsorManager = default!; // Forge-Change
 
 
     public override void Initialize()
@@ -227,6 +229,7 @@ public sealed class PlayTimeTrackingSystem : EntitySystem
             EntityManager,
             _prototypes,
             _config,
+            _sponsorManager, // Forge-Change
             out _);
     }
 
@@ -258,6 +261,7 @@ public sealed class PlayTimeTrackingSystem : EntitySystem
                         EntityManager,
                         _prototypes,
                         _config,
+                        _sponsorManager, // Forge-Change
                         out _))
                     continue;
 
@@ -305,6 +309,7 @@ public sealed class PlayTimeTrackingSystem : EntitySystem
                 EntityManager,
                 _prototypes,
                 _config,
+                _sponsorManager, // Forge-Change
                 out _))
             {
                 jobs.RemoveSwap(i);

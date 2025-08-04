@@ -1,0 +1,38 @@
+- type: loadout
+  id: LoadoutNCRN14ClothingHeadHatRangerHelmetSnowFox1
+  category: Roles
+  cost: 4
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRanger
+  items:
+    - N14ClothingHeadHatRangerHelmetSnowFox
+
+- type: loadout
+  id: LoadoutNCRN14ClothingHeadHatRangerHelmetSnowFox2
+  category: Roles
+  cost: 2
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRangerVeteran
+  items:
+    - N14ClothingHeadHatRangerHelmetSnowFox
+
+- type: loadout
+  id: LoadoutNCRN14ClothingOuterRangerSnowFox
+  category: Roles
+  cost: 2
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRangerVeteran
+  items:
+    - N14ClothingOuterRangerSnowFox

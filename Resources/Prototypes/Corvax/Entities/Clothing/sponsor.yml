@@ -1,0 +1,22 @@
+- type: entity
+  parent: N14ClothingOuterRangerCombat
+  id: N14ClothingOuterRangerSnowFox
+  categories: [HideSpawnMenu]
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/snowFox.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/snowFox.rsi
+
+- type: entity
+  parent: N14ClothingHeadHatRangerHelmetFox
+  id: N14ClothingHeadHatRangerHelmetSnowFox
+  categories: [HideSpawnMenu]
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/snowFox.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/snowFox.rsi
+  - type: Tag
+    tags:
+    - HidesHair

@@ -66,6 +66,9 @@ public sealed class SpawnerSystem : EntitySystem
 
     private bool ShouldBlockSpawn(EntityUid uid, TimedSpawnerComponent component)
     {
+        if (component.IgnoreSpawnBlock)
+            return false;
+
         if (!_xformQuery.TryGetComponent(uid, out var xform) || xform.MapUid == null)
             return true;
 

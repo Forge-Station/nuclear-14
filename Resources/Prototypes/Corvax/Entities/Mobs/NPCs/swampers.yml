@@ -1,0 +1,88 @@
+- type: entity
+  name: болотник
+  id: N14MobSwamper
+  parent: N14MobBaseHostileInsect
+  description: Краб с панцырем? Это что-то новое.
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    layers:
+    - map: ["enum.DamageStateVisualLayers.Base"]
+      state: swamper
+      sprite: Corvax/Mobs/Animals/swamper.rsi
+  - type: MovementSpeedModifier
+    baseWalkSpeed : 3
+    baseSprintSpeed : 4
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+            radius: 0.5
+        density: 20
+        mask:
+        - MobMask
+        layer:
+        - MobLayer
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      150: Dead
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: swamper
+      Critical:
+        Base: swamper
+      Dead:
+        Base: dead
+  - type: MeleeWeapon
+    altDisarm: false
+    hidden: true
+    soundHit:
+        path: /Audio/Weapons/Xeno/alien_claw_flesh3.ogg
+    angle: 60
+    animation: WeaponArcClaw
+    wideAnimation: WeaponArcClaw
+    damage:
+      types:
+        Slash: 2
+        Piercing: 8
+  - type: Butcherable
+    spawned:
+    - id: N14FoodMeatMirelurkClaw
+      amount: 2
+      prob: 0.8
+
+- type: entity
+  name: радболотник
+  id: N14MobRadSwamper
+  parent: N14MobSwamper
+  description: Краб с панцырем, да ещё и светится? Это что-то новое.
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    layers:
+    - map: ["enum.DamageStateVisualLayers.Base"]
+      state: radswamper
+      sprite: Corvax/Mobs/Animals/radswamper.rsi
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: radswamper
+      Critical:
+        Base: radswamper
+      Dead:
+        Base: dead
+  - type: PointLight
+    radius: 2
+    energy: 2
+    color: "#4CBB17FF"
+  - type: RadiationSource
+    intensity: 0.5
+    slope: 0.25
+  - type: Butcherable
+    spawned:
+    - id: N14FoodMeatRadlurkClaw
+      amount: 2
+      prob: 0.8

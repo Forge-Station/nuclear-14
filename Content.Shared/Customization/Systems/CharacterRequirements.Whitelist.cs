@@ -7,6 +7,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Utility;
 using Robust.Shared.Network;
+using Content.Shared._NC.Sponsors; // Forge-Change
 
 namespace Content.Shared.Customization.Systems;
 
@@ -26,6 +27,7 @@ public sealed partial class CharacterWhitelistRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0)
     {

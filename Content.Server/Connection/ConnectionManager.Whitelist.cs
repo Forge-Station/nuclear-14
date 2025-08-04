@@ -66,6 +66,12 @@ public sealed partial class ConnectionManager
                     matched = await CheckConditionManualWhitelist(data);
                     denyMessage = Loc.GetString("whitelist-manual");
                     break;
+                // Forge-Change-Start
+                case ConditionManualSponsorMembership:
+                    matched = await CheckConditionManualSponsor(data);
+                    denyMessage = Loc.GetString("whitelist-sponsor");
+                    break;
+                // Forge-Change-End
                 case ConditionManualBlacklistMembership:
                     matched = await CheckConditionManualBlacklist(data);
                     denyMessage = Loc.GetString("whitelist-blacklisted");
@@ -121,8 +127,15 @@ public sealed partial class ConnectionManager
 
     private async Task<bool> CheckConditionManualWhitelist(NetUserData data)
     {
-        return await _db.GetWhitelistStatusAsync(data.UserId); // Corvax-Change
+        return await _db.GetWhitelistStatusAsync(data.UserId); // Forge-Change
     }
+
+    // Forge-Change-Start
+    private async Task<bool> CheckConditionManualSponsor(NetUserData data)
+    {
+        return _sponsorMan.Sponsors.ContainsKey(data.UserId);
+    }
+    // Forge-Change-End
 
     private async Task<bool> CheckConditionManualBlacklist(NetUserData data)
     {

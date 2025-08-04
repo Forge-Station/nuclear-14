@@ -31,13 +31,13 @@
 - type: startingGear
   id: BoSWestElderCommanderGear
   equipment:
-    jumpsuit: N14ClothingUniformBosRecon
+    jumpsuit: N14ClothingUniformBosReconWest
     back: N14ClothingBackpackMilitary
     shoes: N14ClothingBootsCombatFilled
     head:  N14ClothingHeadHatBrotherhoodFieldCap
-    outerClothing: N14ClothingOuterMidwestArmorMK2
+    outerClothing: N14ClothingOuterPowerArmorT51Elder
     hands: N14ClothingHandsGlovesCombat
-    # pocket1: NCRBoSMidwestPaladinkits
+    pocket1: BoSMidwestPaladinKits
     id: N14IDBrotherhoodWestHolotagElderCommander
     ears: N14ClothingHeadsetBOSWest
     belt: ClothingBeltMilitary

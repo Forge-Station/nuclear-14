@@ -15,7 +15,7 @@
   canBeAntag: false
   startingGear: VaultSecurityGear
   alwaysUseSpawner: true
-  icon: "JobIconVaultSecurity" # Corvax-Change
+  icon: "JobIconVaultSecurity" # Forge-Change
   supervisors: job-supervisors-vault
   access:
   - VaultDweller
@@ -32,7 +32,7 @@
   id: VaultSecurityGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitVault14
-    back: N14ClothingBackpackVaultBlue # Corvax-Change
+    back: N14ClothingBackpackVaultBlue # Forge-Change
     shoes: N14ClothingBootsBlack
     eyes: N14ClothingEyesSunGlasses
     head: N14ClothingHeadHatVaultRiot
@@ -42,7 +42,7 @@
     pocket2: Handcuffs
     ears: N14ClothingHeadsetVaultDweller
     belt: N14PoliceBaton
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14Bandage
     - N14CurrencyPrewarMoney100

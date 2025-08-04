@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Client._NC.Sponsors; // Forge-Change
 using Content.Client.Eui;
 using Content.Client.Lobby;
 using Content.Client.Players.PlayTimeTracking;
@@ -92,6 +93,7 @@ namespace Content.Client.UserInterface.Systems.Ghost.Controls.Roles
             var prefs = IoCManager.Resolve<IClientPreferencesManager>();
             var protoMan = IoCManager.Resolve<IPrototypeManager>();
             var configManager = IoCManager.Resolve<IConfigurationManager>();
+            var sponsorManager = IoCManager.Resolve<SponsorManager>(); // Forge-Change
 
             var groupedRoles = ghostState.GhostRoles.GroupBy(
                 role => (role.Name, role.Description, role.Requirements));
@@ -112,6 +114,7 @@ namespace Content.Client.UserInterface.Systems.Ghost.Controls.Roles
                     entityManager,
                     protoMan,
                     configManager,
+                    sponsorManager, // Forge-Change
                     out var reasons))
                     hasAccess = false;
 

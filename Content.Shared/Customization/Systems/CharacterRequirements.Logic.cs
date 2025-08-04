@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Text;
+using Content.Shared._NC.Sponsors; // Forge-Change
 using Content.Shared.Preferences;
 using Content.Shared.Roles;
 using JetBrains.Annotations;
@@ -29,12 +30,13 @@ public sealed partial class CharacterLogicAndRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0)
     {
         var succeeded = entityManager.EntitySysManager.GetEntitySystem<CharacterRequirementsSystem>()
             .CheckRequirementsValid(Requirements, job, profile, playTimes, whitelisted, prototype, entityManager,
-                prototypeManager, configManager, out var reasons, depth + 1);
+                prototypeManager, configManager, sponsorManager, out var reasons, depth + 1); // Forge-Change
 
         if (reasons.Count == 0)
         {
@@ -71,6 +73,7 @@ public sealed partial class CharacterLogicOrRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0)
     {
@@ -81,7 +84,7 @@ public sealed partial class CharacterLogicOrRequirement : CharacterRequirement
         foreach (var requirement in Requirements)
         {
             if (characterRequirements.CheckRequirementValid(requirement, job, profile, playTimes, whitelisted, prototype,
-                entityManager, prototypeManager, configManager, out var raisin, depth + 1))
+                entityManager, prototypeManager, configManager, sponsorManager, out var raisin, depth + 1)) // Forge-Change
             {
                 succeeded = true;
                 break;
@@ -126,6 +129,7 @@ public sealed partial class CharacterLogicXorRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0)
     {
@@ -136,7 +140,7 @@ public sealed partial class CharacterLogicXorRequirement : CharacterRequirement
         foreach (var requirement in Requirements)
         {
             if (characterRequirements.CheckRequirementValid(requirement, job, profile, playTimes, whitelisted, prototype,
-                entityManager, prototypeManager, configManager, out var raisin, depth + 1))
+                entityManager, prototypeManager, configManager, sponsorManager, out var raisin, depth + 1)) // Forge-Change
             {
                 if (succeeded)
                 {

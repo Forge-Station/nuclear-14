@@ -1,4 +1,3 @@
-using Content.Shared.Customization.Systems;
 using Content.Shared.Preferences;
 using Content.Shared.Roles;
 using JetBrains.Annotations;
@@ -6,7 +5,10 @@ using Robust.Shared.Player;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
-using Content.Shared._NC.CorvaxVars;
+using Content.Shared._NC.CorvaxVars; // Forge-Change
+using Content.Shared._NC.Sponsors;
+using Robust.Shared.Network;
+using Content.Shared.Players; // Forge-Change
 
 namespace Content.Shared.Customization.Systems;
 
@@ -31,6 +33,7 @@ public sealed partial class CVarRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0
     )
@@ -71,6 +74,7 @@ public sealed partial class MinPlayersRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager,
         out string? reason,
         int depth = 0)
     {
@@ -88,3 +92,4 @@ public sealed partial class MinPlayersRequirement : CharacterRequirement
         return playerCount >= Min;
     }
 }
+

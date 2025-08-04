@@ -1,3 +1,4 @@
+using Content.Shared._NC.Sponsors; // Forge-Change
 using Content.Shared.Customization.Systems;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.Manager;
@@ -49,6 +50,9 @@ public sealed partial class LoadoutPrototype : IPrototype
 
     [DataField(serverOnly: true)]
     public LoadoutFunction[] Functions { get; private set; } = Array.Empty<LoadoutFunction>();
+
+    [DataField("sponsorLevel")]
+    public SponsorLevel Level = SponsorLevel.None; // Forge-Change
 }
 
 /// This serves as a hook for loadout functions to modify one or more entities upon spawning in.

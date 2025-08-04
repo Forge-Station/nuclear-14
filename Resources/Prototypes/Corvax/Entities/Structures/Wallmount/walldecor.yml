@@ -8,3 +8,23 @@
   - type: Sprite
     sprite: Corvax/Structures/Wallmount/flag.rsi
     state: flag_bazar
+
+- type: entity
+  parent: NCFlagWallBazar
+  id: NCFlagMexico
+  name: флаг мексики
+  suffix: mexico
+  description: Avocados from Mexico!
+  components:
+  - type: Sprite
+    state: flag_mex
+
+- type: entity
+  parent: NCFlagWallBazar
+  id: NCFlagWallTown
+  name: флаг сепара
+  suffix: town
+  description: брамин на этом флаге выглядит не сильно живым...
+  components:
+  - type: Sprite
+    state: flag_town

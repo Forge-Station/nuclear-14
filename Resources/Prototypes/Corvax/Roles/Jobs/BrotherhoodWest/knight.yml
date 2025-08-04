@@ -29,12 +29,12 @@
 - type: startingGear
   id: BoSWestKnightGear
   equipment:
-    jumpsuit: N14ClothingUniformJumpsuitBOSGreen
+    jumpsuit: N14ClothingUniformJumpsuitBOSWest
     back: N14ClothingBackpackMilitary
     shoes: N14ClothingBootsCombatFilled
     head: N14ClothingHeadHatBrotherhoodMidwestHelmet
     outerClothing: N14ClothingOuterMidwestArmor
-    # pocket1: NCRBoSMidwestkits
+    pocket1: BoSMidwestKnightSet
     hands: N14ClothingHandsGlovesCombat
     id: N14IDBrotherhoodWestHolotagKnight
     belt: ClothingBeltMilitary

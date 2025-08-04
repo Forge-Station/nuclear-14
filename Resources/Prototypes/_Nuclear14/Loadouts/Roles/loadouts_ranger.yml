@@ -281,6 +281,22 @@
         - NCRRanger
   items:
     - ClothingMaskGasRiot
+
+- type: loadout
+  id: LoadoutNCRRangerHelmetEliteOld2
+  category: Roles
+  cost: 4
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRanger
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRanger
+      min: 216000 # 60 hours veterancy unlock "First Tour"
+  items:
+    - N14ClothingHeadHatRangerHelmetEliteOld
+
 # Corvax-Add End
 
 - type: loadout
@@ -555,7 +571,7 @@
     - N14ClothingOuterRangerEliteOld
 
 - type: loadout
-  id: LoadoutNCRRangerHelmetEliteOld
+  id: LoadoutNCRRangerHelmetEliteOld1
   category: Roles
   cost: 2
   exclusive: true

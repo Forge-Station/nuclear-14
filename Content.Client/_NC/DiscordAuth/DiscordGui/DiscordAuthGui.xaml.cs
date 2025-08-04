@@ -20,14 +20,26 @@ public sealed partial class DiscordAuthGui : Control
 
         var link = _discordAuthManager.AuthLink;
 
+        AuthLinkEdit.SetText(link);
+        DLinkEdit.SetText(DiscordAuthManager.DiscordServerLink);
+        InfoLabel.SetMessage(Loc.GetString("stalker-discord-info"));
+        ErrorMessage.SetMessage(_discordAuthManager.ErrorMessage);
+
+        var uriOpener = IoCManager.Resolve<IUriOpener>();
+
         QuitButton.OnPressed += _ =>
         {
-            _consoleHost.ExecuteCommand("quit");
+            _consoleHost.ExecuteCommand("disconnect");
         };
 
         AuthorizeButton.OnPressed += _ =>
         {
-            IoCManager.Resolve<IUriOpener>().OpenUri(link);
+            uriOpener.OpenUri(link);
+        };
+
+        DiscordButton.OnPressed += _ =>
+        {
+            uriOpener.OpenUri(DiscordAuthManager.DiscordServerLink);
         };
     }
 }

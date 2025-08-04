@@ -1,5 +1,4 @@
 using Content.Server._NC.Discord;
-using Content.Server._NC.Sponsors;
 using Content.Server.Administration;
 using Content.Server.Administration.Logs;
 using Content.Server.Administration.Managers;
@@ -19,8 +18,6 @@ using Content.Server.Maps;
 using Content.Server.Players.JobWhitelist;
 using Content.Server.MoMMI;
 using Content.Server.NodeContainer.NodeGroups;
-using Content.Server.Players;
-using Content.Server.Players.JobWhitelist;
 using Content.Server.Players.PlayTimeTracking;
 using Content.Server.Players.RateLimiting;
 using Content.Server.Preferences.Managers;
@@ -34,7 +31,8 @@ using Content.Shared.Chat;
 using Content.Shared.Kitchen;
 using Content.Shared.Players.PlayTimeTracking;
 using Content.Shared.Players.RateLimiting;
-using Robust.Shared.Network;
+using Content.Shared._NC.Sponsors; // Forge-Change
+using Content.Server._NC.Sponsors; // Forge-Change
 
 namespace Content.Server.IoC
 {
@@ -74,7 +72,8 @@ namespace Content.Server.IoC
             IoCManager.Register<ServerDbEntryManager>();
             IoCManager.Register<JoinQueueManager>();
             IoCManager.Register<DiscordAuthManager>();
-            IoCManager.Register<SponsorsManager>();
+            IoCManager.Register<SponsorManager>(); // Forge-Change
+            IoCManager.Register<ISharedSponsorManager, SponsorManager>(); // Forge-Change
             IoCManager.Register<ISharedPlaytimeManager, PlayTimeTrackingManager>();
             IoCManager.Register<ServerApi>();
             IoCManager.Register<JobWhitelistManager>();

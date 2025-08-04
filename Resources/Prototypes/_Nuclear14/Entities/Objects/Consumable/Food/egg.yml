@@ -11,7 +11,7 @@
       - Egg
       - Meat
   - type: Food
-    trash: 
+    trash:
     - Eggshells
   - type: Sprite
     sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
@@ -94,6 +94,7 @@
     intervalSeconds: 20
     minimumEntitiesSpawned: 2
     maximumEntitiesSpawned: 2
+    ignoreSpawnBlock: true # Forge-Change
   - type: TimedDespawn #delete the egg after the chicken spawns
     lifetime: 21
 
@@ -142,6 +143,7 @@
     intervalSeconds: 60
     minimumEntitiesSpawned: 2
     maximumEntitiesSpawned: 2
+    ignoreSpawnBlock: true # Forge-Change
   - type: TimedDespawn #delete the egg after the chicken spawns
     lifetime: 61
 
@@ -190,6 +192,7 @@
     intervalSeconds: 60
     minimumEntitiesSpawned: 2
     maximumEntitiesSpawned: 2
+    ignoreSpawnBlock: true # Forge-Change
   - type: TimedDespawn #delete the egg after the chicken spawns
     lifetime: 61
 
@@ -238,6 +241,7 @@
     intervalSeconds: 60
     minimumEntitiesSpawned: 2
     maximumEntitiesSpawned: 2
+    ignoreSpawnBlock: true # Forge-Change
   - type: TimedDespawn #delete the egg after the chicken spawns
     lifetime: 61
 

@@ -137,6 +137,7 @@
     - RangerMarksmanSet
     - RangerCQBSet
     - RangerTrailmanSet
+    - RangerSMGSet # Forge-Change
 
 - type: entity
   id: NCRveteranrangerloadoutkits
@@ -153,6 +154,7 @@
     - RangerMarksmanSet
     - RangerCQBSet
     - RangerTrailmanSet
+    - RangerSMGSet # Forge-Change
     - VeteranRangerServiceSet
     - VeteranRangerRiflemanSet
     - VeteranRangerHeavySniperSet

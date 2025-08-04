@@ -8,3 +8,39 @@
     sprite: Corvax/Structures/Decoration/metal_pole.rsi
     state: metal_pole
     drawdepth: Mobs
+
+- type: entity
+  parent: N14DecorFloorBase
+  id: NCDecorFloorVaultSkeleton
+  name: скелет с костюмом убежища
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/vault_bones.rsi
+    state: bones
+
+# graves
+
+- type: entity
+  parent: N14DecorFloorBase
+  id: NCDecorFloorGrave1
+  name: надгробье
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/graves.rsi
+    state: grob1
+
+- type: entity
+  parent: NCDecorFloorGrave1
+  id: NCDecorFloorGrave2
+  name: надгробье
+  components:
+  - type: Sprite
+    state: grob2
+
+- type: entity
+  parent: NCDecorFloorGrave1
+  id: NCDecorFloorGrave3
+  name: надгробье
+  components:
+  - type: Sprite
+    state: grob3

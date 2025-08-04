@@ -795,3 +795,28 @@
       - id: BoxMRE
     sound:
       path: /Audio/Effects/unwrap.ogg
+
+# Ranger
+
+- type: entity
+  name: Рейнджерский набор пистолета-пулемёта
+  parent: KitBase
+  id: KitSMGRanger
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: ClothingBeltNCR
+      - id: N14WeaponSMG9mm
+      - id: N14MagazineSMG9mm
+        amount: 4
+      - id: MagazineBox9mm
+      - id: N14Stimpak
+        amount: 2
+      - id: N14BoxCardboardMREBoxKFilled
+      - id: N14CombatKnife
+    sound:
+      path: /Audio/Effects/unwrap.ogg

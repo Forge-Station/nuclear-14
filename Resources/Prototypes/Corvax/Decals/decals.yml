@@ -71,3 +71,55 @@
   sprite:
     sprite: Corvax/Decals/kactus-good.rsi
     state: kactus-good-2
+
+#MARK: Desert Grass
+
+- type: decal
+  id: ForgeDesertGrass1
+  sprite:
+    sprite: Corvax/Decals/desertgrass.rsi
+    state: trava1
+
+- type: decal
+  id: ForgeDesertGrass2
+  sprite:
+    sprite: Corvax/Decals/desertgrass.rsi
+    state: trava2
+
+- type: decal
+  id: ForgeDesertGrass3
+  sprite:
+    sprite: Corvax/Decals/desertgrass.rsi
+    state: trava3
+
+- type: decal
+  id: ForgeDesertGrass4
+  sprite:
+    sprite: Corvax/Decals/desertgrass.rsi
+    state: trava4
+
+- type: decal
+  id: ForgeDesertGrass5
+  sprite:
+    sprite: Corvax/Decals/desertgrass.rsi
+    state: trava5
+
+#MARK: Crater
+
+- type: decal
+  id: ForgeCrater1
+  sprite:
+    sprite: Corvax/Decals/crater.rsi
+    state: boom1
+
+- type: decal
+  id: ForgeCrater2
+  sprite:
+    sprite: Corvax/Decals/crater.rsi
+    state: boom2
+
+- type: decal
+  id: ForgeCrater3
+  sprite:
+    sprite: Corvax/Decals/crater.rsi
+    state: boom3

@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Shared._NC.Sponsors; // Forge-Change
 using Content.Shared.Clothing.Loadouts.Prototypes;
 using Content.Shared.Humanoid;
 using Content.Shared.Humanoid.Prototypes;
@@ -37,6 +38,7 @@ public sealed partial class CharacterAgeRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0
     )
@@ -68,6 +70,7 @@ public sealed partial class CharacterGenderRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0
     )
@@ -98,6 +101,7 @@ public sealed partial class CharacterSexRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0
     )
@@ -128,6 +132,7 @@ public sealed partial class CharacterSpeciesRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0
     )
@@ -170,6 +175,7 @@ public sealed partial class CharacterHeightRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0
     )
@@ -216,6 +222,7 @@ public sealed partial class CharacterWidthRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0
     )
@@ -262,6 +269,7 @@ public sealed partial class CharacterWeightRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0
     )
@@ -312,6 +320,7 @@ public sealed partial class CharacterTraitRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0
     )
@@ -345,6 +354,7 @@ public sealed partial class CharacterLoadoutRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0
     )
@@ -378,6 +388,7 @@ public sealed partial class CharacterItemGroupRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0
     )

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "license": "CC-BY-NC-SA-4.0",
-  "copyright": "Made by baohe (discord)",
+  "copyright": "Made by baohe (discord) and mc_rainbow32 (discord)",
   "size": {
     "x": 32,
     "y": 32
@@ -9,6 +9,12 @@
   "states": [
     {
       "name": "flag_bazar"
+    },
+    {
+      "name": "flag_town"
+    },
+    {
+      "name": "flag_mex"
     }
   ]
 }

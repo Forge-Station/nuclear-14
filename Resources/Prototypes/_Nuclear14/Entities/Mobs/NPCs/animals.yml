@@ -349,6 +349,7 @@
     intervalSeconds: 300
     minimumEntitiesSpawned: 1
     maximumEntitiesSpawned: 1
+    ignoreSpawnBlock: true # Forge-Change
   - type: Reproductive
     breedChance: 0.05
     birthPopup: reproductive-birth-popup
@@ -421,6 +422,7 @@
     prototypes:
       - N14Dung
     chance: 0.5
+    ignoreSpawnBlock: true # Forge-Change
   - type: Reproductive
     breedChance: 0.05
     birthPopup: reproductive-birth-popup
@@ -491,6 +493,7 @@
     prototypes:
       - N14Dung
     chance: 0.5
+    ignoreSpawnBlock: true # Forge-Change
   - type: Reproductive
     breedChance: 0.05
     birthPopup: reproductive-birth-popup

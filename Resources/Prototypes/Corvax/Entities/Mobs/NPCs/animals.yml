@@ -68,6 +68,7 @@
     intervalSeconds: 300
     minimumEntitiesSpawned: 1
     maximumEntitiesSpawned: 1
+    ignoreSpawnBlock: true # Forge-Change
   - type: Reproductive
     breedChance: 0.005 # Low
     birthPopup: reproductive-birth-popup

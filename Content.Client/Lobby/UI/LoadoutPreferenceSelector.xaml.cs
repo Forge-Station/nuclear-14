@@ -1,11 +1,13 @@
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using Content.Client._NC.Sponsors;
 using Content.Client.Guidebook;
 using Content.Client.Paint;
 using Content.Client.Players.PlayTimeTracking;
 using Content.Client.Stylesheets;
 using Content.Client.UserInterface.Systems.Guidebook;
+using Content.Shared._NC.Sponsors; // Forge-Change
 using Content.Shared.Clothing.Loadouts.Prototypes;
 using Content.Shared.Clothing.Loadouts.Systems;
 using Content.Shared.Customization.Systems;
@@ -88,7 +90,8 @@ public sealed partial class LoadoutPreferenceSelector : Control
     public LoadoutPreferenceSelector(LoadoutPrototype loadout, JobPrototype highJob,
         HumanoidCharacterProfile profile, ref Dictionary<string, EntityUid> entities,
         IEntityManager entityManager, IPrototypeManager prototypeManager, IConfigurationManager configManager,
-        CharacterRequirementsSystem characterRequirementsSystem, JobRequirementsManager jobRequirementsManager)
+        CharacterRequirementsSystem characterRequirementsSystem, JobRequirementsManager jobRequirementsManager,
+        SponsorManager sponsorManager) // Forge-Change
     {
         RobustXamlLoader.Load(this);
 
@@ -248,7 +251,7 @@ public sealed partial class LoadoutPreferenceSelector : Control
             loadout.Requirements, highJob, profile, new Dictionary<string, TimeSpan>(),
             jobRequirementsManager.IsWhitelisted(), loadout,
             entityManager, prototypeManager, configManager,
-            out var reasons);
+            sponsorManager, out var reasons); // Forge-Change
 
         // Add requirement reasons to the tooltip
         foreach (var reason in reasons)

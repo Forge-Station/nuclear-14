@@ -67,3 +67,52 @@
   - type: ConditionalSpawner
     prototypes:
       - N14MobBrahdoLightLegion
+
+# Swampers
+
+- type: entity
+  name: спавнер болотника
+  id: N14SpawnMobSwamper
+  parent: MarkerBase
+  components:
+  - type: Sprite
+    layers:
+      - state: green
+      - sprite: Corvax/Mobs/Animals/swamper.rsi
+        state: swamper
+      - state: ai
+  - type: ConditionalSpawner
+    prototypes:
+      - N14MobSwamper
+
+- type: entity
+  name: спавнер радболотника
+  id: N14SpawnMobRadSwamper
+  parent: MarkerBase
+  components:
+  - type: Sprite
+    layers:
+      - state: green
+      - sprite: Corvax/Mobs/Animals/radswamper.rsi
+        state: radswamper
+      - state: ai
+  - type: ConditionalSpawner
+    prototypes:
+      - N14MobRadSwamper
+
+# Jackal
+
+- type: entity
+  name: спавнер шакала
+  id: N14SpawnMobJackal
+  parent: MarkerBase
+  components:
+  - type: Sprite
+    layers:
+      - state: green
+      - sprite: Corvax/Mobs/Animals/jackal.rsi
+        state: jackal
+      - state: ai
+  - type: ConditionalSpawner
+    prototypes:
+      - N14MobJackal

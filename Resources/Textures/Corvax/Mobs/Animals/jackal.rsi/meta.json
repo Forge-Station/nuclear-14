@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "license": "CC-BY-NC-SA-3.0",
+  "copyright": "Made by mc_rainbow32 (986157111891349535), search for him on discord",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "jackal",
+      "directions": 4
+    },
+    {
+      "name": "dead"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+using Content.Shared._NC.Sponsors; // Forge-Change
 using Content.Shared.Preferences;
 using Content.Shared.Roles;
 using JetBrains.Annotations;
@@ -35,6 +36,7 @@ public abstract partial class CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0
     );

@@ -38,6 +38,7 @@ using Robust.Shared.ContentPack;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Replays;
 using Robust.Shared.Timing;
+using Content.Client._NC.Sponsors; // Forge-Change
 
 namespace Content.Client.Entry
 {
@@ -76,6 +77,7 @@ namespace Content.Client.Entry
         [Dependency] private readonly DiscordAuthManager _discordAuth = default!;
         [Dependency] private readonly ContentReplayPlaybackManager _replayMan = default!;
         [Dependency] private readonly DebugMonitorManager _debugMonitorManager = default!;
+        [Dependency] private readonly SponsorManager _sponsorMan = default!; // Forge-Change
 
         public override void Init()
         {
@@ -137,6 +139,7 @@ namespace Content.Client.Entry
             _extendedDisconnectInformation.Initialize();
             _jobRequirements.Initialize();
             _playbackMan.Initialize();
+            _sponsorMan.Initialize(); // Forge-Change
 
             //AUTOSCALING default Setup!
             _configManager.SetCVar("interface.resolutionAutoScaleUpperCutoffX", 1080);

@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Client._NC.Sponsors;
 using Content.Client.Humanoid;
 using Content.Client.Inventory;
 using Content.Client.Lobby.UI;
@@ -42,6 +43,7 @@ public sealed class LobbyUIController : UIController, IOnStateEntered<LobbyState
     [Dependency] private readonly MarkingManager _markings = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly JobRequirementsManager _jobRequirements = default!;
+    [Dependency] private readonly SponsorManager _sponsorMan = default!; // Forge-Change
     [UISystemDependency] private readonly HumanoidAppearanceSystem _humanoid = default!;
     [UISystemDependency] private readonly ClientInventorySystem _inventory = default!;
     [UISystemDependency] private readonly SharedLoadoutSystem _loadouts = default!;
@@ -205,10 +207,11 @@ public sealed class LobbyUIController : UIController, IOnStateEntered<LobbyState
             _dialogManager,
             _playerManager,
             _prototypeManager,
-            _resourceCache, // Corvax-Change
+            _resourceCache, // Forge-Change
             _requirements,
             _markings,
-            _random);
+            _random,
+            _sponsorMan); // Forge-Change
 
         _characterSetup = new CharacterSetupGui(EntityManager, _prototypeManager, _resourceCache, _preferencesManager, _profileEditor);
 

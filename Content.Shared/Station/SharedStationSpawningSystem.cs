@@ -16,6 +16,7 @@ using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
+using Content.Shared._NC.Sponsors; // Forge-Change
 
 namespace Content.Shared.Station;
 
@@ -30,6 +31,7 @@ public abstract class SharedStationSpawningSystem : EntitySystem
     [Dependency] private readonly MetaDataSystem _metadata = default!;
     [Dependency] private readonly IConfigurationManager _configurationManager = default!;
     [Dependency] private readonly CharacterRequirementsSystem _characterRequirements = default!;
+    [Dependency] private readonly ISharedSponsorManager _sponsorManager = default!; // Forge-Change
 
     private EntityQuery<HandsComponent> _handsQuery;
     private EntityQuery<InventoryComponent> _inventoryQuery;
@@ -193,7 +195,7 @@ public abstract class SharedStationSpawningSystem : EntitySystem
             if (!PrototypeManager.TryIndex<StartingGearPrototype>(subGear.Id, out var subGearProto) ||
                 !_characterRequirements.CheckRequirementsValid(
                     subGearProto.Requirements, job, profile, new Dictionary<string, TimeSpan>(), false, job,
-                    EntityManager, PrototypeManager, _configurationManager,
+                    EntityManager, PrototypeManager, _configurationManager, _sponsorManager, // Forge-Change
                     out _))
                 continue;
 

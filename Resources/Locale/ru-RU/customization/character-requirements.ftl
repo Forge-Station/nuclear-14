@@ -126,3 +126,4 @@ character-whitelist-requirement =
     } включённым в белый список
 
 character-minPlayers-requirement = Данная роль доступна только от {$min} человек в сети.
+character-sponsor-requirement = Необходимый уровень поддержки сервера для разблокировки: {$level}

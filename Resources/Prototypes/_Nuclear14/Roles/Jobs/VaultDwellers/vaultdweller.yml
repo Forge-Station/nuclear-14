@@ -12,7 +12,7 @@
   playTimeTracker: VaultDweller
   startingGear: VaultDwellerGear
   alwaysUseSpawner: true
-  icon: "JobIconVaulDweller" # Corvax-Change
+  icon: "JobIconVaulDweller" # Forge-Change
   supervisors: job-supervisors-vault
   access:
   - VaultDweller
@@ -28,12 +28,12 @@
   id: VaultDwellerGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitVault14
-    back: N14ClothingBackpackVaultBlue # Corvax-Change
+    back: N14ClothingBackpackVaultBlue # Forge-Change
     shoes: N14ClothingBootsBlack
     id: N14VaultPDA
     ears: N14ClothingHeadsetVaultDweller
   innerClothingSkirt: N14ClothingUniformJumpsuitVault14
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14Bandage
     - N14CurrencyPrewarMoney100

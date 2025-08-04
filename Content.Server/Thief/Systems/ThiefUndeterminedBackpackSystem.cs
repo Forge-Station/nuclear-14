@@ -8,6 +8,7 @@ using Robust.Server.GameObjects;
 using Robust.Server.Audio;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
+using Content.Server._NC.Sponsors; // Forge-Change
 
 namespace Content.Server.Thief.Systems;
 
@@ -23,6 +24,7 @@ public sealed class ThiefUndeterminedBackpackSystem : EntitySystem
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
     [Dependency] private readonly CharacterRequirementsSystem _characterRequirements = default!;
+    [Dependency] private readonly SponsorManager _sponsorMan = default!; // Forge-Change
 
     private const int MaxSelectedSets = 2;
     public override void Initialize()
@@ -82,7 +84,8 @@ public sealed class ThiefUndeterminedBackpackSystem : EntitySystem
                 appearance.LastProfileLoaded != null &&
                 !_characterRequirements.CheckRequirementsValid(
                     set.Requirements, new JobPrototype() /* not gonna bother with jobs */,
-                    appearance.LastProfileLoaded, new(), false, set, EntityManager, _proto, _config, out _))
+                    appearance.LastProfileLoaded, new(), false, set, EntityManager, _proto, _config,
+                    _sponsorMan, out _)) // Forge-Change
                 continue;
 
             var selected = component.SelectedSets.Contains(i);

@@ -5,7 +5,7 @@ using Content.Client.Administration.UI;
 using Content.Client.Guidebook;
 using Content.Client.Humanoid;
 using Content.Client.Message;
-using Content.Client.Sprite; // Corvax-Change
+using Content.Client.Sprite; // Forge-Change
 using Content.Client.Players.PlayTimeTracking;
 using Content.Client.UserInterface.Controls;
 using Content.Client.UserInterface.Systems.Guidebook;
@@ -13,7 +13,7 @@ using Content.Shared.CCVar;
 using Content.Shared.Clothing.Components;
 using Content.Shared.Clothing.Loadouts.Prototypes;
 using Content.Shared.Clothing.Loadouts.Systems;
-using Content.Shared._NC.CorvaxVars; // Corvax-Fallout-Barks
+using Content.Shared._NC.CorvaxVars; // Forge-Change-Barks
 using Content.Shared.Customization.Systems;
 using Content.Shared.Dataset;
 using Content.Shared.GameTicking;
@@ -39,7 +39,12 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
 using Direction = Robust.Shared.Maths.Direction;
-using Robust.Shared.ContentPack; // Corvax-Change
+using Robust.Shared.ContentPack; // Forge-Change
+using Content.Shared._NC.Sponsors; // Forge-Change
+using Robust.Shared.Player;
+using System.Reflection;
+using Robust.Shared.Network;
+using Content.Client._NC.Sponsors; // Forge-Change
 
 namespace Content.Client.Lobby.UI
 {
@@ -54,10 +59,11 @@ namespace Content.Client.Lobby.UI
         private readonly IClientPreferencesManager _preferencesManager;
         private readonly MarkingManager _markingManager;
         private readonly JobRequirementsManager _requirements;
-        private readonly IResourceManager _resManager; // Corvax-Change
+        private readonly IResourceManager _resManager; // Forge-Change
         private readonly CharacterRequirementsSystem _characterRequirementsSystem;
         private readonly LobbyUIController _controller;
         private readonly IRobustRandom _random;
+        private readonly SponsorManager _sponsorMan; // Forge-Change
 
         private FlavorText.FlavorText? _flavorText;
         private BoxContainer _ccustomspecienamecontainerEdit => CCustomSpecieName;
@@ -66,7 +72,7 @@ namespace Content.Client.Lobby.UI
 
         /// If we're attempting to save
         public event Action? Save;
-        private bool _imaging; // Corvax-Change
+        private bool _imaging; // Forge-Change
         private bool _exporting;
         private bool _isDirty;
 
@@ -113,10 +119,11 @@ namespace Content.Client.Lobby.UI
             IFileDialogManager dialogManager,
             IPlayerManager playerManager,
             IPrototypeManager prototypeManager,
-            IResourceManager resManager, // Corvax-Change
+            IResourceManager resManager, // Forge-Change
             JobRequirementsManager requirements,
             MarkingManager markings,
-            IRobustRandom random
+            IRobustRandom random,
+            SponsorManager sponsorMan // Forge-Change
             )
         {
             RobustXamlLoader.Load(this);
@@ -127,14 +134,15 @@ namespace Content.Client.Lobby.UI
             _prototypeManager = prototypeManager;
             _markingManager = markings;
             _preferencesManager = preferencesManager;
-            _resManager = resManager; // Corvax-Change
+            _resManager = resManager; // Forge-Change
             _requirements = requirements;
             _random = random;
+            _sponsorMan = sponsorMan; // Forge-Change
 
             _characterRequirementsSystem = _entManager.System<CharacterRequirementsSystem>();
             _controller = UserInterfaceManager.GetUIController<LobbyUIController>();
 
-            // Corvax-Change-Start
+            // Forge-Change-Start
             ExportImageButton.OnPressed += args =>
             {
                 ExportImage();
@@ -144,7 +152,7 @@ namespace Content.Client.Lobby.UI
             {
                 _resManager.UserData.OpenOsWindow(ContentSpriteSystem.Exports);
             };
-            // Corvax-Change-End
+            // Forge-Change-End
             ImportButton.OnPressed += args => { ImportProfile(); };
             ExportButton.OnPressed += args => { ExportProfile(); };
             SaveButton.OnPressed += args => { Save?.Invoke(); };
@@ -672,6 +680,7 @@ namespace Content.Client.Lobby.UI
                     _entManager,
                     _prototypeManager,
                     _cfgManager,
+                    _sponsorMan, // Forge-Change
                     out var reasons))
                 {
                     var reason = _characterRequirementsSystem.GetRequirementsText(reasons);
@@ -921,6 +930,7 @@ namespace Content.Client.Lobby.UI
                          _entManager,
                          _prototypeManager,
                          _cfgManager,
+                         _sponsorMan, // Forge-Change
                          out var reasons))
                         selector.LockRequirements(_characterRequirementsSystem.GetRequirementsText(reasons));
                     else
@@ -1055,6 +1065,7 @@ namespace Content.Client.Lobby.UI
                         _entManager,
                         _prototypeManager,
                         _cfgManager,
+                        _sponsorMan, // Forge-Change
                         out var reasons))
                         selector.LockRequirements(_characterRequirementsSystem.GetRequirementsText(reasons));
                     else
@@ -1112,6 +1123,7 @@ namespace Content.Client.Lobby.UI
                         _entManager,
                         _prototypeManager,
                         _cfgManager,
+                        _sponsorMan, // Forge-Change
                         out _))
                     continue;
 
@@ -1797,7 +1809,7 @@ namespace Content.Client.Lobby.UI
             UpdateNameEdit();
         }
 
-        // Corvax-Change-Start
+        // Forge-Change-Start
         private async void ExportImage()
         {
             if (_imaging)
@@ -1810,7 +1822,7 @@ namespace Content.Client.Lobby.UI
             await _entManager.System<ContentSpriteSystem>().Export(PreviewDummy, dir, includeId: false);
             _imaging = false;
         }
-        // Corvax-Change-End
+        // Forge-Change-End
 
         private async void ImportProfile()
         {
@@ -1968,6 +1980,7 @@ namespace Content.Client.Lobby.UI
                     _entManager,
                     _prototypeManager,
                     _cfgManager,
+                    _sponsorMan, // Forge-Change
                     out _
                 );
                 _traits.Add(trait, usable);
@@ -2049,7 +2062,7 @@ namespace Content.Client.Lobby.UI
 
                 var selector = new TraitPreferenceSelector(
                     trait, highJob, Profile ?? HumanoidCharacterProfile.DefaultWithSpecies(),
-                    _entManager, _prototypeManager, _cfgManager, _characterRequirementsSystem, _requirements);
+                    _entManager, _prototypeManager, _cfgManager, _characterRequirementsSystem, _requirements, _sponsorMan); // Forge-Change
                 selector.Valid = usable;
                 selector.ShowUnusable = showUnusable.Value;
                 AddSelector(selector);
@@ -2208,7 +2221,7 @@ namespace Content.Client.Lobby.UI
             UpdateCharacterRequired();
         }
 
-        // Corvax-Change-Start
+        // Forge-Change-Start
         private void RemoveSuperfluousTraits()
         {
             if (Profile?.TraitPreferences == null)
@@ -2230,7 +2243,7 @@ namespace Content.Client.Lobby.UI
                 }
             }
         }
-        // Corvax-Change-End
+        // Forge-Change-End
 
         #endregion
 
@@ -2306,6 +2319,7 @@ namespace Content.Client.Lobby.UI
 
             // Get the highest priority job to use for loadout filtering
             var highJob = _controller.GetPreferredJob(Profile ?? HumanoidCharacterProfile.DefaultWithSpecies());
+            var userId = _playerManager.LocalUser;
 
             _loadouts.Clear();
             foreach (var loadout in _prototypeManager.EnumeratePrototypes<LoadoutPrototype>())
@@ -2320,8 +2334,18 @@ namespace Content.Client.Lobby.UI
                     _entManager,
                     _prototypeManager,
                     _cfgManager,
+                    _sponsorMan, // Forge-Change
                     out _
                 );
+
+                if (loadout.Level != SponsorLevel.None && userId != null)
+                {
+                    if (!_sponsorMan.TryGetSponsor(userId.Value, out SponsorLevel level))
+                        continue;
+                    if (loadout.Level > level)
+                        continue;
+                }
+
                 _loadouts.Add(loadout, usable);
 
                 var list = _loadoutPreferences.ToList();
@@ -2404,7 +2428,7 @@ namespace Content.Client.Lobby.UI
                 var selector = new LoadoutPreferenceSelector(
                     loadout, highJob ?? new JobPrototype(),
                     Profile ?? HumanoidCharacterProfile.DefaultWithSpecies(), ref _dummyLoadouts,
-                    _entManager, _prototypeManager, _cfgManager, _characterRequirementsSystem, _requirements)
+                    _entManager, _prototypeManager, _cfgManager, _characterRequirementsSystem, _requirements, _sponsorMan) // Forge-Change
                     { Preference = new(loadout.ID) };
                 UpdateSelector(selector, usable);
                 AddSelector(selector);
@@ -2626,7 +2650,7 @@ namespace Content.Client.Lobby.UI
             UpdateCharacterRequired();
         }
 
-        // Corvax-Change-Start
+        // Forge-Change-Start
         private void RemoveSuperfluousLoadouts()
         {
             if (Profile?.LoadoutPreferences == null)
@@ -2648,7 +2672,7 @@ namespace Content.Client.Lobby.UI
                 }
             }
         }
-        // Corvax-Change-End
+        // Forge-Change-End
 
         #endregion
 
@@ -2657,8 +2681,8 @@ namespace Content.Client.Lobby.UI
         private void UpdateCharacterRequired()
         {
             // Removes unnecessary items if they exceed the limit /ᐠ˵- ⩊ -˵マ
-            RemoveSuperfluousTraits(); // Corvax-Change
-            RemoveSuperfluousLoadouts(); // Corvax-Change
+            RemoveSuperfluousTraits(); // Forge-Change
+            RemoveSuperfluousLoadouts(); // Forge-Change
 
             UpdateRoleRequirements();
             UpdateTraits(TraitsShowUnusableButton.Pressed);

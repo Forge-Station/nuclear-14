@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Shared._NC.Sponsors; // Forge-Change
 using Content.Shared.CCVar;
 using Content.Shared.Players.PlayTimeTracking;
 using Content.Shared.Preferences;
@@ -31,6 +32,7 @@ public sealed partial class CharacterJobRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0)
     {
@@ -82,6 +84,7 @@ public sealed partial class CharacterDepartmentRequirement : CharacterRequiremen
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0)
     {
@@ -129,6 +132,7 @@ public sealed partial class CharacterDepartmentTimeRequirement : CharacterRequir
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0)
     {
@@ -201,6 +205,7 @@ public sealed partial class CharacterOverallTimeRequirement : CharacterRequireme
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0)
     {
@@ -263,6 +268,7 @@ public sealed partial class CharacterPlaytimeRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0)
     {

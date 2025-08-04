@@ -21,6 +21,7 @@ using Robust.Shared.Random;
 using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Utility;
 using Timer = Robust.Shared.Timing.Timer;
+using Content.Server._NC.Sponsors; // Forge-Change
 
 namespace Content.Server.Traits;
 
@@ -37,6 +38,7 @@ public sealed class TraitSystem : EntitySystem
     [Dependency] private readonly IPlayerManager _playerManager = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly IChatManager _chatManager = default!;
+    [Dependency] private readonly SponsorManager _sponsorManager = default!; // Forge-Change
 
     public override void Initialize()
     {
@@ -77,7 +79,7 @@ public sealed class TraitSystem : EntitySystem
                 jobPrototypeToUse,
                 profile, playTimes, whitelisted, traitPrototype,
                 EntityManager, _prototype, _configuration,
-                out _))
+                _sponsorManager, out _)) // Forge-Change
                 continue;
 
             // To check for cheaters. :FaridaBirb.png:

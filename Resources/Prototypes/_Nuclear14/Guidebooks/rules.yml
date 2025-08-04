@@ -1,4 +1,4 @@
-﻿- type: guideEntry 
-  id: DefaultRuleset
-  name: guide-entry-rules
-  text: "/ServerInfo/Guidebook/ServerRules/DefaultRuleset.xml"
+﻿# - type: guideEntry #! Forge-Change Заменили на свой прото
+#   id: DefaultRuleset
+#   name: guide-entry-rules
+#   text: "/ServerInfo/Guidebook/ServerRules/DefaultRuleset.xml"

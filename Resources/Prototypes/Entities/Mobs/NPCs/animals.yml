@@ -326,6 +326,7 @@
     intervalSeconds: 20
     minimumEntitiesSpawned: 1
     maximumEntitiesSpawned: 1
+    ignoreSpawnBlock: true # Forge-Change
   - type: TimedDespawn #delete the egg after the chicken spawns
     lifetime: 21
 
@@ -747,6 +748,7 @@
       intervalSeconds: 20
       minimumEntitiesSpawned: 1
       maximumEntitiesSpawned: 1
+      ignoreSpawnBlock: true # Forge-Change
     - type: TimedDespawn #delete the egg after the chicken spawns
       lifetime: 21
 

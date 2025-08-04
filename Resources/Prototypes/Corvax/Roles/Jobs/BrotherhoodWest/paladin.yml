@@ -30,12 +30,12 @@
 - type: startingGear
   id: BoSWestPaladinGear
   equipment:
-    jumpsuit: N14ClothingUniformBosRecon
+    jumpsuit: N14ClothingUniformBosReconWest
     back: N14ClothingBackpackMilitary
     shoes: N14ClothingBootsCombatFilled
     head:  N14ClothingHeadHatBrotherhoodFieldCap
-    outerClothing: N14ClothingOuterMidwestArmorMK2
-    # pocket1: NCRBoSMidwestPaladinkits
+    outerClothing: N14ClothingOuterPowerArmorT45West
+    pocket1: BoSMidwestPaladinKits
     hands: N14ClothingHandsGlovesCombat
     id: N14IDBrotherhoodWestHolotagPaladin
     ears: N14ClothingHeadsetBOSWest

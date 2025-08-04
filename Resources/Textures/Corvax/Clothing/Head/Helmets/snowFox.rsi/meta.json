@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "license": "All Rights Reserved",
+  "copyright": "by bao - for Corvax Forge",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "inhand-rightpng",
+      "directions": 4
+    },
+    {
+      "name": "equipped-HELMET",
+      "directions": 4
+    },
+    {
+      "name": "icon"
+    },
+    {
+      "name": "inhand-left",
+      "directions": 4
+    }
+  ]
+}

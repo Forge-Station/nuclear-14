@@ -15,7 +15,7 @@
   playTimeTracker: VaultDoctor
   startingGear: VaultDoctorGear
   alwaysUseSpawner: true
-  icon: "JobIconVaultMedic" # Corvax-Change
+  icon: "JobIconVaultMedic" # Forge-Change
   supervisors: job-supervisors-vault
   access:
   - VaultDweller
@@ -34,14 +34,14 @@
   id: VaultDoctorGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitVault14
-    back: N14ClothingBackpackVaultBlue # Corvax-Change
+    back: N14ClothingBackpackVaultBlue # Forge-Change
     shoes: N14ClothingBootsBlack
     outerClothing: N14ClothingOuterCoatLab
     id: N14VaultDoctorPDA
     ears: N14ClothingHeadsetVaultDweller
     belt: ClothingBeltMedicalFilled
   innerClothingSkirt: N14ClothingUniformJumpsuitVault14
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14Bandage
     - N14Antidote

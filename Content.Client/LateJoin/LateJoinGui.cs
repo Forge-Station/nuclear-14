@@ -19,6 +19,7 @@ using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using static Robust.Client.UserInterface.Controls.BoxContainer;
+using Content.Shared._NC.Sponsors; // Forge-Change
 
 namespace Content.Client.LateJoin
 {
@@ -31,6 +32,7 @@ namespace Content.Client.LateJoin
         [Dependency] private readonly JobRequirementsManager _jobRequirements = default!;
         [Dependency] private readonly IEntityManager _entityManager = default!;
         [Dependency] private readonly IClientPreferencesManager _prefs = default!;
+        [Dependency] private readonly ISharedSponsorManager _sponsorManager = default!; // Forge-Change
 
         public event Action<(NetEntity, string)> SelectedId;
 
@@ -289,6 +291,7 @@ namespace Content.Client.LateJoin
                                 _entityManager,
                                 _prototypeManager,
                                 _configManager,
+                                _sponsorManager, // Forge-Change
                                 out var reasons))
                         {
                             jobButton.Disabled = true;
