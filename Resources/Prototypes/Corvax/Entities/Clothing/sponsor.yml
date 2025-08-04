@@ -20,3 +20,20 @@
   - type: Tag
     tags:
     - HidesHair
+
+- type: entity
+  parent: N14ClothingOuterTownMediumCoat
+  id: N14ClothingOuterWandererCoat
+  categories: [HideSpawnMenu]
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/wanderercoat.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/wanderercoat.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.8
+        Slash: 0.8
+        Piercing: 0.75
+        Heat: 0.8

@@ -36,3 +36,12 @@
         - NCRRangerVeteran
   items:
     - N14ClothingOuterRangerSnowFox
+
+- type: loadout
+  id: LoadoutN14ClothingOuterWandererCoat
+  category: Roles
+  cost: 3
+  exclusive: true
+  sponsorLevel: 2
+  items:
+    - N14ClothingOuterWandererCoat
