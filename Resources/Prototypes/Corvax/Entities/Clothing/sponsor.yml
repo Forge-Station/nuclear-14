@@ -1,7 +1,7 @@
 - type: entity
   parent: N14ClothingOuterRangerCombat
   id: N14ClothingOuterRangerSnowFox
-  categories: [HideSpawnMenu]
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/snowFox.rsi
@@ -11,7 +11,7 @@
 - type: entity
   parent: N14ClothingHeadHatRangerHelmetFox
   id: N14ClothingHeadHatRangerHelmetSnowFox
-  categories: [HideSpawnMenu]
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: Corvax/Clothing/Head/Helmets/snowFox.rsi
@@ -24,7 +24,7 @@
 - type: entity
   parent: N14ClothingOuterTownMediumCoat
   id: N14ClothingOuterWandererCoat
-  categories: [HideSpawnMenu]
+  categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/wanderercoat.rsi
