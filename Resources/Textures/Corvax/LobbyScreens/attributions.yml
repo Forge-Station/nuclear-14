@@ -1,4 +1,9 @@
 - files: ["camp.png, ad_victoriam.png"]
   license: "CC-BY-NC-SA-4.0"
   copyright: "baohe on discord"
-  source: "https://github.com/Corvax-Frontier/nuclear-14"
+  source: "https://github.com/Forge-Station/nuclear-14"
+
+- files: ["oasisbar.png"]
+  license: "CC-BY-NC-SA-4.0"
+  copyright: "rozycosmic on discord"
+  source: "https://github.com/Forge-Station/nuclear-14"

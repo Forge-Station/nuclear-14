@@ -9,3 +9,9 @@
   background: /Textures/Corvax/LobbyScreens/ad_victoriam.png
   name: AD VICTORIAM
   artist: baohe
+
+- type: lobbyBackground
+  id: NCOasisBar
+  background: /Textures/Corvax/LobbyScreens/oasisbar.png
+  name: Oasis Bar
+  artist: rozycosmic
