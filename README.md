@@ -1,41 +1,66 @@
-# Nuclear 14
-Nuclear 14 is the original Fallout fork on Space Station 14 created by Peptide90 in 2022 and a collection of other valuable contributors. It uses assets from various Fallout13 (F13)(SS13) forks as well as brand new assets created by our community. The location and theme of Nuclear14 differs from F13 for a variety of reasons but mostly to give people something new to experience rather than rehashing the old again. Thanks to the SS14 engine and our Upstream repository, Einstein Engines, we bring something highly modular to the community to enjoy. The codebase has been licensed as AGPLv3 so that the fork and its developments can be enjoyed by all.
+# Nuclear 14 / Corvax Forge Nuclear
 
-The SS13 remake curse and F13 curse have been broken, come check out the community on [discord here](https://discord.gg/4gGSWyNbQF) and consider contributing. Links to the official servers can be found on the discord too or via the launcher at `ss14://game.nuclear14.com:1212`
+**Corvax Forge Nuclear** — это первая русскоязычная адаптация оригинального форка **Nuclear 14**, созданного Peptide90 в 2022 году при участии сообщества. Проект сочетает в себе лучшие наработки Fallout-тематики с возможностями движка Space Station 14.
 
-N14 is based on Einstein Engines.
+## О проекте
 
-## Building
+Nuclear 14 — первый Fallout-форк для Space Station 14, использующий:
+- Ассеты из различных Fallout13 (F13/SS13) сборок
+- Уникальные материалы, созданные сообществом
+- Высокомодульную систему от вышестоящего репозитория Einstein Engines
 
-Refer to [the Space Wizards' guide](https://docs.spacestation14.com/en/general-development/setup/setting-up-a-development-environment.html) on setting up a development environment for general information, but keep in mind that Einstein Engines is not the same and many things may not apply.
-We provide some scripts shown below to make the job easier.
+Тематика и локации отличаются от классического F13, предлагая игрокам новый опыт. Кодовая база лицензирована под AGPLv3, что позволяет свободно использовать и развивать проект.
 
-### Build dependencies
+## Особенности русской версии
+Corvax Forge Nuclear добавляет:
+- Полную локализацию интерфейса и контента
+- Оптимизации для русскоязычного комьюнити
+- Уникальные механики и баланс
+- Регулярные обновления и поддержку
 
-> - Git
-> - .NET SDK 9.0.101
+Для участия в разработке присоединяйтесь к нашему [Discord](https://discord.gg/7wDwSPde58).
 
+## Ссылки
+- [Discord](https://discord.gg/4gGSWyNbQF) (официальное сообщество)
+- Игровые серверы: через лаунчер (`ss14://game.nuclear14.com:1212`) или в Discord
+
+## Сборка
+
+### Требования
+- Git
+- .NET SDK 9.0.101
 
 ### Windows
-
-> 1. Clone this repository
-> 2. Run `git submodule update --init --recursive` in a terminal to download the engine
-> 3. Run `Scripts/bat/buildAllDebug.bat` after making any changes to the source
-> 4. Run `Scripts/bat/runQuickAll.bat` to launch the client and the server
-> 5. Connect to localhost in the client and play
+1. Клонируйте репозиторий:
+   ```sh
+   git clone https://github.com/Forge-Station/nuclear-14.git
+   ```
+2. Инициализируйте подмодули:
+   ```sh
+   git submodule update --init --recursive
+   ```
+3. Соберите проект:
+   ```sh
+   Scripts/bat/buildAllDebug.bat
+   ```
+4. Запустите клиент и сервер:
+   ```sh
+   Scripts/bat/runQuickAll.bat
+   ```
+5. Подключитесь к localhost через клиент
 
 ### Linux
-
-> 1. Clone this repository
-> 2. Run `git submodule update --init --recursive` in a terminal to download the engine
-> 3. Run `Scripts/sh/buildAllDebug.sh` after making any changes to the source
-> 4. Run `Scripts/sh/runQuickAll.sh` to launch the client and the server
-> 5. Connect to localhost in the client and play
+Аналогично Windows, но используйте скрипты `.sh`:
+```sh
+Scripts/sh/buildAllDebug.sh
+Scripts/sh/runQuickAll.sh
+```
 
 ### MacOS
+Теоретически аналогично Linux, но не тестировалось
 
-> I don't know anybody using MacOS to test this, but it's probably roughly the same steps as Linux
-
-## License
-
-Please read the [LEGAL.md](./LEGAL.md) file for information on the licenses of the code and assets in this repository.
+## Лицензия
+Подробная информация о лицензировании кода и ассетов доступна в [LEGAL.md](./LEGAL.md). Основные положения:
+- Код: AGPLv3
+- Ассеты: индивидуальные лицензии (проверяйте meta.json)
+- Обязательно соблюдение авторских прав
