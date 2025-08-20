@@ -1,0 +1,26 @@
+- type: loadout
+  id: LoadoutEnclaveX01PA
+  category: Outer
+  cost: 9
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - EnclaveSergeant
+        - EnclaveOfficer
+        - EnclaveColonel
+  items:
+    - N14ClothingOuterPowerArmorWashT51
+
+- type: loadout
+  id: LoadoutEnclaveX02PA
+  category: Outer
+  cost: 10
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - EnclaveOfficer
+        - EnclaveColonel
+  items:
+    - N14ClothingOuterPowerArmorWashT51Elite

@@ -1,85 +1,85 @@
-- type: entity
-  parent: N14BasePipboy
-  id: N14PipboyGold
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Sprite
-    sprite: Corvax/Objects/Misc/goldPipboy.rsi
-  - type: Icon
-    sprite: Corvax/Objects/Misc/goldPipboy.rsi
+#- type: entity
+#  parent: N14BasePipboy
+#  id: N14PipboyGold
+#  categories: [ HideSpawnMenu ]
+#  components:
+# - type: Sprite
+#    sprite: Corvax/Objects/Misc/goldPipboy.rsi
+#  - type: Icon
+#    sprite: Corvax/Objects/Misc/goldPipboy.rsi
 
-- type: entity
-  parent: N14PipboyGold
-  id: N14VaultPDAGold
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Pda
-    id: N14IDCardVault
+#- type: entity
+#  parent: N14PipboyGold
+#  id: N14VaultPDAGold
+#  categories: [ HideSpawnMenu ]
+#  components:
+#  - type: Pda
+#    id: N14IDCardVault
 
-- type: entity
-  parent: N14PipboyGold
-  id: N14VaultEngineerPDAGold
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Pda
-    id: N14IDCardVaultEngineer
+#- type: entity
+#  parent: N14PipboyGold
+#  id: N14VaultEngineerPDAGold
+#  categories: [ HideSpawnMenu ]
+#  components:
+#  - type: Pda
+#   id: N14IDCardVaultEngineer
 
-- type: entity
-  parent: N14PipboyGold
-  id: N14VaultDoctorPDAGold
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Pda
-    id: N14IDCardVaultDoctor
-  - type: HealthAnalyzer
-    scanDelay: 1.4
-    scanningEndSound:
-      path: "/Audio/Items/Medical/healthscanner.ogg"
+#- type: entity
+#  parent: N14PipboyGold
+#  id: N14VaultDoctorPDAGold
+# categories: [ HideSpawnMenu ]
+#  components:
+#  - type: Pda
+#    id: N14IDCardVaultDoctor
+#  - type: HealthAnalyzer
+#    scanDelay: 1.4
+#    scanningEndSound:
+#      path: "/Audio/Items/Medical/healthscanner.ogg"
 
-- type: entity
-  parent: N14PipboyGold
-  id: N14VaultSecurityPDAGold
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Pda
-    id: N14IDCardVaultSecurity
+#- type: entity
+#  parent: N14PipboyGold
+#  id: N14VaultSecurityPDAGold
+#  categories: [ HideSpawnMenu ]
+#  components:
+#  - type: Pda
+#    id: N14IDCardVaultSecurity
 
-- type: entity
-  parent: N14PipboyGold
-  id: N14VaultChefPDAGold
-  description: Covered in grease and flour.
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Pda
-    id: ChefIDCard
-  - type: PdaBorderColor
-    borderColor: "#d7d7d0"
+#- type: entity
+#  parent: N14PipboyGold
+#  id: N14VaultChefPDAGold
+#  description: Covered in grease and flour.
+#  categories: [ HideSpawnMenu ]
+#  components:
+#  - type: Pda
+#    id: ChefIDCard
+#  - type: PdaBorderColor
+#    borderColor: "#d7d7d0"
 
-- type: entity
-  parent: N14PipboyGold
-  id: N14VaultBotanistPDAGold
-  name: botanist PDA
-  description: Has an earthy scent.
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Pda
-    id: BotanistIDCard
-  - type: PdaBorderColor
-    borderColor: "#44843c"
-    accentVColor: "#00cc35"
+#- type: entity
+#  parent: N14PipboyGold
+#  id: N14VaultBotanistPDAGold
+#  name: botanist PDA
+#  description: Has an earthy scent.
+#  categories: [ HideSpawnMenu ]
+#  components:
+#  - type: Pda
+#   id: BotanistIDCard
+#  - type: PdaBorderColor
+#    borderColor: "#44843c"
+#    accentVColor: "#00cc35"
 
-- type: entity
-  parent: N14PipboyGold
-  id: N14VaultOverseerPDAGold
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Pda
-    id: N14IDCardVaultOverseer
-    penSlot:
-      startingItem: PenCap
-      priority: -1
-      whitelist:
-        tags:
-        - Write
-  - type: PdaBorderColor
-    borderColor: "#7C5D00"
+#- type: entity
+#  parent: N14PipboyGold
+#  id: N14VaultOverseerPDAGold
+#  categories: [ HideSpawnMenu ]
+#  components:
+#  - type: Pda
+#    id: N14IDCardVaultOverseer
+#    penSlot:
+#      startingItem: PenCap
+#      priority: -1
+#      whitelist:
+#        tags:
+#        - Write
+#  - type: PdaBorderColor
+#    borderColor: "#7C5D00"

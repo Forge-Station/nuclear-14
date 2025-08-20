@@ -1,0 +1,6 @@
+- type: jobIcon
+  parent: JobIcon
+  id: JobIconEnclave
+  icon:
+    sprite: _Sirius/Interface/Misc/job_icons.rsi
+    state: Enclave

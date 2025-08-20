@@ -1,0 +1,110 @@
+#MARK: Enclave
+- type: entity
+  parent: N14DoorBunker
+  id: N14DoorBunkerLockedEnclave
+  suffix: Enclave, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsEnclaveGeneral ]
+  - type: Wires
+    layoutId: HighSec
+
+- type: entity
+  parent: N14DoorBunkerGlass
+  id: N14DoorBunkerGlassLockedEnclave
+  suffix: Enclave, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsEnclaveGeneral ]
+  - type: Wires
+    layoutId: HighSec
+
+- type: entity
+  parent: N14DoorBunker
+  id: N14DoorBunkerLockedEnclaveScientist
+  suffix: Enclave, Locked, Scientist
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsEnclaveScientist ]
+  - type: Wires
+    layoutId: HighSec
+
+- type: entity
+  parent: N14DoorBunkerGlass
+  id: N14DoorBunkerGlassLockedEnclaveScientist
+  suffix: Enclave, Locked, Scientist
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsEnclaveScientist ]
+  - type: Wires
+    layoutId: HighSec
+
+- type: entity
+  parent: N14DoorBunker
+  id: N14DoorBunkerLockedEnclaveSergeant
+  suffix: Enclave, Locked, Sergeant
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsEnclaveSergeant ]
+  - type: Wires
+    layoutId: HighSec
+
+- type: entity
+  parent: N14DoorBunkerGlass
+  id: N14DoorBunkerGlassLockedEnclaveSergeant
+  suffix: Enclave, Locked, Sergeant
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsEnclaveSergeant ]
+  - type: Wires
+    layoutId: HighSec
+
+- type: entity
+  parent: N14DoorBunker
+  id: N14DoorBunkerLockedEnclaveOfficer
+  suffix: Enclave, Locked, Officer
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsEnclaveOfficer ]
+  - type: Wires
+    layoutId: HighSec
+
+- type: entity
+  parent: N14DoorBunkerGlass
+  id: N14DoorBunkerGlassLockedEnclaveOfficer
+  suffix: Enclave, Locked, Officer
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsEnclaveOfficer ]
+  - type: Wires
+    layoutId: HighSec
+
+- type: entity
+  parent: N14DoorBunker
+  id: N14DoorBunkerLockedEnclaveColonel
+  suffix: Enclave, Locked, Colonel
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsEnclaveColonel ]
+  - type: Wires
+    layoutId: HighSec
+
+- type: entity
+  parent: N14DoorBunkerGlass
+  id: N14DoorBunkerGlassLockedBoSColonel
+  suffix: Enclave, Locked, Colonel
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsEnclaveColonel ]
+  - type: Wires
+    layoutId: HighSec

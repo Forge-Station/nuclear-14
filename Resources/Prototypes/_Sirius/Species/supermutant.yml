@@ -1,0 +1,157 @@
+- type: species
+  id: Supermutant
+  name: species-name-Supermutant
+  roundStart: false
+  prototype: N14MobSupermutant
+  sprites: N14MobSupermutantSprites
+  markingLimits: MobSupermutantMarkingLimits
+  dollPrototype: N14MobSupermutantDummy
+  skinColoration: HumanToned
+  minHeight: 0.937 # Corvax-Change
+  maxHeight: 1.249 # Corvax-Change
+  minWidth: 0.825 # Corvax-Change
+  maxWidth: 1.05 # Corvax-Change
+  minAge: 200 # Corvax-Change
+  oldAge: 250 # Corvax-Change
+  maxAge: 300 # Corvax-Change
+# The lack of a layer means that
+# this person cannot have round-start anything
+# applied to that layer. It has to instead
+# be defined as a 'custom base layer'
+# in either the mob's starting marking prototype,
+# or it has to be added in C#.
+- type: speciesBaseSprites
+  id: N14MobSupermutantSprites
+  sprites:
+    Head: N14MobSupermutantHead
+    Hair: MobHumanoidAnyMarking
+    FacialHair: MobHumanoidAnyMarking
+    Chest: N14MobSupermutantTorso
+    Eyes: MobHumanoidEyes
+    LArm: N14MobSupermutantLArm
+    RArm: N14MobSupermutantRArm
+    LHand: N14MobSupermutantLHand
+    RHand: N14MobSupermutantRHand
+    LLeg: N14MobSupermutantLLeg
+    RLeg: N14MobSupermutantRLeg
+    LFoot: N14MobSupermutantLFoot
+    RFoot: N14MobSupermutantRFoot
+
+- type: markingPoints
+  id: MobSupermutantMarkingLimits
+  onlyWhitelisted: true # Forge-Change ещё удалил ненужные слоты
+  points:
+    Snout:
+      points: 1
+      required: false
+    Chest:
+      points: 1
+      required: false
+    RightLeg:
+      points: 2
+      required: false
+    RightFoot:
+      points: 2
+      required: false
+    LeftLeg:
+      points: 2
+      required: false
+    LeftFoot:
+      points: 2
+      required: false
+    RightArm:
+      points: 2
+      required: false
+    RightHand:
+      points: 2
+      required: false
+    LeftArm:
+      points: 2
+      required: false
+    LeftHand:
+      points: 2
+      required: false
+
+- type: humanoidBaseSprite
+  id: N14MobSupermutantHead
+  baseSprite:
+    sprite: _Sirius/Mobs/Species/Supermutant/parts.rsi
+    state: head_m
+
+- type: humanoidBaseSprite
+  id: N14MobSupermutantHeadMale
+  baseSprite:
+    sprite: _Sirius/Mobs/Species/Supermutant/parts.rsi
+    state: head_m
+
+- type: humanoidBaseSprite
+  id: N14MobSupermutantHeadFemale
+  baseSprite:
+    sprite: _Sirius/Mobs/Species/Supermutant/parts.rsi
+    state: head_f
+
+- type: humanoidBaseSprite
+  id: N14MobSupermutantTorso
+  baseSprite:
+    sprite: _Sirius/Mobs/Species/Supermutant/parts.rsi
+    state: torso_m
+
+- type: humanoidBaseSprite
+  id: N14MobSupermutantTorsoMale
+  baseSprite:
+    sprite: _Sirius/Mobs/Species/Supermutant/parts.rsi
+    state: torso_m
+
+- type: humanoidBaseSprite
+  id: N14MobSupermutantTorsoFemale
+  baseSprite:
+    sprite: _Sirius/Mobs/Species/Supermutant/parts.rsi
+    state: torso_f
+
+- type: humanoidBaseSprite
+  id: N14MobSupermutantLLeg
+  baseSprite:
+    sprite: _Sirius/Mobs/Species/Supermutant/parts.rsi
+    state: l_leg
+
+- type: humanoidBaseSprite
+  id: N14MobSupermutantLArm
+  baseSprite:
+    sprite: _Sirius/Mobs/Species/Supermutant/parts.rsi
+    state: l_arm
+
+- type: humanoidBaseSprite
+  id: N14MobSupermutantLHand
+  baseSprite:
+    sprite: _Sirius/Mobs/Species/Supermutant/parts.rsi
+    state: l_hand
+
+- type: humanoidBaseSprite
+  id: N14MobSupermutantLFoot
+  baseSprite:
+    sprite: _Sirius/Mobs/Species/Supermutant/parts.rsi
+    state: l_foot
+
+- type: humanoidBaseSprite
+  id: N14MobSupermutantRLeg
+  baseSprite:
+    sprite: _Sirius/Mobs/Species/Supermutant/parts.rsi
+    state: r_leg
+
+- type: humanoidBaseSprite
+  id: N14MobSupermutantRArm
+  baseSprite:
+    sprite: _Sirius/Mobs/Species/Supermutant/parts.rsi
+    state: r_arm
+
+- type: humanoidBaseSprite
+  id: N14MobSupermutantRHand
+  baseSprite:
+    sprite: _Sirius/Mobs/Species/Supermutant/parts.rsi
+    state: r_hand
+
+- type: humanoidBaseSprite
+  id: N14MobSupermutantRFoot
+  baseSprite:
+    sprite: _Sirius/Mobs/Species/Supermutant/parts.rsi
+    state: r_foot

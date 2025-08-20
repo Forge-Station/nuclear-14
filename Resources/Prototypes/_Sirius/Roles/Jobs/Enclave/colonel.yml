@@ -1,0 +1,57 @@
+- type: job
+  id: EnclaveColonel
+  setPreference: true
+  overrideConsoleVisibility: false
+  canBeAntag: true
+  name: job-name-enclave-colonel
+  description: job-description-enclave-colonel
+  playTimeTracker: EnclaveColonel
+  requirements:
+    - !type:CharacterSpeciesRequirement
+      species:
+      - Human
+    - !type:CharacterDepartmentTimeRequirement
+      department: Enclave
+      min: 216000 # 60 hours Corvax-Change
+    - !type:CharacterPlaytimeRequirement # Corvax-Add
+      tracker: EnclaveOfficer
+      min: 43200 # 12 hours
+    - !type:CharacterLogicOrRequirement
+      requirements:
+        - !type:CharacterSpeciesRequirement
+          species:
+            - Human
+            - Ghoul
+  startingGear: EnclaveColonelGear
+  alwaysUseSpawner: true
+  icon: "JobIconEnclave"
+  supervisors: job-supervisors-enclave-commander
+  accessGroups:
+  - Enclave
+  special:
+  - !type:AddComponentSpecial
+    components:
+      - type: NpcFactionMember
+        factions:
+          - Wastelander
+          - Enclave
+
+- type: startingGear
+  id: EnclaveColonelGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitEnclave
+    back: N14ClothingBackpackMilitary
+    shoes: N14ClothingBootsCombatFilled
+    head:  N14ClothingHeadHatEnclaveOfficer
+    outerClothing: N14ClothingOuterEnclaverOfficerCoat
+    hands: N14ClothingHandsGlovesCombat
+    pocket1: EnclaveOfficerSet
+    id: N14IDEnclaveColonel
+    ears: N14ClothingHeadsetEnclave
+    belt: ClothingBeltEnclave
+  storage:
+    back:
+    - N14BoxPlasticFilledMilitary
+
+- type: playTimeTracker
+  id: EnclaveColonel

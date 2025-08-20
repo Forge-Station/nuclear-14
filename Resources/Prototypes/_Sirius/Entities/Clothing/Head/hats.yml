@@ -1,0 +1,12 @@
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatEnclaveJunOfficerCap
+  name: enclave officer cap
+  description: A military cap worn by Enclave Officers.
+  components:
+  - type: Sprite
+    sprite: _Sirius/Clothing/Head/FalloutHats/enclavejunofficer.rsi
+  - type: Clothing
+    sprite: _Sirius/Clothing/Head/FalloutHats/enclavejunofficer.rsi
+  # - type: ClothingSpecialModifier
+    # perceptionModifier: 1

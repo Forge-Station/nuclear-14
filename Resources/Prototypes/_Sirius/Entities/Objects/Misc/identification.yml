@@ -1,0 +1,66 @@
+#MARK: Enclave
+- type: entity
+  parent: N14IDPassportBlank
+  id: N14IDEnclaveRecruit
+  name: holotag
+  description: An ID holotag worn by the Enclave.
+  suffix: Trooper
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: enclave_trooper
+  - type: PresetIdCard
+    job: EnclaveRecruit
+
+#MARK: Enclave
+- type: entity
+  parent: N14IDPassportBlank
+  id: N14IDEnclaveSergeant
+  name: holotag
+  description: An ID holotag worn by the Enclave.
+  suffix: Trooper
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: enclave_trooper
+  - type: PresetIdCard
+    job: EnclaveSergeant
+
+- type: entity
+  parent: N14IDPassportBlank
+  id: N14IDEnclaveJunOfficer
+  name: holotag
+  description: An ID holotag worn by higher ranking memebers of the Enclave.
+  suffix: Officer
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: enclave_officer
+  - type: PresetIdCard
+    job: EnclaveOfficer
+
+- type: entity
+  parent: N14IDPassportBlank
+  id: N14IDEnclaveColonel
+  name: holotag
+  description: An ID holotag worn by higher ranking memebers of the Enclave.
+  suffix: Officer
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: enclave_officer
+  - type: PresetIdCard
+    job: EnclaveColonel
+
+- type: entity
+  parent: N14IDPassportBlank
+  id: N14IDEnclaveScientist
+  name: holotag
+  description: An ID holotag worn by the scientists of Enclave.
+  suffix: Scientist
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: enclave_noncombat
+  - type: PresetIdCard
+    job: EnclaveScientist

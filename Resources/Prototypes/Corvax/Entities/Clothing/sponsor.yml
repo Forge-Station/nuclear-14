@@ -1,130 +1,130 @@
-- type: entity
-  parent: N14ClothingOuterRangerCombat
-  id: N14ClothingOuterRangerSnowFox
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Sprite
-    sprite: Corvax/Clothing/OuterClothing/Armor/snowFox.rsi
-  - type: Clothing
-    sprite: Corvax/Clothing/OuterClothing/Armor/snowFox.rsi
+#- type: entity
+#  parent: N14ClothingOuterRangerCombat
+#  id: N14ClothingOuterRangerSnowFox
+#  categories: [ HideSpawnMenu ]
+#  components:
+#  - type: Sprite
+#    sprite: Corvax/Clothing/OuterClothing/Armor/snowFox.rsi
+#  - type: Clothing
+#    sprite: Corvax/Clothing/OuterClothing/Armor/snowFox.rsi
 
-- type: entity
-  parent: N14ClothingHeadHatRangerHelmetFox
-  id: N14ClothingHeadHatRangerHelmetSnowFox
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Sprite
-    sprite: Corvax/Clothing/Head/Helmets/snowFox.rsi
-  - type: Clothing
-    sprite: Corvax/Clothing/Head/Helmets/snowFox.rsi
-  - type: Tag
-    tags:
-    - HidesHair
+#- type: entity
+#  parent: N14ClothingHeadHatRangerHelmetFox
+#  id: N14ClothingHeadHatRangerHelmetSnowFox
+#  categories: [ HideSpawnMenu ]
+#  components:
+#  - type: Sprite
+#    sprite: Corvax/Clothing/Head/Helmets/snowFox.rsi
+#  - type: Clothing
+#    sprite: Corvax/Clothing/Head/Helmets/snowFox.rsi
+#  - type: Tag
+#    tags:
+#    - HidesHair
 
-- type: entity
-  parent: N14ClothingOuterTownMediumCoat
-  id: N14ClothingOuterWandererCoat
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Sprite
-    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/wanderercoat.rsi
-  - type: Clothing
-    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/wanderercoat.rsi
-  - type: Armor
-    modifiers:
-      coefficients:
-        Blunt: 0.8
-        Slash: 0.8
-        Piercing: 0.75
-        Heat: 0.8
+#- type: entity
+#  parent: N14ClothingOuterTownMediumCoat
+#  id: N14ClothingOuterWandererCoat
+#  categories: [ HideSpawnMenu ]
+#  components:
+#  - type: Sprite
+#    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/wanderercoat.rsi
+#  - type: Clothing
+#    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/wanderercoat.rsi
+#  - type: Armor
+#    modifiers:
+#      coefficients:
+#        Blunt: 0.8
+#        Slash: 0.8
+#        Piercing: 0.75
+#        Heat: 0.8
 
-- type: entity
-  parent: N14ClothingOuterPowerArmorMidwest
-  id: N14ClothingOuterPowerArmorHellCat
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Sprite
-    sprite: Corvax/Clothing/OuterClothing/PowerArmor/hellCat.rsi
-  - type: Clothing
-    sprite: Corvax/Clothing/OuterClothing/PowerArmor/hellCat.rsi
-  - type: ToggleableClothing
-    clothingPrototypes:
-      head: N14ClothingHeadHelmetPowerArmorHellCat
-      gloves: N14ClothingPAGauntletsMBoS
-      shoes: N14ClothingPABootsMBoS
-      back: N14ClothingPowerSystemsBack
-  - type: Storage
-    grid:
-    - 0,0,2,1
-  - type: ContainerContainer
-    containers:
-      storagebase: !type:Container
-        ents: []
-  - type: UserInterface
-    interfaces:
-      enum.StorageUiKey.Key:
-        type: StorageBoundUserInterface
-      enum.ToggleClothingUiKey.Key:
-        type: ToggleableClothingBoundUserInterface
+#- type: entity
+#  parent: N14ClothingOuterPowerArmorMidwest
+#  id: N14ClothingOuterPowerArmorHellCat
+#  categories: [ HideSpawnMenu ]
+#  components:
+#  - type: Sprite
+#    sprite: Corvax/Clothing/OuterClothing/PowerArmor/hellCat.rsi
+#  - type: Clothing
+#    sprite: Corvax/Clothing/OuterClothing/PowerArmor/hellCat.rsi
+#  - type: ToggleableClothing
+#    clothingPrototypes:
+#      head: N14ClothingHeadHelmetPowerArmorHellCat
+#      gloves: N14ClothingPAGauntletsMBoS
+#      shoes: N14ClothingPABootsMBoS
+#      back: N14ClothingPowerSystemsBack
+#  - type: Storage
+#    grid:
+#    - 0,0,2,1
+#  - type: ContainerContainer
+#    containers:
+#      storagebase: !type:Container
+#        ents: []
+#  - type: UserInterface
+#    interfaces:
+#      enum.StorageUiKey.Key:
+#        type: StorageBoundUserInterface
+#      enum.ToggleClothingUiKey.Key:
+#        type: ToggleableClothingBoundUserInterface
 
-- type: entity
-  parent: N14ClothingHeadHelmetPowerArmorMidwest
-  id: N14ClothingHeadHelmetPowerArmorHellCat
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Sprite
-    sprite: Corvax/Clothing/Head/PowerArmorHelmets/hellCat.rsi
-  - type: PointLight
-    color: "#f80000"
+#- type: entity
+#  parent: N14ClothingHeadHelmetPowerArmorMidwest
+#  id: N14ClothingHeadHelmetPowerArmorHellCat
+#  categories: [ HideSpawnMenu ]
+#  components:
+#  - type: Sprite
+#    sprite: Corvax/Clothing/Head/PowerArmorHelmets/hellCat.rsi
+#  - type: PointLight
+#    color: "#f80000"
 
-- type: entity
-  parent: N14ClothingUniformSkirtBase
-  id: N14ClothingUniformJumpskirtVault14Gold
-  categories: [ HideSpawnMenu ]
-  name: vault 14 skirt 
-  suffix: Gold
-  description: It's a vault skirt. It is gold-colored. It has a bright yellow 14 on the back.
-  components:
-  - type: Sprite
-    sprite: Corvax/Clothing/Uniforms/FalloutSkirts/vault14dressgold.rsi
-  - type: Clothing
-    sprite: Corvax/Clothing/Uniforms/FalloutSkirts/vault14dressgold.rsi
+#- type: entity
+#  parent: N14ClothingUniformSkirtBase
+#  id: N14ClothingUniformJumpskirtVault14Gold
+#  categories: [ HideSpawnMenu ]
+#  name: vault 14 skirt 
+#  suffix: Gold
+#  description: It's a vault skirt. It is gold-colored. It has a bright yellow 14 on the back.
+#  components:
+#  - type: Sprite
+#    sprite: Corvax/Clothing/Uniforms/FalloutSkirts/vault14dressgold.rsi
+#  - type: Clothing
+#    sprite: Corvax/Clothing/Uniforms/FalloutSkirts/vault14dressgold.rsi
 
-- type: entity
-  parent: N14ClothingUniformSkirtBase
-  id: N14ClothingUniformJumpskirtVault14Purple
-  categories: [ HideSpawnMenu ]
-  name: vault 14 skirt
-  suffix: Purple
-  description: It's a vault skirt. It is purple-colored. It has a bright yellow 14 on the back.
-  components:
-  - type: Sprite
-    sprite: Corvax/Clothing/Uniforms/FalloutSkirts/vault14dresspurple.rsi
-  - type: Clothing
-    sprite: Corvax/Clothing/Uniforms/FalloutSkirts/vault14dresspurple.rsi
+#- type: entity
+#  parent: N14ClothingUniformSkirtBase
+#  id: N14ClothingUniformJumpskirtVault14Purple
+#  categories: [ HideSpawnMenu ]
+#  name: vault 14 skirt
+#  suffix: Purple
+#  description: It's a vault skirt. It is purple-colored. It has a bright yellow 14 on the back.
+#  components:
+#  - type: Sprite
+#    sprite: Corvax/Clothing/Uniforms/FalloutSkirts/vault14dresspurple.rsi
+#  - type: Clothing
+#    sprite: Corvax/Clothing/Uniforms/FalloutSkirts/vault14dresspurple.rsi
 
-- type: entity
-  parent: N14ClothingUniformBase
-  id: N14ClothingUniformJumpsuitVault14Gold
-  categories: [ HideSpawnMenu ]
-  name: vault 14 jumpsuit
-  suffix: Gold
-  description: A jumpsuit worn by the dwellers of a vault. It is gold-colored. It has a bright yellow 14 on the back.
-  components:
-  - type: Sprite
-    sprite: Corvax/Clothing/Uniforms/Jumpsuit/vaultsuit14gold.rsi
-  - type: Clothing
-    sprite: Corvax/Clothing/Uniforms/Jumpsuit/vaultsuit14gold.rsi
+#- type: entity
+#  parent: N14ClothingUniformBase
+#  id: N14ClothingUniformJumpsuitVault14Gold
+#  categories: [ HideSpawnMenu ]
+#  name: vault 14 jumpsuit
+#  suffix: Gold
+#  description: A jumpsuit worn by the dwellers of a vault. It is gold-colored. It has a bright yellow 14 on the back.
+#  components:
+#  - type: Sprite
+#    sprite: Corvax/Clothing/Uniforms/Jumpsuit/vaultsuit14gold.rsi
+#  - type: Clothing
+#    sprite: Corvax/Clothing/Uniforms/Jumpsuit/vaultsuit14gold.rsi
 
-- type: entity
-  parent: N14ClothingUniformBase
-  id: N14ClothingUniformJumpsuitVault14Purple
-  categories: [ HideSpawnMenu ]
-  name: vault 14 jumpsuit
-  suffix: Purple
-  description: A jumpsuit worn by the dwellers of a vault. It is purple-colored. It has a bright yellow 14 on the back.
-  components:
-  - type: Sprite
-    sprite: Corvax/Clothing/Uniforms/Jumpsuit/vaultsuit14purple.rsi
-  - type: Clothing
-    sprite: Corvax/Clothing/Uniforms/Jumpsuit/vaultsuit14purple.rsi
+#- type: entity
+#  parent: N14ClothingUniformBase
+#  id: N14ClothingUniformJumpsuitVault14Purple
+#  categories: [ HideSpawnMenu ]
+#  name: vault 14 jumpsuit
+#  suffix: Purple
+#  description: A jumpsuit worn by the dwellers of a vault. It is purple-colored. It has a bright yellow 14 on the back.
+#  components:
+#  - type: Sprite
+#    sprite: Corvax/Clothing/Uniforms/Jumpsuit/vaultsuit14purple.rsi
+#  - type: Clothing
+#    sprite: Corvax/Clothing/Uniforms/Jumpsuit/vaultsuit14purple.rsi

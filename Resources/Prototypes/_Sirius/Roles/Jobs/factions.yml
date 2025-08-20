@@ -1,0 +1,11 @@
+# Top-down, highest to lowest rank when possible.
+- type: department
+  id: Enclave
+  description: department-Enclave-description
+  color: "#3B72BF"
+  roles:
+  - EnclaveColonel
+  - EnclaveOfficer
+  - EnclaveSergeant
+  - EnclaveScientist
+  - EnclaveRecruit

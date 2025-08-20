@@ -1,0 +1,161 @@
+# Enclave Recruits
+- type: entity
+  id: EnclaveRecruitSet
+  name: Undecided Enclave Recruit Kit
+  parent: BaseLoadoutKit
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  - type: UndecidedLoadoutBackpack
+    possibleSets:
+    - Enclave_RecPla_Set
+    - Enclave_RecBal_Set
+
+# Enclave Sergeants
+- type: entity
+  id: EnclaveSergeantSet
+  name: Undecided Enclave Sergeant Kit
+  parent: BaseLoadoutKit
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  - type: UndecidedLoadoutBackpack
+    possibleSets:
+    - Enclave_SrgPla_Set
+    - Enclave_SrgBal_Set
+    - Enclave_SrgHeav_Set
+
+# Enclave Scientits
+- type: entity
+  id: EnclaveScientistSet
+  name: Undecided Enclave Scientist Kit
+  parent: BaseLoadoutKit
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  - type: UndecidedLoadoutBackpack
+    possibleSets:
+    - Enclave_SciField_Set
+    - Enclave_SciMed_Set
+
+# Enclave Officers
+- type: entity
+  id: EnclaveOfficerSet
+  name: Undecided Enclave Officer Kit
+  parent: BaseLoadoutKit
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  - type: UndecidedLoadoutBackpack
+    possibleSets:
+    - Enclave_OfcPla_Set
+    - Enclave_OfcBal_Set
+    - Enclave_OfcSni_Set
+
+# Enclave Recruit
+- type: UndecidedLoadoutBackpackSet
+  id: Enclave_RecPla_Set
+  name: undecided-loadout-category-enclave-recr-pla-name
+  description: undecided-loadout-category-enclave-recr-pla-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitEnclave_RecPla
+
+- type: UndecidedLoadoutBackpackSet
+  id: Enclave_RecBal_Set
+  name: undecided-loadout-category-enclave-recr-bal-name
+  description: undecided-loadout-category-enclave-recr-bal-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitEnclave_RecBal
+
+# Enclave Sergeant
+- type: UndecidedLoadoutBackpackSet
+  id: Enclave_SrgPla_Set
+  name: undecided-loadout-category-enclave-serg-pla-name
+  description: undecided-loadout-category-enclave-serg-pla-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitEnclave_SrgPla
+
+- type: UndecidedLoadoutBackpackSet
+  id: Enclave_SrgBal_Set
+  name: undecided-loadout-category-enclave-serg-bal-name
+  description: undecided-loadout-category-enclave-serg-bal-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitEnclave_SrgBal
+
+- type: UndecidedLoadoutBackpackSet
+  id: Enclave_SrgHeav_Set
+  name: undecided-loadout-category-enclave-serg-heav-name
+  description: undecided-loadout-category-enclave-serg-heav-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitEnclave_SrgHeav
+
+# Enclave Scientist
+- type: UndecidedLoadoutBackpackSet
+  id: Enclave_SciField_Set
+  name: undecided-loadout-category-enclave-scie-field-name
+  description: undecided-loadout-category-enclave-scie-field-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitEnclave_SciField
+
+- type: UndecidedLoadoutBackpackSet
+  id: Enclave_SciMed_Set
+  name: undecided-loadout-category-enclave-scie-med-name
+  description: undecided-loadout-category-enclave-scie-med-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitEnclave_SciMed
+
+# Enclave Officer
+- type: UndecidedLoadoutBackpackSet
+  id: Enclave_OfcPla_Set
+  name: undecided-loadout-category-enclave-ofc-pla-name
+  description: undecided-loadout-category-enclave-ofc-pla-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitEnclave_OfcPla
+
+- type: UndecidedLoadoutBackpackSet
+  id: Enclave_OfcBal_Set
+  name: undecided-loadout-category-enclave-ofc-bal-name
+  description: undecided-loadout-category-enclave-ofc-bal-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitEnclave_OfcBal
+
+- type: UndecidedLoadoutBackpackSet
+  id: Enclave_OfcSni_Set
+  name: undecided-loadout-category-enclave-ofc-sni-name
+  description: undecided-loadout-category-enclave-ofc-sni-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitEnclave_OfcSni

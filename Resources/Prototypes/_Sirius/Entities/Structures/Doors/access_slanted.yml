@@ -1,0 +1,55 @@
+#MARK: Enclave
+- type: entity
+  parent: N14DoorAirlockSlanted
+  id: N14DoorAirlockSlantedLockedEnclave
+  suffix: Enclave, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsEnclaveGeneral ]
+  - type: Wires
+    layoutId: HighSec
+
+- type: entity
+  parent: N14DoorAirlockSlanted
+  id: N14DoorAirlockSlantedLockedEnclaveOfficer
+  suffix: Enclave, Locked, Officer
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsEnclaveOfficer ]
+  - type: Wires
+    layoutId: HighSec
+
+- type: entity
+  parent: N14DoorAirlockSlanted
+  id: N14DoorAirlockSlantedLockedEnclaveColonel
+  suffix: Enclave, Locked, Colonel
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsEnclaveColonel ]
+  - type: Wires
+    layoutId: HighSec
+
+- type: entity
+  parent: N14DoorAirlockSlanted
+  id: N14DoorAirlockSlantedLockedEnclaveScientist
+  suffix: Enclave, Locked, Scientist
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsEnclaveScientist ]
+  - type: Wires
+    layoutId: HighSec
+
+- type: entity
+  parent: N14DoorAirlockSlanted
+  id: N14DoorAirlockSlantedLockedEnclaveSergeant
+  suffix: Enclave, Locked, Sergeant
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsEnclaveSergeant ]
+  - type: Wires
+    layoutId: HighSec

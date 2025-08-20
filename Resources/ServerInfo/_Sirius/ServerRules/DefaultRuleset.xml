@@ -1,0 +1,116 @@
+<Document>
+  <ColorBox Color="#3a3a3a" OutlineColor="#5a5a5a" OutlineThickness="2" Margin="5">
+    <Box Orientation="Vertical">
+      <Box Orientation="Horizontal" HorizontalAlignment="Center">
+        Правила сервера Sirius
+     </Box>
+      <Box Orientation="Vertical" Margin="10">
+        Sirius - это ролевой сервер. Основная цель этого сервера - не только предоставить игрокам увлекательный геймплей, но и создать истории, которыми они могли бы поделиться даже с друзьями за пределами стандартной Space Station 14.
+      </Box>
+    </Box>
+  </ColorBox>
+
+  <ColorBox Color="#3a3a3a" OutlineColor="#5a5a5a" OutlineThickness="2" Margin="5">
+    <Box Orientation="Vertical">
+      <Box Orientation="Horizontal" HorizontalAlignment="Center">
+        1.НЕ БУДЬ МУДАКОМ
+     </Box>
+      <Box Orientation="Vertical" Margin="10">
+        На других серверах этим банят набегаторов, что является тупостью. Это правило запрещает бессмысленное мудачество: кома СЗБС решил захватить убежище потому что они отказались от союза? Ты мудак. Вали нахуй с сервера. Убить человека заколов заточкой, потому что у него есть огнестрел а у тебя нет? Ты рисковый, и видимо конченый. Оставайся.
+      </Box>
+    </Box>
+  </ColorBox>
+
+  <ColorBox Color="#3a3a3a" OutlineColor="#5a5a5a" OutlineThickness="2" Margin="5">
+    <Box Orientation="Vertical">
+      <Box Orientation="Horizontal" HorizontalAlignment="Center">
+        2.ГРИФЕРСТВО
+     </Box>
+      <Box Orientation="Vertical" Margin="10">
+        Бессмысленная резня, полный уничтожение инфраструктуры фракций или целенаправленный троллинг без IC-логики = на парашу
+      </Box>
+    </Box>
+  </ColorBox>
+
+  <ColorBox Color="#3a3a3a" OutlineColor="#5a5a5a" OutlineThickness="2" Margin="5">
+    <Box Orientation="Vertical">
+      <Box Orientation="Horizontal" HorizontalAlignment="Center">
+        3.АТАКА И НАСИЛИЕ
+     </Box>
+      <Box Orientation="Vertical" Margin="10">
+        Можешь атаковать первым без долгих разговоров. НО ДОЛЖНА БЫТЬ ЛЮБАЯ ПРИЧИНА: умираешь от голода, чуешь запах винта из сумки, захотел пушку получше, война, личная вражда, он зашел на твою базу, контракт. "Я психопат" - НЕ ПРИЧИНА.
+      </Box>
+    </Box>
+  </ColorBox>
+
+  <ColorBox Color="#3a3a3a" OutlineColor="#5a5a5a" OutlineThickness="2" Margin="5">
+    <Box Orientation="Vertical">
+      <Box Orientation="Horizontal" HorizontalAlignment="Center">
+        4.ЛОГИКА ПЕРСОНАЖА
+     </Box>
+      <Box Orientation="Vertical" Margin="10">
+        Держись своей роли/фракции. Можно быть жестоким и хаотичным, если на это есть причины. Наркотики и алкоголь могут сделать тебя более агрессивным или тупым, но на всякий случай сообщи заранее что ты под солями или отыгрывай это более явно.
+      </Box>
+    </Box>
+  </ColorBox>
+
+  <ColorBox Color="#3a3a3a" OutlineColor="#5a5a5a" OutlineThickness="2" Margin="5">
+    <Box Orientation="Vertical">
+      <Box Orientation="Horizontal" HorizontalAlignment="Center">
+        5.СПАМ, ООС И Т.Д.
+     </Box>
+      <Box Orientation="Vertical" Margin="10">
+        LOOC - ТОЛЬКО для технических проблем, советов/обучения или пинка под зад незнающему лора. НЕ для полноценных споров. OOC чат - вопросы/обсуждение. Везде запрещен спам.
+      </Box>
+    </Box>
+  </ColorBox>
+
+ <ColorBox Color="#2a3a3a" OutlineColor="#4a5a5a" OutlineThickness="2" Margin="5">
+    <Box Orientation="Vertical">
+      <Box Orientation="Horizontal" HorizontalAlignment="Center">
+        6.МЕТАГЕЙМИНГ
+      </Box>
+      <Box Orientation="Vertical" Margin="10">
+        Ваш персонаж должен полностью соответствовать роли и сеттингу вселенной Fallout.
+      </Box>
+
+      <Box Orientation="Vertical" Margin="10">
+        6.1 МЕТАКООП Играйте за роль и персонажа, соответствующих сеттингу игры
+      <Box Orientation="Vertical" Margin="10">
+        Запрещена грубая координация через OOC для IC-преимущества.
+        </Box>
+      </Box>
+
+      <Box Orientation="Vertical" Margin="10">
+        6.2 МЕТАЗНАНИЯ
+      <Box Orientation="Vertical" Margin="10">
+        Запрещено откровенное использование OOC-инфы в IC. Знание карты - терпимо, но если конкретно и часто игнорировать понесешь наказание.
+        </Box>
+      </Box>
+    </Box>
+  </ColorBox>
+
+  <ColorBox Color="#3a3a3a" OutlineColor="#5a5a5a" OutlineThickness="2" Margin="5">
+    <Box Orientation="Vertical">
+      <Box Orientation="Horizontal" HorizontalAlignment="Center">
+        7. ERP
+     </Box>
+      <Box Orientation="Vertical" Margin="10">
+        Под запретом
+      </Box>
+    </Box>
+  </ColorBox>
+
+  <ColorBox Color="#3a3a3a" OutlineColor="#5a5a5a" OutlineThickness="2" Margin="5">
+    <Box Orientation="Vertical">
+      <Box Orientation="Horizontal" HorizontalAlignment="Center">
+        Дополнительные пункты
+      </Box>
+      <Box Orientation="Vertical" Margin="10">
+        Основатель, Куратор, Старший модератор в праве сами выносить решение по любой ситуации не упомянутой в правилах.
+
+        Сервер Sirius имеет ограничение 16+, паспорт конечно никто проверять не будет, однако нарушение данного пункта может быть расценено как причина для перманентного бана.
+      </Box>
+    </Box>
+  </ColorBox>
+</Document>

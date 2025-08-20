@@ -1,0 +1,9 @@
+- type: entity
+  save: false
+  name: Urist Supermutant
+  parent: N14BaseMobSupermutant
+  id: N14MobSupermutant
+  components:
+    - type: NpcFactionMember
+      factions:
+      - Wastelander

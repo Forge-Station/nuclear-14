@@ -1,0 +1,50 @@
+﻿- type: body
+  id: Supermutant
+  name: Supermutant
+  root: torso
+  slots:
+    head:
+      part: N14HeadSupermutant
+      connections:
+      - torso
+      organs:
+        brain: N14OrganSupermutantBrain
+        eyes: N14OrganSupermutantEyes
+    torso:
+      part: N14TorsoSupermutant
+      organs:
+        heart: N14OrganSupermutantHeart
+        lungs: N14OrganSupermutantLungs
+        stomach: N14OrganSupermutantStomach
+        liver: N14OrganSupermutantLiver
+        kidneys: N14OrganSupermutantKidneys
+      connections:
+      - right arm
+      - left arm
+      - right leg
+      - left leg
+      - head
+    right arm:
+      part: N14RightArmSupermutant
+      connections:
+      - right hand
+    left arm:
+      part: N14LeftArmSupermutant
+      connections:
+      - left hand
+    right hand:
+      part: N14RightHandSupermutant
+    left hand:
+      part: N14LeftHandSupermutant
+    right leg:
+      part: N14RightLegSupermutant
+      connections:
+      - right foot
+    left leg:
+      part: N14LeftLegSupermutant
+      connections:
+      - left foot
+    right foot:
+      part: N14RightFootSupermutant
+    left foot:
+      part: N14LeftFootSupermutant

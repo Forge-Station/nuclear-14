@@ -1,0 +1,36 @@
+- type: entity
+  parent: N14ClothingOuterPowerArmorAdvanced1
+  id: N14ClothingOuterEnclavePowerArmor
+  name: enclave power armor
+  description: A mass-produced version of the original APA. It sports less plating but is easier to repair and maintain.
+  components:
+  - type: Sprite
+    sprite: _Sirius/Clothing/OuterClothing/PowerArmor/enclavepowerarmor.rsi
+  - type: Clothing
+    sprite: _Sirius/Clothing/OuterClothing/PowerArmor/enclavepowerarmor.rsi
+  - type: ClothingSpeedModifier
+    walkModifier: 0.2
+    sprintModifier: 0.2
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.45
+        Slash: 0.45
+        Piercing: 0.55
+        Heat: 0.55
+        Caustic: 0.75
+        Radiation: 0.6
+  - type: ExplosionResistance
+    damageCoefficient: 0.55
+  - type: UserInterface
+    interfaces:
+      enum.ToggleClothingUiKey.Key:
+        type: ToggleableClothingBoundUserInterface
+  - type: ToggleableClothing
+    clothingPrototypes:
+      head: N14ClothingHeadHelmetPowerArmorEnclavePowerArmour
+      gloves: N14ClothingPAGauntletsDark
+      shoes: N14ClothingPABootsDark
+      back: N14ClothingPowerSystemsBack
+  - type: Reflect
+    reflectProb: 0.125

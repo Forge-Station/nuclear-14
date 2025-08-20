@@ -1,0 +1,45 @@
+- type: entity
+  parent: ClothingMaskGas
+  id: ClothingMaskEnclaveGasCombat
+  name: combat gas mask
+  description: An advanced pre-war military gas mask.
+  components:
+  - type: Item
+    size: Tiny
+  - type: FlashImmunity
+  - type: EyeProtection
+  - type: Sprite
+    sprite: _Sirius/Clothing/Mask/Gasmask/enclavecombatgasmask.rsi
+  - type: Clothing
+    sprite: _Sirius/Clothing/Mask/Gasmask/enclavecombatgasmask.rsi
+  - type: NightVision
+    isEquipment: true
+  - type: Appearance
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.95
+        Slash: 0.95
+        Piercing: 0.95
+        Heat: 0.95
+  - type: Tag
+    tags:
+    - WhitelistChameleon
+
+- type: entity
+  parent: ClothingMaskGasCombat
+  id: ClothingMaskEnclaveGasRiot
+  name: Enclave ranger gas mask
+  description: A close-fitting tactical mask issued to all Enclave Soldiers as a proof of their service.
+  components:
+  - type: Item
+    size: Tiny
+  - type: FlashImmunity
+  - type: EyeProtection
+  - type: Sprite
+    sprite: _Sirius/Clothing/Mask/Gasmask/enclaveriotgasmask.rsi
+  - type: Clothing
+    sprite: _Sirius/Clothing/Mask/Gasmask/enclaveriotgasmask.rsi
+  - type: Tag
+    tags:
+    - WhitelistChameleon

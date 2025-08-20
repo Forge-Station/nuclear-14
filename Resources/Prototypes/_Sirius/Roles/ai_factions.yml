@@ -1,0 +1,38 @@
+- type: npcFaction
+  id: Enclave
+  friendly:
+  - EnclaveSecureArea
+  hostile:
+  - WastelandInsect
+  - WastelandAnimal
+  - Raider
+  - HostileRobot
+  - Feral
+
+- type: npcFaction
+  id: EnclaveSecureArea
+  friendly:
+  - Enclave
+  hostile:
+  - Wastelander
+  - BrotherhoodWashington
+  - BrotherhoodWashingtonSecureArea
+  - CaravanCompany
+  - CaravanCompanySecureArea
+  - NCR
+  - NCRSecureArea
+  - Rangers
+  - Townsfolk
+  - TownsfolkSecureArea
+  - Tribal
+  - TribalSecureArea
+  - Vault
+  - VaultSecureArea
+  - Zetan
+  - WastelandAnimal
+  - WastelandInsect
+  - Raider
+  - CaesarLegion #Corvax-Legion
+  - HostileRobot
+  - Feral
+  - BrotherhoodWest #Corvax-West

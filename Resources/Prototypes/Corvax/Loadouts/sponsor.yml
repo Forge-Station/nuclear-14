@@ -1,123 +1,123 @@
-- type: loadout
-  id: LoadoutNCRN14ClothingHeadHatRangerHelmetSnowFox1
-  category: Roles
-  cost: 4
-  exclusive: true
-  sponsorLevel: 3
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRRanger
-  items:
-    - N14ClothingHeadHatRangerHelmetSnowFox
+#- type: loadout
+#  id: LoadoutNCRN14ClothingHeadHatRangerHelmetSnowFox1
+#  category: Roles
+#  cost: 4
+#  exclusive: true
+#  sponsorLevel: 3
+#  requirements:
+#   - !type:CharacterJobRequirement
+#      jobs:
+#        - NCRRanger
+#  items:
+#    - N14ClothingHeadHatRangerHelmetSnowFox
 
-- type: loadout
-  id: LoadoutNCRN14ClothingHeadHatRangerHelmetSnowFox2
-  category: Roles
-  cost: 2
-  exclusive: true
-  sponsorLevel: 3
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRRangerVeteran
-  items:
-    - N14ClothingHeadHatRangerHelmetSnowFox
+#- type: loadout
+#  id: LoadoutNCRN14ClothingHeadHatRangerHelmetSnowFox2
+#  category: Roles
+#  cost: 2
+#  exclusive: true
+#  sponsorLevel: 3
+#  requirements:
+#   - !type:CharacterJobRequirement
+#      jobs:
+#       - NCRRangerVeteran
+#  items:
+#    - N14ClothingHeadHatRangerHelmetSnowFox
 
-- type: loadout
-  id: LoadoutNCRN14ClothingOuterRangerSnowFox
-  category: Roles
-  cost: 2
-  exclusive: true
-  sponsorLevel: 3
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRRangerVeteran
-  items:
-    - N14ClothingOuterRangerSnowFox
+#- type: loadout
+#  id: LoadoutNCRN14ClothingOuterRangerSnowFox
+#  category: Roles
+#  cost: 2
+#  exclusive: true
+#  sponsorLevel: 3
+#  requirements:
+#    - !type:CharacterJobRequirement
+#     jobs:
+#        - NCRRangerVeteran
+#  items:
+#    - N14ClothingOuterRangerSnowFox
 
-- type: loadout
-  id: LoadoutN14ClothingOuterWandererCoat
-  category: Roles
-  cost: 3
-  exclusive: true
-  sponsorLevel: 2
-  items:
-    - N14ClothingOuterWandererCoat
+#- type: loadout
+#  id: LoadoutN14ClothingOuterWandererCoat
+#  category: Roles
+#  cost: 3
+#  exclusive: true
+#  sponsorLevel: 2
+#  items:
+#    - N14ClothingOuterWandererCoat
 
-- type: loadout
-  id: LoadoutBoSMidwestHellCat
-  category: Roles
-  cost: 10
-  exclusive: true
-  sponsorLevel: 2
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - BoSMidPaladin
-        - BoSMidPaladinCommander
-        - BoSWestElderCommander
-        - BoSWestPaladin
-  items:
-    - N14ClothingOuterPowerArmorHellCat
+#- type: loadout
+#  id: LoadoutBoSMidwestHellCat
+# category: Roles
+#  cost: 10
+#  exclusive: true
+#  sponsorLevel: 2
+#  requirements:
+#    - !type:CharacterJobRequirement
+#      jobs:
+#        - BoSMidPaladin
+#        - BoSMidPaladinCommander
+#        - BoSWestElderCommander
+#        - BoSWestPaladin
+#  items:
+#    - N14ClothingOuterPowerArmorHellCat
 
-- type: loadout
-  id: N14LoadoutUniformJumpskirtVault14Gold
-  category: Uniform
-  cost: 2
-  exclusive: true
-  sponsorLevel: 3
-  items:
-    - N14ClothingUniformJumpskirtVault14Gold
-  requirements:
-    - !type:CharacterItemGroupRequirement
-      group: N14LoadoutUniform
-    - !type:CharacterDepartmentRequirement
-      departments:
-        - Vault
+#- type: loadout
+#  id: N14LoadoutUniformJumpskirtVault14Gold
+#  category: Uniform
+#  cost: 2
+#  exclusive: true
+#  sponsorLevel: 3
+#  items:
+#    - N14ClothingUniformJumpskirtVault14Gold
+#  requirements:
+#    - !type:CharacterItemGroupRequirement
+#      group: N14LoadoutUniform
+#    - !type:CharacterDepartmentRequirement
+#      departments:
+#        - Vault
 
-- type: loadout
-  id: N14LoadoutUniformJumpskirtVault14Purple
-  category: Uniform
-  cost: 2
-  exclusive: true
-  sponsorLevel: 2
-  items:
-    - N14ClothingUniformJumpskirtVault14Purple
-  requirements:
-    - !type:CharacterItemGroupRequirement
-      group: N14LoadoutUniform
-    - !type:CharacterDepartmentRequirement
-      departments:
-        - Vault
+#- type: loadout
+#  id: N14LoadoutUniformJumpskirtVault14Purple
+#  category: Uniform
+#  cost: 2
+#  exclusive: true
+#  sponsorLevel: 2
+#  items:
+#    - N14ClothingUniformJumpskirtVault14Purple
+#  requirements:
+#    - !type:CharacterItemGroupRequirement
+#      group: N14LoadoutUniform
+#    - !type:CharacterDepartmentRequirement
+#      departments:
+#        - Vault
 
-- type: loadout
-  id: N14LoadoutUniformJumpsuitVault14Gold
-  category: Uniform
-  cost: 2
-  exclusive: true
-  sponsorLevel: 3
-  items:
-    - N14ClothingUniformJumpsuitVault14Gold
-  requirements:
-    - !type:CharacterItemGroupRequirement
-      group: N14LoadoutUniform
-    - !type:CharacterDepartmentRequirement
-      departments:
-        - Vault
+#- type: loadout
+#  id: N14LoadoutUniformJumpsuitVault14Gold
+#  category: Uniform
+#  cost: 2
+#  exclusive: true
+#  sponsorLevel: 3
+#  items:
+#    - N14ClothingUniformJumpsuitVault14Gold
+#  requirements:
+#    - !type:CharacterItemGroupRequirement
+#      group: N14LoadoutUniform
+#    - !type:CharacterDepartmentRequirement
+#      departments:
+#        - Vault
 
-- type: loadout
-  id: N14LoadoutUniformJumpsuitVault14Purple
-  category: Uniform
-  cost: 2
-  exclusive: true
-  sponsorLevel: 2
-  items:
-    - N14ClothingUniformJumpsuitVault14Purple
-  requirements:
-    - !type:CharacterItemGroupRequirement
-      group: N14LoadoutUniform
-    - !type:CharacterDepartmentRequirement
-      departments:
-        - Vault
+#- type: loadout
+#  id: N14LoadoutUniformJumpsuitVault14Purple
+#  category: Uniform
+#  cost: 2
+#  exclusive: true
+#  sponsorLevel: 2
+#  items:
+#    - N14ClothingUniformJumpsuitVault14Purple
+#  requirements:
+#    - !type:CharacterItemGroupRequirement
+#      group: N14LoadoutUniform
+#    - !type:CharacterDepartmentRequirement
+#      departments:
+#        - Vault

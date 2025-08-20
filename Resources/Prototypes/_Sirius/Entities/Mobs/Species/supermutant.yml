@@ -1,0 +1,92 @@
+- type: entity
+  save: false
+  name: Supermutant
+  id: N14BaseMobSupermutant
+  parent: BaseMobSpeciesOrganic
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: HumanoidAppearance
+    species: Supermutant
+  - type: Body
+    prototype: Supermutant
+    requiredLegs: 2
+  - type: Icon
+    sprite: _Sirius/Mobs/Species/Supermutant/parts.rsi
+    state: full
+  - type: Sprite
+    sprite: _Sirius/Mobs/Species/Supermutant/parts.rsi
+    netsync: false
+    noRot: true
+    drawdepth: Mobs
+    layers:
+      - map: [ "enum.HumanoidVisualLayers.Chest" ]
+      - map: [ "enum.HumanoidVisualLayers.Head" ]
+      - map: [ "enum.HumanoidVisualLayers.Snout" ]
+      - map: [ "enum.HumanoidVisualLayers.Eyes" ]
+      - map: [ "enum.HumanoidVisualLayers.RArm" ]
+      - map: [ "enum.HumanoidVisualLayers.LArm" ]
+      - map: [ "enum.HumanoidVisualLayers.RLeg" ]
+      - map: [ "enum.HumanoidVisualLayers.LLeg" ]
+      - shader: StencilClear
+        sprite: _Sirius/Mobs/Species/Supermutant/parts.rsi
+        state: l_leg
+      - shader: StencilMask
+        map: [ "enum.HumanoidVisualLayers.StencilMask" ]
+        sprite: Mobs/Customization/masking_helpers.rsi
+        state: female_full
+        visible: false
+      - map: [ "jumpsuit" ]
+      - map: [ "enum.HumanoidVisualLayers.LHand" ]
+      - map: [ "enum.HumanoidVisualLayers.RHand" ]
+      - map: [ "enum.HumanoidVisualLayers.LFoot" ]
+      - map: [ "enum.HumanoidVisualLayers.RFoot" ]
+      - map: [ "enum.HumanoidVisualLayers.Handcuffs" ]
+        color: "#ffffff"
+        sprite: Objects/Misc/handcuffs.rsi
+        state: body-overlay-2
+        visible: false
+      - map: [ "id" ]
+      - map: [ "gloves" ]
+      - map: [ "shoes" ]
+      - map: [ "ears" ]
+      - map: [ "outerClothing" ]
+      - map: [ "eyes" ]
+      - map: [ "belt" ]
+      - map: [ "neck" ]
+      - map: [ "back" ]
+      - map: [ "enum.HumanoidVisualLayers.FacialHair" ]
+      - map: [ "enum.HumanoidVisualLayers.Hair" ]
+      - map: [ "enum.HumanoidVisualLayers.HeadSide" ]
+      - map: [ "enum.HumanoidVisualLayers.HeadTop" ]
+      - map: [ "enum.HumanoidVisualLayers.Tail" ]
+      - map: [ "mask" ]
+      - map: [ "head" ]
+      - map: [ "pocket1" ]
+      - map: [ "pocket2" ]
+  - type: Perishable
+    rotAfter: 3600 # An entire in-game day.
+  - type: Hunger
+    starvationDamage:
+      types:
+        Cold: 0.5
+        Bloodloss: 0.5
+  - type: Thirst
+  - type: Damageable
+    damageContainer: Biological
+    damageModifierSet: Supermutant
+  - type: RadiationReceiver
+  - type: RadiationHealing
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      300: Critical
+      450: Dead
+
+- type: entity
+  save: false
+  parent: MobHumanDummy
+  id: N14MobSupermutantDummy
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: HumanoidAppearance
+    species: Supermutant

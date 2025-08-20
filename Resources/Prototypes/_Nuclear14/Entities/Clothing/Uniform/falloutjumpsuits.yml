@@ -21,9 +21,9 @@
   description: A vault jumpsuit that lacks a number on its back. You feel uneasy while looking at it...
   components:
   - type: Sprite
-    sprite: Corvax/Clothing/Uniforms/Jumpsuit/vaultsuit14emptyresprite.rsi
+    sprite: _Sirius/Clothing/Uniforms/FalloutSuits/vaultsuitemptyreskin.rsi
   - type: Clothing
-    sprite: Corvax/Clothing/Uniforms/Jumpsuit/vaultsuit14emptyresprite.rsi
+    sprite: _Sirius/Clothing/Uniforms/FalloutSuits/vaultsuitemptyreskin.rsi
 
 - type: entity
   parent: N14ClothingUniformBase
@@ -32,9 +32,9 @@
   description: A jumpsuit worn by the dwellers of a vault. It has a bright yellow 14 on the back.
   components:
   - type: Sprite
-    sprite: Corvax/Clothing/Uniforms/Jumpsuit/vaultsuit14resprite.rsi
+    sprite: _Nuclear14/Clothing/Uniforms/FalloutSuits/Vault/vaultsuit14.rsi
   - type: Clothing
-    sprite: Corvax/Clothing/Uniforms/Jumpsuit/vaultsuit14resprite.rsi
+    sprite: _Nuclear14/Clothing/Uniforms/FalloutSuits/Vault/vaultsuit14.rsi
 
 - type: entity
   parent: N14ClothingUniformBase

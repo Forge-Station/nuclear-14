@@ -1,0 +1,56 @@
+- type: entity
+  parent: MobHuman
+  id: EnclaveColonel
+  name: EnclaveColonel
+  components:
+    - type: Icon
+      sprite: _Nuclear14/Markers/Jobs/Enclave.rsi
+      state: commander
+    - type: RandomHumanoidAppearance
+      randomizeName: true
+    - type: Loadout
+      prototypes: [EnclaveColonelGear]
+    - type: NpcFactionMember
+      factions:
+      - Wastelander
+      - Enclave
+
+- type: entity
+  parent: EnclaveColonel
+  id: N14MobHumanEnclaveSergeant
+  name: EnclaveSergeant
+  components:
+    - type: Icon
+      state: Sergeant
+    - type: Loadout
+      prototypes: [EnclaveSergeantGear]
+
+- type: entity
+  parent: EnclaveColonel
+  id: N14MobHumanEnclaveOfficer
+  name: EnclaveOfficer
+  components:
+    - type: Icon
+      state: Officer
+    - type: Loadout
+      prototypes: [EnclaveOfficerGear]
+
+- type: entity
+  parent: EnclaveColonel
+  id: N14MobHumanEnclaveScientist
+  name: EnclaveScientist
+  components:
+    - type: Icon
+      state: Scientist
+    - type: Loadout
+      prototypes: [EnclaveScientistGear]
+
+- type: entity
+  parent: EnclaveColonel
+  id: N14MobHumanEnclaveRecruit
+  name: EnclaveRecruit
+  components:
+    - type: Icon
+      state: Recruit
+    - type: Loadout
+      prototypes: [EnclaveRecruitGear]

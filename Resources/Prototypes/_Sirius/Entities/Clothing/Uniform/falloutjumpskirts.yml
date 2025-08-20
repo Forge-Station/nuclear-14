@@ -1,0 +1,10 @@
+- type: entity
+  parent: N14ClothingUniformSkirtBase
+  id: N14ClothingUniformJumpskirtFalloutVault
+  name: vault skirt
+  description: It's a skirt. This one is vault.
+  components:
+  - type: Sprite
+    sprite: _Sirius/Clothing/Uniforms/FalloutSkirts/vaultskirt.yml
+  - type: Clothing
+    sprite: _Sirius/Clothing/Uniforms/FalloutSkirts/vaultskirt.yml

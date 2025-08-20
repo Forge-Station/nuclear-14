@@ -1,0 +1,45 @@
+# BoS Midwest
+- type: entity
+  parent: DoorElectronics
+  id: DoorElectronicsEnclaveColonel
+  suffix: Enclave Colonel, Locked
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: AccessReader
+    access: [["EnclaveColonel"]]
+
+- type: entity
+  parent: DoorElectronics
+  id: DoorElectronicsEnclaveOfficer
+  suffix: Enclave Officer, Locked
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: AccessReader
+    access: [["EnclaveOfficer"]]
+    
+- type: entity
+  parent: DoorElectronics
+  id: DoorElectronicsEnclaveSergeant
+  suffix: Enclave Sergeant, Locked
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: AccessReader
+    access: [["EnclaveSergeant"]]
+
+- type: entity
+  parent: DoorElectronics
+  id: DoorElectronicsEnclaveScientist
+  suffix: Enclave Scientist, Locked
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: AccessReader
+    access: [["EnclaveScientist"]]
+
+- type: entity
+  parent: DoorElectronics
+  id: DoorElectronicsEnclaveGeneral
+  suffix: Enclave General, Locked
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: AccessReader
+    access: [["Enclave"]]

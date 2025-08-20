@@ -1,0 +1,28 @@
+- type: accessLevel
+  id: EnclaveColonel
+  name: id-card-access-level-enclave-colonel
+
+- type: accessLevel
+  id: EnclaveOfficer
+  name: id-card-access-level-enclave-officer
+  
+- type: accessLevel
+  id: EnclaveSergeant
+  name: id-card-access-level-enclave-sergeant
+  
+- type: accessLevel
+  id: EnclaveScientist
+  name: id-card-access-level-enclave-scientist
+
+- type: accessLevel
+  id: EnclaveFaction
+  name: id-card-access-level-enclave
+
+- type: accessGroup
+  id: EnclaveAccessGroup
+  tags:
+  - EnclaveColonel
+  - EnclaveOfficer
+  - EnclaveSergeant
+  - EnclaveScientist
+  - Enclave

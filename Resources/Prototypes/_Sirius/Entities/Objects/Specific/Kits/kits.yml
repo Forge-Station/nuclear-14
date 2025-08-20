@@ -1,0 +1,214 @@
+# Enclave Kits
+# Enclave Recruit  Kits
+- type: entity
+  name: Enclave Recruit plasma kit
+  parent: KitBase
+  id: KitEnclave_RecPla
+  description: A crate containing everything a member of the Enclave might need.
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponLaserRifleCrude
+      - id: N14PowerCellHigh
+        amount: 3
+      - id: N14WeaponPistol12mm
+      - id: N14MagazinePistol12mm
+        amount: 2
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxKFilled
+
+- type: entity
+  name: Enclave Recruit ballistic kit
+  parent: KitBase
+  id: KitEnclave_RecBal
+  description: A crate containing everything a member of the Enclave might need.
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponRifle556CarbineOld
+      - id: Magazine556Rifle
+        amount: 3
+      - id: N14WeaponLaserPistol
+      - id: N14PowerCellSmall
+        amount: 2
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxKFilled
+
+# Enclave Sergeant Kits
+- type: entity
+  name: Enclave Sergeant plasma kit
+  parent: KitBase
+  id: KitEnclave_SrgPla
+  description: A crate containing everything a member of the Enclave might need.
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponLaserRifleCrude
+      - id: N14PowerCellHigh
+        amount: 3
+      - id: N14WeaponPistol12mm
+      - id: N14MagazinePistol12mm
+        amount: 2
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxKFilled
+
+- type: entity
+  name: Enclave Sergeant ballistic kit
+  parent: KitBase
+  id: KitEnclave_SrgBal
+  description: A crate containing everything a member of the Enclave might need.
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponRifle556CarbineOld
+      - id: Magazine556Rifle
+        amount: 3
+      - id: N14WeaponLaserPistol
+      - id: N14PowerCellSmall
+        amount: 2
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxKFilled
+
+- type: entity
+  name: Enclave Sergeant heavy kit
+  parent: KitBase
+  id: KitEnclave_SrgHeav
+  description: A crate containing everything a member of the Enclave might need.
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponRifle556CarbineOld
+      - id: Magazine556Rifle
+        amount: 3
+      - id: N14WeaponLaserPistol
+      - id: N14PowerCellSmall
+        amount: 2
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxKFilled
+
+# Enclave Scientist Kits
+- type: entity
+  name: Enclave Scientist field kit
+  parent: KitBase
+  id: KitEnclave_SciField
+  description: A crate containing everything a member of the Enclave might need.
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponLaserRifleCrude
+      - id: N14PowerCellHigh
+        amount: 3
+      - id: N14WeaponPistol12mm
+      - id: N14MagazinePistol12mm
+        amount: 2
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxKFilled
+
+- type: entity
+  name: Enclave Scientist medic kit
+  parent: KitBase
+  id: KitEnclave_SciMed
+  description: A crate containing everything a member of the Enclave might need.
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponRifle556CarbineOld
+      - id: Magazine556Rifle
+        amount: 3
+      - id: N14WeaponLaserPistol
+      - id: N14PowerCellSmall
+        amount: 2
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxKFilled
+
+# Enclave Officer Kits
+- type: entity
+  name: Enclave Officer plasma kit
+  parent: KitBase
+  id: KitEnclave_OfcPla
+  description: A crate containing everything a member of the Enclave might need.
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponLaserRifleCrude
+      - id: N14PowerCellHigh
+        amount: 3
+      - id: N14WeaponPistol12mm
+      - id: N14MagazinePistol12mm
+        amount: 2
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxKFilled
+
+- type: entity
+  name: Enclave Officer ballistic kit
+  parent: KitBase
+  id: KitEnclave_OfcBal
+  description: A crate containing everything a member of the Enclave might need.
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponRifle556CarbineOld
+      - id: Magazine556Rifle
+        amount: 3
+      - id: N14WeaponLaserPistol
+      - id: N14PowerCellSmall
+        amount: 2
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxKFilled
+
+- type: entity
+  name: Enclave Officer sniper kit
+  parent: KitBase
+  id: KitEnclave_OfcSni
+  description: A crate containing everything a member of the Enclave might need.
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponRifle556CarbineOld
+      - id: Magazine556Rifle
+        amount: 3
+      - id: N14WeaponLaserPistol
+      - id: N14PowerCellSmall
+        amount: 2
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxKFilled

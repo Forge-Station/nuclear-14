@@ -1,0 +1,47 @@
+- type: job
+  id: EnclaveScientist
+  setPreference: true
+  overrideConsoleVisibility: true
+  canBeAntag: false
+  name: job-name-enclave-scientist
+  description: job-description-enclave-scientist
+  playTimeTracker: EnclaveScientist
+  requirements:
+    - !type:CharacterSpeciesRequirement
+      species:
+      - Human
+      - Ghoul
+    - !type:CharacterDepartmentTimeRequirement
+      department: Enclave
+      min: 18000 # 5 hours
+  startingGear: EnclaveScientistGear
+  alwaysUseSpawner: true
+  icon: "JobIconEnclave" # Corvax-Change
+  supervisors: job-supervisors-enclave
+  access:
+  - Enclave
+  - EnclaveScientist
+  special:
+  - !type:AddComponentSpecial
+    components:
+      - type: NpcFactionMember
+        factions:
+          - Wastelander
+          - Enclave
+      - type: CPRTraining
+
+- type: startingGear
+  id: EnclaveScientistGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitEnclaveScientist
+    back: N14ClothingBackpackSatchelMilitary
+    shoes: N14ClothingBootsCombatFilled
+    pocket1: EnclaveScientistSet
+    id: N14IDEnclaveScientist
+    ears: N14ClothingHeadsetEnclave
+  storage:
+    back:
+    - N14BoxPlasticFilledMilitary
+
+- type: playTimeTracker
+  id: EnclaveScientist

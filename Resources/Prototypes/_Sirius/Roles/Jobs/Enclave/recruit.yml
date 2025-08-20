@@ -1,0 +1,47 @@
+- type: job
+  id: EnclaveRecruit
+  setPreference: true
+  overrideConsoleVisibility: true
+  canBeAntag: false
+  name: job-name-enclave-recruit
+  description: job-description-enclave-recruit
+  playTimeTracker: EnclaveRecruit
+  requirements:
+    - !type:CharacterLogicOrRequirement
+      requirements:
+        - !type:CharacterSpeciesRequirement
+          species:
+            - Human
+    - !type:CharacterOverallTimeRequirement
+      min: 3600
+  startingGear: EnclaveRecruitGear
+  alwaysUseSpawner: true
+  icon: "JobIconEnclave"
+  supervisors: job-supervisors-enclave-recruit
+  access:
+  - Enclave
+  special:
+  - !type:AddComponentSpecial
+    components:
+      - type: NpcFactionMember
+        factions:
+          - Wastelander
+          - Enclave
+
+- type: startingGear
+  id: EnclaveRecruitGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitEnclaveSoldier
+    back: N14ClothingBackpackMilitary
+    shoes: N14ClothingBootsCombatFilled
+    head: N14ClothingHeadHatEnclaveHelmetMarine
+    outerClothing: N14ClothingOuterEnclaveArmor
+    pocket1: EnclaveRecruitSet
+    id: N14IDEnclaveRecruit
+    belt: ClothingBeltEnclave
+  storage:
+    back:
+    - N14BoxPlasticFilledMilitary
+
+- type: playTimeTracker
+  id: EnclaveRecruit

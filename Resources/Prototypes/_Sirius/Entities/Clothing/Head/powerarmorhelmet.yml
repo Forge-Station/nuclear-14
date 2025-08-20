@@ -1,0 +1,27 @@
+- type: entity
+  parent: N14ClothingHeadHelmetPowerArmorX01
+  id: N14ClothingHeadHelmetPowerArmorEnclavePowerArmour
+  name: enclave power armor helmet
+  description: The Enclave Mark II Powered Combat Armor helmet.
+  components:
+  - type: Sprite
+    netsync: false
+    sprite: _Sirius/Clothing/Head/PowerArmorHelmets/enclavepa.rsi
+    layers:
+    - state: icon
+    - state: icon-unshaded
+    - state: light-overlay
+      visible: false
+      shader: unshaded
+      map: [ "light" ]
+  - type: EyeProtection
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.8
+        Slash: 0.8
+        Piercing: 0.85
+        Heat: 0.85
+        Radiation: 0.6
+  - type: ExplosionResistance
+    damageCoefficient: 0.85

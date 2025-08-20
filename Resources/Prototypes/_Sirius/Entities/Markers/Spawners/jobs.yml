@@ -1,0 +1,61 @@
+# Enclave
+- type: entity
+  id: N14SpawnPointEnclaveColonel
+  parent: N14SpawnPointWastelander
+  name: Enclave colonel
+  components:
+  - type: SpawnPoint
+    job_id: EnclaveColonel
+  - type: Sprite
+    sprite: _Sirius/Markers/Jobs/Enclave.rsi
+    layers:
+      - state: green
+      - state: commander
+
+- type: entity
+  id: N14SpawnPointEnclaveSergeant
+  parent: N14SpawnPointEnclaveColonel
+  name: Enclave sergeant
+  components:
+  - type: SpawnPoint
+    job_id: EnclaveSergeant
+  - type: Sprite
+    layers:
+      - state: green
+      - state: knight
+
+- type: entity
+  id: N14SpawnPointEnclaveOfficer
+  parent: N14SpawnPointEnclaveColonel
+  name: Enclave officer
+  components:
+  - type: SpawnPoint
+    job_id: EnclaveOfficer
+  - type: Sprite
+    layers:
+      - state: green
+      - state: paladin
+
+- type: entity
+  id: N14SpawnPointEnclaveRecruit
+  parent: N14SpawnPointEnclaveColonel
+  name: Enclave recruit
+  components:
+  - type: SpawnPoint
+    job_id: EnclaveRecruit
+  - type: Sprite
+    layers:
+      - state: green
+      - state: squire
+
+- type: entity
+  id: N14SpawnPointEnclaveScientist
+  parent: N14SpawnPointEnclaveColonel
+  name: Enclave scientist
+  components:
+  - type: SpawnPoint
+    job_id: EnclaveScientist
+  - type: Sprite
+    layers:
+      - state: green
+      - state: scribe

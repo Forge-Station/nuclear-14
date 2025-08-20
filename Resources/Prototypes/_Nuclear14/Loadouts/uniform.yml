@@ -14,12 +14,12 @@
         - Vault
 
 - type: loadout #Forge-Add-Start
-  id: N14LoadoutUniformJumpskirtVault14
+  id: N14LoadoutUniformJumpskirtFalloutVault
   category: Uniform
   cost: 2
   exclusive: true
   items:
-    - N14ClothingUniformJumpskirtVault14
+    - N14ClothingUniformJumpskirtFalloutVault
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutUniform

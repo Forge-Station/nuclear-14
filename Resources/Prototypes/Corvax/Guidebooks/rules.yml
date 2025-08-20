@@ -1,4 +1,4 @@
-﻿- type: guideEntry
-  id: DefaultRuleset
-  name: guide-entry-rules
-  text: "/ServerInfo/_Forge/ServerRules/DefaultRuleset.xml"
+﻿#- type: guideEntry
+#  id: DefaultRuleset
+#  name: guide-entry-rules
+#  text: "/ServerInfo/_Forge/ServerRules/DefaultRuleset.xml"

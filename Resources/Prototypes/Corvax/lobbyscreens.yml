@@ -1,17 +1,17 @@
-- type: lobbyBackground
-  id: NCCampFire
-  background: /Textures/Corvax/LobbyScreens/camp.png
-  name: Silence Camp
-  artist: baohe
+#- type: lobbyBackground
+#  id: NCCampFire
+#  background: /Textures/Corvax/LobbyScreens/camp.png
+#  name: Silence Camp
+#  artist: baohe
 
-- type: lobbyBackground
-  id: NCAdVictoriam
-  background: /Textures/Corvax/LobbyScreens/ad_victoriam.png
-  name: AD VICTORIAM
-  artist: baohe
+#- type: lobbyBackground
+#  id: NCAdVictoriam
+#  background: /Textures/Corvax/LobbyScreens/ad_victoriam.png
+#  name: AD VICTORIAM
+#  artist: baohe
 
-- type: lobbyBackground
-  id: NCOasisBar
-  background: /Textures/Corvax/LobbyScreens/oasisbar.png
-  name: Oasis Bar
-  artist: rozycosmic
+#- type: lobbyBackground
+#  id: NCOasisBar
+#  background: /Textures/Corvax/LobbyScreens/oasisbar.png
+#  name: Oasis Bar
+#  artist: rozycosmic

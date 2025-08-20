@@ -1,0 +1,51 @@
+- type: job
+  id: EnclaveOfficer
+  setPreference: true
+  overrideConsoleVisibility: true
+  canBeAntag: false
+  name: job-name-enclave-officer
+  description: job-description-enclave-officer
+  playTimeTracker: EnclaveOfficer
+  requirements:
+    - !type:CharacterSpeciesRequirement
+      species:
+      - Human
+    - !type:CharacterDepartmentTimeRequirement
+      department: Enclave
+      min: 54000 # 15 hours
+  startingGear: EnclaveOfficerGear
+  alwaysUseSpawner: true
+  icon: "JobIconEnclave"
+  supervisors: job-supervisors-enclave
+  access:
+  - Enclave
+  - EnclaveSergeant
+  - EnclaveScientist
+  - EnclaveOfficer
+  special:
+  - !type:AddComponentSpecial
+    components:
+      - type: NpcFactionMember
+        factions:
+          - Wastelander
+          - Enclave
+
+- type: startingGear
+  id: EnclaveOfficerGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitEnclave
+    back: N14ClothingBackpackMilitary
+    shoes: N14ClothingBootsCombatFilled
+    head:  N14ClothingHeadHatEnclaveJunOfficerCap
+    outerClothing: N14ClothingOuterEnclaveArmor
+    pocket1: EnclaveOfficerSet
+    hands: N14ClothingHandsGlovesCombat
+    id: N14IDEnclaveJunOfficer
+    ears: N14ClothingHeadsetEnclave
+    belt: ClothingBeltEnclave
+  storage:
+    back:
+    - N14BoxPlasticFilledMilitary
+
+- type: playTimeTracker
+  id: EnclaveOfficer

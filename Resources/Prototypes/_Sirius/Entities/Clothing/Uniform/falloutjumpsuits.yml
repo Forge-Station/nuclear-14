@@ -1,0 +1,32 @@
+- type: entity
+  parent: N14ClothingUniformBase
+  id: N14ClothingUniformJumpsuitEnclaveSoldier
+  name: enclave soldier uniform
+  description: A uniform worn by soldier of the Enclave.
+  components:
+  - type: Sprite
+    sprite: _Sirius/Clothing/Uniforms/FalloutSuits/enclavesoldieruni.rsi
+  - type: Clothing
+    sprite: _Sirius/Clothing/Uniforms/FalloutSuits/enclavesoldieruni.rsi
+
+- type: entity
+  parent: N14ClothingUniformBase
+  id: N14ClothingUniformJumpsuitEnclaveScientist
+  name: enclave scientist uniform
+  description: A uniform worn by scientists of the Enclave.
+  components:
+  - type: Sprite
+    sprite: _Sirius/Clothing/Uniforms/FalloutSuits/enclavescientistuni.rsi
+  - type: Clothing
+    sprite: _Sirius/Clothing/Uniforms/FalloutSuits/enclavescientistuni.rsi
+
+- type: entity
+  parent: N14ClothingUniformBase
+  id: N14ClothingUniformJumpsuitEnclaveIntel
+  name: enclave intel uniform
+  description: A uniform worn by intels of the Enclave.
+  components:
+  - type: Sprite
+    sprite: _Sirius/Clothing/Uniforms/FalloutSuits/enclaveinteluni.rsi
+  - type: Clothing
+    sprite: _Sirius/Clothing/Uniforms/FalloutSuits/enclaveinteluni.rsi
