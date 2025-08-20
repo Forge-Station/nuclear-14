@@ -1,0 +1,10 @@
+ent-N14MobHumanEnclaveOfficer = Офицер Анклава
+    .desc = { ent-MobHuman.desc }
+ent-N14MobHumanEnclaveColonel = Полковник Анклава
+    .desc = { ent-MobHuman.desc }
+ent-N14MobHumanEnclaveRecruit = Рядовой Анклава
+    .desc = { ent-MobHuman.desc }
+ent-N14MobHumanEnclaveScientist = Учёный Анклава
+    .desc = { ent-MobHuman.desc }
+ent-N14MobHumanEnclaveSergeant = Сержант Анклава
+    .desc = { ent-MobHuman.desc }

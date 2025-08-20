@@ -1,0 +1,15 @@
+ent-DoorElectronicsEnclaveColonel = { ent-DoorElectronics }
+    .desc = { ent-DoorElectronics.desc }
+    .suffix = Командный Анклава, Закрыт
+ent-DoorElectronicsEnclaveOfficer = { ent-DoorElectronics }
+    .desc = { ent-DoorElectronics.desc }
+    .suffix = Офицер Анклава, Закрыт
+ent-DoorElectronicsEnclaveSergeant = { ent-DoorElectronics }
+    .desc = { ent-DoorElectronics.desc }
+    .suffix = Сержант Анклава, Закрыт
+ent-DoorElectronicsEnclaveScientist = { ent-DoorElectronics }
+    .desc = { ent-DoorElectronics.desc }
+    .suffix = Учёный Анклава, Закрыт
+ent-DoorElectronicsEnclaveGeneral = { ent-DoorElectronics }
+    .desc = { ent-DoorElectronics.desc }
+    .suffix = Общий Анклава, Закрыт

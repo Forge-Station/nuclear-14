@@ -1,0 +1,15 @@
+ent-N14DoorAirlockSlantedLockedEnclave = { ent-N14DoorAirlockSlanted }
+    .suffix = Анклав, Закрыто
+    .desc = { ent-N14DoorAirlockSlanted.desc }
+ent-N14DoorAirlockSlantedLockedEnclaveScientist = { ent-N14DoorAirlockSlanted }
+    .suffix = Анклав, Закрыто, Учёный
+    .desc = { ent-N14DoorAirlockSlanted.desc }
+ent-N14DoorAirlockSlantedLockedEnclaveSergeant = { ent-N14DoorAirlockSlanted }
+    .suffix = Анклав, Закрыто, Сержант
+    .desc = { ent-N14DoorAirlockSlanted.desc }
+ent-N14DoorAirlockSlantedLockedEnclaveOfficer = { ent-N14DoorAirlockSlanted }
+    .suffix = Анклав, Закрыто, Офицер
+    .desc = { ent-N14DoorAirlockSlanted.desc }
+ent-N14DoorAirlockSlantedLockedEnclaveColonel = { ent-N14DoorAirlockSlanted }
+    .suffix = Анклав, Закрыто, Полковник
+    .desc = { ent-N14DoorAirlockSlanted.desc }
