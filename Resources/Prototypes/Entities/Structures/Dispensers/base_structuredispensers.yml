@@ -70,5 +70,5 @@
       machine_parts: !type:Container
       beakerSlot: !type:ContainerSlot
   - type: StaticPrice
-    price: 1000
+    price: 50 # Forge-Change
   - type: WiresPanel

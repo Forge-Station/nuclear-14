@@ -1,0 +1,15 @@
+- type: entity
+  parent: N14MobHumanTownsperson
+  id: N14MobHumanTownShopkeeperHelper
+  name: TownShopkeeperHelper
+  components:
+    - type: Icon
+      state: shopkeeper
+    - type: RandomHumanoidAppearance
+      randomizeName: true
+    - type: Loadout
+      prototypes: [TownShopkeeperHelperGear]
+    - type: NpcFactionMember
+      factions:
+      - Wastelander
+      - Townsfolk

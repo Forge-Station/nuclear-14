@@ -1,11 +1,11 @@
 - type: job
-  id: TownShopkeeper
+  id: TownShopkeeperHelper
   setPreference: true
   overrideConsoleVisibility: false
   canBeAntag: false
-  name: job-name-townshopkeeper
-  description: job-description-townshopkeeper
-  playTimeTracker: TownShopkeeper
+  name: job-name-townshopkeeperhelper
+  description: job-description-townshopkeeperhelper
+  playTimeTracker: TownShopkeeperHelper
   requirements:
     - !type:CharacterSpeciesRequirement
       species:
@@ -14,15 +14,12 @@
     - !type:CharacterDepartmentTimeRequirement
       department: Townsfolk
       min: 7200 # 2 hours
-    - !type:CharacterPlaytimeRequirement # Forge-Add
-      tracker: TownShopkeeperHelper
-      min: 14400 # 4 hours
-  startingGear: TownShopkeeperGear
-  icon: "JobIconTownShopKeeper" # Corvax-Change
+  startingGear: TownShopkeeperHelperGear
+  icon: "JobIconTownShopKeeper" 
   supervisors: job-supervisors-townsfolk
   access:
   - TownieShopkeeper
-  - TownsPerson # Corvax-Change
+  - TownsPerson 
   special:
   - !type:AddComponentSpecial
     components:
@@ -33,19 +30,19 @@
       - type: ProfessionalChef
 
 - type: startingGear
-  id: TownShopkeeperGear
+  id: TownShopkeeperHelperGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitMerchant
-    back: N14ClothingBackpackHiking # Corvax-Change
+    back: N14ClothingBackpackHiking 
     shoes: N14ClothingShoesBlack
-    id: N14IDShopkeeperTown
+    id: N14IDShopkeeperHelperTown
     belt: N14WalletCash
   innerClothingSkirt: N14ClothingUniformJumpskirtFalloutBlack
   satchel: N14ClothingBackpackSatchelWastelanderFilled
   duffelbag: N14ClothingBackpackDuffelFilled  # N14TODO: Trader bag
-  storage: # Corvax-Change
+  storage: 
     back:
     - N14BoxPlasticFilledWastelander
 
 - type: playTimeTracker
-  id: TownShopkeeper
+  id: TownShopkeeperHelper

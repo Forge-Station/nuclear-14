@@ -478,6 +478,18 @@
     state: passport_presidential
   - type: PresetIdCard
     job: TownShopkeeper
+  
+- type: entity # Forge-Add-Start
+  parent: N14IDPassportTownsfolk
+  id: N14IDShopkeeperHelperTown
+  name: ShopkeepersHelper ID
+  description: A passport ID used by a town shopkeeper helper.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: passport_presidential
+  - type: PresetIdCard
+    job: TownShopkeeperHelper # Forge-Add-End
 
 - type: entity
   parent: N14IDPassportTownsfolk

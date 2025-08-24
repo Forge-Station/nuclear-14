@@ -90,59 +90,59 @@
       - proto: N14WeaponPistol12mm
         price: 70
       - proto: N14WeaponLaserPistol
-        price: 140
+        price: 130
       - proto: N14WeaponLaserRifleCrude
-        price: 210
+        price: 195
       - proto: N14WeaponSMG9mm
-        price: 120
+        price: 115
       - proto: N14WeaponSMG9mmCanadian
-        price: 125
+        price: 120
       - proto: N14WeaponSMG10mmChinese
-        price: 140
+        price: 135
       - proto: N14WeaponSMG10mm
-        price: 145
+        price: 140
       - proto: N14WeaponSMG45
-        price: 155
+        price: 150
       - proto: N14WeaponSMG12mm
-        price: 190
+        price: 170
       - proto: N14WeaponSniper556VarmintRifle
         price: 80
       - proto: N14WeaponRifle556CarbineOld
         price: 110
       - proto: N14WeaponRifle762SKS
-        price: 170
+        price: 155
       - proto: N14WeaponRifle762M14
-        price: 180
+        price: 165
       - proto: N14WeaponRifle556R91
-        price: 220
+        price: 200
       - proto: N14WeaponRifle556EM2
-        price: 300
+        price: 260
       - proto: N14WeaponRifle762Fal
-        price: 250
+        price: 230
       - proto: N14WeaponRifle762Canadian
-        price: 330
+        price: 290
       - proto: N14WeaponShotgunCaravan
-        price: 60
+        price: 40
       - proto: N14WeaponShotgun
         price: 150
       - proto: N14WeaponShotgunLever
         price: 170
       - proto: N14WeaponShotgunRiot
-        price: 210
+        price: 200
       - proto: N14WeaponShotgunAuto
-        price: 340
+        price: 240
       - proto: N14WeaponSniper308Ross
         price: 150
       - proto: N14WeaponSniper44LeverCarbine
-        price: 170
+        price: 165
       - proto: N14WeaponSniper308LeverRifle
         price: 170
       - proto: N14WeaponRifle308Battle
-        price: 200
+        price: 190
       - proto: N14WeaponRifle762MarksmanCanadian
-        price: 200
+        price: 170
       - proto: N14WeaponSniper308Canadian
-        price: 325
+        price: 265
       Патроны:
       - proto: MagazineBox44
         price: 70
@@ -263,14 +263,17 @@
         price: 40
       - proto: N14AloeSalve
         price: 50
+      - proto: N14SuperStimpak
+        price: 120
+        count: 5
       - proto: N14Stimpak
-        price: 60
-      - proto: N14StimpakDirty
         price: 45
+      - proto: N14StimpakDirty
+        price: 30
       - proto: N14Antidote
-        price: 100
-      - proto: N14CrateBreakPlainFilledRadaway
-        price: 50
+        price: 95
+      - proto: N14RadAwayBloodbag
+        price: 45
       - proto: N14HandheldHealthAnalyzer
         price: 200
       Материалы:
@@ -281,7 +284,7 @@
       - proto: N14IngotLead20
         price: 175
       - proto: N14Gunpowder10
-        price: 200
+        price: 190
       Алкоголь:
       - proto: N14DrinkGammagulpBeer
         price: 15
@@ -301,7 +304,7 @@
       - proto: RadioHandheld
         price: 80
       - proto: N14JunkAbraxoCleaner
-        price: 40
+        price: 35
       - proto: CrayonBox
         price: 50
     Sell:
@@ -325,7 +328,7 @@
       - proto: N14WeaponPistol22lr
         price: 20
       - proto: N14WeaponLaserPistolRecharger
-        price: 65
+        price: 70
       - proto: N14WeaponLaserPistol
         price: 50
       - proto: N14WeaponLaserRifleCrude
@@ -345,25 +348,25 @@
       - proto: N14WeaponRifle556Pipe
         price: 20
       - proto: N14WeaponSMG9mmCanadian
-        price: 30
+        price: 35
       - proto: N14WeaponSMG9mm
-        price: 30
+        price: 35
       - proto: N14WeaponSMG10mmChinese
-        price: 35
-      - proto: N14WeaponSMG10mm
-        price: 35
-      - proto: N14WeaponSMG45
         price: 40
-      - proto: N14WeaponSMG12mm
+      - proto: N14WeaponSMG10mm
+        price: 40
+      - proto: N14WeaponSMG45
         price: 45
+      - proto: N14WeaponSMG12mm
+        price: 50
       - proto: N14WeaponRifle556CarbineOld
         price: 25
       - proto: N14WeaponSniper556VarmintRifle
         price: 20
       - proto: N14WeaponRifle762SKS
-        price: 50
+        price: 55
       - proto: N14WeaponRifle762M14
-        price: 70
+        price: 75
       - proto: N14WeaponRifle556R91
         price: 75
       - proto: N14WeaponRifle762Fal
@@ -373,25 +376,25 @@
       - proto: N14WeaponShotgunCaravan
         price: 20
       - proto: N14WeaponShotgun
-        price: 30
+        price: 35
       - proto: N14WeaponShotgunLever
-        price: 30
+        price: 35
       - proto: N14WeaponShotgunRiot
         price: 50
       - proto: N14WeaponShotgunAuto
-        price: 65
+        price: 75
       - proto: N14WeaponSniper308Ross
-        price: 20
+        price: 30
       - proto: N14WeaponSniper44LeverCarbine
         price: 50
       - proto: N14WeaponSniper308LeverRifle
         price: 50
       - proto: N14WeaponRifle308Battle
-        price: 35
+        price: 40
       - proto: N14WeaponRifle762MarksmanCanadian
         price: 40
       - proto: N14WeaponSniper308Canadian
-        price: 80
+        price: 85
       Ближний бой:
       - proto: N14ScrapMachete
         price: 5
@@ -505,6 +508,12 @@
         price: 2
       - proto: N14ScrapGold1
         price: 2
+      - proto: N14MaterialHideGecko
+        price: 3
+      - proto: N14MaterialHideGecko
+        price: 9
+      - proto: N14MaterialHideGeckoFire
+        price: 15
       - proto: N14MaterialYaoguaiHide
         price: 50
       - proto: N14FoodFireantNectar
@@ -556,50 +565,50 @@
       - proto: N14WeaponRevolverWebley
         price: 2
       - proto: N14WeaponRevolver45-70Hunter
-        price: 3
+        price: 2
       - proto: N14WeaponDesertEagle44
         price: 3
       - proto: N14WeaponSMG12mmAdvancedChinese
-        price: 15
+        price: 13
       - proto: N14WeaponSMG12mmAdvanced
-        price: 15
+        price: 14
       - proto: N14WeaponBlowback
         price: 3
       - proto: N14WeaponShotgunChinese
-        price: 5
-      - proto: N14WeaponShotgunCanadian
-        price: 5
-      - proto: N14WeaponRifle556Carbine
-        price: 3
-      - proto: N14WeaponRifle762Chinese
         price: 4
+      - proto: N14WeaponShotgunCanadian
+        price: 4
+      - proto: N14WeaponRifle556Carbine
+        price: 2
+      - proto: N14WeaponRifle762Chinese
+        price: 3
       - proto: N14WeaponRifle762Marksman
-        price: 5
+        price: 4
       - proto: N14WeaponLaserRiflePrototypeAER14
-        price: 6
-      - proto: N14WeaponLaserRifleAuto
-        price: 7
-      - proto: N14WeaponPlasmaRifle
-        price: 8
-      - proto: N14WeaponRifle762MarksmanChinese
         price: 5
+      - proto: N14WeaponLaserRifleAuto
+        price: 6
+      - proto: N14WeaponPlasmaRifle
+        price: 7
+      - proto: N14WeaponRifle762MarksmanChinese
+        price: 4
       - proto: N14WeaponLMG
-        price: 9
+        price: 8
       - proto: N14WeaponLMGchinese
-        price: 13
+        price: 12
       - proto: N14WeaponHMGcanadian
-        price: 15
+        price: 13
       - proto: N14WeaponLMGBren
-        price: 17
+        price: 16
       - proto: N14WeaponLMGAutoRifle
-        price: 15
+        price: 14
       - proto: N14WeaponMinigun
-        price: 20
+        price: 18
       - proto: N14WeaponLauncherMissile
-        price: 20
+        price: 18
       Патроны:
       - proto: CartridgeMissile
-        price: 3
+        price: 2
       Ближний Бой:
       - proto: N14SuperSledgeHammer
         price: 3
@@ -607,21 +616,21 @@
         price: 4
       Взрывчатка:
       - proto: C4
-        price: 3
+        price: 2
       - proto: GrenadeIncendiary
-        price: 3
+        price: 1
       Медикаменты:
       - proto: MedicatedSuture
-        price: 3
+        price: 2
       - proto: RegenerativeMesh
-        price: 3
+        price: 2
       Силовая Броня:
       - proto: N14ClothingOuterPowerArmorRaider
-        price: 30
+        price: 25
         count: 2
       Броня:
       - proto: N14ClothingOuterMarineArmor
-        price: 20
+        price: 18
       - proto: N14ClothingHeadHatBaseHelmetmarine
         price: 5
       - proto: N14ClothingBootsCombatMK2
@@ -687,3 +696,8 @@
       Силовая Броня:
       - proto: N14ClothingOuterPowerArmorRaider
         price: 9
+      Броня: 
+      - proto: N14ClothingOuterCombatArmorMK2
+        price: 3
+      - proto: N14ClothingOuterRaiderCombat2
+        price: 3

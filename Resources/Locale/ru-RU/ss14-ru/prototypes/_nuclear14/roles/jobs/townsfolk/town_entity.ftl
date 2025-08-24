@@ -1,6 +1,8 @@
 ent-N14MobHumanTownsperson = Городской Житель
     .desc = { ent-MobHuman.desc }
-ent-N14MobHumanTownShopkeeper = Городской Торговец
+ent-N14MobHumanTownShopkeeper = Городской Лавочник
+    .desc = { ent-MobHuman.desc }
+ent-N14MobHumanTownShopkeeperHelper = Помощник Лавочника
     .desc = { ent-MobHuman.desc }
 ent-N14MobHumanTownSheriff = Городской Шериф
     .desc = { ent-MobHuman.desc }

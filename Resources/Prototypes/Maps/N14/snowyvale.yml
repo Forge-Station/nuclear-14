@@ -32,7 +32,8 @@
             TownDeputy: [ 1, 2 ]
             TownDoctor: [ 1, 1 ]
             TownMechanic: [ 2, 2 ]
-            TownShopkeeper: [ 2, 2 ]
+            TownShopkeeper: [ 1, 1 ]
+            TownShopkeeperHelper: [ 1, 1 ] # Forge-Add-Town
             Townsperson: [ 5, 5 ]
             NCRLT: [ 1, 1 ]
             NCRRangerVeteran: [ 1, 1 ]

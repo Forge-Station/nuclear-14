@@ -145,3 +145,14 @@
     - state: green
     - state: gunsmith
 
+- type: entity
+  id: N14SpawnPointTownsfolkTownShopkeeperHelper
+  parent: N14SpawnPointTownsfolkTownsperson
+  name: town shopkeeper helper
+  components:
+  - type: SpawnPoint
+    job_id: TownShopkeeperHelper
+  - type: Sprite
+    layers:
+      - state: green
+      - state: shopkeeper

@@ -15,3 +15,9 @@
   background: /Textures/Corvax/LobbyScreens/oasisbar.png
   name: Oasis Bar
   artist: rozycosmic
+
+- type: lobbyBackground
+  id: NCTribalYama
+  background: /Textures/Corvax/LobbyScreens/tribalyama.png
+  name: Tribal Yama
+  artist: sverhbomba

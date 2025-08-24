@@ -97,6 +97,7 @@
   - TownDeputy
   - TownDoctor
   - TownShopkeeper
+  - TownShopkeeperHelper # Forge-Add
   - WastelandChaplain # Forge-Change
   - WastelandBartender # Moved from the Wastelander department, ID unchanged to avoid glitches for players who have it selected.
   - WastelandReporter # Moved from the Wastelander department, ID unchanged to avoid glitches for players who have it selected.

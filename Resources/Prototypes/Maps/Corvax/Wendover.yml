@@ -1,5 +1,5 @@
 # Author Info
-# GitHub: https://github.com/Corvax-Frontier/nuclear-14
+# GitHub: https://github.com/Forge-Station/nuclear-14
 # Discord: mc_rainbow32
 # License: CC-BY-NC-ND-3.0
 # Corvax_frontier
@@ -43,7 +43,8 @@
           TownDeputy: [ 1, 2 ]
           TownDoctor: [ 1, 1 ]
           TownMechanic: [ 2, 2 ]
-          TownShopkeeper: [ 2, 2 ]
+          TownShopkeeper: [ 1, 1 ]
+          TownShopkeeperHelper: [ 1, 1 ] # Forge-Town
           Townsperson: [ 5, 5 ]
           NCRLT: [ 1, 1 ]
           NCRRangerVeteran: [ 1, 1 ]
@@ -72,10 +73,10 @@
           VaultDweller: [ 4, 4 ]
           VaultEngineer: [ 1, 1 ]
           VaultSecurity: [ 2, 2 ]
-          CaesarLegionCenturion: [ 1, 1 ] # Corvax-Legion
-          CaesarLegionVenator: [ 1, 1 ] # Corvax-Legion
-          CaesarLegionDean: [ 2, 2 ] # Corvax-Legion
-          CaesarLegionLegionnaireVeteran: [ 3, 3 ] # Corvax-Legion
-          CaesarLegionLegionnaireWarrior: [ 4, 4 ] # Corvax-Legion
-          CaesarLegionLegionnaireRecruit: [ 6, 6 ] # Corvax-Legion
+          CaesarLegionCenturion: [ 1, 1 ] # Forge-Legion
+          CaesarLegionVenator: [ 1, 1 ] # Forge-Legion
+          CaesarLegionDean: [ 2, 2 ] # Forge-Legion
+          CaesarLegionLegionnaireVeteran: [ 3, 3 ] # Forge-Legion
+          CaesarLegionLegionnaireWarrior: [ 4, 4 ] # Forge-Legion
+          CaesarLegionLegionnaireRecruit: [ 6, 6 ] # Forge-Legion
           # Raider: [3,3]
