@@ -67,6 +67,43 @@ public sealed class NcStoreLogicSystem : EntitySystem
     }
 
 
+    private bool IsProtoOrDescendant(EntityPrototype candidate, string expectedId)
+    {
+        if (candidate.ID == expectedId)
+            return true;
+
+        var visited = new HashSet<string>();
+        var stack = new Stack<string>();
+
+        if (candidate.Parents != null)
+        {
+            foreach (var p in candidate.Parents)
+                stack.Push(p);
+        }
+
+        while (stack.Count > 0)
+        {
+            var pid = stack.Pop();
+            if (!visited.Add(pid))
+                continue;
+
+            if (pid == expectedId)
+                return true;
+
+            if (_protos.TryIndex<EntityPrototype>(pid, out var parentProto))
+            {
+                if (parentProto.Parents != null)
+                {
+                    foreach (var gp in parentProto.Parents)
+                        stack.Push(gp);
+                }
+            }
+        }
+
+        return false;
+    }
+
+
     private bool TryPickCurrencyForSell(
         NcStoreComponent store,
         StoreListingPrototype listing,
@@ -181,17 +218,21 @@ public sealed class NcStoreLogicSystem : EntitySystem
     {
         var total = 0;
 
-        string? expectedStackType = null;
+        _protos.TryIndex<EntityPrototype>(productProtoId, out var expectedProto);
 
-        if (_protos.TryIndex<EntityPrototype>(productProtoId, out var prodProto))
+        string? expectedStackType = null;
+        if (expectedProto != null)
         {
             var stackName = _compFactory.GetComponentName(typeof(StackComponent));
-            if (prodProto.TryGetComponent(stackName, out StackComponent? prodStackDef))
+            if (expectedProto.TryGetComponent(stackName, out StackComponent? prodStackDef))
                 expectedStackType = prodStackDef.StackTypeId;
         }
 
         foreach (var ent in EnumerateDeepItemsUnique(user))
         {
+            if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
+                continue;
+
             if (expectedStackType != null &&
                 _ents.TryGetComponent(ent, out StackComponent? stack) &&
                 stack.StackTypeId == expectedStackType)
@@ -200,8 +241,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 continue;
             }
 
-            if (_ents.TryGetComponent(ent, out MetaDataComponent? meta) &&
-                meta.EntityPrototype?.ID == productProtoId)
+            if (IsProtoOrDescendant(meta.EntityPrototype, productProtoId))
                 total += 1;
         }
 
@@ -227,7 +267,10 @@ public sealed class NcStoreLogicSystem : EntitySystem
         {
             foreach (var ent in EnumerateDeepItemsUnique(user))
             {
-                if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype?.ID != protoId)
+                if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
+                    continue;
+
+                if (!IsProtoOrDescendant(meta.EntityPrototype, protoId))
                     continue;
 
                 if (_ents.TryGetComponent(ent, out StackComponent? st))
@@ -247,7 +290,10 @@ public sealed class NcStoreLogicSystem : EntitySystem
             if (left <= 0)
                 break;
 
-            if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype?.ID != protoId)
+            if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
+                continue;
+
+            if (!IsProtoOrDescendant(meta.EntityPrototype, protoId))
                 continue;
 
             if (_ents.EntityExists(ent))

@@ -504,6 +504,8 @@
       Хлам:
       - proto: N14MaterialCircuitry1
         price: 20
+      - proto: N14ClothingUniformSkirtBase
+        price: 20
       - proto: N14ScrapElectronic1
         price: 2
       - proto: N14ScrapGold1
@@ -696,7 +698,7 @@
       Силовая Броня:
       - proto: N14ClothingOuterPowerArmorRaider
         price: 9
-      Броня: 
+      Броня:
       - proto: N14ClothingOuterCombatArmorMK2
         price: 3
       - proto: N14ClothingOuterRaiderCombat2
