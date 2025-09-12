@@ -143,7 +143,7 @@
   id: LoadoutClothingOuterNCRVestDesertCoat
   customName: false
   customDescription: false
-  catogory: Outer
+  category: Outer
   cost: 0
   exclusive: true
   sponsorLevel: 3
@@ -161,7 +161,7 @@
   id: LoadoutClothingOuterNCRVestpaddedWebKiltDesert
   customName: false
   customDescription: false
-  catogory: Outer
+  category: Outer
   cost: 4
   exclusive: true
   sponsorLevel: 2
@@ -182,7 +182,7 @@
   id: LoadoutClothingOuterNCRVeteranArmorKiltDesert
   customName: false
   customDescription: false
-  catogory: Outer
+  category: Outer
   cost: 5
   exclusive: true
   sponsorLevel: 2
@@ -203,7 +203,7 @@
   id: LoadoutClothingOuterNCRCombatVeteranKiltArmorDesert
   customName: false
   customDescription: false
-  catogory: Outer
+  category: Outer
   cost: 6
   exclusive: true
   sponsorLevel: 2
