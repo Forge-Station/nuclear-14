@@ -54,6 +54,11 @@
         - N14Cartridge762Rifle
     proto: N14Cartridge762Rifle
     capacity: 100
+  - type: Item # Forge-Change
+    size: Normal
+    shape:
+    - 0,0,1,1
+    - 0,1,0,1
   - type: Sprite
     netsync: false
     sprite: _Nuclear14/Objects/Weapons/Guns/Ammunition/Magazines/7.62/belt.rsi

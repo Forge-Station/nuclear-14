@@ -146,4 +146,4 @@
   category: N14Parts
   completetime: 2
   materials:
-    Steel: 50
+    Steel: 100 # Forge-Change

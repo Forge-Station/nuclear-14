@@ -10,6 +10,8 @@
   - type: Item
     size: Normal
     sprite: Objects/Fun/Instruments/trumpet.rsi
+  - type: StaticPrice # Forge-Add
+    price: 15
 
 - type: entity
   parent: TromboneInstrument 
@@ -23,6 +25,8 @@
   - type: Item
     size: Normal
     sprite: Objects/Fun/Instruments/trombone.rsi
+  - type: StaticPrice # Forge-Add
+    price: 15
 
 - type: entity
   parent: BanjoInstrument 
@@ -36,6 +40,8 @@
   - type: Item
     size: Normal
     sprite: Objects/Fun/Instruments/banjo.rsi
+  - type: StaticPrice # Forge-Add
+    price: 15
 
 - type: entity
   parent: ViolinInstrument 
@@ -49,7 +55,8 @@
   - type: Item
     size: Normal
     sprite: Objects/Fun/Instruments/violin.rsi
-
+  - type: StaticPrice # Forge-Add
+    price: 15
 
 - type: entity
   parent: AcousticGuitarInstrument 
@@ -71,7 +78,6 @@
   - type: StaticPrice # Forge-Add
     price: 15
 
-
 - type: entity
   parent: SaxophoneInstrument 
   id: N14InstrumentSaxaphone
@@ -84,7 +90,8 @@
   - type: Item
     size: Normal
     sprite: Objects/Fun/Instruments/saxophone.rsi
-
+  - type: StaticPrice # Forge-Add
+    price: 15
 
 - type: entity
   parent: HarmonicaInstrument 
@@ -98,7 +105,8 @@
   - type: Item
     size: Small
     sprite: Objects/Fun/Instruments/harmonica.rsi
-
+  - type: StaticPrice # Forge-Add
+    price: 15
 
 - type: entity
   parent: ClarinetInstrument 
@@ -114,6 +122,8 @@
   - type: Item
     size: Normal
     sprite: Objects/Fun/Instruments/clarinet.rsi
+  - type: StaticPrice # Forge-Add
+    price: 15
 
 - type: entity
   parent: FluteInstrument 
@@ -129,6 +139,8 @@
   - type: Item
     size: Normal
     sprite: Objects/Fun/Instruments/flute.rsi
+  - type: StaticPrice # Forge-Add
+    price: 15
 
 - type: entity
   parent: PanFluteInstrument 
@@ -144,3 +156,5 @@
   - type: Item
     size: Small
     sprite: Objects/Fun/Instruments/panflute.rsi
+  - type: StaticPrice # Forge-Add
+    price: 15

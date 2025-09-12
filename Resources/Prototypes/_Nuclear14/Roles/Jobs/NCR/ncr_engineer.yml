@@ -34,6 +34,7 @@
     head: N14ClothingHeadHatNCRHelmetMetalDesert # Corvax-Change
     back: N14ClothingBackpackNCR # Corvax-Change
     jumpsuit: N14ClothingUniformNCRDesert # Corvax-Change
+    outerClothing: N14ClothingOuterNCRPouchedVestDesert # Forge-Change
     shoes: N14ClothingBootsLeatherFilled
     gloves: N14ClothingHandsGlovesCombat
     id: N14IDNCRDogtagEngineer

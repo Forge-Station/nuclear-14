@@ -282,6 +282,11 @@
       - map: [ "enum.PowerCellVisualLayers.Unshaded" ]
         state: o2
         shader: unshaded
+  - type: Item # Forge-change
+    size: Normal
+    shape:
+    - 0,0,1,1
+    - 0,1,0,1
   - type: Tag
     tags:
       - N14PlasmaShell

@@ -42,6 +42,7 @@
     gloves: N14ClothingHandsGlovesTribal
     back: N14ClothingBackpackTrekker # Corvax-Change
     pocket1: N14TribalKnife
+    pocket2: Triballoadoutkits # Forge-Change
     id: N14IDTribeBossPendant
   innerClothingSkirt: N14ClothingUniformJumpskirtTribal
   satchel: N14ClothingBackpackSatchelTribalFilled

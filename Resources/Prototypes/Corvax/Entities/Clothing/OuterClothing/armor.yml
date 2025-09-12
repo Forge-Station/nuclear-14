@@ -283,3 +283,66 @@
         Heat: 0.7
   - type: ExplosionResistance
     damageCoefficient: 0.8
+
+- type: entity
+  parent: N14ClothingOuterNCRVestDesert
+  id: N14ClothingOuterNCRVestpaddedWebDesert
+  components: 
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRpaddedwebvest.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRpaddedwebvest.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.825
+        Slash: 0.825
+        Piercing: 0.775
+        Heat: 0.775
+  - type: ExplosionResistance
+    damageCoefficient: 0.9
+  - type: Storage
+    grid:
+    - 0,0,2,1
+  - type: ContainerContainer
+    containers:
+      storagebase: !type:Container
+        ents: []
+  - type: UserInterface
+    interfaces:
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+
+- type: entity
+  parent: N14ClothingOuterNCRVestDesert
+  id: N14ClothingOuterNCRVeteranArmorDesert
+  components: 
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRveteranarmor.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRveteranarmor.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.8
+        Slash: 0.8
+        Piercing: 0.75
+        Heat: 0.75
+  - type: ExplosionResistance
+    damageCoefficient: 0.9
+
+- type: entity
+  parent: N14ClothingOuterNCRCombatArmor
+  id: N14ClothingOuterNCRCombatVeteranArmorDesert
+  components: 
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutcombatveteranNCR.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutcombatveteranNCR.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.725
+        Slash: 0.725
+        Piercing: 0.675
+        Heat: 0.675

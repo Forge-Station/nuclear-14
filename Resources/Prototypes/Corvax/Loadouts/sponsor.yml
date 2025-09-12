@@ -138,3 +138,81 @@
   - N14ClothingOuterLegionPaladinKiller
   functions:
   - !type:LoadoutDeleteHelmet
+
+- type: loadout
+  id: LoadoutClothingOuterNCRVestDesertCoat
+  customName: false
+  customDescription: false
+  catogory: Outer
+  cost: 0
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - NCRSoldier
+    - NCREngineer
+    - NCRMedic
+    - NCRWS
+  items:
+  - N14ClothingOuterNCRVestDesertCoat
+
+- type: loadout
+  id: LoadoutClothingOuterNCRVestpaddedWebKiltDesert
+  customName: false
+  customDescription: false
+  catogory: Outer
+  cost: 4
+  exclusive: true
+  sponsorLevel: 2
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - NCRSoldier
+    - NCREngineer
+    - NCRMedic
+    - NCRWS
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCRSoldier
+    min: 36000 # 10 hours veterancy unlock
+  items:
+  - N14ClothingOuterNCRVestpaddedWebKiltDesert
+
+- type: loadout
+  id: LoadoutClothingOuterNCRVeteranArmorKiltDesert
+  customName: false
+  customDescription: false
+  catogory: Outer
+  cost: 5
+  exclusive: true
+  sponsorLevel: 2
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - NCRSoldier
+    - NCREngineer
+    - NCRMedic
+    - NCRWS
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCRSoldier
+    min: 72000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingOuterNCRVeteranArmorKiltDesert
+
+- type: loadout
+  id: LoadoutClothingOuterNCRCombatVeteranKiltArmorDesert
+  customName: false
+  customDescription: false
+  catogory: Outer
+  cost: 6
+  exclusive: true
+  sponsorLevel: 2
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - NCRSGT
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCRNCO
+    min: 72000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingOuterNCRCombatVeteranKiltArmorDesert

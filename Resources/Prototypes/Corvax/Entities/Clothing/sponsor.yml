@@ -229,3 +229,39 @@
       - Snout
       - HeadTop
       - HeadSide
+
+- type: entity
+  parent: N14ClothingOuterNCRCombatVeteranArmorDesert
+  id: N14ClothingOuterNCRCombatVeteranKiltArmorDesert
+  components: 
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutcombatveterankiltNCR.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutcombatveterankiltNCR.rsi
+
+- type: entity
+  parent: N14ClothingOuterNCRVestpaddedWebDesert
+  id: N14ClothingOuterNCRVestpaddedWebKiltDesert
+  components: 
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRpaddedwebvestkilt.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRpaddedwebvestkilt.rsi
+
+- type: entity
+  parent: N14ClothingOuterNCRVeteranArmorDesert
+  id: N14ClothingOuterNCRVeteranArmorKiltDesert
+  components: 
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRveteranarmorkilt.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRveteranarmorkilt.rsi
+
+- type: entity
+  parent: N14ClothingOuterNCRVestDesert
+  id: N14ClothingOuterNCRVestDesertCoat
+  components: 
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRarmorcoat.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRarmorcoat.rsi

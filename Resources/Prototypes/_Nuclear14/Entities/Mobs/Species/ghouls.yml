@@ -68,8 +68,8 @@
   - type: Hunger
     starvationDamage:
       types:
-        Cold: 0.5
-        Bloodloss: 0.5
+        Cold: 0.15
+    starvingSlowdownModifier: 0.5
   - type: Thirst
   - type: Damageable
     damageContainer: Biological

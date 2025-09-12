@@ -530,7 +530,7 @@
       - id: N14StimpakDirty
         amount: 2
       - id: N14HealingPoultice
-        amount: 8
+        amount: 2
       - id: Brutepack
       - id: Ointment
       - id: N14FoodTinK
