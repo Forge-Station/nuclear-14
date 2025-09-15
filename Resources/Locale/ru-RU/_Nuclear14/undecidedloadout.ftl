@@ -581,3 +581,21 @@ undecided-loadout-category-scribe-plasma-description =
     1 Плазменный пистолет, 2 плазменные Батареи ,
     Сталь , Стекло , Бинты , 1 стимпак , Пояс инструментов
     Полный набор элементов Радио-Защиты
+
+# Инквизитор СЗБС
+undecided-loadout-category-inquisitorinspector-name = Набор Инспектора
+undecided-loadout-category-inquisitorinspector-description =
+    Набор того кто всегда на страже порядке, Инспектора СЗБС.
+    В комплект входит: Охотничий револьвер и кобура к нему, 2 спидлоадера 45-70,
+    Коробка патрон 45-70, боевая аптечка, сухпаек, набор бинтов, 2 стимпака, церемониальный меч.
+
+undecided-loadout-category-inquisitorcrusader-name = Набор Крестоносца
+undecided-loadout-category-inquisitorcrusader-description =
+    Набор Крестоносца, всегда готового к защите братства от дезертиров.
+    В комплект входит: Штурмовая винтовка с 3 магазинами, коробка патрон 5.56,
+    Разгрузочный жилет, сухпаек, 2 стимпака.
+
+undecided-loadout-category-inquisitorplasma-name = Плазменный Набор
+undecided-loadout-category-inquisitorplasma-description =
+    Плазменный набор, для самых жестоких Инквизиторов братства.
+    сухпаек, набор бинтов, набор мазей, 2 стимпака и 1 супер-стимпак, а так-же разгрузочный жилет.

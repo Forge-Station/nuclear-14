@@ -51,3 +51,5 @@ ent-N14ClothingOuterNCRCombatVeteranArmorDesert = боевая броня вет
     .desc = Старая довоенная боевая броня, перекрашенная в цвета Новой Калифорнийской Республики. Этот комплект прослужил не один год, и имеет дополнительные защитные вставки, которые правда не очень защищают от пуль.
 ent-N14ClothingOuterNCRCombatVeteranKiltArmorDesert = боевая броня ветерана нкр с кителем
     .desc = { ent-N14ClothingOuterNCRCombatVeteranArmorDesert.desc }
+ent-N14ClothingOuterBOSInquisitorBattleArmor = боевая броня инквизитора СЗБС
+    .desc = Усиленная броня чёрного цвета с гербами Братства Стали, созданная для защиты инквизиторов в ближнем бою и при штурмах.

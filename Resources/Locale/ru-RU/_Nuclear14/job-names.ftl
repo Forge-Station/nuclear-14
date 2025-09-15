@@ -10,6 +10,8 @@ job-name-bos-mid-scribe = скриптер СЗБС
 job-description-bos-mid-scribe = Проводите научные миссии и исследования для вашего отделения Братства.
 job-name-bos-mid-squire = оруженосец СЗБС
 job-description-bos-mid-squire = Следуйте за своим рыцарем в бой и выполняйте его приказы.
+job-name-bos-mid-inquisitor = инквизитор СЗБС
+job-description-bos-mid-inquisitor = Дезертиры... Вы тот, кого они боятся. Инквизитор, исполняющий роль Военной Полиции на территории братства, карайте врагов и подчиняйтесь командиру.
 # ВБС
 job-name-bos-washington-commander = командир ВБС
 job-description-bos-washington-commander = Ведите Вашингтонское Братство Стали к выполнению вашей задачи.

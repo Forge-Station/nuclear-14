@@ -118,3 +118,12 @@
     sprite: Corvax/Clothing/Uniforms/Jumpsuit/scout.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Uniforms/Jumpsuit/scout.rsi
+
+- type: entity
+  parent: N14ClothingUniformBase
+  id: N14ClothingUniformJumpsuitInquisitorBOS
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/InquisitorUniform.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/InquisitorUniform.rsi

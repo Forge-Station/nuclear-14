@@ -1,0 +1,54 @@
+- type: job
+  id: BoSMidInquisitor
+  setPreference: true
+  overrideConsoleVisibility: true
+  canBeAntag: false
+  name: job-name-bos-mid-inquisitor
+  description: job-description-bos-mid-inquisitor
+  playTimeTracker: BoSMidInquisitor
+  requirements:
+    - !type:CharacterSpeciesRequirement
+      species:
+      - Human
+      - Ghoul
+    - !type:CharacterDepartmentTimeRequirement
+      department: BrotherhoodMidwest
+      min: 216000 # 60 hours
+    - !type:CharacterPlaytimeRequirement 
+      tracker: BoSMidPaladinCommander
+      min: 216000 # 60 hours
+  startingGear: BoSMidInquisitorGear
+  alwaysUseSpawner: true
+  icon: "JobIconBosMPaladin"
+  supervisors: job-supervisors-bos-mid
+  access:
+  - BoSMidwest
+  - Knight
+  - Scribe
+  - Paladin
+  special:
+  - !type:AddComponentSpecial
+    components:
+      - type: NpcFactionMember
+        factions:
+          - Wastelander
+          - BrotherhoodMidwest
+
+- type: startingGear
+  id: BoSMidInquisitorGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitInquisitorBOS
+    back: N14ClothingBackpackMilitary 
+    shoes: N14ClothingBootsCombatFilled
+    head:  N14ClothingHeadHatBoSInquisitorCap
+    outerClothing: N14ClothingOuterBOSInquisitorCoat
+    pocket1: BoSMidwestInquisitorKits
+    gloves: N14ClothingHandsGlovesCombat
+    id: N14IDBrotherhoodHolotagPaladin
+    ears: N14ClothingHeadsetBOSMidwest
+  storage: 
+    back:
+    - N14BoxPlasticFilledMilitary
+
+- type: playTimeTracker
+  id: BoSMidInquisitor

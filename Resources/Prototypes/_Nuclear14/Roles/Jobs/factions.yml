@@ -9,6 +9,7 @@
   - BoSMidScribe
   - BoSMidKnight
   - BoSMidSquire
+  - BoSMidInquisitor # Forge-Change
 
 - type: department
   id: BrotherhoodWashington

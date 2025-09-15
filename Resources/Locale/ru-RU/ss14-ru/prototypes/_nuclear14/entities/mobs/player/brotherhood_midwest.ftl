@@ -7,4 +7,6 @@ ent-N14MobHumanBoSMidPaladin = Паладин СЗБС
 ent-N14MobHumanBoSMidScribe = Скриптер СЗБС
     .desc = { ent-BoSMidPaladinCommander.desc }
 ent-N14MobHumanBoSMidSquire = Сквайр СЗБС
+    .desc = { ent-BoSMidPaladinCommander.desc } 
+ent-N14MobHumanBoSMidInquisitor = Инквизитор СЗБС
     .desc = { ent-BoSMidPaladinCommander.desc }

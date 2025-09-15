@@ -1130,3 +1130,73 @@
       - id: N14ClothingBeltUtilityFilled
       - id: SheetSteel
       - id: SheetGlass
+
+##MARK: Inquisitor Midwest Kits
+- type: entity
+  name: Inquisitor Inspector Kit
+  parent: KitBase
+  id: KitInquisitorInspector
+  description: Standard Inspector kit
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponRevolver45-70Hunter
+      - id: N14CeremonialSword
+      - id: ClothingBeltRevolver
+      - id: N14Stimpak
+        amount: 2
+      - id: N14MedkitCombatFilled
+      - id: SpeedLoader45-70
+        amount: 2
+      - id: MagazineBox45-70
+      - id: N14BoxCardboardMREBoxKFilled
+      - id: N14CleanGauze10
+
+- type: entity
+  name: Inquisitor Crusader Kit
+  parent: KitBase
+  id: KitInquisitorCrusader
+  description: Standard Crusader kit
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponRifle556Carbine
+      - id: N14ClothingBeltBoSWebbing
+      - id: N14Stimpak
+        amount: 2
+      - id: LongMagazine556Rifle
+        amount: 3
+      - id: MagazineBox556
+      - id: N14BoxCardboardMREBoxKFilled
+      - id: N14CleanGauze10
+
+- type: entity
+  name: Inquisitor Plasma Kit
+  parent: KitBase
+  id: KitInquisitorPlasma
+  description: Standard Plasma kit
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponPlasmaRifleAuto
+      - id: N14ClothingBeltBoSWebbing
+      - id: N14Stimpak
+        amount: 2
+      - id: N14PlasmaCartridge
+        amount: 3
+      - id: N14SuperStimpak
+      - id: N14BoxCardboardMREBoxKFilled
+      - id: N14CleanGauze10
+      - id: N14Ointment10

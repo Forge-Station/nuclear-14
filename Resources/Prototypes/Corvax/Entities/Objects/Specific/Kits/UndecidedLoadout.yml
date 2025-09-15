@@ -231,6 +231,20 @@
     - KitBrootherWest_ScribelaserSet
     - KitBrootherWest_ScribeplasmaSet
 
+#Inquisitor Brother Kits
+- type: entity
+  id: BoSMidwestInquisitorKits
+  parent: BaseLoadoutKit
+  components: 
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: marksman
+  - type: UndecidedLoadoutBackpack
+    possibleSets:
+    - KitMidwestInquisitorInspectorSet
+    - KitMidwestInquisitorCrusaderSet
+    - KitMidwestInquisitorPlasmaSet
+
 ### Sets
 
 # Legion
@@ -693,3 +707,34 @@
     state: rifleman
   content:
   - KitBrootherWest_Elderlas
+
+# Inquisitor Brother Kits
+- type: UndecidedLoadoutBackpackSet
+  id: KitMidwestInquisitorInspectorSet
+  name: undecided-loadout-category-inquisitorinspector-name
+  description: undecided-loadout-category-inquisitorinspector-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitInquisitorInspector
+
+- type: UndecidedLoadoutBackpackSet
+  id: KitMidwestInquisitorCrusaderSet
+  name: undecided-loadout-category-inquisitorcrusader-name
+  description: undecided-loadout-category-inquisitorcrusader-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitInquisitorCrusader
+
+- type: UndecidedLoadoutBackpackSet
+  id: KitMidwestInquisitorPlasmaSet
+  name: undecided-loadout-category-inquisitorplasma-name
+  description: undecided-loadout-category-inquisitorplasma-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitInquisitorPlasma
