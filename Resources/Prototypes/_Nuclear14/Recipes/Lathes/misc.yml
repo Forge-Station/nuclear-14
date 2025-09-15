@@ -5,7 +5,7 @@
   completetime: 2
   materials:
     Steel: 50
-    Glass: 50
+    Glass: 100 # Forge-Change
 
 - type: latheRecipe
   id: N14LedLightTube
@@ -14,7 +14,7 @@
   completetime: 2
   materials:
     Steel: 50
-    Glass: 50
+    Glass: 100 # Forge-Change
 
 - type: latheRecipe
   id: N14SodiumLightTube
@@ -23,7 +23,7 @@
   completetime: 2
   materials:
     Steel: 50
-    Glass: 50
+    Glass: 100 # Forge-Change
 
 - type: latheRecipe
   id: N14ExteriorLightTube
@@ -32,7 +32,7 @@
   completetime: 2
   materials:
     Steel: 50
-    Glass: 50
+    Glass: 100 # Forge-Change
 
 - type: latheRecipe
   id: N14LightBulb
@@ -41,7 +41,7 @@
   completetime: 2
   materials:
     Steel: 50
-    Glass: 50
+    Glass: 100 # Forge-Change
 
 - type: latheRecipe
   id: N14LedLightBulb
@@ -50,7 +50,7 @@
   completetime: 2
   materials:
     Steel: 50
-    Glass: 50
+    Glass: 100 # Forge-Change
 
 - type: latheRecipe
   id: N14GlowstickRed

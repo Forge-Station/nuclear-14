@@ -14,7 +14,7 @@
   completetime: 2
   materials:
     Steel: 50
-    Glass: 50
+    Glass: 100
 
 - type: latheRecipe
   id: SodiumLightTube
@@ -23,7 +23,7 @@
   completetime: 2
   materials:
     Steel: 50
-    Glass: 50
+    Glass: 100
 
 - type: latheRecipe
   id: ExteriorLightTube
@@ -32,7 +32,7 @@
   completetime: 2
   materials:
     Steel: 50
-    Glass: 50
+    Glass: 100
 
 - type: latheRecipe
   id: LightBulb
@@ -41,7 +41,7 @@
   completetime: 2
   materials:
     Steel: 50
-    Glass: 50
+    Glass: 100
 
 - type: latheRecipe
   id: LedLightBulb
@@ -50,7 +50,7 @@
   completetime: 2
   materials:
     Steel: 50
-    Glass: 50
+    Glass: 100
 
 - type: latheRecipe
   id: GlowstickRed

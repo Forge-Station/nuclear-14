@@ -598,4 +598,5 @@ undecided-loadout-category-inquisitorcrusader-description =
 undecided-loadout-category-inquisitorplasma-name = Плазменный Набор
 undecided-loadout-category-inquisitorplasma-description =
     Плазменный набор, для самых жестоких Инквизиторов братства.
+    В комплект входит: автоматическая плазменная винтовка с 3 батареями,
     сухпаек, набор бинтов, набор мазей, 2 стимпака и 1 супер-стимпак, а так-же разгрузочный жилет.

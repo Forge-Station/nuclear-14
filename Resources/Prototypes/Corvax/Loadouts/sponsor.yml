@@ -40,7 +40,7 @@
 - type: loadout
   id: LoadoutN14ClothingOuterWandererCoat
   category: Roles
-  cost: 3
+  cost: 4
   exclusive: true
   sponsorLevel: 2
   items:
