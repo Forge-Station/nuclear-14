@@ -460,6 +460,10 @@
     - ArrowRegular
     # Machine Parts
     - N14PortableGeneratorWeldingFuelMachineParts
+    #Paperwork
+    - N14WoodPencil # Corvax Forge Fallout
+    - N14LuxuryPen # Corvax Forge Fallout
+    - N14PenReporter # Corvax Forge Fallout
 
 - type: entity
   parent: N14WorkbenchBase
