@@ -8,10 +8,10 @@
     Charcoal: 100
 
 - type: latheRecipe
-  id: N14LuxuryPen
-  result: LuxuryPen
+  id: N14PenReporter
+  result: N14PenReporter
   category: N14Tools
   completetime: 2
   materials:
-    Plastic: 100
     Steel: 200
+    Plastic: 100
