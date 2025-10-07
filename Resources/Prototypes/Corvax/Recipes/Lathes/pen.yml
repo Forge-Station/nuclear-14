@@ -4,8 +4,8 @@
   category: N14Tools
   completetime: 2
   materials:
-    Wood: 200
-    Charcoal: 100
+    Wood: 50
+    Charcoal: 20
 
 - type: latheRecipe
   id: N14PenReporter
@@ -13,5 +13,5 @@
   category: N14Tools
   completetime: 2
   materials:
-    Steel: 200
-    Plastic: 100
+    Steel: 50
+    Plastic: 20
