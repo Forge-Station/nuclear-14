@@ -14,13 +14,4 @@
   completetime: 2
   materials:
     Plastic: 100
-    Steel: 300
-
-- type: latheRecipe
-  id: N14PenReporter
-  result: N14PenReporter
-  category: N14Tools
-  completetime: 2
-  materials:
-    Steel: 100
-    Plastic: 200
+    Steel: 200
