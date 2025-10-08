@@ -1,0 +1,10 @@
+- type: entity
+  id: ClothingBeltFarmerFilled
+  parent: ClothingBeltFarmer
+  suffix: Filled
+  components:
+  - type: StorageFill
+    contents:
+    - id: HydroponicsToolMiniHoe
+    - id: HydroponicsToolSpade
+    - id: RobustHarvestChemistryBottle # used by tribal farmers, leave robust?
