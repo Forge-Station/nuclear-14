@@ -24,3 +24,17 @@
               doAfter: 2
     - node: paper
       entity: N14Paper
+
+- type: constructionGraph
+  id: MaterialCloth1
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: cloth
+          steps:
+            - material: N14CottonBol
+              amount: 2
+              doAfter: 2
+    - node: cloth
+      entity: MaterialCloth1

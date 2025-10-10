@@ -30,6 +30,14 @@
   itemSize: 1
 
 - type: stack
+  id: N14CottonBol
+  name: cotton ball
+  icon: { sprite: "Objects/Specific/Hydroponics/cotton.rsi", state: produce }
+  spawn: N14CottonBol
+  maxCount: 2
+  itemSize: 1
+
+- type: stack
   id: N14Timber
   name: timber
   icon: { sprite: "_Nuclear14/Structures/Decoration/flora.rsi", state: tree_timber }

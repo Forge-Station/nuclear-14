@@ -23,3 +23,17 @@
   icon: { sprite: /Textures/Objects/Materials/materials.rsi, state: cardboard }
   objectType: Item
   hide: false
+
+  # cloth
+- type: construction
+  name: cloth
+  id: MaterialCloth1
+  graph: MaterialCloth1
+  startNode: start
+  targetNode: cloth
+  category: construction-category-materials
+  description: cloth
+  icon: { sprite: _Nuclear14\Objects\Misc\materials.rsi, state: cloth }
+  objectType: Item
+  hide: false
+

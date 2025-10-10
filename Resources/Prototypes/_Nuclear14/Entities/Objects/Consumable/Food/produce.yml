@@ -1656,7 +1656,7 @@
     - Vegetable
 
 - type: entity
-  name: cotton boll
+  name: cottonboll
   description: Moth people's favorite snack, and just as fluffy as them.
   id: N14CottonBol
   parent: N14FoodProduceBase
@@ -1676,9 +1676,11 @@
           Quantity: 10
   - type: Log
     spawnedPrototype: MaterialCotton1
-    spawnCount: 2
+    spawnCount: 0
   - type: Produce
     seedId: cotton
+  - type: Stack 
+    stackType: N14CottonBol
   - type: Tag
     tags:
     - ClothMade
