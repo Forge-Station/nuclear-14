@@ -1,5 +1,5 @@
 using System.Linq;
-using Content.Client._NC.Sponsors;
+using Content.Client._NC.Sponsor;
 using Content.Client.Humanoid;
 using Content.Client.Inventory;
 using Content.Client.Lobby.UI;

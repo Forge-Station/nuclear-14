@@ -6,7 +6,7 @@ using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Content.Shared._NC.CorvaxVars; // Forge-Change
-using Content.Shared._NC.Sponsors;
+using Content.Shared._NC.Sponsor;
 using Robust.Shared.Network;
 using Content.Shared.Players; // Forge-Change
 

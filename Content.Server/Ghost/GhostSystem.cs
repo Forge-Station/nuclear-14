@@ -1,12 +1,11 @@
 using System.Linq;
 using System.Numerics;
-using Content.Server._NC.Sponsors; // Forge-Change
+using Content.Server._NC.Sponsor; // Forge-Change
 using Content.Server.GameTicking;
 using Content.Server.Ghost.Components;
 using Content.Server.Mind;
 using Content.Server.Roles.Jobs;
 using Content.Server.Warps;
-using Content.Shared._NC.Sponsors; // Forge-Change
 using Content.Shared.Actions;
 using Content.Shared.Examine;
 using Content.Shared.Eye;

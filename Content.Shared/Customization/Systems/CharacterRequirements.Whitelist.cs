@@ -7,7 +7,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Utility;
 using Robust.Shared.Network;
-using Content.Shared._NC.Sponsors; // Forge-Change
+using Content.Shared._NC.Sponsor; // Forge-Change
 
 namespace Content.Shared.Customization.Systems;
 

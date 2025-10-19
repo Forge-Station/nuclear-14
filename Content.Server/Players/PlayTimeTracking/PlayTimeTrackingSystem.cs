@@ -23,7 +23,7 @@ using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
-using Content.Server._NC.Sponsors; // Forge-Change
+using Content.Server._NC.Sponsor; // Forge-Change
 
 namespace Content.Server.Players.PlayTimeTracking;
 

@@ -16,7 +16,7 @@ using Robust.Shared.Network;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
-using Content.Server._NC.Sponsors;
+using Content.Server._NC.Sponsor;
 using Content.Server._NC.Discord; // Forge-Change
 
 /*

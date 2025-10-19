@@ -31,8 +31,9 @@ using Content.Shared.Chat;
 using Content.Shared.Kitchen;
 using Content.Shared.Players.PlayTimeTracking;
 using Content.Shared.Players.RateLimiting;
-using Content.Shared._NC.Sponsors; // Forge-Change
-using Content.Server._NC.Sponsors; // Forge-Change
+using Content.Shared._NC.Sponsor; // Forge-Change
+using Content.Server._NC.Sponsor;
+using Content.Server._NC.TTS; // Forge-Change
 
 namespace Content.Server.IoC
 {
@@ -72,6 +73,7 @@ namespace Content.Server.IoC
             IoCManager.Register<ServerDbEntryManager>();
             IoCManager.Register<JoinQueueManager>();
             IoCManager.Register<DiscordAuthManager>();
+            IoCManager.Register<TTSManager>(); // Corvax-TTS
             IoCManager.Register<SponsorManager>(); // Forge-Change
             IoCManager.Register<ISharedSponsorManager, SponsorManager>(); // Forge-Change
             IoCManager.Register<ISharedPlaytimeManager, PlayTimeTrackingManager>();

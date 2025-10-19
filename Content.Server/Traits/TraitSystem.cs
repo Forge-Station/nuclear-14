@@ -21,7 +21,7 @@ using Robust.Shared.Random;
 using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Utility;
 using Timer = Robust.Shared.Timing.Timer;
-using Content.Server._NC.Sponsors; // Forge-Change
+using Content.Server._NC.Sponsor; // Forge-Change
 
 namespace Content.Server.Traits;
 
