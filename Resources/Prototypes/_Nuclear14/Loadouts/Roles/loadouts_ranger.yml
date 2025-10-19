@@ -773,9 +773,9 @@
     - ClothingMaskGasRiot
 # Corvax-Add End
 
-# Corvax-Add Start
+# Forge-Add Start
 - type: loadout
-  id: LoadoutNCRRangerroman
+  id: LoadoutNCRRangerRoman
   category: Roles
   cost: 1
   exclusive: true
@@ -789,4 +789,4 @@
       min: 216000 # 60 hours veterancy unlock "First Tour"
   items:
     - N14ClothingUniformJumpsuitRanger
-# Corvax-Add End
+# Forge-Add End
