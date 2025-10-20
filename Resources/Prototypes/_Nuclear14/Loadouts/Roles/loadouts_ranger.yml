@@ -788,5 +788,5 @@
       tracker: NCRRanger
       min: 216000 # 60 hours veterancy unlock "First Tour"
   items:
-    - N14ClothingUniformJumpsuitRanger
+    - N14ClothingUniformJumpsuitRangerRoman
 # Forge-Add End
