@@ -176,7 +176,7 @@ reagent-desc-cazador-venom = Яд казадора — самый страшны
 # Chems
 reagent-name-healing-powder = целебный порошок
 reagent-desc-healing-powder = Порошок, приготовленный из измельченных растений.
-reagent-name-antidote-mixture = антидот
+reagent-name-antidote-mixture = противоядие
 reagent-desc-antidote-mixture = Противоядие, приготовленное из хвоста радскорпиона и воды.
 reagent-name-antidote = антидот
 reagent-desc-antidote = Мощный антитоксин, изготовленный в лаборатории.
