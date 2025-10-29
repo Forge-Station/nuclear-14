@@ -1,4 +1,4 @@
-﻿- type: construction
+- type: construction
   name: tall machine frame
   description: A machine under construction. Needs more parts.
   id: N14TallMachineFrame
@@ -29,6 +29,7 @@
     state: rack_on
   conditions:
     - !type:TileNotBlocked
+  hide: true #MARK: Hide (Forge-Change)
 
 - type: construction
   name: server rack
@@ -46,6 +47,7 @@
     state: serverrack_on
   conditions:
     - !type:TileNotBlocked
+  hide: true #MARK: Hide (Forge-Change)
 
 #MARK: Terminals
 - type: construction
@@ -64,6 +66,7 @@
     state: rack_on
   conditions:
     - !type:TileNotBlocked
+  hide: true #MARK: Hide (Forge-Change)
 
 #MARK: Crafting Benches
 
