@@ -1,0 +1,224 @@
+- type: constructionGraph
+  id: DecorationFlagEmpty
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: FlagEmpty
+          steps:
+            - material: WoodPlank
+              amount: 5
+              doAfter: 3
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+    - node: FlagEmpty
+      entity: N14DecorationFlagBearerEmpty
+      edges:
+        - to: start
+          steps:
+            - tool: Prying
+              doAfter: 3
+          completed:
+            - !type:GivePrototype
+              prototype: MaterialWoodPlank1
+              amount: 3
+            - !type:DeleteEntity {}
+
+- type: constructionGraph
+  id: DecorationFlagNCR
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: FlagNCR
+          steps:
+            - material: WoodPlank
+              amount: 5
+              doAfter: 3
+            - material: Cloth
+              amount: 5
+              doAfter: 3
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+    - node: FlagNCR
+      entity: N14DecorationFlagNCR
+      edges:
+        - to: start
+          steps:
+            - tool: Prying
+              doAfter: 5
+          completed:
+            - !type:GivePrototype
+              prototype: MaterialWoodPlank1
+              amount: 3
+            - !type:GivePrototype
+              prototype: MaterialCloth1
+              amount: 3
+            - !type:DeleteEntity {}
+
+- type: constructionGraph
+  id: DecorationFlagYuma
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: FlagYuma
+          steps:
+            - material: WoodPlank
+              amount: 5
+              doAfter: 3
+            - material: Cloth
+              amount: 5
+              doAfter: 3
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+    - node: FlagYuma
+      entity: N14DecorationFlagYuma
+      edges:
+        - to: start
+          steps:
+            - tool: Prying
+              doAfter: 5
+          completed:
+            - !type:GivePrototype
+              prototype: MaterialWoodPlank1
+              amount: 3
+            - !type:GivePrototype
+              prototype: MaterialCloth1
+              amount: 3
+            - !type:DeleteEntity {}
+
+- type: constructionGraph
+  id: DecorationFlagBrotherhoodMidwest
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: FlagBrotherhoodMidwest
+          steps:
+            - material: WoodPlank
+              amount: 5
+              doAfter: 3
+            - material: Cloth
+              amount: 5
+              doAfter: 3
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+    - node: FlagBrotherhoodMidwest
+      entity: N14DecorationFlagBrotherhoodMidwest
+      edges:
+        - to: start
+          steps:
+            - tool: Prying
+              doAfter: 5
+          completed:
+            - !type:GivePrototype
+              prototype: MaterialWoodPlank1
+              amount: 3
+            - !type:GivePrototype
+              prototype: MaterialCloth1
+              amount: 3
+            - !type:DeleteEntity {}
+
+- type: constructionGraph
+  id: DecorationFlagLocust
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: FlagLocust
+          steps:
+            - material: WoodPlank
+              amount: 5
+              doAfter: 3
+            - material: Cloth
+              amount: 5
+              doAfter: 3
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+    - node: FlagLocust
+      entity: N14DecorationFlagLocust
+      edges:
+        - to: start
+          steps:
+            - tool: Prying
+              doAfter: 5
+          completed:
+            - !type:GivePrototype
+              prototype: MaterialWoodPlank1
+              amount: 3
+            - !type:GivePrototype
+              prototype: MaterialCloth1
+              amount: 3
+            - !type:DeleteEntity {}
+
+- type: constructionGraph
+  id: DecorationFlagGunner
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: FlagGunner
+          steps:
+            - material: WoodPlank
+              amount: 5
+              doAfter: 3
+            - material: Cloth
+              amount: 5
+              doAfter: 3
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+    - node: FlagGunner
+      entity: N14DecorationFlagGunner
+      edges:
+        - to: start
+          steps:
+            - tool: Prying
+              doAfter: 5
+          completed:
+            - !type:GivePrototype
+              prototype: MaterialWoodPlank1
+              amount: 3
+            - !type:GivePrototype
+              prototype: MaterialCloth1
+              amount: 3
+            - !type:DeleteEntity {}
+
+- type: constructionGraph
+  id: DecorationFlagFollowers
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: FlagFollowers
+          steps:
+            - material: WoodPlank
+              amount: 5
+              doAfter: 3
+            - material: Cloth
+              amount: 5
+              doAfter: 3
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+    - node: FlagFollowers
+      entity: N14DecorationFlagFollowers
+      edges:
+        - to: start
+          steps:
+            - tool: Prying
+              doAfter: 5
+          completed:
+            - !type:GivePrototype
+              prototype: MaterialWoodPlank1
+              amount: 3
+            - !type:GivePrototype
+              prototype: MaterialCloth1
+              amount: 3
+            - !type:DeleteEntity {}

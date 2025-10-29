@@ -34,6 +34,9 @@
     bodyType: Static
   - type: Clickable
   - type: SpriteFade
+  - type: Construction # Forge-Change
+    graph: DecorationFlagEmpty
+    node: FlagEmpty
 
 # Flammable flags
 - type: entity
@@ -91,6 +94,9 @@
   components:
   - type: Sprite
     state: ncrflag
+  - type: Construction # Forge-Change
+    graph: DecorationFlagNCR
+    node: FlagNCR
 
 - type: entity
   parent: N14DecorationFlagFlammable
@@ -120,6 +126,9 @@
   - type: Sprite
     sprite: _Nuclear14/Structures/Decoration/flags2.rsi
     state: mbosflag
+  - type: Construction # Forge-Change
+    graph: DecorationFlagBrotherhoodMidwest
+    node: FlagBrotherhoodMidwest
 
 - type: entity
   parent: N14DecorationFlagFlammable
@@ -130,6 +139,9 @@
   - type: Sprite
     sprite: _Nuclear14/Structures/Decoration/flags.rsi
     state: followersflag
+  - type: Construction # Forge-Change
+    graph: DecorationFlagFollowers
+    node: FlagFollowers
 
 - type: entity
   parent: N14DecorationFlagFlammable
@@ -150,6 +162,9 @@
   - type: Sprite
     sprite: _Nuclear14/Structures/Decoration/flags.rsi
     state: gunnerflag
+  - type: Construction # Forge-Change
+    graph: DecorationFlagGunner
+    node: FlagGunner
 
 - type: entity
   parent: N14DecorationFlagFlammable
@@ -160,6 +175,9 @@
   - type: Sprite
     sprite: _Nuclear14/Structures/Decoration/flags.rsi
     state: locustflag
+  - type: Construction # Forge-Change
+    graph: DecorationFlagLocust
+    node: FlagLocust
 
 - type: entity
   parent: N14DecorationFlagFlammable
@@ -190,6 +208,9 @@
   - type: Sprite
     sprite: _Nuclear14/Structures/Decoration/flags.rsi
     state: cornflag
+  - type: Construction # Forge-Change
+    graph: DecorationFlagYuma
+    node: FlagYuma
 
 - type: entity
   parent: N14DecorationFlagFlammable

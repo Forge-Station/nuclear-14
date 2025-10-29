@@ -460,6 +460,9 @@
     - ArrowRegular
     # Machine Parts
     - N14PortableGeneratorWeldingFuelMachineParts
+    #Paperwork
+    - N14WoodPencil # Forge-Change
+    - N14PenReporter # Forge-Change
 
 - type: entity
   parent: N14WorkbenchBase

@@ -1,5 +1,5 @@
 using System.Text;
-using Content.Client._NC.Sponsors; // Forge-Change
+using Content.Client._NC.Sponsor; // Forge-Change
 using Content.Client.Players.PlayTimeTracking;
 using Content.Client.Stylesheets;
 using Content.Shared.Customization.Systems;

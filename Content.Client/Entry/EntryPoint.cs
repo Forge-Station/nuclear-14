@@ -38,7 +38,7 @@ using Robust.Shared.ContentPack;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Replays;
 using Robust.Shared.Timing;
-using Content.Client._NC.Sponsors; // Forge-Change
+using Content.Client._NC.Sponsor; // Forge-Change
 
 namespace Content.Client.Entry
 {

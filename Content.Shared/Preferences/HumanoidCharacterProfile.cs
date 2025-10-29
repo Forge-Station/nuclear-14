@@ -7,7 +7,8 @@ using Content.Shared.GameTicking;
 using Content.Shared.Humanoid;
 using Content.Shared.Humanoid.Prototypes;
 using Content.Shared.Roles;
-using Content.Shared._NC.Speech.Synthesis; // Corvax-Fallout-Barks
+using Content.Shared._NC.Speech.Synthesis;
+using Content.Shared._NC.TTS; // Corvax-Fallout-Barks
 using Content.Shared.Traits;
 using Robust.Shared.Configuration;
 using Robust.Shared.Enums;
@@ -84,6 +85,9 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
 
     [DataField] // Corvax-Fallout-Barks
     public string BarkVoice { get; set; } = SharedHumanoidAppearanceSystem.DefaultBarkVoice; // Corvax-Fallout-Barks
+    
+    [DataField] // Corvax-TTS
+    public string Voice { get; set; } = SharedHumanoidAppearanceSystem.DefaultVoice; // Corvax-TTS
 
     [DataField]
     public string? DisplayPronouns { get; set; }
@@ -128,6 +132,7 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
         string name,
         string flavortext,
         string species,
+        string voice, // Corvax-TTS
         string customspeciename,
         float height,
         float width,
@@ -151,6 +156,7 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
         Name = name;
         FlavorText = flavortext;
         Species = species;
+        Voice = voice; // Corvax-TTS
         Customspeciename = customspeciename;
         Height = height;
         Width = width;
@@ -178,6 +184,7 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
             other.Name,
             other.FlavorText,
             other.Species,
+            other.Voice,
             other.Customspeciename,
             other.Height,
             other.Width,
@@ -259,6 +266,13 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
             sex = random.Pick(speciesPrototype.Sexes);
             age = random.Next(speciesPrototype.MinAge, speciesPrototype.OldAge); // people don't look and keep making 119 year old characters with zero rp, cap it at middle aged
         }
+        
+        // Corvax-TTS-Start
+        var voiceId = random.Pick(prototypeManager
+            .EnumeratePrototypes<TTSVoicePrototype>()
+            .Where(o => CanHaveVoice(o, sex)).ToArray()
+        ).ID;
+        // Corvax-TTS-End
 
         // Corvax-Fallout-Barks-start
         var barkvoiceId = random.Pick(prototypeManager
@@ -304,6 +318,7 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
     public HumanoidCharacterProfile WithCustomSpeciesName(string customspeciename) => new(this) { Customspeciename = customspeciename };
     public HumanoidCharacterProfile WithHeight(float height) => new(this) { Height = height };
     public HumanoidCharacterProfile WithWidth(float width) => new(this) { Width = width };
+    public HumanoidCharacterProfile WithVoice(string voice) => new(this) { Voice = voice }; // Corvax-TTS
 
     public HumanoidCharacterProfile WithCharacterAppearance(HumanoidCharacterAppearance appearance) =>
         new(this) { Appearance = appearance };
@@ -557,6 +572,14 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
         _loadoutPreferences.Clear();
         _loadoutPreferences.UnionWith(loadouts);
     }
+    
+    // Corvax-TTS-Start
+    // SHOULD BE NOT PUBLIC, BUT....
+    public static bool CanHaveVoice(TTSVoicePrototype voice, Sex sex)
+    {
+        return voice.RoundStart && sex == Sex.Unsexed || (voice.Sex == sex || voice.Sex == Sex.Unsexed);
+    }
+    // Corvax-TTS-End
 
     public ICharacterProfile Validated(ICommonSession session, IDependencyCollection collection)
     {

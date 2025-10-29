@@ -8,6 +8,7 @@ using Content.Server.Power.EntitySystems;
 using Content.Server.Radio.Components;
 using Content.Server.Speech;
 using Content.Server.Speech.Components;
+using Content.Shared._NC.CorvaxVars; // Forge-Change
 using Content.Shared.Examine;
 using Content.Shared.Interaction;
 using Content.Shared.Power;
@@ -16,11 +17,13 @@ using Content.Shared.Chat;
 using Content.Shared.Radio.Components;
 using Content.Shared.UserInterface; // Nuclear-14
 using Content.Shared._NC.Radio; // Nuclear-14
+using Content.Shared._NC.TTS; // Forge-Change
 using Robust.Server.GameObjects;
 using Robust.Shared.Network;
 using Robust.Shared.Player; // Nuclear-14
 using Robust.Shared.Prototypes;
 using Content.Shared.IdentityManagement;
+using Robust.Shared.Configuration; // Forge-Change
 
 namespace Content.Server.Radio.EntitySystems;
 
@@ -39,6 +42,7 @@ public sealed class RadioDeviceSystem : EntitySystem
     [Dependency] private readonly INetManager _netMan = default!;
     [Dependency] private readonly LanguageSystem _language = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
+    [Dependency] private readonly IConfigurationManager _cfg = default!; // Forge-Change
 
     // Used to prevent a shitter from using a bunch of radios to spam chat.
     private HashSet<(string, EntityUid)> _recentlySent = new();
@@ -231,18 +235,26 @@ public sealed class RadioDeviceSystem : EntitySystem
 
     private void OnReceiveRadio(EntityUid uid, RadioSpeakerComponent component, ref RadioReceiveEvent args)
     {
-        // Corvax-Change-Start
+        // Forge-Change-Start
         var nameEv = new TransformSpeakerNameEvent(args.MessageSource, Name(args.MessageSource));
         RaiseLocalEvent(args.MessageSource, nameEv);
 
         var name = Loc.GetString("speech-name-relay", ("speaker", args.Channel.LocalizedName),
             ("originalName", nameEv.Sender));
 
+        if (_cfg.GetCVar(CorvaxVars.TTSEnabled))
+        {
+            var radTtsComp = Comp<TTSComponent>(uid);
+            var userTtsComp = Comp<TTSComponent>(args.MessageSource);
+            radTtsComp.VoicePrototypeId = userTtsComp.VoicePrototypeId;
+            Dirty(uid, radTtsComp);
+        }
+
         // log to chat so people can identity the speaker/source, but avoid clogging ghost chat if there are many radios
         var message = args.OriginalChatMsg.Message; // The chat system will handle the rest and re-obfuscate if needed.
         var chatType = component.IsSpeaker ? InGameICChatType.Speak : InGameICChatType.Whisper;
         _chat.TrySendInGameICMessage(uid, message, chatType, ChatTransmitRange.GhostRangeLimit, nameOverride: name, checkRadioPrefix: false, languageOverride: args.Language);
-        // Corvax-Change-End
+        // Forge-Change-End
     }
 
     private void OnIntercomEncryptionChannelsChanged(Entity<IntercomComponent> ent, ref EncryptionChannelsChangedEvent args)
