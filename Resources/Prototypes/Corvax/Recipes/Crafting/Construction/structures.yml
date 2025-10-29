@@ -127,3 +127,5 @@
     state: closed
   conditions:
     - !type:TileNotBlocked
+
+#Flags

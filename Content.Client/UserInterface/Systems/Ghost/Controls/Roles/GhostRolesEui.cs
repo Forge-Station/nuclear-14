@@ -1,5 +1,5 @@
 using System.Linq;
-using Content.Client._NC.Sponsors; // Forge-Change
+using Content.Client._NC.Sponsor; // Forge-Change
 using Content.Client.Eui;
 using Content.Client.Lobby;
 using Content.Client.Players.PlayTimeTracking;

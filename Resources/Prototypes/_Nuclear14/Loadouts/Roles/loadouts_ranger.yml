@@ -541,7 +541,7 @@
     - ClothingMaskGasRangerDesert
 
 - type: loadout
-  id: LoadoutNCRuniformCombatDesert 
+  id: LoadoutNCRuniformCombatDesert
   category: Roles
   cost: 2
   exclusive: true
@@ -772,3 +772,21 @@
   items:
     - ClothingMaskGasRiot
 # Corvax-Add End
+
+# Forge-Add Start
+- type: loadout
+  id: LoadoutNCRRangerRoman
+  category: Roles
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRanger
+        - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRanger
+      min: 216000 # 60 hours veterancy unlock "First Tour"
+  items:
+    - N14ClothingUniformJumpsuitRangerRoman
+# Forge-Add End

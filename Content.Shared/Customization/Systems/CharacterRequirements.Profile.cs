@@ -1,5 +1,5 @@
 using System.Linq;
-using Content.Shared._NC.Sponsors; // Forge-Change
+using Content.Shared._NC.Sponsor; // Forge-Change
 using Content.Shared.Clothing.Loadouts.Prototypes;
 using Content.Shared.Humanoid;
 using Content.Shared.Humanoid.Prototypes;

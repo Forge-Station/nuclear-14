@@ -1,5 +1,5 @@
 
-namespace Content.Shared._NC.Sponsors;
+namespace Content.Shared._NC.Sponsor;
 
 public sealed class SponsorData
 {

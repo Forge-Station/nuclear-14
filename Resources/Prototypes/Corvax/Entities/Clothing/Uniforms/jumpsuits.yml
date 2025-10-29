@@ -127,3 +127,25 @@
     sprite: Corvax/Clothing/Uniforms/Jumpsuit/InquisitorUniform.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Uniforms/Jumpsuit/InquisitorUniform.rsi
+
+- type: entity
+  parent: N14ClothingUniformBase
+  id: N14ClothingUniformJumpsuitRangerRoman
+  name:  Tunic of Fire
+  description:  A set of clothes consisting of a tunic that once belonged to a legionary, and a white cloth on top, richly decorated with the remains of fabric from the legionary clothing and several gold aureles of legionaries, on the belt is visible a richly decorated harness made of gold
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/rangeroman.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/rangeroman.rsi
+
+- type: entity
+  parent: N14ClothingUniformBase
+  id: N14ClothingUniformJumpsuitShortOperative
+  name: Black short jumpsuit
+  description:  black jumpsuit with cropped sleeves
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/shortjumpsuit.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/shortjumpsuit.rsi

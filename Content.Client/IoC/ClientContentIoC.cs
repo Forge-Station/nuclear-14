@@ -26,8 +26,8 @@ using Content.Shared.Administration.Managers;
 using Content.Shared.Chat;
 using Content.Shared.Players.PlayTimeTracking;
 using Content.Shared.Players.RateLimiting;
-using Content.Client._NC.Sponsors; // Forge-Change
-using Content.Shared._NC.Sponsors; // Forge-Change
+using Content.Client._NC.Sponsor; // Forge-Change
+using Content.Shared._NC.Sponsor; // Forge-Change
 
 namespace Content.Client.IoC
 {

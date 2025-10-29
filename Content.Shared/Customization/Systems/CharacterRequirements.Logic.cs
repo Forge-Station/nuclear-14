@@ -1,6 +1,6 @@
 using System.Linq;
 using System.Text;
-using Content.Shared._NC.Sponsors; // Forge-Change
+using Content.Shared._NC.Sponsor; // Forge-Change
 using Content.Shared.Preferences;
 using Content.Shared.Roles;
 using JetBrains.Annotations;

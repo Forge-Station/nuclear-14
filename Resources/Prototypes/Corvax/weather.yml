@@ -7,11 +7,12 @@
     collection: NCRadioactiveParticles
     params:
       loop: true
-      volume: -6
+      volume: -8
   duration: 300
   radioactive: true
   rads: 1.25
   showMessage: true
+  chance: 2
   sender: weather-announcement
   message: weather-radioactive-particles
 
@@ -24,7 +25,7 @@
     path: /Audio/Effects/Weather/rain2.ogg
     params:
       loop: true
-      volume: -5
+      volume: -8
   duration: 360
   radioactive: true
   rads: 0.75
@@ -42,7 +43,7 @@
     path: /Audio/Effects/Weather/rain_heavy.ogg
     params:
       loop: true
-      volume: -6
+      volume: -8
   duration: 360
   radioactive: true
   showMessage: true
