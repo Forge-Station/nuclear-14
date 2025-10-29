@@ -14,3 +14,7 @@ recipe-blindfold-name = { ent-ClothingEyesBlindfold }
 recipe-blindfold-desc = { ent-ClothingEyesBlindfold.desc }
 recipe-rag-name = { ent-RagItem }
 recipe-rag-desc = { ent-RagItem.desc }
+recipe-N14ShieldMetalHeavy-name = { ent-N14ShieldMetalHeavy }
+recipe-N14ShieldMetalHeavy-desc = { ent-N14ShieldMetalHeavy.desc }
+recipe-N14ShieldMetalLight-name = { ent-N14ShieldMetalLight }
+recipe-N14ShieldMetalLight-desc = { ent-N14ShieldMetalLight.desc }

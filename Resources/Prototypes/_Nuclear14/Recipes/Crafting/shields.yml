@@ -1,6 +1,6 @@
 - type: construction
   name: light shield
-  id: N14LightShield
+  id: N14ShieldMetalLight # Forge-Change
   graph: N14LightShield
   startNode: start
   targetNode: lightshield
@@ -14,7 +14,7 @@
 
 - type: construction
   name: heavy shield
-  id: N14HeavyShield
+  id: N14ShieldMetalHeavy # Forge-Change
   graph: N14HeavyShield
   startNode: start
   targetNode: heavyshield

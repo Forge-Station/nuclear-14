@@ -4,7 +4,7 @@
   graph: N14BaseballNade
   startNode: start
   targetNode: baseballnade
-  category: explosives
+  category: construction-category-explosives # Forge-Change
   objectType: Item
   description: Impact grenade made from some junk.
   icon:
@@ -18,7 +18,7 @@
   graph: N14NukaNade
   startNode: start
   targetNode: NukaNade
-  category: explosives
+  category: construction-category-explosives # Forge-Change
   objectType: Item
   description: Highly radioactive grenade.
   icon:
@@ -32,7 +32,7 @@
   graph: N14TinNade
   startNode: start
   targetNode: TinNade
-  category: explosives
+  category: construction-category-explosives # Forge-Change
   objectType: Item
   description: Very improvised, very unreliable, very fun.
   icon:

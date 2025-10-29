@@ -1,7 +1,7 @@
 # Mortar and pestle
 - type: construction
   name: mortar & pestle
-  id: N14MortarPestle
+  id: N14MortarpestleGrinder # Forge-Change
   graph: N14MortarPestle
   startNode: start
   targetNode: mortarpestle

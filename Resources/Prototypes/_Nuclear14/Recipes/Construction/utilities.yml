@@ -1,6 +1,6 @@
-﻿- type: construction
+- type: construction
   name: small light
-  id: N14Lightbulb
+  id: N14LightSmallEmpty # Forge-Change
   graph: N14Lightbulb
   startNode: start
   targetNode: bulbLight
@@ -13,7 +13,7 @@
 
 - type: construction
   name: wall torch
-  id: WallTorch
+  id: N14TorchWall # Forge-Change
   graph: WallTorch
   startNode: start
   targetNode: WallTorch
