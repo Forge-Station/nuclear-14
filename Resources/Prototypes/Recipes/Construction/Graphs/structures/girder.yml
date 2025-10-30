@@ -1,4 +1,4 @@
-﻿- type: constructionGraph
+- type: constructionGraph
   id: Girder
   start: start
   graph:
@@ -156,22 +156,6 @@
               amount: 2
               doAfter: 2
 
-        - to: shuttleInteriorWall #Nyano
-          completed:
-            - !type:SnapToGrid
-              southRotation: true
-          conditions:
-            - !type:EntityAnchored { }
-          steps:
-            - material: MetalRod
-              amount: 2
-              doAfter: 1
-            - tool: Screwing
-              doAfter: 1
-            - material: Steel
-              amount: 2
-              doAfter: 1
-
     - node: wall
       entity: WallSolid
       edges:
@@ -290,23 +274,6 @@
             - tool: Prying
               doAfter: 5
 
-    - node: shuttleInteriorWall #Nyano
-      entity: WallShuttleInterior
-      edges:
-        - to: girder
-          completed:
-            - !type:SpawnPrototype
-              prototype: SheetSteel1
-              amount: 2
-            - !type:SpawnPrototype
-              prototype: PartRodMetal1
-              amount: 2
-          steps:
-            - tool: Welding
-              doAfter: 10
-            - tool: Screwing
-              doAfter: 1
-
     - node: reinforcedGirder
       entity: ReinforcedGirder
       edges:
@@ -335,22 +302,6 @@
               doAfter: 2
             - material: Plasteel
               amount: 2
-              doAfter: 1
-
-        - to: diagonalshuttleWall #Nyano
-          completed:
-            - !type:SnapToGrid
-              southRotation: false
-          conditions:
-            - !type:EntityAnchored { }
-          steps:
-            - material: Steel
-              amount: 1
-              doAfter: 1
-            - tool: Welding
-              doAfter: 4
-            - material: Plasteel
-              amount: 1
               doAfter: 1
 
         - to: girder

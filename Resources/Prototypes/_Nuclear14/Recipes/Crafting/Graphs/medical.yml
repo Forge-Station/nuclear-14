@@ -44,8 +44,8 @@
           - tag: Syringe
             name: a syringe
             icon:
-              sprite: _Nuclear14/Objects/Specific/Medical/drugs.rsi
-              state: stimpak
+              sprite: _Nuclear14/Objects/Specific/Medical/ms13_drugs.rsi # Forge-Change
+              state: psycho_used # PH until syringe localization fix (Forge-Change)
             doAfter: 1
           - material: Bloodpack
             doAfter: 1
