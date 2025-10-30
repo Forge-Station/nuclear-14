@@ -23,13 +23,12 @@
   description: A server rack filled with electronics.
   objectType: Structure
   canBuildInImpassable: false
-  hide: false
+  hide: true #MARK: Hide (Forge-Change)
   icon:
     sprite: _Nuclear14/Structures/Power/32x48_machines.rsi
     state: rack_on
   conditions:
     - !type:TileNotBlocked
-  hide: true #MARK: Hide (Forge-Change)
 
 - type: construction
   name: server rack
@@ -41,13 +40,12 @@
   description: A server rack filled with electronics.
   objectType: Structure
   canBuildInImpassable: false
-  hide: false
+  hide: true #MARK: Hide (Forge-Change)
   icon:
     sprite: _Nuclear14/Structures/Power/32x48_machines.rsi
     state: serverrack_on
   conditions:
     - !type:TileNotBlocked
-  hide: true #MARK: Hide (Forge-Change)
 
 #MARK: Terminals
 - type: construction
@@ -60,13 +58,12 @@
   description: A server rack filled with electronics.
   objectType: Structure
   canBuildInImpassable: false
-  hide: false
+  hide: true #MARK: Hide (Forge-Change)
   icon:
     sprite: _Nuclear14/Structures/Power/32x48_machines.rsi
     state: rack_on
   conditions:
     - !type:TileNotBlocked
-  hide: true #MARK: Hide (Forge-Change)
 
 #MARK: Crafting Benches
 
