@@ -8,3 +8,4 @@ construction-insert-info-examine-name-instrument-string = string intrument
 construction-insert-info-examine-name-instrument-woodwind = woodwind instrument
 construction-insert-info-examine-name-knife = knife
 construction-insert-info-examine-name-utensil = utensil
+construction-insert-info-examine-name-laser-cannon = high power laser weapon

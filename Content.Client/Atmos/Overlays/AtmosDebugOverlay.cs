@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using Content.Client.Atmos.EntitySystems;
@@ -101,14 +102,9 @@ public sealed class AtmosDebugOverlay : Overlay
         else
         {
             // Red-Green-Blue interpolation
-            if (interp < 0.5f)
-            {
-                res = Color.InterpolateBetween(Color.Red, Color.LimeGreen, interp * 2);
-            }
-            else
-            {
-                res = Color.InterpolateBetween(Color.LimeGreen, Color.Blue, (interp - 0.5f) * 2);
-            }
+            res = interp < 0.5f
+                ? Color.InterpolateBetween(Color.Red, Color.LimeGreen, interp * 2)
+                : Color.InterpolateBetween(Color.LimeGreen, Color.Blue, (interp - 0.5f) * 2);
         }
 
         res = res.WithAlpha(0.75f);
@@ -145,16 +141,7 @@ public sealed class AtmosDebugOverlay : Overlay
         CheckAndShowBlockDir(data, handle, AtmosDirection.South, tileCentre);
         CheckAndShowBlockDir(data, handle, AtmosDirection.East, tileCentre);
         CheckAndShowBlockDir(data, handle, AtmosDirection.West, tileCentre);
-
-        // -- Pressure Direction --
-        if (data.PressureDirection != AtmosDirection.Invalid)
-        {
-            DrawPressureDirection(handle, data.PressureDirection, tileCentre, Color.Blue);
-        }
-        else if (data.LastPressureDirection != AtmosDirection.Invalid)
-        {
-            DrawPressureDirection(handle, data.LastPressureDirection, tileCentre, Color.LightGray);
-        }
+        DrawPressureDirection(handle, data.LastPressureDirection, tileCentre, Color.Blue);
 
         // -- Excited Groups --
         if (data.InExcitedGroup is {} grp)
@@ -181,7 +168,10 @@ public sealed class AtmosDebugOverlay : Overlay
             handle.DrawCircle(tileCentre, 0.05f, Color.Black);
     }
 
-    private void CheckAndShowBlockDir(AtmosDebugOverlayData data, DrawingHandleWorld handle, AtmosDirection dir,
+    private void CheckAndShowBlockDir(
+        AtmosDebugOverlayData data,
+        DrawingHandleWorld handle,
+        AtmosDirection dir,
         Vector2 tileCentre)
     {
         if (!data.BlockDirection.HasFlag(dir))
@@ -196,17 +186,8 @@ public sealed class AtmosDebugOverlay : Overlay
         handle.DrawLine(basisA, basisB, Color.Azure);
     }
 
-    private void DrawPressureDirection(
-        DrawingHandleWorld handle,
-        AtmosDirection d,
-        Vector2 center,
-        Color color)
-    {
-        // Account for South being 0.
-        var atmosAngle = d.ToAngle() - Angle.FromDegrees(90);
-        var atmosAngleOfs = atmosAngle.ToVec() * 0.4f;
-        handle.DrawLine(center, center + atmosAngleOfs, color);
-    }
+    private void DrawPressureDirection(DrawingHandleWorld handle, Vector2 lastPressureDirection, Vector2 center, Color color) =>
+        handle.DrawLine(center, center + lastPressureDirection, color);
 
     private void DrawTooltip(in OverlayDrawArgs args)
     {
@@ -218,7 +199,7 @@ public sealed class AtmosDebugOverlay : Overlay
         if (_ui.MouseGetControl(mousePos) is not IViewportControl viewport)
             return;
 
-        var coords= viewport.PixelToMap(mousePos.Position);
+        var coords = viewport.PixelToMap(mousePos.Position);
         var box = Box2.CenteredAround(coords.Position, 3 * Vector2.One);
         GetGrids(coords.MapId, new Box2Rotated(box));
 
@@ -243,7 +224,7 @@ public sealed class AtmosDebugOverlay : Overlay
 
         var moles = data.Moles == null
             ? "No Air"
-            : data.Moles.Sum().ToString();
+            : data.Moles.Sum().ToString(CultureInfo.InvariantCulture);
 
         handle.DrawString(_font, pos, $"Moles: {moles}");
         pos += offset;
@@ -263,7 +244,12 @@ public sealed class AtmosDebugOverlay : Overlay
     private void GetGrids(MapId mapId, Box2Rotated box)
     {
         _grids.Clear();
-        _mapManager.FindGridsIntersecting(mapId, box, ref _grids, (EntityUid uid, MapGridComponent grid,
+        _mapManager.FindGridsIntersecting(
+            mapId,
+            box,
+            ref _grids,
+            (EntityUid uid,
+                MapGridComponent grid,
             ref List<(Entity<MapGridComponent>, DebugMessage)> state) =>
         {
             if (_system.TileData.TryGetValue(uid, out var data))

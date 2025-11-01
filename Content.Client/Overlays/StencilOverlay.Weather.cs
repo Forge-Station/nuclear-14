@@ -39,7 +39,7 @@ public sealed partial class StencilOverlay
                 worldHandle.SetTransform(matty);
                 _entManager.TryGetComponent(grid.Owner, out RoofComponent? roofComp);
 
-                foreach (var tile in grid.Comp.GetTilesIntersecting(worldAABB))
+                foreach (var tile in _map.GetTilesIntersecting(grid.Owner, grid, worldAABB))
                 {
                     // Ignored tiles for stencil
                     if (_weather.CanWeatherAffect(grid.Owner, grid, tile, roofComp))

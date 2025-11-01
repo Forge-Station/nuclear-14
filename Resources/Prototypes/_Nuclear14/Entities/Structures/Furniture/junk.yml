@@ -42,6 +42,7 @@
     bodyType: Static
   - type: Anchorable
   - type: Pullable
+  - type: InteractionOutline
   - type: Clickable
 # No fixture on this base, inherit from further down for fixture
 
@@ -52,6 +53,8 @@
   components:
   - type: Damageable
     damageModifierSet: Metallic
+  - type: Physics
+    canCollide: False
   - type: Destructible
     thresholds:
     - trigger:

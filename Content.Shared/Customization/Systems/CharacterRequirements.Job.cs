@@ -1,6 +1,7 @@
 using System.Linq;
 using Content.Shared._NC.Sponsor; // Forge-Change
 using Content.Shared.CCVar;
+using Content.Shared.Mind;
 using Content.Shared.Players.PlayTimeTracking;
 using Content.Shared.Preferences;
 using Content.Shared.Roles;
@@ -26,7 +27,7 @@ public sealed partial class CharacterJobRequirement : CharacterRequirement
 
     public override bool IsValid(JobPrototype job,
         HumanoidCharacterProfile profile,
-        Dictionary<string, TimeSpan> playTimes,
+        IReadOnlyDictionary<string, TimeSpan> playTimes,
         bool whitelisted,
         IPrototype prototype,
         IEntityManager entityManager,
@@ -34,7 +35,8 @@ public sealed partial class CharacterJobRequirement : CharacterRequirement
         IConfigurationManager configManager,
         ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
-        int depth = 0)
+        int depth = 0,
+        MindComponent? mind = null)
     {
         var jobs = new List<string>();
         var depts = prototypeManager.EnumeratePrototypes<DepartmentPrototype>();
@@ -78,7 +80,7 @@ public sealed partial class CharacterDepartmentRequirement : CharacterRequiremen
 
     public override bool IsValid(JobPrototype job,
         HumanoidCharacterProfile profile,
-        Dictionary<string, TimeSpan> playTimes,
+        IReadOnlyDictionary<string, TimeSpan> playTimes,
         bool whitelisted,
         IPrototype prototype,
         IEntityManager entityManager,
@@ -86,7 +88,8 @@ public sealed partial class CharacterDepartmentRequirement : CharacterRequiremen
         IConfigurationManager configManager,
         ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
-        int depth = 0)
+        int depth = 0,
+        MindComponent? mind = null)
     {
         var departments = new List<string>();
 
@@ -126,7 +129,7 @@ public sealed partial class CharacterDepartmentTimeRequirement : CharacterRequir
 
     public override bool IsValid(JobPrototype job,
         HumanoidCharacterProfile profile,
-        Dictionary<string, TimeSpan> playTimes,
+        IReadOnlyDictionary<string, TimeSpan> playTimes,
         bool whitelisted,
         IPrototype prototype,
         IEntityManager entityManager,
@@ -134,7 +137,8 @@ public sealed partial class CharacterDepartmentTimeRequirement : CharacterRequir
         IConfigurationManager configManager,
         ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
-        int depth = 0)
+        int depth = 0,
+        MindComponent? mind = null)
     {
         // Disable the requirement if the role timers are disabled
         if (!configManager.GetCVar(CCVars.GameRoleTimers))
@@ -199,7 +203,7 @@ public sealed partial class CharacterOverallTimeRequirement : CharacterRequireme
 
     public override bool IsValid(JobPrototype job,
         HumanoidCharacterProfile profile,
-        Dictionary<string, TimeSpan> playTimes,
+        IReadOnlyDictionary<string, TimeSpan> playTimes,
         bool whitelisted,
         IPrototype prototype,
         IEntityManager entityManager,
@@ -207,7 +211,8 @@ public sealed partial class CharacterOverallTimeRequirement : CharacterRequireme
         IConfigurationManager configManager,
         ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
-        int depth = 0)
+        int depth = 0,
+        MindComponent? mind = null)
     {
         // Disable the requirement if the role timers are disabled
         if (!configManager.GetCVar(CCVars.GameRoleTimers))
@@ -262,7 +267,7 @@ public sealed partial class CharacterPlaytimeRequirement : CharacterRequirement
 
     public override bool IsValid(JobPrototype job,
         HumanoidCharacterProfile profile,
-        Dictionary<string, TimeSpan> playTimes,
+        IReadOnlyDictionary<string, TimeSpan> playTimes,
         bool whitelisted,
         IPrototype prototype,
         IEntityManager entityManager,
@@ -270,7 +275,8 @@ public sealed partial class CharacterPlaytimeRequirement : CharacterRequirement
         IConfigurationManager configManager,
         ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
-        int depth = 0)
+        int depth = 0,
+        MindComponent? mind = null)
     {
         // Disable the requirement if the role timers are disabled
         if (!configManager.GetCVar(CCVars.GameRoleTimers))

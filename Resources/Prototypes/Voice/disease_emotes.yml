@@ -18,8 +18,13 @@
     - BorgChassis
   chatTriggers:
     - coughs
-    - кашель
-    - кашляет
+    - coughed 
+    - cough.
+    - coughs.
+    - coughed.
+    - cough!
+    - coughs!
+    - coughed!
 
 - type: emote
   id: CatMeow
@@ -59,10 +64,6 @@
     - BorgChassis
   chatTriggers:
     - yawns
-    # Corvax-Localization-Start
-    - зевок
-    - зевает
-    # Corvax-Localization-End
 
 - type: emote
   id: Snore

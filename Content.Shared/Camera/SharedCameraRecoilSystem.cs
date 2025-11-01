@@ -1,8 +1,8 @@
 using System.Numerics;
-using Content.Shared._NC.CameraFollow.Components; // NC changes
-using Content.Shared.Actions; // NC changes
+using Content.Shared.Movement.Components;
+using Content.Shared.Movement.Systems;
 using JetBrains.Annotations;
-using Robust.Shared.Player;
+using Robust.Shared.Network;
 using Robust.Shared.Serialization;
 
 namespace Content.Shared.Camera;
@@ -30,8 +30,18 @@ public abstract class SharedCameraRecoilSystem : EntitySystem
     /// </summary>
     protected const float KickMagnitudeMax = 1f;
 
-    [Dependency] private readonly SharedEyeSystem _eye = default!;
-    [Dependency] private readonly SharedActionsSystem _actionsSystem = default!; // NC changes
+    [Dependency] private readonly SharedContentEyeSystem _eye = default!;
+    [Dependency] private readonly INetManager _net = default!;
+
+    public override void Initialize()
+    {
+        SubscribeLocalEvent<CameraRecoilComponent, GetEyeOffsetEvent>(OnCameraRecoilGetEyeOffset);
+    }
+
+    private void OnCameraRecoilGetEyeOffset(Entity<CameraRecoilComponent> ent, ref GetEyeOffsetEvent args)
+    {
+        args.Offset += ent.Comp.BaseOffset + ent.Comp.CurrentKick;
+    }
 
     /// <summary>
     ///     Applies explosion/recoil/etc kickback to the view of the entity.
@@ -40,29 +50,18 @@ public abstract class SharedCameraRecoilSystem : EntitySystem
     ///     If the entity is missing <see cref="CameraRecoilComponent" /> and/or <see cref="EyeComponent" />,
     ///     this call will have no effect. It is safe to call this function on any entity.
     /// </remarks>
-
-    /// NC changes start
-    public override void Initialize()
-    {
-        SubscribeLocalEvent<CameraFollowComponent, ComponentInit>(OnCameraFollowInit);
-    }
-    /// NC changes end
     public abstract void KickCamera(EntityUid euid, Vector2 kickback, CameraRecoilComponent? component = null);
 
-    public override void Update(float frameTime) // NC changes
+    private void UpdateEyes(float frameTime)
     {
-        base.FrameUpdate(frameTime);
+        var query = AllEntityQuery<CameraRecoilComponent, EyeComponent>();
 
-        var query = AllEntityQuery<EyeComponent, CameraRecoilComponent, CameraFollowComponent>(); // NC changes
-
-        while (query.MoveNext(out var uid, out var eye, out var recoil, out var follow)) // NC changes
+        while (query.MoveNext(out var uid, out var recoil, out var eye))
         {
             var magnitude = recoil.CurrentKick.Length();
             if (magnitude <= 0.005f)
             {
                 recoil.CurrentKick = Vector2.Zero;
-                var offset = recoil.BaseOffset + recoil.CurrentKick + (follow.Enabled ? follow.Offset : Vector2.Zero); // NC-Changes
-                _eye.SetOffset(uid, offset, eye); // NC-Changes
             }
             else // Continually restore camera to 0.
             {
@@ -71,29 +70,33 @@ public abstract class SharedCameraRecoilSystem : EntitySystem
                 var restoreRate = MathHelper.Lerp(RestoreRateMin, RestoreRateMax, Math.Min(1, recoil.LastKickTime / RestoreRateRamp));
                 var restore = normalized * restoreRate * frameTime;
                 var (x, y) = recoil.CurrentKick - restore;
-                if (Math.Sign(x) != Math.Sign(recoil.CurrentKick.X)) x = 0;
+                if (Math.Sign(x) != Math.Sign(recoil.CurrentKick.X))
+                    x = 0;
 
-                if (Math.Sign(y) != Math.Sign(recoil.CurrentKick.Y)) y = 0;
+                if (Math.Sign(y) != Math.Sign(recoil.CurrentKick.Y))
+                    y = 0;
 
                 recoil.CurrentKick = new Vector2(x, y);
-
-                var offset = recoil.BaseOffset + recoil.CurrentKick + (follow.Enabled ? follow.Offset : Vector2.Zero); // NC-Changes
-                _eye.SetOffset(uid, offset, eye); // NC changes
             }
+
+            if (recoil.CurrentKick == recoil.LastKick)
+                continue;
+
+            recoil.LastKick = recoil.CurrentKick;
+            _eye.UpdateEyeOffset((uid, eye));
         }
     }
 
-    /// NC changes start
-    private void OnCameraFollowInit(EntityUid uid, CameraFollowComponent component, ComponentInit args)
+    public override void Update(float frameTime)
     {
-        _actionsSystem.AddAction(uid, ref component.ActionEntity, component.Action);
+        if (_net.IsServer)
+            UpdateEyes(frameTime);
     }
 
-    private void OnCameraFollowRemove(EntityUid uid, CameraFollowComponent component, ComponentRemove args)
+    public override void FrameUpdate(float frameTime)
     {
-        _actionsSystem.RemoveAction(uid, component.ActionEntity);
+        UpdateEyes(frameTime);
     }
-    /// NC changes end
 }
 
 [Serializable]

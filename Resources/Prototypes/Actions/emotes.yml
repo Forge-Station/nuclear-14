@@ -1,14 +1,14 @@
-# - type: emote
-  # id: Flip
-  # name: chat-emote-name-flip
-  # whitelist:
-    # components:
-    # - HumanoidAppearance
-  # chatMessages: ["chat-emote-msg-flip"]
-  # chatTriggers:
-  # - flip
-  # - flips
-  # event: !type:AnimationFlipEmoteEvent
+- type: emote
+  id: Flip
+  name: chat-emote-name-flip
+  whitelist:
+    components:
+    - HumanoidAppearance
+  chatMessages: ["chat-emote-msg-flip"]
+  chatTriggers:
+  - flip
+  - flips
+  event: !type:AnimationFlipEmoteEvent
 
 - type: emote
   id: Spin
@@ -20,11 +20,6 @@
   chatTriggers:
   - spin
   - spins
-  # Corvax-Localization-Start
-  - крутится
-  - крутится!
-  - крутится.
-  # Corvax-Localization-End
   event: !type:AnimationSpinEmoteEvent
 
 - type: emote
@@ -37,9 +32,6 @@
   chatTriggers:
   - jump
   - jumps
-  # Corvax-Localization-Start
-  - прыгает
-  - прыгает!
-  - прыгает.
-  # Corvax-Localization-End
+  - hop # TheDen
+  - hops # TheDen
   event: !type:AnimationJumpEmoteEvent

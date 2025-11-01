@@ -5,7 +5,11 @@
   suffix: Low Ore Yield
   description: A rocky asteroid.
   components:
-  - type: Sprite #! Corvax-Change-DelComp
+  - type: Gatherable
+    toolWhitelist:
+      tags:
+        - Pickaxe
+  - type: Sprite
     sprite: DeltaV/Structures/Walls/asteroid_rock.rsi
     state: full
   - type: Damageable

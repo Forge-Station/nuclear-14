@@ -1,23 +1,19 @@
 using System.Linq;
-using Content.Server.GameTicking;
 using Content.Server.Paint;
 using Content.Server.Players.PlayTimeTracking;
-using Content.Server.Station.Systems;
 using Content.Shared.CCVar;
-using Content.Shared.Clothing.Components;
 using Content.Shared.Clothing.Loadouts.Prototypes;
 using Content.Shared.Clothing.Loadouts.Systems;
+using Content.Shared.GameTicking;
+using Content.Shared.Humanoid;
 using Content.Shared.Inventory;
 using Content.Shared.Item;
-using Content.Shared.Mind.Components;
 using Content.Shared.Players;
 using Content.Shared.Preferences;
 using Content.Shared.Roles;
-using Content.Shared.Roles.Jobs;
 using Content.Shared.Storage;
 using Content.Shared.Storage.EntitySystems;
 using Content.Shared.Traits.Assorted.Components;
-using Robust.Shared.Collections;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
@@ -50,10 +46,30 @@ public sealed class LoadoutSystem : EntitySystem
         _sawmill = _log.GetSawmill("loadouts");
 
         SubscribeLocalEvent<PlayerSpawnCompleteEvent>(OnPlayerSpawnComplete);
+        SubscribeLocalEvent<LoadProfileExtensionsEvent>(OnProfileLoad);
     }
 
 
     private void OnPlayerSpawnComplete(PlayerSpawnCompleteEvent ev)
+    {
+        if (ev.JobId == null || Deleted(ev.Mob) || !Exists(ev.Mob)
+            || !HasComp<MetaDataComponent>(ev.Mob) // TODO: FIND THE STUPID RACE CONDITION THAT IS MAKING ME CHECK FOR THIS.
+            || !_protoMan.TryIndex<JobPrototype>(ev.JobId, out var job)
+            || !_configurationManager.GetCVar(CCVars.GameLoadoutsEnabled))
+            return;
+
+        ApplyCharacterLoadout(
+            ev.Mob,
+            ev.JobId,
+            ev.Profile,
+            _playTimeTracking.GetTrackerTimes(ev.Player),
+            ev.Player.ContentData()?.Whitelisted ?? false,
+            jobProto: job);
+
+        RaiseLocalEvent(ev.Mob, new PlayerLoadoutAppliedEvent(ev.Mob, ev.Player, ev.JobId, ev.LateJoin, ev.Silent, ev.JoinOrder, ev.Station, ev.Profile), broadcast: true);
+    }
+
+    private void OnProfileLoad(LoadProfileExtensionsEvent ev)
     {
         if (ev.JobId == null || Deleted(ev.Mob) || !Exists(ev.Mob)
             || !HasComp<MetaDataComponent>(ev.Mob) // TODO: FIND THE STUPID RACE CONDITION THAT IS MAKING ME CHECK FOR THIS.
@@ -147,26 +163,26 @@ public sealed class LoadoutSystem : EntitySystem
             foreach (var special in jobProto.AfterLoadoutSpecial)
                 special.AfterEquip(uid);
     }
-
+    
     // Corvax-Change-Start
     public void InsertBack(EntityUid uid, EntityUid loadout)
     {
         if (!TryComp(loadout, out ClothingComponent? clothing) ||
             clothing.Slots != SlotFlags.BACK)
             return;
-
+    
         if (!TryComp(uid, out MindContainerComponent? mind) || mind.Mind == null)
             return;
-
+    
         if (!_job.MindTryGetJob(mind.Mind.Value, out _, out var jobPrototype) || jobPrototype.StartingGear == null)
             return;
-
+    
         if (!_protoMan.TryIndex(jobPrototype.StartingGear, out StartingGearPrototype? gear))
             return;
-
+    
         if (!TryComp(uid, out InventoryComponent? inventoryComp))
             return;
-
+    
         if (gear.Storage.Count > 0)
         {
             var coords = _xform.GetMapCoordinates(uid);
@@ -175,18 +191,16 @@ public sealed class LoadoutSystem : EntitySystem
             {
                 if (slot != "back")
                     continue;
-
+    
                 if (entProtos.Count == 0)
                     continue;
-
+    
                 foreach (var ent in entProtos)
-                {
                     ents.Add(Spawn(ent, coords));
-                }
-
+    
                 if (inventoryComp != null &&
                     _inventory.TryGetSlotEntity(uid, slot, out var slotEnt, inventoryComponent: inventoryComp) &&
-                    TryComp(slotEnt, out StorageComponent? storageComp))
+                        TryComp(slotEnt, out StorageComponent? storageComp))
                 {
                     foreach (var ent in ents)
                     {
@@ -197,16 +211,13 @@ public sealed class LoadoutSystem : EntitySystem
             }
         }
     }
-    
+        
     public void DeleteHelmet(EntityUid uid)
     {
         if (!_inventory.TryGetSlotEntity(uid, "head", out var helmet))
-        {
-            _sawmill.Error("Не найти шлем");
             return;
-        }    
-
+    
         EntityManager.DeleteEntity(helmet);
-    }
-    // Corvax-Change-End
+        }
+        // Corvax-Change-End
 }

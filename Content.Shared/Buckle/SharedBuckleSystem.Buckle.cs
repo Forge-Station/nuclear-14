@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
-using Content.Shared._NC.Mountable.Components; // Corvax-Change
 using Content.Shared.Alert;
 using Content.Shared.Buckle.Components;
 using Content.Shared.Cuffs.Components;
@@ -44,6 +43,7 @@ public abstract partial class SharedBuckleSystem
         SubscribeLocalEvent<BuckleComponent, StartPullAttemptEvent>(OnPullAttempt);
         SubscribeLocalEvent<BuckleComponent, BeingPulledAttemptEvent>(OnBeingPulledAttempt);
         SubscribeLocalEvent<BuckleComponent, PullStartedMessage>(OnPullStarted);
+        SubscribeLocalEvent<BuckleComponent, UnbuckleAlertEvent>(OnUnbuckleAlert);
 
         SubscribeLocalEvent<BuckleComponent, InsertIntoEntityStorageAttemptEvent>(OnBuckleInsertIntoEntityStorageAttempt);
 
@@ -52,10 +52,18 @@ public abstract partial class SharedBuckleSystem
         SubscribeLocalEvent<BuckleComponent, StandAttemptEvent>(OnBuckleStandAttempt);
         SubscribeLocalEvent<BuckleComponent, ThrowPushbackAttemptEvent>(OnBuckleThrowPushbackAttempt);
         SubscribeLocalEvent<BuckleComponent, UpdateCanMoveEvent>(OnBuckleUpdateCanMove);
+
+        SubscribeLocalEvent<BuckleComponent, BuckleDoAfterEvent>(OnBuckleDoafter);
+        SubscribeLocalEvent<BuckleComponent, DoAfterAttemptEvent<BuckleDoAfterEvent>>((uid, comp, ev) =>
+        {
+            BuckleDoafterEarly((uid, comp), ev.Event, ev);
+        });
     }
 
     private void OnBuckleComponentShutdown(Entity<BuckleComponent> ent, ref ComponentShutdown args)
-        => Unbuckle(ent!, null);
+    {
+        Unbuckle(ent!, null);
+    }
 
     #region Pulling
 
@@ -78,6 +86,13 @@ public abstract partial class SharedBuckleSystem
     private void OnPullStarted(Entity<BuckleComponent> ent, ref PullStartedMessage args)
     {
         Unbuckle(ent!, args.PullerUid);
+    }
+
+    private void OnUnbuckleAlert(Entity<BuckleComponent> ent, ref UnbuckleAlertEvent args)
+    {
+        if (args.Handled)
+            return;
+        args.Handled = TryUnbuckle(ent, ent, ent);
     }
 
     #endregion
@@ -220,9 +235,6 @@ public abstract partial class SharedBuckleSystem
         if (!Resolve(strapUid, ref strapComp, false))
             return false;
 
-        if (HasComp<MountableComponent>(buckleUid)) // Corvax-Change Костыль чтоб не могли пристегнуть брадо
-            return false;
-
         // Does it pass the Whitelist
         if (_whitelistSystem.IsWhitelistFail(strapComp.Whitelist, buckleUid) ||
             _whitelistSystem.IsBlacklistPass(strapComp.Blacklist, buckleUid))
@@ -258,9 +270,9 @@ public abstract partial class SharedBuckleSystem
             if (popup)
             {
                 var message = Loc.GetString(buckleUid == user
-                    ? "buckle-component-already-buckled-message"
-                    : "buckle-component-other-already-buckled-message",
-                ("owner", Identity.Entity(buckleUid, EntityManager)));
+                        ? "buckle-component-already-buckled-message"
+                        : "buckle-component-other-already-buckled-message",
+                    ("owner", Identity.Entity(buckleUid, EntityManager)));
 
                 _popup.PopupClient(message, user);
             }
@@ -281,9 +293,9 @@ public abstract partial class SharedBuckleSystem
             if (popup)
             {
                 var message = Loc.GetString(buckleUid == user
-                    ? "buckle-component-cannot-buckle-message"
-                    : "buckle-component-other-cannot-buckle-message",
-                ("owner", Identity.Entity(buckleUid, EntityManager)));
+                        ? "buckle-component-cannot-buckle-message"
+                        : "buckle-component-other-cannot-buckle-message",
+                    ("owner", Identity.Entity(buckleUid, EntityManager)));
 
                 _popup.PopupClient(message, user);
             }
@@ -296,9 +308,9 @@ public abstract partial class SharedBuckleSystem
             if (popup)
             {
                 var message = Loc.GetString(buckleUid == user
-                    ? "buckle-component-cannot-buckle-message"
-                    : "buckle-component-other-cannot-buckle-message",
-                ("owner", Identity.Entity(buckleUid, EntityManager)));
+                        ? "buckle-component-cannot-buckle-message"
+                        : "buckle-component-other-cannot-buckle-message",
+                    ("owner", Identity.Entity(buckleUid, EntityManager)));
 
                 _popup.PopupClient(message, user);
             }
@@ -352,6 +364,7 @@ public abstract partial class SharedBuckleSystem
 
         Appearance.SetData(strap, StrapVisuals.State, true);
         Appearance.SetData(buckle, BuckleVisuals.Buckled, true);
+
         _rotationVisuals.SetHorizontalAngle(buckle.Owner, strap.Comp.Rotation);
 
         var xform = Transform(buckle);
@@ -517,4 +530,38 @@ public abstract partial class SharedBuckleSystem
         return !unstrapAttempt.Cancelled;
     }
 
+    /// <summary>
+    /// Once the do-after is complete, try to buckle target to chair/bed
+    /// </summary>
+    /// <param name="args.Target"> The person being put in the chair/bed</param>
+    /// <param name="args.User"> The person putting a person in a chair/bed</param>
+    /// <param name="args.Used"> The chair/bed </param>
+
+    private void OnBuckleDoafter(Entity<BuckleComponent> entity, ref BuckleDoAfterEvent args)
+    {
+        if (args.Cancelled || args.Handled || args.Target == null || args.Used == null)
+            return;
+
+        args.Handled = TryBuckle(args.Target.Value, args.User, args.Used.Value, popup: false);
+    }
+
+    /// <summary>
+    /// If the target being buckled to a chair/bed goes crit or is cuffed
+    /// Cancel the do-after time and try to buckle the target immediately
+    /// </summary>
+    /// <param name="args.Target"> The person being put in the chair/bed</param>
+    /// <param name="args.User"> The person putting a person in a chair/bed</param>
+    /// <param name="args.Used"> The chair/bed </param>
+    private void BuckleDoafterEarly(Entity<BuckleComponent> entity, BuckleDoAfterEvent args, CancellableEntityEventArgs ev)
+    {
+        if (args.Target == null || args.Used == null)
+            return;
+
+        if (TryComp<CuffableComponent>(args.Target, out var targetCuffableComp) && targetCuffableComp.CuffedHandCount > 0
+            || _mobState.IsIncapacitated(args.Target.Value))
+        {
+            ev.Cancel();
+            TryBuckle(args.Target.Value, args.User, args.Used.Value, popup: false);
+        }
+    }
 }

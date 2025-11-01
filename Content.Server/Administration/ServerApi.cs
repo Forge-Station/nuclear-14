@@ -12,10 +12,11 @@ using Content.Server.Administration.Systems;
 using Content.Server.Database;
 using Content.Server.GameTicking;
 using Content.Server.GameTicking.Presets;
+using Content.Server.GameTicking.Rules.Components;
 using Content.Server.Maps;
 using Content.Server.RoundEnd;
-using Content.Shared.Administration;
 using Content.Shared.Administration.Managers;
+using Content.Shared.Administration;
 using Content.Shared.CCVar;
 using Content.Shared.Database;
 using Content.Shared.GameTicking.Components;
@@ -46,7 +47,7 @@ public sealed partial class ServerApi : IPostInjectInit
         CCVars.PanicBunkerCountDeadminnedAdmins.Name,
         CCVars.PanicBunkerShowReason.Name,
         CCVars.PanicBunkerMinAccountAge.Name,
-        CCVars.PanicBunkerMinOverallHours.Name,
+        CCVars.PanicBunkerMinOverallMinutes.Name,
         CCVars.PanicBunkerCustomReason.Name,
     ];
 
@@ -100,6 +101,8 @@ public sealed partial class ServerApi : IPostInjectInit
         //RegisterHandler(HttpMethod.Post, "/admin/actions/send_bwoink", ActionSendBwoink); // Frontier - Discord Ahelp Reply
     }
 
+        InitializeFunky();
+    }
 
     public void Initialize()
     {
@@ -350,7 +353,6 @@ public sealed partial class ServerApi : IPostInjectInit
             reason += " (kicked by admin)";
 
             _netManager.DisconnectChannel(player.Channel, reason);
-
             await RespondOk(context);
 
             _sawmill.Info($"Kicked player {player.Name} ({player.UserId}) for {reason} by {FormatLogActor(actor)}");
@@ -831,7 +833,6 @@ public sealed partial class ServerApi : IPostInjectInit
         }
 
         var authScheme = authHeaderValue[..spaceIndex];
-
         var authValue = authHeaderValue[spaceIndex..].Trim();
         _sawmill.Info(authScheme.Normalize());
         _sawmill.Info(authValue.Normalize());

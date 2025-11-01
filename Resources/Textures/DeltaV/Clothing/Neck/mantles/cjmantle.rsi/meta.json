@@ -1,6 +1,10 @@
 {
   "version": 1,
+<<<<<<<< HEAD:Resources/Textures/DeltaV/Clothing/Neck/Misc/prosecutorbadge.rsi/meta.json
+  "license": "CC-BY-SA-3.0",
+========
   "license": "CC0-1.0",
+>>>>>>>> EE:Resources/Textures/DeltaV/Clothing/Neck/mantles/cjmantle.rsi/meta.json
   "copyright": "sprites by leonardo_dabepis (Discord)",
   "size": {
     "x": 32,

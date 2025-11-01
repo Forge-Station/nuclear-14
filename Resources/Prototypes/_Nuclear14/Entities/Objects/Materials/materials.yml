@@ -5,6 +5,7 @@
   abstract: true
   parent: MaterialBase
   id: N14MaterialBase
+  suffix: Full, 30
   description: A raw material.
   components:
   - type: Sprite
@@ -224,7 +225,7 @@
   parent: N14MaterialBase
   id: N14MaterialCircuitry
   name: circuitry
-  categories: [ HideSpawnMenu ]
+  suffix: Full
   components:
   - type: Material
   - type: PhysicalComposition
@@ -244,6 +245,15 @@
     - state: circuits_3
       map: ["base"]
   - type: Appearance
+  - type: Healing # Used for replacing rad-fried circuitry in Silicons
+    delay: 3
+    damageContainers:
+    - SiliconUnshielded
+    damage:
+      types: # Circuits are very expensive and hard to obtain. Probably needs to be adjusted after testing.
+        Radiation: -25
+        Heat: -10
+        Shock: -20
 
 - type: entity
   parent: N14MaterialCircuitry

@@ -26,7 +26,7 @@ public sealed partial class CCVars
     ///     Config for when the restart vote should be allowed to be called based on percentage of ghosts.
     /// </summary>
     public static readonly CVarDef<int> VoteRestartGhostPercentage =
-        CVarDef.Create("vote.restart_ghost_percentage", 35, CVar.SERVERONLY);
+        CVarDef.Create("vote.restart_ghost_percentage", 75, CVar.SERVERONLY);
 
     /// <summary>
     ///     See vote.enabled, but specific to preset votes
@@ -44,13 +44,13 @@ public sealed partial class CCVars
     ///     The required ratio of the server that must agree for a restart round vote to go through.
     /// </summary>
     public static readonly CVarDef<float> VoteRestartRequiredRatio =
-        CVarDef.Create("vote.restart_required_ratio", 0.75f, CVar.SERVERONLY);
+        CVarDef.Create("vote.restart_required_ratio", 0.85f, CVar.SERVERONLY);
 
     /// <summary>
     /// Whether or not to prevent the restart vote from having any effect when there is an online admin
     /// </summary>
     public static readonly CVarDef<bool> VoteRestartNotAllowedWhenAdminOnline =
-        CVarDef.Create("vote.restart_not_allowed_when_admin_online", false, CVar.SERVERONLY);
+        CVarDef.Create("vote.restart_not_allowed_when_admin_online", true, CVar.SERVERONLY);
 
     /// <summary>
     ///     The delay which two votes of the same type are allowed to be made by separate people, in seconds.

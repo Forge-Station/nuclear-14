@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Text;
 using Content.Shared._NC.Sponsor; // Forge-Change
+using Content.Shared.Mind;
 using Content.Shared.Preferences;
 using Content.Shared.Roles;
 using JetBrains.Annotations;
@@ -12,19 +13,24 @@ using Robust.Shared.Utility;
 namespace Content.Shared.Customization.Systems;
 
 
+[ImplicitDataDefinitionForInheritors, MeansImplicitUse]
+[Serializable, NetSerializable]
+public abstract partial class CharacterLogicRequirement : CharacterRequirement
+{
+    [DataField]
+    public List<CharacterRequirement> Requirements { get; private set; } = new();
+}
+
 /// <summary>
 ///    Requires all of the requirements to be true
 /// </summary>
 [UsedImplicitly]
 [Serializable, NetSerializable]
-public sealed partial class CharacterLogicAndRequirement : CharacterRequirement
+public sealed partial class CharacterLogicAndRequirement : CharacterLogicRequirement
 {
-    [DataField]
-    public List<CharacterRequirement> Requirements { get; private set; } = new();
-
     public override bool IsValid(JobPrototype job,
         HumanoidCharacterProfile profile,
-        Dictionary<string, TimeSpan> playTimes,
+        IReadOnlyDictionary<string, TimeSpan> playTimes,
         bool whitelisted,
         IPrototype prototype,
         IEntityManager entityManager,
@@ -32,7 +38,8 @@ public sealed partial class CharacterLogicAndRequirement : CharacterRequirement
         IConfigurationManager configManager,
         ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
-        int depth = 0)
+        int depth = 0,
+        MindComponent? mind = null)
     {
         var succeeded = entityManager.EntitySysManager.GetEntitySystem<CharacterRequirementsSystem>()
             .CheckRequirementsValid(Requirements, job, profile, playTimes, whitelisted, prototype, entityManager,
@@ -60,14 +67,11 @@ public sealed partial class CharacterLogicAndRequirement : CharacterRequirement
 /// </summary>
 [UsedImplicitly]
 [Serializable, NetSerializable]
-public sealed partial class CharacterLogicOrRequirement : CharacterRequirement
+public sealed partial class CharacterLogicOrRequirement : CharacterLogicRequirement
 {
-    [DataField]
-    public List<CharacterRequirement> Requirements { get; private set; } = new();
-
     public override bool IsValid(JobPrototype job,
         HumanoidCharacterProfile profile,
-        Dictionary<string, TimeSpan> playTimes,
+        IReadOnlyDictionary<string, TimeSpan> playTimes,
         bool whitelisted,
         IPrototype prototype,
         IEntityManager entityManager,
@@ -75,7 +79,8 @@ public sealed partial class CharacterLogicOrRequirement : CharacterRequirement
         IConfigurationManager configManager,
         ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
-        int depth = 0)
+        int depth = 0,
+        MindComponent? mind = null)
     {
         var succeeded = false;
         var reasons = new List<string>();
@@ -116,14 +121,11 @@ public sealed partial class CharacterLogicOrRequirement : CharacterRequirement
 /// </summary>
 [UsedImplicitly]
 [Serializable, NetSerializable]
-public sealed partial class CharacterLogicXorRequirement : CharacterRequirement
+public sealed partial class CharacterLogicXorRequirement : CharacterLogicRequirement
 {
-    [DataField]
-    public List<CharacterRequirement> Requirements { get; private set; } = new();
-
     public override bool IsValid(JobPrototype job,
         HumanoidCharacterProfile profile,
-        Dictionary<string, TimeSpan> playTimes,
+        IReadOnlyDictionary<string, TimeSpan> playTimes,
         bool whitelisted,
         IPrototype prototype,
         IEntityManager entityManager,
@@ -131,7 +133,8 @@ public sealed partial class CharacterLogicXorRequirement : CharacterRequirement
         IConfigurationManager configManager,
         ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
-        int depth = 0)
+        int depth = 0,
+        MindComponent? mind = null)
     {
         var reasons = new List<string>();
         var succeeded = false;

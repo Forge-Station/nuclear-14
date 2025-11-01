@@ -235,13 +235,16 @@ public sealed class RadioDeviceSystem : EntitySystem
 
     private void OnReceiveRadio(EntityUid uid, RadioSpeakerComponent component, ref RadioReceiveEvent args)
     {
-        // Forge-Change-Start
+        if (uid == args.RadioSource)
+            return;
+
         var nameEv = new TransformSpeakerNameEvent(args.MessageSource, Name(args.MessageSource));
         RaiseLocalEvent(args.MessageSource, nameEv);
 
-        var name = Loc.GetString("speech-name-relay", ("speaker", args.Channel.LocalizedName),
-            ("originalName", nameEv.Sender));
-
+        var name = Loc.GetString("speech-name-relay",
+            ("speaker", Name(uid)),
+            ("originalName", nameEv.VoiceName));
+        
         if (_cfg.GetCVar(CorvaxVars.TTSEnabled))
         {
             var radTtsComp = Comp<TTSComponent>(uid);
@@ -251,10 +254,7 @@ public sealed class RadioDeviceSystem : EntitySystem
         }
 
         // log to chat so people can identity the speaker/source, but avoid clogging ghost chat if there are many radios
-        var message = args.OriginalChatMsg.Message; // The chat system will handle the rest and re-obfuscate if needed.
-        var chatType = component.IsSpeaker ? InGameICChatType.Speak : InGameICChatType.Whisper;
-        _chat.TrySendInGameICMessage(uid, message, chatType, ChatTransmitRange.GhostRangeLimit, nameOverride: name, checkRadioPrefix: false, languageOverride: args.Language);
-        // Forge-Change-End
+        _chat.TrySendInGameICMessage(uid, args.OriginalChatMsg.Message, InGameICChatType.Whisper, ChatTransmitRange.GhostRangeLimit, nameOverride: name, checkRadioPrefix: false, languageOverride: args.Language);
     }
 
     private void OnIntercomEncryptionChannelsChanged(Entity<IntercomComponent> ent, ref EncryptionChannelsChangedEvent args)
@@ -317,7 +317,7 @@ public sealed class RadioDeviceSystem : EntitySystem
         {
             mic.BroadcastChannel = channel;
             if(_protoMan.TryIndex<RadioChannelPrototype>(channel, out var channelProto)) // Frontier
-                mic.Frequency = _radio.GetFrequency(ent, channelProto); // Frontier
+                mic.Frequency = channelProto.Frequency; // Frontier
         }
         if (TryComp<RadioSpeakerComponent>(ent, out var speaker))
             speaker.Channels = new(){ channel };

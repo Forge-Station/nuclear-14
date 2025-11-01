@@ -1,4 +1,5 @@
 using Content.Shared._NC.Sponsor; // Forge-Change
+using Content.Shared.Mind;
 using Content.Shared.Preferences;
 using Content.Shared.Roles;
 using JetBrains.Annotations;
@@ -30,7 +31,7 @@ public abstract partial class CharacterRequirement
     public abstract bool IsValid(
         JobPrototype job,
         HumanoidCharacterProfile profile,
-        Dictionary<string, TimeSpan> playTimes,
+        IReadOnlyDictionary<string, TimeSpan> playTimes,
         bool whitelisted,
         IPrototype prototype,
         IEntityManager entityManager,
@@ -38,6 +39,7 @@ public abstract partial class CharacterRequirement
         IConfigurationManager configManager,
         ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
-        int depth = 0
+        int depth = 0,
+        MindComponent? mind = null
     );
 }

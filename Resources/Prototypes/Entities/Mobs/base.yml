@@ -8,7 +8,6 @@
   - type: Sprite
     noRot: true
     drawdepth: Mobs
-  - type: MobCollision
   - type: Physics
     bodyType: KinematicController
   - type: Fixtures
@@ -50,7 +49,6 @@
   - type: AnimatedEmotes
   - type: OwnInteractionVerbs
     allowedVerbs: [] # TODO: define something here, or don't.
-  - type: TTS # Corvax-TTS
 
 - type: entity
   save: false
@@ -90,6 +88,7 @@
       - !type:PlaySoundBehavior
         sound:
           collection: MeatLaserImpact
+  - type: RadiationReceiver
   - type: Stamina
   - type: MobState
   - type: MobThresholds
@@ -243,4 +242,4 @@
       types:
         Bloodloss: -1
     bloodRegenerationHunger: 1
-    bloodRegenerationThirst: 1.5
+    bloodRegenerationThirst: 1.5 # 1 unit of normal blood satiates 1t, 0.3t for vampires, 0.75h, and restores 0.25 blood for non-humans...

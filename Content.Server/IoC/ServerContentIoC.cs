@@ -18,6 +18,9 @@ using Content.Server.Maps;
 using Content.Server.Players.JobWhitelist;
 using Content.Server.MoMMI;
 using Content.Server.NodeContainer.NodeGroups;
+using Content.Server.Objectives;
+using Content.Server.Players;
+using Content.Server.Players.JobWhitelist;
 using Content.Server.Players.PlayTimeTracking;
 using Content.Server.Players.RateLimiting;
 using Content.Server.Preferences.Managers;
@@ -70,18 +73,23 @@ namespace Content.Server.IoC
             IoCManager.Register<ServerInfoManager>();
             IoCManager.Register<PoissonDiskSampler>();
             IoCManager.Register<DiscordWebhook>();
+            IoCManager.Register<VoteWebhooks>();
             IoCManager.Register<ServerDbEntryManager>();
             IoCManager.Register<JoinQueueManager>();
             IoCManager.Register<DiscordAuthManager>();
-            IoCManager.Register<TTSManager>(); // Corvax-TTS
-            IoCManager.Register<SponsorManager>(); // Forge-Change
-            IoCManager.Register<ISharedSponsorManager, SponsorManager>(); // Forge-Change
             IoCManager.Register<ISharedPlaytimeManager, PlayTimeTrackingManager>();
             IoCManager.Register<ServerApi>();
             IoCManager.Register<JobWhitelistManager>();
             IoCManager.Register<PlayerRateLimitManager>();
             IoCManager.Register<SharedPlayerRateLimitManager, PlayerRateLimitManager>();
             IoCManager.Register<MappingManager>();
+            IoCManager.Register<IWatchlistWebhookManager, WatchlistWebhookManager>();
+            IoCManager.Register<ConnectionManager>();
+            IoCManager.Register<MultiServerKickManager>();
+            IoCManager.Register<CVarControlManager>();
+            IoCManager.Register<TTSManager>(); // Corvax-TTS
+            IoCManager.Register<SponsorManager>(); // Forge-Change
+            IoCManager.Register<ISharedSponsorManager, SponsorManager>(); // Forge-Change
         }
     }
 }

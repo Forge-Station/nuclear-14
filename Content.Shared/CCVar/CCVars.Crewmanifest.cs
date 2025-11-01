@@ -13,7 +13,7 @@ public sealed partial class CCVars
     ///     hide the button in UI windows.
     /// </summary>
     public static readonly CVarDef<bool> CrewManifestWithoutEntity =
-        CVarDef.Create("crewmanifest.no_entity", true, CVar.REPLICATED); // Corvax-Change
+        CVarDef.Create("crewmanifest.no_entity", true, CVar.REPLICATED);
 
     /// <summary>
     ///     Setting this allows the crew manifest to be viewed from 'unsecure'

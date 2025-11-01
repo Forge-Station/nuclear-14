@@ -211,7 +211,7 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
                 return TryTargetEntityWorld(args, actionId, entMapTarget, user, comp) || !entMapTarget.InteractOnMiss;
 
             default:
-                Logger.Error($"Unknown targeting action: {actionId.GetType()}");
+                Logger.GetSawmill("action.ui.control").Error($"Unknown targeting action: {actionId.GetType()}");
                 return false;
         }
     }
@@ -452,9 +452,16 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
             StopTargeting();
 
         foreach (var page in _pages)
+        {
             for (var i = 0; i < page.Size; i++)
+            {
                 if (page[i] == actionId)
+                {
                     page[i] = null;
+                    (_container.GetChild(i) as ActionButton)?.ClearData();
+                }
+            }
+        }
     }
 
     private void OnActionsUpdated()
@@ -462,10 +469,6 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         QueueWindowUpdate();
         if (_container == null)
             return;
-
-        // TODO ACTIONS allow buttons to persist across state applications
-        // Then we don't have to interrupt drags any time the buttons get rebuilt.
-        _menuDragHelper.EndDrag();
 
         if (_actionsSystem != null)
             _container?.SetActionData(_actionsSystem, _pages[_currentPageIndex]);
@@ -702,8 +705,7 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         if (args.Function != EngineKeyFunctions.UIClick && args.Function != EngineKeyFunctions.Use)
             return;
 
-        _menuDragHelper.MouseDown(action);
-        args.Handle();
+        HandleActionPressed(args, action);
     }
 
     private void OnWindowActionUnPressed(GUIBoundKeyEventArgs args, ActionButton dragged)
@@ -711,8 +713,7 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         if (args.Function != EngineKeyFunctions.UIClick && args.Function != EngineKeyFunctions.Use)
             return;
 
-        DragAction();
-        args.Handle();
+        HandleActionUnpressed(args, dragged);
     }
 
     private void OnWindowActionFocusExisted(ActionButton button)
@@ -732,6 +733,11 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         if (args.Function != EngineKeyFunctions.UIClick)
             return;
 
+        HandleActionPressed(args, button);
+    }
+
+    private void HandleActionPressed(GUIBoundKeyEventArgs args, ActionButton button)
+    {
         args.Handle();
         if (button.ActionId != null)
         {
@@ -747,7 +753,15 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
 
     private void OnActionUnpressed(GUIBoundKeyEventArgs args, ActionButton button)
     {
-        if (args.Function != EngineKeyFunctions.UIClick || _actionsSystem == null)
+        if (args.Function != EngineKeyFunctions.UIClick)
+            return;
+
+        HandleActionUnpressed(args, button);
+    }
+
+    private void HandleActionUnpressed(GUIBoundKeyEventArgs args, ActionButton button)
+    {
+        if (_actionsSystem == null)
             return;
 
         args.Handle();
@@ -1029,7 +1043,7 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         var range = entityAction.CheckCanAccess ? action.Range : -1;
 
         _interactionOutline?.SetEnabled(false);
-        _targetOutline?.Enable(range, entityAction.CheckCanAccess, predicate, entityAction.Whitelist, null);
+        _targetOutline?.Enable(range, entityAction.CheckCanAccess, predicate, entityAction.Whitelist, entityAction.Blacklist, null);
     }
 
     /// <summary>

@@ -5,6 +5,9 @@
   description: Just add capitalism!
   abstract: true
   components:
+  - type: ActionGrant
+    actions:
+    - ActionVendingThrow
   - type: StationAiWhitelist
   - type: AmbientOnPowered
   - type: AmbientSound
@@ -72,18 +75,15 @@
   - type: Anchorable
   - type: TypingIndicator
     proto: robot
-  - type: TTS # Corvax-TTS
-    voice: TrainingRobot
   - type: Speech
     speechVerb: Robotic
     speechSounds: Vending
+  - type: SpookySpeaker
+    messageSet: SpookySpeakerMessagesGeneric
+    speakChance: 0.2
   - type: IntrinsicRadioReceiver
-  - type: IntrinsicRadioTransmitter
-    channels:
-    - Binary
   - type: ActiveRadio
     channels:
-    - Binary
     - Common
   - type: DoAfter
   - type: Electrified
@@ -108,13 +108,6 @@
     price: 100
   - type: Appearance
   - type: WiresVisuals
-  - type: LanguageKnowledge
-    speaks:
-    - TauCetiBasic
-    - RobotTalk
-    understands:
-    - TauCetiBasic
-    - RobotTalk
 
 - type: entity
   parent: VendingMachine
@@ -210,6 +203,42 @@
   - type: GuideHelp
     guides:
     - Bartender
+    - Drinks
+
+- type: entity
+  parent: VendingMachineBooze
+  id: VendingMachineBoozeSyndicate # syndie booze-o-mat for nukie outpost
+  name: Bruise-O-Mat
+  description: A refurbished Booze-O-Mat for boosting operative morale. An imprint of a blood-red hardsuit is visible on one side, and the paint seems ashed off on the other side.
+  components:
+  - type: VendingMachine
+    pack: BoozeOMatInventory
+    offState: off
+    brokenState: broken
+    normalState: normal-unshaded
+    denyState: deny-unshaded
+    loopDeny: false
+  - type: Advertise
+    pack: BruiseOMatAds
+  - type: SpeakOnUIClosed
+    pack: BruiseOMatGoodbyes
+  - type: Speech
+  - type: Sprite
+    sprite: Structures/Machines/VendingMachines/bruiseomat.rsi
+    layers:
+    - state: "off"
+      map: ["enum.VendingMachineVisualLayers.Base"]
+    - state: "off"
+      map: ["enum.VendingMachineVisualLayers.BaseUnshaded"]
+      shader: unshaded
+    - state: panel
+      map: ["enum.WiresVisualLayers.MaintenancePanel"]
+  - type: AccessReader
+    access: [["SyndicateAgent"]]
+  - type: GuideHelp
+    guides:
+    - Bartender
+    - Drinks
 
 - type: entity
   parent: VendingMachine
@@ -713,9 +742,9 @@
     ejectDelay: 1.9
     initialStockQuality: 0.33
   - type: Advertise
-    pack: RobustSoftdrinksAds
+    pack: DrGibbAds
   - type: SpeakOnUIClosed
-    pack: GenericVendGoodbyes
+    pack: DrGibbGoodbyes
   - type: Speech
   - type: Sprite
     sprite: Structures/Machines/VendingMachines/gib.rsi
@@ -763,7 +792,7 @@
     - state: panel
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
   - type: AccessReader
-    access: [["Service"]]
+    access: [["Kitchen"]]
   - type: PointLight
     radius: 2
     energy: 1.6
@@ -894,7 +923,7 @@
   parent: VendingMachine
   id: VendingMachineMedical
   name: NanoMed Plus
-  description: It's a medical drug dispenser. Natural chemicals only!
+  description: It's a medical drug dispenser. Natural chemicals only! (And wheelchairs, why not) # Goobstation
   components:
   - type: VendingMachine
     pack: NanoMedPlusInventory
@@ -1011,6 +1040,7 @@
   - type: GuideHelp
     guides:
     - Security
+    - Antagonists
   - type: Transform
     noRot: false
   - type: Rotatable
@@ -1545,7 +1575,7 @@
   - type: PointLight
     radius: 2
     energy: 1.6
-    color: "#9dc5c9"
+    color: "#b89f25"
     mask: /Textures/Effects/LightMasks/cone.png
     autoRot: true
   - type: ShopVendor # DeltaV
@@ -1561,6 +1591,8 @@
         type: ShopVendorBoundUserInterface
       enum.WiresUiKey.Key:
         type: WiresBoundUserInterface
+      enum.MiningVoucherUiKey.Key:
+        type: MiningVoucherBoundUserInterface
   - type: Wires # DeltaV: Use shop vendor wires layout
     layoutId: ShopVendor
   - type: AccessReader
@@ -1568,6 +1600,14 @@
   - type: GuideHelp
     guides:
     - Salvage
+  - type: MiningVendor # Lavaland Change
+    kits:
+    - MiningCrusher
+    - MiningExtraction
+    #- MiningResonator
+    #- MiningSurvival
+    #- MiningDrone
+    - MiningConscription
 
 - type: entity
   parent: VendingMachine
@@ -1652,6 +1692,12 @@
       shader: unshaded
     - texture: Structures/Machines/VendingMachines/maintenance_panel.png
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
+  - type: PointLight
+    radius: 2
+    energy: 1.6
+    color: "#9dc5c9"
+    mask: /Textures/Effects/LightMasks/cone.png
+    autoRot: true
   - type: AccessReader
     access: [["Medical"]]
   - type: GuideHelp
@@ -1662,12 +1708,6 @@
   - type: Rotatable
     rotateWhileAnchored: false
     rotateWhilePulling: true
-  - type: PointLight
-    radius: 2
-    energy: 1.6
-    color: "#9dc5c9"
-    mask: /Textures/Effects/LightMasks/cone.png
-    autoRot: true
 
 # job clothing
 
@@ -1696,6 +1736,10 @@
       shader: unshaded
     - state: panel
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
+  - type: PointLight
+    radius: 1.5
+    energy: 1.6
+    color: "#326e3f"
   - type: AccessReader
     access: [["Hydroponics"]]
 
@@ -1725,7 +1769,7 @@
     - state: panel
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
   - type: AccessReader
-    access: [["Lawyer"]]
+    access: [["Justice"]]
 
 - type: entity
   parent: VendingMachine
@@ -1752,6 +1796,10 @@
       shader: unshaded
     - state: panel
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
+  - type: PointLight
+    radius: 1.5
+    energy: 1.6
+    color: "#d82929"
   - type: AccessReader
     access: [["Security"]]
 
@@ -1838,6 +1886,10 @@
       shader: unshaded
     - state: panel
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
+  - type: PointLight
+    radius: 1.5
+    energy: 1.6
+    color: "#b89e2a"
   - type: AccessReader
     access: [["Cargo"]]
 
@@ -1950,6 +2002,10 @@
       shader: unshaded
     - state: panel
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
+  - type: PointLight
+    radius: 1.5
+    energy: 1.6
+    color: "#b89e2a"
   - type: AccessReader
     access: [["Engineering"]]
 
@@ -1978,6 +2034,10 @@
       shader: unshaded
     - state: panel
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
+  - type: PointLight
+    radius: 1.5
+    energy: 1.6
+    color: "#b89e2a"
   - type: AccessReader
     access: [["Engineering"]]
 
@@ -2064,14 +2124,14 @@
       shader: unshaded
     - state: panel
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
-  - type: AccessReader
-    access: [["Janitor"]]
   - type: PointLight
     radius: 2
     energy: 1.6
     color: "#9dc5c9"
     mask: /Textures/Effects/LightMasks/cone.png
     autoRot: true
+  - type: AccessReader
+    access: [["Janitor"]]
 
 - type: entity
   parent: VendingMachine
@@ -2126,6 +2186,10 @@
       shader: unshaded
     - state: panel
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
+  - type: PointLight
+    radius: 1.5
+    energy: 1.6
+    color: "#d82929"
   - type: AccessReader
     access: [["NuclearOperative"], ["SyndicateAgent"]]
 
@@ -2217,7 +2281,7 @@
   parent: VendingMachine
   id: VendingMachineCentDrobe
   name: CentDrobe
-  description: A one-of-a-kind vending machine for all your centcom aesthetic needs!
+  description: A one-of-a-kind vending machine for all your centcomm aesthetic needs!
   components:
   - type: VendingMachine
     pack: CentDrobeInventory
@@ -2388,7 +2452,7 @@
   - type: Advertise
     pack: FitnessVendAds
   - type: SpeakOnUIClosed
-    pack: FitnessVendGoodbyes
+    pack: GenericVendGoodbyes
   - type: Transform
     noRot: false
   - type: Rotatable
@@ -2432,13 +2496,18 @@
   - type: Advertise
     pack: HotfoodAds
   - type: SpeakOnUIClosed
-    pack: HotfoodGoodbyes
+    pack: GenericVendGoodbyes
   - type: PointLight
     radius: 2
     energy: 1.6
     color: "#9dc5c9"
     mask: /Textures/Effects/LightMasks/cone.png
     autoRot: true
+  - type: LanguageKnowledge
+    speaks:
+    - SolCommon
+    understands:
+    - SolCommon
 
 - type: entity
   id: VendingMachineSolsnack
@@ -2467,7 +2536,7 @@
   - type: Advertise
     pack: SolsnackAds
   - type: SpeakOnUIClosed
-    pack: SolsnackGoodbyes
+    pack: GenericVendGoodbyes
   - type: Transform
     noRot: false
   - type: Rotatable
@@ -2479,6 +2548,11 @@
     color: "#9dc5c9"
     mask: /Textures/Effects/LightMasks/cone.png
     autoRot: true
+  - type: LanguageKnowledge
+    speaks:
+    - SolCommon
+    understands:
+    - SolCommon
 
 - type: entity
   id: VendingMachineWeeb
@@ -2508,7 +2582,7 @@
   - type: Advertise
     pack: WeebVendAds
   - type: SpeakOnUIClosed
-    pack: WeebVendGoodbyes
+    pack: GenericVendGoodbyes
   - type: Transform
     noRot: false
   - type: Rotatable
@@ -2520,3 +2594,8 @@
     color: "#9dc5c9"
     mask: /Textures/Effects/LightMasks/cone.png
     autoRot: true
+  - type: LanguageKnowledge
+    speaks:
+    - SolCommon
+    understands:
+    - SolCommon

@@ -19,7 +19,7 @@ loadout-category-JobsCommandCaptain = Captain
 loadout-category-JobsCommandHeadOfPersonnel = Head of Personnel
 loadout-category-JobsCommandAdminAssistant = Administrative Assistant
 loadout-category-JobsCommandBlueshieldOfficer = Blueshield Officer
-loadout-category-JobsCommandNanorep = Nanotrasen Representative
+loadout-category-JobsCommandNanorep = Corporate Liaison
 loadout-category-JobsCommandMagistrate = Magistrate
 
 # Engineering
@@ -64,6 +64,7 @@ loadout-category-JobsMedicalSeniorPhysician = Senior Physician
 
 # Security
 loadout-category-JobsSecurity = Security
+loadout-category-JobsSecurityWeapons = Duty Weapon
 loadout-category-JobsSecurityAUncategorized = All Security
 loadout-category-JobsSecurityCadet = Cadet
 loadout-category-JobsSecurityCorpsman = Corpsman
@@ -86,6 +87,11 @@ loadout-category-JobsServiceMime = Mime
 loadout-category-JobsServiceMusician = Musician
 loadout-category-JobsServiceReporter = Reporter
 
+# Misc
+loadout-category-JobsZMisc = Misc
+loadout-category-JobsZMiscAUncategorized = All Misc
+loadout-category-JobsZMiscPrisoner = Prisoner
+
 loadout-category-Mask = Mask
 loadout-category-Neck = Neck
 loadout-category-Outer = Outer
@@ -93,4 +99,3 @@ loadout-category-Belt = Belt
 loadout-category-Shoes = Shoes
 loadout-category-Species = Species
 loadout-category-Uniform = Uniform
-loadout-category-Weapons = Weapons

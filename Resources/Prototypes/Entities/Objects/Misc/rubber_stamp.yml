@@ -1,5 +1,5 @@
 - type: entity
-  name: generic rubber stamp               # Forge-Change  изменены спрайты - для работы бумаги
+  name: generic rubber stamp
   parent: BaseItem
   id: RubberStampBase
   description: A rubber stamp for stamping important documents.
@@ -15,7 +15,7 @@
         volume: -2
         maxDistance: 5
   - type: Sprite
-    sprite: _Nuclear14/Objects/Misc/clutter.rsi  # Forge-Change-Start
+    sprite: Objects/Misc/stamps.rsi
     state: stamp-mime
   - type: Item
     size: Tiny
@@ -39,150 +39,163 @@
 
 - type: entity
   name: captain's rubber stamp
-  parent: RubberStampBase
+  parent: [RubberStampBase, BaseCommandContraband]
   id: RubberStampCaptain
-  suffix: DO NOT MAP
+  categories: [ DoNotMap ]
   components:
   - type: Stamp
     stampedName: stamp-component-stamped-name-captain
     stampedColor: "#3681bb"
-    stampState: "paper_stamp-ok"
+    stampState: "paper_stamp-cap"
   - type: Sprite
-    state: stamp-ok
+    state: stamp-cap
 
 - type: entity
-  name: CentCom rubber stamp
+  name: CentComm rubber stamp
   parent: RubberStampBase
   id: RubberStampCentcom
-  suffix: DO NOT MAP
+  categories: [ DoNotMap ]
   components:
   - type: Stamp
     stampedName: stamp-component-stamped-name-centcom
     stampedColor: "#006600"
-    stampState: "paper_stamp-ok"
+    stampState: "paper_stamp-centcom"
   - type: Sprite
-    state: stamp-ok
+    state: stamp-centcom
 
 - type: entity
   name: chaplain's rubber stamp
   parent: RubberStampBase
   id: RubberStampChaplain
-  suffix: DO NOT MAP
+  categories: [ DoNotMap ]
   components:
   - type: Stamp
     stampedName: stamp-component-stamped-name-chaplain
     stampedColor: "#d70601"
-    stampState: "paper_stamp-deny"
+    stampState: "paper_stamp-chaplain"
   - type: Sprite
-    state: stamp-deny
+    state: stamp-chaplain
+
+- type: entity
+  name: lawyer's rubber stamp
+  parent: RubberStampBase
+  id: RubberStampLawyer
+  categories: [ DoNotMap ]
+  components:
+  - type: Stamp
+    stampedName: stamp-component-stamped-name-lawyer
+    stampedColor: "#233D57"
+    stampState: "paper_stamp-lawyer"
+  - type: Sprite
+    state: stamp-lawyer
 
 - type: entity
   name: clown's rubber stamp
   parent: RubberStampBase
   id: RubberStampClown
-  suffix: DO NOT MAP
+  categories: [ DoNotMap ]
   components:
   - type: Stamp
     stampedName: stamp-component-stamped-name-clown
     stampedColor: "#ff33cc"
-    stampState: "paper_stamp-ok"
+    stampState: "paper_stamp-clown"
   - type: Sprite
-    state: stamp-deny
+    state: stamp-clown
   - type: Tag
     tags:
       - ClownRubberStamp
 
 - type: entity
   name: chief engineer's rubber stamp
-  parent: RubberStampBase
+  parent: [RubberStampBase, BaseCommandContraband]
   id: RubberStampCE
-  suffix: DO NOT MAP
+  categories: [ DoNotMap ]
   components:
   - type: Stamp
     stampedName: stamp-component-stamped-name-ce
     stampedColor: "#c69b17"
-    stampState: "paper_stamp-ok"
+    stampState: "paper_stamp-ce"
   - type: Sprite
-    state: stamp-ok
+    state: stamp-ce
 
 - type: entity
   name: chief medical officer's rubber stamp
-  parent: RubberStampBase
+  parent: [RubberStampBase, BaseCommandContraband]
   id: RubberStampCMO
-  suffix: DO NOT MAP
+  categories: [ DoNotMap ]
   components:
   - type: Stamp
     stampedName: stamp-component-stamped-name-cmo
     stampedColor: "#33ccff"
-    stampState: "paper_stamp-ok"
+    stampState: "paper_stamp-cmo"
   - type: Sprite
-    state: stamp-ok
+    state: stamp-cmo
 
 - type: entity
   name: head of personnel's rubber stamp
-  parent: RubberStampBase
+  parent: [RubberStampBase, BaseCommandContraband]
   id: RubberStampHop
-  suffix: DO NOT MAP
+  categories: [ DoNotMap ]
   components:
   - type: Stamp
     stampedName: stamp-component-stamped-name-hop
     stampedColor: "#6ec0ea"
-    stampState: "paper_stamp-ok"
+    stampState: "paper_stamp-hop"
   - type: Sprite
-    state: stamp-ok
+    state: stamp-hop
 
 - type: entity
   name: head of security's rubber stamp
-  parent: RubberStampBase
+  parent: [RubberStampBase, BaseCommandContraband]
   id: RubberStampHos
-  suffix: DO NOT MAP
+  categories: [ DoNotMap ]
   components:
   - type: Stamp
     stampedName: stamp-component-stamped-name-hos
     stampedColor: "#cc0000"
-    stampState: "paper_stamp-deny"
+    stampState: "paper_stamp-hos"
   - type: Sprite
-    state: stamp-ok
+    state: stamp-hos
 
 - type: entity
   name: mime's rubber stamp
   parent: RubberStampBase
   id: RubberStampMime
-  suffix: DO NOT MAP
+  categories: [ DoNotMap ]
   components:
   - type: Stamp
     stampedName: stamp-component-stamped-name-mime
     stampedColor: "#777777"
-    stampState: "paper_stamp-ok"
+    stampState: "paper_stamp-mime"
     sound: null
   - type: Sprite
-    state: stamp-ok
+    state: stamp-mime
 
 - type: entity
-  name: logistics officer's rubber stamp # DeltaV - Logistics Department replacing Cargo
-  parent: RubberStampBase
+  name: logistics officer's rubber stamp
+  parent: [RubberStampBase, BaseCommandContraband]
   id: RubberStampQm
-  suffix: DO NOT MAP
+  categories: [ DoNotMap ]
   components:
-    - type: Stamp
-      stampedName: stamp-component-stamped-name-qm
-      stampedColor: "#a23e3e"
-      stampState: "paper_stamp-deny"
-    - type: Sprite
-      state: stamp-deny
+  - type: Stamp
+    stampedName: stamp-component-stamped-name-qm
+    stampedColor: "#a23e3e"
+    stampState: "paper_stamp-qm"
+  - type: Sprite
+    state: stamp-qm
 
 - type: entity
-  name: mystagogue's rubber stamp # DeltaV - Epistemics Department replacing Science
-  parent: RubberStampBase
+  name: mystagogue's rubber stamp
+  parent: [RubberStampBase, BaseCommandContraband]
   id: RubberStampRd
-  suffix: DO NOT MAP
+  categories: [ DoNotMap ]
   components:
-    - type: Stamp
-      stampedName: stamp-component-stamped-name-rd
-      stampedColor: "#1f66a0"
-      stampState: "paper_stamp-ok"
-    - type: Sprite
-      state: stamp-ok
+  - type: Stamp
+    stampedName: stamp-component-stamped-name-rd
+    stampedColor: "#1f66a0"
+    stampState: "paper_stamp-rd"
+  - type: Sprite
+    state: stamp-rd
 
 - type: entity
   name: trader's rubber stamp
@@ -192,35 +205,35 @@
   - type: Stamp
     stampedName: stamp-component-stamped-name-trader
     stampedColor: "#000000"
-    stampState: "paper_stamp-ok"
+    stampState: "paper_stamp-trader"
   - type: Sprite
-    state: stamp-deny
+    state: stamp-trader
 
 - type: entity
   name: syndicate rubber stamp
-  parent: RubberStampBase
+  parent: [RubberStampBase, BaseSyndicateContraband]
   id: RubberStampSyndicate
-  suffix: DO NOT MAP
+  categories: [ DoNotMap ]
   components:
   - type: Stamp
     stampedName: stamp-component-stamped-name-syndicate
     stampedColor: "#850000"
-    stampState: "paper_stamp-deny"
+    stampState: "paper_stamp-syndicate"
   - type: Sprite
-    state: stamp-deny
+    state: stamp-syndicate
 
 - type: entity
   name: warden's rubber stamp
-  parent: RubberStampBase
+  parent: [RubberStampBase, BaseRestrictedContraband]
   id: RubberStampWarden
-  suffix: DO NOT MAP
+  categories: [ DoNotMap ]
   components:
   - type: Stamp
     stampedName: stamp-component-stamped-name-warden
     stampedColor: "#5b0000"
-    stampState: "paper_stamp-deny"
+    stampState: "paper_stamp-warden"
   - type: Sprite
-    state: stamp-deny
+    state: stamp-warden
 
 - type: entity
   name: APPROVED rubber stamp
@@ -248,13 +261,40 @@
 
 - type: entity
   name: detective's rubber stamp
-  parent: RubberStampBase
+  parent: [RubberStampBase, BaseRestrictedContraband]
   id: RubberStampDetective
-  suffix: DO NOT MAP
+  categories: [ DoNotMap ]
   components:
   - type: Stamp
     stampedName: stamp-component-stamped-name-detective
-    stampedColor: "#FC0A0A"
-    stampState: "paper_stamp-deny"
+    stampedColor: "#754d36"
+    stampState: "paper_stamp-detective"
   - type: Sprite
-    state: stamp-deny                 # Forge-Change-End
+    state: stamp-detective
+
+- type: entity
+  name: greytide's rubber stamp
+  parent: RubberStampBase
+  id: RubberStampGreytide
+  description: A rubber stamp for stamping important documents. The tide washes over you, just looking at it...
+  components:
+  - type: Stamp
+    stampedName: stamp-component-stamped-name-greytide
+    stampedColor: "#323232"
+    stampState: "paper_stamp-greytide"
+  - type: Sprite
+    state: stamp-greytide
+
+- type: entity
+  name: psychologist's rubber stamp
+  parent: RubberStampBase
+  id: RubberStampPsychologist
+  categories: [ DoNotMap ]
+  description: A rubber stamp for stamping important documents. Prescribe those treatments!
+  components:
+  - type: Stamp
+    stampedName: stamp-component-stamped-name-psychologist
+    stampedColor: "#5B97BC"
+    stampState: "paper_stamp-psychologist"
+  - type: Sprite
+    state: stamp-psychologist

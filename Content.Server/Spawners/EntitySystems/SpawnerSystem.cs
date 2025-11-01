@@ -5,6 +5,8 @@ using Content.Shared.Mobs.Components;
 using Content.Shared.SSDIndicator;
 using Robust.Server.GameObjects;
 using Robust.Shared.Random;
+using Content.Shared.Friends.Components; // Shitmed Change
+using Content.Shared._Shitmed.Spawners.EntitySystems; // Shitmed Change
 
 namespace Content.Server.Spawners.EntitySystems;
 
@@ -60,7 +62,11 @@ public sealed class SpawnerSystem : EntitySystem
         for (var i = 0; i < spawnCount; i++)
         {
             var entity = _random.Pick(component.Prototypes);
-            SpawnAtPosition(entity, coordinates);
+            // Shitmed Change Start
+            var spawnedEnt = SpawnAtPosition(entity, coordinates);
+            var ev = new SpawnerSpawnedEvent(spawnedEnt, HasComp<PettableFriendComponent>(spawnedEnt));
+            RaiseLocalEvent(uid, ev);
+            // Shitmed Change End
         }
     }
 

@@ -9,10 +9,8 @@
     size: Small
   - type: Clothing
     slots: [mask]
-  - type: HideLayerClothing # Corvax-Change
-    force: true
-    slots:
-    - FacialHair
+  - type: StaticPrice
+    price: 25
 
 - type: entity
   abstract: true
@@ -25,7 +23,6 @@
   id: ActionToggleMask
   name: Toggle Mask
   description: Handy, but prevents insertion of pie into your pie hole.
-  categories: [ HideSpawnMenu ]
   components:
   - type: InstantAction
     icon: { sprite: Clothing/Mask/gas.rsi, state: icon }

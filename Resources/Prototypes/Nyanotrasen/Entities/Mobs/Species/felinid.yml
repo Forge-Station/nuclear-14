@@ -9,7 +9,6 @@
     scale: 0.8, 0.8
   - type: HumanoidAppearance
     species: Felinid
-    initial: Felinid
   - type: Fixtures
     fixtures: # TODO: This needs a second fixture just for mob collisions.
       fix1:
@@ -78,7 +77,7 @@
     stealth: Subtle
     stripTimeReduction: 0
     stripTimeMultiplier: 0.667
-  - type: StepTriggerImmune
+  - type: ProtectedFromStepTriggers
     whitelist:
       types:
         - Shard
@@ -91,6 +90,13 @@
     - FootstepSound
     - DoorBumpOpener
     - FelinidEmotes
+  - type: Inventory
+    femaleDisplacements:
+      jumpsuit:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Human/displacement.rsi
+            state: jumpsuit-female
 
 - type: entity
   save: false
@@ -102,3 +108,10 @@
   components:
   - type: HumanoidAppearance
     species: Felinid
+  - type: Inventory
+    femaleDisplacements:
+      jumpsuit:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Human/displacement.rsi
+            state: jumpsuit-female

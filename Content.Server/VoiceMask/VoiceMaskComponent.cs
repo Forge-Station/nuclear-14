@@ -34,7 +34,7 @@ public sealed partial class VoiceMaskComponent : Component
     public EntProtoId Action = "ActionChangeVoiceMask";
 
     /// <summary>
-    ///     Reference to the action.
+    /// If EnableSpeechVerbModification is true, overrides the speech verb used when this entity speaks.
     /// </summary>
     [DataField]
     public EntityUid? ActionEntity;

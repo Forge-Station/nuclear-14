@@ -53,8 +53,8 @@
         !type:CableDeviceNode
         nodeGroupID: MVPower
   - type: Damageable
-    damageContainer: Inorganic
-    damageModifierSet: StrongMetallic
+    damageContainer: StructuralInorganic
+    damageModifierSet: StructuralMetallicStrong
   - type: Destructible
     thresholds:
       - trigger:
@@ -90,8 +90,9 @@
     access: [[ "Engineering" ]]
   - type: Machine
     board: EmitterCircuitboard
-  # - type: GuideHelp
-    # guides: [ Singularity, Power ]
+  - type: GuideHelp
+    guides:
+    - SingularityTeslaEngine
   - type: DeviceNetwork
     deviceNetId: Wireless
     receiveFrequencyId: BasicDevice
@@ -102,3 +103,4 @@
       - On
       - Off
       - Toggle
+  - type: StationAiWhitelist

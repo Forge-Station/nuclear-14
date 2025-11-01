@@ -10,8 +10,7 @@
   skinColoration: HumanToned
   maleFirstNames: names_cyno_male
   femaleFirstNames: names_cyno_female
-  maleLastNames: names_cyno_last
-  femaleLastNames: names_cyno_last
+  lastNames: names_cyno_last
 
 - type: markingPoints
   id: MobLamiaMarkingLimits

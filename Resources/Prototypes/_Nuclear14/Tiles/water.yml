@@ -36,19 +36,37 @@
       fix1:
         shape:
           !type:PhysShapeAabb
-          bounds: "-0.4,-0.4,0.4,0.4"
+          bounds: "-0.5,-0.5,0.5,0.5"
         layer:
           - SlipLayer
         mask:
           - ItemMask
         density: 1000
         hard: false
+      # Goobstation - fishing
+      fishing:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.4
+        layer:
+        - ItemMask
+        mask:
+        - HighImpassable
+        density: 1000
+        hard: false
+      # Goobstation - fishing
   - type: FootstepModifier
     footstepSoundCollection:
       collection: N14FootstepWater
       params:
         volume: 8
-
+  # Goobstation - fishing
+  - type: FishingSpot
+    fishList: !type:NestedSelector
+      tableId: WaterFishingLootTable
+    fishDefaultTimer: 25.0
+    fishTimerVariety: 15.0
+  # Goobstation - fishing
 
 - type: entity
   parent: N14FloorWaterDirtyEntity
@@ -100,7 +118,7 @@
     sprintSpeedModifier: 0.6
 
 - type: entity
-  parent: N14FloorWaterDirtyEntity
+  parent: N14FloorWaterSewerDeep
   id: N14FloorWaterDeep
   name: deep water
   description: Endless Abyss.
@@ -114,7 +132,7 @@
     sprintSpeedModifier: 0.2
 
 - type: entity
-  parent: N14FloorWaterDeep
+  parent: N14FloorWaterSewerDeep
   id: N14FloorWaterMedium
   name: water
   description: Unclean water, likely highly unclean.
@@ -127,7 +145,7 @@
     sprintSpeedModifier: 0.4
 
 - type: entity
-  parent: N14FloorWaterDeep
+  parent: N14FloorWaterSewerDeep
   id: N14FloorWaterShallow
   name: shallow water
   description: Unclean water, likely highly unclean
@@ -140,7 +158,7 @@
     sprintSpeedModifier: 0.6
 
 - type: entity
-  parent: N14FloorWaterDirtyEntity
+  parent: N14FloorWaterSewerDeep
   id: N14FloorWaterSaltDeep
   name: deep salt water
   description: Endless Abyss.

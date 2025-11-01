@@ -1,7 +1,11 @@
 {
   "version": 1,
   "license": "CC-BY-SA-3.0",
+<<<<<<<< HEAD:Resources/Textures/Clothing/Hands/Gloves/fingerlesswhite.rsi/meta.json
+  "copyright": "Taken from tgstation at commit https://github.com/tgstation/tgstation/commit/54ecdcc05bcaf335489938b1253a2a733ba12271",
+========
   "copyright": "Taken from tgstation at commit https://github.com/tgstation/tgstation/commit/4f6190e2895e09116663ef282d3ce1d8b35c032e. Modified by Rosycup.",
+>>>>>>>> EE:Resources/Textures/Clothing/OuterClothing/Coats/cap_trenchcoat.rsi/meta.json
   "size": {
     "x": 32,
     "y": 32

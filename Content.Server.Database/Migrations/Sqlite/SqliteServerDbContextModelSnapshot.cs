@@ -28,6 +28,14 @@ namespace Content.Server.Database.Migrations.Sqlite
                         .HasColumnType("INTEGER")
                         .HasColumnName("admin_rank_id");
 
+                    b.Property<bool>("Deadminned")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("deadminned");
+
+                    b.Property<bool>("Suspended")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("suspended");
+
                     b.Property<string>("Title")
                         .HasColumnType("TEXT")
                         .HasColumnName("title");
@@ -591,6 +599,35 @@ namespace Content.Server.Database.Migrations.Sqlite
                     b.ToTable("connection_log", (string)null);
                 });
 
+            modelBuilder.Entity("Content.Server.Database.IPIntelCache", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("ipintel_cache_id");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("address");
+
+                    b.Property<float>("Score")
+                        .HasColumnType("REAL")
+                        .HasColumnName("score");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("time");
+
+                    b.HasKey("Id")
+                        .HasName("PK_ipintel_cache");
+
+                    b.HasIndex("Address")
+                        .IsUnique();
+
+                    b.ToTable("ipintel_cache", (string)null);
+                });
+
             modelBuilder.Entity("Content.Server.Database.Job", b =>
                 {
                     b.Property<int>("Id")
@@ -782,12 +819,7 @@ namespace Content.Server.Database.Migrations.Sqlite
                     b.Property<int>("Age")
                         .HasColumnType("INTEGER")
                         .HasColumnName("age");
-
-                    b.Property<string>("Backpack")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("backpack");
-
+                    
                     b.Property<string>("BarkVoice")
                         .IsRequired()
                         .HasColumnType("TEXT")
@@ -797,11 +829,6 @@ namespace Content.Server.Database.Migrations.Sqlite
                         .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("char_name");
-
-                    b.Property<string>("Clothing")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("clothing");
 
                     b.Property<string>("CustomSpecieName")
                         .IsRequired()
@@ -815,6 +842,11 @@ namespace Content.Server.Database.Migrations.Sqlite
                     b.Property<string>("DisplayPronouns")
                         .HasColumnType("TEXT")
                         .HasColumnName("display_pronouns");
+
+                    b.Property<string>("Employer")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("employer");
 
                     b.Property<string>("EyeColor")
                         .IsRequired()
@@ -855,9 +887,19 @@ namespace Content.Server.Database.Migrations.Sqlite
                         .HasColumnType("REAL")
                         .HasColumnName("height");
 
+                    b.Property<string>("Lifepath")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("lifepath");
+
                     b.Property<byte[]>("Markings")
                         .HasColumnType("jsonb")
                         .HasColumnName("markings");
+
+                    b.Property<string>("Nationality")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("nationality");
 
                     b.Property<int>("PreferenceId")
                         .HasColumnType("INTEGER")
@@ -893,7 +935,7 @@ namespace Content.Server.Database.Migrations.Sqlite
                     b.Property<string>("StationAiName")
                         .HasColumnType("TEXT")
                         .HasColumnName("station_ai_name");
-
+                    
                     b.Property<string>("Voice")
                         .IsRequired()
                         .HasColumnType("TEXT")

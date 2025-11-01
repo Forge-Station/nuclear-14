@@ -26,8 +26,8 @@
   - type: Butcherable
     butcheringType: Spike
     spawned:
-      - id: FoodMeatHuman
-        amount: 5
+    - id: FoodMeatHuman
+      amount: 5
   - type: HumanoidAppearance
     species: Human
     hideLayersOnEquip:
@@ -39,10 +39,26 @@
     understands:
     - English
   - type: FootPrints
-  - type: PsionicInsulation
+  - type: Inventory
+    femaleDisplacements:
+      jumpsuit:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Human/displacement.rsi
+            state: jumpsuit-female
   - type: Ghoulify
+    
 
 - type: entity
   parent: BaseSpeciesDummy
   id: MobHumanDummy
   categories: [ HideSpawnMenu ]
+  components:
+  - type: Inventory
+    femaleDisplacements:
+      jumpsuit:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Human/displacement.rsi
+            state: jumpsuit-female
+

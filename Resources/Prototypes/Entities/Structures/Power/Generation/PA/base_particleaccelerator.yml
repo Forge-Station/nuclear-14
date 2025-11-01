@@ -25,9 +25,10 @@
     noRot: false
   - type: Pullable
   - type: Clickable
-  # - type: GuideHelp
-    # guides: [ Singularity, Power ]
-  # - type: Appearance
+  - type: GuideHelp
+    guides:
+    - SingularityTeslaEngine
+  - type: Appearance
 
 - type: entity
   id: ParticleAcceleratorFinishedPart

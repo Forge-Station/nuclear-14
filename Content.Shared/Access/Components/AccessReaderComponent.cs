@@ -21,6 +21,12 @@ public sealed partial class AccessReaderComponent : Component
     public bool Enabled = true;
 
     /// <summary>
+    /// Whether or not the owner of the lock (IPC/Cyborg) can always access it.
+    /// </summary>
+    [DataField]
+    public bool OwnerHasAccess = false;
+
+    /// <summary>
     /// The set of tags that will automatically deny an allowed check, if any of them are present.
     /// </summary>
     [ViewVariables(VVAccess.ReadWrite)]
@@ -76,7 +82,7 @@ public sealed partial class AccessReaderComponent : Component
     /// Whether or not emag interactions have an effect on this.
     /// </summary>
     [DataField]
-    public bool BreakOnEmag = true;
+    public bool BreakOnAccessBreaker = true;
 }
 
 [DataDefinition, Serializable, NetSerializable]

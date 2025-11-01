@@ -8,10 +8,11 @@
   icon: JobIconStationAi
   supervisors: job-supervisors-rd
   jobEntity: StationAiBrain
+  jobPreviewEntity: PlayerStationAiPreview
   nameDataset: NamesAI
-  spawnLoadout: false
   applyTraits: false
-  setPreference: false
+  spawnLoadout: false
+  canHavePassport: false
 
 - type: job
   id: Borg
@@ -21,5 +22,6 @@
   canBeAntag: false
   icon: JobIconBorg
   supervisors: job-supervisors-rd
-  jobEntity: PlayerBorgGeneric
-  setPreference: false
+  jobEntity: PlayerBorgBattery
+  applyTraits: false
+  canHavePassport: false

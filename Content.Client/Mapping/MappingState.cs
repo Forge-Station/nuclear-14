@@ -21,7 +21,6 @@ using Robust.Client.Placement;
 using Robust.Client.ResourceManagement;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.CustomControls;
-using Robust.Shared;
 using Robust.Shared.Enums;
 using Robust.Shared.Input;
 using Robust.Shared.Input.Binding;
@@ -33,7 +32,6 @@ using Robust.Shared.Serialization.Markdown.Sequence;
 using Robust.Shared.Serialization.Markdown.Value;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
-using Robust.Shared.Configuration;
 using static Robust.Client.UserInterface.Controls.BaseButton;
 using static Robust.Client.UserInterface.Controls.OptionButton;
 using static Robust.Shared.Input.Binding.PointerInputCmdHandler;
@@ -58,7 +56,6 @@ public sealed class MappingState : GameplayStateBase
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly IClientConsoleHost _consoleHost = default!;
     [Dependency] private readonly ILocalizationManager _locale = default!;
-    [Dependency] private readonly IConfigurationManager _cfg = default!;
 
     private EntityMenuUIController _entityMenuController = default!;
 
@@ -268,19 +265,8 @@ public sealed class MappingState : GameplayStateBase
     {
         var mappings = new Dictionary<string, MappingPrototype>();
         var entities = new MappingPrototype(null, Loc.GetString("mapping-entities")) { Children = new List<MappingPrototype>() };
-        var categoryFilter = _cfg.GetCVar(CVars.EntitiesCategoryFilter);
-        _prototypeManager.TryIndex<EntityCategoryPrototype>(categoryFilter, out var filter);
         foreach (var entity in _prototypeManager.EnumeratePrototypes<EntityPrototype>())
         {
-            if (entity.Abstract)
-                continue;
-
-            if (entity.HideSpawnMenu)
-                continue;
-
-            if (filter is not null && !entity.Categories.Contains(filter))
-                continue;
-
             Register(entity, entity.ID, entities);
         }
 
@@ -329,19 +315,19 @@ public sealed class MappingState : GameplayStateBase
         Sort(mappings, entitiesTemplate);
         mappings.Clear();
         Screen.Entities.UpdateVisible(
-            new(entitiesTemplate.Children?.Count > 0 ? [entitiesTemplate, entities] : [entities]),
+            new (entitiesTemplate.Children?.Count > 0 ? [entitiesTemplate, entities] : [entities]),
             _allPrototypes.GetOrNew(typeof(EntityPrototype)));
 
         Sort(mappings, tilesTemplate);
         mappings.Clear();
         Screen.Tiles.UpdateVisible(
-            new(tilesTemplate.Children?.Count > 0 ? [tilesTemplate, tiles] : [tiles]),
+            new (tilesTemplate.Children?.Count > 0 ? [tilesTemplate, tiles] : [tiles]),
             _allPrototypes.GetOrNew(typeof(ContentTileDefinition)));
 
         Sort(mappings, decalsTemplate);
         mappings.Clear();
         Screen.Decals.UpdateVisible(
-            new(decalsTemplate.Children?.Count > 0 ? [decalsTemplate, decals] : [decals]),
+            new (decalsTemplate.Children?.Count > 0 ? [decalsTemplate, decals] : [decals]),
             _allPrototypes.GetOrNew(typeof(DecalPrototype)));
     }
 
@@ -394,10 +380,13 @@ public sealed class MappingState : GameplayStateBase
     private MappingPrototype? Register<T>(T? prototype, string id, MappingPrototype topLevel) where T : class, IPrototype, IInheritingPrototype
     {
         {
-            if (prototype == null && _prototypeManager.TryIndex(id, out prototype))
-                if (prototype is EntityPrototype entity)
-                    if (entity.HideSpawnMenu || entity.Abstract)
-                        prototype = null;
+            if (prototype == null &&
+                _prototypeManager.TryIndex(id, out prototype) &&
+                prototype is EntityPrototype entity)
+            {
+                if (entity.HideSpawnMenu || entity.Abstract)
+                    prototype = null;
+            }
         }
 
         if (prototype == null)
@@ -410,8 +399,9 @@ public sealed class MappingState : GameplayStateBase
 
             var ids = _idDict.GetOrNew(typeof(T));
             if (ids.TryGetValue(id, out var mapping))
+            {
                 return mapping;
-
+            }
             else
             {
                 var name = node.TryGet("name", out ValueDataNode? nameNode)
@@ -467,8 +457,9 @@ public sealed class MappingState : GameplayStateBase
         {
             var ids = _idDict.GetOrNew(typeof(T));
             if (ids.TryGetValue(id, out var mapping))
+            {
                 return mapping;
-
+            }
             else
             {
                 var entity = prototype as EntityPrototype;
@@ -627,38 +618,38 @@ public sealed class MappingState : GameplayStateBase
             switch (prototype)
             {
                 case EntityPrototype entityPrototype:
+                {
+                    if (_idDict.GetOrNew(typeof(EntityPrototype)).TryGetValue(entityPrototype.ID, out var entity))
                     {
-                        if (_idDict.GetOrNew(typeof(EntityPrototype)).TryGetValue(entityPrototype.ID, out var entity))
-                        {
-                            Screen.Entities.FavoritesPrototype.Children.Add(entity);
-                            entity.Parents ??= new List<MappingPrototype>();
-                            entity.Parents.Add(Screen.Entities.FavoritesPrototype);
-                            entity.Favorite = true;
-                        }
-                        break;
+                        Screen.Entities.FavoritesPrototype.Children.Add(entity);
+                        entity.Parents ??= new List<MappingPrototype>();
+                        entity.Parents.Add(Screen.Entities.FavoritesPrototype);
+                        entity.Favorite = true;
                     }
+                    break;
+                }
                 case DecalPrototype decalPrototype:
+                {
+                    if (_idDict.GetOrNew(typeof(DecalPrototype)).TryGetValue(decalPrototype.ID, out var decal))
                     {
-                        if (_idDict.GetOrNew(typeof(DecalPrototype)).TryGetValue(decalPrototype.ID, out var decal))
-                        {
-                            Screen.Decals.FavoritesPrototype.Children.Add(decal);
-                            decal.Parents ??= new List<MappingPrototype>();
-                            decal.Parents.Add(Screen.Decals.FavoritesPrototype);
-                            decal.Favorite = true;
-                        }
-                        break;
+                        Screen.Decals.FavoritesPrototype.Children.Add(decal);
+                        decal.Parents ??= new List<MappingPrototype>();
+                        decal.Parents.Add(Screen.Decals.FavoritesPrototype);
+                        decal.Favorite = true;
                     }
+                    break;
+                }
                 case ContentTileDefinition tileDefinition:
+                {
+                    if (_idDict.GetOrNew(typeof(ContentTileDefinition)).TryGetValue(tileDefinition.ID, out var tile))
                     {
-                        if (_idDict.GetOrNew(typeof(ContentTileDefinition)).TryGetValue(tileDefinition.ID, out var tile))
-                        {
-                            Screen.Tiles.FavoritesPrototype.Children.Add(tile);
-                            tile.Parents ??= new List<MappingPrototype>();
-                            tile.Parents.Add(Screen.Tiles.FavoritesPrototype);
-                            tile.Favorite = true;
-                        }
-                        break;
+                        Screen.Tiles.FavoritesPrototype.Children.Add(tile);
+                        tile.Parents ??= new List<MappingPrototype>();
+                        tile.Parents.Add(Screen.Tiles.FavoritesPrototype);
+                        tile.Favorite = true;
                     }
+                    break;
+                }
             }
         }
     }
@@ -777,20 +768,20 @@ public sealed class MappingState : GameplayStateBase
         switch (prototype)
         {
             case EntityPrototype entity:
+            {
+                var placementId = Screen.EntityPlacementMode.SelectedId;
+
+                var placement = new PlacementInformation
                 {
-                    var placementId = Screen.EntityPlacementMode.SelectedId;
+                    PlacementOption = placementId > 0 ? EntitySpawnWindow.InitOpts[placementId] : entity.PlacementMode,
+                    EntityType = entity.ID,
+                    IsTile = false
+                };
 
-                    var placement = new PlacementInformation
-                    {
-                        PlacementOption = placementId > 0 ? EntitySpawnWindow.InitOpts[placementId] : entity.PlacementMode,
-                        EntityType = entity.ID,
-                        IsTile = false
-                    };
-
-                    _decal.SetActive(false);
-                    _placement.BeginPlacing(placement);
-                    break;
-                }
+                _decal.SetActive(false);
+                _placement.BeginPlacing(placement);
+                break;
+            }
             case DecalPrototype decal:
                 _placement.Clear();
 
@@ -798,18 +789,18 @@ public sealed class MappingState : GameplayStateBase
                 Screen.SelectDecal(decal.ID);
                 break;
             case ContentTileDefinition tile:
+            {
+                var placement = new PlacementInformation
                 {
-                    var placement = new PlacementInformation
-                    {
-                        PlacementOption = "AlignTileAny",
-                        TileType = tile.TileId,
-                        IsTile = true
-                    };
+                    PlacementOption = "AlignTileAny",
+                    TileType = tile.TileId,
+                    IsTile = true
+                };
 
-                    _decal.SetActive(false);
-                    _placement.BeginPlacing(placement);
-                    break;
-                }
+                _decal.SetActive(false);
+                _placement.BeginPlacing(placement);
+                break;
+            }
             default:
                 _placement.Clear();
                 break;
@@ -1131,15 +1122,15 @@ public sealed class MappingState : GameplayStateBase
                     switch (button.Prototype)
                     {
                         case EntityPrototype:
-                            {
-                                OnSelected(Screen.Entities, button);
-                                break;
-                            }
+                        {
+                            OnSelected(Screen.Entities, button);
+                            break;
+                        }
                         case ContentTileDefinition:
-                            {
-                                OnSelected(Screen.Tiles, button);
-                                break;
-                            }
+                        {
+                            OnSelected(Screen.Tiles, button);
+                            break;
+                        }
                     }
 
                     return true;
@@ -1167,7 +1158,7 @@ public sealed class MappingState : GameplayStateBase
 
         if (uid == EntityUid.Invalid ||
             _entityManager.GetComponentOrNull<MetaDataComponent>(uid) is not
-            { EntityPrototype: { } prototype } ||
+                { EntityPrototype: { } prototype } ||
             !_allPrototypesDict.TryGetValue(prototype, out button))
         {
             // we always block other input handlers if pick mode is enabled

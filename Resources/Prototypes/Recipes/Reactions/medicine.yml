@@ -402,7 +402,6 @@
 
 - type: reaction
   id: Saline
-  minTemp: 308.15 # N14Changes
   reactants:
     Water:
       amount: 4
@@ -442,7 +441,7 @@
     Bicaridine: # Bicaridine is a conflicting brute medication and if mixed incorrectly will make Razorium. This is intended.
       amount: 1
     Lithium:
-      amount: 1
+      amount: 0.9
     Sugar:
       amount: 1
   products:
@@ -667,3 +666,18 @@
       amount: 1
   products:
     Haloperidol: 5
+
+- type: reaction
+  id: Artiplates
+  minTemp: 310
+  reactants:
+    Iron:
+      amount: 1
+    Copper:
+      amount: 1
+    TranexamicAcid:
+      amount: 2
+    Saline:
+      amount: 3
+  products:
+    Artiplates: 12

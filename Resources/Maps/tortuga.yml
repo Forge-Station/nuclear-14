@@ -63931,7 +63931,6 @@ entities:
     - type: DeviceLinkSink
       links:
       - 27317
-    - type: ActiveConveyor
   - uid: 3016
     components:
     - type: Transform
@@ -63985,7 +63984,6 @@ entities:
     - type: DeviceLinkSink
       links:
       - 27317
-    - type: ActiveConveyor
   - uid: 3283
     components:
     - type: Transform
@@ -64315,7 +64313,6 @@ entities:
     - type: DeviceLinkSink
       links:
       - 17938
-    - type: ActiveConveyor
   - uid: 19461
     components:
     - type: Transform

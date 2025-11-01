@@ -103,6 +103,9 @@ public abstract class SharedWeatherSystem : EntitySystem
         var query = EntityQueryEnumerator<WeatherComponent>();
         while (query.MoveNext(out var uid, out var comp))
         {
+            if (comp.Weather.Count == 0)
+                continue;
+
             foreach (var (proto, weather) in comp.Weather)
             {
                 var endTime = weather.EndTime;
@@ -138,10 +141,6 @@ public abstract class SharedWeatherSystem : EntitySystem
                     if (elapsed < WeatherComponent.StartupTime)
                     {
                         SetState(uid, WeatherState.Starting, comp, weather, weatherProto);
-                    }
-                    else
-                    {
-                        SetState(uid, WeatherState.Running, comp, weather, weatherProto);
                     }
                 }
 
@@ -202,7 +201,6 @@ public abstract class SharedWeatherSystem : EntitySystem
         if (component.Weather.ContainsKey(weather.ID))
             return;
 
-        endTime ??= Timing.CurTime + TimeSpan.FromSeconds(weather.Duration);
         var data = new WeatherData()
         {
             StartTime = Timing.CurTime,

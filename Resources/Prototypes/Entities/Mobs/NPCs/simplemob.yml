@@ -29,6 +29,7 @@
     - Flashed
     - RadiationProtection
     - Drowsiness
+    - Adrenaline
   - type: Buckle
   - type: StandingState
   - type: Tag
@@ -57,8 +58,8 @@
   - type: Body
     prototype: Animal
   - type: Climbing
-   # - type: NameIdentifier # Should be commented out for N14
-    # group: GenericNumber
+  - type: NameIdentifier
+    group: GenericNumber
   - type: SlowOnDamage
     speedModifierThresholds:
       60: 0.7
@@ -106,6 +107,7 @@
     - Flashed
     - RadiationProtection
     - Drowsiness
+    - Adrenaline
   - type: Bloodstream
     bloodMaxVolume: 150
   - type: MobPrice

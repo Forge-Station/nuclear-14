@@ -1,4 +1,4 @@
-using Content.Client._Shitmed.Xenonids.UI;
+using Content.Client._Shitmed.Choice.UI;
 using Content.Client.Administration.UI.CustomControls;
 using Content.Shared._Shitmed.Medical.Surgery;
 using Content.Shared.Body.Components;
@@ -21,7 +21,6 @@ public sealed class SurgeryBui : BoundUserInterface
     [ViewVariables]
     private SurgeryWindow? _window;
     private EntityUid? _part;
-    private ISawmill _sawmill = Logger.GetSawmill("surgery"); // Corvax-Change
     private bool _isBody;
     private (EntityUid Ent, EntProtoId Proto)? _surgery;
     private readonly List<EntProtoId> _previousSurgeries = new();
@@ -147,7 +146,7 @@ public sealed class SurgeryBui : BoundUserInterface
         {
             //var netPart = _entities.GetNetEntity(part.Owner);
             var surgeries = state.Choices[netEntity];
-            var partButton = new XenoChoiceControl();
+            var partButton = new ChoiceControl();
 
             partButton.Set(partName, null);
             partButton.Button.OnPressed += _ => OnPartPressed(netEntity, surgeries);
@@ -201,7 +200,7 @@ public sealed class SurgeryBui : BoundUserInterface
         // This apparently does not consider if theres multiple surgery requirements in one surgery. Maybe thats fine.
         if (surgery.Comp.Requirement is { } requirementId && _system.GetSingleton(requirementId) is { } requirement)
         {
-            var label = new XenoChoiceControl();
+            var label = new ChoiceControl();
             label.Button.OnPressed += _ =>
             {
                 _previousSurgeries.Add(surgeryId);
@@ -212,17 +211,7 @@ public sealed class SurgeryBui : BoundUserInterface
 
             var msg = new FormattedMessage();
             var surgeryName = _entities.GetComponent<MetaDataComponent>(requirement).EntityName;
-            // Corvax-Change-Start
-            var msgMessage = $"[bold]{Loc.GetString("surgery-ui-window-require")}: {surgeryName}[/bold]";
-            msg.TryAddMarkup(msgMessage, out string? error);
-
-            if (error != null)
-            {
-                _sawmill.Error(error);
-                return;
-            }
-            // Corvax-Change-End
-
+            msg.AddMarkupOrThrow($"[bold]{Loc.GetString("surgery-ui-window-require")}: {surgeryName}[/bold]");
             label.Set(msg, null);
 
             _window.Steps.AddChild(label);
@@ -268,7 +257,7 @@ public sealed class SurgeryBui : BoundUserInterface
 
         foreach (var surgery in surgeries)
         {
-            var surgeryButton = new XenoChoiceControl();
+            var surgeryButton = new ChoiceControl();
             surgeryButton.Set(surgery.Name, null);
 
             surgeryButton.Button.OnPressed += _ => OnSurgeryPressed(surgery.Ent, netPart, surgery.Id);
@@ -346,11 +335,11 @@ public sealed class SurgeryBui : BoundUserInterface
 
         if (_entities.TryGetComponent(_part, out MetaDataComponent? partMeta) &&
             _entities.TryGetComponent(_surgery?.Ent, out MetaDataComponent? surgeryMeta))
-            _window.Title = Loc.GetString("surgery-ui-window-title") + "-" + partMeta.EntityName + surgeryMeta.EntityName; // Corvax-Localization
+            _window.Title = $"Surgery - {partMeta.EntityName}, {surgeryMeta.EntityName}";
         else if (partMeta != null)
-            _window.Title = Loc.GetString("surgery-ui-window-title") + "-" + partMeta.EntityName; // Corvax-Localization
+            _window.Title = $"Surgery - {partMeta.EntityName}";
         else
-            _window.Title = Loc.GetString("surgery-ui-window-title"); // Corvax-Localization
+            _window.Title = "Surgery";
     }
 
     private enum ViewType

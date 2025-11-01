@@ -23,6 +23,7 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using Robust.Shared.Containers;
+using Content.Shared._Lavaland.Weapons.Ranged.Events;
 
 namespace Content.Server.Weapons.Ranged.Systems;
 
@@ -134,7 +135,7 @@ public sealed partial class GunSystem : SharedGunSystem
 
                     // Something like ballistic might want to leave it in the container still
                     if (!cartridge.DeleteOnSpawn && !Containers.IsEntityInContainer(ent!.Value))
-                        EjectCartridge(ent.Value, angle);
+                        EjectCartridge(ent.Value, angle, gunComp: gun);
 
                     Dirty(ent!.Value, cartridge);
                     break;
@@ -220,7 +221,7 @@ public sealed partial class GunSystem : SharedGunSystem
 
                         var hitName = ToPrettyString(hitEntity);
                         if (dmg != null)
-                            dmg = Damageable.TryChangeDamage(hitEntity, dmg, origin: user);
+                            dmg = Damageable.TryChangeDamage(hitEntity, dmg * Damageable.UniversalHitscanDamageModifier, origin: user);
 
                         // check null again, as TryChangeDamage returns modified damage values
                         if (dmg != null)
@@ -272,16 +273,45 @@ public sealed partial class GunSystem : SharedGunSystem
                 var spreadEvent = new GunGetAmmoSpreadEvent(ammoSpreadComp.Spread);
                 RaiseLocalEvent(gunUid, ref spreadEvent);
 
-                var angles = LinearSpread(mapAngle - spreadEvent.Spread / 2,
-                    mapAngle + spreadEvent.Spread / 2, ammoSpreadComp.Count);
+                var plusminusSpread = spreadEvent.Spread * gun.ShotgunSpreadMultiplier / 2;
+                var projectileCount = (int) (ammoSpreadComp.Count * gun.ShotgunProjectileCountModifier);
 
-                ShootOrThrow(ammoEnt, angles[0].ToVec(), gunVelocity, gun, gunUid, user);
+                if (gun.UniformSpread)
+                {
+                    var angles = LinearSpread(mapAngle - plusminusSpread,
+                        mapAngle + plusminusSpread, ammoSpreadComp.Count);
+
+                    ShootOrThrow(ammoEnt, angles[0].ToVec(), gunVelocity, gun, gunUid, user);
+                    shotProjectiles.Add(ammoEnt);
+
+                    for (var i = 1; i < projectileCount; i++)
+                    {
+                        var newuid = Spawn(ammoSpreadComp.Proto, fromEnt);
+                        // Lavaland Change: Raise event when a projectile/pellet is fired from a gun.
+                        RaiseLocalEvent(gunUid, new ProjectileShotEvent()
+                        {
+                            FiredProjectile = newuid
+                        });
+                        ShootOrThrow(newuid, angles[i].ToVec(), gunVelocity, gun, gunUid, user);
+                        shotProjectiles.Add(newuid);
+                    }
+                    goto SpreadBreak;
+                }
+
+                // !WHY DOES THE FIRST ONE NEED TO BE SPAWNED SEPARATELY? IF I DON'T DO THIS, THE FIRST ONE HITS THE USER!
+                ShootOrThrow(ammoEnt, mapAngle.ToVec(), gunVelocity, gun, gunUid, user);
                 shotProjectiles.Add(ammoEnt);
 
-                for (var i = 1; i < ammoSpreadComp.Count; i++)
+                for (var i = 1; i < projectileCount; i++)
                 {
+                    var angle = Random.NextAngle(mapAngle - plusminusSpread, mapAngle + plusminusSpread);
                     var newuid = Spawn(ammoSpreadComp.Proto, fromEnt);
-                    ShootOrThrow(newuid, angles[i].ToVec(), gunVelocity, gun, gunUid, user);
+                    // Lavaland Change: Raise event when a projectile/pellet is fired from a gun.
+                    RaiseLocalEvent(gunUid, new ProjectileShotEvent()
+                    {
+                        FiredProjectile = newuid
+                    });
+                    ShootOrThrow(newuid, angle.ToVec(), gunVelocity, gun, gunUid, user);
                     shotProjectiles.Add(newuid);
                 }
             }
@@ -291,6 +321,7 @@ public sealed partial class GunSystem : SharedGunSystem
                 shotProjectiles.Add(ammoEnt);
             }
 
+        SpreadBreak:
             MuzzleFlash(gunUid, ammoComp, mapDirection.ToAngle(), user);
             Audio.PlayPredicted(gun.SoundGunshotModified, gunUid, user);
         }
@@ -305,8 +336,7 @@ public sealed partial class GunSystem : SharedGunSystem
             Dirty(uid, targeted);
         }
 
-        // Do a throw
-        if (!HasComp<ProjectileComponent>(uid))
+        if (!TryComp(uid, out ProjectileComponent? projectileComp))
         {
             RemoveShootable(uid);
             // TODO: Someone can probably yeet this a billion miles so need to pre-validate input somewhere up the call stack.
@@ -314,6 +344,7 @@ public sealed partial class GunSystem : SharedGunSystem
             return;
         }
 
+        projectileComp.Damage *= gun.DamageModifier;
         ShootProjectile(uid, mapDirection, gunVelocity, gunUid, user, gun.ProjectileSpeedModified);
     }
 
@@ -398,28 +429,28 @@ public sealed partial class GunSystem : SharedGunSystem
     // TODO: Pseudo RNG so the client can predict these.
     #region Hitscan effects
 
-    private void FireEffects(EntityCoordinates fromCoordinates, float distance, Angle mapDirection, HitscanPrototype hitscan, EntityUid? hitEntity = null)
+    private void FireEffects(EntityCoordinates fromCoordinates, float distance, Angle angle, HitscanPrototype hitscan, EntityUid? hitEntity = null)
     {
         // Lord
         // Forgive me for the shitcode I am about to do
         // Effects tempt me not
         var sprites = new List<(NetCoordinates coordinates, Angle angle, SpriteSpecifier sprite, float scale)>();
-        var gridUid = fromCoordinates.GetGridUid(EntityManager);
-        var angle = mapDirection;
+        var fromXform = Transform(fromCoordinates.EntityId);
 
         // We'll get the effects relative to the grid / map of the firer
         // Look you could probably optimise this a bit with redundant transforms at this point.
-        var xformQuery = GetEntityQuery<TransformComponent>();
 
-        if (xformQuery.TryGetComponent(gridUid, out var gridXform))
+        var gridUid = fromXform.GridUid;
+        if (gridUid != fromCoordinates.EntityId && TryComp(gridUid, out TransformComponent? gridXform))
         {
-            var (_, gridRot, gridInvMatrix) = TransformSystem.GetWorldPositionRotationInvMatrix(gridXform, xformQuery);
-
-            fromCoordinates = new EntityCoordinates(gridUid.Value,
-                Vector2.Transform(fromCoordinates.ToMapPos(EntityManager, TransformSystem), gridInvMatrix));
-
-            // Use the fallback angle I guess?
+            var (_, gridRot, gridInvMatrix) = TransformSystem.GetWorldPositionRotationInvMatrix(gridXform);
+            var map = _transform.ToMapCoordinates(fromCoordinates);
+            fromCoordinates = new EntityCoordinates(gridUid.Value, Vector2.Transform(map.Position, gridInvMatrix));
             angle -= gridRot;
+        }
+        else
+        {
+            angle -= _transform.GetWorldRotation(fromXform);
         }
 
         if (distance >= 1f)

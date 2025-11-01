@@ -10,8 +10,6 @@ on:
 
 jobs:
   Label:
-    permissions:
-      pull-requests: write
     if: ( github.event.pull_request.draft == false ) && ( github.actor != 'PJBot' && github.actor != 'DeltaV-Bot' && github.actor != 'SimpleStation14' )
     runs-on: ubuntu-latest
     steps:

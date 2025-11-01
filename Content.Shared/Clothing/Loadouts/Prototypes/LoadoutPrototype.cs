@@ -26,6 +26,12 @@ public sealed partial class LoadoutPrototype : IPrototype
     [DataField]
     public int Cost = 1;
 
+    /// <summary>
+    ///     How many item group selections this uses. Defaulted to 1:1, but can be any number.
+    /// </summary>
+    [DataField]
+    public int Slots = 1;
+
     /// Should this item override other items in the same slot
     [DataField]
     public bool Exclusive;
@@ -50,9 +56,9 @@ public sealed partial class LoadoutPrototype : IPrototype
 
     [DataField(serverOnly: true)]
     public LoadoutFunction[] Functions { get; private set; } = Array.Empty<LoadoutFunction>();
-
+    
     [DataField("sponsorLevel")]
-    public SponsorLevel Level = SponsorLevel.None; // Forge-Change
+        public SponsorLevel Level = SponsorLevel.None; // Forge-Change
 }
 
 /// This serves as a hook for loadout functions to modify one or more entities upon spawning in.

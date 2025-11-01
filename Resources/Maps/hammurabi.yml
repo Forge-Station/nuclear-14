@@ -116601,7 +116601,7 @@ entities:
     - type: Transform
       pos: -133.1905,9.656907
       parent: 1
-- proto: FloraTree01
+- proto: FloraTree
   entities:
   - uid: 28673
     components:
@@ -116613,15 +116613,11 @@ entities:
     - type: Transform
       pos: -11.371216,-42.52776
       parent: 1
-- proto: FloraTree02
-  entities:
   - uid: 33448
     components:
     - type: Transform
       pos: -151.13249,-7.4306436
       parent: 1
-- proto: FloraTree03
-  entities:
   - uid: 23768
     components:
     - type: Transform
@@ -116632,8 +116628,6 @@ entities:
     - type: Transform
       pos: -36.475254,19.692598
       parent: 1
-- proto: FloraTree04
-  entities:
   - uid: 28791
     components:
     - type: Transform
@@ -116649,15 +116643,11 @@ entities:
     - type: Transform
       pos: -101.54345,-87.38519
       parent: 1
-- proto: FloraTree05
-  entities:
   - uid: 33449
     components:
     - type: Transform
       pos: -133.00836,7.4976954
       parent: 1
-- proto: FloraTree06
-  entities:
   - uid: 28792
     components:
     - type: Transform
@@ -116668,15 +116658,13 @@ entities:
     - type: Transform
       pos: -132.91449,13.4618635
       parent: 1
-- proto: FloraTreeLarge05
+- proto: FloraTreeLarge
   entities:
   - uid: 33447
     components:
     - type: Transform
       pos: -150.44499,-4.93933
       parent: 1
-- proto: FloraTreeLarge06
-  entities:
   - uid: 28793
     components:
     - type: Transform

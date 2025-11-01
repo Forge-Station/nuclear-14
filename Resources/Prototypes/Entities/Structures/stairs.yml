@@ -14,7 +14,7 @@
   - type: Transform
     anchored: true
   - type: Damageable
-    damageContainer: Inorganic
+    damageContainer: StructuralInorganic
     damageModifierSet: Metallic
   - type: Physics # Forge-add
     bodyType: Static

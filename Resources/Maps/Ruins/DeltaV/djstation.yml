@@ -46,8 +46,6 @@ entities:
       bodyType: Dynamic
     - type: Fixtures
       fixtures: {}
-    - type: BecomesStation
-      id: Empty
     - type: OccluderTree
     - type: Shuttle
     - type: GridPathfinding
@@ -60,6 +58,7 @@ entities:
         nodes: []
     - type: SpreaderGrid
     - type: GridAtmosphere
+      simulatedTurf: false
       version: 2
       data:
         tiles:

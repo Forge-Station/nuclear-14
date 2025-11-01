@@ -1,18 +1,14 @@
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using Content.Shared.Decals;
+using Content.Shared._EE.Contractors.Prototypes;
 using Content.Shared.Examine;
 using Content.Shared.Humanoid.Markings;
 using Content.Shared.Humanoid.Prototypes;
 using Content.Shared._Shitmed.Humanoid.Events; // Shitmed Change
 using Content.Shared.IdentityManagement;
-using Content.Shared._NC.Speech.Synthesis; // Corvax-Fallout-Barks
-using Content.Shared._NC.Speech.Synthesis.Components;
-using Content.Shared._NC.TTS; // Corvax-Fallout-Barks
 using Content.Shared.Preferences;
 using Content.Shared.HeightAdjust;
-using Microsoft.Extensions.Configuration;
 using Robust.Shared;
 using Robust.Shared.Configuration;
 using Robust.Shared.GameObjects.Components.Localization;
@@ -24,6 +20,7 @@ using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Serialization.Markdown;
 using Robust.Shared.Utility;
 using YamlDotNet.RepresentationModel;
+using Content.Shared._EE.GenderChange;
 
 namespace Content.Shared.Humanoid;
 
@@ -44,23 +41,19 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
     [Dependency] private readonly MarkingManager _markingManager = default!;
     [Dependency] private readonly ISerializationManager _serManager = default!;
     [Dependency] private readonly HeightAdjustSystem _heightAdjust = default!;
+    [Dependency] private readonly ISharedPlayerManager _sharedPlayerManager = default!;
 
     [ValidatePrototypeId<SpeciesPrototype>]
     public const string DefaultSpecies = "Human";
-    // Corvax-Fallout-Barks-start
-    [ValidatePrototypeId<BarkPrototype>]
-    public const string DefaultBarkVoice = "BarksGoonSpeak1";
-    // Corvax-Fallout-Barks-end
-    
-    // Corvax-TTS-Start
-    public const string DefaultVoice = "Garithos";
-    public static readonly Dictionary<Sex, string> DefaultSexVoice = new()
-    {
-        {Sex.Male, "Garithos"},
-        {Sex.Female, "Maiev"},
-        {Sex.Unsexed, "Myron"},
-    };
-    // Corvax-TTS-End
+
+    [ValidatePrototypeId<EmployerPrototype>]
+    public const string DefaultEmployer = "NanoTrasen";
+
+    [ValidatePrototypeId<NationalityPrototype>]
+    public const string DefaultNationality = "Bieselite";
+
+    [ValidatePrototypeId<LifepathPrototype>]
+    public const string DefaultLifepath = "Spacer";
 
     public override void Initialize()
     {
@@ -107,7 +100,7 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
         if (string.IsNullOrEmpty(humanoid.Initial)
             || !_proto.TryIndex(humanoid.Initial, out HumanoidProfilePrototype? startingSet))
         {
-            LoadProfile(uid, HumanoidCharacterProfile.DefaultWithSpecies(humanoid.Species), humanoid);
+            LoadProfile(uid, HumanoidCharacterProfile.DefaultWithSpecies(humanoid.Species), humanoid, false, false);
             return;
         }
 
@@ -115,7 +108,7 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
         foreach (var (layer, info) in startingSet.CustomBaseLayers)
             humanoid.CustomBaseLayers.Add(layer, info);
 
-        LoadProfile(uid, startingSet.Profile, humanoid);
+        LoadProfile(uid, startingSet.Profile, humanoid, false, false);
     }
 
     private void OnExamined(EntityUid uid, HumanoidAppearanceComponent component, ExaminedEvent args)
@@ -382,32 +375,71 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
     /// <param name="uid">The mob's entity UID.</param>
     /// <param name="profile">The character profile to load.</param>
     /// <param name="humanoid">Humanoid component of the entity</param>
-    public virtual void LoadProfile(EntityUid uid, HumanoidCharacterProfile profile, HumanoidAppearanceComponent? humanoid = null)
+    public virtual void LoadProfile(EntityUid uid,
+        HumanoidCharacterProfile? profile,
+        HumanoidAppearanceComponent? humanoid = null,
+        bool loadExtensions = true,
+        bool generateLoadouts = true)
     {
+        if (profile == null)
+            return;
+
         if (!Resolve(uid, ref humanoid))
             return;
 
         SetSpecies(uid, profile.Species, false, humanoid);
         SetSex(uid, profile.Sex, false, humanoid);
+
+        humanoid.Gender = profile.Gender;
+        if (TryComp<GrammarComponent>(uid, out var grammar))
+            grammar.Gender = profile.Gender;
+
+        humanoid.DisplayPronouns = profile.DisplayPronouns;
+        humanoid.StationAiName = profile.StationAiName;
+        humanoid.CyborgName = profile.CyborgName;
+        humanoid.Age = profile.Age;
+
+        humanoid.CustomSpecieName = profile.Customspeciename;
+
         humanoid.EyeColor = profile.Appearance.EyeColor;
         var ev = new EyeColorInitEvent();
         RaiseLocalEvent(uid, ref ev);
 
+        humanoid.LastProfileLoaded = profile; //Set the loaded profile because Traits are about to need it
         SetSkinColor(uid, profile.Appearance.SkinColor, false);
+        if (loadExtensions && _sharedPlayerManager.TryGetSessionByEntity(uid, out var session))
+            RaiseLocalEvent(uid, new LoadProfileExtensionsEvent(uid, session, null, profile, generateLoadouts));
 
+        SetMarkings(uid, profile, humanoid);
+
+        var species = _proto.Index(humanoid.Species);
+
+        if (profile.Height <= 0 || profile.Width <= 0)
+            SetScale(uid, new Vector2(species.DefaultWidth, species.DefaultHeight), true, humanoid);
+        else
+            SetScale(uid, new Vector2(profile.Width, profile.Height), true, humanoid);
+
+        _heightAdjust.SetScale(uid, new Vector2(humanoid.Width, humanoid.Height));
+
+        humanoid.LastProfileLoaded = profile; //But traits can also modify the profile so we need to set it again.
+        Dirty(uid, humanoid);
+        RaiseLocalEvent(uid, new ProfileLoadFinishedEvent());
+    }
+
+    public void SetMarkings(EntityUid uid, HumanoidCharacterProfile profile, HumanoidAppearanceComponent humanoid)
+    {
         humanoid.MarkingSet.Clear();
-
         // Add markings that doesn't need coloring. We store them until we add all other markings that doesn't need it.
         var markingFColored = new Dictionary<Marking, MarkingPrototype>();
         foreach (var marking in profile.Appearance.Markings)
         {
-            if (_markingManager.TryGetMarking(marking, out var prototype))
-            {
-                if (!prototype.ForcedColoring)
-                    AddMarking(uid, marking.MarkingId, marking.MarkingColors, false);
-                else
-                    markingFColored.Add(marking, prototype);
-            }
+            if (!_markingManager.TryGetMarking(marking, out var prototype))
+                continue;
+
+            if (!prototype.ForcedColoring)
+                AddMarking(uid, marking.MarkingId, marking.MarkingColors, false);
+            else
+                markingFColored.Add(marking, prototype);
         }
 
         // Hair/facial hair - this may eventually be deprecated.
@@ -440,33 +472,6 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
         }
 
         EnsureDefaultMarkings(uid, humanoid);
-        SetBarkVoice(uid, profile.BarkVoice, humanoid); // Corvax-Fallout-Barks
-        SetTTSVoice(uid, profile.Voice, humanoid); // Corvax-TTS
-
-        humanoid.Gender = profile.Gender;
-        if (TryComp<GrammarComponent>(uid, out var grammar))
-            grammar.Gender = profile.Gender;
-
-        humanoid.DisplayPronouns = profile.DisplayPronouns;
-        humanoid.StationAiName = profile.StationAiName;
-        humanoid.CyborgName = profile.CyborgName;
-        humanoid.Age = profile.Age;
-
-        humanoid.CustomSpecieName = profile.Customspeciename;
-
-        var species = _proto.Index(humanoid.Species);
-
-        if (profile.Height <= 0 || profile.Width <= 0)
-            SetScale(uid, new Vector2(species.DefaultWidth, species.DefaultHeight), true, humanoid);
-        else
-            SetScale(uid, new Vector2(profile.Width, profile.Height), true, humanoid);
-
-        _heightAdjust.SetScale(uid, new Vector2(humanoid.Width, humanoid.Height));
-
-        humanoid.LastProfileLoaded = profile; // DeltaV - let paradox anomaly be cloned
-
-        Dirty(uid, humanoid);
-        RaiseLocalEvent(uid, new ProfileLoadFinishedEvent());
     }
 
     /// <summary>
@@ -499,18 +504,6 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
         if (sync)
             Dirty(uid, humanoid);
     }
-    
-    // Corvax-TTS-Start
-    // ReSharper disable once InconsistentNaming
-    public void SetTTSVoice(EntityUid uid, string voiceId, HumanoidAppearanceComponent humanoid)
-    {
-        if (!TryComp<TTSComponent>(uid, out var comp))
-            return;
-
-        humanoid.Voice = voiceId;
-        comp.VoicePrototypeId = voiceId;
-    }
-    // Corvax-TTS-End
 
     private void EnsureDefaultMarkings(EntityUid uid, HumanoidAppearanceComponent? humanoid)
     {
@@ -518,17 +511,6 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
             return;
         humanoid.MarkingSet.EnsureDefault(humanoid.SkinColor, humanoid.EyeColor, _markingManager);
     }
-
-    // Corvax-Fallout-Barks-start
-    public void SetBarkVoice(EntityUid uid, string? barkvoiceId, HumanoidAppearanceComponent humanoid)
-    {
-        if (!TryComp<SpeechSynthesisComponent>(uid, out var comp))
-            return;
-
-        humanoid.BarkVoice = barkvoiceId ?? DefaultBarkVoice;
-        comp.VoicePrototypeId = barkvoiceId;
-    }
-    // Corvax-Fallout-Barks-end
 
     /// <summary>
     ///
@@ -583,5 +565,21 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
             return Loc.GetString("identity-age-middle-aged");
 
         return Loc.GetString("identity-age-old");
+    }
+    /// <summary>
+    ///     Set a humanoid mob's gender.
+    /// </summary>
+    public void SetGender(EntityUid uid, Robust.Shared.Enums.Gender gender, HumanoidAppearanceComponent? humanoid = null)
+    {
+        if (!Resolve(uid, ref humanoid) || humanoid.Gender == gender)
+            return;
+        if (TryComp<GrammarComponent>(uid, out var grammar))
+        {
+            grammar.Gender = gender;
+            Dirty(uid, grammar);
+        }
+        humanoid.Gender = gender;
+        RaiseLocalEvent(uid, new GenderChangeEvent(uid, gender), true);
+        Dirty(uid, humanoid);
     }
 }

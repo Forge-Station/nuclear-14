@@ -6,8 +6,6 @@ using Content.Client.Stylesheets;
 using Content.Client.UserInterface.Controls;
 using Content.Client.UserInterface.Systems.Hands.Controls;
 using Content.Client.Verbs.UI;
-using Content.Shared._EstacaoPirata.Cards.Card;
-using Content.Shared._EstacaoPirata.Cards.Hand;
 using Content.Shared.Cuffs;
 using Content.Shared.Cuffs.Components;
 using Content.Shared.Ensnaring.Components;
@@ -22,10 +20,8 @@ using Robust.Client.GameObjects;
 using Robust.Client.Player;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
-using Robust.Client.Player;
 using Robust.Shared.Input;
 using Robust.Shared.Map;
-using Robust.Shared.Prototypes;
 using static Content.Client.Inventory.ClientInventorySystem;
 using static Robust.Client.UserInterface.Control;
 
@@ -68,11 +64,9 @@ namespace Content.Client.Inventory
         {
             base.Open();
 
-            _strippingMenu = this.CreateWindow<StrippingMenu>();
+            _strippingMenu = this.CreateWindowCenteredLeft<StrippingMenu>();
             _strippingMenu.OnDirty += UpdateMenu;
             _strippingMenu.Title = Loc.GetString("strippable-bound-user-interface-stripping-menu-title", ("ownerName", Identity.Name(Owner, EntMan)));
-
-            _strippingMenu?.OpenCenteredLeft();
         }
 
         protected override void Dispose(bool disposing)
@@ -108,7 +102,7 @@ namespace Content.Client.Inventory
                 }
             }
 
-            if (EntMan.TryGetComponent<HandsComponent>(Owner, out var handsComp))
+            if (EntMan.TryGetComponent<HandsComponent>(Owner, out var handsComp) && handsComp.CanBeStripped)
             {
                 // good ol hands shit code. there is a GuiHands comparer that does the same thing... but these are hands
                 // and not gui hands... which are different...
@@ -146,7 +140,7 @@ namespace Content.Client.Inventory
                     StyleClasses = { StyleBase.ButtonOpenRight }
                 };
 
-                button.OnPressed += (_) => SendMessage(new StrippingEnsnareButtonPressed());
+                button.OnPressed += (_) => SendPredictedMessage(new StrippingEnsnareButtonPressed());
 
                 _strippingMenu.SnareContainer.AddChild(button);
             }
@@ -186,7 +180,7 @@ namespace Content.Client.Inventory
             // So for now: only stripping & examining
             if (ev.Function == EngineKeyFunctions.Use)
             {
-                SendMessage(new StrippingSlotButtonPressed(slot.SlotName, slot is HandButton));
+                SendPredictedMessage(new StrippingSlotButtonPressed(slot.SlotName, slot is HandButton));
                 return;
             }
 
@@ -194,9 +188,15 @@ namespace Content.Client.Inventory
                 return;
 
             if (ev.Function == ContentKeyFunctions.ExamineEntity)
+            {
                 _examine.DoExamine(slot.Entity.Value);
+                ev.Handle();
+            }
             else if (ev.Function == EngineKeyFunctions.UseSecondary)
+            {
                 _ui.GetUIController<VerbMenuUIController>().OpenVerbMenu(slot.Entity.Value);
+                ev.Handle();
+            }
         }
 
         private void AddInventoryButton(EntityUid invUid, string slotId, InventoryComponent inv)

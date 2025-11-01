@@ -8,7 +8,7 @@ namespace Content.Shared._Shitmed.Medical.Surgery.Tools;
 [RegisterComponent, NetworkedComponent]
 public sealed partial class TendingComponent : Component, ISurgeryToolComponent
 {
-    public string ToolName => "Заживление ран"; // Corvax-Localization
+    public string ToolName => "a wound tender";
     public bool? Used { get; set; } = null;
     [DataField]
     public float Speed { get; set; } = 1f;

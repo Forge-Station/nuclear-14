@@ -157,7 +157,7 @@
 
 - type: entity
   id: N14RockGreyMining
-  parent: AsteroidAltRock # Corvax-Change
+  parent: N14RockGrey
   name: ore vein
   suffix: higher ore yield .44
   description: An asteroid.
@@ -165,17 +165,18 @@
   - type: OreVein
     oreChance: 0.44
     oreRarityPrototypeId: RandomOreDistributionStandard
-  - type: Damageable # Corvax-Change
-    damageContainer: StructuralInorganic
-    damageModifierSet: Rock
-  - type: Destructible # Corvax-Change
-    thresholds:
-      - trigger:
-          !type:DamageTrigger
-          damage: 400
-        behaviors:
-          - !type:DoActsBehavior
-            acts: ["Destruction"]
+  - type: Sprite
+    layers:
+      - state: rock_asteroid
+      - map: [ "enum.EdgeLayer.South" ]
+        state: rock_asteroid_south
+      - map: [ "enum.EdgeLayer.East" ]
+        state: rock_asteroid_east
+      - map: [ "enum.EdgeLayer.North" ]
+        state: rock_asteroid_north
+      - map: [ "enum.EdgeLayer.West" ]
+        state: rock_asteroid_west
+      - state: rock_coal
 
 - type: entity
   id: SteelRock
@@ -874,33 +875,3 @@
         - map: [ "enum.EdgeLayer.West" ]
           state: rock_andesite_west
         - state: rock_salt
-
-# Cold Mountain Rock.
-- type: entity
-  id: ColdMountainRock
-  parent: BaseStructure
-  name: cold mountain rock
-  suffix: Un-mineable
-  description: A craggy mountain wall. It is too hard to mine. Colder.
-  components:
-  - type: Sprite
-    sprite: _Nuclear14/Structures/Walls/cold_mountain_rock.rsi
-    state: full
-  - type: Occluder
-  - type: Airtight
-  - type: Fixtures
-    fixtures:
-      fix1:
-        shape:
-          !type:PhysShapeAabb
-          bounds: "-0.5,-0.5,0.5,0.5"
-        density: 100
-        mask:
-        - FullTileMask
-        layer:
-        - WallLayer
-  - type: IconSmooth
-    key: walls
-    base: rock_
-  - type: BlockWeather
-

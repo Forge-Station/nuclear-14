@@ -15,12 +15,13 @@ namespace Content.Shared.Movement.Components
         public const float DefaultMinimumFrictionSpeed = 0.005f;
         public const float DefaultWeightlessFriction = 1f;
         public const float DefaultWeightlessFrictionNoInput = 0f;
+        public const float DefaultOffGridFriction = 0.05f;
         public const float DefaultWeightlessModifier = 0.7f;
         public const float DefaultWeightlessAcceleration = 1f;
 
-        public const float DefaultAcceleration = 8f; // Smooth Moving, normal is 20
-        public const float DefaultFriction = 8f; // Smooth Moving, normal is 20
-        public const float DefaultFrictionNoInput = 14f; // Smooth Moving, normal is 20
+        public const float DefaultAcceleration = 20f;
+        public const float DefaultFriction = 20f;
+        public const float DefaultFrictionNoInput = 20f;
 
         public const float DefaultBaseWalkSpeed = 3f;
         public const float DefaultBaseSprintSpeed = 5f;
@@ -73,6 +74,12 @@ namespace Content.Shared.Movement.Components
         public float WeightlessFrictionNoInput = DefaultWeightlessFrictionNoInput;
 
         /// <summary>
+        /// The negative velocity applied for friction when weightless and not standing on a grid or mapgrid
+        /// </summary>
+        [ViewVariables(VVAccess.ReadWrite), DataField]
+        public float OffGridFriction = DefaultOffGridFriction;
+
+        /// <summary>
         /// The movement speed modifier applied to a mob's total input velocity when weightless.
         /// </summary>
         [ViewVariables(VVAccess.ReadWrite), DataField]
@@ -100,7 +107,7 @@ namespace Content.Shared.Movement.Components
         /// The negative velocity applied for friction.
         /// </summary>
         [AutoNetworkedField, ViewVariables(VVAccess.ReadWrite), DataField]
-        public float? FrictionNoInput = DefaultFrictionNoInput; // Smooth Moving
+        public float? FrictionNoInput;
 
         [ViewVariables(VVAccess.ReadWrite), DataField, AutoNetworkedField]
         public float BaseWalkSpeed { get; set; } = DefaultBaseWalkSpeed;

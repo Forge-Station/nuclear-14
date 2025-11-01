@@ -1,5 +1,4 @@
 using System.Linq;
-using Content.Client._NC.Sponsor; // Forge-Change
 using Content.Client.Eui;
 using Content.Client.Lobby;
 using Content.Client.Players.PlayTimeTracking;
@@ -83,6 +82,13 @@ namespace Content.Client.UserInterface.Systems.Ghost.Controls.Roles
 
             if (state is not GhostRolesEuiState ghostState)
                 return;
+
+            // We must save BodyVisible state, so all Collapsible boxes will not close
+            // on adding new ghost role.
+            // Save the current state of each Collapsible box being visible or not
+            _window.SaveCollapsibleBoxesStates();
+
+            // Clearing the container before adding new roles
             _window.ClearEntries();
 
             var entityManager = IoCManager.Resolve<IEntityManager>();
@@ -93,10 +99,13 @@ namespace Content.Client.UserInterface.Systems.Ghost.Controls.Roles
             var prefs = IoCManager.Resolve<IClientPreferencesManager>();
             var protoMan = IoCManager.Resolve<IPrototypeManager>();
             var configManager = IoCManager.Resolve<IConfigurationManager>();
-            var sponsorManager = IoCManager.Resolve<SponsorManager>(); // Forge-Change
 
+            // TODO: role.Requirements value doesn't work at all as an equality key, this must be fixed
+            // Grouping roles
             var groupedRoles = ghostState.GhostRoles.GroupBy(
                 role => (role.Name, role.Description, role.Requirements));
+
+            // Add a new entry for each role group
             foreach (var group in groupedRoles)
             {
                 var name = group.Key.Name;
@@ -114,18 +123,19 @@ namespace Content.Client.UserInterface.Systems.Ghost.Controls.Roles
                     entityManager,
                     protoMan,
                     configManager,
-                    sponsorManager, // Forge-Change
                     out var reasons))
                     hasAccess = false;
 
                 _window.AddEntry(name, description, hasAccess, characterReqs.GetRequirementsText(reasons), group, spriteSystem);
             }
 
+            // Restore the Collapsible box state if it is saved
+            _window.RestoreCollapsibleBoxesStates();
+
+            // Close the rules window if it is no longer needed
             var closeRulesWindow = ghostState.GhostRoles.All(role => role.Identifier != _windowRulesId);
             if (closeRulesWindow)
-            {
                 _windowRules?.Close();
-            }
         }
     }
 }

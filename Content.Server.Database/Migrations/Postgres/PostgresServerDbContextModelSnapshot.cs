@@ -36,6 +36,14 @@ namespace Content.Server.Database.Migrations.Postgres
                         .HasColumnType("integer")
                         .HasColumnName("admin_rank_id");
 
+                    b.Property<bool>("Deadminned")
+                        .HasColumnType("boolean")
+                        .HasColumnName("deadminned");
+
+                    b.Property<bool>("Suspended")
+                        .HasColumnType("boolean")
+                        .HasColumnName("suspended");
+
                     b.Property<string>("Title")
                         .HasColumnType("text")
                         .HasColumnName("title");
@@ -627,6 +635,34 @@ namespace Content.Server.Database.Migrations.Postgres
                         });
                 });
 
+            modelBuilder.Entity("Content.Server.Database.IPIntelCache", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("ipintel_cache_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<IPAddress>("Address")
+                        .IsRequired()
+                        .HasColumnType("inet")
+                        .HasColumnName("address");
+
+                    b.Property<float>("Score")
+                        .HasColumnType("real")
+                        .HasColumnName("score");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("time");
+
+                    b.HasKey("Id")
+                        .HasName("PK_ipintel_cache");
+
+                    b.ToTable("ipintel_cache", (string)null);
+                });
+
             modelBuilder.Entity("Content.Server.Database.Job", b =>
                 {
                     b.Property<int>("Id")
@@ -833,12 +869,7 @@ namespace Content.Server.Database.Migrations.Postgres
                     b.Property<int>("Age")
                         .HasColumnType("integer")
                         .HasColumnName("age");
-
-                    b.Property<string>("Backpack")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("backpack");
-
+                    
                     b.Property<string>("BarkVoice")
                         .IsRequired()
                         .HasColumnType("text")
@@ -848,11 +879,6 @@ namespace Content.Server.Database.Migrations.Postgres
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("char_name");
-
-                    b.Property<string>("Clothing")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("clothing");
 
                     b.Property<string>("CustomSpecieName")
                         .IsRequired()
@@ -866,6 +892,11 @@ namespace Content.Server.Database.Migrations.Postgres
                     b.Property<string>("DisplayPronouns")
                         .HasColumnType("text")
                         .HasColumnName("display_pronouns");
+
+                    b.Property<string>("Employer")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("employer");
 
                     b.Property<string>("EyeColor")
                         .IsRequired()
@@ -906,9 +937,19 @@ namespace Content.Server.Database.Migrations.Postgres
                         .HasColumnType("real")
                         .HasColumnName("height");
 
+                    b.Property<string>("Lifepath")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("lifepath");
+
                     b.Property<JsonDocument>("Markings")
                         .HasColumnType("jsonb")
                         .HasColumnName("markings");
+
+                    b.Property<string>("Nationality")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("nationality");
 
                     b.Property<int>("PreferenceId")
                         .HasColumnType("integer")

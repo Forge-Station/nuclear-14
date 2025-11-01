@@ -8,19 +8,16 @@
     },
     "states": [
         {
-            "name": "stamp-lawyer"
-        },
-        {
             "name": "stamp-notary"
-        },
-        {
-            "name": "stamp-psychologist"
         },
         {
             "name": "stamp-cj"
         },
         {
             "name": "stamp-admin-assistant"
+        },
+        {
+            "name": "stamp-liaison"
         }
     ]
 }

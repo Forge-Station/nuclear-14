@@ -1,7 +1,11 @@
 {
   "version": 1,
   "license": "CC-BY-SA-3.0",
+<<<<<<<< HEAD:Resources/Textures/Corvax/Clothing/Neck/caesarpelt.rsi/meta.json
+  "copyright": "Taken from... Where..?",
+========
   "copyright": "sprites by leonardo_dabepis (Discord)",
+>>>>>>>> EE:Resources/Textures/DeltaV/Clothing/Neck/Misc/prosecutorbadge.rsi/meta.json
   "size": {
     "x": 32,
     "y": 32

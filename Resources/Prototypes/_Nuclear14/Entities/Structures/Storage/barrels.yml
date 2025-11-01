@@ -280,14 +280,10 @@
     state: burnbarrel_lit
     netsync: false
   - type: PointLight
-    radius: 5
-    energy: 3
-    color: "#FFC90C"
-  - type: AmbientSound
-    volume: -7
-    range: 4
-    sound:
-      path: /Audio/Ambience/Objects/fireplace.ogg
+    color: "#E25822"
+    radius: 1.0
+    energy: 5.0
+    netsync: false
   - type: LightBehaviour
     behaviours:
       - !type:RandomizeBehaviour # immediately make it bright and flickery

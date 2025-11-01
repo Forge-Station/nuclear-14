@@ -1,19 +1,7 @@
 ﻿- type: playerConnectionWhitelist
-  id: basicWhitelist
+  id: basicWhitelist # Basic whitelist using only the ManualWhitelist condition
   conditions:
-  - !type:ConditionPlayerCount # Allow when <= 100 players are online
-    minimumPlayers: 0
-    maximumPlayers: 100
-    action: Allow
-  - !type:ConditionAlwaysMatch # Condition that always matches
-    action: Deny # Deny connection if matched
-
-- type: playerConnectionWhitelist
-  id: PlayerConnectionConfigurationCorvax
-  conditions:
-  - !type:ConditionPlayerCount # Allow when <= 100 players are online
-    minimumPlayers: 0
-    maximumPlayers: 100
-    action: Allow
-  - !type:ConditionManualSponsorMembership
-    action: Allow
+    - !type:ConditionManualWhitelistMembership
+      action: Allow # Allow connection if matched
+    - !type:ConditionAlwaysMatch # Condition that always matches
+      action: Deny # Deny connection if matched

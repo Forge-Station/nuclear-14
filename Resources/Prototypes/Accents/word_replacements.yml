@@ -383,44 +383,44 @@
   wordReplacements:
     chatsan-word-1: chatsan-replacement-1
     chatsan-word-2: chatsan-replacement-2
-    chatsan-word-3: chatsan-replacement-3
+    # chatsan-word-3: chatsan-replacement-3
     chatsan-word-4: chatsan-replacement-4
-    chatsan-word-5: chatsan-replacement-5
-    chatsan-word-6: chatsan-replacement-6
-    chatsan-word-7: chatsan-replacement-7
-    chatsan-word-8: chatsan-replacement-8
-    chatsan-word-9: chatsan-replacement-9
-    chatsan-word-10: chatsan-replacement-10
-    chatsan-word-11: chatsan-replacement-11
+    # chatsan-word-5: chatsan-replacement-5
+    # chatsan-word-6: chatsan-replacement-6
+    # chatsan-word-7: chatsan-replacement-7
+    # chatsan-word-8: chatsan-replacement-8
+    # chatsan-word-9: chatsan-replacement-9
+    # chatsan-word-10: chatsan-replacement-10
+    # chatsan-word-11: chatsan-replacement-11
     chatsan-word-12: chatsan-replacement-12
-    chatsan-word-13: chatsan-replacement-13
-    chatsan-word-14: chatsan-replacement-14
-    chatsan-word-15: chatsan-replacement-15
-    chatsan-word-16: chatsan-replacement-16
-    chatsan-word-17: chatsan-replacement-17
-    chatsan-word-18: chatsan-replacement-18
-    chatsan-word-19: chatsan-replacement-19
-    chatsan-word-20: chatsan-replacement-20
-    chatsan-word-21: chatsan-replacement-21
-    chatsan-word-22: chatsan-replacement-22
-    chatsan-word-23: chatsan-replacement-23
-    chatsan-word-24: chatsan-replacement-24
-    chatsan-word-25: chatsan-replacement-25
-    chatsan-word-26: chatsan-replacement-26
-    chatsan-word-27: chatsan-replacement-27
-    chatsan-word-28: chatsan-replacement-28
-    chatsan-word-29: chatsan-replacement-29
-    chatsan-word-30: chatsan-replacement-30
-    chatsan-word-31: chatsan-replacement-31
-    chatsan-word-32: chatsan-replacement-32
-    chatsan-word-33: chatsan-replacement-33
-    chatsan-word-34: chatsan-replacement-34
-    chatsan-word-35: chatsan-replacement-35
-    chatsan-word-36: chatsan-replacement-36
+    # chatsan-word-13: chatsan-replacement-13
+    # chatsan-word-14: chatsan-replacement-14
+    # chatsan-word-15: chatsan-replacement-15
+    # chatsan-word-16: chatsan-replacement-16
+    # chatsan-word-17: chatsan-replacement-17
+    # chatsan-word-18: chatsan-replacement-18
+    # chatsan-word-19: chatsan-replacement-19
+    # chatsan-word-20: chatsan-replacement-20
+    # chatsan-word-21: chatsan-replacement-please
+    # chatsan-word-22: chatsan-replacement-please
+    # chatsan-word-23: chatsan-replacement-please
+    # chatsan-word-24: chatsan-replacement-24
+    # chatsan-word-25: chatsan-replacement-25
+    # chatsan-word-26: chatsan-replacement-26
+    # chatsan-word-27: chatsan-replacement-27
+    # chatsan-word-28: chatsan-replacement-28
+    # chatsan-word-29: chatsan-replacement-29
+    # chatsan-word-30: chatsan-replacement-30
+    # chatsan-word-31: chatsan-replacement-31
+    # chatsan-word-32: chatsan-replacement-32
+    # chatsan-word-33: chatsan-replacement-33
+    # chatsan-word-34: chatsan-replacement-34
+    # chatsan-word-35: chatsan-replacement-35
+    # chatsan-word-36: chatsan-replacement-36
     chatsan-word-37: chatsan-replacement-37
     chatsan-word-38: chatsan-replacement-38
-    chatsan-word-39: chatsan-replacement-39
-    chatsan-word-40: chatsan-replacement-40
+    chatsan-word-39: chatsan-replacement-etcetera
+    chatsan-word-40: chatsan-replacement-etcetera
     chatsan-word-41: chatsan-replacement-41
     chatsan-word-42: chatsan-replacement-42
     chatsan-word-43: chatsan-replacement-43
@@ -448,67 +448,10 @@
     chatsan-word-65: chatsan-replacement-65
     chatsan-word-66: chatsan-replacement-66
     chatsan-word-67: chatsan-replacement-67
-    chatsan-word-68: chatsan-replacement-68
-    chatsan-word-69: chatsan-replacement-69
-    chatsan-word-70: chatsan-replacement-70
-    chatsan-word-71: chatsan-replacement-71
-    chatsan-word-72: chatsan-replacement-72
-#    chatsan-word-73: chatsan-replacement-73
-#    chatsan-word-74: chatsan-replacement-74
-    chatsan-word-75: chatsan-replacement-75
-    chatsan-word-76: chatsan-replacement-76
-    chatsan-word-77: chatsan-replacement-77
-    chatsan-word-78: chatsan-replacement-78
-    chatsan-word-79: chatsan-replacement-79
-    chatsan-word-80: chatsan-replacement-80
-    chatsan-word-81: chatsan-replacement-81
-    chatsan-word-82: chatsan-replacement-82
-    chatsan-word-83: chatsan-replacement-83
-    chatsan-word-84: chatsan-replacement-84
-    chatsan-word-85: chatsan-replacement-85
-    chatsan-word-86: chatsan-replacement-86
-    chatsan-word-87: chatsan-replacement-87
-    chatsan-word-88: chatsan-replacement-88
-    chatsan-word-89: chatsan-replacement-89
-    chatsan-word-90: chatsan-replacement-90
-    chatsan-word-91: chatsan-replacement-91
-    chatsan-word-92: chatsan-replacement-92
-    chatsan-word-93: chatsan-replacement-93
-    chatsan-word-94: chatsan-replacement-94
-    chatsan-word-95: chatsan-replacement-95
-    chatsan-word-96: chatsan-replacement-96
-    chatsan-word-97: chatsan-replacement-97
-    chatsan-word-98: chatsan-replacement-98
-    chatsan-word-99: chatsan-replacement-99
-    chatsan-word-100: chatsan-replacement-100
-    chatsan-word-101: chatsan-replacement-101
-    chatsan-word-102: chatsan-replacement-102
-    chatsan-word-103: chatsan-replacement-103
-    chatsan-word-104: chatsan-replacement-104
-    chatsan-word-105: chatsan-replacement-105
-    chatsan-word-106: chatsan-replacement-106
-    chatsan-word-107: chatsan-replacement-107
-    chatsan-word-108: chatsan-replacement-108
-    chatsan-word-109: chatsan-replacement-109
-    chatsan-word-110: chatsan-replacement-110
-    chatsan-word-111: chatsan-replacement-111
-    chatsan-word-112: chatsan-replacement-112
-    chatsan-word-113: chatsan-replacement-113
-    chatsan-word-114: chatsan-replacement-114
-    chatsan-word-115: chatsan-replacement-115
-    chatsan-word-116: chatsan-replacement-116
-    chatsan-word-117: chatsan-replacement-117
-    chatsan-word-118: chatsan-replacement-118
-    chatsan-word-119: chatsan-replacement-119
-    chatsan-word-120: chatsan-replacement-120
-    chatsan-word-121: chatsan-replacement-121
-    chatsan-word-122: chatsan-replacement-122
-    chatsan-word-123: chatsan-replacement-123
-    chatsan-word-124: chatsan-replacement-124
-    chatsan-word-125: chatsan-replacement-125
 
 - type: accent
   id: liar
+  replacementChance: 0.15
   wordReplacements:
     liar-word-1: liar-word-replacement-1
     liar-word-2: liar-word-replacement-2
@@ -553,3 +496,94 @@
     liar-word-40: liar-word-replacement-40
     liar-word-41: liar-word-replacement-41
     liar-word-42: liar-word-replacement-42
+
+- type: accent
+  id: german
+  wordReplacements:
+    accent-german-words-1: accent-german-words-replace-1
+    accent-german-words-1-2: accent-german-words-replace-1
+    accent-german-words-2: accent-german-words-replace-2
+    accent-german-words-3: accent-german-words-replace-3
+    accent-german-words-4: accent-german-words-replace-4
+    accent-german-words-5: accent-german-words-replace-5
+    accent-german-words-6: accent-german-words-replace-6
+    accent-german-words-7: accent-german-words-replace-7
+    accent-german-words-8: accent-german-words-replace-8
+    accent-german-words-9: accent-german-words-replace-9
+    accent-german-words-9-2: accent-german-words-replace-9
+    accent-german-words-10: accent-german-words-replace-10
+    accent-german-words-10-2: accent-german-words-replace-10
+    accent-german-words-11: accent-german-words-replace-11
+    accent-german-words-12: accent-german-words-replace-12
+    accent-german-words-13: accent-german-words-replace-13
+    accent-german-words-14: accent-german-words-replace-14
+    accent-german-words-15: accent-german-words-replace-15
+    accent-german-words-16: accent-german-words-replace-16
+    accent-german-words-17: accent-german-words-replace-17
+    accent-german-words-18: accent-german-words-replace-18
+    accent-german-words-19: accent-german-words-replace-19
+    accent-german-words-20: accent-german-words-replace-20
+    accent-german-words-21: accent-german-words-replace-21
+    accent-german-words-22: accent-german-words-replace-22
+    accent-german-words-23: accent-german-words-replace-23
+    accent-german-words-24: accent-german-words-replace-24
+    accent-german-words-25: accent-german-words-replace-25
+    accent-german-words-26: accent-german-words-replace-26
+    accent-german-words-27: accent-german-words-replace-27
+    accent-german-words-28: accent-german-words-replace-28
+    accent-german-words-29: accent-german-words-replace-29
+    accent-german-words-30: accent-german-words-replace-30
+    accent-german-words-31: accent-german-words-replace-31
+    accent-german-words-32: accent-german-words-replace-32
+    accent-german-words-32-2: accent-german-words-replace-32
+    accent-german-words-33: accent-german-words-replace-33
+    accent-german-words-34: accent-german-words-replace-34
+    accent-german-words-35: accent-german-words-replace-35
+    accent-german-words-36: accent-german-words-replace-36
+    accent-german-words-37: accent-german-words-replace-37
+    accent-german-words-38: accent-german-words-replace-38
+    accent-german-words-38-2: accent-german-words-replace-38
+    accent-german-words-39: accent-german-words-replace-39
+    accent-german-words-40: accent-german-words-replace-40
+    accent-german-words-41: accent-german-words-replace-41
+    accent-german-words-42: accent-german-words-replace-42
+    accent-german-words-43: accent-german-words-replace-43
+    accent-german-words-44: accent-german-words-replace-44
+    accent-german-words-45: accent-german-words-replace-45
+    accent-german-words-46: accent-german-words-replace-46
+    accent-german-words-47: accent-german-words-replace-47
+    accent-german-words-47-2: accent-german-words-replace-47
+    accent-german-words-48: accent-german-words-replace-48
+    accent-german-words-49: accent-german-words-replace-49
+    accent-german-words-50: accent-german-words-replace-50
+    accent-german-words-51: accent-german-words-replace-51
+    accent-german-words-52: accent-german-words-replace-52
+    accent-german-words-53: accent-german-words-replace-53
+    accent-german-words-53-2: accent-german-words-replace-53
+    accent-german-words-54: accent-german-words-replace-54
+    accent-german-words-55: accent-german-words-replace-55
+    accent-german-words-56: accent-german-words-replace-56
+    accent-german-words-56-2: accent-german-words-replace-56
+    accent-german-words-56-3: accent-german-words-replace-56
+    accent-german-words-57: accent-german-words-replace-57
+    accent-german-words-57-2: accent-german-words-replace-57
+    accent-german-words-58: accent-german-words-replace-58
+    accent-german-words-59: accent-german-words-replace-59
+    accent-german-words-60: accent-german-words-replace-60
+    accent-german-words-61: accent-german-words-replace-61
+    accent-german-words-61-2: accent-german-words-replace-61
+    accent-german-words-61-3: accent-german-words-replace-61
+    accent-german-words-61-4: accent-german-words-replace-61
+    accent-german-words-62: accent-german-words-replace-62
+
+- type: accent
+  id: russian
+  wordReplacements:
+    accent-russian-words-1: accent-russian-words-replace-1
+    accent-russian-words-2: accent-russian-words-replace-2
+    accent-russian-words-3: accent-russian-words-replace-3
+    accent-russian-words-3-2: accent-russian-words-replace-3
+    accent-russian-words-3-3: accent-russian-words-replace-3
+    accent-russian-words-4: accent-russian-words-replace-4
+    accent-russian-words-5: accent-russian-words-replace-5
+    accent-russian-words-6: accent-russian-words-replace-6

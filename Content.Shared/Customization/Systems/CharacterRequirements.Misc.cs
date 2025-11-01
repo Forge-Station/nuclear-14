@@ -1,3 +1,5 @@
+using Content.Shared.Customization.Systems;
+using Content.Shared.Mind;
 using Content.Shared.Preferences;
 using Content.Shared.Roles;
 using JetBrains.Annotations;
@@ -27,7 +29,7 @@ public sealed partial class CVarRequirement : CharacterRequirement
     public override bool IsValid(
         JobPrototype job,
         HumanoidCharacterProfile profile,
-        Dictionary<string, TimeSpan> playTimes,
+        IReadOnlyDictionary<string, TimeSpan> playTimes,
         bool whitelisted,
         IPrototype prototype,
         IEntityManager entityManager,
@@ -35,7 +37,8 @@ public sealed partial class CVarRequirement : CharacterRequirement
         IConfigurationManager configManager,
         ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
-        int depth = 0
+        int depth = 0,
+        MindComponent? mind = null
     )
     {
         if (!configManager.IsCVarRegistered(CVar))
@@ -68,15 +71,17 @@ public sealed partial class MinPlayersRequirement : CharacterRequirement
     public override bool IsValid(
         JobPrototype job,
         HumanoidCharacterProfile profile,
-        Dictionary<string, TimeSpan> playTimes,
+        IReadOnlyDictionary<string, TimeSpan> playTimes,
         bool whitelisted,
         IPrototype prototype,
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
-        ISharedSponsorManager sponsorManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
-        int depth = 0)
+        int depth = 0,
+        MindComponent? mind = null
+    )
     {
         var playerManager = IoCManager.Resolve<ISharedPlayerManager>();
         var playerCount = playerManager.PlayerCount;
