@@ -1,0 +1,11 @@
+- type: entity
+  parent: N14DecorationFlagFlammable
+  id: N14DecorationFlagLegion
+  name: Legion flag
+  description: Placeholder.
+  components:
+  - type: Sprite
+    state: legionflag
+  - type: Construction
+    graph: DecorationFlagLegion
+    node: FlagLegion

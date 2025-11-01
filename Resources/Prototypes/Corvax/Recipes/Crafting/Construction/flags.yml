@@ -109,3 +109,19 @@
     state: followersflag
   conditions:
     - !type:TileNotBlocked
+
+- type: construction
+  id: N14DecorationFlagLegion # Legion
+  graph: DecorationFlagLegion
+  startNode: start
+  targetNode: FlagLegion
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Decoration/flags.rsi
+    state: legionflag
+  conditions:
+    - !type:TileNotBlocked

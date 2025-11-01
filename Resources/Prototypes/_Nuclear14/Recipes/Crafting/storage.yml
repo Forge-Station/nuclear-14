@@ -21,7 +21,7 @@
   targetNode: sack
   category: construction-category-storage
   description: A sack for storing compost.
-  hide: false
+  hide: true # hidden till fixed (Forge-Change)
   icon:
     sprite: _Nuclear14/Objects/Misc/Sacks/daesack3.rsi
     state: icon
