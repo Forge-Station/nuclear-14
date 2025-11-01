@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Server._NC.Sponsor; // Forge-Change
 using Content.Shared.Administration.Logs;
 using Content.Server.Administration.Systems;
 using Content.Shared.CCVar;
@@ -37,6 +38,7 @@ public sealed class TraitSystem : EntitySystem
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly IChatManager _chatManager = default!;
     [Dependency] private readonly ISharedAdminLogManager _adminLogManager = default!;
+    [Dependency] private readonly SponsorManager _sponsorManager = default!; // Forge-Change
 
     public override void Initialize()
     {
@@ -96,7 +98,7 @@ public sealed class TraitSystem : EntitySystem
                 jobPrototypeToUse,
                 profile, playTimes, whitelisted, traitPrototype,
                 EntityManager, _prototype, _configuration,
-                out _))
+                _sponsorManager, out _))
                 continue;
 
             // To check for cheaters. :FaridaBirb.png:

@@ -23,12 +23,6 @@ namespace Content.Shared.Damage.Prototypes
         [ViewVariables(VVAccess.ReadOnly)]
         public string LocalizedName => Loc.GetString(Name);
 
-        [DataField(required: true)]
-        private LocId Name { get; set; }
-
-        [ViewVariables(VVAccess.ReadOnly)]
-        public string LocalizedName => Loc.GetString(Name);
-
         [DataField("damageTypes", required: true, customTypeSerializer: typeof(PrototypeIdListSerializer<DamageTypePrototype>))]
         public List<string> DamageTypes { get; private set; } = default!;
     }

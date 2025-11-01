@@ -69,8 +69,6 @@ namespace Content.Server.Zombies
 
             SubscribeLocalEvent<IncurableZombieComponent, MapInitEvent>(OnPendingMapInit);
 
-            SubscribeLocalEvent<IncurableZombieComponent, MapInitEvent>(OnPendingMapInit);
-
             SubscribeLocalEvent<ZombifyOnDeathComponent, MobStateChangedEvent>(OnDamageChanged);
 
         }
@@ -80,11 +78,6 @@ namespace Content.Server.Zombies
             // Pending zombies (e.g. infected non-zombies) do not remove their hosted anomaly on death.
             // Current zombies DO remove the anomaly on death.
             args.Cancelled = true;
-        }
-
-        private void OnPendingMapInit(EntityUid uid, IncurableZombieComponent component, MapInitEvent args)
-        {
-            _actions.AddAction(uid, ref component.Action, component.ZombifySelfActionPrototype);
         }
 
         private void OnPendingMapInit(EntityUid uid, IncurableZombieComponent component, MapInitEvent args)

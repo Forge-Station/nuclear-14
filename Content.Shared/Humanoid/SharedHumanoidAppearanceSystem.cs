@@ -21,6 +21,10 @@ using Robust.Shared.Serialization.Markdown;
 using Robust.Shared.Utility;
 using YamlDotNet.RepresentationModel;
 using Content.Shared._EE.GenderChange;
+using Content.Shared._NC.Speech.Synthesis; // Forge-Change
+using Content.Shared._NC.Speech.Synthesis.Components; // Forge-Change
+using Content.Shared._NC.TTS; // Forge-Change
+
 
 namespace Content.Shared.Humanoid;
 
@@ -54,6 +58,21 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
 
     [ValidatePrototypeId<LifepathPrototype>]
     public const string DefaultLifepath = "Spacer";
+    
+    // Forge-Fallout-Barks-start
+    [ValidatePrototypeId<BarkPrototype>]
+    public const string DefaultBarkVoice = "BarksGoonSpeak1";
+    // Forge-Fallout-Barks-end
+    
+    // Corvax-TTS-Start
+    public const string DefaultVoice = "Garithos";
+    public static readonly Dictionary<Sex, string> DefaultSexVoice = new()
+    {
+        {Sex.Male, "Garithos"},
+        {Sex.Female, "Maiev"},
+        {Sex.Unsexed, "Myron"},
+    };
+    // Corvax-TTS-End
 
     public override void Initialize()
     {
@@ -368,6 +387,29 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
         if (sync)
             Dirty(uid, humanoid);
     }
+    
+    // Corvax-TTS-Start
+    // ReSharper disable once InconsistentNaming
+    public void SetTTSVoice(EntityUid uid, string voiceId, HumanoidAppearanceComponent humanoid)
+    {
+        if (!TryComp<TTSComponent>(uid, out var comp))
+            return;
+
+        humanoid.Voice = voiceId;
+        comp.VoicePrototypeId = voiceId;
+    }
+    // Corvax-TTS-End
+    
+    // Corvax-Fallout-Barks-start
+    public void SetBarkVoice(EntityUid uid, string? barkvoiceId, HumanoidAppearanceComponent humanoid)
+    {
+        if (!TryComp<SpeechSynthesisComponent>(uid, out var comp))
+            return;
+
+        humanoid.BarkVoice = barkvoiceId ?? DefaultBarkVoice;
+        comp.VoicePrototypeId = barkvoiceId;
+    }
+    // Corvax-Fallout-Barks-end
 
     /// <summary>
     ///     Loads a humanoid character profile directly onto this humanoid mob.
@@ -389,6 +431,8 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
 
         SetSpecies(uid, profile.Species, false, humanoid);
         SetSex(uid, profile.Sex, false, humanoid);
+        SetBarkVoice(uid, profile.BarkVoice, humanoid); // Corvax-Fallout-Barks
+        SetTTSVoice(uid, profile.Voice, humanoid); // Corvax-TTS
 
         humanoid.Gender = profile.Gender;
         if (TryComp<GrammarComponent>(uid, out var grammar))

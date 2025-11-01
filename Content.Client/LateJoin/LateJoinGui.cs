@@ -6,6 +6,7 @@ using Content.Client.Lobby;
 using Content.Client.UserInterface.Controls;
 using Content.Client.Players.PlayTimeTracking;
 using Content.Client.Roles;
+using Content.Shared._NC.Sponsor; // Forge-Change
 using Content.Shared.CCVar;
 using Content.Shared.Customization.Systems;
 using Content.Shared.Preferences;
@@ -32,6 +33,7 @@ namespace Content.Client.LateJoin
         [Dependency] private readonly JobRequirementsManager _jobRequirements = default!;
         [Dependency] private readonly IEntityManager _entityManager = default!;
         [Dependency] private readonly IClientPreferencesManager _prefs = default!;
+        [Dependency] private readonly ISharedSponsorManager _sponsorManager = default!; // Forge-Change
 
         public event Action<(NetEntity, string)> SelectedId;
 
@@ -292,6 +294,7 @@ namespace Content.Client.LateJoin
                                 _entityManager,
                                 _prototypeManager,
                                 _configManager,
+                                _sponsorManager, // Forge-Change
                                 out var reasons))
                         {
                             jobButton.Disabled = true;

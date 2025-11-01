@@ -5,6 +5,8 @@ using Content.Shared.Interaction.Components;
 using Content.Shared.NPC.Systems;
 using Content.Shared.NPC.Components;
 using Content.Shared.Inventory.Events;
+using Robust.Shared.Prototypes;
+
 
 namespace Content.Server._NC.ClothingFactionAndRoleAdd;
 
@@ -30,17 +32,17 @@ public sealed partial class ClothingFactionAndRoleAddSystem : EntitySystem
             return;
 
         var mindId = mind.Mind.Value;
-        if (_job.MindTryGetJob(mindId, out _, out JobPrototype? prototype)
+        if (_job.MindTryGetJob(mindId, out JobPrototype? prototype)
             && !_job.MindHasJobWithId(mindId, component.JobId))
         {
             if (!_removedJobs.ContainsKey(user))
             {
                 _removedJobs[user] = prototype.ID;
-                _roles.MindTryRemoveRole<JobComponent>(mindId);
+                _roles.MindTryRemoveRole<JobRoleComponent>(mindId);
             }
-            _roles.MindAddRole(mindId, new JobComponent { Prototype = component.JobId });
+            _roles.MindAddRole(mindId, component.JobId);
         }
-        else _roles.MindAddRole(mindId, new JobComponent { Prototype = component.JobId });
+        else _roles.MindAddRole(mindId, component.JobId);
 
         if (TryComp(user, out NpcFactionMemberComponent? npc) && !_npcFaction.IsMember(user, component.Faction))
         {
@@ -70,11 +72,11 @@ public sealed partial class ClothingFactionAndRoleAddSystem : EntitySystem
             return;
 
         var mindId = mind.Mind.Value;
-        if (_roles.MindTryRemoveRole<JobComponent>(mindId))
+        if (_roles.MindTryRemoveRole<JobRoleComponent>(mindId))
         {
             if (_removedJobs.TryGetValue(user, out var job))
             {
-                _roles.MindAddRole(mindId, new JobComponent { Prototype = job });
+                _roles.MindAddRole(mindId, job);
                 _removedJobs.Remove(user);
             }
         }

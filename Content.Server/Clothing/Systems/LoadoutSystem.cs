@@ -2,18 +2,22 @@ using System.Linq;
 using Content.Server.Paint;
 using Content.Server.Players.PlayTimeTracking;
 using Content.Shared.CCVar;
+using Content.Shared.Clothing.Components;
 using Content.Shared.Clothing.Loadouts.Prototypes;
 using Content.Shared.Clothing.Loadouts.Systems;
 using Content.Shared.GameTicking;
 using Content.Shared.Humanoid;
 using Content.Shared.Inventory;
 using Content.Shared.Item;
+using Content.Shared.Mind.Components;
 using Content.Shared.Players;
 using Content.Shared.Preferences;
 using Content.Shared.Roles;
+using Content.Shared.Roles.Jobs;
 using Content.Shared.Storage;
 using Content.Shared.Storage.EntitySystems;
 using Content.Shared.Traits.Assorted.Components;
+using Robust.Shared.Collections;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
@@ -174,7 +178,7 @@ public sealed class LoadoutSystem : EntitySystem
         if (!TryComp(uid, out MindContainerComponent? mind) || mind.Mind == null)
             return;
     
-        if (!_job.MindTryGetJob(mind.Mind.Value, out _, out var jobPrototype) || jobPrototype.StartingGear == null)
+        if (!_job.MindTryGetJob(mind.Mind.Value, out var jobPrototype) || jobPrototype.StartingGear == null)
             return;
     
         if (!_protoMan.TryIndex(jobPrototype.StartingGear, out StartingGearPrototype? gear))

@@ -1,3 +1,4 @@
+using Content.Server._NC.Sponsor; // Forge-Change
 using Content.Server.Players.PlayTimeTracking;
 using Content.Shared._EE.Contractors.Prototypes;
 using Content.Shared.CCVar;
@@ -22,6 +23,7 @@ public sealed class LifepathSystem : EntitySystem
     [Dependency] private readonly PlayTimeTrackingManager _playTimeTracking = default!;
     [Dependency] private readonly IConfigurationManager _configuration = default!;
     [Dependency] private readonly IComponentFactory _componentFactory = default!;
+    [Dependency] private readonly SponsorManager _sponsorManager = default!; // Forge-Change
 
     public override void Initialize()
     {
@@ -63,7 +65,7 @@ public sealed class LifepathSystem : EntitySystem
             lifepathPrototype.Requirements,
             jobPrototypeToUse,
             profile, playTimes, whitelisted, lifepathPrototype,
-            EntityManager, _prototype, _configuration,
+            EntityManager, _prototype, _configuration, _sponsorManager,
             out _))
             return;
 

@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿/*
+using System.Numerics;
 using Content.Client.Construction;
 using Content.Client.UserInterface.Controls;
 using Content.Shared.Construction.Prototypes;
@@ -126,3 +127,4 @@ public sealed class ShortConstructionMenuBUI : BoundUserInterface
         _menu!.Close();
     }
 }
+*/

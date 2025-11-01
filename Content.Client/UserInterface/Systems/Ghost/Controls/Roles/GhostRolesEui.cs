@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Client._NC.Sponsor; // Forge-Change
 using Content.Client.Eui;
 using Content.Client.Lobby;
 using Content.Client.Players.PlayTimeTracking;
@@ -99,6 +100,7 @@ namespace Content.Client.UserInterface.Systems.Ghost.Controls.Roles
             var prefs = IoCManager.Resolve<IClientPreferencesManager>();
             var protoMan = IoCManager.Resolve<IPrototypeManager>();
             var configManager = IoCManager.Resolve<IConfigurationManager>();
+            var sponsorManager = IoCManager.Resolve<SponsorManager>(); // Forge-Change
 
             // TODO: role.Requirements value doesn't work at all as an equality key, this must be fixed
             // Grouping roles
@@ -123,6 +125,7 @@ namespace Content.Client.UserInterface.Systems.Ghost.Controls.Roles
                     entityManager,
                     protoMan,
                     configManager,
+                    sponsorManager,
                     out var reasons))
                     hasAccess = false;
 

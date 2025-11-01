@@ -1,6 +1,8 @@
 using Content.Server.GameTicking.Rules.Components;
 using Content.Server.Mind;
 using Content.Server.Objectives;
+using Content.Shared.GameTicking;
+
 
 namespace Content.Server.GameTicking.Rules;
 
@@ -22,7 +24,7 @@ public sealed class N14RuleSystem : GameRuleSystem<N14RuleComponent>
         {
             if (_mindSystem.TryGetMind(args.Player, out var mindId, out var mind))
             {
-                var objective = _objectives.GetRandomObjective(mindId, mind, "N14Objectives");
+                var objective = _objectives.GetRandomObjective(mindId, mind, "N14Objectives" , 1);
                 if (objective != null)
                 {
                     Logger.DebugS("n14rule", $"Added objective {objective.Value} for {args.Player}");

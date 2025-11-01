@@ -166,9 +166,9 @@ public sealed class ChatSanitizationManager : IChatSanitizationManager
 
         // -1 is just a canary for nothing found yet
         var lastEmoteIndex = -1;
-
+        
         // Apply Anti-Goida filter
-        input = GoydaRegex.Replace(input, "Я долбоёб");
+        message = GoydaRegex.Replace(message, "Я долбоёб");
 
         foreach (var (shorthand, emoteKey) in ShorthandToEmote)
         {

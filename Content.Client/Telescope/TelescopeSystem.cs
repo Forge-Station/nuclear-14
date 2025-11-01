@@ -1,3 +1,4 @@
+/*
 using System.Numerics;
 using Content.Client.Viewport;
 using Content.Shared.CCVar;
@@ -126,3 +127,4 @@ public sealed class TelescopeSystem : SharedTelescopeSystem
         });
     }
 }
+*/

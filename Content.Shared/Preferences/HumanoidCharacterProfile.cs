@@ -413,16 +413,14 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
         else
             dictionary[jobId] = priority;
 
-        public HumanoidCharacterProfile WithPreferenceUnavailable(PreferenceUnavailableMode mode)
-        {
-            return new(this) { PreferenceUnavailable = mode };
-        }
+        return new(this) { _jobPriorities = dictionary };
+    }
 
     public HumanoidCharacterProfile WithPreferenceUnavailable(PreferenceUnavailableMode mode) =>
         new(this) { PreferenceUnavailable = mode };
     public HumanoidCharacterProfile WithAntagPreferences(IEnumerable<ProtoId<AntagPrototype>> antagPreferences) =>
         new(this) { _antagPreferences = new HashSet<ProtoId<AntagPrototype>>(antagPreferences) };
-
+    
     public HumanoidCharacterProfile WithAntagPreference(ProtoId<AntagPrototype> antagId, bool pref)
     {
         var list = new HashSet<ProtoId<AntagPrototype>>(_antagPreferences);

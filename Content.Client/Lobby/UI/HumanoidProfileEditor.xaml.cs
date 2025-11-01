@@ -753,7 +753,8 @@ namespace Content.Client.Lobby.UI
                     o,
                     _entManager,
                     _prototypeManager,
-                    _cfgManager, out _)));
+                    _cfgManager, 
+                    _sponsorMan, out _)));
 
             var nationalityIds = _nationalies.Select(o => o.ID).ToList();
 
@@ -787,7 +788,8 @@ namespace Content.Client.Lobby.UI
                 o,
                 _entManager,
                 _prototypeManager,
-                _cfgManager, out _)));
+                _cfgManager, 
+                _sponsorMan, out _)));
 
             var employerIds = _employers.Select(o => o.ID).ToList();
 
@@ -821,7 +823,8 @@ namespace Content.Client.Lobby.UI
                 o,
                 _entManager,
                 _prototypeManager,
-                _cfgManager, out _)));
+                _cfgManager, 
+                _sponsorMan, out _)));
 
             var lifepathIds = _lifepaths.Select(o => o.ID).ToList();
 
@@ -1505,7 +1508,7 @@ namespace Content.Client.Lobby.UI
         }
         // Corvax-TTS-End
 
-        private bool IsDirty
+        public bool IsDirty
         {
             get => _isDirty;
             set

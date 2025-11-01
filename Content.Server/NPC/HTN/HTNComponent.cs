@@ -10,7 +10,7 @@ public sealed partial class HTNComponent : NPCComponent
     /// The base task to use for planning
     /// </summary>
     [ViewVariables(VVAccess.ReadWrite),
-    DataField("rootTask", required: true)]
+     DataField("rootTask", required: true)]
     public HTNCompoundTask RootTask = default!;
 
     /// <summary>
@@ -32,10 +32,10 @@ public sealed partial class HTNComponent : NPCComponent
     public float PlanCooldown = 0.45f;
 
     /// <summary>
-    /// Game time when we can next try re-planning.
+    /// How much longer until we can try re-planning. This will happen even during update in case something changed.
     /// </summary>
     [ViewVariables(VVAccess.ReadWrite)]
-    public TimeSpan NextPlanTime;
+    public float PlanAccumulator = 0f;
 
     [ViewVariables]
     public HTNPlanJob? PlanningJob = null;

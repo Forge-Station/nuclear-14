@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using Content.Client._NC.Sponsor;
 using Content.Client.Guidebook;
 using Content.Client.Paint;
 using Content.Client.Players.PlayTimeTracking;
@@ -89,7 +90,8 @@ public sealed partial class LoadoutPreferenceSelector : Control
     public LoadoutPreferenceSelector(LoadoutPrototype loadout, JobPrototype highJob,
         HumanoidCharacterProfile profile, ref Dictionary<string, EntityUid> entities,
         IEntityManager entityManager, IPrototypeManager prototypeManager, IConfigurationManager configManager,
-        CharacterRequirementsSystem characterRequirementsSystem, JobRequirementsManager jobRequirementsManager)
+        CharacterRequirementsSystem characterRequirementsSystem, JobRequirementsManager jobRequirementsManager, 
+        SponsorManager sponsorManager)
     {
         RobustXamlLoader.Load(this);
 
@@ -276,7 +278,7 @@ public sealed partial class LoadoutPreferenceSelector : Control
                 {
                     requirement.IsValid(
                         highJob, profile, new Dictionary<string, TimeSpan>(), jobRequirementsManager.IsWhitelisted(), loadout,
-                        entityManager, prototypeManager, configManager, out var reason);
+                        entityManager, prototypeManager, configManager, sponsorManager, out var reason);
                     box.AddChild(new RichTextLabel { Text = reason?.Split("\n")[0], Margin = new(8, 2), });
                     var newBox = new BoxContainer { Orientation = BoxContainer.LayoutOrientation.Vertical, };
                     box.AddChild(new PanelContainer
@@ -296,7 +298,7 @@ public sealed partial class LoadoutPreferenceSelector : Control
                 {
                     requirement.IsValid(
                         highJob, profile, new Dictionary<string, TimeSpan>(), jobRequirementsManager.IsWhitelisted(), loadout,
-                        entityManager, prototypeManager, configManager, out var reason);
+                        entityManager, prototypeManager, configManager, sponsorManager, out var reason);
                     box.AddChild(new RichTextLabel
                     {
                         Text = reason,

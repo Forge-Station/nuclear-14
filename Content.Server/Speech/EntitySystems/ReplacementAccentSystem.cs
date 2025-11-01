@@ -25,9 +25,6 @@ namespace Content.Server.Speech.EntitySystems
 
         private void OnAccent(EntityUid uid, ReplacementAccentComponent component, AccentGetEvent args)
         {
-            if (!_random.Prob(component.ReplacementChance))
-                return;
-
             args.Message = ApplyReplacements(args.Message, component.Accent);
         }
 

@@ -1,3 +1,4 @@
+using Content.Server._NC.Sponsor; // Forge-Change
 using Content.Server.Thief.Components;
 using Content.Shared.Customization.Systems;
 using Content.Shared.Humanoid;
@@ -23,6 +24,7 @@ public sealed class ThiefUndeterminedBackpackSystem : EntitySystem
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
     [Dependency] private readonly CharacterRequirementsSystem _characterRequirements = default!;
+    [Dependency] private readonly SponsorManager _sponsorManager = default!; // Forge-Change
 
     public override void Initialize()
     {
@@ -81,7 +83,8 @@ public sealed class ThiefUndeterminedBackpackSystem : EntitySystem
                 appearance.LastProfileLoaded != null &&
                 !_characterRequirements.CheckRequirementsValid(
                     set.Requirements, new JobPrototype() /* not gonna bother with jobs */,
-                    appearance.LastProfileLoaded, new Dictionary<string, TimeSpan>(), false, set, EntityManager, _proto, _config, out _))
+                    appearance.LastProfileLoaded, new Dictionary<string, TimeSpan>(), false,
+                    set, EntityManager, _proto, _config, _sponsorManager, out _))
                 continue;
 
             var selected = component.SelectedSets.Contains(i);

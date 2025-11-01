@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Text;
+using Content.Client._NC.Sponsor;
 using Content.Client.Players.PlayTimeTracking;
 using Content.Client.Stylesheets;
 using Content.Shared.Customization.Systems;
@@ -48,7 +49,8 @@ public sealed partial class TraitPreferenceSelector : Control
 
     public TraitPreferenceSelector(TraitPrototype trait, JobPrototype highJob, HumanoidCharacterProfile profile,
         IEntityManager entityManager, IPrototypeManager prototypeManager, IConfigurationManager configManager,
-        CharacterRequirementsSystem characterRequirementsSystem, JobRequirementsManager jobRequirementsManager)
+        CharacterRequirementsSystem characterRequirementsSystem, JobRequirementsManager jobRequirementsManager,
+        SponsorManager sponsorManager)
     {
         RobustXamlLoader.Load(this);
 
@@ -110,7 +112,7 @@ public sealed partial class TraitPreferenceSelector : Control
                 {
                     requirement.IsValid(
                         highJob, profile, new Dictionary<string, TimeSpan>(), jobRequirementsManager.IsWhitelisted(), trait,
-                        entityManager, prototypeManager, configManager, out var reason);
+                        entityManager, prototypeManager, configManager, sponsorManager, out var reason);
                     box.AddChild(new RichTextLabel { Text = reason?.Split("\n")[0], Margin = new(8, 2), });
                     var newBox = new BoxContainer { Orientation = BoxContainer.LayoutOrientation.Vertical, };
                     box.AddChild(new PanelContainer
@@ -130,7 +132,7 @@ public sealed partial class TraitPreferenceSelector : Control
                 {
                     requirement.IsValid(
                         highJob, profile, new Dictionary<string, TimeSpan>(), jobRequirementsManager.IsWhitelisted(), trait,
-                        entityManager, prototypeManager, configManager, out var reason);
+                        entityManager, prototypeManager, configManager, sponsorManager, out var reason);
                     box.AddChild(new RichTextLabel
                     {
                         Text = reason,

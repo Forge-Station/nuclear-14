@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Client._NC.Sponsor; // Forge-Change
 using Content.Client.Guidebook;
 using Content.Client.Humanoid;
 using Content.Client.Inventory;
@@ -43,6 +44,7 @@ public sealed class LobbyUIController : UIController, IOnStateEntered<LobbyState
     [Dependency] private readonly IStateManager _stateManager = default!;
     [Dependency] private readonly JobRequirementsManager _jobRequirements = default!;
     [Dependency] private readonly MarkingManager _markings = default!;
+    [Dependency] private readonly SponsorManager _sponsorManager = default!; // Forge-Change
     [UISystemDependency] private readonly HumanoidAppearanceSystem _humanoid = default!;
     [UISystemDependency] private readonly ClientInventorySystem _inventory = default!;
     [UISystemDependency] private readonly GuidebookSystem _guide = default!;
@@ -261,7 +263,8 @@ public sealed class LobbyUIController : UIController, IOnStateEntered<LobbyState
             _resourceCache,
             _jobRequirements,
             _markings,
-            _random);
+            _random,
+            _sponsorManager);
 
         _profileEditor.OnOpenGuidebook += _guide.OpenHelp;
 

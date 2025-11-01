@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Server._NC.Sponsor; // Forge-Change
 using Content.Server.Administration;
 using Content.Server.Administration.Managers;
 using Content.Server.Afk;
@@ -41,6 +42,7 @@ public sealed class PlayTimeTrackingSystem : EntitySystem
     [Dependency] private readonly IPlayerManager _playerManager = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
     [Dependency] private readonly SharedRoleSystem _roles = default!;
+    [Dependency] private readonly SponsorManager _sponsorManager = default!; // Forge-Change
 
     public override void Initialize()
     {
@@ -219,6 +221,7 @@ public sealed class PlayTimeTrackingSystem : EntitySystem
             EntityManager,
             _prototypes,
             _cfg,
+            _sponsorManager, // Forge-Change
             out _);
     }
 
@@ -250,6 +253,7 @@ public sealed class PlayTimeTrackingSystem : EntitySystem
                 EntityManager,
                 _prototypes,
                 _cfg,
+                _sponsorManager, // Forge-Change
                 out _))
                 continue;
 
@@ -294,6 +298,7 @@ public sealed class PlayTimeTrackingSystem : EntitySystem
                 EntityManager,
                 _prototypes,
                 _cfg,
+                _sponsorManager, // Forge-Change
                 out _))
                 continue;
 
