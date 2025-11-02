@@ -84,7 +84,6 @@
   roles:
   - Survivor
   - Wastelander
-  - WastelandFarmer
   - WastelandMusician
   - WastelandScavenger
 
@@ -104,6 +103,7 @@
   - WastelandReporter # Moved from the Wastelander department, ID unchanged to avoid glitches for players who have it selected.
   - TownMechanic
   - Townsperson
+  - WastelandFarmer # Forge-Change
 
 #- type: department #Disabled until roles are implemented.
 #  id: Zetan

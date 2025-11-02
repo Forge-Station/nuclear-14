@@ -28,7 +28,7 @@
         - Wastelander
         availableJobs:
           Wastelander: [ -1, -1 ]
-          WastelandScavenger: [ 3, 5 ]
+          # WastelandScavenger: [ 3, 5 ]
           WastelandReporter: [ 1, 2 ]
           # WastelandMusician: [ 2, 3 ]
           WastelandFarmer: [ 2, 3 ]
