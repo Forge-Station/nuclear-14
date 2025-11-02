@@ -384,13 +384,15 @@
   - type: Tag
     tags: 
     - JunkTimer
+
 - type: entity
-  parent: N14JunkItemBaseMetal
+  parent: FoodTinBaseTrash
   id: N14JunkTincan
   name: tin can
   description: An old metal can. Probably had food in it.
   components:
   - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi
     state: tincan
   - type: Tag
     tags:

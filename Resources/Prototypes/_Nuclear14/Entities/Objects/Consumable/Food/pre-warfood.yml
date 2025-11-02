@@ -299,7 +299,7 @@
       Cardboard: 100
 
 - type: entity
-  parent: N14FoodPacketTrash
+  parent: FoodTinBaseTrash
   id: N14FoodTinCanTrash
   name: empty tin can
   components:
