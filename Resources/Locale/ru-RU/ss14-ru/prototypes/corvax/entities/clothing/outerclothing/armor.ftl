@@ -53,5 +53,3 @@ ent-N14ClothingOuterNCRCombatVeteranKiltArmorDesert = боевая броня в
     .desc = { ent-N14ClothingOuterNCRCombatVeteranArmorDesert.desc }
 ent-N14ClothingOuterBOSInquisitorBattleArmor = боевая броня инквизитора СЗБС
     .desc = Усиленная броня чёрного цвета с гербами Братства Стали, созданная для защиты инквизиторов в ближнем бою и при штурмах.
-ent-N14ClothingOuterLeatherRobes = кожаная роба
-    .desc = Усиленная броня чёрного цвета с гербами Братства Стали, созданная для защиты инквизиторов в ближнем бою и при штурмах.
