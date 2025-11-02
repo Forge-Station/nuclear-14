@@ -81,7 +81,7 @@
     - N14TrainingSword
     - N14LongSword
     - N14Bola
-    # Blueprints
+    # Blueprints Corvax Forge
     - N14WeaponLaserRevolverBlueprint
     - N14WeaponLaserRifleMakeshiftBlueprint
     - N14WeaponRifle556PipeBlueprint
@@ -99,10 +99,6 @@
     - N14JunkGunpartsStock
     - N14JunkGunpartsStockWood
     - N14JunkGunpartsTrigger
-    # Blueprints Corvax Forge
-    - N14WeaponLaserRevolverBlueprint
-    - N14WeaponLaserRifleMakeshiftBlueprint
-    - N14WeaponRifle556PipeBlueprint
 
 - type: entity
   parent: N14WorkbenchBase
