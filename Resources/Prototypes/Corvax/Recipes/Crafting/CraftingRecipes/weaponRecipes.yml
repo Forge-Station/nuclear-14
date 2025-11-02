@@ -9,6 +9,9 @@
   # requiredIntelligence: 5 #TODO: Enable it after fixing the SPECIAL system
   craftTime: 10
   items:
+    N14WeaponRevolver45-70HandcannonBlueprint:
+      amount: 1
+      catalyzer: true
     N14JunkGunpartsFramePistol:
       amount: 1
     N14JunkComponentGearLarge:
@@ -47,6 +50,9 @@
   # requiredIntelligence: 5
   craftTime: 10
   items:
+    N14WeaponRevolver44TribalBlueprint:
+      amount: 1
+      catalyzer: true
     N14JunkGunpartsFramePistol:
       amount: 1
     N14JunkComponentGearSmall:
@@ -81,6 +87,9 @@
   # requiredIntelligence: 5
   craftTime: 10
   items:
+    N14ModificationkitRevolver44TribalBlueprint:
+      amount: 1
+      catalyzer: true
     N14JunkComponentGearLarge:
       amount: 1
     N14MaterialLeather1:
@@ -98,6 +107,9 @@
   # requiredIntelligence: 5
   craftTime: 10
   items:
+    N14ModificationkitRevolver44TribalUpgraded:
+      amount: 1
+      catalyzer: true
     N14JunkGunpartsRecoilComp:
       amount: 1
     N14Cartridge44Magnum:
@@ -113,6 +125,9 @@
   # requiredIntelligence: 6
   craftTime: 10
   items:
+    N14WeaponSniper556TribalBlueprint:
+      amount: 1
+      catalyzer: true
     N14JunkGunpartsRifleFrame:
       amount: 1
     N14JunkGunpartsTrigger:
@@ -143,6 +158,9 @@
   # requiredIntelligence: 6
   craftTime: 10
   items:
+    N14WeaponSniper556TribalUpgradedBlueprint:
+      amount: 1
+      catalyzer: true
     N14JunkGunpartsAdvancedFrame:
       amount: 1
     N14JunkGunpartsTrigger:
@@ -175,6 +193,9 @@
   # requiredIntelligence: 5
   craftTime: 10
   items:
+    N14WeaponLaserRevolverBlueprint:
+      amount: 1
+      catalyzer: true
     N14JunkGunpartsWeaponParts1:
       amount: 1
     N14JunkGunpartsTrigger:
@@ -203,6 +224,9 @@
   # requiredIntelligence: 6
   craftTime: 10
   items:
+    N14WeaponLaserRifleMakeshiftBlueprint:
+      amount: 1
+      catalyzer: true
     N14JunkGunpartsWeaponParts2:
       amount: 1
     N14JunkGunpartsTrigger:
@@ -233,6 +257,9 @@
   # requiredIntelligence: 6
   craftTime: 10
   items:
+    N14WeaponRifle556PipeBlueprint:
+      amount: 1
+      catalyzer: true
     N14JunkGunpartsAdvancedFrame:
       amount: 1
     N14JunkGunpartsTrigger:
