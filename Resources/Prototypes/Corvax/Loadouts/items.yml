@@ -1,0 +1,18 @@
+ - type: loadout
+   id: GeigerCounter
+   category: Items
+   cost: 4
+   requirements:
+   - !type:OverallTimeRequirement
+      min: 3600 # 60 min
+   - !type:CharacterDepartmentRequirement
+    departments:
+    - Vault
+    - Wastelander
+    - BrotherhoodMidwest
+    - Townsfolk
+    - NCR
+    - Vault
+    - Tribe
+   items:
+     - GeigerCounter

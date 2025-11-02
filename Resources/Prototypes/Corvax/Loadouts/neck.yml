@@ -1,0 +1,19 @@
+ - type: loadout
+   id: ClothingNeckCrucifixColor
+   category: Accessories
+   cost: 2
+   exclusive: true
+   customColorTint: true
+   requirements:
+   - !type:CharacterItemGroupRequirement
+    group: N14LoadoutNeck
+   - !type:CharacterDepartmentRequirement
+    departments:
+    - Vault
+    - Wastelander
+    - BrotherhoodMidwest
+    - Townsfolk
+    - NCR
+    - Vault
+   items:
+     - ClothingNeckCrucifixColor
