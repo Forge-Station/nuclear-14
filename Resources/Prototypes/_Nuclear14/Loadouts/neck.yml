@@ -81,15 +81,3 @@
        group: N14LoadoutNeck
    items:
      - N14ClothingNeckShawl
-
- - type: loadout # Forge-Change
-   id: ClothingNeckCrucifixColor
-   category: Accessories
-   cost: 2
-   exclusive: true
-   customColorTint: true
-   requirements:
-     - !type:CharacterItemGroupRequirement
-       group: N14LoadoutNeck
-   items:
-     - ClothingNeckCrucifixColor
