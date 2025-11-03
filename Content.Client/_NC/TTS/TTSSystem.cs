@@ -86,18 +86,18 @@ public sealed class TTSSystem : EntitySystem
             .WithVolume(AdjustVolume(ev.IsWhisper))
             .WithMaxDistance(AdjustDistance(ev.IsWhisper));
 
-        // var soundSpecifier = new ResolvedPathSpecifier(Prefix / filePath);
+        var soundSpecifier = new ResolvedPathSpecifier(Prefix / filePath);
 
         if (ev.SourceUid != null)
         {
             if (!TryGetEntity(ev.SourceUid.Value, out _))
                 return;
             var sourceUid = GetEntity(ev.SourceUid.Value);
-            _audio.PlayEntity(audioResource.AudioStream, sourceUid, /*soundSpecifier,*/ audioParams);
+            _audio.PlayEntity(audioResource.AudioStream, sourceUid, soundSpecifier, audioParams);
         }
         else
         {
-            _audio.PlayGlobal(audioResource.AudioStream, /*soundSpecifier,*/ audioParams);
+            _audio.PlayGlobal(audioResource.AudioStream, soundSpecifier, audioParams);
         }
 
         _contentRoot.RemoveFile(filePath);

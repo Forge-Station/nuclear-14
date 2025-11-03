@@ -74,10 +74,7 @@ public sealed class BarkSystem : EntitySystem
         var audioResource = new AudioResource();
         audioResource.Load(IoCManager.Instance!, new ResPath(ev.SoundPath));
 
-        /*
         var soundSpecifier = new ResolvedPathSpecifier(ev.SoundPath);
-        With the update of the engine version, remove the commits!!!
-        */
 
         for (int i = 0; i < soundCount; i++)
         {
@@ -86,7 +83,7 @@ public sealed class BarkSystem : EntitySystem
                 if (!_entityManager.EntityExists(sourceEntity) || _entityManager.Deleted(sourceEntity))
                     return;
 
-                _audio.PlayEntity(audioResource.AudioStream, sourceEntity,/* soundSpecifier,*/ audioParams);
+                _audio.PlayEntity(audioResource.AudioStream, sourceEntity, soundSpecifier, audioParams);
             });
         }
     }

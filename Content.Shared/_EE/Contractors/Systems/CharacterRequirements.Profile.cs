@@ -1,5 +1,6 @@
 using System.Linq;
 using Content.Shared._EE.Contractors.Prototypes;
+using Content.Shared._NC.Sponsor; // Forge-Change
 using Content.Shared.CCVar;
 using Content.Shared.Clothing.Loadouts.Prototypes;
 using Content.Shared.Humanoid;
@@ -37,6 +38,7 @@ public sealed partial class CharacterNationalityRequirement : CharacterRequireme
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0,
         MindComponent? mind = null
@@ -78,6 +80,7 @@ public sealed partial class CharacterEmployerRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0,
         MindComponent? mind = null
@@ -119,6 +122,7 @@ public sealed partial class CharacterLifepathRequirement : CharacterRequirement
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0,
         MindComponent? mind = null

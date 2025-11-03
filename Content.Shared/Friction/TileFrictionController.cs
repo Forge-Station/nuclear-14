@@ -30,12 +30,6 @@ namespace Content.Shared.Friction
         private EntityQuery<PullableComponent> _pullableQuery;
         private EntityQuery<MapGridComponent> _gridQuery;
 
-        private EntityQuery<TileFrictionModifierComponent> _frictionQuery;
-        private EntityQuery<TransformComponent> _xformQuery;
-        private EntityQuery<PullerComponent> _pullerQuery;
-        private EntityQuery<PullableComponent> _pullableQuery;
-        private EntityQuery<MapGridComponent> _gridQuery;
-
         private float _stopSpeed;
         private float _frictionModifier;
         public const float DefaultFriction = 0.3f;

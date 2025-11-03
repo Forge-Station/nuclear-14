@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Shared._NC.Sponsor; // Forge-Change
 using Content.Shared.Body.Systems;
 using Content.Shared.Clothing.Components;
 using Content.Shared.Clothing.Loadouts.Prototypes;
@@ -27,6 +28,7 @@ public sealed class SharedLoadoutSystem : EntitySystem
     [Dependency] private readonly CharacterRequirementsSystem _characterRequirements = default!;
     [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
     [Dependency] private readonly SharedTransformSystem _sharedTransformSystem = default!;
+    [Dependency] private readonly ISharedSponsorManager _sponsorManager = default!; // Forge-Change
     [Dependency] private readonly ILogManager _log = default!;
 
     private ISawmill _sawmill = default!;
@@ -97,7 +99,7 @@ public sealed class SharedLoadoutSystem : EntitySystem
 
             if (!_characterRequirements.CheckRequirementsValid(
                 loadoutProto.Requirements, job, profile, playTimes, whitelisted, loadoutProto,
-                EntityManager, _prototype, _configuration,
+                EntityManager, _prototype, _configuration, _sponsorManager,
                 out _))
                 continue;
 

@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Shared._NC.Sponsor; // Forge-Change
 using Content.Shared.Implants.Components;
 using Content.Shared.Mind;
 using Content.Shared.Mindshield.Components;
@@ -26,6 +27,7 @@ public sealed partial class CharacterMindshieldRequirement : CharacterRequiremen
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager  sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0,
         MindComponent? mind = null)

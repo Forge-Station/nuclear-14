@@ -26,6 +26,7 @@ public sealed class CharacterRequirementsSystem : EntitySystem
     [Dependency] private readonly IPrototypeManager _protomanager = default!;
     [Dependency] private readonly IConfigurationManager _configurationManager = default!;
     [Dependency] private readonly ISharedPlaytimeManager _playtimeManager = default!;
+    [Dependency] private readonly ISharedSponsorManager _sponsorManager = default!; // Forge-Change
 
     public bool CheckRequirementValid(CharacterRequirement requirement, JobPrototype job,
         HumanoidCharacterProfile profile, IReadOnlyDictionary<string, TimeSpan> playTimes, bool whitelisted, IPrototype prototype,
@@ -63,7 +64,10 @@ public sealed class CharacterRequirementsSystem : EntitySystem
             || !_playtimeManager.TryGetTrackerTimes(mind.Session, out var trackerTimes))
             return false;
 
-        return CheckRequirementsValid(requirements, jobPrototype, stationSpawningProfile, trackerTimes, whitelisted, prototype, _entManager, _protomanager, _configurationManager, out reasons, depth, mind);
+        return CheckRequirementsValid(
+            requirements, jobPrototype, stationSpawningProfile,
+            trackerTimes, whitelisted, prototype, _entManager, _protomanager,
+            _configurationManager, _sponsorManager, out reasons, depth, mind);
     }
 
     public bool CheckRequirementsValid(List<CharacterRequirement> requirements, JobPrototype job,

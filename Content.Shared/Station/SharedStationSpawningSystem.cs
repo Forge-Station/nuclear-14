@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Content.Shared._NC.Sponsor; //Forge-change
 using Content.Shared.Dataset;
 using Content.Shared.Customization.Systems;
 using Content.Shared.Hands.Components;
@@ -30,6 +31,7 @@ public abstract class SharedStationSpawningSystem : EntitySystem
     [Dependency] private readonly MetaDataSystem _metadata = default!;
     [Dependency] private readonly IConfigurationManager _configurationManager = default!;
     [Dependency] private readonly CharacterRequirementsSystem _characterRequirements = default!;
+    [Dependency] private readonly ISharedSponsorManager _sponsorManager = default!; //Forge-change
 
     private EntityQuery<HandsComponent> _handsQuery;
     private EntityQuery<InventoryComponent> _inventoryQuery;
@@ -193,7 +195,7 @@ public abstract class SharedStationSpawningSystem : EntitySystem
             if (!PrototypeManager.TryIndex<StartingGearPrototype>(subGear.Id, out var subGearProto) ||
                 !_characterRequirements.CheckRequirementsValid(
                     subGearProto.Requirements, job, profile, new Dictionary<string, TimeSpan>(), false, job,
-                    EntityManager, PrototypeManager, _configurationManager,
+                    EntityManager, PrototypeManager, _configurationManager, _sponsorManager,
                     out _))
                 continue;
 
@@ -218,20 +220,22 @@ public abstract class SharedStationSpawningSystem : EntitySystem
 
             foreach (var (slot, entProtoId) in subGearProto.Equipment)
             {
-                // Don't remove items in pockets, instead put them in the backpack or hands
-                if (slot == "pocket1" && newStartingGear.Equipment.TryGetValue("pocket1", out var pocket1) ||
-                    slot == "pocket2" && newStartingGear.Equipment.TryGetValue("pocket2", out var pocket2))
+                // Forge-Change-Start
+                string pocketProtoId = slot switch
                 {
-                    var pocketProtoId = slot == "pocket1" ? pocket1 : pocket2;
-
-                    if (string.IsNullOrEmpty(newStartingGear.GetGear("back")))
-                        newStartingGear.Inhand.Add(pocketProtoId);
-                    else
-                    {
-                        if (!newStartingGear.Storage.ContainsKey("back"))
-                            newStartingGear.Storage["back"] = new();
-                        newStartingGear.Storage["back"].Add(pocketProtoId);
-                    }
+                    "pocket1" when newStartingGear.Equipment.TryGetValue("pocket1", out var pocket1) => pocket1,
+                    "pocket2" when newStartingGear.Equipment.TryGetValue("pocket2", out var pocket2) => pocket2,
+                };
+                // Forge-Change-End
+                
+                if (string.IsNullOrEmpty(newStartingGear.GetGear("back")))
+                    newStartingGear.Inhand.Add(pocketProtoId);
+                    
+                else
+                {
+                    if (!newStartingGear.Storage.ContainsKey("back"))
+                        newStartingGear.Storage["back"] = new();
+                    newStartingGear.Storage["back"].Add(pocketProtoId);
                 }
 
                 newStartingGear.Equipment[slot] = entProtoId;

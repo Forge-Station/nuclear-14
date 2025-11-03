@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Shared._NC.Sponsor; // Forge-Change
 using Content.Shared.Mind;
 using Content.Shared.Preferences;
 using Content.Shared.Roles;
@@ -27,6 +28,7 @@ public sealed partial class CharacterAntagonistRequirement : CharacterRequiremen
         IEntityManager entityManager,
         IPrototypeManager prototypeManager,
         IConfigurationManager configManager,
+        ISharedSponsorManager  sponsorManager, // Forge-Change
         out string? reason,
         int depth = 0,
         MindComponent? mind = null)
