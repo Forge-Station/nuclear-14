@@ -309,7 +309,3 @@ Resources/MapImages
 
 # Changelog package lock
 package-lock.json
-/Resources/Prototypes/Entities/Mobs/Player/slime.yml
-/Resources/Prototypes/Guidebook
-/Resources/Prototypes/Loadouts
-/Resources/Prototypes/Catalog
