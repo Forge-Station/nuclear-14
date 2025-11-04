@@ -77,7 +77,7 @@
   functions:
   - !type:TraitReplaceComponent
     components:
-    - type: Flashable
+    - type: EyeDamageOnFlashing
       eyeDamageChance: 0.3
       eyeDamage: 1
-      durationMultiplier: 1.5
+      flashDurationMultiplier: 1.5

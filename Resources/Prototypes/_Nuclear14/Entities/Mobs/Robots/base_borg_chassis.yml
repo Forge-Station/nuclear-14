@@ -146,7 +146,7 @@
     locked: true
   - type: ActivatableUIRequiresLock
   # - type: LockedWiresPanel # not in our version of the game yet 16/07/2024
-  - type: Flashable
+  - type: EyeDamageOnFlashing
   - type: Damageable
     damageContainer: Silicon
   - type: Destructible

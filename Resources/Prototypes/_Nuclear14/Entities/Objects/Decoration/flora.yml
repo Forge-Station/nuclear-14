@@ -58,7 +58,7 @@
             min: 2
             max: 8
   - type: Pullable
-  
+
 - type: entity
   parent: N14FloraLogBase
   id: N14FloraLog1
@@ -124,6 +124,5 @@
   components:
   - type: Sprite
     state: timber
-  - type: PottedPlantHide
   - type: SecretStash
     secretPartName: secret-stash-part-plant

@@ -18,9 +18,9 @@
       layers:
       - state: frame
       - state: closed
-        map: ["enum.ItemCabinetVisualLayers.Door"]
+        map: ["enum.OpenableVisuals.Layer"]
       - state: closed # N14:TODO: Add this state
-        map: ["enum.ItemCabinetVisualLayers.ContainsItem"]
+        map: ["enum.ItemCabinetVisuals.Layer"]
         visible: true
     - type: ItemCabinet
       cabinetSlot:
@@ -67,7 +67,7 @@
       path: /Audio/Machines/machine_switch.ogg
     openState: open
     closedState: closed
-    
+
 - type: entity
   parent: N14WallmountFireHydrant
   id: N14WallmountFireHydrantOld
@@ -78,9 +78,9 @@
       layers:
       - state: frame
       - state: closed
-        map: ["enum.ItemCabinetVisualLayers.Door"]
+        map: ["enum.OpenableVisuals.Layer"]
       - state: closed # N14:TODO: Add this state
-        map: ["enum.ItemCabinetVisualLayers.ContainsItem"]
+        map: ["enum.ItemCabinetVisuals.Layer"]
         visible: true
 
 - type: entity

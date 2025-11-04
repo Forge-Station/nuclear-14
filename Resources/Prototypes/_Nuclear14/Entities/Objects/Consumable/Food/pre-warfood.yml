@@ -35,7 +35,7 @@
   - type: Sprite
     state: blamco
   - type: Food
-    trash: 
+    trash:
     - N14FoodBlamcomaccheeseTrash
 
 - type: entity
@@ -47,7 +47,7 @@
   - type: Sprite
     state: blamco_large
   - type: Food
-    trash: 
+    trash:
     - N14FoodBlamcomaccheeseLargeTrash
 
 - type: entity
@@ -59,7 +59,7 @@
   - type: Sprite
     state: bubblegum
   - type: Food
-    trash: 
+    trash:
     - N14FoodBubblegumTrash
   - type: SolutionContainerManager
     solutions:
@@ -80,7 +80,7 @@
   - type: Sprite
     state: cram
   - type: Food
-    trash: 
+    trash:
     - N14FoodCramTrash
 
 - type: entity
@@ -92,7 +92,7 @@
   - type: Sprite
     state: crisps
   - type: Food
-    trash: 
+    trash:
     - N14FoodCrispsTrash
 
 - type: entity
@@ -104,7 +104,7 @@
   - type: Sprite
     state: dandyapples
   - type: Food
-    trash: 
+    trash:
     - N14FoodDandyboyapplesTrash
 
 - type: entity
@@ -119,7 +119,7 @@
     flavors:
     - meaty
   - type: Food
-    trash: 
+    trash:
     - N14FoodDogFoodTrash
   - type: Tag
     tags:
@@ -146,7 +146,7 @@
     flavors:
     - meaty
   - type: Food
-    trash: 
+    trash:
     - N14FoodDinki-DiTrash
   - type: Tag
     tags:
@@ -170,7 +170,7 @@
   - type: Sprite
     state: fancylads
   - type: Food
-    trash: 
+    trash:
     - N14FoodFancyladssnackcakesTrash
 
 - type: entity
@@ -182,7 +182,7 @@
   - type: Sprite
     state: instamash
   - type: Food
-    trash: 
+    trash:
     - N14FoodInstamashTrash
 
 - type: entity
@@ -194,7 +194,7 @@
   - type: Sprite
     state: porknbeans
   - type: Food
-    trash: 
+    trash:
     - N14FoodTinCanTrash
   - type: PhysicalComposition
     materialComposition:
@@ -231,7 +231,7 @@
   - type: Sprite
     state: steak
   - type: Food
-    trash: 
+    trash:
     - N14FoodSalisburysteakTrash
   - type: SolutionContainerManager
     solutions:
@@ -252,7 +252,7 @@
   - type: Sprite
     state: sugarbombs
   - type: Food
-    trash: 
+    trash:
     - N14FoodSugarbombsTrash
   - type: SolutionContainerManager
     solutions:
@@ -275,7 +275,7 @@
   - type: Sprite
     state: yumyum
   - type: Food
-    trash: 
+    trash:
     - N14FoodYumyumdeviledeggsTrash
 
 # Trash
@@ -306,7 +306,7 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Consumable/Food/dogfood.rsi
     state: trash
-  - type: WelderRefinable
+  - type: ToolRefinable
     refineResult:
     - id: SheetSteel1
   - type: PhysicalComposition

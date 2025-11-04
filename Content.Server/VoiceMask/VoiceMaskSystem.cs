@@ -28,7 +28,6 @@ public sealed partial class VoiceMaskSystem : EntitySystem
         SubscribeLocalEvent<VoiceMaskComponent, VoiceMaskChangeVerbMessage>(OnChangeVerb);
         SubscribeLocalEvent<VoiceMaskComponent, ClothingGotEquippedEvent>(OnEquip);
         SubscribeLocalEvent<VoiceMaskSetNameEvent>(OpenUI);
-        SubscribeLocalEvent<VoiceMaskSetNameEvent>(OpenUI);
         InitializeTTS(); // Corvax-TTS
     }
 
