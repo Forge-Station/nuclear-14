@@ -44,7 +44,7 @@
       shoes: N14ClothingPABoots
       back: N14ClothingPowerSystemsBack
   - type: TemperatureProtection
-    coefficient: 0.25
+    heatingCoefficient: 0.25
   - type: FireProtection
     reduction: 0.9
   - type: ExplosionResistance
@@ -383,7 +383,7 @@
         Caustic: 0.75
         Radiation: 0.6
   - type: TemperatureProtection
-    coefficient: 0.5
+    heatingCoefficient: 0.5
   - type: ExplosionResistance
     damageCoefficient: 0.55
   - type: UserInterface
@@ -419,7 +419,7 @@
         Caustic: 0.75
         Radiation: 0.65
   - type: TemperatureProtection
-    coefficient: 0.55
+    heatingCoefficient: 0.55
   - type: ExplosionResistance
     damageCoefficient: 0.65
   - type: UserInterface

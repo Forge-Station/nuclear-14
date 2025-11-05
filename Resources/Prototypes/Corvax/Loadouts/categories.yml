@@ -9,9 +9,6 @@
   - Satchel
 
 - type: loadoutCategory
-  id: Backpacks
-
-- type: loadoutCategory
   id: Duffel
 
 - type: loadoutCategory

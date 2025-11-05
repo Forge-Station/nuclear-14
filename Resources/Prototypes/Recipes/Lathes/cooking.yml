@@ -48,13 +48,6 @@
   parent: DrinkMug
   id: DrinkGlassCoupeShaped
   result: DrinkGlassCoupeShaped
-
-- type: latheRecipe 
-  id: CustomDrinkJug 
-  result: CustomDrinkJug 
-  completetime: 2 
-  materials: 
-    Plastic: 200
     
 - type: latheRecipe
   id: CustomDrinkJug
