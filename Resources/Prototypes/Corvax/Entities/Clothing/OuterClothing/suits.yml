@@ -12,7 +12,7 @@
 #    visibility: 1.1
 #    toggleAction: ActionTogglePhaseCloak
   - type: TemperatureProtection
-    coefficient: 0.01
+    heatingCoefficient: 0.01
   - type: Armor
     modifiers:
       coefficients:

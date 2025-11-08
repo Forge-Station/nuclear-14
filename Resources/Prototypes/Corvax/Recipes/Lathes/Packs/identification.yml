@@ -1,0 +1,7 @@
+- type: LatheRecipePack
+  id: LegionaryID
+  recipes:
+  - IDLegionaryBadge
+  - IDLegionaryMedalSilver
+  - IDLegionaryMedalSilver2
+  - IDLegionaryMedalSilver3

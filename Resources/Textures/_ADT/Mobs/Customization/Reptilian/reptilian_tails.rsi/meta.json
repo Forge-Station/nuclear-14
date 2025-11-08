@@ -5,68 +5,6 @@
         "y": 32
     },
     "license": "CC-BY-SA-3.0",
-<<<<<<<< HEAD:Resources/Textures/Mobs/Species/Shadowkin/parts.rsi/meta.json
-    "copyright": "https://github.com/SPLURT-Station/S.P.L.U.R.T-Station-13/commit/5bc3ea02ce03a551c85017f1ddd411315a19a5ca#diff-519788fa2ca74299d1686a44d3ab2098b49ed5ab65d293ec742bead7d49f0b8d",
-    "states": [
-        {
-            "name": "full",
-            "directions": 4
-        },
-        {
-            "name": "full-nomarkings",
-            "directions": 4
-        },
-        {
-            "name": "head_m",
-            "directions": 4
-        },
-        {
-            "name": "head_f",
-            "directions": 4
-        },
-        {
-            "name": "torso_m",
-            "directions": 4
-        },
-        {
-            "name": "torso_f",
-            "directions": 4
-        },
-        {
-            "name": "r_arm",
-            "directions": 4
-        },
-        {
-            "name": "l_arm",
-            "directions": 4
-        },
-        {
-            "name": "r_hand",
-            "directions": 4
-        },
-        {
-            "name": "l_hand",
-            "directions": 4
-        },
-        {
-            "name": "r_leg",
-            "directions": 4
-        },
-        {
-            "name": "r_foot",
-            "directions": 4
-        },
-        {
-            "name": "l_leg",
-            "directions": 4
-        },
-        {
-            "name": "l_foot",
-            "directions": 4
-        },
-        {
-            "name": "eyes",
-========
     "copyright": "Taken from S.P.L.U.R.T at commit https://github.com/SPLURT-Station/S.P.L.U.R.T-Station-13/commit/96703f76bccd8fe6a96b78524efb97a9af661767",
     "states": [
         {
@@ -123,7 +61,6 @@
         },
         {
             "name": "snake",
->>>>>>>> EE:Resources/Textures/_ADT/Mobs/Customization/Reptilian/reptilian_tails.rsi/meta.json
             "directions": 4
         }
     ]

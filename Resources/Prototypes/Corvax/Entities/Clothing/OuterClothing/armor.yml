@@ -233,7 +233,7 @@
   - type: Clothing
     sprite: Corvax/Clothing/OuterClothing/Armor/bosReaconArmor.rsi
   - type: TemperatureProtection
-    coefficient: 0.2
+    heatingCoefficient: 0.2
   - type: Armor
     modifiers:
       coefficients:
@@ -356,7 +356,7 @@
   - type: Clothing
     sprite: Corvax/Clothing/OuterClothing/Armor/InquisitorArmor.rsi
   - type: TemperatureProtection
-    coefficient: 0.2
+    heatingCoefficient: 0.2
   - type: Armor
     modifiers:
       coefficients:

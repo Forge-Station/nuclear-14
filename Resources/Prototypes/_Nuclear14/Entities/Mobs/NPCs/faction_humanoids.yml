@@ -21,7 +21,6 @@
   description: Professional mercenary armed with a combat shotgun. He won't show mercy to anyone if they can't prove proof of their citizenship in a moment's notice.
   components:
     - type: NpcFactionMember
-      friendlyOrderable: true
       factions:
       - TownsfolkSecureArea # Especialy made for the clinic & store, will attack anyone who steps in the storage and not a legal resident.
     - type: Gun
@@ -108,7 +107,6 @@
   description: A servant of the Midwestern Brotherhood chapter, not a full member. He likely works for food and shelter.
   components:
     - type: NpcFactionMember
-      friendlyOrderable: true
       factions:
       - BrotherhoodMidwestSecureArea
     - type: Loadout
@@ -123,7 +121,6 @@
   description: A soldier of the Midwestern Brotherhood, not the most skilled and easily forgetable. Still, he might be dangerous.
   components:
     - type: NpcFactionMember
-      friendlyOrderable: true
       factions:
       - BrotherhoodMidwestSecureArea
     - type: Gun
@@ -210,7 +207,6 @@
   description: A low-ranked member of the Washington Brotherhood, probably tasked with support duties. He is barely a threat, but still is one.
   components:
     - type: NpcFactionMember
-      friendlyOrderable: true
       factions:
       - BrotherhoodWashingtonSecureArea
     - type: Loadout
@@ -225,7 +221,6 @@
   description: A soldier of the Washington Brotherhood, not the most skilled and easily forgetable. Still, he might be dangerous.
   components:
     - type: NpcFactionMember
-      friendlyOrderable: true
       factions:
       - BrotherhoodWashingtonSecureArea
     - type: Gun
@@ -312,7 +307,6 @@
   description: An trooper in the uniform of the NCR Army's Military Police section. He's here to keep the order by spraying lead.
   components:
     - type: NpcFactionMember
-      friendlyOrderable: true
       factions:
       - NCRSecureArea
     - type: Loadout
@@ -327,7 +321,6 @@
   description: An Army trooper of the NCR. He's tasked to guard places and is quite easy to forget, but he's still dangerous.
   components:
     - type: NpcFactionMember
-      friendlyOrderable: true
       factions:
       - NCRSecureArea
     - type: Gun
@@ -414,7 +407,6 @@
   description: A man hired to stand guard and ensure the safety of the Blue Line station. Surely he won't do anything else, right?
   components:
     - type: NpcFactionMember
-      friendlyOrderable: true
       factions:
       - CaravanCompanySecureArea
     - type: Gun
@@ -501,7 +493,6 @@
   description: A skirmisher of the local tribes, he bears a firearm to protect his kin. A silent hero.
   components:
     - type: NpcFactionMember
-      friendlyOrderable: true
       factions:
       - TribalSecureArea
     - type: Gun
@@ -587,7 +578,6 @@
   description: A large and tough warrior, not many could best him in a melee battle. He shall stand guard.
   components: # No gun or ammo components because this is a melee variant.
     - type: NpcFactionMember
-      friendlyOrderable: true
       factions:
       - TribalSecureArea
     - type: MobThresholds

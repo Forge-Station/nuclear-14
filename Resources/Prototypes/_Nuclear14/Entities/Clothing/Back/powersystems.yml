@@ -18,6 +18,6 @@
     walkModifier: 4.5 # Don't be alarmed, it's this high to compensate for the suit's base slowdown.
     sprintModifier: 4.5
   - type: TemperatureProtection
-    coefficient: 0.75
+    heatingCoefficient: 0.75
   - type: FireProtection
     reduction: 0.1

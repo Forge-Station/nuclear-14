@@ -1890,7 +1890,7 @@
         Heat: 0.6
         Radiation: 0.6
   - type: TemperatureProtection
-    coefficient: 0.5
+    heatingCoefficient: 0.5
   - type: ExplosionResistance
     damageCoefficient: 0.8
 

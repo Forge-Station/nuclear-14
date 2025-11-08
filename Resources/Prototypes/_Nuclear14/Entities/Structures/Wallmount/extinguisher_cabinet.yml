@@ -14,54 +14,27 @@
       - state: closed
         map: ["enum.OpenableVisuals.Layer"]
       drawdepth: Overdoors
-    - type: ItemCabinet
-      cabinetSlot:
-        ejectOnInteract: true
-        whitelist:
-          components:
-          - FireExtinguisher
-      doorSound:
-        path: /Audio/Machines/machine_switch.ogg
-      openState: open
-      closedState: closed
 
 - type: entity
   id: N14FireExtinguisherCabinetOpen
   parent: N14FireExtinguisherCabinet
   suffix: Open
   components:
-  - type: ItemCabinet
+  - type: Openable
     opened: true
-    doorSound:
-      path: /Audio/Machines/machine_switch.ogg
-    openState: open
-    closedState: closed
+    
 
 - type: entity
   id: N14FireExtinguisherCabinetFilled
   parent: N14FireExtinguisherCabinet
   suffix: Filled
   components:
-  - type: ItemCabinet
-    cabinetSlot:
-      ejectOnInteract: true
-      startingItem: FireExtinguisher
-      whitelist:
-        components:
-        - FireExtinguisher
-    doorSound:
-      path: /Audio/Machines/machine_switch.ogg
-    openState: open
-    closedState: closed
+  - type: ContainerFill
+    containers:
+      ItemCabinet:
+      - FireExtinguisher
 
 - type: entity
   id: N14FireExtinguisherCabinetFilledOpen
-  parent: N14FireExtinguisherCabinetFilled
+  parent: [N14FireExtinguisherCabinetFilled, N14FireExtinguisherCabinetOpen]
   suffix: Filled, Open
-  components:
-  - type: ItemCabinet
-    opened: true
-    doorSound:
-      path: /Audio/Machines/machine_switch.ogg
-    openState: open
-    closedState: closed

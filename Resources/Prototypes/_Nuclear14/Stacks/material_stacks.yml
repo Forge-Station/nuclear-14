@@ -87,6 +87,13 @@
   itemSize: 1
 
 - type: stack
+  id: N14AluminiumOre
+  name: bauxite
+  icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: lead }
+  spawn: N14AluminiumOre1
+  maxCount: 10
+
+- type: stack
   id: N14CopperOre
   name: copper ore
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: copper }

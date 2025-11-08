@@ -398,7 +398,7 @@
   - type: Clothing
     sprite: _Nuclear14/Clothing/OuterClothing/Coats/armoredwinter.rsi
   - type: TemperatureProtection
-    coefficient: 0.2
+    heatingCoefficient: 0.2
   - type: Armor
     modifiers:
       coefficients:
@@ -589,7 +589,7 @@
   - type: Clothing
     sprite: _Nuclear14/Clothing/OuterClothing/Coats/falloutoverseercoat.rsi
   - type: TemperatureProtection
-    coefficient: 0.1
+    heatingCoefficient: 0.1
 
 #MARK: Midwest BoS
 - type: entity

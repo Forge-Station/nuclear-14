@@ -4,4 +4,8 @@
   minOreYield: 1
   maxOreYield: 5
 
-
+- type: ore
+  id: OreCopper
+  oreEntity: N14CopperOre1
+  minOreYield: 1
+  maxOreYield: 5

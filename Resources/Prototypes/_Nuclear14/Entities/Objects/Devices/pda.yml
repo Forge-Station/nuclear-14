@@ -28,7 +28,6 @@
     slots:
     - idcard
   - type: Pda
-    state: pda
     paiSlot:
       priority: -2
       whitelist:
