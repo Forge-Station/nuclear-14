@@ -33,9 +33,6 @@
     back: N14ClothingBackpackExplorer # Corvax-Change
     shoes: N14ClothingShoesBlack
     id: N14IDPassportTownsfolk
-  innerClothingSkirt: N14ClothingUniformJumpskirtFalloutBlack
-  satchel: N14ClothingBackpackSatchelWastelanderFilled
-  duffelbag: N14ClothingBackpackDuffelFilled
   storage: # Corvax-Change
     back:
     - N14BoxPlasticFilledWastelander

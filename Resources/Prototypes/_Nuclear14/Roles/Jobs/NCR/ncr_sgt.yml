@@ -45,8 +45,6 @@
     pocket1: NCRSGTloadoutkits
     pocket2: RadioHandheld
     id: N14IDNCRDogtagNCO
-  innerClothingSkirt: N14ClothingOfficerUniformNCRDesert # Corvax-Change
-  satchel: N14ClothingBackpackSatchelNCRFilled
   storage: # Corvax-Change
     back:
     - N14BoxPlasticFilledMilitaryNCR

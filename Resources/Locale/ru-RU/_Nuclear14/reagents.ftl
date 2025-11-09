@@ -85,7 +85,6 @@ reagent-name-nightstalker-blood = кровь ночного охотника
 reagent-desc-nightstalker-blood = Кровь из тела ночного охотника.
 
 ## Extracts
-
 reagent-name-extract-agave-nectar = экстракт нектара агавы
 reagent-desc-extract-agave-nectar = Колючее растение с целебными свойствами и фруктовым вкусом с цитрусовыми нотками.
 reagent-name-extract-banana-yucca = экстракт банановой юкки
@@ -134,6 +133,47 @@ reagent-name-extract-fungusrad = экстракт радиоактивного �
 reagent-desc-extract-fungusrad = Радиоактивный гриб, светящийся зловещим зеленым светом. Вкус отвратительный, как старая кашица. Один глоток, и вы сами начнете светиться в темноте.
 reagent-name-extract-fungus = грибной экстракт
 reagent-desc-extract-fungus = Омерзительная кашеобразная субстанция, довольно ядовита.
+
+# Jams
+reagent-name-agavejam = джем из агавы
+reagent-desc-agavejam = Сладкий и ароматный джем с лёгким травянистым привкусом.
+
+reagent-name-blackberryjam = ежевичный джем
+reagent-desc-blackberryjam = Тёмный, сладкий и слегка терпкий джем из ежевики.
+
+reagent-name-cactusjam = кактусовый джем
+reagent-desc-cactusjam = Необычный джем с освежающими нотками кактуса.
+
+reagent-name-brocjam = джем из брок-цветка
+reagent-desc-brocjam = Странный, но питательный джем с целебным ароматом брок-цветка.
+
+reagent-name-multifruitjam = мультифруктовый джем
+reagent-desc-multifruitjam = Смешение разных фруктов пустоши в одной банке.
+
+reagent-name-pricklypearjam = джем из опунции
+reagent-desc-pricklypearjam = Сладкий и сочный джем с мягким вкусом пустыни.
+
+reagent-name-starlightjam = джем из ягод ночного ползуна
+reagent-desc-starlightjam = Слегка мерцающий джем со странным, но глубоким вкусом.
+
+reagent-name-tarberryjam = джем из смоляники
+reagent-desc-tarberryjam = Тягучий, сладкий и с лёгким покалыванием на языке.
+
+# Pickled
+reagent-name-pickledcabbage = маринованная капуста
+reagent-desc-pickledcabbage = Хрустящая и кисленькая, отлично хранится даже в пустоши.
+
+reagent-name-pickledcarrots = маринованная морковь
+reagent-desc-pickledcarrots = Сладковато-кислые ломтики моркови с пряным ароматом.
+
+reagent-name-pickledcorn = маринованная кукуруза
+reagent-desc-pickledcorn = Сочные зерна кукурузы в лёгком маринаде.
+
+reagent-name-pickledjalapenos = маринованные халапеньо
+reagent-desc-pickledjalapenos = Острые перчики для тех, кто любит погорячее.
+
+reagent-name-pickledonions = маринованный лук
+reagent-desc-pickledonions = Хрустящий, ароматный и чуть сладковатый лук.
 
 ## Teas
 

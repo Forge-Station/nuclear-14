@@ -38,9 +38,6 @@
     gloves: N14ClothingHandsGlovesNitrile
     id: N14IDDoctorTown
     outerClothing: N14ClothingOuterCoatLab
-  innerClothingSkirt: N14ClothingUniformJumpskirtFalloutBlack
-  satchel: N14ClothingBackpackSatchelWastelanderFilled
-  duffelbag: N14ClothingBackpackDuffelFilled  # N14TODO: Doctors Bag
   storage: # Corvax-Change
     back:
     - N14BoxPlasticFilledWastelander

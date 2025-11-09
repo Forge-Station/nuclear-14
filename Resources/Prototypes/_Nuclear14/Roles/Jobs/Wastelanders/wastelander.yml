@@ -22,9 +22,6 @@
     jumpsuit: N14ClothingUniformJumpsuitRags
     back: N14ClothingBackpackExplorer # Corvax-Change
     shoes: N14ClothingShoesRags
-  innerClothingSkirt: N14ClothingUniformJumpskirtFalloutBlack
-  satchel: N14ClothingBackpackSatchelWastelanderFilled
-  duffelbag: N14ClothingBackpackDuffelFilled
   storage: # Corvax-Change
     back:
     - N14BoxPlasticFilledWastelander

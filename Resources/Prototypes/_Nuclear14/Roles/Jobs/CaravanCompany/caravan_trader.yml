@@ -39,9 +39,6 @@
 #    id: N14IDPassportCaravanTrader
 #    outerClothing: ClothingOuterVest
 #    suitstorage: N14WeaponSMG45 # Forge-Change
-#  innerClothingSkirt: N14ClothingUniformJumpsuitTrader #placeholder
-#  satchel: N14ClothingBackpackSatchelCaravanFilled
-#  duffelbag: N14ClothingBackpackDuffelCaravanFilled
 #  storage: # Forge-Change
 #    back:
 #    - N14BoxPlasticFilledWastelander

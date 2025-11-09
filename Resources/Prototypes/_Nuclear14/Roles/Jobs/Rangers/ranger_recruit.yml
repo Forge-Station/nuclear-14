@@ -34,9 +34,6 @@
     eyes: ClothingEyesGlassesSunglasses
     outerClothing: N14ClothingOuterRangerCombat
     id: N14IDBadgeNCRDesertRangerRecruit
-  innerClothingSkirt: N14ClothingUniformRangerV1 #placeholder
-  satchel: N14ClothingBackpackSatchelMilitaryFilled
-  duffelbag: N14ClothingBackpackDuffelMilitaryFilled
   storage: # Corvax-Change
     back:
     - N14BoxPlasticFilledMilitary

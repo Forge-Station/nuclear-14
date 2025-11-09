@@ -13,8 +13,6 @@
           mapPaths:
           - /Maps/N14/SunnyvaleUnderground.yml
         - type: StationJobs
-          overflowJobs:
-            - Wastelander
           availableJobs:
             Wastelander: [ -1, -1 ]
             # WastelandScavenger: [ 3, 5 ]

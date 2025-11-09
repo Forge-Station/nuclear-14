@@ -14,9 +14,9 @@
   - 10.524779 # oxygen, not enough for breathing
   - 25.10312 # nitrogen
   - 8.21301 # carbon dioxide
-  weather:
-  - AshfallLight
-  - AshfallHeavy
+#  weather:
+#  - AshfallLight
+#  - AshfallHeavy
   markers:
   - RandomTendrilLavaland
   - ChasmLavaland

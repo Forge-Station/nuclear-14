@@ -1,4 +1,4 @@
-- type: LatheRecipePack
+- type: latheRecipePack
   id: LegionaryID
   recipes:
   - IDLegionaryBadge

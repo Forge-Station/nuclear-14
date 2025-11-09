@@ -29,8 +29,6 @@
     pocket1: N14WeaponRevolverWebley
     pocket2: N14CombatKnife
     suitstorage: N14WastelandPolearm
-  innerClothingSkirt: N14ClothingUniformJumpsuitRCMP #placeholder
-  satchel: N14ClothingBackpackMilitarySkirmisherFilled
 
 - type: playTimeTracker
   id: MountieSkirmisher

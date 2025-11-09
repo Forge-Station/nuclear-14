@@ -53,7 +53,6 @@
     pocket1: LegionCenturionloadoutkits
     pocket2: N14WeaponPistol10mmPipe
     id: N14IDLegionaryMedalGold
-  innerClothingSkirt: N14ClothingUniformJumpsuitLegionnaireOther
   storage:
     back:
     - N14BoxPlasticFilledMilitary

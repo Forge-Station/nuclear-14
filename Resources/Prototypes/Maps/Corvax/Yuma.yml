@@ -21,8 +21,6 @@
       - type: StationNameSetup
         mapNameTemplate: 'Юма'
       - type: StationJobs
-        overflowJobs:
-        - Wastelander
         availableJobs:
           Wastelander: [ -1, -1 ]
           WastelandScavenger: [ 3, 5 ]

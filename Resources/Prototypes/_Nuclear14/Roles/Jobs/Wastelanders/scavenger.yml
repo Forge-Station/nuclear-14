@@ -29,9 +29,6 @@
     back: N14ClothingBackpackExplorer # Corvax-Change
     shoes: N14ClothingBootsFire
     belt: N14ClothingBeltUtilityFilled
-  innerClothingSkirt: N14ClothingUniformJumpsuitMechanic
-  satchel: N14ClothingBackpackSatchelWastelanderFilled
-  duffelbag: N14ClothingBackpackDuffelFilled
   storage: # Corvax-Change
     back:
     - N14BoxPlasticFilledWastelander

@@ -29,8 +29,6 @@
     back: N14ClothingBackpackTrekker # Corvax-Change
     eyes: ClothingEyesGlassesSunglasses
     shoes: N14ClothingShoesBrown
-  satchel: N14ClothingBackpackSatchelMusicianFilled
-  duffelbag: N14ClothingBackpackDuffelMusicianFilled
   storage: # Corvax-Change
     back:
     - N14BoxPlasticFilledWastelander

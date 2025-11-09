@@ -35,9 +35,6 @@
     back: N14ClothingBackpackExplorer # Corvax-Change
     shoes: N14ClothingShoesBlack
     id: N14IDReporterTown
-  innerClothingSkirt: N14ClothingUniformJumpsuitDetectiveAlt
-  satchel: N14ClothingBackpackSatchelWastelanderFilled
-  duffelbag: N14ClothingBackpackDuffelFilled
   storage: # Corvax-Change
     back:
     - N14BoxPlasticFilledWastelander

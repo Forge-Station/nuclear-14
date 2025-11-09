@@ -36,8 +36,6 @@
     shoes: N14ClothingBootsLeatherFilled
     pocket1: NCRcadetloadoutkits
     id: N14IDNCRDogtag
-  innerClothingSkirt: N14ClothingUniformNCRDesert # Corvax-Change
-  satchel: N14ClothingBackpackSatchelNCRFilled
   storage: # Corvax-Change
     back:
     - N14BoxPlasticFilledMilitaryNCR

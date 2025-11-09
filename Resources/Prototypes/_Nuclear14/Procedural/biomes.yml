@@ -14,30 +14,8 @@
       allowedTiles:
         - FloorCaveDrought
       entities:
-        - FloraGreyStalagmite1
-        - FloraGreyStalagmite2
-        - FloraGreyStalagmite3
-        - FloraGreyStalagmite4
-        - FloraGreyStalagmite5
-        - FloraRockSolid01
-        - FloraRockSolid02
-        - FloraRockSolid03
-        - FloraGreyStalagmite1
-        - FloraGreyStalagmite2
-        - FloraGreyStalagmite3
-        - FloraGreyStalagmite4
-        - FloraGreyStalagmite5
-        - FloraRockSolid01
-        - FloraRockSolid02
-        - FloraRockSolid03
-        - FloraGreyStalagmite1
-        - FloraGreyStalagmite2
-        - FloraGreyStalagmite3
-        - FloraGreyStalagmite4
-        - FloraGreyStalagmite5
-        - FloraRockSolid01
-        - FloraRockSolid02
-        - FloraRockSolid03
+        - FloraGreyStalagmite
+        - FloraRockSolid
         - CrystalBlue
         - CrystalCyan
         - CrystalGreen

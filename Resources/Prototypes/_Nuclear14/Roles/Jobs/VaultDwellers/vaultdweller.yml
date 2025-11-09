@@ -32,7 +32,6 @@
     shoes: N14ClothingBootsBlack
     id: N14VaultPDA
     ears: N14ClothingHeadsetVaultDweller
-  innerClothingSkirt: N14ClothingUniformJumpsuitVault14
   storage: # Forge-Change
     back:
     - N14Bandage

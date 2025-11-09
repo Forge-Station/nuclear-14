@@ -36,9 +36,6 @@
     id: N14IDBadgeTownMayor
     pocket1: RadioHandheld
     belt: N14WalletLottaCash
-  innerClothingSkirt: N14ClothingUniformJumpskirtFalloutBlack
-  satchel: N14ClothingBackpackSatchelMayorFilled
-  duffelbag: N14ClothingBackpackDuffelMayorFilled
   storage: # Corvax-Change
     back:
     - N14BoxPlasticFilledWastelander

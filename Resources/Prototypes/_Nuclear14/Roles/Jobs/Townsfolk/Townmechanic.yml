@@ -38,9 +38,6 @@
     belt: N14ClothingBeltUtilityFilled
     gloves: ClothingHandsGlovesColorYellow # Forge-Add
     eyes: N14ClothingEyesGlassesWelding
-  innerClothingSkirt: N14ClothingUniformJumpskirtFalloutBlack
-  satchel: N14ClothingBackpackSatchelWastelanderFilled
-  duffelbag: N14ClothingBackpackDuffelFilled
   storage: # Forge-Change
     back:
     - N14BoxPlasticFilledWastelander

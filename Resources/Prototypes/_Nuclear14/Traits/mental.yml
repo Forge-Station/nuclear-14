@@ -124,7 +124,6 @@
     - !type:TraitAddComponent
       components:
         - type: ReplacementAccent
-          replacementChance: 0.2
           accent: liar
 
 # The flood of various & mixed pet traits shall begin here

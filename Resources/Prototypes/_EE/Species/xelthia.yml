@@ -10,7 +10,6 @@
   skinColoration: Hues
   maleFirstNames: names_xelthia_first
   femaleFirstNames: names_xelthia_first
-  lastNames: names_xelthia_last
   minHeight: 0.7
   defaultHeight: 0.95
   maxHeight: 1.25

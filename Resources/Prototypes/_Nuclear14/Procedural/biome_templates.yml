@@ -173,17 +173,12 @@
         - FloorWasteland
       entities:
         - FloraTreeStump
-        - FloraRockSolid01
-        - FloraRockSolid02
-        - FloraRockSolid03
+        - FloraRockSolid
         - N14FloraDesertTree1
         - N14FloraDesertTree2
         - N14FloraDesertTree3
         - N14FloraDesertTree4
         - FloraTreeStump
-        - FloraRockSolid01
-        - FloraRockSolid02
-        - FloraRockSolid03
         - N14FloraDesertTree1
         - N14FloraDesertTree2
         - N14FloraDesertTree3
@@ -228,9 +223,7 @@
         - N14WastelandFloraWildMutfruit
         - N14WastelandFloraWildPinyon
         - FloraTreeStump
-        - FloraRockSolid01
-        - FloraRockSolid02
-        - FloraRockSolid03
+        - FloraRockSolid
         - N14FloraLog1
         - N14FloraLog3
     - !type:BiomeEntityLayer

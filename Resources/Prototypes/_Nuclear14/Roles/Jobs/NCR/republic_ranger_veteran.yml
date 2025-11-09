@@ -49,9 +49,6 @@
     head: N14ClothingHeadHatRangerHelmetOld
     id: N14IDBadgeNCRRangerElite
     back: N14ClothingBackpackMilitary # Corvax-Change
-  innerClothingSkirt: N14ClothingUniformRangerModif #placeholder
-  satchel: N14ClothingBackpackSatchelMilitaryFilled
-  duffelbag: N14ClothingBackpackDuffelMilitaryFilled
   storage: # Corvax-Change
     back:
     - N14BoxPlasticFilledMilitary

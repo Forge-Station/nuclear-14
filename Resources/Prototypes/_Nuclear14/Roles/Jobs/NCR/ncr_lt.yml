@@ -48,8 +48,6 @@
     pocket1: NCRLTloadoutkits
     pocket2: RadioHandheld
     id: N14IDNCRDogtagOfficer
-  innerClothingSkirt: N14ClothingOfficerUniformNCRDesert # Corvax-Change
-  satchel: N14ClothingBackpackSatchelNCRFilled
   storage: # Corvax-Change
     back:
     - N14BoxPlasticFilledMilitaryNCR

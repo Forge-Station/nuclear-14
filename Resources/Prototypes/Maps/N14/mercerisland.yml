@@ -13,8 +13,6 @@
           mapPaths:
           - /Maps/N14/MercerIslandSewers.yml
         - type: StationJobs
-          overflowJobs:
-            - Wastelander
           availableJobs:
             Wastelander: [ -1, -1 ]
             TribalElder: [ 1, 1 ]

@@ -4,9 +4,6 @@
   id: MaterialsStatic
   recipes:
   - SheetRGlass
-  # EE EDIT START
-  - N14MaterialCircuitry
-  # EE EDIT END
 
 - type: latheRecipePack
   id: PartsStatic
