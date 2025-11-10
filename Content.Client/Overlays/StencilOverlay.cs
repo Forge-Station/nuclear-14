@@ -1,6 +1,7 @@
 using System.Numerics;
 using Content.Client.Parallax;
 using Content.Client.Weather;
+using Content.Shared._NC.Clouds; // NC - Clouds
 using Content.Shared.Salvage;
 using Content.Shared.Weather;
 using Robust.Client.GameObjects;
@@ -67,6 +68,13 @@ public sealed partial class StencilOverlay : Overlay
                 DrawWeather(args, weatherProto, alpha, invMatrix);
             }
         }
+
+        // NC - Clouds
+        if (_entManager.TryGetComponent<NCCloudLayerComponent>(mapUid, out var cloudLayer))
+        {
+            DrawCloudLayer(args, cloudLayer, invMatrix);
+        }
+        // NC - Clouds
 
         if (_entManager.TryGetComponent<RestrictedRangeComponent>(mapUid, out var restrictedRangeComponent))
         {

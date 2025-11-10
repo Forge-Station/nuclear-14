@@ -1,0 +1,14 @@
+cmd-nccloud-desc = Запускает или останавливает облачный слой NC на карте.
+cmd-nccloud-help = nccloud <id карты> start [длительность_в_секундах]\nnccloud <id карты> stop
+cmd-nccloud-hint-map = ID карты
+cmd-nccloud-hint-action = Действие (start/stop)
+cmd-nccloud-hint-duration = Длительность в секундах
+cmd-nccloud-error-args = Недостаточно аргументов.
+cmd-nccloud-error-map-id = {$value} не является корректным ID карты.
+cmd-nccloud-error-map-missing = Карта {$mapId} не найдена.
+cmd-nccloud-error-no-component = На карте {$mapId} нет компонента облачного слоя NC.
+cmd-nccloud-error-duration = {$value} не является положительной длительностью в секундах.
+cmd-nccloud-error-action = Неизвестное действие {$value}. Используйте start или stop.
+cmd-nccloud-start-duration = Облачность NC запущена на карте {$mapId} на {$seconds} секунд.
+cmd-nccloud-start = Облачность NC запущена на карте {$mapId}.
+cmd-nccloud-stop = Облачность NC прекращена на карте {$mapId}.
