@@ -40,7 +40,7 @@ public sealed partial class NCCloudLayerComponent : Component
     ///     Alpha value applied to the texture draw call.
     /// </summary>
     [DataField, AutoNetworkedField]
-    public float Opacity = 0.75f;
+    public float Opacity = 1;
 
     /// <summary>
     ///     Current fade multiplier replicated to clients. 0 = hidden, 1 = fully opaque.
@@ -52,7 +52,7 @@ public sealed partial class NCCloudLayerComponent : Component
     ///     Scale factor applied to the sprite when rendering.
     /// </summary>
     [DataField, AutoNetworkedField]
-    public float Scale = 2.4f;
+    public float Scale = 6f;
 
     /// <summary>
     ///     Tint colour of the clouds.
@@ -88,37 +88,37 @@ public sealed partial class NCCloudLayerComponent : Component
     ///     Minimum length of a cloud event in seconds.
     /// </summary>
     [DataField]
-    public float MinActiveDuration = 30f;
+    public float MinActiveDuration = 600f;
 
     /// <summary>
     ///     Maximum length of a cloud event in seconds.
     /// </summary>
     [DataField]
-    public float MaxActiveDuration = 50f;
+    public float MaxActiveDuration = 900f;
 
     /// <summary>
     ///     Minimum downtime between events in seconds.
     /// </summary>
     [DataField]
-    public float MinDowntime = 30f;
+    public float MinDowntime = 300f;
 
     /// <summary>
     ///     Maximum downtime between events in seconds.
     /// </summary>
     [DataField]
-    public float MaxDowntime = 50f;
+    public float MaxDowntime = 1200f;
 
     /// <summary>
     ///     Seconds spent fading clouds in from transparent to opaque.
     /// </summary>
     [DataField]
-    public float FadeInSeconds = 10f;
+    public float FadeInSeconds = 20f;
 
     /// <summary>
     ///     Seconds spent fading clouds back out once the event ends.
     /// </summary>
     [DataField]
-    public float FadeOutSeconds = 10f;
+    public float FadeOutSeconds = 20f;
 
     /// <summary>
     ///     If true, clouds will begin active as soon as the component spawns.
