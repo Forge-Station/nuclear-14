@@ -26,11 +26,11 @@ public sealed class NCCloudCommand : IConsoleCommand
     {
         switch (args.Length)
         {
-            case 0:
-                return CompletionResult.FromHintOptions(CompletionHelper.MapIds(_entManager), Loc.GetString("cmd-nccloud-hint-map"));
             case 1:
-                return CompletionResult.FromHintOptions(new[] {"start", "stop"}, Loc.GetString("cmd-nccloud-hint-action"));
+                return CompletionResult.FromHintOptions(CompletionHelper.MapIds(_entManager), Loc.GetString("cmd-nccloud-hint-map"));
             case 2:
+                return CompletionResult.FromHintOptions(new[] {"start", "stop"}, Loc.GetString("cmd-nccloud-hint-action"));
+            case 3:
                 if (args[1].Equals("start", StringComparison.OrdinalIgnoreCase))
                     return CompletionResult.FromHint(Loc.GetString("cmd-nccloud-hint-duration"));
                 break;

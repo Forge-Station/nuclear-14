@@ -1,5 +1,6 @@
 using System.Numerics;
 using Content.Shared._NC.Clouds;
+using Content.Shared.Light.Components;
 using Robust.Client.Graphics;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Maths;
@@ -30,10 +31,11 @@ public sealed partial class StencilOverlay
             {
                 var worldMatrix = _transform.GetWorldMatrix(grid, xformQuery) * invMatrix;
                 worldHandle.SetTransform(worldMatrix);
+                _entManager.TryGetComponent(grid.Owner, out RoofComponent? roofComp);
 
                 foreach (var tile in grid.Comp.GetTilesIntersecting(worldAABB))
                 {
-                    if (component.RespectWeatherBlockers && _weather.CanWeatherAffect(grid.Owner, grid, tile))
+                    if (component.RespectWeatherBlockers && _weather.CanWeatherAffect(grid.Owner, grid, tile, roofComp))
                         continue;
 
                     var tileBox = new Box2(tile.GridIndices * grid.Comp.TileSize,
