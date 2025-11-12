@@ -41,11 +41,11 @@
           steps:
           - material: BrocFlower
           - material: XanderRoot
-          - tag: Syringe
-            name: a syringe
+          - tag: SyringeEmpty
+            name: an empty syringe
             icon:
-              sprite: _Nuclear14/Objects/Specific/Medical/ms13_drugs.rsi # Forge-Change
-              state: psycho_used # PH until syringe localization fix (Forge-Change)
+              sprite: _Nuclear14/Objects/Specific/Medical/ms13_stimpak.rsi
+              state: stimpak-empty # Forge-Change
             doAfter: 1
           - material: Bloodpack
             doAfter: 1
