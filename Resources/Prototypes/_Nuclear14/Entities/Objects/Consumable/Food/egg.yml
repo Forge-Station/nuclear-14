@@ -80,6 +80,8 @@
   - type: Construction
     graph: Egg
     node: start
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   id: N14FoodEggChickenFertilized
@@ -97,6 +99,8 @@
     ignoreSpawnBlock: true # Forge-Change
   - type: TimedDespawn #delete the egg after the chicken spawns
     lifetime: 21
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   parent: N14FoodEggChicken
@@ -117,6 +121,8 @@
   - type: Construction
     graph: Egg
     node: boiled
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 # Deathclaw
 - type: entity
@@ -129,6 +135,8 @@
   - type: Construction
     graph: Egg
     node: start
+  - type: StaticPrice # Forge-Change
+    price: 25
 
 - type: entity
   id: N14FoodEggDeathclawFertilized
@@ -144,8 +152,10 @@
     minimumEntitiesSpawned: 2
     maximumEntitiesSpawned: 2
     ignoreSpawnBlock: true # Forge-Change
-  - type: TimedDespawn #delete the egg after the chicken spawns
+  - type: TimedDespawn #delete the egg after the death claw spawns
     lifetime: 61
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   parent: N14FoodEggDeathclaw
@@ -166,6 +176,8 @@
   - type: Construction
     graph: Egg
     node: boiled
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 # Gecko
 - type: entity
@@ -178,6 +190,8 @@
   - type: Construction
     graph: Egg
     node: start
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   id: N14FoodEggGeckoFertilized
@@ -195,6 +209,8 @@
     ignoreSpawnBlock: true # Forge-Change
   - type: TimedDespawn #delete the egg after the chicken spawns
     lifetime: 61
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   parent: N14FoodEggGecko
@@ -215,6 +231,8 @@
   - type: Construction
     graph: Egg
     node: boiled
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 # Nightstalker
 - type: entity
@@ -227,6 +245,8 @@
   - type: Construction
     graph: Egg
     node: start
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   id: N14FoodEggNightstalkerFertilized
@@ -244,6 +264,8 @@
     ignoreSpawnBlock: true # Forge-Change
   - type: TimedDespawn #delete the egg after the chicken spawns
     lifetime: 61
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   parent: N14FoodEggNightstalker
@@ -264,3 +286,5 @@
   - type: Construction
     graph: Egg
     node: boiled
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH

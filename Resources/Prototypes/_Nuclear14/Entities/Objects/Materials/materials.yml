@@ -55,6 +55,8 @@
         reagents:
         - ReagentId: N14Gunpowder
           Quantity: 10
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   parent: N14Gunpowder
@@ -99,6 +101,8 @@
         reagents:
         - ReagentId: Sulfur
           Quantity: 10
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   parent: SulfurPowder
@@ -244,6 +248,8 @@
     - state: circuits_3
       map: ["base"]
   - type: Appearance
+  - type: StaticPrice # Forge-Change
+    price: 20
 
 - type: entity
   parent: N14MaterialCircuitry
@@ -290,6 +296,8 @@
   - type: PhysicalComposition
     materialComposition:
       Leather: 100
+  - type: StaticPrice # Forge-Change
+    price: 2
 
 - type: entity
   parent: N14MaterialLeather
@@ -322,6 +330,8 @@
   - type: PhysicalComposition
     materialComposition:
       RawLeather: 100
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   parent: N14MaterialRawLeather
@@ -359,6 +369,8 @@
       AntChitin: 100
   - type: Item
     size: Small
+  - type: StaticPrice # Forge-Change
+    price: 2
 
 - type: entity
   parent: N14MaterialAntChitin
@@ -384,6 +396,8 @@
       Exoskeleton: 100
   - type: Item
     size: Small
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 #MARK: Thread
 - type: entity
@@ -412,6 +426,8 @@
       Thread: 100
   - type: Item
     size: Small
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   parent: N14MaterialThread
@@ -463,6 +479,8 @@
   - type: Item
     heldPrefix: scrap
   - type: Appearance
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   parent: N14Scrap
@@ -499,6 +517,8 @@
   - type: Item
     heldPrefix: scrap_electronic
   - type: Appearance
+  - type: StaticPrice # Forge-Change
+    price: 2
 
 - type: entity
   parent: N14ScrapElectronic
@@ -535,6 +555,8 @@
   - type: Item
     heldPrefix: scrap_steel
   - type: Appearance
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   parent: N14ScrapSteel
@@ -565,6 +587,8 @@
   - type: Item
     heldPrefix: scrap_gold
   - type: Appearance
+  - type: StaticPrice # Forge-Change
+    price: 2
 
 - type: entity
   parent: N14ScrapGold
@@ -595,6 +619,8 @@
   - type: Item
     heldPrefix: scrap_copper
   - type: Appearance
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   parent: N14ScrapCopper
@@ -625,6 +651,8 @@
   - type: Item
     heldPrefix: scrap_brass
   - type: Appearance
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   parent: N14ScrapBrass
@@ -655,6 +683,8 @@
   - type: Item
     heldPrefix: scrap_lead
   - type: Appearance
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   parent: N14ScrapLead

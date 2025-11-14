@@ -56,6 +56,8 @@
     graph: FoodMeatRad
     node: start
     defaultTarget: MeatCooked
+  - type: StaticPrice # Forge-Change
+    price: 2
 
 - type: entity
   name: raw brahmin steak
@@ -78,6 +80,8 @@
     graph: MeatSteakBrahmin
     node: start
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: raw bighorner steak
@@ -94,6 +98,8 @@
     graph: MeatSteakBighorner
     node: start
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: raw radstag steak
@@ -110,6 +116,8 @@
     graph: MeatSteakRadstag
     node: start
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   parent: N14FoodMeatBrahmin
@@ -126,6 +134,8 @@
     graph: MeatSteakRadhog
     node: start
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 1
 
 - type: entity
   parent: N14FoodMeatBrahmin
@@ -139,6 +149,8 @@
     graph: MeatSteakPigrat
     node: start
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 10
 
 - type: entity
   name: raw Yao Guai meat
@@ -161,6 +173,8 @@
     graph: MeatSteakYaoguai
     node: start
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 1
 
 - type: entity
   name: raw mutant plant meat # for spore plants etc
@@ -174,6 +188,8 @@
   - type: Sprite
     sprite: Objects/Consumable/Food/meat.rsi
     state: plant
+  - type: StaticPrice # Forge-Change
+    price: 1
 
 - type: entity
   name: raw radscorpion meat
@@ -196,6 +212,8 @@
     graph: MeatSteakRadscorpion
     node: start
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 10
 
 - type: entity
   name: raw radscorpion leg
@@ -211,6 +229,8 @@
     graph: MeatRadscorpionLeg
     node: start
     defaultTarget: MeatCooked
+  - type: StaticPrice # Forge-Change
+    price: 1
 
 - type: entity
   name: raw radchicken meat
@@ -225,6 +245,8 @@
     sprite: Objects/Consumable/Food/meat.rsi
     layers:
     - state: bird
+  - type: StaticPrice # Forge-Change
+    price: 1
 
 - type: entity
   name: raw gecko meat
@@ -238,6 +260,8 @@
     graph: MeatSteakGecko
     node: start
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 3
 
 - type: entity
   name: raw fire gecko meat
@@ -251,6 +275,8 @@
     graph: MeatSteakGeckoFire
     node: start
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 15
 
 - type: entity
   name: raw golden gecko meat
@@ -264,6 +290,8 @@
     graph: MeatSteakGeckoGolden
     node: start
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 10
 
 - type: entity
   name: raw iguana
@@ -278,6 +306,8 @@
     graph: MeatIguana
     node: start
     defaultTarget: MeatCooked
+  - type: StaticPrice # Forge-Change
+    price: 1
 
 - type: entity
   name: raw squirrel bits
@@ -292,6 +322,8 @@
     graph: MeatMorsels
     node: start
     defaultTarget: MeatCooked
+  - type: StaticPrice # Forge-Change
+    price: 1
 
 - type: entity
   name: raw radroach fillet
@@ -305,6 +337,8 @@
     graph: MeatRadroach
     node: start
     defaultTarget: MeatCooked
+  - type: StaticPrice # Forge-Change
+    price: 1
 
 - type: entity
   name: raw mirelurk claw
@@ -324,6 +358,8 @@
     graph: MeatMirelurkClaw
     node: start
     defaultTarget: MeatCooked
+  - type: StaticPrice # Forge-Change
+    price: 20
 
 - type: entity
   name: raw radlurk claw
@@ -343,6 +379,8 @@
     graph: MeatRadlurkClaw
     node: start
     defaultTarget: MeatCooked
+  - type: StaticPrice # Forge-Change
+    price: 30
 
 # Cooked
 - type: entity
@@ -370,6 +408,8 @@
           Quantity: 6
         - ReagentId: Protein
           Quantity: 6
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
         # - ReagentId: N14RadParticleFood # You cannot set variables to a zero value!
           # Quantity: 0 #currently, we are experimenting with cooked food not giving rads. Former value is 5.
 
@@ -400,6 +440,8 @@
     graph: MeatSteakBrahmin
     node: SteakCooked
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked bighorner steak
@@ -428,6 +470,8 @@
     graph: MeatSteakBighorner
     node: SteakCooked
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked radstag steak
@@ -456,6 +500,8 @@
     graph: MeatSteakRadstag
     node: SteakCooked
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked radhog meat
@@ -483,6 +529,8 @@
     graph: MeatSteakRadhog
     node: SteakCooked
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   parent: N14FoodMeatBrahminCooked
@@ -507,6 +555,8 @@
     graph: MeatSteakPigrat
     node: SteakCooked
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked yao-guai steak
@@ -535,6 +585,8 @@
     graph: MeatSteakYaoguai
     node: SteakCooked
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked radscorpion steak
@@ -563,6 +615,8 @@
     graph: MeatSteakRadscorpion
     node: SteakCooked
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked radchicken meat
@@ -588,6 +642,8 @@
   - type: SliceableFood
     count: 3
     slice: N14FoodMeatRadchickenCutletCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked gecko steak
@@ -613,6 +669,8 @@
     graph: MeatSteakGecko
     node: SteakCooked
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked fire gecko steak
@@ -638,6 +696,8 @@
     graph: MeatSteakGeckoFire
     node: SteakCooked
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked golden gecko steak
@@ -663,6 +723,8 @@
     graph: MeatSteakGeckoGolden
     node: SteakCooked
     defaultTarget: SteakCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked iguana
@@ -687,6 +749,8 @@
     graph: MeatIguana
     node: MeatCooked
     defaultTarget: MeatCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked squirrel bits
@@ -710,6 +774,8 @@
     graph: MeatMorsels
     node: MeatCooked
     defaultTarget: MeatCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked radroach fillet
@@ -734,6 +800,8 @@
     graph: MeatRadroach
     node: MeatCooked
     defaultTarget: MeatCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked mirelurk claw
@@ -758,6 +826,8 @@
     graph: MeatMirelurkClaw
     node: MeatCooked
     defaultTarget: MeatCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked radlurk claw
@@ -782,6 +852,8 @@
     graph: MeatRadlurkClaw
     node: MeatCooked
     defaultTarget: MeatCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 
 # Cooked Boiled
@@ -807,6 +879,8 @@
     graph: MeatRadscorpionLeg
     node: MeatCooked
     defaultTarget: MeatCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 
 # Cutlets
@@ -845,8 +919,6 @@
     graph: MeatRadCutlet
     node: start
     defaultTarget: CutletCooked
-  - type: StaticPrice # Corvax-Add
-    price: -10
 
 - type: entity
   name: raw brahmin cutlet
@@ -987,8 +1059,8 @@
     graph: MeatRadCutlet
     node: CutletCooked
     defaultTarget: CutletCooked
-  - type: StaticPrice # Corvax-Add
-    price: -10
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked brahmin cutlet
@@ -1005,6 +1077,8 @@
     graph: MeatBrahminCutlet
     node: CutletCooked
     defaultTarget: CutletCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked bighorner cutlet
@@ -1021,6 +1095,8 @@
     graph: MeatBighornerCutlet
     node: CutletCooked
     defaultTarget: CutletCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked radstag cutlet
@@ -1037,6 +1113,8 @@
     graph: MeatRadstagCutlet
     node: CutletCooked
     defaultTarget: CutletCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked radhog cutlet
@@ -1053,6 +1131,8 @@
     graph: MeatRadhogCutlet
     node: CutletCooked
     defaultTarget: CutletCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked yao-guai cutlet
@@ -1069,6 +1149,8 @@
     graph: MeatYaoguaiCutlet
     node: CutletCooked
     defaultTarget: CutletCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked radchicken cutlet
@@ -1083,6 +1165,8 @@
     graph: MeatRadchickenCutlet
     node: CutletCooked
     defaultTarget: CutletCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   name: cooked radscorpion cutlet
@@ -1100,6 +1184,8 @@
     graph: MeatRadscorpionCutlet
     node: CutletCooked
     defaultTarget: CutletCooked
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 #- type: entity
 #  name: raw bacon

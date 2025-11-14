@@ -28,6 +28,8 @@
     damage:
       types:
         Blunt: 0
+  - type: StaticPrice # Forge-Change
+    price: 15
 
 - type: entity
   parent: N14FoodFireantNectar
@@ -50,6 +52,8 @@
       reagents:
       - ReagentId: N14BloatflyAcid
         Quantity: 10
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   parent: N14FoodFireantNectar
@@ -72,3 +76,5 @@
       reagents:
       - ReagentId: N14CazadorAcid
         Quantity: 10
+  - type: StaticPrice # Forge-Change
+    price: 59
