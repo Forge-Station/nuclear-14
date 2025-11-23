@@ -5,11 +5,29 @@
   description: A clean mattress for sleeping on.
   components:
   - type: Sprite
+    noRot: false
     sprite: _Nuclear14/Structures/Furniture/bedsandchairs.rsi
     state: bed
   - type: Construction
     graph: N14Bed
     node: bed
+  - type: Transform
+    anchored: false
+    noRot: false
+
+- type: entity
+  parent: N14Bed
+  id: N14BedBunk
+  name: "Bunk Bed"
+  description: A clean bunk bed. I call top bunk!
+  components:
+  - type: Sprite
+    state: bed_bunk
+    drawdepth: OverMobs
+  - type: Strap
+    position: Down
+    rotation: -270
+    buckleOffset: 0,0.3
 
 - type: entity
   parent: N14Bed
@@ -41,6 +59,11 @@
   components:
   - type: Sprite
     state: bed_wood_bunk
+    drawdepth: OverMobs
+  - type: Strap
+    position: Down
+    rotation: -270
+    buckleOffset: 0,0.3
 
 # TODO: Reduce the healing rate of all these at some point compared to a proper bed.
 - type: entity
@@ -49,53 +72,54 @@
   name: bedroll
   description: A bedroll for sleeping on the road. Not very comfy.
   components:
-    - type: HealOnBuckle
-      damage:
-        types:
-          Poison: -0.05
-          Blunt: -0.05
-    - type: Sprite
-      sprite: _Nuclear14/Structures/Furniture/bedsandchairs.rsi
-      noRot: true
-      layers:
-      - state: bedroll_unrolled
-        map: ["unfoldedLayer"]
-      - state: bedroll_rolled
-        map: ["foldedLayer"]
-      - state: bedroll_unrolled
-        map: ["buckledLayer"]
-        visible: false
-    - type: Appearance
-    - type: Fixtures
-      fixtures:
-        fix1:
-          shape:
-            !type:PhysShapeCircle
-            radius: 0.2
-          density: 100
-          mask:
-          - TableMask
-    - type: Destructible
-      thresholds:
-        - trigger:
-            !type:DamageTrigger
-            damage: 50
-          behaviors:
-            - !type:DoActsBehavior
-              acts: ["Destruction"]
-            - !type:SpawnEntitiesBehavior
-              spawn:
-                MaterialCloth1:
-                  min: 0
-                  max: 2
-    - type: Strap
-      enabled: True
-      position: Down
-      rotation: -90
-      buckleOffset: "0.05,-0.10"
-    - type: Construction
-      graph: N14Bed
-      node: bedroll
+  - type: HealOnBuckle
+    damage:
+      types:
+        Poison: -0.05
+        Blunt: -0.05
+  - type: Sprite
+    sprite: _Nuclear14/Structures/Furniture/bedsandchairs.rsi
+    noRot: true
+    layers:
+    - state: bedroll_unrolled
+      map: ["unfoldedLayer"]
+    - state: bedroll_rolled
+      map: ["foldedLayer"]
+    - state: bedroll_unrolled
+      map: ["buckledLayer"]
+      visible: false
+  - type: Appearance
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.2
+        density: 100
+        mask:
+        - TableMask
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 50
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          MaterialCloth1:
+            min: 0
+            max: 2
+  - type: Strap
+    position: Down
+    rotation: -90
+    buckleOffset: "0.05,-0.10"
+  - type: Construction
+    graph: N14Bed
+    node: bedroll
+  - type: StaticPrice
+    price: 6 # Corvax-Change
 
 - type: entity
   parent: N14Bedroll
@@ -104,8 +128,18 @@
   components:
   - type: Foldable
     folded: true
-  - type: Strap
-    enabled: False
+
+- type: entity
+  parent: N14Bed
+  id: N14BedMattress0
+  name: Mattress
+  description: A mattress on the floor. Better than nothing.
+  components:
+  - type: Sprite
+    state: mattress0
+  - type: Construction
+    graph: N14Bed
+    node: mattress
 
 - type: entity
   parent: N14Bed

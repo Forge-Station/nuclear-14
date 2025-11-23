@@ -4,4 +4,3 @@
   icon: { sprite: "_Nuclear14/Objects/Specific/Medical/drugs.rsi", state: bandage }
   spawn: N14Bandage
   maxCount: 15 #Changed to 15 due to shitmed changes
-  itemSize: 1

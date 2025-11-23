@@ -125,4 +125,4 @@
   - type: Sprite
     state: timber
   - type: SecretStash
-    secretPartName: secret-stash-part-plant
+    secretStashName: secret-stash-part-plant

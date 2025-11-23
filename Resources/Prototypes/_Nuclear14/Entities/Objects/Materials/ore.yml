@@ -11,9 +11,6 @@
     sprite: /Textures/_Nuclear14/Objects/Misc/materials.rsi
     state: aluminium
   - type: Material
-  - type: PhysicalComposition
-    materialComposition:
-      RawAluminium: 500
 
 - type: entity
   id: N14AluminiumOre1

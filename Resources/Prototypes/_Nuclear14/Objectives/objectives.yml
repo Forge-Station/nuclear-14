@@ -20,7 +20,7 @@
   id: BaseNCRObjective
   components:
   - type: Objective
-    issuer: ncr
+    issuer: objective-issuer-ncr
   - type: FactionRequirement
     factions:
     - NCR
@@ -71,7 +71,7 @@
   id: BaseBOSWObjective
   components:
   - type: Objective
-    issuer: Washington Brotherhood
+    issuer: objective-issuer-washington-brotherhood
   - type: FactionRequirement
     factions:
     - BrotherhoodWashington

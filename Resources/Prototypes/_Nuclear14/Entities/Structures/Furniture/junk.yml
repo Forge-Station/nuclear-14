@@ -253,7 +253,7 @@
     snapCardinals: false
     drawdepth: Overdoors
   - type: SecretStash
-    secretPartName: secret-stash-part-toilet
+    secretStashName: secret-stash-part-toilet
 
 - type: entity
   parent: N14JunkMetalBase

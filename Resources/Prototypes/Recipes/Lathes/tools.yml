@@ -56,7 +56,7 @@
   category: Parts
   completetime: 0.1
   materials:
-    Copper: 30
+    N14Copper: 30
 
 - type: latheRecipe
   parent: CableStack

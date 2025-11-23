@@ -11,7 +11,6 @@
   icon: { sprite: _Nuclear14/Objects/Misc/mob_drops.rsi, state: hide_brahmin_2 }
   spawn: N14MaterialBrahminHide1
   maxCount: 4
-  itemSize: 1
 
 - type: stack
   id: N14Gunpowder
@@ -19,7 +18,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: powder_lead }
   spawn: N14Gunpowder1
   maxCount: 10
-  itemSize: 1
 
 - type: stack
   id: N14Paper
@@ -27,7 +25,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/clutter.rsi", state: paper }
   spawn: N14Paper1
   maxCount: 10
-  itemSize: 1
 
 - type: stack
   id: N14Timber
@@ -35,7 +32,6 @@
   icon: { sprite: "_Nuclear14/Structures/Decoration/flora.rsi", state: tree_timber }
   spawn: N14FloraLogTimber
   maxCount: 5
-  itemSize: 1
 
 - type: stack
   id: Compost
@@ -43,7 +39,6 @@
   icon: { sprite: "_Nuclear14/Objects/Misc/crafting_material.rsi", state: compost }
   spawn: N14CompostRotted
   maxCount: 5
-  itemSize: 1
 
 - type: stack
   id: Leather
@@ -51,7 +46,6 @@
   icon: { sprite: _Nuclear14/Objects/Misc/materials.rsi, state: leather_3 }
   spawn: N14MaterialLeather1
   maxCount: 15
-  itemSize: 1
 
 - type: stack
   id: RawLeather
@@ -59,7 +53,6 @@
   icon: { sprite: _Nuclear14/Objects/Misc/materials.rsi, state: raw_leather_2 }
   spawn: N14MaterialRawLeather1
   maxCount: 15
-  itemSize: 1
 
 - type: stack
   id: AntChitin
@@ -67,7 +60,6 @@
   icon: { sprite: _Nuclear14/Objects/Misc/mob_drops.rsi, state: chitin_3 }
   spawn: N14MaterialAntChitin1
   maxCount: 3
-  itemSize: 1
 
 - type: stack
   id: Thread
@@ -75,7 +67,6 @@
   icon: { sprite: /Textures/_Nuclear14/Objects/Misc/materials.rsi, state: thread }
   spawn: N14MaterialThread1
   maxCount: 10
-  itemSize: 1
 
 # Ores
 - type: stack
@@ -84,7 +75,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: lead }
   spawn: N14LeadOre1
   maxCount: 10
-  itemSize: 1
 
 - type: stack
   id: N14AluminiumOre
@@ -99,7 +89,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: copper }
   spawn: N14CopperOre1
   maxCount: 30
-  itemSize: 1
 
 - type: stack
   id: N14IronOre
@@ -107,7 +96,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: iron }
   spawn: N14IronOre1
   maxCount: 30
-  itemSize: 1
 
 - type: stack
   id: N14GoldOre
@@ -115,7 +103,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: gold }
   spawn: N14GoldOre1
   maxCount: 30
-  itemSize: 1
 
 - type: stack
   id: N14SilverOre
@@ -123,7 +110,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: silver }
   spawn: N14SilverOre1
   maxCount: 30
-  itemSize: 1
 
 - type: stack
   id: SulfurOre
@@ -131,15 +117,13 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: sulfur }
   spawn: SulfurOre1
   maxCount: 10
-  itemSize: 1
 
-# - type: stack
-  # id: FertilizerOre
-  # name: fertilizer ore
-  # icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/crafting_material.rsi", state: ore_fertilizer }
-  # spawn: FertilizerOre1
-  # maxCount: 10
-  # itemSize: 1
+- type: stack
+  id: FertilizerOre
+  name: fertilizer ore
+  icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/crafting_material.rsi", state: ore_fertilizer }
+  spawn: FertilizerOre1
+  maxCount: 10
 
 
 # Metals etc
@@ -149,7 +133,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: ingot_lead }
   spawn: N14IngotLead1
   maxCount: 30
-  itemSize: 1
 
 - type: stack
   id: Aluminum
@@ -157,7 +140,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: ingot_aluminum }
   spawn: N14IngotAluminum1
   maxCount: 30
-  itemSize: 1
 
 - type: stack
   id: N14Copper
@@ -165,7 +147,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: ingot_copper }
   spawn: N14IngotCopper1
   maxCount: 30
-  itemSize: 1
 
 - type: stack
   id: N14Brass
@@ -173,7 +154,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: ingot_brass }
   spawn: N14IngotBrass1
   maxCount: 30
-  itemSize: 1
 
 - type: stack
   id: N14Gold
@@ -181,7 +161,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: ingot_gold }
   spawn: N14IngotGold1
   maxCount: 30
-  itemSize: 1
 
 - type: stack
   id: N14Iron
@@ -189,7 +168,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: ingot_iron }
   spawn: N14IngotIron1
   maxCount: 30
-  itemSize: 1
 
 - type: stack
   id: N14Silver
@@ -197,7 +175,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: ingot_silver }
   spawn: N14IngotSilver1
   maxCount: 30
-  itemSize: 1
 
 - type: stack
   id: Sulfur
@@ -205,7 +182,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: powder_brass }
   spawn: SulfurPowder1
   maxCount: 30
-  itemSize: 1
 
 - type: stack
   id: Charcoal
@@ -213,7 +189,6 @@
   icon: { sprite: /Textures/_Nuclear14/Objects/Misc/materials.rsi, state: powder_lead }
   spawn: Charcoal1
   maxCount: 30
-  itemSize: 1
 
 #Scrap
 - type: stack
@@ -222,7 +197,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: scrap_electronic_2 }
   spawn: N14ScrapElectronic1
   maxCount: 30
-  itemSize: 1
 
 - type: stack
   id: N14ScrapSteel
@@ -230,7 +204,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: scrap_steel_2 }
   spawn: N14ScrapSteel1
   maxCount: 30
-  itemSize: 1
 
 - type: stack
   id: N14ScrapGold
@@ -238,7 +211,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: scrap_gold }
   spawn: N14ScrapGold1
   maxCount: 30
-  itemSize: 1
 
 - type: stack
   id: N14ScrapCopper
@@ -246,7 +218,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: scrap_copper }
   spawn: N14ScrapCopper1
   maxCount: 30
-  itemSize: 1
 
 - type: stack
   id: N14ScrapBrass
@@ -254,7 +225,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: scrap_brass }
   spawn: N14ScrapBrass1
   maxCount: 30
-  itemSize: 1
 
 - type: stack
   id: N14Scrap
@@ -262,7 +232,6 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: scrap_3 }
   spawn: N14Scrap1
   maxCount: 30
-  itemSize: 1
 
 - type: stack
   id: N14ScrapLead
@@ -270,4 +239,3 @@
   icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/materials.rsi", state: scrap_lead }
   spawn: N14ScrapLead1
   maxCount: 30
-  itemSize: 1

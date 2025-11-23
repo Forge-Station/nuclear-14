@@ -6,9 +6,9 @@
   components:
     - type: MachineBoard
       prototype: N14PortableGeneratorWeldingFuel
-      requirements:
+      machinePartRequirements:
         Capacitor: 1
-      materialRequirements:
+      stackRequirements:
         Cable: 10
     - type: PhysicalComposition
       materialComposition:

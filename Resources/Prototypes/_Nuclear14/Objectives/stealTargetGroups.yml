@@ -4,21 +4,21 @@
 ## Factions
 - type: stealTargetGroup
   id: FactionPlansNCR
-  name: NCR Plans Holotape
+  name: steal-target-ncr-plans
   sprite:
     sprite: _Nuclear14/Objects/Misc/tapes_cards.rsi
     state: holotape_red
 
 - type: stealTargetGroup
   id: FactionPlansEnclave
-  name: Enclave Plans Holotape
+  name: steal-target-enclave-plans
   sprite:
     sprite: _Nuclear14/Objects/Misc/tapes_cards.rsi
     state: holotape_enclave
 
 - type: stealTargetGroup
   id: FactionPlansVault
-  name: GECK Location Holotape
+  name: steal-target-geck-location
   sprite:
     sprite: _Nuclear14/Objects/Misc/tapes_cards.rsi
     state: holotape_green
@@ -26,7 +26,7 @@
 ## Quests
 - type: stealTargetGroup
   id: QuestHolotapeFusionplans
-  name: Fusion Plans Holotape
+  name: steal-target-fusion-plans
   sprite:
     sprite: _Nuclear14/Objects/Misc/tapes_cards.rsi
     state: holotape_yellow

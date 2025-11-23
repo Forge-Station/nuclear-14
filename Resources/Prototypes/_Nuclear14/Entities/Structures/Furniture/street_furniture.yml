@@ -457,9 +457,6 @@
     enabled: false
   - type: PoweredLight
     bulb: Tube
-    damage:
-      types:
-        Heat: 20
   - type: ContainerContainer
     containers:
       light_bulb: !type:ContainerSlot
@@ -491,9 +488,6 @@
       map: [ "enum.PoweredLightLayers.Base" ]
   - type: PoweredLight
     hasLampOnSpawn: LightTube
-    damage:
-      types:
-        Heat: 20
 
 - type: entity
   parent: N14LightStreetLampPostPoweredEmptyLeft
@@ -508,9 +502,6 @@
       map: [ "enum.PoweredLightLayers.Base" ]
   - type: PoweredLight
     hasLampOnSpawn: LightTube
-    damage:
-      types:
-        Heat: 20
 
 - type: entity
   parent: N14LightStreetLampPostAlwaysPoweredRight
