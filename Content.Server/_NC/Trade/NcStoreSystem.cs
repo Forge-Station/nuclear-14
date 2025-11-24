@@ -1,8 +1,11 @@
 using System.Linq;
+using System.Numerics;
+using Content.Server.Storage.Components;
 using Content.Shared._NC.Trade;
 using Content.Shared.Access;
 using Content.Shared.Access.Components;
 using Content.Shared.Access.Systems;
+using Content.Shared.Movement.Pulling.Components;
 using Robust.Server.Audio;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio;
@@ -27,6 +30,8 @@ public sealed class NcStoreSystem : EntitySystem
         SubscribeLocalEvent<NcStoreComponent, StoreBuyListingBoundUiMessage>(OnBuyRequest);
         SubscribeLocalEvent<NcStoreComponent, StoreSellListingBoundUiMessage>(OnSellRequest);
         SubscribeLocalEvent<NcStoreComponent, StoreExchangeListingBoundUiMessage>(OnExchangeRequest);
+        SubscribeLocalEvent<NcStoreComponent, StoreMassSellPulledCrateBoundUiMessage>(OnMassSellPulledCrateRequest);
+
     }
 
     private void OnBuyRequest(EntityUid uid, NcStoreComponent comp, StoreBuyListingBoundUiMessage msg)
@@ -89,6 +94,52 @@ public sealed class NcStoreSystem : EntitySystem
 
         if (!ok)
             return;
+
+        _sysMan.GetEntitySystem<StoreStructuredSystem>().UpdateUiState(uid, comp, actor);
+    }
+
+    private void OnMassSellPulledCrateRequest(
+        EntityUid uid,
+        NcStoreComponent comp,
+        StoreMassSellPulledCrateBoundUiMessage msg
+    )
+    {
+        if (comp.CurrentUser is not { } actor)
+            return;
+
+        if (!ValidateUiAccess(uid, actor))
+            return;
+
+        if (!_entMan.TryGetComponent(actor, out PullerComponent? puller) ||
+            puller.Pulling is not { } crate)
+            return;
+
+        if (!_entMan.TryGetComponent(crate, out EntityStorageComponent? storage))
+            return;
+
+        if (storage.Open)
+            return;
+
+
+        var storeXf = _entMan.GetComponent<TransformComponent>(uid);
+        var crateXf = _entMan.GetComponent<TransformComponent>(crate);
+
+        var storePos = _transform.GetWorldPosition(storeXf);
+        var cratePos = _transform.GetWorldPosition(crateXf);
+
+        const float maxDistance = 2f;
+        var dist = Vector2.Distance(storePos, cratePos);
+
+        if (dist > maxDistance)
+            return;
+
+
+        var logic = _sysMan.GetEntitySystem<NcStoreLogicSystem>();
+
+        if (!logic.TryMassSellFromContainer(uid, comp, actor, crate))
+            return;
+
+        _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid);
 
         _sysMan.GetEntitySystem<StoreStructuredSystem>().UpdateUiState(uid, comp, actor);
     }

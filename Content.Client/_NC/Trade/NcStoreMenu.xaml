@@ -70,6 +70,13 @@
                                StyleClasses="LabelHeading"
                                Margin="0 0 0 6"
                                Text="Выберите категорию" />
+                        <BoxContainer Orientation="Horizontal" Margin="0 0 0 6">
+                            <Button Name="MassSellPulledCrateButton"
+                                    MinWidth="260"
+                                    ToolTip="Для массовой продажи необходимо:
+                      • Ящик должен быть ЗАКРЫТ
+                      • Вы должны его тянуть " />
+                        </BoxContainer>
 
                         <ScrollContainer Name="SellListingsScroll" VerticalExpand="True" HorizontalExpand="True">
                             <BoxContainer Name="SellListingsContainer" Orientation="Vertical" />

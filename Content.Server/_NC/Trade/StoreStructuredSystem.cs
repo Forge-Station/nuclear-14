@@ -1,9 +1,11 @@
 using System.Linq;
 using Content.Server.Popups;
+using Content.Server.Storage.Components;
 using Content.Shared._NC.Trade;
 using Content.Shared.Access;
 using Content.Shared.Access.Components;
 using Content.Shared.Access.Systems;
+using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Stacks;
 using Content.Shared.UserInterface;
 using Robust.Server.GameObjects;
@@ -119,7 +121,9 @@ public sealed class StoreStructuredSystem : EntitySystem
         }
 
         var preferredCurrency = comp.CurrencyWhitelist.FirstOrDefault();
-        var balance = string.IsNullOrEmpty(preferredCurrency) ? 0 : _logic.GetBalance(user, preferredCurrency);
+        var balance = string.IsNullOrEmpty(preferredCurrency)
+            ? 0
+            : _logic.GetBalance(user, preferredCurrency);
 
         var listings = comp.Listings
             .Where(l => !string.IsNullOrEmpty(l.ProductEntity))
@@ -128,7 +132,8 @@ public sealed class StoreStructuredSystem : EntitySystem
                 string? currencyId = null;
                 var priceF = 0f;
 
-                if (!string.IsNullOrEmpty(preferredCurrency) && l.Cost.TryGetValue(preferredCurrency, out var vPref))
+                if (!string.IsNullOrEmpty(preferredCurrency) &&
+                    l.Cost.TryGetValue(preferredCurrency, out var vPref))
                 {
                     currencyId = preferredCurrency;
                     priceF = vPref;
@@ -193,7 +198,78 @@ public sealed class StoreStructuredSystem : EntitySystem
         if (readyToSell.Count > 0)
             listings.AddRange(readyToSell);
 
-        _ui.SetUiState(uid, StoreUiKey.Key, new StoreUiState(balance, listings));
+        var crateTotals = new Dictionary<string, int>();
+        const string crateCat = "Готово к продаже в ящике";
+
+        EntityUid? crate = null;
+
+        if (TryComp(user, out PullerComponent? puller) &&
+            puller.Pulling is { } pulled &&
+            TryComp(pulled, out EntityStorageComponent? storage) &&
+            !storage.Open)
+            crate = pulled;
+
+        if (crate is { } crateUid)
+        {
+            crateTotals = _logic.GetMassSellValue(comp, crateUid);
+
+            var crateListings = comp.Listings
+                .Where(l => l.Mode == StoreMode.Sell && !string.IsNullOrEmpty(l.ProductEntity))
+                .ToList();
+
+            foreach (var l in crateListings)
+            {
+                int countInCrate;
+                try
+                {
+                    countInCrate = _logic.GetOwnedInRoot(crateUid, l.ProductEntity);
+                }
+                catch
+                {
+                    continue;
+                }
+
+                if (countInCrate <= 0 || l.RemainingCount == 0)
+                    continue;
+
+                string? currencyId = null;
+                var priceF = 0f;
+
+                if (!string.IsNullOrEmpty(preferredCurrency) &&
+                    l.Cost.TryGetValue(preferredCurrency, out var vPref2))
+                {
+                    currencyId = preferredCurrency;
+                    priceF = vPref2;
+                }
+                else if (l.Cost.Count > 0)
+                {
+                    var kv = l.Cost.First();
+                    currencyId = kv.Key;
+                    priceF = kv.Value;
+                }
+
+                var price = (int) MathF.Ceiling(priceF);
+                if (price <= 0 || currencyId == null)
+                    continue;
+
+                var maxByRemaining = l.RemainingCount >= 0 ? l.RemainingCount : int.MaxValue;
+                var owned = Math.Min(countInCrate, maxByRemaining);
+
+                listings.Add(
+                    new(
+                        l.Id + "__crate",
+                        l.ProductEntity,
+                        price,
+                        crateCat,
+                        currencyId,
+                        l.Mode,
+                        owned,
+                        l.RemainingCount
+                    ));
+            }
+        }
+
+        _ui.SetUiState(uid, StoreUiKey.Key, new StoreUiState(balance, listings, crateTotals));
     }
 
 

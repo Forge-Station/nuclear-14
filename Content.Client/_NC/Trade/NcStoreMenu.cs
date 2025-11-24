@@ -11,9 +11,7 @@ using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
-
 namespace Content.Client._NC.Trade;
-
 
 [GenerateTypedNameReferences]
 public sealed partial class NcStoreMenu : FancyWindow
@@ -25,11 +23,8 @@ public sealed partial class NcStoreMenu : FancyWindow
     private static readonly Color CatIdle = new(0x7C, 0x66, 0x24);
 
     private readonly Dictionary<string, (NcStoreListingControl Ctrl, string Sig)> _buyCache = new();
-
     private readonly Dictionary<string, Button> _buyCatButtons = new();
-
     private readonly List<string> _buyCats = new();
-
     private readonly List<StoreListingData> _items = new();
 
     private readonly IPrototypeManager _proto;
@@ -40,10 +35,11 @@ public sealed partial class NcStoreMenu : FancyWindow
     private readonly List<string> _sellCats = new();
     private readonly SpriteSystem _sprites;
 
+    private readonly Dictionary<string, int> _massSellTotals = new();
+
     private int _balance;
 
     private string _buyCat = string.Empty;
-
     private int _pageBuy = 1;
     private int _pageSell = 1;
 
@@ -76,11 +72,19 @@ public sealed partial class NcStoreMenu : FancyWindow
         };
 
         BalanceLabel.StyleClasses.Add(StyleNano.StyleClassLabelHeadingBigger);
+        MassSellPulledCrateButton.Disabled = true;
+        MassSellPulledCrateButton.Text = "Продать содержимое тащимого ящика";
+
+        MassSellPulledCrateButton.OnPressed += _ =>
+        {
+            OnMassSellPulledCrate?.Invoke();
+        };
     }
 
     public event Action<string>? OnSearchChanged;
     public event Action<StoreListingData, int>? OnBuyPressed;
     public event Action<StoreListingData, int>? OnSellPressed;
+    public event Action? OnMassSellPulledCrate;
     public event Action<StoreListingData, int>? OnExchangePressed;
 
     public void SetBalance(int balance)
@@ -88,6 +92,32 @@ public sealed partial class NcStoreMenu : FancyWindow
         _balance = balance;
         BalanceLabel.Text = balance.ToString();
         BalanceInfo.SetMarkup($"[font size=14][color=yellow]{balance}[/color][/font]");
+    }
+
+    public void SetMassSellTotals(Dictionary<string, int> totals)
+    {
+        _massSellTotals.Clear();
+        foreach (var (cur, amt) in totals)
+            _massSellTotals[cur] = amt;
+
+        if (_massSellTotals.Count == 0)
+        {
+            MassSellPulledCrateButton.Text = "Продать содержимое тащимого ящика";
+            MassSellPulledCrateButton.Disabled = true;
+            return;
+        }
+
+        MassSellPulledCrateButton.Disabled = false;
+
+        var text = string.Join(", ", _massSellTotals.Select(p => $"{p.Value} {p.Key}"));
+        MassSellPulledCrateButton.Text = $"Продать содержимое ({text})";
+    }
+
+    public void ApplyState(int balance, List<StoreListingData> list, Dictionary<string, int> massTotals)
+    {
+        SetBalance(balance);
+        SetMassSellTotals(massTotals);
+        Populate(list);
     }
 
     public void Populate(List<StoreListingData> list)
@@ -163,7 +193,6 @@ public sealed partial class NcStoreMenu : FancyWindow
         FillPaneFull(BuyListingsContainer, StoreMode.Buy, _buyCat, (d, qty) => OnBuyPressed?.Invoke(d, qty));
         FillPaneFull(SellListingsContainer, StoreMode.Sell, _sellCat, (d, qty) => OnSellPressed?.Invoke(d, qty));
     }
-
 
     private IEnumerable<StoreListingData> Filtered(StoreMode mode, string cat)
     {
@@ -368,14 +397,24 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         foreach (var c in cats)
         {
-            var selected = c == current;
+            var catId = c;
+
+            var display = c;
+            if (c == "Готово к продаже")
+                display = "Готово";
+            else if (c == "Готово к продаже в ящике")
+                display = "В ящике";
+
+            var selected = catId == current;
+
             var btn = new Button
             {
-                Text = c,
+                Text = display,
                 ToggleMode = true,
                 HorizontalExpand = true,
                 Pressed = selected,
-                ModulateSelfOverride = selected ? CatSelected : CatIdle
+                ModulateSelfOverride = selected ? CatSelected : CatIdle,
+                ToolTip = c
             };
 
             btn.OnMouseEntered += _ =>
@@ -383,12 +422,13 @@ public sealed partial class NcStoreMenu : FancyWindow
             btn.OnMouseExited += _ =>
                 btn.ModulateSelfOverride = btn.Pressed ? CatSelected : CatIdle;
 
-            btn.OnPressed += _ => onClick(c);
+            btn.OnPressed += _ => onClick(catId);
 
             parent.AddChild(btn);
-            registry[c] = btn;
+            registry[catId] = btn;
         }
     }
+
 
     private static void UpdateCatVisuals(Dictionary<string, Button> map, string current)
     {
