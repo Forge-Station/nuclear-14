@@ -6,6 +6,7 @@
   components:
   - type: NcStore
     preset: caravan_store
+    contracts: caravan_contractrs
     access:
     - [ "TownieShopkeeper" ]
   - type: UserInterface
@@ -703,3 +704,23 @@
         price: 3
       - proto: N14ClothingOuterRaiderCombat2
         price: 3
+
+- type: storeContractsPreset
+  id: caravan_contracts
+  contracts:
+    junk_easy:
+      targetItem: N14JunkDuctTape
+      required: 5
+      reward: 25
+      rewardCurrency: Caps
+      difficulty: Easy
+      description: "Сдай 5 рулонов скотча — получи монетки."
+
+    steel_medium:
+      targetItem: SheetSteel
+      required: 3
+      reward: 300
+      rewardCurrency: Caps
+      difficulty: Medium
+      description: "Принеси 3 листа стали."
+

@@ -11,11 +11,13 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
     private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore-loader");
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private readonly NcContractSystem _contracts = default!;
 
     public override void Initialize()
     {
         SubscribeLocalEvent<NcStoreComponent, MapInitEvent>(OnMapInit);
         SubscribeLocalEvent<NcStoreComponent, ComponentStartup>(OnStartup);
+
     }
 
     private void OnMapInit(EntityUid uid, NcStoreComponent comp, MapInitEvent args) =>

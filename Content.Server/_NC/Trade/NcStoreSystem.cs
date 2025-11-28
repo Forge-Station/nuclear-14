@@ -29,7 +29,6 @@ public sealed class NcStoreSystem : EntitySystem
     {
         SubscribeLocalEvent<NcStoreComponent, StoreBuyListingBoundUiMessage>(OnBuyRequest);
         SubscribeLocalEvent<NcStoreComponent, StoreSellListingBoundUiMessage>(OnSellRequest);
-        SubscribeLocalEvent<NcStoreComponent, StoreExchangeListingBoundUiMessage>(OnExchangeRequest);
         SubscribeLocalEvent<NcStoreComponent, StoreMassSellPulledCrateBoundUiMessage>(OnMassSellPulledCrateRequest);
 
     }
@@ -82,21 +81,6 @@ public sealed class NcStoreSystem : EntitySystem
         _sysMan.GetEntitySystem<StoreStructuredSystem>().UpdateUiState(uid, comp, actor);
     }
 
-    private void OnExchangeRequest(EntityUid uid, NcStoreComponent comp, StoreExchangeListingBoundUiMessage msg)
-    {
-        if (comp.CurrentUser is not { } actor)
-            return;
-        if (!ValidateUiAccess(uid, actor))
-            return;
-
-        var ok = _sysMan.GetEntitySystem<NcStoreLogicSystem>()
-            .TryExchange(msg.ListingId, uid, comp, actor, msg);
-
-        if (!ok)
-            return;
-
-        _sysMan.GetEntitySystem<StoreStructuredSystem>().UpdateUiState(uid, comp, actor);
-    }
 
     private void OnMassSellPulledCrateRequest(
         EntityUid uid,

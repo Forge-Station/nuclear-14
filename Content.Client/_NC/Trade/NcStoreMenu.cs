@@ -11,7 +11,9 @@ using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
+
 namespace Content.Client._NC.Trade;
+
 
 [GenerateTypedNameReferences]
 public sealed partial class NcStoreMenu : FancyWindow
@@ -27,6 +29,7 @@ public sealed partial class NcStoreMenu : FancyWindow
     private readonly List<string> _buyCats = new();
     private readonly List<StoreListingData> _items = new();
 
+    private readonly Dictionary<string, int> _massSellTotals = new();
     private readonly IPrototypeManager _proto;
 
     private readonly Dictionary<string, int> _qtyCache = new();
@@ -34,8 +37,6 @@ public sealed partial class NcStoreMenu : FancyWindow
     private readonly Dictionary<string, Button> _sellCatButtons = new();
     private readonly List<string> _sellCats = new();
     private readonly SpriteSystem _sprites;
-
-    private readonly Dictionary<string, int> _massSellTotals = new();
 
     private int _balance;
 
@@ -46,6 +47,8 @@ public sealed partial class NcStoreMenu : FancyWindow
     private string _search = string.Empty;
     private int _searchToken;
     private string _sellCat = string.Empty;
+
+    public Action<string>? OnContractClaim;
 
     public NcStoreMenu()
     {
@@ -85,7 +88,6 @@ public sealed partial class NcStoreMenu : FancyWindow
     public event Action<StoreListingData, int>? OnBuyPressed;
     public event Action<StoreListingData, int>? OnSellPressed;
     public event Action? OnMassSellPulledCrate;
-    public event Action<StoreListingData, int>? OnExchangePressed;
 
     public void SetBalance(int balance)
     {
@@ -287,9 +289,6 @@ public sealed partial class NcStoreMenu : FancyWindow
                     case StoreMode.Sell:
                         ctrl.OnSellPressed += qty => emit(it, qty);
                         break;
-                    case StoreMode.Exchange:
-                        ctrl.OnExchangePressed += qty => OnExchangePressed?.Invoke(it, qty);
-                        break;
                 }
 
                 cache[it.Id] = (ctrl, sig);
@@ -428,6 +427,116 @@ public sealed partial class NcStoreMenu : FancyWindow
             registry[catId] = btn;
         }
     }
+
+    public void PopulateContracts(List<ContractClientData> list)
+    {
+        if (ContractList == null)
+            return;
+
+        ContractList.RemoveAllChildren();
+
+        var ordered = list
+            .OrderBy(x => x.Difficulty switch
+            {
+                "Easy" => 0,
+                "Medium" => 1,
+                "Hard" => 2,
+                _ => 99
+            })
+            .ThenBy(x => x.Completed ? 1 : 0)
+            .ToList();
+
+        foreach (var c in ordered)
+        {
+            var panel = new PanelContainer
+            {
+                StyleClasses = { "NcContractPanel", },
+                Margin = new(0, 0, 0, 8)
+            };
+
+            var box = new BoxContainer
+            {
+                Orientation = BoxContainer.LayoutOrientation.Vertical,
+                Margin = new(8, 8, 8, 8),
+                HorizontalExpand = true
+            };
+
+            box.AddChild(
+                new Label
+                {
+                    Text = $"★ {DifficultyName(c.Difficulty)} контракт",
+                    StyleClasses = { "NcContractTitle", }
+                });
+
+            // Описание, если есть
+            if (!string.IsNullOrWhiteSpace(c.Description))
+            {
+                box.AddChild(
+                    new Label
+                    {
+                        Text = c.Description,
+                        StyleClasses = { "NcContractDescription", },
+                        Margin = new(0, 2, 0, 2)
+                    });
+            }
+
+            // Цель
+            box.AddChild(
+                new Label
+                {
+                    Text = $"Цель: {c.TargetItem}"
+                });
+
+            // Прогресс / выполнено
+            if (!c.Completed)
+            {
+                box.AddChild(
+                    new Label
+                    {
+                        Text = $"Прогресс: {c.Progress} / {c.Required}",
+                        StyleClasses = { "NcContractProgress", }
+                    });
+            }
+            else
+            {
+                box.AddChild(
+                    new Label
+                    {
+                        Text = "✔ Выполнено",
+                        StyleClasses = { "NcContractDone", }
+                    });
+            }
+
+            // Награда
+            box.AddChild(
+                new Label
+                {
+                    Text = $"Награда: {c.Reward} {c.RewardCurrency}"
+                });
+
+            var btn = new Button
+            {
+                Text = c.Completed ? "Забрать награду" : "Сдать",
+                HorizontalExpand = true,
+                Margin = new(0, 6, 0, 0)
+            };
+
+            btn.OnPressed += _ => OnContractClaim?.Invoke(c.Id);
+            box.AddChild(btn);
+
+            panel.AddChild(box);
+            ContractList.AddChild(panel);
+        }
+    }
+
+    private string DifficultyName(string diff) =>
+        diff switch
+        {
+            "Easy" => "Лёгкий",
+            "Medium" => "Средний",
+            "Hard" => "Тяжёлый",
+            _ => diff
+        };
 
 
     private static void UpdateCatVisuals(Dictionary<string, Button> map, string current)

@@ -25,6 +25,7 @@ public sealed class StoreStructuredSystem : EntitySystem
     private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore");
 
     [Dependency] private readonly AccessReaderSystem _access = default!;
+    [Dependency] private readonly NcContractSystem _contracts = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     [Dependency] private readonly PopupSystem _popups = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
@@ -47,6 +48,7 @@ public sealed class StoreStructuredSystem : EntitySystem
         SubscribeLocalEvent<ContainerManagerComponent, EntInsertedIntoContainerMessage>(OnUserEntInserted);
         SubscribeLocalEvent<ContainerManagerComponent, EntRemovedFromContainerMessage>(OnUserEntRemoved);
         SubscribeLocalEvent<StackComponent, StackCountChangedEvent>(OnStackCountChanged);
+        SubscribeLocalEvent<NcStoreComponent, ClaimContractBoundMessage>(OnClaimContract);
     }
 
 
@@ -113,6 +115,7 @@ public sealed class StoreStructuredSystem : EntitySystem
 
     public void UpdateUiState(EntityUid uid, NcStoreComponent comp, EntityUid user)
     {
+        // Проверяем доступ и валидность юзера
         if (!IsAccessAllowed(uid, comp, user))
         {
             _ui.CloseUi(uid, StoreUiKey.Key, user);
@@ -120,6 +123,10 @@ public sealed class StoreStructuredSystem : EntitySystem
             return;
         }
 
+        // 1) Сначала обновляем прогресс контрактов под этого игрока
+        UpdateContractsProgress(comp, user);
+
+        // 2) Дальше идёт обычная логика магазина
         var preferredCurrency = comp.CurrencyWhitelist.FirstOrDefault();
         var balance = string.IsNullOrEmpty(preferredCurrency)
             ? 0
@@ -180,6 +187,7 @@ public sealed class StoreStructuredSystem : EntitySystem
             })
             .ToList();
 
+        // ─── "Готово к продаже" ───
         const string readyCat = "Готово к продаже";
 
         var readyToSell = listings
@@ -198,6 +206,7 @@ public sealed class StoreStructuredSystem : EntitySystem
         if (readyToSell.Count > 0)
             listings.AddRange(readyToSell);
 
+        // ─── Массовая продажа из ящика ───
         var crateTotals = new Dictionary<string, int>();
         const string crateCat = "Готово к продаже в ящике";
 
@@ -269,7 +278,11 @@ public sealed class StoreStructuredSystem : EntitySystem
             }
         }
 
+        // 3) Шлём состояние магазина
         _ui.SetUiState(uid, StoreUiKey.Key, new StoreUiState(balance, listings, crateTotals));
+
+        // 4) Сразу следом шлём состояние контрактов
+        SendContracts(uid, comp, user);
     }
 
 
@@ -355,6 +368,57 @@ public sealed class StoreStructuredSystem : EntitySystem
         while (query.MoveNext(out var storeUid, out var storeComp))
             if (storeComp.CurrentUser is { } user)
                 UpdateUiState(storeUid, storeComp, user);
+    }
+
+    private void OnClaimContract(EntityUid uid, NcStoreComponent comp, ClaimContractBoundMessage msg)
+    {
+        if (comp.CurrentUser is not { } user)
+            return;
+
+        UpdateContractsProgress(comp, user);
+
+        if (!_contracts.TryClaim(uid, user, msg.ContractId))
+            return;
+
+        UpdateUiState(uid, comp, user);
+    }
+
+    private void SendContracts(EntityUid uid, NcStoreComponent comp, EntityUid user)
+    {
+        var list = comp.Contracts.Values
+            .Select(c => new ContractClientData(
+                c.Id,
+                c.TargetItem,
+                c.Progress,
+                c.Required,
+                c.Reward,
+                c.RewardCurrency,
+                c.Difficulty,
+                c.Completed,
+                c.Description
+            ))
+            .ToList();
+
+        _ui.SetUiState(uid, StoreUiKey.Key, new ContractUiState(list));
+    }
+
+    private void UpdateContractsProgress(NcStoreComponent comp, EntityUid user)
+    {
+        if (comp.Contracts.Count == 0)
+            return;
+
+        foreach (var (_, contract) in comp.Contracts)
+        {
+            if (string.IsNullOrWhiteSpace(contract.TargetItem))
+            {
+                contract.Progress = 0;
+                continue;
+            }
+
+            var owned = _logic.GetOwned(user, contract.TargetItem);
+
+            contract.Progress = Math.Min(owned, contract.Required);
+        }
     }
 
 

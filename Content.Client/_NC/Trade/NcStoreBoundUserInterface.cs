@@ -43,6 +43,13 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
     protected override void UpdateState(BoundUserInterfaceState state)
     {
         base.UpdateState(state);
+
+        if (state is ContractUiState contractState && _menu != null)
+        {
+            _menu.PopulateContracts(contractState.Contracts);
+            return;
+        }
+
         if (state is not StoreUiState st)
             return;
 
@@ -74,8 +81,9 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
 
             _menu.OnBuyPressed += OnBuy;
             _menu.OnSellPressed += OnSell;
-            _menu.OnExchangePressed += OnExchange;
             _menu.OnMassSellPulledCrate += OnMassSellPulledCrate;
+
+            _menu.OnContractClaim += OnContractClaim;
 
             _menu.OnClose += () =>
             {
@@ -107,23 +115,12 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
         RequestRefresh(true);
     }
 
-    private void OnExchange(StoreListingData data, int qty)
+    private void OnContractClaim(string contractId)
     {
-        if (Actor is not { } actor)
+        if (Actor is null)
             return;
 
-        SendMessage(
-            new StoreExchangeListingBoundUiMessage(
-                StoreExchangeType.CurrencyToItem,
-                data.CurrencyId,
-                null,
-                data.Price,
-                null,
-                data.Id,
-                1.0f,
-                Net(actor),
-                data.Id));
-
+        SendMessage(new ClaimContractBoundMessage(contractId));
         RequestRefresh(true);
     }
 
@@ -142,8 +139,9 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
         {
             _menu.OnBuyPressed -= OnBuy;
             _menu.OnSellPressed -= OnSell;
-            _menu.OnExchangePressed -= OnExchange;
             _menu.OnMassSellPulledCrate -= OnMassSellPulledCrate;
+            _menu.OnContractClaim -= OnContractClaim;
+
             _menu.Orphan();
             _menu = null;
         }

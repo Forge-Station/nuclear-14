@@ -398,10 +398,50 @@ public sealed class NcStoreLogicSystem : EntitySystem
         string listingId,
         EntityUid machine,
         NcStoreComponent? store,
-        EntityUid user,
-        StoreExchangeListingBoundUiMessage msg
-    ) =>
-        false;
+        EntityUid user
+    )
+    {
+        if (store == null || store.Listings.Count == 0)
+            return false;
+
+        var listing = store.Listings.FirstOrDefault(x => x.Id == listingId && x.Mode == StoreMode.Exchange);
+
+        if (listing == null)
+            return false;
+
+        if (string.IsNullOrEmpty(listing.ProductEntity))
+            return false;
+
+        var requiredCount = listing.RemainingCount > 0
+            ? listing.RemainingCount
+            : 1;
+
+        if (requiredCount <= 0)
+            return false;
+
+        var owned = GetOwned(user, listing.ProductEntity);
+        if (owned < requiredCount)
+            return false;
+
+        if (!TryPickCurrencyForSell(store, listing, out var currencyId, out var rewardPerUnit) ||
+            rewardPerUnit <= 0)
+            return false;
+
+        if (!TryTakeProductUnits(user, listing.ProductEntity, requiredCount))
+            return false;
+
+        var totalReward = checked(rewardPerUnit * requiredCount);
+        GiveCurrency(user, currencyId, totalReward);
+
+        listing.RemainingCount = 0;
+
+        Sawmill.Info(
+            $"TryExchange/Contract: {ToPrettyString(user)} выполнил контракт {listing.Id}: " +
+            $"{listing.ProductEntity} x{requiredCount} -> {totalReward} {currencyId}");
+
+        return true;
+    }
+
 
     private IEnumerable<EntityUid> EnumerateDeepItemsUnique(EntityUid owner)
     {

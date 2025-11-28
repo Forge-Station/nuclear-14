@@ -23,7 +23,6 @@ public sealed class NcStoreListingControl : PanelContainer
     private const int MaxTotalDisplay = 999_999;
     private const int DescMaxChars = 220;
 
-
     private readonly int _maxQty;
     private readonly LineEdit _qtyEdit;
     private Label? _priceLbl;
@@ -47,7 +46,10 @@ public sealed class NcStoreListingControl : PanelContainer
                 BackgroundColor = new(0.08f, 0.08f, 0.09f, 0.9f),
                 BorderColor = Color.FromHex("#B08D3B"),
                 BorderThickness = new(1),
-                PaddingLeft = 10, PaddingRight = 10, PaddingTop = 8, PaddingBottom = 8
+                PaddingLeft = 10,
+                PaddingRight = 10,
+                PaddingTop = 8,
+                PaddingBottom = 8
             }
         };
         AddChild(card);
@@ -63,7 +65,7 @@ public sealed class NcStoreListingControl : PanelContainer
         var pm = IoCManager.Resolve<IPrototypeManager>();
         pm.TryIndex<EntityPrototype>(data.ProductEntity, out var proto);
 
-        // === ОТДЕЛЬНЫЙ ЗАГОЛОВОК КАРТОЧКИ ===
+        // Заголовок
         var title = new Label
         {
             Text = proto?.Name ?? data.ProductEntity,
@@ -115,8 +117,14 @@ public sealed class NcStoreListingControl : PanelContainer
         };
 
         var remainingCap = data.Remaining >= 0 ? data.Remaining : int.MaxValue;
+
+        // Для продажи лимит по Owned, для покупки — нет
         var ownedCap = data.Mode == StoreMode.Sell ? data.Owned : int.MaxValue;
-        var moneyCap = data.Mode == StoreMode.Buy && data.Price > 0 ? balanceHint / data.Price : int.MaxValue;
+
+        // Деньги лимитируют только покупку
+        var moneyCap = data.Mode == StoreMode.Buy && data.Price > 0
+            ? balanceHint / data.Price
+            : int.MaxValue;
 
         _maxQty = Math.Min(remainingCap, Math.Min(ownedCap, moneyCap));
         _qty = Math.Clamp(initialQty, MinAllowed, Math.Max(MinAllowed, _maxQty));
@@ -130,9 +138,17 @@ public sealed class NcStoreListingControl : PanelContainer
 
         var minusBtn = new Button { Text = "−", MinSize = new Vector2i(24, 24), };
         var qtyLbl = new Label
-            { Text = _qty.ToString(), MinSize = new Vector2i(28, 24), HorizontalAlignment = HAlignment.Center, };
+        {
+            Text = _qty.ToString(),
+            MinSize = new Vector2i(28, 24),
+            HorizontalAlignment = HAlignment.Center
+        };
         var qtyEdit = new LineEdit
-            { Text = _qty.ToString(), MinSize = new Vector2i(40, 24), HorizontalExpand = false, };
+        {
+            Text = _qty.ToString(),
+            MinSize = new Vector2i(40, 24),
+            HorizontalExpand = false
+        };
         _qtyEdit = qtyEdit;
         var plusBtn = new Button { Text = "+", MinSize = new Vector2i(24, 24), };
 
@@ -179,6 +195,7 @@ public sealed class NcStoreListingControl : PanelContainer
         {
             if (_maxQty <= 0 || _qty <= 0)
                 return;
+
             switch (data.Mode)
             {
                 case StoreMode.Buy:
@@ -186,9 +203,6 @@ public sealed class NcStoreListingControl : PanelContainer
                     break;
                 case StoreMode.Sell:
                     OnSellPressed?.Invoke(_qty);
-                    break;
-                case StoreMode.Exchange:
-                    OnExchangePressed?.Invoke(_qty);
                     break;
             }
         };
@@ -245,13 +259,10 @@ public sealed class NcStoreListingControl : PanelContainer
         row.AddChild(actionCol);
     }
 
-
     private int MinAllowed => _maxQty <= 0 ? 0 : 1;
-
 
     public event Action<int>? OnBuyPressed;
     public event Action<int>? OnSellPressed;
-    public event Action<int>? OnExchangePressed;
     public event Action<int>? OnQtyChanged;
 
     private static Texture? TryGetCurrencyIcon(string currencyId, SpriteSystem sprites)
@@ -293,7 +304,6 @@ public sealed class NcStoreListingControl : PanelContainer
         if (string.IsNullOrWhiteSpace(full))
             return new();
 
-
         var trimmed = TrimToChars(full, DescMaxChars);
 
         var msg = new FormattedMessage();
@@ -321,14 +331,12 @@ public sealed class NcStoreListingControl : PanelContainer
         return text.Substring(0, end) + "…";
     }
 
-
     private Control MakePriceButton(StoreListingData data)
     {
         var color = data.Mode switch
         {
             StoreMode.Buy => Color.FromHex("#4CAF50"),
             StoreMode.Sell => Color.FromHex("#D9534F"),
-            StoreMode.Exchange => Color.FromHex("#388EE5"),
             _ => Color.Gray
         };
 
@@ -399,9 +407,6 @@ public sealed class NcStoreListingControl : PanelContainer
                     break;
                 case StoreMode.Sell:
                     OnSellPressed?.Invoke(_qty);
-                    break;
-                case StoreMode.Exchange:
-                    OnExchangePressed?.Invoke(_qty);
                     break;
             }
         };
