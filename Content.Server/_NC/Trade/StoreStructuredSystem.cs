@@ -55,23 +55,25 @@ public sealed class StoreStructuredSystem : EntitySystem
     private void OnUiOpenAttempt(EntityUid uid, NcStoreComponent comp, ref ActivatableUIOpenAttemptEvent ev)
     {
         ev.Cancel();
-
         var user = ev.User;
-        if (!user.IsValid())
-            return;
+
+        Logger.Info($"[NcStore] Open attempt on {uid} by {user}");
 
         if (!_ui.HasUi(uid, StoreUiKey.Key))
+        {
+            Logger.Error($"[NcStore] UI not found! UserInterface key=Key is missing on entity {uid}");
             return;
+        }
 
         if (!IsAccessAllowed(uid, comp, user))
         {
-            _popups.PopupEntity(Loc.GetString("ncstore-no-access"), uid, user);
+            Logger.Warning($"[NcStore] Access denied for {user} to store {uid}");
             return;
         }
 
         if (comp.CurrentUser is { } current && current != user)
         {
-            _popups.PopupEntity(Loc.GetString("ncstore-busy"), uid, user);
+            Logger.Warning($"[NcStore] Store {uid} is already used by {current}");
             return;
         }
 
@@ -79,9 +81,11 @@ public sealed class StoreStructuredSystem : EntitySystem
             TryComp(user, out TransformComponent? userXform) &&
             !_xform.InRange(storeXform.Coordinates, userXform.Coordinates, AutoCloseDistance))
         {
-            _popups.PopupEntity(Loc.GetString("ncstore-too-far"), uid, user);
+            Logger.Warning($"[NcStore] Too far: user {user} cannot open store {uid}");
             return;
         }
+
+        Logger.Info($"[NcStore] Opening UI for {user}…");
 
         comp.CurrentUser = user;
 
@@ -115,7 +119,6 @@ public sealed class StoreStructuredSystem : EntitySystem
 
     public void UpdateUiState(EntityUid uid, NcStoreComponent comp, EntityUid user)
     {
-        // Проверяем доступ и валидность юзера
         if (!IsAccessAllowed(uid, comp, user))
         {
             _ui.CloseUi(uid, StoreUiKey.Key, user);
@@ -123,10 +126,8 @@ public sealed class StoreStructuredSystem : EntitySystem
             return;
         }
 
-        // 1) Сначала обновляем прогресс контрактов под этого игрока
         UpdateContractsProgress(comp, user);
 
-        // 2) Дальше идёт обычная логика магазина
         var preferredCurrency = comp.CurrencyWhitelist.FirstOrDefault();
         var balance = string.IsNullOrEmpty(preferredCurrency)
             ? 0
@@ -187,21 +188,32 @@ public sealed class StoreStructuredSystem : EntitySystem
             })
             .ToList();
 
+        var buyCount = listings.Count(x => x.Mode == StoreMode.Buy);
+        var sellCount = listings.Count(x => x.Mode == StoreMode.Sell);
+        var exchCount = listings.Count(x => x.Mode == StoreMode.Exchange);
+
+        Sawmill.Info(
+            $"[NcStore/ServerUI] {ToPrettyString(uid)}: Listings total={listings.Count}, Buy={buyCount}, Sell={sellCount}, Exchange={exchCount}");
+
+
         // ─── "Готово к продаже" ───
         const string readyCat = "Готово к продаже";
 
         var readyToSell = listings
             .Where(d => d.Mode == StoreMode.Sell && d.Owned > 0 && d.Remaining != 0)
-            .Select(d => new StoreListingData(
-                d.Id,
-                d.ProductEntity,
-                d.Price,
-                readyCat,
-                d.CurrencyId,
-                d.Mode,
-                d.Owned,
-                d.Remaining))
+            .Select(d => new StoreListingData
+            {
+                Id = d.Id,
+                ProductEntity = d.ProductEntity,
+                Price = d.Price,
+                Category = readyCat,
+                CurrencyId = d.CurrencyId,
+                Mode = d.Mode,
+                Owned = d.Owned,
+                Remaining = d.Remaining
+            })
             .ToList();
+
 
         if (readyToSell.Count > 0)
             listings.AddRange(readyToSell);
@@ -265,24 +277,36 @@ public sealed class StoreStructuredSystem : EntitySystem
                 var owned = Math.Min(countInCrate, maxByRemaining);
 
                 listings.Add(
-                    new(
-                        l.Id + "__crate",
-                        l.ProductEntity,
-                        price,
-                        crateCat,
-                        currencyId,
-                        l.Mode,
-                        owned,
-                        l.RemainingCount
-                    ));
+                    new()
+                    {
+                        Id = l.Id + "__crate",
+                        ProductEntity = l.ProductEntity,
+                        Price = price,
+                        Category = crateCat,
+                        CurrencyId = currencyId,
+                        Mode = l.Mode,
+                        Owned = owned,
+                        Remaining = l.RemainingCount
+                    });
             }
         }
 
-        // 3) Шлём состояние магазина
-        _ui.SetUiState(uid, StoreUiKey.Key, new StoreUiState(balance, listings, crateTotals));
+        var contracts = comp.Contracts.Values
+            .Select(c => new ContractClientData(
+                c.Id,
+                c.TargetItem,
+                c.Progress,
+                c.Required,
+                c.Reward,
+                c.RewardCurrency,
+                c.Difficulty,
+                c.Completed,
+                c.Description
+            ))
+            .ToList();
 
-        // 4) Сразу следом шлём состояние контрактов
-        SendContracts(uid, comp, user);
+        _ui.SetUiState(uid, StoreUiKey.Key, new StoreUiState(balance, listings, crateTotals, contracts));
+
     }
 
 

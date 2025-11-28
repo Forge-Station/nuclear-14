@@ -9,9 +9,7 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
-
 namespace Content.Client._NC.Trade;
-
 
 public sealed class NcStoreListingControl : PanelContainer
 {
@@ -22,6 +20,8 @@ public sealed class NcStoreListingControl : PanelContainer
     private const int QtyMaxDigits = 6;
     private const int MaxTotalDisplay = 999_999;
     private const int DescMaxChars = 220;
+
+    private static readonly ISawmill Log = Logger.GetSawmill("ncstore-listing");
 
     private readonly int _maxQty;
     private readonly LineEdit _qtyEdit;
@@ -35,6 +35,8 @@ public sealed class NcStoreListingControl : PanelContainer
         int initialQty = 1
     )
     {
+        Log.Info($"[NcStore/Listing] ctor id={data.Id}, mode={data.Mode}, price={data.Price}, remaining={data.Remaining}, owned={data.Owned}, balanceHint={balanceHint}, initQty={initialQty}");
+
         Margin = new(6, 6, 6, 6);
         HorizontalExpand = true;
 
@@ -65,7 +67,6 @@ public sealed class NcStoreListingControl : PanelContainer
         var pm = IoCManager.Resolve<IPrototypeManager>();
         pm.TryIndex<EntityPrototype>(data.ProductEntity, out var proto);
 
-        // Заголовок
         var title = new Label
         {
             Text = proto?.Name ?? data.ProductEntity,
@@ -117,17 +118,15 @@ public sealed class NcStoreListingControl : PanelContainer
         };
 
         var remainingCap = data.Remaining >= 0 ? data.Remaining : int.MaxValue;
-
-        // Для продажи лимит по Owned, для покупки — нет
         var ownedCap = data.Mode == StoreMode.Sell ? data.Owned : int.MaxValue;
-
-        // Деньги лимитируют только покупку
         var moneyCap = data.Mode == StoreMode.Buy && data.Price > 0
             ? balanceHint / data.Price
             : int.MaxValue;
 
         _maxQty = Math.Min(remainingCap, Math.Min(ownedCap, moneyCap));
         _qty = Math.Clamp(initialQty, MinAllowed, Math.Max(MinAllowed, _maxQty));
+
+        Log.Info($"[NcStore/Listing] caps: remaining={remainingCap}, ownedCap={ownedCap}, moneyCap={moneyCap}, maxQty={_maxQty}, startQty={_qty}");
 
         var qtyRow = new BoxContainer
         {
@@ -195,6 +194,8 @@ public sealed class NcStoreListingControl : PanelContainer
         {
             if (_maxQty <= 0 || _qty <= 0)
                 return;
+
+            Log.Info($"[NcStore/Listing] Enter pressed id={data.Id}, mode={data.Mode}, qty={_qty}");
 
             switch (data.Mode)
             {
@@ -352,12 +353,6 @@ public sealed class NcStoreListingControl : PanelContainer
                 || data.Mode == StoreMode.Sell && data.Owned <= 0
                 || _maxQty <= 0
         };
-        btn.StyleBoxOverride = new StyleBoxFlat
-        {
-            BackgroundColor = color,
-            BorderColor = Color.Black,
-            BorderThickness = new(1)
-        };
 
         var inner = new BoxContainer
         {
@@ -400,6 +395,8 @@ public sealed class NcStoreListingControl : PanelContainer
             if (_maxQty <= 0 || _qty <= 0)
                 return;
 
+            Log.Info($"[NcStore/Listing] Price button pressed id={data.Id}, mode={data.Mode}, qty={_qty}");
+
             switch (data.Mode)
             {
                 case StoreMode.Buy:
@@ -426,6 +423,8 @@ public sealed class NcStoreListingControl : PanelContainer
         _qtyEdit.CursorPosition = _qtyEdit.Text.Length;
         UpdateTotal(data);
         OnQtyChanged?.Invoke(_qty);
+
+        Log.Info($"[NcStore/Listing] SetQty id={data.Id}, newQty={_qty}, maxQty={_maxQty}");
     }
 
     private void UpdateTotal(StoreListingData data)
@@ -435,5 +434,7 @@ public sealed class NcStoreListingControl : PanelContainer
 
         var value = _qty <= 0 ? data.Price : (long) data.Price * _qty;
         _priceLbl.Text = value > MaxTotalDisplay ? $"{MaxTotalDisplay}+" : value.ToString();
+
+        Log.Info($"[NcStore/Listing] UpdateTotal id={data.Id}, qty={_qty}, unitPrice={data.Price}, total={value}");
     }
 }

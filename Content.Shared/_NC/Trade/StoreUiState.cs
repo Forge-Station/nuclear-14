@@ -8,14 +8,18 @@ public sealed class StoreUiState : BoundUserInterfaceState
     public int Balance;
     public List<StoreListingData> Listings;
     public Dictionary<string, int> MassSellTotals;
+    public List<ContractClientData> Contracts;
 
     public StoreUiState(
         int balance,
         List<StoreListingData> listings,
-        Dictionary<string, int>? massSellTotals = null)
+        Dictionary<string, int> massSellTotals,
+        List<ContractClientData> contracts)
     {
         Balance = balance;
         Listings = listings;
-        MassSellTotals = massSellTotals ?? new();
+        MassSellTotals = massSellTotals;
+        Contracts = contracts;
     }
 }
+

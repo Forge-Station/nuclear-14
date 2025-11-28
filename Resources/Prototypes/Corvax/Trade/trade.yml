@@ -6,7 +6,7 @@
   components:
   - type: NcStore
     preset: caravan_store
-    contracts: caravan_contractrs
+    contracts: caravan_contracts
     access:
     - [ "TownieShopkeeper" ]
   - type: UserInterface

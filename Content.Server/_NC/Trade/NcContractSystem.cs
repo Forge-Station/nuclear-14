@@ -2,7 +2,6 @@ using Content.Server.Stack;
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 using Robust.Shared.Containers;
-using Robust.Shared.Log;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server._NC.Trade;

@@ -10,19 +10,20 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
-
+using Robust.Shared.Log;
 
 namespace Content.Client._NC.Trade;
-
 
 [GenerateTypedNameReferences]
 public sealed partial class NcStoreMenu : FancyWindow
 {
     private const int SearchDebounceMs = 120;
     private const int PageSize = 96;
-
+    private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore-ui");
     private static readonly Color CatSelected = new(0xD9, 0xA4, 0x41);
     private static readonly Color CatIdle = new(0x7C, 0x66, 0x24);
+
+    private static readonly ISawmill Log = Logger.GetSawmill("ncstore-menu");
 
     private readonly Dictionary<string, (NcStoreListingControl Ctrl, string Sig)> _buyCache = new();
     private readonly Dictionary<string, Button> _buyCatButtons = new();
@@ -52,8 +53,13 @@ public sealed partial class NcStoreMenu : FancyWindow
 
     public NcStoreMenu()
     {
+        Log.Info("[NcStore/Menu] NcStoreMenu constructor START");
+
         RobustXamlLoader.Load(this);
+        Log.Info("[NcStore/Menu] XAML loaded OK");
+
         IoCManager.InjectDependencies(this);
+        Log.Info("[NcStore/Menu] Dependencies injected OK");
 
         _sprites = IoCManager.Resolve<IEntitySystemManager>().GetEntitySystem<SpriteSystem>();
         _proto = IoCManager.Resolve<IPrototypeManager>();
@@ -62,12 +68,17 @@ public sealed partial class NcStoreMenu : FancyWindow
         {
             _search = SearchBar.Text.Trim();
             var token = ++_searchToken;
+
+            Log.Info($"[NcStore/Menu] Search changed to '{_search}' (token={token})");
+
             Timer.Spawn(
                 TimeSpan.FromMilliseconds(SearchDebounceMs),
                 () =>
                 {
                     if (token != _searchToken)
                         return;
+
+                    Log.Info($"[NcStore/Menu] Search debounce fired for '{_search}'");
                     ResetPaging();
                     OnSearchChanged?.Invoke(_search);
                     RefreshListings();
@@ -80,8 +91,11 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         MassSellPulledCrateButton.OnPressed += _ =>
         {
+            Log.Info("[NcStore/Menu] MassSellPulledCrateButton pressed");
             OnMassSellPulledCrate?.Invoke();
         };
+
+        Log.Info("[NcStore/Menu] NcStoreMenu constructor END");
     }
 
     public event Action<string>? OnSearchChanged;
@@ -94,6 +108,8 @@ public sealed partial class NcStoreMenu : FancyWindow
         _balance = balance;
         BalanceLabel.Text = balance.ToString();
         BalanceInfo.SetMarkup($"[font size=14][color=yellow]{balance}[/color][/font]");
+
+        Log.Info($"[NcStore/Menu] SetBalance={balance}");
     }
 
     public void SetMassSellTotals(Dictionary<string, int> totals)
@@ -106,6 +122,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         {
             MassSellPulledCrateButton.Text = "Продать содержимое тащимого ящика";
             MassSellPulledCrateButton.Disabled = true;
+            Log.Info("[NcStore/Menu] SetMassSellTotals: no currencies, button disabled");
             return;
         }
 
@@ -113,10 +130,13 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         var text = string.Join(", ", _massSellTotals.Select(p => $"{p.Value} {p.Key}"));
         MassSellPulledCrateButton.Text = $"Продать содержимое ({text})";
+
+        Log.Info($"[NcStore/Menu] SetMassSellTotals: {text}");
     }
 
     public void ApplyState(int balance, List<StoreListingData> list, Dictionary<string, int> massTotals)
     {
+        Log.Info($"[NcStore/Menu] ApplyState: balance={balance}, items={list.Count}, massTotals={massTotals.Count}");
         SetBalance(balance);
         SetMassSellTotals(massTotals);
         Populate(list);
@@ -124,6 +144,8 @@ public sealed partial class NcStoreMenu : FancyWindow
 
     public void Populate(List<StoreListingData> list)
     {
+        Log.Info($"[NcStore/Menu] Populate() with {list.Count} items");
+
         _items.Clear();
         _items.AddRange(list);
 
@@ -146,6 +168,7 @@ public sealed partial class NcStoreMenu : FancyWindow
                 .Distinct()
                 .OrderBy(c => c));
 
+        Sawmill.Info($"[NcStore/UI] Items={list.Count}, BuyCats={list.Count(i => i.Mode == StoreMode.Buy)}, SellCats={list.Count(i => i.Mode == StoreMode.Sell)}");
         const string readyCat = "Готово к продаже";
         if (_items.Any(i => i.Mode == StoreMode.Sell && i.Category == readyCat))
         {
@@ -160,6 +183,9 @@ public sealed partial class NcStoreMenu : FancyWindow
         if (!_sellCats.Contains(_sellCat))
             _sellCat = string.Empty;
 
+        Log.Info($"[NcStore/Menu] Cats: buy={_buyCats.Count}, sell={_sellCats.Count}, " +
+                 $"buySelected='{_buyCat}', sellSelected='{_sellCat}'");
+
         BuildCategoryButtons();
         ResetPaging();
         RefreshListings();
@@ -170,6 +196,9 @@ public sealed partial class NcStoreMenu : FancyWindow
         var hasSearch = !string.IsNullOrWhiteSpace(_search);
         var buyCount = Filtered(StoreMode.Buy, _buyCat).Count();
         var sellCount = Filtered(StoreMode.Sell, _sellCat).Count();
+
+        Log.Info($"[NcStore/Menu] RefreshListings: search='{_search}', buyCat='{_buyCat}', sellCat='{_sellCat}', " +
+                 $"buyCount={buyCount}, sellCount={sellCount}");
 
         BuyCategoryHeader.Visible = !string.IsNullOrEmpty(_buyCat) || hasSearch;
         SellCategoryHeader.Visible = !string.IsNullOrEmpty(_sellCat) || hasSearch;
@@ -220,16 +249,22 @@ public sealed partial class NcStoreMenu : FancyWindow
         var filtered = Filtered(mode, cat).ToList();
 
         if (string.IsNullOrEmpty(cat) && string.IsNullOrWhiteSpace(_search))
+        {
+            Log.Info($"[NcStore/Menu] FillPaneFull({mode}): no cat and no search, nothing to show");
             return;
+        }
 
         if (filtered.Count == 0)
         {
+            Log.Info($"[NcStore/Menu] FillPaneFull({mode}): filtered empty");
             pane.AddChild(new Label { Text = "Выберите категорию.", });
             return;
         }
 
         var take = Math.Min(filtered.Count, PageSize * (mode == StoreMode.Buy ? _pageBuy : _pageSell));
         var slice = filtered.GetRange(0, take);
+
+        Log.Info($"[NcStore/Menu] FillPaneFull({mode}): total={filtered.Count}, showing={slice.Count}, pageBuy={_pageBuy}, pageSell={_pageSell}");
 
         AddListingRange(pane, mode, filtered, 0, slice.Count, emit);
         AddOrUpdateMoreButton(pane, mode, filtered.Count, take, cat, emit);
@@ -249,6 +284,8 @@ public sealed partial class NcStoreMenu : FancyWindow
         var toAddStart = already;
         var toAddEnd = Math.Min(take, filtered.Count);
 
+        Log.Info($"[NcStore/Menu] AppendNextPage({mode}): total={filtered.Count}, page={page}, already={already}, add={toAddEnd - toAddStart}");
+
         if (toAddStart < toAddEnd)
             AddListingRange(pane, mode, filtered, toAddStart, toAddEnd, emit);
 
@@ -267,6 +304,8 @@ public sealed partial class NcStoreMenu : FancyWindow
     {
         var cache = mode == StoreMode.Buy ? _buyCache : _sellCache;
 
+        Log.Info($"[NcStore/Menu] AddListingRange({mode}): from={startExclusive} to={endExclusive}");
+
         for (var i = startExclusive; i < endExclusive; i++)
         {
             var it = source[i];
@@ -274,10 +313,13 @@ public sealed partial class NcStoreMenu : FancyWindow
 
             NcStoreListingControl ctrl;
             if (cache.TryGetValue(it.Id, out var tuple) && tuple.Sig == sig)
+            {
                 ctrl = tuple.Ctrl;
+            }
             else
             {
                 var initQty = _qtyCache.TryGetValue(it.Id, out var saved) ? saved : 1;
+                Log.Info($"[NcStore/Menu] Creating listing control id={it.Id}, mode={it.Mode}, price={it.Price}, remaining={it.Remaining}, owned={it.Owned}, initQty={initQty}");
                 ctrl = new(it, _sprites, _balance, initQty);
                 ctrl.OnQtyChanged += newQty => _qtyCache[it.Id] = newQty;
 
@@ -325,7 +367,10 @@ public sealed partial class NcStoreMenu : FancyWindow
     )
     {
         if (shown >= totalCount)
+        {
+            Log.Info($"[NcStore/Menu] AddOrUpdateMoreButton({mode}): all shown ({shown}/{totalCount})");
             return;
+        }
 
         var left = totalCount - shown;
 
@@ -343,6 +388,7 @@ public sealed partial class NcStoreMenu : FancyWindow
             else
                 _pageSell++;
 
+            Log.Info($"[NcStore/Menu] More pressed for {mode}, new pageBuy={_pageBuy}, pageSell={_pageSell}");
             AppendNextPage(pane, mode, cat, emit);
         };
 
@@ -362,6 +408,7 @@ public sealed partial class NcStoreMenu : FancyWindow
             cat =>
             {
                 _buyCat = _buyCat == cat ? string.Empty : cat;
+                Log.Info($"[NcStore/Menu] Buy category clicked: '{cat}', now selected='{_buyCat}'");
                 UpdateCatVisuals(_buyCatButtons, _buyCat);
                 ResetPaging();
                 RefreshListings();
@@ -375,6 +422,7 @@ public sealed partial class NcStoreMenu : FancyWindow
             cat =>
             {
                 _sellCat = _sellCat == cat ? string.Empty : cat;
+                Log.Info($"[NcStore/Menu] Sell category clicked: '{cat}', now selected='{_sellCat}'");
                 UpdateCatVisuals(_sellCatButtons, _sellCat);
                 ResetPaging();
                 RefreshListings();
@@ -430,8 +478,13 @@ public sealed partial class NcStoreMenu : FancyWindow
 
     public void PopulateContracts(List<ContractClientData> list)
     {
+        Log.Info($"[NcStore/Menu] PopulateContracts() count={list.Count}");
+
         if (ContractList == null)
+        {
+            Log.Warning("[NcStore/Menu] PopulateContracts: ContractList is null");
             return;
+        }
 
         ContractList.RemoveAllChildren();
 
@@ -468,7 +521,6 @@ public sealed partial class NcStoreMenu : FancyWindow
                     StyleClasses = { "NcContractTitle", }
                 });
 
-            // Описание, если есть
             if (!string.IsNullOrWhiteSpace(c.Description))
             {
                 box.AddChild(
@@ -480,14 +532,12 @@ public sealed partial class NcStoreMenu : FancyWindow
                     });
             }
 
-            // Цель
             box.AddChild(
                 new Label
                 {
                     Text = $"Цель: {c.TargetItem}"
                 });
 
-            // Прогресс / выполнено
             if (!c.Completed)
             {
                 box.AddChild(
@@ -507,7 +557,6 @@ public sealed partial class NcStoreMenu : FancyWindow
                     });
             }
 
-            // Награда
             box.AddChild(
                 new Label
                 {
@@ -521,7 +570,11 @@ public sealed partial class NcStoreMenu : FancyWindow
                 Margin = new(0, 6, 0, 0)
             };
 
-            btn.OnPressed += _ => OnContractClaim?.Invoke(c.Id);
+            btn.OnPressed += _ =>
+            {
+                Log.Info($"[NcStore/Menu] Contract button pressed id={c.Id}, completed={c.Completed}");
+                OnContractClaim?.Invoke(c.Id);
+            };
             box.AddChild(btn);
 
             panel.AddChild(box);
@@ -537,7 +590,6 @@ public sealed partial class NcStoreMenu : FancyWindow
             "Hard" => "Тяжёлый",
             _ => diff
         };
-
 
     private static void UpdateCatVisuals(Dictionary<string, Button> map, string current)
     {
@@ -556,6 +608,7 @@ public sealed partial class NcStoreMenu : FancyWindow
     {
         _pageBuy = 1;
         _pageSell = 1;
+        Log.Info("[NcStore/Menu] ResetPaging()");
     }
 
     private static string Sig(StoreListingData d, int balance) =>
