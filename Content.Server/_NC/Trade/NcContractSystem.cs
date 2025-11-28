@@ -13,14 +13,14 @@ public sealed class NcContractSystem : EntitySystem
     [Dependency] private readonly StackSystem _stacks = default!;
     [Dependency] private readonly IEntityManager _ents = default!;
 
-    public override void Initialize()
-    {
-        base.Initialize();
-        SubscribeLocalEvent<NcStoreComponent, MapInitEvent>(OnStoreMapInit);
-    }
+    // Здесь Initialize больше не нужен, MapInit мы не подписываем.
+    // Систему вызывают другие системы напрямую через методы.
 
-    // 🔹 Инициализация контрактов при спавне автомата
-    private void OnStoreMapInit(EntityUid uid, NcStoreComponent comp, MapInitEvent args)
+    /// <summary>
+    /// Инициализация контрактов для конкретного автомата.
+    /// Вызывается извне (из StoreSystemStructuredLoader) на MapInit/Startup.
+    /// </summary>
+    public void InitContractsForStore(EntityUid uid, NcStoreComponent comp)
     {
         // Уже есть контракты — не трогаем (на будущее)
         if (comp.Contracts.Count > 0)

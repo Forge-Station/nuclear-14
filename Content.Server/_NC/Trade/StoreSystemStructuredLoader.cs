@@ -2,9 +2,7 @@ using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
-
 namespace Content.Server._NC.Trade;
-
 
 public sealed class StoreSystemStructuredLoader : EntitySystem
 {
@@ -17,16 +15,23 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
     {
         SubscribeLocalEvent<NcStoreComponent, MapInitEvent>(OnMapInit);
         SubscribeLocalEvent<NcStoreComponent, ComponentStartup>(OnStartup);
-
     }
 
-    private void OnMapInit(EntityUid uid, NcStoreComponent comp, MapInitEvent args) =>
+    private void OnMapInit(EntityUid uid, NcStoreComponent comp, MapInitEvent args)
+    {
+        // грузим пресет магазина
         TryLoadPreset(uid, comp, "MapInit");
+        // инициализируем контракты
+        _contracts.InitContractsForStore(uid, comp);
+    }
 
     private void OnStartup(EntityUid uid, NcStoreComponent comp, ComponentStartup args)
     {
         if (comp.Listings.Count == 0)
             TryLoadPreset(uid, comp, "ComponentStartup");
+
+        // второй шанс инициализировать контракты (метод идемпотентный)
+        _contracts.InitContractsForStore(uid, comp);
     }
 
     private void TryLoadPreset(EntityUid uid, NcStoreComponent comp, string reason)
@@ -74,7 +79,7 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
                             Id = id,
                             ProductEntity = entry.Proto,
                             Cost = new() { [preset.Currency] = entry.Price, },
-                            Categories = [category,],
+                            Categories = [category],
                             Conditions = new(),
                             Mode = mode,
                             RemainingCount = entry.Count ?? -1
