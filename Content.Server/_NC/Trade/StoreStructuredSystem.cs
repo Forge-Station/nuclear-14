@@ -406,6 +406,8 @@ public sealed class StoreStructuredSystem : EntitySystem
         if (!_contracts.TryClaim(uid, user, msg.ContractId))
             return;
 
+        _popups.PopupEntity("Контракт выполнен!", uid, user);
+
         UpdateUiState(uid, comp, user);
     }
 
@@ -413,6 +415,16 @@ public sealed class StoreStructuredSystem : EntitySystem
     {
         if (comp.Contracts.Count == 0)
             return;
+
+        EntityUid? crate = null;
+
+        if (TryComp(user, out PullerComponent? puller) &&
+            puller.Pulling is { } pulled &&
+            TryComp(pulled, out EntityStorageComponent? storage) &&
+            !storage.Open)
+        {
+            crate = pulled;
+        }
 
         foreach (var (_, contract) in comp.Contracts)
         {
@@ -424,9 +436,13 @@ public sealed class StoreStructuredSystem : EntitySystem
 
             var owned = _logic.GetOwned(user, contract.TargetItem);
 
+            if (crate is { } crateUid)
+                owned += _logic.GetOwnedInRoot(crateUid, contract.TargetItem);
+
             contract.Progress = Math.Min(owned, contract.Required);
         }
     }
+
 
 
     private bool IsAccessAllowed(EntityUid storeUid, NcStoreComponent comp, EntityUid user)

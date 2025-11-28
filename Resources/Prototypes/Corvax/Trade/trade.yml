@@ -720,7 +720,7 @@
 
     steel_medium:
       targetItem: N14MobHumanBoSWashingtonPaladin
-      required: 3
+      required: 1
       reward: 300
       rewardItem: N14ClothingOuterPowerArmorAdvanced2Tesla        # ← новый параметр
       rewardItemCount: 2

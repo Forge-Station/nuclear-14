@@ -89,6 +89,19 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
             Log.Info("[NcStore/UI] Skipping UI update (hash unchanged)");
             return;
         }
+        foreach (var c in st.Contracts)
+        {
+            hash = hash * 31 + (c.Id?.GetHashCode() ?? 0);
+            hash = hash * 31 + (c.TargetItem?.GetHashCode() ?? 0);
+            hash = hash * 31 + c.Progress.GetHashCode();
+            hash = hash * 31 + c.Required.GetHashCode();
+            hash = hash * 31 + c.Reward.GetHashCode();
+            hash = hash * 31 + (c.RewardCurrency?.GetHashCode() ?? 0);
+            hash = hash * 31 + (c.RewardItem?.GetHashCode() ?? 0);
+            hash = hash * 31 + c.RewardItemCount.GetHashCode();
+            hash = hash * 31 + (c.Difficulty?.GetHashCode() ?? 0);
+            hash = hash * 31 + c.Completed.GetHashCode();
+        }
 
         Log.Info(
             $"[NcStore/UI] ApplyState: balance={st.Balance}, listings={st.Listings.Count}, massTotals={st.MassSellTotals.Count}, contracts={st.Contracts.Count}");

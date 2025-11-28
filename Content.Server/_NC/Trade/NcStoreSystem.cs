@@ -25,6 +25,7 @@ public sealed class NcStoreSystem : EntitySystem
     [Dependency] private readonly IEntitySystemManager _sysMan = default!;
     [Dependency] private readonly TransformSystem _transform = default!;
 
+
     public override void Initialize()
     {
         SubscribeLocalEvent<NcStoreComponent, StoreBuyListingBoundUiMessage>(OnBuyRequest);

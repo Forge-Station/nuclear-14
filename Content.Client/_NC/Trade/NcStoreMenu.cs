@@ -648,6 +648,46 @@ public sealed partial class NcStoreMenu : FancyWindow
 
             box.AddChild(rewardRow);
 
+            if (!string.IsNullOrWhiteSpace(c.RewardItem) && c.RewardItemCount > 0)
+            {
+                EntityPrototype? rewardProto = null;
+                _proto.TryIndex(c.RewardItem, out rewardProto);
+
+                var rewardItemRow = new BoxContainer
+                {
+                    Orientation = BoxContainer.LayoutOrientation.Horizontal,
+                    Margin = new(0, 2, 0, 0)
+                };
+
+                Texture? rewardTex = null;
+                if (rewardProto != null)
+                {
+                    var icon = _sprites.GetPrototypeIcon(rewardProto.ID);
+                    rewardTex = icon.Default;
+                }
+
+                if (rewardTex != null)
+                {
+                    rewardItemRow.AddChild(
+                        new TextureRect
+                        {
+                            Texture = rewardTex,
+                            Stretch = TextureRect.StretchMode.KeepAspectCentered,
+                            MinSize = new(20, 20),
+                            Margin = new(0, 0, 4, 0)
+                        });
+                }
+
+                var rewardName = rewardProto?.Name ?? c.RewardItem;
+
+                rewardItemRow.AddChild(
+                    new Label
+                    {
+                        Text = $"Предмет: {rewardName} ×{c.RewardItemCount}"
+                    });
+
+                box.AddChild(rewardItemRow);
+            }
 
             var btn = new Button
             {

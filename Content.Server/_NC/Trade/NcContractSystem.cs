@@ -5,23 +5,20 @@ using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Stacks;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
+using Content.Server.Storage.Components;
+using Content.Shared.Movement.Pulling.Components;
+using Robust.Shared.Timing;
 
 namespace Content.Server._NC.Trade;
 
+
 public sealed class NcContractSystem : EntitySystem
 {
-    [Dependency] private readonly IPrototypeManager _prototypes = default!;
-    [Dependency] private readonly StackSystem _stacks = default!;
     [Dependency] private readonly IEntityManager _ents = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
-
-    // Здесь Initialize больше не нужен, MapInit мы не подписываем.
-    // Систему вызывают другие системы напрямую через методы.
-
-    /// <summary>
-    /// Инициализация контрактов для конкретного автомата.
-    /// Вызывается извне (из StoreSystemStructuredLoader) на MapInit/Startup.
-    /// </summary>
+    [Dependency] private readonly IPrototypeManager _prototypes = default!;
+    [Dependency] private readonly StackSystem _stacks = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
     public void InitContractsForStore(EntityUid uid, NcStoreComponent comp)
     {
         // Уже есть контракты — не трогаем (на будущее)
@@ -75,23 +72,52 @@ public sealed class NcContractSystem : EntitySystem
         if (!comp.Contracts.TryGetValue(contractId, out var contract))
             return false;
 
-        // Ещё раз обновили прогресс перед TryClaim снаружи (UpdateContractsProgress),
-        // здесь просто проверяем.
         if (!contract.Completed)
             return false;
 
-        // 1) Пытаемся забрать предметы, которые игрок сдаёт по контракту
+        // --- ищем тащимый закрытый ящик, как в массовой продаже ---
+        EntityUid? crate = null;
+        if (TryComp(user, out PullerComponent? puller) &&
+            puller.Pulling is { } pulled &&
+            TryComp(pulled, out EntityStorageComponent? storage) &&
+            !storage.Open)
+            crate = pulled;
+
+        // --- проверяем, что суммарно у игрока + в ящике реально есть Required ---
+        var totalOwned = 0;
+        totalOwned += _logic.GetOwned(user, contract.TargetItem);
+        if (crate is { } crateUid)
+            totalOwned += _logic.GetOwnedInRoot(crateUid, contract.TargetItem);
+
+        if (totalOwned < contract.Required)
+            return false; // кто-то успел забрать часть вещей до сдачи
+
+        // --- снимаем сперва с игрока, потом с ящика ---
         if (!string.IsNullOrWhiteSpace(contract.TargetItem) && contract.Required > 0)
         {
-            // Если не удалось забрать (предметы исчезли между обновлением и сдачей) – выходим.
-            if (!_logic.TryTakeProductUnits(user, contract.TargetItem, contract.Required))
+            var left = contract.Required;
+
+            var ownedUser = _logic.GetOwned(user, contract.TargetItem);
+            var takeFromUser = Math.Min(left, ownedUser);
+
+            if (takeFromUser > 0 &&
+                !_logic.TryTakeProductUnits(user, contract.TargetItem, takeFromUser))
                 return false;
+
+            left -= takeFromUser;
+
+            if (left > 0 && crate is { } crateUid2)
+            {
+                if (!_logic.TryTakeProductUnitsFromRoot(crateUid2, contract.TargetItem, left))
+                    return false;
+            }
         }
 
-        // 2) Выдаём денежную награду, если она задана
+        // 2) Денежная награда
         if (contract.Reward > 0 && !string.IsNullOrWhiteSpace(contract.RewardCurrency))
             GiveReward(user, contract.RewardCurrency, contract.Reward);
 
+        // 3) Предметная награда
         if (!string.IsNullOrWhiteSpace(contract.RewardItem) && contract.RewardItemCount > 0)
         {
             var xform = Transform(user);
@@ -101,16 +127,13 @@ public sealed class NcContractSystem : EntitySystem
             {
                 var spawned = _ents.SpawnEntity(contract.RewardItem, coords);
 
-                // Если у игрока есть руки – пытаемся положить в руку
                 if (_ents.HasComponent<HandsComponent>(user))
                     IoCManager.Resolve<SharedHandsSystem>().TryPickupAnyHand(user, spawned, false);
             }
         }
 
-        // 3) Удаляем контракт
+        // 4) удаляем контракт и подсовываем новый
         comp.Contracts.Remove(contractId);
-
-        // 4) Пытаемся выдать замену (новый контракт)
         RefillContractsForStore(store, comp);
 
         return true;
@@ -123,7 +146,8 @@ public sealed class NcContractSystem : EntitySystem
 
         if (!_prototypes.TryIndex<StoreContractsPresetPrototype>(comp.ContractsPreset, out var preset))
         {
-            Logger.Warning($"[NcContracts] Preset '{comp.ContractsPreset}' not found for refill on {ToPrettyString(uid)}");
+            Logger.Warning(
+                $"[NcContracts] Preset '{comp.ContractsPreset}' not found for refill on {ToPrettyString(uid)}");
             return;
         }
 

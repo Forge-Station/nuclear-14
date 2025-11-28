@@ -340,7 +340,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
         return left <= 0;
     }
 
-    private bool TryTakeProductUnitsFromRoot(EntityUid root, string protoId, int amount)
+    public  bool TryTakeProductUnitsFromRoot(EntityUid root, string protoId, int amount)
     {
         if (amount <= 0)
             return true;
