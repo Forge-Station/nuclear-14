@@ -12,6 +12,8 @@ public sealed class ContractServerData
     public string RewardCurrency { get; set; } = string.Empty;
     public string Difficulty { get; set; } = "Easy";
 
+    public string? RewardItem = null;
+    public int RewardItemCount = 0;
     public string Description { get; set; } = string.Empty;
 
     public bool Completed => Progress >= Required;

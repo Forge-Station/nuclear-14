@@ -283,7 +283,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
     }
 
 
-    private bool TryTakeProductUnits(EntityUid user, string protoId, int amount)
+    public bool TryTakeProductUnits(EntityUid user, string protoId, int amount)
     {
         if (amount <= 0)
             return true;

@@ -299,6 +299,8 @@ public sealed class StoreStructuredSystem : EntitySystem
                 c.Required,
                 c.Reward,
                 c.RewardCurrency,
+                c.RewardItem,
+                c.RewardItemCount,
                 c.Difficulty,
                 c.Completed,
                 c.Description
@@ -405,25 +407,6 @@ public sealed class StoreStructuredSystem : EntitySystem
             return;
 
         UpdateUiState(uid, comp, user);
-    }
-
-    private void SendContracts(EntityUid uid, NcStoreComponent comp, EntityUid user)
-    {
-        var list = comp.Contracts.Values
-            .Select(c => new ContractClientData(
-                c.Id,
-                c.TargetItem,
-                c.Progress,
-                c.Required,
-                c.Reward,
-                c.RewardCurrency,
-                c.Difficulty,
-                c.Completed,
-                c.Description
-            ))
-            .ToList();
-
-        _ui.SetUiState(uid, StoreUiKey.Key, new ContractUiState(list));
     }
 
     private void UpdateContractsProgress(NcStoreComponent comp, EntityUid user)

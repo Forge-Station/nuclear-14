@@ -9,7 +9,9 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
+
 namespace Content.Client._NC.Trade;
+
 
 public sealed class NcStoreListingControl : PanelContainer
 {
@@ -35,7 +37,8 @@ public sealed class NcStoreListingControl : PanelContainer
         int initialQty = 1
     )
     {
-        Log.Info($"[NcStore/Listing] ctor id={data.Id}, mode={data.Mode}, price={data.Price}, remaining={data.Remaining}, owned={data.Owned}, balanceHint={balanceHint}, initQty={initialQty}");
+        Log.Info(
+            $"[NcStore/Listing] ctor id={data.Id}, mode={data.Mode}, price={data.Price}, remaining={data.Remaining}, owned={data.Owned}, balanceHint={balanceHint}, initQty={initialQty}");
 
         Margin = new(6, 6, 6, 6);
         HorizontalExpand = true;
@@ -126,7 +129,8 @@ public sealed class NcStoreListingControl : PanelContainer
         _maxQty = Math.Min(remainingCap, Math.Min(ownedCap, moneyCap));
         _qty = Math.Clamp(initialQty, MinAllowed, Math.Max(MinAllowed, _maxQty));
 
-        Log.Info($"[NcStore/Listing] caps: remaining={remainingCap}, ownedCap={ownedCap}, moneyCap={moneyCap}, maxQty={_maxQty}, startQty={_qty}");
+        Log.Info(
+            $"[NcStore/Listing] caps: remaining={remainingCap}, ownedCap={ownedCap}, moneyCap={moneyCap}, maxQty={_maxQty}, startQty={_qty}");
 
         var qtyRow = new BoxContainer
         {

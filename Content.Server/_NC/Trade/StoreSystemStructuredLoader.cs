@@ -19,9 +19,7 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
     private void OnMapInit(EntityUid uid, NcStoreComponent comp, MapInitEvent args)
     {
-        // грузим пресет магазина
         TryLoadPreset(uid, comp, "MapInit");
-        // инициализируем контракты
         _contracts.InitContractsForStore(uid, comp);
     }
 

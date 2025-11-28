@@ -709,18 +709,22 @@
   id: caravan_contracts
   contracts:
     junk_easy:
-      targetItem: N14JunkDuctTape
+      targetItem: N14MaterialRadscorpionTail
       required: 5
-      reward: 25
+      reward: 1000
       rewardCurrency: Caps
+      rewardItem: N14ClothingOuterPowerArmorT51        # ← новый параметр
+      rewardItemCount: 2
       difficulty: Easy
-      description: "Сдай 5 рулонов скотча — получи монетки."
+      description: "Короче мне надо жопы скорпиона, сдашь получишь силовую броню."
 
     steel_medium:
-      targetItem: SheetSteel
+      targetItem: N14MobHumanBoSWashingtonPaladin
       required: 3
       reward: 300
+      rewardItem: N14ClothingOuterPowerArmorAdvanced2Tesla        # ← новый параметр
+      rewardItemCount: 2
       rewardCurrency: Caps
       difficulty: Medium
-      description: "Принеси 3 листа стали."
+      description: "Найди девушку Грому. Найдешь он тебя отблагодарит."
 

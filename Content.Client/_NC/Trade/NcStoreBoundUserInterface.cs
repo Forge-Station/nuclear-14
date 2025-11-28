@@ -38,7 +38,6 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
     {
         Log.Info($"[NcStore/UI] Open() called for store Owner={Owner}");
         base.Open();
-
     }
 
     protected override void UpdateState(BoundUserInterfaceState state)

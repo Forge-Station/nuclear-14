@@ -1,5 +1,7 @@
 using Content.Server.Stack;
 using Content.Shared._NC.Trade;
+using Content.Shared.Hands.Components;
+using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Stacks;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
@@ -11,6 +13,7 @@ public sealed class NcContractSystem : EntitySystem
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
     [Dependency] private readonly StackSystem _stacks = default!;
     [Dependency] private readonly IEntityManager _ents = default!;
+    [Dependency] private readonly NcStoreLogicSystem _logic = default!;
 
     // Здесь Initialize больше не нужен, MapInit мы не подписываем.
     // Систему вызывают другие системы напрямую через методы.
@@ -53,6 +56,8 @@ public sealed class NcContractSystem : EntitySystem
                 Progress = 0,
                 Reward = entry.Reward,
                 RewardCurrency = entry.RewardCurrency,
+                RewardItem = entry.RewardItem,
+                RewardItemCount = entry.RewardItemCount,
                 Difficulty = entry.Difficulty,
                 Description = entry.Description
             };
@@ -70,13 +75,88 @@ public sealed class NcContractSystem : EntitySystem
         if (!comp.Contracts.TryGetValue(contractId, out var contract))
             return false;
 
+        // Ещё раз обновили прогресс перед TryClaim снаружи (UpdateContractsProgress),
+        // здесь просто проверяем.
         if (!contract.Completed)
             return false;
 
-        GiveReward(user, contract.RewardCurrency, contract.Reward);
+        // 1) Пытаемся забрать предметы, которые игрок сдаёт по контракту
+        if (!string.IsNullOrWhiteSpace(contract.TargetItem) && contract.Required > 0)
+        {
+            // Если не удалось забрать (предметы исчезли между обновлением и сдачей) – выходим.
+            if (!_logic.TryTakeProductUnits(user, contract.TargetItem, contract.Required))
+                return false;
+        }
+
+        // 2) Выдаём денежную награду, если она задана
+        if (contract.Reward > 0 && !string.IsNullOrWhiteSpace(contract.RewardCurrency))
+            GiveReward(user, contract.RewardCurrency, contract.Reward);
+
+        if (!string.IsNullOrWhiteSpace(contract.RewardItem) && contract.RewardItemCount > 0)
+        {
+            var xform = Transform(user);
+            var coords = xform.Coordinates;
+
+            for (var i = 0; i < contract.RewardItemCount; i++)
+            {
+                var spawned = _ents.SpawnEntity(contract.RewardItem, coords);
+
+                // Если у игрока есть руки – пытаемся положить в руку
+                if (_ents.HasComponent<HandsComponent>(user))
+                    IoCManager.Resolve<SharedHandsSystem>().TryPickupAnyHand(user, spawned, false);
+            }
+        }
+
+        // 3) Удаляем контракт
         comp.Contracts.Remove(contractId);
 
+        // 4) Пытаемся выдать замену (новый контракт)
+        RefillContractsForStore(store, comp);
+
         return true;
+    }
+
+    private void RefillContractsForStore(EntityUid uid, NcStoreComponent comp)
+    {
+        if (string.IsNullOrWhiteSpace(comp.ContractsPreset))
+            return;
+
+        if (!_prototypes.TryIndex<StoreContractsPresetPrototype>(comp.ContractsPreset, out var preset))
+        {
+            Logger.Warning($"[NcContracts] Preset '{comp.ContractsPreset}' not found for refill on {ToPrettyString(uid)}");
+            return;
+        }
+
+        // Пробуем добавить ОДИН новый контракт, который ещё не висит у автомата
+        foreach (var (key, entry) in preset.Contracts)
+        {
+            var id = entry.Id ?? key;
+            if (string.IsNullOrWhiteSpace(id))
+                continue;
+
+            if (comp.Contracts.ContainsKey(id))
+                continue; // такой уже есть
+
+            var data = new ContractServerData
+            {
+                Id = id,
+                TargetItem = entry.TargetItem,
+                Required = entry.Required,
+                Progress = 0,
+
+                Reward = entry.Reward,
+                RewardCurrency = entry.RewardCurrency,
+
+                RewardItem = entry.RewardItem,
+                RewardItemCount = entry.RewardItemCount,
+                Difficulty = entry.Difficulty,
+                Description = entry.Description
+            };
+
+            comp.Contracts[id] = data;
+            Logger.Info($"[NcContracts] Added new contract '{id}' to {ToPrettyString(uid)} after claim.");
+            break; // добавили один – хватит
+        }
     }
 
     // 🔹 Выдать награду стеками
