@@ -1,5 +1,6 @@
 - type: department
   id: CaesarLegion
+  name: department-CaesarLegion
   description: department-CaesarLegion-description
   color: "#950202"
   roles:
@@ -12,6 +13,7 @@
 
 - type: department
   id: Raider
+  name: department-Raider
   description: department-Raider-description
   color: "#093f09"
   roles:
@@ -19,6 +21,7 @@
 
 - type: department
   id: BrotherhoodWest
+  name: department-BrotherhoodWest
   description: department-BrotherhoodWest-description
   color: "#0c0fb1"
   roles:

@@ -1,11 +1,7 @@
 {
   "version": 1,
   "license": "CC-BY-SA-3.0",
-<<<<<<<< HEAD:Resources/Textures/Clothing/Uniforms/Jumpsuit/cmo_turtle.rsi/meta.json
-  "copyright": "Borrowed from QM turtleneck at https://github.com/space-wizards/space-station-14/tree/master/Resources/Textures/Clothing/Uniforms/Jumpsuit/qmturtle.rsi and modified by Hanzdegloker (github) for space station 14",
-========
   "copyright": "Taken from tgstation at commit https://github.com/tgstation/tgstation/commit/5a73e8f825ff279e82949b9329783a9e3070e2da, edited by Ghagliiarghii",
->>>>>>>> EE:Resources/Textures/Clothing/Eyes/Glasses/commandglasses.rsi/meta.json
   "size": {
     "x": 32,
     "y": 32

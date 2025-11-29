@@ -11,11 +11,7 @@
       "name": "icon"
     },
     {
-<<<<<<<< HEAD:Resources/Textures/Clothing/OuterClothing/Vests/vest_colorable.rsi/meta.json
-      "name": "equipped-OUTERCLOTHING",
-========
       "name": "equipped-HELMET",
->>>>>>>> EE:Resources/Textures/Clothing/Head/Hats/beretwhite.rsi/meta.json
       "directions": 4
     },
     {

@@ -405,6 +405,7 @@
       visible: false
       map: [ "light" ]
   - type: Clothing
+    slots: head
     equippedPrefix: off
   - type: ToggleableLightVisuals
   - type: PointLight

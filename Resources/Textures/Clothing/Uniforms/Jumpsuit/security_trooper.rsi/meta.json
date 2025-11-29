@@ -1,11 +1,7 @@
 {
   "version": 1,
   "license": "CC-BY-SA-3.0",
-<<<<<<<< HEAD:Resources/Textures/_NF/Clothing/Uniforms/Jumpsuit/chaplain-pilgrim.rsi/meta.json
-  "copyright": "Taken/modified files from the base SS14; edits made by erhardsteinhauer (discord)",
-========
   "copyright": "Made by DieselMohawk for use in ss14",
->>>>>>>> EE:Resources/Textures/Clothing/Uniforms/Jumpsuit/security_trooper.rsi/meta.json
   "size": {
     "x": 32,
     "y": 32
