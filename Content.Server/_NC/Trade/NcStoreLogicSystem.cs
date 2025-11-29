@@ -214,41 +214,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
     }
 
 
-    public int GetOwned(EntityUid user, string productProtoId)
-    {
-        var total = 0;
-
-        _protos.TryIndex<EntityPrototype>(productProtoId, out var expectedProto);
-
-        string? expectedStackType = null;
-        if (expectedProto != null)
-        {
-            var stackName = _compFactory.GetComponentName(typeof(StackComponent));
-            if (expectedProto.TryGetComponent(stackName, out StackComponent? prodStackDef))
-                expectedStackType = prodStackDef.StackTypeId;
-        }
-
-        foreach (var ent in EnumerateDeepItemsUnique(user))
-        {
-            if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
-                continue;
-
-            if (expectedStackType != null &&
-                _ents.TryGetComponent(ent, out StackComponent? stack) &&
-                stack.StackTypeId == expectedStackType)
-            {
-                total += Math.Max(stack.Count, 0);
-                continue;
-            }
-
-            if (IsProtoOrDescendant(meta.EntityPrototype, productProtoId))
-                total += 1;
-        }
-
-        return total;
-    }
-
-    public int GetOwnedInRoot(EntityUid root, string productProtoId)
+    private int GetOwnedInternal(EntityUid root, string productProtoId)
     {
         var total = 0;
 
@@ -267,6 +233,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
             if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
                 continue;
 
+            // Если это стаки нужного типа — считаем по их количеству
             if (expectedStackType != null &&
                 _ents.TryGetComponent(ent, out StackComponent? stack) &&
                 stack.StackTypeId == expectedStackType)
@@ -275,6 +242,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 continue;
             }
 
+            // Иначе считаем по 1, если прототип совпадает или является потомком
             if (IsProtoOrDescendant(meta.EntityPrototype, productProtoId))
                 total += 1;
         }
@@ -282,14 +250,18 @@ public sealed class NcStoreLogicSystem : EntitySystem
         return total;
     }
 
+    public int GetOwned(EntityUid user, string productProtoId) => GetOwnedInternal(user, productProtoId);
 
-    public bool TryTakeProductUnits(EntityUid user, string protoId, int amount)
+    public int GetOwnedInRoot(EntityUid root, string productProtoId) => GetOwnedInternal(root, productProtoId);
+
+
+    private bool TryTakeProductUnitsInternal(EntityUid root, string protoId, int amount)
     {
         if (amount <= 0)
             return true;
 
+        // Определяем тип стака для этого прототипа (если он стакуемый)
         string? stackType = null;
-
         if (_protos.TryIndex<EntityPrototype>(protoId, out var prodProto))
         {
             var stackName = _compFactory.GetComponentName(typeof(StackComponent));
@@ -297,102 +269,62 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 stackType = prodStackDef.StackTypeId;
         }
 
+        // Нестакуемый предмет: удаляем сущности по прототипу
         if (stackType == null)
         {
-            foreach (var ent in EnumerateDeepItemsUnique(user))
+            var left = amount;
+            foreach (var ent in EnumerateDeepItemsUnique(root))
             {
+                if (left <= 0)
+                    break;
+
                 if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
                     continue;
 
                 if (!IsProtoOrDescendant(meta.EntityPrototype, protoId))
                     continue;
 
-                if (_ents.TryGetComponent(ent, out StackComponent? st))
+                if (_ents.EntityExists(ent))
                 {
-                    stackType = st.StackTypeId;
-                    break;
+                    _ents.DeleteEntity(ent);
+                    left -= 1;
                 }
             }
+
+            return left <= 0;
         }
 
-        if (stackType != null)
-            return TryTakeCurrency(user, stackType, amount);
-
-        var left = amount;
-        foreach (var ent in EnumerateDeepItemsUnique(user))
-        {
-            if (left <= 0)
-                break;
-
-            if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
-                continue;
-
-            if (!IsProtoOrDescendant(meta.EntityPrototype, protoId))
-                continue;
-
-            if (_ents.EntityExists(ent))
-            {
-                _ents.DeleteEntity(ent);
-                left -= 1;
-            }
-        }
-
-        return left <= 0;
-    }
-
-    public  bool TryTakeProductUnitsFromRoot(EntityUid root, string protoId, int amount)
-    {
-        if (amount <= 0)
-            return true;
-
-        string? stackType = null;
-
-        if (_protos.TryIndex<EntityPrototype>(protoId, out var prodProto))
-        {
-            var stackName = _compFactory.GetComponentName(typeof(StackComponent));
-            if (prodProto.TryGetComponent(stackName, out StackComponent? prodStackDef))
-                stackType = prodStackDef.StackTypeId;
-        }
-
-        if (stackType != null)
-            return TryTakeCurrency(root, stackType, amount);
-
-        var left = amount;
-
+        // Стакуемый предмет: режем стаки
+        var leftStack = amount;
         foreach (var ent in EnumerateDeepItemsUnique(root))
         {
-            if (left <= 0)
+            if (leftStack <= 0)
                 break;
 
-            if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
+            if (!_ents.TryGetComponent(ent, out StackComponent? stack) || stack.StackTypeId != stackType)
                 continue;
 
-            if (!IsProtoOrDescendant(meta.EntityPrototype, protoId))
+            var have = Math.Max(stack.Count, 0);
+            if (have <= 0)
                 continue;
 
-            if (_ents.TryGetComponent(ent, out StackComponent? stack))
-            {
-                var have = Math.Max(stack.Count, 0);
-                if (have <= 0)
-                    continue;
-
-                var take = Math.Min(have, left);
-                var newCount = have - take;
-                _stacks.SetCount(ent, newCount, stack);
-                if (newCount <= 0 && _ents.EntityExists(ent))
-                    _ents.DeleteEntity(ent);
-
-                left -= take;
-            }
-            else
-            {
+            var take = Math.Min(have, leftStack);
+            var newCount = have - take;
+            _stacks.SetCount(ent, newCount, stack);
+            if (newCount <= 0 && _ents.EntityExists(ent))
                 _ents.DeleteEntity(ent);
-                left -= 1;
-            }
+
+            leftStack -= take;
         }
 
-        return left <= 0;
+        return leftStack <= 0;
     }
+
+    public bool TryTakeProductUnits(EntityUid user, string protoId, int amount) =>
+        TryTakeProductUnitsInternal(user, protoId, amount);
+
+    public bool TryTakeProductUnitsFromRoot(EntityUid root, string protoId, int amount) =>
+        TryTakeProductUnitsInternal(root, protoId, amount);
 
     public bool TryExchange(
         string listingId,
@@ -548,7 +480,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
     }
 
 
-    private void GiveCurrency(EntityUid user, string stackType, int amount)
+    public void GiveCurrency(EntityUid user, string stackType, int amount)
     {
         if (amount <= 0)
             return;
@@ -711,7 +643,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
         return incomeByCurrency;
     }
 
-    private bool TrySpawnProduct(string protoId, EntityUid user)
+    public bool TrySpawnProduct(string protoId, EntityUid user)
     {
         try
         {

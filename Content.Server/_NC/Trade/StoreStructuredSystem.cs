@@ -32,8 +32,8 @@ public sealed class StoreStructuredSystem : EntitySystem
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
     [Dependency] private readonly SharedTransformSystem _xform = default!;
-
     private TimeSpan _nextCheck = TimeSpan.Zero;
+    private int _openStores;
 
     public override void Initialize()
     {
@@ -57,37 +57,24 @@ public sealed class StoreStructuredSystem : EntitySystem
         ev.Cancel();
         var user = ev.User;
 
-        Logger.Info($"[NcStore] Open attempt on {uid} by {user}");
-
         if (!_ui.HasUi(uid, StoreUiKey.Key))
-        {
-            Logger.Error($"[NcStore] UI not found! UserInterface key=Key is missing on entity {uid}");
             return;
-        }
 
         if (!IsAccessAllowed(uid, comp, user))
-        {
-            Logger.Warning($"[NcStore] Access denied for {user} to store {uid}");
             return;
-        }
 
         if (comp.CurrentUser is { } current && current != user)
-        {
-            Logger.Warning($"[NcStore] Store {uid} is already used by {current}");
             return;
-        }
 
         if (TryComp(uid, out TransformComponent? storeXform) &&
             TryComp(user, out TransformComponent? userXform) &&
             !_xform.InRange(storeXform.Coordinates, userXform.Coordinates, AutoCloseDistance))
-        {
-            Logger.Warning($"[NcStore] Too far: user {user} cannot open store {uid}");
             return;
-        }
 
-        Logger.Info($"[NcStore] Opening UI for {user}…");
-
+        var wasInUse = comp.CurrentUser != null;
         comp.CurrentUser = user;
+        if (!wasInUse)
+            _openStores++;
 
         if (!_ui.IsUiOpen(uid, StoreUiKey.Key, user))
             _ui.OpenUi(uid, StoreUiKey.Key, user);
@@ -98,9 +85,15 @@ public sealed class StoreStructuredSystem : EntitySystem
 
     private void OnUiClosed(EntityUid uid, NcStoreComponent comp, BoundUIClosedEvent ev)
     {
-        if (ev.UiKey.Equals(StoreUiKey.Key))
-            comp.CurrentUser = null;
+        if (!ev.UiKey.Equals(StoreUiKey.Key))
+            return;
+
+        if (_openStores > 0)
+            _openStores--;
+
+        comp.CurrentUser = null;
     }
+
 
     private void OnUiRefreshRequest(EntityUid uid, NcStoreComponent comp, RequestUiRefreshMessage msg)
     {
@@ -308,7 +301,6 @@ public sealed class StoreStructuredSystem : EntitySystem
             .ToList();
 
         _ui.SetUiState(uid, StoreUiKey.Key, new StoreUiState(balance, listings, crateTotals, contracts));
-
     }
 
 
@@ -370,23 +362,38 @@ public sealed class StoreStructuredSystem : EntitySystem
         EntityUid uid,
         ContainerManagerComponent comp,
         ref EntInsertedIntoContainerMessage args
-    ) =>
+    )
+    {
+        if (_openStores == 0)
+            return;
+
         RefreshAllOpenStores();
+    }
 
     private void OnUserEntRemoved(
         EntityUid uid,
         ContainerManagerComponent comp,
         ref EntRemovedFromContainerMessage args
-    ) =>
-        RefreshAllOpenStores();
+    )
+    {
+        if (_openStores == 0)
+            return;
 
+        RefreshAllOpenStores();
+    }
 
     private void OnStackCountChanged(
         EntityUid uid,
         StackComponent comp,
         ref StackCountChangedEvent args
-    ) =>
+    )
+    {
+        if (_openStores == 0)
+            return;
+
         RefreshAllOpenStores();
+    }
+
 
     private void RefreshAllOpenStores()
     {
@@ -422,9 +429,7 @@ public sealed class StoreStructuredSystem : EntitySystem
             puller.Pulling is { } pulled &&
             TryComp(pulled, out EntityStorageComponent? storage) &&
             !storage.Open)
-        {
             crate = pulled;
-        }
 
         foreach (var (_, contract) in comp.Contracts)
         {
@@ -442,7 +447,6 @@ public sealed class StoreStructuredSystem : EntitySystem
             contract.Progress = Math.Min(owned, contract.Required);
         }
     }
-
 
 
     private bool IsAccessAllowed(EntityUid storeUid, NcStoreComponent comp, EntityUid user)

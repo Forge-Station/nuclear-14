@@ -2,14 +2,16 @@ using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed class StoreSystemStructuredLoader : EntitySystem
 {
     private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore-loader");
+    [Dependency] private readonly NcContractSystem _contracts = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly NcContractSystem _contracts = default!;
 
     public override void Initialize()
     {
@@ -17,18 +19,14 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         SubscribeLocalEvent<NcStoreComponent, ComponentStartup>(OnStartup);
     }
 
-    private void OnMapInit(EntityUid uid, NcStoreComponent comp, MapInitEvent args)
-    {
+    private void OnMapInit(EntityUid uid, NcStoreComponent comp, MapInitEvent args) =>
         TryLoadPreset(uid, comp, "MapInit");
-        _contracts.InitContractsForStore(uid, comp);
-    }
 
     private void OnStartup(EntityUid uid, NcStoreComponent comp, ComponentStartup args)
     {
         if (comp.Listings.Count == 0)
             TryLoadPreset(uid, comp, "ComponentStartup");
 
-        // второй шанс инициализировать контракты (метод идемпотентный)
         _contracts.InitContractsForStore(uid, comp);
     }
 
@@ -77,7 +75,7 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
                             Id = id,
                             ProductEntity = entry.Proto,
                             Cost = new() { [preset.Currency] = entry.Price, },
-                            Categories = [category],
+                            Categories = [category,],
                             Conditions = new(),
                             Mode = mode,
                             RemainingCount = entry.Count ?? -1
