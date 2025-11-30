@@ -6,13 +6,9 @@
    - !type:OverallTimeRequirement
       min: 3600 # 60 min
    - !type:CharacterDepartmentRequirement
+    inverted: true
     departments:
+    - Legion
     - Vault
-    - Wastelander
-    - BrotherhoodMidwest
-    - Townsfolk
-    - NCR
-    - Vault
-    - Tribe
    items:
      - GeigerCounter

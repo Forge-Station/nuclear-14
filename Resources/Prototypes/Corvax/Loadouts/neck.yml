@@ -8,12 +8,9 @@
    - !type:CharacterItemGroupRequirement
     group: N14LoadoutNeck
    - !type:CharacterDepartmentRequirement
+    inverted: true
     departments:
-    - Vault
-    - Wastelander
-    - BrotherhoodMidwest
-    - Townsfolk
-    - NCR
-    - Vault
+    - Legion
+    - Tribe
    items:
      - ClothingNeckCrucifixColor
