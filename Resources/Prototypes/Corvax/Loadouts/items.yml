@@ -8,7 +8,7 @@
    - !type:CharacterDepartmentRequirement
     inverted: true
     departments:
-    - Legion
+    - CaesarLegion
     - Vault
    items:
      - GeigerCounter
