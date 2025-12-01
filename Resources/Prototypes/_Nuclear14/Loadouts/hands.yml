@@ -5,6 +5,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutHands
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingHandsGlovesCloth
 
@@ -15,6 +21,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutHands
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingHandsGlovesLeather
 
@@ -25,6 +37,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutHands
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingHandsGlovesFur
 
@@ -35,6 +53,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutHands
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingHandsGlovesBlackLeather
 
@@ -45,6 +69,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutHands
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingHandsGlovesNitrile
 
@@ -55,5 +85,11 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutHands
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingHandsGlovesNitrilePurple

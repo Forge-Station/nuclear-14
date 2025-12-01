@@ -143,4 +143,19 @@
       - Wastelander
       - NCR
 
+- type: entity
+  parent: N14MobHumanNCRCadet
+  id: N14MobHumanNCRPisoner
+  name: NCRPisoner
+  components:
+    - type: Icon
+      state: soldier
+    - type: RandomHumanoidAppearance
+      randomizeName: true
+    - type: Loadout
+      prototypes: [NCRPisonerGear]
+    - type: NpcFactionMember
+      factions:
+      - Wastelander
+      - NCR
 #TODO add pictures for the entitylist

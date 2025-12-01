@@ -5,6 +5,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutShoes
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingShoesBlack
 
@@ -15,6 +21,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutShoes
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingShoesBrown
 
@@ -25,6 +37,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutShoes
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingShoesRags
 
@@ -35,6 +53,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutShoes
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingBootsCowboy
 
@@ -45,6 +69,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutShoes
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingBootsBlack
 
@@ -55,5 +85,11 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutShoes
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingBootsCombat

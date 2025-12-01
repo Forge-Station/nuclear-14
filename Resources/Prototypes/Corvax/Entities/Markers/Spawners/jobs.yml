@@ -169,3 +169,42 @@
     layers:
       - state: green
       - state: inquisitor
+
+- type: entity
+  id: SpawnPointNCRPisoner
+  parent: SpawnPointJobBase
+  name: NCR Pisoner spawner
+  components:
+  - type: SpawnPoint
+    job_id: NCRPisoner
+  - type: Sprite
+    layers:
+      - state: green
+      - sprite: Corvax/Markers/Jobs.rsi
+        state: Prisoner
+
+- type: entity
+  id: SpawnPointCaesarLegionSlave
+  parent: SpawnPointJobBase
+  name: Legion slave spawnpoint
+  components:
+  - type: SpawnPoint
+    job_id: CaesarLegionSlave
+  - type: Sprite
+    layers:
+      - state: green
+      - sprite: Corvax/Markers/Jobs.rsi
+        state: Slave
+
+- type: entity
+  id: SpawnPointBoSMidSerf
+  parent: SpawnPointJobBase
+  name: Serf spawner
+  components:
+  - type: SpawnPoint
+    job_id: BoSMidSerf
+  - type: Sprite
+    layers:
+      - state: green
+      - sprite: Corvax/Markers/Jobs.rsi
+        state: Serf

@@ -16,3 +16,5 @@ ent-N14MobHumanNCRRangerVeteran = Рейнджер-ветеран НКР
     .desc = { ent-MobHuman.desc }
 ent-N14MobHumanNCRRanger = Рейнджер НКР
     .desc = { ent-MobHuman.desc }
+ent-N14MobHumanNCRPisoner = Заключенный НКР
+    .desc = { ent-MobHuman.desc }

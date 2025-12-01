@@ -10,6 +10,7 @@
   - BoSMidKnight
   - BoSMidSquire
   - BoSMidInquisitor # Forge-Change
+  - BoSMidSerf
 
 - type: department
   id: BrotherhoodWashington
@@ -45,6 +46,7 @@
   - NCREngineer
   - NCRSoldier
   - NCRCadet
+  - NCRPisoner
 
 #- type: department # Disabled until roles are implemented
 #  id: Rangers

@@ -10,3 +10,5 @@ ent-N14MobHumanCaesarLegionnaireWarrior = Легионер-Воин
     .desc = { ent-MobHuman.desc }
 ent-N14MobHumanCaesarLegionnaireRecruit = Легионер-Рекрут
     .desc = { ent-MobHuman.desc }
+ent-N14MobHumanCaesarCaesarLegionSlave = Раб легиона цезаря
+    .desc = { ent-MobHuman.desc }

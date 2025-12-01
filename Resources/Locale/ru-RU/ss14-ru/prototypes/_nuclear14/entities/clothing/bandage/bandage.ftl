@@ -18,3 +18,12 @@ ent-NCClothingBandageLegionRecruit = повязка рекрута
 
 ent-NCClothingBandageRaiders = грязная повязка
     .desc = Клеймо рейдера, удачи...
+
+ent-NCClothingBrasletNCRPrisoner = Трекер браслет заключенного
+    .desc = Оно следит за вами стоит ли сбегать?
+
+ent-NCClothingCollarBoSSerf = Ошейник серфа СЗБС
+    .desc = Кажется он позволит вам сбежать, целым
+
+ent-NCClothingCollarLegionSlave = Ошейник раба легиона цезаря
+    .desc = Злостное оружие угнетие..
