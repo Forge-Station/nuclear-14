@@ -155,14 +155,14 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMelee
-  items:
-    - N14KitchenKnife
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
       - BoSMidSerf
       - CaesarLegionSlave
       - NCRPisoner
+  items:
+    - N14KitchenKnife
 
 - type: loadout
   id: N14BrassKnife

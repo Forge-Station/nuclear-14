@@ -3,7 +3,7 @@
   setPreference: true
   name: job-name-caesar-legion-slave
   description: job-description-caesar-legion-slave
-  playTimeTracker: CaesarLegionRab
+  playTimeTracker: CaesarLegionSlave
   requirements:
   - !type:MinPlayersRequirement
     min: 40

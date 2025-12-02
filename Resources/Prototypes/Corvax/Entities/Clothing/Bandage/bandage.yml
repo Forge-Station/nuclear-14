@@ -42,7 +42,7 @@
   components:
   - type: ClothingFactionAndRoleAdd
     faction: NCR
-    role: NCRPrisoner
+    role: NCRPisoner
 
 #MARK: BoS
 - type: entity
