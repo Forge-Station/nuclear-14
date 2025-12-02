@@ -55,6 +55,7 @@
           NCRMedic: [ 1, 2 ]
           NCRSoldier: [ 3, 6 ]
           NCRCadet: [ 2, 5 ]
+          NCRPisoner : [ 3, 3 ]
           # CaravanLeader: [ 1, 1 ]
           # CaravanTrader: [ 1, 1 ]
           # CaravanGuard: [ 2, 2 ]
@@ -69,6 +70,7 @@
           BoSMidKnight: [ 2, 3 ]
           BoSMidScribe: [ 1, 2 ]
           BoSMidSquire: [ 2, 2 ]
+          BoSMidSerf: [ 3, 3 ]
           Overseer: [ 1, 1 ]
           VaultDoctor: [ 2, 2 ]
           VaultDweller: [ 4, 4 ]
@@ -80,4 +82,5 @@
           CaesarLegionLegionnaireVeteran: [ 3, 3 ] # Forge-Legion
           CaesarLegionLegionnaireWarrior: [ 4, 4 ] # Forge-Legion
           CaesarLegionLegionnaireRecruit: [ 6, 6 ] # Forge-Legion
+          CaesarLegionSlave: [ 3, 3 ] # Forge-Legion
           # Raider: [3,3]
