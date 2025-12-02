@@ -35,7 +35,7 @@
   exclusive: true
   items:
     - N14ClothingUniformJumpskirtAsylumDress
-   requirements:
+  requirements:
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
