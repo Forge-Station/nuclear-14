@@ -97,7 +97,7 @@
    requirements:
      - !type:CharacterItemGroupRequirement
        group: N14LoadoutNeck
-       - !type:CharacterJobRequirement # Forge-Change
+     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
       - BoSMidSerf
