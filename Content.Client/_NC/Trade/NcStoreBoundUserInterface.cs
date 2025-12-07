@@ -84,11 +84,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
             hash = hash * 31 + kv.Value.GetHashCode();
         }
 
-        if (hash == _lastHash)
-        {
-            Log.Info("[NcStore/UI] Skipping UI update (hash unchanged)");
-            return;
-        }
+        // ДОБАВЛЯЕМ КОНТРАКТЫ В ХЭШ ДО ПРОВЕРКИ
         foreach (var c in st.Contracts)
         {
             hash = hash * 31 + (c.Id?.GetHashCode() ?? 0);
@@ -103,17 +99,20 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
             hash = hash * 31 + c.Completed.GetHashCode();
         }
 
+        if (hash == _lastHash)
+        {
+            Log.Info("[NcStore/UI] Skipping UI update (hash unchanged)");
+            return;
+        }
+
         Log.Info(
             $"[NcStore/UI] ApplyState: balance={st.Balance}, listings={st.Listings.Count}, massTotals={st.MassSellTotals.Count}, contracts={st.Contracts.Count}");
 
-        // 1) Обновляем магазин
         _menu.ApplyState(st.Balance, st.Listings.ToList(), st.MassSellTotals);
-
-        // 2) Обновляем контракты
         _menu.PopulateContracts(st.Contracts);
-
         _menu.Visible = true;
         _lastHash = hash;
+
     }
 
 

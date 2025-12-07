@@ -2,45 +2,48 @@ using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
-
 namespace Content.Server._NC.Trade;
-
 
 public sealed class StoreSystemStructuredLoader : EntitySystem
 {
     private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore-loader");
+
     [Dependency] private readonly NcContractSystem _contracts = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
 
     public override void Initialize()
     {
+        base.Initialize();
+
         SubscribeLocalEvent<NcStoreComponent, MapInitEvent>(OnMapInit);
         SubscribeLocalEvent<NcStoreComponent, ComponentStartup>(OnStartup);
     }
 
-    private void OnMapInit(EntityUid uid, NcStoreComponent comp, MapInitEvent args) =>
-        TryLoadPreset(uid, comp, "MapInit");
-
-    private void OnStartup(EntityUid uid, NcStoreComponent comp, ComponentStartup args)
+    private void OnMapInit(EntityUid uid, NcStoreComponent comp, MapInitEvent args)
     {
-        if (comp.Listings.Count == 0)
-            TryLoadPreset(uid, comp, "ComponentStartup");
-
+        TryLoadPresets(uid, comp, "MapInit");
         _contracts.InitContractsForStore(uid, comp);
     }
 
-    private void TryLoadPreset(EntityUid uid, NcStoreComponent comp, string reason)
+    private void OnStartup(EntityUid uid, NcStoreComponent comp, ComponentStartup args)
     {
-        if (string.IsNullOrWhiteSpace(comp.Preset))
-        {
-            Sawmill.Warning($"[NcStore] Нет пресета у {ToPrettyString(uid)} ({reason})");
-            return;
-        }
+        // На случай спавна не через MapInit (админскими тулзами и т.п.)
+        TryLoadPresets(uid, comp, "Startup");
+        _contracts.InitContractsForStore(uid, comp);
+    }
 
-        if (!_prototypes.TryIndex<StorePresetStructuredPrototype>(comp.Preset, out var preset))
+    private void TryLoadPresets(EntityUid uid, NcStoreComponent comp, string reason)
+    {
+        // Если ничего не настроено, пробуем старое поле preset.
+        if (comp.BuyPresets.Count == 0 &&
+            comp.SellPresets.Count == 0 &&
+            !string.IsNullOrWhiteSpace(comp.LegacyPreset))
+            comp.BuyPresets.Add(comp.LegacyPreset!);
+
+        if (comp.BuyPresets.Count == 0 && comp.SellPresets.Count == 0)
         {
-            Sawmill.Error($"[NcStore] Пресет '{comp.Preset}' не найден для {ToPrettyString(uid)} ({reason})");
+            Sawmill.Warning($"[NcStore] {ToPrettyString(uid)}: нет ни одного пресета (reason={reason})");
             return;
         }
 
@@ -48,45 +51,69 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         comp.Categories.Clear();
         comp.Listings.Clear();
 
-        comp.CurrencyWhitelist.Add(preset.Currency);
+        var total = 0;
 
-        var count = 0;
-        foreach (var (modeStr, categories) in preset.Catalog)
+        foreach (var id in comp.BuyPresets)
+            total += LoadPresetForMode(id, StoreMode.Buy, comp);
+
+        foreach (var id in comp.SellPresets)
+            total += LoadPresetForMode(id, StoreMode.Sell, comp);
+
+        if (total == 0)
         {
-            var mode = modeStr switch
-            {
-                "Buy" => StoreMode.Buy,
-                "Sell" => StoreMode.Sell,
-                _ => StoreMode.Buy
-            };
-
-            foreach (var (category, entries) in categories)
-            {
-                if (!comp.Categories.Contains(category))
-                    comp.Categories.Add(category);
-
-                foreach (var entry in entries)
-                {
-                    var id = $"{mode}_{category}_{entry.Proto}_{_random.Next(100000)}";
-
-                    comp.Listings.Add(
-                        new()
-                        {
-                            Id = id,
-                            ProductEntity = entry.Proto,
-                            Cost = new() { [preset.Currency] = entry.Price, },
-                            Categories = [category,],
-                            Conditions = new(),
-                            Mode = mode,
-                            RemainingCount = entry.Count ?? -1
-                        });
-
-                    count++;
-                }
-            }
+            Sawmill.Warning($"[NcStore] {ToPrettyString(uid)}: ни одного лота не загружено (reason={reason})");
+            return;
         }
 
         Sawmill.Info(
-            $"[NcStore] Загружено {count} товаров для {ToPrettyString(uid)} (preset={comp.Preset}, reason={reason})");
+            $"[NcStore] {ToPrettyString(uid)}: загружено {total} лотов. " +
+            $"BuyPresets=[{string.Join(", ", comp.BuyPresets)}], " +
+            $"SellPresets=[{string.Join(", ", comp.SellPresets)}], reason={reason}");
+    }
+
+    private int LoadPresetForMode(string presetId, StoreMode mode, NcStoreComponent comp)
+    {
+        if (!_prototypes.TryIndex<StorePresetStructuredPrototype>(presetId, out var preset))
+        {
+            Sawmill.Error($"[NcStore] Пресет '{presetId}' не найден");
+            return 0;
+        }
+
+        var count = 0;
+
+        if (!string.IsNullOrWhiteSpace(preset.Currency) &&
+            !comp.CurrencyWhitelist.Contains(preset.Currency))
+            comp.CurrencyWhitelist.Add(preset.Currency);
+
+        foreach (var (category, entries) in preset.Catalog)
+        {
+            if (!comp.Categories.Contains(category))
+                comp.Categories.Add(category);
+
+            foreach (var entry in entries)
+            {
+                var id =
+                    $"{presetId}_{mode}_{category}_{entry.Proto}_{_random.Next(100000)}";
+
+                var listing = new StoreListingPrototype
+                {
+                    Id = id,
+                    ProductEntity = entry.Proto,
+                    Mode = mode,
+                    Categories = new() { category, },
+                    Conditions = new(),
+                    RemainingCount = entry.Count ?? -1,
+                    Cost = new()
+                    {
+                        [preset.Currency] = entry.Price
+                    }
+                };
+
+                comp.Listings.Add(listing);
+                count++;
+            }
+        }
+
+        return count;
     }
 }

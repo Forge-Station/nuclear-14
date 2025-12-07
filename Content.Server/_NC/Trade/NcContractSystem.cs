@@ -3,9 +3,7 @@ using Content.Shared._NC.Trade;
 using Content.Shared.Movement.Pulling.Components;
 using Robust.Shared.Prototypes;
 
-
 namespace Content.Server._NC.Trade;
-
 
 public sealed class NcContractSystem : EntitySystem
 {
@@ -14,9 +12,13 @@ public sealed class NcContractSystem : EntitySystem
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
 
+    /// <summary>
+    /// Инициализация контрактах на магазине при спавне.
+    /// Берёт пресет и генерирует ContractServerData из StoreContractPrototype.
+    /// </summary>
     public void InitContractsForStore(EntityUid uid, NcStoreComponent comp)
     {
-        // Уже есть контракты — не трогаем (на будущее)
+        // Уже есть контракты — не трогаем
         if (comp.Contracts.Count > 0)
             return;
 
@@ -25,24 +27,34 @@ public sealed class NcContractSystem : EntitySystem
 
         comp.Contracts.Clear();
 
-        // preset здесь формально nullable, но после if мы знаем, что он не null
-        foreach (var (key, entry) in preset!.Contracts)
+        // preset.Contracts — это List<string> с id storeContract
+        foreach (var contractId in preset!.Contracts)
         {
-            var id = entry.Id ?? key;
-            if (string.IsNullOrWhiteSpace(id))
+            if (string.IsNullOrWhiteSpace(contractId))
                 continue;
 
-            if (comp.Contracts.ContainsKey(id))
+            // Уже есть такой контракт — пропускаем
+            if (comp.Contracts.ContainsKey(contractId))
                 continue;
 
-            var data = CreateContractData(id, entry);
-            comp.Contracts[id] = data;
+            if (!_prototypes.TryIndex<StoreContractPrototype>(contractId, out var proto))
+            {
+                Sawmill.Warning(
+                    $"[Init] Contract '{contractId}' from preset '{preset.ID}' not found for {ToPrettyString(uid)}.");
+                continue;
+            }
+
+            var data = CreateContractData(proto);
+            comp.Contracts[contractId] = data;
         }
 
         Sawmill.Debug(
-            $"[Init] Loaded {comp.Contracts.Count} contracts for {ToPrettyString(uid)} (preset={comp.ContractsPreset}).");
+            $"[Init] Loaded {comp.Contracts.Count} contract(s) for {ToPrettyString(uid)} (preset={preset.ID}).");
     }
 
+    /// <summary>
+    /// Попытка сдать контракт и выдать награду.
+    /// </summary>
     public bool TryClaim(EntityUid store, EntityUid user, string contractId)
     {
         if (!TryComp(store, out NcStoreComponent? comp))
@@ -65,15 +77,15 @@ public sealed class NcContractSystem : EntitySystem
             return false;
         }
 
-        // --- ищем тащимый закрытый ящик, как в массовой продаже ---
         EntityUid? crate = null;
         if (TryComp(user, out PullerComponent? puller) &&
             puller.Pulling is { } pulled &&
             TryComp(pulled, out EntityStorageComponent? storage) &&
             !storage.Open)
+        {
             crate = pulled;
+        }
 
-        // --- считаем, сколько всего предметов есть у игрока + в ящике ---
         var ownedUser = _logic.GetOwned(user, contract.TargetItem);
         var ownedCrate = crate is { } crateUid
             ? _logic.GetOwnedInRoot(crateUid, contract.TargetItem)
@@ -86,15 +98,14 @@ public sealed class NcContractSystem : EntitySystem
             Sawmill.Debug(
                 $"[Claim] Not enough items for contract '{contractId}' on {ToPrettyString(store)}. " +
                 $"Have={totalOwned}, Required={contract.Required}.");
-            return false; // кто-то успел забрать часть вещей до сдачи
+            return false;
         }
 
-        // Обновим прогресс на всякий случай (на сервере, независимо от UI)
         contract.Progress = Math.Min(totalOwned, contract.Required);
 
-        // --- снимаем сперва с игрока, потом с ящика ---
         var left = contract.Required;
 
+        // Сначала забираем с игрока
         var takeFromUser = Math.Min(left, ownedUser);
         if (takeFromUser > 0 &&
             !_logic.TryTakeProductUnits(user, contract.TargetItem, takeFromUser))
@@ -106,6 +117,7 @@ public sealed class NcContractSystem : EntitySystem
 
         left -= takeFromUser;
 
+        // Остаток – из ящика
         if (left > 0 && crate is { } crateUid2)
         {
             if (!_logic.TryTakeProductUnitsFromRoot(crateUid2, contract.TargetItem, left))
@@ -116,7 +128,7 @@ public sealed class NcContractSystem : EntitySystem
             }
         }
 
-        // 2) Денежная награда — через общую логику магазина
+        // Награда валютой
         if (contract.Reward > 0 && !string.IsNullOrWhiteSpace(contract.RewardCurrency))
         {
             Sawmill.Debug(
@@ -124,7 +136,7 @@ public sealed class NcContractSystem : EntitySystem
             _logic.GiveCurrency(user, contract.RewardCurrency, contract.Reward);
         }
 
-        // 3) Предметная награда — тоже через логику магазина
+        // Награда предметами
         if (!string.IsNullOrWhiteSpace(contract.RewardItem) && contract.RewardItemCount > 0)
         {
             Sawmill.Debug(
@@ -133,46 +145,69 @@ public sealed class NcContractSystem : EntitySystem
                 _logic.TrySpawnProduct(contract.RewardItem, user);
         }
 
-        // 4) удаляем контракт и подсовываем новый
+        // Удаляем контракт и пытаемся добрать новый из пресета
         comp.Contracts.Remove(contractId);
         RefillContractsForStore(store, comp);
 
         return true;
     }
 
+    /// <summary>
+    /// Добираем новый контракт из того же пресета после сдачи.
+    /// </summary>
     private void RefillContractsForStore(EntityUid uid, NcStoreComponent comp)
     {
         if (!TryGetPreset(uid, comp, out var preset))
             return;
 
-        // Пробуем добавить ОДИН новый контракт, который ещё не висит у автомата
-        foreach (var (key, entry) in preset!.Contracts)
+        foreach (var contractId in preset!.Contracts)
         {
-            var id = entry.Id ?? key;
-            if (string.IsNullOrWhiteSpace(id))
+            if (string.IsNullOrWhiteSpace(contractId))
                 continue;
 
-            if (comp.Contracts.ContainsKey(id))
-                continue; // такой уже есть
+            if (comp.Contracts.ContainsKey(contractId))
+                continue;
 
-            var data = CreateContractData(id, entry);
-            comp.Contracts[id] = data;
+            if (!_prototypes.TryIndex<StoreContractPrototype>(contractId, out var proto))
+            {
+                Sawmill.Warning(
+                    $"[Refill] Contract '{contractId}' from preset '{preset.ID}' not found for {ToPrettyString(uid)}.");
+                continue;
+            }
 
-            Sawmill.Info($"[Refill] Added new contract '{id}' to {ToPrettyString(uid)} after claim.");
-            break;
+            var data = CreateContractData(proto);
+            comp.Contracts[contractId] = data;
+
+            Sawmill.Info(
+                $"[Refill] Added new contract '{contractId}' to {ToPrettyString(uid)} after claim (preset={preset.ID}).");
+            break; // добавили один — выходим
         }
     }
 
+    /// <summary>
+    /// Выбираем пресет контрактов для магазина
+    /// (новый формат: ContractPresets[], старый: LegacyContractsPreset).
+    /// </summary>
     private bool TryGetPreset(EntityUid uid, NcStoreComponent comp, out StoreContractsPresetPrototype? preset)
     {
         preset = null;
 
-        if (string.IsNullOrWhiteSpace(comp.ContractsPreset))
+        string? presetId = null;
+
+        // Новый путь: несколько пресетов
+        if (comp.ContractPresets.Count > 0)
+            presetId = comp.ContractPresets[0];
+        // Старый путь: одно поле contracts: "preset_id"
+        else if (!string.IsNullOrWhiteSpace(comp.LegacyContractsPreset))
+            presetId = comp.LegacyContractsPreset;
+
+        if (string.IsNullOrWhiteSpace(presetId))
             return false;
 
-        if (!_prototypes.TryIndex<StoreContractsPresetPrototype>(comp.ContractsPreset, out var proto))
+        if (!_prototypes.TryIndex<StoreContractsPresetPrototype>(presetId, out var proto))
         {
-            Sawmill.Warning($"[Preset] Preset '{comp.ContractsPreset}' not found for {ToPrettyString(uid)}.");
+            Sawmill.Warning(
+                $"[Preset] Preset '{presetId}' not found for {ToPrettyString(uid)}.");
             return false;
         }
 
@@ -180,21 +215,20 @@ public sealed class NcContractSystem : EntitySystem
         return true;
     }
 
-    private static ContractServerData CreateContractData(
-        string id,
-        StoreContractsPresetPrototype.ContractPresetEntry entry
-    ) =>
+
+    private static ContractServerData CreateContractData(StoreContractPrototype proto) =>
         new()
         {
-            Id = id,
-            TargetItem = entry.TargetItem,
-            Required = entry.Required,
+            Id = proto.ID,
+            Name = proto.Name,
+            TargetItem = proto.TargetItem,
+            Required = proto.Required,
             Progress = 0,
-            Reward = entry.Reward,
-            RewardCurrency = entry.RewardCurrency,
-            RewardItem = entry.RewardItem,
-            RewardItemCount = entry.RewardItemCount,
-            Difficulty = entry.Difficulty,
-            Description = entry.Description
+            Reward = proto.Reward,
+            RewardCurrency = proto.RewardCurrency,
+            RewardItem = proto.RewardItem,
+            RewardItemCount = proto.RewardItemCount,
+            Difficulty = proto.Difficulty,
+            Description = proto.Description
         };
 }

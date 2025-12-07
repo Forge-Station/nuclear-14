@@ -5,8 +5,12 @@
   suffix: vendor, normal
   components:
   - type: NcStore
-    preset: caravan_store
-    contracts: caravan_contracts
+    buyPresets:
+      - caravan_buy
+    sellPresets:
+      - caravan_sell
+    contractPresets:
+      - caravan_contracts_easy
     access:
     - [ "TownieShopkeeper" ]
   - type: UserInterface
@@ -56,7 +60,13 @@
   suffix: vendor, Tickets
   components:
   - type: NcStore
-    preset: caravan_storetickets
+    buyPresets:
+    - caravan_storetickets
+    sellPresets:
+    - caravan_storetickets_sell
+    - caravan_sell
+    contractPresets:
+    - caravan_contracts_easy
     access:
     - [ "TownieShopkeeper" ]
   - type: Sprite
@@ -69,10 +79,9 @@
       shader: unshaded
 
 - type: storePresetStructured
-  id: caravan_store
+  id: caravan_buy
   currency: Caps
   catalog:
-    Buy:
       Оружие:
       - proto: N14WeaponRevolver10mm
         price: 60
@@ -308,7 +317,11 @@
         price: 35
       - proto: CrayonBox
         price: 50
-    Sell:
+
+- type: storePresetStructured
+  id: caravan_sell
+  currency: Caps
+  catalog:
       Оружие:
       - proto: N14WeaponRevolver9mm
         price: 10
@@ -559,7 +572,6 @@
   id: caravan_storetickets
   currency: PrizeTicket
   catalog:
-    Buy:
       Оружие:
       - proto: N14WeaponPistol9mmSpy
         price: 1
@@ -638,7 +650,11 @@
         price: 5
       - proto: N14ClothingBootsCombatMK2
         price: 1
-    Sell:
+
+- type: storePresetStructured
+  id: caravan_storetickets_sell
+  currency: PrizeTicket
+  catalog:
       Оружие:
       - proto: N14WeaponPistol9mmSpy
         price: 1
@@ -705,26 +721,32 @@
       - proto: N14ClothingOuterRaiderCombat2
         price: 3
 
+- type: storeContract
+  id: caravan_contract_guns
+  name: Пушки на переработку
+  targetItem: N14MaterialRadscorpionTail
+  required: 5
+  reward: 1000
+  rewardCurrency: Caps
+  rewardItem: N14ClothingOuterPowerArmorT51
+  rewardItemCount: 2
+  difficulty: Easy
+  description: "Короче мне надо жопы скорпиона, сдашь получишь силовую броню."
+
+- type: storeContract
+  id: caravan_contract_scrap
+  name: Металлолом нужен
+  targetItem: N14MobHumanBoSWashingtonPaladin
+  required: 1
+  reward: 300
+  rewardItem: N14ClothingOuterPowerArmorAdvanced2Tesla
+  rewardItemCount: 2
+  rewardCurrency: Caps
+  difficulty: Medium
+  description: "Найди девушку Грому. Найдешь он тебя отблагодарит."
+
 - type: storeContractsPreset
-  id: caravan_contracts
+  id: caravan_contracts_easy
   contracts:
-    junk_easy:
-      targetItem: N14MaterialRadscorpionTail
-      required: 5
-      reward: 1000
-      rewardCurrency: Caps
-      rewardItem: N14ClothingOuterPowerArmorT51        # ← новый параметр
-      rewardItemCount: 2
-      difficulty: Easy
-      description: "Короче мне надо жопы скорпиона, сдашь получишь силовую броню."
-
-    steel_medium:
-      targetItem: N14MobHumanBoSWashingtonPaladin
-      required: 1
-      reward: 300
-      rewardItem: N14ClothingOuterPowerArmorAdvanced2Tesla        # ← новый параметр
-      rewardItemCount: 2
-      rewardCurrency: Caps
-      difficulty: Medium
-      description: "Найди девушку Грому. Найдешь он тебя отблагодарит."
-
+  - caravan_contract_scrap
+  - caravan_contract_guns

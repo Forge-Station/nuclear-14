@@ -4,6 +4,9 @@ namespace Content.Shared._NC.Trade;
 public sealed class ContractServerData
 {
     public string Id { get; set; } = string.Empty;
+
+    public string Name { get; set; } = string.Empty;
+
     public string TargetItem { get; set; } = string.Empty;
     public int Required { get; set; }
     public int Progress { get; set; }

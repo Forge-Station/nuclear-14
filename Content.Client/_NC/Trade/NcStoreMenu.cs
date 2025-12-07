@@ -521,12 +521,17 @@ public sealed partial class NcStoreMenu : FancyWindow
                 HorizontalExpand = true
             };
 
+            var titleText = string.IsNullOrWhiteSpace(c.Name)
+                ? $"★ {DifficultyName(c.Difficulty)} контракт"
+                : $"★ {c.Name} ({DifficultyName(c.Difficulty)})";
+
             box.AddChild(
                 new Label
                 {
-                    Text = $"★ {DifficultyName(c.Difficulty)} контракт",
+                    Text = titleText,
                     StyleClasses = { "NcContractTitle", }
                 });
+
 
             if (!string.IsNullOrWhiteSpace(c.Description))
             {

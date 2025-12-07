@@ -287,9 +287,10 @@ public sealed class StoreStructuredSystem : EntitySystem
         var contracts = comp.Contracts.Values
             .Select(c => new ContractClientData(
                 c.Id,
+                c.Name,
                 c.TargetItem,
-                c.Progress,
                 c.Required,
+                c.Progress,
                 c.Reward,
                 c.RewardCurrency,
                 c.RewardItem,
@@ -299,6 +300,8 @@ public sealed class StoreStructuredSystem : EntitySystem
                 c.Description
             ))
             .ToList();
+
+
 
         _ui.SetUiState(uid, StoreUiKey.Key, new StoreUiState(balance, listings, crateTotals, contracts));
     }

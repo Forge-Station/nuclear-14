@@ -5,30 +5,44 @@ namespace Content.Shared._NC.Trade;
 [RegisterComponent, NetworkedComponent]
 public sealed partial class NcStoreComponent : Component
 {
+
     [DataField("categories")]
-    public List<string> Categories = new();
+    public List<string> Categories { get; set; } = new();
+
 
     [DataField("currencyWhitelist")]
-    public List<string> CurrencyWhitelist = new();
+    public List<string> CurrencyWhitelist { get; set; } = new();
 
-    public EntityUid? CurrentUser = null;
 
-    // Лоты магазина (загружаются из StorePresetStructuredPrototype)
-    [DataField("listings")]
-    public List<StoreListingPrototype> Listings = new();
+    public EntityUid? CurrentUser;
 
-    // Пресет магазина (как уже было)
+
+    public List<StoreListingPrototype> Listings { get; set; } = new();
+
+
     [DataField("preset")]
-    public string? Preset;
+    public string? LegacyPreset { get; set; }
 
-    // 🔹 Имя пресета контрактов из YAML:
-    // contracts: caravan_contracts
+
+    [DataField("buyPresets")]
+    public List<string> BuyPresets { get; set; } = new();
+
+
+    [DataField("sellPresets")]
+    public List<string> SellPresets { get; set; } = new();
+
+
+    [DataField("contractPresets")]
+    public List<string> ContractPresets { get; set; } = new();
+
+
     [DataField("contracts")]
-    public string? ContractsPreset;
+    public string? LegacyContractsPreset { get; set; }
 
-    // 🔹 Рантайм-словарь контрактов. В YAML его НЕ трогаем.
+
     public Dictionary<string, ContractServerData> Contracts { get; } = new();
 
+
     [DataField("access")]
-    public List<List<string>>? Access;
+    public List<List<string>>? Access { get; set; }
 }
