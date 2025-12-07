@@ -1,6 +1,6 @@
+using System.Linq;
 using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
 
 
 namespace Content.Server._NC.Trade;
@@ -12,7 +12,6 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
     [Dependency] private readonly NcContractSystem _contracts = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
 
     public override void Initialize()
     {
@@ -30,6 +29,9 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
     private void OnStartup(EntityUid uid, NcStoreComponent comp, ComponentStartup args)
     {
+        if (comp.Listings.Count > 0)
+            return;
+
         TryLoadPresets(uid, comp, "Startup");
         _contracts.InitContractsForStore(uid, comp);
     }
@@ -92,8 +94,12 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
             foreach (var entry in entries)
             {
-                var id =
-                    $"{presetId}_{mode}_{category}_{entry.Proto}_{_random.Next(100000)}";
+                var baseId = $"{presetId}:{mode}:{category}:{entry.Proto}";
+
+                var id = baseId;
+                var suffix = 1;
+                while (comp.Listings.Any(l => l.Id == id))
+                    id = $"{baseId}#{suffix++}";
 
                 var listing = new StoreListingPrototype
                 {
@@ -104,10 +110,10 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
                     Conditions = new(),
                     RemainingCount = entry.Count ?? -1,
                     Cost = new()
-                    {
-                        [preset.Currency] = entry.Price
-                    }
                 };
+
+                if (!string.IsNullOrWhiteSpace(preset.Currency))
+                    listing.Cost[preset.Currency] = entry.Price;
 
                 comp.Listings.Add(listing);
                 count++;

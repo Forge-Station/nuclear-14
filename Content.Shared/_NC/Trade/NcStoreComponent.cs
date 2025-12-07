@@ -42,7 +42,4 @@ public sealed partial class NcStoreComponent : Component
 
     public Dictionary<string, ContractServerData> Contracts { get; } = new();
 
-
-    [DataField("access")]
-    public List<List<string>>? Access { get; set; }
 }

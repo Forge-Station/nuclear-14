@@ -37,7 +37,7 @@ public sealed class NcStoreListingControl : PanelContainer
         int initialQty = 1
     )
     {
-        Log.Info(
+        Log.Debug(
             $"[NcStore/Listing] ctor id={data.Id}, mode={data.Mode}, price={data.Price}, remaining={data.Remaining}, owned={data.Owned}, balanceHint={balanceHint}, initQty={initialQty}");
 
         Margin = new(6, 6, 6, 6);
@@ -129,7 +129,7 @@ public sealed class NcStoreListingControl : PanelContainer
         _maxQty = Math.Min(remainingCap, Math.Min(ownedCap, moneyCap));
         _qty = Math.Clamp(initialQty, MinAllowed, Math.Max(MinAllowed, _maxQty));
 
-        Log.Info(
+        Log.Debug(
             $"[NcStore/Listing] caps: remaining={remainingCap}, ownedCap={ownedCap}, moneyCap={moneyCap}, maxQty={_maxQty}, startQty={_qty}");
 
         var qtyRow = new BoxContainer
@@ -199,7 +199,7 @@ public sealed class NcStoreListingControl : PanelContainer
             if (_maxQty <= 0 || _qty <= 0)
                 return;
 
-            Log.Info($"[NcStore/Listing] Enter pressed id={data.Id}, mode={data.Mode}, qty={_qty}");
+            Log.Debug($"[NcStore/Listing] Enter pressed id={data.Id}, mode={data.Mode}, qty={_qty}");
 
             switch (data.Mode)
             {
@@ -399,7 +399,7 @@ public sealed class NcStoreListingControl : PanelContainer
             if (_maxQty <= 0 || _qty <= 0)
                 return;
 
-            Log.Info($"[NcStore/Listing] Price button pressed id={data.Id}, mode={data.Mode}, qty={_qty}");
+            Log.Debug($"[NcStore/Listing] Price button pressed id={data.Id}, mode={data.Mode}, qty={_qty}");
 
             switch (data.Mode)
             {
@@ -428,7 +428,7 @@ public sealed class NcStoreListingControl : PanelContainer
         UpdateTotal(data);
         OnQtyChanged?.Invoke(_qty);
 
-        Log.Info($"[NcStore/Listing] SetQty id={data.Id}, newQty={_qty}, maxQty={_maxQty}");
+        Log.Debug($"[NcStore/Listing] SetQty id={data.Id}, newQty={_qty}, maxQty={_maxQty}");
     }
 
     private void UpdateTotal(StoreListingData data)
@@ -439,6 +439,6 @@ public sealed class NcStoreListingControl : PanelContainer
         var value = _qty <= 0 ? data.Price : (long) data.Price * _qty;
         _priceLbl.Text = value > MaxTotalDisplay ? $"{MaxTotalDisplay}+" : value.ToString();
 
-        Log.Info($"[NcStore/Listing] UpdateTotal id={data.Id}, qty={_qty}, unitPrice={data.Price}, total={value}");
+        Log.Debug($"[NcStore/Listing] UpdateTotal id={data.Id}, qty={_qty}, unitPrice={data.Price}, total={value}");
     }
 }

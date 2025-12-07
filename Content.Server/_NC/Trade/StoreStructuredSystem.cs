@@ -2,15 +2,12 @@ using System.Linq;
 using Content.Server.Popups;
 using Content.Server.Storage.Components;
 using Content.Shared._NC.Trade;
-using Content.Shared.Access;
 using Content.Shared.Access.Components;
-using Content.Shared.Access.Systems;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Stacks;
 using Content.Shared.UserInterface;
 using Robust.Server.GameObjects;
 using Robust.Shared.Containers;
-using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
 
@@ -24,20 +21,22 @@ public sealed class StoreStructuredSystem : EntitySystem
 
     private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore");
 
-    [Dependency] private readonly AccessReaderSystem _access = default!;
     [Dependency] private readonly NcContractSystem _contracts = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
+    private readonly HashSet<EntityUid> _openStoreUids = new();
+
     [Dependency] private readonly PopupSystem _popups = default!;
-    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
+    [Dependency] private readonly NcStoreSystem _storeSystem = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
     [Dependency] private readonly SharedTransformSystem _xform = default!;
+
     private TimeSpan _nextCheck = TimeSpan.Zero;
-    private int _openStores;
 
     public override void Initialize()
     {
         base.Initialize();
+
         SubscribeLocalEvent<NcStoreComponent, ActivatableUIOpenAttemptEvent>(
             OnUiOpenAttempt,
             new[] { typeof(ActivatableUISystem), });
@@ -51,7 +50,6 @@ public sealed class StoreStructuredSystem : EntitySystem
         SubscribeLocalEvent<NcStoreComponent, ClaimContractBoundMessage>(OnClaimContract);
     }
 
-
     private void OnUiOpenAttempt(EntityUid uid, NcStoreComponent comp, ref ActivatableUIOpenAttemptEvent ev)
     {
         ev.Cancel();
@@ -60,7 +58,7 @@ public sealed class StoreStructuredSystem : EntitySystem
         if (!_ui.HasUi(uid, StoreUiKey.Key))
             return;
 
-        if (!IsAccessAllowed(uid, comp, user))
+        if (!_storeSystem.CanUseStore(uid, comp, user))
             return;
 
         if (comp.CurrentUser is { } current && current != user)
@@ -73,8 +71,9 @@ public sealed class StoreStructuredSystem : EntitySystem
 
         var wasInUse = comp.CurrentUser != null;
         comp.CurrentUser = user;
+
         if (!wasInUse)
-            _openStores++;
+            _openStoreUids.Add(uid);
 
         if (!_ui.IsUiOpen(uid, StoreUiKey.Key, user))
             _ui.OpenUi(uid, StoreUiKey.Key, user);
@@ -82,28 +81,28 @@ public sealed class StoreStructuredSystem : EntitySystem
         UpdateUiState(uid, comp, user);
     }
 
-
     private void OnUiClosed(EntityUid uid, NcStoreComponent comp, BoundUIClosedEvent ev)
     {
         if (!ev.UiKey.Equals(StoreUiKey.Key))
             return;
 
-        if (_openStores > 0)
-            _openStores--;
-
         comp.CurrentUser = null;
+        _openStoreUids.Remove(uid);
     }
-
 
     private void OnUiRefreshRequest(EntityUid uid, NcStoreComponent comp, RequestUiRefreshMessage msg)
     {
         if (comp.CurrentUser is not { } user)
+        {
+            _openStoreUids.Remove(uid);
             return;
+        }
 
-        if (!IsAccessAllowed(uid, comp, user))
+        if (!_storeSystem.CanUseStore(uid, comp, user))
         {
             _ui.CloseUi(uid, StoreUiKey.Key, user);
             comp.CurrentUser = null;
+            _openStoreUids.Remove(uid);
             return;
         }
 
@@ -112,17 +111,26 @@ public sealed class StoreStructuredSystem : EntitySystem
 
     public void UpdateUiState(EntityUid uid, NcStoreComponent comp, EntityUid user)
     {
-        if (!IsAccessAllowed(uid, comp, user))
+        if (!_storeSystem.CanUseStore(uid, comp, user))
         {
             _ui.CloseUi(uid, StoreUiKey.Key, user);
             comp.CurrentUser = null;
+            _openStoreUids.Remove(uid);
             return;
         }
 
         UpdateContractsProgress(comp, user);
 
         var preferredCurrency = comp.CurrencyWhitelist.FirstOrDefault();
-        var balance = string.IsNullOrEmpty(preferredCurrency)
+
+        if (string.IsNullOrWhiteSpace(preferredCurrency))
+        {
+            preferredCurrency = comp.Listings
+                .SelectMany(l => l.Cost.Keys)
+                .FirstOrDefault();
+        }
+
+        var balance = string.IsNullOrWhiteSpace(preferredCurrency)
             ? 0
             : _logic.GetBalance(user, preferredCurrency);
 
@@ -133,7 +141,7 @@ public sealed class StoreStructuredSystem : EntitySystem
                 string? currencyId = null;
                 var priceF = 0f;
 
-                if (!string.IsNullOrEmpty(preferredCurrency) &&
+                if (!string.IsNullOrWhiteSpace(preferredCurrency) &&
                     l.Cost.TryGetValue(preferredCurrency, out var vPref))
                 {
                     currencyId = preferredCurrency;
@@ -141,13 +149,17 @@ public sealed class StoreStructuredSystem : EntitySystem
                 }
                 else
                 {
-                    var found = comp.CurrencyWhitelist.FirstOrDefault(c => l.Cost.ContainsKey(c));
-                    if (!string.IsNullOrEmpty(found))
+                    if (comp.CurrencyWhitelist.Count > 0)
                     {
-                        currencyId = found;
-                        priceF = l.Cost[found];
+                        var found = comp.CurrencyWhitelist.FirstOrDefault(c => l.Cost.ContainsKey(c));
+                        if (!string.IsNullOrWhiteSpace(found))
+                        {
+                            currencyId = found;
+                            priceF = l.Cost[found];
+                        }
                     }
-                    else if (l.Cost.Count > 0)
+
+                    if (currencyId == null && l.Cost.Count > 0)
                     {
                         var kv = l.Cost.First();
                         currencyId = kv.Key;
@@ -185,33 +197,28 @@ public sealed class StoreStructuredSystem : EntitySystem
         var sellCount = listings.Count(x => x.Mode == StoreMode.Sell);
         var exchCount = listings.Count(x => x.Mode == StoreMode.Exchange);
 
-        Sawmill.Info(
+        Sawmill.Debug(
             $"[NcStore/ServerUI] {ToPrettyString(uid)}: Listings total={listings.Count}, Buy={buyCount}, Sell={sellCount}, Exchange={exchCount}");
 
-
-        // ─── "Готово к продаже" ───
         const string readyCat = "Готово к продаже";
 
         var readyToSell = listings
             .Where(d => d.Mode == StoreMode.Sell && d.Owned > 0 && d.Remaining != 0)
-            .Select(d => new StoreListingData
-            {
-                Id = d.Id,
-                ProductEntity = d.ProductEntity,
-                Price = d.Price,
-                Category = readyCat,
-                CurrencyId = d.CurrencyId,
-                Mode = d.Mode,
-                Owned = d.Owned,
-                Remaining = d.Remaining
-            })
+            .Select(d => new StoreListingData(
+                d.Id + "__ready",
+                d.ProductEntity,
+                d.Price,
+                readyCat,
+                d.CurrencyId,
+                d.Mode,
+                d.Owned,
+                d.Remaining
+            ))
             .ToList();
-
 
         if (readyToSell.Count > 0)
             listings.AddRange(readyToSell);
 
-        // ─── Массовая продажа из ящика ───
         var crateTotals = new Dictionary<string, int>();
         const string crateCat = "Готово к продаже в ящике";
 
@@ -249,7 +256,7 @@ public sealed class StoreStructuredSystem : EntitySystem
                 string? currencyId = null;
                 var priceF = 0f;
 
-                if (!string.IsNullOrEmpty(preferredCurrency) &&
+                if (!string.IsNullOrWhiteSpace(preferredCurrency) &&
                     l.Cost.TryGetValue(preferredCurrency, out var vPref2))
                 {
                     currencyId = preferredCurrency;
@@ -268,19 +275,20 @@ public sealed class StoreStructuredSystem : EntitySystem
 
                 var maxByRemaining = l.RemainingCount >= 0 ? l.RemainingCount : int.MaxValue;
                 var owned = Math.Min(countInCrate, maxByRemaining);
+                if (owned <= 0)
+                    continue;
 
                 listings.Add(
-                    new()
-                    {
-                        Id = l.Id + "__crate",
-                        ProductEntity = l.ProductEntity,
-                        Price = price,
-                        Category = crateCat,
-                        CurrencyId = currencyId,
-                        Mode = l.Mode,
-                        Owned = owned,
-                        Remaining = l.RemainingCount
-                    });
+                    new(
+                        l.Id + "__crate",
+                        l.ProductEntity,
+                        price,
+                        crateCat,
+                        currencyId,
+                        l.Mode,
+                        owned,
+                        l.RemainingCount
+                    ));
             }
         }
 
@@ -301,10 +309,8 @@ public sealed class StoreStructuredSystem : EntitySystem
             ))
             .ToList();
 
-
         _ui.SetUiState(uid, StoreUiKey.Key, new StoreUiState(balance, listings, crateTotals, contracts));
     }
-
 
     public override void Update(float frameTime)
     {
@@ -315,15 +321,28 @@ public sealed class StoreStructuredSystem : EntitySystem
 
         _nextCheck = _timing.CurTime + TimeSpan.FromSeconds(CheckInterval);
 
-        var iter = EntityQueryEnumerator<NcStoreComponent, TransformComponent>();
-        while (iter.MoveNext(out var uid, out var store, out var xform))
-        {
-            if (store.CurrentUser is not { } userUid)
-                continue;
+        if (_openStoreUids.Count == 0)
+            return;
 
-            if (!EntityManager.TryGetComponent(userUid, out TransformComponent? userXform))
+        foreach (var uid in _openStoreUids.ToArray())
+        {
+            if (!TryComp(uid, out NcStoreComponent? store) ||
+                !TryComp(uid, out TransformComponent? xform))
+            {
+                _openStoreUids.Remove(uid);
+                continue;
+            }
+
+            if (store.CurrentUser is not { } userUid)
+            {
+                _openStoreUids.Remove(uid);
+                continue;
+            }
+
+            if (!TryComp(userUid, out TransformComponent? userXform))
             {
                 store.CurrentUser = null;
+                _openStoreUids.Remove(uid);
                 continue;
             }
 
@@ -331,17 +350,20 @@ public sealed class StoreStructuredSystem : EntitySystem
             {
                 _ui.CloseUi(uid, StoreUiKey.Key, userUid);
                 store.CurrentUser = null;
+                _openStoreUids.Remove(uid);
                 continue;
             }
 
-            if (!IsAccessAllowed(uid, store, userUid))
+            if (!_storeSystem.CanUseStore(uid, store, userUid))
             {
                 _ui.CloseUi(uid, StoreUiKey.Key, userUid);
                 store.CurrentUser = null;
+                _openStoreUids.Remove(uid);
                 _popups.PopupEntity(Loc.GetString("ncstore-no-access"), uid, userUid);
             }
         }
     }
+
 
     private void OnAccessReaderChanged(
         EntityUid uid,
@@ -351,14 +373,14 @@ public sealed class StoreStructuredSystem : EntitySystem
     {
         if (TryComp<NcStoreComponent>(uid, out var store) && store.CurrentUser is { } user)
         {
-            if (!IsAccessAllowed(uid, store, user))
+            if (!_storeSystem.CanUseStore(uid, store, user))
             {
                 _ui.CloseUi(uid, StoreUiKey.Key, user);
                 store.CurrentUser = null;
+                _openStoreUids.Remove(uid);
             }
         }
     }
-
 
     private void OnUserEntInserted(
         EntityUid uid,
@@ -366,9 +388,10 @@ public sealed class StoreStructuredSystem : EntitySystem
         ref EntInsertedIntoContainerMessage args
     )
     {
-        if (_openStores == 0)
+        if (_openStoreUids.Count == 0)
             return;
 
+        _logic.InvalidateAllInventoryCache();
         RefreshAllOpenStores();
     }
 
@@ -378,11 +401,13 @@ public sealed class StoreStructuredSystem : EntitySystem
         ref EntRemovedFromContainerMessage args
     )
     {
-        if (_openStores == 0)
+        if (_openStoreUids.Count == 0)
             return;
 
+        _logic.InvalidateAllInventoryCache();
         RefreshAllOpenStores();
     }
+
 
     private void OnStackCountChanged(
         EntityUid uid,
@@ -390,19 +415,34 @@ public sealed class StoreStructuredSystem : EntitySystem
         ref StackCountChangedEvent args
     )
     {
-        if (_openStores == 0)
+        if (_openStoreUids.Count == 0)
             return;
 
+        _logic.InvalidateAllInventoryCache();
         RefreshAllOpenStores();
     }
 
-
     private void RefreshAllOpenStores()
     {
-        var query = EntityQueryEnumerator<NcStoreComponent>();
-        while (query.MoveNext(out var storeUid, out var storeComp))
-            if (storeComp.CurrentUser is { } user)
-                UpdateUiState(storeUid, storeComp, user);
+        if (_openStoreUids.Count == 0)
+            return;
+
+        foreach (var uid in _openStoreUids.ToArray())
+        {
+            if (!TryComp<NcStoreComponent>(uid, out var store))
+            {
+                _openStoreUids.Remove(uid);
+                continue;
+            }
+
+            if (store.CurrentUser is not { } user)
+            {
+                _openStoreUids.Remove(uid);
+                continue;
+            }
+
+            UpdateUiState(uid, store, user);
+        }
     }
 
     private void OnClaimContract(EntityUid uid, NcStoreComponent comp, ClaimContractBoundMessage msg)
@@ -448,68 +488,5 @@ public sealed class StoreStructuredSystem : EntitySystem
 
             contract.Progress = Math.Min(owned, contract.Required);
         }
-    }
-
-
-    private bool IsAccessAllowed(EntityUid storeUid, NcStoreComponent comp, EntityUid user)
-    {
-        if (TryComp<AccessReaderComponent>(storeUid, out var reader))
-            return _access.IsAllowed(user, storeUid, reader);
-
-        if (comp.Access is { Count: > 0, })
-        {
-            var fake = new AccessReaderComponent();
-            fake.AccessLists.Clear();
-
-            foreach (var group in comp.Access)
-            {
-                var set = new HashSet<ProtoId<AccessLevelPrototype>>();
-                foreach (var token in group)
-                {
-                    if (_prototypeManager.TryIndex<AccessLevelPrototype>(token, out _))
-                    {
-                        set.Add(new(token));
-                        continue;
-                    }
-
-                    if (_prototypeManager.TryIndex<AccessGroupPrototype>(token, out var grp))
-                    {
-                        if (grp.Tags.Count == 0)
-                        {
-                            Sawmill.Warning(
-                                $"[Access] Empty access group '{token}' on {ToPrettyString(storeUid)}; skipping.");
-                            continue;
-                        }
-
-                        if (set.Count > 0)
-                        {
-                            fake.AccessLists.Add(set);
-                            set = new();
-                        }
-
-                        foreach (var lvl in grp.Tags)
-                            fake.AccessLists.Add(new() { lvl, });
-
-                        continue;
-                    }
-
-                    Sawmill.Warning(
-                        $"[Access] Unknown access token '{token}' on {ToPrettyString(storeUid)}; skipping.");
-                }
-
-                if (set.Count > 0)
-                    fake.AccessLists.Add(set);
-            }
-
-            if (fake.AccessLists.Count == 0)
-            {
-                Sawmill.Warning($"[Access] All access groups invalid/empty on {ToPrettyString(storeUid)}; denying.");
-                return false;
-            }
-
-            return _access.IsAllowed(user, storeUid, fake);
-        }
-
-        return true;
     }
 }

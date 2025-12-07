@@ -39,14 +39,14 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
 
         if (state == null)
         {
-            Log.Error("[NcStore/UI] UpdateState received NULL state");
+            Log.Warning("[NcStore/UI] UpdateState received NULL state");
             return;
         }
 
         EnsureMenuCreated();
         if (_menu == null)
         {
-            Log.Error("[NcStore/UI] UpdateState: menu is NULL after EnsureMenuCreated");
+            Log.Warning("[NcStore/UI] UpdateState: menu is NULL after EnsureMenuCreated");
             return;
         }
 
@@ -62,6 +62,9 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
         foreach (var it in st.Listings)
         {
             hash = hash * 31 + (it.Id?.GetHashCode() ?? 0);
+            hash = hash * 31 + (it.ProductEntity?.GetHashCode() ?? 0);
+            hash = hash * 31 + (it.Category?.GetHashCode() ?? 0);
+            hash = hash * 31 + (it.CurrencyId?.GetHashCode() ?? 0);
             hash = hash * 31 + it.Price.GetHashCode();
             hash = hash * 31 + it.Remaining.GetHashCode();
             hash = hash * 31 + it.Owned.GetHashCode();
@@ -96,6 +99,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
         _menu.Visible = true;
         _lastHash = hash;
     }
+
 
     private void EnsureMenuCreated()
     {

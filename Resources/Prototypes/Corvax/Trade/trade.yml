@@ -11,6 +11,7 @@
       - caravan_sell
     contractPresets:
       - caravan_contracts_easy
+  - type: AccessReader
     access:
     - [ "TownieShopkeeper" ]
   - type: UserInterface
@@ -67,6 +68,7 @@
     - caravan_sell
     contractPresets:
     - caravan_contracts_easy
+  - type: AccessReader
     access:
     - [ "TownieShopkeeper" ]
   - type: Sprite
