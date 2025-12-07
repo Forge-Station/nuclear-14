@@ -1,9 +1,11 @@
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 
+
 namespace Content.Shared._NC.Trade;
 
-[Serializable, NetSerializable, Prototype("ncStoreListing")]
+
+[Serializable, NetSerializable, Prototype("ncStoreListing"),]
 public sealed class StoreListingPrototype : IPrototype
 {
     [IdDataField]

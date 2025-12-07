@@ -1,17 +1,19 @@
 using Robust.Shared.Serialization;
 
+
 namespace Content.Shared._NC.Trade;
 
-[Serializable, NetSerializable]
+
+[Serializable, NetSerializable,]
 public sealed class StoreListingData
 {
-    public string Id = string.Empty;
-    public string ProductEntity = string.Empty;
-    public int Price;
     public string Category = string.Empty;
     public string CurrencyId = string.Empty;
+    public string Id = string.Empty;
     public StoreMode Mode;
     public int Owned;
+    public int Price;
+    public string ProductEntity = string.Empty;
     public int Remaining = -1;
 
     public StoreListingData() { }

@@ -2,7 +2,9 @@ using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed class StoreSystemStructuredLoader : EntitySystem
 {
@@ -28,14 +30,12 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
     private void OnStartup(EntityUid uid, NcStoreComponent comp, ComponentStartup args)
     {
-        // На случай спавна не через MapInit (админскими тулзами и т.п.)
         TryLoadPresets(uid, comp, "Startup");
         _contracts.InitContractsForStore(uid, comp);
     }
 
     private void TryLoadPresets(EntityUid uid, NcStoreComponent comp, string reason)
     {
-        // Если ничего не настроено, пробуем старое поле preset.
         if (comp.BuyPresets.Count == 0 &&
             comp.SellPresets.Count == 0 &&
             !string.IsNullOrWhiteSpace(comp.LegacyPreset))

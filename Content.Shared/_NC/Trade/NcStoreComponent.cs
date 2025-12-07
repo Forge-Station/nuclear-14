@@ -1,10 +1,13 @@
 using Robust.Shared.GameStates;
 
+
 namespace Content.Shared._NC.Trade;
 
-[RegisterComponent, NetworkedComponent]
+
+[RegisterComponent, NetworkedComponent,]
 public sealed partial class NcStoreComponent : Component
 {
+    public EntityUid? CurrentUser;
 
     [DataField("categories")]
     public List<string> Categories { get; set; } = new();
@@ -12,9 +15,6 @@ public sealed partial class NcStoreComponent : Component
 
     [DataField("currencyWhitelist")]
     public List<string> CurrencyWhitelist { get; set; } = new();
-
-
-    public EntityUid? CurrentUser;
 
 
     public List<StoreListingPrototype> Listings { get; set; } = new();

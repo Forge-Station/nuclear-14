@@ -1,27 +1,31 @@
 using Robust.Shared.Serialization;
 
+
 namespace Content.Shared._NC.Trade;
 
-[Serializable, NetSerializable]
+
+[Serializable, NetSerializable,]
 public sealed class ContractUiState : BoundUserInterfaceState
 {
-    public List<ContractClientData> Contracts { get; }
-
     public ContractUiState(List<ContractClientData> contracts)
     {
         Contracts = contracts;
     }
+
+    public List<ContractClientData> Contracts { get; }
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public sealed class ContractClientData
 {
+    public bool Completed;
+    public string Description = string.Empty;
+
+    public string Difficulty = "Easy";
     public string Id = string.Empty;
     public string Name = string.Empty;
-
-    public string TargetItem = string.Empty;
-    public int Required;
     public int Progress;
+    public int Required;
 
     public int Reward;
     public string RewardCurrency = string.Empty;
@@ -29,9 +33,7 @@ public sealed class ContractClientData
     public string? RewardItem;
     public int RewardItemCount;
 
-    public string Difficulty = "Easy";
-    public bool Completed;
-    public string Description = string.Empty;
+    public string TargetItem = string.Empty;
 
     public ContractClientData() { }
 
@@ -47,7 +49,8 @@ public sealed class ContractClientData
         int rewardItemCount,
         string difficulty,
         bool completed,
-        string description)
+        string description
+    )
     {
         Id = id;
         Name = name;

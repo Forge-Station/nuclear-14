@@ -30,14 +30,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
             return;
 
         _nextRefreshTime = now + RefreshInterval;
-        Log.Info($"[NcStore/UI] RequestRefresh(force={force}) for Owner={Owner}");
         SendMessage(new RequestUiRefreshMessage());
-    }
-
-    protected override void Open()
-    {
-        Log.Info($"[NcStore/UI] Open() called for store Owner={Owner}");
-        base.Open();
     }
 
     protected override void UpdateState(BoundUserInterfaceState state)
@@ -46,7 +39,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
 
         if (state == null)
         {
-            Log.Warning("[NcStore/UI] UpdateState received NULL state");
+            Log.Error("[NcStore/UI] UpdateState received NULL state");
             return;
         }
 
@@ -57,15 +50,12 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
             return;
         }
 
-        Log.Info($"[NcStore/UI] UpdateState received {state.GetType().Name} for Owner={Owner}");
-
         if (state is not StoreUiState st)
         {
             Log.Warning($"[NcStore/UI] Unknown state type: {state.GetType().Name}");
             return;
         }
 
-        // --- Хэш как было ---
         var hash = 17;
         hash = hash * 31 + st.Balance.GetHashCode();
 
@@ -84,7 +74,6 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
             hash = hash * 31 + kv.Value.GetHashCode();
         }
 
-        // ДОБАВЛЯЕМ КОНТРАКТЫ В ХЭШ ДО ПРОВЕРКИ
         foreach (var c in st.Contracts)
         {
             hash = hash * 31 + (c.Id?.GetHashCode() ?? 0);
@@ -100,31 +89,18 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
         }
 
         if (hash == _lastHash)
-        {
-            Log.Info("[NcStore/UI] Skipping UI update (hash unchanged)");
             return;
-        }
-
-        Log.Info(
-            $"[NcStore/UI] ApplyState: balance={st.Balance}, listings={st.Listings.Count}, massTotals={st.MassSellTotals.Count}, contracts={st.Contracts.Count}");
 
         _menu.ApplyState(st.Balance, st.Listings.ToList(), st.MassSellTotals);
         _menu.PopulateContracts(st.Contracts);
         _menu.Visible = true;
         _lastHash = hash;
-
     }
 
-
-    /// <summary>
-    ///     Создаёт окно, если его ещё нет.
-    /// </summary>
     private void EnsureMenuCreated()
     {
         if (_menu != null)
             return;
-
-        Log.Info("[NcStore/UI] Creating NcStoreMenu window");
 
         try
         {
@@ -136,8 +112,6 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
             _menu = null;
             return;
         }
-
-        Log.Info("[NcStore/UI] NcStoreMenu window created successfully");
 
         try
         {
@@ -156,7 +130,6 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
 
         _menu.OnClose += () =>
         {
-            Log.Info("[NcStore/UI] NcStoreMenu closed by user, disposing window");
             _menu.Orphan();
             _menu = null;
         };
@@ -165,12 +138,8 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
     private void OnBuy(StoreListingData data, int qty)
     {
         if (Actor is null)
-        {
-            Log.Warning("[NcStore/UI] OnBuy called but Actor is null");
             return;
-        }
 
-        Log.Info($"[NcStore/UI] OnBuy listing={data.Id} qty={qty}");
         SendMessage(new StoreBuyListingBoundUiMessage(data.Id, qty));
         RequestRefresh(true);
     }
@@ -178,12 +147,8 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
     private void OnSell(StoreListingData data, int qty)
     {
         if (Actor is null)
-        {
-            Log.Warning("[NcStore/UI] OnSell called but Actor is null");
             return;
-        }
 
-        Log.Info($"[NcStore/UI] OnSell listing={data.Id} qty={qty}");
         SendMessage(new StoreSellListingBoundUiMessage(data.Id, qty));
         RequestRefresh(true);
     }
@@ -191,12 +156,8 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
     private void OnContractClaim(string contractId)
     {
         if (Actor is null)
-        {
-            Log.Warning("[NcStore/UI] OnContractClaim called but Actor is null");
             return;
-        }
 
-        Log.Info($"[NcStore/UI] OnContractClaim id={contractId}");
         SendMessage(new ClaimContractBoundMessage(contractId));
         RequestRefresh(true);
     }
@@ -204,20 +165,14 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
     private void OnMassSellPulledCrate()
     {
         if (Actor is null)
-        {
-            Log.Warning("[NcStore/UI] OnMassSellPulledCrate called but Actor is null");
             return;
-        }
 
-        Log.Info("[NcStore/UI] OnMassSellPulledCrate triggered");
         SendMessage(new StoreMassSellPulledCrateBoundUiMessage());
         RequestRefresh(true);
     }
 
     protected override void Dispose(bool disposing)
     {
-        Log.Info($"[NcStore/UI] Dispose(disposing={disposing}) for Owner={Owner}");
-
         if (_menu != null)
         {
             _menu.OnBuyPressed -= OnBuy;

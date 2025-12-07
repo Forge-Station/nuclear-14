@@ -302,7 +302,6 @@ public sealed class StoreStructuredSystem : EntitySystem
             .ToList();
 
 
-
         _ui.SetUiState(uid, StoreUiKey.Key, new StoreUiState(balance, listings, crateTotals, contracts));
     }
 

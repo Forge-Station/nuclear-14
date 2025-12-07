@@ -131,8 +131,16 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         MassSellPulledCrateButton.Disabled = false;
 
-        var text = string.Join(", ", _massSellTotals.Select(p => $"{p.Value} {p.Key}"));
+        var text = string.Join(
+            ", ",
+            _massSellTotals.Select(p =>
+            {
+                var curName = CurrencyName(p.Key);
+                return $"{p.Value} {curName}";
+            }));
+
         MassSellPulledCrateButton.Text = $"Продать содержимое ({text})";
+
 
         Log.Info($"[NcStore/Menu] SetMassSellTotals: {text}");
     }
@@ -485,15 +493,22 @@ public sealed partial class NcStoreMenu : FancyWindow
 
     public void PopulateContracts(List<ContractClientData> list)
     {
-        Log.Info($"[NcStore/Menu] PopulateContracts() count={list.Count}");
-
         if (ContractList == null)
-        {
-            Log.Warning("[NcStore/Menu] PopulateContracts: ContractList is null");
             return;
-        }
 
         ContractList.RemoveAllChildren();
+
+        if (list.Count == 0)
+        {
+            ContractList.AddChild(
+                new Label
+                {
+                    Text = "Контрактов пока нет. Загляните позже.",
+                    HorizontalAlignment = HAlignment.Center,
+                    Margin = new(0, 8, 0, 0)
+                });
+            return;
+        }
 
         var ordered = list
             .OrderBy(x => x.Difficulty switch
@@ -510,41 +525,80 @@ public sealed partial class NcStoreMenu : FancyWindow
         {
             var panel = new PanelContainer
             {
-                StyleClasses = { "NcContractPanel", },
-                Margin = new(0, 0, 0, 8)
+                PanelOverride = new StyleBoxFlat
+                {
+                    BackgroundColor = new(0.06f, 0.06f, 0.07f, 0.98f),
+                    BorderColor = new(0f, 0f, 0f, 0.9f),
+                    BorderThickness = new(1),
+                    ContentMarginLeftOverride = 8,
+                    ContentMarginRightOverride = 8,
+                    ContentMarginTopOverride = 6,
+                    ContentMarginBottomOverride = 6
+                },
+                Margin = new(4, 0, 4, 8)
             };
 
-            var box = new BoxContainer
+            var root = new BoxContainer
             {
                 Orientation = BoxContainer.LayoutOrientation.Vertical,
-                Margin = new(8, 8, 8, 8),
                 HorizontalExpand = true
             };
+            panel.AddChild(root);
+
+            var header = new BoxContainer
+            {
+                Orientation = BoxContainer.LayoutOrientation.Horizontal,
+                HorizontalExpand = true,
+                Margin = new(0, 0, 0, 4)
+            };
+
+            var diffStrip = new PanelContainer
+            {
+                MinSize = new(4, 0),
+                VerticalExpand = true,
+                PanelOverride = new StyleBoxFlat
+                {
+                    BackgroundColor = DifficultyColor(c.Difficulty, c.Completed)
+                },
+                Margin = new(0, 0, 6, 0)
+            };
+            header.AddChild(diffStrip);
 
             var titleText = string.IsNullOrWhiteSpace(c.Name)
-                ? $"★ {DifficultyName(c.Difficulty)} контракт"
-                : $"★ {c.Name} ({DifficultyName(c.Difficulty)})";
+                ? $"{DifficultyName(c.Difficulty)} контракт"
+                : c.Name;
 
-            box.AddChild(
-                new Label
-                {
-                    Text = titleText,
-                    StyleClasses = { "NcContractTitle", }
-                });
-
-
-            if (!string.IsNullOrWhiteSpace(c.Description))
+            var titleLabel = new Label
             {
-                box.AddChild(
+                Text = titleText,
+                Margin = new(0, 0, 4, 0)
+            };
+            titleLabel.StyleClasses.Add("LabelHeading");
+            header.AddChild(titleLabel);
+
+            if (c.Completed)
+            {
+                header.AddChild(
                     new Label
                     {
-                        Text = c.Description,
-                        StyleClasses = { "NcContractDescription", },
-                        Margin = new(0, 2, 0, 2)
+                        Text = "✔ Выполнено",
+                        Margin = new(4, 0, 0, 0)
                     });
             }
 
-            // Цель контракта: иконка + красивое имя + описание
+            root.AddChild(header);
+
+            if (!string.IsNullOrWhiteSpace(c.Description))
+            {
+                var desc = new Label
+                {
+                    Text = c.Description,
+                    Margin = new(0, 0, 0, 4)
+                };
+                desc.StyleClasses.Add("LabelSubText");
+                root.AddChild(desc);
+            }
+
             EntityPrototype? targetProto = null;
             if (!string.IsNullOrWhiteSpace(c.TargetItem))
                 _proto.TryIndex(c.TargetItem, out targetProto);
@@ -552,10 +606,9 @@ public sealed partial class NcStoreMenu : FancyWindow
             var targetRow = new BoxContainer
             {
                 Orientation = BoxContainer.LayoutOrientation.Horizontal,
-                Margin = new(0, 2, 0, 2)
+                Margin = new(0, 0, 0, 2)
             };
 
-            // Иконка предмета цели
             Texture? targetTex = null;
             if (targetProto != null)
             {
@@ -576,55 +629,67 @@ public sealed partial class NcStoreMenu : FancyWindow
             }
 
             var targetName = targetProto?.Name ?? c.TargetItem;
-
             targetRow.AddChild(
                 new Label
                 {
-                    Text = $"Цель: {targetName}"
+                    Text = $"Цель: {targetName} ×{c.Required}"
                 });
+            root.AddChild(targetRow);
 
-            box.AddChild(targetRow);
-
-            // Описание предмета, если есть
             if (!string.IsNullOrWhiteSpace(targetProto?.Description))
             {
-                box.AddChild(
-                    new Label
-                    {
-                        Text = targetProto.Description,
-                        StyleClasses = { "NcContractItemDescription", },
-                        Margin = new(0, 0, 0, 2)
-                    });
+                var itemDesc = new Label
+                {
+                    Text = targetProto.Description,
+                    Margin = new(0, 0, 0, 4)
+                };
+                itemDesc.StyleClasses.Add("LabelSubText");
+                root.AddChild(itemDesc);
             }
-
 
             if (!c.Completed)
             {
-                box.AddChild(
+                root.AddChild(
                     new Label
                     {
                         Text = $"Прогресс: {c.Progress} / {c.Required}",
-                        StyleClasses = { "NcContractProgress", }
+                        Margin = new(0, 0, 0, 2)
                     });
-            }
-            else
-            {
-                box.AddChild(
-                    new Label
+
+                var max = c.Required <= 0 ? 1 : c.Required;
+                var val = Math.Clamp(c.Progress, 0, max);
+
+                root.AddChild(
+                    new ProgressBar
                     {
-                        Text = "✔ Выполнено",
-                        StyleClasses = { "NcContractDone", }
+                        MinValue = 0,
+                        MaxValue = max,
+                        Value = val,
+                        HorizontalExpand = true,
+                        Margin = new(0, 0, 0, 4)
                     });
             }
+
+            var bottom = new BoxContainer
+            {
+                Orientation = BoxContainer.LayoutOrientation.Horizontal,
+                HorizontalExpand = true,
+                Margin = new(0, 2, 0, 0)
+            };
+
+            var rewardsCol = new BoxContainer
+            {
+                Orientation = BoxContainer.LayoutOrientation.Vertical,
+                HorizontalExpand = true
+            };
+
 
             var rewardRow = new BoxContainer
             {
-                Orientation = BoxContainer.LayoutOrientation.Horizontal,
-                Margin = new(0, 4, 0, 0)
+                Orientation = BoxContainer.LayoutOrientation.Horizontal
             };
 
             Texture? currencyTex = null;
-
             if (!string.IsNullOrEmpty(c.RewardCurrency) &&
                 _proto.TryIndex<StackPrototype>(c.RewardCurrency, out var stackProto) &&
                 _proto.TryIndex<EntityPrototype>(stackProto.Spawn, out var currencyEnt))
@@ -645,13 +710,18 @@ public sealed partial class NcStoreMenu : FancyWindow
                     });
             }
 
+            var currencyName = CurrencyName(c.RewardCurrency);
+
             rewardRow.AddChild(
                 new Label
                 {
-                    Text = $"Награда: {c.Reward} {c.RewardCurrency}"
+                    Text = string.IsNullOrEmpty(currencyName)
+                        ? $"Награда: {c.Reward}"
+                        : $"Награда: {c.Reward} {currencyName}"
                 });
 
-            box.AddChild(rewardRow);
+
+            rewardsCol.AddChild(rewardRow);
 
             if (!string.IsNullOrWhiteSpace(c.RewardItem) && c.RewardItemCount > 0)
             {
@@ -660,8 +730,7 @@ public sealed partial class NcStoreMenu : FancyWindow
 
                 var rewardItemRow = new BoxContainer
                 {
-                    Orientation = BoxContainer.LayoutOrientation.Horizontal,
-                    Margin = new(0, 2, 0, 0)
+                    Orientation = BoxContainer.LayoutOrientation.Horizontal
                 };
 
                 Texture? rewardTex = null;
@@ -684,34 +753,69 @@ public sealed partial class NcStoreMenu : FancyWindow
                 }
 
                 var rewardName = rewardProto?.Name ?? c.RewardItem;
-
                 rewardItemRow.AddChild(
                     new Label
                     {
                         Text = $"Предмет: {rewardName} ×{c.RewardItemCount}"
                     });
 
-                box.AddChild(rewardItemRow);
+                rewardsCol.AddChild(rewardItemRow);
             }
 
+            bottom.AddChild(rewardsCol);
+
+            var canClaim = c.Completed;
             var btn = new Button
             {
-                Text = c.Completed ? "Забрать награду" : "Сдать",
-                HorizontalExpand = true,
-                Margin = new(0, 6, 0, 0)
+                Text = canClaim ? "Забрать" : $"Сдать ({c.Progress}/{c.Required})",
+                Disabled = !canClaim,
+                MinSize = new(150, 24),
+                Margin = new(8, 0, 0, 0)
             };
+
+            if (!canClaim)
+                btn.ToolTip = "Контракт ещё не выполнен.";
 
             btn.OnPressed += _ =>
             {
-                Log.Info($"[NcStore/Menu] Contract button pressed id={c.Id}, completed={c.Completed}");
+                if (!canClaim)
+                    return;
+
                 OnContractClaim?.Invoke(c.Id);
             };
-            box.AddChild(btn);
 
-            panel.AddChild(box);
+            bottom.AddChild(btn);
+            root.AddChild(bottom);
+
             ContractList.AddChild(panel);
         }
     }
+
+    private string CurrencyName(string? currencyId)
+    {
+        if (string.IsNullOrWhiteSpace(currencyId))
+            return string.Empty;
+
+        if (_proto.TryIndex<StackPrototype>(currencyId, out var stackProto) &&
+            _proto.TryIndex<EntityPrototype>(stackProto.Spawn, out var currencyEnt))
+            return currencyEnt.Name;
+
+        return currencyId;
+    }
+
+    private Color DifficultyColor(string diff, bool completed)
+    {
+        var baseColor = diff switch
+        {
+            "Easy" => Color.FromHex("#4CAF50"),
+            "Medium" => Color.FromHex("#FFC107"),
+            "Hard" => Color.FromHex("#F44336"),
+            _ => Color.FromHex("#9E9E9E")
+        };
+
+        return completed ? Brighten(baseColor, 0.7f) : baseColor;
+    }
+
 
     private string DifficultyName(string diff) =>
         diff switch
