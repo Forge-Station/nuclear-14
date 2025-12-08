@@ -41,8 +41,8 @@
           steps:
           - material: BrocFlower
           - material: XanderRoot
-          - tag: SyringeEmpty
-            name: an empty syringe
+          - tag: Syringe
+            name: an syringe
             icon:
               sprite: _Nuclear14/Objects/Specific/Medical/ms13_stimpak.rsi
               state: stimpak-empty # Forge-Change

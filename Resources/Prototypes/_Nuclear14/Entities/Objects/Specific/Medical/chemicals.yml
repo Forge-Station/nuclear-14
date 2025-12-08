@@ -86,7 +86,7 @@
     toggleState: Draw
   - type: Tag
     tags:
-    - SyringeEmpty # Forge-Change
+    - Syringe # Forge-Change
     - Trash
 
 - type: entity
@@ -196,7 +196,7 @@
     emptySpriteName: used
   - type: Tag
     tags:
-    - SyringeEmpty
+    - Syringe
 
 - type: entity
   parent: N14ChemicalSyringeAntidoteEmpty
@@ -239,7 +239,7 @@
   - type: Tag
     tags:
     - Jet
-    - SyringeEmpty
+    - Syringe
 
 - type: entity
   parent: N14JetInhaler
@@ -282,7 +282,7 @@
         maxVol: 10
   - type: Tag
     tags:
-    - SyringeEmpty
+    - Syringe
 
 - type: entity
   parent: N14TurboInhaler
@@ -348,7 +348,7 @@
     transferAmount: 15
   - type: Tag
     tags:
-    - SyringeEmpty
+    - Syringe
 
 - type: entity
   parent: N14HydraInhaler
@@ -391,7 +391,7 @@
         maxVol: 20
   - type: Tag
     tags:
-    - SyringeEmpty
+    - Syringe
 
 - type: entity
   parent: N14PsychoSyringe
