@@ -23,28 +23,7 @@ public sealed class NcContractSystem : EntitySystem
             return;
 
         comp.Contracts.Clear();
-
-        foreach (var contractId in preset!.Contracts)
-        {
-            if (string.IsNullOrWhiteSpace(contractId))
-                continue;
-
-            if (comp.Contracts.ContainsKey(contractId))
-                continue;
-
-            if (!_prototypes.TryIndex<StoreContractPrototype>(contractId, out var proto))
-            {
-                Sawmill.Warning(
-                    $"[Init] Contract '{contractId}' from preset '{preset.ID}' not found for {ToPrettyString(uid)}.");
-                continue;
-            }
-
-            var data = CreateContractData(proto);
-            comp.Contracts[contractId] = data;
-        }
-
-        Sawmill.Debug(
-            $"[Init] Loaded {comp.Contracts.Count} contract(s) for {ToPrettyString(uid)} (preset={preset.ID}).");
+        AddMissingContractsFromPreset(uid, comp, preset!, false);
     }
 
     public bool TryClaim(EntityUid store, EntityUid user, string contractId)
@@ -83,12 +62,7 @@ public sealed class NcContractSystem : EntitySystem
         var totalOwned = ownedUser + ownedCrate;
 
         if (totalOwned < contract.Required)
-        {
-            Sawmill.Debug(
-                $"[Claim] Not enough items for contract '{contractId}' on {ToPrettyString(store)}. " +
-                $"Have={totalOwned}, Required={contract.Required}.");
             return false;
-        }
 
         contract.Progress = Math.Min(totalOwned, contract.Required);
 
@@ -116,18 +90,12 @@ public sealed class NcContractSystem : EntitySystem
         }
 
         if (contract.Reward > 0 && !string.IsNullOrWhiteSpace(contract.RewardCurrency))
-        {
-            Sawmill.Debug(
-                $"[Claim] Reward currency {contract.Reward}x {contract.RewardCurrency} to {ToPrettyString(user)}.");
             _logic.GiveCurrency(user, contract.RewardCurrency, contract.Reward);
-        }
 
         if (!string.IsNullOrWhiteSpace(contract.RewardItem) && contract.RewardItemCount > 0)
         {
-            Sawmill.Debug(
-                $"[Claim] Reward items {contract.RewardItemCount}x {contract.RewardItem} to {ToPrettyString(user)}.");
             for (var i = 0; i < contract.RewardItemCount; i++)
-                _logic.TrySpawnProduct(contract.RewardItem, user);
+                _logic.TrySpawnProduct(contract.RewardItem!, user);
         }
 
         comp.Contracts.Remove(contractId);
@@ -136,13 +104,22 @@ public sealed class NcContractSystem : EntitySystem
         return true;
     }
 
-
     private void RefillContractsForStore(EntityUid uid, NcStoreComponent comp)
     {
         if (!TryGetPreset(uid, comp, out var preset))
             return;
 
-        foreach (var contractId in preset!.Contracts)
+        AddMissingContractsFromPreset(uid, comp, preset!, true);
+    }
+
+    private void AddMissingContractsFromPreset(
+        EntityUid uid,
+        NcStoreComponent comp,
+        StoreContractsPresetPrototype preset,
+        bool fillOnlyFirstMissing
+    )
+    {
+        foreach (var contractId in preset.Contracts)
         {
             if (string.IsNullOrWhiteSpace(contractId))
                 continue;
@@ -153,19 +130,16 @@ public sealed class NcContractSystem : EntitySystem
             if (!_prototypes.TryIndex<StoreContractPrototype>(contractId, out var proto))
             {
                 Sawmill.Warning(
-                    $"[Refill] Contract '{contractId}' from preset '{preset.ID}' not found for {ToPrettyString(uid)}.");
+                    $"[Contracts] Contract '{contractId}' from preset '{preset.ID}' not found for {ToPrettyString(uid)}.");
                 continue;
             }
 
-            var data = CreateContractData(proto);
-            comp.Contracts[contractId] = data;
+            comp.Contracts[contractId] = CreateContractData(proto);
 
-            Sawmill.Info(
-                $"[Refill] Added new contract '{contractId}' to {ToPrettyString(uid)} after claim (preset={preset.ID}).");
-            break;
+            if (fillOnlyFirstMissing)
+                break;
         }
     }
-
 
     private bool TryGetPreset(EntityUid uid, NcStoreComponent comp, out StoreContractsPresetPrototype? preset)
     {
@@ -191,7 +165,6 @@ public sealed class NcContractSystem : EntitySystem
         preset = proto;
         return true;
     }
-
 
     private static ContractServerData CreateContractData(StoreContractPrototype proto) =>
         new()

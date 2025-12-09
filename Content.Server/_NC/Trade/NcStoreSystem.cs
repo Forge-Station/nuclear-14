@@ -72,7 +72,6 @@ public sealed class NcStoreSystem : EntitySystem
         if (!IsInUseRange(uid, actor))
             return;
 
-        // Разрешаем только покупки через этот путь
         var listing = comp.Listings.FirstOrDefault(x => x.Id == msg.ListingId && x.Mode == StoreMode.Buy);
         if (listing == null)
             return;

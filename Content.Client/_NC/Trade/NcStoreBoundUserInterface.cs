@@ -11,7 +11,6 @@ namespace Content.Client._NC.Trade;
 public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
     : BoundUserInterface(owner, uiKey)
 {
-    private static readonly ISawmill Log = Logger.GetSawmill("ncstore-ui");
     private static readonly TimeSpan RefreshInterval = TimeSpan.FromSeconds(1);
 
     private readonly IPlayerManager _player = IoCManager.Resolve<IPlayerManager>();
@@ -37,95 +36,76 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
     {
         base.UpdateState(state);
 
-        if (state == null)
-        {
-            Log.Warning("[NcStore/UI] UpdateState received NULL state");
+        if (state is not StoreUiState st)
             return;
-        }
 
         EnsureMenuCreated();
         if (_menu == null)
-        {
-            Log.Warning("[NcStore/UI] UpdateState: menu is NULL after EnsureMenuCreated");
             return;
-        }
 
-        if (state is not StoreUiState st)
-        {
-            Log.Warning($"[NcStore/UI] Unknown state type: {state.GetType().Name}");
-            return;
-        }
-
-        var hash = 17;
-        hash = hash * 31 + st.Balance.GetHashCode();
-
-        foreach (var it in st.Listings)
-        {
-            hash = hash * 31 + (it.Id?.GetHashCode() ?? 0);
-            hash = hash * 31 + (it.ProductEntity?.GetHashCode() ?? 0);
-            hash = hash * 31 + (it.Category?.GetHashCode() ?? 0);
-            hash = hash * 31 + (it.CurrencyId?.GetHashCode() ?? 0);
-            hash = hash * 31 + it.Price.GetHashCode();
-            hash = hash * 31 + it.Remaining.GetHashCode();
-            hash = hash * 31 + it.Owned.GetHashCode();
-            hash = hash * 31 + ((int) it.Mode).GetHashCode();
-        }
-
-        foreach (var kv in st.MassSellTotals.OrderBy(p => p.Key))
-        {
-            hash = hash * 31 + kv.Key.GetHashCode();
-            hash = hash * 31 + kv.Value.GetHashCode();
-        }
-
-        foreach (var c in st.Contracts)
-        {
-            hash = hash * 31 + (c.Id?.GetHashCode() ?? 0);
-            hash = hash * 31 + (c.TargetItem?.GetHashCode() ?? 0);
-            hash = hash * 31 + c.Progress.GetHashCode();
-            hash = hash * 31 + c.Required.GetHashCode();
-            hash = hash * 31 + c.Reward.GetHashCode();
-            hash = hash * 31 + (c.RewardCurrency?.GetHashCode() ?? 0);
-            hash = hash * 31 + (c.RewardItem?.GetHashCode() ?? 0);
-            hash = hash * 31 + c.RewardItemCount.GetHashCode();
-            hash = hash * 31 + (c.Difficulty?.GetHashCode() ?? 0);
-            hash = hash * 31 + c.Completed.GetHashCode();
-        }
-
+        var hash = ComputeStateHash(st);
         if (hash == _lastHash)
             return;
+
+        _lastHash = hash;
 
         _menu.ApplyState(st.Balance, st.Listings.ToList(), st.MassSellTotals);
         _menu.PopulateContracts(st.Contracts);
         _menu.Visible = true;
-        _lastHash = hash;
     }
 
+    private static int ComputeStateHash(StoreUiState st)
+    {
+        var hash = 17;
+
+        hash = CombineHash(hash, st.Balance.GetHashCode());
+
+        foreach (var it in st.Listings)
+        {
+            hash = CombineHash(hash, it.Id?.GetHashCode() ?? 0);
+            hash = CombineHash(hash, it.ProductEntity?.GetHashCode() ?? 0);
+            hash = CombineHash(hash, it.Category?.GetHashCode() ?? 0);
+            hash = CombineHash(hash, it.CurrencyId?.GetHashCode() ?? 0);
+            hash = CombineHash(hash, it.Price.GetHashCode());
+            hash = CombineHash(hash, it.Remaining.GetHashCode());
+            hash = CombineHash(hash, it.Owned.GetHashCode());
+            hash = CombineHash(hash, ((int) it.Mode).GetHashCode());
+        }
+
+        foreach (var kv in st.MassSellTotals.OrderBy(p => p.Key))
+        {
+            hash = CombineHash(hash, kv.Key.GetHashCode());
+            hash = CombineHash(hash, kv.Value.GetHashCode());
+        }
+
+        foreach (var c in st.Contracts)
+        {
+            hash = CombineHash(hash, c.Id?.GetHashCode() ?? 0);
+            hash = CombineHash(hash, c.TargetItem?.GetHashCode() ?? 0);
+            hash = CombineHash(hash, c.Progress.GetHashCode());
+            hash = CombineHash(hash, c.Required.GetHashCode());
+            hash = CombineHash(hash, c.Reward.GetHashCode());
+            hash = CombineHash(hash, c.RewardCurrency?.GetHashCode() ?? 0);
+            hash = CombineHash(hash, c.RewardItem?.GetHashCode() ?? 0);
+            hash = CombineHash(hash, c.RewardItemCount.GetHashCode());
+            hash = CombineHash(hash, c.Difficulty?.GetHashCode() ?? 0);
+            hash = CombineHash(hash, c.Completed.GetHashCode());
+        }
+
+        return hash;
+    }
+
+    private static int CombineHash(int current, int value) => unchecked(current * 31 + value);
 
     private void EnsureMenuCreated()
     {
         if (_menu != null)
             return;
 
-        try
-        {
-            _menu = this.CreateWindow<NcStoreMenu>();
-        }
-        catch (Exception ex)
-        {
-            Log.Error($"[NcStore/UI] FAILED to create NcStoreMenu: {ex}");
-            _menu = null;
-            return;
-        }
+        _menu = this.CreateWindow<NcStoreMenu>();
 
-        try
-        {
-            var meta = EntMan.GetComponent<MetaDataComponent>(Owner);
+        if (EntMan.TryGetComponent(Owner, out MetaDataComponent? meta))
             _menu.Title = meta.EntityName;
-        }
-        catch (Exception ex)
-        {
-            Log.Error($"[NcStore/UI] Failed to set window title: {ex}");
-        }
 
         _menu.OnBuyPressed += OnBuy;
         _menu.OnSellPressed += OnSell;
