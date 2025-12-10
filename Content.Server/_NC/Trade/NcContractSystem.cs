@@ -304,6 +304,7 @@ public sealed class NcContractSystem : EntitySystem
             var idx = random.Next(steps);
             return minStep + idx * step;
         }
+
         var val = TryPick(random, min, max, 5);
         if (val >= 0)
             return val;
@@ -318,7 +319,8 @@ public sealed class NcContractSystem : EntitySystem
         StoreContractBonusReward bonus,
         Dictionary<string, int> rewardCurrencies,
         Dictionary<string, int> rewardItems,
-        bool ignoreReplace = false)
+        bool ignoreReplace = false
+    )
     {
         if (!ignoreReplace && bonus.Mode == StoreContractBonusMode.Replace)
         {
@@ -328,10 +330,12 @@ public sealed class NcContractSystem : EntitySystem
 
         if (!string.IsNullOrWhiteSpace(bonus.Id))
         {
+            var addCount = bonus.Count > 0 ? bonus.Count : 1;
+
             if (rewardItems.TryGetValue(bonus.Id, out var existing))
-                rewardItems[bonus.Id] = existing + 1;
+                rewardItems[bonus.Id] = existing + addCount;
             else
-                rewardItems[bonus.Id] = 1;
+                rewardItems[bonus.Id] = addCount;
         }
 
         if (bonus.RewardCurrencies != null)
@@ -369,100 +373,235 @@ public sealed class NcContractSystem : EntitySystem
         }
     }
 
+
     private ContractServerData CreateContractData(StoreContractPrototype proto)
-{
-    var targets = new List<ContractTargetServerData>();
-
-    var targetItem = proto.TargetItem ?? string.Empty;
-    var required = proto.Required;
-
-    if (proto.Targets is { Count: > 0, })
     {
-        var targetCount = proto.TargetCount;
-        if (targetCount <= 0)
-            targetCount = 1;
+        // 1. Цели контракта
+        var targets = new List<ContractTargetServerData>();
 
-        if (targetCount == 1)
+        var targetItem = proto.TargetItem ?? string.Empty;
+        var required = proto.Required;
+
+        if (proto.Targets is { Count: > 0, })
         {
-            var chosen = PickWeighted(_random, proto.Targets, t => t.Weight);
-            if (chosen != null)
-            {
-                targetItem = chosen.TargetItemId ?? targetItem;
+            var targetCount = proto.TargetCount;
+            if (targetCount <= 0)
+                targetCount = 1;
 
-                if (chosen.Required > 0)
-                    required = chosen.Required;
+            if (targetCount == 1)
+            {
+                var chosen = PickWeighted(_random, proto.Targets, t => t.Weight);
+                if (chosen != null)
+                {
+                    targetItem = chosen.TargetItemId ?? targetItem;
+
+                    if (chosen.Required > 0)
+                        required = chosen.Required;
+                }
+            }
+            else
+            {
+                var pool = proto.Targets.ToList();
+                var picks = Math.Min(targetCount, pool.Count);
+
+                for (var i = 0; i < picks && pool.Count > 0; i++)
+                {
+                    var chosen = PickWeighted(_random, pool, t => t.Weight);
+                    if (chosen == null)
+                        break;
+
+                    pool.Remove(chosen);
+
+                    var itemId = chosen.TargetItemId ?? targetItem;
+                    var req = chosen.Required > 0 ? chosen.Required : required;
+
+                    targets.Add(
+                        new()
+                        {
+                            TargetItem = itemId,
+                            Required = req,
+                            Progress = 0
+                        });
+                }
+
+                if (targets.Count > 0)
+                {
+                    targetItem = targets[0].TargetItem;
+                    required = 0;
+                    foreach (var t in targets)
+                        required += t.Required;
+                }
             }
         }
-        else
+
+        // 2. Накопление базовой награды
+        var rewardCurrencies = new Dictionary<string, int>();
+        var rewardItems = new Dictionary<string, int>();
+
+        // 2.1 Диапазоны валют (Currencies)
+        if (proto.Currencies is { Count: > 0, })
         {
-            var pool = proto.Targets.ToList();
-            var picks = Math.Min(targetCount, pool.Count);
+            foreach (var c in proto.Currencies)
+            {
+                if (string.IsNullOrWhiteSpace(c.Id))
+                    continue;
+
+                var min = c.Min;
+                var max = c.Max;
+
+                if (max < min)
+                    (min, max) = (max, min);
+
+                min = Math.Max(min, 0);
+                if (max < 0)
+                    continue;
+
+                var amount = GetRandomSteppedAmount(_random, min, max);
+                if (amount <= 0)
+                    continue;
+
+                if (rewardCurrencies.TryGetValue(c.Id, out var existing))
+                    rewardCurrencies[c.Id] = existing + amount;
+                else
+                    rewardCurrencies[c.Id] = amount;
+            }
+        }
+
+        // 2.2 Фикс. словарь валют (RewardCurrencies)
+        if (proto.RewardCurrencies != null)
+        {
+            foreach (var kvp in proto.RewardCurrencies)
+            {
+                var currencyId = kvp.Key;
+                var amount = kvp.Value;
+
+                if (amount <= 0 || string.IsNullOrWhiteSpace(currencyId))
+                    continue;
+
+                if (rewardCurrencies.TryGetValue(currencyId, out var existing))
+                    rewardCurrencies[currencyId] = existing + amount;
+                else
+                    rewardCurrencies[currencyId] = amount;
+            }
+        }
+
+        // 2.3 Фикс. словарь предметов (RewardItems)
+        if (proto.RewardItems != null)
+        {
+            foreach (var kvp in proto.RewardItems)
+            {
+                var protoId = kvp.Key;
+                var count = kvp.Value;
+
+                if (count <= 0 || string.IsNullOrWhiteSpace(protoId))
+                    continue;
+
+                if (rewardItems.TryGetValue(protoId, out var existing))
+                    rewardItems[protoId] = existing + count;
+                else
+                    rewardItems[protoId] = count;
+            }
+        }
+
+        // 2.4 Старые поля Reward / RewardCurrency
+        if (proto.Reward > 0 && !string.IsNullOrWhiteSpace(proto.RewardCurrency))
+        {
+            var currencyId = proto.RewardCurrency;
+            var amount = proto.Reward;
+
+            if (rewardCurrencies.TryGetValue(currencyId, out var existing))
+                rewardCurrencies[currencyId] = existing + amount;
+            else
+                rewardCurrencies[currencyId] = amount;
+        }
+
+        // 2.5 Старые поля RewardItem / RewardItemCount
+        if (!string.IsNullOrWhiteSpace(proto.RewardItem) &&
+            proto.RewardItemCount > 0)
+        {
+            var protoId = proto.RewardItem!;
+            var count = proto.RewardItemCount;
+
+            if (rewardItems.TryGetValue(protoId, out var existing))
+                rewardItems[protoId] = existing + count;
+            else
+                rewardItems[protoId] = count;
+        }
+
+        var allBonusRewards = new List<StoreContractBonusReward>();
+
+        if (proto.BonusRewards is { Count: > 0, })
+            allBonusRewards.AddRange(proto.BonusRewards);
+
+        if (proto.RewardPools is { Count: > 0, })
+        {
+            foreach (var poolRef in proto.RewardPools)
+            {
+                if (!_prototypes.TryIndex<NcContractRewardPoolPrototype>(poolRef.ID, out var poolProto))
+                {
+                    Sawmill.Error($"[Contracts] RewardPool '{poolRef.ID}' not found for contract '{proto.ID}'.");
+                    continue;
+                }
+
+                if (poolProto.Entries is not { Count: > 0, })
+                    continue;
+
+                var poolWeight = poolRef.Weight <= 0 ? 1 : poolRef.Weight;
+
+                foreach (var entry in poolProto.Entries)
+                {
+                    if (entry == null)
+                        continue;
+
+                    // Копируем entry, чтобы не мутировать прототип
+                    var entryWeight = entry.Weight <= 0 ? 1 : entry.Weight;
+                    var combinedWeight = entryWeight * poolWeight;
+
+                    var copy = new StoreContractBonusReward
+                    {
+                        Id = entry.Id,
+                        Count = entry.Count,
+                        Weight = combinedWeight,
+                        Mode = entry.Mode,
+                        RewardCurrencies = entry.RewardCurrencies != null
+                            ? new Dictionary<string, int>(entry.RewardCurrencies)
+                            : null,
+                        RewardItems = entry.RewardItems != null
+                            ? new Dictionary<string, int>(entry.RewardItems)
+                            : null
+                    };
+
+                    allBonusRewards.Add(copy);
+                }
+            }
+        }
+
+        if (allBonusRewards.Count > 0 && proto.BonusPickCount > 0)
+        {
+            var pool = allBonusRewards.ToList();
+            var picks = Math.Min(proto.BonusPickCount, pool.Count);
+
+            var isFirst = true;
 
             for (var i = 0; i < picks && pool.Count > 0; i++)
             {
-                var chosen = PickWeighted(_random, pool, t => t.Weight);
-                if (chosen == null)
+                var bonus = PickWeighted(_random, pool, b => b.Weight);
+                if (bonus == null)
                     break;
 
-                pool.Remove(chosen);
+                pool.Remove(bonus);
 
-                var itemId = chosen.TargetItemId ?? targetItem;
-                var req = chosen.Required > 0 ? chosen.Required : required;
-
-                targets.Add(new ContractTargetServerData
-                {
-                    TargetItem = itemId,
-                    Required = req,
-                    Progress = 0
-                });
-            }
-
-            if (targets.Count > 0)
-            {
-                targetItem = targets[0].TargetItem;
-                required = 0;
-                foreach (var t in targets)
-                    required += t.Required;
+                // для первого учитываем Replace, дальше только Add
+                ApplyBonusReward(bonus, rewardCurrencies, rewardItems, !isFirst);
+                isFirst = false;
             }
         }
-    }
 
-    var rewardCurrencies = new Dictionary<string, int>();
-    var rewardItems = new Dictionary<string, int>();
+        // 4. Выбираем «основную» валюту и «основной» предмет
+        string? mainCurrency = null;
+        var mainCurrencyAmount = 0;
 
-    if (proto.Currencies is { Count: > 0, })
-    {
-        foreach (var c in proto.Currencies)
-        {
-            if (string.IsNullOrWhiteSpace(c.Id))
-                continue;
-
-            var min = c.Min;
-            var max = c.Max;
-
-            if (max < min)
-                (min, max) = (max, min);
-
-            min = Math.Max(min, 0);
-
-            if (max < 0)
-                continue;
-
-            var amount = GetRandomSteppedAmount(_random, min, max);
-
-            if (amount <= 0)
-                continue;
-
-            if (rewardCurrencies.TryGetValue(c.Id, out var existing))
-                rewardCurrencies[c.Id] = existing + amount;
-            else
-                rewardCurrencies[c.Id] = amount;
-        }
-    }
-
-    if (proto.RewardCurrencies != null)
-    {
-        foreach (var kvp in proto.RewardCurrencies)
+        foreach (var kvp in rewardCurrencies)
         {
             var currencyId = kvp.Key;
             var amount = kvp.Value;
@@ -470,16 +609,17 @@ public sealed class NcContractSystem : EntitySystem
             if (amount <= 0 || string.IsNullOrWhiteSpace(currencyId))
                 continue;
 
-            if (rewardCurrencies.TryGetValue(currencyId, out var existing))
-                rewardCurrencies[currencyId] = existing + amount;
-            else
-                rewardCurrencies[currencyId] = amount;
+            if (amount > mainCurrencyAmount)
+            {
+                mainCurrency = currencyId;
+                mainCurrencyAmount = amount;
+            }
         }
-    }
 
-    if (proto.RewardItems != null)
-    {
-        foreach (var kvp in proto.RewardItems)
+        string? mainItem = null;
+        var mainItemCount = 0;
+
+        foreach (var kvp in rewardItems)
         {
             var protoId = kvp.Key;
             var count = kvp.Value;
@@ -487,116 +627,35 @@ public sealed class NcContractSystem : EntitySystem
             if (count <= 0 || string.IsNullOrWhiteSpace(protoId))
                 continue;
 
-            if (rewardItems.TryGetValue(protoId, out var existing))
-                rewardItems[protoId] = existing + count;
-            else
-                rewardItems[protoId] = count;
+            if (count > mainItemCount)
+            {
+                mainItem = protoId;
+                mainItemCount = count;
+            }
         }
-    }
 
-    if (proto.Reward > 0 && !string.IsNullOrWhiteSpace(proto.RewardCurrency))
-    {
-        var currencyId = proto.RewardCurrency;
-        var amount = proto.Reward;
-
-        if (rewardCurrencies.TryGetValue(currencyId, out var existing))
-            rewardCurrencies[currencyId] = existing + amount;
-        else
-            rewardCurrencies[currencyId] = amount;
-    }
-
-    if (!string.IsNullOrWhiteSpace(proto.RewardItem) &&
-        proto.RewardItemCount > 0)
-    {
-        var protoId = proto.RewardItem!;
-        var count = proto.RewardItemCount;
-
-        if (rewardItems.TryGetValue(protoId, out var existing))
-            rewardItems[protoId] = existing + count;
-        else
-            rewardItems[protoId] = count;
-    }
-
-    if (proto.BonusRewards is { Count: > 0, } && proto.BonusPickCount > 0)
-    {
-        var pool = proto.BonusRewards.ToList();
-        var picks = Math.Min(proto.BonusPickCount, pool.Count);
-
-        var isFirst = true;
-
-        for (var i = 0; i < picks && pool.Count > 0; i++)
+        // 5. Финальная сборка контракта
+        return new()
         {
-            var bonus = PickWeighted(_random, pool, b => b.Weight);
-            if (bonus == null)
-                break;
+            Id = proto.ID,
+            Name = proto.Name,
+            TargetItem = targetItem,
+            Required = required,
+            Progress = 0,
 
-            pool.Remove(bonus);
+            Reward = mainCurrencyAmount,
+            RewardCurrency = mainCurrency ?? string.Empty,
+            RewardItem = mainItem,
+            RewardItemCount = mainItemCount,
 
-            ApplyBonusReward(bonus, rewardCurrencies, rewardItems, ignoreReplace: !isFirst);
-            isFirst = false;
-        }
+            Difficulty = proto.Difficulty,
+            Description = proto.Description,
+
+            RewardCurrencies = rewardCurrencies,
+            RewardItems = rewardItems,
+            Targets = targets
+        };
     }
-
-    // Выбираем «основную» валюту (наибольшая сумма)
-    string? mainCurrency = null;
-    var mainCurrencyAmount = 0;
-
-    foreach (var kvp in rewardCurrencies)
-    {
-        var currencyId = kvp.Key;
-        var amount = kvp.Value;
-
-        if (amount <= 0 || string.IsNullOrWhiteSpace(currencyId))
-            continue;
-
-        if (amount > mainCurrencyAmount)
-        {
-            mainCurrency = currencyId;
-            mainCurrencyAmount = amount;
-        }
-    }
-
-    // Выбираем «основной» предмет (наибольшее количество)
-    string? mainItem = null;
-    var mainItemCount = 0;
-
-    foreach (var kvp in rewardItems)
-    {
-        var protoId = kvp.Key;
-        var count = kvp.Value;
-
-        if (count <= 0 || string.IsNullOrWhiteSpace(protoId))
-            continue;
-
-        if (count > mainItemCount)
-        {
-            mainItem = protoId;
-            mainItemCount = count;
-        }
-    }
-
-    return new()
-    {
-        Id = proto.ID,
-        Name = proto.Name,
-        TargetItem = targetItem,
-        Required = required,
-        Progress = 0,
-
-        Reward = mainCurrencyAmount,
-        RewardCurrency = mainCurrency ?? string.Empty,
-        RewardItem = mainItem,
-        RewardItemCount = mainItemCount,
-
-        Difficulty = proto.Difficulty,
-        Description = proto.Description,
-
-        RewardCurrencies = rewardCurrencies,
-        RewardItems = rewardItems,
-        Targets = targets
-    };
-}
-
 
 
     private static T? PickWeighted<T>(
@@ -615,15 +674,15 @@ public sealed class NcContractSystem : EntitySystem
         for (var i = 0; i < list.Count; i++)
         {
             var w = weightSelector(list[i]);
-            if (w < 0)
-                w = 0;
+            if (w <= 0)
+                w = 1;
 
             weights[i] = w;
             total += w;
         }
 
         if (total <= 0)
-            return list[0];
+            return list[random.Next(list.Count)];
 
         var value = random.Next(total);
         var accum = 0;
@@ -635,6 +694,6 @@ public sealed class NcContractSystem : EntitySystem
                 return list[i];
         }
 
-        return list[list.Count - 1];
+        return list[^1];
     }
 }

@@ -111,6 +111,9 @@ public sealed class StoreContractPrototype : IPrototype
     [DataField("rewardItemCount")]
     public int RewardItemCount { get; private set; }
 
+    [DataField("rewardPools")]
+    public List<NcContractRewardPoolPrototype>? RewardPools { get; private set; }
+
     [IdDataField] public string ID { get; private set; } = default!;
 }
 
@@ -147,6 +150,9 @@ public enum StoreContractBonusMode
 [DataDefinition]
 public sealed partial class StoreContractBonusReward
 {
+    [DataField("count")]
+    public int Count = 1;
+
     [DataField("currencies")]
     public Dictionary<string, int>? RewardCurrencies;
 
@@ -174,6 +180,20 @@ public sealed partial class StoreContractCurrencyRange
 
     [DataField("max")]
     public int Max { get; set; }
+}
+
+[Prototype("ncContractRewardPool")]
+public sealed class NcContractRewardPoolPrototype : IPrototype
+{
+    [DataField("weight")]
+    public int Weight = 1;
+
+    [DataField("entries")]
+    public List<StoreContractBonusReward> Entries { get; private set; } = new();
+
+    [IdDataField]
+    public string ID { get; private set; } = default!;
+
 }
 
 [Serializable]
