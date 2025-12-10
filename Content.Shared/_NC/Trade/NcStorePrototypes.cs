@@ -1,10 +1,11 @@
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 
+
 namespace Content.Shared._NC.Trade;
 
-[Serializable, NetSerializable]
-[Prototype("ncStoreListing")]
+
+[Serializable, NetSerializable, Prototype("ncStoreListing"),]
 public sealed class StoreListingPrototype : IPrototype
 {
     [IdDataField]
@@ -60,35 +61,57 @@ public sealed partial class StorePresetStructuredPrototype : IPrototype
 [Prototype("storeContract")]
 public sealed class StoreContractPrototype : IPrototype
 {
+    [DataField("name")]
+    public string Name { get; private set; } = string.Empty;
+
     [DataField("description")]
-    public string Description = string.Empty;
+    public string Description { get; private set; } = string.Empty;
 
     [DataField("difficulty")]
-    public string Difficulty = "Easy";
+    public string Difficulty { get; private set; } = "Easy";
 
-    [DataField("name", required: true)]
-    public string Name = string.Empty;
+    [DataField("targetItem")]
+    public string? TargetItem { get; private set; }
 
     [DataField("required")]
-    public int Required = 1;
+    public int Required { get; private set; }
+
+    [DataField("targets")]
+    public List<StoreContractTargetEntry>? Targets { get; private set; }
+
+    [DataField("currencies")]
+    public List<StoreContractCurrencyRange>? Currencies { get; private set; }
+
+    [DataField("rewardCurrencies")]
+    public Dictionary<string, int>? RewardCurrencies { get; private set; }
+
+    [DataField("rewardItems")]
+    public Dictionary<string, int>? RewardItems { get; private set; }
+
+
+    [DataField("bonusRewards")]
+    public List<StoreContractBonusReward>? BonusRewards { get; private set; }
+
+    [DataField("targetCount")]
+    public int TargetCount { get; set; } = 1;
+
+    [DataField("bonusPickCount")]
+    public int BonusPickCount { get; private set; } = 1;
+
 
     [DataField("reward")]
-    public int Reward;
+    public int Reward { get; private set; }
 
     [DataField("rewardCurrency")]
-    public string RewardCurrency = string.Empty;
+    public string RewardCurrency { get; private set; } = string.Empty;
 
     [DataField("rewardItem")]
-    public string? RewardItem;
+    public string? RewardItem { get; private set; }
 
     [DataField("rewardItemCount")]
-    public int RewardItemCount;
+    public int RewardItemCount { get; private set; }
 
-    [DataField("targetItem", required: true)]
-    public string TargetItem = string.Empty;
-
-    [IdDataField]
-    public string ID { get; private set; } = default!;
+    [IdDataField] public string ID { get; private set; } = default!;
 }
 
 [Prototype("storeContractsPreset")]
@@ -99,6 +122,58 @@ public sealed class StoreContractsPresetPrototype : IPrototype
 
     [IdDataField]
     public string ID { get; private set; } = default!;
+}
+
+[DataDefinition]
+public sealed partial class StoreContractTargetEntry
+{
+    [DataField("id", required: true)]
+    public string TargetItemId { get; set; } = default!;
+
+    [DataField("required")]
+    public int Required { get; set; }
+
+    [DataField("weight")]
+    public int Weight { get; set; } = 1;
+}
+
+public enum StoreContractBonusMode
+{
+    Add,
+
+    Replace
+}
+
+[DataDefinition]
+public sealed partial class StoreContractBonusReward
+{
+    [DataField("currencies")]
+    public Dictionary<string, int>? RewardCurrencies;
+
+    [DataField("items")]
+    public Dictionary<string, int>? RewardItems;
+
+    [DataField("id")]
+    public string? Id { get; set; }
+
+    [DataField("weight")]
+    public int Weight { get; set; } = 1;
+
+    [DataField("mode")]
+    public StoreContractBonusMode Mode { get; set; } = StoreContractBonusMode.Add;
+}
+
+[DataDefinition]
+public sealed partial class StoreContractCurrencyRange
+{
+    [DataField("id", required: true)]
+    public string Id { get; set; } = string.Empty;
+
+    [DataField("min")]
+    public int Min { get; set; }
+
+    [DataField("max")]
+    public int Max { get; set; }
 }
 
 [Serializable]

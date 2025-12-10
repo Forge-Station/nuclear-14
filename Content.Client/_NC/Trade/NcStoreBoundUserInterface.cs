@@ -15,7 +15,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
 
     private readonly IPlayerManager _player = IoCManager.Resolve<IPlayerManager>();
     private readonly IGameTiming _timing = IoCManager.Resolve<IGameTiming>();
-    private int _lastHash;
+    private int _lastHash = int.MinValue;
 
     private NcStoreMenu? _menu;
     private TimeSpan _nextRefreshTime = TimeSpan.Zero;
@@ -90,10 +90,31 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
             hash = CombineHash(hash, c.RewardItemCount.GetHashCode());
             hash = CombineHash(hash, c.Difficulty?.GetHashCode() ?? 0);
             hash = CombineHash(hash, c.Completed.GetHashCode());
+
+            foreach (var t in c.Targets)
+            {
+                hash = CombineHash(hash, t.TargetItem?.GetHashCode() ?? 0);
+                hash = CombineHash(hash, t.Required.GetHashCode());
+                hash = CombineHash(hash, t.Progress.GetHashCode());
+            }
+
+            foreach (var kv in c.RewardCurrencies.OrderBy(p => p.Key))
+            {
+                hash = CombineHash(hash, kv.Key.GetHashCode());
+                hash = CombineHash(hash, kv.Value.GetHashCode());
+            }
+
+            foreach (var kv in c.RewardItems.OrderBy(p => p.Key))
+            {
+                hash = CombineHash(hash, kv.Key.GetHashCode());
+                hash = CombineHash(hash, kv.Value.GetHashCode());
+            }
         }
+
 
         return hash;
     }
+
 
     private static int CombineHash(int current, int value) => unchecked(current * 31 + value);
 
@@ -103,6 +124,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
             return;
 
         _menu = this.CreateWindow<NcStoreMenu>();
+        _lastHash = int.MinValue;
 
         if (EntMan.TryGetComponent(Owner, out MetaDataComponent? meta))
             _menu.Title = meta.EntityName;
@@ -116,8 +138,10 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
         {
             _menu.Orphan();
             _menu = null;
+            _lastHash = int.MinValue;
         };
     }
+
 
     private void OnBuy(StoreListingData data, int qty)
     {

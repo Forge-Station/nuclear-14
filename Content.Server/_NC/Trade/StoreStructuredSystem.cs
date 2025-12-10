@@ -293,21 +293,58 @@ public sealed class StoreStructuredSystem : EntitySystem
         }
 
         var contracts = comp.Contracts.Values
-            .Select(c => new ContractClientData(
-                c.Id,
-                c.Name,
-                c.TargetItem,
-                c.Required,
-                c.Progress,
-                c.Reward,
-                c.RewardCurrency,
-                c.RewardItem,
-                c.RewardItemCount,
-                c.Difficulty,
-                c.Completed,
-                c.Description
-            ))
+            .Select(c =>
+            {
+                var targets = new List<ContractTargetClientData>();
+
+                if (c.Targets is { Count: > 0 })
+                {
+                    foreach (var t in c.Targets)
+                    {
+                        if (string.IsNullOrWhiteSpace(t.TargetItem) || t.Required <= 0)
+                            continue;
+
+                        targets.Add(new ContractTargetClientData(
+                            t.TargetItem,
+                            t.Required,
+                            t.Progress));
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(c.TargetItem) && c.Required > 0)
+                {
+                    targets.Add(new ContractTargetClientData(
+                        c.TargetItem,
+                        c.Required,
+                        c.Progress));
+                }
+
+                var client = new ContractClientData(
+                    c.Id,
+                    c.Name,
+                    c.TargetItem,
+                    c.Required,
+                    c.Progress,
+                    c.Reward,
+                    c.RewardCurrency,
+                    c.RewardItem,
+                    c.RewardItemCount,
+                    c.Difficulty,
+                    c.Completed,
+                    c.Description,
+                    targets
+                );
+
+                if (c.RewardCurrencies is { Count: > 0 })
+                    client.RewardCurrencies = new Dictionary<string, int>(c.RewardCurrencies);
+
+                if (c.RewardItems is { Count: > 0 })
+                    client.RewardItems = new Dictionary<string, int>(c.RewardItems);
+
+                return client;
+            })
             .ToList();
+
+
 
         _ui.SetUiState(uid, StoreUiKey.Key, new StoreUiState(balance, listings, crateTotals, contracts));
     }
@@ -475,18 +512,53 @@ public sealed class StoreStructuredSystem : EntitySystem
 
         foreach (var (_, contract) in comp.Contracts)
         {
-            if (string.IsNullOrWhiteSpace(contract.TargetItem))
+            var targets = contract.Targets;
+            if (targets.Count > 0)
             {
-                contract.Progress = 0;
-                continue;
+                var totalRequired = 0;
+                var totalProgress = 0;
+
+                foreach (var t in targets)
+                {
+                    if (string.IsNullOrWhiteSpace(t.TargetItem) || t.Required <= 0)
+                    {
+                        t.Progress = 0;
+                        continue;
+                    }
+
+                    var owned = _logic.GetOwned(user, t.TargetItem);
+
+                    if (crate is { } crateUid)
+                        owned += _logic.GetOwnedInRoot(crateUid, t.TargetItem);
+
+                    var prog = Math.Min(owned, t.Required);
+                    t.Progress = prog;
+
+                    totalRequired += t.Required;
+                    totalProgress += prog;
+                }
+
+                contract.Required = totalRequired;
+                contract.Progress = totalProgress;
+
+                if (targets.Count > 0)
+                    contract.TargetItem = targets[0].TargetItem;
             }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(contract.TargetItem) || contract.Required <= 0)
+                {
+                    contract.Progress = 0;
+                    continue;
+                }
 
-            var owned = _logic.GetOwned(user, contract.TargetItem);
+                var owned = _logic.GetOwned(user, contract.TargetItem);
 
-            if (crate is { } crateUid)
-                owned += _logic.GetOwnedInRoot(crateUid, contract.TargetItem);
+                if (crate is { } crateUid)
+                    owned += _logic.GetOwnedInRoot(crateUid, contract.TargetItem);
 
-            contract.Progress = Math.Min(owned, contract.Required);
+                contract.Progress = Math.Min(owned, contract.Required);
+            }
         }
     }
 }

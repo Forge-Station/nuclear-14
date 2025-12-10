@@ -16,6 +16,7 @@ namespace Content.Server._NC.Trade;
 public sealed class NcStoreSystem : EntitySystem
 {
     private const float MaxUseDistance = 2.5f;
+    private const string ReadyListingSuffix = "__ready";
 
     [Dependency] private readonly AccessReaderSystem _accessReader = default!;
     [Dependency] private readonly AudioSystem _audio = default!;
@@ -94,8 +95,17 @@ public sealed class NcStoreSystem : EntitySystem
 
         if (!IsInUseRange(uid, actor))
             return;
+        var requestedId = msg.ListingId;
+        if (!string.IsNullOrEmpty(requestedId) &&
+            requestedId.EndsWith(ReadyListingSuffix, StringComparison.Ordinal))
+        {
+            requestedId = requestedId.Substring(
+                0,
+                requestedId.Length - ReadyListingSuffix.Length);
+        }
 
-        var listing = comp.Listings.FirstOrDefault(x => x.Id == msg.ListingId && x.Mode == StoreMode.Sell);
+        var listing = comp.Listings.FirstOrDefault(x => x.Id == requestedId && x.Mode == StoreMode.Sell);
+
         if (listing == null)
             return;
 
@@ -106,6 +116,7 @@ public sealed class NcStoreSystem : EntitySystem
         _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid, AudioParams.Default.WithVolume(-2f));
         _storeUi.UpdateUiState(uid, comp, actor);
     }
+
 
     private void OnMassSellPulledCrateRequest(
         EntityUid uid,

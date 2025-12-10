@@ -4,7 +4,7 @@ using Robust.Shared.GameStates;
 namespace Content.Shared._NC.Trade;
 
 
-[RegisterComponent, NetworkedComponent]
+[RegisterComponent, NetworkedComponent,]
 public sealed partial class NcStoreComponent : Component
 {
     public EntityUid? CurrentUser;
@@ -33,4 +33,10 @@ public sealed partial class NcStoreComponent : Component
     public string? LegacyContractsPreset { get; set; }
 
     public Dictionary<string, ContractServerData> Contracts { get; } = new();
+
+    [DataField("rewardCurrencies")]
+    public Dictionary<string, int> RewardCurrencies { get; set; } = new();
+
+    [DataField("rewardItems")]
+    public Dictionary<string, int> RewardItems { get; set; } = new();
 }

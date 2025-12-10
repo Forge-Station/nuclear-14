@@ -726,29 +726,92 @@
 - type: storeContract
   id: caravan_contract_guns
   name: Пушки на переработку
-  targetItem: N14MaterialRadscorpionTail
-  required: 5
-  reward: 1000
-  rewardCurrency: Caps
-  rewardItem: N14ClothingOuterPowerArmorT51
-  rewardItemCount: 2
-  difficulty: Easy
   description: "Короче мне надо жопы скорпиона, сдашь получишь силовую броню."
+  targetCount: 2
+  targets:
+  - id: N14MaterialRadscorpionTail
+    required: 1
+    weight: 5
+  - id: N14FoodMeatRadscorpionLeg
+    required: 1
+    weight: 5
+  - id: N14MaterialExoskeleton
+    required: 1
+    weight: 5
+  currencies:
+  - id: Caps
+    min: 0
+    max: 1000
+  - id: PrizeTicket
+    min: 0
+    max: 50
+  rewardItems:
+    N14ClothingOuterPowerArmorT51: 1
+  bonusPickCount: 2
+  bonusRewards:
+    - id: N14ClothingOuterCombatArmorMK2
+      weight: 12
+    - id: C4
+      weight: 2
+      mode: Replace
+  difficulty: Easy
+
 
 - type: storeContract
   id: caravan_contract_scrap
   name: Металлолом нужен
-  targetItem: N14MobHumanBoSWashingtonPaladin
-  required: 1
-  reward: 300
-  rewardItem: N14ClothingOuterPowerArmorAdvanced2Tesla
-  rewardItemCount: 2
-  rewardCurrency: Caps
-  difficulty: Medium
   description: "Найди девушку Грому. Найдешь он тебя отблагодарит."
+  targetCount: 2
+  targets:
+  - id: N14MobHumanBoSWestPaladin
+    required: 1
+    weight: 5
+  - id: N14MobHumanBoSWashingtonPaladin
+    required: 1
+    weight: 2
+  - id: BoSMidPaladinCommander
+    required: 1
+    weight: 1
+  currencies:
+  - id: Caps
+    min: 0
+    max: 1000
+  - id: PrizeTicket
+    min: 0
+    max: 50
+  rewardItems:
+    N14ClothingOuterPowerArmorT51: 2
+  bonusPickCount: 4
+  bonusRewards:
+  - id: N14ClothingOuterCombatArmorMK2
+    weight: 6
+  - id: C4
+    weight: 2
+    mode: Replace
+  difficulty: Medium
+
+- type: storeContract
+  id: caravan_contract_scraps
+  name: Металлолом нужен
+  description: "Найди девушку Грому. Найдешь он тебя отблагодарит."
+  targetCount: 2
+  targets:
+  - id: N14MobHumanBoSWestPaladin
+    required: 1
+  rewardCurrencies:
+    Caps: 5000
+  bonusPickCount: 3
+  bonusRewards:
+  - id: N14ClothingOuterCombatArmorMK2
+    weight: 6
+  - id: C4
+    weight: 2
+    mode: Replace
+  difficulty: Medium
 
 - type: storeContractsPreset
   id: caravan_contracts_easy
   contracts:
   - caravan_contract_scrap
   - caravan_contract_guns
+  - caravan_contract_scraps

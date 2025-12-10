@@ -143,13 +143,18 @@ public sealed partial class NcStoreMenu : FancyWindow
         _items.Clear();
         _items.AddRange(list);
 
-        // чистим кеш количества для удалённых лотов
         var ids = _items.Select(i => i.Id).ToHashSet();
         foreach (var key in _qtyCache.Keys.Where(k => !ids.Contains(k)).ToList())
             _qtyCache.Remove(key);
 
+        foreach (var key in _buyCache.Keys.Where(k => !ids.Contains(k)).ToList())
+            _buyCache.Remove(key);
+        foreach (var key in _sellCache.Keys.Where(k => !ids.Contains(k)).ToList())
+            _sellCache.Remove(key);
+
         _buyCats.Clear();
         _sellCats.Clear();
+
 
         _buyCats.AddRange(
             list.Where(i => i.Mode == StoreMode.Buy)
@@ -168,20 +173,12 @@ public sealed partial class NcStoreMenu : FancyWindow
         {
             _sellCats.Remove(readyCat);
             _sellCats.Insert(0, readyCat);
-            if (string.IsNullOrEmpty(_sellCat))
-                _sellCat = readyCat;
         }
 
         if (!_buyCats.Contains(_buyCat))
             _buyCat = string.Empty;
         if (!_sellCats.Contains(_sellCat))
             _sellCat = string.Empty;
-
-        // Автоселект первой категории, если никакая ещё не выбрана
-        if (string.IsNullOrEmpty(_buyCat) && _buyCats.Count > 0)
-            _buyCat = _buyCats[0];
-        if (string.IsNullOrEmpty(_sellCat) && _sellCats.Count > 0)
-            _sellCat = _sellCats[0];
 
         BuildCategoryButtons();
         ResetPaging();
@@ -298,67 +295,135 @@ public sealed partial class NcStoreMenu : FancyWindow
                 root.AddChild(desc);
             }
 
-            // --- Цель ---
-            EntityPrototype? targetProto = null;
-            if (!string.IsNullOrWhiteSpace(c.TargetItem))
-                _proto.TryIndex(c.TargetItem, out targetProto);
+            // --- Цели ---
+            var hasTargets = c.Targets != null && c.Targets.Count > 0;
 
-            var targetRow = new BoxContainer
+            if (hasTargets)
             {
-                Orientation = BoxContainer.LayoutOrientation.Horizontal,
-                Margin = new(0, 0, 0, 2)
-            };
-
-            Texture? targetTex = null;
-            if (targetProto != null)
-            {
-                var icon = _sprites.GetPrototypeIcon(targetProto.ID);
-                targetTex = icon.Default;
-            }
-
-            if (targetTex != null)
-            {
-                targetRow.AddChild(
-                    new TextureRect
+                root.AddChild(
+                    new Label
                     {
-                        Texture = targetTex,
-                        Stretch = TextureRect.StretchMode.KeepAspectCentered,
-                        MinSize = new(24, 24),
-                        Margin = new(0, 0, 4, 0)
+                        Text = "Цели:",
+                        Margin = new(0, 0, 0, 2)
                     });
-            }
 
-            var targetName = targetProto?.Name ?? c.TargetItem;
-            targetRow.AddChild(
-                new Label
+                var targets = c.Targets ?? new List<ContractTargetClientData>();
+                foreach (var t in targets)
                 {
-                    Text = $"Цель: {targetName} ×{c.Required}"
-                });
-            root.AddChild(targetRow);
+                    EntityPrototype? targetProto = null;
+                    if (!string.IsNullOrWhiteSpace(t.TargetItem))
+                        _proto.TryIndex(t.TargetItem, out targetProto);
 
-            if (!string.IsNullOrWhiteSpace(targetProto?.Description))
+                    var targetRow = new BoxContainer
+                    {
+                        Orientation = BoxContainer.LayoutOrientation.Horizontal,
+                        Margin = new(0, 0, 0, 2)
+                    };
+
+                    Texture? targetTex = null;
+                    if (targetProto != null)
+                    {
+                        var icon = _sprites.GetPrototypeIcon(targetProto.ID);
+                        targetTex = icon.Default;
+                    }
+
+                    if (targetTex != null)
+                    {
+                        targetRow.AddChild(
+                            new TextureRect
+                            {
+                                Texture = targetTex,
+                                Stretch = TextureRect.StretchMode.KeepAspectCentered,
+                                MinSize = new(24, 24),
+                                Margin = new(0, 0, 4, 0)
+                            });
+                    }
+
+                    var targetName = targetProto?.Name ?? t.TargetItem;
+                    targetRow.AddChild(
+                        new Label
+                        {
+                            Text = $"• {targetName} ×{t.Required} (у вас {t.Progress})"
+                        });
+
+                    root.AddChild(targetRow);
+
+                    if (!string.IsNullOrWhiteSpace(targetProto?.Description))
+                    {
+                        var itemDesc = new Label
+                        {
+                            Text = targetProto.Description,
+                            Margin = new(28, 0, 0, 2)
+                        };
+                        itemDesc.StyleClasses.Add("LabelSubText");
+                        root.AddChild(itemDesc);
+                    }
+                }
+            }
+            else
             {
-                var itemDesc = new Label
+                // Legacy: одна цель как раньше.
+                EntityPrototype? targetProto = null;
+                if (!string.IsNullOrWhiteSpace(c.TargetItem))
+                    _proto.TryIndex(c.TargetItem, out targetProto);
+
+                var targetRow = new BoxContainer
                 {
-                    Text = targetProto.Description,
-                    Margin = new(0, 0, 0, 4)
+                    Orientation = BoxContainer.LayoutOrientation.Horizontal,
+                    Margin = new(0, 0, 0, 2)
                 };
-                itemDesc.StyleClasses.Add("LabelSubText");
-                root.AddChild(itemDesc);
+
+                Texture? targetTex = null;
+                if (targetProto != null)
+                {
+                    var icon = _sprites.GetPrototypeIcon(targetProto.ID);
+                    targetTex = icon.Default;
+                }
+
+                if (targetTex != null)
+                {
+                    targetRow.AddChild(
+                        new TextureRect
+                        {
+                            Texture = targetTex,
+                            Stretch = TextureRect.StretchMode.KeepAspectCentered,
+                            MinSize = new(24, 24),
+                            Margin = new(0, 0, 4, 0)
+                        });
+                }
+
+                var targetName = targetProto?.Name ?? c.TargetItem;
+                targetRow.AddChild(
+                    new Label
+                    {
+                        Text = $"Цель: {targetName} ×{c.Required}"
+                    });
+                root.AddChild(targetRow);
+
+                if (!string.IsNullOrWhiteSpace(targetProto?.Description))
+                {
+                    var itemDesc = new Label
+                    {
+                        Text = targetProto.Description,
+                        Margin = new(0, 0, 0, 4)
+                    };
+                    itemDesc.StyleClasses.Add("LabelSubText");
+                    root.AddChild(itemDesc);
+                }
             }
 
-            // --- Прогресс ---
+            // --- Прогресс (суммарный) ---
             if (!c.Completed)
             {
+                var max = c.Required <= 0 ? 1 : c.Required;
+                var val = Math.Clamp(c.Progress, 0, max);
+
                 root.AddChild(
                     new Label
                     {
                         Text = $"Прогресс: {c.Progress} / {c.Required}",
                         Margin = new(0, 0, 0, 2)
                     });
-
-                var max = c.Required <= 0 ? 1 : c.Required;
-                var val = Math.Clamp(c.Progress, 0, max);
 
                 root.AddChild(
                     new ProgressBar
@@ -385,53 +450,154 @@ public sealed partial class NcStoreMenu : FancyWindow
                 HorizontalExpand = true
             };
 
-            // валюта
-            var rewardRow = new BoxContainer
+            // --- Награда: валюты (много) или fallback ---
+            if (c.RewardCurrencies is { Count: > 0, } currencies)
             {
-                Orientation = BoxContainer.LayoutOrientation.Horizontal
-            };
+                var rewardsRow = new BoxContainer
+                {
+                    Orientation = BoxContainer.LayoutOrientation.Horizontal,
+                    Margin = new(0, 0, 0, 2)
+                };
 
-            Texture? currencyTex = null;
-            if (!string.IsNullOrEmpty(c.RewardCurrency) &&
-                _proto.TryIndex<StackPrototype>(c.RewardCurrency, out var stackProto) &&
-                _proto.TryIndex<EntityPrototype>(stackProto.Spawn, out var currencyEnt))
-            {
-                var icon = _sprites.GetPrototypeIcon(currencyEnt.ID);
-                currencyTex = icon.Default;
-            }
-
-            if (currencyTex != null)
-            {
-                rewardRow.AddChild(
-                    new TextureRect
+                rewardsRow.AddChild(
+                    new Label
                     {
-                        Texture = currencyTex,
-                        Stretch = TextureRect.StretchMode.KeepAspectCentered,
-                        MinSize = new(16, 16),
+                        Text = "Награда:",
                         Margin = new(0, 0, 4, 0)
                     });
+
+                var parts = new List<string>();
+
+                foreach (var kv in currencies)
+                {
+                    var curId = kv.Key;
+                    var amount = kv.Value;
+                    if (amount <= 0 || string.IsNullOrWhiteSpace(curId))
+                        continue;
+
+                    var name = CurrencyName(curId);
+                    if (string.IsNullOrWhiteSpace(name))
+                        name = curId;
+
+                    parts.Add($"{amount} {name}");
+                }
+
+                rewardsRow.AddChild(
+                    new Label
+                    {
+                        Text = string.Join(", ", parts)
+                    });
+
+                rewardsCol.AddChild(rewardsRow);
+            }
+            else if (c.Reward > 0 && !string.IsNullOrWhiteSpace(c.RewardCurrency))
+            {
+                var rewardRow = new BoxContainer
+                {
+                    Orientation = BoxContainer.LayoutOrientation.Horizontal,
+                    Margin = new(0, 0, 0, 2)
+                };
+
+                Texture? currencyTex = null;
+                if (_proto.TryIndex<StackPrototype>(c.RewardCurrency, out var stackProto) &&
+                    _proto.TryIndex<EntityPrototype>(stackProto.Spawn, out var currencyEnt))
+                {
+                    var icon = _sprites.GetPrototypeIcon(currencyEnt.ID);
+                    currencyTex = icon.Default;
+                }
+
+                if (currencyTex != null)
+                {
+                    rewardRow.AddChild(
+                        new TextureRect
+                        {
+                            Texture = currencyTex,
+                            Stretch = TextureRect.StretchMode.KeepAspectCentered,
+                            MinSize = new(16, 16),
+                            Margin = new(0, 0, 4, 0)
+                        });
+                }
+
+                var currencyName = CurrencyName(c.RewardCurrency);
+                rewardRow.AddChild(
+                    new Label
+                    {
+                        Text = string.IsNullOrEmpty(currencyName)
+                            ? $"Награда: {c.Reward}"
+                            : $"Награда: {c.Reward} {currencyName}"
+                    });
+
+                rewardsCol.AddChild(rewardRow);
             }
 
-            var currencyName = CurrencyName(c.RewardCurrency);
-            rewardRow.AddChild(
-                new Label
+            // --- Награда: предметы (много) или fallback ---
+            if (c.RewardItems is { Count: > 0, } items)
+            {
+                var itemsCol = new BoxContainer
                 {
-                    Text = string.IsNullOrEmpty(currencyName)
-                        ? $"Награда: {c.Reward}"
-                        : $"Награда: {c.Reward} {currencyName}"
-                });
+                    Orientation = BoxContainer.LayoutOrientation.Vertical,
+                    Margin = new(0, 2, 0, 0)
+                };
 
-            rewardsCol.AddChild(rewardRow);
+                itemsCol.AddChild(
+                    new Label
+                    {
+                        Text = "Предметы награды:",
+                        Margin = new(0, 0, 0, 2)
+                    });
 
-            // предмет
-            if (!string.IsNullOrWhiteSpace(c.RewardItem) && c.RewardItemCount > 0)
+                foreach (var kv in items)
+                {
+                    var id = kv.Key;
+                    var count = kv.Value;
+                    if (count <= 0 || string.IsNullOrWhiteSpace(id))
+                        continue;
+
+                    EntityPrototype? proto = null;
+                    _proto.TryIndex(id, out proto);
+
+                    var line = new BoxContainer
+                    {
+                        Orientation = BoxContainer.LayoutOrientation.Horizontal,
+                        Margin = new(0, 0, 0, 2)
+                    };
+
+                    Texture? tex = null;
+                    if (proto != null)
+                    {
+                        var icon = _sprites.GetPrototypeIcon(proto.ID);
+                        tex = icon.Default;
+                    }
+
+                    if (tex != null)
+                    {
+                        line.AddChild(
+                            new TextureRect
+                            {
+                                Texture = tex,
+                                Stretch = TextureRect.StretchMode.KeepAspectCentered,
+                                MinSize = new(20, 20),
+                                Margin = new(0, 0, 4, 0)
+                            });
+                    }
+
+                    var name = proto?.Name ?? id;
+                    line.AddChild(new Label { Text = $"{name} ×{count}", });
+
+                    itemsCol.AddChild(line);
+                }
+
+                rewardsCol.AddChild(itemsCol);
+            }
+            else if (!string.IsNullOrWhiteSpace(c.RewardItem) && c.RewardItemCount > 0)
             {
                 EntityPrototype? rewardProto = null;
                 _proto.TryIndex(c.RewardItem, out rewardProto);
 
                 var rewardItemRow = new BoxContainer
                 {
-                    Orientation = BoxContainer.LayoutOrientation.Horizontal
+                    Orientation = BoxContainer.LayoutOrientation.Horizontal,
+                    Margin = new(0, 2, 0, 0)
                 };
 
                 Texture? rewardTex = null;
@@ -465,6 +631,7 @@ public sealed partial class NcStoreMenu : FancyWindow
 
             bottom.AddChild(rewardsCol);
 
+            // --- Кнопка сдачи ---
             var canClaim = c.Completed;
             var btn = new Button
             {
@@ -492,7 +659,6 @@ public sealed partial class NcStoreMenu : FancyWindow
         }
     }
 
-    // --- Категории и фильтрация ---
 
     private void RefreshListings()
     {
@@ -549,22 +715,33 @@ public sealed partial class NcStoreMenu : FancyWindow
         pane.Children.Clear();
 
         var filtered = Filtered(mode, cat).ToList();
-
         if (string.IsNullOrEmpty(cat) && string.IsNullOrWhiteSpace(_search))
             return;
 
         if (filtered.Count == 0)
         {
-            pane.AddChild(new Label { Text = "Выберите категорию.", });
+            string message;
+            var hasSearch = !string.IsNullOrWhiteSpace(_search);
+
+            if (!hasSearch)
+                message = "Выберите категорию.";
+            else if (!string.IsNullOrEmpty(cat))
+                message = "По вашему запросу в этой категории ничего не найдено.";
+            else
+                message = "По вашему запросу ничего не найдено.";
+
+            pane.AddChild(new Label { Text = message, });
             return;
         }
 
-        var take = Math.Min(filtered.Count, PageSize * (mode == StoreMode.Buy ? _pageBuy : _pageSell));
-        var slice = filtered.GetRange(0, take);
+        var page = mode == StoreMode.Buy ? _pageBuy : _pageSell;
+        var take = Math.Min(filtered.Count, PageSize * page);
 
-        AddListingRange(pane, mode, filtered, 0, slice.Count, emit);
+        AddListingRange(pane, mode, filtered, 0, take, emit);
+
         AddOrUpdateMoreButton(pane, mode, filtered.Count, take, cat, emit);
     }
+
 
     private void AppendNextPage(Control pane, StoreMode mode, string cat, Action<StoreListingData, int> emit)
     {
