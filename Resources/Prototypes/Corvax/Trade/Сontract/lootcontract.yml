@@ -10,7 +10,6 @@
     state: icon
   - type: Item
     sprite: Objects/Storage/Briefcases/briefcase_brown.rsi
-  - type: Item
     size: Ginormous
   - type: StaticPrice
     price: 0
