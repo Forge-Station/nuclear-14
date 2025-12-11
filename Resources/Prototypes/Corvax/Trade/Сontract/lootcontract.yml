@@ -10,7 +10,7 @@
     state: icon
   - type: Item
     sprite: Objects/Storage/Briefcases/briefcase_brown.rsi
-    size: Ginormous
+    size: Huge
   - type: StaticPrice
     price: 0
 
@@ -19,13 +19,12 @@
   parent: N14BriefcaseContract
   id: N14BriefcaseContractSS
   description: A small tin hiding riches, treasures, or maybe just garbage. You'll only know when you open it.
-  abstract: true
   components:
   - type: SpawnItemsOnUse
     items:
-    - id: N14WeaponSMG10mmSuppressed
-    - id: N14MagazineSMG10mm
-      amount: 3
-    - id: MagazineBox10mm
+      - id: N14WeaponSMG10mmSuppressed
+      - id: N14MagazineSMG10mm
+        amount: 3
+      - id: MagazineBox10mm
     sound:
       path: /Audio/Items/can_open3.ogg
