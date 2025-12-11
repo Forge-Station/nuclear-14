@@ -695,13 +695,13 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
         InvalidateInventoryCache(container);
 
-
         var stackTypeCounts = new Dictionary<string, int>();
         var protoCounts = new Dictionary<string, int>();
         var protoCache = new Dictionary<string, EntityPrototype>();
 
         foreach (var ent in EnumerateDeepItemsUnique(container))
         {
+            // Сначала считаем стэки по StackTypeId
             if (_ents.TryGetComponent(ent, out StackComponent? stack) &&
                 !string.IsNullOrEmpty(stack.StackTypeId))
             {
@@ -715,14 +715,16 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 continue;
             }
 
-            if (_ents.TryGetComponent(ent, out MetaDataComponent? meta) &&
-                meta.EntityPrototype is { } proto)
-            {
-                if (!protoCounts.TryAdd(proto.ID, 1))
-                    protoCounts[proto.ID] += 1;
+            if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) ||
+                meta.EntityPrototype is null)
+                continue;
 
-                protoCache[proto.ID] = proto;
-            }
+            var proto = meta.EntityPrototype;
+
+            if (!protoCounts.TryAdd(proto.ID, 1))
+                protoCounts[proto.ID] += 1;
+
+            protoCache[proto.ID] = proto;
         }
 
         if (stackTypeCounts.Count == 0 && protoCounts.Count == 0)
@@ -731,7 +733,6 @@ public sealed class NcStoreLogicSystem : EntitySystem
         var protoIds = protoCounts.Count > 0
             ? protoCounts.Keys.ToArray()
             : Array.Empty<string>();
-
 
         var sellListings = store.Listings
             .Where(l =>
@@ -746,14 +747,10 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
         var stackName = _compFactory.GetComponentName(typeof(StackComponent));
 
-
         foreach (var listing in sellListings)
         {
             if (!TryPickCurrencyForSell(store, listing, out var currencyId, out var unitPrice) ||
                 unitPrice <= 0)
-                continue;
-
-            if (!_protos.TryIndex<EntityPrototype>(listing.ProductEntity, out var prodProto))
                 continue;
 
             var maxByRemaining = listing.RemainingCount >= 0
@@ -763,9 +760,11 @@ public sealed class NcStoreLogicSystem : EntitySystem
             if (maxByRemaining <= 0)
                 continue;
 
+
             string? expectedStackType = null;
 
-            if (prodProto.TryGetComponent(stackName, out StackComponent? prodStackDef))
+            if (_protos.TryIndex<EntityPrototype>(listing.ProductEntity, out var prodProto) &&
+                prodProto.TryGetComponent(stackName, out StackComponent? prodStackDef))
                 expectedStackType = prodStackDef.StackTypeId;
 
             if (!string.IsNullOrEmpty(expectedStackType))
@@ -779,7 +778,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 if (taken <= 0)
                     continue;
 
-                stackTypeCounts[expectedStackType] = available - taken;
+                stackTypeCounts[expectedStackType!] = available - taken;
 
                 var total = checked(unitPrice * taken);
                 if (!incomeByCurrency.TryAdd(currencyId, total))

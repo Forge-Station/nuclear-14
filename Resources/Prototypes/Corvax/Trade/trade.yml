@@ -519,7 +519,7 @@
       Хлам:
       - proto: N14MaterialCircuitry1
         price: 20
-      - proto: N14ClothingUniformSkirtBase
+      - proto: N14ClothingUniformBase
         price: 20
       - proto: N14ScrapElectronic1
         price: 2
