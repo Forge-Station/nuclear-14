@@ -85,19 +85,17 @@ public sealed class StoreContractPrototype : IPrototype
     [DataField("rewardCurrencies")]
     public Dictionary<string, int>? RewardCurrencies { get; private set; }
 
+    [DataField("fixedRewardItems")]
+    public Dictionary<string, int>? FixedRewardItems { get; private set; }
+
     [DataField("rewardItems")]
-    public Dictionary<string, int>? RewardItems { get; private set; }
-
-
-    [DataField("bonusRewards")]
-    public List<StoreContractBonusReward>? BonusRewards { get; private set; }
+    public List<StoreContractBonusReward>? RewardItems { get; private set; }
 
     [DataField("targetCount")]
     public int TargetCount { get; set; } = 1;
 
     [DataField("bonusPickCount")]
     public int BonusPickCount { get; private set; } = 1;
-
 
     [DataField("reward")]
     public int Reward { get; private set; }
@@ -111,10 +109,8 @@ public sealed class StoreContractPrototype : IPrototype
     [DataField("rewardItemCount")]
     public int RewardItemCount { get; private set; }
 
-    [DataField("rewardPools")]
-    public List<NcContractRewardPoolPrototype>? RewardPools { get; private set; }
-
-    [IdDataField] public string ID { get; private set; } = default!;
+    [IdDataField]
+    public string ID { get; private set; } = default!;
 }
 
 [Prototype("storeContractsPreset")]
@@ -162,12 +158,19 @@ public sealed partial class StoreContractBonusReward
     [DataField("id")]
     public string? Id { get; set; }
 
+    [DataField("pool")]
+    public string? PoolId { get; set; }
+
+    [DataField("always")]
+    public bool Always { get; set; } = false;
+
     [DataField("weight")]
     public int Weight { get; set; } = 1;
 
     [DataField("mode")]
     public StoreContractBonusMode Mode { get; set; } = StoreContractBonusMode.Add;
 }
+
 
 [DataDefinition]
 public sealed partial class StoreContractCurrencyRange
@@ -185,8 +188,6 @@ public sealed partial class StoreContractCurrencyRange
 [Prototype("ncContractRewardPool")]
 public sealed class NcContractRewardPoolPrototype : IPrototype
 {
-    [DataField("weight")]
-    public int Weight = 1;
 
     [DataField("entries")]
     public List<StoreContractBonusReward> Entries { get; private set; } = new();

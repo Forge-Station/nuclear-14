@@ -434,11 +434,9 @@ public sealed class NcContractSystem : EntitySystem
             }
         }
 
-        // 2. Накопление базовой награды
         var rewardCurrencies = new Dictionary<string, int>();
         var rewardItems = new Dictionary<string, int>();
 
-        // 2.1 Диапазоны валют (Currencies)
         if (proto.Currencies is { Count: > 0, })
         {
             foreach (var c in proto.Currencies)
@@ -467,7 +465,6 @@ public sealed class NcContractSystem : EntitySystem
             }
         }
 
-        // 2.2 Фикс. словарь валют (RewardCurrencies)
         if (proto.RewardCurrencies != null)
         {
             foreach (var kvp in proto.RewardCurrencies)
@@ -485,10 +482,9 @@ public sealed class NcContractSystem : EntitySystem
             }
         }
 
-        // 2.3 Фикс. словарь предметов (RewardItems)
-        if (proto.RewardItems != null)
+        if (proto.FixedRewardItems != null)
         {
-            foreach (var kvp in proto.RewardItems)
+            foreach (var kvp in proto.FixedRewardItems)
             {
                 var protoId = kvp.Key;
                 var count = kvp.Value;
@@ -503,7 +499,7 @@ public sealed class NcContractSystem : EntitySystem
             }
         }
 
-        // 2.4 Старые поля Reward / RewardCurrency
+
         if (proto.Reward > 0 && !string.IsNullOrWhiteSpace(proto.RewardCurrency))
         {
             var currencyId = proto.RewardCurrency;
@@ -515,7 +511,6 @@ public sealed class NcContractSystem : EntitySystem
                 rewardCurrencies[currencyId] = amount;
         }
 
-        // 2.5 Старые поля RewardItem / RewardItemCount
         if (!string.IsNullOrWhiteSpace(proto.RewardItem) &&
             proto.RewardItemCount > 0)
         {
@@ -530,74 +525,75 @@ public sealed class NcContractSystem : EntitySystem
 
         var allBonusRewards = new List<StoreContractBonusReward>();
 
-        if (proto.BonusRewards is { Count: > 0, })
-            allBonusRewards.AddRange(proto.BonusRewards);
+        if (proto.RewardItems is { Count: > 0, })
+            allBonusRewards.AddRange(proto.RewardItems);
 
-        if (proto.RewardPools is { Count: > 0, })
+        if (allBonusRewards.Count > 0)
         {
-            foreach (var poolRef in proto.RewardPools)
+            var anyBonusApplied = false;
+
+            StoreContractBonusReward ResolveEffective(StoreContractBonusReward bonus)
             {
-                if (!_prototypes.TryIndex<NcContractRewardPoolPrototype>(poolRef.ID, out var poolProto))
+                if (string.IsNullOrWhiteSpace(bonus.PoolId))
+                    return bonus;
+
+                if (_prototypes.TryIndex<NcContractRewardPoolPrototype>(bonus.PoolId, out var poolProto) &&
+                    poolProto.Entries is { Count: > 0, })
                 {
-                    Sawmill.Error($"[Contracts] RewardPool '{poolRef.ID}' not found for contract '{proto.ID}'.");
-                    continue;
-                }
-
-                if (poolProto.Entries is not { Count: > 0, })
-                    continue;
-
-                var poolWeight = poolRef.Weight <= 0 ? 1 : poolRef.Weight;
-
-                foreach (var entry in poolProto.Entries)
-                {
-                    if (entry == null)
-                        continue;
-
-                    // Копируем entry, чтобы не мутировать прототип
-                    var entryWeight = entry.Weight <= 0 ? 1 : entry.Weight;
-                    var combinedWeight = entryWeight * poolWeight;
-
-                    var copy = new StoreContractBonusReward
+                    var poolEntry = PickWeighted(_random, poolProto.Entries, e => e.Weight);
+                    if (poolEntry != null)
                     {
-                        Id = entry.Id,
-                        Count = entry.Count,
-                        Weight = combinedWeight,
-                        Mode = entry.Mode,
-                        RewardCurrencies = entry.RewardCurrencies != null
-                            ? new Dictionary<string, int>(entry.RewardCurrencies)
-                            : null,
-                        RewardItems = entry.RewardItems != null
-                            ? new Dictionary<string, int>(entry.RewardItems)
-                            : null
-                    };
+                        return new()
+                        {
+                            Id = poolEntry.Id,
+                            Count = poolEntry.Count,
+                            Mode = poolEntry.Mode,
+                            RewardCurrencies = poolEntry.RewardCurrencies != null
+                                ? new Dictionary<string, int>(poolEntry.RewardCurrencies)
+                                : null,
+                            RewardItems = poolEntry.RewardItems != null
+                                ? new Dictionary<string, int>(poolEntry.RewardItems)
+                                : null
+                        };
+                    }
+                }
 
-                    allBonusRewards.Add(copy);
+                return bonus;
+            }
+
+            foreach (var bonus in allBonusRewards)
+            {
+                if (!bonus.Always)
+                    continue;
+
+                var effective = ResolveEffective(bonus);
+                ApplyBonusReward(effective, rewardCurrencies, rewardItems, anyBonusApplied);
+                anyBonusApplied = true;
+            }
+
+            var randomRewards = allBonusRewards
+                .Where(b => !b.Always)
+                .ToList();
+
+            if (randomRewards.Count > 0 && proto.BonusPickCount > 0)
+            {
+                var picks = proto.BonusPickCount;
+                if (picks < 0)
+                    picks = 0;
+
+                for (var i = 0; i < picks; i++)
+                {
+                    var bonus = PickWeighted(_random, randomRewards, b => b.Weight);
+                    if (bonus == null)
+                        break;
+
+                    var effective = ResolveEffective(bonus);
+                    ApplyBonusReward(effective, rewardCurrencies, rewardItems, anyBonusApplied);
+                    anyBonusApplied = true;
                 }
             }
         }
 
-        if (allBonusRewards.Count > 0 && proto.BonusPickCount > 0)
-        {
-            var pool = allBonusRewards.ToList();
-            var picks = Math.Min(proto.BonusPickCount, pool.Count);
-
-            var isFirst = true;
-
-            for (var i = 0; i < picks && pool.Count > 0; i++)
-            {
-                var bonus = PickWeighted(_random, pool, b => b.Weight);
-                if (bonus == null)
-                    break;
-
-                pool.Remove(bonus);
-
-                // для первого учитываем Replace, дальше только Add
-                ApplyBonusReward(bonus, rewardCurrencies, rewardItems, !isFirst);
-                isFirst = false;
-            }
-        }
-
-        // 4. Выбираем «основную» валюту и «основной» предмет
         string? mainCurrency = null;
         var mainCurrencyAmount = 0;
 
@@ -634,7 +630,6 @@ public sealed class NcContractSystem : EntitySystem
             }
         }
 
-        // 5. Финальная сборка контракта
         return new()
         {
             Id = proto.ID,
