@@ -16,7 +16,7 @@ using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
-using Content.Shared._NC.Sponsors; // Forge-Change
+using Content.Shared._NC.Sponsor; // Forge-Change
 
 namespace Content.Shared.Station;
 

@@ -72,7 +72,7 @@ N14WeaponLaserAutoRifle: N14WeaponLaserRifleAuto
 N14WeaponPlasmaAutoRifle: N14WeaponPlasmaRifleAuto
 N14WeaponLaserProtoRifle: N14WeaponLaserRiflePrototypeAER14
 N14WeaponUrbanPlasmaRifle: N14WeaponPlasmaRifleUrban
-# N14WeaponMultiplas: N14WeaponPlasmaMultiplas #! ну да, ну да Forge-Change
+N14WeaponMultiplas: N14WeaponPlasmaMultiplas # Никакого отката, я её вернул Forge-Change
 N14WeaponWattz3000: N14WeaponLaserRifleWattz3000
 N14WeaponWattz2000: N14WeaponLaserRifleWattz2000
 

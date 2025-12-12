@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using Content.Server.Administration.Commands;
 using Content.Server.Administration.Managers;
 using Content.Server.Administration.Systems;
 using Content.Server.Database;
@@ -88,6 +89,7 @@ public sealed partial class ServerApi : IPostInjectInit
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/kick", ActionKick);
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/ban", ActionBan);
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/pardon", ActionPardon); // Forge-Change
+        RegisterActorHandler(HttpMethod.Post, "/admin/actions/add_time", ActionAddTime); // Forge-Change
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/shutdown", ShutdownAction);
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/add_game_rule", ActionAddGameRule);
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/end_game_rule", ActionEndGameRule);
@@ -397,10 +399,7 @@ public sealed partial class ServerApi : IPostInjectInit
             var reason = body.Reason ?? "No reason supplied";
             reason += " (banned by admin)";
 
-            if (body.Reason != null)
-                _bans.CreateServerBan(targetId, targetUsername, admin.UserId,null, targetHWid, (uint)body.Minutes, (NoteSeverity)body.Severity, body.Reason);
-            else
-                _bans.CreateServerBan(targetId, targetUsername, admin.UserId,null, targetHWid, (uint)body.Minutes, (NoteSeverity)body.Severity, "No reason");
+            _bans.CreateServerBan(targetId, targetUsername, admin.UserId, null, targetHWid, (uint)body.Minutes, (NoteSeverity)body.Severity, body.Reason ?? "No reason");
 
             await RespondOk(context);
 
@@ -463,6 +462,81 @@ public sealed partial class ServerApi : IPostInjectInit
                 new { Message = "Ban successfully pardoned", });
 
             _sawmill.Info($"Ban {banId} pardoned by {admin}");
+        });
+    }
+    
+    private async Task ActionAddTime(IStatusHandlerContext context, Actor actor)
+    {
+        var body = await ReadJson<TimeTransferActionBody>(context);
+        if (body == null)
+        {
+            await context.RespondErrorAsync(HttpStatusCode.BadRequest);
+            return;
+        }
+    
+        await RunOnMainThread(async () =>
+        {
+            var data = await _locator.LookupIdByNameOrIdAsync($"{body.TargetUsername}");
+            if (data == null)
+            {
+                await context.RespondJsonAsync(
+                    new { Error = "Player not found", }, 
+                    HttpStatusCode.NotFound);
+                return;
+            }
+            
+            var admin = await _locator.LookupIdByNameOrIdAsync($"{actor.Guid}");
+            if (admin == null)
+            {
+                await context.RespondJsonAsync(
+                    new { Error = "Admin not found", }, 
+                    HttpStatusCode.NotFound);
+                return;
+            }
+            
+            var adminData = await _db.GetAdminDataForAsync(admin.UserId);
+            if (adminData == null)
+            {
+                await context.RespondJsonAsync(
+                    new { Error = "Is not admin", }, 
+                    HttpStatusCode.NotFound);
+                return;
+            }
+
+            try
+            {
+                var currentPlayTimes = await _db.GetPlayTimes(data.UserId);
+                var playTimeDict = currentPlayTimes.ToDictionary(p => p.Tracker, p => p.TimeSpent);
+            
+                var updateList = new List<PlayTimeUpdate>();
+            
+                foreach (var timeData in body.TimeData)
+                {
+                    var timeToAdd = TimeSpan.FromMinutes(PlayTimeCommandUtilities.CountMinutes(timeData.TimeString));
+                    TimeSpan newTime;
+
+                    if (playTimeDict.TryGetValue(timeData.PlaytimeTracker, out var currentTime))
+                        newTime = currentTime + timeToAdd;
+                    else
+                        newTime = timeToAdd;
+                
+                    updateList.Add(new PlayTimeUpdate(data.UserId, timeData.PlaytimeTracker, newTime));
+                }
+            
+                await _db.UpdatePlayTimes(updateList);
+            
+                await context.RespondJsonAsync(
+                    new { Message = "Время успешно выдано", });
+            
+                _sawmill.Info($"{admin.Username} выдал время игроку {data.Username}");
+            }
+            catch (Exception ex)
+            {
+                _sawmill.Error($"Ошибка при выдаче времени: {ex}");
+                await context.RespondJsonAsync(
+                    new { Error = "Internal server error", }, 
+                    HttpStatusCode.InternalServerError);
+            }
         });
     }
     // Forge-Change-End
@@ -856,6 +930,19 @@ public sealed partial class ServerApi : IPostInjectInit
     private sealed class PardonActionBody
     {
         public int BanId { get; init; }
+    }
+
+    private sealed class TimeTransferActionBody
+    {
+        public string? TargetUsername { get; init; }
+        public required List<TimeTransferData> TimeData { get; init; }
+        
+    }
+
+    private sealed class TimeTransferData
+    {
+        public required string PlaytimeTracker { get; init; }
+        public required string TimeString { get; init; }
     }
     // Forge-Change-End
 

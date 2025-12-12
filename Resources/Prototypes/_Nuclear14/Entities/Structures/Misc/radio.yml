@@ -112,6 +112,7 @@
     broadcastChannel: PBS
     toggleOnInteract: false
     frequency: 1667
+  - type: TTS # Forge-Change
 
 - type: entity # Prototype for radio receivers
   name: standing microphone

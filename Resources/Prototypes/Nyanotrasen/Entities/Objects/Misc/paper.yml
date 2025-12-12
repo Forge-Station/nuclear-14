@@ -8,10 +8,10 @@
   - type: Stamp
     stampedName: stamp-component-stamped-name-mantis
     stampedColor: "#777777"
-    stampState: "paper_stamp-mantis"
+    stampState: "paper_stamp-ok" # Forge-Change
   - type: Sprite
-    sprite: Nyanotrasen/Objects/Misc/bureaucracy.rsi
-    state: stamp-mantis
+    sprite: _Nuclear14/Objects/Misc/clutter.rsi # Forge-Change
+    state: stamp-ok # Forge-Change
   - type: Tag
     tags:
       - ForensicBeltEquip

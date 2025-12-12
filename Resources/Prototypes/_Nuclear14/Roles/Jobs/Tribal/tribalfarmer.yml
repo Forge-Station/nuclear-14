@@ -38,7 +38,7 @@
     shoes: N14ClothingShoesTribal
     gloves: N14ClothingHandsGlovesTribal
     back: N14ClothingBackpackTrekker # Corvax-Change
-    belt: ClothingBeltPlantFilled # placeholder
+    belt: ClothingBeltFarmerFilled # Forge-Change
     pocket1: N14TribalKnife
     pocket2: Triballoadoutkits #given to them until i sort out this role
     id: N14IDTribeEnforcerPendant

@@ -40,11 +40,12 @@ using Robust.Shared.Random;
 using Robust.Shared.Utility;
 using Direction = Robust.Shared.Maths.Direction;
 using Robust.Shared.ContentPack; // Forge-Change
-using Content.Shared._NC.Sponsors; // Forge-Change
+using Content.Shared._NC.Sponsor; // Forge-Change
 using Robust.Shared.Player;
 using System.Reflection;
 using Robust.Shared.Network;
-using Content.Client._NC.Sponsors; // Forge-Change
+using Content.Client._NC.Sponsor;
+using Content.Client._NC.TTS; // Forge-Change
 
 namespace Content.Client.Lobby.UI
 {
@@ -69,6 +70,8 @@ namespace Content.Client.Lobby.UI
         private BoxContainer _ccustomspecienamecontainerEdit => CCustomSpecieName;
         private LineEdit _customspecienameEdit => CCustomSpecieNameEdit;
         private TextEdit? _flavorTextEdit;
+        
+        private TTSTab? _ttsTab; // Corvax-TTS
 
         /// If we're attempting to save
         public event Action? Save;
@@ -546,6 +549,8 @@ namespace Content.Client.Lobby.UI
             #endregion Markings
 
             RefreshFlavorText();
+            
+            RefreshVoiceTab(); // Corvax-TTS
 
             #region Dummy
 
@@ -600,7 +605,50 @@ namespace Content.Client.Lobby.UI
                 _flavorTextEdit = null;
             }
         }
+        
+        // Corvax-TTS-Start
+        #region Voice
 
+        private void RefreshVoiceTab()
+        {
+            if (!_cfgManager.GetCVar(CorvaxVars.TTSEnabled))
+                return;
+
+            _ttsTab = new TTSTab
+                {
+                    HorizontalExpand = true,
+                    VerticalExpand = true
+                };
+            CTabContainer.AddTab(_ttsTab, Loc.GetString("humanoid-profile-editor-voice-tab"));
+
+            CTabContainer.SetTabVisible(CTabContainer.ChildCount - 1, true);
+            _cfgManager.OnValueChanged(CorvaxVars.TTSEnabled, 
+                enabled => CTabContainer.SetTabVisible(CTabContainer.ChildCount - 1, enabled));
+
+            _ttsTab.OnVoiceSelected += voiceId =>
+            {
+                SetVoice(voiceId);
+                _ttsTab.SetSelectedVoice(voiceId);
+            };
+
+            _ttsTab.OnPreviewRequested += voiceId =>
+            {
+                _entManager.System<TTSSystem>().RequestPreviewTTS(voiceId);
+            };
+        }
+
+        private void UpdateTTSVoicesControls()
+        {
+            if (Profile is null || _ttsTab is null)
+                return;
+
+            _ttsTab.UpdateControls(Profile, Profile.Sex);
+            _ttsTab.SetSelectedVoice(Profile.Voice);
+        }
+
+        #endregion
+        // Corvax-TTS-End
+        
         private void OnCosmeticPronounsValueChanged(bool newValue)
         {
             _customizePronouns = newValue;
@@ -774,6 +822,7 @@ namespace Content.Client.Lobby.UI
             UpdateSaveButton();
             UpdateMarkings();
             UpdateBarkVoicesControls(); // Corvax-Fallout-Barks
+            UpdateTTSVoicesControls(); // Corvax-TTS
             UpdateHairPickers();
             UpdateCMarkingsHair();
             UpdateCMarkingsFacialHair();
@@ -1378,6 +1427,14 @@ namespace Content.Client.Lobby.UI
             IsDirty = true;
         }
         // Corvax-Fallout-Barks-end
+        
+        // Corvax-TTS-Start
+        private void SetVoice(string newVoice)
+        {
+            Profile = Profile?.WithVoice(newVoice);
+            IsDirty = true;
+        }
+        // Corvax-TTS-End
 
         private bool IsDirty
         {
@@ -2672,6 +2729,30 @@ namespace Content.Client.Lobby.UI
                 }
             }
         }
+
+        private void RemoveSponsorLoadouts()
+        {
+            if (Profile?.LoadoutPreferences == null)
+                return;
+
+            var user = _playerManager.LocalUser;
+            if (user == null)
+                return;
+
+            foreach (var pref in Profile.LoadoutPreferences.Where(l => l.Selected))
+            {
+                var loadoutProto = _prototypeManager.Index<LoadoutPrototype>(pref.LoadoutName);
+                
+                if (loadoutProto.Level != SponsorLevel.None)
+                {
+                    if (!_sponsorMan.TryGetSponsor(user.Value, out var level))
+                        Profile.LoadoutPreferences.Remove(pref);
+
+                    if (loadoutProto.Level > level)
+                        Profile.LoadoutPreferences.Remove(pref);
+                }
+            }
+        }
         // Forge-Change-End
 
         #endregion
@@ -2683,6 +2764,7 @@ namespace Content.Client.Lobby.UI
             // Removes unnecessary items if they exceed the limit /ᐠ˵- ⩊ -˵マ
             RemoveSuperfluousTraits(); // Forge-Change
             RemoveSuperfluousLoadouts(); // Forge-Change
+            RemoveSponsorLoadouts(); // Forge-Change
 
             UpdateRoleRequirements();
             UpdateTraits(TraitsShowUnusableButton.Pressed);

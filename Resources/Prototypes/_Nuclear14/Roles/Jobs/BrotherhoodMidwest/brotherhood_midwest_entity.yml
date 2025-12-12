@@ -54,3 +54,13 @@
       state: squire
     - type: Loadout
       prototypes: [BoSMidSquireGear]
+
+- type: entity # Forge-Add-Start
+  parent: BoSMidPaladinCommander
+  id: N14MobHumanBoSMidInquisitor
+  name: BoSMidInquisitor
+  components:
+    - type: Icon
+      state: paladin
+    - type: Loadout
+      prototypes: [BoSMidInquisitorGear] # Forge-Add-End

@@ -1,0 +1,17 @@
+- type: latheRecipe
+  id: N14WoodPencil
+  result: Pen
+  category: N14Tools
+  completetime: 2
+  materials:
+    Wood: 50
+    Charcoal: 20
+
+- type: latheRecipe
+  id: N14PenReporter
+  result: N14PenReporter
+  category: N14Tools
+  completetime: 2
+  materials:
+    Steel: 50
+    Plastic: 20

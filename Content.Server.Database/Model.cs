@@ -397,6 +397,7 @@ namespace Content.Server.Database
         public string? CyborgName { get; set; }
         public string Species { get; set; } = null!;
         public string BarkVoice { get; set; } = null!; // Corvax-Fallout-Barks
+        public string Voice { get; set; } = null!; // Corvax-TTS
         public float Height { get; set; } = 1f;
         public float Width { get; set; } = 1f;
         [Column(TypeName = "jsonb")] public JsonDocument? Markings { get; set; } = null!;

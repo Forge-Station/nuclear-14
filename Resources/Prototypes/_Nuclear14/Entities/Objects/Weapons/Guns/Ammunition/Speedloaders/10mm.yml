@@ -26,6 +26,11 @@
   components:
   - type: BallisticAmmoProvider
     proto: N14CartridgePistol10
+  - type: Item # Forge-Change
+    size: Small
+    shape:
+    - 0,0,0,0
+    - 0,0,0,0
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/Ammunition/Speedloaders/10mmloader.rsi
     layers:

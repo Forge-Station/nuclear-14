@@ -1,5 +1,8 @@
 - type: reaction
   id: N14Gunpowder
+  impact: Low # Forge-Add
+  quantized: true # Forge-Add
+  conserveEnergy: false # Forge-Add
   reactants:
     Sulfur:
       amount: 1
@@ -10,7 +13,7 @@
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14Gunpowder1
-      
+
 # - type: reaction
   # id: Composting
   # source: true # breakdown of existing resource
@@ -22,10 +25,13 @@
   # effects:
     # - !type:CreateEntityReactionEffect
       # entity: N14CompostRotted
-      
+
 - type: reaction
   id: Composting
   source: true # breakdown of existing resource
+  impact: Low # Forge-Add
+  quantized: true # Forge-Add
+  conserveEnergy: false # Forge-Add
   reactants:
     Dung:
       amount: 10
@@ -34,7 +40,7 @@
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14CompostRotted
-      
+
 - type: reaction
   id: Cleaner
   reactants:

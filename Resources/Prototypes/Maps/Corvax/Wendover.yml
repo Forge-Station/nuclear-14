@@ -64,6 +64,7 @@
           # BoSWashingtonKnight: [ 2, 2 ]
           # BoSWashingtonInitiate: [ 0, 2 ]
           BoSMidPaladinCommander: [ 1, 1 ]
+          BoSMidInquisitor: [ 1, 1 ]
           BoSMidPaladin: [ 1, 2 ]
           BoSMidKnight: [ 2, 3 ]
           BoSMidScribe: [ 1, 2 ]

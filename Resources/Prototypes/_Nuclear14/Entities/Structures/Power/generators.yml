@@ -386,6 +386,8 @@
       layers:
       - state: diesel-off
         map: [ "enum.GeneratorVisualLayers.Body" ]
+    - type: StaticPrice # Forge-Changes
+      price: 30
     - type: GenericVisualizer
       visuals:
         enum.GeneratorVisuals.Running:

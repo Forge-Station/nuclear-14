@@ -1,9 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
-using Content.Shared._NC.Sponsors;
+using Content.Shared._NC.Sponsor;
 using JetBrains.Annotations;
 using Robust.Shared.Network;
 
-namespace Content.Client._NC.Sponsors;
+namespace Content.Client._NC.Sponsor;
 
 [UsedImplicitly]
 public sealed class SponsorManager : ISharedSponsorManager
@@ -17,7 +17,11 @@ public sealed class SponsorManager : ISharedSponsorManager
 
     private void OnSponsorDataReceived(MsgSyncSponsorData message)
     {
-        _sponsors.Add(message.UserId, message.Level);
+        if (_sponsors.ContainsKey(message.UserId))
+            _sponsors[message.UserId] = message.Level;
+
+        else
+            _sponsors.Add(message.UserId, message.Level);
     }
 
     public bool TryGetSponsor(NetUserId user, out SponsorLevel level)

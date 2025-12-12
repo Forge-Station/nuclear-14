@@ -14,19 +14,17 @@
     fillBaseName: fill
     metamorphic: true
     metamorphicDefaultSprite:
-      sprite: _Nuclear14/Objects/Consumable/Food/preserves.rsi
+      sprite: _Nuclear14/Objects/Consumable/Food/preserves.rsi # Forge-Change
       state: icon
   - type: TransformableContainer
   - type: Sprite
-    sprite: _Nuclear14/Objects/Consumable/Food/preserves.rsi
+    sprite: _Nuclear14/Objects/Consumable/Food/preserves.rsi # Forge-Change
     layers:
       - state: icon
         map: [ "enum.SolutionContainerLayers.Base" ]
       - state: fill1
         map: [ "enum.SolutionContainerLayers.Fill" ]
         visible: false
-      - state: icon-front
-        map: [ "enum.SolutionContainerLayers.Overlay" ]
     scale: 0.5, 0.5
   - type: Construction
     graph: N14FoodJarBase
@@ -213,7 +211,7 @@
         reagents:
         - ReagentId: PickledCarrots
           Quantity: 30
-  
+
 - type: entity
   parent: N14PickledBase
   id: N14PickledCorn

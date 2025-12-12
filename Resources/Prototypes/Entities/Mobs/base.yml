@@ -50,6 +50,7 @@
   - type: AnimatedEmotes
   - type: OwnInteractionVerbs
     allowedVerbs: [] # TODO: define something here, or don't.
+  - type: TTS # Corvax-TTS
 
 - type: entity
   save: false

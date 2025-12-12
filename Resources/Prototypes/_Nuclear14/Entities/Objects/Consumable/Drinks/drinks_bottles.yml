@@ -31,7 +31,7 @@
     layers:
       - state: icon
         map: ["enum.OpenableVisuals.Layer"]
- 
+
 # Milk
 # Empty Bottle
 - type: entity
@@ -41,7 +41,7 @@
   description: Looks good at holding milky substances.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Objects/Consumable/Drinks/milk.rsi 
+    sprite: _Nuclear14/Objects/Consumable/Drinks/milk.rsi
 
 # Basic Milk Bottle
 - type: entity
@@ -58,7 +58,7 @@
         - ReagentId: N14MilkBrahmin
           Quantity: 50
   - type: Sprite
-    sprite: _Nuclear14/Objects/Consumable/Drinks/milk.rsi 
+    sprite: _Nuclear14/Objects/Consumable/Drinks/milk.rsi
     layers:
       - state: icon
         map: ["enum.OpenableVisuals.Layer"]
@@ -106,7 +106,7 @@
   description: Aw look, theres a little cow on the front.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Objects/Consumable/Drinks/cream.rsi 
+    sprite: _Nuclear14/Objects/Consumable/Drinks/cream.rsi
 
 # Filled Cream Bottle
 - type: entity
@@ -123,7 +123,7 @@
         - ReagentId: Cream
           Quantity: 50
   - type: Sprite
-    sprite: _Nuclear14/Objects/Consumable/Drinks/cream.rsi 
+    sprite: _Nuclear14/Objects/Consumable/Drinks/cream.rsi
     layers:
       - state: icon
         map: ["enum.OpenableVisuals.Layer"]
@@ -133,7 +133,7 @@
   - type: SolutionContainerVisuals
     maxFillLevels: 6
     fillBaseName: fill
-    
+
 # Soda
 - type: entity
   parent: DrinkBottleBaseFull50
@@ -141,6 +141,12 @@
   name: Nuka-Cola bottle
   description: A refreshing beverage that has a extremely sugary taste. Reminds you of vanilla and cinnamon.
   components:
+  - type: Openable # Forge-Change
+    closeable: false
+  - type: SpawnWhenOpened # Forge-Add
+    prototypes:
+    - id: N14CurrencyCap
+      amount: 1
   - type: SolutionContainerManager
     solutions:
       drink:
@@ -157,6 +163,12 @@
   name: irradiated Nuka-Cola bottle
   description: An unrefreshing beverage that has a extremely sugary taste. The aftertaste is bitter and burnt.
   components:
+  - type: Openable # Forge-Change
+    closeable: false
+  - type: SpawnWhenOpened # Forge-Add
+    prototypes:
+    - id: N14CurrencyCap
+      amount: 1
   - type: SolutionContainerManager
     solutions:
       drink:
@@ -177,6 +189,12 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Consumable/Drinks/nuka_cola_new.rsi
     state: empty
+  - type: Openable # Forge-Change
+    closeable: false
+  - type: SpawnWhenOpened # Forge-Add
+    prototypes:
+    - id: N14CurrencyCap
+      amount: 1
   - type: Destructible
     thresholds:
     - trigger:

@@ -6,10 +6,10 @@
   - type: Stamp
     stampedName: stamp-component-stamped-name-nanorep
     stampedColor: "#2ec69b"
-    stampState: "paper_stamp-nanorep"
+    stampState: "paper_stamp-ok" # Forge-Change
   - type: Sprite
-    sprite: _Goobstation/Objects/Misc/stamps.rsi
-    state: stamp-nanorep
+    sprite: _Nuclear14/Objects/Misc/clutter.rsi # Forge-Change
+    state: stamp-ok # Forge-Change
 
 - type: entity
   name: magistrate rubber stamp
@@ -19,7 +19,7 @@
   - type: Stamp
     stampedName: stamp-component-stamped-name-magistrate
     stampedColor: "#76a5b4"
-    stampState: "paper_stamp-magistrate"
+    stampState: "paper_stamp-ok" # Forge-Change
   - type: Sprite
-    sprite: _Goobstation/Objects/Misc/stamps.rsi
-    state: stamp-magistrate
+    sprite: _Nuclear14/Objects/Misc/clutter.rsi # Forge-Change
+    state: stamp-ok # Forge-Change

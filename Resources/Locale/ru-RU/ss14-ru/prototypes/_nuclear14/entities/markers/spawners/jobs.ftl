@@ -124,3 +124,5 @@ ent-N14SpawnPointWestScribe = ЗБС Скриптер
     .desc = { ent-N14SpawnPointWastelander.desc }
 ent-N14SpawnPointWestGunsmith = ЗБС Оруженосец
     .desc = { ent-N14SpawnPointWastelander.desc }
+ent-N14SpawnPointBoSMidInquisitor = Инквизитор СЗБС
+    .desc = { ent-N14SpawnPointWastelander.desc }

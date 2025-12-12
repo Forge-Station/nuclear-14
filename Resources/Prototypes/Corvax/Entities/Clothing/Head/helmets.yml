@@ -213,3 +213,33 @@
   - type: HideLayerClothing
     slots:
     - Hair
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatBoSInquisitorBattleHelmet
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/InquisitorHelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/InquisitorHelmet.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.9
+        Slash: 0.9
+        Piercing: 0.875
+        Heat: 0.9
+  - type: NightVision
+    isEquipment: true
+  - type: HideLayerClothing
+    slots:
+    - Hair
+
+- type: entity
+  parent: N14ClothingHeadHatBoSInquisitorBattleHelmet
+  id: N14ClothingHeadHatBoSInquisitorBattleHelmetHood
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/InquisitorHelmetHood.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/InquisitorHelmetHood.rsi

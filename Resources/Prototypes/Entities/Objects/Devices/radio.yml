@@ -33,6 +33,7 @@
     interfaces:
       enum.HandheldRadioUiKey.Key:
         type: HandheldRadioBoundUserInterface
+  - type: TTS # Forge-Change
 
 - type: entity
   name: security radio

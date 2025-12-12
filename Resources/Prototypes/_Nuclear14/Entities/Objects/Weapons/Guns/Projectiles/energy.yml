@@ -39,7 +39,7 @@
     damage:
       types:
         Heat: 20
-        Radiation: 2
+        Radiation: 3
     soundHit:
       path: "/Audio/Weapons/Guns/Hits/energy_meat1.ogg"
 

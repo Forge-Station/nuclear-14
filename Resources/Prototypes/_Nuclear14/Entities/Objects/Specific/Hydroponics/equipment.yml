@@ -67,6 +67,10 @@
     solution: sack
   - type: RefillableSolution
     solution: sack
+  - type: SolutionTransfer # Forge-Add
+    maxTransferAmount: 100
+    minTransferAmount: 5
+    canChangeTransferAmount: true
   - type: SolutionContainerManager
     solutions:
       sack:

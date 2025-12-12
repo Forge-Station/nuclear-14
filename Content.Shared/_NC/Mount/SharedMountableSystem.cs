@@ -7,6 +7,7 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Movement.Components;
 using Content.Shared.Movement.Systems;
 using Content.Shared.NPC;
+using Content.Shared.Standing;
 
 namespace Content.Shared._NC.Mountable;
 
@@ -20,6 +21,7 @@ public sealed class SharedMountSystem : EntitySystem
     [Dependency] private readonly SharedMoverController _mover = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly MovementSpeedModifierSystem _movement = default!;
+    [Dependency] private readonly StandingStateSystem _standing = default!;
 
     public override void Initialize()
     {
@@ -28,6 +30,7 @@ public sealed class SharedMountSystem : EntitySystem
         SubscribeLocalEvent<RiderComponent, MoveEvent>(OnRiderMove);
         SubscribeLocalEvent<RiderComponent, MobStateChangedEvent>(OnMobStateChanged);
 
+        SubscribeLocalEvent<MountableComponent, DownAttemptEvent>(OnDownAttempt);
         SubscribeLocalEvent<MountableComponent, StrappedEvent>(OnStrapped);
         SubscribeLocalEvent<MountableComponent, UnstrappedEvent>(OnUnstrapped);
         SubscribeLocalEvent<MountableComponent, MobStateChangedEvent>(OnMobStateChanged);
@@ -48,6 +51,15 @@ public sealed class SharedMountSystem : EntitySystem
     }
 
     /// <summary>
+    /// Checking that you can't drop a mount with a rider
+    /// </summary>
+    private void OnDownAttempt(Entity<MountableComponent> ent, ref DownAttemptEvent args)
+    {
+        if (ent.Comp.Rider != null)
+            args.Cancel();
+    }
+
+    /// <summary>
     /// The method of attaching a rider to a mount
     /// </summary>
     private void OnStrapped(Entity<MountableComponent> ent, ref StrappedEvent args)
@@ -59,18 +71,25 @@ public sealed class SharedMountSystem : EntitySystem
         }
 
         EnsureComp<InputMoverComponent>(ent);
-        EnsureComp<RiderComponent>(args.Buckle.Owner).Mount = ent.Owner;
+        var rider = EnsureComp<RiderComponent>(args.Buckle.Owner);
+        rider.Mount = ent.Owner;
         ent.Comp.Rider = args.Buckle.Owner;
+
+        Dirty(ent.Owner, ent.Comp);
+        Dirty(args.Buckle.Owner, rider);
 
         if (ent.Comp.ControlMovement)
         {
             _mover.SetRelay(args.Buckle.Owner, ent.Owner);
         }
 
+        if (_standing.IsDown(ent))
+            _standing.Stand(ent);
+
+        RemComp<ActiveNPCComponent>(ent);
         if (!TryComp<MovementSpeedModifierComponent>(ent, out var move))
             return;
 
-        RemComp<ActiveNPCComponent>(ent);
         var walk = move.BaseWalkSpeed * ent.Comp.MountedSpeed;
         var sprint = move.BaseSprintSpeed * ent.Comp.MountedSpeed;
         _movement.ChangeBaseSpeed(ent, walk, sprint, move.Acceleration, move);
@@ -86,8 +105,10 @@ public sealed class SharedMountSystem : EntitySystem
 
         RemComp<RiderComponent>(args.Buckle.Owner);
         ent.Comp.Rider = null;
-        AddComp(ent, new ActiveNPCComponent());
 
+        Dirty(ent.Owner, ent.Comp);
+
+        AddComp(ent, new ActiveNPCComponent());
         if (!TryComp<MovementSpeedModifierComponent>(ent, out var move))
             return;
 

@@ -82,6 +82,11 @@
   - type: Tag
     tags:
       - Magazine308M60Box
+  - type: Item # Forge-Change
+    size: Normal
+    shape:
+    - 0,0,1,1
+    - 0,1,0,1
   - type: BallisticAmmoProvider
     proto: N14Cartridge308Rifle
     capacity: 100

@@ -156,3 +156,16 @@
     layers:
       - state: green
       - state: shopkeeper
+
+- type: entity
+  id: N14SpawnPointBoSMidInquisitor
+  parent: N14SpawnPointBoSMidPaladin
+  name: BoS mid inquisitor
+  components:
+  - type: SpawnPoint
+    job_id: BoSMidInquisitor
+  - type: Sprite
+    sprite: Corvax/Markers/jobs.rsi
+    layers:
+      - state: green
+      - state: inquisitor

@@ -1,0 +1,111 @@
+- type: construction
+  id: N14DecorationFlagBearerEmpty # Empty
+  graph: DecorationFlagEmpty
+  startNode: start
+  targetNode: FlagEmpty
+  category: construction-category-furniture 
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Decoration/flags.rsi
+    state: emptyflag
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DecorationFlagNCR # NCR
+  graph: DecorationFlagNCR
+  startNode: start
+  targetNode: FlagNCR
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Decoration/flags.rsi
+    state: ncrflag
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DecorationFlagYuma # Yuma Tribe
+  graph: DecorationFlagYuma
+  startNode: start
+  targetNode: FlagYuma
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Decoration/flags.rsi
+    state: cornflag
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DecorationFlagBrotherhoodMidwest # MW Brotherhood
+  graph: DecorationFlagBrotherhoodMidwest
+  startNode: start
+  targetNode: FlagBrotherhoodMidwest
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Decoration/flags2.rsi
+    state: mbosflag
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DecorationFlagLocust # Raiders / Locust
+  graph: DecorationFlagLocust
+  startNode: start
+  targetNode: FlagLocust
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Decoration/flags.rsi
+    state: locustflag
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DecorationFlagGunner # Gunners
+  graph: DecorationFlagGunner
+  startNode: start
+  targetNode: FlagGunner
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Decoration/flags.rsi
+    state: gunnerflag
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DecorationFlagFollowers # Followers
+  graph: DecorationFlagFollowers
+  startNode: start
+  targetNode: FlagFollowers
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Decoration/flags.rsi
+    state: followersflag
+  conditions:
+    - !type:TileNotBlocked

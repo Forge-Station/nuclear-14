@@ -8,7 +8,7 @@ using Robust.Server.GameObjects;
 using Robust.Server.Audio;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
-using Content.Server._NC.Sponsors; // Forge-Change
+using Content.Server._NC.Sponsor; // Forge-Change
 
 namespace Content.Server.Thief.Systems;
 

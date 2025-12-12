@@ -7,10 +7,10 @@
   - type: Stamp
     stampedName: stamp-component-stamped-name-psychologist
     stampedColor: "#00ccff"
-    stampState: "paper_stamp-psychologist"
+    stampState: "paper_stamp-ok" # Forge-Change
   - type: Sprite
-    sprite: DeltaV/Objects/Misc/stamps.rsi
-    state: stamp-psychologist
+    sprite: _Nuclear14/Objects/Misc/clutter.rsi # Forge-Change
+    state: stamp-ok # Forge-Change
 
 - type: entity
   name: lawyer's rubber stamp
@@ -21,10 +21,10 @@
   - type: Stamp
     stampedName: stamp-component-stamped-name-lawyer
     stampedColor: "#696969"
-    stampState: "paper_stamp-lawyer"
+    stampState: "paper_stamp-ok" # Forge-Change
   - type: Sprite
-    sprite: DeltaV/Objects/Misc/stamps.rsi
-    state: stamp-lawyer
+    sprite: _Nuclear14/Objects/Misc/clutter.rsi # Forge-Change
+    state: stamp-ok # Forge-Change
 
 - type: entity
   name: notary stamp
@@ -35,10 +35,10 @@
   - type: Stamp
     stampedName: stamp-component-stamped-name-notary
     stampedColor: "#a81f3d"
-    stampState: "paper_stamp-deny" # Forge-Change
+    stampState: "paper_stamp-ok" # Forge-Change
   - type: Sprite
-    sprite: _Nuclear14/Objects/Misc/clutter.rsi # Forge-Change обновление конц
-    state: stamp-deny # Forge-Change
+    sprite: _Nuclear14/Objects/Misc/clutter.rsi # Forge-Change
+    state: stamp-ok # Forge-Change
   - type: StealTarget
     stealGroup: RubberStampNotary
 
@@ -50,10 +50,10 @@
   - type: Stamp
     stampedName: stamp-component-stamped-name-chiefjustice
     stampedColor: "#6b2833"
-    stampState: "paper_stamp-deny" # Forge-Change
+    stampState: "paper_stamp-ok" # Forge-Change
   - type: Sprite
     sprite: _Nuclear14/Objects/Misc/clutter.rsi # Forge-Change
-    state: stamp-deny # Forge-Change
+    state: stamp-ok # Forge-Change
 
 - type: entity
   name: administrative assistant rubber stamp
@@ -64,7 +64,7 @@
   - type: Stamp
     stampedName: stamp-component-stamped-name-admin-assistant
     stampedColor: "#4191f2"
-    stampState: "paper_stamp-deny" # Forge-Change
+    stampState: "paper_stamp-ok" # Forge-Change
   - type: Sprite
     sprite: _Nuclear14/Objects/Misc/clutter.rsi # Forge-Change
-    state: stamp-deny # Forge-Change
+    state: stamp-ok # Forge-Change

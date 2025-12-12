@@ -27,6 +27,11 @@
     slots:
     - Back
     - suitStorage
+  - type: Item # Forge-Change
+    size: Large
+    shape:
+    - 0,0,2,1
+    - 0,1,0,1
   - type: Sprite
     scale: 0.8, 0.8
     sprite: _Nuclear14/Objects/Weapons/Guns/SMGs/10mmSMG.rsi
@@ -420,6 +425,11 @@
     slots:
     - Back
     - suitStorage
+  - type: Item # Forge-Change
+    size: Large
+    shape:
+    - 0,0,2,1
+    - 0,1,0,1
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/SMGs/9mmSMG.rsi
     layers:
@@ -533,6 +543,11 @@
     slots:
     - Back
     - suitStorage
+  - type: Item # Forge-Change
+    size: Large
+    shape:
+    - 0,0,2,1
+    - 0,1,0,1
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/SMGs/45SMG.rsi
     layers:
@@ -589,6 +604,11 @@
     slots:
     - Back
     - suitStorage
+  - type: Item # Forge-Change
+    size: Large
+    shape:
+    - 0,0,2,1
+    - 0,1,0,1
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/SMGs/canadianSMG.rsi
     layers:
@@ -759,6 +779,11 @@
     slots:
     - Back
     - suitStorage
+  - type: Item # Forge-Change
+    size: Large
+    shape:
+    - 0,0,2,1
+    - 0,1,0,1
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/SMGs/chineseSMG.rsi
     layers:

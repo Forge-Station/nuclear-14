@@ -1,4 +1,4 @@
-# Nuclear 14 / Corvax Forge Nuclear 
+# Nuclear 14 / Corvax Forge Nuclear
 
 **Corvax Forge Nuclear** — это первая русскоязычная адаптация оригинального форка **Nuclear 14**, созданного Peptide90 в 2022 году при участии сообщества. Проект сочетает в себе лучшие наработки Fallout-тематики с возможностями движка Space Station 14.
 

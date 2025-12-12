@@ -21,3 +21,95 @@
         - BoSMidPaladinCommander
   items:
     - N14ClothingOuterPowerArmorMidwestCommander
+
+- type: loadout
+  id: LoadoutClothingOuterBOSInquisitorBlackCoat
+  category: Roles
+  cost: 8
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidInquisitor
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidInquisitor
+      min: 216000 # 60 hours
+  items:
+    - N14ClothingOuterBOSInquisitorBlackCoat
+
+- type: loadout
+  id: LoadoutClothingOuterBOSInquisitorBattleArmor
+  category: Roles
+  cost: 8
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidInquisitor
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidInquisitor
+      min: 72000 # 20 hours veterancy unlock
+  items:
+    - N14ClothingOuterBOSInquisitorBattleArmor
+
+- type: loadout
+  id: LoadoutClothingHeadHatBoSInquisitorHat
+  category: Roles
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidInquisitor
+  items:
+    - N14ClothingHeadHatBoSInquisitorHat
+
+- type: loadout
+  id: LoadoutClothingHeadHatBoSInquisitorBlackHat
+  category: Roles
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidInquisitor
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidInquisitor
+      min: 216000 # 60 hours
+  items:
+    - N14ClothingHeadHatBoSInquisitorBlackHat
+
+- type: loadout
+  id: LoadoutClothingHeadHatBoSInquisitorBattleHelmet
+  category: Roles
+  cost: 4
+  exclusive: true
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidInquisitor
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidInquisitor
+      min: 72000 # 20 hours veterancy unlock
+  items:
+    - N14ClothingHeadHatBoSInquisitorBattleHelmet
+
+- type: loadout
+  id: LoadoutClothingHeadHatBoSInquisitorBattleHelmetHood
+  category: Roles
+  cost: 4
+  exclusive: true
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidInquisitor
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidInquisitor
+      min: 72000 # 20 hours veterancy unlock
+  items:
+    - N14ClothingHeadHatBoSInquisitorBattleHelmetHood
+

@@ -1,0 +1,67 @@
+- type: loadout
+  id: LoadoutClothingOuterNCRPouchedVestDesert
+  category: Outer
+  cost: 2
+  exclusive: true
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - NCRSoldier
+    - NCREngineer
+    - NCRMedic
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCRSoldier
+    min: 12000 # 5 hours veterancy unlock
+  items:
+  - N14ClothingOuterNCRPouchedVestDesert
+
+- type: loadout
+  id: LoadoutClothingOuterNCRVestpaddedWebDesert
+  category: Outer
+  cost: 3
+  exclusive: true
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - NCRSoldier
+    - NCREngineer
+    - NCRMedic
+    - NCRWS
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCRSoldier
+    min: 36000 # 10 hours veterancy unlock
+  items:
+  - N14ClothingOuterNCRVestpaddedWebDesert
+
+- type: loadout
+  id: LoadoutClothingOuterNCRVeteranArmorDesert
+  category: Outer
+  cost: 4
+  exclusive: true
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - NCRSoldier
+    - NCREngineer
+    - NCRMedic
+    - NCRWS
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCRSoldier
+    min: 72000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingOuterNCRVeteranArmorDesert
+
+- type: loadout
+  id: LoadoutClothingOuterNCRCombatVeteranArmorDesert
+  category: Outer
+  cost: 4
+  exclusive: true
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - NCRSGT
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCRNCO
+    min: 72000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingOuterNCRCombatVeteranArmorDesert

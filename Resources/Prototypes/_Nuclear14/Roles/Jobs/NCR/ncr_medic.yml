@@ -34,6 +34,7 @@
   id: NCRMedicGear
   equipment:
     jumpsuit: N14ClothingUniformNCRDesert # Corvax-Change
+    outerClothing: N14ClothingOuterNCRPouchedVestDesert # Forge-Change
     back: N14ClothingBackpackNCR # Corvax-Change
     shoes: N14ClothingBootsLeatherFilled
     id: N14IDNCRDogtagDoctor
