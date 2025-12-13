@@ -27,12 +27,14 @@ public sealed class NcStoreListingControl : PanelContainer
     private readonly LineEdit _qtyEdit;
     private Label? _priceLbl;
     private int _qty;
+    private bool _suppressQtyEditChange;
 
     public NcStoreListingControl(
         StoreListingData data,
         SpriteSystem sprites,
         int balanceHint = int.MaxValue,
-        int initialQty = 1
+        int initialQty = 1,
+        bool actionsEnabled = true
     )
     {
         Margin = new(6, 6, 6, 6);
@@ -66,7 +68,6 @@ public sealed class NcStoreListingControl : PanelContainer
         var pm = IoCManager.Resolve<IPrototypeManager>();
         pm.TryIndex<EntityPrototype>(data.ProductEntity, out var proto);
 
-        // Заголовок
         var title = new Label
         {
             Text = proto?.Name ?? data.ProductEntity,
@@ -75,10 +76,9 @@ public sealed class NcStoreListingControl : PanelContainer
             ToolTip = proto?.Name ?? data.ProductEntity,
             Margin = new(2, 0, 2, 4)
         };
-        title.StyleClasses.Add(StyleNano.StyleClassLabelHeading);
+        title.StyleClasses.Add(StyleBase.StyleClassLabelHeading);
         mainCol.AddChild(title);
 
-        // Основная строка: иконка / описание / действия
         var row = new BoxContainer
         {
             Orientation = BoxContainer.LayoutOrientation.Horizontal,
@@ -87,7 +87,6 @@ public sealed class NcStoreListingControl : PanelContainer
         };
         mainCol.AddChild(row);
 
-        // Левая колонка — слот с иконкой
         var leftCol = new BoxContainer
         {
             Orientation = BoxContainer.LayoutOrientation.Vertical,
@@ -100,8 +99,6 @@ public sealed class NcStoreListingControl : PanelContainer
             leftCol.AddChild(slot);
 
         row.AddChild(leftCol);
-
-        // Центральная колонка — описание
         var textCol = new BoxContainer
         {
             Orientation = BoxContainer.LayoutOrientation.Vertical,
@@ -169,30 +166,52 @@ public sealed class NcStoreListingControl : PanelContainer
             MinSize = new Vector2i(24, 24)
         };
 
-        var noQty = _maxQty <= 0;
+        var noQty = _maxQty <= 0 || !actionsEnabled;
         minusBtn.Disabled = noQty;
         plusBtn.Disabled = noQty;
         _qtyEdit.Editable = !noQty;
 
+        if (!actionsEnabled)
+        {
+            minusBtn.ToolTip = "Доступно только через массовую продажу ящика.";
+            plusBtn.ToolTip = "Доступно только через массовую продажу ящика.";
+            _qtyEdit.ToolTip = "Доступно только через массовую продажу ящика.";
+        }
+
         minusBtn.OnPressed += _ =>
         {
+            if (!actionsEnabled)
+                return;
+
             if (_qty > MinAllowed)
                 SetQty(_qty - 1, data, qtyLbl);
         };
 
         plusBtn.OnPressed += _ =>
         {
+            if (!actionsEnabled)
+                return;
+
             if (_qty < _maxQty)
                 SetQty(_qty + 1, data, qtyLbl);
         };
 
         _qtyEdit.OnTextChanged += _ =>
         {
+            if (!actionsEnabled)
+                return;
+
+            if (_suppressQtyEditChange)
+                return;
+
             var digits = new string(_qtyEdit.Text.Where(char.IsDigit).Take(QtyMaxDigits).ToArray());
             if (digits.Length == 0)
             {
+                // Не даём оставить пустоту; откатываем к текущему значению без рекурсии.
+                _suppressQtyEditChange = true;
                 _qtyEdit.Text = _qty.ToString();
                 _qtyEdit.CursorPosition = _qtyEdit.Text.Length;
+                _suppressQtyEditChange = false;
                 return;
             }
 
@@ -204,8 +223,10 @@ public sealed class NcStoreListingControl : PanelContainer
 
             if (_qtyEdit.Text != newText)
             {
+                _suppressQtyEditChange = true;
                 _qtyEdit.Text = newText;
                 _qtyEdit.CursorPosition = _qtyEdit.Text.Length;
+                _suppressQtyEditChange = false;
             }
 
             SetQty(clamped, data, qtyLbl);
@@ -213,6 +234,9 @@ public sealed class NcStoreListingControl : PanelContainer
 
         _qtyEdit.OnTextEntered += _ =>
         {
+            if (!actionsEnabled)
+                return;
+
             if (_maxQty <= 0 || _qty <= 0)
                 return;
 
@@ -236,7 +260,7 @@ public sealed class NcStoreListingControl : PanelContainer
         // Кнопка цены / статус
         if (data.Remaining != 0)
         {
-            actionCol.AddChild(MakePriceButton(data, sprites));
+            actionCol.AddChild(MakePriceButton(data, sprites, actionsEnabled));
             UpdateTotal(data);
         }
         else
@@ -332,13 +356,11 @@ public sealed class NcStoreListingControl : PanelContainer
         return slot;
     }
 
-    // --- Описание товара ---
-
     private static Control MakeDescription(EntityPrototype? proto)
     {
         var full = proto?.Description ?? string.Empty;
         if (string.IsNullOrWhiteSpace(full))
-            return new();
+            return new Label { Text = string.Empty, };
 
         var trimmed = TrimToChars(full, DescMaxChars);
 
@@ -371,7 +393,7 @@ public sealed class NcStoreListingControl : PanelContainer
 
     // --- Кнопка цены ---
 
-    private Control MakePriceButton(StoreListingData data, SpriteSystem sprites)
+    private Control MakePriceButton(StoreListingData data, SpriteSystem sprites, bool actionsEnabled)
     {
         var btn = new Button
         {
@@ -381,10 +403,14 @@ public sealed class NcStoreListingControl : PanelContainer
             ClipText = true,
             Margin = new(8, 0, 0, 0),
             StyleClasses = { StyleNano.StyleClassButtonBig, },
-            Disabled = data.Remaining == 0
+            Disabled = !actionsEnabled
+                || data.Remaining == 0
                 || data.Mode == StoreMode.Sell && data.Owned <= 0
                 || _maxQty <= 0
         };
+
+        if (!actionsEnabled)
+            btn.ToolTip = "Доступно только через массовую продажу ящика.";
 
         var inner = new BoxContainer
         {
@@ -423,6 +449,9 @@ public sealed class NcStoreListingControl : PanelContainer
 
         btn.OnPressed += _ =>
         {
+            if (!actionsEnabled)
+                return;
+
             if (_maxQty <= 0 || _qty <= 0)
                 return;
 
@@ -450,8 +479,17 @@ public sealed class NcStoreListingControl : PanelContainer
 
         _qty = newQty;
         qtyLbl.Text = _qty.ToString();
-        _qtyEdit.Text = _qty.ToString();
-        _qtyEdit.CursorPosition = _qtyEdit.Text.Length;
+        var text = _qty.ToString();
+
+        if (_qtyEdit.Text != text)
+        {
+            _suppressQtyEditChange = true;
+            _qtyEdit.Text = text;
+            _qtyEdit.CursorPosition = _qtyEdit.Text.Length;
+            _suppressQtyEditChange = false;
+        }
+        else
+            _qtyEdit.CursorPosition = _qtyEdit.Text.Length;
 
         UpdateTotal(data);
         OnQtyChanged?.Invoke(_qty);

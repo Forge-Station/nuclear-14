@@ -62,12 +62,34 @@ public sealed class NcStoreSystem : EntitySystem
         return dist <= MaxUseDistance;
     }
 
+    private bool CanInteract(EntityUid store, NcStoreComponent comp, EntityUid user)
+    {
+        if (!CanUseStore(store, comp, user))
+            return false;
+
+        return IsInUseRange(store, user);
+    }
+
+    private static string NormalizeListingId(string id)
+    {
+        if (string.IsNullOrEmpty(id))
+            return string.Empty;
+
+        if (id.EndsWith(ReadyListingSuffix, StringComparison.Ordinal))
+            return id[..^ReadyListingSuffix.Length];
+        if (id.EndsWith("__crate", StringComparison.Ordinal))
+            return string.Empty;
+
+        return id;
+    }
+
+
     private void OnBuyRequest(EntityUid uid, NcStoreComponent comp, StoreBuyListingBoundUiMessage msg)
     {
         if (comp.CurrentUser is not { } actor)
             return;
 
-        if (!CanUseStore(uid, comp, actor))
+        if (!CanInteract(uid, comp, actor))
             return;
 
         if (!IsInUseRange(uid, actor))
@@ -90,21 +112,17 @@ public sealed class NcStoreSystem : EntitySystem
         if (comp.CurrentUser is not { } actor)
             return;
 
-        if (!CanUseStore(uid, comp, actor))
+        if (!CanInteract(uid, comp, actor))
             return;
 
         if (!IsInUseRange(uid, actor))
             return;
-        var requestedId = msg.ListingId;
-        if (!string.IsNullOrEmpty(requestedId) &&
-            requestedId.EndsWith(ReadyListingSuffix, StringComparison.Ordinal))
-        {
-            requestedId = requestedId.Substring(
-                0,
-                requestedId.Length - ReadyListingSuffix.Length);
-        }
+        var requestedId = NormalizeListingId(msg.ListingId);
+        if (string.IsNullOrEmpty(requestedId))
+            return;
 
         var listing = comp.Listings.FirstOrDefault(x => x.Id == requestedId && x.Mode == StoreMode.Sell);
+
 
         if (listing == null)
             return;
@@ -127,7 +145,7 @@ public sealed class NcStoreSystem : EntitySystem
         if (comp.CurrentUser is not { } actor)
             return;
 
-        if (!CanUseStore(uid, comp, actor))
+        if (!CanInteract(uid, comp, actor))
             return;
 
         if (!_entMan.TryGetComponent(actor, out PullerComponent? puller) ||

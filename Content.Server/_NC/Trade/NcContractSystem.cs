@@ -66,14 +66,13 @@ public sealed class NcContractSystem : EntitySystem
         var targets = GetEffectiveTargets(contract);
         if (targets.Count == 0)
         {
-            Sawmill.Warning(
-                $"[Claim] Contract '{contractId}' on {ToPrettyString(store)} has no valid targets.");
+            Sawmill.Warning($"[Claim] Contract '{contractId}' on {ToPrettyString(store)} has no valid targets.");
             return false;
         }
 
-        var crate = GetPulledClosedCrate(user);
+        var pulledCrate = GetPulledClosedCrate(user);
+        var requiredByProto = new Dictionary<string, int>(StringComparer.Ordinal);
 
-        // 1) Проверяем, что по КАЖДОЙ цели хватает предметов.
         foreach (var t in targets)
         {
             if (string.IsNullOrWhiteSpace(t.TargetItem) || t.Required <= 0)
@@ -83,48 +82,68 @@ public sealed class NcContractSystem : EntitySystem
                 return false;
             }
 
-            var ownedUser = _logic.GetOwned(user, t.TargetItem);
-            var ownedCrate = crate is { } crateUid
-                ? _logic.GetOwnedInRoot(crateUid, t.TargetItem)
-                : 0;
+            if (!requiredByProto.TryAdd(t.TargetItem, t.Required))
+                requiredByProto[t.TargetItem] = checked(requiredByProto[t.TargetItem] + t.Required);
+        }
 
-            var totalOwned = ownedUser + ownedCrate;
-            if (totalOwned < t.Required)
+        foreach (var kvp in requiredByProto)
+        {
+            var protoId = kvp.Key;
+            var required = kvp.Value;
+
+            var owned = _logic.GetOwned(user, protoId);
+
+            if (pulledCrate is { } crateUid)
+                owned += _logic.GetOwnedInRoot(crateUid, protoId);
+
+            if (owned < required)
                 return false;
         }
 
-        // 2) Реально забираем предметы по всем целям.
-        foreach (var t in targets)
+        foreach (var kvp in requiredByProto)
         {
-            var left = t.Required;
+            var protoId = kvp.Key;
+            var required = kvp.Value;
 
-            var ownedUser = _logic.GetOwned(user, t.TargetItem);
+            var left = required;
+
+            var ownedUser = _logic.GetOwned(user, protoId);
             var takeFromUser = Math.Min(left, ownedUser);
 
             if (takeFromUser > 0 &&
-                !_logic.TryTakeProductUnits(user, t.TargetItem, takeFromUser))
+                !_logic.TryTakeProductUnits(user, protoId, takeFromUser))
             {
                 Sawmill.Error(
-                    $"[Claim] Failed to take {takeFromUser}x {t.TargetItem} " +
+                    $"[Claim] Failed to take {takeFromUser}x {protoId} " +
                     $"from user {ToPrettyString(user)} for contract '{contractId}' on {ToPrettyString(store)}.");
                 return false;
             }
 
             left -= takeFromUser;
 
-            if (left > 0 && crate is { } crateUid2)
+            if (left > 0)
             {
-                if (!_logic.TryTakeProductUnitsFromRoot(crateUid2, t.TargetItem, left))
+                if (pulledCrate is not { } crateUid)
                 {
                     Sawmill.Error(
-                        $"[Claim] Failed to take {left}x {t.TargetItem} " +
-                        $"from crate {ToPrettyString(crateUid2)} for contract '{contractId}' on {ToPrettyString(store)}.");
+                        $"[Claim] Missing {left}x {protoId} but user has no pulled closed crate. " +
+                        $"Contract '{contractId}' on {ToPrettyString(store)}.");
+                    return false;
+                }
+
+                if (!_logic.TryTakeProductUnitsFromRoot(crateUid, protoId, left))
+                {
+                    Sawmill.Error(
+                        $"[Claim] Failed to take {left}x {protoId} " +
+                        $"from crate {ToPrettyString(crateUid)} for contract '{contractId}' on {ToPrettyString(store)}.");
                     return false;
                 }
             }
-
-            t.Progress = t.Required;
         }
+
+        foreach (var t in contract.Targets)
+            if (!string.IsNullOrWhiteSpace(t.TargetItem) && t.Required > 0)
+                t.Progress = t.Required;
 
         if (contract.Targets.Count > 0)
         {
@@ -153,7 +172,8 @@ public sealed class NcContractSystem : EntitySystem
             if (contract.Targets.Count > 0)
                 contract.TargetItem = contract.Targets[0].TargetItem;
         }
-
+        else
+            contract.Progress = contract.Required;
 
         if (contract.RewardCurrencies is { Count: > 0, })
         {
@@ -185,8 +205,7 @@ public sealed class NcContractSystem : EntitySystem
                     _logic.TrySpawnProduct(protoId, user);
             }
         }
-        else if (!string.IsNullOrWhiteSpace(contract.RewardItem) &&
-            contract.RewardItemCount > 0)
+        else if (!string.IsNullOrWhiteSpace(contract.RewardItem) && contract.RewardItemCount > 0)
         {
             for (var i = 0; i < contract.RewardItemCount; i++)
                 _logic.TrySpawnProduct(contract.RewardItem!, user);
@@ -393,7 +412,7 @@ public sealed class NcContractSystem : EntitySystem
                 var chosen = PickWeighted(_random, proto.Targets, t => t.Weight);
                 if (chosen != null)
                 {
-                    targetItem = chosen.TargetItemId ?? targetItem;
+                    targetItem = chosen.TargetItemId;
 
                     if (chosen.Required > 0)
                         required = chosen.Required;
@@ -412,7 +431,7 @@ public sealed class NcContractSystem : EntitySystem
 
                     pool.Remove(chosen);
 
-                    var itemId = chosen.TargetItemId ?? targetItem;
+                    var itemId = chosen.TargetItemId;
                     var req = chosen.Required > 0 ? chosen.Required : required;
 
                     targets.Add(

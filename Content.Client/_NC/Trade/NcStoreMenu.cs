@@ -36,6 +36,7 @@ public sealed partial class NcStoreMenu : FancyWindow
     private readonly IPrototypeManager _proto;
 
     private readonly Dictionary<string, int> _qtyCache = new();
+    private readonly Dictionary<string, string> _searchIndex = new();
     private readonly Dictionary<string, (NcStoreListingControl Ctrl, string Sig)> _sellCache = new();
     private readonly Dictionary<string, Button> _sellCatButtons = new();
     private readonly List<string> _sellCats = new();
@@ -45,10 +46,13 @@ public sealed partial class NcStoreMenu : FancyWindow
 
     private string _buyCat = string.Empty;
 
+    private bool _disposed;
+
     private int _pageBuy = 1;
     private int _pageSell = 1;
 
     private string _search = string.Empty;
+    private string _searchLower = string.Empty;
     private int _searchToken;
     private string _sellCat = string.Empty;
 
@@ -62,10 +66,13 @@ public sealed partial class NcStoreMenu : FancyWindow
         _sprites = IoCManager.Resolve<IEntitySystemManager>().GetEntitySystem<SpriteSystem>();
         _proto = IoCManager.Resolve<IPrototypeManager>();
 
-        // Поиск
         SearchBar.OnTextChanged += _ =>
         {
+            if (_disposed)
+                return;
+
             _search = SearchBar.Text.Trim();
+            _searchLower = _search.ToLowerInvariant();
             var token = ++_searchToken;
 
             Timer.Spawn(
@@ -75,17 +82,18 @@ public sealed partial class NcStoreMenu : FancyWindow
                     if (token != _searchToken)
                         return;
 
+                    if (_disposed)
+                        return;
+
                     ResetPaging();
                     OnSearchChanged?.Invoke(_search);
                     RefreshListings();
                 });
         };
 
-        // Баланс
         BalanceLabel.StyleClasses.Add(StyleNano.StyleClassLabelHeadingBigger);
         BalanceInfo.SetMarkup("[font size=14][color=yellow]0[/color][/font]");
 
-        // Массовая продажа ящика
         MassSellPulledCrateButton.Disabled = true;
         MassSellPulledCrateButton.Text = "Продать содержимое тащимого ящика";
         MassSellPulledCrateButton.OnPressed += _ => OnMassSellPulledCrate?.Invoke();
@@ -96,7 +104,6 @@ public sealed partial class NcStoreMenu : FancyWindow
     public event Action<StoreListingData, int>? OnSellPressed;
     public event Action? OnMassSellPulledCrate;
 
-    // --- Публичные методы состояния ---
 
     public void SetBalance(int balance)
     {
@@ -143,6 +150,8 @@ public sealed partial class NcStoreMenu : FancyWindow
         _items.Clear();
         _items.AddRange(list);
 
+        RebuildSearchIndex();
+
         var ids = _items.Select(i => i.Id).ToHashSet();
         foreach (var key in _qtyCache.Keys.Where(k => !ids.Contains(k)).ToList())
             _qtyCache.Remove(key);
@@ -185,14 +194,32 @@ public sealed partial class NcStoreMenu : FancyWindow
         RefreshListings();
     }
 
-    public void PopulateContracts(List<ContractClientData> list)
+    private void RebuildSearchIndex()
+    {
+        _searchIndex.Clear();
+
+        foreach (var protoId in _items.Select(i => i.ProductEntity).Distinct())
+        {
+            if (string.IsNullOrWhiteSpace(protoId))
+                continue;
+
+            if (!_proto.TryIndex<EntityPrototype>(protoId, out var p))
+                continue;
+
+            var name = p.Name;
+            var desc = p.Description;
+            _searchIndex[protoId] = (name + "\n" + desc).ToLowerInvariant();
+        }
+    }
+
+    public void PopulateContracts(List<ContractClientData>? list)
     {
         if (ContractList == null)
             return;
 
         ContractList.RemoveAllChildren();
 
-        if (list.Count == 0)
+        if (list == null || list.Count == 0)
         {
             ContractList.AddChild(
                 new Label
@@ -296,7 +323,7 @@ public sealed partial class NcStoreMenu : FancyWindow
             }
 
             // --- Цели ---
-            var hasTargets = c.Targets != null && c.Targets.Count > 0;
+            var hasTargets = c.Targets.Count > 0;
 
             if (hasTargets)
             {
@@ -307,7 +334,7 @@ public sealed partial class NcStoreMenu : FancyWindow
                         Margin = new(0, 0, 0, 2)
                     });
 
-                var targets = c.Targets ?? new List<ContractTargetClientData>();
+                var targets = c.Targets;
                 foreach (var t in targets)
                 {
                     EntityPrototype? targetProto = null;
@@ -553,7 +580,7 @@ public sealed partial class NcStoreMenu : FancyWindow
                     if (count <= 0 || string.IsNullOrWhiteSpace(id))
                         continue;
 
-                    EntityPrototype? proto = null;
+                    EntityPrototype? proto;
                     _proto.TryIndex(id, out proto);
 
                     var line = new BoxContainer
@@ -591,7 +618,7 @@ public sealed partial class NcStoreMenu : FancyWindow
             }
             else if (!string.IsNullOrWhiteSpace(c.RewardItem) && c.RewardItemCount > 0)
             {
-                EntityPrototype? rewardProto = null;
+                EntityPrototype? rewardProto;
                 _proto.TryIndex(c.RewardItem, out rewardProto);
 
                 var rewardItemRow = new BoxContainer
@@ -663,8 +690,11 @@ public sealed partial class NcStoreMenu : FancyWindow
     private void RefreshListings()
     {
         var hasSearch = !string.IsNullOrWhiteSpace(_search);
-        var buyCount = Filtered(StoreMode.Buy, _buyCat).Count();
-        var sellCount = Filtered(StoreMode.Sell, _sellCat).Count();
+        var buyFiltered = Filtered(StoreMode.Buy, _buyCat).ToList();
+        var sellFiltered = Filtered(StoreMode.Sell, _sellCat).ToList();
+
+        var buyCount = buyFiltered.Count;
+        var sellCount = sellFiltered.Count;
 
         BuyCategoryHeader.Visible = !string.IsNullOrEmpty(_buyCat) || hasSearch;
         SellCategoryHeader.Visible = !string.IsNullOrEmpty(_sellCat) || hasSearch;
@@ -687,8 +717,19 @@ public sealed partial class NcStoreMenu : FancyWindow
         else
             SellCategoryHeader.Text = string.Empty;
 
-        FillPaneFull(BuyListingsContainer, StoreMode.Buy, _buyCat, (d, qty) => OnBuyPressed?.Invoke(d, qty));
-        FillPaneFull(SellListingsContainer, StoreMode.Sell, _sellCat, (d, qty) => OnSellPressed?.Invoke(d, qty));
+        FillPaneFull(
+            BuyListingsContainer,
+            StoreMode.Buy,
+            _buyCat,
+            buyFiltered,
+            (d, qty) => OnBuyPressed?.Invoke(d, qty));
+
+        FillPaneFull(
+            SellListingsContainer,
+            StoreMode.Sell,
+            _sellCat,
+            sellFiltered,
+            (d, qty) => OnSellPressed?.Invoke(d, qty));
     }
 
     private IEnumerable<StoreListingData> Filtered(StoreMode mode, string cat)
@@ -696,7 +737,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         var q = _items.Where(i => i.Mode == mode);
 
         var hasCat = !string.IsNullOrEmpty(cat);
-        var hasSearch = !string.IsNullOrWhiteSpace(_search);
+        var hasSearch = !string.IsNullOrWhiteSpace(_searchLower);
 
         if (!hasCat && !hasSearch)
             return Enumerable.Empty<StoreListingData>();
@@ -710,22 +751,30 @@ public sealed partial class NcStoreMenu : FancyWindow
         return q;
     }
 
-    private void FillPaneFull(Control pane, StoreMode mode, string cat, Action<StoreListingData, int> emit)
+    private void FillPaneFull(
+        Control pane,
+        StoreMode mode,
+        string cat,
+        List<StoreListingData> filtered,
+        Action<StoreListingData, int> emit
+    )
     {
         pane.Children.Clear();
 
-        var filtered = Filtered(mode, cat).ToList();
-        if (string.IsNullOrEmpty(cat) && string.IsNullOrWhiteSpace(_search))
+        var hasCat = !string.IsNullOrEmpty(cat);
+        var hasSearch = !string.IsNullOrWhiteSpace(_searchLower);
+
+        if (!hasCat && !hasSearch)
+        {
+            pane.AddChild(new Label { Text = "Выберите категорию.", });
             return;
+        }
 
         if (filtered.Count == 0)
         {
             string message;
-            var hasSearch = !string.IsNullOrWhiteSpace(_search);
 
-            if (!hasSearch)
-                message = "Выберите категорию.";
-            else if (!string.IsNullOrEmpty(cat))
+            if (!string.IsNullOrEmpty(cat))
                 message = "По вашему запросу в этой категории ничего не найдено.";
             else
                 message = "По вашему запросу ничего не найдено.";
@@ -787,7 +836,9 @@ public sealed partial class NcStoreMenu : FancyWindow
             {
                 var initQty = _qtyCache.TryGetValue(it.Id, out var saved) ? saved : 1;
 
-                ctrl = new(it, _sprites, _balance, initQty);
+                var actionsEnabled = !(mode == StoreMode.Sell && it.Category == CrateCategory);
+
+                ctrl = new(it, _sprites, _balance, initQty, actionsEnabled);
                 ctrl.OnQtyChanged += newQty => _qtyCache[it.Id] = newQty;
 
                 switch (mode)
@@ -997,6 +1048,13 @@ public sealed partial class NcStoreMenu : FancyWindow
         _pageSell = 1;
     }
 
+    [Obsolete("Controls should only be removed from UI tree instead of being disposed")]
+    protected override void Dispose(bool disposing)
+    {
+        _disposed = true;
+        base.Dispose(disposing);
+    }
+
     private static string Sig(StoreListingData d, int balance) =>
         d.Mode == StoreMode.Buy
             ? $"{d.Id}|{d.ProductEntity}|{d.Category}|{d.Price}|{d.Remaining}|{d.Owned}|{d.CurrencyId}|B{balance}"
@@ -1004,14 +1062,22 @@ public sealed partial class NcStoreMenu : FancyWindow
 
     private bool MatchesSearch(string protoId)
     {
-        if (string.IsNullOrWhiteSpace(_search))
+        if (string.IsNullOrWhiteSpace(protoId))
+            return false;
+
+        if (string.IsNullOrWhiteSpace(_searchLower))
             return true;
+
+        if (_searchIndex.TryGetValue(protoId, out var hay))
+            return hay.Contains(_searchLower, StringComparison.Ordinal);
 
         if (!_proto.TryIndex<EntityPrototype>(protoId, out var p))
             return false;
 
-        return p.Name.Contains(_search, StringComparison.OrdinalIgnoreCase)
-            || !string.IsNullOrEmpty(p.Description) &&
-            p.Description.Contains(_search, StringComparison.OrdinalIgnoreCase);
+        var name = p.Name;
+        var desc = p.Description;
+        var combined = (name + "\n" + desc).ToLowerInvariant();
+        _searchIndex[protoId] = combined;
+        return combined.Contains(_searchLower, StringComparison.Ordinal);
     }
 }

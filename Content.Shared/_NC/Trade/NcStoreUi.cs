@@ -10,19 +10,23 @@ public enum StoreUiKey : byte
     Key
 }
 
-[Serializable, NetSerializable,]
+[Serializable, NetSerializable]
 public sealed class StoreUiState(
+    int revision,
     int balance,
     List<StoreListingData> listings,
     Dictionary<string, int> massSellTotals,
     List<ContractClientData> contracts)
     : BoundUserInterfaceState
 {
+    public int Revision = revision;
+
     public int Balance = balance;
     public List<ContractClientData> Contracts = contracts;
     public List<StoreListingData> Listings = listings;
     public Dictionary<string, int> MassSellTotals = massSellTotals;
 }
+
 
 [Serializable, NetSerializable,]
 public sealed class ContractUiState(List<ContractClientData> contracts) : BoundUserInterfaceState

@@ -8,7 +8,7 @@ namespace Content.Shared._NC.Trade;
 public sealed partial class NcStoreComponent : Component
 {
     public EntityUid? CurrentUser;
-
+    public int UiRevision;
     [DataField("categories")]
     public List<string> Categories { get; set; } = new();
 
