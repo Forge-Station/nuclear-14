@@ -1,0 +1,44 @@
+- type: job
+  id: BoSMidSerf
+  overrideConsoleVisibility: true
+  canBeAntag: false
+  name: job-name-BoS-Mid-Serf
+  description: job-description-bos-mid-Serf
+  playTimeTracker: BoSMidSerf
+  requirements:
+    - !type:MinPlayersRequirement
+      min: 40
+    - !type:CharacterSpeciesRequirement
+      species:
+      - Human
+      - Ghoul
+    - !type:CharacterOverallTimeRequirement
+      min: 3600
+  startingGear: BoSMidSerfGear
+  alwaysUseSpawner: true
+  icon: "JobIconRabMBos"
+  supervisors: job-supervisors-bos-mid-Serf
+  access:
+  - BoSMidwest
+  special:
+  - !type:AddComponentSpecial
+    components:
+      - type: NpcFactionMember
+        factions:
+          - Wastelander
+          - BrotherhoodMidwest
+
+- type: startingGear
+  id: BoSMidSerfGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitSettlerRags
+    shoes: N14ClothingShoesRaider
+    gloves: N14ClothingHandsGlovesCloth
+    bandage: NCClothingCollarBoSSerf
+
+
+- type: playTimeTracker
+  id: BoSMidSerf
+
+
+

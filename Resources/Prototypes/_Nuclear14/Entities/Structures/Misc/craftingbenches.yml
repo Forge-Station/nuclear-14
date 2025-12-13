@@ -159,6 +159,7 @@
     - Magazine308Rifle
     - Magazine308RifleLong
     - ClipMagazine308Rifle
+    - Magazine308RifleSniper # Forge-change
     - MagazineBox308
     - SpeedLoader45-70
     - SpeedLoader45-70Tube

@@ -21,6 +21,29 @@
     faction: NCR
     role: NCRCadet
 
+- type: entity
+  parent: Clothing
+  id: NCClothingBrasletNCRBase
+  abstract: true
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Bandage/bandageNCRPrisonner.rsi
+    state: icon
+  - type: Clothing
+    sprite: Corvax/Clothing/Bandage/bandageNCRPrisonner.rsi
+    slots: [ bandage ]
+  - type: Unremoveable
+
+- type: entity
+  parent: NCClothingBrasletNCRBase
+  id: NCClothingBrasletNCRPrisoner
+  name: Prisoner braslet NCR
+  description: A braslet use to track prisoners
+  components:
+  - type: ClothingFactionAndRoleAdd
+    faction: NCR
+    role: NCRPisoner
+
 #MARK: BoS
 - type: entity
   parent: Clothing
@@ -44,6 +67,29 @@
     faction: BrotherhoodMidwest
     role: BoSMidSquire
 
+- type: entity
+  parent: Clothing
+  id: NCClothingCollarBoSBase
+  abstract: true
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Bandage/bandageSerfMBOS.rsi
+    state: icon
+  - type: Clothing
+    sprite: Corvax/Clothing/Bandage/bandageSerfMBOS.rsi
+    slots: [ bandage ]
+  - type: Unremoveable
+
+- type: entity
+  parent: NCClothingCollarBoSBase
+  id: NCClothingCollarBoSSerf
+  name: Serf collar BoS
+  description: A Collar used by the BoS serfs.
+  components:
+  - type: ClothingFactionAndRoleAdd
+    faction: BrotherhoodMidwest
+    role: BoSMidSerf
+
 #MARK: Legion
 - type: entity
   parent: Clothing
@@ -66,6 +112,29 @@
   - type: ClothingFactionAndRoleAdd
     faction: CaesarLegion
     role: CaesarLegionLegionnaireRecruit
+
+- type: entity
+  parent: Clothing
+  id: NCClothingCollarLegionBase
+  abstract: true
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Bandage/bandageSerfMBOS.rsi
+    state: icon
+  - type: Clothing
+    sprite: Corvax/Clothing/Bandage/bandageSerfMBOS.rsi
+    slots: [ bandage ]
+  - type: Unremoveable
+
+- type: entity
+  parent: NCClothingCollarLegionBase
+  id: NCClothingCollarLegionSlave
+  name: recruit bandage Legion
+  description: A collar used by the Legion slave.
+  components:
+  - type: ClothingFactionAndRoleAdd
+    faction: CaesarLegion
+    role: CaesarLegionSlave
 
 #MARK: Raiders
 - type: entity

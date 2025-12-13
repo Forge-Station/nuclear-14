@@ -1,0 +1,46 @@
+- type: job
+  id: CaesarLegionSlave
+  setPreference: true
+  name: job-name-caesar-legion-slave
+  description: job-description-caesar-legion-slave
+  playTimeTracker: CaesarLegionSlave
+  requirements:
+  - !type:MinPlayersRequirement
+    min: 40
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+  - !type:CharacterOverallTimeRequirement
+    min: 3600
+  startingGear: CaesarLegionSlaveGear
+  alwaysUseSpawner: true
+  icon: "JobIconLegionSlave"
+  supervisors: job-supervisors-caesar-legion-slave
+  canBeAntag: false
+  access:
+  - CaesarLegion
+  special:
+  - !type:AddComponentSpecial
+    components:
+      - type: NpcFactionMember
+        factions:
+          - CaesarLegion
+      - type: ReplacementAccent
+        accent: latin
+  - !type:AddTraitSpecial
+    traits: [ LanguageLatin ]
+
+- type: startingGear
+  id: CaesarLegionSlaveGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitRags
+    shoes: N14ClothingShoesTribal
+    gloves: N14ClothingHandsGlovesTribal
+    bandage: NCClothingCollarLegionSlave
+
+
+- type: playTimeTracker
+  id: CaesarLegionSlave
+
+
+

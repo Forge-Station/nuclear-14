@@ -141,6 +141,8 @@ ent-RangerCQBSet = Набор рейнджера CQB специалиста
     .desc = Содержит снаряжение для рейнджера NCR.
 ent-RangerTrailmanSet = Набор рейнджера-следопыта
     .desc = Содержит снаряжение для рейнджера NCR.
+ent-RangerSniperSet = Набор рейнджера-снайпера
+    .desc = Содержит снаряжение для рейнджера NCR.
 
 # Veteran Kits
 ent-VeteranRangerServiceSet = Модифицированный сервисный набор рейнджера
@@ -258,7 +260,7 @@ ent-KitBrootherWest_ScribelaserSet = Набор снаряжения Скрип�
 ent-KitBrootherWest_ScribeplasmaSet = Набор снаряжения Скриптера-Плазменный
     .desc = Содержит снаряжение для Скриптера.
 
-# Inquisitor Midwest Kits 
+# Inquisitor Midwest Kits
 ent-BoSMidwestInquisitorKits = набор снаряжения Инквизитора СЗБС (не выбран)
     .desc = "Ааааа, помогите..." - последние слова дезертира, при виде этого неразобранного набора инквизитора.
 ent-KitInquisitorInspector = набор инквизитора-инспектора СЗБС
@@ -267,3 +269,13 @@ ent-KitInquisitorCrusader = набор инквизитора-крестонос
     .desc = Содержит набор "Крестоносца", ни один дезертир не выживет.
 ent-KitInquisitorPlasma = набор инквизитора-плазменный СЗБС
     .desc = Содержит набор "Плазменный", готов к службе.
+
+# NCRMP Investegator Kits
+ent-NCRMPinvestigatorKits = набор снаряжение Следователя ВП НКР (не выбран)
+    .desc= содержит различные комплекты снаряжения для следователя НКР
+ent-KitNCRMPMilitaryPoliceSet = набор  Военного полицейского НКР
+    .desc = Содержит набор " Военного полицейского НКР"
+ent-KitNCRMPinvestigatorSet =  набор снаряжение Следователя военной полиции НКР
+    .desc = Содержит набор снаряжения "Следователя ВП НКР"
+ent-KitNCRMPinvestigatorBailifSet = набор  судебного исполнителя НКР
+    .desc = Содержит набор снаряжения "Судебного исполнителя НКР"

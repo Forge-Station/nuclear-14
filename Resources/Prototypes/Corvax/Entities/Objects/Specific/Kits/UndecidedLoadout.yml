@@ -235,7 +235,7 @@
 - type: entity
   id: BoSMidwestInquisitorKits
   parent: BaseLoadoutKit
-  components: 
+  components:
   - type: Sprite
     sprite: _Nuclear14/Objects/Misc/kits.rsi
     state: marksman
@@ -244,6 +244,20 @@
     - KitMidwestInquisitorInspectorSet
     - KitMidwestInquisitorCrusaderSet
     - KitMidwestInquisitorPlasmaSet
+
+# NCRMP Investegator Kits
+- type: entity
+  id: NCRMPinvestigatorKits
+  parent: BaseLoadoutKit
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: marksman
+  - type: UndecidedLoadoutBackpack
+    possibleSets:
+    - KitNCRMPMilitaryPoliceSet
+    - KitNCRMPinvestigatorBailifSet
+    - KitNCRMPinvestigatorSet
 
 ### Sets
 
@@ -738,3 +752,33 @@
     state: rifleman
   content:
   - KitInquisitorPlasma
+
+- type: UndecidedLoadoutBackpackSet
+  id: KitNCRMPMilitaryPoliceSet
+  name: undecided-loadout-category-NCRMPMilitaryPolice-name
+  description: undecided-loadout-category-NCRMPMilitaryPolice-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitNCRMPMilitaryPolice
+
+- type: UndecidedLoadoutBackpackSet
+  id: KitNCRMPinvestigatorSet
+  name: undecided-loadout-category-NCRMPinvestigator-name
+  description: undecided-loadout-category-NCRMPinvestigator-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitNCRMPinvestigator
+
+- type: UndecidedLoadoutBackpackSet
+  id: KitNCRMPinvestigatorBailifSet
+  name: undecided-loadout-category-NCRMPinvestigatorBailif-name
+  description: undecided-loadout-category-NCRMPinvestigatorBailif-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitNCRMPbailiff

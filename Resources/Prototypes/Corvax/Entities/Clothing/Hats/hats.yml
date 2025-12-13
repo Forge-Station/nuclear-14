@@ -24,3 +24,21 @@
     sprite: Corvax/Clothing/Head/Hats/InquisitorCap.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Head/Hats/InquisitorCap.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatNCRMPBeret
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Hats/NCRMPBeret.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Hats/NCRMPBeret.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatNCRMPCap
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Hats/InquisitorCap.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Hats/InquisitorCap.rsi

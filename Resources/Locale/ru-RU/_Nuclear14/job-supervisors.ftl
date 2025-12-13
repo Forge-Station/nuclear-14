@@ -1,12 +1,15 @@
 job-supervisors-bos-mid = подчиняться командиру Среднезападного Братства Стали.
+job-supervisors-bos-mid-Serf = подчиняйтесь своему надзирателю и членам фракциям, или попытайтесь сбежать бескровно
 job-supervisors-bos-washington-elder = выполнить вашу миссию!
 job-supervisors-bos-washington = следовать за своим старейшиной к победе!
 job-supervisors-bos-washington-recruit = подчиняться старшим по званию в вашем отделении.
 job-supervisors-caravan = подчиняться главе каравана.
 job-supervisors-caravan-leader = продать все ваши товары с максимальной наценкой.
 job-supervisors-ncr = подчиняться офицеру Новой Калифорнийской Республики.
+job-supervisors-ncr-mp = следить за соблюдением устава и законом на аванпосту
 job-supervisors-ncr-nco = подчиняться офицеру Новой Калифорнийской Республики, затем сержанту.
 job-supervisors-ncr-captain = подчиняться капитану Новой Калифорнийской Республики.
+job-supervisors-ncr-prisoners = Служить фракции и слушать надзитареля, или попытаться бескровно и тихо сбежать
 job-supervisors-ranger = подчиняться рейнджеру.
 job-supervisors-veteran-ranger = подчиняться ветерану-рейнджеру.
 job-supervisors-chief-ranger = подчиняться главному рейнджеру.

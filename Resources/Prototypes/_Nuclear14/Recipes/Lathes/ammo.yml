@@ -539,6 +539,17 @@
     N14Gunpowder: 96
     Cardboard: 100
 
+# forge-change
+- type: latheRecipe
+  id: Magazine308RifleSniper
+  result: Magazine308RifleSniper
+  category: N14AmmoMagazine
+  completetime: 5
+  materials:
+    Lead: 33
+    Steel: 77
+    N14Gunpowder: 33
+
 # 45-70 gov't
 - type: latheRecipe
   id: SpeedLoader45-70

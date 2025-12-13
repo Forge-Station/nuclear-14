@@ -203,6 +203,12 @@
   requirements:
     - !type:OverallTimeRequirement
       min: 3600
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingBeltUtilityFilled
 
@@ -219,5 +225,12 @@
   id: N14CurrencyCap100
   category: Items
   cost: 5
+  requirements:
+  - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14CurrencyCap100

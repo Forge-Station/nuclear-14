@@ -9,6 +9,7 @@
   - CaesarLegionLegionnaireVeteran
   - CaesarLegionLegionnaireWarrior
   - CaesarLegionLegionnaireRecruit
+  - CaesarLegionSlave
 
 - type: department
   id: Raider

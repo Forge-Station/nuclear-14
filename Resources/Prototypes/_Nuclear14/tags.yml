@@ -57,28 +57,28 @@
 #MARK: Crafts
 - type: Tag
   id: Abraxo
-  
+
 - type: Tag
   id: SensorModule
-  
+
 - type: Tag
   id: Baseball
-  
+
 - type: Tag
   id: JunkTimer
-  
+
 - type: Tag
   id: Turpentine
-  
+
 - type: Tag
   id: JunkKettle
-  
+
 - type: Tag
   id: Tincan
-  
+
 - type: Tag
   id: N14JunkLunchbox
-  
+
 - type: Tag
   id: Scrap
 
@@ -320,6 +320,9 @@
 
 - type: Tag
   id: N14Magazine308Rifle
+
+- type: Tag # forge-add
+  id: N14Magazine308RifleSnipers
 
 - type: Tag
   id: N14Magazine308RifleLong

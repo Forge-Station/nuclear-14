@@ -133,11 +133,9 @@
   - type: UndecidedLoadoutBackpack
     possibleSets:
     - RangerServiceSet
-    - RangerRiflemanSet
-    - RangerMarksmanSet
     - RangerCQBSet
     - RangerTrailmanSet
-    - RangerSMGSet # Forge-Change
+    - RangerSniperSet
 
 - type: entity
   id: NCRveteranrangerloadoutkits
@@ -605,6 +603,17 @@
     state: marksman
   content:
   - KitTrailmanRanger
+
+#forge-add
+- type: UndecidedLoadoutBackpackSet
+  id: RangerSniperSet
+  name: undecided-loadout-category-ranger-sniper-name
+  description: undecided-loadout-category-ranger-sniper-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: marksman
+  content:
+  - KitSniperRanger
 
 #MARK: Veteran Kits
 - type: UndecidedLoadoutBackpackSet

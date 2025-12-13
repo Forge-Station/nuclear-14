@@ -1200,3 +1200,78 @@
       - id: N14BoxCardboardMREBoxKFilled
       - id: N14CleanGauze10
       - id: N14Ointment10
+
+- type: entity
+  name: Military Police Kit
+  parent: KitBase
+  id: KitNCRMPMilitaryPolice
+  description: Standard Military Police Kit
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponShotgunRiot
+      - id: N14Stimpak
+        amount: 2
+      - id: N14MagazineShotgun20
+        amount: 2
+      - id: MagazineBox20gauge
+      - id: N14BoxCardboardMREBoxKFilled
+      - id: N14CleanGauze10
+      - id: N14PoliceBaton
+      - id: Handcuffs
+        amount: 2
+
+
+- type: entity
+  name: NCRMP investigator kit
+  parent: KitBase
+  id: KitNCRMPinvestigator
+  description: Standard investigator kit
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponRifle308Battle
+      - id: N14Stimpak
+        amount: 2
+      - id: ClipMagazine308Rifle
+        amount: 2
+      - id: MagazineBox308
+      - id: N14BoxCardboardMREBoxKFilled
+      - id: N14CleanGauze10
+      - id: N14PoliceBaton
+      - id: Handcuffs
+        amount: 2
+
+
+- type: entity
+  name: NCRMP bailiff Kit
+  parent: KitBase
+  id: KitNCRMPbailiff
+  description: Standard bailiff kit
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponSMG9mm
+      - id: N14Stimpak
+        amount: 2
+      - id: N14PoliceBaton
+      - id: N14MagazineSMG9mm
+        amount: 2
+      - id: MagazineBox9mm
+      - id: N14BoxCardboardMREBoxKFilled
+      - id: N14CleanGauze10
+      - id: Handcuffs
+        amount: 2
+

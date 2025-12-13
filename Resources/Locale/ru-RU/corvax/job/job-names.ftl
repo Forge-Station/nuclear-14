@@ -25,3 +25,5 @@ job-name-bos-west-paladin = паладин братства
 job-description-bos-west-paladin = Опытный воин Братства Стали, защищающий его интересы и технологии.
 job-name-bos-west-scribe = писец братства
 job-description-bos-west-scribe = Хранитель знаний и технологий Братства Стали, занимающийся исследованиями и документацией.
+job-name-caesar-legion-slave = Раб легиона цезаря
+job-description-caesar-legion-slave = Вы раб, вы обязаны служить Легиону Цезарю, ваша жизнь в их руках

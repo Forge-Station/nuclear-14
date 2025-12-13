@@ -12,7 +12,7 @@
     - N14ClothingOuterRangerVest
 
 - type: loadout
-  id: LoadoutNCRRangerArmorB
+  id: LoadoutNCRRangerRedwood
   category: Roles
   cost: 4
   exclusive: true
@@ -20,60 +20,14 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRanger
+    - !type:CharacterPlaytimeRequirement # Forge-change
+      tracker: NCRRanger
+      min: 1200
   items:
-    - N14ClothingOuterRangerArmorB
+    - N14ClothingOuterRangerRedwood # Forge-change
 
 - type: loadout
-  id: LoadoutNCRRangerDuster
-  category: Roles
-  cost: 6
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRRanger
-  items:
-    - N14ClothingOuterRangerDuster
-
-- type: loadout
-  id: LoadoutNCRhelmet
-  category: Roles
-  cost: 4
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRRanger
-  items:
-    - N14ClothingHeadHatRangerHelmet
-
-- type: loadout
-  id: LoadoutNCRmaskBroken
-  category: Roles
-  cost: 1
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRRanger
-  items:
-    - ClothingMaskGasRangerBroken
-
-- type: loadout
-  id: LoadoutNCRmaskCombat
-  category: Roles
-  cost: 4
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRRanger
-  items:
-    - ClothingMaskGasCombat
-
-#Corvax-Add Start
-- type: loadout
-  id: LoadoutNCRRangerCoat
+  id: LoadoutNCRRangerCombat
   category: Roles
   cost: 2
   exclusive: true
@@ -81,53 +35,30 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRanger
-  items:
-    - N14ClothingOuterRangerCoat
-
-- type: loadout
-  id: LoadoutNCRClothingMaskGasRangerDesert1
-  category: Roles
-  cost: 4
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRRanger
-    - !type:CharacterPlaytimeRequirement
+    - !type:CharacterPlaytimeRequirement # Forge-change
       tracker: NCRRanger
-      min: 216000 # 60 hours veterancy unlock "First Tour"
+      min: 900
   items:
-    - ClothingMaskGasRangerDesert
+    - N14ClothingOuterRangerArmorOld # Forge-change
 
 - type: loadout
-  id: LoadoutNCRClothingMaskGasRangerOld1
+  id: LoadoutNCRRangerCoyote
   category: Roles
-  cost: 4
+  cost: 6
   exclusive: true
   requirements:
     - !type:CharacterJobRequirement
       jobs:
         - NCRRanger
-  items:
-    - ClothingMaskGasRangerOld
-
-- type: loadout
-  id: LoadoutNCRClothingMaskGasRangerPrice1
-  category: Roles
-  cost: 4
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRRanger
-    - !type:CharacterPlaytimeRequirement
+    - !type:CharacterPlaytimeRequirement # Forge-change
       tracker: NCRRanger
-      min: 72000 # 1200 minutes
+      min: 2400
   items:
-    - ClothingMaskGasRangerPrice
+    - N14ClothingOuterRangerCoyote # Forge-change
+
 
 - type: loadout
-  id: LoadoutNCRClothingMaskGasRangerElite1
+  id: LoadoutNCRRangerScorpion
   category: Roles
   cost: 4
   exclusive: true
@@ -135,113 +66,11 @@
     - !type:CharacterJobRequirement
       jobs:
         - NCRRanger
-    - !type:CharacterPlaytimeRequirement
+    - !type:CharacterPlaytimeRequirement # Forge-change
       tracker: NCRRanger
-      min: 216000 # 60 hours veterancy unlock "First Tour"
+      min: 900
   items:
-    - ClothingMaskGasRangerElite
-
-- type: loadout
-  id: LoadoutNCRClothingMaskGasRangerModif1
-  category: Roles
-  cost: 4
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRRanger
-    - !type:CharacterPlaytimeRequirement
-      tracker: NCRRanger
-      min: 72000 # 1200 minutes
-  items:
-    - ClothingMaskGasRangerModif
-
-- type: loadout
-  id: LoadoutNCRClothingMaskGasRangerWeathered
-  category: Roles
-  cost: 1
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRRanger
-    - !type:CharacterPlaytimeRequirement
-      tracker: NCRRanger
-      min: 36000 # 600 minutes
-  items:
-    - ClothingMaskGasRangerWeathered
-
-- type: loadout
-  id: LoadoutNCRN14ClothingHeadHatRangerHelmetDesert1
-  category: Roles
-  cost: 4
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRRanger
-    - !type:CharacterPlaytimeRequirement
-      tracker: NCRRanger
-      min: 216000 # 60 hours veterancy unlock "First Tour"
-  items:
-    - N14ClothingHeadHatRangerHelmetDesert
-
-- type: loadout
-  id: LoadoutNCRN14ClothingHeadHatRangerHelmetOld
-  category: Roles
-  cost: 4
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRRanger
-  items:
-    - N14ClothingHeadHatRangerHelmetOld
-
-- type: loadout
-  id: LoadoutNCRN14ClothingHeadHatRangerHelmetPrice1
-  category: Roles
-  cost: 4
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRRanger
-    - !type:CharacterPlaytimeRequirement
-      tracker: NCRRanger
-      min: 72000 # 1200 minutes
-  items:
-    - N14ClothingHeadHatRangerHelmetPrice
-
-- type: loadout
-  id: LoadoutNCRN14ClothingHeadHatRangerHelmetFox1
-  category: Roles
-  cost: 4
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRRanger
-    - !type:CharacterPlaytimeRequirement
-      tracker: NCRRanger
-      min: 72000 # 1200 minutes
-  items:
-    - N14ClothingHeadHatRangerHelmetFox
-
-- type: loadout
-  id: LoadoutNCRN14ClothingHeadHatRangerHelmetModif1
-  category: Roles
-  cost: 4
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRRanger
-    - !type:CharacterPlaytimeRequirement
-      tracker: NCRRanger
-      min: 216000 # 60 hours veterancy unlock "First Tour"
-  items:
-    - N14ClothingHeadHatRangerHelmetModif
+    - N14ClothingOuterRangerScorpion # Forge-change
 
 - type: loadout
   id: LoadoutNCRN14ClothingNeckCloakRanger
@@ -254,48 +83,6 @@
         - NCRRanger
   items:
     - N14ClothingNeckCloakRanger
-
-- type: loadout
-  id: LoadoutNCRClothingMaskGasRanger1
-  category: Roles
-  cost: 4
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRRanger
-    - !type:CharacterPlaytimeRequirement
-      tracker: NCRRanger
-      min: 216000 # 60 hours veterancy unlock "First Tour"
-  items:
-    - ClothingMaskGasRanger
-
-- type: loadout
-  id: LoadoutNCRClothingMaskGasRiot1
-  category: Roles
-  cost: 4
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRRanger
-  items:
-    - ClothingMaskGasRiot
-
-- type: loadout
-  id: LoadoutNCRRangerHelmetEliteOld2
-  category: Roles
-  cost: 4
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRRanger
-    - !type:CharacterPlaytimeRequirement
-      tracker: NCRRanger
-      min: 216000 # 60 hours veterancy unlock "First Tour"
-  items:
-    - N14ClothingHeadHatRangerHelmetEliteOld
 
 # Corvax-Add End
 
@@ -333,7 +120,6 @@
   requirements:
     - !type:CharacterJobRequirement
       jobs:
-        - NCRRanger
         - NCRRangerVeteran
   items:
     - N14ClothingMaskDesertMask

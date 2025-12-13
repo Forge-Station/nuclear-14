@@ -1,0 +1,51 @@
+- type: job
+  id: NCRMPinvestigator
+  setPreference: true
+  overrideConsoleVisibility: true
+  canBeAntag: false
+  name: job-name-ncr-mp-investegator
+  description: job-description-ncr-mp-investegator
+  playTimeTracker: NCRMPinvestigator
+  requirements:
+    - !type:CharacterWhitelistRequirement
+    - !type:CharacterSpeciesRequirement
+      species:
+      - Human
+      - Ghoul
+    - !type:CharacterDepartmentTimeRequirement
+      department: NCR
+      min: 216000 # 60 hours
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCROfficer
+      min: 216000 # 60 hours
+  startingGear: NCRMPinvestigatorGear
+  alwaysUseSpawner: true
+  icon: "JobIconNCRMPInvestegator"
+  supervisors: job-supervisors-ncr-mp
+  access:
+  - NCR
+  - NCRSGT
+  special:
+  - !type:AddComponentSpecial
+    components:
+      - type: NpcFactionMember
+        factions:
+          - Wastelander
+          - NCR
+
+- type: startingGear
+  id: NCRMPinvestigatorGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitNCRMP
+    back: N14ClothingBackpackMilitary
+    shoes: N14ClothingBootsCombatFilled
+    head:  N14ClothingHeadHatNCRMPCap
+    outerClothing: N14ClothingOuterNCRMPArmorWest
+    pocket1: NCRMPinvestigatorKits
+    gloves: N14ClothingHandsGlovesCombat
+    id: N14IDNCRDogtagNCO
+    ears: N14ClothingHeadsetNCR
+    eyes: ClothingEyesGlassesSunglasses
+
+- type: playTimeTracker
+  id: NCRMPinvestigator
