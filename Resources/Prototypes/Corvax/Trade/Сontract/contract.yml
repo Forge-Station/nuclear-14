@@ -9,18 +9,18 @@
   id: caravan_contract_guns
   name: Пушки на переработку
   description: "Короче мне надо жопы скорпиона, сдашь получишь силовую броню."
-  targetCount: 2
-  bonusPickCount: 2
+  targetCount: { min: 1, max: 3 }
+  bonusPickCount: { min: 1, max: 5 }
   difficulty: Easy
   targets:
   - id: N14MaterialRadscorpionTail
-    required: 1
+    required: { min: 1, max: 3 }
     weight: 5
   - id: N14FoodMeatRadscorpionLeg
     required: 1
     weight: 5
   - id: N14MaterialExoskeleton
-    required: 1
+    required: { min: 1, max: 3 }
     weight: 5
   currencies:
   - id: Caps
@@ -38,7 +38,6 @@
     - id: C4
       weight: 2
       mode: Replace
-
 
 
 - type: storeContract

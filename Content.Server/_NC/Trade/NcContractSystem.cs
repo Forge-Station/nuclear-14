@@ -396,6 +396,23 @@ public sealed class NcContractSystem : EntitySystem
         }
     }
 
+    private static int Roll(IRobustRandom rng, IntRange range, int minClamp, int maxClamp = int.MaxValue)
+    {
+        var min = range.Min;
+        var max = range.Max;
+
+        if (max < min)
+            (min, max) = (max, min);
+
+        min = Math.Clamp(min, minClamp, maxClamp);
+        max = Math.Clamp(max, minClamp, maxClamp);
+
+        if (max <= min)
+            return min;
+
+        // Next(maxExclusive), поэтому +1
+        return rng.Next(min, max + 1);
+    }
 
     private ContractServerData CreateContractData(StoreContractPrototype proto)
     {
@@ -403,11 +420,13 @@ public sealed class NcContractSystem : EntitySystem
         var targets = new List<ContractTargetServerData>();
 
         var targetItem = proto.TargetItem ?? string.Empty;
-        var required = proto.Required;
+        var required = Roll(_random, proto.Required, 1);
+
 
         if (proto.Targets is { Count: > 0, })
         {
-            var targetCount = proto.TargetCount;
+            var targetCount = Roll(_random, proto.TargetCount, 1);
+
             if (targetCount <= 0)
                 targetCount = 1;
 
@@ -418,8 +437,9 @@ public sealed class NcContractSystem : EntitySystem
                 {
                     targetItem = chosen.TargetItemId;
 
-                    if (chosen.Required > 0)
-                        required = chosen.Required;
+                    var chosenReq = Roll(_random, chosen.Required, 1);
+                    if (chosenReq > 0)
+                        required = chosenReq;
                 }
             }
             else
@@ -436,7 +456,8 @@ public sealed class NcContractSystem : EntitySystem
                     pool.Remove(chosen);
 
                     var itemId = chosen.TargetItemId;
-                    var req = chosen.Required > 0 ? chosen.Required : required;
+                    var rolledReq = Roll(_random, chosen.Required, 1);
+                    var req = rolledReq > 0 ? rolledReq : required;
 
                     targets.Add(
                         new()
@@ -598,11 +619,12 @@ public sealed class NcContractSystem : EntitySystem
                 .Where(b => !b.Always)
                 .ToList();
 
-            if (randomRewards.Count > 0 && proto.BonusPickCount > 0)
+            if (randomRewards.Count > 0)
             {
-                var picks = proto.BonusPickCount;
-                if (picks < 0)
-                    picks = 0;
+                var picks = Roll(_random, proto.BonusPickCount, 0);
+
+                if (picks <= 0)
+                    goto DoneBonus;
 
                 for (var i = 0; i < picks; i++)
                 {
@@ -614,6 +636,8 @@ public sealed class NcContractSystem : EntitySystem
                     ApplyBonusReward(effective, rewardCurrencies, rewardItems, anyBonusApplied);
                     anyBonusApplied = true;
                 }
+
+                DoneBonus: ;
             }
         }
 

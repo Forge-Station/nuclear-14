@@ -50,6 +50,9 @@ public sealed partial class StorePresetStructuredPrototype : IPrototype
     [DataDefinition]
     public sealed partial class StoreCatalogEntry
     {
+        [DataField("match")]
+        public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
+
         [DataField("price", required: true)]
         public int Price;
 
@@ -58,16 +61,15 @@ public sealed partial class StorePresetStructuredPrototype : IPrototype
 
         [DataField("count")]
         public int? Count { get; set; }
-
-        [DataField("match")]
-        public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
-
     }
 }
 
 [Prototype("storeContract")]
 public sealed class StoreContractPrototype : IPrototype
 {
+    [DataField("match")]
+    public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
+
     [DataField("name")]
     public string Name { get; private set; } = string.Empty;
 
@@ -81,7 +83,7 @@ public sealed class StoreContractPrototype : IPrototype
     public string? TargetItem { get; private set; }
 
     [DataField("required")]
-    public int Required { get; private set; }
+    public IntRange Required { get; private set; } = IntRange.Fixed(0);
 
     [DataField("targets")]
     public List<StoreContractTargetEntry>? Targets { get; private set; }
@@ -99,10 +101,10 @@ public sealed class StoreContractPrototype : IPrototype
     public List<StoreContractBonusReward>? RewardItems { get; private set; }
 
     [DataField("targetCount")]
-    public int TargetCount { get; set; } = 1;
+    public IntRange TargetCount { get; private set; } = IntRange.Fixed(1);
 
     [DataField("bonusPickCount")]
-    public int BonusPickCount { get; private set; } = 1;
+    public IntRange BonusPickCount { get; private set; } = IntRange.Fixed(1);
 
     [DataField("reward")]
     public int Reward { get; private set; }
@@ -115,9 +117,6 @@ public sealed class StoreContractPrototype : IPrototype
 
     [DataField("rewardItemCount")]
     public int RewardItemCount { get; private set; }
-
-    [DataField("match")]
-    public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
 
     [IdDataField]
     public string ID { get; private set; } = default!;
@@ -140,7 +139,7 @@ public sealed partial class StoreContractTargetEntry
     public string TargetItemId { get; set; } = default!;
 
     [DataField("required")]
-    public int Required { get; set; }
+    public IntRange Required { get; set; } = IntRange.Fixed(0);
 
     [DataField("weight")]
     public int Weight { get; set; } = 1;
@@ -153,13 +152,12 @@ public enum StoreContractBonusMode
     Replace
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public enum PrototypeMatchMode : byte
 {
     Exact = 0,
-    Descendants = 1,
+    Descendants = 1
 }
-
 
 [DataDefinition]
 public sealed partial class StoreContractBonusReward
@@ -180,7 +178,7 @@ public sealed partial class StoreContractBonusReward
     public string? PoolId { get; set; }
 
     [DataField("always")]
-    public bool Always { get; set; } = false;
+    public bool Always { get; set; }
 
     [DataField("weight")]
     public int Weight { get; set; } = 1;
@@ -188,7 +186,6 @@ public sealed partial class StoreContractBonusReward
     [DataField("mode")]
     public StoreContractBonusMode Mode { get; set; } = StoreContractBonusMode.Add;
 }
-
 
 [DataDefinition]
 public sealed partial class StoreContractCurrencyRange
@@ -206,13 +203,11 @@ public sealed partial class StoreContractCurrencyRange
 [Prototype("ncContractRewardPool")]
 public sealed class NcContractRewardPoolPrototype : IPrototype
 {
-
     [DataField("entries")]
     public List<StoreContractBonusReward> Entries { get; private set; } = new();
 
     [IdDataField]
     public string ID { get; private set; } = default!;
-
 }
 
 [Serializable]
