@@ -31,6 +31,20 @@ public sealed class NcStoreLogicSystem : EntitySystem
     public void InvalidateInventoryCache(EntityUid root) => _inventoryCache.Remove(root);
 
 
+    private PrototypeMatchMode ResolveMatchMode(string expectedProtoId, PrototypeMatchMode configured)
+    {
+        // Explicit override always wins.
+        if (configured == PrototypeMatchMode.Descendants)
+            return PrototypeMatchMode.Descendants;
+
+        // Auto: abstract prototypes act as "category" keys and match all descendants.
+        if (_protos.TryIndex<EntityPrototype>(expectedProtoId, out var expectedProto) && expectedProto.Abstract)
+            return PrototypeMatchMode.Descendants;
+
+        return PrototypeMatchMode.Exact;
+    }
+
+
     public int GetBalance(EntityUid user, string stackType)
     {
         var total = 0;
@@ -44,41 +58,57 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
     public InventorySnapshot BuildInventorySnapshot(EntityUid root)
     {
-        var ancestorCounts = new Dictionary<string, int>();
-        var stackTypeCounts = new Dictionary<string, int>();
+        var protoCounts = new Dictionary<string, int>(StringComparer.Ordinal);
+        var ancestorCounts = new Dictionary<string, int>(StringComparer.Ordinal);
+        var stackTypeCounts = new Dictionary<string, int>(StringComparer.Ordinal);
 
         foreach (var ent in EnumerateDeepItemsUnique(root))
         {
             if (_ents.TryGetComponent(ent, out StackComponent? stack))
             {
                 var cnt = Math.Max(stack.Count, 0);
-                if (cnt > 0)
+                if (cnt > 0 && !string.IsNullOrWhiteSpace(stack.StackTypeId))
                 {
                     stackTypeCounts.TryGetValue(stack.StackTypeId, out var prev);
                     stackTypeCounts[stack.StackTypeId] = prev + cnt;
                 }
+
+                // For stack-based products we always match by StackTypeId; no need to count proto/ancestors.
+                continue;
             }
 
             if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
                 continue;
 
-            foreach (var id in GetProtoAndAncestors(meta.EntityPrototype))
+            var proto = meta.EntityPrototype;
+            if (!protoCounts.TryAdd(proto.ID, 1))
+                protoCounts[proto.ID] += 1;
+
+            foreach (var id in GetProtoAndAncestors(proto))
             {
                 ancestorCounts.TryGetValue(id, out var prev);
                 ancestorCounts[id] = prev + 1;
             }
         }
 
-        return new(ancestorCounts, stackTypeCounts);
+        return new(protoCounts, ancestorCounts, stackTypeCounts);
     }
 
-    public int GetOwnedFromSnapshot(in InventorySnapshot snapshot, string productProtoId)
+    public int GetOwnedFromSnapshot(in InventorySnapshot snapshot, string productProtoId) =>
+        GetOwnedFromSnapshot(snapshot, productProtoId, PrototypeMatchMode.Exact);
+
+    public int GetOwnedFromSnapshot(in InventorySnapshot snapshot, string productProtoId, PrototypeMatchMode matchMode)
     {
         var stackType = GetProductStackType(productProtoId);
         if (stackType != null)
             return snapshot.StackTypeCounts.TryGetValue(stackType, out var cnt) ? cnt : 0;
 
-        return snapshot.AncestorCounts.TryGetValue(productProtoId, out var units) ? units : 0;
+        var effective = ResolveMatchMode(productProtoId, matchMode);
+
+        if (effective == PrototypeMatchMode.Descendants)
+            return snapshot.AncestorCounts.TryGetValue(productProtoId, out var units) ? units : 0;
+
+        return snapshot.ProtoCounts.TryGetValue(productProtoId, out var exact) ? exact : 0;
     }
 
     private string? GetProductStackType(string productProtoId)
@@ -284,6 +314,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
         var maxByRemaining = listing.RemainingCount >= 0 ? listing.RemainingCount : int.MaxValue;
 
+        InvalidateInventoryCache(user);
         var balance = GetBalance(user, currency);
         var maxByMoney = unitPrice > 0 ? balance / unitPrice : int.MaxValue;
 
@@ -330,7 +361,8 @@ public sealed class NcStoreLogicSystem : EntitySystem
         if (!TryPickCurrencyForSell(store, listing, out var currency, out var unitPrice) || unitPrice <= 0)
             return false;
 
-        var owned = GetOwned(user, listing.ProductEntity);
+        InvalidateInventoryCache(user);
+        var owned = GetOwned(user, listing.ProductEntity, listing.MatchMode);
         var maxByRemaining = listing.RemainingCount >= 0 ? listing.RemainingCount : int.MaxValue;
 
         var maxPossible = Math.Min(owned, maxByRemaining);
@@ -339,7 +371,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
         var actual = Math.Min(count, maxPossible);
 
-        if (!TryTakeProductUnits(user, listing.ProductEntity, actual))
+        if (!TryTakeProductUnits(user, listing.ProductEntity, actual, listing.MatchMode))
             return false;
 
         var totalL = (long) unitPrice * actual;
@@ -355,25 +387,62 @@ public sealed class NcStoreLogicSystem : EntitySystem
         return true;
     }
 
-    private int GetOwnedInternal(EntityUid root, string productProtoId)
+    public bool TrySellFromContainer(
+        string listingId,
+        EntityUid machine,
+        NcStoreComponent? store,
+        EntityUid user,
+        EntityUid container,
+        int count = 1
+    )
+    {
+        if (store == null || store.Listings.Count == 0 || count <= 0)
+            return false;
+
+        var listing = store.Listings.FirstOrDefault(x => x.Id == listingId && x.Mode == StoreMode.Sell);
+        if (listing == null)
+            return false;
+
+        if (!TryPickCurrencyForSell(store, listing, out var currency, out var unitPrice) || unitPrice <= 0)
+            return false;
+
+        InvalidateInventoryCache(container);
+
+        var owned = GetOwnedInRoot(container, listing.ProductEntity, listing.MatchMode);
+        var maxByRemaining = listing.RemainingCount >= 0 ? listing.RemainingCount : int.MaxValue;
+
+        var maxPossible = Math.Min(owned, maxByRemaining);
+        if (maxPossible <= 0)
+            return false;
+
+        var actual = Math.Min(count, maxPossible);
+
+        if (!TryTakeProductUnitsFromRoot(container, listing.ProductEntity, actual, listing.MatchMode))
+            return false;
+
+        var totalL = (long) unitPrice * actual;
+        if (totalL > int.MaxValue)
+            return false;
+
+        GiveCurrency(user, currency, (int) totalL);
+
+        if (listing.RemainingCount > 0)
+            listing.RemainingCount = Math.Max(0, listing.RemainingCount - actual);
+
+        Sawmill.Info(
+            $"TrySellFromContainer: OK {listing.ProductEntity} x{actual} for {unitPrice} {currency} each (container={ToPrettyString(container)})");
+        return true;
+    }
+
+
+    private int GetOwnedInternal(EntityUid root, string productProtoId, PrototypeMatchMode matchMode)
     {
         var total = 0;
 
-        _protos.TryIndex<EntityPrototype>(productProtoId, out var expectedProto);
-
-        string? expectedStackType = null;
-        if (expectedProto != null)
-        {
-            var stackName = _compFactory.GetComponentName(typeof(StackComponent));
-            if (expectedProto.TryGetComponent(stackName, out StackComponent? prodStackDef))
-                expectedStackType = prodStackDef.StackTypeId;
-        }
+        var expectedStackType = GetProductStackType(productProtoId);
 
         foreach (var ent in EnumerateDeepItemsUnique(root))
         {
-            if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
-                continue;
-
             if (expectedStackType != null &&
                 _ents.TryGetComponent(ent, out StackComponent? stack) &&
                 stack.StackTypeId == expectedStackType)
@@ -382,41 +451,106 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 continue;
             }
 
-            if (IsProtoOrDescendant(meta.EntityPrototype, productProtoId))
-                total += 1;
+            if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
+                continue;
+
+            var effective = ResolveMatchMode(productProtoId, matchMode);
+
+            if (effective == PrototypeMatchMode.Descendants)
+            {
+                if (IsProtoOrDescendant(meta.EntityPrototype, productProtoId))
+                    total += 1;
+            }
+            else
+            {
+                if (meta.EntityPrototype.ID == productProtoId)
+                    total += 1;
+            }
         }
 
         return total;
     }
 
-    public int GetOwned(EntityUid user, string productProtoId) => GetOwnedInternal(user, productProtoId);
+    public int GetOwned(EntityUid user, string productProtoId) =>
+        GetOwnedInternal(user, productProtoId, PrototypeMatchMode.Exact);
 
-    public int GetOwnedInRoot(EntityUid root, string productProtoId) => GetOwnedInternal(root, productProtoId);
+    public int GetOwned(EntityUid user, string productProtoId, PrototypeMatchMode matchMode) =>
+        GetOwnedInternal(user, productProtoId, matchMode);
 
-    private bool TryTakeProductUnitsInternal(EntityUid root, string protoId, int amount)
+    public int GetOwnedInRoot(EntityUid root, string productProtoId) =>
+        GetOwnedInternal(root, productProtoId, PrototypeMatchMode.Exact);
+
+    public int GetOwnedInRoot(EntityUid root, string productProtoId, PrototypeMatchMode matchMode) =>
+        GetOwnedInternal(root, productProtoId, matchMode);
+
+    private bool TryTakeProductUnitsInternal(EntityUid root, string protoId, int amount, PrototypeMatchMode matchMode)
     {
         if (amount <= 0)
             return true;
 
         InvalidateInventoryCache(root);
 
-        string? stackType = null;
-        if (_protos.TryIndex<EntityPrototype>(protoId, out var prodProto))
-        {
-            var stackName = _compFactory.GetComponentName(typeof(StackComponent));
-            if (prodProto.TryGetComponent(stackName, out StackComponent? prodStackDef))
-                stackType = prodStackDef.StackTypeId;
-        }
+        var stackType = GetProductStackType(protoId);
 
         if (stackType == null)
         {
             var left = amount;
+
+            var effective = ResolveMatchMode(protoId, matchMode);
+
+            // Exact-only: remove only the requested prototype.
+            if (effective == PrototypeMatchMode.Exact)
+            {
+                foreach (var ent in EnumerateDeepItemsUnique(root))
+                {
+                    if (left <= 0)
+                        break;
+
+                    if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
+                        continue;
+
+                    if (meta.EntityPrototype.ID != protoId)
+                        continue;
+
+                    if (_ents.EntityExists(ent))
+                    {
+                        _ents.DeleteEntity(ent);
+                        left -= 1;
+                    }
+                }
+
+                return left <= 0;
+            }
+
+            // Descendants: consume exact first (if present), then any descendants.
             foreach (var ent in EnumerateDeepItemsUnique(root))
             {
                 if (left <= 0)
                     break;
 
                 if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
+                    continue;
+
+                if (meta.EntityPrototype.ID != protoId)
+                    continue;
+
+                if (_ents.EntityExists(ent))
+                {
+                    _ents.DeleteEntity(ent);
+                    left -= 1;
+                }
+            }
+
+            foreach (var ent in EnumerateDeepItemsUnique(root))
+            {
+                if (left <= 0)
+                    break;
+
+                if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
+                    continue;
+
+                // exact was already consumed above
+                if (meta.EntityPrototype.ID == protoId)
                     continue;
 
                 if (!IsProtoOrDescendant(meta.EntityPrototype, protoId))
@@ -432,6 +566,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
             return left <= 0;
         }
 
+        // Stack-based products: always match by StackTypeId.
         var leftStack = amount;
         foreach (var ent in EnumerateDeepItemsUnique(root))
         {
@@ -458,10 +593,16 @@ public sealed class NcStoreLogicSystem : EntitySystem
     }
 
     public bool TryTakeProductUnits(EntityUid user, string protoId, int amount) =>
-        TryTakeProductUnitsInternal(user, protoId, amount);
+        TryTakeProductUnitsInternal(user, protoId, amount, PrototypeMatchMode.Exact);
+
+    public bool TryTakeProductUnits(EntityUid user, string protoId, int amount, PrototypeMatchMode matchMode) =>
+        TryTakeProductUnitsInternal(user, protoId, amount, matchMode);
 
     public bool TryTakeProductUnitsFromRoot(EntityUid root, string protoId, int amount) =>
-        TryTakeProductUnitsInternal(root, protoId, amount);
+        TryTakeProductUnitsInternal(root, protoId, amount, PrototypeMatchMode.Exact);
+
+    public bool TryTakeProductUnitsFromRoot(EntityUid root, string protoId, int amount, PrototypeMatchMode matchMode) =>
+        TryTakeProductUnitsInternal(root, protoId, amount, matchMode);
 
     public bool TryExchange(
         string listingId,
@@ -488,7 +629,8 @@ public sealed class NcStoreLogicSystem : EntitySystem
         if (requiredCount <= 0)
             return false;
 
-        var owned = GetOwned(user, listing.ProductEntity);
+        InvalidateInventoryCache(user);
+        var owned = GetOwned(user, listing.ProductEntity, listing.MatchMode);
         if (owned < requiredCount)
             return false;
 
@@ -496,7 +638,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
             rewardPerUnit <= 0)
             return false;
 
-        if (!TryTakeProductUnits(user, listing.ProductEntity, requiredCount))
+        if (!TryTakeProductUnits(user, listing.ProductEntity, requiredCount, listing.MatchMode))
             return false;
 
         var totalRewardL = (long) rewardPerUnit * requiredCount;
@@ -857,29 +999,40 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 if (protoIds.Length == 0)
                     continue;
 
-                foreach (var protoId in protoIds)
+                if (listing.MatchMode != PrototypeMatchMode.Descendants)
                 {
-                    if (taken >= want)
-                        break;
-
-                    if (!protoCounts.TryGetValue(protoId, out var available) || available <= 0)
+                    if (!protoCounts.TryGetValue(listing.ProductEntity, out var available) || available <= 0)
                         continue;
 
-                    if (!protoCache.TryGetValue(protoId, out var proto) &&
-                        !_protos.TryIndex(protoId, out proto))
-                        continue;
+                    taken = Math.Min(available, want);
+                    protoCounts[listing.ProductEntity] = available - taken;
+                }
+                else
+                {
+                    foreach (var protoId in protoIds)
+                    {
+                        if (taken >= want)
+                            break;
 
-                    protoCache[protoId] = proto;
+                        if (!protoCounts.TryGetValue(protoId, out var available) || available <= 0)
+                            continue;
 
-                    if (!IsProtoOrDescendant(proto, listing.ProductEntity))
-                        continue;
+                        if (!protoCache.TryGetValue(protoId, out var proto) &&
+                            !_protos.TryIndex(protoId, out proto))
+                            continue;
 
-                    var take = Math.Min(available, want - taken);
-                    if (take <= 0)
-                        continue;
+                        protoCache[protoId] = proto;
 
-                    protoCounts[protoId] = available - take;
-                    taken += take;
+                        if (!IsProtoOrDescendant(proto, listing.ProductEntity))
+                            continue;
+
+                        var take = Math.Min(available, want - taken);
+                        if (take <= 0)
+                            continue;
+
+                        protoCounts[protoId] = available - take;
+                        taken += take;
+                    }
                 }
             }
 
@@ -936,7 +1089,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
             if (take <= 0)
                 continue;
 
-            if (!TryTakeProductUnitsInternal(container, listing.ProductEntity, take))
+            if (!TryTakeProductUnitsInternal(container, listing.ProductEntity, take, listing.MatchMode))
                 continue;
 
             if (listing.RemainingCount > 0)
@@ -1001,6 +1154,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
         List<MassSellStep> Steps);
 
     public readonly record struct InventorySnapshot(
+        Dictionary<string, int> ProtoCounts,
         Dictionary<string, int> AncestorCounts,
         Dictionary<string, int> StackTypeCounts);
 }

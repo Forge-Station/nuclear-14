@@ -251,7 +251,7 @@ public sealed class StoreStructuredSystem : EntitySystem
                 price = p;
             }
 
-            var owned = _logic.GetOwnedFromSnapshot(userSnap, l.ProductEntity);
+            var owned = _logic.GetOwnedFromSnapshot(userSnap, l.ProductEntity, l.MatchMode);
 
             listings.Add(
                 new(
@@ -689,10 +689,10 @@ public sealed class StoreStructuredSystem : EntitySystem
                         continue;
                     }
 
-                    var owned = _logic.GetOwnedFromSnapshot(userSnap, t.TargetItem);
+                    var owned = _logic.GetOwnedFromSnapshot(userSnap, t.TargetItem, t.MatchMode);
 
                     if (crateSnap.HasValue)
-                        owned += _logic.GetOwnedFromSnapshot(crateSnap.Value, t.TargetItem);
+                        owned += _logic.GetOwnedFromSnapshot(crateSnap.Value, t.TargetItem, t.MatchMode);
 
                     var prog = Math.Min(owned, t.Required);
                     t.Progress = prog;
@@ -715,10 +715,10 @@ public sealed class StoreStructuredSystem : EntitySystem
                     continue;
                 }
 
-                var owned = _logic.GetOwnedFromSnapshot(userSnap, contract.TargetItem);
+                var owned = _logic.GetOwnedFromSnapshot(userSnap, contract.TargetItem, contract.MatchMode);
 
                 if (crateSnap.HasValue)
-                    owned += _logic.GetOwnedFromSnapshot(crateSnap.Value, contract.TargetItem);
+                    owned += _logic.GetOwnedFromSnapshot(crateSnap.Value, contract.TargetItem, contract.MatchMode);
 
                 contract.Progress = Math.Min(owned, contract.Required);
             }

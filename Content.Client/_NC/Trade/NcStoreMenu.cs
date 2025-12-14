@@ -214,14 +214,15 @@ public sealed partial class NcStoreMenu : FancyWindow
 
     public void PopulateContracts(List<ContractClientData>? list)
     {
-        if (ContractList == null)
+        var contractList = ContractList;
+
+        if (contractList == null)
             return;
 
-        ContractList.RemoveAllChildren();
-
+        contractList.RemoveAllChildren();
         if (list == null || list.Count == 0)
         {
-            ContractList.AddChild(
+            contractList.AddChild(
                 new Label
                 {
                     Text = "Контрактов пока нет. Загляните позже.",
@@ -682,7 +683,7 @@ public sealed partial class NcStoreMenu : FancyWindow
             bottom.AddChild(btn);
             root.AddChild(bottom);
 
-            ContractList.AddChild(panel);
+            contractList.AddChild(panel);
         }
     }
 
@@ -836,7 +837,7 @@ public sealed partial class NcStoreMenu : FancyWindow
             {
                 var initQty = _qtyCache.TryGetValue(it.Id, out var saved) ? saved : 1;
 
-                var actionsEnabled = !(mode == StoreMode.Sell && it.Category == CrateCategory);
+                var actionsEnabled = true;
 
                 ctrl = new(it, _sprites, _balance, initQty, actionsEnabled);
                 ctrl.OnQtyChanged += newQty => _qtyCache[it.Id] = newQty;
@@ -847,10 +848,7 @@ public sealed partial class NcStoreMenu : FancyWindow
                         ctrl.OnBuyPressed += qty => emit(it, qty);
                         break;
                     case StoreMode.Sell:
-                        // Для обычных лотов — обычная продажа.
-                        // Для лотов "Готово к продаже в ящике" — продаём только через кнопку ящика.
-                        if (it.Category != CrateCategory)
-                            ctrl.OnSellPressed += qty => emit(it, qty);
+                        ctrl.OnSellPressed += qty => emit(it, qty);
                         break;
                 }
 
@@ -993,7 +991,6 @@ public sealed partial class NcStoreMenu : FancyWindow
         }
     }
 
-    // --- Вспомогательные штуки ---
 
     private string CurrencyName(string? currencyId)
     {

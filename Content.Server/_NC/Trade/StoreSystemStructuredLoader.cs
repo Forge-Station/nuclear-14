@@ -31,10 +31,9 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
     private void OnStartup(EntityUid uid, NcStoreComponent comp, ComponentStartup args)
     {
-        if (comp.Listings.Count > 0)
-            return;
+        if (comp.Listings.Count == 0)
+            TryLoadPresets(uid, comp, "Startup");
 
-        TryLoadPresets(uid, comp, "Startup");
         _contracts.InitContractsForStore(uid, comp);
     }
 
@@ -107,6 +106,7 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
                 {
                     Id = id,
                     ProductEntity = entry.Proto,
+                    MatchMode = entry.MatchMode,
                     Mode = mode,
                     Categories = new() { category, },
                     Conditions = new(),

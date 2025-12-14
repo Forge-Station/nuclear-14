@@ -41,7 +41,8 @@ public sealed class NcContractSystem : EntitySystem
                 {
                     TargetItem = contract.TargetItem,
                     Required = contract.Required,
-                    Progress = contract.Progress
+                    Progress = contract.Progress,
+                    MatchMode = contract.MatchMode
                 }
             };
         }
@@ -70,8 +71,9 @@ public sealed class NcContractSystem : EntitySystem
             return false;
         }
 
+
         var pulledCrate = GetPulledClosedCrate(user);
-        var requiredByProto = new Dictionary<string, int>(StringComparer.Ordinal);
+        var requiredByKey = new Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int>();
 
         foreach (var t in targets)
         {
@@ -82,36 +84,38 @@ public sealed class NcContractSystem : EntitySystem
                 return false;
             }
 
-            if (!requiredByProto.TryAdd(t.TargetItem, t.Required))
-                requiredByProto[t.TargetItem] = checked(requiredByProto[t.TargetItem] + t.Required);
+            var key = (t.TargetItem, t.MatchMode);
+
+            if (!requiredByKey.TryAdd(key, t.Required))
+                requiredByKey[key] = checked(requiredByKey[key] + t.Required);
         }
 
-        foreach (var kvp in requiredByProto)
+        foreach (var kvp in requiredByKey)
         {
-            var protoId = kvp.Key;
+            var (protoId, matchMode) = kvp.Key;
             var required = kvp.Value;
 
-            var owned = _logic.GetOwned(user, protoId);
+            var owned = _logic.GetOwned(user, protoId, matchMode);
 
             if (pulledCrate is { } crateUid)
-                owned += _logic.GetOwnedInRoot(crateUid, protoId);
+                owned += _logic.GetOwnedInRoot(crateUid, protoId, matchMode);
 
             if (owned < required)
                 return false;
         }
 
-        foreach (var kvp in requiredByProto)
+        foreach (var kvp in requiredByKey)
         {
-            var protoId = kvp.Key;
+            var (protoId, matchMode) = kvp.Key;
             var required = kvp.Value;
 
             var left = required;
 
-            var ownedUser = _logic.GetOwned(user, protoId);
+            var ownedUser = _logic.GetOwned(user, protoId, matchMode);
             var takeFromUser = Math.Min(left, ownedUser);
 
             if (takeFromUser > 0 &&
-                !_logic.TryTakeProductUnits(user, protoId, takeFromUser))
+                !_logic.TryTakeProductUnits(user, protoId, takeFromUser, matchMode))
             {
                 Sawmill.Error(
                     $"[Claim] Failed to take {takeFromUser}x {protoId} " +
@@ -131,7 +135,7 @@ public sealed class NcContractSystem : EntitySystem
                     return false;
                 }
 
-                if (!_logic.TryTakeProductUnitsFromRoot(crateUid, protoId, left))
+                if (!_logic.TryTakeProductUnitsFromRoot(crateUid, protoId, left, matchMode))
                 {
                     Sawmill.Error(
                         $"[Claim] Failed to take {left}x {protoId} " +

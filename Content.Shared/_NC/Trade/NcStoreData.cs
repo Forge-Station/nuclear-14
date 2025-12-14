@@ -46,6 +46,10 @@ public sealed class ContractTargetServerData
     public string TargetItem { get; set; } = string.Empty;
     public int Required { get; set; }
     public int Progress { get; set; }
+
+    [DataField("match")]
+    public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
+
 }
 
 [Serializable]
@@ -57,6 +61,9 @@ public sealed class ContractServerData
     public string TargetItem { get; set; } = string.Empty;
     public int Required { get; set; }
     public int Progress { get; set; }
+
+    [DataField("match")]
+    public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
 
 
     public string Id { get; set; } = string.Empty;
@@ -110,6 +117,9 @@ public sealed class ContractTargetClientData
         Required = required;
         Progress = progress;
     }
+
+    [DataField("match")]
+    public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
 
     public string TargetItem { get; set; } = string.Empty;
     public int Required { get; set; }

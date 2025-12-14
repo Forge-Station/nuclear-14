@@ -521,6 +521,7 @@
         price: 20
       - proto: N14ClothingUniformBase
         price: 20
+        match: Descendants
       - proto: N14ScrapElectronic1
         price: 2
       - proto: N14ScrapGold1

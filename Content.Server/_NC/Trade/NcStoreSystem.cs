@@ -17,6 +17,7 @@ public sealed class NcStoreSystem : EntitySystem
 {
     private const float MaxUseDistance = 2.5f;
     private const string ReadyListingSuffix = "__ready";
+    private const string CrateListingSuffix = "__crate";
 
     [Dependency] private readonly AccessReaderSystem _accessReader = default!;
     [Dependency] private readonly AudioSystem _audio = default!;
@@ -48,19 +49,20 @@ public sealed class NcStoreSystem : EntitySystem
         return true;
     }
 
-    private bool IsInUseRange(EntityUid store, EntityUid user)
+    private bool IsInRange(EntityUid a, EntityUid b, float maxDistance)
     {
-        if (!_entMan.TryGetComponent(store, out TransformComponent? storeXf))
+        if (!_entMan.TryGetComponent(a, out TransformComponent? aXf))
             return false;
-        if (!_entMan.TryGetComponent(user, out TransformComponent? userXf))
+        if (!_entMan.TryGetComponent(b, out TransformComponent? bXf))
             return false;
 
-        var storePos = _transform.GetWorldPosition(storeXf);
-        var userPos = _transform.GetWorldPosition(userXf);
+        var aPos = _transform.GetWorldPosition(aXf);
+        var bPos = _transform.GetWorldPosition(bXf);
 
-        var dist = Vector2.Distance(storePos, userPos);
-        return dist <= MaxUseDistance;
+        return Vector2.Distance(aPos, bPos) <= maxDistance;
     }
+
+    private bool IsInUseRange(EntityUid store, EntityUid user) => IsInRange(store, user, MaxUseDistance);
 
     private bool CanInteract(EntityUid store, NcStoreComponent comp, EntityUid user)
     {
@@ -70,17 +72,28 @@ public sealed class NcStoreSystem : EntitySystem
         return IsInUseRange(store, user);
     }
 
-    private static string NormalizeListingId(string id)
+    private static bool TryParseSellListingId(
+        string rawId,
+        out string listingId,
+        out bool fromCrate
+    )
     {
-        if (string.IsNullOrEmpty(id))
-            return string.Empty;
+        fromCrate = false;
+        listingId = rawId;
 
-        if (id.EndsWith(ReadyListingSuffix, StringComparison.Ordinal))
-            return id[..^ReadyListingSuffix.Length];
-        if (id.EndsWith("__crate", StringComparison.Ordinal))
-            return string.Empty;
+        if (string.IsNullOrEmpty(listingId))
+            return false;
 
-        return id;
+        if (listingId.EndsWith(CrateListingSuffix, StringComparison.Ordinal))
+        {
+            fromCrate = true;
+            listingId = listingId[..^CrateListingSuffix.Length];
+        }
+
+        if (listingId.EndsWith(ReadyListingSuffix, StringComparison.Ordinal))
+            listingId = listingId[..^ReadyListingSuffix.Length];
+
+        return !string.IsNullOrEmpty(listingId);
     }
 
 
@@ -92,8 +105,6 @@ public sealed class NcStoreSystem : EntitySystem
         if (!CanInteract(uid, comp, actor))
             return;
 
-        if (!IsInUseRange(uid, actor))
-            return;
 
         var listing = comp.Listings.FirstOrDefault(x => x.Id == msg.ListingId && x.Mode == StoreMode.Buy);
         if (listing == null)
@@ -115,20 +126,36 @@ public sealed class NcStoreSystem : EntitySystem
         if (!CanInteract(uid, comp, actor))
             return;
 
-        if (!IsInUseRange(uid, actor))
-            return;
-        var requestedId = NormalizeListingId(msg.ListingId);
-        if (string.IsNullOrEmpty(requestedId))
+        if (!TryParseSellListingId(msg.ListingId, out var requestedId, out var fromCrate))
             return;
 
         var listing = comp.Listings.FirstOrDefault(x => x.Id == requestedId && x.Mode == StoreMode.Sell);
-
-
         if (listing == null)
             return;
 
         var count = Math.Max(1, msg.Count);
-        if (!_logic.TrySell(listing.Id, uid, comp, actor, count))
+
+        bool ok;
+
+        if (fromCrate)
+        {
+            if (!_entMan.TryGetComponent(actor, out PullerComponent? puller) ||
+                puller.Pulling is not { } crate)
+                return;
+
+            if (!_entMan.TryGetComponent(crate, out EntityStorageComponent? storage) || storage.Open)
+                return;
+
+            const float maxCrateDistance = 2f;
+            if (!IsInRange(uid, crate, maxCrateDistance))
+                return;
+
+            ok = _logic.TrySellFromContainer(listing.Id, uid, comp, actor, crate, count);
+        }
+        else
+            ok = _logic.TrySell(listing.Id, uid, comp, actor, count);
+
+        if (!ok)
             return;
 
         _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid, AudioParams.Default.WithVolume(-2f));
@@ -158,16 +185,8 @@ public sealed class NcStoreSystem : EntitySystem
         if (storage.Open)
             return;
 
-        var storeXf = _entMan.GetComponent<TransformComponent>(uid);
-        var crateXf = _entMan.GetComponent<TransformComponent>(crate);
-
-        var storePos = _transform.GetWorldPosition(storeXf);
-        var cratePos = _transform.GetWorldPosition(crateXf);
-
         const float maxDistance = 2f;
-        var dist = Vector2.Distance(storePos, cratePos);
-
-        if (dist > maxDistance)
+        if (!IsInRange(uid, crate, maxDistance))
             return;
 
         if (!_logic.TryMassSellFromContainer(uid, comp, actor, crate))

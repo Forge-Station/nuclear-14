@@ -11,6 +11,9 @@ public sealed class StoreListingPrototype : IPrototype
     [IdDataField]
     public string Id = string.Empty;
 
+    [DataField("match")]
+    public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
+
     [DataField("mode")]
     public StoreMode Mode = StoreMode.Buy;
 
@@ -55,6 +58,10 @@ public sealed partial class StorePresetStructuredPrototype : IPrototype
 
         [DataField("count")]
         public int? Count { get; set; }
+
+        [DataField("match")]
+        public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
+
     }
 }
 
@@ -109,6 +116,9 @@ public sealed class StoreContractPrototype : IPrototype
     [DataField("rewardItemCount")]
     public int RewardItemCount { get; private set; }
 
+    [DataField("match")]
+    public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
+
     [IdDataField]
     public string ID { get; private set; } = default!;
 }
@@ -142,6 +152,14 @@ public enum StoreContractBonusMode
 
     Replace
 }
+
+[Serializable, NetSerializable]
+public enum PrototypeMatchMode : byte
+{
+    Exact = 0,
+    Descendants = 1,
+}
+
 
 [DataDefinition]
 public sealed partial class StoreContractBonusReward
