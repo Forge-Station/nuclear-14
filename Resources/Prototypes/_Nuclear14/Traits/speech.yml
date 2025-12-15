@@ -81,6 +81,7 @@
     - BoSWashingtonPaladin
     - BoSMidPaladinCommander
     - BoSMidPaladin
+    - BoSMidInquisitor # Forge-Change
     - Overseer
     - VaultSecurity
   - !type:CharacterTraitRequirement
