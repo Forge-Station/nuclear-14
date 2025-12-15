@@ -203,6 +203,23 @@
   components:
   - type: Sprite
     state: armorbench
+  # Forge-Change-Start
+  - type: ContainerContainer
+    containers:
+      storagebase: !type:Container
+  - type: UserInterface
+    interfaces:
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+      enum.LatheUiKey.Key:
+        type: LatheBoundUserInterface
+  - type: Craftable
+  - type: Storage
+    craft: true
+    maxItemSize: Ginormous
+    grid:
+    - 0,0,12,9
+  # Forge-Change-End
   - type: MaterialStorage
     whitelist:
       tags:
@@ -232,6 +249,11 @@
     - N14InsectShield
     - MakeshiftShield
     - WoodenBuckler
+    # Forge-Change-Start
+    # Blueprints
+    - N14ClothingOuterCombatArmorBlueprint
+    - N14ClothingOuterCombatArmorMK2Blueprint
+    # Forge-Change-End
     # Other
     - N14MaterialLeather
     - ClothingBeltQuiver # In misc.yml

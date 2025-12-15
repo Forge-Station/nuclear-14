@@ -1,0 +1,15 @@
+- type: latheRecipe
+  id: N14ClothingOuterCombatArmorBlueprint
+  result: N14ClothingOuterCombatArmorBlueprint
+  category: N14Blueprints
+  completetime: 1
+  materials:
+    Paper: 100
+
+- type: latheRecipe
+  id: N14ClothingOuterCombatArmorMK2Blueprint
+  result: N14ClothingOuterCombatArmorMK2Blueprint
+  category: N14Blueprints
+  completetime: 1
+  materials:
+    Paper: 100
