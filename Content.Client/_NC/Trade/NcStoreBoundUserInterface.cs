@@ -12,7 +12,6 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
 {
     private readonly IPlayerManager _player = IoCManager.Resolve<IPlayerManager>();
     private int _lastRevision = int.MinValue;
-
     private NcStoreMenu? _menu;
 
     private EntityUid? Actor => _player.LocalSession?.AttachedEntity;
@@ -34,7 +33,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
 
         _lastRevision = st.Revision;
 
-        _menu.ApplyState(st.Balance, st.Listings.ToList(), st.MassSellTotals);
+        _menu.ApplyState(st.Balance, st.BalanceByCurrency, st.Listings.ToList(), st.MassSellTotals);
         _menu.PopulateContracts(st.Contracts);
         _menu.Visible = true;
     }
