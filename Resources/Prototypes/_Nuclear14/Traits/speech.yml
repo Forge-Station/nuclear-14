@@ -65,6 +65,11 @@
   category: Speech
   points: 2 # Forge-Change
   requirements:
+  - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+        - BrotherhoodWashington
+        - BrotherhoodWest
   - !type:CharacterJobRequirement
     inverted: true
     jobs:
@@ -77,11 +82,28 @@
     - NCRRanger # Forge-Change
     - NCRSGT
 #    - CaravanLeader
-    - BoSWashingtonCommander
-    - BoSWashingtonPaladin
+#    - BoSWashingtonCommander
+#    - BoSWashingtonPaladin
     - BoSMidPaladinCommander
     - BoSMidPaladin
-    - BoSMidInquisitor # Forge-Change
+    # Forge-Change-Start
+    - NCRMPinvestigator
+    - NCRWS
+    - NCREngineer
+    - NCRMedic
+    - NCRSoldier
+    - NCRCadet
+    - BoSMidInquisitor
+    - BoSMidScribe
+    - BoSMidKnight
+    - BoSMidSquire
+    - CaesarLegionCenturion
+    - CaesarLegionVenator
+    - CaesarLegionDean
+    - CaesarLegionLegionnaireVeteran
+    - CaesarLegionLegionnaireWarrior
+    - CaesarLegionLegionnaireRecruit
+    # Forge-Change-End
     - Overseer
     - VaultSecurity
   - !type:CharacterTraitRequirement

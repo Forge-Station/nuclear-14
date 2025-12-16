@@ -51,9 +51,22 @@
         - BoSWashingtonInitiate
         - BoSMidPaladinCommander
         - BoSMidPaladin
-        - BoSMidInquisitor # Forge-Change
         - BoSMidKnight
         - BoSMidSquire
+        # Forge-Change-Start
+        - NCRMPinvestigator
+        - BoSMidInquisitor
+        - BoSWestElderCommander
+        - BoSWestPaladin
+        - BoSWestKnight
+        - BoSWestGunsmith
+        - CaesarLegionCenturion
+        - CaesarLegionVenator
+        - CaesarLegionDean
+        - CaesarLegionLegionnaireVeteran
+        - CaesarLegionLegionnaireWarrior
+        - CaesarLegionLegionnaireRecruit
+        # Forge-Change-End
         - VaultSecurity
   functions:
     - !type:TraitAddComponent
