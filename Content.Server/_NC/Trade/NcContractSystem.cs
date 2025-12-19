@@ -241,9 +241,17 @@ public sealed class NcContractSystem : EntitySystem
                 _logic.TrySpawnProduct(contract.RewardItem!, user);
         }
 
-        comp.Contracts.Remove(contractId);
-        RefillContractsForStore(store, comp);
+        var repeatable = contract.Repeatable;
 
+        comp.Contracts.Remove(contractId);
+
+        if (!repeatable)
+        {
+            comp.CompletedOneTimeContracts.Add(contractId);
+            return true;
+        }
+
+        RefillContractsForStore(store, comp);
         return true;
     }
 
@@ -292,11 +300,15 @@ public sealed class NcContractSystem : EntitySystem
                 continue;
             }
 
+            if (!proto.Repeatable && comp.CompletedOneTimeContracts.Contains(contractId))
+                continue;
+
             comp.Contracts[contractId] = CreateContractData(uid, proto);
 
             if (fillOnlyFirstMissing)
                 break;
         }
+
     }
 
     private bool TryGetPreset(
@@ -736,15 +748,13 @@ public sealed class NcContractSystem : EntitySystem
             Required = required,
             Progress = 0,
             MatchMode = matchMode,
-
             Reward = mainCurrencyAmount,
             RewardCurrency = mainCurrency ?? string.Empty,
             RewardItem = mainItem,
             RewardItemCount = mainItemCount,
-
             Difficulty = proto.Difficulty,
             Description = proto.Description,
-
+            Repeatable = proto.Repeatable,
             RewardCurrencies = rewardCurrencies,
             RewardItems = rewardItems,
             Targets = targets

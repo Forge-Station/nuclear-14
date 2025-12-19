@@ -101,7 +101,6 @@ public sealed partial class NcStoreMenu : FancyWindow
         MassSellPulledCrateButton.ToolTip =
             "Для массовой продажи необходимо:\n• Ящик должен быть ЗАКРЫТ\n• Вы должны его тянуть";
         MassSellPulledCrateButton.OnPressed += _ => OnMassSellPulledCrate?.Invoke();
-
     }
 
     public event Action<string>? OnSearchChanged;
@@ -252,11 +251,11 @@ public sealed partial class NcStoreMenu : FancyWindow
     public void PopulateContracts(List<ContractClientData>? list)
     {
         var contractList = ContractList;
-
         if (contractList == null)
             return;
 
         contractList.RemoveAllChildren();
+
         if (list == null || list.Count == 0)
         {
             contractList.AddChild(
@@ -282,20 +281,41 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         foreach (var c in ordered)
         {
+            // --- Карточка: слева полоска сложности на всю высоту, справа контент ---
+            var cardRow = new BoxContainer
+            {
+                Orientation = BoxContainer.LayoutOrientation.Horizontal,
+                HorizontalExpand = true,
+                Margin = new(4, 0, 4, 8)
+            };
+
+            var diffStrip = new PanelContainer
+            {
+                MinSize = new(4, 0),
+                VerticalExpand = true,
+                PanelOverride = new StyleBoxFlat
+                {
+                    BackgroundColor = DifficultyColor(c.Difficulty, c.Completed)
+                },
+                Margin = new(0, 0, 6, 0)
+            };
+            cardRow.AddChild(diffStrip);
+
             var panel = new PanelContainer
             {
+                HorizontalExpand = true,
                 PanelOverride = new StyleBoxFlat
                 {
                     BackgroundColor = new(0.06f, 0.06f, 0.07f, 0.98f),
-                    BorderColor = new(0f, 0f, 0f, 0.9f),
-                    BorderThickness = new(1),
+                    BorderColor = DifficultyColor(c.Difficulty, c.Completed),
+                    BorderThickness = new(2),
                     ContentMarginLeftOverride = 8,
                     ContentMarginRightOverride = 8,
                     ContentMarginTopOverride = 6,
                     ContentMarginBottomOverride = 6
-                },
-                Margin = new(4, 0, 4, 8)
+                }
             };
+            cardRow.AddChild(panel);
 
             var root = new BoxContainer
             {
@@ -312,18 +332,6 @@ public sealed partial class NcStoreMenu : FancyWindow
                 Margin = new(0, 0, 0, 4)
             };
 
-            var diffStrip = new PanelContainer
-            {
-                MinSize = new(4, 0),
-                VerticalExpand = true,
-                PanelOverride = new StyleBoxFlat
-                {
-                    BackgroundColor = DifficultyColor(c.Difficulty, c.Completed)
-                },
-                Margin = new(0, 0, 6, 0)
-            };
-            header.AddChild(diffStrip);
-
             var titleText = string.IsNullOrWhiteSpace(c.Name)
                 ? $"{DifficultyName(c.Difficulty)} контракт"
                 : c.Name;
@@ -331,19 +339,51 @@ public sealed partial class NcStoreMenu : FancyWindow
             var titleLabel = new Label
             {
                 Text = titleText,
-                Margin = new(0, 0, 4, 0)
+                Margin = new(0, 0, 6, 0)
             };
             titleLabel.StyleClasses.Add("LabelHeading");
             header.AddChild(titleLabel);
 
-            if (c.Completed)
+            // Спейсер — всё “служебное” уходит вправо
+            header.AddChild(new() { HorizontalExpand = true, });
+
+            // --- Бейдж одноразового контракта (видимый и аккуратный) ---
+            if (!c.Repeatable)
             {
-                header.AddChild(
-                    new Label
+                const string oneTimeTip =
+                    "Единичная заявка.\n" +
+                    "Этот терминал принимает её один раз за смену.\n" +
+                    "После новой смены заявка появится снова.";
+
+                var badge = new PanelContainer
+                {
+                    VerticalAlignment = VAlignment.Center,
+                    Margin = new(0, 1, 6, 0),
+                    MouseFilter = MouseFilterMode.Stop,
+                    PanelOverride = new StyleBoxFlat
                     {
-                        Text = "✔ Выполнено",
-                        Margin = new(4, 0, 0, 0)
-                    });
+                        BackgroundColor = new(0.12f, 0.12f, 0.14f),
+                        BorderColor = new(0f, 0f, 0f, 0.7f),
+                        BorderThickness = new(1),
+                        ContentMarginLeftOverride = 8,
+                        ContentMarginRightOverride = 8,
+                        ContentMarginTopOverride = 2,
+                        ContentMarginBottomOverride = 2
+                    },
+                    ToolTip = oneTimeTip
+                };
+
+                var badgeText = new Label
+                {
+                    Text = "Разовый",
+                    VerticalAlignment = VAlignment.Center,
+                    ToolTip = oneTimeTip,
+                    MouseFilter = MouseFilterMode.Stop
+                };
+                badgeText.StyleClasses.Add("LabelSubText");
+
+                badge.AddChild(badgeText);
+                header.AddChild(badge);
             }
 
             root.AddChild(header);
@@ -372,8 +412,7 @@ public sealed partial class NcStoreMenu : FancyWindow
                         Margin = new(0, 0, 0, 2)
                     });
 
-                var targets = c.Targets;
-                foreach (var t in targets)
+                foreach (var t in c.Targets)
                 {
                     EntityPrototype? targetProto = null;
                     if (!string.IsNullOrWhiteSpace(t.TargetItem))
@@ -427,7 +466,6 @@ public sealed partial class NcStoreMenu : FancyWindow
             }
             else
             {
-                // Legacy: одна цель как раньше.
                 EntityPrototype? targetProto = null;
                 if (!string.IsNullOrWhiteSpace(c.TargetItem))
                     _proto.TryIndex(c.TargetItem, out targetProto);
@@ -477,7 +515,7 @@ public sealed partial class NcStoreMenu : FancyWindow
                 }
             }
 
-            // --- Прогресс (суммарный) ---
+            // --- Прогресс ---
             if (!c.Completed)
             {
                 var max = c.Required <= 0 ? 1 : c.Required;
@@ -487,7 +525,7 @@ public sealed partial class NcStoreMenu : FancyWindow
                     new Label
                     {
                         Text = $"Прогресс: {c.Progress} / {c.Required}",
-                        Margin = new(0, 0, 0, 2)
+                        Margin = new(0, 2, 0, 2)
                     });
 
                 root.AddChild(
@@ -497,16 +535,33 @@ public sealed partial class NcStoreMenu : FancyWindow
                         MaxValue = max,
                         Value = val,
                         HorizontalExpand = true,
+                        MinSize = new(0, 14),
                         Margin = new(0, 0, 0, 4)
                     });
             }
 
-            // --- Награды и кнопка ---
-            var bottom = new BoxContainer
+            // --- Низ карточки: награды слева + действия справа ---
+            var bottomWrap = new BoxContainer
             {
                 Orientation = BoxContainer.LayoutOrientation.Horizontal,
                 HorizontalExpand = true,
-                Margin = new(0, 2, 0, 0)
+                Margin = new(0, 6, 0, 0)
+            };
+
+            // Левая часть: награды в панели
+            var rewardsPanel = new PanelContainer
+            {
+                HorizontalExpand = true,
+                PanelOverride = new StyleBoxFlat
+                {
+                    BackgroundColor = new(0.05f, 0.05f, 0.06f, 0.6f),
+                    BorderColor = new(0f, 0f, 0f, 0.55f),
+                    BorderThickness = new(1),
+                    ContentMarginLeftOverride = 8,
+                    ContentMarginRightOverride = 8,
+                    ContentMarginTopOverride = 6,
+                    ContentMarginBottomOverride = 6
+                }
             };
 
             var rewardsCol = new BoxContainer
@@ -514,25 +569,16 @@ public sealed partial class NcStoreMenu : FancyWindow
                 Orientation = BoxContainer.LayoutOrientation.Vertical,
                 HorizontalExpand = true
             };
+            rewardsPanel.AddChild(rewardsCol);
 
-            // --- Награда: валюты (много) или fallback ---
+            var rewardsHeader = new Label { Text = "Награда", Margin = new(0, 0, 0, 3), };
+            rewardsHeader.StyleClasses.Add("LabelHeading");
+            rewardsCol.AddChild(rewardsHeader);
+
+            // Валюты (много) или fallback
             if (c.RewardCurrencies is { Count: > 0, } currencies)
             {
-                var rewardsRow = new BoxContainer
-                {
-                    Orientation = BoxContainer.LayoutOrientation.Horizontal,
-                    Margin = new(0, 0, 0, 2)
-                };
-
-                rewardsRow.AddChild(
-                    new Label
-                    {
-                        Text = "Награда:",
-                        Margin = new(0, 0, 4, 0)
-                    });
-
                 var parts = new List<string>();
-
                 foreach (var kv in currencies)
                 {
                     var curId = kv.Key;
@@ -547,22 +593,15 @@ public sealed partial class NcStoreMenu : FancyWindow
                     parts.Add($"{amount} {name}");
                 }
 
-                rewardsRow.AddChild(
-                    new Label
-                    {
-                        Text = string.Join(", ", parts)
-                    });
-
-                rewardsCol.AddChild(rewardsRow);
+                if (parts.Count > 0)
+                {
+                    var curLine = new Label { Text = string.Join(", ", parts), };
+                    curLine.StyleClasses.Add("LabelSubText");
+                    rewardsCol.AddChild(curLine);
+                }
             }
             else if (c.Reward > 0 && !string.IsNullOrWhiteSpace(c.RewardCurrency))
             {
-                var rewardRow = new BoxContainer
-                {
-                    Orientation = BoxContainer.LayoutOrientation.Horizontal,
-                    Margin = new(0, 0, 0, 2)
-                };
-
                 Texture? currencyTex = null;
                 if (_proto.TryIndex<StackPrototype>(c.RewardCurrency, out var stackProto) &&
                     _proto.TryIndex<EntityPrototype>(stackProto.Spawn, out var currencyEnt))
@@ -571,9 +610,15 @@ public sealed partial class NcStoreMenu : FancyWindow
                     currencyTex = icon.Default;
                 }
 
+                var line = new BoxContainer
+                {
+                    Orientation = BoxContainer.LayoutOrientation.Horizontal,
+                    Margin = new(0, 0, 0, 2)
+                };
+
                 if (currencyTex != null)
                 {
-                    rewardRow.AddChild(
+                    line.AddChild(
                         new TextureRect
                         {
                             Texture = currencyTex,
@@ -584,33 +629,32 @@ public sealed partial class NcStoreMenu : FancyWindow
                 }
 
                 var currencyName = CurrencyName(c.RewardCurrency);
-                rewardRow.AddChild(
-                    new Label
-                    {
-                        Text = string.IsNullOrEmpty(currencyName)
-                            ? $"Награда: {c.Reward}"
-                            : $"Награда: {c.Reward} {currencyName}"
-                    });
+                var curText = string.IsNullOrEmpty(currencyName)
+                    ? $"{c.Reward}"
+                    : $"{c.Reward} {currencyName}";
 
-                rewardsCol.AddChild(rewardRow);
+                var curLine = new Label { Text = curText, };
+                curLine.StyleClasses.Add("LabelSubText");
+
+                line.AddChild(curLine);
+                rewardsCol.AddChild(line);
             }
 
-            // --- Награда: предметы (много) или fallback ---
+            // Предметы
+            var anyItems = c.RewardItems is { Count: > 0, } ||
+                !string.IsNullOrWhiteSpace(c.RewardItem) && c.RewardItemCount > 0;
+
+            if (anyItems)
+            {
+                rewardsCol.AddChild(new() { MinSize = new(0, 4), });
+
+                var itemsHeader = new Label { Text = "Предметы", Margin = new(0, 2, 0, 2), };
+                itemsHeader.StyleClasses.Add("LabelHeading");
+                rewardsCol.AddChild(itemsHeader);
+            }
+
             if (c.RewardItems is { Count: > 0, } items)
             {
-                var itemsCol = new BoxContainer
-                {
-                    Orientation = BoxContainer.LayoutOrientation.Vertical,
-                    Margin = new(0, 2, 0, 0)
-                };
-
-                itemsCol.AddChild(
-                    new Label
-                    {
-                        Text = "Предметы награды:",
-                        Margin = new(0, 0, 0, 2)
-                    });
-
                 foreach (var kv in items)
                 {
                     var id = kv.Key;
@@ -618,8 +662,7 @@ public sealed partial class NcStoreMenu : FancyWindow
                     if (count <= 0 || string.IsNullOrWhiteSpace(id))
                         continue;
 
-                    EntityPrototype? proto;
-                    _proto.TryIndex(id, out proto);
+                    _proto.TryIndex<EntityPrototype>(id, out var proto);
 
                     var line = new BoxContainer
                     {
@@ -649,20 +692,17 @@ public sealed partial class NcStoreMenu : FancyWindow
                     var name = proto?.Name ?? id;
                     line.AddChild(new Label { Text = $"{name} ×{count}", });
 
-                    itemsCol.AddChild(line);
+                    rewardsCol.AddChild(line);
                 }
-
-                rewardsCol.AddChild(itemsCol);
             }
             else if (!string.IsNullOrWhiteSpace(c.RewardItem) && c.RewardItemCount > 0)
             {
-                EntityPrototype? rewardProto;
-                _proto.TryIndex(c.RewardItem, out rewardProto);
+                _proto.TryIndex<EntityPrototype>(c.RewardItem, out var rewardProto);
 
-                var rewardItemRow = new BoxContainer
+                var line = new BoxContainer
                 {
                     Orientation = BoxContainer.LayoutOrientation.Horizontal,
-                    Margin = new(0, 2, 0, 0)
+                    Margin = new(0, 0, 0, 2)
                 };
 
                 Texture? rewardTex = null;
@@ -674,7 +714,7 @@ public sealed partial class NcStoreMenu : FancyWindow
 
                 if (rewardTex != null)
                 {
-                    rewardItemRow.AddChild(
+                    line.AddChild(
                         new TextureRect
                         {
                             Texture = rewardTex,
@@ -685,29 +725,46 @@ public sealed partial class NcStoreMenu : FancyWindow
                 }
 
                 var rewardName = rewardProto?.Name ?? c.RewardItem;
-                rewardItemRow.AddChild(
-                    new Label
-                    {
-                        Text = $"Предмет: {rewardName} ×{c.RewardItemCount}"
-                    });
+                line.AddChild(new Label { Text = $"{rewardName} ×{c.RewardItemCount}", });
 
-                rewardsCol.AddChild(rewardItemRow);
+                rewardsCol.AddChild(line);
             }
 
-            bottom.AddChild(rewardsCol);
+            bottomWrap.AddChild(rewardsPanel);
 
-            // --- Кнопка сдачи ---
-            var canClaim = c.Completed;
-            var btn = new Button
+            // Правая часть: действия (фиксированная ширина)
+            var actionCol = new BoxContainer
             {
-                Text = canClaim ? "Забрать" : $"Сдать ({c.Progress}/{c.Required})",
-                Disabled = !canClaim,
-                MinSize = new(150, 24),
+                Orientation = BoxContainer.LayoutOrientation.Vertical,
+                MinSize = new(180, 0),
                 Margin = new(8, 0, 0, 0)
             };
 
-            if (!canClaim)
-                btn.ToolTip = "Контракт ещё не выполнен.";
+            var actionHint = new Label
+            {
+                Text = c.Completed ? "Можно сдать" : "Не выполнено",
+                Margin = new(0, 0, 0, 4)
+            };
+            actionHint.StyleClasses.Add("LabelSubText");
+            actionCol.AddChild(actionHint);
+
+            actionCol.AddChild(new() { VerticalExpand = true, });
+
+            var canClaim = c.Completed;
+
+            var btn = new Button
+            {
+                Text = canClaim ? "Сдать" : $"Сдать ({c.Progress}/{c.Required})",
+                Disabled = !canClaim,
+                HorizontalExpand = true,
+                MinSize = new(0, 32)
+            };
+
+            btn.ToolTip = canClaim
+                ? !c.Repeatable
+                    ? "Закрыть единичную заявку и получить награду.\nТерминал примет её один раз за смену."
+                    : "Закрыть контракт и получить награду."
+                : "Контракт ещё не выполнен.";
 
             btn.OnPressed += _ =>
             {
@@ -717,10 +774,12 @@ public sealed partial class NcStoreMenu : FancyWindow
                 OnContractClaim?.Invoke(c.Id);
             };
 
-            bottom.AddChild(btn);
-            root.AddChild(bottom);
+            actionCol.AddChild(btn);
+            bottomWrap.AddChild(actionCol);
 
-            contractList.AddChild(panel);
+            root.AddChild(bottomWrap);
+
+            contractList.AddChild(cardRow);
         }
     }
 

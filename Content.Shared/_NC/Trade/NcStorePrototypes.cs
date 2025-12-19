@@ -79,6 +79,9 @@ public sealed class StoreContractPrototype : IPrototype
     [DataField("difficulty")]
     public string Difficulty { get; private set; } = "Easy";
 
+    [DataField("repeatable")]
+    public bool Repeatable { get; private set; } = true;
+
     [DataField("targetItem")]
     public string? TargetItem { get; private set; }
 

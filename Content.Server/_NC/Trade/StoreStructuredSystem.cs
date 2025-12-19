@@ -386,7 +386,9 @@ public sealed class StoreStructuredSystem : EntitySystem
                     c.Difficulty,
                     c.Completed,
                     c.Description,
-                    targets);
+                    targets,
+                    c.Repeatable);
+
 
                 if (c.RewardCurrencies is { Count: > 0, })
                     client.RewardCurrencies = new(c.RewardCurrencies);

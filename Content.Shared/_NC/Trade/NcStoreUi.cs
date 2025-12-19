@@ -4,7 +4,7 @@ using Robust.Shared.Serialization;
 namespace Content.Shared._NC.Trade;
 
 
-[Serializable, NetSerializable,]
+[Serializable, NetSerializable]
 public enum StoreUiKey : byte
 {
     Key
@@ -20,32 +20,32 @@ public sealed class StoreUiState(
     List<ContractClientData> contracts)
     : BoundUserInterfaceState
 {
-    public int Revision = revision;
-
     public int Balance = balance;
     public Dictionary<string, int> BalanceByCurrency = balanceByCurrency;
+    public List<ContractClientData> Contracts = contracts;
 
     public List<StoreListingData> Listings = listings;
     public Dictionary<string, int> MassSellTotals = massSellTotals;
-    public List<ContractClientData> Contracts = contracts;
+    public int Revision = revision;
 }
 
-
-[Serializable, NetSerializable,]
+[Serializable, NetSerializable]
 public sealed class ContractUiState(List<ContractClientData> contracts) : BoundUserInterfaceState
 {
     public List<ContractClientData> Contracts { get; } = contracts;
 }
 
-[Serializable, NetSerializable,]
+[Serializable, NetSerializable]
 public sealed class ContractClientData
 {
     public bool Completed;
+
     public string Description;
     public string Difficulty;
     public string Id;
     public string Name;
     public int Progress;
+    public bool Repeatable;
     public int Required;
 
     public int Reward;
@@ -68,6 +68,8 @@ public sealed class ContractClientData
         RewardCurrency = string.Empty;
         Difficulty = "Easy";
         Description = string.Empty;
+
+        Repeatable = true;
     }
 
     public ContractClientData(
@@ -83,7 +85,8 @@ public sealed class ContractClientData
         string difficulty,
         bool completed,
         string description,
-        List<ContractTargetClientData>? targets = null
+        List<ContractTargetClientData>? targets = null,
+        bool repeatable = true
     )
     {
         Id = id;
@@ -99,34 +102,36 @@ public sealed class ContractClientData
         Completed = completed;
         Description = description;
         Targets = targets ?? new();
+
+        Repeatable = repeatable;
     }
 }
 
-[Serializable, NetSerializable,]
+[Serializable, NetSerializable]
 public sealed class StoreBuyListingBoundUiMessage(string listingId, int count) : BoundUserInterfaceMessage
 {
     public string ListingId { get; } = listingId;
     public int Count { get; } = count;
 }
 
-[Serializable, NetSerializable,]
+[Serializable, NetSerializable]
 public sealed class StoreSellListingBoundUiMessage(string listingId, int count) : BoundUserInterfaceMessage
 {
     public string ListingId { get; } = listingId;
     public int Count { get; } = count;
 }
 
-[Serializable, NetSerializable,]
+[Serializable, NetSerializable]
 public sealed class StoreMassSellPulledCrateBoundUiMessage : BoundUserInterfaceMessage { }
 
-[Serializable, NetSerializable,]
+[Serializable, NetSerializable]
 public sealed class RequestUiRefreshMessage : BoundUserInterfaceMessage { }
 
-[Serializable, NetSerializable,]
+[Serializable, NetSerializable]
 public sealed class ClaimContractBoundMessage(string id) : BoundUserInterfaceMessage
 {
     public string ContractId { get; } = id;
 }
 
-[Serializable, NetSerializable,]
+[Serializable, NetSerializable]
 public sealed class RequestContractsRefreshMessage : BoundUserInterfaceMessage { }

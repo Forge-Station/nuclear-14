@@ -62,6 +62,8 @@ public sealed class ContractServerData
     public int Required { get; set; }
     public int Progress { get; set; }
 
+    public bool Repeatable { get; set; } = true;
+
     [DataField("match")]
     public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
 
