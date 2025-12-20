@@ -17,17 +17,26 @@ public sealed class StoreUiState(
     Dictionary<string, int> balanceByCurrency,
     List<StoreListingData> listings,
     Dictionary<string, int> massSellTotals,
-    List<ContractClientData> contracts)
+    List<ContractClientData> contracts,
+    bool hasBuyTab,
+    bool hasSellTab,
+    bool hasContractsTab)
     : BoundUserInterfaceState
 {
+    public int Revision = revision;
+
     public int Balance = balance;
     public Dictionary<string, int> BalanceByCurrency = balanceByCurrency;
-    public List<ContractClientData> Contracts = contracts;
 
     public List<StoreListingData> Listings = listings;
     public Dictionary<string, int> MassSellTotals = massSellTotals;
-    public int Revision = revision;
+
+    public List<ContractClientData> Contracts = contracts;
+    public bool HasBuyTab = hasBuyTab;
+    public bool HasSellTab = hasSellTab;
+    public bool HasContractsTab = hasContractsTab;
 }
+
 
 [Serializable, NetSerializable]
 public sealed class ContractUiState(List<ContractClientData> contracts) : BoundUserInterfaceState

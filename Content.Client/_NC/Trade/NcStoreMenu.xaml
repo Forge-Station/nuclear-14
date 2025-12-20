@@ -24,7 +24,9 @@
         </BoxContainer>
 
         <!-- ───── Основные вкладки ───── -->
-        <TabContainer StyleClasses="TabContainerLarge"
+        <!-- ВАЖНО: Name="Tabs" нужен, чтобы код мог скрывать вкладки полностью (вместе с заголовками). -->
+        <TabContainer Name="Tabs"
+                      StyleClasses="TabContainerLarge"
                       VerticalExpand="True"
                       Margin="4">
 
@@ -158,5 +160,6 @@
                        Margin="0 0 5 0" />
             </BoxContainer>
         </BoxContainer>
+
     </BoxContainer>
 </controls1:FancyWindow>

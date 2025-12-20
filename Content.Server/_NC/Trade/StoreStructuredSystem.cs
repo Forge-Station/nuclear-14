@@ -402,10 +402,26 @@ public sealed class StoreStructuredSystem : EntitySystem
 
         comp.UiRevision = unchecked(comp.UiRevision + 1);
         var balancesByCurrency = new Dictionary<string, int>(userSnap.StackTypeCounts);
+        var hasBuyTab = comp.Listings.Any(l => l.Mode == StoreMode.Buy);
+        var hasSellTab = comp.Listings.Any(l => l.Mode == StoreMode.Sell);
+        var hasContractsTab =
+            comp.ContractPresets.Count > 0 ||
+            !string.IsNullOrWhiteSpace(comp.LegacyContractsPreset);
+
         _ui.SetUiState(
             uid,
             StoreUiKey.Key,
-            new StoreUiState(comp.UiRevision, balance, balancesByCurrency, listings, crateTotals, contracts));
+            new StoreUiState(
+                comp.UiRevision,
+                balance,
+                balancesByCurrency,
+                listings,
+                crateTotals,
+                contracts,
+                hasBuyTab,
+                hasSellTab,
+                hasContractsTab));
+
     }
 
 

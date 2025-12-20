@@ -42,12 +42,15 @@ public sealed partial class NcStoreMenu : FancyWindow
     private readonly Dictionary<string, Button> _sellCatButtons = new();
     private readonly List<string> _sellCats = new();
     private readonly SpriteSystem _sprites;
-
     private int _balance;
+
 
     private string _buyCat = string.Empty;
 
     private bool _disposed;
+    private bool _hasBuyTab;
+    private bool _hasContractsTab;
+    private bool _hasSellTab;
 
     private int _pageBuy = 1;
     private int _pageSell = 1;
@@ -56,6 +59,10 @@ public sealed partial class NcStoreMenu : FancyWindow
     private string _searchLower = string.Empty;
     private int _searchToken;
     private string _sellCat = string.Empty;
+    private Control? _tabBuy;
+    private Control? _tabContracts;
+    private bool _tabsCaptured;
+    private Control? _tabSell;
 
     public Action<string>? OnContractClaim;
 
@@ -167,13 +174,71 @@ public sealed partial class NcStoreMenu : FancyWindow
             $"Получите: {full}";
     }
 
+    private void CaptureTabsIfNeeded()
+    {
+        if (_tabsCaptured)
+            return;
+
+        _tabsCaptured = true;
+
+        _tabBuy = Покупка;
+        _tabSell = Продажа;
+        _tabContracts = Контракты;
+    }
+
+
+    private void EnsureTab(Control? tab, bool shouldExist)
+    {
+        if (Tabs == null || tab == null)
+            return;
+
+        var exists = Tabs.Children.Contains(tab);
+
+        if (shouldExist && !exists)
+            Tabs.AddChild(tab);
+        else if (!shouldExist && exists)
+            Tabs.RemoveChild(tab);
+    }
+
+
+    private void ApplyTabsVisibility()
+    {
+        if (Tabs == null)
+            return;
+
+        CaptureTabsIfNeeded();
+
+        EnsureTab(_tabBuy, _hasBuyTab);
+        EnsureTab(_tabSell, _hasSellTab);
+        EnsureTab(_tabContracts, _hasContractsTab);
+
+        var count = Tabs.ChildCount;
+        if (count <= 0)
+            return;
+
+        var curIndex = Tabs.CurrentTab;
+        if (curIndex < 0 || curIndex >= count)
+            Tabs.CurrentTab = 0;
+    }
+
+
     public void ApplyState(
         int balance,
         Dictionary<string, int> balancesByCurrency,
         List<StoreListingData> list,
-        Dictionary<string, int> massTotals
+        Dictionary<string, int> massTotals,
+        bool hasBuyTab,
+        bool hasSellTab,
+        bool hasContractsTab
     )
     {
+        _hasBuyTab = hasBuyTab;
+        _hasSellTab = hasSellTab;
+        _hasContractsTab = hasContractsTab;
+
+        ApplyTabsVisibility();
+
+
         SetBalance(balance);
         SetBalancesByCurrency(balancesByCurrency);
         SetMassSellTotals(massTotals);
@@ -256,6 +321,7 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         contractList.RemoveAllChildren();
 
+        // Пусто / нет контрактов
         if (list == null || list.Count == 0)
         {
             contractList.AddChild(
@@ -265,6 +331,9 @@ public sealed partial class NcStoreMenu : FancyWindow
                     HorizontalAlignment = HAlignment.Center,
                     Margin = new(0, 8, 0, 0)
                 });
+
+            // ВАЖНО: нормализуем вкладки и тут тоже (один раз)
+            ApplyTabsVisibility();
             return;
         }
 
@@ -501,6 +570,7 @@ public sealed partial class NcStoreMenu : FancyWindow
                     {
                         Text = $"Цель: {targetName} ×{c.Required}"
                     });
+
                 root.AddChild(targetRow);
 
                 if (!string.IsNullOrWhiteSpace(targetProto?.Description))
@@ -781,6 +851,9 @@ public sealed partial class NcStoreMenu : FancyWindow
 
             contractList.AddChild(cardRow);
         }
+
+        // ВАЖНО: один раз после построения всего списка
+        ApplyTabsVisibility();
     }
 
 
