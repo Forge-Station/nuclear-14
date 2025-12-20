@@ -26,6 +26,8 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         if (comp.Listings.Count == 0)
             TryLoadPresets(uid, comp, "MapInit");
 
+        comp.RebuildListingIndex();
+
         _contracts.InitContractsForStore(uid, comp);
     }
 
@@ -34,8 +36,11 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         if (comp.Listings.Count == 0)
             TryLoadPresets(uid, comp, "Startup");
 
+        comp.RebuildListingIndex();
+
         _contracts.InitContractsForStore(uid, comp);
     }
+
 
     private void TryLoadPresets(EntityUid uid, NcStoreComponent comp, string reason)
     {

@@ -4,15 +4,16 @@ using Robust.Shared.GameStates;
 namespace Content.Shared._NC.Trade;
 
 
-[RegisterComponent, NetworkedComponent,]
+[RegisterComponent, NetworkedComponent]
 public sealed partial class NcStoreComponent : Component
 {
     public EntityUid? CurrentUser;
 
+    public int UiRevision;
+
     [ViewVariables]
     public HashSet<string> CompletedOneTimeContracts { get; } = new();
 
-    public int UiRevision;
     [DataField("categories")]
     public List<string> Categories { get; set; } = new();
 
@@ -20,6 +21,14 @@ public sealed partial class NcStoreComponent : Component
     public List<string> CurrencyWhitelist { get; set; } = new();
 
     public List<StoreListingPrototype> Listings { get; set; } = new();
+
+    /// <summary>
+    ///     Fast lookup cache for <see cref="Listings" />.
+    ///     Key format: "{(byte)mode}:{listingId}".
+    ///     Not networked; rebuilt on server when presets are (re)loaded.
+    /// </summary>
+    [ViewVariables]
+    public Dictionary<string, StoreListingPrototype> ListingIndex { get; } = new();
 
     [DataField("preset")]
     public string? LegacyPreset { get; set; }
@@ -43,4 +52,18 @@ public sealed partial class NcStoreComponent : Component
 
     [DataField("rewardItems")]
     public Dictionary<string, int> RewardItems { get; set; } = new();
+
+    public static string MakeListingKey(StoreMode mode, string listingId) => $"{(byte) mode}:{listingId}";
+
+    public void RebuildListingIndex()
+    {
+        ListingIndex.Clear();
+        foreach (var l in Listings)
+        {
+            if (string.IsNullOrWhiteSpace(l.Id))
+                continue;
+
+            ListingIndex[MakeListingKey(l.Mode, l.Id)] = l;
+        }
+    }
 }

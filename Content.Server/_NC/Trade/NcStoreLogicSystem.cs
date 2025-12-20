@@ -306,8 +306,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
         if (store == null || store.Listings.Count == 0 || count <= 0)
             return false;
 
-        var listing = store.Listings.FirstOrDefault(x => x.Id == listingId && x.Mode == StoreMode.Buy);
-        if (listing == null)
+        if (!store.ListingIndex.TryGetValue(NcStoreComponent.MakeListingKey(StoreMode.Buy, listingId), out var listing))
             return false;
 
         if (!_protos.TryIndex<EntityPrototype>(listing.ProductEntity, out _))
@@ -358,9 +357,9 @@ public sealed class NcStoreLogicSystem : EntitySystem
         if (store == null || store.Listings.Count == 0 || count <= 0)
             return false;
 
-        var listing = store.Listings.FirstOrDefault(x => x.Id == listingId && x.Mode == StoreMode.Sell);
-        if (listing == null)
+        if (!store.ListingIndex.TryGetValue(NcStoreComponent.MakeListingKey(StoreMode.Sell, listingId), out var listing))
             return false;
+
 
         if (!TryPickCurrencyForSell(store, listing, out var currency, out var unitPrice) || unitPrice <= 0)
             return false;
@@ -403,8 +402,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
         if (store == null || store.Listings.Count == 0 || count <= 0)
             return false;
 
-        var listing = store.Listings.FirstOrDefault(x => x.Id == listingId && x.Mode == StoreMode.Sell);
-        if (listing == null)
+        if (!store.ListingIndex.TryGetValue(NcStoreComponent.MakeListingKey(StoreMode.Sell, listingId), out var listing))
             return false;
 
         if (!TryPickCurrencyForSell(store, listing, out var currency, out var unitPrice) || unitPrice <= 0)
@@ -630,9 +628,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
         if (store == null || store.Listings.Count == 0)
             return false;
 
-        var listing = store.Listings.FirstOrDefault(x => x.Id == listingId && x.Mode == StoreMode.Exchange);
-
-        if (listing == null)
+        if (!store.ListingIndex.TryGetValue(NcStoreComponent.MakeListingKey(StoreMode.Exchange, listingId), out var listing))
             return false;
 
         if (string.IsNullOrEmpty(listing.ProductEntity))

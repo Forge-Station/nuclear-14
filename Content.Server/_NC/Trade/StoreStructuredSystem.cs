@@ -19,6 +19,7 @@ public sealed class StoreStructuredSystem : EntitySystem
     private const float AutoCloseDistance = 3f;
     private const float CheckInterval = 0.2f;
     [Dependency] private readonly NcContractSystem _contracts = default!;
+    private readonly HashSet<EntityUid> _dirtyStores = new();
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     private readonly HashSet<EntityUid> _openStoreUids = new();
     [Dependency] private readonly PopupSystem _popups = default!;
@@ -113,6 +114,14 @@ public sealed class StoreStructuredSystem : EntitySystem
         }
 
         UpdateUiState(uid, comp, user);
+    }
+
+    private void MarkDirty(EntityUid storeUid)
+    {
+        if (storeUid == EntityUid.Invalid)
+            return;
+
+        _dirtyStores.Add(storeUid);
     }
 
     private bool EnsureCrateWatchUpToDate(EntityUid storeUid, EntityUid user)
@@ -421,7 +430,6 @@ public sealed class StoreStructuredSystem : EntitySystem
                 hasBuyTab,
                 hasSellTab,
                 hasContractsTab));
-
     }
 
 
@@ -444,6 +452,7 @@ public sealed class StoreStructuredSystem : EntitySystem
             {
                 _openStoreUids.Remove(uid);
                 UnregisterStoreWatch(uid);
+                _dirtyStores.Remove(uid);
                 continue;
             }
 
@@ -451,6 +460,7 @@ public sealed class StoreStructuredSystem : EntitySystem
             {
                 _openStoreUids.Remove(uid);
                 UnregisterStoreWatch(uid);
+                _dirtyStores.Remove(uid);
                 continue;
             }
 
@@ -459,6 +469,7 @@ public sealed class StoreStructuredSystem : EntitySystem
                 store.CurrentUser = null;
                 _openStoreUids.Remove(uid);
                 UnregisterStoreWatch(uid);
+                _dirtyStores.Remove(uid);
                 continue;
             }
 
@@ -468,6 +479,7 @@ public sealed class StoreStructuredSystem : EntitySystem
                 store.CurrentUser = null;
                 _openStoreUids.Remove(uid);
                 UnregisterStoreWatch(uid);
+                _dirtyStores.Remove(uid);
                 continue;
             }
 
@@ -477,11 +489,15 @@ public sealed class StoreStructuredSystem : EntitySystem
                 store.CurrentUser = null;
                 _openStoreUids.Remove(uid);
                 UnregisterStoreWatch(uid);
+                _dirtyStores.Remove(uid);
                 _popups.PopupEntity(Loc.GetString("ncstore-no-access"), uid, userUid);
                 continue;
             }
 
             if (EnsureCrateWatchUpToDate(uid, userUid))
+                MarkDirty(uid);
+
+            if (_dirtyStores.Remove(uid))
                 UpdateUiState(uid, store, userUid);
         }
     }
@@ -616,6 +632,8 @@ public sealed class StoreStructuredSystem : EntitySystem
             if (parent == EntityUid.Invalid || parent == cur)
                 break;
 
+            // Prefer walking "container-parent" when possible: it keeps the effective root correct
+            // for deep item changes (stack changes inside nested containers).
             if (TryComp(parent, out ContainerManagerComponent? parentContainers))
             {
                 foreach (var container in parentContainers.Containers.Values)
@@ -639,14 +657,15 @@ public sealed class StoreStructuredSystem : EntitySystem
         foreach (var storeUid in affectedStores)
         {
             if (!TryComp(storeUid, out NcStoreComponent? store) ||
-                store.CurrentUser is not { } user)
+                store.CurrentUser is not { } _)
             {
                 _openStoreUids.Remove(storeUid);
                 UnregisterStoreWatch(storeUid);
+                _dirtyStores.Remove(storeUid);
                 continue;
             }
 
-            UpdateUiState(storeUid, store, user);
+            MarkDirty(storeUid);
         }
     }
 

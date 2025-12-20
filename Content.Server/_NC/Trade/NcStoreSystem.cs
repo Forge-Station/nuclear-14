@@ -106,8 +106,7 @@ public sealed class NcStoreSystem : EntitySystem
             return;
 
 
-        var listing = comp.Listings.FirstOrDefault(x => x.Id == msg.ListingId && x.Mode == StoreMode.Buy);
-        if (listing == null)
+        if (!comp.ListingIndex.TryGetValue(NcStoreComponent.MakeListingKey(StoreMode.Buy, msg.ListingId), out var listing))
             return;
 
         var count = Math.Max(1, msg.Count);
@@ -129,9 +128,9 @@ public sealed class NcStoreSystem : EntitySystem
         if (!TryParseSellListingId(msg.ListingId, out var requestedId, out var fromCrate))
             return;
 
-        var listing = comp.Listings.FirstOrDefault(x => x.Id == requestedId && x.Mode == StoreMode.Sell);
-        if (listing == null)
+        if (!comp.ListingIndex.TryGetValue(NcStoreComponent.MakeListingKey(StoreMode.Sell, requestedId), out var listing))
             return;
+
 
         var count = Math.Max(1, msg.Count);
 
