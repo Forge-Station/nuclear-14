@@ -1,7 +1,129 @@
 #! Corvax-Change
 
 # - type: weather
-#   id: SandstormHeavyExtreme
+#   id: Ashfall
+#   sprite:
+#     sprite: /Textures/Effects/weather.rsi
+#     state: ashfall
+#   sound:
+#     path: /Audio/Effects/Weather/snowstorm_weak.ogg
+#     params:
+#       loop: true
+#       volume: -6
+#   temperature: 330
+#   duration: 500
+#   message: weather-ashfall
+
+# - type: weather
+#   id: AshfallLight
+#   sprite:
+#     sprite: /Textures/Effects/weather.rsi
+#     state: ashfall_light
+#   sound:
+#     path: /Audio/Effects/Weather/snowstorm_weak.ogg
+#     params:
+#       loop: true
+#       volume: -6
+#   temperature: 320
+#   duration: 500
+#   message: weather-ashfall-light
+
+# - type: weather
+#   id: AshfallHeavy
+#   sprite:
+#     sprite: /Textures/Effects/weather.rsi
+#     state: ashfall_heavy
+#   sound:
+#     path: /Audio/Effects/Weather/snowstorm.ogg
+#     params:
+#       loop: true
+#       volume: -6
+#   temperature: 340
+#   duration: 20
+#   chance: 0
+#   showMessage: true
+#   sender: weather-announcement
+#   message: weather-ashfall-heavy
+
+- type: weather
+  id: Default
+  duration: 1200
+  chance: 15
+  message: weather-default
+
+# - type: weather
+#   id: Fallout
+#   sprite:
+#     sprite: /Textures/Effects/weather.rsi
+#     state: fallout
+#   sound:
+#     path: /Audio/Effects/Weather/snowstorm_weak.ogg
+#     params:
+#       loop: true
+#       volume: -6
+#   temperature: 340
+#   duration: 500
+#   chance: 0
+#   showMessage: true
+#   sender: weather-announcement
+#   message: weather-fallout
+#   radioactive: true
+
+- type: weather
+  id: Hail
+  sprite:
+    sprite: /Textures/Effects/weather.rsi
+    state: hail
+  sound:
+    path:
+      /Audio/Effects/Weather/rain.ogg
+    params:
+      loop: true
+      volume: -6
+  temperature: 300
+  duration: 500
+  message: weather-hail
+
+- type: weather
+  id: Rain
+  sprite:
+    sprite: /Textures/Effects/weather.rsi
+    state: rain
+  sound:
+    collection: Rain
+    params:
+      loop: true
+      volume: -8 # Forge-Change -6>-8
+  temperature: 300
+  duration: 500
+  showMessage: true # Forge-Change-Start
+  chance: 3 # 6>3
+  sender: weather-announcement # Forge-Change-End
+  message: weather-rain
+
+- type: soundCollection
+  id: Rain
+  files:
+    - /Audio/Effects/Weather/rain.ogg
+    - /Audio/Effects/Weather/rain2.ogg
+
+# - type: weather
+#   id: Sandstorm
+#   sprite:
+#     sprite: /Textures/Effects/weather.rsi
+#     state: sandstorm
+#   sound:
+#     path: /Audio/Effects/Weather/snowstorm_weak.ogg
+#     params:
+#       loop: true
+#       volume: -6
+#   temperature: 320
+#   duration: 500
+#   chance: 0
+#   message: weather-sandstorm
+
+# - type: weather
+#   id: SandstormHeavy
 #   sprite:
 #     sprite: /Textures/Effects/weather.rsi
 #     state: sandstorm_heavy
@@ -10,14 +132,43 @@
 #     params:
 #       loop: true
 #       volume: -6
-#   temperature: 400 #
-#   duration: 60
+#   temperature: 330
+#   duration: 500
+#   chance: 0
 #   showMessage: true
 #   sender: weather-announcement
-#   message: weather-sandstorm-extreme
+#   message: weather-sandstorm-heavy
 
 - type: weather
-  id: SnowfallHeavyExtreme
+  id: SnowfallLight
+  sprite:
+    sprite: /Textures/Effects/weather.rsi
+    state: snowfall_light
+  sound:
+    path: /Audio/Effects/Weather/snowstorm_weak.ogg
+    params:
+      loop: true
+      volume: -6
+  temperature: 280
+  duration: 500
+  message: weather-snowfall-light
+
+- type: weather
+  id: SnowfallMedium
+  sprite:
+    sprite: /Textures/Effects/weather.rsi
+    state: snowfall_med
+  sound:
+    path: /Audio/Effects/Weather/snowstorm_weak.ogg
+    params:
+      loop: true
+      volume: -6
+  temperature: 270
+  duration: 500
+  message: weather-snowfall-medium
+
+- type: weather
+  id: SnowfallHeavy
   sprite:
     sprite: /Textures/Effects/weather.rsi
     state: snowfall_heavy
@@ -26,8 +177,26 @@
     params:
       loop: true
       volume: -6
-  temperature: 2 # -
-  duration: 60
+  temperature: 260
+  duration: 500
+  chance: 0
   showMessage: true
   sender: weather-announcement
-  message: weather-snowfall-extreme
+  message: weather-snowfall-heavy
+
+- type: weather
+  id: Storm
+  sprite:
+    sprite: /Textures/Effects/weather.rsi
+    state: storm
+  sound:
+    path: /Audio/Effects/Weather/rain_heavy.ogg
+    params:
+      loop: true
+      volume: -8 # Forge-Change -6>-8
+  temperature: 310
+  duration: 500
+  showMessage: true
+  chance: 2 # Forge-Change 4>2
+  sender: weather-announcement
+  message: weather-storm
