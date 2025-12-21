@@ -2,7 +2,7 @@ using Robust.Shared.GameStates;
 
 
 namespace Content.Shared._NC.Trade;
-
+public readonly record struct StoreListingKey(StoreMode Mode, string ListingId);
 
 [RegisterComponent, NetworkedComponent]
 public sealed partial class NcStoreComponent : Component
@@ -28,7 +28,7 @@ public sealed partial class NcStoreComponent : Component
     ///     Not networked; rebuilt on server when presets are (re)loaded.
     /// </summary>
     [ViewVariables]
-    public Dictionary<string, StoreListingPrototype> ListingIndex { get; } = new();
+    public Dictionary<StoreListingKey, StoreListingPrototype> ListingIndex { get; } = new();
 
     [DataField("preset")]
     public string? LegacyPreset { get; set; }
@@ -53,7 +53,7 @@ public sealed partial class NcStoreComponent : Component
     [DataField("rewardItems")]
     public Dictionary<string, int> RewardItems { get; set; } = new();
 
-    public static string MakeListingKey(StoreMode mode, string listingId) => $"{(byte) mode}:{listingId}";
+    public static StoreListingKey MakeListingKey(StoreMode mode, string listingId) => new(mode, listingId);
 
     public void RebuildListingIndex()
     {

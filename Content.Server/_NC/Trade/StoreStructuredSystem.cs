@@ -18,10 +18,12 @@ public sealed class StoreStructuredSystem : EntitySystem
 {
     private const float AutoCloseDistance = 3f;
     private const float CheckInterval = 0.2f;
+    private readonly HashSet<EntityUid> _affectedStoresScratch = new();
     [Dependency] private readonly NcContractSystem _contracts = default!;
     private readonly HashSet<EntityUid> _dirtyStores = new();
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     private readonly HashSet<EntityUid> _openStoreUids = new();
+    private readonly HashSet<EntityUid> _pendingRefreshEntities = new();
     [Dependency] private readonly PopupSystem _popups = default!;
     private readonly Dictionary<EntityUid, HashSet<EntityUid>> _storesByWatchedRoot = new();
     [Dependency] private readonly NcStoreSystem _storeSystem = default!;
@@ -436,6 +438,8 @@ public sealed class StoreStructuredSystem : EntitySystem
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
+        if (_timing.CurTime >= _nextCheck)
+            ProcessPendingRefreshes();
 
         if (_timing.CurTime < _nextCheck)
             return;
@@ -608,65 +612,76 @@ public sealed class StoreStructuredSystem : EntitySystem
         if (_storesByWatchedRoot.Count == 0)
             return;
 
-        var affectedStores = new HashSet<EntityUid>();
+        _pendingRefreshEntities.Add(changedEntity);
+
+        if (_pendingRefreshEntities.Count > 4096)
+        {
+            foreach (var s in _openStoreUids)
+                MarkDirty(s);
+
+            _pendingRefreshEntities.Clear();
+        }
+    }
+
+
+    private void ProcessPendingRefreshes()
+    {
+        if (_pendingRefreshEntities.Count == 0 || _storesByWatchedRoot.Count == 0)
+            return;
+
+        _affectedStoresScratch.Clear();
 
         void AddStoresForRoot(EntityUid root)
         {
             if (_storesByWatchedRoot.TryGetValue(root, out var stores))
             {
                 foreach (var s in stores)
-                    affectedStores.Add(s);
+                    _affectedStoresScratch.Add(s);
             }
         }
 
-        var cur = changedEntity;
-
-        for (var i = 0; i < 64; i++)
+        foreach (var changed in _pendingRefreshEntities)
         {
-            AddStoresForRoot(cur);
+            if (!Exists(changed))
+                continue;
 
-            if (!TryComp(cur, out TransformComponent? xform))
-                break;
+            var cur = changed;
 
-            var parent = xform.ParentUid;
-            if (parent == EntityUid.Invalid || parent == cur)
-                break;
-
-            // Prefer walking "container-parent" when possible: it keeps the effective root correct
-            // for deep item changes (stack changes inside nested containers).
-            if (TryComp(parent, out ContainerManagerComponent? parentContainers))
+            for (var i = 0; i < 64; i++)
             {
-                foreach (var container in parentContainers.Containers.Values)
+                AddStoresForRoot(cur);
+
+                if (!TryComp(cur, out TransformComponent? xform))
+                    break;
+
+                var parent = xform.ParentUid;
+                if (parent == EntityUid.Invalid || parent == cur)
+                    break;
+
+                if (TryComp(parent, out ContainerManagerComponent? parentContainers))
                 {
-                    if (!container.Contains(cur))
-                        continue;
+                    foreach (var container in parentContainers.Containers.Values)
+                    {
+                        if (!container.Contains(cur))
+                            continue;
 
-                    cur = parent;
-                    goto NextStep;
+                        cur = parent;
+                        goto NextStep;
+                    }
                 }
+
+                cur = parent;
+                NextStep: ;
             }
-
-            cur = parent;
-
-            NextStep: ;
         }
 
-        if (affectedStores.Count == 0)
+        _pendingRefreshEntities.Clear();
+
+        if (_affectedStoresScratch.Count == 0)
             return;
 
-        foreach (var storeUid in affectedStores)
-        {
-            if (!TryComp(storeUid, out NcStoreComponent? store) ||
-                store.CurrentUser is not { } _)
-            {
-                _openStoreUids.Remove(storeUid);
-                UnregisterStoreWatch(storeUid);
-                _dirtyStores.Remove(storeUid);
-                continue;
-            }
-
+        foreach (var storeUid in _affectedStoresScratch)
             MarkDirty(storeUid);
-        }
     }
 
 

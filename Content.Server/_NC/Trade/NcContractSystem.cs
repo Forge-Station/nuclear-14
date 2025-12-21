@@ -19,7 +19,7 @@ public sealed class NcContractSystem : EntitySystem
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
 
     // key -> phase [0..1)
-    private readonly Dictionary<string, double> _quasiPhase = new(StringComparer.Ordinal);
+    private readonly Dictionary<QuasiKey, double> _quasiPhase = new();
     [Dependency] private readonly IRobustRandom _random = default!;
 
     public void InitContractsForStore(EntityUid uid, NcStoreComponent comp)
@@ -308,7 +308,6 @@ public sealed class NcContractSystem : EntitySystem
             if (fillOnlyFirstMissing)
                 break;
         }
-
     }
 
     private bool TryGetPreset(
@@ -438,7 +437,7 @@ public sealed class NcContractSystem : EntitySystem
     private double NextUnit() => _random.NextFloat();
 
     private int RollSmooth(
-        string key,
+        QuasiKey key,
         IntRange range,
         int minClamp,
         int maxClamp = int.MaxValue,
@@ -483,13 +482,13 @@ public sealed class NcContractSystem : EntitySystem
         var targets = new List<ContractTargetServerData>();
 
         var targetItem = proto.TargetItem ?? string.Empty;
-        var required = RollSmooth($"req:{store}:{proto.ID}", proto.Required, 1);
+        var required = RollSmooth(new(QuasiKeyKind.Req, store, proto.ID, null), proto.Required, 1);
 
         var matchMode = proto.MatchMode;
 
         if (proto.Targets is { Count: > 0, })
         {
-            var targetCount = RollSmooth($"tc:{store}:{proto.ID}", proto.TargetCount, 1);
+            var targetCount = RollSmooth(new(QuasiKeyKind.Tc, store, proto.ID, null), proto.TargetCount, 1);
 
             if (targetCount <= 0)
                 targetCount = 1;
@@ -501,7 +500,12 @@ public sealed class NcContractSystem : EntitySystem
                 {
                     targetItem = chosen.TargetItemId;
 
-                    var chosenReq = RollSmooth($"treq:{store}:{proto.ID}:{chosen.TargetItemId}", chosen.Required, 1);
+                    var chosenReq = RollSmooth(
+                        new(QuasiKeyKind.TReq, store, proto.ID, chosen.TargetItemId),
+                        chosen.Required,
+                        1);
+
+
                     if (chosenReq > 0)
                         required = chosenReq;
                 }
@@ -520,7 +524,10 @@ public sealed class NcContractSystem : EntitySystem
                     pool.Remove(chosen);
 
                     var itemId = chosen.TargetItemId;
-                    var rolledReq = RollSmooth($"treq:{store}:{proto.ID}:{chosen.TargetItemId}", chosen.Required, 1);
+                    var rolledReq = RollSmooth(
+                        new(QuasiKeyKind.TReq, store, proto.ID, chosen.TargetItemId),
+                        chosen.Required,
+                        1);
                     var req = rolledReq > 0 ? rolledReq : required;
 
                     targets.Add(
@@ -686,7 +693,7 @@ public sealed class NcContractSystem : EntitySystem
 
             if (randomRewards.Count > 0)
             {
-                var picks = RollSmooth($"bp:{store}:{proto.ID}", proto.BonusPickCount, 0);
+                var picks = RollSmooth(new(QuasiKeyKind.Bp, store, proto.ID, null), proto.BonusPickCount, 0);
 
                 if (picks > 0)
                 {
@@ -800,4 +807,19 @@ public sealed class NcContractSystem : EntitySystem
 
         return list[^1];
     }
+
+    private enum QuasiKeyKind : byte
+    {
+        Req,
+        Tc,
+        TReq,
+        Bp
+    }
+
+    private readonly record struct QuasiKey(
+        QuasiKeyKind Kind,
+        EntityUid Store,
+        string ProtoId,
+        string? Extra // например TargetItemId для TReq
+    );
 }

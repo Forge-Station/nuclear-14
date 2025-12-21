@@ -28,7 +28,7 @@ public sealed partial class NcStoreMenu : FancyWindow
     private static readonly Color CatIdle = new(0x7C, 0x66, 0x24);
     private readonly Dictionary<string, int> _balancesByCurrency = new();
 
-    private readonly Dictionary<string, (NcStoreListingControl Ctrl, string Sig)> _buyCache = new();
+    private readonly Dictionary<string, (NcStoreListingControl Ctrl, int Sig)> _buyCache = new();
     private readonly Dictionary<string, Button> _buyCatButtons = new();
     private readonly List<string> _buyCats = new();
     private readonly List<StoreListingData> _items = new();
@@ -38,7 +38,7 @@ public sealed partial class NcStoreMenu : FancyWindow
 
     private readonly Dictionary<string, int> _qtyCache = new();
     private readonly Dictionary<string, string> _searchIndex = new();
-    private readonly Dictionary<string, (NcStoreListingControl Ctrl, string Sig)> _sellCache = new();
+    private readonly Dictionary<string, (NcStoreListingControl Ctrl, int Sig)> _sellCache = new();
     private readonly Dictionary<string, Button> _sellCatButtons = new();
     private readonly List<string> _sellCats = new();
     private readonly SpriteSystem _sprites;
@@ -1227,10 +1227,12 @@ public sealed partial class NcStoreMenu : FancyWindow
         base.Dispose(disposing);
     }
 
-    private static string Sig(StoreListingData d, int balance) =>
-        d.Mode == StoreMode.Buy
-            ? $"{d.Id}|{d.ProductEntity}|{d.Category}|{d.Price}|{d.Remaining}|{d.Owned}|{d.CurrencyId}|B{balance}"
-            : $"{d.Id}|{d.ProductEntity}|{d.Category}|{d.Price}|{d.Remaining}|{d.Owned}|{d.CurrencyId}";
+    private static int Sig(StoreListingData d, int balance)
+    {
+        return d.Mode == StoreMode.Buy
+            ? HashCode.Combine(d.Id, d.ProductEntity, d.Category, d.Price, d.Remaining, d.Owned, d.CurrencyId, balance)
+            : HashCode.Combine(d.Id, d.ProductEntity, d.Category, d.Price, d.Remaining, d.Owned, d.CurrencyId);
+    }
 
     private bool MatchesSearch(string protoId)
     {
