@@ -18,6 +18,8 @@ public sealed class StoreStructuredSystem : EntitySystem
 {
     private const float AutoCloseDistance = 3f;
     private const float CheckInterval = 0.2f;
+    private const int WatchedRootSearchLimit = 32;
+
     private readonly HashSet<EntityUid> _affectedStoresScratch = new();
     [Dependency] private readonly NcContractSystem _contracts = default!;
     private readonly HashSet<EntityUid> _dirtyStores = new();
@@ -48,6 +50,37 @@ public sealed class StoreStructuredSystem : EntitySystem
         SubscribeLocalEvent<StackComponent, StackCountChangedEvent>(OnStackCountChanged);
         SubscribeLocalEvent<NcStoreComponent, ClaimContractBoundMessage>(OnClaimContract);
     }
+
+    private bool TryFindWatchedRoot(EntityUid start, out EntityUid watchedRoot)
+    {
+        watchedRoot = default;
+
+        if (_storesByWatchedRoot.Count == 0)
+            return false;
+
+        var cur = start;
+
+        for (var i = 0; i < WatchedRootSearchLimit; i++)
+        {
+            if (_storesByWatchedRoot.ContainsKey(cur))
+            {
+                watchedRoot = cur;
+                return true;
+            }
+
+            if (!TryComp(cur, out TransformComponent? xform))
+                return false;
+
+            var parent = xform.ParentUid;
+            if (parent == EntityUid.Invalid || parent == cur)
+                return false;
+
+            cur = parent;
+        }
+
+        return false;
+    }
+
 
     private void OnUiOpenAttempt(EntityUid uid, NcStoreComponent comp, ref ActivatableUIOpenAttemptEvent ev)
     {
@@ -631,47 +664,17 @@ public sealed class StoreStructuredSystem : EntitySystem
 
         _affectedStoresScratch.Clear();
 
-        void AddStoresForRoot(EntityUid root)
+        foreach (var root in _pendingRefreshEntities)
         {
+            // На всякий случай проверяем существование
+            if (!Exists(root))
+                continue;
+
+            // Теперь это просто O(1) получение списка магазинов.
             if (_storesByWatchedRoot.TryGetValue(root, out var stores))
             {
                 foreach (var s in stores)
                     _affectedStoresScratch.Add(s);
-            }
-        }
-
-        foreach (var changed in _pendingRefreshEntities)
-        {
-            if (!Exists(changed))
-                continue;
-
-            var cur = changed;
-
-            for (var i = 0; i < 64; i++)
-            {
-                AddStoresForRoot(cur);
-
-                if (!TryComp(cur, out TransformComponent? xform))
-                    break;
-
-                var parent = xform.ParentUid;
-                if (parent == EntityUid.Invalid || parent == cur)
-                    break;
-
-                if (TryComp(parent, out ContainerManagerComponent? parentContainers))
-                {
-                    foreach (var container in parentContainers.Containers.Values)
-                    {
-                        if (!container.Contains(cur))
-                            continue;
-
-                        cur = parent;
-                        goto NextStep;
-                    }
-                }
-
-                cur = parent;
-                NextStep: ;
             }
         }
 
@@ -687,14 +690,19 @@ public sealed class StoreStructuredSystem : EntitySystem
 
     private void OnUserEntInserted(EntityUid uid, ContainerManagerComponent comp, EntInsertedIntoContainerMessage args)
     {
-        RefreshStoresAffectedBy(args.Entity);
-        RefreshStoresAffectedBy(uid);
+        // Ищем владельца контейнера (uid)
+        if (!TryFindWatchedRoot(uid, out var watchedRoot))
+            return;
+
+        RefreshStoresAffectedBy(watchedRoot);
     }
 
     private void OnUserEntRemoved(EntityUid uid, ContainerManagerComponent comp, EntRemovedFromContainerMessage args)
     {
-        RefreshStoresAffectedBy(args.Entity);
-        RefreshStoresAffectedBy(uid);
+        if (!TryFindWatchedRoot(uid, out var watchedRoot))
+            return;
+
+        RefreshStoresAffectedBy(watchedRoot);
     }
 
 
@@ -702,8 +710,14 @@ public sealed class StoreStructuredSystem : EntitySystem
         EntityUid uid,
         StackComponent comp,
         ref StackCountChangedEvent args
-    ) =>
-        RefreshStoresAffectedBy(uid);
+    )
+    {
+        // Ищем владельца стака (uid)
+        if (!TryFindWatchedRoot(uid, out var watchedRoot))
+            return;
+
+        RefreshStoresAffectedBy(watchedRoot);
+    }
 
 
     private void OnClaimContract(EntityUid uid, NcStoreComponent comp, ClaimContractBoundMessage msg)
