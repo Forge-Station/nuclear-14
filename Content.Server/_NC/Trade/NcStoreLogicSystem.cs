@@ -357,7 +357,9 @@ public sealed class NcStoreLogicSystem : EntitySystem
         if (store == null || store.Listings.Count == 0 || count <= 0)
             return false;
 
-        if (!store.ListingIndex.TryGetValue(NcStoreComponent.MakeListingKey(StoreMode.Sell, listingId), out var listing))
+        if (!store.ListingIndex.TryGetValue(
+            NcStoreComponent.MakeListingKey(StoreMode.Sell, listingId),
+            out var listing))
             return false;
 
 
@@ -402,7 +404,9 @@ public sealed class NcStoreLogicSystem : EntitySystem
         if (store == null || store.Listings.Count == 0 || count <= 0)
             return false;
 
-        if (!store.ListingIndex.TryGetValue(NcStoreComponent.MakeListingKey(StoreMode.Sell, listingId), out var listing))
+        if (!store.ListingIndex.TryGetValue(
+            NcStoreComponent.MakeListingKey(StoreMode.Sell, listingId),
+            out var listing))
             return false;
 
         if (!TryPickCurrencyForSell(store, listing, out var currency, out var unitPrice) || unitPrice <= 0)
@@ -500,8 +504,17 @@ public sealed class NcStoreLogicSystem : EntitySystem
         if (stackType == null)
         {
             var left = amount;
-
             var effective = ResolveMatchMode(protoId, matchMode);
+
+            void TakeFromEntity(EntityUid ent)
+            {
+                if (_ents.TryGetComponent(ent, out StackComponent? stackComp) && stackComp.Count > 1)
+                    _stacks.SetCount(ent, stackComp.Count - 1, stackComp);
+                else
+                    _ents.DeleteEntity(ent);
+
+                left -= 1;
+            }
 
             if (effective == PrototypeMatchMode.Exact)
             {
@@ -509,69 +522,47 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 {
                     if (left <= 0)
                         break;
-
                     if (IsProtectedFromDirectSale(root, ent))
                         continue;
 
                     if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
                         continue;
 
-                    if (meta.EntityPrototype.ID != protoId)
-                        continue;
-
-                    if (_ents.EntityExists(ent))
-                    {
-                        _ents.DeleteEntity(ent);
-                        left -= 1;
-                    }
+                    if (meta.EntityPrototype.ID == protoId && _ents.EntityExists(ent))
+                        TakeFromEntity(ent);
                 }
 
                 return left <= 0;
             }
 
+
             foreach (var ent in EnumerateDeepItemsUnique(root))
             {
                 if (left <= 0)
                     break;
-
                 if (IsProtectedFromDirectSale(root, ent))
                     continue;
-
                 if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
                     continue;
 
-                if (meta.EntityPrototype.ID != protoId)
-                    continue;
-
-                if (_ents.EntityExists(ent))
-                {
-                    _ents.DeleteEntity(ent);
-                    left -= 1;
-                }
+                if (meta.EntityPrototype.ID == protoId && _ents.EntityExists(ent))
+                    TakeFromEntity(ent);
             }
 
             foreach (var ent in EnumerateDeepItemsUnique(root))
             {
                 if (left <= 0)
                     break;
-
                 if (IsProtectedFromDirectSale(root, ent))
                     continue;
-
                 if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
                     continue;
 
                 if (meta.EntityPrototype.ID == protoId)
                     continue;
 
-                if (!IsProtoOrDescendant(meta.EntityPrototype, protoId))
-                    continue;
-
-                if (_ents.EntityExists(ent))
-                {
-                    _ents.DeleteEntity(ent);
-                    left -= 1;
-                }
+                if (IsProtoOrDescendant(meta.EntityPrototype, protoId) && _ents.EntityExists(ent))
+                    TakeFromEntity(ent);
             }
 
             return left <= 0;
@@ -582,7 +573,6 @@ public sealed class NcStoreLogicSystem : EntitySystem
         {
             if (leftStack <= 0)
                 break;
-
             if (IsProtectedFromDirectSale(root, ent))
                 continue;
 
@@ -628,7 +618,9 @@ public sealed class NcStoreLogicSystem : EntitySystem
         if (store == null || store.Listings.Count == 0)
             return false;
 
-        if (!store.ListingIndex.TryGetValue(NcStoreComponent.MakeListingKey(StoreMode.Exchange, listingId), out var listing))
+        if (!store.ListingIndex.TryGetValue(
+            NcStoreComponent.MakeListingKey(StoreMode.Exchange, listingId),
+            out var listing))
             return false;
 
         if (string.IsNullOrEmpty(listing.ProductEntity))
