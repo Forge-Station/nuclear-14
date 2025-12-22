@@ -31,17 +31,24 @@ public sealed partial class NcStoreMenu : FancyWindow
     private readonly Dictionary<string, (NcStoreListingControl Ctrl, int Sig)> _buyCache = new();
     private readonly Dictionary<string, Button> _buyCatButtons = new();
     private readonly List<string> _buyCats = new();
+    private readonly List<StoreListingStaticData> _catalog = new();
+    private readonly Dictionary<string, int> _crateUnitsById = new();
     private readonly List<StoreListingData> _items = new();
 
     private readonly Dictionary<string, int> _massSellTotals = new();
+    private readonly Dictionary<string, int> _ownedById = new();
     private readonly IPrototypeManager _proto;
 
     private readonly Dictionary<string, int> _qtyCache = new();
+
+    private readonly Dictionary<string, int> _remainingById = new();
     private readonly Dictionary<string, string> _searchIndex = new();
     private readonly Dictionary<string, (NcStoreListingControl Ctrl, int Sig)> _sellCache = new();
     private readonly Dictionary<string, Button> _sellCatButtons = new();
     private readonly List<string> _sellCats = new();
     private readonly SpriteSystem _sprites;
+    private readonly Dictionary<string, StoreListingStaticData> _staticById = new();
+
     private int _balance;
 
 
@@ -131,6 +138,32 @@ public sealed partial class NcStoreMenu : FancyWindow
         return _balancesByCurrency.TryGetValue(currencyId, out var v) ? v : 0;
     }
 
+    private void UpdateBalanceHeader()
+    {
+        if (_balancesByCurrency.Count == 0)
+        {
+            SetBalance(0);
+            return;
+        }
+
+        if (_balancesByCurrency.Count == 1)
+        {
+            var kv = _balancesByCurrency.First();
+            var amount = kv.Value;
+            var name = CurrencyName(kv.Key);
+            BalanceLabel.Text = amount.ToString();
+            BalanceInfo.SetMarkup($"[font size=14][color=yellow]{amount}[/color][/font] {name}");
+            return;
+        }
+
+        var sum = 0;
+        foreach (var v in _balancesByCurrency.Values)
+            sum += v;
+
+        BalanceLabel.Text = sum.ToString();
+        BalanceInfo.SetMarkup($"[font size=14][color=yellow]{sum}[/color][/font]");
+    }
+
     public void SetBalancesByCurrency(Dictionary<string, int> balances)
     {
         _balancesByCurrency.Clear();
@@ -141,6 +174,7 @@ public sealed partial class NcStoreMenu : FancyWindow
                 continue;
 
             _balancesByCurrency[cur] = amt;
+            UpdateBalanceHeader();
         }
     }
 
@@ -222,11 +256,8 @@ public sealed partial class NcStoreMenu : FancyWindow
     }
 
 
-    public void ApplyState(
-        int balance,
-        Dictionary<string, int> balancesByCurrency,
-        List<StoreListingData> list,
-        Dictionary<string, int> massTotals,
+    public void PopulateCatalog(
+        List<StoreListingStaticData> listings,
         bool hasBuyTab,
         bool hasSellTab,
         bool hasContractsTab
@@ -238,11 +269,189 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         ApplyTabsVisibility();
 
+        _catalog.Clear();
+        _staticById.Clear();
 
-        SetBalance(balance);
+        foreach (var s in listings)
+        {
+            if (string.IsNullOrWhiteSpace(s.Id) || string.IsNullOrWhiteSpace(s.ProductEntity))
+                continue;
+
+            _catalog.Add(s);
+            _staticById[s.Id] = s;
+        }
+
+        RebuildSearchIndexFromCatalog();
+        RebuildCategoriesFromCatalog();
+
+        ResetPaging();
+        RefreshListings();
+    }
+
+    private void RebuildSearchIndexFromCatalog()
+    {
+        _searchIndex.Clear();
+
+        foreach (var protoId in _catalog.Select(x => x.ProductEntity).Distinct())
+        {
+            if (string.IsNullOrWhiteSpace(protoId))
+                continue;
+
+            if (!_proto.TryIndex<EntityPrototype>(protoId, out var p))
+                continue;
+
+            _searchIndex[protoId] = (p.Name + "\n" + p.Description).ToLowerInvariant();
+        }
+    }
+
+    private void RebuildCategoriesFromCatalog()
+    {
+        _buyCats.Clear();
+        _sellCats.Clear();
+
+        _buyCats.AddRange(
+            _catalog.Where(i => i.Mode == StoreMode.Buy).Select(i => i.Category).Distinct().OrderBy(c => c));
+        _sellCats.AddRange(
+            _catalog.Where(i => i.Mode == StoreMode.Sell).Select(i => i.Category).Distinct().OrderBy(c => c));
+        if (!_buyCats.Contains(_buyCat))
+            _buyCat = string.Empty;
+        if (!_sellCats.Contains(_sellCat))
+            _sellCat = string.Empty;
+
+        BuildCategoryButtons();
+    }
+
+    private void UpdateVirtualSellCategories()
+    {
+        const string readyCat = "Готово к продаже";
+
+        var hasReady = _items.Any(i => i.Mode == StoreMode.Sell && i.Category == readyCat);
+        var hasCrate = _items.Any(i => i.Mode == StoreMode.Sell && i.Category == CrateCategory);
+
+        _sellCats.Remove(readyCat);
+        _sellCats.Remove(CrateCategory);
+
+        var insertIndex = 0;
+        if (hasReady)
+            _sellCats.Insert(insertIndex++, readyCat);
+
+        if (hasCrate)
+            _sellCats.Insert(insertIndex, CrateCategory);
+
+        if (!_sellCats.Contains(_sellCat))
+            _sellCat = string.Empty;
+
+        BuildCategoryButtons();
+    }
+
+    public void ApplyDynamicState(
+        Dictionary<string, int> balancesByCurrency,
+        Dictionary<string, int> remainingById,
+        Dictionary<string, int> ownedById,
+        Dictionary<string, int> crateUnitsById,
+        Dictionary<string, int> massTotals,
+        bool hasBuyTab,
+        bool hasSellTab,
+        bool hasContractsTab,
+        List<ContractClientData> contracts
+    )
+    {
+        _hasBuyTab = hasBuyTab;
+        _hasSellTab = hasSellTab;
+        _hasContractsTab = hasContractsTab;
+        ApplyTabsVisibility();
+
         SetBalancesByCurrency(balancesByCurrency);
+
+        _remainingById.Clear();
+        foreach (var (k, v) in remainingById)
+            _remainingById[k] = v;
+
+        _ownedById.Clear();
+        foreach (var (k, v) in ownedById)
+            _ownedById[k] = v;
+
+        _crateUnitsById.Clear();
+        foreach (var (k, v) in crateUnitsById)
+            _crateUnitsById[k] = v;
+
         SetMassSellTotals(massTotals);
-        Populate(list);
+        PopulateContracts(contracts);
+
+        RebuildItemsFromCatalogAndDynamic();
+        UpdateVirtualSellCategories();
+        RefreshListings();
+    }
+
+    private void RebuildItemsFromCatalogAndDynamic()
+    {
+        _items.Clear();
+
+        foreach (var s in _catalog)
+        {
+            var remaining = _remainingById.TryGetValue(s.Id, out var r) ? r : -1;
+            var owned = _ownedById.TryGetValue(s.Id, out var o) ? o : 0;
+
+            _items.Add(
+                new(
+                    s.Id,
+                    s.ProductEntity,
+                    s.BasePrice,
+                    s.Category,
+                    s.CurrencyId,
+                    s.Mode,
+                    owned,
+                    remaining));
+        }
+
+        const string readyCat = "Готово к продаже";
+        var ready = _items
+            .Where(d => d.Mode == StoreMode.Sell && d.Owned > 0 && d.Remaining != 0)
+            .Select(d => new StoreListingData(
+                d.Id + "__ready",
+                d.ProductEntity,
+                d.Price,
+                readyCat,
+                d.CurrencyId,
+                d.Mode,
+                d.Owned,
+                d.Remaining))
+            .ToList();
+
+        if (ready.Count > 0)
+            _items.AddRange(ready);
+
+        if (_crateUnitsById.Count > 0)
+        {
+            foreach (var s in _catalog.Where(x => x.Mode == StoreMode.Sell))
+            {
+                if (!_crateUnitsById.TryGetValue(s.Id, out var take) || take <= 0)
+                    continue;
+
+                var remaining = _remainingById.TryGetValue(s.Id, out var r) ? r : 0;
+
+                _items.Add(
+                    new(
+                        s.Id + "__crate",
+                        s.ProductEntity,
+                        s.BasePrice,
+                        CrateCategory,
+                        s.CurrencyId,
+                        StoreMode.Sell,
+                        take,
+                        remaining));
+            }
+        }
+
+        var ids = _items.Select(i => i.Id).ToHashSet();
+        foreach (var key in _qtyCache.Keys.Where(k => !ids.Contains(k)).ToList())
+            _qtyCache.Remove(key);
+
+        foreach (var key in _buyCache.Keys.Where(k => !ids.Contains(k)).ToList())
+            _buyCache.Remove(key);
+
+        foreach (var key in _sellCache.Keys.Where(k => !ids.Contains(k)).ToList())
+            _sellCache.Remove(key);
     }
 
 
@@ -321,7 +530,6 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         contractList.RemoveAllChildren();
 
-        // Пусто / нет контрактов
         if (list == null || list.Count == 0)
         {
             contractList.AddChild(
@@ -332,7 +540,6 @@ public sealed partial class NcStoreMenu : FancyWindow
                     Margin = new(0, 8, 0, 0)
                 });
 
-            // ВАЖНО: нормализуем вкладки и тут тоже (один раз)
             ApplyTabsVisibility();
             return;
         }
@@ -350,7 +557,6 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         foreach (var c in ordered)
         {
-            // --- Карточка: слева полоска сложности на всю высоту, справа контент ---
             var cardRow = new BoxContainer
             {
                 Orientation = BoxContainer.LayoutOrientation.Horizontal,
@@ -393,7 +599,6 @@ public sealed partial class NcStoreMenu : FancyWindow
             };
             panel.AddChild(root);
 
-            // --- Заголовок ---
             var header = new BoxContainer
             {
                 Orientation = BoxContainer.LayoutOrientation.Horizontal,
@@ -413,10 +618,7 @@ public sealed partial class NcStoreMenu : FancyWindow
             titleLabel.StyleClasses.Add("LabelHeading");
             header.AddChild(titleLabel);
 
-            // Спейсер — всё “служебное” уходит вправо
             header.AddChild(new() { HorizontalExpand = true, });
-
-            // --- Бейдж одноразового контракта (видимый и аккуратный) ---
             if (!c.Repeatable)
             {
                 const string oneTimeTip =
@@ -1002,18 +1204,19 @@ public sealed partial class NcStoreMenu : FancyWindow
                 ? GetBalanceForCurrency(it.CurrencyId)
                 : int.MaxValue;
 
-            var sig = Sig(it, balanceHint);
+            var sig = Sig(it);
 
             NcStoreListingControl ctrl;
+
             if (cache.TryGetValue(it.Id, out var tuple) && tuple.Sig == sig)
                 ctrl = tuple.Ctrl;
             else
             {
                 var initQty = _qtyCache.TryGetValue(it.Id, out var saved) ? saved : 1;
-
                 var actionsEnabled = true;
 
                 ctrl = new(it, _sprites, balanceHint, initQty, actionsEnabled);
+
                 ctrl.OnQtyChanged += newQty => _qtyCache[it.Id] = newQty;
 
                 switch (mode)
@@ -1028,6 +1231,8 @@ public sealed partial class NcStoreMenu : FancyWindow
 
                 cache[it.Id] = (ctrl, sig);
             }
+
+            ctrl.UpdateDynamicData(balanceHint, it.Remaining, it.Owned);
 
             pane.AddChild(ctrl);
 
@@ -1088,84 +1293,116 @@ public sealed partial class NcStoreMenu : FancyWindow
 
     private void BuildCategoryButtons()
     {
-        _buyCatButtons.Clear();
-        _sellCatButtons.Clear();
-
-        MakeButtons(
+        SyncCategoryButtons(
             _buyCats,
             BuyCategoryListContainer,
-            _buyCat,
             _buyCatButtons,
+            _buyCat,
             cat =>
             {
                 _buyCat = _buyCat == cat ? string.Empty : cat;
                 UpdateCatVisuals(_buyCatButtons, _buyCat);
+
                 ResetPaging();
                 RefreshListings();
             });
 
-        MakeButtons(
+        SyncCategoryButtons(
             _sellCats,
             SellCategoryListContainer,
-            _sellCat,
             _sellCatButtons,
+            _sellCat,
             cat =>
             {
                 _sellCat = _sellCat == cat ? string.Empty : cat;
+
                 UpdateCatVisuals(_sellCatButtons, _sellCat);
+
                 ResetPaging();
                 RefreshListings();
             });
-
-        UpdateCatVisuals(_buyCatButtons, _buyCat);
-        UpdateCatVisuals(_sellCatButtons, _sellCat);
     }
 
-    private static void MakeButtons(
-        IEnumerable<string> cats,
+    private Button CreateCategoryButton(string catId, Action<string> onClick)
+    {
+        var display = catId;
+        if (catId == "Готово к продаже")
+            display = "Готово";
+        else if (catId == CrateCategory)
+            display = "В ящике";
+
+        var btn = new Button
+        {
+            Text = display,
+            ToggleMode = true,
+            HorizontalExpand = true,
+            ToolTip = catId,
+            ModulateSelfOverride = CatIdle
+        };
+
+        btn.OnPressed += _ => onClick(catId);
+        btn.OnMouseEntered += _ =>
+        {
+            btn.ModulateSelfOverride = btn.Pressed
+                ? Brighten(CatSelected, 1.2f)
+                : Brighten(CatIdle, 1.2f);
+        };
+
+        btn.OnMouseExited += _ =>
+        {
+            btn.ModulateSelfOverride = btn.Pressed ? CatSelected : CatIdle;
+        };
+
+        return btn;
+    }
+
+    private void SyncCategoryButtons(
+        List<string> neededCats,
         Control parent,
-        string current,
         Dictionary<string, Button> registry,
+        string selectedCat,
         Action<string> onClick
     )
     {
-        parent.Children.Clear();
+        var neededSet = neededCats.ToHashSet();
+        var toRemove = registry.Keys.Where(k => !neededSet.Contains(k)).ToList();
 
-        foreach (var c in cats)
+        foreach (var key in toRemove)
         {
-            var catId = c;
+            var btn = registry[key];
+            parent.RemoveChild(btn);
+            registry.Remove(key);
+        }
 
-            var display = c;
-            if (c == "Готово к продаже")
-                display = "Готово";
-            else if (c == CrateCategory)
-                display = "В ящике";
+        foreach (var cat in neededCats)
+        {
+            if (registry.ContainsKey(cat))
+                continue;
 
-            var selected = catId == current;
-
-            var btn = new Button
-            {
-                Text = display,
-                ToggleMode = true,
-                HorizontalExpand = true,
-                Pressed = selected,
-                ModulateSelfOverride = selected ? CatSelected : CatIdle,
-                ToolTip = c
-            };
-
-            btn.OnMouseEntered += _ =>
-                btn.ModulateSelfOverride =
-                    btn.Pressed ? Brighten(CatSelected, 1.2f) : Brighten(CatIdle, 1.2f);
-            btn.OnMouseExited += _ =>
-                btn.ModulateSelfOverride = btn.Pressed ? CatSelected : CatIdle;
-
-            btn.OnPressed += _ => onClick(catId);
-
+            var btn = CreateCategoryButton(cat, onClick);
+            registry[cat] = btn;
             parent.AddChild(btn);
-            registry[catId] = btn;
+        }
+
+        foreach (var cat in neededCats)
+        {
+            if (!registry.TryGetValue(cat, out var btn))
+                continue;
+
+            parent.RemoveChild(btn);
+            parent.AddChild(btn);
+        }
+
+        foreach (var (cat, btn) in registry)
+        {
+            var isSelected = cat == selectedCat;
+            if (btn.Pressed != isSelected)
+            {
+                btn.Pressed = isSelected;
+                btn.ModulateSelfOverride = isSelected ? CatSelected : CatIdle;
+            }
         }
     }
-
 
     private string CurrencyName(string? currencyId)
     {
@@ -1227,12 +1464,9 @@ public sealed partial class NcStoreMenu : FancyWindow
         base.Dispose(disposing);
     }
 
-    private static int Sig(StoreListingData d, int balance)
-    {
-        return d.Mode == StoreMode.Buy
-            ? HashCode.Combine(d.Id, d.ProductEntity, d.Category, d.Price, d.Remaining, d.Owned, d.CurrencyId, balance)
-            : HashCode.Combine(d.Id, d.ProductEntity, d.Category, d.Price, d.Remaining, d.Owned, d.CurrencyId);
-    }
+    private static int Sig(StoreListingData d) =>
+        HashCode.Combine(d.Id, d.ProductEntity, d.Category, d.Price, d.CurrencyId, d.Mode);
+
 
     private bool MatchesSearch(string protoId)
     {

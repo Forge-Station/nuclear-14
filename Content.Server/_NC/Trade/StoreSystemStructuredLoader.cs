@@ -28,6 +28,8 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
         comp.RebuildListingIndex();
 
+        comp.BumpCatalogRevision();
+
         _contracts.InitContractsForStore(uid, comp);
     }
 
@@ -37,6 +39,8 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
             TryLoadPresets(uid, comp, "Startup");
 
         comp.RebuildListingIndex();
+
+        comp.BumpCatalogRevision();
 
         _contracts.InitContractsForStore(uid, comp);
     }

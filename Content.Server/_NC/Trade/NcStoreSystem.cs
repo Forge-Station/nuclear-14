@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Numerics;
 using Content.Server.Storage.Components;
 using Content.Shared._NC.Trade;
@@ -114,7 +113,7 @@ public sealed class NcStoreSystem : EntitySystem
             return;
 
         _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid, AudioParams.Default.WithVolume(-2f));
-        _storeUi.UpdateUiState(uid, comp, actor);
+        _storeUi.UpdateDynamicState(uid, comp, actor);
     }
 
     private void OnSellRequest(EntityUid uid, NcStoreComponent comp, StoreSellListingBoundUiMessage msg)
@@ -158,7 +157,7 @@ public sealed class NcStoreSystem : EntitySystem
             return;
 
         _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid, AudioParams.Default.WithVolume(-2f));
-        _storeUi.UpdateUiState(uid, comp, actor);
+        _storeUi.UpdateDynamicState(uid, comp, actor);
     }
 
 
@@ -191,7 +190,7 @@ public sealed class NcStoreSystem : EntitySystem
         if (!_logic.TryMassSellFromContainer(uid, comp, actor, crate))
             return;
 
-        _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid);
-        _storeUi.UpdateUiState(uid, comp, actor);
+        _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid, AudioParams.Default.WithVolume(-2f));
+        _storeUi.UpdateDynamicState(uid, comp, actor);
     }
 }

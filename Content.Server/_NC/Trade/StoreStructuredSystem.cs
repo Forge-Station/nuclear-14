@@ -17,22 +17,15 @@ namespace Content.Server._NC.Trade;
 public sealed class StoreStructuredSystem : EntitySystem
 {
     private const float AutoCloseDistance = 3f;
-
-    // Обычный интервал проверки (когда ничего не происходит) - 5 раз в секунду
     private const float CheckInterval = 0.2f;
-
-    // Минимальный интервал для "ускоренного" обновления - 20 раз в секунду.
-    // Защищает от лаг-шторма при массовом перемещении предметов.
     private const float MinAccelInterval = 0.05f;
-
     private const int WatchedRootSearchLimit = 32;
-
     private readonly HashSet<EntityUid> _affectedStoresScratch = new();
-
+    private readonly Dictionary<EntityUid, List<StoreListingStaticData>> _catalogCache = new();
     [Dependency] private readonly NcContractSystem _contracts = default!;
     private readonly HashSet<EntityUid> _dirtyStores = new();
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
-    private readonly List<EntityUid> _openStoresScratch = new(); // Scratch list для Update
+    private readonly List<EntityUid> _openStoresScratch = new();
     private readonly HashSet<EntityUid> _openStoreUids = new();
     private readonly HashSet<EntityUid> _pendingRefreshEntities = new();
     [Dependency] private readonly PopupSystem _popups = default!;
@@ -40,35 +33,126 @@ public sealed class StoreStructuredSystem : EntitySystem
     [Dependency] private readonly NcStoreSystem _storeSystem = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
+
     private readonly Dictionary<EntityUid, (EntityUid User, EntityUid? Crate)> _watchByStore = new();
     [Dependency] private readonly SharedTransformSystem _xform = default!;
-    private TimeSpan _nextAccelAllowed = TimeSpan.Zero; // Таймер для лимита ускорений
 
+    private TimeSpan _nextAccelAllowed = TimeSpan.Zero;
     private TimeSpan _nextCheck = TimeSpan.Zero;
 
     public override void Initialize()
     {
         base.Initialize();
-
         SubscribeLocalEvent<NcStoreComponent, ActivatableUIOpenAttemptEvent>(OnUiOpenAttempt);
         SubscribeLocalEvent<NcStoreComponent, BoundUIClosedEvent>(OnUiClosed);
         SubscribeLocalEvent<NcStoreComponent, RequestUiRefreshMessage>(OnUiRefreshRequest);
         SubscribeLocalEvent<AccessReaderComponent, AccessReaderConfigurationChangedEvent>(OnAccessReaderChanged);
-
+        SubscribeLocalEvent<NcStoreComponent, ComponentShutdown>(OnStoreShutdown);
         SubscribeLocalEvent<ContainerManagerComponent, EntInsertedIntoContainerMessage>(OnUserEntInserted);
         SubscribeLocalEvent<ContainerManagerComponent, EntRemovedFromContainerMessage>(OnUserEntRemoved);
         SubscribeLocalEvent<StackComponent, StackCountChangedEvent>(OnStackCountChanged);
-
         SubscribeLocalEvent<NcStoreComponent, ClaimContractBoundMessage>(OnClaimContract);
     }
 
+    private void OnStoreShutdown(EntityUid uid, NcStoreComponent comp, ComponentShutdown args) =>
+        _catalogCache.Remove(uid);
+
+    public void RefreshCatalog(EntityUid uid, NcStoreComponent comp)
+    {
+        _catalogCache.Remove(uid);
+
+        comp.BumpCatalogRevision();
+
+        if (comp.CurrentUser is not { } user)
+            return;
+
+        if (!_ui.IsUiOpen(uid, StoreUiKey.Key, user))
+            return;
+
+        SendCatalog(uid, comp, user);
+        UpdateDynamicState(uid, comp, user);
+    }
+
+
+    public void UpdateDynamicState(EntityUid uid, NcStoreComponent comp, EntityUid user)
+    {
+        EntityUid? crateUid = null;
+        if (TryGetPulledClosedCrate(user, out var pulledCrate))
+            crateUid = pulledCrate;
+
+        UpdateStoreWatch(uid, user, crateUid);
+
+        var userSnap = _logic.BuildInventorySnapshot(user);
+
+        NcStoreLogicSystem.InventorySnapshot? crateSnap = null;
+        if (crateUid is { } crateEntity)
+            crateSnap = _logic.BuildInventorySnapshot(crateEntity);
+
+        UpdateContractsProgress(comp, userSnap, crateSnap);
+
+        var balancesByCurrency = new Dictionary<string, int>(comp.CurrencyWhitelist.Count, StringComparer.Ordinal);
+        foreach (var cur in comp.CurrencyWhitelist)
+        {
+            if (string.IsNullOrWhiteSpace(cur))
+                continue;
+
+            balancesByCurrency[cur] = userSnap.StackTypeCounts.TryGetValue(cur, out var b) ? b : 0;
+        }
+
+        var remainingById = new Dictionary<string, int>(comp.Listings.Count);
+        var ownedById = new Dictionary<string, int>(comp.Listings.Count);
+
+        foreach (var l in comp.Listings)
+        {
+            if (string.IsNullOrWhiteSpace(l.Id))
+                continue;
+            remainingById[l.Id] = l.RemainingCount;
+        }
+
+        foreach (var l in comp.Listings)
+        {
+            if (string.IsNullOrWhiteSpace(l.Id) || string.IsNullOrWhiteSpace(l.ProductEntity))
+                continue;
+            ownedById[l.Id] = _logic.GetOwnedFromSnapshot(userSnap, l.ProductEntity, l.MatchMode);
+        }
+
+        var crateUnitsById = new Dictionary<string, int>();
+        var crateTotals = new Dictionary<string, int>();
+
+        if (crateUid is { } crate)
+        {
+            var plan = _logic.ComputeMassSellPlan(comp, crate);
+            crateTotals = plan.IncomeByCurrency;
+            crateUnitsById = new(plan.UnitsByListingId);
+        }
+
+        var contracts = comp.Contracts.Values.Select(c => MapContractToClient(c)).ToList();
+
+        comp.UiRevision = unchecked(comp.UiRevision + 1);
+
+        _ui.SetUiState(
+            uid,
+            StoreUiKey.Key,
+            new StoreDynamicState(
+                comp.UiRevision,
+                comp.CatalogRevision,
+                balancesByCurrency,
+                remainingById,
+                ownedById,
+                crateUnitsById,
+                crateTotals,
+                contracts,
+                comp.Listings.Any(l => l.Mode == StoreMode.Buy),
+                comp.Listings.Any(l => l.Mode == StoreMode.Sell),
+                comp.ContractPresets.Count > 0 || !string.IsNullOrWhiteSpace(comp.LegacyContractsPreset)
+            ));
+    }
 
     private bool TryFindWatchedRoot(EntityUid start, out EntityUid watchedRoot)
     {
         watchedRoot = default;
         if (_storesByWatchedRoot.Count == 0)
             return false;
-
         var cur = start;
         for (var i = 0; i < WatchedRootSearchLimit; i++)
         {
@@ -78,14 +162,11 @@ public sealed class StoreStructuredSystem : EntitySystem
                 return true;
             }
 
-            // Fail-fast: если нет компонента или родитель невалиден - сразу выход
             if (!TryComp(cur, out TransformComponent? xform))
                 return false;
-
             var parent = xform.ParentUid;
             if (parent == EntityUid.Invalid || parent == cur)
                 return false;
-
             cur = parent;
         }
 
@@ -96,17 +177,11 @@ public sealed class StoreStructuredSystem : EntitySystem
     {
         if (_storesByWatchedRoot.Count == 0)
             return;
-
         _logic.InvalidateInventoryCache(changedRoot);
-
         _pendingRefreshEntities.Add(changedRoot);
-
-        // УМНОЕ УСКОРЕНИЕ:
-        // Если событие произошло раньше плановой проверки, ускоряем таймер.
-        // Но не чаще чем раз в MinAccelInterval (защита от шторма).
         if (_timing.CurTime < _nextCheck && _timing.CurTime >= _nextAccelAllowed)
         {
-            _nextCheck = _timing.CurTime; // Обновим в ближайшем Update
+            _nextCheck = _timing.CurTime;
             _nextAccelAllowed = _timing.CurTime + TimeSpan.FromSeconds(MinAccelInterval);
         }
 
@@ -120,27 +195,26 @@ public sealed class StoreStructuredSystem : EntitySystem
 
     private void OnUserEntInserted(EntityUid uid, ContainerManagerComponent comp, EntInsertedIntoContainerMessage args)
     {
-        if (TryFindWatchedRoot(uid, out var watchedRoot))
-            RefreshStoresAffectedBy(watchedRoot);
+        if (TryFindWatchedRoot(uid, out var r))
+            RefreshStoresAffectedBy(r);
     }
 
     private void OnUserEntRemoved(EntityUid uid, ContainerManagerComponent comp, EntRemovedFromContainerMessage args)
     {
-        if (TryFindWatchedRoot(uid, out var watchedRoot))
-            RefreshStoresAffectedBy(watchedRoot);
+        if (TryFindWatchedRoot(uid, out var r))
+            RefreshStoresAffectedBy(r);
     }
 
     private void OnStackCountChanged(EntityUid uid, StackComponent comp, ref StackCountChangedEvent args)
     {
-        if (TryFindWatchedRoot(uid, out var watchedRoot))
-            RefreshStoresAffectedBy(watchedRoot);
+        if (TryFindWatchedRoot(uid, out var r))
+            RefreshStoresAffectedBy(r);
     }
 
     private void ProcessPendingRefreshes()
     {
         if (_pendingRefreshEntities.Count == 0 || _storesByWatchedRoot.Count == 0)
             return;
-
         _affectedStoresScratch.Clear();
         foreach (var root in _pendingRefreshEntities)
         {
@@ -154,33 +228,22 @@ public sealed class StoreStructuredSystem : EntitySystem
         }
 
         _pendingRefreshEntities.Clear();
-
-        foreach (var storeUid in _affectedStoresScratch)
-            MarkDirty(storeUid);
+        foreach (var s in _affectedStoresScratch)
+            MarkDirty(s);
     }
-
 
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
-
         if (_timing.CurTime < _nextCheck)
             return;
-
-        // Ставим следующую проверку через 0.2с.
-        // Если придет событие, оно "сбросит" это время назад через RefreshStoresAffectedBy.
         _nextCheck = _timing.CurTime + TimeSpan.FromSeconds(CheckInterval);
-
         ProcessPendingRefreshes();
-
         if (_openStoreUids.Count == 0)
             return;
-
-        // Используем scratch list для итерации без аллокаций
         _openStoresScratch.Clear();
         foreach (var u in _openStoreUids)
             _openStoresScratch.Add(u);
-
         foreach (var uid in _openStoresScratch)
         {
             if (!TryComp(uid, out NcStoreComponent? store) || !TryComp(uid, out TransformComponent? xform))
@@ -195,8 +258,10 @@ public sealed class StoreStructuredSystem : EntitySystem
                 continue;
             }
 
-            if (!TryComp(userUid, out TransformComponent? userXform) ||
-                !_xform.InRange(xform.Coordinates, userXform.Coordinates, AutoCloseDistance))
+            if (!TryComp(userUid, out TransformComponent? userXform) || !_xform.InRange(
+                xform.Coordinates,
+                userXform.Coordinates,
+                AutoCloseDistance))
             {
                 CloseAndCleanUp(uid, userUid);
                 store.CurrentUser = null;
@@ -213,9 +278,8 @@ public sealed class StoreStructuredSystem : EntitySystem
 
             if (EnsureCrateWatchUpToDate(uid, userUid))
                 MarkDirty(uid);
-
             if (_dirtyStores.Remove(uid))
-                UpdateUiState(uid, store, userUid);
+                UpdateDynamicState(uid, store, userUid);
         }
     }
 
@@ -228,216 +292,15 @@ public sealed class StoreStructuredSystem : EntitySystem
         _dirtyStores.Remove(storeUid);
     }
 
-
-    public void UpdateUiState(EntityUid uid, NcStoreComponent comp, EntityUid user)
-    {
-        EntityUid? crateUid = null;
-        if (TryGetPulledClosedCrate(user, out var pulledCrate))
-            crateUid = pulledCrate;
-
-
-        UpdateStoreWatch(uid, user, crateUid);
-
-        var userSnap = _logic.BuildInventorySnapshot(user);
-        NcStoreLogicSystem.InventorySnapshot? crateSnap = null;
-        if (crateUid is { } crateEntity)
-            crateSnap = _logic.BuildInventorySnapshot(crateEntity);
-
-        UpdateContractsProgress(comp, userSnap, crateSnap);
-
-        string? preferredCurrency = null;
-        if (comp.CurrencyWhitelist.Count > 0)
-        {
-            preferredCurrency = comp.CurrencyWhitelist.FirstOrDefault(c =>
-                !string.IsNullOrWhiteSpace(c) && comp.Listings.Any(l => l.Cost.ContainsKey(c)));
-            preferredCurrency ??= comp.CurrencyWhitelist.FirstOrDefault(c => !string.IsNullOrWhiteSpace(c));
-        }
-
-        if (string.IsNullOrWhiteSpace(preferredCurrency))
-            preferredCurrency = comp.Listings.SelectMany(l => l.Cost.Keys).FirstOrDefault();
-
-        var balance = 0;
-        if (!string.IsNullOrWhiteSpace(preferredCurrency))
-            userSnap.StackTypeCounts.TryGetValue(preferredCurrency, out balance);
-
-        var listings = new List<StoreListingData>(comp.Listings.Count + 64);
-
-        foreach (var l in comp.Listings)
-        {
-            if (string.IsNullOrEmpty(l.ProductEntity))
-                continue;
-
-            var cat = l.Categories.Count > 0 ? l.Categories[0] : "Разное";
-            if (TryPickUiCurrencyAndPrice(comp, l, out var cur, out var p))
-            {
-                var owned = _logic.GetOwnedFromSnapshot(userSnap, l.ProductEntity, l.MatchMode);
-                listings.Add(new(l.Id, l.ProductEntity, p, cat, cur, l.Mode, owned, l.RemainingCount));
-            }
-        }
-
-        const string readyCat = "Готово к продаже";
-        var readyToSell = listings
-            .Where(d => d.Mode == StoreMode.Sell && d.Owned > 0 && d.Remaining != 0)
-            .Select(d => new StoreListingData(
-                d.Id + "__ready",
-                d.ProductEntity,
-                d.Price,
-                readyCat,
-                d.CurrencyId,
-                d.Mode,
-                d.Owned,
-                d.Remaining))
-            .ToList();
-
-        if (readyToSell.Count > 0)
-            listings.AddRange(readyToSell);
-
-        const string crateCat = "Готово к продаже в ящике";
-        var crateTotals = new Dictionary<string, int>();
-
-        if (crateUid is { } crate)
-        {
-            var plan = _logic.ComputeMassSellPlan(comp, crate);
-            crateTotals = plan.IncomeByCurrency;
-
-            foreach (var l in comp.Listings)
-            {
-                if (l.Mode != StoreMode.Sell || string.IsNullOrEmpty(l.ProductEntity))
-                    continue;
-                if (l.RemainingCount == 0)
-                    continue;
-
-                if (!plan.UnitsByListingId.TryGetValue(l.Id, out var take) || take <= 0)
-                    continue;
-                if (!plan.PriceByListingId.TryGetValue(l.Id, out var priceData))
-                    continue;
-
-                listings.Add(
-                    new(
-                        l.Id + "__crate",
-                        l.ProductEntity,
-                        priceData.UnitPrice,
-                        crateCat,
-                        priceData.CurrencyId,
-                        l.Mode,
-                        take,
-                        l.RemainingCount));
-            }
-        }
-
-        var contracts = comp.Contracts.Values.Select(c => MapContractToClient(c)).ToList();
-
-        comp.UiRevision = unchecked(comp.UiRevision + 1);
-        var balancesByCurrency = new Dictionary<string, int>(userSnap.StackTypeCounts);
-
-        _ui.SetUiState(
-            uid,
-            StoreUiKey.Key,
-            new StoreUiState(
-                comp.UiRevision,
-                balance,
-                balancesByCurrency,
-                listings,
-                crateTotals,
-                contracts,
-                comp.Listings.Any(l => l.Mode == StoreMode.Buy),
-                comp.Listings.Any(l => l.Mode == StoreMode.Sell),
-                comp.ContractPresets.Count > 0 || !string.IsNullOrWhiteSpace(comp.LegacyContractsPreset)
-            ));
-    }
-
-    private bool TryPickUiCurrencyAndPrice(
-        NcStoreComponent comp,
-        StoreListingPrototype listing,
-        out string currencyId,
-        out int price
-    )
-    {
-        currencyId = string.Empty;
-        price = 0;
-        if (listing.Cost.Count == 0)
-            return false;
-
-        foreach (var cur in comp.CurrencyWhitelist)
-        {
-            if (string.IsNullOrWhiteSpace(cur))
-                continue;
-            if (listing.Cost.TryGetValue(cur, out var pf))
-            {
-                var p = (int) MathF.Ceiling(pf);
-                if (p > 0)
-                {
-                    currencyId = cur;
-                    price = p;
-                    return true;
-                }
-            }
-        }
-
-        var first = listing.Cost.First();
-        var fp = (int) MathF.Ceiling(first.Value);
-        if (fp > 0 && !string.IsNullOrWhiteSpace(first.Key))
-        {
-            currencyId = first.Key;
-            price = fp;
-            return true;
-        }
-
-        return false;
-    }
-
-    private ContractClientData MapContractToClient(ContractServerData c)
-    {
-        var targets = new List<ContractTargetClientData>();
-        if (c.Targets is { Count: > 0, })
-        {
-            foreach (var t in c.Targets)
-                if (!string.IsNullOrWhiteSpace(t.TargetItem) && t.Required > 0)
-                    targets.Add(new(t.TargetItem, t.Required, t.Progress) { MatchMode = t.MatchMode, });
-        }
-        else if (!string.IsNullOrWhiteSpace(c.TargetItem) && c.Required > 0)
-            targets.Add(new(c.TargetItem, c.Required, c.Progress) { MatchMode = c.MatchMode, });
-
-        var client = new ContractClientData(
-            c.Id,
-            c.Name,
-            c.TargetItem,
-            c.Required,
-            c.Progress,
-            c.Reward,
-            c.RewardCurrency,
-            c.RewardItem,
-            c.RewardItemCount,
-            c.Difficulty,
-            c.Completed,
-            c.Description,
-            targets,
-            c.Repeatable);
-        if (c.RewardCurrencies is { Count: > 0, })
-            client.RewardCurrencies = new(c.RewardCurrencies);
-        if (c.RewardItems is { Count: > 0, })
-            client.RewardItems = new(c.RewardItems);
-        return client;
-    }
-
-
-    private void MarkDirty(EntityUid storeUid)
-    {
-        if (storeUid != EntityUid.Invalid)
-            _dirtyStores.Add(storeUid);
-    }
-
     private bool EnsureCrateWatchUpToDate(EntityUid storeUid, EntityUid user)
     {
         EntityUid? crateUid = null;
         if (TryGetPulledClosedCrate(user, out var pulledCrate))
             crateUid = pulledCrate;
-
         if (_watchByStore.TryGetValue(storeUid, out var prev))
         {
             if (prev.User == user && prev.Crate == crateUid)
                 return false;
-
             if (prev.Crate != crateUid)
             {
                 if (prev.Crate is { } oldCrate)
@@ -530,7 +393,6 @@ public sealed class StoreStructuredSystem : EntitySystem
         _watchByStore.Remove(storeUid);
     }
 
-
     private void OnUiOpenAttempt(EntityUid uid, NcStoreComponent comp, ref ActivatableUIOpenAttemptEvent ev)
     {
         ev.Cancel();
@@ -541,22 +403,80 @@ public sealed class StoreStructuredSystem : EntitySystem
             return;
         if (comp.CurrentUser is { } current && current != user)
             return;
-
         if (TryComp(uid, out TransformComponent? sX) && TryComp(user, out TransformComponent? uX) &&
             !_xform.InRange(sX.Coordinates, uX.Coordinates, AutoCloseDistance))
             return;
-
         var wasInUse = comp.CurrentUser != null;
         comp.CurrentUser = user;
         if (!wasInUse)
             _openStoreUids.Add(uid);
-
         if (!_ui.IsUiOpen(uid, StoreUiKey.Key, user))
             _ui.OpenUi(uid, StoreUiKey.Key, user);
-
         EnsureCrateWatchUpToDate(uid, user);
+        SendCatalog(uid, comp, user);
+        UpdateDynamicState(uid, comp, user);
+    }
 
-        UpdateUiState(uid, comp, user);
+    private void SendCatalog(EntityUid store, NcStoreComponent comp, EntityUid user)
+    {
+        if (!_ui.IsUiOpen(store, StoreUiKey.Key, user))
+            return;
+
+        if (_catalogCache.TryGetValue(store, out var cachedList))
+        {
+            var hasBuy = cachedList.Any(l => l.Mode == StoreMode.Buy);
+            var hasSell = cachedList.Any(l => l.Mode == StoreMode.Sell);
+
+            var msg = new StoreCatalogMessage(
+                comp.CatalogRevision,
+                cachedList,
+                hasBuy,
+                hasSell,
+                comp.ContractPresets.Count > 0 || !string.IsNullOrWhiteSpace(comp.LegacyContractsPreset)
+            );
+            _ui.ServerSendUiMessage((store, null), StoreUiKey.Key, msg, user);
+            return;
+        }
+
+        var list = new List<StoreListingStaticData>(comp.Listings.Count);
+
+        foreach (var l in comp.Listings)
+        {
+            if (string.IsNullOrWhiteSpace(l.Id) || string.IsNullOrWhiteSpace(l.ProductEntity))
+                continue;
+
+            var cat = l.Categories.Count > 0 ? l.Categories[0] : "Разное";
+
+            if (!TryPickUiCurrencyAndPrice(comp, l, out var cur, out var price))
+                continue;
+
+            list.Add(
+                new(
+                    l.Id,
+                    l.Mode,
+                    cat,
+                    l.ProductEntity,
+                    price,
+                    cur
+                ));
+        }
+
+        _catalogCache[store] = list;
+
+        {
+            var hasBuy = list.Any(l => l.Mode == StoreMode.Buy);
+            var hasSell = list.Any(l => l.Mode == StoreMode.Sell);
+
+            var msg = new StoreCatalogMessage(
+                comp.CatalogRevision,
+                list,
+                hasBuy,
+                hasSell,
+                comp.ContractPresets.Count > 0 || !string.IsNullOrWhiteSpace(comp.LegacyContractsPreset)
+            );
+
+            _ui.ServerSendUiMessage((store, null), StoreUiKey.Key, msg, user);
+        }
     }
 
     private void OnUiClosed(EntityUid uid, NcStoreComponent comp, BoundUIClosedEvent ev)
@@ -584,8 +504,7 @@ public sealed class StoreStructuredSystem : EntitySystem
         }
 
         EnsureCrateWatchUpToDate(uid, user);
-
-        UpdateUiState(uid, comp, user);
+        UpdateDynamicState(uid, comp, user);
     }
 
     private void OnAccessReaderChanged(
@@ -612,17 +531,94 @@ public sealed class StoreStructuredSystem : EntitySystem
         _logic.InvalidateInventoryCache(user);
         if (TryGetPulledClosedCrate(user, out var crate))
             _logic.InvalidateInventoryCache(crate);
-
         var userSnap = _logic.BuildInventorySnapshot(user);
         NcStoreLogicSystem.InventorySnapshot? crateSnap = null;
         if (crate != default)
             crateSnap = _logic.BuildInventorySnapshot(crate);
-
         UpdateContractsProgress(comp, userSnap, crateSnap);
         if (!_contracts.TryClaim(uid, user, msg.ContractId))
             return;
         _popups.PopupEntity("Контракт выполнен!", uid, user);
-        UpdateUiState(uid, comp, user);
+        UpdateDynamicState(uid, comp, user);
+    }
+
+    private void MarkDirty(EntityUid storeUid)
+    {
+        if (storeUid != EntityUid.Invalid)
+            _dirtyStores.Add(storeUid);
+    }
+
+    private bool TryPickUiCurrencyAndPrice(
+        NcStoreComponent comp,
+        StoreListingPrototype listing,
+        out string currencyId,
+        out int price
+    )
+    {
+        currencyId = string.Empty;
+        price = 0;
+        if (listing.Cost.Count == 0)
+            return false;
+        foreach (var cur in comp.CurrencyWhitelist)
+        {
+            if (string.IsNullOrWhiteSpace(cur))
+                continue;
+            if (listing.Cost.TryGetValue(cur, out var pf))
+            {
+                var p = (int) MathF.Ceiling(pf);
+                if (p > 0)
+                {
+                    currencyId = cur;
+                    price = p;
+                    return true;
+                }
+            }
+        }
+
+        var first = listing.Cost.First();
+        var fp = (int) MathF.Ceiling(first.Value);
+        if (fp > 0 && !string.IsNullOrWhiteSpace(first.Key))
+        {
+            currencyId = first.Key;
+            price = fp;
+            return true;
+        }
+
+        return false;
+    }
+
+    private ContractClientData MapContractToClient(ContractServerData c)
+    {
+        var targets = new List<ContractTargetClientData>();
+        if (c.Targets is { Count: > 0, })
+        {
+            foreach (var t in c.Targets)
+                if (!string.IsNullOrWhiteSpace(t.TargetItem) && t.Required > 0)
+                    targets.Add(new(t.TargetItem, t.Required, t.Progress) { MatchMode = t.MatchMode, });
+        }
+        else if (!string.IsNullOrWhiteSpace(c.TargetItem) && c.Required > 0)
+            targets.Add(new(c.TargetItem, c.Required, c.Progress) { MatchMode = c.MatchMode, });
+
+        var client = new ContractClientData(
+            c.Id,
+            c.Name,
+            c.TargetItem,
+            c.Required,
+            c.Progress,
+            c.Reward,
+            c.RewardCurrency,
+            c.RewardItem,
+            c.RewardItemCount,
+            c.Difficulty,
+            c.Completed,
+            c.Description,
+            targets,
+            c.Repeatable);
+        if (c.RewardCurrencies is { Count: > 0, })
+            client.RewardCurrencies = new(c.RewardCurrencies);
+        if (c.RewardItems is { Count: > 0, })
+            client.RewardItems = new(c.RewardItems);
+        return client;
     }
 
     private void UpdateContractsProgress(

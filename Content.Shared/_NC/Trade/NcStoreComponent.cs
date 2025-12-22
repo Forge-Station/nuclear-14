@@ -8,8 +8,13 @@ public readonly record struct StoreListingKey(StoreMode Mode, string ListingId);
 public sealed partial class NcStoreComponent : Component
 {
     public EntityUid? CurrentUser;
-
+    public int CatalogRevision;
     public int UiRevision;
+
+    public void BumpCatalogRevision()
+    {
+        CatalogRevision = unchecked(CatalogRevision + 1);
+    }
 
     [ViewVariables]
     public HashSet<string> CompletedOneTimeContracts { get; } = new();
@@ -67,3 +72,4 @@ public sealed partial class NcStoreComponent : Component
         }
     }
 }
+

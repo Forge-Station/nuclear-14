@@ -22,9 +22,16 @@ public sealed class NcStoreListingControl : PanelContainer
     private const int QtyMaxDigits = 6;
     private const int MaxTotalDisplay = 999_999;
     private const int DescMaxChars = 220;
-
-    private readonly int _maxQty;
+    private readonly Button? _minusBtn;
+    private readonly Label? _ownedLbl;
+    private readonly Button? _plusBtn;
     private readonly LineEdit _qtyEdit;
+    private readonly Label? _qtyLbl;
+    private readonly Label? _remainingLbl;
+    private readonly StoreListingData _staticData;
+    private int _lastBalanceHint = int.MaxValue;
+    private int _maxQty;
+    private Button? _priceButton;
     private Label? _priceLbl;
     private int _qty;
     private bool _suppressQtyEditChange;
@@ -37,10 +44,12 @@ public sealed class NcStoreListingControl : PanelContainer
         bool actionsEnabled = true
     )
     {
+        _staticData = data;
+        _lastBalanceHint = balanceHint;
+
         Margin = new(6, 6, 6, 6);
         HorizontalExpand = true;
 
-        // Карточка-обёртка
         var card = new PanelContainer
         {
             HorizontalExpand = true,
@@ -112,7 +121,6 @@ public sealed class NcStoreListingControl : PanelContainer
         textCol.AddChild(desc);
         row.AddChild(textCol);
 
-        // Правая колонка — количество, цена, остаток
         var actionCol = new BoxContainer
         {
             Orientation = BoxContainer.LayoutOrientation.Vertical,
@@ -121,7 +129,6 @@ public sealed class NcStoreListingControl : PanelContainer
             MinSize = new Vector2i(PriceW, PriceH)
         };
 
-        // Ограничения по количеству
         var remainingCap = data.Remaining >= 0 ? data.Remaining : int.MaxValue;
         var ownedCap = data.Mode == StoreMode.Sell ? data.Owned : int.MaxValue;
         var moneyCap = data.Mode == StoreMode.Buy && data.Price > 0
@@ -131,7 +138,6 @@ public sealed class NcStoreListingControl : PanelContainer
         _maxQty = Math.Min(remainingCap, Math.Min(ownedCap, moneyCap));
         _qty = Math.Clamp(initialQty, MinAllowed, Math.Max(MinAllowed, _maxQty));
 
-        // Строка с выбором количества
         var qtyRow = new BoxContainer
         {
             Orientation = BoxContainer.LayoutOrientation.Horizontal,
@@ -144,6 +150,7 @@ public sealed class NcStoreListingControl : PanelContainer
             Text = "−",
             MinSize = new Vector2i(24, 24)
         };
+        _minusBtn = minusBtn;
 
         var qtyLbl = new Label
         {
@@ -151,6 +158,7 @@ public sealed class NcStoreListingControl : PanelContainer
             MinSize = new Vector2i(28, 24),
             HorizontalAlignment = HAlignment.Center
         };
+        _qtyLbl = qtyLbl;
 
         var qtyEdit = new LineEdit
         {
@@ -165,6 +173,7 @@ public sealed class NcStoreListingControl : PanelContainer
             Text = "+",
             MinSize = new Vector2i(24, 24)
         };
+        _plusBtn = plusBtn;
 
         var noQty = _maxQty <= 0 || !actionsEnabled;
         minusBtn.Disabled = noQty;
@@ -207,7 +216,6 @@ public sealed class NcStoreListingControl : PanelContainer
             var digits = new string(_qtyEdit.Text.Where(char.IsDigit).Take(QtyMaxDigits).ToArray());
             if (digits.Length == 0)
             {
-                // Не даём оставить пустоту; откатываем к текущему значению без рекурсии.
                 _suppressQtyEditChange = true;
                 _qtyEdit.Text = _qty.ToString();
                 _qtyEdit.CursorPosition = _qtyEdit.Text.Length;
@@ -257,7 +265,6 @@ public sealed class NcStoreListingControl : PanelContainer
         qtyRow.AddChild(plusBtn);
         actionCol.AddChild(qtyRow);
 
-        // Кнопка цены / статус
         if (data.Remaining != 0)
         {
             actionCol.AddChild(MakePriceButton(data, sprites, actionsEnabled));
@@ -275,34 +282,33 @@ public sealed class NcStoreListingControl : PanelContainer
                 });
         }
 
-        // Остаток и "у вас"
         var showRemaining = data.Remaining >= 0;
         var showOwned = data.Owned > 0;
 
         if (showRemaining)
         {
-            actionCol.AddChild(
-                new Label
-                {
-                    Text = data.Mode == StoreMode.Buy
-                        ? $"Осталось: {data.Remaining}"
-                        : $"Скупим: {data.Remaining}",
-                    HorizontalAlignment = HAlignment.Center,
-                    Modulate = Color.FromHex("#C0C0C0"),
-                    Margin = new(0, 2, 0, 0)
-                });
+            _remainingLbl = new()
+            {
+                Text = data.Mode == StoreMode.Buy
+                    ? $"Осталось: {data.Remaining}"
+                    : $"Скупим: {data.Remaining}",
+                HorizontalAlignment = HAlignment.Center,
+                Modulate = Color.FromHex("#C0C0C0"),
+                Margin = new(0, 2, 0, 0)
+            };
+            actionCol.AddChild(_remainingLbl);
         }
 
         if (showOwned)
         {
-            actionCol.AddChild(
-                new Label
-                {
-                    Text = $"У вас: {data.Owned}",
-                    HorizontalAlignment = HAlignment.Center,
-                    Modulate = Color.FromHex("#C0C0C0"),
-                    Margin = new(0, 2, 0, 0)
-                });
+            _ownedLbl = new()
+            {
+                Text = $"У вас: {data.Owned}",
+                HorizontalAlignment = HAlignment.Center,
+                Modulate = Color.FromHex("#C0C0C0"),
+                Margin = new(0, 2, 0, 0)
+            };
+            actionCol.AddChild(_ownedLbl);
         }
 
         row.AddChild(actionCol);
@@ -314,7 +320,79 @@ public sealed class NcStoreListingControl : PanelContainer
     public event Action<int>? OnSellPressed;
     public event Action<int>? OnQtyChanged;
 
-    // --- Иконка валюты ---
+    public void UpdateDynamicData(int playerBalance, int remainingStock, int playerOwned)
+    {
+        _lastBalanceHint = playerBalance;
+
+        var remainingCap = remainingStock >= 0 ? remainingStock : int.MaxValue;
+        var ownedCap = _staticData.Mode == StoreMode.Sell ? playerOwned : int.MaxValue;
+
+        var moneyCap = _staticData.Mode == StoreMode.Buy && _staticData.Price > 0
+            ? playerBalance / _staticData.Price
+            : int.MaxValue;
+
+        _maxQty = Math.Min(remainingCap, Math.Min(ownedCap, moneyCap));
+
+        var minAllowed = _maxQty <= 0 ? 0 : 1;
+        var clamped = Math.Clamp(_qty, minAllowed, Math.Max(minAllowed, _maxQty));
+
+
+        if (clamped != _qty)
+        {
+            _qty = clamped;
+            if (_qtyLbl != null)
+                _qtyLbl.Text = _qty.ToString();
+
+            if (_qtyEdit.Text != _qty.ToString())
+            {
+                _suppressQtyEditChange = true;
+                _qtyEdit.Text = _qty.ToString();
+                _qtyEdit.CursorPosition = _qtyEdit.Text.Length;
+                _suppressQtyEditChange = false;
+            }
+
+            OnQtyChanged?.Invoke(_qty);
+        }
+
+
+        var noQty = _maxQty <= 0;
+        if (_minusBtn != null)
+            _minusBtn.Disabled = noQty || _qty <= minAllowed;
+        if (_plusBtn != null)
+            _plusBtn.Disabled = noQty || _qty >= _maxQty;
+
+        _qtyEdit.Editable = !noQty;
+
+        if (_priceButton != null)
+        {
+            var disable =
+                noQty ||
+                remainingStock == 0 ||
+                _staticData.Mode == StoreMode.Sell && playerOwned <= 0;
+
+            _priceButton.Disabled = disable;
+        }
+
+        if (_remainingLbl != null)
+        {
+            if (remainingStock >= 0)
+            {
+                _remainingLbl.Text = _staticData.Mode == StoreMode.Buy
+                    ? $"Осталось: {remainingStock}"
+                    : $"Скупим: {remainingStock}";
+            }
+        }
+
+        if (_ownedLbl != null)
+        {
+            _ownedLbl.Visible = playerOwned > 0;
+            if (playerOwned > 0)
+                _ownedLbl.Text = $"У вас: {playerOwned}";
+        }
+
+        UpdateTotal(_staticData);
+    }
+
 
     private static Texture? TryGetCurrencyIcon(string currencyId, SpriteSystem sprites)
     {
@@ -329,7 +407,6 @@ public sealed class NcStoreListingControl : PanelContainer
         return sprites.GetPrototypeIcon(ent.ID).Default;
     }
 
-    // --- Слот с иконкой товара ---
 
     private static Control? MakeSlot(EntityPrototype? proto, SpriteSystem sprites)
     {
@@ -391,8 +468,6 @@ public sealed class NcStoreListingControl : PanelContainer
         return text.Substring(0, end) + "…";
     }
 
-    // --- Кнопка цены ---
-
     private Control MakePriceButton(StoreListingData data, SpriteSystem sprites, bool actionsEnabled)
     {
         var btn = new Button
@@ -408,6 +483,8 @@ public sealed class NcStoreListingControl : PanelContainer
                 || data.Mode == StoreMode.Sell && data.Owned <= 0
                 || _maxQty <= 0
         };
+
+        _priceButton = btn;
 
         if (!actionsEnabled)
             btn.ToolTip = "Доступно только через массовую продажу ящика.";
@@ -469,7 +546,6 @@ public sealed class NcStoreListingControl : PanelContainer
         return btn;
     }
 
-    // --- Количество и пересчёт цены ---
 
     private void SetQty(int v, StoreListingData data, Label qtyLbl)
     {

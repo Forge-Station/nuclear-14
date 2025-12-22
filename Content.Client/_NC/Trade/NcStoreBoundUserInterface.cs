@@ -1,4 +1,3 @@
-using System.Linq;
 using Content.Shared._NC.Trade;
 using Robust.Client.Player;
 using Robust.Client.UserInterface;
@@ -11,8 +10,11 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
     : BoundUserInterface(owner, uiKey)
 {
     private readonly IPlayerManager _player = IoCManager.Resolve<IPlayerManager>();
+    private int _lastCatalogRevision = int.MinValue;
     private int _lastRevision = int.MinValue;
     private NcStoreMenu? _menu;
+    private StoreDynamicState? _pendingDynamic;
+
 
     private EntityUid? Actor => _player.LocalSession?.AttachedEntity;
 
@@ -21,30 +23,78 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
     {
         base.UpdateState(state);
 
-        if (state is not StoreUiState st)
+        if (state is not StoreDynamicState st)
             return;
 
         EnsureMenuCreated();
         if (_menu == null)
             return;
 
+        if (st.CatalogRevision != _lastCatalogRevision)
+        {
+            _pendingDynamic = st;
+            return;
+        }
+
         if (st.Revision == _lastRevision)
             return;
 
         _lastRevision = st.Revision;
 
-        _menu.ApplyState(
-            st.Balance,
+        _menu.ApplyDynamicState(
             st.BalanceByCurrency,
-            st.Listings.ToList(),
+            st.RemainingById,
+            st.OwnedById,
+            st.CrateUnitsById,
             st.MassSellTotals,
             st.HasBuyTab,
             st.HasSellTab,
-            st.HasContractsTab);
-
-        _menu.PopulateContracts(st.Contracts);
+            st.HasContractsTab,
+            st.Contracts);
 
         _menu.Visible = true;
+    }
+
+
+    protected override void ReceiveMessage(BoundUserInterfaceMessage message)
+    {
+        base.ReceiveMessage(message);
+
+        if (message is not StoreCatalogMessage cat)
+            return;
+
+        EnsureMenuCreated();
+        if (_menu == null)
+            return;
+
+        if (cat.CatalogRevision == _lastCatalogRevision)
+            return;
+
+        _lastCatalogRevision = cat.CatalogRevision;
+
+        _lastRevision = int.MinValue;
+
+        _menu.PopulateCatalog(cat.Listings, cat.HasBuyTab, cat.HasSellTab, cat.HasContractsTab);
+
+        if (_pendingDynamic is { } pending && pending.CatalogRevision == _lastCatalogRevision)
+        {
+            _pendingDynamic = null;
+
+            _lastRevision = pending.Revision;
+
+            _menu.ApplyDynamicState(
+                pending.BalanceByCurrency,
+                pending.RemainingById,
+                pending.OwnedById,
+                pending.CrateUnitsById,
+                pending.MassSellTotals,
+                pending.HasBuyTab,
+                pending.HasSellTab,
+                pending.HasContractsTab,
+                pending.Contracts);
+
+            _menu.Visible = true;
+        }
     }
 
     private void EnsureMenuCreated()

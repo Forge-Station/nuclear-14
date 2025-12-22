@@ -10,12 +10,43 @@ public enum StoreUiKey : byte
     Key
 }
 
+
 [Serializable, NetSerializable]
-public sealed class StoreUiState(
+public sealed class StoreCatalogMessage(
+    int catalogRevision,
+    List<StoreListingStaticData> listings,
+    bool hasBuyTab,
+    bool hasSellTab,
+    bool hasContractsTab)
+    : BoundUserInterfaceMessage
+{
+    public int CatalogRevision { get; } = catalogRevision;
+    public List<StoreListingStaticData> Listings { get; } = listings;
+
+    public bool HasBuyTab { get; } = hasBuyTab;
+    public bool HasSellTab { get; } = hasSellTab;
+    public bool HasContractsTab { get; } = hasContractsTab;
+}
+
+[Serializable, NetSerializable]
+public readonly record struct StoreListingStaticData(
+    string Id,
+    StoreMode Mode,
+    string Category,
+    string ProductEntity,
+    int BasePrice,
+    string CurrencyId
+);
+
+
+[Serializable, NetSerializable]
+public sealed class StoreDynamicState(
     int revision,
-    int balance,
+    int catalogRevision,
     Dictionary<string, int> balanceByCurrency,
-    List<StoreListingData> listings,
+    Dictionary<string, int> remainingById,
+    Dictionary<string, int> ownedById,
+    Dictionary<string, int> crateUnitsById,
     Dictionary<string, int> massSellTotals,
     List<ContractClientData> contracts,
     bool hasBuyTab,
@@ -23,19 +54,22 @@ public sealed class StoreUiState(
     bool hasContractsTab)
     : BoundUserInterfaceState
 {
-    public int Revision = revision;
+    public int Revision { get; } = revision;
+    public int CatalogRevision { get; } = catalogRevision;
 
-    public int Balance = balance;
-    public Dictionary<string, int> BalanceByCurrency = balanceByCurrency;
+    public Dictionary<string, int> BalanceByCurrency { get; } = balanceByCurrency;
+    public Dictionary<string, int> RemainingById { get; } = remainingById;
+    public Dictionary<string, int> OwnedById { get; } = ownedById;
+    public Dictionary<string, int> CrateUnitsById { get; } = crateUnitsById;
 
-    public List<StoreListingData> Listings = listings;
-    public Dictionary<string, int> MassSellTotals = massSellTotals;
+    public Dictionary<string, int> MassSellTotals { get; } = massSellTotals;
 
-    public List<ContractClientData> Contracts = contracts;
-    public bool HasBuyTab = hasBuyTab;
-    public bool HasSellTab = hasSellTab;
-    public bool HasContractsTab = hasContractsTab;
+    public List<ContractClientData> Contracts { get; } = contracts;
+    public bool HasBuyTab { get; } = hasBuyTab;
+    public bool HasSellTab { get; } = hasSellTab;
+    public bool HasContractsTab { get; } = hasContractsTab;
 }
+
 
 
 [Serializable, NetSerializable]
