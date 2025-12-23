@@ -17,11 +17,8 @@ public sealed class NcContractSystem : EntitySystem
 
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
-
-    // key -> phase [0..1)
     private readonly Dictionary<QuasiKey, double> _quasiPhase = new();
     [Dependency] private readonly IRobustRandom _random = default!;
-
     public void InitContractsForStore(EntityUid uid, NcStoreComponent comp)
     {
         if (comp.Contracts.Count > 0)
@@ -820,6 +817,6 @@ public sealed class NcContractSystem : EntitySystem
         QuasiKeyKind Kind,
         EntityUid Store,
         string ProtoId,
-        string? Extra // например TargetItemId для TReq
+        string? Extra
     );
 }

@@ -9,9 +9,7 @@ using Content.Shared.Stacks;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 
-
 namespace Content.Server._NC.Trade;
-
 
 public sealed class NcStoreLogicSystem : EntitySystem
 {
@@ -23,22 +21,28 @@ public sealed class NcStoreLogicSystem : EntitySystem
     private readonly Dictionary<EntityUid, List<EntityUid>> _inventoryCache = new();
 
     private readonly Dictionary<string, string?> _productStackTypeCache = new();
-
     private readonly Dictionary<string, string[]> _protoAndAncestorsCache = new();
 
     [Dependency] private readonly IPrototypeManager _protos = default!;
     [Dependency] private readonly SharedStackSystem _stacks = default!;
 
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        SubscribeLocalEvent((ref EntityTerminatingEvent ev) =>
+        {
+            _inventoryCache.Remove(ev.Entity);
+        });
+    }
     public void InvalidateInventoryCache(EntityUid root) => _inventoryCache.Remove(root);
 
 
     private PrototypeMatchMode ResolveMatchMode(string expectedProtoId, PrototypeMatchMode configured)
     {
-        // Explicit override always wins.
         if (configured == PrototypeMatchMode.Descendants)
             return PrototypeMatchMode.Descendants;
 
-        // Auto: abstract prototypes act as "category" keys and match all descendants.
         if (_protos.TryIndex<EntityPrototype>(expectedProtoId, out var expectedProto) && expectedProto.Abstract)
             return PrototypeMatchMode.Descendants;
 

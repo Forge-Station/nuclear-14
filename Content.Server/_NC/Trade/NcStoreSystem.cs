@@ -17,7 +17,7 @@ public sealed class NcStoreSystem : EntitySystem
     private const float MaxUseDistance = 2.5f;
     private const string ReadyListingSuffix = "__ready";
     private const string CrateListingSuffix = "__crate";
-
+    private new static readonly ISawmill Log = Logger.GetSawmill("ncstore");
     [Dependency] private readonly AccessReaderSystem _accessReader = default!;
     [Dependency] private readonly AudioSystem _audio = default!;
     [Dependency] private readonly IEntityManager _entMan = default!;
@@ -104,9 +104,20 @@ public sealed class NcStoreSystem : EntitySystem
         if (!CanInteract(uid, comp, actor))
             return;
 
+        if (comp.Listings.Count > 0 && comp.ListingIndex.Count == 0)
+        {
+            Log.Error($"[NcStore] {ToPrettyString(uid)} has listings but empty ListingIndex. Rebuilding.");
+            comp.RebuildListingIndex();
+        }
 
-        if (!comp.ListingIndex.TryGetValue(NcStoreComponent.MakeListingKey(StoreMode.Buy, msg.ListingId), out var listing))
+        if (!comp.ListingIndex.TryGetValue(
+            NcStoreComponent.MakeListingKey(StoreMode.Buy, msg.ListingId),
+            out var listing))
+        {
+            Log.Warning(
+                $"[NcStore] {ToPrettyString(actor)} tried to buy invalid listing '{msg.ListingId}' at {ToPrettyString(uid)}");
             return;
+        }
 
         var count = Math.Max(1, msg.Count);
         if (!_logic.TryBuy(listing.Id, uid, comp, actor, count))
@@ -127,8 +138,20 @@ public sealed class NcStoreSystem : EntitySystem
         if (!TryParseSellListingId(msg.ListingId, out var requestedId, out var fromCrate))
             return;
 
-        if (!comp.ListingIndex.TryGetValue(NcStoreComponent.MakeListingKey(StoreMode.Sell, requestedId), out var listing))
+        if (comp.Listings.Count > 0 && comp.ListingIndex.Count == 0)
+        {
+            Log.Error($"[NcStore] {ToPrettyString(uid)} has listings but empty ListingIndex. Rebuilding.");
+            comp.RebuildListingIndex();
+        }
+
+        if (!comp.ListingIndex.TryGetValue(
+            NcStoreComponent.MakeListingKey(StoreMode.Sell, requestedId),
+            out var listing))
+        {
+            Log.Warning(
+                $"[NcStore] {ToPrettyString(actor)} tried to sell invalid listing '{requestedId}' (raw '{msg.ListingId}') at {ToPrettyString(uid)}");
             return;
+        }
 
 
         var count = Math.Max(1, msg.Count);

@@ -182,9 +182,9 @@ public sealed class NcStoreListingControl : PanelContainer
 
         if (!actionsEnabled)
         {
-            minusBtn.ToolTip = "Доступно только через массовую продажу ящика.";
-            plusBtn.ToolTip = "Доступно только через массовую продажу ящика.";
-            _qtyEdit.ToolTip = "Доступно только через массовую продажу ящика.";
+            minusBtn.ToolTip = Loc.GetString("nc-store-only-mass-sell");
+            plusBtn.ToolTip = Loc.GetString("nc-store-only-mass-sell");
+            _qtyEdit.ToolTip = Loc.GetString("nc-store-only-mass-sell");
         }
 
         minusBtn.OnPressed += _ =>
@@ -275,7 +275,7 @@ public sealed class NcStoreListingControl : PanelContainer
             actionCol.AddChild(
                 new Label
                 {
-                    Text = data.Mode == StoreMode.Buy ? "Нет в наличии" : "Закупка завершена",
+                    Text = data.Mode == StoreMode.Buy ? Loc.GetString("nc-store-no-stock") : Loc.GetString("nc-store-buying-finished"),
                     HorizontalAlignment = HAlignment.Center,
                     Modulate = Color.FromHex("#C0C0C0"),
                     Margin = new(0, 8, 0, 0)
@@ -290,8 +290,8 @@ public sealed class NcStoreListingControl : PanelContainer
             _remainingLbl = new()
             {
                 Text = data.Mode == StoreMode.Buy
-                    ? $"Осталось: {data.Remaining}"
-                    : $"Скупим: {data.Remaining}",
+                    ? Loc.GetString("nc-store-remaining", ("count", data.Remaining))
+                    : Loc.GetString("nc-store-will-buy", ("count", data.Remaining)),
                 HorizontalAlignment = HAlignment.Center,
                 Modulate = Color.FromHex("#C0C0C0"),
                 Margin = new(0, 2, 0, 0)
@@ -303,7 +303,7 @@ public sealed class NcStoreListingControl : PanelContainer
         {
             _ownedLbl = new()
             {
-                Text = $"У вас: {data.Owned}",
+                Text = Loc.GetString("nc-store-owned", ("count", data.Owned)),
                 HorizontalAlignment = HAlignment.Center,
                 Modulate = Color.FromHex("#C0C0C0"),
                 Margin = new(0, 2, 0, 0)
@@ -316,9 +316,9 @@ public sealed class NcStoreListingControl : PanelContainer
 
     private int MinAllowed => _maxQty <= 0 ? 0 : 1;
 
-    public event Action<int>? OnBuyPressed;
-    public event Action<int>? OnSellPressed;
-    public event Action<int>? OnQtyChanged;
+    public Action<int>? OnBuyPressed { get; set; }
+    public Action<int>? OnSellPressed { get; set; }
+    public Action<int>? OnQtyChanged { get; set; }
 
     public void UpdateDynamicData(int playerBalance, int remainingStock, int playerOwned)
     {
@@ -378,8 +378,8 @@ public sealed class NcStoreListingControl : PanelContainer
             if (remainingStock >= 0)
             {
                 _remainingLbl.Text = _staticData.Mode == StoreMode.Buy
-                    ? $"Осталось: {remainingStock}"
-                    : $"Скупим: {remainingStock}";
+                    ? Loc.GetString("nc-store-remaining", ("count", remainingStock))
+                    : Loc.GetString("nc-store-will-buy", ("count", remainingStock));
             }
         }
 
@@ -387,7 +387,7 @@ public sealed class NcStoreListingControl : PanelContainer
         {
             _ownedLbl.Visible = playerOwned > 0;
             if (playerOwned > 0)
-                _ownedLbl.Text = $"У вас: {playerOwned}";
+                _ownedLbl.Text = Loc.GetString("nc-store-owned", ("count", playerOwned));
         }
 
         UpdateTotal(_staticData);
@@ -487,7 +487,7 @@ public sealed class NcStoreListingControl : PanelContainer
         _priceButton = btn;
 
         if (!actionsEnabled)
-            btn.ToolTip = "Доступно только через массовую продажу ящика.";
+            btn.ToolTip = Loc.GetString("nc-store-only-mass-sell");
 
         var inner = new BoxContainer
         {

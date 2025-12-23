@@ -21,7 +21,8 @@ public sealed class StoreStructuredSystem : EntitySystem
     private const float MinAccelInterval = 0.05f;
     private const int WatchedRootSearchLimit = 32;
     private readonly HashSet<EntityUid> _affectedStoresScratch = new();
-    private readonly Dictionary<EntityUid, List<StoreListingStaticData>> _catalogCache = new();
+    private readonly Dictionary<EntityUid, (int Revision, List<StoreListingStaticData> List)> _catalogCache = new();
+
     [Dependency] private readonly NcContractSystem _contracts = default!;
     private readonly HashSet<EntityUid> _dirtyStores = new();
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
@@ -33,6 +34,8 @@ public sealed class StoreStructuredSystem : EntitySystem
     [Dependency] private readonly NcStoreSystem _storeSystem = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
+    [Dependency] private readonly StoreSystemStructuredLoader _loader = default!;
+
 
     private readonly Dictionary<EntityUid, (EntityUid User, EntityUid? Crate)> _watchByStore = new();
     [Dependency] private readonly SharedTransformSystem _xform = default!;
@@ -272,7 +275,7 @@ public sealed class StoreStructuredSystem : EntitySystem
             {
                 CloseAndCleanUp(uid, userUid);
                 store.CurrentUser = null;
-                _popups.PopupEntity(Loc.GetString("ncstore-no-access"), uid, userUid);
+                _popups.PopupEntity(Loc.GetString("nc-store-no-access"), uid, userUid);
                 continue;
             }
 
@@ -397,6 +400,7 @@ public sealed class StoreStructuredSystem : EntitySystem
     {
         ev.Cancel();
         var user = ev.User;
+
         if (!_ui.HasUi(uid, StoreUiKey.Key))
             return;
         if (!_storeSystem.CanUseStore(uid, comp, user))
@@ -406,24 +410,33 @@ public sealed class StoreStructuredSystem : EntitySystem
         if (TryComp(uid, out TransformComponent? sX) && TryComp(user, out TransformComponent? uX) &&
             !_xform.InRange(sX.Coordinates, uX.Coordinates, AutoCloseDistance))
             return;
+
         var wasInUse = comp.CurrentUser != null;
         comp.CurrentUser = user;
         if (!wasInUse)
             _openStoreUids.Add(uid);
+
         if (!_ui.IsUiOpen(uid, StoreUiKey.Key, user))
             _ui.OpenUi(uid, StoreUiKey.Key, user);
+
         EnsureCrateWatchUpToDate(uid, user);
+
+        _loader.EnsureLoaded(uid, comp, "UiOpenAttempt");
+
         SendCatalog(uid, comp, user);
         UpdateDynamicState(uid, comp, user);
     }
+
 
     private void SendCatalog(EntityUid store, NcStoreComponent comp, EntityUid user)
     {
         if (!_ui.IsUiOpen(store, StoreUiKey.Key, user))
             return;
 
-        if (_catalogCache.TryGetValue(store, out var cachedList))
+        if (_catalogCache.TryGetValue(store, out var cached) && cached.Revision == comp.CatalogRevision)
         {
+            var cachedList = cached.List;
+
             var hasBuy = cachedList.Any(l => l.Mode == StoreMode.Buy);
             var hasSell = cachedList.Any(l => l.Mode == StoreMode.Sell);
 
@@ -438,6 +451,7 @@ public sealed class StoreStructuredSystem : EntitySystem
             return;
         }
 
+
         var list = new List<StoreListingStaticData>(comp.Listings.Count);
 
         foreach (var l in comp.Listings)
@@ -445,7 +459,7 @@ public sealed class StoreStructuredSystem : EntitySystem
             if (string.IsNullOrWhiteSpace(l.Id) || string.IsNullOrWhiteSpace(l.ProductEntity))
                 continue;
 
-            var cat = l.Categories.Count > 0 ? l.Categories[0] : "Разное";
+            var cat = l.Categories.Count > 0 ? l.Categories[0] : Loc.GetString("nc-store-category-fallback");
 
             if (!TryPickUiCurrencyAndPrice(comp, l, out var cur, out var price))
                 continue;
@@ -461,7 +475,7 @@ public sealed class StoreStructuredSystem : EntitySystem
                 ));
         }
 
-        _catalogCache[store] = list;
+        _catalogCache[store] = (comp.CatalogRevision, list);
 
         {
             var hasBuy = list.Any(l => l.Mode == StoreMode.Buy);
@@ -538,7 +552,7 @@ public sealed class StoreStructuredSystem : EntitySystem
         UpdateContractsProgress(comp, userSnap, crateSnap);
         if (!_contracts.TryClaim(uid, user, msg.ContractId))
             return;
-        _popups.PopupEntity("Контракт выполнен!", uid, user);
+        _popups.PopupEntity(Loc.GetString("nc-store-contract-completed"), uid, user);
         UpdateDynamicState(uid, comp, user);
     }
 

@@ -1,6 +1,5 @@
 using System.Linq;
 using Content.Client.Message;
-using Content.Client.Stylesheets;
 using Content.Client.UserInterface.Controls;
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
@@ -22,17 +21,15 @@ public sealed partial class NcStoreMenu : FancyWindow
 {
     private const int SearchDebounceMs = 120;
     private const int PageSize = 96;
-    private const string CrateCategory = "Готово к продаже в ящике";
-
     private static readonly Color CatSelected = new(0xD9, 0xA4, 0x41);
     private static readonly Color CatIdle = new(0x7C, 0x66, 0x24);
     private readonly Dictionary<string, int> _balancesByCurrency = new();
-
     private readonly Dictionary<string, (NcStoreListingControl Ctrl, int Sig)> _buyCache = new();
     private readonly Dictionary<string, Button> _buyCatButtons = new();
     private readonly List<string> _buyCats = new();
     private readonly List<StoreListingStaticData> _catalog = new();
     private readonly Dictionary<string, int> _crateUnitsById = new();
+    private readonly TextureRect? _currencyIcon;
     private readonly List<StoreListingData> _items = new();
 
     private readonly Dictionary<string, int> _massSellTotals = new();
@@ -48,16 +45,14 @@ public sealed partial class NcStoreMenu : FancyWindow
     private readonly List<string> _sellCats = new();
     private readonly SpriteSystem _sprites;
     private readonly Dictionary<string, StoreListingStaticData> _staticById = new();
-
     private int _balance;
-
-
     private string _buyCat = string.Empty;
 
     private bool _disposed;
     private bool _hasBuyTab;
     private bool _hasContractsTab;
     private bool _hasSellTab;
+    private readonly BoxContainer? _headerBar;
 
     private int _pageBuy = 1;
     private int _pageSell = 1;
@@ -77,7 +72,11 @@ public sealed partial class NcStoreMenu : FancyWindow
     {
         RobustXamlLoader.Load(this);
         IoCManager.InjectDependencies(this);
-
+        TabContainer.SetTabTitle(TabBuy, Loc.GetString("nc-store-tab-buy"));
+        TabContainer.SetTabTitle(TabSell, Loc.GetString("nc-store-tab-sell"));
+        TabContainer.SetTabTitle(TabContracts, Loc.GetString("nc-store-tab-contracts"));
+        _currencyIcon = FindControl<TextureRect>("CurrencyIcon");
+        _headerBar = FindControl<BoxContainer>("HeaderBar");
         _sprites = IoCManager.Resolve<IEntitySystemManager>().GetEntitySystem<SpriteSystem>();
         _proto = IoCManager.Resolve<IPrototypeManager>();
 
@@ -106,16 +105,17 @@ public sealed partial class NcStoreMenu : FancyWindow
                 });
         };
 
-        BalanceLabel.StyleClasses.Add(StyleNano.StyleClassLabelHeadingBigger);
         BalanceInfo.SetMarkup("[font size=14][color=yellow]0[/color][/font]");
 
         MassSellPulledCrateButton.Disabled = true;
-        MassSellPulledCrateButton.ClipText = true; // один раз, тут
-        MassSellPulledCrateButton.Text = "Продать содержимое";
-        MassSellPulledCrateButton.ToolTip =
-            "Для массовой продажи необходимо:\n• Ящик должен быть ЗАКРЫТ\n• Вы должны его тянуть";
+        MassSellPulledCrateButton.ClipText = true;
+        MassSellPulledCrateButton.Text = Loc.GetString("nc-store-mass-sell-button");
+        MassSellPulledCrateButton.ToolTip = Loc.GetString("nc-store-mass-sell-tooltip");
         MassSellPulledCrateButton.OnPressed += _ => OnMassSellPulledCrate?.Invoke();
     }
+
+    private string CrateCategory => Loc.GetString("nc-store-cat-crate-full");
+    private string ReadyCategory => Loc.GetString("nc-store-cat-ready-full");
 
     public event Action<string>? OnSearchChanged;
     public event Action<StoreListingData, int>? OnBuyPressed;
@@ -126,7 +126,6 @@ public sealed partial class NcStoreMenu : FancyWindow
     public void SetBalance(int balance)
     {
         _balance = balance;
-        BalanceLabel.Text = balance.ToString();
         BalanceInfo.SetMarkup($"[font size=14][color=yellow]{balance}[/color][/font]");
     }
 
@@ -146,22 +145,31 @@ public sealed partial class NcStoreMenu : FancyWindow
             return;
         }
 
+        string? displayCurrency;
+        int displayAmount;
+
         if (_balancesByCurrency.Count == 1)
         {
             var kv = _balancesByCurrency.First();
-            var amount = kv.Value;
-            var name = CurrencyName(kv.Key);
-            BalanceLabel.Text = amount.ToString();
-            BalanceInfo.SetMarkup($"[font size=14][color=yellow]{amount}[/color][/font] {name}");
-            return;
+            displayCurrency = kv.Key;
+            displayAmount = kv.Value;
+        }
+        else
+        {
+            displayCurrency = _balancesByCurrency.Keys.FirstOrDefault();
+            displayAmount = _balancesByCurrency.Values.Sum();
         }
 
-        var sum = 0;
-        foreach (var v in _balancesByCurrency.Values)
-            sum += v;
-
-        BalanceLabel.Text = sum.ToString();
-        BalanceInfo.SetMarkup($"[font size=14][color=yellow]{sum}[/color][/font]");
+        BalanceInfo.SetMarkup($"[font size=14][color=yellow]{displayAmount}[/color][/font]");
+        if (_currencyIcon != null && !string.IsNullOrEmpty(displayCurrency))
+        {
+            if (_proto.TryIndex<StackPrototype>(displayCurrency, out var stackProto) &&
+                _proto.TryIndex<EntityPrototype>(stackProto.Spawn, out var entProto))
+            {
+                var icon = _sprites.GetPrototypeIcon(entProto).Default;
+                _currencyIcon.Texture = icon;
+            }
+        }
     }
 
     public void SetBalancesByCurrency(Dictionary<string, int> balances)
@@ -174,22 +182,23 @@ public sealed partial class NcStoreMenu : FancyWindow
                 continue;
 
             _balancesByCurrency[cur] = amt;
-            UpdateBalanceHeader();
         }
+
+        UpdateBalanceHeader();
     }
+
 
     public void SetMassSellTotals(Dictionary<string, int> totals)
     {
         _massSellTotals.Clear();
         foreach (var (cur, amt) in totals)
             _massSellTotals[cur] = amt;
-        MassSellPulledCrateButton.Text = "Продать содержимое";
+        MassSellPulledCrateButton.Text = Loc.GetString("nc-store-mass-sell-button");
         MassSellPulledCrateButton.ClipText = true;
 
         if (_massSellTotals.Count == 0)
         {
-            MassSellPulledCrateButton.ToolTip =
-                "Для массовой продажи необходимо:\n• Ящик должен быть ЗАКРЫТ\n• Вы должны его тянуть";
+            MassSellPulledCrateButton.ToolTip = Loc.GetString("nc-store-mass-sell-tooltip");
             MassSellPulledCrateButton.Disabled = true;
             return;
         }
@@ -198,14 +207,15 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         var parts = _massSellTotals
             .Where(p => p.Value > 0 && !string.IsNullOrWhiteSpace(p.Key))
-            .Select(p => $"{p.Value} {CurrencyName(p.Key)}")
+            .Select(p => Loc.GetString(
+                "nc-store-currency-format",
+                ("amount", p.Value),
+                ("currency", CurrencyName(p.Key))))
             .ToList();
 
         var full = parts.Count > 0 ? string.Join(", ", parts) : "—";
 
-        MassSellPulledCrateButton.ToolTip =
-            "Для массовой продажи необходимо:\n• Ящик должен быть ЗАКРЫТ\n• Вы должны его тянуть\n\n" +
-            $"Получите: {full}";
+        MassSellPulledCrateButton.ToolTip = Loc.GetString("nc-store-mass-sell-tooltip-with-reward", ("reward", full));
     }
 
     private void CaptureTabsIfNeeded()
@@ -215,9 +225,9 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         _tabsCaptured = true;
 
-        _tabBuy = Покупка;
-        _tabSell = Продажа;
-        _tabContracts = Контракты;
+        _tabBuy = TabBuy;
+        _tabSell = TabSell;
+        _tabContracts = TabContracts;
     }
 
 
@@ -268,6 +278,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         _hasContractsTab = hasContractsTab;
 
         ApplyTabsVisibility();
+        UpdateHeaderVisibility();
 
         _catalog.Clear();
         _staticById.Clear();
@@ -286,6 +297,13 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         ResetPaging();
         RefreshListings();
+    }
+
+    private void UpdateHeaderVisibility()
+    {
+        if (_headerBar == null)
+            return;
+        _headerBar.Visible = _hasBuyTab || _hasSellTab;
     }
 
     private void RebuildSearchIndexFromCatalog()
@@ -323,17 +341,15 @@ public sealed partial class NcStoreMenu : FancyWindow
 
     private void UpdateVirtualSellCategories()
     {
-        const string readyCat = "Готово к продаже";
-
-        var hasReady = _items.Any(i => i.Mode == StoreMode.Sell && i.Category == readyCat);
+        var hasReady = _items.Any(i => i.Mode == StoreMode.Sell && i.Category == ReadyCategory);
         var hasCrate = _items.Any(i => i.Mode == StoreMode.Sell && i.Category == CrateCategory);
 
-        _sellCats.Remove(readyCat);
+        _sellCats.Remove(ReadyCategory);
         _sellCats.Remove(CrateCategory);
 
         var insertIndex = 0;
         if (hasReady)
-            _sellCats.Insert(insertIndex++, readyCat);
+            _sellCats.Insert(insertIndex++, ReadyCategory);
 
         if (hasCrate)
             _sellCats.Insert(insertIndex, CrateCategory);
@@ -360,6 +376,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         _hasSellTab = hasSellTab;
         _hasContractsTab = hasContractsTab;
         ApplyTabsVisibility();
+        UpdateHeaderVisibility();
 
         SetBalancesByCurrency(balancesByCurrency);
 
@@ -404,7 +421,7 @@ public sealed partial class NcStoreMenu : FancyWindow
                     remaining));
         }
 
-        const string readyCat = "Готово к продаже";
+        var readyCat = ReadyCategory;
         var ready = _items
             .Where(d => d.Mode == StoreMode.Sell && d.Owned > 0 && d.Remaining != 0)
             .Select(d => new StoreListingData(
@@ -474,7 +491,6 @@ public sealed partial class NcStoreMenu : FancyWindow
         _buyCats.Clear();
         _sellCats.Clear();
 
-
         _buyCats.AddRange(
             list.Where(i => i.Mode == StoreMode.Buy)
                 .Select(i => i.Category)
@@ -486,8 +502,8 @@ public sealed partial class NcStoreMenu : FancyWindow
                 .Select(i => i.Category)
                 .Distinct()
                 .OrderBy(c => c));
+        var readyCat = ReadyCategory;
 
-        const string readyCat = "Готово к продаже";
         if (_items.Any(i => i.Mode == StoreMode.Sell && i.Category == readyCat))
         {
             _sellCats.Remove(readyCat);
@@ -535,7 +551,7 @@ public sealed partial class NcStoreMenu : FancyWindow
             contractList.AddChild(
                 new Label
                 {
-                    Text = "Контрактов пока нет. Загляните позже.",
+                    Text = Loc.GetString("nc-store-contracts-empty"),
                     HorizontalAlignment = HAlignment.Center,
                     Margin = new(0, 8, 0, 0)
                 });
@@ -607,7 +623,7 @@ public sealed partial class NcStoreMenu : FancyWindow
             };
 
             var titleText = string.IsNullOrWhiteSpace(c.Name)
-                ? $"{DifficultyName(c.Difficulty)} контракт"
+                ? Loc.GetString("nc-store-contract-title", ("difficulty", DifficultyName(c.Difficulty)))
                 : c.Name;
 
             var titleLabel = new Label
@@ -621,10 +637,7 @@ public sealed partial class NcStoreMenu : FancyWindow
             header.AddChild(new() { HorizontalExpand = true, });
             if (!c.Repeatable)
             {
-                const string oneTimeTip =
-                    "Единичная заявка.\n" +
-                    "Этот терминал принимает её один раз за смену.\n" +
-                    "После новой смены заявка появится снова.";
+                var oneTimeTip = Loc.GetString("nc-store-contract-badge-single-tooltip");
 
                 var badge = new PanelContainer
                 {
@@ -646,7 +659,7 @@ public sealed partial class NcStoreMenu : FancyWindow
 
                 var badgeText = new Label
                 {
-                    Text = "Разовый",
+                    Text = Loc.GetString("nc-store-contract-badge-single"),
                     VerticalAlignment = VAlignment.Center,
                     ToolTip = oneTimeTip,
                     MouseFilter = MouseFilterMode.Stop
@@ -679,7 +692,7 @@ public sealed partial class NcStoreMenu : FancyWindow
                 root.AddChild(
                     new Label
                     {
-                        Text = "Цели:",
+                        Text = Loc.GetString("nc-store-contract-goals-header"),
                         Margin = new(0, 0, 0, 2)
                     });
 
@@ -718,7 +731,10 @@ public sealed partial class NcStoreMenu : FancyWindow
                     targetRow.AddChild(
                         new Label
                         {
-                            Text = $"• {targetName} ×{t.Required} (у вас {t.Progress})"
+                            Text = Loc.GetString(
+                                "nc-store-contract-goal-line",
+                                ("item", targetName),
+                                ("count", t.Required))
                         });
 
                     root.AddChild(targetRow);
@@ -770,7 +786,7 @@ public sealed partial class NcStoreMenu : FancyWindow
                 targetRow.AddChild(
                     new Label
                     {
-                        Text = $"Цель: {targetName} ×{c.Required}"
+                        Text = Loc.GetString("nc-store-contract-goal-line", ("item", targetName), ("count", c.Required))
                     });
 
                 root.AddChild(targetRow);
@@ -796,7 +812,10 @@ public sealed partial class NcStoreMenu : FancyWindow
                 root.AddChild(
                     new Label
                     {
-                        Text = $"Прогресс: {c.Progress} / {c.Required}",
+                        Text = Loc.GetString(
+                            "nc-store-contract-progress-line",
+                            ("progress", c.Progress),
+                            ("required", c.Required)),
                         Margin = new(0, 2, 0, 2)
                     });
 
@@ -812,7 +831,6 @@ public sealed partial class NcStoreMenu : FancyWindow
                     });
             }
 
-            // --- Низ карточки: награды слева + действия справа ---
             var bottomWrap = new BoxContainer
             {
                 Orientation = BoxContainer.LayoutOrientation.Horizontal,
@@ -820,7 +838,6 @@ public sealed partial class NcStoreMenu : FancyWindow
                 Margin = new(0, 6, 0, 0)
             };
 
-            // Левая часть: награды в панели
             var rewardsPanel = new PanelContainer
             {
                 HorizontalExpand = true,
@@ -843,7 +860,8 @@ public sealed partial class NcStoreMenu : FancyWindow
             };
             rewardsPanel.AddChild(rewardsCol);
 
-            var rewardsHeader = new Label { Text = "Награда", Margin = new(0, 0, 0, 3), };
+            var rewardsHeader = new Label
+                { Text = Loc.GetString("nc-store-contract-reward-header"), Margin = new(0, 0, 0, 3), };
             rewardsHeader.StyleClasses.Add("LabelHeading");
             rewardsCol.AddChild(rewardsHeader);
 
@@ -920,7 +938,8 @@ public sealed partial class NcStoreMenu : FancyWindow
             {
                 rewardsCol.AddChild(new() { MinSize = new(0, 4), });
 
-                var itemsHeader = new Label { Text = "Предметы", Margin = new(0, 2, 0, 2), };
+                var itemsHeader = new Label
+                    { Text = Loc.GetString("nc-store-contract-items-header"), Margin = new(0, 2, 0, 2), };
                 itemsHeader.StyleClasses.Add("LabelHeading");
                 rewardsCol.AddChild(itemsHeader);
             }
@@ -962,7 +981,11 @@ public sealed partial class NcStoreMenu : FancyWindow
                     }
 
                     var name = proto?.Name ?? id;
-                    line.AddChild(new Label { Text = $"{name} ×{count}", });
+                    line.AddChild(
+                        new Label
+                        {
+                            Text = Loc.GetString("nc-store-contract-goal-line", ("item", name), ("count", count))
+                        });
 
                     rewardsCol.AddChild(line);
                 }
@@ -997,14 +1020,19 @@ public sealed partial class NcStoreMenu : FancyWindow
                 }
 
                 var rewardName = rewardProto?.Name ?? c.RewardItem;
-                line.AddChild(new Label { Text = $"{rewardName} ×{c.RewardItemCount}", });
+                line.AddChild(
+                    new Label
+                    {
+                        Text = Loc.GetString(
+                            "nc-store-contract-goal-line",
+                            ("item", rewardName),
+                            ("count", c.RewardItemCount))
+                    });
 
                 rewardsCol.AddChild(line);
             }
 
             bottomWrap.AddChild(rewardsPanel);
-
-            // Правая часть: действия (фиксированная ширина)
             var actionCol = new BoxContainer
             {
                 Orientation = BoxContainer.LayoutOrientation.Vertical,
@@ -1014,7 +1042,9 @@ public sealed partial class NcStoreMenu : FancyWindow
 
             var actionHint = new Label
             {
-                Text = c.Completed ? "Можно сдать" : "Не выполнено",
+                Text = c.Completed
+                    ? Loc.GetString("nc-store-contract-action-can-claim")
+                    : Loc.GetString("nc-store-contract-action-not-done"),
                 Margin = new(0, 0, 0, 4)
             };
             actionHint.StyleClasses.Add("LabelSubText");
@@ -1026,7 +1056,12 @@ public sealed partial class NcStoreMenu : FancyWindow
 
             var btn = new Button
             {
-                Text = canClaim ? "Сдать" : $"Сдать ({c.Progress}/{c.Required})",
+                Text = canClaim
+                    ? Loc.GetString("nc-store-contract-action-claim")
+                    : Loc.GetString(
+                        "nc-store-contract-action-claim-progress",
+                        ("progress", c.Progress),
+                        ("required", c.Required)),
                 Disabled = !canClaim,
                 HorizontalExpand = true,
                 MinSize = new(0, 32)
@@ -1034,9 +1069,9 @@ public sealed partial class NcStoreMenu : FancyWindow
 
             btn.ToolTip = canClaim
                 ? !c.Repeatable
-                    ? "Закрыть единичную заявку и получить награду.\nТерминал примет её один раз за смену."
-                    : "Закрыть контракт и получить награду."
-                : "Контракт ещё не выполнен.";
+                    ? Loc.GetString("nc-store-contract-claim-tooltip-single")
+                    : Loc.GetString("nc-store-contract-claim-tooltip-repeatable")
+                : Loc.GetString("nc-store-contract-claim-tooltip-not-done");
 
             btn.OnPressed += _ =>
             {
@@ -1054,7 +1089,6 @@ public sealed partial class NcStoreMenu : FancyWindow
             contractList.AddChild(cardRow);
         }
 
-        // ВАЖНО: один раз после построения всего списка
         ApplyTabsVisibility();
     }
 
@@ -1075,7 +1109,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         {
             BuyCategoryHeader.Text = !string.IsNullOrEmpty(_buyCat)
                 ? _buyCat
-                : $"Результаты поиска ({buyCount})";
+                : Loc.GetString("nc-store-search-results-buy", ("count", buyCount));
         }
         else
             BuyCategoryHeader.Text = string.Empty;
@@ -1084,7 +1118,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         {
             SellCategoryHeader.Text = !string.IsNullOrEmpty(_sellCat)
                 ? _sellCat
-                : $"Результаты поиска ({sellCount})";
+                : Loc.GetString("nc-store-search-results-sell", ("count", sellCount));
         }
         else
             SellCategoryHeader.Text = string.Empty;
@@ -1138,7 +1172,7 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         if (!hasCat && !hasSearch)
         {
-            pane.AddChild(new Label { Text = "Выберите категорию.", });
+            pane.AddChild(new Label { Text = Loc.GetString("nc-store-select-category"), });
             return;
         }
 
@@ -1147,9 +1181,9 @@ public sealed partial class NcStoreMenu : FancyWindow
             string message;
 
             if (!string.IsNullOrEmpty(cat))
-                message = "По вашему запросу в этой категории ничего не найдено.";
+                message = Loc.GetString("nc-store-empty-category-search");
             else
-                message = "По вашему запросу ничего не найдено.";
+                message = Loc.GetString("nc-store-empty-search");
 
             pane.AddChild(new Label { Text = message, });
             return;
@@ -1206,31 +1240,21 @@ public sealed partial class NcStoreMenu : FancyWindow
 
             var sig = Sig(it);
 
-            NcStoreListingControl ctrl;
-
-            if (cache.TryGetValue(it.Id, out var tuple) && tuple.Sig == sig)
-                ctrl = tuple.Ctrl;
-            else
+            if (!cache.TryGetValue(it.Id, out var tuple) || tuple.Sig != sig)
             {
                 var initQty = _qtyCache.TryGetValue(it.Id, out var saved) ? saved : 1;
                 var actionsEnabled = true;
 
-                ctrl = new(it, _sprites, balanceHint, initQty, actionsEnabled);
+                var created = new NcStoreListingControl(it, _sprites, balanceHint, initQty, actionsEnabled);
+                created.OnQtyChanged = newQty => _qtyCache[it.Id] = newQty;
 
-                ctrl.OnQtyChanged += newQty => _qtyCache[it.Id] = newQty;
-
-                switch (mode)
-                {
-                    case StoreMode.Buy:
-                        ctrl.OnBuyPressed += qty => emit(it, qty);
-                        break;
-                    case StoreMode.Sell:
-                        ctrl.OnSellPressed += qty => emit(it, qty);
-                        break;
-                }
-
-                cache[it.Id] = (ctrl, sig);
+                cache[it.Id] = (created, sig);
+                tuple = (created, sig);
             }
+
+            var ctrl = tuple.Ctrl;
+            ctrl.OnBuyPressed = mode == StoreMode.Buy ? qty => emit(it, qty) : null;
+            ctrl.OnSellPressed = mode == StoreMode.Sell ? qty => emit(it, qty) : null;
 
             ctrl.UpdateDynamicData(balanceHint, it.Remaining, it.Owned);
 
@@ -1252,9 +1276,13 @@ public sealed partial class NcStoreMenu : FancyWindow
     private static void RemoveMoreButtons(Control pane)
     {
         foreach (var ch in pane.Children.ToList())
-            if (ch is Button b && b.Text != null &&
-                b.Text.StartsWith("Показать ещё (", StringComparison.Ordinal))
+        {
+            if (ch is not Button b)
+                continue;
+
+            if (b.Name == "MoreButton")
                 pane.RemoveChild(b);
+        }
     }
 
     private void AddOrUpdateMoreButton(
@@ -1273,7 +1301,8 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         var more = new Button
         {
-            Text = $"Показать ещё ({left})",
+            Name = "MoreButton",
+            Text = Loc.GetString("nc-store-show-more", ("count", left)),
             HorizontalExpand = true,
             Margin = new(0, 8, 0, 8)
         };
@@ -1326,11 +1355,10 @@ public sealed partial class NcStoreMenu : FancyWindow
     private Button CreateCategoryButton(string catId, Action<string> onClick)
     {
         var display = catId;
-        if (catId == "Готово к продаже")
-            display = "Готово";
+        if (catId == ReadyCategory)
+            display = Loc.GetString("nc-store-cat-ready-short");
         else if (catId == CrateCategory)
-            display = "В ящике";
-
+            display = Loc.GetString("nc-store-cat-crate-short");
         var btn = new Button
         {
             Text = display,
@@ -1432,9 +1460,9 @@ public sealed partial class NcStoreMenu : FancyWindow
     private string DifficultyName(string diff) =>
         diff switch
         {
-            "Easy" => "Лёгкий",
-            "Medium" => "Средний",
-            "Hard" => "Тяжёлый",
+            "Easy" => Loc.GetString("nc-store-difficulty-easy"),
+            "Medium" => Loc.GetString("nc-store-difficulty-medium"),
+            "Hard" => Loc.GetString("nc-store-difficulty-hard"),
             _ => diff
         };
 
