@@ -9,7 +9,6 @@
         <BoxContainer Name="HeaderBar" Orientation="Horizontal" Margin="4 4 4 0" StyleClasses="PanelBackgroundBaseDark">
 
             <TextureRect Name="CurrencyIcon"
-                         TexturePath="/Textures/Objects/Materials/Sheets/Other/credit.rsi/icon.png"
                          MinSize="24 24"
                          Stretch="KeepAspectCentered"
                          Margin="4 0 4 0"

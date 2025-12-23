@@ -22,6 +22,16 @@ public sealed class NcStoreStructuredBoundUi : BoundUserInterface
 
     private EntityUid? Actor => _player.LocalSession?.AttachedEntity;
 
+    private void DetachMenuHandlers(NcStoreMenu menu)
+    {
+        menu.OnBuyPressed -= OnBuy;
+        menu.OnSellPressed -= OnSell;
+        menu.OnMassSellPulledCrate -= OnMassSellPulledCrate;
+        menu.OnContractClaim -= OnContractClaim;
+        menu.OnClose -= OnMenuClosed;
+    }
+
+
     protected override void UpdateState(BoundUserInterfaceState state)
     {
         base.UpdateState(state);
@@ -124,6 +134,8 @@ public sealed class NcStoreStructuredBoundUi : BoundUserInterface
         if (_menu == null)
             return;
 
+        DetachMenuHandlers(_menu);
+
         _menu.Orphan();
         _menu = null;
         _lastCatalogRevision = int.MinValue;
@@ -167,10 +179,7 @@ public sealed class NcStoreStructuredBoundUi : BoundUserInterface
     {
         if (_menu != null)
         {
-            _menu.OnBuyPressed -= OnBuy;
-            _menu.OnSellPressed -= OnSell;
-            _menu.OnMassSellPulledCrate -= OnMassSellPulledCrate;
-            _menu.OnContractClaim -= OnContractClaim;
+            DetachMenuHandlers(_menu);
             _menu.Orphan();
             _menu = null;
         }

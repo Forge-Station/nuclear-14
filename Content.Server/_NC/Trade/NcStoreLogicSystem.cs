@@ -25,10 +25,12 @@ public sealed class NcStoreLogicSystem : EntitySystem
     [Dependency] private readonly IEntityManager _ents = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     private readonly Dictionary<EntityUid, List<EntityUid>> _inventoryCache = new();
-
+    private readonly HashSet<EntityUid> _scratchVisited = new();
+    private readonly Queue<EntityUid> _scratchQueue = new();
+    private readonly List<EntityUid> _scratchResult = new();
+    [Dependency] private readonly SharedTransformSystem _xforms = default!;
     private readonly Dictionary<string, string?> _productStackTypeCache = new();
     private readonly Dictionary<string, string[]> _protoAndAncestorsCache = new();
-
     [Dependency] private readonly IPrototypeManager _protos = default!;
     [Dependency] private readonly SharedStackSystem _stacks = default!;
 
@@ -208,10 +210,6 @@ public sealed class NcStoreLogicSystem : EntitySystem
         return arr;
     }
 
-    /// <summary>
-    ///     Picks the first affordable currency for <see cref="StoreMode.Buy" /> following the store's whitelist order.
-    ///     Uses a prebuilt <see cref="InventorySnapshot" /> to avoid O(items * currencies) rescans.
-    /// </summary>
     private bool TryPickCurrencyForBuy(
         NcStoreComponent store,
         StoreListingPrototype listing,
@@ -227,8 +225,6 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
         if (listing.Cost.Count == 0)
             return false;
-
-        // Preferred order: store whitelist.
         foreach (var cur in store.CurrencyWhitelist)
         {
             if (string.IsNullOrWhiteSpace(cur))
@@ -250,8 +246,6 @@ public sealed class NcStoreLogicSystem : EntitySystem
             balance = bal;
             return true;
         }
-
-        // Fallback: first cost entry (preserves prior behavior), but still checks affordability.
         var firstCost = listing.Cost.First();
         var fallbackCur = firstCost.Key;
         var fallbackPrice = (int) MathF.Ceiling(firstCost.Value);
@@ -356,8 +350,6 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
         if (!_protos.TryIndex<EntityPrototype>(listing.ProductEntity, out _))
             return false;
-
-        // Currency selection depends on current inventory state.
         InvalidateInventoryCache(user);
         var snap = BuildInventorySnapshot(user);
 
@@ -388,8 +380,6 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 spawned++;
             else
                 GiveCurrency(user, currency, unitPrice);
-
-        // Inventory changed (currency removed, products spawned/refunded). Ensure next reads are correct.
         InvalidateInventoryCache(user);
 
         if (spawned <= 0)
@@ -434,8 +424,6 @@ public sealed class NcStoreLogicSystem : EntitySystem
             return false;
 
         GiveCurrency(user, currency, (int) totalL);
-
-        // Inventory changed (product removed, currency given).
         InvalidateInventoryCache(user);
 
         if (listing.RemainingCount > 0)
@@ -484,8 +472,6 @@ public sealed class NcStoreLogicSystem : EntitySystem
             return false;
 
         GiveCurrency(user, currency, (int) totalL);
-
-        // Both roots changed: items removed from container and currency given to the user.
         InvalidateInventoryCache(container);
         InvalidateInventoryCache(user);
 
@@ -664,8 +650,6 @@ public sealed class NcStoreLogicSystem : EntitySystem
             return true;
 
         var stackType = GetProductStackType(protoId);
-
-        // Stack-type match: consume units from stacks.
         if (stackType != null)
         {
             var left = amount;
@@ -699,13 +683,11 @@ public sealed class NcStoreLogicSystem : EntitySystem
             return left <= 0;
         }
 
-        // Non-stack: remove entities.
         var effective = ResolveMatchMode(protoId, matchMode);
         var leftEnts = amount;
 
         void TakeEntity(int i, EntityUid ent)
         {
-            // Preserve prior behavior: if a stack exists, decrement by 1 if possible.
             if (_ents.TryGetComponent(ent, out StackComponent? st) && st.Count > 1)
                 _stacks.SetCount(ent, st.Count - 1, st);
             else
@@ -726,7 +708,6 @@ public sealed class NcStoreLogicSystem : EntitySystem
             return MatchesExact(proto) || IsProtoOrDescendant(proto, protoId);
         }
 
-        // Pass 1: exact matches first (helps to preserve intent when selling descendants).
         for (var i = 0; i < cachedItems.Count && leftEnts > 0; i++)
         {
             var ent = cachedItems[i];
@@ -747,7 +728,6 @@ public sealed class NcStoreLogicSystem : EntitySystem
         if (effective == PrototypeMatchMode.Exact)
             return false;
 
-        // Pass 2: descendants.
         for (var i = 0; i < cachedItems.Count && leftEnts > 0; i++)
         {
             var ent = cachedItems[i];
@@ -833,80 +813,80 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
 
     private IEnumerable<EntityUid> EnumerateDeepItemsUnique(EntityUid owner)
+{
+    if (_inventoryCache.TryGetValue(owner, out var cached))
     {
-        if (_inventoryCache.TryGetValue(owner, out var cached))
-        {
-            foreach (var ent in cached)
-                if (_ents.EntityExists(ent))
-                    yield return ent;
-
-            yield break;
-        }
-
-        var visited = new HashSet<EntityUid>();
-        var queue = new Queue<EntityUid>();
-        var result = new List<EntityUid>();
-
-        void Enqueue(EntityUid uid)
-        {
-            if (!visited.Add(uid))
-                return;
-
-            queue.Enqueue(uid);
-            result.Add(uid);
-        }
-
-
-        if (_ents.TryGetComponent(owner, out InventoryComponent? inventory))
-        {
-            var slotEnum = new InventorySystem.InventorySlotEnumerator(inventory);
-            while (slotEnum.NextItem(out var item))
-                Enqueue(item);
-        }
-
-        if (_ents.TryGetComponent(owner, out ItemSlotsComponent? itemSlots))
-        {
-            foreach (var slot in itemSlots.Slots.Values)
-                if (slot.HasItem && slot.Item.HasValue)
-                    Enqueue(slot.Item.Value);
-        }
-
-        if (_ents.TryGetComponent(owner, out HandsComponent? hands))
-        {
-            foreach (var hand in hands.Hands.Values)
-                if (hand.HeldEntity.HasValue)
-                    Enqueue(hand.HeldEntity.Value);
-        }
-
-        if (_ents.TryGetComponent(owner, out ContainerManagerComponent? cmcRoot))
-        {
-            foreach (var container in cmcRoot.Containers.Values)
-            {
-                foreach (var entity in container.ContainedEntities)
-                    Enqueue(entity);
-            }
-        }
-
-        while (queue.Count > 0)
-        {
-            var current = queue.Dequeue();
-
-            if (_ents.TryGetComponent(current, out ContainerManagerComponent? cmc))
-            {
-                foreach (var container in cmc.Containers.Values)
-                {
-                    foreach (var child in container.ContainedEntities)
-                        Enqueue(child);
-                }
-            }
-        }
-
-        _inventoryCache[owner] = result;
-
-        foreach (var ent in result)
+        foreach (var ent in cached)
             if (_ents.EntityExists(ent))
                 yield return ent;
+
+        yield break;
     }
+
+    _scratchVisited.Clear();
+    _scratchQueue.Clear();
+    _scratchResult.Clear();
+
+    void Enqueue(EntityUid uid)
+    {
+        if (!_scratchVisited.Add(uid))
+            return;
+
+        _scratchQueue.Enqueue(uid);
+        _scratchResult.Add(uid);
+    }
+
+    if (_ents.TryGetComponent(owner, out InventoryComponent? inventory))
+    {
+        var slotEnum = new InventorySystem.InventorySlotEnumerator(inventory);
+        while (slotEnum.NextItem(out var item))
+            Enqueue(item);
+    }
+
+    if (_ents.TryGetComponent(owner, out ItemSlotsComponent? itemSlots))
+    {
+        foreach (var slot in itemSlots.Slots.Values)
+            if (slot.HasItem && slot.Item.HasValue)
+                Enqueue(slot.Item.Value);
+    }
+
+    if (_ents.TryGetComponent(owner, out HandsComponent? hands))
+    {
+        foreach (var hand in hands.Hands.Values)
+            if (hand.HeldEntity.HasValue)
+                Enqueue(hand.HeldEntity.Value);
+    }
+
+    if (_ents.TryGetComponent(owner, out ContainerManagerComponent? cmcRoot))
+    {
+        foreach (var container in cmcRoot.Containers.Values)
+        {
+            foreach (var entity in container.ContainedEntities)
+                Enqueue(entity);
+        }
+    }
+
+    while (_scratchQueue.Count > 0)
+    {
+        var current = _scratchQueue.Dequeue();
+
+        if (_ents.TryGetComponent(current, out ContainerManagerComponent? cmc))
+        {
+            foreach (var container in cmc.Containers.Values)
+            {
+                foreach (var child in container.ContainedEntities)
+                    Enqueue(child);
+            }
+        }
+    }
+
+    var cachedList = new List<EntityUid>(_scratchResult);
+    _inventoryCache[owner] = cachedList;
+
+    foreach (var ent in cachedList)
+        if (_ents.EntityExists(ent))
+            yield return ent;
+}
 
     private bool TryTakeCurrency(EntityUid user, string stackType, int amount)
     {
@@ -1025,8 +1005,11 @@ public sealed class NcStoreLogicSystem : EntitySystem
         }
 
         if (remaining > 0)
+        {
             Sawmill.Warning(
                 $"[NcStore] GiveCurrency: spawn guard tripped. user={ToPrettyString(user)}, currency={stackType}, remaining={remaining}");
+        }
+
         InvalidateInventoryCache(user);
     }
 
@@ -1362,10 +1345,20 @@ public sealed class NcStoreLogicSystem : EntitySystem
     {
         try
         {
-            var coords = _ents.GetComponent<TransformComponent>(user).Coordinates;
-            var spawned = _ents.SpawnEntity(protoId, coords);
+            var userCoords = _ents.GetComponent<TransformComponent>(user).Coordinates;
+            var spawned = _ents.SpawnEntity(protoId, userCoords);
+
+            var pickedUp = false;
             if (_ents.HasComponent<HandsComponent>(user))
-                _hands.TryPickupAnyHand(user, spawned, false);
+                pickedUp = _hands.TryPickupAnyHand(user, spawned, false);
+
+            if (!pickedUp && TryGetPulledClosedCrate(user, out var crate) && Exists(crate))
+            {
+                var crateCoords = _ents.GetComponent<TransformComponent>(crate).Coordinates;
+                _xforms.SetCoordinates(spawned, crateCoords);
+                InvalidateInventoryCache(crate);
+            }
+
             InvalidateInventoryCache(user);
             return true;
         }
@@ -1375,6 +1368,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
             return false;
         }
     }
+
 
     private sealed class OrdinalIdComparer : IComparer<string>
     {

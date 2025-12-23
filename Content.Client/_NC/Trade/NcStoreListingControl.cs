@@ -22,6 +22,8 @@ public sealed class NcStoreListingControl : PanelContainer
     private const int QtyMaxDigits = 6;
     private const int MaxTotalDisplay = 999_999;
     private const int DescMaxChars = 220;
+
+    private readonly bool _actionsEnabled;
     private readonly Button? _minusBtn;
     private readonly Label? _ownedLbl;
     private readonly Button? _plusBtn;
@@ -48,6 +50,7 @@ public sealed class NcStoreListingControl : PanelContainer
     )
     {
         _staticData = data;
+        _actionsEnabled = actionsEnabled;
         _lastBalanceHint = balanceHint;
 
         Margin = new(6, 6, 6, 6);
@@ -178,12 +181,12 @@ public sealed class NcStoreListingControl : PanelContainer
         };
         _plusBtn = plusBtn;
 
-        var noQty = _maxQty <= 0 || !actionsEnabled;
+        var noQty = _maxQty <= 0 || !_actionsEnabled;
         minusBtn.Disabled = noQty;
         plusBtn.Disabled = noQty;
         _qtyEdit.Editable = !noQty;
 
-        if (!actionsEnabled)
+        if (!_actionsEnabled)
         {
             minusBtn.ToolTip = Loc.GetString("nc-store-only-mass-sell");
             plusBtn.ToolTip = Loc.GetString("nc-store-only-mass-sell");
@@ -192,7 +195,7 @@ public sealed class NcStoreListingControl : PanelContainer
 
         minusBtn.OnPressed += _ =>
         {
-            if (!actionsEnabled)
+            if (!_actionsEnabled)
                 return;
 
             if (_qty > MinAllowed)
@@ -201,7 +204,7 @@ public sealed class NcStoreListingControl : PanelContainer
 
         plusBtn.OnPressed += _ =>
         {
-            if (!actionsEnabled)
+            if (!_actionsEnabled)
                 return;
 
             if (_qty < _maxQty)
@@ -210,7 +213,7 @@ public sealed class NcStoreListingControl : PanelContainer
 
         _qtyEdit.OnTextChanged += _ =>
         {
-            if (!actionsEnabled)
+            if (!_actionsEnabled)
                 return;
 
             if (_suppressQtyEditChange)
@@ -245,7 +248,7 @@ public sealed class NcStoreListingControl : PanelContainer
 
         _qtyEdit.OnTextEntered += _ =>
         {
-            if (!actionsEnabled)
+            if (!_actionsEnabled)
                 return;
 
             if (_maxQty <= 0 || _qty <= 0)
@@ -367,7 +370,7 @@ public sealed class NcStoreListingControl : PanelContainer
         }
 
 
-        var noQty = _maxQty <= 0;
+        var noQty = _maxQty <= 0 || !_actionsEnabled;
         if (_minusBtn != null)
             _minusBtn.Disabled = noQty || _qty <= minAllowed;
         if (_plusBtn != null)
@@ -378,6 +381,7 @@ public sealed class NcStoreListingControl : PanelContainer
         if (_priceButton != null)
         {
             var disable =
+                !_actionsEnabled ||
                 noQty ||
                 remainingStock == 0 ||
                 _staticData.Mode == StoreMode.Sell && playerOwned <= 0;
@@ -490,7 +494,7 @@ public sealed class NcStoreListingControl : PanelContainer
             ClipText = true,
             Margin = new(8, 0, 0, 0),
             StyleClasses = { StyleNano.StyleClassButtonBig, },
-            Disabled = !actionsEnabled
+            Disabled = !_actionsEnabled
                 || data.Remaining == 0
                 || data.Mode == StoreMode.Sell && data.Owned <= 0
                 || _maxQty <= 0
@@ -498,7 +502,7 @@ public sealed class NcStoreListingControl : PanelContainer
 
         _priceButton = btn;
 
-        if (!actionsEnabled)
+        if (!_actionsEnabled)
             btn.ToolTip = Loc.GetString("nc-store-only-mass-sell");
 
         var inner = new BoxContainer
@@ -538,7 +542,7 @@ public sealed class NcStoreListingControl : PanelContainer
 
         btn.OnPressed += _ =>
         {
-            if (!actionsEnabled)
+            if (!_actionsEnabled)
                 return;
 
             if (_maxQty <= 0 || _qty <= 0)

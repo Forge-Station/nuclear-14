@@ -92,32 +92,36 @@ public sealed class NcContractSystem : EntitySystem
         }
 
         _logic.InvalidateInventoryCache(user);
-        if (crateUid is { } c0)
-            _logic.InvalidateInventoryCache(c0);
-
-        var userSnap = _logic.BuildInventorySnapshot(user);
 
         var hasCrateSnap = false;
         NcStoreLogicSystem.InventorySnapshot crateSnap = default;
 
-        if (crateUid is { } c1)
+        if (crateUid is { } c0 && Exists(c0))
         {
-            crateSnap = _logic.BuildInventorySnapshot(c1);
+            _logic.InvalidateInventoryCache(c0);
+            crateSnap = _logic.BuildInventorySnapshot(c0);
             hasCrateSnap = true;
         }
+        else
+            crateUid = null;
+
+        var userSnap = _logic.BuildInventorySnapshot(user);
 
         foreach (var kvp in requiredByKey)
         {
             var (protoId, matchMode) = kvp.Key;
             var required = kvp.Value;
 
-            var owned = _logic.GetOwnedFromSnapshot(userSnap, protoId, matchMode);
+            var ownedUser = _logic.GetOwnedFromSnapshot(userSnap, protoId, matchMode);
+            var ownedCrate = hasCrateSnap ? _logic.GetOwnedFromSnapshot(crateSnap, protoId, matchMode) : 0;
 
-            if (hasCrateSnap)
-                owned += _logic.GetOwnedFromSnapshot(crateSnap, protoId, matchMode);
-
-            if (owned < required)
+            if (ownedUser + ownedCrate < required)
+            {
+                Sawmill.Info(
+                    $"[Claim] Not enough items for '{contractId}': need {required}x {protoId} (mode={matchMode}), " +
+                    $"have user={ownedUser}, crate={ownedCrate} on {ToPrettyString(store)}.");
                 return false;
+            }
         }
 
         foreach (var kvp in requiredByKey)
@@ -145,25 +149,25 @@ public sealed class NcContractSystem : EntitySystem
                 left -= takeFromUser;
             }
 
-            if (left > 0)
+            if (left <= 0)
+                continue;
+
+            if (crateUid is not { } crateEntity || !Exists(crateEntity))
             {
-                if (crateUid is not { } crateEntity || !Exists(crateEntity))
-                {
-                    Sawmill.Error(
-                        $"[Claim] Missing {left}x {protoId} but pulled closed crate is missing/invalid. " +
-                        $"Contract '{contractId}' on {ToPrettyString(store)}.");
-                    return false;
-                }
+                Sawmill.Error(
+                    $"[Claim] Missing {left}x {protoId} but pulled closed crate is missing/invalid. " +
+                    $"Contract '{contractId}' on {ToPrettyString(store)}.");
+                return false;
+            }
 
-                _logic.InvalidateInventoryCache(crateEntity);
+            _logic.InvalidateInventoryCache(crateEntity);
 
-                if (!_logic.TryTakeProductUnitsFromRoot(crateEntity, protoId, left, matchMode))
-                {
-                    Sawmill.Error(
-                        $"[Claim] Failed to take {left}x {protoId} " +
-                        $"from crate {ToPrettyString(crateEntity)} for contract '{contractId}' on {ToPrettyString(store)}.");
-                    return false;
-                }
+            if (!_logic.TryTakeProductUnitsFromRoot(crateEntity, protoId, left, matchMode))
+            {
+                Sawmill.Error(
+                    $"[Claim] Failed to take {left}x {protoId} " +
+                    $"from crate {ToPrettyString(crateEntity)} for contract '{contractId}' on {ToPrettyString(store)}.");
+                return false;
             }
         }
 
@@ -206,7 +210,6 @@ public sealed class NcContractSystem : EntitySystem
         else
             contract.Progress = contract.Required;
 
-        // 4) Награды
         if (contract.RewardCurrencies is { Count: > 0, })
         {
             foreach (var kvp in contract.RewardCurrencies)
