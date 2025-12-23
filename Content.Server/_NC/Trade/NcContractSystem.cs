@@ -1,7 +1,8 @@
-using System.Linq;
 using Content.Shared._NC.Trade;
+using Content.Shared.Stacks;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
+using Enumerable = System.Linq.Enumerable;
 
 
 namespace Content.Server._NC.Trade;
@@ -12,6 +13,8 @@ public sealed class NcContractSystem : EntitySystem
     private const double Golden = 0.6180339887498948;
     private const double DefaultJitter = 0.06;
     private static readonly ISawmill Sawmill = Logger.GetSawmill("nccontracts");
+    private readonly Dictionary<string, List<string>> _ancestorsCache = new();
+    private readonly Dictionary<string, int> _depthCache = new();
 
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
@@ -36,8 +39,8 @@ public sealed class NcContractSystem : EntitySystem
 
         if (!string.IsNullOrWhiteSpace(contract.TargetItem) && contract.Required > 0)
         {
-            return new()
-            {
+            return
+            [
                 new()
                 {
                     TargetItem = contract.TargetItem,
@@ -45,7 +48,7 @@ public sealed class NcContractSystem : EntitySystem
                     Progress = contract.Progress,
                     MatchMode = contract.MatchMode
                 }
-            };
+            ];
         }
 
         return new();
@@ -72,10 +75,10 @@ public sealed class NcContractSystem : EntitySystem
             return false;
         }
 
+
         var crateUid = _logic.GetPulledClosedCrate(user);
 
         var requiredByKey = new Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int>();
-
         foreach (var t in targets)
         {
             if (string.IsNullOrWhiteSpace(t.TargetItem) || t.Required <= 0)
@@ -86,12 +89,12 @@ public sealed class NcContractSystem : EntitySystem
             }
 
             var key = (t.TargetItem, t.MatchMode);
-
             if (!requiredByKey.TryAdd(key, t.Required))
                 requiredByKey[key] = checked(requiredByKey[key] + t.Required);
         }
 
         _logic.InvalidateInventoryCache(user);
+        var userSnap = _logic.BuildInventorySnapshot(user);
 
         var hasCrateSnap = false;
         NcStoreLogicSystem.InventorySnapshot crateSnap = default;
@@ -104,8 +107,6 @@ public sealed class NcContractSystem : EntitySystem
         }
         else
             crateUid = null;
-
-        var userSnap = _logic.BuildInventorySnapshot(user);
 
         foreach (var kvp in requiredByKey)
         {
@@ -124,49 +125,91 @@ public sealed class NcContractSystem : EntitySystem
             }
         }
 
-        foreach (var kvp in requiredByKey)
+        var orderedKeys = OrderClaimKeys(requiredByKey.Keys);
+
+        var plan = new List<ClaimSlice>(requiredByKey.Count * 2);
+
+        foreach (var key in orderedKeys)
         {
-            var (protoId, matchMode) = kvp.Key;
-            var required = kvp.Value;
-
-            var left = required;
-
-            var ownedUser = _logic.GetOwnedFromSnapshot(userSnap, protoId, matchMode);
-            var takeFromUser = Math.Min(left, ownedUser);
-
-            if (takeFromUser > 0)
-            {
-                _logic.InvalidateInventoryCache(user);
-
-                if (!_logic.TryTakeProductUnits(user, protoId, takeFromUser, matchMode))
-                {
-                    Sawmill.Error(
-                        $"[Claim] Failed to take {takeFromUser}x {protoId} " +
-                        $"from user {ToPrettyString(user)} for contract '{contractId}' on {ToPrettyString(store)}.");
-                    return false;
-                }
-
-                left -= takeFromUser;
-            }
-
-            if (left <= 0)
+            var (protoId, matchMode) = key;
+            var need = requiredByKey[key];
+            if (need <= 0)
                 continue;
 
-            if (crateUid is not { } crateEntity || !Exists(crateEntity))
+            var reservedFromUser = ReserveFromSnapshot(
+                userSnap,
+                protoId,
+                matchMode,
+                need,
+                out var userSlices,
+                user);
+
+            if (reservedFromUser > 0)
+            {
+                plan.AddRange(userSlices);
+                need -= reservedFromUser;
+            }
+
+            if (need <= 0)
+                continue;
+
+            // Потом из crate
+            if (crateUid is not { } crateEntity || !Exists(crateEntity) || !hasCrateSnap)
             {
                 Sawmill.Error(
-                    $"[Claim] Missing {left}x {protoId} but pulled closed crate is missing/invalid. " +
+                    $"[Claim] Missing {need}x {protoId} but pulled closed crate is missing/invalid. " +
                     $"Contract '{contractId}' on {ToPrettyString(store)}.");
                 return false;
             }
 
-            _logic.InvalidateInventoryCache(crateEntity);
+            var reservedFromCrate = ReserveFromSnapshot(
+                crateSnap,
+                protoId,
+                matchMode,
+                need,
+                out var crateSlices,
+                crateEntity);
 
-            if (!_logic.TryTakeProductUnitsFromRoot(crateEntity, protoId, left, matchMode))
+            if (reservedFromCrate > 0)
+            {
+                plan.AddRange(crateSlices);
+                need -= reservedFromCrate;
+            }
+
+            if (need > 0)
             {
                 Sawmill.Error(
-                    $"[Claim] Failed to take {left}x {protoId} " +
-                    $"from crate {ToPrettyString(crateEntity)} for contract '{contractId}' on {ToPrettyString(store)}.");
+                    $"[Claim] Reserve failed for '{contractId}': still need {need}x {protoId} (mode={matchMode}). " +
+                    $"Store={ToPrettyString(store)}.");
+                return false;
+            }
+        }
+
+        var exec = new Dictionary<(EntityUid Root, string ProtoId), int>();
+        foreach (var s in plan)
+        {
+            var k = (s.Root, s.ProtoId);
+            if (!exec.TryAdd(k, s.Amount))
+                exec[k] = checked(exec[k] + s.Amount);
+        }
+
+        foreach (var kvp in exec)
+        {
+            var (root, protoId) = kvp.Key;
+            var amount = kvp.Value;
+            if (amount <= 0)
+                continue;
+
+            var ok = root == user
+                ? _logic.TryTakeProductUnits(user, protoId, amount, PrototypeMatchMode.Exact)
+                : _logic.TryTakeProductUnitsFromRoot(root, protoId, amount, PrototypeMatchMode.Exact);
+
+            if (!ok)
+            {
+                Sawmill.Error(
+                    $"[Claim] Execute failed: could not take {amount}x {protoId} from {ToPrettyString(root)} " +
+                    $"for contract '{contractId}' on {ToPrettyString(store)}. " +
+                    $"(NOTE: partial consumption may have already happened)");
                 return false;
             }
         }
@@ -247,7 +290,6 @@ public sealed class NcContractSystem : EntitySystem
         }
 
         var repeatable = contract.Repeatable;
-
         comp.Contracts.Remove(contractId);
 
         if (!repeatable)
@@ -257,6 +299,272 @@ public sealed class NcContractSystem : EntitySystem
         }
 
         RefillContractsForStore(store, comp);
+        return true;
+    }
+
+    private List<(string ProtoId, PrototypeMatchMode MatchMode)> OrderClaimKeys(
+        Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int>.KeyCollection keys
+    )
+    {
+        var list = new List<(string ProtoId, PrototypeMatchMode MatchMode)>(keys.Count);
+        foreach (var k in keys)
+            list.Add(k);
+
+        list.Sort((a, b) =>
+        {
+            if (a.MatchMode != b.MatchMode)
+                return a.MatchMode == PrototypeMatchMode.Exact ? -1 : 1;
+
+            if (a.MatchMode == PrototypeMatchMode.Descendants)
+            {
+                var da = GetProtoDepth(a.ProtoId);
+                var db = GetProtoDepth(b.ProtoId);
+                var cmp = db.CompareTo(da);
+                if (cmp != 0)
+                    return cmp;
+            }
+
+            return string.CompareOrdinal(a.ProtoId, b.ProtoId);
+        });
+
+        return list;
+    }
+
+    private int ReserveFromSnapshot(
+        NcStoreLogicSystem.InventorySnapshot snap,
+        string targetProtoId,
+        PrototypeMatchMode matchMode,
+        int need,
+        out List<ClaimSlice> slices,
+        EntityUid? rootOverride = null
+    )
+    {
+        slices = new();
+
+        if (need <= 0)
+            return 0;
+
+        if (TryGetStackTypeId(targetProtoId, out var stackTypeId))
+        {
+            snap.StackTypeCounts.TryGetValue(stackTypeId, out var have);
+            if (have <= 0)
+                return 0;
+
+            var take = Math.Min(have, need);
+            var left = have - take;
+
+            if (left > 0)
+                snap.StackTypeCounts[stackTypeId] = left;
+            else
+                snap.StackTypeCounts.Remove(stackTypeId);
+
+            slices.Add(new(rootOverride ?? EntityUid.Invalid, targetProtoId, take));
+            return take;
+        }
+
+        if (matchMode == PrototypeMatchMode.Exact)
+        {
+            snap.ProtoCounts.TryGetValue(targetProtoId, out var haveExact);
+            if (haveExact <= 0)
+                return 0;
+
+            var take = Math.Min(haveExact, need);
+            ApplyReservationExact(snap, targetProtoId, take);
+
+            slices.Add(new(rootOverride ?? EntityUid.Invalid, targetProtoId, take));
+            return take;
+        }
+
+        var candidates = new List<(string ProtoId, int Count)>();
+        foreach (var kvp in snap.ProtoCounts)
+        {
+            if (kvp.Value <= 0)
+                continue;
+
+            if (IsProtoOrDescendant(kvp.Key, targetProtoId))
+                candidates.Add((kvp.Key, kvp.Value));
+        }
+
+        if (candidates.Count == 0)
+            return 0;
+
+        candidates.Sort((a, b) =>
+        {
+            var da = GetProtoDepth(a.ProtoId);
+            var db = GetProtoDepth(b.ProtoId);
+            var cmp = db.CompareTo(da);
+            if (cmp != 0)
+                return cmp;
+            return string.CompareOrdinal(a.ProtoId, b.ProtoId);
+        });
+
+        var takenTotal = 0;
+        for (var i = 0; i < candidates.Count && takenTotal < need; i++)
+        {
+            var (exactProto, have) = candidates[i];
+            if (have <= 0)
+                continue;
+
+            var take = Math.Min(have, need - takenTotal);
+            ApplyReservationExact(snap, exactProto, take);
+
+            slices.Add(new(rootOverride ?? EntityUid.Invalid, exactProto, take));
+            takenTotal += take;
+        }
+
+        return takenTotal;
+    }
+
+    private void ApplyReservationExact(NcStoreLogicSystem.InventorySnapshot snap, string exactProtoId, int take)
+    {
+        if (take <= 0)
+            return;
+
+        if (snap.ProtoCounts.TryGetValue(exactProtoId, out var have))
+        {
+            var left = have - take;
+            if (left > 0)
+                snap.ProtoCounts[exactProtoId] = left;
+            else
+                snap.ProtoCounts.Remove(exactProtoId);
+        }
+
+        var ancestors = GetAncestorsInclusive(exactProtoId);
+        foreach (var a in ancestors)
+        {
+            if (!snap.AncestorCounts.TryGetValue(a, out var cnt))
+                continue;
+
+            var left = cnt - take;
+            if (left > 0)
+                snap.AncestorCounts[a] = left;
+            else
+                snap.AncestorCounts.Remove(a);
+        }
+    }
+
+    private int GetProtoDepth(string protoId)
+    {
+        if (_depthCache.TryGetValue(protoId, out var d))
+            return d;
+
+        if (!_prototypes.TryIndex<EntityPrototype>(protoId, out var proto))
+        {
+            _depthCache[protoId] = 0;
+            return 0;
+        }
+
+        var best = 0;
+        var parents = proto.Parents;
+
+        if (parents is { Length: > 0, })
+        {
+            foreach (var p in parents)
+            {
+                var pd = GetProtoDepth(p) + 1;
+                if (pd > best)
+                    best = pd;
+            }
+        }
+
+
+        _depthCache[protoId] = best;
+        return best;
+    }
+
+    private List<string> GetAncestorsInclusive(string protoId)
+    {
+        if (_ancestorsCache.TryGetValue(protoId, out var list))
+            return list;
+
+        var result = new List<string> { protoId, };
+
+        if (_prototypes.TryIndex<EntityPrototype>(protoId, out var proto))
+        {
+            var parents0 = proto.Parents;
+            if (parents0 != null && parents0.Length > 0)
+            {
+                var stack = new Stack<string>(parents0);
+                var seen = new HashSet<string>();
+
+                while (stack.Count > 0)
+                {
+                    var cur = stack.Pop();
+                    if (!seen.Add(cur))
+                        continue;
+
+                    result.Add(cur);
+
+                    if (_prototypes.TryIndex<EntityPrototype>(cur, out var p))
+                    {
+                        var parents = p.Parents;
+                        if (parents != null && parents.Length > 0)
+                        {
+                            foreach (var t in parents)
+                                stack.Push(t);
+                        }
+                    }
+                }
+            }
+        }
+
+        _ancestorsCache[protoId] = result;
+        return result;
+    }
+
+    private bool IsProtoOrDescendant(string childProtoId, string ancestorProtoId)
+    {
+        if (childProtoId == ancestorProtoId)
+            return true;
+
+        if (!_prototypes.TryIndex<EntityPrototype>(childProtoId, out var child))
+            return false;
+
+        var childParents = child.Parents;
+        if (childParents == null || childParents.Length == 0)
+            return false;
+
+        var stack = new Stack<string>(childParents);
+        var seen = new HashSet<string>();
+
+        while (stack.Count > 0)
+        {
+            var cur = stack.Pop();
+            if (!seen.Add(cur))
+                continue;
+
+            if (cur == ancestorProtoId)
+                return true;
+
+            if (_prototypes.TryIndex<EntityPrototype>(cur, out var p))
+            {
+                var parents = p.Parents;
+                if (parents != null && parents.Length > 0)
+                {
+                    foreach (var t in parents)
+                        stack.Push(t);
+                }
+            }
+        }
+
+        return false;
+    }
+
+
+    private bool TryGetStackTypeId(string productProtoId, out string stackTypeId)
+    {
+        stackTypeId = string.Empty;
+
+        if (!_prototypes.TryIndex<EntityPrototype>(productProtoId, out var expectedProto))
+            return false;
+
+        if (!expectedProto.TryGetComponent("Stack", out StackComponent? prodStackDef))
+            return false;
+
+        if (string.IsNullOrWhiteSpace(prodStackDef.StackTypeId))
+            return false;
+
+        stackTypeId = prodStackDef.StackTypeId;
         return true;
     }
 
@@ -503,7 +811,7 @@ public sealed class NcContractSystem : EntitySystem
             }
             else
             {
-                var pool = proto.Targets.ToList();
+                var pool = Enumerable.ToList(proto.Targets);
                 var picks = Math.Min(targetCount, pool.Count);
 
                 for (var i = 0; i < picks && pool.Count > 0; i++)
@@ -678,9 +986,7 @@ public sealed class NcContractSystem : EntitySystem
                 anyBonusApplied = true;
             }
 
-            var randomRewards = allBonusRewards
-                .Where(b => !b.Always)
-                .ToList();
+            var randomRewards = Enumerable.ToList(Enumerable.Where(allBonusRewards, b => !b.Always));
 
             if (randomRewards.Count > 0)
             {
@@ -798,6 +1104,8 @@ public sealed class NcContractSystem : EntitySystem
 
         return list[^1];
     }
+
+    private readonly record struct ClaimSlice(EntityUid Root, string ProtoId, int Amount);
 
     private enum QuasiKeyKind : byte
     {

@@ -566,7 +566,9 @@ public sealed class NcStoreListingControl : PanelContainer
     private void SetQty(int v, StoreListingData data, Label qtyLbl)
     {
         var newQty = Math.Clamp(v, MinAllowed, Math.Max(MinAllowed, _maxQty));
-        if (newQty == _qty)
+        _qtyEdit.Modulate = Color.White;
+
+        if (newQty == _qty && _qtyEdit.Text == newQty.ToString())
             return;
 
         _qty = newQty;
@@ -580,9 +582,12 @@ public sealed class NcStoreListingControl : PanelContainer
             _qtyEdit.CursorPosition = _qtyEdit.Text.Length;
             _suppressQtyEditChange = false;
         }
-        else
-            _qtyEdit.CursorPosition = _qtyEdit.Text.Length;
 
+        var noQty = _maxQty <= 0 || !_actionsEnabled;
+        if (_minusBtn != null)
+            _minusBtn.Disabled = noQty || _qty <= MinAllowed;
+        if (_plusBtn != null)
+            _plusBtn.Disabled = noQty || _qty >= _maxQty;
         UpdateTotal(data);
         OnQtyChanged?.Invoke(_qty);
     }

@@ -15,12 +15,11 @@ namespace Content.Server._NC.Trade;
 public sealed class StoreStructuredSystem : EntitySystem
 {
     private const float AutoCloseDistance = 3f;
-    private const float CheckInterval = 0.2f;
     private const float MinAccelInterval = 0.05f;
     private const int WatchedRootSearchLimit = 32;
+    private const float CheckInterval = 0.2f;
     private readonly HashSet<EntityUid> _affectedStoresScratch = new();
     private readonly Dictionary<EntityUid, (int Revision, List<StoreListingStaticData> List)> _catalogCache = new();
-
     [Dependency] private readonly NcContractSystem _contracts = default!;
     private readonly HashSet<EntityUid> _dirtyStores = new();
     [Dependency] private readonly StoreSystemStructuredLoader _loader = default!;
@@ -55,8 +54,22 @@ public sealed class StoreStructuredSystem : EntitySystem
         SubscribeLocalEvent<NcStoreComponent, ClaimContractBoundMessage>(OnClaimContract);
     }
 
-    private void OnStoreShutdown(EntityUid uid, NcStoreComponent comp, ComponentShutdown args) =>
+    private void OnStoreShutdown(EntityUid uid, NcStoreComponent comp, ComponentShutdown args)
+    {
         _catalogCache.Remove(uid);
+
+        if (_openStoreUids.Contains(uid) || _watchByStore.ContainsKey(uid) || _dirtyStores.Contains(uid))
+        {
+            EntityUid? user = null;
+
+            if (_watchByStore.TryGetValue(uid, out var watch) && watch.User != EntityUid.Invalid)
+                user = watch.User;
+            else if (comp.CurrentUser is { } cur && cur != EntityUid.Invalid)
+                user = cur;
+
+            CloseAndCleanUp(uid, user);
+        }
+    }
 
     public void RefreshCatalog(EntityUid uid, NcStoreComponent comp)
     {
@@ -209,21 +222,31 @@ public sealed class StoreStructuredSystem : EntitySystem
 
     private void OnUserEntInserted(EntityUid uid, ContainerManagerComponent comp, EntInsertedIntoContainerMessage args)
     {
+        if (_storesByWatchedRoot.Count == 0)
+            return;
+
         if (TryFindWatchedRoot(uid, out var r))
             RefreshStoresAffectedBy(r);
     }
 
     private void OnUserEntRemoved(EntityUid uid, ContainerManagerComponent comp, EntRemovedFromContainerMessage args)
     {
+        if (_storesByWatchedRoot.Count == 0)
+            return;
+
         if (TryFindWatchedRoot(uid, out var r))
             RefreshStoresAffectedBy(r);
     }
 
     private void OnStackCountChanged(EntityUid uid, StackComponent comp, ref StackCountChangedEvent args)
     {
+        if (_storesByWatchedRoot.Count == 0)
+            return;
+
         if (TryFindWatchedRoot(uid, out var r))
             RefreshStoresAffectedBy(r);
     }
+
 
     private void ProcessPendingRefreshes()
     {
@@ -254,12 +277,13 @@ public sealed class StoreStructuredSystem : EntitySystem
             return;
 
         _nextCheck = _timing.CurTime + TimeSpan.FromSeconds(CheckInterval);
-        _logic.ResetFrameCache();
 
         ProcessPendingRefreshes();
 
         if (_openStoreUids.Count == 0)
             return;
+
+        _logic.ResetFrameCache();
 
         _openStoresScratch.Clear();
         foreach (var u in _openStoreUids)
@@ -279,10 +303,8 @@ public sealed class StoreStructuredSystem : EntitySystem
                 continue;
             }
 
-            if (!TryComp(userUid, out TransformComponent? userXform) || !_xform.InRange(
-                xform.Coordinates,
-                userXform.Coordinates,
-                AutoCloseDistance))
+            if (!TryComp(userUid, out TransformComponent? userXform) ||
+                !_xform.InRange(xform.Coordinates, userXform.Coordinates, AutoCloseDistance))
             {
                 CloseAndCleanUp(uid, userUid);
                 store.CurrentUser = null;

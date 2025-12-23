@@ -201,7 +201,7 @@ public sealed class NcStoreSystem : EntitySystem
                 return;
             }
 
-            const float maxCrateDistance = 2f;
+            const float maxCrateDistance = 4f;
             if (!IsInRange(uid, crate, maxCrateDistance))
             {
                 PopupFail(actor, Loc.GetString("nc-store-popup-crate-too-far"));
@@ -258,7 +258,7 @@ public sealed class NcStoreSystem : EntitySystem
             return;
         }
 
-        const float maxDistance = 2f;
+        const float maxDistance = 4f;
         if (!IsInRange(uid, crate, maxDistance))
         {
             PopupFail(actor, Loc.GetString("nc-store-popup-crate-too-far"));
