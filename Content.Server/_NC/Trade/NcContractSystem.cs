@@ -3,6 +3,7 @@ using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
+
 namespace Content.Server._NC.Trade;
 
 
@@ -16,6 +17,7 @@ public sealed class NcContractSystem : EntitySystem
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
     private readonly Dictionary<QuasiKey, double> _quasiPhase = new();
     [Dependency] private readonly IRobustRandom _random = default!;
+
     public void InitContractsForStore(EntityUid uid, NcStoreComponent comp)
     {
         if (comp.Contracts.Count > 0)

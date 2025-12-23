@@ -29,6 +29,9 @@ public sealed class NcStoreListingControl : PanelContainer
     private readonly Label? _qtyLbl;
     private readonly Label? _remainingLbl;
     private readonly StoreListingData _staticData;
+
+
+    private readonly IUserInterfaceManager _ui = IoCManager.Resolve<IUserInterfaceManager>();
     private int _lastBalanceHint = int.MaxValue;
     private int _maxQty;
     private Button? _priceButton;
@@ -36,8 +39,6 @@ public sealed class NcStoreListingControl : PanelContainer
     private int _qty;
     private bool _suppressQtyEditChange;
 
-
-    private readonly IUserInterfaceManager _ui = IoCManager.Resolve<IUserInterfaceManager>();
     public NcStoreListingControl(
         StoreListingData data,
         SpriteSystem sprites,
@@ -277,7 +278,9 @@ public sealed class NcStoreListingControl : PanelContainer
             actionCol.AddChild(
                 new Label
                 {
-                    Text = data.Mode == StoreMode.Buy ? Loc.GetString("nc-store-no-stock") : Loc.GetString("nc-store-buying-finished"),
+                    Text = data.Mode == StoreMode.Buy
+                        ? Loc.GetString("nc-store-no-stock")
+                        : Loc.GetString("nc-store-buying-finished"),
                     HorizontalAlignment = HAlignment.Center,
                     Modulate = Color.FromHex("#C0C0C0"),
                     Margin = new(0, 8, 0, 0)
@@ -324,6 +327,7 @@ public sealed class NcStoreListingControl : PanelContainer
 
 
     public string ListingId => _staticData.Id;
+
     public void UpdateDynamicData(int playerBalance, int remainingStock, int playerOwned)
     {
         _lastBalanceHint = playerBalance;

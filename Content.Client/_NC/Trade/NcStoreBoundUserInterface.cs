@@ -2,23 +2,25 @@ using Content.Shared._NC.Trade;
 using Robust.Client.Player;
 using Robust.Client.UserInterface;
 
+
 namespace Content.Client._NC.Trade;
+
 
 public sealed class NcStoreStructuredBoundUi : BoundUserInterface
 {
     private readonly IPlayerManager _player = IoCManager.Resolve<IPlayerManager>();
 
-    private NcStoreMenu? _menu;
-
     private int _lastCatalogRevision = int.MinValue;
-    private int _lastStateRevision   = int.MinValue;
+    private int _lastStateRevision = int.MinValue;
+
+    private NcStoreMenu? _menu;
 
     private StoreDynamicState? _pendingDynamic;
 
-    private EntityUid? Actor => _player.LocalSession?.AttachedEntity;
-
     public NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
         : base(owner, uiKey) { }
+
+    private EntityUid? Actor => _player.LocalSession?.AttachedEntity;
 
     protected override void UpdateState(BoundUserInterfaceState state)
     {
@@ -82,8 +84,7 @@ public sealed class NcStoreStructuredBoundUi : BoundUserInterface
             _menu.Visible = false;
     }
 
-    private void ApplyDynamic(StoreDynamicState st)
-    {
+    private void ApplyDynamic(StoreDynamicState st) =>
         _menu!.ApplyDynamicState(
             st.BalanceByCurrency,
             st.RemainingById,
@@ -94,7 +95,6 @@ public sealed class NcStoreStructuredBoundUi : BoundUserInterface
             st.HasSellTab,
             st.HasContractsTab,
             st.Contracts);
-    }
 
     private void EnsureMenuCreated()
     {
@@ -105,8 +105,8 @@ public sealed class NcStoreStructuredBoundUi : BoundUserInterface
         _menu.Visible = false;
 
         _lastCatalogRevision = int.MinValue;
-        _lastStateRevision   = int.MinValue;
-        _pendingDynamic      = null;
+        _lastStateRevision = int.MinValue;
+        _pendingDynamic = null;
 
         if (EntMan.TryGetComponent(Owner, out MetaDataComponent? meta))
             _menu.Title = meta.EntityName;
@@ -127,8 +127,8 @@ public sealed class NcStoreStructuredBoundUi : BoundUserInterface
         _menu.Orphan();
         _menu = null;
         _lastCatalogRevision = int.MinValue;
-        _lastStateRevision   = int.MinValue;
-        _pendingDynamic      = null;
+        _lastStateRevision = int.MinValue;
+        _pendingDynamic = null;
     }
 
     private void OnBuy(StoreListingData data, int qty)
@@ -176,8 +176,8 @@ public sealed class NcStoreStructuredBoundUi : BoundUserInterface
         }
 
         _lastCatalogRevision = int.MinValue;
-        _lastStateRevision   = int.MinValue;
-        _pendingDynamic      = null;
+        _lastStateRevision = int.MinValue;
+        _pendingDynamic = null;
 
         base.Dispose(disposing);
     }

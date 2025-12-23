@@ -11,11 +11,15 @@ using Content.Shared.Stacks;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed class NcStoreLogicSystem : EntitySystem
 {
     private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore-logic");
+
+    private static readonly IComparer<string> OrdinalIds = new OrdinalIdComparer();
 
     [Dependency] private readonly IComponentFactory _compFactory = default!;
     [Dependency] private readonly IEntityManager _ents = default!;
@@ -43,10 +47,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
         base.Shutdown();
     }
 
-    private void OnEntityTerminating(ref EntityTerminatingEvent ev)
-    {
-        _inventoryCache.Remove(ev.Entity);
-    }
+    private void OnEntityTerminating(ref EntityTerminatingEvent ev) => _inventoryCache.Remove(ev.Entity);
 
     private void OnPrototypesReloaded(PrototypesReloadedEventArgs ev)
     {
@@ -59,10 +60,8 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
     public void InvalidateInventoryCache(EntityUid root) => _inventoryCache.Remove(root);
 
-    public EntityUid? GetPulledClosedCrate(EntityUid user)
-    {
-        return TryGetPulledClosedCrate(user, out var crate) ? crate : null;
-    }
+    public EntityUid? GetPulledClosedCrate(EntityUid user) =>
+        TryGetPulledClosedCrate(user, out var crate) ? crate : null;
 
     public bool TryGetPulledClosedCrate(EntityUid user, out EntityUid crate)
     {
@@ -210,8 +209,8 @@ public sealed class NcStoreLogicSystem : EntitySystem
     }
 
     /// <summary>
-    /// Picks the first affordable currency for <see cref="StoreMode.Buy"/> following the store's whitelist order.
-    /// Uses a prebuilt <see cref="InventorySnapshot"/> to avoid O(items * currencies) rescans.
+    ///     Picks the first affordable currency for <see cref="StoreMode.Buy" /> following the store's whitelist order.
+    ///     Uses a prebuilt <see cref="InventorySnapshot" /> to avoid O(items * currencies) rescans.
     /// </summary>
     private bool TryPickCurrencyForBuy(
         NcStoreComponent store,
@@ -1026,7 +1025,8 @@ public sealed class NcStoreLogicSystem : EntitySystem
         }
 
         if (remaining > 0)
-            Sawmill.Warning($"[NcStore] GiveCurrency: spawn guard tripped. user={ToPrettyString(user)}, currency={stackType}, remaining={remaining}");
+            Sawmill.Warning(
+                $"[NcStore] GiveCurrency: spawn guard tripped. user={ToPrettyString(user)}, currency={stackType}, remaining={remaining}");
         InvalidateInventoryCache(user);
     }
 
@@ -1089,7 +1089,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
     {
         var incomeByCurrency = new Dictionary<string, int>();
         var unitsByListingId = new Dictionary<string, int>();
-        var priceByListingId = new Dictionary<string, (string, int)>(StringComparer.Ordinal);
+        var priceByListingId = new Dictionary<string, (string, int)>();
         var steps = new List<MassSellStep>();
 
         if (store.Listings.Count == 0)
@@ -1099,7 +1099,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
         var stackTypeCounts = new Dictionary<string, int>();
         var protoCounts = new Dictionary<string, int>();
-        var protoCache = new Dictionary<string, EntityPrototype>(StringComparer.Ordinal);
+        var protoCache = new Dictionary<string, EntityPrototype>();
 
         foreach (var ent in EnumerateDeepItemsUnique(container))
         {
@@ -1132,7 +1132,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
         var protoIds = protoCounts.Count > 0
             ? protoCounts.Keys
                 .OrderByDescending(GetInheritanceDepth)
-                .ThenBy(x => x, StringComparer.Ordinal)
+                .ThenBy(x => x, OrdinalIds)
                 .ToArray()
             : Array.Empty<string>();
 
@@ -1142,8 +1142,8 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 !string.IsNullOrEmpty(l.ProductEntity) &&
                 l.RemainingCount != 0)
             .OrderByDescending(l => GetInheritanceDepth(l.ProductEntity))
-            .ThenBy(l => l.ProductEntity, StringComparer.Ordinal)
-            .ThenBy(l => l.Id, StringComparer.Ordinal)
+            .ThenBy(l => l.ProductEntity, OrdinalIds)
+            .ThenBy(l => l.Id, OrdinalIds)
             .ToArray();
 
         if (sellListings.Length == 0)
@@ -1287,7 +1287,12 @@ public sealed class NcStoreLogicSystem : EntitySystem
             if (take <= 0)
                 continue;
 
-            if (!TryTakeProductUnitsFromCachedList(container, cachedItems, listing.ProductEntity, take, listing.MatchMode))
+            if (!TryTakeProductUnitsFromCachedList(
+                container,
+                cachedItems,
+                listing.ProductEntity,
+                take,
+                listing.MatchMode))
                 continue;
 
             if (listing.RemainingCount > 0)
@@ -1369,6 +1374,11 @@ public sealed class NcStoreLogicSystem : EntitySystem
             Sawmill.Error($"Spawn failed for {protoId}: {e}");
             return false;
         }
+    }
+
+    private sealed class OrdinalIdComparer : IComparer<string>
+    {
+        public int Compare(string? x, string? y) => string.CompareOrdinal(x, y);
     }
 
 

@@ -1,4 +1,5 @@
 using System.Numerics;
+using Content.Server.Popups;
 using Content.Server.Storage.Components;
 using Content.Shared._NC.Trade;
 using Content.Shared.Access.Components;
@@ -7,7 +8,6 @@ using Content.Shared.Movement.Pulling.Components;
 using Robust.Server.Audio;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio;
-using Content.Server.Popups;
 
 
 namespace Content.Server._NC.Trade;
@@ -21,9 +21,9 @@ public sealed class NcStoreSystem : EntitySystem
     private new static readonly ISawmill Log = Logger.GetSawmill("ncstore");
     [Dependency] private readonly AccessReaderSystem _accessReader = default!;
     [Dependency] private readonly AudioSystem _audio = default!;
-    [Dependency] private readonly PopupSystem _popups = default!;
     [Dependency] private readonly IEntityManager _entMan = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
+    [Dependency] private readonly PopupSystem _popups = default!;
     [Dependency] private readonly StoreStructuredSystem _storeUi = default!;
     [Dependency] private readonly TransformSystem _transform = default!;
 
@@ -74,12 +74,9 @@ public sealed class NcStoreSystem : EntitySystem
     }
 
 
-private void PopupFail(EntityUid actor, string message)
-{
-    _popups.PopupEntity(message, actor, actor);
-}
+    private void PopupFail(EntityUid actor, string message) => _popups.PopupEntity(message, actor, actor);
 
-private static bool TryParseSellListingId(
+    private static bool TryParseSellListingId(
         string rawId,
         out string listingId,
         out bool fromCrate
@@ -191,22 +188,16 @@ private static bool TryParseSellListingId(
 
         if (fromCrate)
         {
-            if (!_entMan.TryGetComponent(actor, out PullerComponent? puller) ||
-                puller.Pulling is not { } crate)
+            if (!_logic.TryGetPulledClosedCrate(actor, out var crate))
             {
-                PopupFail(actor, Loc.GetString("nc-store-popup-no-crate"));
-                return;
-            }
+                if (_entMan.TryGetComponent(actor, out PullerComponent? puller) &&
+                    puller.Pulling is { } pulled &&
+                    _entMan.TryGetComponent(pulled, out EntityStorageComponent? storage) &&
+                    storage.Open)
+                    PopupFail(actor, Loc.GetString("nc-store-popup-crate-open"));
+                else
+                    PopupFail(actor, Loc.GetString("nc-store-popup-no-crate"));
 
-            if (!_entMan.TryGetComponent(crate, out EntityStorageComponent? storage))
-            {
-                PopupFail(actor, Loc.GetString("nc-store-popup-no-crate"));
-                return;
-            }
-
-            if (storage.Open)
-            {
-                PopupFail(actor, Loc.GetString("nc-store-popup-crate-open"));
                 return;
             }
 
@@ -254,22 +245,16 @@ private static bool TryParseSellListingId(
             return;
         }
 
-        if (!_entMan.TryGetComponent(actor, out PullerComponent? puller) ||
-            puller.Pulling is not { } crate)
+        if (!_logic.TryGetPulledClosedCrate(actor, out var crate))
         {
-            PopupFail(actor, Loc.GetString("nc-store-popup-no-crate"));
-            return;
-        }
+            if (_entMan.TryGetComponent(actor, out PullerComponent? puller) &&
+                puller.Pulling is { } pulled &&
+                _entMan.TryGetComponent(pulled, out EntityStorageComponent? storage) &&
+                storage.Open)
+                PopupFail(actor, Loc.GetString("nc-store-popup-crate-open"));
+            else
+                PopupFail(actor, Loc.GetString("nc-store-popup-no-crate"));
 
-        if (!_entMan.TryGetComponent(crate, out EntityStorageComponent? storage))
-        {
-            PopupFail(actor, Loc.GetString("nc-store-popup-no-crate"));
-            return;
-        }
-
-        if (storage.Open)
-        {
-            PopupFail(actor, Loc.GetString("nc-store-popup-crate-open"));
             return;
         }
 

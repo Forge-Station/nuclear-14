@@ -23,6 +23,7 @@ public sealed class StoreStructuredSystem : EntitySystem
 
     [Dependency] private readonly NcContractSystem _contracts = default!;
     private readonly HashSet<EntityUid> _dirtyStores = new();
+    [Dependency] private readonly StoreSystemStructuredLoader _loader = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     private readonly List<EntityUid> _openStoresScratch = new();
     private readonly HashSet<EntityUid> _openStoreUids = new();
@@ -32,7 +33,6 @@ public sealed class StoreStructuredSystem : EntitySystem
     [Dependency] private readonly NcStoreSystem _storeSystem = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
-    [Dependency] private readonly StoreSystemStructuredLoader _loader = default!;
 
 
     private readonly Dictionary<EntityUid, (EntityUid User, EntityUid? Crate)> _watchByStore = new();
@@ -202,6 +202,7 @@ public sealed class StoreStructuredSystem : EntitySystem
 
                 MarkDirty(s);
             }
+
             _pendingRefreshEntities.Clear();
         }
     }

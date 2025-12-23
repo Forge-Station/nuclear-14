@@ -9,10 +9,10 @@ namespace Content.Server._NC.Trade;
 public sealed class StoreSystemStructuredLoader : EntitySystem
 {
     private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore-loader");
-    private readonly HashSet<EntityUid> _loadedStores = new();
-    private readonly HashSet<EntityUid> _contractsInitialized = new();
 
     [Dependency] private readonly NcContractSystem _contracts = default!;
+    private readonly HashSet<EntityUid> _contractsInitialized = new();
+    private readonly HashSet<EntityUid> _loadedStores = new();
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
 
     public override void Initialize()
@@ -30,20 +30,14 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         _contractsInitialized.Remove(uid);
     }
 
-    private void OnMapInit(EntityUid uid, NcStoreComponent comp, MapInitEvent args)
-    {
-        EnsureLoadedInternal(uid, comp, "MapInit", allowContractsInit: true);
-    }
+    private void OnMapInit(EntityUid uid, NcStoreComponent comp, MapInitEvent args) =>
+        EnsureLoadedInternal(uid, comp, "MapInit", true);
 
-    public void EnsureLoaded(EntityUid uid, NcStoreComponent comp, string reason)
-    {
-        EnsureLoadedInternal(uid, comp, reason, allowContractsInit: true);
-    }
+    public void EnsureLoaded(EntityUid uid, NcStoreComponent comp, string reason) =>
+        EnsureLoadedInternal(uid, comp, reason, true);
 
-    private void OnStartup(EntityUid uid, NcStoreComponent comp, ComponentStartup args)
-    {
-        EnsureLoadedInternal(uid, comp, "Startup", allowContractsInit: true);
-    }
+    private void OnStartup(EntityUid uid, NcStoreComponent comp, ComponentStartup args) =>
+        EnsureLoadedInternal(uid, comp, "Startup", true);
 
     private void EnsureLoadedInternal(EntityUid uid, NcStoreComponent comp, string reason, bool allowContractsInit)
     {
@@ -77,7 +71,6 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
             _contractsInitialized.Add(uid);
         }
     }
-
 
 
     private void TryLoadPresets(EntityUid uid, NcStoreComponent comp, string reason)
