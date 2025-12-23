@@ -1,10 +1,12 @@
 using System.Linq;
+using Content.Server.Storage.Components;
 using Content.Shared._NC.Trade;
 using Content.Shared.Clothing.Components;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Inventory;
+using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Stacks;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
@@ -26,17 +28,55 @@ public sealed class NcStoreLogicSystem : EntitySystem
     [Dependency] private readonly IPrototypeManager _protos = default!;
     [Dependency] private readonly SharedStackSystem _stacks = default!;
 
+
     public override void Initialize()
     {
         base.Initialize();
 
-        SubscribeLocalEvent((ref EntityTerminatingEvent ev) =>
-        {
-            _inventoryCache.Remove(ev.Entity);
-        });
+        _protos.PrototypesReloaded += OnPrototypesReloaded;
+        SubscribeLocalEvent<EntityTerminatingEvent>(OnEntityTerminating);
     }
+
+    public override void Shutdown()
+    {
+        _protos.PrototypesReloaded -= OnPrototypesReloaded;
+        base.Shutdown();
+    }
+
+    private void OnEntityTerminating(ref EntityTerminatingEvent ev)
+    {
+        _inventoryCache.Remove(ev.Entity);
+    }
+
+    private void OnPrototypesReloaded(PrototypesReloadedEventArgs ev)
+    {
+        _productStackTypeCache.Clear();
+        _protoAndAncestorsCache.Clear();
+        _inventoryCache.Clear();
+    }
+
+    public void ResetFrameCache() => _inventoryCache.Clear();
+
     public void InvalidateInventoryCache(EntityUid root) => _inventoryCache.Remove(root);
 
+    public EntityUid? GetPulledClosedCrate(EntityUid user)
+    {
+        return TryGetPulledClosedCrate(user, out var crate) ? crate : null;
+    }
+
+    public bool TryGetPulledClosedCrate(EntityUid user, out EntityUid crate)
+    {
+        crate = default;
+
+        if (!TryComp(user, out PullerComponent? puller) || puller.Pulling is not { } pulled)
+            return false;
+
+        if (!TryComp(pulled, out EntityStorageComponent? storage) || storage.Open)
+            return false;
+
+        crate = pulled;
+        return true;
+    }
 
     private PrototypeMatchMode ResolveMatchMode(string expectedProtoId, PrototypeMatchMode configured)
     {
@@ -63,9 +103,9 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
     public InventorySnapshot BuildInventorySnapshot(EntityUid root)
     {
-        var protoCounts = new Dictionary<string, int>(StringComparer.Ordinal);
-        var ancestorCounts = new Dictionary<string, int>(StringComparer.Ordinal);
-        var stackTypeCounts = new Dictionary<string, int>(StringComparer.Ordinal);
+        var protoCounts = new Dictionary<string, int>();
+        var ancestorCounts = new Dictionary<string, int>();
+        var stackTypeCounts = new Dictionary<string, int>();
 
         foreach (var ent in EnumerateDeepItemsUnique(root))
         {
@@ -169,29 +209,27 @@ public sealed class NcStoreLogicSystem : EntitySystem
         return arr;
     }
 
+    /// <summary>
+    /// Picks the first affordable currency for <see cref="StoreMode.Buy"/> following the store's whitelist order.
+    /// Uses a prebuilt <see cref="InventorySnapshot"/> to avoid O(items * currencies) rescans.
+    /// </summary>
     private bool TryPickCurrencyForBuy(
         NcStoreComponent store,
         StoreListingPrototype listing,
-        EntityUid user,
+        in InventorySnapshot snapshot,
         out string currency,
-        out int price
+        out int unitPrice,
+        out int balance
     )
     {
         currency = string.Empty;
-        price = 0;
+        unitPrice = 0;
+        balance = 0;
 
         if (listing.Cost.Count == 0)
             return false;
 
-        var balances = new Dictionary<string, int>(store.CurrencyWhitelist.Count);
-        foreach (var cur in store.CurrencyWhitelist)
-        {
-            if (string.IsNullOrWhiteSpace(cur))
-                continue;
-
-            balances[cur] = GetBalance(user, cur);
-        }
-
+        // Preferred order: store whitelist.
         foreach (var cur in store.CurrencyWhitelist)
         {
             if (string.IsNullOrWhiteSpace(cur))
@@ -204,26 +242,30 @@ public sealed class NcStoreLogicSystem : EntitySystem
             if (p <= 0)
                 continue;
 
-            if (!balances.TryGetValue(cur, out var bal) || bal < p)
+            var bal = snapshot.StackTypeCounts.TryGetValue(cur, out var b) ? b : 0;
+            if (bal < p)
                 continue;
 
             currency = cur;
-            price = p;
+            unitPrice = p;
+            balance = bal;
             return true;
         }
 
+        // Fallback: first cost entry (preserves prior behavior), but still checks affordability.
         var firstCost = listing.Cost.First();
         var fallbackCur = firstCost.Key;
         var fallbackPrice = (int) MathF.Ceiling(firstCost.Value);
         if (fallbackPrice <= 0)
             return false;
 
-        var fallbackBalance = GetBalance(user, fallbackCur);
-        if (fallbackBalance < fallbackPrice)
+        var fallbackBal = snapshot.StackTypeCounts.TryGetValue(fallbackCur, out var fb) ? fb : 0;
+        if (fallbackBal < fallbackPrice)
             return false;
 
         currency = fallbackCur;
-        price = fallbackPrice;
+        unitPrice = fallbackPrice;
+        balance = fallbackBal;
         return true;
     }
 
@@ -316,13 +358,15 @@ public sealed class NcStoreLogicSystem : EntitySystem
         if (!_protos.TryIndex<EntityPrototype>(listing.ProductEntity, out _))
             return false;
 
-        if (!TryPickCurrencyForBuy(store, listing, user, out var currency, out var unitPrice))
+        // Currency selection depends on current inventory state.
+        InvalidateInventoryCache(user);
+        var snap = BuildInventorySnapshot(user);
+
+        if (!TryPickCurrencyForBuy(store, listing, snap, out var currency, out var unitPrice, out var balance))
             return false;
 
         var maxByRemaining = listing.RemainingCount >= 0 ? listing.RemainingCount : int.MaxValue;
 
-        InvalidateInventoryCache(user);
-        var balance = GetBalance(user, currency);
         var maxByMoney = unitPrice > 0 ? balance / unitPrice : int.MaxValue;
 
         var maxPossible = Math.Min(maxByRemaining, maxByMoney);
@@ -345,6 +389,9 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 spawned++;
             else
                 GiveCurrency(user, currency, unitPrice);
+
+        // Inventory changed (currency removed, products spawned/refunded). Ensure next reads are correct.
+        InvalidateInventoryCache(user);
 
         if (spawned <= 0)
             return false;
@@ -388,6 +435,9 @@ public sealed class NcStoreLogicSystem : EntitySystem
             return false;
 
         GiveCurrency(user, currency, (int) totalL);
+
+        // Inventory changed (product removed, currency given).
+        InvalidateInventoryCache(user);
 
         if (listing.RemainingCount > 0)
             listing.RemainingCount = Math.Max(0, listing.RemainingCount - actual);
@@ -435,6 +485,10 @@ public sealed class NcStoreLogicSystem : EntitySystem
             return false;
 
         GiveCurrency(user, currency, (int) totalL);
+
+        // Both roots changed: items removed from container and currency given to the user.
+        InvalidateInventoryCache(container);
+        InvalidateInventoryCache(user);
 
         if (listing.RemainingCount > 0)
             listing.RemainingCount = Math.Max(0, listing.RemainingCount - actual);
@@ -599,6 +653,122 @@ public sealed class NcStoreLogicSystem : EntitySystem
         return leftStack <= 0;
     }
 
+    private bool TryTakeProductUnitsFromCachedList(
+        EntityUid root,
+        List<EntityUid> cachedItems,
+        string protoId,
+        int amount,
+        PrototypeMatchMode matchMode
+    )
+    {
+        if (amount <= 0)
+            return true;
+
+        var stackType = GetProductStackType(protoId);
+
+        // Stack-type match: consume units from stacks.
+        if (stackType != null)
+        {
+            var left = amount;
+            for (var i = 0; i < cachedItems.Count && left > 0; i++)
+            {
+                var ent = cachedItems[i];
+                if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
+                    continue;
+                if (IsProtectedFromDirectSale(root, ent))
+                    continue;
+
+                if (!_ents.TryGetComponent(ent, out StackComponent? stack) || stack.StackTypeId != stackType)
+                    continue;
+
+                var have = Math.Max(stack.Count, 0);
+                if (have <= 0)
+                    continue;
+
+                var take = Math.Min(have, left);
+                var newCount = have - take;
+                _stacks.SetCount(ent, newCount, stack);
+                if (newCount <= 0 && _ents.EntityExists(ent))
+                {
+                    _ents.DeleteEntity(ent);
+                    cachedItems[i] = EntityUid.Invalid;
+                }
+
+                left -= take;
+            }
+
+            return left <= 0;
+        }
+
+        // Non-stack: remove entities.
+        var effective = ResolveMatchMode(protoId, matchMode);
+        var leftEnts = amount;
+
+        void TakeEntity(int i, EntityUid ent)
+        {
+            // Preserve prior behavior: if a stack exists, decrement by 1 if possible.
+            if (_ents.TryGetComponent(ent, out StackComponent? st) && st.Count > 1)
+                _stacks.SetCount(ent, st.Count - 1, st);
+            else
+            {
+                _ents.DeleteEntity(ent);
+                cachedItems[i] = EntityUid.Invalid;
+            }
+
+            leftEnts -= 1;
+        }
+
+        bool MatchesExact(EntityPrototype proto) => proto.ID == protoId;
+
+        bool Matches(EntityPrototype proto)
+        {
+            if (effective == PrototypeMatchMode.Exact)
+                return MatchesExact(proto);
+            return MatchesExact(proto) || IsProtoOrDescendant(proto, protoId);
+        }
+
+        // Pass 1: exact matches first (helps to preserve intent when selling descendants).
+        for (var i = 0; i < cachedItems.Count && leftEnts > 0; i++)
+        {
+            var ent = cachedItems[i];
+            if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
+                continue;
+            if (IsProtectedFromDirectSale(root, ent))
+                continue;
+            if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
+                continue;
+
+            if (meta.EntityPrototype.ID == protoId)
+                TakeEntity(i, ent);
+        }
+
+        if (leftEnts <= 0)
+            return true;
+
+        if (effective == PrototypeMatchMode.Exact)
+            return false;
+
+        // Pass 2: descendants.
+        for (var i = 0; i < cachedItems.Count && leftEnts > 0; i++)
+        {
+            var ent = cachedItems[i];
+            if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
+                continue;
+            if (IsProtectedFromDirectSale(root, ent))
+                continue;
+            if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
+                continue;
+
+            if (meta.EntityPrototype.ID == protoId)
+                continue;
+
+            if (Matches(meta.EntityPrototype))
+                TakeEntity(i, ent);
+        }
+
+        return leftEnts <= 0;
+    }
+
 
     public bool TryTakeProductUnits(EntityUid user, string protoId, int amount) =>
         TryTakeProductUnitsInternal(user, protoId, amount, PrototypeMatchMode.Exact);
@@ -654,6 +824,8 @@ public sealed class NcStoreLogicSystem : EntitySystem
             return false;
 
         GiveCurrency(user, currencyId, (int) totalRewardL);
+
+        InvalidateInventoryCache(user);
 
         listing.RemainingCount = 0;
 
@@ -833,8 +1005,10 @@ public sealed class NcStoreLogicSystem : EntitySystem
         var perStackLimit = proto.MaxCount ?? int.MaxValue;
         if (perStackLimit <= 0)
             perStackLimit = 1;
+        var spawnGuard = 0;
+        const int maxSpawnedStacksPerCall = 256;
 
-        while (remaining > 0)
+        while (remaining > 0 && spawnGuard < maxSpawnedStacksPerCall)
         {
             var addL = Math.Min(remaining, perStackLimit);
             var add = (int) Math.Clamp(addL, 1L, perStackLimit);
@@ -848,7 +1022,12 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 _hands.TryPickupAnyHand(user, spawned, false);
 
             remaining -= add;
+            spawnGuard++;
         }
+
+        if (remaining > 0)
+            Sawmill.Warning($"[NcStore] GiveCurrency: spawn guard tripped. user={ToPrettyString(user)}, currency={stackType}, remaining={remaining}");
+        InvalidateInventoryCache(user);
     }
 
     private int GetInheritanceDepth(string protoId)
@@ -856,33 +1035,40 @@ public sealed class NcStoreLogicSystem : EntitySystem
         if (!_protos.TryIndex<EntityPrototype>(protoId, out var proto))
             return 0;
 
-        var visited = new HashSet<string>();
-        var maxDepth = 0;
+        var bestDepth = new Dictionary<string, int>();
         var stack = new Stack<(string Id, int Depth)>();
 
         if (proto.Parents != null)
         {
             foreach (var pid in proto.Parents)
-                if (visited.Add(pid))
+                if (!string.IsNullOrWhiteSpace(pid))
                     stack.Push((pid, 1));
         }
 
+        var max = 0;
+
         while (stack.Count > 0)
         {
-            var (currentId, depth) = stack.Pop();
-            if (depth > maxDepth)
-                maxDepth = depth;
+            var (id, depth) = stack.Pop();
 
-            if (_protos.TryIndex<EntityPrototype>(currentId, out var parentProto) && parentProto.Parents != null)
+            if (bestDepth.TryGetValue(id, out var prev) && prev >= depth)
+                continue;
+
+            bestDepth[id] = depth;
+            if (depth > max)
+                max = depth;
+
+            if (_protos.TryIndex<EntityPrototype>(id, out var p) && p.Parents != null)
             {
-                foreach (var pid in parentProto.Parents)
-                    if (visited.Add(pid))
+                foreach (var pid in p.Parents)
+                    if (!string.IsNullOrWhiteSpace(pid))
                         stack.Push((pid, depth + 1));
             }
         }
 
-        return maxDepth;
+        return max;
     }
+
 
     private static void SafeAddIncome(Dictionary<string, int> income, string currencyId, long delta)
     {
@@ -901,8 +1087,8 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
     public MassSellPlan ComputeMassSellPlan(NcStoreComponent store, EntityUid container)
     {
-        var incomeByCurrency = new Dictionary<string, int>(StringComparer.Ordinal);
-        var unitsByListingId = new Dictionary<string, int>(StringComparer.Ordinal);
+        var incomeByCurrency = new Dictionary<string, int>();
+        var unitsByListingId = new Dictionary<string, int>();
         var priceByListingId = new Dictionary<string, (string, int)>(StringComparer.Ordinal);
         var steps = new List<MassSellStep>();
 
@@ -911,8 +1097,8 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
         InvalidateInventoryCache(container);
 
-        var stackTypeCounts = new Dictionary<string, int>(StringComparer.Ordinal);
-        var protoCounts = new Dictionary<string, int>(StringComparer.Ordinal);
+        var stackTypeCounts = new Dictionary<string, int>();
+        var protoCounts = new Dictionary<string, int>();
         var protoCache = new Dictionary<string, EntityPrototype>(StringComparer.Ordinal);
 
         foreach (var ent in EnumerateDeepItemsUnique(container))
@@ -993,6 +1179,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 expectedStackType = prodStackDef.StackTypeId;
 
             var taken = 0;
+            var effectiveMatch = ResolveMatchMode(listing.ProductEntity, listing.MatchMode);
 
             if (!string.IsNullOrEmpty(expectedStackType))
             {
@@ -1007,7 +1194,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 if (protoIds.Length == 0)
                     continue;
 
-                if (listing.MatchMode != PrototypeMatchMode.Descendants)
+                if (effectiveMatch != PrototypeMatchMode.Descendants)
                 {
                     if (!protoCounts.TryGetValue(listing.ProductEntity, out var available) || available <= 0)
                         continue;
@@ -1068,11 +1255,14 @@ public sealed class NcStoreLogicSystem : EntitySystem
         if (store.Listings.Count == 0)
             return false;
 
+        InvalidateInventoryCache(container);
+        var cachedItems = EnumerateDeepItemsUnique(container).ToList();
+
         var plan = ComputeMassSellPlan(store, container);
         if (plan.Steps.Count == 0 || plan.IncomeByCurrency.Count == 0)
             return false;
 
-        var incomeActual = new Dictionary<string, int>(StringComparer.Ordinal);
+        var incomeActual = new Dictionary<string, int>();
         var any = false;
 
         foreach (var step in plan.Steps)
@@ -1097,7 +1287,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
             if (take <= 0)
                 continue;
 
-            if (!TryTakeProductUnitsInternal(container, listing.ProductEntity, take, listing.MatchMode))
+            if (!TryTakeProductUnitsFromCachedList(container, cachedItems, listing.ProductEntity, take, listing.MatchMode))
                 continue;
 
             if (listing.RemainingCount > 0)
@@ -1119,6 +1309,9 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
             GiveCurrency(user, currency, amount);
         }
+
+        InvalidateInventoryCache(container);
+        InvalidateInventoryCache(user);
 
         return true;
     }
@@ -1168,6 +1361,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
             var spawned = _ents.SpawnEntity(protoId, coords);
             if (_ents.HasComponent<HandsComponent>(user))
                 _hands.TryPickupAnyHand(user, spawned, false);
+            InvalidateInventoryCache(user);
             return true;
         }
         catch (Exception e)

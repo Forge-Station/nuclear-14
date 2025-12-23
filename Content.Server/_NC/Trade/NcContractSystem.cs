@@ -1,10 +1,7 @@
 using System.Linq;
-using Content.Server.Storage.Components;
 using Content.Shared._NC.Trade;
-using Content.Shared.Movement.Pulling.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
-
 
 namespace Content.Server._NC.Trade;
 
@@ -73,7 +70,7 @@ public sealed class NcContractSystem : EntitySystem
             return false;
         }
 
-        var crateUid = GetPulledClosedCrate(user);
+        var crateUid = _logic.GetPulledClosedCrate(user);
 
         var requiredByKey = new Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int>();
 
@@ -168,9 +165,15 @@ public sealed class NcContractSystem : EntitySystem
             }
         }
 
-        foreach (var t in contract.Targets)
-            if (!string.IsNullOrWhiteSpace(t.TargetItem) && t.Required > 0)
-                t.Progress = t.Required;
+        for (var i = 0; i < contract.Targets.Count; i++)
+        {
+            var t = contract.Targets[i];
+            if (string.IsNullOrWhiteSpace(t.TargetItem) || t.Required <= 0)
+                continue;
+
+            t.Progress = t.Required;
+            contract.Targets[i] = t;
+        }
 
         if (contract.Targets.Count > 0)
         {
@@ -252,20 +255,6 @@ public sealed class NcContractSystem : EntitySystem
         return true;
     }
 
-
-    private EntityUid? GetPulledClosedCrate(EntityUid user)
-    {
-        if (!TryComp(user, out PullerComponent? puller))
-            return null;
-
-        if (puller.Pulling is not { } pulled)
-            return null;
-
-        if (!TryComp(pulled, out EntityStorageComponent? storage))
-            return null;
-
-        return storage.Open ? null : pulled;
-    }
 
     private void RefillContractsForStore(EntityUid uid, NcStoreComponent comp)
     {

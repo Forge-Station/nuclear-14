@@ -167,7 +167,21 @@ public sealed partial class NcStoreMenu : FancyWindow
         }
         else
         {
-            displayCurrency = _balancesByCurrency.Keys.FirstOrDefault();
+            string? bestKey = null;
+            var bestValue = int.MinValue;
+
+            foreach (var (key, value) in _balancesByCurrency)
+            {
+                if (bestKey == null ||
+                    value > bestValue ||
+                    (value == bestValue && string.CompareOrdinal(key, bestKey) < 0))
+                {
+                    bestKey = key;
+                    bestValue = value;
+                }
+            }
+
+            displayCurrency = bestKey;
             displayAmount = _balancesByCurrency.Values.Sum();
         }
 
@@ -1172,7 +1186,6 @@ private bool TryUpdatePaneInPlace(
 
     if (take <= 0)
         return false;
-
     var ctrls = pane.Children.OfType<NcStoreListingControl>().ToArray();
     if (ctrls.Length != take)
         return false;
@@ -1194,7 +1207,6 @@ private bool TryUpdatePaneInPlace(
 
         ctrls[i].UpdateDynamicData(balanceHint, it.Remaining, it.Owned);
     }
-
     RemoveMoreButtons(pane);
     AddOrUpdateMoreButton(pane, mode, filtered.Count, take, cat, emit);
 

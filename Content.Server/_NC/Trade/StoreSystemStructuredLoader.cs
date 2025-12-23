@@ -9,6 +9,8 @@ namespace Content.Server._NC.Trade;
 public sealed class StoreSystemStructuredLoader : EntitySystem
 {
     private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore-loader");
+    private readonly HashSet<EntityUid> _loadedStores = new();
+    private readonly HashSet<EntityUid> _contractsInitialized = new();
 
     [Dependency] private readonly NcContractSystem _contracts = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
@@ -19,44 +21,62 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
         SubscribeLocalEvent<NcStoreComponent, MapInitEvent>(OnMapInit);
         SubscribeLocalEvent<NcStoreComponent, ComponentStartup>(OnStartup);
+        SubscribeLocalEvent<NcStoreComponent, EntityTerminatingEvent>(OnTerminating);
+    }
+
+    private void OnTerminating(EntityUid uid, NcStoreComponent comp, ref EntityTerminatingEvent args)
+    {
+        _loadedStores.Remove(uid);
+        _contractsInitialized.Remove(uid);
     }
 
     private void OnMapInit(EntityUid uid, NcStoreComponent comp, MapInitEvent args)
     {
-        if (comp.Listings.Count == 0)
-            TryLoadPresets(uid, comp, "MapInit");
-
-        comp.RebuildListingIndex();
-
-        comp.BumpCatalogRevision();
-
-        _contracts.InitContractsForStore(uid, comp);
+        EnsureLoadedInternal(uid, comp, "MapInit", allowContractsInit: true);
     }
 
     public void EnsureLoaded(EntityUid uid, NcStoreComponent comp, string reason)
-{
-    if (comp.Listings.Count == 0)
-        TryLoadPresets(uid, comp, reason);
-
-    if (comp.Listings.Count > 0 && comp.ListingIndex.Count == 0)
-        comp.RebuildListingIndex();
-    comp.BumpCatalogRevision();
-
-    _contracts.InitContractsForStore(uid, comp);
-}
-
+    {
+        EnsureLoadedInternal(uid, comp, reason, allowContractsInit: true);
+    }
 
     private void OnStartup(EntityUid uid, NcStoreComponent comp, ComponentStartup args)
-{
-    if (comp.Listings.Count == 0)
-        TryLoadPresets(uid, comp, "Startup");
+    {
+        EnsureLoadedInternal(uid, comp, "Startup", allowContractsInit: true);
+    }
 
-    if (comp.Listings.Count > 0 && comp.ListingIndex.Count == 0)
-        comp.RebuildListingIndex();
+    private void EnsureLoadedInternal(EntityUid uid, NcStoreComponent comp, string reason, bool allowContractsInit)
+    {
+        var changed = false;
 
-    comp.BumpCatalogRevision();
-    _contracts.InitContractsForStore(uid, comp);
-}
+        if (comp.Listings.Count == 0)
+        {
+            TryLoadPresets(uid, comp, reason);
+            if (comp.Listings.Count > 0)
+                changed = true;
+        }
+
+        if (comp.Listings.Count > 0 && comp.ListingIndex.Count == 0)
+        {
+            comp.RebuildListingIndex();
+            changed = true;
+        }
+
+        if (!_loadedStores.Contains(uid))
+        {
+            _loadedStores.Add(uid);
+            changed = true;
+        }
+
+        if (changed)
+            comp.BumpCatalogRevision();
+
+        if (allowContractsInit && !_contractsInitialized.Contains(uid))
+        {
+            _contracts.InitContractsForStore(uid, comp);
+            _contractsInitialized.Add(uid);
+        }
+    }
 
 
 

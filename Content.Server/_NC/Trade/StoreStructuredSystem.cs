@@ -1,9 +1,7 @@
 using System.Linq;
 using Content.Server.Popups;
-using Content.Server.Storage.Components;
 using Content.Shared._NC.Trade;
 using Content.Shared.Access.Components;
-using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Stacks;
 using Content.Shared.UserInterface;
 using Robust.Server.GameObjects;
@@ -80,7 +78,7 @@ public sealed class StoreStructuredSystem : EntitySystem
     public void UpdateDynamicState(EntityUid uid, NcStoreComponent comp, EntityUid user)
     {
         EntityUid? crateUid = null;
-        if (TryGetPulledClosedCrate(user, out var pulledCrate))
+        if (_logic.TryGetPulledClosedCrate(user, out var pulledCrate))
             crateUid = pulledCrate;
 
         UpdateStoreWatch(uid, user, crateUid);
@@ -93,7 +91,7 @@ public sealed class StoreStructuredSystem : EntitySystem
 
         UpdateContractsProgress(comp, userSnap, crateSnap);
 
-        var balancesByCurrency = new Dictionary<string, int>(comp.CurrencyWhitelist.Count, StringComparer.Ordinal);
+        var balancesByCurrency = new Dictionary<string, int>(comp.CurrencyWhitelist.Count);
         foreach (var cur in comp.CurrencyWhitelist)
         {
             if (string.IsNullOrWhiteSpace(cur))
@@ -193,7 +191,17 @@ public sealed class StoreStructuredSystem : EntitySystem
         if (_pendingRefreshEntities.Count > 4096)
         {
             foreach (var s in _openStoreUids)
+            {
+                if (_watchByStore.TryGetValue(s, out var watch))
+                {
+                    if (watch.User != EntityUid.Invalid)
+                        _logic.InvalidateInventoryCache(watch.User);
+                    if (watch.Crate is { } crate)
+                        _logic.InvalidateInventoryCache(crate);
+                }
+
                 MarkDirty(s);
+            }
             _pendingRefreshEntities.Clear();
         }
     }
@@ -240,15 +248,22 @@ public sealed class StoreStructuredSystem : EntitySystem
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
+
         if (_timing.CurTime < _nextCheck)
             return;
+
         _nextCheck = _timing.CurTime + TimeSpan.FromSeconds(CheckInterval);
+        _logic.ResetFrameCache();
+
         ProcessPendingRefreshes();
+
         if (_openStoreUids.Count == 0)
             return;
+
         _openStoresScratch.Clear();
         foreach (var u in _openStoreUids)
             _openStoresScratch.Add(u);
+
         foreach (var uid in _openStoresScratch)
         {
             if (!TryComp(uid, out NcStoreComponent? store) || !TryComp(uid, out TransformComponent? xform))
@@ -283,10 +298,12 @@ public sealed class StoreStructuredSystem : EntitySystem
 
             if (EnsureCrateWatchUpToDate(uid, userUid))
                 MarkDirty(uid);
+
             if (_dirtyStores.Remove(uid))
                 UpdateDynamicState(uid, store, userUid);
         }
     }
+
 
     private void CloseAndCleanUp(EntityUid storeUid, EntityUid? user = null)
     {
@@ -309,7 +326,7 @@ public sealed class StoreStructuredSystem : EntitySystem
     private bool EnsureCrateWatchUpToDate(EntityUid storeUid, EntityUid user)
     {
         EntityUid? crateUid = null;
-        if (TryGetPulledClosedCrate(user, out var pulledCrate))
+        if (_logic.TryGetPulledClosedCrate(user, out var pulledCrate))
             crateUid = pulledCrate;
         if (_watchByStore.TryGetValue(storeUid, out var prev))
         {
@@ -338,17 +355,6 @@ public sealed class StoreStructuredSystem : EntitySystem
         }
 
         UpdateStoreWatch(storeUid, user, crateUid);
-        return true;
-    }
-
-    private bool TryGetPulledClosedCrate(EntityUid user, out EntityUid crate)
-    {
-        crate = default;
-        if (!TryComp(user, out PullerComponent? puller) || puller.Pulling is not { } pulled)
-            return false;
-        if (!TryComp(pulled, out EntityStorageComponent? storage) || storage.Open)
-            return false;
-        crate = pulled;
         return true;
     }
 
@@ -554,8 +560,10 @@ public sealed class StoreStructuredSystem : EntitySystem
         if (comp.CurrentUser is not { } user)
             return;
         _logic.InvalidateInventoryCache(user);
-        if (TryGetPulledClosedCrate(user, out var crate))
+
+        if (_logic.TryGetPulledClosedCrate(user, out var crate))
             _logic.InvalidateInventoryCache(crate);
+
         var userSnap = _logic.BuildInventorySnapshot(user);
         NcStoreLogicSystem.InventorySnapshot? crateSnap = null;
         if (crate != default)
