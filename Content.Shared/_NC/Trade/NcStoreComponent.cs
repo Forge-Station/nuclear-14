@@ -2,19 +2,16 @@ using Robust.Shared.GameStates;
 
 
 namespace Content.Shared._NC.Trade;
+
+
 public readonly record struct StoreListingKey(StoreMode Mode, string ListingId);
 
-[RegisterComponent, NetworkedComponent]
+[RegisterComponent, NetworkedComponent,]
 public sealed partial class NcStoreComponent : Component
 {
-    public EntityUid? CurrentUser;
     public int CatalogRevision;
+    public EntityUid? CurrentUser;
     public int UiRevision;
-
-    public void BumpCatalogRevision()
-    {
-        CatalogRevision = unchecked(CatalogRevision + 1);
-    }
 
     [ViewVariables]
     public HashSet<string> CompletedOneTimeContracts { get; } = new();
@@ -27,11 +24,6 @@ public sealed partial class NcStoreComponent : Component
 
     public List<StoreListingPrototype> Listings { get; set; } = new();
 
-    /// <summary>
-    ///     Fast lookup cache for <see cref="Listings" />.
-    ///     Key format: "{(byte)mode}:{listingId}".
-    ///     Not networked; rebuilt on server when presets are (re)loaded.
-    /// </summary>
     [ViewVariables]
     public Dictionary<StoreListingKey, StoreListingPrototype> ListingIndex { get; } = new();
 
@@ -58,6 +50,8 @@ public sealed partial class NcStoreComponent : Component
     [DataField("rewardItems")]
     public Dictionary<string, int> RewardItems { get; set; } = new();
 
+    public void BumpCatalogRevision() => CatalogRevision = unchecked(CatalogRevision + 1);
+
     public static StoreListingKey MakeListingKey(StoreMode mode, string listingId) => new(mode, listingId);
 
     public void RebuildListingIndex()
@@ -72,4 +66,3 @@ public sealed partial class NcStoreComponent : Component
         }
     }
 }
-

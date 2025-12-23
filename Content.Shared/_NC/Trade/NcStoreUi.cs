@@ -4,14 +4,13 @@ using Robust.Shared.Serialization;
 namespace Content.Shared._NC.Trade;
 
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public enum StoreUiKey : byte
 {
     Key
 }
 
-
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public sealed class StoreCatalogMessage(
     int catalogRevision,
     List<StoreListingStaticData> listings,
@@ -28,7 +27,7 @@ public sealed class StoreCatalogMessage(
     public bool HasContractsTab { get; } = hasContractsTab;
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public readonly record struct StoreListingStaticData(
     string Id,
     StoreMode Mode,
@@ -38,8 +37,7 @@ public readonly record struct StoreListingStaticData(
     string CurrencyId
 );
 
-
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public sealed class StoreDynamicState(
     int revision,
     int catalogRevision,
@@ -70,15 +68,13 @@ public sealed class StoreDynamicState(
     public bool HasContractsTab { get; } = hasContractsTab;
 }
 
-
-
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public sealed class ContractUiState(List<ContractClientData> contracts) : BoundUserInterfaceState
 {
     public List<ContractClientData> Contracts { get; } = contracts;
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public sealed class ContractClientData
 {
     public bool Completed;
@@ -150,31 +146,31 @@ public sealed class ContractClientData
     }
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public sealed class StoreBuyListingBoundUiMessage(string listingId, int count) : BoundUserInterfaceMessage
 {
     public string ListingId { get; } = listingId;
     public int Count { get; } = count;
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public sealed class StoreSellListingBoundUiMessage(string listingId, int count) : BoundUserInterfaceMessage
 {
     public string ListingId { get; } = listingId;
     public int Count { get; } = count;
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public sealed class StoreMassSellPulledCrateBoundUiMessage : BoundUserInterfaceMessage { }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public sealed class RequestUiRefreshMessage : BoundUserInterfaceMessage { }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public sealed class ClaimContractBoundMessage(string id) : BoundUserInterfaceMessage
 {
     public string ContractId { get; } = id;
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public sealed class RequestContractsRefreshMessage : BoundUserInterfaceMessage { }

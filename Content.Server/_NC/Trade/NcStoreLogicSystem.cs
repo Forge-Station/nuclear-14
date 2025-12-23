@@ -29,7 +29,9 @@ public sealed class NcStoreLogicSystem : EntitySystem
     private readonly Dictionary<EntityUid, List<EntityUid>> _inventoryCache = new();
     private readonly Dictionary<string, string?> _productStackTypeCache = new();
     private readonly Dictionary<string, string[]> _protoAndAncestorsCache = new();
+
     [Dependency] private readonly IPrototypeManager _protos = default!;
+    private readonly List<EntityUid> _scratchItems = new();
     private readonly Queue<EntityUid> _scratchQueue = new();
     private readonly List<EntityUid> _scratchResult = new();
     private readonly HashSet<EntityUid> _scratchVisited = new();
@@ -544,7 +546,12 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
         InvalidateInventoryCache(root);
 
-        var allItems = EnumerateDeepItemsUnique(root).ToList();
+        // Avoid per-call allocations (GC pressure) by reusing a scratch list instead of .ToList().
+        _scratchItems.Clear();
+        foreach (var item in EnumerateDeepItemsUnique(root))
+            _scratchItems.Add(item);
+
+        var allItems = _scratchItems;
 
         var stackType = GetProductStackType(protoId);
         var availableTotal = 0;
@@ -1126,177 +1133,177 @@ public sealed class NcStoreLogicSystem : EntitySystem
     }
 
     public MassSellPlan ComputeMassSellPlan(NcStoreComponent store, EntityUid container)
-{
-    var incomeByCurrency = new Dictionary<string, int>();
-    var unitsByListingId = new Dictionary<string, int>();
-    var priceByListingId = new Dictionary<string, (string, int)>();
-    var steps = new List<MassSellStep>();
-
-    if (store.Listings.Count == 0)
-        return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
-
-    InvalidateInventoryCache(container);
-
-    var stackTypeCounts = new Dictionary<string, int>();
-    var protoCounts = new Dictionary<string, int>();
-    var protoCache = new Dictionary<string, EntityPrototype>();
-
-    foreach (var ent in EnumerateDeepItemsUnique(container))
     {
-        if (_ents.TryGetComponent(ent, out StackComponent? st))
+        var incomeByCurrency = new Dictionary<string, int>();
+        var unitsByListingId = new Dictionary<string, int>();
+        var priceByListingId = new Dictionary<string, (string, int)>();
+        var steps = new List<MassSellStep>();
+
+        if (store.Listings.Count == 0)
+            return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
+
+        InvalidateInventoryCache(container);
+
+        var stackTypeCounts = new Dictionary<string, int>();
+        var protoCounts = new Dictionary<string, int>();
+        var protoCache = new Dictionary<string, EntityPrototype>();
+
+        foreach (var ent in EnumerateDeepItemsUnique(container))
         {
-            var cnt = Math.Max(st.Count, 0);
-            if (cnt > 0 && !string.IsNullOrWhiteSpace(st.StackTypeId))
+            if (_ents.TryGetComponent(ent, out StackComponent? st))
             {
-                stackTypeCounts.TryGetValue(st.StackTypeId, out var prev);
-                stackTypeCounts[st.StackTypeId] = prev + cnt;
+                var cnt = Math.Max(st.Count, 0);
+                if (cnt > 0 && !string.IsNullOrWhiteSpace(st.StackTypeId))
+                {
+                    stackTypeCounts.TryGetValue(st.StackTypeId, out var prev);
+                    stackTypeCounts[st.StackTypeId] = prev + cnt;
+                }
+
+                continue;
             }
 
-            continue;
-        }
-
-        if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
-            continue;
-
-        var proto = meta.EntityPrototype;
-
-        if (!protoCounts.TryAdd(proto.ID, 1))
-            protoCounts[proto.ID] += 1;
-
-        protoCache[proto.ID] = proto;
-    }
-
-    if (stackTypeCounts.Count == 0 && protoCounts.Count == 0)
-        return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
-
-    var protoIds = protoCounts.Count > 0
-        ? protoCounts.Keys
-            .OrderByDescending(GetInheritanceDepth)
-            .ThenBy(x => x, OrdinalIds)
-            .ToArray()
-        : Array.Empty<string>();
-
-    var listingPrices = new Dictionary<string, int>();
-    foreach (var l in store.Listings)
-    {
-        if (l.Mode != StoreMode.Sell)
-            continue;
-        if (TryPickCurrencyForSell(store, l, out _, out var price))
-            listingPrices[l.Id] = price;
-        else
-            listingPrices[l.Id] = 0;
-    }
-
-    var sellListings = store.Listings
-        .Where(l =>
-            l.Mode == StoreMode.Sell &&
-            !string.IsNullOrEmpty(l.ProductEntity) &&
-            l.RemainingCount != 0 &&
-            listingPrices.TryGetValue(l.Id, out var p) && p > 0)
-        .OrderByDescending(l => listingPrices[l.Id]) // Сначала дорогие
-        .ThenByDescending(l => GetInheritanceDepth(l.ProductEntity))
-        .ThenBy(l => l.ProductEntity, OrdinalIds)
-        .ThenBy(l => l.Id, OrdinalIds)
-        .ToArray();
-
-    if (sellListings.Length == 0)
-        return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
-
-    var stackName = _compFactory.GetComponentName(typeof(StackComponent));
-
-    foreach (var listing in sellListings)
-    {
-        if (!TryPickCurrencyForSell(store, listing, out var currencyId, out var unitPrice))
-            continue;
-
-        if (unitPrice <= 0 || string.IsNullOrWhiteSpace(currencyId))
-            continue;
-
-        var remaining = listing.RemainingCount;
-        if (remaining < -1)
-            remaining = -1;
-
-        var maxByRemaining = remaining >= 0 ? remaining : int.MaxValue;
-        if (maxByRemaining <= 0)
-            continue;
-
-        var maxTakeByInt = int.MaxValue / unitPrice;
-        if (maxTakeByInt <= 0)
-            continue;
-
-        var want = Math.Min(maxByRemaining, maxTakeByInt);
-
-        string? expectedStackType = null;
-        if (_protos.TryIndex<EntityPrototype>(listing.ProductEntity, out var prodProto) &&
-            prodProto.TryGetComponent(stackName, out StackComponent? prodStackDef))
-            expectedStackType = prodStackDef.StackTypeId;
-
-        var taken = 0;
-        var effectiveMatch = ResolveMatchMode(listing.ProductEntity, listing.MatchMode);
-
-        if (!string.IsNullOrEmpty(expectedStackType))
-        {
-            if (!stackTypeCounts.TryGetValue(expectedStackType, out var available) || available <= 0)
+            if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
                 continue;
 
-            taken = Math.Min(available, want);
-            stackTypeCounts[expectedStackType] = available - taken;
+            var proto = meta.EntityPrototype;
+
+            if (!protoCounts.TryAdd(proto.ID, 1))
+                protoCounts[proto.ID] += 1;
+
+            protoCache[proto.ID] = proto;
         }
-        else
+
+        if (stackTypeCounts.Count == 0 && protoCounts.Count == 0)
+            return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
+
+        var protoIds = protoCounts.Count > 0
+            ? protoCounts.Keys
+                .OrderByDescending(GetInheritanceDepth)
+                .ThenBy(x => x, OrdinalIds)
+                .ToArray()
+            : Array.Empty<string>();
+
+        var listingPrices = new Dictionary<string, int>();
+        foreach (var l in store.Listings)
         {
-            if (protoIds.Length == 0)
+            if (l.Mode != StoreMode.Sell)
+                continue;
+            if (TryPickCurrencyForSell(store, l, out _, out var price))
+                listingPrices[l.Id] = price;
+            else
+                listingPrices[l.Id] = 0;
+        }
+
+        var sellListings = store.Listings
+            .Where(l =>
+                l.Mode == StoreMode.Sell &&
+                !string.IsNullOrEmpty(l.ProductEntity) &&
+                l.RemainingCount != 0 &&
+                listingPrices.TryGetValue(l.Id, out var p) && p > 0)
+            .OrderByDescending(l => listingPrices[l.Id]) // Сначала дорогие
+            .ThenByDescending(l => GetInheritanceDepth(l.ProductEntity))
+            .ThenBy(l => l.ProductEntity, OrdinalIds)
+            .ThenBy(l => l.Id, OrdinalIds)
+            .ToArray();
+
+        if (sellListings.Length == 0)
+            return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
+
+        var stackName = _compFactory.GetComponentName(typeof(StackComponent));
+
+        foreach (var listing in sellListings)
+        {
+            if (!TryPickCurrencyForSell(store, listing, out var currencyId, out var unitPrice))
                 continue;
 
-            if (effectiveMatch != PrototypeMatchMode.Descendants)
+            if (unitPrice <= 0 || string.IsNullOrWhiteSpace(currencyId))
+                continue;
+
+            var remaining = listing.RemainingCount;
+            if (remaining < -1)
+                remaining = -1;
+
+            var maxByRemaining = remaining >= 0 ? remaining : int.MaxValue;
+            if (maxByRemaining <= 0)
+                continue;
+
+            var maxTakeByInt = int.MaxValue / unitPrice;
+            if (maxTakeByInt <= 0)
+                continue;
+
+            var want = Math.Min(maxByRemaining, maxTakeByInt);
+
+            string? expectedStackType = null;
+            if (_protos.TryIndex<EntityPrototype>(listing.ProductEntity, out var prodProto) &&
+                prodProto.TryGetComponent(stackName, out StackComponent? prodStackDef))
+                expectedStackType = prodStackDef.StackTypeId;
+
+            var taken = 0;
+            var effectiveMatch = ResolveMatchMode(listing.ProductEntity, listing.MatchMode);
+
+            if (!string.IsNullOrEmpty(expectedStackType))
             {
-                if (!protoCounts.TryGetValue(listing.ProductEntity, out var available) || available <= 0)
+                if (!stackTypeCounts.TryGetValue(expectedStackType, out var available) || available <= 0)
                     continue;
 
                 taken = Math.Min(available, want);
-                protoCounts[listing.ProductEntity] = available - taken;
+                stackTypeCounts[expectedStackType] = available - taken;
             }
             else
             {
-                foreach (var protoId in protoIds)
+                if (protoIds.Length == 0)
+                    continue;
+
+                if (effectiveMatch != PrototypeMatchMode.Descendants)
                 {
-                    if (taken >= want)
-                        break;
-
-                    if (!protoCounts.TryGetValue(protoId, out var available) || available <= 0)
+                    if (!protoCounts.TryGetValue(listing.ProductEntity, out var available) || available <= 0)
                         continue;
 
-                    if (!protoCache.TryGetValue(protoId, out var proto) &&
-                        !_protos.TryIndex(protoId, out proto))
-                        continue;
+                    taken = Math.Min(available, want);
+                    protoCounts[listing.ProductEntity] = available - taken;
+                }
+                else
+                {
+                    foreach (var protoId in protoIds)
+                    {
+                        if (taken >= want)
+                            break;
 
-                    protoCache[protoId] = proto;
+                        if (!protoCounts.TryGetValue(protoId, out var available) || available <= 0)
+                            continue;
 
-                    if (!IsProtoOrDescendant(proto, listing.ProductEntity))
-                        continue;
+                        if (!protoCache.TryGetValue(protoId, out var proto) &&
+                            !_protos.TryIndex(protoId, out proto))
+                            continue;
 
-                    var take = Math.Min(available, want - taken);
-                    if (take <= 0)
-                        continue;
+                        protoCache[protoId] = proto;
 
-                    protoCounts[protoId] = available - take;
-                    taken += take;
+                        if (!IsProtoOrDescendant(proto, listing.ProductEntity))
+                            continue;
+
+                        var take = Math.Min(available, want - taken);
+                        if (take <= 0)
+                            continue;
+
+                        protoCounts[protoId] = available - take;
+                        taken += take;
+                    }
                 }
             }
+
+            if (taken <= 0)
+                continue;
+
+            var total = (long) unitPrice * taken;
+            SafeAddIncome(incomeByCurrency, currencyId, total);
+
+            unitsByListingId[listing.Id] = taken;
+            priceByListingId[listing.Id] = (currencyId, unitPrice);
+            steps.Add(new(listing, currencyId, unitPrice, taken));
         }
 
-        if (taken <= 0)
-            continue;
-
-        var total = (long) unitPrice * taken;
-        SafeAddIncome(incomeByCurrency, currencyId, total);
-
-        unitsByListingId[listing.Id] = taken;
-        priceByListingId[listing.Id] = (currencyId, unitPrice);
-        steps.Add(new(listing, currencyId, unitPrice, taken));
+        return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
     }
-
-    return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
-}
 
     public bool TryMassSellFromContainer(
         EntityUid machine,

@@ -65,14 +65,6 @@ public sealed class NcStoreSystem : EntitySystem
 
     private bool IsInUseRange(EntityUid store, EntityUid user) => IsInRange(store, user, MaxUseDistance);
 
-    private bool CanInteract(EntityUid store, NcStoreComponent comp, EntityUid user)
-    {
-        if (!CanUseStore(store, comp, user))
-            return false;
-
-        return IsInUseRange(store, user);
-    }
-
 
     private void PopupFail(EntityUid actor, string message) => _popups.PopupEntity(message, actor, actor);
 

@@ -18,7 +18,6 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
-
         SubscribeLocalEvent<NcStoreComponent, MapInitEvent>(OnMapInit);
         SubscribeLocalEvent<NcStoreComponent, ComponentStartup>(OnStartup);
         SubscribeLocalEvent<NcStoreComponent, EntityTerminatingEvent>(OnTerminating);

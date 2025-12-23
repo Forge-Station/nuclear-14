@@ -21,6 +21,25 @@ public sealed class NcContractSystem : EntitySystem
     private readonly Dictionary<QuasiKey, double> _quasiPhase = new();
     [Dependency] private readonly IRobustRandom _random = default!;
 
+    public override void Initialize()
+    {
+        base.Initialize();
+        _prototypes.PrototypesReloaded += OnPrototypesReloaded;
+    }
+
+    public override void Shutdown()
+    {
+        _prototypes.PrototypesReloaded -= OnPrototypesReloaded;
+        base.Shutdown();
+    }
+
+    private void OnPrototypesReloaded(PrototypesReloadedEventArgs ev)
+    {
+        _ancestorsCache.Clear();
+        _depthCache.Clear();
+        _quasiPhase.Clear();
+    }
+
     public void InitContractsForStore(EntityUid uid, NcStoreComponent comp)
     {
         if (comp.Contracts.Count > 0)

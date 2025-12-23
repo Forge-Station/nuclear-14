@@ -16,8 +16,9 @@ public sealed class StoreStructuredSystem : EntitySystem
 {
     private const float AutoCloseDistance = 3f;
     private const float MinAccelInterval = 0.05f;
+
     private const int WatchedRootSearchLimit = 32;
-    private const float CheckInterval = 0.2f;
+    private const float CheckInterval = 1.0f;
     private readonly HashSet<EntityUid> _affectedStoresScratch = new();
     private readonly Dictionary<EntityUid, (int Revision, List<StoreListingStaticData> List)> _catalogCache = new();
     [Dependency] private readonly NcContractSystem _contracts = default!;
