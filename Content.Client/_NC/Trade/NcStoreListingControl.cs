@@ -36,6 +36,8 @@ public sealed class NcStoreListingControl : PanelContainer
     private int _qty;
     private bool _suppressQtyEditChange;
 
+
+    private readonly IUserInterfaceManager _ui = IoCManager.Resolve<IUserInterfaceManager>();
     public NcStoreListingControl(
         StoreListingData data,
         SpriteSystem sprites,
@@ -320,6 +322,8 @@ public sealed class NcStoreListingControl : PanelContainer
     public Action<int>? OnSellPressed { get; set; }
     public Action<int>? OnQtyChanged { get; set; }
 
+
+    public string ListingId => _staticData.Id;
     public void UpdateDynamicData(int playerBalance, int remainingStock, int playerOwned)
     {
         _lastBalanceHint = playerBalance;
@@ -345,10 +349,14 @@ public sealed class NcStoreListingControl : PanelContainer
 
             if (_qtyEdit.Text != _qty.ToString())
             {
-                _suppressQtyEditChange = true;
-                _qtyEdit.Text = _qty.ToString();
-                _qtyEdit.CursorPosition = _qtyEdit.Text.Length;
-                _suppressQtyEditChange = false;
+                // Не "воюем" с вводом игрока: если LineEdit сейчас в фокусе, не перетираем текст из-под рук.
+                if (_ui.KeyboardFocused != _qtyEdit)
+                {
+                    _suppressQtyEditChange = true;
+                    _qtyEdit.Text = _qty.ToString();
+                    _qtyEdit.CursorPosition = _qtyEdit.Text.Length;
+                    _suppressQtyEditChange = false;
+                }
             }
 
             OnQtyChanged?.Invoke(_qty);

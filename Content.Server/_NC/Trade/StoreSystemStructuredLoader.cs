@@ -34,28 +34,30 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
     }
 
     public void EnsureLoaded(EntityUid uid, NcStoreComponent comp, string reason)
-    {
-        if (comp.Listings.Count > 0)
-            return;
-
+{
+    if (comp.Listings.Count == 0)
         TryLoadPresets(uid, comp, reason);
 
+    if (comp.Listings.Count > 0 && comp.ListingIndex.Count == 0)
         comp.RebuildListingIndex();
-        comp.BumpCatalogRevision();
-        _contracts.InitContractsForStore(uid, comp);
-    }
+    comp.BumpCatalogRevision();
+
+    _contracts.InitContractsForStore(uid, comp);
+}
+
 
     private void OnStartup(EntityUid uid, NcStoreComponent comp, ComponentStartup args)
-    {
-        if (comp.Listings.Count > 0)
-            return;
-
+{
+    if (comp.Listings.Count == 0)
         TryLoadPresets(uid, comp, "Startup");
 
+    if (comp.Listings.Count > 0 && comp.ListingIndex.Count == 0)
         comp.RebuildListingIndex();
-        comp.BumpCatalogRevision();
-        _contracts.InitContractsForStore(uid, comp);
-    }
+
+    comp.BumpCatalogRevision();
+    _contracts.InitContractsForStore(uid, comp);
+}
+
 
 
     private void TryLoadPresets(EntityUid uid, NcStoreComponent comp, string reason)

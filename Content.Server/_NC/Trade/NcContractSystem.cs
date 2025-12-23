@@ -148,10 +148,10 @@ public sealed class NcContractSystem : EntitySystem
 
             if (left > 0)
             {
-                if (crateUid is not { } crateEntity)
+                if (crateUid is not { } crateEntity || !Exists(crateEntity))
                 {
                     Sawmill.Error(
-                        $"[Claim] Missing {left}x {protoId} but user has no pulled closed crate. " +
+                        $"[Claim] Missing {left}x {protoId} but pulled closed crate is missing/invalid. " +
                         $"Contract '{contractId}' on {ToPrettyString(store)}.");
                     return false;
                 }

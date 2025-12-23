@@ -7,6 +7,7 @@ using Content.Shared.Movement.Pulling.Components;
 using Robust.Server.Audio;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio;
+using Content.Server.Popups;
 
 
 namespace Content.Server._NC.Trade;
@@ -20,6 +21,7 @@ public sealed class NcStoreSystem : EntitySystem
     private new static readonly ISawmill Log = Logger.GetSawmill("ncstore");
     [Dependency] private readonly AccessReaderSystem _accessReader = default!;
     [Dependency] private readonly AudioSystem _audio = default!;
+    [Dependency] private readonly PopupSystem _popups = default!;
     [Dependency] private readonly IEntityManager _entMan = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     [Dependency] private readonly StoreStructuredSystem _storeUi = default!;
@@ -71,7 +73,13 @@ public sealed class NcStoreSystem : EntitySystem
         return IsInUseRange(store, user);
     }
 
-    private static bool TryParseSellListingId(
+
+private void PopupFail(EntityUid actor, string message)
+{
+    _popups.PopupEntity(message, actor, actor);
+}
+
+private static bool TryParseSellListingId(
         string rawId,
         out string listingId,
         out bool fromCrate
@@ -101,8 +109,17 @@ public sealed class NcStoreSystem : EntitySystem
         if (comp.CurrentUser is not { } actor)
             return;
 
-        if (!CanInteract(uid, comp, actor))
+        if (!CanUseStore(uid, comp, actor))
+        {
+            PopupFail(actor, Loc.GetString("nc-store-popup-no-access"));
             return;
+        }
+
+        if (!IsInUseRange(uid, actor))
+        {
+            PopupFail(actor, Loc.GetString("nc-store-popup-too-far"));
+            return;
+        }
 
         if (comp.Listings.Count > 0 && comp.ListingIndex.Count == 0)
         {
@@ -116,12 +133,16 @@ public sealed class NcStoreSystem : EntitySystem
         {
             Log.Warning(
                 $"[NcStore] {ToPrettyString(actor)} tried to buy invalid listing '{msg.ListingId}' at {ToPrettyString(uid)}");
+            PopupFail(actor, Loc.GetString("nc-store-popup-invalid-listing"));
             return;
         }
 
         var count = Math.Max(1, msg.Count);
         if (!_logic.TryBuy(listing.Id, uid, comp, actor, count))
+        {
+            PopupFail(actor, Loc.GetString("nc-store-popup-transaction-failed"));
             return;
+        }
 
         _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid, AudioParams.Default.WithVolume(-2f));
         _storeUi.UpdateDynamicState(uid, comp, actor);
@@ -132,8 +153,17 @@ public sealed class NcStoreSystem : EntitySystem
         if (comp.CurrentUser is not { } actor)
             return;
 
-        if (!CanInteract(uid, comp, actor))
+        if (!CanUseStore(uid, comp, actor))
+        {
+            PopupFail(actor, Loc.GetString("nc-store-popup-no-access"));
             return;
+        }
+
+        if (!IsInUseRange(uid, actor))
+        {
+            PopupFail(actor, Loc.GetString("nc-store-popup-too-far"));
+            return;
+        }
 
         if (!TryParseSellListingId(msg.ListingId, out var requestedId, out var fromCrate))
             return;
@@ -150,6 +180,7 @@ public sealed class NcStoreSystem : EntitySystem
         {
             Log.Warning(
                 $"[NcStore] {ToPrettyString(actor)} tried to sell invalid listing '{requestedId}' (raw '{msg.ListingId}') at {ToPrettyString(uid)}");
+            PopupFail(actor, Loc.GetString("nc-store-popup-invalid-listing"));
             return;
         }
 
@@ -162,14 +193,29 @@ public sealed class NcStoreSystem : EntitySystem
         {
             if (!_entMan.TryGetComponent(actor, out PullerComponent? puller) ||
                 puller.Pulling is not { } crate)
+            {
+                PopupFail(actor, Loc.GetString("nc-store-popup-no-crate"));
                 return;
+            }
 
-            if (!_entMan.TryGetComponent(crate, out EntityStorageComponent? storage) || storage.Open)
+            if (!_entMan.TryGetComponent(crate, out EntityStorageComponent? storage))
+            {
+                PopupFail(actor, Loc.GetString("nc-store-popup-no-crate"));
                 return;
+            }
+
+            if (storage.Open)
+            {
+                PopupFail(actor, Loc.GetString("nc-store-popup-crate-open"));
+                return;
+            }
 
             const float maxCrateDistance = 2f;
             if (!IsInRange(uid, crate, maxCrateDistance))
+            {
+                PopupFail(actor, Loc.GetString("nc-store-popup-crate-too-far"));
                 return;
+            }
 
             ok = _logic.TrySellFromContainer(listing.Id, uid, comp, actor, crate, count);
         }
@@ -177,7 +223,10 @@ public sealed class NcStoreSystem : EntitySystem
             ok = _logic.TrySell(listing.Id, uid, comp, actor, count);
 
         if (!ok)
+        {
+            PopupFail(actor, Loc.GetString("nc-store-popup-transaction-failed"));
             return;
+        }
 
         _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid, AudioParams.Default.WithVolume(-2f));
         _storeUi.UpdateDynamicState(uid, comp, actor);
@@ -193,25 +242,49 @@ public sealed class NcStoreSystem : EntitySystem
         if (comp.CurrentUser is not { } actor)
             return;
 
-        if (!CanInteract(uid, comp, actor))
+        if (!CanUseStore(uid, comp, actor))
+        {
+            PopupFail(actor, Loc.GetString("nc-store-popup-no-access"));
             return;
+        }
+
+        if (!IsInUseRange(uid, actor))
+        {
+            PopupFail(actor, Loc.GetString("nc-store-popup-too-far"));
+            return;
+        }
 
         if (!_entMan.TryGetComponent(actor, out PullerComponent? puller) ||
             puller.Pulling is not { } crate)
+        {
+            PopupFail(actor, Loc.GetString("nc-store-popup-no-crate"));
             return;
+        }
 
         if (!_entMan.TryGetComponent(crate, out EntityStorageComponent? storage))
+        {
+            PopupFail(actor, Loc.GetString("nc-store-popup-no-crate"));
             return;
+        }
 
         if (storage.Open)
+        {
+            PopupFail(actor, Loc.GetString("nc-store-popup-crate-open"));
             return;
+        }
 
         const float maxDistance = 2f;
         if (!IsInRange(uid, crate, maxDistance))
+        {
+            PopupFail(actor, Loc.GetString("nc-store-popup-crate-too-far"));
             return;
+        }
 
         if (!_logic.TryMassSellFromContainer(uid, comp, actor, crate))
+        {
+            PopupFail(actor, Loc.GetString("nc-store-popup-transaction-failed"));
             return;
+        }
 
         _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid, AudioParams.Default.WithVolume(-2f));
         _storeUi.UpdateDynamicState(uid, comp, actor);

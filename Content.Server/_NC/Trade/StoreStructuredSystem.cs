@@ -180,8 +180,10 @@ public sealed class StoreStructuredSystem : EntitySystem
     {
         if (_storesByWatchedRoot.Count == 0)
             return;
-        _logic.InvalidateInventoryCache(changedRoot);
-        _pendingRefreshEntities.Add(changedRoot);
+
+        if (_pendingRefreshEntities.Add(changedRoot))
+            _logic.InvalidateInventoryCache(changedRoot);
+
         if (_timing.CurTime < _nextCheck && _timing.CurTime >= _nextAccelAllowed)
         {
             _nextCheck = _timing.CurTime;
@@ -288,6 +290,15 @@ public sealed class StoreStructuredSystem : EntitySystem
 
     private void CloseAndCleanUp(EntityUid storeUid, EntityUid? user = null)
     {
+        if (_watchByStore.TryGetValue(storeUid, out var info))
+        {
+            if (info.User != EntityUid.Invalid)
+                _logic.InvalidateInventoryCache(info.User);
+
+            if (info.Crate is { } crate)
+                _logic.InvalidateInventoryCache(crate);
+        }
+
         if (user != null)
             _ui.CloseUi(storeUid, StoreUiKey.Key, user.Value);
         _openStoreUids.Remove(storeUid);
