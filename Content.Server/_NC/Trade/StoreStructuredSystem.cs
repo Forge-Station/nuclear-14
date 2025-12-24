@@ -1,8 +1,10 @@
 using System.Linq;
 using Content.Server.Popups;
+using Content.Server.Storage.Components;
 using Content.Shared._NC.Trade;
 using Content.Shared.Access.Components;
 using Content.Shared.Stacks;
+using Content.Shared.Storage.Components;
 using Content.Shared.UserInterface;
 using Robust.Server.GameObjects;
 using Robust.Shared.Containers;
@@ -23,6 +25,8 @@ public sealed class StoreStructuredSystem : EntitySystem
     private readonly Dictionary<EntityUid, (int Revision, List<StoreListingStaticData> List)> _catalogCache = new();
     [Dependency] private readonly NcContractSystem _contracts = default!;
     private readonly HashSet<EntityUid> _dirtyStores = new();
+
+    private readonly Dictionary<EntityUid, DynamicScratch> _dynamicScratchByStore = new();
     [Dependency] private readonly StoreSystemStructuredLoader _loader = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     private readonly List<EntityUid> _openStoresScratch = new();
@@ -34,12 +38,22 @@ public sealed class StoreStructuredSystem : EntitySystem
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
 
-
     private readonly Dictionary<EntityUid, (EntityUid User, EntityUid? Crate)> _watchByStore = new();
+
     [Dependency] private readonly SharedTransformSystem _xform = default!;
 
     private TimeSpan _nextAccelAllowed = TimeSpan.Zero;
     private TimeSpan _nextCheck = TimeSpan.Zero;
+
+    private DynamicScratch GetDynamicScratch(EntityUid storeUid)
+    {
+        if (_dynamicScratchByStore.TryGetValue(storeUid, out var scratch))
+            return scratch;
+
+        scratch = new();
+        _dynamicScratchByStore[storeUid] = scratch;
+        return scratch;
+    }
 
     public override void Initialize()
     {
@@ -53,11 +67,26 @@ public sealed class StoreStructuredSystem : EntitySystem
         SubscribeLocalEvent<ContainerManagerComponent, EntRemovedFromContainerMessage>(OnUserEntRemoved);
         SubscribeLocalEvent<StackComponent, StackCountChangedEvent>(OnStackCountChanged);
         SubscribeLocalEvent<NcStoreComponent, ClaimContractBoundMessage>(OnClaimContract);
+        SubscribeLocalEvent<EntityStorageComponent, StorageAfterOpenEvent>(OnStorageOpen);
+        SubscribeLocalEvent<EntityStorageComponent, StorageAfterCloseEvent>(OnStorageClose);
+    }
+
+    private void OnStorageOpen(EntityUid uid, EntityStorageComponent comp, ref StorageAfterOpenEvent args)
+    {
+        if (_storesByWatchedRoot.ContainsKey(uid))
+            RefreshStoresAffectedBy(uid);
+    }
+
+    private void OnStorageClose(EntityUid uid, EntityStorageComponent comp, ref StorageAfterCloseEvent args)
+    {
+        if (_storesByWatchedRoot.ContainsKey(uid))
+            RefreshStoresAffectedBy(uid);
     }
 
     private void OnStoreShutdown(EntityUid uid, NcStoreComponent comp, ComponentShutdown args)
     {
         _catalogCache.Remove(uid);
+        _dynamicScratchByStore.Remove(uid);
 
         if (_openStoreUids.Contains(uid) || _watchByStore.ContainsKey(uid) || _dirtyStores.Contains(uid))
         {
@@ -75,6 +104,7 @@ public sealed class StoreStructuredSystem : EntitySystem
     public void RefreshCatalog(EntityUid uid, NcStoreComponent comp)
     {
         _catalogCache.Remove(uid);
+        _dynamicScratchByStore.Remove(uid);
 
         comp.BumpCatalogRevision();
 
@@ -87,7 +117,6 @@ public sealed class StoreStructuredSystem : EntitySystem
         SendCatalog(uid, comp, user);
         UpdateDynamicState(uid, comp, user);
     }
-
 
     public void UpdateDynamicState(EntityUid uid, NcStoreComponent comp, EntityUid user)
     {
@@ -105,43 +134,63 @@ public sealed class StoreStructuredSystem : EntitySystem
 
         UpdateContractsProgress(comp, userSnap, crateSnap);
 
-        var balancesByCurrency = new Dictionary<string, int>(comp.CurrencyWhitelist.Count);
+        var scratch = GetDynamicScratch(uid);
+
+        scratch.BalancesByCurrency.Clear();
+        scratch.RemainingById.Clear();
+        scratch.OwnedById.Clear();
+        scratch.CrateUnitsById.Clear();
+        scratch.CrateTotals.Clear();
+        scratch.Contracts.Clear();
+
         foreach (var cur in comp.CurrencyWhitelist)
         {
             if (string.IsNullOrWhiteSpace(cur))
                 continue;
 
-            balancesByCurrency[cur] = userSnap.StackTypeCounts.TryGetValue(cur, out var b) ? b : 0;
+            scratch.BalancesByCurrency[cur] = userSnap.StackTypeCounts.TryGetValue(cur, out var b) ? b : 0;
         }
 
-        var remainingById = new Dictionary<string, int>(comp.Listings.Count);
-        var ownedById = new Dictionary<string, int>(comp.Listings.Count);
+        var hasBuyTab = false;
+        var hasSellTab = false;
 
         foreach (var l in comp.Listings)
         {
+            if (l.Mode == StoreMode.Buy)
+                hasBuyTab = true;
+            else if (l.Mode == StoreMode.Sell)
+                hasSellTab = true;
+
             if (string.IsNullOrWhiteSpace(l.Id))
                 continue;
-            remainingById[l.Id] = l.RemainingCount;
-        }
 
-        foreach (var l in comp.Listings)
-        {
-            if (string.IsNullOrWhiteSpace(l.Id) || string.IsNullOrWhiteSpace(l.ProductEntity))
-                continue;
-            ownedById[l.Id] = _logic.GetOwnedFromSnapshot(userSnap, l.ProductEntity, l.MatchMode);
-        }
+            scratch.RemainingById[l.Id] = l.RemainingCount;
 
-        var crateUnitsById = new Dictionary<string, int>();
-        var crateTotals = new Dictionary<string, int>();
+            if (!string.IsNullOrWhiteSpace(l.ProductEntity))
+                scratch.OwnedById[l.Id] = _logic.GetOwnedFromSnapshot(userSnap, l.ProductEntity, l.MatchMode);
+        }
 
         if (crateUid is { } crate)
         {
             var plan = _logic.ComputeMassSellPlan(comp, crate);
-            crateTotals = plan.IncomeByCurrency;
-            crateUnitsById = new(plan.UnitsByListingId);
+
+            foreach (var kvp in plan.UnitsByListingId)
+                if (!string.IsNullOrWhiteSpace(kvp.Key) && kvp.Value > 0)
+                    scratch.CrateUnitsById[kvp.Key] = kvp.Value;
+
+            foreach (var kvp in plan.IncomeByCurrency)
+                if (!string.IsNullOrWhiteSpace(kvp.Key) && kvp.Value > 0)
+                    scratch.CrateTotals[kvp.Key] = kvp.Value;
         }
 
-        var contracts = comp.Contracts.Values.Select(c => MapContractToClient(c)).ToList();
+        foreach (var c in comp.Contracts.Values)
+            scratch.Contracts.Add(MapContractToClient(c));
+        var balancesByCurrency = new Dictionary<string, int>(scratch.BalancesByCurrency);
+        var remainingById = new Dictionary<string, int>(scratch.RemainingById);
+        var ownedById = new Dictionary<string, int>(scratch.OwnedById);
+        var crateUnitsById = new Dictionary<string, int>(scratch.CrateUnitsById);
+        var crateTotals = new Dictionary<string, int>(scratch.CrateTotals);
+        var contracts = new List<ContractClientData>(scratch.Contracts);
 
         comp.UiRevision = unchecked(comp.UiRevision + 1);
 
@@ -157,8 +206,8 @@ public sealed class StoreStructuredSystem : EntitySystem
                 crateUnitsById,
                 crateTotals,
                 contracts,
-                comp.Listings.Any(l => l.Mode == StoreMode.Buy),
-                comp.Listings.Any(l => l.Mode == StoreMode.Sell),
+                hasBuyTab,
+                hasSellTab,
                 comp.ContractPresets.Count > 0 || !string.IsNullOrWhiteSpace(comp.LegacyContractsPreset)
             ));
     }
@@ -274,12 +323,36 @@ public sealed class StoreStructuredSystem : EntitySystem
     {
         base.Update(frameTime);
 
+        ProcessPendingRefreshes();
+
+        if (_openStoreUids.Count > 0)
+        {
+            _openStoresScratch.Clear();
+            _openStoresScratch.AddRange(_openStoreUids);
+
+            foreach (var uid in _openStoresScratch)
+            {
+                if (!TryComp(uid, out NcStoreComponent? store) || store.CurrentUser is not { } user)
+                    continue;
+
+                if (EnsureCrateWatchUpToDate(uid, user))
+                    MarkDirty(uid);
+            }
+        }
+
+        if (_dirtyStores.Count > 0)
+        {
+            foreach (var uid in _dirtyStores.ToList())
+                if (TryComp(uid, out NcStoreComponent? store) && store.CurrentUser is { } user)
+                    UpdateDynamicState(uid, store, user);
+
+            _dirtyStores.Clear();
+        }
+
         if (_timing.CurTime < _nextCheck)
             return;
 
         _nextCheck = _timing.CurTime + TimeSpan.FromSeconds(CheckInterval);
-
-        ProcessPendingRefreshes();
 
         if (_openStoreUids.Count == 0)
             return;
@@ -287,8 +360,7 @@ public sealed class StoreStructuredSystem : EntitySystem
         _logic.ResetFrameCache();
 
         _openStoresScratch.Clear();
-        foreach (var u in _openStoreUids)
-            _openStoresScratch.Add(u);
+        _openStoresScratch.AddRange(_openStoreUids);
 
         foreach (var uid in _openStoresScratch)
         {
@@ -317,17 +389,9 @@ public sealed class StoreStructuredSystem : EntitySystem
                 CloseAndCleanUp(uid, userUid);
                 store.CurrentUser = null;
                 _popups.PopupEntity(Loc.GetString("nc-store-no-access"), uid, userUid);
-                continue;
             }
-
-            if (EnsureCrateWatchUpToDate(uid, userUid))
-                MarkDirty(uid);
-
-            if (_dirtyStores.Remove(uid))
-                UpdateDynamicState(uid, store, userUid);
         }
     }
-
 
     private void CloseAndCleanUp(EntityUid storeUid, EntityUid? user = null)
     {
@@ -345,6 +409,7 @@ public sealed class StoreStructuredSystem : EntitySystem
         _openStoreUids.Remove(storeUid);
         UnregisterStoreWatch(storeUid);
         _dirtyStores.Remove(storeUid);
+        _dynamicScratchByStore.Remove(storeUid);
     }
 
     private bool EnsureCrateWatchUpToDate(EntityUid storeUid, EntityUid user)
@@ -478,8 +543,19 @@ public sealed class StoreStructuredSystem : EntitySystem
         {
             var cachedList = cached.List;
 
-            var hasBuy = cachedList.Any(l => l.Mode == StoreMode.Buy);
-            var hasSell = cachedList.Any(l => l.Mode == StoreMode.Sell);
+            var hasBuy = false;
+            var hasSell = false;
+
+            foreach (var l in cachedList)
+            {
+                if (l.Mode == StoreMode.Buy)
+                    hasBuy = true;
+                else if (l.Mode == StoreMode.Sell)
+                    hasSell = true;
+
+                if (hasBuy && hasSell)
+                    break;
+            }
 
             var msg = new StoreCatalogMessage(
                 comp.CatalogRevision,
@@ -519,8 +595,19 @@ public sealed class StoreStructuredSystem : EntitySystem
         _catalogCache[store] = (comp.CatalogRevision, list);
 
         {
-            var hasBuy = list.Any(l => l.Mode == StoreMode.Buy);
-            var hasSell = list.Any(l => l.Mode == StoreMode.Sell);
+            var hasBuy = false;
+            var hasSell = false;
+
+            foreach (var l in list)
+            {
+                if (l.Mode == StoreMode.Buy)
+                    hasBuy = true;
+                else if (l.Mode == StoreMode.Sell)
+                    hasSell = true;
+
+                if (hasBuy && hasSell)
+                    break;
+            }
 
             var msg = new StoreCatalogMessage(
                 comp.CatalogRevision,
@@ -680,12 +767,13 @@ public sealed class StoreStructuredSystem : EntitySystem
 
     private void UpdateContractsProgress(
         NcStoreComponent comp,
-        in NcStoreLogicSystem.InventorySnapshot userSnap,
+        NcStoreLogicSystem.InventorySnapshot userSnap,
         NcStoreLogicSystem.InventorySnapshot? crateSnap
     )
     {
         if (comp.Contracts.Count == 0)
             return;
+
         foreach (var (_, contract) in comp.Contracts)
         {
             var targets = contract.Targets;
@@ -702,8 +790,10 @@ public sealed class StoreStructuredSystem : EntitySystem
                     }
 
                     var owned = _logic.GetOwnedFromSnapshot(userSnap, t.TargetItem, t.MatchMode);
-                    if (crateSnap.HasValue)
-                        owned += _logic.GetOwnedFromSnapshot(crateSnap.Value, t.TargetItem, t.MatchMode);
+
+                    if (crateSnap != null)
+                        owned += _logic.GetOwnedFromSnapshot(crateSnap, t.TargetItem, t.MatchMode);
+
                     var prog = Math.Min(owned, t.Required);
                     t.Progress = prog;
                     totalRequired += t.Required;
@@ -724,10 +814,22 @@ public sealed class StoreStructuredSystem : EntitySystem
                 }
 
                 var owned = _logic.GetOwnedFromSnapshot(userSnap, contract.TargetItem, contract.MatchMode);
-                if (crateSnap.HasValue)
-                    owned += _logic.GetOwnedFromSnapshot(crateSnap.Value, contract.TargetItem, contract.MatchMode);
+
+                if (crateSnap != null)
+                    owned += _logic.GetOwnedFromSnapshot(crateSnap, contract.TargetItem, contract.MatchMode);
+
                 contract.Progress = Math.Min(owned, contract.Required);
             }
         }
+    }
+
+    private sealed class DynamicScratch
+    {
+        public readonly Dictionary<string, int> BalancesByCurrency = new();
+        public readonly List<ContractClientData> Contracts = new();
+        public readonly Dictionary<string, int> CrateTotals = new();
+        public readonly Dictionary<string, int> CrateUnitsById = new();
+        public readonly Dictionary<string, int> OwnedById = new();
+        public readonly Dictionary<string, int> RemainingById = new();
     }
 }

@@ -57,6 +57,9 @@ public sealed class NcStoreSystem : EntitySystem
         if (!_entMan.TryGetComponent(b, out TransformComponent? bXf))
             return false;
 
+        if (aXf.MapID != bXf.MapID)
+            return false;
+
         var aPos = _transform.GetWorldPosition(aXf);
         var bPos = _transform.GetWorldPosition(bXf);
 

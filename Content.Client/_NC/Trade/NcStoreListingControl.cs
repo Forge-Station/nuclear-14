@@ -30,7 +30,6 @@ public sealed class NcStoreListingControl : PanelContainer
     private readonly LineEdit _qtyEdit;
     private readonly Label? _qtyLbl;
     private readonly Label? _remainingLbl;
-    private readonly StoreListingData _staticData;
 
 
     private readonly IUserInterfaceManager _ui = IoCManager.Resolve<IUserInterfaceManager>();
@@ -39,6 +38,7 @@ public sealed class NcStoreListingControl : PanelContainer
     private Button? _priceButton;
     private Label? _priceLbl;
     private int _qty;
+    private StoreListingData _staticData;
     private bool _suppressQtyEditChange;
 
     public NcStoreListingControl(
@@ -273,7 +273,7 @@ public sealed class NcStoreListingControl : PanelContainer
 
         if (data.Remaining != 0)
         {
-            actionCol.AddChild(MakePriceButton(data, sprites, actionsEnabled));
+            actionCol.AddChild(MakePriceButton(data, sprites));
             UpdateTotal(data);
         }
         else
@@ -331,6 +331,8 @@ public sealed class NcStoreListingControl : PanelContainer
 
     public string ListingId => _staticData.Id;
 
+    public void UpdateIdentity(StoreListingData newData) => _staticData = newData;
+
     public void UpdateDynamicData(int playerBalance, int remainingStock, int playerOwned)
     {
         _lastBalanceHint = playerBalance;
@@ -356,7 +358,6 @@ public sealed class NcStoreListingControl : PanelContainer
 
             if (_qtyEdit.Text != _qty.ToString())
             {
-                // Не "воюем" с вводом игрока: если LineEdit сейчас в фокусе, не перетираем текст из-под рук.
                 if (_ui.KeyboardFocused != _qtyEdit)
                 {
                     _suppressQtyEditChange = true;
@@ -484,7 +485,7 @@ public sealed class NcStoreListingControl : PanelContainer
         return text.Substring(0, end) + "…";
     }
 
-    private Control MakePriceButton(StoreListingData data, SpriteSystem sprites, bool actionsEnabled)
+    private Control MakePriceButton(StoreListingData data, SpriteSystem sprites)
     {
         var btn = new Button
         {

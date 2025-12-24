@@ -2,7 +2,6 @@ using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
-using Enumerable = System.Linq.Enumerable;
 
 
 namespace Content.Server._NC.Trade;
@@ -94,7 +93,6 @@ public sealed class NcContractSystem : EntitySystem
             return false;
         }
 
-
         var crateUid = _logic.GetPulledClosedCrate(user);
 
         var requiredByKey = new Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int>();
@@ -116,7 +114,8 @@ public sealed class NcContractSystem : EntitySystem
         var userSnap = _logic.BuildInventorySnapshot(user);
 
         var hasCrateSnap = false;
-        NcStoreLogicSystem.InventorySnapshot crateSnap = default;
+        // ИСПРАВЛЕНИЕ 1: Явно указываем, что переменная может быть null (?) и инициализируем null
+        NcStoreLogicSystem.InventorySnapshot? crateSnap = null;
 
         if (crateUid is { } c0 && Exists(c0))
         {
@@ -127,19 +126,23 @@ public sealed class NcContractSystem : EntitySystem
         else
             crateUid = null;
 
+        // 1. Проверяем, хватает ли предметов суммарно
         foreach (var kvp in requiredByKey)
         {
             var (protoId, matchMode) = kvp.Key;
             var required = kvp.Value;
 
             var ownedUser = _logic.GetOwnedFromSnapshot(userSnap, protoId, matchMode);
-            var ownedCrate = hasCrateSnap ? _logic.GetOwnedFromSnapshot(crateSnap, protoId, matchMode) : 0;
 
-            if (ownedUser + ownedCrate < required)
+            // ИСПРАВЛЕНИЕ 2: Переименовали переменную в ownedInCrate, чтобы не было конфликтов
+            // И добавили '!', чтобы убрать ошибку "possible null reference"
+            var ownedInCrate = hasCrateSnap ? _logic.GetOwnedFromSnapshot(crateSnap!, protoId, matchMode) : 0;
+
+            if (ownedUser + ownedInCrate < required)
             {
                 Sawmill.Info(
                     $"[Claim] Not enough items for '{contractId}': need {required}x {protoId} (mode={matchMode}), " +
-                    $"have user={ownedUser}, crate={ownedCrate} on {ToPrettyString(store)}.");
+                    $"have user={ownedUser}, crate={ownedInCrate} on {ToPrettyString(store)}.");
                 return false;
             }
         }
@@ -148,6 +151,7 @@ public sealed class NcContractSystem : EntitySystem
 
         var plan = new List<ClaimSlice>(requiredByKey.Count * 2);
 
+        // 2. Планируем, откуда именно забирать
         foreach (var key in orderedKeys)
         {
             var (protoId, matchMode) = key;
@@ -172,7 +176,6 @@ public sealed class NcContractSystem : EntitySystem
             if (need <= 0)
                 continue;
 
-            // Потом из crate
             if (crateUid is not { } crateEntity || !Exists(crateEntity) || !hasCrateSnap)
             {
                 Sawmill.Error(
@@ -182,7 +185,7 @@ public sealed class NcContractSystem : EntitySystem
             }
 
             var reservedFromCrate = ReserveFromSnapshot(
-                crateSnap,
+                crateSnap!, // Используем ! здесь тоже
                 protoId,
                 matchMode,
                 need,
@@ -204,6 +207,7 @@ public sealed class NcContractSystem : EntitySystem
             }
         }
 
+        // 3. Агрегируем план в словарь
         var exec = new Dictionary<(EntityUid Root, string ProtoId), int>();
         foreach (var s in plan)
         {
@@ -212,27 +216,16 @@ public sealed class NcContractSystem : EntitySystem
                 exec[k] = checked(exec[k] + s.Amount);
         }
 
-        foreach (var kvp in exec)
+        // 4. ВЫПОЛНЕНИЕ (ОПТИМИЗИРОВАНО: один вызов вместо цикла)
+        if (!_logic.ExecuteContractBatch(exec))
         {
-            var (root, protoId) = kvp.Key;
-            var amount = kvp.Value;
-            if (amount <= 0)
-                continue;
-
-            var ok = root == user
-                ? _logic.TryTakeProductUnits(user, protoId, amount, PrototypeMatchMode.Exact)
-                : _logic.TryTakeProductUnitsFromRoot(root, protoId, amount, PrototypeMatchMode.Exact);
-
-            if (!ok)
-            {
-                Sawmill.Error(
-                    $"[Claim] Execute failed: could not take {amount}x {protoId} from {ToPrettyString(root)} " +
-                    $"for contract '{contractId}' on {ToPrettyString(store)}. " +
-                    $"(NOTE: partial consumption may have already happened)");
-                return false;
-            }
+            Sawmill.Error(
+                $"[Claim] ExecuteBatch failed for contract '{contractId}' on {ToPrettyString(store)}. " +
+                $"(NOTE: partial consumption may have already happened)");
+            return false;
         }
 
+        // 5. Обновление прогресса
         for (var i = 0; i < contract.Targets.Count; i++)
         {
             var t = contract.Targets[i];
@@ -272,6 +265,7 @@ public sealed class NcContractSystem : EntitySystem
         else
             contract.Progress = contract.Required;
 
+        // 6. Выдача награды
         if (contract.RewardCurrencies is { Count: > 0, })
         {
             foreach (var kvp in contract.RewardCurrencies)
@@ -830,7 +824,7 @@ public sealed class NcContractSystem : EntitySystem
             }
             else
             {
-                var pool = Enumerable.ToList(proto.Targets);
+                var pool = new List<StoreContractTargetEntry>(proto.Targets);
                 var picks = Math.Min(targetCount, pool.Count);
 
                 for (var i = 0; i < picks && pool.Count > 0; i++)
@@ -1005,7 +999,10 @@ public sealed class NcContractSystem : EntitySystem
                 anyBonusApplied = true;
             }
 
-            var randomRewards = Enumerable.ToList(Enumerable.Where(allBonusRewards, b => !b.Always));
+            var randomRewards = new List<StoreContractBonusReward>();
+            foreach (var b in allBonusRewards)
+                if (!b.Always)
+                    randomRewards.Add(b);
 
             if (randomRewards.Count > 0)
             {
@@ -1095,8 +1092,11 @@ public sealed class NcContractSystem : EntitySystem
         if (list.Count == 0)
             return null;
 
+        var weights = list.Count <= 128
+            ? stackalloc int[list.Count]
+            : new int[list.Count];
+
         var total = 0;
-        var weights = new int[list.Count];
 
         for (var i = 0; i < list.Count; i++)
         {

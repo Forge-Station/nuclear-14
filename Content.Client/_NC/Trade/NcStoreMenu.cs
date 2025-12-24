@@ -63,6 +63,7 @@ public sealed partial class NcStoreMenu : FancyWindow
     private Control? _tabSell;
     public Action<string>? OnContractClaim;
 
+
     public NcStoreMenu()
     {
         RobustXamlLoader.Load(this);
@@ -142,7 +143,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         if (string.IsNullOrWhiteSpace(currencyId))
             return 0;
 
-        return _balancesByCurrency.TryGetValue(currencyId, out var v) ? v : 0;
+        return _balancesByCurrency.GetValueOrDefault(currencyId, 0);
     }
 
     private void UpdateBalanceHeader()
@@ -329,17 +330,8 @@ public sealed partial class NcStoreMenu : FancyWindow
     private void RebuildSearchIndexFromCatalog()
     {
         _searchIndex.Clear();
-
         foreach (var protoId in _catalog.Select(x => x.ProductEntity).Distinct())
-        {
-            if (string.IsNullOrWhiteSpace(protoId))
-                continue;
-
-            if (!_proto.TryIndex<EntityPrototype>(protoId, out var p))
-                continue;
-
-            _searchIndex[protoId] = (p.Name + "\n" + p.Description).ToLowerInvariant();
-        }
+            AddToSearchIndex(protoId);
     }
 
     private void RebuildCategoriesFromCatalog()
@@ -361,8 +353,8 @@ public sealed partial class NcStoreMenu : FancyWindow
 
     private void UpdateVirtualSellCategories()
     {
-        var hasReady = _items.Any(i => i.Mode == StoreMode.Sell && i.Category == CatIdReady);
-        var hasCrate = _items.Any(i => i.Mode == StoreMode.Sell && i.Category == CatIdCrate);
+        var hasReady = _items.Any(i => i is { Mode: StoreMode.Sell, Category: CatIdReady, });
+        var hasCrate = _items.Any(i => i is { Mode: StoreMode.Sell, Category: CatIdCrate, });
 
         _sellCats.Remove(CatIdReady);
         _sellCats.Remove(CatIdCrate);
@@ -426,8 +418,8 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         foreach (var s in _catalog)
         {
-            var remaining = _remainingById.TryGetValue(s.Id, out var r) ? r : -1;
-            var owned = _ownedById.TryGetValue(s.Id, out var o) ? o : 0;
+            var remaining = _remainingById.GetValueOrDefault(s.Id, -1);
+            var owned = _ownedById.GetValueOrDefault(s.Id, 0);
 
             _items.Add(
                 new(
@@ -464,7 +456,7 @@ public sealed partial class NcStoreMenu : FancyWindow
                 if (!_crateUnitsById.TryGetValue(s.Id, out var take) || take <= 0)
                     continue;
 
-                var remaining = _remainingById.TryGetValue(s.Id, out var r) ? r : 0;
+                var remaining = _remainingById.GetValueOrDefault(s.Id, 0);
 
                 _items.Add(
                     new(
@@ -521,7 +513,7 @@ public sealed partial class NcStoreMenu : FancyWindow
                 .Select(i => i.Category)
                 .Distinct()
                 .OrderBy(c => c));
-        if (_items.Any(i => i.Mode == StoreMode.Sell && i.Category == CatIdReady))
+        if (_items.Any(i => i is { Mode: StoreMode.Sell, Category: CatIdReady, }))
         {
             _sellCats.Remove(CatIdReady);
             _sellCats.Insert(0, CatIdReady);
@@ -540,19 +532,8 @@ public sealed partial class NcStoreMenu : FancyWindow
     private void RebuildSearchIndex()
     {
         _searchIndex.Clear();
-
         foreach (var protoId in _items.Select(i => i.ProductEntity).Distinct())
-        {
-            if (string.IsNullOrWhiteSpace(protoId))
-                continue;
-
-            if (!_proto.TryIndex<EntityPrototype>(protoId, out var p))
-                continue;
-
-            var name = p.Name;
-            var desc = p.Description;
-            _searchIndex[protoId] = (name + "\n" + desc).ToLowerInvariant();
-        }
+            AddToSearchIndex(protoId);
     }
 
     public void PopulateContracts(List<ContractClientData>? list)
@@ -882,7 +863,6 @@ public sealed partial class NcStoreMenu : FancyWindow
             rewardsHeader.StyleClasses.Add("LabelHeading");
             rewardsCol.AddChild(rewardsHeader);
 
-            // Валюты (много) или fallback
             if (c.RewardCurrencies is { Count: > 0, } currencies)
             {
                 var parts = new List<string>();
@@ -947,7 +927,6 @@ public sealed partial class NcStoreMenu : FancyWindow
                 rewardsCol.AddChild(line);
             }
 
-            // Предметы
             var anyItems = c.RewardItems is { Count: > 0, } ||
                 !string.IsNullOrWhiteSpace(c.RewardItem) && c.RewardItemCount > 0;
 
@@ -1140,8 +1119,6 @@ public sealed partial class NcStoreMenu : FancyWindow
         else
             SellCategoryHeader.Text = string.Empty;
 
-        // Ключевая оптимизация UX: если состав/порядок списка не менялся, обновляем данные "на месте"
-        // (не удаляем контролы и не пересоздаём их), чтобы не сбрасывались фокус ввода и скролл.
         var buyEmit = new Action<StoreListingData, int>((d, qty) => OnBuyPressed?.Invoke(d, qty));
         if (!TryUpdatePaneInPlace(BuyListingsContainer, StoreMode.Buy, _buyCat, buyFiltered, buyEmit))
         {
@@ -1181,26 +1158,29 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         if (take <= 0)
             return false;
+
         var ctrls = pane.Children.OfType<NcStoreListingControl>().ToArray();
+
         if (ctrls.Length != take)
             return false;
 
         for (var i = 0; i < take; i++)
         {
             var it = filtered[i];
+            var ctrl = ctrls[i];
 
-            if (!string.Equals(ctrls[i].ListingId, it.Id, StringComparison.Ordinal))
-                return false;
+            if (!string.Equals(ctrl.ListingId, it.Id, StringComparison.Ordinal))
+                ctrl.UpdateIdentity(it);
 
             var balanceHint = mode == StoreMode.Buy
                 ? GetBalanceForCurrency(it.CurrencyId)
                 : int.MaxValue;
 
             var captured = it;
-            ctrls[i].OnBuyPressed = mode == StoreMode.Buy ? qty => emit(captured, qty) : null;
-            ctrls[i].OnSellPressed = mode == StoreMode.Sell ? qty => emit(captured, qty) : null;
+            ctrl.OnBuyPressed = mode == StoreMode.Buy ? qty => emit(captured, qty) : null;
+            ctrl.OnSellPressed = mode == StoreMode.Sell ? qty => emit(captured, qty) : null;
 
-            ctrls[i].UpdateDynamicData(balanceHint, it.Remaining, it.Owned);
+            ctrl.UpdateDynamicData(balanceHint, it.Remaining, it.Owned);
         }
 
         RemoveMoreButtons(pane);
@@ -1250,12 +1230,8 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         if (filtered.Count == 0)
         {
-            string message;
-
-            if (!string.IsNullOrEmpty(cat))
-                message = Loc.GetString("nc-store-empty-category-search");
-            else
-                message = Loc.GetString("nc-store-empty-search");
+            var message = Loc.GetString(
+                !string.IsNullOrEmpty(cat) ? "nc-store-empty-category-search" : "nc-store-empty-search");
 
             pane.AddChild(new Label { Text = message, });
             return;
@@ -1314,7 +1290,7 @@ public sealed partial class NcStoreMenu : FancyWindow
 
             if (!cache.TryGetValue(it.Id, out var tuple) || tuple.Sig != sig)
             {
-                var initQty = _qtyCache.TryGetValue(it.Id, out var saved) ? saved : 1;
+                var initQty = _qtyCache.GetValueOrDefault(it.Id, 1);
                 var actionsEnabled = true;
 
                 var created = new NcStoreListingControl(it, _sprites, balanceHint, initQty, actionsEnabled);
@@ -1568,6 +1544,18 @@ public sealed partial class NcStoreMenu : FancyWindow
     private static int Sig(StoreListingData d) =>
         HashCode.Combine(d.Id, d.ProductEntity, d.Category, d.Price, d.CurrencyId, d.Mode);
 
+    private void AddToSearchIndex(string? protoId)
+    {
+        if (string.IsNullOrWhiteSpace(protoId))
+            return;
+        if (_searchIndex.ContainsKey(protoId))
+            return;
+
+        if (!_proto.TryIndex<EntityPrototype>(protoId, out var p))
+            return;
+
+        _searchIndex[protoId] = (p.Name + "\n" + p.Description).ToLowerInvariant();
+    }
 
     private bool MatchesSearch(string protoId)
     {
@@ -1576,17 +1564,7 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         if (string.IsNullOrWhiteSpace(_searchLower))
             return true;
-
-        if (_searchIndex.TryGetValue(protoId, out var hay))
-            return hay.Contains(_searchLower, StringComparison.Ordinal);
-
-        if (!_proto.TryIndex<EntityPrototype>(protoId, out var p))
-            return false;
-
-        var name = p.Name;
-        var desc = p.Description;
-        var combined = (name + "\n" + desc).ToLowerInvariant();
-        _searchIndex[protoId] = combined;
-        return combined.Contains(_searchLower, StringComparison.Ordinal);
+        return _searchIndex.TryGetValue(protoId, out var hay) &&
+            hay.Contains(_searchLower, StringComparison.Ordinal);
     }
 }
