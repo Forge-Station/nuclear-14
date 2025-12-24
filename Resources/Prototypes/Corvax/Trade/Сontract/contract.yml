@@ -38,21 +38,21 @@
     weight: 5
   currencies:
   - id: Caps
-    min: 0
-    max: 1000
+    amount: { min: 555, max: 5555 }
   - id: PrizeTicket
-    min: 0
-    max: 50
+    amount: { min: 555, max: 5555 }
+  - id: Caps
+    amount: 555
+  - id: PrizeTicket
+    amount: 555
   rewardItems:
-    - id: N14ClothingOuterCombatArmorMK2
-      weight: 12
-    - id: N14ClothingOuterPowerArmorT51
-      count: 3
-      always: true
-    - id: C4
-      weight: 2
-      mode: Replace
-
+  - id: N14ClothingOuterCombatArmorMK2
+    weight: 12
+  - id: N14ClothingOuterPowerArmorT51
+    count: 3
+    always: true
+  - id: C4
+    weight: 2
 
 - type: storeContract
   id: caravan_contract_scrap
@@ -62,22 +62,13 @@
   targetCount: 2
   bonusPickCount: 4
   targets:
-  - id: N14MobHumanBoSWestPaladin
-    required: 1
-    weight: 5
-  - id: N14MobHumanBoSWashingtonPaladin
-    required: 1
-    weight: 2
-  - id: BoSMidPaladinCommander
-    required: 1
-    weight: 1
+  - id: N14MaterialRadscorpionTail
+    required: 3
   currencies:
   - id: Caps
-    min: 0
-    max: 1000
+    amount: { min: 555, max: 5555 }
   - id: PrizeTicket
-    min: 0
-    max: 50
+    amount: { min: 5, max: 333 }
   rewardItems:
   - id: N14ClothingOuterCombatArmorMK2
     weight: 6
@@ -93,16 +84,15 @@
   bonusPickCount: 3
   difficulty: Easy
   targets:
-  - id: N14MobHumanBoSWestPaladin
-    required: 1
+  - id: N14MaterialRadscorpionTail
+    required: 7
   currencies:
   - id: Caps
-    amount: 5000
+    amount: 5555
+  - id: Caps
+    amount: { min: 555, max: 5555 }
   rewardItems:
   - id: N14ClothingOuterCombatArmorMK2
     weight: 6
   - id: C4
     weight: 2
-    mode: Replace
-
-

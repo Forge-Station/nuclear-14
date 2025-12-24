@@ -92,10 +92,7 @@ public sealed class StoreContractPrototype : IPrototype
     public List<StoreContractTargetEntry>? Targets { get; private set; }
 
     [DataField("currencies")]
-    public List<StoreContractCurrencyRange>? Currencies { get; private set; }
-
-    [DataField("rewardCurrencies")]
-    public Dictionary<string, int>? RewardCurrencies { get; private set; }
+    public List<StoreContractCurrencyEntry>? Currencies { get; private set; }
 
     [DataField("fixedRewardItems")]
     public Dictionary<string, int>? FixedRewardItems { get; private set; }
@@ -108,12 +105,6 @@ public sealed class StoreContractPrototype : IPrototype
 
     [DataField("bonusPickCount")]
     public IntRange BonusPickCount { get; private set; } = IntRange.Fixed(1);
-
-    [DataField("reward")]
-    public int Reward { get; private set; }
-
-    [DataField("rewardCurrency")]
-    public string RewardCurrency { get; private set; } = string.Empty;
 
     [DataField("rewardItem")]
     public string? RewardItem { get; private set; }
@@ -240,19 +231,13 @@ public sealed partial class StoreContractBonusReward
 }
 
 [DataDefinition]
-public sealed partial class StoreContractCurrencyRange
+public sealed partial class StoreContractCurrencyEntry
 {
     [DataField("id", required: true)]
     public string Id { get; set; } = string.Empty;
 
-    [DataField("min")]
-    public int Min { get; set; }
-
-    [DataField("max")]
-    public int Max { get; set; }
-
-    [DataField("amount")]
-    public int Amount { get; set; }
+    [DataField("amount", required: true)]
+    public IntRange Amount { get; set; } = IntRange.Fixed(0);
 }
 
 [Prototype("ncContractRewardPool")]
