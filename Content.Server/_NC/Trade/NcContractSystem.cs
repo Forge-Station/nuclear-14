@@ -797,18 +797,16 @@ public sealed class NcContractSystem : EntitySystem
             if (targetCount == 1)
             {
                 var chosen = PickWeighted(_random, proto.Targets, t => t.Weight);
-                {
-                    targetItem = chosen.TargetItemId;
 
-                    var chosenReq = RollSmooth(
-                        new(QuasiKeyKind.TReq, store, proto.ID, chosen.TargetItemId),
-                        chosen.Required,
-                        1);
+                targetItem = chosen.TargetItemId;
 
+                var chosenReq = RollSmooth(
+                    new(QuasiKeyKind.TReq, store, proto.ID, chosen.TargetItemId),
+                    chosen.Required,
+                    1);
 
-                    if (chosenReq > 0)
-                        required = chosenReq;
-                }
+                if (chosenReq > 0)
+                    required = chosenReq;
             }
             else
             {
@@ -818,7 +816,6 @@ public sealed class NcContractSystem : EntitySystem
                 for (var i = 0; i < picks && pool.Count > 0; i++)
                 {
                     var chosen = PickWeighted(_random, pool, t => t.Weight);
-
                     pool.Remove(chosen);
 
                     var itemId = chosen.TargetItemId;
@@ -826,6 +823,7 @@ public sealed class NcContractSystem : EntitySystem
                         new(QuasiKeyKind.TReq, store, proto.ID, chosen.TargetItemId),
                         chosen.Required,
                         1);
+
                     var req = rolledReq > 0 ? rolledReq : required;
 
                     targets.Add(
@@ -852,6 +850,18 @@ public sealed class NcContractSystem : EntitySystem
         var rewardCurrencies = new Dictionary<string, int>();
         var rewardItems = new Dictionary<string, int>();
 
+        static void AddAmount(Dictionary<string, int> dict, string id, int amount)
+        {
+            if (amount <= 0 || string.IsNullOrWhiteSpace(id))
+                return;
+
+            if (dict.TryGetValue(id, out var existing))
+                dict[id] = existing + amount;
+            else
+                dict[id] = amount;
+        }
+
+        // ===== CURRENCIES (LIST): supports duplicates + amount/min/max =====
         if (proto.Currencies is { Count: > 0, })
         {
             foreach (var c in proto.Currencies)
@@ -859,84 +869,55 @@ public sealed class NcContractSystem : EntitySystem
                 if (string.IsNullOrWhiteSpace(c.Id))
                     continue;
 
-                var min = c.Min;
-                var max = c.Max;
+                int amount;
 
-                if (max < min)
-                    (min, max) = (max, min);
-
-                if (min < 0)
-                    min = 0;
-                if (max < 0)
-                    continue;
-
-                var amount = GetRandomSteppedAmount(_random, min, max);
-                if (amount <= 0)
-                    continue;
-
-                if (rewardCurrencies.TryGetValue(c.Id, out var existing))
-                    rewardCurrencies[c.Id] = existing + amount;
+                // Fixed amount has priority if provided.
+                if (c.Amount > 0)
+                    amount = c.Amount;
                 else
-                    rewardCurrencies[c.Id] = amount;
+                {
+                    var min = c.Min;
+                    var max = c.Max;
+
+                    if (max < min)
+                        (min, max) = (max, min);
+
+                    if (min < 0)
+                        min = 0;
+
+                    if (max < 0)
+                        continue;
+
+                    amount = GetRandomSteppedAmount(_random, min, max);
+                }
+
+                AddAmount(rewardCurrencies, c.Id, amount);
             }
         }
 
+        // ===== rewardCurrencies (DICTIONARY): no duplicates possible in YAML, but we still merge safely =====
         if (proto.RewardCurrencies != null)
         {
             foreach (var kvp in proto.RewardCurrencies)
-            {
-                var currencyId = kvp.Key;
-                var amount = kvp.Value;
-
-                if (amount <= 0 || string.IsNullOrWhiteSpace(currencyId))
-                    continue;
-
-                if (rewardCurrencies.TryGetValue(currencyId, out var existing))
-                    rewardCurrencies[currencyId] = existing + amount;
-                else
-                    rewardCurrencies[currencyId] = amount;
-            }
+                AddAmount(rewardCurrencies, kvp.Key, kvp.Value);
         }
 
+        // ===== fixed reward items (dictionary) =====
         if (proto.FixedRewardItems != null)
         {
             foreach (var kvp in proto.FixedRewardItems)
-            {
-                var protoId = kvp.Key;
-                var count = kvp.Value;
-
-                if (count <= 0 || string.IsNullOrWhiteSpace(protoId))
-                    continue;
-
-                if (rewardItems.TryGetValue(protoId, out var existing))
-                    rewardItems[protoId] = existing + count;
-                else
-                    rewardItems[protoId] = count;
-            }
+                AddAmount(rewardItems, kvp.Key, kvp.Value);
         }
 
+        // ===== legacy single reward currency =====
         if (proto.Reward > 0 && !string.IsNullOrWhiteSpace(proto.RewardCurrency))
-        {
-            var currencyId = proto.RewardCurrency;
-            var amount = proto.Reward;
+            AddAmount(rewardCurrencies, proto.RewardCurrency, proto.Reward);
 
-            if (rewardCurrencies.TryGetValue(currencyId, out var existing))
-                rewardCurrencies[currencyId] = existing + amount;
-            else
-                rewardCurrencies[currencyId] = amount;
-        }
-
+        // ===== legacy single reward item =====
         if (!string.IsNullOrWhiteSpace(proto.RewardItem) && proto.RewardItemCount > 0)
-        {
-            var protoId = proto.RewardItem!;
-            var count = proto.RewardItemCount;
+            AddAmount(rewardItems, proto.RewardItem!, proto.RewardItemCount);
 
-            if (rewardItems.TryGetValue(protoId, out var existing))
-                rewardItems[protoId] = existing + count;
-            else
-                rewardItems[protoId] = count;
-        }
-
+        // ===== bonus rewards =====
         var allBonusRewards = new List<StoreContractBonusReward>();
 
         if (proto.RewardItems is { Count: > 0, })
@@ -996,8 +977,8 @@ public sealed class NcContractSystem : EntitySystem
                     for (var i = 0; i < picks; i++)
                     {
                         var bonus = PickWeighted(_random, randomRewards, b => b.Weight);
-
                         var effective = ResolveEffective(bonus);
+
                         ApplyBonusReward(effective, rewardCurrencies, rewardItems, anyBonusApplied);
                         anyBonusApplied = true;
                     }
@@ -1005,6 +986,7 @@ public sealed class NcContractSystem : EntitySystem
             }
         }
 
+        // ===== pick "main" currency/item for legacy UI fields =====
         string? mainCurrency = null;
         var mainCurrencyAmount = 0;
 
@@ -1049,13 +1031,16 @@ public sealed class NcContractSystem : EntitySystem
             Required = required,
             Progress = 0,
             MatchMode = matchMode,
+
             Reward = mainCurrencyAmount,
             RewardCurrency = mainCurrency ?? string.Empty,
             RewardItem = mainItem,
             RewardItemCount = mainItemCount,
+
             Difficulty = proto.Difficulty,
             Description = proto.Description,
             Repeatable = proto.Repeatable,
+
             RewardCurrencies = rewardCurrencies,
             RewardItems = rewardItems,
             Targets = targets
