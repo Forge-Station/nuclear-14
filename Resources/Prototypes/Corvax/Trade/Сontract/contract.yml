@@ -1,9 +1,22 @@
-- type: storeContractsPreset
-  id: bazar_contracts_easy
+- type: storeContractPack
+  id: bazar_contracts
   contracts:
-  - caravan_contract_scrap
-  - caravan_contract_guns
-  - caravan_contract_scraps
+  - id: caravan_contract_scrap
+    weight: 50
+  - id: caravan_contract_guns
+    weight: 50
+  - id: caravan_contract_scraps
+    weight: 50
+
+- type: storeContractsPreset
+  id: bazar_contracts
+  limits:
+    Easy: 1
+    Medium: 1
+    Hard: 1
+  packs:
+  - id: bazar_contracts
+    weight: 1
 
 - type: storeContract
   id: caravan_contract_guns
@@ -45,7 +58,7 @@
   id: caravan_contract_scrap
   name: Металлолом нужен
   description: "Найди девушку Грому. Найдешь он тебя отблагодарит."
-  difficulty: Medium
+  difficulty: Easy
   targetCount: 2
   bonusPickCount: 4
   targets:
@@ -78,12 +91,13 @@
   description: "Найди девушку Грому. Найдешь он тебя отблагодарит."
   targetCount: 2
   bonusPickCount: 3
-  difficulty: Medium
+  difficulty: Easy
   targets:
   - id: N14MobHumanBoSWestPaladin
     required: 1
-  rewardCurrencies:
-    Caps: 5000
+  currencies:
+  - id: Caps
+    amount: 5000
   rewardItems:
   - id: N14ClothingOuterCombatArmorMK2
     weight: 6

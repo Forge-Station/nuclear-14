@@ -128,12 +128,61 @@ public sealed class StoreContractPrototype : IPrototype
 [Prototype("storeContractsPreset")]
 public sealed class StoreContractsPresetPrototype : IPrototype
 {
-    [DataField("contracts", required: true)]
-    public List<string> Contracts { get; set; } = new();
-
     [IdDataField]
     public string ID { get; private set; } = default!;
+
+    [DataField("limits", required: true)]
+    public Dictionary<string, int> Limits { get; set; } = new();
+
+    [DataField("packs")]
+    public List<PackIncludeEntry> Packs { get; set; } = new();
 }
+
+[DataDefinition]
+public partial struct ContractWeightEntry
+{
+    [DataField("id", required: true)]
+    public string Id = string.Empty;
+
+    [DataField("weight")]
+    public int Weight = 1;
+
+    public ContractWeightEntry(string id, int weight)
+    {
+        Id = id;
+        Weight = weight;
+    }
+}
+
+[DataDefinition]
+public partial struct PackIncludeEntry
+{
+    [DataField("id", required: true)]
+    public string Id = string.Empty;
+
+    [DataField("weight")]
+    public int Weight = 1;
+
+    public PackIncludeEntry(string id, int weight)
+    {
+        Id = id;
+        Weight = weight;
+    }
+}
+
+[Prototype("storeContractPack")]
+public sealed class StoreContractPackPrototype : IPrototype
+{
+    [IdDataField]
+    public string ID { get; private set; } = default!;
+
+    [DataField("contracts")]
+    public List<ContractWeightEntry> Contracts { get; set; } = new();
+
+    [DataField("includes")]
+    public List<PackIncludeEntry> Includes { get; set; } = new();
+}
+
 
 [DataDefinition]
 public sealed partial class StoreContractTargetEntry
@@ -201,6 +250,9 @@ public sealed partial class StoreContractCurrencyRange
 
     [DataField("max")]
     public int Max { get; set; }
+
+    [DataField("amount")]
+    public int Amount { get; set; }
 }
 
 [Prototype("ncContractRewardPool")]

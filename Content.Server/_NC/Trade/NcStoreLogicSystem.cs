@@ -938,7 +938,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
         if (_ents.TryGetComponent(owner, out ItemSlotsComponent? itemSlots))
         {
             foreach (var slot in itemSlots.Slots.Values)
-                if (slot.HasItem && slot.Item.HasValue)
+                if (slot is { HasItem: true, Item: not null, })
                     Enqueue(slot.Item.Value);
         }
 
@@ -1202,7 +1202,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 .OrderByDescending(GetInheritanceDepth)
                 .ThenBy(x => x, OrdinalIds)
                 .ToArray()
-            : Array.Empty<string>();
+            : [];
 
         var listingPrices = new Dictionary<string, int>();
         foreach (var l in store.Listings)

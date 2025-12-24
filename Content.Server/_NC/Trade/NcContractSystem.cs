@@ -44,10 +44,7 @@ public sealed class NcContractSystem : EntitySystem
         if (comp.Contracts.Count > 0)
             return;
 
-        if (!TryGetPreset(uid, comp, out var preset))
-            return;
-
-        AddMissingContractsFromPreset(uid, comp, preset!, false);
+        RefreshContractsInternal(uid, comp);
     }
 
     private static List<ContractTargetServerData> GetEffectiveTargets(ContractServerData contract)
@@ -114,7 +111,6 @@ public sealed class NcContractSystem : EntitySystem
         var userSnap = _logic.BuildInventorySnapshot(user);
 
         var hasCrateSnap = false;
-        // ИСПРАВЛЕНИЕ 1: Явно указываем, что переменная может быть null (?) и инициализируем null
         NcStoreLogicSystem.InventorySnapshot? crateSnap = null;
 
         if (crateUid is { } c0 && Exists(c0))
@@ -126,16 +122,12 @@ public sealed class NcContractSystem : EntitySystem
         else
             crateUid = null;
 
-        // 1. Проверяем, хватает ли предметов суммарно
         foreach (var kvp in requiredByKey)
         {
             var (protoId, matchMode) = kvp.Key;
             var required = kvp.Value;
 
             var ownedUser = _logic.GetOwnedFromSnapshot(userSnap, protoId, matchMode);
-
-            // ИСПРАВЛЕНИЕ 2: Переименовали переменную в ownedInCrate, чтобы не было конфликтов
-            // И добавили '!', чтобы убрать ошибку "possible null reference"
             var ownedInCrate = hasCrateSnap ? _logic.GetOwnedFromSnapshot(crateSnap!, protoId, matchMode) : 0;
 
             if (ownedUser + ownedInCrate < required)
@@ -151,7 +143,6 @@ public sealed class NcContractSystem : EntitySystem
 
         var plan = new List<ClaimSlice>(requiredByKey.Count * 2);
 
-        // 2. Планируем, откуда именно забирать
         foreach (var key in orderedKeys)
         {
             var (protoId, matchMode) = key;
@@ -185,7 +176,7 @@ public sealed class NcContractSystem : EntitySystem
             }
 
             var reservedFromCrate = ReserveFromSnapshot(
-                crateSnap!, // Используем ! здесь тоже
+                crateSnap!,
                 protoId,
                 matchMode,
                 need,
@@ -207,7 +198,6 @@ public sealed class NcContractSystem : EntitySystem
             }
         }
 
-        // 3. Агрегируем план в словарь
         var exec = new Dictionary<(EntityUid Root, string ProtoId), int>();
         foreach (var s in plan)
         {
@@ -216,7 +206,6 @@ public sealed class NcContractSystem : EntitySystem
                 exec[k] = checked(exec[k] + s.Amount);
         }
 
-        // 4. ВЫПОЛНЕНИЕ (ОПТИМИЗИРОВАНО: один вызов вместо цикла)
         if (!_logic.ExecuteContractBatch(exec))
         {
             Sawmill.Error(
@@ -225,7 +214,6 @@ public sealed class NcContractSystem : EntitySystem
             return false;
         }
 
-        // 5. Обновление прогресса
         for (var i = 0; i < contract.Targets.Count; i++)
         {
             var t = contract.Targets[i];
@@ -236,36 +224,6 @@ public sealed class NcContractSystem : EntitySystem
             contract.Targets[i] = t;
         }
 
-        if (contract.Targets.Count > 0)
-        {
-            var totalRequired = 0;
-            var totalProgress = 0;
-
-            foreach (var t in contract.Targets)
-            {
-                if (t.Required <= 0 || string.IsNullOrWhiteSpace(t.TargetItem))
-                    continue;
-
-                totalRequired += t.Required;
-
-                var prog = t.Progress;
-                if (prog < 0)
-                    prog = 0;
-                if (prog > t.Required)
-                    prog = t.Required;
-
-                totalProgress += prog;
-            }
-
-            contract.Required = totalRequired;
-            contract.Progress = totalProgress;
-
-            contract.TargetItem = contract.Targets[0].TargetItem;
-        }
-        else
-            contract.Progress = contract.Required;
-
-        // 6. Выдача награды
         if (contract.RewardCurrencies is { Count: > 0, })
         {
             foreach (var kvp in contract.RewardCurrencies)
@@ -303,15 +261,14 @@ public sealed class NcContractSystem : EntitySystem
         }
 
         var repeatable = contract.Repeatable;
+
         comp.Contracts.Remove(contractId);
 
         if (!repeatable)
-        {
             comp.CompletedOneTimeContracts.Add(contractId);
-            return true;
-        }
 
-        RefillContractsForStore(store, comp);
+        RefillContractsForStore(store, comp, contractId);
+
         return true;
     }
 
@@ -495,7 +452,7 @@ public sealed class NcContractSystem : EntitySystem
         if (_prototypes.TryIndex<EntityPrototype>(protoId, out var proto))
         {
             var parents0 = proto.Parents;
-            if (parents0 != null && parents0.Length > 0)
+            if (parents0 is { Length: > 0, })
             {
                 var stack = new Stack<string>(parents0);
                 var seen = new HashSet<string>();
@@ -511,7 +468,7 @@ public sealed class NcContractSystem : EntitySystem
                     if (_prototypes.TryIndex<EntityPrototype>(cur, out var p))
                     {
                         var parents = p.Parents;
-                        if (parents != null && parents.Length > 0)
+                        if (parents is { Length: > 0, })
                         {
                             foreach (var t in parents)
                                 stack.Push(t);
@@ -552,7 +509,7 @@ public sealed class NcContractSystem : EntitySystem
             if (_prototypes.TryIndex<EntityPrototype>(cur, out var p))
             {
                 var parents = p.Parents;
-                if (parents != null && parents.Length > 0)
+                if (parents is { Length: > 0, })
                 {
                     foreach (var t in parents)
                         stack.Push(t);
@@ -582,73 +539,105 @@ public sealed class NcContractSystem : EntitySystem
     }
 
 
-    private void RefillContractsForStore(EntityUid uid, NcStoreComponent comp)
+    private void RefillContractsForStore(EntityUid uid, NcStoreComponent comp, string? ignoredContractId = null) =>
+        RefreshContractsInternal(uid, comp, ignoredContractId);
+
+    private void RefreshContractsInternal(EntityUid uid, NcStoreComponent comp, string? ignoredContractId = null)
     {
-        if (!TryGetPreset(uid, comp, out var preset))
-            return;
-
-        AddMissingContractsFromPreset(uid, comp, preset!, true);
-    }
-
-    private void AddMissingContractsFromPreset(
-        EntityUid uid,
-        NcStoreComponent comp,
-        StoreContractsPresetPrototype preset,
-        bool fillOnlyFirstMissing
-    )
-    {
-        foreach (var contractId in preset.Contracts)
-        {
-            if (string.IsNullOrWhiteSpace(contractId))
-                continue;
-
-            if (comp.Contracts.ContainsKey(contractId))
-                continue;
-
-            if (!_prototypes.TryIndex<StoreContractPrototype>(contractId, out var proto))
-            {
-                Sawmill.Warning(
-                    $"[Contracts] Contract '{contractId}' from preset '{preset.ID}' not found for {ToPrettyString(uid)}.");
-                continue;
-            }
-
-            if (!proto.Repeatable && comp.CompletedOneTimeContracts.Contains(contractId))
-                continue;
-
-            comp.Contracts[contractId] = CreateContractData(uid, proto);
-
-            if (fillOnlyFirstMissing)
-                break;
-        }
-    }
-
-    private bool TryGetPreset(
-        EntityUid uid,
-        NcStoreComponent comp,
-        out StoreContractsPresetPrototype? preset
-    )
-    {
-        preset = null;
-
         string? presetId = null;
-
         if (comp.ContractPresets.Count > 0)
             presetId = comp.ContractPresets[0];
         else if (!string.IsNullOrWhiteSpace(comp.LegacyContractsPreset))
             presetId = comp.LegacyContractsPreset;
 
         if (string.IsNullOrWhiteSpace(presetId))
-            return false;
+            return;
 
-        if (!_prototypes.TryIndex(presetId, out preset))
+        if (!_prototypes.TryIndex<StoreContractsPresetPrototype>(presetId, out var mainPreset))
         {
-            Sawmill.Warning(
-                $"[Preset] Preset '{presetId}' not found for {ToPrettyString(uid)}.");
-            return false;
+            Sawmill.Warning($"[Contracts] Preset '{presetId}' not found for {ToPrettyString(uid)}");
+            return;
         }
 
-        return true;
+        var currentCounts = new Dictionary<string, int>();
+        foreach (var c in comp.Contracts.Values)
+        {
+            currentCounts.TryAdd(c.Difficulty, 0);
+            currentCounts[c.Difficulty]++;
+        }
+
+        var candidates = new List<(StoreContractPrototype Proto, int Weight)>();
+        var visitedPacks = new HashSet<string>();
+
+        foreach (var packEntry in mainPreset.Packs)
+            CollectFromPackRecursive(packEntry.Id, packEntry.Weight, candidates, visitedPacks);
+
+        var poolByDifficulty = new Dictionary<string, List<(StoreContractPrototype Proto, int Weight)>>();
+
+        foreach (var (proto, weight) in candidates)
+        {
+            if (ignoredContractId != null && proto.ID == ignoredContractId)
+                continue;
+
+            if (!proto.Repeatable && comp.CompletedOneTimeContracts.Contains(proto.ID))
+                continue;
+            if (comp.Contracts.ContainsKey(proto.ID))
+                continue;
+
+            if (!poolByDifficulty.ContainsKey(proto.Difficulty))
+                poolByDifficulty[proto.Difficulty] = new();
+
+            poolByDifficulty[proto.Difficulty].Add((proto, weight));
+        }
+
+        foreach (var (difficulty, limit) in mainPreset.Limits)
+        {
+            var current = currentCounts.TryGetValue(difficulty, out var c) ? c : 0;
+            var needed = limit - current;
+
+            if (needed <= 0)
+                continue;
+            if (!poolByDifficulty.TryGetValue(difficulty, out var validPool) || validPool.Count == 0)
+                continue;
+
+            for (var i = 0; i < needed; i++)
+            {
+                if (validPool.Count == 0)
+                    break;
+
+                var pick = PickWeighted(_random, validPool, x => x.Weight);
+
+                comp.Contracts[pick.Proto.ID] = CreateContractData(uid, pick.Proto);
+
+                validPool.Remove(pick);
+            }
+        }
     }
+
+    private void CollectFromPackRecursive(
+        string packId,
+        int currentWeightMult,
+        List<(StoreContractPrototype Proto, int FinalWeight)> accumulator,
+        HashSet<string> visitedPacks
+    )
+    {
+        if (!visitedPacks.Add(packId))
+            return;
+
+        if (!_prototypes.TryIndex<StoreContractPackPrototype>(packId, out var pack))
+        {
+            Sawmill.Error($"[Contracts] Pack '{packId}' not found.");
+            return;
+        }
+
+        foreach (var entry in pack.Contracts)
+            if (_prototypes.TryIndex<StoreContractPrototype>(entry.Id, out var proto))
+                accumulator.Add((proto, entry.Weight * currentWeightMult));
+
+        foreach (var include in pack.Includes)
+            CollectFromPackRecursive(include.Id, currentWeightMult * include.Weight, accumulator, visitedPacks);
+    }
+
 
     private static int GetRandomSteppedAmount(IRobustRandom random, int min, int max)
     {
@@ -808,7 +797,6 @@ public sealed class NcContractSystem : EntitySystem
             if (targetCount == 1)
             {
                 var chosen = PickWeighted(_random, proto.Targets, t => t.Weight);
-                if (chosen != null)
                 {
                     targetItem = chosen.TargetItemId;
 
@@ -830,8 +818,6 @@ public sealed class NcContractSystem : EntitySystem
                 for (var i = 0; i < picks && pool.Count > 0; i++)
                 {
                     var chosen = PickWeighted(_random, pool, t => t.Weight);
-                    if (chosen == null)
-                        break;
 
                     pool.Remove(chosen);
 
@@ -969,21 +955,18 @@ public sealed class NcContractSystem : EntitySystem
                     poolProto.Entries is { Count: > 0, })
                 {
                     var poolEntry = PickWeighted(_random, poolProto.Entries, e => e.Weight);
-                    if (poolEntry != null)
+                    return new()
                     {
-                        return new()
-                        {
-                            Id = poolEntry.Id,
-                            Count = poolEntry.Count,
-                            Mode = poolEntry.Mode,
-                            RewardCurrencies = poolEntry.RewardCurrencies != null
-                                ? new Dictionary<string, int>(poolEntry.RewardCurrencies)
-                                : null,
-                            RewardItems = poolEntry.RewardItems != null
-                                ? new Dictionary<string, int>(poolEntry.RewardItems)
-                                : null
-                        };
-                    }
+                        Id = poolEntry.Id,
+                        Count = poolEntry.Count,
+                        Mode = poolEntry.Mode,
+                        RewardCurrencies = poolEntry.RewardCurrencies != null
+                            ? new Dictionary<string, int>(poolEntry.RewardCurrencies)
+                            : null,
+                        RewardItems = poolEntry.RewardItems != null
+                            ? new Dictionary<string, int>(poolEntry.RewardItems)
+                            : null
+                    };
                 }
 
                 return bonus;
@@ -1013,8 +996,6 @@ public sealed class NcContractSystem : EntitySystem
                     for (var i = 0; i < picks; i++)
                     {
                         var bonus = PickWeighted(_random, randomRewards, b => b.Weight);
-                        if (bonus == null)
-                            break;
 
                         var effective = ResolveEffective(bonus);
                         ApplyBonusReward(effective, rewardCurrencies, rewardItems, anyBonusApplied);
@@ -1082,15 +1063,14 @@ public sealed class NcContractSystem : EntitySystem
     }
 
 
-    private static T? PickWeighted<T>(
+    private static T PickWeighted<T>(
         IRobustRandom random,
         IReadOnlyList<T> list,
         Func<T, int> weightSelector
     )
-        where T : class
     {
         if (list.Count == 0)
-            return null;
+            return default!;
 
         var weights = list.Count <= 128
             ? stackalloc int[list.Count]

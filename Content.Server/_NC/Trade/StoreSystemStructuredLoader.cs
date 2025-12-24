@@ -55,11 +55,8 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
             changed = true;
         }
 
-        if (!_loadedStores.Contains(uid))
-        {
-            _loadedStores.Add(uid);
+        if (_loadedStores.Add(uid))
             changed = true;
-        }
 
         if (changed)
             comp.BumpCatalogRevision();
@@ -129,9 +126,8 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
             if (ctx.CategorySeen.Add(category))
                 comp.Categories.Add(category);
 
-            for (var i = 0; i < entries.Count; i++)
+            foreach (var entry in entries)
             {
-                var entry = entries[i];
                 var baseId = $"{presetId}:{mode}:{category}:{entry.Proto}";
 
                 var id = AllocateDeterministicId(baseId, ctx);
@@ -142,8 +138,8 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
                     ProductEntity = entry.Proto,
                     MatchMode = entry.MatchMode,
                     Mode = mode,
-                    Categories = new() { category, },
-                    Conditions = new(),
+                    Categories = [category,],
+                    Conditions = [],
                     RemainingCount = entry.Count ?? -1,
                     Cost = new()
                 };
