@@ -6,6 +6,7 @@ using Robust.Shared.Random;
 
 namespace Content.Server._NC.Trade;
 
+
 public sealed class NcContractSystem : EntitySystem
 {
     private const double Golden = 0.6180339887498948;
@@ -15,10 +16,15 @@ public sealed class NcContractSystem : EntitySystem
     private readonly Dictionary<string, List<string>> _ancestorsCache = new();
     private readonly Dictionary<string, int> _depthCache = new();
 
+
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
     private readonly Dictionary<QuasiKey, double> _quasiPhase = new();
     [Dependency] private readonly IRobustRandom _random = default!;
+    private readonly List<EntityUid> _scratchCrateItems = new();
+    private readonly NcStoreLogicSystem.InventorySnapshot _scratchCrateSnap = new();
+    private readonly List<EntityUid> _scratchUserItems = new();
+    private readonly NcStoreLogicSystem.InventorySnapshot _scratchUserSnap = new();
 
     public override void Initialize()
     {
@@ -87,20 +93,28 @@ public sealed class NcContractSystem : EntitySystem
                 requiredByKey[key] = checked(requiredByKey[key] + t.Required);
         }
 
+        // Build deep lists + snapshots exactly once per root.
         _logic.InvalidateInventoryCache(user);
-        var userSnap = _logic.BuildInventorySnapshot(user);
 
-        var hasCrateSnap = false;
+        _logic.FillDeepItemsList(user, _scratchUserItems);
+        _logic.FillInventorySnapshotFromItems(user, _scratchUserItems, _scratchUserSnap);
+        var userSnap = _scratchUserSnap;
+
+        var hasCrate = false;
+        EntityUid? crateEntity = null;
         NcStoreLogicSystem.InventorySnapshot? crateSnap = null;
 
         if (crateUid is { } c0 && Exists(c0))
         {
+            crateEntity = c0;
             _logic.InvalidateInventoryCache(c0);
-            crateSnap = _logic.BuildInventorySnapshot(c0);
-            hasCrateSnap = true;
+
+            _logic.FillDeepItemsList(c0, _scratchCrateItems);
+            _logic.FillInventorySnapshotFromItems(c0, _scratchCrateItems, _scratchCrateSnap);
+
+            crateSnap = _scratchCrateSnap;
+            hasCrate = true;
         }
-        else
-            crateUid = null;
 
         foreach (var kvp in requiredByKey)
         {
@@ -108,7 +122,7 @@ public sealed class NcContractSystem : EntitySystem
             var required = kvp.Value;
 
             var ownedUser = _logic.GetOwnedFromSnapshot(userSnap, protoId, matchMode);
-            var ownedInCrate = hasCrateSnap ? _logic.GetOwnedFromSnapshot(crateSnap!, protoId, matchMode) : 0;
+            var ownedInCrate = hasCrate ? _logic.GetOwnedFromSnapshot(crateSnap!, protoId, matchMode) : 0;
 
             if (ownedUser + ownedInCrate < required)
             {
@@ -147,7 +161,7 @@ public sealed class NcContractSystem : EntitySystem
             if (need <= 0)
                 continue;
 
-            if (crateUid is not { } crateEntity || !Exists(crateEntity) || !hasCrateSnap)
+            if (!hasCrate || crateEntity is not { } ce || !Exists(ce) || crateSnap == null)
             {
                 Sawmill.Error(
                     $"[Claim] Missing {need}x {protoId} but pulled closed crate is missing/invalid. " +
@@ -156,12 +170,12 @@ public sealed class NcContractSystem : EntitySystem
             }
 
             var reservedFromCrate = ReserveFromSnapshot(
-                crateSnap!,
+                crateSnap,
                 protoId,
                 matchMode,
                 need,
                 out var crateSlices,
-                crateEntity);
+                ce);
 
             if (reservedFromCrate > 0)
             {
@@ -186,13 +200,40 @@ public sealed class NcContractSystem : EntitySystem
                 exec[k] = checked(exec[k] + s.Amount);
         }
 
-        if (!_logic.ExecuteContractBatch(exec))
+        foreach (var ((root, protoId), amount) in exec)
         {
-            Sawmill.Error(
-                $"[Claim] ExecuteBatch failed for contract '{contractId}' on {ToPrettyString(store)}. " +
-                "(NOTE: partial consumption may have already happened)");
-            return false;
+            if (amount <= 0)
+                continue;
+
+            List<EntityUid>? items = null;
+            if (root == user)
+                items = _scratchUserItems;
+            else if (hasCrate && crateEntity is { } c1 && root == c1)
+                items = _scratchCrateItems;
+
+            if (items != null)
+            {
+                if (!_logic.TryTakeProductUnitsFromCachedItems(root, items, protoId, amount, PrototypeMatchMode.Exact))
+                {
+                    Sawmill.Error(
+                        $"[Claim] Take failed for {amount}x {protoId} from {ToPrettyString(root)}. Aborting claim '{contractId}'.");
+                    return false;
+                }
+
+                continue;
+            }
+
+            if (!_logic.TryTakeProductUnitsFromRoot(root, protoId, amount, PrototypeMatchMode.Exact))
+            {
+                Sawmill.Error(
+                    $"[Claim] Take fallback failed for {amount}x {protoId} from {ToPrettyString(root)}. Aborting claim '{contractId}'.");
+                return false;
+            }
         }
+
+        _logic.InvalidateInventoryCache(user);
+        if (hasCrate && crateEntity is { } c2)
+            _logic.InvalidateInventoryCache(c2);
 
         for (var i = 0; i < contract.Targets.Count; i++)
         {

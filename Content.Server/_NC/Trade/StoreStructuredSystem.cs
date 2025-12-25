@@ -19,14 +19,20 @@ namespace Content.Server._NC.Trade;
 public sealed class StoreStructuredSystem : EntitySystem
 {
     private const float AutoCloseDistance = 3f;
-    private const float MinAccelInterval = 0.05f;
-    [Dependency] private readonly AudioSystem _audio = default!;
+    private const float MinAccelInterval = 0.25f;
+    private const float MinDynamicInterval = 0.25f;
     private const int WatchedRootSearchLimit = 32;
     private const float CheckInterval = 1.0f;
     private readonly HashSet<EntityUid> _affectedStoresScratch = new();
+    [Dependency] private readonly AudioSystem _audio = default!;
     private readonly Dictionary<EntityUid, (int Revision, List<StoreListingStaticData> List)> _catalogCache = new();
     [Dependency] private readonly NcContractSystem _contracts = default!;
+    private readonly NcStoreLogicSystem.InventorySnapshot _crateSnapScratch = new();
+    private readonly List<EntityUid> _deepCrateItemsScratch = new();
+    private readonly List<EntityUid> _deepUserItemsScratch = new();
     private readonly HashSet<EntityUid> _dirtyStores = new();
+
+    private readonly List<EntityUid> _dirtyStoresScratch = new();
 
     private readonly Dictionary<EntityUid, DynamicScratch> _dynamicScratchByStore = new();
     [Dependency] private readonly StoreSystemStructuredLoader _loader = default!;
@@ -34,11 +40,13 @@ public sealed class StoreStructuredSystem : EntitySystem
     private readonly List<EntityUid> _openStoresScratch = new();
     private readonly HashSet<EntityUid> _openStoreUids = new();
     private readonly HashSet<EntityUid> _pendingRefreshEntities = new();
+
     [Dependency] private readonly PopupSystem _popups = default!;
     private readonly Dictionary<EntityUid, HashSet<EntityUid>> _storesByWatchedRoot = new();
     [Dependency] private readonly NcStoreSystem _storeSystem = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
+    private readonly NcStoreLogicSystem.InventorySnapshot _userSnapScratch = new();
 
     private readonly Dictionary<EntityUid, (EntityUid User, EntityUid? Crate)> _watchByStore = new();
 
@@ -46,6 +54,8 @@ public sealed class StoreStructuredSystem : EntitySystem
 
     private TimeSpan _nextAccelAllowed = TimeSpan.Zero;
     private TimeSpan _nextCheck = TimeSpan.Zero;
+
+    private TimeSpan _nextDynamicAllowed = TimeSpan.Zero;
 
     private DynamicScratch GetDynamicScratch(EntityUid storeUid)
     {
@@ -128,11 +138,20 @@ public sealed class StoreStructuredSystem : EntitySystem
 
         UpdateStoreWatch(uid, user, crateUid);
 
-        var userSnap = _logic.BuildInventorySnapshot(user);
+        // Build deep lists + snapshots exactly once per root (avoid double scans on big crates).
+        _logic.InvalidateInventoryCache(user);
+        _logic.FillDeepItemsList(user, _deepUserItemsScratch);
+        _logic.FillInventorySnapshotFromItems(user, _deepUserItemsScratch, _userSnapScratch);
+        var userSnap = _userSnapScratch;
 
         NcStoreLogicSystem.InventorySnapshot? crateSnap = null;
         if (crateUid is { } crateEntity)
-            crateSnap = _logic.BuildInventorySnapshot(crateEntity);
+        {
+            _logic.InvalidateInventoryCache(crateEntity);
+            _logic.FillDeepItemsList(crateEntity, _deepCrateItemsScratch);
+            _logic.FillInventorySnapshotFromItems(crateEntity, _deepCrateItemsScratch, _crateSnapScratch);
+            crateSnap = _crateSnapScratch;
+        }
 
         UpdateContractsProgress(comp, userSnap, crateSnap);
 
@@ -174,7 +193,7 @@ public sealed class StoreStructuredSystem : EntitySystem
 
         if (crateUid is { } crate)
         {
-            var plan = _logic.ComputeMassSellPlan(comp, crate);
+            var plan = _logic.ComputeMassSellPlanFromCachedItems(comp, crate, _deepCrateItemsScratch);
 
             foreach (var kvp in plan.UnitsByListingId)
                 if (!string.IsNullOrWhiteSpace(kvp.Key) && kvp.Value > 0)
@@ -342,13 +361,17 @@ public sealed class StoreStructuredSystem : EntitySystem
             }
         }
 
-        if (_dirtyStores.Count > 0)
+        if (_dirtyStores.Count > 0 && _timing.CurTime >= _nextDynamicAllowed)
         {
-            foreach (var uid in _dirtyStores.ToList())
+            _dirtyStoresScratch.Clear();
+            _dirtyStoresScratch.AddRange(_dirtyStores);
+            _dirtyStores.Clear();
+
+            foreach (var uid in _dirtyStoresScratch)
                 if (TryComp(uid, out NcStoreComponent? store) && store.CurrentUser is { } user)
                     UpdateDynamicState(uid, store, user);
 
-            _dirtyStores.Clear();
+            _nextDynamicAllowed = _timing.CurTime + TimeSpan.FromSeconds(MinDynamicInterval);
         }
 
         if (_timing.CurTime < _nextCheck)
@@ -738,7 +761,7 @@ public sealed class StoreStructuredSystem : EntitySystem
     {
         var targets = new List<ContractTargetClientData>();
 
-        if (c.Targets is { Count: > 0 })
+        if (c.Targets is { Count: > 0, })
         {
             foreach (var t in c.Targets)
             {
@@ -760,7 +783,8 @@ public sealed class StoreStructuredSystem : EntitySystem
                     MatchMode = c.MatchMode
                 });
         }
-        var rewards = c.Rewards is { Count: > 0 }
+
+        var rewards = c.Rewards is { Count: > 0, }
             ? new(c.Rewards)
             : new List<ContractRewardData>();
 

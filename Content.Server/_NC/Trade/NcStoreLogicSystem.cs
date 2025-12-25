@@ -139,6 +139,13 @@ public sealed class NcStoreLogicSystem : EntitySystem
             if (IsProtectedFromDirectSale(root, ent))
                 continue;
 
+            // NOTE:
+            // Stack entities must contribute not only to StackTypeCounts, but also to ProtoCounts/AncestorCounts.
+            // Otherwise, any listing/contract with MatchMode=Descendants for an abstract (non-stack) parent proto
+            // will see 0 units when the actual items are stacks.
+            _ents.TryGetComponent(ent, out MetaDataComponent? meta);
+            var proto = meta?.EntityPrototype;
+
             if (_ents.TryGetComponent(ent, out StackComponent? stack))
             {
                 var cnt = Math.Max(stack.Count, 0);
@@ -148,13 +155,23 @@ public sealed class NcStoreLogicSystem : EntitySystem
                     buffer.StackTypeCounts[stack.StackTypeId] = prev + cnt;
                 }
 
+                if (cnt > 0 && proto != null)
+                {
+                    if (!buffer.ProtoCounts.TryAdd(proto.ID, cnt))
+                        buffer.ProtoCounts[proto.ID] += cnt;
+
+                    foreach (var id in GetProtoAndAncestors(proto))
+                    {
+                        buffer.AncestorCounts.TryGetValue(id, out var prev);
+                        buffer.AncestorCounts[id] = prev + cnt;
+                    }
+                }
+
                 continue;
             }
 
-            if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
+            if (proto is null)
                 continue;
-
-            var proto = meta.EntityPrototype;
 
             if (!buffer.ProtoCounts.TryAdd(proto.ID, 1))
                 buffer.ProtoCounts[proto.ID] += 1;
@@ -166,6 +183,75 @@ public sealed class NcStoreLogicSystem : EntitySystem
             }
         }
     }
+
+    public void FillDeepItemsList(EntityUid root, List<EntityUid> buffer)
+    {
+        buffer.Clear();
+        foreach (var ent in EnumerateDeepItemsUnique(root))
+            buffer.Add(ent);
+    }
+
+    public void FillInventorySnapshotFromItems(EntityUid root, IReadOnlyList<EntityUid> items, InventorySnapshot buffer)
+    {
+        buffer.Clear();
+
+        foreach (var ent in items)
+        {
+            if (!_ents.EntityExists(ent))
+                continue;
+
+            if (IsProtectedFromDirectSale(root, ent))
+                continue;
+
+            _ents.TryGetComponent(ent, out MetaDataComponent? meta);
+            var proto = meta?.EntityPrototype;
+
+            if (_ents.TryGetComponent(ent, out StackComponent? stack))
+            {
+                var cnt = Math.Max(stack.Count, 0);
+                if (cnt > 0 && !string.IsNullOrWhiteSpace(stack.StackTypeId))
+                {
+                    buffer.StackTypeCounts.TryGetValue(stack.StackTypeId, out var prev);
+                    buffer.StackTypeCounts[stack.StackTypeId] = prev + cnt;
+                }
+
+                if (cnt > 0 && proto != null)
+                {
+                    if (!buffer.ProtoCounts.TryAdd(proto.ID, cnt))
+                        buffer.ProtoCounts[proto.ID] += cnt;
+
+                    foreach (var id in GetProtoAndAncestors(proto))
+                    {
+                        buffer.AncestorCounts.TryGetValue(id, out var prev);
+                        buffer.AncestorCounts[id] = prev + cnt;
+                    }
+                }
+
+                continue;
+            }
+
+            if (proto is null)
+                continue;
+
+            if (!buffer.ProtoCounts.TryAdd(proto.ID, 1))
+                buffer.ProtoCounts[proto.ID] += 1;
+
+            foreach (var id in GetProtoAndAncestors(proto))
+            {
+                buffer.AncestorCounts.TryGetValue(id, out var prev);
+                buffer.AncestorCounts[id] = prev + 1;
+            }
+        }
+    }
+
+    public bool TryTakeProductUnitsFromCachedItems(
+        EntityUid root,
+        List<EntityUid> cachedItems,
+        string protoId,
+        int amount,
+        PrototypeMatchMode matchMode
+    ) =>
+        TryTakeProductUnitsFromCachedList(root, cachedItems, protoId, amount, matchMode);
 
 
     public int GetOwnedFromSnapshot(in InventorySnapshot snapshot, string productProtoId) =>
@@ -1230,6 +1316,22 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
     public MassSellPlan ComputeMassSellPlan(NcStoreComponent store, EntityUid container)
     {
+        InvalidateInventoryCache(container);
+        return ComputeMassSellPlanInternal(store, EnumerateDeepItemsUnique(container));
+    }
+
+    public MassSellPlan ComputeMassSellPlanFromCachedItems(
+        NcStoreComponent store,
+        EntityUid container,
+        IReadOnlyList<EntityUid> cachedItems
+    ) =>
+        ComputeMassSellPlanInternal(store, cachedItems);
+
+    private MassSellPlan ComputeMassSellPlanInternal(
+        NcStoreComponent store,
+        IEnumerable<EntityUid> items
+    )
+    {
         var incomeByCurrency = new Dictionary<string, int>();
         var unitsByListingId = new Dictionary<string, int>();
         var priceByListingId = new Dictionary<string, (string, int)>();
@@ -1238,14 +1340,15 @@ public sealed class NcStoreLogicSystem : EntitySystem
         if (store.Listings.Count == 0)
             return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
 
-        InvalidateInventoryCache(container);
-
         var stackTypeCounts = new Dictionary<string, int>();
         var protoCounts = new Dictionary<string, int>();
         var protoCache = new Dictionary<string, EntityPrototype>();
+        var stackProtoToType = new Dictionary<string, string>(StringComparer.Ordinal);
 
-        foreach (var ent in EnumerateDeepItemsUnique(container))
+        foreach (var ent in items)
         {
+            if (!_ents.EntityExists(ent))
+                continue;
             if (_ents.TryGetComponent(ent, out StackComponent? st))
             {
                 var cnt = Math.Max(st.Count, 0);
@@ -1253,6 +1356,14 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 {
                     stackTypeCounts.TryGetValue(st.StackTypeId, out var prev);
                     stackTypeCounts[st.StackTypeId] = prev + cnt;
+                }
+
+                // Still register the prototype for descendant matching.
+                if (_ents.TryGetComponent(ent, out MetaDataComponent? stMeta) && stMeta.EntityPrototype is { } stProto)
+                {
+                    protoCache[stProto.ID] = stProto;
+                    if (!string.IsNullOrWhiteSpace(st.StackTypeId))
+                        stackProtoToType.TryAdd(stProto.ID, st.StackTypeId);
                 }
 
                 continue;
@@ -1271,9 +1382,10 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
         if (stackTypeCounts.Count == 0 && protoCounts.Count == 0)
             return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
-
-        var protoIds = protoCounts.Count > 0
+        var protoIds = protoCounts.Count > 0 || stackProtoToType.Count > 0
             ? protoCounts.Keys
+                .Concat(stackProtoToType.Keys)
+                .Distinct(StringComparer.Ordinal)
                 .OrderByDescending(GetInheritanceDepth)
                 .ThenBy(x => x, OrdinalIds)
                 .ToArray()
@@ -1365,8 +1477,20 @@ public sealed class NcStoreLogicSystem : EntitySystem
                         if (taken >= want)
                             break;
 
-                        if (!protoCounts.TryGetValue(protoId, out var available) || available <= 0)
-                            continue;
+                        var isStackProto = stackProtoToType.TryGetValue(protoId, out var stType) &&
+                            !string.IsNullOrWhiteSpace(stType);
+
+                        int available;
+                        if (isStackProto)
+                        {
+                            if (!stackTypeCounts.TryGetValue(stType!, out available) || available <= 0)
+                                continue;
+                        }
+                        else
+                        {
+                            if (!protoCounts.TryGetValue(protoId, out available) || available <= 0)
+                                continue;
+                        }
 
                         if (!protoCache.TryGetValue(protoId, out var proto) &&
                             !_protos.TryIndex(protoId, out proto))
@@ -1381,7 +1505,10 @@ public sealed class NcStoreLogicSystem : EntitySystem
                         if (take <= 0)
                             continue;
 
-                        protoCounts[protoId] = available - take;
+                        if (isStackProto)
+                            stackTypeCounts[stType!] = available - take;
+                        else
+                            protoCounts[protoId] = available - take;
                         taken += take;
                     }
                 }
@@ -1419,7 +1546,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
         var cachedItems = _scratchItems;
 
-        var plan = ComputeMassSellPlan(store, container);
+        var plan = ComputeMassSellPlanFromCachedItems(store, container, cachedItems);
         if (plan.Steps.Count == 0 || plan.IncomeByCurrency.Count == 0)
             return false;
 
