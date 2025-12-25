@@ -45,7 +45,6 @@ public sealed class NcCategoryBar : BoxContainer
             _ordered.Add(t);
 
         SyncButtons();
-
         SetSelected(selectedCategory, false);
     }
 

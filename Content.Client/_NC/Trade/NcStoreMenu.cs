@@ -30,6 +30,10 @@ public sealed partial class NcStoreMenu : FancyWindow
     private readonly Dictionary<string, int> _ownedById = new();
     private readonly IPrototypeManager _proto;
     private readonly Dictionary<string, int> _remainingById = new();
+    private readonly HashSet<string> _scratchAvailableIds = new();
+    private readonly HashSet<string> _scratchBuyCatSet = new();
+    private readonly List<StoreListingData> _scratchReadyItems = new();
+    private readonly HashSet<string> _scratchSellCatSet = new();
     private readonly NcCategoryBar _sellCategoryBar;
     private readonly List<string> _sellCats = new();
     private readonly NcListingGrid _sellGrid;
@@ -268,10 +272,27 @@ public sealed partial class NcStoreMenu : FancyWindow
         _buyCats.Clear();
         _sellCats.Clear();
 
-        _buyCats.AddRange(
-            _catalog.Where(i => i.Mode == StoreMode.Buy).Select(i => i.Category).Distinct().OrderBy(c => c));
-        _sellCats.AddRange(
-            _catalog.Where(i => i.Mode == StoreMode.Sell).Select(i => i.Category).Distinct().OrderBy(c => c));
+        _scratchBuyCatSet.Clear();
+        _scratchSellCatSet.Clear();
+
+        for (var i = 0; i < _catalog.Count; i++)
+        {
+            var it = _catalog[i];
+            if (string.IsNullOrWhiteSpace(it.Category))
+                continue;
+
+            if (it.Mode == StoreMode.Buy)
+                _scratchBuyCatSet.Add(it.Category);
+            else if (it.Mode == StoreMode.Sell)
+                _scratchSellCatSet.Add(it.Category);
+        }
+
+        _buyCats.AddRange(_scratchBuyCatSet);
+        _sellCats.AddRange(_scratchSellCatSet);
+
+        _buyCats.Sort(static (a, b) => string.Compare(a, b, StringComparison.CurrentCulture));
+        _sellCats.Sort(static (a, b) => string.Compare(a, b, StringComparison.CurrentCulture));
+
         if (!_buyCats.Contains(_buyCat))
             _buyCat = string.Empty;
         if (!_sellCats.Contains(_sellCat))
@@ -282,8 +303,22 @@ public sealed partial class NcStoreMenu : FancyWindow
 
     private void UpdateVirtualSellCategories()
     {
-        var hasReady = _items.Any(i => i is { Mode: StoreMode.Sell, Category: CatIdReady, });
-        var hasCrate = _items.Any(i => i is { Mode: StoreMode.Sell, Category: CatIdCrate, });
+        var hasReady = false;
+        var hasCrate = false;
+
+        for (var i = 0; i < _items.Count; i++)
+        {
+            var it = _items[i];
+
+            if (!hasReady && it is { Mode: StoreMode.Sell, Category: CatIdReady, })
+                hasReady = true;
+
+            if (!hasCrate && it is { Mode: StoreMode.Sell, Category: CatIdCrate, })
+                hasCrate = true;
+
+            if (hasReady && hasCrate)
+                break;
+        }
 
         _sellCats.Remove(CatIdReady);
         _sellCats.Remove(CatIdCrate);
@@ -328,8 +363,10 @@ public sealed partial class NcStoreMenu : FancyWindow
     {
         _items.Clear();
 
-        foreach (var s in _catalog)
+        for (var i = 0; i < _catalog.Count; i++)
         {
+            var s = _catalog[i];
+
             var remaining = _remainingById.GetValueOrDefault(s.Id, -1);
             var owned = _ownedById.GetValueOrDefault(s.Id, 0);
 
@@ -345,26 +382,46 @@ public sealed partial class NcStoreMenu : FancyWindow
                     remaining));
         }
 
-        var ready = _items
-            .Where(d => d is { Mode: StoreMode.Sell, Owned: > 0, } && d.Remaining != 0)
-            .Select(d => new StoreListingData(
-                d.Id + "__ready",
-                d.ProductEntity,
-                d.Price,
-                CatIdReady,
-                d.CurrencyId,
-                d.Mode,
-                d.Owned,
-                d.Remaining))
-            .ToList();
+        // Virtual "ready to sell" category (derived from base sell listings).
+        var baseCount = _items.Count;
+        _scratchReadyItems.Clear();
 
-        if (ready.Count > 0)
-            _items.AddRange(ready);
+        for (var i = 0; i < baseCount; i++)
+        {
+            var d = _items[i];
+            if (d.Mode != StoreMode.Sell)
+                continue;
 
+            if (d.Owned <= 0)
+                continue;
+
+            if (d.Remaining == 0)
+                continue;
+
+            _scratchReadyItems.Add(
+                new(
+                    d.Id + "__ready",
+                    d.ProductEntity,
+                    d.Price,
+                    CatIdReady,
+                    d.CurrencyId,
+                    d.Mode,
+                    d.Owned,
+                    d.Remaining));
+        }
+
+        if (_scratchReadyItems.Count > 0)
+            _items.AddRange(_scratchReadyItems);
+
+        // Virtual "crate" category (derived from server-provided crate units per listing).
         if (_crateUnitsById.Count > 0)
         {
-            foreach (var s in _catalog.Where(x => x.Mode == StoreMode.Sell))
+            for (var i = 0; i < _catalog.Count; i++)
             {
+                var s = _catalog[i];
+                if (s.Mode != StoreMode.Sell)
+                    continue;
+
                 if (!_crateUnitsById.TryGetValue(s.Id, out var take) || take <= 0)
                     continue;
 
@@ -383,9 +440,12 @@ public sealed partial class NcStoreMenu : FancyWindow
             }
         }
 
-        var ids = _items.Select(i => i.Id).ToHashSet();
-        _buyGrid.SyncAvailableIds(ids);
-        _sellGrid.SyncAvailableIds(ids);
+        _scratchAvailableIds.Clear();
+        for (var i = 0; i < _items.Count; i++)
+            _scratchAvailableIds.Add(_items[i].Id);
+
+        _buyGrid.SyncAvailableIds(_scratchAvailableIds);
+        _sellGrid.SyncAvailableIds(_scratchAvailableIds);
     }
 
 

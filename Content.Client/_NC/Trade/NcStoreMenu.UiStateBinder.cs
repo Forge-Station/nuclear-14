@@ -10,8 +10,18 @@ public sealed partial class NcStoreMenu
     ///     Centralized mapping layer that applies catalog/dynamic state to UI.
     ///     Keeps update ordering in one place so future optimizations are localized here.
     /// </summary>
-    private sealed class UiStateBinder(NcStoreMenu menu)
+    private sealed class UiStateBinder
     {
+        private readonly NcStoreMenu _m;
+        private readonly List<string> _scratchProductEntities = new();
+        private bool _hasLastDynamic;
+        private int _lastContractsHash;
+
+        public UiStateBinder(NcStoreMenu menu)
+        {
+            _m = menu;
+        }
+
         public void PopulateCatalog(
             List<StoreListingStaticData> listings,
             bool hasBuyTab,
@@ -19,32 +29,82 @@ public sealed partial class NcStoreMenu
             bool hasContractsTab
         )
         {
-            menu._hasBuyTab = hasBuyTab;
-            menu._hasSellTab = hasSellTab;
-            menu._hasContractsTab = hasContractsTab;
+            _m._hasBuyTab = hasBuyTab;
+            _m._hasSellTab = hasSellTab;
+            _m._hasContractsTab = hasContractsTab;
 
-            menu.ApplyTabsVisibility();
-            menu.UpdateHeaderVisibility();
+            _m.ApplyTabsVisibility();
+            _m.UpdateHeaderVisibility();
 
-            menu._catalog.Clear();
-            menu._staticById.Clear();
+            _m._catalog.Clear();
+            _m._staticById.Clear();
 
-            foreach (var s in listings)
+            for (var i = 0; i < listings.Count; i++)
             {
+                var s = listings[i];
                 if (string.IsNullOrWhiteSpace(s.Id) || string.IsNullOrWhiteSpace(s.ProductEntity))
                     continue;
 
-                menu._catalog.Add(s);
-                menu._staticById[s.Id] = s;
+                _m._catalog.Add(s);
+                _m._staticById[s.Id] = s;
             }
-            menu._buyGrid.PrepareSearchIndex(menu._catalog.ConvertAll(x => x.ProductEntity));
-            menu._sellGrid.PrepareSearchIndex(menu._catalog.ConvertAll(x => x.ProductEntity));
 
-            menu.RebuildCategoriesFromCatalog();
+            _scratchProductEntities.Clear();
+            for (var i = 0; i < _m._catalog.Count; i++)
+            {
+                var proto = _m._catalog[i].ProductEntity;
+                if (!string.IsNullOrWhiteSpace(proto))
+                    _scratchProductEntities.Add(proto);
+            }
 
-            menu._buyGrid.ResetPaging();
-            menu._sellGrid.ResetPaging();
-            menu.RefreshListings();
+            _m._buyGrid.PrepareSearchIndex(_scratchProductEntities);
+            _m._sellGrid.PrepareSearchIndex(_scratchProductEntities);
+
+            _m.RebuildCategoriesFromCatalog();
+
+            _m._buyGrid.ResetPaging();
+            _m._sellGrid.ResetPaging();
+            _m.RefreshListings();
+        }
+
+        private static bool DictEquals(Dictionary<string, int> a, Dictionary<string, int> b)
+        {
+            if (ReferenceEquals(a, b))
+                return true;
+
+            if (a.Count != b.Count)
+                return false;
+
+            foreach (var pair in a)
+                if (!b.TryGetValue(pair.Key, out var other) || other != pair.Value)
+                    return false;
+
+            return true;
+        }
+
+        private static int ComputeContractsHash(List<ContractClientData> contracts)
+        {
+            unchecked
+            {
+                var h = 17;
+
+                for (var i = 0; i < contracts.Count; i++)
+                {
+                    var c = contracts[i];
+
+                    h = h * 31 + (c.Id?.GetHashCode() ?? 0);
+                    h = h * 31 + (c.Completed ? 1 : 0);
+                    h = h * 31 + c.Progress;
+                    h = h * 31 + c.Required;
+                    h = h * 31 + (c.Difficulty?.GetHashCode() ?? 0);
+                    h = h * 31 + (c.Name?.GetHashCode() ?? 0);
+
+                    h = h * 31 + (c.Targets?.Count ?? 0);
+                    h = h * 31 + (c.Rewards?.Count ?? 0);
+                }
+
+                return h;
+            }
         }
 
         public void ApplyDynamicState(
@@ -59,58 +119,105 @@ public sealed partial class NcStoreMenu
             List<ContractClientData> contracts
         )
         {
-            menu._hasBuyTab = hasBuyTab;
-            menu._hasSellTab = hasSellTab;
-            menu._hasContractsTab = hasContractsTab;
+            var tabsChanged = !_hasLastDynamic
+                || hasBuyTab != _m._hasBuyTab
+                || hasSellTab != _m._hasSellTab
+                || hasContractsTab != _m._hasContractsTab;
 
-            menu.ApplyTabsVisibility();
-            menu.UpdateHeaderVisibility();
+            _m._hasBuyTab = hasBuyTab;
+            _m._hasSellTab = hasSellTab;
+            _m._hasContractsTab = hasContractsTab;
 
-            menu.SetBalancesByCurrency(balancesByCurrency);
+            if (tabsChanged)
+            {
+                _m.ApplyTabsVisibility();
+                _m.UpdateHeaderVisibility();
+            }
 
-            menu._remainingById.Clear();
-            foreach (var (k, v) in remainingById)
-                menu._remainingById[k] = v;
+            var balancesChanged = !DictEquals(balancesByCurrency, _m._balancesByCurrency);
+            if (balancesChanged)
+                _m.SetBalancesByCurrency(balancesByCurrency);
 
-            menu._ownedById.Clear();
-            foreach (var (k, v) in ownedById)
-                menu._ownedById[k] = v;
+            var listingsChanged = false;
 
-            menu._crateUnitsById.Clear();
-            foreach (var (k, v) in crateUnitsById)
-                menu._crateUnitsById[k] = v;
+            if (!DictEquals(remainingById, _m._remainingById))
+            {
+                _m._remainingById.Clear();
+                foreach (var pair in remainingById)
+                    _m._remainingById[pair.Key] = pair.Value;
+                listingsChanged = true;
+            }
 
-            menu.SetMassSellTotals(massTotals);
-            menu.PopulateContracts(contracts);
+            if (!DictEquals(ownedById, _m._ownedById))
+            {
+                _m._ownedById.Clear();
+                foreach (var pair in ownedById)
+                    _m._ownedById[pair.Key] = pair.Value;
+                listingsChanged = true;
+            }
 
-            menu.RebuildItemsFromCatalogAndDynamic();
-            menu.UpdateVirtualSellCategories();
-            menu.RefreshListings();
+            if (!DictEquals(crateUnitsById, _m._crateUnitsById))
+            {
+                _m._crateUnitsById.Clear();
+                foreach (var pair in crateUnitsById)
+                    _m._crateUnitsById[pair.Key] = pair.Value;
+                listingsChanged = true;
+            }
+
+            if (!DictEquals(massTotals, _m._massSellTotals))
+                _m.SetMassSellTotals(massTotals);
+
+            var contractsHash = ComputeContractsHash(contracts);
+            if (!_hasLastDynamic || contractsHash != _lastContractsHash)
+            {
+                _lastContractsHash = contractsHash;
+                _m.PopulateContracts(contracts);
+            }
+
+            if (listingsChanged)
+            {
+                _m.RebuildItemsFromCatalogAndDynamic();
+                _m.UpdateVirtualSellCategories();
+                _m.RefreshListings();
+            }
+            else if (balancesChanged || tabsChanged)
+                _m.RefreshListings();
+
+            _hasLastDynamic = true;
         }
 
         public void PopulateFromRaw(List<StoreListingData> list)
         {
-            menu._items.Clear();
-            menu._items.AddRange(list);
+            _m._items.Clear();
+            _m._items.AddRange(list);
 
-            menu._buyGrid.PrepareSearchIndex(menu._items.ConvertAll(x => x.ProductEntity));
-            menu._sellGrid.PrepareSearchIndex(menu._items.ConvertAll(x => x.ProductEntity));
+            _scratchProductEntities.Clear();
+            for (var i = 0; i < _m._items.Count; i++)
+            {
+                var pe = _m._items[i].ProductEntity;
+                if (!string.IsNullOrWhiteSpace(pe))
+                    _scratchProductEntities.Add(pe);
+            }
+
+            _m._buyGrid.PrepareSearchIndex(_scratchProductEntities);
+            _m._sellGrid.PrepareSearchIndex(_scratchProductEntities);
 
             var ids = new HashSet<string>();
-            foreach (var t in menu._items)
-                ids.Add(t.Id);
+            for (var i = 0; i < _m._items.Count; i++)
+                ids.Add(_m._items[i].Id);
 
-            menu._buyGrid.SyncAvailableIds(ids);
-            menu._sellGrid.SyncAvailableIds(ids);
+            _m._buyGrid.SyncAvailableIds(ids);
+            _m._sellGrid.SyncAvailableIds(ids);
 
-            menu._buyCats.Clear();
-            menu._sellCats.Clear();
+            _m._buyCats.Clear();
+            _m._sellCats.Clear();
 
             var buySet = new HashSet<string>();
             var sellSet = new HashSet<string>();
 
-            foreach (var it in list)
+            for (var i = 0; i < list.Count; i++)
             {
+                var it = list[i];
                 if (string.IsNullOrWhiteSpace(it.Category))
                     continue;
 
@@ -120,33 +227,20 @@ public sealed partial class NcStoreMenu
                     sellSet.Add(it.Category);
             }
 
-            menu._buyCats.AddRange(buySet);
-            menu._sellCats.AddRange(sellSet);
-            menu._buyCats.Sort(static (a, b) => string.Compare(a, b, StringComparison.CurrentCulture));
-            menu._sellCats.Sort(static (a, b) => string.Compare(a, b, StringComparison.CurrentCulture));
-            var hasReady = false;
-            foreach (var t in menu._items)
-                if (t is { Mode: StoreMode.Sell, Category: CatIdReady, })
-                {
-                    hasReady = true;
-                    break;
-                }
+            _m._buyCats.AddRange(buySet);
+            _m._sellCats.AddRange(sellSet);
 
-            if (hasReady)
-            {
-                menu._sellCats.Remove(CatIdReady);
-                menu._sellCats.Insert(0, CatIdReady);
-            }
+            if (!_m._buyCats.Contains(_m._buyCat))
+                _m._buyCat = string.Empty;
+            if (!_m._sellCats.Contains(_m._sellCat))
+                _m._sellCat = string.Empty;
 
-            if (!menu._buyCats.Contains(menu._buyCat))
-                menu._buyCat = string.Empty;
-            if (!menu._sellCats.Contains(menu._sellCat))
-                menu._sellCat = string.Empty;
+            _m._buyCategoryBar.SetCategories(_m._buyCats, _m._buyCat);
+            _m._sellCategoryBar.SetCategories(_m._sellCats, _m._sellCat);
 
-            menu.BuildCategoryButtons();
-            menu._buyGrid.ResetPaging();
-            menu._sellGrid.ResetPaging();
-            menu.RefreshListings();
+            _m._buyGrid.ResetPaging();
+            _m._sellGrid.ResetPaging();
+            _m.RefreshListings();
         }
     }
 }

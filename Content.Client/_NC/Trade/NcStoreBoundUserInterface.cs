@@ -6,7 +6,7 @@ using Robust.Client.UserInterface;
 namespace Content.Client._NC.Trade;
 
 
-public sealed class NcStoreStructuredBoundUi : BoundUserInterface
+public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : BoundUserInterface(owner, uiKey)
 {
     private readonly IPlayerManager _player = IoCManager.Resolve<IPlayerManager>();
 
@@ -16,9 +16,6 @@ public sealed class NcStoreStructuredBoundUi : BoundUserInterface
     private NcStoreMenu? _menu;
 
     private StoreDynamicState? _pendingDynamic;
-
-    public NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey)
-        : base(owner, uiKey) { }
 
     private EntityUid? Actor => _player.LocalSession?.AttachedEntity;
 
