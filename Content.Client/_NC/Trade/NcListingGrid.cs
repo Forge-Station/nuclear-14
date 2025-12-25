@@ -16,18 +16,20 @@ public sealed class NcListingGrid : BoxContainer
 {
     private const int PageSize = 96;
     private readonly Dictionary<string, (NcStoreListingControl Ctrl, int Sig)> _cache = new();
+    private readonly Dictionary<string, StoreListingData> _itemById = new();
 
     private readonly StoreMode _mode;
     private readonly IPrototypeManager _proto;
     private readonly Dictionary<string, int> _qtyCache = new();
     private readonly List<StoreListingData> _scratchFiltered = new();
+
     private readonly List<string> _scratchKeys = new();
     private readonly HashSet<string> _scratchSeenProtos = new();
 
     private readonly Dictionary<string, string> _searchIndex = new();
     private readonly SpriteSystem _sprites;
 
-    private IReadOnlyList<StoreListingData> _allItems = [];
+    private IReadOnlyList<StoreListingData> _allItems = Array.Empty<StoreListingData>();
     private Func<string, int> _balanceResolver = _ => int.MaxValue;
     private Action<StoreListingData, int> _emit = (_, _) => { };
 
@@ -63,16 +65,16 @@ public sealed class NcListingGrid : BoxContainer
             if (!ids.Contains(key))
                 _scratchKeys.Add(key);
 
-        foreach (var t in _scratchKeys)
-            _qtyCache.Remove(t);
+        for (var i = 0; i < _scratchKeys.Count; i++)
+            _qtyCache.Remove(_scratchKeys[i]);
 
         _scratchKeys.Clear();
         foreach (var key in _cache.Keys)
             if (!ids.Contains(key))
                 _scratchKeys.Add(key);
 
-        foreach (var t in _scratchKeys)
-            _cache.Remove(t);
+        for (var i = 0; i < _scratchKeys.Count; i++)
+            _cache.Remove(_scratchKeys[i]);
     }
 
     public void PrepareSearchIndex(IEnumerable<string> productEntities)
@@ -106,7 +108,39 @@ public sealed class NcListingGrid : BoxContainer
         _balanceResolver = balanceResolver;
         _emit = emit;
 
+        _itemById.Clear();
+        for (var i = 0; i < allItems.Count; i++)
+        {
+            var it = allItems[i];
+            if (it.Mode != _mode)
+                continue;
+            if (string.IsNullOrWhiteSpace(it.Id))
+                continue;
+            _itemById[it.Id] = it;
+        }
+
         return RefreshInternal();
+    }
+
+
+    public void UpdateDynamicOnly(Func<string, int> balanceResolver)
+    {
+        _balanceResolver = balanceResolver;
+
+        foreach (var child in Children)
+        {
+            if (child is not NcStoreListingControl ctrl)
+                continue;
+
+            if (!_itemById.TryGetValue(ctrl.ListingId, out var it))
+                continue;
+
+            var balanceHint = _mode == StoreMode.Buy
+                ? _balanceResolver(it.CurrencyId)
+                : int.MaxValue;
+
+            ctrl.UpdateDynamicData(balanceHint, it.Remaining, it.Owned);
+        }
     }
 
     private int RefreshInternal()

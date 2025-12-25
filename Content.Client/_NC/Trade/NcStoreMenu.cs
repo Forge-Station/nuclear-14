@@ -449,9 +449,6 @@ public sealed partial class NcStoreMenu : FancyWindow
     }
 
 
-    public void Populate(List<StoreListingData> list) => _binder.PopulateFromRaw(list);
-
-
     public void PopulateContracts(List<ContractClientData>? list)
     {
         var contractList = ContractList;

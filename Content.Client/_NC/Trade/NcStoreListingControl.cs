@@ -22,7 +22,6 @@ public sealed class NcStoreListingControl : PanelContainer
     private const int QtyMaxDigits = 6;
     private const int MaxTotalDisplay = 999_999;
     private const int DescMaxChars = 220;
-
     private readonly bool _actionsEnabled;
     private readonly Button? _minusBtn;
     private readonly Label? _ownedLbl;
