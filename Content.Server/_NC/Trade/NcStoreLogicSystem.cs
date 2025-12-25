@@ -2,14 +2,10 @@ using System.Linq;
 using Content.Server.Storage.Components;
 using Content.Server.Storage.EntitySystems;
 using Content.Shared._NC.Trade;
-using Content.Shared.Clothing.Components;
-using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
-using Content.Shared.Inventory;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Stacks;
-using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 
 
@@ -27,22 +23,17 @@ public sealed class NcStoreLogicSystem : EntitySystem
     [Dependency] private readonly IEntityManager _ents = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     private readonly Dictionary<string, int> _inheritanceDepthCache = new();
-    private readonly Dictionary<EntityUid, List<EntityUid>> _inventoryCache = new();
-    private readonly Dictionary<string, string?> _productStackTypeCache = new();
-    private readonly Dictionary<string, string[]> _protoAndAncestorsCache = new();
-
     [Dependency] private readonly IPrototypeManager _protos = default!;
     private readonly List<EntityUid> _scratchItems = new();
-    private readonly Queue<EntityUid> _scratchQueue = new();
-    private readonly List<EntityUid> _scratchResult = new();
-    private readonly HashSet<EntityUid> _scratchVisited = new();
     [Dependency] private readonly SharedStackSystem _stacks = default!;
 
+    private NcInventoryHelper _inventoryHelper = default!;
 
     public override void Initialize()
     {
         base.Initialize();
 
+        _inventoryHelper = new(_ents, _protos, _compFactory, _stacks);
         _protos.PrototypesReloaded += OnPrototypesReloaded;
         SubscribeLocalEvent<EntityTerminatingEvent>(OnEntityTerminating);
     }
@@ -53,19 +44,17 @@ public sealed class NcStoreLogicSystem : EntitySystem
         base.Shutdown();
     }
 
-    private void OnEntityTerminating(ref EntityTerminatingEvent ev) => _inventoryCache.Remove(ev.Entity);
+    private void OnEntityTerminating(ref EntityTerminatingEvent ev) => _inventoryHelper.OnEntityTerminating(ev.Entity);
 
     private void OnPrototypesReloaded(PrototypesReloadedEventArgs ev)
     {
-        _productStackTypeCache.Clear();
-        _protoAndAncestorsCache.Clear();
-        _inventoryCache.Clear();
+        _inventoryHelper.OnPrototypesReloaded();
         _inheritanceDepthCache.Clear();
     }
 
-    public void ResetFrameCache() => _inventoryCache.Clear();
 
-    public void InvalidateInventoryCache(EntityUid root) => _inventoryCache.Remove(root);
+    public void ResetFrameCache() => _inventoryHelper.ResetFrameCache();
+    public void InvalidateInventoryCache(EntityUid root) => _inventoryHelper.InvalidateInventoryCache(root);
 
     public EntityUid? GetPulledClosedCrate(EntityUid user) =>
         TryGetPulledClosedCrate(user, out var crate) ? crate : null;
@@ -99,17 +88,8 @@ public sealed class NcStoreLogicSystem : EntitySystem
         return true;
     }
 
-    private PrototypeMatchMode ResolveMatchMode(string expectedProtoId, PrototypeMatchMode configured)
-    {
-        if (configured == PrototypeMatchMode.Descendants)
-            return PrototypeMatchMode.Descendants;
-
-        if (_protos.TryIndex<EntityPrototype>(expectedProtoId, out var expectedProto) && expectedProto.Abstract)
-            return PrototypeMatchMode.Descendants;
-
-        return PrototypeMatchMode.Exact;
-    }
-
+    private PrototypeMatchMode ResolveMatchMode(string expectedProtoId, PrototypeMatchMode configured) =>
+        _inventoryHelper.ResolveMatchMode(expectedProtoId, configured);
 
     public int GetBalance(EntityUid user, string stackType)
     {
@@ -138,11 +118,6 @@ public sealed class NcStoreLogicSystem : EntitySystem
         {
             if (IsProtectedFromDirectSale(root, ent))
                 continue;
-
-            // NOTE:
-            // Stack entities must contribute not only to StackTypeCounts, but also to ProtoCounts/AncestorCounts.
-            // Otherwise, any listing/contract with MatchMode=Descendants for an abstract (non-stack) parent proto
-            // will see 0 units when the actual items are stacks.
             _ents.TryGetComponent(ent, out MetaDataComponent? meta);
             var proto = meta?.EntityPrototype;
 
@@ -271,54 +246,10 @@ public sealed class NcStoreLogicSystem : EntitySystem
         return snapshot.ProtoCounts.TryGetValue(productProtoId, out var exact) ? exact : 0;
     }
 
-    private string? GetProductStackType(string productProtoId)
-    {
-        if (_productStackTypeCache.TryGetValue(productProtoId, out var cached))
-            return cached;
+    private string? GetProductStackType(string productProtoId) => _inventoryHelper.GetProductStackType(productProtoId);
 
-        string? stackType = null;
+    private string[] GetProtoAndAncestors(EntityPrototype proto) => _inventoryHelper.GetProtoAndAncestors(proto);
 
-        if (_protos.TryIndex<EntityPrototype>(productProtoId, out var expectedProto))
-        {
-            var stackName = _compFactory.GetComponentName(typeof(StackComponent));
-            if (expectedProto.TryGetComponent(stackName, out StackComponent? prodStackDef))
-                stackType = prodStackDef.StackTypeId;
-        }
-
-        _productStackTypeCache[productProtoId] = stackType;
-        return stackType;
-    }
-
-    private string[] GetProtoAndAncestors(EntityPrototype proto)
-    {
-        var id = proto.ID;
-        if (_protoAndAncestorsCache.TryGetValue(id, out var cached))
-            return cached;
-
-        var visited = new HashSet<string>();
-        var result = new List<string>();
-        var stack = new Stack<string>();
-        stack.Push(id);
-
-        while (stack.Count > 0)
-        {
-            var cur = stack.Pop();
-            if (!visited.Add(cur))
-                continue;
-            result.Add(cur);
-
-            if (!_protos.TryIndex<EntityPrototype>(cur, out var curProto) || curProto.Parents == null)
-                continue;
-
-            foreach (var p in curProto.Parents)
-                if (!string.IsNullOrWhiteSpace(p))
-                    stack.Push(p);
-        }
-
-        var arr = result.ToArray();
-        _protoAndAncestorsCache[id] = arr;
-        return arr;
-    }
 
     private bool TryPickCurrencyForBuy(
         NcStoreComponent store,
@@ -397,19 +328,9 @@ public sealed class NcStoreLogicSystem : EntitySystem
         return true;
     }
 
+    private bool IsProtoOrDescendant(EntityPrototype candidate, string expectedId) =>
+        _inventoryHelper.IsProtoOrDescendant(candidate, expectedId);
 
-    private bool IsProtoOrDescendant(EntityPrototype candidate, string expectedId)
-    {
-        if (candidate.ID == expectedId)
-            return true;
-
-        var ancestors = GetProtoAndAncestors(candidate);
-        foreach (var t in ancestors)
-            if (t == expectedId)
-                return true;
-
-        return false;
-    }
 
     private bool TryPickCurrencyForSell(
         NcStoreComponent store,
@@ -546,8 +467,6 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 }
                 catch (Exception e)
                 {
-                    // Важно: если спавн падает на середине цикла, деньги уже списаны.
-                    // Возвращаем стоимость за то, что не выдали.
                     Sawmill.Error($"Spawn failed during bulk buy: {e}");
 
                     if (remainingToSpawn > 0)
@@ -725,126 +644,9 @@ public sealed class NcStoreLogicSystem : EntitySystem
     public int GetOwnedInRoot(EntityUid root, string productProtoId, PrototypeMatchMode matchMode) =>
         GetOwnedInternal(root, productProtoId, matchMode);
 
-    private bool TryTakeProductUnitsInternal(EntityUid root, string protoId, int amount, PrototypeMatchMode matchMode)
-    {
-        if (amount <= 0)
-            return true;
-
-        InvalidateInventoryCache(root);
-
-        _scratchItems.Clear();
-        foreach (var item in EnumerateDeepItemsUnique(root))
-            _scratchItems.Add(item);
-
-        var allItems = _scratchItems;
-        var stackType = GetProductStackType(protoId);
-        var availableTotal = 0;
-        var effective = ResolveMatchMode(protoId, matchMode);
-
-        bool Matches(EntityPrototype proto)
-        {
-            if (effective == PrototypeMatchMode.Exact)
-                return proto.ID == protoId;
-            return proto.ID == protoId || IsProtoOrDescendant(proto, protoId);
-        }
-
-        foreach (var ent in allItems)
-        {
-            if (!_ents.EntityExists(ent))
-                continue;
-            if (IsProtectedFromDirectSale(root, ent))
-                continue;
-
-            if (stackType != null)
-            {
-                if (_ents.TryGetComponent(ent, out StackComponent? stack) && stack.StackTypeId == stackType)
-                    availableTotal += Math.Max(stack.Count, 0);
-            }
-            else
-            {
-                if (_ents.TryGetComponent(ent, out StackComponent? stack))
-                {
-                    if (_ents.TryGetComponent(ent, out MetaDataComponent? meta) && meta.EntityPrototype != null &&
-                        Matches(meta.EntityPrototype))
-                        availableTotal += stack.Count;
-                }
-                else if (_ents.TryGetComponent(ent, out MetaDataComponent? meta) && meta.EntityPrototype != null)
-                {
-                    if (Matches(meta.EntityPrototype))
-                        availableTotal += 1;
-                }
-            }
-
-            if (availableTotal >= amount)
-                break;
-        }
-
-        if (availableTotal < amount)
-            return false;
-
-        var left = amount;
-
-        foreach (var ent in allItems)
-        {
-            if (left <= 0)
-                break;
-            if (!_ents.EntityExists(ent))
-                continue;
-            if (IsProtectedFromDirectSale(root, ent))
-                continue;
-
-            if (stackType != null)
-            {
-                if (!_ents.TryGetComponent(ent, out StackComponent? stack) || stack.StackTypeId != stackType)
-                    continue;
-
-                var have = Math.Max(stack.Count, 0);
-                if (have <= 0)
-                    continue;
-
-                var take = Math.Min(have, left);
-                var newCount = have - take;
-                _stacks.SetCount(ent, newCount, stack);
-
-                if (newCount <= 0 && _ents.EntityExists(ent))
-                    _ents.DeleteEntity(ent);
-
-                left -= take;
-            }
-            else
-            {
-                if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
-                    continue;
-
-                var matches = effective == PrototypeMatchMode.Exact
-                    ? meta.EntityPrototype.ID == protoId
-                    : Matches(meta.EntityPrototype);
-
-                if (!matches)
-                    continue;
-                if (_ents.TryGetComponent(ent, out StackComponent? st))
-                {
-                    var have = st.Count;
-                    var take = Math.Min(have, left);
-
-                    if (take >= have)
-                        _ents.DeleteEntity(ent);
-                    else
-                        _stacks.SetCount(ent, have - take, st);
-
-                    left -= take;
-                }
-                else
-                {
-                    _ents.DeleteEntity(ent);
-                    left -= 1;
-                }
-            }
-        }
-
-        InvalidateInventoryCache(root);
-        return left <= 0;
-    }
+    private bool
+        TryTakeProductUnitsInternal(EntityUid root, string protoId, int amount, PrototypeMatchMode matchMode) =>
+        _inventoryHelper.TryTakeProductUnitsInternal(root, protoId, amount, matchMode);
 
     private bool TryTakeProductUnitsFromCachedList(
         EntityUid root,
@@ -852,165 +654,8 @@ public sealed class NcStoreLogicSystem : EntitySystem
         string protoId,
         int amount,
         PrototypeMatchMode matchMode
-    )
-    {
-        if (amount <= 0)
-            return true;
-
-        var stackType = GetProductStackType(protoId);
-        var availableTotal = 0;
-
-        var effective = ResolveMatchMode(protoId, matchMode);
-
-        bool Matches(EntityPrototype proto)
-        {
-            if (effective == PrototypeMatchMode.Exact)
-                return proto.ID == protoId;
-            return proto.ID == protoId || IsProtoOrDescendant(proto, protoId);
-        }
-
-        foreach (var ent in cachedItems)
-        {
-            if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
-                continue;
-            if (IsProtectedFromDirectSale(root, ent))
-                continue;
-
-            if (stackType != null)
-            {
-                if (_ents.TryGetComponent(ent, out StackComponent? stack) && stack.StackTypeId == stackType)
-                    availableTotal += Math.Max(stack.Count, 0);
-            }
-            else
-            {
-                if (_ents.TryGetComponent(ent, out MetaDataComponent? meta) && meta.EntityPrototype != null)
-                {
-                    if (Matches(meta.EntityPrototype))
-                    {
-                        if (_ents.TryGetComponent(ent, out StackComponent? st) && st.Count > 0)
-                            availableTotal += st.Count;
-                        else
-                            availableTotal += 1;
-                    }
-                }
-            }
-
-            if (availableTotal >= amount)
-                break;
-        }
-
-        if (availableTotal < amount)
-            return false;
-
-        var left = amount;
-
-        if (stackType != null)
-        {
-            for (var i = 0; i < cachedItems.Count && left > 0; i++)
-            {
-                var ent = cachedItems[i];
-                if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
-                    continue;
-                if (IsProtectedFromDirectSale(root, ent))
-                    continue;
-
-                if (!_ents.TryGetComponent(ent, out StackComponent? stack) || stack.StackTypeId != stackType)
-                    continue;
-
-                var have = Math.Max(stack.Count, 0);
-                if (have <= 0)
-                    continue;
-
-                var take = Math.Min(have, left);
-                var newCount = have - take;
-                _stacks.SetCount(ent, newCount, stack);
-
-                if (newCount <= 0 && _ents.EntityExists(ent))
-                {
-                    _ents.DeleteEntity(ent);
-                    cachedItems[i] = EntityUid.Invalid;
-                }
-
-                left -= take;
-            }
-        }
-        else
-        {
-            for (var i = 0; i < cachedItems.Count && left > 0; i++)
-            {
-                var ent = cachedItems[i];
-                if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
-                    continue;
-                if (IsProtectedFromDirectSale(root, ent))
-                    continue;
-                if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
-                    continue;
-
-                if (meta.EntityPrototype.ID == protoId)
-                    DeleteOrDecrement(i, ent);
-            }
-
-            if (left > 0 && effective != PrototypeMatchMode.Exact)
-            {
-                for (var i = 0; i < cachedItems.Count && left > 0; i++)
-                {
-                    var ent = cachedItems[i];
-                    if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
-                        continue;
-                    if (IsProtectedFromDirectSale(root, ent))
-                        continue;
-                    if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
-                        continue;
-
-                    if (meta.EntityPrototype.ID == protoId)
-                        continue;
-
-                    if (Matches(meta.EntityPrototype))
-                        DeleteOrDecrement(i, ent);
-                }
-            }
-
-            void DeleteOrDecrement(int index, EntityUid item)
-            {
-                // Важно: если target proto не имеет StackComponent, stackType может быть null,
-                // но реальные сущности всё равно могут быть стаками. Снимаем сразу несколько единиц.
-                if (_ents.TryGetComponent(item, out StackComponent? st))
-                {
-                    var have = Math.Max(st.Count, 0);
-                    if (have <= 1)
-                    {
-                        if (have > 0)
-                            left -= 1;
-                        if (_ents.EntityExists(item))
-                            _ents.DeleteEntity(item);
-                        cachedItems[index] = EntityUid.Invalid;
-                        return;
-                    }
-
-                    var take = Math.Min(have, left);
-                    var newCount = have - take;
-                    _stacks.SetCount(item, newCount, st);
-
-                    if (newCount <= 0 && _ents.EntityExists(item))
-                    {
-                        _ents.DeleteEntity(item);
-                        cachedItems[index] = EntityUid.Invalid;
-                    }
-
-                    left -= take;
-                    return;
-                }
-
-                if (_ents.EntityExists(item))
-                    _ents.DeleteEntity(item);
-                cachedItems[index] = EntityUid.Invalid;
-                left -= 1;
-            }
-        }
-
-        return left <= 0;
-    }
-
+    ) =>
+        _inventoryHelper.TryTakeProductUnitsFromCachedList(root, cachedItems, protoId, amount, matchMode);
 
     public bool TryTakeProductUnits(EntityUid user, string protoId, int amount) =>
         TryTakeProductUnitsInternal(user, protoId, amount, PrototypeMatchMode.Exact);
@@ -1074,89 +719,9 @@ public sealed class NcStoreLogicSystem : EntitySystem
         return true;
     }
 
+    private IEnumerable<EntityUid> EnumerateDeepItemsUnique(EntityUid owner) =>
+        _inventoryHelper.EnumerateDeepItems(owner);
 
-    private IEnumerable<EntityUid> EnumerateDeepItemsUnique(EntityUid owner)
-    {
-        if (_inventoryCache.TryGetValue(owner, out var cached))
-        {
-            foreach (var ent in cached)
-                if (_ents.EntityExists(ent))
-                    yield return ent;
-
-            yield break;
-        }
-
-        _scratchVisited.Clear();
-        _scratchQueue.Clear();
-        _scratchResult.Clear();
-
-        void Enqueue(EntityUid uid)
-        {
-            if (!_scratchVisited.Add(uid))
-                return;
-
-            _scratchQueue.Enqueue(uid);
-            _scratchResult.Add(uid);
-        }
-
-        if (_ents.TryGetComponent(owner, out InventoryComponent? inventory))
-        {
-            var slotEnum = new InventorySystem.InventorySlotEnumerator(inventory);
-            while (slotEnum.NextItem(out var item))
-                Enqueue(item);
-        }
-
-        if (_ents.TryGetComponent(owner, out ItemSlotsComponent? itemSlots))
-        {
-            foreach (var slot in itemSlots.Slots.Values)
-                if (slot is { HasItem: true, Item: not null, })
-                    Enqueue(slot.Item.Value);
-        }
-
-        if (_ents.TryGetComponent(owner, out HandsComponent? hands))
-        {
-            foreach (var hand in hands.Hands.Values)
-                if (hand.HeldEntity.HasValue)
-                    Enqueue(hand.HeldEntity.Value);
-        }
-
-        if (_ents.TryGetComponent(owner, out ContainerManagerComponent? cmcRoot))
-        {
-            foreach (var container in cmcRoot.Containers.Values)
-            {
-                foreach (var entity in container.ContainedEntities)
-                    Enqueue(entity);
-            }
-        }
-
-        while (_scratchQueue.Count > 0)
-        {
-            var current = _scratchQueue.Dequeue();
-
-            if (_ents.TryGetComponent(current, out ContainerManagerComponent? cmc))
-            {
-                foreach (var container in cmc.Containers.Values)
-                {
-                    foreach (var child in container.ContainedEntities)
-                        Enqueue(child);
-                }
-            }
-        }
-
-        if (!_inventoryCache.TryGetValue(owner, out var cachedList))
-        {
-            cachedList = new(_scratchResult.Count);
-            _inventoryCache[owner] = cachedList;
-        }
-        else
-            cachedList.Clear();
-
-        cachedList.AddRange(_scratchResult);
-
-        foreach (var ent in cachedList)
-            if (_ents.EntityExists(ent))
-                yield return ent;
-    }
 
     private bool TryTakeCurrency(EntityUid user, string stackType, int amount)
     {
@@ -1609,35 +1174,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
         return true;
     }
 
-    private bool IsHeldInHands(EntityUid user, EntityUid item)
-    {
-        if (!_ents.TryGetComponent(user, out HandsComponent? hands))
-            return false;
-
-        foreach (var hand in hands.Hands.Values)
-            if (hand.HeldEntity == item)
-                return true;
-
-        return false;
-    }
-
-    private bool IsDirectChildOf(EntityUid root, EntityUid item) =>
-        _ents.TryGetComponent(item, out TransformComponent? xform) && xform.ParentUid == root;
-
-    private bool IsProtectedFromDirectSale(EntityUid root, EntityUid item)
-    {
-        if (!_ents.HasComponent<InventoryComponent>(root))
-            return false;
-
-        if (!IsDirectChildOf(root, item))
-            return false;
-
-        if (IsHeldInHands(root, item))
-            return false;
-
-        return _ents.HasComponent<ClothingComponent>(item);
-    }
-
+    private bool IsProtectedFromDirectSale(EntityUid root, EntityUid item) => !_inventoryHelper.IsTradable(root, item);
 
     public Dictionary<string, int> GetMassSellValue(
         NcStoreComponent store,
@@ -1715,74 +1252,11 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
     private bool TryTakeProductUnitsUnsafe(EntityUid root, string protoId, int amount, PrototypeMatchMode matchMode)
     {
-        if (!_inventoryCache.TryGetValue(root, out var cachedItems))
-        {
-            var _ = EnumerateDeepItemsUnique(root).FirstOrDefault();
-
-            if (!_inventoryCache.TryGetValue(root, out cachedItems))
-                return false;
-        }
-
-        var stackType = GetProductStackType(protoId);
-        var effective = ResolveMatchMode(protoId, matchMode);
-
-        bool Matches(EntityPrototype proto)
-        {
-            if (effective == PrototypeMatchMode.Exact)
-                return proto.ID == protoId;
-            return proto.ID == protoId || IsProtoOrDescendant(proto, protoId);
-        }
-
-        var left = amount;
-
-        for (var i = 0; i < cachedItems.Count && left > 0; i++)
-        {
-            var ent = cachedItems[i];
-
-            if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
-                continue;
-
-            if (IsProtectedFromDirectSale(root, ent))
-                continue;
-
-            if (stackType != null)
-            {
-                if (!_ents.TryGetComponent(ent, out StackComponent? stack) || stack.StackTypeId != stackType)
-                    continue;
-
-                var have = Math.Max(stack.Count, 0);
-                if (have <= 0)
-                    continue;
-
-                var take = Math.Min(have, left);
-                var newCount = have - take;
-
-                _stacks.SetCount(ent, newCount, stack);
-
-                if (newCount <= 0 && _ents.EntityExists(ent))
-                    _ents.DeleteEntity(ent);
-
-                left -= take;
-            }
-            else
-            {
-                if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
-                    continue;
-
-                if (!Matches(meta.EntityPrototype))
-                    continue;
-
-                if (_ents.TryGetComponent(ent, out StackComponent? st) && st.Count > 1)
-                    _stacks.SetCount(ent, st.Count - 1, st);
-                else
-                    _ents.DeleteEntity(ent);
-
-                left -= 1;
-            }
-        }
-
-        return left <= 0;
+        if (!_inventoryHelper.TryGetCachedDeepItems(root, out var cachedItems))
+            return false;
+        return _inventoryHelper.TryTakeProductUnitsFromCachedList(root, cachedItems, protoId, amount, matchMode);
     }
+
 
     private sealed class OrdinalIdComparer : IComparer<string>
     {
