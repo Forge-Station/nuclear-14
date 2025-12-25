@@ -68,3 +68,23 @@ nc-store-contract-completed = Контракт успешно выполнен!
 nc-store-contract-goal-line = { $item }: { $count } шт.
 nc-store-contract-progress-line = Прогресс выполнения: { $progress } из { $required }
 nc-store-currency-format = { $amount } { $currency }
+nc-store-contract-title-pretty = Контракт: { $difficulty } — { $goal }
+nc-store-contract-title-pretty-nogoal = Контракт: { $difficulty }
+
+nc-store-contract-desc-default = Выполните требования контракта и заберите награду.
+nc-store-contract-desc-generated = Требуется: { $goals }
+
+nc-store-contract-goal-inline = { $item } ×{ $count }
+
+nc-store-unknown-item = ???
+
+nc-store-proto-tooltip-name-only = { $name }
+nc-store-proto-tooltip = { $name }
+    { $desc }
+
+nc-store-contract-reward-none = Награда не указана
+nc-store-contract-reward-item-line = { $item } ×{ $count }
+
+nc-store-contract-badge-completed = ВЫПОЛНЕНО
+nc-store-contract-badge-completed-tooltip = Контракт выполнен — можно забрать награду.
+

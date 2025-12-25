@@ -120,11 +120,11 @@ public sealed class NcStoreSystem : EntitySystem
         }
 
         if (!comp.ListingIndex.TryGetValue(
-            NcStoreComponent.MakeListingKey(StoreMode.Buy, msg.ListingId),
+            NcStoreComponent.MakeListingKey(StoreMode.Buy, msg.Id),
             out var listing))
         {
             Log.Warning(
-                $"[NcStore] {ToPrettyString(actor)} tried to buy invalid listing '{msg.ListingId}' at {ToPrettyString(uid)}");
+                $"[NcStore] {ToPrettyString(actor)} tried to buy invalid listing '{msg.Id}' at {ToPrettyString(uid)}");
             PopupFail(actor, Loc.GetString("nc-store-popup-invalid-listing"));
             return;
         }
@@ -157,7 +157,7 @@ public sealed class NcStoreSystem : EntitySystem
             return;
         }
 
-        if (!TryParseSellListingId(msg.ListingId, out var requestedId, out var fromCrate))
+        if (!TryParseSellListingId(msg.Id, out var requestedId, out var fromCrate))
             return;
 
         if (comp.Listings.Count > 0 && comp.ListingIndex.Count == 0)
@@ -171,7 +171,7 @@ public sealed class NcStoreSystem : EntitySystem
             out var listing))
         {
             Log.Warning(
-                $"[NcStore] {ToPrettyString(actor)} tried to sell invalid listing '{requestedId}' (raw '{msg.ListingId}') at {ToPrettyString(uid)}");
+                $"[NcStore] {ToPrettyString(actor)} tried to sell invalid listing '{requestedId}' (raw '{msg.Id}') at {ToPrettyString(uid)}");
             PopupFail(actor, Loc.GetString("nc-store-popup-invalid-listing"));
             return;
         }

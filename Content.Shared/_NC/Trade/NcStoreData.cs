@@ -1,10 +1,11 @@
+using System;
+using System.Collections.Generic;
 using Robust.Shared.Serialization;
-
+using Robust.Shared.Serialization.Manager.Attributes;
 
 namespace Content.Shared._NC.Trade;
 
-
-[Serializable, NetSerializable,]
+[Serializable, NetSerializable]
 public sealed class StoreListingData
 {
     public string Category = string.Empty;
@@ -40,6 +41,55 @@ public sealed class StoreListingData
     }
 }
 
+// ============================================================
+// Contracts - Rewards (Blueprint -> Baked result)
+// ============================================================
+
+[Serializable, NetSerializable]
+public enum StoreRewardType : byte
+{
+    Item,
+    Currency,
+    Pool
+}
+
+[DataDefinition]
+[Serializable, NetSerializable]
+public sealed partial class ContractRewardDef
+{
+    [DataField("type")]
+    public StoreRewardType Type { get; set; } = StoreRewardType.Item;
+
+    [DataField("id")]
+    public string Id { get; set; } = string.Empty;
+
+    // amount: 5 OR amount: {min: 1, max: 5}
+    [DataField("amount")]
+    public IntRange Amount { get; set; } = IntRange.Fixed(1);
+
+    // prob: 0..1
+    [DataField("prob")]
+    public float Probability { get; set; } = 1.0f;
+
+    [DataField("weight")]
+    public int Weight { get; set; } = 1;
+
+    // max: 0 => unlimited
+    [DataField("max")]
+    public int MaxRepeats { get; set; } = 0;
+
+    // Nested pool options
+    [DataField("options")]
+    public List<ContractRewardDef>? Options { get; set; }
+}
+
+[Serializable, NetSerializable]
+public readonly record struct ContractRewardData(StoreRewardType Type, string Id, int Amount);
+
+// ============================================================
+// Contracts - Targets / Server contract snapshot
+// ============================================================
+
 [Serializable]
 public sealed class ContractTargetServerData
 {
@@ -59,13 +109,12 @@ public sealed class ContractServerData
 
     public List<ContractTargetServerData> Targets { get; set; } = new();
 
-
+    // OLD fields kept for UI compatibility (StoreStructuredSystem reads these):contentReference[oaicite:8]{index=8}
     public string TargetItem { get; set; } = string.Empty;
     public int Required { get; set; }
     public int Progress { get; set; }
 
     public bool Repeatable { get; set; } = true;
-
 
     public string Id { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
@@ -75,12 +124,14 @@ public sealed class ContractServerData
     public string? RewardItem { get; set; }
     public int RewardItemCount { get; set; }
 
-
     public Dictionary<string, int> RewardCurrencies { get; set; } = new();
     public Dictionary<string, int> RewardItems { get; set; } = new();
 
     public string Difficulty { get; set; } = "Easy";
     public string Description { get; set; } = string.Empty;
+
+    // NEW: baked rewards list (used by new NcContractSystem)
+    public List<ContractRewardData> Rewards { get; set; } = new();
 
     public bool Completed
     {
@@ -107,7 +158,7 @@ public sealed class ContractServerData
     }
 }
 
-[Serializable, NetSerializable,]
+[Serializable, NetSerializable]
 public sealed class ContractTargetClientData
 {
     [DataField("match")]
@@ -127,7 +178,7 @@ public sealed class ContractTargetClientData
     public int Progress { get; set; }
 }
 
-[Serializable, NetSerializable,]
+[Serializable, NetSerializable]
 public enum StoreMode
 {
     Buy,

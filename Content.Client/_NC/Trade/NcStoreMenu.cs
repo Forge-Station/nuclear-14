@@ -434,7 +434,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         }
 
         var ready = _items
-            .Where(d => d.Mode == StoreMode.Sell && d.Owned > 0 && d.Remaining != 0)
+            .Where(d => d is { Mode: StoreMode.Sell, Owned: > 0 } && d.Remaining != 0)
             .Select(d => new StoreListingData(
                 d.Id + "__ready",
                 d.ProductEntity,
@@ -566,11 +566,14 @@ public sealed partial class NcStoreMenu : FancyWindow
                 "Hard" => 2,
                 _ => 99
             })
-            .ThenBy(x => x.Completed ? 1 : 0)
+            .ThenBy(x => x.Name)
+            .ThenBy(x => x.Id)
             .ToList();
 
         foreach (var c in ordered)
         {
+            var borderColor = DifficultyColor(c.Difficulty, c.Completed);
+
             var cardRow = new BoxContainer
             {
                 Orientation = BoxContainer.LayoutOrientation.Horizontal,
@@ -582,10 +585,7 @@ public sealed partial class NcStoreMenu : FancyWindow
             {
                 MinSize = new(4, 0),
                 VerticalExpand = true,
-                PanelOverride = new StyleBoxFlat
-                {
-                    BackgroundColor = DifficultyColor(c.Difficulty, c.Completed)
-                },
+                PanelOverride = new StyleBoxFlat { BackgroundColor = borderColor, },
                 Margin = new(0, 0, 6, 0)
             };
             cardRow.AddChild(diffStrip);
@@ -596,7 +596,7 @@ public sealed partial class NcStoreMenu : FancyWindow
                 PanelOverride = new StyleBoxFlat
                 {
                     BackgroundColor = new(0.06f, 0.06f, 0.07f, 0.98f),
-                    BorderColor = DifficultyColor(c.Difficulty, c.Completed),
+                    BorderColor = borderColor,
                     BorderThickness = new(2),
                     ContentMarginLeftOverride = 8,
                     ContentMarginRightOverride = 8,
@@ -620,22 +620,21 @@ public sealed partial class NcStoreMenu : FancyWindow
                 Margin = new(0, 0, 0, 4)
             };
 
-            var titleText = string.IsNullOrWhiteSpace(c.Name)
-                ? Loc.GetString("nc-store-contract-title", ("difficulty", DifficultyName(c.Difficulty)))
-                : c.Name;
-
             var titleLabel = new Label
             {
-                Text = titleText,
-                Margin = new(0, 0, 6, 0)
+                Text = BuildPrettyTitle(c),
+                Margin = new(0, 0, 6, 0),
+                HorizontalExpand = true
             };
             titleLabel.StyleClasses.Add("LabelHeading");
             header.AddChild(titleLabel);
 
             header.AddChild(new() { HorizontalExpand = true, });
+
+
             if (!c.Repeatable)
             {
-                var oneTimeTip = Loc.GetString("nc-store-contract-badge-single-tooltip");
+                var tip = Loc.GetString("nc-store-contract-badge-single-tooltip");
 
                 var badge = new PanelContainer
                 {
@@ -652,15 +651,47 @@ public sealed partial class NcStoreMenu : FancyWindow
                         ContentMarginTopOverride = 2,
                         ContentMarginBottomOverride = 2
                     },
-                    ToolTip = oneTimeTip
+                    ToolTip = tip
                 };
 
                 var badgeText = new Label
                 {
                     Text = Loc.GetString("nc-store-contract-badge-single"),
                     VerticalAlignment = VAlignment.Center,
-                    ToolTip = oneTimeTip,
-                    MouseFilter = MouseFilterMode.Stop
+                    MouseFilter = MouseFilterMode.Ignore,
+                    ToolTip = tip
+                };
+                badgeText.StyleClasses.Add("LabelSubText");
+
+                badge.AddChild(badgeText);
+                header.AddChild(badge);
+            }
+
+            if (c.Completed)
+            {
+                var badge = new PanelContainer
+                {
+                    VerticalAlignment = VAlignment.Center,
+                    Margin = new(0, 1, 0, 0),
+                    MouseFilter = MouseFilterMode.Stop,
+                    PanelOverride = new StyleBoxFlat
+                    {
+                        BackgroundColor = Color.FromHex("#1E3A1E"),
+                        BorderColor = Color.FromHex("#4CAF50"),
+                        BorderThickness = new(1),
+                        ContentMarginLeftOverride = 8,
+                        ContentMarginRightOverride = 8,
+                        ContentMarginTopOverride = 2,
+                        ContentMarginBottomOverride = 2
+                    },
+                    ToolTip = Loc.GetString("nc-store-contract-badge-completed-tooltip")
+                };
+
+                var badgeText = new Label
+                {
+                    Text = Loc.GetString("nc-store-contract-badge-completed"),
+                    VerticalAlignment = VAlignment.Center,
+                    MouseFilter = MouseFilterMode.Ignore
                 };
                 badgeText.StyleClasses.Add("LabelSubText");
 
@@ -670,152 +701,49 @@ public sealed partial class NcStoreMenu : FancyWindow
 
             root.AddChild(header);
 
-            // --- Описание ---
-            if (!string.IsNullOrWhiteSpace(c.Description))
+
+            var descText = BuildPrettyDescription(c);
+            if (!string.IsNullOrWhiteSpace(descText))
             {
                 var desc = new Label
                 {
-                    Text = c.Description,
-                    Margin = new(0, 0, 0, 4)
+                    Text = descText,
+                    Margin = new(0, 0, 0, 8),
+                    Modulate = Color.FromHex("#C9C9C9")
                 };
-                desc.StyleClasses.Add("LabelSubText");
                 root.AddChild(desc);
             }
 
-            // --- Цели ---
-            var hasTargets = c.Targets.Count > 0;
-
-            if (hasTargets)
-            {
-                root.AddChild(
-                    new Label
-                    {
-                        Text = Loc.GetString("nc-store-contract-goals-header"),
-                        Margin = new(0, 0, 0, 2)
-                    });
-
-                foreach (var t in c.Targets)
+            root.AddChild(
+                new Label
                 {
-                    EntityPrototype? targetProto = null;
-                    if (!string.IsNullOrWhiteSpace(t.TargetItem))
-                        _proto.TryIndex(t.TargetItem, out targetProto);
+                    Text = Loc.GetString("nc-store-contract-goals-header"),
+                    Margin = new(0, 0, 0, 2),
+                    Modulate = Color.FromHex("#8A8A8A")
+                });
 
-                    var targetRow = new BoxContainer
-                    {
-                        Orientation = BoxContainer.LayoutOrientation.Horizontal,
-                        Margin = new(0, 0, 0, 2)
-                    };
-
-                    Texture? targetTex = null;
-                    if (targetProto != null)
-                    {
-                        var icon = _sprites.GetPrototypeIcon(targetProto.ID);
-                        targetTex = icon.Default;
-                    }
-
-                    if (targetTex != null)
-                    {
-                        targetRow.AddChild(
-                            new TextureRect
-                            {
-                                Texture = targetTex,
-                                Stretch = TextureRect.StretchMode.KeepAspectCentered,
-                                MinSize = new(24, 24),
-                                Margin = new(0, 0, 4, 0)
-                            });
-                    }
-
-                    var targetName = targetProto?.Name ?? t.TargetItem;
-                    targetRow.AddChild(
-                        new Label
-                        {
-                            Text = Loc.GetString(
-                                "nc-store-contract-goal-line",
-                                ("item", targetName),
-                                ("count", t.Required))
-                        });
-
-                    root.AddChild(targetRow);
-
-                    if (!string.IsNullOrWhiteSpace(targetProto?.Description))
-                    {
-                        var itemDesc = new Label
-                        {
-                            Text = targetProto.Description,
-                            Margin = new(28, 0, 0, 2)
-                        };
-                        itemDesc.StyleClasses.Add("LabelSubText");
-                        root.AddChild(itemDesc);
-                    }
-                }
+            if (c.Targets is { Count: > 0, })
+            {
+                foreach (var t in c.Targets)
+                    root.AddChild(BuildTargetRow(t.TargetItem, t.Required));
             }
             else
-            {
-                EntityPrototype? targetProto = null;
-                if (!string.IsNullOrWhiteSpace(c.TargetItem))
-                    _proto.TryIndex(c.TargetItem, out targetProto);
+                root.AddChild(BuildTargetRow(c.TargetItem, c.Required));
 
-                var targetRow = new BoxContainer
-                {
-                    Orientation = BoxContainer.LayoutOrientation.Horizontal,
-                    Margin = new(0, 0, 0, 2)
-                };
 
-                Texture? targetTex = null;
-                if (targetProto != null)
-                {
-                    var icon = _sprites.GetPrototypeIcon(targetProto.ID);
-                    targetTex = icon.Default;
-                }
-
-                if (targetTex != null)
-                {
-                    targetRow.AddChild(
-                        new TextureRect
-                        {
-                            Texture = targetTex,
-                            Stretch = TextureRect.StretchMode.KeepAspectCentered,
-                            MinSize = new(24, 24),
-                            Margin = new(0, 0, 4, 0)
-                        });
-                }
-
-                var targetName = targetProto?.Name ?? c.TargetItem;
-                targetRow.AddChild(
-                    new Label
-                    {
-                        Text = Loc.GetString("nc-store-contract-goal-line", ("item", targetName), ("count", c.Required))
-                    });
-
-                root.AddChild(targetRow);
-
-                if (!string.IsNullOrWhiteSpace(targetProto?.Description))
-                {
-                    var itemDesc = new Label
-                    {
-                        Text = targetProto.Description,
-                        Margin = new(0, 0, 0, 4)
-                    };
-                    itemDesc.StyleClasses.Add("LabelSubText");
-                    root.AddChild(itemDesc);
-                }
-            }
-
-            // --- Прогресс ---
             if (!c.Completed)
             {
-                var max = c.Required <= 0 ? 1 : c.Required;
+                var max = CalculateRequiredTotal(c);
                 var val = Math.Clamp(c.Progress, 0, max);
 
-                root.AddChild(
-                    new Label
-                    {
-                        Text = Loc.GetString(
-                            "nc-store-contract-progress-line",
-                            ("progress", c.Progress),
-                            ("required", c.Required)),
-                        Margin = new(0, 2, 0, 2)
-                    });
+                var progressLabel = new Label
+                {
+                    Text = Loc.GetString("nc-store-contract-progress-line", ("progress", val), ("required", max)),
+                    Margin = new(0, 6, 0, 2),
+                    Align = Label.AlignMode.Right
+                };
+                progressLabel.StyleClasses.Add("LabelSubText");
+                root.AddChild(progressLabel);
 
                 root.AddChild(
                     new ProgressBar
@@ -824,10 +752,11 @@ public sealed partial class NcStoreMenu : FancyWindow
                         MaxValue = max,
                         Value = val,
                         HorizontalExpand = true,
-                        MinSize = new(0, 14),
+                        MinSize = new(0, 10),
                         Margin = new(0, 0, 0, 4)
                     });
             }
+
 
             var bottomWrap = new BoxContainer
             {
@@ -859,176 +788,17 @@ public sealed partial class NcStoreMenu : FancyWindow
             rewardsPanel.AddChild(rewardsCol);
 
             var rewardsHeader = new Label
-                { Text = Loc.GetString("nc-store-contract-reward-header"), Margin = new(0, 0, 0, 3), };
+            {
+                Text = Loc.GetString("nc-store-contract-reward-header"),
+                Margin = new(0, 0, 0, 3)
+            };
             rewardsHeader.StyleClasses.Add("LabelHeading");
             rewardsCol.AddChild(rewardsHeader);
 
-            if (c.RewardCurrencies is { Count: > 0, } currencies)
-            {
-                var parts = new List<string>();
-                foreach (var kv in currencies)
-                {
-                    var curId = kv.Key;
-                    var amount = kv.Value;
-                    if (amount <= 0 || string.IsNullOrWhiteSpace(curId))
-                        continue;
-
-                    var name = CurrencyName(curId);
-                    if (string.IsNullOrWhiteSpace(name))
-                        name = curId;
-
-                    parts.Add($"{amount} {name}");
-                }
-
-                if (parts.Count > 0)
-                {
-                    var curLine = new Label { Text = string.Join(", ", parts), };
-                    curLine.StyleClasses.Add("LabelSubText");
-                    rewardsCol.AddChild(curLine);
-                }
-            }
-            else if (c.Reward > 0 && !string.IsNullOrWhiteSpace(c.RewardCurrency))
-            {
-                Texture? currencyTex = null;
-                if (_proto.TryIndex<StackPrototype>(c.RewardCurrency, out var stackProto) &&
-                    _proto.TryIndex<EntityPrototype>(stackProto.Spawn, out var currencyEnt))
-                {
-                    var icon = _sprites.GetPrototypeIcon(currencyEnt.ID);
-                    currencyTex = icon.Default;
-                }
-
-                var line = new BoxContainer
-                {
-                    Orientation = BoxContainer.LayoutOrientation.Horizontal,
-                    Margin = new(0, 0, 0, 2)
-                };
-
-                if (currencyTex != null)
-                {
-                    line.AddChild(
-                        new TextureRect
-                        {
-                            Texture = currencyTex,
-                            Stretch = TextureRect.StretchMode.KeepAspectCentered,
-                            MinSize = new(16, 16),
-                            Margin = new(0, 0, 4, 0)
-                        });
-                }
-
-                var currencyName = CurrencyName(c.RewardCurrency);
-                var curText = string.IsNullOrEmpty(currencyName)
-                    ? $"{c.Reward}"
-                    : $"{c.Reward} {currencyName}";
-
-                var curLine = new Label { Text = curText, };
-                curLine.StyleClasses.Add("LabelSubText");
-
-                line.AddChild(curLine);
-                rewardsCol.AddChild(line);
-            }
-
-            var anyItems = c.RewardItems is { Count: > 0, } ||
-                !string.IsNullOrWhiteSpace(c.RewardItem) && c.RewardItemCount > 0;
-
-            if (anyItems)
-            {
-                rewardsCol.AddChild(new() { MinSize = new(0, 4), });
-
-                var itemsHeader = new Label
-                    { Text = Loc.GetString("nc-store-contract-items-header"), Margin = new(0, 2, 0, 2), };
-                itemsHeader.StyleClasses.Add("LabelHeading");
-                rewardsCol.AddChild(itemsHeader);
-            }
-
-            if (c.RewardItems is { Count: > 0, } items)
-            {
-                foreach (var kv in items)
-                {
-                    var id = kv.Key;
-                    var count = kv.Value;
-                    if (count <= 0 || string.IsNullOrWhiteSpace(id))
-                        continue;
-
-                    _proto.TryIndex<EntityPrototype>(id, out var proto);
-
-                    var line = new BoxContainer
-                    {
-                        Orientation = BoxContainer.LayoutOrientation.Horizontal,
-                        Margin = new(0, 0, 0, 2)
-                    };
-
-                    Texture? tex = null;
-                    if (proto != null)
-                    {
-                        var icon = _sprites.GetPrototypeIcon(proto.ID);
-                        tex = icon.Default;
-                    }
-
-                    if (tex != null)
-                    {
-                        line.AddChild(
-                            new TextureRect
-                            {
-                                Texture = tex,
-                                Stretch = TextureRect.StretchMode.KeepAspectCentered,
-                                MinSize = new(20, 20),
-                                Margin = new(0, 0, 4, 0)
-                            });
-                    }
-
-                    var name = proto?.Name ?? id;
-                    line.AddChild(
-                        new Label
-                        {
-                            Text = Loc.GetString("nc-store-contract-goal-line", ("item", name), ("count", count))
-                        });
-
-                    rewardsCol.AddChild(line);
-                }
-            }
-            else if (!string.IsNullOrWhiteSpace(c.RewardItem) && c.RewardItemCount > 0)
-            {
-                _proto.TryIndex<EntityPrototype>(c.RewardItem, out var rewardProto);
-
-                var line = new BoxContainer
-                {
-                    Orientation = BoxContainer.LayoutOrientation.Horizontal,
-                    Margin = new(0, 0, 0, 2)
-                };
-
-                Texture? rewardTex = null;
-                if (rewardProto != null)
-                {
-                    var icon = _sprites.GetPrototypeIcon(rewardProto.ID);
-                    rewardTex = icon.Default;
-                }
-
-                if (rewardTex != null)
-                {
-                    line.AddChild(
-                        new TextureRect
-                        {
-                            Texture = rewardTex,
-                            Stretch = TextureRect.StretchMode.KeepAspectCentered,
-                            MinSize = new(20, 20),
-                            Margin = new(0, 0, 4, 0)
-                        });
-                }
-
-                var rewardName = rewardProto?.Name ?? c.RewardItem;
-                line.AddChild(
-                    new Label
-                    {
-                        Text = Loc.GetString(
-                            "nc-store-contract-goal-line",
-                            ("item", rewardName),
-                            ("count", c.RewardItemCount))
-                    });
-
-                rewardsCol.AddChild(line);
-            }
+            PopulateRewards(rewardsCol, c.Rewards);
 
             bottomWrap.AddChild(rewardsPanel);
+
             var actionCol = new BoxContainer
             {
                 Orientation = BoxContainer.LayoutOrientation.Vertical,
@@ -1036,19 +806,20 @@ public sealed partial class NcStoreMenu : FancyWindow
                 Margin = new(8, 0, 0, 0)
             };
 
+            var canClaim = c.Completed;
+
             var actionHint = new Label
             {
-                Text = c.Completed
+                Text = canClaim
                     ? Loc.GetString("nc-store-contract-action-can-claim")
                     : Loc.GetString("nc-store-contract-action-not-done"),
-                Margin = new(0, 0, 0, 4)
+                Margin = new(0, 0, 0, 4),
+                Align = Label.AlignMode.Center
             };
             actionHint.StyleClasses.Add("LabelSubText");
             actionCol.AddChild(actionHint);
 
             actionCol.AddChild(new() { VerticalExpand = true, });
-
-            var canClaim = c.Completed;
 
             var btn = new Button
             {
@@ -1057,11 +828,14 @@ public sealed partial class NcStoreMenu : FancyWindow
                     : Loc.GetString(
                         "nc-store-contract-action-claim-progress",
                         ("progress", c.Progress),
-                        ("required", c.Required)),
+                        ("required", CalculateRequiredTotal(c))),
                 Disabled = !canClaim,
                 HorizontalExpand = true,
                 MinSize = new(0, 32)
             };
+
+            if (canClaim)
+                btn.Modulate = Color.FromHex("#4CAF50");
 
             btn.ToolTip = canClaim
                 ? !c.Repeatable
@@ -1081,11 +855,277 @@ public sealed partial class NcStoreMenu : FancyWindow
             bottomWrap.AddChild(actionCol);
 
             root.AddChild(bottomWrap);
-
             contractList.AddChild(cardRow);
         }
 
         ApplyTabsVisibility();
+    }
+
+    private string BuildPrettyTitle(ContractClientData c)
+    {
+        if (!string.IsNullOrWhiteSpace(c.Name))
+            return c.Name.Trim();
+
+        var diff = DifficultyName(c.Difficulty);
+        var goal = BuildGoalsInline(c, 2);
+
+        return string.IsNullOrWhiteSpace(goal)
+            ? Loc.GetString("nc-store-contract-title-pretty-nogoal", ("difficulty", diff))
+            : Loc.GetString("nc-store-contract-title-pretty", ("difficulty", diff), ("goal", goal));
+    }
+
+
+    private string BuildPrettyDescription(ContractClientData c)
+    {
+        if (!string.IsNullOrWhiteSpace(c.Description))
+            return c.Description.Trim();
+
+        var goal = BuildGoalsInline(c, 4);
+        if (string.IsNullOrWhiteSpace(goal))
+            return Loc.GetString("nc-store-contract-desc-default");
+
+        return Loc.GetString("nc-store-contract-desc-generated", ("goals", goal.Replace(", ", "; ")));
+    }
+
+
+    private string BuildGoalsInline(ContractClientData c, int maxParts)
+    {
+        var parts = new List<string>(maxParts);
+
+        if (c.Targets is { Count: > 0, })
+        {
+            foreach (var t in c.Targets)
+            {
+                if (parts.Count >= maxParts)
+                    break;
+
+                if (t.Required <= 0 || string.IsNullOrWhiteSpace(t.TargetItem))
+                    continue;
+
+                var name = ResolveProtoName(t.TargetItem);
+                parts.Add(Loc.GetString("nc-store-contract-goal-inline", ("item", name), ("count", t.Required)));
+            }
+        }
+        else
+        {
+            if (c.Required > 0 && !string.IsNullOrWhiteSpace(c.TargetItem))
+            {
+                var name = ResolveProtoName(c.TargetItem);
+                parts.Add(Loc.GetString("nc-store-contract-goal-inline", ("item", name), ("count", c.Required)));
+            }
+        }
+
+        return string.Join(", ", parts);
+    }
+
+
+    private int CalculateRequiredTotal(ContractClientData c)
+    {
+        if (c.Targets is { Count: > 0, })
+        {
+            var sum = 0;
+            foreach (var t in c.Targets)
+                if (t.Required > 0)
+                    sum += t.Required;
+            return Math.Max(1, sum);
+        }
+
+        return Math.Max(1, c.Required);
+    }
+
+    private Control BuildTargetRow(string? protoId, int required)
+    {
+        EntityPrototype? targetProto = null;
+        if (!string.IsNullOrWhiteSpace(protoId))
+            _proto.TryIndex(protoId, out targetProto);
+
+        var targetRow = new BoxContainer
+        {
+            Orientation = BoxContainer.LayoutOrientation.Horizontal,
+            Margin = new(0, 0, 0, 2),
+            MouseFilter = MouseFilterMode.Stop
+        };
+
+        var tooltip = BuildProtoTooltip(targetProto);
+        if (!string.IsNullOrWhiteSpace(tooltip))
+            targetRow.ToolTip = tooltip;
+
+        Texture? tex = null;
+        if (targetProto != null)
+        {
+            var icon = _sprites.GetPrototypeIcon(targetProto.ID);
+            tex = icon.Default;
+        }
+
+        if (tex != null)
+        {
+            targetRow.AddChild(
+                new TextureRect
+                {
+                    Texture = tex,
+                    Stretch = TextureRect.StretchMode.KeepAspectCentered,
+                    MinSize = new(24, 24),
+                    Margin = new(0, 0, 4, 0),
+                    MouseFilter = MouseFilterMode.Ignore
+                });
+        }
+
+        var targetName = targetProto?.Name ?? protoId ?? Loc.GetString("nc-store-unknown-item");
+        targetRow.AddChild(
+            new Label
+            {
+                Text = Loc.GetString("nc-store-contract-goal-line", ("item", targetName), ("count", required)),
+                MouseFilter = MouseFilterMode.Ignore
+            });
+
+        return targetRow;
+    }
+
+
+    private string ResolveProtoName(string protoId)
+    {
+        if (_proto.TryIndex<EntityPrototype>(protoId, out var proto))
+            return proto.Name;
+
+        return protoId;
+    }
+
+    private string BuildProtoTooltip(EntityPrototype? proto)
+    {
+        if (proto == null)
+            return string.Empty;
+
+        if (string.IsNullOrWhiteSpace(proto.Description))
+            return Loc.GetString("nc-store-proto-tooltip-name-only", ("name", proto.Name));
+
+        return Loc.GetString("nc-store-proto-tooltip", ("name", proto.Name), ("desc", proto.Description));
+    }
+
+
+    private void PopulateRewards(BoxContainer rewardsCol, List<ContractRewardData>? rewards)
+    {
+        if (rewards is not { Count: > 0, })
+        {
+            rewardsCol.AddChild(
+                new Label
+                {
+                    Text = Loc.GetString("nc-store-contract-reward-none"),
+                    Modulate = Color.FromHex("#777777")
+                });
+            return;
+        }
+
+        var currencyTotals = new Dictionary<string, int>();
+        var itemTotals = new Dictionary<string, int>();
+
+        foreach (var r in rewards)
+        {
+            if (r.Amount <= 0 || string.IsNullOrWhiteSpace(r.Id))
+                continue;
+
+            switch (r.Type)
+            {
+                case StoreRewardType.Currency:
+                    if (!currencyTotals.TryAdd(r.Id, r.Amount))
+                        currencyTotals[r.Id] += r.Amount;
+                    break;
+
+                case StoreRewardType.Item:
+                    if (!itemTotals.TryAdd(r.Id, r.Amount))
+                        itemTotals[r.Id] += r.Amount;
+                    break;
+
+                case StoreRewardType.Pool:
+                    break;
+            }
+        }
+
+        if (currencyTotals.Count > 0)
+        {
+            var parts = new List<string>(currencyTotals.Count);
+            foreach (var kv in currencyTotals)
+            {
+                var name = CurrencyName(kv.Key);
+                if (string.IsNullOrWhiteSpace(name))
+                    name = kv.Key;
+
+                parts.Add(Loc.GetString("nc-store-currency-format", ("amount", kv.Value), ("currency", name)));
+            }
+
+            rewardsCol.AddChild(
+                new Label
+                {
+                    Text = string.Join(", ", parts),
+                    Modulate = Color.FromHex("#D4AF37")
+                });
+        }
+
+        if (itemTotals.Count > 0)
+        {
+            if (currencyTotals.Count > 0)
+                rewardsCol.AddChild(new() { MinSize = new(0, 4), });
+
+            foreach (var kv in itemTotals)
+            {
+                var id = kv.Key;
+                var count = kv.Value;
+                if (count <= 0 || string.IsNullOrWhiteSpace(id))
+                    continue;
+
+                _proto.TryIndex<EntityPrototype>(id, out var proto);
+
+                var line = new BoxContainer
+                {
+                    Orientation = BoxContainer.LayoutOrientation.Horizontal,
+                    Margin = new(0, 0, 0, 2),
+                    MouseFilter = MouseFilterMode.Stop
+                };
+
+                var tooltip = BuildProtoTooltip(proto);
+                if (!string.IsNullOrWhiteSpace(tooltip))
+                    line.ToolTip = tooltip;
+
+                Texture? tex = null;
+                if (proto != null)
+                {
+                    var icon = _sprites.GetPrototypeIcon(proto.ID);
+                    tex = icon.Default;
+                }
+
+                if (tex != null)
+                {
+                    line.AddChild(
+                        new TextureRect
+                        {
+                            Texture = tex,
+                            Stretch = TextureRect.StretchMode.KeepAspectCentered,
+                            MinSize = new(20, 20),
+                            Margin = new(0, 0, 4, 0),
+                            MouseFilter = MouseFilterMode.Ignore
+                        });
+                }
+
+                var name = proto?.Name ?? id;
+                line.AddChild(
+                    new Label
+                    {
+                        Text = Loc.GetString("nc-store-contract-reward-item-line", ("item", name), ("count", count)),
+                        MouseFilter = MouseFilterMode.Ignore
+                    });
+
+                rewardsCol.AddChild(line);
+            }
+        }
+
+        if (currencyTotals.Count == 0 && itemTotals.Count == 0)
+        {
+            rewardsCol.AddChild(
+                new Label
+                {
+                    Text = Loc.GetString("nc-store-contract-reward-none"),
+                    Modulate = Color.FromHex("#777777")
+                });
+        }
     }
 
 
@@ -1198,7 +1238,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         var hasSearch = !string.IsNullOrWhiteSpace(_searchLower);
 
         if (!hasCat && !hasSearch)
-            return Enumerable.Empty<StoreListingData>();
+            return [];
 
         if (hasCat)
             q = q.Where(i => i.Category == cat);

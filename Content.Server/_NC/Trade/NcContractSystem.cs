@@ -6,11 +6,11 @@ using Robust.Shared.Random;
 
 namespace Content.Server._NC.Trade;
 
-
 public sealed class NcContractSystem : EntitySystem
 {
     private const double Golden = 0.6180339887498948;
     private const double DefaultJitter = 0.06;
+    private const int MaxRewardDepth = 6;
     private static readonly ISawmill Sawmill = Logger.GetSawmill("nccontracts");
     private readonly Dictionary<string, List<string>> _ancestorsCache = new();
     private readonly Dictionary<string, int> _depthCache = new();
@@ -47,27 +47,7 @@ public sealed class NcContractSystem : EntitySystem
         RefreshContractsInternal(uid, comp);
     }
 
-    private static List<ContractTargetServerData> GetEffectiveTargets(ContractServerData contract)
-    {
-        if (contract.Targets.Count > 0)
-            return contract.Targets;
-
-        if (!string.IsNullOrWhiteSpace(contract.TargetItem) && contract.Required > 0)
-        {
-            return
-            [
-                new()
-                {
-                    TargetItem = contract.TargetItem,
-                    Required = contract.Required,
-                    Progress = contract.Progress,
-                    MatchMode = contract.MatchMode
-                }
-            ];
-        }
-
-        return new();
-    }
+    private static List<ContractTargetServerData> GetEffectiveTargets(ContractServerData contract) => contract.Targets;
 
     public bool TryClaim(EntityUid store, EntityUid user, string contractId)
     {
@@ -210,7 +190,7 @@ public sealed class NcContractSystem : EntitySystem
         {
             Sawmill.Error(
                 $"[Claim] ExecuteBatch failed for contract '{contractId}' on {ToPrettyString(store)}. " +
-                $"(NOTE: partial consumption may have already happened)");
+                "(NOTE: partial consumption may have already happened)");
             return false;
         }
 
@@ -224,40 +204,21 @@ public sealed class NcContractSystem : EntitySystem
             contract.Targets[i] = t;
         }
 
-        if (contract.RewardCurrencies is { Count: > 0, })
+        foreach (var reward in contract.Rewards)
         {
-            foreach (var kvp in contract.RewardCurrencies)
+            if (reward.Amount <= 0 || string.IsNullOrWhiteSpace(reward.Id))
+                continue;
+
+            switch (reward.Type)
             {
-                var currencyId = kvp.Key;
-                var amount = kvp.Value;
-
-                if (amount <= 0 || string.IsNullOrWhiteSpace(currencyId))
-                    continue;
-
-                _logic.GiveCurrency(user, currencyId, amount);
+                case StoreRewardType.Currency:
+                    _logic.GiveCurrency(user, reward.Id, reward.Amount);
+                    break;
+                case StoreRewardType.Item:
+                    for (var i = 0; i < reward.Amount; i++)
+                        _logic.TrySpawnProduct(reward.Id, user);
+                    break;
             }
-        }
-        else if (contract.Reward > 0 && !string.IsNullOrWhiteSpace(contract.RewardCurrency))
-            _logic.GiveCurrency(user, contract.RewardCurrency, contract.Reward);
-
-        if (contract.RewardItems is { Count: > 0, })
-        {
-            foreach (var kvp in contract.RewardItems)
-            {
-                var protoId = kvp.Key;
-                var count = kvp.Value;
-
-                if (count <= 0 || string.IsNullOrWhiteSpace(protoId))
-                    continue;
-
-                for (var i = 0; i < count; i++)
-                    _logic.TrySpawnProduct(protoId, user);
-            }
-        }
-        else if (!string.IsNullOrWhiteSpace(contract.RewardItem) && contract.RewardItemCount > 0)
-        {
-            for (var i = 0; i < contract.RewardItemCount; i++)
-                _logic.TrySpawnProduct(contract.RewardItem!, user);
         }
 
         var repeatable = contract.Repeatable;
@@ -268,8 +229,333 @@ public sealed class NcContractSystem : EntitySystem
             comp.CompletedOneTimeContracts.Add(contractId);
 
         RefillContractsForStore(store, comp, contractId);
-
         return true;
+    }
+
+
+    private void RefillContractsForStore(EntityUid uid, NcStoreComponent comp, string? ignoredContractId = null) =>
+        RefreshContractsInternal(uid, comp, ignoredContractId);
+
+    private void RefreshContractsInternal(EntityUid uid, NcStoreComponent comp, string? ignoredContractId = null)
+    {
+        string? presetId = null;
+        if (comp.ContractPresets.Count > 0)
+            presetId = comp.ContractPresets[0];
+        else if (!string.IsNullOrWhiteSpace(comp.LegacyContractsPreset))
+            presetId = comp.LegacyContractsPreset;
+
+        if (string.IsNullOrWhiteSpace(presetId))
+            return;
+
+        if (!_prototypes.TryIndex<StoreContractsPresetPrototype>(presetId, out var mainPreset))
+        {
+            Sawmill.Warning($"[Contracts] Preset '{presetId}' not found for {ToPrettyString(uid)}");
+            return;
+        }
+
+        var currentCounts = new Dictionary<string, int>();
+        foreach (var c in comp.Contracts.Values)
+        {
+            currentCounts.TryAdd(c.Difficulty, 0);
+            currentCounts[c.Difficulty]++;
+        }
+
+        var candidates = new List<(StoreContractPrototype Proto, int Weight)>();
+        var visitedPacks = new HashSet<string>();
+
+        foreach (var packEntry in mainPreset.Packs)
+            CollectFromPackRecursive(packEntry.Id, packEntry.Weight, candidates, visitedPacks);
+
+        var poolByDifficulty = new Dictionary<string, List<(StoreContractPrototype Proto, int Weight)>>();
+
+        foreach (var (proto, weight) in candidates)
+        {
+            if (ignoredContractId != null && proto.ID == ignoredContractId)
+                continue;
+
+            if (!proto.Repeatable && comp.CompletedOneTimeContracts.Contains(proto.ID))
+                continue;
+            if (comp.Contracts.ContainsKey(proto.ID))
+                continue;
+
+            if (!poolByDifficulty.ContainsKey(proto.Difficulty))
+                poolByDifficulty[proto.Difficulty] = new();
+
+            poolByDifficulty[proto.Difficulty].Add((proto, weight));
+        }
+
+        foreach (var (difficulty, limit) in mainPreset.Limits)
+        {
+            var current = currentCounts.TryGetValue(difficulty, out var c) ? c : 0;
+            var needed = limit - current;
+
+            if (needed <= 0)
+                continue;
+            if (!poolByDifficulty.TryGetValue(difficulty, out var validPool) || validPool.Count == 0)
+                continue;
+
+            for (var i = 0; i < needed; i++)
+            {
+                if (validPool.Count == 0)
+                    break;
+
+                var pick = PickWeighted(_random, validPool, x => x.Weight);
+                comp.Contracts[pick.Proto.ID] = CreateContractData(uid, pick.Proto);
+                validPool.Remove(pick);
+            }
+        }
+    }
+
+    private void CollectFromPackRecursive(
+        string packId,
+        int currentWeightMult,
+        List<(StoreContractPrototype Proto, int FinalWeight)> accumulator,
+        HashSet<string> visitedPacks
+    )
+    {
+        if (!visitedPacks.Add(packId))
+            return;
+
+        if (!_prototypes.TryIndex<StoreContractPackPrototype>(packId, out var pack))
+        {
+            Sawmill.Error($"[Contracts] Pack '{packId}' not found.");
+            return;
+        }
+
+        foreach (var entry in pack.Contracts)
+            if (_prototypes.TryIndex<StoreContractPrototype>(entry.Id, out var proto))
+                accumulator.Add((proto, entry.Weight * currentWeightMult));
+
+        foreach (var include in pack.Includes)
+            CollectFromPackRecursive(include.Id, currentWeightMult * include.Weight, accumulator, visitedPacks);
+    }
+
+
+    private ContractServerData CreateContractData(EntityUid store, StoreContractPrototype proto)
+    {
+        var targets = new List<ContractTargetServerData>();
+
+        var baseTargetItem = proto.TargetItem ?? string.Empty;
+        var baseRequired = RollSmooth(new(QuasiKeyKind.Req, store, proto.ID, null), proto.Required, 1);
+
+        if (proto.Targets is { Count: > 0, })
+        {
+            var targetCount = RollSmooth(new(QuasiKeyKind.Tc, store, proto.ID, null), proto.TargetCount, 1);
+            if (targetCount <= 0)
+                targetCount = 1;
+
+            var pool = new List<StoreContractTargetEntry>(proto.Targets);
+            var picks = Math.Min(targetCount, pool.Count);
+
+            for (var i = 0; i < picks && pool.Count > 0; i++)
+            {
+                var chosen = PickWeighted(_random, pool, t => t.Weight);
+                pool.Remove(chosen);
+
+                var itemId = chosen.TargetItemId;
+                var rolledReq = RollSmooth(
+                    new(QuasiKeyKind.TReq, store, proto.ID, chosen.TargetItemId),
+                    chosen.Required,
+                    1);
+
+                var req = rolledReq > 0 ? rolledReq : baseRequired;
+                targets.Add(
+                    new()
+                    {
+                        TargetItem = itemId,
+                        Required = req,
+                        Progress = 0,
+                        MatchMode = proto.MatchMode
+                    });
+            }
+
+            if (targets.Count == 0 && !string.IsNullOrWhiteSpace(baseTargetItem) && baseRequired > 0)
+            {
+                targets.Add(
+                    new()
+                    {
+                        TargetItem = baseTargetItem,
+                        Required = baseRequired,
+                        Progress = 0,
+                        MatchMode = proto.MatchMode
+                    });
+            }
+        }
+        else if (!string.IsNullOrWhiteSpace(baseTargetItem) && baseRequired > 0)
+        {
+            targets.Add(
+                new()
+                {
+                    TargetItem = baseTargetItem,
+                    Required = baseRequired,
+                    Progress = 0,
+                    MatchMode = proto.MatchMode
+                });
+        }
+
+        var totalRequired = 0;
+        foreach (var t in targets)
+            totalRequired += Math.Max(0, t.Required);
+
+        var mainTarget = targets.Count > 0 ? targets[0].TargetItem : string.Empty;
+
+        // --- Rewards (baked) ---
+        var rewards = BakeRewardsForContract(store, proto);
+
+        return new()
+        {
+            Id = proto.ID,
+            Name = proto.Name,
+            Difficulty = proto.Difficulty,
+            Description = proto.Description,
+            Repeatable = proto.Repeatable,
+
+            Targets = targets,
+            TargetItem = mainTarget,
+            Required = totalRequired,
+            Progress = 0,
+
+            Rewards = rewards
+        };
+    }
+
+
+    private List<ContractRewardData> BakeRewardsForContract(EntityUid store, StoreContractPrototype proto)
+    {
+        if (proto.Rewards.Count == 0)
+            return new();
+
+        var baked = BakeRewardsRecursive(store, proto.ID, proto.Rewards, 0);
+        return AggregateRewards(baked);
+    }
+
+    private List<ContractRewardData> BakeRewardsRecursive(
+        EntityUid store,
+        string contractProtoId,
+        List<ContractRewardDef> blueprints,
+        int depth
+    )
+    {
+        var result = new List<ContractRewardData>();
+        if (depth > MaxRewardDepth)
+            return result;
+
+        for (var i = 0; i < blueprints.Count; i++)
+        {
+            var bp = blueprints[i];
+
+            if (bp.Probability < 1.0f && !_random.Prob(Math.Clamp(bp.Probability, 0f, 1f)))
+                continue;
+            var count = RollSmooth(
+                new(QuasiKeyKind.RAmount, store, contractProtoId, $"{depth}:{i}:{bp.Type}:{bp.Id}"),
+                bp.Amount,
+                0);
+
+            if (count <= 0)
+                continue;
+
+            var isPool = bp.Type == StoreRewardType.Pool || bp.Options is { Count: > 0, };
+
+            if (isPool)
+            {
+                var rolled = RollPool(store, contractProtoId, bp, count, depth + 1);
+                result.AddRange(rolled);
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(bp.Id))
+                continue;
+
+            if (bp.Type != StoreRewardType.Item && bp.Type != StoreRewardType.Currency)
+                continue;
+
+            result.Add(new(bp.Type, bp.Id, count));
+        }
+
+        return result;
+    }
+
+    private List<ContractRewardData> RollPool(
+        EntityUid store,
+        string contractProtoId,
+        ContractRewardDef poolDef,
+        int rolls,
+        int depth
+    )
+    {
+        var output = new List<ContractRewardData>();
+        if (depth > MaxRewardDepth)
+            return output;
+
+        List<ContractRewardDef>? options = null;
+        if (poolDef.Options is { Count: > 0, })
+            options = poolDef.Options;
+        else if (!string.IsNullOrWhiteSpace(poolDef.Id) &&
+            _prototypes.TryIndex<NcContractRewardPoolPrototype>(poolDef.Id, out var poolProto) &&
+            poolProto.Entries is { Count: > 0, })
+            options = poolProto.Entries;
+
+        if (options == null || options.Count == 0)
+            return output;
+
+        var deck = new List<PoolEntry>(options.Count);
+        for (var i = 0; i < options.Count; i++)
+        {
+            var def = options[i];
+            var key = $"{i}:{def.Type}:{def.Id}";
+            deck.Add(new(def, key));
+        }
+
+        var dropCounts = new Dictionary<string, int>();
+
+        for (var i = 0; i < rolls; i++)
+        {
+            if (deck.Count == 0)
+                break;
+
+            var winner = PickWeighted(_random, deck, x => x.Def.Weight);
+            var key = winner.Key;
+
+            if (!dropCounts.TryAdd(key, 1))
+                dropCounts[key] = dropCounts[key] + 1;
+
+            if (winner.Def.MaxRepeats > 0 && dropCounts[key] >= winner.Def.MaxRepeats)
+                deck.Remove(winner);
+
+            output.AddRange(BakeRewardsRecursive(store, contractProtoId, new() { winner.Def, }, depth));
+        }
+
+        return output;
+    }
+
+    private static List<ContractRewardData> AggregateRewards(List<ContractRewardData> rewards)
+    {
+        if (rewards.Count == 0)
+            return rewards;
+
+        var map = new Dictionary<(StoreRewardType Type, string Id), int>();
+
+        foreach (var r in rewards)
+        {
+            if (r.Amount <= 0 || string.IsNullOrWhiteSpace(r.Id))
+                continue;
+            if (r.Type != StoreRewardType.Item && r.Type != StoreRewardType.Currency)
+                continue;
+
+            var k = (r.Type, r.Id);
+            if (!map.TryAdd(k, r.Amount))
+                map[k] = checked(map[k] + r.Amount);
+        }
+
+        var outList = new List<ContractRewardData>(map.Count);
+        foreach (var (k, amt) in map)
+        {
+            if (amt <= 0)
+                continue;
+            outList.Add(new(k.Type, k.Id, amt));
+        }
+
+        return outList;
     }
 
     private List<(string ProtoId, PrototypeMatchMode MatchMode)> OrderClaimKeys(
@@ -310,7 +596,6 @@ public sealed class NcContractSystem : EntitySystem
     )
     {
         slices = new();
-
         if (need <= 0)
             return 0;
 
@@ -413,6 +698,23 @@ public sealed class NcContractSystem : EntitySystem
         }
     }
 
+    private bool TryGetStackTypeId(string productProtoId, out string stackTypeId)
+    {
+        stackTypeId = string.Empty;
+
+        if (!_prototypes.TryIndex<EntityPrototype>(productProtoId, out var expectedProto))
+            return false;
+
+        if (!expectedProto.TryGetComponent("Stack", out StackComponent? prodStackDef))
+            return false;
+
+        if (string.IsNullOrWhiteSpace(prodStackDef.StackTypeId))
+            return false;
+
+        stackTypeId = prodStackDef.StackTypeId;
+        return true;
+    }
+
     private int GetProtoDepth(string protoId)
     {
         if (_depthCache.TryGetValue(protoId, out var d))
@@ -436,7 +738,6 @@ public sealed class NcContractSystem : EntitySystem
                     best = pd;
             }
         }
-
 
         _depthCache[protoId] = best;
         return best;
@@ -520,221 +821,6 @@ public sealed class NcContractSystem : EntitySystem
         return false;
     }
 
-
-    private bool TryGetStackTypeId(string productProtoId, out string stackTypeId)
-    {
-        stackTypeId = string.Empty;
-
-        if (!_prototypes.TryIndex<EntityPrototype>(productProtoId, out var expectedProto))
-            return false;
-
-        if (!expectedProto.TryGetComponent("Stack", out StackComponent? prodStackDef))
-            return false;
-
-        if (string.IsNullOrWhiteSpace(prodStackDef.StackTypeId))
-            return false;
-
-        stackTypeId = prodStackDef.StackTypeId;
-        return true;
-    }
-
-
-    private void RefillContractsForStore(EntityUid uid, NcStoreComponent comp, string? ignoredContractId = null) =>
-        RefreshContractsInternal(uid, comp, ignoredContractId);
-
-    private void RefreshContractsInternal(EntityUid uid, NcStoreComponent comp, string? ignoredContractId = null)
-    {
-        string? presetId = null;
-        if (comp.ContractPresets.Count > 0)
-            presetId = comp.ContractPresets[0];
-        else if (!string.IsNullOrWhiteSpace(comp.LegacyContractsPreset))
-            presetId = comp.LegacyContractsPreset;
-
-        if (string.IsNullOrWhiteSpace(presetId))
-            return;
-
-        if (!_prototypes.TryIndex<StoreContractsPresetPrototype>(presetId, out var mainPreset))
-        {
-            Sawmill.Warning($"[Contracts] Preset '{presetId}' not found for {ToPrettyString(uid)}");
-            return;
-        }
-
-        var currentCounts = new Dictionary<string, int>();
-        foreach (var c in comp.Contracts.Values)
-        {
-            currentCounts.TryAdd(c.Difficulty, 0);
-            currentCounts[c.Difficulty]++;
-        }
-
-        var candidates = new List<(StoreContractPrototype Proto, int Weight)>();
-        var visitedPacks = new HashSet<string>();
-
-        foreach (var packEntry in mainPreset.Packs)
-            CollectFromPackRecursive(packEntry.Id, packEntry.Weight, candidates, visitedPacks);
-
-        var poolByDifficulty = new Dictionary<string, List<(StoreContractPrototype Proto, int Weight)>>();
-
-        foreach (var (proto, weight) in candidates)
-        {
-            if (ignoredContractId != null && proto.ID == ignoredContractId)
-                continue;
-
-            if (!proto.Repeatable && comp.CompletedOneTimeContracts.Contains(proto.ID))
-                continue;
-            if (comp.Contracts.ContainsKey(proto.ID))
-                continue;
-
-            if (!poolByDifficulty.ContainsKey(proto.Difficulty))
-                poolByDifficulty[proto.Difficulty] = new();
-
-            poolByDifficulty[proto.Difficulty].Add((proto, weight));
-        }
-
-        foreach (var (difficulty, limit) in mainPreset.Limits)
-        {
-            var current = currentCounts.TryGetValue(difficulty, out var c) ? c : 0;
-            var needed = limit - current;
-
-            if (needed <= 0)
-                continue;
-            if (!poolByDifficulty.TryGetValue(difficulty, out var validPool) || validPool.Count == 0)
-                continue;
-
-            for (var i = 0; i < needed; i++)
-            {
-                if (validPool.Count == 0)
-                    break;
-
-                var pick = PickWeighted(_random, validPool, x => x.Weight);
-
-                comp.Contracts[pick.Proto.ID] = CreateContractData(uid, pick.Proto);
-
-                validPool.Remove(pick);
-            }
-        }
-    }
-
-    private void CollectFromPackRecursive(
-        string packId,
-        int currentWeightMult,
-        List<(StoreContractPrototype Proto, int FinalWeight)> accumulator,
-        HashSet<string> visitedPacks
-    )
-    {
-        if (!visitedPacks.Add(packId))
-            return;
-
-        if (!_prototypes.TryIndex<StoreContractPackPrototype>(packId, out var pack))
-        {
-            Sawmill.Error($"[Contracts] Pack '{packId}' not found.");
-            return;
-        }
-
-        foreach (var entry in pack.Contracts)
-            if (_prototypes.TryIndex<StoreContractPrototype>(entry.Id, out var proto))
-                accumulator.Add((proto, entry.Weight * currentWeightMult));
-
-        foreach (var include in pack.Includes)
-            CollectFromPackRecursive(include.Id, currentWeightMult * include.Weight, accumulator, visitedPacks);
-    }
-
-
-    private static int GetRandomSteppedAmount(IRobustRandom random, int min, int max)
-    {
-        if (max < min)
-            (min, max) = (max, min);
-
-        min = Math.Max(min, 0);
-        max = Math.Max(max, 0);
-
-        if (max <= min)
-            return min;
-
-        static int TryPick(IRobustRandom random, int min, int max, int step)
-        {
-            if (step <= 0)
-                return -1;
-
-            var minStep = (min + step - 1) / step * step;
-            var maxStep = max / step * step;
-
-            if (maxStep < minStep)
-                return -1;
-
-            var steps = (maxStep - minStep) / step + 1;
-            var idx = random.Next(steps);
-            return minStep + idx * step;
-        }
-
-        var val = TryPick(random, min, max, 5);
-        if (val >= 0)
-            return val;
-
-        val = TryPick(random, min, max, 3);
-        if (val >= 0)
-            return val;
-        return min;
-    }
-
-    private static void ApplyBonusReward(
-        StoreContractBonusReward bonus,
-        Dictionary<string, int> rewardCurrencies,
-        Dictionary<string, int> rewardItems,
-        bool ignoreReplace = false
-    )
-    {
-        if (!ignoreReplace && bonus.Mode == StoreContractBonusMode.Replace)
-        {
-            rewardCurrencies.Clear();
-            rewardItems.Clear();
-        }
-
-        if (!string.IsNullOrWhiteSpace(bonus.Id))
-        {
-            var addCount = bonus.Count > 0 ? bonus.Count : 1;
-
-            if (rewardItems.TryGetValue(bonus.Id, out var existing))
-                rewardItems[bonus.Id] = existing + addCount;
-            else
-                rewardItems[bonus.Id] = addCount;
-        }
-
-        if (bonus.RewardCurrencies != null)
-        {
-            foreach (var kvp in bonus.RewardCurrencies)
-            {
-                var currencyId = kvp.Key;
-                var amount = kvp.Value;
-
-                if (amount <= 0 || string.IsNullOrWhiteSpace(currencyId))
-                    continue;
-
-                if (rewardCurrencies.TryGetValue(currencyId, out var existing))
-                    rewardCurrencies[currencyId] = existing + amount;
-                else
-                    rewardCurrencies[currencyId] = amount;
-            }
-        }
-
-        if (bonus.RewardItems != null)
-        {
-            foreach (var kvp in bonus.RewardItems)
-            {
-                var protoId = kvp.Key;
-                var count = kvp.Value;
-
-                if (count <= 0 || string.IsNullOrWhiteSpace(protoId))
-                    continue;
-
-                if (rewardItems.TryGetValue(protoId, out var existing))
-                    rewardItems[protoId] = existing + count;
-                else
-                    rewardItems[protoId] = count;
-            }
-        }
-    }
-
-
     private double NextUnit() => _random.NextFloat();
 
     private int RollSmooth(
@@ -764,10 +850,8 @@ public sealed class NcContractSystem : EntitySystem
             p = NextUnit();
 
         var j = (NextUnit() - 0.5) * 2.0 * jitter;
-
         p = p + Golden + j;
         p -= Math.Floor(p);
-
         _quasiPhase[key] = p;
 
         var buckets = max - min + 1;
@@ -778,269 +862,7 @@ public sealed class NcContractSystem : EntitySystem
         return min + idx;
     }
 
-    private ContractServerData CreateContractData(EntityUid store, StoreContractPrototype proto)
-    {
-        var targets = new List<ContractTargetServerData>();
-
-        var targetItem = proto.TargetItem ?? string.Empty;
-        var required = RollSmooth(new(QuasiKeyKind.Req, store, proto.ID, null), proto.Required, 1);
-
-        var matchMode = proto.MatchMode;
-
-        if (proto.Targets is { Count: > 0, })
-        {
-            var targetCount = RollSmooth(new(QuasiKeyKind.Tc, store, proto.ID, null), proto.TargetCount, 1);
-
-            if (targetCount <= 0)
-                targetCount = 1;
-
-            if (targetCount == 1)
-            {
-                var chosen = PickWeighted(_random, proto.Targets, t => t.Weight);
-                {
-                    targetItem = chosen.TargetItemId;
-
-                    var chosenReq = RollSmooth(
-                        new(QuasiKeyKind.TReq, store, proto.ID, chosen.TargetItemId),
-                        chosen.Required,
-                        1);
-
-
-                    if (chosenReq > 0)
-                        required = chosenReq;
-                }
-            }
-            else
-            {
-                var pool = new List<StoreContractTargetEntry>(proto.Targets);
-                var picks = Math.Min(targetCount, pool.Count);
-
-                for (var i = 0; i < picks && pool.Count > 0; i++)
-                {
-                    var chosen = PickWeighted(_random, pool, t => t.Weight);
-
-                    pool.Remove(chosen);
-
-                    var itemId = chosen.TargetItemId;
-                    var rolledReq = RollSmooth(
-                        new(QuasiKeyKind.TReq, store, proto.ID, chosen.TargetItemId),
-                        chosen.Required,
-                        1);
-                    var req = rolledReq > 0 ? rolledReq : required;
-
-                    targets.Add(
-                        new()
-                        {
-                            TargetItem = itemId,
-                            Required = req,
-                            Progress = 0,
-                            MatchMode = matchMode
-                        });
-                }
-
-                if (targets.Count > 0)
-                {
-                    targetItem = targets[0].TargetItem;
-
-                    required = 0;
-                    foreach (var t in targets)
-                        required += t.Required;
-                }
-            }
-        }
-
-        var rewardCurrencies = new Dictionary<string, int>();
-        var rewardItems = new Dictionary<string, int>();
-
-        if (proto.Currencies is { Count: > 0, })
-        {
-            foreach (var c in proto.Currencies)
-            {
-                if (string.IsNullOrWhiteSpace(c.Id))
-                    continue;
-
-                var min = c.Amount.Min;
-                var max = c.Amount.Max;
-
-                if (max < min)
-                    (min, max) = (max, min);
-
-                if (min < 0)
-                    min = 0;
-
-                if (max < 0)
-                    continue;
-
-                var amount = GetRandomSteppedAmount(_random, min, max);
-                if (amount <= 0)
-                    continue;
-
-                if (rewardCurrencies.TryGetValue(c.Id, out var existing))
-                    rewardCurrencies[c.Id] = existing + amount;
-                else
-                    rewardCurrencies[c.Id] = amount;
-            }
-        }
-
-        if (proto.FixedRewardItems != null)
-        {
-            foreach (var kvp in proto.FixedRewardItems)
-            {
-                var protoId = kvp.Key;
-                var count = kvp.Value;
-
-                if (count <= 0 || string.IsNullOrWhiteSpace(protoId))
-                    continue;
-
-                if (rewardItems.TryGetValue(protoId, out var existing))
-                    rewardItems[protoId] = existing + count;
-                else
-                    rewardItems[protoId] = count;
-            }
-        }
-
-        if (!string.IsNullOrWhiteSpace(proto.RewardItem) && proto.RewardItemCount > 0)
-        {
-            var protoId = proto.RewardItem!;
-            var count = proto.RewardItemCount;
-
-            if (rewardItems.TryGetValue(protoId, out var existing))
-                rewardItems[protoId] = existing + count;
-            else
-                rewardItems[protoId] = count;
-        }
-
-        var allBonusRewards = new List<StoreContractBonusReward>();
-
-        if (proto.RewardItems is { Count: > 0, })
-            allBonusRewards.AddRange(proto.RewardItems);
-
-        if (allBonusRewards.Count > 0)
-        {
-            var anyBonusApplied = false;
-
-            StoreContractBonusReward ResolveEffective(StoreContractBonusReward bonus)
-            {
-                if (string.IsNullOrWhiteSpace(bonus.PoolId))
-                    return bonus;
-
-                if (_prototypes.TryIndex<NcContractRewardPoolPrototype>(bonus.PoolId, out var poolProto) &&
-                    poolProto.Entries is { Count: > 0, })
-                {
-                    var poolEntry = PickWeighted(_random, poolProto.Entries, e => e.Weight);
-                    return new()
-                    {
-                        Id = poolEntry.Id,
-                        Count = poolEntry.Count,
-                        Mode = poolEntry.Mode,
-                        RewardCurrencies = poolEntry.RewardCurrencies != null
-                            ? new Dictionary<string, int>(poolEntry.RewardCurrencies)
-                            : null,
-                        RewardItems = poolEntry.RewardItems != null
-                            ? new Dictionary<string, int>(poolEntry.RewardItems)
-                            : null
-                    };
-                }
-
-                return bonus;
-            }
-
-            foreach (var bonus in allBonusRewards)
-            {
-                if (!bonus.Always)
-                    continue;
-
-                var effective = ResolveEffective(bonus);
-                ApplyBonusReward(effective, rewardCurrencies, rewardItems, anyBonusApplied);
-                anyBonusApplied = true;
-            }
-
-            var randomRewards = new List<StoreContractBonusReward>();
-            foreach (var b in allBonusRewards)
-                if (!b.Always)
-                    randomRewards.Add(b);
-
-            if (randomRewards.Count > 0)
-            {
-                var picks = RollSmooth(new(QuasiKeyKind.Bp, store, proto.ID, null), proto.BonusPickCount, 0);
-
-                if (picks > 0)
-                {
-                    for (var i = 0; i < picks; i++)
-                    {
-                        var bonus = PickWeighted(_random, randomRewards, b => b.Weight);
-
-                        var effective = ResolveEffective(bonus);
-                        ApplyBonusReward(effective, rewardCurrencies, rewardItems, anyBonusApplied);
-                        anyBonusApplied = true;
-                    }
-                }
-            }
-        }
-
-        string? mainCurrency = null;
-        var mainCurrencyAmount = 0;
-
-        foreach (var kvp in rewardCurrencies)
-        {
-            var currencyId = kvp.Key;
-            var amount = kvp.Value;
-
-            if (amount <= 0 || string.IsNullOrWhiteSpace(currencyId))
-                continue;
-
-            if (amount > mainCurrencyAmount)
-            {
-                mainCurrency = currencyId;
-                mainCurrencyAmount = amount;
-            }
-        }
-
-        string? mainItem = null;
-        var mainItemCount = 0;
-
-        foreach (var kvp in rewardItems)
-        {
-            var protoId = kvp.Key;
-            var count = kvp.Value;
-
-            if (count <= 0 || string.IsNullOrWhiteSpace(protoId))
-                continue;
-
-            if (count > mainItemCount)
-            {
-                mainItem = protoId;
-                mainItemCount = count;
-            }
-        }
-
-        return new()
-        {
-            Id = proto.ID,
-            Name = proto.Name,
-            TargetItem = targetItem,
-            Required = required,
-            Progress = 0,
-            MatchMode = matchMode,
-            Reward = mainCurrencyAmount,
-            RewardCurrency = mainCurrency ?? string.Empty,
-            RewardItem = mainItem,
-            RewardItemCount = mainItemCount,
-            Difficulty = proto.Difficulty,
-            Description = proto.Description,
-            Repeatable = proto.Repeatable,
-            RewardCurrencies = rewardCurrencies,
-            RewardItems = rewardItems,
-            Targets = targets
-        };
-    }
-
-
-    private static T PickWeighted<T>(
-        IRobustRandom random,
-        IReadOnlyList<T> list,
-        Func<T, int> weightSelector
-    )
+    private static T PickWeighted<T>(IRobustRandom random, IReadOnlyList<T> list, Func<T, int> weightSelector)
     {
         if (list.Count == 0)
             return default!;
@@ -1050,7 +872,6 @@ public sealed class NcContractSystem : EntitySystem
             : new int[list.Count];
 
         var total = 0;
-
         for (var i = 0; i < list.Count; i++)
         {
             var w = weightSelector(list[i]);
@@ -1066,7 +887,6 @@ public sealed class NcContractSystem : EntitySystem
 
         var value = random.Next(total);
         var accum = 0;
-
         for (var i = 0; i < list.Count; i++)
         {
             accum += weights[i];
@@ -1079,18 +899,15 @@ public sealed class NcContractSystem : EntitySystem
 
     private readonly record struct ClaimSlice(EntityUid Root, string ProtoId, int Amount);
 
+    private readonly record struct PoolEntry(ContractRewardDef Def, string Key);
+
     private enum QuasiKeyKind : byte
     {
         Req,
         Tc,
         TReq,
-        Bp
+        RAmount
     }
 
-    private readonly record struct QuasiKey(
-        QuasiKeyKind Kind,
-        EntityUid Store,
-        string ProtoId,
-        string? Extra
-    );
+    private readonly record struct QuasiKey(QuasiKeyKind Kind, EntityUid Store, string ProtoId, string? Extra);
 }

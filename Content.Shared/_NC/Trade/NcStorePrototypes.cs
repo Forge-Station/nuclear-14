@@ -4,30 +4,21 @@ using Robust.Shared.Serialization;
 
 namespace Content.Shared._NC.Trade;
 
-
-[Serializable, NetSerializable, Prototype("ncStoreListing"),]
+[Serializable, NetSerializable, Prototype("ncStoreListing")]
 public sealed class StoreListingPrototype : IPrototype
 {
-    [IdDataField]
-    public string Id = string.Empty;
+    [IdDataField] public string Id = string.Empty;
 
-    [DataField("match")]
-    public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
+    [DataField("match")] public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
+    [DataField("mode")] public StoreMode Mode = StoreMode.Buy;
 
-    [DataField("mode")]
-    public StoreMode Mode = StoreMode.Buy;
+    [DataField("productEntity")] public string ProductEntity = string.Empty;
 
-    [DataField("productEntity")]
-    public string ProductEntity = string.Empty;
+    [DataField("cost")] public Dictionary<string, int> Cost { get; set; } = new();
 
-    [DataField("cost")]
-    public Dictionary<string, int> Cost { get; set; } = new();
+    [DataField("categories")] public List<string> Categories { get; set; } = new();
 
-    [DataField("categories")]
-    public List<string> Categories { get; set; } = new();
-
-    [DataField("conditions")]
-    public List<ListingConditionPrototype> Conditions { get; set; } = new();
+    [DataField("conditions")] public List<ListingConditionPrototype> Conditions { get; set; } = new();
 
     [ViewVariables(VVAccess.ReadWrite)]
     public int RemainingCount { get; set; } = -1;
@@ -50,77 +41,51 @@ public sealed partial class StorePresetStructuredPrototype : IPrototype
     [DataDefinition]
     public sealed partial class StoreCatalogEntry
     {
-        [DataField("match")]
-        public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
-
-        [DataField("price", required: true)]
-        public int Price;
-
-        [DataField("proto", required: true)]
-        public string Proto = string.Empty;
-
-        [DataField("count")]
-        public int? Count { get; set; }
+        [DataField("match")] public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
+        [DataField("price", required: true)] public int Price;
+        [DataField("proto", required: true)] public string Proto = string.Empty;
+        [DataField("count")] public int? Count { get; set; }
     }
 }
+
 
 [Prototype("storeContract")]
 public sealed class StoreContractPrototype : IPrototype
 {
-    [DataField("match")]
-    public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
+    [IdDataField] public string ID { get; private set; } = default!;
 
-    [DataField("name")]
-    public string Name { get; private set; } = string.Empty;
+    [DataField("match")] public PrototypeMatchMode MatchMode { get; private set; } = PrototypeMatchMode.Exact;
 
-    [DataField("description")]
-    public string Description { get; private set; } = string.Empty;
+    [DataField("name")] public string Name { get; private set; } = string.Empty;
+    [DataField("description")] public string Description { get; private set; } = string.Empty;
 
-    [DataField("difficulty")]
-    public string Difficulty { get; private set; } = "Easy";
+    [DataField("difficulty")] public string Difficulty { get; private set; } = "Easy";
+    [DataField("repeatable")] public bool Repeatable { get; private set; } = true;
 
-    [DataField("repeatable")]
-    public bool Repeatable { get; private set; } = true;
+    [DataField("targetItem")] public string? TargetItem { get; private set; }
 
-    [DataField("targetItem")]
-    public string? TargetItem { get; private set; }
+    [DataField("required")] public IntRange Required { get; private set; } = IntRange.Fixed(0);
 
-    [DataField("required")]
-    public IntRange Required { get; private set; } = IntRange.Fixed(0);
+    [DataField("targets")] public List<StoreContractTargetEntry>? Targets { get; private set; }
 
-    [DataField("targets")]
-    public List<StoreContractTargetEntry>? Targets { get; private set; }
+    [DataField("targetCount")] public IntRange TargetCount { get; private set; } = IntRange.Fixed(1);
 
-    [DataField("currencies")]
-    public List<StoreContractCurrencyEntry>? Currencies { get; private set; }
+    [DataField("rewards")]
+    public List<ContractRewardDef> Rewards { get; private set; } = new();
+}
 
-    [DataField("fixedRewardItems")]
-    public Dictionary<string, int>? FixedRewardItems { get; private set; }
-
-    [DataField("rewardItems")]
-    public List<StoreContractBonusReward>? RewardItems { get; private set; }
-
-    [DataField("targetCount")]
-    public IntRange TargetCount { get; private set; } = IntRange.Fixed(1);
-
-    [DataField("bonusPickCount")]
-    public IntRange BonusPickCount { get; private set; } = IntRange.Fixed(1);
-
-    [DataField("rewardItem")]
-    public string? RewardItem { get; private set; }
-
-    [DataField("rewardItemCount")]
-    public int RewardItemCount { get; private set; }
-
-    [IdDataField]
-    public string ID { get; private set; } = default!;
+[DataDefinition]
+public sealed partial class StoreContractTargetEntry
+{
+    [DataField("id", required: true)] public string TargetItemId { get; set; } = default!;
+    [DataField("required")] public IntRange Required { get; set; } = IntRange.Fixed(0);
+    [DataField("weight")] public int Weight { get; set; } = 1;
 }
 
 [Prototype("storeContractsPreset")]
 public sealed class StoreContractsPresetPrototype : IPrototype
 {
-    [IdDataField]
-    public string ID { get; private set; } = default!;
+    [IdDataField] public string ID { get; private set; } = default!;
 
     [DataField("limits", required: true)]
     public Dictionary<string, int> Limits { get; set; } = new();
@@ -132,11 +97,8 @@ public sealed class StoreContractsPresetPrototype : IPrototype
 [DataDefinition]
 public partial struct ContractWeightEntry
 {
-    [DataField("id", required: true)]
-    public string Id = string.Empty;
-
-    [DataField("weight")]
-    public int Weight = 1;
+    [DataField("id", required: true)] public string Id = string.Empty;
+    [DataField("weight")] public int Weight = 1;
 
     public ContractWeightEntry(string id, int weight)
     {
@@ -148,11 +110,8 @@ public partial struct ContractWeightEntry
 [DataDefinition]
 public partial struct PackIncludeEntry
 {
-    [DataField("id", required: true)]
-    public string Id = string.Empty;
-
-    [DataField("weight")]
-    public int Weight = 1;
+    [DataField("id", required: true)] public string Id = string.Empty;
+    [DataField("weight")] public int Weight = 1;
 
     public PackIncludeEntry(string id, int weight)
     {
@@ -164,8 +123,7 @@ public partial struct PackIncludeEntry
 [Prototype("storeContractPack")]
 public sealed class StoreContractPackPrototype : IPrototype
 {
-    [IdDataField]
-    public string ID { get; private set; } = default!;
+    [IdDataField] public string ID { get; private set; } = default!;
 
     [DataField("contracts")]
     public List<ContractWeightEntry> Contracts { get; set; } = new();
@@ -175,79 +133,23 @@ public sealed class StoreContractPackPrototype : IPrototype
 }
 
 
-[DataDefinition]
-public sealed partial class StoreContractTargetEntry
-{
-    [DataField("id", required: true)]
-    public string TargetItemId { get; set; } = default!;
-
-    [DataField("required")]
-    public IntRange Required { get; set; } = IntRange.Fixed(0);
-
-    [DataField("weight")]
-    public int Weight { get; set; } = 1;
-}
-
-public enum StoreContractBonusMode
-{
-    Add,
-
-    Replace
-}
-
-[Serializable, NetSerializable,]
-public enum PrototypeMatchMode : byte
-{
-    Exact = 0,
-    Descendants = 1
-}
-
-[DataDefinition]
-public sealed partial class StoreContractBonusReward
-{
-    [DataField("count")]
-    public int Count = 1;
-
-    [DataField("currencies")]
-    public Dictionary<string, int>? RewardCurrencies;
-
-    [DataField("items")]
-    public Dictionary<string, int>? RewardItems;
-
-    [DataField("id")]
-    public string? Id { get; set; }
-
-    [DataField("pool")]
-    public string? PoolId { get; set; }
-
-    [DataField("always")]
-    public bool Always { get; set; }
-
-    [DataField("weight")]
-    public int Weight { get; set; } = 1;
-
-    [DataField("mode")]
-    public StoreContractBonusMode Mode { get; set; } = StoreContractBonusMode.Add;
-}
-
-[DataDefinition]
-public sealed partial class StoreContractCurrencyEntry
-{
-    [DataField("id", required: true)]
-    public string Id { get; set; } = string.Empty;
-
-    [DataField("amount", required: true)]
-    public IntRange Amount { get; set; } = IntRange.Fixed(0);
-}
 
 [Prototype("ncContractRewardPool")]
 public sealed class NcContractRewardPoolPrototype : IPrototype
 {
-    [DataField("entries")]
-    public List<StoreContractBonusReward> Entries { get; private set; } = new();
+    [IdDataField] public string ID { get; private set; } = default!;
 
-    [IdDataField]
-    public string ID { get; private set; } = default!;
+    [DataField("entries")]
+    public List<ContractRewardDef> Entries { get; private set; } = new();
+}
+
+
+
+[Serializable, NetSerializable]
+public enum PrototypeMatchMode : byte
+{
+    Exact = 0,
+    Descendants = 1
 }
 
 [Serializable]

@@ -10,7 +10,7 @@ using Robust.Shared.Serialization.TypeSerializers.Interfaces;
 namespace Content.Shared._NC.Trade;
 
 
-[Serializable, NetSerializable,]
+[Serializable, NetSerializable]
 public readonly record struct IntRange(int Min, int Max)
 {
     public static IntRange Fixed(int value) => new(value, value);
@@ -41,12 +41,18 @@ public sealed class IntRangeSerializer :
         int? min = null;
         int? max = null;
 
-        if (node.TryGet("min", out var minNode) && minNode is ValueDataNode minVal &&
-            int.TryParse(minVal.Value, out var parsedMin))
+        static bool TryGetInt(MappingDataNode node, string key, out int value)
+        {
+            value = 0;
+            return node.TryGet(key, out var n) &&
+                   n is ValueDataNode v &&
+                   int.TryParse(v.Value, out value);
+        }
+
+        if (TryGetInt(node, "min", out var parsedMin) || TryGetInt(node, "Min", out parsedMin))
             min = parsedMin;
 
-        if (node.TryGet("max", out var maxNode) && maxNode is ValueDataNode maxVal &&
-            int.TryParse(maxVal.Value, out var parsedMax))
+        if (TryGetInt(node, "max", out var parsedMax) || TryGetInt(node, "Max", out parsedMax))
             max = parsedMax;
 
         var a = min ?? max ?? 0;

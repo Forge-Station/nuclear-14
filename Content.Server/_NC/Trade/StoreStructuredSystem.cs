@@ -6,7 +6,9 @@ using Content.Shared.Access.Components;
 using Content.Shared.Stacks;
 using Content.Shared.Storage.Components;
 using Content.Shared.UserInterface;
+using Robust.Server.Audio;
 using Robust.Server.GameObjects;
+using Robust.Shared.Audio;
 using Robust.Shared.Containers;
 using Robust.Shared.Timing;
 
@@ -18,7 +20,7 @@ public sealed class StoreStructuredSystem : EntitySystem
 {
     private const float AutoCloseDistance = 3f;
     private const float MinAccelInterval = 0.05f;
-
+    [Dependency] private readonly AudioSystem _audio = default!;
     private const int WatchedRootSearchLimit = 32;
     private const float CheckInterval = 1.0f;
     private readonly HashSet<EntityUid> _affectedStoresScratch = new();
@@ -682,6 +684,7 @@ public sealed class StoreStructuredSystem : EntitySystem
         UpdateContractsProgress(comp, userSnap, crateSnap);
         if (!_contracts.TryClaim(uid, user, msg.ContractId))
             return;
+        _audio.PlayPvs(new SoundPathSpecifier("/Audio/Effects/Cargo/ping.ogg"), user);
         _popups.PopupEntity(Loc.GetString("nc-store-contract-completed"), uid, user);
         UpdateDynamicState(uid, comp, user);
     }
@@ -734,36 +737,48 @@ public sealed class StoreStructuredSystem : EntitySystem
     private ContractClientData MapContractToClient(ContractServerData c)
     {
         var targets = new List<ContractTargetClientData>();
-        if (c.Targets is { Count: > 0, })
+
+        if (c.Targets is { Count: > 0 })
         {
             foreach (var t in c.Targets)
-                if (!string.IsNullOrWhiteSpace(t.TargetItem) && t.Required > 0)
-                    targets.Add(new(t.TargetItem, t.Required, t.Progress) { MatchMode = t.MatchMode, });
+            {
+                if (string.IsNullOrWhiteSpace(t.TargetItem) || t.Required <= 0)
+                    continue;
+
+                targets.Add(
+                    new(t.TargetItem, t.Required, t.Progress)
+                    {
+                        MatchMode = t.MatchMode
+                    });
+            }
         }
         else if (!string.IsNullOrWhiteSpace(c.TargetItem) && c.Required > 0)
-            targets.Add(new(c.TargetItem, c.Required, c.Progress) { MatchMode = c.MatchMode, });
+        {
+            targets.Add(
+                new(c.TargetItem, c.Required, c.Progress)
+                {
+                    MatchMode = c.MatchMode
+                });
+        }
+        var rewards = c.Rewards is { Count: > 0 }
+            ? new(c.Rewards)
+            : new List<ContractRewardData>();
 
-        var client = new ContractClientData(
+        return new(
             c.Id,
             c.Name,
+            c.Difficulty,
+            c.Description,
+            c.Repeatable,
+            c.Completed,
             c.TargetItem,
             c.Required,
             c.Progress,
-            c.Reward,
-            c.RewardCurrency,
-            c.RewardItem,
-            c.RewardItemCount,
-            c.Difficulty,
-            c.Completed,
-            c.Description,
             targets,
-            c.Repeatable);
-        if (c.RewardCurrencies is { Count: > 0, })
-            client.RewardCurrencies = new(c.RewardCurrencies);
-        if (c.RewardItems is { Count: > 0, })
-            client.RewardItems = new(c.RewardItems);
-        return client;
+            rewards
+        );
     }
+
 
     private void UpdateContractsProgress(
         NcStoreComponent comp,
@@ -777,10 +792,12 @@ public sealed class StoreStructuredSystem : EntitySystem
         foreach (var (_, contract) in comp.Contracts)
         {
             var targets = contract.Targets;
+
             if (targets.Count > 0)
             {
                 var totalRequired = 0;
                 var totalProgress = 0;
+
                 foreach (var t in targets)
                 {
                     if (string.IsNullOrWhiteSpace(t.TargetItem) || t.Required <= 0)
@@ -796,12 +813,14 @@ public sealed class StoreStructuredSystem : EntitySystem
 
                     var prog = Math.Min(owned, t.Required);
                     t.Progress = prog;
+
                     totalRequired += t.Required;
                     totalProgress += prog;
                 }
 
                 contract.Required = totalRequired;
                 contract.Progress = totalProgress;
+
                 if (targets.Count > 0)
                     contract.TargetItem = targets[0].TargetItem;
             }

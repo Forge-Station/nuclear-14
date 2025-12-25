@@ -249,34 +249,58 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
         if (listing.Cost.Count == 0)
             return false;
-        foreach (var cur in store.CurrencyWhitelist)
+
+        var hasWhitelist = false;
+        foreach (var c in store.CurrencyWhitelist)
+            if (!string.IsNullOrWhiteSpace(c))
+            {
+                hasWhitelist = true;
+                break;
+            }
+
+        if (hasWhitelist)
         {
-            if (string.IsNullOrWhiteSpace(cur))
-                continue;
+            foreach (var cur in store.CurrencyWhitelist)
+            {
+                if (string.IsNullOrWhiteSpace(cur))
+                    continue;
 
-            if (!listing.Cost.TryGetValue(cur, out var priceF))
-                continue;
+                if (!listing.Cost.TryGetValue(cur, out var price))
+                    continue;
 
-            var p = (int) MathF.Ceiling(priceF);
-            if (p <= 0)
-                continue;
+                if (price <= 0)
+                    continue;
 
-            var bal = snapshot.StackTypeCounts.TryGetValue(cur, out var b) ? b : 0;
-            if (bal < p)
-                continue;
+                var bal = snapshot.StackTypeCounts.TryGetValue(cur, out var b) ? b : 0;
+                if (bal < price)
+                    continue;
 
-            currency = cur;
-            unitPrice = p;
-            balance = bal;
-            return true;
+                currency = cur;
+                unitPrice = price;
+                balance = bal;
+                return true;
+            }
+
+            // Есть whitelist, но нет пересечения с cost или не хватает баланса.
+            return false;
         }
 
-        var firstCost = listing.Cost.First();
-        var fallbackCur = firstCost.Key;
-        var fallbackPrice = (int) MathF.Ceiling(firstCost.Value);
-        if (fallbackPrice <= 0)
+        // Нет whitelist -> выбираем детерминированно (по ключу), чтобы валюта не "прыгала".
+        KeyValuePair<string, int>? best = null;
+        foreach (var kv in listing.Cost)
+        {
+            if (string.IsNullOrWhiteSpace(kv.Key) || kv.Value <= 0)
+                continue;
+
+            if (best == null || OrdinalIds.Compare(kv.Key, best.Value.Key) < 0)
+                best = kv;
+        }
+
+        if (best == null)
             return false;
 
+        var fallbackCur = best.Value.Key;
+        var fallbackPrice = best.Value.Value;
         var fallbackBal = snapshot.StackTypeCounts.TryGetValue(fallbackCur, out var fb) ? fb : 0;
         if (fallbackBal < fallbackPrice)
             return false;
@@ -286,6 +310,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
         balance = fallbackBal;
         return true;
     }
+
 
     private bool IsProtoOrDescendant(EntityPrototype candidate, string expectedId)
     {
@@ -300,7 +325,6 @@ public sealed class NcStoreLogicSystem : EntitySystem
         return false;
     }
 
-
     private bool TryPickCurrencyForSell(
         NcStoreComponent store,
         StoreListingPrototype listing,
@@ -314,33 +338,55 @@ public sealed class NcStoreLogicSystem : EntitySystem
         if (listing.Cost.Count == 0)
             return false;
 
-        foreach (var cur in store.CurrencyWhitelist)
+        var hasWhitelist = false;
+        foreach (var c in store.CurrencyWhitelist)
+            if (!string.IsNullOrWhiteSpace(c))
+            {
+                hasWhitelist = true;
+                break;
+            }
+
+        if (hasWhitelist)
         {
-            if (string.IsNullOrWhiteSpace(cur))
-                continue;
+            foreach (var cur in store.CurrencyWhitelist)
+            {
+                if (string.IsNullOrWhiteSpace(cur))
+                    continue;
 
-            if (!listing.Cost.TryGetValue(cur, out var priceF))
-                continue;
+                if (!listing.Cost.TryGetValue(cur, out var p))
+                    continue;
 
-            var p = (int) MathF.Ceiling(priceF);
-            if (p <= 0)
-                continue;
+                if (p <= 0)
+                    continue;
 
-            currency = cur;
-            price = p;
-            return true;
+                currency = cur;
+                price = p;
+                return true;
+            }
+
+            // Есть whitelist, но нет пересечения с cost.
+            return false;
         }
 
-        var firstCost = listing.Cost.First();
-        var fallbackCur = firstCost.Key;
-        var fallbackPrice = (int) MathF.Ceiling(firstCost.Value);
-        if (fallbackPrice <= 0)
+        // Нет whitelist -> выбираем детерминированно.
+        KeyValuePair<string, int>? best = null;
+        foreach (var kv in listing.Cost)
+        {
+            if (string.IsNullOrWhiteSpace(kv.Key) || kv.Value <= 0)
+                continue;
+
+            if (best == null || OrdinalIds.Compare(kv.Key, best.Value.Key) < 0)
+                best = kv;
+        }
+
+        if (best == null)
             return false;
 
-        currency = fallbackCur;
-        price = fallbackPrice;
+        currency = best.Value.Key;
+        price = best.Value.Value;
         return true;
     }
+
 
     public bool TryBuy(string listingId, EntityUid machine, NcStoreComponent? store, EntityUid user, int count = 1)
     {
@@ -414,7 +460,17 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 }
                 catch (Exception e)
                 {
+                    // Важно: если спавн падает на середине цикла, деньги уже списаны.
+                    // Возвращаем стоимость за то, что не выдали.
                     Sawmill.Error($"Spawn failed during bulk buy: {e}");
+
+                    if (remainingToSpawn > 0)
+                    {
+                        var refundL = (long) remainingToSpawn * unitPrice;
+                        if (refundL > 0 && refundL <= int.MaxValue)
+                            GiveCurrency(user, currency, (int) refundL);
+                    }
+
                     break;
                 }
             }
@@ -744,7 +800,12 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 if (_ents.TryGetComponent(ent, out MetaDataComponent? meta) && meta.EntityPrototype != null)
                 {
                     if (Matches(meta.EntityPrototype))
-                        availableTotal += 1;
+                    {
+                        if (_ents.TryGetComponent(ent, out StackComponent? st) && st.Count > 0)
+                            availableTotal += st.Count;
+                        else
+                            availableTotal += 1;
+                    }
                 }
             }
 
@@ -825,14 +886,38 @@ public sealed class NcStoreLogicSystem : EntitySystem
 
             void DeleteOrDecrement(int index, EntityUid item)
             {
-                if (_ents.TryGetComponent(item, out StackComponent? st) && st.Count > 1)
-                    _stacks.SetCount(item, st.Count - 1, st);
-                else
+                // Важно: если target proto не имеет StackComponent, stackType может быть null,
+                // но реальные сущности всё равно могут быть стаками. Снимаем сразу несколько единиц.
+                if (_ents.TryGetComponent(item, out StackComponent? st))
                 {
-                    _ents.DeleteEntity(item);
-                    cachedItems[index] = EntityUid.Invalid;
+                    var have = Math.Max(st.Count, 0);
+                    if (have <= 1)
+                    {
+                        if (have > 0)
+                            left -= 1;
+                        if (_ents.EntityExists(item))
+                            _ents.DeleteEntity(item);
+                        cachedItems[index] = EntityUid.Invalid;
+                        return;
+                    }
+
+                    var take = Math.Min(have, left);
+                    var newCount = have - take;
+                    _stacks.SetCount(item, newCount, st);
+
+                    if (newCount <= 0 && _ents.EntityExists(item))
+                    {
+                        _ents.DeleteEntity(item);
+                        cachedItems[index] = EntityUid.Invalid;
+                    }
+
+                    left -= take;
+                    return;
                 }
 
+                if (_ents.EntityExists(item))
+                    _ents.DeleteEntity(item);
+                cachedItems[index] = EntityUid.Invalid;
                 left -= 1;
             }
         }
@@ -1083,10 +1168,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
         var perStackLimit = proto.MaxCount ?? int.MaxValue;
         if (perStackLimit <= 0)
             perStackLimit = 1;
-        var spawnGuard = 0;
-        const int maxSpawnedStacksPerCall = 256;
-
-        while (remaining > 0 && spawnGuard < maxSpawnedStacksPerCall)
+        while (remaining > 0)
         {
             var addL = Math.Min(remaining, perStackLimit);
             var add = (int) Math.Clamp(addL, 1L, perStackLimit);
@@ -1100,13 +1182,6 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 _hands.TryPickupAnyHand(user, spawned, false);
 
             remaining -= add;
-            spawnGuard++;
-        }
-
-        if (remaining > 0)
-        {
-            Sawmill.Warning(
-                $"[NcStore] GiveCurrency: spawn guard tripped. user={ToPrettyString(user)}, currency={stackType}, remaining={remaining}");
         }
 
         InvalidateInventoryCache(user);
@@ -1202,7 +1277,7 @@ public sealed class NcStoreLogicSystem : EntitySystem
                 .OrderByDescending(GetInheritanceDepth)
                 .ThenBy(x => x, OrdinalIds)
                 .ToArray()
-            : [];
+            : Array.Empty<string>();
 
         var listingPrices = new Dictionary<string, int>();
         foreach (var l in store.Listings)

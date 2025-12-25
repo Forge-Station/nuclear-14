@@ -1,19 +1,10 @@
 - type: entity
   id: Trademachine
+  abstract: true
   name: Торговый автомат Города
   description: Нужно срочно — он рядом. Выбирай, плати, забирай.
   suffix: vendor, normal
   components:
-  - type: NcStore
-    buyPresets:
-      - caravan_buy
-    sellPresets:
-      - caravan_sell
-    contractPresets:
-      - bazar_contracts
-  - type: AccessReader
-    access:
-    - [ "TownieShopkeeper" ]
   - type: UserInterface
     interfaces:
       enum.StoreUiKey.Key:
@@ -52,6 +43,24 @@
     color: "#b34747"
     mask: /Textures/Effects/LightMasks/cone.png
     autoRot: true
+
+- type: entity
+  id: TrademachineCity
+  parent: Trademachine
+  name: Торговый автомат Города
+  description: Нужно срочно — он рядом. Выбирай, плати, забирай.
+  suffix: vendor, normal
+  components:
+  - type: NcStore
+    buyPresets:
+    - caravan_buy
+    sellPresets:
+    - caravan_sell
+    contractPresets:
+    - PresetBazar
+  - type: AccessReader
+    access:
+    - [ "TownieShopkeeper" ]
 
 - type: entity
   id: TrademachineTickets
