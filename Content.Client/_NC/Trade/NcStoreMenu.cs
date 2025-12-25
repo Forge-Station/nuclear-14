@@ -19,6 +19,7 @@ public sealed partial class NcStoreMenu : FancyWindow
     private const string CatIdReady = "__READY__";
     private const string CatIdCrate = "__CRATE__";
     private readonly Dictionary<string, int> _balancesByCurrency = new();
+    private readonly UiStateBinder _binder;
     private readonly NcCategoryBar _buyCategoryBar;
     private readonly List<string> _buyCats = new();
     private readonly NcListingGrid _buyGrid;
@@ -123,6 +124,8 @@ public sealed partial class NcStoreMenu : FancyWindow
         MassSellPulledCrateButton.Text = Loc.GetString("nc-store-mass-sell-button");
         MassSellPulledCrateButton.ToolTip = Loc.GetString("nc-store-mass-sell-tooltip");
         MassSellPulledCrateButton.OnPressed += _ => OnMassSellPulledCrate?.Invoke();
+
+        _binder = new(this);
     }
 
     private string GetCategoryDisplayName(string catId) =>
@@ -253,37 +256,12 @@ public sealed partial class NcStoreMenu : FancyWindow
         bool hasBuyTab,
         bool hasSellTab,
         bool hasContractsTab
-    )
-    {
-        _hasBuyTab = hasBuyTab;
-        _hasSellTab = hasSellTab;
-        _hasContractsTab = hasContractsTab;
+    ) =>
+        _binder.PopulateCatalog(listings, hasBuyTab, hasSellTab, hasContractsTab);
 
-        ApplyTabsVisibility();
-        UpdateHeaderVisibility();
 
-        _catalog.Clear();
-        _staticById.Clear();
-
-        foreach (var s in listings)
-        {
-            if (string.IsNullOrWhiteSpace(s.Id) || string.IsNullOrWhiteSpace(s.ProductEntity))
-                continue;
-
-            _catalog.Add(s);
-            _staticById[s.Id] = s;
-        }
-
-        _buyGrid.PrepareSearchIndex(_catalog.Select(x => x.ProductEntity));
-        _sellGrid.PrepareSearchIndex(_catalog.Select(x => x.ProductEntity));
-        RebuildCategoriesFromCatalog();
-
-        _buyGrid.ResetPaging();
-        _sellGrid.ResetPaging();
-        RefreshListings();
-    }
-
-    private void UpdateHeaderVisibility() => Header.Visible = _hasBuyTab || _hasSellTab;
+    private void UpdateHeaderVisibility() =>
+        Header.Visible = _hasBuyTab || _hasSellTab;
 
     private void RebuildCategoriesFromCatalog()
     {
@@ -333,35 +311,18 @@ public sealed partial class NcStoreMenu : FancyWindow
         bool hasSellTab,
         bool hasContractsTab,
         List<ContractClientData> contracts
-    )
-    {
-        _hasBuyTab = hasBuyTab;
-        _hasSellTab = hasSellTab;
-        _hasContractsTab = hasContractsTab;
-        ApplyTabsVisibility();
-        UpdateHeaderVisibility();
+    ) =>
+        _binder.ApplyDynamicState(
+            balancesByCurrency,
+            remainingById,
+            ownedById,
+            crateUnitsById,
+            massTotals,
+            hasBuyTab,
+            hasSellTab,
+            hasContractsTab,
+            contracts);
 
-        SetBalancesByCurrency(balancesByCurrency);
-
-        _remainingById.Clear();
-        foreach (var (k, v) in remainingById)
-            _remainingById[k] = v;
-
-        _ownedById.Clear();
-        foreach (var (k, v) in ownedById)
-            _ownedById[k] = v;
-
-        _crateUnitsById.Clear();
-        foreach (var (k, v) in crateUnitsById)
-            _crateUnitsById[k] = v;
-
-        SetMassSellTotals(massTotals);
-        PopulateContracts(contracts);
-
-        RebuildItemsFromCatalogAndDynamic();
-        UpdateVirtualSellCategories();
-        RefreshListings();
-    }
 
     private void RebuildItemsFromCatalogAndDynamic()
     {
@@ -428,48 +389,8 @@ public sealed partial class NcStoreMenu : FancyWindow
     }
 
 
-    public void Populate(List<StoreListingData> list)
-    {
-        _items.Clear();
-        _items.AddRange(list);
+    public void Populate(List<StoreListingData> list) => _binder.PopulateFromRaw(list);
 
-        _buyGrid.PrepareSearchIndex(_items.Select(x => x.ProductEntity));
-        _sellGrid.PrepareSearchIndex(_items.Select(x => x.ProductEntity));
-
-        var ids = _items.Select(i => i.Id).ToHashSet();
-        _buyGrid.SyncAvailableIds(ids);
-        _sellGrid.SyncAvailableIds(ids);
-
-        _buyCats.Clear();
-        _sellCats.Clear();
-
-        _buyCats.AddRange(
-            list.Where(i => i.Mode == StoreMode.Buy)
-                .Select(i => i.Category)
-                .Distinct()
-                .OrderBy(c => c));
-
-        _sellCats.AddRange(
-            list.Where(i => i.Mode == StoreMode.Sell)
-                .Select(i => i.Category)
-                .Distinct()
-                .OrderBy(c => c));
-        if (_items.Any(i => i is { Mode: StoreMode.Sell, Category: CatIdReady, }))
-        {
-            _sellCats.Remove(CatIdReady);
-            _sellCats.Insert(0, CatIdReady);
-        }
-
-        if (!_buyCats.Contains(_buyCat))
-            _buyCat = string.Empty;
-        if (!_sellCats.Contains(_sellCat))
-            _sellCat = string.Empty;
-
-        BuildCategoryButtons();
-        _buyGrid.ResetPaging();
-        _sellGrid.ResetPaging();
-        RefreshListings();
-    }
 
     public void PopulateContracts(List<ContractClientData>? list)
     {

@@ -16,13 +16,18 @@ public sealed class NcListingGrid : BoxContainer
 {
     private const int PageSize = 96;
     private readonly Dictionary<string, (NcStoreListingControl Ctrl, int Sig)> _cache = new();
+
     private readonly StoreMode _mode;
     private readonly IPrototypeManager _proto;
     private readonly Dictionary<string, int> _qtyCache = new();
     private readonly List<StoreListingData> _scratchFiltered = new();
+    private readonly List<string> _scratchKeys = new();
+    private readonly HashSet<string> _scratchSeenProtos = new();
+
     private readonly Dictionary<string, string> _searchIndex = new();
     private readonly SpriteSystem _sprites;
-    private IReadOnlyList<StoreListingData> _allItems = Array.Empty<StoreListingData>();
+
+    private IReadOnlyList<StoreListingData> _allItems = [];
     private Func<string, int> _balanceResolver = _ => int.MaxValue;
     private Action<StoreListingData, int> _emit = (_, _) => { };
 
@@ -53,18 +58,38 @@ public sealed class NcListingGrid : BoxContainer
 
     public void SyncAvailableIds(IReadOnlyCollection<string> ids)
     {
-        foreach (var key in _qtyCache.Keys.Where(k => !ids.Contains(k)).ToList())
-            _qtyCache.Remove(key);
+        _scratchKeys.Clear();
+        foreach (var key in _qtyCache.Keys)
+            if (!ids.Contains(key))
+                _scratchKeys.Add(key);
 
-        foreach (var key in _cache.Keys.Where(k => !ids.Contains(k)).ToList())
-            _cache.Remove(key);
+        foreach (var t in _scratchKeys)
+            _qtyCache.Remove(t);
+
+        _scratchKeys.Clear();
+        foreach (var key in _cache.Keys)
+            if (!ids.Contains(key))
+                _scratchKeys.Add(key);
+
+        foreach (var t in _scratchKeys)
+            _cache.Remove(t);
     }
 
     public void PrepareSearchIndex(IEnumerable<string> productEntities)
     {
         _searchIndex.Clear();
-        foreach (var protoId in productEntities.Where(p => !string.IsNullOrWhiteSpace(p)).Distinct())
+        _scratchSeenProtos.Clear();
+
+        foreach (var protoId in productEntities)
+        {
+            if (string.IsNullOrWhiteSpace(protoId))
+                continue;
+
+            if (!_scratchSeenProtos.Add(protoId))
+                continue;
+
             AddToSearchIndex(protoId);
+        }
     }
 
     public int Refresh(

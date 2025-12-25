@@ -1,10 +1,12 @@
 using Robust.Client.UserInterface.Controls;
 
+
 namespace Content.Client._NC.Trade;
 
+
 /// <summary>
-/// Vertical list of category buttons with toggle selection and hover feedback.
-/// Owns button creation/reuse and only exposes the selected category.
+///     Vertical list of category buttons with toggle selection and hover feedback.
+///     Owns button creation/reuse and only exposes the selected category.
 /// </summary>
 public sealed class NcCategoryBar : BoxContainer
 {
@@ -13,21 +15,22 @@ public sealed class NcCategoryBar : BoxContainer
 
     private readonly Dictionary<string, Button> _buttons = new();
     private readonly List<string> _ordered = new();
+    private readonly HashSet<string> _scratchNeeded = new();
+    private readonly List<string> _scratchRemove = new();
 
     private Func<string, string> _displayName = static id => id;
+
     private Func<string, string> _toolTip = static id => id;
-
-    private string _selected = string.Empty;
-
-    public event Action<string>? OnSelectedChanged;
-
-    public string Selected => _selected;
 
     public NcCategoryBar()
     {
         Orientation = LayoutOrientation.Vertical;
         HorizontalExpand = true;
     }
+
+    public string Selected { get; private set; } = string.Empty;
+
+    public event Action<string>? OnSelectedChanged;
 
     public void Configure(Func<string, string> displayName, Func<string, string> toolTip)
     {
@@ -38,12 +41,12 @@ public sealed class NcCategoryBar : BoxContainer
     public void SetCategories(IReadOnlyList<string> categories, string selectedCategory)
     {
         _ordered.Clear();
-        for (var i = 0; i < categories.Count; i++)
-            _ordered.Add(categories[i]);
+        foreach (var t in categories)
+            _ordered.Add(t);
 
         SyncButtons();
 
-        SetSelected(selectedCategory, raiseEvent: false);
+        SetSelected(selectedCategory, false);
     }
 
     public void SetSelected(string selectedCategory, bool raiseEvent = true)
@@ -51,34 +54,36 @@ public sealed class NcCategoryBar : BoxContainer
         if (!string.IsNullOrEmpty(selectedCategory) && !_buttons.ContainsKey(selectedCategory))
             selectedCategory = string.Empty;
 
-        if (_selected == selectedCategory)
+        if (Selected == selectedCategory)
             return;
 
-        _selected = selectedCategory;
+        Selected = selectedCategory;
         UpdateVisuals();
 
         if (raiseEvent)
-            OnSelectedChanged?.Invoke(_selected);
+            OnSelectedChanged?.Invoke(Selected);
     }
 
     private void SyncButtons()
     {
-        var needed = new HashSet<string>(_ordered);
-        var toRemove = new List<string>();
-        foreach (var key in _buttons.Keys)
-            if (!needed.Contains(key))
-                toRemove.Add(key);
+        _scratchNeeded.Clear();
+        foreach (var t in _ordered)
+            _scratchNeeded.Add(t);
 
-        foreach (var key in toRemove)
+        _scratchRemove.Clear();
+        foreach (var key in _buttons.Keys)
+            if (!_scratchNeeded.Contains(key))
+                _scratchRemove.Add(key);
+
+        foreach (var key in _scratchRemove)
         {
             var btn = _buttons[key];
             RemoveChild(btn);
             _buttons.Remove(key);
         }
 
-        for (var i = 0; i < _ordered.Count; i++)
+        foreach (var catId in _ordered)
         {
-            var catId = _ordered[i];
             if (_buttons.ContainsKey(catId))
                 continue;
 
@@ -87,9 +92,8 @@ public sealed class NcCategoryBar : BoxContainer
             AddChild(btn);
         }
 
-        for (var i = 0; i < _ordered.Count; i++)
+        foreach (var catId in _ordered)
         {
-            var catId = _ordered[i];
             if (!_buttons.TryGetValue(catId, out var btn))
                 continue;
 
@@ -97,9 +101,8 @@ public sealed class NcCategoryBar : BoxContainer
             AddChild(btn);
         }
 
-        for (var i = 0; i < _ordered.Count; i++)
+        foreach (var catId in _ordered)
         {
-            var catId = _ordered[i];
             if (!_buttons.TryGetValue(catId, out var btn))
                 continue;
 
@@ -123,7 +126,7 @@ public sealed class NcCategoryBar : BoxContainer
 
         btn.OnPressed += _ =>
         {
-            var next = _selected == catId ? string.Empty : catId;
+            var next = Selected == catId ? string.Empty : catId;
             SetSelected(next);
         };
 
@@ -143,7 +146,7 @@ public sealed class NcCategoryBar : BoxContainer
     {
         foreach (var (catId, btn) in _buttons)
         {
-            var isSelected = catId == _selected;
+            var isSelected = catId == Selected;
             if (btn.Pressed != isSelected)
                 btn.Pressed = isSelected;
 
