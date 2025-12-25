@@ -1,5 +1,4 @@
 using System.Linq;
-using Content.Client.Message;
 using Content.Client.UserInterface.Controls;
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
@@ -9,7 +8,6 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Timing;
 
 
 namespace Content.Client._NC.Trade;
@@ -18,30 +16,24 @@ namespace Content.Client._NC.Trade;
 [GenerateTypedNameReferences]
 public sealed partial class NcStoreMenu : FancyWindow
 {
-    private const int SearchDebounceMs = 120;
     private const string CatIdReady = "__READY__";
     private const string CatIdCrate = "__CRATE__";
-    private static readonly Color CatSelected = new(0xD9, 0xA4, 0x41);
-    private static readonly Color CatIdle = new(0x7C, 0x66, 0x24);
     private readonly Dictionary<string, int> _balancesByCurrency = new();
-    private readonly Dictionary<string, Button> _buyCatButtons = new();
+    private readonly NcCategoryBar _buyCategoryBar;
     private readonly List<string> _buyCats = new();
     private readonly NcListingGrid _buyGrid;
     private readonly List<StoreListingStaticData> _catalog = new();
     private readonly Dictionary<string, int> _crateUnitsById = new();
-    private readonly TextureRect? _currencyIcon;
-    private readonly BoxContainer? _headerBar;
     private readonly List<StoreListingData> _items = new();
     private readonly Dictionary<string, int> _massSellTotals = new();
     private readonly Dictionary<string, int> _ownedById = new();
     private readonly IPrototypeManager _proto;
     private readonly Dictionary<string, int> _remainingById = new();
-    private readonly Dictionary<string, Button> _sellCatButtons = new();
+    private readonly NcCategoryBar _sellCategoryBar;
     private readonly List<string> _sellCats = new();
     private readonly NcListingGrid _sellGrid;
     private readonly SpriteSystem _sprites;
     private readonly Dictionary<string, StoreListingStaticData> _staticById = new();
-    private int _balance;
     private string _buyCat = string.Empty;
     private bool _disposed;
     private bool _hasBuyTab;
@@ -49,7 +41,6 @@ public sealed partial class NcStoreMenu : FancyWindow
     private bool _hasSellTab;
     private string _search = string.Empty;
     private string _searchLower = string.Empty;
-    private int _searchToken;
     private string _sellCat = string.Empty;
     private Control? _tabBuy;
     private Control? _tabContracts;
@@ -65,13 +56,39 @@ public sealed partial class NcStoreMenu : FancyWindow
         TabContainer.SetTabTitle(TabBuy, Loc.GetString("nc-store-tab-buy"));
         TabContainer.SetTabTitle(TabSell, Loc.GetString("nc-store-tab-sell"));
         TabContainer.SetTabTitle(TabContracts, Loc.GetString("nc-store-tab-contracts"));
-        _currencyIcon = FindControl<TextureRect>("CurrencyIcon");
-        _headerBar = FindControl<BoxContainer>("HeaderBar");
         _sprites = IoCManager.Resolve<IEntitySystemManager>().GetEntitySystem<SpriteSystem>();
         _proto = IoCManager.Resolve<IPrototypeManager>();
 
+        Header.BindServices(_proto, _sprites);
+
         _buyGrid = new(StoreMode.Buy, _proto, _sprites);
         _sellGrid = new(StoreMode.Sell, _proto, _sprites);
+
+        _buyCategoryBar = new();
+        _sellCategoryBar = new();
+
+        _buyCategoryBar.Configure(GetCategoryDisplayName, GetCategoryToolTip);
+        _sellCategoryBar.Configure(GetCategoryDisplayName, GetCategoryToolTip);
+
+        _buyCategoryBar.OnSelectedChanged += catId =>
+        {
+            if (_disposed)
+                return;
+
+            _buyCat = catId;
+            _buyGrid.ResetPaging();
+            RefreshListings();
+        };
+
+        _sellCategoryBar.OnSelectedChanged += catId =>
+        {
+            if (_disposed)
+                return;
+
+            _sellCat = catId;
+            _sellGrid.ResetPaging();
+            RefreshListings();
+        };
 
         _buyGrid.HorizontalExpand = true;
         _sellGrid.HorizontalExpand = true;
@@ -79,36 +96,27 @@ public sealed partial class NcStoreMenu : FancyWindow
         BuyListingsContainer.Children.Clear();
         BuyListingsContainer.AddChild(_buyGrid);
 
+        BuyCategoryListContainer.Children.Clear();
+        BuyCategoryListContainer.AddChild(_buyCategoryBar);
+
         SellListingsContainer.Children.Clear();
         SellListingsContainer.AddChild(_sellGrid);
 
-        SearchBar.OnTextChanged += _ =>
+        SellCategoryListContainer.Children.Clear();
+        SellCategoryListContainer.AddChild(_sellCategoryBar);
+
+        Header.OnSearchChanged += text =>
         {
             if (_disposed)
                 return;
 
-            _search = SearchBar.Text.Trim();
-            _searchLower = _search.ToLowerInvariant();
-            var token = ++_searchToken;
-
-            Timer.Spawn(
-                TimeSpan.FromMilliseconds(SearchDebounceMs),
-                () =>
-                {
-                    if (token != _searchToken)
-                        return;
-
-                    if (_disposed)
-                        return;
-
-                    _buyGrid.ResetPaging();
-                    _sellGrid.ResetPaging();
-                    OnSearchChanged?.Invoke(_search);
-                    RefreshListings();
-                });
+            _search = text;
+            _searchLower = text.ToLowerInvariant();
+            _buyGrid.ResetPaging();
+            _sellGrid.ResetPaging();
+            OnSearchChanged?.Invoke(_search);
+            RefreshListings();
         };
-
-        BalanceInfo.SetMarkup("[font size=14][color=yellow]0[/color][/font]");
 
         MassSellPulledCrateButton.Disabled = true;
         MassSellPulledCrateButton.ClipText = true;
@@ -138,66 +146,12 @@ public sealed partial class NcStoreMenu : FancyWindow
     public event Action<StoreListingData, int>? OnSellPressed;
     public event Action? OnMassSellPulledCrate;
 
-
-    public void SetBalance(int balance)
-    {
-        _balance = balance;
-        BalanceInfo.SetMarkup($"[font size=14][color=yellow]{balance}[/color][/font]");
-    }
-
     private int GetBalanceForCurrency(string currencyId)
     {
         if (string.IsNullOrWhiteSpace(currencyId))
             return 0;
 
         return _balancesByCurrency.GetValueOrDefault(currencyId, 0);
-    }
-
-    private void UpdateBalanceHeader()
-    {
-        if (_balancesByCurrency.Count == 0)
-        {
-            SetBalance(0);
-            return;
-        }
-
-        string? displayCurrency;
-        int displayAmount;
-
-        if (_balancesByCurrency.Count == 1)
-        {
-            var kv = _balancesByCurrency.First();
-            displayCurrency = kv.Key;
-            displayAmount = kv.Value;
-        }
-        else
-        {
-            string? bestKey = null;
-            var bestValue = int.MinValue;
-
-            foreach (var (key, value) in _balancesByCurrency)
-                if (bestKey == null ||
-                    value > bestValue ||
-                    value == bestValue && string.CompareOrdinal(key, bestKey) < 0)
-                {
-                    bestKey = key;
-                    bestValue = value;
-                }
-
-            displayCurrency = bestKey;
-            displayAmount = _balancesByCurrency.Values.Sum();
-        }
-
-        BalanceInfo.SetMarkup($"[font size=14][color=yellow]{displayAmount}[/color][/font]");
-        if (_currencyIcon != null && !string.IsNullOrEmpty(displayCurrency))
-        {
-            if (_proto.TryIndex<StackPrototype>(displayCurrency, out var stackProto) &&
-                _proto.TryIndex<EntityPrototype>(stackProto.Spawn, out var entProto))
-            {
-                var icon = _sprites.GetPrototypeIcon(entProto).Default;
-                _currencyIcon.Texture = icon;
-            }
-        }
     }
 
     public void SetBalancesByCurrency(Dictionary<string, int> balances)
@@ -212,7 +166,7 @@ public sealed partial class NcStoreMenu : FancyWindow
             _balancesByCurrency[cur] = amt;
         }
 
-        UpdateBalanceHeader();
+        Header.SetBalances(_balancesByCurrency);
     }
 
 
@@ -329,12 +283,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         RefreshListings();
     }
 
-    private void UpdateHeaderVisibility()
-    {
-        if (_headerBar == null)
-            return;
-        _headerBar.Visible = _hasBuyTab || _hasSellTab;
-    }
+    private void UpdateHeaderVisibility() => Header.Visible = _hasBuyTab || _hasSellTab;
 
     private void RebuildCategoriesFromCatalog()
     {
@@ -608,119 +557,8 @@ public sealed partial class NcStoreMenu : FancyWindow
 
     private void BuildCategoryButtons()
     {
-        SyncCategoryButtons(
-            _buyCats,
-            BuyCategoryListContainer,
-            _buyCatButtons,
-            _buyCat,
-            cat =>
-            {
-                _buyCat = _buyCat == cat ? string.Empty : cat;
-                UpdateCatVisuals(_buyCatButtons, _buyCat);
-
-                _sellGrid.ResetPaging();
-                RefreshListings();
-            });
-
-        SyncCategoryButtons(
-            _sellCats,
-            SellCategoryListContainer,
-            _sellCatButtons,
-            _sellCat,
-            cat =>
-            {
-                _sellCat = _sellCat == cat ? string.Empty : cat;
-
-                UpdateCatVisuals(_sellCatButtons, _sellCat);
-
-                _sellGrid.ResetPaging();
-                RefreshListings();
-            });
-    }
-
-
-    private void UpdateCatVisuals(Dictionary<string, Button> buttons, string selectedCat)
-    {
-        foreach (var (cat, btn) in buttons)
-        {
-            var isSelected = cat == selectedCat;
-            if (btn.Pressed != isSelected)
-                btn.Pressed = isSelected;
-
-            btn.ModulateSelfOverride = isSelected ? CatSelected : CatIdle;
-        }
-    }
-
-    private Button CreateCategoryButton(string catId, Action<string> onClick)
-    {
-        var btn = new Button
-        {
-            Text = GetCategoryDisplayName(catId),
-            ToggleMode = true,
-            HorizontalExpand = true,
-            ToolTip = GetCategoryToolTip(catId),
-            ModulateSelfOverride = CatIdle
-        };
-
-        btn.OnPressed += _ => onClick(catId);
-        btn.OnMouseEntered += _ =>
-        {
-            btn.ModulateSelfOverride = btn.Pressed
-                ? Brighten(CatSelected, 1.2f)
-                : Brighten(CatIdle, 1.2f);
-        };
-
-        btn.OnMouseExited += _ => { btn.ModulateSelfOverride = btn.Pressed ? CatSelected : CatIdle; };
-
-        return btn;
-    }
-
-    private void SyncCategoryButtons(
-        List<string> neededCats,
-        Control parent,
-        Dictionary<string, Button> registry,
-        string selectedCat,
-        Action<string> onClick
-    )
-    {
-        var neededSet = neededCats.ToHashSet();
-        var toRemove = registry.Keys.Where(k => !neededSet.Contains(k)).ToList();
-
-        foreach (var key in toRemove)
-        {
-            var btn = registry[key];
-            parent.RemoveChild(btn);
-            registry.Remove(key);
-        }
-
-        foreach (var cat in neededCats)
-        {
-            if (registry.ContainsKey(cat))
-                continue;
-
-            var btn = CreateCategoryButton(cat, onClick);
-            registry[cat] = btn;
-            parent.AddChild(btn);
-        }
-
-        foreach (var cat in neededCats)
-        {
-            if (!registry.TryGetValue(cat, out var btn))
-                continue;
-
-            parent.RemoveChild(btn);
-            parent.AddChild(btn);
-        }
-
-        foreach (var (cat, btn) in registry)
-        {
-            var isSelected = cat == selectedCat;
-            if (btn.Pressed != isSelected)
-            {
-                btn.Pressed = isSelected;
-                btn.ModulateSelfOverride = isSelected ? CatSelected : CatIdle;
-            }
-        }
+        _buyCategoryBar.SetCategories(_buyCats, _buyCat);
+        _sellCategoryBar.SetCategories(_sellCats, _sellCat);
     }
 
     private string CurrencyName(string? currencyId)
@@ -734,9 +572,6 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         return currencyId;
     }
-
-    private static Color Brighten(Color c, float f) =>
-        new(MathF.Min(c.R * f, 1f), MathF.Min(c.G * f, 1f), MathF.Min(c.B * f, 1f), c.A);
 
     [Obsolete("Controls should only be removed from UI tree instead of being disposed")]
     protected override void Dispose(bool disposing)

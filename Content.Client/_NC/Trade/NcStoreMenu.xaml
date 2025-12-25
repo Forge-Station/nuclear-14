@@ -2,31 +2,14 @@
     xmlns="https://spacestation14.io"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls1="clr-namespace:Content.Client.UserInterface.Controls"
+    xmlns:trade="clr-namespace:Content.Client._NC.Trade"
     Title="{Loc 'nc-store-window-title'}"
     MinWidth="1100" MinHeight="720"
     StyleClasses="WindowLarge">
     <BoxContainer Orientation="Vertical" StyleClasses="PanelBackgroundBase">
-        <BoxContainer Name="HeaderBar" Orientation="Horizontal" Margin="4 4 4 0" StyleClasses="PanelBackgroundBaseDark">
-
-            <TextureRect Name="CurrencyIcon"
-                         MinSize="24 24"
-                         Stretch="KeepAspectCentered"
-                         Margin="4 0 4 0"
-                         VerticalAlignment="Center"/>
-
-            <RichTextLabel Name="BalanceInfo"
-                           StyleClasses="LabelHeading"
-                           HorizontalExpand="False"
-                           VerticalAlignment="Center"/>
-
-            <Control HorizontalExpand="True" />
-
-            <Label Text="🔍" Margin="0 0 4 0" VerticalAlignment="Center"/>
-            <LineEdit Name="SearchBar"
-                      HorizontalExpand="False"
-                      MinWidth="250"
-                      Access="Public" />
-        </BoxContainer>
+        <trade:NcStoreHeaderBar Name="Header"
+                               Margin="4 4 4 0"
+                               StyleClasses="PanelBackgroundBaseDark" />
 
         <TabContainer Name="Tabs"
                       StyleClasses="TabContainerLarge"
