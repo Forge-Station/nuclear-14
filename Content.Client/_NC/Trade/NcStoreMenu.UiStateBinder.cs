@@ -12,6 +12,8 @@ public sealed partial class NcStoreMenu
 
         private bool _hasLastDynamic;
         private int _lastContractsHash;
+        private int _lastCrateMembershipHash;
+        private int _lastReadyMembershipHash;
 
         public UiStateBinder(NcStoreMenu menu)
         {
@@ -33,6 +35,35 @@ public sealed partial class NcStoreMenu
             return true;
         }
 
+        private static bool KeysEqual(Dictionary<string, int> a, Dictionary<string, int> b)
+        {
+            if (ReferenceEquals(a, b))
+                return true;
+
+            if (a.Count != b.Count)
+                return false;
+
+            foreach (var k in a.Keys)
+                if (!b.ContainsKey(k))
+                    return false;
+
+            return true;
+        }
+
+        private static void CopyOrUpdate(Dictionary<string, int> src, Dictionary<string, int> dst, bool keysSame)
+        {
+            if (!keysSame)
+            {
+                dst.Clear();
+                foreach (var (k, v) in src)
+                    dst[k] = v;
+                return;
+            }
+
+            foreach (var (k, v) in src)
+                dst[k] = v;
+        }
+
         private static int ComputeContractsHash(List<ContractClientData> contracts)
         {
             unchecked
@@ -51,6 +82,54 @@ public sealed partial class NcStoreMenu
 
                     h = h * 31 + (c.Targets?.Count ?? 0);
                     h = h * 31 + (c.Rewards?.Count ?? 0);
+                }
+
+                return h;
+            }
+        }
+
+        private int ComputeReadyMembershipHash(Dictionary<string, int> ownedById, Dictionary<string, int> remainingById)
+        {
+            unchecked
+            {
+                var h = 17;
+
+                for (var i = 0; i < _m._catalog.Count; i++)
+                {
+                    var s = _m._catalog[i];
+                    if (s.Mode != StoreMode.Sell)
+                        continue;
+
+                    var owned = ownedById.GetValueOrDefault(s.Id, 0);
+                    if (owned <= 0)
+                        continue;
+
+                    var remaining = remainingById.GetValueOrDefault(s.Id, -1);
+                    if (remaining == 0)
+                        continue;
+                    h = h * 31 + (s.Id?.GetHashCode() ?? 0);
+                }
+
+                return h;
+            }
+        }
+
+        private int ComputeCrateMembershipHash(Dictionary<string, int> crateUnitsById)
+        {
+            unchecked
+            {
+                var h = 17;
+
+                for (var i = 0; i < _m._catalog.Count; i++)
+                {
+                    var s = _m._catalog[i];
+                    if (s.Mode != StoreMode.Sell)
+                        continue;
+
+                    var take = crateUnitsById.GetValueOrDefault(s.Id, 0);
+                    if (take <= 0)
+                        continue;
+                    h = h * 31 + (s.Id?.GetHashCode() ?? 0);
                 }
 
                 return h;
@@ -84,7 +163,6 @@ public sealed partial class NcStoreMenu
                 _m._staticById[s.Id] = s;
             }
 
-            // Build per-prototype search index once per catalog revision.
             var productProtos = new List<string>(_m._catalog.Count);
             for (var i = 0; i < _m._catalog.Count; i++)
                 productProtos.Add(_m._catalog[i].ProductEntity);
@@ -97,8 +175,10 @@ public sealed partial class NcStoreMenu
             _m._buyGrid.ResetPaging();
             _m._sellGrid.ResetPaging();
             _m.RefreshListings();
-
             _hasLastDynamic = false;
+            _lastContractsHash = 0;
+            _lastReadyMembershipHash = 0;
+            _lastCrateMembershipHash = 0;
         }
 
         public void ApplyDynamicState(
@@ -131,32 +211,22 @@ public sealed partial class NcStoreMenu
             var balancesChanged = !DictEquals(balancesByCurrency, _m._balancesByCurrency);
             if (balancesChanged)
                 _m.SetBalancesByCurrency(balancesByCurrency);
+            var remainingKeysSame = KeysEqual(remainingById, _m._remainingById);
+            var ownedKeysSame = KeysEqual(ownedById, _m._ownedById);
+            var crateKeysSame = KeysEqual(crateUnitsById, _m._crateUnitsById);
 
-            var listingsChanged = false;
+            var remainingChanged = !DictEquals(remainingById, _m._remainingById);
+            var ownedChanged = !DictEquals(ownedById, _m._ownedById);
+            var crateChanged = !DictEquals(crateUnitsById, _m._crateUnitsById);
 
-            if (!DictEquals(remainingById, _m._remainingById))
-            {
-                _m._remainingById.Clear();
-                foreach (var (k, v) in remainingById)
-                    _m._remainingById[k] = v;
-                listingsChanged = true;
-            }
+            if (remainingChanged)
+                CopyOrUpdate(remainingById, _m._remainingById, remainingKeysSame);
 
-            if (!DictEquals(ownedById, _m._ownedById))
-            {
-                _m._ownedById.Clear();
-                foreach (var (k, v) in ownedById)
-                    _m._ownedById[k] = v;
-                listingsChanged = true;
-            }
+            if (ownedChanged)
+                CopyOrUpdate(ownedById, _m._ownedById, ownedKeysSame);
 
-            if (!DictEquals(crateUnitsById, _m._crateUnitsById))
-            {
-                _m._crateUnitsById.Clear();
-                foreach (var (k, v) in crateUnitsById)
-                    _m._crateUnitsById[k] = v;
-                listingsChanged = true;
-            }
+            if (crateChanged)
+                CopyOrUpdate(crateUnitsById, _m._crateUnitsById, crateKeysSame);
 
             if (!DictEquals(massTotals, _m._massSellTotals))
                 _m.SetMassSellTotals(massTotals);
@@ -168,14 +238,34 @@ public sealed partial class NcStoreMenu
                 _m.PopulateContracts(contracts);
             }
 
-            if (listingsChanged)
+            var keysChanged = !_hasLastDynamic || !remainingKeysSame || !ownedKeysSame || !crateKeysSame;
+
+            var readyMembershipHash = ComputeReadyMembershipHash(ownedById, remainingById);
+            var crateMembershipHash = ComputeCrateMembershipHash(crateUnitsById);
+
+            var membershipChanged = !_hasLastDynamic ||
+                readyMembershipHash != _lastReadyMembershipHash ||
+                crateMembershipHash != _lastCrateMembershipHash;
+
+            var structureChanged = keysChanged || membershipChanged;
+            var valuesChanged = remainingChanged || ownedChanged || crateChanged;
+
+            if (structureChanged)
             {
                 _m.RebuildItemsFromCatalogAndDynamic();
                 _m.UpdateVirtualSellCategories();
                 _m.RefreshListings();
             }
+            else if (valuesChanged)
+            {
+                _m.UpdateItemsDynamicInPlace();
+                _m.RefreshListingsDynamicOnly();
+            }
             else if (balancesChanged || tabsChanged)
                 _m.RefreshListingsDynamicOnly();
+
+            _lastReadyMembershipHash = readyMembershipHash;
+            _lastCrateMembershipHash = crateMembershipHash;
 
             _hasLastDynamic = true;
         }

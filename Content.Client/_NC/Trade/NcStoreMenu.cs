@@ -264,8 +264,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         _binder.PopulateCatalog(listings, hasBuyTab, hasSellTab, hasContractsTab);
 
 
-    private void UpdateHeaderVisibility() =>
-        Header.Visible = _hasBuyTab || _hasSellTab;
+    private void UpdateHeaderVisibility() => Header.Visible = _hasBuyTab || _hasSellTab;
 
     private void RebuildCategoriesFromCatalog()
     {
@@ -413,7 +412,6 @@ public sealed partial class NcStoreMenu : FancyWindow
         if (_scratchReadyItems.Count > 0)
             _items.AddRange(_scratchReadyItems);
 
-        // Virtual "crate" category (derived from server-provided crate units per listing).
         if (_crateUnitsById.Count > 0)
         {
             for (var i = 0; i < _catalog.Count; i++)
@@ -447,7 +445,6 @@ public sealed partial class NcStoreMenu : FancyWindow
         _buyGrid.SyncAvailableIds(_scratchAvailableIds);
         _sellGrid.SyncAvailableIds(_scratchAvailableIds);
     }
-
 
     public void PopulateContracts(List<ContractClientData>? list)
     {
