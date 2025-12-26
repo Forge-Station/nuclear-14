@@ -12,21 +12,37 @@ public sealed partial class NcStoreLogicSystem
 {
     private IEnumerable<EntityUid> EnumerateDeepItemsUnique(EntityUid owner)
     {
-        if (_inventoryCache.TryGetValue(owner, out var cached))
+        var cached = GetOrBuildDeepItemsCache(owner);
+        for (var i = 0; i < cached.Count; i++)
         {
-            foreach (var ent in cached)
-                if (_ents.EntityExists(ent))
-                    yield return ent;
+            var ent = cached[i];
+            if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
+                continue;
 
-            yield break;
+            yield return ent;
         }
+    }
 
+    private List<EntityUid> GetOrBuildDeepItemsCache(EntityUid owner)
+    {
+        if (_inventoryCache.TryGetValue(owner, out var cached))
+            return cached;
+
+        BuildDeepItemsCache(owner, out cached);
+        return cached;
+    }
+
+    private void BuildDeepItemsCache(EntityUid owner, out List<EntityUid> cached)
+    {
         _scratchVisited.Clear();
         _scratchQueue.Clear();
         _scratchResult.Clear();
 
         void Enqueue(EntityUid uid)
         {
+            if (uid == EntityUid.Invalid)
+                return;
+
             if (!_scratchVisited.Add(uid))
                 return;
 
@@ -68,29 +84,36 @@ public sealed partial class NcStoreLogicSystem
         {
             var current = _scratchQueue.Dequeue();
 
-            if (_ents.TryGetComponent(current, out ContainerManagerComponent? cmc))
+            if (!_ents.TryGetComponent(current, out ContainerManagerComponent? cmc))
+                continue;
+
+            foreach (var container in cmc.Containers.Values)
             {
-                foreach (var container in cmc.Containers.Values)
-                {
-                    foreach (var child in container.ContainedEntities)
-                        Enqueue(child);
-                }
+                foreach (var child in container.ContainedEntities)
+                    Enqueue(child);
             }
         }
 
-        if (!_inventoryCache.TryGetValue(owner, out var cachedList))
+        cached = new(_scratchResult.Count);
+        cached.AddRange(_scratchResult);
+        _inventoryCache[owner] = cached;
+    }
+
+
+    private void CompactCachedItems(List<EntityUid> cached)
+    {
+        var w = 0;
+        for (var r = 0; r < cached.Count; r++)
         {
-            cachedList = new(_scratchResult.Count);
-            _inventoryCache[owner] = cachedList;
+            var ent = cached[r];
+            if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
+                continue;
+
+            cached[w++] = ent;
         }
-        else
-            cachedList.Clear();
 
-        cachedList.AddRange(_scratchResult);
-
-        foreach (var ent in cachedList)
-            if (_ents.EntityExists(ent))
-                yield return ent;
+        if (w < cached.Count)
+            cached.RemoveRange(w, cached.Count - w);
     }
 
     private bool IsHeldInHands(EntityUid user, EntityUid item)

@@ -29,6 +29,7 @@ public sealed partial class NcStoreLogicSystem : EntitySystem
 
     [Dependency] private readonly IPrototypeManager _protos = default!;
     private readonly List<EntityUid> _scratchItems = new();
+    private readonly List<(EntityUid Ent, int Count)> _scratchCurrencyCandidates = new();
     private readonly Queue<EntityUid> _scratchQueue = new();
     private readonly List<EntityUid> _scratchResult = new();
     private readonly HashSet<EntityUid> _scratchVisited = new();
@@ -219,12 +220,9 @@ public sealed partial class NcStoreLogicSystem : EntitySystem
                 balance = bal;
                 return true;
             }
-
-            // Есть whitelist, но нет пересечения с cost или не хватает баланса.
             return false;
         }
 
-        // Нет whitelist -> выбираем детерминированно (по ключу), чтобы валюта не "прыгала".
         KeyValuePair<string, int>? best = null;
         foreach (var kv in listing.Cost)
         {
@@ -382,8 +380,6 @@ public sealed partial class NcStoreLogicSystem : EntitySystem
                 }
                 catch (Exception e)
                 {
-                    // Важно: если спавн падает на середине цикла, деньги уже списаны.
-                    // Возвращаем стоимость за то, что не выдали.
                     Sawmill.Error($"Spawn failed during bulk buy: {e}");
 
                     if (remainingToSpawn > 0)
@@ -565,16 +561,16 @@ public sealed partial class NcStoreLogicSystem : EntitySystem
 
 
     public bool TryTakeProductUnits(EntityUid user, string protoId, int amount) =>
-        TryTakeProductUnitsInternal(user, protoId, amount, PrototypeMatchMode.Exact);
+        TryTakeProductUnitsFromRootCached(user, protoId, amount, PrototypeMatchMode.Exact);
 
     public bool TryTakeProductUnits(EntityUid user, string protoId, int amount, PrototypeMatchMode matchMode) =>
-        TryTakeProductUnitsInternal(user, protoId, amount, matchMode);
+        TryTakeProductUnitsFromRootCached(user, protoId, amount, matchMode);
 
     public bool TryTakeProductUnitsFromRoot(EntityUid root, string protoId, int amount) =>
-        TryTakeProductUnitsInternal(root, protoId, amount, PrototypeMatchMode.Exact);
+        TryTakeProductUnitsFromRootCached(root, protoId, amount, PrototypeMatchMode.Exact);
 
     public bool TryTakeProductUnitsFromRoot(EntityUid root, string protoId, int amount, PrototypeMatchMode matchMode) =>
-        TryTakeProductUnitsInternal(root, protoId, amount, matchMode);
+        TryTakeProductUnitsFromRootCached(root, protoId, amount, matchMode);
 
     public bool TryExchange(
         string listingId,
@@ -714,8 +710,6 @@ public sealed partial class NcStoreLogicSystem : EntitySystem
                     stackTypeCounts.TryGetValue(st.StackTypeId, out var prev);
                     stackTypeCounts[st.StackTypeId] = prev + cnt;
                 }
-
-                // Still register the prototype for descendant matching.
                 if (_ents.TryGetComponent(ent, out MetaDataComponent? stMeta) && stMeta.EntityPrototype is { } stProto)
                 {
                     protoCache[stProto.ID] = stProto;
@@ -1010,8 +1004,8 @@ public sealed partial class NcStoreLogicSystem : EntitySystem
         {
             if (amount <= 0)
                 continue;
-            var available = GetOwnedInRoot(root, protoId, PrototypeMatchMode.Exact);
 
+            var available = GetOwnedInRoot(root, protoId, PrototypeMatchMode.Exact);
             if (available < amount)
             {
                 Sawmill.Warning(
@@ -1020,28 +1014,42 @@ public sealed partial class NcStoreLogicSystem : EntitySystem
             }
         }
 
-        var rootsToInvalidate = new HashSet<EntityUid>();
-        var success = true;
-
+        var grouped = new Dictionary<EntityUid, List<(string ProtoId, int Amount)>>();
         foreach (var ((root, protoId), amount) in plan)
         {
             if (amount <= 0)
                 continue;
 
-            rootsToInvalidate.Add(root);
-            if (!TryTakeProductUnitsUnsafe(root, protoId, amount, PrototypeMatchMode.Exact))
+            if (!grouped.TryGetValue(root, out var list))
             {
-                Sawmill.Error(
-                    $"[NcStore] ExecuteContractBatch CRITICAL: Validation passed but take failed for {amount} of {protoId} from {ToPrettyString(root)}. Transaction interrupted partially.");
-                success = false;
-                break;
+                list = new List<(string ProtoId, int Amount)>();
+                grouped[root] = list;
             }
+
+            list.Add((protoId, amount));
         }
 
-        foreach (var root in rootsToInvalidate)
-            InvalidateInventoryCache(root);
+        foreach (var (root, reqs) in grouped)
+        {
+            var cachedItems = GetOrBuildDeepItemsCache(root);
 
-        return success;
+            for (var i = 0; i < reqs.Count; i++)
+            {
+                var (protoId, amount) = reqs[i];
+                if (!TryTakeProductUnitsFromCachedList(root, cachedItems, protoId, amount, PrototypeMatchMode.Exact))
+                {
+                    Sawmill.Error(
+                        $"[NcStore] ExecuteContractBatch CRITICAL: Validation passed but take failed for {amount} of {protoId} from {ToPrettyString(root)}.");
+                    InvalidateInventoryCache(root);
+                    return false;
+                }
+            }
+
+            CompactCachedItems(cachedItems);
+            InvalidateInventoryCache(root);
+        }
+
+        return true;
     }
 
 

@@ -1,3 +1,4 @@
+using System.Globalization;
 using Robust.Shared.Serialization;
 using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Serialization.Markdown;
@@ -10,10 +11,18 @@ using Robust.Shared.Serialization.TypeSerializers.Interfaces;
 namespace Content.Shared._NC.Trade;
 
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public readonly record struct IntRange(int Min, int Max)
 {
     public static IntRange Fixed(int value) => new(value, value);
+
+    public static IntRange Create(int min, int max)
+    {
+        if (max < min)
+            (min, max) = (max, min);
+
+        return new(min, max);
+    }
 }
 
 [TypeSerializer]
@@ -22,12 +31,12 @@ public sealed class IntRangeSerializer :
     ITypeSerializer<IntRange, MappingDataNode>
 {
     public ValidationNode Validate(
-        ISerializationManager serializationManager,
-        MappingDataNode node,
-        IDependencyCollection dependencies,
-        ISerializationContext? context = null
-    ) =>
-        serializationManager.ValidateNode<Dictionary<string, int>>(node, context);
+            ISerializationManager serializationManager,
+            MappingDataNode node,
+            IDependencyCollection dependencies,
+            ISerializationContext? context = null
+        ) =>
+            serializationManager.ValidateNode<Dictionary<string, int>>(node, context);
 
     public IntRange Read(
         ISerializationManager serializationManager,
@@ -45,8 +54,8 @@ public sealed class IntRangeSerializer :
         {
             value = 0;
             return node.TryGet(key, out var n) &&
-                   n is ValueDataNode v &&
-                   int.TryParse(v.Value, out value);
+                n is ValueDataNode v &&
+                int.TryParse(v.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out value);
         }
 
         if (TryGetInt(node, "min", out var parsedMin) || TryGetInt(node, "Min", out parsedMin))
@@ -55,13 +64,13 @@ public sealed class IntRangeSerializer :
         if (TryGetInt(node, "max", out var parsedMax) || TryGetInt(node, "Max", out parsedMax))
             max = parsedMax;
 
-        var a = min ?? max ?? 0;
-        var b = max ?? min ?? a;
+        if (min is null && max is null)
+            throw new InvalidOperationException("IntRange mapping must contain 'min' and/or 'max'.");
 
-        if (b < a)
-            (a, b) = (b, a);
+        var a = min ?? max!.Value;
+        var b = max ?? min!.Value;
 
-        return new(a, b);
+        return IntRange.Create(a, b);
     }
 
     public ValidationNode Validate(
@@ -81,10 +90,10 @@ public sealed class IntRangeSerializer :
         ISerializationManager.InstantiationDelegate<IntRange>? instanceProvider = null
     )
     {
-        if (!int.TryParse(node.Value, out var v))
-            v = 0;
+        if (!int.TryParse(node.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var v))
+            throw new InvalidOperationException($"Invalid IntRange value '{node.Value}', expected integer.");
 
-        return new(v, v);
+        return IntRange.Fixed(v);
     }
 
     public DataNode Write(
@@ -96,11 +105,11 @@ public sealed class IntRangeSerializer :
     )
     {
         if (value.Min == value.Max)
-            return new ValueDataNode(value.Min.ToString());
+            return new ValueDataNode(value.Min.ToString(CultureInfo.InvariantCulture));
 
         var map = new MappingDataNode();
-        map.Add("min", new ValueDataNode(value.Min.ToString()));
-        map.Add("max", new ValueDataNode(value.Max.ToString()));
+        map.Add("min", new ValueDataNode(value.Min.ToString(CultureInfo.InvariantCulture)));
+        map.Add("max", new ValueDataNode(value.Max.ToString(CultureInfo.InvariantCulture)));
         return map;
     }
 }
