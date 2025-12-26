@@ -34,10 +34,6 @@ public sealed partial class NcStoreLogicSystem
             if (IsProtectedFromDirectSale(root, ent))
                 continue;
 
-            // NOTE:
-            // Stack entities must contribute not only to StackTypeCounts, but also to ProtoCounts/AncestorCounts.
-            // Otherwise, any listing/contract with MatchMode=Descendants for an abstract (non-stack) parent proto
-            // will see 0 units when the actual items are stacks.
             _ents.TryGetComponent(ent, out MetaDataComponent? meta);
             var proto = meta?.EntityPrototype;
 

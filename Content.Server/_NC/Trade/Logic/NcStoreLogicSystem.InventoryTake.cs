@@ -9,6 +9,10 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcStoreLogicSystem
 {
+    /// <summary>
+    ///     Atomic consume: first validates availability, then performs entity mutations.
+    ///     Uses the per-root deep-items cache to avoid repeated traversals.
+    /// </summary>
     private bool TryTakeProductUnitsFromRootCached(
         EntityUid root,
         string protoId,
