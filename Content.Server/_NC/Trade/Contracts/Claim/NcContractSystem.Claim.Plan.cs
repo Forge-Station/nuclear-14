@@ -6,13 +6,18 @@ public sealed partial class NcContractSystem : EntitySystem
 {
     private bool TryBuildClaimExecutionBatches(
         ClaimContext ctx,
-        out Dictionary<(EntityUid Root, string ProtoId), int> exec
+        out Dictionary<(EntityUid Root, string ProtoId), int> exec,
+        out ClaimAttemptResult fail
     )
     {
         exec = new Dictionary<(EntityUid Root, string ProtoId), int>();
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
         if (ctx.RequiredByKey.Count == 0)
+        {
+            fail = ClaimAttemptResult.Fail(ClaimFailureReason.NoValidTargets, "RequiredByKey is empty.");
             return false;
+        }
 
         var orderedKeys = OrderClaimKeys(ctx.RequiredByKey.Keys);
         var plan = new List<ClaimSlice>(ctx.RequiredByKey.Count * 2);
@@ -42,9 +47,10 @@ public sealed partial class NcContractSystem : EntitySystem
 
             if (ctx.Crate is not { } crate || !Exists(crate) || ctx.CrateSnap == null)
             {
-                Sawmill.Error(
-                    $"[Claim] Missing {need}x {protoId} but pulled closed crate is missing/invalid. " +
-                    $"Contract on {ToPrettyString(ctx.Store)}.");
+                fail = ClaimAttemptResult.Fail(
+                    ClaimFailureReason.MissingCrate,
+                    $"Missing {need}x {protoId} (mode={matchMode}) and pulled closed crate is missing/invalid."
+                );
                 return false;
             }
 
@@ -64,9 +70,10 @@ public sealed partial class NcContractSystem : EntitySystem
 
             if (need > 0)
             {
-                Sawmill.Error(
-                    $"[Claim] Reserve failed: still need {need}x {protoId} (mode={matchMode}). " +
-                    $"Store={ToPrettyString(ctx.Store)}.");
+                fail = ClaimAttemptResult.Fail(
+                    ClaimFailureReason.ReservationFailed,
+                    $"Reserve failed: still need {need}x {protoId} (mode={matchMode})."
+                );
                 return false;
             }
         }
@@ -78,7 +85,13 @@ public sealed partial class NcContractSystem : EntitySystem
                 exec[k] = checked(exec[k] + s.Amount);
         }
 
-        return exec.Count > 0;
+        if (exec.Count <= 0)
+        {
+            fail = ClaimAttemptResult.Fail(ClaimFailureReason.ReservationFailed, "Execution plan is empty.");
+            return false;
+        }
+
+        return true;
     }
 
     private List<(string ProtoId, PrototypeMatchMode MatchMode)> OrderClaimKeys(

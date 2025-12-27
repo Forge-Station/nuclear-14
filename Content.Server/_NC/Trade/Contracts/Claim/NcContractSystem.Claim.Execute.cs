@@ -6,9 +6,12 @@ public sealed partial class NcContractSystem : EntitySystem
 {
     private bool TryExecuteClaimBatches(
         ClaimContext ctx,
-        Dictionary<(EntityUid Root, string ProtoId), int> exec
+        Dictionary<(EntityUid Root, string ProtoId), int> exec,
+        out ClaimAttemptResult fail
     )
     {
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+
         foreach (var ((root, protoId), amount) in exec)
         {
             if (amount <= 0)
@@ -22,32 +25,33 @@ public sealed partial class NcContractSystem : EntitySystem
 
             if (items != null)
             {
-                if (!_logic._inventory.TryTakeProductUnitsFromCachedList(
+                if (!_logic.TryTakeProductUnitsFromCachedList(
                     root,
                     items,
                     protoId,
                     amount,
                     PrototypeMatchMode.Exact))
                 {
-                    Sawmill.Error(
-                        $"[Claim] Take failed for {amount}x {protoId} from {ToPrettyString(root)}. Aborting claim.");
+                    fail = ClaimAttemptResult.Fail(
+                        ClaimFailureReason.ExecutionFailed,
+                        $"Take failed for {amount}x {protoId} from {ToPrettyString(root)} (cached list)."
+                    );
                     return false;
                 }
 
                 continue;
             }
 
-            if (!_logic._inventory.TryTakeProductUnitsFromRootCached(root, protoId, amount, PrototypeMatchMode.Exact))
-            {
-                Sawmill.Error(
-                    $"[Claim] Take fallback failed for {amount}x {protoId} from {ToPrettyString(root)}. Aborting claim.");
-                return false;
-            }
+            fail = ClaimAttemptResult.Fail(
+                ClaimFailureReason.ExecutionFailed,
+                $"Unexpected root {ToPrettyString(root)} for {amount}x {protoId}."
+            );
+            return false;
         }
 
-        _logic._inventory.InvalidateInventoryCache(ctx.User);
+        _logic.InvalidateInventoryCache(ctx.User);
         if (ctx.Crate is { } c)
-            _logic._inventory.InvalidateInventoryCache(c);
+            _logic.InvalidateInventoryCache(c);
 
         for (var i = 0; i < ctx.Contract.Targets.Count; i++)
         {

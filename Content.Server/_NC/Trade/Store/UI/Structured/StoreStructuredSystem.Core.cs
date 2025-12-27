@@ -295,8 +295,12 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         _watchByStore[storeUid] = (user, crate);
         AddWatchedRoot(user, storeUid);
+        _logic.InvalidateInventoryCache(user);
         if (crate is { } c)
+        {
             AddWatchedRoot(c, storeUid);
+            _logic.InvalidateInventoryCache(c);
+        }
     }
 
     private void UnregisterStoreWatch(EntityUid storeUid)
@@ -491,9 +495,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         EntityUid crate = default;
         if (_logic.TryGetPulledClosedCrate(user, out crate))
             _logic.InvalidateInventoryCache(crate);
-        var userSnap = _logic._inventory.BuildInventorySnapshot(user);
+        var userSnap = _logic.BuildInventorySnapshot(user);
         if (crate != default)
-            crateSnap = _logic._inventory.BuildInventorySnapshot(crate);
+            crateSnap = _logic.BuildInventorySnapshot(crate);
 
         UpdateContractsProgress(comp, userSnap, crateSnap);
     }
@@ -506,7 +510,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
     private bool TryPickUiCurrencyAndPrice(
         NcStoreComponent comp,
-        StoreListingPrototype listing,
+        NcStoreListingDef listing,
         out string currencyId,
         out int price
     )
@@ -588,15 +592,39 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             rewards
         );
     }
-
-
     private sealed class DynamicScratch
     {
+        private readonly DynamicStateBuffer[] _buffers = { new(), new() };
+        private int _activeIndex;
+
+        public DynamicStateBuffer GetWriteBuffer()
+        {
+            return _buffers[1 - _activeIndex];
+        }
+
+        public void Commit()
+        {
+            _activeIndex = 1 - _activeIndex;
+        }
+    }
+
+    private sealed class DynamicStateBuffer
+    {
         public readonly Dictionary<string, int> BalancesByCurrency = new();
-        public readonly List<ContractClientData> Contracts = new();
-        public readonly Dictionary<string, int> CrateTotals = new();
-        public readonly Dictionary<string, int> CrateUnitsById = new();
-        public readonly Dictionary<string, int> OwnedById = new();
         public readonly Dictionary<string, int> RemainingById = new();
+        public readonly Dictionary<string, int> OwnedById = new();
+        public readonly Dictionary<string, int> CrateUnitsById = new();
+        public readonly Dictionary<string, int> CrateTotals = new();
+        public readonly List<ContractClientData> Contracts = new();
+
+        public void Clear()
+        {
+            BalancesByCurrency.Clear();
+            RemainingById.Clear();
+            OwnedById.Clear();
+            CrateUnitsById.Clear();
+            CrateTotals.Clear();
+            Contracts.Clear();
+        }
     }
 }

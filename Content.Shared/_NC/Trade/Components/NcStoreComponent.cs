@@ -22,10 +22,10 @@ public sealed partial class NcStoreComponent : Component
     [DataField("currencyWhitelist")]
     public List<string> CurrencyWhitelist { get; set; } = new();
 
-    public List<StoreListingPrototype> Listings { get; set; } = new();
+    public List<NcStoreListingDef> Listings { get; set; } = new();
 
     [ViewVariables]
-    public Dictionary<StoreListingKey, StoreListingPrototype> ListingIndex { get; } = new();
+    public Dictionary<StoreListingKey, NcStoreListingDef> ListingIndex { get; } = new();
 
     [DataField("preset")]
     public string? LegacyPreset { get; set; }

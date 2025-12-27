@@ -8,6 +8,25 @@ public sealed partial class NcContractSystem : EntitySystem
 {
     private readonly record struct ClaimSlice(EntityUid Root, string ProtoId, int Amount);
 
+    private enum ClaimFailureReason : byte
+    {
+        None = 0,
+        StoreMissing,
+        ContractMissing,
+        NoValidTargets,
+        InvalidTarget,
+        NotEnoughItems,
+        MissingCrate,
+        ReservationFailed,
+        ExecutionFailed,
+    }
+
+    private readonly record struct ClaimAttemptResult(bool Success, ClaimFailureReason Reason, string? Details)
+    {
+        public static ClaimAttemptResult Ok() => new(true, ClaimFailureReason.None, null);
+        public static ClaimAttemptResult Fail(ClaimFailureReason reason, string? details = null) => new(false, reason, details);
+    }
+
     private readonly record struct PoolEntry(ContractRewardDef Def, string Key);
 
     private enum QuasiKeyKind : byte

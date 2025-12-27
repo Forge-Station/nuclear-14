@@ -132,7 +132,7 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
                 var id = AllocateDeterministicId(baseId, ctx);
 
-                var listing = new StoreListingPrototype
+                var listing = new NcStoreListingDef
                 {
                     Id = id,
                     ProductEntity = entry.Proto,

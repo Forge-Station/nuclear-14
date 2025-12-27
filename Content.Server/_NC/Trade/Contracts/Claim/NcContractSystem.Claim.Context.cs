@@ -17,26 +17,33 @@ public sealed partial class NcContractSystem : EntitySystem
         NcInventorySnapshot? CrateSnap,
         List<EntityUid>? CrateItems);
 
-    private bool TryPrepareClaimContext(EntityUid store, EntityUid user, string contractId, out ClaimContext ctx)
+    private bool TryPrepareClaimContext(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        out ClaimContext ctx,
+        out ClaimAttemptResult fail
+    )
     {
         ctx = default;
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
         if (!TryComp(store, out NcStoreComponent? comp))
         {
-            Sawmill.Warning($"[Claim] Store {ToPrettyString(store)} has no NcStoreComponent.");
+            fail = ClaimAttemptResult.Fail(ClaimFailureReason.StoreMissing, $"Store {ToPrettyString(store)} has no NcStoreComponent.");
             return false;
         }
 
         if (!comp.Contracts.TryGetValue(contractId, out var contract))
         {
-            Sawmill.Warning($"[Claim] Store {ToPrettyString(store)} has no contract '{contractId}'.");
+            fail = ClaimAttemptResult.Fail(ClaimFailureReason.ContractMissing, $"Store {ToPrettyString(store)} has no contract '{contractId}'.");
             return false;
         }
 
         var targets = GetEffectiveTargets(contract);
         if (targets.Count == 0)
         {
-            Sawmill.Warning($"[Claim] Contract '{contractId}' on {ToPrettyString(store)} has no valid targets.");
+            fail = ClaimAttemptResult.Fail(ClaimFailureReason.NoValidTargets, $"Contract '{contractId}' has no valid targets.");
             return false;
         }
 
@@ -45,7 +52,7 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             if (string.IsNullOrWhiteSpace(t.TargetItem) || t.Required <= 0)
             {
-                Sawmill.Warning($"[Claim] Contract '{contractId}' on {ToPrettyString(store)} has invalid target '{t.TargetItem}'.");
+                fail = ClaimAttemptResult.Fail(ClaimFailureReason.InvalidTarget, $"Invalid target '{t.TargetItem}' (required={t.Required}).");
                 return false;
             }
 
@@ -54,7 +61,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 requiredByKey[key] = checked(requiredByKey[key] + t.Required);
         }
 
-        _logic._inventory.ScanInventory(user, _scratchUserItems, _scratchUserSnap);
+        _logic.ScanInventory(user, _scratchUserItems, _scratchUserSnap);
         var userSnap = _scratchUserSnap;
 
         EntityUid? crateEntity = null;
@@ -65,7 +72,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (crateUid is { } c0 && Exists(c0))
         {
             crateEntity = c0;
-            _logic._inventory.ScanInventory(c0, _scratchCrateItems, _scratchCrateSnap);
+            _logic.ScanInventory(c0, _scratchCrateItems, _scratchCrateSnap);
             crateSnap = _scratchCrateSnap;
             crateItems = _scratchCrateItems;
         }
@@ -75,17 +82,18 @@ public sealed partial class NcContractSystem : EntitySystem
             var (protoId, matchMode) = kvp.Key;
             var required = kvp.Value;
 
-            var ownedUser = _logic._inventory.GetOwnedFromSnapshot(userSnap, protoId, matchMode);
+            var ownedUser = _logic.GetOwnedFromSnapshot(userSnap, protoId, matchMode);
 
             var ownedCrate = crateSnap != null
-                ? _logic._inventory.GetOwnedFromSnapshot(crateSnap, protoId, matchMode)
+                ? _logic.GetOwnedFromSnapshot(crateSnap, protoId, matchMode)
                 : 0;
 
             if (ownedUser + ownedCrate < required)
             {
-                Sawmill.Info(
-                    $"[Claim] Not enough items for '{contractId}': need {required}x {protoId} (mode={matchMode}), " +
-                    $"have user={ownedUser}, crate={ownedCrate} on {ToPrettyString(store)}.");
+                fail = ClaimAttemptResult.Fail(
+                    ClaimFailureReason.NotEnoughItems,
+                    $"need {required}x {protoId} (mode={matchMode}), have user={ownedUser}, crate={ownedCrate}"
+                );
                 return false;
             }
         }

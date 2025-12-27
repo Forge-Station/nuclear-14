@@ -4,16 +4,32 @@ public sealed partial class NcContractSystem : EntitySystem
 {
     public bool TryClaim(EntityUid store, EntityUid user, string contractId)
     {
-        if (!TryPrepareClaimContext(store, user, contractId, out var ctx))
-            return false;
+        var res = TryClaimDetailed(store, user, contractId);
+        if (!res.Success)
+        {
+            // Keep this at Debug/Info level: claim failures can be user-driven (not enough items).
+            // Raising this to Warning/Error will spam logs.
+            if (res.Reason is ClaimFailureReason.NotEnoughItems or ClaimFailureReason.NoValidTargets)
+                Sawmill.Info($"[Claim] Failed ({res.Reason}) '{contractId}' on {ToPrettyString(store)}: {res.Details}");
+            else
+                Sawmill.Warning($"[Claim] Failed ({res.Reason}) '{contractId}' on {ToPrettyString(store)}: {res.Details}");
+        }
 
-        if (!TryBuildClaimExecutionBatches(ctx, out var exec))
-            return false;
+        return res.Success;
+    }
 
-        if (!TryExecuteClaimBatches(ctx, exec))
-            return false;
+    private ClaimAttemptResult TryClaimDetailed(EntityUid store, EntityUid user, string contractId)
+    {
+        if (!TryPrepareClaimContext(store, user, contractId, out var ctx, out var prepFail))
+            return prepFail;
+
+        if (!TryBuildClaimExecutionBatches(ctx, out var exec, out var planFail))
+            return planFail;
+
+        if (!TryExecuteClaimBatches(ctx, exec, out var execFail))
+            return execFail;
 
         FinalizeClaim(ctx, contractId);
-        return true;
+        return ClaimAttemptResult.Ok();
     }
 }

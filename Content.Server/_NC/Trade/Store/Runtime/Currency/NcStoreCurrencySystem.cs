@@ -18,7 +18,7 @@ public sealed class NcStoreCurrencySystem : EntitySystem
 
     public bool TryPickCurrencyForBuy(
         NcStoreComponent store,
-        StoreListingPrototype listing,
+        NcStoreListingDef listing,
         in NcInventorySnapshot snapshot,
         out string currency,
         out int unitPrice,
@@ -91,7 +91,7 @@ public sealed class NcStoreCurrencySystem : EntitySystem
 
     public bool TryPickCurrencyForSell(
         NcStoreComponent store,
-        StoreListingPrototype listing,
+        NcStoreListingDef listing,
         out string currency,
         out int unitPrice
     )

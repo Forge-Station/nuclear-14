@@ -248,7 +248,7 @@ public sealed partial class NcStoreLogicSystem
     }
 
     public readonly record struct MassSellStep(
-        StoreListingPrototype Listing,
+        NcStoreListingDef Listing,
         string CurrencyId,
         int UnitPrice,
         int Count);
