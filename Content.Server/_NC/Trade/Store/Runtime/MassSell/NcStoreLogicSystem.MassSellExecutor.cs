@@ -4,31 +4,19 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcStoreLogicSystem
 {
-    // ==============================================================
-    // Mass Sell – Execution (world mutations)
-    // ==============================================================
-
-    public bool TryMassSellFromContainer(
-        EntityUid machine,
-        NcStoreComponent store,
-        EntityUid user,
-        EntityUid container
-    )
+    public bool TryMassSellFromContainer(EntityUid machine, NcStoreComponent store, EntityUid user, EntityUid container)
     {
         if (store.Listings.Count == 0)
             return false;
 
-        InvalidateInventoryCache(container);
+        _inventory.InvalidateInventoryCache(container);
+        _scratchCurrencyCandidates.Clear();
+        var items = new List<EntityUid>();
 
-        _scratchItems.Clear();
-        var cached = GetOrBuildDeepItemsCacheCompacted(container);
+        var cached = _inventory.GetOrBuildDeepItemsCacheCompacted(container);
+        items.AddRange(cached);
 
-        foreach (var item in cached)
-            _scratchItems.Add(item);
-
-        var cachedItems = _scratchItems;
-
-        var plan = ComputeMassSellPlanFromCachedItems(store, container, cachedItems);
+        var plan = ComputeMassSellPlanFromCachedItems(store, container, items);
         if (plan.Steps.Count == 0 || plan.IncomeByCurrency.Count == 0)
             return false;
 
@@ -37,29 +25,24 @@ public sealed partial class NcStoreLogicSystem
 
         foreach (var step in plan.Steps)
         {
-            if (step.Count <= 0 ||
-                step.UnitPrice <= 0 ||
-                string.IsNullOrWhiteSpace(step.CurrencyId) ||
+            if (step.Count <= 0 || step.UnitPrice <= 0 || string.IsNullOrWhiteSpace(step.CurrencyId) ||
                 string.IsNullOrWhiteSpace(step.Listing.ProductEntity))
                 continue;
 
             var listing = step.Listing;
-
             var remaining = listing.RemainingCount;
             if (remaining < -1)
                 remaining = -1;
-
             var maxByRemaining = remaining >= 0 ? remaining : int.MaxValue;
             if (maxByRemaining <= 0)
                 continue;
-
             var take = Math.Min(step.Count, maxByRemaining);
             if (take <= 0)
                 continue;
 
-            if (!TryTakeProductUnitsFromCachedList(
+            if (!_inventory.TryTakeProductUnitsFromCachedList(
                 container,
-                cachedItems,
+                items,
                 listing.ProductEntity,
                 take,
                 listing.MatchMode))
@@ -70,7 +53,6 @@ public sealed partial class NcStoreLogicSystem
 
             var total = (long) step.UnitPrice * take;
             SafeAddIncome(incomeActual, step.CurrencyId, total);
-
             any = true;
         }
 
@@ -81,13 +63,11 @@ public sealed partial class NcStoreLogicSystem
         {
             if (amount <= 0)
                 continue;
-
             GiveCurrency(user, currency, amount);
         }
 
-        InvalidateInventoryCache(container);
-        InvalidateInventoryCache(user);
-
+        _inventory.InvalidateInventoryCache(container);
+        _inventory.InvalidateInventoryCache(user);
         return true;
     }
 }

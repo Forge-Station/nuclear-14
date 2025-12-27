@@ -19,9 +19,9 @@ public sealed partial class NcContractSystem : EntitySystem
     private readonly Dictionary<QuasiKey, double> _quasiPhase = new();
     [Dependency] private readonly IRobustRandom _random = default!;
     private readonly List<EntityUid> _scratchCrateItems = new();
-    private readonly NcStoreLogicSystem.InventorySnapshot _scratchCrateSnap = new();
+    private readonly NcInventorySnapshot _scratchCrateSnap = new();
     private readonly List<EntityUid> _scratchUserItems = new();
-    private readonly NcStoreLogicSystem.InventorySnapshot _scratchUserSnap = new();
+    private readonly NcInventorySnapshot _scratchUserSnap = new();
 
     public override void Initialize()
     {

@@ -22,7 +22,12 @@ public sealed partial class NcContractSystem : EntitySystem
 
             if (items != null)
             {
-                if (!_logic.TryTakeProductUnitsFromCachedItems(root, items, protoId, amount, PrototypeMatchMode.Exact))
+                if (!_logic._inventory.TryTakeProductUnitsFromCachedList(
+                    root,
+                    items,
+                    protoId,
+                    amount,
+                    PrototypeMatchMode.Exact))
                 {
                     Sawmill.Error(
                         $"[Claim] Take failed for {amount}x {protoId} from {ToPrettyString(root)}. Aborting claim.");
@@ -32,16 +37,17 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
             }
 
-            if (!_logic.TryTakeProductUnitsFromRootCached(root, protoId, amount, PrototypeMatchMode.Exact))
+            if (!_logic._inventory.TryTakeProductUnitsFromRootCached(root, protoId, amount, PrototypeMatchMode.Exact))
             {
-                Sawmill.Error($"[Claim] Take fallback failed for {amount}x {protoId} from {ToPrettyString(root)}. Aborting claim.");
+                Sawmill.Error(
+                    $"[Claim] Take fallback failed for {amount}x {protoId} from {ToPrettyString(root)}. Aborting claim.");
                 return false;
             }
         }
 
-        _logic.InvalidateInventoryCache(ctx.User);
+        _logic._inventory.InvalidateInventoryCache(ctx.User);
         if (ctx.Crate is { } c)
-            _logic.InvalidateInventoryCache(c);
+            _logic._inventory.InvalidateInventoryCache(c);
 
         for (var i = 0; i < ctx.Contract.Targets.Count; i++)
         {

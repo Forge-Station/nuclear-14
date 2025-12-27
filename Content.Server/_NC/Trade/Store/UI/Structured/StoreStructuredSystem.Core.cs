@@ -27,27 +27,23 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     [Dependency] private readonly AudioSystem _audio = default!;
     private readonly Dictionary<EntityUid, (int Revision, List<StoreListingStaticData> List)> _catalogCache = new();
     [Dependency] private readonly NcContractSystem _contracts = default!;
-    private readonly NcStoreLogicSystem.InventorySnapshot _crateSnapScratch = new();
+    private readonly NcInventorySnapshot _crateSnapScratch = new();
     private readonly List<EntityUid> _deepCrateItemsScratch = new();
     private readonly List<EntityUid> _deepUserItemsScratch = new();
     private readonly HashSet<EntityUid> _dirtyStores = new();
-
     private readonly List<EntityUid> _dirtyStoresScratch = new();
-
     private readonly Dictionary<EntityUid, DynamicScratch> _dynamicScratchByStore = new();
     [Dependency] private readonly StoreSystemStructuredLoader _loader = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     private readonly List<EntityUid> _openStoresScratch = new();
     private readonly HashSet<EntityUid> _openStoreUids = new();
     private readonly HashSet<EntityUid> _pendingRefreshEntities = new();
-
     [Dependency] private readonly PopupSystem _popups = default!;
     private readonly Dictionary<EntityUid, HashSet<EntityUid>> _storesByWatchedRoot = new();
     [Dependency] private readonly NcStoreSystem _storeSystem = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
-    private readonly NcStoreLogicSystem.InventorySnapshot _userSnapScratch = new();
-
+    private readonly NcInventorySnapshot _userSnapScratch = new();
     private readonly Dictionary<EntityUid, (EntityUid User, EntityUid? Crate)> _watchByStore = new();
 
     [Dependency] private readonly SharedTransformSystem _xform = default!;
@@ -494,15 +490,13 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
 
         _logic.InvalidateInventoryCache(user);
-
-        NcStoreLogicSystem.InventorySnapshot? crateSnap = null;
+        NcInventorySnapshot? crateSnap = null;
         EntityUid crate = default;
         if (_logic.TryGetPulledClosedCrate(user, out crate))
             _logic.InvalidateInventoryCache(crate);
-
-        var userSnap = _logic.BuildInventorySnapshot(user);
+        var userSnap = _logic._inventory.BuildInventorySnapshot(user);
         if (crate != default)
-            crateSnap = _logic.BuildInventorySnapshot(crate);
+            crateSnap = _logic._inventory.BuildInventorySnapshot(crate);
 
         UpdateContractsProgress(comp, userSnap, crateSnap);
     }

@@ -110,7 +110,7 @@ public sealed partial class NcContractSystem : EntitySystem
     }
 
     private int ReserveFromSnapshot(
-        NcStoreLogicSystem.InventorySnapshot snap,
+        NcInventorySnapshot snap,
         string targetProtoId,
         PrototypeMatchMode matchMode,
         int need,
@@ -193,7 +193,7 @@ public sealed partial class NcContractSystem : EntitySystem
         return takenTotal;
     }
 
-    private void ApplyReservationExact(NcStoreLogicSystem.InventorySnapshot snap, string exactProtoId, int take)
+    private void ApplyReservationExact(NcInventorySnapshot snap, string exactProtoId, int take)
     {
         if (take <= 0)
             return;

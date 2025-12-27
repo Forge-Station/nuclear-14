@@ -12,9 +12,9 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData Contract,
         List<ContractTargetServerData> Targets,
         Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> RequiredByKey,
-        NcStoreLogicSystem.InventorySnapshot UserSnap,
+        NcInventorySnapshot UserSnap,
         List<EntityUid> UserItems,
-        NcStoreLogicSystem.InventorySnapshot? CrateSnap,
+        NcInventorySnapshot? CrateSnap,
         List<EntityUid>? CrateItems);
 
     private bool TryPrepareClaimContext(EntityUid store, EntityUid user, string contractId, out ClaimContext ctx)
@@ -54,33 +54,34 @@ public sealed partial class NcContractSystem : EntitySystem
                 requiredByKey[key] = checked(requiredByKey[key] + t.Required);
         }
 
-        // Build deep lists + snapshots exactly once per root.
-        _logic.InvalidateInventoryCache(user);
-        _logic.ScanInventory(user, _scratchUserItems, _scratchUserSnap);
+        _logic._inventory.InvalidateInventoryCache(user);
+        _logic._inventory.ScanInventory(user, _scratchUserItems, _scratchUserSnap);
         var userSnap = _scratchUserSnap;
 
         EntityUid? crateEntity = null;
-        NcStoreLogicSystem.InventorySnapshot? crateSnap = null;
+        NcInventorySnapshot? crateSnap = null;
         List<EntityUid>? crateItems = null;
 
         var crateUid = _logic.GetPulledClosedCrate(user);
         if (crateUid is { } c0 && Exists(c0))
         {
             crateEntity = c0;
-            _logic.InvalidateInventoryCache(c0);
-            _logic.ScanInventory(c0, _scratchCrateItems, _scratchCrateSnap);
+            _logic._inventory.InvalidateInventoryCache(c0);
+            _logic._inventory.ScanInventory(c0, _scratchCrateItems, _scratchCrateSnap);
             crateSnap = _scratchCrateSnap;
             crateItems = _scratchCrateItems;
         }
 
-        // Validate sufficiency using snapshots (no mutations).
         foreach (var kvp in requiredByKey)
         {
             var (protoId, matchMode) = kvp.Key;
             var required = kvp.Value;
 
-            var ownedUser = _logic.GetOwnedFromSnapshot(userSnap, protoId, matchMode);
-            var ownedCrate = crateSnap != null ? _logic.GetOwnedFromSnapshot(crateSnap, protoId, matchMode) : 0;
+            var ownedUser = _logic._inventory.GetOwnedFromSnapshot(userSnap, protoId, matchMode);
+
+            var ownedCrate = crateSnap != null
+                ? _logic._inventory.GetOwnedFromSnapshot(crateSnap, protoId, matchMode)
+                : 0;
 
             if (ownedUser + ownedCrate < required)
             {
@@ -90,7 +91,6 @@ public sealed partial class NcContractSystem : EntitySystem
                 return false;
             }
         }
-
         ctx = new ClaimContext(
             store,
             user,

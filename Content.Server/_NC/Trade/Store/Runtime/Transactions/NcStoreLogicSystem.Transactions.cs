@@ -1,7 +1,9 @@
 using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcStoreLogicSystem
 {
@@ -14,32 +16,40 @@ public sealed partial class NcStoreLogicSystem
         if (!_protos.TryIndex<EntityPrototype>(listing.ProductEntity, out var proto))
             return false;
 
-        InvalidateInventoryCache(user);
-        var snap = BuildInventorySnapshot(user);
+        _inventory.InvalidateInventoryCache(user);
+
+        // Используем новую систему
+        var snap = _inventory.BuildInventorySnapshot(user);
 
         if (!TryPickCurrencyForBuy(store, listing, snap, out var currency, out var unitPrice, out var balance))
             return false;
+
         var maxByRemaining = listing.RemainingCount >= 0 ? listing.RemainingCount : int.MaxValue;
         var maxByMoney = unitPrice > 0 ? balance / unitPrice : int.MaxValue;
 
         var maxPossible = Math.Min(maxByRemaining, maxByMoney);
         if (maxPossible <= 0)
             return false;
-        var actual = Math.Min(count, maxPossible);
 
+        var actual = Math.Min(count, maxPossible);
         var totalPriceL = (long) unitPrice * actual;
         if (totalPriceL > int.MaxValue)
             return false;
+
         var totalPrice = (int) totalPriceL;
         if (!TryTakeCurrency(user, currency, totalPrice))
             return false;
+
         var spawnedTotal = SpawnPurchasedProduct(user, listing.ProductEntity, proto, actual, unitPrice, currency);
 
-        InvalidateInventoryCache(user);
+        _inventory.InvalidateInventoryCache(user);
+
         if (spawnedTotal <= 0)
             return false;
+
         if (listing.RemainingCount > 0)
             listing.RemainingCount = Math.Max(0, listing.RemainingCount - spawnedTotal);
+
         Sawmill.Info($"TryBuy: OK {listing.ProductEntity} x{spawnedTotal} for {unitPrice} {currency} each");
         return true;
     }
@@ -62,11 +72,9 @@ public sealed partial class NcStoreLogicSystem
     {
         if (store == null)
             return false;
-
         return TrySellScenario(listingId, store, user, container, count, out var sold) &&
             LogSellFromContainer(sold, listingId, store, container);
     }
-
 
     private bool TrySellScenario(
         string listingId,
@@ -86,31 +94,35 @@ public sealed partial class NcStoreLogicSystem
             return false;
         if (!TryPickCurrencyForSell(store, listing, out var currency, out var unitPrice) || unitPrice <= 0)
             return false;
-        if (root == user)
-            InvalidateInventoryCache(user);
-        else
-            InvalidateInventoryCache(root);
-        var owned = root == user
-            ? GetOwned(user, listing.ProductEntity, listing.MatchMode)
-            : GetOwnedInRoot(root, listing.ProductEntity, listing.MatchMode);
-        var maxByRemaining = listing.RemainingCount >= 0 ? listing.RemainingCount : int.MaxValue;
 
+        _inventory.InvalidateInventoryCache(root);
+
+        // Считаем через новую систему
+        var snap = _inventory.BuildInventorySnapshot(root);
+        var owned = _inventory.GetOwnedFromSnapshot(snap, listing.ProductEntity, listing.MatchMode);
+
+        var maxByRemaining = listing.RemainingCount >= 0 ? listing.RemainingCount : int.MaxValue;
         var maxPossible = Math.Min(owned, maxByRemaining);
         if (maxPossible <= 0)
             return false;
-        var actual = Math.Min(count, maxPossible);
-        var ok = TryTakeProductUnitsFromRootCached(root, listing.ProductEntity, actual, listing.MatchMode);
 
+        var actual = Math.Min(count, maxPossible);
+
+        // Забираем через новую систему
+        var ok = _inventory.TryTakeProductUnitsFromRootCached(root, listing.ProductEntity, actual, listing.MatchMode);
         if (!ok)
             return false;
+
         var totalL = (long) unitPrice * actual;
         if (totalL > int.MaxValue)
             return false;
+
         GiveCurrency(user, currency, (int) totalL);
 
-        InvalidateInventoryCache(user);
+        _inventory.InvalidateInventoryCache(user);
         if (root != user)
-            InvalidateInventoryCache(root);
+            _inventory.InvalidateInventoryCache(root);
+
         if (listing.RemainingCount > 0)
             listing.RemainingCount = Math.Max(0, listing.RemainingCount - actual);
         sold = actual;
@@ -135,12 +147,7 @@ public sealed partial class NcStoreLogicSystem
         return true;
     }
 
-    public bool TryExchange(
-        string listingId,
-        EntityUid machine,
-        NcStoreComponent? store,
-        EntityUid user
-    )
+    public bool TryExchange(string listingId, EntityUid machine, NcStoreComponent? store, EntityUid user)
     {
         if (store == null || store.Listings.Count == 0)
             return false;
@@ -150,31 +157,36 @@ public sealed partial class NcStoreLogicSystem
             return false;
         if (string.IsNullOrEmpty(listing.ProductEntity))
             return false;
-        var requiredCount = listing.RemainingCount > 0
-            ? listing.RemainingCount
-            : 1;
+
+        var requiredCount = listing.RemainingCount > 0 ? listing.RemainingCount : 1;
         if (requiredCount <= 0)
             return false;
 
-        InvalidateInventoryCache(user);
-        var owned = GetOwned(user, listing.ProductEntity, listing.MatchMode);
+        _inventory.InvalidateInventoryCache(user);
+
+        var snap = _inventory.BuildInventorySnapshot(user);
+        var owned = _inventory.GetOwnedFromSnapshot(snap, listing.ProductEntity, listing.MatchMode);
+
         if (owned < requiredCount)
             return false;
-        if (!TryPickCurrencyForSell(store, listing, out var currencyId, out var rewardPerUnit) ||
-            rewardPerUnit <= 0)
+
+        if (!TryPickCurrencyForSell(store, listing, out var currencyId, out var rewardPerUnit) || rewardPerUnit <= 0)
             return false;
-        if (!TryTakeProductUnitsFromRootCached(user, listing.ProductEntity, requiredCount, listing.MatchMode))
+
+        if (!_inventory.TryTakeProductUnitsFromRootCached(
+            user,
+            listing.ProductEntity,
+            requiredCount,
+            listing.MatchMode))
             return false;
 
         var totalRewardL = (long) rewardPerUnit * requiredCount;
         if (totalRewardL > int.MaxValue)
             return false;
+
         GiveCurrency(user, currencyId, (int) totalRewardL);
-
-        InvalidateInventoryCache(user);
-
+        _inventory.InvalidateInventoryCache(user);
         listing.RemainingCount = 0;
-
         return true;
     }
 }

@@ -13,56 +13,25 @@ namespace Content.Server._NC.Trade;
 public sealed partial class NcStoreLogicSystem : EntitySystem
 {
     private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore-logic");
-
     private static readonly IComparer<string> OrdinalIds = new OrdinalIdComparer();
 
     [Dependency] private readonly IComponentFactory _compFactory = default!;
     [Dependency] private readonly EntityStorageSystem _entityStorage = default!;
-    [Dependency] private readonly IEntityManager _ents = default!;
+    [Dependency] public readonly IEntityManager _ents = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
-    private readonly Dictionary<string, int> _inheritanceDepthCache = new();
-    private readonly Dictionary<EntityUid, List<EntityUid>> _inventoryCache = new();
-    private readonly Dictionary<string, string?> _productStackTypeCache = new();
-    private readonly Dictionary<string, string[]> _protoAndAncestorsCache = new();
-
-    [Dependency] private readonly IPrototypeManager _protos = default!;
-    private readonly List<EntityUid> _scratchItems = new();
-    private readonly List<(EntityUid Ent, int Count)> _scratchCurrencyCandidates = new();
-    private readonly Queue<EntityUid> _scratchQueue = new();
-    private readonly List<EntityUid> _scratchResult = new();
-    private readonly HashSet<EntityUid> _scratchVisited = new();
-    [Dependency] private readonly SharedStackSystem _stacks = default!;
-
+    [Dependency] public readonly NcStoreInventorySystem _inventory = default!;
+    [Dependency] public readonly IPrototypeManager _protos = default!;
+    public readonly List<(EntityUid Ent, int Count)> _scratchCurrencyCandidates = new();
+    [Dependency] public readonly SharedStackSystem _stacks = default!;
 
     public override void Initialize()
     {
         base.Initialize();
-
         InitializeServices();
-
-        _protos.PrototypesReloaded += OnPrototypesReloaded;
-        SubscribeLocalEvent<EntityTerminatingEvent>(OnEntityTerminating);
     }
 
-    public override void Shutdown()
-    {
-        _protos.PrototypesReloaded -= OnPrototypesReloaded;
-        base.Shutdown();
-    }
-
-    private void OnEntityTerminating(ref EntityTerminatingEvent ev) => _inventoryCache.Remove(ev.Entity);
-
-    private void OnPrototypesReloaded(PrototypesReloadedEventArgs ev)
-    {
-        _productStackTypeCache.Clear();
-        _protoAndAncestorsCache.Clear();
-        _inventoryCache.Clear();
-        _inheritanceDepthCache.Clear();
-    }
-
-    public void ResetFrameCache() => _inventoryCache.Clear();
-
-    public void InvalidateInventoryCache(EntityUid root) => _inventoryCache.Remove(root);
+    public void ResetFrameCache() => _inventory.InvalidateAllCaches();
+    public void InvalidateInventoryCache(EntityUid root) => _inventory.InvalidateInventoryCache(root);
 
     public EntityUid? GetPulledClosedCrate(EntityUid user) =>
         TryGetPulledClosedCrate(user, out var crate) ? crate : null;
@@ -70,14 +39,12 @@ public sealed partial class NcStoreLogicSystem : EntitySystem
     public bool TryGetPulledClosedCrate(EntityUid user, out EntityUid crate)
     {
         crate = default;
-
         if (TryComp<HandsComponent>(user, out var hands))
         {
             foreach (var hand in hands.Hands.Values)
             {
                 if (hand.HeldEntity is not { } held)
                     continue;
-
                 if (TryComp<EntityStorageComponent>(held, out var storage) && !storage.Open)
                 {
                     crate = held;
@@ -88,10 +55,8 @@ public sealed partial class NcStoreLogicSystem : EntitySystem
 
         if (!TryComp(user, out PullerComponent? puller) || puller.Pulling is not { } pulled)
             return false;
-
         if (!TryComp<EntityStorageComponent>(pulled, out var pulledStorage) || pulledStorage.Open)
             return false;
-
         crate = pulled;
         return true;
     }

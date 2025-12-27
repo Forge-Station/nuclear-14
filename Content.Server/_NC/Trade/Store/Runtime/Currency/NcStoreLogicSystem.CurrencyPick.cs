@@ -7,11 +7,12 @@ public sealed partial class NcStoreLogicSystem
     private bool TryPickCurrencyForBuy(
         NcStoreComponent store,
         StoreListingPrototype listing,
-        in InventorySnapshot snapshot,
+        in NcInventorySnapshot snapshot,
         out string currency,
         out int unitPrice,
         out int balance
-    ){
+    )
+    {
         return _currencyService.TryPickCurrencyForBuy(store, listing, snapshot, out currency, out unitPrice, out balance);
     }
 

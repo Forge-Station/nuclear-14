@@ -4,6 +4,7 @@ using Content.Shared.Hands.Components;
 
 namespace Content.Server._NC.Trade;
 
+
 public sealed partial class NcStoreLogicSystem
 {
     public bool TrySpawnProduct(string protoId, EntityUid user)
@@ -39,8 +40,9 @@ public sealed partial class NcStoreLogicSystem
         {
             if (amount <= 0)
                 continue;
+            var snap = _inventory.BuildInventorySnapshot(root);
+            var available = _inventory.GetOwnedFromSnapshot(snap, protoId, PrototypeMatchMode.Exact);
 
-            var available = GetOwnedInRoot(root, protoId, PrototypeMatchMode.Exact);
             if (available < amount)
             {
                 Sawmill.Warning(
@@ -48,7 +50,6 @@ public sealed partial class NcStoreLogicSystem
                 return false;
             }
         }
-
         var grouped = new Dictionary<EntityUid, List<(string ProtoId, int Amount)>>();
         foreach (var ((root, protoId), amount) in plan)
         {
@@ -57,7 +58,7 @@ public sealed partial class NcStoreLogicSystem
 
             if (!grouped.TryGetValue(root, out var list))
             {
-                list = new List<(string ProtoId, int Amount)>();
+                list = new();
                 grouped[root] = list;
             }
 
@@ -66,22 +67,26 @@ public sealed partial class NcStoreLogicSystem
 
         foreach (var (root, reqs) in grouped)
         {
-            var cachedItems = GetOrBuildDeepItemsCacheCompacted(root);
+            var cachedItems = _inventory.GetOrBuildDeepItemsCacheCompacted(root);
 
             for (var i = 0; i < reqs.Count; i++)
             {
                 var (protoId, amount) = reqs[i];
-                if (!TryTakeProductUnitsFromCachedList(root, cachedItems, protoId, amount, PrototypeMatchMode.Exact))
+                if (!_inventory.TryTakeProductUnitsFromCachedList(
+                    root,
+                    cachedItems,
+                    protoId,
+                    amount,
+                    PrototypeMatchMode.Exact))
                 {
                     Sawmill.Error(
                         $"[NcStore] ExecuteContractBatch CRITICAL: Validation passed but take failed for {amount} of {protoId} from {ToPrettyString(root)}.");
-                    InvalidateInventoryCache(root);
+                    _inventory.InvalidateInventoryCache(root);
                     return false;
                 }
             }
 
-            CompactCachedItems(cachedItems);
-            InvalidateInventoryCache(root);
+            _inventory.InvalidateInventoryCache(root);
         }
 
         return true;

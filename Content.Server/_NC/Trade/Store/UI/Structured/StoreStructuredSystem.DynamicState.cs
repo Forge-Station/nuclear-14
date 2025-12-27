@@ -14,17 +14,14 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             crateUid = pulledCrate;
 
         UpdateStoreWatch(uid, user, crateUid);
-
-        // Build deep lists + snapshots exactly once per root (avoid double scans on big crates).
-        _logic.InvalidateInventoryCache(user);
-        _logic.ScanInventory(user, _deepUserItemsScratch, _userSnapScratch);
+        _logic._inventory.InvalidateInventoryCache(user);
+        _logic._inventory.ScanInventory(user, _deepUserItemsScratch, _userSnapScratch);
         var userSnap = _userSnapScratch;
-
-        NcStoreLogicSystem.InventorySnapshot? crateSnap = null;
+        NcInventorySnapshot? crateSnap = null;
         if (crateUid is { } crateEntity)
         {
-            _logic.InvalidateInventoryCache(crateEntity);
-            _logic.ScanInventory(crateEntity, _deepCrateItemsScratch, _crateSnapScratch);
+            _logic._inventory.InvalidateInventoryCache(crateEntity);
+            _logic._inventory.ScanInventory(crateEntity, _deepCrateItemsScratch, _crateSnapScratch);
             crateSnap = _crateSnapScratch;
         }
 
@@ -63,7 +60,10 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             scratch.RemainingById[l.Id] = l.RemainingCount;
 
             if (!string.IsNullOrWhiteSpace(l.ProductEntity))
-                scratch.OwnedById[l.Id] = _logic.GetOwnedFromSnapshot(userSnap, l.ProductEntity, l.MatchMode);
+            {
+                // ИСПРАВЛЕНО: GetOwnedFromSnapshot теперь в _inventory
+                scratch.OwnedById[l.Id] = _logic._inventory.GetOwnedFromSnapshot(userSnap, l.ProductEntity, l.MatchMode);
+            }
         }
 
         if (crateUid is { } crate)
@@ -81,6 +81,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         foreach (var c in comp.Contracts.Values)
             scratch.Contracts.Add(MapContractToClient(c));
+
         var balancesByCurrency = new Dictionary<string, int>(scratch.BalancesByCurrency);
         var remainingById = new Dictionary<string, int>(scratch.RemainingById);
         var ownedById = new Dictionary<string, int>(scratch.OwnedById);
@@ -139,7 +140,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             return;
 
         if (_pendingRefreshEntities.Add(changedRoot))
-            _logic.InvalidateInventoryCache(changedRoot);
+            _logic._inventory.InvalidateInventoryCache(changedRoot);
 
         if (_timing.CurTime < _nextCheck && _timing.CurTime >= _nextAccelAllowed)
         {
@@ -154,9 +155,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 if (_watchByStore.TryGetValue(s, out var watch))
                 {
                     if (watch.User != EntityUid.Invalid)
-                        _logic.InvalidateInventoryCache(watch.User);
+                        _logic._inventory.InvalidateInventoryCache(watch.User);
                     if (watch.Crate is { } crate)
-                        _logic.InvalidateInventoryCache(crate);
+                        _logic._inventory.InvalidateInventoryCache(crate);
                 }
 
                 MarkDirty(s);
@@ -217,8 +218,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
     private void UpdateContractsProgress(
         NcStoreComponent comp,
-        NcStoreLogicSystem.InventorySnapshot userSnap,
-        NcStoreLogicSystem.InventorySnapshot? crateSnap
+        NcInventorySnapshot UserSnap,
+        NcInventorySnapshot? CrateSnap
     )
     {
         if (comp.Contracts.Count == 0)
@@ -240,11 +241,10 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                         t.Progress = 0;
                         continue;
                     }
+                    var owned = _logic._inventory.GetOwnedFromSnapshot(UserSnap, t.TargetItem, t.MatchMode);
 
-                    var owned = _logic.GetOwnedFromSnapshot(userSnap, t.TargetItem, t.MatchMode);
-
-                    if (crateSnap != null)
-                        owned += _logic.GetOwnedFromSnapshot(crateSnap, t.TargetItem, t.MatchMode);
+                    if (CrateSnap != null)
+                        owned += _logic._inventory.GetOwnedFromSnapshot(CrateSnap, t.TargetItem, t.MatchMode);
 
                     var prog = Math.Min(owned, t.Required);
                     t.Progress = prog;
@@ -266,11 +266,10 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                     contract.Progress = 0;
                     continue;
                 }
+                var owned = _logic._inventory.GetOwnedFromSnapshot(UserSnap, contract.TargetItem, contract.MatchMode);
 
-                var owned = _logic.GetOwnedFromSnapshot(userSnap, contract.TargetItem, contract.MatchMode);
-
-                if (crateSnap != null)
-                    owned += _logic.GetOwnedFromSnapshot(crateSnap, contract.TargetItem, contract.MatchMode);
+                if (CrateSnap != null)
+                    owned += _logic._inventory.GetOwnedFromSnapshot(CrateSnap, contract.TargetItem, contract.MatchMode);
 
                 contract.Progress = Math.Min(owned, contract.Required);
             }
