@@ -3,11 +3,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls1="clr-namespace:Content.Client.UserInterface.Controls"
     xmlns:trade="clr-namespace:Content.Client._NC.Trade"
+    xmlns:controls="clr-namespace:Content.Client._NC.Trade.Controls"
     Title="{Loc 'nc-store-window-title'}"
     MinWidth="1100" MinHeight="720"
     StyleClasses="WindowLarge">
     <BoxContainer Orientation="Vertical" StyleClasses="PanelBackgroundBase">
-        <trade:NcStoreHeaderBar Name="Header"
+        <controls:NcStoreHeaderBar Name="Header"
                                Margin="4 4 4 0"
                                StyleClasses="PanelBackgroundBaseDark" />
 

@@ -1,0 +1,64 @@
+<PanelContainer xmlns="https://spacestation14.io"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:graphics="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
+                HorizontalExpand="True"
+                Margin="0"> <PanelContainer HorizontalExpand="True">
+        <PanelContainer.PanelOverride>
+            <graphics:StyleBoxFlat BackgroundColor="#141417E6"
+                                   BorderColor="#B08D3B"
+                                   BorderThickness="1"
+                                   Padding="10 8 10 8"/>
+        </PanelContainer.PanelOverride>
+
+        <BoxContainer Orientation="Vertical" SeparationOverride="4" HorizontalExpand="True">
+
+            <Label Name="TitleLabel"
+                   StyleClasses="LabelHeading"
+                   ClipText="True"
+                   HorizontalExpand="True"
+                   Margin="2 0 2 2"/>
+
+            <PanelContainer MinSize="0 1" Margin="0 0 0 6">
+                 <PanelContainer.PanelOverride>
+                     <graphics:StyleBoxFlat BackgroundColor="#B08D3B80"/>
+                 </PanelContainer.PanelOverride>
+            </PanelContainer>
+
+            <BoxContainer Orientation="Horizontal" SeparationOverride="6" HorizontalExpand="True">
+
+                <BoxContainer Orientation="Vertical" SeparationOverride="4" HorizontalExpand="False" MinWidth="96">
+                    <PanelContainer Name="IconSlotBackground"
+                                    MinSize="96 96"
+                                    MaxSize="96 96"
+                                    StyleClasses="InventorySlotBackground">
+                        <TextureRect Name="IconTexture" Stretch="KeepAspectCentered" Margin="2"/>
+                    </PanelContainer>
+                </BoxContainer>
+
+                <BoxContainer Orientation="Vertical" SeparationOverride="2" HorizontalExpand="True" VerticalExpand="False">
+                    <RichTextLabel Name="DescriptionLabel" HorizontalExpand="True" VerticalExpand="False" Margin="0 0 6 0"/>
+                </BoxContainer>
+
+                <BoxContainer Orientation="Vertical" SeparationOverride="4" HorizontalExpand="False" MinWidth="96">
+                    <BoxContainer Orientation="Horizontal" SeparationOverride="4" HorizontalExpand="False" HorizontalAlignment="Center">
+                        <Button Name="MinusButton" Text="-" MinSize="24 24"/>
+                        <Label Name="QtyLabel" MinWidth="28" HorizontalAlignment="Center"/>
+                        <LineEdit Name="QtyEdit" MinWidth="40" HorizontalExpand="False"/>
+                        <Button Name="PlusButton" Text="+" MinSize="24 24"/>
+                    </BoxContainer>
+
+                    <Button Name="PriceButton" MinSize="96 32" MaxSize="96 32" ClipText="True" StyleClasses="ButtonBig" Margin="8 0 0 0">
+                        <BoxContainer Orientation="Horizontal" SeparationOverride="6" HorizontalExpand="True" VerticalExpand="True" HorizontalAlignment="Center">
+                            <TextureRect Name="PriceCurrencyIcon" Stretch="KeepAspectCentered" MinSize="26 26" MaxSize="26 26" VerticalAlignment="Center" Margin="2 2 0 2"/>
+                            <Label Name="PriceLabel" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </BoxContainer>
+                    </Button>
+
+                    <Label Name="NoStockLabel" Visible="False" HorizontalAlignment="Center" Modulate="#C0C0C0" Margin="0 8 0 0"/>
+                    <Label Name="RemainingLabel" HorizontalAlignment="Center" Modulate="#C0C0C0" Margin="0 2 0 0"/>
+                    <Label Name="OwnedLabel" Visible="False" HorizontalAlignment="Center" Modulate="#C0C0C0" Margin="0 2 0 0"/>
+                </BoxContainer>
+            </BoxContainer>
+        </BoxContainer>
+    </PanelContainer>
+</PanelContainer>

@@ -8,7 +8,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
 
-namespace Content.Client._NC.Trade;
+namespace Content.Client._NC.Trade.Controls;
 
 
 public sealed class NcStoreHeaderBar : BoxContainer

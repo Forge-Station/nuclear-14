@@ -1,7 +1,7 @@
 using Robust.Client.UserInterface.Controls;
 
 
-namespace Content.Client._NC.Trade;
+namespace Content.Client._NC.Trade.Controls;
 
 
 /// <summary>

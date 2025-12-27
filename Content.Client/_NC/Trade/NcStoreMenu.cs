@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Client._NC.Trade.Controls;
 using Content.Client.UserInterface.Controls;
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;

@@ -7,7 +7,7 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Prototypes;
 
 
-namespace Content.Client._NC.Trade;
+namespace Content.Client._NC.Trade.Controls;
 
 
 /// <summary>

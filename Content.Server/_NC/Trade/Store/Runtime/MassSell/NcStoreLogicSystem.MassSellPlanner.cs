@@ -7,7 +7,7 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcStoreLogicSystem
 {
-    private readonly Dictionary<string, int> _inheritanceDepthCache = new();
+    private readonly Dictionary<string, int> _inheritanceDepthCache = new(StringComparer.Ordinal);
 
     public MassSellPlan ComputeMassSellPlan(NcStoreComponent store, EntityUid container)
     {
@@ -28,16 +28,16 @@ public sealed partial class NcStoreLogicSystem
 
     private MassSellPlan ComputeMassSellPlanInternal(NcStoreComponent store, IEnumerable<EntityUid> items)
     {
-        var incomeByCurrency = new Dictionary<string, int>();
-        var unitsByListingId = new Dictionary<string, int>();
-        var priceByListingId = new Dictionary<string, (string, int)>();
+        var incomeByCurrency = new Dictionary<string, int>(StringComparer.Ordinal);
+        var unitsByListingId = new Dictionary<string, int>(StringComparer.Ordinal);
+        var priceByListingId = new Dictionary<string, (string, int)>(StringComparer.Ordinal);
         var steps = new List<MassSellStep>();
         if (store.Listings.Count == 0)
             return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
 
-        var stackTypeCounts = new Dictionary<string, int>();
-        var protoCounts = new Dictionary<string, int>();
-        var protoCache = new Dictionary<string, EntityPrototype>();
+        var stackTypeCounts = new Dictionary<string, int>(StringComparer.Ordinal);
+        var protoCounts = new Dictionary<string, int>(StringComparer.Ordinal);
+        var protoCache = new Dictionary<string, EntityPrototype>(StringComparer.Ordinal);
         var stackProtoToType = new Dictionary<string, string>(StringComparer.Ordinal);
 
         foreach (var ent in items)
@@ -82,7 +82,7 @@ public sealed partial class NcStoreLogicSystem
                 .ToArray()
             : Array.Empty<string>();
 
-        var listingPrices = new Dictionary<string, int>();
+        var listingPrices = new Dictionary<string, int>(StringComparer.Ordinal);
         foreach (var l in store.Listings)
         {
             if (l.Mode != StoreMode.Sell)

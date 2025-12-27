@@ -93,7 +93,7 @@ public sealed partial class NcContractSystem : EntitySystem
             deck.Add(new(def, key));
         }
 
-        var dropCounts = new Dictionary<string, int>();
+        var dropCounts = new Dictionary<string, int>(StringComparer.Ordinal);
 
         for (var i = 0; i < rolls; i++)
         {
@@ -109,7 +109,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (winner.Def.MaxRepeats > 0 && dropCounts[key] >= winner.Def.MaxRepeats)
                 deck.Remove(winner);
 
-            output.AddRange(BakeRewardsRecursive(store, contractProtoId, new() { winner.Def, }, depth));
+            output.AddRange(BakeRewardsRecursive(store, contractProtoId, new() { winner.Def }, depth));
         }
 
         return output;

@@ -8,13 +8,55 @@ namespace Content.Server._NC.Trade;
 
 public sealed class NcStoreCurrencySystem : EntitySystem
 {
+    [Dependency] private readonly IPrototypeManager _protos = default!;
+
     [Dependency] private readonly IEntityManager _ents = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     [Dependency] private readonly NcStoreInventorySystem _inventory = default!;
-    [Dependency] private readonly IPrototypeManager _protos = default!;
-    private readonly List<(EntityUid Ent, int Count)> _scratchCandidates = new();
     [Dependency] private readonly SharedStackSystem _stacks = default!;
     [Dependency] private readonly SharedTransformSystem _xform = default!;
+
+    private readonly List<ICurrencyHandler> _handlers = new();
+    private readonly Dictionary<string, ICurrencyHandler> _handlerCache = new(StringComparer.Ordinal);
+
+    public override void Initialize()
+    {
+        base.Initialize();
+        _handlers.Clear();
+        _handlerCache.Clear();
+        _handlers.Add(new StackCurrencyHandler(_ents, _hands, _inventory, _protos, _stacks, _xform));
+    }
+
+    private bool TryResolveHandler(string currencyId, out ICurrencyHandler handler)
+    {
+        if (_handlerCache.TryGetValue(currencyId, out var cached))
+        {
+            handler = cached;
+            return true;
+        }
+
+        foreach (var h in _handlers)
+        {
+            if (!h.CanHandle(currencyId))
+                continue;
+
+            _handlerCache[currencyId] = h;
+            handler = h;
+            return true;
+        }
+
+        handler = default!;
+        return false;
+    }
+
+
+    public bool TryGetBalance(in NcInventorySnapshot snapshot, string currencyId, out int balance)
+    {
+        balance = 0;
+        if (!TryResolveHandler(currencyId, out var h))
+            return false;
+        return h.TryGetBalance(snapshot, currencyId, out balance);
+    }
 
     public bool TryPickCurrencyForBuy(
         NcStoreComponent store,
@@ -51,7 +93,8 @@ public sealed class NcStoreCurrencySystem : EntitySystem
                 if (price <= 0)
                     continue;
 
-                var bal = snapshot.StackTypeCounts.TryGetValue(cur, out var b) ? b : 0;
+                if (!TryGetBalance(snapshot, cur, out var bal))
+                    bal = 0;
                 if (bal < price)
                     continue;
 
@@ -78,7 +121,8 @@ public sealed class NcStoreCurrencySystem : EntitySystem
 
         var fallbackCur = best.Value.Key;
         var fallbackPrice = best.Value.Value;
-        var fallbackBal = snapshot.StackTypeCounts.TryGetValue(fallbackCur, out var fb) ? fb : 0;
+        if (!TryGetBalance(snapshot, fallbackCur, out var fallbackBal))
+            fallbackBal = 0;
 
         if (fallbackBal < fallbackPrice)
             return false;
@@ -105,7 +149,7 @@ public sealed class NcStoreCurrencySystem : EntitySystem
         {
             if (string.IsNullOrWhiteSpace(cur))
                 continue;
-            if (listing.Cost.TryGetValue(cur, out var price) && price > 0)
+            if (listing.Cost.TryGetValue(cur, out var price) && price > 0 && TryResolveHandler(cur, out _))
             {
                 currency = cur;
                 unitPrice = price;
@@ -114,7 +158,7 @@ public sealed class NcStoreCurrencySystem : EntitySystem
         }
 
         var first = listing.Cost.FirstOrDefault();
-        if (!string.IsNullOrEmpty(first.Key) && first.Value > 0)
+        if (!string.IsNullOrEmpty(first.Key) && first.Value > 0 && TryResolveHandler(first.Key, out _))
         {
             currency = first.Key;
             unitPrice = first.Value;
@@ -124,122 +168,21 @@ public sealed class NcStoreCurrencySystem : EntitySystem
         return false;
     }
 
-    public bool TryTakeCurrency(EntityUid user, string stackType, int amount)
+    public bool TryTakeCurrency(EntityUid user, string currencyId, int amount)
     {
         if (amount <= 0)
             return true;
-
-        var cachedItems = _inventory.GetOrBuildDeepItemsCache(user);
-
-        _scratchCandidates.Clear();
-        var total = 0;
-
-        foreach (var ent in cachedItems)
-        {
-            if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
-                continue;
-            if (_inventory.IsProtectedFromDirectSale(user, ent))
-                continue;
-
-            if (!_ents.TryGetComponent(ent, out StackComponent? st) || st.StackTypeId != stackType)
-                continue;
-
-            var cnt = Math.Max(st.Count, 0);
-            if (cnt <= 0)
-                continue;
-
-            _scratchCandidates.Add((ent, cnt));
-            total += cnt;
-        }
-
-        if (total < amount)
+        if (!TryResolveHandler(currencyId, out var h))
             return false;
-
-        _scratchCandidates.Sort((a, b) => a.Count.CompareTo(b.Count));
-
-        var left = amount;
-        foreach (var (ent, have) in _scratchCandidates)
-        {
-            if (left <= 0)
-                break;
-            var take = Math.Min(have, left);
-
-            if (_ents.TryGetComponent(ent, out StackComponent? st))
-            {
-                _stacks.SetCount(ent, st.Count - take, st);
-                if (st.Count <= 0)
-                    _ents.DeleteEntity(ent);
-            }
-
-            left -= take;
-        }
-
-        if (left <= 0)
-        {
-            _inventory.InvalidateInventoryCache(user);
-            return true;
-        }
-
-        return false;
+        return h.TryTake(user, currencyId, amount);
     }
 
-    public void GiveCurrency(EntityUid user, string stackType, int amount)
+    public void GiveCurrency(EntityUid user, string currencyId, int amount)
     {
-        if (amount <= 0 || string.IsNullOrWhiteSpace(stackType))
+        if (amount <= 0)
             return;
-
-        _inventory.InvalidateInventoryCache(user);
-
-        if (!_protos.TryIndex<StackPrototype>(stackType, out var proto))
+        if (!TryResolveHandler(currencyId, out var h))
             return;
-
-        var maxPerStack = proto.MaxCount ?? int.MaxValue;
-        if (maxPerStack <= 0)
-            maxPerStack = 1;
-
-        long remaining = amount;
-
-        var cached = _inventory.GetOrBuildDeepItemsCacheCompacted(user);
-        foreach (var ent in cached)
-        {
-            if (remaining <= 0)
-                break;
-            if (!_ents.TryGetComponent(ent, out StackComponent? st) || st.StackTypeId != stackType)
-                continue;
-
-            var canAdd = (long) maxPerStack - st.Count;
-            if (canAdd <= 0)
-                continue;
-
-            var add = Math.Min(canAdd, remaining);
-            var newCount = (int) Math.Clamp(st.Count + add, 0L, maxPerStack);
-
-            _stacks.SetCount(ent, newCount, st);
-            remaining -= add;
-        }
-
-        if (remaining <= 0)
-        {
-            _inventory.InvalidateInventoryCache(user);
-            return;
-        }
-
-        var coords = _xform.GetMoverCoordinates(user);
-
-        while (remaining > 0)
-        {
-            var addL = Math.Min(remaining, maxPerStack);
-            var add = (int) Math.Clamp(addL, 1L, maxPerStack);
-
-            var spawned = _ents.SpawnEntity(proto.Spawn, coords);
-
-            if (_ents.TryGetComponent(spawned, out StackComponent? newStack))
-                _stacks.SetCount(spawned, add, newStack);
-
-            _hands.TryPickupAnyHand(user, spawned, false);
-            remaining -= add;
-        }
-
-        _inventory.InvalidateInventoryCache(user);
+        h.Give(user, currencyId, amount);
     }
 }

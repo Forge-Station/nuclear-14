@@ -16,8 +16,8 @@ public sealed class NcStoreInventorySystem : EntitySystem
     [Dependency] private readonly IComponentFactory _compFactory = default!;
     [Dependency] private readonly IEntityManager _ents = default!;
     private readonly Dictionary<EntityUid, List<EntityUid>> _inventoryCache = new();
-    private readonly Dictionary<string, string?> _productStackTypeCache = new();
-    private readonly Dictionary<string, string[]> _protoAndAncestorsCache = new();
+    private readonly Dictionary<string, string?> _productStackTypeCache = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, string[]> _protoAndAncestorsCache = new(StringComparer.Ordinal);
     [Dependency] private readonly IPrototypeManager _protos = default!;
     private readonly Queue<EntityUid> _scratchQueue = new();
     private readonly List<EntityUid> _scratchResult = new();
@@ -437,7 +437,7 @@ public sealed class NcStoreInventorySystem : EntitySystem
         if (_protoAndAncestorsCache.TryGetValue(proto.ID, out var cached))
             return cached;
 
-        var visited = new HashSet<string>();
+        var visited = new HashSet<string>(StringComparer.Ordinal);
         var result = new List<string>();
         var stack = new Stack<string>();
         stack.Push(proto.ID);

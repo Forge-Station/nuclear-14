@@ -19,7 +19,7 @@ public sealed partial class NcStoreLogicSystem
         if (plan.Steps.Count == 0 || plan.IncomeByCurrency.Count == 0)
             return false;
 
-        var incomeActual = new Dictionary<string, int>();
+        var incomeActual = new Dictionary<string, int>(StringComparer.Ordinal);
         var any = false;
 
         foreach (var step in plan.Steps)

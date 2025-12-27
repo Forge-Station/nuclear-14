@@ -10,8 +10,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private const double DefaultJitter = 0.06;
     private const int MaxRewardDepth = 6;
     private static readonly ISawmill Sawmill = Logger.GetSawmill("nccontracts");
-    private readonly Dictionary<string, List<string>> _ancestorsCache = new();
-    private readonly Dictionary<string, int> _depthCache = new();
+    private readonly Dictionary<string, List<string>> _ancestorsCache = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, int> _depthCache = new(StringComparer.Ordinal);
 
 
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;

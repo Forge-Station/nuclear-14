@@ -183,9 +183,9 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
     private sealed class LoadContext
     {
-        public readonly HashSet<string> CategorySeen = new();
-        public readonly HashSet<string> CurrencySeen = new();
-        public readonly HashSet<string> ListingIds = new();
-        public readonly Dictionary<string, int> NextSuffixByBaseId = new();
+        public readonly HashSet<string> CategorySeen = new(StringComparer.Ordinal);
+        public readonly HashSet<string> CurrencySeen = new(StringComparer.Ordinal);
+        public readonly HashSet<string> ListingIds = new(StringComparer.Ordinal);
+        public readonly Dictionary<string, int> NextSuffixByBaseId = new(StringComparer.Ordinal);
     }
 }

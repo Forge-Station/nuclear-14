@@ -1,11 +1,12 @@
 using System.Linq;
 using Content.Shared._NC.Trade;
 using Robust.Client.GameObjects;
+using Robust.Client.Graphics;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Prototypes;
 
 
-namespace Content.Client._NC.Trade;
+namespace Content.Client._NC.Trade.Controls;
 
 
 /// <summary>
@@ -201,10 +202,7 @@ public sealed class NcListingGrid : BoxContainer
         {
             var it = source[i];
 
-            var balanceHint = _mode == StoreMode.Buy
-                ? _balanceResolver(it.CurrencyId)
-                : int.MaxValue;
-
+            var balanceHint = _mode == StoreMode.Buy ? _balanceResolver(it.CurrencyId) : int.MaxValue;
             var sig = Sig(it);
 
             if (!_cache.TryGetValue(it.Id, out var tuple) || tuple.Sig != sig)
@@ -228,12 +226,14 @@ public sealed class NcListingGrid : BoxContainer
 
             if (i < endExclusive - 1)
             {
-                AddChild(
-                    new PanelContainer
+                AddChild(new PanelContainer
+                {
+                    MinSize = new Vector2i(0, 1),
+                    PanelOverride = new StyleBoxFlat
                     {
-                        MinSize = new Vector2i(0, 1),
-                        StyleClasses = { "LowDivider", }
-                    });
+                        BackgroundColor = Color.FromHex("#A0A0A0")
+                    }
+                });
             }
         }
     }

@@ -26,7 +26,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return;
         }
 
-        var currentCounts = new Dictionary<string, int>();
+        var currentCounts = new Dictionary<string, int>(StringComparer.Ordinal);
         foreach (var c in comp.Contracts.Values)
         {
             currentCounts.TryAdd(c.Difficulty, 0);
@@ -34,12 +34,12 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         var candidates = new List<(StoreContractPrototype Proto, int Weight)>();
-        var visitedPacks = new HashSet<string>();
+        var visitedPacks = new HashSet<string>(StringComparer.Ordinal);
 
         foreach (var packEntry in mainPreset.Packs)
             CollectFromPackRecursive(packEntry.Id, packEntry.Weight, candidates, visitedPacks);
 
-        var poolByDifficulty = new Dictionary<string, List<(StoreContractPrototype Proto, int Weight)>>();
+        var poolByDifficulty = new Dictionary<string, List<(StoreContractPrototype Proto, int Weight)>>(StringComparer.Ordinal);
 
         foreach (var (proto, weight) in candidates)
         {

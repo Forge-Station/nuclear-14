@@ -16,9 +16,10 @@ namespace Content.Server._NC.Trade;
 public sealed class NcStoreSystem : EntitySystem
 {
     private const float MaxUseDistance = 2.5f;
+    private const float MaxCrateDistance = 4f;
     private const string ReadyListingSuffix = "__ready";
     private const string CrateListingSuffix = "__crate";
-    private new static readonly ISawmill Log = Logger.GetSawmill("ncstore");
+    private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore");
     [Dependency] private readonly AccessReaderSystem _accessReader = default!;
     [Dependency] private readonly AudioSystem _audio = default!;
     [Dependency] private readonly IEntityManager _entMan = default!;
@@ -69,6 +70,80 @@ public sealed class NcStoreSystem : EntitySystem
     private bool IsInUseRange(EntityUid store, EntityUid user) => IsInRange(store, user, MaxUseDistance);
 
 
+private bool TryValidateUse(EntityUid store, NcStoreComponent comp, EntityUid actor, out string failMessage)
+    {
+        failMessage = string.Empty;
+
+        if (!CanUseStore(store, comp, actor))
+        {
+            failMessage = Loc.GetString("nc-store-popup-no-access");
+            return false;
+        }
+
+        if (!IsInUseRange(store, actor))
+        {
+            failMessage = Loc.GetString("nc-store-popup-too-far");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void EnsureListingIndex(EntityUid store, NcStoreComponent comp)
+    {
+        if (comp.Listings.Count > 0 && comp.ListingIndex.Count == 0)
+        {
+            Sawmill.Error($"[NcStore] {ToPrettyString(store)} has listings but empty ListingIndex. Rebuilding.");
+            comp.RebuildListingIndex();
+        }
+    }
+
+    private bool TryGetListing(
+        EntityUid store,
+        NcStoreComponent comp,
+        EntityUid actor,
+        StoreMode mode,
+        string id,
+        out NcStoreListingDef listing
+    )
+    {
+        listing = default!;
+
+        EnsureListingIndex(store, comp);
+
+        if (!comp.ListingIndex.TryGetValue(NcStoreComponent.MakeListingKey(mode, id), out var found))
+        {
+            Sawmill.Warning(
+                $"[NcStore] {ToPrettyString(actor)} tried to use invalid listing '{id}' (mode={mode}) at {ToPrettyString(store)}");
+            return false;
+        }
+
+        listing = found;
+        return true;
+    }
+
+    private bool TryGetPulledClosedCrate(EntityUid actor, out EntityUid crate, out string failMessage)
+    {
+        crate = default;
+        failMessage = string.Empty;
+
+        if (_logic.TryGetPulledClosedCrate(actor, out crate))
+            return true;
+
+        if (_entMan.TryGetComponent(actor, out PullerComponent? puller) &&
+            puller.Pulling is { } pulled &&
+            _entMan.TryGetComponent(pulled, out EntityStorageComponent? storage) &&
+            storage.Open)
+        {
+            failMessage = Loc.GetString("nc-store-popup-crate-open");
+            return false;
+        }
+
+        failMessage = Loc.GetString("nc-store-popup-no-crate");
+        return false;
+    }
+
+
     private void PopupFail(EntityUid actor, string message) => _popups.PopupEntity(message, actor, actor);
 
     private static bool TryParseSellListingId(
@@ -101,30 +176,14 @@ public sealed class NcStoreSystem : EntitySystem
         if (comp.CurrentUser is not { } actor)
             return;
 
-        if (!CanUseStore(uid, comp, actor))
+        if (!TryValidateUse(uid, comp, actor, out var fail))
         {
-            PopupFail(actor, Loc.GetString("nc-store-popup-no-access"));
+            PopupFail(actor, fail);
             return;
         }
 
-        if (!IsInUseRange(uid, actor))
+        if (!TryGetListing(uid, comp, actor, StoreMode.Buy, msg.Id, out var listing))
         {
-            PopupFail(actor, Loc.GetString("nc-store-popup-too-far"));
-            return;
-        }
-
-        if (comp.Listings.Count > 0 && comp.ListingIndex.Count == 0)
-        {
-            Log.Error($"[NcStore] {ToPrettyString(uid)} has listings but empty ListingIndex. Rebuilding.");
-            comp.RebuildListingIndex();
-        }
-
-        if (!comp.ListingIndex.TryGetValue(
-            NcStoreComponent.MakeListingKey(StoreMode.Buy, msg.Id),
-            out var listing))
-        {
-            Log.Warning(
-                $"[NcStore] {ToPrettyString(actor)} tried to buy invalid listing '{msg.Id}' at {ToPrettyString(uid)}");
             PopupFail(actor, Loc.GetString("nc-store-popup-invalid-listing"));
             return;
         }
@@ -145,33 +204,17 @@ public sealed class NcStoreSystem : EntitySystem
         if (comp.CurrentUser is not { } actor)
             return;
 
-        if (!CanUseStore(uid, comp, actor))
+        if (!TryValidateUse(uid, comp, actor, out var fail))
         {
-            PopupFail(actor, Loc.GetString("nc-store-popup-no-access"));
-            return;
-        }
-
-        if (!IsInUseRange(uid, actor))
-        {
-            PopupFail(actor, Loc.GetString("nc-store-popup-too-far"));
+            PopupFail(actor, fail);
             return;
         }
 
         if (!TryParseSellListingId(msg.Id, out var requestedId, out var fromCrate))
             return;
 
-        if (comp.Listings.Count > 0 && comp.ListingIndex.Count == 0)
+        if (!TryGetListing(uid, comp, actor, StoreMode.Sell, requestedId, out var listing))
         {
-            Log.Error($"[NcStore] {ToPrettyString(uid)} has listings but empty ListingIndex. Rebuilding.");
-            comp.RebuildListingIndex();
-        }
-
-        if (!comp.ListingIndex.TryGetValue(
-            NcStoreComponent.MakeListingKey(StoreMode.Sell, requestedId),
-            out var listing))
-        {
-            Log.Warning(
-                $"[NcStore] {ToPrettyString(actor)} tried to sell invalid listing '{requestedId}' (raw '{msg.Id}') at {ToPrettyString(uid)}");
             PopupFail(actor, Loc.GetString("nc-store-popup-invalid-listing"));
             return;
         }
@@ -183,21 +226,13 @@ public sealed class NcStoreSystem : EntitySystem
 
         if (fromCrate)
         {
-            if (!_logic.TryGetPulledClosedCrate(actor, out var crate))
+            if (!TryGetPulledClosedCrate(actor, out var crate, out var crateFail))
             {
-                if (_entMan.TryGetComponent(actor, out PullerComponent? puller) &&
-                    puller.Pulling is { } pulled &&
-                    _entMan.TryGetComponent(pulled, out EntityStorageComponent? storage) &&
-                    storage.Open)
-                    PopupFail(actor, Loc.GetString("nc-store-popup-crate-open"));
-                else
-                    PopupFail(actor, Loc.GetString("nc-store-popup-no-crate"));
-
+                PopupFail(actor, crateFail);
                 return;
             }
 
-            const float maxCrateDistance = 4f;
-            if (!IsInRange(uid, crate, maxCrateDistance))
+            if (!IsInRange(uid, crate, MaxCrateDistance))
             {
                 PopupFail(actor, Loc.GetString("nc-store-popup-crate-too-far"));
                 return;
@@ -228,33 +263,19 @@ public sealed class NcStoreSystem : EntitySystem
         if (comp.CurrentUser is not { } actor)
             return;
 
-        if (!CanUseStore(uid, comp, actor))
+        if (!TryValidateUse(uid, comp, actor, out var fail))
         {
-            PopupFail(actor, Loc.GetString("nc-store-popup-no-access"));
+            PopupFail(actor, fail);
             return;
         }
 
-        if (!IsInUseRange(uid, actor))
+        if (!TryGetPulledClosedCrate(actor, out var crate, out var crateFail))
         {
-            PopupFail(actor, Loc.GetString("nc-store-popup-too-far"));
+            PopupFail(actor, crateFail);
             return;
         }
 
-        if (!_logic.TryGetPulledClosedCrate(actor, out var crate))
-        {
-            if (_entMan.TryGetComponent(actor, out PullerComponent? puller) &&
-                puller.Pulling is { } pulled &&
-                _entMan.TryGetComponent(pulled, out EntityStorageComponent? storage) &&
-                storage.Open)
-                PopupFail(actor, Loc.GetString("nc-store-popup-crate-open"));
-            else
-                PopupFail(actor, Loc.GetString("nc-store-popup-no-crate"));
-
-            return;
-        }
-
-        const float maxDistance = 4f;
-        if (!IsInRange(uid, crate, maxDistance))
+        if (!IsInRange(uid, crate, MaxCrateDistance))
         {
             PopupFail(actor, Loc.GetString("nc-store-popup-crate-too-far"));
             return;

@@ -26,7 +26,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         if (_depthCache.TryGetValue(protoId, out var d))
         {
-                return d < 0 ? 0 : d;
+            return d < 0 ? 0 : d;
         }
 
         if (!_prototypes.TryIndex<EntityPrototype>(protoId, out var proto))
@@ -57,7 +57,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (_ancestorsCache.TryGetValue(protoId, out var list))
             return list;
 
-        var result = new List<string> { protoId, };
+        var result = new List<string> { protoId };
 
         if (_prototypes.TryIndex<EntityPrototype>(protoId, out var proto))
         {
@@ -65,7 +65,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (parents0 is { Length: > 0 })
             {
                 var stack = new Stack<string>(parents0);
-                var seen = new HashSet<string>();
+                var seen = new HashSet<string>(StringComparer.Ordinal);
 
                 while (stack.Count > 0)
                 {
