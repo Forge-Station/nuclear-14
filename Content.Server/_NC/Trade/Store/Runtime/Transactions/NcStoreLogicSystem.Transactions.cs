@@ -1,5 +1,4 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Hands.Components;
 using Content.Shared.Stacks;
 using Robust.Shared.Prototypes;
 
@@ -41,65 +40,7 @@ public sealed partial class NcStoreLogicSystem
         if (!TryTakeCurrency(user, currency, totalPrice))
             return false;
 
-        var spawnedTotal = 0;
-        var userCoords = _ents.GetComponent<TransformComponent>(user).Coordinates;
-
-        if (proto.TryGetComponent("Stack", out StackComponent? stackComp))
-        {
-            var maxPerStack = int.MaxValue;
-            if (_protos.TryIndex<StackPrototype>(stackComp.StackTypeId, out var stackTypeProto))
-                maxPerStack = stackTypeProto.MaxCount ?? int.MaxValue;
-
-            if (maxPerStack <= 0)
-                maxPerStack = 1;
-
-            var remainingToSpawn = actual;
-
-            while (remainingToSpawn > 0)
-            {
-                var amount = Math.Min(remainingToSpawn, maxPerStack);
-                try
-                {
-                    var spawned = _ents.SpawnEntity(listing.ProductEntity, userCoords);
-                    if (_ents.TryGetComponent(spawned, out StackComponent? spawnedStack))
-                        _stacks.SetCount(spawned, amount, spawnedStack);
-
-                    var pickedUp = false;
-                    if (_ents.HasComponent<HandsComponent>(user))
-                        pickedUp = _hands.TryPickupAnyHand(user, spawned, false);
-
-                    if (!pickedUp && TryGetPulledClosedCrate(user, out var crate) && Exists(crate))
-                    {
-                        _entityStorage.Insert(spawned, crate);
-                        InvalidateInventoryCache(crate);
-                    }
-
-                    spawnedTotal += amount;
-                    remainingToSpawn -= amount;
-                }
-                catch (Exception e)
-                {
-                    Sawmill.Error($"Spawn failed during bulk buy: {e}");
-
-                    if (remainingToSpawn > 0)
-                    {
-                        var refundL = (long) remainingToSpawn * unitPrice;
-                        if (refundL > 0 && refundL <= int.MaxValue)
-                            GiveCurrency(user, currency, (int) refundL);
-                    }
-
-                    break;
-                }
-            }
-        }
-        else
-        {
-            for (var i = 0; i < actual; i++)
-                if (TrySpawnProduct(listing.ProductEntity, user))
-                    spawnedTotal++;
-                else
-                    GiveCurrency(user, currency, unitPrice);
-        }
+        var spawnedTotal = SpawnPurchasedProduct(user, listing.ProductEntity, proto, actual, unitPrice, currency);
 
         InvalidateInventoryCache(user);
 
@@ -115,43 +56,10 @@ public sealed partial class NcStoreLogicSystem
 
     public bool TrySell(string listingId, EntityUid machine, NcStoreComponent? store, EntityUid user, int count = 1)
     {
-        if (store == null || store.Listings.Count == 0 || count <= 0)
+        if (store == null)
             return false;
 
-        if (!store.ListingIndex.TryGetValue(
-            NcStoreComponent.MakeListingKey(StoreMode.Sell, listingId),
-            out var listing))
-            return false;
-
-
-        if (!TryPickCurrencyForSell(store, listing, out var currency, out var unitPrice) || unitPrice <= 0)
-            return false;
-
-        InvalidateInventoryCache(user);
-        var owned = GetOwned(user, listing.ProductEntity, listing.MatchMode);
-        var maxByRemaining = listing.RemainingCount >= 0 ? listing.RemainingCount : int.MaxValue;
-
-        var maxPossible = Math.Min(owned, maxByRemaining);
-        if (maxPossible <= 0)
-            return false;
-
-        var actual = Math.Min(count, maxPossible);
-
-        if (!TryTakeProductUnits(user, listing.ProductEntity, actual, listing.MatchMode))
-            return false;
-
-        var totalL = (long) unitPrice * actual;
-        if (totalL > int.MaxValue)
-            return false;
-
-        GiveCurrency(user, currency, (int) totalL);
-        InvalidateInventoryCache(user);
-
-        if (listing.RemainingCount > 0)
-            listing.RemainingCount = Math.Max(0, listing.RemainingCount - actual);
-
-        Sawmill.Info($"TrySell: OK {listing.ProductEntity} x{actual} for {unitPrice} {currency} each");
-        return true;
+        return TrySellScenario(listingId, store, user, user, count, out _);
     }
 
     public bool TrySellFromContainer(
@@ -163,7 +71,26 @@ public sealed partial class NcStoreLogicSystem
         int count = 1
     )
     {
-        if (store == null || store.Listings.Count == 0 || count <= 0)
+        if (store == null)
+            return false;
+
+        return TrySellScenario(listingId, store, user, container, count, out var sold) &&
+               LogSellFromContainer(sold, listingId, store, container);
+    }
+
+
+    private bool TrySellScenario(
+        string listingId,
+        NcStoreComponent store,
+        EntityUid user,
+        EntityUid root,
+        int count,
+        out int sold
+    )
+    {
+        sold = 0;
+
+        if (store.Listings.Count == 0 || count <= 0)
             return false;
 
         if (!store.ListingIndex.TryGetValue(
@@ -174,9 +101,15 @@ public sealed partial class NcStoreLogicSystem
         if (!TryPickCurrencyForSell(store, listing, out var currency, out var unitPrice) || unitPrice <= 0)
             return false;
 
-        InvalidateInventoryCache(container);
+        if (root == user)
+            InvalidateInventoryCache(user);
+        else
+            InvalidateInventoryCache(root);
 
-        var owned = GetOwnedInRoot(container, listing.ProductEntity, listing.MatchMode);
+        var owned = root == user
+            ? GetOwned(user, listing.ProductEntity, listing.MatchMode)
+            : GetOwnedInRoot(root, listing.ProductEntity, listing.MatchMode);
+
         var maxByRemaining = listing.RemainingCount >= 0 ? listing.RemainingCount : int.MaxValue;
 
         var maxPossible = Math.Min(owned, maxByRemaining);
@@ -185,7 +118,11 @@ public sealed partial class NcStoreLogicSystem
 
         var actual = Math.Min(count, maxPossible);
 
-        if (!TryTakeProductUnitsFromRoot(container, listing.ProductEntity, actual, listing.MatchMode))
+        var ok = root == user
+            ? TryTakeProductUnits(user, listing.ProductEntity, actual, listing.MatchMode)
+            : TryTakeProductUnitsFromRoot(root, listing.ProductEntity, actual, listing.MatchMode);
+
+        if (!ok)
             return false;
 
         var totalL = (long) unitPrice * actual;
@@ -193,86 +130,39 @@ public sealed partial class NcStoreLogicSystem
             return false;
 
         GiveCurrency(user, currency, (int) totalL);
-        InvalidateInventoryCache(container);
+
         InvalidateInventoryCache(user);
+        if (root != user)
+            InvalidateInventoryCache(root);
 
         if (listing.RemainingCount > 0)
             listing.RemainingCount = Math.Max(0, listing.RemainingCount - actual);
 
-        Sawmill.Info(
-            $"TrySellFromContainer: OK {listing.ProductEntity} x{actual} for {unitPrice} {currency} each (container={ToPrettyString(container)})");
+        sold = actual;
+
+        if (root == user)
+            Sawmill.Info($"TrySell: OK {listing.ProductEntity} x{actual} for {unitPrice} {currency} each");
+
         return true;
     }
 
-
-    private int GetOwnedInternal(EntityUid root, string productProtoId, PrototypeMatchMode matchMode)
+    private bool LogSellFromContainer(int sold, string listingId, NcStoreComponent store, EntityUid container)
     {
-        var total = 0;
+        if (sold <= 0)
+            return false;
 
-        var expectedStackType = GetProductStackType(productProtoId);
-        var effective = ResolveMatchMode(productProtoId, matchMode);
+        if (!store.ListingIndex.TryGetValue(
+            NcStoreComponent.MakeListingKey(StoreMode.Sell, listingId),
+            out var listing))
+            return true;
 
-        var cached = GetOrBuildDeepItemsCache(root);
-        CompactCachedItems(cached);
+        if (!TryPickCurrencyForSell(store, listing, out var currency, out var unitPrice) || unitPrice <= 0)
+            return true;
 
-        foreach (var ent in cached)
-        {
-            if (IsProtectedFromDirectSale(root, ent))
-                continue;
-
-            if (expectedStackType != null &&
-                _ents.TryGetComponent(ent, out StackComponent? stack) &&
-                stack.StackTypeId == expectedStackType)
-            {
-                total += Math.Max(stack.Count, 0);
-                continue;
-            }
-
-            if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
-                continue;
-
-            if (effective == PrototypeMatchMode.Descendants)
-            {
-                if (IsProtoOrDescendant(meta.EntityPrototype, productProtoId))
-                    total += 1;
-            }
-            else
-            {
-                if (meta.EntityPrototype.ID == productProtoId)
-                    total += 1;
-            }
-        }
-
-        return total;
+        Sawmill.Info(
+            $"TrySellFromContainer: OK {listing.ProductEntity} x{sold} for {unitPrice} {currency} each (container={ToPrettyString(container)})");
+        return true;
     }
-
-
-    public int GetOwned(EntityUid user, string productProtoId) =>
-        GetOwnedInternal(user, productProtoId, PrototypeMatchMode.Exact);
-
-    public int GetOwned(EntityUid user, string productProtoId, PrototypeMatchMode matchMode) =>
-        GetOwnedInternal(user, productProtoId, matchMode);
-
-    public int GetOwnedInRoot(EntityUid root, string productProtoId) =>
-        GetOwnedInternal(root, productProtoId, PrototypeMatchMode.Exact);
-
-    public int GetOwnedInRoot(EntityUid root, string productProtoId, PrototypeMatchMode matchMode) =>
-        GetOwnedInternal(root, productProtoId, matchMode);
-
-
-
-
-    public bool TryTakeProductUnits(EntityUid user, string protoId, int amount) =>
-        TryTakeProductUnitsFromRootCached(user, protoId, amount, PrototypeMatchMode.Exact);
-
-    public bool TryTakeProductUnits(EntityUid user, string protoId, int amount, PrototypeMatchMode matchMode) =>
-        TryTakeProductUnitsFromRootCached(user, protoId, amount, matchMode);
-
-    public bool TryTakeProductUnitsFromRoot(EntityUid root, string protoId, int amount) =>
-        TryTakeProductUnitsFromRootCached(root, protoId, amount, PrototypeMatchMode.Exact);
-
-    public bool TryTakeProductUnitsFromRoot(EntityUid root, string protoId, int amount, PrototypeMatchMode matchMode) =>
-        TryTakeProductUnitsFromRootCached(root, protoId, amount, matchMode);
 
     public bool TryExchange(
         string listingId,
@@ -323,50 +213,4 @@ public sealed partial class NcStoreLogicSystem
 
         return true;
     }
-
-
-
-
-
-    private int GetInheritanceDepth(string protoId)
-    {
-        if (_inheritanceDepthCache.TryGetValue(protoId, out var depth))
-            return depth;
-
-        if (!_protos.TryIndex<EntityPrototype>(protoId, out var proto))
-        {
-            _inheritanceDepthCache[protoId] = 0;
-            return 0;
-        }
-
-        var max = 0;
-        if (proto.Parents != null)
-        {
-            foreach (var parent in proto.Parents)
-            {
-                var d = GetInheritanceDepth(parent) + 1;
-                if (d > max)
-                    max = d;
-            }
-        }
-
-        _inheritanceDepthCache[protoId] = max;
-        return max;
-    }
-
-    private static void SafeAddIncome(Dictionary<string, int> income, string currencyId, long delta)
-    {
-        if (delta <= 0)
-            return;
-
-        if (!income.TryGetValue(currencyId, out var cur))
-            cur = 0;
-
-        var sum = cur + delta;
-        if (sum >= int.MaxValue)
-            income[currencyId] = int.MaxValue;
-        else
-            income[currencyId] = (int) sum;
-    }
-
 }

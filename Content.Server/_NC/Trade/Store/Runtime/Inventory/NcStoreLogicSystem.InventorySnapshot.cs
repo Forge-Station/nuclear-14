@@ -69,4 +69,59 @@ public sealed partial class NcStoreLogicSystem
             StackTypeCounts.Clear();
         }
     }
+
+    private int GetOwnedInternal(EntityUid root, string productProtoId, PrototypeMatchMode matchMode)
+    {
+        var total = 0;
+
+        var expectedStackType = GetProductStackType(productProtoId);
+        var effective = ResolveMatchMode(productProtoId, matchMode);
+
+        var cached = GetOrBuildDeepItemsCache(root);
+        CompactCachedItems(cached);
+
+        foreach (var ent in cached)
+        {
+            if (IsProtectedFromDirectSale(root, ent))
+                continue;
+
+            if (expectedStackType != null &&
+                _ents.TryGetComponent(ent, out StackComponent? stack) &&
+                stack.StackTypeId == expectedStackType)
+            {
+                total += Math.Max(stack.Count, 0);
+                continue;
+            }
+
+            if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
+                continue;
+
+            if (effective == PrototypeMatchMode.Descendants)
+            {
+                if (IsProtoOrDescendant(meta.EntityPrototype, productProtoId))
+                    total += 1;
+            }
+            else
+            {
+                if (meta.EntityPrototype.ID == productProtoId)
+                    total += 1;
+            }
+        }
+
+        return total;
+    }
+
+
+    public int GetOwned(EntityUid user, string productProtoId) =>
+        GetOwnedInternal(user, productProtoId, PrototypeMatchMode.Exact);
+
+    public int GetOwned(EntityUid user, string productProtoId, PrototypeMatchMode matchMode) =>
+        GetOwnedInternal(user, productProtoId, matchMode);
+
+    public int GetOwnedInRoot(EntityUid root, string productProtoId) =>
+        GetOwnedInternal(root, productProtoId, PrototypeMatchMode.Exact);
+
+    public int GetOwnedInRoot(EntityUid root, string productProtoId, PrototypeMatchMode matchMode) =>
+        GetOwnedInternal(root, productProtoId, matchMode);
+
 }

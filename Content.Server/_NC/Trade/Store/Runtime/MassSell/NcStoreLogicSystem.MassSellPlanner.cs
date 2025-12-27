@@ -7,6 +7,10 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcStoreLogicSystem
 {
+    // ==============================================================
+    // Mass Sell – Planning (no world mutations)
+    // ==============================================================
+
     public MassSellPlan ComputeMassSellPlan(NcStoreComponent store, EntityUid container)
     {
         InvalidateInventoryCache(container);
@@ -21,6 +25,12 @@ public sealed partial class NcStoreLogicSystem
         IReadOnlyList<EntityUid> cachedItems
     ) =>
         ComputeMassSellPlanInternal(store, cachedItems);
+
+    public Dictionary<string, int> GetMassSellValue(
+        NcStoreComponent store,
+        EntityUid container
+    ) =>
+        ComputeMassSellPlan(store, container).IncomeByCurrency;
 
     private MassSellPlan ComputeMassSellPlanInternal(
         NcStoreComponent store,
@@ -44,6 +54,7 @@ public sealed partial class NcStoreLogicSystem
         {
             if (!_ents.EntityExists(ent))
                 continue;
+
             if (_ents.TryGetComponent(ent, out StackComponent? st))
             {
                 var cnt = Math.Max(st.Count, 0);
@@ -52,6 +63,7 @@ public sealed partial class NcStoreLogicSystem
                     stackTypeCounts.TryGetValue(st.StackTypeId, out var prev);
                     stackTypeCounts[st.StackTypeId] = prev + cnt;
                 }
+
                 if (_ents.TryGetComponent(ent, out MetaDataComponent? stMeta) && stMeta.EntityPrototype is { } stProto)
                 {
                     protoCache[stProto.ID] = stProto;
@@ -75,6 +87,7 @@ public sealed partial class NcStoreLogicSystem
 
         if (stackTypeCounts.Count == 0 && protoCounts.Count == 0)
             return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
+
         var protoIds = protoCounts.Count > 0 || stackProtoToType.Count > 0
             ? protoCounts.Keys
                 .Concat(stackProtoToType.Keys)
@@ -89,6 +102,7 @@ public sealed partial class NcStoreLogicSystem
         {
             if (l.Mode != StoreMode.Sell)
                 continue;
+
             if (TryPickCurrencyForSell(store, l, out _, out var price))
                 listingPrices[l.Id] = price;
             else
@@ -101,7 +115,7 @@ public sealed partial class NcStoreLogicSystem
                 !string.IsNullOrEmpty(l.ProductEntity) &&
                 l.RemainingCount != 0 &&
                 listingPrices.TryGetValue(l.Id, out var p) && p > 0)
-            .OrderByDescending(l => listingPrices[l.Id]) // Сначала дорогие
+            .OrderByDescending(l => listingPrices[l.Id])
             .ThenByDescending(l => GetInheritanceDepth(l.ProductEntity))
             .ThenBy(l => l.ProductEntity, OrdinalIds)
             .ThenBy(l => l.Id, OrdinalIds)
@@ -221,100 +235,6 @@ public sealed partial class NcStoreLogicSystem
         return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
     }
 
-    public bool TryMassSellFromContainer(
-        EntityUid machine,
-        NcStoreComponent store,
-        EntityUid user,
-        EntityUid container
-    )
-    {
-        if (store.Listings.Count == 0)
-            return false;
-
-        InvalidateInventoryCache(container);
-
-        _scratchItems.Clear();
-        var cached = GetOrBuildDeepItemsCache(container);
-        CompactCachedItems(cached);
-
-        foreach (var item in cached)
-            _scratchItems.Add(item);
-
-        var cachedItems = _scratchItems;
-
-        var plan = ComputeMassSellPlanFromCachedItems(store, container, cachedItems);
-        if (plan.Steps.Count == 0 || plan.IncomeByCurrency.Count == 0)
-            return false;
-
-        var incomeActual = new Dictionary<string, int>();
-        var any = false;
-
-        foreach (var step in plan.Steps)
-        {
-            if (step.Count <= 0 ||
-                step.UnitPrice <= 0 ||
-                string.IsNullOrWhiteSpace(step.CurrencyId) ||
-                string.IsNullOrWhiteSpace(step.Listing.ProductEntity))
-                continue;
-
-            var listing = step.Listing;
-
-            var remaining = listing.RemainingCount;
-            if (remaining < -1)
-                remaining = -1;
-
-            var maxByRemaining = remaining >= 0 ? remaining : int.MaxValue;
-            if (maxByRemaining <= 0)
-                continue;
-
-            var take = Math.Min(step.Count, maxByRemaining);
-            if (take <= 0)
-                continue;
-
-            if (!TryTakeProductUnitsFromCachedList(
-                container,
-                cachedItems,
-                listing.ProductEntity,
-                take,
-                listing.MatchMode))
-                continue;
-
-            if (listing.RemainingCount > 0)
-                listing.RemainingCount = Math.Max(0, listing.RemainingCount - take);
-
-            var total = (long) step.UnitPrice * take;
-            SafeAddIncome(incomeActual, step.CurrencyId, total);
-
-            any = true;
-        }
-
-        if (!any || incomeActual.Count == 0)
-            return false;
-
-        foreach (var (currency, amount) in incomeActual)
-        {
-            if (amount <= 0)
-                continue;
-
-            GiveCurrency(user, currency, amount);
-        }
-
-        InvalidateInventoryCache(container);
-        InvalidateInventoryCache(user);
-
-        return true;
-    }
-
-
-
-
-
-    public Dictionary<string, int> GetMassSellValue(
-        NcStoreComponent store,
-        EntityUid container
-    ) =>
-        ComputeMassSellPlan(store, container).IncomeByCurrency;
-
     public readonly record struct MassSellStep(
         StoreListingPrototype Listing,
         string CurrencyId,
@@ -326,4 +246,46 @@ public sealed partial class NcStoreLogicSystem
         Dictionary<string, int> UnitsByListingId,
         Dictionary<string, (string CurrencyId, int UnitPrice)> PriceByListingId,
         List<MassSellStep> Steps);
+
+    private int GetInheritanceDepth(string protoId)
+    {
+        if (_inheritanceDepthCache.TryGetValue(protoId, out var depth))
+            return depth;
+
+        if (!_protos.TryIndex<EntityPrototype>(protoId, out var proto))
+        {
+            _inheritanceDepthCache[protoId] = 0;
+            return 0;
+        }
+
+        var max = 0;
+        if (proto.Parents != null)
+        {
+            foreach (var parent in proto.Parents)
+            {
+                var d = GetInheritanceDepth(parent) + 1;
+                if (d > max)
+                    max = d;
+            }
+        }
+
+        _inheritanceDepthCache[protoId] = max;
+        return max;
+    }
+
+    private static void SafeAddIncome(Dictionary<string, int> income, string currencyId, long delta)
+    {
+        if (delta <= 0)
+            return;
+
+        if (!income.TryGetValue(currencyId, out var cur))
+            cur = 0;
+
+        var sum = cur + delta;
+        if (sum >= int.MaxValue)
+            income[currencyId] = int.MaxValue;
+        else
+            income[currencyId] = (int) sum;
+    }
+
 }
