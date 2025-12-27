@@ -138,8 +138,8 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
                     ProductEntity = entry.Proto,
                     MatchMode = entry.MatchMode,
                     Mode = mode,
-                    Categories = [category,],
-                    Conditions = [],
+                    Categories = new List<string> { category },
+                    Conditions = new List<ListingConditionPrototype>(),
                     RemainingCount = entry.Count ?? -1,
                     Cost = new()
                 };

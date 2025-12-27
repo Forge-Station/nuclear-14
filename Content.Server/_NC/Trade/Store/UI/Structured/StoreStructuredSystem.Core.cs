@@ -167,9 +167,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         if (_openStoreUids.Count == 0)
             return;
-
-        _logic.ResetFrameCache();
-
         _openStoresScratch.Clear();
         _openStoresScratch.AddRange(_openStoreUids);
 
@@ -550,7 +547,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     {
         var targets = new List<ContractTargetClientData>();
 
-        if (c.Targets is { Count: > 0, })
+        if (c.Targets is { Count: > 0 })
         {
             foreach (var t in c.Targets)
             {
@@ -573,7 +570,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 });
         }
 
-        var rewards = c.Rewards is { Count: > 0, }
+        var rewards = c.Rewards is { Count: > 0 }
             ? new(c.Rewards)
             : new List<ContractRewardData>();
 

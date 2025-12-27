@@ -54,7 +54,6 @@ public sealed partial class NcContractSystem : EntitySystem
                 requiredByKey[key] = checked(requiredByKey[key] + t.Required);
         }
 
-        _logic._inventory.InvalidateInventoryCache(user);
         _logic._inventory.ScanInventory(user, _scratchUserItems, _scratchUserSnap);
         var userSnap = _scratchUserSnap;
 
@@ -66,7 +65,6 @@ public sealed partial class NcContractSystem : EntitySystem
         if (crateUid is { } c0 && Exists(c0))
         {
             crateEntity = c0;
-            _logic._inventory.InvalidateInventoryCache(c0);
             _logic._inventory.ScanInventory(c0, _scratchCrateItems, _scratchCrateSnap);
             crateSnap = _scratchCrateSnap;
             crateItems = _scratchCrateItems;

@@ -93,7 +93,7 @@ public sealed class NcStoreInventorySystem : EntitySystem
         if (_ents.TryGetComponent(owner, out ItemSlotsComponent? itemSlots))
         {
             foreach (var slot in itemSlots.Slots.Values)
-                if (slot is { HasItem: true, Item: not null, })
+                if (slot is { HasItem: true, Item: not null })
                     Enqueue(slot.Item.Value);
         }
 

@@ -41,7 +41,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (count <= 0)
                 continue;
 
-            var isPool = bp.Type == StoreRewardType.Pool || bp.Options is { Count: > 0, };
+            var isPool = bp.Type == StoreRewardType.Pool || bp.Options is { Count: > 0 };
 
             if (isPool)
             {
@@ -75,11 +75,11 @@ public sealed partial class NcContractSystem : EntitySystem
             return output;
 
         List<ContractRewardDef>? options = null;
-        if (poolDef.Options is { Count: > 0, })
+        if (poolDef.Options is { Count: > 0 })
             options = poolDef.Options;
         else if (!string.IsNullOrWhiteSpace(poolDef.Id) &&
             _prototypes.TryIndex<NcContractRewardPoolPrototype>(poolDef.Id, out var poolProto) &&
-            poolProto.Entries is { Count: > 0, })
+            poolProto.Entries is { Count: > 0 })
             options = poolProto.Entries;
 
         if (options == null || options.Count == 0)

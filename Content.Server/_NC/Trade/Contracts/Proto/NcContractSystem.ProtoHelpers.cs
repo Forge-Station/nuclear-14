@@ -26,9 +26,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         if (_depthCache.TryGetValue(protoId, out var d))
         {
-                return 0;
-
-            return d;
+                return d < 0 ? 0 : d;
         }
 
         if (!_prototypes.TryIndex<EntityPrototype>(protoId, out var proto))
@@ -40,7 +38,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         var best = 0;
         var parents = proto.Parents;
-        if (parents is { Length: > 0, })
+        if (parents is { Length: > 0 })
         {
             foreach (var p in parents)
             {
@@ -64,7 +62,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (_prototypes.TryIndex<EntityPrototype>(protoId, out var proto))
         {
             var parents0 = proto.Parents;
-            if (parents0 is { Length: > 0, })
+            if (parents0 is { Length: > 0 })
             {
                 var stack = new Stack<string>(parents0);
                 var seen = new HashSet<string>();
@@ -80,7 +78,7 @@ public sealed partial class NcContractSystem : EntitySystem
                     if (_prototypes.TryIndex<EntityPrototype>(cur, out var p))
                     {
                         var parents = p.Parents;
-                        if (parents is { Length: > 0, })
+                        if (parents is { Length: > 0 })
                         {
                             foreach (var t in parents)
                                 stack.Push(t);
@@ -94,11 +92,6 @@ public sealed partial class NcContractSystem : EntitySystem
         return result;
     }
 
-
-    /// <summary>
-    ///     Returns true if <paramref name="childProtoId"/> is the same as <paramref name="ancestorProtoId"/> or inherits from it.
-    ///     Uses cached ancestor lists to avoid per-call Stack/HashSet allocations.
-    /// </summary>
     private bool IsProtoOrDescendant(string childProtoId, string ancestorProtoId)
     {
         if (childProtoId == ancestorProtoId)

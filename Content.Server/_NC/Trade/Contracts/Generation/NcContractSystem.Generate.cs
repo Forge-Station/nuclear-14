@@ -11,7 +11,7 @@ public sealed partial class NcContractSystem : EntitySystem
         var baseTargetItem = proto.TargetItem ?? string.Empty;
         var baseRequired = RollSmooth(new(QuasiKeyKind.Req, store, proto.ID, null), proto.Required, 1);
 
-        if (proto.Targets is { Count: > 0, })
+        if (proto.Targets is { Count: > 0 })
         {
             var targetCount = RollSmooth(new(QuasiKeyKind.Tc, store, proto.ID, null), proto.TargetCount, 1);
             if (targetCount <= 0)
@@ -72,7 +72,6 @@ public sealed partial class NcContractSystem : EntitySystem
 
         var mainTarget = targets.Count > 0 ? targets[0].TargetItem : string.Empty;
 
-        // --- Rewards (baked) ---
         var rewards = BakeRewardsForContract(store, proto);
 
         return new()

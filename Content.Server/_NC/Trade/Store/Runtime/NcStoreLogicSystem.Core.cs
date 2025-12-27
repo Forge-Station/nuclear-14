@@ -27,8 +27,6 @@ public sealed partial class NcStoreLogicSystem : EntitySystem
         base.Initialize();
         InitializeServices();
     }
-
-    public void ResetFrameCache() => _inventory.InvalidateAllCaches();
     public void InvalidateInventoryCache(EntityUid root) => _inventory.InvalidateInventoryCache(root);
 
     public EntityUid? GetPulledClosedCrate(EntityUid user) =>

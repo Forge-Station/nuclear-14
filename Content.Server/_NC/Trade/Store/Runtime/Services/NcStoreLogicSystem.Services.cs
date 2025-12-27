@@ -3,7 +3,6 @@ using Content.Shared.Hands.Components;
 using Content.Shared.Stacks;
 using Robust.Shared.Prototypes;
 
-
 namespace Content.Server._NC.Trade;
 
 
@@ -38,11 +37,15 @@ public sealed partial class NcStoreLogicSystem
         _currency.GiveCurrency(user, stackType, amount);
 
 
-
     private sealed class StoreSpawnService
     {
+        private readonly string _stackComponentName;
         private readonly NcStoreLogicSystem _sys;
-        public StoreSpawnService(NcStoreLogicSystem sys) { _sys = sys; }
+        public StoreSpawnService(NcStoreLogicSystem sys)
+        {
+            _sys = sys;
+            _stackComponentName = _sys._compFactory.GetComponentName(typeof(StackComponent));
+        }
 
         public int SpawnPurchasedProduct(
             EntityUid user,
@@ -56,7 +59,7 @@ public sealed partial class NcStoreLogicSystem
             if (amount <= 0)
                 return 0;
             var spawnedTotal = 0;
-            if (productProto.TryGetComponent("Stack", out StackComponent? stackComp))
+            if (productProto.TryGetComponent(_stackComponentName, out StackComponent? stackComp))
             {
                 var userCoords = _sys._ents.GetComponent<TransformComponent>(user).Coordinates;
                 var maxPerStack = int.MaxValue;
@@ -105,7 +108,6 @@ public sealed partial class NcStoreLogicSystem
 
                 return spawnedTotal;
             }
-
             for (var i = 0; i < amount; i++)
                 if (_sys.TrySpawnProduct(productEntity, user))
                     spawnedTotal++;

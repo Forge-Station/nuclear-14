@@ -100,7 +100,7 @@ public sealed class NcContractCard : PanelContainer
                 Modulate = Color.FromHex("#8A8A8A")
             });
 
-        if (_data.Targets is { Count: > 0, })
+        if (_data.Targets is { Count: > 0 })
         {
             foreach (var t in _data.Targets)
                 root.AddChild(BuildTargetRow(t.TargetItem, t.Required));
@@ -347,7 +347,7 @@ public sealed class NcContractCard : PanelContainer
     {
         var parts = new List<string>(maxParts);
 
-        if (c.Targets is { Count: > 0, })
+        if (c.Targets is { Count: > 0 })
         {
             foreach (var t in c.Targets)
             {
@@ -375,7 +375,7 @@ public sealed class NcContractCard : PanelContainer
 
     private int CalculateRequiredTotal(ContractClientData c)
     {
-        if (c.Targets is { Count: > 0, })
+        if (c.Targets is { Count: > 0 })
         {
             var sum = 0;
             foreach (var t in c.Targets)
