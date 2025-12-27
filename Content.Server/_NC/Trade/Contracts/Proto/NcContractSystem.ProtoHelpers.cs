@@ -25,17 +25,21 @@ public sealed partial class NcContractSystem : EntitySystem
     private int GetProtoDepth(string protoId)
     {
         if (_depthCache.TryGetValue(protoId, out var d))
+        {
+                return 0;
+
             return d;
+        }
 
         if (!_prototypes.TryIndex<EntityPrototype>(protoId, out var proto))
         {
             _depthCache[protoId] = 0;
             return 0;
         }
+        _depthCache[protoId] = -1;
 
         var best = 0;
         var parents = proto.Parents;
-
         if (parents is { Length: > 0, })
         {
             foreach (var p in parents)

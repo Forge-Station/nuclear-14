@@ -12,7 +12,7 @@ public sealed partial class NcStoreLogicSystem
 {
     private IEnumerable<EntityUid> EnumerateDeepItemsUnique(EntityUid owner)
     {
-        var cached = GetOrBuildDeepItemsCache(owner);
+        var cached = GetOrBuildDeepItemsCacheCompacted(owner);
         for (var i = 0; i < cached.Count; i++)
         {
             var ent = cached[i];

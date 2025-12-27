@@ -32,10 +32,9 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
             }
 
-            if (!_logic.TryTakeProductUnitsFromRoot(root, protoId, amount, PrototypeMatchMode.Exact))
+            if (!_logic.TryTakeProductUnitsFromRootCached(root, protoId, amount, PrototypeMatchMode.Exact))
             {
-                Sawmill.Error(
-                    $"[Claim] Take fallback failed for {amount}x {protoId} from {ToPrettyString(root)}. Aborting claim.");
+                Sawmill.Error($"[Claim] Take fallback failed for {amount}x {protoId} from {ToPrettyString(root)}. Aborting claim.");
                 return false;
             }
         }
@@ -44,7 +43,6 @@ public sealed partial class NcContractSystem : EntitySystem
         if (ctx.Crate is { } c)
             _logic.InvalidateInventoryCache(c);
 
-        // Mark progress complete.
         for (var i = 0; i < ctx.Contract.Targets.Count; i++)
         {
             var t = ctx.Contract.Targets[i];
@@ -55,7 +53,6 @@ public sealed partial class NcContractSystem : EntitySystem
             ctx.Contract.Targets[i] = t;
         }
 
-        // Payout.
         foreach (var reward in ctx.Contract.Rewards)
         {
             if (reward.Amount <= 0 || string.IsNullOrWhiteSpace(reward.Id))

@@ -66,7 +66,7 @@ public sealed partial class NcStoreLogicSystem
 
         foreach (var (root, reqs) in grouped)
         {
-            var cachedItems = GetOrBuildDeepItemsCache(root);
+            var cachedItems = GetOrBuildDeepItemsCacheCompacted(root);
 
             for (var i = 0; i < reqs.Count; i++)
             {

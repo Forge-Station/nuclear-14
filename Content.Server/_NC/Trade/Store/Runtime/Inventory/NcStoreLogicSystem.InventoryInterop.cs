@@ -26,9 +26,7 @@ public sealed partial class NcStoreLogicSystem
     {
         itemsBuffer.Clear();
 
-        var cached = GetOrBuildDeepItemsCache(root);
-        if (compactCache)
-            CompactCachedItems(cached);
+        var cached = compactCache ? GetOrBuildDeepItemsCacheCompacted(root) : GetOrBuildDeepItemsCache(root);
 
         for (var i = 0; i < cached.Count; i++)
         {
