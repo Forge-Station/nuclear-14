@@ -95,13 +95,6 @@ public sealed partial class NcStoreLogicSystem
                     catch (Exception e)
                     {
                         Sawmill.Error($"Spawn failed during bulk buy: {e}");
-                        if (remainingToSpawn > 0)
-                        {
-                            var refundL = (long) remainingToSpawn * unitPrice;
-                            if (refundL > 0 && refundL <= int.MaxValue)
-                                _sys.GiveCurrency(user, currency, (int) refundL);
-                        }
-
                         break;
                     }
                 }
@@ -112,7 +105,7 @@ public sealed partial class NcStoreLogicSystem
                 if (_sys.TrySpawnProduct(productEntity, user))
                     spawnedTotal++;
                 else
-                    _sys.GiveCurrency(user, currency, unitPrice);
+                    continue;
             return spawnedTotal;
         }
     }

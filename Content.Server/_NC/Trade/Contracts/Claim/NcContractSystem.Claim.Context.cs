@@ -56,7 +56,6 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        // Aggregate requirements (protoId + matchMode) to avoid repeated planning for identical keys.
         var requiredByKey = new Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int>();
         foreach (var t in targets)
         {
@@ -72,9 +71,6 @@ public sealed partial class NcContractSystem : EntitySystem
             if (!requiredByKey.TryAdd(key, t.Required))
                 requiredByKey[key] = checked(requiredByKey[key] + t.Required);
         }
-
-        // IMPORTANT: For claim planning we only need concrete items.
-        // Avoid snapshot computation (ancestor counts) to prevent double work.
         _logic.ScanInventoryItems(user, _scratchUserItems);
 
         EntityUid? crateEntity = null;

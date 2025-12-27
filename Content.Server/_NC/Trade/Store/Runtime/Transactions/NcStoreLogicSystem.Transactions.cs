@@ -42,6 +42,14 @@ public sealed partial class NcStoreLogicSystem
 
         _inventory.InvalidateInventoryCache(user);
 
+        if (spawnedTotal < actual)
+        {
+            var missing = actual - spawnedTotal;
+            var refundL = (long) missing * unitPrice;
+            if (refundL > 0 && refundL <= int.MaxValue)
+                GiveCurrency(user, currency, (int) refundL);
+        }
+
         if (spawnedTotal <= 0)
             return false;
 

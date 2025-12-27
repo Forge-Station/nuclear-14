@@ -15,6 +15,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
 
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
+    [Dependency] private readonly NcStoreInventorySystem _inventory = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
     private readonly Dictionary<QuasiKey, double> _quasiPhase = new();
     [Dependency] private readonly IRobustRandom _random = default!;

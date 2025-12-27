@@ -87,7 +87,7 @@ public sealed class NcStoreInventorySystem : EntitySystem
     public List<EntityUid> GetOrBuildDeepItemsCacheCompacted(EntityUid owner)
     {
         var cached = GetOrBuildDeepItemsCache(owner);
-        CompactCachedItems(cached);
+        CompactCachedItemsIfNeeded(cached);
         return cached;
     }
 
@@ -168,7 +168,35 @@ public sealed class NcStoreInventorySystem : EntitySystem
     }
 
 
-    public NcInventorySnapshot BuildInventorySnapshot(EntityUid root)
+
+    private void CompactCachedItemsIfNeeded(List<EntityUid> cached)
+    {
+        if (cached.Count < 256)
+            return;
+
+        var invalid = 0;
+        var threshold = Math.Max(64, cached.Count / 4);
+
+        // Fast detection: stop as soon as we know we must compact.
+        for (var i = 0; i < cached.Count; i++)
+        {
+            var ent = cached[i];
+            if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
+            {
+                invalid++;
+                if (invalid >= threshold)
+                    break;
+            }
+        }
+
+        if (invalid < threshold)
+            return;
+
+        CompactCachedItems(cached);
+    }
+
+
+public NcInventorySnapshot BuildInventorySnapshot(EntityUid root)
     {
         var snap = new NcInventorySnapshot();
         FillInventorySnapshot(root, snap);
@@ -340,6 +368,7 @@ public void ScanInventoryItems(EntityUid root, List<EntityUid> itemsBuffer)
             return false;
 
         var left = amount;
+        var compactNeeded = false;
 
         for (var i = 0; i < cachedItems.Count && left > 0; i++)
         {
@@ -365,6 +394,7 @@ public void ScanInventoryItems(EntityUid root, List<EntityUid> itemsBuffer)
                 {
                     _ents.DeleteEntity(ent);
                     cachedItems[i] = EntityUid.Invalid;
+                compactNeeded = true;
                 }
 
                 left -= take;
@@ -399,6 +429,7 @@ public void ScanInventoryItems(EntityUid root, List<EntityUid> itemsBuffer)
                 {
                     _ents.DeleteEntity(item);
                     cachedItems[index] = EntityUid.Invalid;
+                compactNeeded = true;
                 }
 
                 left -= take;
@@ -407,9 +438,13 @@ public void ScanInventoryItems(EntityUid root, List<EntityUid> itemsBuffer)
             {
                 _ents.DeleteEntity(item);
                 cachedItems[index] = EntityUid.Invalid;
+                compactNeeded = true;
                 left -= 1;
             }
         }
+
+        if (compactNeeded)
+            CompactCachedItemsIfNeeded(cachedItems);
 
         return left <= 0;
     }

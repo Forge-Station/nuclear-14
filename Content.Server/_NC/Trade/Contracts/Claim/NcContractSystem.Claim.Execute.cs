@@ -78,9 +78,9 @@ public sealed partial class NcContractSystem : EntitySystem
             EntityManager.DeleteEntity(e.Entity);
         }
 
-        _logic.InvalidateInventoryCache(ctx.User);
+        _inventory.InvalidateInventoryCache(ctx.User);
         if (ctx.Crate is { } c)
-            _logic.InvalidateInventoryCache(c);
+            _inventory.InvalidateInventoryCache(c);
 
         // Mark targets as completed.
         for (var i = 0; i < ctx.Contract.Targets.Count; i++)

@@ -490,11 +490,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             return;
         }
 
-        _logic.InvalidateInventoryCache(user);
         NcInventorySnapshot? crateSnap = null;
         EntityUid crate = default;
-        if (_logic.TryGetPulledClosedCrate(user, out crate))
-            _logic.InvalidateInventoryCache(crate);
+        _logic.TryGetPulledClosedCrate(user, out crate);
         var userSnap = _logic.BuildInventorySnapshot(user);
         if (crate != default)
             crateSnap = _logic.BuildInventorySnapshot(crate);
