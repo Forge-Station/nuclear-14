@@ -485,21 +485,26 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     {
         if (comp.CurrentUser is not { } user)
             return;
+        if (_contracts.TryClaim(uid, user, msg.ContractId))
+        {
+            _audio.PlayPvs(new SoundPathSpecifier("/Audio/Effects/Cargo/ping.ogg"), user);
+            _popups.PopupEntity(Loc.GetString("nc-store-contract-completed"), uid, user);
+            UpdateDynamicState(uid, comp, user);
+            return;
+        }
+
         _logic.InvalidateInventoryCache(user);
 
-        if (_logic.TryGetPulledClosedCrate(user, out var crate))
+        NcStoreLogicSystem.InventorySnapshot? crateSnap = null;
+        EntityUid crate = default;
+        if (_logic.TryGetPulledClosedCrate(user, out crate))
             _logic.InvalidateInventoryCache(crate);
 
         var userSnap = _logic.BuildInventorySnapshot(user);
-        NcStoreLogicSystem.InventorySnapshot? crateSnap = null;
         if (crate != default)
             crateSnap = _logic.BuildInventorySnapshot(crate);
+
         UpdateContractsProgress(comp, userSnap, crateSnap);
-        if (!_contracts.TryClaim(uid, user, msg.ContractId))
-            return;
-        _audio.PlayPvs(new SoundPathSpecifier("/Audio/Effects/Cargo/ping.ogg"), user);
-        _popups.PopupEntity(Loc.GetString("nc-store-contract-completed"), uid, user);
-        UpdateDynamicState(uid, comp, user);
     }
 
     private void MarkDirty(EntityUid storeUid)

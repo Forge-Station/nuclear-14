@@ -47,8 +47,7 @@ public sealed partial class NcContractSystem : EntitySystem
         // Build deep lists + snapshots exactly once per root.
         _logic.InvalidateInventoryCache(user);
 
-        _logic.FillDeepItemsList(user, _scratchUserItems);
-        _logic.FillInventorySnapshotFromItems(user, _scratchUserItems, _scratchUserSnap);
+        _logic.ScanInventory(user, _scratchUserItems, _scratchUserSnap);
         var userSnap = _scratchUserSnap;
 
         var hasCrate = false;
@@ -60,8 +59,7 @@ public sealed partial class NcContractSystem : EntitySystem
             crateEntity = c0;
             _logic.InvalidateInventoryCache(c0);
 
-            _logic.FillDeepItemsList(c0, _scratchCrateItems);
-            _logic.FillInventorySnapshotFromItems(c0, _scratchCrateItems, _scratchCrateSnap);
+            _logic.ScanInventory(c0, _scratchCrateItems, _scratchCrateSnap);
 
             crateSnap = _scratchCrateSnap;
             hasCrate = true;

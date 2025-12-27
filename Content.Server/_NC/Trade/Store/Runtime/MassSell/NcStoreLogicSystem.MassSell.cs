@@ -10,7 +10,9 @@ public sealed partial class NcStoreLogicSystem
     public MassSellPlan ComputeMassSellPlan(NcStoreComponent store, EntityUid container)
     {
         InvalidateInventoryCache(container);
-        return ComputeMassSellPlanInternal(store, EnumerateDeepItemsUnique(container));
+        var cached = GetOrBuildDeepItemsCache(container);
+        CompactCachedItems(cached);
+        return ComputeMassSellPlanInternal(store, cached);
     }
 
     public MassSellPlan ComputeMassSellPlanFromCachedItems(
@@ -232,7 +234,10 @@ public sealed partial class NcStoreLogicSystem
         InvalidateInventoryCache(container);
 
         _scratchItems.Clear();
-        foreach (var item in EnumerateDeepItemsUnique(container))
+        var cached = GetOrBuildDeepItemsCache(container);
+        CompactCachedItems(cached);
+
+        foreach (var item in cached)
             _scratchItems.Add(item);
 
         var cachedItems = _scratchItems;

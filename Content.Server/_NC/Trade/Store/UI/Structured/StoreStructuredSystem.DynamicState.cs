@@ -17,16 +17,14 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         // Build deep lists + snapshots exactly once per root (avoid double scans on big crates).
         _logic.InvalidateInventoryCache(user);
-        _logic.FillDeepItemsList(user, _deepUserItemsScratch);
-        _logic.FillInventorySnapshotFromItems(user, _deepUserItemsScratch, _userSnapScratch);
+        _logic.ScanInventory(user, _deepUserItemsScratch, _userSnapScratch);
         var userSnap = _userSnapScratch;
 
         NcStoreLogicSystem.InventorySnapshot? crateSnap = null;
         if (crateUid is { } crateEntity)
         {
             _logic.InvalidateInventoryCache(crateEntity);
-            _logic.FillDeepItemsList(crateEntity, _deepCrateItemsScratch);
-            _logic.FillInventorySnapshotFromItems(crateEntity, _deepCrateItemsScratch, _crateSnapScratch);
+            _logic.ScanInventory(crateEntity, _deepCrateItemsScratch, _crateSnapScratch);
             crateSnap = _crateSnapScratch;
         }
 

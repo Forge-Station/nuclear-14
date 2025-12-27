@@ -5,12 +5,42 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcStoreLogicSystem
 {
-
     public void FillDeepItemsList(EntityUid root, List<EntityUid> buffer)
     {
         buffer.Clear();
-        foreach (var ent in EnumerateDeepItemsUnique(root))
+        var cached = GetOrBuildDeepItemsCache(root);
+        CompactCachedItems(cached);
+        for (var i = 0; i < cached.Count; i++)
+        {
+            var ent = cached[i];
+            if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
+                continue;
             buffer.Add(ent);
+        }
+    }
+
+    public void ScanInventory(
+        EntityUid root,
+        List<EntityUid> itemsBuffer,
+        InventorySnapshot snapshotBuffer,
+        bool compactCache = true)
+    {
+        itemsBuffer.Clear();
+
+        var cached = GetOrBuildDeepItemsCache(root);
+        if (compactCache)
+            CompactCachedItems(cached);
+
+        for (var i = 0; i < cached.Count; i++)
+        {
+            var ent = cached[i];
+            if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
+                continue;
+
+            itemsBuffer.Add(ent);
+        }
+
+        FillInventorySnapshotFromItems(root, itemsBuffer, snapshotBuffer);
     }
 
     public void FillInventorySnapshotFromItems(EntityUid root, IReadOnlyList<EntityUid> items, InventorySnapshot buffer)
@@ -74,5 +104,4 @@ public sealed partial class NcStoreLogicSystem
         PrototypeMatchMode matchMode
     ) =>
         TryTakeProductUnitsFromCachedList(root, cachedItems, protoId, amount, matchMode);
-
 }

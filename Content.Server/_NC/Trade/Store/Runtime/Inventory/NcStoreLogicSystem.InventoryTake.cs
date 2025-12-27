@@ -258,7 +258,10 @@ public sealed partial class NcStoreLogicSystem
 
         long remaining = amount;
 
-        foreach (var ent in EnumerateDeepItemsUnique(user))
+        var cached = GetOrBuildDeepItemsCache(user);
+        CompactCachedItems(cached);
+
+        foreach (var ent in cached)
         {
             if (remaining <= 0)
                 break;

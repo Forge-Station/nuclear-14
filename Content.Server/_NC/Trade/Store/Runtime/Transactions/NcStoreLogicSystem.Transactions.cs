@@ -212,7 +212,10 @@ public sealed partial class NcStoreLogicSystem
         var expectedStackType = GetProductStackType(productProtoId);
         var effective = ResolveMatchMode(productProtoId, matchMode);
 
-        foreach (var ent in EnumerateDeepItemsUnique(root))
+        var cached = GetOrBuildDeepItemsCache(root);
+        CompactCachedItems(cached);
+
+        foreach (var ent in cached)
         {
             if (IsProtectedFromDirectSale(root, ent))
                 continue;
