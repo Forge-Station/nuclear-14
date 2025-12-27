@@ -23,13 +23,11 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryPrepareClaimContext(store, user, contractId, out var ctx, out var prepFail))
             return prepFail;
 
-        if (!TryBuildClaimExecutionBatches(ctx, out var exec, out var planFail))
-            return planFail;
-
-        if (!TryExecuteClaimBatches(ctx, exec, out var execFail))
+        if (!TryExecuteClaimTakePlan(ctx, out var execFail))
             return execFail;
 
         FinalizeClaim(ctx, contractId);
         return ClaimAttemptResult.Ok();
     }
+
 }

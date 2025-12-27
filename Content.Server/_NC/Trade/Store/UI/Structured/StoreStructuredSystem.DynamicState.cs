@@ -73,27 +73,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
 
         foreach (var c in comp.Contracts.Values)
-        {
-            var cd = MapContractToClient(c);
-            buf.Contracts.Add(cd);
-            unchecked
-            {
-                var h = 17;
-                h = h * 31 + (cd.Id?.GetHashCode() ?? 0);
-                h = h * 31 + (cd.Completed ? 1 : 0);
-                h = h * 31 + cd.Progress;
-                h = h * 31 + cd.Required;
-                h = h * 31 + (cd.Difficulty?.GetHashCode() ?? 0);
-                h = h * 31 + (cd.Name?.GetHashCode() ?? 0);
-                h = h * 31 + (cd.Targets?.Count ?? 0);
-                h = h * 31 + (cd.Rewards?.Count ?? 0);
-                buf.ContractsHash ^= h;
-            }
-        }
-
-        var prev = scratch.GetReadBuffer();
-        if (DynamicBufferEquals(prev, buf))
-            return;
+            buf.Contracts.Add(MapContractToClient(c));
 
         comp.UiRevision = unchecked(comp.UiRevision + 1);
 
@@ -116,45 +96,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         scratch.Commit();
     }
-
-    private static bool DynamicBufferEquals(DynamicStateBuffer a, DynamicStateBuffer b)
-    {
-        if (!DictEquals(a.BalancesByCurrency, b.BalancesByCurrency))
-            return false;
-        if (!DictEquals(a.RemainingById, b.RemainingById))
-            return false;
-        if (!DictEquals(a.OwnedById, b.OwnedById))
-            return false;
-        if (!DictEquals(a.CrateUnitsById, b.CrateUnitsById))
-            return false;
-        if (!DictEquals(a.CrateTotals, b.CrateTotals))
-            return false;
-
-        // Contracts: use precomputed order-independent hash + count.
-        if (a.Contracts.Count != b.Contracts.Count)
-            return false;
-        if (a.ContractsHash != b.ContractsHash)
-            return false;
-
-        return true;
-    }
-
-    private static bool DictEquals(Dictionary<string, int> a, Dictionary<string, int> b)
-    {
-        if (ReferenceEquals(a, b))
-            return true;
-        if (a.Count != b.Count)
-            return false;
-
-        foreach (var (k, av) in a)
-        {
-            if (!b.TryGetValue(k, out var bv) || bv != av)
-                return false;
-        }
-
-        return true;
-    }
-
 
     private bool TryFindWatchedRoot(EntityUid start, out EntityUid watchedRoot)
     {

@@ -1,4 +1,7 @@
+using System.Linq;
 using Content.Shared._NC.Trade;
+using Content.Shared.Stacks;
+
 
 namespace Content.Server._NC.Trade;
 
@@ -12,10 +15,10 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData Contract,
         List<ContractTargetServerData> Targets,
         Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> RequiredByKey,
-        NcInventorySnapshot UserSnap,
         List<EntityUid> UserItems,
-        NcInventorySnapshot? CrateSnap,
-        List<EntityUid>? CrateItems);
+        List<EntityUid>? CrateItems,
+        List<ClaimTakeEntry> TakePlan
+    );
 
     private bool TryPrepareClaimContext(
         EntityUid store,
@@ -30,29 +33,38 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (!TryComp(store, out NcStoreComponent? comp))
         {
-            fail = ClaimAttemptResult.Fail(ClaimFailureReason.StoreMissing, $"Store {ToPrettyString(store)} has no NcStoreComponent.");
+            fail = ClaimAttemptResult.Fail(
+                ClaimFailureReason.StoreMissing,
+                $"Store {ToPrettyString(store)} has no NcStoreComponent.");
             return false;
         }
 
         if (!comp.Contracts.TryGetValue(contractId, out var contract))
         {
-            fail = ClaimAttemptResult.Fail(ClaimFailureReason.ContractMissing, $"Store {ToPrettyString(store)} has no contract '{contractId}'.");
+            fail = ClaimAttemptResult.Fail(
+                ClaimFailureReason.ContractMissing,
+                $"Store {ToPrettyString(store)} has no contract '{contractId}'.");
             return false;
         }
 
         var targets = GetEffectiveTargets(contract);
         if (targets.Count == 0)
         {
-            fail = ClaimAttemptResult.Fail(ClaimFailureReason.NoValidTargets, $"Contract '{contractId}' has no valid targets.");
+            fail = ClaimAttemptResult.Fail(
+                ClaimFailureReason.NoValidTargets,
+                $"Contract '{contractId}' has no valid targets.");
             return false;
         }
 
+        // Aggregate requirements (protoId + matchMode) to avoid repeated planning for identical keys.
         var requiredByKey = new Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int>();
         foreach (var t in targets)
         {
             if (string.IsNullOrWhiteSpace(t.TargetItem) || t.Required <= 0)
             {
-                fail = ClaimAttemptResult.Fail(ClaimFailureReason.InvalidTarget, $"Invalid target '{t.TargetItem}' (required={t.Required}).");
+                fail = ClaimAttemptResult.Fail(
+                    ClaimFailureReason.InvalidTarget,
+                    $"Invalid target '{t.TargetItem}' (required={t.Required}).");
                 return false;
             }
 
@@ -61,42 +73,75 @@ public sealed partial class NcContractSystem : EntitySystem
                 requiredByKey[key] = checked(requiredByKey[key] + t.Required);
         }
 
-        _logic.ScanInventory(user, _scratchUserItems, _scratchUserSnap);
-        var userSnap = _scratchUserSnap;
+        // IMPORTANT: For claim planning we only need concrete items.
+        // Avoid snapshot computation (ancestor counts) to prevent double work.
+        _logic.ScanInventoryItems(user, _scratchUserItems);
 
         EntityUid? crateEntity = null;
-        NcInventorySnapshot? crateSnap = null;
         List<EntityUid>? crateItems = null;
 
         var crateUid = _logic.GetPulledClosedCrate(user);
         if (crateUid is { } c0 && Exists(c0))
         {
             crateEntity = c0;
-            _logic.ScanInventory(c0, _scratchCrateItems, _scratchCrateSnap);
-            crateSnap = _scratchCrateSnap;
+            _logic.ScanInventoryItems(c0, _scratchCrateItems);
             crateItems = _scratchCrateItems;
         }
 
-        foreach (var kvp in requiredByKey)
+        var takePlan = new List<ClaimTakeEntry>(64);
+        var virtualStackLeft = new Dictionary<EntityUid, int>();
+
+        var orderedKeys = requiredByKey
+            .OrderBy(k => k.Key.ProtoId, StringComparer.Ordinal)
+            .ThenBy(k => (int) k.Key.MatchMode)
+            .ToArray();
+
+        foreach (var kvp in orderedKeys)
         {
             var (protoId, matchMode) = kvp.Key;
             var required = kvp.Value;
+            if (required <= 0)
+                continue;
 
-            var ownedUser = _logic.GetOwnedFromSnapshot(userSnap, protoId, matchMode);
+            var need = required;
 
-            var ownedCrate = crateSnap != null
-                ? _logic.GetOwnedFromSnapshot(crateSnap, protoId, matchMode)
-                : 0;
+            if (crateEntity is { } crate && crateItems != null)
+            {
+                var reserved = ReserveTakePlanFromItems(
+                    crate,
+                    crateItems,
+                    protoId,
+                    matchMode,
+                    need,
+                    virtualStackLeft,
+                    takePlan);
 
-            if (ownedUser + ownedCrate < required)
+                need -= reserved;
+            }
+
+            if (need > 0)
+            {
+                var reserved = ReserveTakePlanFromItems(
+                    user,
+                    _scratchUserItems,
+                    protoId,
+                    matchMode,
+                    need,
+                    virtualStackLeft,
+                    takePlan);
+
+                need -= reserved;
+            }
+
+            if (need > 0)
             {
                 fail = ClaimAttemptResult.Fail(
                     ClaimFailureReason.NotEnoughItems,
-                    $"need {required}x {protoId} (mode={matchMode}), have user={ownedUser}, crate={ownedCrate}"
-                );
+                    $"need {required}x {protoId} (mode={matchMode}), missing {need} after planning.");
                 return false;
             }
         }
+
         ctx = new ClaimContext(
             store,
             user,
@@ -105,10 +150,145 @@ public sealed partial class NcContractSystem : EntitySystem
             contract,
             targets,
             requiredByKey,
-            userSnap,
             _scratchUserItems,
-            crateSnap,
-            crateItems);
+            crateItems,
+            takePlan);
+
         return true;
+    }
+
+    private int ReserveTakePlanFromItems(
+        EntityUid root,
+        List<EntityUid> items,
+        string expectedProtoId,
+        PrototypeMatchMode matchMode,
+        int need,
+        Dictionary<EntityUid, int> virtualStackLeft,
+        List<ClaimTakeEntry> planOut
+    )
+    {
+        if (need <= 0)
+            return 0;
+
+        var reserved = 0;
+
+        // Case A: expected product is stack-based. Prefer stack-type matching.
+        if (TryGetStackTypeId(expectedProtoId, out var stackTypeId))
+        {
+            for (var i = 0; i < items.Count && reserved < need; i++)
+            {
+                var ent = items[i];
+                if (ent == EntityUid.Invalid || !EntityManager.EntityExists(ent))
+                    continue;
+
+                if (_logic.IsProtectedFromDirectSale(root, ent))
+                    continue;
+
+                if (!TryComp(ent, out StackComponent? stack) || stack.StackTypeId != stackTypeId)
+                    continue;
+
+                var have = virtualStackLeft.TryGetValue(ent, out var v)
+                    ? v
+                    : Math.Max(stack.Count, 0);
+
+                if (have <= 0)
+                {
+                    items[i] = EntityUid.Invalid;
+                    continue;
+                }
+
+                var take = Math.Min(have, need - reserved);
+                if (take <= 0)
+                    continue;
+
+                planOut.Add(new ClaimTakeEntry(root, ent, take, true));
+                reserved += take;
+
+                var left = have - take;
+                if (left > 0)
+                    virtualStackLeft[ent] = left;
+                else
+                {
+                    virtualStackLeft.Remove(ent);
+                    items[i] = EntityUid.Invalid;
+                }
+            }
+
+            return reserved;
+        }
+
+        // Case B: prototype matching (Exact / Descendants)
+        for (var i = 0; i < items.Count && reserved < need; i++)
+        {
+            var ent = items[i];
+            if (ent == EntityUid.Invalid || !EntityManager.EntityExists(ent))
+                continue;
+
+            if (_logic.IsProtectedFromDirectSale(root, ent))
+                continue;
+
+            if (!TryComp(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
+                continue;
+
+            var candidateId = meta.EntityPrototype.ID;
+
+            var matches = matchMode == PrototypeMatchMode.Exact
+                ? candidateId == expectedProtoId
+                : candidateId == expectedProtoId || IsDescendantId(candidateId, expectedProtoId);
+
+            if (!matches)
+                continue;
+
+            // If the entity is a stack, treat its Count as units (same behavior as inventory take).
+            if (TryComp(ent, out StackComponent? st) && st.Count > 0)
+            {
+                var have = virtualStackLeft.TryGetValue(ent, out var v)
+                    ? v
+                    : Math.Max(st.Count, 0);
+
+                if (have <= 0)
+                {
+                    items[i] = EntityUid.Invalid;
+                    continue;
+                }
+
+                var take = Math.Min(have, need - reserved);
+                if (take <= 0)
+                    continue;
+
+                planOut.Add(new ClaimTakeEntry(root, ent, take, true));
+                reserved += take;
+
+                var left = have - take;
+                if (left > 0)
+                    virtualStackLeft[ent] = left;
+                else
+                {
+                    virtualStackLeft.Remove(ent);
+                    items[i] = EntityUid.Invalid;
+                }
+
+                continue;
+            }
+
+            planOut.Add(new ClaimTakeEntry(root, ent, 1, false));
+            reserved += 1;
+            items[i] = EntityUid.Invalid;
+        }
+
+        return reserved;
+    }
+
+    private bool IsDescendantId(string candidateProtoId, string expectedAncestorId)
+    {
+
+        var ancestors = GetAncestorsInclusive(candidateProtoId);
+        for (var i = 0; i < ancestors.Count; i++)
+        {
+            if (ancestors[i] == expectedAncestorId)
+                return true;
+        }
+
+        return false;
     }
 }

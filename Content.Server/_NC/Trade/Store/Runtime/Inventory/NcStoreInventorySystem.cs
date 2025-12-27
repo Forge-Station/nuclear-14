@@ -16,7 +16,6 @@ public sealed class NcStoreInventorySystem : EntitySystem
     [Dependency] private readonly IComponentFactory _compFactory = default!;
     [Dependency] private readonly IEntityManager _ents = default!;
     private readonly Dictionary<EntityUid, List<EntityUid>> _inventoryCache = new();
-    private readonly HashSet<EntityUid> _inventoryDirty = new();
     private readonly Dictionary<string, string?> _productStackTypeCache = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string[]> _protoAndAncestorsCache = new(StringComparer.Ordinal);
     [Dependency] private readonly IPrototypeManager _protos = default!;
@@ -48,33 +47,15 @@ public sealed class NcStoreInventorySystem : EntitySystem
     private void OnEntityTerminating(ref EntityTerminatingEvent ev) => InvalidateInventoryCache(ev.Entity);
 
 
-    public void InvalidateInventoryCache(EntityUid root)
-    {
-        if (root == EntityUid.Invalid)
-            return;
-        _inventoryDirty.Add(root);
-    }
-
-    public void InvalidateAllCaches()
-    {
-        _inventoryCache.Clear();
-        _inventoryDirty.Clear();
-        _protoAndAncestorsCache.Clear();
-    }
+    public void InvalidateInventoryCache(EntityUid root) => _inventoryCache.Remove(root);
+    public void InvalidateAllCaches() => _inventoryCache.Clear();
 
     public List<EntityUid> GetOrBuildDeepItemsCache(EntityUid owner)
     {
         if (_inventoryCache.TryGetValue(owner, out var cached))
-        {
-            if (_inventoryDirty.Remove(owner))
-                BuildDeepItemsCache(owner, cached);
             return cached;
-        }
 
-        cached = new();
-        BuildDeepItemsCache(owner, cached);
-        _inventoryCache[owner] = cached;
-        _inventoryDirty.Remove(owner);
+        BuildDeepItemsCache(owner, out cached);
         return cached;
     }
 
@@ -86,7 +67,7 @@ public sealed class NcStoreInventorySystem : EntitySystem
     }
 
 
-    private void BuildDeepItemsCache(EntityUid owner, List<EntityUid> cached)
+    private void BuildDeepItemsCache(EntityUid owner, out List<EntityUid> cached)
     {
         _scratchVisited.Clear();
         _scratchQueue.Clear();
@@ -141,10 +122,9 @@ public sealed class NcStoreInventorySystem : EntitySystem
                     Enqueue(child);
         }
 
-        cached.Clear();
-        if (cached.Capacity < _scratchResult.Count)
-            cached.Capacity = _scratchResult.Count;
+        cached = new(_scratchResult.Count);
         cached.AddRange(_scratchResult);
+        _inventoryCache[owner] = cached;
     }
 
     private void CompactCachedItems(List<EntityUid> cached)
@@ -182,6 +162,15 @@ public sealed class NcStoreInventorySystem : EntitySystem
         itemsBuffer.AddRange(cached);
         FillInventorySnapshotFromItems(root, itemsBuffer, snapshotBuffer);
     }
+
+
+public void ScanInventoryItems(EntityUid root, List<EntityUid> itemsBuffer)
+{
+    itemsBuffer.Clear();
+    var cached = GetOrBuildDeepItemsCacheCompacted(root);
+    itemsBuffer.AddRange(cached);
+}
+
 
     private void FillInventorySnapshotFromItems(
         EntityUid root,

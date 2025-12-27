@@ -8,6 +8,8 @@ public sealed partial class NcContractSystem : EntitySystem
 {
     private readonly record struct ClaimSlice(EntityUid Root, string ProtoId, int Amount);
 
+    private readonly record struct ClaimTakeEntry(EntityUid Root, EntityUid Entity, int Amount, bool IsStack);
+
     private enum ClaimFailureReason : byte
     {
         None = 0,

@@ -39,32 +39,6 @@ public sealed partial class NcStoreLogicSystem
         var protoCounts = new Dictionary<string, int>(StringComparer.Ordinal);
         var protoCache = new Dictionary<string, EntityPrototype>(StringComparer.Ordinal);
         var stackProtoToType = new Dictionary<string, string>(StringComparer.Ordinal);
-        var descendantCache = new Dictionary<(string Candidate, string Expected), bool>();
-
-        bool IsDescendantCached(EntityPrototype candidate, string expectedId)
-        {
-            if (candidate.ID == expectedId)
-                return true;
-
-            var key = (candidate.ID, expectedId);
-            if (descendantCache.TryGetValue(key, out var ok))
-                return ok;
-
-            ok = false;
-            var ancestors = _inventory.GetProtoAndAncestors(candidate);
-            for (var ai = 0; ai < ancestors.Length; ai++)
-            {
-                if (ancestors[ai] == expectedId)
-                {
-                    ok = true;
-                    break;
-                }
-            }
-
-            descendantCache[key] = ok;
-            return ok;
-        }
-
 
         foreach (var ent in items)
         {
@@ -200,7 +174,7 @@ public sealed partial class NcStoreLogicSystem
                             continue;
                         protoCache[protoId] = proto;
 
-                        if (!IsDescendantCached(proto, listing.ProductEntity))
+                        if (!IsProtoOrDescendantLocal(proto, listing.ProductEntity))
                             continue;
 
                         var take = Math.Min(available, want - taken);

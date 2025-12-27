@@ -18,15 +18,18 @@ public sealed class StoreBuyListingBoundUiMessage : BoundUserInterfaceMessage
 [Serializable, NetSerializable]
 public sealed class StoreSellListingBoundUiMessage : BoundUserInterfaceMessage
 {
-    public StoreSellListingBoundUiMessage(string id, int count)
+    public StoreSellListingBoundUiMessage(string id, int count, bool fromCrate = false)
     {
         Id = id;
         Count = count;
+        FromCrate = fromCrate;
     }
 
     public string Id { get; }
     public int Count { get; }
+    public bool FromCrate { get; }
 }
+
 
 [Serializable, NetSerializable]
 public sealed class StoreMassSellPulledCrateBoundUiMessage : BoundUserInterfaceMessage { }
