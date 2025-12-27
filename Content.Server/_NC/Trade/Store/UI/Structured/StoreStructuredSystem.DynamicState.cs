@@ -14,32 +14,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             crateUid = pulledCrate;
 
         UpdateStoreWatch(uid, user, crateUid);
-        _logic.ScanInventory(user, _deepUserItemsScratch, _userSnapScratch);
-        var userSnap = _userSnapScratch;
-        NcInventorySnapshot? crateSnap = null;
-        if (crateUid is { } crateEntity)
-        {
-            _logic.ScanInventory(crateEntity, _deepCrateItemsScratch, _crateSnapScratch);
-            crateSnap = _crateSnapScratch;
-        }
-
-        UpdateContractsProgress(comp, userSnap, crateSnap);
-
-        var scratch = GetDynamicScratch(uid);
-        var buf = scratch.GetWriteBuffer();
-        buf.Clear();
-
-        foreach (var cur in comp.CurrencyWhitelist)
-        {
-            if (string.IsNullOrWhiteSpace(cur))
-                continue;
-
-            buf.BalancesByCurrency[cur] = userSnap.StackTypeCounts.TryGetValue(cur, out var b) ? b : 0;
-        }
-
         var hasBuyTab = false;
         var hasSellTab = false;
-
         foreach (var l in comp.Listings)
         {
             if (l.Mode == StoreMode.Buy)
@@ -47,19 +23,77 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             else if (l.Mode == StoreMode.Sell)
                 hasSellTab = true;
 
+            if (hasBuyTab && hasSellTab)
+                break;
+        }
+
+        var hasContractsTab = comp.ContractPresets.Count > 0 || !string.IsNullOrWhiteSpace(comp.LegacyContractsPreset);
+
+        var needUserSnap = hasContractsTab;
+        if (!needUserSnap && comp.CurrencyWhitelist.Count > 0)
+            needUserSnap = true;
+
+        if (!needUserSnap)
+        {
+            foreach (var l in comp.Listings)
+            {
+                if (!string.IsNullOrWhiteSpace(l.ProductEntity))
+                {
+                    needUserSnap = true;
+                    break;
+                }
+            }
+        }
+
+        var needCrateScan = crateUid != null && (hasSellTab || hasContractsTab);
+
+        NcInventorySnapshot? userSnap = null;
+        NcInventorySnapshot? crateSnap = null;
+
+        if (needUserSnap)
+        {
+            _logic.ScanInventory(user, _deepUserItemsScratch, _userSnapScratch);
+            userSnap = _userSnapScratch;
+        }
+
+        if (needCrateScan && crateUid is { } crateEntity)
+        {
+            _logic.ScanInventory(crateEntity, _deepCrateItemsScratch, _crateSnapScratch);
+            crateSnap = _crateSnapScratch;
+        }
+
+        if (hasContractsTab && userSnap != null)
+            UpdateContractsProgress(comp, userSnap, crateSnap);
+
+        var scratch = GetDynamicScratch(uid);
+        var buf = scratch.GetWriteBuffer();
+        buf.Clear();
+
+        if (userSnap != null)
+        {
+            foreach (var cur in comp.CurrencyWhitelist)
+            {
+                if (string.IsNullOrWhiteSpace(cur))
+                    continue;
+
+                buf.BalancesByCurrency[cur] = userSnap.StackTypeCounts.TryGetValue(cur, out var b) ? b : 0;
+            }
+        }
+
+        foreach (var l in comp.Listings)
+        {
             if (string.IsNullOrWhiteSpace(l.Id))
                 continue;
 
             buf.RemainingById[l.Id] = l.RemainingCount;
 
-            if (!string.IsNullOrWhiteSpace(l.ProductEntity))
+            if (userSnap != null && !string.IsNullOrWhiteSpace(l.ProductEntity))
             {
-                // ИСПРАВЛЕНО: GetOwnedFromSnapshot теперь в _logic
                 buf.OwnedById[l.Id] = _logic.GetOwnedFromSnapshot(userSnap, l.ProductEntity, l.MatchMode);
             }
         }
 
-        if (crateUid is { } crate)
+        if (hasSellTab && needCrateScan && crateUid is { } crate)
         {
             var plan = _logic.ComputeMassSellPlanFromCachedItems(comp, crate, _deepCrateItemsScratch);
 
@@ -72,36 +106,37 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                     buf.CrateTotals[kvp.Key] = kvp.Value;
         }
 
-        
-foreach (var c in comp.Contracts.Values)
-    buf.Contracts.Add(MapContractToClient(c));
+        if (hasContractsTab && comp.Contracts.Count > 0)
+        {
+            foreach (var c in comp.Contracts.Values)
+                buf.Contracts.Add(MapContractToClient(c));
+        }
 
-var hasContractsTab = comp.ContractPresets.Count > 0 || !string.IsNullOrWhiteSpace(comp.LegacyContractsPreset);
+        if (scratch.EqualsLast(buf, comp.CatalogRevision, hasBuyTab, hasSellTab, hasContractsTab))
+            return;
 
-// Skip network update if nothing actually changed since the last sent state.
-if (scratch.EqualsLast(buf, comp.CatalogRevision, hasBuyTab, hasSellTab, hasContractsTab))
-    return;
+        comp.UiRevision = unchecked(comp.UiRevision + 1);
 
-comp.UiRevision = unchecked(comp.UiRevision + 1);
+        _ui.SetUiState(
+            uid,
+            StoreUiKey.Key,
+            new StoreDynamicState(
+                comp.UiRevision,
+                comp.CatalogRevision,
+                buf.BalancesByCurrency,
+                buf.RemainingById,
+                buf.OwnedById,
+                buf.CrateUnitsById,
+                buf.CrateTotals,
+                buf.Contracts,
+                hasBuyTab,
+                hasSellTab,
+                hasContractsTab
+            )
+        );
 
-_ui.SetUiState(
-    uid,
-    StoreUiKey.Key,
-    new StoreDynamicState(
-        comp.UiRevision,
-        comp.CatalogRevision,
-        buf.BalancesByCurrency,
-        buf.RemainingById,
-        buf.OwnedById,
-        buf.CrateUnitsById,
-        buf.CrateTotals,
-        buf.Contracts,
-        hasBuyTab,
-        hasSellTab,
-        hasContractsTab
-    ));
-
-scratch.Commit(comp.CatalogRevision, hasBuyTab, hasSellTab, hasContractsTab);}
+        scratch.Commit(comp.CatalogRevision, hasBuyTab, hasSellTab, hasContractsTab);
+    }
 
     private bool TryFindWatchedRoot(EntityUid start, out EntityUid watchedRoot)
     {

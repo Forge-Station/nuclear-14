@@ -24,6 +24,11 @@ public sealed class NcListingGrid : BoxContainer
     private readonly Dictionary<string, int> _qtyCache = new();
     private readonly List<StoreListingData> _scratchFiltered = new();
 
+    private readonly Label _messageLabel = new();
+    private readonly Button _moreButton = new();
+    private readonly List<PanelContainer> _separatorPool = new();
+    private readonly StyleBoxFlat _separatorStyle = new() { BackgroundColor = Color.FromHex("#A0A0A0") };
+
     private readonly List<string> _scratchKeys = new();
     private readonly HashSet<string> _scratchSeenProtos = new();
 
@@ -48,6 +53,18 @@ public sealed class NcListingGrid : BoxContainer
         SeparationOverride = 0;
         HorizontalExpand = true;
         VerticalExpand = true;
+
+        _messageLabel.HorizontalExpand = true;
+        _messageLabel.VerticalExpand = false;
+
+        _moreButton.Name = "MoreButton";
+        _moreButton.HorizontalExpand = true;
+        _moreButton.Margin = new(0, 8, 0, 8);
+        _moreButton.OnPressed += _ =>
+        {
+            _page++;
+            RefreshInternal();
+        };
     }
 
     public void ResetPaging() => _page = 1;
@@ -144,6 +161,41 @@ public sealed class NcListingGrid : BoxContainer
         }
     }
 
+
+    private void DetachAllChildren()
+    {
+        // IMPORTANT: Do not dispose controls; RobustUI expects controls to be removed from the tree.
+        while (ChildCount > 0)
+        {
+            var child = GetChild(0);
+            RemoveChild(child);
+            // separators go back to pool for reuse
+            if (child is PanelContainer sep)
+            {
+                sep.Visible = false;
+                _separatorPool.Add(sep);
+            }
+        }
+    }
+
+    private PanelContainer GetSeparator()
+    {
+        if (_separatorPool.Count > 0)
+        {
+            var last = _separatorPool.Count - 1;
+            var sep = _separatorPool[last];
+            _separatorPool.RemoveAt(last);
+            sep.Visible = true;
+            return sep;
+        }
+
+        return new PanelContainer
+        {
+            MinSize = new Vector2i(0, 1),
+            PanelOverride = _separatorStyle
+        };
+    }
+
     private int RefreshInternal()
     {
         var hasCat = !string.IsNullOrEmpty(_selectedCategory);
@@ -170,16 +222,18 @@ public sealed class NcListingGrid : BoxContainer
 
         if (!hasCat && !hasSearch)
         {
-            Children.Clear();
-            AddChild(new Label { Text = Loc.GetString("nc-store-select-category"), });
+            DetachAllChildren();
+            _messageLabel.Text = Loc.GetString("nc-store-select-category");
+            AddChild(_messageLabel);
             return 0;
         }
 
         if (_scratchFiltered.Count == 0)
         {
-            Children.Clear();
+            DetachAllChildren();
             var message = Loc.GetString(hasCat ? "nc-store-empty-category-search" : "nc-store-empty-search");
-            AddChild(new Label { Text = message, });
+            _messageLabel.Text = message;
+            AddChild(_messageLabel);
             return 0;
         }
 
@@ -189,7 +243,7 @@ public sealed class NcListingGrid : BoxContainer
         var total = _scratchFiltered.Count;
         var take = Math.Min(total, PageSize * _page);
 
-        Children.Clear();
+        DetachAllChildren();
         AddListingRange(_scratchFiltered, 0, take);
         AddOrUpdateMoreButton(total, take);
 
@@ -226,14 +280,7 @@ public sealed class NcListingGrid : BoxContainer
 
             if (i < endExclusive - 1)
             {
-                AddChild(new PanelContainer
-                {
-                    MinSize = new Vector2i(0, 1),
-                    PanelOverride = new StyleBoxFlat
-                    {
-                        BackgroundColor = Color.FromHex("#A0A0A0")
-                    }
-                });
+                AddChild(GetSeparator());
             }
         }
     }
@@ -245,21 +292,8 @@ public sealed class NcListingGrid : BoxContainer
 
         var left = totalCount - shown;
 
-        var more = new Button
-        {
-            Name = "MoreButton",
-            Text = Loc.GetString("nc-store-show-more", ("count", left)),
-            HorizontalExpand = true,
-            Margin = new(0, 8, 0, 8)
-        };
-
-        more.OnPressed += _ =>
-        {
-            _page++;
-            RefreshInternal();
-        };
-
-        AddChild(more);
+        _moreButton.Text = Loc.GetString("nc-store-show-more", ("count", left));
+        AddChild(_moreButton);
     }
 
     private static int Sig(StoreListingData d) =>
