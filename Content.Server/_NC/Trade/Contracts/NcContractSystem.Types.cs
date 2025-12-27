@@ -6,8 +6,6 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private readonly record struct ClaimSlice(EntityUid Root, string ProtoId, int Amount);
-
     private readonly record struct ClaimTakeEntry(EntityUid Root, EntityUid Entity, int Amount, bool IsStack);
 
     private enum ClaimFailureReason : byte
@@ -19,7 +17,6 @@ public sealed partial class NcContractSystem : EntitySystem
         InvalidTarget,
         NotEnoughItems,
         MissingCrate,
-        ReservationFailed,
         ExecutionFailed,
     }
 

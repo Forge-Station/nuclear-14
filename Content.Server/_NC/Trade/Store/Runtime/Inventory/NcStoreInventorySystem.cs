@@ -18,6 +18,9 @@ public sealed class NcStoreInventorySystem : EntitySystem
     private readonly Dictionary<EntityUid, List<EntityUid>> _inventoryCache = new();
     private readonly Dictionary<string, string?> _productStackTypeCache = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string[]> _protoAndAncestorsCache = new(StringComparer.Ordinal);
+    private readonly HashSet<string> _scratchProtoVisited = new(StringComparer.Ordinal);
+    private readonly List<string> _scratchProtoResult = new();
+    private readonly List<string> _scratchProtoStack = new();
     [Dependency] private readonly IPrototypeManager _protos = default!;
     private readonly Queue<EntityUid> _scratchQueue = new();
     private readonly List<EntityUid> _scratchResult = new();
@@ -446,27 +449,34 @@ public void ScanInventoryItems(EntityUid root, List<EntityUid> itemsBuffer)
         if (_protoAndAncestorsCache.TryGetValue(proto.ID, out var cached))
             return cached;
 
-        var visited = new HashSet<string>(StringComparer.Ordinal);
-        var result = new List<string>();
-        var stack = new Stack<string>();
-        stack.Push(proto.ID);
+        _scratchProtoVisited.Clear();
+        _scratchProtoResult.Clear();
+        _scratchProtoStack.Clear();
 
-        while (stack.Count > 0)
+        _scratchProtoStack.Add(proto.ID);
+
+        while (_scratchProtoStack.Count > 0)
         {
-            var cur = stack.Pop();
-            if (!visited.Add(cur))
+            var idx = _scratchProtoStack.Count - 1;
+            var cur = _scratchProtoStack[idx];
+            _scratchProtoStack.RemoveAt(idx);
+
+            if (!_scratchProtoVisited.Add(cur))
                 continue;
-            result.Add(cur);
+
+            _scratchProtoResult.Add(cur);
 
             if (_protos.TryIndex<EntityPrototype>(cur, out var curProto) && curProto.Parents != null)
             {
                 foreach (var p in curProto.Parents)
+                {
                     if (!string.IsNullOrWhiteSpace(p))
-                        stack.Push(p);
+                        _scratchProtoStack.Add(p);
+                }
             }
         }
 
-        var arr = result.ToArray();
+        var arr = _scratchProtoResult.ToArray();
         _protoAndAncestorsCache[proto.ID] = arr;
         return arr;
     }

@@ -48,4 +48,33 @@ public sealed partial class NcContractSystem : EntitySystem
     }
 
     private static List<ContractTargetServerData> GetEffectiveTargets(ContractServerData contract) => contract.Targets;
+
+    private int GetProtoDepth(string protoId)
+    {
+        if (_depthCache.TryGetValue(protoId, out var cached))
+            return cached < 0 ? 0 : cached;
+
+        if (!_prototypes.TryIndex<EntityPrototype>(protoId, out var proto))
+        {
+            _depthCache[protoId] = 0;
+            return 0;
+        }
+
+        _depthCache[protoId] = -1;
+
+        var best = 0;
+        var parents = proto.Parents;
+        if (parents is { Length: > 0 })
+        {
+            foreach (var p in parents)
+            {
+                var pd = GetProtoDepth(p) + 1;
+                if (pd > best)
+                    best = pd;
+            }
+        }
+
+        _depthCache[protoId] = best;
+        return best;
+    }
 }

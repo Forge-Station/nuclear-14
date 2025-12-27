@@ -592,23 +592,102 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             rewards
         );
     }
-    private sealed class DynamicScratch
+
+private sealed class DynamicScratch
+{
+    private readonly DynamicStateBuffer[] _buffers = { new(), new() };
+    private int _activeIndex;
+
+    private bool _hasMeta;
+    private int _catalogRevision;
+    private bool _hasBuyTab;
+    private bool _hasSellTab;
+    private bool _hasContracts;
+
+    public DynamicStateBuffer GetReadBuffer()
     {
-        private readonly DynamicStateBuffer[] _buffers = { new(), new() };
-        private int _activeIndex;
-
-        public DynamicStateBuffer GetWriteBuffer()
-        {
-            return _buffers[1 - _activeIndex];
-        }
-
-        public void Commit()
-        {
-            _activeIndex = 1 - _activeIndex;
-        }
+        return _buffers[_activeIndex];
     }
 
-    private sealed class DynamicStateBuffer
+    public DynamicStateBuffer GetWriteBuffer()
+    {
+        return _buffers[1 - _activeIndex];
+    }
+
+    public bool EqualsLast(
+        DynamicStateBuffer next,
+        int catalogRevision,
+        bool hasBuyTab,
+        bool hasSellTab,
+        bool hasContracts
+    )
+    {
+        if (!_hasMeta)
+            return false;
+
+        if (_catalogRevision != catalogRevision ||
+            _hasBuyTab != hasBuyTab ||
+            _hasSellTab != hasSellTab ||
+            _hasContracts != hasContracts)
+            return false;
+
+        var prev = GetReadBuffer();
+
+        return DictEquals(prev.BalancesByCurrency, next.BalancesByCurrency) &&
+               DictEquals(prev.RemainingById, next.RemainingById) &&
+               DictEquals(prev.OwnedById, next.OwnedById) &&
+               DictEquals(prev.CrateUnitsById, next.CrateUnitsById) &&
+               DictEquals(prev.CrateTotals, next.CrateTotals) &&
+               ListEquals(prev.Contracts, next.Contracts);
+    }
+
+    public void Commit(int catalogRevision, bool hasBuyTab, bool hasSellTab, bool hasContracts)
+    {
+        _activeIndex = 1 - _activeIndex;
+
+        _catalogRevision = catalogRevision;
+        _hasBuyTab = hasBuyTab;
+        _hasSellTab = hasSellTab;
+        _hasContracts = hasContracts;
+        _hasMeta = true;
+    }
+
+    private static bool DictEquals(Dictionary<string, int> a, Dictionary<string, int> b)
+    {
+        if (ReferenceEquals(a, b))
+            return true;
+
+        if (a.Count != b.Count)
+            return false;
+
+        foreach (var (k, v) in a)
+        {
+            if (!b.TryGetValue(k, out var bv) || bv != v)
+                return false;
+        }
+
+        return true;
+    }
+
+    private static bool ListEquals(List<ContractClientData> a, List<ContractClientData> b)
+    {
+        if (ReferenceEquals(a, b))
+            return true;
+
+        if (a.Count != b.Count)
+            return false;
+
+        for (var i = 0; i < a.Count; i++)
+        {
+            if (!EqualityComparer<ContractClientData>.Default.Equals(a[i], b[i]))
+                return false;
+        }
+
+        return true;
+    }
+}
+
+private sealed class DynamicStateBuffer
     {
         public readonly Dictionary<string, int> BalancesByCurrency = new();
         public readonly Dictionary<string, int> RemainingById = new();

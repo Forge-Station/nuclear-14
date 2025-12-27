@@ -92,8 +92,9 @@ public sealed partial class NcContractSystem : EntitySystem
         var virtualStackLeft = new Dictionary<EntityUid, int>();
 
         var orderedKeys = requiredByKey
-            .OrderBy(k => k.Key.ProtoId, StringComparer.Ordinal)
+            .OrderByDescending(k => GetProtoDepth(k.Key.ProtoId))
             .ThenBy(k => (int) k.Key.MatchMode)
+            .ThenBy(k => k.Key.ProtoId, StringComparer.Ordinal)
             .ToArray();
 
         foreach (var kvp in orderedKeys)
@@ -135,6 +136,14 @@ public sealed partial class NcContractSystem : EntitySystem
 
             if (need > 0)
             {
+                if (crateEntity == null)
+                {
+                    fail = ClaimAttemptResult.Fail(
+                        ClaimFailureReason.MissingCrate,
+                        $"need {required}x {protoId} (mode={matchMode}), missing {need}. Pull a closed crate to claim from it.");
+                    return false;
+                }
+
                 fail = ClaimAttemptResult.Fail(
                     ClaimFailureReason.NotEnoughItems,
                     $"need {required}x {protoId} (mode={matchMode}), missing {need} after planning.");

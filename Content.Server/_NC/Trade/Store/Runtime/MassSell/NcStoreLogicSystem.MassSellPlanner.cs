@@ -104,7 +104,42 @@ public sealed partial class NcStoreLogicSystem
 
         if (sellListings.Length == 0)
             return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
-        var stackName = _compFactory.GetComponentName(typeof(StackComponent));
+        var descendantExpected = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var l in sellListings)
+        {
+            if (_inventory.ResolveMatchMode(l.ProductEntity, l.MatchMode) == PrototypeMatchMode.Descendants)
+                descendantExpected.Add(l.ProductEntity);
+
+        }
+
+        Dictionary<string, List<string>>? matchesByExpected = null;
+        if (descendantExpected.Count > 0 && protoIds.Length > 0)
+        {
+            matchesByExpected = new Dictionary<string, List<string>>(StringComparer.Ordinal);
+
+            foreach (var protoId in protoIds)
+            {
+                if (!protoCache.TryGetValue(protoId, out var proto) && !_protos.TryIndex(protoId, out proto))
+                    continue;
+                protoCache[protoId] = proto;
+
+                foreach (var anc in _inventory.GetProtoAndAncestors(proto))
+                {
+                    if (!descendantExpected.Contains(anc))
+                        continue;
+
+                    if (!matchesByExpected.TryGetValue(anc, out var list))
+                    {
+                        list = new List<string>();
+                        matchesByExpected[anc] = list;
+                    }
+
+                    list.Add(protoId);
+                }
+            }
+        }
+
+var stackName = _compFactory.GetComponentName(typeof(StackComponent));
 
         foreach (var listing in sellListings)
         {
@@ -152,7 +187,12 @@ public sealed partial class NcStoreLogicSystem
                 }
                 else
                 {
-                    foreach (var protoId in protoIds)
+                    if (matchesByExpected == null ||
+                        !matchesByExpected.TryGetValue(listing.ProductEntity, out var matchingProtoIds) ||
+                        matchingProtoIds.Count == 0)
+                        continue;
+
+                    foreach (var protoId in matchingProtoIds)
                     {
                         if (taken >= want)
                             break;
@@ -169,13 +209,6 @@ public sealed partial class NcStoreLogicSystem
                             if (!protoCounts.TryGetValue(protoId, out available) || available <= 0)
                                 continue;
                         }
-
-                        if (!protoCache.TryGetValue(protoId, out var proto) && !_protos.TryIndex(protoId, out proto))
-                            continue;
-                        protoCache[protoId] = proto;
-
-                        if (!IsProtoOrDescendantLocal(proto, listing.ProductEntity))
-                            continue;
 
                         var take = Math.Min(available, want - taken);
                         if (take <= 0)
@@ -234,17 +267,6 @@ public sealed partial class NcStoreLogicSystem
             cur = 0;
         var sum = cur + delta;
         income[currencyId] = sum >= int.MaxValue ? int.MaxValue : (int) sum;
-    }
-
-    private bool IsProtoOrDescendantLocal(EntityPrototype candidate, string expectedId)
-    {
-        if (candidate.ID == expectedId)
-            return true;
-        var ancestors = _inventory.GetProtoAndAncestors(candidate);
-        foreach (var t in ancestors)
-            if (t == expectedId)
-                return true;
-        return false;
     }
 
     public readonly record struct MassSellStep(

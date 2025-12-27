@@ -72,30 +72,36 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                     buf.CrateTotals[kvp.Key] = kvp.Value;
         }
 
-        foreach (var c in comp.Contracts.Values)
-            buf.Contracts.Add(MapContractToClient(c));
+        
+foreach (var c in comp.Contracts.Values)
+    buf.Contracts.Add(MapContractToClient(c));
 
-        comp.UiRevision = unchecked(comp.UiRevision + 1);
+var hasContractsTab = comp.ContractPresets.Count > 0 || !string.IsNullOrWhiteSpace(comp.LegacyContractsPreset);
 
-        _ui.SetUiState(
-            uid,
-            StoreUiKey.Key,
-            new StoreDynamicState(
-                comp.UiRevision,
-                comp.CatalogRevision,
-                buf.BalancesByCurrency,
-                buf.RemainingById,
-                buf.OwnedById,
-                buf.CrateUnitsById,
-                buf.CrateTotals,
-                buf.Contracts,
-                hasBuyTab,
-                hasSellTab,
-                comp.ContractPresets.Count > 0 || !string.IsNullOrWhiteSpace(comp.LegacyContractsPreset)
-            ));
+// Skip network update if nothing actually changed since the last sent state.
+if (scratch.EqualsLast(buf, comp.CatalogRevision, hasBuyTab, hasSellTab, hasContractsTab))
+    return;
 
-        scratch.Commit();
-    }
+comp.UiRevision = unchecked(comp.UiRevision + 1);
+
+_ui.SetUiState(
+    uid,
+    StoreUiKey.Key,
+    new StoreDynamicState(
+        comp.UiRevision,
+        comp.CatalogRevision,
+        buf.BalancesByCurrency,
+        buf.RemainingById,
+        buf.OwnedById,
+        buf.CrateUnitsById,
+        buf.CrateTotals,
+        buf.Contracts,
+        hasBuyTab,
+        hasSellTab,
+        hasContractsTab
+    ));
+
+scratch.Commit(comp.CatalogRevision, hasBuyTab, hasSellTab, hasContractsTab);}
 
     private bool TryFindWatchedRoot(EntityUid start, out EntityUid watchedRoot)
     {

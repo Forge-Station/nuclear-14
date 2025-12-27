@@ -7,9 +7,7 @@ public sealed partial class NcContractSystem : EntitySystem
         var res = TryClaimDetailed(store, user, contractId);
         if (!res.Success)
         {
-            // Keep this at Debug/Info level: claim failures can be user-driven (not enough items).
-            // Raising this to Warning/Error will spam logs.
-            if (res.Reason is ClaimFailureReason.NotEnoughItems or ClaimFailureReason.NoValidTargets)
+            if (res.Reason is ClaimFailureReason.NotEnoughItems or ClaimFailureReason.NoValidTargets or ClaimFailureReason.MissingCrate)
                 Sawmill.Info($"[Claim] Failed ({res.Reason}) '{contractId}' on {ToPrettyString(store)}: {res.Details}");
             else
                 Sawmill.Warning($"[Claim] Failed ({res.Reason}) '{contractId}' on {ToPrettyString(store)}: {res.Details}");
