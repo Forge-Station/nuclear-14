@@ -38,6 +38,8 @@ public sealed partial class NcStoreLogicSystem : EntitySystem
     {
         base.Initialize();
 
+        InitializeServices();
+
         _protos.PrototypesReloaded += OnPrototypesReloaded;
         SubscribeLocalEvent<EntityTerminatingEvent>(OnEntityTerminating);
     }
