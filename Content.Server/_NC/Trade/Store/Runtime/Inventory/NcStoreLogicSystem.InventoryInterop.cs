@@ -8,8 +8,7 @@ public sealed partial class NcStoreLogicSystem
     public void FillDeepItemsList(EntityUid root, List<EntityUid> buffer)
     {
         buffer.Clear();
-        var cached = GetOrBuildDeepItemsCache(root);
-        CompactCachedItems(cached);
+        var cached = GetOrBuildDeepItemsCacheCompacted(root);
         for (var i = 0; i < cached.Count; i++)
         {
             var ent = cached[i];

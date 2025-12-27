@@ -21,8 +21,7 @@ public sealed partial class NcStoreLogicSystem
         InvalidateInventoryCache(container);
 
         _scratchItems.Clear();
-        var cached = GetOrBuildDeepItemsCache(container);
-        CompactCachedItems(cached);
+        var cached = GetOrBuildDeepItemsCacheCompacted(container);
 
         foreach (var item in cached)
             _scratchItems.Add(item);

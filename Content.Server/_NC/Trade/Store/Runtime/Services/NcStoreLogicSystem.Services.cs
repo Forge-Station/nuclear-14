@@ -168,8 +168,7 @@ public sealed partial class NcStoreLogicSystem
 
             long remaining = amount;
 
-            var cached = _sys.GetOrBuildDeepItemsCache(user);
-            _sys.CompactCachedItems(cached);
+            var cached = _sys.GetOrBuildDeepItemsCacheCompacted(user);
 
 
             foreach (var ent in cached)

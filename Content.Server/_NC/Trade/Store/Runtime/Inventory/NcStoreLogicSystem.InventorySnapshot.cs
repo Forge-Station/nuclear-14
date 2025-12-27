@@ -9,8 +9,7 @@ public sealed partial class NcStoreLogicSystem
     {
         var total = 0;
 
-        var cached = GetOrBuildDeepItemsCache(user);
-        CompactCachedItems(cached);
+        var cached = GetOrBuildDeepItemsCacheCompacted(user);
 
         foreach (var entity in cached)
         {
@@ -77,8 +76,7 @@ public sealed partial class NcStoreLogicSystem
         var expectedStackType = GetProductStackType(productProtoId);
         var effective = ResolveMatchMode(productProtoId, matchMode);
 
-        var cached = GetOrBuildDeepItemsCache(root);
-        CompactCachedItems(cached);
+        var cached = GetOrBuildDeepItemsCacheCompacted(root);
 
         foreach (var ent in cached)
         {

@@ -14,8 +14,7 @@ public sealed partial class NcStoreLogicSystem
     public MassSellPlan ComputeMassSellPlan(NcStoreComponent store, EntityUid container)
     {
         InvalidateInventoryCache(container);
-        var cached = GetOrBuildDeepItemsCache(container);
-        CompactCachedItems(cached);
+        var cached = GetOrBuildDeepItemsCacheCompacted(container);
         return ComputeMassSellPlanInternal(store, cached);
     }
 

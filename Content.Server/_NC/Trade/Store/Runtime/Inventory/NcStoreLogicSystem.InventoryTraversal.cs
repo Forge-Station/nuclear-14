@@ -23,10 +23,6 @@ public sealed partial class NcStoreLogicSystem
         }
     }
 
-    /// <summary>
-    ///     Returns a cached, mutable list of deep items for <paramref name="owner" />.
-    ///     The returned list is owned by this system; do not store it outside the scope of the call.
-    /// </summary>
     private List<EntityUid> GetOrBuildDeepItemsCache(EntityUid owner)
     {
         if (_inventoryCache.TryGetValue(owner, out var cached))
@@ -35,6 +31,14 @@ public sealed partial class NcStoreLogicSystem
         BuildDeepItemsCache(owner, out cached);
         return cached;
     }
+
+
+private List<EntityUid> GetOrBuildDeepItemsCacheCompacted(EntityUid owner)
+{
+    var cached = GetOrBuildDeepItemsCache(owner);
+    CompactCachedItems(cached);
+    return cached;
+}
 
     private void BuildDeepItemsCache(EntityUid owner, out List<EntityUid> cached)
     {
