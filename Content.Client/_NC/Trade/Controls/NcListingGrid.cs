@@ -133,7 +133,7 @@ public sealed class NcListingGrid : BoxContainer
             if (child is not NcStoreListingControl ctrl)
                 continue;
 
-            if (!_itemById.TryGetValue(ctrl.ListingId, out var it))
+            if (!_itemById.TryGetValue(ctrl.UiId, out var it))
                 continue;
 
             var balanceHint = _mode == StoreMode.Buy

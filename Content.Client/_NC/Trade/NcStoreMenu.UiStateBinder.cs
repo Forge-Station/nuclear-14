@@ -151,7 +151,6 @@ public sealed partial class NcStoreMenu
             _m.UpdateHeaderVisibility();
 
             _m._catalog.Clear();
-            _m._staticById.Clear();
 
             for (var i = 0; i < listings.Count; i++)
             {
@@ -160,7 +159,6 @@ public sealed partial class NcStoreMenu
                     continue;
 
                 _m._catalog.Add(s);
-                _m._staticById[s.Id] = s;
             }
 
             var productProtos = new List<string>(_m._catalog.Count);

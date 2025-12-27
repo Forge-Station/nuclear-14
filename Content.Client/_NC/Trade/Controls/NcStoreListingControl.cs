@@ -23,7 +23,6 @@ public sealed partial class NcStoreListingControl : PanelContainer
     private readonly bool _actionsEnabled;
     private readonly IUserInterfaceManager _ui = IoCManager.Resolve<IUserInterfaceManager>();
 
-    private int _lastBalanceHint = int.MaxValue;
     private int _maxQty;
     private int _qty;
     private StoreListingData _staticData;
@@ -33,7 +32,9 @@ public sealed partial class NcStoreListingControl : PanelContainer
     public Action<int>? OnSellPressed { get; set; }
     public Action<int>? OnQtyChanged { get; set; }
 
-    public string ListingId => _staticData.Id;
+    public string UiId => _staticData.Id;
+    public string ListingId => _staticData.ListingId;
+    public StoreListingFlavor Flavor => _staticData.Flavor;
     private int MinAllowed => _maxQty <= 0 ? 0 : 1;
 
     public NcStoreListingControl(
@@ -48,7 +49,6 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
         _staticData = data;
         _actionsEnabled = actionsEnabled;
-        _lastBalanceHint = balanceHint;
 
         var pm = IoCManager.Resolve<IPrototypeManager>();
         pm.TryIndex<EntityPrototype>(data.ProductEntity, out var proto);
@@ -216,7 +216,6 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
     public void UpdateDynamicData(int playerBalance, int remainingStock, int playerOwned)
     {
-        _lastBalanceHint = playerBalance;
 
         _staticData.Remaining = remainingStock;
         _staticData.Owned = playerOwned;

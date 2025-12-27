@@ -17,8 +17,8 @@ namespace Content.Client._NC.Trade;
 [GenerateTypedNameReferences]
 public sealed partial class NcStoreMenu : FancyWindow
 {
-    private const string CatIdReady = "__READY__";
-    private const string CatIdCrate = "__CRATE__";
+    private const string CatIdReady = "nc.internal.category.ready";
+    private const string CatIdCrate = "nc.internal.category.crate";
     private readonly Dictionary<string, int> _balancesByCurrency = new();
     private readonly UiStateBinder _binder;
     private readonly NcCategoryBar _buyCategoryBar;
@@ -39,7 +39,6 @@ public sealed partial class NcStoreMenu : FancyWindow
     private readonly List<string> _sellCats = new();
     private readonly NcListingGrid _sellGrid;
     private readonly SpriteSystem _sprites;
-    private readonly Dictionary<string, StoreListingStaticData> _staticById = new();
     private string _buyCat = string.Empty;
     private bool _disposed;
     private bool _hasBuyTab;
@@ -373,15 +372,17 @@ public sealed partial class NcStoreMenu : FancyWindow
             _items.Add(
                 new(
                     s.Id,
+                    StoreListingFlavor.Base,
                     s.ProductEntity,
                     s.BasePrice,
                     s.Category,
                     s.CurrencyId,
                     s.Mode,
-                    StoreListingFlavor.Base,
                     owned,
                     remaining));
         }
+
+        // Virtual "ready to sell" category (derived from base sell listings).
         var baseCount = _items.Count;
         _scratchReadyItems.Clear();
 
@@ -399,13 +400,13 @@ public sealed partial class NcStoreMenu : FancyWindow
 
             _scratchReadyItems.Add(
                 new(
-                    d.Id,
+                    d.ListingId,
+                    StoreListingFlavor.Ready,
                     d.ProductEntity,
                     d.Price,
                     CatIdReady,
                     d.CurrencyId,
                     d.Mode,
-                    StoreListingFlavor.Ready,
                     d.Owned,
                     d.Remaining));
         }
@@ -429,12 +430,12 @@ public sealed partial class NcStoreMenu : FancyWindow
                 _items.Add(
                     new(
                         s.Id,
+                        StoreListingFlavor.Crate,
                         s.ProductEntity,
                         s.BasePrice,
                         CatIdCrate,
                         s.CurrencyId,
                         StoreMode.Sell,
-                        StoreListingFlavor.Crate,
                         take,
                         remaining));
             }
@@ -556,7 +557,6 @@ public sealed partial class NcStoreMenu : FancyWindow
         _disposed = true;
         _buyGrid.ClearCaches();
         _sellGrid.ClearCaches();
-        _staticById.Clear();
         _catalog.Clear();
         _items.Clear();
 

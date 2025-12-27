@@ -1,4 +1,3 @@
-using System;
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 

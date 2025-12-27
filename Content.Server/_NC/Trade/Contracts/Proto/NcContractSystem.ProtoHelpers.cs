@@ -22,35 +22,6 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
-    private int GetProtoDepth(string protoId)
-    {
-        if (_depthCache.TryGetValue(protoId, out var d))
-        {
-            return d < 0 ? 0 : d;
-        }
-
-        if (!_prototypes.TryIndex<EntityPrototype>(protoId, out var proto))
-        {
-            _depthCache[protoId] = 0;
-            return 0;
-        }
-        _depthCache[protoId] = -1;
-
-        var best = 0;
-        var parents = proto.Parents;
-        if (parents is { Length: > 0 })
-        {
-            foreach (var p in parents)
-            {
-                var pd = GetProtoDepth(p) + 1;
-                if (pd > best)
-                    best = pd;
-            }
-        }
-
-        _depthCache[protoId] = best;
-        return best;
-    }
 
     private List<string> GetAncestorsInclusive(string protoId)
     {
@@ -90,20 +61,5 @@ public sealed partial class NcContractSystem : EntitySystem
 
         _ancestorsCache[protoId] = result;
         return result;
-    }
-
-    private bool IsProtoOrDescendant(string childProtoId, string ancestorProtoId)
-    {
-        if (childProtoId == ancestorProtoId)
-            return true;
-
-        var ancestors = GetAncestorsInclusive(childProtoId);
-        for (var i = 0; i < ancestors.Count; i++)
-        {
-            if (ancestors[i] == ancestorProtoId)
-                return true;
-        }
-
-        return false;
     }
 }

@@ -1,11 +1,11 @@
 using Content.Shared._NC.Trade;
 
+
 namespace Content.Client._NC.Trade;
 
 
 public sealed partial class NcStoreMenu
 {
-
     private void RefreshListingsDynamicOnly()
     {
         if (_disposed)
@@ -20,28 +20,17 @@ public sealed partial class NcStoreMenu
         for (var i = 0; i < _items.Count; i++)
         {
             var it = _items[i];
-            var baseId = it.Id;
+            var listingId = it.ListingId;
 
-            switch (it.Flavor)
+            if (it.Flavor == StoreListingFlavor.Crate)
             {
-                case StoreListingFlavor.Crate:
-                    it.Owned = _crateUnitsById.GetValueOrDefault(baseId, 0);
-                    it.Remaining = _remainingById.GetValueOrDefault(baseId, -1);
-                    break;
-
-                case StoreListingFlavor.Ready:
-                    it.Owned = _ownedById.GetValueOrDefault(baseId, 0);
-                    it.Remaining = _remainingById.GetValueOrDefault(baseId, -1);
-                    break;
-
-                default:
-                    it.Owned = _ownedById.GetValueOrDefault(baseId, 0);
-                    it.Remaining = _remainingById.GetValueOrDefault(baseId, -1);
-                    break;
+                it.Owned = _crateUnitsById.GetValueOrDefault(listingId, 0);
+                it.Remaining = _remainingById.GetValueOrDefault(listingId, 0);
+                continue;
             }
 
-            _items[i] = it;
+            it.Owned = _ownedById.GetValueOrDefault(listingId, 0);
+            it.Remaining = _remainingById.GetValueOrDefault(listingId, -1);
         }
     }
-
 }
