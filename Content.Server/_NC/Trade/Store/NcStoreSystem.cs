@@ -18,7 +18,6 @@ public sealed class NcStoreSystem : EntitySystem
     private const float MaxUseDistance = 2.5f;
     private const float MaxCrateDistance = 4f;
     private const string ReadyListingSuffix = "__ready";
-    private const string CrateListingSuffix = "__crate";
     private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore");
     [Dependency] private readonly AccessReaderSystem _accessReader = default!;
     [Dependency] private readonly AudioSystem _audio = default!;
@@ -146,29 +145,7 @@ private bool TryValidateUse(EntityUid store, NcStoreComponent comp, EntityUid ac
 
     private void PopupFail(EntityUid actor, string message) => _popups.PopupEntity(message, actor, actor);
 
-    private static bool TryParseSellListingId(
-        string rawId,
-        out string listingId,
-        out bool fromCrate
-    )
-    {
-        fromCrate = false;
-        listingId = rawId;
 
-        if (string.IsNullOrEmpty(listingId))
-            return false;
-
-        if (listingId.EndsWith(CrateListingSuffix, StringComparison.Ordinal))
-        {
-            fromCrate = true;
-            listingId = listingId[..^CrateListingSuffix.Length];
-        }
-
-        if (listingId.EndsWith(ReadyListingSuffix, StringComparison.Ordinal))
-            listingId = listingId[..^ReadyListingSuffix.Length];
-
-        return !string.IsNullOrEmpty(listingId);
-    }
 
 
     private void OnBuyRequest(EntityUid uid, NcStoreComponent comp, StoreBuyListingBoundUiMessage msg)
@@ -210,7 +187,10 @@ private bool TryValidateUse(EntityUid store, NcStoreComponent comp, EntityUid ac
             return;
         }
 
-        if (!TryParseSellListingId(msg.Id, out var requestedId, out var fromCrate))
+        var requestedId = msg.Id;
+        var fromCrate = msg.FromCrate;
+
+        if (string.IsNullOrEmpty(requestedId))
             return;
 
         if (!TryGetListing(uid, comp, actor, StoreMode.Sell, requestedId, out var listing))

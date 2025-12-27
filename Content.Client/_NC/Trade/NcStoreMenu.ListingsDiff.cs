@@ -1,10 +1,10 @@
+using Content.Shared._NC.Trade;
+
 namespace Content.Client._NC.Trade;
 
 
 public sealed partial class NcStoreMenu
 {
-    private const string ReadySuffix = "__ready";
-    private const string CrateSuffix = "__crate";
 
     private void RefreshListingsDynamicOnly()
     {
@@ -20,30 +20,28 @@ public sealed partial class NcStoreMenu
         for (var i = 0; i < _items.Count; i++)
         {
             var it = _items[i];
-            var id = it.Id;
+            var baseId = it.Id;
 
-            if (id.EndsWith(CrateSuffix, StringComparison.Ordinal))
+            switch (it.Flavor)
             {
-                var baseId = id.Substring(0, id.Length - CrateSuffix.Length);
-                it.Owned = _crateUnitsById.GetValueOrDefault(baseId, 0);
+                case StoreListingFlavor.Crate:
+                    it.Owned = _crateUnitsById.GetValueOrDefault(baseId, 0);
+                    it.Remaining = _remainingById.GetValueOrDefault(baseId, -1);
+                    break;
 
-                it.Remaining = _remainingById.GetValueOrDefault(baseId, 0);
+                case StoreListingFlavor.Ready:
+                    it.Owned = _ownedById.GetValueOrDefault(baseId, 0);
+                    it.Remaining = _remainingById.GetValueOrDefault(baseId, -1);
+                    break;
 
-                continue;
+                default:
+                    it.Owned = _ownedById.GetValueOrDefault(baseId, 0);
+                    it.Remaining = _remainingById.GetValueOrDefault(baseId, -1);
+                    break;
             }
 
-            if (id.EndsWith(ReadySuffix, StringComparison.Ordinal))
-            {
-                var baseId = id.Substring(0, id.Length - ReadySuffix.Length);
-
-                it.Owned = _ownedById.GetValueOrDefault(baseId, 0);
-                it.Remaining = _remainingById.GetValueOrDefault(baseId, -1);
-
-                continue;
-            }
-
-            it.Owned = _ownedById.GetValueOrDefault(id, 0);
-            it.Remaining = _remainingById.GetValueOrDefault(id, -1);
+            _items[i] = it;
         }
     }
+
 }

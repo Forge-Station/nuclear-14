@@ -602,6 +602,11 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             return _buffers[1 - _activeIndex];
         }
 
+        public DynamicStateBuffer GetReadBuffer()
+        {
+            return _buffers[_activeIndex];
+        }
+
         public void Commit()
         {
             _activeIndex = 1 - _activeIndex;
@@ -616,6 +621,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         public readonly Dictionary<string, int> CrateUnitsById = new();
         public readonly Dictionary<string, int> CrateTotals = new();
         public readonly List<ContractClientData> Contracts = new();
+        public int ContractsHash;
 
         public void Clear()
         {
@@ -625,6 +631,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             CrateUnitsById.Clear();
             CrateTotals.Clear();
             Contracts.Clear();
+            ContractsHash = 0;
         }
     }
 }

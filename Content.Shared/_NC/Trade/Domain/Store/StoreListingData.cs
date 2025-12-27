@@ -2,6 +2,13 @@ using Robust.Shared.Serialization;
 
 namespace Content.Shared._NC.Trade;
 
+public enum StoreListingFlavor : byte
+{
+    Base = 0,
+    Ready = 1,
+    Crate = 2
+}
+
 /// <summary>
 /// Client-side listing view model (static + dynamic fields).
 /// Constructed on the client from <see cref="StoreListingStaticData"/> and <see cref="StoreDynamicState"/>.
@@ -13,8 +20,8 @@ public sealed class StoreListingData
     public string CurrencyId = string.Empty;
     public string Id = string.Empty;
     public StoreMode Mode;
+    public StoreListingFlavor Flavor = StoreListingFlavor.Base;
 
-    // Dynamic
     public int Owned;
     public int Price;
     public string ProductEntity = string.Empty;
@@ -29,6 +36,7 @@ public sealed class StoreListingData
         string category,
         string currencyId,
         StoreMode mode,
+        StoreListingFlavor flavor = StoreListingFlavor.Base,
         int owned = 0,
         int remaining = -1)
     {
@@ -38,6 +46,7 @@ public sealed class StoreListingData
         Category = category;
         CurrencyId = currencyId;
         Mode = mode;
+        Flavor = flavor;
         Owned = owned;
         Remaining = remaining;
     }

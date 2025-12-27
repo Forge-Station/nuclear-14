@@ -378,11 +378,10 @@ public sealed partial class NcStoreMenu : FancyWindow
                     s.Category,
                     s.CurrencyId,
                     s.Mode,
+                    StoreListingFlavor.Base,
                     owned,
                     remaining));
         }
-
-        // Virtual "ready to sell" category (derived from base sell listings).
         var baseCount = _items.Count;
         _scratchReadyItems.Clear();
 
@@ -400,12 +399,13 @@ public sealed partial class NcStoreMenu : FancyWindow
 
             _scratchReadyItems.Add(
                 new(
-                    d.Id + "__ready",
+                    d.Id,
                     d.ProductEntity,
                     d.Price,
                     CatIdReady,
                     d.CurrencyId,
                     d.Mode,
+                    StoreListingFlavor.Ready,
                     d.Owned,
                     d.Remaining));
         }
@@ -428,12 +428,13 @@ public sealed partial class NcStoreMenu : FancyWindow
 
                 _items.Add(
                     new(
-                        s.Id + "__crate",
+                        s.Id,
                         s.ProductEntity,
                         s.BasePrice,
                         CatIdCrate,
                         s.CurrencyId,
                         StoreMode.Sell,
+                        StoreListingFlavor.Crate,
                         take,
                         remaining));
             }

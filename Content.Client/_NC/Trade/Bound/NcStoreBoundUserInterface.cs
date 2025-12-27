@@ -153,7 +153,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         if (Actor == null)
             return;
 
-        SendMessage(new StoreSellListingBoundUiMessage(data.Id, qty));
+        SendMessage(new StoreSellListingBoundUiMessage(data.Id, qty, data.Flavor == StoreListingFlavor.Crate));
     }
 
     private void OnContractClaim(string contractId)
