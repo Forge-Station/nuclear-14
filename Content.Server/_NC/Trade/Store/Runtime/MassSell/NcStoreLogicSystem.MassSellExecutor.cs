@@ -10,7 +10,6 @@ public sealed partial class NcStoreLogicSystem
             return false;
 
         _inventory.InvalidateInventoryCache(container);
-        _scratchCurrencyCandidates.Clear();
         var items = new List<EntityUid>();
 
         var cached = _inventory.GetOrBuildDeepItemsCacheCompacted(container);

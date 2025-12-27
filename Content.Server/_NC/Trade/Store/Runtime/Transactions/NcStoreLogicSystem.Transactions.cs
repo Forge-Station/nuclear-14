@@ -17,8 +17,6 @@ public sealed partial class NcStoreLogicSystem
             return false;
 
         _inventory.InvalidateInventoryCache(user);
-
-        // Используем новую систему
         var snap = _inventory.BuildInventorySnapshot(user);
 
         if (!TryPickCurrencyForBuy(store, listing, snap, out var currency, out var unitPrice, out var balance))

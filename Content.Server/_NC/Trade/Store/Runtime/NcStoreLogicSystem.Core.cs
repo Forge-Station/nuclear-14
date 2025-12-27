@@ -6,9 +6,7 @@ using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Stacks;
 using Robust.Shared.Prototypes;
 
-
 namespace Content.Server._NC.Trade;
-
 
 public sealed partial class NcStoreLogicSystem : EntitySystem
 {
@@ -20,8 +18,8 @@ public sealed partial class NcStoreLogicSystem : EntitySystem
     [Dependency] public readonly IEntityManager _ents = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     [Dependency] public readonly NcStoreInventorySystem _inventory = default!;
+    [Dependency] public readonly NcStoreCurrencySystem _currency = default!;
     [Dependency] public readonly IPrototypeManager _protos = default!;
-    public readonly List<(EntityUid Ent, int Count)> _scratchCurrencyCandidates = new();
     [Dependency] public readonly SharedStackSystem _stacks = default!;
 
     public override void Initialize()
@@ -43,8 +41,7 @@ public sealed partial class NcStoreLogicSystem : EntitySystem
         {
             foreach (var hand in hands.Hands.Values)
             {
-                if (hand.HeldEntity is not { } held)
-                    continue;
+                if (hand.HeldEntity is not { } held) continue;
                 if (TryComp<EntityStorageComponent>(held, out var storage) && !storage.Open)
                 {
                     crate = held;
