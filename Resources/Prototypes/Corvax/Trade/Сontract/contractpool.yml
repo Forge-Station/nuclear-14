@@ -2,8 +2,53 @@
   id: caravan_easy
   entries:
   - type: Item
-    id: N14ClothingOuterCombatArmorMK2
-    weight: 12
+    id: N14WeaponSMG10mmSuppressed
+    weight: 3
   - type: Item
-    id: C4
+    id: N14Stimpak
+    amount: { min: 1, max: 3 }
+    weight: 2
+  - type: Item
+    id: N14WeaponSMG9mmCanadian
+    weight: 1
+  - type: Item
+    id: N14WeaponSMG9mm
+    weight: 3
+  - type: Item
+    id: N14WeaponLaserRifleCrude
+    weight: 3
+  - type: Item
+    id: N14WeaponSMG9mminfiltrator
+    weight: 2
+  - type: Item
+    id: N14WeaponPistol9mmSpy
+    weight: 2
+  - type: Item
+    id: N14Gunpowder10
+    weight: 3
+  - type: Item
+    id: N14WeaponSMG10mmChinese
+    weight: 2
+  - type: Item
+    id: N14RadAwayBloodbag
+    amount: { min: 1, max: 3 }
+    weight: 3
+  - type: Item
+    id: N14Antidote
+    amount: { min: 1, max: 3 }
+    weight: 3
+  - type: Item
+    id: N14ClothingOuterCombatArmorCargo
+    weight: 3
+  - type: Item
+    id: N14WeaponRifle556ServiceScoped
+    weight: 1
+  - type: Item
+    id: N14ClothingHeadHatCombatHelmetCargo
+    weight: 1
+  - type: Item
+    id: N14WeaponLaserRifleRecharger
+    weight: 1
+  - type: Item
+    id: N14LongSword
     weight: 2

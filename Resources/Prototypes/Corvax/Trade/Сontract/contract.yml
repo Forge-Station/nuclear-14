@@ -7,102 +7,190 @@
     weight: 50
   - id: caravan_contract_scraps
     weight: 50
+  - id: caravan_contract_N14MaterialThread
+    weight: 50
+  - id: caravan_contract_MaterialCloth
+    weight: 50
+  - id: caravan_contract_N14FloraLogTimber
+    weight: 50
+  - id: caravan_contract_MaterialWoodPlank1
+    weight: 50
+  - id: caravan_contract_N14FloraProduceWildCoyoteTobacco
+    weight: 50
+  - id: caravan_contract_N14FoodDogfood
+    weight: 50
+  - id: caravan_contract_N14WeaponSniper556VarmintRifle
+    weight: 50
+  - id: caravan_contract_N14Scrap1
+    weight: 50
 
 - type: storeContractsPreset
   id: PresetBazar
   limits:
-    Easy: 2
-    Medium: 1
-    Hard: 1
+    Easy: 3
   packs:
   - id: PackBazar
     weight: 1
 
 - type: storeContract
-  id: caravan_contract_guns
-  name: Пушки на переработку
-  description: "Короче мне надо жопы скорпиона, сдашь получишь силовую броню."
+  id: caravan_contract_N14MaterialThread
+  name: "Требуются нитки"
+  description: "Для создания новой одежды требуются нитки."
   difficulty: Easy
-  repeatable: false
-  targetCount: { min: 1, max: 3 }
   targets:
-  - id: N14MaterialRadscorpionTail
-    required: { min: 1, max: 3 }
-    weight: 5
-  - id: N14FoodMeatRadscorpionLeg
-    required: 1
-    weight: 5
-  - id: N14MaterialExoskeleton
-    required: { min: 1, max: 3 }
-    weight: 5
+  - id: N14MaterialThread1
+    required: { min: 3, max: 6 }
   rewards:
   - type: Currency
     id: Caps
-    amount: { min: 555, max: 5555 }
-  - type: Currency
-    id: PrizeTicket
-    amount: { min: 555, max: 5555 }
-  - type: Item
-    id: N14ClothingOuterPowerArmorT51
-    amount: 3
+    amount: { min: 100, max: 150 }
   - type: Pool
-    amount: { min: 1, max: 5 }
+    amount: { min: 1, max: 3 }
     options:
     - type: Pool
       id: caravan_easy
-      weight: 12
-    - type: Item
-      id: C4
-      weight: 2
 
 - type: storeContract
-  id: caravan_contract_scrap
-  name: Металлолом нужен
-  description: "Найди девушку Грому. Найдешь он тебя отблагодарит."
+  id: caravan_contract_MaterialCloth
+  name: "Требуется ткань"
+  description: "Для создания новой одежды нужна ткань."
   difficulty: Easy
-  targetCount: 2
   targets:
-  - id: N14MaterialRadscorpionTail
-    required: 3
+  - id: MaterialCloth1
+    required: { min: 3, max: 6 }
   rewards:
   - type: Currency
     id: Caps
-    amount: { min: 555, max: 5555 }
-  - type: Currency
-    id: PrizeTicket
-    amount: { min: 5, max: 333 }
+    amount: { min: 100, max: 150 }
   - type: Pool
-    amount: 4
+    amount: { min: 1, max: 3 }
     options:
-    - type: Item
-      id: N14ClothingOuterCombatArmorMK2
-      weight: 6
-    - type: Item
-      id: C4
-      weight: 2
+    - type: Pool
+      id: caravan_easy
 
 - type: storeContract
-  id: caravan_contract_scraps
-  name: Металлолом нужен
-  description: "Меттал тащиии"
+  id: caravan_contract_N14FloraLogTimber
+  name: "Дрова для отопления"
+  description: "Нужны дрова для отопления и строительства."
   difficulty: Easy
-  targetCount: 2
   targets:
-  - id: N14MaterialRadscorpionTail
-    required: 7
+  - id: N14FloraLogTimber
+    required: { min: 3, max: 6 }
   rewards:
   - type: Currency
     id: Caps
-    amount: 5555
+    amount: { min: 100, max: 150 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy
+
+- type: storeContract
+  id: caravan_contract_MaterialWoodPlank1
+  name: "Древесина для плотника"
+  description: "Нужна древесина для работы плотника."
+  difficulty: Easy
+  targets:
+  - id: MaterialWoodPlank1
+    required: { min: 6, max: 15 }
+  rewards:
   - type: Currency
     id: Caps
-    amount: { min: 555, max: 5555 }
+    amount: { min: 100, max: 150 }
   - type: Pool
-    amount: 3
+    amount: { min: 1, max: 3 }
     options:
-    - type: Item
-      id: N14ClothingOuterCombatArmorMK2
-      weight: 6
-    - type: Item
-      id: C4
-      weight: 2
+    - type: Pool
+      id: caravan_easy
+
+- type: storeContract
+  id: caravan_contract_N14FloraProduceWildCoyoteTobacco
+  name: "Табак для наемников"
+  description: "Необходим табак для сигарет для наемников."
+  difficulty: Easy
+  targets:
+  - id: N14FloraProduceWildCoyoteTobacco
+    required: { min: 2, max: 5 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 100, max: 150 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy
+
+- type: storeContract
+  id: caravan_contract_N14FoodDogfood
+  name: "Собачий корм"
+  description: "Для моей собачки нужно больше корма."
+  difficulty: Easy
+  repeatable: false
+  targets:
+  - id: N14FoodDogfood
+    required: { min: 2, max: 3 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 150, max: 200 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy
+
+- type: storeContract
+  id: caravan_contract_N14WeaponSniper556VarmintRifle
+  name: "Оружие для охраны"
+  description: "Необходимо предоставить ствол для охраны."
+  difficulty: Easy
+  targets:
+  - id: N14WeaponSniper556VarmintRifle
+    required: { min: 1, max: 2 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 100, max: 150 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy
+
+- type: storeContract
+  id: caravan_contract_N14WeaponSniper556VarmintRifle
+  name: "Собрание мяса"
+  description: "Необходимо добыть мясо для переработки."
+  difficulty: Easy
+  targets:
+  - id: N14FoodMeatRadRaw
+    required: { min: 2, max: 4 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 100, max: 150 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy
+
+- type: storeContract
+  id: caravan_contract_N14Scrap1
+  name: "Сбор металлолома"
+  description: "Нужно собрать металлолом для переплавки."
+  difficulty: Easy
+  targets:
+  - id: N14Scrap1
+    required: { min: 2, max: 5 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 100, max: 150 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy
