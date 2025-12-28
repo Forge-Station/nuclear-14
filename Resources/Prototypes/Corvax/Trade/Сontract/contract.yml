@@ -160,7 +160,7 @@
       id: caravan_easy
 
 - type: storeContract
-  id: caravan_contract_N14WeaponSniper556VarmintRifle
+  id: caravan_contract_N14FoodMeatRadRaw
   name: "Собрание мяса"
   description: "Необходимо добыть мясо для переработки."
   difficulty: Easy
