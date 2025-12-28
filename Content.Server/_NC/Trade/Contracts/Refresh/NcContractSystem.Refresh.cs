@@ -14,8 +14,6 @@ public sealed partial class NcContractSystem : EntitySystem
         string? presetId = null;
         if (comp.ContractPresets.Count > 0)
             presetId = comp.ContractPresets[0];
-        else if (!string.IsNullOrWhiteSpace(comp.LegacyContractsPreset))
-            presetId = comp.LegacyContractsPreset;
 
         if (string.IsNullOrWhiteSpace(presetId))
             return;

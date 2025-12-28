@@ -70,11 +70,6 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
     private void TryLoadPresets(EntityUid uid, NcStoreComponent comp, string reason)
     {
-        if (comp.BuyPresets.Count == 0 &&
-            comp.SellPresets.Count == 0 &&
-            !string.IsNullOrWhiteSpace(comp.LegacyPreset))
-            comp.BuyPresets.Add(comp.LegacyPreset!);
-
         if (comp.BuyPresets.Count == 0 && comp.SellPresets.Count == 0)
         {
             Sawmill.Warning($"[NcStore] {ToPrettyString(uid)}: нет ни одного пресета (reason={reason})");

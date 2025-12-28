@@ -35,6 +35,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     private readonly Dictionary<EntityUid, DynamicScratch> _dynamicScratchByStore = new();
     [Dependency] private readonly StoreSystemStructuredLoader _loader = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
+    [Dependency] private readonly NcStoreInventorySystem _inventory = default!;
     private readonly List<EntityUid> _openStoresScratch = new();
     private readonly HashSet<EntityUid> _openStoreUids = new();
     private readonly HashSet<EntityUid> _pendingRefreshEntities = new();
@@ -206,10 +207,10 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (_watchByStore.TryGetValue(storeUid, out var info))
         {
             if (info.User != EntityUid.Invalid)
-                _logic.InvalidateInventoryCache(info.User);
+                _inventory.InvalidateInventoryCache(info.User);
 
             if (info.Crate is { } crate)
-                _logic.InvalidateInventoryCache(crate);
+                _inventory.InvalidateInventoryCache(crate);
         }
 
         if (user != null)
@@ -232,23 +233,23 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             if (prev.Crate != crateUid)
             {
                 if (prev.Crate is { } oldCrate)
-                    _logic.InvalidateInventoryCache(oldCrate);
+                    _inventory.InvalidateInventoryCache(oldCrate);
                 if (crateUid is { } newCrate)
-                    _logic.InvalidateInventoryCache(newCrate);
+                    _inventory.InvalidateInventoryCache(newCrate);
             }
 
             if (prev.User != user)
             {
                 if (prev.User != EntityUid.Invalid)
-                    _logic.InvalidateInventoryCache(prev.User);
-                _logic.InvalidateInventoryCache(user);
+                    _inventory.InvalidateInventoryCache(prev.User);
+                _inventory.InvalidateInventoryCache(user);
             }
         }
         else
         {
-            _logic.InvalidateInventoryCache(user);
+            _inventory.InvalidateInventoryCache(user);
             if (crateUid is { } newCrate)
-                _logic.InvalidateInventoryCache(newCrate);
+                _inventory.InvalidateInventoryCache(newCrate);
         }
 
         UpdateStoreWatch(storeUid, user, crateUid);
@@ -295,11 +296,11 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         _watchByStore[storeUid] = (user, crate);
         AddWatchedRoot(user, storeUid);
-        _logic.InvalidateInventoryCache(user);
+        _inventory.InvalidateInventoryCache(user);
         if (crate is { } c)
         {
             AddWatchedRoot(c, storeUid);
-            _logic.InvalidateInventoryCache(c);
+            _inventory.InvalidateInventoryCache(c);
         }
     }
 
@@ -374,7 +375,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 cachedList,
                 hasBuy,
                 hasSell,
-                comp.ContractPresets.Count > 0 || !string.IsNullOrWhiteSpace(comp.LegacyContractsPreset)
+                comp.ContractPresets.Count > 0
             );
             _ui.ServerSendUiMessage((store, null), StoreUiKey.Key, msg, user);
             return;
@@ -426,7 +427,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 list,
                 hasBuy,
                 hasSell,
-                comp.ContractPresets.Count > 0 || !string.IsNullOrWhiteSpace(comp.LegacyContractsPreset)
+                comp.ContractPresets.Count > 0
             );
 
             _ui.ServerSendUiMessage((store, null), StoreUiKey.Key, msg, user);

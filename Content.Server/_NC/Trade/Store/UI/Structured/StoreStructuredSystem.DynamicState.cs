@@ -22,27 +22,23 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 hasBuyTab = true;
             else if (l.Mode == StoreMode.Sell)
                 hasSellTab = true;
-
             if (hasBuyTab && hasSellTab)
                 break;
         }
 
-        var hasContractsTab = comp.ContractPresets.Count > 0 || !string.IsNullOrWhiteSpace(comp.LegacyContractsPreset);
+        var hasContractsTab = comp.ContractPresets.Count > 0;
 
         var needUserSnap = hasContractsTab;
         if (!needUserSnap && comp.CurrencyWhitelist.Count > 0)
             needUserSnap = true;
-
         if (!needUserSnap)
         {
             foreach (var l in comp.Listings)
-            {
                 if (!string.IsNullOrWhiteSpace(l.ProductEntity))
                 {
                     needUserSnap = true;
                     break;
                 }
-            }
         }
 
         var needCrateScan = crateUid != null && (hasSellTab || hasContractsTab);
@@ -52,21 +48,27 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         if (needUserSnap)
         {
-            _logic.ScanInventory(user, _deepUserItemsScratch, _userSnapScratch);
+            _inventory.ScanInventory(user, _deepUserItemsScratch, _userSnapScratch);
             userSnap = _userSnapScratch;
         }
 
         if (needCrateScan && crateUid is { } crateEntity)
         {
-            _logic.ScanInventory(crateEntity, _deepCrateItemsScratch, _crateSnapScratch);
-            crateSnap = _crateSnapScratch;
+            if (hasContractsTab)
+            {
+                _inventory.ScanInventory(crateEntity, _deepCrateItemsScratch, _crateSnapScratch);
+                crateSnap = _crateSnapScratch;
+            }
+            else
+                _inventory.ScanInventoryItems(crateEntity, _deepCrateItemsScratch);
         }
 
         if (hasContractsTab && userSnap != null)
             UpdateContractsProgress(comp, userSnap, crateSnap);
-
         var scratch = GetDynamicScratch(uid);
         var buf = scratch.GetWriteBuffer();
+        var oldBuf = scratch.GetReadBuffer();
+
         buf.Clear();
 
         if (userSnap != null)
@@ -75,7 +77,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             {
                 if (string.IsNullOrWhiteSpace(cur))
                     continue;
-
                 buf.BalancesByCurrency[cur] = userSnap.StackTypeCounts.TryGetValue(cur, out var b) ? b : 0;
             }
         }
@@ -84,23 +85,17 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         {
             if (string.IsNullOrWhiteSpace(l.Id))
                 continue;
-
             buf.RemainingById[l.Id] = l.RemainingCount;
-
             if (userSnap != null && !string.IsNullOrWhiteSpace(l.ProductEntity))
-            {
-                buf.OwnedById[l.Id] = _logic.GetOwnedFromSnapshot(userSnap, l.ProductEntity, l.MatchMode);
-            }
+                buf.OwnedById[l.Id] = _inventory.GetOwnedFromSnapshot(userSnap, l.ProductEntity, l.MatchMode);
         }
 
         if (hasSellTab && needCrateScan && crateUid is { } crate)
         {
             var plan = _logic.ComputeMassSellPlanFromCachedItems(comp, crate, _deepCrateItemsScratch);
-
             foreach (var kvp in plan.UnitsByListingId)
                 if (!string.IsNullOrWhiteSpace(kvp.Key) && kvp.Value > 0)
                     buf.CrateUnitsById[kvp.Key] = kvp.Value;
-
             foreach (var kvp in plan.IncomeByCurrency)
                 if (!string.IsNullOrWhiteSpace(kvp.Key) && kvp.Value > 0)
                     buf.CrateTotals[kvp.Key] = kvp.Value;
@@ -169,7 +164,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             return;
 
         if (_pendingRefreshEntities.Add(changedRoot))
-            _logic.InvalidateInventoryCache(changedRoot);
+            _inventory.InvalidateInventoryCache(changedRoot);
 
         if (_timing.CurTime < _nextCheck && _timing.CurTime >= _nextAccelAllowed)
         {
@@ -184,9 +179,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 if (_watchByStore.TryGetValue(s, out var watch))
                 {
                     if (watch.User != EntityUid.Invalid)
-                        _logic.InvalidateInventoryCache(watch.User);
+                        _inventory.InvalidateInventoryCache(watch.User);
                     if (watch.Crate is { } crate)
-                        _logic.InvalidateInventoryCache(crate);
+                        _inventory.InvalidateInventoryCache(crate);
                 }
 
                 MarkDirty(s);
@@ -270,6 +265,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                         t.Progress = 0;
                         continue;
                     }
+
                     var owned = _logic.GetOwnedFromSnapshot(UserSnap, t.TargetItem, t.MatchMode);
 
                     if (CrateSnap != null)
@@ -295,6 +291,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                     contract.Progress = 0;
                     continue;
                 }
+
                 var owned = _logic.GetOwnedFromSnapshot(UserSnap, contract.TargetItem, contract.MatchMode);
 
                 if (CrateSnap != null)

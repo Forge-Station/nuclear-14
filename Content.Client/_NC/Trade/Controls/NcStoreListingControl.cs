@@ -28,15 +28,6 @@ public sealed partial class NcStoreListingControl : PanelContainer
     private StoreListingData _staticData;
     private bool _suppressQtyEditChange;
 
-    public Action<int>? OnBuyPressed { get; set; }
-    public Action<int>? OnSellPressed { get; set; }
-    public Action<int>? OnQtyChanged { get; set; }
-
-    public string UiId => _staticData.Id;
-    public string ListingId => _staticData.ListingId;
-    public StoreListingFlavor Flavor => _staticData.Flavor;
-    private int MinAllowed => _maxQty <= 0 ? 0 : 1;
-
     public NcStoreListingControl(
         StoreListingData data,
         SpriteSystem sprites,
@@ -57,13 +48,9 @@ public sealed partial class NcStoreListingControl : PanelContainer
         TitleLabel.ToolTip = proto?.Name ?? data.ProductEntity;
 
         if (proto != null && sprites.GetPrototypeIcon(proto.ID).Default is { } tex)
-        {
             IconTexture.Texture = tex;
-        }
         else
-        {
             IconSlotBackground.Visible = false;
-        }
         SetDescription(proto);
 
         SetupPriceButton(data, sprites, pm);
@@ -72,6 +59,15 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
         UpdateLabelsAndVisibility(data);
     }
+
+    public Action<int>? OnBuyPressed { get; set; }
+    public Action<int>? OnSellPressed { get; set; }
+    public Action<int>? OnQtyChanged { get; set; }
+
+    public string UiId => _staticData.Id;
+    public string ListingId => _staticData.ListingId;
+    public StoreListingFlavor Flavor => _staticData.Flavor;
+    private int MinAllowed => _maxQty <= 0 ? 0 : 1;
 
     private void SetDescription(EntityPrototype? proto)
     {
@@ -102,18 +98,15 @@ public sealed partial class NcStoreListingControl : PanelContainer
             PriceCurrencyIcon.Visible = true;
         }
         else
-        {
             PriceCurrencyIcon.Visible = false;
-        }
 
         if (!_actionsEnabled)
-        {
             PriceButton.ToolTip = Loc.GetString("nc-store-only-mass-sell");
-        }
 
         PriceButton.OnPressed += _ =>
         {
-            if (!_actionsEnabled || _maxQty <= 0 || _qty <= 0) return;
+            if (!_actionsEnabled || _maxQty <= 0 || _qty <= 0)
+                return;
 
             switch (data.Mode)
             {
@@ -161,16 +154,18 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
         QtyEdit.OnTextChanged += _ =>
         {
-            if (!_actionsEnabled || _suppressQtyEditChange) return;
+            if (!_actionsEnabled || _suppressQtyEditChange)
+                return;
 
-            var digits = new string(Enumerable.Where<char>(QtyEdit.Text, char.IsDigit).Take(QtyMaxDigits).ToArray());
+            var digits = new string(QtyEdit.Text.Where(char.IsDigit).Take(QtyMaxDigits).ToArray());
             if (digits.Length == 0)
             {
                 SetQtyEditSafe(_qty.ToString());
                 return;
             }
 
-            if (!int.TryParse(digits, out var v)) v = _qty;
+            if (!int.TryParse(digits, out var v))
+                v = _qty;
 
             var clamped = Math.Clamp(v, MinAllowed, Math.Max(MinAllowed, _maxQty));
             var newText = clamped.ToString();
@@ -183,10 +178,13 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
         QtyEdit.OnTextEntered += _ =>
         {
-            if (!_actionsEnabled || _maxQty <= 0 || _qty <= 0) return;
+            if (!_actionsEnabled || _maxQty <= 0 || _qty <= 0)
+                return;
 
-            if (data.Mode == StoreMode.Buy) OnBuyPressed?.Invoke(_qty);
-            else if (data.Mode == StoreMode.Sell) OnSellPressed?.Invoke(_qty);
+            if (data.Mode == StoreMode.Buy)
+                OnBuyPressed?.Invoke(_qty);
+            else if (data.Mode == StoreMode.Sell)
+                OnSellPressed?.Invoke(_qty);
         };
     }
 
@@ -209,14 +207,10 @@ public sealed partial class NcStoreListingControl : PanelContainer
         _maxQty = Math.Min(remainingCap, Math.Min(ownedCap, moneyCap));
     }
 
-    public void UpdateIdentity(StoreListingData newData)
-    {
-        _staticData = newData;
-    }
+    public void UpdateIdentity(StoreListingData newData) => _staticData = newData;
 
     public void UpdateDynamicData(int playerBalance, int remainingStock, int playerOwned)
     {
-
         _staticData.Remaining = remainingStock;
         _staticData.Owned = playerOwned;
 
@@ -231,9 +225,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
             QtyLabel.Text = _qty.ToString();
 
             if (QtyEdit.Text != _qty.ToString() && _ui.KeyboardFocused != QtyEdit)
-            {
                 SetQtyEditSafe(_qty.ToString());
-            }
             OnQtyChanged?.Invoke(_qty);
         }
 
@@ -249,8 +241,8 @@ public sealed partial class NcStoreListingControl : PanelContainer
         QtyEdit.Editable = !noQty;
 
         var disablePrice = !_actionsEnabled || noQty ||
-                           _staticData.Remaining == 0 ||
-                           (_staticData.Mode == StoreMode.Sell && _staticData.Owned <= 0);
+            _staticData.Remaining == 0 ||
+            _staticData.Mode == StoreMode.Sell && _staticData.Owned <= 0;
 
         PriceButton.Disabled = disablePrice;
     }
@@ -280,16 +272,11 @@ public sealed partial class NcStoreListingControl : PanelContainer
                 : Loc.GetString("nc-store-will-buy", ("count", data.Remaining));
         }
         else
-        {
             RemainingLabel.Visible = false;
-        }
 
-        // Owned label
         OwnedLabel.Visible = data.Owned > 0;
         if (data.Owned > 0)
-        {
             OwnedLabel.Text = Loc.GetString("nc-store-owned", ("count", data.Owned));
-        }
     }
 
     private void SetQty(int v)
@@ -305,9 +292,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
         var text = _qty.ToString();
 
         if (QtyEdit.Text != text)
-        {
             SetQtyEditSafe(text);
-        }
 
         UpdateButtonsState(MinAllowed);
         UpdateTotalPrice(_staticData);
@@ -316,7 +301,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
     private void UpdateTotalPrice(StoreListingData data)
     {
-        var value = _qty <= 0 ? data.Price : (long)data.Price * _qty;
+        var value = _qty <= 0 ? data.Price : (long) data.Price * _qty;
         PriceLabel.Text = value > MaxTotalDisplay ? $"{MaxTotalDisplay}+" : value.ToString();
     }
 

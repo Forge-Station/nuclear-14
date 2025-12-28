@@ -27,9 +27,6 @@ public sealed partial class NcStoreComponent : Component
     [ViewVariables]
     public Dictionary<StoreListingKey, NcStoreListingDef> ListingIndex { get; } = new();
 
-    [DataField("preset")]
-    public string? LegacyPreset { get; set; }
-
     [DataField("buyPresets")]
     public List<string> BuyPresets { get; set; } = new();
 
@@ -38,9 +35,6 @@ public sealed partial class NcStoreComponent : Component
 
     [DataField("contractPresets")]
     public List<string> ContractPresets { get; set; } = new();
-
-    [DataField("contracts")]
-    public string? LegacyContractsPreset { get; set; }
 
     public Dictionary<string, ContractServerData> Contracts { get; } = new();
 

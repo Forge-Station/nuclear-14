@@ -309,10 +309,10 @@ public sealed partial class NcStoreMenu : FancyWindow
         {
             var it = _items[i];
 
-            if (!hasReady && it is { Mode: StoreMode.Sell, Category: CatIdReady })
+            if (!hasReady && it is { Mode: StoreMode.Sell, Category: CatIdReady, })
                 hasReady = true;
 
-            if (!hasCrate && it is { Mode: StoreMode.Sell, Category: CatIdCrate })
+            if (!hasCrate && it is { Mode: StoreMode.Sell, Category: CatIdCrate, })
                 hasCrate = true;
 
             if (hasReady && hasCrate)

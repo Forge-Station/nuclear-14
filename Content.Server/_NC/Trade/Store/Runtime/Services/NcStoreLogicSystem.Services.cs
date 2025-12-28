@@ -61,15 +61,48 @@ public sealed partial class NcStoreLogicSystem
             var spawnedTotal = 0;
             if (productProto.TryGetComponent(_stackComponentName, out StackComponent? stackComp))
             {
-                var userCoords = _sys._ents.GetComponent<TransformComponent>(user).Coordinates;
+                var remainingToSpawn = amount;
+
+                var stackTypeId = stackComp.StackTypeId;
                 var maxPerStack = int.MaxValue;
-                if (!string.IsNullOrWhiteSpace(stackComp.StackTypeId) &&
-                    _sys._protos.TryIndex<StackPrototype>(stackComp.StackTypeId, out var stackTypeProto))
+
+                if (!string.IsNullOrWhiteSpace(stackTypeId) &&
+                    _sys._protos.TryIndex<StackPrototype>(stackTypeId, out var stackTypeProto))
                     maxPerStack = stackTypeProto.MaxCount ?? int.MaxValue;
                 if (maxPerStack <= 0)
                     maxPerStack = 1;
 
-                var remainingToSpawn = amount;
+                var cachedItems = _sys._inventory.GetOrBuildDeepItemsCacheCompacted(user);
+
+                foreach (var ent in cachedItems)
+                {
+                    if (remainingToSpawn <= 0)
+                        break;
+
+                    if (!_sys._ents.TryGetComponent(ent, out StackComponent? existingStack) ||
+                        existingStack.StackTypeId != stackTypeId)
+                        continue;
+
+                    var spaceLeft = maxPerStack - existingStack.Count;
+                    if (spaceLeft <= 0)
+                        continue;
+
+                    var toAdd = Math.Min(spaceLeft, remainingToSpawn);
+
+                    _sys._stacks.SetCount(ent, existingStack.Count + toAdd, existingStack);
+
+                    remainingToSpawn -= toAdd;
+                    spawnedTotal += toAdd;
+                }
+
+                if (remainingToSpawn <= 0)
+                {
+                    _sys._inventory.InvalidateInventoryCache(user);
+                    return spawnedTotal;
+                }
+
+                var userCoords = _sys._ents.GetComponent<TransformComponent>(user).Coordinates;
+
                 while (remainingToSpawn > 0)
                 {
                     var chunk = Math.Min(remainingToSpawn, maxPerStack);
@@ -94,18 +127,22 @@ public sealed partial class NcStoreLogicSystem
                     }
                     catch (Exception e)
                     {
-                        Sawmill.Error($"Spawn failed during bulk buy: {e}");
+                        Logger.GetSawmill("ncstore-logic").Error($"Spawn failed during bulk buy: {e}");
                         break;
                     }
                 }
 
+                _sys._inventory.InvalidateInventoryCache(user);
+
                 return spawnedTotal;
             }
+
             for (var i = 0; i < amount; i++)
                 if (_sys.TrySpawnProduct(productEntity, user))
                     spawnedTotal++;
                 else
                     continue;
+
             return spawnedTotal;
         }
     }

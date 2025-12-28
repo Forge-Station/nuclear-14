@@ -16,6 +16,7 @@ namespace Content.Client._NC.Trade.Controls;
 public sealed class NcListingGrid : BoxContainer
 {
     private const int PageSize = 96;
+    private const string SeparatorName = "NcListingGridSeparator";
     private readonly Dictionary<string, (NcStoreListingControl Ctrl, int Sig)> _cache = new();
     private readonly Dictionary<string, StoreListingData> _itemById = new();
 
@@ -37,9 +38,7 @@ public sealed class NcListingGrid : BoxContainer
 
     private IReadOnlyList<StoreListingData> _allItems = Array.Empty<StoreListingData>();
     private Func<string, int> _balanceResolver = _ => int.MaxValue;
-    private Action<StoreListingData, int> _emit = (_, _) => { };
-
-    private int _page = 1;
+    private Action<StoreListingData, int> _emit = (_, _) => { };    private int _page = 1;
     private string _searchLower = string.Empty;
     private string _selectedCategory = string.Empty;
 
@@ -164,13 +163,11 @@ public sealed class NcListingGrid : BoxContainer
 
     private void DetachAllChildren()
     {
-        // IMPORTANT: Do not dispose controls; RobustUI expects controls to be removed from the tree.
         while (ChildCount > 0)
         {
             var child = GetChild(0);
-            RemoveChild(child);
-            // separators go back to pool for reuse
-            if (child is PanelContainer sep)
+            child.Orphan();
+            if (child is PanelContainer sep && sep.Name == SeparatorName)
             {
                 sep.Visible = false;
                 _separatorPool.Add(sep);
@@ -180,17 +177,26 @@ public sealed class NcListingGrid : BoxContainer
 
     private PanelContainer GetSeparator()
     {
-        if (_separatorPool.Count > 0)
+        while (_separatorPool.Count > 0)
         {
             var last = _separatorPool.Count - 1;
             var sep = _separatorPool[last];
             _separatorPool.RemoveAt(last);
+
+            if (sep is NcStoreListingControl)
+                continue;
+            if (sep.Name != SeparatorName)
+                continue;
+
+            if (sep.Parent != null)
+                sep.Orphan();
             sep.Visible = true;
             return sep;
         }
 
         return new PanelContainer
         {
+            Name = SeparatorName,
             MinSize = new Vector2i(0, 1),
             PanelOverride = _separatorStyle
         };
@@ -276,11 +282,16 @@ public sealed class NcListingGrid : BoxContainer
             ctrl.OnSellPressed = _mode == StoreMode.Sell ? qty => _emit(it, qty) : null;
             ctrl.UpdateDynamicData(balanceHint, it.Remaining, it.Owned);
 
+            if (ctrl.Parent != null)
+                ctrl.Orphan();
             AddChild(ctrl);
 
             if (i < endExclusive - 1)
             {
-                AddChild(GetSeparator());
+                var sep = GetSeparator();
+                if (sep.Parent != null)
+                    sep.Orphan();
+                AddChild(sep);
             }
         }
     }

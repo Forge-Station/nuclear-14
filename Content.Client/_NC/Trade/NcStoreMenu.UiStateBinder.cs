@@ -72,14 +72,12 @@ public sealed partial class NcStoreMenu
                 for (var i = 0; i < contracts.Count; i++)
                 {
                     var c = contracts[i];
-
                     h = h * 31 + (c.Id?.GetHashCode() ?? 0);
                     h = h * 31 + (c.Completed ? 1 : 0);
                     h = h * 31 + c.Progress;
                     h = h * 31 + c.Required;
                     h = h * 31 + (c.Difficulty?.GetHashCode() ?? 0);
                     h = h * 31 + (c.Name?.GetHashCode() ?? 0);
-
                     h = h * 31 + (c.Targets?.Count ?? 0);
                     h = h * 31 + (c.Rewards?.Count ?? 0);
                 }
@@ -93,7 +91,6 @@ public sealed partial class NcStoreMenu
             unchecked
             {
                 var h = 17;
-
                 for (var i = 0; i < _m._catalog.Count; i++)
                 {
                     var s = _m._catalog[i];
