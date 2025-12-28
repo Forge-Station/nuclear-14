@@ -379,7 +379,8 @@ public sealed partial class NcStoreMenu : FancyWindow
                     s.CurrencyId,
                     s.Mode,
                     owned,
-                    remaining));
+                    remaining,
+                    s.UnitsPerPurchase));
         }
 
         // Virtual "ready to sell" category (derived from base sell listings).
@@ -408,7 +409,8 @@ public sealed partial class NcStoreMenu : FancyWindow
                     d.CurrencyId,
                     d.Mode,
                     d.Owned,
-                    d.Remaining));
+                    d.Remaining,
+                    d.UnitsPerPurchase));
         }
 
         if (_scratchReadyItems.Count > 0)
@@ -437,7 +439,8 @@ public sealed partial class NcStoreMenu : FancyWindow
                         s.CurrencyId,
                         StoreMode.Sell,
                         take,
-                        remaining));
+                        remaining,
+                        s.UnitsPerPurchase));
             }
         }
 

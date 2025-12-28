@@ -1,3 +1,4 @@
+using System;
 using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
 
@@ -136,6 +137,7 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
                     Categories = new List<string> { category },
                     Conditions = new List<ListingConditionPrototype>(),
                     RemainingCount = entry.Count ?? -1,
+                    UnitsPerPurchase = Math.Max(1, entry.Amount),
                     Cost = new()
                 };
 

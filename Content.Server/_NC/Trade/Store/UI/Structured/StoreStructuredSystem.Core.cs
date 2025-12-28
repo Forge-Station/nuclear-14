@@ -401,9 +401,10 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                     cat,
                     l.ProductEntity,
                     price,
-                    cur
+                    cur,
+                    l.UnitsPerPurchase
                 ));
-        }
+}
 
         _catalogCache[store] = (comp.CatalogRevision, list);
 

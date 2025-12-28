@@ -15,5 +15,7 @@ public sealed class NcStoreListingDef
 
     public List<ListingConditionPrototype> Conditions { get; set; } = new();
 
+    public int UnitsPerPurchase { get; set; } = 1;
+
     public int RemainingCount { get; set; } = -1;
 }

@@ -44,6 +44,7 @@ public sealed partial class StorePresetStructuredPrototype : IPrototype
         [DataField("price", required: true)] public int Price;
         [DataField("proto", required: true)] public string Proto = string.Empty;
         [DataField("count")] public int? Count { get; set; }
+        [DataField("amount")] public int Amount { get; set; } = 1;
     }
 }
 

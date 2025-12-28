@@ -1,3 +1,4 @@
+using System;
 using Robust.Shared.Serialization;
 
 namespace Content.Shared._NC.Trade;
@@ -41,6 +42,7 @@ public sealed class StoreListingData
     // Dynamic
     public int Owned;
     public int Price;
+    public int UnitsPerPurchase = 1;
     public string ProductEntity = string.Empty;
     public int Remaining = -1;
 
@@ -55,7 +57,8 @@ public sealed class StoreListingData
         string currencyId,
         StoreMode mode,
         int owned = 0,
-        int remaining = -1)
+        int remaining = -1,
+        int unitsPerPurchase = 1)
     {
         ListingId = listingId;
         Flavor = flavor;
@@ -67,6 +70,7 @@ public sealed class StoreListingData
         Mode = mode;
         Owned = owned;
         Remaining = remaining;
+        UnitsPerPurchase = Math.Max(1, unitsPerPurchase);
     }
 
     public StoreListingData(
@@ -77,7 +81,8 @@ public sealed class StoreListingData
         string currencyId,
         StoreMode mode,
         int owned = 0,
-        int remaining = -1)
+        int remaining = -1,
+        int unitsPerPurchase = 1)
     {
         Id = id;
         ListingId = id;
@@ -89,5 +94,6 @@ public sealed class StoreListingData
         Mode = mode;
         Owned = owned;
         Remaining = remaining;
+        UnitsPerPurchase = Math.Max(1, unitsPerPurchase);
     }
 }

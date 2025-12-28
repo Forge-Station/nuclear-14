@@ -308,7 +308,7 @@ public sealed class NcListingGrid : BoxContainer
     }
 
     private static int Sig(StoreListingData d) =>
-        HashCode.Combine(d.Id, d.ProductEntity, d.Category, d.Price, d.CurrencyId, d.Mode);
+        HashCode.Combine(d.Id, d.ProductEntity, d.Category, d.Price, d.CurrencyId, d.Mode, d.UnitsPerPurchase);
 
     private void AddToSearchIndex(string protoId)
     {

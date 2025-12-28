@@ -35,7 +35,8 @@ public sealed class StoreListingStaticData
         string category,
         string productEntity,
         int basePrice,
-        string currencyId)
+        string currencyId,
+        int unitsPerPurchase)
     {
         Id = id;
         Mode = mode;
@@ -43,6 +44,7 @@ public sealed class StoreListingStaticData
         ProductEntity = productEntity;
         BasePrice = basePrice;
         CurrencyId = currencyId;
+        UnitsPerPurchase = unitsPerPurchase;
     }
 
     public string Id { get; }
@@ -51,4 +53,5 @@ public sealed class StoreListingStaticData
     public string ProductEntity { get; }
     public int BasePrice { get; }
     public string CurrencyId { get; }
+    public int UnitsPerPurchase { get; }
 }

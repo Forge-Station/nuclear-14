@@ -278,8 +278,10 @@
         price: 60
       Медицина:
       - proto: N14DirtyGauze10
+        amount: 10
         price: 40
       - proto: N14AloeSalve
+        amount: 10
         price: 50
       - proto: N14SuperStimpak
         price: 120
@@ -296,12 +298,16 @@
         price: 200
       Материалы:
       - proto: SheetSteel
+        amount: 30
         price: 150
       - proto: SheetPlastic
+        amount: 30
         price: 120
       - proto: N14IngotLead20
+        amount: 20
         price: 175
       - proto: N14Gunpowder10
+        amount: 10
         price: 190
       Алкоголь:
       - proto: N14DrinkGammagulpBeer

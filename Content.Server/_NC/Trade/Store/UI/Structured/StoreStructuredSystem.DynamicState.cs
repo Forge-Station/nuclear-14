@@ -9,6 +9,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 {
     public void UpdateDynamicState(EntityUid uid, NcStoreComponent comp, EntityUid user)
     {
+        if (!_ui.IsUiOpen(uid, StoreUiKey.Key, user))
+            return;
+
         EntityUid? crateUid = null;
         if (_logic.TryGetPulledClosedCrate(user, out var pulledCrate))
             crateUid = pulledCrate;

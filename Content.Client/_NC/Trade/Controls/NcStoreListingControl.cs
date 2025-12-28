@@ -47,6 +47,13 @@ public sealed partial class NcStoreListingControl : PanelContainer
         TitleLabel.Text = proto?.Name ?? data.ProductEntity;
         TitleLabel.ToolTip = proto?.Name ?? data.ProductEntity;
 
+        if (data.Mode == StoreMode.Buy && data.UnitsPerPurchase > 1)
+        {
+            TitleLabel.Text = $"{TitleLabel.Text} ×{data.UnitsPerPurchase}";
+            TitleLabel.ToolTip = TitleLabel.Text;
+        }
+
+
         if (proto != null && sprites.GetPrototypeIcon(proto.ID).Default is { } tex)
             IconTexture.Texture = tex;
         else

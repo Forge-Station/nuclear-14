@@ -22,42 +22,64 @@ public sealed partial class NcStoreLogicSystem
         if (!TryPickCurrencyForBuy(store, listing, snap, out var currency, out var unitPrice, out var balance))
             return false;
 
-        var maxByRemaining = listing.RemainingCount >= 0 ? listing.RemainingCount : int.MaxValue;
-        var maxByMoney = unitPrice > 0 ? balance / unitPrice : int.MaxValue;
+        var unitsPerPurchase = Math.Max(1, listing.UnitsPerPurchase);
 
-        var maxPossible = Math.Min(maxByRemaining, maxByMoney);
-        if (maxPossible <= 0)
+        var maxByRemainingPurchases = listing.RemainingCount >= 0 ? listing.RemainingCount : int.MaxValue;
+        var maxByMoneyPurchases = unitPrice > 0 ? balance / unitPrice : int.MaxValue;
+
+        var maxPurchases = Math.Min(maxByRemainingPurchases, maxByMoneyPurchases);
+        if (maxPurchases <= 0)
             return false;
 
-        var actual = Math.Min(count, maxPossible);
-        var totalPriceL = (long) unitPrice * actual;
+        var purchases = Math.Min(count, maxPurchases);
+
+        var totalPriceL = (long) unitPrice * purchases;
         if (totalPriceL > int.MaxValue)
             return false;
 
+        var totalUnitsL = (long) purchases * unitsPerPurchase;
+        if (totalUnitsL <= 0 || totalUnitsL > int.MaxValue)
+            return false;
+
         var totalPrice = (int) totalPriceL;
+        var totalUnits = (int) totalUnitsL;
+
         if (!TryTakeCurrency(user, currency, totalPrice))
             return false;
 
-        var spawnedTotal = SpawnPurchasedProduct(user, listing.ProductEntity, proto, actual, unitPrice, currency);
+        var spawnedUnits = SpawnPurchasedProduct(user, listing.ProductEntity, proto, totalUnits, unitPrice, currency);
 
         _inventory.InvalidateInventoryCache(user);
 
-        if (spawnedTotal < actual)
+        if (spawnedUnits <= 0)
         {
-            var missing = actual - spawnedTotal;
-            var refundL = (long) missing * unitPrice;
+            // Full refund for failed delivery.
+            GiveCurrency(user, currency, totalPrice);
+            return false;
+        }
+
+        var deliveredPurchases = spawnedUnits / unitsPerPurchase;
+        if (deliveredPurchases <= 0)
+        {
+            GiveCurrency(user, currency, totalPrice);
+            return false;
+        }
+
+        if (deliveredPurchases < purchases)
+        {
+            var refundPurchases = purchases - deliveredPurchases;
+            var refundL = (long) refundPurchases * unitPrice;
             if (refundL > 0 && refundL <= int.MaxValue)
                 GiveCurrency(user, currency, (int) refundL);
         }
 
-        if (spawnedTotal <= 0)
-            return false;
+        if (listing.RemainingCount >= 0)
+            listing.RemainingCount = Math.Max(0, listing.RemainingCount - deliveredPurchases);
 
-        if (listing.RemainingCount > 0)
-            listing.RemainingCount = Math.Max(0, listing.RemainingCount - spawnedTotal);
-
-        Sawmill.Info($"TryBuy: OK {listing.ProductEntity} x{spawnedTotal} for {unitPrice} {currency} each");
+        Sawmill.Info(
+            $"TryBuy: OK {listing.ProductEntity} x{spawnedUnits} ({deliveredPurchases} purchases) for {unitPrice} {currency} each");
         return true;
+
     }
 
     public bool TrySell(string listingId, EntityUid machine, NcStoreComponent? store, EntityUid user, int count = 1)
