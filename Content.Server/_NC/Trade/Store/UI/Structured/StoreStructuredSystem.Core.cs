@@ -21,6 +21,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     private const float AutoCloseDistance = 3f;
     private const float MinAccelInterval = 0.25f;
     private const float MinDynamicInterval = 0.25f;
+    private const int MaxVisibleListingIds = 256;
+    private const int MaxVisibleListingIdLength = 96;
     private const int WatchedRootSearchLimit = 32;
     private const float CheckInterval = 1.0f;
     private readonly HashSet<EntityUid> _affectedStoresScratch = new();
@@ -33,9 +35,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     private readonly HashSet<EntityUid> _dirtyStores = new();
     private readonly List<EntityUid> _dirtyStoresScratch = new();
     private readonly Dictionary<EntityUid, DynamicScratch> _dynamicScratchByStore = new();
+    [Dependency] private readonly NcStoreInventorySystem _inventory = default!;
     [Dependency] private readonly StoreSystemStructuredLoader _loader = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
-    [Dependency] private readonly NcStoreInventorySystem _inventory = default!;
     private readonly List<EntityUid> _openStoresScratch = new();
     private readonly HashSet<EntityUid> _openStoreUids = new();
     private readonly HashSet<EntityUid> _pendingRefreshEntities = new();
@@ -81,16 +83,42 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         SubscribeLocalEvent<EntityStorageComponent, StorageAfterCloseEvent>(OnStorageClose);
     }
 
+
+    private bool TryGetLockedUiUser(EntityUid store, NcStoreComponent comp, out EntityUid user)
+    {
+        user = default;
+        if (comp.CurrentUser is not { } cur || cur == EntityUid.Invalid)
+            return false;
+
+        if (!_ui.IsUiOpen(store, StoreUiKey.Key, cur))
+            return false;
+
+        user = cur;
+        return true;
+    }
+
+
     private void OnSetVisibleListings(EntityUid uid, NcStoreComponent comp, StoreSetVisibleListingsBoundUiMessage msg)
     {
-        if (comp.CurrentUser is not { } user)
+        if (!TryGetLockedUiUser(uid, comp, out _))
             return;
 
-        if (!_ui.IsUiOpen(uid, StoreUiKey.Key, user))
-            return;
+        var ids = msg.Ids;
+        if (ids.Length > MaxVisibleListingIds)
+            ids = ids.Take(MaxVisibleListingIds).ToArray();
+
+        if (ids.Length > 0)
+        {
+            for (var i = 0; i < ids.Length; i++)
+            {
+                var id = ids[i];
+                if (id.Length is 0 or > MaxVisibleListingIdLength)
+                    ids[i] = string.Empty;
+            }
+        }
 
         var scratch = GetDynamicScratch(uid);
-        if (scratch.UpdateVisibleIds(msg.Ids))
+        if (scratch.UpdateVisibleIds(ids))
             MarkDirty(uid);
     }
 
@@ -421,7 +449,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                     cur,
                     l.UnitsPerPurchase
                 ));
-}
+        }
 
         _catalogCache[store] = (comp.CatalogRevision, list);
 
@@ -462,13 +490,22 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
     private void OnUiRefreshRequest(EntityUid uid, NcStoreComponent comp, RequestUiRefreshMessage msg)
     {
-        if (comp.CurrentUser is not { } user)
+        if (!TryGetLockedUiUser(uid, comp, out var user))
         {
             CloseAndCleanUp(uid);
             return;
         }
 
         if (!_storeSystem.CanUseStore(uid, comp, user))
+        {
+            _ui.CloseUi(uid, StoreUiKey.Key, user);
+            comp.CurrentUser = null;
+            CloseAndCleanUp(uid);
+            return;
+        }
+
+        if (TryComp(uid, out TransformComponent? sX) && TryComp(user, out TransformComponent? uX) &&
+            !_xform.InRange(sX.Coordinates, uX.Coordinates, AutoCloseDistance))
         {
             _ui.CloseUi(uid, StoreUiKey.Key, user);
             comp.CurrentUser = null;
@@ -499,8 +536,16 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
     private void OnClaimContract(EntityUid uid, NcStoreComponent comp, ClaimContractBoundMessage msg)
     {
-        if (comp.CurrentUser is not { } user)
+        if (!TryGetLockedUiUser(uid, comp, out var user))
             return;
+
+        if (!_storeSystem.CanUseStore(uid, comp, user))
+            return;
+
+        if (TryComp(uid, out TransformComponent? sX) && TryComp(user, out TransformComponent? uX) &&
+            !_xform.InRange(sX.Coordinates, uX.Coordinates, AutoCloseDistance))
+            return;
+
         if (_contracts.TryClaim(uid, user, msg.ContractId))
         {
             _audio.PlayPvs(new SoundPathSpecifier("/Audio/Effects/Cargo/ping.ogg"), user);
@@ -540,35 +585,37 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         {
             if (string.IsNullOrWhiteSpace(cur))
                 continue;
-            if (listing.Cost.TryGetValue(cur, out var pf))
+            if (listing.Cost.TryGetValue(cur, out var p) && p > 0)
             {
-                var p = (int) MathF.Ceiling(pf);
-                if (p > 0)
-                {
-                    currencyId = cur;
-                    price = p;
-                    return true;
-                }
+                currencyId = cur;
+                price = p;
+                return true;
             }
         }
 
-        var first = listing.Cost.First();
-        var fp = (int) MathF.Ceiling(first.Value);
-        if (fp > 0 && !string.IsNullOrWhiteSpace(first.Key))
+        KeyValuePair<string, int>? best = null;
+        foreach (var kv in listing.Cost)
         {
-            currencyId = first.Key;
-            price = fp;
-            return true;
+            if (string.IsNullOrWhiteSpace(kv.Key) || kv.Value <= 0)
+                continue;
+
+            if (best == null || string.CompareOrdinal(kv.Key, best.Value.Key) < 0)
+                best = kv;
         }
 
-        return false;
+        if (best == null)
+            return false;
+
+        currencyId = best.Value.Key;
+        price = best.Value.Value;
+        return true;
     }
 
     private ContractClientData MapContractToClient(ContractServerData c)
     {
         var targets = new List<ContractTargetClientData>();
 
-        if (c.Targets is { Count: > 0 })
+        if (c.Targets is { Count: > 0, })
         {
             foreach (var t in c.Targets)
             {
@@ -591,7 +638,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 });
         }
 
-        var rewards = c.Rewards is { Count: > 0 }
+        var rewards = c.Rewards is { Count: > 0, }
             ? new(c.Rewards)
             : new List<ContractRewardData>();
 
@@ -610,171 +657,162 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         );
     }
 
-private sealed class DynamicScratch
-{
-    private readonly DynamicStateBuffer[] _buffers = { new(), new() };
-    private int _activeIndex;
-    private readonly HashSet<string> _visibleListingIds = new();
-    private int _visibleSig;
-    private bool _hasVisibleIds;
-    private bool _hasMeta;
-    private int _catalogRevision;
-    private bool _hasBuyTab;
-    private bool _hasSellTab;
-    private bool _hasContracts;
-    public DynamicStateBuffer GetReadBuffer()
+    private sealed class DynamicScratch
     {
-        return _buffers[_activeIndex];
-    }
+        private readonly DynamicStateBuffer[] _buffers = { new(), new(), };
+        private readonly HashSet<string> _visibleListingIds = new();
+        private int _activeIndex;
+        private int _catalogRevision;
+        private bool _hasBuyTab;
+        private bool _hasContracts;
+        private bool _hasMeta;
+        private bool _hasSellTab;
+        private bool _hasVisibleIds;
+        private int _visibleSig;
 
-    public DynamicStateBuffer GetWriteBuffer()
-    {
-        return _buffers[1 - _activeIndex];
-    }
+        public DynamicStateBuffer GetReadBuffer() => _buffers[_activeIndex];
 
-    public bool UpdateVisibleIds(string[]? ids)
-    {
-        if (ids == null || ids.Length == 0)
+        public DynamicStateBuffer GetWriteBuffer() => _buffers[1 - _activeIndex];
+
+        public bool UpdateVisibleIds(string[]? ids)
         {
-            if (!_hasVisibleIds)
-                return false;
+            if (ids == null || ids.Length == 0)
+            {
+                if (!_hasVisibleIds)
+                    return false;
 
-            _visibleListingIds.Clear();
-            _visibleSig = 0;
-            _hasVisibleIds = false;
-            return true;
-        }
+                _visibleListingIds.Clear();
+                _visibleSig = 0;
+                _hasVisibleIds = false;
+                return true;
+            }
 
-        var sig = 17;
-        for (var i = 0; i < ids.Length; i++)
-        {
-            var id = ids[i];
-            if (string.IsNullOrWhiteSpace(id))
-                continue;
-            sig = unchecked(sig * 31 + id.GetHashCode());
-        }
-
-        if (_hasVisibleIds && sig == _visibleSig && _visibleListingIds.Count == ids.Length)
-        {
-            var all = true;
+            var sig = 17;
             for (var i = 0; i < ids.Length; i++)
             {
                 var id = ids[i];
                 if (string.IsNullOrWhiteSpace(id))
                     continue;
-                if (!_visibleListingIds.Contains(id))
-                {
-                    all = false;
-                    break;
-                }
+                sig = unchecked(sig * 31 + id.GetHashCode());
             }
 
-            if (all)
-                return false;
-        }
+            if (_hasVisibleIds && sig == _visibleSig && _visibleListingIds.Count == ids.Length)
+            {
+                var all = true;
+                for (var i = 0; i < ids.Length; i++)
+                {
+                    var id = ids[i];
+                    if (string.IsNullOrWhiteSpace(id))
+                        continue;
+                    if (!_visibleListingIds.Contains(id))
+                    {
+                        all = false;
+                        break;
+                    }
+                }
 
-        _visibleListingIds.Clear();
-        for (var i = 0; i < ids.Length; i++)
-        {
-            var id = ids[i];
-            if (!string.IsNullOrWhiteSpace(id))
-                _visibleListingIds.Add(id);
-        }
+                if (all)
+                    return false;
+            }
 
-        _visibleSig = sig;
-        _hasVisibleIds = true;
-        return true;
-    }
+            _visibleListingIds.Clear();
+            for (var i = 0; i < ids.Length; i++)
+            {
+                var id = ids[i];
+                if (!string.IsNullOrWhiteSpace(id))
+                    _visibleListingIds.Add(id);
+            }
 
-    public bool ShouldSendBuyDynamicFor(string listingId)
-    {
-        if (!_hasVisibleIds)
+            _visibleSig = sig;
+            _hasVisibleIds = true;
             return true;
-
-        return _visibleListingIds.Contains(listingId);
-    }
-
-    public bool EqualsLast(
-        DynamicStateBuffer next,
-        int catalogRevision,
-        bool hasBuyTab,
-        bool hasSellTab,
-        bool hasContracts
-    )
-    {
-        if (!_hasMeta)
-            return false;
-
-        if (_catalogRevision != catalogRevision ||
-            _hasBuyTab != hasBuyTab ||
-            _hasSellTab != hasSellTab ||
-            _hasContracts != hasContracts)
-            return false;
-
-        var prev = GetReadBuffer();
-
-        return DictEquals(prev.BalancesByCurrency, next.BalancesByCurrency) &&
-               DictEquals(prev.RemainingById, next.RemainingById) &&
-               DictEquals(prev.OwnedById, next.OwnedById) &&
-               DictEquals(prev.CrateUnitsById, next.CrateUnitsById) &&
-               DictEquals(prev.CrateTotals, next.CrateTotals) &&
-               ListEquals(prev.Contracts, next.Contracts);
-    }
-
-    public void Commit(int catalogRevision, bool hasBuyTab, bool hasSellTab, bool hasContracts)
-    {
-        _activeIndex = 1 - _activeIndex;
-
-        _catalogRevision = catalogRevision;
-        _hasBuyTab = hasBuyTab;
-        _hasSellTab = hasSellTab;
-        _hasContracts = hasContracts;
-        _hasMeta = true;
-    }
-
-    private static bool DictEquals(Dictionary<string, int> a, Dictionary<string, int> b)
-    {
-        if (ReferenceEquals(a, b))
-            return true;
-
-        if (a.Count != b.Count)
-            return false;
-
-        foreach (var (k, v) in a)
-        {
-            if (!b.TryGetValue(k, out var bv) || bv != v)
-                return false;
         }
 
-        return true;
-    }
-
-    private static bool ListEquals(List<ContractClientData> a, List<ContractClientData> b)
-    {
-        if (ReferenceEquals(a, b))
-            return true;
-
-        if (a.Count != b.Count)
-            return false;
-
-        for (var i = 0; i < a.Count; i++)
+        public bool ShouldSendBuyDynamicFor(string listingId)
         {
-            if (!EqualityComparer<ContractClientData>.Default.Equals(a[i], b[i]))
-                return false;
+            if (!_hasVisibleIds)
+                return true;
+
+            return _visibleListingIds.Contains(listingId);
         }
 
-        return true;
-    }
-}
+        public bool EqualsLast(
+            DynamicStateBuffer next,
+            int catalogRevision,
+            bool hasBuyTab,
+            bool hasSellTab,
+            bool hasContracts
+        )
+        {
+            if (!_hasMeta)
+                return false;
 
-private sealed class DynamicStateBuffer
+            if (_catalogRevision != catalogRevision ||
+                _hasBuyTab != hasBuyTab ||
+                _hasSellTab != hasSellTab ||
+                _hasContracts != hasContracts)
+                return false;
+
+            var prev = GetReadBuffer();
+
+            return DictEquals(prev.BalancesByCurrency, next.BalancesByCurrency) &&
+                DictEquals(prev.RemainingById, next.RemainingById) &&
+                DictEquals(prev.OwnedById, next.OwnedById) &&
+                DictEquals(prev.CrateUnitsById, next.CrateUnitsById) &&
+                DictEquals(prev.CrateTotals, next.CrateTotals) &&
+                ListEquals(prev.Contracts, next.Contracts);
+        }
+
+        public void Commit(int catalogRevision, bool hasBuyTab, bool hasSellTab, bool hasContracts)
+        {
+            _activeIndex = 1 - _activeIndex;
+
+            _catalogRevision = catalogRevision;
+            _hasBuyTab = hasBuyTab;
+            _hasSellTab = hasSellTab;
+            _hasContracts = hasContracts;
+            _hasMeta = true;
+        }
+
+        private static bool DictEquals(Dictionary<string, int> a, Dictionary<string, int> b)
+        {
+            if (ReferenceEquals(a, b))
+                return true;
+
+            if (a.Count != b.Count)
+                return false;
+
+            foreach (var (k, v) in a)
+                if (!b.TryGetValue(k, out var bv) || bv != v)
+                    return false;
+
+            return true;
+        }
+
+        private static bool ListEquals(List<ContractClientData> a, List<ContractClientData> b)
+        {
+            if (ReferenceEquals(a, b))
+                return true;
+
+            if (a.Count != b.Count)
+                return false;
+
+            for (var i = 0; i < a.Count; i++)
+                if (!EqualityComparer<ContractClientData>.Default.Equals(a[i], b[i]))
+                    return false;
+
+            return true;
+        }
+    }
+
+    private sealed class DynamicStateBuffer
     {
         public readonly Dictionary<string, int> BalancesByCurrency = new();
-        public readonly Dictionary<string, int> RemainingById = new();
-        public readonly Dictionary<string, int> OwnedById = new();
-        public readonly Dictionary<string, int> CrateUnitsById = new();
-        public readonly Dictionary<string, int> CrateTotals = new();
         public readonly List<ContractClientData> Contracts = new();
+        public readonly Dictionary<string, int> CrateTotals = new();
+        public readonly Dictionary<string, int> CrateUnitsById = new();
+        public readonly Dictionary<string, int> OwnedById = new();
+        public readonly Dictionary<string, int> RemainingById = new();
 
         public void Clear()
         {

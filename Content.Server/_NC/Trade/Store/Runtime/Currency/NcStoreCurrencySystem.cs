@@ -1,4 +1,3 @@
-using System.Linq;
 using Content.Shared._NC.Trade;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Stacks;
@@ -157,15 +156,25 @@ public sealed class NcStoreCurrencySystem : EntitySystem
             }
         }
 
-        var first = listing.Cost.FirstOrDefault();
-        if (!string.IsNullOrEmpty(first.Key) && first.Value > 0 && TryResolveHandler(first.Key, out _))
+        KeyValuePair<string, int>? best = null;
+        foreach (var kv in listing.Cost)
         {
-            currency = first.Key;
-            unitPrice = first.Value;
-            return true;
+            if (string.IsNullOrWhiteSpace(kv.Key) || kv.Value <= 0)
+                continue;
+
+            if (!TryResolveHandler(kv.Key, out _))
+                continue;
+
+            if (best == null || string.CompareOrdinal(kv.Key, best.Value.Key) < 0)
+                best = kv;
         }
 
-        return false;
+        if (best == null)
+            return false;
+
+        currency = best.Value.Key;
+        unitPrice = best.Value.Value;
+        return true;
     }
 
     public bool TryTakeCurrency(EntityUid user, string currencyId, int amount)

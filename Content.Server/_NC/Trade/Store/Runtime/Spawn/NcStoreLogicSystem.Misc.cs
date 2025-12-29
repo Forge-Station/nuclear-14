@@ -14,15 +14,7 @@ public sealed partial class NcStoreLogicSystem
             var userCoords = _ents.GetComponent<TransformComponent>(user).Coordinates;
             var spawned = _ents.SpawnEntity(protoId, userCoords);
 
-            var pickedUp = false;
-            if (_ents.HasComponent<HandsComponent>(user))
-                pickedUp = _hands.TryPickupAnyHand(user, spawned, false);
-
-            if (!pickedUp && TryGetPulledClosedCrate(user, out var crate) && Exists(crate))
-            {
-                _entityStorage.Insert(spawned, crate);
-                InvalidateInventoryCache(crate);
-            }
+            QueuePickupToHandsOrCrateNextTick(user, spawned);
 
             InvalidateInventoryCache(user);
             return true;

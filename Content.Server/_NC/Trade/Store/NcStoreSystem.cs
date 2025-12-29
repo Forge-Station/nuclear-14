@@ -25,6 +25,7 @@ public sealed class NcStoreSystem : EntitySystem
     [Dependency] private readonly PopupSystem _popups = default!;
     [Dependency] private readonly StoreStructuredSystem _storeUi = default!;
     [Dependency] private readonly TransformSystem _transform = default!;
+    [Dependency] private readonly UserInterfaceSystem _ui = default!;
 
     public override void Initialize()
     {
@@ -68,7 +69,7 @@ public sealed class NcStoreSystem : EntitySystem
     private bool IsInUseRange(EntityUid store, EntityUid user) => IsInRange(store, user, MaxUseDistance);
 
 
-private bool TryValidateUse(EntityUid store, NcStoreComponent comp, EntityUid actor, out string failMessage)
+    private bool TryValidateUse(EntityUid store, NcStoreComponent comp, EntityUid actor, out string failMessage)
     {
         failMessage = string.Empty;
 
@@ -143,9 +144,24 @@ private bool TryValidateUse(EntityUid store, NcStoreComponent comp, EntityUid ac
 
 
     private void PopupFail(EntityUid actor, string message) => _popups.PopupEntity(message, actor, actor);
+
+
+    private bool TryGetLockedUiUser(EntityUid store, NcStoreComponent comp, out EntityUid user)
+    {
+        user = default;
+        if (comp.CurrentUser is not { } cur || cur == EntityUid.Invalid)
+            return false;
+        if (!_ui.IsUiOpen(store, StoreUiKey.Key, cur))
+            return false;
+
+        user = cur;
+        return true;
+    }
+
+
     private void OnBuyRequest(EntityUid uid, NcStoreComponent comp, StoreBuyListingBoundUiMessage msg)
     {
-        if (comp.CurrentUser is not { } actor)
+        if (!TryGetLockedUiUser(uid, comp, out var actor))
             return;
 
         if (!TryValidateUse(uid, comp, actor, out var fail))
@@ -173,7 +189,7 @@ private bool TryValidateUse(EntityUid store, NcStoreComponent comp, EntityUid ac
 
     private void OnSellRequest(EntityUid uid, NcStoreComponent comp, StoreSellListingBoundUiMessage msg)
     {
-        if (comp.CurrentUser is not { } actor)
+        if (!TryGetLockedUiUser(uid, comp, out var actor))
             return;
 
         if (!TryValidateUse(uid, comp, actor, out var fail))
@@ -234,7 +250,7 @@ private bool TryValidateUse(EntityUid store, NcStoreComponent comp, EntityUid ac
         StoreMassSellPulledCrateBoundUiMessage msg
     )
     {
-        if (comp.CurrentUser is not { } actor)
+        if (!TryGetLockedUiUser(uid, comp, out var actor))
             return;
 
         if (!TryValidateUse(uid, comp, actor, out var fail))

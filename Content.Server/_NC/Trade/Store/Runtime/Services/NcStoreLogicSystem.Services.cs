@@ -112,15 +112,7 @@ public sealed partial class NcStoreLogicSystem
                         if (_sys._ents.TryGetComponent(spawned, out StackComponent? spawnedStack))
                             _sys._stacks.SetCount(spawned, chunk, spawnedStack);
 
-                        var pickedUp = false;
-                        if (_sys._ents.HasComponent<HandsComponent>(user))
-                            pickedUp = _sys._hands.TryPickupAnyHand(user, spawned, false);
-
-                        if (!pickedUp && _sys.TryGetPulledClosedCrate(user, out var crate) && _sys.Exists(crate))
-                        {
-                            _sys._entityStorage.Insert(spawned, crate);
-                            _sys._inventory.InvalidateInventoryCache(crate);
-                        }
+                        _sys.QueuePickupToHandsOrCrateNextTick(user, spawned);
 
                         spawnedTotal += chunk;
                         remainingToSpawn -= chunk;
