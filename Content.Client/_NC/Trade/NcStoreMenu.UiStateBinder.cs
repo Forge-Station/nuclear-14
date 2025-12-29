@@ -35,33 +35,17 @@ public sealed partial class NcStoreMenu
             return true;
         }
 
-        private static bool KeysEqual(Dictionary<string, int> a, Dictionary<string, int> b)
+        private static void ApplySparseSnapshot(Dictionary<string, int> src, Dictionary<string, int> dst)
         {
-            if (ReferenceEquals(a, b))
-                return true;
-
-            if (a.Count != b.Count)
-                return false;
-
-            foreach (var k in a.Keys)
-                if (!b.ContainsKey(k))
-                    return false;
-
-            return true;
-        }
-
-        private static void CopyOrUpdate(Dictionary<string, int> src, Dictionary<string, int> dst, bool keysSame)
-        {
-            if (!keysSame)
-            {
-                dst.Clear();
-                foreach (var (k, v) in src)
-                    dst[k] = v;
-                return;
-            }
+            dst.Clear();
 
             foreach (var (k, v) in src)
+            {
+                if (string.IsNullOrWhiteSpace(k))
+                    continue;
+
                 dst[k] = v;
+            }
         }
 
         private static int ComputeContractsHash(List<ContractClientData> contracts)
@@ -206,23 +190,18 @@ public sealed partial class NcStoreMenu
             var balancesChanged = !DictEquals(balancesByCurrency, _m._balancesByCurrency);
             if (balancesChanged)
                 _m.SetBalancesByCurrency(balancesByCurrency);
-            var remainingKeysSame = KeysEqual(remainingById, _m._remainingById);
-            var ownedKeysSame = KeysEqual(ownedById, _m._ownedById);
-            var crateKeysSame = KeysEqual(crateUnitsById, _m._crateUnitsById);
-
             var remainingChanged = !DictEquals(remainingById, _m._remainingById);
             var ownedChanged = !DictEquals(ownedById, _m._ownedById);
             var crateChanged = !DictEquals(crateUnitsById, _m._crateUnitsById);
 
             if (remainingChanged)
-                CopyOrUpdate(remainingById, _m._remainingById, remainingKeysSame);
+                ApplySparseSnapshot(remainingById, _m._remainingById);
 
             if (ownedChanged)
-                CopyOrUpdate(ownedById, _m._ownedById, ownedKeysSame);
+                ApplySparseSnapshot(ownedById, _m._ownedById);
 
             if (crateChanged)
-                CopyOrUpdate(crateUnitsById, _m._crateUnitsById, crateKeysSame);
-
+                ApplySparseSnapshot(crateUnitsById, _m._crateUnitsById);
             if (!DictEquals(massTotals, _m._massSellTotals))
                 _m.SetMassSellTotals(massTotals);
 
@@ -233,8 +212,6 @@ public sealed partial class NcStoreMenu
                 _m.PopulateContracts(contracts);
             }
 
-            var keysChanged = !_hasLastDynamic || !remainingKeysSame || !ownedKeysSame || !crateKeysSame;
-
             var readyMembershipHash = ComputeReadyMembershipHash(ownedById, remainingById);
             var crateMembershipHash = ComputeCrateMembershipHash(crateUnitsById);
 
@@ -242,7 +219,7 @@ public sealed partial class NcStoreMenu
                 readyMembershipHash != _lastReadyMembershipHash ||
                 crateMembershipHash != _lastCrateMembershipHash;
 
-            var structureChanged = keysChanged || membershipChanged;
+            var structureChanged = membershipChanged;
             var valuesChanged = remainingChanged || ownedChanged || crateChanged;
 
             if (structureChanged)

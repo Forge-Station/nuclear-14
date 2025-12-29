@@ -88,9 +88,18 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         {
             if (string.IsNullOrWhiteSpace(l.Id))
                 continue;
-            buf.RemainingById[l.Id] = l.RemainingCount;
+            if (l.Mode == StoreMode.Buy && !scratch.ShouldSendBuyDynamicFor(l.Id))
+                continue;
+
+            if (l.RemainingCount != -1)
+                buf.RemainingById[l.Id] = l.RemainingCount;
+
             if (userSnap != null && !string.IsNullOrWhiteSpace(l.ProductEntity))
-                buf.OwnedById[l.Id] = _inventory.GetOwnedFromSnapshot(userSnap, l.ProductEntity, l.MatchMode);
+            {
+                var owned = _inventory.GetOwnedFromSnapshot(userSnap, l.ProductEntity, l.MatchMode);
+                if (owned > 0)
+                    buf.OwnedById[l.Id] = owned;
+            }
         }
 
         if (hasSellTab && needCrateScan && crateUid is { } crate)

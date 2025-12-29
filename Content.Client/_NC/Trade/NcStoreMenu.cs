@@ -38,6 +38,10 @@ public sealed partial class NcStoreMenu : FancyWindow
     private readonly NcCategoryBar _sellCategoryBar;
     private readonly List<string> _sellCats = new();
     private readonly NcListingGrid _sellGrid;
+    private readonly List<string> _visibleBuyIds = new();
+    private readonly List<string> _visibleSellIds = new();
+    private readonly HashSet<string> _visibleUnionScratch = new();
+    private int _lastVisibleIdsSig;
     private readonly SpriteSystem _sprites;
     private string _buyCat = string.Empty;
     private bool _disposed;
@@ -68,6 +72,20 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         _buyGrid = new(StoreMode.Buy, _proto, _sprites);
         _sellGrid = new(StoreMode.Sell, _proto, _sprites);
+
+        _buyGrid.VisibleIdsChanged += ids =>
+        {
+            _visibleBuyIds.Clear();
+            _visibleBuyIds.AddRange(ids);
+            EmitVisibleListingIdsChanged();
+        };
+
+        _sellGrid.VisibleIdsChanged += ids =>
+        {
+            _visibleSellIds.Clear();
+            _visibleSellIds.AddRange(ids);
+            EmitVisibleListingIdsChanged();
+        };
 
         _buyCategoryBar = new();
         _sellCategoryBar = new();
@@ -152,6 +170,42 @@ public sealed partial class NcStoreMenu : FancyWindow
     public event Action<StoreListingData, int>? OnBuyPressed;
     public event Action<StoreListingData, int>? OnSellPressed;
     public event Action? OnMassSellPulledCrate;
+    public event Action<string[]>? OnVisibleListingIdsChanged;
+
+    private void EmitVisibleListingIdsChanged()
+    {
+        if (OnVisibleListingIdsChanged == null)
+            return;
+
+        _visibleUnionScratch.Clear();
+
+        for (var i = 0; i < _visibleBuyIds.Count; i++)
+        {
+            var id = _visibleBuyIds[i];
+            if (!string.IsNullOrWhiteSpace(id))
+                _visibleUnionScratch.Add(id);
+        }
+
+        for (var i = 0; i < _visibleSellIds.Count; i++)
+        {
+            var id = _visibleSellIds[i];
+            if (!string.IsNullOrWhiteSpace(id))
+                _visibleUnionScratch.Add(id);
+        }
+
+        var arr = _visibleUnionScratch.ToArray();
+        Array.Sort(arr, static (a, b) => string.CompareOrdinal(a, b));
+
+        var sig = 17;
+        for (var i = 0; i < arr.Length; i++)
+            sig = unchecked(sig * 31 + arr[i].GetHashCode());
+
+        if (sig == _lastVisibleIdsSig)
+            return;
+
+        _lastVisibleIdsSig = sig;
+        OnVisibleListingIdsChanged(arr);
+    }
 
     private int GetBalanceForCurrency(string currencyId)
     {

@@ -70,6 +70,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         SubscribeLocalEvent<NcStoreComponent, ActivatableUIOpenAttemptEvent>(OnUiOpenAttempt);
         SubscribeLocalEvent<NcStoreComponent, BoundUIClosedEvent>(OnUiClosed);
         SubscribeLocalEvent<NcStoreComponent, RequestUiRefreshMessage>(OnUiRefreshRequest);
+        SubscribeLocalEvent<NcStoreComponent, StoreSetVisibleListingsBoundUiMessage>(OnSetVisibleListings);
         SubscribeLocalEvent<AccessReaderComponent, AccessReaderConfigurationChangedEvent>(OnAccessReaderChanged);
         SubscribeLocalEvent<NcStoreComponent, ComponentShutdown>(OnStoreShutdown);
         SubscribeLocalEvent<ContainerManagerComponent, EntInsertedIntoContainerMessage>(OnUserEntInserted);
@@ -78,6 +79,19 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         SubscribeLocalEvent<NcStoreComponent, ClaimContractBoundMessage>(OnClaimContract);
         SubscribeLocalEvent<EntityStorageComponent, StorageAfterOpenEvent>(OnStorageOpen);
         SubscribeLocalEvent<EntityStorageComponent, StorageAfterCloseEvent>(OnStorageClose);
+    }
+
+    private void OnSetVisibleListings(EntityUid uid, NcStoreComponent comp, StoreSetVisibleListingsBoundUiMessage msg)
+    {
+        if (comp.CurrentUser is not { } user)
+            return;
+
+        if (!_ui.IsUiOpen(uid, StoreUiKey.Key, user))
+            return;
+
+        var scratch = GetDynamicScratch(uid);
+        if (scratch.UpdateVisibleIds(msg.Ids))
+            MarkDirty(uid);
     }
 
     private void OnStorageOpen(EntityUid uid, EntityStorageComponent comp, ref StorageAfterOpenEvent args)
@@ -215,6 +229,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         if (user != null)
             _ui.CloseUi(storeUid, StoreUiKey.Key, user.Value);
+
+        if (_dynamicScratchByStore.TryGetValue(storeUid, out var scratch))
+            scratch.UpdateVisibleIds(null);
         _openStoreUids.Remove(storeUid);
         UnregisterStoreWatch(storeUid);
         _dirtyStores.Remove(storeUid);
@@ -597,13 +614,14 @@ private sealed class DynamicScratch
 {
     private readonly DynamicStateBuffer[] _buffers = { new(), new() };
     private int _activeIndex;
-
+    private readonly HashSet<string> _visibleListingIds = new();
+    private int _visibleSig;
+    private bool _hasVisibleIds;
     private bool _hasMeta;
     private int _catalogRevision;
     private bool _hasBuyTab;
     private bool _hasSellTab;
     private bool _hasContracts;
-
     public DynamicStateBuffer GetReadBuffer()
     {
         return _buffers[_activeIndex];
@@ -612,6 +630,68 @@ private sealed class DynamicScratch
     public DynamicStateBuffer GetWriteBuffer()
     {
         return _buffers[1 - _activeIndex];
+    }
+
+    public bool UpdateVisibleIds(string[]? ids)
+    {
+        if (ids == null || ids.Length == 0)
+        {
+            if (!_hasVisibleIds)
+                return false;
+
+            _visibleListingIds.Clear();
+            _visibleSig = 0;
+            _hasVisibleIds = false;
+            return true;
+        }
+
+        var sig = 17;
+        for (var i = 0; i < ids.Length; i++)
+        {
+            var id = ids[i];
+            if (string.IsNullOrWhiteSpace(id))
+                continue;
+            sig = unchecked(sig * 31 + id.GetHashCode());
+        }
+
+        if (_hasVisibleIds && sig == _visibleSig && _visibleListingIds.Count == ids.Length)
+        {
+            var all = true;
+            for (var i = 0; i < ids.Length; i++)
+            {
+                var id = ids[i];
+                if (string.IsNullOrWhiteSpace(id))
+                    continue;
+                if (!_visibleListingIds.Contains(id))
+                {
+                    all = false;
+                    break;
+                }
+            }
+
+            if (all)
+                return false;
+        }
+
+        _visibleListingIds.Clear();
+        for (var i = 0; i < ids.Length; i++)
+        {
+            var id = ids[i];
+            if (!string.IsNullOrWhiteSpace(id))
+                _visibleListingIds.Add(id);
+        }
+
+        _visibleSig = sig;
+        _hasVisibleIds = true;
+        return true;
+    }
+
+    public bool ShouldSendBuyDynamicFor(string listingId)
+    {
+        if (!_hasVisibleIds)
+            return true;
+
+        return _visibleListingIds.Contains(listingId);
     }
 
     public bool EqualsLast(

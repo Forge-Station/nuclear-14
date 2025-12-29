@@ -25,7 +25,7 @@ public sealed partial class NcStoreMenu
             if (it.Flavor == StoreListingFlavor.Crate)
             {
                 it.Owned = _crateUnitsById.GetValueOrDefault(listingId, 0);
-                it.Remaining = _remainingById.GetValueOrDefault(listingId, 0);
+                it.Remaining = _remainingById.GetValueOrDefault(listingId, -1);
                 continue;
             }
 

@@ -25,6 +25,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         menu.OnSellPressed -= OnSell;
         menu.OnMassSellPulledCrate -= OnMassSellPulledCrate;
         menu.OnContractClaim -= OnContractClaim;
+        menu.OnVisibleListingIdsChanged -= OnVisibleListingIdsChanged;
         menu.OnClose -= OnMenuClosed;
     }
 
@@ -122,6 +123,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         _menu.OnSellPressed += OnSell;
         _menu.OnMassSellPulledCrate += OnMassSellPulledCrate;
         _menu.OnContractClaim += OnContractClaim;
+        _menu.OnVisibleListingIdsChanged += OnVisibleListingIdsChanged;
 
         _menu.OnClose += OnMenuClosed;
     }
@@ -170,6 +172,14 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
             return;
 
         SendMessage(new StoreMassSellPulledCrateBoundUiMessage());
+    }
+
+    private void OnVisibleListingIdsChanged(string[] ids)
+    {
+        if (Actor == null)
+            return;
+
+        SendMessage(new StoreSetVisibleListingsBoundUiMessage(ids));
     }
 
     protected override void Dispose(bool disposing)

@@ -50,3 +50,14 @@ public sealed class RequestUiRefreshMessage : BoundUserInterfaceMessage { }
 
 [Serializable, NetSerializable]
 public sealed class RequestContractsRefreshBoundMessage : BoundUserInterfaceMessage { }
+
+[Serializable, NetSerializable]
+public sealed class StoreSetVisibleListingsBoundUiMessage : BoundUserInterfaceMessage
+{
+    public StoreSetVisibleListingsBoundUiMessage(string[] ids)
+    {
+        Ids = ids;
+    }
+
+    public string[] Ids { get; }
+}

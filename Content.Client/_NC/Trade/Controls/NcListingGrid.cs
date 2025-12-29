@@ -41,6 +41,8 @@ public sealed class NcListingGrid : BoxContainer
     private Action<StoreListingData, int> _emit = (_, _) => { };    private int _page = 1;
     private string _searchLower = string.Empty;
     private string _selectedCategory = string.Empty;
+    public event Action<IReadOnlyList<string>>? VisibleIdsChanged;
+    private readonly List<string> _visibleIdsScratch = new();
 
     public NcListingGrid(StoreMode mode, IPrototypeManager proto, SpriteSystem sprites)
     {
@@ -231,6 +233,7 @@ public sealed class NcListingGrid : BoxContainer
             DetachAllChildren();
             _messageLabel.Text = Loc.GetString("nc-store-select-category");
             AddChild(_messageLabel);
+            NotifyVisibleIdsChanged();
             return 0;
         }
 
@@ -240,6 +243,7 @@ public sealed class NcListingGrid : BoxContainer
             var message = Loc.GetString(hasCat ? "nc-store-empty-category-search" : "nc-store-empty-search");
             _messageLabel.Text = message;
             AddChild(_messageLabel);
+            NotifyVisibleIdsChanged();
             return 0;
         }
 
@@ -253,7 +257,25 @@ public sealed class NcListingGrid : BoxContainer
         AddListingRange(_scratchFiltered, 0, take);
         AddOrUpdateMoreButton(total, take);
 
+        NotifyVisibleIdsChanged();
+
         return total;
+    }
+
+    private void NotifyVisibleIdsChanged()
+    {
+        if (VisibleIdsChanged == null)
+            return;
+
+        _visibleIdsScratch.Clear();
+
+        foreach (var child in Children)
+        {
+            if (child is NcStoreListingControl ctrl)
+                _visibleIdsScratch.Add(ctrl.UiId);
+        }
+
+        VisibleIdsChanged(_visibleIdsScratch);
     }
 
     private void AddListingRange(List<StoreListingData> source, int startInclusive, int endExclusive)
