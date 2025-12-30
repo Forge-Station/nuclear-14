@@ -437,7 +437,6 @@ public sealed partial class NcStoreMenu : FancyWindow
                     s.UnitsPerPurchase));
         }
 
-        // Virtual "ready to sell" category (derived from base sell listings).
         var baseCount = _items.Count;
         _scratchReadyItems.Clear();
 
@@ -481,7 +480,7 @@ public sealed partial class NcStoreMenu : FancyWindow
                 if (!_crateUnitsById.TryGetValue(s.Id, out var take) || take <= 0)
                     continue;
 
-                var remaining = _remainingById.GetValueOrDefault(s.Id, 0);
+                var remaining = _remainingById.GetValueOrDefault(s.Id, -1);
 
                 _items.Add(
                     new(
