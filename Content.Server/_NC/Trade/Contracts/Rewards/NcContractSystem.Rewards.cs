@@ -33,7 +33,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
             if (bp.Probability < 1.0f && !_random.Prob(Math.Clamp(bp.Probability, 0f, 1f)))
                 continue;
-            var count = RollSmooth(
+            var count = RollFair(
                 new(QuasiKeyKind.RAmount, store, contractProtoId, $"{depth}:{i}:{bp.Type}:{bp.Id}"),
                 bp.Amount,
                 0);

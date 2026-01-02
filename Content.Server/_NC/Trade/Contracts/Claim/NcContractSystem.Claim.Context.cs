@@ -177,7 +177,6 @@ public sealed partial class NcContractSystem : EntitySystem
 
         var reserved = 0;
 
-        // Case A: expected product is stack-based. Prefer stack-type matching.
         if (TryGetStackTypeId(expectedProtoId, out var stackTypeId))
         {
             for (var i = 0; i < items.Count && reserved < need; i++)
@@ -222,7 +221,6 @@ public sealed partial class NcContractSystem : EntitySystem
             return reserved;
         }
 
-        // Case B: prototype matching (Exact / Descendants)
         for (var i = 0; i < items.Count && reserved < need; i++)
         {
             var ent = items[i];
@@ -244,7 +242,6 @@ public sealed partial class NcContractSystem : EntitySystem
             if (!matches)
                 continue;
 
-            // If the entity is a stack, treat its Count as units (same behavior as inventory take).
             if (TryComp(ent, out StackComponent? st) && st.Count > 0)
             {
                 var have = virtualStackLeft.TryGetValue(ent, out var v)

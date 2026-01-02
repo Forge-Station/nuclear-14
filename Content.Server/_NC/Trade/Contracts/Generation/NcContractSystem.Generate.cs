@@ -1,6 +1,8 @@
 using Content.Shared._NC.Trade;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -9,11 +11,11 @@ public sealed partial class NcContractSystem : EntitySystem
         var targets = new List<ContractTargetServerData>();
 
         var baseTargetItem = proto.TargetItem ?? string.Empty;
-        var baseRequired = RollSmooth(new(QuasiKeyKind.Req, store, proto.ID, null), proto.Required, 1);
+        var baseRequired = RollFair(new(QuasiKeyKind.Req, store, proto.ID, null), proto.Required, 1);
 
-        if (proto.Targets is { Count: > 0 })
+        if (proto.Targets is { Count: > 0, })
         {
-            var targetCount = RollSmooth(new(QuasiKeyKind.Tc, store, proto.ID, null), proto.TargetCount, 1);
+            var targetCount = RollFair(new(QuasiKeyKind.Tc, store, proto.ID, null), proto.TargetCount, 1);
             if (targetCount <= 0)
                 targetCount = 1;
 
@@ -26,7 +28,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 pool.Remove(chosen);
 
                 var itemId = chosen.TargetItemId;
-                var rolledReq = RollSmooth(
+                var rolledReq = RollFair(
                     new(QuasiKeyKind.TReq, store, proto.ID, chosen.TargetItemId),
                     chosen.Required,
                     1);
@@ -90,6 +92,4 @@ public sealed partial class NcContractSystem : EntitySystem
             Rewards = rewards
         };
     }
-
-
 }

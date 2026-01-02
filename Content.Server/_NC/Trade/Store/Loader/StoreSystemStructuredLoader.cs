@@ -1,4 +1,3 @@
-using System;
 using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
 
@@ -64,7 +63,7 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
         if (allowContractsInit && !_contractsInitialized.Contains(uid))
         {
-            _contracts.InitContractsForStore(uid, comp);
+            _contracts.RefillContractsForStore(uid, comp);
             _contractsInitialized.Add(uid);
         }
     }
