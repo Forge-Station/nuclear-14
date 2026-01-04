@@ -192,6 +192,6 @@ public sealed class NcStoreCurrencySystem : EntitySystem
             return;
         if (!TryResolveHandler(currencyId, out var h))
             return;
-        h.Give(user, currencyId, amount);
+        h.TryGiveCurrency(user, currencyId, amount);
     }
 }

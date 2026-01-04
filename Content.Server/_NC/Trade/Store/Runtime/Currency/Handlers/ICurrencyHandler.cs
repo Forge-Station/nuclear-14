@@ -27,5 +27,5 @@ public interface ICurrencyHandler
     /// <summary>
     /// Gives a positive amount of currency to the user.
     /// </summary>
-    void Give(EntityUid user, string currencyId, int amount);
+    bool TryGiveCurrency(EntityUid user, string currencyId, int amount);
 }

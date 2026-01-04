@@ -116,12 +116,12 @@ public sealed class StackCurrencyHandler : ICurrencyHandler
         return false;
     }
 
-    public void Give(EntityUid user, string currencyId, int amount)
+    public bool TryGiveCurrency(EntityUid user, string currencyId, int amount)
     {
         if (amount <= 0 || string.IsNullOrWhiteSpace(currencyId))
-            return;
+            return true; // Nothing to give, operation is trivially successful.
         if (!_protos.TryIndex<StackPrototype>(currencyId, out var proto))
-            return;
+            return false;
 
         _inventory.InvalidateInventoryCache(user);
 
@@ -153,7 +153,7 @@ public sealed class StackCurrencyHandler : ICurrencyHandler
         if (remaining <= 0)
         {
             _inventory.InvalidateInventoryCache(user);
-            return;
+            return true;
         }
 
         var coords = _xform.GetMoverCoordinates(user);
@@ -173,5 +173,6 @@ public sealed class StackCurrencyHandler : ICurrencyHandler
         }
 
         _inventory.InvalidateInventoryCache(user);
+        return true;
     }
 }
