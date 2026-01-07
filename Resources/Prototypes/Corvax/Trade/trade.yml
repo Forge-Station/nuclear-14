@@ -1534,18 +1534,6 @@
       price: 24
     - proto: N14FoodEggDeathclaw
       price: 38
-    - proto: SheetSteel
-      amount: 30
-      price: 70
-    - proto: SheetPlastic
-      amount: 30
-      price: 70
-    - proto: N14IngotLead20
-      amount: 30
-      price: 70
-    - proto: N14Gunpowder10
-      amount: 30
-      price: 70
     - proto: N14MaterialYaoguaiHide
       price: 56
     - proto: N14MaterialNightstalkerPelt

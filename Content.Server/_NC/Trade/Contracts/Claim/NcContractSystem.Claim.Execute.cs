@@ -106,8 +106,7 @@ public sealed partial class NcContractSystem : EntitySystem
                     break;
 
                 case StoreRewardType.Item:
-                    for (var i = 0; i < reward.Amount; i++)
-                        _logic.TrySpawnProduct(reward.Id, ctx.User);
+                    _logic.TrySpawnProductUnits(reward.Id, ctx.User, reward.Amount);
                     break;
             }
         }
