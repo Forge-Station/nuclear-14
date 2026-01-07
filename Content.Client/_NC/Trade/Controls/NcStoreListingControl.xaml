@@ -27,11 +27,11 @@
             <BoxContainer Orientation="Horizontal" SeparationOverride="6" HorizontalExpand="True">
 
                 <BoxContainer Orientation="Vertical" SeparationOverride="4" HorizontalExpand="False" MinWidth="96">
-                    <PanelContainer Name="IconSlotBackground"
-                                    MinSize="96 96"
-                                    MaxSize="96 96"
-                                    StyleClasses="InventorySlotBackground">
-                        <TextureRect Name="IconTexture" Stretch="KeepAspectCentered" Margin="2"/>
+                    <PanelContainer Name="IconSlotBackground" MinSize="96 96" MaxSize="96 96">
+                        <BoxContainer Orientation="Vertical" HorizontalExpand="True" VerticalExpand="True">
+                            <PanelContainer VerticalExpand="True"/>
+                            <EntityPrototypeView Name="IconView" HorizontalAlignment="Center" Margin="2"/>
+                        </BoxContainer>
                     </PanelContainer>
                 </BoxContainer>
 

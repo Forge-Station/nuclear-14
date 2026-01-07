@@ -3,6 +3,7 @@ using Content.Shared._NC.Trade;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.UserInterface.Controls;
+using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 
 
@@ -292,7 +293,7 @@ public sealed class NcListingGrid : BoxContainer
                 var initQty = _qtyCache.GetValueOrDefault(it.Id, 1);
                 var actionsEnabled = true;
 
-                var created = new NcStoreListingControl(it, _sprites, balanceHint, initQty, actionsEnabled);
+                var created = new NcStoreListingControl(it, _sprites, IoCManager.Resolve<IEntityManager>(), balanceHint, initQty, actionsEnabled);
                 created.OnQtyChanged = newQty => _qtyCache[it.Id] = newQty;
 
                 _cache[it.Id] = (created, sig);

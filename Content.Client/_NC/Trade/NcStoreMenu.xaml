@@ -4,7 +4,7 @@
     xmlns:controls1="clr-namespace:Content.Client.UserInterface.Controls"
     xmlns:controls="clr-namespace:Content.Client._NC.Trade.Controls"
     Title="{Loc 'nc-store-window-title'}"
-    MinWidth="1100" MinHeight="720"
+    MinWidth="1300" MinHeight="820"
     StyleClasses="WindowLarge">
     <BoxContainer Orientation="Vertical" StyleClasses="PanelBackgroundBase">
         <controls:NcStoreHeaderBar Name="Header"
@@ -21,7 +21,7 @@
                             StyleClasses="PanelBackgroundBaseDark">
                 <BoxContainer Orientation="Horizontal" VerticalExpand="True">
                     <PanelContainer VerticalExpand="True"
-                                    MinWidth="180"
+                                    MinWidth="230"
                                     StyleClasses="PanelBackgroundBaseDark">
                         <BoxContainer Orientation="Vertical" VerticalExpand="True">
                             <Label Text="{Loc 'nc-store-tab-buy'}" StyleClasses="LabelHeading" Margin="6 6 6 6" />
@@ -56,7 +56,7 @@
                             StyleClasses="PanelBackgroundBaseDark">
                 <BoxContainer Orientation="Horizontal" VerticalExpand="True">
                     <PanelContainer VerticalExpand="True"
-                                    MinWidth="180"
+                                    MinWidth="230"
                                     StyleClasses="PanelBackgroundBaseDark">
                         <BoxContainer Orientation="Vertical" VerticalExpand="True">
                             <Label Text="{Loc 'nc-store-tab-sell'}" StyleClasses="LabelHeading" Margin="6 6 6 6" />

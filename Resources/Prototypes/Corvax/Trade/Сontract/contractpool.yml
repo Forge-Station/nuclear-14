@@ -15,20 +15,20 @@
     id: N14WeaponLaserRifleCrude
     weight: 2
   - type: Item
-    id: N14Gunpowder10
-    amount: 10
+    id: N14Gunpowder1
+    amount: { min: 4, max: 8 }
     weight: 3
   - type: Item
-    id: SheetSteel10
-    amount: 10
+    id: SheetSteel1
+    amount: { min: 4, max: 8 }
     weight: 3
   - type: Item
-    id: N14IngotLead20
-    amount: 20
+    id: N14IngotLead1
+    amount: { min: 4, max: 8 }
     weight: 3
   - type: Item
-    id: N14IngotBrass
-    amount: 20
+    id: N14IngotBrass1
+    amount: { min: 4, max: 8 }
     weight: 3
   - type: Item
     id: N14WeaponSMG10mmSuppressed

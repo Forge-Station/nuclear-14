@@ -4,6 +4,7 @@ using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
+using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 
 
@@ -19,12 +20,17 @@ public sealed class NcContractCard : PanelContainer
     private readonly ContractClientData _data;
     private readonly IPrototypeManager _proto;
     private readonly SpriteSystem _sprites;
+    private readonly IEntityManager _entMan;
+    private const int TargetIconPx = 96;
+    private const int RewardIconPx = 40;
 
-    public NcContractCard(ContractClientData data, IPrototypeManager protoMan, SpriteSystem sprites)
+
+    public NcContractCard(ContractClientData data, IPrototypeManager protoMan, SpriteSystem sprites, IEntityManager entMan)
     {
         _data = data;
         _proto = protoMan;
         _sprites = sprites;
+        _entMan = entMan;
 
         HorizontalExpand = true;
         Margin = new(4, 0, 4, 8);
@@ -38,7 +44,6 @@ public sealed class NcContractCard : PanelContainer
     {
         var borderColor = DifficultyColor(_data.Difficulty, _data.Completed);
 
-        // Outer: difficulty strip + main panel
         var row = new BoxContainer
         {
             Orientation = BoxContainer.LayoutOrientation.Horizontal,
@@ -409,24 +414,18 @@ public sealed class NcContractCard : PanelContainer
         if (!string.IsNullOrWhiteSpace(tooltip))
             targetRow.ToolTip = tooltip;
 
-        Texture? tex = null;
-        if (targetProto != null)
+        if (!string.IsNullOrWhiteSpace(protoId))
         {
-            var icon = _sprites.GetPrototypeIcon(targetProto.ID);
-            tex = icon.Default;
-        }
-
-        if (tex != null)
-        {
-            targetRow.AddChild(
-                new TextureRect
-                {
-                    Texture = tex,
-                    Stretch = TextureRect.StretchMode.KeepAspectCentered,
-                    MinSize = new(24, 24),
-                    Margin = new(0, 0, 4, 0),
-                    MouseFilter = MouseFilterMode.Ignore
-                });
+            var view = new EntityPrototypeView
+            {
+                MinSize = new(TargetIconPx, TargetIconPx),
+                MaxSize = new(TargetIconPx, TargetIconPx),
+                Margin = new(0, 0, 4, 0),
+                MouseFilter = MouseFilterMode.Ignore
+            };
+            view.SetPrototype(protoId);
+            NcUiIconFit.Fit(view, _sprites, protoId, targetPx: TargetIconPx, paddingPx: 4);
+            targetRow.AddChild(view);
         }
 
         var targetName = targetProto?.Name ?? protoId ?? Loc.GetString("nc-store-unknown-item");
@@ -546,24 +545,18 @@ public sealed class NcContractCard : PanelContainer
                 if (!string.IsNullOrWhiteSpace(tooltip))
                     line.ToolTip = tooltip;
 
-                Texture? tex = null;
-                if (proto != null)
+                if (!string.IsNullOrWhiteSpace(id))
                 {
-                    var icon = _sprites.GetPrototypeIcon(proto.ID);
-                    tex = icon.Default;
-                }
-
-                if (tex != null)
-                {
-                    line.AddChild(
-                        new TextureRect
-                        {
-                            Texture = tex,
-                            Stretch = TextureRect.StretchMode.KeepAspectCentered,
-                            MinSize = new(20, 20),
-                            Margin = new(0, 0, 4, 0),
-                            MouseFilter = MouseFilterMode.Ignore
-                        });
+                    var view = new EntityPrototypeView
+                    {
+                        MinSize = new(RewardIconPx, RewardIconPx),
+                        MaxSize = new(RewardIconPx, RewardIconPx),
+                        Margin = new(0, 0, 4, 0),
+                        MouseFilter = MouseFilterMode.Ignore
+                    };
+                    view.SetPrototype(id);
+                    NcUiIconFit.Fit(view, _sprites, id, targetPx: RewardIconPx, paddingPx: 0, mul: 1.25f, variant: 1);
+                    line.AddChild(view);
                 }
 
                 var name = proto?.Name ?? id;

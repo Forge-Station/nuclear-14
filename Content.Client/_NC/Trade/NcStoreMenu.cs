@@ -10,7 +10,6 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Prototypes;
 
-
 namespace Content.Client._NC.Trade;
 
 
@@ -56,6 +55,10 @@ public sealed partial class NcStoreMenu : FancyWindow
     private bool _tabsCaptured;
     private Control? _tabSell;
     public Action<string>? OnContractClaim;
+    private const int CategoryPanelMin = 180;
+    private const int CategoryPanelMax = 360;
+    private const float ApproxCharPx = 7.5f;
+    private const int ExtraPaddingPx = 46;
 
 
     public NcStoreMenu()
@@ -541,7 +544,7 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         foreach (var c in ordered)
         {
-            var card = new NcContractCard(c, _proto, _sprites);
+            var card = new NcContractCard(c, _proto, _sprites, IoCManager.Resolve<IEntityManager>());
             card.OnClaim += id => OnContractClaim?.Invoke(id);
             contractList.AddChild(card);
         }
