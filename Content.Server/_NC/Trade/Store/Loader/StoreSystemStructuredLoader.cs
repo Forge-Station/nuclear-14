@@ -116,15 +116,22 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         if (!string.IsNullOrWhiteSpace(preset.Currency) && ctx.CurrencySeen.Add(preset.Currency))
             comp.CurrencyWhitelist.Add(preset.Currency);
 
-        foreach (var (category, entries) in preset.Catalog)
+        foreach (var categoryId in preset.Categories)
         {
-            if (ctx.CategorySeen.Add(category))
-                comp.Categories.Add(category);
-
-            foreach (var entry in entries)
+            if (!_prototypes.TryIndex<StoreCategoryStructuredPrototype>(categoryId, out var categoryProto))
             {
-                var baseId = $"{presetId}:{mode}:{category}:{entry.Proto}";
+                Sawmill.Error($"[NcStore] Категория '{categoryId}' не найдена (preset='{presetId}')");
+                continue;
+            }
 
+            var categoryName = categoryProto.Name;
+
+            if (ctx.CategorySeen.Add(categoryName))
+                comp.Categories.Add(categoryName);
+
+            foreach (var entry in categoryProto.Entries)
+            {
+                var baseId = $"{presetId}:{mode}:{categoryId}:{entry.Proto}";
                 var id = AllocateDeterministicId(baseId, ctx);
 
                 var listing = new NcStoreListingDef
@@ -133,7 +140,7 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
                     ProductEntity = entry.Proto,
                     MatchMode = entry.MatchMode,
                     Mode = mode,
-                    Categories = new List<string> { category },
+                    Categories = new List<string> { categoryName },
                     Conditions = new List<ListingConditionPrototype>(),
                     RemainingCount = entry.Count ?? -1,
                     UnitsPerPurchase = Math.Max(1, entry.Amount),

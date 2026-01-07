@@ -25,27 +25,40 @@ public sealed class StoreListingPrototype : IPrototype
     public string ID => Id;
 }
 
+[DataDefinition]
+public sealed partial class StoreCatalogEntry
+{
+    [DataField("match")] public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
+    [DataField("price", required: true)] public int Price;
+    [DataField("proto", required: true)] public string Proto = string.Empty;
+    [DataField("count")] public int? Count { get; set; }
+    [DataField("amount")] public int Amount { get; set; } = 1;
+}
+
+[Prototype("storeCategoryStructured")]
+public sealed partial class StoreCategoryStructuredPrototype : IPrototype
+{
+    [IdDataField]
+    public string ID { get; private set; } = default!;
+
+    [DataField("name", required: true)]
+    public string Name { get; private set; } = string.Empty;
+
+    [DataField("entries", required: true)]
+    public List<StoreCatalogEntry> Entries { get; private set; } = new();
+}
+
 [Prototype("storePresetStructured")]
 public sealed partial class StorePresetStructuredPrototype : IPrototype
 {
-    [DataField("catalog", required: true)]
-    public Dictionary<string, List<StoreCatalogEntry>> Catalog = new();
+    [DataField("categories", required: true)]
+    public List<string> Categories { get; private set; } = new();
 
     [DataField("currency", required: true)]
     public string Currency = string.Empty;
 
     [IdDataField]
     public string ID { get; private set; } = default!;
-
-    [DataDefinition]
-    public sealed partial class StoreCatalogEntry
-    {
-        [DataField("match")] public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
-        [DataField("price", required: true)] public int Price;
-        [DataField("proto", required: true)] public string Proto = string.Empty;
-        [DataField("count")] public int? Count { get; set; }
-        [DataField("amount")] public int Amount { get; set; } = 1;
-    }
 }
 
 
