@@ -106,7 +106,7 @@ public sealed class NcCategoryBar : BoxContainer
                 continue;
 
             btn.Text = _displayName(catId);
-            btn.ToolTip = _toolTip(catId);
+            btn.ToolTip = null;
         }
 
         UpdateVisuals();
