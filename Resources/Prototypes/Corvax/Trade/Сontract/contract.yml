@@ -43,11 +43,13 @@
     weight: 50
   - id: caravan_contract_N14SuperSledgeHammer
     weight: 50
-  - id: caravan_contract_N14MobRobotAssaultronHostile
+  - id: caravan_contract_N14MobCazadorWave
     weight: 50
   - id: caravan_contract_N14MobRaiderBoss
     weight: 50
   - id: caravan_contract_N14MobDeathclaw
+    weight: 50
+  - id: caravan_contract_N14FloraProduceWildBrocFlower
     weight: 50
 
 - type: storeContractsPreset
@@ -68,6 +70,24 @@
   targets:
   - id: N14MaterialThread1
     required: { min: 3, max: 6 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 100, max: 150 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy
+
+- type: storeContract
+  id: caravan_contract_N14FloraProduceWildBrocFlower
+  name: "Брок"
+  description: "Нужен брок для одного медика."
+  difficulty: Easy
+  targets:
+  - id: N14FloraProduceWildBrocFlower
+    required: { min: 3, max: 5 }
   rewards:
   - type: Currency
     id: Caps
@@ -185,7 +205,7 @@
     amount: { min: 1, max: 3 }
     options:
     - type: Pool
-      id: caravan_easy
+      id: caravan_easy_nonweapons
 
 - type: storeContract
   id: caravan_contract_N14FoodMeatRadRaw
@@ -270,7 +290,7 @@
     amount: { min: 1, max: 3 }
     options:
     - type: Pool
-      id: caravan_easy
+      id: caravan_easy_nonweapons
 
 - type: storeContract
   id: caravan_contract_N14MaterialLeather1
@@ -440,7 +460,7 @@
   description: "Он всех достал. Он слишком много ходит по земле. Убей его."
   difficulty: Hard
   targets:
-  - id: N14MobRaiderBoss
+  - id: N14MobEnforcerWarden
     required: 1
   rewards:
   - type: Currency
@@ -453,13 +473,13 @@
       id: caravan_hard
 
 - type: storeContract
-  id: caravan_contract_N14MobRobotAssaultronHostile
-  name: "Робот"
-  description: "Нужен робот для изучения. Поймай его. Главное не сломай!"
+  id: caravan_contract_N14MobCazadorWave
+  name: "Казадор"
+  description: "Принеси три трупа казадора."
   difficulty: Hard
   targets:
-  - id: N14MobRobotAssaultronHostile
-    required: 1
+  - id: N14MobCazadorWave
+    required: 3
   rewards:
   - type: Currency
     id: Caps

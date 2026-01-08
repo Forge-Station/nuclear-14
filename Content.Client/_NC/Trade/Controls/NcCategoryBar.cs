@@ -119,8 +119,6 @@ public sealed class NcCategoryBar : BoxContainer
             Text = _displayName(catId),
             ToggleMode = true,
             HorizontalExpand = true,
-            ClipText = true,
-            ToolTip = _toolTip(catId),
             ModulateSelfOverride = IdleColor
         };
 
