@@ -16,7 +16,7 @@ namespace Content.Client._NC.Trade.Controls;
 [GenerateTypedNameReferences]
 public sealed partial class NcStoreListingControl : PanelContainer
 {
-    private const int TextMax = 420;
+    private const int TextMax = 620;
     private const int QtyMaxDigits = 6;
     private const int MaxTotalDisplay = 999_999;
     private const int DescMaxChars = 220;
@@ -62,7 +62,10 @@ public sealed partial class NcStoreListingControl : PanelContainer
             NcUiIconFit.Fit(IconView, sprites, proto.ID, targetPx: 96, paddingPx: 8);
         }
         else
+        {
             IconSlotBackground.Visible = false;
+            IconDivider.Visible = false;
+        }
         SetDescription(proto);
 
         SetupPriceButton(data, sprites, pm);
@@ -97,6 +100,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
         DescriptionLabel.SetMessage(msg);
         DescriptionLabel.ToolTip = full;
         DescriptionLabel.MaxWidth = TextMax;
+        DescriptionLabel.HorizontalAlignment = HAlignment.Left;
     }
 
     private void SetupPriceButton(StoreListingData data, SpriteSystem sprites, IPrototypeManager pm)
