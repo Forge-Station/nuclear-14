@@ -12,8 +12,6 @@ public sealed partial class NcStoreLogicSystem
         int amount,
         int unitPrice,
         string currency
-    )
-    {
-        return _spawnService.SpawnPurchasedProduct(user, productEntity, productProto, amount, unitPrice, currency);
-    }
+    ) =>
+        _spawnService.SpawnPurchasedProduct(user, productEntity, productProto, amount, unitPrice, currency);
 }

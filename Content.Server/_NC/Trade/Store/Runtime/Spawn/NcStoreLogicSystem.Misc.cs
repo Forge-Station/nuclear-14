@@ -2,6 +2,7 @@ using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Utility;
 
 
 namespace Content.Server._NC.Trade;
@@ -29,9 +30,6 @@ public sealed partial class NcStoreLogicSystem
             var spawned = _ents.SpawnEntity(protoId, xform.Coordinates);
 
             QueuePickupToHandsOrCrateNextTick(user, spawned);
-
-            if (invalidateCache)
-                _inventory.InvalidateInventoryCache(user);
 
             return true;
         }
@@ -145,17 +143,12 @@ public sealed partial class NcStoreLogicSystem
 
     private bool TryTakeWithRetry(EntityUid root, ref List<EntityUid> cachedItems, string protoId, int amount)
     {
-        if (_inventory.TryTakeProductUnitsFromCachedList(root, cachedItems, protoId, amount, PrototypeMatchMode.Exact))
-            return true;
-
-        cachedItems = _inventory.GetOrBuildDeepItemsCacheCompacted(root);
-
         return _inventory.TryTakeProductUnitsFromCachedList(
             root,
             cachedItems,
             protoId,
             amount,
-            PrototypeMatchMode.Exact);
+            PrototypeMatchMode.Exact) || SlowTake(ref cachedItems, root, protoId, amount);
     }
 
     #region Private Helpers
@@ -264,12 +257,7 @@ public sealed partial class NcStoreLogicSystem
             if (amount <= 0 || string.IsNullOrWhiteSpace(protoId))
                 continue;
 
-            if (!grouped.TryGetValue(root, out var items))
-            {
-                items = new();
-                grouped[root] = items;
-            }
-
+            var items = grouped.GetOrNew(root);
             try
             {
                 checked { items[protoId] = items.GetValueOrDefault(protoId) + amount; }
@@ -282,6 +270,17 @@ public sealed partial class NcStoreLogicSystem
         }
 
         return grouped;
+    }
+
+    private bool SlowTake(ref List<EntityUid> cachedItems, EntityUid root, string protoId, int amount)
+    {
+        cachedItems = _inventory.GetOrBuildDeepItemsCacheCompacted(root);
+        return _inventory.TryTakeProductUnitsFromCachedList(
+            root,
+            cachedItems,
+            protoId,
+            amount,
+            PrototypeMatchMode.Exact);
     }
 
     #endregion
