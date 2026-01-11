@@ -43,7 +43,8 @@
                                Text="{Loc 'nc-store-select-category'}" />
                         <ScrollContainer Name="BuyListingsScroll"
                                          VerticalExpand="True"
-                                         HorizontalExpand="True">
+                                         HorizontalExpand="True"
+                                         HScrollEnabled="False">
                             <BoxContainer Name="BuyListingsContainer"
                                           Orientation="Vertical" />
                         </ScrollContainer>
@@ -84,7 +85,8 @@
                         </BoxContainer>
                         <ScrollContainer Name="SellListingsScroll"
                                          VerticalExpand="True"
-                                         HorizontalExpand="True">
+                                         HorizontalExpand="True"
+                                         HScrollEnabled="False">
                             <BoxContainer Name="SellListingsContainer"
                                           Orientation="Vertical" />
                         </ScrollContainer>

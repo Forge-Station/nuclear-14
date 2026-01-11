@@ -21,7 +21,6 @@
                HorizontalExpand="True"
                Margin="2 0 2 2"/>
 
-        <!-- Горизонтальная линия -->
         <PanelContainer Name="TitleDivider"
                         HorizontalExpand="True"
                         MinSize="0 1"
@@ -31,13 +30,11 @@
             </PanelContainer.PanelOverride>
         </PanelContainer>
 
-        <!-- ВАЖНО: НЕТ верхнего Margin, иначе линия сверху всегда будет не встык -->
         <BoxContainer Orientation="Horizontal"
                       SeparationOverride="0"
                       HorizontalExpand="True"
                       Margin="0">
 
-            <!-- Иконка: уменьшаем правый зазор -->
             <PanelContainer Name="IconSlotBackground"
                             MinSize="96 96"
                             MaxSize="96 96"
@@ -48,10 +45,6 @@
                                      Margin="2"/>
             </PanelContainer>
 
-            <!-- Вертикальная линия:
-                 - сверху без отрицательного значения (чтобы не лезла в заголовок)
-                 - снизу чуть меньше, чтобы не выпирала (подгонка под BorderThickness)
-            -->
             <PanelContainer Name="IconDivider"
                             MinSize="1 0"
                             VerticalExpand="True"
@@ -61,8 +54,8 @@
                 </PanelContainer.PanelOverride>
             </PanelContainer>
 
-            <!-- Описание: максимально близко к линии -->
-            <BoxContainer Orientation="Vertical"
+            <BoxContainer Name="DescriptionBox"
+                          Orientation="Vertical"
                           SeparationOverride="0"
                           HorizontalExpand="True"
                           VerticalExpand="True"
@@ -74,7 +67,6 @@
                                Margin="0"/>
             </BoxContainer>
 
-            <!-- Правая колонка -->
             <BoxContainer Orientation="Vertical"
                           SeparationOverride="4"
                           HorizontalExpand="False"
@@ -96,7 +88,7 @@
                         MaxSize="96 32"
                         ClipText="True"
                         StyleClasses="ButtonBig"
-                        Margin="8 0 0 0">
+                        Margin="0">
                     <BoxContainer Orientation="Horizontal"
                                   SeparationOverride="6"
                                   HorizontalExpand="True"
