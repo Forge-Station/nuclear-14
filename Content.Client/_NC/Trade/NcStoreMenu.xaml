@@ -25,10 +25,9 @@
                                     StyleClasses="PanelBackgroundBaseDark">
                         <BoxContainer Orientation="Vertical" VerticalExpand="True">
                             <Label Text="{Loc 'nc-store-tab-buy'}" StyleClasses="LabelHeading" Margin="6 6 6 6" />
-                            <ScrollContainer VerticalExpand="True">
-                            <BoxContainer Name="BuyCategoryListContainer"
-                                          Orientation="Vertical" />
-                        </ScrollContainer>
+                            <controls:NcCategoryBar Name="BuyCategoryBar"
+                                                VerticalExpand="True"
+                                                HorizontalExpand="True" />
                         </BoxContainer>
                     </PanelContainer>
                     <PanelContainer MinWidth="1"
@@ -61,10 +60,9 @@
                                     StyleClasses="PanelBackgroundBaseDark">
                         <BoxContainer Orientation="Vertical" VerticalExpand="True">
                             <Label Text="{Loc 'nc-store-tab-sell'}" StyleClasses="LabelHeading" Margin="6 6 6 6" />
-                            <ScrollContainer VerticalExpand="True">
-                            <BoxContainer Name="SellCategoryListContainer"
-                                          Orientation="Vertical" />
-                        </ScrollContainer>
+                            <controls:NcCategoryBar Name="SellCategoryBar"
+                                                VerticalExpand="True"
+                                                HorizontalExpand="True" />
                         </BoxContainer>
                     </PanelContainer>
                     <PanelContainer MinWidth="1"

@@ -90,8 +90,8 @@ public sealed partial class NcStoreMenu : FancyWindow
             EmitVisibleListingIdsChanged();
         };
 
-        _buyCategoryBar = new();
-        _sellCategoryBar = new();
+        _buyCategoryBar = BuyCategoryBar;
+        _sellCategoryBar = SellCategoryBar;
 
         _buyCategoryBar.Configure(GetCategoryDisplayName, GetCategoryToolTip);
         _sellCategoryBar.Configure(GetCategoryDisplayName, GetCategoryToolTip);
@@ -122,14 +122,8 @@ public sealed partial class NcStoreMenu : FancyWindow
         BuyListingsContainer.Children.Clear();
         BuyListingsContainer.AddChild(_buyGrid);
 
-        BuyCategoryListContainer.Children.Clear();
-        BuyCategoryListContainer.AddChild(_buyCategoryBar);
-
         SellListingsContainer.Children.Clear();
         SellListingsContainer.AddChild(_sellGrid);
-
-        SellCategoryListContainer.Children.Clear();
-        SellCategoryListContainer.AddChild(_sellCategoryBar);
 
         Header.OnSearchChanged += text =>
         {
