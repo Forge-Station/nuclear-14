@@ -4,17 +4,12 @@ using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
-using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 
 
 namespace Content.Client._NC.Trade.Controls;
 
 
-/// <summary>
-///     Pure UI control that renders a single contract card.
-///     It does not send any network messages; it only raises <see cref="OnClaim" />.
-/// </summary>
 public sealed class NcContractCard : PanelContainer
 {
     private readonly ContractClientData _data;

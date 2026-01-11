@@ -4,16 +4,9 @@ using Robust.Client.UserInterface.Controls;
 namespace Content.Client._NC.Trade.Controls;
 
 
-/// <summary>
-///     Vertical list of category buttons with toggle selection and hover feedback.
-///     Owns button creation/reuse and only exposes the selected category.
-/// </summary>
 public sealed class NcCategoryBar : BoxContainer
 {
-    private static readonly Color SelectedColor = new(0xD9, 0xA4, 0x41);
-    private static readonly Color IdleColor = new(0x7C, 0x66, 0x24);
-
-    private readonly Dictionary<string, Button> _buttons = new();
+    private readonly Dictionary<string, NcCategoryButtonControl> _buttons = new();
     private readonly List<string> _ordered = new();
     private readonly HashSet<string> _scratchNeeded = new();
     private readonly List<string> _scratchRemove = new();
@@ -105,37 +98,24 @@ public sealed class NcCategoryBar : BoxContainer
             if (!_buttons.TryGetValue(catId, out var btn))
                 continue;
 
-            btn.Text = _displayName(catId);
-            btn.ToolTip = null;
+            var tip = _toolTip(catId);
+            btn.Bind(catId, _displayName(catId), string.IsNullOrWhiteSpace(tip) ? null : tip);
         }
 
         UpdateVisuals();
     }
 
-    private Button CreateButton(string catId)
+    private NcCategoryButtonControl CreateButton(string catId)
     {
-        var btn = new Button
-        {
-            Text = _displayName(catId),
-            ToggleMode = true,
-            HorizontalExpand = true,
-            ModulateSelfOverride = IdleColor
-        };
+        var btn = new NcCategoryButtonControl();
+        var tip = _toolTip(catId);
+            btn.Bind(catId, _displayName(catId), string.IsNullOrWhiteSpace(tip) ? null : tip);
 
-        btn.OnPressed += _ =>
+        btn.OnCategoryPressed += id =>
         {
-            var next = Selected == catId ? string.Empty : catId;
+            var next = Selected == id ? string.Empty : id;
             SetSelected(next);
         };
-
-        btn.OnMouseEntered += _ =>
-        {
-            btn.ModulateSelfOverride = btn.Pressed
-                ? Brighten(SelectedColor, 1.2f)
-                : Brighten(IdleColor, 1.2f);
-        };
-
-        btn.OnMouseExited += _ => { btn.ModulateSelfOverride = btn.Pressed ? SelectedColor : IdleColor; };
 
         return btn;
     }
@@ -145,13 +125,7 @@ public sealed class NcCategoryBar : BoxContainer
         foreach (var (catId, btn) in _buttons)
         {
             var isSelected = catId == Selected;
-            if (btn.Pressed != isSelected)
-                btn.Pressed = isSelected;
-
-            btn.ModulateSelfOverride = isSelected ? SelectedColor : IdleColor;
+            btn.SetSelected(isSelected);
         }
     }
-
-    private static Color Brighten(Color c, float f) =>
-        new(MathF.Min(c.R * f, 1f), MathF.Min(c.G * f, 1f), MathF.Min(c.B * f, 1f), c.A);
 }

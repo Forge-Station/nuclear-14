@@ -1,6 +1,7 @@
 <PanelContainer xmlns="https://spacestation14.io"
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:graphics="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
+                xmlns:controls="clr-namespace:Content.Client._NC.Trade.Controls"
                 HorizontalExpand="True"
                 Margin="0">
 
@@ -54,18 +55,10 @@
                 </PanelContainer.PanelOverride>
             </PanelContainer>
 
-            <BoxContainer Name="DescriptionBox"
-                          Orientation="Vertical"
-                          SeparationOverride="0"
-                          HorizontalExpand="True"
-                          VerticalExpand="True"
-                          Margin="2 0 0 0">
-                <RichTextLabel Name="DescriptionLabel"
-                               HorizontalExpand="True"
-                               VerticalExpand="True"
-                               VerticalAlignment="Top"
-                               Margin="0"/>
-            </BoxContainer>
+            <controls:NcListingDescriptionBox Name="DescriptionBox"
+                                      HorizontalExpand="True"
+                                      VerticalExpand="True"
+                                      Margin="2 0 0 0"/>
 
             <BoxContainer Orientation="Vertical"
                           SeparationOverride="4"
@@ -73,53 +66,11 @@
                           MinWidth="96"
                           Margin="0 0 0 0">
 
-                <BoxContainer Orientation="Horizontal"
-                              SeparationOverride="4"
-                              HorizontalExpand="False"
-                              HorizontalAlignment="Center">
-                    <Button Name="MinusButton" Text="-" MinSize="24 24"/>
-                    <Label Name="QtyLabel" MinWidth="28" HorizontalAlignment="Center"/>
-                    <LineEdit Name="QtyEdit" MinWidth="40" HorizontalExpand="False"/>
-                    <Button Name="PlusButton" Text="+" MinSize="24 24"/>
-                </BoxContainer>
+                <controls:NcListingQuantityControl Name="QtyControl" />
 
-                <Button Name="PriceButton"
-                        MinSize="96 32"
-                        MaxSize="96 32"
-                        ClipText="True"
-                        StyleClasses="ButtonBig"
-                        Margin="0">
-                    <BoxContainer Orientation="Horizontal"
-                                  SeparationOverride="6"
-                                  HorizontalExpand="True"
-                                  VerticalExpand="True"
-                                  HorizontalAlignment="Center">
-                        <TextureRect Name="PriceCurrencyIcon"
-                                     Stretch="KeepAspectCentered"
-                                     MinSize="26 26"
-                                     MaxSize="26 26"
-                                     VerticalAlignment="Center"
-                                     Margin="2 2 0 2"/>
-                        <Label Name="PriceLabel"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"/>
-                    </BoxContainer>
-                </Button>
+                <controls:NcListingPriceButtonControl Name="PriceButton" />
 
-                <Label Name="NoStockLabel"
-                       Visible="False"
-                       HorizontalAlignment="Center"
-                       Modulate="#C0C0C0"
-                       Margin="0 8 0 0"/>
-                <Label Name="RemainingLabel"
-                       HorizontalAlignment="Center"
-                       Modulate="#C0C0C0"
-                       Margin="0 2 0 0"/>
-                <Label Name="OwnedLabel"
-                       Visible="False"
-                       HorizontalAlignment="Center"
-                       Modulate="#C0C0C0"
-                       Margin="0 2 0 0"/>
+                <controls:NcListingStockInfoControl Name="StockInfo" />
             </BoxContainer>
 
         </BoxContainer>
