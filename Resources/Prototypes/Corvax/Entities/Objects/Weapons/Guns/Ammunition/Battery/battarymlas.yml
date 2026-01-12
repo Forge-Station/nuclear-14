@@ -18,7 +18,7 @@
   - type: Tag
     tags:
       - N14PowerCellMagnetoSmall
-      - N14AmmoCellMagneto
+      - N14AmmoCell
   - type: Battery
     maxCharge: 600
     startingCharge: 600
