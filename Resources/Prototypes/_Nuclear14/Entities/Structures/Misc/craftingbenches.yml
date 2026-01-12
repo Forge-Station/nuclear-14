@@ -166,6 +166,12 @@
     - MagazineBox45-70
     - N14Magazine50AMR
     - MagazineBox50
+    # Forge-Change-Start
+    # 5.45
+    - MagazineBox545
+    - Magazine545Rifle
+    - MagazineDrum545Rifle
+    # Forge-Change-End
 
 - type: entity
   parent: N14WorkbenchBase
