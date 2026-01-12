@@ -16,51 +16,31 @@ namespace Content.Client._NC.Trade;
 [GenerateTypedNameReferences]
 public sealed partial class NcStoreMenu : FancyWindow
 {
-    private const string CatIdReady = "nc.internal.category.ready";
-    private const string CatIdCrate = "nc.internal.category.crate";
     private readonly Dictionary<string, int> _balancesByCurrency = new();
     private readonly UiStateBinder _binder;
-    private readonly NcCategoryBar _buyCategoryBar;
     private readonly List<string> _buyCats = new();
-    private readonly NcListingGrid _buyGrid;
-    private readonly List<StoreListingStaticData> _catalog = new();
-    private readonly Dictionary<string, int> _crateUnitsById = new();
-    private readonly List<StoreListingData> _items = new();
+    private readonly NcStoreClientCatalogModel _catalogModel = new();
     private readonly Dictionary<string, int> _massSellTotals = new();
-    private readonly Dictionary<string, int> _ownedById = new();
     private readonly IPrototypeManager _proto;
-    private readonly Dictionary<string, int> _remainingById = new();
-    private readonly HashSet<string> _scratchAvailableIds = new();
     private readonly HashSet<string> _scratchBuyCatSet = new();
-    private readonly List<StoreListingData> _scratchReadyItems = new();
     private readonly HashSet<string> _scratchSellCatSet = new();
-    private readonly NcCategoryBar _sellCategoryBar;
     private readonly List<string> _sellCats = new();
-    private readonly NcListingGrid _sellGrid;
     private readonly List<string> _visibleBuyIds = new();
     private readonly List<string> _visibleSellIds = new();
     private readonly HashSet<string> _visibleUnionScratch = new();
     private int _lastVisibleIdsSig;
     private readonly SpriteSystem _sprites;
-    private string _buyCat = string.Empty;
     private bool _disposed;
     private bool _hasBuyTab;
     private bool _hasContractsTab;
     private bool _hasSellTab;
     private string _search = string.Empty;
     private string _searchLower = string.Empty;
-    private string _sellCat = string.Empty;
     private Control? _tabBuy;
     private Control? _tabContracts;
     private bool _tabsCaptured;
     private Control? _tabSell;
     public Action<string>? OnContractClaim;
-    private const int CategoryPanelMin = 180;
-    private const int CategoryPanelMax = 360;
-    private const float ApproxCharPx = 7.5f;
-    private const int ExtraPaddingPx = 46;
-
-
     public NcStoreMenu()
     {
         RobustXamlLoader.Load(this);
@@ -73,57 +53,25 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         Header.BindServices(_proto, _sprites);
 
-        _buyGrid = new(StoreMode.Buy, _proto, _sprites);
-        _sellGrid = new(StoreMode.Sell, _proto, _sprites);
+        BuyView.Initialize(StoreMode.Buy, _proto, _sprites, Loc.GetString("nc-store-tab-buy"), false);
+        SellView.Initialize(StoreMode.Sell, _proto, _sprites, Loc.GetString("nc-store-tab-sell"), true);
 
-        _buyGrid.VisibleIdsChanged += ids =>
+        BuyView.ConfigureCategories(GetCategoryDisplayName, GetCategoryToolTip);
+        SellView.ConfigureCategories(GetCategoryDisplayName, GetCategoryToolTip);
+
+        BuyView.VisibleIdsChanged += ids =>
         {
             _visibleBuyIds.Clear();
             _visibleBuyIds.AddRange(ids);
             EmitVisibleListingIdsChanged();
         };
 
-        _sellGrid.VisibleIdsChanged += ids =>
+        SellView.VisibleIdsChanged += ids =>
         {
             _visibleSellIds.Clear();
             _visibleSellIds.AddRange(ids);
             EmitVisibleListingIdsChanged();
         };
-
-        _buyCategoryBar = BuyCategoryBar;
-        _sellCategoryBar = SellCategoryBar;
-
-        _buyCategoryBar.Configure(GetCategoryDisplayName, GetCategoryToolTip);
-        _sellCategoryBar.Configure(GetCategoryDisplayName, GetCategoryToolTip);
-
-        _buyCategoryBar.OnSelectedChanged += catId =>
-        {
-            if (_disposed)
-                return;
-
-            _buyCat = catId;
-            _buyGrid.ResetPaging();
-            RefreshListings();
-        };
-
-        _sellCategoryBar.OnSelectedChanged += catId =>
-        {
-            if (_disposed)
-                return;
-
-            _sellCat = catId;
-            _sellGrid.ResetPaging();
-            RefreshListings();
-        };
-
-        _buyGrid.HorizontalExpand = true;
-        _sellGrid.HorizontalExpand = true;
-
-        BuyListingsContainer.Children.Clear();
-        BuyListingsContainer.AddChild(_buyGrid);
-
-        SellListingsContainer.Children.Clear();
-        SellListingsContainer.AddChild(_sellGrid);
 
         Header.OnSearchChanged += text =>
         {
@@ -132,17 +80,17 @@ public sealed partial class NcStoreMenu : FancyWindow
 
             _search = text;
             _searchLower = text.ToLowerInvariant();
-            _buyGrid.ResetPaging();
-            _sellGrid.ResetPaging();
+            BuyView.SetSearch(_searchLower);
+            SellView.SetSearch(_searchLower);
             OnSearchChanged?.Invoke(_search);
             RefreshListings();
         };
 
-        MassSellPulledCrateButton.Disabled = true;
-        MassSellPulledCrateButton.ClipText = true;
-        MassSellPulledCrateButton.Text = Loc.GetString("nc-store-mass-sell-button");
-        MassSellPulledCrateButton.ToolTip = Loc.GetString("nc-store-mass-sell-tooltip");
-        MassSellPulledCrateButton.OnPressed += _ => OnMassSellPulledCrate?.Invoke();
+        SellView.MassSellButtonControl.Disabled = true;
+        SellView.MassSellButtonControl.ClipText = true;
+        SellView.MassSellButtonControl.Text = Loc.GetString("nc-store-mass-sell-button");
+        SellView.MassSellButtonControl.ToolTip = Loc.GetString("nc-store-mass-sell-tooltip");
+        SellView.MassSellButtonControl.OnPressed += _ => OnMassSellPulledCrate?.Invoke();
 
         _binder = new(this);
     }
@@ -150,16 +98,16 @@ public sealed partial class NcStoreMenu : FancyWindow
     private string GetCategoryDisplayName(string catId) =>
         catId switch
         {
-            CatIdReady => Loc.GetString("nc-store-cat-ready-short"),
-            CatIdCrate => Loc.GetString("nc-store-cat-crate-short"),
+            NcStoreClientCatalogModel.CatIdReady => Loc.GetString("nc-store-cat-ready-short"),
+            NcStoreClientCatalogModel.CatIdCrate => Loc.GetString("nc-store-cat-crate-short"),
             _ => catId
         };
 
     private string GetCategoryToolTip(string catId) =>
         catId switch
         {
-            CatIdReady => Loc.GetString("nc-store-cat-ready-full"),
-            CatIdCrate => Loc.GetString("nc-store-cat-crate-full"),
+            NcStoreClientCatalogModel.CatIdReady => Loc.GetString("nc-store-cat-ready-full"),
+            NcStoreClientCatalogModel.CatIdCrate => Loc.GetString("nc-store-cat-crate-full"),
             _ => catId
         };
 
@@ -233,17 +181,18 @@ public sealed partial class NcStoreMenu : FancyWindow
         _massSellTotals.Clear();
         foreach (var (cur, amt) in totals)
             _massSellTotals[cur] = amt;
-        MassSellPulledCrateButton.Text = Loc.GetString("nc-store-mass-sell-button");
-        MassSellPulledCrateButton.ClipText = true;
+        var btn = SellView.MassSellButtonControl;
+        btn.Text = Loc.GetString("nc-store-mass-sell-button");
+        btn.ClipText = true;
 
         if (_massSellTotals.Count == 0)
         {
-            MassSellPulledCrateButton.ToolTip = Loc.GetString("nc-store-mass-sell-tooltip");
-            MassSellPulledCrateButton.Disabled = true;
+            btn.ToolTip = Loc.GetString("nc-store-mass-sell-tooltip");
+            btn.Disabled = true;
             return;
         }
 
-        MassSellPulledCrateButton.Disabled = false;
+        btn.Disabled = false;
 
         var parts = _massSellTotals
             .Where(p => p.Value > 0 && !string.IsNullOrWhiteSpace(p.Key))
@@ -255,7 +204,7 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         var full = parts.Count > 0 ? string.Join(", ", parts) : "—";
 
-        MassSellPulledCrateButton.ToolTip = Loc.GetString("nc-store-mass-sell-tooltip-with-reward", ("reward", full));
+        btn.ToolTip = Loc.GetString("nc-store-mass-sell-tooltip-with-reward", ("reward", full));
     }
 
     private void CaptureTabsIfNeeded()
@@ -325,9 +274,10 @@ public sealed partial class NcStoreMenu : FancyWindow
         _scratchBuyCatSet.Clear();
         _scratchSellCatSet.Clear();
 
-        for (var i = 0; i < _catalog.Count; i++)
+        var catalog = _catalogModel.Catalog;
+        for (var i = 0; i < catalog.Count; i++)
         {
-            var it = _catalog[i];
+            var it = catalog[i];
             if (string.IsNullOrWhiteSpace(it.Category))
                 continue;
 
@@ -343,11 +293,6 @@ public sealed partial class NcStoreMenu : FancyWindow
         _buyCats.Sort(static (a, b) => string.Compare(a, b, StringComparison.CurrentCulture));
         _sellCats.Sort(static (a, b) => string.Compare(a, b, StringComparison.CurrentCulture));
 
-        if (!_buyCats.Contains(_buyCat))
-            _buyCat = string.Empty;
-        if (!_sellCats.Contains(_sellCat))
-            _sellCat = string.Empty;
-
         BuildCategoryButtons();
     }
 
@@ -356,32 +301,30 @@ public sealed partial class NcStoreMenu : FancyWindow
         var hasReady = false;
         var hasCrate = false;
 
-        for (var i = 0; i < _items.Count; i++)
+        var items = _catalogModel.Items;
+        for (var i = 0; i < items.Count; i++)
         {
-            var it = _items[i];
+            var it = items[i];
 
-            if (!hasReady && it is { Mode: StoreMode.Sell, Category: CatIdReady, })
+            if (!hasReady && it is { Mode: StoreMode.Sell, Category: NcStoreClientCatalogModel.CatIdReady, })
                 hasReady = true;
 
-            if (!hasCrate && it is { Mode: StoreMode.Sell, Category: CatIdCrate, })
+            if (!hasCrate && it is { Mode: StoreMode.Sell, Category: NcStoreClientCatalogModel.CatIdCrate, })
                 hasCrate = true;
 
             if (hasReady && hasCrate)
                 break;
         }
 
-        _sellCats.Remove(CatIdReady);
-        _sellCats.Remove(CatIdCrate);
+        _sellCats.Remove(NcStoreClientCatalogModel.CatIdReady);
+        _sellCats.Remove(NcStoreClientCatalogModel.CatIdCrate);
 
         var insertIndex = 0;
         if (hasReady)
-            _sellCats.Insert(insertIndex++, CatIdReady);
+            _sellCats.Insert(insertIndex++, NcStoreClientCatalogModel.CatIdReady);
 
         if (hasCrate)
-            _sellCats.Insert(insertIndex, CatIdCrate);
-
-        if (!_sellCats.Contains(_sellCat))
-            _sellCat = string.Empty;
+            _sellCats.Insert(insertIndex, NcStoreClientCatalogModel.CatIdCrate);
 
         BuildCategoryButtons();
     }
@@ -411,95 +354,9 @@ public sealed partial class NcStoreMenu : FancyWindow
 
     private void RebuildItemsFromCatalogAndDynamic()
     {
-        _items.Clear();
-
-        for (var i = 0; i < _catalog.Count; i++)
-        {
-            var s = _catalog[i];
-
-            var remaining = _remainingById.GetValueOrDefault(s.Id, -1);
-            var owned = _ownedById.GetValueOrDefault(s.Id, 0);
-
-            _items.Add(
-                new(
-                    s.Id,
-                    StoreListingFlavor.Base,
-                    s.ProductEntity,
-                    s.BasePrice,
-                    s.Category,
-                    s.CurrencyId,
-                    s.Mode,
-                    owned,
-                    remaining,
-                    s.UnitsPerPurchase));
-        }
-
-        var baseCount = _items.Count;
-        _scratchReadyItems.Clear();
-
-        for (var i = 0; i < baseCount; i++)
-        {
-            var d = _items[i];
-            if (d.Mode != StoreMode.Sell)
-                continue;
-
-            if (d.Owned <= 0)
-                continue;
-
-            if (d.Remaining == 0)
-                continue;
-
-            _scratchReadyItems.Add(
-                new(
-                    d.ListingId,
-                    StoreListingFlavor.Ready,
-                    d.ProductEntity,
-                    d.Price,
-                    CatIdReady,
-                    d.CurrencyId,
-                    d.Mode,
-                    d.Owned,
-                    d.Remaining,
-                    d.UnitsPerPurchase));
-        }
-
-        if (_scratchReadyItems.Count > 0)
-            _items.AddRange(_scratchReadyItems);
-
-        if (_crateUnitsById.Count > 0)
-        {
-            for (var i = 0; i < _catalog.Count; i++)
-            {
-                var s = _catalog[i];
-                if (s.Mode != StoreMode.Sell)
-                    continue;
-
-                if (!_crateUnitsById.TryGetValue(s.Id, out var take) || take <= 0)
-                    continue;
-
-                var remaining = _remainingById.GetValueOrDefault(s.Id, -1);
-
-                _items.Add(
-                    new(
-                        s.Id,
-                        StoreListingFlavor.Crate,
-                        s.ProductEntity,
-                        s.BasePrice,
-                        CatIdCrate,
-                        s.CurrencyId,
-                        StoreMode.Sell,
-                        take,
-                        remaining,
-                        s.UnitsPerPurchase));
-            }
-        }
-
-        _scratchAvailableIds.Clear();
-        for (var i = 0; i < _items.Count; i++)
-            _scratchAvailableIds.Add(_items[i].Id);
-
-        _buyGrid.SyncAvailableIds(_scratchAvailableIds);
-        _sellGrid.SyncAvailableIds(_scratchAvailableIds);
+        _catalogModel.RebuildItemsFromCatalogAndDynamic();
+        BuyView.SyncAvailableIds(_catalogModel.AvailableIds);
+        SellView.SyncAvailableIds(_catalogModel.AvailableIds);
     }
 
     public void PopulateContracts(List<ContractClientData>? list)
@@ -548,48 +405,18 @@ public sealed partial class NcStoreMenu : FancyWindow
 
     private void RefreshListings()
     {
-        var hasSearch = !string.IsNullOrWhiteSpace(_search);
+        var items = _catalogModel.Items;
+        BuyView.BindListingsData(items, GetBalanceForCurrency, (d, qty) => OnBuyPressed?.Invoke(d, qty));
+        SellView.BindListingsData(items, static _ => int.MaxValue, (d, qty) => OnSellPressed?.Invoke(d, qty));
 
-        var buyCount = _buyGrid.Refresh(
-            _items,
-            _buyCat,
-            _searchLower,
-            GetBalanceForCurrency,
-            (d, qty) => OnBuyPressed?.Invoke(d, qty));
-
-        var sellCount = _sellGrid.Refresh(
-            _items,
-            _sellCat,
-            _searchLower,
-            _ => int.MaxValue,
-            (d, qty) => OnSellPressed?.Invoke(d, qty));
-
-        BuyCategoryHeader.Visible = !string.IsNullOrEmpty(_buyCat) || hasSearch;
-        SellCategoryHeader.Visible = !string.IsNullOrEmpty(_sellCat) || hasSearch;
-
-        if (BuyCategoryHeader.Visible)
-        {
-            BuyCategoryHeader.Text = !string.IsNullOrEmpty(_buyCat)
-                ? GetCategoryDisplayName(_buyCat)
-                : Loc.GetString("nc-store-search-results-buy", ("count", buyCount));
-        }
-        else
-            BuyCategoryHeader.Text = string.Empty;
-
-        if (SellCategoryHeader.Visible)
-        {
-            SellCategoryHeader.Text = !string.IsNullOrEmpty(_sellCat)
-                ? GetCategoryDisplayName(_sellCat)
-                : Loc.GetString("nc-store-search-results-sell", ("count", sellCount));
-        }
-        else
-            SellCategoryHeader.Text = string.Empty;
+        BuyView.SetSearch(_searchLower);
+        SellView.SetSearch(_searchLower);
     }
 
     private void BuildCategoryButtons()
     {
-        _buyCategoryBar.SetCategories(_buyCats, _buyCat);
-        _sellCategoryBar.SetCategories(_sellCats, _sellCat);
+        BuyView.SetCategories(_buyCats);
+        SellView.SetCategories(_sellCats);
     }
 
     private string CurrencyName(string? currencyId)
@@ -608,10 +435,9 @@ public sealed partial class NcStoreMenu : FancyWindow
     protected override void Dispose(bool disposing)
     {
         _disposed = true;
-        _buyGrid.ClearCaches();
-        _sellGrid.ClearCaches();
-        _catalog.Clear();
-        _items.Clear();
+        BuyView.ClearCaches();
+        SellView.ClearCaches();
+        _catalogModel.Clear();
 
         base.Dispose(disposing);
     }

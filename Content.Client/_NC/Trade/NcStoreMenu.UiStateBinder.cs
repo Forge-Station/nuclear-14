@@ -75,9 +75,10 @@ public sealed partial class NcStoreMenu
             unchecked
             {
                 var h = 17;
-                for (var i = 0; i < _m._catalog.Count; i++)
+                var catalog = _m._catalogModel.Catalog;
+                for (var i = 0; i < catalog.Count; i++)
                 {
-                    var s = _m._catalog[i];
+                    var s = catalog[i];
                     if (s.Mode != StoreMode.Sell)
                         continue;
 
@@ -101,9 +102,10 @@ public sealed partial class NcStoreMenu
             {
                 var h = 17;
 
-                for (var i = 0; i < _m._catalog.Count; i++)
+                var catalog = _m._catalogModel.Catalog;
+                for (var i = 0; i < catalog.Count; i++)
                 {
-                    var s = _m._catalog[i];
+                    var s = catalog[i];
                     if (s.Mode != StoreMode.Sell)
                         continue;
 
@@ -131,7 +133,7 @@ public sealed partial class NcStoreMenu
             _m.ApplyTabsVisibility();
             _m.UpdateHeaderVisibility();
 
-            _m._catalog.Clear();
+            var filtered = new List<StoreListingStaticData>(listings.Count);
 
             for (var i = 0; i < listings.Count; i++)
             {
@@ -139,20 +141,22 @@ public sealed partial class NcStoreMenu
                 if (string.IsNullOrWhiteSpace(s.Id) || string.IsNullOrWhiteSpace(s.ProductEntity))
                     continue;
 
-                _m._catalog.Add(s);
+                filtered.Add(s);
             }
 
-            var productProtos = new List<string>(_m._catalog.Count);
-            for (var i = 0; i < _m._catalog.Count; i++)
-                productProtos.Add(_m._catalog[i].ProductEntity);
+            _m._catalogModel.SetCatalog(filtered);
 
-            _m._buyGrid.PrepareSearchIndex(productProtos);
-            _m._sellGrid.PrepareSearchIndex(productProtos);
+            var productProtos = new List<string>(filtered.Count);
+            for (var i = 0; i < filtered.Count; i++)
+                productProtos.Add(filtered[i].ProductEntity);
+
+            _m.BuyView.PrepareSearchIndex(productProtos);
+            _m.SellView.PrepareSearchIndex(productProtos);
 
             _m.RebuildCategoriesFromCatalog();
 
-            _m._buyGrid.ResetPaging();
-            _m._sellGrid.ResetPaging();
+            _m.BuyView.SetSearch(string.Empty);
+            _m.SellView.SetSearch(string.Empty);
             _m.RefreshListings();
             _hasLastDynamic = false;
             _lastContractsHash = 0;
@@ -190,18 +194,18 @@ public sealed partial class NcStoreMenu
             var balancesChanged = !DictEquals(balancesByCurrency, _m._balancesByCurrency);
             if (balancesChanged)
                 _m.SetBalancesByCurrency(balancesByCurrency);
-            var remainingChanged = !DictEquals(remainingById, _m._remainingById);
-            var ownedChanged = !DictEquals(ownedById, _m._ownedById);
-            var crateChanged = !DictEquals(crateUnitsById, _m._crateUnitsById);
+            var remainingChanged = !DictEquals(remainingById, _m._catalogModel.RemainingById);
+            var ownedChanged = !DictEquals(ownedById, _m._catalogModel.OwnedById);
+            var crateChanged = !DictEquals(crateUnitsById, _m._catalogModel.CrateUnitsById);
 
             if (remainingChanged)
-                ApplySparseSnapshot(remainingById, _m._remainingById);
+                ApplySparseSnapshot(remainingById, _m._catalogModel.RemainingById);
 
             if (ownedChanged)
-                ApplySparseSnapshot(ownedById, _m._ownedById);
+                ApplySparseSnapshot(ownedById, _m._catalogModel.OwnedById);
 
             if (crateChanged)
-                ApplySparseSnapshot(crateUnitsById, _m._crateUnitsById);
+                ApplySparseSnapshot(crateUnitsById, _m._catalogModel.CrateUnitsById);
             if (!DictEquals(massTotals, _m._massSellTotals))
                 _m.SetMassSellTotals(massTotals);
 
@@ -230,7 +234,7 @@ public sealed partial class NcStoreMenu
             }
             else if (valuesChanged)
             {
-                _m.UpdateItemsDynamicInPlace();
+                _m._catalogModel.UpdateItemsDynamicInPlace();
                 _m.RefreshListingsDynamicOnly();
             }
             else if (balancesChanged || tabsChanged)

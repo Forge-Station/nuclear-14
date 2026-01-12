@@ -19,77 +19,17 @@
             <PanelContainer Name="TabBuy"
                             VerticalExpand="True"
                             StyleClasses="PanelBackgroundBaseDark">
-                <BoxContainer Orientation="Horizontal" VerticalExpand="True">
-                    <PanelContainer VerticalExpand="True"
-                                    MinWidth="230"
-                                    StyleClasses="PanelBackgroundBaseDark">
-                        <BoxContainer Orientation="Vertical" VerticalExpand="True">
-                            <Label Text="{Loc 'nc-store-tab-buy'}" StyleClasses="LabelHeading" Margin="6 6 6 6" />
-                            <controls:NcCategoryBar Name="BuyCategoryBar"
-                                                VerticalExpand="True"
-                                                HorizontalExpand="True" />
-                        </BoxContainer>
-                    </PanelContainer>
-                    <PanelContainer MinWidth="1"
-                                    StyleClasses="HighDivider" />
-                    <BoxContainer Orientation="Vertical"
-                                  VerticalExpand="True"
-                                  HorizontalExpand="True"
-                                  Margin="6 4 6 4">
-                        <Label Name="BuyCategoryHeader"
-                               StyleClasses="LabelHeading"
-                               Margin="0 0 0 6"
-                               Text="{Loc 'nc-store-select-category'}" />
-                        <ScrollContainer Name="BuyListingsScroll"
-                                         VerticalExpand="True"
-                                         HorizontalExpand="True"
-                                         HScrollEnabled="False">
-                            <BoxContainer Name="BuyListingsContainer"
-                                          Orientation="Vertical" />
-                        </ScrollContainer>
-                    </BoxContainer>
-                </BoxContainer>
+                <controls:NcStoreListingsView Name="BuyView"
+                                             VerticalExpand="True"
+                                             HorizontalExpand="True" />
             </PanelContainer>
 
             <PanelContainer Name="TabSell"
                             VerticalExpand="True"
                             StyleClasses="PanelBackgroundBaseDark">
-                <BoxContainer Orientation="Horizontal" VerticalExpand="True">
-                    <PanelContainer VerticalExpand="True"
-                                    MinWidth="230"
-                                    StyleClasses="PanelBackgroundBaseDark">
-                        <BoxContainer Orientation="Vertical" VerticalExpand="True">
-                            <Label Text="{Loc 'nc-store-tab-sell'}" StyleClasses="LabelHeading" Margin="6 6 6 6" />
-                            <controls:NcCategoryBar Name="SellCategoryBar"
-                                                VerticalExpand="True"
-                                                HorizontalExpand="True" />
-                        </BoxContainer>
-                    </PanelContainer>
-                    <PanelContainer MinWidth="1"
-                                    StyleClasses="HighDivider" />
-                    <BoxContainer Orientation="Vertical"
-                                  VerticalExpand="True"
-                                  HorizontalExpand="True"
-                                  Margin="6 4 6 4">
-                        <Label Name="SellCategoryHeader"
-                               StyleClasses="LabelHeading"
-                               Margin="0 0 0 6"
-                               Text="{Loc 'nc-store-select-category'}" />
-
-                        <BoxContainer Orientation="Horizontal"
-                                      Margin="0 0 0 6">
-                            <Button Name="MassSellPulledCrateButton"
-                                    MinWidth="260" />
-                        </BoxContainer>
-                        <ScrollContainer Name="SellListingsScroll"
-                                         VerticalExpand="True"
-                                         HorizontalExpand="True"
-                                         HScrollEnabled="False">
-                            <BoxContainer Name="SellListingsContainer"
-                                          Orientation="Vertical" />
-                        </ScrollContainer>
-                    </BoxContainer>
-                </BoxContainer>
+                <controls:NcStoreListingsView Name="SellView"
+                                             VerticalExpand="True"
+                                             HorizontalExpand="True" />
             </PanelContainer>
 
             <PanelContainer Name="TabContracts"

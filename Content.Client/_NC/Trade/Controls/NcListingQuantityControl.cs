@@ -6,10 +6,6 @@ using Robust.Client.UserInterface.XAML;
 
 namespace Content.Client._NC.Trade.Controls;
 
-/// <summary>
-/// Standard quantity picker for store listings: [-] [label] [edit] [+].
-/// Encapsulates input filtering and clamping. The parent control provides min/max.
-/// </summary>
 [GenerateTypedNameReferences]
 public sealed partial class NcListingQuantityControl : BoxContainer
 {

@@ -100,7 +100,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
     private void OnSetVisibleListings(EntityUid uid, NcStoreComponent comp, StoreSetVisibleListingsBoundUiMessage msg)
     {
-        if (!TryGetLockedUiUser(uid, comp, out _))
+        if (!TryGetLockedUiUser(uid, comp, out var user))
             return;
 
         var ids = msg.Ids;
@@ -118,8 +118,16 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
 
         var scratch = GetDynamicScratch(uid);
-        if (scratch.UpdateVisibleIds(ids))
-            MarkDirty(uid);
+        if (!scratch.UpdateVisibleIds(ids))
+            return;
+        MarkDirty(uid);
+
+        if (_timing.CurTime >= _nextDynamicAllowed)
+        {
+            _dirtyStores.Remove(uid);
+            UpdateDynamicState(uid, comp, user);
+            _nextDynamicAllowed = _timing.CurTime + TimeSpan.FromSeconds(MinDynamicInterval);
+        }
     }
 
     private void OnStorageOpen(EntityUid uid, EntityStorageComponent comp, ref StorageAfterOpenEvent args)
