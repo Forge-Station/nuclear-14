@@ -398,6 +398,11 @@
         - Tribal
         - TribalFarmer
         - TribalHealer
+        # Forge-Change-Start
+        - BoSWestElderCommander
+        - BoSWestPaladin
+        - BoSWestKnight
+        # Forge-Change-End
     - !type:CharacterTraitRequirement
       inverted: true
       traits:
@@ -424,6 +429,11 @@
         - BoSWashingtonCommander
         - BoSWashingtonPaladin
         - BoSWashingtonKnight
+        # Forge-Change-Start
+        - BoSWestElderCommander
+        - BoSWestPaladin
+        - BoSWestKnight
+        # Forge-Change-End
     - !type:CharacterTraitRequirement
       inverted: true
       traits:
