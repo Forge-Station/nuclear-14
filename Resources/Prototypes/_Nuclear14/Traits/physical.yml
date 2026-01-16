@@ -20,6 +20,12 @@
   category: Physical
   points: -2
   requirements:
+    # Forge-Change-Start
+    - !type:CharacterJobRequirement
+      inverted: true
+      jobs:
+        - Followers
+    # Forge-Change-End
     - !type:CharacterTraitRequirement
       inverted: true
       traits:
@@ -101,6 +107,12 @@
   category: Physical
   points: -2
   requirements:
+    # Forge-Change-Start
+    - !type:CharacterJobRequirement
+      inverted: true
+      jobs:
+        - Followers
+    # Forge-Change-End
     - !type:CharacterTraitRequirement
       inverted: true
       traits:
@@ -187,6 +199,12 @@
   category: Physical
   points: -2
   requirements:
+    # Forge-Change-Start
+    - !type:CharacterJobRequirement
+      inverted: true
+      jobs:
+        - Followers
+    # Forge-Change-End
     - !type:CharacterTraitRequirement
       inverted: true
       traits:
@@ -253,6 +271,13 @@
   id: N14WorldChampion
   category: Physical
   points: -6 #Make super mutants unable to take this when they get added
+  # Forge-Change-Start
+  requirements:
+    - !type:CharacterJobRequirement
+      inverted: true
+      jobs:
+        - Followers
+  # Forge-Change-End
   functions:
     - !type:TraitAddComponent
       components:
@@ -334,6 +359,12 @@
   category: Physical
   points: -3
   requirements:
+    # Forge-Change-Start
+    - !type:CharacterJobRequirement
+      inverted: true
+      jobs:
+        - Followers
+    # Forge-Change-End
     - !type:CharacterTraitRequirement
       inverted: true
       traits:
@@ -402,6 +433,7 @@
         - BoSWestElderCommander
         - BoSWestPaladin
         - BoSWestKnight
+        - Followers
         # Forge-Change-End
     - !type:CharacterTraitRequirement
       inverted: true

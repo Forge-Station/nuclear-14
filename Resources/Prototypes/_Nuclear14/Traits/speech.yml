@@ -22,6 +22,7 @@
     jobs:
     - NCRRanger
     - NCRRangerVeteran
+    - Followers # Forge-Change
   functions:
   - !type:TraitModifyLanguages
     languagesSpoken:
