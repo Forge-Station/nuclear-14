@@ -2445,7 +2445,7 @@
         - id: N14WeaponRifle762M14
           prob: 0.04
           orGroup: Weapon
-        - id: N14WeaponRifleR91
+        - id: N14WeaponRifle556R91
           prob: 0.04
           orGroup: Weapon
         - id: N14ClothingOuterRaiderCombat1
