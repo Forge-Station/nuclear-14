@@ -85,3 +85,4 @@
           CaesarLegionLegionnaireRecruit: [ 6, 6 ] # Forge-Legion
           CaesarLegionSlave: [ 3, 3 ] # Forge-Legion
           # Raider: [3,3]
+          Followers: [ 2, 2 ]
