@@ -204,3 +204,93 @@
     min: 72000 # 20 hours veterancy unlock
   items:
   - N14ClothingOuterNCRCombatVeteranKiltArmorDesert
+
+- type: loadout
+  id: LoadoutClothingOuterJacketCowboyOld
+  customName: false
+  customDescription: false
+  category: Outer
+  cost: 0
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+  - !type:CharacterLogicOrRequirement
+    requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+      - NCRRangerVeteran
+      - NCRRanger
+      - Wastelander
+    - !type:CharacterDepartmentRequirement
+      departments:
+      - Townsfolk
+  items:
+  - N14ClothingOuterJacketCowboyOld
+
+- type: loadout
+  id: LoadoutUniformJumpsuitCowboyOld
+  customName: false
+  customDescription: false
+  category: Uniform
+  cost: 0
+  exclusive: true
+  sponsorLevel: 2
+  requirements:
+  - !type:CharacterLogicOrRequirement
+    requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+      - NCRRangerVeteran
+      - NCRRanger
+      - Wastelander
+    - !type:CharacterDepartmentRequirement
+      departments:
+      - Townsfolk
+  - !type:CharacterItemGroupRequirement
+    group: N14LoadoutUniform
+  items:
+  - N14ClothingUniformJumpsuitCowboyOld
+
+- type: loadout
+  id: LoadoutClothingHeadHatCowboyOld
+  customName: false
+  customDescription: false
+  category: Head
+  cost: 0
+  exclusive: true
+  sponsorLevel: 2
+  requirements:
+  - !type:CharacterLogicOrRequirement
+    requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+      - NCRRangerVeteran
+      - NCRRanger
+      - Wastelander
+    - !type:CharacterDepartmentRequirement
+      departments:
+      - Townsfolk
+  items:
+  - N14ClothingHeadHatCowboyOld
+
+- type: loadout
+  id: LoadoutClothingNeckCloakCowboyOld
+  customName: false
+  customDescription: false
+  category: Roles
+  cost: 0
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+  - !type:CharacterLogicOrRequirement
+    requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+      - NCRRangerVeteran
+      - NCRRanger
+      - Wastelander
+    - !type:CharacterDepartmentRequirement
+      departments:
+      - Townsfolk
+  items:
+  - N14ClothingNeckCloakCowboyOld

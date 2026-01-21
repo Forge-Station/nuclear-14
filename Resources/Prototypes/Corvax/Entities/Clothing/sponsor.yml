@@ -269,3 +269,57 @@
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRarmorcoat.rsi
   - type: Clothing
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRarmorcoat.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, BaseFoldable]
+  id: N14ClothingNeckCloakCowboyOld
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Appearance
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-zip-verb
+    foldVerbText: fold-unzip-verb
+  - type: FoldableClothing
+    foldedEquippedPrefix: open
+    foldedHeldPrefix: open
+  - type: Clothing
+    sprite: Corvax/Clothing/Neck/PonchoOfAManWithNoName.rsi
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/PonchoOfAManWithNoName.rsi
+    layers:
+    - state: icon
+      map: [ "unfoldedLayer" ]
+    - state: icon-open
+      map: [ "foldedLayer" ]
+      visible: false
+
+- type: entity
+  parent: ClothingOuterBase
+  id: N14ClothingOuterJacketCowboyOld
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/JacketOfAManWithNoName.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/JacketOfAManWithNoName.rsi
+
+- type: entity
+  parent: N14ClothingUniformBase
+  id: N14ClothingUniformJumpsuitCowboyOld
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/ShirtOfAManWithNoName.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/ShirtOfAManWithNoName.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatCowboyOld
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Hats/HatOfAManWithNoName.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Hats/HatOfAManWithNoName.rsi
