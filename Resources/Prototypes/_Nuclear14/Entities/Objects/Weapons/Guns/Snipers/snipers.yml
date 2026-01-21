@@ -183,6 +183,8 @@
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/levercarbine.rsi
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/levercarbine.rsi
+  - type: Item
+    size: Large # Corvax-Change
   - type: Wieldable
   - type: GunWieldBonus
     minAngle: -23
@@ -325,6 +327,8 @@
     - Belt
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/shortlevercarbine.rsi
+  - type: Item
+    size: Normal # Corvax-Change
   - type: Wieldable
   - type: GunWieldBonus
     minAngle: -20
@@ -527,6 +531,8 @@
         whitelist:
           tags:
             - N14Cartridge308Rifle
+  - type: FollowDistance
+    backStrength: 3
   - type: StaticPrice
     price: 175
 # Forge-add-end

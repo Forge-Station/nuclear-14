@@ -125,10 +125,7 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/Shotguns/sawed_off.rsi
   - type: Item
-    size: Small
-    shape:
-    - 0,0,1,0
-    - 0,1,0,1
+    size: Normal # Corvax-Change
     sprite: _Nuclear14/Objects/Weapons/Guns/Shotguns/sawed_off.rsi
   - type: Gun
     fireRate: 3
@@ -237,6 +234,7 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/Shotguns/caravan_shotgun.rsi
   - type: Item
+    size: Large # Corvax-Change
     sprite: _Nuclear14/Objects/Weapons/Guns/Shotguns/caravan_shotgun.rsi
   - type: Gun
     fireRate: 6
@@ -270,7 +268,7 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/Shotguns/lever_shotgun.rsi
   - type: Item
-    size: Large
+    size: Normal # Corvax-Change
     sprite: _Nuclear14/Objects/Weapons/Guns/Shotguns/lever_shotgun.rsi
   - type: BallisticAmmoProvider
     whitelist:
@@ -375,7 +373,7 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/Shotguns/shortpump.rsi
   - type: Item
-    size: Large
+    size: Normal # Corvax-Change
     sprite: _Nuclear14/Objects/Weapons/Guns/Shotguns/shortpump.rsi
   - type: BallisticAmmoProvider
     whitelist:
