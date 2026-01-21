@@ -1,0 +1,17 @@
+- type: entity
+  parent: N14BaseBlueprintPaper
+  id: N14ClothingOuterLegionnaireBaseArmorBlueprint
+  name: blueprint legionnaire armor
+  suffix: Craft
+  components:
+    - type: STBlueprint
+      blueprint: N14ClothingOuterLegionnaireBaseArmorRecipe
+
+- type: entity
+  parent: N14BaseBlueprintPaper
+  id: N14ClothingOuterLegionnaireVeteranArmorBlueprint
+  name: blueprint legionnaire veteran armor
+  suffix: Craft
+  components:
+    - type: STBlueprint
+      blueprint: N14ClothingOuterLegionnaireVeteranArmorRecipe

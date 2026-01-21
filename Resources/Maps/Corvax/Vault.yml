@@ -40687,7 +40687,7 @@ entities:
   - uid: 26506
     components:
     - type: MetaData
-      desc: Берет принадлежащий уорент-офицеру. Имеется значок кротокрыса.
+      desc: Берет принадлежащий уорент-офицеру. Имеется значок кротокрыса. Кротокрыс - неформальный символ инженерно-связных войск НКР. Очевидно, только для инженеров и связистов.
       name: берет главного уорент-офицера пятого класса
     - type: Transform
       pos: -169.51909,-51.267624
@@ -41756,17 +41756,6 @@ entities:
       linearDamping: 0
       canCollide: False
     - type: InsideEntityStorage
-- proto: ClothingOuterCoatDetectiveLoadout
-  entities:
-  - uid: 1586
-    components:
-    - type: Transform
-      parent: 1582
-    - type: Physics
-      angularDamping: 0
-      linearDamping: 0
-      canCollide: False
-    - type: InsideEntityStorage
 - proto: ClothingOuterCoatJacketBiker
   entities:
   - uid: 4952
@@ -42174,20 +42163,6 @@ entities:
     components:
     - type: Transform
       parent: 5098
-    - type: Physics
-      angularDamping: 0
-      linearDamping: 0
-      canCollide: False
-    - type: InsideEntityStorage
-- proto: ClothingUniformJumpsuitBarber
-  entities:
-  - uid: 24705
-    components:
-    - type: MetaData
-      desc: Выглядит как база каждого барбера!
-      name: униформа барбера
-    - type: Transform
-      parent: 24703
     - type: Physics
       angularDamping: 0
       linearDamping: 0
@@ -44886,7 +44861,7 @@ entities:
       containers:
       - drink
     - type: PressurizedSolution
-      sprayFizzinessThresholdRoll: 0.4705126
+      sprayFizzinessThresholdRoll: 0.9209456
     - type: Physics
       angularDamping: 0
       linearDamping: 0
@@ -45238,7 +45213,7 @@ entities:
       containers:
       - drink
     - type: PressurizedSolution
-      sprayFizzinessThresholdRoll: 0.20243612
+      sprayFizzinessThresholdRoll: 0.22008678
     - type: Physics
       angularDamping: 0
       linearDamping: 0
@@ -45517,7 +45492,7 @@ entities:
       containers:
       - drink
     - type: PressurizedSolution
-      sprayFizzinessThresholdRoll: 0.020610593
+      sprayFizzinessThresholdRoll: 0.6959144
     - type: Physics
       angularDamping: 0
       linearDamping: 0
@@ -49629,7 +49604,7 @@ entities:
       pos: 72.5,23.5
       parent: 2
     - type: Drain
-      accumulator: 0.40132797
+      accumulator: 0.054114982
     - type: Fixtures
       fixtures: {}
   - uid: 6266
@@ -49639,7 +49614,7 @@ entities:
       pos: 74.5,21.5
       parent: 2
     - type: Drain
-      accumulator: 0.07096733
+      accumulator: 0.43867806
     - type: Fixtures
       fixtures: {}
   - uid: 6267
@@ -49649,7 +49624,7 @@ entities:
       pos: 76.5,21.5
       parent: 2
     - type: Drain
-      accumulator: 0.9840237
+      accumulator: 0.4935902
     - type: Fixtures
       fixtures: {}
   - uid: 6268
@@ -49658,7 +49633,7 @@ entities:
       pos: 72.5,21.5
       parent: 2
     - type: Drain
-      accumulator: 0.07128085
+      accumulator: 0.98584
     - type: Fixtures
       fixtures: {}
   - uid: 6269
@@ -49668,7 +49643,7 @@ entities:
       pos: 76.5,23.5
       parent: 2
     - type: Drain
-      accumulator: 0.17137256
+      accumulator: 0.08171045
     - type: Fixtures
       fixtures: {}
   - uid: 6270
@@ -49677,7 +49652,7 @@ entities:
       pos: -209.5,-5.5
       parent: 2
     - type: Drain
-      accumulator: 0.26831138
+      accumulator: 0.25130555
     - type: Fixtures
       fixtures: {}
   - uid: 6271
@@ -49686,7 +49661,7 @@ entities:
       pos: -214.5,-3.5
       parent: 2
     - type: Drain
-      accumulator: 0.6237976
+      accumulator: 0.6229949
     - type: Fixtures
       fixtures: {}
   - uid: 6272
@@ -49695,7 +49670,7 @@ entities:
       pos: -106.5,-9.5
       parent: 2
     - type: Drain
-      accumulator: 0.40535647
+      accumulator: 0.5197139
     - type: Fixtures
       fixtures: {}
   - uid: 6273
@@ -49704,7 +49679,7 @@ entities:
       pos: 37.5,-0.5
       parent: 2
     - type: Drain
-      accumulator: 0.47446308
+      accumulator: 0.57787293
     - type: Fixtures
       fixtures: {}
   - uid: 6274
@@ -49713,7 +49688,7 @@ entities:
       pos: 37.5,-2.5
       parent: 2
     - type: Drain
-      accumulator: 0.5466759
+      accumulator: 0.17886192
     - type: Fixtures
       fixtures: {}
   - uid: 6275
@@ -49722,7 +49697,7 @@ entities:
       pos: -95.5,58.5
       parent: 2
     - type: Drain
-      accumulator: 0.15293333
+      accumulator: 0.7485474
     - type: Fixtures
       fixtures: {}
   - uid: 6276
@@ -49732,7 +49707,7 @@ entities:
       pos: -81.5,72.5
       parent: 2
     - type: Drain
-      accumulator: 0.94308555
+      accumulator: 0.4567868
     - type: Fixtures
       fixtures: {}
   - uid: 6277
@@ -49741,7 +49716,7 @@ entities:
       pos: 32.5,26.5
       parent: 2
     - type: Drain
-      accumulator: 0.45518425
+      accumulator: 0.4358882
     - type: Fixtures
       fixtures: {}
   - uid: 6278
@@ -49750,7 +49725,7 @@ entities:
       pos: 34.5,26.5
       parent: 2
     - type: Drain
-      accumulator: 0.6423235
+      accumulator: 0.32816398
     - type: Fixtures
       fixtures: {}
 - proto: FloorTileItemSteel
@@ -66221,6 +66196,15 @@ entities:
       angularDamping: 0
       linearDamping: 0
       canCollide: False
+- proto: MaterialHideCorgi
+  entities:
+  - uid: 24367
+    components:
+    - type: Transform
+      pos: 29.524845,41.604946
+      parent: 2
+    missingComponents:
+    - Item
 - proto: MaterialWoodPlank
   entities:
   - uid: 8343
@@ -67547,7 +67531,7 @@ entities:
       pos: -40.5,56.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -1048027.5
+      secondsUntilStateChange: -1050314.8
       state: Opening
     - type: DeviceLinkSink
       invokeCounter: 3
@@ -67850,6 +67834,8 @@ entities:
       parent: 2
   - uid: 26342
     components:
+    - type: MetaData
+      desc: Поврежденная тактическая карта. Часть данных утеряна, но даже обрывки информации могут быть бесценны в мире Пустоши. Кто знает, какие секреты она еще хранит?
     - type: Transform
       pos: -168.5,-47.5
       parent: 2
@@ -69840,28 +69826,28 @@ entities:
           showEnts: False
           occludes: True
           ents:
-          - 225
-          - 224
-          - 219
-          - 218
-          - 221
-          - 220
-          - 229
-          - 215
-          - 236
-          - 238
-          - 237
-          - 217
-          - 228
-          - 216
-          - 208
-          - 239
-          - 240
-          - 222
-          - 226
-          - 223
-          - 227
           - 8983
+          - 227
+          - 223
+          - 226
+          - 222
+          - 240
+          - 239
+          - 208
+          - 216
+          - 228
+          - 217
+          - 237
+          - 238
+          - 236
+          - 215
+          - 229
+          - 220
+          - 221
+          - 218
+          - 219
+          - 224
+          - 225
         paper_label: !type:ContainerSlot
           showEnts: False
           occludes: True
@@ -69877,11 +69863,11 @@ entities:
           showEnts: False
           occludes: True
           ents:
-          - 1454
-          - 1456
           - 1453
-          - 1452
+          - 1456
+          - 1454
           - 1455
+          - 1452
         paper_label: !type:ContainerSlot
           showEnts: False
           occludes: True
@@ -69937,11 +69923,11 @@ entities:
           showEnts: False
           occludes: True
           ents:
-          - 1470
-          - 1473
-          - 1471
-          - 1474
           - 1472
+          - 1474
+          - 1471
+          - 1473
+          - 1470
         paper_label: !type:ContainerSlot
           showEnts: False
           occludes: True
@@ -70165,12 +70151,12 @@ entities:
           - 1589
           - 1590
           - 1588
-          - 1586
           - 1587
           - 1584
           - 1585
           - 1583
           - 1597
+          - 1586
         paper_label: !type:ContainerSlot
           showEnts: False
           occludes: True
@@ -70223,10 +70209,10 @@ entities:
           showEnts: False
           occludes: True
           ents:
-          - 4934
-          - 4933
-          - 4932
           - 4935
+          - 4932
+          - 4933
+          - 4934
         paper_label: !type:ContainerSlot
           showEnts: False
           occludes: True
@@ -70244,10 +70230,10 @@ entities:
           showEnts: False
           occludes: True
           ents:
-          - 4939
-          - 4938
-          - 4940
           - 4937
+          - 4940
+          - 4938
+          - 4939
         paper_label: !type:ContainerSlot
           showEnts: False
           occludes: True
@@ -70391,17 +70377,17 @@ entities:
           showEnts: False
           occludes: True
           ents:
-          - 8831
-          - 8828
-          - 8830
-          - 8826
-          - 8827
-          - 8832
-          - 8822
-          - 8825
-          - 8829
-          - 8824
           - 8823
+          - 8824
+          - 8829
+          - 8825
+          - 8822
+          - 8832
+          - 8827
+          - 8826
+          - 8830
+          - 8828
+          - 8831
         paper_label: !type:ContainerSlot
           showEnts: False
           occludes: True
@@ -70444,7 +70430,6 @@ entities:
           occludes: True
           ents:
           - 24704
-          - 24705
         paper_label: !type:ContainerSlot
           showEnts: False
           occludes: True
@@ -70653,32 +70638,6 @@ entities:
     - type: Transform
       pos: -170.5,-53.5
       parent: 2
-    - type: Fixtures
-      fixtures:
-        fix1:
-          shape: !type:PolygonShape
-            radius: 0.01
-            vertices:
-            - -0.15,-0.45
-            - 0.45,-0.45
-            - 0.45,0.45
-            - -0.15,0.45
-          mask:
-          - Impassable
-          - TableLayer
-          - LowImpassable
-          layer:
-          - BulletImpassable
-          - Opaque
-          density: 145
-          hard: True
-          restitution: 0
-          friction: 0.4
-    - type: EntityStorage
-      open: True
-      removedMasks: 20
-    - type: PlaceableSurface
-      isPlaceable: True
   - uid: 26818
     components:
     - type: Transform
@@ -70999,16 +70958,16 @@ entities:
           showEnts: False
           occludes: True
           ents:
-          - 1547
-          - 1551
-          - 1544
-          - 1545
-          - 1549
-          - 1546
-          - 1553
-          - 1548
-          - 1552
           - 1550
+          - 1552
+          - 1548
+          - 1553
+          - 1546
+          - 1549
+          - 1545
+          - 1544
+          - 1551
+          - 1547
         paper_label: !type:ContainerSlot
           showEnts: False
           occludes: True
@@ -71024,28 +70983,28 @@ entities:
           showEnts: False
           occludes: True
           ents:
-          - 8033
-          - 8034
-          - 8021
-          - 8039
-          - 8037
-          - 8038
-          - 8040
-          - 8022
-          - 8023
-          - 8041
-          - 8042
-          - 8024
-          - 8035
-          - 8025
-          - 8027
-          - 8026
-          - 8028
-          - 8029
-          - 8030
-          - 8031
-          - 8032
           - 8036
+          - 8032
+          - 8031
+          - 8030
+          - 8029
+          - 8028
+          - 8026
+          - 8027
+          - 8025
+          - 8035
+          - 8024
+          - 8042
+          - 8041
+          - 8023
+          - 8022
+          - 8040
+          - 8038
+          - 8037
+          - 8039
+          - 8021
+          - 8034
+          - 8033
         paper_label: !type:ContainerSlot
           showEnts: False
           occludes: True
@@ -71112,15 +71071,15 @@ entities:
           showEnts: False
           occludes: True
           ents:
+          - 8895
+          - 8894
+          - 8902
           - 8898
           - 8901
           - 8897
           - 8899
           - 8900
           - 18397
-          - 8895
-          - 8894
-          - 8902
         paper_label: !type:ContainerSlot
           showEnts: False
           occludes: True
@@ -71359,7 +71318,7 @@ entities:
   - uid: 27086
     components:
     - type: Transform
-      pos: -170.27867,-53.573307
+      pos: -165.03783,-55.22148
       parent: 2
     - type: Physics
       angularDamping: 0
@@ -71936,6 +71895,28 @@ entities:
     - type: Transform
       pos: 48.405,22.898615
       parent: 2
+  - uid: 24352
+    components:
+    - type: MetaData
+      desc: шляпа одних из тех, кто придумал лучше оформление меню, которое я видел.
+      name: шляпа Берта
+    - type: Transform
+      pos: -115.286705,-3.1040943
+      parent: 2
+    - type: Physics
+      angularDamping: 0
+      linearDamping: 0
+  - uid: 24357
+    components:
+    - type: MetaData
+      desc: Деревенская ковбойская шляпа.
+      name: шляпа Берта
+    - type: Transform
+      pos: -114.36483,-9.254838
+      parent: 2
+    - type: Physics
+      angularDamping: 0
+      linearDamping: 0
 - proto: N14ClothingHeadHatCowboyGrey
   entities:
   - uid: 8966
@@ -72032,7 +72013,7 @@ entities:
       desc: Шлем перекачевавший сначало от довоенных морпехов к рейнджерам НКР, а потом и к обычным бойцам, хотя и встречается сильно реже дешёвых вариантов с заводов....
       name: боевой пехотный шлем
     - type: Transform
-      pos: -146.98828,-44.660217
+      pos: -164.15663,-54.830055
       parent: 2
     - type: Physics
       angularDamping: 0
@@ -72222,6 +72203,17 @@ entities:
     - type: Transform
       pos: -97.46527,-53.533386
       parent: 2
+- proto: N14ClothingNeckMantleSheriff
+  entities:
+  - uid: 1586
+    components:
+    - type: Transform
+      parent: 1582
+    - type: Physics
+      angularDamping: 0
+      linearDamping: 0
+      canCollide: False
+    - type: InsideEntityStorage
 - proto: N14ClothingNeckTownGuardCloak
   entities:
   - uid: 8977
@@ -72951,7 +72943,7 @@ entities:
   - uid: 26618
     components:
     - type: MetaData
-      desc: Прочный комбез с кармашками,похоже взят из довоенной канадской армии.
+      desc: Прочный комбез с кармашками,похоже взят из довоенной канадской армии. Только для инженеров.
       name: униформа инженера НКР
     - type: Transform
       pos: -146.94234,-46.01837
@@ -73081,7 +73073,7 @@ entities:
       desc: Покрашена в цвет леса,выглядит удобнее. На рукаве вышита голова котокрыса. Кротокрыс - неформальный символ инженерно-связных войск НКР.
       name: лесная штабная униформа НКР
     - type: Transform
-      pos: -169.29665,-51.880688
+      pos: -164.99757,-54.885353
       parent: 2
     - type: Physics
       angularDamping: 0
@@ -75439,11 +75431,11 @@ entities:
           showEnts: False
           occludes: True
           ents:
-          - 9254
-          - 9252
-          - 9255
-          - 9253
           - 9251
+          - 9253
+          - 9255
+          - 9252
+          - 9254
         paper_label: !type:ContainerSlot
           showEnts: False
           occludes: True
@@ -75545,17 +75537,17 @@ entities:
           showEnts: False
           occludes: True
           ents:
-          - 5535
-          - 5532
-          - 5534
-          - 5533
-          - 5526
-          - 5525
-          - 5528
-          - 5529
-          - 5530
-          - 5531
           - 5527
+          - 5531
+          - 5530
+          - 5529
+          - 5528
+          - 5525
+          - 5526
+          - 5533
+          - 5534
+          - 5532
+          - 5535
         paper_label: !type:ContainerSlot
           showEnts: False
           occludes: True
@@ -79232,6 +79224,16 @@ entities:
       parent: 2
     - type: Fixtures
       fixtures: {}
+- proto: N14DecorFloorBookPile6
+  entities:
+  - uid: 24360
+    components:
+    - type: Transform
+      rot: -1.5707963267948966 rad
+      pos: 4.5,8.5
+      parent: 2
+    - type: Fixtures
+      fixtures: {}
 - proto: N14DecorFloorBookstack1
   entities:
   - uid: 9632
@@ -80628,6 +80630,22 @@ entities:
       parent: 2
     - type: Fixtures
       fixtures: {}
+  - uid: 24358
+    components:
+    - type: Transform
+      rot: 3.141592653589793 rad
+      pos: 19.5,28.5
+      parent: 2
+    - type: Fixtures
+      fixtures: {}
+  - uid: 24359
+    components:
+    - type: Transform
+      rot: 1.5707963267948966 rad
+      pos: 8.5,20.5
+      parent: 2
+    - type: Fixtures
+      fixtures: {}
 - proto: N14DecorFloorFood1
   entities:
   - uid: 9768
@@ -81327,6 +81345,13 @@ entities:
     components:
     - type: Transform
       pos: -95.5,4.5
+      parent: 2
+    - type: Fixtures
+      fixtures: {}
+  - uid: 24366
+    components:
+    - type: Transform
+      pos: 7.5,34.5
       parent: 2
     - type: Fixtures
       fixtures: {}
@@ -84243,6 +84268,29 @@ entities:
       parent: 2
     - type: Fixtures
       fixtures: {}
+  - uid: 24363
+    components:
+    - type: Transform
+      rot: -1.5707963267948966 rad
+      pos: 90.5,18.5
+      parent: 2
+    - type: Fixtures
+      fixtures: {}
+  - uid: 24364
+    components:
+    - type: Transform
+      rot: 1.5707963267948966 rad
+      pos: 88.5,12.5
+      parent: 2
+    - type: Fixtures
+      fixtures: {}
+  - uid: 24365
+    components:
+    - type: Transform
+      pos: 92.5,13.5
+      parent: 2
+    - type: Fixtures
+      fixtures: {}
   - uid: 25299
     components:
     - type: Transform
@@ -85806,6 +85854,12 @@ entities:
     - type: Transform
       pos: -70.53871,-33.315334
       parent: 2
+  - uid: 24362
+    components:
+    - type: Transform
+      rot: -1.5707963267948966 rad
+      pos: 6.5,31.5
+      parent: 2
 - proto: N14DecorFloorTrashbags2
   entities:
   - uid: 10384
@@ -85997,6 +86051,12 @@ entities:
     - type: Transform
       rot: 1.5707963267948966 rad
       pos: -114.5,-52.5
+      parent: 2
+  - uid: 24361
+    components:
+    - type: Transform
+      rot: -1.5707963267948966 rad
+      pos: -36.5,21.5
       parent: 2
   - uid: 24707
     components:
@@ -86502,7 +86562,7 @@ entities:
       pos: -92.5,67.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -1067579.4
+      secondsUntilStateChange: -1069866.6
       state: Opening
     - type: DeviceLinkSource
       lastSignals:
@@ -86558,7 +86618,7 @@ entities:
       pos: -1.5,15.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -1812568.5
+      secondsUntilStateChange: -1814855.8
       state: Opening
     - type: DeviceLinkSource
       lastSignals:
@@ -86757,7 +86817,7 @@ entities:
       pos: 2.5,26.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -954526.3
+      secondsUntilStateChange: -956813.56
       state: Opening
     - type: DeviceLinkSource
       lastSignals:
@@ -87402,7 +87462,7 @@ entities:
       pos: -85.5,-47.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -303291.56
+      secondsUntilStateChange: -305578.8
       canPry: False
       state: Opening
   - uid: 10612
@@ -87524,7 +87584,7 @@ entities:
       pos: -94.5,-48.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -302479.38
+      secondsUntilStateChange: -304766.62
       canPry: False
       state: Opening
   - uid: 10623
@@ -95966,6 +96026,16 @@ entities:
     - type: Transform
       pos: -112.55853,-32.370674
       parent: 2
+  - uid: 24353
+    components:
+    - type: MetaData
+      name: гитара Селены
+    - type: Transform
+      pos: -113.55233,-9.129838
+      parent: 2
+    - type: Physics
+      angularDamping: 0
+      linearDamping: 0
 - proto: N14InstrumentSaxaphone
   entities:
   - uid: 11321
@@ -96929,7 +96999,7 @@ entities:
       pos: -80.5,4.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -1069960.5
+      secondsUntilStateChange: -1072247.8
       state: Closing
   - uid: 11429
     components:
@@ -96942,7 +97012,7 @@ entities:
       pos: -171.5,-57.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -20162.047
+      secondsUntilStateChange: -22449.293
       state: Closing
 - proto: N14JunkDresser
   entities:
@@ -98356,7 +98426,7 @@ entities:
     - type: Openable
       opened: True
     - type: PressurizedSolution
-      sprayFizzinessThresholdRoll: 0.906857
+      sprayFizzinessThresholdRoll: 0.56915444
     - type: ContainerContainer
       containers:
         solution@drink: !type:ContainerSlot
@@ -103197,30 +103267,6 @@ entities:
       linearDamping: 0
       canCollide: False
     - type: InsideEntityStorage
-  - uid: 11183
-    components:
-    - type: Transform
-      parent: 11166
-    - type: Physics
-      angularDamping: 0
-      linearDamping: 0
-      canCollide: False
-  - uid: 11184
-    components:
-    - type: Transform
-      parent: 11166
-    - type: Physics
-      angularDamping: 0
-      linearDamping: 0
-      canCollide: False
-  - uid: 11185
-    components:
-    - type: Transform
-      parent: 11166
-    - type: Physics
-      angularDamping: 0
-      linearDamping: 0
-      canCollide: False
 - proto: N14ReagentContainerFlourSmall
   entities:
   - uid: 11912
@@ -105754,9 +105800,6 @@ entities:
           showEnts: False
           occludes: True
           ents:
-          - 11183
-          - 11184
-          - 11185
           - 11188
           - 11192
           - 11193
@@ -105782,6 +105825,9 @@ entities:
           - 11168
           - 11169
           - 11170
+          - 11183
+          - 11184
+          - 11185
   - uid: 11334
     components:
     - type: Transform
@@ -173759,6 +173805,196 @@ entities:
     - type: Physics
       angularDamping: 0
       linearDamping: 0
+  - uid: 24350
+    components:
+    - type: Transform
+      pos: -106.195786,-11.392044
+      parent: 2
+    - type: Paper
+      content: >2-
+
+
+                                [color=#fff]██████████████████████████
+                                ██[color=#b57d5d]██[color=#b47a5a]██[color=#fff]██████████████[color=#b87b59]██[color=#b57d5d]██[color=#fff]██
+                                [color=#ffcdde]██[color=#f6aac1]██[color=#b67857]██[color=#b97a57]██[color=#fcf8f6]██[color=#fff]██████[color=#fcf9f7]██[color=#b97a57]██[color=#b67857]██[color=#faadc5]██[color=#ffbdd3]██
+                                [color=#ffaec9]██████[color=#8a5b41]██[color=#b67a59]██[color=#fff]██████[color=#a07a65]██[color=#8a5b41]██[color=#ffaec9]██[color=#e39ba9]██[color=#ffb8d0]██
+                                [color=#9f8d93]██[color=#af806c]██[color=#feadc8]██[color=#8b5d43]██[color=#91654d]██[color=#9a725c]██[color=#a88471]██[color=#8a5b41]██[color=#91654d]██[color=#997059]██[color=#f2a6bb]██[color=#b69989]██[color=#fff]██
+                                [color=#fff]██[color=#b47856]██[color=#a07a65]██[color=#cfcfcf]██[color=#dfdfdf]██[color=#8a5b41]██████[color=#dfdfdf]██[color=#cfcfcf]██[color=#b69989]██[color=#997059]██[color=#fff]██
+                                ██[color=#fff]██[color=#8a5b41]██[color=#efefef]██[color=#0]██[color=#8c5e44]██[color=#b97a57]██[color=#8c5e44]██[color=#0]██[color=#efefef]██[color=#8a5b41]██[color=#fff]████
+                                ██[color=#fff]██[color=#997059]██[color=#956b53]██[color=#a07a65]██[color=#b97a57]██[color=#ff7e8f]██[color=#b97a57]██[color=#966a53]██[color=#8e6148]██[color=#997059]██[color=#fff]████
+        [color=#0][color=#d43539][head=1]==========================[/head][/color]
+
+        [color=#d43539][head=1]           "МОКРАЯ КРЫСА"[/head][/color] 
+
+                                                        [head=2]МЕНЮ[/head]
+        [bold]====================================================[/bold]  [color=#d43539][italic]Рады приветствовать вас баре "мокрая крыса". Просим вести себя прилично, иначе придется научить вас манерам.[/italic]
+
+        [/color][bold]====================================================[/bold]
+                                                       [head=3]Напитки:[/head]
+                                                  [italic]В барной карте.[/italic]
+
+                                           [head=3]Авторские ланчи: [bold] [color=#d43539]NEW[/color][/bold][/head]
+        Малая мокрая крыса (мясо, суп из тошки, хлеб, вода) - [color=#d43539]35кр.[/color]
+
+        Большая мокрая крыса (геккон, рис, хлеб, чай/молоко) - [color=#d43539]65кр.[/color]
+
+                                           [head=3]Приличные блюда:[/head]
+        Суп из тошки.................................................................20 крышек
+
+        Отварной рис.................................................................25 крышек
+
+                                                             [head=3]Мясо:[/head]
+        Приготовленное облученное мясо..........................20 крышек
+
+        Стейк из гекона................................................................30 крышек
+
+        Стейк из огненного гекона.........................................45 крышек
+
+        Стейк из Яо Гая.................................................................90 крышек
+
+        Стейк из РадОленя/брамина.......................................45 крышек
+
+                                                       [head=3]Закуски:[/head]
+        Картофель фри................................................................20 крышек
+
+        Печеный картофель.......................................................20 крышек
+
+        Ломтик хлеба......................................................................5 крышек
+
+        [bold]====================================================[/bold]
+
+        [color=#0][color=#d43539][head=1]==========================[/head][/color]
+                                [color=#fff]██[color=#8f6249]██[color=#986548]██[color=#b07453]██[color=#ae7351]██[color=#b97a57]████████[color=#ae7351]██[color=#8d6047]██[color=#8e6148]██[color=#fff]██
+                                ██[color=#91654d]██[color=#8a5b41]██[color=#966247]██[color=#ae7351]██[color=#b67856]██[color=#b97a57]██[color=#b67856]██[color=#b37654]██[color=#8a5b41]██[color=#8c5e44]████[color=#fff]██
+                                [color=#ffecf2]██[color=#ffb2cc]██[color=#fd90a3]██[color=#8d5d42]██[color=#8a5b41]██████████[color=#8d5d42]██[color=#b67857]██[color=#ff8b9e]██[color=#fffdfd]██
+                                [color=#ff90a1]██[color=#ff8b9d]██[color=#ff8092]██[color=#8a5b41]██[color=#ae7454]██[color=#91654d]██[color=#8a5b41]████[color=#8b5d43]██[color=#8a5b41]██[color=#ffafca]██[color=#ff91a5]██[color=#ffc2d7]██
+                                [color=#ffc3d7]██[color=#ffa9c3]██[color=#ff8193]██[color=#fff]████[color=#ffebed]██[color=#ffafb9]██[color=#fff]██████[color=#ff8d9f]██[color=#ffa3bc]██[color=#ff8ea1]██
+                                [color=#ff8496]██[color=#ff8597]██[color=#fff]██████[color=#ff96a4]██[color=#ff8696]██[color=#fff]██[color=#ffafb9]██[color=#fff]████[color=#ff8497]██[color=#ff8496]██
+                                [color=#fff]██[color=#fff]██████[color=#ffafb9]██[color=#ff7e8f]██[color=#fffafb]██[color=#fff]██[color=#ff7e8f]██[color=#fff]████████
+                                ██[color=#fff]██████[color=#ff7e8f]██[color=#ffced5]██[color=#fff]██[color=#fffdfd]██[color=#ff8191]██[color=#fff]████████
+                                ██[color=#fff]██████[color=#ff7e8f]██[color=#fff7f8]██[color=#fff]██[color=#ff96a4]██[color=#ff8e9d]██[color=#fff]████████
+                                ██[color=#fff]██████[color=#ff8e9d]██[color=#ffafb9]██[color=#fff]██[color=#ff8e9d]██[color=#fff]██████████
+                                ██[color=#fff]████████[color=#ff8696]██[color=#ff8796]██[color=#ff9fab]██[color=#fff]██████████
+        [color=#0]
+    - type: Physics
+      angularDamping: 0
+      linearDamping: 0
+  - uid: 24351
+    components:
+    - type: Transform
+      pos: -105.74266,-11.532669
+      parent: 2
+    - type: Paper
+      content: >-
+        [color=#fff]██████████████████████[color=#fff6f9]██[color=#fff]████[color=#ffc3d7]██[color=#fffbfc]██[color=#fff]████████
+
+        ██[color=#fff]██████████████████████████[color=#fffafc]██[color=#ffaec9]██[color=#ffc3d7]██[color=#fff]██████
+
+        ██[color=#fff]████████[color=#bd815f]██[color=#bb7d5a]██[color=#fff]██████████████[color=#729fb4]██[color=#73a3b0]████[color=#729fb4]██[color=#fff]████
+
+        ██[color=#fff]██████[color=#bb7f5d]██[color=#eda2ad]██[color=#c08062]██[color=#c69377]██[color=#fff]██████████[color=#729fb4]██[color=#9be99f]██[color=#a0ef9c]████[color=#a2e9b0]██[color=#729db6]██[color=#fff5f8]██
+
+        ██[color=#fff]██████[color=#b97b59]██[color=#eda2ad]██[color=#fbabc1]██[color=#bd8262]██[color=#fff]██[color=#fcf9f8]██[color=#fff]██████[color=#c0e8f2]██[color=#729fb4]██[color=#73a3b0]████[color=#729fb4]██[color=#7dacb8]██[color=#ffaec9]██
+
+        [color=#c69377]████[color=#d4ac96]██[color=#be8363]██[color=#ab7050]██[color=#a76f4e]██[color=#a86f4e]██[color=#bd815f]██[color=#b97a57]██[color=#fefefe]██[color=#fffffe]██[color=#fff]████[color=#82b8c6]██[color=#a3daaa]██[color=#eebbc1]██[color=#ffaec9]██████[color=#fffbfd]██
+
+        [color=#b97c5b]██[color=#b97a57]████[color=#ab7050]██[color=#a46c4d]██[color=#b97a57]████[color=#2e1f16]██[color=#c08766]██[color=#ce8a79]██[color=#f4a9b9]██[color=#fff]██[color=#fff7fa]██[color=#ffaec9]██[color=#f9b2c6]██[color=#b5e7a8]██[color=#9ae898]██[color=#89cc86]██[color=#82b8c6]██[color=#fff]██
+
+        [color=#af7452]██[color=#b67856]██[color=#b97a57]██[color=#a46c4d]██[color=#b97b57]████[color=#b97a57]██[color=#b97b57]██[color=#b97a58]██[color=#ba7c5a]██[color=#c98670]██[color=#fff]██[color=#ffc3d7]██[color=#e5b9d2]██[color=#a5f6a3]██[color=#a8fda6]██[color=#91d98e]██[color=#a8fba6]██[color=#f2aec8]██[color=#ffc3d7]██
+
+        [color=#b17554]██[color=#af7452]██[color=#a16a4c]██[color=#b57c5b]██[color=#a16a4c]██[color=#916044]██[color=#b57855]██[color=#bd8262]██[color=#9c674a]██[color=#916044]██[color=#faf8f7]██[color=#fff]████[color=#86bac7]██[color=#99e59d]██[color=#9ae798]██[color=#a4f5a1]██[color=#ecb8bf]██[color=#f9b1cb]██[color=#fff]██
+
+        [color=#b47755]██[color=#916044]████[color=#926045]██[color=#916045]██[color=#916044]██████[color=#f8f5f3]██[color=#fff]████████[color=#73a1b2]██[color=#a3f3a0]██[color=#a2f29e]██[color=#eab6be]██[color=#f9b2c6]██[color=#729fb4]██[color=#fff]██
+
+        [color=#986a50]████[color=#97654a]██[color=#956346]██[color=#af7452]██[color=#f8b9cb]██[color=#ffc3d7]██[color=#f8f5f3]██[color=#fff]██[color=#fffefe]██[color=#fff]████████[color=#729fb4]██[color=#caaac0]██[color=#edacc6]██[color=#729fb4]██[color=#fff]████
+
+        [color=#0][color=#0][color=#d43539][head=1]==========================[/head][/color]
+
+        [color=#d43539][head=1]           "МОКРАЯ КРЫСА"[/head][/color] 
+                                              [head=2]БАРНАЯ КАРТА[/head]
+        [bold]====================================================[/bold] [color=#d43539][italic]Лучшие во всей пустоши алкогольные напитки. Мы нальем вам покуда это не станет опасным для вашего здоровья.[/italic]
+
+        [/color][bold]====================================================[/bold]
+
+                                     [head=3]Алкогольные коктейли:[/head]
+        Виски-кола...........................................................................25 кр.
+
+        Мохито..................................................................................25 кр.
+
+        Куба-либре...........................................................................25 кр.
+
+        Ирландские  сливки...........................................................25 кр.
+
+        Маргарита............................................................................25 кр.
+
+        Джин-Тоник..........................................................................30 кр.
+
+        Мужественный дворф......................................................30 кр.
+
+        Храбрый бык........................................................................30 кр.
+
+        Ёрш..........................................................................................35 кр. 
+
+        Самогон.................................................................................40 кр.
+
+        Пангалактический  грызлодёр.......................................40 кр.
+
+        Отвертка................................................................................40 кр.
+
+        Черный русский...................................................................45 кр.
+
+        Белый Русский......................................................................50 кр.
+
+                                                      [head=3]Алкоголь:[/head]
+        Пиво/Виски/Ром/Джин/Эль..............(стакант) 30 кр. (стопка) 5 кр.
+
+
+        Медовуха/Вермут/Текила/Кофейный ликер/Водка.................(стакан) 45 кр. (стопка) 10 кр.
+
+
+        Коньяк.........................................(стакан) 50кр. (стопка)15 кр.
+
+
+        Красное вино...........................(бутылка) 100 кр. (бокал) 45 кр.
+
+                                             [head=3]Безалкогольные:[/head]
+        Чай зеленый черный/ со льдом/без................(стакан) 10 кр.
+
+        соки:апелсин, арбуз, лайм...................................(стакан) 15 кр.
+
+        мороженное.............................................................(стакан) 15 кр.
+
+        кофе, кофе с молоком...........................................(стакан) 15 кр.
+
+        мороженное с рутбиром.....................................(стакан) 15 кр.
+
+        кофе со льдом.........................................................(стакан) 15 кр.
+
+        ВИМ, ядер кола........................................................(стакан) 15 кр.
+
+        [color=#0][color=#0][color=#d43539][head=1]==========================[/head][/color]
+    - type: Physics
+      angularDamping: 0
+      linearDamping: 0
+  - uid: 24354
+    components:
+    - type: Transform
+      pos: -113.652565,-1.9402294
+      parent: 2
+    - type: Paper
+      content: При необходимости, можете менять меню, добавляя новые или удаляя старые позиции.
+  - uid: 24356
+    components:
+    - type: MetaData
+      name: старая фотография
+    - type: Transform
+      pos: -112.18802,-4.3111196
+      parent: 2
+    - type: Paper
+      content: "[color=#fefefe]██[color=#fdfdfd]██[color=#f8f8f8]██[color=#f6f6f6]██[color=#fff]██[color=#fcfcfc]██[color=#414241]████[color=#787878]██[color=#888888]██[color=#7c7c7c]██[color=#fff]██[color=#fdfdfd]██[color=#fefefe]██\r\n[color=#fff]██████[color=#fefefe]██[color=#fafafa]██[color=#3a3b3a]██[color=#404140]██[color=#6a6a6a]██[color=#7a7a7a]██[color=#868686]██[color=#8e8e8e]██[color=#545453]██[color=#fefefe]██[color=#fff]██\r\n██[color=#fff]██[color=#fcfcfc]██[color=#fefefe]██[color=#e1e1e1]██[color=#404140]██[color=#717171]██[color=#5f5f5e]██[color=#757575]██[color=#b7b7b7]██[color=#868686]██[color=#6a6a69]██[color=#f8f8f8]██[color=#fdfdfd]██\r\n██[color=#fff]██████[color=#393a39]██[color=#444544]██[color=#6d6d6d]██[color=#5f5f5e]██[color=#bdbdbd]██[color=#919191]██[color=#d0d0d0]██[color=#383938]██[color=#656564]██[color=#fff]██\r\n██[color=#fff]██████[color=#7b7c7b]██[color=#6f6f6f]██[color=#717171]██[color=#afafaf]██[color=#c5c5c5]██[color=#bdbdbd]██[color=#c5c5c5]██[color=#383938]██[color=#525251]██[color=#fff]██\r\n██[color=#fff]██[color=#f9f9f9]██[color=#bababa]██[color=#383a38]██[color=#666665]██[color=#4d4d4c]██[color=#c5c5c5]██[color=#bebebe]██[color=#d0d0d0]██[color=#bbbbbb]██[color=#383938]██[color=#414140]██[color=#e5e5e5]██\r\n██[color=#fff]████[color=#585958]██[color=#3e3f3e]██[color=#5d5d5d]██[color=#464744]██[color=#bbbbbb]██[color=#c5c5c5]████[color=#535352]██[color=#474847]██[color=#4e4e4d]██[color=#d5d5d5]██\r\n██[color=#fff]██[color=#cacaca]██[color=#7c7d7c]██[color=#464746]██[color=#50504f]██[color=#4d4d4b]██[color=#999998]██[color=#9d9d9c]██[color=#979796]██[color=#898989]██[color=#3b3c3b]██[color=#383938]██[color=#b4b5b4]██\r\n██[color=#fff]████[color=#9d9d9d]██[color=#d0d0d0]██[color=#565655]██[color=#c9c9c9]██[color=#bababa]██[color=#9d9d9c]██[color=#b5b5b5]██[color=#b8b8b8]██[color=#4f504f]██[color=#3f403f]██[color=#979797]██\r\n██[color=#fff]██[color=#9d9d9d]██[color=#cecece]██[color=#b1b1b1]██[color=#50504f]██[color=#cdcdcd]██[color=#cccccc]██[color=#cacaca]██[color=#c8c8c8]██[color=#d2d2d2]██[color=#8e8f8e]██[color=#4b4c4b]██[color=#535353]██\r\n██[color=#9d9d9d]██[color=#cccccc]██[color=#d7d7d7]██[color=#393939]██[color=#808080]██[color=#cacaca]██[color=#cbcbcb]████[color=#cacaca]██[color=#999999]██[color=#8f8f8f]██[color=#3a3b3a]██[color=#e2e2e2]██\r\n[color=#c0c0c0]██[color=#d0d0d0]██[color=#d5d5d5]██[color=#fefefe]██[color=#0c0c0c]██[color=#201f1f]██[color=#515150]██[color=#b1b1b1]██[color=#a5a5a5]██[color=#bfbfbf]██[color=#838383]██[color=#848484]██[color=#383938]██[color=#dadada]██\r\n[color=#ababab]██[color=#d0d0d0]██[color=#f9f9f9]██[color=#fefefe]██[color=#525252]██[color=#777776]██[color=#777777]██[color=#3f3f3e]██[color=#a5a5a5]██[color=#1e1e1e]██[color=#222121]██[color=#141414]██[color=#393a39]██[color=#c1c1c1]██\r\n[color=#9c9c9c]██[color=#d2d2d2]██[color=#fff]██[color=#fcfcfc]██[color=#595959]██[color=#797979]██[color=#777777]██[color=#5c5c5b]██[color=#232323]██[color=#565655]██[color=#787878]██[color=#646564]██[color=#383938]██[color=#636463]██\r\n[color=#ebebeb]██[color=#b3b3b3]██[color=#d7d7d7]██[color=#f9f9f9]██[color=#989898]██[color=#494948]██[color=#454544]██[color=#212121]██[color=#272827]██[color=#404140]██[color=#616261]██[color=#626362]██[color=#393a39]██[color=#cfcfcf]██\r\n[color=#fff]██[color=#f7f7f7]██[color=#9e9e9e]██[color=#d6d6d6]██[color=#a0a0a0]██[color=#0e0e0e]██[color=#292a29]██[color=#252525]██[color=#2c2d2c]██[color=#393a39]██[color=#787878]██[color=#eaeaea]██[color=#3d3e3d]██[color=#d7d7d7]██\r\n██[color=#fff]██[color=#efefef]██[color=#9d9d9d]██[color=#a2a2a2]██[color=#060606]██[color=#262525]██[color=#252625]██[color=#323332]██[color=#060606]██[color=#a7a7a7]██[color=#fefefe]██[color=#989897]██[color=#e1e1e1]██\r\n██[color=#9d9d9c]██[color=#9b9b9a]██[color=#b1b1b0]██[color=#161616]██[color=#020202]██[color=#0b0b0b]██[color=#060606]████[color=#252625]██[color=#656565]██[color=#fff]██[color=#999998]██[color=#dcdcdc]██\r\n██[color=#fefefe]██[color=#eeeeee]██[color=#686767]██[color=#0b0b0b]██[color=#3b3c3b]██[color=#343534]██[color=#3a3b3a]██[color=#474747]██[color=#414241]██[color=#090909]██[color=#fcfcfc]██[color=#b3b3b3]██[color=#cfcfcf]██\r\n██[color=#f9f9f9]██[color=#3d3e3d]██[color=#010101]██[color=#525251]██[color=#393939]██[color=#3d3e3d]██[color=#3e3f3e]██[color=#4b4b4b]██[color=#4e4e4e]██[color=#535453]██[color=#161616]██[color=#a4a4a3]██[color=#cccccc]██\r\n██[color=#737473]██[color=#0e0e0e]██[color=#313030]██[color=#2c2b2b]██[color=#2e2e2e]██[color=#2d2d2c]██[color=#3b3c3b]██[color=#4e4e4e]██████[color=#060606]██[color=#999998]██[color=#cecece]██\r\n██[color=#383938]██[color=#010101]██[color=#2a2929]██[color=#666666]██[color=#2a2929]██[color=#303030]██[color=#3f403f]██[color=#3d3e3d]██[color=#4b4b4b]██[color=#4e4e4e]██[color=#3e3f3e]██[color=#a8a8a7]██[color=#cbcbcb]██\r\n██[color=#767676]██[color=#060606]██[color=#2a2929]██[color=#7d7d7d]██[color=#3d3c3c]██[color=#191818]██[color=#313131]██[color=#3d3e3d]████[color=#4a4a4a]██[color=#4e4e4e]██[color=#a1a1a0]████\r\n[color=#a5a5a5]██[color=#2b2b2b]██[color=#2a2929]██[color=#302f2f]██[color=#808080]██[color=#5b5b5b]██[color=#060606]██[color=#343534]██[color=#4d4e4d]██[color=#3d3e3d]████[color=#4e4e4e]██[color=#2d2c2c]██[color=#b7b7b6]██\r\n[color=#3a3b3a]██[color=#121212]██[color=#292828]██[color=#626262]██[color=#919191]██[color=#7d7d7d]██[color=#090909]██[color=#282928]██[color=#3c3d3c]██[color=#3d3e3d]██[color=#3c3d3c]██[color=#2b2c2b]██[color=#101010]██[color=#fbfbfb]██\r\n[color=#383938]██[color=#171717]██[color=#2a2929]██[color=#8f8f8f]██[color=#c4c4c4]██[color=#7f7f7f]██[color=#100f0f]██[color=#2d2e2d]██[color=#1c1a1a]██[color=#353635]██[color=#484948]██[color=#2c2d2c]██[color=#161616]██[color=#fdfdfd]██\r\n[color=#0]\r\n           [head=3]\"Мисс Райс\"[/head]\r\n\r\n                              [italic]Бестии что портит мне жизнь\r\n                              и одновременно радует глаз...\r\n \r\n                                                                      Берт Ковальски[/italic]"
+    - type: Physics
+      angularDamping: 0
+      linearDamping: 0
   - uid: 25456
     components:
     - type: Transform
@@ -174122,6 +174358,30 @@ entities:
     - type: Transform
       pos: -93.162224,51.634163
       parent: 2
+    - type: Physics
+      angularDamping: 0
+      linearDamping: 0
+  - uid: 24349
+    components:
+    - type: MetaData
+      name: записка от предыдущих управляющих
+    - type: Transform
+      pos: -106.70752,-11.324104
+      parent: 2
+    - type: Paper
+      content: При необходимости, можете менять меню, добавляя новые или удаляя старые позиции.
+    - type: Physics
+      angularDamping: 0
+      linearDamping: 0
+  - uid: 24355
+    components:
+    - type: MetaData
+      name: старая фотография
+    - type: Transform
+      pos: -112.70201,-11.515789
+      parent: 2
+    - type: Paper
+      content: "[color=#fefefe]██[color=#fdfdfd]██[color=#f8f8f8]██[color=#f6f6f6]██[color=#fff]██[color=#fcfcfc]██[color=#414241]████[color=#787878]██[color=#888888]██[color=#7c7c7c]██[color=#fff]██[color=#fdfdfd]██[color=#fefefe]██\r\n[color=#fff]██████[color=#fefefe]██[color=#fafafa]██[color=#3a3b3a]██[color=#404140]██[color=#6a6a6a]██[color=#7a7a7a]██[color=#868686]██[color=#8e8e8e]██[color=#545453]██[color=#fefefe]██[color=#fff]██\r\n██[color=#fff]██[color=#fcfcfc]██[color=#fefefe]██[color=#e1e1e1]██[color=#404140]██[color=#717171]██[color=#5f5f5e]██[color=#757575]██[color=#b7b7b7]██[color=#868686]██[color=#6a6a69]██[color=#f8f8f8]██[color=#fdfdfd]██\r\n██[color=#fff]██████[color=#393a39]██[color=#444544]██[color=#6d6d6d]██[color=#5f5f5e]██[color=#bdbdbd]██[color=#919191]██[color=#d0d0d0]██[color=#383938]██[color=#656564]██[color=#fff]██\r\n██[color=#fff]██████[color=#7b7c7b]██[color=#6f6f6f]██[color=#717171]██[color=#afafaf]██[color=#c5c5c5]██[color=#bdbdbd]██[color=#c5c5c5]██[color=#383938]██[color=#525251]██[color=#fff]██\r\n██[color=#fff]██[color=#f9f9f9]██[color=#bababa]██[color=#383a38]██[color=#666665]██[color=#4d4d4c]██[color=#c5c5c5]██[color=#bebebe]██[color=#d0d0d0]██[color=#bbbbbb]██[color=#383938]██[color=#414140]██[color=#e5e5e5]██\r\n██[color=#fff]████[color=#585958]██[color=#3e3f3e]██[color=#5d5d5d]██[color=#464744]██[color=#bbbbbb]██[color=#c5c5c5]████[color=#535352]██[color=#474847]██[color=#4e4e4d]██[color=#d5d5d5]██\r\n██[color=#fff]██[color=#cacaca]██[color=#7c7d7c]██[color=#464746]██[color=#50504f]██[color=#4d4d4b]██[color=#999998]██[color=#9d9d9c]██[color=#979796]██[color=#898989]██[color=#3b3c3b]██[color=#383938]██[color=#b4b5b4]██\r\n██[color=#fff]████[color=#9d9d9d]██[color=#d0d0d0]██[color=#565655]██[color=#c9c9c9]██[color=#bababa]██[color=#9d9d9c]██[color=#b5b5b5]██[color=#b8b8b8]██[color=#4f504f]██[color=#3f403f]██[color=#979797]██\r\n██[color=#fff]██[color=#9d9d9d]██[color=#cecece]██[color=#b1b1b1]██[color=#50504f]██[color=#cdcdcd]██[color=#cccccc]██[color=#cacaca]██[color=#c8c8c8]██[color=#d2d2d2]██[color=#8e8f8e]██[color=#4b4c4b]██[color=#535353]██\r\n██[color=#9d9d9d]██[color=#cccccc]██[color=#d7d7d7]██[color=#393939]██[color=#808080]██[color=#cacaca]██[color=#cbcbcb]████[color=#cacaca]██[color=#999999]██[color=#8f8f8f]██[color=#3a3b3a]██[color=#e2e2e2]██\r\n[color=#c0c0c0]██[color=#d0d0d0]██[color=#d5d5d5]██[color=#fefefe]██[color=#0c0c0c]██[color=#201f1f]██[color=#515150]██[color=#b1b1b1]██[color=#a5a5a5]██[color=#bfbfbf]██[color=#838383]██[color=#848484]██[color=#383938]██[color=#dadada]██\r\n[color=#ababab]██[color=#d0d0d0]██[color=#f9f9f9]██[color=#fefefe]██[color=#525252]██[color=#777776]██[color=#777777]██[color=#3f3f3e]██[color=#a5a5a5]██[color=#1e1e1e]██[color=#222121]██[color=#141414]██[color=#393a39]██[color=#c1c1c1]██\r\n[color=#9c9c9c]██[color=#d2d2d2]██[color=#fff]██[color=#fcfcfc]██[color=#595959]██[color=#797979]██[color=#777777]██[color=#5c5c5b]██[color=#232323]██[color=#565655]██[color=#787878]██[color=#646564]██[color=#383938]██[color=#636463]██\r\n[color=#ebebeb]██[color=#b3b3b3]██[color=#d7d7d7]██[color=#f9f9f9]██[color=#989898]██[color=#494948]██[color=#454544]██[color=#212121]██[color=#272827]██[color=#404140]██[color=#616261]██[color=#626362]██[color=#393a39]██[color=#cfcfcf]██\r\n[color=#fff]██[color=#f7f7f7]██[color=#9e9e9e]██[color=#d6d6d6]██[color=#a0a0a0]██[color=#0e0e0e]██[color=#292a29]██[color=#252525]██[color=#2c2d2c]██[color=#393a39]██[color=#787878]██[color=#eaeaea]██[color=#3d3e3d]██[color=#d7d7d7]██\r\n██[color=#fff]██[color=#efefef]██[color=#9d9d9d]██[color=#a2a2a2]██[color=#060606]██[color=#262525]██[color=#252625]██[color=#323332]██[color=#060606]██[color=#a7a7a7]██[color=#fefefe]██[color=#989897]██[color=#e1e1e1]██\r\n██[color=#9d9d9c]██[color=#9b9b9a]██[color=#b1b1b0]██[color=#161616]██[color=#020202]██[color=#0b0b0b]██[color=#060606]████[color=#252625]██[color=#656565]██[color=#fff]██[color=#999998]██[color=#dcdcdc]██\r\n██[color=#fefefe]██[color=#eeeeee]██[color=#686767]██[color=#0b0b0b]██[color=#3b3c3b]██[color=#343534]██[color=#3a3b3a]██[color=#474747]██[color=#414241]██[color=#090909]██[color=#fcfcfc]██[color=#b3b3b3]██[color=#cfcfcf]██\r\n██[color=#f9f9f9]██[color=#3d3e3d]██[color=#010101]██[color=#525251]██[color=#393939]██[color=#3d3e3d]██[color=#3e3f3e]██[color=#4b4b4b]██[color=#4e4e4e]██[color=#535453]██[color=#161616]██[color=#a4a4a3]██[color=#cccccc]██\r\n██[color=#737473]██[color=#0e0e0e]██[color=#313030]██[color=#2c2b2b]██[color=#2e2e2e]██[color=#2d2d2c]██[color=#3b3c3b]██[color=#4e4e4e]██████[color=#060606]██[color=#999998]██[color=#cecece]██\r\n██[color=#383938]██[color=#010101]██[color=#2a2929]██[color=#666666]██[color=#2a2929]██[color=#303030]██[color=#3f403f]██[color=#3d3e3d]██[color=#4b4b4b]██[color=#4e4e4e]██[color=#3e3f3e]██[color=#a8a8a7]██[color=#cbcbcb]██\r\n██[color=#767676]██[color=#060606]██[color=#2a2929]██[color=#7d7d7d]██[color=#3d3c3c]██[color=#191818]██[color=#313131]██[color=#3d3e3d]████[color=#4a4a4a]██[color=#4e4e4e]██[color=#a1a1a0]████\r\n[color=#a5a5a5]██[color=#2b2b2b]██[color=#2a2929]██[color=#302f2f]██[color=#808080]██[color=#5b5b5b]██[color=#060606]██[color=#343534]██[color=#4d4e4d]██[color=#3d3e3d]████[color=#4e4e4e]██[color=#2d2c2c]██[color=#b7b7b6]██\r\n[color=#3a3b3a]██[color=#121212]██[color=#292828]██[color=#626262]██[color=#919191]██[color=#7d7d7d]██[color=#090909]██[color=#282928]██[color=#3c3d3c]██[color=#3d3e3d]██[color=#3c3d3c]██[color=#2b2c2b]██[color=#101010]██[color=#fbfbfb]██\r\n[color=#383938]██[color=#171717]██[color=#2a2929]██[color=#8f8f8f]██[color=#c4c4c4]██[color=#7f7f7f]██[color=#100f0f]██[color=#2d2e2d]██[color=#1c1a1a]██[color=#353635]██[color=#484948]██[color=#2c2d2c]██[color=#161616]██[color=#fdfdfd]██\r\n[color=#0]\r\n           [head=3]\"Мисс Райс\"[/head]\r\n\r\n                              [italic]Бестии что портит мне жизнь\r\n                              и одновременно радует глаз...\r\n \r\n                                                                      Берт Ковальски[/italic]"
     - type: Physics
       angularDamping: 0
       linearDamping: 0
@@ -181226,6 +181486,32 @@ entities:
       angularDamping: 0
       linearDamping: 0
       canCollide: False
+- proto: ReagentContainerFlour
+  entities:
+  - uid: 11183
+    components:
+    - type: Transform
+      parent: 11166
+    - type: Physics
+      angularDamping: 0
+      linearDamping: 0
+      canCollide: False
+  - uid: 11184
+    components:
+    - type: Transform
+      parent: 11166
+    - type: Physics
+      angularDamping: 0
+      linearDamping: 0
+      canCollide: False
+  - uid: 11185
+    components:
+    - type: Transform
+      parent: 11166
+    - type: Physics
+      angularDamping: 0
+      linearDamping: 0
+      canCollide: False
 - proto: ReagentContainerMayo
   entities:
   - uid: 304
@@ -183696,14 +183982,6 @@ entities:
       parent: 2
     - type: Door
       clickOpen: False
-- proto: SpawnMobGorilla
-  entities:
-  - uid: 24682
-    components:
-    - type: Transform
-      rot: 1.5707963267948966 rad
-      pos: 59.5,29.5
-      parent: 2
 - proto: SpeedLoader10
   entities:
   - uid: 8089
@@ -185688,13 +185966,19 @@ entities:
   - uid: 24306
     components:
     - type: Transform
-      pos: 43.052326,-0.69712985
+      pos: 43.177647,0.98200315
       parent: 2
+    - type: Physics
+      angularDamping: 0
+      linearDamping: 0
   - uid: 24315
     components:
     - type: Transform
-      pos: 42.939827,-1.2371298
+      pos: 43.16202,0.54450315
       parent: 2
+    - type: Physics
+      angularDamping: 0
+      linearDamping: 0
 - proto: WeaponTurretSyndicateBroken
   entities:
   - uid: 23783

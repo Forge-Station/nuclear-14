@@ -187,32 +187,41 @@ ent-KitTownGuard_Brea = Набор стража-прорыва
 ent-KitTownGuard_Riot = Набор стража-подавления беспорядков
     .desc = Ящик со всем необходимым для стража Города для выполнения своих обязанностей перед общественностью.
 
-# All of the Broother Western kits
-ent-KitBrootherWest_Elderlas = Набор снаряжения Старейшены-Лазерный
-    .desc = Содержит снаряжение для Старейшены.
-ent-KitBrootherWest_Elderrifle = Набор снаряжения Старейшены-Огнестрельный
-    .desc = Содержит снаряжение для Старейшены.
-ent-KitBrootherWest_Paladinlas = Набор снаряжения Паладина-Лазерный
-    .desc = Содержит снаряжение для Паладина.
-ent-KitBrootherWest_Paladinrifle = Набор снаряжения Паладина-Огнестрельный
-    .desc = Содержит снаряжение для Паладина.
-ent-KitBrootherWest_Paladinplasma = Набор снаряжения Паладина-Плазменный
-    .desc = Содержит снаряжение для Паладина.
-ent-KitBrootherWest_Knightrifle = Набор снаряжения Рыцаря-Огнестрельный
-    .desc = Содержит снаряжение для Рыцаря.
-ent-KitBrootherWest_Knightlaser = Набор снаряжения Рыцаря-Лазерный
-    .desc = Содержит снаряжение для Рыцаря.
-ent-KitBrootherWest_Knightplasma = Набор снаряжения Рыцаря-Плазменный
-    .desc = Содержит снаряжение для Рыцаря.
-ent-KitBrootherWest_Squirerifle = Набор снаряжения Оруженосца-Огнестрельный
-    .desc = Содержит снаряжение для Оруженосца.
-ent-KitBrootherWest_Squirelaser = Набор снаряжения Оруженосца-Лазерный
-    .desc = Содержит снаряжение для Оруженосца.
-ent-KitBrootherWest_Squireplasma = Набор снаряжения Оруженосца-Плазменный
-    .desc = Содержит снаряжение для Оруженосца.
-ent-KitBrootherWest_Scriberifle = Набор снаряжения Скриптера-Огнестрельный
-    .desc = Содержит снаряжение для Скриптера.
-ent-KitBrootherWest_Scribelaser = Набор снаряжения Скриптера-Лазерный
-    .desc = Содержит снаряжение для Скриптера.
-ent-KitBrootherWest_Scribeplasma = Набор снаряжения Скриптера-Плазменный
-    .desc = Содержит снаряжение для Скриптера.
+# Brotherhood Western Chapter Kits
+# Western BoS Squire kits
+ent-KitBrootherWest_Squireplasma = Плазменный набор оруженосца Братства
+    .desc = Содержит снаряжение для оруженосца Западного Братства Стали.
+ent-KitBrootherWest_Squirelaser = Лазерный набор оруженосца Братства
+    .desc = { ent-KitBrootherWest_Squireplasma.desc }
+ent-KitBrootherWest_Squirerifle = Баллистический набор оруженосца Братства
+    .desc = { ent-KitBrootherWest_Squireplasma.desc }
+
+# Western BoS Knight kits
+ent-KitBrootherWest_Knightplasma = Плазменный набор рыцаря Братства
+    .desc = Содержит снаряжение для рыцаря Западного Братства Стали.
+ent-KitBrootherWest_Knightlaser = Лазерный набор рыцаря Братства
+    .desc = { ent-KitBrootherWest_Knightplasma.desc }
+ent-KitBrootherWest_Knightrifle = Баллистический набор рыцаря Братства
+    .desc = { ent-KitBrootherWest_Knightplasma.desc }
+
+# Western BoS Scribe kits
+ent-KitBrootherWest_Scribeplasma = Плазменный набор скриптера Братства
+    .desc = Содержит снаряжение для cкриптера Западного Братства Стали.
+ent-KitBrootherWest_Scribelaser = Лазерный набор скриптера Братства
+    .desc = { KitBrootherWest_Scribeplasma.desc }
+ent-KitBrootherWest_Scriberifle = Баллистический набор скриптера Братства
+    .desc = { KitBrootherWest_Scribeplasma.desc }
+
+# Western BoS Paladin kits
+ent-KitBrootherWest_Paladinplasma = Плазменный набор паладина Братства
+    .desc = Содержит снаряжение для паладина Западного Братства Стали.
+ent-KitBrootherWest_Paladinlas = Лазерный набор паладина Братства
+    .desc = { ent-KitBrootherWest_Paladinplasma.desc }
+ent-KitBrootherWest_Paladinrifle = Баллистический набор паладина Братства
+    .desc = { ent-KitBrootherWest_Paladinplasma.desc }
+
+# Western BoS Elder kits
+ent-KitBrootherWest_Elderlas = Лазерный набор старейшины Братства
+    .desc = Содержит снаряжение для старейшины Западного Братства Стали.
+ent-KitBrootherWest_Elderrifle = Баллистический набор старейшины Братства
+    .desc = { ent-KitBrootherWest_Elderlas.desc }

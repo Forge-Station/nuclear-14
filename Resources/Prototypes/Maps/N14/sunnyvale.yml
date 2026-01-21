@@ -1,7 +1,7 @@
 - type: gameMap
   id: Sunnyvale
   mapName: 'Саннивейл'
-  mapPath: /Maps/N14/SunnyvaleSurface.yml
+  mapPath: /Maps/Corvax/CorvaxSunnyvaleSurface.yml # Forge-Change
   minPlayers: 0
   stations:
     Sunnyvale:
@@ -11,7 +11,7 @@
           mapNameTemplate: 'Саннивейл'
         - type: CP14StationAdditionalMap
           mapPaths:
-          - /Maps/N14/SunnyvaleUnderground.yml
+          - /Maps/Corvax/CorvaxSunnyvaleUnderground.yml # Forge-Change
         - type: StationJobs
           overflowJobs:
             - Wastelander
@@ -43,6 +43,7 @@
             NCRMedic: [ 1, 2 ]
             NCRSoldier: [ 3, 6 ]
             NCRCadet: [ 2, 5 ]
+            # Forge-Change-Start
 #            CaravanLeader: [ 1, 1 ]
 #            CaravanTrader: [ 1, 1 ]
 #            CaravanGuard: [ 2, 2 ]
@@ -51,19 +52,20 @@
             # BoSWashingtonScribe: [ 2, 0 ]
             # BoSWashingtonKnight: [ 2, 2 ]
             # BoSWashingtonInitiate: [ 0, 2 ]
-            BoSMidPaladinCommander: [ 1, 1 ]
-            BoSMidPaladin: [ 1, 2 ]
-            BoSMidKnight: [ 2, 3 ]
-            BoSMidScribe: [ 1, 2 ]
-            BoSMidSquire: [ 2, 2 ]
-            Overseer: [ 1, 1 ]
-            VaultDoctor: [ 2, 2 ]
-            VaultDweller: [ 4, 4 ]
-            VaultEngineer: [ 1, 1 ]
-            VaultSecurity: [ 2, 2 ]
-            CaesarLegionCenturion: [ 0, 1 ] # Corvax-Legion
-            CaesarLegionVenator: [ 0, 1 ] # Corvax-Legion
-            CaesarLegionDean: [ 0, 2 ] # Corvax-Legion
-            CaesarLegionLegionnaireVeteran: [ 0, 3 ] # Corvax-Legion
-            CaesarLegionLegionnaireWarrior: [ 0, 4 ] # Corvax-Legion
-            CaesarLegionLegionnaireRecruit: [ 0, 6 ] # Corvax-Legion
+            BoSWestElderCommander: [ 1, 1 ]
+            BoSWestPaladin: [ 1, 2 ]
+            BoSWestKnight: [ 2, 3 ]
+            BoSWestScribe: [ 1, 2 ]
+            BoSWestGunsmith: [ 2, 2 ]
+            #Overseer: [ 1, 1 ]
+            #VaultDoctor: [ 2, 2 ]
+            #VaultDweller: [ 4, 4 ]
+            #VaultEngineer: [ 1, 1 ]
+            #VaultSecurity: [ 2, 2 ]
+            #CaesarLegionCenturion: [ 0, 1 ] # Corvax-Legion
+            #CaesarLegionVenator: [ 0, 1 ] # Corvax-Legion
+            #CaesarLegionDean: [ 0, 2 ] # Corvax-Legion
+            #CaesarLegionLegionnaireVeteran: [ 0, 3 ] # Corvax-Legion
+            #CaesarLegionLegionnaireWarrior: [ 0, 4 ] # Corvax-Legion
+            #CaesarLegionLegionnaireRecruit: [ 0, 6 ] # Corvax-Legion
+            # Forge-Change-End

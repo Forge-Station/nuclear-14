@@ -1,0 +1,37 @@
+- type: craftRecipe
+  id: N14ClothingOuterCombatArmorRecipe
+  resultProtos:
+    - N14ClothingOuterCombatArmor
+  requiredWorkbench: N14WorkbenchArmorbench
+  craftTime: 7.5
+  items:
+    N14ClothingOuterCombatArmorBlueprint:
+      amount: 1
+      catalyzer: true
+    N14ClothingOuterRaiderCombat1:
+      amount: 1
+    MaterialCloth1:
+      amount: 2
+    N14MaterialThread1:
+      amount: 3
+    SheetSteel1:
+      amount: 3
+
+- type: craftRecipe
+  id: N14ClothingOuterCombatArmorMK2Recipe
+  resultProtos:
+    - N14ClothingOuterCombatArmorMK2
+  requiredWorkbench: N14WorkbenchArmorbench
+  craftTime: 7.5
+  items:
+    N14ClothingOuterCombatArmorMK2Blueprint:
+      amount: 1
+      catalyzer: true
+    N14ClothingOuterRaiderCombat2:
+      amount: 1
+    MaterialCloth1:
+      amount: 3
+    N14MaterialThread1:
+      amount: 5
+    SheetSteel1:
+      amount: 5

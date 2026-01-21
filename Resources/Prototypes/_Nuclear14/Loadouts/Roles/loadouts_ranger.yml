@@ -22,7 +22,7 @@
         - NCRRanger
     - !type:CharacterPlaytimeRequirement # Forge-change
       tracker: NCRRanger
-      min: 1200
+      min: 72000
   items:
     - N14ClothingOuterRangerRedwood # Forge-change
 
@@ -37,7 +37,7 @@
         - NCRRanger
     - !type:CharacterPlaytimeRequirement # Forge-change
       tracker: NCRRanger
-      min: 900
+      min: 54000
   items:
     - N14ClothingOuterRangerArmorOld # Forge-change
 
@@ -52,7 +52,7 @@
         - NCRRanger
     - !type:CharacterPlaytimeRequirement # Forge-change
       tracker: NCRRanger
-      min: 2400
+      min: 144000
   items:
     - N14ClothingOuterRangerCoyote # Forge-change
 
@@ -68,7 +68,7 @@
         - NCRRanger
     - !type:CharacterPlaytimeRequirement # Forge-change
       tracker: NCRRanger
-      min: 900
+      min: 54000
   items:
     - N14ClothingOuterRangerScorpion # Forge-change
 

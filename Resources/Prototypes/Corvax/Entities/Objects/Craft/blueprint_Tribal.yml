@@ -51,3 +51,12 @@
   components:
     - type: STBlueprint
       blueprint: N14WeaponSniper556TribalUpgraded
+
+- type: entity
+  parent: N14BaseBlueprintPaper
+  id: N14ClothingOuterCombatTribalBlueprint
+  name: blueprint tribal combat armor
+  suffix: Craft, Tribal
+  components:
+    - type: STBlueprint
+      blueprint: N14ClothingOuterCombatTribalRecipe

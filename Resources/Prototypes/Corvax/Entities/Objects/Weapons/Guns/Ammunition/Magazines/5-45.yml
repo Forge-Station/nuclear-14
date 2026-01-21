@@ -2,6 +2,7 @@
   id: BaseMagazine545Rifle
   name: "magazine (5.45mm)"
   parent: BaseItem
+  abstract: true
   components:
   - type: Tag
     tags: 

@@ -89,8 +89,7 @@
     possibleSets:
     - NCRA_GunnerSet
     - NCRA_GrenadierSet
-    - NCRA_SniperSet
-    - NCRA_StealthSet
+    - NCRA_SniperSet   
 
 - type: entity
   id: NCRSGTloadoutkits

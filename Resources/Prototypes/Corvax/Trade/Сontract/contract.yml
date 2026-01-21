@@ -1,0 +1,545 @@
+- type: storeContractPack
+  id: PackBazar
+  contracts:
+  - id: caravan_contract_N14FoodMeatRadRaw
+    weight: 50
+  - id: caravan_contract_N14MaterialThread
+    weight: 50
+  - id: caravan_contract_MaterialCloth
+    weight: 50
+  - id: caravan_contract_N14FloraLogTimber
+    weight: 50
+  - id: caravan_contract_MaterialWoodPlank1
+    weight: 50
+  - id: caravan_contract_N14FloraProduceWildCoyoteTobacco
+    weight: 50
+  - id: caravan_contract_N14FoodDogfood
+    weight: 50
+  - id: caravan_contract_N14WeaponSniper556VarmintRifle
+    weight: 50
+  - id: caravan_contract_N14Scrap1
+    weight: 50
+  - id: caravan_contract_N14Scraps
+    weight: 50
+  - id: caravan_contract_N14Weapon9mm
+    weight: 50
+  - id: caravan_contract_N14MaterialLeather1
+    weight: 50
+  - id: caravan_contract_N14FloraProduceWildCaveFungusRad
+    weight: 50
+  - id: caravan_contract_N14BrassKnife
+    weight: 50
+  - id: caravan_contract_N14FloraProduceWildCarrot
+    weight: 50
+  - id: caravan_contract_N14DrinkNukaCola
+    weight: 50
+  - id: caravan_contract_N14MobRaiderPsycho
+    weight: 50
+  - id: caravan_contract_N14MobGhoulFeral
+    weight: 50
+  - id: caravan_contract_N14CookedFoodEggDeathclawBoiled
+    weight: 50
+  - id: caravan_contract_N14MobDeathclawMetal
+    weight: 50
+  - id: caravan_contract_N14SuperSledgeHammer
+    weight: 50
+  - id: caravan_contract_N14MobCazadorWave
+    weight: 50
+  - id: caravan_contract_N14MobRaiderBoss
+    weight: 50
+  - id: caravan_contract_N14MobDeathclaw
+    weight: 50
+  - id: caravan_contract_N14FloraProduceWildBrocFlower
+    weight: 50
+
+- type: storeContractsPreset
+  id: PresetBazar
+  limits:
+    Easy: 3
+    Medium: 2
+    Hard: 1
+  packs:
+  - id: PackBazar
+    weight: 1
+
+- type: storeContract
+  id: caravan_contract_N14MaterialThread
+  name: "Требуются нитки"
+  description: "Для создания новой одежды требуются нитки."
+  difficulty: Easy
+  targets:
+  - id: N14MaterialThread1
+    required: { min: 3, max: 6 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 100, max: 150 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy
+
+- type: storeContract
+  id: caravan_contract_N14FloraProduceWildBrocFlower
+  name: "Брок"
+  description: "Нужен брок для одного медика."
+  difficulty: Easy
+  targets:
+  - id: N14FloraProduceWildBrocFlower
+    required: { min: 3, max: 5 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 100, max: 150 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy
+
+- type: storeContract
+  id: caravan_contract_MaterialCloth
+  name: "Требуется ткань"
+  description: "Для создания новой одежды нужна ткань."
+  difficulty: Easy
+  targets:
+  - id: MaterialCloth1
+    required: { min: 3, max: 6 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 100, max: 150 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy
+
+- type: storeContract
+  id: caravan_contract_N14FloraLogTimber
+  name: "Дрова для отопления"
+  description: "Нужны дрова для отопления и строительства."
+  difficulty: Easy
+  targets:
+  - id: N14FloraLogTimber
+    required: { min: 3, max: 6 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 100, max: 150 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy
+
+- type: storeContract
+  id: caravan_contract_MaterialWoodPlank1
+  name: "Древесина для плотника"
+  description: "Нужна древесина для работы плотника."
+  difficulty: Easy
+  targets:
+  - id: MaterialWoodPlank1
+    required: { min: 6, max: 15 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 100, max: 150 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy
+
+- type: storeContract
+  id: caravan_contract_N14FloraProduceWildCoyoteTobacco
+  name: "Табак для наемников"
+  description: "Необходим табак для сигарет для наемников."
+  difficulty: Easy
+  targets:
+  - id: N14FloraProduceWildCoyoteTobacco
+    required: { min: 2, max: 5 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 100, max: 150 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy
+
+- type: storeContract
+  id: caravan_contract_N14FoodDogfood
+  name: "Собачий корм"
+  description: "Для моей собачки нужно больше корма."
+  difficulty: Easy
+  repeatable: false
+  targets:
+  - id: N14FoodDogfood
+    required: { min: 2, max: 3 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 150, max: 200 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy
+
+- type: storeContract
+  id: caravan_contract_N14WeaponSniper556VarmintRifle
+  name: "Оружие для охраны"
+  description: "Необходимо предоставить ствол для охраны."
+  difficulty: Easy
+  targets:
+  - id: N14WeaponSniper556VarmintRifle
+    required: { min: 1, max: 2 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 100, max: 150 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy_nonweapons
+
+- type: storeContract
+  id: caravan_contract_N14FoodMeatRadRaw
+  name: "Собрание мяса"
+  description: "Необходимо добыть мясо для переработки."
+  difficulty: Easy
+  targets:
+  - id: N14FoodMeatRadRaw
+    required: { min: 2, max: 4 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 100, max: 150 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy
+
+- type: storeContract
+  id: caravan_contract_N14Scrap1
+  name: "Сбор металлолома"
+  description: "Нужно собрать металлолом для переплавки."
+  difficulty: Easy
+  targets:
+  - id: N14Scrap1
+    required: { min: 2, max: 5 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 100, max: 150 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy
+
+- type: storeContract
+  id: caravan_contract_N14Scraps
+  name: "Сбор цветного металла"
+  description: "Нужно собрать металлолом для переплавки."
+  difficulty: Easy
+  targetCount: 1
+  targets:
+  - id: N14ScrapCopper1
+    required: { min: 2, max: 3 }
+    weight: 60
+  - id: N14ScrapBrass1
+    required: { min: 2, max: 3 }
+    weight: 60
+  - id: N14ScrapLead1
+    required: { min: 2, max: 3 }
+    weight: 60
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 100, max: 150 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy
+
+- type: storeContract
+  id: caravan_contract_N14Weapon9mm
+  name: "Нужен ствол"
+  description: "Ствол для охраннка бара."
+  difficulty: Easy
+  targetCount: 1
+  targets:
+  - id: N14WeaponPistol9mm
+    required: 1
+    weight: 60
+  - id: N14WeaponRevolver9mm
+    required: 1
+    weight: 60
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 100, max: 150 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy_nonweapons
+
+- type: storeContract
+  id: caravan_contract_N14MaterialLeather1
+  name: "Сбор кожи"
+  description: "Нужно собрать кожу для кожевника."
+  difficulty: Easy
+  targets:
+  - id: N14MaterialLeather1
+    required: { min: 2, max: 5 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 100, max: 150 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_easy
+
+- type: storeContract
+  id: caravan_contract_N14MobGhoulFeral
+  name: "Гули"
+  description: "Нужны мертвые тела гулей для экспрементов."
+  difficulty: Medium
+  targets:
+  - id: N14MobGhoulFeral
+    required: { min: 2, max: 3 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 300, max: 450 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_medium
+
+- type: storeContract
+  id: caravan_contract_N14MobRaiderPsycho
+  name: "Рейдерды"
+  description: "Надоели уже, мелкие и мерзкие. Убей пару штук и притащи трупы."
+  difficulty: Medium
+  targets:
+  - id: N14MobRaiderPsycho
+    required: { min: 2, max: 3 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 300, max: 450 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_medium
+
+- type: storeContract
+  id: caravan_contract_N14DrinkNukaCola
+  name: "Ядер Кола"
+  description: "Мне не хватает одна ядер кола для коллекций."
+  difficulty: Medium
+  targetCount: 1
+  targets:
+  - id: N14DrinkNukaColaCherry
+    required: 1
+    weight: 60
+  - id: N14DrinkNukaCola
+    required: 1
+    weight: 60
+  - id: N14DrinkNukaColaOrange
+    required: 1
+    weight: 60
+  - id: N14DrinkNukaColaGrape
+    required: 1
+    weight: 60
+  - id: N14DrinkNukaColaWild
+    required: 1
+    weight: 60
+  - id: N14DrinkNukaColaYellow
+    required: 1
+    weight: 60
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 300, max: 450 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_medium
+
+- type: storeContract
+  id: caravan_contract_N14FloraProduceWildCarrot
+  name: "Морковкааа!!!"
+  description: "Я люблю морковку! Мне нужно много морковки!"
+  difficulty: Medium
+  targets:
+  - id: N14FloraProduceWildCarrot
+    required: { min: 2, max: 4 }
+    weight: 60
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 300, max: 450 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_medium
+
+- type: storeContract
+  id: caravan_contract_N14BrassKnife
+  name: "Нож"
+  description: "Ищу новый ножи для своей коллекций."
+  difficulty: Medium
+  targets:
+  - id: N14BrassKnife
+    required: { min: 1, max: 2 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 300, max: 450 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_medium
+
+- type: storeContract
+  id: caravan_contract_N14FloraProduceWildCaveFungusRad
+  name: "Грибы!"
+  description: "Мне нужны грибы. Да да чисто в научных целях."
+  difficulty: Medium
+  targets:
+  - id: N14FloraProduceWildCaveFungusRad
+    required: { min: 2, max: 4 }
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 300, max: 450 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_medium
+
+- type: storeContract
+  id: caravan_contract_N14MobDeathclaw
+  name: "Коготь смерти!"
+  description: "Найди и убей тварь. Принеси ко мне."
+  difficulty: Hard
+  targets:
+  - id: N14MobDeathclaw
+    required: 1
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 600, max: 1000 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_hard
+
+- type: storeContract
+  id: caravan_contract_N14MobRaiderBoss
+  name: "Босс Рейдеров"
+  description: "Он всех достал. Он слишком много ходит по земле. Убей его."
+  difficulty: Hard
+  targets:
+  - id: N14MobEnforcerWarden
+    required: 1
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 600, max: 1000 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_hard
+
+- type: storeContract
+  id: caravan_contract_N14MobCazadorWave
+  name: "Казадор"
+  description: "Принеси три трупа казадора."
+  difficulty: Hard
+  targets:
+  - id: N14MobCazadorWave
+    required: 3
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 600, max: 1000 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_hard
+
+- type: storeContract
+  id: caravan_contract_N14SuperSledgeHammer
+  name: "Молот"
+  description: "Молот для одного ценителя."
+  difficulty: Hard
+  targets:
+  - id: N14SuperSledgeHammer
+    required: 1
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 600, max: 1000 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_hard
+
+- type: storeContract
+  id: caravan_contract_N14MobDeathclawMetal
+  name: "Коготь смерти"
+  description: "Я слыхал живет один с броне. Очень стар и опасен."
+  difficulty: Hard
+  targets:
+  - id: N14MobDeathclawMetal
+    required: 1
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 600, max: 1000 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_hard
+
+- type: storeContract
+  id: caravan_contract_N14CookedFoodEggDeathclawBoiled
+  name: "Яйцо"
+  description: "Для одного гурмана срочно нужно варенные яйца когтя смерти."
+  difficulty: Hard
+  targets:
+  - id: N14CookedFoodEggDeathclawBoiled
+    required: 1
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 600, max: 1000 }
+  - type: Pool
+    amount: { min: 1, max: 3 }
+    options:
+    - type: Pool
+      id: caravan_hard

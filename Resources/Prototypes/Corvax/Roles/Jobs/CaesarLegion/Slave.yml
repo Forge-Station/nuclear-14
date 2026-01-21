@@ -6,7 +6,7 @@
   playTimeTracker: CaesarLegionSlave
   requirements:
   - !type:MinPlayersRequirement
-    min: 40
+    min: 60
   - !type:CharacterSpeciesRequirement
     species:
     - Human

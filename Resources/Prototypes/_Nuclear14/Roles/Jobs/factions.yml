@@ -89,6 +89,7 @@
   - Wastelander
   - WastelandMusician
   - WastelandScavenger
+  - Followers # Forge-Change
 
 - type: department
   id: Townsfolk

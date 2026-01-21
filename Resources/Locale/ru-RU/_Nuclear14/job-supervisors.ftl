@@ -20,3 +20,4 @@ job-supervisors-vault-overseer = поддерживать функциониро
 job-supervisors-wastelander = не умереть от радтаракана.
 job-supervisors-townsfolk = подчиняться мэру города.
 job-supervisors-raider = вы верны лишь своему оружию и жажде наживы.
+job-supervisors-followers = помогать нуждающимся и делиться знаниями для возрождения цивилизации.

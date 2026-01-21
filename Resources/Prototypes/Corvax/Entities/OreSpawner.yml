@@ -1,0 +1,71 @@
+- type: entity
+  id: NcRespawnSpawnerRuntime
+  name: runtime respawn spawner
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Transform
+    anchored: true
+  - type: RespawnSpawner
+    proto: N14RockGreyMining
+    spawnOnMapInit: false
+
+- type: entity
+  parent: MarkerBase
+  id: NcRespawnSpawnerMarkerBase
+  abstract: true
+  components:
+  - type: RespawnSpawnerMarker
+    runtimePrototype: NcRespawnSpawnerRuntime
+  - type: Sprite
+    layers:
+    - state: red
+      scale: 0.5, 0.5
+
+
+- type: entity
+  parent: NcRespawnSpawnerMarkerBase
+  id: SpawnerOreRegen
+  name: Возобновляемая жила (Бедная)
+  suffix: 15m respawn
+  components:
+  - type: Sprite
+    layers:
+    - sprite: DeltaV/Structures/Walls/asteroid_rock.rsi
+      state: full
+    - sprite: Markers/cross.rsi
+      state: red
+      scale: 0.5, 0.5
+  - type: RespawnSpawner
+    proto: N14RockGreyMining
+    respawnSeconds: 900
+    spawnOnMapInit: true
+
+- type: entity
+  parent: NcRespawnSpawnerMarkerBase
+  id: SpawnerOreRichRegen
+  name: Возобновляемая жила (Богатая)
+  suffix: 20m respawn
+  components:
+  - type: Sprite
+    layers:
+    - sprite: DeltaV/Structures/Walls/asteroid_rock.rsi
+      state: full
+    - sprite: Markers/cross.rsi
+      state: red
+      scale: 0.5, 0.5
+  - type: RespawnSpawner
+    proto: N14RockGreyMiningRich
+    respawnSeconds: 1200
+    spawnOnMapInit: true
+
+- type: entity
+  id: N14RockGreyMiningRich
+  parent: N14RockGreyMining
+  name: ore vein
+  suffix: higher ore yield 100
+  description: An asteroid.
+  components:
+  - type: OreVein
+    oreChance: 1
+    oreRarityPrototypeId: RandomOreDistributionStandard

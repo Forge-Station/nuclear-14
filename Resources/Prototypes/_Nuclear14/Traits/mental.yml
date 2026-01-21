@@ -53,6 +53,20 @@
         - BoSMidPaladin
         - BoSMidKnight
         - BoSMidSquire
+        # Forge-Change-Start
+        - NCRMPinvestigator
+        - BoSMidInquisitor
+        - BoSWestElderCommander
+        - BoSWestPaladin
+        - BoSWestKnight
+        - BoSWestGunsmith
+        - CaesarLegionCenturion
+        - CaesarLegionVenator
+        - CaesarLegionDean
+        - CaesarLegionLegionnaireVeteran
+        - CaesarLegionLegionnaireWarrior
+        - CaesarLegionLegionnaireRecruit
+        # Forge-Change-End
         - VaultSecurity
   functions:
     - !type:TraitAddComponent
@@ -84,6 +98,7 @@
         - BoSWashingtonScribe
         - BoSMidScribe
         - VaultDoctor
+        - Followers # Forge-Change
   functions:
     - !type:TraitAddComponent
       components:

@@ -80,6 +80,12 @@
   - type: Appearance
   - type: Item
     size: Tiny
+  # cherry-pick from space-station#32938 courtesy of Ilya246
+  - type: UserInterface
+    interfaces:
+      enum.StackCustomSplitUiKey.Key:
+        type: StackCustomSplitBoundUserInterface
+  # end cherry-pick from ss#32938
 
 - type: stack
   id: Caps

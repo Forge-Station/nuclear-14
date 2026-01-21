@@ -1,6 +1,6 @@
 - type: job
   id: Followers
-  setPreference: false # Delete line for RP
+  setPreference: true # Forge-Change
   name: job-name-followers
   description: job-description-followers
   playTimeTracker: Followers
@@ -9,15 +9,25 @@
   supervisors: job-supervisors-followers
   accessGroups:
   - FollowersApocalypse
+  # Forge-Change-Start
+  special:
+  - !type:AddComponentSpecial
+    components:
+      - type: NpcFactionMember
+        factions:
+          - Wastelander
+      - type: CPRTraining
+  # Forge-Change-End
 
 - type: startingGear
   id: FollowersGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitFollowers
     back: N14ClothingBackpackWastelanderFilled # N14TODO: Doctors Bag
-    shoes: ClothingShoesColorBlack
+    shoes: N14ClothingBootsLeather # Forge-Change
+    neck: ClothingNeckStethoscope # Forge-Change
     id: N14IDDoctorFollower
-    outerClothing: ClothingOuterCoatLab
+    outerClothing: N14ClothingOuterCoatFollowerLab # Forge-Change
     belt: N14ClothingBeltMedicalFilled
   innerClothingSkirt: N14ClothingUniformJumpskirtFalloutBlack
   satchel: N14ClothingBackpackSatchelWastelanderFilled

@@ -3,6 +3,11 @@
   category: Visual
   points: 5 # Forge-Change
   requirements:
+  - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+        - BrotherhoodWashington
+        - BrotherhoodWest
   - !type:CharacterJobRequirement # Forge-Change
     inverted: true
     jobs:
@@ -14,9 +19,25 @@
     - NCRRangerVeteran
     - NCRRanger
     - NCRSGT
-#    - CaravanLeader
+    - NCRMPinvestigator
+    - NCRWS
+    - NCREngineer
+    - NCRMedic
+    - NCRSoldier
+    - NCRCadet
+#   - CaravanLeader
     - BoSMidPaladinCommander
     - BoSMidPaladin
+    - BoSMidInquisitor
+    - BoSMidScribe
+    - BoSMidKnight
+    - BoSMidSquire
+    - CaesarLegionCenturion
+    - CaesarLegionVenator
+    - CaesarLegionDean
+    - CaesarLegionLegionnaireVeteran
+    - CaesarLegionLegionnaireWarrior
+    - CaesarLegionLegionnaireRecruit
     - Overseer
     - VaultSecurity
   - !type:CharacterTraitRequirement

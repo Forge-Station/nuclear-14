@@ -154,3 +154,61 @@
     N14Wrench:
       amount: 1
       catalyzer: true
+
+#MARK: Armor
+- type: craftRecipe
+  id: N14ClothingOuterNCRVestDesertRecipe
+  resultProtos:
+    - N14ClothingOuterNCRVestDesert
+  requiredWorkbench: N14WorkbenchArmorbench
+  availableFaction:
+    - NCR
+  craftTime: 7.5
+  items:
+    N14ClothingOuterNCRVestDesertBlueprint:
+      amount: 1
+      catalyzer: true
+    N14ClothingOuterReinforcedLeatherArmor:
+      amount: 1
+    MaterialCloth1:
+      amount: 1
+    N14MaterialThread1:
+      amount: 2
+
+- type: craftRecipe
+  id: N14ClothingOuterNCRCombatArmorRecipe
+  resultProtos:
+    - N14ClothingOuterNCRCombatArmor
+  requiredWorkbench: N14WorkbenchArmorbench
+  availableFaction:
+    - NCR
+  craftTime: 7.5
+  items:
+    N14ClothingOuterNCRCombatArmorBlueprint:
+      amount: 1
+      catalyzer: true
+    N14ClothingOuterCombatArmor:
+      amount: 1
+    MaterialCloth1:
+      amount: 2
+    N14MaterialThread1:
+      amount: 3
+
+- type: craftRecipe
+  id: N14ClothingOuterNCRCombatArmorMK2Recipe
+  resultProtos:
+    - N14ClothingOuterNCRCombatArmorMK2
+  requiredWorkbench: N14WorkbenchArmorbench
+  availableFaction:
+    - NCR
+  craftTime: 7.5
+  items:
+    N14ClothingOuterNCRCombatArmorMK2Blueprint:
+      amount: 1
+      catalyzer: true
+    N14ClothingOuterCombatArmorMK2:
+      amount: 1
+    MaterialCloth1:
+      amount: 3
+    N14MaterialThread1:
+      amount: 4

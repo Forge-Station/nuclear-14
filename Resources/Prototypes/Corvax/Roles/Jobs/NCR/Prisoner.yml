@@ -8,7 +8,7 @@
   playTimeTracker: NCRPisoner
   requirements:
     - !type:MinPlayersRequirement
-      min: 40
+      min: 55
     - !type:CharacterSpeciesRequirement
       species:
       - Human

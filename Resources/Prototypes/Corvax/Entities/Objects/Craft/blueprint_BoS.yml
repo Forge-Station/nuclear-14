@@ -6,3 +6,31 @@
   components:
     - type: STBlueprint
       blueprint: N14ClothingOuterPowerArmorT60TeslaRecipe
+
+#MARK: Armor
+- type: entity
+  parent: N14BaseBlueprintPaper
+  id: N14ClothingOuterMBoSInitiateArmorBlueprint
+  name: blueprint BoS Midwest initiate armor
+  suffix: Craft, BoS
+  components:
+    - type: STBlueprint
+      blueprint: N14ClothingOuterMBoSInitiateArmorRecipe
+
+- type: entity
+  parent: N14BaseBlueprintPaper
+  id: N14ClothingOuterMidwestArmorBlueprint
+  name: blueprint BoS Midwest combat armor
+  suffix: Craft, BoS
+  components:
+    - type: STBlueprint
+      blueprint: N14ClothingOuterMidwestArmorRecipe
+
+- type: entity
+  parent: N14BaseBlueprintPaper
+  id: N14ClothingOuterMidwestArmorMK2Blueprint
+  name: blueprint BoS Midwest MK2 combat armor
+  suffix: Craft, BoS
+  components:
+    - type: STBlueprint
+      blueprint: N14ClothingOuterMidwestArmorMK2Recipe
