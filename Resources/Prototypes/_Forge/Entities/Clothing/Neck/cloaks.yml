@@ -1,0 +1,32 @@
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckCloakLegionRed
+  name: Legion red cloak
+  description: A comfy cloak with a Legion.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/cloaklegionred.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Neck/cloaklegionred.rsi
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckCloakLegionWhite
+  name: Legion white cloak
+  description: A comfy cloak with a Legion.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/cloaklegionwhite.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Neck/cloaklegionwhite.rsi
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckCloakLegionBlack
+  name: Legion black cloak
+  description: A comfy cloak with a Legion.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/cloaklegionblack.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Neck/cloaklegionblack.rsi
