@@ -14,36 +14,89 @@
 
 # All types of the rare and unique fishes
 
+# Таблица редкой/опасной рыбы (Для высокого уровня навыка или удачи)
 - type: entityTable
   id: RareFishTable
   table: !type:GroupSelector
     children:
-    - !type:EntSelector { id: FishAlien }
-    - !type:EntSelector { id: FishBingle }
-    - !type:EntSelector { id: FishBoyFisher }
-    - !type:EntSelector { id: FishNukeDisk }
-    - !type:EntSelector { id: FishGib }
-    - !type:EntSelector { id: FishMutant }
-    - !type:EntSelector { id: FishNuker }
-    - !type:EntSelector { id: FishToxic }
-    - !type:EntSelector { id: FishIan }
+    - !type:EntSelector { id: FishSvarka }       # Сом-сварщик
+    - !type:EntSelector { id: FishPowerArmor }   # Броне-рыба
+    - !type:EntSelector { id: FishAngler }       # Удильщик (Свет)
+    - !type:EntSelector { id: FishFugu }         # Фугу (Яд)
+    - !type:EntSelector { id: FishClown }        # Клоун (Смена пола)
+    - !type:EntSelector { id: FishLegion }       # Греза (Наркотики)
+    - !type:EntSelector { id: FishGun }          # Ган-фиш (Порох)
+    - !type:EntSelector { id: FishBomb }         # Пиро-щука (Взрывчатка)
+    - !type:EntSelector { id: FishGold }         # Золотой карп (Деньги)
+    - !type:EntSelector { id: FishExocoetidae }  # Аэро-акула (Пласталь)
+    - !type:EntSelector { id: FishOctopus }      # Осьминог (Чернила)
+    - !type:EntSelector { id: FishTropic }       # Кислотный угорь
 
-
-# Fish from water
+# Таблица обычной рыбы (Еда и базовые ресурсы)
 - type: entityTable
   id: WaterFishTable
-  table: !type:GroupSelector
+  table: !type:GroupSelector # Меняем на Random, чтобы выбиралась ОДНА рыба
     children:
-    - !type:EntSelector { id: FishAngler }
-    - !type:EntSelector { id: FishBass }
-    - !type:EntSelector { id: FishBlob }
-    - !type:EntSelector { id: FishBlueFintuna }
-    - !type:EntSelector { id: FishCat }
-    - !type:EntSelector { id: FishTropicalClown }
-    - !type:EntSelector { id: FishPuffer }
-    - !type:EntSelector { id: FishSilver }
-    - !type:EntSelector { id: FishTropicalSun }
-    - !type:EntSelector { id: FishTropical }
+    - !type:EntSelector
+      id: FishSardina
+      weight: 20
+    - !type:EntSelector
+      id: FishCarp
+      weight: 20
+    - !type:EntSelector
+      id: FishShrimp
+      weight: 20
+    - !type:EntSelector
+      id: FishCrab
+      weight: 20
+    - !type:EntSelector
+      id: FishBone
+      weight: 20     # Скелеты падают часто (консервант)
+    - !type:EntSelector
+      id: FishStar
+      weight: 15     # Медицина
+    - !type:EntSelector
+      id: FishCarrot
+      weight: 15     # Глина
+    - !type:EntSelector
+      id: FishYorsh
+      weight: 15     # Слизь
+    - !type:EntSelector
+      id: FishSvarka
+      weight: 10     # Топливо
+    - !type:EntSelector
+      id: FishPowerArmor
+      weight: 10     # Броня
+    - !type:EntSelector
+      id: FishTropic
+      weight: 10     # Кислота
+    - !type:EntSelector
+      id: FishOctopus
+      weight: 8      # Чернила
+    - !type:EntSelector
+      id: FishFugu
+      weight: 5      # Яд
+    - !type:EntSelector
+      id: FishLegion
+      weight: 5      # Наркотики
+    - !type:EntSelector
+      id: FishClown
+      weight: 4      # Смена пола (чуть реже)
+    - !type:EntSelector
+      id: NF14FishAngler
+      weight: 5      # Свет
+    - !type:EntSelector
+      id: FishGun
+      weight: 2      # Оружие
+    - !type:EntSelector
+      id: FishBomb
+      weight: 2      # Взрывчатка
+    - !type:EntSelector
+      id: FishExocoetidae
+      weight: 1      # Пласталь (Очень редко)
+    - !type:EntSelector
+      id: FishGold
+      weight: 1      # Золото (Джекпот)
 
 
 # Items from Water

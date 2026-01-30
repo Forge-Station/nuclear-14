@@ -9,7 +9,8 @@
 
 using System.Linq;
 using System.Numerics;
-using Content.Shared._Goobstation.Fishing.Systems;
+using Content.Goobstation.Shared.Fishing.Components;
+using Content.Goobstation.Shared.Fishing.Systems;
 using Content.Shared.Interaction.Events;
 using Content.Shared.Item;
 using Content.Shared.Movement.Pulling.Components;
@@ -20,14 +21,8 @@ using Robust.Shared.Physics;
 using Robust.Shared.Physics.Events;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
-using ActiveFisherComponent = Content.Shared._Goobstation.Fishing.Components.ActiveFisherComponent;
-using ActiveFishingSpotComponent = Content.Shared._Goobstation.Fishing.Components.ActiveFishingSpotComponent;
-using FishComponent = Content.Shared._Goobstation.Fishing.Components.FishComponent;
-using FishingLureComponent = Content.Shared._Goobstation.Fishing.Components.FishingLureComponent;
-using FishingRodComponent = Content.Shared._Goobstation.Fishing.Components.FishingRodComponent;
 
-
-namespace Content.Server._Goobstation.Fishing;
+namespace Content.Goobstation.Server.Fishing;
 
 public sealed class FishingSystem : SharedFishingSystem
 {
@@ -70,7 +65,8 @@ public sealed class FishingSystem : SharedFishingSystem
         Anchor(ent, attachedEnt);
 
         // Currently we don't support multiple loots from this
-        var fish = spotComp.FishList.GetSpawns(_random.GetRandom(), EntityManager, _proto).First();
+        var sysRandom = new Random(_random.Next());
+        var fish = spotComp.FishList.GetSpawns(sysRandom, EntityManager, _proto).First();
 
         // Get fish difficulty
         _proto.Index(fish).TryGetComponent(out FishComponent? fishComp, _compFactory);

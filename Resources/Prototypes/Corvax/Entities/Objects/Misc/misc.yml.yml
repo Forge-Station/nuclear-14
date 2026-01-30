@@ -1,0 +1,25 @@
+- type: construction
+  name: Самодельная Удочка
+  id: FishingRodMakeshift
+  graph: FishingRodMakeshift
+  startNode: start
+  targetNode: makeshiftRod
+  category: construction-category-tools
+  description: Удочка из того что есть
+  icon: { sprite: _Goobstation/Objects/Specific/Fishing/makeshift_rod.rsi, state: icon }
+  objectType: Item
+  hide: false
+
+- type: constructionGraph
+  id: FishingRodMakeshift
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: makeshiftRod
+          steps:
+            - material: WoodPlank
+              amount: 5
+              doAfter: 2
+    - node: makeshiftRod
+      entity: FishingRodMakeshift

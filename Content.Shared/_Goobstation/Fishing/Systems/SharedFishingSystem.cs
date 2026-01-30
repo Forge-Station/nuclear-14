@@ -6,6 +6,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+using Content.Goobstation.Shared.Fishing.Components;
+using Content.Goobstation.Shared.Fishing.Events;
 using Content.Shared.Actions;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Popups;
@@ -16,16 +18,8 @@ using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
-using ActiveFisherComponent = Content.Shared._Goobstation.Fishing.Components.ActiveFisherComponent;
-using ActiveFishingSpotComponent = Content.Shared._Goobstation.Fishing.Components.ActiveFishingSpotComponent;
-using FishingLureComponent = Content.Shared._Goobstation.Fishing.Components.FishingLureComponent;
-using FishingRodComponent = Content.Shared._Goobstation.Fishing.Components.FishingRodComponent;
-using FishingSpotComponent = Content.Shared._Goobstation.Fishing.Components.FishingSpotComponent;
-using PullFishingLureActionEvent = Content.Shared._Goobstation.Fishing.Events.PullFishingLureActionEvent;
-using ThrowFishingLureActionEvent = Content.Shared._Goobstation.Fishing.Events.ThrowFishingLureActionEvent;
 
-
-namespace Content.Shared._Goobstation.Fishing.Systems;
+namespace Content.Goobstation.Shared.Fishing.Systems;
 
 /// <summary>
 /// This handles... da fish
@@ -353,7 +347,7 @@ public abstract class SharedFishingSystem : EntitySystem
             var attachedEnt = lureComp.AttachedEntity.Value;
             var targetCoords = Xform.GetMapCoordinates(Transform(attachedEnt));
             var playerCoords = Xform.GetMapCoordinates(Transform(player));
-            var rand = new System.Random((int) Timing.CurTick.Value); // evil random prediction hack
+            var rand = new Random((int) Timing.CurTick.Value); // evil random prediction hack
 
             // Calculate throw direction
             var direction = (playerCoords.Position - targetCoords.Position) * rand.NextFloat(0.2f, 0.85f);

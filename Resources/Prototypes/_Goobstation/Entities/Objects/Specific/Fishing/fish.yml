@@ -55,7 +55,7 @@
   description: Water-born creature from the infinite sea... Or toilet.
   components:
   - type: Fish
-    difficulty: 0.038
+    difficulty: 0.01
   - type: StaticPrice
     price: 750
 
@@ -292,3 +292,243 @@
     state: ian
   - type: Item
     sprite: _Goobstation/Objects/Specific/Fishing/fish.rsi
+
+- type: entity
+  id: FishSardina
+  parent: BaseFish
+  name: серебрянка
+  description: Маленькая, юркая рыбка. Основа рациона пустошей.
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/sardina
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/sardina
+
+- type: entity
+  id: FishCarp
+  parent: BaseFish
+  name: речной карп
+  description: Самая обычная рыба. Смотрит на вас пустым взглядом.
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/carp
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/carp
+
+- type: entity
+  id: FishShrimp
+  parent: BaseFish
+  name: титан-креветка
+  description: Мутировавшая креветка-переросток. Много мяса и много лапок.
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/shrimp
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/shrimp
+
+- type: entity
+  id: FishCrab
+  parent: BaseFish
+  name: болотный краб
+  description: Вредный падальщик с крепким панцирем. Берегите пальцы.
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/cancer
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/cancer
+
+- type: entity
+  id: FishBone
+  parent: BaseFish
+  name: рыба-скелет
+  description: Жуткая груда костей, которая отказывается умирать. Отличный источник кальция и консервантов.
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/bone-fish
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/bone-fish
+
+- type: entity
+  id: FishStar
+  parent: BaseFish
+  name: кровавая звезда
+  description: Пульсирующая морская звезда. Её слизь отлично заживляет ожоги.
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/star
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/star
+
+- type: entity
+  id: FishCarrot
+  parent: BaseFish
+  name: грязевая камбала
+  description: Похожа на грязную морковку. Покрыта толстым слоем полезной глины.
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/carrot-fish
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/carrot-fish
+
+- type: entity
+  id: FishYorsh
+  parent: BaseFish
+  name: тиновый ерш
+  description: Скользкий, колючий и неприятный. Выделяет густую слизь.
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/yorsh
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/yorsh
+
+- type: entity
+  id: FishSvarka
+  parent: BaseFishRare
+  name: сом-сварщик
+  description: Обитает в промышленных стоках. Искрит при ударе, внутри полно горючего жира.
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/svarka-fish
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/svarka-fish
+
+- type: entity
+  id: FishPowerArmor
+  parent: BaseFishRare
+  name: броне-рыба
+  description: Рыба с каменной кожей. Чтобы её разделать, нужна болгарка, а не нож.
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/powerarmor-carp
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/powerarmor-carp
+
+- type: entity
+  id: NF14FishAngler
+  parent: BaseFishRare
+  name: глубинный удильщик
+  description: Кошмар из тьмы. Его фонарь продолжает светиться даже после смерти.
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/anglerfish
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/anglerfish
+
+- type: entity
+  id: FishFugu
+  parent: BaseFishRare
+  name: рад-иглобрюх
+  description: Раздутый шар, полный смертельного нейротоксина. Деликатес для самоубийц.
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/fugu
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/fugu
+
+- type: entity
+  id: FishClown
+  parent: BaseFishRare
+  name: рыба-клоун
+  description: Издает смешные звуки при нажатии. Говорят, её мясо способно менять саму природу человека.
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/clown-fish
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/clown-fish
+
+- type: entity
+  id: FishLegion
+  parent: BaseFishRare
+  name: рыба-греза
+  description: У неё слишком много глаз. Если долго смотреть на неё, можно увидеть будущее... или просто словить приход.
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/legion-fish
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/legion-fish
+
+- type: entity
+  id: FishGun
+  parent: BaseFishRare
+  name: баллистическая форель
+  description: Живое оружие. Пахнет порохом и насилием. Осторожнее при разделке!
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/gun-fish
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/gun-fish
+
+- type: entity
+  id: FishBomb
+  parent: BaseFishRare
+  name: пиро-щука
+  description: Горячая на ощупь. Её внутренности можно использовать как взрывчатку.
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/bomb-fish
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/bomb-fish
+
+- type: entity
+  id: FishGold
+  parent: BaseFishRare
+  name: золотой карп
+  description: Живая легенда. Его чешуя состоит из чистого золота. Удача поймать такого!
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/gold-fish
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/gold-fish
+
+- type: entity
+  id: FishExocoetidae
+  parent: BaseFishRare
+  name: аэро-акула
+  description: Эволюция дала ей крылья, а радиация — пласталевую шкуру. Королева глубин.
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/exocoetidae
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/exocoetidae
+
+- type: entity
+  id: FishOctopus
+  parent: BaseFishRare
+  name: красный осьминог
+  description: Умный моллюск с запасом чернил. Отлично подходит для создания дымовых завес.
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/octopus
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/octopus
+
+- type: entity
+  id: FishTropic
+  parent: BaseFishRare
+  name: кислотный угорь
+  description: Яркая окраска предупреждает об опасности. Выделяет едкую кислоту.
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Fish/tropic-fish
+    state: icon
+  - type: Item
+    sprite: Corvax/Mobs/Fish/tropic-fish

@@ -5,8 +5,7 @@
 
 using Content.Shared.EntityTable.EntitySelectors;
 
-
-namespace Content.Shared._Goobstation.Fishing.Components;
+namespace Content.Goobstation.Shared.Fishing.Components;
 
 [RegisterComponent]
 public sealed partial class FishingSpotComponent : Component
@@ -15,7 +14,7 @@ public sealed partial class FishingSpotComponent : Component
     /// All possible fishes to catch here
     /// </summary>
     [DataField(required: true)]
-    public EntityTableSelector FishList;
+    public EntityTableSelector FishList = default!;
 
     /// <summary>
     /// Default time for fish to occur
