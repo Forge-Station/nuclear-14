@@ -1,0 +1,16 @@
+- type: entity
+  id: N14Floorbubble
+  parent: BaseFishingSpot
+  name: bubble
+  description: A real thirst quencher.
+  components:
+  - type: Sprite
+    sprite: Corvax/Decals/bubble.rsi
+    drawdepth: BelowFloor
+    layers:
+      - state: bubble
+  - type: FishingSpot
+    fishList: !type:NestedSelector
+      tableId: WaterFishingLootTable
+    fishDefaultTimer: 25.0
+    fishTimerVariety: 15.0
