@@ -267,6 +267,16 @@
   id: N14WallConcreteSlanted
   name: concrete wall
   suffix: slanted
+  # Forge-Change-Start
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Structures/Walls/ms13/slanted/concrete.rsi
+  - type: Icon
+    sprite: _Nuclear14/Structures/Walls/ms13/slanted/concrete.rsi
+  - type: IconSmooth
+    key: walls
+    base: slantedconcrete
+  # Forge-Change-End
 
 - type: entity
   parent: BaseWallIndestructible

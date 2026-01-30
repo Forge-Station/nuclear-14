@@ -1,2 +1,2 @@
-recipe-LightTorch-name = { ent-Torch }
-recipe-LightTorch-desc = { ent-Torch.desc }
+recipe-Torch-name = { ent-Torch }
+recipe-Torch-desc = { ent-Torch.desc }

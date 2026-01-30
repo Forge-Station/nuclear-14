@@ -1,0 +1,16 @@
+ - type: loadout
+   id: ClothingNeckCrucifixColor
+   category: Accessories
+   cost: 2
+   exclusive: true
+   customColorTint: true
+   requirements:
+   - !type:CharacterItemGroupRequirement
+    group: N14LoadoutNeck
+   - !type:CharacterDepartmentRequirement
+    inverted: true
+    departments:
+    - CaesarLegion
+    - Tribe
+   items:
+     - ClothingNeckCrucifixColor

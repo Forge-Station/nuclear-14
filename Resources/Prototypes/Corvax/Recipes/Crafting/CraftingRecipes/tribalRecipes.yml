@@ -1,0 +1,20 @@
+- type: craftRecipe
+  id: N14ClothingOuterCombatTribalRecipe
+  resultProtos:
+    - N14ClothingOuterCombatTribal
+  requiredWorkbench: N14WorkbenchArmorbench
+  availableFaction:
+    - Tribe
+  craftTime: 7.5
+  items:
+    N14ClothingOuterCombatTribalBlueprint:
+      amount: 1
+      catalyzer: true
+    N14ClothingOuterCombatArmor:
+      amount: 1
+    MaterialCloth1:
+      amount: 1
+    N14MaterialThread1:
+      amount: 1
+    N14FloraProduceWildBrocFlower:
+      amount: 2

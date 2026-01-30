@@ -1,5 +1,5 @@
-recipe-N14MortarPestle-name = { ent-N14MortarpestleGrinder }
-recipe-N14MortarPestle-desc = { ent-N14MortarpestleGrinder.desc }
+recipe-N14MortarpestleGrinder-name = { ent-N14MortarpestleGrinder }
+recipe-N14MortarpestleGrinder-desc = { ent-N14MortarpestleGrinder.desc }
 recipe-N14HealingPowder-name = { ent-N14HealingPowder }
 recipe-N14HealingPowder-desc = { ent-N14HealingPowder.desc }
 recipe-N14Stimpak-name = { ent-N14Stimpak }

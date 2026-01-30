@@ -46,6 +46,7 @@
     - N14Bandage
     - N14CurrencyPrewarMoney500
     - N14CurrencyPrewarMoney500
+    - N14NewYearsGift # Forge-Change
 
 - type: playTimeTracker
   id: Overseer

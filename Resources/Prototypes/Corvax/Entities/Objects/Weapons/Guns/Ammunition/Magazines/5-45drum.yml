@@ -2,7 +2,13 @@
   id: BaseMagazineDrum545Rifle
   name: "magazine drum (5.45mm)"
   parent: BaseItem
+  abstract: true
   components:
+  - type: Item
+    size: Normal
+    shape:
+    - 0,0,1,1
+    - 0,1,0,1
   - type: Tag
     tags:
       - MagazineDrum545Rifle

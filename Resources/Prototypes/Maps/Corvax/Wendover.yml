@@ -28,7 +28,7 @@
         - Wastelander
         availableJobs:
           Wastelander: [ -1, -1 ]
-          WastelandScavenger: [ 3, 5 ]
+          # WastelandScavenger: [ 3, 5 ]
           WastelandReporter: [ 1, 2 ]
           # WastelandMusician: [ 2, 3 ]
           WastelandFarmer: [ 2, 3 ]
@@ -55,6 +55,8 @@
           NCRMedic: [ 1, 2 ]
           NCRSoldier: [ 3, 6 ]
           NCRCadet: [ 2, 5 ]
+          NCRPisoner : [ 3, 3 ]
+          NCRMPinvestigator : [ 1, 1 ]
           # CaravanLeader: [ 1, 1 ]
           # CaravanTrader: [ 1, 1 ]
           # CaravanGuard: [ 2, 2 ]
@@ -69,6 +71,7 @@
           BoSMidKnight: [ 2, 3 ]
           BoSMidScribe: [ 1, 2 ]
           BoSMidSquire: [ 2, 2 ]
+          BoSMidSerf: [ 3, 3 ]
           Overseer: [ 1, 1 ]
           VaultDoctor: [ 2, 2 ]
           VaultDweller: [ 4, 4 ]
@@ -80,4 +83,6 @@
           CaesarLegionLegionnaireVeteran: [ 3, 3 ] # Forge-Legion
           CaesarLegionLegionnaireWarrior: [ 4, 4 ] # Forge-Legion
           CaesarLegionLegionnaireRecruit: [ 6, 6 ] # Forge-Legion
+          CaesarLegionSlave: [ 3, 3 ] # Forge-Legion
           # Raider: [3,3]
+          Followers: [ 2, 2 ]

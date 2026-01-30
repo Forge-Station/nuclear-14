@@ -1,6 +1,6 @@
 - type: construction
   name: torch
-  id: LightTorch
+  id: Torch # Forge-Change
   graph: LightTorch
   startNode: start
   targetNode: torch

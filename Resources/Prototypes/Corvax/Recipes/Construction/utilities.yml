@@ -1,0 +1,14 @@
+# FIX REQUIRED: wonky construction ghost (prob sprite issue) causing wrong placement
+# - type: construction
+#   name: small light
+#   id: N14tubeLight
+#   graph: LightFixture
+#   startNode: start
+#   targetNode: tubeLight
+#   category: construction-category-utilities
+#   description: A light bulb in a cage.
+#   icon: { sprite: Structures/Wallmounts/Lighting/light_tube.rsi, state: glow }
+#   objectType: Structure
+#   placementMode: SnapgridCenter
+#   hide: false
+

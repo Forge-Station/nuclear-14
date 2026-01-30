@@ -86,7 +86,7 @@
     toggleState: Draw
   - type: Tag
     tags:
-    - Syringe
+    - Syringe # Forge-Change
     - Trash
 
 - type: entity
@@ -194,6 +194,9 @@
     maxFillLevels: 1
     changeColor: false
     emptySpriteName: used
+  - type: Tag
+    tags:
+    - Syringe
 
 - type: entity
   parent: N14ChemicalSyringeAntidoteEmpty
@@ -236,6 +239,7 @@
   - type: Tag
     tags:
     - Jet
+    - Syringe
 
 - type: entity
   parent: N14JetInhaler
@@ -276,6 +280,9 @@
     solutions:
       pen:
         maxVol: 10
+  - type: Tag
+    tags:
+    - Syringe
 
 - type: entity
   parent: N14TurboInhaler
@@ -330,16 +337,18 @@
     scale: 0.75, 0.75
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_drugs.rsi
     layers:
-    - state: turbo
+    - state: hydra
       map: ["enum.SolutionContainerLayers.Fill"]
   - type: SolutionContainerVisuals
     maxFillLevels: 1
     changeColor: false
-    emptySpriteName: turbo
+    emptySpriteName: hydra
   - type: Hypospray
     solutionName: pen
     transferAmount: 15
-
+  - type: Tag
+    tags:
+    - Syringe
 
 - type: entity
   parent: N14HydraInhaler
@@ -380,6 +389,9 @@
     solutions:
       pen:
         maxVol: 20
+  - type: Tag
+    tags:
+    - Syringe
 
 - type: entity
   parent: N14PsychoSyringe

@@ -19,3 +19,12 @@
     sprite: Corvax/Clothing/Neck/sheriffmantle.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Neck/sheriffmantle.rsi
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckNCRMPCoat
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/NCRMPСoatNect.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Neck/NCRMPСoatNect.rsi

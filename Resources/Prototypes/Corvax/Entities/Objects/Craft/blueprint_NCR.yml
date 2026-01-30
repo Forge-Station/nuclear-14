@@ -42,3 +42,31 @@
   components:
     - type: STBlueprint
       blueprint: N14ClothingOuterPowerArmorAdvanced1NCRRecipe
+
+#MARK: Armor
+- type: entity
+  parent: N14BaseBlueprintPaper
+  id: N14ClothingOuterNCRVestDesertBlueprint
+  name: blueprint NCR vest desert
+  suffix: Craft, NCR
+  components:
+    - type: STBlueprint
+      blueprint: N14ClothingOuterNCRVestDesertRecipe
+
+- type: entity
+  parent: N14BaseBlueprintPaper
+  id: N14ClothingOuterNCRCombatArmorBlueprint
+  name: blueprint NCR combat armor
+  suffix: Craft, NCR
+  components:
+    - type: STBlueprint
+      blueprint: N14ClothingOuterNCRCombatArmorRecipe
+
+- type: entity
+  parent: N14BaseBlueprintPaper
+  id: N14ClothingOuterNCRCombatArmorMK2Blueprint
+  name: blueprint NCR MK2 combat armor
+  suffix: Craft, NCR
+  components:
+    - type: STBlueprint
+      blueprint: N14ClothingOuterNCRCombatArmorMK2Recipe

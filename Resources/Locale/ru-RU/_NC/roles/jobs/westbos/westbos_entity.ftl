@@ -1,0 +1,10 @@
+ent-N14BoSWestElderCommander = Старейшина ЗБС
+    .desc = { ent-MobHuman.desc }
+ent-N14MobHumanBoSWestPaladin = Паладин ЗБС
+    .desc = { ent-MobHuman.desc }
+ent-N14MobHumanBoSWestScribe = Скриптер ЗБС
+    .desc = { ent-MobHuman.desc }
+ent-N14MobHumanBoSWestKnight = Рыцарь ЗБС
+    .desc = { ent-MobHuman.desc }
+ent-N14MobHumanBoSWestGunsmith = Оруженосец ЗБС
+    .desc = { ent-MobHuman.desc }

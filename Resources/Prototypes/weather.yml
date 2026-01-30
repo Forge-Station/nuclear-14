@@ -93,12 +93,10 @@
     collection: Rain
     params:
       loop: true
-      volume: -8 # Forge-Change -6>-8
+      volume: -6
   temperature: 300
-  duration: 500
-  showMessage: true # Forge-Change-Start
-  chance: 3 # 6>3
-  sender: weather-announcement # Forge-Change-End
+  duration: 250
+  chance: 2
   message: weather-rain
 
 - type: soundCollection
@@ -193,10 +191,10 @@
     path: /Audio/Effects/Weather/rain_heavy.ogg
     params:
       loop: true
-      volume: -8 # Forge-Change -6>-8
+      volume: -6
   temperature: 310
-  duration: 500
+  duration: 250
   showMessage: true
-  chance: 2 # Forge-Change 4>2
+  chance: 1
   sender: weather-announcement
   message: weather-storm

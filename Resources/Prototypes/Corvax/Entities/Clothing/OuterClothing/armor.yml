@@ -221,7 +221,7 @@
         Heat: 0.9
   - type: ExplosionResistance
     damageCoefficient: 0.95
-  
+
 - type: entity
   parent: N14FalloutArmorBase
   id: NCClothingOuterBosReconArmor
@@ -287,7 +287,7 @@
 - type: entity
   parent: N14ClothingOuterNCRVestDesert
   id: N14ClothingOuterNCRVestpaddedWebDesert
-  components: 
+  components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRpaddedwebvest.rsi
   - type: Clothing
@@ -316,7 +316,7 @@
 - type: entity
   parent: N14ClothingOuterNCRVestDesert
   id: N14ClothingOuterNCRVeteranArmorDesert
-  components: 
+  components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRveteranarmor.rsi
   - type: Clothing
@@ -334,7 +334,7 @@
 - type: entity
   parent: N14ClothingOuterNCRCombatArmor
   id: N14ClothingOuterNCRCombatVeteranArmorDesert
-  components: 
+  components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutcombatveteranNCR.rsi
   - type: Clothing
@@ -350,7 +350,7 @@
 - type: entity
   parent: N14FalloutArmorBase
   id: N14ClothingOuterBOSInquisitorBattleArmor
-  components: 
+  components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/InquisitorArmor.rsi
   - type: Clothing
@@ -366,3 +366,96 @@
         Heat: 0.6
   - type: ExplosionResistance
     damageCoefficient: 0.75
+
+- type: entity
+  parent: N14FalloutArmorBase
+  id: N14ClothingOuterNCRMPArmorWest
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/NCRMPArmorWest.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/NCRMPArmorWest.rsi
+  - type: TemperatureProtection
+    coefficient: 0.2
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.8
+        Slash: 0.8
+        Piercing: 0.8
+        Heat: 0.7
+  - type: ExplosionResistance
+    damageCoefficient: 0.8
+
+- type: entity
+  parent: N14ClothingOuterNCRCombatArmor
+  id: N14ClothingOuterRangerRedwood
+  name: комплект патрульной брони рейнджера "Редвуд"
+  description: Модифицированная версия патрульной боевой брони, поверх которой надета тёмно-коричневая кожаная куртка. Используется рейндерами НКР, патрулирующими густые районы и горные перевалы Калифорнии. Комплект обеспечивает хорошую защиту, при этом не ограничивая движения.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/RangerJacketArmor.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/RangerJacketArmor.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.7
+        Slash: 0.7
+        Piercing: 0.7
+        Heat: 0.7
+    priceMultiplier: 0.6
+  - type: ExplosionResistance
+    damageCoefficient: 0.7
+
+- type: entity
+  parent: N14ClothingOuterBase
+  id: N14ClothingOuterRangerCoyote
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/RangerAltArmor.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/RangerAltArmor.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.75
+        Slash: 0.75
+        Piercing: 0.75
+        Heat: 0.75
+    priceMultiplier: 0.6
+  - type: ExplosionResistance
+    damageCoefficient: 0.7
+  - type: ClothingSpeedModifier
+    walkModifier: 1.05
+    sprintModifier: 1.05
+
+- type: entity
+  parent: N14ClothingOuterBase
+  id: N14ClothingOuterRangerScorpion
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/RangerScorpionArmor.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/RangerScorpionArmor.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.75
+        Slash: 0.75
+        Piercing: 0.75
+        Heat: 0.75
+        Caustic: 0.85
+        Radiation: 0.9
+    priceMultiplier: 0.6
+  - type: ExplosionResistance
+    damageCoefficient: 0.7
+
+- type: entity
+  parent: N14ClothingOuterNCRCombatArmor
+  id: N14ClothingOuterRangerArmorOld
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/RangerStandartArmor.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/RangerStandartArmor.rsi

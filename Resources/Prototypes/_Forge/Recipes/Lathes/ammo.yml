@@ -1,0 +1,31 @@
+# 5.45
+- type: latheRecipe
+  id: MagazineBox545
+  result: MagazineBox545
+  category: N14AmmoBox
+  completetime: 5
+  materials:
+    Lead: 180
+    Steel: 260
+    N14Gunpowder: 180
+    Cardboard: 100
+
+- type: latheRecipe
+  id: Magazine545Rifle
+  result: Magazine545Rifle
+  category: N14AmmoMagazine
+  completetime: 5
+  materials:
+    Lead: 60
+    Steel: 180
+    N14Gunpowder: 60
+
+- type: latheRecipe
+  id: MagazineDrum545Rifle
+  result: MagazineDrum545Rifle
+  category: N14AmmoMagazine
+  completetime: 5
+  materials:
+    Lead: 450
+    Steel: 1000
+    N14Gunpowder: 970

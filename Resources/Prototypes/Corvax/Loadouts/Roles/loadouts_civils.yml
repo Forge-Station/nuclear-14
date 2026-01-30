@@ -1,0 +1,14 @@
+- type: loadout
+  id: LoadoutNCRClothingUniformNCRCFUniform
+  category: Roles
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRPisoner
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRPisoner
+      min: 72000 # 1200 minutes
+  items:
+    - N14ClothingUniformNCRCFUniform

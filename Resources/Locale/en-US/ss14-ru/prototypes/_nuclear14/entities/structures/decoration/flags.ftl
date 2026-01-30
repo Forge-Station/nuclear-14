@@ -26,3 +26,6 @@ ent-N14DecorationFlagKhans = Great Khans flag
     .desc = A flag worn and weathered from a long cherished history. A decorated smiling skull smiles mockingly upon those who challenge it.
 ent-N14DecorationFlagChurch = The Church flag
     .desc = A blood red flag featuring a symbol associated with nuclear radiation.
+ent-N14DecorationFlagLegion = Legion flag
+    .suffix = Mapping
+    .desc = Scarlet like blood-drenched lands conquered by the Legion. At its heart, a bronze bull, a symbol of fury and power. The sight of the flag reminds you of Caesar's promise to purify the world through conquest

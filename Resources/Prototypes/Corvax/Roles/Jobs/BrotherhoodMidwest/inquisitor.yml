@@ -50,6 +50,7 @@
   storage: 
     back:
     - N14BoxPlasticFilledMilitary
+    - N14NewYearsGift # Forge-Change
 
 - type: playTimeTracker
   id: BoSMidInquisitor

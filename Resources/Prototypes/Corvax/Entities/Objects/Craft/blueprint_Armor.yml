@@ -1,0 +1,17 @@
+- type: entity
+  parent: N14BaseBlueprintPaper
+  id: N14ClothingOuterCombatArmorBlueprint
+  name: blueprint restoration combat armor
+  suffix: Craft
+  components:
+    - type: STBlueprint
+      blueprint: N14ClothingOuterCombatArmorRecipe
+
+- type: entity
+  parent: N14BaseBlueprintPaper
+  id: N14ClothingOuterCombatArmorMK2Blueprint
+  name: blueprint restoration MK2 combat armor
+  suffix: Craft
+  components:
+    - type: STBlueprint
+      blueprint: N14ClothingOuterCombatArmorMK2Recipe

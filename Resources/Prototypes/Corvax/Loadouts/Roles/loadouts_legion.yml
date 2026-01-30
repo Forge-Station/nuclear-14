@@ -108,3 +108,51 @@
         - CaesarLegionDean
   items:
     - N14ClothingOuterDeanLegionnaireRecruitArmor
+
+- type: loadout
+  id: LoadoutLegionCloakBlack
+  category: Roles
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionCenturion
+        - CaesarLegionVenator
+        - CaesarLegionDean
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionDean
+      min: 72000
+  items:
+    - N14ClothingNeckCloakLegionBlack
+
+- type: loadout
+  id: LoadoutNeckCloakLegionWhite
+  category: Roles
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionCenturion
+        - CaesarLegionVenator
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionVenator
+      min: 72000
+  items:
+    - N14ClothingNeckCloakLegionWhite
+
+- type: loadout
+  id: LoadoutNeckCloakLegionRed
+  category: Roles
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionCenturion
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionCenturion
+      min: 72000
+  items:
+    - N14ClothingNeckCloakLegionRed

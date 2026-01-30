@@ -54,6 +54,7 @@
     - Ointment
     - N14HealingPowder
     - N14HealingPowder
+    - N14NewYearsGift # Forge-Change
 
 - type: playTimeTracker
   id: TribalHealer

@@ -11,7 +11,7 @@
     - ClothingNeckPinNCRRecruit
 
 - type: loadout
-  id: LoadoutNCRPinPrivate
+  id: LoadoutNCRPinPrivateSoldier # Forge-Change
   category: Roles
   cost: 1
   exclusive: true
@@ -23,7 +23,19 @@
     - ClothingNeckPinNCRPrivate
 
 - type: loadout
-  id: LoadoutNCRPinPrivate1st
+  id: LoadoutNCRPinPrivateNCRWS # Forge-Change
+  category: Roles
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRWS
+  items:
+    - ClothingNeckPinNCRPrivate
+
+- type: loadout
+  id: LoadoutNCRPinPrivate1stSoldier # Forge-Change
   category: Roles
   cost: 1
   exclusive: true
@@ -38,7 +50,22 @@
     - ClothingNeckPinNCRPrivate1st
 
 - type: loadout
-  id: LoadoutNCRPinCorporal
+  id: LoadoutNCRPinPrivate1stNCRWS # Forge-Change
+  category: Roles
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRWS
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRWS
+      min: 72000 # 20 hours veterancy unlock
+  items:
+    - ClothingNeckPinNCRPrivate1st
+
+- type: loadout
+  id: LoadoutNCRPinCorporalSoldier # Forge-Change
   category: Roles
   cost: 1
   exclusive: true
@@ -53,7 +80,22 @@
     - ClothingNeckPinNCRCorporal
 
 - type: loadout
-  id: LoadoutNCRPinSpecialist
+  id: LoadoutNCRPinCorporalNCRWS # Forge-Change
+  category: Roles
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRWS
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRWS
+      min: 144000 # 40 hours veterancy unlock
+  items:
+    - ClothingNeckPinNCRCorporal
+
+- type: loadout
+  id: LoadoutNCRPinSpecialistSoldier # Forge-Change
   category: Roles
   cost: 1
   exclusive: true
@@ -63,6 +105,21 @@
         - NCRSoldier
     - !type:CharacterPlaytimeRequirement
       tracker: NCRSoldier
+      min: 216000 # 60 hours veterancy unlock
+  items:
+    - ClothingNeckPinNCRSpecialist
+
+- type: loadout
+  id: LoadoutNCRPinSpecialistSNCRWS # Forge-Change
+  category: Roles
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRWS
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRWS
       min: 216000 # 60 hours veterancy unlock
   items:
     - ClothingNeckPinNCRSpecialist
@@ -225,7 +282,7 @@
 
 - type: loadout
   id: LoadoutNCRSnowHelmet
-  category: Roles
+  category: Head # Forge-Change
   cost: 1
   exclusive: true
   requirements:
@@ -233,12 +290,13 @@
       jobs:
         - NCRSoldier
         - NCRSGT
+        - NCRWS # Forge-Change
   items:
     - N14ClothingHeadHatNCRHelmetMetalSnow
 
 - type: loadout
   id: LoadoutNCRWoodsHelmet
-  category: Roles
+  category: Head # Forge-Change
   cost: 1
   exclusive: true
   requirements:
@@ -246,6 +304,7 @@
       jobs:
         - NCRSoldier
         - NCRSGT
+        - NCRWS # Forge-Change
   items:
     - N14ClothingHeadHatNCRHelmetMetalWoods
 
@@ -260,12 +319,13 @@
         - NCRSoldier
         - NCRCadet
         - NCRSGT
+        - NCRWS # Forge-Change
   items:
     - N14ClothingEyesGlassesGoggles
 
 - type: loadout
   id: LoadoutClothingHandsGlovesNCR
-  category: Roles
+  category: Hands # Forge-Change
   cost: 1
   exclusive: true
   requirements:
@@ -274,12 +334,13 @@
         - NCRSoldier
         - NCRCadet
         - NCRSGT
+        - NCRWS # Forge-Change
   items:
     - N14ClothingHandsGlovesNCR
 
 - type: loadout
   id: LoadoutNCRWoodsHelmetGhillie
-  category: Roles
+  category: Head # Forge-Change
   cost: 1
   exclusive: true
   requirements:
@@ -287,12 +348,13 @@
       jobs:
         - NCRSoldier
         - NCRSGT
+        - NCRWS # Forge-Change
   items:
     - N14ClothingHeadHatNCRHelmetMetalGhillie
 
 - type: loadout
   id: LoadoutNCRWhiteBoonie
-  category: Roles
+  category: Head # Forge-Change
   cost: 1
   exclusive: true
   requirements:
@@ -300,12 +362,13 @@
       jobs:
         - NCRSoldier
         - NCRSGT
+        - NCRWS # Forge-Change
   items:
     - N14ClothingHeadHatWinterBoonie
 
 - type: loadout
   id: LoadoutNCRGreenBoonie
-  category: Roles
+  category: Head # Forge-Change
   cost: 1
   exclusive: true
   requirements:
@@ -313,12 +376,13 @@
       jobs:
         - NCRSoldier
         - NCRSGT
+        - NCRWS # Forge-Change
   items:
     - N14ClothingHeadHatWoodBoonie
 
 - type: loadout
-  id: LoadoutNCRCloakNCR
-  category: Roles
+  id: LoadoutNCRBrownBoonie # Forge-Change
+  category: Head # Forge-Change
   cost: 1
   exclusive: true
   requirements:
@@ -326,6 +390,21 @@
       jobs:
         - NCRSoldier
         - NCRSGT
+        - NCRWS
+  items:
+    - N14ClothingHeadHatDesertBoonie
+
+- type: loadout
+  id: LoadoutNCRCloakNCR
+  category: Roles 
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRSoldier
+        - NCRSGT
+        - NCRWS # Forge-Change
   items:
     - N14ClothingNeckCloakNCR
 
@@ -339,6 +418,7 @@
       jobs:
         - NCRSoldier
         - NCRSGT
+        - NCRWS # Forge-Change
   items:
     - N14ClothingNeckCloakGhillie
 
@@ -352,6 +432,7 @@
       jobs:
         - NCRSoldier
         - NCRSGT
+        - NCRWS # Forge-Change
   items:
     - N14ClothingNeckCloakNCRSnow
 
@@ -365,6 +446,7 @@
       jobs:
         - NCRSoldier
         - NCRSGT
+        - NCRWS # Forge-Change
   items:
     - N14ClothingNeckCloakNCRWoods
 
@@ -378,5 +460,6 @@
       jobs:
         - NCRSoldier
         - NCRSGT
+        - NCRWS # Forge-Change
   items:
     - N14ClothingMaskBrownBalaclava

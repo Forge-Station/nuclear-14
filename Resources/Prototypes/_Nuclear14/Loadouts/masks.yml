@@ -5,6 +5,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMask
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - ClothingMaskBat
 
@@ -15,6 +21,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMask
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - ClothingMaskBear
 
@@ -25,6 +37,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMask
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - ClothingMaskFox
 
@@ -35,6 +53,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMask
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - ClothingMaskJackal
 
@@ -45,6 +69,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMask
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - ClothingMaskRat
 
@@ -55,6 +85,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMask
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - ClothingMaskRaven
 
@@ -67,6 +103,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMask
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingMaskWhiteBalaclava
 
@@ -79,5 +121,11 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMask
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingMaskBreather

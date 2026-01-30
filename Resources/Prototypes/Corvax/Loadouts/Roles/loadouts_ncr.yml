@@ -65,3 +65,33 @@
     min: 72000 # 20 hours veterancy unlock
   items:
   - N14ClothingOuterNCRCombatVeteranArmorDesert
+
+- type: loadout
+  id: LoadoutClothingNeckNCRMPCoat
+  category: Outer
+  cost: 4
+  exclusive: true
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - NCRMPinvestigator
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCRMPinvestigator
+    min: 72000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingNeckNCRMPCoat
+
+- type: loadout
+  id: LoadoutClothingNeckNCRMPBeret
+  category: Outer
+  cost: 2
+  exclusive: true
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - NCRMPinvestigator
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCRMPinvestigator
+    min: 72000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingHeadHatNCRMPBeret

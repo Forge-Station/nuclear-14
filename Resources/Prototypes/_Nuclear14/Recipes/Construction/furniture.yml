@@ -54,7 +54,7 @@
   hide: false
 
 - type: construction
-  id: N14BedMattress
+  id: N14BedMattress0 # Forge-Change
   name: mattress
   description: A basic cloth mattress for bedding down.
   graph: N14Bed

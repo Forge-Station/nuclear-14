@@ -14,7 +14,7 @@
 # Cardboard
 - type: construction
   name: cardboard
-  id: N14Cardboard
+  id: MaterialCardboard # Forge-Change
   graph: N14Cardboard
   startNode: start
   targetNode: cardboard

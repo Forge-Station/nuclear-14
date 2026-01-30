@@ -1,7 +1,7 @@
 #MARK: Bandanas
 - type: construction
   name: black bandana
-  id: blackbandana
+  id: N14ClothingMaskBlackMask # Forge-Change
   graph: blackbandana
   startNode: start
   targetNode: bandanablack
@@ -15,7 +15,7 @@
 
 - type: construction
   name: blue bandana
-  id: bluebandana
+  id: N14ClothingMaskBlueMask # Forge-Change
   graph: bluebandana
   startNode: start
   targetNode: bandanablue
@@ -43,7 +43,7 @@
 
 - type: construction
   name: green bandana
-  id: greenbandana
+  id: N14ClothingMaskGreenMask # Forge-Change
   graph: greenbandana
   startNode: start
   targetNode: bandanagreen
@@ -57,7 +57,7 @@
 
 - type: construction
   name: red bandana
-  id: redbandana
+  id: N14ClothingMaskRedMask # Forge-Change
   graph: redbandana
   startNode: start
   targetNode: bandanared
@@ -71,7 +71,7 @@
 
 - type: construction
   name: skull bandana
-  id: skullbandana
+  id: N14ClothingMaskPatriotMask # Forge-Change
   graph: skullbandana
   startNode: start
   targetNode: bandanaskull
@@ -85,7 +85,7 @@
 
 - type: construction
   name: brown bandana
-  id: brownbandana
+  id: N14ClothingMaskBrownMask # Forge-Change
   graph: brownbandana
   startNode: start
   targetNode: bandanabrown
@@ -99,7 +99,7 @@
 
 - type: construction
   name: grey bandana
-  id: greybandana
+  id: N14ClothingMaskDesertMask # Forge-Change
   graph: greybandana
   startNode: start
   targetNode: bandanagrey
@@ -114,7 +114,7 @@
 #MARK: Uniform's
 - type: construction
   name: wastelander rags
-  id: WastelanderRags
+  id: N14ClothingUniformJumpsuitRags # Forge-Change
   graph: WastelanderRagsGraph
   startNode: start
   targetNode: rags
@@ -128,7 +128,7 @@
 
 - type: construction
   name: Followers armored coat
-  id: CoatFollowersArmored
+  id: N14ClothingOuterCoatFollowersArmored # Forge-Change
   graph: CoatFollowersArmoredGraph
   startNode: start
   targetNode: followercoat
@@ -142,7 +142,7 @@
 
 #MARK: Mantle's
 - type: construction
-  id: LeatherMantle
+  id: N14ClothingNeckMantleLeather # Forge-Change
   name: leather mantle
   description: A comfortable brown long mantle.
   category: construction-category-clothing
@@ -156,7 +156,7 @@
   hide: false
 
 - type: construction
-  id: LeatherCloak
+  id: N14ClothingNeckCloakLeather # Forge-Change
   name: leather cloak
   description: A handmade cloak, comfy and warm.
   category: construction-category-clothing
@@ -170,7 +170,7 @@
   hide: false
 
 - type: construction
-  id: YaoguaiCloak
+  id: N14ClothingNeckCloakYaoguai # Forge-Change
   name: Yao Guai cloak
   description: A handmade cloak, comfy and warm this piece comes from a dangerous Yao Guai.
   category: construction-category-clothing
@@ -184,7 +184,7 @@
   hide: false
 
 - type: construction
-  id: GlovesCloth
+  id: N14ClothingHandsGlovesCloth # Forge-Change
   name: cloth gloves
   description: A piece of cloth to tie around the hand.
   category: construction-category-clothing
@@ -198,7 +198,7 @@
   hide: false
 
 - type: construction
-  id: Nightstalkerhat
+  id: N14ClothingHeadHatNightstalker # Forge-Change
   name: nightstalker hat
   description: A warm and resistent hat made from the head of a nightstalker.
   category: construction-category-clothing

@@ -531,36 +531,46 @@
         - id: N14WeaponRevolver9mm
           prob: 0.1
           orGroup: Weapon
-        - id: N14WeaponRifle556Carbine
+        # Forge-Change-Start
+        #- id: N14WeaponRifle556Carbine
+        #  prob: 0.04
+        #  orGroup: Weapon
+        #- id: N14WeaponRifle762Chinese
+        #  prob: 0.02
+        #  orGroup: Weapon
+        #- id: N14WeaponRifle762Marksman
+        #  prob: 0.04
+        #  orGroup: Weapon
+        - id: N14WeaponRifle556CarbineOld
           prob: 0.04
           orGroup: Weapon
-        - id: N14WeaponRifle762Chinese
-          prob: 0.02
+        - id: N14WeaponRifle762M14
+          prob: 0.03
           orGroup: Weapon
-        - id: N14WeaponRifle762Marksman
-          prob: 0.04
-          orGroup: Weapon
+        # Forge-Change-End
         - id: N14WeaponShotgunDoubleBarrel
           prob: 0.1
           orGroup: Weapon
         - id: N14WeaponShotgun
           prob: 0.05
           orGroup: Weapon
-        - id: N14WeaponShotgunAuto
-          prob: 0.02
-          orGroup: Weapon
+        #- id: N14WeaponShotgunAuto # Forge-Change
+        #  prob: 0.02
+        #  orGroup: Weapon
         - id: N14WeaponShotgunCaravan
           prob: 0.1
           orGroup: Weapon
         - id: N14WeaponShotgunLever
           prob: 0.07
           orGroup: Weapon
-        - id: N14WeaponSMG10mm
-          prob: 0.05
-          orGroup: Weapon
-        - id: N14WeaponSMG12mm
-          prob: 0.08
-          orGroup: Weapon
+        # Forge-Change-Start
+        #- id: N14WeaponSMG10mm
+        #  prob: 0.05
+        #  orGroup: Weapon
+        #- id: N14WeaponSMG12mm
+        #  prob: 0.08
+        #  orGroup: Weapon
+        # Forge-Change-End
         - id: N14WeaponSMG12mmPipe
           prob: 0.07
           orGroup: Weapon
@@ -582,9 +592,9 @@
         - id: N14WeaponRevolver44Magnun
           prob: 0.07
           orGroup: Weapon
-        - id: N14WeaponDesertEagle44
-          prob: 0.025
-          orGroup: Weapon
+        #- id: N14WeaponDesertEagle44 # Forge-Change
+        #  prob: 0.025
+        #  orGroup: Weapon
         - id: N14WeaponSMG45
           prob: 0.05
           orGroup: Weapon
@@ -834,12 +844,14 @@
         - id: N14ClothingOuterMetalArmor
           prob: 0.1
           orGroup: Clothing
-        - id: N14ClothingOuterCombatArmor
-          prob: 0.07
-          orGroup: Clothing
-        - id: N14ClothingOuterCombatArmorMK2
-          prob: 0.05
-          orGroup: Clothing
+        # Forge-Change-Start
+        #- id: N14ClothingOuterCombatArmor
+        #  prob: 0.07
+        #  orGroup: Clothing
+        #- id: N14ClothingOuterCombatArmorMK2
+        #  prob: 0.05
+        #  orGroup: Clothing
+        # Forge-Change-End
         - id: N14ClothingOuterTribalArmor
           prob: 0.12
           orGroup: Clothing
@@ -852,12 +864,14 @@
         - id: N14ClothingOuterRaiderBlastmaster
           prob: 0.8
           orGroup: Clothing
-        - id: N14ClothingOuterRaiderCombat1
-          prob: 0.12
-          orGroup: Clothing
-        - id: N14ClothingOuterRaiderCombat2
-          prob: 0.12
-          orGroup: Clothing
+        # Forge-Change-Start
+        #- id: N14ClothingOuterRaiderCombat1
+        #  prob: 0.12
+        #  orGroup: Clothing
+        #- id: N14ClothingOuterRaiderCombat2
+        #  prob: 0.12
+        #  orGroup: Clothing
+        # Forge-Change-End
         - id: N14ClothingOuterZealotDuster
           prob: 0.001
           orGroup: Clothing
@@ -891,9 +905,9 @@
         - id: N14ClothingMaskDesertMask
           prob: 0.07
           orGroup: Clothing
-        - id: N14ClothingHeadHatCombatHelmet
-          prob: 0.05
-          orGroup: Clothing
+        #- id: N14ClothingHeadHatCombatHelmet # Forge-Change
+        #  prob: 0.05
+        #  orGroup: Clothing
         - id: N14ClothingBootsCombat
           prob: 0.05
           orGroup: Clothing
@@ -1383,9 +1397,9 @@
         - id: N14ClothingMaskDesertMask
           prob: 0.07
           orGroup: Clothing
-        - id: N14ClothingHeadHatCombatHelmet
-          prob: 0.05
-          orGroup: Clothing
+        #- id: N14ClothingHeadHatCombatHelmet # Forge-Change
+        #  prob: 0.05
+        #  orGroup: Clothing
         - id: N14ClothingBootsCombat
           prob: 0.05
           orGroup: Clothing
@@ -2424,6 +2438,23 @@
         - id: N14ClothingMaskDesertMask
           prob: 0.07
           orGroup: Clothing
+        # Forge-Change-Start
+        - id: N14WeaponSMG10mmChinese
+          prob: 0.05
+          orGroup: Weapon
+        - id: N14WeaponRifle762M14
+          prob: 0.04
+          orGroup: Weapon
+        - id: N14WeaponRifle556R91
+          prob: 0.04
+          orGroup: Weapon
+        - id: N14ClothingOuterRaiderCombat1
+          prob: 0.03
+          orGroup: Clothing
+        - id: N14ClothingOuterRaiderCombat2
+          prob: 0.01
+          orGroup: Clothing
+        # Forge-Change-End
         - id: N14ClothingOuterPowerArmorT45
           prob: 0.01
           orGroup: Clothing

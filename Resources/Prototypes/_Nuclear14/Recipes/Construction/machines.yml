@@ -1,4 +1,4 @@
-﻿- type: construction
+- type: construction
   name: tall machine frame
   description: A machine under construction. Needs more parts.
   id: N14TallMachineFrame
@@ -23,7 +23,7 @@
   description: A server rack filled with electronics.
   objectType: Structure
   canBuildInImpassable: false
-  hide: false
+  hide: true #MARK: Hide (Forge-Change)
   icon:
     sprite: _Nuclear14/Structures/Power/32x48_machines.rsi
     state: rack_on
@@ -40,7 +40,7 @@
   description: A server rack filled with electronics.
   objectType: Structure
   canBuildInImpassable: false
-  hide: false
+  hide: true #MARK: Hide (Forge-Change)
   icon:
     sprite: _Nuclear14/Structures/Power/32x48_machines.rsi
     state: serverrack_on
@@ -58,7 +58,7 @@
   description: A server rack filled with electronics.
   objectType: Structure
   canBuildInImpassable: false
-  hide: false
+  hide: true #MARK: Hide (Forge-Change)
   icon:
     sprite: _Nuclear14/Structures/Power/32x48_machines.rsi
     state: rack_on

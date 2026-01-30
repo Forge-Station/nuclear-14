@@ -205,7 +205,7 @@ undecided-loadout-category-lt-tactical-description =
 undecided-loadout-category-ranger-service-name = Стандартный набор рейнджера
 undecided-loadout-category-ranger-service-description =
     Ящик с продвинутым вооружением для рейнджеров.
-    Содержит: 1 пояс НКР, 1 служебную винтовку, 4 магазина 5.56,
+    Содержит: 1 пояс НКР, 1 автоматическую служебную винтовку, 4 магазина 5.56,
     1 коробка патронов 5.56, 1 стимпак, 1 сухпаёк типа C и боевой нож.
 
 undecided-loadout-category-ranger-rifleman-name = Набор рейнджера-стрелка
@@ -214,17 +214,17 @@ undecided-loadout-category-ranger-rifleman-description =
     Содержит: 1 пояс НКР, 1 штурмовой карабин, 3 магазина 5.56, 1 коробка патронов 5.56,
     1 стимпак, сухпаёк типа C и боевой нож.
 
-undecided-loadout-category-ranger-marksman-name = Набор рейнджера-снайпера
-undecided-loadout-category-ranger-marksman-description =
+undecided-loadout-category-ranger-sniper-name = Набор рейнджера-снайпера
+undecided-loadout-category-ranger-sniper-description =
     Ящик с продвинутым вооружением для рейнджеров.
-    Содержит: 1 пояс НКР, 1 снайперскую винтовку, 3 магазина 7.62,
-    1 коробка патронов 7.62, 1 стимпак, 1 сухпаёк типа C и боевой нож.
+    Содержит: 1 пояс НКР, 1 снайперскую винтовку, 3 магазина .308,
+    1 коробка патронов .308, 1 стимпак, 1 сухпаёк типа C и боевой нож.
 
 undecided-loadout-category-ranger-cqb-name = Набор рейнджера CQB
 undecided-loadout-category-ranger-cqb-description =
     Ящик с продвинутым вооружением для рейнджеров.
-    Содержит: 1 подсумок НКР, 1 дробовик для беспорядков, 3 барабанных магазина 20 калибра,
-    1 коробка патронов 20 калибра, 2 боевых ножа, 2 стимпака и сухпаёк типа C.
+    Содержит: 1 подсумок НКР, 1 боевой дробовик , 2 барабанных магазина 12 калибра,
+    1 коробка патронов 12 калибра, 2 боевых ножа, 2 стимпака и сухпаёк типа C.
 
 undecided-loadout-category-ranger-trailman-name = Набор следопыта-рейнджера
 undecided-loadout-category-ranger-trailman-description =
@@ -488,96 +488,96 @@ undecided-loadout-category-town-riot-description =
     2 быстрых заряжателя .45-70, 1 старый плащ, 1 рулон бинтов,
     и базовый сухпаёк.
 
-# Наборы ЗБС 
+# Наборы ЗБС
 undecided-loadout-category-elder-rifle-name = Ящик огнестрельного снаряжения Старейшены
-undecided-loadout-category-elder-rifle-description = 
+undecided-loadout-category-elder-rifle-description =
     Достал. Приказал . Убил
-    Содержит : 1 Ак-112РП , 2 Барабана 5.45 , 1 коробку патронов 5.45 
+    Содержит : 1 Ак-112РП , 2 Барабана 5.45 , 1 коробку патронов 5.45
     Пистолет .45 , 3 магазина .45 , Бинты , 1 стимпак . Осколочная граната
 
 undecided-loadout-category-elder-laser-name = Ящик лазерного снаряжения Старейшены
-undecided-loadout-category-elder-laser-description = 
+undecided-loadout-category-elder-laser-description =
     Идеальный набор для талантливого Старейшены!
     Содержит : 1 Импульсное ружьё YK42B , 3 Батареи к нему
     Магнитно-Лазерный пистолет , 2 источника питания к нему
     Бинты, стимпанк, Плазменная граната
 
 undecided-loadout-category-paladin-rifle-name = Ящик огнестрельного снаряжения Паладина
-undecided-loadout-category-paladin-rifle-description = 
+undecided-loadout-category-paladin-rifle-description =
     Эффективно. Быстро. Надежно
-    Содержит : 1 Ак-112РП , 2 Барабана 5.45 , 1 коробку патронов 5.45 
-    Пистолет .45 , 3 магазина .45 , Бинты , 1 стимпак 
+    Содержит : 1 Ак-112РП , 2 Барабана 5.45 , 1 коробку патронов 5.45
+    Пистолет .45 , 3 магазина .45 , Бинты , 1 стимпак
 
 undecided-loadout-category-paladin-laser-name = Ящик лазерного снаряжения Паладина
-undecided-loadout-category-paladin-laser-description = 
+undecided-loadout-category-paladin-laser-description =
     Простой и эффективный способ решить проблемы,Точность не обязательна
     Содержит : 1 Автоматическую лазерную винтовку , 3 Микроядерныебатареи
-    Лазерный пистолет , 2 энергобатареи , Бинты , 1 стимпак 
+    Лазерный пистолет , 2 энергобатареи , Бинты , 1 стимпак
 
 undecided-loadout-category-paladin-plasma-name = Ящик плазменого снаряжения Паладина
-undecided-loadout-category-paladin-plasma-description = 
+undecided-loadout-category-paladin-plasma-description =
     Самое страшное попасть по союзнику. А в прочем. . .
     Содержит : 1 Плазменаная винтовка , 3 плазменных магазина
     Магнитно-Лазерный пистолет, 2 источника питания к нему, Бинты ,
-    1 стимпак 
+    1 стимпак
 
 undecided-loadout-category-knight-rifle-name = Ящик огнестрельного снаряжения Рыцаря
-undecided-loadout-category-knight-rifle-description = 
+undecided-loadout-category-knight-rifle-description =
     Снаряжение главное боевой единицы западного Братства
-    1 Ак-112 , 3 магазина 5.45 , 1 коробку патронов 5.45 
-    Пистолет .45 , 3 магазина .45 , Бинты , 1 стимпак 
+    1 Ак-112 , 3 магазина 5.45 , 1 коробку патронов 5.45
+    Пистолет .45 , 3 магазина .45 , Бинты , 1 стимпак
     Полный набор элементов комплекта MA-72 BoS
 
 undecided-loadout-category-knight-laser-name = Ящик лазерного снаряжения Рыцаря
-undecided-loadout-category-knight-laser-description = 
-    Набор для ведения лазерного боя. Стильно. Мощно 
-    1 Лазерная винтовка , 3 Микроядерныебатареи , 1 лазерный пистолет, 
-    2 энергобатареи , Бинты , 1 стимпак 
+undecided-loadout-category-knight-laser-description =
+    Набор для ведения лазерного боя. Стильно. Мощно
+    1 Лазерная винтовка , 3 Микроядерныебатареи , 1 лазерный пистолет,
+    2 энергобатареи , Бинты , 1 стимпак
     Полный набор элементов комплекта MB-72 BoS
 
 undecided-loadout-category-knight-plasma-name = Ящик плазменого снаряжения Рыцаря
-undecided-loadout-category-knight-plasma-description = 
+undecided-loadout-category-knight-plasma-description =
     Набор для любителей легкости, и радиации
-    1 Плазменный карабин, 3 плазменные Батареи , 1 пистолет 12.7, 
-    2 магазина 12.7 , 1 Нюка-Граната , Бинты , 1 стимпак 
+    1 Плазменный карабин, 3 плазменные Батареи , 1 пистолет 12.7,
+    2 магазина 12.7 , 1 Нюка-Граната , Бинты , 1 стимпак
     Полный набор элементов комплекта MV-72 BoS
 
 undecided-loadout-category-squire-rifle-name = Ящик огнестрельного снаряжения Оруженосца
-undecided-loadout-category-squire-rifle-description = 
-    Основной набор оруженосца . Стандарт качества 
-    1 Ак-112 , 3 магазина 5.45 , 1 коробку патронов 5.45 
-    Бинты , 1 стимпак 
+undecided-loadout-category-squire-rifle-description =
+    Основной набор оруженосца . Стандарт качества
+    1 Ак-112 , 3 магазина 5.45 , 1 коробку патронов 5.45
+    Бинты , 1 стимпак
     Полный набор элементов комплекта SQ-22 BoS
 
 undecided-loadout-category-squire-laser-name = Ящик лазерного снаряжения Оруженосца
-undecided-loadout-category-squire-laser-description = 
+undecided-loadout-category-squire-laser-description =
     Удобный набор на все случаи жизни и не жизни
     1 Лазерная винтовка образца А, 2 Микроядерныебатареи
-    Бинты ,Стимпак 
+    Бинты ,Стимпак
     Полный набор элементов комплекта SQ-4 BoS
 
 undecided-loadout-category-squire-plasma-name = Ящик плазменого снаряжения Оруженосца
-undecided-loadout-category-squire-plasma-description = 
+undecided-loadout-category-squire-plasma-description =
     Легкий в освоении и простой в начале набор, Осторожно : Радиоактивен
     1 Плазменный пистолет, 2 плазменные Батареи ,
-    2 Нюка-Гранаты , Бинты , 1 стимпак 
+    2 Нюка-Гранаты , Бинты , 1 стимпак
     Полный набор элементов комплекта SQ-5 BoS
 
 undecided-loadout-category-scribe-rifle-name = Ящик огнестрельного снаряжения Скриптера
-undecided-loadout-category-scribe-rifle-description = 
-    Набор Скриптера-Оружейника 
+undecided-loadout-category-scribe-rifle-description =
+    Набор Скриптера-Оружейника
     1 Обрез , Коробка патрон 12 калибра ,10 пороха , 1 cтимпак
     Разгрузка , Бинты , Свинец
 
 undecided-loadout-category-scribe-laser-name = Ящик лазерного снаряжения Скриптера
-undecided-loadout-category-scribe-laser-description = 
+undecided-loadout-category-scribe-laser-description =
     Набор Скриптера-Медика
     1 Магнитно-Лазерный пистолет, 2 источника питания к нему
     Анализатор организма ,Стимпак , Аптечка , Пояс медика
 
 undecided-loadout-category-scribe-plasma-name = Ящик плазменого снаряжения Скриптера
-undecided-loadout-category-scribe-plasma-description = 
-    Набор Скриптера-Инженера , Реактор не ждет 
+undecided-loadout-category-scribe-plasma-description =
+    Набор Скриптера-Инженера , Реактор не ждет
     1 Плазменный пистолет, 2 плазменные Батареи ,
     Сталь , Стекло , Бинты , 1 стимпак , Пояс инструментов
     Полный набор элементов Радио-Защиты
@@ -600,3 +600,23 @@ undecided-loadout-category-inquisitorplasma-description =
     Плазменный набор, для самых жестоких Инквизиторов братства.
     В комплект входит: автоматическая плазменная винтовка с 3 батареями,
     сухпаек, набор бинтов, набор мазей, 2 стимпака и 1 супер-стимпак, а так-же разгрузочный жилет.
+
+# Следователь ВП НКР
+undecided-loadout-category-NCRMPMilitaryPolice-name = Набор военного полицейского НКР
+undecided-loadout-category-NCRMPMilitaryPolice-description =
+    Набор того, кто всегда готов следить за соблюдением устава, Военного полицейского НКР.
+    Включает в комплект: полицейский дробовик,с 2 баранами, коробкой 20 калибра
+    2 пары наручников, полицейскую дубинку, сухпаек и 2 стимпака
+
+undecided-loadout-category-NCRMPinvestigator-name = Набор следователя ВП НКР
+undecided-loadout-category-NCRMPinvestigator-description =
+    Набор того, кто всегда расследовать самое тяжелое военное преступление.
+    Включает в комплект: самозарядную винтовку 308 калибра, 2 магазина к ней и коробку патрон
+    2 пары наручников, полицейскую дубинку, сухпаек и 2 стимпака
+
+undecided-loadout-category-NCRMPinvestigatorBailif-name= Набор судебного исполнителя НКР
+undecided-loadout-category-NCRMPinvestigatorBailif-description =
+    Набор того, кто всегда готов исполнить решение суда, Судебного исполнителя.
+    Набор включатает:  9мм пистолет-пулемет, 2 магазина, коробку патронов
+    2 пары наручников, полицейскую дубинку, сухпаек и 2 стимпака
+

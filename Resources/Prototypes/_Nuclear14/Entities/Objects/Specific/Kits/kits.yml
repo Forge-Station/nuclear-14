@@ -761,7 +761,7 @@
   - type: SpawnItemsOnUse
     items:
       - id: ClothingBeltNCR
-      - id: N14WeaponRifle556Service
+      - id: N14WeaponRifle556Butchered # forge-change
       - id: Magazine556Rifle
         amount: 4
       - id: MagazineBox556
@@ -830,10 +830,10 @@
   - type: SpawnItemsOnUse
     items:
       - id: ClothingBeltNCRPouches
-      - id: N14WeaponShotgunRiot
-      - id: N14MagazineShotgun20
-        amount: 4
-      - id: MagazineBox20gauge
+      - id: N14WeaponShotgunAuto # Forge-Change
+      - id:  N14MagazineShotgun12 # Forge-Change
+        amount: 2 # Forge-Change
+      - id: MagazineBox12gauge # Forge-Change
       - id: N14CombatKnife
       - id: N14Stimpak
       - id: N14Stimpak
@@ -858,6 +858,31 @@
       - id: N14WeaponSniper44LeverCarbine
       - id: MagazineBox44
         amount: 3
+      - id: N14Stimpak
+      - id: N14Stimpak
+      - id: N14BoxCardboardMREBoxKFilled
+      - id: N14CombatKnife
+    sound:
+      path: /Audio/Effects/unwrap.ogg
+
+# forge-add
+- type: entity
+  name: ranger sniper kit
+  parent: KitBase
+  id: KitSniperRanger
+  description: A crate containing advanced weaponry for members of the Rangers.
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: ClothingBeltNCRPouches
+      - id: N14WeaponRifle308SniperRifle
+      - id: Magazine308RifleSniper
+        amount: 3
+      - id: MagazineBox308
       - id: N14Stimpak
       - id: N14Stimpak
       - id: N14BoxCardboardMREBoxKFilled

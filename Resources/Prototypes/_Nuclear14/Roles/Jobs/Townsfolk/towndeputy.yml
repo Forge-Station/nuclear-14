@@ -45,6 +45,7 @@
     - N14CombatKnife
     - MagazineBox10mm
     - MagazineBox44
+    - N14NewYearsGift # Forge-Change
 
 - type: playTimeTracker
   id: TownDeputy

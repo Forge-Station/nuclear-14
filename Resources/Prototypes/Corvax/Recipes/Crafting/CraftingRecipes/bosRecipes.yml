@@ -55,3 +55,64 @@
     N14Screwdriver:
       amount: 1
       catalyzer: true
+
+
+#MARK: Armor
+- type: craftRecipe
+  id: N14ClothingOuterMBoSInitiateArmorRecipe
+  resultProtos:
+    - N14ClothingOuterMBoSInitiateArmor
+  requiredWorkbench: N14WorkbenchArmorbench
+  availableFaction:
+    - BrotherhoodMidwest
+  craftTime: 7.5
+  items:
+    N14ClothingOuterMBoSInitiateArmorBlueprint:
+      amount: 1
+      catalyzer: true
+    N14ClothingOuterReinforcedLeatherArmor:
+      amount: 1
+    MaterialCloth1:
+      amount: 1
+    N14MaterialThread1:
+      amount: 2
+    N14MaterialLeather1:
+      amount: 2
+
+- type: craftRecipe
+  id: N14ClothingOuterMidwestArmorRecipe
+  resultProtos:
+    - N14ClothingOuterMidwestArmor
+  requiredWorkbench: N14WorkbenchArmorbench
+  availableFaction:
+    - BrotherhoodMidwest
+  craftTime: 7.5
+  items:
+    N14ClothingOuterMidwestArmorBlueprint:
+      amount: 1
+      catalyzer: true
+    N14ClothingOuterCombatArmor:
+      amount: 1
+    MaterialCloth1:
+      amount: 2
+    N14MaterialThread1:
+      amount: 3
+
+- type: craftRecipe
+  id: N14ClothingOuterMidwestArmorMK2Recipe
+  resultProtos:
+    - N14ClothingOuterMidwestArmorMK2
+  requiredWorkbench: N14WorkbenchArmorbench
+  availableFaction:
+    - BrotherhoodMidwest
+  craftTime: 7.5
+  items:
+    N14ClothingOuterMidwestArmorMK2Blueprint:
+      amount: 1
+      catalyzer: true
+    N14ClothingOuterCombatArmorMK2:
+      amount: 1
+    MaterialCloth1:
+      amount: 3
+    N14MaterialThread1:
+      amount: 4

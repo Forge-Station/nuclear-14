@@ -75,3 +75,16 @@
     - type: NpcFactionMember
       factions:
       - CaesarLegion
+
+- type: entity
+  parent: MobHuman
+  id: N14MobHumanCaesarCaesarLegionSlave
+  name: CaesarLegionSlave
+  components:
+    - type: RandomHumanoidAppearance
+      randomizeName: true
+    - type: Loadout
+      prototypes: [CaesarLegionSlaveGear]
+    - type: NpcFactionMember
+      factions:
+      - CaesarLegion

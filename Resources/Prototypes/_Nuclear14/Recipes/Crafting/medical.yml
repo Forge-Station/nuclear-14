@@ -1,7 +1,7 @@
 # Mortar and pestle
 - type: construction
   name: mortar & pestle
-  id: N14MortarPestle
+  id: N14MortarpestleGrinder # Forge-Change
   graph: N14MortarPestle
   startNode: start
   targetNode: mortarpestle
@@ -39,7 +39,7 @@
   description: A stimpak for healing wounds.
   hide: false
   icon:
-    sprite: _Nuclear14/Objects/Specific/Medical/drugs.rsi
+    sprite: _Nuclear14/Objects/Specific/Medical/ms13_stimpak.rsi # Forge-Change
     state: stimpak
   objectType: Item
 

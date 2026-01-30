@@ -2,6 +2,6 @@
   id: DefaultMapPool
   maps:
   #- Wave1
-  # - Sunnyvale
-  - Snowyvale
+  - Sunnyvale
+  #- Snowyvale
   - Wendover

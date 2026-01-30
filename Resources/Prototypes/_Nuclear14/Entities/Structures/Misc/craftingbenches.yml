@@ -81,7 +81,7 @@
     - N14TrainingSword
     - N14LongSword
     - N14Bola
-    # Blueprints
+    # Blueprints Corvax Forge
     - N14WeaponLaserRevolverBlueprint
     - N14WeaponLaserRifleMakeshiftBlueprint
     - N14WeaponRifle556PipeBlueprint
@@ -99,10 +99,6 @@
     - N14JunkGunpartsStock
     - N14JunkGunpartsStockWood
     - N14JunkGunpartsTrigger
-    # Blueprints Corvax Forge
-    - N14WeaponLaserRevolverBlueprint
-    - N14WeaponLaserRifleMakeshiftBlueprint
-    - N14WeaponRifle556PipeBlueprint
 
 - type: entity
   parent: N14WorkbenchBase
@@ -163,12 +159,19 @@
     - Magazine308Rifle
     - Magazine308RifleLong
     - ClipMagazine308Rifle
+    - Magazine308RifleSniper # Forge-change
     - MagazineBox308
     - SpeedLoader45-70
     - SpeedLoader45-70Tube
     - MagazineBox45-70
     - N14Magazine50AMR
     - MagazineBox50
+    # Forge-Change-Start
+    # 5.45
+    - MagazineBox545
+    - Magazine545Rifle
+    - MagazineDrum545Rifle
+    # Forge-Change-End
 
 - type: entity
   parent: N14WorkbenchBase
@@ -206,6 +209,23 @@
   components:
   - type: Sprite
     state: armorbench
+  # Forge-Change-Start
+  - type: ContainerContainer
+    containers:
+      storagebase: !type:Container
+  - type: UserInterface
+    interfaces:
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+      enum.LatheUiKey.Key:
+        type: LatheBoundUserInterface
+  - type: Craftable
+  - type: Storage
+    craft: true
+    maxItemSize: Ginormous
+    grid:
+    - 0,0,12,9
+  # Forge-Change-End
   - type: MaterialStorage
     whitelist:
       tags:
@@ -235,6 +255,11 @@
     - N14InsectShield
     - MakeshiftShield
     - WoodenBuckler
+    # Forge-Change-Start
+    # Blueprints
+    - N14ClothingOuterCombatArmorBlueprint
+    - N14ClothingOuterCombatArmorMK2Blueprint
+    # Forge-Change-End
     # Other
     - N14MaterialLeather
     - ClothingBeltQuiver # In misc.yml

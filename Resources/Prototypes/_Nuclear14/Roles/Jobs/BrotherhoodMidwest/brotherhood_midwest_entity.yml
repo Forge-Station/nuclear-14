@@ -64,3 +64,13 @@
       state: paladin
     - type: Loadout
       prototypes: [BoSMidInquisitorGear] # Forge-Add-End
+
+- type: entity # Forge-Add-Start
+  parent: BoSMidPaladinCommander
+  id: N14MobHumanBoSMidSerf
+  name: BoSMidSerf
+  components:
+    - type: Icon
+      state: paladin
+    - type: Loadout
+      prototypes: [BoSMidSerfGear] # Forge-Add-End

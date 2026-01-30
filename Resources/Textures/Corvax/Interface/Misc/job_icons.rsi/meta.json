@@ -1,7 +1,7 @@
 {
   "version": 1,
   "license": "CC-BY-SA-3.0",
-  "copyright": "Legioner Taken from https://github.com/Civ13/Civ13, Raider made by Mr_Lop_Lop, NCR and BOS made by kubertyantr discord, other made by mars33_2.0 discord, legion other made by Zekins",
+  "copyright": "Legioner Taken from https://github.com/Civ13/Civ13, Raider made by Mr_Lop_Lop, NCR and BOS made by kubertyantr discord, other made by mars33_2.0 discord, legion other made by Zekins, slave,serf,prisoner and investigator change by kubertyantr discord",
   "size": {
     "x": 8,
     "y": 8
@@ -11,10 +11,22 @@
       "name": "Legioner"
     },
     {
+      "name": "Slave"
+    },
+    {
+      "name": "Serf"
+    },
+    {
+      "name": "Prisoner"
+    },
+    {
       "name": "Raider"
     },
     {
       "name": "bosMCommander"
+    },
+    {
+        "name": "investigator"
     },
     {
       "name": "bosMKnight"

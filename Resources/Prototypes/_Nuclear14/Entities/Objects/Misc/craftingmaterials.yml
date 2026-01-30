@@ -63,6 +63,8 @@
     - hide_brahmin_1
     - hide_brahmin_2
   - type: Appearance
+  - type: StaticPrice # Forge-Change
+    price: 1 # PH
 
 - type: entity
   parent: N14MaterialBrahminHide
@@ -87,6 +89,8 @@
   - type: PhysicalComposition
     materialComposition:
       RawLeather: 300
+  - type: StaticPrice # Forge-Change
+    price: 30
 
 - type: entity
   parent: N14MaterialBaseHide
@@ -103,6 +107,8 @@
   - type: PhysicalComposition
     materialComposition:
       RawLeather: 600
+  - type: StaticPrice # Forge-Change
+    price: 50
 
 - type: entity
   parent: BaseItem
@@ -120,15 +126,24 @@
     materialComposition:
       RawLeather: 600
   - type: Craftable # Corvax-Change
+  - type: StaticPrice # Forge-Change
+    price: 3
 
 - type: entity
   parent: N14MaterialHideGecko
   id: N14MaterialHideGeckoFire
   name: fire gecko hide
   description: A thick flame resistant hide from a fire gecko.
+  components:
+  - type: StaticPrice # Forge-Change
+    price: 9
+
 
 - type: entity
   parent: N14MaterialHideGecko
   id: N14MaterialHideGeckoGolden
   name: golden gecko hide
   description: A thick beautiful hide from a golden gecko.
+  components:
+  - type: StaticPrice # Forge-Change
+    price: 15

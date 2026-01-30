@@ -1,13 +1,10 @@
 - type: entity
   id: Trademachine
+  abstract: true
   name: Торговый автомат Города
   description: Нужно срочно — он рядом. Выбирай, плати, забирай.
   suffix: vendor, normal
   components:
-  - type: NcStore
-    preset: caravan_store
-    access:
-    - [ "TownieShopkeeper" ]
   - type: UserInterface
     interfaces:
       enum.StoreUiKey.Key:
@@ -48,6 +45,24 @@
     autoRot: true
 
 - type: entity
+  id: TrademachineCity
+  parent: Trademachine
+  name: Торговый автомат Города
+  description: Нужно срочно — он рядом. Выбирай, плати, забирай.
+  suffix: vendor, normal
+  components:
+  - type: NcStore
+    buyPresets:
+    - caravan_buy2
+    sellPresets:
+    - caravan_sell2
+    contractPresets:
+    - PresetBazar
+  - type: AccessReader
+    access:
+    - [ "TownieShopkeeper" ]
+
+- type: entity
   id: TrademachineTickets
   parent: Trademachine
   name: торговый автомат каравана
@@ -55,7 +70,11 @@
   suffix: vendor, Tickets
   components:
   - type: NcStore
-    preset: caravan_storetickets
+    buyPresets:
+    - caravan_storetickets
+    sellPresets:
+    - caravan_storetickets_sell
+  - type: AccessReader
     access:
     - [ "TownieShopkeeper" ]
   - type: Sprite
@@ -67,637 +86,1221 @@
       map: ["enum.VendingMachineVisualLayers.BaseUnshaded"]
       shader: unshaded
 
-- type: storePresetStructured
-  id: caravan_store
-  currency: Caps
-  catalog:
-    Buy:
-      Оружие:
-      - proto: N14WeaponRevolver10mm
-        price: 60
-      - proto: N14WeaponRevolver44Magnun
-        price: 150
-      - proto: N14WeaponPistolWebley
-        price: 60
-      - proto: N14WeaponPistol9mmChinese
-        price: 65
-      - proto: N14WeaponPistol9mm
-        price: 50
-      - proto: N14WeaponPistol10mm
-        price: 60
-      - proto: N14WeaponPistol45Colt
-        price: 65
-      - proto: N14WeaponPistol12mm
-        price: 70
-      - proto: N14WeaponLaserPistol
-        price: 130
-      - proto: N14WeaponLaserRifleCrude
-        price: 195
-      - proto: N14WeaponSMG9mm
-        price: 115
-      - proto: N14WeaponSMG9mmCanadian
-        price: 120
-      - proto: N14WeaponSMG10mmChinese
-        price: 135
-      - proto: N14WeaponSMG10mm
-        price: 140
-      - proto: N14WeaponSMG45
-        price: 150
-      - proto: N14WeaponSMG12mm
-        price: 170
-      - proto: N14WeaponSniper556VarmintRifle
-        price: 80
-      - proto: N14WeaponRifle556CarbineOld
-        price: 110
-      - proto: N14WeaponRifle762SKS
-        price: 155
-      - proto: N14WeaponRifle762M14
-        price: 165
-      - proto: N14WeaponRifle556R91
-        price: 200
-      - proto: N14WeaponRifle556EM2
-        price: 260
-      - proto: N14WeaponRifle762Fal
-        price: 230
-      - proto: N14WeaponRifle762Canadian
-        price: 290
-      - proto: N14WeaponShotgunCaravan
-        price: 40
-      - proto: N14WeaponShotgun
-        price: 150
-      - proto: N14WeaponShotgunLever
-        price: 170
-      - proto: N14WeaponShotgunRiot
-        price: 200
-      - proto: N14WeaponShotgunAuto
-        price: 240
-      - proto: N14WeaponSniper308Ross
-        price: 150
-      - proto: N14WeaponSniper44LeverCarbine
-        price: 165
-      - proto: N14WeaponSniper308LeverRifle
-        price: 170
-      - proto: N14WeaponRifle308Battle
-        price: 190
-      - proto: N14WeaponRifle762MarksmanCanadian
-        price: 170
-      - proto: N14WeaponSniper308Canadian
-        price: 265
-      Патроны:
-      - proto: MagazineBox44
-        price: 70
-        count: 15
-      - proto: MagazineBox9mm
-        price: 40
-        count: 15
-      - proto: 40mmGrenadeFrag
-        price: 160
-      - proto: N14PowerCellSmall
-        price: 60
-      - proto: N14PowerCellHigh
-        price: 70
-      Ближний бой:
-      - proto: N14ScrapMachete
-        price: 35
-      - proto: N14ChineseSword
-        price: 70
-      - proto: N14CeremonialSword
-        price: 70
-      - proto: N14LongSword
-        price: 70
-      - proto: N14TrainingSword
-        price: 15
-      - proto: N14CombatKnife
-        price: 50
-      - proto: N14KitchenKnife
-        price: 30
-      - proto: N14BrassKnife
-        price: 30
-      - proto: N14WastelandSpear
-        price: 70
-      - proto: N14PilumSpear
-        price: 70
-      - proto: N14WastelandPolearm
-        price: 50
-      - proto: N14GolfClub
-        price: 70
-      - proto: N14WastelandTribalJavelin
-        price: 70
-      - proto: N14SledgeHammer
-        price: 130
-      - proto: N14BaseAxe
-        price: 120
-      - proto: N14PoliceBaton
-        price: 50
-      Головной убор:
-      - proto: N14ClothingHeadHatArmyBeret
-        price: 20
-      Броня:
-      - proto: N14ClothingOuterCoatDuster
-        price: 10
-      - proto: N14ClothingOuterCoatLeatherDuster
-        price: 15
-      - proto: N14ClothingOuterCoatLeatherCoat
-        price: 20
-      - proto: N14ClothingOuterRaiderBadlands
-        price: 20
-      - proto: N14ClothingOuterRaiderBlastmaster
-        price: 50
-      - proto: N14ClothingOuterTownCoat
-        price: 20
-      - proto: N14ClothingOuterTownMediumCoat
-        price: 100
-      - proto: N14ClothingOuterTownHeavyCoat
-        price: 220
-      - proto: N14ClothingOuterCoatCombatDuster
-        price: 200
-      - proto: N14ClothingOuterCoatFollowersArmored
-        price: 205
-      - proto: N14ClothingOuterPoliceOfficer
-        price: 30
-      - proto: N14ClothingOuterPoliceLieutenant
-        price: 35
-      - proto: N14ClothingOuterTownSpecialCoat
-        price: 35
-      - proto: N14ClothingOuterBattlecoatCoat
-        price: 55
-      - proto: N14ClothingOuterBattlecoatTan
-        price: 55
-      - proto: N14ClothingOuterLeatherArmor
-        price: 110
-      - proto: N14ClothingOuterInsectArmor
-        price: 140
-      - proto: N14ClothingOuterLightMetalArmor
-        price: 150
-      - proto: N14ClothingOuterMetalArmor
-        price: 170
-      - proto: N14ClothingOuterVestLeather
-        price: 105
-      - proto: N14ClothingOuterVaultSecVest
-        price: 170
-      - proto: N14ClothingOuterPressArmor
-        price: 165
-      - proto: N14ClothingOuterPoliceVest
-        price: 200
-      - proto: N14ClothingOuterVestChinese
-        price: 310
-      - proto: ClothingOuterArmorBasicSlim
-        price: 350
-      - proto: N14ClothingOuterCombatRusted
-        price: 150
-      - proto: N14ClothingOuterCombatRaider
-        price: 150
-      - proto: N14ClothingOuterPainspike
-        price: 60
-      - proto: N14ClothingOuterCombatPainspike
-        price: 300
-      - proto: N14ClothingOuterRaiderCombat1
-        price: 300
-      - proto: N14ClothingOuterCombatArmor
-        price: 310
-      РПС:
-      - proto: ClothingBeltMilitary
-        price: 60
-      Медицина:
-      - proto: N14DirtyGauze10
-        price: 40
-      - proto: N14AloeSalve
-        price: 50
-      - proto: N14SuperStimpak
-        price: 120
-        count: 5
-      - proto: N14Stimpak
-        price: 45
-      - proto: N14StimpakDirty
-        price: 30
-      - proto: N14Antidote
-        price: 95
-      - proto: N14RadAwayBloodbag
-        price: 45
-      - proto: N14HandheldHealthAnalyzer
-        price: 200
-      Материалы:
-      - proto: SheetSteel
-        price: 150
-      - proto: SheetPlastic
-        price: 120
-      - proto: N14IngotLead20
-        price: 175
-      - proto: N14Gunpowder10
-        price: 190
-      Алкоголь:
-      - proto: N14DrinkGammagulpBeer
-        price: 15
-        count: 30
-      - proto: DrinkVodkaBottleFull
-        price: 30
-        count: 30
-      - proto: DrinkGinBottleFull
-        price: 30
-        count: 30
-      - proto: DrinkCognacBottleFull
-        price: 40
-        count: 30
-      Разное:
-      - proto: N14JunkDuctTape
-        price: 10
-      - proto: RadioHandheld
-        price: 80
-      - proto: N14JunkAbraxoCleaner
-        price: 35
-      - proto: CrayonBox
-        price: 50
-    Sell:
-      Оружие:
-      - proto: N14WeaponRevolver9mm
-        price: 10
-      - proto: N14WeaponRevolver10mm
-        price: 15
-      - proto: N14WeaponPistolWebley
-        price: 20
-      - proto: N14WeaponPistol9mmChinese
-        price: 20
-      - proto: N14WeaponPistol9mm
-        price: 15
-      - proto: N14WeaponPistol10mm
-        price: 20
-      - proto: N14WeaponPistol45Colt
-        price: 25
-      - proto: N14WeaponPistol12mm
-        price: 30
-      - proto: N14WeaponPistol22lr
-        price: 20
-      - proto: N14WeaponLaserPistolRecharger
-        price: 70
-      - proto: N14WeaponLaserPistol
-        price: 50
-      - proto: N14WeaponLaserRifleCrude
-        price: 60
-      - proto: N14WeaponPistol10mmPipe
-        price: 10
-      - proto: N14WeaponShotgunDoubleBarrel
-        price: 20
-      - proto: N14WeaponSMG10mmPipe
-        price: 15
-      - proto: N14WeaponSMG12mmPipe
-        price: 20
-      - proto: N14WeaponSniper308PipeRifle
-        price: 15
-      - proto: N14WeaponShotgunPipe
-        price: 10
-      - proto: N14WeaponRifle556Pipe
-        price: 20
-      - proto: N14WeaponSMG9mmCanadian
-        price: 35
-      - proto: N14WeaponSMG9mm
-        price: 35
-      - proto: N14WeaponSMG10mmChinese
-        price: 40
-      - proto: N14WeaponSMG10mm
-        price: 40
-      - proto: N14WeaponSMG45
-        price: 45
-      - proto: N14WeaponSMG12mm
-        price: 50
-      - proto: N14WeaponRifle556CarbineOld
-        price: 25
-      - proto: N14WeaponSniper556VarmintRifle
-        price: 20
-      - proto: N14WeaponRifle762SKS
-        price: 55
-      - proto: N14WeaponRifle762M14
-        price: 75
-      - proto: N14WeaponRifle556R91
-        price: 75
-      - proto: N14WeaponRifle762Fal
-        price: 65
-      - proto: N14WeaponRifle762Canadian
-        price: 70
-      - proto: N14WeaponShotgunCaravan
-        price: 20
-      - proto: N14WeaponShotgun
-        price: 35
-      - proto: N14WeaponShotgunLever
-        price: 35
-      - proto: N14WeaponShotgunRiot
-        price: 50
-      - proto: N14WeaponShotgunAuto
-        price: 75
-      - proto: N14WeaponSniper308Ross
-        price: 30
-      - proto: N14WeaponSniper44LeverCarbine
-        price: 50
-      - proto: N14WeaponSniper308LeverRifle
-        price: 50
-      - proto: N14WeaponRifle308Battle
-        price: 40
-      - proto: N14WeaponRifle762MarksmanCanadian
-        price: 40
-      - proto: N14WeaponSniper308Canadian
-        price: 85
-      Ближний бой:
-      - proto: N14ScrapMachete
-        price: 5
-      - proto: N14ChineseSword
-        price: 20
-      - proto: N14CeremonialSword
-        price: 20
-      - proto: N14LongSword
-        price: 20
-      - proto: N14TrainingSword
-        price: 2
-      - proto: N14CombatKnife
-        price: 10
-      - proto: N14KitchenKnife
-        price: 5
-      - proto: N14BrassKnife
-        price: 5
-      - proto: N14WastelandSpear
-        price: 15
-      - proto: N14PilumSpear
-        price: 15
-      - proto: N14WastelandPolearm
-        price: 10
-      - proto: N14GolfClub
-        price: 15
-      - proto: N14WastelandTribalJavelin
-        price: 15
-      - proto: N14SledgeHammer
-        price: 20
-      - proto: N14BaseAxe
-        price: 25
-      - proto: N14PoliceBaton
-        price: 10
-      Головной убор:
-      - proto: N14ClothingHeadHatArmyBeret
-        price: 2
-      - proto: N14ClothingHeadHatArmyBeretRanger
-        price: 5
-      Броня:
-      - proto: N14ClothingOuterCoatDuster
-        price: 2
-      - proto: N14ClothingOuterCoatLeatherDuster
-        price: 4
-      - proto: N14ClothingOuterCoatLeatherCoat
-        price: 5
-      - proto: N14ClothingOuterRaiderBadlands
-        price: 5
-      - proto: N14ClothingOuterRaiderBlastmaster
-        price: 20
-      - proto: N14ClothingOuterTownCoat
-        price: 5
-      - proto: N14ClothingOuterTownMediumCoat
-        price: 30
-      - proto: N14ClothingOuterTownHeavyCoat
-        price: 60
-      - proto: N14ClothingOuterCoatCombatDuster
-        price: 50
-      - proto: N14ClothingOuterCoatFollowersArmored
-        price: 55
-      - proto: N14ClothingOuterPoliceOfficer
-        price: 5
-      - proto: N14ClothingOuterPoliceLieutenant
-        price: 10
-      - proto: N14ClothingOuterPoliceChief
-        price: 30
-      - proto: N14ClothingOuterTownSpecialCoat
-        price: 10
-      - proto: N14ClothingOuterBattlecoatCoat
-        price: 15
-      - proto: N14ClothingOuterBattlecoatTan
-        price: 15
-      - proto: N14ClothingOuterLeatherArmor
-        price: 30
-      - proto: N14ClothingOuterInsectArmor
-        price: 40
-      - proto: N14ClothingOuterLightMetalArmor
-        price: 50
-      - proto: N14ClothingOuterMetalArmor
-        price: 60
-      - proto: N14ClothingOuterVestLeather
-        price: 25
-      - proto: N14ClothingOuterVaultSecVest
-        price: 50
-      - proto: N14ClothingOuterPressArmor
-        price: 70
-      - proto: N14ClothingOuterPoliceVest
-        price: 70
-      - proto: N14ClothingOuterVestChinese
-        price: 90
-      - proto: ClothingOuterArmorBasicSlim
-        price: 120
-      - proto: N14ClothingOuterCombatRusted
-        price: 50
-      - proto: N14ClothingOuterCombatRaider
-        price: 50
-      - proto: N14ClothingOuterPainspike
-        price: 15
-      - proto: N14ClothingOuterCombatPainspike
-        price: 70
-      - proto: N14ClothingOuterRaiderCombat1
-        price: 70
-      - proto: N14ClothingOuterCombatArmor
-        price: 85
-      Медицина:
-      - proto: N14DirtyGauze1
-        price: 2
-      Хлам:
-      - proto: N14MaterialCircuitry1
-        price: 20
-      - proto: N14ScrapElectronic1
-        price: 2
-      - proto: N14ScrapGold1
-        price: 2
-      - proto: N14MaterialHideGecko
-        price: 3
-      - proto: N14MaterialHideGecko
-        price: 9
-      - proto: N14MaterialHideGeckoFire
-        price: 15
-      - proto: N14MaterialYaoguaiHide
-        price: 50
-      - proto: N14FoodFireantNectar
-        price: 15
-      - proto: N14FoodCazadorAcidSac
-        price: 59
-      - proto: N14MaterialNightstalkerPelt
-        price: 30
-      - proto: N14MaterialLeather1
-        price: 2
-      - proto: N14MaterialAntChitin1
-        price: 2
-      - proto: N14FoodEggDeathclaw
-        price: 25
-      - proto: N14FoodMeatGecko
-        price: 3
-      - proto: N14FoodMeatGeckoGolden
-        price: 10
-      - proto: N14FoodMeatGeckoFire
-        price: 15
-      - proto: N14FoodMeatRadscorpion
-        price: 10
-      - proto: N14FoodMeatMirelurkClaw
-        price: 20
-      - proto: N14FoodMeatRadlurkClaw
-        price: 30
-      - proto: N14FoodMeatPigrat
-        price: 2
-      - proto: N14FoodMeatRadRaw
-        price: 2
-      Руда:
-      - proto: N14IngotCopper1
-        price: 5
-      - proto: N14IngotSilver1
-        price: 10
-      - proto: N14IngotGold1
-        price: 15
+# ----------------------------
+# caravan_storetickets categories
+# ----------------------------
+- type: storeCategoryStructured
+  id: TicketsBuy_Weapons
+  name: "Оружие"
+  entries:
+  - proto: N14WeaponPistol9mmSpy
+    price: 1
+  - proto: N14WeaponPlasmaPistol
+    price: 3
+  - proto: N14WeaponRevolverWebley
+    price: 2
+  - proto: N14WeaponRevolver45-70Hunter
+    price: 2
+  - proto: N14WeaponDesertEagle44
+    price: 3
+  - proto: N14WeaponSMG12mmAdvancedChinese
+    price: 13
+  - proto: N14WeaponSMG12mmAdvanced
+    price: 14
+  - proto: N14WeaponBlowback
+    price: 3
+  - proto: N14WeaponShotgunChinese
+    price: 4
+  - proto: N14WeaponShotgunCanadian
+    price: 4
+  - proto: N14WeaponRifle556Carbine
+    price: 2
+  - proto: N14WeaponRifle762Chinese
+    price: 3
+  - proto: N14WeaponRifle762Marksman
+    price: 4
+  - proto: N14WeaponLaserRiflePrototypeAER14
+    price: 5
+  - proto: N14WeaponLaserRifleAuto
+    price: 6
+  - proto: N14WeaponPlasmaRifle
+    price: 7
+  - proto: N14WeaponRifle762MarksmanChinese
+    price: 4
+  - proto: N14WeaponLMG
+    price: 8
+  - proto: N14WeaponLMGchinese
+    price: 12
+  - proto: N14WeaponHMGcanadian
+    price: 13
+  - proto: N14WeaponLMGBren
+    price: 16
+  - proto: N14WeaponLMGAutoRifle
+    price: 14
+  - proto: N14WeaponMinigun
+    price: 18
+  - proto: N14WeaponLauncherMissile
+    price: 18
+
+- type: storeCategoryStructured
+  id: TicketsBuy_Ammo
+  name: "Патроны"
+  entries:
+  - proto: CartridgeMissile
+    price: 2
+
+- type: storeCategoryStructured
+  id: TicketsBuy_Melee
+  name: "Ближний Бой"
+  entries:
+  - proto: N14SuperSledgeHammer
+    price: 3
+  - proto: N14WeaponThermospear
+    price: 4
+
+- type: storeCategoryStructured
+  id: TicketsBuy_Explosives
+  name: "Взрывчатка"
+  entries:
+  - proto: C4
+    price: 2
+  - proto: GrenadeIncendiary
+    price: 1
+
+- type: storeCategoryStructured
+  id: TicketsBuy_Meds
+  name: "Медикаменты"
+  entries:
+  - proto: MedicatedSuture
+    price: 2
+  - proto: RegenerativeMesh
+    price: 2
+
+- type: storeCategoryStructured
+  id: TicketsBuy_PowerArmor
+  name: "Силовая Броня"
+  entries:
+  - proto: N14ClothingOuterPowerArmorRaider
+    price: 25
+    count: 2
+
+- type: storeCategoryStructured
+  id: TicketsBuy_Armor
+  name: "Броня"
+  entries:
+  - proto: N14ClothingOuterMarineArmor
+    price: 18
+  - proto: N14ClothingHeadHatBaseHelmetmarine
+    price: 5
+  - proto: N14ClothingBootsCombatMK2
+    price: 1
 
 - type: storePresetStructured
   id: caravan_storetickets
   currency: PrizeTicket
-  catalog:
-    Buy:
-      Оружие:
-      - proto: N14WeaponPistol9mmSpy
-        price: 1
-      - proto: N14WeaponPlasmaPistol
-        price: 3
-      - proto: N14WeaponRevolverWebley
-        price: 2
-      - proto: N14WeaponRevolver45-70Hunter
-        price: 2
-      - proto: N14WeaponDesertEagle44
-        price: 3
-      - proto: N14WeaponSMG12mmAdvancedChinese
-        price: 13
-      - proto: N14WeaponSMG12mmAdvanced
-        price: 14
-      - proto: N14WeaponBlowback
-        price: 3
-      - proto: N14WeaponShotgunChinese
-        price: 4
-      - proto: N14WeaponShotgunCanadian
-        price: 4
-      - proto: N14WeaponRifle556Carbine
-        price: 2
-      - proto: N14WeaponRifle762Chinese
-        price: 3
-      - proto: N14WeaponRifle762Marksman
-        price: 4
-      - proto: N14WeaponLaserRiflePrototypeAER14
-        price: 5
-      - proto: N14WeaponLaserRifleAuto
-        price: 6
-      - proto: N14WeaponPlasmaRifle
-        price: 7
-      - proto: N14WeaponRifle762MarksmanChinese
-        price: 4
-      - proto: N14WeaponLMG
-        price: 8
-      - proto: N14WeaponLMGchinese
-        price: 12
-      - proto: N14WeaponHMGcanadian
-        price: 13
-      - proto: N14WeaponLMGBren
-        price: 16
-      - proto: N14WeaponLMGAutoRifle
-        price: 14
-      - proto: N14WeaponMinigun
-        price: 18
-      - proto: N14WeaponLauncherMissile
-        price: 18
-      Патроны:
-      - proto: CartridgeMissile
-        price: 2
-      Ближний Бой:
-      - proto: N14SuperSledgeHammer
-        price: 3
-      - proto: N14WeaponThermospear
-        price: 4
-      Взрывчатка:
-      - proto: C4
-        price: 2
-      - proto: GrenadeIncendiary
-        price: 1
-      Медикаменты:
-      - proto: MedicatedSuture
-        price: 2
-      - proto: RegenerativeMesh
-        price: 2
-      Силовая Броня:
-      - proto: N14ClothingOuterPowerArmorRaider
-        price: 25
-        count: 2
-      Броня:
-      - proto: N14ClothingOuterMarineArmor
-        price: 18
-      - proto: N14ClothingHeadHatBaseHelmetmarine
-        price: 5
-      - proto: N14ClothingBootsCombatMK2
-        price: 1
-    Sell:
-      Оружие:
-      - proto: N14WeaponPistol9mmSpy
-        price: 1
-      - proto: N14WeaponPlasmaPistol
-        price: 1
-      - proto: N14WeaponRevolverWebley
-        price: 1
-      - proto: N14WeaponRevolver45-70Hunter
-        price: 1
-      - proto: N14WeaponDesertEagle44
-        price: 1
-      - proto: N14WeaponSMG12mmAdvancedChinese
-        price: 5
-      - proto: N14WeaponSMG12mmAdvanced
-        price: 5
-      - proto: N14WeaponBlowback
-        price: 1
-      - proto: N14WeaponShotgunChinese
-        price: 2
-      - proto: N14WeaponShotgunCanadian
-        price: 2
-      - proto: N14WeaponRifle556Carbine
-        price: 1
-      - proto: N14WeaponRifle762Chinese
-        price: 1
-      - proto: N14WeaponRifle762Marksman
-        price: 2
-      - proto: N14WeaponLaserRiflePrototypeAER14
-        price: 2
-      - proto: N14WeaponLaserRifleAuto
-        price: 3
-      - proto: N14WeaponPlasmaRifle
-        price: 3
-      - proto: N14WeaponRifle762MarksmanChinese
-        price: 2
-      - proto: N14WeaponLMG
-        price: 3
-      - proto: N14WeaponLMGchinese
-        price: 4
-      - proto: N14WeaponHMGcanadian
-        price: 5
-      - proto: N14WeaponLMGBren
-        price: 5
-      - proto: N14WeaponLMGAutoRifle
-        price: 6
-      - proto: N14WeaponMinigun
-        price: 9
-      Ближний Бой:
-      - proto: N14SuperSledgeHammer
-        price: 1
-      - proto: N14WeaponThermospear
-        price: 1
-      Взрывчатка:
-      - proto: C4
-        price: 1
-      - proto: GrenadeIncendiary
-        price: 1
-      Силовая Броня:
-      - proto: N14ClothingOuterPowerArmorRaider
-        price: 9
-      Броня: 
-      - proto: N14ClothingOuterCombatArmorMK2
-        price: 3
-      - proto: N14ClothingOuterRaiderCombat2
-        price: 3
+  categories:
+  - TicketsBuy_Weapons
+  - TicketsBuy_Ammo
+  - TicketsBuy_Melee
+  - TicketsBuy_Explosives
+  - TicketsBuy_Meds
+  - TicketsBuy_PowerArmor
+  - TicketsBuy_Armor
+
+# ----------------------------
+# caravan_storetickets_sell categories
+# ----------------------------
+- type: storeCategoryStructured
+  id: TicketsSell_Weapons
+  name: "Оружие"
+  entries:
+  - proto: N14WeaponPistol9mmSpy
+    price: 1
+  - proto: N14WeaponPlasmaPistol
+    price: 1
+  - proto: N14WeaponRevolverWebley
+    price: 1
+  - proto: N14WeaponRevolver45-70Hunter
+    price: 1
+  - proto: N14WeaponDesertEagle44
+    price: 1
+  - proto: N14WeaponSMG12mmAdvancedChinese
+    price: 5
+  - proto: N14WeaponSMG12mmAdvanced
+    price: 5
+  - proto: N14WeaponBlowback
+    price: 1
+  - proto: N14WeaponShotgunChinese
+    price: 2
+  - proto: N14WeaponShotgunCanadian
+    price: 2
+  - proto: N14WeaponRifle556Carbine
+    price: 1
+  - proto: N14WeaponRifle762Chinese
+    price: 1
+  - proto: N14WeaponRifle762Marksman
+    price: 2
+  - proto: N14WeaponLaserRiflePrototypeAER14
+    price: 2
+  - proto: N14WeaponLaserRifleAuto
+    price: 3
+  - proto: N14WeaponPlasmaRifle
+    price: 3
+  - proto: N14WeaponRifle762MarksmanChinese
+    price: 2
+  - proto: N14WeaponLMG
+    price: 3
+  - proto: N14WeaponLMGchinese
+    price: 4
+  - proto: N14WeaponHMGcanadian
+    price: 5
+  - proto: N14WeaponLMGBren
+    price: 5
+  - proto: N14WeaponLMGAutoRifle
+    price: 6
+  - proto: N14WeaponMinigun
+    price: 9
+
+- type: storeCategoryStructured
+  id: TicketsSell_Melee
+  name: "Ближний Бой"
+  entries:
+  - proto: N14SuperSledgeHammer
+    price: 1
+  - proto: N14WeaponThermospear
+    price: 1
+
+- type: storeCategoryStructured
+  id: TicketsSell_Explosives
+  name: "Взрывчатка"
+  entries:
+  - proto: C4
+    price: 1
+  - proto: GrenadeIncendiary
+    price: 1
+
+- type: storeCategoryStructured
+  id: TicketsSell_PowerArmor
+  name: "Силовая Броня"
+  entries:
+  - proto: N14ClothingOuterPowerArmorRaider
+    price: 9
+
+- type: storeCategoryStructured
+  id: TicketsSell_Armor
+  name: "Броня"
+  entries:
+  - proto: N14ClothingOuterCombatArmorMK2
+    price: 3
+  - proto: N14ClothingOuterRaiderCombat2
+    price: 3
+
+- type: storePresetStructured
+  id: caravan_storetickets_sell
+  currency: PrizeTicket
+  categories:
+  - TicketsSell_Weapons
+  - TicketsSell_Melee
+  - TicketsSell_Explosives
+  - TicketsSell_PowerArmor
+  - TicketsSell_Armor
+
+- type: storeCategoryStructured
+  id: CaravanBuy2_Revolvers
+  name: "Револьверы"
+  entries:
+  - proto: N14WeaponRevolver10mm
+    price: 30
+  - proto: N14WeaponRevolver44Tribal
+    price: 50
+  - proto: N14WeaponRevolver45-70Handcannon
+    price: 80
+  - proto: N14WeaponRevolver44Magnun
+    price: 70
+  - proto: N14WeaponRevolver44TribalUpgraded
+    price: 80
+  - proto: N14WeaponRevolverWebley
+    price: 80
+  - proto: N14WeaponRevolver44TribalUpgradedExtra
+    price: 120
+  - proto: N14WeaponRevolver45-70Hunter
+    price: 160
+  - proto: N14WeaponRevolver45-70HandcannonUpgraded
+    price: 170
+
+- type: storeCategoryStructured
+  id: CaravanBuy2_Pistols
+  name: "Пистолеты"
+  entries:
+  - proto: N14WeaponPistol10mmPipe
+    price: 15
+  - proto: N14WeaponPistol9mmChinese
+    price: 18
+  - proto: N14WeaponPistol10mm
+    price: 20
+  - proto: N14WeaponPistol22lr
+    price: 20
+  - proto: N14WeaponPistolWebley
+    price: 30
+  - proto: N14WeaponPistol12mm
+    price: 35
+  - proto: N14WeaponPistol45Colt
+    price: 45
+  - proto: N14WeaponLaserPistol
+    price: 60
+  - proto: N14WeaponDesertEagle44
+    price: 200
+
+- type: storeCategoryStructured
+  id: CaravanBuy2_SMGs
+  name: "Пистолеты-пулеметы"
+  entries:
+  - proto: N14WeaponSMG9mm
+    price: 130
+  - proto: N14WeaponSMG45
+    price: 150
+  - proto: N14WeaponSMG12mmPipe
+    price: 125
+  - proto: N14WeaponSMG10mmPipe
+    price: 150
+  - proto: N14WeaponSMG9mmCanadian
+    price: 200
+  - proto: N14WeaponSMG10mm
+    price: 200
+  - proto: N14WeaponSMG12mm
+    price: 220
+  - proto: N14WeaponSMG9mminfiltrator
+    price: 250
+  - proto: N14WeaponSMG12mmAdvancedCanadian
+    price: 250
+  - proto: N14WeaponSMG10mmSuppressed
+    price: 300
+  - proto: N14WeaponSMG10mmChinese
+    price: 330
+  - proto: N14WeaponSMG12mmAdvancedChinese
+    price: 400
+    count: 2
+  - proto: N14WeaponSMG12mmAdvanced
+    price: 600
+    count: 2
+
+- type: storeCategoryStructured
+  id: CaravanBuy2_Shotguns
+  name: "Дробовики"
+  entries:
+  - proto: N14WeaponShotgunPipe
+    price: 15
+  - proto: N14WeaponShotgunDoubleBarrel
+    price: 25
+  - proto: N14WeaponShotgunBoomstick
+    price: 25
+  - proto: N14WeaponShotgunBloodyStick
+    price: 25
+  - proto: N14WeaponShotgunCaravan
+    price: 25
+  - proto: N14WeaponShotgun
+    price: 50
+  - proto: N14WeaponShotgunShort
+    price: 50
+  - proto: N14WeaponShotgunSawedOff
+    price: 125
+  - proto: N14WeaponShotgunRiot
+    price: 290
+  - proto: N14WeaponShotgunAuto
+    price: 300
+  - proto: N14WeaponShotgunChinese
+    price: 400
+    count: 4
+  - proto: N14WeaponShotgunCanadian
+    price: 500
+    count: 4
+  - proto: N14WeaponBlowback
+    price: 1000
+    count: 2
+
+- type: storeCategoryStructured
+  id: CaravanBuy2_AssaultRifles
+  name: "Штурмовые винтовки"
+  entries:
+  - proto: N14WeaponRifle556Pipe
+    price: 120
+  - proto: N14WeaponRifle762SKS
+    price: 150
+  - proto: N14WeaponRifle556Service
+    price: 150
+  - proto: N14WeaponRifle556Butchered
+    price: 150
+  - proto: N14WeaponRifle556ServiceScoped
+    price: 185
+  - proto: N14WeaponRifle762M14
+    price: 200
+  - proto: N14WeaponRifle556R91
+    price: 210
+  - proto: N14WeaponRifle556CarbineOld
+    price: 220
+  - proto: N14WeaponRifleAk112
+    price: 230
+    count: 2
+  - proto: N14WeaponRifle556EM2
+    price: 240
+  - proto: N14WeaponSniper308Canadian
+    price: 300
+  - proto: N14WeaponRifle762Chinese
+    price: 350
+    count: 5
+  - proto: N14WeaponRifle762Fal
+    price: 350
+  - proto: N14WeaponRifle556Carbine
+    price: 450
+    count: 8
+  - proto: N14WeaponRifle762MarksmanCanadian
+    price: 400
+    count: 2
+  - proto: N14WeaponRifle762Marksman
+    price: 500
+    count: 4
+  - proto: N14WeaponRifle762MarksmanChinese
+    price: 600
+    count: 2
+  - proto: N14WeaponRifle762Canadian
+    price: 600
+    count: 3
+
+- type: storeCategoryStructured
+  id: CaravanBuy2_MachineGuns
+  name: "Пулеметы"
+  entries:
+  - proto: N14WeaponLMG
+    price: 1200
+    count: 2
+  - proto: N14WeaponRifleAk112pn
+    price: 1300
+    count: 2
+  - proto: N14WeaponHMGcanadian
+    price: 1500
+    count: 2
+  - proto: N14WeaponLMGchinese
+    price: 1600
+    count: 2
+  - proto: N14WeaponLMGBren
+    price: 1800
+    count: 2
+
+- type: storeCategoryStructured
+  id: CaravanBuy2_Rifles
+  name: "Винтовки"
+  entries:
+  - proto: N14WeaponSniper308PipeRifle
+    price: 20
+  - proto: N14WeaponSniper556VarmintRifle
+    price: 35
+  - proto: N14WeaponSniper556Tribal
+    price: 80
+  - proto: N14WeaponSniper556TribalUpgraded
+    price: 100
+  - proto: N14WeaponSniper308LeverRifle
+    price: 100
+  - proto: N14WeaponSniper44LeverCarbine
+    price: 100
+  - proto: N14WeaponRifle308Battle
+    price: 100
+  - proto: N14WeaponSniperHunting
+    price: 125
+  - proto: N14WeaponSniper308Ross
+    price: 125
+  - proto: N14WeaponSniper308Tribal
+    price: 200
+  - proto: N14WeaponSniperEnfield
+    price: 200
+  - proto: N14WeaponSniper308TribalUpgraded
+    price: 210
+  - proto: N14WeaponRifle308SniperRifle
+    price: 500
+
+- type: storeCategoryStructured
+  id: CaravanBuy2_EnergyWeapons
+  name: "Энергооружие"
+  entries:
+  - proto: N14WeaponLaserRifleMakeshift
+    price: 75
+  - proto: N14WeaponLaserRevolver
+    price: 80
+  - proto: N14WeaponLaserRifleCrude
+    price: 200
+  - proto: N14WeaponPlasmaRifleCrude
+    price: 240
+
+- type: storeCategoryStructured
+  id: CaravanBuy2_Ammo
+  name: "Патроны"
+  entries:
+  - proto: N14PowerCellSmall
+    price: 75
+  - proto: N14PowerCellHigh
+    price: 125
+    count: 15
+  - proto: N14PlasmaCartridge
+    price: 150
+    count: 12
+  - proto: 40mmGrenadeFrag
+    price: 150
+    count: 10
+
+- type: storeCategoryStructured
+  id: CaravanBuy2_Melee
+  name: "Ближний бой"
+  entries:
+  - proto: N14TrainingSword
+    price: 5
+  - proto: N14ScrapMachete
+    price: 10
+  - proto: N14LongSword
+    price: 20
+  - proto: N14CombatKnife
+    price: 20
+  - proto: N14KitchenKnife
+    price: 20
+  - proto: N14BrassKnife
+    price: 20
+  - proto: N14WastelandSpear
+    price: 20
+  - proto: N14PilumSpear
+    price: 20
+  - proto: N14WastelandPolearm
+    price: 20
+  - proto: N14GolfClub
+    price: 20
+  - proto: N14WastelandTribalJavelin
+    price: 20
+  - proto: N14BaseAxe
+    price: 50
+  - proto: N14ChineseSword
+    price: 200
+  - proto: N14CeremonialSword
+    price: 200
+  - proto: N14SledgeHammer
+    price: 250
+
+- type: storeCategoryStructured
+  id: CaravanBuy2_Headwear
+  name: "Головные уборы"
+  entries:
+  - proto: N14ClothingHeadHatArmyBeret
+    price: 5
+  - proto: N14ClothingHeadHatChinese
+    price: 5
+  - proto: N14ClothingMaskPlate
+    price: 15
+  - proto: N14ClothingHeadHatChineseHelmet
+    price: 15
+  - proto: N14ClothingMaskBreather
+    price: 15
+  - proto: N14ClothingHeadHatPrewarMilitaryHelmet
+    price: 35
+  - proto: N14ClothingHeadHatCombatHelmetCargo
+    price: 35
+
+- type: storeCategoryStructured
+  id: CaravanBuy2_Armor
+  name: "Броня"
+  entries:
+  - proto: N14ClothingOuterCoatDuster
+    price: 10
+  - proto: N14ClothingOuterCoatLeatherDuster
+    price: 10
+  - proto: N14ClothingOuterCoatLeatherCoat
+    price: 10
+  - proto: N14ClothingOuterRaiderBadlands
+    price: 10
+  - proto: N14ClothingOuterRaiderBlastmaster
+    price: 10
+  - proto: N14ClothingOuterPoliceOfficer
+    price: 15
+  - proto: N14ClothingOuterTownCoat
+    price: 20
+  - proto: N14ClothingOuterPoliceLieutenant
+    price: 20
+  - proto: N14ClothingOuterTownSpecialCoat
+    price: 20
+  - proto: N14ClothingOuterBattlecoatCoat
+    price: 20
+  - proto: N14ClothingOuterBattlecoatTan
+    price: 20
+  - proto: N14ClothingOuterPainspike
+    price: 30
+  - proto: N14ClothingOuterVestLeather
+    price: 35
+  - proto: N14ClothingOuterMetalArmor
+    price: 45
+  - proto: N14ClothingOuterTownMediumCoat
+    price: 50
+  - proto: N14ClothingOuterCoatFollowersArmored
+    price: 55
+  - proto: N14ClothingOuterInsectArmor
+    price: 55
+  - proto: N14ClothingOuterLightMetalArmor
+    price: 55
+  - proto: N14ClothingOuterLeatherArmor
+    price: 65
+  - proto: N14ClothingOuterPressArmor
+    price: 65
+  - proto: ClothingOuterArmorBasicSlim
+    price: 65
+  - proto: N14ClothingOuterCombatRusted
+    price: 65
+  - proto: N14ClothingOuterCombatRaider
+    price: 65
+  - proto: N14ClothingOuterVaultSecVest
+    price: 70
+  - proto: N14ClothingOuterTownHeavyCoat
+    price: 100
+  - proto: N14ClothingOuterCoatCombatDuster
+    price: 100
+  - proto: N14ClothingOuterPoliceVest
+    price: 200
+  - proto: N14ClothingOuterVestChinese
+    price: 200
+  - proto: N14ClothingOuterCombatPainspike
+    price: 250
+  - proto: N14ClothingOuterRaiderCombat1
+    price: 250
+  - proto: N14ClothingOuterCombatArmor
+    price: 250
+
+- type: storeCategoryStructured
+  id: CaravanBuy2_Rigs
+  name: "Экипировка (РПС)"
+  entries:
+  - proto: ClothingBeltRope
+    price: 75
+  - proto: ClothingBeltCowboy
+    price: 100
+  - proto: ClothingBeltRevolver
+    price: 100
+  - proto: ClothingBeltMilitary
+    price: 100
+
+- type: storeCategoryStructured
+  id: CaravanBuy2_Medical
+  name: "Медицина"
+  entries:
+  - proto: N14DirtyGauze10
+    amount: 10
+    price: 10
+  - proto: N14CleanGauze10
+    amount: 10
+    price: 15
+  - proto: N14RadAwayPhial
+    price: 30
+  - proto: N14RadAwayBloodbag
+    price: 50
+  - proto: N14Antidote
+    price: 95
+  - proto: N14StimpakDirty
+    price: 50
+  - proto: N14Stimpak
+    price: 75
+  - proto: N14AloeSalve
+    amount: 10
+    price: 100
+  - proto: N14Ointment10
+    amount: 10
+    price: 150
+  - proto: N14SuperStimpak
+    price: 250
+    count: 5
+  - proto: N14HandheldHealthAnalyzer
+    price: 350
+
+- type: storeCategoryStructured
+  id: CaravanBuy2_Materials
+  name: "Материалы"
+  entries:
+  - proto: SheetSteel
+    amount: 30
+    price: 350
+  - proto: SheetPlastic
+    amount: 30
+    price: 350
+  - proto: N14IngotLead20
+    amount: 20
+    price: 400
+  - proto: N14Gunpowder10
+    amount: 10
+    price: 350
+
+- type: storeCategoryStructured
+  id: CaravanBuy2_Alcohol
+  name: "Алкоголь"
+  entries:
+  - proto: N14DrinkGammagulpBeer
+    price: 5
+  - proto: DrinkVodkaBottleFull
+    price: 5
+  - proto: DrinkGinBottleFull
+    price: 5
+  - proto: DrinkCognacBottleFull
+    price: 5
+
+- type: storeCategoryStructured
+  id: CaravanBuy2_Misc
+  name: "Разное"
+  entries:
+  - proto: N14JunkDuctTape
+    price: 5
+  - proto: CrayonBox
+    price: 5
+  - proto: N14JunkAbraxoCleaner
+    price: 15
+  - proto: RadioHandheld
+    price: 75
+
+- type: storeCategoryStructured
+  id: CaravanBuy2_Sprouts
+  name: "Ростки"
+  entries:
+  - proto: N14FloraWildAgaveClippingSeed
+    price: 5
+  - proto: N14FloraWildBananaYuccaClippingSeed
+    price: 5
+  - proto: N14FloraWildBarrelCactusClippingSeed
+    price: 5
+  - proto: N14FloraWildBlackberryClippingSeed
+    price: 5
+  - proto: N14FloraWildBrocFlowerClippingSeed
+    price: 5
+  - proto: N14FloraWildBuffaloGourdClippingSeed
+    price: 5
+  - proto: N14FloraWildCabbageClippingSeed
+    price: 5
+  - proto: N14FloraWildCarrotClippingSeed
+    price: 5
+  - proto: N14FloraWildCoyoteTobaccoClippingSeed
+    price: 5
+  - proto: N14FloraDaturaClippingSeed
+    price: 5
+  - proto: N14FloraWildGlowpepperClippingSeed
+    price: 5
+  - proto: N14FloraWildMaizeClippingSeed
+    price: 5
+  - proto: N14FloraWildHoneyMesquiteClippingSeed
+    price: 5
+  - proto: N14FloraWildMutfruitClippingSeed
+    price: 5
+  - proto: N14FloraWildNettleClippingSeed
+    price: 5
+  - proto: N14FloraWildOnionClippingSeed
+    price: 5
+  - proto: N14FloraWildPinyonClippingSeed
+    price: 5
+  - proto: N14FloraWildPricklyPearClippingSeed
+    price: 5
+  - proto: N14FloraWildRazorgrainClippingSeed
+    price: 5
+  - proto: N14FloraWildStarlightBerryClippingSeed
+    price: 5
+  - proto: N14FloraWildTarberryClippingSeed
+    price: 5
+  - proto: N14FloraWildTatoClippingSeed
+    price: 5
+  - proto: N14FloraWildWhiteHorsenettleClippingSeed
+    price: 5
+  - proto: N14FloraWildXanderRootClippingSeed
+    price: 5
+
+- type: storePresetStructured
+  id: caravan_buy2
+  currency: Caps
+  categories:
+  - CaravanBuy2_Revolvers
+  - CaravanBuy2_Pistols
+  - CaravanBuy2_SMGs
+  - CaravanBuy2_Shotguns
+  - CaravanBuy2_AssaultRifles
+  - CaravanBuy2_MachineGuns
+  - CaravanBuy2_Rifles
+  - CaravanBuy2_EnergyWeapons
+  - CaravanBuy2_Ammo
+  - CaravanBuy2_Melee
+  - CaravanBuy2_Headwear
+  - CaravanBuy2_Armor
+  - CaravanBuy2_Rigs
+  - CaravanBuy2_Medical
+  - CaravanBuy2_Materials
+  - CaravanBuy2_Alcohol
+  - CaravanBuy2_Misc
+  - CaravanBuy2_Sprouts
+
+# ----------------------------
+# caravan_sell2 categories
+# ----------------------------
+- type: storeCategoryStructured
+  id: CaravanSell2_Revolvers
+  name: "Револьверы"
+  entries:
+  - proto: N14WeaponRevolver9mm
+    price: 14
+  - proto: N14WeaponRevolver10mm
+    price: 21
+  - proto: N14WeaponRevolver44Tribal
+    price: 35
+  - proto: N14WeaponRevolver45-70Handcannon
+    price: 42
+  - proto: N14WeaponRevolver44Magnun
+    price: 49
+  - proto: N14WeaponRevolver44TribalUpgraded
+    price: 56
+  - proto: N14WeaponRevolverWebley
+    price: 56
+  - proto: N14WeaponRevolver45-70Hunter
+    price: 70
+  - proto: N14WeaponRevolver45-70HandcannonUpgraded
+    price: 70
+  - proto: N14WeaponRevolver44TribalUpgradedExtra
+    price: 70
+
+- type: storeCategoryStructured
+  id: CaravanSell2_Pistols
+  name: "Пистолеты"
+  entries:
+  - proto: N14WeaponPistol9mm
+    price: 10
+  - proto: N14WeaponPistol10mmPipe
+    price: 10
+  - proto: N14WeaponPistol9mmChinese
+    price: 13
+  - proto: N14WeaponPistol10mm
+    price: 14
+  - proto: N14WeaponPistol22lr
+    price: 14
+  - proto: N14WeaponPistolWebley
+    price: 21
+  - proto: N14WeaponPistol12mm
+    price: 24
+  - proto: N14WeaponPistol9mmSpy
+    price: 31
+  - proto: N14WeaponPistol45Colt
+    price: 31
+  - proto: N14WeaponLaserPistol
+    price: 42
+  - proto: N14WeaponDesertEagle44
+    price: 56
+
+- type: storeCategoryStructured
+  id: CaravanSell2_SMGs
+  name: "Пистолеты-пулеметы"
+  entries:
+  - proto: N14WeaponSMG10mmPipe
+    price: 14
+  - proto: N14WeaponSMG12mmPipe
+    price: 14
+  - proto: N14WeaponSMG9mm
+    price: 35
+  - proto: N14WeaponSMG10mm
+    price: 35
+  - proto: N14WeaponSMG9mminfiltrator
+    price: 42
+  - proto: N14WeaponSMG10mmSuppressed
+    price: 42
+  - proto: N14WeaponSMG45
+    price: 45
+  - proto: N14WeaponSMG9mmCanadian
+    price: 56
+  - proto: N14WeaponSMG10mmChinese
+    price: 56
+  - proto: N14WeaponSMG12mm
+    price: 56
+  - proto: N14WeaponSMG12mmAdvancedChinese
+    price: 66
+  - proto: N14WeaponSMG12mmAdvancedCanadian
+    price: 77
+  - proto: N14WeaponSMG12mmAdvanced
+    price: 84
+
+- type: storeCategoryStructured
+  id: CaravanSell2_Shotguns
+  name: "Дробовики"
+  entries:
+  - proto: N14WeaponShotgunPipe
+    price: 10
+  - proto: N14WeaponShotgunDoubleBarrel
+    price: 17
+  - proto: N14WeaponShotgunBoomstick
+    price: 17
+  - proto: N14WeaponShotgunBloodyStick
+    price: 17
+  - proto: N14WeaponShotgunCaravan
+    price: 17
+  - proto: N14WeaponShotgunSawedOff
+    price: 24
+  - proto: N14WeaponShotgun
+    price: 35
+  - proto: N14WeaponShotgunShort
+    price: 35
+  - proto: N14WeaponShotgunAuto
+    price: 119
+  - proto: N14WeaponShotgunChinese
+    price: 168
+  - proto: N14WeaponShotgunCanadian
+    price: 175
+  - proto: N14WeaponShotgunRiot
+    price: 189
+  - proto: N14WeaponBlowback
+    price: 210
+
+- type: storeCategoryStructured
+  id: CaravanSell2_AssaultRifles
+  name: "Штурмовые винтовки"
+  entries:
+  - proto: N14WeaponRifle556Pipe
+    price: 56
+  - proto: N14WeaponRifle762SKS
+    price: 84
+  - proto: N14WeaponRifle556Service
+    price: 87
+  - proto: N14WeaponRifle556Butchered
+    price: 87
+  - proto: N14WeaponRifle556ServiceScoped
+    price: 94
+  - proto: N14WeaponRifle762M14
+    price: 119
+  - proto: N14WeaponRifle556R91
+    price: 119
+  - proto: N14WeaponRifle762Chinese
+    price: 119
+  - proto: N14WeaponRifle556CarbineOld
+    price: 126
+  - proto: N14WeaponRifleAk112
+    price: 133
+  - proto: N14WeaponRifle556Carbine
+    price: 133
+  - proto: N14WeaponSniper308Canadian
+    price: 147
+  - proto: N14WeaponRifle556EM2
+    price: 154
+  - proto: N14WeaponRifle762Marksman
+    price: 157
+  - proto: N14WeaponRifle762Fal
+    price: 168
+  - proto: N14WeaponRifle762MarksmanChinese
+    price: 171
+  - proto: N14WeaponRifle762Canadian
+    price: 175
+  - proto: N14WeaponRifle762MarksmanCanadian
+    price: 175
+  - proto: N14WeaponLMGAutoRifle
+    price: 245
+
+- type: storeCategoryStructured
+  id: CaravanSell2_MachineGuns
+  name: "Пулеметы"
+  entries:
+  - proto: N14WeaponLMG
+    price: 350
+  - proto: N14WeaponLMGBren
+    price: 560
+  - proto: N14WeaponRifleAk112pn
+    price: 770
+  - proto: N14WeaponLMGchinese
+    price: 1050
+  - proto: N14WeaponHMGcanadian
+    price: 1120
+
+- type: storeCategoryStructured
+  id: CaravanSell2_Rifles
+  name: "Винтовки"
+  entries:
+  - proto: N14WeaponSniper308PipeRifle
+    price: 14
+  - proto: N14WeaponSniper556Tribal
+    price: 21
+  - proto: N14WeaponSniper556VarmintRifle
+    price: 24
+  - proto: N14WeaponSniper556TribalUpgraded
+    price: 28
+  - proto: N14WeaponSniperHunting
+    price: 31
+  - proto: N14WeaponSniper308Ross
+    price: 38
+  - proto: N14WeaponSniper50Pipe
+    price: 38
+  - proto: N14WeaponSniper308LeverRifle
+    price: 42
+  - proto: N14WeaponSniper44LeverCarbine
+    price: 42
+  - proto: N14WeaponSniper308Tribal
+    price: 42
+  - proto: N14WeaponSniper308TribalUpgraded
+    price: 49
+  - proto: N14WeaponSniperEnfield
+    price: 56
+  - proto: N14WeaponRifle308Battle
+    price: 63
+  - proto: N14WeaponRifle308SniperRifle
+    price: 140
+
+- type: storeCategoryStructured
+  id: CaravanSell2_EnergyWeapons
+  name: "Энергооружие"
+  entries:
+  - proto: N14WeaponLaserPistol
+    price: 49
+  - proto: N14WeaponLaserRifleMakeshift
+    price: 52
+  - proto: N14WeaponLaserRevolver
+    price: 56
+  - proto: N14WeaponLaserPistolRecharger
+    price: 56
+  - proto: N14WeaponLaserRifle
+    price: 119
+  - proto: N14WeaponPlasmaPistol
+    price: 133
+  - proto: N14WeaponLaserRifleRecharger
+    price: 140
+  - proto: N14WeaponLaserRifleCrude
+    price: 140
+  - proto: N14WeaponPlasmaRifleCrude
+    price: 168
+  - proto: N14WeaponLaserRiflePrototypeAER14
+    price: 168
+  - proto: N14WeaponPlasmaDefender
+    price: 168
+  - proto: N14WeaponPlasmaRifle
+    price: 182
+  - proto: N14WeaponPlasmaRifleUrban
+    price: 210
+
+- type: storeCategoryStructured
+  id: CaravanSell2_Ammo
+  name: "Патроны"
+  entries:
+  - proto: N14PowerCellSmall
+    price: 17
+  - proto: N14PowerCellHigh
+    price: 24
+  - proto: N14PlasmaCartridge
+    price: 35
+  - proto: 40mmGrenadeFrag
+    price: 56
+
+- type: storeCategoryStructured
+  id: CaravanSell2_Melee
+  name: "Ближний бой"
+  entries:
+  - proto: N14TrainingSword
+    price: 3
+  - proto: N14ScrapMachete
+    price: 7
+  - proto: N14ChineseSword
+    price: 14
+  - proto: N14CeremonialSword
+    price: 14
+  - proto: N14LongSword
+    price: 14
+  - proto: N14CombatKnife
+    price: 14
+  - proto: N14KitchenKnife
+    price: 14
+  - proto: N14BrassKnife
+    price: 14
+  - proto: N14WastelandSpear
+    price: 14
+  - proto: N14PilumSpear
+    price: 14
+  - proto: N14WastelandPolearm
+    price: 14
+  - proto: N14GolfClub
+    price: 14
+  - proto: N14WastelandTribalJavelin
+    price: 14
+  - proto: N14PoliceBaton
+    price: 21
+  - proto: N14SledgeHammer
+    price: 35
+  - proto: N14BaseAxe
+    price: 35
+
+- type: storeCategoryStructured
+  id: CaravanSell2_Headwear
+  name: "Головные уборы"
+  entries:
+  - proto: N14ClothingHeadHatArmyBeret
+    price: 3
+  - proto: N14ClothingHeadHatArmyBeretRanger
+    price: 4
+
+- type: storeCategoryStructured
+  id: CaravanSell2_Armor
+  name: "Броня"
+  entries:
+  - proto: N14ClothingOuterCoatDuster
+    price: 7
+  - proto: N14ClothingOuterCoatLeatherDuster
+    price: 7
+  - proto: N14ClothingOuterCoatLeatherCoat
+    price: 7
+  - proto: N14ClothingOuterRaiderBadlands
+    price: 7
+  - proto: N14ClothingOuterRaiderBlastmaster
+    price: 7
+  - proto: N14ClothingOuterPoliceOfficer
+    price: 10
+  - proto: N14ClothingOuterTownCoat
+    price: 14
+  - proto: N14ClothingOuterPoliceLieutenant
+    price: 14
+  - proto: N14ClothingOuterTownSpecialCoat
+    price: 14
+  - proto: N14ClothingOuterBattlecoatCoat
+    price: 14
+  - proto: N14ClothingOuterBattlecoatTan
+    price: 14
+  - proto: N14ClothingOuterPainspike
+    price: 21
+  - proto: N14ClothingOuterVestLeather
+    price: 24
+  - proto: N14ClothingOuterMetalArmor
+    price: 31
+  - proto: N14ClothingOuterTownMediumCoat
+    price: 35
+  - proto: N14ClothingOuterTownHeavyCoat
+    price: 38
+  - proto: N14ClothingOuterCoatCombatDuster
+    price: 38
+  - proto: N14ClothingOuterCoatFollowersArmored
+    price: 38
+  - proto: N14ClothingOuterInsectArmor
+    price: 38
+  - proto: N14ClothingOuterLightMetalArmor
+    price: 38
+  - proto: N14ClothingOuterLeatherArmor
+    price: 45
+  - proto: N14ClothingOuterPressArmor
+    price: 45
+  - proto: N14ClothingOuterPoliceVest
+    price: 45
+  - proto: ClothingOuterArmorBasicSlim
+    price: 45
+  - proto: N14ClothingOuterCombatRusted
+    price: 45
+  - proto: N14ClothingOuterCombatRaider
+    price: 45
+  - proto: N14ClothingOuterVaultSecVest
+    price: 49
+  - proto: N14ClothingOuterVestChinese
+    price: 52
+  - proto: N14ClothingOuterCombatPainspike
+    price: 87
+  - proto: N14ClothingOuterRaiderCombat1
+    price: 87
+  - proto: N14ClothingOuterCombatArmor
+    price: 87
+
+- type: storeCategoryStructured
+  id: CaravanSell2_Rigs
+  name: "Экипировка (РПС)"
+  entries:
+  - proto: ClothingBeltCowboy
+    price: 21
+  - proto: ClothingBeltMilitary
+    price: 42
+
+- type: storeCategoryStructured
+  id: CaravanSell2_MaterialsAndJunk
+  name: "Материалы и хлам"
+  entries:
+  - proto: MaterialCloth1
+    price: 4
+  - proto: N14MaterialThread1
+    price: 4
+  - proto: N14JunkDuctTape
+    price: 3
+  - proto: N14ScrapElectronic1
+    price: 6
+  - proto: N14ScrapGold1
+    price: 6
+  - proto: N14FoodMeatPigrat
+    price: 5
+  - proto: N14FoodMeatRadRaw
+    price: 5
+  - proto: N14JunkAbraxoCleaner
+    price: 10
+  - proto: N14MaterialLeather1
+    price: 10
+  - proto: N14MaterialAntChitin1
+    price: 10
+  - proto: N14MaterialHideGecko
+    price: 14
+  - proto: N14MaterialHideGeckoFire
+    price: 17
+  - proto: N14FoodFireantNectar
+    price: 17
+  - proto: N14FoodMeatGeckoGolden
+    price: 17
+  - proto: N14FoodMeatMirelurkClaw
+    price: 17
+  - proto: N14MaterialCircuitry1
+    price: 24
+  - proto: N14FoodMeatRadlurkClaw
+    price: 24
+  - proto: N14FoodEggDeathclaw
+    price: 38
+  - proto: N14MaterialYaoguaiHide
+    price: 40
+  - proto: N14MaterialNightstalkerPelt
+    price: 40
+  - proto: N14FoodCazadorAcidSac
+    price: 45
+
+- type: storeCategoryStructured
+  id: CaravanSell2_Ore
+  name: "Руда"
+  entries:
+  - proto: N14IngotCopper1
+    price: 10
+  - proto: N14IngotAluminum1
+    price: 10
+  - proto: N14IngotIron1
+    price: 10
+  - proto: N14IngotBrass1
+    price: 10
+  - proto: N14IngotLead1
+    price: 10
+  - proto: N14IngotSilver1
+    price: 20
+  - proto: N14IngotGold1
+    price: 25
+
+- type: storeCategoryStructured
+  id: CaravanSell2_Alcohol
+  name: "Алкоголь"
+  entries:
+  - proto: N14DrinkGammagulpBeer
+    price: 3
+  - proto: DrinkVodkaBottleFull
+    price: 3
+  - proto: DrinkGinBottleFull
+    price: 3
+  - proto: DrinkCognacBottleFull
+    price: 3
+
+- type: storePresetStructured
+  id: caravan_sell2
+  currency: Caps
+  categories:
+  - CaravanSell2_Revolvers
+  - CaravanSell2_Pistols
+  - CaravanSell2_SMGs
+  - CaravanSell2_Shotguns
+  - CaravanSell2_AssaultRifles
+  - CaravanSell2_MachineGuns
+  - CaravanSell2_Rifles
+  - CaravanSell2_EnergyWeapons
+  - CaravanSell2_Ammo
+  - CaravanSell2_Melee
+  - CaravanSell2_Headwear
+  - CaravanSell2_Armor
+  - CaravanSell2_Rigs
+  - CaravanSell2_MaterialsAndJunk
+  - CaravanSell2_Ore
+  - CaravanSell2_Alcohol

@@ -5,6 +5,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - ClothingOuterGhostSheet
 
@@ -15,6 +21,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingOuterJacketLettermanRed
 
@@ -25,6 +37,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingOuterJacketLettermanBrown
 
@@ -35,6 +53,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     -  N14ClothingOuterConusrobe   # Forge-Change замена на фанаткую версию
 
@@ -45,6 +69,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     -  N14ClothingOuterFlannelRed
 
@@ -55,6 +85,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     -  N14ClothingOuterFlannelAqua
 
@@ -65,6 +101,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     -  N14ClothingOuterFlannelBrown
 
@@ -79,6 +121,12 @@
       inverted: true
       departments:
       - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     -  N14ClothingOuterCoatFollowerLab
 
@@ -93,6 +141,12 @@
       inverted: true
       departments:
       - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingOuterCoatWinterArmored
 
@@ -107,6 +161,12 @@
       inverted: true
       departments:
       - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingOuterBattlecoatCoat
 
@@ -121,6 +181,12 @@
       inverted: true
       departments:
       - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingOuterBattlecoatTan
 
@@ -131,6 +197,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingOuterCoatDuster
 
@@ -145,6 +217,12 @@
       inverted: true
       departments:
       - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingOuterCoatLeatherDuster
 
@@ -155,6 +233,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingOuterCoatLeatherJacket
 
@@ -165,6 +249,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingOuterCoatLeatherCoat
 
@@ -175,6 +265,12 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingOuterTownCoat
 
@@ -189,6 +285,12 @@
       inverted: true
       departments:
       - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingOuterTownMediumCoat
 
@@ -203,6 +305,12 @@
       inverted: true
       departments:
       - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingOuterLeatherArmor
 
@@ -217,6 +325,12 @@
       inverted: true
       departments:
       - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingOuterMetalArmor
 
@@ -231,6 +345,12 @@
       inverted: true
       departments:
       - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingOuterTribalArmor
 
@@ -245,6 +365,12 @@
       inverted: true
       departments:
       - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingOuterTribalArmorHeavy
 
@@ -259,6 +385,12 @@
       inverted: true
       departments:
       - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingOuterRaiderBadlands
 
@@ -273,6 +405,12 @@
       inverted: true
       departments:
       - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingOuterRaiderBlastmaster
 
@@ -287,6 +425,12 @@
       inverted: true
       departments:
       - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingOuterHarperCoat
 
@@ -304,5 +448,11 @@
       inverted: true
       departments:
       - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
   items:
     - N14ClothingScavengerHeavyArmor

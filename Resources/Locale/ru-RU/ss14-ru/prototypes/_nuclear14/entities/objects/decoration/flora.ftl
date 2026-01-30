@@ -1,12 +1,12 @@
 ent-N14FloraLogBase = бревно
-    .desc = Было дерево, осталась древесина.
+    .desc = Было дерево, осталось бревно.
     .suffix = Маппинг
-ent-N14FloraLog1 = древесина
-    .desc = Было дерево, осталась древесина.
+ent-N14FloraLog1 = { ent-N14FloraLogBase }
+    .desc = { ent-N14FloraLogBase.desc }
     .suffix = кресло, маппинг
-ent-N14FloraLogTimber = бревно
+ent-N14FloraLogTimber = { ent-N14FloraLogBase }
     .suffix = предмет, маппинг
     .desc = { ent-N14FloraLogBase.desc }
-ent-N14FloraLog3 = { ent-N14FloraLog1 }
+ent-N14FloraLog3 = { ent-N14FloraLogBase }
     .suffix = тайник, маппинг
     .desc = { ent-N14FloraLogBase.desc }

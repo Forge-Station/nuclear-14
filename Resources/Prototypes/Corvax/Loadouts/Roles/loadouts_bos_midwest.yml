@@ -113,3 +113,53 @@
   items:
     - N14ClothingHeadHatBoSInquisitorBattleHelmetHood
 
+- type: loadout
+  id: LoadoutMaskBoSMidwestLiner
+  category: Mask
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladinCommander
+        - BoSMidPaladin
+        - BoSMidKnight
+        - BoSMidSquire
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidSquire
+      min: 18000
+  items:
+    - N14ClothingMaskLiner
+
+- type: loadout
+  id: LoadoutMaskBoSMidwestLinerBlack
+  category: Mask
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladinCommander
+        - BoSMidPaladin
+        - BoSMidKnight
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidKnight
+      min: 36000
+  items:
+    - N14ClothingMaskLinerBlack
+
+- type: loadout
+  id: LoadoutMaskBoSMidwestLinerElite
+  category: Mask
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladinCommander
+        - BoSMidPaladin
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladin
+      min: 36000
+  items:
+    - N14ClothingMaskLinerElite

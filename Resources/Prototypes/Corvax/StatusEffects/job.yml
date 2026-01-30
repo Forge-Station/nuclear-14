@@ -305,3 +305,31 @@
   icon:
     sprite: Corvax/Interface/Misc/job_icons.rsi
     state: centurion
+
+- type: jobIcon
+  parent: JobIcon
+  id: JobIconNCRPrisoner
+  icon:
+    sprite: Corvax/Interface/Misc/job_icons.rsi
+    state: Prisoner
+
+- type: jobIcon
+  parent: JobIcon
+  id: JobIconRabMBos
+  icon:
+    sprite: Corvax/Interface/Misc/job_icons.rsi
+    state: Serf
+
+- type: jobIcon
+  parent: JobIcon
+  id: JobIconLegionSlave
+  icon:
+    sprite: Corvax/Interface/Misc/job_icons.rsi
+    state: Slave
+
+- type: jobIcon
+  parent: JobIcon
+  id: JobIconNCRMPInvestegator
+  icon:
+    sprite: Corvax/Interface/Misc/job_icons.rsi
+    state: investigator

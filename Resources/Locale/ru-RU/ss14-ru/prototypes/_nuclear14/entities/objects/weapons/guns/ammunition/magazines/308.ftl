@@ -4,3 +4,5 @@ ent-Magazine308Rifle = магазин (308.)
     .desc = { ent-BaseMagazine308Rifle.desc }
 ent-ClipMagazine308Rifle = обойма (308.)
     .desc = { ent-BaseMagazine308Rifle.desc }
+ent-Magazine308RifleSniper = снайперский магазин (308.)
+    .desc = { ent-BaseMagazine308Rifle.desc }

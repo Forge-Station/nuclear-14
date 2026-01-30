@@ -7,6 +7,12 @@
    requirements:
      - !type:CharacterItemGroupRequirement
        group: N14LoadoutNeck
+     - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
    items:
      - N14ClothingNeckCloakLeather
 
@@ -19,6 +25,12 @@
    requirements:
      - !type:CharacterItemGroupRequirement
        group: N14LoadoutNeck
+     - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
    items:
      - N14ClothingNeckMantleLeather
 
@@ -31,6 +43,12 @@
    requirements:
      - !type:CharacterItemGroupRequirement
        group: N14LoadoutNeck
+     - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
    items:
      - N14ClothingNeckCloakDarkCloak
 
@@ -43,6 +61,12 @@
    requirements:
      - !type:CharacterItemGroupRequirement
        group: N14LoadoutNeck
+     - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
    items:
      - ClothingNeckScarfStripedBlack
 
@@ -55,6 +79,12 @@
    requirements:
      - !type:CharacterItemGroupRequirement
        group: N14LoadoutNeck
+     - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
    items:
      - N14ClothingNeckTribalCloak
 
@@ -67,6 +97,12 @@
    requirements:
      - !type:CharacterItemGroupRequirement
        group: N14LoadoutNeck
+     - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
    items:
      - N14ClothingNeckTribalCloakBr
 
@@ -79,5 +115,11 @@
    requirements:
      - !type:CharacterItemGroupRequirement
        group: N14LoadoutNeck
+     - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
    items:
      - N14ClothingNeckShawl
