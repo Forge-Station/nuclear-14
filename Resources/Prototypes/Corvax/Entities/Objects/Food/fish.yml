@@ -71,6 +71,7 @@
   description: Кусок сырой красной рыбы. Выглядит свежим, но употребление в сыром виде — это риск.
   components:
   - type: Sprite
+    scale: 1, 1
     sprite: Corvax/Objects/Consumable/Food/fish.rsi
     state: redfish
   - type: SolutionContainerManager
@@ -93,6 +94,7 @@
   description: Кусок сырой белой рыбы. Слегка склизкий на ощупь.
   components:
   - type: Sprite
+    scale: 1, 1
     sprite: Corvax/Objects/Consumable/Food/fish.rsi
     state: whitefish
   - type: SolutionContainerManager
@@ -117,6 +119,7 @@
   description: Идеально прожаренный кусок красной рыбы. Пахнет превосходно.
   components:
   - type: Sprite
+    scale: 1, 1
     sprite: Corvax/Objects/Consumable/Food/fish.rsi
     state: redfish-cooked
   - type: SolutionContainerManager
@@ -142,6 +145,7 @@
   description: Нежный стейк из белой рыбы. Легкая и полезная еда.
   components:
   - type: Sprite
+    scale: 1, 1
     sprite: Corvax/Objects/Consumable/Food/fish.rsi
     state: whitefish-cooked
   - type: SolutionContainerManager
@@ -282,7 +286,7 @@
     state: toastredcaviar
 
 - type: entity
-  parent: FoodTinBase
+  parent: [FoodTinBase, FoodMeatBase]
   id: N14FoodCannedFish
   name: рыбные консервы
   description: Жестяная банка с консервированной рыбой. Подозрительно напоминает довоенные запасы.
@@ -290,9 +294,17 @@
   - type: Sprite
     sprite: Corvax/Objects/Consumable/Food/canned_fish.rsi
     state: icon
-  - type: FlavorProfile
-    flavors:
-    - fishy
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        maxVol: 20
+        reagents:
+        - ReagentId: Nutriment
+          Quantity: 15
+  - type: Construction
+    graph: FoodCannedFishHeat
+    node: start
+    defaultTarget: N14FoodCannedFishHot
   - type: Food
     trash:
     - N14FoodCannedFishTrash
@@ -302,6 +314,35 @@
     - Soup
 
 - type: entity
+  parent: FoodTinBase
+  id: N14FoodCannedFishHot
+  name: разогретые рыбные консервы
+  description: Банка разогрета, крышка вздулась и легко поддалась. Пахнет отлично!
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Consumable/Food/canned_fish_hot.rsi
+    state: icon
+  - type: Openable
+    opened: true
+    openableByHand: true
+  - type: Construction
+    graph: FoodCannedFishHeat
+    node: start
+    defaultTarget: N14FoodCannedFishHot
+  - type: Food
+    trash:
+    - N14FoodCannedFishTrash
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        reagents:
+        - ReagentId: Nutriment
+          Quantity: 20
+  - type: FlavorProfile
+    flavors:
+    - fishy
+
+- type: entity
   parent: FoodTinBaseTrash
   id: N14FoodCannedFishTrash
   name: пустая рыбная консерва
@@ -309,3 +350,18 @@
   - type: Sprite
     sprite: Corvax/Objects/Consumable/Food/canned_fish.rsi
     state: trash
+
+- type: constructionGraph
+  id: FoodCannedFishHeat
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: FoodCannedFishHot
+      completed:
+      - !type:PlaySound
+        sound: /Audio/Effects/sizzle.ogg
+      steps:
+      - minTemperature: 292
+  - node: FoodCannedFishHot
+    entity: N14FoodCannedFishHot
