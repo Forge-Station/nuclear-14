@@ -1,0 +1,311 @@
+- type: entity
+  name: крабовые палочки
+  parent: FoodBakedBase
+  id: Crabstick
+  description: Имитация крабового мяса, которая на самом деле — переработанная белая рыба. Любимый ингредиент для салатов.
+  components:
+  - type: Stack
+    stackType: Crabsticks
+    count: 1
+    composite: true
+    layerStates:
+    - crab_sticks1
+    - crab_sticks2
+    - crab_sticks3
+    - crab_sticks4
+    - crab_sticks5
+    - crab_sticks6
+    - crab_sticks7
+    - crab_sticks8
+    - crab_sticks9
+  - type: Sprite
+    sprite: Corvax/Objects/Consumable/Food/crab_sticks.rsi
+    state: crab_sticks1
+    layers:
+    - state: crab_sticks1
+      map: ["crab_sticks1"]
+      visible: false
+    - state: crab_sticks2
+      map: ["crab_sticks2"]
+      visible: false
+    - state: crab_sticks3
+      map: ["crab_sticks3"]
+      visible: false
+    - state: crab_sticks4
+      map: ["crab_sticks4"]
+      visible: false
+    - state: crab_sticks5
+      map: ["crab_sticks5"]
+      visible: false
+    - state: crab_sticks6
+      map: ["crab_sticks6"]
+      visible: false
+    - state: crab_sticks7
+      map: ["crab_sticks7"]
+      visible: false
+    - state: crab_sticks8
+      map: ["crab_sticks8"]
+      visible: false
+    - state: crab_sticks9
+      map: ["crab_sticks9"]
+      visible: false
+  - type: Appearance
+  - type: Tag
+    tags:
+    - Crabsticks
+
+- type: stack
+  id: Crabsticks
+  name: крабовые палочки
+  spawn: Crabstick
+  maxCount: 9
+  itemSize: 1
+
+- type: Tag
+  id: Crabsticks
+
+- type: entity
+  name: сырая красная рыба
+  parent: N14FoodMeatRadRaw
+  id: FoodMeatRedfishRaw
+  description: Кусок сырой красной рыбы. Выглядит свежим, но употребление в сыром виде — это риск.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Consumable/Food/fish.rsi
+    state: redfish
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        reagents:
+        - ReagentId: N14UncookedAnimalProteinsRad
+          Quantity: 7
+  - type: Construction
+    graph: FoodMeatRedfish
+    node: start
+    defaultTarget: FoodMeatRedfishCooked
+  - type: StaticPrice
+    price: 5
+
+- type: entity
+  name: сырая белая рыба
+  parent: N14FoodMeatRadRaw
+  id: FoodMeatWhitefishRaw
+  description: Кусок сырой белой рыбы. Слегка склизкий на ощупь.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Consumable/Food/fish.rsi
+    state: whitefish
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        reagents:
+        - ReagentId: N14UncookedAnimalProteinsRad
+          Quantity: 6
+  - type: Construction
+    graph: FoodMeatWhitefish
+    node: start
+    defaultTarget: FoodMeatWhitefishCooked
+  - type: StaticPrice
+    price: 4
+
+# --- Приготовленная рыба ---
+
+- type: entity
+  name: стейк из красной рыбы
+  parent: N14FoodMeatCooked
+  id: FoodMeatRedfishCooked
+  description: Идеально прожаренный кусок красной рыбы. Пахнет превосходно.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Consumable/Food/fish.rsi
+    state: redfish-cooked
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        maxVol: 20
+        reagents:
+        - ReagentId: Nutriment
+          Quantity: 8
+        - ReagentId: Protein
+          Quantity: 6
+  - type: Construction
+    graph: FoodMeatRedfish
+    node: MeatCooked
+    defaultTarget: FoodMeatRedfishCooked
+  - type: StaticPrice
+    price: 10
+
+- type: entity
+  name: стейк из белой рыбы
+  parent: N14FoodMeatCooked
+  id: FoodMeatWhitefishCooked
+  description: Нежный стейк из белой рыбы. Легкая и полезная еда.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Consumable/Food/fish.rsi
+    state: whitefish-cooked
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        maxVol: 20
+        reagents:
+        - ReagentId: Nutriment
+          Quantity: 7
+        - ReagentId: Protein
+          Quantity: 5
+  - type: Construction
+    graph: FoodMeatWhitefish
+    node: MeatCooked
+    defaultTarget: FoodMeatWhitefishCooked
+  - type: StaticPrice
+    price: 8
+
+- type: constructionGraph
+  id: FoodMeatRedfish
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: MeatCooked
+      completed:
+      - !type:PlaySound
+        sound: /Audio/Effects/sizzle.ogg
+      steps:
+      - minTemperature: 305
+  - node: MeatCooked
+    entity: FoodMeatRedfishCooked
+
+- type: constructionGraph
+  id: FoodMeatWhitefish
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: MeatCooked
+      completed:
+      - !type:PlaySound
+        sound: /Audio/Effects/sizzle.ogg
+      steps:
+      - minTemperature: 305
+  - node: MeatCooked
+    entity: FoodMeatWhitefishCooked
+
+- type: entity
+  name: крабовый салат
+  parent: N14CookedFoodBowlBase
+  id: FoodCrabSalad
+  description: Сытный салат с крабовыми палочками. Классика любого праздничного стола.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Consumable/Food/bowl_food_fish.rsi
+    state: crab_salad
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        reagents:
+        - ReagentId: Nutriment
+          Quantity: 10
+        - ReagentId: Vitamin
+          Quantity: 2
+
+- type: entity
+  name: рыбный суп
+  parent: N14CookedFoodBowlBase
+  id: FoodFishSoup
+  description: Горячий и ароматный суп из свежей рыбы. Согревает душу.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Consumable/Food/bowl_food_fish.rsi
+    state: fish_soup
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        reagents:
+        - ReagentId: Nutriment
+          Quantity: 8
+        - ReagentId: Water
+          Quantity: 5
+
+# --- Рыбный пирог ---
+- type: entity
+  name: рыбный пирог
+  parent: FoodPieBase
+  id: FoodFishPie
+  description: Целый рыбный пирог. Пахнет выпечкой.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Consumable/Food/fish_pie.rsi
+    state: fish
+  - type: SliceableFood
+    count: 5
+    slice: FoodFishPieSlice
+
+- type: entity
+  name: кусок рыбного пирога
+  parent: FoodPieSliceBase
+  id: FoodFishPieSlice
+  description: Аппетитный кусочек пирога.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Consumable/Food/fish_pie.rsi
+    state: fish-slice
+
+# --- Икра и закуски ---
+- type: entity
+  name: красная икра
+  parent: N14CookedFoodTacoBase
+  id: FoodRedCaviar
+  description: Баночка свежей красной икры.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Consumable/Food/redcaviar.rsi
+    state: redcaviar
+
+- type: entity
+  name: тартлетка с икрой
+  parent: N14CookedFoodBreadBase
+  id: FoodCaviarTartlet
+  description: Маленькая закуска с икрой.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Consumable/Food/caviar_food.rsi
+    state: tartletredcaviar
+
+- type: entity
+  name: тост с икрой
+  parent: N14CookedFoodBreadBase
+  id: FoodCaviarToast
+  description: Хрустящий тост с красной икрой.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Consumable/Food/caviar_food.rsi
+    state: toastredcaviar
+
+- type: entity
+  parent: FoodTinBase
+  id: N14FoodCannedFish
+  name: рыбные консервы
+  description: Жестяная банка с консервированной рыбой. Подозрительно напоминает довоенные запасы.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Consumable/Food/canned_fish.rsi
+    state: icon
+  - type: FlavorProfile
+    flavors:
+    - fishy
+  - type: Food
+    trash:
+    - N14FoodCannedFishTrash
+  - type: Tag
+    tags:
+    - Meat
+    - Soup
+
+- type: entity
+  parent: FoodTinBaseTrash
+  id: N14FoodCannedFishTrash
+  name: пустая рыбная консерва
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Consumable/Food/canned_fish.rsi
+    state: trash

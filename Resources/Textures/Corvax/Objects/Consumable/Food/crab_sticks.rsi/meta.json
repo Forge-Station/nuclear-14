@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "thevictorplumber",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "crab_sticks1"
+    },
+    {
+      "name": "crab_sticks2"
+    },
+    {
+      "name": "crab_sticks3"
+    },
+    {
+      "name": "crab_sticks4"
+    },
+    {
+      "name": "crab_sticks5"
+    },
+    {
+      "name": "crab_sticks6"
+    },
+    {
+      "name": "crab_sticks7"
+    },
+    {
+      "name": "crab_sticks8"
+    },
+    {
+      "name": "crab_sticks9"
+    }
+  ]
+}
