@@ -1,5 +1,5 @@
 - type: entity
-  id: N14Floorbubble
+  id: N14FishingSpot
   parent: BaseFishingSpot
   name: bubble
   description: A real thirst quencher.
@@ -11,6 +11,6 @@
       - state: bubble
   - type: FishingSpot
     fishList: !type:NestedSelector
-      tableId: WaterFishingLootTable
+      tableId: WaterFishTable
     fishDefaultTimer: 25.0
     fishTimerVariety: 15.0

@@ -20,11 +20,37 @@
     - crab_sticks9
   - type: Sprite
     sprite: Corvax/Objects/Consumable/Food/crab_sticks.rsi
-    state: crab_sticks1
+    layers:
+    - state: crab_sticks1
+      map: ["crab_sticks1"]
+      visible: true
+    - state: crab_sticks2
+      map: ["crab_sticks2"]
+      visible: false
+    - state: crab_sticks3
+      map: ["crab_sticks3"]
+      visible: false
+    - state: crab_sticks4
+      map: ["crab_sticks4"]
+      visible: false
+    - state: crab_sticks5
+      map: ["crab_sticks5"]
+      visible: false
+    - state: crab_sticks6
+      map: ["crab_sticks6"]
+      visible: false
+    - state: crab_sticks7
+      map: ["crab_sticks7"]
+      visible: false
+    - state: crab_sticks8
+      map: ["crab_sticks8"]
+      visible: false
+    - state: crab_sticks9
+      map: ["crab_sticks9"]
+      visible: false
   - type: Appearance
   - type: Tag
-    tags:
-    - Crabsticks
+    tags: [Crabsticks]
   - type: SolutionContainerManager
     solutions:
       food:
@@ -303,6 +329,8 @@
           Quantity: 8 # Концентрат пользы
         - ReagentId: Omnizine
           Quantity: 5
+        - ReagentId: Saline
+          Quantity: 15
 
 - type: entity
   name: тартлетка с икрой
@@ -326,6 +354,8 @@
           Quantity: 3
         - ReagentId: Omnizine
           Quantity: 3
+        - ReagentId: Saline
+          Quantity: 15
 
 - type: entity
   name: тост с икрой
@@ -349,6 +379,8 @@
           Quantity: 3
         - ReagentId: Omnizine
           Quantity: 3
+        - ReagentId: Saline
+          Quantity: 15
 
 - type: entity
   parent: [FoodTinBase, FoodMeatBase]
@@ -447,3 +479,99 @@
       - minTemperature: 292
   - node: FoodCannedFishHot
     entity: N14FoodCannedFishHot
+
+- type: microwaveMealRecipe
+  id: N14RecipeFoodCrabSalad
+  name: crab salad (wasteland)
+  result: FoodCrabSalad
+  time: 10
+  solids:
+    Crabstick: 1
+    N14FloraProduceWildOnion: 1
+    N14FloraProduceWildTato: 1
+    N14FloraProduceWildTarberries: 1
+
+- type: microwaveMealRecipe
+  id: N14RecipeFoodFishSoupWhite
+  name: fish soup (whitefish)
+  result: FoodFishSoup
+  time: 10
+  solids:
+    FoodMeatWhitefishCooked: 1
+    N14FloraProduceWildOnion: 1
+    N14FloraProduceWildTato: 1
+
+- type: microwaveMealRecipe
+  id: N14RecipeFoodFishSoupRed
+  name: fish soup (redfish)
+  result: FoodFishSoup
+  time: 10
+  solids:
+    FoodMeatRedfishCooked: 1
+    N14FloraProduceWildOnion: 1
+    N14FloraProduceWildTato: 1
+
+- type: microwaveMealRecipe
+  id: N14RecipeFoodFishSoupStarlight
+  name: fish soup (starlight)
+  result: FoodFishSoup
+  time: 15
+  solids:
+    FoodMeatWhitefishCooked: 1
+    N14FloraProduceWildOnion: 1
+    N14FloraProduceWildTato: 1
+    N14FloraProduceWildStarlightBerries: 1
+
+- type: microwaveMealRecipe
+  id: N14RecipeFoodFishPieWhite
+  name: fish pie (whitefish)
+  result: FoodFishPie
+  time: 15
+  solids:
+    N14FloraProduceWildRazorgrain: 1
+    FoodMeatWhitefishCooked: 1
+    N14FloraProduceWildOnion: 1
+    N14FloraProduceWildTato: 1
+
+- type: microwaveMealRecipe
+  id: N14RecipeFoodFishPieRed
+  name: fish pie (redfish)
+  result: FoodFishPie
+  time: 15
+  solids:
+    N14FloraProduceWildRazorgrain: 1
+    FoodMeatRedfishCooked: 1
+    N14FloraProduceWildOnion: 1
+    N14FloraProduceWildTato: 1
+
+# Икра
+- type: microwaveMealRecipe
+  id: N14RecipeFoodCaviarTartlet
+  name: caviar tartlet (wasteland)
+  result: FoodCaviarTartlet
+  time: 5
+  solids:
+    FoodRedCaviar: 1
+    N14FloraProduceWildPricklyPearFruit: 1
+    N14FoodDoughTortillaFlat: 1
+
+- type: microwaveMealRecipe
+  id: N14RecipeFoodCaviarToast
+  name: caviar toast (wasteland)
+  result: FoodCaviarToast
+  time: 5
+  solids:
+    FoodRedCaviar: 1
+    N14FloraProduceWildPricklyPearFruit: 1
+    N14CookedFoodBreadPlainSlice: 1
+
+# Крабовые палочки (лучше из Cooked, как ты сделал)
+- type: microwaveMealRecipe
+  id: N14RecipeCrabstick
+  name: crab sticks
+  result: Crabstick
+  time: 5
+  solids:
+    FoodMeatWhitefishCooked: 1
+    N14FloraProduceWildRazorgrain: 1
+    N14FloraProduceWildTato: 1

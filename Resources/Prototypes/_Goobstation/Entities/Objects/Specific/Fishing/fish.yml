@@ -7,7 +7,7 @@
 
 - type: entity
   id: BaseFish
-  parent: [SimpleMobBase, BaseItem]
+  parent: [N14MobBaseSimple, BaseItem]
   abstract: true
   name: fish
   description: Water-born creature from the infinite sea... Or toilet.
@@ -15,7 +15,7 @@
   - type: Fish
     difficulty: 0.029
   - type: StaticPrice
-    price: 250
+    price: 20
   - type: MobThresholds
     thresholds:
       0: Alive
@@ -57,7 +57,7 @@
   - type: Fish
     difficulty: 0.01
   - type: StaticPrice
-    price: 750
+    price: 30
 
 - type: entity
   id: FishAlien
@@ -293,9 +293,54 @@
   - type: Item
     sprite: _Goobstation/Objects/Specific/Fishing/fish.rsi
 
+# =========================
+# FISH PARENTS (N14)
+# =========================
+
+- type: entity
+  id: BaseFishWhite
+  parent: BaseFish
+  abstract: true
+  components:
+  - type: Body
+    remove: true
+  - type: Butcherable
+    spawned:
+    - id: FoodMeatWhitefishRaw
+      amount: 1
+    - id: FoodMeatWhitefishRaw
+      prob: 0.5
+      amount: 1
+    - id: FoodMeatWhitefishRaw
+      prob: 0.5
+      amount: 1
+
+
+- type: entity
+  id: BaseFishRed
+  parent: BaseFishRare
+  abstract: true
+  components:
+  - type: Body
+    remove: true
+  - type: Butcherable
+    spawned:
+    - id: FoodMeatRedfishRaw
+      amount: 1
+    - id: FoodMeatRedfishRaw
+      prob: 0.5
+      amount: 1
+    - id: FoodRedCaviar
+      prob: 0.5
+      amount: 1
+
+# =========================
+# COMMON FISH (WHITE MEAT)
+# =========================
+
 - type: entity
   id: FishSardina
-  parent: BaseFish
+  parent: BaseFishWhite
   name: серебрянка
   description: Маленькая, юркая рыбка. Основа рациона пустошей.
   components:
@@ -307,7 +352,7 @@
 
 - type: entity
   id: FishCarp
-  parent: BaseFish
+  parent: BaseFishWhite
   name: речной карп
   description: Самая обычная рыба. Смотрит на вас пустым взглядом.
   components:
@@ -319,7 +364,7 @@
 
 - type: entity
   id: FishShrimp
-  parent: BaseFish
+  parent: BaseFishWhite
   name: титан-креветка
   description: Мутировавшая креветка-переросток. Много мяса и много лапок.
   components:
@@ -331,7 +376,7 @@
 
 - type: entity
   id: FishCrab
-  parent: BaseFish
+  parent: BaseFishWhite
   name: болотный краб
   description: Вредный падальщик с крепким панцирем. Берегите пальцы.
   components:
@@ -343,7 +388,7 @@
 
 - type: entity
   id: FishBone
-  parent: BaseFish
+  parent: BaseFishWhite
   name: рыба-скелет
   description: Жуткая груда костей, которая отказывается умирать. Отличный источник кальция и консервантов.
   components:
@@ -355,7 +400,7 @@
 
 - type: entity
   id: FishStar
-  parent: BaseFish
+  parent: BaseFishWhite
   name: кровавая звезда
   description: Пульсирующая морская звезда. Её слизь отлично заживляет ожоги.
   components:
@@ -367,7 +412,7 @@
 
 - type: entity
   id: FishCarrot
-  parent: BaseFish
+  parent: BaseFishWhite
   name: грязевая камбала
   description: Похожа на грязную морковку. Покрыта толстым слоем полезной глины.
   components:
@@ -379,7 +424,7 @@
 
 - type: entity
   id: FishYorsh
-  parent: BaseFish
+  parent: BaseFishWhite
   name: тиновый ерш
   description: Скользкий, колючий и неприятный. Выделяет густую слизь.
   components:
@@ -389,9 +434,13 @@
   - type: Item
     sprite: Corvax/Mobs/Fish/yorsh
 
+# =========================
+# RARE FISH (RED MEAT + CAVIAR 50%)
+# =========================
+
 - type: entity
   id: FishSvarka
-  parent: BaseFishRare
+  parent: BaseFishRed
   name: сом-сварщик
   description: Обитает в промышленных стоках. Искрит при ударе, внутри полно горючего жира.
   components:
@@ -403,7 +452,7 @@
 
 - type: entity
   id: FishPowerArmor
-  parent: BaseFishRare
+  parent: BaseFishRed
   name: броне-рыба
   description: Рыба с каменной кожей. Чтобы её разделать, нужна болгарка, а не нож.
   components:
@@ -415,7 +464,7 @@
 
 - type: entity
   id: NF14FishAngler
-  parent: BaseFishRare
+  parent: BaseFishRed
   name: глубинный удильщик
   description: Кошмар из тьмы. Его фонарь продолжает светиться даже после смерти.
   components:
@@ -427,7 +476,7 @@
 
 - type: entity
   id: FishFugu
-  parent: BaseFishRare
+  parent: BaseFishRed
   name: рад-иглобрюх
   description: Раздутый шар, полный смертельного нейротоксина. Деликатес для самоубийц.
   components:
@@ -439,7 +488,7 @@
 
 - type: entity
   id: FishClown
-  parent: BaseFishRare
+  parent: BaseFishRed
   name: рыба-клоун
   description: Издает смешные звуки при нажатии. Говорят, её мясо способно менять саму природу человека.
   components:
@@ -451,7 +500,7 @@
 
 - type: entity
   id: FishLegion
-  parent: BaseFishRare
+  parent: BaseFishRed
   name: рыба-греза
   description: У неё слишком много глаз. Если долго смотреть на неё, можно увидеть будущее... или просто словить приход.
   components:
@@ -463,7 +512,7 @@
 
 - type: entity
   id: FishGun
-  parent: BaseFishRare
+  parent: BaseFishRed
   name: баллистическая форель
   description: Живое оружие. Пахнет порохом и насилием. Осторожнее при разделке!
   components:
@@ -475,7 +524,7 @@
 
 - type: entity
   id: FishBomb
-  parent: BaseFishRare
+  parent: BaseFishRed
   name: пиро-щука
   description: Горячая на ощупь. Её внутренности можно использовать как взрывчатку.
   components:
@@ -487,7 +536,7 @@
 
 - type: entity
   id: FishGold
-  parent: BaseFishRare
+  parent: BaseFishRed
   name: золотой карп
   description: Живая легенда. Его чешуя состоит из чистого золота. Удача поймать такого!
   components:
@@ -499,7 +548,7 @@
 
 - type: entity
   id: FishExocoetidae
-  parent: BaseFishRare
+  parent: BaseFishRed
   name: аэро-акула
   description: Эволюция дала ей крылья, а радиация — пласталевую шкуру. Королева глубин.
   components:
@@ -511,7 +560,7 @@
 
 - type: entity
   id: FishOctopus
-  parent: BaseFishRare
+  parent: BaseFishRed
   name: красный осьминог
   description: Умный моллюск с запасом чернил. Отлично подходит для создания дымовых завес.
   components:
@@ -523,7 +572,7 @@
 
 - type: entity
   id: FishTropic
-  parent: BaseFishRare
+  parent: BaseFishRed
   name: кислотный угорь
   description: Яркая окраска предупреждает об опасности. Выделяет едкую кислоту.
   components:
