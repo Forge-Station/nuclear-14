@@ -302,8 +302,6 @@
   parent: BaseFish
   abstract: true
   components:
-  - type: Body
-    remove: true
   - type: Butcherable
     spawned:
     - id: FoodMeatWhitefishRaw
@@ -321,8 +319,6 @@
   parent: BaseFishRare
   abstract: true
   components:
-  - type: Body
-    remove: true
   - type: Butcherable
     spawned:
     - id: FoodMeatRedfishRaw
