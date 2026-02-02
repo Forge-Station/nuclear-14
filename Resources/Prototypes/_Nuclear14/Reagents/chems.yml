@@ -144,10 +144,11 @@
   color: "#00e5ff"
   metabolisms:
     Medicine:
-      metabolismRate: 0.2 # Effectively once every 5 seconds.
+      metabolismRate: 0.2
       effects:
-      - !type:Jitter
-      # - !type:NightvisionHalf
+      - !type:NocturineNightVision
+        durationSeconds: 3.0
+        color: "#F0FFFF"
 
 - type: reagent
   id: Buffout
