@@ -121,4 +121,4 @@
         maxVol: 20
         reagents:
         - ReagentId: Cateye
-          Quantity: 20
+          Quantity: 30 # Forge-Change

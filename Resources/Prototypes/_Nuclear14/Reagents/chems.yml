@@ -144,10 +144,10 @@
   color: "#00e5ff"
   metabolisms:
     Medicine:
-      metabolismRate: 0.2
+      metabolismRate: 0.067
       effects:
       - !type:NocturineNightVision
-        durationSeconds: 3.0
+        durationSeconds: 5.0
         color: "#F0FFFF"
 
 - type: reagent
