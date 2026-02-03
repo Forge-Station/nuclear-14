@@ -144,11 +144,11 @@
   color: "#00e5ff"
   metabolisms:
     Medicine:
-      metabolismRate: 0.067
+      metabolismRate: 0.067 # Forge-Change
       effects:
-      - !type:NocturineNightVision
+      - !type:NocturineNightVision # Forge-Change
         durationSeconds: 5.0
-        color: "#F0FFFF"
+        color: "#F0FFFF" # Forge-Change
 
 - type: reagent
   id: Buffout
