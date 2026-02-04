@@ -1,0 +1,14 @@
+- type: entity
+  id: Magazine556Rifle30
+  name: "magazine, 30 rounds (5.56mm)"
+  parent: Magazine556Rifle
+  components:
+  - type: Tag
+    tags:
+      - Magazine556Rifle30
+  - type: BallisticAmmoProvider
+    proto: N14Cartridge556Rifle
+    capacity: 30
+  - type: Sprite
+    netsync: false
+    sprite: _Nuclear14/Objects/Weapons/Guns/Ammunition/Magazines/5.56/maglmg.rsi

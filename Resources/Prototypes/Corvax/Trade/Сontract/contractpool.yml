@@ -193,6 +193,9 @@
   - type: Item
     id: N14WeaponRifle762MarksmanChinese
     weight: 1
+  - type: Item
+    id: N14WeaponRifleBozarGRA
+    weight: 1
 
 
 - type: ncContractRewardPool
