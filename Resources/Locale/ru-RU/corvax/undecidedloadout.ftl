@@ -34,8 +34,8 @@ undecided-loadout-category-dean-gladiator-description =
 undecided-loadout-category-dean-sagitaria-name = Набор декана-сагитария
 undecided-loadout-category-dean-sagitaria-description =
     Ящик со всем необходимым для ведения дальнего боя.
-    Включает: 1 автоматическую винтовку, 2 магазина .308, 1 коробка патронов .308,
-    1 аптечку первой помощи, 1 стандартный набор пропитания.
+    Включает: 1 автоматическую винтовку, 2 винтовочных магазина (.308 Winchester),
+    1 коробка патронов (.308 Winchester), 1 аптечку первой помощи, 1 стандартный набор пропитания.
 
 undecided-loadout-category-dean-berserker-name = Набор декана-берсерка
 undecided-loadout-category-dean-berserker-description =

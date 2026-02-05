@@ -1,2 +1,2 @@
-ent-N14Cartridge44Magnum = патрон (.44 магнум)
-    .desc = { ent-BaseCartridgePistol.desc }
+ent-N14Cartridge44Magnum = патрон (.44 Magnum)
+    .desc = Патрон калибра .44 (~0.43 дюйма). Альтернативная маркировка: 10.9x33mmR (10.9 миллиметра).

@@ -1,2 +1,2 @@
-ent-N14Cartridge45-70 = патрон (.45-70)
-    .desc = { ent-BaseCartridgeLightRifle.desc }
+ent-N14Cartridge45-70 = патрон (.45-70 Gov't)
+    .desc = Патрон калибра .45-70 Government (0.458 дюйма). Альтернативная маркировка: 11.6×53mmR (11.63 миллиметра).

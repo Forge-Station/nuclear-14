@@ -1,2 +1,2 @@
-ent-N14CartridgePistol45 = патрон (.45 авто)
-    .desc = { ent-BaseCartridgePistol.desc }
+ent-N14CartridgePistol45 = патрон (.45 ACP)
+    .desc = Безгильзовые патроны калибра .45 Automatic Colt Pistol (~0.43 дюйма). Альтернативная маркировка: 11.43×23mm (11.5 миллиметра).

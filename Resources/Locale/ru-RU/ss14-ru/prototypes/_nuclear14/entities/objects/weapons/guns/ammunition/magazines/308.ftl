@@ -1,8 +1,8 @@
-ent-BaseMagazine308Rifle = магазин (308.)
-    .desc = { ent-BaseItem.desc }
-ent-Magazine308Rifle = магазин (308.)
-    .desc = { ent-BaseMagazine308Rifle.desc }
-ent-ClipMagazine308Rifle = обойма (308.)
-    .desc = { ent-BaseMagazine308Rifle.desc }
-ent-Magazine308RifleSniper = снайперский магазин (308.)
-    .desc = { ent-BaseMagazine308Rifle.desc }
+ent-BaseMagazine308Rifle = магазин (.308 Winchester)
+    .desc = Магазин калибра .308 (0.308 дюйма). Калибр схож с калибром 7.62x51mm NATO, но на деле имеет диаметр 7.82 миллиметра.
+ent-Magazine308Rifle = магазин винтовочный (.308 Winchester)
+    .desc = Магазин винтовочный калибра .308 (0.308 дюйма) на 21 патрон. Калибр схож с калибром 7.62x51mm NATO, но на деле имеет диаметр 7.82 миллиметра.
+ent-ClipMagazine308Rifle = обойма (.308 Winchester)
+    .desc = Обойма калибра .308 (0.308 дюйма) на 7 патронов. Калибр схож с калибром 7.62x51mm NATO, но на деле имеет диаметр 7.82 миллиметра.
+ent-Magazine308RifleSniper = магазин снайперский (.308 Winchester)
+    .desc = Магазин для снайперских винтовок калибра .308 (0.308 дюйма) на 10 патронов. Калибр схож с калибром 7.62x51mm NATO, но на деле имеет диаметр 7.82 миллиметра.

@@ -1,8 +1,8 @@
-ent-N14BaseSpeedLoader45-70 = спидлоадер (45-70)
+ent-N14BaseSpeedLoader45-70 = спидлоадер (.45-70 Gov't)
+    .desc = Спидлоадер калибра .45-70 Government (0.458 дюйма). Альтернативная маркировка: 11.6×53mmR (11.63 миллиметра).
+ent-SpeedLoader45-70 = спидлоадер револьверный (.45-70 Gov't)
+    .desc = Спидлоадер для револьвера калибра .45-70 Government (0.458 дюйма) на 6 патронов. Альтернативная маркировка: 11.6×53mmR (11.63 миллиметра).
+ent-BaseSpeedLoaderInternal4570 = { ent-N14BaseSpeedLoader45-70 }
     .desc = { ent-BaseItem.desc }
-ent-SpeedLoader45-70 = спидлоадер (45-70)
-    .desc = { ent-N14BaseSpeedLoader45-70.desc }
-ent-BaseSpeedLoaderInternal4570 = спидлоадер
-    .desc = { ent-BaseItem.desc }
-ent-SpeedLoader45-70Tube = спидлоадер (45-70 gov)
-    .desc = { ent-BaseSpeedLoaderInternal4570.desc }
+ent-SpeedLoader45-70Tube = спидлоадер винтовочный (.45-70 Gov't)
+    .desc = Спидлоадер для винтовки калибра .45-70 Government (0.458 дюйма) на 10 патронов. Альтернативная маркировка: 11.6×53mmR (11.63 миллиметра).

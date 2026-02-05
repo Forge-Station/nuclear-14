@@ -32,7 +32,7 @@
 
 - type: entity
   id: N14MagazinePistol44
-  name: pistol magazine (44)
+  name: pistol magazine (.44)
   parent: N14BaseMagazine44Pistol
   components:
   - type: BallisticAmmoProvider

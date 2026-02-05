@@ -1,6 +1,6 @@
-ent-N14BaseMagazine127Pistol = пистолетный магазин (12.7mm)
+ent-N14BaseMagazine127Pistol = магазин пистолетный (12.7mm)
     .desc = { ent-BaseItem.desc }
-ent-N14MagazinePistol12mm = пистолетный магазин (12.7mm)
+ent-N14MagazinePistol12mm = магазин пистолетный (12.7mm)
     .desc = { ent-N14BaseMagazine127Pistol.desc }
 ent-N14BaseMagazine127SubMachineGun = магазин ПП (12.7mm)
     .desc = { ent-BaseItem.desc }

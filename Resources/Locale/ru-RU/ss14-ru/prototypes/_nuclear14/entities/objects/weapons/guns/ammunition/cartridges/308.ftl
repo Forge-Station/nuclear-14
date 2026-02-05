@@ -1,2 +1,2 @@
-ent-N14Cartridge308Rifle = патрон (.308)
-    .desc = { ent-BaseCartridgeLightRifle.desc }
+ent-N14Cartridge308Rifle = патрон (.308 Winchester)
+    .desc = Патрон калибра .308 (0.308 дюйма). Схож с калибром 7.62x51mm NATO, однако на деле имеет диаметр 7.82 миллиметра.

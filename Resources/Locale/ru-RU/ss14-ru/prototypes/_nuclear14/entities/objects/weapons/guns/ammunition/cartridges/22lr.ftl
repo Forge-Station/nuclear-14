@@ -1,2 +1,2 @@
-ent-N14CartridgePistol22 = патрон (.22lr)
-    .desc = { ent-BaseCartridgePistol.desc }
+ent-N14CartridgePistol22 = патрон (.22LR)
+    .desc = Патрон калибра .22 Long Rifle (0.223 дюйма). Альтернативная маркировка: 5.7×15mmR (5.73 миллиметра).
