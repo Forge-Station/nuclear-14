@@ -206,8 +206,8 @@
       - state: mag-0
         map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
-    minAngle: 22
-    maxAngle: 43
+    minAngle: 21
+    maxAngle: 40
     angleIncrease: 2
     angleDecay: 8
     fireRate: 8
@@ -235,6 +235,7 @@
         whitelist:
           tags:
             - N14Cartridge556Rifle
-            
+  - type: FollowDistance
+    backStrength: 2
   - type: StaticPrice
     price: 500
