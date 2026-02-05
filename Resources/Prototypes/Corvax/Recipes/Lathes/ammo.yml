@@ -1,0 +1,9 @@
+- type: latheRecipe
+  id: Magazine556Rifle30
+  result: Magazine556Rifle30
+  category: N14AmmoMagazine
+  completetime: 5
+  materials:
+    Lead: 90
+    Steel: 190
+    N14Gunpowder: 60

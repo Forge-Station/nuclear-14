@@ -122,6 +122,7 @@
     runningState: icon # change this
     staticRecipes: # Ammo related only.
     - Magazine556Rifle
+    - Magazine556Rifle30 # Forge-add
     - LongMagazine556Rifle
     - LMGMagazine556Rifle
     - MagazineBox556
