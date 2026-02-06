@@ -1,4 +1,4 @@
-ent-N14BaseShell12Shotgun = ружейный патрон (12 калибр)
-    .desc = { ent-BaseCartridge.desc }
-ent-N14ShellShotgun12 = ружейный патрон (12 калибр)
+ent-N14BaseShell12Shotgun = патрон ружейный (12-gauge)
+    .desc = Ружейный патрон калибра 12-gauge диаметром 0.725 дюйма (18.42 миллиметра).
+ent-N14ShellShotgun12 = { ent-N14BaseShell12Shotgun }
     .desc = { ent-N14BaseShell12Shotgun.desc }

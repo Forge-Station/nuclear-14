@@ -1,6 +1,7 @@
-ent-BaseMagazineBox50 = { ent-BaseItem }
-    .desc = { ent-BaseItem.desc }
-ent-MagazineBox50 = коробка патронов (.50 анти-материальные)
+ent-BaseMagazineBox50 = коробка патронов (.50 BMG)
+    .desc = Коробка патронов калибра .50 Browning Machine Gun (.511 дюйма), в полном комплекте 30 патронов. Альтернативная маркировка: 12.7×99mm NATO (12.98 миллиметров).
+ent-MagazineBox50 = { ent-BaseMagazineBox50 }
     .desc = { ent-BaseMagazineBox50.desc }
-ent-MagazineBox50HEIAP = коробка патронов (.50 анти-материальные)
-    .desc = { ent-BaseMagazineBox50.desc }
+ent-MagazineBox50HEIAP = коробка патронов (.50 Raufoss Mk 211)
+    .suffix = HEIAP
+    .desc = Коробка бронебойно-зажигательных патронов калибра .50 Raufoss Mk 211 (.511 дюйма), в полном комплекте 30 патронов. Альтернативная маркировка: 12.7×99mm NATO (12.98 миллиметров).

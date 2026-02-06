@@ -1,4 +1,4 @@
-ent-40mmGrenadeFrag = 40мм граната
-    .desc = { ent-BaseGrenade.desc }
-ent-40mmGrenadeFire = 40мм огненная граната
-    .desc = { ent-BaseGrenade.desc }
+ent-40mmGrenadeFrag = граната (40x53mm)
+    .desc = Выстрел для гранатометной системы калибра 40x53mm.
+ent-40mmGrenadeFire = граната зажигательная (40x53mm)
+    .desc = Выстрел с зажигательной смесью для гранатометной системы калибра 40x53mm.
