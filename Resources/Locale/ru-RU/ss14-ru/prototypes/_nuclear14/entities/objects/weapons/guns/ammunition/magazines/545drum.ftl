@@ -1,1 +1,2 @@
-ent-MagazineDrum545Rifle = барабанный магазин (5.45mm)
+ent-MagazineDrum545Rifle = магазин барабанный (5.45mm)
+    .desc = Барабанный магазин калибра 5,45x39mm на 100 патронов.

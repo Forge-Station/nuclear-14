@@ -1,4 +1,4 @@
-ent-N14BaseSpeedLoader10 = спидлоадер (10-мм)
-    .desc = { ent-BaseItem.desc }
-ent-SpeedLoader10 = спидлоадер (10-мм)
-    .desc = { ent-N14BaseSpeedLoader10.desc }
+ent-N14BaseSpeedLoader10 = спидлоадер револьверный (10mm)
+    .desc = Спидлоадер для револьвера калибра 10mm на 6 патронов.
+ent-SpeedLoader10 = спидлоадер револьверный (10mm Auto)
+    .desc = Спидлоадер для револьвера калибра 10x25 Auto на 6 патронов.

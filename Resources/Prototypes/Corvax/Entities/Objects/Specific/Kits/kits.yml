@@ -352,7 +352,6 @@
   - type: SpawnItemsOnUse
     items:
       - id: N14ClothingOuterLegionnaireBaseArmor
-      - id: ClothingBeltRope
       - id: N14TribalMachete
       - id: N14Stimpak
         amount: 3

@@ -1,4 +1,4 @@
 ent-Magazine762AmmoBelt = лента пулеметная (7.62mm)
-    .desc = { ent-BaseItem.desc }
-ent-Magazine762AmmoShort = магазин укороченый (7.62mm)
-    .desc = { ent-BaseItem.desc }
+    .desc = Магазин для ручных пулеметов калибра 7.62×51mm NATO на 100 патронов.
+ent-Magazine762AmmoShort = магазин винтовочный укороченный (7.62mm)
+    .desc = Магазин для винтовок калибра 7.62×51mm NATO на 20 патронов.

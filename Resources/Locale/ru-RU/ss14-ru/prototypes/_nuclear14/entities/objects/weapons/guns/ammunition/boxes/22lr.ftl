@@ -1,4 +1,4 @@
-ent-BaseMagazineBox22 = { ent-BaseItem }
-    .desc = { ent-BaseItem.desc }
-ent-MagazineBox22 = коробка патронов (22lr)
+ent-BaseMagazineBox22 = коробка патронов (.22LR)
+    .desc = Коробка патронов калибра .22 Long Rifle (0.223 дюйма), в полном комплекте 75. Используется в малокалиберных пистолетах и винтовках для охоты на мелких животных. Альтернативная маркировка: 5.7×15mmR (5.73 миллиметра).
+ent-MagazineBox22 = { ent-BaseMagazineBox22 }
     .desc = { ent-BaseMagazineBox22.desc }

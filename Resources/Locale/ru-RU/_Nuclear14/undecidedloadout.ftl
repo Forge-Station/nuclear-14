@@ -81,7 +81,7 @@ undecided-loadout-category-engi-mechanic-description =
     Содержит: 1 инженерный пояс, 1 9мм ПП, 3 магазина 9мм,
     1 пистолет Browning HP, 2 пистолетных магазина (9x19mm Parabellum),
     30 железного лома, 10 стеклянных листов, 30 деревянных досок,
-    сухпаёк типа C, 1 стимпак, 1 Радавей, 1 набор бинтов, 1 фальшфейер.
+    сухпаёк типа C, 1 стимпак, 1 антирад, 1 набор бинтов, 1 фальшфейер.
 
 undecided-loadout-category-engi-demo-name = Набор инженера-подрывника
 undecided-loadout-category-engi-demo-description =
@@ -89,7 +89,7 @@ undecided-loadout-category-engi-demo-description =
     Содержит: 1 инженерный пояс, 1 "Риппер", 1 помповый дробовик,
     1 коробку патронов 12 калибра, 1 пистолет Browning HP, 2 пистолетных
     магазина (9x19mm Parabellum), 1 С4, сухпаёк типа C, 1 стимпак,
-    1 Радавей, 1 набор бинтов, 1 фальшфейер.
+    1 антирад, 1 набор бинтов, 1 фальшфейер.
 
 undecided-loadout-category-engi-breach-name = Набор инженера-штурмовика
 undecided-loadout-category-engi-breach-description =

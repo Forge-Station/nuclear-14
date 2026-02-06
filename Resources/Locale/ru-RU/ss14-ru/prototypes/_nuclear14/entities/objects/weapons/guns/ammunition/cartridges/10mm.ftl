@@ -1,2 +1,2 @@
-ent-N14CartridgePistol10 = патрон (10mm)
-    .desc = { ent-BaseCartridgePistol.desc }
+ent-N14CartridgePistol10 = патрон (10mm Auto)
+    .desc = Патрон калибра 10x25mm. Используется для пистолетов, пистолетов-пулеметов и револьверов.
