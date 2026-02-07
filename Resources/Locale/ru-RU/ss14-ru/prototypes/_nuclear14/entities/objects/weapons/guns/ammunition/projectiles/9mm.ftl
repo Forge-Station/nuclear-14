@@ -1,2 +1,2 @@
-ent-N14Bullet9mm = пуля (9x19mm Parabellum)
+ent-N14Bullet9mm = пуля (9mm Parabellum)
     .desc = { ent-BaseBullet.desc }

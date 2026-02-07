@@ -183,7 +183,7 @@
 - type: latheRecipe
   id: SpeedLoader9
   result: SpeedLoader9
-  category: N14Ammo
+  category: N14AmmoMagazine
   completetime: 5
   materials:
     Lead: 6
@@ -235,7 +235,7 @@
 - type: latheRecipe
   id: SpeedLoader10
   result: SpeedLoader10
-  category: N14Ammo
+  category: N14AmmoMagazine
   completetime: 5
   materials:
     Lead: 6
@@ -417,7 +417,7 @@
 - type: latheRecipe
   id: SpeedLoader44
   result: SpeedLoader44
-  category: N14Ammo
+  category: N14AmmoMagazine
   completetime: 5
   materials:
     Lead: 10
@@ -438,7 +438,7 @@
 - type: latheRecipe
   id: N14MagazinePistol44
   result: N14MagazinePistol44
-  category: N14Ammo
+  category: N14AmmoMagazine
   completetime: 5
   materials:
     Lead: 20
@@ -554,7 +554,7 @@
 - type: latheRecipe
   id: SpeedLoader45-70
   result: SpeedLoader45-70
-  category: N14Ammo
+  category: N14AmmoMagazine
   completetime: 5
   materials:
     Lead: 24
@@ -564,7 +564,7 @@
 - type: latheRecipe
   id: SpeedLoader45-70Tube
   result: SpeedLoader45-70Tube
-  category: N14Ammo
+  category: N14AmmoMagazine
   completetime: 5
   materials:
     Lead: 40
