@@ -1,2 +1,3 @@
-ent-N14CartridgePistol127 = патрон (12.7mm)
-    .desc = { ent-BaseCartridgePistol.desc }
+ent-N14CartridgePistol127 = патрон (.50 AE)
+    .suffix = 12.7mm
+    .desc = Патрон калибра .50 Action Express (.500 дюйма). Младший брат калибра .50 BMG, первоначально разработаный для Desert Eagle, но со временем внедренный в новые типы персонального оружия. Альтернативная маркировка: 12.7×33mmRB (12.7 миллиметров).

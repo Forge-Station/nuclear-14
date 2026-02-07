@@ -1,2 +1,2 @@
-ent-N14Bullet127 = пуля (12.7mm)
+ent-N14Bullet127 = пуля (.50 AE)
     .desc = { ent-BaseBullet.desc }

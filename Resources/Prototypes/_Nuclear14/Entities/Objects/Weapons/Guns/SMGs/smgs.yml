@@ -138,7 +138,7 @@
   name: 12.7mm SMG
   parent: N14WeaponSMGBase
   id: N14WeaponSMG12mm
-  description: A heavy submachine gun chambered in 12mm. # TODO: Need to create projectiles, magazines and boxes for 12mm.
+  description: A heavy submachine gun chambered in 12mm.
   components:
   - type: Clothing
     sprite: _Nuclear14/Objects/Weapons/Guns/SMGs/12mmSMG.rsi
@@ -190,7 +190,6 @@
             - N14CartridgePistol127
   - type: StaticPrice
     price: 100
-
 
 - type: entity
   name: 12.7mm pipe SMG
@@ -330,7 +329,6 @@
             - N14CartridgePistol10
   - type: StaticPrice
     price: 10
-
 
 - type: entity
   parent: N14WeaponSMG10mmPipe
@@ -688,7 +686,7 @@
       path: /Audio/_Nuclear14/Weapons/Effects/Reload/SMGs/smg_cock.ogg
   - type: GunWieldBonus
     minAngle: -15
-    maxAngle: -29
+    maxAngle: -23
   - type: ItemSlots
     slots:
       gun_magazine:
@@ -745,7 +743,7 @@
       path: /Audio/_Nuclear14/Weapons/Effects/Reload/SMGs/smg_cock.ogg
   - type: GunWieldBonus
     minAngle: -15
-    maxAngle: -29
+    maxAngle: -23
   - type: ItemSlots
     slots:
       gun_magazine:
