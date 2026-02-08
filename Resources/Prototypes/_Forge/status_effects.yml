@@ -1,3 +1,12 @@
 ﻿- type: statusEffect
   id: NocturineNightVision
   alwaysAllowed: true
+  alert: NightVisionAlert
+
+- type: alert
+  id: NightVisionAlert
+  icons:
+  - sprite: _Nuclear14/Objects/Specific/Medical/pill_canisters.rsi
+    state: pill_canister_cateye
+  name: "Ночное зрение"
+  description: "Ваши зрачки расширены, позволяя видеть в темноте."

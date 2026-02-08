@@ -3,15 +3,21 @@ using Content.Shared.EntityEffects;
 using Content.Shared.StatusEffect;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Shared.Chemistry.Effects;
+
 
 [DataDefinition]
 public sealed partial class NocturineNightVision : EntityEffect
 {
-    [DataField("durationSeconds")] public float DurationSeconds = 2.0f;
-    [DataField("color")] public Color NightVisionColor = Color.Green;
+    [DataField("durationSeconds")]
+    public float DurationSeconds = 2.0f;
 
-    protected override string ReagentEffectGuidebookText(IPrototypeManager prototype, IEntitySystemManager sys) => Loc.GetString("reagent-effect-guidebook-nocturine-night-vision", ("time", DurationSeconds));
+    [DataField("color")]
+    public Color NightVisionColor = Color.FromHex("#98FB98");
+
+    protected override string ReagentEffectGuidebookText(IPrototypeManager prototype, IEntitySystemManager sys) =>
+        Loc.GetString("reagent-effect-guidebook-nocturine-night-vision", ("time", DurationSeconds));
 
     public override void Effect(EntityEffectBaseArgs args)
     {
@@ -27,10 +33,12 @@ public sealed partial class NocturineNightVision : EntityEffect
             uid,
             NocturineNightVisionStatusEffectSystem.StatusKey,
             TimeSpan.FromSeconds(DurationSeconds),
-            refresh: true))
+            true))
             return;
-        entMan.System<NocturineNightVisionStatusEffectSystem>()
-            .Refresh(uid, NightVisionColor);
-    }
 
+        var meta = entMan.EnsureComponent<NocturineNightVisionStatusEffectComponent>(uid);
+        meta.NightVisionColor = NightVisionColor;
+
+        entMan.System<NocturineNightVisionStatusEffectSystem>().ForceReconcile(uid);
+    }
 }
