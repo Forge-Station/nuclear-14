@@ -105,13 +105,21 @@
   color: "#00e5ff"
   metabolisms:
     Medicine:
-      metabolismRate: 0.2 # Effectively once every 5 seconds.
+      metabolismRate: 0.2
       effects:
       - !type:Drunk
     Narcotic:
       effects:
-      - !type:ChemAddMoodlet
-        moodPrototype: PsychoBenefit
+      - !type:ChemDamageProtection
+        durationSeconds: 6
+        modifierSet: PsychoBenefit
+
+- type: damageModifierSet
+  id: PsychoBenefit
+  flatReductions:
+    Brute: 300
+    Piercing: 300
+    Slash: 300
 
 - type: reagent
   id: Daytripper
