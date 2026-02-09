@@ -153,7 +153,7 @@
     capacity: 1
     proto: N14Cartridge50
   - type: Wieldable
-  - type: GunRequiresWield # Corvax-Change
+  - type: GunRequiresWield # Forge-Change
   - type: GunWieldBonus
     minAngle: -23
     maxAngle: -104
@@ -241,7 +241,7 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/brushgun.rsi
   - type: Gun
-    fireRate: 2.5 # Corvax-Change
+    fireRate: 2.5 # Forge-Change
     soundGunshot:
       collection: N14BrushGunGunshot
   - type: BallisticAmmoProvider
@@ -327,8 +327,8 @@
     - Belt
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/shortlevercarbine.rsi
-  - type: Item # Corvax-Change
-    size: Normal # Corvax-Change
+  - type: Item # Forge-Change
+    size: Normal # Forge-Change
   - type: Wieldable
   - type: GunWieldBonus
     minAngle: -20
@@ -375,7 +375,7 @@
     capacity: 1
     proto: N14Cartridge50
   - type: Wieldable
-  - type: GunRequiresWield # Corvax-Change
+  - type: GunRequiresWield # Forge-Change
   - type: GunWieldBonus
     minAngle: -23
     maxAngle: -104
@@ -474,10 +474,10 @@
       - N14Cartridge308Rifle
     capacity: 6
     proto: N14Cartridge308Rifle
-  - type: FollowDistance # Corvax-Change
-    backStrength: 3 # Corvax-Change
+  - type: FollowDistance # Forge-Change
+    backStrength: 3 # Forge-Change
   - type: StaticPrice
-    price: 50 # Corvax-Change
+    price: 50 # Forge-Change
 
 # Forge-add-start
 - type: entity
