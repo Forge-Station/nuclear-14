@@ -4,11 +4,13 @@ using Content.Server.GameTicking;
 using Content.Shared.Administration;
 using Content.Shared.CCVar;
 using Robust.Server.GameObjects;
-using Robust.Server.Maps;
+using Robust.Shared.EntitySerialization;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Configuration;
 using Robust.Shared.Console;
 using Robust.Shared.ContentPack;
 using Robust.Shared.Map;
+using Robust.Shared.Utility;
 
 namespace Content.Server.Mapping
 {
@@ -91,8 +93,12 @@ namespace Content.Server.Mapping
                 }
                 else
                 {
-                    var loadOptions = new MapLoadOptions {StoreMapUids = true};
-                    _entities.System<MapLoaderSystem>().TryLoad(mapId, args[1], out _, loadOptions);
+                    var loadOptions = new MapLoadOptions
+                    {
+                        ForceMapId = mapId,
+                        DeserializationOptions = new DeserializationOptions { StoreYamlUids = true }
+                    };
+                    _entities.System<MapLoaderSystem>().TryLoadGeneric(new ResPath(args[1]), out _, loadOptions);
                 }
 
                 // was the map actually created or did it fail somehow?

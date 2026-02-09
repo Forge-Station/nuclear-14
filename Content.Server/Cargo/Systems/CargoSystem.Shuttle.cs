@@ -13,7 +13,8 @@ using Content.Shared.GameTicking;
 using Content.Shared.Shuttles.Components;
 using Content.Shared.Tiles;
 using Content.Shared.Whitelist;
-using Robust.Server.Maps;
+using Robust.Shared.EntitySerialization;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Random;
 using Robust.Shared.Audio;
@@ -379,29 +380,26 @@ public sealed partial class CargoSystem
         }
 
         // It gets mapinit which is okay... buuutt we still want it paused to avoid power draining.
-        var mapEntId = _mapSystem.CreateMap();
-        CargoMap = _entityManager.GetComponent<MapComponent>(mapEntId).MapId;
+        // Use TryLoadMap instead of CreateMap+TryMergeMap (grid-maps not supported by TryMergeMap).
+        if (!_mapLoader.TryLoadMap(new ResPath("/Maps/Shuttles/trading_outpost.yml"), out var loadedMap, out var rootUids,
+                new DeserializationOptions { InitializeMaps = true })) // Oh boy oh boy, hardcoded paths!
+            return;
 
-        var options = new MapLoadOptions
-        {
-            LoadMap = true,
-        };
-
-        _mapLoader.TryLoad((MapId) CargoMap, "/Maps/Shuttles/trading_outpost.yml", out var rootUids, options); // Oh boy oh boy, hardcoded paths!
+        CargoMap = loadedMap!.Value.Comp.MapId;
 
         // If this fails to load for whatever reason, cargo is fucked
-        if (rootUids == null || !rootUids.Any())
+        if (rootUids.Count == 0)
             return;
 
         foreach (var grid in rootUids)
         {
-            EnsureComp<ProtectedGridComponent>(grid);
-            EnsureComp<TradeStationComponent>(grid);
+            EnsureComp<ProtectedGridComponent>(grid.Owner);
+            EnsureComp<TradeStationComponent>(grid.Owner);
 
-            var shuttleComponent = EnsureComp<ShuttleComponent>(grid);
+            var shuttleComponent = EnsureComp<ShuttleComponent>(grid.Owner);
             shuttleComponent.AngularDamping = 10000;
             shuttleComponent.LinearDamping = 10000;
-            Dirty(grid, shuttleComponent);
+            Dirty(grid.Owner, shuttleComponent);
         }
 
         var mapUid = _sharedMapSystem.GetMap(CargoMap.Value);

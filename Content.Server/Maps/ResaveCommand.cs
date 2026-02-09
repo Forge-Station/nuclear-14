@@ -2,9 +2,11 @@ using System.Linq;
 using Content.Server.Administration;
 using Content.Shared.Administration;
 using Robust.Server.GameObjects;
-using Robust.Server.Maps;
+using Robust.Shared.EntitySerialization;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Console;
 using Robust.Shared.ContentPack;
+using Robust.Shared.EntitySerialization.Components;
 using Robust.Shared.Map;
 using Robust.Shared.Utility;
 
@@ -25,30 +27,30 @@ public sealed class ResaveCommand : LocalizedCommands
     public override void Execute(IConsoleShell shell, string argStr, string[] args)
     {
         var loader = _entManager.System<MapLoaderSystem>();
+        var mapSys = _entManager.System<SharedMapSystem>();
 
         foreach (var fn in _res.ContentFindFiles(new ResPath("/Maps/")))
         {
-            var mapId = _mapManager.CreateMap();
-            _mapManager.AddUninitializedMap(mapId);
-            loader.Load(mapId, fn.ToString(), new MapLoadOptions()
+            var mapUid = mapSys.CreateMap(out var mapId, runMapInit: false);
+            var options = new MapLoadOptions
             {
-                StoreMapUids = true,
-                LoadMap = true,
-            });
+                MergeMap = mapId,
+                DeserializationOptions = new DeserializationOptions { StoreYamlUids = true },
+            };
+            loader.TryLoadGeneric(fn, out _, options);
 
             // Process deferred component removals.
             _entManager.CullRemovedComponents();
 
-            var mapUid = _mapManager.GetMapEntityId(mapId);
             var mapXform = _entManager.GetComponent<TransformComponent>(mapUid);
 
             if (_entManager.HasComponent<LoadedMapComponent>(mapUid) || mapXform.ChildCount != 1)
             {
-                loader.SaveMap(mapId, fn.ToString());
+                loader.TrySaveMap(mapId, fn);
             }
             else if (mapXform.ChildEnumerator.MoveNext(out var child))
             {
-                loader.Save(child, fn.ToString());
+                loader.TrySaveGrid(child, fn);
             }
 
             _mapManager.DeleteMap(mapId);

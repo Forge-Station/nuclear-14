@@ -1,8 +1,8 @@
 using System.Numerics;
 using Content.Shared.CCVar;
-using Robust.Server.GameObjects;
 using Robust.Shared.Configuration;
 using Robust.Shared.ContentPack;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Maths;
@@ -47,7 +47,7 @@ namespace Content.IntegrationTests.Tests
                     mapSystem.SetTile(mapGrid, new Vector2i(0, 0), new Tile(typeId: 2, flags: 1, variant: 254));
                 }
 
-                Assert.Multiple(() => mapLoader.SaveMap(mapId, mapPath));
+                Assert.Multiple(() => mapLoader.TrySaveMap(mapId, new ResPath(mapPath)));
                 Assert.Multiple(() => mapManager.DeleteMap(mapId));
             });
 
@@ -55,7 +55,7 @@ namespace Content.IntegrationTests.Tests
 
             await server.WaitAssertion(() =>
             {
-                Assert.That(mapLoader.TryLoad(new MapId(10), mapPath, out _));
+                Assert.That(mapLoader.TryLoadMapWithId(new MapId(10), new ResPath(mapPath), out _, out _));
             });
 
             await server.WaitIdleAsync();

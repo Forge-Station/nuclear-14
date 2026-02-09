@@ -42,7 +42,7 @@ public sealed partial class NoiseDunGen : IDunGen
 }
 
 [DataRecord]
-public record struct NoiseDunGenLayer
+public partial record struct NoiseDunGenLayer
 {
     /// <summary>
     /// If the noise value is above this then it gets output.

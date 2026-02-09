@@ -6,7 +6,7 @@ namespace Content.Shared.Roles;
 public sealed partial class DepartmentPrototype : IPrototype
 {
     [IdDataField]
-    public string ID { get; } = string.Empty;
+    public string ID { get; set; } = string.Empty;
 
     /// <summary>
     /// A description string to display in the character menu as an explanation of the department's function.

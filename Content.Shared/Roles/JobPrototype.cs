@@ -70,7 +70,7 @@ namespace Content.Shared.Roles
         /// Nyano/DV: For e.g. prisoners, they'll never use their latejoin spawner.
         /// </summary>
         [DataField("alwaysUseSpawner")]
-        public bool AlwaysUseSpawner { get; } = false;
+        public bool AlwaysUseSpawner { get; set; } = false;
 
         /// <summary>
         ///     Whether this job is a head.

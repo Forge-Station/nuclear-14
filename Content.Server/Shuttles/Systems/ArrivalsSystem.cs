@@ -31,11 +31,14 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Collections;
 using Robust.Shared.Configuration;
 using Robust.Shared.Console;
+using Robust.Shared.EntitySerialization;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
+using Robust.Shared.Utility;
 using TimedDespawnComponent = Robust.Shared.Spawners.TimedDespawnComponent;
 
 namespace Content.Server.Shuttles.Systems;
@@ -518,19 +521,20 @@ public sealed class ArrivalsSystem : EntitySystem
 
     private void SetupArrivalsStation()
     {
-        var mapUid = _mapSystem.CreateMap(out var mapId, false);
-        _metaData.SetEntityName(mapUid, Loc.GetString("map-name-terminal"));
-
-        if (!_loader.TryLoad(mapId, _cfgManager.GetCVar(CCVars.ArrivalsMap), out var uids))
+        if (!_loader.TryLoadMap(new ResPath(_cfgManager.GetCVar(CCVars.ArrivalsMap)), out var loadedMap, out var loadedGrids))
         {
             return;
         }
 
-        foreach (var id in uids)
+        var mapUid = loadedMap!.Value.Owner;
+        var mapId = loadedMap.Value.Comp.MapId;
+        _metaData.SetEntityName(mapUid, Loc.GetString("map-name-terminal"));
+
+        foreach (var grid in loadedGrids)
         {
-            EnsureComp<ArrivalsSourceComponent>(id);
-            EnsureComp<ProtectedGridComponent>(id);
-            EnsureComp<PreventPilotComponent>(id);
+            EnsureComp<ArrivalsSourceComponent>(grid.Owner);
+            EnsureComp<ProtectedGridComponent>(grid.Owner);
+            EnsureComp<PreventPilotComponent>(grid.Owner);
         }
 
         // Setup planet arrivals if relevant
@@ -606,9 +610,9 @@ public sealed class ArrivalsSystem : EntitySystem
         var dummpMapEntity = _mapSystem.CreateMap(out var dummyMapId);
 
         if (TryGetArrivals(out var arrivals) &&
-            _loader.TryLoad(dummyMapId, component.ShuttlePath.ToString(), out var shuttleUids))
+            _loader.TryLoadGrid(dummyMapId, component.ShuttlePath, out var shuttleGrid))
         {
-            component.Shuttle = shuttleUids[0];
+            component.Shuttle = shuttleGrid.Value.Owner;
             var shuttleComp = Comp<ShuttleComponent>(component.Shuttle);
             var arrivalsComp = EnsureComp<ArrivalsShuttleComponent>(component.Shuttle);
             arrivalsComp.Station = uid;

@@ -5,6 +5,8 @@ using Content.Shared.Administration;
 using Content.Shared.Mapping;
 using Robust.Server.GameObjects;
 using Robust.Server.Player;
+using Robust.Shared.EntitySerialization.Systems;
+using Robust.Shared.GameObjects;
 using Robust.Shared.ContentPack;
 using Robust.Shared.Map;
 using Robust.Shared.Network;
@@ -67,7 +69,7 @@ public sealed class MappingManager : IPostInjectInit
 
             var mapId = _systems.GetEntitySystem<TransformSystem>().GetMapCoordinates(player).MapId;
             var mapEntity = _map.GetMapEntityIdOrThrow(mapId);
-            var data = _systems.GetEntitySystem<MapLoaderSystem>().GetSaveData(mapEntity);
+            var (data, _) = _systems.GetEntitySystem<MapLoaderSystem>().SerializeEntitiesRecursive(new HashSet<EntityUid> { mapEntity });
             var document = new YamlDocument(data.ToYaml());
             var stream = new YamlStream { document };
             var writer = new StringWriter();

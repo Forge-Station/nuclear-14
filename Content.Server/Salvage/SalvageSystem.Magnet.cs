@@ -6,7 +6,8 @@ using Content.Shared.Humanoid;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Radio;
 using Content.Shared.Salvage.Magnet;
-using Robust.Server.Maps;
+using Robust.Shared.EntitySerialization;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Map;
 
 namespace Content.Server.Salvage;
@@ -267,15 +268,12 @@ public sealed partial class SalvageSystem
             case SalvageOffering wreck:
                 var salvageProto = wreck.SalvageMap;
 
-                var opts = new MapLoadOptions
-                {
-                    Offset = new Vector2(0, 0)
-                };
-
-                if (!_map.TryLoad(salvMap, salvageProto.MapPath.ToString(), out var roots, opts))
+                // Delete pre-created map and use TryLoadMapWithId instead of TryMergeMap
+                // (grid-maps not supported by TryMergeMap).
+                _mapManager.DeleteMap(salvMap);
+                if (!_map.TryLoadMapWithId(salvMap, salvageProto.MapPath, out _, out _))
                 {
                     Report(magnet, MagnetChannel, "salvage-system-announcement-spawn-debris-disintegrated");
-                    _mapManager.DeleteMap(salvMap);
                     return;
                 }
 

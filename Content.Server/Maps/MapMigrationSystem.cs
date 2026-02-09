@@ -2,7 +2,8 @@
 using System.IO;
 using System.Linq;
 using Robust.Server.GameObjects;
-using Robust.Server.Maps;
+using Robust.Shared.EntitySerialization;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.ContentPack;
 using Robust.Shared.Map.Events;
 using Robust.Shared.Prototypes;
@@ -84,13 +85,13 @@ public sealed class MapMigrationSystem : EntitySystem
         {
             foreach (var (key, value) in mapping)
             {
-                if (key is not ValueDataNode keyNode || value is not ValueDataNode valueNode)
+                if (value is not ValueDataNode valueNode)
                     continue;
 
                 if (string.IsNullOrWhiteSpace(valueNode.Value) || valueNode.Value == "null")
-                    ev.DeletedPrototypes.Add(keyNode.Value);
+                    ev.DeletedPrototypes.Add(key);
                 else
-                    ev.RenamedPrototypes.Add(keyNode.Value, valueNode.Value);
+                    ev.RenamedPrototypes.Add(key, valueNode.Value);
             }
         }
     }

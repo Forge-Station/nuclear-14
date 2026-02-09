@@ -37,7 +37,7 @@ public sealed class SolutionCommand : ToolshedCommand
     public SolutionRef AdjReagent(
             [PipedArgument] SolutionRef input,
             ProtoId<ReagentPrototype> proto,
-            FixedPoint2 amount
+            [CommandArgument(unparseable: true)] FixedPoint2 amount
         )
     {
         _solutionContainer ??= GetSys<SolutionContainerSystem>();
@@ -58,7 +58,7 @@ public sealed class SolutionCommand : ToolshedCommand
     public IEnumerable<SolutionRef> AdjReagent(
             [PipedArgument] IEnumerable<SolutionRef> input,
             ProtoId<ReagentPrototype> name,
-            FixedPoint2 amount
+            [CommandArgument(unparseable: true)] FixedPoint2 amount
         )
         => input.Select(x => AdjReagent(x, name, amount));
 }

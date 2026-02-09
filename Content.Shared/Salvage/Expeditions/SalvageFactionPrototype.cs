@@ -5,7 +5,7 @@ namespace Content.Shared.Salvage.Expeditions;
 [Prototype("salvageFaction")]
 public sealed partial class SalvageFactionPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; } = default!;
+    [IdDataField] public string ID { get; set; } = default!;
 
     [DataField("desc")] public string Description { get; private set; } = string.Empty;
 

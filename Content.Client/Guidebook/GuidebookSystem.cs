@@ -13,6 +13,7 @@ using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Player;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 
@@ -25,6 +26,7 @@ public sealed class GuidebookSystem : EntitySystem
 {
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly IPlayerManager _playerManager = default!;
+    [Dependency] private readonly IPrototypeManager _protoManager = default!;
     [Dependency] private readonly SharedAudioSystem _audioSystem = default!;
     [Dependency] private readonly VerbSystem _verbSystem = default!;
     [Dependency] private readonly RgbLightControllerSystem _rgbLightControllerSystem = default!;
@@ -143,7 +145,8 @@ public sealed class GuidebookSystem : EntitySystem
         if (!TryComp<SpeechComponent>(uid, out var speech) || speech.SpeechSounds is null)
             return;
 
-        _audioSystem.PlayGlobal(speech.SpeechSounds, Filter.Local(), false, speech.AudioParams);
+        var prototype = _protoManager.Index<SpeechSoundsPrototype>(speech.SpeechSounds.Value);
+        _audioSystem.PlayGlobal(prototype.SaySound, Filter.Local(), false, speech.AudioParams);
     }
 
     public void FakeClientActivateInWorld(EntityUid activated)

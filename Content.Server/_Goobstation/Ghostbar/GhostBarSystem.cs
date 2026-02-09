@@ -6,8 +6,10 @@ using Content.Server.Players.PlayTimeTracking; // Einstein Engines
 using Content.Server.Station.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
-using Robust.Server.Maps;
+using Robust.Shared.EntitySerialization;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Random;
+using Robust.Shared.Utility;
 using Content.Shared.Ghost;
 using Content.Server._Goobstation.Ghostbar.Components;
 using Content.Server.Mind;
@@ -55,11 +57,8 @@ public sealed class GhostBarSystem : EntitySystem
         // N14 doesn't have ghost bars.
         return;
 
-        _mapSystem.CreateMap(out var mapId);
-        var options = new MapLoadOptions { LoadMap = true };
-
-        if (_mapLoader.TryLoad(mapId, MapPath, out _, options))
-            _mapSystem.SetPaused(mapId, false);
+        if (_mapLoader.TryLoadMap(new ResPath(MapPath), out var loadedMap, out _))
+            _mapSystem.SetPaused(loadedMap!.Value.Owner, false);
     }
 
     public void SpawnPlayer(GhostBarSpawnEvent msg, EntitySessionEventArgs args)

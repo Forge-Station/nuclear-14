@@ -1,4 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\RobustToolbox\Imports\Shared.props" />
+  <Import Project="..\RobustToolbox\Imports\Server.props" />
   <PropertyGroup>
     <!-- Work around https://github.com/dotnet/project-system/issues/4314 -->
     <TargetFramework>$(TargetFramework)</TargetFramework>
@@ -16,16 +18,15 @@
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="All" />
     <PackageReference Include="MathNet.Numerics" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" />
+    <PackageReference Include="prometheus-net" />
+    <PackageReference Include="Serilog" />
     <PackageReference Include="QRCoder" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Content.Packaging\Content.Packaging.csproj" />
     <ProjectReference Include="..\Content.Server.Database\Content.Server.Database.csproj" />
     <ProjectReference Include="..\Content.Shared.Database\Content.Shared.Database.csproj" />
-    <ProjectReference Include="..\RobustToolbox\Lidgren.Network\Lidgren.Network.csproj" />
-    <ProjectReference Include="..\RobustToolbox\Robust.Shared.Maths\Robust.Shared.Maths.csproj" />
-    <ProjectReference Include="..\RobustToolbox\Robust.Shared\Robust.Shared.csproj" />
-    <ProjectReference Include="..\RobustToolbox\Robust.Server\Robust.Server.csproj" />
     <ProjectReference Include="..\Content.Shared\Content.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>

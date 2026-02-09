@@ -1,3 +1,4 @@
+using System.Numerics;
 using Content.Shared.Shadowkin;
 using Content.Shared.CCVar;
 using Robust.Client.Graphics;

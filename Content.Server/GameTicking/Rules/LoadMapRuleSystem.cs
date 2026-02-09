@@ -1,8 +1,10 @@
+using System.Linq;
 using Content.Server.GameTicking.Rules.Components;
 using Content.Server.GridPreloader;
 using Content.Shared.GameTicking.Components;
 using Robust.Server.GameObjects;
-using Robust.Server.Maps;
+using Robust.Shared.EntitySerialization;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 
@@ -40,16 +42,18 @@ public sealed class LoadMapRuleSystem : GameRuleSystem<LoadMapRuleComponent>
         }
         else if (comp.MapPath is {} path)
         {
-            var options = new MapLoadOptions { LoadMap = true };
-            if (!_mapLoader.TryLoad(mapId, path.ToString(), out var roots, options))
+            // Delete pre-created map and use TryLoadMapWithId instead of TryMergeMap.
+            // TryMergeMap doesn't support grid-maps (entities that are both map and grid).
+            Del(mapUid);
+            if (!_mapLoader.TryLoadMapWithId(mapId, path, out _, out var roots))
             {
                 Log.Error($"Failed to load map from {path}!");
-                Del(mapUid);
                 ForceEndSelf(uid, rule);
                 return;
             }
 
-            grids = roots;
+            mapUid = _map.GetMap(mapId);
+            grids = roots.Select(g => g.Owner).ToList();
         }
         else if (comp.PreloadedGrid is {} preloaded)
         {

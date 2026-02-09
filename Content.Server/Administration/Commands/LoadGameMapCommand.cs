@@ -3,7 +3,8 @@ using System.Numerics;
 using Content.Server.GameTicking;
 using Content.Server.Maps;
 using Content.Shared.Administration;
-using Robust.Server.Maps;
+using Robust.Shared.EntitySerialization;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Console;
 using Robust.Shared.ContentPack;
 using Robust.Shared.Map;
@@ -37,10 +38,7 @@ namespace Content.Server.Administration.Commands
                 if (!int.TryParse(args[0], out var mapId))
                     return;
 
-                var loadOptions = new MapLoadOptions()
-                {
-                    LoadMap = false,
-                };
+                var loadOptions = new MapLoadOptions();
 
                 var stationName = args.Length == 5 ? args[4] : null;
 

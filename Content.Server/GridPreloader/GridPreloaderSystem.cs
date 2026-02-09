@@ -3,7 +3,8 @@ using Content.Shared.CCVar;
 using Content.Shared.GridPreloader.Prototypes;
 using Content.Shared.GridPreloader.Systems;
 using Robust.Server.GameObjects;
-using Robust.Server.Maps;
+using Robust.Shared.EntitySerialization;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Configuration;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
@@ -72,19 +73,10 @@ public sealed class GridPreloaderSystem : SharedGridPreloaderSystem
         {
             for (var i = 0; i < proto.Copies; i++)
             {
-                var options = new MapLoadOptions
-                {
-                    LoadMap = false,
-                };
-
-                if (!_mapLoader.TryLoad(mapId, proto.Path.ToString(), out var roots, options))
+                if (!_mapLoader.TryLoadGrid(mapId, proto.Path, out var loadedGrid))
                     continue;
 
-                // only supports loading maps with one grid.
-                if (roots.Count != 1)
-                    continue;
-
-                var gridUid = roots[0];
+                var gridUid = loadedGrid.Value.Owner;
 
                 // gets grid + also confirms that the root we loaded is actually a grid
                 if (!TryComp<MapGridComponent>(gridUid, out var mapGrid))

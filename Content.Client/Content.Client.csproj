@@ -1,4 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\RobustToolbox\Imports\Shared.props" />
+  <Import Project="..\RobustToolbox\Imports\Client.props" />
   <PropertyGroup>
     <!-- Work around https://github.com/dotnet/project-system/issues/4314 -->
     <TargetFramework>$(TargetFramework)</TargetFramework>
@@ -16,12 +18,12 @@
     <PackageReference Include="Nett" />
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="All" />
     <PackageReference Include="MathNet.Numerics" PrivateAssets="All" />
+    <PackageReference Include="Pidgin" />
+    <PackageReference Include="prometheus-net" />
+    <PackageReference Include="Serilog" />
+    <PackageReference Include="SixLabors.ImageSharp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RobustToolbox\Lidgren.Network\Lidgren.Network.csproj" />
-    <ProjectReference Include="..\RobustToolbox\Robust.Shared.Maths\Robust.Shared.Maths.csproj" />
-    <ProjectReference Include="..\RobustToolbox\Robust.Shared\Robust.Shared.csproj" />
-    <ProjectReference Include="..\RobustToolbox\Robust.Client\Robust.Client.csproj" />
     <ProjectReference Include="..\Content.Shared\Content.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>

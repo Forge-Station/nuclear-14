@@ -17,7 +17,7 @@ namespace Content.Shared.Crafting.Prototypes;
 /// Prototype to handle by <see cref="SharedCraftingSystem"/>
 /// </summary>
 [Prototype("craftRecipe"), Serializable, NetSerializable]
-public sealed class CraftingPrototype : IPrototype
+public sealed partial class CraftingPrototype : IPrototype
 {
     [ViewVariables]
     [IdDataField]

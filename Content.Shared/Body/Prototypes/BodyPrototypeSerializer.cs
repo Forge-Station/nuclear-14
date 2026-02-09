@@ -40,12 +40,6 @@ public sealed class BodyPrototypeSerializer : ITypeReader<BodyPrototype, Mapping
         {
             foreach (var (key, value) in organsNode)
             {
-                if (key is not ValueDataNode)
-                {
-                    nodes.Add(new ErrorNode(key, $"Key is not a value data node"));
-                    continue;
-                }
-
                 if (value is not ValueDataNode organ)
                 {
                     nodes.Add(new ErrorNode(value, $"Value is not a value data node"));
@@ -91,12 +85,6 @@ public sealed class BodyPrototypeSerializer : ITypeReader<BodyPrototype, Mapping
 
             foreach (var (key, value) in slots)
             {
-                if (key is not ValueDataNode)
-                {
-                    nodes.Add(new ErrorNode(key, $"Key is not a value data node"));
-                    continue;
-                }
-
                 if (value is not MappingDataNode slot)
                 {
                     nodes.Add(new ErrorNode(value, $"Slot is not a mapping data node"));
@@ -130,7 +118,7 @@ public sealed class BodyPrototypeSerializer : ITypeReader<BodyPrototype, Mapping
 
         foreach (var (keyNode, valueNode) in slotNodes)
         {
-            var slotId = ((ValueDataNode) keyNode).Value;
+            var slotId = keyNode;
             var slot = ((MappingDataNode) valueNode);
 
             string? part = null;
@@ -157,7 +145,7 @@ public sealed class BodyPrototypeSerializer : ITypeReader<BodyPrototype, Mapping
 
                 foreach (var (organKeyNode, organValueNode) in slotOrgansNode)
                 {
-                    organs.Add(((ValueDataNode) organKeyNode).Value, ((ValueDataNode) organValueNode).Value);
+                    organs.Add(organKeyNode, ((ValueDataNode) organValueNode).Value);
                 }
             }
 

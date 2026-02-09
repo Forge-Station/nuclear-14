@@ -6,7 +6,7 @@ using BenchmarkDotNet.Attributes;
 using Content.IntegrationTests;
 using Content.IntegrationTests.Pair;
 using Content.Server.Maps;
-using Robust.Server.GameObjects;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared;
 using Robust.Shared.Analyzers;
 using Robust.Shared.GameObjects;
@@ -35,7 +35,7 @@ public class MapLoadBenchmark
             .EnumeratePrototypes<GameMapPrototype>()
             .ToDictionary(x => x.ID, x => x.MapPath.ToString());
 
-        _mapLoader = server.ResolveDependency<IEntitySystemManager>().GetEntitySystem<MapLoaderSystem>();
+        _mapLoader = server.ResolveDependency<IEntityManager>().System<MapLoaderSystem>();
         _mapManager = server.ResolveDependency<IMapManager>();
     }
 
@@ -60,7 +60,7 @@ public class MapLoadBenchmark
         var server = _pair.Server;
         await server.WaitPost(() =>
         {
-            var success = _mapLoader.TryLoad(new MapId(10), mapPath, out _);
+            var success = _mapLoader.TryLoadMapWithId(new MapId(10), new Robust.Shared.Utility.ResPath(mapPath), out _, out _);
             if (!success)
                 throw new Exception("Map load failed");
         });

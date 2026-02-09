@@ -10,7 +10,7 @@ namespace Content.Shared.Traits;
 public sealed partial class TraitCategoryPrototype : IPrototype
 {
     [IdDataField]
-    public string ID { get; } = default!;
+    public string ID { get; set; } = default!;
 
     [DataField]
     public bool Root;

@@ -79,7 +79,7 @@ namespace Pow3r
 
             for (var n = 0; n < drawData.CmdListsCount; n++)
             {
-                var drawList = drawData.CmdListsRange[n];
+                var drawList = drawData.CmdLists[n];
 
                 for (var cmdI = 0; cmdI < drawList.CmdBuffer.Size; cmdI++)
                 {

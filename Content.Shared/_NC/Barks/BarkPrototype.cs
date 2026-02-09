@@ -6,26 +6,26 @@ namespace Content.Shared._NC.Speech.Synthesis;
 /// A prototype for the available barges.
 /// </summary>
 [Prototype("bark")]
-public sealed class BarkPrototype : IPrototype
+public sealed partial class BarkPrototype : IPrototype
 {
     [IdDataField]
-    public string ID { get; } = default!;
+    public string ID { get; set; } = default!;
 
     /// <summary>
     /// The name of the voice.
     /// </summary>
     [DataField("name")]
-    public string Name { get; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// A set of sounds used for speech.
     /// </summary>
     [DataField("soundFiles", required: true)]
-    public List<string> SoundFiles { get; } = new();
+    public List<string> SoundFiles { get; set; } = new();
 
     /// <summary>
     /// Whether it is available for selection.
     /// </summary>
     [DataField("roundStart")]
-    public bool RoundStart { get; } = true;
+    public bool RoundStart { get; set; } = true;
 }

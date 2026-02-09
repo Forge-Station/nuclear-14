@@ -6,7 +6,7 @@ namespace Content.Shared.Salvage;
 [Prototype]
 public sealed partial class SalvageMapPrototype : IPrototype
 {
-    [ViewVariables] [IdDataField] public string ID { get; } = default!;
+    [ViewVariables] [IdDataField] public string ID { get; set; } = default!;
 
     /// <summary>
     /// Relative directory path to the given map, i.e. `Maps/Salvage/template.yml`
@@ -16,5 +16,5 @@ public sealed partial class SalvageMapPrototype : IPrototype
     /// <summary>
     /// DeltaV - Used for getting the proper name for the map
     /// </summary>
-    [DataField] public string Size { get; } = "unknown";
+    [DataField] public string Size { get; set; } = "unknown";
 }

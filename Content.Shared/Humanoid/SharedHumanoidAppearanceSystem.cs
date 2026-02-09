@@ -12,7 +12,7 @@ using Content.Shared._NC.Speech.Synthesis.Components;
 using Content.Shared._NC.TTS; // Corvax-Fallout-Barks
 using Content.Shared.Preferences;
 using Content.Shared.HeightAdjust;
-using Microsoft.Extensions.Configuration;
+// Microsoft.Extensions.Configuration removed - using Robust.Shared.Configuration instead
 using Robust.Shared;
 using Robust.Shared.Configuration;
 using Robust.Shared.GameObjects.Components.Localization;

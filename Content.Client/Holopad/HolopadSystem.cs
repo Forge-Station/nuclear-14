@@ -1,3 +1,5 @@
+using System.Linq;
+using System.Numerics;
 using Content.Shared.Chat.TypingIndicator;
 using Content.Shared.Holopad;
 using Robust.Client.GameObjects;
@@ -5,7 +7,6 @@ using Robust.Client.Graphics;
 using Robust.Client.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
-using System.Linq;
 
 namespace Content.Client.Holopad;
 

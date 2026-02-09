@@ -15,7 +15,7 @@ using Robust.Shared.Serialization;
 namespace Content.Shared.Crafting.Prototypes;
 
 [Prototype("lightCraftingRecipe"), Serializable, NetSerializable]
-public sealed class LightCraftingPrototype : IPrototype
+public sealed partial class LightCraftingPrototype : IPrototype
 {
     [ViewVariables, IdDataField]
     public string ID { get; private set; } = default!;

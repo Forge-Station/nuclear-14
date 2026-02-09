@@ -27,7 +27,8 @@ using Content.Shared.Shuttles.Events;
 using Content.Shared.Tag;
 using Content.Shared.Tiles;
 using Robust.Server.GameObjects;
-using Robust.Server.Maps;
+using Robust.Shared.EntitySerialization;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Configuration;
 using Robust.Shared.Map;
@@ -37,6 +38,7 @@ using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 using Content.Server.Announcements.Systems;
+
 
 namespace Content.Server.Shuttles.Systems;
 
@@ -444,25 +446,19 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
         }
 
         var map = _mapSystem.CreateMap(out var mapId);
-        var grid = _map.LoadGrid(
-            mapId,
-            mapPath,
-            new()
-            {
-                LoadMap = false,
-            });
+        if (!_map.TryLoadGrid(mapId, new ResPath(mapPath), out var gridEnt))
+        {
+            Log.Error("Failed to set up centcomm grid!");
+            QueueDel(map);
+            return;
+        }
+
+        var grid = (EntityUid?) gridEnt.Value.Owner;
 
         if (!Exists(map) || map == EntityUid.Invalid)
         {
             Log.Error("Failed to set up centcomm map!");
             QueueDel(grid);
-            return;
-        }
-
-        if (!Exists(grid))
-        {
-            Log.Error("Failed to set up centcomm grid!");
-            QueueDel(map);
             return;
         }
 
@@ -523,19 +519,14 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
 
         // Load escape shuttle
         var shuttlePath = ent.Comp1.EmergencyShuttlePath;
-        var shuttle = _map.LoadGrid(map.MapId, shuttlePath.ToString(), new MapLoadOptions()
-        {
-            // Should be far enough... right? I'm too lazy to bounds check CentCom rn.
-            Offset = new Vector2(500f + ent.Comp2.ShuttleIndex, 0f),
-            // fun fact: if you just fucking yeet centcomm into nullspace anytime you try to spawn the shuttle, then any distance is far enough. so lets not do that
-            LoadMap = false,
-        });
-
-        if (shuttle == null)
+        if (!_map.TryLoadGrid(map.MapId, shuttlePath, out var shuttleGrid,
+            offset: new Vector2(500f + ent.Comp2.ShuttleIndex, 0f)))
         {
             Log.Error($"Unable to spawn emergency shuttle {shuttlePath} for {ToPrettyString(ent)}");
             return;
         }
+
+        var shuttle = (EntityUid?) shuttleGrid.Value.Owner;
 
         ent.Comp2.ShuttleIndex += Comp<MapGridComponent>(shuttle.Value).LocalAABB.Width + ShuttleSpawnBuffer;
 

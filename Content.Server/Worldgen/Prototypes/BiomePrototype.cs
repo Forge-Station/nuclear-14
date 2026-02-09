@@ -14,12 +14,12 @@ public sealed partial class BiomePrototype : IPrototype, IInheritingPrototype
 {
     /// <inheritdoc />
     [ParentDataField(typeof(AbstractPrototypeIdArraySerializer<EntityPrototype>))]
-    public string[]? Parents { get; }
+    public string[]? Parents { get; set; }
 
     /// <inheritdoc />
     [NeverPushInheritance]
     [AbstractDataField]
-    public bool Abstract { get; }
+    public bool Abstract { get; set; }
 
     /// <inheritdoc />
     [IdDataField]
@@ -42,7 +42,7 @@ public sealed partial class BiomePrototype : IPrototype, IInheritingPrototype
     /// </summary>
     [DataField("chunkComponents")]
     [AlwaysPushInheritance]
-    public ComponentRegistry ChunkComponents { get; } = new();
+    public ComponentRegistry ChunkComponents { get; set; } = new();
 
     //TODO: Get someone to make this a method on componentregistry that does it Correctly.
     /// <summary>

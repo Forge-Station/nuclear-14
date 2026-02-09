@@ -3,12 +3,13 @@ using Content.Server.Atmos.EntitySystems;
 using Content.Server.Body.Components;
 using Content.Server.Body.Systems;
 using Content.Shared.Body.Components;
-using Robust.Server.GameObjects;
 using Robust.Shared;
 using Robust.Shared.Configuration;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
+using Robust.Shared.Utility;
 using System.Linq;
 using System.Numerics;
 
@@ -73,13 +74,10 @@ namespace Content.IntegrationTests.Tests.Body
 
             await server.WaitPost(() =>
             {
-                mapSys.CreateMap(out var mapId);
-                Assert.That(mapLoader.TryLoad(mapId, testMapName, out var roots));
+                Assert.That(mapLoader.TryLoadMap(new ResPath(testMapName), out _, out var loadedGrids));
 
-                var query = entityManager.GetEntityQuery<MapGridComponent>();
-                var grids = roots.Where(x => query.HasComponent(x));
-                Assert.That(grids, Is.Not.Empty);
-                grid = grids.First();
+                Assert.That(loadedGrids, Is.Not.Empty);
+                grid = loadedGrids!.First().Owner;
             });
 
             Assert.That(grid, Is.Not.Null, $"Test blueprint {testMapName} not found.");
@@ -152,14 +150,9 @@ namespace Content.IntegrationTests.Tests.Body
 
             await server.WaitPost(() =>
             {
-                mapSys.CreateMap(out var mapId);
-
-                Assert.That(mapLoader.TryLoad(mapId, testMapName, out var ents), Is.True);
-                var query = entityManager.GetEntityQuery<MapGridComponent>();
-                grid = ents
-                    .Select<EntityUid, EntityUid?>(x => x)
-                    .FirstOrDefault((uid) => uid.HasValue && query.HasComponent(uid.Value), null);
-                Assert.That(grid, Is.Not.Null);
+                Assert.That(mapLoader.TryLoadMap(new ResPath(testMapName), out _, out var loadedGrids), Is.True);
+                Assert.That(loadedGrids, Is.Not.Empty);
+                grid = loadedGrids!.First().Owner;
             });
 
             Assert.That(grid, Is.Not.Null, $"Test blueprint {testMapName} not found.");

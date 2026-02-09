@@ -3,11 +3,12 @@ using System.Linq;
 using System.Numerics;
 using Content.Server.Shuttles.Systems;
 using Content.Tests;
-using Robust.Server.GameObjects;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Maths;
+using Robust.Shared.Utility;
 
 namespace Content.IntegrationTests.Tests.Shuttle;
 
@@ -95,6 +96,7 @@ public sealed class DockTest : ContentUnitTest
         var otherMap = await pair.CreateTestMap();
 
         var entManager = server.ResolveDependency<IEntityManager>();
+        var mapManager = server.ResolveDependency<IMapManager>();
         var dockingSystem = entManager.System<DockingSystem>();
         var mapSystem = entManager.System<SharedMapSystem>();
         MapGridComponent mapGrid = default!;
@@ -106,8 +108,9 @@ public sealed class DockTest : ContentUnitTest
         {
             mapGrid = entManager.AddComponent<MapGridComponent>(map.MapUid);
             entManager.DeleteEntity(map.Grid);
-            Assert.That(entManager.System<MapLoaderSystem>().TryLoad(otherMap.MapId, "/Maps/Shuttles/emergency.yml", out var rootUids));
-            shuttle = rootUids[0];
+            mapManager.DeleteMap(otherMap.MapId);
+            Assert.That(entManager.System<MapLoaderSystem>().TryLoadMapWithId(otherMap.MapId, new ResPath("/Maps/Shuttles/emergency.yml"), out _, out var loadedGrids));
+            shuttle = loadedGrids!.First().Owner;
 
             var dockingConfig = dockingSystem.GetDockingConfig(shuttle, map.MapUid);
             Assert.That(dockingConfig, Is.EqualTo(null));

@@ -6,7 +6,7 @@ using Content.IntegrationTests;
 using Content.IntegrationTests.Pair;
 using Content.Shared.Clothing.Components;
 using Content.Shared.Item;
-using Robust.Server.GameObjects;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared;
 using Robust.Shared.Analyzers;
 using Robust.Shared.GameObjects;
@@ -37,7 +37,7 @@ public class EntityQueryBenchmark
         _pair.Server.ResolveDependency<IRobustRandom>().SetSeed(42);
         _pair.Server.WaitPost(() =>
         {
-            var success = _entMan.System<MapLoaderSystem>().TryLoad(_mapId, Map, out _);
+            var success = _entMan.System<MapLoaderSystem>().TryLoadMapWithId(_mapId, new Robust.Shared.Utility.ResPath(Map), out _, out _);
             if (!success)
                 throw new Exception("Map load failed");
             _pair.Server.MapMan.DoMapInitialize(_mapId);

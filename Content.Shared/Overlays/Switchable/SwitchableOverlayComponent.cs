@@ -1,4 +1,3 @@
-using System.Dynamic;
 using Robust.Shared.Audio;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
@@ -7,7 +6,7 @@ namespace Content.Shared.Overlays.Switchable;
 
 public abstract partial class SwitchableOverlayComponent : BaseOverlayComponent
 {
-    [DataField, AutoNetworkedField]
+    [DataField]
     public bool IsActive;
 
     [DataField]

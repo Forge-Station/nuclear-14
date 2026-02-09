@@ -7,7 +7,7 @@ namespace Content.Shared.Weather;
 [Prototype("weather")]
 public sealed partial class WeatherPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; } = default!;
+    [IdDataField] public string ID { get; set; } = default!;
 
     [ViewVariables(VVAccess.ReadWrite), DataField("sprite")]
     public SpriteSpecifier? Sprite;

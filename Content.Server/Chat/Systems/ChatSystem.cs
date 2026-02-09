@@ -347,7 +347,7 @@ public sealed partial class ChatSystem : SharedChatSystem
         _chatManager.ChatMessageToAll(ChatChannel.Radio, message, wrappedMessage, default, false, true, colorOverride);
         if (playSound)
         {
-            _audio.PlayGlobal(announcementSound != null ? announcementSound.ToString() : DefaultAnnouncementSound, Filter.Broadcast(), true, AudioParams.Default.WithVolume(-2f));
+            _audio.PlayGlobal(announcementSound ?? new SoundPathSpecifier(DefaultAnnouncementSound), Filter.Broadcast(), true, AudioParams.Default.WithVolume(-2f));
         }
         _adminLogger.Add(LogType.Chat, LogImpact.Low, $"Global station announcement from {sender}: {message}");
     }
@@ -385,7 +385,7 @@ public sealed partial class ChatSystem : SharedChatSystem
 
         if (playDefaultSound)
         {
-            _audio.PlayGlobal(announcementSound != null ? announcementSound.ToString() : DefaultAnnouncementSound, filter, true, AudioParams.Default.WithVolume(-2f));
+            _audio.PlayGlobal(announcementSound ?? new SoundPathSpecifier(DefaultAnnouncementSound), filter, true, AudioParams.Default.WithVolume(-2f));
         }
 
         _adminLogger.Add(LogType.Chat, LogImpact.Low, $"Station Announcement on {station} from {sender}: {message}");

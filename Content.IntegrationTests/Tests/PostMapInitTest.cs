@@ -9,9 +9,9 @@ using Content.Server.Spawners.Components;
 using Content.Server.Station.Components;
 using Content.Shared.CCVar;
 using Content.Shared.Roles;
-using Robust.Server.GameObjects;
 using Robust.Shared.Configuration;
 using Robust.Shared.ContentPack;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
@@ -90,13 +90,14 @@ namespace Content.IntegrationTests.Tests
 
             await server.WaitPost(() =>
             {
-                mapSystem.CreateMap(out var mapId);
+                MapId mapId = default;
                 try
                 {
 #pragma warning disable NUnit2045
-                    Assert.That(mapLoader.TryLoad(mapId, mapFile, out var roots));
-                    Assert.That(roots.Where(uid => entManager.HasComponent<MapGridComponent>(uid)), Is.Not.Empty);
+                    Assert.That(mapLoader.TryLoadMap(new ResPath(mapFile), out var loadedMap, out var loadedGrids));
+                    Assert.That(loadedGrids, Is.Not.Empty);
 #pragma warning restore NUnit2045
+                    mapId = loadedMap!.Value.Comp.MapId;
                 }
                 catch (Exception ex)
                 {
@@ -222,11 +223,12 @@ namespace Content.IntegrationTests.Tests
                 {
                     var shuttlePath = stationEvac.EmergencyShuttlePath;
 #pragma warning disable NUnit2045
-                    Assert.That(mapLoader.TryLoad(shuttleMap, shuttlePath.ToString(), out var roots));
+                    mapManager.DeleteMap(shuttleMap);
+                    Assert.That(mapLoader.TryLoadMapWithId(shuttleMap, shuttlePath, out _, out var shuttleGrids));
                     EntityUid shuttle = default!;
                     Assert.DoesNotThrow(() =>
                     {
-                        shuttle = roots.First(uid => entManager.HasComponent<MapGridComponent>(uid));
+                        shuttle = shuttleGrids!.First().Owner;
                     }, $"Failed to load {shuttlePath}");
                     Assert.That(
                         shuttleSystem.TryFTLDock(shuttle,
@@ -340,7 +342,7 @@ namespace Content.IntegrationTests.Tests
             await using var pair = await PoolManager.GetServerClient();
             var server = pair.Server;
 
-            var mapLoader = server.ResolveDependency<IEntitySystemManager>().GetEntitySystem<MapLoaderSystem>();
+            var mapLoader = server.ResolveDependency<IEntityManager>().System<MapLoaderSystem>();
             var mapManager = server.ResolveDependency<IMapManager>();
             var resourceManager = server.ResolveDependency<IResourceManager>();
             var protoManager = server.ResolveDependency<IPrototypeManager>();
@@ -376,23 +378,15 @@ namespace Content.IntegrationTests.Tests
                 {
                     foreach (var mapName in mapNames)
                     {
-                        mapSystem.CreateMap(out var mapId);
                         try
                         {
-                            Assert.That(mapLoader.TryLoad(mapId, mapName, out _));
-                        }
-                        catch (Exception ex)
-                        {
-                            throw new Exception($"Failed to load map {mapName}", ex);
-                        }
-
-                        try
-                        {
+                            Assert.That(mapLoader.TryLoadMap(new ResPath(mapName), out var loadedMap, out _));
+                            var mapId = loadedMap!.Value.Comp.MapId;
                             mapManager.DeleteMap(mapId);
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception($"Failed to delete map {mapName}", ex);
+                            throw new Exception($"Failed to load map {mapName}", ex);
                         }
                     }
                 });

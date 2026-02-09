@@ -12,7 +12,8 @@ using Content.Shared.Players;
 using Content.Shared.Preferences;
 using JetBrains.Annotations;
 using Prometheus;
-using Robust.Server.Maps;
+using Robust.Shared.EntitySerialization;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Asynchronous;
 using Robust.Shared.Audio;
 using Robust.Shared.Map;
@@ -92,8 +93,9 @@ namespace Content.Server.GameTicking
 
             AddGamePresetRules();
 
-            DefaultMap = _mapManager.CreateMap();
-            _mapManager.AddUninitializedMap(DefaultMap);
+            var mapSys = EntityManager.System<SharedMapSystem>();
+            mapSys.CreateMap(out var defaultMapId, runMapInit: false);
+            DefaultMap = defaultMapId;
 
             var maps = new List<GameMapPrototype>();
 
@@ -138,8 +140,7 @@ namespace Content.Server.GameTicking
                 if (maps[0] != map)
                 {
                     // Create other maps for the others since we need to.
-                    toLoad = _mapManager.CreateMap();
-                    _mapManager.AddUninitializedMap(toLoad);
+                    mapSys.CreateMap(out toLoad, runMapInit: false);
                 }
 
                 LoadGameMap(map, toLoad, null);
@@ -165,11 +166,20 @@ namespace Content.Server.GameTicking
             var ev = new PreGameMapLoad(targetMapId, map, loadOpts);
             RaiseLocalEvent(ev);
 
-            var gridIds = _map.LoadMap(targetMapId, ev.GameMap.MapPath.ToString(), ev.Options);
+            // Delete the pre-created empty map so TryLoadMapWithId can recreate it from the file.
+            // TryMergeMap doesn't support grid-maps (entities that are both map and grid).
+            if (_mapManager.MapExists(targetMapId))
+            {
+                var existingMapUid = _mapManager.GetMapEntityId(targetMapId);
+                EntityManager.DeleteEntity(existingMapUid);
+            }
+
+            _map.TryLoadMapWithId(targetMapId, ev.GameMap.MapPath, out _, out var grids,
+                offset: ev.Options.Offset, rot: ev.Options.Rotation);
 
             _metaData.SetEntityName(_mapManager.GetMapEntityId(targetMapId), $"station map - {map.MapName}");
 
-            var gridUids = gridIds.ToList();
+            var gridUids = grids?.Select(g => g.Owner).ToList() ?? new List<EntityUid>();
             RaiseLocalEvent(new PostGameMapLoad(map, targetMapId, gridUids, stationName));
 
             return gridUids;

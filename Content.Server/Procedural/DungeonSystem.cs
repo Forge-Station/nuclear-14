@@ -14,6 +14,8 @@ using Content.Shared.Tag;
 using Robust.Server.GameObjects;
 using Robust.Shared.Configuration;
 using Robust.Shared.Console;
+using Robust.Shared.EntitySerialization;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Prototypes;
@@ -173,11 +175,21 @@ public sealed partial class DungeonSystem : SharedDungeonSystem
                 return Transform(uid).MapID;
         }
 
-        var mapId = _mapManager.CreateMap();
-        _mapManager.AddUninitializedMap(mapId);
-        _loader.Load(mapId, proto.AtlasPath.ToString());
-        var mapUid = _mapManager.GetMapEntityId(mapId);
-        _mapManager.SetMapPaused(mapId, true);
+        // Use TryLoadMap directly instead of CreateMap+TryMergeMap.
+        // TryMergeMap doesn't support grid-maps (entities that are both map and grid).
+        if (!_loader.TryLoadMap(proto.AtlasPath, out var map, out _))
+        {
+            Log.Error($"Failed to load dungeon template: {proto.AtlasPath}");
+            var fallbackUid = _maps.CreateMap(out var fallbackMapId, runMapInit: false);
+            _maps.SetPaused(fallbackUid, true);
+            comp = AddComp<DungeonAtlasTemplateComponent>(fallbackUid);
+            comp.Path = proto.AtlasPath;
+            return fallbackMapId;
+        }
+
+        var mapUid = map.Value.Owner;
+        var mapId = Comp<MapComponent>(mapUid).MapId;
+        _maps.SetPaused(mapUid, true);
         comp = AddComp<DungeonAtlasTemplateComponent>(mapUid);
         comp.Path = proto.AtlasPath;
         return mapId;

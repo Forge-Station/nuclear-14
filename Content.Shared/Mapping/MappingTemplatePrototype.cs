@@ -9,19 +9,19 @@ namespace Content.Shared.Mapping;
 public sealed partial class MappingTemplatePrototype : IPrototype
 {
     [IdDataField]
-    public string ID { get; } = default!;
+    public string ID { get; set; } = default!;
 
     /// <summary>
     /// Used to allocate root objects to the corresponding sections of the map editor interface.
     /// </summary>
     [DataField]
-    public TemplateType? RootType { get; }
+    public TemplateType? RootType { get; set; }
 
     /// <summary>
     /// Prototypes for which this one will be a parent.
     /// </summary>
     [DataField]
-    public List<MappingTemplatePrototype> Children { get; } = new ();
+    public List<MappingTemplatePrototype> Children { get; set; } = new ();
 }
 
 [Serializable]

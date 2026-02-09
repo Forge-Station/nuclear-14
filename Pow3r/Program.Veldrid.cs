@@ -318,7 +318,7 @@ void main()
 
             for (var n = 0; n < drawData.CmdListsCount; n++)
             {
-                var drawList = drawData.CmdListsRange[n];
+                var drawList = drawData.CmdLists[n];
 
                 var drawVtx = new Span<ImDrawVert>((void*) drawList.VtxBuffer.Data, drawList.VtxBuffer.Size);
                 var drawIdx = new Span<ushort>((void*) drawList.IdxBuffer.Data, drawList.IdxBuffer.Size);

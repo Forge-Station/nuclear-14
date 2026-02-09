@@ -4,7 +4,7 @@ using Robust.Shared.Serialization;
 namespace Content.Shared._NC.Trade;
 
 [Serializable, NetSerializable, Prototype("ncStoreListing")]
-public sealed class StoreListingPrototype : IPrototype
+public sealed partial class StoreListingPrototype : IPrototype
 {
     [IdDataField] public string Id = string.Empty;
 
@@ -63,7 +63,7 @@ public sealed partial class StorePresetStructuredPrototype : IPrototype
 
 
 [Prototype("storeContract")]
-public sealed class StoreContractPrototype : IPrototype
+public sealed partial class StoreContractPrototype : IPrototype
 {
     [IdDataField] public string ID { get; private set; } = default!;
 
@@ -96,7 +96,7 @@ public sealed partial class StoreContractTargetEntry
 }
 
 [Prototype("storeContractsPreset")]
-public sealed class StoreContractsPresetPrototype : IPrototype
+public sealed partial class StoreContractsPresetPrototype : IPrototype
 {
     [IdDataField] public string ID { get; private set; } = default!;
 
@@ -134,7 +134,7 @@ public partial struct PackIncludeEntry
 }
 
 [Prototype("storeContractPack")]
-public sealed class StoreContractPackPrototype : IPrototype
+public sealed partial class StoreContractPackPrototype : IPrototype
 {
     [IdDataField] public string ID { get; private set; } = default!;
 
@@ -148,7 +148,7 @@ public sealed class StoreContractPackPrototype : IPrototype
 
 
 [Prototype("ncContractRewardPool")]
-public sealed class NcContractRewardPoolPrototype : IPrototype
+public sealed partial class NcContractRewardPoolPrototype : IPrototype
 {
     [IdDataField] public string ID { get; private set; } = default!;
 

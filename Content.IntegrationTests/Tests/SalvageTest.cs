@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using Content.Shared.CCVar;
 using Content.Shared.Salvage;
-using Robust.Server.GameObjects;
 using Robust.Shared.Configuration;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
@@ -36,24 +36,15 @@ public sealed class SalvageTest
             {
                 var mapFile = salvage.MapPath;
 
-                mapSystem.CreateMap(out var mapId);
                 try
                 {
-                    Assert.That(mapLoader.TryLoad(mapId, mapFile.ToString(), out var roots));
-                    Assert.That(roots.Where(uid => entManager.HasComponent<MapGridComponent>(uid)), Is.Not.Empty);
+                    Assert.That(mapLoader.TryLoadMap(mapFile, out var loadedMap, out var loadedGrids));
+                    Assert.That(loadedGrids, Is.Not.Empty);
+                    mapManager.DeleteMap(loadedMap!.Value.Comp.MapId);
                 }
                 catch (Exception ex)
                 {
                     throw new Exception($"Failed to load salvage map {salvage.ID}, was it saved as a map instead of a grid?", ex);
-                }
-
-                try
-                {
-                    mapManager.DeleteMap(mapId);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception($"Failed to delete salvage map {salvage.ID}", ex);
                 }
             }
         });

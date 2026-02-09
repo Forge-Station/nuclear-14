@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\RobustToolbox\Imports\Shared.props" />
   <PropertyGroup>
     <!-- Work around https://github.com/dotnet/project-system/issues/4314 -->
     <TargetFramework>$(TargetFramework)</TargetFramework>
@@ -11,18 +12,10 @@
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="All" />
     <PackageReference Include="MathNet.Numerics" PrivateAssets="All" />
+    <PackageReference Include="YamlDotNet" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Content.Shared.Database\Content.Shared.Database.csproj" />
-    <ProjectReference Include="..\RobustToolbox\Lidgren.Network\Lidgren.Network.csproj">
-      <Private>false</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\RobustToolbox\Robust.Shared.Maths\Robust.Shared.Maths.csproj">
-      <Private>false</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\RobustToolbox\Robust.Shared\Robust.Shared.csproj">
-      <Private>false</Private>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
   <Import Project="..\RobustToolbox\MSBuild\Robust.CompNetworkGenerator.targets" />

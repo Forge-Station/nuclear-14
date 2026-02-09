@@ -20,6 +20,8 @@ using Robust.Server;
 using Robust.Server.GameObjects;
 using Robust.Server.GameStates;
 using Robust.Server.Player;
+using Robust.Shared.EntitySerialization;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Configuration;

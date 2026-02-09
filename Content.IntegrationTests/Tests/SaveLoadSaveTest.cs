@@ -2,9 +2,10 @@ using System.IO;
 using System.Linq;
 using Content.Shared.CCVar;
 using Robust.Server.GameObjects;
-using Robust.Server.Maps;
 using Robust.Shared.Configuration;
 using Robust.Shared.ContentPack;
+using Robust.Shared.EntitySerialization;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
@@ -35,17 +36,17 @@ namespace Content.IntegrationTests.Tests
                 mapSystem.CreateMap(out var mapId0);
                 // TODO: Properly find the "main" station grid.
                 var grid0 = mapManager.CreateGridEntity(mapId0);
-                mapLoader.Save(grid0.Owner, "save load save 1.yml");
+                mapLoader.TrySaveGrid(grid0.Owner, new ResPath("save load save 1.yml"));
                 mapSystem.CreateMap(out var mapId1);
                 EntityUid grid1 = default!;
 #pragma warning disable NUnit2045
-                Assert.That(mapLoader.TryLoad(mapId1, "save load save 1.yml", out var roots, new MapLoadOptions() { LoadMap = false }), $"Failed to load test map {TestMap}");
+                Assert.That(mapLoader.TryLoadGrid(mapId1, new ResPath("save load save 1.yml"), out var gridEnt), $"Failed to load test map {TestMap}");
                 Assert.DoesNotThrow(() =>
                 {
-                    grid1 = roots.First(uid => entManager.HasComponent<MapGridComponent>(uid));
+                    grid1 = gridEnt!.Value.Owner;
                 });
 #pragma warning restore NUnit2045
-                mapLoader.Save(grid1, "save load save 2.yml");
+                mapLoader.TrySaveGrid(grid1, new ResPath("save load save 2.yml"));
             });
 
             await server.WaitIdleAsync();
@@ -102,7 +103,6 @@ namespace Content.IntegrationTests.Tests
             var server = pair.Server;
             var mapLoader = server.ResolveDependency<IEntitySystemManager>().GetEntitySystem<MapLoaderSystem>();
             var mapManager = server.ResolveDependency<IMapManager>();
-            var mapSystem = server.System<SharedMapSystem>();
 
             MapId mapId = default;
             var cfg = server.ResolveDependency<IConfigurationManager>();
@@ -111,10 +111,9 @@ namespace Content.IntegrationTests.Tests
             // Load pebble.yml as uninitialized map, and save it to ensure it's up to date.
             server.Post(() =>
             {
-                mapSystem.CreateMap(out mapId, runMapInit: false);
-                mapManager.SetMapPaused(mapId, true);
-                Assert.That(mapLoader.TryLoad(mapId, TestMap, out _), $"Failed to load test map {TestMap}");
-                mapLoader.SaveMap(mapId, "load save ticks save 1.yml");
+                Assert.That(mapLoader.TryLoadMap(new ResPath(TestMap), out var mapEnt, out _, new DeserializationOptions { InitializeMaps = false }), $"Failed to load test map {TestMap}");
+                mapId = mapEnt!.Value.Comp.MapId;
+                mapLoader.TrySaveMap(mapId, new ResPath("load save ticks save 1.yml"));
             });
 
             // Run 5 ticks.
@@ -122,7 +121,7 @@ namespace Content.IntegrationTests.Tests
 
             await server.WaitPost(() =>
             {
-                mapLoader.SaveMap(mapId, "/load save ticks save 2.yml");
+                mapLoader.TrySaveMap(mapId, new ResPath("/load save ticks save 2.yml"));
             });
 
             await server.WaitIdleAsync();
@@ -184,7 +183,6 @@ namespace Content.IntegrationTests.Tests
             var server = pair.Server;
 
             var mapLoader = server.System<MapLoaderSystem>();
-            var mapSystem = server.System<SharedMapSystem>();
             var mapManager = server.ResolveDependency<IMapManager>();
             var userData = server.ResolveDependency<IResourceManager>().UserData;
             var cfg = server.ResolveDependency<IConfigurationManager>();
@@ -199,10 +197,9 @@ namespace Content.IntegrationTests.Tests
             // Load & save the first map
             server.Post(() =>
             {
-                mapSystem.CreateMap(out mapId, runMapInit: false);
-                mapManager.SetMapPaused(mapId, true);
-                Assert.That(mapLoader.TryLoad(mapId, TestMap, out _), $"Failed to load test map {TestMap}");
-                mapLoader.SaveMap(mapId, fileA);
+                Assert.That(mapLoader.TryLoadMap(new ResPath(TestMap), out var mapEnt, out _, new DeserializationOptions { InitializeMaps = false }), $"Failed to load test map {TestMap}");
+                mapId = mapEnt!.Value.Comp.MapId;
+                mapLoader.TrySaveMap(mapId, new ResPath(fileA));
             });
 
             await server.WaitIdleAsync();
@@ -218,10 +215,9 @@ namespace Content.IntegrationTests.Tests
             server.Post(() =>
             {
                 mapManager.DeleteMap(mapId);
-                mapSystem.CreateMap(out mapId, runMapInit: false);
-                mapManager.SetMapPaused(mapId, true);
-                Assert.That(mapLoader.TryLoad(mapId, TestMap, out _), $"Failed to load test map {TestMap}");
-                mapLoader.SaveMap(mapId, fileB);
+                Assert.That(mapLoader.TryLoadMap(new ResPath(TestMap), out var mapEnt2, out _, new DeserializationOptions { InitializeMaps = false }), $"Failed to load test map {TestMap}");
+                mapId = mapEnt2!.Value.Comp.MapId;
+                mapLoader.TrySaveMap(mapId, new ResPath(fileB));
             });
 
             await server.WaitIdleAsync();

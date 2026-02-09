@@ -18,7 +18,7 @@ public sealed partial class GridSpawnComponent : Component
 }
 
 [DataRecord]
-public record struct GridSpawnGroup
+public partial record struct GridSpawnGroup
 {
     public List<ResPath> Paths = new();
     public int MinCount = 1;

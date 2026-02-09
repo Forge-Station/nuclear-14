@@ -8,7 +8,7 @@ namespace Content.Shared.Procedural;
 [Prototype("dungeonRoom")]
 public sealed partial class DungeonRoomPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; } = string.Empty;
+    [IdDataField] public string ID { get; set; } = string.Empty;
 
     [ViewVariables(VVAccess.ReadWrite), DataField("tags", customTypeSerializer:typeof(PrototypeIdListSerializer<TagPrototype>))]
     public List<string> Tags = new();
