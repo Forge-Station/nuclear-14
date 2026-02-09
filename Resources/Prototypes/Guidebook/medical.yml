@@ -4,14 +4,14 @@
   text: "/ServerInfo/Guidebook/Medical/Medical.xml"
   hideInMenu: true
   children:
-  - Medical Doctor
+  - MedicalDoctor
   - Chemist
   - Cloning
   - Cryogenics
   - Surgery
 
 - type: guideEntry
-  id: Medical Doctor
+  id: MedicalDoctor
   name: guide-entry-medicaldoctor
   text: "/ServerInfo/Guidebook/Medical/MedicalDoctor.xml"
   hideInMenu: true

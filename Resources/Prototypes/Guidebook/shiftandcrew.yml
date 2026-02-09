@@ -40,10 +40,10 @@
   text: "/ServerInfo/Guidebook/Service/Chef.xml"
   hideInMenu: true
   children:
-  - Food Recipes
+  - FoodRecipes
 
 - type: guideEntry
-  id: Food Recipes
+  id: FoodRecipes
   name: guide-entry-foodrecipes
   text: "/ServerInfo/Guidebook/Service/FoodRecipes.xml"
   hideInMenu: true

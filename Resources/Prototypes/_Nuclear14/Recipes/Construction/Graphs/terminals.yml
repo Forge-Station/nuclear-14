@@ -161,7 +161,9 @@
             - tag: Bomb # Corvax-Change
               store: bomb
               name: explosive
-              icon: Objects/Weapons/Bombs/c4.rsi/icon.png
+              icon:
+                sprite: Objects/Weapons/Bombs/c4.rsi
+                state: icon
           completed:
             - !type:SpawnPrototype
               prototype: N14ComputerTerminalRigged
