@@ -175,7 +175,7 @@
     # Forge-Change-End
 
 - type: entity
-  categories: [ HideSpawnMenu ]
+  categories: [ HideSpawnMenu ] # Forge-change
   parent: N14WorkbenchBase
   id: N14WorkbenchAmmobenchFrame
   description: A workbench with ammo working tools for crafting. This one is still being built!

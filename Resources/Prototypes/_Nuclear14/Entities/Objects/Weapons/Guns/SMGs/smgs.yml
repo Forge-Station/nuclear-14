@@ -686,7 +686,7 @@
       path: /Audio/_Nuclear14/Weapons/Effects/Reload/SMGs/smg_cock.ogg
   - type: GunWieldBonus
     minAngle: -15
-    maxAngle: -23
+    maxAngle: -23 # Forge-Change
   - type: ItemSlots
     slots:
       gun_magazine:
@@ -743,7 +743,7 @@
       path: /Audio/_Nuclear14/Weapons/Effects/Reload/SMGs/smg_cock.ogg
   - type: GunWieldBonus
     minAngle: -15
-    maxAngle: -23
+    maxAngle: -23 # Forge-Change
   - type: ItemSlots
     slots:
       gun_magazine:

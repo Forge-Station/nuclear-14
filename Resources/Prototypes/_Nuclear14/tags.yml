@@ -303,8 +303,10 @@
 - type: Tag
   id: N14LMGMagazine556Rifle
 
-- type: Tag # Forge-add
+# Forge-Add-Start
+- type: Tag 
   id: Magazine556Rifle30
+# Forge-Add-End
 
 - type: Tag
   id: N14Magazine762Rifle
