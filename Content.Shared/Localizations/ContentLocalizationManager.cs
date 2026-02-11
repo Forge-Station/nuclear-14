@@ -26,12 +26,28 @@ namespace Content.Shared.Localizations
 
         public void Initialize()
         {
+            // Corvax-Localization-Start
             var culture = new CultureInfo(Culture);
-            var fallbackCulture = new CultureInfo(FallbackCulture); // Corvax-Localization
+            var fallbackCulture = new CultureInfo(FallbackCulture);
 
             _loc.LoadCulture(culture);
-            _loc.LoadCulture(fallbackCulture); // Corvax-Localization
-            _loc.SetFallbackCluture(fallbackCulture); // Corvax-Localization
+            _loc.LoadCulture(fallbackCulture);
+
+            RegisterCommonFunctions(culture);
+            RegisterCommonFunctions(fallbackCulture);
+
+
+            _loc.AddFunction(fallbackCulture, "MAKEPLURAL", FormatMakePlural);
+
+            _loc.SetCulture(culture);
+            _loc.SetFallbackCluture(fallbackCulture);
+            // Corvax-Localization-End
+        }
+
+        // Corvax-Localization-Start
+        private void RegisterCommonFunctions(CultureInfo culture)
+        {
+            _loc.AddFunction(culture, "MANY", FormatMany);
             _loc.AddFunction(culture, "PRESSURE", FormatPressure);
             _loc.AddFunction(culture, "POWERWATTS", FormatPowerWatts);
             _loc.AddFunction(culture, "POWERJOULES", FormatPowerJoules);
@@ -40,19 +56,8 @@ namespace Content.Shared.Localizations
             _loc.AddFunction(culture, "LOC", FormatLoc);
             _loc.AddFunction(culture, "NATURALFIXED", FormatNaturalFixed);
             _loc.AddFunction(culture, "NATURALPERCENT", FormatNaturalPercent);
-            _loc.AddFunction(culture, "MANY", FormatMany); // Corvax-Localization
-
-
-            /*
-             * The following language functions are specific to the english localization. When working on your own
-             * localization you should NOT modify these, instead add new functions specific to your language/culture.
-             * This ensures the english translations continue to work as expected when fallbacks are needed.
-             */
-            var cultureEn = new CultureInfo("en-US");
-
-            _loc.AddFunction(cultureEn, "MAKEPLURAL", FormatMakePlural);
-            _loc.AddFunction(cultureEn, "MANY", FormatMany);
         }
+        // Corvax-Localization-End
 
         private ILocValue FormatMany(LocArgs args)
         {
