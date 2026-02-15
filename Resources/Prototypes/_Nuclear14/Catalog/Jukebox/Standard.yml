@@ -139,51 +139,67 @@
   path:
     path: /Audio/_Nuclear14/Music/Fallout3/mus_texbeneke_guy_mono.ogg
     
-# Music - Enclave
+# Music/Generic
 - type: jukebox
   id: PatrioticAmerica
   name: Patriotic America
   path:
-    path: /Audio/_Nuclear14/Music/MUS_Patriotic_America.ogg 
+    path: /Audio/_Nuclear14/Music/Generic/MUS_Patriotic_America.ogg # Forge-Change
     
 - type: jukebox
   id: BattleHymn
   name: Battle Hymn
   path:
-    path: /Audio/_Nuclear14/Music/MUS_Patriotic_BattleHymn_mono.ogg
+    path: /Audio/_Nuclear14/Music/Generic/MUS_Patriotic_BattleHymn_mono.ogg # Forge-Change
     
 - type: jukebox
   id: PatrioticDixie
   name: Patriotic Dixie
   path:
-    path: /Audio/_Nuclear14/Music/MUS_Patriotic_Dixie.ogg
+    path: /Audio/_Nuclear14/Music/Generic/MUS_Patriotic_Dixie.ogg # Forge-Change
     
 - type: jukebox
   id: PatrioticMontezuma
   name: Patriotic Montezuma
   path:
-    path: /Audio/_Nuclear14/Music/MUS_Patriotic_Montezuma.ogg
+    path: /Audio/_Nuclear14/Music/Generic/MUS_Patriotic_Montezuma.ogg # Forge-Change
     
 - type: jukebox
   id: PatrioticPresidential
   name: Patriotic Presidential
   path:
-    path: /Audio/_Nuclear14/Music/MUS_Patriotic_Presidential.ogg
+    path: /Audio/_Nuclear14/Music/Generic/MUS_Patriotic_Presidential.ogg # Forge-Change
     
 - type: jukebox
   id: PatrioticStars
   name: Patriotic Stars
   path:
-    path: /Audio/_Nuclear14/Music/MUS_Patriotic_Stars.ogg
+    path: /Audio/_Nuclear14/Music/Generic/MUS_Patriotic_Stars.ogg # Forge-Change
     
 - type: jukebox
   id: PatrioticWashington
   name: Patriotic Washington
   path:
-    path: /Audio/_Nuclear14/Music/MUS_Patriotic_Washington.ogg
+    path: /Audio/_Nuclear14/Music/Generic/MUS_Patriotic_Washington.ogg # Forge-Change
     
 - type: jukebox
   id: PatrioticYankee
   name: Patriotic Yankee
   path:
-    path: /Audio/_Nuclear14/Music/MUS_Patriotic_Yankee.ogg
+    path: /Audio/_Nuclear14/Music/Generic/MUS_Patriotic_Yankee.ogg # Forge-Change
+
+# Forge-Change-Start
+# Music/Fallout4
+- type: jukebox
+  id: TheDion
+  name: The Wanderer - The Dion
+  path:
+    path: /Audio/_Nuclear14/Music/Fallout4/mus_the_wanderer_the_dion.ogg # Forge-Change
+
+# Music/FalloutTV
+- type: jukebox
+  id: SoDoggoneLonesome
+  name: Johny Cash - So Doggone Lonesome
+  path:
+    path: /Audio/_Nuclear14/Music/FalloutTV/mus_so_doggone_lonesome.ogg # Forge-Change
+# Forge-Change-End

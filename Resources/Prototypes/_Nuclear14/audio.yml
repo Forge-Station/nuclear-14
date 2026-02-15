@@ -74,15 +74,15 @@
 - type: soundCollection
   id: AmbienceEyebot
   files:
-    - /Audio/_Nuclear14/Music/MUS_Patriotic_America.ogg 
-    - /Audio/_Nuclear14/Music/MUS_Patriotic_BattleHymn.ogg
-    - /Audio/_Nuclear14/Music/MUS_Patriotic_BattleHymn_mono.ogg
-    - /Audio/_Nuclear14/Music/MUS_Patriotic_Dixie.ogg
-    - /Audio/_Nuclear14/Music/MUS_Patriotic_Montezuma.ogg
-    - /Audio/_Nuclear14/Music/MUS_Patriotic_Presidential.ogg
-    - /Audio/_Nuclear14/Music/MUS_Patriotic_Stars.ogg
-    - /Audio/_Nuclear14/Music/MUS_Patriotic_Washington.ogg
-    - /Audio/_Nuclear14/Music/MUS_Patriotic_Yankee.ogg
+    - /Audio/_Nuclear14/Music/Generic/MUS_Patriotic_America.ogg 
+    - /Audio/_Nuclear14/Music/Generic/MUS_Patriotic_BattleHymn.ogg
+    - /Audio/_Nuclear14/Music/Generic/MUS_Patriotic_BattleHymn_mono.ogg
+    - /Audio/_Nuclear14/Music/Generic/MUS_Patriotic_Dixie.ogg
+    - /Audio/_Nuclear14/Music/Generic/MUS_Patriotic_Montezuma.ogg
+    - /Audio/_Nuclear14/Music/Generic/MUS_Patriotic_Presidential.ogg
+    - /Audio/_Nuclear14/Music/Generic/MUS_Patriotic_Stars.ogg
+    - /Audio/_Nuclear14/Music/Generic/MUS_Patriotic_Washington.ogg
+    - /Audio/_Nuclear14/Music/Generic/MUS_Patriotic_Yankee.ogg
 
 #- type: soundCollection
 #  id: AmbienceSupermarket
