@@ -188,18 +188,18 @@
   path:
     path: /Audio/_Nuclear14/Music/Generic/MUS_Patriotic_Yankee.ogg # Forge-Change
 
-# Forge-Change-Start
+# Forge-Add-Start
 # Music/Fallout4
 - type: jukebox
   id: TheDion
   name: The Wanderer - The Dion
   path:
-    path: /Audio/_Nuclear14/Music/Fallout4/mus_the_wanderer_the_dion.ogg # Forge-Change
+    path: /Audio/_Nuclear14/Music/Fallout4/mus_the_wanderer_the_dion.ogg
 
 # Music/FalloutTV
 - type: jukebox
   id: SoDoggoneLonesome
   name: Johny Cash - So Doggone Lonesome
   path:
-    path: /Audio/_Nuclear14/Music/FalloutTV/mus_so_doggone_lonesome.ogg # Forge-Change
-# Forge-Change-End
+    path: /Audio/_Nuclear14/Music/FalloutTV/mus_so_doggone_lonesome.ogg
+# Forge-Add-End
