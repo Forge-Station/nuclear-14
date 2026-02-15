@@ -334,45 +334,47 @@
   items:
     - N14ClothingOuterMetalArmor
 
-- type: loadout
-  id: N14LoadoutOuterTribalArmor
-  category: Outer
-  cost: 2
-  requirements:
-    - !type:CharacterItemGroupRequirement
-      group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement # Forge-Change
-      inverted: true
-      departments:
-      - Vault
-    - !type:CharacterJobRequirement # Forge-Change
-      inverted: true
-      jobs:
-      - BoSMidSerf
-      - CaesarLegionSlave
-      - NCRPisoner
-  items:
-    - N14ClothingOuterTribalArmor
+# Forge-Delete-Start
+# - type: loadout
+#   id: N14LoadoutOuterTribalArmor
+#   category: Outer
+#   cost: 2
+#   requirements:
+#     - !type:CharacterItemGroupRequirement
+#       group: N14LoadoutOuter
+#     - !type:CharacterDepartmentRequirement # Forge-Change
+#       inverted: true
+#       departments:
+#       - Vault
+#     - !type:CharacterJobRequirement # Forge-Change
+#       inverted: true
+#       jobs:
+#       - BoSMidSerf
+#       - CaesarLegionSlave
+#       - NCRPisoner
+#   items:
+#     - N14ClothingOuterTribalArmor
 
-- type: loadout
-  id: N14LoadoutOuterTribalArmorHeavy
-  category: Outer
-  cost: 3
-  requirements:
-    - !type:CharacterItemGroupRequirement
-      group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement # Forge-Change
-      inverted: true
-      departments:
-      - Vault
-    - !type:CharacterJobRequirement # Forge-Change
-      inverted: true
-      jobs:
-      - BoSMidSerf
-      - CaesarLegionSlave
-      - NCRPisoner
-  items:
-    - N14ClothingOuterTribalArmorHeavy
+# - type: loadout
+#   id: N14LoadoutOuterTribalArmorHeavy
+#   category: Outer
+#   cost: 3
+#   requirements:
+#     - !type:CharacterItemGroupRequirement
+#       group: N14LoadoutOuter
+#     - !type:CharacterDepartmentRequirement # Forge-Change
+#       inverted: true
+#       departments:
+#       - Vault
+#     - !type:CharacterJobRequirement # Forge-Change
+#       inverted: true
+#       jobs:
+#       - BoSMidSerf
+#       - CaesarLegionSlave
+#       - NCRPisoner
+#   items:
+#     - N14ClothingOuterTribalArmorHeavy
+# Forge-Delete-End
 
 - type: loadout
   id: N14LoadoutOuterRaiderBadlands
