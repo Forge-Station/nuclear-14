@@ -43,7 +43,7 @@
     weight: 50
   - id: caravan_contract_N14SuperSledgeHammer
     weight: 50
-  - id: caravan_contract_N14MobCazadorWave
+  - id: caravan_contract_N14MobCazador
     weight: 50
   - id: caravan_contract_N14MobRaiderBoss
     weight: 50
@@ -473,12 +473,12 @@
       id: caravan_hard
 
 - type: storeContract
-  id: caravan_contract_N14MobCazadorWave
+  id: caravan_contract_N14MobCazador
   name: "Казадор"
   description: "Принеси  трупы казадоров."
   difficulty: Hard
   targets:
-  - id: N14MobCazadorWave
+  - id: N14MobCazador
     required: 3
   rewards:
   - type: Currency
