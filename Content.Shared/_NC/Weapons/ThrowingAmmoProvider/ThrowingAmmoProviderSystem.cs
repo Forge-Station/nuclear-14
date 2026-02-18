@@ -31,6 +31,7 @@ public sealed class ThrowingAmmoProviderSystem : EntitySystem
         SubscribeLocalEvent<ThrowingAmmoProviderComponent, TakeAmmoEvent>(OnTakeAmmo);
         SubscribeLocalEvent<ThrowingAmmoProviderComponent, GetAmmoCountEvent>(OnGetAmmoCount);
         SubscribeLocalEvent<ThrowingAmmoProviderComponent, InteractUsingEvent>(OnInteractUsing);
+        SubscribeLocalEvent<ThrowingAmmoProviderComponent, AmmoShotEvent>(OnAmmoShot);
         SubscribeLocalEvent<ThrowingAmmoProviderComponent, AttemptShootEvent>(OnAttemptShoot);
         SubscribeLocalEvent<ThrowingAmmoProviderComponent, EntInsertedIntoContainerMessage>(OnSlotChanged);
         SubscribeLocalEvent<ThrowingAmmoProviderComponent, EntRemovedFromContainerMessage>(OnSlotChanged);
@@ -64,7 +65,7 @@ public sealed class ThrowingAmmoProviderSystem : EntitySystem
             var slot = new ItemSlot(comp.SlotTemplate)
             {
                 Name = string.Empty,
-                Whitelist = comp.Whitelist
+                Whitelist = comp.Whitelist,
             };
             _itemSlots.AddItemSlot(uid, slotId, slot);
         }
@@ -134,6 +135,12 @@ public sealed class ThrowingAmmoProviderSystem : EntitySystem
     private void OnAttemptShoot(EntityUid uid, ThrowingAmmoProviderComponent comp, ref AttemptShootEvent args)
     {
         args.ThrowItems = true;
+    }
+
+    private void OnAmmoShot(EntityUid uid, ThrowingAmmoProviderComponent comp, ref AmmoShotEvent args)
+    {
+        if (TryComp<GunComponent>(uid, out var gun) && gun.SoundGunshot != null)
+            _audio.PlayPredicted(gun.SoundGunshot, uid, null);
     }
 
     private void OnSlotChanged(EntityUid uid, ThrowingAmmoProviderComponent comp, ContainerModifiedMessage args)
