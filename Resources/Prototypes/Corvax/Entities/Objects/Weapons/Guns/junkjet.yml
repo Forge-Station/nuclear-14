@@ -1,0 +1,92 @@
+- type: entity
+  name: Хламотрон
+  parent: BaseItem
+  id: JunkCannon
+  description: Легендарная инженерная мысль - превратить мусор в боеприпасы. Работает шумно, но смертельно.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Guns/JunkJet/junkjet.rsi
+    layers:
+    - state: base
+      visible: true
+      map: [ "enum.HlamotronVisualLayers.Empty" ]
+    - state: icon
+      visible: false
+      map: [ "enum.HlamotronVisualLayers.Loaded" ]
+  - type: Item
+    size: Huge
+    sprite: Corvax/Objects/Weapons/Guns/JunkJet/junkjet.rsi
+  - type: GenericVisualizer
+    visuals:
+      enum.AmmoVisuals.HasAmmo:
+        enum.HlamotronVisualLayers.Empty:
+          True: { visible: false }
+          False: { visible: true }
+        enum.HlamotronVisualLayers.Loaded:
+          True: { visible: true }
+          False: { visible: false }
+  - type: GunRequiresWield
+  - type: Wieldable
+  - type: AmmoCounter
+  - type: StaticPrice
+    price: 500
+  - type: Execution
+  - type: MeleeWeapon
+    attackRate: 1.3333
+    damage:
+      types:
+        Blunt: 8.5
+    bluntStaminaDamageFactor: 1.25
+    swapKeys: true
+    disableHeavy: true
+    animation: WeaponArcThrust
+    wideAnimationRotation: 180
+    soundHit:
+      collection: MetalThud
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Blunt: 2.5
+  - type: Appearance
+  - type: ThrowingAmmoProvider
+    containerId: throwing_ammo
+    capacity: 12
+    damageMultiplier: 2.0
+    minimumThrowFlyTime: 0.15
+    soundInsert:
+      path: /Audio/Weapons/Guns/MagIn/shotgun_insert.ogg
+    soundRack:
+      path: /Audio/Weapons/Guns/Cock/shotgun_rack.ogg
+    whitelist:
+      components:
+      - DamageOtherOnHit
+  - type: ItemSlots
+  - type: Gun
+    fireRate: 2
+    projectileSpeed: 45
+    selectedMode: SemiAuto
+    availableModes:
+    - SemiAuto
+    soundGunshot:
+      path: /Audio/Weapons/Guns/Gunshots/shotgun.ogg
+    soundEmpty:
+      path: /Audio/Weapons/Guns/Empty/empty.ogg
+
+- type: entity
+  name: DebugХламотрон
+  parent: JunkCannon
+  id: DebugJunkCannon
+  description: Легендарная инженерная мысль - превратить мусор в боеприпасы. Работает шумно, но смертельно.
+  components:
+  - type: ThrowingAmmoProvider
+    containerId: throwing_ammo
+    capacity: 33
+    damageMultiplier: 5.0
+    minimumThrowFlyTime: 0.15
+    soundInsert:
+      path: /Audio/Weapons/Guns/MagIn/shotgun_insert.ogg
+    soundRack:
+      path: /Audio/Weapons/Guns/Cock/shotgun_rack.ogg
+  - type: ItemSlots
+  - type: Gun
+    fireRate: 22
