@@ -1,0 +1,112 @@
+- type: entity
+  parent: BaseWeaponRifle
+  id: MachineGunM2C
+  categories: [ HideSpawnMenu ]
+  name: тяжелый пулемет M2C
+  description: Верхняя часть пулемета M2C. Бесполезна без треноги.
+  components:
+  - type: Item
+    size: Huge
+  - type: Appearance
+  - type: Sprite
+    sprite: _RMC14/Objects/Weapons/Guns/HMGs/m2c.rsi
+    layers:
+    - state: m2c_gun_mount
+    - state: mag-0
+      map: [ "enum.GunVisualLayers.Mag" ]
+  - type: MeleeWeapon
+    damage:
+      types:
+        Blunt: 20
+  - type: Gun
+    selectedMode: FullAuto
+    availableModes:
+    - FullAuto
+    fireRate: 10
+    soundGunshot:
+      path: /Audio/_RMC14/Weapons/Guns/Gunshots/gun_m2c2.ogg
+      params:
+        volume: -2
+    soundEmpty:
+      path: /Audio/Weapons/Guns/Empty/lmg_empty.ogg
+  - type: ContainerContainer
+    containers:
+      gun_magazine: !type:ContainerSlot
+      gun_chamber: !type:ContainerSlot
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Магазин
+        insertSound: /Audio/_RMC14/Weapons/Guns/Reload/m41_reload.ogg
+        ejectSound: /Audio/_RMC14/Weapons/Guns/Reload/m41_reload.ogg
+        priority: 2
+        whitelist:
+          tags:
+          - MagazineM2C
+  # Подключение к нашей системе
+  - type: MountableWeapon
+    requiresMount: true
+    requiredFreeHands: 2
+    shootArc: 160
+  - type: Tag
+    tags:
+    - MachineGunM2C
+  - type: Overheat
+
+# ── Магазины ───────────────────────────────────────────────────
+
+- type: entity
+  parent: BaseMagazineRifle
+  id: MagazineM2C
+  name: короб M2C (10x28мм)
+  description: Короб на 125 патронов для системы M2C.
+  components:
+  - type: Tag
+    tags:
+    - MagazineM2C
+  - type: BallisticAmmoProvider
+    whitelist:
+      tags:
+      - CartridgeHMG10x28mmTungsten
+    proto: CartridgeHMG10x28mmTungsten
+    capacity: 125
+  - type: Sprite
+    sprite: _RMC14/Objects/Weapons/Guns/Ammunition/Magazines/HMGs/m2c.rsi
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: mag-1
+      map: ["enum.GunVisualLayers.Mag"]
+
+# ── Патроны ────────────────────────────────────────────────────
+
+- type: entity
+  parent: BaseCartridgeRifle
+  id: CartridgeHMG10x28mmTungsten
+  name: патрон (10x28мм Вольфрам)
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Ammunition/Casings/large_casing.rsi
+    layers:
+    - state: base
+      map: ["enum.AmmoVisualLayers.Base"]
+  - type: CartridgeAmmo
+    proto: BulletHMG10x28mmTungsten
+  - type: Tag
+    tags:
+    - CartridgeHMG10x28mmTungsten
+
+- type: entity
+  parent: BaseBullet
+  id: BulletHMG10x28mmTungsten
+  name: пуля (10x28мм Вольфрам)
+  components:
+  - type: Sprite
+    sprite: _RMC14/Objects/Weapons/Guns/Ammunition/Projectiles/bullet_projectiles.rsi
+    layers:
+    - state: bullet
+      shader: unshaded
+  - type: Projectile
+    damage:
+      types:
+        Piercing: 50

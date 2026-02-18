@@ -1,0 +1,205 @@
+- type: entity
+  abstract: true
+  id: BaseWeaponMount
+  name: оружейный станок
+  description: Платформа для установки тяжелого вооружения.
+  components:
+  - type: Transform
+    noLocalRotation: true
+  - type: Appearance
+  - type: Strap
+    enabled: false # ВАЖНО: Наша C# система сама включит его, когда станок будет готов
+    position: Stand
+    buckleOffset: "0, 0.5"
+  - type: WeaponMount
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.49,-0.49,0.49, 0.05"
+        density: 5
+        mask:
+        - FullTileMask
+        layer:
+        - WallLayer
+  - type: Damageable
+    damageContainer: Inorganic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 200
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+  - type: Clickable
+  - type: InteractionOutline
+  - type: DamageExaminable
+  - type: Sprite
+    drawdepth: Mobs
+
+# ── Стационарные (бункерные) версии ──────────────────────────────
+
+- type: entity
+  parent: BaseWeaponMount
+  id: ML66DNestSandbag
+  name: гнездо ML66D с мешками
+  description: Стационарный пулемет ML66D, укрепленный мешками с песком.
+  components:
+  - type: Sprite
+    sprite: _RMC14/Objects/Weapons/Guns/HMGs/ML66D/mount.rsi
+    state: towergun
+  - type: Transform
+    anchored: true
+  - type: WeaponMount
+    fixedWeaponPrototype: "SmartGunMountedStatic"
+    isWeaponSecured: true
+    isWeaponLocked: true
+  - type: Physics
+    bodyType: Static
+
+- type: entity
+  parent: ML66DNestSandbag
+  id: ML66DNestMetal
+  name: бронированный ML66D
+  description: Стационарный пулемет ML66D, закрытый металлическим щитом.
+  components:
+  - type: Sprite
+    state: towergun_folding
+
+# ── Переносные (складные) станки ───────────────────────────────
+
+- type: entity
+  parent: [BaseWeaponMount, BaseItem]
+  id: ML66DMount
+  name: станок ML66D
+  description: Складной станок для пулемета ML66D.
+  suffix: Сложенный
+  components:
+  - type: Item
+    size: Small
+  - type: Sprite
+    sprite: _RMC14/Objects/Weapons/Guns/HMGs/ML66D/mount.rsi
+    state: folded_mount
+    layers:
+    - state: ml66d_mount
+      map: [ "unfoldedLayer" ]
+    - state: folded_mount
+      map: [ "foldedLayer" ]
+      visible: false
+    - state: ml66d
+      map: [ "enum.WeaponMountLayers.Deployed" ]
+      visible: false
+    - state: ml66d_magazine
+      map: [ "enum.WeaponMountLayers.DeployedAmmo" ]
+      visible: false
+    - state: ml66d_gun_mount
+      map: [ "enum.WeaponMountLayers.Folded" ]
+      visible: false
+    - state: ml66d_gun_mount_magazine
+      map: [ "enum.WeaponMountLayers.FoldedAmmo" ]
+      visible: false
+  - type: Foldable
+    folded: true
+  - type: Anchorable
+    tool: Anchoring
+  - type: Rotatable
+  - type: Clothing
+    slots:
+    - suitStorage
+    - Back
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 200
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+      - !type:EmptyContainersBehaviour
+        containers:
+        - weapon
+  - type: CollisionWake
+  - type: WeaponMount
+    mountableWhitelist:
+      tags:
+      - SmartGunMounted
+
+- type: entity
+  parent: [BaseWeaponMount, BaseItem]
+  id: M2CMount
+  name: станок M2C
+  description: Тяжелая телескопическая тренога для пулемета M2C.
+  components:
+  - type: Item
+    size: Huge
+  - type: Sprite
+    sprite: _RMC14/Objects/Weapons/Guns/HMGs/m2c.rsi
+    state: m2c_gun_mount
+    layers:
+    - state: m2c
+      map: [ "enum.WeaponMountLayers.Deployed" ]
+      visible: false
+    - state: m2c_magazine
+      map: [ "enum.WeaponMountLayers.DeployedAmmo" ]
+      visible: false
+    - state: m2c_gun_mount
+      map: [ "enum.WeaponMountLayers.Folded" ]
+      visible: false
+    - state: m2c_gun_mount_broken
+      map: [ "enum.WeaponMountLayers.Broken" ]
+      visible: false
+    - state: mag-0
+      map: [ "enum.WeaponMountLayers.FoldedAmmo" ]
+      visible: false
+    - state: m2c_overheat
+      map: [ "enum.WeaponMountLayers.Overheated" ]
+      visible: false
+  - type: Clothing
+    slots:
+    - suitStorage
+    - Back
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 230
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+      - !type:DoActsBehavior
+        acts: [ "Breakage" ]
+  - type: CollisionWake
+  - type: WeaponMount
+    fixedWeaponPrototype: "MachineGunM2C" # Оружие будет создано внутри при спавне
+    isWeaponSecured: true
+    isWeaponLocked: true
+    canRotateWithoutTool: true
+    mountOnDeploy: true
+    assembleDelay: 0.5
+    shootOffset: 0, 0.5
+  - type: Foldable
+    folded: true
+
+# ── Кнопка действия для отстегивания ───────────────────────────
+
+- type: entity
+  parent: ActionBase # Если вдруг после запуска ругнется на ActionBase, замени на BaseAction
+  id: ActionDismount
+  name: Отцепиться
+  description: Прекратить использование пулемета.
+  components:
+  - type: InstantAction
+    itemIconStyle: NoItem
+    icon:
+      sprite: _RMC14/Actions/marine_emplacement_actions.rsi
+      state: cancel_view
+    event: !type:DismountActionEvent

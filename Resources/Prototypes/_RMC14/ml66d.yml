@@ -1,0 +1,154 @@
+- type: entity
+  parent: BaseWeaponRifle
+  id: SmartGunMounted
+  name: пулемет ML66D
+  description: Верхняя часть пулемета ML66D. Без треноги не постреляешь.
+  components:
+  - type: Item
+    size: Huge
+  - type: Appearance
+  - type: Sprite
+    sprite: _RMC14/Objects/Weapons/Guns/HMGs/ML66D/ml66d.rsi
+    layers:
+    - state: ml66d_gun_e
+    - state: mag-0
+      map: [ "enum.GunVisualLayers.Mag" ]
+  - type: MeleeWeapon
+    damage:
+      types:
+        Blunt: 20
+  - type: Gun
+    selectedMode: FullAuto
+    availableModes:
+    - FullAuto
+    - SemiAuto
+    fireRate: 3.33
+    soundGunshot:
+      path: /Audio/_RMC14/Weapons/Guns/Gunshots/gun_ml66a.ogg
+    soundEmpty:
+      path: /Audio/Weapons/Guns/Empty/lmg_empty.ogg
+  - type: ContainerContainer
+    containers:
+      gun_magazine: !type:ContainerSlot
+      gun_chamber: !type:ContainerSlot
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Магазин
+        insertSound: /Audio/_RMC14/Weapons/Guns/Reload/gun_sg_reload.ogg
+        ejectSound: /Audio/_RMC14/Weapons/Guns/Reload/gun_sg_reload.ogg
+        priority: 2
+        whitelist:
+          tags:
+          - MagazineML66D
+          - MagazineML66DLarge
+  - type: MountableWeapon
+    requiresMount: true
+    requiredFreeHands: 2
+    shootArc: 160
+  - type: Tag
+    tags:
+    - SmartGunMounted
+
+# ── Версия для стационарного бункера ───────────────────────────
+
+- type: entity
+  parent: SmartGunMounted
+  id: SmartGunMountedStatic
+  name: стационарный ML66D
+  components:
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Магазин
+        startingItem: MagazineML66DLarge
+        insertSound: /Audio/_RMC14/Weapons/Guns/Reload/gun_sg_reload.ogg
+        ejectSound: /Audio/_RMC14/Weapons/Guns/Reload/gun_sg_reload.ogg
+        priority: 2
+        whitelist:
+          tags:
+          - MagazineML66DLarge
+  - type: Gun
+    fireRate: 5
+
+# ── Магазины ───────────────────────────────────────────────────
+
+- type: entity
+  parent: BaseMagazineRifle
+  id: MagazineML66D
+  name: барабан ML66D (10x28мм)
+  components:
+  - type: Tag
+    tags:
+    - MagazineML66D
+  - type: BallisticAmmoProvider
+    whitelist:
+      tags:
+      - CartridgeHMG10x28mm
+    proto: CartridgeHMG10x28mm
+    capacity: 700
+  - type: Sprite
+    sprite: _RMC14/Objects/Weapons/Guns/Ammunition/Magazines/HMGs/ml66d.rsi
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: mag-1
+      map: ["enum.GunVisualLayers.Mag"]
+  - type: Item
+    size: Large
+
+- type: entity
+  parent: MagazineML66D
+  id: MagazineML66DLarge
+  name: большой барабан ML66D (10x28мм)
+  components:
+  - type: Tag
+    tags:
+    - MagazineML66DLarge
+  - type: BallisticAmmoProvider
+    whitelist:
+      tags:
+      - CartridgeHMG10x28mm
+    proto: CartridgeHMG10x28mmOffset
+    capacity: 1500
+
+# ── Патроны ────────────────────────────────────────────────────
+
+- type: entity
+  parent: BaseCartridgeRifle
+  id: CartridgeHMG10x28mm
+  name: патрон (10x28мм)
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Ammunition/Casings/large_casing.rsi
+    layers:
+    - state: base
+      map: ["enum.AmmoVisualLayers.Base"]
+  - type: CartridgeAmmo
+    proto: BulletHMG10x28mm
+  - type: Tag
+    tags:
+    - CartridgeHMG10x28mm
+
+- type: entity
+  parent: CartridgeHMG10x28mm
+  id: CartridgeHMG10x28mmOffset
+  components:
+  - type: CartridgeAmmo
+    muzzleFlashOffset: 0.25, 0
+    proto: BulletHMG10x28mm
+
+- type: entity
+  parent: BaseBullet
+  id: BulletHMG10x28mm
+  name: пуля (10x28мм)
+  components:
+  - type: Sprite
+    sprite: _RMC14/Objects/Weapons/Guns/Ammunition/Projectiles/bullet_projectiles.rsi
+    layers:
+    - state: bullet
+      shader: unshaded
+  - type: Projectile
+    damage:
+      types:
+        Piercing: 36
