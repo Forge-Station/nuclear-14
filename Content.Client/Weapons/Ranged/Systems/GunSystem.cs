@@ -86,7 +86,7 @@ public sealed partial class GunSystem : SharedGunSystem
 
         InitializeMagazineVisuals();
         InitializeSpentAmmo();
-        InitializeThrowingAmmoCounter(); // Forge Change Throwing Ammo Provider
+        InitializeThrowingAmmoCounter(); // Forge-Change Throwing Ammo Provider
     }
 
     private void OnUpdateClientAmmo(EntityUid uid, AmmoCounterComponent ammoComp, ref UpdateClientAmmoEvent args)
