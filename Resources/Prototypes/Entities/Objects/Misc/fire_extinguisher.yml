@@ -84,3 +84,4 @@
   - type: VaporVisuals
     animationTime: 0.8
     animationState: extinguish
+  - type: ExtinguisherSpray
