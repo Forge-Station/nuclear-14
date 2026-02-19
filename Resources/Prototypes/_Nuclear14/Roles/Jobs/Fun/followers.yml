@@ -7,6 +7,7 @@
   startingGear: FollowersGear
   icon: "JobIconPassenger"
   supervisors: job-supervisors-followers
+  alwaysUseSpawner: true # # Forge-Change
   accessGroups:
   - FollowersApocalypse
   # Forge-Change-Start

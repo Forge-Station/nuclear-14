@@ -1,0 +1,94 @@
+# Forge-Change
+#MARK: Base Entity
+- type: entity
+  abstract: true
+  parent: [Clothing]
+  id: N14FalloutMutantArmorBase
+  components:
+  - type: Clothing
+    slots:
+    - outerClothing
+  - type: Sprite
+    state: icon
+  - type: Craftable
+
+#MARK: Armor
+- type: entity
+  parent: [N14FalloutMutantArmorBase, N14ClothingOuterBase]
+  id: N14ClothingMutantwild
+  name: броня супермутанта
+  description: Наспех сделан из грубой кожи и метлолома.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Clothing/OuterClothing/MutantArmor/wild.rsi
+  - type: Clothing
+    sprite: _Nuclear14/Clothing/OuterClothing/MutantArmor/wild.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.9
+        Slash: 0.9
+        Piercing: 0.95
+        Heat: 0.9
+    priceMultiplier: 0.2
+  - type: ExplosionResistance
+    damageCoefficient: 0.95
+  - type: Tag
+    tags:
+    - SupermutantArmor
+ # - type: ClothingSpecialModifier
+  #  luckModifier: 1
+
+#MARK: Armor
+- type: entity
+  parent: [N14FalloutMutantArmorBase, N14ClothingOuterBase]
+  id: N14ClothingMutantmetal
+  name: металлическая броня супермутанта.
+  description: Массивная броня, сварен из нескольких полированных стальных пластин.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Clothing/OuterClothing/MutantArmor/metal.rsi
+  - type: Clothing
+    sprite: _Nuclear14/Clothing/OuterClothing/MutantArmor/metal.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.8
+        Slash: 0.8
+        Piercing: 0.85
+        Heat: 0.8
+    priceMultiplier: 0.4
+  - type: ExplosionResistance
+    damageCoefficient: 0.85
+  - type: Tag
+    tags:
+    - SupermutantArmor
+ # - type: ClothingSpecialModifier
+  #  luckModifier: 1
+
+#MARK: Armor
+- type: entity
+  parent: [N14FalloutMutantArmorBase, N14ClothingOuterBase]
+  id: N14ClothingOuterMutantmaster
+  name: броня мутанта мастера.
+  description: Куча газовых труб и пластин, мастерски свареных и нанизанных на кожаное основание.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Clothing/OuterClothing/MutantArmor/master.rsi
+  - type: Clothing
+    sprite: _Nuclear14/Clothing/OuterClothing/MutantArmor/master.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.75
+        Slash: 0.75
+        Piercing: 0.8
+        Heat: 0.85
+    priceMultiplier: 0.5
+  - type: ExplosionResistance
+    damageCoefficient: 0.85
+  - type: Tag
+    tags:
+    - SupermutantArmor
+ # - type: ClothingSpecialModifier
+  #  luckModifier: 1

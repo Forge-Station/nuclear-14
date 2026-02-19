@@ -11,15 +11,17 @@
       species:
       - Human
       - Ghoul
+      - Supermutant # Forge-Change
     - !type:CharacterDepartmentTimeRequirement
       department: Townsfolk
       min: 7200
   startingGear: TownDoctorGear
   icon: "JobIconTownMedic" # Corvax-Change
   supervisors: job-supervisors-townsfolk
+  alwaysUseSpawner: true # Forge-Change
   access:
   - TownieDoctor
-  - TownsPerson # Corvax-Change
+  - TownsPerson # Forge-Change
   special:
   - !type:AddComponentSpecial
     components:
@@ -33,7 +35,7 @@
   id: TownDoctorGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitWastelandDoc
-    back: N14ClothingBackpackExplorer # Corvax-Change
+    back: N14ClothingBackpackExplorer # Forge-Change
     shoes: N14ClothingShoesBlack
     gloves: N14ClothingHandsGlovesNitrile
     id: N14IDDoctorTown
@@ -41,7 +43,7 @@
   innerClothingSkirt: N14ClothingUniformJumpskirtFalloutBlack
   satchel: N14ClothingBackpackSatchelWastelanderFilled
   duffelbag: N14ClothingBackpackDuffelFilled  # N14TODO: Doctors Bag
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledWastelander
     - N14NewYearsGift # Forge-Change

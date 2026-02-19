@@ -1,0 +1,550 @@
+# Forge-Change
+- type: entity
+  id: OrganSupermutantHeart
+  parent: OrganHumanHeart
+  name: Supermutant heart
+  components:
+  - type: Metabolizer
+    metabolizerTypes: [ Human ]
+
+- type: entity
+  id: OrganSupermutantLiver
+  parent: OrganHumanLiver
+  name: Supermutant liver
+  components:
+  - type: Metabolizer
+    metabolizerTypes: [ Human ]
+
+- type: entity
+  id: OrganSupermutantStomach
+  parent: OrganHumanStomach
+  name: Supermutant stomach
+  components:
+  - type: Sprite
+    state: stomach
+  - type: Organ
+  - type: SolutionContainerManager
+    solutions:
+      stomach:
+        maxVol: 100
+      food:
+        maxVol: 5
+        reagents:
+        - ReagentId: UncookedAnimalProteins
+          Quantity: 5
+  - type: Stomach
+  - type: Metabolizer
+    # mm very yummy
+    maxReagents: 5
+    metabolizerTypes: [ Human ]
+
+- type: body
+  id: Supermutant
+  name: "Supermutant"
+  root: torso
+  slots:
+    head:
+      part: HeadSupermutant
+      connections:
+      - torso
+      organs:
+        brain: OrganHumanBrain
+        eyes: OrganHumanEyes
+    torso:
+      part: TorsoSupermutant
+      connections:
+      - right arm
+      - left arm
+      - right leg
+      - left leg
+      organs:
+        heart: OrganSupermutantHeart
+        lungs: OrganHumanLungs
+        stomach: OrganHumanStomach
+        liver: OrganSupermutantLiver
+        kidneys: OrganHumanKidneys
+    right arm:
+      part: RightArmSupermutant
+      connections:
+      - right hand
+    left arm:
+      part: LeftArmSupermutant
+      connections:
+      - left hand
+    right hand:
+      part: RightHandSupermutant
+    left hand:
+      part: LeftHandSupermutant
+    right leg:
+      part: RightLegSupermutant
+      connections:
+      - right foot
+    left leg:
+      part: LeftLegSupermutant
+      connections:
+      - left foot
+    right foot:
+      part: RightFootSupermutant
+    left foot:
+      part: LeftFootSupermutant
+
+- type: metabolizerType
+  id: Supermutant
+  name: Supermutant
+
+- type: entity
+  save: false
+  name: Urist McHands The Supermutant
+  parent: BaseMobSpeciesOrganic
+  id: BaseMobSupermutant
+  abstract: true
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    netsync: false
+    noRot: true
+    drawdepth: Mobs
+    layers:
+      - map: [ "enum.HumanoidVisualLayers.Chest" ]
+      - map: [ "enum.HumanoidVisualLayers.Head" ]
+      - map: [ "enum.HumanoidVisualLayers.Snout" ]
+      - map: [ "enum.HumanoidVisualLayers.Eyes" ]
+      - map: [ "enum.HumanoidVisualLayers.RArm" ]
+      - map: [ "enum.HumanoidVisualLayers.LArm" ]
+      - map: [ "enum.HumanoidVisualLayers.RLeg" ]
+      - map: [ "enum.HumanoidVisualLayers.LLeg" ]
+      - shader: StencilClear
+        sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+        state: l_leg
+      - shader: StencilMask
+        map: [ "enum.HumanoidVisualLayers.StencilMask" ]
+        sprite: Mobs/Customization/masking_helpers.rsi
+        state: female_full
+        visible: false
+      - map: [ "jumpsuit" ]
+      - map: [ "enum.HumanoidVisualLayers.LHand" ]
+      - map: [ "enum.HumanoidVisualLayers.RHand" ]
+      - map: [ "enum.HumanoidVisualLayers.LFoot" ]
+      - map: [ "enum.HumanoidVisualLayers.RFoot" ]
+      - map: [ "enum.HumanoidVisualLayers.Handcuffs" ]
+        color: "#ffffff"
+        sprite: Objects/Misc/handcuffs.rsi
+        state: body-overlay-2
+        visible: false
+      - map: [ "id" ]
+      - map: [ "gloves" ]
+      - map: [ "shoes" ]
+      - map: [ "ears" ]
+      - map: [ "outerClothing" ]
+      - map: [ "eyes" ]
+      - map: [ "belt" ]
+      - map: [ "neck" ]
+      - map: [ "back" ]
+      - map: [ "enum.HumanoidVisualLayers.FacialHair" ]
+      - map: [ "enum.HumanoidVisualLayers.Hair" ]
+      - map: [ "enum.HumanoidVisualLayers.HeadSide" ]
+      - map: [ "enum.HumanoidVisualLayers.HeadTop" ]
+      - map: [ "enum.HumanoidVisualLayers.Tail" ]
+      - map: [ "mask" ]
+      - map: [ "head" ]
+      - map: [ "pocket1" ]
+      - map: [ "pocket2" ]
+  - type: Perishable
+    rotAfter: 3600 # An entire in-game day.
+  - type: Hunger
+    thresholds:
+      Overfed: 400
+      Okay: 300
+      Peckish: 200
+      Starving: 100
+      Dead: 0
+    baseDecayRate: 0.09
+    starvationDamage:
+      types:
+        Cold: 0.15
+    starvingSlowdownModifier: 0.5
+  - type: Thirst
+    thresholds:
+      OverHydrated: 400
+      Okay: 300
+      Thirsty: 200
+      Parched: 100
+      Dead: 0
+    baseDecayRate: 0.15
+  - type: Icon
+    sprite: Mobs/Species/Slime/parts.rsi # It was like this beforehand, no idea why.
+    state: full
+  - type: Respirator
+    damage:
+      types:
+        Asphyxiation: 1
+        Bloodloss: 0.5
+    damageRecovery:
+      types:
+        Asphyxiation: -1
+  - type: Body
+    prototype: Supermutant
+    requiredLegs: 2
+  - type: Butcherable
+    butcheringType: Spike
+    spawned:
+    - id: FoodMeathuman
+      amount: 4
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.4
+        # they r smaller
+        density: 150
+        restitution: 0.0
+        mask:
+        - MobMask
+        layer:
+        - MobLayer
+  - type: Vocal
+    sounds:
+      Male: MaleSupermutant
+      Female: FemaleSupermutant
+      Unsexed: MaleSupermutant
+  - type: Speech
+    speechSounds: Alto
+  - type: HumanoidAppearance
+    species: Supermutant
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      200: Critical
+      400: Dead
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 3.4
+    baseSprintSpeed: 3.4
+  - type: SlowOnDamage
+    speedModifierThresholds:
+      100: 1
+      120: 0.9
+      150: 0.8
+      175: 0.7
+      190: 0.5
+  - type: MeleeWeapon
+    altDisarm: true
+    attackRate: 1.5
+    angle: 60
+    damage:
+      types:
+        Blunt: 15
+  - type: Inventory
+    templateId: supermutant
+  - type: Tag
+    tags:
+    - CanPilot
+    - FootstepSound
+    - DoorBumpOpener
+    - AnomalyHost
+    - SupermutantArmor
+  - type: Damageable
+    damageModifierSet: Supermutant
+  - type: Destructible
+  thresholds:
+  - trigger:
+      !type:DamageTypeTrigger
+      damageType: Blunt
+      damage: 2500
+    behaviors:
+    - !type:GibPartBehavior {}
+  - trigger:
+      !type:DamageTypeTrigger
+      damageType: Heat
+      damage: 2500
+    behaviors:
+    - !type:SpawnEntitiesBehavior
+      spawnInContainer: true
+      spawn:
+        Ash:
+          min: 2
+          max: 5
+    - !type:BurnBodyBehavior {}
+    - !type:PlaySoundBehavior
+      sound:
+        collection: MeatLaserImpact
+  - type: WhitelistClothing
+    whitelist: SupermutantArmor
+    whitelistState: humanoid
+  - type: Stamina
+    critThreshold: 200
+
+
+
+  - type: Bloodstream
+    bloodlossDamage:
+      types:
+        Bloodloss: 0.5
+    bloodlossHealDamage:
+      types:
+        Bloodloss: -1.5
+    bloodRegenerationHunger: 1.5
+    bloodRegenerationThirst: 2
+    bloodMaxVolume: 200
+    bloodReagent: WastelandBlood
+
+  - type: DamageVisuals
+    damageOverlayGroups:
+      Brute:
+        sprite: Mobs/Effects/brute_damage.rsi
+        color: "#88221f"
+
+  - type: Barotrauma
+    damage:
+      types:
+        Blunt: 0.30 #per second, scales with pressure and other constants.
+        Heat: 0.05
+  - type: PassiveDamage # Slight passive regen. Assuming one damage type, comes out to about 4 damage a minute.
+    allowedStates:
+    - Alive
+    - Critical
+    damageCap: 300
+    damage:
+      types:
+        Heat: -0.5
+        Poison: -0.5
+        Radiation: -0.1
+      groups:
+        Brute: -0.5
+        Genetic: -10
+
+- type: damageModifierSet
+  id: Supermutant
+  coefficients:
+    Blunt: 1.0
+    Slash: 1.0
+    Piercing: 1.0
+    Heat: 1.0
+    Poison: 0.1
+    Cold: 0.5
+    Shock: 1.0
+    Radiation: 0.1
+    Cellular: 0.0
+
+- type: entity
+  save: false
+  name: Urist McSupermutant
+  parent: MobHumanDummy
+  id: MobSupermutantDummy
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: HumanoidAppearance
+    species: Supermutant
+
+- type: species
+  id: Supermutant
+  name: Супермутант
+  roundStart: false
+  prototype: MobSupermutant
+  sprites: MobSupermutantSprites
+  markingLimits: MobSupermutantMarkingLimits
+  dollPrototype: MobSupermutantDummy
+  skinColoration: Hues
+  minHeight: 1.45 # Corvax-Change
+  maxHeight: 1.71 # Corvax-Change
+  minWidth: 1.45 # Corvax-Change
+  maxWidth: 1.77 # Corvax-Change
+  minAge: 50 # Corvax-Change
+  oldAge: 150 # Corvax-Change
+  maxAge: 200 # Corvax-Change
+
+- type: markingPoints
+  id: MobSupermutantMarkingLimits
+  points:
+    Hair:
+      points: 1
+      required: false
+    FacialHair:
+      points: 0
+      required: false
+
+- type: speciesBaseSprites
+  id: MobSupermutantSprites
+  sprites:
+    Head: MobSupermutantHead
+    Hair: MobHumanoidAnyMarking
+    FacialHair: MobHumanoidAnyMarking
+    Snout: MobHumanoidAnyMarking
+    Chest: MobSupermutantTorso
+    Eyes: MobHumanoidEyes
+    LArm: MobSupermutantLArm
+    RArm: MobSupermutantRArm
+    LHand: MobSupermutantLHand
+    RHand: MobSupermutantRHand
+    LLeg: MobSupermutantLLeg
+    RLeg: MobSupermutantRLeg
+    LFoot: MobSupermutantLFoot
+    RFoot: MobSupermutantRFoot
+
+- type: humanoidBaseSprite
+  id: MobSupermutantHead
+  baseSprite:
+    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    state: head_m
+
+- type: humanoidBaseSprite
+  id: MobSupermutantHeadMale
+  baseSprite:
+    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    state: head_m
+
+- type: humanoidBaseSprite
+  id: MobSupermutantHeadFemale
+  baseSprite:
+    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    state: head_f
+
+- type: humanoidBaseSprite
+  id: MobSupermutantTorso
+  baseSprite:
+    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    state: torso_m
+
+- type: humanoidBaseSprite
+  id: MobSupermutantTorsoMale
+  baseSprite:
+    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    state: torso_m
+
+- type: humanoidBaseSprite
+  id: MobSupermutantTorsoFemale
+  baseSprite:
+    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    state: torso_f
+
+- type: humanoidBaseSprite
+  id: MobSupermutantLLeg
+  baseSprite:
+    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    state: l_leg
+
+- type: humanoidBaseSprite
+  id: MobSupermutantLArm
+  baseSprite:
+    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    state: l_arm
+
+- type: humanoidBaseSprite
+  id: MobSupermutantLHand
+  baseSprite:
+    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    state: l_hand
+
+- type: humanoidBaseSprite
+  id: MobSupermutantLFoot
+  baseSprite:
+    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    state: l_foot
+
+- type: humanoidBaseSprite
+  id: MobSupermutantRLeg
+  baseSprite:
+    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    state: r_leg
+
+- type: humanoidBaseSprite
+  id: MobSupermutantRArm
+  baseSprite:
+    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    state: r_arm
+
+- type: humanoidBaseSprite
+  id: MobSupermutantRHand
+  baseSprite:
+    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    state: r_hand
+
+- type: humanoidBaseSprite
+  id: MobSupermutantRFoot
+  baseSprite:
+    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    state: r_foot
+
+- type: entity
+  save: false
+  name: Urist Supermutant
+  parent: BaseMobSupermutant
+  id: MobSupermutant
+  components:
+    - type: NpcFactionMember
+      factions:
+      - Wastelander
+
+- type: emoteSounds
+  id: MaleSupermutant
+  params:
+    variation: 0.125
+    pitch: 0.55
+  sounds:
+    Scream:
+      collection: MaleScreams
+    Laugh:
+      collection: MaleLaugh
+    Sneeze:
+      collection: MaleSneezes
+    Cough:
+      collection: MaleCoughs
+    CatMeow:
+      collection: CatMeows
+    CatHisses:
+      collection: CatHisses
+    MonkeyScreeches:
+      collection: MonkeyScreeches
+    RobotBeep:
+      collection: RobotBeeps
+    Yawn:
+      collection: MaleYawn
+    Snore:
+      collection: Snores
+    Honk:
+      collection: BikeHorn
+    Sigh:
+      collection: MaleSigh
+    Crying:
+      collection: MaleCry
+    Whistle:
+      collection: Whistles
+    Weh:
+      collection: Weh
+
+- type: emoteSounds
+  id: FemaleSupermutant
+  params:
+    variation: 0.125
+    pitch: 0.50
+  sounds:
+    Scream:
+      collection: FemaleScreams
+    Laugh:
+      collection: FemaleLaugh
+    Sneeze:
+      collection: FemaleSneezes
+    Cough:
+      collection: FemaleCoughs
+    CatMeow:
+      collection: CatMeows
+    CatHisses:
+      collection: CatHisses
+    MonkeyScreeches:
+      collection: MonkeyScreeches
+    RobotBeep:
+      collection: RobotBeeps
+    Yawn:
+      collection: FemaleYawn
+    Snore:
+      collection: Snores
+    Honk:
+      collection: CluwneHorn
+    Sigh:
+      collection: FemaleSigh
+    Crying:
+      collection: FemaleCry
+    Whistle:
+      collection: Whistles
+    Weh:
+      collection: Weh

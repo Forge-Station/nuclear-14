@@ -11,3 +11,15 @@ mech-energy-display = Энергия: { $amount }%
 mech-energy-missing = Энергия: ОТСУТСТВУЕТ
 mech-slot-display = Доступно слотов: { $amount }
 mech-no-enter = Вы не можете пилотировать это.
+# Forge-Change-start
+mech-key-removed = Вы взяли ключ.
+mech-key-dropped = Ключ упал на пол.
+mech-verb-enter-passenger = Войти пассажиром
+mech-no-passenger-in-slot = В пассажирском кресле {$slot} никого нет.
+action-name-mech-eject-passenger1 = Высадить пассажира 1
+action-description-mech-eject-passenger1 = Высаживает первого пассажира из меха
+action-name-mech-eject-passenger2 = Высадить пассажира 2
+action-description-mech-eject-passenger2 = Высаживает второго пассажира
+action-name-mech-eject-passenger3 = Высадить пассажира 3
+action-description-mech-eject-passenger3 = Высаживает третьего пассажира
+# Forge-Change-end

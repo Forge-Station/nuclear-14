@@ -1,0 +1,202 @@
+# Forge-Change
+- type: entity
+  id: BaseCars
+  parent: BaseMech
+  save: false
+  abstract: true
+  components:
+  - type: Repairable
+    fuelCost: 20
+    doAfterDelay: 10
+  - type: UserInterface
+    interfaces:
+      enum.MechUiKey.Key:
+        type: MechBoundUserInterface
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+  - type: DamageOtherOnHit
+    soundHit:
+      collection: MetalThud
+  - type: Puller
+    needsHands: false
+  - type: MovementSpeedModifier
+    acceleration: 8
+    friction: 5 # wheels dont stop instantly
+    baseSprintSpeed: 7
+    baseWalkSpeed: 4.5 # default walking speed
+  - type: AmbientSound
+    sound: "/Audio/Effects/Vehicle/vehicleengineidle.ogg"
+    range: 10
+    volume: -10
+    enabled: false
+  - type: Tag
+    tags:
+    - DoorBumpOpener
+    - FootstepSound
+  - type: Physics
+    bodyType: Dynamic
+  - type: Clickable
+  - type: InputMover
+  - type: InteractionOutline
+  - type: Access
+  - type: WiresPanel
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.5,-0.9,0.5,0.9"
+        density: 21390
+        mask:
+        - MachineMask
+        layer:
+        - MidImpassable
+        - LowImpassable
+        - BulletImpassable
+  - type: Appearance
+    autoRot: true
+  - type: ContainerContainer
+    containers:
+      mech-pilot-slot: !type:ContainerSlot
+      mech-equipment-container: !type:Container
+      mech-battery-slot: !type:ContainerSlot
+      storagebase: !type:Container
+  - type: ContainerFill
+    containers:
+      mech-battery-slot:
+      - N14PowerCellFusion
+  - type: Damageable
+    damageContainer: Inorganic
+    damageModifierSet: LightArmor # Goobstation
+  - type: FootstepModifier
+    footstepSoundCollection:
+      path: /Audio/Mecha/cardrive.ogg
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 1000 # Goobstation
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+      - !type:ChangeConstructionNodeBehavior
+        node: start
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+        insertSound:
+          path: /Audio/Effects/Vehicle/vehiclestartup.ogg
+          params:
+            volume: -3
+  # Goobstation Change Start
+  - type: StaticPrice
+    price: 2000
+  # Goobstation Change End
+#  - type: Storage
+#    grid:
+#    - 0,0,9,5
+#    maxItemSize: Ginormous
+
+- type: entity
+  parent: [ BaseCars, SpecialMech ]
+  id: N14Highwayman
+  name: Хайвеймен
+  description: Ничто не остановит „Хайвеймен“!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    noRot: true
+    sprite: _Nuclear14/Objects/Vehicles/highwayman.rsi
+    layers:
+    - map: [ "enum.MechVisualLayers.Base" ]
+      state: highwayman2
+  - type: Mech
+    baseState: highwayman2
+    openState: highwayman1
+    brokenState: highwayman_open
+    engineOnState: highwayman_open
+    mechToPilotDamageMultiplier: 0.5
+    airtight: false
+    pilotWhitelist:
+      components:
+      - HumanoidAppearance
+    hornSound:
+      path: /Audio/Items/airhorn.ogg
+    mechHornAction: ActionMechHorn
+
+- type: entity
+  id: ActionMechHorn
+  name: action-name-mech-horn
+  description: action-description-mech-horn
+  components:
+  - type: InstantAction
+    icon:
+      sprite: Objects/Fun/bikehorn.rsi
+      state: icon
+    event: !type:HornActionEvent
+    useDelay: 2.0
+
+- type: entity
+  id: ActionMechSiren
+  name: action-name-mech-siren
+  description: action-description-mech-siren
+  components:
+  - type: InstantAction
+    icon:
+      sprite: Objects/Fun/bikehorn.rsi
+      state: icon
+    event: !type:SirenActionEvent
+    useDelay: 0.5
+
+- type: entity
+  parent: BaseKey
+  id: MechKey
+  name: Ключи от машины
+  description: Нужны для запуска двигателя. Не потеряй их!
+  components:
+  - type: Sprite
+    sprite: Objects/Vehicles/motorbike.rsi
+    state: keys
+  - type: IgnitionKey
+  - type: Tag
+    tags:
+    - MechKey
+
+- type: entity
+  id: ActionMechEjectPassenger1
+  name: Eject passenger 1
+  description: Ejects the first passenger from the mech
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: InstantAction
+    itemIconStyle: NoItem
+    icon:
+      sprite: Interface/Actions/actions_mecha.rsi
+      state: mech_eject
+    event: !type:MechEjectPassenger1Event
+
+- type: entity
+  id: ActionMechEjectPassenger2
+  name: Eject passenger 2
+  description: Ejects the second passenger from the mech
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: InstantAction
+    itemIconStyle: NoItem
+    icon:
+      sprite: Interface/Actions/actions_mecha.rsi
+      state: mech_eject
+    event: !type:MechEjectPassenger2Event
+
+- type: entity
+  id: ActionMechEjectPassenger3
+  name: Eject passenger 3
+  description: Ejects the third passenger from the mech
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: InstantAction
+    itemIconStyle: NoItem
+    icon:
+      sprite: Interface/Actions/actions_mecha.rsi
+      state: mech_eject
+    event: !type:MechEjectPassenger3Event

@@ -83,6 +83,9 @@
   id: Scrap
 
 - type: Tag
+  id: SupermutantArmor
+
+- type: Tag
   id: Phial
 
 - type: Tag
@@ -303,11 +306,6 @@
 - type: Tag
   id: N14LMGMagazine556Rifle
 
-# Forge-Add-Start
-- type: Tag 
-  id: Magazine556Rifle30
-# Forge-Add-End
-
 - type: Tag
   id: N14Magazine762Rifle
 
@@ -325,9 +323,6 @@
 
 - type: Tag
   id: N14Magazine308Rifle
-
-- type: Tag # forge-add
-  id: N14Magazine308RifleSnipers
 
 - type: Tag
   id: N14Magazine308RifleLong
@@ -426,3 +421,12 @@
 
 - type: Tag
   id: NightstalkerPelt
+
+- type: Tag
+  id: MotorbikeKeys
+
+- type: Tag
+  id: VehicleKey
+
+- type: Tag
+  id: JanicartKeys

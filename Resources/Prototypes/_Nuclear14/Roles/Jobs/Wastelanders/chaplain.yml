@@ -11,12 +11,14 @@
       species:
       - Human
       - Ghoul
+      - Supermutant # Forge-Change
     - !type:CharacterDepartmentTimeRequirement # Forge-Add
       department: Townsfolk
       min: 7200 # 2 hours
   startingGear: WastelandChaplainGear
   icon: "JobIconWastelandChaplain" # Forge-Change
   supervisors: job-supervisors-townsfolk
+  alwaysUseSpawner: true # Forge-Change
   access:
   - WastelandChaplain
   - TownsPerson # Forge-Change

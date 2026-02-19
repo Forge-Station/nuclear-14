@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "license": "CC-BY-NC-SA-3.0",
+  "copyright": "made by RavenReaper",
+  "size": {
+    "x": 96,
+    "y": 96
+  },
+  "states": [
+    {
+      "name": "highwayman_open",
+      "directions": 4
+    },
+    {
+      "name": "highwayman1",
+      "directions": 4
+    },
+    {
+      "name": "highwayman2",
+      "directions": 4,
+      "delays": [
+        [
+          0.030000001,
+          0.030000001,
+          0.030000001
+        ],
+        [
+          0.030000001,
+          0.030000001,
+          0.030000001
+        ],
+        [
+          0.030000001,
+          0.030000001,
+          0.030000001
+        ],
+        [
+          0.030000001,
+          0.030000001,
+          0.030000001
+        ]
+      ]
+    }
+  ]
+}

@@ -11,12 +11,14 @@
       species:
       - Human
       - Ghoul
+      - Supermutant # Forge-Change
     - !type:CharacterDepartmentTimeRequirement
       department: Townsfolk
       min: 14400 # 4 hours
   startingGear: TownDeputyGear
   icon: "JobIconTownDeputy" # Forge-Change
   supervisors: job-supervisors-townsfolk
+  alwaysUseSpawner: true # Forge-Change
   access:
   - TownieLaw
   - TownieMechanic

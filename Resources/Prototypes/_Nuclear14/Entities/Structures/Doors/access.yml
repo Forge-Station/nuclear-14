@@ -403,6 +403,28 @@
   - type: Wires
     layoutId: AirlockService
 
+# Forge-Change-Start
+- type: entity
+  parent: N14DoorMakeshift
+  id: N14DoorMakeshiftSecureLockedTownsPerson
+  suffix: Townie, Locked
+  components:
+  - type: AccessReader
+    access: [ [ "TownsPerson" ] ]
+  - type: Wires
+    layoutId: AirlockService
+
+- type: entity
+  parent: N14DoorWoodSecure
+  id: N14DoorWoodSecureLockedTownsPerson
+  suffix: Townie, Locked
+  components:
+  - type: AccessReader
+    access: [ [ "TownsPerson" ] ]
+  - type: Wires
+    layoutId: AirlockService
+# Forge-Change-End
+
 # Wastelander
 
 - type: entity

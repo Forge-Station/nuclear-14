@@ -12,6 +12,7 @@
       species:
       - Human
       - Ghoul
+      - Supermutant # Forge-Change
     - !type:CharacterOverallTimeRequirement
       min: 3600
   startingGear: BoSMidSerfGear

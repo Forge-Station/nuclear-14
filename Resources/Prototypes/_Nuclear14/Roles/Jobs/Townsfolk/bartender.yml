@@ -11,15 +11,17 @@
       species:
       - Human
       - Ghoul
+      - Supermutant # Forge-Change
     - !type:CharacterDepartmentTimeRequirement
       department: Townsfolk
       min: 7200 # 2 hours
   startingGear: WastelandBartenderGear
   icon: "JobIconBartender"
   supervisors: job-supervisors-townsfolk
+  alwaysUseSpawner: true # Forge-Change
   access:
   - WastelandBartender
-  - TownsPerson # Corvax-Change
+  - TownsPerson # Forge-Change
   - InnRoomOne
   - InnRoomTwo
   - InnRoomThree
@@ -38,13 +40,13 @@
     head: ClothingHeadHatTophat
     jumpsuit: N14ClothingUniformJumpsuitBartenderAlt
     outerClothing: N14ClothingOuterLeatherArmor
-    back: N14ClothingBackpackExplorer # Corvax-Change
+    back: N14ClothingBackpackExplorer # Forge-Change
     shoes: N14ClothingBootsLeather
     id: N14IDBartenderTown
   innerClothingSkirt: N14ClothingUniformJumpsuitBartenderAlt #placeholder
   satchel: N14ClothingBackpackSatchelWastelanderFilled
   duffelbag: N14ClothingBackpackDuffelFilled
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledWastelander
     - N14NewYearsGift # Forge-Change
