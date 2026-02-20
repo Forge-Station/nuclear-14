@@ -715,8 +715,8 @@
       coefficients:
         Blunt: 0.7
         Slash: 0.7
-        Piercing: 0.8
-        Heat: 0.8
+        Piercing: 0.75 # Forge-Change
+        Heat: 0.75 # Forge-Change
     priceMultiplier: 0.5
 
 - type: entity

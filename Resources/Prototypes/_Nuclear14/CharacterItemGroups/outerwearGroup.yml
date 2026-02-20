@@ -37,10 +37,12 @@
       id: N14LoadoutOuterLeatherArmor
     - type: loadout
       id: N14LoadoutOuterMetalArmor
-    - type: loadout
-      id: N14LoadoutOuterTribalArmor
-    - type: loadout
-      id: N14LoadoutOuterTribalArmorHeavy
+# Forge-Delete-Start
+    # - type: loadout
+    #   id: N14LoadoutOuterTribalArmor
+    # - type: loadout
+    #   id: N14LoadoutOuterTribalArmorHeavy
+# Forge-Delete-End
     - type: loadout
       id: N14LoadoutOuterRaiderBadlands
     - type: loadout

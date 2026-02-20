@@ -455,10 +455,14 @@
   - type: Armor
     modifiers:
       coefficients:
-        Blunt: 0.95
-        Slash: 0.95
-        Piercing: 0.95
+# Forge-Change-Start
+        Blunt: 0.93
+        Slash: 0.93
+        Piercing: 0.93
         Heat: 0.9
+  - type: ExplosionResistance
+    damageCoefficient: 0.95
+# Forge-Change-End
   - type: HideLayerClothing
     slots:
     - Hair
@@ -533,7 +537,7 @@
     sprite: _Nuclear14/Clothing/Head/FalloutHats/dryland-hunterhood.rsi
 
 - type: entity
-  parent: ClothingHeadBase
+  parent: N14ClothingDrylanderGoggles # Forge-Change
   id: N14ClothingTribalMuffaloskull
   name: brahmin skull hat
   description: A brahmin skull fashioned into a hat.
@@ -544,7 +548,7 @@
     sprite: _Nuclear14/Clothing/Head/FalloutHats/muffalo-skull.rsi
 
 - type: entity
-  parent: ClothingHeadBase
+  parent: N14ClothingDrylanderGoggles # Forge-Change
   id: N14ClothingTribalRadstagSkull
   name: radstag skull hat
   description: A radstag skull fashioned into a hat.

@@ -46,9 +46,6 @@
     id: N14IDNCRDogtagNCO
     ears: N14ClothingHeadsetNCR
     eyes: ClothingEyesGlassesSunglasses
-  storage:
-    back:
-    - N14NewYearsGift # Forge-Change
 
 - type: playTimeTracker
   id: NCRMPinvestigator

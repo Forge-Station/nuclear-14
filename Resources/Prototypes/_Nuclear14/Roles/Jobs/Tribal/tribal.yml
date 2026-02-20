@@ -49,7 +49,6 @@
     - Torch
     - N14Bandage
     - Ointment
-    - N14NewYearsGift # Forge-Change
 
 - type: playTimeTracker
   id: Tribal

@@ -50,7 +50,6 @@
     - N14CurrencyPrewarMoney100
     - N14MagazinePistol10mm
     - N14MagazinePistol10mm
-    - N14NewYearsGift # Forge-Change
 
 - type: playTimeTracker
   id: VaultSecurity
