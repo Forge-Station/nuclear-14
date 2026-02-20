@@ -32,40 +32,40 @@
       - ReagentId: Blood
         Quantity: 40
   - type: Destructible
-  thresholds:
-  - trigger:
-      !type:DamageTypeTrigger
-      damageType: Blunt
-      damage: 2500
-    behaviors:
-    - !type:GibPartBehavior {}
-  - trigger:
-      !type:DamageTypeTrigger
-      damageType: Piercing
-      damage: 2500
-    behaviors:
-    - !type:GibPartBehavior {}
-  - trigger:
-      !type:DamageTypeTrigger
-      damageType: Slash
-      damage: 2500
-    behaviors:
-    - !type:GibPartBehavior {}
-  - trigger:
-      !type:DamageTypeTrigger
-      damageType: Heat
-      damage: 2500
-    behaviors:
-    - !type:SpawnEntitiesBehavior
-      spawnInContainer: true
-      spawn:
-        Ash:
-          min: 2
-          max: 5
-    - !type:BurnBodyBehavior {}
-    - !type:PlaySoundBehavior
-      sound:
-        collection: MeatLaserImpact
+    thresholds:
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Blunt
+        damage: 2500
+      behaviors:
+      - !type:GibPartBehavior {}
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Piercing
+        damage: 2500
+      behaviors:
+      - !type:GibPartBehavior {}
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Slash
+        damage: 2500
+      behaviors:
+      - !type:GibPartBehavior {}
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Heat
+        damage: 2500
+      behaviors:
+      - !type:SpawnEntitiesBehavior
+        spawnInContainer: true
+        spawn:
+          Ash:
+            min: 2
+            max: 5
+      - !type:BurnBodyBehavior {}
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MeatLaserImpact
 
 - type: entity
   id: HeadSupermutant
@@ -86,42 +86,42 @@
     damageContainer: Biological
     damageModifierSet: SupermutantPartDamage
   - type: Destructible
-  thresholds:
-  - trigger:
-      !type:DamageTypeTrigger
-      damageType: Blunt
-      damage: 2500
-    behaviors:
-    - !type:GibPartBehavior {}
-  - trigger:
-      !type:DamageTypeTrigger
-      damageType: Piercing
-      damage: 2500
-    behaviors:
-    - !type:GibPartBehavior {}
-  - trigger:
-      !type:DamageTypeTrigger
-      damageType: Slash
-      damage: 2500
-    behaviors:
-    - !type:GibPartBehavior {}
-  - trigger:
-      !type:DamageTypeTrigger
-      damageType: Heat
-      damage: 2500
-    behaviors:
-    - !type:SpawnEntitiesBehavior
-      spawnInContainer: true
-      spawn:
-        Ash:
-          min: 2
-          max: 5
-    - !type:BurnBodyBehavior {}
-    - !type:PlaySoundBehavior
-      sound:
-        collection: MeatLaserImpact
+    thresholds:
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Blunt
+        damage: 2500
+      behaviors:
+      - !type:GibPartBehavior {}
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Piercing
+        damage: 2500
+      behaviors:
+      - !type:GibPartBehavior {}
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Slash
+        damage: 2500
+      behaviors:
+      - !type:GibPartBehavior {}
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Heat
+        damage: 2500
+      behaviors:
+      - !type:SpawnEntitiesBehavior
+        spawnInContainer: true
+        spawn:
+          Ash:
+            min: 2
+            max: 5
+      - !type:BurnBodyBehavior {}
+      - !type:PlaySoundBehavior
         sound:
           collection: MeatLaserImpact
+          sound:
+            collection: MeatLaserImpact
 
 - type: entity
   id: LeftArmSupermutant

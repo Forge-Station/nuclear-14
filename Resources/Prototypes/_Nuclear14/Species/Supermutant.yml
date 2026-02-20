@@ -89,8 +89,8 @@
       part: LeftFootSupermutant
 
 - type: metabolizerType
-  id: Supermutant
-  name: Supermutant
+  id: supermutant
+  name: metabolizer-type-supermutant
 
 - type: entity
   save: false
@@ -188,7 +188,7 @@
   - type: Butcherable
     butcheringType: Spike
     spawned:
-    - id: FoodMeathuman
+    - id: FoodMeatHuman
       amount: 4
   - type: Fixtures
     fixtures:
@@ -241,7 +241,6 @@
     - CanPilot
     - FootstepSound
     - DoorBumpOpener
-    - AnomalyHost
     - SupermutantArmor
   - type: Damageable
     damageModifierSet: Supermutant

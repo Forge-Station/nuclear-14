@@ -4,3 +4,4 @@ species-name-ghoul = Ghoul
 species-name-ghoul-glowing = Glowing Ghoul
 species-name-ratfolk = Rat Folk
 species-name-ratmonarch = Rat Monarch
+species-name-Supermutant = Супермутант

@@ -430,3 +430,13 @@
 
 - type: Tag
   id: JanicartKeys
+# Forge-Change-start
+- type: Tag
+  id: MechKey
+
+- type: Tag
+  id: Magazine556Rifle30
+
+- type: Tag
+  id: N14Magazine308RifleSnipers
+# Forge-Change-end

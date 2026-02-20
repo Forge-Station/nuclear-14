@@ -4,9 +4,6 @@
   name: green motorbike
   description: A clean green motorbike.
   components:
-  - type: Vehicle
-    northOverride: -0.1
-    southOverride: 0.1
   - type: Sprite
     sprite: _Nuclear14/Objects/Vehicles/bikesbuggy.rsi
     layers:

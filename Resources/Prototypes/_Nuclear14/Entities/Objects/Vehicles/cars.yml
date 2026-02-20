@@ -54,7 +54,6 @@
         - LowImpassable
         - BulletImpassable
   - type: Appearance
-    autoRot: true
   - type: ContainerContainer
     containers:
       mech-pilot-slot: !type:ContainerSlot
@@ -84,10 +83,6 @@
         node: start
       - !type:DoActsBehavior
         acts: ["Destruction"]
-        insertSound:
-          path: /Audio/Effects/Vehicle/vehiclestartup.ogg
-          params:
-            volume: -3
   # Goobstation Change Start
   - type: StaticPrice
     price: 2000
