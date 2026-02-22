@@ -56,6 +56,13 @@
         Piercing: 0.85
         Heat: 0.85
         Radiation: 0.6
+      # Forge-Add-Start
+      flatReductions:
+        Blunt: 2
+        Slash: 2
+        Piercing: 2
+        Heat: 2
+      # Forge-Add-End
   - type: ExplosionResistance
     damageCoefficient: 0.85
   - type: Tag
@@ -121,6 +128,13 @@
         Piercing: 0.85
         Heat: 0.85
         Radiation: 0.6
+      # Forge-Add-Start
+      flatReductions:
+        Blunt: 2
+        Slash: 2
+        Piercing: 2
+        Heat: 2
+      # Forge-Add-End
   - type: ExplosionResistance
     damageCoefficient: 0.85
   - type: Tag
@@ -186,6 +200,13 @@
         Piercing: 0.85
         Heat: 0.85
         Radiation: 0.6
+      # Forge-Add-Start
+      flatReductions:
+        Blunt: 2
+        Slash: 2
+        Piercing: 2
+        Heat: 2
+      # Forge-Add-End
   - type: ExplosionResistance
     damageCoefficient: 0.85
   - type: Tag
@@ -251,6 +272,13 @@
         Piercing: 0.85
         Heat: 0.8
         Radiation: 0.6
+      # Forge-Add-Start
+      flatReductions:
+        Blunt: 2
+        Slash: 2
+        Piercing: 2
+        Heat: 2
+      # Forge-Add-End
   - type: ExplosionResistance
     damageCoefficient: 0.85
   - type: Tag
@@ -283,6 +311,13 @@
         Piercing: 0.85
         Heat: 0.85
         Radiation: 0.6
+      # Forge-Add-Start
+      flatReductions:
+        Blunt: 2
+        Slash: 2
+        Piercing: 2
+        Heat: 2
+      # Forge-Add-End
   - type: ExplosionResistance
     damageCoefficient: 0.85
 
@@ -311,6 +346,13 @@
         Piercing: 0.85
         Heat: 0.85
         Radiation: 0.6
+      # Forge-Add-Start
+      flatReductions:
+        Blunt: 2
+        Slash: 2
+        Piercing: 2
+        Heat: 2
+      # Forge-Add-End
   - type: ExplosionResistance
     damageCoefficient: 0.85
 
@@ -372,6 +414,13 @@
         Piercing: 0.85
         Heat: 0.85
         Radiation: 0.6
+      # Forge-Add-Start
+      flatReductions:
+        Blunt: 2
+        Slash: 2
+        Piercing: 2
+        Heat: 2
+      # Forge-Add-End
   - type: ExplosionResistance
     damageCoefficient: 0.85
 
@@ -433,6 +482,13 @@
         Piercing: 0.85
         Heat: 0.85
         Radiation: 0.6
+      # Forge-Add-Start
+      flatReductions:
+        Blunt: 2
+        Slash: 2
+        Piercing: 2
+        Heat: 2
+      # Forge-Add-End
   - type: ExplosionResistance
     damageCoefficient: 0.85
 
@@ -461,6 +517,13 @@
         Piercing: 0.85
         Heat: 0.85
         Radiation: 0.6
+      # Forge-Add-Start
+      flatReductions:
+        Blunt: 2
+        Slash: 2
+        Piercing: 2
+        Heat: 2
+      # Forge-Add-End
   - type: ExplosionResistance
     damageCoefficient: 0.85
 
@@ -489,6 +552,13 @@
         Piercing: 0.85
         Heat: 0.85
         Radiation: 0.6
+      # Forge-Add-Start
+      flatReductions:
+        Blunt: 2
+        Slash: 2
+        Piercing: 2
+        Heat: 2
+      # Forge-Add-End
   - type: ExplosionResistance
     damageCoefficient: 0.85
   - type: ThermalVision

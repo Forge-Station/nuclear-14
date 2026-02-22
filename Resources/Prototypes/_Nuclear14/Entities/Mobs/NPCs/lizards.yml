@@ -467,11 +467,14 @@
     angle: 60
     animation: WeaponArcClaw
     wideAnimation: WeaponArcClaw
+    # Forge-Change-Start
+    resistanceBypass: true
     damage:
       types:
-        Blunt: 15
-        Slash: 15
+        Blunt: 5
+        Slash: 10
         Piercing: 5
+    # Forge-Change-End
     range: 2
   - type: MovementSpeedModifier
     baseWalkSpeed : 3
@@ -541,11 +544,14 @@
     angle: 60
     animation: WeaponArcClaw
     wideAnimation: WeaponArcClaw
+    # Forge-Change-Start
+    resistanceBypass: true
     damage:
       types:
-        Blunt: 17
-        Slash: 17
-        Piercing: 7
+        Blunt: 10
+        Slash: 15
+        Piercing: 5
+    # Forge-Change-End
   - type: MobThresholds
     thresholds:
       0: Alive
