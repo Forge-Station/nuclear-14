@@ -16,6 +16,7 @@
   - type: CP14BiomeSpawner
   - type: PlacementReplacement
     key: CP14BiomeSpawner
+  - type: Marker # Forge-Change
 
 - type: entity
   id: N14BiomeSpawnerWasteland

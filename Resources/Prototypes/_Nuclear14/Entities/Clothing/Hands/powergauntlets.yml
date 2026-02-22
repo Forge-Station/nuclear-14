@@ -36,6 +36,13 @@
         Slash: 0.925
         Piercing: 0.95
         Heat: 0.95
+      # Forge-Add-Start
+      flatReductions:
+        Blunt: 1
+        Slash: 1
+        Piercing: 1
+        Heat: 1
+      # Forge-Add-End
 
 - type: entity
   parent: N14ClothingPAGauntlets

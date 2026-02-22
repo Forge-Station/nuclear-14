@@ -44,7 +44,6 @@
     back:
     - N14BoxPlasticFilledWastelander
     - Bible
-    - N14NewYearsGift # Forge-Change
 
 - type: playTimeTracker
   id: WastelandChaplain

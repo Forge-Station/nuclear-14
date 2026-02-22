@@ -50,7 +50,6 @@
   storage: # Corvax-Change
     back:
     - N14BoxPlasticFilledMilitaryNCR
-    - N14NewYearsGift # Forge-Change
 
 - type: playTimeTracker
   id: NCRNCO

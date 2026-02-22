@@ -36,7 +36,6 @@
     - N14BoxPlasticFilledWastelander
     - AcousticGuitarInstrument
     - SaxophoneInstrument
-    - N14NewYearsGift # Forge-Change
 
 - type: playTimeTracker
   id: WastelandMusician

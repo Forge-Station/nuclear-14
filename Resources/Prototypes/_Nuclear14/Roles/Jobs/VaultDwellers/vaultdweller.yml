@@ -37,7 +37,6 @@
     back:
     - N14Bandage
     - N14CurrencyPrewarMoney100
-    - N14NewYearsGift # Forge-Change
 
 - type: playTimeTracker
   id: VaultDweller

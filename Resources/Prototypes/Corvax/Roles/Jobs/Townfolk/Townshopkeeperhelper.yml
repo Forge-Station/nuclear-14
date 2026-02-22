@@ -45,7 +45,6 @@
   storage:
     back:
     - N14BoxPlasticFilledWastelander
-    - N14NewYearsGift # Forge-Change
 
 - type: playTimeTracker
   id: TownShopkeeperHelper
