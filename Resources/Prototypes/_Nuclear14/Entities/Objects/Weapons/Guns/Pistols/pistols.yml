@@ -162,6 +162,30 @@
     price: 10
 
 - type: entity
+  name: мега нагибатор
+  parent: N14WeaponPistol9mm
+  id: N14WeaponPistol9mmmega
+  description: The cheap and ubiquitous sidearm, chambered in 9mm ammo.
+  components:
+  - type: GunDamageModifier
+    multiplier: 10
+    flatBonus:
+      types:
+        Slash: +20
+
+- type: entity
+  name: говно пушка
+  parent: N14WeaponPistol9mm
+  id: N14WeaponPistol9mfuf
+  description: The cheap and ubiquitous sidearm, chambered in 9mm ammo.
+  components:
+  - type: GunDamageModifier
+    multiplier: 0.1
+    flatBonus:
+      types:
+        Slash: -2
+
+- type: entity
   name: 10mm Pistol
   parent: N14BaseWeaponPistol
   id: N14WeaponPistol10mm
