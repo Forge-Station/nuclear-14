@@ -81,7 +81,7 @@
       0: Alive
       100: Critical
       150: Dead
-  - type: FeralGhoulify
+#  - type: FeralGhoulify # Forge-Change
   # - type: Special
 
 - type: entity

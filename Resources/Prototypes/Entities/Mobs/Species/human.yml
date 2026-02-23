@@ -40,7 +40,7 @@
     - English
   - type: FootPrints
   - type: PsionicInsulation
-  - type: Ghoulify
+#  - type: Ghoulify # Forge-Change
 
 - type: entity
   parent: BaseSpeciesDummy
