@@ -1,0 +1,187 @@
+- type: entity
+  id: OverworldToken
+  name: world map token
+  description: A projection of your consciousness on the world map.
+  components:
+  - type: Sprite
+    sprite: _Goobstation/Actions/modsuit.rsi
+    state: activate
+  - type: Transform
+  - type: Physics
+    bodyType: Dynamic
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.35
+        density: 10
+        layer:
+        - MobLayer
+        mask:
+        - MobMask
+  - type: Input
+    context: "human"
+  - type: MobMover
+  - type: InputMover
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 3.0
+    baseSprintSpeed: 5.0
+  - type: Hands
+  - type: InteractionOutline
+  - type: OverworldToken
+  - type: Actions
+  - type: Clickable
+
+# ─── TravelNode база ───────────────────────────────────────────────────────────
+- type: entity
+  id: TravelNodeStatic
+  name: travel gate
+  description: A portal leading to a distant location.
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    sprite: _Goobstation/Actions/modsuit.rsi
+    state: activate
+  - type: Transform
+  - type: Physics
+    bodyType: Static
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.5
+        hard: false
+        layer:
+        - MobLayer
+        mask:
+        - MobMask
+  - type: TravelNode
+    destination: TravelDest_Wendover
+    displayName: Wendover
+  - type: InteractionOutline
+  - type: Clickable
+
+# ─── TravelNode варианты ──────────────────────────────────────────────────────
+- type: entity
+  id: TravelNodeWendover
+  parent: TravelNodeStatic
+  suffix: Wendover
+  components:
+  - type: TravelNode
+    destination: TravelDest_Wendover
+    displayName: Wendover
+  - type: Clickable
+
+- type: entity
+  id: TravelNodeYuma
+  parent: TravelNodeStatic
+  suffix: Yuma
+  components:
+  - type: TravelNode
+    destination: TravelDest_Yuma
+    displayName: Yuma
+  - type: Clickable
+
+- type: entity
+  id: TravelNodeVault
+  parent: TravelNodeStatic
+  suffix: Vault
+  components:
+  - type: TravelNode
+    destination: TravelDest_Vault
+    displayName: The Vault
+  - type: Clickable
+
+# ─── Терминал (стационарный активатор) ────────────────────────────────────────
+- type: entity
+  id: WorldMapTerminal
+  name: world map terminal
+  description: A terminal for projecting your consciousness onto the world map.
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    sprite: _Goobstation/Actions/modsuit.rsi
+    state: activate
+  - type: Transform
+  - type: Physics
+    bodyType: Static
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.4,-0.4,0.4,0.4"
+  - type: WorldMapActivator
+    requiresHolding: false
+  - type: InteractionOutline
+  - type: Clickable
+
+# ─── Предмет-активатор (в руках) ──────────────────────────────────────────────
+- type: entity
+  id: WorldMapItem
+  name: world map
+  description: A magical map allowing you to enter the overworld.
+  components:
+  - type: Sprite
+    sprite: _Goobstation/Actions/modsuit.rsi
+    state: activate
+  - type: Transform
+  - type: Item
+  - type: WorldMapActivator
+    requiresHolding: true
+
+# ─── Маркер спавна (на Overworld гриде) ───────────────────────────────────────
+- type: entity
+  id: OverworldSpawnMarker
+  name: overworld spawn marker
+  suffix: "[MAP EDITOR ONLY]"
+  components:
+  - type: Transform
+  - type: OverworldArrivalMarker
+    markerID: OverworldSpawn
+  - type: Sprite
+    sprite: _Goobstation/Actions/modsuit.rsi
+    state: activate
+
+# ─── Маркер прибытия Wendover ─────────────────────────────────────────────────
+- type: entity
+  id: OverworldArrivalMarkerWendover
+  name: overworld arrival marker
+  suffix: "[Wendover]"
+  components:
+  - type: Transform
+  - type: OverworldArrivalMarker
+    markerID: Wendover_Arrivals
+  - type: Sprite
+    sprite: _Goobstation/Actions/modsuit.rsi
+    state: activate
+
+# ─── Маркер прибытия Yuma ────────────────────────────────────────────────────
+- type: entity
+  id: OverworldArrivalMarkerYuma
+  name: overworld arrival marker
+  suffix: "[Yuma]"
+  components:
+  - type: Transform
+  - type: OverworldArrivalMarker
+    markerID: Yuma_Arrivals
+  - type: Sprite
+    sprite: _Goobstation/Actions/modsuit.rsi
+    state: activate
+
+# ─── Маркер прибытия Vault ───────────────────────────────────────────────────
+- type: entity
+  id: OverworldArrivalMarkerVault
+  name: overworld arrival marker
+  suffix: "[Vault]"
+  components:
+  - type: Transform
+  - type: OverworldArrivalMarker
+    markerID: Vault_Arrivals
+  - type: Sprite
+    sprite: _Goobstation/Actions/modsuit.rsi
+    state: activate

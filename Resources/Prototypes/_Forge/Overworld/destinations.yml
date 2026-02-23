@@ -1,0 +1,34 @@
+# Основной хаб — Wendover
+- type: travelDestination
+  id: TravelDest_Wendover
+  arrivalMarkerTag: Wendover_Arrivals
+  mapPath: /Maps/Corvax/Wendover.yml
+
+- type: travelDestination
+  id: TravelDest_Yuma
+  arrivalMarkerTag: Yuma_Arrivals
+  mapPath: /Maps/Corvax/Yuma.yml
+
+- type: travelDestination
+  id: TravelDest_Vault
+  arrivalMarkerTag: Vault_Arrivals
+  mapPath: /Maps/Corvax/Vault.yml
+
+- type: travelDestination
+  id: TravelDest_Overworld
+  arrivalMarkerTag: OverworldSpawn
+  mapPath: /Maps/overworld.yml
+
+# Instance — заглушка для Этапа 2
+# - type: travelDestination
+#   id: TravelDest_DungeonA
+#   destinationType: Instance
+#   instanceMapVariants:
+#     - /Maps/Dungeons/dungeon_a_v1.yml
+#     - /Maps/Dungeons/dungeon_a_v2.yml
+
+
+
+
+
+

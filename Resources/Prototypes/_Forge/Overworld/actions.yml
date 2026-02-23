@@ -1,0 +1,12 @@
+- type: entity
+  id: ActionExitOverworld
+  name: Exit World Map
+  description: Return to your body and leave the overworld.
+  components:
+  - type: MetaData
+  - type: InstantAction
+    icon:
+      sprite: _Goobstation/Actions/modsuit.rsi
+      state: activate
+    event: !type:ExitOverworldActionEvent
+    checkCanInteract: false
