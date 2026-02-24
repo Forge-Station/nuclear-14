@@ -7,4 +7,4 @@
   - type: Projectile
     damage:
       types:
-        Piercing: 9
+        Piercing: 10 # Forge-Change
