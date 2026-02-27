@@ -207,10 +207,10 @@
         map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
     minAngle: 21
-    maxAngle: 40
+    maxAngle: 46
     angleIncrease: 2
     angleDecay: 8
-    fireRate: 8
+    fireRate: 6
     soundGunshot:
       collection: N14CarbineGunshot
     selectedMode: Fullauto
@@ -237,5 +237,8 @@
             - N14Cartridge556Rifle
   - type: FollowDistance
     backStrength: 2
+  - type: ClothingSpeedModifier
+    walkModifier: 0.90
+    sprintModifier: 0.90
   - type: StaticPrice
     price: 500
