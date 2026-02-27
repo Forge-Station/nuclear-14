@@ -20,9 +20,10 @@ public sealed class ArmorModSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<ArmorModifiableComponent, MapInitEvent>(OnMapInit);
-        SubscribeLocalEvent<ArmorModifiableComponent, EntInsertedIntoContainerMessage>(OnContainerModified);
-        SubscribeLocalEvent<ArmorModifiableComponent, EntRemovedFromContainerMessage>(OnContainerModified);
+        SubscribeLocalEvent<ArmorModifiableComponent, EntInsertedIntoContainerMessage>(OnItemInserted);
+        SubscribeLocalEvent<ArmorModifiableComponent, EntRemovedFromContainerMessage>(OnItemRemoved);
         SubscribeLocalEvent<ArmorModifiableComponent, InteractUsingEvent>(OnInteractUsing);
+        SubscribeLocalEvent<ArmorModifiableComponent, ArmorModLockDoAfterEvent>(OnLockDoAfter);
     }
 
     private void OnMapInit(EntityUid uid, ArmorModifiableComponent component, MapInitEvent args)
@@ -30,31 +31,26 @@ public sealed class ArmorModSystem : EntitySystem
         if (!TryComp<ArmorComponent>(uid, out var armor))
             return;
 
-        // Save the unmodified YAML values as the base.
-        // Must happen before any mods are applied.
         component.BaseModifiers = CopyModifiers(armor.Modifiers);
+        component.BaseModifiersStored = true;
     }
 
-    private void OnContainerModified(EntityUid uid, ArmorModifiableComponent component, ContainerModifiedMessage args)
+    private void OnItemInserted(EntityUid uid, ArmorModifiableComponent component, EntInsertedIntoContainerMessage args)
     {
         if (!component.ModSlots.Contains(args.Container.ID))
             return;
 
-        // Guard: if BaseModifiers was never populated (e.g. entity loaded from
-        // a save before this component existed), re-read it from ArmorComponent
-        // minus any currently-installed mods by just snapshotting current state.
-        // In normal gameplay MapInit always runs first, so this is a safety net only.
-        if (!TryComp<ArmorComponent>(uid, out var armor))
+        EnsureBaseModifiers(uid, component);
+        RefreshModifiers(uid, component);
+    }
+
+    private void OnItemRemoved(EntityUid uid, ArmorModifiableComponent component, EntRemovedFromContainerMessage args)
+    {
+        if (!component.ModSlots.Contains(args.Container.ID))
             return;
 
-        if (component.BaseModifiers.Coefficients.Count == 0 &&
-            component.BaseModifiers.FlatReduction.Count == 0 &&
-            (armor.Modifiers.Coefficients.Count > 0 || armor.Modifiers.FlatReduction.Count > 0))
-        {
-            component.BaseModifiers = CopyModifiers(armor.Modifiers);
-        }
-
-        RefreshModifiers(uid, component, armor);
+        EnsureBaseModifiers(uid, component);
+        RefreshModifiers(uid, component);
     }
 
     private void OnInteractUsing(EntityUid uid, ArmorModifiableComponent component, InteractUsingEvent args)
@@ -66,6 +62,15 @@ public sealed class ArmorModSystem : EntitySystem
             return;
 
         args.Handled = true;
+
+        _tool.UseTool(args.Used, args.User, uid, component.LockDelay, component.LockToolQuality,
+            new ArmorModLockDoAfterEvent());
+    }
+
+    private void OnLockDoAfter(EntityUid uid, ArmorModifiableComponent component, ArmorModLockDoAfterEvent args)
+    {
+        if (args.Cancelled)
+            return;
 
         component.SlotsLocked = !component.SlotsLocked;
         Dirty(uid, component);
@@ -80,6 +85,23 @@ public sealed class ArmorModSystem : EntitySystem
         _popup.PopupEntity(msg, uid, args.User);
     }
 
+    /// <summary>
+    /// Safety net: if BaseModifiers was never stored (e.g. entity loaded from a save
+    /// before this component existed), snapshot current armor state.
+    /// In normal gameplay MapInit always runs first so this is rarely needed.
+    /// </summary>
+    private void EnsureBaseModifiers(EntityUid uid, ArmorModifiableComponent component)
+    {
+        if (component.BaseModifiersStored)
+            return;
+
+        if (!TryComp<ArmorComponent>(uid, out var armor))
+            return;
+
+        component.BaseModifiers = CopyModifiers(armor.Modifiers);
+        component.BaseModifiersStored = true;
+    }
+
     public void RefreshModifiers(EntityUid uid, ArmorModifiableComponent? modifiable = null, ArmorComponent? armor = null)
     {
         if (!Resolve(uid, ref modifiable, ref armor))
@@ -89,7 +111,6 @@ public sealed class ArmorModSystem : EntitySystem
 
         foreach (var slotId in modifiable.ModSlots)
         {
-            // GetItemOrNull is simpler and avoids accessing slot.ContainerSlot directly
             var modItem = _itemSlots.GetItemOrNull(uid, slotId);
             if (modItem == null)
                 continue;

@@ -15,3 +15,4 @@ armor-mod-examine-unlocked = [color=green]Mod slots: UNLOCKED (use screwdriver t
 armor-mod-examine-header = [color=white]Installed modifications:[/color]
 armor-mod-slot-empty = [color=gray]  { $slot }: empty[/color]
 armor-mod-slot-filled = [color=gray]  { $slot }:[/color] [color=cyan]{ $mod }[/color]
+armor-mod-stat-header = [color=white]Provides the following bonuses:[/color]

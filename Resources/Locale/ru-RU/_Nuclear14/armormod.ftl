@@ -15,6 +15,7 @@ armor-mod-examine-unlocked = [color=green]Слоты модов: разблок�
 armor-mod-examine-header = [color=white]Установленные модификации:[/color]
 armor-mod-slot-empty = [color=gray]  { $slot }: пусто[/color]
 armor-mod-slot-filled = [color=gray]  { $slot }:[/color] [color=cyan]{ $mod }[/color]
+armor-mod-stat-header = [color=white]Предоставляет следующие бонусы:[/color]
 
 ## Названия предметов-модов
 

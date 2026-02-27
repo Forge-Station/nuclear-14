@@ -1,5 +1,7 @@
 using Content.Shared.Damage;
+using Content.Shared.Tools;
 using Robust.Shared.GameStates;
+using Robust.Shared.Prototypes;
 
 namespace Content.Shared._N14.ArmorMod;
 
@@ -28,6 +30,13 @@ public sealed partial class ArmorModifiableComponent : Component
     public DamageModifierSet BaseModifiers = new();
 
     /// <summary>
+    /// Set to true once BaseModifiers has been captured from ArmorComponent on MapInit.
+    /// Prevents accidentally baking installed mod stats into the base.
+    /// </summary>
+    [DataField]
+    public bool BaseModifiersStored = false;
+
+    /// <summary>
     /// Whether the mod slots are currently locked (require a tool to modify).
     /// </summary>
     [DataField, AutoNetworkedField]
@@ -37,5 +46,11 @@ public sealed partial class ArmorModifiableComponent : Component
     /// The tool quality required to lock/unlock mod slots.
     /// </summary>
     [DataField]
-    public string LockToolQuality = "Screwing";
+    public ProtoId<ToolQualityPrototype> LockToolQuality = "Screwing";
+
+    /// <summary>
+    /// Time in seconds to lock/unlock the slots with the tool.
+    /// </summary>
+    [DataField]
+    public float LockDelay = 1.5f;
 }
