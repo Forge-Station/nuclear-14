@@ -1,0 +1,105 @@
+# Armor Modifications
+# Insert into armor mod slots to change the armor's damage protection stats.
+# Coefficients multiply the armor's base coefficient (0.9 = 10% extra protection).
+# FlatReductions are added to the armor's base flat reductions.
+
+- type: entity
+  id: N14ArmorModBase
+  name: armor mod
+  description: A modification for power armor.
+  abstract: true
+  components:
+  - type: Item
+    size: Small
+  - type: Sprite
+    sprite: Objects/Misc/module.rsi
+    state: ash_plating
+  - type: Icon
+    sprite: Objects/Misc/module.rsi
+    state: ash_plating
+
+# Titanium Plating - improves physical resistance
+- type: entity
+  parent: N14ArmorModBase
+  id: N14ArmorModTitaniumPlating
+  name: titanium plating
+  description: Reinforced titanium plating. Improves the armor's resistance to blunt, slash, and piercing damage.
+  components:
+  - type: Sprite
+    sprite: Objects/Misc/module.rsi
+    state: ash_plating
+  - type: Icon
+    sprite: Objects/Misc/module.rsi
+    state: ash_plating
+  - type: ArmorMod
+    modifiers:
+      coefficients:
+        Blunt: 0.9
+        Slash: 0.9
+        Piercing: 0.9
+      flatReductions:
+        Blunt: 1
+        Slash: 1
+        Piercing: 1
+
+# HDPE Lining - radiation shielding
+- type: entity
+  parent: N14ArmorModBase
+  id: N14ArmorModHDPELining
+  name: HDPE lining
+  description: A high-density polyethylene lining that improves radiation shielding.
+  components:
+  - type: Sprite
+    sprite: Objects/Misc/module.rsi
+    state: power_mod
+  - type: Icon
+    sprite: Objects/Misc/module.rsi
+    state: power_mod
+  - type: ArmorMod
+    modifiers:
+      coefficients:
+        Radiation: 0.8
+      flatReductions:
+        Radiation: 2
+
+# Ceramic Plate - heat and caustic protection
+- type: entity
+  parent: N14ArmorModBase
+  id: N14ArmorModCeramicPlate
+  name: ceramic plate
+  description: Ceramic plating that improves thermal and chemical resistance.
+  components:
+  - type: Sprite
+    sprite: Objects/Misc/module.rsi
+    state: std_mod
+  - type: Icon
+    sprite: Objects/Misc/module.rsi
+    state: std_mod
+  - type: ArmorMod
+    modifiers:
+      coefficients:
+        Heat: 0.85
+        Caustic: 0.85
+      flatReductions:
+        Heat: 1
+        Caustic: 1
+
+# Shock Absorbers - explosive and blunt protection
+- type: entity
+  parent: N14ArmorModBase
+  id: N14ArmorModShockAbsorbers
+  name: shock absorbers
+  description: Hydraulic shock absorbers that reduce the impact of blunt trauma and explosions.
+  components:
+  - type: Sprite
+    sprite: Objects/Misc/module.rsi
+    state: servo
+  - type: Icon
+    sprite: Objects/Misc/module.rsi
+    state: servo
+  - type: ArmorMod
+    modifiers:
+      coefficients:
+        Blunt: 0.85
+      flatReductions:
+        Blunt: 2
