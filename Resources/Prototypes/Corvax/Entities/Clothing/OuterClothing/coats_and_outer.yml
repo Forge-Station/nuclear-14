@@ -73,3 +73,35 @@
     sprintModifier: 1.05
   - type: ExplosionResistance
     damageCoefficient: 0.8
+  - type: ItemSlots
+    slots:
+      armor_mod_slot_1:
+        name: armor-mod-slot-name-1
+        whitelist:
+          components:
+          - ArmorMod
+        swap: false
+        ejectOnInteract: true
+        priority: 1
+        lockedFailPopup: armor-mod-slots-locked
+        insertSound:
+          path: /Audio/Items/ratchet.ogg
+        ejectSound:
+          path: /Audio/Items/ratchet.ogg
+      armor_mod_slot_2:
+        name: armor-mod-slot-name-2
+        whitelist:
+          components:
+          - ArmorMod
+        swap: false
+        ejectOnInteract: true
+        priority: 0
+        lockedFailPopup: armor-mod-slots-locked
+        insertSound:
+          path: /Audio/Items/ratchet.ogg
+        ejectSound:
+          path: /Audio/Items/ratchet.ogg
+  - type: ArmorModifiable
+    modSlots:
+    - armor_mod_slot_1
+    - armor_mod_slot_2
