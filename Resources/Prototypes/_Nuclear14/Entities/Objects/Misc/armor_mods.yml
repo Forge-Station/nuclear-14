@@ -40,7 +40,7 @@
         Piercing: 0.9
       flatReductions:
         Blunt: 99
-        Slash: 99
+        Slash: 95
         Piercing: 99
 
 # HDPE Lining - radiation shielding
