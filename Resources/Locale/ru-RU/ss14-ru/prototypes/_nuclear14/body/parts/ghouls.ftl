@@ -1,0 +1,47 @@
+<#-- Гуль -->
+ent-N14PartGhoul = часть тела гуля
+    .desc = { ent-PartHuman.desc }
+ent-N14TorsoGhoul = туловище гуля
+    .desc = { ent-N14PartGhoul.desc }
+ent-N14HeadGhoul = голова гуля
+    .desc = { ent-N14PartGhoul.desc }
+ent-N14LeftArmGhoul = левая рука гуля
+    .desc = { ent-N14PartGhoul.desc }
+ent-N14RightArmGhoul = правая рука гуля
+    .desc = { ent-N14PartGhoul.desc }
+ent-N14LeftHandGhoul = левая кисть гуля
+    .desc = { ent-N14PartGhoul.desc }
+ent-N14RightHandGhoul = правая кисть гуля
+    .desc = { ent-N14PartGhoul.desc }
+ent-N14LeftLegGhoul = левая нога гуля
+    .desc = { ent-N14PartGhoul.desc }
+ent-N14RightLegGhoul = правая нога гуля
+    .desc = { ent-N14PartGhoul.desc }
+ent-N14LeftFootGhoul = левая ступня гуля
+    .desc = { ent-N14PartGhoul.desc }
+ent-N14RightFootGhoul = правая ступня гуля
+    .desc = { ent-N14PartGhoul.desc }
+
+<#-- Светящийся гуль -->
+ent-N14PartGhoulGlowing = { ent-N14PartGhoul }
+    .desc = { ent-N14PartGhoul.desc }
+ent-N14TorsoGhoulGlowing = { ent-N14TorsoGhoul }
+    .desc = { ent-N14PartGhoulGlowing.desc }
+ent-N14HeadGhoulGlowing = { ent-N14HeadGhoul }
+    .desc = { ent-N14PartGhoulGlowing.desc }
+ent-N14LeftArmGhoulGlowing = { ent-N14LeftArmGhoul }
+    .desc = { ent-N14PartGhoulGlowing.desc }
+ent-N14RightArmGhoulGlowing = { ent-N14RightArmGhoul }
+    .desc = { ent-N14PartGhoulGlowing.desc }
+ent-N14LeftHandGhoulGlowing = { ent-N14LeftHandGhoul }
+    .desc = { ent-N14PartGhoulGlowing.desc }
+ent-N14RightHandGhoulGlowing = { ent-N14RightHandGhoul }
+    .desc = { ent-N14PartGhoulGlowing.desc }
+ent-N14LeftLegGhoulGlowing = { ent-N14LeftLegGhoul }
+    .desc = { ent-N14PartGhoulGlowing.desc }
+ent-N14RightLegGhoulGlowing = { ent-N14RightLegGhoul }
+    .desc = { ent-N14PartGhoulGlowing.desc }
+ent-N14LeftFootGhoulGlowing = { ent-N14LeftFootGhoul }
+    .desc = { ent-N14PartGhoulGlowing.desc }
+ent-N14RightFootGhoulGlowing = { ent-N14RightFootGhoul }
+    .desc = { ent-N14PartGhoulGlowing.desc }
