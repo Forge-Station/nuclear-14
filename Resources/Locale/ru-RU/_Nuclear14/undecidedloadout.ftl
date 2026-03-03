@@ -283,15 +283,15 @@ undecided-loadout-category-ranger-marksman-description =
 
 # Наборы Среднезападного Братства
 
-undecided-loadout-category-mbos-init-las-name = Набор неофита (лазеры)
+undecided-loadout-category-mbos-init-las-name = Набор послушника (лазеры)
 undecided-loadout-category-mbos-init-las-description =
-    Тайник с вещами неофита Среднезападного Братства.
+    Тайник с вещами послушника Среднезападного Братства.
     Содержит: 1 самодельную лазерную винтовку, 3 микрофьюжн-ячейки, 1 12.7мм пистолет,
     2 магазина 12.7мм, 1 рулон бинтов и сухпаёк типа K.
 
-undecided-loadout-category-mbos-init-bal-name = Набор неофита (баллистика)
+undecided-loadout-category-mbos-init-bal-name = Набор послушника (баллистика)
 undecided-loadout-category-mbos-init-bal-description =
-    Тайник с вещами неофита Среднезападного Братства.
+    Тайник с вещами послушника Среднезападного Братства.
     Содержит: 1 старый карабин, 3 магазина 5.56, 1 AEP-7, 2 энергоячейки,
     1 рулон бинтов и сухпаёк типа K.
 
@@ -357,15 +357,15 @@ undecided-loadout-category-mbos-pal-pla-description =
 
 # Наборы Вашингтонского Братства
 
-undecided-loadout-category-wbos-init-pla-name = Набор неофита (плазма)
+undecided-loadout-category-wbos-init-pla-name = Набор послушника (плазма)
 undecided-loadout-category-wbos-init-pla-description =
-    Тайник с вещами неофита Вашингтонского Братства.
+    Тайник с вещами послушника Вашингтонского Братства.
     Содержит: 1 самодельную плазменную винтовку, 3 плазменных картриджа, 1 пистолет Webley,
     2 пистолетных магазина (9mm Parabellum), 1 рулон бинтов и сухпаёк типа K.
 
-undecided-loadout-category-wbos-init-bal-name = Набор неофита (баллистика)
+undecided-loadout-category-wbos-init-bal-name = Набор послушника (баллистика)
 undecided-loadout-category-wbos-init-bal-description =
-    Тайник с вещами неофита Вашингтонского Братства.
+    Тайник с вещами послушника Вашингтонского Братства.
     Содержит: 1 старый карабин, 3 магазина 5.56, 1 плазменный пистолет, 2
     плазменные ячейки, 1 рулон бинтов и сухпаёк типа K.
 
