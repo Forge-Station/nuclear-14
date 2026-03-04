@@ -109943,7 +109943,7 @@ entities:
       rot: 1.5707963267948966 rad
       pos: -82.5,70.5
       parent: 2
-- proto: N14ToolboxFilled1
+- proto: N14ToolboxFilled
   entities:
   - uid: 14283
     components:

@@ -1,0 +1,21 @@
+ent-N14BaseStorageFill = { ent-BaseItem }
+    .desc = { ent-BaseItem.desc }
+<#--  -->
+ent-N14BaseLockerStorageFill = { ent-N14BaseStorageFill }
+    .desc = { ent-N14BaseStorageFill.desc }
+ent-N14BaseSmallLockerStorageFill = { ent-N14BaseStorageFill }
+    .desc = { ent-N14BaseStorageFill.desc }
+ent-N14StorageFillDomestic = { ent-N14BaseStorageFill }
+    .desc = { ent-N14BaseStorageFill.desc }
+ent-N14BaseMilitaryStorageFill = { ent-N14BaseStorageFill }
+    .desc = { ent-N14BaseStorageFill.desc }
+ent-N14StorageFillMedical = { ent-N14BaseStorageFill }
+    .desc = { ent-N14BaseStorageFill.desc }
+ent-N14ClosetFridgeFill = { ent-N14BaseStorageFill }
+    .desc = { ent-N14BaseStorageFill.desc }
+ent-N14WastelandBotanyStorageFill = { ent-N14BaseStorageFill }
+    .desc = { ent-N14BaseStorageFill.desc }
+ent-N14StorageFillCurrencyFill = { ent-N14BaseStorageFill }
+    .desc = { ent-N14BaseStorageFill.desc }
+ent-N14StorageFillSafePrewarFill = { ent-N14BaseStorageFill }
+    .desc = { ent-N14BaseStorageFill.desc }
