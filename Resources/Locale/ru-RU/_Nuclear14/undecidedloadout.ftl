@@ -609,13 +609,13 @@ undecided-loadout-category-inquisitorinspector-description =
 
 undecided-loadout-category-inquisitorcrusader-name = Набор Крестоносца
 undecided-loadout-category-inquisitorcrusader-description =
-    Набор Крестоносца, всегда готового к защите братства от дезертиров.
+    Набор Крестоносца, всегда готового к защите Братства от дезертиров.
     В комплект входит: Штурмовая винтовка с 3 магазинами, коробка патрон 5.56,
     Разгрузочный жилет, сухпаек, 2 стимпака.
 
 undecided-loadout-category-inquisitorplasma-name = Плазменный Набор
 undecided-loadout-category-inquisitorplasma-description =
-    Плазменный набор, для самых жестоких Инквизиторов братства.
+    Плазменный набор, для самых жестоких Инквизиторов Братства.
     В комплект входит: автоматическая плазменная винтовка с 3 батареями,
     сухпаек, набор бинтов, набор мазей, 2 стимпака и 1 супер-стимпак, а так-же разгрузочный жилет.
 

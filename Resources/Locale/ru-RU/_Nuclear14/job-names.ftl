@@ -11,7 +11,7 @@ job-description-bos-mid-scribe = Проводите научные миссии 
 job-name-bos-mid-squire = оруженосец СЗБС
 job-description-bos-mid-squire = Следуйте за своим рыцарем в бой и выполняйте его приказы.
 job-name-bos-mid-inquisitor = инквизитор СЗБС
-job-description-bos-mid-inquisitor = Дезертиры... Вы тот, кого они боятся. Инквизитор, исполняющий роль Военной Полиции на территории братства, карайте врагов и подчиняйтесь командиру.
+job-description-bos-mid-inquisitor = Дезертиры... Вы тот, кого они боятся. Инквизитор, исполняющий роль Военной Полиции на территории Братства, карайте врагов и подчиняйтесь командиру.
 job-name-BoS-Mid-Serf = серф СЗБС
 job-description-bos-mid-Serf = Вы раб, вы обязаны служить СЗБС, ваша жизнь в их руках.
 # ВБС
@@ -22,7 +22,7 @@ job-description-bos-washington-initiate = Докажите свою ценнос
 job-name-bos-washington-knight = рыцарь ВБС
 job-description-bos-washington-knight = Военная сила Братства Стали. Защищайте свое отделение в их целях и производите снаряжение.
 job-name-bos-washington-paladin = паладин ВБС
-job-description-bos-washington-paladin = Защищайте братство любой ценой. Воплощайте волю командира в пустоши.
+job-description-bos-washington-paladin = Защищайте Братство любой ценой. Воплощайте волю командира в пустоши.
 job-name-bos-washington-scribe = скриптер ВБС
 job-description-bos-washington-scribe = Проводите научные миссии и исследования для вашего отделения Братства.
 # Караван

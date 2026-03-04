@@ -4,5 +4,5 @@ ent-N14SpawnPointLatejoin = спавнер позднего присоедине
     .suffix = Житель Пустошей
     .desc = { ent-N14LatejoinMarkerBase.desc }
 ent-N14SpawnPointLatejoinMidwestCommander = { ent-N14SpawnPointLatejoin }
-    .suffix = Командир среднезападного Братства Стали
+    .suffix = Командир Среднезападного Братства Стали
     .desc = { ent-N14SpawnPointLatejoin.desc }

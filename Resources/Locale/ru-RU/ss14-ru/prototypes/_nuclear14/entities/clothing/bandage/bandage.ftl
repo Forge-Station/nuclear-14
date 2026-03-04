@@ -14,7 +14,7 @@ ent-NCClothingBandageLegionRecruit = повязка рекрута
 ent-NCClothingCollarLegionSlave = Ошейник раба легиона цезаря
     .desc = Злостное оружие угнетие..
 
-<#-- Средне-западное Братство Стали (СЗБС) -->
+<#-- Среднезападное Братство Стали (СЗБС) -->
 ent-NCClothingBandageBoS = полевая повязка Братства
     .desc = Стандартная повязка Братства Стали.
 ent-NCClothingBandageBoSRecruit = повязка оруженосца

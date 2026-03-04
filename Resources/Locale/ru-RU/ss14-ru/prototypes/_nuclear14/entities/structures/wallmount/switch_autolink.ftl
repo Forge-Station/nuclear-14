@@ -7,6 +7,6 @@ ent-N14ControlTerminalButtonExt2 = дверной терминал
 ent-N14ControlTerminalButtonExt3 = дверной терминал
     .suffix = Автолинк, Внеш3
     .desc = { ent-N14ControlTerminalButton.desc }
-ent-N14ControlTerminalButtonBos = дверной терминал братства
+ent-N14ControlTerminalButtonBos = дверной терминал Братства
     .suffix = Автолинк, СЗБС
     .desc = { ent-N14ControlTerminalButton.desc }
