@@ -57,3 +57,6 @@ public sealed class QuestBoardSelectDifficultyMessage : BoundUserInterfaceMessag
         Difficulty = difficulty;
     }
 }
+
+[RegisterComponent]
+public sealed partial class WeatherAudioListenerComponent : Component { }

@@ -35,7 +35,6 @@ public sealed partial class QuestInstanceSystem
 
     private void SendWarningPopups(QuestBoardComponent board, TimeSpan remaining)
     {
-        PrunePresentPlayers(board);
         if (board.PresentPlayers.Count == 0)
             return;
 

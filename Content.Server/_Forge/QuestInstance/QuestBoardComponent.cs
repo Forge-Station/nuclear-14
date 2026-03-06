@@ -37,6 +37,8 @@ public sealed partial class QuestBoardComponent : Component
     [DataField]
     public int JoinWindowSeconds;
 
+    public TimeSpan NextMaintenanceAt;
+
     [DataField]
     public EntityUid MapUid = EntityUid.Invalid;
 

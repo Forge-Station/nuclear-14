@@ -1,3 +1,4 @@
+﻿using Content.Shared._Forge.QuestInstance;
 using System.Numerics;
 using Content.Shared.Atmos;
 using Content.Shared.Gravity;
@@ -208,6 +209,10 @@ public sealed partial class QuestInstanceSystem
     )
     {
         board.BarrierProto = preset.BarrierProto;
+
+        var required = Math.Max(0, 8 * r);
+        if (board.PendingBarrierCoords.Capacity < required)
+            board.PendingBarrierCoords.Capacity = required;
 
         for (var x = -r; x <= r; x++)
         {

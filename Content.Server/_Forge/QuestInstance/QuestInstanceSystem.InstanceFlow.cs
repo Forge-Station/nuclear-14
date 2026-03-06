@@ -50,7 +50,6 @@ public sealed partial class QuestInstanceSystem
             }
 
             JoinInstance(board, session);
-            SendBoardState(boardUid, board);
             return;
         }
 
@@ -65,7 +64,6 @@ public sealed partial class QuestInstanceSystem
             return;
 
         JoinInstance(board, session);
-        SendBoardState(boardUid, board);
     }
 
     private bool CreateInstance(EntityUid boardUid, QuestBoardComponent board, QuestInstancePresetPrototype preset)
@@ -132,10 +130,8 @@ public sealed partial class QuestInstanceSystem
 
         _mapSystem.InitializeMap(mapId);
 
-        // Re-apply atmosphere AFTER map init so map-atmos tiles keep the selected profile,
-        // then normalize loaded grid tile mixtures to prevent decompression spikes.
+        // Re-apply map atmosphere after init so map-atmos tiles keep the selected profile.
         ApplyBreathableMapAtmosphere(mapUid, atmosphereTemperatureCelsius);
-        ForceGridBreathableAtmosphere(gridUid, atmosphereTemperatureCelsius);
 
         var signpostCoords = ComputeSpawnCoordinates(mapUid, gridUid, preset);
         var playerSpawnCoords = OffsetCoordinates(signpostCoords, new(1.25f, 0f));
@@ -148,6 +144,7 @@ public sealed partial class QuestInstanceSystem
         board.WarningThresholdsSeconds = preset.WarningThresholdsSeconds.ToArray();
         board.JoinUntil = now + TimeSpan.FromSeconds(preset.JoinWindowSeconds);
         board.EndAt = now + TimeSpan.FromSeconds(preset.TimeLimitSeconds);
+        board.NextMaintenanceAt = now;
 
         var signpost = Spawn(preset.ExitSignpostProto, signpostCoords);
         var signpostComp = EnsureComp<QuestSignpostComponent>(signpost);
@@ -318,6 +315,7 @@ public sealed partial class QuestInstanceSystem
         board.EndAt = TimeSpan.Zero;
         board.JoinUntil = TimeSpan.Zero;
         board.JoinWindowSeconds = 0;
+        board.NextMaintenanceAt = TimeSpan.Zero;
         board.MapUid = EntityUid.Invalid;
         board.SpawnCoords = EntityCoordinates.Invalid;
         board.WarningThresholdsSeconds = Array.Empty<int>();
@@ -334,10 +332,23 @@ public sealed partial class QuestInstanceSystem
             if (!board.HasActiveInstance)
                 continue;
 
-            ProcessPendingBarrier(board);
+            if (board.PendingBarrierCoords.Count > 0)
+                ProcessPendingBarrier(board);
+
+            if (curTime >= board.NextMaintenanceAt)
+            {
+                board.NextMaintenanceAt = curTime + TimeSpan.FromSeconds(1);
+                PrunePresentPlayers(board);
+                PruneReturnCoords(board);
+            }
 
             var remaining = board.EndAt - curTime;
-            SendWarningPopups(board, remaining);
+
+            if (board.PresentPlayers.Count > 0 &&
+                board.WarningThresholdsSeconds.Length > board.SentWarnings.Count)
+            {
+                SendWarningPopups(board, remaining);
+            }
 
             if (remaining <= TimeSpan.Zero)
             {

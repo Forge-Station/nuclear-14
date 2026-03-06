@@ -1,14 +1,14 @@
-using Content.Shared.Parallax.Biomes;
+﻿using Content.Shared.Parallax.Biomes;
 using Content.Shared.TimeCycle;
 using Content.Shared.Weather;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
 
-namespace Content.Server._Forge.QuestInstance;
+namespace Content.Shared._Forge.QuestInstance;
 
 [Prototype("questInstancePreset")]
-public sealed partial class QuestInstancePresetPrototype : IPrototype
+public sealed class QuestInstancePresetPrototype : IPrototype
 {
     [IdDataField]
     public string ID { get; set; } = default!;
@@ -51,10 +51,12 @@ public sealed partial class QuestInstancePresetPrototype : IPrototype
 
     [DataField]
     public float AtmosphereTemperatureCelsius = 20f;
+
+    public bool HasMapEntries => MapEntries.Count > 0;
 }
 
 [DataDefinition]
-public sealed partial class QuestInstanceMapEntry
+public sealed class QuestInstanceMapEntry
 {
     [DataField(required: true)]
     public ResPath MapPath = default!;
@@ -76,5 +78,6 @@ public sealed partial class QuestInstanceMapEntry
 
     [DataField]
     public float? AtmosphereTemperatureCelsius;
-}
 
+    public float EffectiveWeight => MathF.Max(0f, Weight);
+}
