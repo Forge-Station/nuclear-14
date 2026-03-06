@@ -1,0 +1,80 @@
+﻿# Quest Instance Presets — Easy / Medium / Hard
+# Each preset picks one map at random from its mapPaths list on instance creation.
+# Biome is applied as background when biomeTemplateId is set.
+
+- type: questInstancePreset
+  id: QuestInstanceEasy
+  biomeTemplateId: Wastes
+  timeLimitSeconds: 900          # 15 minutes
+  barrierPadding: 60
+  maxBarrierRadius: 200
+  spawnDistanceFromGrid: 4
+  warningThresholdsSeconds:
+    - 60
+    - 30
+    - 10
+  joinWindowSeconds: 120
+  mapPaths:
+    - /Maps/Salvage/small-1.yml
+    - /Maps/Salvage/small-2.yml
+    - /Maps/Salvage/small-3.yml
+    - /Maps/Salvage/small-4.yml
+    - /Maps/Salvage/small-a-1.yml
+    - /Maps/Salvage/small-cargo.yml
+    - /Maps/Salvage/small-ai-survey-drone.yml
+    - /Maps/Salvage/small-chapel.yml
+    - /Maps/Salvage/small-chef.yml
+    - /Maps/Salvage/small-party.yml
+    - /Maps/Salvage/small-ship-1.yml
+    - /Maps/Salvage/hauling-shuttle.yml
+    - /Maps/Salvage/cargo-1.yml
+
+- type: questInstancePreset
+  id: QuestInstanceMedium
+  biomeTemplateId: Wastes
+  timeLimitSeconds: 1200         # 20 minutes
+  barrierPadding: 100
+  maxBarrierRadius: 220
+  spawnDistanceFromGrid: 4
+  warningThresholdsSeconds:
+    - 60
+    - 30
+    - 10
+  joinWindowSeconds: 120
+  mapPaths:
+    - /Maps/Salvage/medium-1.yml
+    - /Maps/Salvage/medium-dock.yml
+    - /Maps/Salvage/medium-library.yml
+    - /Maps/Salvage/medium-crashed-shuttle.yml
+    - /Maps/Salvage/medium-pet-hospital.yml
+    - /Maps/Salvage/medium-ruined-emergency-shuttle.yml
+    - /Maps/Salvage/medium-silent-orchestra.yml
+    - /Maps/Salvage/medium-template.yml
+    - /Maps/Salvage/ruin-cargo-salvage.yml
+    - /Maps/Salvage/wh-salvage.yml
+
+- type: questInstancePreset
+  id: QuestInstanceHard
+  biomeTemplateId: Wastes
+  timeLimitSeconds: 1500         # 25 minutes
+  barrierPadding: 150
+  maxBarrierRadius: 240
+  spawnDistanceFromGrid: 5
+  warningThresholdsSeconds:
+    - 60
+    - 30
+    - 10
+  joinWindowSeconds: 120
+  mapPaths:
+    - /Maps/Salvage/asteroid-base.yml
+    - /Maps/Salvage/engineering-chunk.yml
+    - /Maps/Salvage/outpost-arm.yml
+    - /Maps/Salvage/security-chunk.yml
+    - /Maps/Salvage/medium-pirate.yml
+    - /Maps/Salvage/medium-vault-1.yml
+    - /Maps/Salvage/meatball.yml
+    - /Maps/Salvage/vegan-meatball.yml
+    - /Maps/Salvage/small-syndicate.yml
+    - /Maps/Salvage/small-tesla.yml
+    - /Maps/Salvage/stationstation.yml
+    - /Maps/Salvage/tick-colony.yml
