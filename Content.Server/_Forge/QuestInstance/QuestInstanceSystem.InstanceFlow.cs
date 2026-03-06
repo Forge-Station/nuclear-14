@@ -1,13 +1,14 @@
 using System.Linq;
-using System.Numerics;
-using Content.Shared.Magnits.QuestInstance;
+using Content.Shared._Forge.QuestInstance;
 using Content.Shared.Weather;
 using Robust.Shared.Map;
 using Robust.Shared.Player;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
 
-namespace Content.Server.Magnits.QuestInstance;
+
+namespace Content.Server._Forge.QuestInstance;
+
 
 public sealed partial class QuestInstanceSystem
 {
@@ -24,7 +25,7 @@ public sealed partial class QuestInstanceSystem
             if (curTime >= board.EndAt)
             {
                 _popup.PopupEntity(
-                    Loc.GetString("quest-instance-expired"),
+                    Robust.Shared.Localization.Loc.GetString("quest-instance-expired"),
                     session.AttachedEntity ?? boardUid,
                     session);
                 return;
@@ -33,7 +34,9 @@ public sealed partial class QuestInstanceSystem
             if (!alreadyParticipant && curTime > board.JoinUntil)
             {
                 _popup.PopupEntity(
-                    Loc.GetString("quest-instance-join-closed", ("seconds", board.JoinWindowSeconds)),
+                    Robust.Shared.Localization.Loc.GetString(
+                        "quest-instance-join-closed",
+                        ("seconds", board.JoinWindowSeconds)),
                     session.AttachedEntity ?? boardUid,
                     session);
                 return;
@@ -80,7 +83,8 @@ public sealed partial class QuestInstanceSystem
             mapPath = preset.OptionalMapPath;
 
         var biomeTemplateId = selectedMapEntry?.BiomeTemplateId ?? preset.BiomeTemplateId;
-        var atmosphereTemperatureCelsius = selectedMapEntry?.AtmosphereTemperatureCelsius ?? preset.AtmosphereTemperatureCelsius;
+        var atmosphereTemperatureCelsius =
+            selectedMapEntry?.AtmosphereTemperatureCelsius ?? preset.AtmosphereTemperatureCelsius;
 
         // Always create a dedicated map so biome + loaded grid can coexist.
         var mapUid = _mapSystem.CreateMap(out var mapId, false);
@@ -134,7 +138,7 @@ public sealed partial class QuestInstanceSystem
         ForceGridBreathableAtmosphere(gridUid, atmosphereTemperatureCelsius);
 
         var signpostCoords = ComputeSpawnCoordinates(mapUid, gridUid, preset);
-        var playerSpawnCoords = OffsetCoordinates(signpostCoords, new Vector2(1.25f, 0f));
+        var playerSpawnCoords = OffsetCoordinates(signpostCoords, new(1.25f, 0f));
 
         var now = _timing.CurTime;
         board.HasActiveInstance = true;
@@ -154,7 +158,7 @@ public sealed partial class QuestInstanceSystem
             1,
             Math.Max(1, preset.MaxBarrierRadius));
         QueueSquareBarrier(board, gridUid, preset, barrierRadius);
-        ProcessPendingBarrier(board, 16);
+        ProcessPendingBarrier(board);
 
         ApplyMapEnvironmentOverrides(mapUid, mapId, selectedMapEntry);
         return true;
@@ -290,6 +294,7 @@ public sealed partial class QuestInstanceSystem
                     weatherComp.Weather.Clear();
                     Dirty(board.MapUid, weatherComp);
                 }
+
                 _mapSystem.DeleteMap(mapId);
             }
         }
@@ -353,4 +358,3 @@ public sealed partial class QuestInstanceSystem
         }
     }
 }
-

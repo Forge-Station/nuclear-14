@@ -1,9 +1,9 @@
-using Content.Shared.Magnits.QuestInstance;
+﻿using Content.Shared._Forge.QuestInstance;
 using JetBrains.Annotations;
 using Robust.Client.UserInterface;
 
 
-namespace Content.Client.Magnits.QuestInstance;
+namespace Content.Client._Forge.QuestInstance;
 
 
 [UsedImplicitly]
@@ -35,3 +35,4 @@ public sealed class QuestBoardBoundUserInterface : BoundUserInterface
             _window?.UpdateState(s);
     }
 }
+

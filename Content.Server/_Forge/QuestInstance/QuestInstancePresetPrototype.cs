@@ -4,7 +4,8 @@ using Content.Shared.Weather;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
-namespace Content.Server.Magnits.QuestInstance;
+
+namespace Content.Server._Forge.QuestInstance;
 
 [Prototype("questInstancePreset")]
 public sealed partial class QuestInstancePresetPrototype : IPrototype

@@ -1,5 +1,5 @@
+using Content.Shared._Forge.QuestInstance;
 using Content.Shared.Interaction;
-using Content.Shared.Magnits.QuestInstance;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Popups;
 using Content.Shared.UserInterface;
@@ -7,7 +7,8 @@ using Robust.Shared.Map;
 using Robust.Shared.Player;
 
 
-namespace Content.Server.Magnits.QuestInstance;
+namespace Content.Server._Forge.QuestInstance;
+
 
 public sealed partial class QuestInstanceSystem
 {
@@ -48,7 +49,7 @@ public sealed partial class QuestInstanceSystem
             if (!board.SentWarnings.Add(threshold))
                 continue;
 
-            var msg = Loc.GetString("quest-instance-warning", ("seconds", threshold));
+            var msg = Robust.Shared.Localization.Loc.GetString("quest-instance-warning", ("seconds", threshold));
             players ??= [..board.PresentPlayers,];
 
             foreach (var uid in players)

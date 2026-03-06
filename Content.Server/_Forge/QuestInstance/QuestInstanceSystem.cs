@@ -1,8 +1,8 @@
 using Content.Server.Atmos.EntitySystems;
 using Content.Server.Parallax;
 using Content.Server.Weather;
+using Content.Shared._Forge.QuestInstance;
 using Content.Shared.Interaction;
-using Content.Shared.Magnits.QuestInstance;
 using Content.Shared.Movement.Pulling.Systems;
 using Content.Shared.Popups;
 using Content.Shared.UserInterface;
@@ -12,7 +12,9 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
-namespace Content.Server.Magnits.QuestInstance;
+
+namespace Content.Server._Forge.QuestInstance;
+
 
 public sealed partial class QuestInstanceSystem : EntitySystem
 {
@@ -22,9 +24,9 @@ public sealed partial class QuestInstanceSystem : EntitySystem
     [Dependency] private readonly SharedMapSystem _mapSystem = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
+    [Dependency] private readonly PullingSystem _pulling = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly PullingSystem _pulling = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
     [Dependency] private readonly WeatherSystem _weather = default!;

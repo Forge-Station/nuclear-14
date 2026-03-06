@@ -1,27 +1,29 @@
 using Robust.Shared.Serialization;
 
-namespace Content.Shared.Magnits.QuestInstance;
+
+namespace Content.Shared._Forge.QuestInstance;
+
 
 /// <summary>Difficulty tiers for quest instances.</summary>
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public enum QuestDifficulty
 {
     Easy,
     Medium,
-    Hard,
+    Hard
 }
 
 /// <summary>BUI key for QuestBoard UI.</summary>
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public enum QuestBoardUiKey
 {
-    Key,
+    Key
 }
 
 /// <summary>
-/// Sent from server to client whenever board state changes.
+///     Sent from server to client whenever board state changes.
 /// </summary>
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public sealed class QuestBoardBoundUserInterfaceState : BoundUserInterfaceState
 {
     /// <summary>True when an instance is active for this board.</summary>
@@ -42,10 +44,10 @@ public sealed class QuestBoardBoundUserInterfaceState : BoundUserInterfaceState
 }
 
 /// <summary>
-/// Sent from client when selecting difficulty or joining an active instance.
-/// Difficulty is ignored by server when an instance is already active.
+///     Sent from client when selecting difficulty or joining an active instance.
+///     Difficulty is ignored by server when an instance is already active.
 /// </summary>
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public sealed class QuestBoardSelectDifficultyMessage : BoundUserInterfaceMessage
 {
     public QuestDifficulty Difficulty;

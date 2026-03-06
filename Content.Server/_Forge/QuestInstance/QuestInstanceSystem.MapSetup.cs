@@ -9,7 +9,9 @@ using Robust.Shared.Map.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
-namespace Content.Server.Magnits.QuestInstance;
+
+namespace Content.Server._Forge.QuestInstance;
+
 
 public sealed partial class QuestInstanceSystem
 {
@@ -24,7 +26,8 @@ public sealed partial class QuestInstanceSystem
 
         if (totalWeight <= 0f)
         {
-            Log.Warning($"QuestInstanceSystem: preset '{preset.ID}' has mapEntries with non-positive total weight. Using uniform pick.");
+            Log.Warning(
+                $"QuestInstanceSystem: preset '{preset.ID}' has mapEntries with non-positive total weight. Using uniform pick.");
             return _random.Pick(preset.MapEntries);
         }
 
@@ -91,7 +94,11 @@ public sealed partial class QuestInstanceSystem
         _weather.SetWeather(mapId, weather, null);
     }
 
-    private EntityCoordinates ComputeSpawnCoordinates(EntityUid mapUid, EntityUid gridUid, QuestInstancePresetPrototype preset)
+    private EntityCoordinates ComputeSpawnCoordinates(
+        EntityUid mapUid,
+        EntityUid gridUid,
+        QuestInstancePresetPrototype preset
+    )
     {
         if (!TryComp<MapGridComponent>(gridUid, out var gridComp) || gridComp.LocalAABB.IsEmpty())
             return new(mapUid, new(0.5f, 0.5f));
@@ -120,8 +127,7 @@ public sealed partial class QuestInstanceSystem
         if (boardXform.MapUid == null)
             return EntityCoordinates.Invalid;
 
-        // Keep fallback spawn next to the board so players do not clip into its fixture.
-        return new EntityCoordinates(boardUid, new Vector2(1.25f, 0f));
+        return new(boardUid, new(1.25f, 0f));
     }
 
     private void ForceMapEnvironment(EntityUid mapUid)
@@ -147,7 +153,7 @@ public sealed partial class QuestInstanceSystem
         moles[(int) Gas.Nitrogen] = 82.10312f;
 
         var temperatureKelvin = MathF.Max(Atmospherics.TCMB, Atmospherics.T0C + temperatureCelsius);
-        _atmos.SetMapAtmosphere(mapUid, false, new GasMixture(moles, temperatureKelvin));
+        _atmos.SetMapAtmosphere(mapUid, false, new(moles, temperatureKelvin));
     }
 
     private void ForceGridBreathableAtmosphere(EntityUid gridUid, float temperatureCelsius)
@@ -194,20 +200,25 @@ public sealed partial class QuestInstanceSystem
         return baseRadius + padding;
     }
 
-    private void QueueSquareBarrier(QuestBoardComponent board, EntityUid gridUid, QuestInstancePresetPrototype preset, int r)
+    private void QueueSquareBarrier(
+        QuestBoardComponent board,
+        EntityUid gridUid,
+        QuestInstancePresetPrototype preset,
+        int r
+    )
     {
         board.BarrierProto = preset.BarrierProto;
 
         for (var x = -r; x <= r; x++)
         {
-            board.PendingBarrierCoords.Add(new EntityCoordinates(gridUid, new Vector2(x + 0.5f, -r + 0.5f)));
-            board.PendingBarrierCoords.Add(new EntityCoordinates(gridUid, new Vector2(x + 0.5f, r + 0.5f)));
+            board.PendingBarrierCoords.Add(new(gridUid, new(x + 0.5f, -r + 0.5f)));
+            board.PendingBarrierCoords.Add(new(gridUid, new(x + 0.5f, r + 0.5f)));
         }
 
         for (var y = -r + 1; y <= r - 1; y++)
         {
-            board.PendingBarrierCoords.Add(new EntityCoordinates(gridUid, new Vector2(-r + 0.5f, y + 0.5f)));
-            board.PendingBarrierCoords.Add(new EntityCoordinates(gridUid, new Vector2(r + 0.5f, y + 0.5f)));
+            board.PendingBarrierCoords.Add(new(gridUid, new(-r + 0.5f, y + 0.5f)));
+            board.PendingBarrierCoords.Add(new(gridUid, new(r + 0.5f, y + 0.5f)));
         }
     }
 
@@ -222,4 +233,3 @@ public sealed partial class QuestInstanceSystem
         }
     }
 }
-

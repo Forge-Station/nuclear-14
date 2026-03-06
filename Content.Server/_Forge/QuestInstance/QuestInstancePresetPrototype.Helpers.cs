@@ -1,4 +1,4 @@
-namespace Content.Server.Magnits.QuestInstance;
+namespace Content.Server._Forge.QuestInstance;
 
 public sealed partial class QuestInstancePresetPrototype
 {

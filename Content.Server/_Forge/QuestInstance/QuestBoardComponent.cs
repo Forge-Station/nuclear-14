@@ -1,7 +1,8 @@
 using Robust.Shared.Map;
 using Robust.Shared.Network;
 
-namespace Content.Server.Magnits.QuestInstance;
+
+namespace Content.Server._Forge.QuestInstance;
 
 [RegisterComponent]
 public sealed partial class QuestBoardComponent : Component
