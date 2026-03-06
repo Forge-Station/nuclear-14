@@ -5,6 +5,8 @@ using Content.Shared.Atmos;
 using Content.Shared.Interaction;
 using Content.Shared.Gravity;
 using Content.Shared.Magnits.QuestInstance;
+using Content.Shared.Movement.Pulling.Components;
+using Content.Shared.Movement.Pulling.Systems;
 using Content.Shared.Parallax.Biomes;
 using Content.Shared.Popups;
 using Content.Shared.UserInterface;
@@ -36,6 +38,7 @@ public sealed class QuestInstanceSystem : EntitySystem
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly PullingSystem _pulling = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
 
@@ -197,7 +200,7 @@ public sealed class QuestInstanceSystem : EntitySystem
 
         instance.Participants.Add(session.UserId);
 
-        _transform.SetCoordinates(playerEnt, instance.SpawnCoords);
+        TeleportWithPulledEntity(playerEnt, instance.SpawnCoords);
     }
 
     private bool ExitPlayer(ICommonSession session, QuestInstance instance)
@@ -208,7 +211,7 @@ public sealed class QuestInstanceSystem : EntitySystem
         if (instance.ReturnCoords.TryGetValue(session.UserId, out var returnCoords))
         {
             instance.ReturnCoords.Remove(session.UserId);
-            _transform.SetCoordinates(playerEnt, returnCoords);
+            TeleportWithPulledEntity(playerEnt, returnCoords);
             return true;
         }
 
@@ -220,7 +223,7 @@ public sealed class QuestInstanceSystem : EntitySystem
         }
 
         Log.Warning($"QuestInstanceSystem: no ReturnCoords for {session.UserId}, using board fallback.");
-        _transform.SetCoordinates(playerEnt, fallback);
+        TeleportWithPulledEntity(playerEnt, fallback);
         return true;
     }
 
@@ -329,6 +332,27 @@ public sealed class QuestInstanceSystem : EntitySystem
         return nearGrid;
     }
 
+
+    private void TeleportWithPulledEntity(EntityUid user, EntityCoordinates destination)
+    {
+        if (TryComp<PullerComponent>(user, out var puller)
+            && puller.Pulling is { } pulled
+            && TryComp<PullableComponent>(pulled, out var pullable))
+        {
+            _transform.SetCoordinates(pulled, destination);
+            _transform.AttachToGridOrMap(pulled);
+            _transform.SetCoordinates(user, destination);
+            _transform.AttachToGridOrMap(user);
+
+            if (pullable.Puller != user)
+                _pulling.TryStartPull(user, pulled, puller, pullable);
+
+            return;
+        }
+
+        _transform.SetCoordinates(user, destination);
+        _transform.AttachToGridOrMap(user);
+    }
     private EntityCoordinates GetBoardFallbackCoordinates(EntityUid boardUid)
     {
         if (Deleted(boardUid))
