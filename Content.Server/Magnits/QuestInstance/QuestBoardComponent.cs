@@ -1,12 +1,47 @@
-using Robust.Shared.GameObjects;
+using Robust.Shared.Map;
+using Robust.Shared.Network;
 
 namespace Content.Server.Magnits.QuestInstance;
 
-/// <summary>
-/// Marks an entity as a Quest Board.
-/// QuestInstanceSystem enforces at most one active instance per board.
-/// Call <c>QuestInstanceSystem.StartOrJoinInstance(boardUid, session, difficulty)</c>
-/// from a UI or interaction handler to create or join an instance.
-/// </summary>
 [RegisterComponent]
-public sealed partial class QuestBoardComponent : Component { }
+public sealed partial class QuestBoardComponent : Component
+{
+    [DataField]
+    public bool HasActiveInstance;
+
+    [DataField]
+    public HashSet<NetUserId> Participants = new();
+
+    [DataField]
+    public HashSet<EntityUid> PresentPlayers = new();
+
+    [DataField]
+    public Dictionary<EntityUid, EntityCoordinates> ReturnCoords = new();
+
+    [DataField]
+    public HashSet<int> SentWarnings = new();
+
+    [DataField]
+    public List<EntityCoordinates> PendingBarrierCoords = new();
+
+    [DataField]
+    public string BarrierProto = "QuestInvisibleWall";
+
+    [DataField]
+    public TimeSpan EndAt;
+
+    [DataField]
+    public TimeSpan JoinUntil;
+
+    [DataField]
+    public int JoinWindowSeconds;
+
+    [DataField]
+    public EntityUid MapUid = EntityUid.Invalid;
+
+    [DataField]
+    public EntityCoordinates SpawnCoords = EntityCoordinates.Invalid;
+
+    [DataField]
+    public int[] WarningThresholdsSeconds = Array.Empty<int>();
+}

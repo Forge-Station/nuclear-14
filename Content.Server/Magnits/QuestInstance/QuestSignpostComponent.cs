@@ -1,16 +1,14 @@
 namespace Content.Server.Magnits.QuestInstance;
 
 /// <summary>
-/// Placed at the center of a quest instance (tile 0,0).
-/// When a player interacts with this entity, QuestInstanceSystem teleports them
-/// back to their saved origin and removes them from the instance.
+/// Spawned near quest instance entry.
+/// Interacting teleports player back via QuestInstanceSystem.
 /// </summary>
 [RegisterComponent]
 public sealed partial class QuestSignpostComponent : Component
 {
     /// <summary>
-    /// The QuestBoard entity (with <see cref="QuestBoardComponent"/>) that spawned this instance.
-    /// Used to look up the active <c>QuestInstance</c> in QuestInstanceSystem.
+    /// The QuestBoard entity that owns this instance.
     /// </summary>
     [DataField]
     public EntityUid BoardUid;

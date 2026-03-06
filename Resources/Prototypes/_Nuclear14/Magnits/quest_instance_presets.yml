@@ -1,6 +1,17 @@
-﻿# Quest Instance Presets — Easy / Medium / Hard
-# Each preset picks one map at random from its mapPaths list on instance creation.
-# Biome is applied as background when biomeTemplateId is set.
+# Quest Instance Presets - Easy / Medium / Hard
+# mapEntries supports per-map overrides:
+#   mapPath: /Maps/Salvage/example.yml
+#   weight: 3
+#   biomeTemplateId: Wastes
+#   weatherPrototypeId: Rain
+#   atmosphereTemperatureCelsius: 20
+#   timeCyclePaletteId: QuestDay
+#
+# Quest palettes:
+#   Day: QuestDay
+#   Morning: QuestMorning
+#   Dusk: QuestDusk
+#   Night: QuestNight
 
 - type: questInstancePreset
   id: QuestInstanceEasy
@@ -14,20 +25,72 @@
     - 30
     - 10
   joinWindowSeconds: 120
-  mapPaths:
-    - /Maps/Salvage/small-1.yml
-    - /Maps/Salvage/small-2.yml
-    - /Maps/Salvage/small-3.yml
-    - /Maps/Salvage/small-4.yml
-    - /Maps/Salvage/small-a-1.yml
-    - /Maps/Salvage/small-cargo.yml
-    - /Maps/Salvage/small-ai-survey-drone.yml
-    - /Maps/Salvage/small-chapel.yml
-    - /Maps/Salvage/small-chef.yml
-    - /Maps/Salvage/small-party.yml
-    - /Maps/Salvage/small-ship-1.yml
-    - /Maps/Salvage/hauling-shuttle.yml
-    - /Maps/Salvage/cargo-1.yml
+  mapEntries:
+    - mapPath: /Maps/Salvage/small-1.yml
+      weight: 8
+      weatherPrototypeId: Rain
+      atmosphereTemperatureCelsius: 12
+      timeCyclePaletteId: QuestDay
+    - mapPath: /Maps/Salvage/small-2.yml
+      weight: 6
+      weatherPrototypeId: SnowfallHeavyExtreme
+      atmosphereTemperatureCelsius: -24
+      timeCyclePaletteId: QuestMorning
+    - mapPath: /Maps/Salvage/small-3.yml
+      weight: 5
+      weatherPrototypeId: Default
+      atmosphereTemperatureCelsius: 20
+      timeCyclePaletteId: QuestDusk
+    - mapPath: /Maps/Salvage/small-4.yml
+      weight: 4
+      weatherPrototypeId: Storm
+      atmosphereTemperatureCelsius: 6
+      timeCyclePaletteId: QuestNight
+    - mapPath: /Maps/Salvage/small-a-1.yml
+      weight: 5
+      weatherPrototypeId: NCRadioactiveParticles
+      atmosphereTemperatureCelsius: 34
+      timeCyclePaletteId: QuestDay
+    - mapPath: /Maps/Salvage/small-cargo.yml
+      weight: 4
+      weatherPrototypeId: NCRadioactiveRain
+      atmosphereTemperatureCelsius: 30
+      timeCyclePaletteId: QuestMorning
+    - mapPath: /Maps/Salvage/small-ai-survey-drone.yml
+      weight: 3
+      weatherPrototypeId: Rain
+      atmosphereTemperatureCelsius: 12
+      timeCyclePaletteId: QuestDusk
+    - mapPath: /Maps/Salvage/small-chapel.yml
+      weight: 4
+      weatherPrototypeId: Default
+      atmosphereTemperatureCelsius: 20
+      timeCyclePaletteId: QuestNight
+    - mapPath: /Maps/Salvage/small-chef.yml
+      weight: 3
+      weatherPrototypeId: Storm
+      atmosphereTemperatureCelsius: 6
+      timeCyclePaletteId: QuestDay
+    - mapPath: /Maps/Salvage/small-party.yml
+      weight: 2
+      weatherPrototypeId: Rain
+      atmosphereTemperatureCelsius: 12
+      timeCyclePaletteId: QuestMorning
+    - mapPath: /Maps/Salvage/small-ship-1.yml
+      weight: 5
+      weatherPrototypeId: SnowfallHeavyExtreme
+      atmosphereTemperatureCelsius: -24
+      timeCyclePaletteId: QuestDusk
+    - mapPath: /Maps/Salvage/hauling-shuttle.yml
+      weight: 3
+      weatherPrototypeId: NCRadioactiveStorm
+      atmosphereTemperatureCelsius: 38
+      timeCyclePaletteId: QuestNight
+    - mapPath: /Maps/Salvage/cargo-1.yml
+      weight: 4
+      weatherPrototypeId: Default
+      atmosphereTemperatureCelsius: 20
+      timeCyclePaletteId: QuestDay
 
 - type: questInstancePreset
   id: QuestInstanceMedium
@@ -41,17 +104,57 @@
     - 30
     - 10
   joinWindowSeconds: 120
-  mapPaths:
-    - /Maps/Salvage/medium-1.yml
-    - /Maps/Salvage/medium-dock.yml
-    - /Maps/Salvage/medium-library.yml
-    - /Maps/Salvage/medium-crashed-shuttle.yml
-    - /Maps/Salvage/medium-pet-hospital.yml
-    - /Maps/Salvage/medium-ruined-emergency-shuttle.yml
-    - /Maps/Salvage/medium-silent-orchestra.yml
-    - /Maps/Salvage/medium-template.yml
-    - /Maps/Salvage/ruin-cargo-salvage.yml
-    - /Maps/Salvage/wh-salvage.yml
+  mapEntries:
+    - mapPath: /Maps/Salvage/medium-1.yml
+      weight: 6
+      weatherPrototypeId: Storm
+      atmosphereTemperatureCelsius: 6
+      timeCyclePaletteId: QuestMorning
+    - mapPath: /Maps/Salvage/medium-dock.yml
+      weight: 5
+      weatherPrototypeId: Rain
+      atmosphereTemperatureCelsius: 12
+      timeCyclePaletteId: QuestDusk
+    - mapPath: /Maps/Salvage/medium-library.yml
+      weight: 4
+      weatherPrototypeId: Default
+      atmosphereTemperatureCelsius: 20
+      timeCyclePaletteId: QuestNight
+    - mapPath: /Maps/Salvage/medium-crashed-shuttle.yml
+      weight: 4
+      weatherPrototypeId: NCRadioactiveRain
+      atmosphereTemperatureCelsius: 30
+      timeCyclePaletteId: QuestDay
+    - mapPath: /Maps/Salvage/medium-pet-hospital.yml
+      weight: 3
+      weatherPrototypeId: Rain
+      atmosphereTemperatureCelsius: 12
+      timeCyclePaletteId: QuestMorning
+    - mapPath: /Maps/Salvage/medium-ruined-emergency-shuttle.yml
+      weight: 3
+      weatherPrototypeId: NCRadioactiveParticles
+      atmosphereTemperatureCelsius: 34
+      timeCyclePaletteId: QuestDusk
+    - mapPath: /Maps/Salvage/medium-silent-orchestra.yml
+      weight: 3
+      weatherPrototypeId: SnowfallHeavyExtreme
+      atmosphereTemperatureCelsius: -24
+      timeCyclePaletteId: QuestNight
+    - mapPath: /Maps/Salvage/medium-template.yml
+      weight: 2
+      weatherPrototypeId: Default
+      atmosphereTemperatureCelsius: 20
+      timeCyclePaletteId: QuestDay
+    - mapPath: /Maps/Salvage/ruin-cargo-salvage.yml
+      weight: 4
+      weatherPrototypeId: Storm
+      atmosphereTemperatureCelsius: 6
+      timeCyclePaletteId: QuestMorning
+    - mapPath: /Maps/Salvage/wh-salvage.yml
+      weight: 2
+      weatherPrototypeId: NCRadioactiveStorm
+      atmosphereTemperatureCelsius: 38
+      timeCyclePaletteId: QuestDusk
 
 - type: questInstancePreset
   id: QuestInstanceHard
@@ -65,16 +168,64 @@
     - 30
     - 10
   joinWindowSeconds: 120
-  mapPaths:
-    - /Maps/Salvage/asteroid-base.yml
-    - /Maps/Salvage/engineering-chunk.yml
-    - /Maps/Salvage/outpost-arm.yml
-    - /Maps/Salvage/security-chunk.yml
-    - /Maps/Salvage/medium-pirate.yml
-    - /Maps/Salvage/medium-vault-1.yml
-    - /Maps/Salvage/meatball.yml
-    - /Maps/Salvage/vegan-meatball.yml
-    - /Maps/Salvage/small-syndicate.yml
-    - /Maps/Salvage/small-tesla.yml
-    - /Maps/Salvage/stationstation.yml
-    - /Maps/Salvage/tick-colony.yml
+  mapEntries:
+    - mapPath: /Maps/Salvage/asteroid-base.yml
+      weight: 5
+      weatherPrototypeId: SnowfallHeavyExtreme
+      atmosphereTemperatureCelsius: -24
+      timeCyclePaletteId: QuestNight
+    - mapPath: /Maps/Salvage/engineering-chunk.yml
+      weight: 4
+      weatherPrototypeId: Storm
+      atmosphereTemperatureCelsius: 6
+      timeCyclePaletteId: QuestDay
+    - mapPath: /Maps/Salvage/outpost-arm.yml
+      weight: 4
+      weatherPrototypeId: Rain
+      atmosphereTemperatureCelsius: 12
+      timeCyclePaletteId: QuestMorning
+    - mapPath: /Maps/Salvage/security-chunk.yml
+      weight: 3
+      weatherPrototypeId: NCRadioactiveRain
+      atmosphereTemperatureCelsius: 30
+      timeCyclePaletteId: QuestDusk
+    - mapPath: /Maps/Salvage/medium-pirate.yml
+      weight: 4
+      weatherPrototypeId: Storm
+      atmosphereTemperatureCelsius: 6
+      timeCyclePaletteId: QuestNight
+    - mapPath: /Maps/Salvage/medium-vault-1.yml
+      weight: 3
+      weatherPrototypeId: NCRadioactiveParticles
+      atmosphereTemperatureCelsius: 34
+      timeCyclePaletteId: QuestDay
+    - mapPath: /Maps/Salvage/meatball.yml
+      weight: 2
+      weatherPrototypeId: Default
+      atmosphereTemperatureCelsius: 20
+      timeCyclePaletteId: QuestMorning
+    - mapPath: /Maps/Salvage/vegan-meatball.yml
+      weight: 2
+      weatherPrototypeId: Rain
+      atmosphereTemperatureCelsius: 12
+      timeCyclePaletteId: QuestDusk
+    - mapPath: /Maps/Salvage/small-syndicate.yml
+      weight: 3
+      weatherPrototypeId: NCRadioactiveStorm
+      atmosphereTemperatureCelsius: 38
+      timeCyclePaletteId: QuestNight
+    - mapPath: /Maps/Salvage/small-tesla.yml
+      weight: 2
+      weatherPrototypeId: Storm
+      atmosphereTemperatureCelsius: 6
+      timeCyclePaletteId: QuestDay
+    - mapPath: /Maps/Salvage/stationstation.yml
+      weight: 2
+      weatherPrototypeId: Default
+      atmosphereTemperatureCelsius: 20
+      timeCyclePaletteId: QuestMorning
+    - mapPath: /Maps/Salvage/tick-colony.yml
+      weight: 3
+      weatherPrototypeId: NCRadioactiveRain
+      atmosphereTemperatureCelsius: 30
+      timeCyclePaletteId: QuestDusk

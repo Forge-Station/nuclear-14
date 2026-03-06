@@ -2,7 +2,9 @@ using Content.Shared.Magnits.QuestInstance;
 using JetBrains.Annotations;
 using Robust.Client.UserInterface;
 
+
 namespace Content.Client.Magnits.QuestInstance;
+
 
 [UsedImplicitly]
 public sealed class QuestBoardBoundUserInterface : BoundUserInterface
