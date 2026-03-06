@@ -175,6 +175,8 @@ public sealed partial class QuestInstanceSystem
         board.Participants.Add(session.UserId);
         board.PresentPlayers.Add(playerEnt);
         TeleportWithPulledEntity(playerEnt, board.SpawnCoords);
+
+        RaiseNetworkEvent(new QuestInstanceWeatherAudioCleanupEvent(GetNetEntity(board.MapUid)), session);
     }
 
     private void ExitPlayer(EntityUid boardUid, ICommonSession session, QuestBoardComponent board)
@@ -182,7 +184,12 @@ public sealed partial class QuestInstanceSystem
         if (session.AttachedEntity is not { } playerEnt)
             return;
 
-        ExitEntity(playerEnt, boardUid, board, session.UserId.ToString());
+        if (!ExitEntity(playerEnt, boardUid, board, session.UserId.ToString()))
+            return;
+
+        var keepMapUid = Deleted(playerEnt) ? null : Transform(playerEnt).MapUid;
+        NetEntity? keepMapNetUid = keepMapUid != null ? GetNetEntity(keepMapUid.Value) : null;
+        RaiseNetworkEvent(new QuestInstanceWeatherAudioCleanupEvent(keepMapNetUid), session);
     }
 
     private bool ExitEntity(EntityUid playerEnt, EntityUid boardUid, QuestBoardComponent board, string debugLabel)
@@ -267,7 +274,17 @@ public sealed partial class QuestInstanceSystem
         toEvacuate.UnionWith(board.PresentPlayers);
 
         foreach (var uid in toEvacuate)
-            everyoneEvacuated &= ExitEntity(uid, boardUid, board, uid.ToString());
+        {
+            var evacuated = ExitEntity(uid, boardUid, board, uid.ToString());
+            everyoneEvacuated &= evacuated;
+
+            if (evacuated && TryComp<ActorComponent>(uid, out var actor))
+            {
+                var keepMapUid = Deleted(uid) ? null : Transform(uid).MapUid;
+                NetEntity? keepMapNetUid = keepMapUid != null ? GetNetEntity(keepMapUid.Value) : null;
+                RaiseNetworkEvent(new QuestInstanceWeatherAudioCleanupEvent(keepMapNetUid), actor.PlayerSession);
+            }
+        }
 
         if (!everyoneEvacuated)
         {
@@ -346,9 +363,7 @@ public sealed partial class QuestInstanceSystem
 
             if (board.PresentPlayers.Count > 0 &&
                 board.WarningThresholdsSeconds.Length > board.SentWarnings.Count)
-            {
                 SendWarningPopups(board, remaining);
-            }
 
             if (remaining <= TimeSpan.Zero)
             {

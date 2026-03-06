@@ -1,51 +1,39 @@
-using Content.Shared._Forge.QuestInstance;
+﻿using Content.Shared._Forge.QuestInstance;
 using Content.Shared.Weather;
+using Robust.Client.Player;
+using Robust.Shared.Audio.Components;
 using Robust.Shared.Audio.Systems;
-using Robust.Shared.Player;
 
 namespace Content.Client.Weather;
 
 public sealed class WeatherAudioCleanupSystem : EntitySystem
 {
     [Dependency] private readonly SharedAudioSystem _audio = default!;
-
-    private EntityUid? _currentMap;
+    [Dependency] private readonly IPlayerManager _player = default!;
 
     public override void Initialize()
     {
         base.Initialize();
 
         SubscribeLocalEvent<WeatherComponent, ComponentShutdown>(OnWeatherShutdown);
-
-        SubscribeLocalEvent<LocalPlayerAttachedEvent>(OnLocalPlayerAttached);
-        SubscribeLocalEvent<LocalPlayerDetachedEvent>(OnLocalPlayerDetached);
-        SubscribeLocalEvent<WeatherAudioListenerComponent, EntParentChangedMessage>(OnPlayerParentChanged);
+        SubscribeNetworkEvent<QuestInstanceWeatherAudioCleanupEvent>(OnQuestInstanceWeatherCleanup);
     }
 
-    private void OnLocalPlayerAttached(LocalPlayerAttachedEvent args)
+    private void OnQuestInstanceWeatherCleanup(QuestInstanceWeatherAudioCleanupEvent ev)
     {
-        EnsureComp<WeatherAudioListenerComponent>(args.Entity);
-
-        _currentMap = Transform(args.Entity).MapUid;
-        CleanupWeatherAudioForCurrentMap(_currentMap);
+        var keepMapUid = ResolveKeepMapUid(ev.KeepMapUid);
+        CleanupWeatherAudio(keepMapUid);
     }
 
-    private void OnLocalPlayerDetached(LocalPlayerDetachedEvent args)
+    private EntityUid? ResolveKeepMapUid(NetEntity? keepMapNetUid)
     {
-        RemComp<WeatherAudioListenerComponent>(args.Entity);
+        if (keepMapNetUid is { } keepNet && TryGetEntity(keepNet, out var keepMapUid) && !Deleted(keepMapUid))
+            return keepMapUid;
 
-        _currentMap = null;
-        CleanupWeatherAudioForCurrentMap(null);
-    }
+        if (_player.LocalEntity is { } playerUid && !Deleted(playerUid))
+            return Transform(playerUid).MapUid;
 
-    private void OnPlayerParentChanged(EntityUid uid, WeatherAudioListenerComponent comp, ref EntParentChangedMessage args)
-    {
-        var newMap = args.Transform.MapUid;
-        if (newMap == _currentMap)
-            return;
-
-        _currentMap = newMap;
-        CleanupWeatherAudioForCurrentMap(_currentMap);
+        return null;
     }
 
     private void OnWeatherShutdown(EntityUid uid, WeatherComponent component, ComponentShutdown args)
@@ -53,16 +41,30 @@ public sealed class WeatherAudioCleanupSystem : EntitySystem
         StopAllStreams(component);
     }
 
-    private void CleanupWeatherAudioForCurrentMap(EntityUid? currentMap)
+    private void CleanupWeatherAudio(EntityUid? keepMapUid)
     {
         var query = EntityQueryEnumerator<WeatherComponent, TransformComponent>();
         while (query.MoveNext(out _, out var weather, out var xform))
         {
-            if (currentMap != null && xform.MapUid == currentMap)
+            if (!HasActiveStreams(weather))
+                continue;
+
+            if (keepMapUid != null && xform.MapUid == keepMapUid)
                 continue;
 
             StopAllStreams(weather);
         }
+    }
+
+    private static bool HasActiveStreams(WeatherComponent component)
+    {
+        foreach (var data in component.Weather.Values)
+        {
+            if (data.Stream != null)
+                return true;
+        }
+
+        return false;
     }
 
     private void StopAllStreams(WeatherComponent component)
@@ -71,6 +73,9 @@ public sealed class WeatherAudioCleanupSystem : EntitySystem
         {
             if (data.Stream is not { } streamUid)
                 continue;
+
+            if (TryComp(streamUid, out AudioComponent? audioComp))
+                _audio.SetState(streamUid, AudioState.Stopped, true, audioComp);
 
             _audio.Stop(streamUid);
             data.Stream = null;
