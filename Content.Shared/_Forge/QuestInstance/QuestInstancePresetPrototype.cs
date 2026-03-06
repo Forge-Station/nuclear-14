@@ -56,7 +56,7 @@ public sealed partial class QuestInstancePresetPrototype : IPrototype
 }
 
 [DataDefinition]
-public sealed class QuestInstanceMapEntry
+public sealed partial class QuestInstanceMapEntry
 {
     [DataField(required: true)]
     public ResPath MapPath = default!;
