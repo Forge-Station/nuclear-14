@@ -8,7 +8,7 @@ using Robust.Shared.Utility;
 namespace Content.Shared._Forge.QuestInstance;
 
 [Prototype("questInstancePreset")]
-public sealed class QuestInstancePresetPrototype : IPrototype
+public sealed partial class QuestInstancePresetPrototype : IPrototype
 {
     [IdDataField]
     public string ID { get; set; } = default!;
