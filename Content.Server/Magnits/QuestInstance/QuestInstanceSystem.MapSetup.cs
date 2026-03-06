@@ -1,5 +1,4 @@
 using System.Numerics;
-using Content.Server.Atmos.Components;
 using Content.Shared.Atmos;
 using Content.Shared.Gravity;
 using Content.Shared.Parallax.Biomes;
@@ -98,20 +97,10 @@ public sealed partial class QuestInstanceSystem
             return new(mapUid, new(0.5f, 0.5f));
 
         var aabb = gridComp.LocalAABB;
-
-        // Biome map: gridUid == mapUid (map entity has a grid component).
-        // Spawn just outside the biome grid chunk — the infinite biome has terrain there.
-        if (gridUid == mapUid)
-        {
-            var offset = MathF.Max(1f, preset.SpawnDistanceFromGrid);
-            var nearEdge = new EntityCoordinates(gridUid, new(aabb.Right + offset, aabb.Center.Y));
-            var mapCoords = _transform.ToMapCoordinates(nearEdge);
-            return new(mapUid, mapCoords.Position);
-        }
-
-        // Loaded grid (salvage ship etc.): spawn INSIDE the grid at its AABB center so
-        // the player lands on actual tiles, not in the void.
-        return new EntityCoordinates(gridUid, aabb.Center);
+        var offset = MathF.Max(1f, preset.SpawnDistanceFromGrid);
+        var nearEdge = new EntityCoordinates(gridUid, new(aabb.Right + offset, aabb.Center.Y));
+        var mapCoords = _transform.ToMapCoordinates(nearEdge);
+        return new(mapUid, mapCoords.Position);
     }
 
     private static EntityCoordinates OffsetCoordinates(EntityCoordinates origin, Vector2 offset)
@@ -149,12 +138,6 @@ public sealed partial class QuestInstanceSystem
         gridGravity.Enabled = true;
         gridGravity.Inherent = true;
         Dirty(gridUid, gridGravity);
-
-        // Remove any stale GridAtmosphereComponent that may have been loaded from the
-        // grid file (possibly with vacuum tile data), then add a fresh one so it
-        // initialises from the map atmosphere set in ApplyBreathableMapAtmosphere.
-        RemComp<GridAtmosphereComponent>(gridUid);
-        EnsureComp<GridAtmosphereComponent>(gridUid);
     }
 
     private void ApplyBreathableMapAtmosphere(EntityUid mapUid, float temperatureCelsius)
@@ -165,6 +148,22 @@ public sealed partial class QuestInstanceSystem
 
         var temperatureKelvin = MathF.Max(Atmospherics.TCMB, Atmospherics.T0C + temperatureCelsius);
         _atmos.SetMapAtmosphere(mapUid, false, new GasMixture(moles, temperatureKelvin));
+    }
+
+    private void ForceGridBreathableAtmosphere(EntityUid gridUid, float temperatureCelsius)
+    {
+        var temperatureKelvin = MathF.Max(Atmospherics.TCMB, Atmospherics.T0C + temperatureCelsius);
+
+        foreach (var mixture in _atmos.GetAllMixtures(gridUid, true))
+        {
+            if (mixture.Immutable)
+                continue;
+
+            mixture.Clear();
+            mixture.SetMoles(Gas.Oxygen, 21.824779f);
+            mixture.SetMoles(Gas.Nitrogen, 82.10312f);
+            mixture.Temperature = temperatureKelvin;
+        }
     }
 
     private int ComputeBarrierRadius(EntityUid gridUid, QuestInstancePresetPrototype preset)
@@ -223,3 +222,4 @@ public sealed partial class QuestInstanceSystem
         }
     }
 }
+

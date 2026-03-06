@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Numerics;
 using Content.Shared.Magnits.QuestInstance;
+using Content.Shared.Weather;
 using Robust.Shared.Map;
 using Robust.Shared.Player;
 using Robust.Shared.Random;
@@ -123,21 +124,17 @@ public sealed partial class QuestInstanceSystem
         }
 
         ForceGridEnvironment(gridUid);
+        ForceGridBreathableAtmosphere(gridUid, atmosphereTemperatureCelsius);
 
         _mapSystem.InitializeMap(mapId);
 
-        // Re-apply atmosphere AFTER map init so tiles loaded from a salvage grid
-        // (saved as vacuum) get overwritten with breathable air + correct temperature.
+        // Re-apply atmosphere AFTER map init so map-atmos tiles keep the selected profile,
+        // then normalize loaded grid tile mixtures to prevent decompression spikes.
         ApplyBreathableMapAtmosphere(mapUid, atmosphereTemperatureCelsius);
+        ForceGridBreathableAtmosphere(gridUid, atmosphereTemperatureCelsius);
 
         var signpostCoords = ComputeSpawnCoordinates(mapUid, gridUid, preset);
-        // For biome maps the player spawns slightly away from the signpost (open terrain).
-        // For loaded grids both land at the same AABB center — the offset would push the
-        // player outside the grid into the void.
-        var isBiomeMap = gridUid == mapUid;
-        var playerSpawnCoords = isBiomeMap
-            ? OffsetCoordinates(signpostCoords, new Vector2(1.25f, 0f))
-            : signpostCoords;
+        var playerSpawnCoords = OffsetCoordinates(signpostCoords, new Vector2(1.25f, 0f));
 
         var now = _timing.CurTime;
         board.HasActiveInstance = true;
@@ -288,9 +285,11 @@ public sealed partial class QuestInstanceSystem
             var mapId = Transform(board.MapUid).MapID;
             if (mapId != MapId.Nullspace)
             {
-                // Stop weather before deleting the map so clients receive the
-                // stop-weather network message before the map entity disappears.
-                _weather.SetWeather(mapId, null, null);
+                if (TryComp<WeatherComponent>(board.MapUid, out var weatherComp))
+                {
+                    weatherComp.Weather.Clear();
+                    Dirty(board.MapUid, weatherComp);
+                }
                 _mapSystem.DeleteMap(mapId);
             }
         }
