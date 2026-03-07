@@ -6,11 +6,6 @@ namespace Content.Server.Warps;
 
 public sealed class WarpPointSystem : EntitySystem
 {
-    /// <summary>
-     /// Dictionary of warp points with unique identifiers.
-     /// </summary>
-     private Dictionary<string, EntityUid> warpPoints = new Dictionary<string, EntityUid>();
-
     public override void Initialize()
     {
         base.Initialize();

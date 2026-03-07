@@ -368,6 +368,16 @@
 
 - type: entity
   parent: BaseTreeSnow
+  id: SnowElka
+  name: ёлка
+  components:
+  - type: Sprite
+    noRot: true
+    sprite: _Nuclear14/Structures/Misc/trees.rsi
+    state: snowelka
+
+- type: entity
+  parent: BaseTreeSnow
   id: FloraTreeStump
   name: tree stump
   components:
