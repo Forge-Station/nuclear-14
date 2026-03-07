@@ -1,3 +1,4 @@
+<#-- Оружие -->
 ent-N14SpawnerRandomWeaponMelee = Спавнер случайного оружия
     .suffix = Ближний бой
     .desc = { ent-MarkerBase.desc }
@@ -10,14 +11,20 @@ ent-N14SpawnerRandomWeaponGunShotgunsRifles = Спавнер случайног�
 ent-N14SpawnerRandomWeaponGunLaser = Спавнер случайного оружия
     .suffix = Лазерное
     .desc = { ent-MarkerBase.desc }
+
+<#-- Медикаменты -->
 ent-N14SpawnerRandomMedical = Спавнер случайных медикаментов
     .suffix = наркотики / химикаты
     .desc = { ent-MarkerBase.desc }
+
+<#-- Еда -->
 ent-N14SpawnerRandomFoodPreWar = Спавнер случайной еды
     .suffix = довоенная
     .desc = { ent-MarkerBase.desc }
 ent-N14SpawnerRandomFoodPreWarTrash = Спавнер мусорной еды
     .suffix = довоенная
     .desc = { ent-MarkerBase.desc }
+
+<#-- Инструменты -->
 ent-N14SpawnerRandomTools = Спавнер случайных инструментов
     .desc = { ent-MarkerBase.desc }
