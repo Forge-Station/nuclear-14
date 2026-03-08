@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "license": "CC-BY-NC-SA-3.0",
+    "copyright": "Rainbow made this",
+    "size": {
+      "x": 64,
+      "y": 96
+    },
+    "states": [
+      {
+        "name": "snowelka"
+      }
+    ]
+}

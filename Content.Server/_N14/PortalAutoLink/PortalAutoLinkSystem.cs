@@ -11,10 +11,10 @@ namespace Content.Server._N14.PortalAutoLink
         public override void Initialize()
         {
             base.Initialize();
-            SubscribeLocalEvent<PortalAutoLinkComponent, MapInitEvent>(HandleMapInitialization);
+            SubscribeLocalEvent<PortalAutoLinkComponent, ComponentStartup>(HandleMapInitialization); // Forge-Change MapInit -> ComponentStartup
         }
 
-        private void HandleMapInitialization(Entity<PortalAutoLinkComponent> entity, ref MapInitEvent eventArgs)
+        private void HandleMapInitialization(Entity<PortalAutoLinkComponent> entity, ref ComponentStartup eventArgs)
         {
             PerformAutoLink(entity, out _);
         }

@@ -601,6 +601,17 @@
   - proto: N14ClothingHeadHatCombatHelmetCargo
     price: 35
 
+- type: storeCategoryStructured # Forge-change
+  id: CaravanBuy2_PowerArmor
+  name: "Силовая броня"
+  entries:
+  - proto: N14ClothingOuterPowerArmorRaider
+    price: 5000
+    count: 2
+  - proto: N14ClothingOuterPowerArmorT45
+    price: 7000
+    count: 2
+
 - type: storeCategoryStructured
   id: CaravanBuy2_Armor
   name: "Броня"
@@ -825,6 +836,7 @@
   - CaravanBuy2_Melee
   - CaravanBuy2_Headwear
   - CaravanBuy2_Armor
+  - CaravanBuy2_PowerArmor # Forge-change
   - CaravanBuy2_Rigs
   - CaravanBuy2_Medical
   - CaravanBuy2_Materials
