@@ -360,3 +360,17 @@
       board: [ DoorElectronicsBOSWestElderCommander ]
   - type: Wires
     layoutId: HighSec
+
+#MARK: Followers
+- type: entity
+  parent: N14DoorWoodSecure
+  id: N14DoorWoodSecureLockedFollower
+  suffix: Locked, Follower
+  components:
+  - type: AccessReader
+    access: [ [ "Followers" ] ]
+  - type: Wires
+    layoutId: AirlockService
+  - type: Sprite
+    sprite: _Nuclear14/Structures/Doors/FalloutDoors/wooddoor.rsi
+    state: closed
