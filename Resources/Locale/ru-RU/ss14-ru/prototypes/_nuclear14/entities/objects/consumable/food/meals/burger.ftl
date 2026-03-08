@@ -1,7 +1,6 @@
-ent-N14CookedFoodBreadBun = булочка
-  .desc = Булочка для гамбургера. Круглая и удобная для удержания чего-то.
 ent-N14FoodBurgerBase = { ent-FoodInjectableBase }
   .desc = { ent-FoodInjectableBase.desc }
+
 ent-N14CookedFoodBurgerJelly = желейный бургер
   .desc = Кулинарное наслаждение..?
 ent-N14CookedFoodBurgerAppendix = апендикс бургер
@@ -38,3 +37,6 @@ ent-N14CookedFoodBurgerSuper = мегабургер
   .desc = Это бургер гора. ЕДА!
 ent-N14CookedFoodBurgerTofu = бургер с тофу
   .desc = Что... это мясо?
+
+ent-N14CookedFoodBreadBun = булочка
+  .desc = Булочка для гамбургера. Круглая и удобная для удержания чего-то.

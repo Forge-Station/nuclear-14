@@ -1,3 +1,4 @@
+<#-- C-рацион -->
 ent-N14FoodTinC1 = C-рацион тип 1
     .desc = Консервированный продукт, содержащий основное блюдо военного боевого рациона. Неизвестно, что внутри, но, вероятно, съедобно.
 ent-N14FoodTinC1Open = { ent-N14FoodTinC1 }
@@ -19,6 +20,8 @@ ent-N14FoodTinC3Open = { ent-N14FoodTinC3 }
     .desc = { ent-N14FoodTinC3.desc }
 ent-N14FoodTinC3Trash = C-рацион тип 3
     .desc = { ent-FoodTinBaseTrash.desc }
+
+<#-- K-рацион -->
 ent-N14FoodTinK = K-рацион
     .desc = Консервированный продукт, содержащий полевой вариант военного боевого рациона. Компактный и питательный, как раз для солдата на марше.
 ent-N14FoodTinKOpen = { ent-N14FoodTinK }

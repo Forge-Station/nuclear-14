@@ -2,6 +2,7 @@ ent-N14ProduceBase = { ent-BaseItem }
     .desc = { ent-BaseItem.desc }
 ent-N14FoodProduceBase = { ent-FoodInjectableBase }
     .desc = { ent-FoodInjectableBase.desc }
+
 ent-N14WheatBushel = сноп пшеницы
     .desc = Как правило, не лишён здравого зерна.
 ent-N14OatBushel = сноп овса
