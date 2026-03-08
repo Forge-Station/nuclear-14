@@ -5,10 +5,8 @@ using Content.Server.Maps;
 using Content.Server.RoundEnd;
 using Content.Shared.CCVar;
 using Content.Shared.Database;
-using Content.Shared.Ghost;
 using Content.Shared.Voting;
 using Robust.Shared.Configuration;
-using Robust.Shared.Enums;
 using Robust.Shared.Player;
 using Robust.Shared.Random;
 
@@ -51,38 +49,7 @@ namespace Content.Server.Voting.Managers
 
         private void CreateRestartVote(ICommonSession? initiator)
         {
-
-            var playerVoteMaximum = _cfg.GetCVar(CCVars.VoteRestartMaxPlayers);
-            var totalPlayers = _playerManager.Sessions.Count(session => session.Status != SessionStatus.Disconnected);
-
-            var ghostVotePercentageRequirement = _cfg.GetCVar(CCVars.VoteRestartGhostPercentage);
-            var ghostCount = 0;
-            
-            foreach (var player in _playerManager.Sessions)
-            {
-                _playerManager.UpdateState(player);
-                if (player.Status != SessionStatus.Disconnected && _entityManager.HasComponent<GhostComponent>(player.AttachedEntity))
-                {
-                    ghostCount++;
-                }
-            }
-
-            var ghostPercentage = 0.0;
-            if (totalPlayers > 0)
-            {
-                ghostPercentage = ((double)ghostCount / totalPlayers) * 100;
-            }
-
-            var roundedGhostPercentage = (int)Math.Round(ghostPercentage);
-
-            if (totalPlayers <= playerVoteMaximum || roundedGhostPercentage >= ghostVotePercentageRequirement)
-            {
-                StartVote(initiator);
-            }
-            else
-            {
-                NotifyNotEnoughGhostPlayers(ghostVotePercentageRequirement, roundedGhostPercentage);
-            }
+            StartVote(initiator);
         }
 
         private void StartVote(ICommonSession? initiator)
@@ -137,6 +104,13 @@ namespace Content.Server.Voting.Managers
                         _adminLogger.Add(LogType.Vote, LogImpact.Medium, $"Restart vote failed: {votesYes}/{votesNo}");
                         _chatManager.DispatchServerAnnouncement(
                             Loc.GetString("ui-vote-restart-failed", ("ratio", ratioRequired)));
+
+                        // Apply a longer cooldown if players clearly rejected the restart.
+                        if (votesNo > votesYes)
+                        {
+                            TimeoutStandardVote(StandardVoteType.Restart,
+                                TimeSpan.FromSeconds(_cfg.GetCVar(CCVars.VoteRestartNoMajorityCooldown)));
+                        }
                     }
                 };
 
@@ -154,14 +128,6 @@ namespace Content.Server.Voting.Managers
                         vote.CastVote(player, 2);
                     }
                 }
-        }
-
-        private void NotifyNotEnoughGhostPlayers(int ghostPercentageRequirement, int roundedGhostPercentage)
-        {
-            // Logic to notify that there are not enough ghost players to start a vote
-            _adminLogger.Add(LogType.Vote, LogImpact.Medium, $"Restart vote failed: Current Ghost player percentage:{roundedGhostPercentage.ToString()}% does not meet {ghostPercentageRequirement.ToString()}%");
-            _chatManager.DispatchServerAnnouncement(
-                Loc.GetString("ui-vote-restart-fail-not-enough-ghost-players", ("ghostPlayerRequirement", ghostPercentageRequirement)));
         }
 
         private void CreatePresetVote(ICommonSession? initiator)
@@ -275,10 +241,10 @@ namespace Content.Server.Voting.Managers
             };
         }
 
-        private void TimeoutStandardVote(StandardVoteType type)
+        private void TimeoutStandardVote(StandardVoteType type, TimeSpan? timeout = null)
         {
-            var timeout = TimeSpan.FromSeconds(_cfg.GetCVar(CCVars.VoteSameTypeTimeout));
-            _standardVoteTimeout[type] = _timing.RealTime + timeout;
+            var voteTimeout = timeout ?? TimeSpan.FromSeconds(_cfg.GetCVar(CCVars.VoteSameTypeTimeout));
+            _standardVoteTimeout[type] = _timing.RealTime + voteTimeout;
             DirtyCanCallVoteAll();
         }
 

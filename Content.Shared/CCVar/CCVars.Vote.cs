@@ -14,7 +14,7 @@ public sealed partial class CCVars
     ///     See vote.enabled, but specific to restart votes
     /// </summary>
     public static readonly CVarDef<bool> VoteRestartEnabled =
-        CVarDef.Create("vote.restart_enabled", false, CVar.SERVERONLY); // Corvax-Change
+        CVarDef.Create("vote.restart_enabled", true, CVar.SERVERONLY);
 
     /// <summary>
     ///     Config for when the restart vote should be allowed to be called regardless with less than this amount of players.
@@ -57,6 +57,12 @@ public sealed partial class CCVars
     /// </summary>
     public static readonly CVarDef<float> VoteSameTypeTimeout =
         CVarDef.Create("vote.same_type_timeout", 240f, CVar.SERVERONLY);
+
+    /// <summary>
+    ///     Cooldown for restart votes when the vote ends with more no votes than yes votes, in seconds.
+    /// </summary>
+    public static readonly CVarDef<float> VoteRestartNoMajorityCooldown =
+        CVarDef.Create("vote.restart_no_majority_cooldown", 1200f, CVar.SERVERONLY);
 
     /// <summary>
     ///     Sets the duration of the map vote timer.
