@@ -368,7 +368,7 @@
   suffix: Locked, Follower
   components:
   - type: AccessReader
-    access: [ [ "Followers" ] ]
+    access: [ [ "FollowersApocalypse" ] ]
   - type: Wires
     layoutId: AirlockService
   - type: Sprite

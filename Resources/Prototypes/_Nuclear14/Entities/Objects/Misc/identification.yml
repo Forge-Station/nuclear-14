@@ -675,7 +675,7 @@
   components:
   - type: Access
     tags:
-    - Followers
+    - FollowersApocalypse
   # Forge-Add-End
 
 #MARK: Keys
