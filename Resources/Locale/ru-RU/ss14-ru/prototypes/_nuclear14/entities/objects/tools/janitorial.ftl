@@ -5,3 +5,5 @@ ent-N14MopBucket = ведро для швабры
 ent-N14MopBucketFull = ведро для швабры
     .suffix = полное
     .desc = { ent-N14MopBucket.desc }
+ent-TowelColorDarkGreen = зеленое полотенце
+    .desc = Галактика — суровая штука. Чтобы в ней выжить, надо знать, где твое полотенце.

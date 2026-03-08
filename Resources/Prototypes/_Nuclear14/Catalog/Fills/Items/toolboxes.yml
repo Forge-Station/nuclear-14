@@ -1,5 +1,5 @@
 - type: entity
-  id: N14ToolboxFilled1
+  id: N14ToolboxFilled # Forge-Change
   name: toolbox
   suffix: Filled, always
   parent: ToolboxEmergency
@@ -31,7 +31,7 @@
       - id: N14Welder
         
 - type: entity
-  id: N14ToolboxFilled2
+  id: N14ToolboxFilledLoot # Forge-Change
   name: toolbox
   suffix: Filled, loot
   parent: ToolboxEmergency

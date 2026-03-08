@@ -671,6 +671,12 @@
   id: N14IDDoctorFollower
   name: followers ID
   description: An ID card worn by the Followers of the Apocalypse.
+  # Forge-Add-Start
+  components:
+  - type: Access
+    tags:
+    - FollowersApocalypse
+  # Forge-Add-End
 
 #MARK: Keys
 

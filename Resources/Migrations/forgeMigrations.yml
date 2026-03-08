@@ -17,3 +17,7 @@ N14DoorWoodSecureLockedCaravanGuard: null
 N14DoorCellMetalLockedCaravanGuard: null
 N14DoorWoodSecureLockedCaravanTrader: null
 N14DoorWoodSecureLockedCaravanLeader: null
+
+N14ToolboxFilled1 : N14ToolboxFilled
+N14ToolboxFilled2 : N14ToolboxFilledLoot
+N14ClothingBeltMilitaryFilled : N14ClothingBeltAssaultFilled

@@ -1,0 +1,19 @@
+ent-N14CookedFoodTacoBase = { ent-FoodInjectableBase }
+    .desc = { ent-FoodInjectableBase.desc }
+ent-N14CookedFoodMealSoftTaco = мягкая лепёшка тако
+    .desc = Укуси!
+ent-N14CookedFoodTacoShell = лепёшка тако
+    .desc = Оболочка для тако, которую удобно держать. Падает на бок, если положить.
+
+ent-N14CookedFoodTacoMeat = мясной тако
+    .desc = Хрустящий, сырный тако. Черт, представьте это с пряностями...
+ent-N14CookedFoodTacoChicken = куриный тако
+    .desc = Хрустящий куриный тако, теперь с сыром!
+ent-N14CookedFoodTacoFish = рыбный тако
+    .desc = Когда-то в этих водах не было рыбы.
+ent-N14CookedFoodTacoRat = тако с крысой
+    .desc = Да, это выглядит примерно правильно...
+ent-N14CookedFoodTacoMeatSupreme = мясной тако суприм
+    .desc = ЛИКУЙ, НИЧТОЖЕСТВО!
+ent-N14CookedFoodTacoChickenSupreme = куриный тако суприм
+    .desc = Любимое блюдо лорда Хьюмангуса.
