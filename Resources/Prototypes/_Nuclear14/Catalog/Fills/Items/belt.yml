@@ -80,7 +80,7 @@
       - id: Handcuffs
 
 - type: entity
-  id: N14ClothingBeltMilitaryFilled
+  id: N14ClothingBeltAssaultFilled
   parent: ClothingBeltAssault
   suffix: Filled
   components:

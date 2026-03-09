@@ -1,8 +1,9 @@
 ent-N14CookedFoodDonutBase = { ent-FoodInjectableBase }
     .desc = Отлично сочетается с крепким кофе.
+
 ent-N14CookedFoodDonutPlain = обычный пончик
     .desc = { ent-N14CookedFoodDonutBase.desc }
-ent-N14CookedFoodDonutJellyPlain = обычный желейный пончик
+ent-N14CookedFoodDonutJellyPlain = желейный пончик без начинки
     .desc = { ent-N14CookedFoodDonutBase.desc }
 ent-N14CookedFoodDonutHomer = любимый пончик гомера
     .desc = Пончик покрытый розовой глазурью, а вот кто такой гомер никто не знает.

@@ -1,0 +1,14 @@
+ent-N14CookedFoodSaladHerb = травяной салат
+    .desc = Вкусный салат с мутафруктом сверху.
+ent-N14CookedFoodSaladColeslaw = коулсло
+    .desc = Порубленная капуста и красный лук, заправленные соусом винегрет.
+ent-N14CookedFoodSaladCaesar = салат Цезарь
+    .desc = Простой, но вкусный салат из лука, капусты, сухариков и тертого сыра, заправленный маслом.
+ent-N14CookedFoodSaladKimchi = салат кимчи
+    .desc = Это действительно просто острый салат.
+ent-N14CookedFoodSaladFruit = фруктовый салат
+    .desc = Ваш стандартный фруктовый салат.
+ent-N14CookedFoodSaladJungle = тропический салат
+    .desc = Экзотические фрукты в миске.
+ent-N14CookedFoodSaladCitrus = цитрусовый салат
+    .desc = Цитрусовая перегрузка!

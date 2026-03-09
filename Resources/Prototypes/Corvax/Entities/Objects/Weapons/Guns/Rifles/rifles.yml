@@ -53,7 +53,7 @@
     price: 100
 
 - type: entity
-  name: M7 Spear Rifle 
+  name: M7 Spear Rifle
   parent: N14WeaponRifleM7SpearScope
   id: N14WeaponRifleM7Spear
   description: Prototype of a next-generation rifle that never made it into service with the US Army. Only a few units were delivered for special operations testing just days before the Great War began. Finding one in the wasteland is a real jackpot. It uses a unique caliber, so finding ammunition for it is an even greater stroke of luck.
@@ -124,6 +124,7 @@
         whitelist:
           tags:
             - Magazine545Rifle
+            - MagazineDrum545Rifle # Forge-change
       gun_chamber:
         name: Chamber
         startingItem: N14Cartridge545Rifle
@@ -177,6 +178,7 @@
         whitelist:
           tags:
             - MagazineDrum545Rifle
+            - Magazine545Rifle # Forge-change
       gun_chamber:
         name: Chamber
         startingItem: N14Cartridge545Rifle

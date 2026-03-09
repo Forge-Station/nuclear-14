@@ -165,6 +165,8 @@
         whitelist:
           tags:
             - LongMagazine556Rifle
+            - Magazine556Rifle # Forge-change
+
       gun_chamber:
         name: Chamber
         startingItem: N14Cartridge556Rifle

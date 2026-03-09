@@ -1,0 +1,26 @@
+<#-- кот Хаггис -->
+bark-cat-1 = Мяу
+bark-cat-2 = Мур-мур
+bark-cat-3 = Голоден
+bark-cat-4 = Рыбка!
+bark-cat-5 = Птичка!
+bark-cat-6 = Время подремать
+bark-cat-7 = Скр-скр-скр
+bark-cat-8 = Мур-мур-мур
+bark-cat-9 = Это мышка?
+bark-cat-10 = Мяу-мяу
+bark-cat-11 = Мрмяу
+bark-cat-12 = Погладь меня
+bark-cat-13 = Питомцы - это хорошо
+bark-cat-14 = Зеваю
+bark-cat-15 = Хис!
+bark-cat-16 = Куда ушло солнышко?
+bark-cat-17 = Время играть
+bark-cat-18 = Сонный
+bark-cat-19 = Надо отдохнуть
+bark-cat-20 = Я слышу мышку
+bark-cat-21 = Я должен поймать мышку
+bark-cat-22 = Мотылек был вкусным
+bark-cat-23 = Мур-мяу
+bark-cat-24 = Мрмяу-мяу-мурр
+bark-cat-count = 24
