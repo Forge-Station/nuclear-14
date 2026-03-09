@@ -12,7 +12,7 @@
     thresholds:
     - trigger:
         !type:DamageTypeTrigger
-        damageType: Brute
+        damageType: Blunt
         damage: 800
       behaviors:
       - !type:GibPartBehavior {}

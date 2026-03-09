@@ -70,8 +70,6 @@
   - type: FootstepModifier
     footstepSoundCollection:
       path: /Audio/Mecha/cardrive.ogg
-    range: 20
-    volume: -5
   - type: Destructible
     thresholds:
     - trigger:
