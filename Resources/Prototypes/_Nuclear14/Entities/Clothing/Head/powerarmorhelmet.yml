@@ -60,8 +60,8 @@
       flatReductions:
         Blunt: 2
         Slash: 2
-        Piercing: 2
-        Heat: 2
+        Piercing: 1
+        Heat: 1
       # Forge-Add-End
   - type: ExplosionResistance
     damageCoefficient: 0.85
