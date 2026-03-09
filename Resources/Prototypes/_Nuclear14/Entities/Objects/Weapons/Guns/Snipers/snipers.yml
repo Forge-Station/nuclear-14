@@ -266,6 +266,11 @@
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/piperifle.rsi
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/piperifle.rsi
+  - type: Item # Forge-Add
+    size: Huge
+    shape:
+    - 0,0,3,1
+    - 0,1,0,1
   - type: Wieldable
   - type: BallisticAmmoProvider
     whitelist:
@@ -291,6 +296,11 @@
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/varmint.rsi
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/varmint.rsi
+  - type: Item # Forge-Add
+    size: Huge
+    shape:
+    - 0,0,3,1
+    - 0,1,0,1
   - type: Wieldable
   - type: GunWieldBonus
     minAngle: -23
