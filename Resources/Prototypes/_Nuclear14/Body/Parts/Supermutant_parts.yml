@@ -8,11 +8,48 @@
   - type: Damageable
     damageContainer: OrganicPart # Shitmed Change
     damageModifierSet: SupermutantPartDamage
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Brute
+        damage: 800
+      behaviors:
+      - !type:GibPartBehavior {}
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Piercing
+        damage: 800
+      behaviors:
+      - !type:GibPartBehavior {}
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Slash
+        damage: 1600
+      behaviors:
+      - !type:GibPartBehavior {}
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Heat
+        damage: 800
+      behaviors:
+      - !type:SpawnEntitiesBehavior
+        spawnInContainer: true
+        spawn:
+          Ash:
+            min: 2
+            max: 5
+      - !type:BurnBodyBehavior {}
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MeatLaserImpact
+          sound:
+            collection: MeatLaserImpact
   - type: Extractable
     juiceSolution:
       reagents:
       - ReagentId: Fat
-        Quantity: 3
+        Quantity: 5
       - ReagentId: Blood
         Quantity: 10
 
@@ -31,41 +68,6 @@
         Quantity: 10
       - ReagentId: Blood
         Quantity: 40
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Blunt
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior {}
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Piercing
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior {}
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Slash
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior {}
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Heat
-        damage: 2500
-      behaviors:
-      - !type:SpawnEntitiesBehavior
-        spawnInContainer: true
-        spawn:
-          Ash:
-            min: 2
-            max: 5
-      - !type:BurnBodyBehavior {}
-      - !type:PlaySoundBehavior
-        sound:
-          collection: MeatLaserImpact
 
 - type: entity
   id: HeadSupermutant
@@ -75,53 +77,6 @@
   - type: Sprite
     sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
     state: "head_m"
-  - type: Extractable
-    juiceSolution:
-      reagents:
-      - ReagentId: Fat
-        Quantity: 5
-      - ReagentId: Blood
-        Quantity: 10
-  - type: Damageable
-    damageContainer: Biological
-    damageModifierSet: SupermutantPartDamage
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Blunt
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior {}
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Piercing
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior {}
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Slash
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior {}
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Heat
-        damage: 2500
-      behaviors:
-      - !type:SpawnEntitiesBehavior
-        spawnInContainer: true
-        spawn:
-          Ash:
-            min: 2
-            max: 5
-      - !type:BurnBodyBehavior {}
-      - !type:PlaySoundBehavior
-        sound:
-          collection: MeatLaserImpact
-          sound:
-            collection: MeatLaserImpact
 
 - type: entity
   id: LeftArmSupermutant
@@ -131,41 +86,6 @@
   - type: Sprite
     sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
     state: "l_arm"
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Blunt
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Slash
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Piercing
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Heat
-        damage: 2500
-      behaviors:
-      - !type:SpawnEntitiesBehavior
-        spawnInContainer: true
-        spawn:
-          Ash:
-            min: 2
-            max: 5
-      - !type:BurnBodyBehavior { }
-      - !type:PlaySoundBehavior
-        sound:
-          collection: MeatLaserImpact
 
 - type: entity
   id: RightArmSupermutant
@@ -175,41 +95,6 @@
   - type: Sprite
     sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
     state: "r_arm"
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Blunt
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Slash
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Piercing
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Heat
-        damage: 2500
-      behaviors:
-      - !type:SpawnEntitiesBehavior
-        spawnInContainer: true
-        spawn:
-          Ash:
-            min: 2
-            max: 5
-      - !type:BurnBodyBehavior { }
-      - !type:PlaySoundBehavior
-        sound:
-          collection: MeatLaserImpact
 
 - type: entity
   id: LeftHandSupermutant
@@ -219,41 +104,6 @@
   - type: Sprite
     sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
     state: "l_hand"
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Blunt
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Slash
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Piercing
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Heat
-        damage: 2500
-      behaviors:
-      - !type:SpawnEntitiesBehavior
-        spawnInContainer: true
-        spawn:
-          Ash:
-            min: 2
-            max: 5
-      - !type:BurnBodyBehavior { }
-      - !type:PlaySoundBehavior
-        sound:
-          collection: MeatLaserImpact
 
 - type: entity
   id: RightHandSupermutant
@@ -263,41 +113,6 @@
   - type: Sprite
     sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
     state: "r_hand"
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Blunt
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Slash
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Piercing
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Heat
-        damage: 2500
-      behaviors:
-      - !type:SpawnEntitiesBehavior
-        spawnInContainer: true
-        spawn:
-          Ash:
-            min: 2
-            max: 5
-      - !type:BurnBodyBehavior { }
-      - !type:PlaySoundBehavior
-        sound:
-          collection: MeatLaserImpact
 
 - type: entity
   id: LeftLegSupermutant
@@ -307,41 +122,6 @@
   - type: Sprite
     sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
     state: "l_leg"
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Blunt
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Slash
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Piercing
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Heat
-        damage: 2500
-      behaviors:
-      - !type:SpawnEntitiesBehavior
-        spawnInContainer: true
-        spawn:
-          Ash:
-            min: 2
-            max: 5
-      - !type:BurnBodyBehavior { }
-      - !type:PlaySoundBehavior
-        sound:
-          collection: MeatLaserImpact
 
 - type: entity
   id: RightLegSupermutant
@@ -351,41 +131,6 @@
   - type: Sprite
     sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
     state: "r_leg"
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Blunt
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Slash
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Piercing
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Heat
-        damage: 2500
-      behaviors:
-      - !type:SpawnEntitiesBehavior
-        spawnInContainer: true
-        spawn:
-          Ash:
-            min: 2
-            max: 5
-      - !type:BurnBodyBehavior { }
-      - !type:PlaySoundBehavior
-        sound:
-          collection: MeatLaserImpact
 
 - type: entity
   id: LeftFootSupermutant
@@ -395,41 +140,6 @@
   - type: Sprite
     sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
     state: "l_foot"
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Blunt
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Slash
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Piercing
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Heat
-        damage: 2500
-      behaviors:
-      - !type:SpawnEntitiesBehavior
-        spawnInContainer: true
-        spawn:
-          Ash:
-            min: 2
-            max: 5
-      - !type:BurnBodyBehavior { }
-      - !type:PlaySoundBehavior
-        sound:
-          collection: MeatLaserImpact
 
 - type: entity
   id: RightFootSupermutant
@@ -439,38 +149,3 @@
   - type: Sprite
     sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
     state: "r_foot"
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Blunt
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Slash
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Piercing
-        damage: 2500
-      behaviors:
-      - !type:GibPartBehavior { }
-    - trigger:
-        !type:DamageTypeTrigger
-        damageType: Heat
-        damage: 2500
-      behaviors:
-      - !type:SpawnEntitiesBehavior
-        spawnInContainer: true
-        spawn:
-          Ash:
-            min: 2
-            max: 5
-      - !type:BurnBodyBehavior { }
-      - !type:PlaySoundBehavior
-        sound:
-          collection: MeatLaserImpact

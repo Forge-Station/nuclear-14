@@ -17,10 +17,6 @@
 - type: damageModifierSet
   id: SupermutantPartDamage
   coefficients:
-    Blunt: 0.4
-    Slash: 0.6
-    Piercing: 0.25
-    Cold: 0.25
-    Heat: 0.4
-    Shock: 0.25
+    Slash: 0.5
+    Cold: 0.5
 # Forge-Change-end
