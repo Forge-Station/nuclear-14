@@ -1,6 +1,6 @@
-ent-N14ToolboxFilled1 = toolbox
+ent-N14ToolboxFilled = toolbox
     .suffix = Filled, always
     .desc = { ent-ToolboxEmergency.desc }
-ent-N14ToolboxFilled2 = toolbox
+ent-N14ToolboxFilledLoot = toolbox
     .suffix = Filled, loot
     .desc = { ent-ToolboxEmergency.desc }

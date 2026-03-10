@@ -150,7 +150,7 @@
   category: N14Parts
   completetime: 2
   materials:
-    N14Iron: 50
+    N14Iron: 100 # Forge-Change
 
 - type: latheRecipe
   id: N14JunkGunpartsBarrel
@@ -166,7 +166,7 @@
   category: N14Parts
   completetime: 2
   materials:
-    N14Iron: 50
+    N14Iron: 100 # Forge-Change
 
 - type: latheRecipe
   id: N14JunkGunpartsFrame
@@ -190,7 +190,7 @@
   category: N14Parts
   completetime: 3
   materials:
-    Steel: 50
+    Steel: 100 # Forge-Change
 
 - type: latheRecipe
   id: N14JunkGunpartsRecoilComp
@@ -198,7 +198,7 @@
   category: N14Parts
   completetime: 3
   materials:
-    Steel: 50
+    Steel: 100 # Forge-Change
 
 - type: latheRecipe
   id: N14JunkGunpartsRifleFrame
@@ -222,7 +222,7 @@
   category: N14Parts
   completetime: 3
   materials:
-    Steel: 50
+    Steel: 100 # Forge-Change
     Glass: 50
 
 - type: latheRecipe
@@ -247,4 +247,4 @@
   category: N14Parts
   completetime: 3
   materials:
-    Steel: 50
+    Steel: 100 # Forge-Change

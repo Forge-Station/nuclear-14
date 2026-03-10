@@ -1,0 +1,47 @@
+<#-- Гуль -->
+ent-N14BaseGhoulOrgan = { ent-BaseHumanOrgan }
+    .desc = { ent-BaseHumanOrgan.desc }
+ent-N14OrganGhoulBrain = мозг
+    .desc = Источник невероятного, неиссякаемого интеллекта.
+ent-N14OrganGhoulHeart = сердце
+    .desc = Мне жаль бессердечного ублюдка, который это потерял.
+ent-N14OrganGhoulLiver = печень
+    .desc = Рекомендуется подавать с кьянти и бобами.
+ent-N14OrganGhoulKidneys = почки
+    .desc = Фильтруют токсины из крови.
+ent-N14OrganGhoulLungs = лёгкие
+    .desc = Осуществляют газообмен между атмосферой и кровеносной системой.
+ent-N14OrganGhoulStomach = желудок
+    .desc = Накапливает пищу для дальнейшего ее переваривания.
+ent-N14OrganGhoulAppendix = аппендикс
+    .desc = Трубчатый придаток начальной части толстой кишки. Важная часть иммунной системы.
+ent-N14OrganGhoulEyes = глаза
+    .desc = Я тебя вижу!
+ent-N14OrganGhoulTongue = язык
+    .desc = Мышца, используемая в основном для лжи.
+ent-N14OrganGhoulEars = уши
+    .desc = Ухо состоит из трёх частей: внутренней, средней и наружной. Обычно видна только одна из них.
+
+<#-- Светящийся гуль -->
+ent-N14BaseGhoulGlowingOrgan = { ent-N14BaseGhoulOrgan }
+    .desc = { ent-N14BaseGhoulOrgan.desc }
+ent-N14OrganGhoulGlowingBrain = { ent-N14OrganGhoulBrain }
+    .desc = { ent-N14OrganGhoulBrain.desc }
+ent-N14OrganGhoulGlowingHeart = { ent-N14OrganGhoulHeart }
+    .desc = { ent-N14OrganGhoulHeart.desc }
+ent-N14OrganGhoulGlowingLiver = { ent-N14OrganGhoulLiver }
+    .desc = { ent-N14OrganGhoulLiver.desc }
+ent-N14OrganGhoulGlowingKidneys = { ent-N14OrganGhoulKidneys }
+    .desc = { ent-N14OrganGhoulKidneys.desc }
+ent-N14OrganGhoulGlowingLungs = { ent-N14OrganGhoulLungs }
+    .desc = { ent-N14OrganGhoulLungs.desc }
+ent-N14OrganGhoulGlowingStomach = { ent-N14OrganGhoulStomach }
+    .desc = { ent-N14OrganGhoulStomach.desc }
+ent-N14OrganGhoulGlowingAppendix = { ent-N14OrganGhoulAppendix }
+    .desc = { ent-N14OrganGhoulAppendix.desc }
+ent-N14OrganGhoulGlowingEyes = { ent-N14OrganGhoulEyes }
+    .desc = { ent-N14OrganGhoulEyes.desc }
+ent-N14OrganGhoulGlowingTongue = { ent-N14OrganGhoulTongue }
+    .desc = { ent-N14OrganGhoulTongue.desc }
+ent-N14OrganGhoulGlowingEars = { ent-N14OrganGhoulEars }
+    .desc = { ent-N14OrganGhoulEars.desc }

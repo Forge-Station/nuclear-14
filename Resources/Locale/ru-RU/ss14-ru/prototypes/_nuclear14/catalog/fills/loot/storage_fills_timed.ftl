@@ -1,0 +1,19 @@
+ent-N14BaseLockerTimedStorageFill = { ent-BaseItem }
+    .desc = { ent-BaseItem.desc }
+<#--  -->
+ent-N14BaseTimedStorageFill = { ent-N14BaseLockerTimedStorageFill }
+    .desc = { ent-N14BaseLockerTimedStorageFill.desc }
+ent-N14BaseSmallLockerTimedStorageFill = { ent-N14BaseLockerTimedStorageFill }
+    .desc = { ent-N14BaseLockerTimedStorageFill.desc }
+ent-N14TimedStorageFillDomestic = { ent-N14BaseLockerTimedStorageFill }
+    .desc = { ent-N14BaseLockerTimedStorageFill.desc }
+ent-N14BaseMilitaryTimedStorageFill = { ent-N14BaseLockerTimedStorageFill }
+    .desc = { ent-N14BaseLockerTimedStorageFill.desc }
+ent-N14TimedStorageFillMedical = { ent-N14BaseLockerTimedStorageFill }
+    .desc = { ent-N14BaseLockerTimedStorageFill.desc }
+ent-N14WastelandBotanyTimedStorageFill = { ent-N14BaseLockerTimedStorageFill }
+    .desc = { ent-N14BaseLockerTimedStorageFill.desc }
+ent-N14ClosetFridgeTimedFill = { ent-N14BaseLockerTimedStorageFill }
+    .desc = { ent-N14BaseLockerTimedStorageFill.desc }
+ent-N14StorageFillSafePrewarTimed = { ent-N14BaseLockerTimedStorageFill }
+    .desc = { ent-N14BaseLockerTimedStorageFill.desc }
