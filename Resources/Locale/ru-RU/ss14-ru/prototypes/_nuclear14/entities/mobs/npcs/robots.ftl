@@ -1,15 +1,12 @@
-# Робот
-ent-N14MobFriendlyRobot = робот
-  .suffix = Робот, дружелюбный
-  .desc = Создан, чтобы служить человечеству.
+# Робот 
 ent-N14MobRobotHostile = робот
   .suffix = Робот, враждебный
   .desc = Создан, чтобы служить человечеству. Возможно, он же положил ему конец.
-ent-N14MobRobotHostileMelee = { ent-N14MobRobotHostile }
-  .suffix = { ent-N14MobRobotHostile.suffix }
-  .desc = { ent-N14MobRobotHostile.desc }
+ent-N14MobRobotHostileMelee = робот
+  .suffix = Робот, враждебный
+  .desc = Создан, чтобы служить человечеству. Возможно, он же положил ему конец.
 
-ent-N14MobRobotHostileAssaultron = ассаултрон
+ent-N14MobRobotAssaultronHostile = ассаултрон
   .suffix = { ent-N14MobRobotHostileMelee.suffix }
   .desc = Один его вид вселяет ужас. Лучше не представлять, что будет, если он активируется.
 ent-N14MobRobotProtectronHostile = протектрон

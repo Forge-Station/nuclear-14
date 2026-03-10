@@ -1,4 +1,4 @@
-<#-- Чай -->
+# Чай 
 ent-N14DrinkTeaFireantNectar = чай из нектара огненного муравья
     .desc = { ent-DrinkGreenTea.desc }
 ent-N14DrinkTeaAgave = чай из агавы

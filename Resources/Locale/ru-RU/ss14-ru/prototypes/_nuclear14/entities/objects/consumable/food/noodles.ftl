@@ -1,7 +1,7 @@
 ent-N14CookedFoodNoodlesBase = { ent-FoodInjectableBase }
     .desc = Вот это отличная паста!
 
-<#-- Спагетти -->
+# Спагетти 
 ent-N14CookedFoodNoodlesBoiled = отварные спагетти
     .desc = Простое блюдо из лапши, тут нужно больше ингредиентов.
 ent-N14CookedFoodNoodles = спагетти

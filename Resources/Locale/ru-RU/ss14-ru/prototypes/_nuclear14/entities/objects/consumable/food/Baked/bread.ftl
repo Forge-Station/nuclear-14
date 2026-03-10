@@ -1,7 +1,7 @@
-<#-- Хлеб -->
+# Хлеб 
 ent-N14CookedFoodBreadBase = { ent-FoodInjectableBase }
     .desc = { ent-FoodInjectableBase.desc }
-<#--  -->
+
 ent-N14CookedFoodBreadVolcanic = вулканический хлеб
     .desc = Темный хлеб. Похоже на пемзу.
 ent-N14CookedFoodBreadBanana = банановый хлеб
@@ -25,10 +25,10 @@ ent-N14CookedFoodBreadBaguette = багет
 ent-N14CookedFoodBreadGarlicSlice = чесночный хлеб
     .desc = Увы, рано или поздно закончится.
 
-<#-- Ломтики хлеба -->
+# Ломтики хлеба 
 ent-N14CookedFoodBreadSliceBase = { ent-N14CookedFoodBreadBase }
     .desc = { ent-N14CookedFoodBreadBase.desc }
-<#--  -->
+
 ent-N14CookedFoodBreadVolcanicSlice = вулканический ломтик
     .desc = Ломтик тёмного хлеба. Похоже на пемзу.
 ent-N14CookedFoodBreadBananaSlice = ломтик бананового хлеба

@@ -1,4 +1,4 @@
-<#-- Гуль -->
+# Гуль 
 ent-N14PartGhoul = часть тела гуля
     .desc = { ent-PartHuman.desc }
 ent-N14TorsoGhoul = туловище гуля
@@ -22,7 +22,7 @@ ent-N14LeftFootGhoul = левая ступня гуля
 ent-N14RightFootGhoul = правая ступня гуля
     .desc = { ent-N14PartGhoul.desc }
 
-<#-- Светящийся гуль -->
+# Светящийся гуль 
 ent-N14PartGhoulGlowing = { ent-N14PartGhoul }
     .desc = { ent-N14PartGhoul.desc }
 ent-N14TorsoGhoulGlowing = { ent-N14TorsoGhoul }

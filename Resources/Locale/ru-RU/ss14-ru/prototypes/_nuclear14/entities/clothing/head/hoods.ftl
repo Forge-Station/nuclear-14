@@ -1,8 +1,8 @@
-<#-- Обитатели пустоши -->
+# Обитатели пустоши 
 ent-N14ClothingHeadHatHoodLeatherCloak = капюшон кожаного плаща
     .desc = Капюшон, сшитый из толстой браминской кожи. Скроет лицо от палящего солнца и любопытных глаз.
 
-<#-- Новая Калифорнийская Республика (НКР) -->
+# Новая Калифорнийская Республика (НКР) 
 ent-N14ClothingHeadHatHoodRangerCloak = капюшон плаща рейнджера
     .desc = Капюшон плаща рейнджера, собранный из обрывков ткани, найденных на просторах Пустоши. В нем есть что-то суровое и неуловимое, как сама Пустошь.
 ent-N14ClothingHeadHatHoodPonchoCloak = капюшон пончо
@@ -10,13 +10,13 @@ ent-N14ClothingHeadHatHoodPonchoCloak = капюшон пончо
 ent-N14ClothingHeadHatHoodGhillieCloak = капюшон маскировочного плаща
     .desc = Капюшон из лесного маскировочного камуфляжа.
 
-<#-- Среднезападное Браство Стали (СЗБС) -->
+# Среднезападное Браство Стали (СЗБС) 
 ent-N14ClothingHeadHatHoodScribeTabard = капюшон писца
     .desc = Капюшон, прикрепленный к плащу-накидке, снабжен оптической линзой.
 ent-NCClothingHeadHatBoSReaconHood = капюшон разведчика Братства
     .desc = Обычный капюшон, на вид ничего примечательного.
 
-<#-- Племя -->
+# Племя 
 ent-N14ClothingHeadTribalCloakHood = капюшон племенного плаща
     .desc = Капюшон для племенного плаща.
 ent-N14ClothingHeadTribalCloakHoodBr = { ent-N14ClothingHeadTribalCloakHood }

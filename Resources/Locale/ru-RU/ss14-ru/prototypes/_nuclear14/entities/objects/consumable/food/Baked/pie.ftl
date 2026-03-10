@@ -1,7 +1,7 @@
-<#-- Пирог -->
+# Пирог 
 ent-N14CookedFoodPieBase = { ent-FoodInjectableBase }
     .desc = { ent-FoodInjectableBase.desc }
-<#--  -->
+
 ent-N14CookedFoodPieMutfruit = пирог из мутафрукта
     .desc = Он весь липкий...
 ent-N14CookedFoodPieBlackberry = черничный пирог
@@ -13,10 +13,10 @@ ent-N14CookedFoodPieMeatSlice = кусок мясного пирога
 ent-N14CookedFoodTartCoco = шоколадный кокосовый тарт
     .desc = Вкусный десерт из шоколада с жидкой начинкой.
 
-<#-- Кусок пирога -->
+# Кусок пирога 
 ent-N14CookedFoodPieSliceBase = { ent-N14CookedFoodPieBase }
     .desc = Кусочек пирога. Объедение!
-<#--  -->
+
 ent-N14CookedFoodPieMutfruitSlice = кусок пирога из мутафрукта
     .desc = { ent-N14CookedFoodPieSliceBase.desc }
 ent-N14CookedFoodPieBlackberrySlice = кусок черничного пирога

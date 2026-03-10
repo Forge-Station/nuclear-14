@@ -1,4 +1,4 @@
-<#-- Базовые существа -->
+# Базовые существа 
 ent-N14MobBaseHostile = животное пустошей
     .desc = Грязная уродливая тварь. Не подпускай её к себе.
 ent-N14MobBaseHostileScaley = чешуйчатое животное пустощей
@@ -6,7 +6,7 @@ ent-N14MobBaseHostileScaley = чешуйчатое животное пустощ
 ent-N14MobBaseHostileInsect = насекомое пустошей
     .desc = { ent-N14MobBaseHostile.desc }
 
-<#-- Защита -->
+# Защита 
 ent-N14MobWave = атакующая волна
     .desc = { "" }
 ent-N14MobWaveAnimal = { ent-N14MobWave }

@@ -1,4 +1,4 @@
-<#-- Гуль -->
+# Гуль 
 ent-N14BaseGhoulOrgan = { ent-BaseHumanOrgan }
     .desc = { ent-BaseHumanOrgan.desc }
 ent-N14OrganGhoulBrain = мозг
@@ -22,7 +22,7 @@ ent-N14OrganGhoulTongue = язык
 ent-N14OrganGhoulEars = уши
     .desc = Ухо состоит из трёх частей: внутренней, средней и наружной. Обычно видна только одна из них.
 
-<#-- Светящийся гуль -->
+# Светящийся гуль 
 ent-N14BaseGhoulGlowingOrgan = { ent-N14BaseGhoulOrgan }
     .desc = { ent-N14BaseGhoulOrgan.desc }
 ent-N14OrganGhoulGlowingBrain = { ent-N14OrganGhoulBrain }

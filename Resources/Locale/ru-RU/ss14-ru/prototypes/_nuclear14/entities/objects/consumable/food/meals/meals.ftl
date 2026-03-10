@@ -1,7 +1,7 @@
 ent-N14CookedFoodMealBase = { ent-FoodInjectableBase }
   .desc = Вкусное блюдо, приготовленное с любовью.
 
-<#-- Закуски -->
+# Закуски 
 ent-N14CookedFoodMealPotatoLoaded = печёный картофель с начинкой
   .desc = Полностью запеченный.
 ent-N14CookedFoodMealFries = картофель фри
@@ -27,11 +27,11 @@ ent-N14CookedFoodMealEnchiladas = энчилада
 ent-N14CookedFoodMealCornInButter = кукуруза в сливочном масле
   .desc = Маслянистенько.
 
-<#-- Барбекю -->
+# Барбекю 
 ent-N14CookedFoodMealRibs = рёбрышки барбекю
   .desc = Рёбрышки барбекю, покрытые обильным слоем соуса барбекю. Наименее вегетарианская вещь, которая когда-либо существовала.
 
-<#-- Завтраки из яиц -->
+# Завтраки из яиц 
 ent-N14CookedFoodMealEggsbenedict = Яйца Бенедикт
   .desc = Здесь только одно яйцо, как грубо.
 ent-N14CookedFoodMealOmelette = омлет дю фромаж
@@ -39,7 +39,7 @@ ent-N14CookedFoodMealOmelette = омлет дю фромаж
 ent-N14CookedFoodMealFriedegg = яичница
   .desc = Жареное яйцо с щепоткой соли и перца.
 
-<#-- Деликатесы -->
+# Деликатесы 
 ent-N14CookedFoodMealMint = мята
   .desc = Она очень нежная.
 ent-N14CookedFoodMealSashimi = сашими
@@ -47,11 +47,11 @@ ent-N14CookedFoodMealSashimi = сашими
 ent-N14CookedFoodJellyAmanita = желе из мухомора
     .desc = Это зло, не трогайте это!
 
-<#-- Блюда из свежих фруктов -->
+# Блюда из свежих фруктов 
 ent-N14CookedFoodSaladWatermelonFruitBowl = фруктовый арбузный боул
   .desc = Единственный салат, который можно съесть вместе с миской.
 
-<#-- Рис -->
+# Рис 
 ent-N14CookedFoodRiceBoiled = отварной рис
     .desc = Теплая миска риса.
 ent-N14CookedFoodRiceEgg = рис с яйцом
@@ -63,6 +63,6 @@ ent-N14CookedFoodRicePudding = рисовый пудинг
 ent-N14CookedFoodRiceGumbo = черноглазый гамбо
     .desc = Острое и солёное блюдо из мяса и риса.
 
-<#-- Овсянка -->
+# Овсянка 
 ent-N14CookedFoodOatmeal = овсянка
     .desc = Отличная миска овсянки.
