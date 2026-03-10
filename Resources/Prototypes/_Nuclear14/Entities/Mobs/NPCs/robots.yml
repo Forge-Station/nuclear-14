@@ -97,6 +97,19 @@
   - type: Appearance
   - type: ReplacementAccent
     accent: genericAggressive
+  - type: SpriteMovement
+    movementLayers:
+      movement:
+        state: moving
+    noMovementLayers:
+      movement:
+        state: icon
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: icon
+      Dead:
+        Base: dead
   # - type: Bloodstream
     # bloodMaxVolume: 50
   # - type: GhostTakeoverAvailable
@@ -160,7 +173,7 @@
     rechargeCooldown: 2
     rechargeSound:
       path: /Audio/Weapons/Guns/MagIn/batrifle_magin.ogg
-# Forge-Add-Start
+# Forge-Add-End
 
 - type: entity
   parent: N14MobRobotHostileMelee
@@ -178,24 +191,9 @@
   - type: Sprite
     sprite: _Nuclear14/Mobs/Robots/assaultron.rsi
     layers:
-    # Forge-Change-Start
+  # Forge-Change-Start
     - map: ["enum.DamageStateVisualLayers.Base", "movement"]
-      state: assaultron
-    # Forge-Change-End
-  - type: SpriteMovement
-    movementLayers:
-      movement:
-        state: assaultron-moving
-    noMovementLayers:
-      movement:
-        state: assaultron
-  - type: DamageStateVisuals
-    states:
-      Alive:
-        Base: assaultron
-      Dead:
-        Base: assaultron-dead
-    # Forge-Delete-Start
+      state: icon
     # - state: icon # change me
     #   map: ["enum.BorgVisualLayers.Light"]
     #   shader: unshaded
@@ -204,13 +202,13 @@
     #   shader: unshaded
     #   map: ["light"]
     #   visible: false
-    # Forge-Delete-End
-    # - type: GhostRole
-      # prob: 1
-      # makeSentient: true
-      # name: Assaultron
-      # description: |
-        # Protect your area and remove any trespassers.
+  # Forge-Change-End
+  # - type: GhostRole
+    # prob: 1
+    # makeSentient: true
+    # name: Assaultron
+    # description: |
+      # Protect your area and remove any trespassers.
 
 - type: entity
   parent: N14MobRobotHostileMelee
@@ -224,12 +222,10 @@
   - type: Sprite
     sprite: _Nuclear14/Mobs/Robots/protectron.rsi
     layers:
-    # Forge-Change-Start
-    - map: ["movement"]
+  # Forge-Change-Start
+    - map: ["enum.DamageStateVisualLayers.Base", "movement"]
       state: icon
-    # Forge-Change-End
-    # Forge-Delete-Start
-    # - state: icon  # change me
+    # - state: icon # change me
     #   map: ["enum.BorgVisualLayers.Light"]
     #   shader: unshaded
     #   visible: false
@@ -237,7 +233,20 @@
     #   shader: unshaded
     #   map: ["light"]
     #   visible: false
-    # Forge-Delete-End
+  - type: SpriteMovement
+    movementLayers:
+      movement:
+        state: moving
+    noMovementLayers:
+      movement:
+        state: icon
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: icon
+      Dead:
+        Base: dead
+  # Forge-Change-End
   # - type: GhostRole
     # prob: 1
     # makeSentient: true
@@ -253,14 +262,7 @@
   components:
   - type: Sprite
     sprite: _Nuclear14/Mobs/Robots/protectron-builder.rsi
-    layers:
-    # Forge-Change-Start
-    - map: ["movement"]
-      state: icon
-    # Forge-Change-End
-    # Forge-Delete-Start
-    # - state: icon
-    #   map: ["movement"]
+  # Forge-Change-Start
     # - state: icon # change me
     #   map: ["enum.BorgVisualLayers.Light"]
     #   shader: unshaded
@@ -269,7 +271,7 @@
     #   shader: unshaded
     #   map: ["light"]
     #   visible: false
-    # Forge-Delete-End
+  # Forge-Change-End
 
 - type: entity
   parent: N14MobRobotHostileProtectron
@@ -278,15 +280,8 @@
   description: A protectron firefighter looking for a fight.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Mobs/Robots/protectron-fire.rsi
-    layers:
-    # Forge-Change-Start
-    - map: ["movement"]
-      state: icon
-    # Forge-Change-End
-    # Forge-Delete-Start
-    # - state: icon
-    #   map: ["movement"]
+    sprite: _Nuclear14\Mobs\Robots\protectron-fire.rsi
+  # Forge-Change-Start
     # - state: icon # change me
     #   map: ["enum.BorgVisualLayers.Light"]
     #   shader: unshaded
@@ -295,7 +290,7 @@
     #   shader: unshaded
     #   map: ["light"]
     #   visible: false
-    # Forge-Delete-End
+  # Forge-Change-End
 
 - type: entity
   parent: N14MobRobotHostileProtectron
@@ -304,15 +299,8 @@
   description: A protectron police bot looking for a fight.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Mobs/Robots/protectron-police.rsi
-    layers:
-    # Forge-Change-Start
-    - map: ["movement"]
-      state: icon
-    # Forge-Change-End
-    # Forge-Delete-Start
-    # - state: icon
-    #   map: ["movement"]
+    sprite: _Nuclear14\Mobs\Robots\protectron-police.rsi
+  # Forge-Change-Start
     # - state: icon # change me
     #   map: ["enum.BorgVisualLayers.Light"]
     #   shader: unshaded
@@ -321,7 +309,7 @@
     #   shader: unshaded
     #   map: ["light"]
     #   visible: false
-    # Forge-Delete-End
+  # Forge-Change-End
   - type: Gun #Mobs currently cannot bolt a gun, so we have to simulate them firing it
     minAngle: 9
     maxAngle: 18
@@ -354,25 +342,12 @@
   - type: MovementSpeedModifier
     baseWalkSpeed : 2
     baseSprintSpeed : 4
-  - type: MeleeWeapon
-    hidden: true
-    soundHit:
-      path: /Audio/Effects/metal_thud1.ogg
-    angle: 0
-    animation: WeaponArcPunch
-    damage:
-      types:
-        Pierce: 5
   - type: Sprite
     sprite: _Nuclear14/Mobs/Robots/mrhandyclaw.rsi
     layers:
-    # Forge-Change-Start
-    - map: ["movement"]
+  # Forge-Change-Start
+    - map: ["enum.DamageStateVisualLayers.Base", "movement"]
       state: icon
-    # Forge-Change-End
-    # Forge-Delete-Start
-    # - state: icon
-    #   map: ["movement"]
     # - state: icon # change me
     #   map: ["enum.BorgVisualLayers.Light"]
     #   shader: unshaded
@@ -381,7 +356,7 @@
     #   shader: unshaded
     #   map: ["light"]
     #   visible: false
-    # Forge-Delete-End
+  # Forge-Change-End
   # - type: GhostRole
     # prob: 1
     # makeSentient: true
@@ -393,6 +368,15 @@
     # volume: -3
     # sound: /Audio/DeltaV/Glimmer_Creatures/mite.ogg
   # - type: AmbientOnPowered
+  - type: MeleeWeapon
+    hidden: true
+    soundHit:
+      path: /Audio/Effects/metal_thud1.ogg
+    angle: 0
+    animation: WeaponArcPunch
+    damage:
+      types:
+        Pierce: 5
 
 - type: entity
   parent: N14MobRobotHostileMrHandyClaw
@@ -400,6 +384,21 @@
   description: A domestic Mr Handy model with a saw attachment.
   suffix: hostile, saw
   components:
+  - type: Sprite
+    sprite: _Nuclear14/Mobs/Robots/mrhandysaw.rsi
+    layers:
+  # Forge-Change-Start
+    - map: ["enum.DamageStateVisualLayers.Base", "movement"]
+      state: icon
+    # - state: icon # change me
+    #   map: ["enum.BorgVisualLayers.Light"]
+    #   shader: unshaded
+    #   visible: false
+    # - state: icon # change me
+    #   shader: unshaded
+    #   map: ["light"]
+    #   visible: false
+  # Forge-Change-End
   - type: MeleeWeapon
     hidden: true
     soundHit:
@@ -410,25 +409,6 @@
       types:
         Slash: 3
     attackRate: 0.5
-  - type: Sprite
-    sprite: _Nuclear14/Mobs/Robots/mrhandysaw.rsi
-    layers:
-    # Forge-Change-Start
-    - map: ["movement"]
-      state: icon
-    # Forge-Change-End
-    # Forge-Delete-Start
-    # - state: icon
-    #   map: ["movement"]
-    # - state: icon # change me
-    #   map: ["enum.BorgVisualLayers.Light"]
-    #   shader: unshaded
-    #   visible: false
-    # - state: icon # change me
-    #   shader: unshaded
-    #   map: ["light"]
-    #   visible: false
-    # Forge-Delete-End
 
 - type: entity
   parent: N14MobRobotHostileRanged
@@ -443,13 +423,9 @@
   - type: Sprite
     sprite: _Nuclear14/Mobs/Robots/mrhandygun.rsi
     layers:
-    # Forge-Change-Start
-    - map: ["movement"]
+  # Forge-Change-Start
+    - map: ["enum.DamageStateVisualLayers.Base", "movement"]
       state: icon
-    # Forge-Change-End
-    # Forge-Delete-Start
-    # - state: icon
-    #   map: ["movement"]
     # - state: icon # change me
     #   map: ["enum.BorgVisualLayers.Light"]
     #   shader: unshaded
@@ -458,7 +434,7 @@
     #   shader: unshaded
     #   map: ["light"]
     #   visible: false
-    # Forge-Delete-End
+  # Forge-Change-End
   # - type: GhostRole
     # prob: 1
     # makeSentient: true
@@ -502,13 +478,9 @@
   - type: Sprite
     sprite: _Nuclear14/Mobs/Robots/mrhandygutsy.rsi
     layers:
-    # Forge-Change-Start
-    - map: ["movement"]
+  # Forge-Change-Start
+    - map: ["enum.DamageStateVisualLayers.Base", "movement"]
       state: icon
-    # Forge-Change-End
-    # Forge-Delete-Start
-    # - state: icon
-    #   map: ["movement"]
     # - state: icon # change me
     #   map: ["enum.BorgVisualLayers.Light"]
     #   shader: unshaded
@@ -517,7 +489,7 @@
     #   shader: unshaded
     #   map: ["light"]
     #   visible: false
-    # Forge-Delete-End
+  # Forge-Change-End
   # - type: GhostRole
     # prob: 1
     # makeSentient: true
@@ -558,13 +530,9 @@
   - type: Sprite
     sprite: _Nuclear14/Mobs/Robots/robobrain.rsi
     layers:
-    # Forge-Change-Start
-    - map: ["movement"]
+  # Forge-Change-Start
+    - map: ["enum.DamageStateVisualLayers.Base", "movement"]
       state: icon
-    # Forge-Change-End
-    # Forge-Delete-Start
-    # - state: icon
-    #   map: ["movement"]
     # - state: icon # change me
     #   map: ["enum.BorgVisualLayers.Light"]
     #   shader: unshaded
@@ -573,7 +541,7 @@
     #   shader: unshaded
     #   map: ["light"]
     #   visible: false
-    # Forge-Delete-End
+  # Forge-Change-End
   # - type: GhostRole
     # prob: 1
     # makeSentient: true
@@ -618,17 +586,11 @@
     noMovementLayers:
       movement:
         state: icon
-  - type: DamageStateVisuals
-    states:
-      Alive:
-        Base: icon
-      Dead:
-        Base: dead
   - type: Sprite
     sprite: _Nuclear14/Mobs/Robots/eyebot.rsi
     layers:
     # Forge-Change-Start
-    - map: ["icon"]
+    - map: ["enum.DamageStateVisualLayers.Base", "movement"]
       state: icon
     - state: shadow_eyebot
     # Forge-Change-End
@@ -638,6 +600,11 @@
     # name: Eyebot
     # description: |
       # Protect your area and remove any trespassers.
+  - type: AmbientSound
+    range: 4
+    volume: -4
+    sound:
+      collection: AmbienceEyebot
   - type: Gun #Mobs currently cannot bolt a gun, so we have to simulate them firing it
     minAngle: 12
     maxAngle: 24
@@ -658,8 +625,3 @@
     rechargeCooldown: 2
     rechargeSound:
       path: /Audio/Weapons/Guns/MagIn/batrifle_magin.ogg
-  - type: AmbientSound
-    range: 4
-    volume: -4
-    sound:
-      collection: AmbienceEyebot

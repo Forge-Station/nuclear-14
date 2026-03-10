@@ -26,7 +26,7 @@ N14ClothingBeltMilitaryFilled : N14ClothingBeltAssaultFilled
 N14MobFriendlyRobot : null
 
 N14MobRobotAssaultronHostile : N14MobRobotHostileAssaultron
-N14MobRobotHostileProtectron : N14MobRobotHostileProtectron
+N14MobRobotProtectronHostile : N14MobRobotHostileProtectron
 N14MobRobotProtectronBuilderHostile : N14MobRobotHostileProtectronBuilder
 N14MobRobotProtectronFireHostile : N14MobRobotHostileProtectronFire
 N14MobRobotProtectronPoliceHostile : N14MobRobotHostileProtectronPolice
