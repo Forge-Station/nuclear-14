@@ -31,9 +31,9 @@
   category: N14Ammo
   completetime: 2
   materials:
-    Lead: 2
-    Steel: 3
-    N14Gunpowder: 2
+    Lead: 3 # Forge-Change
+    Steel: 5 # Forge-Change
+    N14Gunpowder: 4 # Forge-Change
 
 - type: latheRecipe
   id: Magazine556Rifle
@@ -41,9 +41,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 50
+    Lead: 75 # Forge-Change
     Steel: 175
-    N14Gunpowder: 50
+    N14Gunpowder: 100 # Forge-Change
 
 - type: latheRecipe
   id: LongMagazine556Rifle
@@ -51,9 +51,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 70
-    Steel: 205
-    N14Gunpowder: 70
+    Lead: 105 # Forge-Change
+    Steel: 245 # Forge-Change
+    N14Gunpowder: 140 # Forge-Change
 
 - type: latheRecipe
   id: LMGMagazine556Rifle
@@ -61,9 +61,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 110
-    Steel: 265
-    N14Gunpowder: 110
+    Lead: 165 # Forge-Change
+    Steel: 375 # Forge-Change
+    N14Gunpowder: 220 # Forge-Change
 
 - type: latheRecipe
   id: MagazineBox556
@@ -71,10 +71,10 @@
   category: N14AmmoBox
   completetime: 5
   materials:
-    Lead: 150
-    Steel: 225
-    N14Gunpowder: 150
-    Cardboard: 100
+    Lead: 225 # Forge-Change
+    Steel: 375 # Forge-Change
+    N14Gunpowder: 300 # Forge-Change
+    Cardboard: 200 # Forge-Change
 
 # 5mm
 - type: latheRecipe
@@ -83,9 +83,9 @@
   category: N14Ammo
   completetime: 2
   materials:
-    Lead: 1
-    Steel: 2
-    N14Gunpowder: 2
+    Lead: 2 # Forge-Change
+    Steel: 3 # Forge-Change
+    N14Gunpowder: 3 # Forge-Change
 
 - type: latheRecipe
   id: N14MagazineMinigun5mm
@@ -93,9 +93,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 500
+    Lead: 400 # Forge-Change
     Steel: 1100
-    N14Gunpowder: 1000
+    N14Gunpowder: 600 # Forge-Change
 
 # 7.62
 - type: latheRecipe
@@ -104,9 +104,9 @@
   category: N14Ammo
   completetime: 2
   materials:
-    Lead: 2
-    Steel: 3
-    N14Gunpowder: 2
+    Lead: 4 # Forge-Change
+    Steel: 6 # Forge-Change
+    N14Gunpowder: 4 # Forge-Change
 
 - type: latheRecipe
   id: Magazine762AmmoShort
@@ -114,9 +114,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 40
+    Lead: 80 # Forge-Change
     Steel: 180
-    N14Gunpowder: 40
+    N14Gunpowder: 80 # Forge-Change
 
 - type: latheRecipe
   id: Magazine762Rifle
@@ -125,8 +125,8 @@
   completetime: 5
   materials:
     Lead: 60
-    Steel: 190
-    N14Gunpowder: 60
+    Steel: 260 # Forge-Change
+    N14Gunpowder: 120 # Forge-Change
 
 - type: latheRecipe
   id: Magazine762AmmoBelt
@@ -135,8 +135,8 @@
   completetime: 5
   materials:
     Lead: 500
-    Steel: 1100
-    N14Gunpowder: 1000
+    Steel: 1300 # Forge-Change
+    N14Gunpowder: 500 # Forge-Change
 
 - type: latheRecipe
   id: MagazineBox762
@@ -144,10 +144,10 @@
   category: N14AmmoBox
   completetime: 5
   materials:
-    Lead: 120
-    Steel: 180
-    N14Gunpowder: 120
-    Cardboard: 100
+    Lead: 240 # Forge-Change
+    Steel: 360 # Forge-Change
+    N14Gunpowder: 240 # Forge-Change
+    Cardboard: 150 # Forge-Change
 
 # 9mm
 - type: latheRecipe
@@ -156,9 +156,9 @@
   category: N14Ammo
   completetime: 2
   materials:
-    Lead: 1
-    Steel: 2
-    N14Gunpowder: 2
+    Lead: 2 # Forge-Change
+    Steel: 3 # Forge-Change
+    N14Gunpowder: 3 # Forge-Change
 
 - type: latheRecipe
   id: N14MagazinePistol9mm
@@ -166,9 +166,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 24
-    Steel: 148
-    N14Gunpowder: 48
+    Lead: 36 # Forge-Change
+    Steel: 74 # Forge-Change
+    N14Gunpowder: 42 # Forge-Change
 
 - type: latheRecipe
   id: N14MagazineSMG9mm
@@ -176,9 +176,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 31
-    Steel: 162
-    N14Gunpowder: 62
+    Lead: 62 # Forge-Change
+    Steel: 123 # Forge-Change
+    N14Gunpowder: 93 # Forge-Change
 
 - type: latheRecipe
   id: SpeedLoader9
@@ -186,9 +186,9 @@
   category: N14AmmoMagazine # Forge-Change
   completetime: 5
   materials:
-    Lead: 6
-    Steel: 22
-    N14Gunpowder: 12
+    Lead: 12 # Forge-Change
+    Steel: 28 # Forge-Change
+    N14Gunpowder: 18 # Forge-Change
 
 - type: latheRecipe
   id: MagazineBox9mm
@@ -196,10 +196,10 @@
   category: N14AmmoBox
   completetime: 5
   materials:
-    Lead: 80
-    Steel: 160
-    N14Gunpowder: 160
-    Cardboard: 100
+    Lead: 160 # Forge-Change
+    Steel: 240 # Forge-Change
+    N14Gunpowder: 240 # Forge-Change
+    Cardboard: 200 # Forge-Change
 
 # 10mm
 - type: latheRecipe
@@ -208,9 +208,9 @@
   category: N14Ammo
   completetime: 2
   materials:
-    Lead: 1
-    Steel: 2
-    N14Gunpowder: 2
+    Lead: 2.5 # Forge-Change
+    Steel: 4 # Forge-Change
+    N14Gunpowder: 3.5 # Forge-Change
 
 - type: latheRecipe
   id: N14MagazinePistol10mm
@@ -218,9 +218,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 10
-    Steel: 120
-    N14Gunpowder: 20
+    Lead: 25 # Forge-Change
+    Steel: 60 # Forge-Change
+    N14Gunpowder: 35 # Forge-Change
 
 - type: latheRecipe
   id: N14MagazineSMG10mm
@@ -228,9 +228,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 35
+    Lead: 88 # Forge-Change
     Steel: 170
-    N14Gunpowder: 70
+    N14Gunpowder: 123 # Forge-Change
 
 - type: latheRecipe
   id: SpeedLoader10
@@ -238,9 +238,9 @@
   category: N14AmmoMagazine # Forge-Change
   completetime: 5
   materials:
-    Lead: 6
-    Steel: 22
-    N14Gunpowder: 12
+    Lead: 15 # Forge-Change
+    Steel: 34
+    N14Gunpowder: 21 # Forge-Change
 
 - type: latheRecipe
   id: MagazineBox10mm
@@ -250,7 +250,7 @@
   materials:
     Lead: 80
     Steel: 160
-    N14Gunpowder: 160
+    N14Gunpowder: 280 # Forge-Change
     Cardboard: 100
 
 # 12.7mm
@@ -260,9 +260,9 @@
   category: N14Ammo
   completetime: 2
   materials:
-    Lead: 2
-    Steel: 3
-    N14Gunpowder: 2
+    Lead: 4 # Forge-Change
+    Steel: 6 # Forge-Change
+    N14Gunpowder: 4 # Forge-Change
 
 - type: latheRecipe
   id: N14MagazinePistol12mm
@@ -270,9 +270,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 20
-    Steel: 130
-    N14Gunpowder: 20
+    Lead: 40 # Forge-Change
+    Steel: 68 # Forge-Change
+    N14Gunpowder: 40 # Forge-Change
 
 - type: latheRecipe
   id: N14MagazineSMG12mm
@@ -280,9 +280,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 56
-    Steel: 184
-    N14Gunpowder: 56
+    Lead: 112 # Forge-Change
+    Steel: 200 # Forge-Change
+    N14Gunpowder: 112 # Forge-Change
 
 - type: latheRecipe
   id: N14TopMagazineSMG12mm
@@ -290,9 +290,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 80
-    Steel: 220
-    N14Gunpowder: 80
+    Lead: 160 # Forge-Change
+    Steel: 350 # Forge-Change
+    N14Gunpowder: 160 # Forge-Change
 
 - type: latheRecipe
   id: MagazineBox12
@@ -300,10 +300,10 @@
   category: N14AmmoBox
   completetime: 5
   materials:
-    Lead: 150
-    Steel: 225
-    N14Gunpowder: 150
-    Cardboard: 100
+    Lead: 300 # Forge-Change
+    Steel: 450 # Forge-Change
+    N14Gunpowder: 300 # Forge-Change
+    Cardboard: 200 # Forge-Change
 
 # 12ga
 - type: latheRecipe
@@ -312,9 +312,9 @@
   category: N14Ammo
   completetime: 2
   materials:
-    Lead: 2
-    Steel: 3
-    N14Gunpowder: 2
+    Lead: 3 # Forge-Change
+    Paper: 3 # Forge-Change
+    N14Gunpowder: 3 # Forge-Change
 
 - type: latheRecipe
   id: N14MagazineShotgun12
@@ -322,10 +322,10 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 16
-    Paper: 24
+    Lead: 24 # Forge-Change
+    Paper: 24 # Forge-Change
     Steel: 100
-    N14Gunpowder: 16
+    N14Gunpowder: 24 # Forge-Change
 
 - type: latheRecipe
   id: MagazineBox12gauge
@@ -333,10 +333,10 @@
   category: N14AmmoBox
   completetime: 5
   materials:
-    Lead: 60
-    Paper: 90
-    N14Gunpowder: 60
-    Cardboard: 100
+    Lead: 90 # Forge-Change
+    Paper: 180 # Forge-Change
+    N14Gunpowder: 90 # Forge-Change
+    Cardboard: 200 # Forge-Change
 
 # 20ga
 - type: latheRecipe
@@ -345,8 +345,8 @@
   category: N14Ammo
   completetime: 2
   materials:
-    Lead: 1
-    Paper: 2
+    Lead: 2 # Forge-Change
+    Paper: 3 # Forge-Change
     N14Gunpowder: 2
 
 - type: latheRecipe
@@ -357,8 +357,8 @@
   materials:
     Lead: 20
     Steel: 100
-    Paper: 40
-    N14Gunpowder: 40
+    Paper: 30 # Forge-Change
+    N14Gunpowder: 20 # Forge-Change
 
 - type: latheRecipe
   id: MagazineBox20gauge
@@ -366,10 +366,10 @@
   category: N14AmmoBox
   completetime: 5
   materials:
-    Lead: 30
-    Paper: 60
+    Lead: 60 # Forge-Change
+    Paper: 90 # Forge-Change
     N14Gunpowder: 60
-    Cardboard: 100
+    Cardboard: 150 # Forge-Change
 
 # 22lr
 - type: latheRecipe
@@ -388,9 +388,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 80
-    Steel: 260
-    N14Gunpowder: 160
+    Lead: 18 # Forge-Change
+    Steel: 56 # Forge-Change
+    N14Gunpowder: 36 # Forge-Change
 
 - type: latheRecipe
   id: MagazineBox22
@@ -410,9 +410,9 @@
   category: N14Ammo
   completetime: 2
   materials:
-    Lead: 2
-    Steel: 3
-    N14Gunpowder: 2
+    Lead: 4.4 # Forge-Change
+    Steel: 5 # Forge-Change
+    N14Gunpowder: 4.4 # Forge-Change
 
 - type: latheRecipe
   id: SpeedLoader44
@@ -420,9 +420,9 @@
   category: N14AmmoMagazine # Forge-Change
   completetime: 5
   materials:
-    Lead: 10
-    Steel: 25
-    N14Gunpowder: 10
+    Lead: 27 # Forge-Change
+    Steel: 30 # Forge-Change
+    N14Gunpowder: 27 # Forge-Change
 
 - type: latheRecipe
   id: MagazineBox44
@@ -430,10 +430,10 @@
   category: N14AmmoBox
   completetime: 5
   materials:
-    Lead: 44
-    Steel: 166
-    N14Gunpowder: 44
-    Cardboard: 100
+    Lead: 132 # Forge-Change
+    Steel: 160 # Forge-Change
+    N14Gunpowder: 132 # Forge-Change
+    Cardboard: 100 # Forge-Change
 
 - type: latheRecipe
   id: N14MagazinePistol44
@@ -441,9 +441,9 @@
   category: N14AmmoMagazine # Forge-Change
   completetime: 5
   materials:
-    Lead: 20
-    Steel: 30
-    N14Gunpowder: 15
+    Lead: 40 # Forge-Change
+    Steel: 50 # Forge-Change
+    N14Gunpowder: 40 # Forge-Change
 
 # .45 auto
 - type: latheRecipe
@@ -452,9 +452,9 @@
   category: N14Ammo
   completetime: 2
   materials:
-    Lead: 1
-    Steel: 2
-    N14Gunpowder: 2
+    Lead: 3 # Forge-Change
+    Steel: 4 # Forge-Change
+    N14Gunpowder: 4 # Forge-Change
 
 - type: latheRecipe
   id: N14MagazinePistol45
@@ -462,9 +462,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 18
-    Steel: 136
-    N14Gunpowder: 36
+    Lead: 24 # Forge-Change
+    Steel: 52 # Forge-Change
+    N14Gunpowder: 32 # Forge-Change
 
 - type: latheRecipe
   id: Magazine45SubMachineGun
@@ -472,9 +472,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 25
+    Lead: 75  # Forge-Change
     Steel: 150
-    N14Gunpowder: 50
+    N14Gunpowder: 100  # Forge-Change
 
 - type: latheRecipe
   id: MagazineBox45
@@ -482,10 +482,10 @@
   category: N14AmmoBox
   completetime: 5
   materials:
-    Lead: 75
-    Steel: 150
-    N14Gunpowder: 150
-    Cardboard: 100
+    Lead: 225  # Forge-Change
+    Steel: 300  # Forge-Change
+    N14Gunpowder: 300  # Forge-Change
+    Cardboard: 200  # Forge-Change
 
 # .308
 - type: latheRecipe
@@ -494,9 +494,9 @@
   category: N14Ammo
   completetime: 2
   materials:
-    Lead: 3
-    Steel: 4
-    N14Gunpowder: 3
+    Lead: 5  # Forge-Change
+    Steel: 7  # Forge-Change
+    N14Gunpowder: 6  # Forge-Change
 
 - type: latheRecipe
   id: Magazine308Rifle
@@ -504,9 +504,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 33
-    Steel: 144
-    N14Gunpowder: 33
+    Lead: 105  # Forge-Change
+    Steel: 210  # Forge-Change
+    N14Gunpowder: 126  # Forge-Change
 
 - type: latheRecipe
   id: Magazine308RifleLong
@@ -524,9 +524,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 24
-    Steel: 132
-    N14Gunpowder: 24
+    Lead: 35 # Forge-Change
+    Steel: 50 # Forge-Change
+    N14Gunpowder: 42 # Forge-Change
 
 - type: latheRecipe
   id: MagazineBox308
@@ -534,9 +534,9 @@
   category: N14AmmoBox
   completetime: 5
   materials:
-    Lead: 96
-    Steel: 128
-    N14Gunpowder: 96
+    Lead: 160 # Forge-Change
+    Steel: 224 # Forge-Change
+    N14Gunpowder: 192 # Forge-Change
     Cardboard: 100
 
 # forge-change
@@ -546,9 +546,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 33
-    Steel: 77
-    N14Gunpowder: 33
+    Lead: 60 # Forge-Change
+    Steel: 150 # Forge-Change
+    N14Gunpowder: 60 # Forge-Change
 
 # 45-70 gov't
 - type: latheRecipe
@@ -557,9 +557,9 @@
   category: N14AmmoMagazine # Forge-Change
   completetime: 5
   materials:
-    Lead: 24
-    Steel: 25
-    N14Gunpowder: 20
+    Lead: 36 # Forge-Change
+    Steel: 46 # Forge-Change
+    N14Gunpowder: 36 # Forge-Change
 
 - type: latheRecipe
   id: SpeedLoader45-70Tube
@@ -567,9 +567,9 @@
   category: N14AmmoMagazine # Forge-Change
   completetime: 5
   materials:
-    Lead: 40
-    Steel: 35
-    N14Gunpowder: 30
+    Lead: 60 # Forge-Change
+    Steel: 80 # Forge-Change
+    N14Gunpowder: 60 # Forge-Change
 
 - type: latheRecipe
   id: MagazineBox45-70
@@ -577,10 +577,10 @@
   category: N14AmmoBox
   completetime: 5
   materials:
-    Lead: 120
-    Steel: 150
-    N14Gunpowder: 100
-    Cardboard: 100
+    Lead: 180 # Forge-Change
+    Steel: 180 # Forge-Change
+    N14Gunpowder: 180 # Forge-Change
+    Cardboard: 150 # Forge-Change
 
 # 50
 - type: latheRecipe
@@ -589,9 +589,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 25
-    Steel: 50
-    N14Gunpowder: 25
+    Lead: 50 # Forge-Change
+    Steel: 150 # Forge-Change
+    N14Gunpowder: 75 # Forge-Change
 
 - type: latheRecipe
   id: MagazineBox50
@@ -599,7 +599,7 @@
   category: N14AmmoBox
   completetime: 5
   materials:
-    Lead: 150
-    Steel: 200
-    N14Gunpowder: 150
-    Cardboard: 100
+    Lead: 300 # Forge-Change
+    Steel: 300 # Forge-Change
+    N14Gunpowder: 450 # Forge-Change
+    Cardboard: 200 # Forge-Change

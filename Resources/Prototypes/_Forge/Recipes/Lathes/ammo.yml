@@ -5,10 +5,10 @@
   category: N14AmmoBox
   completetime: 5
   materials:
-    Lead: 180
-    Steel: 260
-    N14Gunpowder: 180
-    Cardboard: 100
+    Lead: 300 # Forge-Change
+    Steel: 375 # Forge-Change
+    N14Gunpowder: 300 # Forge-Change
+    Cardboard: 200 # Forge-Change
 
 - type: latheRecipe
   id: Magazine545Rifle
@@ -16,9 +16,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 60
+    Lead: 100 # Forge-Change
     Steel: 180
-    N14Gunpowder: 60
+    N14Gunpowder: 100 # Forge-Change
 
 - type: latheRecipe
   id: MagazineDrum545Rifle
@@ -28,4 +28,4 @@
   materials:
     Lead: 450
     Steel: 1000
-    N14Gunpowder: 970
+    N14Gunpowder: 450 # Forge-Change
