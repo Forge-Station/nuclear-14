@@ -23,7 +23,7 @@ N14ToolboxFilled2 : N14ToolboxFilledLoot
 
 N14ClothingBeltMilitaryFilled : N14ClothingBeltAssaultFilled
 
-N14MobFriendlyRobot : N14MobRobotFriendly
+N14MobFriendlyRobot : null
 
 N14MobRobotAssaultronHostile : N14MobRobotHostileAssaultron
 N14MobRobotHostileProtectron : N14MobRobotHostileProtectron
