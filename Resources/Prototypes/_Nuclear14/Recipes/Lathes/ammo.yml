@@ -208,9 +208,9 @@
   category: N14Ammo
   completetime: 2
   materials:
-    Lead: 2.5 # Forge-Change
+    Lead: 2 # Forge-Change
     Steel: 4 # Forge-Change
-    N14Gunpowder: 3.5 # Forge-Change
+    N14Gunpowder: 3 # Forge-Change
 
 - type: latheRecipe
   id: N14MagazinePistol10mm
@@ -410,9 +410,9 @@
   category: N14Ammo
   completetime: 2
   materials:
-    Lead: 4.4 # Forge-Change
+    Lead: 4 # Forge-Change
     Steel: 5 # Forge-Change
-    N14Gunpowder: 4.4 # Forge-Change
+    N14Gunpowder: 4 # Forge-Change
 
 - type: latheRecipe
   id: SpeedLoader44
