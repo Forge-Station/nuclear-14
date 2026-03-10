@@ -176,25 +176,25 @@
     baseWalkSpeed : 3
     baseSprintSpeed : 6
   - type: Sprite
+    sprite: _Nuclear14/Mobs/Robots/assaultron.rsi
     layers:
     # Forge-Change-Start
     - map: ["enum.DamageStateVisualLayers.Base", "movement"]
       state: assaultron
-      sprite: _Nuclear14/Mobs/Robots/assaultron.rsi
-    - type: SpriteMovement
-      movementLayers:
-        movement:
-          state: assaultron-moving
-      noMovementLayers:
-        movement:
-          state: assaultron
-    - type: DamageStateVisuals
-      states:
-        Alive:
-          Base: assaultron
-        Dead:
-          Base: assaultron-dead
     # Forge-Change-End
+  - type: SpriteMovement
+    movementLayers:
+      movement:
+        state: assaultron-moving
+    noMovementLayers:
+      movement:
+        state: assaultron
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: assaultron
+      Dead:
+        Base: assaultron-dead
     # Forge-Delete-Start
     # - state: icon # change me
     #   map: ["enum.BorgVisualLayers.Light"]
