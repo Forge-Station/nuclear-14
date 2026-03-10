@@ -28,3 +28,25 @@
   components:
   - type: Sprite
     state: flag_town
+
+- type: entity
+  parent: N14SignBase
+  id: NCFlagCanada
+  name: flag
+  description: A Canada flag.
+  suffix: Canada
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Wallmount/horizontal_flags.rsi
+    state: flag_canada
+    scale: 0.7,0.8
+
+- type: entity
+  parent: NCFlagCanada
+  id: NCFlagAlaska
+  name: flag
+  description: A flag of Alaska.
+  suffix: Alaska
+  components:
+  - type: Sprite
+    state: flag_alaska

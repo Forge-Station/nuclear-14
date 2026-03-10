@@ -21,3 +21,34 @@
   background: /Textures/Corvax/LobbyScreens/tribalyama.png
   name: Tribal Yama
   artist: sverhbomba
+
+- type: lobbyBackground
+  id: NCDelaniHuk
+  background: /Textures/Corvax/LobbyScreens/arbat.png
+  name: Delani Huk
+  artist: Fox_Place
+
+- type: lobbyBackground
+  id: NCAquilliiNCRRangers
+  background: /Textures/Corvax/LobbyScreens/aquillii.png
+  name: Aquillii NCR Rangers
+  artist: l_i_q_u_e_u_r
+
+- type: lobbyBackground
+  id: NCBarWild
+  background: /Textures/Corvax/LobbyScreens/barwild.png
+  name: Wild Bar
+  artist: miaurokku
+
+- type: lobbyBackground
+  id: NCDepression
+  background: /Textures/Corvax/LobbyScreens/depression.png
+  name: Depression
+  artist: miaurokku
+
+- type: lobbyBackground
+  id: NClegionNoob
+  background: /Textures/Corvax/LobbyScreens/legionnoob.png
+  name: Legion get good
+  artist: miaurokku
+

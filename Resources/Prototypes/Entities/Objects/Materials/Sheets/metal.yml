@@ -80,7 +80,7 @@
     requireActiveHand: false
   - type: ShortConstruction
     entries:
-    #- prototype: Girder
+    - prototype: Girder
     - prototype: MetalRod
     #- category:
        # name: Tiles
@@ -294,7 +294,8 @@
     requireActiveHand: false
   - type: ShortConstruction
     entries:
-    - prototype: SecureWindoor
+    - prototype: ReinforcedGirder # Forge-Add
+    # - prototype: SecureWindoor # Forge-Delete
   - type: TwistedConstructionTarget
     replacementProto: RunedMetal1
 

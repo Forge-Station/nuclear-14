@@ -1,9 +1,11 @@
 ent-N14BaseTallObstacle = { ent-BaseStructure }
     .suffix = Высокая
     .desc = { ent-BaseStructure.desc }
-ent-N14BarricadeWoodTall = деревянные баррикалы
+
+ent-N14BarricadeWoodTall = деревянные баррикады
     .suffix = Высокая
     .desc = { ent-N14BaseTallObstacle.desc }
+
 ent-N14CellBars = решётка
     .suffix = Стандартная
     .desc = { ent-N14BaseTallObstacle.desc }

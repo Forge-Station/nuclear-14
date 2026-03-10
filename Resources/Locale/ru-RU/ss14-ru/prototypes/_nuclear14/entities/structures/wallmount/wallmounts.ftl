@@ -7,3 +7,6 @@ ent-N14WallmountVentDamaged = { ent-N14WallmountVent }
 ent-N14WallmountVentOpen = { ent-N14WallmountVent }
     .suffix = открытая, маппинг
     .desc = { ent-N14WallmountVent.desc }
+ent-SignConspiracyBoard = детективная доска
+    .suffix = маппинг
+    .desc = Идеальна для для отслеживания хода расследования.

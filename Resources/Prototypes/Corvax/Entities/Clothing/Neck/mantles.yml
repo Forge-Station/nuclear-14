@@ -28,3 +28,16 @@
     sprite: Corvax/Clothing/Neck/NCRMPСoatNect.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Neck/NCRMPСoatNect.rsi
+  - type: Storage
+    grid:
+    - 0,0,1,1
+  - type: ContainerContainer
+    containers:
+      storagebase: !type:Container
+        ents: []
+  - type: UserInterface
+    interfaces:
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+      enum.ToggleClothingUiKey.Key:
+        type: ToggleableClothingBoundUserInterface

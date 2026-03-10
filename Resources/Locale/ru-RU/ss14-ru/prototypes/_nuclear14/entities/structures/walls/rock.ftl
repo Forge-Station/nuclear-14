@@ -108,3 +108,6 @@ ent-N14WallRockAndesiteUranium = { ent-N14WallRockAndesite }
 ent-N14WallRockAndesiteSalt = { ent-N14WallRockAndesite }
     .desc = Рудная жила, вмурованная в андезитовую стену. Соль — необходимость и роскошь в мире Пустоши.
     .suffix = соляная
+ent-ColdMountainRock = холодная каменная стена
+    .suffix = planetmap
+    .desc = Холодная на ощупь скалистая стена пещеры. Слишком твердая чтобы повредить.

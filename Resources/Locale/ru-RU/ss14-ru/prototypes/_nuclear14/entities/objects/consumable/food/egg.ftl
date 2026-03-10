@@ -1,12 +1,16 @@
 ent-N14FoodEggBase = { ent-FoodEggBase }
     .desc = Яйцо! В Пустоши это настоящая редкость.
+
+<#-- Курица -->
 ent-N14FoodEggChicken = куриное яйцо
     .desc = { ent-N14FoodEggBase.desc }
 ent-N14FoodEggChickenFertilized = { ent-N14FoodEggChicken }
     .suffix = Оплодотворенное, Куриное
     .desc = { ent-N14FoodEggChicken.desc }
 ent-N14CookedFoodEggChickenBoiled = вареное куриное яйцо
-    .desc = Вкусное вареное яйцо.  Настоящий деликатес для жителя Пустоши.
+    .desc = Вкусное вареное яйцо. Настоящий деликатес для жителя Пустоши.
+
+<#-- Коготь смерти -->
 ent-N14FoodEggDeathclaw = яйцо когтя смерти
     .desc = { ent-N14FoodEggBase.desc }
 ent-N14FoodEggDeathclawFertilized = { ent-N14FoodEggDeathclaw }
@@ -14,6 +18,8 @@ ent-N14FoodEggDeathclawFertilized = { ent-N14FoodEggDeathclaw }
     .desc = { ent-N14FoodEggDeathclaw.desc }
 ent-N14CookedFoodEggDeathclawBoiled = вареное яйцо когтя смерти
     .desc = Вкусное вареное яйцо... когтя смерти?  Только самые отчаянные гурманы рискнут его попробовать.
+
+<#-- Геккон -->
 ent-N14FoodEggGecko = яйцо геккона
     .desc = { ent-N14FoodEggBase.desc }
 ent-N14FoodEggGeckoFertilized = { ent-N14FoodEggGecko }
@@ -21,6 +27,8 @@ ent-N14FoodEggGeckoFertilized = { ent-N14FoodEggGecko }
     .desc = { ent-N14FoodEggGecko.desc }
 ent-N14CookedFoodEggGeckoBoiled = вареное яйцо геккона
     .desc = Вкусное вареное яйцо... геккона?  Ну, на вкус и цвет, как говорится...
+
+<#-- Ночной охотник -->
 ent-N14FoodEggNightstalker = яйцо ночного охотника
     .desc = { ent-N14FoodEggBase.desc }
 ent-N14FoodEggNightstalkerFertilized = { ent-N14FoodEggNightstalker }

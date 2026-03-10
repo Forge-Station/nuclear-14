@@ -92,7 +92,7 @@
     animation: WeaponArcFist
     damage:
       types:
-        Brute: 30
+        Blunt: 15 # Forge-Change
         Slash: 10
     range: 2.5
   - type: MeleeThrowOnHit
