@@ -1,7 +1,7 @@
-<#-- Пицца -->
+# Пицца 
 ent-N14CookedFoodPizzaBase = { ent-FoodInjectableBase }
     .desc = { ent-FoodInjectableBase.desc }
-<#--  -->
+
 ent-N14CookedFoodPizzaMargherita = пицца Маргарита
     .desc = Аромат какого-то места под названием... Ита-ли..?
 ent-N14CookedFoodPizzaMeat = мясная пицца
@@ -14,10 +14,10 @@ ent-N14CookedFoodPizzaPineapple = пицца с ананасом
     .desc = "Пицца" с ананасами. Вы всё таки сделали ЭТО!!! УЖАС!!!
 
 
-<#-- Кусок пиццы -->
+# Кусок пиццы 
 ent-N14CookedFoodPizzaSliceBase = { ent-FoodInjectableBase }
     .desc = { ent-FoodInjectableBase.desc }
-<#--  -->
+
 ent-N14CookedFoodPizzaMargheritaSlice = кусок пиццы Маргарита
     .desc = Кусочек  Ита-ли.
 ent-N14CookedFoodPizzaMeatSlice = кусок мясной пиццы

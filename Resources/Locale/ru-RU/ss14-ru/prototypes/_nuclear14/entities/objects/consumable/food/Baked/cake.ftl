@@ -1,7 +1,7 @@
-<#-- Торт -->
+# Торт 
 ent-N14CookedFoodCakeBase = { ent-FoodInjectableBase }
     .desc = { ent-FoodInjectableBase.desc }
-<#--  -->
+
 ent-N14CookedFoodCakeTarberry = торт из смоляники
     .desc = Сытный и вкусный торт из смоляники.
 ent-N14CookedFoodCakePlain = торт
@@ -29,10 +29,10 @@ ent-N14CookedFoodCakeBirthday = именинный торт
 ent-N14CookedFoodCakeVanilla = ванильный торт
     .desc =Торт с ванильной глазурью.
 
-<#-- Кусок торта -->
+# Кусок торта 
 ent-N14CookedFoodCakeSliceBase = { ent-N14CookedFoodCakeBase }
     .desc = Просто кусок торта, хватит на всех.
-<#--  -->
+
 ent-N14CookedFoodCakeTarberrySlice = кусок торта из смоляники
     .desc = Осторожно, покрасит ваш язык и прилипнет к вашим зубам.
 ent-N14CookedFoodCakePlainSlice = кусок обычного торта

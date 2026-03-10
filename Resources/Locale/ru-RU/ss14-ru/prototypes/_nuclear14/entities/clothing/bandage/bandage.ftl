@@ -1,4 +1,4 @@
-<#-- Новая Калифорнийская Республика (НКР) -->
+# Новая Калифорнийская Республика (НКР) 
 ent-NCClothingBandageNCR = повязка НКР
     .desc = Стандартная повязка армии НКР.
 ent-NCClothingBandageNCRRecruit = повязка рекрута НКР
@@ -6,7 +6,7 @@ ent-NCClothingBandageNCRRecruit = повязка рекрута НКР
 ent-NCClothingBrasletNCRPrisoner = Трекер браслет заключенного
     .desc = Оно следит за вами стоит ли сбегать?
 
-<#-- Легион Цезаря -->
+# Легион Цезаря 
 ent-NCClothingBandageLegion = повязка Легиона
     .desc = Грубая повязка из кожи.
 ent-NCClothingBandageLegionRecruit = повязка рекрута
@@ -14,7 +14,7 @@ ent-NCClothingBandageLegionRecruit = повязка рекрута
 ent-NCClothingCollarLegionSlave = Ошейник раба легиона цезаря
     .desc = Злостное оружие угнетие..
 
-<#-- Среднезападное Братство Стали (СЗБС) -->
+# Среднезападное Братство Стали (СЗБС) 
 ent-NCClothingBandageBoS = полевая повязка Братства
     .desc = Стандартная повязка Братства Стали.
 ent-NCClothingBandageBoSRecruit = повязка оруженосца
@@ -22,6 +22,6 @@ ent-NCClothingBandageBoSRecruit = повязка оруженосца
 ent-NCClothingCollarBoSSerf = Ошейник серфа СЗБС
     .desc = Кажется он, не позволит вам сбежать, целым
 
-<#-- Рейдеры -->
+# Рейдеры 
 ent-NCClothingBandageRaiders = грязная повязка
     .desc = Клеймо рейдера, удачи...

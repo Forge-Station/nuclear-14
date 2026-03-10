@@ -1,6 +1,6 @@
 ent-N14BaseStorageFill = { ent-BaseItem }
     .desc = { ent-BaseItem.desc }
-<#--  -->
+
 ent-N14BaseLockerStorageFill = { ent-N14BaseStorageFill }
     .desc = { ent-N14BaseStorageFill.desc }
 ent-N14BaseSmallLockerStorageFill = { ent-N14BaseStorageFill }
