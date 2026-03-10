@@ -20,4 +20,19 @@ N14DoorWoodSecureLockedCaravanLeader: null
 
 N14ToolboxFilled1 : N14ToolboxFilled
 N14ToolboxFilled2 : N14ToolboxFilledLoot
+
 N14ClothingBeltMilitaryFilled : N14ClothingBeltAssaultFilled
+
+N14MobFriendlyRobot : N14MobRobotFriendly
+
+N14MobRobotAssaultronHostile : N14MobRobotHostileAssaultron
+N14MobRobotHostileProtectron : N14MobRobotHostileProtectron
+N14MobRobotProtectronBuilderHostile : N14MobRobotHostileProtectronBuilder
+N14MobRobotProtectronFireHostile : N14MobRobotHostileProtectronFire
+N14MobRobotProtectronPoliceHostile : N14MobRobotHostileProtectronPolice
+N14MobRobotMrHandyClaw : N14MobRobotHostileMrHandyClaw
+N14MobRobotMrHandySaw : N14MobRobotHostileMrHandySaw
+N14MobRobotMrHandyGun : N14MobRobotHostileMrHandyGun
+N14MobRobotMrHandyGutsy : N14MobRobotHostileMrHandyGutsy
+N14MobRobotRobobrain : N14MobRobotHostileRobobrain
+N14MobRobotEyebot : N14MobRobotHostileEyebot

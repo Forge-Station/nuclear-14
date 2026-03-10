@@ -8,7 +8,10 @@
   },
   "states": [
     {
-      "name": "shadow_eyebot"
+        "name": "shadow_eyebot"
+    },
+    {
+      "name": "dead"
     },
     {
       "name": "icon",

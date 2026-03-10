@@ -8,49 +8,48 @@
   },
   "states": [
     {
-      "name": "icon",
-	  "directions": 4
+        "name": "icon"
     },
     {
-      "name": "dead"
+        "name": "assaultron",
+	    "directions": 4
     },
     {
-      "name": "off",
-	  "directions": 4
+        "name": "assaultron-dead"
     },
     {
-      "name": "on",
-	  "directions": 4
+        "name": "assaultron-off",
+	    "directions": 4
     },
     {
-      "name": "walking",
-	  "directions": 4,
-      "delays": [
-        [
-          0.1,
-          0.2,
-          0.1,
-          0.2
-        ],
-        [
-          0.1,
-          0.2,
-          0.1,
-          0.2
-        ],
-        [
-          0.1,
-          0.2,
-          0.1,
-          0.2
-        ],
-        [
-          0.1,
-          0.2,
-          0.1,
-          0.2
+        "name": "assaultron-on",
+	    "directions": 4
+    },
+    {
+        "name": "assaultron-moving",
+        "directions": 4,
+        "delays": [
+            [
+                0.2,
+                0.2,
+                0.2
+            ],
+            [
+                0.2,
+                0.2,
+                0.2
+            ],
+            [
+                0.2,
+                0.2,
+                0.2
+            ],
+            [
+                0.2,
+                0.2,
+                0.2
+            ]
         ]
-      ]
     }
   ]
 }

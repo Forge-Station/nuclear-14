@@ -1,7 +1,7 @@
 - type: entity
   save: false
   abstract: true
-  id: N14MobFriendlyRobot
+  id: N14MobRobotFriendly # Forge-Change
   categories: [ HideSpawnMenu ]
   components:
   - type: LagCompensation
@@ -71,8 +71,6 @@
     whitelist:
       types:
       - Shard
-      - Lava
-      - Chasm
       - SlipTile
       - Landmine
       - Mousetrap
@@ -84,7 +82,7 @@
 - type: entity
   name: Waster Eyebot
   id: N14MobPetEyebot #Basic Eyebot every other inherits from.
-  parent: N14MobFriendlyRobot
+  parent: N14MobRobotFriendly
   description: A military Eyebot with a smiling face to look at!
   components:
   - type: HTN
