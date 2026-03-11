@@ -41,6 +41,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             c.Difficulty,
             c.Description,
             c.Repeatable,
+            c.Taken,
             c.Completed,
             c.TargetItem,
             c.Required,
@@ -238,6 +239,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 return false;
 
             if (a.Repeatable != b.Repeatable ||
+                a.Taken != b.Taken ||
                 a.Completed != b.Completed ||
                 a.Required != b.Required ||
                 a.Progress != b.Progress)

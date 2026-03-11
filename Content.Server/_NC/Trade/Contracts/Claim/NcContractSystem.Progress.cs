@@ -21,11 +21,30 @@ public sealed partial class NcContractSystem : EntitySystem
 
         foreach (var (_, contract) in comp.Contracts)
         {
+            if (!contract.Taken)
+            {
+                ResetContractProgress(contract);
+                continue;
+            }
+
             ClearProgressPerContractScratch();
             UpdateContractProgressForSingleContract(contract, user, userItems, crate, crateItems, hasCrateWork);
         }
     }
 
+
+    private static void ResetContractProgress(ContractServerData contract)
+    {
+        contract.Progress = 0;
+
+        var targets = GetEffectiveTargets(contract);
+        for (var i = 0; i < targets.Count; i++)
+        {
+            var target = targets[i];
+            target.Progress = 0;
+            targets[i] = target;
+        }
+    }
     private void UpdateContractProgressForSingleContract(
         ContractServerData contract,
         EntityUid user,

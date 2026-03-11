@@ -13,6 +13,7 @@ public sealed class ContractClientData
     public int Progress;
 
     public bool Repeatable;
+    public bool Taken;
     public int Required;
     public List<ContractRewardData> Rewards = new();
 
@@ -28,6 +29,7 @@ public sealed class ContractClientData
         string difficulty,
         string description,
         bool repeatable,
+        bool taken,
         bool completed,
         string targetItem,
         int required,
@@ -40,6 +42,7 @@ public sealed class ContractClientData
         Difficulty = difficulty;
         Description = description;
         Repeatable = repeatable;
+        Taken = taken;
         Completed = completed;
         TargetItem = targetItem;
         Required = required;

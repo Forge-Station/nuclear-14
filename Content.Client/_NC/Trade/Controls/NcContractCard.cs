@@ -40,6 +40,7 @@ public sealed class NcContractCard : PanelContainer
     }
 
     public event Action<string>? OnClaim;
+    public event Action<string>? OnTake;
     public event Action<string>? OnSkip;
 
     private void BuildUi()
@@ -175,6 +176,16 @@ public sealed class NcContractCard : PanelContainer
                     new(0f, 0f, 0f, 0.7f)));
         }
 
+        if (_data.Taken && !_data.Completed)
+        {
+            header.AddChild(
+                BuildBadge(
+                    Loc.GetString("nc-store-contract-badge-taken"),
+                    Loc.GetString("nc-store-contract-badge-taken-tooltip"),
+                    Color.FromHex("#1F2E45"),
+                    Color.FromHex("#5E88C9")));
+        }
+
         if (_data.Completed)
         {
             header.AddChild(
@@ -270,13 +281,16 @@ public sealed class NcContractCard : PanelContainer
             Margin = new(8, 0, 0, 0)
         };
 
-        var canClaim = _data.Completed;
+        var canTake = !_data.Taken;
+        var canClaim = _data.Taken && _data.Completed;
 
         var actionHint = new Label
         {
-            Text = canClaim
-                ? Loc.GetString("nc-store-contract-action-can-claim")
-                : Loc.GetString("nc-store-contract-action-not-done"),
+            Text = canTake
+                ? Loc.GetString("nc-store-contract-action-not-taken")
+                : canClaim
+                    ? Loc.GetString("nc-store-contract-action-can-claim")
+                    : Loc.GetString("nc-store-contract-action-not-done"),
             Margin = new(0, 0, 0, 4),
             Align = Label.AlignMode.Center
         };
@@ -287,28 +301,40 @@ public sealed class NcContractCard : PanelContainer
 
         var btn = new Button
         {
-            Text = canClaim
-                ? Loc.GetString("nc-store-contract-action-claim")
-                : Loc.GetString(
-                    "nc-store-contract-action-claim-progress",
-                    ("progress", _data.Progress),
-                    ("required", CalculateRequiredTotal(_data))),
-            Disabled = !canClaim,
+            Text = canTake
+                ? Loc.GetString("nc-store-contract-action-take")
+                : canClaim
+                    ? Loc.GetString("nc-store-contract-action-claim")
+                    : Loc.GetString(
+                        "nc-store-contract-action-claim-progress",
+                        ("progress", _data.Progress),
+                        ("required", CalculateRequiredTotal(_data))),
+            Disabled = !(canTake || canClaim),
             HorizontalExpand = true,
             MinSize = new(0, 32)
         };
 
-        if (canClaim)
+        if (canTake)
+            btn.Modulate = Color.FromHex("#3F83F8");
+        else if (canClaim)
             btn.Modulate = Color.FromHex("#4CAF50");
 
-        btn.ToolTip = canClaim
-            ? !_data.Repeatable
-                ? Loc.GetString("nc-store-contract-claim-tooltip-single")
-                : Loc.GetString("nc-store-contract-claim-tooltip-repeatable")
-            : Loc.GetString("nc-store-contract-claim-tooltip-not-done");
+        btn.ToolTip = canTake
+            ? Loc.GetString("nc-store-contract-take-tooltip")
+            : canClaim
+                ? !_data.Repeatable
+                    ? Loc.GetString("nc-store-contract-claim-tooltip-single")
+                    : Loc.GetString("nc-store-contract-claim-tooltip-repeatable")
+                : Loc.GetString("nc-store-contract-claim-tooltip-not-done");
 
         btn.OnPressed += _ =>
         {
+            if (canTake)
+            {
+                OnTake?.Invoke(_data.Id);
+                return;
+            }
+
             if (!canClaim)
                 return;
 
@@ -320,7 +346,7 @@ public sealed class NcContractCard : PanelContainer
         if (_skipCost > 0 && !string.IsNullOrWhiteSpace(_skipCurrency))
         {
             var skipCurrencyName = CurrencyName(_skipCurrency);
-            var canSkip = _skipBalance >= _skipCost;
+            var canSkip = !_data.Taken && _skipBalance >= _skipCost;
             var skipBtn = new Button
             {
                 Text = Loc.GetString("nc-store-contract-action-skip", ("cost", _skipCost), ("currency", skipCurrencyName)),
@@ -335,9 +361,11 @@ public sealed class NcContractCard : PanelContainer
                 : Color.FromHex("#8A8A8A");
 
             var baseTip = Loc.GetString("nc-store-contract-skip-tooltip", ("cost", _skipCost), ("currency", skipCurrencyName));
-            skipBtn.ToolTip = canSkip
-                ? baseTip
-                : $"{baseTip}\n{Loc.GetString("nc-store-contract-skip-failed")}";
+            skipBtn.ToolTip = _data.Taken
+                ? Loc.GetString("nc-store-contract-skip-locked")
+                : canSkip
+                    ? baseTip
+                    : $"{baseTip}\n{Loc.GetString("nc-store-contract-skip-failed")}";
 
             skipBtn.OnPressed += _ =>
             {

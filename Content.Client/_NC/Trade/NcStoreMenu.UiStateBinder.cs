@@ -119,6 +119,7 @@ public sealed partial class NcStoreMenu
                     h = h * 31 + (c.Description?.GetHashCode() ?? 0);
                     h = h * 31 + (c.TargetItem?.GetHashCode() ?? 0);
                     h = h * 31 + (c.Repeatable ? 1 : 0);
+                    h = h * 31 + (c.Taken ? 1 : 0);
                     h = h * 31 + (c.Completed ? 1 : 0);
                     h = h * 31 + c.Progress;
                     h = h * 31 + c.Required;

@@ -77,6 +77,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         SubscribeLocalEvent<ContainerManagerComponent, EntRemovedFromContainerMessage>(OnUserEntRemoved);
         SubscribeLocalEvent<StackComponent, StackCountChangedEvent>(OnStackCountChanged);
         SubscribeLocalEvent<NcStoreComponent, ClaimContractBoundMessage>(OnClaimContract);
+        SubscribeLocalEvent<NcStoreComponent, TakeContractBoundMessage>(OnTakeContract);
         SubscribeLocalEvent<NcStoreComponent, SkipContractBoundMessage>(OnSkipContract);
         SubscribeLocalEvent<EntityStorageComponent, StorageAfterOpenEvent>(OnStorageOpen);
         SubscribeLocalEvent<EntityStorageComponent, StorageAfterCloseEvent>(OnStorageClose);

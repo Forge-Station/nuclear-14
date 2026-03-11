@@ -83,6 +83,7 @@ public sealed partial class NcContractSystem : EntitySystem
             Difficulty = proto.Difficulty,
             Description = proto.Description,
             Repeatable = proto.Repeatable,
+            Taken = false,
 
             Targets = targets,
             TargetItem = mainTarget,

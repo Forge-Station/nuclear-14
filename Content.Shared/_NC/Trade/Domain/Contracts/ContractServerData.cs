@@ -28,6 +28,7 @@ public sealed class ContractServerData
     public int Progress { get; set; }
 
     public bool Repeatable { get; set; } = true;
+    public bool Taken { get; set; }
 
     public string Id { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;

@@ -56,7 +56,10 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryComp(store, out NcStoreComponent? comp))
             return false;
 
-        if (!comp.Contracts.ContainsKey(contractId))
+        if (!comp.Contracts.TryGetValue(contractId, out var contract))
+            return false;
+
+        if (contract.Taken)
             return false;
 
         if (!TryGetContractSkipInfo(store, comp, out var currency, out var cost))

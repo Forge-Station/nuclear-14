@@ -44,6 +44,7 @@ public sealed partial class NcStoreMenu : FancyWindow
     private bool _tabsCaptured;
     private Control? _tabSell;
     public Action<string>? OnContractClaim;
+    public event Action<string>? OnContractTake;
     public event Action<string>? OnContractSkip;
     public NcStoreMenu()
     {
@@ -460,6 +461,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         {
             var card = new NcContractCard(c, _proto, _sprites, IoCManager.Resolve<IEntityManager>(), skipCost, skipCurrency, skipBalance);
             card.OnClaim += id => OnContractClaim?.Invoke(id);
+            card.OnTake += id => OnContractTake?.Invoke(id);
             card.OnSkip += id => OnContractSkip?.Invoke(id);
             contractList.AddChild(card);
         }

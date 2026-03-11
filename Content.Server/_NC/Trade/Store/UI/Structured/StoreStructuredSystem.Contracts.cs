@@ -28,6 +28,29 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         UpdateDynamicState(uid, comp, user);
     }
 
+
+    private void OnTakeContract(EntityUid uid, NcStoreComponent comp, TakeContractBoundMessage msg)
+    {
+        if (!TryGetLockedUiUser(uid, comp, out var user))
+            return;
+
+        if (!_storeSystem.CanUseStore(uid, comp, user))
+            return;
+
+        if (TryComp(uid, out TransformComponent? sX) && TryComp(user, out TransformComponent? uX) &&
+            !_xform.InRange(sX.Coordinates, uX.Coordinates, AutoCloseDistance))
+            return;
+
+        if (_contracts.TryTakeContract(uid, msg.ContractId))
+        {
+            _popups.PopupEntity(Loc.GetString("nc-store-contract-taken"), uid, user);
+            UpdateDynamicState(uid, comp, user);
+            return;
+        }
+
+        _popups.PopupEntity(Loc.GetString("nc-store-contract-take-failed"), uid, user);
+        UpdateDynamicState(uid, comp, user);
+    }
     private void OnSkipContract(EntityUid uid, NcStoreComponent comp, SkipContractBoundMessage msg)
     {
         if (!TryGetLockedUiUser(uid, comp, out var user))

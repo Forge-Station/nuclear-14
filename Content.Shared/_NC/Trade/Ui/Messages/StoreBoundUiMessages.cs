@@ -45,6 +45,17 @@ public sealed class ClaimContractBoundMessage : BoundUserInterfaceMessage
     public string ContractId { get; }
 }
 
+
+[Serializable, NetSerializable]
+public sealed class TakeContractBoundMessage : BoundUserInterfaceMessage
+{
+    public TakeContractBoundMessage(string contractId)
+    {
+        ContractId = contractId;
+    }
+
+    public string ContractId { get; }
+}
 [Serializable, NetSerializable]
 public sealed class RequestUiRefreshMessage : BoundUserInterfaceMessage { }
 

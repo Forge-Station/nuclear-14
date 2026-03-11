@@ -60,11 +60,16 @@ nc-store-contract-items-header = Предметы:
 nc-store-contract-action-claim = Завершить контракт
 nc-store-contract-action-claim-progress = Внести часть ({ $progress }/{ $required })
 nc-store-contract-action-can-claim = Готово к сдаче
+nc-store-contract-action-not-taken = Не принят
 nc-store-contract-action-not-done = Не выполнено
+nc-store-contract-action-take = Взять контракт
 nc-store-contract-claim-tooltip-single = Завершить разовый контракт и получить полную награду.
 nc-store-contract-claim-tooltip-repeatable = Сдать текущий прогресс по контракту и получить награду.
 nc-store-contract-claim-tooltip-not-done = Условия контракта ещё не выполнены. Недостаточно предметов.
+nc-store-contract-take-tooltip = Принять контракт. После принятия его нельзя пропустить.
 nc-store-contract-completed = Контракт успешно выполнен!
+nc-store-contract-taken = Контракт принят.
+nc-store-contract-take-failed = Не удалось принять контракт.
 nc-store-contract-goal-line = { $item }: { $count } шт.
 nc-store-contract-progress-line = Прогресс выполнения: { $progress } из { $required }
 nc-store-currency-format = { $amount } { $currency }
@@ -85,6 +90,8 @@ nc-store-proto-tooltip = { $name }
 nc-store-contract-reward-none = Награда не указана
 nc-store-contract-reward-item-line = { $item } ×{ $count }
 
+nc-store-contract-badge-taken = ВЗЯТ
+nc-store-contract-badge-taken-tooltip = Контракт принят и активен. Его нельзя пропустить.
 nc-store-contract-badge-completed = ВЫПОЛНЕНО
 nc-store-contract-badge-completed-tooltip = Контракт выполнен — можно забрать награду.
 
@@ -94,4 +101,5 @@ nc-store-contract-skip-tooltip =
     Стоимость: { $cost } { $currency }.
 nc-store-contract-skipped = Контракт пропущен, выдан новый.
 nc-store-contract-skip-failed = Не удалось пропустить контракт. Недостаточно средств.
+nc-store-contract-skip-locked = Этот контракт уже принят и не может быть пропущен.
 

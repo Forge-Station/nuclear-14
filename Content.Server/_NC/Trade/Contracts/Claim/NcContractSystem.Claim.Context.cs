@@ -47,6 +47,13 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
+        if (!contract.Taken)
+        {
+            fail = ClaimAttemptResult.Fail(
+                ClaimFailureReason.NotTaken,
+                $"Contract '{contractId}' is not taken yet.");
+            return false;
+        }
         var targets = GetEffectiveTargets(contract);
         if (targets.Count == 0)
         {

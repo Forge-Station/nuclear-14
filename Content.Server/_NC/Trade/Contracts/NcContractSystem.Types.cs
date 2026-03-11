@@ -13,6 +13,7 @@ public sealed partial class NcContractSystem : EntitySystem
         None = 0,
         StoreMissing,
         ContractMissing,
+        NotTaken,
         NoValidTargets,
         InvalidTarget,
         NotEnoughItems,
