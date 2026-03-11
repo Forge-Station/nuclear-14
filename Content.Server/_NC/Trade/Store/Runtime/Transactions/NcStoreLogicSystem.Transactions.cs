@@ -134,15 +134,21 @@ public sealed partial class NcStoreLogicSystem
         if (maxPossible <= 0)
             return false;
 
-        var actual = Math.Min(count, maxPossible);
+        var maxByPayout = int.MaxValue / unitPrice;
+        if (maxByPayout <= 0)
+            return false;
 
-        // Забираем через новую систему
-        var ok = _inventory.TryTakeProductUnitsFromRootCached(root, listing.ProductEntity, actual, listing.MatchMode);
-        if (!ok)
+        var actual = Math.Min(count, Math.Min(maxPossible, maxByPayout));
+        if (actual <= 0)
             return false;
 
         var totalL = (long) unitPrice * actual;
         if (totalL > int.MaxValue)
+            return false;
+
+        // Забираем через новую систему
+        var ok = _inventory.TryTakeProductUnitsFromRootCached(root, listing.ProductEntity, actual, listing.MatchMode);
+        if (!ok)
             return false;
 
         GiveCurrency(user, currency, (int) totalL);
@@ -201,15 +207,15 @@ public sealed partial class NcStoreLogicSystem
         if (!TryPickCurrencyForSell(store, listing, out var currencyId, out var rewardPerUnit) || rewardPerUnit <= 0)
             return false;
 
+        var totalRewardL = (long) rewardPerUnit * requiredCount;
+        if (totalRewardL > int.MaxValue)
+            return false;
+
         if (!_inventory.TryTakeProductUnitsFromRootCached(
             user,
             listing.ProductEntity,
             requiredCount,
             listing.MatchMode))
-            return false;
-
-        var totalRewardL = (long) rewardPerUnit * requiredCount;
-        if (totalRewardL > int.MaxValue)
             return false;
 
         GiveCurrency(user, currencyId, (int) totalRewardL);

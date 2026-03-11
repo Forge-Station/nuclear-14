@@ -47,7 +47,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         var needCrateScan = crateUid != null && (hasSellTab || hasContractsTab);
 
         NcInventorySnapshot? userSnap = null;
-        NcInventorySnapshot? crateSnap = null;
 
         if (needUserSnap)
         {
@@ -57,20 +56,18 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         if (needCrateScan && crateUid is { } crateEntity)
         {
-            if (hasContractsTab)
-            {
-                _inventory.ScanInventory(crateEntity, _deepCrateItemsScratch, _crateSnapScratch);
-                crateSnap = _crateSnapScratch;
-            }
-            else
-                _inventory.ScanInventoryItems(crateEntity, _deepCrateItemsScratch);
+            _inventory.ScanInventoryItems(crateEntity, _deepCrateItemsScratch);
         }
 
-        if (hasContractsTab && userSnap != null)
-            UpdateContractsProgress(comp, userSnap, crateSnap);
+        if (hasContractsTab)
+            _contracts.UpdateContractsProgress(
+                comp,
+                user,
+                _deepUserItemsScratch,
+                crateUid,
+                crateUid != null ? _deepCrateItemsScratch : null);
         var scratch = GetDynamicScratch(uid);
         var buf = scratch.GetWriteBuffer();
-        var oldBuf = scratch.GetReadBuffer();
 
         buf.Clear();
 
@@ -117,6 +114,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         {
             foreach (var c in comp.Contracts.Values)
                 buf.Contracts.Add(MapContractToClient(c));
+
+            buf.Contracts.Sort(static (a, b) => string.CompareOrdinal(a.Id, b.Id));
         }
 
         if (scratch.EqualsLast(buf, comp.CatalogRevision, hasBuyTab, hasSellTab, hasContractsTab))
@@ -250,67 +249,5 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         _pendingRefreshEntities.Clear();
         foreach (var s in _affectedStoresScratch)
             MarkDirty(s);
-    }
-
-    private void UpdateContractsProgress(
-        NcStoreComponent comp,
-        NcInventorySnapshot UserSnap,
-        NcInventorySnapshot? CrateSnap
-    )
-    {
-        if (comp.Contracts.Count == 0)
-            return;
-
-        foreach (var (_, contract) in comp.Contracts)
-        {
-            var targets = contract.Targets;
-
-            if (targets.Count > 0)
-            {
-                var totalRequired = 0;
-                var totalProgress = 0;
-
-                foreach (var t in targets)
-                {
-                    if (string.IsNullOrWhiteSpace(t.TargetItem) || t.Required <= 0)
-                    {
-                        t.Progress = 0;
-                        continue;
-                    }
-
-                    var owned = _logic.GetOwnedFromSnapshot(UserSnap, t.TargetItem, t.MatchMode);
-
-                    if (CrateSnap != null)
-                        owned += _logic.GetOwnedFromSnapshot(CrateSnap, t.TargetItem, t.MatchMode);
-
-                    var prog = Math.Min(owned, t.Required);
-                    t.Progress = prog;
-
-                    totalRequired += t.Required;
-                    totalProgress += prog;
-                }
-
-                contract.Required = totalRequired;
-                contract.Progress = totalProgress;
-
-                if (targets.Count > 0)
-                    contract.TargetItem = targets[0].TargetItem;
-            }
-            else
-            {
-                if (string.IsNullOrWhiteSpace(contract.TargetItem) || contract.Required <= 0)
-                {
-                    contract.Progress = 0;
-                    continue;
-                }
-
-                var owned = _logic.GetOwnedFromSnapshot(UserSnap, contract.TargetItem, contract.MatchMode);
-
-                if (CrateSnap != null)
-                    owned += _logic.GetOwnedFromSnapshot(CrateSnap, contract.TargetItem, contract.MatchMode);
-
-                contract.Progress = Math.Min(owned, contract.Required);
-            }
-        }
     }
 }

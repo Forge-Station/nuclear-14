@@ -16,9 +16,19 @@ public sealed partial class NcContractSystem : EntitySystem
     private readonly Dictionary<string, List<string>> _ancestorsCache = new(StringComparer.Ordinal);
     private readonly Dictionary<(EntityUid Store, string Difficulty), CooldownState> _contractCooldown = new();
     private readonly Dictionary<string, int> _depthCache = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, Dictionary<string, (StoreContractPrototype Proto, int Weight)>> _flattenedPoolCache = new(StringComparer.Ordinal);
     [Dependency] private readonly NcStoreInventorySystem _inventory = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
+    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _progressClaimableByKeyScratch = new();
+    private readonly List<EntityUid> _progressCrateItemsScratch = new();
+    private readonly List<(string ProtoId, PrototypeMatchMode MatchMode, int Depth)> _progressOrderedKeysScratch = new();
+    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _progressRequiredByKeyScratch = new();
+    private readonly List<ClaimTakeEntry> _progressSimulatedPlanScratch = new(64);
+    private readonly Stack<List<int>> _progressTargetIndexPool = new();
+    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), List<int>> _progressTargetIndexesByKeyScratch = new();
+    private readonly List<EntityUid> _progressUserItemsScratch = new();
+    private readonly Dictionary<EntityUid, int> _progressVirtualStackLeftScratch = new();
     private readonly Dictionary<QuasiKey, double> _quasiPhase = new();
     [Dependency] private readonly IRobustRandom _random = default!;
     private readonly List<EntityUid> _scratchCrateItems = new();
@@ -48,6 +58,7 @@ public sealed partial class NcContractSystem : EntitySystem
         _smallBags.Clear();
 
         _contractCooldown.Clear();
+        _flattenedPoolCache.Clear();
     }
 
     private static List<ContractTargetServerData> GetEffectiveTargets(ContractServerData contract) => contract.Targets;

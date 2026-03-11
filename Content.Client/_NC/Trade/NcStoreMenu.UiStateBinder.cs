@@ -57,13 +57,41 @@ public sealed partial class NcStoreMenu
                 {
                     var c = contracts[i];
                     h = h * 31 + (c.Id?.GetHashCode() ?? 0);
+                    h = h * 31 + (c.Name?.GetHashCode() ?? 0);
+                    h = h * 31 + (c.Difficulty?.GetHashCode() ?? 0);
+                    h = h * 31 + (c.Description?.GetHashCode() ?? 0);
+                    h = h * 31 + (c.TargetItem?.GetHashCode() ?? 0);
+                    h = h * 31 + (c.Repeatable ? 1 : 0);
                     h = h * 31 + (c.Completed ? 1 : 0);
                     h = h * 31 + c.Progress;
                     h = h * 31 + c.Required;
-                    h = h * 31 + (c.Difficulty?.GetHashCode() ?? 0);
-                    h = h * 31 + (c.Name?.GetHashCode() ?? 0);
-                    h = h * 31 + (c.Targets?.Count ?? 0);
-                    h = h * 31 + (c.Rewards?.Count ?? 0);
+
+                    var targets = c.Targets;
+                    h = h * 31 + (targets?.Count ?? 0);
+                    if (targets != null)
+                    {
+                        for (var t = 0; t < targets.Count; t++)
+                        {
+                            var target = targets[t];
+                            h = h * 31 + (target.TargetItem?.GetHashCode() ?? 0);
+                            h = h * 31 + target.Required;
+                            h = h * 31 + target.Progress;
+                            h = h * 31 + (int) target.MatchMode;
+                        }
+                    }
+
+                    var rewards = c.Rewards;
+                    h = h * 31 + (rewards?.Count ?? 0);
+                    if (rewards != null)
+                    {
+                        for (var r = 0; r < rewards.Count; r++)
+                        {
+                            var reward = rewards[r];
+                            h = h * 31 + (int) reward.Type;
+                            h = h * 31 + (reward.Id?.GetHashCode() ?? 0);
+                            h = h * 31 + reward.Amount;
+                        }
+                    }
                 }
 
                 return h;
