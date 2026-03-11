@@ -25,6 +25,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         menu.OnSellPressed -= OnSell;
         menu.OnMassSellPulledCrate -= OnMassSellPulledCrate;
         menu.OnContractClaim -= OnContractClaim;
+        menu.OnContractSkip -= OnContractSkip;
         menu.OnVisibleListingIdsChanged -= OnVisibleListingIdsChanged;
         menu.OnClose -= OnMenuClosed;
     }
@@ -102,7 +103,9 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
             st.HasBuyTab,
             st.HasSellTab,
             st.HasContractsTab,
-            st.Contracts);
+            st.Contracts,
+            st.ContractSkipCost,
+            st.ContractSkipCurrency);
 
     private void EnsureMenuCreated()
     {
@@ -123,6 +126,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         _menu.OnSellPressed += OnSell;
         _menu.OnMassSellPulledCrate += OnMassSellPulledCrate;
         _menu.OnContractClaim += OnContractClaim;
+        _menu.OnContractSkip += OnContractSkip;
         _menu.OnVisibleListingIdsChanged += OnVisibleListingIdsChanged;
 
         _menu.OnClose += OnMenuClosed;
@@ -164,6 +168,14 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
             return;
 
         SendMessage(new ClaimContractBoundMessage(contractId));
+    }
+
+    private void OnContractSkip(string contractId)
+    {
+        if (Actor == null)
+            return;
+
+        SendMessage(new SkipContractBoundMessage(contractId));
     }
 
     private void OnMassSellPulledCrate()

@@ -14,6 +14,10 @@ public sealed partial class NcStoreMenu
         private int _lastContractsHash;
         private int _lastCrateMembershipHash;
         private int _lastReadyMembershipHash;
+        private int _lastSkipCost;
+        private string _lastSkipCurrency = string.Empty;
+        private int _lastSkipBalance;
+        private readonly HashSet<string> _buyListingIds = new();
 
         public UiStateBinder(NcStoreMenu menu)
         {
@@ -35,9 +39,62 @@ public sealed partial class NcStoreMenu
             return true;
         }
 
+        private static bool SparseDictEqualsWithPreserve(
+            Dictionary<string, int> src,
+            Dictionary<string, int> dst,
+            HashSet<string> preserveMissingIds
+        )
+        {
+            foreach (var (k, v) in src)
+            {
+                if (!dst.TryGetValue(k, out var other) || other != v)
+                    return false;
+            }
+
+            foreach (var key in dst.Keys)
+            {
+                if (src.ContainsKey(key))
+                    continue;
+
+                if (!preserveMissingIds.Contains(key))
+                    return false;
+            }
+
+            return true;
+        }
+
         private static void ApplySparseSnapshot(Dictionary<string, int> src, Dictionary<string, int> dst)
         {
             dst.Clear();
+
+            foreach (var (k, v) in src)
+            {
+                if (string.IsNullOrWhiteSpace(k))
+                    continue;
+
+                dst[k] = v;
+            }
+        }
+
+        private static void ApplySparseSnapshotWithPreserve(
+            Dictionary<string, int> src,
+            Dictionary<string, int> dst,
+            HashSet<string> preserveMissingIds
+        )
+        {
+            var toRemove = new List<string>();
+
+            foreach (var key in dst.Keys)
+            {
+                if (src.ContainsKey(key))
+                    continue;
+
+                if (!preserveMissingIds.Contains(key))
+                    toRemove.Add(key);
+            }
+
+            for (var i = 0; i < toRemove.Count; i++)
+                dst.Remove(toRemove[i]);
 
             foreach (var (k, v) in src)
             {
@@ -174,6 +231,14 @@ public sealed partial class NcStoreMenu
 
             _m._catalogModel.SetCatalog(filtered);
 
+            _buyListingIds.Clear();
+            for (var i = 0; i < filtered.Count; i++)
+            {
+                var listing = filtered[i];
+                if (listing.Mode == StoreMode.Buy && !string.IsNullOrWhiteSpace(listing.Id))
+                    _buyListingIds.Add(listing.Id);
+            }
+
             var productProtos = new List<string>(filtered.Count);
             for (var i = 0; i < filtered.Count; i++)
                 productProtos.Add(filtered[i].ProductEntity);
@@ -190,6 +255,9 @@ public sealed partial class NcStoreMenu
             _lastContractsHash = 0;
             _lastReadyMembershipHash = 0;
             _lastCrateMembershipHash = 0;
+            _lastSkipCost = 0;
+            _lastSkipCurrency = string.Empty;
+            _lastSkipBalance = 0;
         }
 
         public void ApplyDynamicState(
@@ -201,7 +269,9 @@ public sealed partial class NcStoreMenu
             bool hasBuyTab,
             bool hasSellTab,
             bool hasContractsTab,
-            List<ContractClientData> contracts
+            List<ContractClientData> contracts,
+            int contractSkipCost,
+            string contractSkipCurrency
         )
         {
             var tabsChanged = !_hasLastDynamic ||
@@ -222,26 +292,42 @@ public sealed partial class NcStoreMenu
             var balancesChanged = !DictEquals(balancesByCurrency, _m._balancesByCurrency);
             if (balancesChanged)
                 _m.SetBalancesByCurrency(balancesByCurrency);
-            var remainingChanged = !DictEquals(remainingById, _m._catalogModel.RemainingById);
-            var ownedChanged = !DictEquals(ownedById, _m._catalogModel.OwnedById);
+
+            var remainingChanged =
+                !SparseDictEqualsWithPreserve(remainingById, _m._catalogModel.RemainingById, _buyListingIds);
+            var ownedChanged =
+                !SparseDictEqualsWithPreserve(ownedById, _m._catalogModel.OwnedById, _buyListingIds);
             var crateChanged = !DictEquals(crateUnitsById, _m._catalogModel.CrateUnitsById);
 
             if (remainingChanged)
-                ApplySparseSnapshot(remainingById, _m._catalogModel.RemainingById);
+                ApplySparseSnapshotWithPreserve(remainingById, _m._catalogModel.RemainingById, _buyListingIds);
 
             if (ownedChanged)
-                ApplySparseSnapshot(ownedById, _m._catalogModel.OwnedById);
+                ApplySparseSnapshotWithPreserve(ownedById, _m._catalogModel.OwnedById, _buyListingIds);
 
             if (crateChanged)
                 ApplySparseSnapshot(crateUnitsById, _m._catalogModel.CrateUnitsById);
             if (!DictEquals(massTotals, _m._massSellTotals))
                 _m.SetMassSellTotals(massTotals);
 
+            var skipChanged = !_hasLastDynamic ||
+                contractSkipCost != _lastSkipCost ||
+                !string.Equals(contractSkipCurrency, _lastSkipCurrency, StringComparison.Ordinal);
+
+            var trackSkipBalance = contractSkipCost > 0 && !string.IsNullOrWhiteSpace(contractSkipCurrency);
+            var currentSkipBalance = trackSkipBalance
+                ? balancesByCurrency.GetValueOrDefault(contractSkipCurrency, 0)
+                : 0;
+            var skipBalanceChanged = trackSkipBalance && (!_hasLastDynamic || currentSkipBalance != _lastSkipBalance);
+
             var contractsHash = ComputeContractsHash(contracts);
-            if (!_hasLastDynamic || contractsHash != _lastContractsHash)
+            if (!_hasLastDynamic || contractsHash != _lastContractsHash || skipChanged || skipBalanceChanged)
             {
                 _lastContractsHash = contractsHash;
-                _m.PopulateContracts(contracts);
+                _lastSkipCost = contractSkipCost;
+                _lastSkipCurrency = contractSkipCurrency;
+                _lastSkipBalance = currentSkipBalance;
+                _m.PopulateContracts(contracts, contractSkipCost, contractSkipCurrency, currentSkipBalance);
             }
 
             var readyMembershipHash = ComputeReadyMembershipHash(ownedById, remainingById);

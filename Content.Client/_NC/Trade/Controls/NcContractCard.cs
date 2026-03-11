@@ -16,16 +16,22 @@ public sealed class NcContractCard : PanelContainer
     private readonly IPrototypeManager _proto;
     private readonly SpriteSystem _sprites;
     private readonly IEntityManager _entMan;
+    private readonly int _skipCost;
+    private readonly string _skipCurrency;
+    private readonly int _skipBalance;
     private const int TargetIconPx = 96;
     private const int RewardIconPx = 40;
 
 
-    public NcContractCard(ContractClientData data, IPrototypeManager protoMan, SpriteSystem sprites, IEntityManager entMan)
+    public NcContractCard(ContractClientData data, IPrototypeManager protoMan, SpriteSystem sprites, IEntityManager entMan, int skipCost = 0, string skipCurrency = "", int skipBalance = 0)
     {
         _data = data;
         _proto = protoMan;
         _sprites = sprites;
         _entMan = entMan;
+        _skipCost = skipCost;
+        _skipCurrency = skipCurrency;
+        _skipBalance = skipBalance;
 
         HorizontalExpand = true;
         Margin = new(4, 0, 4, 8);
@@ -34,6 +40,7 @@ public sealed class NcContractCard : PanelContainer
     }
 
     public event Action<string>? OnClaim;
+    public event Action<string>? OnSkip;
 
     private void BuildUi()
     {
@@ -309,6 +316,40 @@ public sealed class NcContractCard : PanelContainer
         };
 
         actionCol.AddChild(btn);
+
+        if (_skipCost > 0 && !string.IsNullOrWhiteSpace(_skipCurrency))
+        {
+            var skipCurrencyName = CurrencyName(_skipCurrency);
+            var canSkip = _skipBalance >= _skipCost;
+            var skipBtn = new Button
+            {
+                Text = Loc.GetString("nc-store-contract-action-skip", ("cost", _skipCost), ("currency", skipCurrencyName)),
+                HorizontalExpand = true,
+                MinSize = new(0, 28),
+                Margin = new(0, 4, 0, 0),
+                Disabled = !canSkip
+            };
+
+            skipBtn.Modulate = canSkip
+                ? Color.FromHex("#B0B0B0")
+                : Color.FromHex("#8A8A8A");
+
+            var baseTip = Loc.GetString("nc-store-contract-skip-tooltip", ("cost", _skipCost), ("currency", skipCurrencyName));
+            skipBtn.ToolTip = canSkip
+                ? baseTip
+                : $"{baseTip}\n{Loc.GetString("nc-store-contract-skip-failed")}";
+
+            skipBtn.OnPressed += _ =>
+            {
+                if (!canSkip)
+                    return;
+
+                OnSkip?.Invoke(_data.Id);
+            };
+
+            actionCol.AddChild(skipBtn);
+        }
+
         bottomWrap.AddChild(actionCol);
 
         return bottomWrap;

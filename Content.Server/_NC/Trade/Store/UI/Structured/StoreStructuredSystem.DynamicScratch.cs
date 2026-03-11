@@ -58,6 +58,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         private int _catalogRevision;
         private bool _hasBuyTab;
         private bool _hasContracts;
+        private bool _hasContractsFingerprint;
+        private int _contractsFingerprint;
         private bool _hasMeta;
         private bool _hasSellTab;
         private bool _hasVisibleIds;
@@ -131,6 +133,24 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             return _visibleListingIds.Contains(listingId);
         }
 
+        public bool ShouldRebuildContracts(int fingerprint)
+        {
+            if (!_hasContractsFingerprint || _contractsFingerprint != fingerprint)
+            {
+                _contractsFingerprint = fingerprint;
+                _hasContractsFingerprint = true;
+                return true;
+            }
+
+            return false;
+        }
+
+        public void ResetContractsFingerprint()
+        {
+            _hasContractsFingerprint = false;
+            _contractsFingerprint = 0;
+        }
+
         public bool EqualsLast(
             DynamicStateBuffer next,
             int catalogRevision,
@@ -155,7 +175,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 DictEquals(prev.OwnedById, next.OwnedById) &&
                 DictEquals(prev.CrateUnitsById, next.CrateUnitsById) &&
                 DictEquals(prev.CrateTotals, next.CrateTotals) &&
-                ListEquals(prev.Contracts, next.Contracts);
+                ListEquals(prev.Contracts, next.Contracts) &&
+                prev.ContractSkipCost == next.ContractSkipCost &&
+                string.Equals(prev.ContractSkipCurrency, next.ContractSkipCurrency, StringComparison.Ordinal);
         }
 
         public void Commit(int catalogRevision, bool hasBuyTab, bool hasSellTab, bool hasContracts)
@@ -279,6 +301,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         public readonly Dictionary<string, int> CrateUnitsById = new();
         public readonly Dictionary<string, int> OwnedById = new();
         public readonly Dictionary<string, int> RemainingById = new();
+        public int ContractSkipCost;
+        public string ContractSkipCurrency = string.Empty;
 
         public void Clear()
         {
@@ -288,6 +312,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             CrateUnitsById.Clear();
             CrateTotals.Clear();
             Contracts.Clear();
+            ContractSkipCost = 0;
+            ContractSkipCurrency = string.Empty;
         }
     }
 }

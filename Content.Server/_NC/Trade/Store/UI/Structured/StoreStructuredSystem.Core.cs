@@ -77,6 +77,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         SubscribeLocalEvent<ContainerManagerComponent, EntRemovedFromContainerMessage>(OnUserEntRemoved);
         SubscribeLocalEvent<StackComponent, StackCountChangedEvent>(OnStackCountChanged);
         SubscribeLocalEvent<NcStoreComponent, ClaimContractBoundMessage>(OnClaimContract);
+        SubscribeLocalEvent<NcStoreComponent, SkipContractBoundMessage>(OnSkipContract);
         SubscribeLocalEvent<EntityStorageComponent, StorageAfterOpenEvent>(OnStorageOpen);
         SubscribeLocalEvent<EntityStorageComponent, StorageAfterCloseEvent>(OnStorageClose);
     }
@@ -145,6 +146,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     {
         _catalogCache.Remove(uid);
         _dynamicScratchByStore.Remove(uid);
+        _contracts.ClearStoreRuntimeCaches(uid);
 
         if (_openStoreUids.Contains(uid) || _watchByStore.ContainsKey(uid) || _dirtyStores.Contains(uid))
         {

@@ -88,3 +88,10 @@ nc-store-contract-reward-item-line = { $item } ×{ $count }
 nc-store-contract-badge-completed = ВЫПОЛНЕНО
 nc-store-contract-badge-completed-tooltip = Контракт выполнен — можно забрать награду.
 
+nc-store-contract-action-skip = Пропустить ({ $cost } { $currency })
+nc-store-contract-skip-tooltip =
+    Заменить этот контракт на новый.
+    Стоимость: { $cost } { $currency }.
+nc-store-contract-skipped = Контракт пропущен, выдан новый.
+nc-store-contract-skip-failed = Не удалось пропустить контракт. Недостаточно средств.
+

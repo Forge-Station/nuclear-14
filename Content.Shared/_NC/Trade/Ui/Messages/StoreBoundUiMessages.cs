@@ -52,6 +52,17 @@ public sealed class RequestUiRefreshMessage : BoundUserInterfaceMessage { }
 public sealed class RequestContractsRefreshBoundMessage : BoundUserInterfaceMessage { }
 
 [Serializable, NetSerializable]
+public sealed class SkipContractBoundMessage : BoundUserInterfaceMessage
+{
+    public SkipContractBoundMessage(string contractId)
+    {
+        ContractId = contractId;
+    }
+
+    public string ContractId { get; }
+}
+
+[Serializable, NetSerializable]
 public sealed class StoreSetVisibleListingsBoundUiMessage : BoundUserInterfaceMessage
 {
     public StoreSetVisibleListingsBoundUiMessage(string[] ids)

@@ -17,6 +17,13 @@ public sealed partial class NcStoreListingControl : PanelContainer
     private const int MaxTotalDisplay = 999_999;
     private const int DescMaxChars = 220;
 
+    private const float CompactSwitchFloor = 780f;
+    private const float MinHorizontalDescriptionWidth = 280f;
+    private const float HorizontalChromeWidth = 44f;
+    private const float IconBlockWidth = 78f;
+    private const float ActionColumnMinWidth = 124f;
+    private const int ActionColumnRightPad = 6;
+
     private readonly bool _actionsEnabled;
     private readonly IUserInterfaceManager _ui = IoCManager.Resolve<IUserInterfaceManager>();
 
@@ -46,7 +53,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
         if (data.Mode == StoreMode.Buy && data.UnitsPerPurchase > 1)
         {
-            TitleLabel.Text = $"{TitleLabel.Text} ×{data.UnitsPerPurchase}";
+            TitleLabel.Text = $"{TitleLabel.Text} x{data.UnitsPerPurchase}";
             TitleLabel.ToolTip = TitleLabel.Text;
         }
 
@@ -54,7 +61,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
         if (proto != null)
         {
             IconView.SetPrototype(proto.ID);
-            NcUiIconFit.Fit(IconView, sprites, proto.ID, targetPx: 96, paddingPx: 8);
+            NcUiIconFit.Fit(IconView, sprites, proto.ID, targetPx: 72, paddingPx: 6);
         }
         else
         {
@@ -68,6 +75,13 @@ public sealed partial class NcStoreListingControl : PanelContainer
         SetupQtyLogic(data, balanceHint, initialQty);
 
         UpdateLabelsAndVisibility(data);
+
+        QtyControl.HorizontalAlignment = HAlignment.Right;
+        PriceButton.HorizontalAlignment = HAlignment.Right;
+        StockInfo.HorizontalAlignment = HAlignment.Right;
+        StockInfo.Margin = new(0, 0, 1, 0);
+
+        ApplyResponsiveLayout();
     }
 
     public Action<int>? OnBuyPressed { get; set; }
@@ -78,6 +92,60 @@ public sealed partial class NcStoreListingControl : PanelContainer
     public string ListingId => _staticData.ListingId;
     public StoreListingFlavor Flavor => _staticData.Flavor;
     private int MinAllowed => _maxQty <= 0 ? 0 : 1;
+
+    protected override void Resized()
+    {
+        base.Resized();
+        ApplyResponsiveLayout();
+    }
+
+    private void ApplyResponsiveLayout()
+    {
+        var listingWidth = Size.X > 0 ? Size.X : DesiredSize.X;
+        var actionWidth = CalculateActionColumnWidth();
+        var iconWidth = IconSlotBackground.Visible ? IconBlockWidth : 0f;
+
+        var minHorizontalWidth = MathF.Max(
+            CompactSwitchFloor,
+            iconWidth + actionWidth + MinHorizontalDescriptionWidth + HorizontalChromeWidth);
+
+        var compact = listingWidth <= minHorizontalWidth;
+
+        ContentRow.Orientation = compact
+            ? BoxContainer.LayoutOrientation.Vertical
+            : BoxContainer.LayoutOrientation.Horizontal;
+
+        IconDivider.Visible = !compact && IconSlotBackground.Visible;
+
+        ActionColumn.RectClipContent = true;
+        ActionColumn.HorizontalExpand = compact;
+        ActionColumn.HorizontalAlignment = compact ? HAlignment.Stretch : HAlignment.Right;
+        ActionColumn.Margin = compact ? new(0, 6, ActionColumnRightPad, 0) : new(0, 0, ActionColumnRightPad, 0);
+        ActionColumn.MinWidth = compact ? 0f : actionWidth;
+        ActionColumn.MaxWidth = compact ? float.PositiveInfinity : actionWidth;
+
+        var descriptionMax = compact
+            ? float.PositiveInfinity
+            : MathF.Max(120f, listingWidth - iconWidth - actionWidth - HorizontalChromeWidth);
+
+        DescriptionBox.MaxWidth = descriptionMax;
+        DescriptionBox.SetLayoutMaxWidth(descriptionMax);
+
+        // Keep arrange/measure fresh after a fast drag-resize, so controls don't spill out.
+        ActionColumn.InvalidateMeasure();
+        DescriptionBox.InvalidateMeasure();
+        ContentRow.InvalidateArrange();
+    }
+
+    private float CalculateActionColumnWidth()
+    {
+        var qtyWidth = QtyControl.DesiredSize.X;
+        var priceWidth = PriceButton.DesiredSize.X;
+        var stockWidth = StockInfo.DesiredSize.X;
+
+        var desired = MathF.Max(ActionColumnMinWidth, MathF.Max(qtyWidth, MathF.Max(priceWidth, stockWidth)));
+        return MathF.Ceiling(desired);
+    }
 
     private void SetDescription(EntityPrototype? proto)
     {
@@ -185,6 +253,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
         UpdatePriceAndButtons();
         UpdateLabelsAndVisibility(_staticData);
+        ApplyResponsiveLayout();
     }
 
     private void UpdatePriceAndButtons()

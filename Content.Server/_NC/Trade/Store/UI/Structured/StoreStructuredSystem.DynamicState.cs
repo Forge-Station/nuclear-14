@@ -112,10 +112,29 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         if (hasContractsTab && comp.Contracts.Count > 0)
         {
-            foreach (var c in comp.Contracts.Values)
-                buf.Contracts.Add(MapContractToClient(c));
+            var contractsFingerprint = ComputeContractsFingerprint(comp.Contracts);
+            if (scratch.ShouldRebuildContracts(contractsFingerprint))
+            {
+                foreach (var c in comp.Contracts.Values)
+                    buf.Contracts.Add(MapContractToClient(c));
 
-            buf.Contracts.Sort(static (a, b) => string.CompareOrdinal(a.Id, b.Id));
+                buf.Contracts.Sort(static (a, b) => string.CompareOrdinal(a.Id, b.Id));
+            }
+            else
+            {
+                var prevContracts = scratch.GetReadBuffer().Contracts;
+                buf.Contracts.AddRange(prevContracts);
+            }
+        }
+        else
+        {
+            scratch.ResetContractsFingerprint();
+        }
+
+        if (hasContractsTab && _contracts.TryGetContractSkipInfo(uid, comp, out var skipCurrency, out var skipCost))
+        {
+            buf.ContractSkipCost = skipCost;
+            buf.ContractSkipCurrency = skipCurrency;
         }
 
         if (scratch.EqualsLast(buf, comp.CatalogRevision, hasBuyTab, hasSellTab, hasContractsTab))
@@ -137,7 +156,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 buf.Contracts,
                 hasBuyTab,
                 hasSellTab,
-                hasContractsTab
+                hasContractsTab,
+                buf.ContractSkipCost,
+                buf.ContractSkipCurrency
             )
         );
 
@@ -249,5 +270,64 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         _pendingRefreshEntities.Clear();
         foreach (var s in _affectedStoresScratch)
             MarkDirty(s);
+    }
+
+    private static int ComputeContractsFingerprint(IReadOnlyDictionary<string, ContractServerData> contracts)
+    {
+        unchecked
+        {
+            var sum = 0;
+            var mix = 17;
+
+            foreach (var contract in contracts.Values)
+            {
+                var h = ComputeContractFingerprint(contract);
+                sum += h;
+                mix ^= h * 397;
+            }
+
+            return (sum * 31) ^ mix ^ contracts.Count;
+        }
+    }
+
+    private static int ComputeContractFingerprint(ContractServerData contract)
+    {
+        unchecked
+        {
+            var h = 17;
+            h = h * 31 + (contract.Id?.GetHashCode() ?? 0);
+            h = h * 31 + (contract.Name?.GetHashCode() ?? 0);
+            h = h * 31 + (contract.Difficulty?.GetHashCode() ?? 0);
+            h = h * 31 + (contract.Description?.GetHashCode() ?? 0);
+            h = h * 31 + (contract.TargetItem?.GetHashCode() ?? 0);
+            h = h * 31 + (contract.Repeatable ? 1 : 0);
+            h = h * 31 + (contract.Completed ? 1 : 0);
+            h = h * 31 + contract.Required;
+            h = h * 31 + contract.Progress;
+            h = h * 31 + (int) contract.MatchMode;
+
+            var targets = contract.Targets;
+            h = h * 31 + targets.Count;
+            for (var iTarget = 0; iTarget < targets.Count; iTarget++)
+            {
+                var target = targets[iTarget];
+                h = h * 31 + (target.TargetItem?.GetHashCode() ?? 0);
+                h = h * 31 + target.Required;
+                h = h * 31 + target.Progress;
+                h = h * 31 + (int) target.MatchMode;
+            }
+
+            var rewards = contract.Rewards;
+            h = h * 31 + rewards.Count;
+            for (var iReward = 0; iReward < rewards.Count; iReward++)
+            {
+                var reward = rewards[iReward];
+                h = h * 31 + (int) reward.Type;
+                h = h * 31 + (reward.Id?.GetHashCode() ?? 0);
+                h = h * 31 + reward.Amount;
+            }
+
+            return h;
+        }
     }
 }

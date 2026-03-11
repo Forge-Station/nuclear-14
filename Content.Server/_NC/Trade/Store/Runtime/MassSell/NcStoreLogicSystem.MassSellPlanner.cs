@@ -1,4 +1,3 @@
-using System.Linq;
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 using Robust.Shared.Prototypes;
@@ -8,6 +7,9 @@ namespace Content.Server._NC.Trade;
 public sealed partial class NcStoreLogicSystem
 {
     private readonly Dictionary<string, int> _inheritanceDepthCache = new(StringComparer.Ordinal);
+    private readonly List<string> _protoIdsScratch = new();
+    private readonly HashSet<string> _protoIdsSeenScratch = new(StringComparer.Ordinal);
+    private readonly List<NcStoreListingDef> _sellListingsScratch = new();
 
     public MassSellPlan ComputeMassSellPlan(NcStoreComponent store, EntityUid container)
     {
@@ -74,13 +76,29 @@ public sealed partial class NcStoreLogicSystem
         if (stackTypeCounts.Count == 0 && protoCounts.Count == 0)
             return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
 
-        var protoIds = protoCounts.Count > 0 || stackProtoToType.Count > 0
-            ? protoCounts.Keys.Concat(stackProtoToType.Keys)
-                .Distinct(StringComparer.Ordinal)
-                .OrderByDescending(GetInheritanceDepth)
-                .ThenBy(x => x, OrdinalIds)
-                .ToArray()
-            : Array.Empty<string>();
+        _protoIdsSeenScratch.Clear();
+        _protoIdsScratch.Clear();
+
+        foreach (var protoId in protoCounts.Keys)
+        {
+            if (_protoIdsSeenScratch.Add(protoId))
+                _protoIdsScratch.Add(protoId);
+        }
+
+        foreach (var protoId in stackProtoToType.Keys)
+        {
+            if (_protoIdsSeenScratch.Add(protoId))
+                _protoIdsScratch.Add(protoId);
+        }
+
+        _protoIdsScratch.Sort((left, right) =>
+        {
+            var depth = GetInheritanceDepth(right).CompareTo(GetInheritanceDepth(left));
+            if (depth != 0)
+                return depth;
+
+            return OrdinalIds.Compare(left, right);
+        });
 
         var listingPrices = new Dictionary<string, int>(StringComparer.Ordinal);
         foreach (var l in store.Listings)
@@ -93,32 +111,56 @@ public sealed partial class NcStoreLogicSystem
                 listingPrices[l.Id] = 0;
         }
 
-        var sellListings = store.Listings
-            .Where(l => l.Mode == StoreMode.Sell && !string.IsNullOrEmpty(l.ProductEntity) &&
-                l.RemainingCount != 0 && listingPrices.TryGetValue(l.Id, out var p) && p > 0)
-            .OrderByDescending(l => listingPrices[l.Id])
-            .ThenByDescending(l => GetInheritanceDepth(l.ProductEntity))
-            .ThenBy(l => l.ProductEntity, OrdinalIds)
-            .ThenBy(l => l.Id, OrdinalIds)
-            .ToArray();
+        _sellListingsScratch.Clear();
+        foreach (var l in store.Listings)
+        {
+            if (l.Mode != StoreMode.Sell || string.IsNullOrEmpty(l.ProductEntity) || l.RemainingCount == 0)
+                continue;
 
-        if (sellListings.Length == 0)
+            if (!listingPrices.TryGetValue(l.Id, out var price) || price <= 0)
+                continue;
+
+            _sellListingsScratch.Add(l);
+        }
+
+        _sellListingsScratch.Sort((left, right) =>
+        {
+            var leftPrice = listingPrices[left.Id];
+            var rightPrice = listingPrices[right.Id];
+
+            var priceCmp = rightPrice.CompareTo(leftPrice);
+            if (priceCmp != 0)
+                return priceCmp;
+
+            var depthCmp = GetInheritanceDepth(right.ProductEntity).CompareTo(GetInheritanceDepth(left.ProductEntity));
+            if (depthCmp != 0)
+                return depthCmp;
+
+            var productCmp = OrdinalIds.Compare(left.ProductEntity, right.ProductEntity);
+            if (productCmp != 0)
+                return productCmp;
+
+            return OrdinalIds.Compare(left.Id, right.Id);
+        });
+
+        if (_sellListingsScratch.Count == 0)
             return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
+
         var descendantExpected = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var l in sellListings)
+        foreach (var l in _sellListingsScratch)
         {
             if (_inventory.ResolveMatchMode(l.ProductEntity, l.MatchMode) == PrototypeMatchMode.Descendants)
                 descendantExpected.Add(l.ProductEntity);
-
         }
 
         Dictionary<string, List<string>>? matchesByExpected = null;
-        if (descendantExpected.Count > 0 && protoIds.Length > 0)
+        if (descendantExpected.Count > 0 && _protoIdsScratch.Count > 0)
         {
             matchesByExpected = new Dictionary<string, List<string>>(StringComparer.Ordinal);
 
-            foreach (var protoId in protoIds)
+            for (var i = 0; i < _protoIdsScratch.Count; i++)
             {
+                var protoId = _protoIdsScratch[i];
                 if (!protoCache.TryGetValue(protoId, out var proto) && !_protos.TryIndex(protoId, out proto))
                     continue;
                 protoCache[protoId] = proto;
@@ -139,9 +181,9 @@ public sealed partial class NcStoreLogicSystem
             }
         }
 
-var stackName = _compFactory.GetComponentName(typeof(StackComponent));
+        var stackName = _compFactory.GetComponentName(typeof(StackComponent));
 
-        foreach (var listing in sellListings)
+        foreach (var listing in _sellListingsScratch)
         {
             if (!TryPickCurrencyForSell(store, listing, out var currencyId, out var unitPrice))
                 continue;
@@ -176,7 +218,7 @@ var stackName = _compFactory.GetComponentName(typeof(StackComponent));
             }
             else
             {
-                if (protoIds.Length == 0)
+                if (_protoIdsScratch.Count == 0)
                     continue;
                 if (effectiveMatch != PrototypeMatchMode.Descendants)
                 {
@@ -192,12 +234,15 @@ var stackName = _compFactory.GetComponentName(typeof(StackComponent));
                         matchingProtoIds.Count == 0)
                         continue;
 
-                    foreach (var protoId in matchingProtoIds)
+                    for (var i = 0; i < matchingProtoIds.Count; i++)
                     {
                         if (taken >= want)
                             break;
+
+                        var protoId = matchingProtoIds[i];
                         var isStackProto = stackProtoToType.TryGetValue(protoId, out var stType) &&
                             !string.IsNullOrWhiteSpace(stType);
+
                         int available;
                         if (isStackProto)
                         {
@@ -213,10 +258,12 @@ var stackName = _compFactory.GetComponentName(typeof(StackComponent));
                         var take = Math.Min(available, want - taken);
                         if (take <= 0)
                             continue;
+
                         if (isStackProto)
                             stackTypeCounts[stType!] = available - take;
                         else
                             protoCounts[protoId] = available - take;
+
                         taken += take;
                     }
                 }
@@ -224,6 +271,7 @@ var stackName = _compFactory.GetComponentName(typeof(StackComponent));
 
             if (taken <= 0)
                 continue;
+
             var total = (long) unitPrice * taken;
             SafeAddIncome(incomeByCurrency, currencyId, total);
             unitsByListingId[listing.Id] = taken;

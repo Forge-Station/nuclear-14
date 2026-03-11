@@ -1,22 +1,29 @@
 <PanelContainer xmlns="https://spacestation14.io"
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:controls="clr-namespace:Content.Client._NC.Trade.Controls"
+                xmlns:graphics="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
                 HorizontalExpand="True"
-                VerticalExpand="True"
-                StyleClasses="PanelBackgroundBaseDark">
+                VerticalExpand="True">
+
+    <PanelContainer.PanelOverride>
+        <graphics:StyleBoxFlat BackgroundColor="#1E2027" />
+    </PanelContainer.PanelOverride>
 
     <BoxContainer Orientation="Horizontal"
                   HorizontalExpand="True"
                   VerticalExpand="True">
 
         <PanelContainer VerticalExpand="True"
-                        MinWidth="230"
-                        StyleClasses="PanelBackgroundBaseDark">
+                        MinWidth="230">
+            <PanelContainer.PanelOverride>
+                <graphics:StyleBoxFlat BackgroundColor="#1A1B20" />
+            </PanelContainer.PanelOverride>
+
             <BoxContainer Orientation="Vertical"
                           VerticalExpand="True">
                 <Label Name="TabHeading"
-                       StyleClasses="LabelHeading"
-                       Margin="6 6 6 6" />
+                       StyleClasses="LabelKeyText"
+                       Margin="6 2 6 2" />
 
                 <controls:NcCategoryBar Name="CategoryBar"
                                         VerticalExpand="True"
@@ -24,22 +31,25 @@
             </BoxContainer>
         </PanelContainer>
 
-        <PanelContainer MinWidth="1"
-                        StyleClasses="HighDivider" />
+        <PanelContainer MinWidth="1">
+            <PanelContainer.PanelOverride>
+                <graphics:StyleBoxFlat BackgroundColor="#7A6334" />
+            </PanelContainer.PanelOverride>
+        </PanelContainer>
 
         <BoxContainer Orientation="Vertical"
                       VerticalExpand="True"
                       HorizontalExpand="True"
-                      Margin="6 4 6 4">
+                      Margin="3 2 3 2">
 
             <Label Name="CategoryHeader"
-                   StyleClasses="LabelHeading"
-                   Margin="0 0 0 6"
+                   StyleClasses="LabelKeyText"
+                   Margin="2 0 0 3"
                    Text="{Loc 'nc-store-select-category'}" />
 
             <BoxContainer Name="MassSellRow"
                           Orientation="Horizontal"
-                          Margin="0 0 0 6"
+                          Margin="0 0 0 3"
                           Visible="False">
                 <Button Name="MassSellButton"
                         MinWidth="260" />

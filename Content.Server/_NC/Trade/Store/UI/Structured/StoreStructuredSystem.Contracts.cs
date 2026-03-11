@@ -25,22 +25,29 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             return;
         }
 
-        EntityUid? crateUid = null;
-        if (_logic.TryGetPulledClosedCrate(user, out var pulledCrate))
+        UpdateDynamicState(uid, comp, user);
+    }
+
+    private void OnSkipContract(EntityUid uid, NcStoreComponent comp, SkipContractBoundMessage msg)
+    {
+        if (!TryGetLockedUiUser(uid, comp, out var user))
+            return;
+
+        if (!_storeSystem.CanUseStore(uid, comp, user))
+            return;
+
+        if (TryComp(uid, out TransformComponent? sX) && TryComp(user, out TransformComponent? uX) &&
+            !_xform.InRange(sX.Coordinates, uX.Coordinates, AutoCloseDistance))
+            return;
+
+        if (_contracts.TrySkipContract(uid, user, msg.ContractId))
         {
-            crateUid = pulledCrate;
-            _inventory.ScanInventoryItems(pulledCrate, _deepCrateItemsScratch);
+            _popups.PopupEntity(Loc.GetString("nc-store-contract-skipped"), uid, user);
+            UpdateDynamicState(uid, comp, user);
+            return;
         }
 
-        _inventory.ScanInventoryItems(user, _deepUserItemsScratch);
-
-        _contracts.UpdateContractsProgress(
-            comp,
-            user,
-            _deepUserItemsScratch,
-            crateUid,
-            crateUid != null ? _deepCrateItemsScratch : null);
-
+        _popups.PopupEntity(Loc.GetString("nc-store-contract-skip-failed"), uid, user);
         UpdateDynamicState(uid, comp, user);
     }
 }

@@ -14,6 +14,7 @@ public sealed partial class NcContractSystem : EntitySystem
     private const int DepthInProgress = -1;
     private static readonly ISawmill Sawmill = Logger.GetSawmill("nccontracts");
     private readonly Dictionary<string, List<string>> _ancestorsCache = new(StringComparer.Ordinal);
+    private readonly List<(EntityUid Store, string Difficulty)> _cooldownKeysToRemoveScratch = new();
     private readonly Dictionary<(EntityUid Store, string Difficulty), CooldownState> _contractCooldown = new();
     private readonly Dictionary<string, int> _depthCache = new(StringComparer.Ordinal);
     private readonly Dictionary<string, Dictionary<string, (StoreContractPrototype Proto, int Weight)>> _flattenedPoolCache = new(StringComparer.Ordinal);
@@ -21,13 +22,11 @@ public sealed partial class NcContractSystem : EntitySystem
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
     private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _progressClaimableByKeyScratch = new();
-    private readonly List<EntityUid> _progressCrateItemsScratch = new();
+    private readonly HashSet<EntityUid> _progressConsumedEntitiesScratch = new();
     private readonly List<(string ProtoId, PrototypeMatchMode MatchMode, int Depth)> _progressOrderedKeysScratch = new();
     private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _progressRequiredByKeyScratch = new();
-    private readonly List<ClaimTakeEntry> _progressSimulatedPlanScratch = new(64);
     private readonly Stack<List<int>> _progressTargetIndexPool = new();
     private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), List<int>> _progressTargetIndexesByKeyScratch = new();
-    private readonly List<EntityUid> _progressUserItemsScratch = new();
     private readonly Dictionary<EntityUid, int> _progressVirtualStackLeftScratch = new();
     private readonly Dictionary<QuasiKey, double> _quasiPhase = new();
     [Dependency] private readonly IRobustRandom _random = default!;
@@ -57,8 +56,30 @@ public sealed partial class NcContractSystem : EntitySystem
         _quasiPhase.Clear();
         _smallBags.Clear();
 
+        _cooldownKeysToRemoveScratch.Clear();
         _contractCooldown.Clear();
         _flattenedPoolCache.Clear();
+    }
+
+    public void ClearStoreRuntimeCaches(EntityUid store)
+    {
+        if (store == EntityUid.Invalid || _contractCooldown.Count == 0)
+            return;
+
+        _cooldownKeysToRemoveScratch.Clear();
+        foreach (var key in _contractCooldown.Keys)
+        {
+            if (key.Store == store)
+                _cooldownKeysToRemoveScratch.Add(key);
+        }
+
+        if (_cooldownKeysToRemoveScratch.Count == 0)
+            return;
+
+        for (var i = 0; i < _cooldownKeysToRemoveScratch.Count; i++)
+            _contractCooldown.Remove(_cooldownKeysToRemoveScratch[i]);
+
+        _cooldownKeysToRemoveScratch.Clear();
     }
 
     private static List<ContractTargetServerData> GetEffectiveTargets(ContractServerData contract) => contract.Targets;

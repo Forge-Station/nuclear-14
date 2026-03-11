@@ -7,20 +7,22 @@
 
     <Label Name="NoStockLabel"
            Visible="False"
-           HorizontalAlignment="Center"
+           HorizontalAlignment="Right"
            Modulate="#C0C0C0"
-           Margin="0 8 0 0"/>
+           Margin="0 6 2 0"/>
 
     <Label Name="RemainingLabel"
            Visible="False"
-           HorizontalAlignment="Center"
+           HorizontalAlignment="Right"
            Modulate="#C0C0C0"
-           Margin="0 2 0 0"/>
+           Margin="0 1 2 0"/>
 
     <Label Name="OwnedLabel"
            Visible="False"
-           HorizontalAlignment="Center"
+           HorizontalAlignment="Right"
            Modulate="#C0C0C0"
-           Margin="0 2 0 0"/>
+           Margin="0 1 2 0"/>
 
 </BoxContainer>
+
+

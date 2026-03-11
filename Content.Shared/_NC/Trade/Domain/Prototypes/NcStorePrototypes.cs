@@ -105,6 +105,19 @@ public sealed partial class StoreContractsPresetPrototype : IPrototype
 
     [DataField("packs")]
     public List<PackIncludeEntry> Packs { get; set; } = new();
+
+    /// <summary>
+    /// Стоимость пропуска одного контракта. 0 — пропуск отключён.
+    /// </summary>
+    [DataField("skipCost")]
+    public int SkipCost { get; set; } = 50;
+
+    /// <summary>
+    /// Валюта для оплаты пропуска.
+    /// Если пусто — используется первая валюта из CurrencyWhitelist магазина.
+    /// </summary>
+    [DataField("skipCurrency")]
+    public string SkipCurrency { get; set; } = string.Empty;
 }
 
 [DataDefinition]

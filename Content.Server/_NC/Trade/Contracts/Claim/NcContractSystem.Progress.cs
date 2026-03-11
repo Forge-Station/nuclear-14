@@ -1,4 +1,6 @@
 using Content.Shared._NC.Trade;
+using Content.Shared.Stacks;
+
 
 namespace Content.Server._NC.Trade;
 
@@ -15,18 +17,21 @@ public sealed partial class NcContractSystem : EntitySystem
         if (comp.Contracts.Count == 0)
             return;
 
+        var hasCrateWork = crate is { } && crateItems is { Count: > 0 };
+
         foreach (var (_, contract) in comp.Contracts)
         {
-            var hasCrateWork = PrepareProgressWorkItems(userItems, crate, crateItems);
             ClearProgressPerContractScratch();
-            UpdateContractProgressForSingleContract(contract, user, crate, hasCrateWork);
+            UpdateContractProgressForSingleContract(contract, user, userItems, crate, crateItems, hasCrateWork);
         }
     }
 
     private void UpdateContractProgressForSingleContract(
         ContractServerData contract,
         EntityUid user,
+        IReadOnlyList<EntityUid> userItems,
         EntityUid? crate,
+        IReadOnlyList<EntityUid>? crateItems,
         bool hasCrateWork
     )
     {
@@ -34,7 +39,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (targets.Count == 0)
         {
-            UpdateLegacyContractProgress(contract, user, crate, hasCrateWork);
+            UpdateLegacyContractProgress(contract, user, userItems, crate, crateItems, hasCrateWork);
             return;
         }
 
@@ -109,30 +114,30 @@ public sealed partial class NcContractSystem : EntitySystem
 
             var need = required;
 
-            if (crate is { } crateRoot && hasCrateWork)
+            if (crate is { } crateRoot && hasCrateWork && crateItems != null)
             {
-                var reserved = ReserveTakePlanFromItems(
+                var reserved = ReserveProgressFromItems(
                     crateRoot,
-                    _progressCrateItemsScratch,
+                    crateItems,
                     ordered.ProtoId,
                     ordered.MatchMode,
                     need,
                     _progressVirtualStackLeftScratch,
-                    _progressSimulatedPlanScratch);
+                    _progressConsumedEntitiesScratch);
 
                 need -= reserved;
             }
 
             if (need > 0)
             {
-                var reserved = ReserveTakePlanFromItems(
+                var reserved = ReserveProgressFromItems(
                     user,
-                    _progressUserItemsScratch,
+                    userItems,
                     ordered.ProtoId,
                     ordered.MatchMode,
                     need,
                     _progressVirtualStackLeftScratch,
-                    _progressSimulatedPlanScratch);
+                    _progressConsumedEntitiesScratch);
 
                 need -= reserved;
             }
@@ -176,7 +181,9 @@ public sealed partial class NcContractSystem : EntitySystem
     private void UpdateLegacyContractProgress(
         ContractServerData contract,
         EntityUid user,
+        IReadOnlyList<EntityUid> userItems,
         EntityUid? crate,
+        IReadOnlyList<EntityUid>? crateItems,
         bool hasCrateWork
     )
     {
@@ -188,54 +195,36 @@ public sealed partial class NcContractSystem : EntitySystem
 
         var need = contract.Required;
 
-        if (crate is { } crateRoot && hasCrateWork)
+        if (crate is { } crateRoot && hasCrateWork && crateItems != null)
         {
-            var reserved = ReserveTakePlanFromItems(
+            var reserved = ReserveProgressFromItems(
                 crateRoot,
-                _progressCrateItemsScratch,
+                crateItems,
                 contract.TargetItem,
                 contract.MatchMode,
                 need,
                 _progressVirtualStackLeftScratch,
-                _progressSimulatedPlanScratch);
+                _progressConsumedEntitiesScratch);
 
             need -= reserved;
         }
 
         if (need > 0)
         {
-            var reserved = ReserveTakePlanFromItems(
+            var reserved = ReserveProgressFromItems(
                 user,
-                _progressUserItemsScratch,
+                userItems,
                 contract.TargetItem,
                 contract.MatchMode,
                 need,
                 _progressVirtualStackLeftScratch,
-                _progressSimulatedPlanScratch);
+                _progressConsumedEntitiesScratch);
 
             need -= reserved;
         }
 
         var progressed = contract.Required - Math.Max(0, need);
         contract.Progress = Math.Clamp(progressed, 0, contract.Required);
-    }
-
-    private bool PrepareProgressWorkItems(
-        IReadOnlyList<EntityUid> userItems,
-        EntityUid? crate,
-        IReadOnlyList<EntityUid>? crateItems
-    )
-    {
-        _progressUserItemsScratch.Clear();
-        _progressUserItemsScratch.AddRange(userItems);
-
-        _progressCrateItemsScratch.Clear();
-
-        if (crate is null || crateItems is not { Count: > 0 })
-            return false;
-
-        _progressCrateItemsScratch.AddRange(crateItems);
-        return _progressCrateItemsScratch.Count > 0;
     }
 
     private void ClearProgressPerContractScratch()
@@ -254,7 +243,7 @@ public sealed partial class NcContractSystem : EntitySystem
         _progressRequiredByKeyScratch.Clear();
         _progressClaimableByKeyScratch.Clear();
         _progressVirtualStackLeftScratch.Clear();
-        _progressSimulatedPlanScratch.Clear();
+        _progressConsumedEntitiesScratch.Clear();
         _progressOrderedKeysScratch.Clear();
     }
 
@@ -264,5 +253,97 @@ public sealed partial class NcContractSystem : EntitySystem
             return _progressTargetIndexPool.Pop();
 
         return new List<int>(4);
+    }
+
+    private int ReserveProgressFromItems(
+        EntityUid root,
+        IReadOnlyList<EntityUid> items,
+        string expectedProtoId,
+        PrototypeMatchMode matchMode,
+        int need,
+        Dictionary<EntityUid, int> virtualStackLeft,
+        HashSet<EntityUid> consumedNonStack
+    )
+    {
+        if (need <= 0)
+            return 0;
+
+        var reserved = 0;
+
+        if (TryGetStackTypeId(expectedProtoId, out var stackTypeId))
+        {
+            for (var i = 0; i < items.Count && reserved < need; i++)
+            {
+                var ent = items[i];
+                if (ent == EntityUid.Invalid || !EntityManager.EntityExists(ent))
+                    continue;
+
+                if (_logic.IsProtectedFromDirectSale(root, ent))
+                    continue;
+
+                if (!TryComp(ent, out StackComponent? stack) || stack.StackTypeId != stackTypeId)
+                    continue;
+
+                var have = virtualStackLeft.TryGetValue(ent, out var virtualLeft)
+                    ? virtualLeft
+                    : Math.Max(stack.Count, 0);
+                if (have <= 0)
+                    continue;
+
+                var take = Math.Min(have, need - reserved);
+                if (take <= 0)
+                    continue;
+
+                reserved += take;
+                virtualStackLeft[ent] = have - take;
+            }
+
+            return reserved;
+        }
+
+        for (var i = 0; i < items.Count && reserved < need; i++)
+        {
+            var ent = items[i];
+            if (ent == EntityUid.Invalid || !EntityManager.EntityExists(ent))
+                continue;
+
+            if (_logic.IsProtectedFromDirectSale(root, ent))
+                continue;
+
+            if (!TryComp(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
+                continue;
+
+            var candidateId = meta.EntityPrototype.ID;
+            var matches = matchMode == PrototypeMatchMode.Exact
+                ? candidateId == expectedProtoId
+                : candidateId == expectedProtoId || IsDescendantId(candidateId, expectedProtoId);
+
+            if (!matches)
+                continue;
+
+            if (TryComp(ent, out StackComponent? stack) && stack.Count > 0)
+            {
+                var have = virtualStackLeft.TryGetValue(ent, out var virtualLeft)
+                    ? virtualLeft
+                    : Math.Max(stack.Count, 0);
+                if (have <= 0)
+                    continue;
+
+                var take = Math.Min(have, need - reserved);
+                if (take <= 0)
+                    continue;
+
+                reserved += take;
+                virtualStackLeft[ent] = have - take;
+                continue;
+            }
+
+            if (!consumedNonStack.Add(ent))
+                continue;
+
+            reserved += 1;
+        }
+
+        return reserved;
     }
 }
