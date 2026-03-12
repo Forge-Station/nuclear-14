@@ -1,0 +1,9 @@
+- type: entity
+  id: NcContractHuntTestSpawnMarker
+  parent: MarkerBase
+  name: contract hunt test spawn marker
+  suffix: contracts, hunt
+  components:
+  - type: Tag
+    tags:
+    - NcContractHuntTestSpawn

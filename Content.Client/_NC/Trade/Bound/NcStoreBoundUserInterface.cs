@@ -27,6 +27,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         menu.OnContractClaim -= OnContractClaim;
         menu.OnContractTake -= OnContractTake;
         menu.OnContractSkip -= OnContractSkip;
+        menu.OnContractRequestPinpointer -= OnContractRequestPinpointer;
         menu.OnVisibleListingIdsChanged -= OnVisibleListingIdsChanged;
         menu.OnClose -= OnMenuClosed;
     }
@@ -129,6 +130,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         _menu.OnContractClaim += OnContractClaim;
         _menu.OnContractTake += OnContractTake;
         _menu.OnContractSkip += OnContractSkip;
+        _menu.OnContractRequestPinpointer += OnContractRequestPinpointer;
         _menu.OnVisibleListingIdsChanged += OnVisibleListingIdsChanged;
 
         _menu.OnClose += OnMenuClosed;
@@ -180,12 +182,21 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
 
         SendMessage(new TakeContractBoundMessage(contractId));
     }
+
     private void OnContractSkip(string contractId)
     {
         if (Actor == null)
             return;
 
         SendMessage(new SkipContractBoundMessage(contractId));
+    }
+
+    private void OnContractRequestPinpointer(string contractId)
+    {
+        if (Actor == null)
+            return;
+
+        SendMessage(new RequestContractPinpointerBoundMessage(contractId));
     }
 
     private void OnMassSellPulledCrate()

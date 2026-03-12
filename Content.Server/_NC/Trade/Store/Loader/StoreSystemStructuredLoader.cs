@@ -27,6 +27,7 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
     {
         _loadedStores.Remove(uid);
         _contractsInitialized.Remove(uid);
+        _contracts.ClearStoreRuntimeCaches(uid);
     }
 
     private void OnMapInit(EntityUid uid, NcStoreComponent comp, MapInitEvent args) =>

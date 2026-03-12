@@ -1,0 +1,17 @@
+- type: entity
+  id: TrademachineCityObjectiveTest
+  parent: Trademachine
+  name: trade machine city (contracts test)
+  description: test vendor for objective contracts
+  suffix: vendor, objective-test
+  components:
+  - type: NcStore
+    buyPresets:
+    - caravan_buy2
+    sellPresets:
+    - caravan_sell2
+    contractPresets:
+    - PresetBazarObjectiveTest
+  - type: AccessReader
+    access:
+    - [ "TownieShopkeeper" ]

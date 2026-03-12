@@ -46,6 +46,7 @@ public sealed partial class NcStoreMenu : FancyWindow
     public Action<string>? OnContractClaim;
     public event Action<string>? OnContractTake;
     public event Action<string>? OnContractSkip;
+    public event Action<string>? OnContractRequestPinpointer;
     public NcStoreMenu()
     {
         RobustXamlLoader.Load(this);
@@ -463,6 +464,7 @@ public sealed partial class NcStoreMenu : FancyWindow
             card.OnClaim += id => OnContractClaim?.Invoke(id);
             card.OnTake += id => OnContractTake?.Invoke(id);
             card.OnSkip += id => OnContractSkip?.Invoke(id);
+            card.OnRequestPinpointer += id => OnContractRequestPinpointer?.Invoke(id);
             contractList.AddChild(card);
         }
 

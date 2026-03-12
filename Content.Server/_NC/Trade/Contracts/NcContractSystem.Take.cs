@@ -4,7 +4,7 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
-    public bool TryTakeContract(EntityUid store, string contractId)
+    public bool TryTakeContract(EntityUid store, EntityUid user, string contractId)
     {
         if (!TryComp(store, out NcStoreComponent? comp))
             return false;
@@ -13,6 +13,9 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         if (contract.Taken)
+            return false;
+
+        if (!TryInitializeObjectiveRuntimeOnTake(store, user, contractId, contract))
             return false;
 
         contract.Taken = true;
@@ -25,6 +28,8 @@ public sealed partial class NcContractSystem : EntitySystem
             target.Progress = 0;
             targets[i] = target;
         }
+        if (contract.ObjectiveType != ContractObjectiveType.Delivery)
+            UpdateObjectiveContractProgress(store, contractId, contract);
 
         return true;
     }

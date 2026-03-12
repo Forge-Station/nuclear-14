@@ -68,6 +68,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (cost > 0 && !_logic._currency.TryTakeCurrency(user, currency, cost))
             return false;
 
+        CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true);
         comp.Contracts.Remove(contractId);
         RefillContractsForStore(store, comp, null);
         return true;

@@ -7,6 +7,7 @@ namespace Content.Server._NC.Trade;
 public sealed partial class NcContractSystem : EntitySystem
 {
     public void UpdateContractsProgress(
+        EntityUid store,
         NcStoreComponent comp,
         EntityUid user,
         IReadOnlyList<EntityUid> userItems,
@@ -19,11 +20,17 @@ public sealed partial class NcContractSystem : EntitySystem
 
         var hasCrateWork = crate is { } && crateItems is { Count: > 0 };
 
-        foreach (var (_, contract) in comp.Contracts)
+        foreach (var (contractId, contract) in comp.Contracts)
         {
             if (!contract.Taken)
             {
                 ResetContractProgress(contract);
+                continue;
+            }
+
+            if (contract.ObjectiveType != ContractObjectiveType.Delivery)
+            {
+                UpdateObjectiveContractProgress(store, contractId, contract);
                 continue;
             }
 

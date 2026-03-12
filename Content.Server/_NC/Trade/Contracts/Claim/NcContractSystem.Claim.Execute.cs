@@ -93,8 +93,14 @@ public sealed partial class NcContractSystem : EntitySystem
             ctx.Contract.Targets[i] = t;
         }
 
-        // Give baked rewards.
-        foreach (var reward in ctx.Contract.Rewards)
+        GiveContractRewards(ctx.User, ctx.Contract.Rewards);
+
+        return true;
+    }
+
+    private void GiveContractRewards(EntityUid user, List<ContractRewardData> rewards)
+    {
+        foreach (var reward in rewards)
         {
             if (reward.Amount <= 0 || string.IsNullOrWhiteSpace(reward.Id))
                 continue;
@@ -102,26 +108,24 @@ public sealed partial class NcContractSystem : EntitySystem
             switch (reward.Type)
             {
                 case StoreRewardType.Currency:
-                    _logic.GiveCurrency(ctx.User, reward.Id, reward.Amount);
+                    _logic.GiveCurrency(user, reward.Id, reward.Amount);
                     break;
 
                 case StoreRewardType.Item:
-                    _logic.TrySpawnProductUnits(reward.Id, ctx.User, reward.Amount);
+                    _logic.TrySpawnProductUnits(reward.Id, user, reward.Amount);
                     break;
             }
         }
-
-        return true;
     }
 
-    private void FinalizeClaim(ClaimContext ctx, string contractId)
+    private void FinalizeClaim(EntityUid store, NcStoreComponent comp, string contractId, bool repeatable)
     {
-        var repeatable = ctx.Contract.Repeatable;
+        CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true, deleteGuards: false);
 
-        ctx.Comp.Contracts.Remove(contractId);
+        comp.Contracts.Remove(contractId);
         if (!repeatable)
-            ctx.Comp.CompletedOneTimeContracts.Add(contractId);
+            comp.CompletedOneTimeContracts.Add(contractId);
 
-        RefillContractsForStore(ctx.Store, ctx.Comp, contractId);
+        RefillContractsForStore(store, comp, contractId);
     }
 }

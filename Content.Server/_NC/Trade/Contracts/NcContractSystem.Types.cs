@@ -18,6 +18,8 @@ public sealed partial class NcContractSystem : EntitySystem
         InvalidTarget,
         NotEnoughItems,
         MissingCrate,
+        ObjectiveNotCompleted,
+        ObjectiveFailed,
         ExecutionFailed,
     }
 

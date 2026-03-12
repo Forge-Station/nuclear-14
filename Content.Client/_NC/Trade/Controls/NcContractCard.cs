@@ -42,6 +42,7 @@ public sealed class NcContractCard : PanelContainer
     public event Action<string>? OnClaim;
     public event Action<string>? OnTake;
     public event Action<string>? OnSkip;
+    public event Action<string>? OnRequestPinpointer;
 
     private void BuildUi()
     {
@@ -97,6 +98,18 @@ public sealed class NcContractCard : PanelContainer
                     Text = descText,
                     Margin = new(0, 0, 0, 8),
                     Modulate = Color.FromHex("#C9C9C9")
+                });
+        }
+
+        if (_data.ObjectiveType != ContractObjectiveType.Delivery && _data.Runtime.StageGoal > 1)
+        {
+            var stage = Math.Clamp(_data.Runtime.Stage, 0, _data.Runtime.StageGoal);
+            root.AddChild(
+                new Label
+                {
+                    Text = Loc.GetString("nc-store-contract-runtime-stage", ("stage", stage), ("goal", _data.Runtime.StageGoal)),
+                    Margin = new(0, 0, 0, 6),
+                    Modulate = Color.FromHex("#8DB7E8")
                 });
         }
 
@@ -164,6 +177,16 @@ public sealed class NcContractCard : PanelContainer
         header.AddChild(titleLabel);
 
         header.AddChild(new() { HorizontalExpand = true, });
+
+        var objectiveTypeText = ObjectiveTypeName(_data.ObjectiveType);
+        var objectiveTypeTip = ObjectiveTypeTooltip(_data.ObjectiveType);
+        header.AddChild(
+            BuildBadge(
+                objectiveTypeText,
+                objectiveTypeTip,
+                Color.FromHex("#202630"),
+                Color.FromHex("#5B708D")));
+
 
         if (!_data.Repeatable)
         {
@@ -283,6 +306,7 @@ public sealed class NcContractCard : PanelContainer
 
         var canTake = !_data.Taken;
         var canClaim = _data.Taken && _data.Completed;
+        var canRequestPinpointer = CanRequestPinpointer(_data);
 
         var actionHint = new Label
         {
@@ -343,6 +367,21 @@ public sealed class NcContractCard : PanelContainer
 
         actionCol.AddChild(btn);
 
+        if (canRequestPinpointer)
+        {
+            var pointerBtn = new Button
+            {
+                Text = Loc.GetString("nc-store-contract-action-pinpointer"),
+                HorizontalExpand = true,
+                MinSize = new(0, 28),
+                Margin = new(0, 4, 0, 0),
+                ToolTip = Loc.GetString("nc-store-contract-action-pinpointer-tooltip")
+            };
+
+            pointerBtn.OnPressed += _ => OnRequestPinpointer?.Invoke(_data.Id);
+            actionCol.AddChild(pointerBtn);
+        }
+
         if (_skipCost > 0 && !string.IsNullOrWhiteSpace(_skipCurrency))
         {
             var skipCurrencyName = CurrencyName(_skipCurrency);
@@ -383,9 +422,35 @@ public sealed class NcContractCard : PanelContainer
         return bottomWrap;
     }
 
+    private static bool CanRequestPinpointer(ContractClientData data)
+    {
+        if (!data.Taken || data.Completed || !data.Runtime.GivePinpointer)
+            return false;
+
+        return data.ObjectiveType == ContractObjectiveType.Hunt ||
+            !string.IsNullOrWhiteSpace(data.Runtime.TargetPrototype);
+    }
     // =====================
     // Text helpers
     // =====================
+
+    private string ObjectiveTypeName(ContractObjectiveType objectiveType) =>
+        objectiveType switch
+        {
+            ContractObjectiveType.Hunt => Loc.GetString("nc-store-contract-type-hunt"),
+            ContractObjectiveType.Repair => Loc.GetString("nc-store-contract-type-repair"),
+            ContractObjectiveType.GhostRole => Loc.GetString("nc-store-contract-type-ghost-role"),
+            _ => Loc.GetString("nc-store-contract-type-delivery")
+        };
+
+    private string ObjectiveTypeTooltip(ContractObjectiveType objectiveType) =>
+        objectiveType switch
+        {
+            ContractObjectiveType.Hunt => Loc.GetString("nc-store-contract-type-hunt-tooltip"),
+            ContractObjectiveType.Repair => Loc.GetString("nc-store-contract-type-repair-tooltip"),
+            ContractObjectiveType.GhostRole => Loc.GetString("nc-store-contract-type-ghost-role-tooltip"),
+            _ => Loc.GetString("nc-store-contract-type-delivery-tooltip")
+        };
 
     private string BuildPrettyTitle(ContractClientData c)
     {

@@ -1,8 +1,7 @@
+using System;
 using Content.Shared._NC.Trade;
 
-
 namespace Content.Server._NC.Trade;
-
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -74,6 +73,22 @@ public sealed partial class NcContractSystem : EntitySystem
 
         var mainTarget = targets.Count > 0 ? targets[0].TargetItem : string.Empty;
 
+        var objectiveType = proto.ObjectiveType;
+        var runtime = BuildInitialRuntimeContext(proto);
+
+        if (objectiveType != ContractObjectiveType.Delivery)
+        {
+            targets.Clear();
+            totalRequired = Math.Max(1, runtime.StageGoal);
+
+            if (!string.IsNullOrWhiteSpace(runtime.TargetPrototype))
+                mainTarget = runtime.TargetPrototype;
+            else if (!string.IsNullOrWhiteSpace(runtime.StructurePrototype))
+                mainTarget = runtime.StructurePrototype;
+            else if (!string.IsNullOrWhiteSpace(runtime.GhostRolePrototype))
+                mainTarget = runtime.GhostRolePrototype;
+        }
+
         var rewards = BakeRewardsForContract(store, proto);
 
         return new()
@@ -84,6 +99,8 @@ public sealed partial class NcContractSystem : EntitySystem
             Description = proto.Description,
             Repeatable = proto.Repeatable,
             Taken = false,
+            ObjectiveType = objectiveType,
+            Runtime = runtime,
 
             Targets = targets,
             TargetItem = mainTarget,
@@ -91,6 +108,36 @@ public sealed partial class NcContractSystem : EntitySystem
             Progress = 0,
 
             Rewards = rewards
+        };
+    }
+
+    private static ContractRuntimeContextData BuildInitialRuntimeContext(StoreContractPrototype proto)
+    {
+        var runtimeProto = proto.Runtime;
+
+        var stageGoal = runtimeProto.StageGoal;
+        if (stageGoal <= 0)
+            stageGoal = proto.ObjectiveType == ContractObjectiveType.Repair ? 3 : 1;
+
+        var pinpointerPrototype = runtimeProto.PinpointerPrototype;
+        if (string.IsNullOrWhiteSpace(pinpointerPrototype))
+            pinpointerPrototype = "PinpointerUniversal";
+
+        return new ContractRuntimeContextData
+        {
+            Stage = 0,
+            StageGoal = stageGoal,
+            AcceptTimeoutSeconds = Math.Max(0, runtimeProto.AcceptTimeoutSeconds),
+            Failed = false,
+            FailureReason = string.Empty,
+            SpawnPointTag = runtimeProto.SpawnPointTag ?? string.Empty,
+            TargetPrototype = runtimeProto.TargetPrototype ?? string.Empty,
+            StructurePrototype = runtimeProto.StructurePrototype ?? string.Empty,
+            GhostRolePrototype = runtimeProto.GhostRolePrototype ?? string.Empty,
+            GivePinpointer = runtimeProto.GivePinpointer,
+            PinpointerPrototype = pinpointerPrototype,
+            GuardPrototype = runtimeProto.GuardPrototype ?? string.Empty,
+            GuardCount = Math.Max(0, runtimeProto.GuardCount)
         };
     }
 }

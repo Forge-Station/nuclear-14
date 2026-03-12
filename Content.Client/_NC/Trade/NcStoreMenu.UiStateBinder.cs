@@ -120,9 +120,27 @@ public sealed partial class NcStoreMenu
                     h = h * 31 + (c.TargetItem?.GetHashCode() ?? 0);
                     h = h * 31 + (c.Repeatable ? 1 : 0);
                     h = h * 31 + (c.Taken ? 1 : 0);
+                    h = h * 31 + (int) c.ObjectiveType;
                     h = h * 31 + (c.Completed ? 1 : 0);
                     h = h * 31 + c.Progress;
                     h = h * 31 + c.Required;
+                    var runtime = c.Runtime;
+                    if (runtime != null)
+                    {
+                        h = h * 31 + runtime.Stage;
+                        h = h * 31 + runtime.StageGoal;
+                        h = h * 31 + runtime.AcceptTimeoutSeconds;
+                        h = h * 31 + (runtime.Failed ? 1 : 0);
+                        h = h * 31 + (runtime.FailureReason?.GetHashCode() ?? 0);
+                        h = h * 31 + (runtime.SpawnPointTag?.GetHashCode() ?? 0);
+                        h = h * 31 + (runtime.TargetPrototype?.GetHashCode() ?? 0);
+                        h = h * 31 + (runtime.StructurePrototype?.GetHashCode() ?? 0);
+                        h = h * 31 + (runtime.GhostRolePrototype?.GetHashCode() ?? 0);
+                        h = h * 31 + (runtime.GivePinpointer ? 1 : 0);
+                        h = h * 31 + (runtime.PinpointerPrototype?.GetHashCode() ?? 0);
+                        h = h * 31 + (runtime.GuardPrototype?.GetHashCode() ?? 0);
+                        h = h * 31 + runtime.GuardCount;
+                    }
 
                     var targets = c.Targets;
                     h = h * 31 + (targets?.Count ?? 0);

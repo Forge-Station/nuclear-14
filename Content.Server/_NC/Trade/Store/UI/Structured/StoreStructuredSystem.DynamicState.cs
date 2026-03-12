@@ -61,6 +61,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         if (hasContractsTab)
             _contracts.UpdateContractsProgress(
+                uid,
                 comp,
                 user,
                 _deepUserItemsScratch,
@@ -302,10 +303,28 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             h = h * 31 + (contract.TargetItem?.GetHashCode() ?? 0);
             h = h * 31 + (contract.Repeatable ? 1 : 0);
             h = h * 31 + (contract.Taken ? 1 : 0);
+            h = h * 31 + (int) contract.ObjectiveType;
             h = h * 31 + (contract.Completed ? 1 : 0);
             h = h * 31 + contract.Required;
             h = h * 31 + contract.Progress;
             h = h * 31 + (int) contract.MatchMode;
+            var runtime = contract.Runtime;
+            if (runtime != null)
+            {
+                h = h * 31 + runtime.Stage;
+                h = h * 31 + runtime.StageGoal;
+                h = h * 31 + runtime.AcceptTimeoutSeconds;
+                h = h * 31 + (runtime.Failed ? 1 : 0);
+                h = h * 31 + (runtime.FailureReason?.GetHashCode() ?? 0);
+                h = h * 31 + (runtime.SpawnPointTag?.GetHashCode() ?? 0);
+                h = h * 31 + (runtime.TargetPrototype?.GetHashCode() ?? 0);
+                h = h * 31 + (runtime.StructurePrototype?.GetHashCode() ?? 0);
+                h = h * 31 + (runtime.GhostRolePrototype?.GetHashCode() ?? 0);
+                h = h * 31 + (runtime.GivePinpointer ? 1 : 0);
+                h = h * 31 + (runtime.PinpointerPrototype?.GetHashCode() ?? 0);
+                h = h * 31 + (runtime.GuardPrototype?.GetHashCode() ?? 0);
+                h = h * 31 + runtime.GuardCount;
+            }
 
             var targets = contract.Targets;
             h = h * 31 + targets.Count;

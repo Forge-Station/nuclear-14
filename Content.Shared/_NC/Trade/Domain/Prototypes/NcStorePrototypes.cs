@@ -74,6 +74,8 @@ public sealed partial class StoreContractPrototype : IPrototype
 
     [DataField("difficulty")] public string Difficulty { get; private set; } = "Easy";
     [DataField("repeatable")] public bool Repeatable { get; private set; } = true;
+    [DataField("objectiveType")] public ContractObjectiveType ObjectiveType { get; private set; } = ContractObjectiveType.Delivery;
+    [DataField("runtime")] public StoreContractRuntimePrototype Runtime { get; private set; } = new();
 
     [DataField("targetItem")] public string? TargetItem { get; private set; }
 
@@ -95,6 +97,40 @@ public sealed partial class StoreContractTargetEntry
     [DataField("weight")] public int Weight { get; set; } = 1;
 }
 
+
+[DataDefinition]
+public sealed partial class StoreContractRuntimePrototype
+{
+    [DataField("stageGoal")]
+    public int StageGoal { get; set; } = 1;
+
+    [DataField("spawnPointTag")]
+    public string SpawnPointTag { get; set; } = string.Empty;
+
+    [DataField("targetPrototype")]
+    public string TargetPrototype { get; set; } = string.Empty;
+
+    [DataField("structurePrototype")]
+    public string StructurePrototype { get; set; } = string.Empty;
+
+    [DataField("ghostRolePrototype")]
+    public string GhostRolePrototype { get; set; } = string.Empty;
+
+    [DataField("acceptTimeoutSeconds")]
+    public int AcceptTimeoutSeconds { get; set; } = 300;
+
+    [DataField("givePinpointer")]
+    public bool GivePinpointer { get; set; } = true;
+
+    [DataField("pinpointerPrototype")]
+    public string PinpointerPrototype { get; set; } = "PinpointerUniversal";
+
+    [DataField("guardPrototype")]
+    public string GuardPrototype { get; set; } = string.Empty;
+
+    [DataField("guardCount")]
+    public int GuardCount { get; set; } = 0;
+}
 [Prototype("storeContractsPreset")]
 public sealed partial class StoreContractsPresetPrototype : IPrototype
 {
@@ -106,16 +142,9 @@ public sealed partial class StoreContractsPresetPrototype : IPrototype
     [DataField("packs")]
     public List<PackIncludeEntry> Packs { get; set; } = new();
 
-    /// <summary>
-    /// Стоимость пропуска одного контракта. 0 — пропуск отключён.
-    /// </summary>
     [DataField("skipCost")]
     public int SkipCost { get; set; } = 50;
 
-    /// <summary>
-    /// Валюта для оплаты пропуска.
-    /// Если пусто — используется первая валюта из CurrencyWhitelist магазина.
-    /// </summary>
     [DataField("skipCurrency")]
     public string SkipCurrency { get; set; } = string.Empty;
 }
@@ -171,6 +200,15 @@ public sealed partial class NcContractRewardPoolPrototype : IPrototype
 
 
 
+
+[Serializable, NetSerializable]
+public enum ContractObjectiveType : byte
+{
+    Delivery = 0,
+    Hunt = 1,
+    Repair = 2,
+    GhostRole = 3
+}
 [Serializable, NetSerializable]
 public enum PrototypeMatchMode : byte
 {

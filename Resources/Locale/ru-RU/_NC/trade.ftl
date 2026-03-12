@@ -103,3 +103,22 @@ nc-store-contract-skipped = Контракт пропущен, выдан нов
 nc-store-contract-skip-failed = Не удалось пропустить контракт. Недостаточно средств.
 nc-store-contract-skip-locked = Этот контракт уже принят и не может быть пропущен.
 
+
+nc-store-contract-type-delivery = Поставка
+nc-store-contract-type-delivery-tooltip = Базовый контракт на доставку предметов.
+
+nc-store-contract-type-hunt = Охота
+nc-store-contract-type-hunt-tooltip = После принятия появится цель. Устраните цель и сдайте контракт.
+
+nc-store-contract-type-repair = Ремонт
+nc-store-contract-type-repair-tooltip = Многоэтапный контракт на починку объекта.
+
+nc-store-contract-type-ghost-role = Гост-роль
+nc-store-contract-type-ghost-role-tooltip = Контракт с появлением специальной гост-роли.
+
+nc-store-contract-runtime-stage = Этап: { $stage } / { $goal }
+
+nc-store-contract-action-pinpointer = Выдать пинпоинтер
+nc-store-contract-action-pinpointer-tooltip = Выдать новый пинпоинтер для текущей цели активного контракта.
+nc-store-contract-pinpointer-issued = Пинпоинтер выдан.
+nc-store-contract-pinpointer-issue-failed = Не удалось выдать пинпоинтер.

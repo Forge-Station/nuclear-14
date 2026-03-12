@@ -42,6 +42,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             c.Description,
             c.Repeatable,
             c.Taken,
+            c.ObjectiveType,
+            CloneRuntimeContext(c.Runtime),
             c.Completed,
             c.TargetItem,
             c.Required,
@@ -51,6 +53,29 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         );
     }
 
+
+    private static ContractRuntimeContextData CloneRuntimeContext(ContractRuntimeContextData? runtime)
+    {
+        if (runtime == null)
+            return new ContractRuntimeContextData();
+
+        return new ContractRuntimeContextData
+        {
+            Stage = runtime.Stage,
+            StageGoal = runtime.StageGoal,
+            AcceptTimeoutSeconds = runtime.AcceptTimeoutSeconds,
+            Failed = runtime.Failed,
+            FailureReason = runtime.FailureReason,
+            SpawnPointTag = runtime.SpawnPointTag,
+            TargetPrototype = runtime.TargetPrototype,
+            StructurePrototype = runtime.StructurePrototype,
+            GhostRolePrototype = runtime.GhostRolePrototype,
+            GivePinpointer = runtime.GivePinpointer,
+            PinpointerPrototype = runtime.PinpointerPrototype,
+            GuardPrototype = runtime.GuardPrototype,
+            GuardCount = runtime.GuardCount
+        };
+    }
     private sealed class DynamicScratch
     {
         private readonly DynamicStateBuffer[] _buffers = { new(), new(), };
@@ -240,15 +265,40 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
             if (a.Repeatable != b.Repeatable ||
                 a.Taken != b.Taken ||
+                a.ObjectiveType != b.ObjectiveType ||
                 a.Completed != b.Completed ||
                 a.Required != b.Required ||
                 a.Progress != b.Progress)
                 return false;
 
             return TargetsEquals(a.Targets, b.Targets) &&
-                RewardsEquals(a.Rewards, b.Rewards);
+                RewardsEquals(a.Rewards, b.Rewards) &&
+                RuntimeEquals(a.Runtime, b.Runtime);
         }
 
+
+        private static bool RuntimeEquals(ContractRuntimeContextData? a, ContractRuntimeContextData? b)
+        {
+            if (ReferenceEquals(a, b))
+                return true;
+
+            if (a == null || b == null)
+                return false;
+
+            return a.Stage == b.Stage &&
+                a.StageGoal == b.StageGoal &&
+                a.AcceptTimeoutSeconds == b.AcceptTimeoutSeconds &&
+                a.Failed == b.Failed &&
+                string.Equals(a.FailureReason, b.FailureReason, StringComparison.Ordinal) &&
+                string.Equals(a.SpawnPointTag, b.SpawnPointTag, StringComparison.Ordinal) &&
+                string.Equals(a.TargetPrototype, b.TargetPrototype, StringComparison.Ordinal) &&
+                string.Equals(a.StructurePrototype, b.StructurePrototype, StringComparison.Ordinal) &&
+                string.Equals(a.GhostRolePrototype, b.GhostRolePrototype, StringComparison.Ordinal) &&
+                a.GivePinpointer == b.GivePinpointer &&
+                string.Equals(a.PinpointerPrototype, b.PinpointerPrototype, StringComparison.Ordinal) &&
+                string.Equals(a.GuardPrototype, b.GuardPrototype, StringComparison.Ordinal) &&
+                a.GuardCount == b.GuardCount;
+        }
         private static bool TargetsEquals(List<ContractTargetClientData>? a, List<ContractTargetClientData>? b)
         {
             if (ReferenceEquals(a, b))

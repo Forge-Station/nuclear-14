@@ -79,6 +79,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         SubscribeLocalEvent<NcStoreComponent, ClaimContractBoundMessage>(OnClaimContract);
         SubscribeLocalEvent<NcStoreComponent, TakeContractBoundMessage>(OnTakeContract);
         SubscribeLocalEvent<NcStoreComponent, SkipContractBoundMessage>(OnSkipContract);
+        SubscribeLocalEvent<NcStoreComponent, RequestContractPinpointerBoundMessage>(OnRequestContractPinpointer);
         SubscribeLocalEvent<EntityStorageComponent, StorageAfterOpenEvent>(OnStorageOpen);
         SubscribeLocalEvent<EntityStorageComponent, StorageAfterCloseEvent>(OnStorageClose);
     }

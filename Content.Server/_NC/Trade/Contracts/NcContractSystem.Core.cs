@@ -37,12 +37,14 @@ public sealed partial class NcContractSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
+        InitializeObjectiveRuntime();
         _prototypes.PrototypesReloaded += OnPrototypesReloaded;
     }
 
     public override void Shutdown()
     {
         _prototypes.PrototypesReloaded -= OnPrototypesReloaded;
+        ShutdownObjectiveRuntime();
         base.Shutdown();
     }
 
@@ -63,23 +65,25 @@ public sealed partial class NcContractSystem : EntitySystem
 
     public void ClearStoreRuntimeCaches(EntityUid store)
     {
-        if (store == EntityUid.Invalid || _contractCooldown.Count == 0)
+        if (store == EntityUid.Invalid)
             return;
 
-        _cooldownKeysToRemoveScratch.Clear();
-        foreach (var key in _contractCooldown.Keys)
+        if (_contractCooldown.Count > 0)
         {
-            if (key.Store == store)
-                _cooldownKeysToRemoveScratch.Add(key);
+            _cooldownKeysToRemoveScratch.Clear();
+            foreach (var key in _contractCooldown.Keys)
+            {
+                if (key.Store == store)
+                    _cooldownKeysToRemoveScratch.Add(key);
+            }
+
+            for (var i = 0; i < _cooldownKeysToRemoveScratch.Count; i++)
+                _contractCooldown.Remove(_cooldownKeysToRemoveScratch[i]);
+
+            _cooldownKeysToRemoveScratch.Clear();
         }
 
-        if (_cooldownKeysToRemoveScratch.Count == 0)
-            return;
-
-        for (var i = 0; i < _cooldownKeysToRemoveScratch.Count; i++)
-            _contractCooldown.Remove(_cooldownKeysToRemoveScratch[i]);
-
-        _cooldownKeysToRemoveScratch.Clear();
+        ClearStoreObjectiveRuntime(store, deleteTrackedEntities: true);
     }
 
     private static List<ContractTargetServerData> GetEffectiveTargets(ContractServerData contract) => contract.Targets;

@@ -14,6 +14,8 @@ public sealed class ContractClientData
 
     public bool Repeatable;
     public bool Taken;
+    public ContractObjectiveType ObjectiveType = ContractObjectiveType.Delivery;
+    public ContractRuntimeContextData Runtime = new();
     public int Required;
     public List<ContractRewardData> Rewards = new();
 
@@ -30,6 +32,8 @@ public sealed class ContractClientData
         string description,
         bool repeatable,
         bool taken,
+        ContractObjectiveType objectiveType,
+        ContractRuntimeContextData runtime,
         bool completed,
         string targetItem,
         int required,
@@ -43,6 +47,8 @@ public sealed class ContractClientData
         Description = description;
         Repeatable = repeatable;
         Taken = taken;
+        ObjectiveType = objectiveType;
+        Runtime = runtime;
         Completed = completed;
         TargetItem = targetItem;
         Required = required;
