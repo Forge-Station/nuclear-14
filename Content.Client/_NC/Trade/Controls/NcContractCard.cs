@@ -111,7 +111,9 @@ public sealed class NcContractCard : PanelContainer
                     Margin = new(0, 0, 0, 6),
                     Modulate = IsGhostRoleAwaitingAcceptance(_data)
                         ? Color.FromHex("#D3B06A")
-                        : Color.FromHex("#8DB7E8")
+                        : _data.FlowStatus == ContractFlowStatus.Failed
+                            ? Color.FromHex("#D97575")
+                            : Color.FromHex("#8DB7E8")
                 });
         }
 
@@ -212,7 +214,7 @@ public sealed class NcContractCard : PanelContainer
                     new(0f, 0f, 0f, 0.7f)));
         }
 
-        if (_data.Taken && !_data.Completed)
+        if (_data.FlowStatus is ContractFlowStatus.AwaitingActivation or ContractFlowStatus.InProgress)
         {
             header.AddChild(
                 BuildBadge(
@@ -241,7 +243,7 @@ public sealed class NcContractCard : PanelContainer
             }
         }
 
-        if (_data.Completed)
+        if (_data.FlowStatus == ContractFlowStatus.ReadyToTurnIn)
         {
             header.AddChild(
                 BuildBadge(
@@ -336,8 +338,8 @@ public sealed class NcContractCard : PanelContainer
             Margin = new(8, 0, 0, 0)
         };
 
-        var canTake = !_data.Taken;
-        var canClaim = _data.Taken && _data.Completed;
+        var canTake = _data.FlowStatus == ContractFlowStatus.Available;
+        var canClaim = _data.FlowStatus == ContractFlowStatus.ReadyToTurnIn;
         var canRequestPinpointer = CanRequestPinpointer(_data);
 
         var actionHint = new Label
@@ -413,7 +415,7 @@ public sealed class NcContractCard : PanelContainer
         if (_skipCost > 0 && !string.IsNullOrWhiteSpace(_skipCurrency))
         {
             var skipCurrencyName = CurrencyName(_skipCurrency);
-            var canSkip = !_data.Taken && _skipBalance >= _skipCost;
+            var canSkip = _data.FlowStatus == ContractFlowStatus.Available && _skipBalance >= _skipCost;
             var skipBtn = new Button
             {
                 Text = Loc.GetString("nc-store-contract-action-skip", ("cost", _skipCost), ("currency", skipCurrencyName)),
@@ -428,7 +430,7 @@ public sealed class NcContractCard : PanelContainer
                 : Color.FromHex("#8A8A8A");
 
             var baseTip = Loc.GetString("nc-store-contract-skip-tooltip", ("cost", _skipCost), ("currency", skipCurrencyName));
-            skipBtn.ToolTip = _data.Taken
+            skipBtn.ToolTip = _data.FlowStatus != ContractFlowStatus.Available
                 ? Loc.GetString("nc-store-contract-skip-locked")
                 : canSkip
                     ? baseTip
@@ -452,32 +454,22 @@ public sealed class NcContractCard : PanelContainer
 
     private static bool CanRequestPinpointer(ContractClientData data)
     {
-        if (!data.Taken || data.Completed || !data.Runtime.GivePinpointer)
+        if (!data.SupportsPinpointer || data.FlowStatus != ContractFlowStatus.InProgress)
             return false;
 
-        if (data.ObjectiveType == ContractObjectiveType.GhostRole)
-            return IsGhostRoleActive(data);
-
-        return data.ObjectiveType is ContractObjectiveType.Hunt or ContractObjectiveType.Repair ||
-            !string.IsNullOrWhiteSpace(data.Runtime.TargetPrototype) ||
-            !string.IsNullOrWhiteSpace(data.Runtime.StructurePrototype);
+        return data.ObjectiveType is ContractObjectiveType.Hunt or ContractObjectiveType.Repair or ContractObjectiveType.GhostRole or ContractObjectiveType.Delivery;
     }
 
     private static bool IsGhostRoleAwaitingAcceptance(ContractClientData data)
     {
         return data.ObjectiveType == ContractObjectiveType.GhostRole &&
-            data.Taken &&
-            !data.Completed &&
-            data.Runtime.GhostRolePendingAcceptance;
+            data.FlowStatus == ContractFlowStatus.AwaitingActivation;
     }
 
     private static bool IsGhostRoleActive(ContractClientData data)
     {
         return data.ObjectiveType == ContractObjectiveType.GhostRole &&
-            data.Taken &&
-            !data.Completed &&
-            !data.Runtime.GhostRolePendingAcceptance &&
-            !data.Runtime.Failed;
+            data.FlowStatus == ContractFlowStatus.InProgress;
     }
 
     private static string BuildGhostRoleStatusText(ContractClientData data)
@@ -488,24 +480,24 @@ public sealed class NcContractCard : PanelContainer
         if (IsGhostRoleActive(data))
             return Loc.GetString("nc-store-contract-ghost-role-active-line");
 
+        if (data.FlowStatus == ContractFlowStatus.Failed && !string.IsNullOrWhiteSpace(data.Runtime.FailureReason))
+            return data.Runtime.FailureReason;
+
         return string.Empty;
     }
 
     private static string BuildActionHintText(ContractClientData data)
     {
-        if (!data.Taken)
-            return Loc.GetString("nc-store-contract-action-not-taken");
-
-        if (data.Completed)
-            return Loc.GetString("nc-store-contract-action-can-claim");
-
-        if (IsGhostRoleAwaitingAcceptance(data))
-            return Loc.GetString("nc-store-contract-ghost-role-waiting-line", ("time", FormatCountdown(data.Runtime.AcceptTimeoutRemainingSeconds)));
-
-        if (IsGhostRoleActive(data))
-            return Loc.GetString("nc-store-contract-ghost-role-active-line");
-
-        return Loc.GetString("nc-store-contract-action-not-done");
+        return data.FlowStatus switch
+        {
+            ContractFlowStatus.Available => Loc.GetString("nc-store-contract-action-not-taken"),
+            ContractFlowStatus.ReadyToTurnIn => Loc.GetString("nc-store-contract-action-can-claim"),
+            ContractFlowStatus.AwaitingActivation => Loc.GetString("nc-store-contract-ghost-role-waiting-line", ("time", FormatCountdown(data.Runtime.AcceptTimeoutRemainingSeconds))),
+            ContractFlowStatus.Failed when !string.IsNullOrWhiteSpace(data.Runtime.FailureReason) => data.Runtime.FailureReason,
+            _ => IsGhostRoleActive(data)
+                ? Loc.GetString("nc-store-contract-ghost-role-active-line")
+                : Loc.GetString("nc-store-contract-action-not-done")
+        };
     }
 
     private static string FormatCountdown(int totalSeconds)
@@ -838,7 +830,4 @@ public sealed class NcContractCard : PanelContainer
     private static Color Brighten(Color c, float f) =>
         new(MathF.Min(c.R * f, 1f), MathF.Min(c.G * f, 1f), MathF.Min(c.B * f, 1f), c.A);
 }
-
-
-
 

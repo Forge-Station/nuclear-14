@@ -22,10 +22,11 @@ public sealed partial class NcContractSystem : EntitySystem
         contract.Progress = 0;
 
         ResetContractTargetProgress(contract);
+        SyncContractFlowStatus(contract);
+
         if (contract.ObjectiveType != ContractObjectiveType.Delivery)
             UpdateObjectiveContractProgress(store, contractId, contract);
 
         return true;
     }
 }
-

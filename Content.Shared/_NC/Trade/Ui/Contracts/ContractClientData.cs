@@ -8,12 +8,14 @@ public sealed class ContractClientData
     public bool Completed;
     public string Description = string.Empty;
     public string Difficulty = string.Empty;
+    public ContractFlowStatus FlowStatus;
     public string Id = string.Empty;
     public string Name = string.Empty;
     public int Progress;
 
     public bool Repeatable;
     public bool Taken;
+    public bool SupportsPinpointer;
     public ContractObjectiveType ObjectiveType = ContractObjectiveType.Delivery;
     public ContractRuntimeContextData Runtime = new();
     public int Required;
@@ -32,8 +34,10 @@ public sealed class ContractClientData
         string description,
         bool repeatable,
         bool taken,
+        bool supportsPinpointer,
         ContractObjectiveType objectiveType,
         ContractRuntimeContextData runtime,
+        ContractFlowStatus flowStatus,
         bool completed,
         string targetItem,
         int required,
@@ -47,8 +51,10 @@ public sealed class ContractClientData
         Description = description;
         Repeatable = repeatable;
         Taken = taken;
+        SupportsPinpointer = supportsPinpointer;
         ObjectiveType = objectiveType;
         Runtime = runtime;
+        FlowStatus = flowStatus;
         Completed = completed;
         TargetItem = targetItem;
         Required = required;

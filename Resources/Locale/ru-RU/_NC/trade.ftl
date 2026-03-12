@@ -1,4 +1,4 @@
-ent-PrizeTicket = талон каравана
+﻿ent-PrizeTicket = талон каравана
    .desc = Талон, используемый для обмена при помощи специального "торгового автомата". Позволяет заполучить довольно мощное оружие, если конечно хватит талончиков.
 ent-PrizeTicket1 = { ent-PrizeTicket }
    .suffix = 1
@@ -128,7 +128,7 @@ nc-store-contract-ghost-role-target-lost = Цель гост-роли была �
 nc-store-contract-badge-awaiting-ghost-role = ОЖИДАНИЕ
 nc-store-contract-badge-awaiting-ghost-role-tooltip = Контракт ожидает, пока кто-нибудь займёт гост-роль. Если за отведённое время её не возьмут, контракт провалится.
 nc-store-contract-badge-ghost-role-active = АКТИВНА
-nc-store-contract-badge-ghost-role-active-tooltip = ����-���� ������. ���� ����� ����� � ��������� ���� � ��������� ��������.
+nc-store-contract-badge-ghost-role-active-tooltip = Гост-роль занята. Цель нужно убить и доставить тело к торговому автомату.
 nc-store-contract-ghost-role-waiting-line = Ожидание заселения гост-роли: { $time }
-nc-store-contract-ghost-role-active-line = ����-���� ������. ������ ���� � ��������� ���� � ��������� ��������.
+nc-store-contract-ghost-role-active-line = Гост-роль занята. Убейте цель и доставьте тело к торговому автомату.
 

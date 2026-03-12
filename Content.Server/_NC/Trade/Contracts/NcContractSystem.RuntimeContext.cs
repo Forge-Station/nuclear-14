@@ -1,24 +1,31 @@
 using Content.Shared._NC.Trade;
+
 namespace Content.Server._NC.Trade;
+
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private const int DefaultObjectiveStageGoal = 1;
-    private const int DefaultRepairStageGoal = 3;
-    private const float MinRepairDoAfterSeconds = 0.1f;
-    private const string DefaultContractPinpointerPrototypeId = "PinpointerUniversal";
-    private const string DefaultRepairToolQuality = "Welding";
-    private const float DefaultRepairDoAfterSeconds = 2f;
-    private const string DefaultRepairStageSoundPath = "/Audio/Effects/sparks4.ogg";
-    private static ContractRuntimeContextData CreateInitialRuntimeContext(StoreContractPrototype proto)
+    private static ContractRuntimeContextData CreateInitialRuntimeState(StoreContractPrototype proto)
     {
-        var runtimeProto = proto.Runtime;
         var runtime = new ContractRuntimeContextData
         {
             Stage = 0,
-            StageGoal = runtimeProto.StageGoal,
-            AcceptTimeoutSeconds = runtimeProto.AcceptTimeoutSeconds,
+            StageGoal = proto.Runtime.StageGoal,
+            AcceptTimeoutRemainingSeconds = 0,
+            GhostRolePendingAcceptance = false,
             Failed = false,
-            FailureReason = string.Empty,
+            FailureReason = string.Empty
+        };
+
+        NormalizeRuntimeState(proto.ObjectiveType, runtime);
+        return runtime;
+    }
+
+    private static ContractObjectiveConfigData CreateObjectiveConfig(StoreContractPrototype proto)
+    {
+        var runtimeProto = proto.Runtime;
+        var config = new ContractObjectiveConfigData
+        {
+            AcceptTimeoutSeconds = runtimeProto.AcceptTimeoutSeconds,
             SpawnPointTag = runtimeProto.SpawnPointTag ?? string.Empty,
             TargetPrototype = runtimeProto.TargetPrototype ?? string.Empty,
             StructurePrototype = runtimeProto.StructurePrototype ?? string.Empty,
@@ -31,74 +38,116 @@ public sealed partial class NcContractSystem : EntitySystem
             RepairDoAfterSeconds = runtimeProto.RepairDoAfterSeconds,
             RepairStageSound = runtimeProto.RepairStageSound ?? string.Empty
         };
-        NormalizeRuntimeContext(proto.ObjectiveType, runtime);
-        return runtime;
+
+        NormalizeObjectiveConfig(config);
+        return config;
     }
-    private static void NormalizeRuntimeContext(ContractObjectiveType objectiveType, ContractRuntimeContextData runtime)
+
+    private static void NormalizeRuntimeState(ContractObjectiveType objectiveType, ContractRuntimeContextData runtime)
     {
         runtime.StageGoal = runtime.StageGoal > 0
             ? runtime.StageGoal
             : GetDefaultObjectiveStageGoal(objectiveType);
-        runtime.AcceptTimeoutSeconds = Math.Max(0, runtime.AcceptTimeoutSeconds);
-        runtime.GuardCount = Math.Max(0, runtime.GuardCount);
         runtime.Stage = Math.Clamp(runtime.Stage, 0, runtime.StageGoal);
-        runtime.SpawnPointTag ??= string.Empty;
-        runtime.TargetPrototype ??= string.Empty;
-        runtime.StructurePrototype ??= string.Empty;
-        runtime.GhostRolePrototype ??= string.Empty;
-        runtime.PinpointerPrototype = ResolvePinpointerPrototypeId(runtime.PinpointerPrototype);
-        runtime.GuardPrototype ??= string.Empty;
-        runtime.RepairToolQuality = ResolveRepairToolQuality(runtime.RepairToolQuality);
-        runtime.RepairDoAfterSeconds = ResolveRepairDoAfterSeconds(runtime.RepairDoAfterSeconds);
-        runtime.RepairStageSound = ResolveRepairStageSound(runtime.RepairStageSound);
+        runtime.AcceptTimeoutRemainingSeconds = Math.Max(0, runtime.AcceptTimeoutRemainingSeconds);
         runtime.FailureReason ??= string.Empty;
     }
+
+    private static void NormalizeObjectiveConfig(ContractObjectiveConfigData config)
+    {
+        config.AcceptTimeoutSeconds = Math.Max(0, config.AcceptTimeoutSeconds);
+        config.SpawnPointTag ??= string.Empty;
+        config.TargetPrototype ??= string.Empty;
+        config.StructurePrototype ??= string.Empty;
+        config.GhostRolePrototype ??= string.Empty;
+        config.GivePinpointer = config.GivePinpointer;
+        config.PinpointerPrototype = ResolvePinpointerPrototypeId(config.PinpointerPrototype);
+        config.GuardPrototype ??= string.Empty;
+        config.GuardCount = Math.Max(0, config.GuardCount);
+        config.RepairToolQuality = ResolveRepairToolQuality(config.RepairToolQuality);
+        config.RepairDoAfterSeconds = ResolveRepairDoAfterSeconds(config.RepairDoAfterSeconds);
+        config.RepairStageSound = ResolveRepairStageSound(config.RepairStageSound);
+    }
+
     private static int GetDefaultObjectiveStageGoal(ContractObjectiveType objectiveType)
     {
         return objectiveType == ContractObjectiveType.Repair
-            ? DefaultRepairStageGoal
-            : DefaultObjectiveStageGoal;
+            ? NcContractTuning.DefaultRepairStageGoal
+            : NcContractTuning.DefaultObjectiveStageGoal;
     }
-    private static string ResolveObjectiveTargetId(ContractRuntimeContextData runtime)
+
+    private static ContractFlowStatus ComputeContractFlowStatus(ContractServerData contract)
     {
-        if (!string.IsNullOrWhiteSpace(runtime.TargetPrototype))
-            return runtime.TargetPrototype;
-        if (!string.IsNullOrWhiteSpace(runtime.StructurePrototype))
-            return runtime.StructurePrototype;
-        if (!string.IsNullOrWhiteSpace(runtime.GhostRolePrototype))
-            return runtime.GhostRolePrototype;
+        if (contract.Runtime.Failed)
+            return ContractFlowStatus.Failed;
+
+        if (!contract.Taken)
+            return ContractFlowStatus.Available;
+
+        if (contract.Completed)
+            return ContractFlowStatus.ReadyToTurnIn;
+
+        if (contract.ObjectiveType == ContractObjectiveType.GhostRole && contract.Runtime.GhostRolePendingAcceptance)
+            return ContractFlowStatus.AwaitingActivation;
+
+        return ContractFlowStatus.InProgress;
+    }
+
+    private static void SyncContractFlowStatus(ContractServerData contract)
+    {
+        contract.FlowStatus = ComputeContractFlowStatus(contract);
+    }
+
+    private static string ResolveObjectiveTargetId(ContractObjectiveConfigData config)
+    {
+        if (!string.IsNullOrWhiteSpace(config.TargetPrototype))
+            return config.TargetPrototype;
+
+        if (!string.IsNullOrWhiteSpace(config.StructurePrototype))
+            return config.StructurePrototype;
+
+        if (!string.IsNullOrWhiteSpace(config.GhostRolePrototype))
+            return config.GhostRolePrototype;
+
         return string.Empty;
     }
+
     private static string ResolveTrackedObjectivePrototypeId(string? runtimePrototype, string? fallbackTargetId)
     {
         return !string.IsNullOrWhiteSpace(runtimePrototype)
             ? runtimePrototype
             : fallbackTargetId ?? string.Empty;
     }
+
     private static string ResolvePinpointerPrototypeId(string? prototypeId)
     {
         return string.IsNullOrWhiteSpace(prototypeId)
-            ? DefaultContractPinpointerPrototypeId
+            ? NcContractTuning.DefaultContractPinpointerPrototypeId
             : prototypeId;
     }
+
     private static string ResolveRepairToolQuality(string? quality)
     {
         return string.IsNullOrWhiteSpace(quality)
-            ? DefaultRepairToolQuality
+            ? NcContractTuning.DefaultRepairToolQuality
             : quality;
     }
+
     private static float ResolveRepairDoAfterSeconds(float seconds)
     {
         if (seconds <= 0f)
-            return DefaultRepairDoAfterSeconds;
-        return Math.Max(MinRepairDoAfterSeconds, seconds);
+            return NcContractTuning.DefaultRepairDoAfterSeconds;
+
+        return Math.Max(NcContractTuning.MinRepairDoAfterSeconds, seconds);
     }
+
     private static string ResolveRepairStageSound(string? sound)
     {
         return string.IsNullOrWhiteSpace(sound)
-            ? DefaultRepairStageSoundPath
+            ? NcContractTuning.DefaultRepairStageSoundPath
             : sound;
     }
+
     private static void ResetContractTargetProgress(ContractServerData contract)
     {
         var targets = GetEffectiveTargets(contract);

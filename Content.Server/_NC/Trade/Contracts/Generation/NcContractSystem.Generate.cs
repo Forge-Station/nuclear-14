@@ -74,18 +74,19 @@ public sealed partial class NcContractSystem : EntitySystem
         var mainTarget = targets.Count > 0 ? targets[0].TargetItem : string.Empty;
 
         var objectiveType = proto.ObjectiveType;
-        var runtime = CreateInitialRuntimeContext(proto);
+        var runtime = CreateInitialRuntimeState(proto);
+        var config = CreateObjectiveConfig(proto);
 
         if (objectiveType != ContractObjectiveType.Delivery)
         {
             targets.Clear();
             totalRequired = Math.Max(1, runtime.StageGoal);
-            mainTarget = ResolveObjectiveTargetId(runtime);
+            mainTarget = ResolveObjectiveTargetId(config);
         }
 
         var rewards = BakeRewardsForContract(store, proto);
 
-        return new()
+        var contract = new ContractServerData
         {
             Id = proto.ID,
             Name = proto.Name,
@@ -95,11 +96,16 @@ public sealed partial class NcContractSystem : EntitySystem
             Taken = false,
             ObjectiveType = objectiveType,
             Runtime = runtime,
+            Config = config,
+            FlowStatus = ContractFlowStatus.Available,
             Targets = targets,
             TargetItem = mainTarget,
             Required = totalRequired,
             Progress = 0,
             Rewards = rewards
         };
+
+        SyncContractFlowStatus(contract);
+        return contract;
     }
 }

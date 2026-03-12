@@ -2,49 +2,6 @@ using Robust.Shared.Serialization;
 
 namespace Content.Shared._NC.Trade;
 
-// ============================================================
-// Contracts - Targets / Server contract snapshot
-// ============================================================
-
-[Serializable]
-public sealed class ContractTargetServerData
-{
-    [DataField("match")]
-    public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
-
-    public string TargetItem { get; set; } = string.Empty;
-    public int Required { get; set; }
-    public int Progress { get; set; }
-}
-
-[Serializable, NetSerializable]
-public sealed class ContractRuntimeContextData
-{
-    public int Stage;
-    public int StageGoal = 1;
-    public int AcceptTimeoutSeconds;
-    public int AcceptTimeoutRemainingSeconds;
-    public bool GhostRolePendingAcceptance;
-    public bool Failed;
-
-    public string FailureReason = string.Empty;
-    public string SpawnPointTag = string.Empty;
-    public string TargetPrototype = string.Empty;
-    public string StructurePrototype = string.Empty;
-    public string GhostRolePrototype = string.Empty;
-
-    public bool GivePinpointer = true;
-    public string PinpointerPrototype = string.Empty;
-
-    public string GuardPrototype = string.Empty;
-    public int GuardCount;
-
-    public string RepairToolQuality = "Welding";
-    public float RepairDoAfterSeconds = 2f;
-    public string RepairStageSound = "/Audio/Effects/sparks4.ogg";
-}
-
-[Serializable]
 public sealed class ContractServerData
 {
     [DataField("match")]
@@ -60,6 +17,8 @@ public sealed class ContractServerData
     public bool Taken { get; set; }
     public ContractObjectiveType ObjectiveType { get; set; } = ContractObjectiveType.Delivery;
     public ContractRuntimeContextData Runtime { get; set; } = new();
+    public ContractObjectiveConfigData Config { get; set; } = new();
+    public ContractFlowStatus FlowStatus { get; set; } = ContractFlowStatus.Available;
 
     public string Id { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
@@ -96,5 +55,3 @@ public sealed class ContractServerData
         }
     }
 }
-
-

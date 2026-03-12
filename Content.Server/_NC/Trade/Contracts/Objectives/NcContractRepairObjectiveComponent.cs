@@ -6,8 +6,8 @@ namespace Content.Server._NC.Trade;
 public sealed partial class NcContractRepairObjectiveComponent : Component
 {
     [DataField]
-    public string ToolQuality = "Welding";
+    public string ToolQuality = NcContractTuning.DefaultRepairToolQuality;
 
     [DataField]
-    public float DoAfterSeconds = 2f;
+    public float DoAfterSeconds = NcContractTuning.DefaultRepairDoAfterSeconds;
 }

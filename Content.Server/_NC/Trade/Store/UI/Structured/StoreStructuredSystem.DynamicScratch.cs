@@ -42,8 +42,10 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             c.Description,
             c.Repeatable,
             c.Taken,
+            SupportsContractPinpointer(c),
             c.ObjectiveType,
             CloneRuntimeContext(c.Runtime),
+            c.FlowStatus,
             c.Completed,
             c.TargetItem,
             c.Required,
@@ -53,6 +55,19 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         );
     }
 
+    private static bool SupportsContractPinpointer(ContractServerData contract)
+    {
+        var config = contract.Config;
+        if (!config.GivePinpointer)
+            return false;
+
+        if (contract.ObjectiveType is ContractObjectiveType.Hunt or ContractObjectiveType.Repair or ContractObjectiveType.GhostRole)
+            return true;
+
+        return !string.IsNullOrWhiteSpace(config.TargetPrototype) ||
+            !string.IsNullOrWhiteSpace(config.StructurePrototype) ||
+            !string.IsNullOrWhiteSpace(config.GhostRolePrototype);
+    }
 
     private static ContractRuntimeContextData CloneRuntimeContext(ContractRuntimeContextData? runtime)
     {
@@ -63,24 +78,13 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         {
             Stage = runtime.Stage,
             StageGoal = runtime.StageGoal,
-            AcceptTimeoutSeconds = runtime.AcceptTimeoutSeconds,
             AcceptTimeoutRemainingSeconds = runtime.AcceptTimeoutRemainingSeconds,
             GhostRolePendingAcceptance = runtime.GhostRolePendingAcceptance,
             Failed = runtime.Failed,
-            FailureReason = runtime.FailureReason,
-            SpawnPointTag = runtime.SpawnPointTag,
-            TargetPrototype = runtime.TargetPrototype,
-            StructurePrototype = runtime.StructurePrototype,
-            GhostRolePrototype = runtime.GhostRolePrototype,
-            GivePinpointer = runtime.GivePinpointer,
-            PinpointerPrototype = runtime.PinpointerPrototype,
-            GuardPrototype = runtime.GuardPrototype,
-            GuardCount = runtime.GuardCount,
-            RepairToolQuality = runtime.RepairToolQuality,
-            RepairDoAfterSeconds = runtime.RepairDoAfterSeconds,
-            RepairStageSound = runtime.RepairStageSound
+            FailureReason = runtime.FailureReason
         };
     }
+
     private sealed class DynamicScratch
     {
         private readonly DynamicStateBuffer[] _buffers = { new(), new(), };
@@ -96,7 +100,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         private bool _hasVisibleIds;
         private int _visibleSig;
         public TimeSpan NextDynamicAllowed = TimeSpan.Zero;
-
 
         public DynamicStateBuffer GetReadBuffer() => _buffers[_activeIndex];
 
@@ -270,7 +273,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
             if (a.Repeatable != b.Repeatable ||
                 a.Taken != b.Taken ||
+                a.SupportsPinpointer != b.SupportsPinpointer ||
                 a.ObjectiveType != b.ObjectiveType ||
+                a.FlowStatus != b.FlowStatus ||
                 a.Completed != b.Completed ||
                 a.Required != b.Required ||
                 a.Progress != b.Progress)
@@ -280,7 +285,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 RewardsEquals(a.Rewards, b.Rewards) &&
                 RuntimeEquals(a.Runtime, b.Runtime);
         }
-
 
         private static bool RuntimeEquals(ContractRuntimeContextData? a, ContractRuntimeContextData? b)
         {
@@ -292,23 +296,12 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
             return a.Stage == b.Stage &&
                 a.StageGoal == b.StageGoal &&
-                a.AcceptTimeoutSeconds == b.AcceptTimeoutSeconds &&
                 a.AcceptTimeoutRemainingSeconds == b.AcceptTimeoutRemainingSeconds &&
                 a.GhostRolePendingAcceptance == b.GhostRolePendingAcceptance &&
                 a.Failed == b.Failed &&
-                string.Equals(a.FailureReason, b.FailureReason, StringComparison.Ordinal) &&
-                string.Equals(a.SpawnPointTag, b.SpawnPointTag, StringComparison.Ordinal) &&
-                string.Equals(a.TargetPrototype, b.TargetPrototype, StringComparison.Ordinal) &&
-                string.Equals(a.StructurePrototype, b.StructurePrototype, StringComparison.Ordinal) &&
-                string.Equals(a.GhostRolePrototype, b.GhostRolePrototype, StringComparison.Ordinal) &&
-                a.GivePinpointer == b.GivePinpointer &&
-                string.Equals(a.PinpointerPrototype, b.PinpointerPrototype, StringComparison.Ordinal) &&
-                string.Equals(a.GuardPrototype, b.GuardPrototype, StringComparison.Ordinal) &&
-                a.GuardCount == b.GuardCount &&
-                string.Equals(a.RepairToolQuality, b.RepairToolQuality, StringComparison.Ordinal) &&
-                Math.Abs(a.RepairDoAfterSeconds - b.RepairDoAfterSeconds) < 0.0001f &&
-                string.Equals(a.RepairStageSound, b.RepairStageSound, StringComparison.Ordinal);
+                string.Equals(a.FailureReason, b.FailureReason, StringComparison.Ordinal);
         }
+
         private static bool TargetsEquals(List<ContractTargetClientData>? a, List<ContractTargetClientData>? b)
         {
             if (ReferenceEquals(a, b))
@@ -379,5 +372,4 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
     }
 }
-
 

@@ -51,6 +51,8 @@ public sealed partial class NcContractSystem : EntitySystem
             target.Progress = 0;
             targets[i] = target;
         }
+
+        SyncContractFlowStatus(contract);
     }
     private void UpdateContractProgressForSingleContract(
         ContractServerData contract,
@@ -101,6 +103,8 @@ public sealed partial class NcContractSystem : EntitySystem
             contract.Progress = 0;
             if (targets.Count > 0)
                 contract.TargetItem = targets[0].TargetItem;
+
+            SyncContractFlowStatus(contract);
             return;
         }
 
@@ -202,6 +206,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (targets.Count > 0)
             contract.TargetItem = targets[0].TargetItem;
+
+        SyncContractFlowStatus(contract);
     }
 
     private void UpdateLegacyContractProgress(
@@ -216,6 +222,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (string.IsNullOrWhiteSpace(contract.TargetItem) || contract.Required <= 0)
         {
             contract.Progress = 0;
+            SyncContractFlowStatus(contract);
             return;
         }
 
@@ -251,6 +258,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         var progressed = contract.Required - Math.Max(0, need);
         contract.Progress = Math.Clamp(progressed, 0, contract.Required);
+        SyncContractFlowStatus(contract);
     }
 
     private void ClearProgressPerContractScratch()
@@ -373,3 +381,4 @@ public sealed partial class NcContractSystem : EntitySystem
         return reserved;
     }
 }
+

@@ -304,31 +304,21 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             h = h * 31 + (contract.Repeatable ? 1 : 0);
             h = h * 31 + (contract.Taken ? 1 : 0);
             h = h * 31 + (int) contract.ObjectiveType;
+            h = h * 31 + (int) contract.FlowStatus;
             h = h * 31 + (contract.Completed ? 1 : 0);
             h = h * 31 + contract.Required;
             h = h * 31 + contract.Progress;
             h = h * 31 + (int) contract.MatchMode;
+            h = h * 31 + (SupportsContractPinpointer(contract) ? 1 : 0);
             var runtime = contract.Runtime;
             if (runtime != null)
             {
                 h = h * 31 + runtime.Stage;
                 h = h * 31 + runtime.StageGoal;
-                h = h * 31 + runtime.AcceptTimeoutSeconds;
                 h = h * 31 + runtime.AcceptTimeoutRemainingSeconds;
                 h = h * 31 + (runtime.GhostRolePendingAcceptance ? 1 : 0);
                 h = h * 31 + (runtime.Failed ? 1 : 0);
                 h = h * 31 + (runtime.FailureReason?.GetHashCode() ?? 0);
-                h = h * 31 + (runtime.SpawnPointTag?.GetHashCode() ?? 0);
-                h = h * 31 + (runtime.TargetPrototype?.GetHashCode() ?? 0);
-                h = h * 31 + (runtime.StructurePrototype?.GetHashCode() ?? 0);
-                h = h * 31 + (runtime.GhostRolePrototype?.GetHashCode() ?? 0);
-                h = h * 31 + (runtime.GivePinpointer ? 1 : 0);
-                h = h * 31 + (runtime.PinpointerPrototype?.GetHashCode() ?? 0);
-                h = h * 31 + (runtime.GuardPrototype?.GetHashCode() ?? 0);
-                h = h * 31 + runtime.GuardCount;
-                h = h * 31 + (runtime.RepairToolQuality?.GetHashCode() ?? 0);
-                h = h * 31 + runtime.RepairDoAfterSeconds.GetHashCode();
-                h = h * 31 + (runtime.RepairStageSound?.GetHashCode() ?? 0);
             }
 
             var targets = contract.Targets;
@@ -356,5 +346,4 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
     }
 }
-
 
