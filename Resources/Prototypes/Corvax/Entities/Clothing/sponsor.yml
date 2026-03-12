@@ -130,6 +130,16 @@
     sprite: Corvax/Clothing/Uniforms/Jumpsuit/vaultsuit14purple.rsi
 
 - type: entity
+  parent: N14ClothingUniformBase
+  id: N14ClothingUniformValkyrieRaider
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/valkyrieraiderarmor.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/valkyrieraiderarmor.rsi
+
+- type: entity
   parent: ClothingOuterHardsuitBase
   id: N14ClothingOuterLegionPaladinKiller
   categories: [ HideSpawnMenu ]
