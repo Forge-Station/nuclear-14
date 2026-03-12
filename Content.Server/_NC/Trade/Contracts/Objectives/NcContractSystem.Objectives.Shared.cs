@@ -37,17 +37,21 @@ public sealed partial class NcContractSystem : EntitySystem
         if (contract.Runtime.Failed)
             return;
 
-        switch (contract.ObjectiveType)
+        switch (contract.ExecutionKind)
         {
-            case ContractObjectiveType.Repair:
+            case ContractExecutionKind.TrackedDeliveryObjective:
+                HandleTrackedDeliveryTargetResolved(key, comp, contract);
+                return;
+
+            case ContractExecutionKind.RepairObjective:
                 HandleRepairObjectiveTargetResolved(key, comp, contract);
                 return;
 
-            case ContractObjectiveType.Hunt:
+            case ContractExecutionKind.HuntObjective:
                 HandleHuntObjectiveTargetResolved(key, contract);
                 return;
 
-            case ContractObjectiveType.GhostRole:
+            case ContractExecutionKind.GhostRoleObjective:
                 HandleGhostRoleTargetResolved(key, comp, contract);
                 return;
 
@@ -61,7 +65,7 @@ public sealed partial class NcContractSystem : EntitySystem
         NormalizeRuntimeState(contract.ObjectiveType, contract.Runtime);
         NormalizeObjectiveConfig(contract.Config);
 
-        if (contract.ObjectiveType == ContractObjectiveType.Delivery)
+        if (!contract.UsesStageObjectiveProgress)
         {
             SyncContractFlowStatus(contract);
             return;
@@ -215,10 +219,16 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         EnsureObjectiveRuntimeDefaults(contract);
 
-        if (contract.ObjectiveType == ContractObjectiveType.Hunt)
-            SyncHuntObjectiveProgress(store, contractId, contract);
-        else if (contract.ObjectiveType == ContractObjectiveType.GhostRole)
-            SyncGhostRoleObjectiveProgress(store, contractId, contract);
+        switch (contract.ExecutionKind)
+        {
+            case ContractExecutionKind.HuntObjective:
+                SyncHuntObjectiveProgress(store, contractId, contract);
+                break;
+
+            case ContractExecutionKind.GhostRoleObjective:
+                SyncGhostRoleObjectiveProgress(store, contractId, contract);
+                break;
+        }
 
         SyncObjectiveProgressFromRuntime(contract);
         ResetContractTargetProgress(contract);
@@ -235,3 +245,7 @@ public sealed partial class NcContractSystem : EntitySystem
         public EntityUid? TargetEntity;
     }
 }
+
+
+
+

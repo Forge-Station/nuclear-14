@@ -1,7 +1,10 @@
+﻿# Map markers for world-objective contract test spawns.
+# Classic inventory delivery does not use a marker.
+
 - type: entity
   id: NcContractHuntTestSpawnMarker
   parent: MarkerBase
-  name: contract hunt test spawn marker
+  name: маркер спавна тестовой цели охоты
   suffix: contracts, hunt
   components:
   - type: Tag
@@ -11,7 +14,7 @@
 - type: entity
   id: NcContractRepairTestSpawnMarker
   parent: MarkerBase
-  name: contract repair test spawn marker
+  name: маркер спавна тестового ремонта
   suffix: contracts, repair
   components:
   - type: Tag
@@ -21,8 +24,8 @@
 - type: entity
   id: NcContractDeliveryTestSpawnMarker
   parent: MarkerBase
-  name: contract delivery test spawn marker
-  suffix: contracts, delivery
+  name: маркер спавна tracked-delivery цели
+  suffix: contracts, delivery-objective
   components:
   - type: Tag
     tags:
@@ -31,8 +34,8 @@
 - type: entity
   id: NcContractGhostRoleTestSpawnMarker
   parent: MarkerBase
-  name: contract ghost role test spawn marker
-  suffix: contracts, ghost role
+  name: маркер спавна тестовой гост-роли
+  suffix: contracts, ghost-role
   components:
   - type: Tag
     tags:

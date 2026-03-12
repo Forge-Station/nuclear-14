@@ -1,4 +1,4 @@
-using Content.Shared._NC.Trade;
+﻿using Content.Shared._NC.Trade;
 
 namespace Content.Server._NC.Trade;
 
@@ -43,6 +43,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             c.Repeatable,
             c.Taken,
             SupportsContractPinpointer(c),
+            c.ExecutionKind,
             c.ObjectiveType,
             CloneRuntimeContext(c.Runtime),
             c.FlowStatus,
@@ -61,12 +62,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (!config.GivePinpointer)
             return false;
 
-        if (contract.ObjectiveType is ContractObjectiveType.Hunt or ContractObjectiveType.Repair or ContractObjectiveType.GhostRole)
-            return true;
-
-        return !string.IsNullOrWhiteSpace(config.TargetPrototype) ||
-            !string.IsNullOrWhiteSpace(config.StructurePrototype) ||
-            !string.IsNullOrWhiteSpace(config.GhostRolePrototype);
+        return contract.UsesWorldRuntimeSupport;
     }
 
     private static ContractRuntimeContextData CloneRuntimeContext(ContractRuntimeContextData? runtime)
@@ -274,6 +270,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             if (a.Repeatable != b.Repeatable ||
                 a.Taken != b.Taken ||
                 a.SupportsPinpointer != b.SupportsPinpointer ||
+                a.ExecutionKind != b.ExecutionKind ||
                 a.ObjectiveType != b.ObjectiveType ||
                 a.FlowStatus != b.FlowStatus ||
                 a.Completed != b.Completed ||
@@ -372,4 +369,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
     }
 }
+
+
+
+
 

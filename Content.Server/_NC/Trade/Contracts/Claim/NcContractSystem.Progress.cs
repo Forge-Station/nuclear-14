@@ -1,4 +1,4 @@
-using Content.Shared._NC.Trade;
+﻿using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 
 
@@ -28,13 +28,19 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
             }
 
-            if (contract.ObjectiveType != ContractObjectiveType.Delivery)
+            switch (contract.ExecutionKind)
             {
-                UpdateObjectiveContractProgress(store, contractId, contract);
-                continue;
+                case ContractExecutionKind.TrackedDeliveryObjective:
+                    UpdateTrackedDeliveryObjectiveProgress(store, contractId, contract, userItems, crateItems);
+                    continue;
+
+                case ContractExecutionKind.HuntObjective:
+                case ContractExecutionKind.RepairObjective:
+                case ContractExecutionKind.GhostRoleObjective:
+                    UpdateObjectiveContractProgress(store, contractId, contract);
+                    continue;
             }
 
-            ClearProgressPerContractScratch();
             UpdateContractProgressForSingleContract(contract, user, userItems, crate, crateItems, hasCrateWork);
         }
     }
@@ -54,6 +60,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         SyncContractFlowStatus(contract);
     }
+
     private void UpdateContractProgressForSingleContract(
         ContractServerData contract,
         EntityUid user,
@@ -67,9 +74,19 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (targets.Count == 0)
         {
+            ClearProgressReservationScratch();
             UpdateLegacyContractProgress(contract, user, userItems, crate, crateItems, hasCrateWork);
             return;
         }
+
+        if (targets.Count == 1)
+        {
+            ClearProgressReservationScratch();
+            UpdateSingleTargetContractProgress(contract, targets[0], user, userItems, crate, crateItems, hasCrateWork);
+            return;
+        }
+
+        ClearProgressPerContractScratch();
 
         var totalRequired = 0;
 
@@ -210,6 +227,43 @@ public sealed partial class NcContractSystem : EntitySystem
         SyncContractFlowStatus(contract);
     }
 
+    private void UpdateSingleTargetContractProgress(
+        ContractServerData contract,
+        ContractTargetServerData target,
+        EntityUid user,
+        IReadOnlyList<EntityUid> userItems,
+        EntityUid? crate,
+        IReadOnlyList<EntityUid>? crateItems,
+        bool hasCrateWork)
+    {
+        contract.TargetItem = target.TargetItem;
+
+        if (string.IsNullOrWhiteSpace(target.TargetItem) || target.Required <= 0)
+        {
+            target.Progress = 0;
+            contract.Required = 0;
+            contract.Progress = 0;
+            SyncContractFlowStatus(contract);
+            return;
+        }
+
+        var required = Math.Max(0, target.Required);
+        var progressed = ComputeProgressForTarget(
+            user,
+            userItems,
+            crate,
+            crateItems,
+            hasCrateWork,
+            target.TargetItem,
+            target.MatchMode,
+            required);
+
+        target.Progress = progressed;
+        contract.Required = required;
+        contract.Progress = progressed;
+        SyncContractFlowStatus(contract);
+    }
+
     private void UpdateLegacyContractProgress(
         ContractServerData contract,
         EntityUid user,
@@ -226,15 +280,42 @@ public sealed partial class NcContractSystem : EntitySystem
             return;
         }
 
-        var need = contract.Required;
+        var progressed = ComputeProgressForTarget(
+            user,
+            userItems,
+            crate,
+            crateItems,
+            hasCrateWork,
+            contract.TargetItem,
+            contract.MatchMode,
+            contract.Required);
+
+        contract.Progress = Math.Clamp(progressed, 0, contract.Required);
+        SyncContractFlowStatus(contract);
+    }
+
+    private int ComputeProgressForTarget(
+        EntityUid user,
+        IReadOnlyList<EntityUid> userItems,
+        EntityUid? crate,
+        IReadOnlyList<EntityUid>? crateItems,
+        bool hasCrateWork,
+        string targetItem,
+        PrototypeMatchMode matchMode,
+        int required)
+    {
+        if (string.IsNullOrWhiteSpace(targetItem) || required <= 0)
+            return 0;
+
+        var need = required;
 
         if (crate is { } crateRoot && hasCrateWork && crateItems != null)
         {
             var reserved = ReserveProgressFromItems(
                 crateRoot,
                 crateItems,
-                contract.TargetItem,
-                contract.MatchMode,
+                targetItem,
+                matchMode,
                 need,
                 _progressVirtualStackLeftScratch,
                 _progressConsumedEntitiesScratch);
@@ -247,8 +328,8 @@ public sealed partial class NcContractSystem : EntitySystem
             var reserved = ReserveProgressFromItems(
                 user,
                 userItems,
-                contract.TargetItem,
-                contract.MatchMode,
+                targetItem,
+                matchMode,
                 need,
                 _progressVirtualStackLeftScratch,
                 _progressConsumedEntitiesScratch);
@@ -256,9 +337,8 @@ public sealed partial class NcContractSystem : EntitySystem
             need -= reserved;
         }
 
-        var progressed = contract.Required - Math.Max(0, need);
-        contract.Progress = Math.Clamp(progressed, 0, contract.Required);
-        SyncContractFlowStatus(contract);
+        var progressed = required - Math.Max(0, need);
+        return Math.Clamp(progressed, 0, required);
     }
 
     private void ClearProgressPerContractScratch()
@@ -276,9 +356,14 @@ public sealed partial class NcContractSystem : EntitySystem
 
         _progressRequiredByKeyScratch.Clear();
         _progressClaimableByKeyScratch.Clear();
+        ClearProgressReservationScratch();
+        _progressOrderedKeysScratch.Clear();
+    }
+
+    private void ClearProgressReservationScratch()
+    {
         _progressVirtualStackLeftScratch.Clear();
         _progressConsumedEntitiesScratch.Clear();
-        _progressOrderedKeysScratch.Clear();
     }
 
     private List<int> RentProgressTargetIndexList()
@@ -381,4 +466,3 @@ public sealed partial class NcContractSystem : EntitySystem
         return reserved;
     }
 }
-

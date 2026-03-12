@@ -32,17 +32,24 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!contract.Taken)
             return ClaimAttemptResult.Fail(ClaimFailureReason.NotTaken, $"Contract '{contractId}' is not taken yet.");
 
-        if (contract.ObjectiveType != ContractObjectiveType.Delivery)
-            return TryClaimObjectiveContract(store, user, contractId, comp, contract);
+        switch (contract.ExecutionKind)
+        {
+            case ContractExecutionKind.InventoryDelivery:
+                if (!TryPrepareClaimContext(store, user, contractId, out var ctx, out var prepFail))
+                    return prepFail;
 
-        if (!TryPrepareClaimContext(store, user, contractId, out var ctx, out var prepFail))
-            return prepFail;
+                if (!TryExecuteClaimTakePlan(ctx, out var execFail))
+                    return execFail;
 
-        if (!TryExecuteClaimTakePlan(ctx, out var execFail))
-            return execFail;
+                FinalizeClaim(ctx.Store, ctx.Comp, contractId, ctx.Contract.Repeatable);
+                return ClaimAttemptResult.Ok();
 
-        FinalizeClaim(ctx.Store, ctx.Comp, contractId, ctx.Contract.Repeatable);
-        return ClaimAttemptResult.Ok();
+            case ContractExecutionKind.TrackedDeliveryObjective:
+                return TryClaimTrackedDeliveryContract(store, user, contractId, comp, contract);
+
+            default:
+                return TryClaimObjectiveContract(store, user, contractId, comp, contract);
+        }
     }
 
     private ClaimAttemptResult TryClaimObjectiveContract(

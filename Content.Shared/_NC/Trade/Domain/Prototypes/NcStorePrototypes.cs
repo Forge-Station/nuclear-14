@@ -1,4 +1,4 @@
-using Robust.Shared.Prototypes;
+﻿using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 
 namespace Content.Shared._NC.Trade;
@@ -109,6 +109,9 @@ public sealed partial class StoreContractRuntimePrototype
 
     [DataField("targetPrototype")]
     public string TargetPrototype { get; set; } = string.Empty;
+
+    [DataField("deliverySpawnPrototype")]
+    public string DeliverySpawnPrototype { get; set; } = string.Empty;
 
     [DataField("structurePrototype")]
     public string StructurePrototype { get; set; } = string.Empty;
@@ -231,4 +234,5 @@ public sealed class ListingConditionPrototype
     [DataField("condition")]
     public object? Condition;
 }
+
 

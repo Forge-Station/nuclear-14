@@ -107,14 +107,66 @@ public sealed partial class NcContractSystem : EntitySystem
 
         EnsureObjectiveRuntimeDefaults(contract);
 
-        return contract.ObjectiveType switch
+        return contract.ExecutionKind switch
         {
-            ContractObjectiveType.Delivery => TryInitializeDeliveryObjectiveRuntime(store, user, contractId, contract),
-            ContractObjectiveType.Hunt => TryInitializeHuntObjective(store, user, contractId, contract),
-            ContractObjectiveType.Repair => TryInitializeRepairObjective(store, user, contractId, contract),
-            ContractObjectiveType.GhostRole => TryInitializeGhostRoleObjective(store, user, contractId, contract),
+            ContractExecutionKind.InventoryDelivery => TryInitializeInventoryDeliverySupportRuntime(store, user, contractId, contract),
+            ContractExecutionKind.TrackedDeliveryObjective => TryInitializeDeliveryObjectiveRuntime(store, user, contractId, contract),
+            ContractExecutionKind.HuntObjective => TryInitializeHuntObjective(store, user, contractId, contract),
+            ContractExecutionKind.RepairObjective => TryInitializeRepairObjective(store, user, contractId, contract),
+            ContractExecutionKind.GhostRoleObjective => TryInitializeGhostRoleObjective(store, user, contractId, contract),
             _ => true
         };
+    }
+
+    private bool TryInitializeInventoryDeliverySupportRuntime(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        ContractServerData contract
+    )
+    {
+        var config = contract.Config;
+        var spawnProtoId = config.DeliverySpawnPrototype;
+        if (string.IsNullOrWhiteSpace(spawnProtoId))
+            return true;
+
+        if (!_prototypes.HasIndex<EntityPrototype>(spawnProtoId))
+        {
+            Sawmill.Warning(
+                $"[Contracts] Delivery support init failed for '{contractId}': helper spawn prototype '{spawnProtoId}' is missing.");
+            return false;
+        }
+
+        if (!TryResolveObjectiveSpawnCoordinates(store, config.SpawnPointTag, out var spawnCoords))
+        {
+            Sawmill.Warning($"[Contracts] Delivery support init failed for '{contractId}': cannot resolve spawn coordinates.");
+            return false;
+        }
+
+        var key = (store, contractId);
+        if (config.GuardCount > 0 && !string.IsNullOrWhiteSpace(config.GuardPrototype))
+        {
+            var state = GetOrCreateObjectiveRuntimeState(key);
+            if (!TrySpawnObjectiveGuards(key, state, config, spawnCoords))
+            {
+                CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: false);
+                return false;
+            }
+        }
+
+        try
+        {
+            Spawn(spawnProtoId, spawnCoords);
+        }
+        catch (Exception e)
+        {
+            CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: false);
+            Sawmill.Error(
+                $"[Contracts] Delivery support init failed for '{contractId}': cannot spawn helper item '{spawnProtoId}': {e}");
+            return false;
+        }
+
+        return true;
     }
 
     private bool TryInitializeDeliveryObjectiveRuntime(
@@ -126,7 +178,6 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         var config = contract.Config;
 
-        // For regular delivery contracts we keep old behavior (no runtime world entities).
         if (string.IsNullOrWhiteSpace(config.TargetPrototype))
             return true;
 
@@ -233,7 +284,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
             return false;
 
-        if (contract.ObjectiveType == ContractObjectiveType.GhostRole && !state.GhostRoleTaken)
+        if (contract.ExecutionKind == ContractExecutionKind.GhostRoleObjective && !state.GhostRoleTaken)
             return false;
 
         if (state.TargetEntity is not { } target || target == EntityUid.Invalid || TerminatingOrDeleted(target))
@@ -494,3 +545,10 @@ public sealed partial class NcContractSystem : EntitySystem
     }
 
 }
+
+
+
+
+
+
+

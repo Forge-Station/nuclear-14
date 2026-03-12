@@ -1,4 +1,4 @@
-using Content.Shared._NC.Trade;
+﻿using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 using Robust.Shared.Containers;
 
@@ -31,9 +31,19 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         var hasContractsTab = comp.ContractPresets.Count > 0;
 
-        var needUserSnap = hasContractsTab;
-        if (!needUserSnap && comp.CurrencyWhitelist.Count > 0)
-            needUserSnap = true;
+        var hasTakenContracts = false;
+        var contractsNeedUserItems = false;
+        var contractsNeedCrateItems = false;
+        if (hasContractsTab)
+        {
+            _contracts.AnalyzeContractProgressRequirements(
+                comp,
+                out hasTakenContracts,
+                out contractsNeedUserItems,
+                out contractsNeedCrateItems);
+        }
+
+        var needUserSnap = comp.CurrencyWhitelist.Count > 0;
         if (!needUserSnap)
         {
             foreach (var l in comp.Listings)
@@ -44,7 +54,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 }
         }
 
-        var needCrateScan = crateUid != null && (hasSellTab || hasContractsTab);
+        var needUserItems = needUserSnap || contractsNeedUserItems;
+        var needCrateScan = crateUid != null && (hasSellTab || contractsNeedCrateItems);
 
         NcInventorySnapshot? userSnap = null;
 
@@ -53,13 +64,28 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             _inventory.ScanInventory(user, _deepUserItemsScratch, _userSnapScratch);
             userSnap = _userSnapScratch;
         }
+        else if (needUserItems)
+        {
+            _inventory.ScanInventoryItems(user, _deepUserItemsScratch);
+            _userSnapScratch.Clear();
+        }
+        else
+        {
+            _deepUserItemsScratch.Clear();
+            _userSnapScratch.Clear();
+        }
 
         if (needCrateScan && crateUid is { } crateEntity)
         {
             _inventory.ScanInventoryItems(crateEntity, _deepCrateItemsScratch);
         }
+        else
+        {
+            _deepCrateItemsScratch.Clear();
+        }
 
-        if (hasContractsTab)
+        if (hasContractsTab && hasTakenContracts)
+        {
             _contracts.UpdateContractsProgress(
                 uid,
                 comp,
@@ -67,6 +93,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 _deepUserItemsScratch,
                 crateUid,
                 crateUid != null ? _deepCrateItemsScratch : null);
+        }
         var scratch = GetDynamicScratch(uid);
         var buf = scratch.GetWriteBuffer();
 
@@ -303,6 +330,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             h = h * 31 + (contract.TargetItem?.GetHashCode() ?? 0);
             h = h * 31 + (contract.Repeatable ? 1 : 0);
             h = h * 31 + (contract.Taken ? 1 : 0);
+            h = h * 31 + (int) contract.ExecutionKind;
             h = h * 31 + (int) contract.ObjectiveType;
             h = h * 31 + (int) contract.FlowStatus;
             h = h * 31 + (contract.Completed ? 1 : 0);
@@ -346,4 +374,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
     }
 }
+
+
+
+
+
 

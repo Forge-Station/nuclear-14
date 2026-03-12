@@ -1,9 +1,24 @@
+﻿# Test contracts for all supported execution modes.
+#
+# Delivery has two distinct scenarios:
+# 1. Classic inventory delivery:
+#    objectiveType: Delivery
+#    no runtime.targetPrototype
+#    Any matching item can be handed in.
+#
+# 2. Tracked delivery objective:
+#    objectiveType: Delivery
+#    runtime.targetPrototype is set
+#    The spawned target entity must be delivered exactly.
+
 - type: storeContractPack
   id: PackBazarObjectiveTest
   contracts:
-  - id: caravan_contract_test_hunt_monkey
+  - id: caravan_contract_test_delivery_inventory_ingot
     weight: 100
-  - id: caravan_contract_test_delivery_ingot
+  - id: caravan_contract_test_delivery_tracked_ingot
+    weight: 100
+  - id: caravan_contract_test_hunt_monkey
     weight: 100
   - id: caravan_contract_test_repair_table
     weight: 100
@@ -13,35 +28,39 @@
 - type: storeContractsPreset
   id: PresetBazarObjectiveTest
   limits:
-    Easy: 3
+    Easy: 5
   packs:
   - id: PackBazarObjectiveTest
     weight: 1
 
+# ----------------------------
+# Classic inventory delivery
+# ----------------------------
 - type: storeContract
-  id: caravan_contract_test_hunt_monkey
-  name: "Test Hunt: Monkey"
-  description: "Accept contract, kill the spawned monkey, then claim reward."
+  id: caravan_contract_test_delivery_inventory_ingot
+  name: "Тест: обычная поставка медного слитка"
+  description: "Классическая поставка с подсказочным спавном. Автомат создаст медный слиток в мире, но сдать можно любой подходящий слиток."
   difficulty: Easy
   repeatable: true
-  objectiveType: Hunt
+  objectiveType: Delivery
   runtime:
-    stageGoal: 1
-    spawnPointTag: NcContractHuntTestSpawn
-    targetPrototype: MobMonkey
-    guardPrototype: N14MobRaiderPsycho
-    guardCount: 2
-    givePinpointer: true
-    pinpointerPrototype: PinpointerUniversal
+    spawnPointTag: NcContractDeliveryTestSpawn
+    deliverySpawnPrototype: N14IngotCopper1
+  targets:
+  - id: N14IngotCopper1
+    required: 1
   rewards:
   - type: Currency
     id: Caps
-    amount: { min: 50, max: 80 }
+    amount: { min: 20, max: 35 }
 
+# ----------------------------
+# Tracked delivery objective
+# ----------------------------
 - type: storeContract
-  id: caravan_contract_test_delivery_ingot
-  name: "Test Delivery: Copper Ingot"
-  description: "Track spawned ingot with pinpointer, fight guards, then hand item in via claim."
+  id: caravan_contract_test_delivery_tracked_ingot
+  name: "Тест: адресная доставка медного слитка"
+  description: "Objective-поставка со спавном цели. Найдите отмеченный слиток и сдайте именно его через автомат. Любой другой такой же предмет не подойдёт."
   difficulty: Easy
   repeatable: true
   objectiveType: Delivery
@@ -60,10 +79,36 @@
     id: Caps
     amount: { min: 35, max: 60 }
 
+# ----------------------------
+# Hunt objective
+# ----------------------------
+- type: storeContract
+  id: caravan_contract_test_hunt_monkey
+  name: "Тест: охота на обезьяну"
+  description: "Примите контракт, устраните заспавненную цель и сдайте контракт через автомат."
+  difficulty: Easy
+  repeatable: true
+  objectiveType: Hunt
+  runtime:
+    stageGoal: 1
+    spawnPointTag: NcContractHuntTestSpawn
+    targetPrototype: MobMonkey
+    guardPrototype: N14MobRaiderPsycho
+    guardCount: 2
+    givePinpointer: true
+    pinpointerPrototype: PinpointerUniversal
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 50, max: 80 }
+
+# ----------------------------
+# Multi-stage repair objective
+# ----------------------------
 - type: storeContract
   id: caravan_contract_test_repair_table
-  name: "Test Repair: Table"
-  description: "Repair the spawned structure three times with a welder. Each repair triggers a guard wave. Claim reward after completion."
+  name: "Тест: ремонт стола"
+  description: "Почините заспавненный объект сваркой три раза. После каждого этапа появляется новая волна охраны."
   difficulty: Easy
   repeatable: true
   objectiveType: Repair
@@ -83,10 +128,13 @@
     id: Caps
     amount: { min: 80, max: 120 }
 
+# ----------------------------
+# Ghost-role objective
+# ----------------------------
 - type: storeContract
   id: caravan_contract_test_ghost_role_hamlet
-  name: "Test Ghost Role: Hamlet"
-  description: "Accept contract, wait for a ghost to take Hamlet, then bring the target to the vending machine and claim reward."
+  name: "Тест: гост-роль рейдера"
+  description: "Примите контракт, дождитесь заселения гост-роли, устраните цель и доставьте тело к торговому автомату."
   difficulty: Easy
   repeatable: true
   objectiveType: GhostRole

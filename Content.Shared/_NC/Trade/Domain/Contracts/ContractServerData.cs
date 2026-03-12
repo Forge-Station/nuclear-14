@@ -1,4 +1,4 @@
-using Robust.Shared.Serialization;
+﻿using Robust.Shared.Serialization;
 
 namespace Content.Shared._NC.Trade;
 
@@ -20,6 +20,14 @@ public sealed class ContractServerData
     public ContractObjectiveConfigData Config { get; set; } = new();
     public ContractFlowStatus FlowStatus { get; set; } = ContractFlowStatus.Available;
 
+    public ContractExecutionKind ExecutionKind => ContractExecutionKinds.Resolve(ObjectiveType, Config?.TargetPrototype);
+    public bool IsInventoryDelivery => ExecutionKind == ContractExecutionKind.InventoryDelivery;
+    public bool IsTrackedDeliveryObjective => ExecutionKind == ContractExecutionKind.TrackedDeliveryObjective;
+    public bool HasInventoryDeliverySpawnSupport => IsInventoryDelivery && !string.IsNullOrWhiteSpace(Config?.DeliverySpawnPrototype);
+    public bool UsesWorldObjectiveRuntime => ContractExecutionKinds.UsesWorldRuntime(ExecutionKind);
+    public bool UsesWorldRuntimeSupport => UsesWorldObjectiveRuntime || HasInventoryDeliverySpawnSupport;
+    public bool UsesStageObjectiveProgress => ContractExecutionKinds.UsesStageProgress(ExecutionKind);
+
     public string Id { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
 
@@ -32,7 +40,7 @@ public sealed class ContractServerData
     {
         get
         {
-            if (ObjectiveType != ContractObjectiveType.Delivery)
+            if (UsesStageObjectiveProgress)
                 return Required > 0 && Progress >= Required;
 
             if (Targets.Count > 0)

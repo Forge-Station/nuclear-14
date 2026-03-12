@@ -132,3 +132,6 @@ nc-store-contract-badge-ghost-role-active-tooltip = Гост-роль занят
 nc-store-contract-ghost-role-waiting-line = Ожидание заселения гост-роли: { $time }
 nc-store-contract-ghost-role-active-line = Гост-роль занята. Убейте цель и доставьте тело к торговому автомату.
 
+
+nc-store-contract-delivery-target-lost = Цель доставки утеряна. Контракт провален.
+

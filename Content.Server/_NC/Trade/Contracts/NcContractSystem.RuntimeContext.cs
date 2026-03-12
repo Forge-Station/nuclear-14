@@ -1,4 +1,4 @@
-using Content.Shared._NC.Trade;
+﻿using Content.Shared._NC.Trade;
 
 namespace Content.Server._NC.Trade;
 
@@ -28,6 +28,7 @@ public sealed partial class NcContractSystem : EntitySystem
             AcceptTimeoutSeconds = runtimeProto.AcceptTimeoutSeconds,
             SpawnPointTag = runtimeProto.SpawnPointTag ?? string.Empty,
             TargetPrototype = runtimeProto.TargetPrototype ?? string.Empty,
+            DeliverySpawnPrototype = runtimeProto.DeliverySpawnPrototype ?? string.Empty,
             StructurePrototype = runtimeProto.StructurePrototype ?? string.Empty,
             GhostRolePrototype = runtimeProto.GhostRolePrototype ?? string.Empty,
             GivePinpointer = runtimeProto.GivePinpointer,
@@ -58,6 +59,7 @@ public sealed partial class NcContractSystem : EntitySystem
         config.AcceptTimeoutSeconds = Math.Max(0, config.AcceptTimeoutSeconds);
         config.SpawnPointTag ??= string.Empty;
         config.TargetPrototype ??= string.Empty;
+        config.DeliverySpawnPrototype ??= string.Empty;
         config.StructurePrototype ??= string.Empty;
         config.GhostRolePrototype ??= string.Empty;
         config.GivePinpointer = config.GivePinpointer;
@@ -87,7 +89,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (contract.Completed)
             return ContractFlowStatus.ReadyToTurnIn;
 
-        if (contract.ObjectiveType == ContractObjectiveType.GhostRole && contract.Runtime.GhostRolePendingAcceptance)
+        if (contract.ExecutionKind == ContractExecutionKind.GhostRoleObjective && contract.Runtime.GhostRolePendingAcceptance)
             return ContractFlowStatus.AwaitingActivation;
 
         return ContractFlowStatus.InProgress;
@@ -159,3 +161,4 @@ public sealed partial class NcContractSystem : EntitySystem
         }
     }
 }
+

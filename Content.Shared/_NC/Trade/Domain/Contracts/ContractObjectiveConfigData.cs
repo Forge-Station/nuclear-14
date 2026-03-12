@@ -1,4 +1,4 @@
-using Robust.Shared.Serialization;
+﻿using Robust.Shared.Serialization;
 
 namespace Content.Shared._NC.Trade;
 
@@ -9,6 +9,7 @@ public sealed class ContractObjectiveConfigData
 
     public string SpawnPointTag { get; set; } = string.Empty;
     public string TargetPrototype { get; set; } = string.Empty;
+    public string DeliverySpawnPrototype { get; set; } = string.Empty;
     public string StructurePrototype { get; set; } = string.Empty;
     public string GhostRolePrototype { get; set; } = string.Empty;
 

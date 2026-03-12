@@ -120,6 +120,7 @@ public sealed partial class NcStoreMenu
                     h = h * 31 + (c.TargetItem?.GetHashCode() ?? 0);
                     h = h * 31 + (c.Repeatable ? 1 : 0);
                     h = h * 31 + (c.Taken ? 1 : 0);
+                    h = h * 31 + (int) c.ExecutionKind;
                     h = h * 31 + (int) c.ObjectiveType;
                     h = h * 31 + (int) c.FlowStatus;
                     h = h * 31 + (c.Completed ? 1 : 0);
@@ -375,4 +376,7 @@ public sealed partial class NcStoreMenu
         }
     }
 }
+
+
+
 

@@ -76,8 +76,9 @@ public sealed partial class NcContractSystem : EntitySystem
         var objectiveType = proto.ObjectiveType;
         var runtime = CreateInitialRuntimeState(proto);
         var config = CreateObjectiveConfig(proto);
+        var executionKind = ContractExecutionKinds.Resolve(objectiveType, config.TargetPrototype);
 
-        if (objectiveType != ContractObjectiveType.Delivery)
+        if (ContractExecutionKinds.UsesStageProgress(executionKind))
         {
             targets.Clear();
             totalRequired = Math.Max(1, runtime.StageGoal);

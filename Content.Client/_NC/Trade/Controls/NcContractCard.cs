@@ -117,7 +117,7 @@ public sealed class NcContractCard : PanelContainer
                 });
         }
 
-        if (_data.ObjectiveType != ContractObjectiveType.Delivery && _data.Runtime.StageGoal > 1)
+        if ((_data.ExecutionKind is ContractExecutionKind.HuntObjective or ContractExecutionKind.RepairObjective or ContractExecutionKind.GhostRoleObjective) && _data.Runtime.StageGoal > 1)
         {
             var stage = Math.Clamp(_data.Runtime.Stage, 0, _data.Runtime.StageGoal);
             root.AddChild(
@@ -457,7 +457,7 @@ public sealed class NcContractCard : PanelContainer
         if (!data.SupportsPinpointer || data.FlowStatus != ContractFlowStatus.InProgress)
             return false;
 
-        return data.ObjectiveType is ContractObjectiveType.Hunt or ContractObjectiveType.Repair or ContractObjectiveType.GhostRole or ContractObjectiveType.Delivery;
+        return data.ExecutionKind != ContractExecutionKind.InventoryDelivery;
     }
 
     private static bool IsGhostRoleAwaitingAcceptance(ContractClientData data)
@@ -830,4 +830,6 @@ public sealed class NcContractCard : PanelContainer
     private static Color Brighten(Color c, float f) =>
         new(MathF.Min(c.R * f, 1f), MathF.Min(c.G * f, 1f), MathF.Min(c.B * f, 1f), c.A);
 }
+
+
 

@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 
@@ -14,7 +14,6 @@ public sealed partial class NcContractSystem : EntitySystem
         NcStoreComponent Comp,
         ContractServerData Contract,
         List<ContractTargetServerData> Targets,
-        Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> RequiredByKey,
         List<EntityUid> UserItems,
         List<EntityUid>? CrateItems,
         List<ClaimTakeEntry> TakePlan
@@ -54,6 +53,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 $"Contract '{contractId}' is not taken yet.");
             return false;
         }
+
         var targets = GetEffectiveTargets(contract);
         if (targets.Count == 0)
         {
@@ -63,7 +63,35 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        var requiredByKey = new Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int>();
+        _logic.ScanInventoryItems(user, _scratchUserItems);
+
+        EntityUid? crateEntity = null;
+        List<EntityUid>? crateItems = null;
+
+        var crateUid = _logic.GetPulledClosedCrate(user);
+        if (crateUid is { } c0 && Exists(c0))
+        {
+            crateEntity = c0;
+            _logic.ScanInventoryItems(c0, _scratchCrateItems);
+            crateItems = _scratchCrateItems;
+        }
+
+        if (targets.Count == 1)
+        {
+            return TryPrepareSingleTargetClaimContext(
+                store,
+                user,
+                contractId,
+                comp,
+                contract,
+                targets,
+                crateEntity,
+                crateItems,
+                out ctx,
+                out fail);
+        }
+
+        var requiredByKey = new Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int>(targets.Count);
         foreach (var t in targets)
         {
             if (string.IsNullOrWhiteSpace(t.TargetItem) || t.Required <= 0)
@@ -77,18 +105,6 @@ public sealed partial class NcContractSystem : EntitySystem
             var key = (t.TargetItem, t.MatchMode);
             if (!requiredByKey.TryAdd(key, t.Required))
                 requiredByKey[key] = checked(requiredByKey[key] + t.Required);
-        }
-        _logic.ScanInventoryItems(user, _scratchUserItems);
-
-        EntityUid? crateEntity = null;
-        List<EntityUid>? crateItems = null;
-
-        var crateUid = _logic.GetPulledClosedCrate(user);
-        if (crateUid is { } c0 && Exists(c0))
-        {
-            crateEntity = c0;
-            _logic.ScanInventoryItems(c0, _scratchCrateItems);
-            crateItems = _scratchCrateItems;
         }
 
         var takePlan = new List<ClaimTakeEntry>(64);
@@ -161,7 +177,92 @@ public sealed partial class NcContractSystem : EntitySystem
             comp,
             contract,
             targets,
-            requiredByKey,
+            _scratchUserItems,
+            crateItems,
+            takePlan);
+
+        return true;
+    }
+
+    private bool TryPrepareSingleTargetClaimContext(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        NcStoreComponent comp,
+        ContractServerData contract,
+        List<ContractTargetServerData> targets,
+        EntityUid? crateEntity,
+        List<EntityUid>? crateItems,
+        out ClaimContext ctx,
+        out ClaimAttemptResult fail)
+    {
+        ctx = default;
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+
+        var target = targets[0];
+        if (string.IsNullOrWhiteSpace(target.TargetItem) || target.Required <= 0)
+        {
+            fail = ClaimAttemptResult.Fail(
+                ClaimFailureReason.InvalidTarget,
+                $"Invalid target '{target.TargetItem}' (required={target.Required}).");
+            return false;
+        }
+
+        var takePlan = new List<ClaimTakeEntry>(Math.Max(4, Math.Min(32, target.Required)));
+        var virtualStackLeft = new Dictionary<EntityUid, int>();
+        var need = target.Required;
+
+        if (crateEntity is { } crate && crateItems != null)
+        {
+            var reserved = ReserveTakePlanFromItems(
+                crate,
+                crateItems,
+                target.TargetItem,
+                target.MatchMode,
+                need,
+                virtualStackLeft,
+                takePlan);
+
+            need -= reserved;
+        }
+
+        if (need > 0)
+        {
+            var reserved = ReserveTakePlanFromItems(
+                user,
+                _scratchUserItems,
+                target.TargetItem,
+                target.MatchMode,
+                need,
+                virtualStackLeft,
+                takePlan);
+
+            need -= reserved;
+        }
+
+        if (need > 0)
+        {
+            if (crateEntity == null)
+            {
+                fail = ClaimAttemptResult.Fail(
+                    ClaimFailureReason.MissingCrate,
+                    $"need {target.Required}x {target.TargetItem} (mode={target.MatchMode}), missing {need}. Pull a closed crate to claim from it.");
+                return false;
+            }
+
+            fail = ClaimAttemptResult.Fail(
+                ClaimFailureReason.NotEnoughItems,
+                $"need {target.Required}x {target.TargetItem} (mode={target.MatchMode}), missing {need} after planning.");
+            return false;
+        }
+
+        ctx = new ClaimContext(
+            store,
+            user,
+            crateEntity,
+            comp,
+            contract,
+            targets,
             _scratchUserItems,
             crateItems,
             takePlan);
@@ -272,10 +373,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 if (left > 0)
                     virtualStackLeft[ent] = left;
                 else
-                {
-                    virtualStackLeft.Remove(ent);
                     items[i] = EntityUid.Invalid;
-                }
 
                 continue;
             }
@@ -286,18 +384,5 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         return reserved;
-    }
-
-    private bool IsDescendantId(string candidateProtoId, string expectedAncestorId)
-    {
-
-        var ancestors = GetAncestorsInclusive(candidateProtoId);
-        for (var i = 0; i < ancestors.Count; i++)
-        {
-            if (ancestors[i] == expectedAncestorId)
-                return true;
-        }
-
-        return false;
     }
 }

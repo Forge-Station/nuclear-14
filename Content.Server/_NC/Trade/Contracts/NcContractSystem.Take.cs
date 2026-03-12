@@ -24,7 +24,7 @@ public sealed partial class NcContractSystem : EntitySystem
         ResetContractTargetProgress(contract);
         SyncContractFlowStatus(contract);
 
-        if (contract.ObjectiveType != ContractObjectiveType.Delivery)
+        if (contract.UsesStageObjectiveProgress)
             UpdateObjectiveContractProgress(store, contractId, contract);
 
         return true;

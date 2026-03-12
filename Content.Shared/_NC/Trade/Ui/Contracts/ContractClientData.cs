@@ -16,6 +16,7 @@ public sealed class ContractClientData
     public bool Repeatable;
     public bool Taken;
     public bool SupportsPinpointer;
+    public ContractExecutionKind ExecutionKind = ContractExecutionKind.InventoryDelivery;
     public ContractObjectiveType ObjectiveType = ContractObjectiveType.Delivery;
     public ContractRuntimeContextData Runtime = new();
     public int Required;
@@ -35,6 +36,7 @@ public sealed class ContractClientData
         bool repeatable,
         bool taken,
         bool supportsPinpointer,
+        ContractExecutionKind executionKind,
         ContractObjectiveType objectiveType,
         ContractRuntimeContextData runtime,
         ContractFlowStatus flowStatus,
@@ -52,6 +54,7 @@ public sealed class ContractClientData
         Repeatable = repeatable;
         Taken = taken;
         SupportsPinpointer = supportsPinpointer;
+        ExecutionKind = executionKind;
         ObjectiveType = objectiveType;
         Runtime = runtime;
         FlowStatus = flowStatus;
