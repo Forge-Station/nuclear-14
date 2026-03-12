@@ -9,12 +9,12 @@
       tags:
         - N14Cartridge12-7x55mm
     proto: N14Cartridge12-7x55mm
-    capacity: 60
+    capacity: 30
   - type: ContainerContainer
     containers:
       ballistic-ammo: !type:Container
   - type: Sprite
-    sprite: Corvax/Objects/Weapons/Guns/Ammunition/Boxes/12-7x55mmbox.rsi
+    sprite: Corvax/Objects/Weapons/Guns/Ammunition/Boxes/12-7-55mmbox.rsi
     netsync: false
   - type: MagazineVisuals
     magState: mag

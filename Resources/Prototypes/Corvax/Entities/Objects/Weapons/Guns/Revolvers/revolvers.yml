@@ -7,7 +7,7 @@
   - type: Clothing
     sprite: Corvax/Objects/Weapons/Guns/Revolvers/rsh12.rsi
   - type: Gun
-    fireRate: 2
+    fireRate: 1.5
     resetOnHandSelected: false
     soundGunshot:
       collection: N14RSH12Gunshot
