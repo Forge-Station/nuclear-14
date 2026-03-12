@@ -147,6 +147,8 @@
     slots:
     - Back
     - suitStorage
+  - type: Item
+    size: Huge
   - type: Sprite
     sprite: Corvax/Objects/Weapons/Guns/Rifles/ak112pn.rsi
     layers:

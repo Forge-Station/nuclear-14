@@ -1,7 +1,7 @@
 ent-N14WastelandFlora = растение пустоши
     .desc = Несмотря на радиацию и суровые условия, жизнь в Пустоши продолжается. Эти растения - тому подтверждение.
 
-<#-- Культурные растения -->
+# Культурные растения 
 ent-N14WastelandFloraWildBananaYucca = банановая юкка
     .desc = Это растение с длинными листьями напоминает банан, но его плоды больше похожи на сладкую тошку.
 ent-N14WastelandFloraWildBlackberries = куст ежевики
@@ -29,7 +29,7 @@ ent-N14WastelandFloraWildStarlightBerries = ягоды ночного ползу
 ent-N14WastelandFloraWildTato = тошка
     .desc = Мутировавший картофель, не самый вкусный, но питательный.
 
-<#-- Дикие растения -->
+# Дикие растения 
 ent-N14WastelandFloraWildBroc = брок
     .desc = Это растение с яркими цветами выделяется на фоне унылых пейзажей Пустоши.
 ent-N14WastelandFloraWildBarrelCactus = бочкообразный кактус
@@ -53,13 +53,13 @@ ent-N14WastelandFloraWildXander = ксандер
 ent-N14WastelandFloraWildGlowpepper = дикий светоперец
     .desc = Светящийся дикий светоперец. ХА-ХА-ХА... он здоровый.
 
-<#-- Грибы -->
+# Грибы 
 ent-N14WastelandFloraWildCaveFungus = пещерные грибы
     .desc = Эти грибы растут в темноте пещер и питаются влагой, просачивающейся сквозь камни.
 ent-N14WastelandFloraWildCaveFungusRad = облучённые пещерные грибы
     .desc = Эти грибы впитали в себя радиацию и теперь светятся в темноте.
 
-<#-- Деревья -->
+# Деревья 
 ent-N14WastelandFloraWildMesquite = прозопис
     .desc = Это дерево - ценный источник древесины и сладких стручков.
 ent-N14WastelandFloraWildPinyon = сосна

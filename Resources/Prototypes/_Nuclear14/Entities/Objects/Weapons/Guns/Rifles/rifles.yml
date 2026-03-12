@@ -926,6 +926,11 @@
     sprite: _Nuclear14/Objects/Weapons/Guns/Rifles/tribalrifle.rsi
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/Rifles/tribalrifle.rsi
+  - type: Item # Forge-Add
+    size: Huge
+    shape:
+    - 0,0,3,1
+    - 0,1,0,1
   - type: Wieldable
   - type: GunWieldBonus
     minAngle: -23

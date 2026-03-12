@@ -1,6 +1,6 @@
 ent-N14BaseLockerTimedStorageFill = { ent-BaseItem }
     .desc = { ent-BaseItem.desc }
-<#--  -->
+
 ent-N14BaseTimedStorageFill = { ent-N14BaseLockerTimedStorageFill }
     .desc = { ent-N14BaseLockerTimedStorageFill.desc }
 ent-N14BaseSmallLockerTimedStorageFill = { ent-N14BaseLockerTimedStorageFill }

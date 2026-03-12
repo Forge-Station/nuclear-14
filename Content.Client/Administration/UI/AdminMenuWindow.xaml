@@ -15,7 +15,7 @@
         <tabs:RoundTab />
         <tabs:ServerTab />
         <panic:PanicBunkerTab Name="PanicBunkerControl" Access="Public" />
-        <baby:BabyJailTab Name="BabyJailControl" Access="Public" />
+        <!-- <baby:BabyJailTab Name="BabyJailControl" Access="Public" /> -->
         <playerTab:PlayerTab Name="PlayerTabControl" Access="Public" />
         <objectsTab:ObjectsTab Name="ObjectsTabControl" Access="Public" />
     </TabContainer>

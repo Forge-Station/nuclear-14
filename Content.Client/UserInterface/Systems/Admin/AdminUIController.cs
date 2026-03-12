@@ -46,7 +46,7 @@ public sealed class AdminUIController : UIController,
     {
         base.Initialize();
         SubscribeNetworkEvent<PanicBunkerChangedEvent>(OnPanicBunkerUpdated);
-        SubscribeNetworkEvent<BabyJailChangedEvent>(OnBabyJailUpdated);
+        // SubscribeNetworkEvent<BabyJailChangedEvent>(OnBabyJailUpdated); // Forge-Change not use BabyJail
     }
 
     private void OnPanicBunkerUpdated(PanicBunkerChangedEvent msg, EntitySessionEventArgs args)
@@ -60,18 +60,18 @@ public sealed class AdminUIController : UIController,
             UIManager.CreateWindow<PanicBunkerStatusWindow>().OpenCentered();
         }
     }
-
-    private void OnBabyJailUpdated(BabyJailChangedEvent msg, EntitySessionEventArgs args)
-    {
-        var showDialog = _babyJail == null && msg.Status.Enabled;
-        _babyJail = msg.Status;
-        _window?.BabyJailControl.UpdateStatus(msg.Status);
-
-        if (showDialog)
-        {
-            UIManager.CreateWindow<BabyJailStatusWindow>().OpenCentered();
-        }
-    }
+    // Forge-Change not use BabyJail
+    // private void OnBabyJailUpdated(BabyJailChangedEvent msg, EntitySessionEventArgs args)
+    // {
+    //     var showDialog = _babyJail == null && msg.Status.Enabled;
+    //     _babyJail = msg.Status;
+    //     _window?.BabyJailControl.UpdateStatus(msg.Status);
+    //
+    //     if (showDialog)
+    //     {
+    //         UIManager.CreateWindow<BabyJailStatusWindow>().OpenCentered();
+    //     }
+    // }
 
     public void OnStateEntered(GameplayState state)
     {
@@ -128,8 +128,8 @@ public sealed class AdminUIController : UIController,
          * TODO: Remove baby jail code once a more mature gateway process is established. This code is only being issued as a stopgap to help with potential tiding in the immediate future.
          */
 
-        if (_babyJail != null)
-            _window.BabyJailControl.UpdateStatus(_babyJail);
+        // if (_babyJail != null) // Forge-Change not use BabyJail
+        //     _window.BabyJailControl.UpdateStatus(_babyJail);
 
         _window.PlayerTabControl.OnEntryKeyBindDown += PlayerTabEntryKeyBindDown;
         _window.ObjectsTabControl.OnEntryKeyBindDown += ObjectsTabEntryKeyBindDown;

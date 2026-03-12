@@ -5,7 +5,7 @@ ent-N14FoodJamBase = { ent-BaseItem }
 ent-N14PickledBase = { ent-N14FoodJarBase }
     .desc = { ent-N14FoodJarBase.desc }
 
-<#-- Варенья -->
+# Варенья 
 ent-N14AgaveJam = варенье из агавы
     .desc = Банка, агавового варенья. Подождите... люди делают агавовое варенье?
 ent-N14BlackberryJam = варенье из ежевики
@@ -23,7 +23,7 @@ ent-N14StarlightJam = варенье из ползуна
 ent-N14TarberryJam = варенье из смоляники
     .desc = Банка, варенья из смоляники. Оно вызывает странное чувство...
 
-<#-- Соленья -->
+# Соленья 
 ent-N14PickledCabbage = маринованная капуста
     .desc = Банка, маринованной капустой. Сколько ей лет?
 ent-N14PickledCarrots = маринованная морковь
