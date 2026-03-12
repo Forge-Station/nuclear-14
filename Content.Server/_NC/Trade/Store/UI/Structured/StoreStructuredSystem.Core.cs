@@ -267,6 +267,16 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 continue;
             }
 
+            if (_contracts.HasRealtimeGhostRoleState(store))
+            {
+                var scratch = GetDynamicScratch(uid);
+                if (_timing.CurTime >= scratch.NextDynamicAllowed)
+                {
+                    UpdateDynamicState(uid, store, userUid);
+                    scratch.NextDynamicAllowed = _timing.CurTime + TimeSpan.FromSeconds(CheckInterval);
+                }
+            }
+
             if (!_storeSystem.CanUseStore(uid, store, userUid))
             {
                 CloseAndCleanUp(uid, userUid);
@@ -613,3 +623,4 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     }
 
 }
+

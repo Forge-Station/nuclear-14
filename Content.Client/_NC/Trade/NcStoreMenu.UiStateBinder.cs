@@ -130,6 +130,8 @@ public sealed partial class NcStoreMenu
                         h = h * 31 + runtime.Stage;
                         h = h * 31 + runtime.StageGoal;
                         h = h * 31 + runtime.AcceptTimeoutSeconds;
+                        h = h * 31 + runtime.AcceptTimeoutRemainingSeconds;
+                        h = h * 31 + (runtime.GhostRolePendingAcceptance ? 1 : 0);
                         h = h * 31 + (runtime.Failed ? 1 : 0);
                         h = h * 31 + (runtime.FailureReason?.GetHashCode() ?? 0);
                         h = h * 31 + (runtime.SpawnPointTag?.GetHashCode() ?? 0);
@@ -380,3 +382,7 @@ public sealed partial class NcStoreMenu
         }
     }
 }
+
+
+
+

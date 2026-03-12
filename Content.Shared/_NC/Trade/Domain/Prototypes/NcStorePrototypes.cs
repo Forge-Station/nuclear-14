@@ -130,6 +130,15 @@ public sealed partial class StoreContractRuntimePrototype
 
     [DataField("guardCount")]
     public int GuardCount { get; set; } = 0;
+
+    [DataField("repairToolQuality")]
+    public string RepairToolQuality { get; set; } = "Welding";
+
+    [DataField("repairDoAfterSeconds")]
+    public float RepairDoAfterSeconds { get; set; } = 2f;
+
+    [DataField("repairStageSound")]
+    public string RepairStageSound { get; set; } = "/Audio/Effects/sparks4.ogg";
 }
 [Prototype("storeContractsPreset")]
 public sealed partial class StoreContractsPresetPrototype : IPrototype
@@ -222,3 +231,4 @@ public sealed class ListingConditionPrototype
     [DataField("condition")]
     public object? Condition;
 }
+

@@ -122,3 +122,13 @@ nc-store-contract-action-pinpointer = Выдать пинпоинтер
 nc-store-contract-action-pinpointer-tooltip = Выдать новый пинпоинтер для текущей цели активного контракта.
 nc-store-contract-pinpointer-issued = Пинпоинтер выдан.
 nc-store-contract-pinpointer-issue-failed = Не удалось выдать пинпоинтер.
+nc-store-contract-ghost-role-timeout = Гост-роль не была занята вовремя. Контракт провален.
+nc-store-contract-ghost-role-target-lost = Цель гост-роли была уничтожена до заселения. Контракт провален.
+
+nc-store-contract-badge-awaiting-ghost-role = ОЖИДАНИЕ
+nc-store-contract-badge-awaiting-ghost-role-tooltip = Контракт ожидает, пока кто-нибудь займёт гост-роль. Если за отведённое время её не возьмут, контракт провалится.
+nc-store-contract-badge-ghost-role-active = АКТИВНА
+nc-store-contract-badge-ghost-role-active-tooltip = ����-���� ������. ���� ����� ����� � ��������� ���� � ��������� ��������.
+nc-store-contract-ghost-role-waiting-line = Ожидание заселения гост-роли: { $time }
+nc-store-contract-ghost-role-active-line = ����-���� ������. ������ ���� � ��������� ���� � ��������� ��������.
+

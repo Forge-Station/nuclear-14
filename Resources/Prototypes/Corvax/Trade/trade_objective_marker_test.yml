@@ -7,3 +7,33 @@
   - type: Tag
     tags:
     - NcContractHuntTestSpawn
+
+- type: entity
+  id: NcContractRepairTestSpawnMarker
+  parent: MarkerBase
+  name: contract repair test spawn marker
+  suffix: contracts, repair
+  components:
+  - type: Tag
+    tags:
+    - NcContractRepairTestSpawn
+
+- type: entity
+  id: NcContractDeliveryTestSpawnMarker
+  parent: MarkerBase
+  name: contract delivery test spawn marker
+  suffix: contracts, delivery
+  components:
+  - type: Tag
+    tags:
+    - NcContractDeliveryTestSpawn
+
+- type: entity
+  id: NcContractGhostRoleTestSpawnMarker
+  parent: MarkerBase
+  name: contract ghost role test spawn marker
+  suffix: contracts, ghost role
+  components:
+  - type: Tag
+    tags:
+    - NcContractGhostRoleTestSpawn

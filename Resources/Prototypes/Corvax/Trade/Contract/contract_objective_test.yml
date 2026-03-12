@@ -1,0 +1,105 @@
+- type: storeContractPack
+  id: PackBazarObjectiveTest
+  contracts:
+  - id: caravan_contract_test_hunt_monkey
+    weight: 100
+  - id: caravan_contract_test_delivery_ingot
+    weight: 100
+  - id: caravan_contract_test_repair_table
+    weight: 100
+  - id: caravan_contract_test_ghost_role_hamlet
+    weight: 100
+
+- type: storeContractsPreset
+  id: PresetBazarObjectiveTest
+  limits:
+    Easy: 3
+  packs:
+  - id: PackBazarObjectiveTest
+    weight: 1
+
+- type: storeContract
+  id: caravan_contract_test_hunt_monkey
+  name: "Test Hunt: Monkey"
+  description: "Accept contract, kill the spawned monkey, then claim reward."
+  difficulty: Easy
+  repeatable: true
+  objectiveType: Hunt
+  runtime:
+    stageGoal: 1
+    spawnPointTag: NcContractHuntTestSpawn
+    targetPrototype: MobMonkey
+    guardPrototype: N14MobRaiderPsycho
+    guardCount: 2
+    givePinpointer: true
+    pinpointerPrototype: PinpointerUniversal
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 50, max: 80 }
+
+- type: storeContract
+  id: caravan_contract_test_delivery_ingot
+  name: "Test Delivery: Copper Ingot"
+  description: "Track spawned ingot with pinpointer, fight guards, then hand item in via claim."
+  difficulty: Easy
+  repeatable: true
+  objectiveType: Delivery
+  runtime:
+    spawnPointTag: NcContractDeliveryTestSpawn
+    targetPrototype: N14IngotCopper1
+    guardPrototype: N14MobRaiderPsycho
+    guardCount: 2
+    givePinpointer: true
+    pinpointerPrototype: PinpointerUniversal
+  targets:
+  - id: N14IngotCopper1
+    required: 1
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 35, max: 60 }
+
+- type: storeContract
+  id: caravan_contract_test_repair_table
+  name: "Test Repair: Table"
+  description: "Repair the spawned structure three times with a welder. Each repair triggers a guard wave. Claim reward after completion."
+  difficulty: Easy
+  repeatable: true
+  objectiveType: Repair
+  runtime:
+    stageGoal: 3
+    spawnPointTag: NcContractRepairTestSpawn
+    structurePrototype: Table
+    guardPrototype: N14MobRaiderPsycho
+    guardCount: 2
+    givePinpointer: true
+    pinpointerPrototype: PinpointerUniversal
+    repairToolQuality: Welding
+    repairDoAfterSeconds: 2
+    repairStageSound: /Audio/Effects/sparks4.ogg
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 80, max: 120 }
+
+- type: storeContract
+  id: caravan_contract_test_ghost_role_hamlet
+  name: "Test Ghost Role: Hamlet"
+  description: "Accept contract, wait for a ghost to take Hamlet, then bring the target to the vending machine and claim reward."
+  difficulty: Easy
+  repeatable: true
+  objectiveType: GhostRole
+  runtime:
+    stageGoal: 1
+    spawnPointTag: NcContractGhostRoleTestSpawn
+    ghostRolePrototype: N14MobHumanRaider
+    guardPrototype: N14MobRaiderPsycho
+    guardCount: 2
+    givePinpointer: true
+    pinpointerPrototype: PinpointerUniversal
+    acceptTimeoutSeconds: 60
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 90, max: 140 }

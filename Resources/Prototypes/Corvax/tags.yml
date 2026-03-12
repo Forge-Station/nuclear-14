@@ -51,3 +51,12 @@
 
 - type: Tag
   id: NcContractHuntTestSpawn
+
+- type: Tag
+  id: NcContractDeliveryTestSpawn
+
+- type: Tag
+  id: NcContractRepairTestSpawn
+
+- type: Tag
+  id: NcContractGhostRoleTestSpawn

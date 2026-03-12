@@ -314,6 +314,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 h = h * 31 + runtime.Stage;
                 h = h * 31 + runtime.StageGoal;
                 h = h * 31 + runtime.AcceptTimeoutSeconds;
+                h = h * 31 + runtime.AcceptTimeoutRemainingSeconds;
+                h = h * 31 + (runtime.GhostRolePendingAcceptance ? 1 : 0);
                 h = h * 31 + (runtime.Failed ? 1 : 0);
                 h = h * 31 + (runtime.FailureReason?.GetHashCode() ?? 0);
                 h = h * 31 + (runtime.SpawnPointTag?.GetHashCode() ?? 0);
@@ -324,6 +326,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 h = h * 31 + (runtime.PinpointerPrototype?.GetHashCode() ?? 0);
                 h = h * 31 + (runtime.GuardPrototype?.GetHashCode() ?? 0);
                 h = h * 31 + runtime.GuardCount;
+                h = h * 31 + (runtime.RepairToolQuality?.GetHashCode() ?? 0);
+                h = h * 31 + runtime.RepairDoAfterSeconds.GetHashCode();
+                h = h * 31 + (runtime.RepairStageSound?.GetHashCode() ?? 0);
             }
 
             var targets = contract.Targets;
@@ -351,3 +356,5 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
     }
 }
+
+

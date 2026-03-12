@@ -128,4 +128,11 @@ public sealed partial class NcContractSystem : EntitySystem
 
         RefillContractsForStore(store, comp, contractId);
     }
+
+    private void FinalizeFailedObjectiveContract(EntityUid store, NcStoreComponent comp, string contractId)
+    {
+        CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true, deleteGuards: false);
+        comp.Contracts.Remove(contractId);
+        RefillContractsForStore(store, comp, contractId);
+    }
 }

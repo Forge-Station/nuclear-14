@@ -23,6 +23,8 @@ public sealed class ContractRuntimeContextData
     public int Stage;
     public int StageGoal = 1;
     public int AcceptTimeoutSeconds;
+    public int AcceptTimeoutRemainingSeconds;
+    public bool GhostRolePendingAcceptance;
     public bool Failed;
 
     public string FailureReason = string.Empty;
@@ -36,6 +38,10 @@ public sealed class ContractRuntimeContextData
 
     public string GuardPrototype = string.Empty;
     public int GuardCount;
+
+    public string RepairToolQuality = "Welding";
+    public float RepairDoAfterSeconds = 2f;
+    public string RepairStageSound = "/Audio/Effects/sparks4.ogg";
 }
 
 [Serializable]
@@ -90,3 +96,5 @@ public sealed class ContractServerData
         }
     }
 }
+
+

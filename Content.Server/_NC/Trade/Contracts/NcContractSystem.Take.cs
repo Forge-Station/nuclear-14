@@ -21,16 +21,11 @@ public sealed partial class NcContractSystem : EntitySystem
         contract.Taken = true;
         contract.Progress = 0;
 
-        var targets = GetEffectiveTargets(contract);
-        for (var i = 0; i < targets.Count; i++)
-        {
-            var target = targets[i];
-            target.Progress = 0;
-            targets[i] = target;
-        }
+        ResetContractTargetProgress(contract);
         if (contract.ObjectiveType != ContractObjectiveType.Delivery)
             UpdateObjectiveContractProgress(store, contractId, contract);
 
         return true;
     }
 }
+

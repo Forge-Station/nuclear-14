@@ -64,6 +64,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             Stage = runtime.Stage,
             StageGoal = runtime.StageGoal,
             AcceptTimeoutSeconds = runtime.AcceptTimeoutSeconds,
+            AcceptTimeoutRemainingSeconds = runtime.AcceptTimeoutRemainingSeconds,
+            GhostRolePendingAcceptance = runtime.GhostRolePendingAcceptance,
             Failed = runtime.Failed,
             FailureReason = runtime.FailureReason,
             SpawnPointTag = runtime.SpawnPointTag,
@@ -73,7 +75,10 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             GivePinpointer = runtime.GivePinpointer,
             PinpointerPrototype = runtime.PinpointerPrototype,
             GuardPrototype = runtime.GuardPrototype,
-            GuardCount = runtime.GuardCount
+            GuardCount = runtime.GuardCount,
+            RepairToolQuality = runtime.RepairToolQuality,
+            RepairDoAfterSeconds = runtime.RepairDoAfterSeconds,
+            RepairStageSound = runtime.RepairStageSound
         };
     }
     private sealed class DynamicScratch
@@ -288,6 +293,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             return a.Stage == b.Stage &&
                 a.StageGoal == b.StageGoal &&
                 a.AcceptTimeoutSeconds == b.AcceptTimeoutSeconds &&
+                a.AcceptTimeoutRemainingSeconds == b.AcceptTimeoutRemainingSeconds &&
+                a.GhostRolePendingAcceptance == b.GhostRolePendingAcceptance &&
                 a.Failed == b.Failed &&
                 string.Equals(a.FailureReason, b.FailureReason, StringComparison.Ordinal) &&
                 string.Equals(a.SpawnPointTag, b.SpawnPointTag, StringComparison.Ordinal) &&
@@ -297,7 +304,10 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 a.GivePinpointer == b.GivePinpointer &&
                 string.Equals(a.PinpointerPrototype, b.PinpointerPrototype, StringComparison.Ordinal) &&
                 string.Equals(a.GuardPrototype, b.GuardPrototype, StringComparison.Ordinal) &&
-                a.GuardCount == b.GuardCount;
+                a.GuardCount == b.GuardCount &&
+                string.Equals(a.RepairToolQuality, b.RepairToolQuality, StringComparison.Ordinal) &&
+                Math.Abs(a.RepairDoAfterSeconds - b.RepairDoAfterSeconds) < 0.0001f &&
+                string.Equals(a.RepairStageSound, b.RepairStageSound, StringComparison.Ordinal);
         }
         private static bool TargetsEquals(List<ContractTargetClientData>? a, List<ContractTargetClientData>? b)
         {
@@ -369,3 +379,5 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
     }
 }
+
+

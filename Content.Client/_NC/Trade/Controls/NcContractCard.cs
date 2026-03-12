@@ -101,6 +101,20 @@ public sealed class NcContractCard : PanelContainer
                 });
         }
 
+        var ghostRoleStatus = BuildGhostRoleStatusText(_data);
+        if (!string.IsNullOrWhiteSpace(ghostRoleStatus))
+        {
+            root.AddChild(
+                new Label
+                {
+                    Text = ghostRoleStatus,
+                    Margin = new(0, 0, 0, 6),
+                    Modulate = IsGhostRoleAwaitingAcceptance(_data)
+                        ? Color.FromHex("#D3B06A")
+                        : Color.FromHex("#8DB7E8")
+                });
+        }
+
         if (_data.ObjectiveType != ContractObjectiveType.Delivery && _data.Runtime.StageGoal > 1)
         {
             var stage = Math.Clamp(_data.Runtime.Stage, 0, _data.Runtime.StageGoal);
@@ -187,7 +201,6 @@ public sealed class NcContractCard : PanelContainer
                 Color.FromHex("#202630"),
                 Color.FromHex("#5B708D")));
 
-
         if (!_data.Repeatable)
         {
             var tip = Loc.GetString("nc-store-contract-badge-single-tooltip");
@@ -207,6 +220,25 @@ public sealed class NcContractCard : PanelContainer
                     Loc.GetString("nc-store-contract-badge-taken-tooltip"),
                     Color.FromHex("#1F2E45"),
                     Color.FromHex("#5E88C9")));
+
+            if (IsGhostRoleAwaitingAcceptance(_data))
+            {
+                header.AddChild(
+                    BuildBadge(
+                        Loc.GetString("nc-store-contract-badge-awaiting-ghost-role"),
+                        Loc.GetString("nc-store-contract-badge-awaiting-ghost-role-tooltip"),
+                        Color.FromHex("#3A2B12"),
+                        Color.FromHex("#C99A3A")));
+            }
+            else if (IsGhostRoleActive(_data))
+            {
+                header.AddChild(
+                    BuildBadge(
+                        Loc.GetString("nc-store-contract-badge-ghost-role-active"),
+                        Loc.GetString("nc-store-contract-badge-ghost-role-active-tooltip"),
+                        Color.FromHex("#1C3148"),
+                        Color.FromHex("#6EA7E8")));
+            }
         }
 
         if (_data.Completed)
@@ -310,11 +342,7 @@ public sealed class NcContractCard : PanelContainer
 
         var actionHint = new Label
         {
-            Text = canTake
-                ? Loc.GetString("nc-store-contract-action-not-taken")
-                : canClaim
-                    ? Loc.GetString("nc-store-contract-action-can-claim")
-                    : Loc.GetString("nc-store-contract-action-not-done"),
+            Text = BuildActionHintText(_data),
             Margin = new(0, 0, 0, 4),
             Align = Label.AlignMode.Center
         };
@@ -427,8 +455,66 @@ public sealed class NcContractCard : PanelContainer
         if (!data.Taken || data.Completed || !data.Runtime.GivePinpointer)
             return false;
 
-        return data.ObjectiveType == ContractObjectiveType.Hunt ||
-            !string.IsNullOrWhiteSpace(data.Runtime.TargetPrototype);
+        if (data.ObjectiveType == ContractObjectiveType.GhostRole)
+            return IsGhostRoleActive(data);
+
+        return data.ObjectiveType is ContractObjectiveType.Hunt or ContractObjectiveType.Repair ||
+            !string.IsNullOrWhiteSpace(data.Runtime.TargetPrototype) ||
+            !string.IsNullOrWhiteSpace(data.Runtime.StructurePrototype);
+    }
+
+    private static bool IsGhostRoleAwaitingAcceptance(ContractClientData data)
+    {
+        return data.ObjectiveType == ContractObjectiveType.GhostRole &&
+            data.Taken &&
+            !data.Completed &&
+            data.Runtime.GhostRolePendingAcceptance;
+    }
+
+    private static bool IsGhostRoleActive(ContractClientData data)
+    {
+        return data.ObjectiveType == ContractObjectiveType.GhostRole &&
+            data.Taken &&
+            !data.Completed &&
+            !data.Runtime.GhostRolePendingAcceptance &&
+            !data.Runtime.Failed;
+    }
+
+    private static string BuildGhostRoleStatusText(ContractClientData data)
+    {
+        if (IsGhostRoleAwaitingAcceptance(data))
+            return Loc.GetString("nc-store-contract-ghost-role-waiting-line", ("time", FormatCountdown(data.Runtime.AcceptTimeoutRemainingSeconds)));
+
+        if (IsGhostRoleActive(data))
+            return Loc.GetString("nc-store-contract-ghost-role-active-line");
+
+        return string.Empty;
+    }
+
+    private static string BuildActionHintText(ContractClientData data)
+    {
+        if (!data.Taken)
+            return Loc.GetString("nc-store-contract-action-not-taken");
+
+        if (data.Completed)
+            return Loc.GetString("nc-store-contract-action-can-claim");
+
+        if (IsGhostRoleAwaitingAcceptance(data))
+            return Loc.GetString("nc-store-contract-ghost-role-waiting-line", ("time", FormatCountdown(data.Runtime.AcceptTimeoutRemainingSeconds)));
+
+        if (IsGhostRoleActive(data))
+            return Loc.GetString("nc-store-contract-ghost-role-active-line");
+
+        return Loc.GetString("nc-store-contract-action-not-done");
+    }
+
+    private static string FormatCountdown(int totalSeconds)
+    {
+        var clamped = Math.Max(0, totalSeconds);
+        var span = TimeSpan.FromSeconds(clamped);
+        return span.TotalHours >= 1
+            ? span.ToString(@"hh\:mm\:ss")
+            : span.ToString(@"mm\:ss");
     }
     // =====================
     // Text helpers
@@ -752,3 +838,7 @@ public sealed class NcContractCard : PanelContainer
     private static Color Brighten(Color c, float f) =>
         new(MathF.Min(c.R * f, 1f), MathF.Min(c.G * f, 1f), MathF.Min(c.B * f, 1f), c.A);
 }
+
+
+
+

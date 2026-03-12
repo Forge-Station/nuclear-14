@@ -1,18 +1,30 @@
-using System;
 using System.Numerics;
+using Content.Server.Ghost.Roles;
+using Content.Server.Ghost.Roles.Components;
 using Content.Server.Pinpointer;
+using Content.Server.Mind.Commands;
+using Content.Server.Tools;
 using Content.Shared._NC.Trade;
+using Content.Shared.Interaction;
+using Content.Shared.Jittering;
+using Content.Shared.Mind.Components;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Tag;
+using Robust.Shared.Audio;
+using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Timing;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
     private const int MaxActiveContractPinpointers = 5;
+    private const float GhostRoleStoreDeliveryRange = 2.5f;
 
     private static readonly Vector2[] HuntGuardSpawnOffsets =
     {
@@ -26,33 +38,43 @@ public sealed partial class NcContractSystem : EntitySystem
         new(-0.75f, -0.75f)
     };
 
-    [Dependency] private readonly PinpointerSystem _pinpointer = default!;
-    [Dependency] private readonly TagSystem _tags = default!;
-    [Dependency] private readonly SharedTransformSystem _xform = default!;
-
-    private readonly Dictionary<(EntityUid Store, string ContractId), ObjectiveRuntimeState> _objectiveRuntimeByContract = new();
-    private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByTarget = new();
-    private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByPinpointer = new();
-    private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByGuard = new();
-    private readonly List<(EntityUid Store, string ContractId)> _objectiveRuntimeKeysScratch = new();
+    [Dependency] private readonly SharedAudioSystem _audio = default!;
+    [Dependency] private readonly SharedJitteringSystem _jitter = default!;
     private readonly List<EntityUid> _objectivePinpointersScratch = new();
 
-    private sealed class ObjectiveRuntimeState
-    {
-        public EntityUid? TargetEntity;
-        public readonly HashSet<EntityUid> PinpointerEntities = new();
-        public readonly List<EntityUid> GuardEntities = new();
-    }
+    private readonly Dictionary<(EntityUid Store, string ContractId), ObjectiveRuntimeState>
+        _objectiveRuntimeByContract = new();
+
+    private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByGuard = new();
+    private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByPinpointer = new();
+    private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByTarget = new();
+    private readonly List<(EntityUid Store, string ContractId)> _objectiveRuntimeKeysScratch = new();
+
+    [Dependency] private readonly PinpointerSystem _pinpointer = default!;
+    [Dependency] private readonly TagSystem _tags = default!;
+    [Dependency] private readonly ToolSystem _tool = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly GhostRoleSystem _ghostRoles = default!;
+    [Dependency] private readonly SharedTransformSystem _xform = default!;
 
     private void InitializeObjectiveRuntime()
     {
         SubscribeLocalEvent<EntityTerminatingEvent>(OnObjectiveTrackedEntityTerminating);
         SubscribeLocalEvent<MobStateChangedEvent>(OnObjectiveTrackedMobStateChanged);
+        SubscribeLocalEvent<NcContractGhostRoleSpawnerComponent, TakeGhostRoleEvent>(OnContractGhostRoleTakeover);
+        SubscribeLocalEvent<NcContractRepairObjectiveComponent, InteractUsingEvent>(OnRepairObjectiveInteractUsing);
+        SubscribeLocalEvent<NcContractRepairObjectiveComponent, ContractRepairDoAfterEvent>(OnRepairObjectiveDoAfter);
     }
 
-    private void ShutdownObjectiveRuntime()
+    private static readonly TimeSpan GhostRoleTimeoutCheckInterval = TimeSpan.FromSeconds(1);
+    private TimeSpan _nextGhostRoleTimeoutCheck = TimeSpan.Zero;
+    private void ShutdownObjectiveRuntime() => ClearAllObjectiveRuntime(false);
+    public override void Update(float frameTime)
     {
-        ClearAllObjectiveRuntime(deleteTrackedEntities: false);
+        if (_objectiveRuntimeByContract.Count == 0 || _timing.CurTime < _nextGhostRoleTimeoutCheck)
+            return;
+        _nextGhostRoleTimeoutCheck = _timing.CurTime + GhostRoleTimeoutCheckInterval;
+        UpdateGhostRoleObjectiveTimeouts();
     }
 
     private void ClearAllObjectiveRuntime(bool deleteTrackedEntities)
@@ -83,10 +105,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
         _objectiveRuntimeKeysScratch.Clear();
         foreach (var key in _objectiveRuntimeByContract.Keys)
-        {
             if (key.Store == store)
                 _objectiveRuntimeKeysScratch.Add(key);
-        }
 
         for (var i = 0; i < _objectiveRuntimeKeysScratch.Count; i++)
         {
@@ -97,9 +117,15 @@ public sealed partial class NcContractSystem : EntitySystem
         _objectiveRuntimeKeysScratch.Clear();
     }
 
-    private bool TryInitializeObjectiveRuntimeOnTake(EntityUid store, EntityUid user, string contractId, ContractServerData contract)
+    // Objective initialization.
+    private bool TryInitializeObjectiveRuntimeOnTake(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        ContractServerData contract
+    )
     {
-        CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true);
+        CleanupObjectiveRuntime(store, contractId, true);
 
         EnsureObjectiveRuntimeDefaults(contract);
 
@@ -107,13 +133,18 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             ContractObjectiveType.Delivery => TryInitializeDeliveryObjectiveRuntime(store, user, contractId, contract),
             ContractObjectiveType.Hunt => TryInitializeHuntObjective(store, user, contractId, contract),
-            ContractObjectiveType.Repair => true,
-            ContractObjectiveType.GhostRole => true,
+            ContractObjectiveType.Repair => TryInitializeRepairObjective(store, user, contractId, contract),
+            ContractObjectiveType.GhostRole => TryInitializeGhostRoleObjective(store, user, contractId, contract),
             _ => true
         };
     }
 
-    private bool TryInitializeDeliveryObjectiveRuntime(EntityUid store, EntityUid user, string contractId, ContractServerData contract)
+    private bool TryInitializeDeliveryObjectiveRuntime(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        ContractServerData contract
+    )
     {
         var runtime = contract.Runtime;
 
@@ -127,38 +158,177 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
-    private bool TryInitializeHuntObjective(EntityUid store, EntityUid user, string contractId, ContractServerData contract)
+    private bool TryInitializeHuntObjective(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        ContractServerData contract
+    )
     {
         var runtime = contract.Runtime;
 
-        var targetProtoId = !string.IsNullOrWhiteSpace(runtime.TargetPrototype)
-            ? runtime.TargetPrototype
-            : contract.TargetItem;
+        var targetProtoId = ResolveTrackedObjectivePrototypeId(runtime.TargetPrototype, contract.TargetItem);
 
         if (!TryInitializeTrackedTargetAndSupport(store, user, contractId, contract, targetProtoId))
             return false;
 
         runtime.TargetPrototype = targetProtoId;
-        runtime.Stage = 0;
-        runtime.Failed = false;
-        runtime.FailureReason = string.Empty;
-
-        contract.Required = Math.Max(1, runtime.StageGoal);
-        contract.Progress = 0;
+        ResetObjectiveState(contract);
 
         return true;
     }
 
+
+    private bool TryInitializeGhostRoleObjective(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        ContractServerData contract
+    )
+    {
+        var runtime = contract.Runtime;
+        var ghostRoleProtoId = ResolveTrackedObjectivePrototypeId(runtime.GhostRolePrototype, contract.TargetItem);
+        if (string.IsNullOrWhiteSpace(ghostRoleProtoId) || !_prototypes.HasIndex<EntityPrototype>(ghostRoleProtoId))
+        {
+            Sawmill.Warning($"[Contracts] Ghost role init failed for '{contractId}': ghost role prototype '{ghostRoleProtoId}' is missing.");
+            return false;
+        }
+
+        runtime.GhostRolePrototype = ghostRoleProtoId;
+        ResetObjectiveState(contract);
+
+        if (!TryResolveObjectiveSpawnCoordinates(store, runtime.SpawnPointTag, out var spawnCoords))
+        {
+            Sawmill.Warning($"[Contracts] Ghost role init failed for '{contractId}': cannot resolve spawn coordinates.");
+            return false;
+        }
+
+        EntityUid spawner;
+        try
+        {
+            spawner = Spawn(null, spawnCoords);
+        }
+        catch (Exception e)
+        {
+            Sawmill.Error($"[Contracts] Ghost role init failed for '{contractId}': runtime spawner creation threw: {e}");
+            return false;
+        }
+
+        var ghostRole = EnsureComp<GhostRoleComponent>(spawner);
+        ghostRole.RoleName = contract.Name;
+        ghostRole.RoleDescription = contract.Description;
+
+        var spawnerComp = EnsureComp<NcContractGhostRoleSpawnerComponent>(spawner);
+        spawnerComp.TargetPrototype = ghostRoleProtoId;
+
+        var key = (store, contractId);
+        var state = GetOrCreateObjectiveRuntimeState(key);
+        state.TargetEntity = spawner;
+        state.GhostRoleTaken = false;
+        state.GhostRoleAcceptDeadline = runtime.AcceptTimeoutSeconds > 0
+            ? _timing.CurTime + TimeSpan.FromSeconds(runtime.AcceptTimeoutSeconds)
+            : null;
+        _objectiveRuntimeByTarget[spawner] = key;
+
+        runtime.GhostRolePendingAcceptance = state.GhostRoleAcceptDeadline != null;
+        runtime.AcceptTimeoutRemainingSeconds = runtime.GhostRolePendingAcceptance
+            ? Math.Max(0, runtime.AcceptTimeoutSeconds)
+            : 0;
+
+        return true;
+    }
+    private void OnContractGhostRoleTakeover(EntityUid uid, NcContractGhostRoleSpawnerComponent comp, ref TakeGhostRoleEvent args)
+    {
+        if (!TryComp(uid, out GhostRoleComponent? ghostRole) || comp.Claimed || ghostRole.Taken || MetaData(uid).EntityPaused)
+        {
+            args.TookRole = false;
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(comp.TargetPrototype) || !_prototypes.HasIndex<EntityPrototype>(comp.TargetPrototype))
+        {
+            Sawmill.Warning($"[Contracts] Ghost role take failed for {ToPrettyString(uid)}: invalid prototype '{comp.TargetPrototype}'.");
+            args.TookRole = false;
+            return;
+        }
+
+        var mob = Spawn(comp.TargetPrototype, Transform(uid).Coordinates);
+        _xform.AttachToGridOrMap(mob);
+
+        if (!TryActivateGhostRoleContractTarget(uid, mob))
+        {
+            QueueDel(mob);
+            args.TookRole = false;
+            return;
+        }
+
+        if (ghostRole.MakeSentient)
+            MakeSentientCommand.MakeSentient(mob, EntityManager, ghostRole.AllowMovement, ghostRole.AllowSpeech);
+
+        EnsureComp<MindContainerComponent>(mob);
+        _ghostRoles.GhostRoleInternalCreateMindAndTransfer(args.Player, uid, mob, ghostRole);
+
+        comp.Claimed = true;
+        _ghostRoles.UnregisterGhostRole((uid, ghostRole));
+        QueueDel(uid);
+
+        args.TookRole = true;
+    }
+
+    private bool TryActivateGhostRoleContractTarget(EntityUid spawner, EntityUid target)
+    {
+        if (!_objectiveRuntimeByTarget.TryGetValue(spawner, out var key))
+            return false;
+
+        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+            return false;
+
+        if (!TryGetObjectiveContract(key, out _, out var contract) ||
+            !contract.Taken ||
+            contract.ObjectiveType != ContractObjectiveType.GhostRole)
+        {
+            return false;
+        }
+
+        _objectiveRuntimeByTarget.Remove(spawner);
+        state.TargetEntity = target;
+        state.GhostRoleTaken = true;
+        state.GhostRoleAcceptDeadline = null;
+        contract.Runtime.GhostRolePendingAcceptance = false;
+        contract.Runtime.AcceptTimeoutRemainingSeconds = 0;
+        _objectiveRuntimeByTarget[target] = key;
+
+        foreach (var pinpointer in state.PinpointerEntities)
+        {
+            if (!TerminatingOrDeleted(pinpointer))
+                _pinpointer.SetTarget(pinpointer, target);
+        }
+
+        if (contract.Runtime.GuardCount <= 0 || string.IsNullOrWhiteSpace(contract.Runtime.GuardPrototype))
+            return true;
+
+        if (!TryComp(target, out TransformComponent? targetXform))
+            return true;
+
+        if (TrySpawnObjectiveGuards(key, state, contract.Runtime, targetXform.Coordinates))
+            return true;
+
+        Sawmill.Warning($"[Contracts] Ghost role guard wave failed for '{key.ContractId}'.");
+        return true;
+    }
     private bool TryInitializeTrackedTargetAndSupport(
         EntityUid store,
         EntityUid user,
         string contractId,
         ContractServerData contract,
-        string targetProtoId)
+        string targetProtoId,
+        bool spawnGuards = true
+    )
     {
         if (string.IsNullOrWhiteSpace(targetProtoId) || !_prototypes.HasIndex<EntityPrototype>(targetProtoId))
         {
-            Sawmill.Warning($"[Contracts] Objective init failed for '{contractId}': target prototype '{targetProtoId}' is missing.");
+            Sawmill.Warning(
+                $"[Contracts] Objective init failed for '{contractId}': target prototype '{targetProtoId}' is missing.");
             return false;
         }
 
@@ -171,7 +341,7 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid target;
         try
         {
-            target = EntityManager.SpawnEntity(targetProtoId, spawnCoords);
+            target = Spawn(targetProtoId, spawnCoords);
         }
         catch (Exception e)
         {
@@ -184,9 +354,9 @@ public sealed partial class NcContractSystem : EntitySystem
         state.TargetEntity = target;
         _objectiveRuntimeByTarget[target] = key;
 
-        if (!TrySpawnObjectiveGuards(key, state, contract.Runtime, spawnCoords))
+        if (spawnGuards && !TrySpawnObjectiveGuards(key, state, contract.Runtime, spawnCoords))
         {
-            CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true);
+            CleanupObjectiveRuntime(store, contractId, true);
             return false;
         }
 
@@ -195,13 +365,14 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (!TrySpawnObjectivePinpointer(user, target, key, state, contract.Runtime, spawnCoords))
         {
-            CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true);
+            CleanupObjectiveRuntime(store, contractId, true);
             return false;
         }
 
         return true;
     }
 
+    // World spawning and pinpointer management.
     public bool TryIssueContractPinpointer(EntityUid store, EntityUid user, string contractId)
     {
         if (!TryComp(store, out NcStoreComponent? comp))
@@ -222,6 +393,9 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
             return false;
 
+        if (contract.ObjectiveType == ContractObjectiveType.GhostRole && !state.GhostRoleTaken)
+            return false;
+
         if (state.TargetEntity is not { } target || target == EntityUid.Invalid || TerminatingOrDeleted(target))
             return false;
 
@@ -235,28 +409,30 @@ public sealed partial class NcContractSystem : EntitySystem
 
         return TrySpawnObjectivePinpointer(user, target, key, state, contract.Runtime, spawnCoords);
     }
+
     private bool TrySpawnObjectivePinpointer(
         EntityUid user,
         EntityUid target,
         (EntityUid Store, string ContractId) key,
         ObjectiveRuntimeState state,
         ContractRuntimeContextData runtime,
-        EntityCoordinates spawnCoords)
+        EntityCoordinates spawnCoords
+    )
     {
         if (!CanIssueContractPinpointer(key, state))
         {
-            Sawmill.Info($"[Contracts] Objective init blocked for '{key.ContractId}': contract pinpointer limit reached ({MaxActiveContractPinpointers}).");
+            Sawmill.Info(
+                $"[Contracts] Objective init blocked for '{key.ContractId}': contract pinpointer limit reached ({MaxActiveContractPinpointers}).");
             return false;
         }
 
-        var pinpointerProtoId = !string.IsNullOrWhiteSpace(runtime.PinpointerPrototype)
-            ? runtime.PinpointerPrototype
-            : "PinpointerUniversal";
+        var pinpointerProtoId = ResolvePinpointerPrototypeId(runtime.PinpointerPrototype);
 
         if (!_prototypes.HasIndex<EntityPrototype>(pinpointerProtoId))
         {
-            Sawmill.Warning($"[Contracts] Objective init: pinpointer proto '{pinpointerProtoId}' not found, fallback to PinpointerUniversal.");
-            pinpointerProtoId = "PinpointerUniversal";
+            Sawmill.Warning(
+                $"[Contracts] Objective init: pinpointer proto '{pinpointerProtoId}' not found, fallback to {DefaultContractPinpointerPrototypeId}.");
+            pinpointerProtoId = DefaultContractPinpointerPrototypeId;
 
             if (!_prototypes.HasIndex<EntityPrototype>(pinpointerProtoId))
                 return false;
@@ -271,11 +447,12 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid pinpointer;
         try
         {
-            pinpointer = EntityManager.SpawnEntity(pinpointerProtoId, pinpointerCoords);
+            pinpointer = Spawn(pinpointerProtoId, pinpointerCoords);
         }
         catch (Exception e)
         {
-            Sawmill.Error($"[Contracts] Objective init failed for '{key.ContractId}': cannot spawn pinpointer '{pinpointerProtoId}': {e}");
+            Sawmill.Error(
+                $"[Contracts] Objective init failed for '{key.ContractId}': cannot spawn pinpointer '{pinpointerProtoId}': {e}");
             return false;
         }
 
@@ -292,7 +469,8 @@ public sealed partial class NcContractSystem : EntitySystem
         (EntityUid Store, string ContractId) key,
         ObjectiveRuntimeState state,
         ContractRuntimeContextData runtime,
-        EntityCoordinates spawnCoords)
+        EntityCoordinates spawnCoords
+    )
     {
         var guardCount = Math.Max(0, runtime.GuardCount);
         if (guardCount <= 0 || string.IsNullOrWhiteSpace(runtime.GuardPrototype))
@@ -301,7 +479,8 @@ public sealed partial class NcContractSystem : EntitySystem
         var guardPrototype = runtime.GuardPrototype;
         if (!_prototypes.HasIndex<EntityPrototype>(guardPrototype))
         {
-            Sawmill.Warning($"[Contracts] Objective init failed for '{key.ContractId}': guard prototype '{guardPrototype}' is missing.");
+            Sawmill.Warning(
+                $"[Contracts] Objective init failed for '{key.ContractId}': guard prototype '{guardPrototype}' is missing.");
             return false;
         }
 
@@ -316,11 +495,12 @@ public sealed partial class NcContractSystem : EntitySystem
             EntityUid guard;
             try
             {
-                guard = EntityManager.SpawnEntity(guardPrototype, guardCoords);
+                guard = Spawn(guardPrototype, guardCoords);
             }
             catch (Exception e)
             {
-                Sawmill.Error($"[Contracts] Objective init failed for '{key.ContractId}': cannot spawn guard '{guardPrototype}': {e}");
+                Sawmill.Error(
+                    $"[Contracts] Objective init failed for '{key.ContractId}': cannot spawn guard '{guardPrototype}': {e}");
                 return false;
             }
 
@@ -331,7 +511,11 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
-    private bool TryResolveObjectiveSpawnCoordinates(EntityUid store, string? spawnTag, out EntityCoordinates coordinates)
+    private bool TryResolveObjectiveSpawnCoordinates(
+        EntityUid store,
+        string? spawnTag,
+        out EntityCoordinates coordinates
+    )
     {
         if (TryComp(store, out TransformComponent? storeXform))
             coordinates = storeXform.Coordinates;
@@ -356,7 +540,7 @@ public sealed partial class NcContractSystem : EntitySystem
         var found = false;
 
         var query = EntityQueryEnumerator<TagComponent, TransformComponent>();
-        while (query.MoveNext(out var _, out var tagComp, out var xform))
+        while (query.MoveNext(out _, out var tagComp, out var xform))
         {
             if (xform.MapID != storeMap)
                 continue;
@@ -377,7 +561,8 @@ public sealed partial class NcContractSystem : EntitySystem
         if (found)
             return true;
 
-        Sawmill.Warning($"[Contracts] Spawn tag '{spawnTag}' not found on map for {ToPrettyString(store)}. Fallback to store coordinates.");
+        Sawmill.Warning(
+            $"[Contracts] Spawn tag '{spawnTag}' not found on map for {ToPrettyString(store)}. Fallback to store coordinates.");
         return coordinates != EntityCoordinates.Invalid;
     }
 
@@ -394,10 +579,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
         _objectivePinpointersScratch.Clear();
         foreach (var pinpointer in state.PinpointerEntities)
-        {
             if (TerminatingOrDeleted(pinpointer))
                 _objectivePinpointersScratch.Add(pinpointer);
-        }
 
         for (var i = 0; i < _objectivePinpointersScratch.Count; i++)
             UnregisterIssuedPinpointer(_objectivePinpointersScratch[i], key);
@@ -410,9 +593,29 @@ public sealed partial class NcContractSystem : EntitySystem
         if (_objectiveRuntimeByContract.TryGetValue(key, out var state))
             return state;
 
-        state = new ObjectiveRuntimeState();
+        state = new();
         _objectiveRuntimeByContract[key] = state;
         return state;
+    }
+
+    private bool TryGetObjectiveContract(
+        (EntityUid Store, string ContractId) key,
+        out NcStoreComponent comp,
+        out ContractServerData contract
+    )
+    {
+        comp = default!;
+        contract = default!;
+
+        if (!TryComp(key.Store, out NcStoreComponent? storeComp) || storeComp == null)
+            return false;
+
+        if (!storeComp.Contracts.TryGetValue(key.ContractId, out var foundContract) || foundContract == null)
+            return false;
+
+        comp = storeComp;
+        contract = foundContract;
+        return true;
     }
 
     private void UnregisterIssuedPinpointer(EntityUid pinpointer, (EntityUid Store, string ContractId) key)
@@ -423,7 +626,11 @@ public sealed partial class NcContractSystem : EntitySystem
             state.PinpointerEntities.Remove(pinpointer);
     }
 
-    private void CleanupObjectivePinpointers((EntityUid Store, string ContractId) key, ObjectiveRuntimeState state, bool deleteTrackedEntities)
+    private void CleanupObjectivePinpointers(
+        (EntityUid Store, string ContractId) key,
+        ObjectiveRuntimeState state,
+        bool deleteTrackedEntities
+    )
     {
         if (state.PinpointerEntities.Count == 0)
             return;
@@ -437,7 +644,7 @@ public sealed partial class NcContractSystem : EntitySystem
             UnregisterIssuedPinpointer(pinpointer, key);
 
             if (deleteTrackedEntities && !TerminatingOrDeleted(pinpointer))
-                EntityManager.DeleteEntity(pinpointer);
+                Del(pinpointer);
         }
 
         state.PinpointerEntities.Clear();
@@ -454,17 +661,238 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (_objectiveRuntimeByGuard.Remove(args.Entity, out var guardKey) &&
             _objectiveRuntimeByContract.TryGetValue(guardKey, out var guardState))
-        {
             guardState.GuardEntities.Remove(args.Entity);
-        }
     }
 
+
+    // Repair objective runtime.
+    private bool TryInitializeRepairObjective(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        ContractServerData contract
+    )
+    {
+        var runtime = contract.Runtime;
+
+        var structureProtoId = ResolveTrackedObjectivePrototypeId(runtime.StructurePrototype, contract.TargetItem);
+
+        if (string.IsNullOrWhiteSpace(structureProtoId))
+        {
+            Sawmill.Warning($"[Contracts] Repair init failed for '{contractId}': structure prototype is missing.");
+            return false;
+        }
+
+        runtime.StructurePrototype = structureProtoId;
+        ResetObjectiveState(contract);
+
+        if (!TryInitializeTrackedTargetAndSupport(store, user, contractId, contract, structureProtoId, false))
+            return false;
+
+        var key = (store, contractId);
+        if (_objectiveRuntimeByContract.TryGetValue(key, out var state) && state.TargetEntity is { } structure)
+        {
+            var repair = EnsureComp<NcContractRepairObjectiveComponent>(structure);
+            repair.ToolQuality = runtime.RepairToolQuality;
+            repair.DoAfterSeconds = runtime.RepairDoAfterSeconds;
+        }
+
+        return true;
+    }
+
+    private void OnRepairObjectiveInteractUsing(
+        EntityUid uid,
+        NcContractRepairObjectiveComponent comp,
+        InteractUsingEvent args
+    )
+    {
+        if (args.Handled)
+            return;
+
+        if (!TryGetRepairRuntimeState(uid, out _, out var runtimeState))
+            return;
+
+        if (runtimeState.RepairInProgress)
+        {
+            args.Handled = true;
+            return;
+        }
+
+        if (!TryGetActiveRepairContract(uid, out _, out _, out var contract))
+            return;
+
+        var quality = ResolveRepairToolQuality(
+            string.IsNullOrWhiteSpace(comp.ToolQuality) ? contract.Runtime.RepairToolQuality : comp.ToolQuality);
+
+        var delay = ResolveRepairDoAfterSeconds(
+            comp.DoAfterSeconds > 0f ? comp.DoAfterSeconds : contract.Runtime.RepairDoAfterSeconds);
+
+        runtimeState.RepairInProgress = true;
+
+        var started = _tool.UseTool(args.Used, args.User, uid, delay, quality, new ContractRepairDoAfterEvent());
+        if (!started)
+            runtimeState.RepairInProgress = false;
+
+        args.Handled = started;
+    }
+
+    private void OnRepairObjectiveDoAfter(
+        EntityUid uid,
+        NcContractRepairObjectiveComponent comp,
+        ContractRepairDoAfterEvent args
+    )
+    {
+        if (!TryGetRepairRuntimeState(uid, out _, out var runtimeState))
+            return;
+
+        runtimeState.RepairInProgress = false;
+
+        if (args.Cancelled)
+            return;
+
+        if (!TryGetActiveRepairContract(uid, out var key, out var state, out var contract))
+            return;
+
+        var runtime = contract.Runtime;
+        var stageGoal = Math.Max(1, runtime.StageGoal);
+        if (runtime.Stage >= stageGoal)
+            return;
+
+        runtime.Stage = Math.Clamp(runtime.Stage + 1, 0, stageGoal);
+        SyncObjectiveProgressFromRuntime(contract);
+
+        PlayRepairObjectiveStageEffects(uid, runtime);
+
+        if (runtime.GuardCount <= 0 || string.IsNullOrWhiteSpace(runtime.GuardPrototype))
+            return;
+
+        if (TryComp(uid, out TransformComponent? structureXform) &&
+            !TrySpawnObjectiveGuards(key, state, runtime, structureXform.Coordinates))
+            Sawmill.Warning($"[Contracts] Repair stage wave failed for '{key.ContractId}'.");
+    }
+
+    private bool TryGetRepairRuntimeState(
+        EntityUid uid,
+        out (EntityUid Store, string ContractId) key,
+        out ObjectiveRuntimeState state
+    )
+    {
+        key = default;
+        state = default!;
+
+        if (!_objectiveRuntimeByTarget.TryGetValue(uid, out key))
+            return false;
+
+        if (!_objectiveRuntimeByContract.TryGetValue(key, out var foundState) ||
+            foundState == null ||
+            foundState.TargetEntity != uid)
+        {
+            return false;
+        }
+
+        state = foundState;
+        return true;
+    }
+
+    private bool TryGetActiveRepairContract(
+        EntityUid uid,
+        out (EntityUid Store, string ContractId) key,
+        out ObjectiveRuntimeState state,
+        out ContractServerData contract
+    )
+    {
+        key = default;
+        state = default!;
+        contract = default!;
+
+        if (!TryGetRepairRuntimeState(uid, out key, out state))
+            return false;
+
+        if (!TryGetObjectiveContract(key, out _, out contract))
+            return false;
+
+        if (!contract.Taken || contract.ObjectiveType != ContractObjectiveType.Repair || contract.Completed)
+            return false;
+
+        EnsureObjectiveRuntimeDefaults(contract);
+        return !contract.Runtime.Failed;
+    }
+
+    private void PlayRepairObjectiveStageEffects(EntityUid structure, ContractRuntimeContextData runtime)
+    {
+        var sound = ResolveRepairStageSound(runtime.RepairStageSound);
+
+        _audio.PlayPvs(
+            sound,
+            structure,
+            AudioParams.Default.WithVariation(0.125f).WithVolume(-1f));
+
+        var hadJitter = HasComp<JitteringComponent>(structure);
+        _jitter.AddJitter(structure, 12f, 7f);
+        if (hadJitter)
+            return;
+
+        Timer.Spawn(
+            TimeSpan.FromSeconds(1.2),
+            () =>
+            {
+                if (TerminatingOrDeleted(structure))
+                    return;
+
+                RemComp<JitteringComponent>(structure);
+            });
+    }
+
+    // Ghost role objective runtime.
+    private void UpdateGhostRoleObjectiveTimeouts()
+    {
+        if (_objectiveRuntimeByContract.Count == 0)
+            return;
+        _objectiveRuntimeKeysScratch.Clear();
+        foreach (var (key, state) in _objectiveRuntimeByContract)
+        {
+            if (state.GhostRoleTaken || state.GhostRoleAcceptDeadline is not { } deadline)
+                continue;
+            if (_timing.CurTime >= deadline)
+                _objectiveRuntimeKeysScratch.Add(key);
+        }
+        for (var i = 0; i < _objectiveRuntimeKeysScratch.Count; i++)
+            FailExpiredGhostRoleObjective(_objectiveRuntimeKeysScratch[i]);
+        _objectiveRuntimeKeysScratch.Clear();
+    }
+    private void FailExpiredGhostRoleObjective((EntityUid Store, string ContractId) key)
+    {
+        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state) ||
+            state.GhostRoleTaken ||
+            state.GhostRoleAcceptDeadline is not { } deadline ||
+            _timing.CurTime < deadline)
+        {
+            return;
+        }
+        if (!TryGetObjectiveContract(key, out var comp, out var contract))
+        {
+            CleanupObjectiveRuntime(key.Store, key.ContractId, true);
+            return;
+        }
+        if (!contract.Taken || contract.ObjectiveType != ContractObjectiveType.GhostRole || contract.Completed)
+            return;
+        contract.Runtime.Failed = true;
+        contract.Runtime.GhostRolePendingAcceptance = false;
+        contract.Runtime.AcceptTimeoutRemainingSeconds = 0;
+        contract.Runtime.FailureReason = Loc.GetString("nc-store-contract-ghost-role-timeout");
+        CleanupObjectivePinpointers(key, state, true);
+        FailObjectiveContract(key, comp, deleteGuards: false);
+    }
+    // Target resolution and progress synchronization.
     private void OnObjectiveTrackedMobStateChanged(MobStateChangedEvent args)
     {
         if (args.NewMobState != MobState.Dead || args.OldMobState == MobState.Dead)
             return;
 
         if (!_objectiveRuntimeByTarget.TryGetValue(args.Target, out var key))
+            return;
+
+        if (!TryGetObjectiveContract(key, out _, out var contract) || contract.ObjectiveType != ContractObjectiveType.Hunt)
             return;
 
         OnObjectiveTrackedTargetResolved(key, args.Target);
@@ -477,61 +905,133 @@ public sealed partial class NcContractSystem : EntitySystem
         if (_objectiveRuntimeByContract.TryGetValue(key, out var state) && state.TargetEntity == target)
             state.TargetEntity = null;
 
-        if (!TryComp(key.Store, out NcStoreComponent? comp))
+        if (!TryGetObjectiveContract(key, out var comp, out var contract))
             return;
 
-        if (!comp.Contracts.TryGetValue(key.ContractId, out var contract))
-            return;
-
-        if (!contract.Taken || contract.ObjectiveType != ContractObjectiveType.Hunt)
+        if (!contract.Taken)
             return;
 
         EnsureObjectiveRuntimeDefaults(contract);
-
-        var runtime = contract.Runtime;
-        if (runtime.Failed)
+        if (contract.Runtime.Failed)
             return;
 
-        var stageGoal = Math.Max(1, runtime.StageGoal);
-        runtime.Stage = stageGoal;
+        switch (contract.ObjectiveType)
+        {
+            case ContractObjectiveType.Repair:
+                HandleRepairObjectiveTargetResolved(key, comp, contract);
+                return;
 
-        contract.Required = stageGoal;
-        contract.Progress = stageGoal;
+            case ContractObjectiveType.Hunt:
+                HandleHuntObjectiveTargetResolved(key, contract);
+                return;
 
-        if (_objectiveRuntimeByContract.TryGetValue(key, out var huntState))
-            CleanupObjectivePinpointers(key, huntState, deleteTrackedEntities: true);
+            case ContractObjectiveType.GhostRole:
+                HandleGhostRoleTargetResolved(key, comp, contract);
+                return;
+
+            default:
+                return;
+        }
     }
 
+    private void HandleRepairObjectiveTargetResolved(
+        (EntityUid Store, string ContractId) key,
+        NcStoreComponent comp,
+        ContractServerData contract
+    )
+    {
+        if (contract.Completed)
+        {
+            if (_objectiveRuntimeByContract.TryGetValue(key, out var completedRepairState))
+                CleanupObjectivePinpointers(key, completedRepairState, true);
+            return;
+        }
+
+        contract.Runtime.Failed = true;
+        contract.Runtime.FailureReason = Loc.GetString("nc-store-contract-repair-structure-lost");
+
+        if (_objectiveRuntimeByContract.TryGetValue(key, out var failedRepairState))
+            CleanupObjectivePinpointers(key, failedRepairState, true);
+
+        FailObjectiveContract(key, comp, deleteGuards: false);
+    }
+
+    private void HandleHuntObjectiveTargetResolved((EntityUid Store, string ContractId) key, ContractServerData contract)
+    {
+        MarkObjectiveComplete(contract);
+        if (_objectiveRuntimeByContract.TryGetValue(key, out var huntState))
+            CleanupObjectivePinpointers(key, huntState, true);
+    }
+    private void HandleGhostRoleTargetResolved(
+        (EntityUid Store, string ContractId) key,
+        NcStoreComponent comp,
+        ContractServerData contract
+    )
+    {
+        contract.Runtime.Failed = true;
+        contract.Runtime.FailureReason = Loc.GetString("nc-store-contract-ghost-role-target-lost");
+
+        if (_objectiveRuntimeByContract.TryGetValue(key, out var failedGhostRoleState))
+            CleanupObjectivePinpointers(key, failedGhostRoleState, true);
+
+        FailObjectiveContract(key, comp, deleteGuards: false);
+    }
+    // Shared objective state helpers.
     private static void EnsureObjectiveRuntimeDefaults(ContractServerData contract)
     {
-        contract.Runtime ??= new ContractRuntimeContextData();
         var runtime = contract.Runtime;
-
-        if (runtime.StageGoal <= 0)
-            runtime.StageGoal = contract.ObjectiveType == ContractObjectiveType.Repair ? 3 : 1;
-
-        runtime.AcceptTimeoutSeconds = Math.Max(0, runtime.AcceptTimeoutSeconds);
-        runtime.GuardCount = Math.Max(0, runtime.GuardCount);
-        runtime.Stage = Math.Clamp(runtime.Stage, 0, runtime.StageGoal);
-
-        contract.Required = Math.Max(1, runtime.StageGoal);
-        contract.Progress = Math.Clamp(runtime.Stage, 0, contract.Required);
+        NormalizeRuntimeContext(contract.ObjectiveType, runtime);
 
         if (contract.ObjectiveType == ContractObjectiveType.Delivery)
             return;
 
+        SyncObjectiveProgressFromRuntime(contract);
+
         if (!string.IsNullOrWhiteSpace(contract.TargetItem))
             return;
 
-        if (!string.IsNullOrWhiteSpace(runtime.TargetPrototype))
-            contract.TargetItem = runtime.TargetPrototype;
-        else if (!string.IsNullOrWhiteSpace(runtime.StructurePrototype))
-            contract.TargetItem = runtime.StructurePrototype;
-        else if (!string.IsNullOrWhiteSpace(runtime.GhostRolePrototype))
-            contract.TargetItem = runtime.GhostRolePrototype;
+        contract.TargetItem = ResolveObjectiveTargetId(runtime);
     }
 
-    private void CleanupObjectiveRuntime(EntityUid store, string contractId, bool deleteTrackedEntities, bool deleteGuards = true)
+    private static void ResetObjectiveState(ContractServerData contract)
+    {
+        var runtime = contract.Runtime;
+        runtime.Stage = 0;
+        runtime.Failed = false;
+        runtime.FailureReason = string.Empty;
+        runtime.GhostRolePendingAcceptance = false;
+        runtime.AcceptTimeoutRemainingSeconds = 0;
+
+        contract.Required = Math.Max(1, runtime.StageGoal);
+        contract.Progress = 0;
+    }
+
+    private static void SyncObjectiveProgressFromRuntime(ContractServerData contract)
+    {
+        var stageGoal = Math.Max(1, contract.Runtime.StageGoal);
+        contract.Required = stageGoal;
+        contract.Progress = Math.Clamp(contract.Runtime.Stage, 0, stageGoal);
+    }
+
+    private static void MarkObjectiveComplete(ContractServerData contract)
+    {
+        contract.Runtime.Stage = Math.Max(1, contract.Runtime.StageGoal);
+        SyncObjectiveProgressFromRuntime(contract);
+    }
+
+    private void FailObjectiveContract((EntityUid Store, string ContractId) key, NcStoreComponent comp, bool deleteGuards)
+    {
+        CleanupObjectiveRuntime(key.Store, key.ContractId, deleteTrackedEntities: true, deleteGuards: deleteGuards);
+        comp.Contracts.Remove(key.ContractId);
+        RefillContractsForStore(key.Store, comp, key.ContractId);
+    }
+
+    private void CleanupObjectiveRuntime(
+        EntityUid store,
+        string contractId,
+        bool deleteTrackedEntities,
+        bool deleteGuards = true
+    )
     {
         var key = (store, contractId);
 
@@ -541,10 +1041,11 @@ public sealed partial class NcContractSystem : EntitySystem
         if (state.TargetEntity is { } target)
         {
             _objectiveRuntimeByTarget.Remove(target);
+            RemComp<NcContractRepairObjectiveComponent>(target);
             state.TargetEntity = null;
 
             if (deleteTrackedEntities && !TerminatingOrDeleted(target))
-                EntityManager.DeleteEntity(target);
+                Del(target);
         }
 
         CleanupObjectivePinpointers(key, state, deleteTrackedEntities);
@@ -557,7 +1058,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 _objectiveRuntimeByGuard.Remove(guard);
 
                 if (deleteTrackedEntities && deleteGuards && !TerminatingOrDeleted(guard))
-                    EntityManager.DeleteEntity(guard);
+                    Del(guard);
             }
 
             state.GuardEntities.Clear();
@@ -608,28 +1109,101 @@ public sealed partial class NcContractSystem : EntitySystem
             OnObjectiveTrackedTargetResolved(key, target);
     }
 
+
+    public bool HasRealtimeGhostRoleState(NcStoreComponent comp)
+    {
+        foreach (var contract in comp.Contracts.Values)
+        {
+            if (!contract.Taken || contract.ObjectiveType != ContractObjectiveType.GhostRole)
+                continue;
+
+            EnsureObjectiveRuntimeDefaults(contract);
+            if (!contract.Runtime.Failed)
+                return true;
+        }
+
+        return false;
+    }
+    private bool IsGhostRoleTargetAtStore(EntityUid store, EntityUid target)
+    {
+        if (!TryComp(store, out TransformComponent? storeXform) || !TryComp(target, out TransformComponent? targetXform))
+            return false;
+
+        if (storeXform.MapID != targetXform.MapID)
+            return false;
+
+        var storePos = _xform.GetWorldPosition(storeXform);
+        var targetPos = _xform.GetWorldPosition(targetXform);
+        return (targetPos - storePos).LengthSquared() <= GhostRoleStoreDeliveryRange * GhostRoleStoreDeliveryRange;
+    }
+
+    private void SyncGhostRoleObjectiveProgress(EntityUid store, string contractId, ContractServerData contract)
+    {
+        var key = (store, contractId);
+        var runtime = contract.Runtime;
+
+        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+        {
+            runtime.GhostRolePendingAcceptance = false;
+            runtime.AcceptTimeoutRemainingSeconds = 0;
+            return;
+        }
+
+        if (!state.GhostRoleTaken && state.GhostRoleAcceptDeadline is { } deadline)
+        {
+            runtime.GhostRolePendingAcceptance = true;
+            runtime.AcceptTimeoutRemainingSeconds = Math.Max(0, (int) Math.Ceiling((deadline - _timing.CurTime).TotalSeconds));
+            runtime.Stage = 0;
+            return;
+        }
+
+        runtime.GhostRolePendingAcceptance = false;
+        runtime.AcceptTimeoutRemainingSeconds = 0;
+
+        if (state.TargetEntity is not { } target || target == EntityUid.Invalid)
+            return;
+
+        if (TerminatingOrDeleted(target))
+        {
+            OnObjectiveTrackedTargetResolved(key, target);
+            return;
+        }
+
+        var isDead = TryComp(target, out MobStateComponent? mobState) && mobState.CurrentState == MobState.Dead;
+        contract.Runtime.Stage = state.GhostRoleTaken && isDead && IsGhostRoleTargetAtStore(store, target)
+            ? Math.Max(1, contract.Runtime.StageGoal)
+            : 0;
+    }
     private void UpdateObjectiveContractProgress(EntityUid store, string contractId, ContractServerData contract)
     {
         EnsureObjectiveRuntimeDefaults(contract);
 
         if (contract.ObjectiveType == ContractObjectiveType.Hunt)
             SyncHuntObjectiveProgress(store, contractId, contract);
+        else if (contract.ObjectiveType == ContractObjectiveType.GhostRole)
+            SyncGhostRoleObjectiveProgress(store, contractId, contract);
 
-        var runtime = contract.Runtime;
-        var stageGoal = Math.Max(1, runtime.StageGoal);
-        var stage = Math.Clamp(runtime.Stage, 0, stageGoal);
+        SyncObjectiveProgressFromRuntime(contract);
 
-        contract.Required = stageGoal;
-        contract.Progress = stage;
+        ResetContractTargetProgress(contract);
+    }
 
-        if (contract.Targets.Count > 0)
-        {
-            for (var i = 0; i < contract.Targets.Count; i++)
-            {
-                var t = contract.Targets[i];
-                t.Progress = 0;
-                contract.Targets[i] = t;
-            }
-        }
+    private sealed class ObjectiveRuntimeState
+    {
+        public readonly List<EntityUid> GuardEntities = new();
+        public readonly HashSet<EntityUid> PinpointerEntities = new();
+        public TimeSpan? GhostRoleAcceptDeadline;
+        public bool GhostRoleTaken;
+        public bool RepairInProgress;
+        public EntityUid? TargetEntity;
     }
 }
+
+
+
+
+
+
+
+
+
