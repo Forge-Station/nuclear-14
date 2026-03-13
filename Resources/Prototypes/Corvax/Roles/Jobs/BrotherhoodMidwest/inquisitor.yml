@@ -14,10 +14,10 @@
       - Ghoul
     - !type:CharacterDepartmentTimeRequirement
       department: BrotherhoodMidwest
-      min: 216000 # 60 hours
+      min: 108000 # 30 hours
     - !type:CharacterPlaytimeRequirement 
       tracker: BoSMidPaladinCommander
-      min: 216000 # 60 hours
+      min: 64800 # 18 hours
   startingGear: BoSMidInquisitorGear
   alwaysUseSpawner: true
   icon: "JobIconBosMPaladin"

@@ -111,6 +111,26 @@
     - Vault
 
 - type: loadout
+  id: N14LoadoutUniformValkyrieRaider
+  category: Uniform
+  cost: 2
+  exclusive: true
+  sponsorLevel: 2
+  items:
+  - N14ClothingUniformValkyrieRaider
+  requirements:
+  - !type:CharacterItemGroupRequirement
+    group: N14LoadoutUniform
+  - !type:CharacterDepartmentRequirement
+    inverted: true
+    departments:
+    - Vault
+    - NCR
+    - BrotherhoodMidwest
+    - CaesarLegion
+    - BrotherhoodWest
+
+- type: loadout
   id: LoadoutN14ClothingOuterLegionPaladinKiller
   customName: false
   customDescription: false

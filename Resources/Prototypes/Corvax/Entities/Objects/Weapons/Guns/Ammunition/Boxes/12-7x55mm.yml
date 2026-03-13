@@ -1,20 +1,20 @@
 - type: entity
   abstract: true
   parent: BaseItem
-  id: BaseMagazineBox68Rifle
+  id: BaseMagazineBox12-7x55mm
   components:
   - type: BallisticAmmoProvider
     mayTransfer: true
     whitelist:
       tags:
-        - N14Cartridge68Rifle
-    proto: N14Cartridge68Rifle
-    capacity: 60
+        - N14Cartridge12-7x55mm
+    proto: N14Cartridge12-7x55mm
+    capacity: 30
   - type: ContainerContainer
     containers:
       ballistic-ammo: !type:Container
   - type: Sprite
-    sprite: Corvax/Objects/Weapons/Guns/Ammunition/Boxes/6-8box.rsi
+    sprite: Corvax/Objects/Weapons/Guns/Ammunition/Boxes/12-7-55mmbox.rsi
     netsync: false
   - type: MagazineVisuals
     magState: mag
@@ -23,12 +23,12 @@
   - type: Appearance
 
 - type: entity
-  parent: BaseMagazineBox68Rifle
-  id: MagazineBox68
-  name: ammunition box (6.8mm)
+  parent: BaseMagazineBox12-7x55mm
+  id: MagazineBox12-7x55mm
+  name: ammunition box (12.7x55mm)
   components:
   - type: BallisticAmmoProvider
-    proto: N14Cartridge68Rifle
+    proto: N14Cartridge12-7x55mm
   - type: Sprite
     layers:
     - state: base
