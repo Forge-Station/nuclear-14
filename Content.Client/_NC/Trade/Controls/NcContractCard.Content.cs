@@ -19,7 +19,8 @@ public sealed partial class NcContractCard
         {
             Orientation = BoxContainer.LayoutOrientation.Horizontal,
             Margin = new(0, 0, 0, 2),
-            MouseFilter = MouseFilterMode.Stop
+            MouseFilter = MouseFilterMode.Stop,
+            HorizontalExpand = true
         };
 
         var tooltip = BuildProtoTooltip(targetProto);
@@ -45,7 +46,9 @@ public sealed partial class NcContractCard
             new Label
             {
                 Text = Loc.GetString("nc-store-contract-goal-line", ("item", targetName), ("count", required)),
-                MouseFilter = MouseFilterMode.Ignore
+                MouseFilter = MouseFilterMode.Ignore,
+                HorizontalExpand = true,
+                ClipText = true
             });
 
         return targetRow;
@@ -138,7 +141,8 @@ public sealed partial class NcContractCard
         {
             Orientation = BoxContainer.LayoutOrientation.Horizontal,
             Margin = new(0, 0, 0, 2),
-            MouseFilter = MouseFilterMode.Stop
+            MouseFilter = MouseFilterMode.Stop,
+            HorizontalExpand = true
         };
 
         var tooltip = BuildProtoTooltip(proto);
@@ -161,7 +165,9 @@ public sealed partial class NcContractCard
             new Label
             {
                 Text = Loc.GetString("nc-store-contract-reward-item-line", ("item", name), ("count", count)),
-                MouseFilter = MouseFilterMode.Ignore
+                MouseFilter = MouseFilterMode.Ignore,
+                HorizontalExpand = true,
+                ClipText = true
             });
 
         return line;

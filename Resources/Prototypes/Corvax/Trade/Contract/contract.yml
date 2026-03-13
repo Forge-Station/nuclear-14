@@ -315,6 +315,8 @@
   name: "Гули"
   description: "Нужны мертвые тела гулей для экспрементов."
   difficulty: Medium
+  runtime:
+    allowStoreWorldTurnIn: true
   targets:
   - id: N14MobGhoulFeral
     required: { min: 2, max: 3 }
@@ -333,6 +335,8 @@
   name: "Рейдерды"
   description: "Надоели уже, мелкие и мерзкие. Убей пару штук и притащи трупы."
   difficulty: Medium
+  runtime:
+    allowStoreWorldTurnIn: true
   targets:
   - id: N14MobRaiderPsycho
     required: { min: 2, max: 5 }
@@ -441,6 +445,8 @@
   name: "Коготь смерти!"
   description: "Найди и убей тварь. Принеси ко мне."
   difficulty: Hard
+  runtime:
+    allowStoreWorldTurnIn: true
   targets:
   - id: N14MobDeathclaw
     required: 1
@@ -459,6 +465,8 @@
   name: "Босс Рейдеров"
   description: "Он всех достал. Он слишком много ходит по земле. Убей его."
   difficulty: Hard
+  runtime:
+    allowStoreWorldTurnIn: true
   targets:
   - id: N14MobEnforcerWarden
     required: 1
@@ -477,6 +485,8 @@
   name: "Казадор"
   description: "Принеси  трупы казадоров."
   difficulty: Hard
+  runtime:
+    allowStoreWorldTurnIn: true
   targets:
   - id: N14MobCazador
     required: 3
@@ -513,6 +523,8 @@
   name: "Коготь смерти"
   description: "Я слыхал живет один с броне. Очень стар и опасен."
   difficulty: Hard
+  runtime:
+    allowStoreWorldTurnIn: true
   targets:
   - id: N14MobDeathclawMetal
     required: 1

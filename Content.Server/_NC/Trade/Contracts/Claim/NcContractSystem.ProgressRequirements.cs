@@ -8,11 +8,13 @@ public sealed partial class NcContractSystem : EntitySystem
         NcStoreComponent comp,
         out bool hasTakenContracts,
         out bool needsUserItems,
-        out bool needsCrateItems)
+        out bool needsCrateItems,
+        out bool needsStoreWorldItems)
     {
         hasTakenContracts = false;
         needsUserItems = false;
         needsCrateItems = false;
+        needsStoreWorldItems = false;
 
         if (comp.Contracts.Count == 0)
             return;
@@ -27,10 +29,15 @@ public sealed partial class NcContractSystem : EntitySystem
             switch (contract.ExecutionKind)
             {
                 case ContractExecutionKind.InventoryDelivery:
+                    needsUserItems = true;
+                    needsCrateItems = true;
+                    needsStoreWorldItems |= contract.AllowsStoreWorldTurnIn;
+                    break;
+
                 case ContractExecutionKind.TrackedDeliveryObjective:
                     needsUserItems = true;
                     needsCrateItems = true;
-                    return;
+                    break;
             }
         }
     }

@@ -90,48 +90,48 @@ nc-store-proto-tooltip = { $name }
 nc-store-contract-reward-none = Награда не указана
 nc-store-contract-reward-item-line = { $item } ×{ $count }
 
-nc-store-contract-badge-taken = ВЗЯТ
-nc-store-contract-badge-taken-tooltip = Контракт принят и активен. Его нельзя пропустить.
-nc-store-contract-badge-completed = ВЫПОЛНЕНО
-nc-store-contract-badge-completed-tooltip = Контракт выполнен — можно забрать награду.
+nc-store-contract-badge-taken = В РАБОТЕ
+nc-store-contract-badge-taken-tooltip = Контракт уже у вас на руках. Снять его с доски больше нельзя.
+nc-store-contract-badge-completed = ГОТОВ
+nc-store-contract-badge-completed-tooltip = Работа сделана. Осталось забрать плату.
 
-nc-store-contract-action-skip = Пропустить ({ $cost } { $currency })
+nc-store-contract-action-skip = Сменить ({ $cost } { $currency })
 nc-store-contract-skip-tooltip =
-    Заменить этот контракт на новый.
+    Снять этот контракт с доски и заменить его новым.
     Стоимость: { $cost } { $currency }.
-nc-store-contract-skipped = Контракт пропущен, выдан новый.
-nc-store-contract-skip-failed = Не удалось пропустить контракт. Недостаточно средств.
-nc-store-contract-skip-locked = Этот контракт уже принят и не может быть пропущен.
+nc-store-contract-skipped = Контракт снят. На его месте появился новый.
+nc-store-contract-skip-failed = Не удалось сменить контракт. Не хватает средств.
+nc-store-contract-skip-locked = Этот контракт уже у вас на руках. Снять его нельзя.
 
 
-nc-store-contract-type-delivery = Поставка
-nc-store-contract-type-delivery-tooltip = Базовый контракт на доставку предметов.
+nc-store-contract-type-delivery = Доставка
+nc-store-contract-type-delivery-tooltip = Обычный заказ на доставку нужного товара.
 
-nc-store-contract-type-hunt = Охота
-nc-store-contract-type-hunt-tooltip = После принятия появится цель. Устраните цель и сдайте контракт.
+nc-store-contract-type-hunt = Контракт на голову
+nc-store-contract-type-hunt-tooltip = После принятия появится цель. Уберите цель и вернитесь за платой.
 
 nc-store-contract-type-repair = Ремонт
-nc-store-contract-type-repair-tooltip = Многоэтапный контракт на починку объекта.
+nc-store-contract-type-repair-tooltip = Заказ на восстановление объекта в несколько этапов.
 
-nc-store-contract-type-ghost-role = Гост-роль
-nc-store-contract-type-ghost-role-tooltip = Контракт с появлением специальной гост-роли.
+nc-store-contract-type-ghost-role = Особая цель
+nc-store-contract-type-ghost-role-tooltip = После принятия откроется особая роль. Если её займут, появится живая цель.
 
-nc-store-contract-runtime-stage = Этап: { $stage } / { $goal }
+nc-store-contract-runtime-stage = Этап: { $stage } из { $goal }
 
-nc-store-contract-action-pinpointer = Выдать пинпоинтер
-nc-store-contract-action-pinpointer-tooltip = Выдать новый пинпоинтер для текущей цели активного контракта.
-nc-store-contract-pinpointer-issued = Пинпоинтер выдан.
-nc-store-contract-pinpointer-issue-failed = Не удалось выдать пинпоинтер.
-nc-store-contract-ghost-role-timeout = Гост-роль не была занята вовремя. Контракт провален.
-nc-store-contract-ghost-role-target-lost = Цель гост-роли была уничтожена до заселения. Контракт провален.
+nc-store-contract-action-pinpointer = Выдать пеленгатор
+nc-store-contract-action-pinpointer-tooltip = Выдать новый пеленгатор для текущей цели активного контракта.
+nc-store-contract-pinpointer-issued = Пеленгатор выдан.
+nc-store-contract-pinpointer-issue-failed = Не удалось выдать пеленгатор.
+nc-store-contract-ghost-role-timeout = Никто не взял эту роль вовремя. Контракт сорван.
+nc-store-contract-ghost-role-target-lost = Цель выбыла ещё до начала операции. Контракт сорван.
 
 nc-store-contract-badge-awaiting-ghost-role = ОЖИДАНИЕ
-nc-store-contract-badge-awaiting-ghost-role-tooltip = Контракт ожидает, пока кто-нибудь займёт гост-роль. Если за отведённое время её не возьмут, контракт провалится.
-nc-store-contract-badge-ghost-role-active = АКТИВНА
-nc-store-contract-badge-ghost-role-active-tooltip = Гост-роль занята. Цель нужно убить и доставить тело к торговому автомату.
-nc-store-contract-ghost-role-waiting-line = Ожидание заселения гост-роли: { $time }
-nc-store-contract-ghost-role-active-line = Гост-роль занята. Убейте цель и доставьте тело к торговому автомату.
+nc-store-contract-badge-awaiting-ghost-role-tooltip = Идёт поиск исполнителя. Если за отведённое время никто не возьмётся за дело, контракт сорвётся.
+nc-store-contract-badge-ghost-role-active = ЦЕЛЬ АКТИВНА
+nc-store-contract-badge-ghost-role-active-tooltip = Цель уже в деле. Уберите её и доставьте тело к торговому автомату.
+nc-store-contract-ghost-role-waiting-line = Идёт поиск исполнителя: { $time }
+nc-store-contract-ghost-role-active-line = Цель вышла в поле. Уберите её и доставьте тело к торговому автомату.
 
 
-nc-store-contract-delivery-target-lost = Цель доставки утеряна. Контракт провален.
+nc-store-contract-delivery-target-lost = Груз утрачен. Контракт сорван.
 

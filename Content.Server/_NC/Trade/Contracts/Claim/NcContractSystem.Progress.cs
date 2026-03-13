@@ -12,12 +12,14 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid user,
         IReadOnlyList<EntityUid> userItems,
         EntityUid? crate,
-        IReadOnlyList<EntityUid>? crateItems
+        IReadOnlyList<EntityUid>? crateItems,
+        bool includeStoreWorldItems
     )
     {
         if (comp.Contracts.Count == 0)
             return;
 
+        var storeNearbyItemsPrepared = false;
         _progressContractIdsScratch.Clear();
         foreach (var contractId in comp.Contracts.Keys)
             _progressContractIdsScratch.Add(contractId);
@@ -49,7 +51,21 @@ public sealed partial class NcContractSystem : EntitySystem
                     continue;
             }
 
-            UpdateContractProgressForSingleContract(contract, user, userItems, crate, crateItems, hasCrateWork);
+            if (includeStoreWorldItems && contract.AllowsStoreWorldTurnIn && !storeNearbyItemsPrepared)
+            {
+                ScanStoreNearbyTurnInItems(store, _scratchStoreNearbyItems);
+                storeNearbyItemsPrepared = true;
+            }
+
+            UpdateContractProgressForSingleContract(
+                contract,
+                store,
+                user,
+                userItems,
+                crate,
+                crateItems,
+                _scratchStoreNearbyItems,
+                hasCrateWork);
         }
 
         _progressContractIdsScratch.Clear();
@@ -73,10 +89,12 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void UpdateContractProgressForSingleContract(
         ContractServerData contract,
+        EntityUid store,
         EntityUid user,
         IReadOnlyList<EntityUid> userItems,
         EntityUid? crate,
         IReadOnlyList<EntityUid>? crateItems,
+        IReadOnlyList<EntityUid>? storeNearbyItems,
         bool hasCrateWork
     )
     {
@@ -85,14 +103,14 @@ public sealed partial class NcContractSystem : EntitySystem
         if (targets.Count == 0)
         {
             ClearProgressReservationScratch();
-            UpdateLegacyContractProgress(contract, user, userItems, crate, crateItems, hasCrateWork);
+            UpdateLegacyContractProgress(contract, store, user, userItems, crate, crateItems, storeNearbyItems, hasCrateWork);
             return;
         }
 
         if (targets.Count == 1)
         {
             ClearProgressReservationScratch();
-            UpdateSingleTargetContractProgress(contract, targets[0], user, userItems, crate, crateItems, hasCrateWork);
+            UpdateSingleTargetContractProgress(contract, targets[0], store, user, userItems, crate, crateItems, storeNearbyItems, hasCrateWork);
             return;
         }
 
@@ -183,6 +201,21 @@ public sealed partial class NcContractSystem : EntitySystem
                 need -= reserved;
             }
 
+            if (need > 0 && storeNearbyItems is { Count: > 0 })
+            {
+                var reserved = ReserveProgressFromItems(
+                    store,
+                    storeNearbyItems,
+                    ordered.ProtoId,
+                    ordered.MatchMode,
+                    need,
+                    _progressVirtualStackLeftScratch,
+                    _progressConsumedEntitiesScratch,
+                    worldTurnInSource: true);
+
+                need -= reserved;
+            }
+
             var claimable = required - Math.Max(0, need);
             _progressClaimableByKeyScratch[key] = Math.Max(0, claimable);
         }
@@ -224,10 +257,12 @@ public sealed partial class NcContractSystem : EntitySystem
     private void UpdateSingleTargetContractProgress(
         ContractServerData contract,
         ContractTargetServerData target,
+        EntityUid store,
         EntityUid user,
         IReadOnlyList<EntityUid> userItems,
         EntityUid? crate,
         IReadOnlyList<EntityUid>? crateItems,
+        IReadOnlyList<EntityUid>? storeNearbyItems,
         bool hasCrateWork)
     {
         contract.TargetItem = target.TargetItem;
@@ -243,10 +278,12 @@ public sealed partial class NcContractSystem : EntitySystem
 
         var required = Math.Max(0, target.Required);
         var progressed = ComputeProgressForTarget(
+            store,
             user,
             userItems,
             crate,
             crateItems,
+            storeNearbyItems,
             hasCrateWork,
             target.TargetItem,
             target.MatchMode,
@@ -260,10 +297,12 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void UpdateLegacyContractProgress(
         ContractServerData contract,
+        EntityUid store,
         EntityUid user,
         IReadOnlyList<EntityUid> userItems,
         EntityUid? crate,
         IReadOnlyList<EntityUid>? crateItems,
+        IReadOnlyList<EntityUid>? storeNearbyItems,
         bool hasCrateWork
     )
     {
@@ -275,10 +314,12 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         var progressed = ComputeProgressForTarget(
+            store,
             user,
             userItems,
             crate,
             crateItems,
+            storeNearbyItems,
             hasCrateWork,
             contract.TargetItem,
             contract.MatchMode,
@@ -289,10 +330,12 @@ public sealed partial class NcContractSystem : EntitySystem
     }
 
     private int ComputeProgressForTarget(
+        EntityUid store,
         EntityUid user,
         IReadOnlyList<EntityUid> userItems,
         EntityUid? crate,
         IReadOnlyList<EntityUid>? crateItems,
+        IReadOnlyList<EntityUid>? storeNearbyItems,
         bool hasCrateWork,
         string targetItem,
         PrototypeMatchMode matchMode,
@@ -327,6 +370,21 @@ public sealed partial class NcContractSystem : EntitySystem
                 need,
                 _progressVirtualStackLeftScratch,
                 _progressConsumedEntitiesScratch);
+
+            need -= reserved;
+        }
+
+        if (need > 0 && storeNearbyItems is { Count: > 0 })
+        {
+            var reserved = ReserveProgressFromItems(
+                store,
+                storeNearbyItems,
+                targetItem,
+                matchMode,
+                need,
+                _progressVirtualStackLeftScratch,
+                _progressConsumedEntitiesScratch,
+                worldTurnInSource: true);
 
             need -= reserved;
         }
@@ -375,7 +433,8 @@ public sealed partial class NcContractSystem : EntitySystem
         PrototypeMatchMode matchMode,
         int need,
         Dictionary<EntityUid, int> virtualStackLeft,
-        HashSet<EntityUid> consumedNonStack
+        HashSet<EntityUid> consumedNonStack,
+        bool worldTurnInSource = false
     )
     {
         if (need <= 0)
@@ -391,7 +450,12 @@ public sealed partial class NcContractSystem : EntitySystem
                 if (ent == EntityUid.Invalid || !EntityManager.EntityExists(ent))
                     continue;
 
-                if (_logic.IsProtectedFromDirectSale(root, ent))
+                if (worldTurnInSource)
+                {
+                    if (!CanUseNearbyStoreTurnInEntity(ent))
+                        continue;
+                }
+                else if (_logic.IsProtectedFromDirectSale(root, ent))
                     continue;
 
                 if (!TryComp(ent, out StackComponent? stack) || stack.StackTypeId != stackTypeId)
@@ -420,7 +484,12 @@ public sealed partial class NcContractSystem : EntitySystem
             if (ent == EntityUid.Invalid || !EntityManager.EntityExists(ent))
                 continue;
 
-            if (_logic.IsProtectedFromDirectSale(root, ent))
+            if (worldTurnInSource)
+            {
+                if (!CanUseNearbyStoreTurnInEntity(ent))
+                    continue;
+            }
+            else if (_logic.IsProtectedFromDirectSale(root, ent))
                 continue;
 
             if (!TryComp(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)

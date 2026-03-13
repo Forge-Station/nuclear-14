@@ -34,13 +34,15 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         var hasTakenContracts = false;
         var contractsNeedUserItems = false;
         var contractsNeedCrateItems = false;
+        var contractsNeedStoreWorldItems = false;
         if (hasContractsTab)
         {
             _contracts.AnalyzeContractProgressRequirements(
                 comp,
                 out hasTakenContracts,
                 out contractsNeedUserItems,
-                out contractsNeedCrateItems);
+                out contractsNeedCrateItems,
+                out contractsNeedStoreWorldItems);
         }
 
         var needUserSnap = comp.CurrencyWhitelist.Count > 0;
@@ -92,7 +94,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 user,
                 _deepUserItemsScratch,
                 crateUid,
-                crateUid != null ? _deepCrateItemsScratch : null);
+                crateUid != null ? _deepCrateItemsScratch : null,
+                contractsNeedStoreWorldItems);
         }
         var scratch = GetDynamicScratch(uid);
         var buf = scratch.GetWriteBuffer();

@@ -88,29 +88,39 @@ public sealed partial class NcContractCard : PanelContainer
         var descText = BuildPrettyDescription(_data);
         if (!string.IsNullOrWhiteSpace(descText))
         {
+            var descLabel = new Label
+            {
+                Text = descText,
+                Margin = new(0, 0, 0, 8),
+                Modulate = Color.FromHex("#C9C9C9"),
+                HorizontalExpand = true,
+                ClipText = true,
+                ToolTip = descText
+            };
+
             root.AddChild(
-                new Label
-                {
-                    Text = descText,
-                    Margin = new(0, 0, 0, 8),
-                    Modulate = Color.FromHex("#C9C9C9")
-                });
+                descLabel);
         }
 
         var ghostRoleStatus = BuildGhostRoleStatusText(_data);
         if (!string.IsNullOrWhiteSpace(ghostRoleStatus))
         {
+            var statusLabel = new Label
+            {
+                Text = ghostRoleStatus,
+                Margin = new(0, 0, 0, 6),
+                Modulate = IsGhostRoleAwaitingAcceptance(_data)
+                    ? Color.FromHex("#D3B06A")
+                    : _data.FlowStatus == ContractFlowStatus.Failed
+                        ? Color.FromHex("#D97575")
+                        : Color.FromHex("#8DB7E8"),
+                HorizontalExpand = true,
+                ClipText = true,
+                ToolTip = ghostRoleStatus
+            };
+
             root.AddChild(
-                new Label
-                {
-                    Text = ghostRoleStatus,
-                    Margin = new(0, 0, 0, 6),
-                    Modulate = IsGhostRoleAwaitingAcceptance(_data)
-                        ? Color.FromHex("#D3B06A")
-                        : _data.FlowStatus == ContractFlowStatus.Failed
-                            ? Color.FromHex("#D97575")
-                            : Color.FromHex("#8DB7E8")
-                });
+                statusLabel);
         }
 
         if ((_data.ExecutionKind is ContractExecutionKind.HuntObjective or ContractExecutionKind.RepairObjective or ContractExecutionKind.GhostRoleObjective) && _data.Runtime.StageGoal > 1)
@@ -152,7 +162,9 @@ public sealed partial class NcContractCard : PanelContainer
             {
                 Text = Loc.GetString("nc-store-contract-progress-line", ("progress", val), ("required", max)),
                 Margin = new(0, 6, 0, 2),
-                Align = Label.AlignMode.Right
+                Align = Label.AlignMode.Left,
+                HorizontalExpand = true,
+                ClipText = true
             };
             progressLabel.StyleClasses.Add("LabelSubText");
             root.AddChild(progressLabel);
@@ -176,25 +188,41 @@ public sealed partial class NcContractCard : PanelContainer
     {
         var header = new BoxContainer
         {
-            Orientation = BoxContainer.LayoutOrientation.Horizontal,
+            Orientation = BoxContainer.LayoutOrientation.Vertical,
             HorizontalExpand = true,
             Margin = new(0, 0, 0, 4)
         };
 
+        var titleRow = new BoxContainer
+        {
+            Orientation = BoxContainer.LayoutOrientation.Horizontal,
+            HorizontalExpand = true,
+            Margin = new(0, 0, 0, 3)
+        };
+        header.AddChild(titleRow);
+
         var titleLabel = new Label
         {
             Text = BuildPrettyTitle(_data),
-            Margin = new(0, 0, 6, 0),
+            Margin = new(0, 0, 4, 0),
             HorizontalExpand = true
         };
         titleLabel.StyleClasses.Add("LabelHeading");
-        header.AddChild(titleLabel);
+        titleLabel.HorizontalExpand = true;
+        titleLabel.ClipText = true;
+        titleLabel.ToolTip = BuildPrettyTitle(_data);
+        titleRow.AddChild(titleLabel);
 
-        header.AddChild(new Control { HorizontalExpand = true });
+        var badgesRow = new BoxContainer
+        {
+            Orientation = BoxContainer.LayoutOrientation.Horizontal,
+            HorizontalExpand = true
+        };
+        header.AddChild(badgesRow);
 
         var objectiveTypeText = ObjectiveTypeName(_data.ExecutionKind);
         var objectiveTypeTip = ObjectiveTypeTooltip(_data.ExecutionKind);
-        header.AddChild(
+        badgesRow.AddChild(
             BuildBadge(
                 objectiveTypeText,
                 objectiveTypeTip,
@@ -204,7 +232,7 @@ public sealed partial class NcContractCard : PanelContainer
         if (!_data.Repeatable)
         {
             var tip = Loc.GetString("nc-store-contract-badge-single-tooltip");
-            header.AddChild(
+            badgesRow.AddChild(
                 BuildBadge(
                     Loc.GetString("nc-store-contract-badge-single"),
                     tip,
@@ -214,7 +242,7 @@ public sealed partial class NcContractCard : PanelContainer
 
         if (_data.FlowStatus is ContractFlowStatus.AwaitingActivation or ContractFlowStatus.InProgress)
         {
-            header.AddChild(
+            badgesRow.AddChild(
                 BuildBadge(
                     Loc.GetString("nc-store-contract-badge-taken"),
                     Loc.GetString("nc-store-contract-badge-taken-tooltip"),
@@ -223,7 +251,7 @@ public sealed partial class NcContractCard : PanelContainer
 
             if (IsGhostRoleAwaitingAcceptance(_data))
             {
-                header.AddChild(
+                badgesRow.AddChild(
                     BuildBadge(
                         Loc.GetString("nc-store-contract-badge-awaiting-ghost-role"),
                         Loc.GetString("nc-store-contract-badge-awaiting-ghost-role-tooltip"),
@@ -232,7 +260,7 @@ public sealed partial class NcContractCard : PanelContainer
             }
             else if (IsGhostRoleActive(_data))
             {
-                header.AddChild(
+                badgesRow.AddChild(
                     BuildBadge(
                         Loc.GetString("nc-store-contract-badge-ghost-role-active"),
                         Loc.GetString("nc-store-contract-badge-ghost-role-active-tooltip"),
@@ -243,7 +271,7 @@ public sealed partial class NcContractCard : PanelContainer
 
         if (_data.FlowStatus == ContractFlowStatus.ReadyToTurnIn)
         {
-            header.AddChild(
+            badgesRow.AddChild(
                 BuildBadge(
                     Loc.GetString("nc-store-contract-badge-completed"),
                     Loc.GetString("nc-store-contract-badge-completed-tooltip"),
@@ -291,7 +319,7 @@ public sealed partial class NcContractCard : PanelContainer
     {
         var bottomWrap = new BoxContainer
         {
-            Orientation = BoxContainer.LayoutOrientation.Horizontal,
+            Orientation = BoxContainer.LayoutOrientation.Vertical,
             HorizontalExpand = true,
             Margin = new(0, 6, 0, 0)
         };
@@ -329,12 +357,29 @@ public sealed partial class NcContractCard : PanelContainer
         PopulateRewards(rewardsCol, _data.Rewards);
         bottomWrap.AddChild(rewardsPanel);
 
+        var actionPanel = new PanelContainer
+        {
+            HorizontalExpand = true,
+            Margin = new(0, 6, 0, 0),
+            PanelOverride = new StyleBoxFlat
+            {
+                BackgroundColor = new(0.07f, 0.07f, 0.08f, 0.72f),
+                BorderColor = new(0f, 0f, 0f, 0.45f),
+                BorderThickness = new(1),
+                ContentMarginLeftOverride = 8,
+                ContentMarginRightOverride = 8,
+                ContentMarginTopOverride = 6,
+                ContentMarginBottomOverride = 6
+            }
+        };
+        bottomWrap.AddChild(actionPanel);
+
         var actionCol = new BoxContainer
         {
             Orientation = BoxContainer.LayoutOrientation.Vertical,
-            MinSize = new(180, 0),
-            Margin = new(8, 0, 0, 0)
+            HorizontalExpand = true
         };
+        actionPanel.AddChild(actionCol);
 
         var canTake = _data.FlowStatus == ContractFlowStatus.Available;
         var canClaim = _data.FlowStatus == ContractFlowStatus.ReadyToTurnIn;
@@ -344,12 +389,13 @@ public sealed partial class NcContractCard : PanelContainer
         {
             Text = BuildActionHintText(_data),
             Margin = new(0, 0, 0, 4),
-            Align = Label.AlignMode.Center
+            Align = Label.AlignMode.Left,
+            HorizontalExpand = true,
+            ClipText = true,
+            ToolTip = BuildActionHintText(_data)
         };
         actionHint.StyleClasses.Add("LabelSubText");
         actionCol.AddChild(actionHint);
-
-        actionCol.AddChild(new Control { VerticalExpand = true });
 
         var btn = new Button
         {
@@ -395,23 +441,38 @@ public sealed partial class NcContractCard : PanelContainer
 
         actionCol.AddChild(btn);
 
+        BoxContainer? secondaryButtonsRow = null;
+
         if (canRequestPinpointer)
         {
+            secondaryButtonsRow ??= new BoxContainer
+            {
+                Orientation = BoxContainer.LayoutOrientation.Horizontal,
+                HorizontalExpand = true,
+                Margin = new(0, 6, 0, 0)
+            };
+
             var pointerBtn = new Button
             {
                 Text = Loc.GetString("nc-store-contract-action-pinpointer"),
                 HorizontalExpand = true,
                 MinSize = new(0, 28),
-                Margin = new(0, 4, 0, 0),
                 ToolTip = Loc.GetString("nc-store-contract-action-pinpointer-tooltip")
             };
 
             pointerBtn.OnPressed += _ => OnRequestPinpointer?.Invoke(_data.Id);
-            actionCol.AddChild(pointerBtn);
+            secondaryButtonsRow.AddChild(pointerBtn);
         }
 
         if (_skipCost > 0 && !string.IsNullOrWhiteSpace(_skipCurrency))
         {
+            secondaryButtonsRow ??= new BoxContainer
+            {
+                Orientation = BoxContainer.LayoutOrientation.Horizontal,
+                HorizontalExpand = true,
+                Margin = new(0, 6, 0, 0)
+            };
+
             var skipCurrencyName = CurrencyName(_skipCurrency);
             var canSkip = _data.FlowStatus == ContractFlowStatus.Available && _skipBalance >= _skipCost;
             var skipBtn = new Button
@@ -419,7 +480,7 @@ public sealed partial class NcContractCard : PanelContainer
                 Text = Loc.GetString("nc-store-contract-action-skip", ("cost", _skipCost), ("currency", skipCurrencyName)),
                 HorizontalExpand = true,
                 MinSize = new(0, 28),
-                Margin = new(0, 4, 0, 0),
+                Margin = canRequestPinpointer ? new Thickness(6, 0, 0, 0) : default,
                 Disabled = !canSkip
             };
 
@@ -442,10 +503,12 @@ public sealed partial class NcContractCard : PanelContainer
                 OnSkip?.Invoke(_data.Id);
             };
 
-            actionCol.AddChild(skipBtn);
+            secondaryButtonsRow.AddChild(skipBtn);
         }
 
-        bottomWrap.AddChild(actionCol);
+        if (secondaryButtonsRow != null)
+            actionCol.AddChild(secondaryButtonsRow);
+
         return bottomWrap;
     }
 }

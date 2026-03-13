@@ -118,9 +118,14 @@ public sealed partial class NcContractSystem : EntitySystem
         }
     }
 
-    private void FinalizeClaim(EntityUid store, NcStoreComponent comp, string contractId, bool repeatable)
+    private void FinalizeClaim(
+        EntityUid store,
+        NcStoreComponent comp,
+        string contractId,
+        bool repeatable,
+        bool deleteTrackedEntities = true)
     {
-        CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true, deleteGuards: false);
+        CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities, deleteGuards: false);
 
         comp.Contracts.Remove(contractId);
         if (!repeatable)

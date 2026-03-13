@@ -1,0 +1,14 @@
+﻿- type: entity
+  id: TradeContractBoardCity
+  parent: Trademachine
+  name: доска контрактов города
+  description: доска с заказами на поставки, охоту, ремонт и особые цели
+  suffix: contracts
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Misc/noticeboard2.rsi
+    layers:
+    - state: noticeboardstanding
+  - type: NcStore
+    contractPresets:
+    - TradeContractsCityPreset

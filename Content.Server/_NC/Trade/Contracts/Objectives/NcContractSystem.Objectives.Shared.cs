@@ -1,4 +1,5 @@
 using Content.Shared._NC.Trade;
+using Robust.Shared.Map;
 
 namespace Content.Server._NC.Trade;
 
@@ -134,7 +135,7 @@ public sealed partial class NcContractSystem : EntitySystem
         MarkObjectiveComplete(contract);
 
         if (_objectiveRuntimeByContract.TryGetValue(key, out var state))
-            CleanupObjectivePinpointers(key, state, true);
+            CleanupObjectivePinpointers(key, state);
     }
 
     private void FinalizeObjectiveFailure(
@@ -147,7 +148,7 @@ public sealed partial class NcContractSystem : EntitySystem
         MarkObjectiveFailed(contract, failureReason);
 
         if (_objectiveRuntimeByContract.TryGetValue(key, out var state))
-            CleanupObjectivePinpointers(key, state, true);
+            CleanupObjectivePinpointers(key, state);
 
         FailObjectiveContract(key, comp, deleteGuards);
     }
@@ -181,7 +182,9 @@ public sealed partial class NcContractSystem : EntitySystem
                 Del(target);
         }
 
-        CleanupObjectivePinpointers(key, state, deleteTrackedEntities);
+        DeactivateTrackedDeliveryDropoff(state);
+
+        CleanupObjectivePinpointers(key, state);
 
         if (state.GuardEntities.Count > 0)
         {
@@ -237,6 +240,10 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private sealed class ObjectiveRuntimeState
     {
+        public bool ActiveDeliveryDropoff;
+        public bool DeliveryDropoffCompleted;
+        public MapCoordinates? DeliveryDropoffCoordinates;
+        public EntityUid? DeliveryDropoffEntity;
         public readonly List<EntityUid> GuardEntities = new();
         public readonly HashSet<EntityUid> PinpointerEntities = new();
         public TimeSpan? GhostRoleAcceptDeadline;

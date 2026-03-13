@@ -190,6 +190,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         {
             _openStoresScratch.Clear();
             _openStoresScratch.AddRange(_openStoreUids);
+            var now = _timing.CurTime;
 
             foreach (var uid in _openStoresScratch)
             {
@@ -198,6 +199,17 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
                 if (EnsureCrateWatchUpToDate(uid, user))
                     MarkDirty(uid);
+
+                if (!_contracts.HasRealtimeContractState(store))
+                    continue;
+
+                var scratch = GetDynamicScratch(uid);
+                if (now < scratch.NextDynamicAllowed)
+                    continue;
+
+                _dirtyStores.Remove(uid);
+                UpdateDynamicState(uid, store, user);
+                scratch.NextDynamicAllowed = now + TimeSpan.FromSeconds(MinDynamicInterval);
             }
         }
 
@@ -265,16 +277,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 CloseAndCleanUp(uid, userUid);
                 store.CurrentUser = null;
                 continue;
-            }
-
-            if (_contracts.HasRealtimeGhostRoleState(store))
-            {
-                var scratch = GetDynamicScratch(uid);
-                if (_timing.CurTime >= scratch.NextDynamicAllowed)
-                {
-                    UpdateDynamicState(uid, store, userUid);
-                    scratch.NextDynamicAllowed = _timing.CurTime + TimeSpan.FromSeconds(CheckInterval);
-                }
             }
 
             if (!_storeSystem.CanUseStore(uid, store, userUid))

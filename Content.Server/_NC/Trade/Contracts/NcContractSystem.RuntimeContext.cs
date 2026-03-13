@@ -28,10 +28,20 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             AcceptTimeoutSeconds = runtimeProto.AcceptTimeoutSeconds,
             SpawnPointTag = runtimeProto.SpawnPointTag ?? string.Empty,
+            SpawnPointTags = runtimeProto.SpawnPointTags != null
+                ? new List<WeightedTagEntry>(runtimeProto.SpawnPointTags)
+                : new List<WeightedTagEntry>(),
+            DropoffPointTag = runtimeProto.DropoffPointTag ?? string.Empty,
+            DropoffPointTags = runtimeProto.DropoffPointTags != null
+                ? new List<WeightedTagEntry>(runtimeProto.DropoffPointTags)
+                : new List<WeightedTagEntry>(),
             TargetPrototype = runtimeProto.TargetPrototype ?? string.Empty,
             DeliverySpawnPrototype = runtimeProto.DeliverySpawnPrototype ?? string.Empty,
             StructurePrototype = runtimeProto.StructurePrototype ?? string.Empty,
             GhostRolePrototype = runtimeProto.GhostRolePrototype ?? string.Empty,
+            SpawnAtStore = runtimeProto.SpawnAtStore,
+            PreserveTargetOnComplete = runtimeProto.PreserveTargetOnComplete,
+            AllowStoreWorldTurnIn = runtimeProto.AllowStoreWorldTurnIn,
             GivePinpointer = runtimeProto.GivePinpointer,
             PinpointerPrototype = runtimeProto.PinpointerPrototype ?? string.Empty,
             GuardPrototype = runtimeProto.GuardPrototype ?? string.Empty,
@@ -59,6 +69,23 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         config.AcceptTimeoutSeconds = Math.Max(0, config.AcceptTimeoutSeconds);
         config.SpawnPointTag ??= string.Empty;
+        config.SpawnPointTags ??= new List<WeightedTagEntry>();
+        for (var i = config.SpawnPointTags.Count - 1; i >= 0; i--)
+        {
+            var entry = config.SpawnPointTags[i];
+            if (string.IsNullOrWhiteSpace(entry.Tag) || entry.Weight <= 0)
+                config.SpawnPointTags.RemoveAt(i);
+        }
+
+        config.DropoffPointTag ??= string.Empty;
+        config.DropoffPointTags ??= new List<WeightedTagEntry>();
+        for (var i = config.DropoffPointTags.Count - 1; i >= 0; i--)
+        {
+            var entry = config.DropoffPointTags[i];
+            if (string.IsNullOrWhiteSpace(entry.Tag) || entry.Weight <= 0)
+                config.DropoffPointTags.RemoveAt(i);
+        }
+
         config.TargetPrototype ??= string.Empty;
         config.DeliverySpawnPrototype ??= string.Empty;
         config.StructurePrototype ??= string.Empty;

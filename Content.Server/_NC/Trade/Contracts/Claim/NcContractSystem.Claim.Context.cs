@@ -74,6 +74,11 @@ public sealed partial class NcContractSystem : EntitySystem
             crateItems = _scratchCrateItems;
         }
 
+        if (contract.AllowsStoreWorldTurnIn)
+            ScanStoreNearbyTurnInItems(store, _scratchStoreNearbyItems);
+        else
+            _scratchStoreNearbyItems.Clear();
+
         if (targets.Count == 1)
         {
             return TryPrepareSingleTargetClaimContext(
@@ -85,6 +90,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 targets,
                 crateEntity,
                 crateItems,
+                _scratchStoreNearbyItems,
                 out ctx,
                 out fail);
         }
@@ -117,9 +123,11 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             if (!TryAppendTakePlanForRequirement(
+                    store,
                     user,
                     crateEntity,
                     crateItems,
+                    _scratchStoreNearbyItems,
                     ordered.ProtoId,
                     ordered.MatchMode,
                     required,
@@ -156,6 +164,7 @@ public sealed partial class NcContractSystem : EntitySystem
         List<ContractTargetServerData> targets,
         EntityUid? crateEntity,
         List<EntityUid>? crateItems,
+        List<EntityUid>? storeNearbyItems,
         out ClaimContext ctx,
         out ClaimAttemptResult fail)
     {
@@ -175,9 +184,11 @@ public sealed partial class NcContractSystem : EntitySystem
         var takePlan = new List<ClaimTakeEntry>(Math.Max(4, Math.Min(32, target.Required)));
 
         if (!TryAppendTakePlanForRequirement(
+                store,
                 user,
                 crateEntity,
                 crateItems,
+                storeNearbyItems,
                 target.TargetItem,
                 target.MatchMode,
                 target.Required,
@@ -205,9 +216,11 @@ public sealed partial class NcContractSystem : EntitySystem
     }
 
     private bool TryAppendTakePlanForRequirement(
+        EntityUid store,
         EntityUid user,
         EntityUid? crateEntity,
         List<EntityUid>? crateItems,
+        List<EntityUid>? storeNearbyItems,
         string targetItem,
         PrototypeMatchMode matchMode,
         int required,
@@ -246,10 +259,25 @@ public sealed partial class NcContractSystem : EntitySystem
             need -= reserved;
         }
 
+        if (need > 0 && storeNearbyItems is { Count: > 0 })
+        {
+            var reserved = ReserveTakePlanFromItems(
+                store,
+                storeNearbyItems,
+                targetItem,
+                matchMode,
+                need,
+                _claimVirtualStackLeftScratch,
+                takePlan,
+                worldTurnInSource: true);
+
+            need -= reserved;
+        }
+
         if (need <= 0)
             return true;
 
-        if (crateEntity == null)
+        if (crateEntity == null && (storeNearbyItems == null || storeNearbyItems.Count == 0))
         {
             fail = ClaimAttemptResult.Fail(
                 ClaimFailureReason.MissingCrate,
@@ -270,7 +298,8 @@ public sealed partial class NcContractSystem : EntitySystem
         PrototypeMatchMode matchMode,
         int need,
         Dictionary<EntityUid, int> virtualStackLeft,
-        List<ClaimTakeEntry> planOut
+        List<ClaimTakeEntry> planOut,
+        bool worldTurnInSource = false
     )
     {
         if (need <= 0)
@@ -286,7 +315,12 @@ public sealed partial class NcContractSystem : EntitySystem
                 if (ent == EntityUid.Invalid || !EntityManager.EntityExists(ent))
                     continue;
 
-                if (_logic.IsProtectedFromDirectSale(root, ent))
+                if (worldTurnInSource)
+                {
+                    if (!CanUseNearbyStoreTurnInEntity(ent))
+                        continue;
+                }
+                else if (_logic.IsProtectedFromDirectSale(root, ent))
                     continue;
 
                 if (!TryComp(ent, out StackComponent? stack) || stack.StackTypeId != stackTypeId)
@@ -328,7 +362,12 @@ public sealed partial class NcContractSystem : EntitySystem
             if (ent == EntityUid.Invalid || !EntityManager.EntityExists(ent))
                 continue;
 
-            if (_logic.IsProtectedFromDirectSale(root, ent))
+            if (worldTurnInSource)
+            {
+                if (!CanUseNearbyStoreTurnInEntity(ent))
+                    continue;
+            }
+            else if (_logic.IsProtectedFromDirectSale(root, ent))
                 continue;
 
             if (!TryComp(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)

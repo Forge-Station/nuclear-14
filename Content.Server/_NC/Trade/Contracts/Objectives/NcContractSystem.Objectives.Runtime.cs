@@ -46,11 +46,23 @@ public sealed partial class NcContractSystem : EntitySystem
     }
 
     private TimeSpan _nextGhostRoleTimeoutCheck = TimeSpan.Zero;
+    private TimeSpan _nextTrackedDeliveryDropoffCheck = TimeSpan.Zero;
+    private int _activeTrackedDeliveryDropoffObjectives;
     private void ShutdownObjectiveRuntime() => ClearAllObjectiveRuntime(false, deleteGuards: false);
     public override void Update(float frameTime)
     {
-        if (_objectiveRuntimeByContract.Count == 0 || _timing.CurTime < _nextGhostRoleTimeoutCheck)
+        if (_objectiveRuntimeByContract.Count == 0)
             return;
+
+        if (_activeTrackedDeliveryDropoffObjectives > 0 && _timing.CurTime >= _nextTrackedDeliveryDropoffCheck)
+        {
+            _nextTrackedDeliveryDropoffCheck = _timing.CurTime + NcContractTuning.TrackedDeliveryDropoffCheckInterval;
+            UpdateTrackedDeliveryDropoffObjectives();
+        }
+
+        if (_timing.CurTime < _nextGhostRoleTimeoutCheck)
+            return;
+
         _nextGhostRoleTimeoutCheck = _timing.CurTime + NcContractTuning.GhostRoleTimeoutCheckInterval;
         UpdateGhostRoleObjectiveTimeouts();
     }
@@ -74,6 +86,7 @@ public sealed partial class NcContractSystem : EntitySystem
         _objectiveRuntimeByTarget.Clear();
         _objectiveRuntimeByPinpointer.Clear();
         _objectiveRuntimeByGuard.Clear();
+        _activeTrackedDeliveryDropoffObjectives = 0;
     }
 
     private void ClearStoreObjectiveRuntime(EntityUid store, bool deleteTrackedEntities, bool deleteGuards = true)
@@ -137,7 +150,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        if (!TryResolveObjectiveSpawnCoordinates(store, config.SpawnPointTag, out var spawnCoords))
+        if (!TryResolveObjectiveSpawnCoordinates(store, config, out var spawnCoords))
         {
             Sawmill.Warning($"[Contracts] Delivery support init failed for '{contractId}': cannot resolve spawn coordinates.");
             return false;
@@ -181,7 +194,14 @@ public sealed partial class NcContractSystem : EntitySystem
         if (string.IsNullOrWhiteSpace(config.TargetPrototype))
             return true;
 
-        if (!TryInitializeTrackedTargetAndSupport(store, user, contractId, contract, config.TargetPrototype))
+        if (!TryInitializeTrackedTargetAndSupport(
+                store,
+                user,
+                contractId,
+                contract,
+                config.TargetPrototype,
+                spawnGuards: true,
+                spawnAtStore: config.SpawnAtStore))
             return false;
 
         return true;
@@ -213,7 +233,8 @@ public sealed partial class NcContractSystem : EntitySystem
         string contractId,
         ContractServerData contract,
         string targetProtoId,
-        bool spawnGuards = true
+        bool spawnGuards = true,
+        bool spawnAtStore = false
     )
     {
         if (string.IsNullOrWhiteSpace(targetProtoId) || !_prototypes.HasIndex<EntityPrototype>(targetProtoId))
@@ -223,7 +244,18 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        if (!TryResolveObjectiveSpawnCoordinates(store, contract.Config.SpawnPointTag, out var spawnCoords))
+        EntityCoordinates spawnCoords;
+        if (spawnAtStore)
+        {
+            if (!TryComp(store, out TransformComponent? storeXform))
+            {
+                Sawmill.Warning($"[Contracts] Objective init failed for '{contractId}': store has no transform for local spawn.");
+                return false;
+            }
+
+            spawnCoords = storeXform.Coordinates;
+        }
+        else if (!TryResolveObjectiveSpawnCoordinates(store, contract.Config, out spawnCoords))
         {
             Sawmill.Warning($"[Contracts] Objective init failed for '{contractId}': cannot resolve spawn coordinates.");
             return false;
@@ -245,6 +277,30 @@ public sealed partial class NcContractSystem : EntitySystem
         state.TargetEntity = target;
         _objectiveRuntimeByTarget[target] = key;
 
+        if (HasConfiguredObjectiveDropoff(contract.Config))
+        {
+            if (!TryResolveObjectiveDropoffCoordinates(store, contract.Config, out var dropoffCoords))
+            {
+                CleanupObjectiveRuntime(store, contractId, true);
+                Sawmill.Warning($"[Contracts] Objective init failed for '{contractId}': cannot resolve dropoff coordinates.");
+                return false;
+            }
+
+            state.DeliveryDropoffCoordinates = _xform.ToMapCoordinates(dropoffCoords);
+
+            if (!TrySpawnDeliveryDropoffMarker(contractId, state, dropoffCoords))
+            {
+                CleanupObjectiveRuntime(store, contractId, true);
+                return false;
+            }
+
+            ActivateTrackedDeliveryDropoff(state);
+        }
+        else
+        {
+            DeactivateTrackedDeliveryDropoff(state);
+        }
+
         if (spawnGuards && !TrySpawnObjectiveGuards(key, state, contract.Config, spawnCoords))
         {
             CleanupObjectiveRuntime(store, contractId, true);
@@ -254,7 +310,8 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!contract.Config.GivePinpointer)
             return true;
 
-        if (!TrySpawnObjectivePinpointer(user, target, key, state, contract.Config, spawnCoords))
+        var pinpointerTarget = ResolveObjectivePinpointerTarget(contract, state, target);
+        if (!TrySpawnObjectivePinpointer(user, pinpointerTarget, key, state, contract.Config, spawnCoords))
         {
             CleanupObjectiveRuntime(store, contractId, true);
             return false;
@@ -290,6 +347,10 @@ public sealed partial class NcContractSystem : EntitySystem
         if (state.TargetEntity is not { } target || target == EntityUid.Invalid || TerminatingOrDeleted(target))
             return false;
 
+        var pinpointerTarget = ResolveObjectivePinpointerTarget(contract, state, target);
+        if (pinpointerTarget == EntityUid.Invalid || TerminatingOrDeleted(pinpointerTarget))
+            return false;
+
         EntityCoordinates spawnCoords;
         if (TryComp(store, out TransformComponent? storeXform))
             spawnCoords = storeXform.Coordinates;
@@ -298,7 +359,75 @@ public sealed partial class NcContractSystem : EntitySystem
         else
             return false;
 
-        return TrySpawnObjectivePinpointer(user, target, key, state, contract.Config, spawnCoords);
+        return TrySpawnObjectivePinpointer(user, pinpointerTarget, key, state, contract.Config, spawnCoords);
+    }
+
+    private bool TrySpawnDeliveryDropoffMarker(
+        string contractId,
+        ObjectiveRuntimeState state,
+        EntityCoordinates dropoffCoords)
+    {
+        EntityUid dropoffMarker;
+        try
+        {
+            dropoffMarker = Spawn(NcContractTuning.DefaultTrackedDeliveryDropoffBeaconPrototypeId, dropoffCoords);
+        }
+        catch (Exception e)
+        {
+            Sawmill.Error(
+                $"[Contracts] Objective init failed for '{contractId}': cannot spawn dropoff beacon '{NcContractTuning.DefaultTrackedDeliveryDropoffBeaconPrototypeId}': {e}");
+            return false;
+        }
+
+        state.DeliveryDropoffEntity = dropoffMarker;
+        return true;
+    }
+
+    private void ActivateTrackedDeliveryDropoff(ObjectiveRuntimeState state)
+    {
+        if (state.ActiveDeliveryDropoff)
+            return;
+
+        state.DeliveryDropoffCompleted = false;
+        state.ActiveDeliveryDropoff = true;
+        _activeTrackedDeliveryDropoffObjectives++;
+    }
+
+    private void DeactivateTrackedDeliveryDropoff(ObjectiveRuntimeState state)
+    {
+        if (state.ActiveDeliveryDropoff)
+        {
+            state.ActiveDeliveryDropoff = false;
+
+            if (_activeTrackedDeliveryDropoffObjectives > 0)
+                _activeTrackedDeliveryDropoffObjectives--;
+        }
+
+        state.DeliveryDropoffCoordinates = null;
+
+        if (state.DeliveryDropoffEntity is { } dropoffMarker)
+        {
+            state.DeliveryDropoffEntity = null;
+
+            if (!TerminatingOrDeleted(dropoffMarker))
+                Del(dropoffMarker);
+        }
+    }
+
+    private static EntityUid ResolveObjectivePinpointerTarget(
+        ContractServerData contract,
+        ObjectiveRuntimeState state,
+        EntityUid fallbackTarget)
+    {
+        if (contract.IsTrackedDeliveryObjective &&
+            UsesTrackedDeliveryDropoff(contract) &&
+            state.DeliveryDropoffEntity is { } dropoffMarker &&
+            dropoffMarker != EntityUid.Invalid)
+        {
+            return dropoffMarker;
+        }
+
+        return fallbackTarget;
     }
 
     private bool TrySpawnObjectivePinpointer(
@@ -352,6 +481,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         state.PinpointerEntities.Add(pinpointer);
         _objectiveRuntimeByPinpointer[pinpointer] = key;
+        _logic.QueuePickupToHandsOrCrateNextTick(user, pinpointer);
 
         return true;
     }
@@ -406,8 +536,56 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool TryResolveObjectiveSpawnCoordinates(
         EntityUid store,
+        ContractObjectiveConfigData config,
+        out EntityCoordinates coordinates,
+        bool fallbackToStore = true
+    )
+    {
+        return TryResolveObjectiveSpawnCoordinates(
+            store,
+            config.SpawnPointTag,
+            config.SpawnPointTags,
+            out coordinates,
+            fallbackToStore);
+    }
+
+    private bool TryResolveObjectiveDropoffCoordinates(
+        EntityUid store,
+        ContractObjectiveConfigData config,
+        out EntityCoordinates coordinates,
+        bool fallbackToStore = false
+    )
+    {
+        return TryResolveObjectiveSpawnCoordinates(
+            store,
+            config.DropoffPointTag,
+            config.DropoffPointTags,
+            out coordinates,
+            fallbackToStore);
+    }
+
+    private static bool HasConfiguredObjectiveDropoff(ContractObjectiveConfigData config)
+    {
+        return !string.IsNullOrWhiteSpace(config.DropoffPointTag) ||
+               config.DropoffPointTags.Count > 0;
+    }
+
+    private bool TryResolveObjectiveSpawnCoordinates(
+        EntityUid store,
         string? spawnTag,
-        out EntityCoordinates coordinates
+        out EntityCoordinates coordinates,
+        bool fallbackToStore = true
+    )
+    {
+        return TryResolveObjectiveSpawnCoordinates(store, spawnTag, null, out coordinates, fallbackToStore);
+    }
+
+    private bool TryResolveObjectiveSpawnCoordinates(
+        EntityUid store,
+        string? spawnTag,
+        IReadOnlyList<WeightedTagEntry>? weightedSpawnTags,
+        out EntityCoordinates coordinates,
+        bool fallbackToStore = true
     )
     {
         if (TryComp(store, out TransformComponent? storeXform))
@@ -415,22 +593,35 @@ public sealed partial class NcContractSystem : EntitySystem
         else
             coordinates = EntityCoordinates.Invalid;
 
-        if (string.IsNullOrWhiteSpace(spawnTag))
-            return coordinates != EntityCoordinates.Invalid;
-
-        if (!_prototypes.HasIndex<TagPrototype>(spawnTag))
+        var selectedSpawnTag = spawnTag;
+        if (weightedSpawnTags is { Count: > 0 })
         {
-            Sawmill.Warning($"[Contracts] Spawn tag '{spawnTag}' is not defined. Fallback to store coordinates.");
-            return coordinates != EntityCoordinates.Invalid;
+            var weightedTag = PickAvailableObjectiveSpawnTag(storeXform?.MapID ?? MapId.Nullspace, weightedSpawnTags);
+            if (!string.IsNullOrWhiteSpace(weightedTag))
+                selectedSpawnTag = weightedTag;
+        }
+
+        if (string.IsNullOrWhiteSpace(selectedSpawnTag))
+            return fallbackToStore && coordinates != EntityCoordinates.Invalid;
+
+        if (!_prototypes.HasIndex<TagPrototype>(selectedSpawnTag))
+        {
+            if (fallbackToStore)
+            {
+                Sawmill.Warning($"[Contracts] Spawn tag '{selectedSpawnTag}' is not defined. Fallback to store coordinates.");
+                return coordinates != EntityCoordinates.Invalid;
+            }
+
+            Sawmill.Warning($"[Contracts] Spawn tag '{selectedSpawnTag}' is not defined.");
+            return false;
         }
 
         if (storeXform == null)
             return false;
 
         var storeMap = storeXform.MapID;
-        var storeWorld = _xform.GetWorldPosition(storeXform);
-        var bestDistance = float.MaxValue;
         var found = false;
+        var matches = 0;
 
         var query = EntityQueryEnumerator<TagComponent, TransformComponent>();
         while (query.MoveNext(out _, out var tagComp, out var xform))
@@ -438,15 +629,13 @@ public sealed partial class NcContractSystem : EntitySystem
             if (xform.MapID != storeMap)
                 continue;
 
-            if (!_tags.HasTag(tagComp, spawnTag))
+            if (!_tags.HasTag(tagComp, selectedSpawnTag))
                 continue;
 
-            var candidateWorld = _xform.GetWorldPosition(xform);
-            var dist = (candidateWorld - storeWorld).LengthSquared();
-            if (dist >= bestDistance)
+            matches++;
+            if (_random.Next(matches) != 0)
                 continue;
 
-            bestDistance = dist;
             coordinates = xform.Coordinates;
             found = true;
         }
@@ -454,9 +643,57 @@ public sealed partial class NcContractSystem : EntitySystem
         if (found)
             return true;
 
-        Sawmill.Warning(
-            $"[Contracts] Spawn tag '{spawnTag}' not found on map for {ToPrettyString(store)}. Fallback to store coordinates.");
-        return coordinates != EntityCoordinates.Invalid;
+        if (fallbackToStore)
+        {
+            Sawmill.Warning(
+                $"[Contracts] Spawn tag '{selectedSpawnTag}' not found on map for {ToPrettyString(store)}. Fallback to store coordinates.");
+            return coordinates != EntityCoordinates.Invalid;
+        }
+
+        Sawmill.Warning($"[Contracts] Spawn tag '{selectedSpawnTag}' not found on map for {ToPrettyString(store)}.");
+        return false;
+    }
+
+    private string? PickAvailableObjectiveSpawnTag(
+        MapId mapId,
+        IReadOnlyList<WeightedTagEntry>? weightedSpawnTags
+    )
+    {
+        if (weightedSpawnTags == null || weightedSpawnTags.Count == 0)
+            return null;
+
+        var totalWeight = 0;
+        string? selectedTag = null;
+
+        for (var i = 0; i < weightedSpawnTags.Count; i++)
+        {
+            var entry = weightedSpawnTags[i];
+            if (string.IsNullOrWhiteSpace(entry.Tag) ||
+                entry.Weight <= 0 ||
+                !_prototypes.HasIndex<TagPrototype>(entry.Tag) ||
+                !HasObjectiveSpawnTagOnMap(mapId, entry.Tag))
+            {
+                continue;
+            }
+
+            totalWeight += entry.Weight;
+            if (_random.Next(totalWeight) < entry.Weight)
+                selectedTag = entry.Tag;
+        }
+
+        return selectedTag;
+    }
+
+    private bool HasObjectiveSpawnTagOnMap(MapId mapId, string tag)
+    {
+        var query = EntityQueryEnumerator<TagComponent, TransformComponent>();
+        while (query.MoveNext(out _, out var tagComp, out var xform))
+        {
+            if (xform.MapID == mapId && _tags.HasTag(tagComp, tag))
+                return true;
+        }
+
+        return false;
     }
 
     private bool CanIssueContractPinpointer((EntityUid Store, string ContractId) key, ObjectiveRuntimeState state)
@@ -521,8 +758,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void CleanupObjectivePinpointers(
         (EntityUid Store, string ContractId) key,
-        ObjectiveRuntimeState state,
-        bool deleteTrackedEntities
+        ObjectiveRuntimeState state
     )
     {
         if (state.PinpointerEntities.Count == 0)
@@ -536,7 +772,7 @@ public sealed partial class NcContractSystem : EntitySystem
             var pinpointer = _objectivePinpointersScratch[i];
             UnregisterIssuedPinpointer(pinpointer, key);
 
-            if (deleteTrackedEntities && !TerminatingOrDeleted(pinpointer))
+            if (!TerminatingOrDeleted(pinpointer))
                 Del(pinpointer);
         }
 
@@ -545,10 +781,3 @@ public sealed partial class NcContractSystem : EntitySystem
     }
 
 }
-
-
-
-
-
-
-

@@ -50,13 +50,31 @@
   id: N14PowerCellFocusedYk42b
 
 - type: Tag
-  id: NcContractHuntTestSpawn
+  id: TradeContractHuntSpawn
 
 - type: Tag
-  id: NcContractDeliveryTestSpawn
+  id: TradeContractMineSpawn
 
 - type: Tag
-  id: NcContractRepairTestSpawn
+  id: TradeContractStoreSpawn
 
 - type: Tag
-  id: NcContractGhostRoleTestSpawn
+  id: TradeContractRoadSpawn
+
+- type: Tag
+  id: TradeContractWarehouseSpawn
+
+- type: Tag
+  id: TradeContractDeliverySpawn
+
+- type: Tag
+  id: TradeContractStructureSpawn
+
+- type: Tag
+  id: TradeContractRepairSpawn
+
+- type: Tag
+  id: TradeContractGhostSpawn
+
+- type: Tag
+  id: TradeContractStructureDropoff

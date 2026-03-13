@@ -29,7 +29,7 @@ public sealed partial class NcContractSystem : EntitySystem
         config.GhostRolePrototype = ghostRoleProtoId;
         ResetObjectiveState(contract);
 
-        if (!TryResolveObjectiveSpawnCoordinates(store, config.SpawnPointTag, out var spawnCoords))
+        if (!TryResolveObjectiveSpawnCoordinates(store, config, out var spawnCoords))
         {
             Sawmill.Warning($"[Contracts] Ghost role init failed for '{contractId}': cannot resolve spawn coordinates.");
             return false;
@@ -221,16 +221,23 @@ public sealed partial class NcContractSystem : EntitySystem
             deleteGuards: false);
     }
 
-    public bool HasRealtimeGhostRoleState(NcStoreComponent comp)
+    public bool HasRealtimeContractState(NcStoreComponent comp)
     {
         foreach (var contract in comp.Contracts.Values)
         {
-            if (!contract.Taken || !contract.IsGhostRoleObjective)
+            if (!contract.Taken)
                 continue;
 
             EnsureObjectiveRuntimeDefaults(contract);
-            if (!contract.Runtime.Failed)
+            if (contract.Runtime.Failed || contract.Completed)
+                continue;
+
+            if (contract.IsGhostRoleObjective ||
+                contract.IsTrackedDeliveryObjective ||
+                contract.AllowsStoreWorldTurnIn)
+            {
                 return true;
+            }
         }
 
         return false;

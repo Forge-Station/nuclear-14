@@ -32,8 +32,10 @@ public sealed partial class NcContractSystem : EntitySystem
     [Dependency] private readonly IRobustRandom _random = default!;
     private readonly List<string> _progressContractIdsScratch = new();
     private readonly List<EntityUid> _scratchCrateItems = new();
+    private readonly List<EntityUid> _scratchStoreNearbyItems = new();
     private readonly List<EntityUid> _scratchUserItems = new();
     private readonly Dictionary<QuasiKey, SmallBagState> _smallBags = new();
+    [Dependency] private readonly EntityLookupSystem _lookup = default!;
 
     public override void Initialize()
     {

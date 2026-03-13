@@ -9,12 +9,16 @@ internal static class NcContractTuning
 
     public const float MinRepairDoAfterSeconds = 0.1f;
     public const string DefaultContractPinpointerPrototypeId = "PinpointerUniversal";
+    public const string DefaultTrackedDeliveryDropoffBeaconPrototypeId = "TradeContractDropoffBeacon";
     public const string DefaultRepairToolQuality = "Welding";
     public const float DefaultRepairDoAfterSeconds = 2f;
     public const string DefaultRepairStageSoundPath = "/Audio/Effects/sparks4.ogg";
 
     public const int MaxActiveContractPinpointers = 5;
     public const float GhostRoleStoreDeliveryRange = 2.5f;
+    public const float TrackedDeliveryStoreRange = 1.5f;
+    public const float TrackedDeliveryDropoffRange = 1.5f;
+    public static readonly TimeSpan TrackedDeliveryDropoffCheckInterval = TimeSpan.FromSeconds(0.5);
     public static readonly TimeSpan GhostRoleTimeoutCheckInterval = TimeSpan.FromSeconds(1);
 
     public const float GuardSpawnRingScaleStep = 0.65f;

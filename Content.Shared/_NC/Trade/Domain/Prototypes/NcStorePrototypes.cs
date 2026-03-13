@@ -107,6 +107,15 @@ public sealed partial class StoreContractRuntimePrototype
     [DataField("spawnPointTag")]
     public string SpawnPointTag { get; set; } = string.Empty;
 
+    [DataField("spawnPointTags")]
+    public List<WeightedTagEntry> SpawnPointTags { get; set; } = new();
+
+    [DataField("dropoffPointTag")]
+    public string DropoffPointTag { get; set; } = string.Empty;
+
+    [DataField("dropoffPointTags")]
+    public List<WeightedTagEntry> DropoffPointTags { get; set; } = new();
+
     [DataField("targetPrototype")]
     public string TargetPrototype { get; set; } = string.Empty;
 
@@ -118,6 +127,15 @@ public sealed partial class StoreContractRuntimePrototype
 
     [DataField("ghostRolePrototype")]
     public string GhostRolePrototype { get; set; } = string.Empty;
+
+    [DataField("spawnAtStore")]
+    public bool SpawnAtStore { get; set; }
+
+    [DataField("preserveTargetOnComplete")]
+    public bool PreserveTargetOnComplete { get; set; }
+
+    [DataField("allowStoreWorldTurnIn")]
+    public bool AllowStoreWorldTurnIn { get; set; }
 
     [DataField("acceptTimeoutSeconds")]
     public int AcceptTimeoutSeconds { get; set; } = 300;
@@ -143,6 +161,23 @@ public sealed partial class StoreContractRuntimePrototype
     [DataField("repairStageSound")]
     public string RepairStageSound { get; set; } = "/Audio/Effects/sparks4.ogg";
 }
+
+[DataDefinition, Serializable, NetSerializable]
+public partial struct WeightedTagEntry
+{
+    [DataField("tag", required: true)]
+    public string Tag;
+
+    [DataField("weight")]
+    public int Weight;
+
+    public WeightedTagEntry(string tag, int weight)
+    {
+        Tag = tag;
+        Weight = weight;
+    }
+}
+
 [Prototype("storeContractsPreset")]
 public sealed partial class StoreContractsPresetPrototype : IPrototype
 {
@@ -155,7 +190,7 @@ public sealed partial class StoreContractsPresetPrototype : IPrototype
     public List<PackIncludeEntry> Packs { get; set; } = new();
 
     [DataField("skipCost")]
-    public int SkipCost { get; set; } = 50;
+    public int SkipCost { get; set; } = 150;
 
     [DataField("skipCurrency")]
     public string SkipCurrency { get; set; } = string.Empty;

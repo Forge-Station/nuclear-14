@@ -5,6 +5,85 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
+    private void UpdateTrackedDeliveryDropoffObjectives()
+    {
+        if (_objectiveRuntimeByContract.Count == 0)
+            return;
+
+        _objectiveRuntimeKeysScratch.Clear();
+        foreach (var (key, state) in _objectiveRuntimeByContract)
+        {
+            if (state.TargetEntity is not { } target ||
+                target == EntityUid.Invalid ||
+                TerminatingOrDeleted(target) ||
+                state.DeliveryDropoffCoordinates == null)
+            {
+                continue;
+            }
+
+            if (!TryGetObjectiveContract(key, out _, out var contract) ||
+                !contract.Taken ||
+                !contract.IsTrackedDeliveryObjective ||
+                !UsesTrackedDeliveryDropoff(contract) ||
+                contract.Completed)
+            {
+                continue;
+            }
+
+            if (IsTrackedDeliveryTargetAtDropoff(target, state))
+                _objectiveRuntimeKeysScratch.Add(key);
+        }
+
+        for (var i = 0; i < _objectiveRuntimeKeysScratch.Count; i++)
+            CompleteTrackedDeliveryDropoffObjective(_objectiveRuntimeKeysScratch[i]);
+
+        _objectiveRuntimeKeysScratch.Clear();
+    }
+
+    private void CompleteTrackedDeliveryDropoffObjective((EntityUid Store, string ContractId) key)
+    {
+        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state) ||
+            state.TargetEntity is not { } target ||
+            target == EntityUid.Invalid ||
+            TerminatingOrDeleted(target))
+        {
+            return;
+        }
+
+        if (!TryGetObjectiveContract(key, out _, out var contract))
+        {
+            CleanupObjectiveRuntime(key.Store, key.ContractId, true);
+            return;
+        }
+
+        if (!contract.Taken ||
+            !contract.IsTrackedDeliveryObjective ||
+            !UsesTrackedDeliveryDropoff(contract) ||
+            contract.Completed)
+        {
+            return;
+        }
+
+        SetTrackedDeliveryProgress(contract, GetTrackedDeliveryAmount(contract, target));
+        if (!contract.Completed)
+            return;
+
+        state.DeliveryDropoffCompleted = true;
+
+        if (!contract.Config.PreserveTargetOnComplete)
+        {
+            _objectiveRuntimeByTarget.Remove(target);
+            state.TargetEntity = null;
+
+            if (!TerminatingOrDeleted(target))
+                Del(target);
+        }
+
+        DeactivateTrackedDeliveryDropoff(state);
+
+        CleanupObjectivePinpointers(key, state);
+    }
+
     private void HandleTrackedDeliveryTargetResolved(
         (EntityUid Store, string ContractId) key,
         NcStoreComponent comp,
@@ -28,22 +107,52 @@ public sealed partial class NcContractSystem : EntitySystem
         EnsureObjectiveRuntimeDefaults(contract);
 
         var key = (store, contractId);
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state) ||
-            state.TargetEntity is not { } target ||
-            target == EntityUid.Invalid ||
-            TerminatingOrDeleted(target))
+        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
         {
             SetTrackedDeliveryProgress(contract, 0);
             return;
         }
 
-        var inUserInventory = ContainsTrackedDeliveryEntity(userItems, target);
-        var inCrate = ContainsTrackedDeliveryEntity(crateItems, target);
-        var progress = inUserInventory || inCrate
-            ? GetTrackedDeliveryAmount(contract, target)
+        if (UsesTrackedDeliveryDropoff(contract))
+        {
+            if (state.DeliveryDropoffCompleted)
+            {
+                SetTrackedDeliveryProgress(contract, GetTrackedDeliveryCompletionAmount(contract));
+                return;
+            }
+
+            if (state.TargetEntity is not { } target ||
+                target == EntityUid.Invalid ||
+                TerminatingOrDeleted(target))
+            {
+                SetTrackedDeliveryProgress(contract, 0);
+                return;
+            }
+
+            var dropoffProgress = IsTrackedDeliveryTargetAtDropoff(target, state)
+                ? GetTrackedDeliveryAmount(contract, target)
+                : 0;
+
+            SetTrackedDeliveryProgress(contract, dropoffProgress);
+            return;
+        }
+
+        if (state.TargetEntity is not { } storeTarget ||
+            storeTarget == EntityUid.Invalid ||
+            TerminatingOrDeleted(storeTarget))
+        {
+            SetTrackedDeliveryProgress(contract, 0);
+            return;
+        }
+
+        var inUserInventory = ContainsTrackedDeliveryEntity(userItems, storeTarget);
+        var inCrate = ContainsTrackedDeliveryEntity(crateItems, storeTarget);
+        var atStore = IsTrackedDeliveryTargetAtStore(store, storeTarget);
+        var storeProgress = inUserInventory || inCrate || atStore
+            ? GetTrackedDeliveryAmount(contract, storeTarget)
             : 0;
 
-        SetTrackedDeliveryProgress(contract, progress);
+        SetTrackedDeliveryProgress(contract, storeProgress);
     }
 
     private ClaimAttemptResult TryClaimTrackedDeliveryContract(
@@ -56,8 +165,59 @@ public sealed partial class NcContractSystem : EntitySystem
         EnsureObjectiveRuntimeDefaults(contract);
 
         var key = (store, contractId);
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state) ||
-            state.TargetEntity is not { } target ||
+        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+        {
+            return ClaimAttemptResult.Fail(
+                ClaimFailureReason.ObjectiveFailed,
+                Loc.GetString("nc-store-contract-delivery-target-lost"));
+        }
+
+        if (UsesTrackedDeliveryDropoff(contract))
+        {
+            if (state.DeliveryDropoffCompleted)
+                SetTrackedDeliveryProgress(contract, GetTrackedDeliveryCompletionAmount(contract));
+
+            if (!contract.Completed)
+            {
+                if (state.TargetEntity is not { } dropoffTarget ||
+                    dropoffTarget == EntityUid.Invalid ||
+                    TerminatingOrDeleted(dropoffTarget))
+                {
+                    FinalizeObjectiveFailure(
+                        key,
+                        comp,
+                        contract,
+                        Loc.GetString("nc-store-contract-delivery-target-lost"),
+                        deleteGuards: false);
+
+                    return ClaimAttemptResult.Fail(
+                        ClaimFailureReason.ObjectiveFailed,
+                        Loc.GetString("nc-store-contract-delivery-target-lost"));
+                }
+
+                SetTrackedDeliveryProgress(contract, IsTrackedDeliveryTargetAtDropoff(dropoffTarget, state)
+                    ? GetTrackedDeliveryAmount(contract, dropoffTarget)
+                    : 0);
+            }
+
+            if (!contract.Completed)
+            {
+                return ClaimAttemptResult.Fail(
+                    ClaimFailureReason.ObjectiveNotCompleted,
+                    $"Tracked delivery target for '{contractId}' has not reached the dropoff point.");
+            }
+
+            GiveContractRewards(user, contract.Rewards);
+            FinalizeClaim(
+                store,
+                comp,
+                contractId,
+                contract.Repeatable,
+                deleteTrackedEntities: !contract.Config.PreserveTargetOnComplete);
+            return ClaimAttemptResult.Ok();
+        }
+
+        if (state.TargetEntity is not { } target ||
             target == EntityUid.Invalid ||
             TerminatingOrDeleted(target))
         {
@@ -68,7 +228,9 @@ public sealed partial class NcContractSystem : EntitySystem
                 Loc.GetString("nc-store-contract-delivery-target-lost"),
                 deleteGuards: false);
 
-            return ClaimAttemptResult.Fail(ClaimFailureReason.ObjectiveFailed, Loc.GetString("nc-store-contract-delivery-target-lost"));
+            return ClaimAttemptResult.Fail(
+                ClaimFailureReason.ObjectiveFailed,
+                Loc.GetString("nc-store-contract-delivery-target-lost"));
         }
 
         _logic.ScanInventoryItems(user, _scratchUserItems);
@@ -85,12 +247,13 @@ public sealed partial class NcContractSystem : EntitySystem
 
         var inUserInventory = ContainsTrackedDeliveryEntity(_scratchUserItems, target);
         var inCrate = ContainsTrackedDeliveryEntity(crateItems, target);
-        if (!inUserInventory && !inCrate)
+        var atStore = IsTrackedDeliveryTargetAtStore(store, target);
+        if (!inUserInventory && !inCrate && !atStore)
         {
             SetTrackedDeliveryProgress(contract, 0);
             return ClaimAttemptResult.Fail(
                 ClaimFailureReason.ObjectiveNotCompleted,
-                $"Tracked delivery target for '{contractId}' is not present in user inventory or pulled crate.");
+                $"Tracked delivery target for '{contractId}' is not present in user inventory, pulled crate or at the store.");
         }
 
         if ((inUserInventory && _logic.IsProtectedFromDirectSale(user, target)) ||
@@ -110,8 +273,59 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         GiveContractRewards(user, contract.Rewards);
-        FinalizeClaim(store, comp, contractId, contract.Repeatable);
+        FinalizeClaim(
+            store,
+            comp,
+            contractId,
+            contract.Repeatable,
+            deleteTrackedEntities: !contract.Config.PreserveTargetOnComplete);
         return ClaimAttemptResult.Ok();
+    }
+
+    private static bool UsesTrackedDeliveryDropoff(ContractServerData contract)
+    {
+        return !string.IsNullOrWhiteSpace(contract.Config.DropoffPointTag) ||
+               contract.Config.DropoffPointTags.Count > 0;
+    }
+
+    private bool IsTrackedDeliveryTargetAtDropoff(EntityUid target, ObjectiveRuntimeState state)
+    {
+        if (state.DeliveryDropoffCoordinates is not { } dropoff)
+            return false;
+
+        if (!TryComp(target, out TransformComponent? targetXform))
+            return false;
+
+        if (IsTargetInEntityContainer(targetXform))
+            return false;
+
+        var targetMap = _xform.ToMapCoordinates(targetXform.Coordinates);
+        if (targetMap.MapId != dropoff.MapId)
+            return false;
+
+        var targetPos = _xform.GetWorldPosition(targetXform);
+        var delta = targetPos - dropoff.Position;
+        return delta.LengthSquared() <= NcContractTuning.TrackedDeliveryDropoffRange * NcContractTuning.TrackedDeliveryDropoffRange;
+    }
+
+    private bool IsTrackedDeliveryTargetAtStore(EntityUid store, EntityUid target)
+    {
+        if (!TryComp(store, out TransformComponent? storeXform) ||
+            !TryComp(target, out TransformComponent? targetXform))
+        {
+            return false;
+        }
+
+        if (IsTargetInEntityContainer(targetXform))
+            return false;
+
+        var storeMap = _xform.ToMapCoordinates(storeXform.Coordinates);
+        var targetMap = _xform.ToMapCoordinates(targetXform.Coordinates);
+        if (storeMap.MapId != targetMap.MapId)
+            return false;
+
+        var delta = targetMap.Position - storeMap.Position;
+        return delta.LengthSquared() <= NcContractTuning.TrackedDeliveryStoreRange * NcContractTuning.TrackedDeliveryStoreRange;
     }
 
     private static bool ContainsTrackedDeliveryEntity(IReadOnlyList<EntityUid>? items, EntityUid target)
@@ -136,6 +350,19 @@ public sealed partial class NcContractSystem : EntitySystem
             return Math.Clamp(stack.Count, 0, required);
 
         return Math.Min(required, 1);
+    }
+
+    private static int GetTrackedDeliveryCompletionAmount(ContractServerData contract)
+    {
+        var targets = GetEffectiveTargets(contract);
+        if (targets.Count == 0)
+            return Math.Max(1, contract.Required);
+
+        var totalRequired = 0;
+        for (var i = 0; i < targets.Count; i++)
+            totalRequired = SaturatingAdd(totalRequired, Math.Max(0, targets[i].Required));
+
+        return Math.Max(1, totalRequired);
     }
 
     private static void SetTrackedDeliveryProgress(ContractServerData contract, int trackedAmount)

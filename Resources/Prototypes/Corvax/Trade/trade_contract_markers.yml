@@ -1,0 +1,101 @@
+# Markers for contract spawn zones and delivery points.
+
+- type: entity
+  id: MarkerTradeContractBounty
+  parent: MarkerBase
+  name: контракт, охота
+  suffix: contracts, bounty
+  components:
+  - type: Tag
+    tags:
+    - TradeContractHuntSpawn
+
+- type: entity
+  id: MarkerTradeContractMine
+  parent: MarkerBase
+  name: контракт, шахта
+  suffix: contracts, mine
+  components:
+  - type: Tag
+    tags:
+    - TradeContractMineSpawn
+
+- type: entity
+  id: MarkerTradeContractStore
+  parent: MarkerBase
+  name: контракт, магазин
+  suffix: contracts, store
+  components:
+  - type: Tag
+    tags:
+    - TradeContractStoreSpawn
+
+- type: entity
+  id: MarkerTradeContractRoad
+  parent: MarkerBase
+  name: контракт, дорога
+  suffix: contracts, road
+  components:
+  - type: Tag
+    tags:
+    - TradeContractRoadSpawn
+
+- type: entity
+  id: MarkerTradeContractWarehouse
+  parent: MarkerBase
+  name: контракт, склад
+  suffix: contracts, warehouse
+  components:
+  - type: Tag
+    tags:
+    - TradeContractWarehouseSpawn
+
+- type: entity
+  id: MarkerTradeContractDelivery
+  parent: MarkerBase
+  name: контракт, адресная доставка
+  suffix: contracts, delivery
+  components:
+  - type: Tag
+    tags:
+    - TradeContractDeliverySpawn
+
+- type: entity
+  id: MarkerTradeContractStructure
+  parent: MarkerBase
+  name: контракт, крупный груз
+  suffix: contracts, structure
+  components:
+  - type: Tag
+    tags:
+    - TradeContractStructureSpawn
+
+- type: entity
+  id: MarkerTradeContractRepair
+  parent: MarkerBase
+  name: контракт, ремонт
+  suffix: contracts, repair
+  components:
+  - type: Tag
+    tags:
+    - TradeContractRepairSpawn
+
+- type: entity
+  id: MarkerTradeContractSpecialTarget
+  parent: MarkerBase
+  name: контракт, особая цель
+  suffix: contracts, special-target
+  components:
+  - type: Tag
+    tags:
+    - TradeContractGhostSpawn
+
+- type: entity
+  id: MarkerTradeContractDropoff
+  parent: MarkerBase
+  name: контракт, точка выгрузки
+  suffix: contracts, dropoff
+  components:
+  - type: Tag
+    tags:
+    - TradeContractStructureDropoff
