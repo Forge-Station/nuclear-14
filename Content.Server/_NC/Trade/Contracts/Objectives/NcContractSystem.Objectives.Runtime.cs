@@ -46,7 +46,7 @@ public sealed partial class NcContractSystem : EntitySystem
     }
 
     private TimeSpan _nextGhostRoleTimeoutCheck = TimeSpan.Zero;
-    private void ShutdownObjectiveRuntime() => ClearAllObjectiveRuntime(false);
+    private void ShutdownObjectiveRuntime() => ClearAllObjectiveRuntime(false, deleteGuards: false);
     public override void Update(float frameTime)
     {
         if (_objectiveRuntimeByContract.Count == 0 || _timing.CurTime < _nextGhostRoleTimeoutCheck)
@@ -55,7 +55,7 @@ public sealed partial class NcContractSystem : EntitySystem
         UpdateGhostRoleObjectiveTimeouts();
     }
 
-    private void ClearAllObjectiveRuntime(bool deleteTrackedEntities)
+    private void ClearAllObjectiveRuntime(bool deleteTrackedEntities, bool deleteGuards = true)
     {
         if (_objectiveRuntimeByContract.Count == 0)
             return;
@@ -67,7 +67,7 @@ public sealed partial class NcContractSystem : EntitySystem
         for (var i = 0; i < _objectiveRuntimeKeysScratch.Count; i++)
         {
             var key = _objectiveRuntimeKeysScratch[i];
-            CleanupObjectiveRuntime(key.Store, key.ContractId, deleteTrackedEntities);
+            CleanupObjectiveRuntime(key.Store, key.ContractId, deleteTrackedEntities, deleteGuards);
         }
 
         _objectiveRuntimeKeysScratch.Clear();
@@ -76,7 +76,7 @@ public sealed partial class NcContractSystem : EntitySystem
         _objectiveRuntimeByGuard.Clear();
     }
 
-    private void ClearStoreObjectiveRuntime(EntityUid store, bool deleteTrackedEntities)
+    private void ClearStoreObjectiveRuntime(EntityUid store, bool deleteTrackedEntities, bool deleteGuards = true)
     {
         if (store == EntityUid.Invalid || _objectiveRuntimeByContract.Count == 0)
             return;
@@ -89,7 +89,7 @@ public sealed partial class NcContractSystem : EntitySystem
         for (var i = 0; i < _objectiveRuntimeKeysScratch.Count; i++)
         {
             var key = _objectiveRuntimeKeysScratch[i];
-            CleanupObjectiveRuntime(key.Store, key.ContractId, deleteTrackedEntities);
+            CleanupObjectiveRuntime(key.Store, key.ContractId, deleteTrackedEntities, deleteGuards);
         }
 
         _objectiveRuntimeKeysScratch.Clear();

@@ -1,4 +1,4 @@
-using Robust.Shared.Serialization;
+﻿using Robust.Shared.Serialization;
 
 namespace Content.Shared._NC.Trade;
 
@@ -17,13 +17,11 @@ public sealed class ContractClientData
     public bool Taken;
     public bool SupportsPinpointer;
     public ContractExecutionKind ExecutionKind = ContractExecutionKind.InventoryDelivery;
-    public ContractObjectiveType ObjectiveType = ContractObjectiveType.Delivery;
     public ContractRuntimeContextData Runtime = new();
     public int Required;
     public List<ContractRewardData> Rewards = new();
 
     public string TargetItem = string.Empty;
-
     public List<ContractTargetClientData> Targets = new();
 
     public ContractClientData() { }
@@ -37,7 +35,6 @@ public sealed class ContractClientData
         bool taken,
         bool supportsPinpointer,
         ContractExecutionKind executionKind,
-        ContractObjectiveType objectiveType,
         ContractRuntimeContextData runtime,
         ContractFlowStatus flowStatus,
         bool completed,
@@ -55,7 +52,6 @@ public sealed class ContractClientData
         Taken = taken;
         SupportsPinpointer = supportsPinpointer;
         ExecutionKind = executionKind;
-        ObjectiveType = objectiveType;
         Runtime = runtime;
         FlowStatus = flowStatus;
         Completed = completed;

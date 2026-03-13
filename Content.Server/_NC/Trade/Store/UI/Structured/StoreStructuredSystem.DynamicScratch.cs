@@ -4,86 +4,9 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class StoreStructuredSystem : EntitySystem
 {
-    private ContractClientData MapContractToClient(ContractServerData c)
+    private sealed partial class DynamicScratch
     {
-        var targets = new List<ContractTargetClientData>();
-
-        if (c.Targets is { Count: > 0, })
-        {
-            foreach (var t in c.Targets)
-            {
-                if (string.IsNullOrWhiteSpace(t.TargetItem) || t.Required <= 0)
-                    continue;
-
-                targets.Add(
-                    new(t.TargetItem, t.Required, t.Progress)
-                    {
-                        MatchMode = t.MatchMode
-                    });
-            }
-        }
-        else if (!string.IsNullOrWhiteSpace(c.TargetItem) && c.Required > 0)
-        {
-            targets.Add(
-                new(c.TargetItem, c.Required, c.Progress)
-                {
-                    MatchMode = c.MatchMode
-                });
-        }
-
-        var rewards = c.Rewards is { Count: > 0, }
-            ? new(c.Rewards)
-            : new List<ContractRewardData>();
-
-        return new(
-            c.Id,
-            c.Name,
-            c.Difficulty,
-            c.Description,
-            c.Repeatable,
-            c.Taken,
-            SupportsContractPinpointer(c),
-            c.ExecutionKind,
-            c.ObjectiveType,
-            CloneRuntimeContext(c.Runtime),
-            c.FlowStatus,
-            c.Completed,
-            c.TargetItem,
-            c.Required,
-            c.Progress,
-            targets,
-            rewards
-        );
-    }
-
-    private static bool SupportsContractPinpointer(ContractServerData contract)
-    {
-        var config = contract.Config;
-        if (!config.GivePinpointer)
-            return false;
-
-        return contract.UsesWorldRuntimeSupport;
-    }
-
-    private static ContractRuntimeContextData CloneRuntimeContext(ContractRuntimeContextData? runtime)
-    {
-        if (runtime == null)
-            return new ContractRuntimeContextData();
-
-        return new ContractRuntimeContextData
-        {
-            Stage = runtime.Stage,
-            StageGoal = runtime.StageGoal,
-            AcceptTimeoutRemainingSeconds = runtime.AcceptTimeoutRemainingSeconds,
-            GhostRolePendingAcceptance = runtime.GhostRolePendingAcceptance,
-            Failed = runtime.Failed,
-            FailureReason = runtime.FailureReason
-        };
-    }
-
-    private sealed class DynamicScratch
-    {
-        private readonly DynamicStateBuffer[] _buffers = { new(), new(), };
+        private readonly DynamicStateBuffer[] _buffers = { new(), new() };
         private readonly HashSet<string> _visibleListingIds = new();
         private int _activeIndex;
         private int _catalogRevision;
@@ -120,6 +43,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 var id = ids[i];
                 if (string.IsNullOrWhiteSpace(id))
                     continue;
+
                 sig = unchecked(sig * 31 + id.GetHashCode());
             }
 
@@ -131,11 +55,12 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                     var id = ids[i];
                     if (string.IsNullOrWhiteSpace(id))
                         continue;
-                    if (!_visibleListingIds.Contains(id))
-                    {
-                        all = false;
-                        break;
-                    }
+
+                    if (_visibleListingIds.Contains(id))
+                        continue;
+
+                    all = false;
+                    break;
                 }
 
                 if (all)
@@ -213,135 +138,11 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         public void Commit(int catalogRevision, bool hasBuyTab, bool hasSellTab, bool hasContracts)
         {
             _activeIndex = 1 - _activeIndex;
-
             _catalogRevision = catalogRevision;
             _hasBuyTab = hasBuyTab;
             _hasSellTab = hasSellTab;
             _hasContracts = hasContracts;
             _hasMeta = true;
-        }
-
-        private static bool DictEquals(Dictionary<string, int> a, Dictionary<string, int> b)
-        {
-            if (ReferenceEquals(a, b))
-                return true;
-
-            if (a.Count != b.Count)
-                return false;
-
-            foreach (var (k, v) in a)
-                if (!b.TryGetValue(k, out var bv) || bv != v)
-                    return false;
-
-            return true;
-        }
-
-        private static bool ListEquals(List<ContractClientData> a, List<ContractClientData> b)
-        {
-            if (ReferenceEquals(a, b))
-                return true;
-
-            if (a.Count != b.Count)
-                return false;
-
-            for (var i = 0; i < a.Count; i++)
-            {
-                if (!ContractEquals(a[i], b[i]))
-                    return false;
-            }
-
-            return true;
-        }
-
-        private static bool ContractEquals(ContractClientData? a, ContractClientData? b)
-        {
-            if (ReferenceEquals(a, b))
-                return true;
-            if (a == null || b == null)
-                return false;
-
-            if (!string.Equals(a.Id, b.Id, StringComparison.Ordinal) ||
-                !string.Equals(a.Name, b.Name, StringComparison.Ordinal) ||
-                !string.Equals(a.Difficulty, b.Difficulty, StringComparison.Ordinal) ||
-                !string.Equals(a.Description, b.Description, StringComparison.Ordinal) ||
-                !string.Equals(a.TargetItem, b.TargetItem, StringComparison.Ordinal))
-                return false;
-
-            if (a.Repeatable != b.Repeatable ||
-                a.Taken != b.Taken ||
-                a.SupportsPinpointer != b.SupportsPinpointer ||
-                a.ExecutionKind != b.ExecutionKind ||
-                a.ObjectiveType != b.ObjectiveType ||
-                a.FlowStatus != b.FlowStatus ||
-                a.Completed != b.Completed ||
-                a.Required != b.Required ||
-                a.Progress != b.Progress)
-                return false;
-
-            return TargetsEquals(a.Targets, b.Targets) &&
-                RewardsEquals(a.Rewards, b.Rewards) &&
-                RuntimeEquals(a.Runtime, b.Runtime);
-        }
-
-        private static bool RuntimeEquals(ContractRuntimeContextData? a, ContractRuntimeContextData? b)
-        {
-            if (ReferenceEquals(a, b))
-                return true;
-
-            if (a == null || b == null)
-                return false;
-
-            return a.Stage == b.Stage &&
-                a.StageGoal == b.StageGoal &&
-                a.AcceptTimeoutRemainingSeconds == b.AcceptTimeoutRemainingSeconds &&
-                a.GhostRolePendingAcceptance == b.GhostRolePendingAcceptance &&
-                a.Failed == b.Failed &&
-                string.Equals(a.FailureReason, b.FailureReason, StringComparison.Ordinal);
-        }
-
-        private static bool TargetsEquals(List<ContractTargetClientData>? a, List<ContractTargetClientData>? b)
-        {
-            if (ReferenceEquals(a, b))
-                return true;
-            if (a == null || b == null)
-                return false;
-            if (a.Count != b.Count)
-                return false;
-
-            for (var i = 0; i < a.Count; i++)
-            {
-                var at = a[i];
-                var bt = b[i];
-                if (!string.Equals(at.TargetItem, bt.TargetItem, StringComparison.Ordinal) ||
-                    at.Required != bt.Required ||
-                    at.Progress != bt.Progress ||
-                    at.MatchMode != bt.MatchMode)
-                    return false;
-            }
-
-            return true;
-        }
-
-        private static bool RewardsEquals(List<ContractRewardData>? a, List<ContractRewardData>? b)
-        {
-            if (ReferenceEquals(a, b))
-                return true;
-            if (a == null || b == null)
-                return false;
-            if (a.Count != b.Count)
-                return false;
-
-            for (var i = 0; i < a.Count; i++)
-            {
-                var ar = a[i];
-                var br = b[i];
-                if (ar.Type != br.Type ||
-                    ar.Amount != br.Amount ||
-                    !string.Equals(ar.Id, br.Id, StringComparison.Ordinal))
-                    return false;
-            }
-
-            return true;
         }
     }
 
@@ -369,8 +170,3 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
     }
 }
-
-
-
-
-

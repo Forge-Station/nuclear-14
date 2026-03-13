@@ -6,6 +6,7 @@ public sealed partial class NcContractSystem : EntitySystem
 {
     private static ContractRuntimeContextData CreateInitialRuntimeState(StoreContractPrototype proto)
     {
+        var executionKind = ContractExecutionKinds.Resolve(proto.ObjectiveType, proto.Runtime.TargetPrototype);
         var runtime = new ContractRuntimeContextData
         {
             Stage = 0,
@@ -16,7 +17,7 @@ public sealed partial class NcContractSystem : EntitySystem
             FailureReason = string.Empty
         };
 
-        NormalizeRuntimeState(proto.ObjectiveType, runtime);
+        NormalizeRuntimeState(executionKind, runtime);
         return runtime;
     }
 
@@ -44,11 +45,11 @@ public sealed partial class NcContractSystem : EntitySystem
         return config;
     }
 
-    private static void NormalizeRuntimeState(ContractObjectiveType objectiveType, ContractRuntimeContextData runtime)
+    private static void NormalizeRuntimeState(ContractExecutionKind executionKind, ContractRuntimeContextData runtime)
     {
         runtime.StageGoal = runtime.StageGoal > 0
             ? runtime.StageGoal
-            : GetDefaultObjectiveStageGoal(objectiveType);
+            : GetDefaultObjectiveStageGoal(executionKind);
         runtime.Stage = Math.Clamp(runtime.Stage, 0, runtime.StageGoal);
         runtime.AcceptTimeoutRemainingSeconds = Math.Max(0, runtime.AcceptTimeoutRemainingSeconds);
         runtime.FailureReason ??= string.Empty;
@@ -71,9 +72,9 @@ public sealed partial class NcContractSystem : EntitySystem
         config.RepairStageSound = ResolveRepairStageSound(config.RepairStageSound);
     }
 
-    private static int GetDefaultObjectiveStageGoal(ContractObjectiveType objectiveType)
+    private static int GetDefaultObjectiveStageGoal(ContractExecutionKind executionKind)
     {
-        return objectiveType == ContractObjectiveType.Repair
+        return executionKind == ContractExecutionKind.RepairObjective
             ? NcContractTuning.DefaultRepairStageGoal
             : NcContractTuning.DefaultObjectiveStageGoal;
     }

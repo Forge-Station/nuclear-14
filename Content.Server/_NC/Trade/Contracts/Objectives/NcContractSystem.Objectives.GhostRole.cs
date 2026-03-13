@@ -119,7 +119,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryGetObjectiveContract(key, out _, out var contract) ||
             !contract.Taken ||
             contract.Completed ||
-            contract.ObjectiveType != ContractObjectiveType.GhostRole ||
+            !contract.IsGhostRoleObjective ||
             contract.Runtime.Failed)
         {
             return false;
@@ -196,7 +196,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return;
         }
 
-        if (!contract.Taken || contract.ObjectiveType != ContractObjectiveType.GhostRole || contract.Completed)
+        if (!contract.Taken || !contract.IsGhostRoleObjective || contract.Completed)
             return;
 
         FinalizeObjectiveFailure(
@@ -225,7 +225,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         foreach (var contract in comp.Contracts.Values)
         {
-            if (!contract.Taken || contract.ObjectiveType != ContractObjectiveType.GhostRole)
+            if (!contract.Taken || !contract.IsGhostRoleObjective)
                 continue;
 
             EnsureObjectiveRuntimeDefaults(contract);

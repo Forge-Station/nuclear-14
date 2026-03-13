@@ -1,4 +1,4 @@
-namespace Content.Shared._NC.Trade;
+﻿namespace Content.Shared._NC.Trade;
 
 public static class ContractExecutionKinds
 {
@@ -13,6 +13,17 @@ public static class ContractExecutionKinds
             ContractObjectiveType.Repair => ContractExecutionKind.RepairObjective,
             ContractObjectiveType.GhostRole => ContractExecutionKind.GhostRoleObjective,
             _ => ContractExecutionKind.InventoryDelivery
+        };
+    }
+
+    public static ContractObjectiveType ToObjectiveType(ContractExecutionKind kind)
+    {
+        return kind switch
+        {
+            ContractExecutionKind.HuntObjective => ContractObjectiveType.Hunt,
+            ContractExecutionKind.RepairObjective => ContractObjectiveType.Repair,
+            ContractExecutionKind.GhostRoleObjective => ContractObjectiveType.GhostRole,
+            _ => ContractObjectiveType.Delivery
         };
     }
 

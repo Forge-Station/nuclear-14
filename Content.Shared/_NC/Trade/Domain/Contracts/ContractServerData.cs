@@ -23,6 +23,9 @@ public sealed class ContractServerData
     public ContractExecutionKind ExecutionKind => ContractExecutionKinds.Resolve(ObjectiveType, Config?.TargetPrototype);
     public bool IsInventoryDelivery => ExecutionKind == ContractExecutionKind.InventoryDelivery;
     public bool IsTrackedDeliveryObjective => ExecutionKind == ContractExecutionKind.TrackedDeliveryObjective;
+    public bool IsHuntObjective => ExecutionKind == ContractExecutionKind.HuntObjective;
+    public bool IsRepairObjective => ExecutionKind == ContractExecutionKind.RepairObjective;
+    public bool IsGhostRoleObjective => ExecutionKind == ContractExecutionKind.GhostRoleObjective;
     public bool HasInventoryDeliverySpawnSupport => IsInventoryDelivery && !string.IsNullOrWhiteSpace(Config?.DeliverySpawnPrototype);
     public bool UsesWorldObjectiveRuntime => ContractExecutionKinds.UsesWorldRuntime(ExecutionKind);
     public bool UsesWorldRuntimeSupport => UsesWorldObjectiveRuntime || HasInventoryDeliverySpawnSupport;

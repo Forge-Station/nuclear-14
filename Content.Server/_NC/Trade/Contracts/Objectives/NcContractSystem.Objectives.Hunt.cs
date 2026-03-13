@@ -14,7 +14,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!_objectiveRuntimeByTarget.TryGetValue(args.Target, out var key))
             return;
 
-        if (!TryGetObjectiveContract(key, out _, out var contract) || contract.ObjectiveType != ContractObjectiveType.Hunt)
+        if (!TryGetObjectiveContract(key, out _, out var contract) || !contract.IsHuntObjective)
             return;
 
         OnObjectiveTrackedTargetResolved(key, args.Target);

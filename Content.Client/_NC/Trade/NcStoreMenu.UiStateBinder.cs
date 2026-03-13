@@ -1,12 +1,10 @@
-using Content.Shared._NC.Trade;
-
+﻿using Content.Shared._NC.Trade;
 
 namespace Content.Client._NC.Trade;
 
-
 public sealed partial class NcStoreMenu
 {
-    private sealed class UiStateBinder
+    private sealed partial class UiStateBinder
     {
         private readonly NcStoreMenu _m;
 
@@ -22,152 +20,6 @@ public sealed partial class NcStoreMenu
         public UiStateBinder(NcStoreMenu menu)
         {
             _m = menu;
-        }
-
-        private static bool DictEquals(Dictionary<string, int> a, Dictionary<string, int> b)
-        {
-            if (ReferenceEquals(a, b))
-                return true;
-
-            if (a.Count != b.Count)
-                return false;
-
-            foreach (var (k, v) in a)
-                if (!b.TryGetValue(k, out var other) || other != v)
-                    return false;
-
-            return true;
-        }
-
-        private static bool SparseDictEqualsWithPreserve(
-            Dictionary<string, int> src,
-            Dictionary<string, int> dst,
-            HashSet<string> preserveMissingIds
-        )
-        {
-            foreach (var (k, v) in src)
-            {
-                if (!dst.TryGetValue(k, out var other) || other != v)
-                    return false;
-            }
-
-            foreach (var key in dst.Keys)
-            {
-                if (src.ContainsKey(key))
-                    continue;
-
-                if (!preserveMissingIds.Contains(key))
-                    return false;
-            }
-
-            return true;
-        }
-
-        private static void ApplySparseSnapshot(Dictionary<string, int> src, Dictionary<string, int> dst)
-        {
-            dst.Clear();
-
-            foreach (var (k, v) in src)
-            {
-                if (string.IsNullOrWhiteSpace(k))
-                    continue;
-
-                dst[k] = v;
-            }
-        }
-
-        private static void ApplySparseSnapshotWithPreserve(
-            Dictionary<string, int> src,
-            Dictionary<string, int> dst,
-            HashSet<string> preserveMissingIds
-        )
-        {
-            var toRemove = new List<string>();
-
-            foreach (var key in dst.Keys)
-            {
-                if (src.ContainsKey(key))
-                    continue;
-
-                if (!preserveMissingIds.Contains(key))
-                    toRemove.Add(key);
-            }
-
-            for (var i = 0; i < toRemove.Count; i++)
-                dst.Remove(toRemove[i]);
-
-            foreach (var (k, v) in src)
-            {
-                if (string.IsNullOrWhiteSpace(k))
-                    continue;
-
-                dst[k] = v;
-            }
-        }
-
-        private static int ComputeContractsHash(List<ContractClientData> contracts)
-        {
-            unchecked
-            {
-                var h = 17;
-                for (var i = 0; i < contracts.Count; i++)
-                {
-                    var c = contracts[i];
-                    h = h * 31 + (c.Id?.GetHashCode() ?? 0);
-                    h = h * 31 + (c.Name?.GetHashCode() ?? 0);
-                    h = h * 31 + (c.Difficulty?.GetHashCode() ?? 0);
-                    h = h * 31 + (c.Description?.GetHashCode() ?? 0);
-                    h = h * 31 + (c.TargetItem?.GetHashCode() ?? 0);
-                    h = h * 31 + (c.Repeatable ? 1 : 0);
-                    h = h * 31 + (c.Taken ? 1 : 0);
-                    h = h * 31 + (int) c.ExecutionKind;
-                    h = h * 31 + (int) c.ObjectiveType;
-                    h = h * 31 + (int) c.FlowStatus;
-                    h = h * 31 + (c.Completed ? 1 : 0);
-                    h = h * 31 + c.Progress;
-                    h = h * 31 + c.Required;
-                    h = h * 31 + (c.SupportsPinpointer ? 1 : 0);
-                    var runtime = c.Runtime;
-                    if (runtime != null)
-                    {
-                        h = h * 31 + runtime.Stage;
-                        h = h * 31 + runtime.StageGoal;
-                        h = h * 31 + runtime.AcceptTimeoutRemainingSeconds;
-                        h = h * 31 + (runtime.GhostRolePendingAcceptance ? 1 : 0);
-                        h = h * 31 + (runtime.Failed ? 1 : 0);
-                        h = h * 31 + (runtime.FailureReason?.GetHashCode() ?? 0);
-                    }
-
-                    var targets = c.Targets;
-                    h = h * 31 + (targets?.Count ?? 0);
-                    if (targets != null)
-                    {
-                        for (var t = 0; t < targets.Count; t++)
-                        {
-                            var target = targets[t];
-                            h = h * 31 + (target.TargetItem?.GetHashCode() ?? 0);
-                            h = h * 31 + target.Required;
-                            h = h * 31 + target.Progress;
-                            h = h * 31 + (int) target.MatchMode;
-                        }
-                    }
-
-                    var rewards = c.Rewards;
-                    h = h * 31 + (rewards?.Count ?? 0);
-                    if (rewards != null)
-                    {
-                        for (var r = 0; r < rewards.Count; r++)
-                        {
-                            var reward = rewards[r];
-                            h = h * 31 + (int) reward.Type;
-                            h = h * 31 + (reward.Id?.GetHashCode() ?? 0);
-                            h = h * 31 + reward.Amount;
-                        }
-                    }
-                }
-
-                return h;
-            }
         }
 
         private int ComputeReadyMembershipHash(Dictionary<string, int> ownedById, Dictionary<string, int> remainingById)
@@ -189,6 +41,7 @@ public sealed partial class NcStoreMenu
                     var remaining = remainingById.GetValueOrDefault(s.Id, -1);
                     if (remaining == 0)
                         continue;
+
                     h = h * 31 + (s.Id?.GetHashCode() ?? 0);
                 }
 
@@ -201,7 +54,6 @@ public sealed partial class NcStoreMenu
             unchecked
             {
                 var h = 17;
-
                 var catalog = _m._catalogModel.Catalog;
                 for (var i = 0; i < catalog.Count; i++)
                 {
@@ -212,6 +64,7 @@ public sealed partial class NcStoreMenu
                     var take = crateUnitsById.GetValueOrDefault(s.Id, 0);
                     if (take <= 0)
                         continue;
+
                     h = h * 31 + (s.Id?.GetHashCode() ?? 0);
                 }
 
@@ -322,6 +175,7 @@ public sealed partial class NcStoreMenu
 
             if (crateChanged)
                 ApplySparseSnapshot(crateUnitsById, _m._catalogModel.CrateUnitsById);
+
             if (!DictEquals(massTotals, _m._massSellTotals))
                 _m.SetMassSellTotals(massTotals);
 
@@ -367,16 +221,13 @@ public sealed partial class NcStoreMenu
                 _m.RefreshListingsDynamicOnly();
             }
             else if (balancesChanged || tabsChanged)
+            {
                 _m.RefreshListingsDynamicOnly();
+            }
 
             _lastReadyMembershipHash = readyMembershipHash;
             _lastCrateMembershipHash = crateMembershipHash;
-
             _hasLastDynamic = true;
         }
     }
 }
-
-
-
-

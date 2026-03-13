@@ -18,10 +18,18 @@ public sealed partial class NcContractSystem : EntitySystem
         if (comp.Contracts.Count == 0)
             return;
 
+        _progressContractIdsScratch.Clear();
+        foreach (var contractId in comp.Contracts.Keys)
+            _progressContractIdsScratch.Add(contractId);
+
         var hasCrateWork = crate is { } && crateItems is { Count: > 0 };
 
-        foreach (var (contractId, contract) in comp.Contracts)
+        for (var i = 0; i < _progressContractIdsScratch.Count; i++)
         {
+            var contractId = _progressContractIdsScratch[i];
+            if (!comp.Contracts.TryGetValue(contractId, out var contract))
+                continue;
+
             if (!contract.Taken)
             {
                 ResetContractProgress(contract);
@@ -43,6 +51,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
             UpdateContractProgressForSingleContract(contract, user, userItems, crate, crateItems, hasCrateWork);
         }
+
+        _progressContractIdsScratch.Clear();
     }
 
 
@@ -128,26 +138,10 @@ public sealed partial class NcContractSystem : EntitySystem
         foreach (var (key, required) in _progressRequiredByKeyScratch)
         {
             if (required <= 0)
-            {
                 _progressClaimableByKeyScratch[key] = 0;
-                continue;
-            }
-
-            _progressOrderedKeysScratch.Add((key.ProtoId, key.MatchMode, GetProtoDepth(key.ProtoId)));
         }
 
-        _progressOrderedKeysScratch.Sort(static (a, b) =>
-        {
-            var depth = b.Depth.CompareTo(a.Depth);
-            if (depth != 0)
-                return depth;
-
-            var mode = ((int) a.MatchMode).CompareTo((int) b.MatchMode);
-            if (mode != 0)
-                return mode;
-
-            return string.CompareOrdinal(a.ProtoId, b.ProtoId);
-        });
+        BuildOrderedRequiredKeys(_progressRequiredByKeyScratch, _progressOrderedKeysScratch);
 
         foreach (var ordered in _progressOrderedKeysScratch)
         {
@@ -433,9 +427,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             var candidateId = meta.EntityPrototype.ID;
-            var matches = matchMode == PrototypeMatchMode.Exact
-                ? candidateId == expectedProtoId
-                : candidateId == expectedProtoId || IsDescendantId(candidateId, expectedProtoId);
+            var matches = MatchesPrototypeId(candidateId, expectedProtoId, matchMode);
 
             if (!matches)
                 continue;
@@ -466,3 +458,4 @@ public sealed partial class NcContractSystem : EntitySystem
         return reserved;
     }
 }
+

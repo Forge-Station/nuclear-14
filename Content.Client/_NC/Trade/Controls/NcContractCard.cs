@@ -1,16 +1,13 @@
-using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
+﻿using Content.Shared._NC.Trade;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Prototypes;
 
-
 namespace Content.Client._NC.Trade.Controls;
 
-
-public sealed class NcContractCard : PanelContainer
+public sealed partial class NcContractCard : PanelContainer
 {
     private readonly ContractClientData _data;
     private readonly IPrototypeManager _proto;
@@ -21,7 +18,6 @@ public sealed class NcContractCard : PanelContainer
     private readonly int _skipBalance;
     private const int TargetIconPx = 96;
     private const int RewardIconPx = 40;
-
 
     public NcContractCard(ContractClientData data, IPrototypeManager protoMan, SpriteSystem sprites, IEntityManager entMan, int skipCost = 0, string skipCurrency = "", int skipBalance = 0)
     {
@@ -59,7 +55,7 @@ public sealed class NcContractCard : PanelContainer
         {
             MinSize = new(4, 0),
             VerticalExpand = true,
-            PanelOverride = new StyleBoxFlat { BackgroundColor = borderColor, },
+            PanelOverride = new StyleBoxFlat { BackgroundColor = borderColor },
             Margin = new(0, 0, 6, 0)
         };
         row.AddChild(diffStrip);
@@ -143,7 +139,9 @@ public sealed class NcContractCard : PanelContainer
                 root.AddChild(BuildTargetRow(t.TargetItem, t.Required));
         }
         else
+        {
             root.AddChild(BuildTargetRow(_data.TargetItem, _data.Required));
+        }
 
         if (!_data.Completed)
         {
@@ -192,10 +190,10 @@ public sealed class NcContractCard : PanelContainer
         titleLabel.StyleClasses.Add("LabelHeading");
         header.AddChild(titleLabel);
 
-        header.AddChild(new() { HorizontalExpand = true, });
+        header.AddChild(new Control { HorizontalExpand = true });
 
-        var objectiveTypeText = ObjectiveTypeName(_data.ObjectiveType);
-        var objectiveTypeTip = ObjectiveTypeTooltip(_data.ObjectiveType);
+        var objectiveTypeText = ObjectiveTypeName(_data.ExecutionKind);
+        var objectiveTypeTip = ObjectiveTypeTooltip(_data.ExecutionKind);
         header.AddChild(
             BuildBadge(
                 objectiveTypeText,
@@ -351,7 +349,7 @@ public sealed class NcContractCard : PanelContainer
         actionHint.StyleClasses.Add("LabelSubText");
         actionCol.AddChild(actionHint);
 
-        actionCol.AddChild(new() { VerticalExpand = true, });
+        actionCol.AddChild(new Control { VerticalExpand = true });
 
         var btn = new Button
         {
@@ -448,388 +446,8 @@ public sealed class NcContractCard : PanelContainer
         }
 
         bottomWrap.AddChild(actionCol);
-
         return bottomWrap;
     }
-
-    private static bool CanRequestPinpointer(ContractClientData data)
-    {
-        if (!data.SupportsPinpointer || data.FlowStatus != ContractFlowStatus.InProgress)
-            return false;
-
-        return data.ExecutionKind != ContractExecutionKind.InventoryDelivery;
-    }
-
-    private static bool IsGhostRoleAwaitingAcceptance(ContractClientData data)
-    {
-        return data.ObjectiveType == ContractObjectiveType.GhostRole &&
-            data.FlowStatus == ContractFlowStatus.AwaitingActivation;
-    }
-
-    private static bool IsGhostRoleActive(ContractClientData data)
-    {
-        return data.ObjectiveType == ContractObjectiveType.GhostRole &&
-            data.FlowStatus == ContractFlowStatus.InProgress;
-    }
-
-    private static string BuildGhostRoleStatusText(ContractClientData data)
-    {
-        if (IsGhostRoleAwaitingAcceptance(data))
-            return Loc.GetString("nc-store-contract-ghost-role-waiting-line", ("time", FormatCountdown(data.Runtime.AcceptTimeoutRemainingSeconds)));
-
-        if (IsGhostRoleActive(data))
-            return Loc.GetString("nc-store-contract-ghost-role-active-line");
-
-        if (data.FlowStatus == ContractFlowStatus.Failed && !string.IsNullOrWhiteSpace(data.Runtime.FailureReason))
-            return data.Runtime.FailureReason;
-
-        return string.Empty;
-    }
-
-    private static string BuildActionHintText(ContractClientData data)
-    {
-        return data.FlowStatus switch
-        {
-            ContractFlowStatus.Available => Loc.GetString("nc-store-contract-action-not-taken"),
-            ContractFlowStatus.ReadyToTurnIn => Loc.GetString("nc-store-contract-action-can-claim"),
-            ContractFlowStatus.AwaitingActivation => Loc.GetString("nc-store-contract-ghost-role-waiting-line", ("time", FormatCountdown(data.Runtime.AcceptTimeoutRemainingSeconds))),
-            ContractFlowStatus.Failed when !string.IsNullOrWhiteSpace(data.Runtime.FailureReason) => data.Runtime.FailureReason,
-            _ => IsGhostRoleActive(data)
-                ? Loc.GetString("nc-store-contract-ghost-role-active-line")
-                : Loc.GetString("nc-store-contract-action-not-done")
-        };
-    }
-
-    private static string FormatCountdown(int totalSeconds)
-    {
-        var clamped = Math.Max(0, totalSeconds);
-        var span = TimeSpan.FromSeconds(clamped);
-        return span.TotalHours >= 1
-            ? span.ToString(@"hh\:mm\:ss")
-            : span.ToString(@"mm\:ss");
-    }
-    // =====================
-    // Text helpers
-    // =====================
-
-    private string ObjectiveTypeName(ContractObjectiveType objectiveType) =>
-        objectiveType switch
-        {
-            ContractObjectiveType.Hunt => Loc.GetString("nc-store-contract-type-hunt"),
-            ContractObjectiveType.Repair => Loc.GetString("nc-store-contract-type-repair"),
-            ContractObjectiveType.GhostRole => Loc.GetString("nc-store-contract-type-ghost-role"),
-            _ => Loc.GetString("nc-store-contract-type-delivery")
-        };
-
-    private string ObjectiveTypeTooltip(ContractObjectiveType objectiveType) =>
-        objectiveType switch
-        {
-            ContractObjectiveType.Hunt => Loc.GetString("nc-store-contract-type-hunt-tooltip"),
-            ContractObjectiveType.Repair => Loc.GetString("nc-store-contract-type-repair-tooltip"),
-            ContractObjectiveType.GhostRole => Loc.GetString("nc-store-contract-type-ghost-role-tooltip"),
-            _ => Loc.GetString("nc-store-contract-type-delivery-tooltip")
-        };
-
-    private string BuildPrettyTitle(ContractClientData c)
-    {
-        if (!string.IsNullOrWhiteSpace(c.Name))
-            return c.Name.Trim();
-
-        var diff = DifficultyName(c.Difficulty);
-        var goal = BuildGoalsInline(c, 2);
-
-        return string.IsNullOrWhiteSpace(goal)
-            ? Loc.GetString("nc-store-contract-title-pretty-nogoal", ("difficulty", diff))
-            : Loc.GetString("nc-store-contract-title-pretty", ("difficulty", diff), ("goal", goal));
-    }
-
-    private string BuildPrettyDescription(ContractClientData c)
-    {
-        if (!string.IsNullOrWhiteSpace(c.Description))
-            return c.Description.Trim();
-
-        var goal = BuildGoalsInline(c, 4);
-        if (string.IsNullOrWhiteSpace(goal))
-            return Loc.GetString("nc-store-contract-desc-default");
-
-        return Loc.GetString("nc-store-contract-desc-generated", ("goals", goal.Replace(", ", "; ")));
-    }
-
-    private string BuildGoalsInline(ContractClientData c, int maxParts)
-    {
-        var parts = new List<string>(maxParts);
-
-        if (c.Targets is { Count: > 0 })
-        {
-            foreach (var t in c.Targets)
-            {
-                if (parts.Count >= maxParts)
-                    break;
-
-                if (t.Required <= 0 || string.IsNullOrWhiteSpace(t.TargetItem))
-                    continue;
-
-                var name = ResolveProtoName(t.TargetItem);
-                parts.Add(Loc.GetString("nc-store-contract-goal-inline", ("item", name), ("count", t.Required)));
-            }
-        }
-        else
-        {
-            if (c.Required > 0 && !string.IsNullOrWhiteSpace(c.TargetItem))
-            {
-                var name = ResolveProtoName(c.TargetItem);
-                parts.Add(Loc.GetString("nc-store-contract-goal-inline", ("item", name), ("count", c.Required)));
-            }
-        }
-
-        return string.Join(", ", parts);
-    }
-
-    private int CalculateRequiredTotal(ContractClientData c)
-    {
-        if (c.Targets is { Count: > 0 })
-        {
-            var sum = 0;
-            foreach (var t in c.Targets)
-                if (t.Required > 0)
-                    sum += t.Required;
-
-            return Math.Max(1, sum);
-        }
-
-        return Math.Max(1, c.Required);
-    }
-
-    // =====================
-    // Targets / tooltips
-    // =====================
-
-    private Control BuildTargetRow(string? protoId, int required)
-    {
-        EntityPrototype? targetProto = null;
-        if (!string.IsNullOrWhiteSpace(protoId))
-            _proto.TryIndex(protoId, out targetProto);
-
-        var targetRow = new BoxContainer
-        {
-            Orientation = BoxContainer.LayoutOrientation.Horizontal,
-            Margin = new(0, 0, 0, 2),
-            MouseFilter = MouseFilterMode.Stop
-        };
-
-        var tooltip = BuildProtoTooltip(targetProto);
-        if (!string.IsNullOrWhiteSpace(tooltip))
-            targetRow.ToolTip = tooltip;
-
-        if (!string.IsNullOrWhiteSpace(protoId))
-        {
-            var view = new EntityPrototypeView
-            {
-                MinSize = new(TargetIconPx, TargetIconPx),
-                MaxSize = new(TargetIconPx, TargetIconPx),
-                Margin = new(0, 0, 4, 0),
-                MouseFilter = MouseFilterMode.Ignore
-            };
-            view.SetPrototype(protoId);
-            NcUiIconFit.Fit(view, _sprites, protoId, targetPx: TargetIconPx, paddingPx: 4);
-            targetRow.AddChild(view);
-        }
-
-        var targetName = targetProto?.Name ?? protoId ?? Loc.GetString("nc-store-unknown-item");
-        targetRow.AddChild(
-            new Label
-            {
-                Text = Loc.GetString("nc-store-contract-goal-line", ("item", targetName), ("count", required)),
-                MouseFilter = MouseFilterMode.Ignore
-            });
-
-        return targetRow;
-    }
-
-    private string ResolveProtoName(string protoId)
-    {
-        if (_proto.TryIndex<EntityPrototype>(protoId, out var proto))
-            return proto.Name;
-
-        return protoId;
-    }
-
-    private static string BuildProtoTooltip(EntityPrototype? proto)
-    {
-        if (proto == null)
-            return string.Empty;
-
-        if (string.IsNullOrWhiteSpace(proto.Description))
-            return Loc.GetString("nc-store-proto-tooltip-name-only", ("name", proto.Name));
-
-        return Loc.GetString("nc-store-proto-tooltip", ("name", proto.Name), ("desc", proto.Description));
-    }
-
-    // =====================
-    // Rewards
-    // =====================
-
-    private void PopulateRewards(BoxContainer rewardsCol, List<ContractRewardData>? rewards)
-    {
-        if (rewards is not { Count: > 0, })
-        {
-            rewardsCol.AddChild(
-                new Label
-                {
-                    Text = Loc.GetString("nc-store-contract-reward-none"),
-                    Modulate = Color.FromHex("#777777")
-                });
-            return;
-        }
-
-        var currencyTotals = new Dictionary<string, int>();
-        var itemTotals = new Dictionary<string, int>();
-
-        foreach (var r in rewards)
-        {
-            if (r.Amount <= 0 || string.IsNullOrWhiteSpace(r.Id))
-                continue;
-
-            switch (r.Type)
-            {
-                case StoreRewardType.Currency:
-                    if (!currencyTotals.TryAdd(r.Id, r.Amount))
-                        currencyTotals[r.Id] += r.Amount;
-                    break;
-
-                case StoreRewardType.Item:
-                    if (!itemTotals.TryAdd(r.Id, r.Amount))
-                        itemTotals[r.Id] += r.Amount;
-                    break;
-
-                case StoreRewardType.Pool:
-                    break;
-            }
-        }
-
-        if (currencyTotals.Count > 0)
-        {
-            var parts = new List<string>(currencyTotals.Count);
-            foreach (var kv in currencyTotals)
-            {
-                var name = CurrencyName(kv.Key);
-                if (string.IsNullOrWhiteSpace(name))
-                    name = kv.Key;
-
-                parts.Add(Loc.GetString("nc-store-currency-format", ("amount", kv.Value), ("currency", name)));
-            }
-
-            rewardsCol.AddChild(
-                new Label
-                {
-                    Text = string.Join(", ", parts),
-                    Modulate = Color.FromHex("#D4AF37")
-                });
-        }
-
-        if (itemTotals.Count > 0)
-        {
-            if (currencyTotals.Count > 0)
-                rewardsCol.AddChild(new() { MinSize = new(0, 4), });
-
-            foreach (var kv in itemTotals)
-            {
-                var id = kv.Key;
-                var count = kv.Value;
-                if (count <= 0 || string.IsNullOrWhiteSpace(id))
-                    continue;
-
-                _proto.TryIndex<EntityPrototype>(id, out var proto);
-
-                var line = new BoxContainer
-                {
-                    Orientation = BoxContainer.LayoutOrientation.Horizontal,
-                    Margin = new(0, 0, 0, 2),
-                    MouseFilter = MouseFilterMode.Stop
-                };
-
-                var tooltip = BuildProtoTooltip(proto);
-                if (!string.IsNullOrWhiteSpace(tooltip))
-                    line.ToolTip = tooltip;
-
-                if (!string.IsNullOrWhiteSpace(id))
-                {
-                    var view = new EntityPrototypeView
-                    {
-                        MinSize = new(RewardIconPx, RewardIconPx),
-                        MaxSize = new(RewardIconPx, RewardIconPx),
-                        Margin = new(0, 0, 4, 0),
-                        MouseFilter = MouseFilterMode.Ignore
-                    };
-                    view.SetPrototype(id);
-                    NcUiIconFit.Fit(view, _sprites, id, targetPx: RewardIconPx, paddingPx: 0, mul: 1.25f, variant: 1);
-                    line.AddChild(view);
-                }
-
-                var name = proto?.Name ?? id;
-                line.AddChild(
-                    new Label
-                    {
-                        Text = Loc.GetString("nc-store-contract-reward-item-line", ("item", name), ("count", count)),
-                        MouseFilter = MouseFilterMode.Ignore
-                    });
-
-                rewardsCol.AddChild(line);
-            }
-        }
-
-        if (currencyTotals.Count == 0 && itemTotals.Count == 0)
-        {
-            rewardsCol.AddChild(
-                new Label
-                {
-                    Text = Loc.GetString("nc-store-contract-reward-none"),
-                    Modulate = Color.FromHex("#777777")
-                });
-        }
-    }
-
-    private string CurrencyName(string? currencyId)
-    {
-        if (string.IsNullOrWhiteSpace(currencyId))
-            return string.Empty;
-
-        if (_proto.TryIndex<StackPrototype>(currencyId, out var stackProto) &&
-            _proto.TryIndex<EntityPrototype>(stackProto.Spawn, out var currencyEnt))
-            return currencyEnt.Name;
-
-        return currencyId;
-    }
-
-    // =====================
-    // Difficulty
-    // =====================
-
-    private Color DifficultyColor(string diff, bool completed)
-    {
-        var baseColor = diff switch
-        {
-            "Easy" => Color.FromHex("#4CAF50"),
-            "Medium" => Color.FromHex("#FFC107"),
-            "Hard" => Color.FromHex("#F44336"),
-            _ => Color.FromHex("#9E9E9E")
-        };
-
-        return completed ? Brighten(baseColor, 0.7f) : baseColor;
-    }
-
-    private string DifficultyName(string diff) =>
-        diff switch
-        {
-            "Easy" => Loc.GetString("nc-store-difficulty-easy"),
-            "Medium" => Loc.GetString("nc-store-difficulty-medium"),
-            "Hard" => Loc.GetString("nc-store-difficulty-hard"),
-            _ => diff
-        };
-
-    private static Color Brighten(Color c, float f) =>
-        new(MathF.Min(c.R * f, 1f), MathF.Min(c.G * f, 1f), MathF.Min(c.B * f, 1f), c.A);
 }
-
 
 

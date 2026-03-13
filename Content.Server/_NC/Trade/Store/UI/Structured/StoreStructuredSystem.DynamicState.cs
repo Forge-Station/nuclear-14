@@ -331,7 +331,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             h = h * 31 + (contract.Repeatable ? 1 : 0);
             h = h * 31 + (contract.Taken ? 1 : 0);
             h = h * 31 + (int) contract.ExecutionKind;
-            h = h * 31 + (int) contract.ObjectiveType;
             h = h * 31 + (int) contract.FlowStatus;
             h = h * 31 + (contract.Completed ? 1 : 0);
             h = h * 31 + contract.Required;
@@ -374,6 +373,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
     }
 }
+
+
 
 
 

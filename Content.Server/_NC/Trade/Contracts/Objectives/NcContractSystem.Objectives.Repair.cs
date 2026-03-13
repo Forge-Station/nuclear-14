@@ -150,7 +150,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryGetObjectiveContract(key, out _, out contract))
             return false;
 
-        if (!contract.Taken || contract.ObjectiveType != ContractObjectiveType.Repair || contract.Completed)
+        if (!contract.Taken || !contract.IsRepairObjective || contract.Completed)
             return false;
 
         EnsureObjectiveRuntimeDefaults(contract);

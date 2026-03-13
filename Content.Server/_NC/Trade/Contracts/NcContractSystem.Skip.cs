@@ -70,7 +70,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true);
         comp.Contracts.Remove(contractId);
-        RefillContractsForStore(store, comp, null);
+        RefillContractsForStore(store, comp, contractId);
         return true;
     }
 }

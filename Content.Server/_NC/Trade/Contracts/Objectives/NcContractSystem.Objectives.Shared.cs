@@ -62,7 +62,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static void EnsureObjectiveRuntimeDefaults(ContractServerData contract)
     {
-        NormalizeRuntimeState(contract.ObjectiveType, contract.Runtime);
+        NormalizeRuntimeState(contract.ExecutionKind, contract.Runtime);
         NormalizeObjectiveConfig(contract.Config);
 
         if (!contract.UsesStageObjectiveProgress)
@@ -190,7 +190,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 var guard = state.GuardEntities[i];
                 _objectiveRuntimeByGuard.Remove(guard);
 
-                if (deleteTrackedEntities && deleteGuards && !TerminatingOrDeleted(guard))
+                if (deleteGuards && !TerminatingOrDeleted(guard))
                     Del(guard);
             }
 

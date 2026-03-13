@@ -1,7 +1,5 @@
-﻿using System.Linq;
-using Content.Shared._NC.Trade;
+﻿using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
-
 
 namespace Content.Server._NC.Trade;
 
@@ -91,11 +89,13 @@ public sealed partial class NcContractSystem : EntitySystem
                 out fail);
         }
 
-        var requiredByKey = new Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int>(targets.Count);
+        ClearClaimPlanningScratch();
+
         foreach (var t in targets)
         {
             if (string.IsNullOrWhiteSpace(t.TargetItem) || t.Required <= 0)
             {
+                ClearClaimPlanningScratch();
                 fail = ClaimAttemptResult.Fail(
                     ClaimFailureReason.InvalidTarget,
                     $"Invalid target '{t.TargetItem}' (required={t.Required}).");
@@ -103,72 +103,35 @@ public sealed partial class NcContractSystem : EntitySystem
             }
 
             var key = (t.TargetItem, t.MatchMode);
-            if (!requiredByKey.TryAdd(key, t.Required))
-                requiredByKey[key] = checked(requiredByKey[key] + t.Required);
+            _claimRequiredByKeyScratch[key] = SaturatingAdd(_claimRequiredByKeyScratch.GetValueOrDefault(key, 0), t.Required);
         }
 
-        var takePlan = new List<ClaimTakeEntry>(64);
-        var virtualStackLeft = new Dictionary<EntityUid, int>();
+        var takePlan = new List<ClaimTakeEntry>(Math.Max(8, Math.Min(64, targets.Count * 4)));
+        BuildOrderedRequiredKeys(_claimRequiredByKeyScratch, _claimOrderedKeysScratch);
 
-        var orderedKeys = requiredByKey
-            .OrderByDescending(k => GetProtoDepth(k.Key.ProtoId))
-            .ThenBy(k => (int) k.Key.MatchMode)
-            .ThenBy(k => k.Key.ProtoId, StringComparer.Ordinal)
-            .ToArray();
-
-        foreach (var kvp in orderedKeys)
+        foreach (var ordered in _claimOrderedKeysScratch)
         {
-            var (protoId, matchMode) = kvp.Key;
-            var required = kvp.Value;
+            var key = (ordered.ProtoId, ordered.MatchMode);
+            var required = _claimRequiredByKeyScratch.GetValueOrDefault(key, 0);
             if (required <= 0)
                 continue;
 
-            var need = required;
-
-            if (crateEntity is { } crate && crateItems != null)
-            {
-                var reserved = ReserveTakePlanFromItems(
-                    crate,
-                    crateItems,
-                    protoId,
-                    matchMode,
-                    need,
-                    virtualStackLeft,
-                    takePlan);
-
-                need -= reserved;
-            }
-
-            if (need > 0)
-            {
-                var reserved = ReserveTakePlanFromItems(
+            if (!TryAppendTakePlanForRequirement(
                     user,
-                    _scratchUserItems,
-                    protoId,
-                    matchMode,
-                    need,
-                    virtualStackLeft,
-                    takePlan);
-
-                need -= reserved;
-            }
-
-            if (need > 0)
+                    crateEntity,
+                    crateItems,
+                    ordered.ProtoId,
+                    ordered.MatchMode,
+                    required,
+                    takePlan,
+                    out fail))
             {
-                if (crateEntity == null)
-                {
-                    fail = ClaimAttemptResult.Fail(
-                        ClaimFailureReason.MissingCrate,
-                        $"need {required}x {protoId} (mode={matchMode}), missing {need}. Pull a closed crate to claim from it.");
-                    return false;
-                }
-
-                fail = ClaimAttemptResult.Fail(
-                    ClaimFailureReason.NotEnoughItems,
-                    $"need {required}x {protoId} (mode={matchMode}), missing {need} after planning.");
+                ClearClaimPlanningScratch();
                 return false;
             }
         }
+
+        ClearClaimPlanningScratch();
 
         ctx = new ClaimContext(
             store,
@@ -208,53 +171,24 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
+        ClearClaimPlanningScratch();
         var takePlan = new List<ClaimTakeEntry>(Math.Max(4, Math.Min(32, target.Required)));
-        var virtualStackLeft = new Dictionary<EntityUid, int>();
-        var need = target.Required;
 
-        if (crateEntity is { } crate && crateItems != null)
-        {
-            var reserved = ReserveTakePlanFromItems(
-                crate,
+        if (!TryAppendTakePlanForRequirement(
+                user,
+                crateEntity,
                 crateItems,
                 target.TargetItem,
                 target.MatchMode,
-                need,
-                virtualStackLeft,
-                takePlan);
-
-            need -= reserved;
-        }
-
-        if (need > 0)
+                target.Required,
+                takePlan,
+                out fail))
         {
-            var reserved = ReserveTakePlanFromItems(
-                user,
-                _scratchUserItems,
-                target.TargetItem,
-                target.MatchMode,
-                need,
-                virtualStackLeft,
-                takePlan);
-
-            need -= reserved;
-        }
-
-        if (need > 0)
-        {
-            if (crateEntity == null)
-            {
-                fail = ClaimAttemptResult.Fail(
-                    ClaimFailureReason.MissingCrate,
-                    $"need {target.Required}x {target.TargetItem} (mode={target.MatchMode}), missing {need}. Pull a closed crate to claim from it.");
-                return false;
-            }
-
-            fail = ClaimAttemptResult.Fail(
-                ClaimFailureReason.NotEnoughItems,
-                $"need {target.Required}x {target.TargetItem} (mode={target.MatchMode}), missing {need} after planning.");
+            ClearClaimPlanningScratch();
             return false;
         }
+
+        ClearClaimPlanningScratch();
 
         ctx = new ClaimContext(
             store,
@@ -268,6 +202,65 @@ public sealed partial class NcContractSystem : EntitySystem
             takePlan);
 
         return true;
+    }
+
+    private bool TryAppendTakePlanForRequirement(
+        EntityUid user,
+        EntityUid? crateEntity,
+        List<EntityUid>? crateItems,
+        string targetItem,
+        PrototypeMatchMode matchMode,
+        int required,
+        List<ClaimTakeEntry> takePlan,
+        out ClaimAttemptResult fail)
+    {
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+
+        var need = required;
+
+        if (crateEntity is { } crate && crateItems != null)
+        {
+            var reserved = ReserveTakePlanFromItems(
+                crate,
+                crateItems,
+                targetItem,
+                matchMode,
+                need,
+                _claimVirtualStackLeftScratch,
+                takePlan);
+
+            need -= reserved;
+        }
+
+        if (need > 0)
+        {
+            var reserved = ReserveTakePlanFromItems(
+                user,
+                _scratchUserItems,
+                targetItem,
+                matchMode,
+                need,
+                _claimVirtualStackLeftScratch,
+                takePlan);
+
+            need -= reserved;
+        }
+
+        if (need <= 0)
+            return true;
+
+        if (crateEntity == null)
+        {
+            fail = ClaimAttemptResult.Fail(
+                ClaimFailureReason.MissingCrate,
+                $"need {required}x {targetItem} (mode={matchMode}), missing {need}. Pull a closed crate to claim from it.");
+            return false;
+        }
+
+        fail = ClaimAttemptResult.Fail(
+            ClaimFailureReason.NotEnoughItems,
+            $"need {required}x {targetItem} (mode={matchMode}), missing {need} after planning.");
+        return false;
     }
 
     private int ReserveTakePlanFromItems(
@@ -341,13 +334,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (!TryComp(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
                 continue;
 
-            var candidateId = meta.EntityPrototype.ID;
-
-            var matches = matchMode == PrototypeMatchMode.Exact
-                ? candidateId == expectedProtoId
-                : candidateId == expectedProtoId || IsDescendantId(candidateId, expectedProtoId);
-
-            if (!matches)
+            if (!MatchesPrototypeId(meta.EntityPrototype.ID, expectedProtoId, matchMode))
                 continue;
 
             if (TryComp(ent, out StackComponent? st) && st.Count > 0)
@@ -373,7 +360,10 @@ public sealed partial class NcContractSystem : EntitySystem
                 if (left > 0)
                     virtualStackLeft[ent] = left;
                 else
+                {
+                    virtualStackLeft.Remove(ent);
                     items[i] = EntityUid.Invalid;
+                }
 
                 continue;
             }
@@ -386,3 +376,4 @@ public sealed partial class NcContractSystem : EntitySystem
         return reserved;
     }
 }
+

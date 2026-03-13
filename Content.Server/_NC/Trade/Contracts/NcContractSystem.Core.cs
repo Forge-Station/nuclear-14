@@ -30,6 +30,7 @@ public sealed partial class NcContractSystem : EntitySystem
     private readonly Dictionary<EntityUid, int> _progressVirtualStackLeftScratch = new();
     private readonly Dictionary<QuasiKey, double> _quasiPhase = new();
     [Dependency] private readonly IRobustRandom _random = default!;
+    private readonly List<string> _progressContractIdsScratch = new();
     private readonly List<EntityUid> _scratchCrateItems = new();
     private readonly List<EntityUid> _scratchUserItems = new();
     private readonly Dictionary<QuasiKey, SmallBagState> _smallBags = new();
