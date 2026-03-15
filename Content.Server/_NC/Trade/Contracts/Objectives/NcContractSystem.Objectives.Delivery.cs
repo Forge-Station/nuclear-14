@@ -50,7 +50,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return;
         }
 
-        if (!TryGetObjectiveContract(key, out _, out var contract))
+        if (!TryGetObjectiveContract(key, out var comp, out var contract))
         {
             CleanupObjectiveRuntime(key.Store, key.ContractId, true);
             return;
@@ -66,6 +66,9 @@ public sealed partial class NcContractSystem : EntitySystem
 
         SetTrackedDeliveryProgress(contract, GetTrackedDeliveryAmount(contract, target));
         if (!contract.Completed)
+            return;
+
+        if (!TrySpawnRequiredObjectiveProofOrFail(key, comp, contract, Transform(target).Coordinates))
             return;
 
         state.DeliveryDropoffCompleted = true;
@@ -301,6 +304,9 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract
     )
     {
+        if (!TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail))
+            return proofFail;
+
         var config = EnsureContractConfig(contract);
         GiveContractRewards(user, contract.Rewards);
         FinalizeClaim(

@@ -55,16 +55,19 @@ nc-store-contract-badge-single-tooltip =
     Этот контракт доступен для выполнения только один раз за смену.
     После завершения он исчезнет из списка.
 nc-store-contract-goals-header = Цели заказа:
+nc-store-contract-turn-in-header = Сдать в автомат:
+nc-store-contract-turn-in-note = После выполнения: { $item }
 nc-store-contract-reward-header = Награда:
 nc-store-contract-items-header = Предметы:
 nc-store-contract-action-claim = Завершить контракт
 nc-store-contract-action-claim-progress = Внести часть ({ $progress }/{ $required })
 nc-store-contract-action-can-claim = Готово к сдаче
+nc-store-contract-action-can-claim-proof = Готово, нужно сдать доказательство
 nc-store-contract-action-not-taken = Не принят
 nc-store-contract-action-not-done = Не выполнено
 nc-store-contract-action-take = Взять контракт
 nc-store-contract-claim-tooltip-single = Завершить разовый контракт и получить полную награду.
-nc-store-contract-claim-tooltip-repeatable = Сдать текущий прогресс по контракту и получить награду.
+nc-store-contract-claim-tooltip-repeatable = Сдать текущий результат по контракту и получить награду.
 nc-store-contract-claim-tooltip-not-done = Условия контракта ещё не выполнены. Недостаточно предметов.
 nc-store-contract-take-tooltip = Принять контракт. После принятия его нельзя пропустить.
 nc-store-contract-completed = Контракт успешно выполнен!
@@ -93,7 +96,7 @@ nc-store-contract-reward-item-line = { $item } ×{ $count }
 nc-store-contract-badge-taken = В РАБОТЕ
 nc-store-contract-badge-taken-tooltip = Контракт уже у вас на руках. Снять его с доски больше нельзя.
 nc-store-contract-badge-completed = ГОТОВ
-nc-store-contract-badge-completed-tooltip = Работа сделана. Осталось забрать плату.
+nc-store-contract-badge-completed-tooltip = Работа сделана. Осталось сдать результат и забрать плату.
 
 nc-store-contract-action-skip = Сменить ({ $cost } { $currency })
 nc-store-contract-skip-tooltip =
@@ -108,10 +111,10 @@ nc-store-contract-type-delivery = Доставка
 nc-store-contract-type-delivery-tooltip = Обычный заказ на доставку нужного товара.
 
 nc-store-contract-type-hunt = Контракт на голову
-nc-store-contract-type-hunt-tooltip = После принятия появится цель. Уберите цель и вернитесь за платой.
+nc-store-contract-type-hunt-tooltip = После принятия появится цель. Уберите её, заберите доказательство и вернитесь за платой.
 
 nc-store-contract-type-repair = Ремонт
-nc-store-contract-type-repair-tooltip = Заказ на восстановление объекта в несколько этапов.
+nc-store-contract-type-repair-tooltip = Заказ на восстановление объекта в несколько этапов. После ремонта нужно принести подтверждение работы.
 
 nc-store-contract-type-ghost-role = Особая цель
 nc-store-contract-type-ghost-role-tooltip = После принятия откроется особая роль. Если её займут, появится живая цель.
@@ -134,4 +137,5 @@ nc-store-contract-ghost-role-active-line = Цель вышла в поле. Уб
 
 
 nc-store-contract-delivery-target-lost = Груз утрачен. Контракт сорван.
+nc-store-contract-proof-generation-failed = Подтверждение выполнения не сформировалось. Контракт сорван.
 

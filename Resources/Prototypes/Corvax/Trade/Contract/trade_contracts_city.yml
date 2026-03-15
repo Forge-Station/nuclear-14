@@ -118,12 +118,13 @@
 - type: storeContract
   id: trade_contract_delivery_structure_to_dropoff_crate
   name: "Доставить стальной ящик на шахту"
-  description: "Стальной ящик появится возле торгового автомата. Доставьте его на одну из шахтных точек целым и вернитесь за оплатой. После доставки груз исчезнет."
+  description: "Стальной ящик появится возле торгового автомата. Доставьте его на одну из шахтных точек целым, заберите накладную о приёмке и принесите её обратно за оплатой."
   difficulty: Easy
   repeatable: true
   objectiveType: Delivery
   runtime:
     targetPrototype: CrateGenericSteel
+    proofPrototype: NcTradeContractProofDeliveryReceipt
     spawnAtStore: true
     dropoffPointTags:
     - tag: TradeContractMineSpawn
@@ -146,7 +147,7 @@
 - type: storeContract
   id: trade_contract_hunt_ghoul
   name: "Контракт на голову гуля"
-  description: "В окрестностях шахты заметили дикого гуля. Найдите цель, устраните её и возвращайтесь к доске за оплатой."
+  description: "В окрестностях шахты заметили дикого гуля. Найдите цель, устраните её, подберите трофейную метку с тела и принесите её к доске за оплатой."
   difficulty: Easy
   repeatable: true
   objectiveType: Hunt
@@ -158,6 +159,7 @@
       weight: 1
     stageGoal: 1
     targetPrototype: N14MobGhoulFeral
+    proofPrototype: NcTradeContractProofGhoulTrophy
     givePinpointer: true
     pinpointerPrototype: PinpointerUniversal
   rewards:
@@ -171,7 +173,7 @@
 - type: storeContract
   id: trade_contract_repair_generator
   name: "Запустить ржавый генератор"
-  description: "В городской торговой зоне стоит заглохший генератор. Проведите три этапа ремонта сваркой и переживите шум, который привлечёт налётчиков."
+  description: "В городской торговой зоне стоит заглохший генератор. Проведите три этапа ремонта сваркой, заберите фотоподтверждение выполненной работы и сдайте его к торговому автомату."
   difficulty: Easy
   repeatable: true
   objectiveType: Repair
@@ -181,6 +183,7 @@
       weight: 1
     stageGoal: 3
     structurePrototype: N14GeneratorFusionMiniRusted
+    proofPrototype: NcTradeContractProofRepairPhoto
     guardPrototype: N14MobRaiderPsycho
     guardCount: 2
     givePinpointer: true
@@ -227,7 +230,7 @@
 - type: storeContract
   id: trade_contract_repair_generator_legacy_store
   name: "Проверка: генератор у магазина"
-  description: "Проверочный контракт на старом формате spawnPointTag. Генератор должен появиться в торговой зоне."
+  description: "Проверочный контракт на старом формате spawnPointTag. Генератор должен появиться в торговой зоне, а после ремонта нужно принести фотоподтверждение."
   difficulty: Easy
   repeatable: true
   objectiveType: Repair
@@ -235,6 +238,7 @@
     spawnPointTag: TradeContractStoreSpawn
     stageGoal: 3
     structurePrototype: N14GeneratorFusionMiniRusted
+    proofPrototype: NcTradeContractProofRepairPhoto
     guardPrototype: N14MobRaiderPsycho
     guardCount: 2
     givePinpointer: true

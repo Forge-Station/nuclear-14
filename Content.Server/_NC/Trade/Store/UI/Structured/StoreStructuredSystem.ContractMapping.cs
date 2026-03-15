@@ -22,6 +22,7 @@ public sealed partial class StoreStructuredSystem
             contract.FlowStatus,
             contract.Completed,
             contract.TargetItem,
+            ResolveContractTurnInItem(contract),
             contract.Required,
             contract.Progress,
             targets,
@@ -71,6 +72,12 @@ public sealed partial class StoreStructuredSystem
         return rewards.Count > 0
             ? new List<ContractRewardData>(rewards)
             : new List<ContractRewardData>(0);
+    }
+
+    private static string ResolveContractTurnInItem(ContractServerData contract)
+    {
+        var config = EnsureClientContractConfig(contract);
+        return config.ProofPrototype ?? string.Empty;
     }
 
     private static bool SupportsContractPinpointer(ContractServerData contract)

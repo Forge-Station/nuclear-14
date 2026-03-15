@@ -16,6 +16,7 @@ public sealed class ContractObjectiveConfigData
     public string DeliverySpawnPrototype { get; set; } = string.Empty;
     public string StructurePrototype { get; set; } = string.Empty;
     public string GhostRole { get; set; } = string.Empty;
+    public string ProofPrototype { get; set; } = string.Empty;
     public string GhostRolePrototype { get; set; } = string.Empty;
     public string GhostRoleName { get; set; } = string.Empty;
     public string GhostRoleDescription { get; set; } = string.Empty;

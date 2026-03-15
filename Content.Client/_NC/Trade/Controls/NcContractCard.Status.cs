@@ -45,6 +45,9 @@ public sealed partial class NcContractCard
 
     private static string BuildActionHintText(ContractClientData data)
     {
+        if (data.FlowStatus == ContractFlowStatus.ReadyToTurnIn && !string.IsNullOrWhiteSpace(data.TurnInItem))
+            return Loc.GetString("nc-store-contract-action-can-claim-proof");
+
         return data.FlowStatus switch
         {
             ContractFlowStatus.Available => Loc.GetString("nc-store-contract-action-not-taken"),

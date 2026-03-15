@@ -104,6 +104,15 @@ public sealed partial class NcContractSystem : EntitySystem
 
         SetObjectiveStage(contract, runtime.Stage + 1);
 
+        if (runtime.Stage >= Math.Max(1, runtime.StageGoal))
+        {
+            if (!TryGetObjectiveContract(key, out var storeComp, out _) ||
+                !TrySpawnRequiredObjectiveProofOrFail(key, storeComp, contract, Transform(uid).Coordinates))
+            {
+                return;
+            }
+        }
+
         PlayRepairObjectiveStageEffects(uid, config);
 
         if (config.GuardCount <= 0 || string.IsNullOrWhiteSpace(config.GuardPrototype))

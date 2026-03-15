@@ -51,7 +51,8 @@ public sealed partial class StoreStructuredSystem
                 !string.Equals(a.Name, b.Name, StringComparison.Ordinal) ||
                 !string.Equals(a.Difficulty, b.Difficulty, StringComparison.Ordinal) ||
                 !string.Equals(a.Description, b.Description, StringComparison.Ordinal) ||
-                !string.Equals(a.TargetItem, b.TargetItem, StringComparison.Ordinal))
+                !string.Equals(a.TargetItem, b.TargetItem, StringComparison.Ordinal) ||
+                !string.Equals(a.TurnInItem, b.TurnInItem, StringComparison.Ordinal))
                 return false;
 
             if (a.Repeatable != b.Repeatable ||

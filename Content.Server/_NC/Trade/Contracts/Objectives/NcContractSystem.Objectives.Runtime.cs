@@ -121,6 +121,9 @@ public sealed partial class NcContractSystem : EntitySystem
 
         EnsureObjectiveRuntimeDefaults(contract);
 
+        if (!TryValidateObjectiveProofPrototype(contractId, contract))
+            return false;
+
         return contract.ExecutionKind switch
         {
             ContractExecutionKind.InventoryDelivery => TryInitializeInventoryDeliverySupportRuntime(store, user, contractId, contract),

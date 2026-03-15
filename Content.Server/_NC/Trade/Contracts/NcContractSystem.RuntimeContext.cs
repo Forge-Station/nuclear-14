@@ -41,6 +41,7 @@ public sealed partial class NcContractSystem : EntitySystem
             DeliverySpawnPrototype = runtimeProto.DeliverySpawnPrototype ?? string.Empty,
             StructurePrototype = runtimeProto.StructurePrototype ?? string.Empty,
             GhostRole = runtimeProto.GhostRole ?? string.Empty,
+            ProofPrototype = runtimeProto.ProofPrototype ?? string.Empty,
             SpawnAtStore = runtimeProto.SpawnAtStore,
             PreserveTargetOnComplete = runtimeProto.PreserveTargetOnComplete,
             AllowStoreWorldTurnIn = runtimeProto.AllowStoreWorldTurnIn,
@@ -119,6 +120,7 @@ public sealed partial class NcContractSystem : EntitySystem
         config.DeliverySpawnPrototype ??= string.Empty;
         config.StructurePrototype ??= string.Empty;
         config.GhostRole ??= string.Empty;
+        config.ProofPrototype ??= string.Empty;
         config.GhostRolePrototype ??= string.Empty;
         config.GhostRoleName ??= string.Empty;
         config.GhostRoleDescription ??= string.Empty;

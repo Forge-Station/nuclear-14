@@ -4,18 +4,23 @@ using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Utility;
 
 namespace Content.Client._NC.Trade.Controls;
 
 public sealed partial class NcContractCard : PanelContainer
 {
-    private readonly ContractClientData _data;
+    private const float DescriptionHorizontalBudget = 40f;
+    private ContractClientData _data;
     private readonly IPrototypeManager _proto;
     private readonly SpriteSystem _sprites;
     private readonly IEntityManager _entMan;
-    private readonly int _skipCost;
-    private readonly string _skipCurrency;
-    private readonly int _skipBalance;
+    private int _presentationHash;
+    private int _skipCost;
+    private string _skipCurrency;
+    private int _skipBalance;
+    private float _lastDescriptionMaxWidth = -1f;
+    private RichTextLabel? _descriptionLabel;
     private const int TargetIconPx = 96;
     private const int RewardIconPx = 40;
 
@@ -28,6 +33,7 @@ public sealed partial class NcContractCard : PanelContainer
         _skipCost = skipCost;
         _skipCurrency = skipCurrency;
         _skipBalance = skipBalance;
+        _presentationHash = ComputePresentationHash(data, skipCost, skipCurrency, skipBalance);
 
         HorizontalExpand = true;
         Margin = new(4, 0, 4, 8);
@@ -88,15 +94,14 @@ public sealed partial class NcContractCard : PanelContainer
         var descText = BuildPrettyDescription(_data);
         if (!string.IsNullOrWhiteSpace(descText))
         {
-            var descLabel = new Label
+            var descLabel = new RichTextLabel
             {
-                Text = descText,
                 Margin = new(0, 0, 0, 8),
-                Modulate = Color.FromHex("#C9C9C9"),
                 HorizontalExpand = true,
-                ClipText = true,
                 ToolTip = descText
             };
+            descLabel.SetMessage(descText, null, Color.FromHex("#C9C9C9"));
+            _descriptionLabel = descLabel;
 
             root.AddChild(
                 descLabel);
@@ -151,6 +156,34 @@ public sealed partial class NcContractCard : PanelContainer
         else
         {
             root.AddChild(BuildTargetRow(_data.TargetItem, _data.Required));
+        }
+
+        var turnInNote = BuildTurnInNoteText(_data);
+        if (!string.IsNullOrWhiteSpace(turnInNote))
+        {
+            root.AddChild(
+                new Label
+                {
+                    Text = turnInNote,
+                    Margin = new(0, 6, 0, 2),
+                    Modulate = Color.FromHex("#A8A8A8"),
+                    HorizontalExpand = true,
+                    ClipText = true,
+                    ToolTip = turnInNote
+                });
+        }
+
+        if (ShouldShowTurnInItem(_data))
+        {
+            root.AddChild(
+                new Label
+                {
+                    Text = Loc.GetString("nc-store-contract-turn-in-header"),
+                    Margin = new(0, 6, 0, 2),
+                    Modulate = Color.FromHex("#8A8A8A")
+                });
+
+            root.AddChild(BuildTargetRow(_data.TurnInItem, 1));
         }
 
         if (!_data.Completed)
@@ -510,6 +543,45 @@ public sealed partial class NcContractCard : PanelContainer
             actionCol.AddChild(secondaryButtonsRow);
 
         return bottomWrap;
+    }
+
+    public void UpdateData(ContractClientData data, int skipCost, string skipCurrency, int skipBalance)
+    {
+        var presentationHash = ComputePresentationHash(data, skipCost, skipCurrency, skipBalance);
+        if (_presentationHash == presentationHash)
+            return;
+
+        _presentationHash = presentationHash;
+        _data = data;
+        _skipCost = skipCost;
+        _skipCurrency = skipCurrency;
+        _skipBalance = skipBalance;
+        _descriptionLabel = null;
+        _lastDescriptionMaxWidth = -1f;
+
+        DisposeAllChildren();
+        RemoveAllChildren();
+        BuildUi();
+        SyncDescriptionWidth(Size.X);
+    }
+
+    protected override void Resized()
+    {
+        base.Resized();
+        SyncDescriptionWidth(Size.X);
+    }
+
+    private void SyncDescriptionWidth(float candidateWidth)
+    {
+        if (_descriptionLabel == null || candidateWidth <= 0 || !float.IsFinite(candidateWidth))
+            return;
+
+        var maxWidth = System.MathF.Max(0, candidateWidth - DescriptionHorizontalBudget);
+        if (System.MathF.Abs(_lastDescriptionMaxWidth - maxWidth) < 0.5f)
+            return;
+
+        _lastDescriptionMaxWidth = maxWidth;
+        _descriptionLabel.MaxWidth = maxWidth;
     }
 }
 

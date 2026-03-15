@@ -217,6 +217,12 @@ public sealed partial class NcContractSystem : EntitySystem
             state.GuardEntities.Clear();
         }
 
+        if (state.ProofEntity is { } proof && !TerminatingOrDeleted(proof))
+            Del(proof);
+
+        state.ProofEntity = null;
+        state.ProofSpawned = false;
+        state.ProofToken = string.Empty;
         _objectiveRuntimeByContract.Remove(key);
     }
 
@@ -265,6 +271,9 @@ public sealed partial class NcContractSystem : EntitySystem
         public readonly HashSet<EntityUid> PinpointerEntities = new();
         public TimeSpan? GhostRoleAcceptDeadline;
         public bool GhostRoleTaken;
+        public EntityUid? ProofEntity;
+        public bool ProofSpawned;
+        public string ProofToken = string.Empty;
         public bool RepairInProgress;
         public EntityUid? TargetEntity;
     }

@@ -59,6 +59,37 @@ public sealed partial class NcContractCard
         return string.Join(", ", parts);
     }
 
+    private static bool ShouldShowTurnInItem(ContractClientData c)
+    {
+        return c.FlowStatus == ContractFlowStatus.ReadyToTurnIn && HasDistinctTurnInItem(c);
+    }
+
+    private string BuildTurnInNoteText(ContractClientData c)
+    {
+        if (!HasDistinctTurnInItem(c) || c.FlowStatus == ContractFlowStatus.ReadyToTurnIn)
+            return string.Empty;
+
+        return Loc.GetString("nc-store-contract-turn-in-note", ("item", ResolveProtoName(c.TurnInItem)));
+    }
+
+    private static bool HasDistinctTurnInItem(ContractClientData c)
+    {
+        if (string.IsNullOrWhiteSpace(c.TurnInItem))
+            return false;
+
+        if (c.Targets is { Count: > 0 })
+        {
+            for (var i = 0; i < c.Targets.Count; i++)
+            {
+                var target = c.Targets[i];
+                if (target.Required == 1 && string.Equals(target.TargetItem, c.TurnInItem, StringComparison.Ordinal))
+                    return false;
+            }
+        }
+
+        return !(c.Required == 1 && string.Equals(c.TargetItem, c.TurnInItem, StringComparison.Ordinal));
+    }
+
     private int CalculateRequiredTotal(ContractClientData c)
     {
         if (c.Targets is { Count: > 0 })

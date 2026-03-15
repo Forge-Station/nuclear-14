@@ -12,6 +12,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (res.Reason is ClaimFailureReason.NotEnoughItems or
                 ClaimFailureReason.NoValidTargets or
                 ClaimFailureReason.MissingCrate or
+                ClaimFailureReason.MissingProof or
                 ClaimFailureReason.ObjectiveNotCompleted)
                 Sawmill.Info($"[Claim] Failed ({res.Reason}) '{contractId}' on {ToPrettyString(store)}: {res.Details}");
             else
@@ -72,6 +73,9 @@ public sealed partial class NcContractSystem : EntitySystem
                 ClaimFailureReason.ObjectiveNotCompleted,
                 $"Objective progress {contract.Progress}/{contract.Required} for '{contractId}'.");
         }
+
+        if (!TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail))
+            return proofFail;
 
         GiveContractRewards(user, contract.Rewards);
         FinalizeClaim(store, comp, contractId, contract.Repeatable);

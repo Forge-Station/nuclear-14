@@ -482,6 +482,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             h = h * 31 + (contract.Difficulty?.GetHashCode() ?? 0);
             h = h * 31 + (contract.Description?.GetHashCode() ?? 0);
             h = h * 31 + (contract.TargetItem?.GetHashCode() ?? 0);
+            h = h * 31 + (EnsureClientContractConfig(contract).ProofPrototype?.GetHashCode() ?? 0);
             h = h * 31 + (contract.Repeatable ? 1 : 0);
             h = h * 31 + (contract.Taken ? 1 : 0);
             h = h * 31 + (int) contract.ExecutionKind;
@@ -524,7 +525,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
     }
 }
-
 
 
 

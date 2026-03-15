@@ -22,6 +22,7 @@ public sealed class ContractClientData
     public List<ContractRewardData> Rewards = new();
 
     public string TargetItem = string.Empty;
+    public string TurnInItem = string.Empty;
     public List<ContractTargetClientData> Targets = new();
 
     public ContractClientData() { }
@@ -39,6 +40,7 @@ public sealed class ContractClientData
         ContractFlowStatus flowStatus,
         bool completed,
         string targetItem,
+        string turnInItem,
         int required,
         int progress,
         List<ContractTargetClientData> targets,
@@ -56,6 +58,7 @@ public sealed class ContractClientData
         FlowStatus = flowStatus;
         Completed = completed;
         TargetItem = targetItem;
+        TurnInItem = turnInItem;
         Required = required;
         Progress = progress;
         Targets = targets;

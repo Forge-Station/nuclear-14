@@ -424,53 +424,6 @@ public sealed partial class NcStoreMenu : FancyWindow
         SellView.SyncAvailableIds(_catalogModel.AvailableIds);
     }
 
-    public void PopulateContracts(List<ContractClientData>? list, int skipCost, string skipCurrency, int skipBalance)
-    {
-        var contractList = ContractList;
-        if (contractList == null)
-            return;
-
-        contractList.RemoveAllChildren();
-
-        if (list == null || list.Count == 0)
-        {
-            contractList.AddChild(
-                new Label
-                {
-                    Text = Loc.GetString("nc-store-contracts-empty"),
-                    HorizontalAlignment = HAlignment.Center,
-                    Margin = new(0, 8, 0, 0)
-                });
-
-            ApplyTabsVisibility();
-            return;
-        }
-
-        var ordered = list
-            .OrderBy(x => x.Difficulty switch
-            {
-                "Easy" => 0,
-                "Medium" => 1,
-                "Hard" => 2,
-                _ => 99
-            })
-            .ThenBy(x => x.Name)
-            .ThenBy(x => x.Id)
-            .ToList();
-
-        foreach (var c in ordered)
-        {
-            var card = new NcContractCard(c, _proto, _sprites, IoCManager.Resolve<IEntityManager>(), skipCost, skipCurrency, skipBalance);
-            card.OnClaim += id => OnContractClaim?.Invoke(id);
-            card.OnTake += id => OnContractTake?.Invoke(id);
-            card.OnSkip += id => OnContractSkip?.Invoke(id);
-            card.OnRequestPinpointer += id => OnContractRequestPinpointer?.Invoke(id);
-            contractList.AddChild(card);
-        }
-
-        ApplyTabsVisibility();
-    }
-
     private void RefreshListings()
     {
         var items = _catalogModel.Items;
