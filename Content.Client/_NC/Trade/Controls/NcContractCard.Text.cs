@@ -32,6 +32,11 @@ public sealed partial class NcContractCard
         return Loc.GetString("nc-store-contract-desc-generated", ("goals", goal.Replace(", ", "; ")));
     }
 
+    private string BuildDisplayDescription(ContractClientData c, int maxChars)
+    {
+        return TrimToChars(BuildPrettyDescription(c), maxChars);
+    }
+
     private string BuildGoalsInline(ContractClientData c, int maxParts)
     {
         var parts = new List<string>(maxParts);
@@ -162,5 +167,13 @@ public sealed partial class NcContractCard
 
     private static Color Brighten(Color c, float f) =>
         new(MathF.Min(c.R * f, 1f), MathF.Min(c.G * f, 1f), MathF.Min(c.B * f, 1f), c.A);
+
+    private static string TrimToChars(string text, int maxChars)
+    {
+        if (maxChars <= 0 || text.Length <= maxChars)
+            return text;
+
+        return text[..maxChars].TrimEnd() + "...";
+    }
 }
 

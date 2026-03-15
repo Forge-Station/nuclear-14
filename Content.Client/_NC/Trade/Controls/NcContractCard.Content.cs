@@ -18,7 +18,7 @@ public sealed partial class NcContractCard
         var targetRow = new BoxContainer
         {
             Orientation = BoxContainer.LayoutOrientation.Horizontal,
-            Margin = new(0, 0, 0, 2),
+            Margin = new(0, 0, 0, 1),
             MouseFilter = MouseFilterMode.Stop,
             HorizontalExpand = true
         };
@@ -33,7 +33,7 @@ public sealed partial class NcContractCard
             {
                 MinSize = new(TargetIconPx, TargetIconPx),
                 MaxSize = new(TargetIconPx, TargetIconPx),
-                Margin = new(0, 0, 4, 0),
+                Margin = new(0, 0, 8, 0),
                 MouseFilter = MouseFilterMode.Ignore
             };
             view.SetPrototype(protoId);
@@ -42,14 +42,17 @@ public sealed partial class NcContractCard
         }
 
         var targetName = targetProto?.Name ?? protoId ?? Loc.GetString("nc-store-unknown-item");
-        targetRow.AddChild(
-            new Label
-            {
-                Text = Loc.GetString("nc-store-contract-goal-line", ("item", targetName), ("count", required)),
-                MouseFilter = MouseFilterMode.Ignore,
-                HorizontalExpand = true,
-                ClipText = true
-            });
+        var targetLabel = new Label
+        {
+            Text = Loc.GetString("nc-store-contract-goal-line", ("item", targetName), ("count", required)),
+            MouseFilter = MouseFilterMode.Ignore,
+            HorizontalExpand = true,
+            ClipText = true,
+            VerticalAlignment = VAlignment.Center,
+            Modulate = Color.FromHex("#CAC1B1")
+        };
+        targetLabel.StyleClasses.Add("LabelSubText");
+        targetRow.AddChild(targetLabel);
 
         return targetRow;
     }
@@ -107,11 +110,13 @@ public sealed partial class NcContractCard
 
     private Label BuildEmptyRewardsLabel()
     {
-        return new Label
+        var label = new Label
         {
             Text = Loc.GetString("nc-store-contract-reward-none"),
-            Modulate = Color.FromHex("#777777")
+            Modulate = Color.FromHex("#8E8577")
         };
+        label.StyleClasses.Add("LabelSubText");
+        return label;
     }
 
     private Label BuildCurrencyRewardsLine(Dictionary<string, int> currencyTotals)
@@ -126,11 +131,13 @@ public sealed partial class NcContractCard
             parts.Add(Loc.GetString("nc-store-currency-format", ("amount", amount), ("currency", name)));
         }
 
-        return new Label
+        var label = new Label
         {
             Text = string.Join(", ", parts),
-            Modulate = Color.FromHex("#D4AF37")
+            Modulate = Color.FromHex("#D8B160")
         };
+        label.StyleClasses.Add("LabelKeyText");
+        return label;
     }
 
     private BoxContainer BuildItemRewardLine(string id, int count)
@@ -140,7 +147,7 @@ public sealed partial class NcContractCard
         var line = new BoxContainer
         {
             Orientation = BoxContainer.LayoutOrientation.Horizontal,
-            Margin = new(0, 0, 0, 2),
+            Margin = new(0, 0, 0, 1),
             MouseFilter = MouseFilterMode.Stop,
             HorizontalExpand = true
         };
@@ -153,7 +160,7 @@ public sealed partial class NcContractCard
         {
             MinSize = new(RewardIconPx, RewardIconPx),
             MaxSize = new(RewardIconPx, RewardIconPx),
-            Margin = new(0, 0, 4, 0),
+            Margin = new(0, 0, 6, 0),
             MouseFilter = MouseFilterMode.Ignore
         };
         view.SetPrototype(id);
@@ -161,14 +168,17 @@ public sealed partial class NcContractCard
         line.AddChild(view);
 
         var name = proto?.Name ?? id;
-        line.AddChild(
-            new Label
-            {
-                Text = Loc.GetString("nc-store-contract-reward-item-line", ("item", name), ("count", count)),
-                MouseFilter = MouseFilterMode.Ignore,
-                HorizontalExpand = true,
-                ClipText = true
-            });
+        var rewardLabel = new Label
+        {
+            Text = Loc.GetString("nc-store-contract-reward-item-line", ("item", name), ("count", count)),
+            MouseFilter = MouseFilterMode.Ignore,
+            HorizontalExpand = true,
+            ClipText = true,
+            VerticalAlignment = VAlignment.Center,
+            Modulate = Color.FromHex("#BEB5A5")
+        };
+        rewardLabel.StyleClasses.Add("LabelSubText");
+        line.AddChild(rewardLabel);
 
         return line;
     }
