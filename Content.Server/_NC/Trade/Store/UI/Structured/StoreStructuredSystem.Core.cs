@@ -122,15 +122,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         var scratch = GetDynamicScratch(uid);
         if (!scratch.UpdateVisibleIds(ids))
             return;
-        MarkDirty(uid);
-
-        var now = _timing.CurTime;
-        if (now >= scratch.NextDynamicAllowed)
-        {
-            _dirtyStores.Remove(uid);
-            UpdateDynamicState(uid, comp, user);
-            scratch.NextDynamicAllowed = now + TimeSpan.FromSeconds(MinDynamicInterval);
-        }
+        RequestDynamicRefresh(uid, comp, user);
     }
 
     private void OnStorageOpen(EntityUid uid, EntityStorageComponent comp, ref StorageAfterOpenEvent args)
@@ -178,7 +170,21 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             return;
 
         SendCatalog(uid, comp, user);
+        RequestDynamicRefresh(uid, comp, user);
+    }
+
+    public void RequestDynamicRefresh(EntityUid uid, NcStoreComponent comp, EntityUid user)
+    {
+        MarkDirty(uid);
+
+        var now = _timing.CurTime;
+        var scratch = GetDynamicScratch(uid);
+        if (now < scratch.NextDynamicAllowed)
+            return;
+
+        _dirtyStores.Remove(uid);
         UpdateDynamicState(uid, comp, user);
+        SetNextDynamicUpdateTime(scratch, now);
     }
 
     public override void Update(float frameTime)
@@ -485,7 +491,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         _loader.EnsureLoaded(uid, comp, "UiOpenAttempt");
 
         SendCatalog(uid, comp, user);
-        UpdateDynamicState(uid, comp, user);
+        RequestDynamicRefresh(uid, comp, user);
     }
 
 
@@ -622,7 +628,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
 
         EnsureCrateWatchUpToDate(uid, user);
-        UpdateDynamicState(uid, comp, user);
+        RequestDynamicRefresh(uid, comp, user);
     }
 
     private void OnAccessReaderChanged(

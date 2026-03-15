@@ -21,11 +21,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         {
             _audio.PlayPvs(new SoundPathSpecifier("/Audio/Effects/Cargo/ping.ogg"), user);
             _popups.PopupEntity(Loc.GetString("nc-store-contract-completed"), uid, user);
-            UpdateDynamicState(uid, comp, user);
-            return;
         }
 
-        UpdateDynamicState(uid, comp, user);
+        RequestDynamicRefresh(uid, comp, user);
     }
 
 
@@ -42,15 +40,13 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             return;
 
         if (_contracts.TryTakeContract(uid, user, msg.ContractId))
-        {
             _popups.PopupEntity(Loc.GetString("nc-store-contract-taken"), uid, user);
-            UpdateDynamicState(uid, comp, user);
-            return;
-        }
+        else
+            _popups.PopupEntity(Loc.GetString("nc-store-contract-take-failed"), uid, user);
 
-        _popups.PopupEntity(Loc.GetString("nc-store-contract-take-failed"), uid, user);
-        UpdateDynamicState(uid, comp, user);
+        RequestDynamicRefresh(uid, comp, user);
     }
+
     private void OnRequestContractPinpointer(EntityUid uid, NcStoreComponent comp, RequestContractPinpointerBoundMessage msg)
     {
         if (!TryGetLockedUiUser(uid, comp, out var user))
@@ -64,14 +60,11 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             return;
 
         if (_contracts.TryIssueContractPinpointer(uid, user, msg.ContractId))
-        {
             _popups.PopupEntity(Loc.GetString("nc-store-contract-pinpointer-issued"), uid, user);
-            UpdateDynamicState(uid, comp, user);
-            return;
-        }
+        else
+            _popups.PopupEntity(Loc.GetString("nc-store-contract-pinpointer-issue-failed"), uid, user);
 
-        _popups.PopupEntity(Loc.GetString("nc-store-contract-pinpointer-issue-failed"), uid, user);
-        UpdateDynamicState(uid, comp, user);
+        RequestDynamicRefresh(uid, comp, user);
     }
 
     private void OnSkipContract(EntityUid uid, NcStoreComponent comp, SkipContractBoundMessage msg)
@@ -87,13 +80,10 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             return;
 
         if (_contracts.TrySkipContract(uid, user, msg.ContractId))
-        {
             _popups.PopupEntity(Loc.GetString("nc-store-contract-skipped"), uid, user);
-            UpdateDynamicState(uid, comp, user);
-            return;
-        }
+        else
+            _popups.PopupEntity(Loc.GetString("nc-store-contract-skip-failed"), uid, user);
 
-        _popups.PopupEntity(Loc.GetString("nc-store-contract-skip-failed"), uid, user);
-        UpdateDynamicState(uid, comp, user);
+        RequestDynamicRefresh(uid, comp, user);
     }
 }

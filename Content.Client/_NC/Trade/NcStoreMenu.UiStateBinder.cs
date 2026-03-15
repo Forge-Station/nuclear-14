@@ -115,6 +115,8 @@ public sealed partial class NcStoreMenu
             _m.SellView.PrepareSearchIndex(productProtos);
 
             _m.RebuildCategoriesFromCatalog();
+            _m.RebuildItemsFromCatalogAndDynamic();
+            _m.UpdateVirtualSellCategories();
 
             _m.BuyView.SetSearch(string.Empty);
             _m.SellView.SetSearch(string.Empty);
@@ -162,16 +164,28 @@ public sealed partial class NcStoreMenu
                 _m.SetBalancesByCurrency(balancesByCurrency);
 
             var remainingChanged =
-                !SparseDictEqualsWithPreserve(remainingById, _m._catalogModel.RemainingById, _buyListingIds);
+                !SparseDictEqualsPreservingHiddenBuyListings(
+                    remainingById,
+                    _m._catalogModel.RemainingById,
+                    _buyListingIds);
             var ownedChanged =
-                !SparseDictEqualsWithPreserve(ownedById, _m._catalogModel.OwnedById, _buyListingIds);
+                !SparseDictEqualsPreservingHiddenBuyListings(
+                    ownedById,
+                    _m._catalogModel.OwnedById,
+                    _buyListingIds);
             var crateChanged = !DictEquals(crateUnitsById, _m._catalogModel.CrateUnitsById);
 
             if (remainingChanged)
-                ApplySparseSnapshotWithPreserve(remainingById, _m._catalogModel.RemainingById, _buyListingIds);
+                ApplySparseSnapshotPreservingHiddenBuyListings(
+                    remainingById,
+                    _m._catalogModel.RemainingById,
+                    _buyListingIds);
 
             if (ownedChanged)
-                ApplySparseSnapshotWithPreserve(ownedById, _m._catalogModel.OwnedById, _buyListingIds);
+                ApplySparseSnapshotPreservingHiddenBuyListings(
+                    ownedById,
+                    _m._catalogModel.OwnedById,
+                    _buyListingIds);
 
             if (crateChanged)
                 ApplySparseSnapshot(crateUnitsById, _m._catalogModel.CrateUnitsById);

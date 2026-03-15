@@ -1,4 +1,5 @@
 ﻿using Content.Shared._NC.Trade;
+using Content.Shared.Customization.Systems;
 
 namespace Content.Server._NC.Trade;
 
@@ -22,7 +23,7 @@ public sealed partial class NcContractSystem : EntitySystem
         return runtime;
     }
 
-    private static ContractObjectiveConfigData CreateObjectiveConfig(StoreContractPrototype proto)
+    private ContractObjectiveConfigData CreateObjectiveConfig(StoreContractPrototype proto)
     {
         var runtimeProto = GetRuntimePrototypeOrDefault(proto);
         var config = new ContractObjectiveConfigData
@@ -39,7 +40,7 @@ public sealed partial class NcContractSystem : EntitySystem
             TargetPrototype = runtimeProto.TargetPrototype ?? string.Empty,
             DeliverySpawnPrototype = runtimeProto.DeliverySpawnPrototype ?? string.Empty,
             StructurePrototype = runtimeProto.StructurePrototype ?? string.Empty,
-            GhostRolePrototype = runtimeProto.GhostRolePrototype ?? string.Empty,
+            GhostRole = runtimeProto.GhostRole ?? string.Empty,
             SpawnAtStore = runtimeProto.SpawnAtStore,
             PreserveTargetOnComplete = runtimeProto.PreserveTargetOnComplete,
             AllowStoreWorldTurnIn = runtimeProto.AllowStoreWorldTurnIn,
@@ -52,8 +53,30 @@ public sealed partial class NcContractSystem : EntitySystem
             RepairStageSound = runtimeProto.RepairStageSound ?? string.Empty
         };
 
+        ApplyGhostRoleDefinition(proto.ID, config);
         NormalizeObjectiveConfig(config);
         return config;
+    }
+
+    private void ApplyGhostRoleDefinition(string contractId, ContractObjectiveConfigData config)
+    {
+        if (string.IsNullOrWhiteSpace(config.GhostRole))
+            return;
+
+        if (!_prototypes.TryIndex<StoreContractGhostRolePrototype>(config.GhostRole, out var ghostRole))
+        {
+            Sawmill.Warning(
+                $"[Contracts] Ghost role config resolve failed for '{contractId}': ghost role '{config.GhostRole}' is missing.");
+            return;
+        }
+
+        config.GhostRolePrototype = ghostRole.EntityPrototype ?? string.Empty;
+        config.GhostRoleName = ghostRole.Name ?? string.Empty;
+        config.GhostRoleDescription = ghostRole.Description ?? string.Empty;
+        config.GhostRoleRules = ghostRole.Rules ?? string.Empty;
+        config.GhostRoleRequirements = ghostRole.Requirements.Count > 0
+            ? new List<CharacterRequirement>(ghostRole.Requirements)
+            : new List<CharacterRequirement>();
     }
 
     private static StoreContractRuntimePrototype GetRuntimePrototypeOrDefault(StoreContractPrototype proto)
@@ -95,7 +118,12 @@ public sealed partial class NcContractSystem : EntitySystem
         config.TargetPrototype ??= string.Empty;
         config.DeliverySpawnPrototype ??= string.Empty;
         config.StructurePrototype ??= string.Empty;
+        config.GhostRole ??= string.Empty;
         config.GhostRolePrototype ??= string.Empty;
+        config.GhostRoleName ??= string.Empty;
+        config.GhostRoleDescription ??= string.Empty;
+        config.GhostRoleRules ??= string.Empty;
+        config.GhostRoleRequirements ??= new List<CharacterRequirement>();
         config.GivePinpointer = config.GivePinpointer;
         config.PinpointerPrototype = ResolvePinpointerPrototypeId(config.PinpointerPrototype);
         config.GuardPrototype ??= string.Empty;
@@ -103,6 +131,12 @@ public sealed partial class NcContractSystem : EntitySystem
         config.RepairToolQuality = ResolveRepairToolQuality(config.RepairToolQuality);
         config.RepairDoAfterSeconds = ResolveRepairDoAfterSeconds(config.RepairDoAfterSeconds);
         config.RepairStageSound = ResolveRepairStageSound(config.RepairStageSound);
+
+        for (var i = config.GhostRoleRequirements.Count - 1; i >= 0; i--)
+        {
+            if (config.GhostRoleRequirements[i] is null)
+                config.GhostRoleRequirements.RemoveAt(i);
+        }
     }
 
     private static int GetDefaultObjectiveStageGoal(ContractExecutionKind executionKind)

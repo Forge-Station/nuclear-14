@@ -16,6 +16,7 @@ public sealed partial class NcStoreLogicSystem
     }
 
     private readonly Dictionary<string, int> _inheritanceDepthCache = new(StringComparer.Ordinal);
+    private readonly List<EntityUid> _massSellItemsScratch = new();
     private readonly List<string> _protoIdsScratch = new();
     private readonly HashSet<string> _protoIdsSeenScratch = new(StringComparer.Ordinal);
     private readonly List<NcStoreListingDef> _sellListingsScratch = new();
@@ -23,8 +24,8 @@ public sealed partial class NcStoreLogicSystem
     public MassSellPlan ComputeMassSellPlan(NcStoreComponent store, EntityUid container)
     {
         _inventory.InvalidateInventoryCache(container);
-        var cached = _inventory.GetOrBuildDeepItemsCacheCompacted(container);
-        return ComputeMassSellPlanInternal(store, cached);
+        _inventory.ScanInventoryItems(container, _massSellItemsScratch);
+        return ComputeMassSellPlanInternal(store, _massSellItemsScratch);
     }
 
     public MassSellPlan ComputeMassSellPlanFromCachedItems(

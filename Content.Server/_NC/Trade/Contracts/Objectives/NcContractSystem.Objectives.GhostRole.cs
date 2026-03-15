@@ -1,13 +1,16 @@
 using Content.Server.Ghost.Roles.Components;
 using Content.Server.Mind.Commands;
 using Content.Shared._NC.Trade;
+using Content.Shared.Customization.Systems;
 using Content.Shared.Mind.Components;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -38,9 +41,12 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryResolveGhostRolePrototype(
         string contractId,
         ContractServerData contract,
-        out string ghostRoleProtoId)
+        out string ghostRoleProtoId
+    )
     {
-        ghostRoleProtoId = ResolveTrackedObjectivePrototypeId(EnsureContractConfig(contract).GhostRolePrototype, contract.TargetItem);
+        ghostRoleProtoId = ResolveTrackedObjectivePrototypeId(
+            EnsureContractConfig(contract).GhostRolePrototype,
+            contract.TargetItem);
         if (!string.IsNullOrWhiteSpace(ghostRoleProtoId) && _prototypes.HasIndex<EntityPrototype>(ghostRoleProtoId))
             return true;
 
@@ -53,7 +59,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid store,
         string contractId,
         ContractObjectiveConfigData config,
-        out EntityCoordinates spawnCoords)
+        out EntityCoordinates spawnCoords
+    )
     {
         if (TryResolveObjectiveSpawnCoordinates(store, config, out spawnCoords))
             return true;
@@ -65,7 +72,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TrySpawnGhostRoleSpawner(
         string contractId,
         EntityCoordinates spawnCoords,
-        out EntityUid spawner)
+        out EntityUid spawner
+    )
     {
         try
         {
@@ -74,7 +82,8 @@ public sealed partial class NcContractSystem : EntitySystem
         }
         catch (Exception e)
         {
-            Sawmill.Error($"[Contracts] Ghost role init failed for '{contractId}': runtime spawner creation threw: {e}");
+            Sawmill.Error(
+                $"[Contracts] Ghost role init failed for '{contractId}': runtime spawner creation threw: {e}");
             spawner = EntityUid.Invalid;
             return false;
         }
@@ -82,18 +91,43 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void ConfigureGhostRoleSpawner(EntityUid spawner, ContractServerData contract, string ghostRoleProtoId)
     {
+        var config = EnsureContractConfig(contract);
         var ghostRole = EnsureComp<GhostRoleComponent>(spawner);
-        ghostRole.RoleName = contract.Name;
-        ghostRole.RoleDescription = contract.Description;
+        ghostRole.RoleName = ResolveContractGhostRoleName(config, contract);
+        ghostRole.RoleDescription = ResolveContractGhostRoleDescription(config, contract);
+        ghostRole.RoleRules = ResolveContractGhostRoleRules(config);
 
         var spawnerComp = EnsureComp<NcContractGhostRoleSpawnerComponent>(spawner);
         spawnerComp.TargetPrototype = ghostRoleProtoId;
+        spawnerComp.Requirements = config.GhostRoleRequirements.Count > 0
+            ? new(config.GhostRoleRequirements)
+            : new List<CharacterRequirement>();
     }
+
+    private static string
+        ResolveContractGhostRoleName(ContractObjectiveConfigData config, ContractServerData contract) =>
+        string.IsNullOrWhiteSpace(config.GhostRoleName)
+            ? contract.Name
+            : config.GhostRoleName;
+
+    private static string ResolveContractGhostRoleDescription(
+        ContractObjectiveConfigData config,
+        ContractServerData contract
+    ) =>
+        string.IsNullOrWhiteSpace(config.GhostRoleDescription)
+            ? contract.Description
+            : config.GhostRoleDescription;
+
+    private static string ResolveContractGhostRoleRules(ContractObjectiveConfigData config) =>
+        string.IsNullOrWhiteSpace(config.GhostRoleRules)
+            ? "ghost-role-component-default-rules"
+            : config.GhostRoleRules;
 
     private void RegisterGhostRoleObjectiveState(
         (EntityUid Store, string ContractId) key,
         EntityUid spawner,
-        ContractServerData contract)
+        ContractServerData contract
+    )
     {
         var config = EnsureContractConfig(contract);
         var runtime = EnsureContractRuntime(contract);
@@ -111,17 +145,25 @@ public sealed partial class NcContractSystem : EntitySystem
             : 0;
     }
 
-    private void OnContractGhostRoleTakeover(EntityUid uid, NcContractGhostRoleSpawnerComponent comp, ref TakeGhostRoleEvent args)
+    private void OnContractGhostRoleTakeover(
+        EntityUid uid,
+        NcContractGhostRoleSpawnerComponent comp,
+        ref TakeGhostRoleEvent args
+    )
     {
-        if (!TryComp(uid, out GhostRoleComponent? ghostRole) || comp.Claimed || ghostRole.Taken || MetaData(uid).EntityPaused)
+        if (!TryComp(uid, out GhostRoleComponent? ghostRole) ||
+            comp.Claimed ||
+            !CanTakeContractGhostRole(args.Player, uid, comp, ghostRole))
         {
             args.TookRole = false;
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(comp.TargetPrototype) || !_prototypes.HasIndex<EntityPrototype>(comp.TargetPrototype))
+        if (string.IsNullOrWhiteSpace(comp.TargetPrototype) ||
+            !_prototypes.HasIndex<EntityPrototype>(comp.TargetPrototype))
         {
-            Sawmill.Warning($"[Contracts] Ghost role take failed for {ToPrettyString(uid)}: invalid prototype '{comp.TargetPrototype}'.");
+            Sawmill.Warning(
+                $"[Contracts] Ghost role take failed for {ToPrettyString(uid)}: invalid prototype '{comp.TargetPrototype}'.");
             args.TookRole = false;
             return;
         }
@@ -162,9 +204,7 @@ public sealed partial class NcContractSystem : EntitySystem
             contract.Completed ||
             !contract.IsGhostRoleObjective ||
             EnsureContractRuntime(contract).Failed)
-        {
             return false;
-        }
 
         EnsureObjectiveRuntimeDefaults(contract);
 
@@ -184,10 +224,8 @@ public sealed partial class NcContractSystem : EntitySystem
         _objectiveRuntimeByTarget[target] = key;
 
         foreach (var pinpointer in state.PinpointerEntities)
-        {
             if (!TerminatingOrDeleted(pinpointer))
                 _pinpointer.SetTarget(pinpointer, target);
-        }
 
         var config = EnsureContractConfig(contract);
         if (config.GuardCount <= 0 || string.IsNullOrWhiteSpace(config.GuardPrototype))
@@ -231,9 +269,7 @@ public sealed partial class NcContractSystem : EntitySystem
             state.GhostRoleTaken ||
             state.GhostRoleAcceptDeadline is not { } deadline ||
             _timing.CurTime < deadline)
-        {
             return;
-        }
 
         if (!TryGetObjectiveContract(key, out var comp, out var contract))
         {
@@ -248,23 +284,19 @@ public sealed partial class NcContractSystem : EntitySystem
             key,
             comp,
             contract,
-            Loc.GetString("nc-store-contract-ghost-role-timeout"),
-            deleteGuards: false);
+            Loc.GetString("nc-store-contract-ghost-role-timeout"));
     }
 
     private void HandleGhostRoleTargetResolved(
         (EntityUid Store, string ContractId) key,
         NcStoreComponent comp,
         ContractServerData contract
-    )
-    {
+    ) =>
         FinalizeObjectiveFailure(
             key,
             comp,
             contract,
-            Loc.GetString("nc-store-contract-ghost-role-target-lost"),
-            deleteGuards: false);
-    }
+            Loc.GetString("nc-store-contract-ghost-role-target-lost"));
 
     public bool HasRealtimeContractState(NcStoreComponent comp)
     {
@@ -280,9 +312,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (contract.IsGhostRoleObjective ||
                 contract.IsTrackedDeliveryObjective ||
                 contract.AllowsStoreWorldTurnIn)
-            {
                 return true;
-            }
         }
 
         return false;
@@ -290,7 +320,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool IsGhostRoleTargetAtStore(EntityUid store, EntityUid target)
     {
-        if (!TryComp(store, out TransformComponent? storeXform) || !TryComp(target, out TransformComponent? targetXform))
+        if (!TryComp(store, out TransformComponent? storeXform) ||
+            !TryComp(target, out TransformComponent? targetXform))
             return false;
 
         if (storeXform.MapID != targetXform.MapID)
@@ -317,7 +348,9 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!state.GhostRoleTaken && state.GhostRoleAcceptDeadline is { } deadline)
         {
             runtime.GhostRolePendingAcceptance = true;
-            runtime.AcceptTimeoutRemainingSeconds = Math.Max(0, (int)Math.Ceiling((deadline - _timing.CurTime).TotalSeconds));
+            runtime.AcceptTimeoutRemainingSeconds = Math.Max(
+                0,
+                (int) Math.Ceiling((deadline - _timing.CurTime).TotalSeconds));
             runtime.Stage = 0;
             return;
         }

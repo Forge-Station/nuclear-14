@@ -41,6 +41,9 @@ public sealed partial class NcStoreLogicSystem
     private sealed class StoreSpawnService
     {
         private readonly string _stackComponentName;
+        private readonly List<EntityUid> _scratchItems = new();
+        private readonly List<EntityUid> _spawnedScratch = new();
+        private readonly List<(EntityUid Ent, int PreviousCount)> _stackRestoreScratch = new();
         private readonly NcStoreLogicSystem _sys;
         public StoreSpawnService(NcStoreLogicSystem sys)
         {
@@ -52,18 +55,17 @@ public sealed partial class NcStoreLogicSystem
             EntityUid user,
             string productEntity,
             EntityPrototype productProto,
-            int amount,
-            int unitPrice,
-            string currency
+            int purchases,
+            int unitsPerPurchase
         )
         {
-            if (amount <= 0)
+            if (purchases <= 0 || unitsPerPurchase <= 0)
                 return 0;
 
             if (TryGetStackPurchaseConfig(productProto, out var stackTypeId, out var maxPerStack))
-                return SpawnStackPurchasedProduct(user, productEntity, amount, stackTypeId, maxPerStack);
+                return SpawnStackPurchasedProduct(user, productEntity, purchases, unitsPerPurchase, stackTypeId, maxPerStack);
 
-            return SpawnSinglePurchasedProduct(user, productEntity, amount);
+            return SpawnSinglePurchasedProduct(user, productEntity, purchases, unitsPerPurchase);
         }
 
         private bool TryGetStackPurchaseConfig(
@@ -94,29 +96,83 @@ public sealed partial class NcStoreLogicSystem
         private int SpawnStackPurchasedProduct(
             EntityUid user,
             string productEntity,
-            int amount,
+            int purchases,
+            int unitsPerPurchase,
             string? stackTypeId,
             int maxPerStack)
         {
-            var cachedItems = _sys._inventory.GetOrBuildDeepItemsCacheCompacted(user);
-            var remainingToSpawn = amount;
-            var spawnedTotal = FillExistingPurchasedStacks(cachedItems, stackTypeId, maxPerStack, ref remainingToSpawn);
+            var successfulPurchases = 0;
 
-            if (remainingToSpawn > 0)
-                spawnedTotal += SpawnRemainingPurchasedStacks(user, productEntity, remainingToSpawn, maxPerStack);
+            for (var i = 0; i < purchases; i++)
+            {
+                if (!TrySpawnStackPurchaseBatch(user, productEntity, unitsPerPurchase, stackTypeId, maxPerStack))
+                    break;
 
-            _sys._inventory.InvalidateInventoryCache(user);
-            return spawnedTotal;
+                successfulPurchases++;
+            }
+
+            return FinalizeSuccessfulStackPurchases(user, successfulPurchases, unitsPerPurchase);
         }
 
-        private int FillExistingPurchasedStacks(
+        private int FinalizeSuccessfulStackPurchases(EntityUid user, int successfulPurchases, int unitsPerPurchase)
+        {
+            if (successfulPurchases <= 0)
+                return 0;
+
+            _sys._inventory.InvalidateInventoryCache(user);
+            return successfulPurchases * unitsPerPurchase;
+        }
+
+        private bool TrySpawnStackPurchaseBatch(
+            EntityUid user,
+            string productEntity,
+            int unitsPerPurchase,
+            string? stackTypeId,
+            int maxPerStack)
+        {
+            PrepareStackPurchaseBatch(user);
+
+            var remainingToSpawn = unitsPerPurchase;
+            FillExistingPurchasedStacks(_scratchItems, stackTypeId, maxPerStack, ref remainingToSpawn);
+
+            if (!TryCompleteStackPurchaseBatch(user, productEntity, remainingToSpawn, maxPerStack))
+            {
+                HandleFailedPurchaseBatch(user);
+                return false;
+            }
+
+            CommitPurchaseBatch(user);
+            return true;
+        }
+
+        private void PrepareStackPurchaseBatch(EntityUid user)
+        {
+            _sys._inventory.ScanInventoryItems(user, _scratchItems);
+            ResetPurchaseBatchState();
+        }
+
+        private bool TryCompleteStackPurchaseBatch(
+            EntityUid user,
+            string productEntity,
+            int remainingToSpawn,
+            int maxPerStack)
+        {
+            return remainingToSpawn <= 0 ||
+                   TrySpawnRemainingPurchasedStacks(user, productEntity, remainingToSpawn, maxPerStack);
+        }
+
+        private void HandleFailedPurchaseBatch(EntityUid user)
+        {
+            RollbackPurchaseBatch();
+            _sys._inventory.InvalidateInventoryCache(user);
+        }
+
+        private void FillExistingPurchasedStacks(
             List<EntityUid> cachedItems,
             string? stackTypeId,
             int maxPerStack,
             ref int remainingToSpawn)
         {
-            var spawnedTotal = 0;
-
             foreach (var ent in cachedItems)
             {
                 if (remainingToSpawn <= 0)
@@ -130,71 +186,156 @@ public sealed partial class NcStoreLogicSystem
                 if (spaceLeft <= 0)
                     continue;
 
+                TrackStackRestore(ent, existingStack.Count);
                 var toAdd = Math.Min(spaceLeft, remainingToSpawn);
                 _sys._stacks.SetCount(ent, existingStack.Count + toAdd, existingStack);
 
                 remainingToSpawn -= toAdd;
-                spawnedTotal += toAdd;
             }
-
-            return spawnedTotal;
         }
 
-        private int SpawnRemainingPurchasedStacks(
+        private void TrackStackRestore(EntityUid ent, int previousCount)
+        {
+            for (var i = 0; i < _stackRestoreScratch.Count; i++)
+            {
+                if (_stackRestoreScratch[i].Ent == ent)
+                    return;
+            }
+
+            _stackRestoreScratch.Add((ent, previousCount));
+        }
+
+        private bool TrySpawnRemainingPurchasedStacks(
             EntityUid user,
             string productEntity,
             int remainingToSpawn,
             int maxPerStack)
         {
-            var spawnedTotal = 0;
-            var userCoords = _sys._ents.GetComponent<TransformComponent>(user).Coordinates;
+            if (!TryGetUserSpawnCoordinates(user, out var userCoords))
+                return false;
 
             while (remainingToSpawn > 0)
             {
                 var chunk = Math.Min(remainingToSpawn, maxPerStack);
-                if (!TrySpawnPurchasedStackChunk(user, productEntity, userCoords, chunk))
-                    break;
+                if (!TrySpawnPurchasedStackChunk(productEntity, userCoords, chunk))
+                    return false;
 
-                spawnedTotal += chunk;
                 remainingToSpawn -= chunk;
             }
 
-            return spawnedTotal;
+            return true;
+        }
+
+        private bool TryGetUserSpawnCoordinates(EntityUid user, out EntityCoordinates userCoords)
+        {
+            userCoords = default;
+            if (!_sys._ents.TryGetComponent(user, out TransformComponent? userXform))
+                return false;
+
+            userCoords = userXform.Coordinates;
+            return true;
         }
 
         private bool TrySpawnPurchasedStackChunk(
-            EntityUid user,
             string productEntity,
             EntityCoordinates userCoords,
             int chunk)
         {
+            if (!TrySpawnPurchaseEntity(productEntity, userCoords, out var spawned))
+                return false;
+
+            if (_sys._ents.TryGetComponent(spawned, out StackComponent? spawnedStack))
+                _sys._stacks.SetCount(spawned, chunk, spawnedStack);
+
+            _spawnedScratch.Add(spawned);
+            return true;
+        }
+
+        private bool TrySpawnPurchaseEntity(string productEntity, EntityCoordinates userCoords, out EntityUid spawned)
+        {
+            spawned = default;
+
             try
             {
-                var spawned = _sys._ents.SpawnEntity(productEntity, userCoords);
-                if (_sys._ents.TryGetComponent(spawned, out StackComponent? spawnedStack))
-                    _sys._stacks.SetCount(spawned, chunk, spawnedStack);
-
-                _sys.QueuePickupToHandsOrCrateNextTick(user, spawned);
+                spawned = _sys._ents.SpawnEntity(productEntity, userCoords);
                 return true;
             }
             catch (Exception e)
             {
-                Logger.GetSawmill("ncstore-logic").Error($"Spawn failed during bulk buy: {e}");
+                Logger.GetSawmill("ncstore-logic").Error($"Spawn failed during purchase batch: {e}");
                 return false;
             }
         }
 
-        private int SpawnSinglePurchasedProduct(EntityUid user, string productEntity, int amount)
+        private void CommitPurchaseBatch(EntityUid user)
         {
-            var spawnedTotal = 0;
+            for (var i = 0; i < _spawnedScratch.Count; i++)
+                _sys.QueuePickupToHandsOrCrateNextTick(user, _spawnedScratch[i]);
 
-            for (var i = 0; i < amount; i++)
+            ResetPurchaseBatchState();
+        }
+
+        private void ResetPurchaseBatchState()
+        {
+            _spawnedScratch.Clear();
+            _stackRestoreScratch.Clear();
+        }
+
+        private void RollbackPurchaseBatch()
+        {
+            for (var i = 0; i < _stackRestoreScratch.Count; i++)
             {
-                if (_sys.TrySpawnProduct(productEntity, user))
-                    spawnedTotal++;
+                var (ent, previousCount) = _stackRestoreScratch[i];
+                if (!_sys._ents.TryGetComponent(ent, out StackComponent? stack))
+                    continue;
+
+                _sys._stacks.SetCount(ent, previousCount, stack);
             }
 
-            return spawnedTotal;
+            for (var i = 0; i < _spawnedScratch.Count; i++)
+            {
+                var ent = _spawnedScratch[i];
+                if (_sys.Exists(ent))
+                    _sys._ents.DeleteEntity(ent);
+            }
+
+            ResetPurchaseBatchState();
+        }
+
+        private int SpawnSinglePurchasedProduct(EntityUid user, string productEntity, int purchases, int unitsPerPurchase)
+        {
+            var successfulPurchases = 0;
+
+            for (var i = 0; i < purchases; i++)
+            {
+                if (!TrySpawnSinglePurchaseBatch(user, productEntity, unitsPerPurchase))
+                    break;
+
+                successfulPurchases++;
+            }
+
+            return successfulPurchases * unitsPerPurchase;
+        }
+
+        private bool TrySpawnSinglePurchaseBatch(EntityUid user, string productEntity, int unitsPerPurchase)
+        {
+            ResetPurchaseBatchState();
+            if (!TryGetUserSpawnCoordinates(user, out var userCoords))
+                return false;
+
+            for (var i = 0; i < unitsPerPurchase; i++)
+            {
+                if (!TrySpawnPurchaseEntity(productEntity, userCoords, out var spawned))
+                {
+                    RollbackPurchaseBatch();
+                    return false;
+                }
+
+                _spawnedScratch.Add(spawned);
+            }
+
+            CommitPurchaseBatch(user);
+            return true;
         }
     }
 }

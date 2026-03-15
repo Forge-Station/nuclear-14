@@ -2,7 +2,9 @@ using Content.Shared._NC.Trade;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -20,10 +22,11 @@ public sealed partial class NcContractSystem : EntitySystem
         OnObjectiveTrackedTargetResolved(key, args.Target);
     }
 
-    private void HandleHuntObjectiveTargetResolved((EntityUid Store, string ContractId) key, ContractServerData contract)
-    {
+    private void HandleHuntObjectiveTargetResolved(
+        (EntityUid Store, string ContractId) key,
+        ContractServerData contract
+    ) =>
         FinalizeObjectiveCompletion(key, contract);
-    }
 
     private void SyncHuntObjectiveProgress(EntityUid store, string contractId, ContractServerData contract)
     {

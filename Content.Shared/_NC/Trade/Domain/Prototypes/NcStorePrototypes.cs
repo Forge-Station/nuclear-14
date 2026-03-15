@@ -125,8 +125,8 @@ public sealed partial class StoreContractRuntimePrototype
     [DataField("structurePrototype")]
     public string StructurePrototype { get; set; } = string.Empty;
 
-    [DataField("ghostRolePrototype")]
-    public string GhostRolePrototype { get; set; } = string.Empty;
+    [DataField("ghostRole")]
+    public string GhostRole { get; set; } = string.Empty;
 
     [DataField("spawnAtStore")]
     public bool SpawnAtStore { get; set; }

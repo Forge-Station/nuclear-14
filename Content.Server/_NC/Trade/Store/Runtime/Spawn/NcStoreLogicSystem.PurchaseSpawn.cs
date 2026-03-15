@@ -9,9 +9,8 @@ public sealed partial class NcStoreLogicSystem
         EntityUid user,
         string productEntity,
         EntityPrototype productProto,
-        int amount,
-        int unitPrice,
-        string currency
+        int purchases,
+        int unitsPerPurchase
     ) =>
-        _spawnService.SpawnPurchasedProduct(user, productEntity, productProto, amount, unitPrice, currency);
+        _spawnService.SpawnPurchasedProduct(user, productEntity, productProto, purchases, unitsPerPurchase);
 }

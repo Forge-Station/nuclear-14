@@ -13,6 +13,17 @@ namespace Content.Server._NC.Trade;
 
 public sealed class NcStoreInventorySystem : EntitySystem
 {
+    private const int UncachedRevision = int.MinValue;
+
+    private sealed class InventoryCacheEntry
+    {
+        public readonly List<EntityUid> Items = new();
+        public readonly NcInventorySnapshot Snapshot = new();
+        public int Revision;
+        public int ItemsRevision = UncachedRevision;
+        public int SnapshotRevision = UncachedRevision;
+    }
+
     private readonly record struct ProductTakeRequest(
         string ProtoId,
         string? StackType,
@@ -20,8 +31,7 @@ public sealed class NcStoreInventorySystem : EntitySystem
 
     [Dependency] private readonly IComponentFactory _compFactory = default!;
     [Dependency] private readonly IEntityManager _ents = default!;
-    private readonly Dictionary<EntityUid, List<EntityUid>> _inventoryCache = new();
-    private readonly HashSet<EntityUid> _inventoryDirty = new();
+    private readonly Dictionary<EntityUid, InventoryCacheEntry> _inventoryCache = new();
     private readonly Dictionary<string, string?> _productStackTypeCache = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string[]> _protoAndAncestorsCache = new(StringComparer.Ordinal);
     private readonly HashSet<string> _scratchProtoVisited = new(StringComparer.Ordinal);
@@ -56,46 +66,93 @@ public sealed class NcStoreInventorySystem : EntitySystem
     private void OnEntityTerminating(ref EntityTerminatingEvent ev)
     {
         _inventoryCache.Remove(ev.Entity);
-        _inventoryDirty.Remove(ev.Entity);
+
+        foreach (var entry in _inventoryCache.Values)
+        {
+            if (entry.ItemsRevision != entry.Revision || !entry.Items.Contains(ev.Entity))
+                continue;
+
+            entry.Revision = unchecked(entry.Revision + 1);
+        }
     }
 
 
     public void InvalidateInventoryCache(EntityUid root)
     {
-        // Keep the list instance to reduce GC; mark it dirty for rebuild.
-        if (!_inventoryCache.ContainsKey(root))
-            _inventoryCache[root] = new List<EntityUid>();
-        _inventoryDirty.Add(root);
+        var entry = GetOrCreateInventoryCacheEntry(root);
+        MarkInventoryDirty(entry, itemsStillCurrent: false);
     }
 
     public void InvalidateAllCaches()
     {
-        _inventoryDirty.Clear();
         _inventoryCache.Clear();
     }
 
-    public List<EntityUid> GetOrBuildDeepItemsCache(EntityUid owner)
+    public int GetInventoryRevision(EntityUid root)
     {
-        if (_inventoryCache.TryGetValue(owner, out var cached))
-        {
-            if (_inventoryDirty.Remove(owner))
-                BuildDeepItemsCache(owner, cached);
-            return cached;
-        }
-
-        cached = new List<EntityUid>();
-        _inventoryCache[owner] = cached;
-        BuildDeepItemsCache(owner, cached);
-        return cached;
+        return _inventoryCache.TryGetValue(root, out var entry)
+            ? entry.Revision
+            : 0;
     }
 
-    public List<EntityUid> GetOrBuildDeepItemsCacheCompacted(EntityUid owner)
+    private List<EntityUid> GetOrBuildDeepItemsCache(EntityUid owner)
     {
-        var cached = GetOrBuildDeepItemsCache(owner);
-        CompactCachedItemsIfNeeded(cached);
-        return cached;
+        var entry = GetOrCreateInventoryCacheEntry(owner);
+        EnsureItemsCache(owner, entry);
+        MarkSnapshotCacheEscaped(entry);
+        return entry.Items;
     }
 
+    private List<EntityUid> GetOrBuildDeepItemsCacheCompacted(EntityUid owner)
+    {
+        var entry = GetOrCreateInventoryCacheEntry(owner);
+        EnsureItemsCache(owner, entry);
+        CompactCachedItemsIfNeeded(entry.Items);
+        MarkSnapshotCacheEscaped(entry);
+        return entry.Items;
+    }
+
+    private InventoryCacheEntry GetOrCreateInventoryCacheEntry(EntityUid owner)
+    {
+        if (_inventoryCache.TryGetValue(owner, out var entry))
+            return entry;
+
+        entry = new();
+        _inventoryCache[owner] = entry;
+        return entry;
+    }
+
+    private void EnsureItemsCache(EntityUid owner, InventoryCacheEntry entry)
+    {
+        if (entry.ItemsRevision == entry.Revision)
+            return;
+
+        BuildDeepItemsCache(owner, entry.Items);
+        entry.ItemsRevision = entry.Revision;
+    }
+
+    private void EnsureSnapshotCache(EntityUid owner, InventoryCacheEntry entry)
+    {
+        EnsureItemsCache(owner, entry);
+        if (entry.SnapshotRevision == entry.Revision)
+            return;
+
+        FillInventorySnapshotFromItems(owner, entry.Items, entry.Snapshot);
+        entry.SnapshotRevision = entry.Revision;
+    }
+
+    private static void MarkSnapshotCacheEscaped(InventoryCacheEntry entry)
+    {
+        // Callers receive the live internal items list and may mutate it in-place.
+        entry.SnapshotRevision = UncachedRevision;
+    }
+
+    private static void MarkInventoryDirty(InventoryCacheEntry entry, bool itemsStillCurrent)
+    {
+        entry.Revision = unchecked(entry.Revision + 1);
+        entry.ItemsRevision = itemsStillCurrent ? entry.Revision : UncachedRevision;
+        entry.SnapshotRevision = UncachedRevision;
+    }
 
     private void BuildDeepItemsCache(EntityUid owner, List<EntityUid> cached)
     {
@@ -156,7 +213,7 @@ public sealed class NcStoreInventorySystem : EntitySystem
         if (cached.Capacity < _scratchResult.Count)
             cached.Capacity = _scratchResult.Count;
         cached.AddRange(_scratchResult);
-        }
+    }
 
     private void CompactCachedItems(List<EntityUid> cached)
     {
@@ -200,8 +257,7 @@ public sealed class NcStoreInventorySystem : EntitySystem
         CompactCachedItems(cached);
     }
 
-
-public NcInventorySnapshot BuildInventorySnapshot(EntityUid root)
+    public NcInventorySnapshot BuildInventorySnapshot(EntityUid root)
     {
         var snap = new NcInventorySnapshot();
         FillInventorySnapshot(root, snap);
@@ -210,25 +266,33 @@ public NcInventorySnapshot BuildInventorySnapshot(EntityUid root)
 
     public void FillInventorySnapshot(EntityUid root, NcInventorySnapshot buffer)
     {
-        var items = GetOrBuildDeepItemsCache(root);
-        FillInventorySnapshotFromItems(root, items, buffer);
+        var entry = GetOrCreateInventoryCacheEntry(root);
+        EnsureSnapshotCache(root, entry);
+        buffer.CopyFrom(entry.Snapshot);
     }
 
     public void ScanInventory(EntityUid root, List<EntityUid> itemsBuffer, NcInventorySnapshot snapshotBuffer)
     {
+        var entry = GetOrCreateInventoryCacheEntry(root);
+        EnsureItemsCache(root, entry);
+        CompactCachedItemsIfNeeded(entry.Items);
+
         itemsBuffer.Clear();
-        var cached = GetOrBuildDeepItemsCacheCompacted(root);
-        itemsBuffer.AddRange(cached);
-        FillInventorySnapshotFromItems(root, itemsBuffer, snapshotBuffer);
+        itemsBuffer.AddRange(entry.Items);
+
+        EnsureSnapshotCache(root, entry);
+        snapshotBuffer.CopyFrom(entry.Snapshot);
     }
 
+    public void ScanInventoryItems(EntityUid root, List<EntityUid> itemsBuffer)
+    {
+        var entry = GetOrCreateInventoryCacheEntry(root);
+        EnsureItemsCache(root, entry);
+        CompactCachedItemsIfNeeded(entry.Items);
 
-public void ScanInventoryItems(EntityUid root, List<EntityUid> itemsBuffer)
-{
-    itemsBuffer.Clear();
-    var cached = GetOrBuildDeepItemsCacheCompacted(root);
-    itemsBuffer.AddRange(cached);
-}
+        itemsBuffer.Clear();
+        itemsBuffer.AddRange(entry.Items);
+    }
 
 
     private void FillInventorySnapshotFromItems(
@@ -332,7 +396,11 @@ public void ScanInventoryItems(EntityUid root, List<EntityUid> itemsBuffer)
         if (CalculateAvailableTakeUnits(root, cachedItems, request, amount) < amount)
             return false;
 
-        return ExecuteTakeUnitsFromCachedItems(root, cachedItems, request, amount);
+        var success = ExecuteTakeUnitsFromCachedItems(root, cachedItems, request, amount);
+        if (success && _inventoryCache.TryGetValue(root, out var entry))
+            MarkInventoryDirty(entry, ReferenceEquals(entry.Items, cachedItems));
+
+        return success;
     }
 
     private ProductTakeRequest CreateProductTakeRequest(string protoId, PrototypeMatchMode matchMode)

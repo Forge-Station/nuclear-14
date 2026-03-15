@@ -21,24 +21,24 @@ public sealed partial class NcStoreMenu
             return true;
         }
 
-        private static bool SparseDictEqualsWithPreserve(
-            Dictionary<string, int> src,
-            Dictionary<string, int> dst,
-            HashSet<string> preserveMissingIds
+        private static bool SparseDictEqualsPreservingHiddenBuyListings(
+            Dictionary<string, int> authoritativeValues,
+            Dictionary<string, int> cachedValues,
+            HashSet<string> buyListingIds
         )
         {
-            foreach (var (k, v) in src)
+            foreach (var (key, value) in authoritativeValues)
             {
-                if (!dst.TryGetValue(k, out var other) || other != v)
+                if (!cachedValues.TryGetValue(key, out var other) || other != value)
                     return false;
             }
 
-            foreach (var key in dst.Keys)
+            foreach (var key in cachedValues.Keys)
             {
-                if (src.ContainsKey(key))
+                if (authoritativeValues.ContainsKey(key))
                     continue;
 
-                if (!preserveMissingIds.Contains(key))
+                if (!buyListingIds.Contains(key))
                     return false;
             }
 
@@ -58,32 +58,32 @@ public sealed partial class NcStoreMenu
             }
         }
 
-        private static void ApplySparseSnapshotWithPreserve(
-            Dictionary<string, int> src,
-            Dictionary<string, int> dst,
-            HashSet<string> preserveMissingIds
+        private static void ApplySparseSnapshotPreservingHiddenBuyListings(
+            Dictionary<string, int> authoritativeValues,
+            Dictionary<string, int> cachedValues,
+            HashSet<string> buyListingIds
         )
         {
             var toRemove = new List<string>();
 
-            foreach (var key in dst.Keys)
+            foreach (var key in cachedValues.Keys)
             {
-                if (src.ContainsKey(key))
+                if (authoritativeValues.ContainsKey(key))
                     continue;
 
-                if (!preserveMissingIds.Contains(key))
+                if (!buyListingIds.Contains(key))
                     toRemove.Add(key);
             }
 
             for (var i = 0; i < toRemove.Count; i++)
-                dst.Remove(toRemove[i]);
+                cachedValues.Remove(toRemove[i]);
 
-            foreach (var (k, v) in src)
+            foreach (var (key, value) in authoritativeValues)
             {
-                if (string.IsNullOrWhiteSpace(k))
+                if (string.IsNullOrWhiteSpace(key))
                     continue;
 
-                dst[k] = v;
+                cachedValues[key] = value;
             }
         }
     }

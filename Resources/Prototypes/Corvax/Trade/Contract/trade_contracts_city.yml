@@ -210,7 +210,7 @@
     - tag: TradeContractGhostSpawn
       weight: 1
     stageGoal: 1
-    ghostRolePrototype: N14MobHumanRaider
+    ghostRole: nc_contract_ghost_role_raider
     guardPrototype: N14MobRaiderPsycho
     guardCount: 2
     givePinpointer: true
@@ -257,7 +257,7 @@
   runtime:
     spawnPointTag: TradeContractStoreSpawn
     stageGoal: 1
-    ghostRolePrototype: N14MobHumanRaider
+    ghostRole: nc_contract_ghost_role_raider
     guardPrototype: N14MobRaiderPsycho
     guardCount: 2
     givePinpointer: true

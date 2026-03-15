@@ -7,10 +7,15 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     private sealed partial class DynamicScratch
     {
         private readonly DynamicStateBuffer[] _buffers = { new(), new() };
+        private readonly Dictionary<string, int> _cratePreviewTotals = new();
+        private readonly Dictionary<string, int> _cratePreviewUnitsById = new();
         private readonly HashSet<string> _visibleListingIds = new();
         private int _activeIndex;
         private int _catalogRevision;
+        private int _cratePreviewCatalogRevision;
+        private int _cratePreviewInventoryRevision;
         private bool _hasBuyTab;
+        private bool _hasCratePreview;
         private bool _hasContracts;
         private bool _hasContractsFingerprint;
         private int _contractsFingerprint;
@@ -18,6 +23,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         private bool _hasSellTab;
         private bool _hasVisibleIds;
         private int _visibleSig;
+        private EntityUid? _cratePreviewRoot;
         public TimeSpan NextDynamicAllowed = TimeSpan.Zero;
 
         public DynamicStateBuffer GetReadBuffer() => _buffers[_activeIndex];
@@ -104,6 +110,68 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         {
             _hasContractsFingerprint = false;
             _contractsFingerprint = 0;
+        }
+
+        public bool TryPopulateCachedCratePreview(
+            EntityUid crateUid,
+            int catalogRevision,
+            int inventoryRevision,
+            DynamicStateBuffer buf)
+        {
+            if (!_hasCratePreview ||
+                _cratePreviewRoot != crateUid ||
+                _cratePreviewCatalogRevision != catalogRevision ||
+                _cratePreviewInventoryRevision != inventoryRevision)
+                return false;
+
+            CopyCachedCratePreviewToBuffer(buf);
+            return true;
+        }
+
+        public void CacheCratePreview(
+            EntityUid crateUid,
+            int catalogRevision,
+            int inventoryRevision,
+            NcStoreLogicSystem.MassSellPlan plan)
+        {
+            _cratePreviewUnitsById.Clear();
+            _cratePreviewTotals.Clear();
+
+            foreach (var (key, value) in plan.UnitsByListingId)
+            {
+                if (!string.IsNullOrWhiteSpace(key) && value > 0)
+                    _cratePreviewUnitsById[key] = value;
+            }
+
+            foreach (var (key, value) in plan.IncomeByCurrency)
+            {
+                if (!string.IsNullOrWhiteSpace(key) && value > 0)
+                    _cratePreviewTotals[key] = value;
+            }
+
+            _cratePreviewRoot = crateUid;
+            _cratePreviewCatalogRevision = catalogRevision;
+            _cratePreviewInventoryRevision = inventoryRevision;
+            _hasCratePreview = true;
+        }
+
+        public void ResetCachedCratePreview()
+        {
+            _cratePreviewUnitsById.Clear();
+            _cratePreviewTotals.Clear();
+            _cratePreviewRoot = null;
+            _cratePreviewCatalogRevision = 0;
+            _cratePreviewInventoryRevision = 0;
+            _hasCratePreview = false;
+        }
+
+        private void CopyCachedCratePreviewToBuffer(DynamicStateBuffer buf)
+        {
+            foreach (var (key, value) in _cratePreviewUnitsById)
+                buf.CrateUnitsById[key] = value;
+
+            foreach (var (key, value) in _cratePreviewTotals)
+                buf.CrateTotals[key] = value;
         }
 
         public bool EqualsLast(

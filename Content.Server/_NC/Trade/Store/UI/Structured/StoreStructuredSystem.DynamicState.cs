@@ -40,7 +40,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         PopulateDynamicBalances(comp, userSnap, buf);
         PopulateDynamicListings(comp, userSnap, scratch, buf);
-        PopulateDynamicCratePreview(comp, crateUid, tabs.HasSellTab, scanNeeds.NeedCrateScan, buf);
+        PopulateDynamicCratePreview(comp, crateUid, tabs.HasSellTab, scanNeeds.NeedCrateScan, scratch, buf);
         PopulateDynamicContracts(comp, tabs.HasContractsTab, scratch, buf);
         PopulateDynamicContractSkip(uid, comp, tabs.HasContractsTab, buf);
         PushDynamicState(uid, comp, tabs, scratch, buf);
@@ -195,20 +195,35 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             if (string.IsNullOrWhiteSpace(listing.Id))
                 continue;
 
-            var isVisibleBuyListing = listing.Mode == StoreMode.Buy && scratch.ShouldSendBuyDynamicFor(listing.Id);
+            var isVisibleBuyListing = IsVisibleBuyListing(listing, scratch);
             if (listing.Mode == StoreMode.Buy && !isVisibleBuyListing)
                 continue;
 
-            if (listing.RemainingCount != -1)
+            if (ShouldSendListingRemaining(listing, isVisibleBuyListing))
                 buf.RemainingById[listing.Id] = listing.RemainingCount;
 
             if (userSnap == null || string.IsNullOrWhiteSpace(listing.ProductEntity))
                 continue;
 
             var owned = _inventory.GetOwnedFromSnapshot(userSnap, listing.ProductEntity, listing.MatchMode);
-            if (owned > 0 || isVisibleBuyListing)
+            if (ShouldSendListingOwned(owned, isVisibleBuyListing))
                 buf.OwnedById[listing.Id] = owned;
         }
+    }
+
+    private static bool IsVisibleBuyListing(NcStoreListingDef listing, DynamicScratch scratch)
+    {
+        return listing.Mode == StoreMode.Buy && scratch.ShouldSendBuyDynamicFor(listing.Id);
+    }
+
+    private static bool ShouldSendListingRemaining(NcStoreListingDef listing, bool isVisibleBuyListing)
+    {
+        return listing.RemainingCount != -1 || isVisibleBuyListing;
+    }
+
+    private static bool ShouldSendListingOwned(int owned, bool isVisibleBuyListing)
+    {
+        return owned > 0 || isVisibleBuyListing;
     }
 
     private void PopulateDynamicCratePreview(
@@ -216,23 +231,22 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         EntityUid? crateUid,
         bool hasSellTab,
         bool needCrateScan,
+        DynamicScratch scratch,
         DynamicStateBuffer buf)
     {
         if (!hasSellTab || !needCrateScan || crateUid is not { } crate)
+        {
+            scratch.ResetCachedCratePreview();
+            return;
+        }
+
+        var inventoryRevision = _logic.GetInventoryRevision(crate);
+        if (scratch.TryPopulateCachedCratePreview(crate, comp.CatalogRevision, inventoryRevision, buf))
             return;
 
         var plan = _logic.ComputeMassSellPlanFromCachedItems(comp, crate, _deepCrateItemsScratch);
-        foreach (var kvp in plan.UnitsByListingId)
-        {
-            if (!string.IsNullOrWhiteSpace(kvp.Key) && kvp.Value > 0)
-                buf.CrateUnitsById[kvp.Key] = kvp.Value;
-        }
-
-        foreach (var kvp in plan.IncomeByCurrency)
-        {
-            if (!string.IsNullOrWhiteSpace(kvp.Key) && kvp.Value > 0)
-                buf.CrateTotals[kvp.Key] = kvp.Value;
-        }
+        scratch.CacheCratePreview(crate, comp.CatalogRevision, inventoryRevision, plan);
+        scratch.TryPopulateCachedCratePreview(crate, comp.CatalogRevision, inventoryRevision, buf);
     }
 
     private void PopulateDynamicContracts(
@@ -510,8 +524,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
     }
 }
-
-
 
 
 

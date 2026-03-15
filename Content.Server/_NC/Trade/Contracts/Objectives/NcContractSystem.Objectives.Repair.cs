@@ -4,7 +4,9 @@ using Content.Shared.Jittering;
 using Robust.Shared.Audio;
 using Robust.Shared.Timing;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -127,9 +129,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!_objectiveRuntimeByContract.TryGetValue(key, out var foundState) ||
             foundState == null ||
             foundState.TargetEntity != uid)
-        {
             return false;
-        }
 
         state = foundState;
         return true;
@@ -205,6 +205,6 @@ public sealed partial class NcContractSystem : EntitySystem
             comp,
             contract,
             Loc.GetString("nc-store-contract-repair-structure-lost"),
-            deleteGuards: false);
+            false);
     }
 }

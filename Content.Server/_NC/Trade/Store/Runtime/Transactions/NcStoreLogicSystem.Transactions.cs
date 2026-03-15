@@ -27,9 +27,8 @@ public sealed partial class NcStoreLogicSystem
             user,
             listing.ProductEntity,
             proto,
-            plan.TotalUnits,
-            plan.UnitPrice,
-            plan.Currency);
+            plan.Purchases,
+            plan.UnitsPerPurchase);
         _inventory.InvalidateInventoryCache(user);
 
         return FinalizeBuy(user, listing, plan, spawnedUnits);
@@ -214,7 +213,6 @@ public sealed partial class NcStoreLogicSystem
 
         _inventory.InvalidateInventoryCache(root);
 
-        // Считаем через новую систему
         var snap = _inventory.BuildInventorySnapshot(root);
         var owned = _inventory.GetOwnedFromSnapshot(snap, listing.ProductEntity, listing.MatchMode);
 
@@ -235,7 +233,6 @@ public sealed partial class NcStoreLogicSystem
         if (totalL > int.MaxValue)
             return false;
 
-        // Забираем через новую систему
         var ok = _inventory.TryTakeProductUnitsFromRootCached(root, listing.ProductEntity, actual, listing.MatchMode);
         if (!ok)
             return false;

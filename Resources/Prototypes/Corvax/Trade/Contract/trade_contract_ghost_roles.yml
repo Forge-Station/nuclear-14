@@ -1,0 +1,11 @@
+# Shared contract ghost-role definitions.
+
+- type: storeContractGhostRole
+  id: nc_contract_ghost_role_raider
+  entityPrototype: N14MobHumanRaider
+  name: nc-contract-ghost-role-raider-name
+  description: nc-contract-ghost-role-raider-description
+  rules: nc-contract-ghost-role-raider-rules
+  requirements:
+  - !type:CharacterOverallTimeRequirement
+    min: 36000 # 10 hours
