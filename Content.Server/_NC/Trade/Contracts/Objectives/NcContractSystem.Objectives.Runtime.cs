@@ -138,48 +138,78 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract
     )
     {
-        var config = contract.Config;
+        var config = EnsureContractConfig(contract);
         var spawnProtoId = config.DeliverySpawnPrototype;
         if (string.IsNullOrWhiteSpace(spawnProtoId))
             return true;
 
-        if (!_prototypes.HasIndex<EntityPrototype>(spawnProtoId))
-        {
-            Sawmill.Warning(
-                $"[Contracts] Delivery support init failed for '{contractId}': helper spawn prototype '{spawnProtoId}' is missing.");
+        if (!TryValidateInventoryDeliverySupportPrototype(contractId, spawnProtoId))
             return false;
-        }
 
-        if (!TryResolveObjectiveSpawnCoordinates(store, config, out var spawnCoords))
-        {
-            Sawmill.Warning($"[Contracts] Delivery support init failed for '{contractId}': cannot resolve spawn coordinates.");
+        if (!TryResolveInventoryDeliverySupportCoordinates(store, contractId, config, out var spawnCoords))
             return false;
-        }
 
         var key = (store, contractId);
-        if (config.GuardCount > 0 && !string.IsNullOrWhiteSpace(config.GuardPrototype))
-        {
-            var state = GetOrCreateObjectiveRuntimeState(key);
-            if (!TrySpawnObjectiveGuards(key, state, config, spawnCoords))
-            {
-                CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: false);
-                return false;
-            }
-        }
+        return TryInitializeInventoryDeliverySupportGuards(key, config, spawnCoords)
+            && TrySpawnInventoryDeliverySupportEntity(key, spawnProtoId, spawnCoords);
+    }
 
+    private bool TryValidateInventoryDeliverySupportPrototype(string contractId, string spawnProtoId)
+    {
+        if (_prototypes.HasIndex<EntityPrototype>(spawnProtoId))
+            return true;
+
+        Sawmill.Warning(
+            $"[Contracts] Delivery support init failed for '{contractId}': helper spawn prototype '{spawnProtoId}' is missing.");
+        return false;
+    }
+
+    private bool TryResolveInventoryDeliverySupportCoordinates(
+        EntityUid store,
+        string contractId,
+        ContractObjectiveConfigData config,
+        out EntityCoordinates spawnCoords)
+    {
+        if (TryResolveObjectiveSpawnCoordinates(store, config, out spawnCoords))
+            return true;
+
+        Sawmill.Warning($"[Contracts] Delivery support init failed for '{contractId}': cannot resolve spawn coordinates.");
+        return false;
+    }
+
+    private bool TryInitializeInventoryDeliverySupportGuards(
+        (EntityUid Store, string ContractId) key,
+        ContractObjectiveConfigData config,
+        EntityCoordinates spawnCoords)
+    {
+        if (config.GuardCount <= 0 || string.IsNullOrWhiteSpace(config.GuardPrototype))
+            return true;
+
+        var state = GetOrCreateObjectiveRuntimeState(key);
+        if (TrySpawnObjectiveGuards(key, state, config, spawnCoords))
+            return true;
+
+        CleanupObjectiveRuntime(key.Store, key.ContractId, deleteTrackedEntities: false);
+        return false;
+    }
+
+    private bool TrySpawnInventoryDeliverySupportEntity(
+        (EntityUid Store, string ContractId) key,
+        string spawnProtoId,
+        EntityCoordinates spawnCoords)
+    {
         try
         {
             Spawn(spawnProtoId, spawnCoords);
+            return true;
         }
         catch (Exception e)
         {
-            CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: false);
+            CleanupObjectiveRuntime(key.Store, key.ContractId, deleteTrackedEntities: false);
             Sawmill.Error(
-                $"[Contracts] Delivery support init failed for '{contractId}': cannot spawn helper item '{spawnProtoId}': {e}");
+                $"[Contracts] Delivery support init failed for '{key.ContractId}': cannot spawn helper item '{spawnProtoId}': {e}");
             return false;
         }
-
-        return true;
     }
 
     private bool TryInitializeDeliveryObjectiveRuntime(
@@ -189,7 +219,7 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract
     )
     {
-        var config = contract.Config;
+        var config = EnsureContractConfig(contract);
 
         if (string.IsNullOrWhiteSpace(config.TargetPrototype))
             return true;
@@ -214,7 +244,7 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract
     )
     {
-        var config = contract.Config;
+        var config = EnsureContractConfig(contract);
 
         var targetProtoId = ResolveTrackedObjectivePrototypeId(config.TargetPrototype, contract.TargetItem);
 
@@ -237,87 +267,168 @@ public sealed partial class NcContractSystem : EntitySystem
         bool spawnAtStore = false
     )
     {
-        if (string.IsNullOrWhiteSpace(targetProtoId) || !_prototypes.HasIndex<EntityPrototype>(targetProtoId))
-        {
-            Sawmill.Warning(
-                $"[Contracts] Objective init failed for '{contractId}': target prototype '{targetProtoId}' is missing.");
+        if (!TryValidateObjectiveTargetPrototype(contractId, targetProtoId))
             return false;
-        }
 
-        EntityCoordinates spawnCoords;
-        if (spawnAtStore)
-        {
-            if (!TryComp(store, out TransformComponent? storeXform))
-            {
-                Sawmill.Warning($"[Contracts] Objective init failed for '{contractId}': store has no transform for local spawn.");
-                return false;
-            }
-
-            spawnCoords = storeXform.Coordinates;
-        }
-        else if (!TryResolveObjectiveSpawnCoordinates(store, contract.Config, out spawnCoords))
-        {
-            Sawmill.Warning($"[Contracts] Objective init failed for '{contractId}': cannot resolve spawn coordinates.");
+        var config = EnsureContractConfig(contract);
+        if (!TryResolveTrackedTargetSpawnCoordinates(store, contractId, config, spawnAtStore, out var spawnCoords))
             return false;
-        }
 
-        EntityUid target;
-        try
-        {
-            target = Spawn(targetProtoId, spawnCoords);
-        }
-        catch (Exception e)
-        {
-            Sawmill.Error($"[Contracts] Objective init failed for '{contractId}': spawn '{targetProtoId}' threw: {e}");
+        if (!TrySpawnObjectiveTarget(contractId, targetProtoId, spawnCoords, out var target))
             return false;
-        }
 
         var key = (store, contractId);
         var state = GetOrCreateObjectiveRuntimeState(key);
-        state.TargetEntity = target;
-        _objectiveRuntimeByTarget[target] = key;
+        RegisterObjectiveTarget(key, state, target);
 
-        if (HasConfiguredObjectiveDropoff(contract.Config))
-        {
-            if (!TryResolveObjectiveDropoffCoordinates(store, contract.Config, out var dropoffCoords))
-            {
-                CleanupObjectiveRuntime(store, contractId, true);
-                Sawmill.Warning($"[Contracts] Objective init failed for '{contractId}': cannot resolve dropoff coordinates.");
-                return false;
-            }
+        if (!TryInitializeTrackedTargetDropoff(store, contractId, config, state))
+            return CleanupFailedObjectiveInitialization(store, contractId);
 
-            state.DeliveryDropoffCoordinates = _xform.ToMapCoordinates(dropoffCoords);
-
-            if (!TrySpawnDeliveryDropoffMarker(contractId, state, dropoffCoords))
-            {
-                CleanupObjectiveRuntime(store, contractId, true);
-                return false;
-            }
-
-            ActivateTrackedDeliveryDropoff(state);
-        }
-        else
-        {
-            DeactivateTrackedDeliveryDropoff(state);
-        }
-
-        if (spawnGuards && !TrySpawnObjectiveGuards(key, state, contract.Config, spawnCoords))
-        {
-            CleanupObjectiveRuntime(store, contractId, true);
-            return false;
-        }
-
-        if (!contract.Config.GivePinpointer)
-            return true;
-
-        var pinpointerTarget = ResolveObjectivePinpointerTarget(contract, state, target);
-        if (!TrySpawnObjectivePinpointer(user, pinpointerTarget, key, state, contract.Config, spawnCoords))
+        if (!TryInitializeTrackedTargetSupport(
+                store,
+                user,
+                contract,
+                key,
+                state,
+                target,
+                spawnCoords,
+                spawnGuards,
+                config))
         {
             CleanupObjectiveRuntime(store, contractId, true);
             return false;
         }
 
         return true;
+    }
+
+    private bool TryValidateObjectiveTargetPrototype(string contractId, string targetProtoId)
+    {
+        if (string.IsNullOrWhiteSpace(targetProtoId))
+        {
+            Sawmill.Warning($"[Contracts] Objective init failed for '{contractId}': target prototype is missing.");
+            return false;
+        }
+
+        if (_prototypes.HasIndex<EntityPrototype>(targetProtoId))
+            return true;
+
+        Sawmill.Warning(
+            $"[Contracts] Objective init failed for '{contractId}': target prototype '{targetProtoId}' is missing.");
+        return false;
+    }
+
+    private bool TryResolveTrackedTargetSpawnCoordinates(
+        EntityUid store,
+        string contractId,
+        ContractObjectiveConfigData config,
+        bool spawnAtStore,
+        out EntityCoordinates spawnCoords
+    )
+    {
+        if (spawnAtStore)
+            return TryResolveStoreObjectiveCoordinates(store, contractId, out spawnCoords);
+
+        if (TryResolveObjectiveSpawnCoordinates(store, config, out spawnCoords))
+            return true;
+
+        Sawmill.Warning($"[Contracts] Objective init failed for '{contractId}': cannot resolve spawn coordinates.");
+        return false;
+    }
+
+    private bool TryResolveStoreObjectiveCoordinates(EntityUid store, string contractId, out EntityCoordinates spawnCoords)
+    {
+        spawnCoords = EntityCoordinates.Invalid;
+
+        if (!TryComp(store, out TransformComponent? storeXform))
+        {
+            Sawmill.Warning($"[Contracts] Objective init failed for '{contractId}': store has no transform for local spawn.");
+            return false;
+        }
+
+        spawnCoords = storeXform.Coordinates;
+        return true;
+    }
+
+    private bool TrySpawnObjectiveTarget(string contractId, string targetProtoId, EntityCoordinates spawnCoords, out EntityUid target)
+    {
+        target = EntityUid.Invalid;
+
+        try
+        {
+            target = Spawn(targetProtoId, spawnCoords);
+            return true;
+        }
+        catch (Exception e)
+        {
+            Sawmill.Error($"[Contracts] Objective init failed for '{contractId}': spawn '{targetProtoId}' threw: {e}");
+            return false;
+        }
+    }
+
+    private bool CleanupFailedObjectiveInitialization(EntityUid store, string contractId)
+    {
+        CleanupObjectiveRuntime(store, contractId, true);
+        return false;
+    }
+
+    private void RegisterObjectiveTarget(
+        (EntityUid Store, string ContractId) key,
+        ObjectiveRuntimeState state,
+        EntityUid target
+    )
+    {
+        state.TargetEntity = target;
+        _objectiveRuntimeByTarget[target] = key;
+    }
+
+    private bool TryInitializeTrackedTargetDropoff(
+        EntityUid store,
+        string contractId,
+        ContractObjectiveConfigData config,
+        ObjectiveRuntimeState state
+    )
+    {
+        if (!HasConfiguredObjectiveDropoff(config))
+        {
+            DeactivateTrackedDeliveryDropoff(state);
+            return true;
+        }
+
+        if (!TryResolveObjectiveDropoffCoordinates(store, config, out var dropoffCoords))
+        {
+            Sawmill.Warning($"[Contracts] Objective init failed for '{contractId}': cannot resolve dropoff coordinates.");
+            return false;
+        }
+
+        state.DeliveryDropoffCoordinates = _xform.ToMapCoordinates(dropoffCoords);
+        if (!TrySpawnDeliveryDropoffMarker(contractId, state, dropoffCoords))
+            return false;
+
+        ActivateTrackedDeliveryDropoff(state);
+        return true;
+    }
+
+    private bool TryInitializeTrackedTargetSupport(
+        EntityUid store,
+        EntityUid user,
+        ContractServerData contract,
+        (EntityUid Store, string ContractId) key,
+        ObjectiveRuntimeState state,
+        EntityUid target,
+        EntityCoordinates spawnCoords,
+        bool spawnGuards,
+        ContractObjectiveConfigData config
+    )
+    {
+        if (spawnGuards && !TrySpawnObjectiveGuards(key, state, config, spawnCoords))
+            return false;
+
+        if (!config.GivePinpointer)
+            return true;
+
+        var pinpointerTarget = ResolveObjectivePinpointerTarget(contract, state, target);
+        return TrySpawnObjectivePinpointer(user, pinpointerTarget, key, state, config, spawnCoords);
     }
 
     // World spawning and pinpointer management.
@@ -334,7 +445,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
         EnsureObjectiveRuntimeDefaults(contract);
 
-        if (!contract.Config.GivePinpointer)
+        var config = EnsureContractConfig(contract);
+        if (!config.GivePinpointer)
             return false;
 
         var key = (store, contractId);
@@ -359,7 +471,7 @@ public sealed partial class NcContractSystem : EntitySystem
         else
             return false;
 
-        return TrySpawnObjectivePinpointer(user, pinpointerTarget, key, state, contract.Config, spawnCoords);
+        return TrySpawnObjectivePinpointer(user, pinpointerTarget, key, state, config, spawnCoords);
     }
 
     private bool TrySpawnDeliveryDropoffMarker(
@@ -446,44 +558,71 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        var pinpointerProtoId = ResolvePinpointerPrototypeId(config.PinpointerPrototype);
+        if (!TryResolveObjectivePinpointerPrototype(config, out var pinpointerProtoId))
+            return false;
 
-        if (!_prototypes.HasIndex<EntityPrototype>(pinpointerProtoId))
-        {
-            Sawmill.Warning(
-                $"[Contracts] Objective init: pinpointer proto '{pinpointerProtoId}' not found, fallback to {NcContractTuning.DefaultContractPinpointerPrototypeId}.");
-            pinpointerProtoId = NcContractTuning.DefaultContractPinpointerPrototypeId;
+        var pinpointerCoords = ResolveObjectivePinpointerSpawnCoordinates(user, spawnCoords);
+        if (!TrySpawnObjectivePinpointerEntity(key, pinpointerProtoId, pinpointerCoords, out var pinpointer))
+            return false;
 
-            if (!_prototypes.HasIndex<EntityPrototype>(pinpointerProtoId))
-                return false;
-        }
+        RegisterObjectivePinpointer(user, target, key, state, pinpointer);
+        return true;
+    }
 
-        EntityCoordinates pinpointerCoords;
+    private bool TryResolveObjectivePinpointerPrototype(
+        ContractObjectiveConfigData config,
+        out string pinpointerProtoId)
+    {
+        pinpointerProtoId = ResolvePinpointerPrototypeId(config.PinpointerPrototype);
+        if (_prototypes.HasIndex<EntityPrototype>(pinpointerProtoId))
+            return true;
+
+        Sawmill.Warning(
+            $"[Contracts] Objective init: pinpointer proto '{pinpointerProtoId}' not found, fallback to {NcContractTuning.DefaultContractPinpointerPrototypeId}.");
+        pinpointerProtoId = NcContractTuning.DefaultContractPinpointerPrototypeId;
+        return _prototypes.HasIndex<EntityPrototype>(pinpointerProtoId);
+    }
+
+    private EntityCoordinates ResolveObjectivePinpointerSpawnCoordinates(EntityUid user, EntityCoordinates fallbackCoords)
+    {
         if (TryComp(user, out TransformComponent? userXform))
-            pinpointerCoords = userXform.Coordinates;
-        else
-            pinpointerCoords = spawnCoords;
+            return userXform.Coordinates;
 
-        EntityUid pinpointer;
+        return fallbackCoords;
+    }
+
+    private bool TrySpawnObjectivePinpointerEntity(
+        (EntityUid Store, string ContractId) key,
+        string pinpointerProtoId,
+        EntityCoordinates pinpointerCoords,
+        out EntityUid pinpointer)
+    {
         try
         {
             pinpointer = Spawn(pinpointerProtoId, pinpointerCoords);
+            return true;
         }
         catch (Exception e)
         {
             Sawmill.Error(
                 $"[Contracts] Objective init failed for '{key.ContractId}': cannot spawn pinpointer '{pinpointerProtoId}': {e}");
+            pinpointer = EntityUid.Invalid;
             return false;
         }
+    }
 
+    private void RegisterObjectivePinpointer(
+        EntityUid user,
+        EntityUid target,
+        (EntityUid Store, string ContractId) key,
+        ObjectiveRuntimeState state,
+        EntityUid pinpointer)
+    {
         _pinpointer.SetTarget(pinpointer, target);
         _pinpointer.SetActive(pinpointer, true);
-
         state.PinpointerEntities.Add(pinpointer);
         _objectiveRuntimeByPinpointer[pinpointer] = key;
         _logic.QueuePickupToHandsOrCrateNextTick(user, pinpointer);
-
-        return true;
     }
 
     private bool TrySpawnObjectiveGuards(
@@ -493,45 +632,69 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityCoordinates spawnCoords
     )
     {
-        var guardCount = Math.Max(0, config.GuardCount);
-        if (guardCount <= 0 || string.IsNullOrWhiteSpace(config.GuardPrototype))
-            return true;
-
-        var guardPrototype = config.GuardPrototype;
-        if (!_prototypes.HasIndex<EntityPrototype>(guardPrototype))
-        {
-            Sawmill.Warning(
-                $"[Contracts] Objective init failed for '{key.ContractId}': guard prototype '{guardPrototype}' is missing.");
-            return false;
-        }
+        if (!TryValidateObjectiveGuards(key, config, out var guardCount, out var guardPrototype))
+            return guardCount >= 0;
 
         for (var i = 0; i < guardCount; i++)
         {
-            var baseOffset = NcContractTuning.HuntGuardSpawnOffsets[i % NcContractTuning.HuntGuardSpawnOffsets.Length];
-            var ring = i / NcContractTuning.HuntGuardSpawnOffsets.Length;
-            var ringScale = 1f + ring * NcContractTuning.GuardSpawnRingScaleStep;
-            var jitter = new Vector2(
-                (_random.NextFloat() - 0.5f) * NcContractTuning.GuardSpawnJitterScale,
-                (_random.NextFloat() - 0.5f) * NcContractTuning.GuardSpawnJitterScale);
-            var guardCoords = spawnCoords.Offset(baseOffset * ringScale + jitter);
-
-            EntityUid guard;
-            try
-            {
-                guard = Spawn(guardPrototype, guardCoords);
-            }
-            catch (Exception e)
-            {
-                Sawmill.Error(
-                    $"[Contracts] Objective init failed for '{key.ContractId}': cannot spawn guard '{guardPrototype}': {e}");
+            var guardCoords = GetObjectiveGuardSpawnCoordinates(spawnCoords, i);
+            if (!TrySpawnObjectiveGuard(key, state, guardPrototype, guardCoords))
                 return false;
-            }
-
-            state.GuardEntities.Add(guard);
-            _objectiveRuntimeByGuard[guard] = key;
         }
 
         return true;
+    }
+
+    private bool TryValidateObjectiveGuards(
+        (EntityUid Store, string ContractId) key,
+        ContractObjectiveConfigData config,
+        out int guardCount,
+        out string guardPrototype)
+    {
+        guardCount = Math.Max(0, config.GuardCount);
+        guardPrototype = config.GuardPrototype;
+        if (guardCount <= 0 || string.IsNullOrWhiteSpace(guardPrototype))
+            return false;
+
+        if (_prototypes.HasIndex<EntityPrototype>(guardPrototype))
+            return true;
+
+        Sawmill.Warning(
+            $"[Contracts] Objective init failed for '{key.ContractId}': guard prototype '{guardPrototype}' is missing.");
+        guardCount = -1;
+        return false;
+    }
+
+    private EntityCoordinates GetObjectiveGuardSpawnCoordinates(EntityCoordinates spawnCoords, int index)
+    {
+        var baseOffset = NcContractTuning.HuntGuardSpawnOffsets[index % NcContractTuning.HuntGuardSpawnOffsets.Length];
+        var ring = index / NcContractTuning.HuntGuardSpawnOffsets.Length;
+        var ringScale = 1f + ring * NcContractTuning.GuardSpawnRingScaleStep;
+        var jitter = new Vector2(
+            (_random.NextFloat() - 0.5f) * NcContractTuning.GuardSpawnJitterScale,
+            (_random.NextFloat() - 0.5f) * NcContractTuning.GuardSpawnJitterScale);
+        return spawnCoords.Offset(baseOffset * ringScale + jitter);
+    }
+
+    private bool TrySpawnObjectiveGuard(
+        (EntityUid Store, string ContractId) key,
+        ObjectiveRuntimeState state,
+        string guardPrototype,
+        EntityCoordinates guardCoords)
+    {
+        try
+        {
+            var guard = Spawn(guardPrototype, guardCoords);
+            state.GuardEntities.Add(guard);
+            _objectiveRuntimeByGuard[guard] = key;
+            return true;
+        }
+        catch (Exception e)
+        {
+            Sawmill.Error(
+                $"[Contracts] Objective init failed for '{key.ContractId}': cannot spawn guard '{guardPrototype}': {e}");
+            return false;
+        }
     }
 
     private bool TryResolveObjectiveSpawnCoordinates(
@@ -567,7 +730,7 @@ public sealed partial class NcContractSystem : EntitySystem
     private static bool HasConfiguredObjectiveDropoff(ContractObjectiveConfigData config)
     {
         return !string.IsNullOrWhiteSpace(config.DropoffPointTag) ||
-               config.DropoffPointTags.Count > 0;
+               config.DropoffPointTags is { Count: > 0 };
     }
 
     private bool TryResolveObjectiveSpawnCoordinates(
@@ -588,48 +751,90 @@ public sealed partial class NcContractSystem : EntitySystem
         bool fallbackToStore = true
     )
     {
-        if (TryComp(store, out TransformComponent? storeXform))
-            coordinates = storeXform.Coordinates;
-        else
-            coordinates = EntityCoordinates.Invalid;
+        GetObjectiveSpawnFallback(store, out var storeXform, out coordinates);
 
-        var selectedSpawnTag = spawnTag;
-        if (weightedSpawnTags is { Count: > 0 })
-        {
-            var weightedTag = PickAvailableObjectiveSpawnTag(storeXform?.MapID ?? MapId.Nullspace, weightedSpawnTags);
-            if (!string.IsNullOrWhiteSpace(weightedTag))
-                selectedSpawnTag = weightedTag;
-        }
+        var selectedSpawnTag = ResolveObjectiveSpawnTag(storeXform?.MapID ?? MapId.Nullspace, spawnTag, weightedSpawnTags);
 
         if (string.IsNullOrWhiteSpace(selectedSpawnTag))
             return fallbackToStore && coordinates != EntityCoordinates.Invalid;
 
         if (!_prototypes.HasIndex<TagPrototype>(selectedSpawnTag))
-        {
-            if (fallbackToStore)
-            {
-                Sawmill.Warning($"[Contracts] Spawn tag '{selectedSpawnTag}' is not defined. Fallback to store coordinates.");
-                return coordinates != EntityCoordinates.Invalid;
-            }
-
-            Sawmill.Warning($"[Contracts] Spawn tag '{selectedSpawnTag}' is not defined.");
-            return false;
-        }
+            return HandleMissingObjectiveSpawnTag(selectedSpawnTag, coordinates, fallbackToStore);
 
         if (storeXform == null)
             return false;
 
-        var storeMap = storeXform.MapID;
-        var found = false;
+        if (TryPickObjectiveSpawnCoordinate(storeXform.MapID, selectedSpawnTag, out var selectedCoordinates))
+        {
+            coordinates = selectedCoordinates;
+            return true;
+        }
+
+        return HandleUnavailableObjectiveSpawnTag(store, selectedSpawnTag, coordinates, fallbackToStore);
+    }
+
+    private void GetObjectiveSpawnFallback(
+        EntityUid store,
+        out TransformComponent? storeXform,
+        out EntityCoordinates coordinates
+    )
+    {
+        if (TryComp(store, out storeXform))
+        {
+            coordinates = storeXform.Coordinates;
+            return;
+        }
+
+        coordinates = EntityCoordinates.Invalid;
+    }
+
+    private string? ResolveObjectiveSpawnTag(
+        MapId mapId,
+        string? spawnTag,
+        IReadOnlyList<WeightedTagEntry>? weightedSpawnTags
+    )
+    {
+        var selectedSpawnTag = spawnTag;
+        if (weightedSpawnTags is not { Count: > 0 })
+            return selectedSpawnTag;
+
+        var weightedTag = PickAvailableObjectiveSpawnTag(mapId, weightedSpawnTags);
+        if (!string.IsNullOrWhiteSpace(weightedTag))
+            selectedSpawnTag = weightedTag;
+
+        return selectedSpawnTag;
+    }
+
+    private bool HandleMissingObjectiveSpawnTag(
+        string selectedSpawnTag,
+        EntityCoordinates fallbackCoordinates,
+        bool fallbackToStore
+    )
+    {
+        if (fallbackToStore)
+        {
+            Sawmill.Warning($"[Contracts] Spawn tag '{selectedSpawnTag}' is not defined. Fallback to store coordinates.");
+            return fallbackCoordinates != EntityCoordinates.Invalid;
+        }
+
+        Sawmill.Warning($"[Contracts] Spawn tag '{selectedSpawnTag}' is not defined.");
+        return false;
+    }
+
+    private bool TryPickObjectiveSpawnCoordinate(
+        MapId storeMap,
+        string selectedSpawnTag,
+        out EntityCoordinates coordinates
+    )
+    {
+        coordinates = EntityCoordinates.Invalid;
         var matches = 0;
+        var found = false;
 
         var query = EntityQueryEnumerator<TagComponent, TransformComponent>();
         while (query.MoveNext(out _, out var tagComp, out var xform))
         {
-            if (xform.MapID != storeMap)
-                continue;
-
-            if (!_tags.HasTag(tagComp, selectedSpawnTag))
+            if (xform.MapID != storeMap || !_tags.HasTag(tagComp, selectedSpawnTag))
                 continue;
 
             matches++;
@@ -640,14 +845,21 @@ public sealed partial class NcContractSystem : EntitySystem
             found = true;
         }
 
-        if (found)
-            return true;
+        return found;
+    }
 
+    private bool HandleUnavailableObjectiveSpawnTag(
+        EntityUid store,
+        string selectedSpawnTag,
+        EntityCoordinates fallbackCoordinates,
+        bool fallbackToStore
+    )
+    {
         if (fallbackToStore)
         {
             Sawmill.Warning(
                 $"[Contracts] Spawn tag '{selectedSpawnTag}' not found on map for {ToPrettyString(store)}. Fallback to store coordinates.");
-            return coordinates != EntityCoordinates.Invalid;
+            return fallbackCoordinates != EntityCoordinates.Invalid;
         }
 
         Sawmill.Warning($"[Contracts] Spawn tag '{selectedSpawnTag}' not found on map for {ToPrettyString(store)}.");

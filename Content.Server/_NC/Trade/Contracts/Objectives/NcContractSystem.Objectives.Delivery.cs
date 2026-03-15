@@ -70,7 +70,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
         state.DeliveryDropoffCompleted = true;
 
-        if (!contract.Config.PreserveTargetOnComplete)
+        var config = EnsureContractConfig(contract);
+        if (!config.PreserveTargetOnComplete)
         {
             _objectiveRuntimeByTarget.Remove(target);
             state.TargetEntity = null;
@@ -113,33 +114,43 @@ public sealed partial class NcContractSystem : EntitySystem
             return;
         }
 
-        if (UsesTrackedDeliveryDropoff(contract))
-        {
-            if (state.DeliveryDropoffCompleted)
-            {
-                SetTrackedDeliveryProgress(contract, GetTrackedDeliveryCompletionAmount(contract));
-                return;
-            }
-
-            if (state.TargetEntity is not { } target ||
-                target == EntityUid.Invalid ||
-                TerminatingOrDeleted(target))
-            {
-                SetTrackedDeliveryProgress(contract, 0);
-                return;
-            }
-
-            var dropoffProgress = IsTrackedDeliveryTargetAtDropoff(target, state)
-                ? GetTrackedDeliveryAmount(contract, target)
-                : 0;
-
-            SetTrackedDeliveryProgress(contract, dropoffProgress);
+        if (TryUpdateTrackedDeliveryDropoffProgress(contract, state))
             return;
+
+        UpdateTrackedDeliveryStoreProgress(store, contract, state, userItems, crateItems);
+    }
+
+    private bool TryUpdateTrackedDeliveryDropoffProgress(
+        ContractServerData contract,
+        ObjectiveRuntimeState state)
+    {
+        if (!UsesTrackedDeliveryDropoff(contract))
+            return false;
+
+        if (state.DeliveryDropoffCompleted)
+        {
+            SetTrackedDeliveryProgress(contract, GetTrackedDeliveryCompletionAmount(contract));
+            return true;
         }
 
-        if (state.TargetEntity is not { } storeTarget ||
-            storeTarget == EntityUid.Invalid ||
-            TerminatingOrDeleted(storeTarget))
+        var target = GetLiveTrackedDeliveryObjectiveTarget(state);
+        var progress = target is { } deliveryTarget && IsTrackedDeliveryTargetAtDropoff(deliveryTarget, state)
+            ? GetTrackedDeliveryAmount(contract, deliveryTarget)
+            : 0;
+
+        SetTrackedDeliveryProgress(contract, progress);
+        return true;
+    }
+
+    private void UpdateTrackedDeliveryStoreProgress(
+        EntityUid store,
+        ContractServerData contract,
+        ObjectiveRuntimeState state,
+        IReadOnlyList<EntityUid> userItems,
+        IReadOnlyList<EntityUid>? crateItems)
+    {
+        var target = GetLiveTrackedDeliveryObjectiveTarget(state);
+        if (target is not { } storeTarget)
         {
             SetTrackedDeliveryProgress(contract, 0);
             return;
@@ -148,11 +159,19 @@ public sealed partial class NcContractSystem : EntitySystem
         var inUserInventory = ContainsTrackedDeliveryEntity(userItems, storeTarget);
         var inCrate = ContainsTrackedDeliveryEntity(crateItems, storeTarget);
         var atStore = IsTrackedDeliveryTargetAtStore(store, storeTarget);
-        var storeProgress = inUserInventory || inCrate || atStore
+        var progress = inUserInventory || inCrate || atStore
             ? GetTrackedDeliveryAmount(contract, storeTarget)
             : 0;
 
-        SetTrackedDeliveryProgress(contract, storeProgress);
+        SetTrackedDeliveryProgress(contract, progress);
+    }
+
+    private EntityUid? GetLiveTrackedDeliveryObjectiveTarget(ObjectiveRuntimeState state)
+    {
+        if (state.TargetEntity is not { } target || target == EntityUid.Invalid || TerminatingOrDeleted(target))
+            return null;
+
+        return target;
     }
 
     private ClaimAttemptResult TryClaimTrackedDeliveryContract(
@@ -166,84 +185,61 @@ public sealed partial class NcContractSystem : EntitySystem
 
         var key = (store, contractId);
         if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+            return CreateTrackedDeliveryTargetLostResult();
+
+        return UsesTrackedDeliveryDropoff(contract)
+            ? TryClaimTrackedDeliveryDropoff(store, user, contractId, comp, contract, key, state)
+            : TryClaimTrackedDeliveryStoreTarget(store, user, contractId, comp, contract, key, state);
+    }
+
+    private ClaimAttemptResult TryClaimTrackedDeliveryDropoff(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        NcStoreComponent comp,
+        ContractServerData contract,
+        (EntityUid Store, string ContractId) key,
+        ObjectiveRuntimeState state
+    )
+    {
+        if (state.DeliveryDropoffCompleted)
+            SetTrackedDeliveryProgress(contract, GetTrackedDeliveryCompletionAmount(contract));
+
+        if (!contract.Completed)
+        {
+            if (!TryGetLiveTrackedDeliveryTarget(state, out var target))
+                return FailTrackedDeliveryObjective(key, comp, contract);
+
+            var trackedAmount = IsTrackedDeliveryTargetAtDropoff(target, state)
+                ? GetTrackedDeliveryAmount(contract, target)
+                : 0;
+            SetTrackedDeliveryProgress(contract, trackedAmount);
+        }
+
+        if (!contract.Completed)
         {
             return ClaimAttemptResult.Fail(
-                ClaimFailureReason.ObjectiveFailed,
-                Loc.GetString("nc-store-contract-delivery-target-lost"));
+                ClaimFailureReason.ObjectiveNotCompleted,
+                $"Tracked delivery target for '{contractId}' has not reached the dropoff point.");
         }
 
-        if (UsesTrackedDeliveryDropoff(contract))
-        {
-            if (state.DeliveryDropoffCompleted)
-                SetTrackedDeliveryProgress(contract, GetTrackedDeliveryCompletionAmount(contract));
+        return CompleteTrackedDeliveryClaim(store, user, contractId, comp, contract);
+    }
 
-            if (!contract.Completed)
-            {
-                if (state.TargetEntity is not { } dropoffTarget ||
-                    dropoffTarget == EntityUid.Invalid ||
-                    TerminatingOrDeleted(dropoffTarget))
-                {
-                    FinalizeObjectiveFailure(
-                        key,
-                        comp,
-                        contract,
-                        Loc.GetString("nc-store-contract-delivery-target-lost"),
-                        deleteGuards: false);
+    private ClaimAttemptResult TryClaimTrackedDeliveryStoreTarget(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        NcStoreComponent comp,
+        ContractServerData contract,
+        (EntityUid Store, string ContractId) key,
+        ObjectiveRuntimeState state
+    )
+    {
+        if (!TryGetLiveTrackedDeliveryTarget(state, out var target))
+            return FailTrackedDeliveryObjective(key, comp, contract);
 
-                    return ClaimAttemptResult.Fail(
-                        ClaimFailureReason.ObjectiveFailed,
-                        Loc.GetString("nc-store-contract-delivery-target-lost"));
-                }
-
-                SetTrackedDeliveryProgress(contract, IsTrackedDeliveryTargetAtDropoff(dropoffTarget, state)
-                    ? GetTrackedDeliveryAmount(contract, dropoffTarget)
-                    : 0);
-            }
-
-            if (!contract.Completed)
-            {
-                return ClaimAttemptResult.Fail(
-                    ClaimFailureReason.ObjectiveNotCompleted,
-                    $"Tracked delivery target for '{contractId}' has not reached the dropoff point.");
-            }
-
-            GiveContractRewards(user, contract.Rewards);
-            FinalizeClaim(
-                store,
-                comp,
-                contractId,
-                contract.Repeatable,
-                deleteTrackedEntities: !contract.Config.PreserveTargetOnComplete);
-            return ClaimAttemptResult.Ok();
-        }
-
-        if (state.TargetEntity is not { } target ||
-            target == EntityUid.Invalid ||
-            TerminatingOrDeleted(target))
-        {
-            FinalizeObjectiveFailure(
-                key,
-                comp,
-                contract,
-                Loc.GetString("nc-store-contract-delivery-target-lost"),
-                deleteGuards: false);
-
-            return ClaimAttemptResult.Fail(
-                ClaimFailureReason.ObjectiveFailed,
-                Loc.GetString("nc-store-contract-delivery-target-lost"));
-        }
-
-        _logic.ScanInventoryItems(user, _scratchUserItems);
-
-        EntityUid? crateEntity = null;
-        List<EntityUid>? crateItems = null;
-        var crateUid = _logic.GetPulledClosedCrate(user);
-        if (crateUid is { } pulledCrate && Exists(pulledCrate))
-        {
-            crateEntity = pulledCrate;
-            _logic.ScanInventoryItems(pulledCrate, _scratchCrateItems);
-            crateItems = _scratchCrateItems;
-        }
+        ScanTrackedDeliveryTransferSources(user, out var crateEntity, out var crateItems);
 
         var inUserInventory = ContainsTrackedDeliveryEntity(_scratchUserItems, target);
         var inCrate = ContainsTrackedDeliveryEntity(crateItems, target);
@@ -256,8 +252,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 $"Tracked delivery target for '{contractId}' is not present in user inventory, pulled crate or at the store.");
         }
 
-        if ((inUserInventory && _logic.IsProtectedFromDirectSale(user, target)) ||
-            (inCrate && crateEntity is { } crate && _logic.IsProtectedFromDirectSale(crate, target)))
+        if (IsTrackedDeliveryProtectedFromDirectSale(user, target, crateEntity, inUserInventory, inCrate))
         {
             return ClaimAttemptResult.Fail(
                 ClaimFailureReason.ObjectiveNotCompleted,
@@ -272,20 +267,103 @@ public sealed partial class NcContractSystem : EntitySystem
                 $"Tracked delivery progress {contract.Progress}/{contract.Required} for '{contractId}'.");
         }
 
+        return CompleteTrackedDeliveryClaim(store, user, contractId, comp, contract);
+    }
+
+    private ClaimAttemptResult CreateTrackedDeliveryTargetLostResult()
+    {
+        return ClaimAttemptResult.Fail(
+            ClaimFailureReason.ObjectiveFailed,
+            Loc.GetString("nc-store-contract-delivery-target-lost"));
+    }
+
+    private ClaimAttemptResult FailTrackedDeliveryObjective(
+        (EntityUid Store, string ContractId) key,
+        NcStoreComponent comp,
+        ContractServerData contract
+    )
+    {
+        FinalizeObjectiveFailure(
+            key,
+            comp,
+            contract,
+            Loc.GetString("nc-store-contract-delivery-target-lost"),
+            deleteGuards: false);
+
+        return CreateTrackedDeliveryTargetLostResult();
+    }
+
+    private ClaimAttemptResult CompleteTrackedDeliveryClaim(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        NcStoreComponent comp,
+        ContractServerData contract
+    )
+    {
+        var config = EnsureContractConfig(contract);
         GiveContractRewards(user, contract.Rewards);
         FinalizeClaim(
             store,
             comp,
             contractId,
             contract.Repeatable,
-            deleteTrackedEntities: !contract.Config.PreserveTargetOnComplete);
+            deleteTrackedEntities: !config.PreserveTargetOnComplete);
         return ClaimAttemptResult.Ok();
+    }
+
+    private bool TryGetLiveTrackedDeliveryTarget(ObjectiveRuntimeState state, out EntityUid target)
+    {
+        target = EntityUid.Invalid;
+
+        if (state.TargetEntity is not { } existingTarget ||
+            existingTarget == EntityUid.Invalid ||
+            TerminatingOrDeleted(existingTarget))
+        {
+            return false;
+        }
+
+        target = existingTarget;
+        return true;
+    }
+
+    private void ScanTrackedDeliveryTransferSources(
+        EntityUid user,
+        out EntityUid? crateEntity,
+        out List<EntityUid>? crateItems
+    )
+    {
+        _logic.ScanInventoryItems(user, _scratchUserItems);
+
+        crateEntity = null;
+        crateItems = null;
+
+        var crateUid = _logic.GetPulledClosedCrate(user);
+        if (crateUid is not { } pulledCrate || !Exists(pulledCrate))
+            return;
+
+        crateEntity = pulledCrate;
+        _logic.ScanInventoryItems(pulledCrate, _scratchCrateItems);
+        crateItems = _scratchCrateItems;
+    }
+
+    private bool IsTrackedDeliveryProtectedFromDirectSale(
+        EntityUid user,
+        EntityUid target,
+        EntityUid? crateEntity,
+        bool inUserInventory,
+        bool inCrate
+    )
+    {
+        return (inUserInventory && _logic.IsProtectedFromDirectSale(user, target)) ||
+               (inCrate && crateEntity is { } crate && _logic.IsProtectedFromDirectSale(crate, target));
     }
 
     private static bool UsesTrackedDeliveryDropoff(ContractServerData contract)
     {
-        return !string.IsNullOrWhiteSpace(contract.Config.DropoffPointTag) ||
-               contract.Config.DropoffPointTags.Count > 0;
+        var config = EnsureContractConfig(contract);
+        return !string.IsNullOrWhiteSpace(config.DropoffPointTag) ||
+               config.DropoffPointTags is { Count: > 0 };
     }
 
     private bool IsTrackedDeliveryTargetAtDropoff(EntityUid target, ObjectiveRuntimeState state)

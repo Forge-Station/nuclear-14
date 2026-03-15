@@ -89,7 +89,17 @@ public sealed partial class NcContractSystem : EntitySystem
         ClearStoreObjectiveRuntime(store, deleteTrackedEntities: true);
     }
 
-    private static List<ContractTargetServerData> GetEffectiveTargets(ContractServerData contract) => contract.Targets;
+    private static List<ContractTargetServerData> GetEffectiveTargets(ContractServerData contract)
+    {
+        contract.Targets ??= new();
+        for (var i = contract.Targets.Count - 1; i >= 0; i--)
+        {
+            if (contract.Targets[i] == null)
+                contract.Targets.RemoveAt(i);
+        }
+
+        return contract.Targets;
+    }
 
     private int GetProtoDepth(string protoId)
     {

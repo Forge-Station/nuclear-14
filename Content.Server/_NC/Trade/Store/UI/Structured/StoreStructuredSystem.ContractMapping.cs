@@ -18,7 +18,7 @@ public sealed partial class StoreStructuredSystem
             contract.Taken,
             SupportsContractPinpointer(contract),
             contract.ExecutionKind,
-            CloneRuntimeContext(contract.Runtime),
+            CloneRuntimeContext(EnsureClientContractRuntime(contract)),
             contract.FlowStatus,
             contract.Completed,
             contract.TargetItem,
@@ -31,7 +31,7 @@ public sealed partial class StoreStructuredSystem
 
     private static List<ContractTargetClientData> MapContractTargetsToClient(ContractServerData contract)
     {
-        var sourceTargets = contract.Targets;
+        var sourceTargets = EnsureClientContractTargets(contract);
         var targets = sourceTargets is { Count: > 0 }
             ? new List<ContractTargetClientData>(sourceTargets.Count)
             : new List<ContractTargetClientData>(1);
@@ -67,18 +67,49 @@ public sealed partial class StoreStructuredSystem
 
     private static List<ContractRewardData> CloneContractRewards(ContractServerData contract)
     {
-        return contract.Rewards is { Count: > 0 }
-            ? new List<ContractRewardData>(contract.Rewards)
+        var rewards = EnsureClientContractRewards(contract);
+        return rewards.Count > 0
+            ? new List<ContractRewardData>(rewards)
             : new List<ContractRewardData>(0);
     }
 
     private static bool SupportsContractPinpointer(ContractServerData contract)
     {
-        var config = contract.Config;
+        var config = EnsureClientContractConfig(contract);
         if (!config.GivePinpointer)
             return false;
 
         return contract.UsesWorldObjectiveRuntime;
+    }
+
+    private static ContractRuntimeContextData EnsureClientContractRuntime(ContractServerData contract)
+    {
+        contract.Runtime ??= new();
+        return contract.Runtime;
+    }
+
+    private static ContractObjectiveConfigData EnsureClientContractConfig(ContractServerData contract)
+    {
+        contract.Config ??= new();
+        return contract.Config;
+    }
+
+    private static List<ContractTargetServerData> EnsureClientContractTargets(ContractServerData contract)
+    {
+        contract.Targets ??= new();
+        for (var i = contract.Targets.Count - 1; i >= 0; i--)
+        {
+            if (contract.Targets[i] == null)
+                contract.Targets.RemoveAt(i);
+        }
+
+        return contract.Targets;
+    }
+
+    private static List<ContractRewardData> EnsureClientContractRewards(ContractServerData contract)
+    {
+        contract.Rewards ??= new();
+        return contract.Rewards;
     }
 
     private static ContractRuntimeContextData CloneRuntimeContext(ContractRuntimeContextData? runtime)

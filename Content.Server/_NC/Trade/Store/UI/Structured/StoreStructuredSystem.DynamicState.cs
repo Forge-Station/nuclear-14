@@ -7,174 +7,286 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class StoreStructuredSystem : EntitySystem
 {
+    private readonly record struct DynamicTabState(bool HasBuyTab, bool HasSellTab, bool HasContractsTab);
+
+    private readonly record struct DynamicContractNeeds(
+        bool HasTakenContracts,
+        bool NeedUserItems,
+        bool NeedCrateItems,
+        bool NeedStoreWorldItems);
+
+    private readonly record struct DynamicScanNeeds(
+        bool NeedUserSnapshot,
+        bool NeedUserItems,
+        bool NeedCrateScan);
+
     public void UpdateDynamicState(EntityUid uid, NcStoreComponent comp, EntityUid user)
     {
         if (!_ui.IsUiOpen(uid, StoreUiKey.Key, user))
             return;
 
-        EntityUid? crateUid = null;
-        if (_logic.TryGetPulledClosedCrate(user, out var pulledCrate))
-            crateUid = pulledCrate;
-
+        var crateUid = GetDynamicCrate(user);
         UpdateStoreWatch(uid, user, crateUid);
+        var tabs = GetDynamicTabState(comp);
+        var contractNeeds = GetDynamicContractNeeds(comp, tabs.HasContractsTab);
+        var scanNeeds = GetDynamicScanNeeds(comp, crateUid, tabs.HasSellTab, contractNeeds);
+        var userSnap = ScanDynamicUserInventory(user, scanNeeds);
+        ScanDynamicCrateInventory(crateUid, scanNeeds);
+        UpdateDynamicContractProgress(uid, comp, user, crateUid, tabs, contractNeeds);
+
+        var scratch = GetDynamicScratch(uid);
+        var buf = scratch.GetWriteBuffer();
+        buf.Clear();
+
+        PopulateDynamicBalances(comp, userSnap, buf);
+        PopulateDynamicListings(comp, userSnap, scratch, buf);
+        PopulateDynamicCratePreview(comp, crateUid, tabs.HasSellTab, scanNeeds.NeedCrateScan, buf);
+        PopulateDynamicContracts(comp, tabs.HasContractsTab, scratch, buf);
+        PopulateDynamicContractSkip(uid, comp, tabs.HasContractsTab, buf);
+        PushDynamicState(uid, comp, tabs, scratch, buf);
+    }
+
+    private EntityUid? GetDynamicCrate(EntityUid user)
+    {
+        return _logic.TryGetPulledClosedCrate(user, out var pulledCrate)
+            ? pulledCrate
+            : null;
+    }
+
+    private static DynamicTabState GetDynamicTabState(NcStoreComponent comp)
+    {
         var hasBuyTab = false;
         var hasSellTab = false;
-        foreach (var l in comp.Listings)
+
+        foreach (var listing in comp.Listings)
         {
-            if (l.Mode == StoreMode.Buy)
+            if (listing.Mode == StoreMode.Buy)
                 hasBuyTab = true;
-            else if (l.Mode == StoreMode.Sell)
+            else if (listing.Mode == StoreMode.Sell)
                 hasSellTab = true;
+
             if (hasBuyTab && hasSellTab)
                 break;
         }
 
-        var hasContractsTab = comp.ContractPresets.Count > 0;
+        return new(hasBuyTab, hasSellTab, comp.ContractPresets.Count > 0);
+    }
 
-        var hasTakenContracts = false;
-        var contractsNeedUserItems = false;
-        var contractsNeedCrateItems = false;
-        var contractsNeedStoreWorldItems = false;
-        if (hasContractsTab)
+    private DynamicContractNeeds GetDynamicContractNeeds(NcStoreComponent comp, bool hasContractsTab)
+    {
+        if (!hasContractsTab)
+            return default;
+
+        _contracts.AnalyzeContractProgressRequirements(
+            comp,
+            out var hasTakenContracts,
+            out var needUserItems,
+            out var needCrateItems,
+            out var needStoreWorldItems);
+
+        return new(hasTakenContracts, needUserItems, needCrateItems, needStoreWorldItems);
+    }
+
+    private static DynamicScanNeeds GetDynamicScanNeeds(
+        NcStoreComponent comp,
+        EntityUid? crateUid,
+        bool hasSellTab,
+        DynamicContractNeeds contractNeeds)
+    {
+        var needUserSnapshot = NeedsDynamicUserSnapshot(comp);
+        var needUserItems = needUserSnapshot || contractNeeds.NeedUserItems;
+        var needCrateScan = crateUid != null && (hasSellTab || contractNeeds.NeedCrateItems);
+        return new(needUserSnapshot, needUserItems, needCrateScan);
+    }
+
+    private static bool NeedsDynamicUserSnapshot(NcStoreComponent comp)
+    {
+        if (comp.CurrencyWhitelist.Count > 0)
+            return true;
+
+        foreach (var listing in comp.Listings)
         {
-            _contracts.AnalyzeContractProgressRequirements(
-                comp,
-                out hasTakenContracts,
-                out contractsNeedUserItems,
-                out contractsNeedCrateItems,
-                out contractsNeedStoreWorldItems);
+            if (!string.IsNullOrWhiteSpace(listing.ProductEntity))
+                return true;
         }
 
-        var needUserSnap = comp.CurrencyWhitelist.Count > 0;
-        if (!needUserSnap)
-        {
-            foreach (var l in comp.Listings)
-                if (!string.IsNullOrWhiteSpace(l.ProductEntity))
-                {
-                    needUserSnap = true;
-                    break;
-                }
-        }
+        return false;
+    }
 
-        var needUserItems = needUserSnap || contractsNeedUserItems;
-        var needCrateScan = crateUid != null && (hasSellTab || contractsNeedCrateItems);
-
-        NcInventorySnapshot? userSnap = null;
-
-        if (needUserSnap)
+    private NcInventorySnapshot? ScanDynamicUserInventory(EntityUid user, DynamicScanNeeds scanNeeds)
+    {
+        if (scanNeeds.NeedUserSnapshot)
         {
             _inventory.ScanInventory(user, _deepUserItemsScratch, _userSnapScratch);
-            userSnap = _userSnapScratch;
+            return _userSnapScratch;
         }
-        else if (needUserItems)
+
+        if (scanNeeds.NeedUserItems)
         {
             _inventory.ScanInventoryItems(user, _deepUserItemsScratch);
             _userSnapScratch.Clear();
-        }
-        else
-        {
-            _deepUserItemsScratch.Clear();
-            _userSnapScratch.Clear();
+            return null;
         }
 
-        if (needCrateScan && crateUid is { } crateEntity)
+        _deepUserItemsScratch.Clear();
+        _userSnapScratch.Clear();
+        return null;
+    }
+
+    private void ScanDynamicCrateInventory(EntityUid? crateUid, DynamicScanNeeds scanNeeds)
+    {
+        if (scanNeeds.NeedCrateScan && crateUid is { } crateEntity)
         {
             _inventory.ScanInventoryItems(crateEntity, _deepCrateItemsScratch);
-        }
-        else
-        {
-            _deepCrateItemsScratch.Clear();
+            return;
         }
 
-        if (hasContractsTab && hasTakenContracts)
-        {
-            _contracts.UpdateContractsProgress(
-                uid,
-                comp,
-                user,
-                _deepUserItemsScratch,
-                crateUid,
-                crateUid != null ? _deepCrateItemsScratch : null,
-                contractsNeedStoreWorldItems);
-        }
-        var scratch = GetDynamicScratch(uid);
-        var buf = scratch.GetWriteBuffer();
+        _deepCrateItemsScratch.Clear();
+    }
 
-        buf.Clear();
+    private void UpdateDynamicContractProgress(
+        EntityUid store,
+        NcStoreComponent comp,
+        EntityUid user,
+        EntityUid? crateUid,
+        DynamicTabState tabs,
+        DynamicContractNeeds contractNeeds)
+    {
+        if (!tabs.HasContractsTab || !contractNeeds.HasTakenContracts)
+            return;
 
-        if (userSnap != null)
-        {
-            foreach (var cur in comp.CurrencyWhitelist)
-            {
-                if (string.IsNullOrWhiteSpace(cur))
-                    continue;
-                buf.BalancesByCurrency[cur] = userSnap.StackTypeCounts.TryGetValue(cur, out var b) ? b : 0;
-            }
-        }
+        _contracts.UpdateContractsProgress(
+            store,
+            comp,
+            user,
+            _deepUserItemsScratch,
+            crateUid,
+            crateUid != null ? _deepCrateItemsScratch : null,
+            contractNeeds.NeedStoreWorldItems);
+    }
 
-        foreach (var l in comp.Listings)
+    private static void PopulateDynamicBalances(
+        NcStoreComponent comp,
+        NcInventorySnapshot? userSnap,
+        DynamicStateBuffer buf)
+    {
+        if (userSnap == null)
+            return;
+
+        foreach (var currency in comp.CurrencyWhitelist)
         {
-            if (string.IsNullOrWhiteSpace(l.Id))
+            if (string.IsNullOrWhiteSpace(currency))
                 continue;
-            if (l.Mode == StoreMode.Buy && !scratch.ShouldSendBuyDynamicFor(l.Id))
+
+            buf.BalancesByCurrency[currency] = userSnap.StackTypeCounts.TryGetValue(currency, out var balance)
+                ? balance
+                : 0;
+        }
+    }
+
+    private void PopulateDynamicListings(
+        NcStoreComponent comp,
+        NcInventorySnapshot? userSnap,
+        DynamicScratch scratch,
+        DynamicStateBuffer buf)
+    {
+        foreach (var listing in comp.Listings)
+        {
+            if (string.IsNullOrWhiteSpace(listing.Id))
                 continue;
 
-            if (l.RemainingCount != -1)
-                buf.RemainingById[l.Id] = l.RemainingCount;
+            var isVisibleBuyListing = listing.Mode == StoreMode.Buy && scratch.ShouldSendBuyDynamicFor(listing.Id);
+            if (listing.Mode == StoreMode.Buy && !isVisibleBuyListing)
+                continue;
 
-            if (userSnap != null && !string.IsNullOrWhiteSpace(l.ProductEntity))
-            {
-                var owned = _inventory.GetOwnedFromSnapshot(userSnap, l.ProductEntity, l.MatchMode);
-                if (owned > 0)
-                    buf.OwnedById[l.Id] = owned;
-            }
+            if (listing.RemainingCount != -1)
+                buf.RemainingById[listing.Id] = listing.RemainingCount;
+
+            if (userSnap == null || string.IsNullOrWhiteSpace(listing.ProductEntity))
+                continue;
+
+            var owned = _inventory.GetOwnedFromSnapshot(userSnap, listing.ProductEntity, listing.MatchMode);
+            if (owned > 0 || isVisibleBuyListing)
+                buf.OwnedById[listing.Id] = owned;
         }
+    }
 
-        if (hasSellTab && needCrateScan && crateUid is { } crate)
+    private void PopulateDynamicCratePreview(
+        NcStoreComponent comp,
+        EntityUid? crateUid,
+        bool hasSellTab,
+        bool needCrateScan,
+        DynamicStateBuffer buf)
+    {
+        if (!hasSellTab || !needCrateScan || crateUid is not { } crate)
+            return;
+
+        var plan = _logic.ComputeMassSellPlanFromCachedItems(comp, crate, _deepCrateItemsScratch);
+        foreach (var kvp in plan.UnitsByListingId)
         {
-            var plan = _logic.ComputeMassSellPlanFromCachedItems(comp, crate, _deepCrateItemsScratch);
-            foreach (var kvp in plan.UnitsByListingId)
-                if (!string.IsNullOrWhiteSpace(kvp.Key) && kvp.Value > 0)
-                    buf.CrateUnitsById[kvp.Key] = kvp.Value;
-            foreach (var kvp in plan.IncomeByCurrency)
-                if (!string.IsNullOrWhiteSpace(kvp.Key) && kvp.Value > 0)
-                    buf.CrateTotals[kvp.Key] = kvp.Value;
+            if (!string.IsNullOrWhiteSpace(kvp.Key) && kvp.Value > 0)
+                buf.CrateUnitsById[kvp.Key] = kvp.Value;
         }
 
-        if (hasContractsTab && comp.Contracts.Count > 0)
+        foreach (var kvp in plan.IncomeByCurrency)
         {
-            var contractsFingerprint = ComputeContractsFingerprint(comp.Contracts);
-            if (scratch.ShouldRebuildContracts(contractsFingerprint))
-            {
-                foreach (var c in comp.Contracts.Values)
-                    buf.Contracts.Add(MapContractToClient(c));
-
-                buf.Contracts.Sort(static (a, b) => string.CompareOrdinal(a.Id, b.Id));
-            }
-            else
-            {
-                var prevContracts = scratch.GetReadBuffer().Contracts;
-                buf.Contracts.AddRange(prevContracts);
-            }
+            if (!string.IsNullOrWhiteSpace(kvp.Key) && kvp.Value > 0)
+                buf.CrateTotals[kvp.Key] = kvp.Value;
         }
-        else
+    }
+
+    private void PopulateDynamicContracts(
+        NcStoreComponent comp,
+        bool hasContractsTab,
+        DynamicScratch scratch,
+        DynamicStateBuffer buf)
+    {
+        if (!hasContractsTab || comp.Contracts.Count == 0)
         {
             scratch.ResetContractsFingerprint();
+            return;
         }
 
-        if (hasContractsTab && _contracts.TryGetContractSkipInfo(uid, comp, out var skipCurrency, out var skipCost))
+        var contractsFingerprint = ComputeContractsFingerprint(comp.Contracts);
+        if (!scratch.ShouldRebuildContracts(contractsFingerprint))
         {
-            buf.ContractSkipCost = skipCost;
-            buf.ContractSkipCurrency = skipCurrency;
+            buf.Contracts.AddRange(scratch.GetReadBuffer().Contracts);
+            return;
         }
 
-        if (scratch.EqualsLast(buf, comp.CatalogRevision, hasBuyTab, hasSellTab, hasContractsTab))
+        foreach (var contract in comp.Contracts.Values)
+            buf.Contracts.Add(MapContractToClient(contract));
+
+        buf.Contracts.Sort(static (left, right) => string.CompareOrdinal(left.Id, right.Id));
+    }
+
+    private void PopulateDynamicContractSkip(
+        EntityUid store,
+        NcStoreComponent comp,
+        bool hasContractsTab,
+        DynamicStateBuffer buf)
+    {
+        if (!hasContractsTab || !_contracts.TryGetContractSkipInfo(store, comp, out var skipCurrency, out var skipCost))
+            return;
+
+        buf.ContractSkipCost = skipCost;
+        buf.ContractSkipCurrency = skipCurrency;
+    }
+
+    private void PushDynamicState(
+        EntityUid store,
+        NcStoreComponent comp,
+        DynamicTabState tabs,
+        DynamicScratch scratch,
+        DynamicStateBuffer buf)
+    {
+        if (scratch.EqualsLast(buf, comp.CatalogRevision, tabs.HasBuyTab, tabs.HasSellTab, tabs.HasContractsTab))
             return;
 
         comp.UiRevision = unchecked(comp.UiRevision + 1);
 
         _ui.SetUiState(
-            uid,
+            store,
             StoreUiKey.Key,
             new StoreDynamicState(
                 comp.UiRevision,
@@ -185,15 +297,15 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 buf.CrateUnitsById,
                 buf.CrateTotals,
                 buf.Contracts,
-                hasBuyTab,
-                hasSellTab,
-                hasContractsTab,
+                tabs.HasBuyTab,
+                tabs.HasSellTab,
+                tabs.HasContractsTab,
                 buf.ContractSkipCost,
                 buf.ContractSkipCurrency
             )
         );
 
-        scratch.Commit(comp.CatalogRevision, hasBuyTab, hasSellTab, hasContractsTab);
+        scratch.Commit(comp.CatalogRevision, tabs.HasBuyTab, tabs.HasSellTab, tabs.HasContractsTab);
     }
 
     private bool TryFindWatchedRoot(EntityUid start, out EntityUid watchedRoot)
@@ -281,6 +393,31 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             RefreshStoresAffectedBy(r);
     }
 
+    private void OnWatchedEntityParentChanged(ref EntParentChangedMessage args)
+    {
+        if (_storesByWatchedRoot.Count == 0)
+            return;
+
+        EntityUid? refreshedRoot = null;
+
+        if (TryFindWatchedRoot(args.Entity, out var currentRoot))
+        {
+            RefreshStoresAffectedBy(currentRoot);
+            refreshedRoot = currentRoot;
+        }
+
+        if (args.OldParent is not { } oldParent || oldParent == EntityUid.Invalid)
+            return;
+
+        if (!TryFindWatchedRoot(oldParent, out var previousRoot))
+            return;
+
+        if (refreshedRoot == previousRoot)
+            return;
+
+        RefreshStoresAffectedBy(previousRoot);
+    }
+
 
     private void ProcessPendingRefreshes()
     {
@@ -340,18 +477,15 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             h = h * 31 + contract.Progress;
             h = h * 31 + (int) contract.MatchMode;
             h = h * 31 + (SupportsContractPinpointer(contract) ? 1 : 0);
-            var runtime = contract.Runtime;
-            if (runtime != null)
-            {
-                h = h * 31 + runtime.Stage;
-                h = h * 31 + runtime.StageGoal;
-                h = h * 31 + runtime.AcceptTimeoutRemainingSeconds;
-                h = h * 31 + (runtime.GhostRolePendingAcceptance ? 1 : 0);
-                h = h * 31 + (runtime.Failed ? 1 : 0);
-                h = h * 31 + (runtime.FailureReason?.GetHashCode() ?? 0);
-            }
+            var runtime = EnsureClientContractRuntime(contract);
+            h = h * 31 + runtime.Stage;
+            h = h * 31 + runtime.StageGoal;
+            h = h * 31 + runtime.AcceptTimeoutRemainingSeconds;
+            h = h * 31 + (runtime.GhostRolePendingAcceptance ? 1 : 0);
+            h = h * 31 + (runtime.Failed ? 1 : 0);
+            h = h * 31 + (runtime.FailureReason?.GetHashCode() ?? 0);
 
-            var targets = contract.Targets;
+            var targets = EnsureClientContractTargets(contract);
             h = h * 31 + targets.Count;
             for (var iTarget = 0; iTarget < targets.Count; iTarget++)
             {
@@ -362,7 +496,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 h = h * 31 + (int) target.MatchMode;
             }
 
-            var rewards = contract.Rewards;
+            var rewards = EnsureClientContractRewards(contract);
             h = h * 31 + rewards.Count;
             for (var iReward = 0; iReward < rewards.Count; iReward++)
             {

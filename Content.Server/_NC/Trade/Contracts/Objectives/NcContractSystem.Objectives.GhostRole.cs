@@ -4,6 +4,7 @@ using Content.Shared._NC.Trade;
 using Content.Shared.Mind.Components;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
+using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server._NC.Trade;
@@ -17,43 +18,85 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract
     )
     {
-        var config = contract.Config;
-        var runtime = contract.Runtime;
-        var ghostRoleProtoId = ResolveTrackedObjectivePrototypeId(config.GhostRolePrototype, contract.TargetItem);
-        if (string.IsNullOrWhiteSpace(ghostRoleProtoId) || !_prototypes.HasIndex<EntityPrototype>(ghostRoleProtoId))
-        {
-            Sawmill.Warning($"[Contracts] Ghost role init failed for '{contractId}': ghost role prototype '{ghostRoleProtoId}' is missing.");
+        if (!TryResolveGhostRolePrototype(contractId, contract, out var ghostRoleProtoId))
             return false;
-        }
 
-        config.GhostRolePrototype = ghostRoleProtoId;
+        var config = EnsureContractConfig(contract);
         ResetObjectiveState(contract);
-
-        if (!TryResolveObjectiveSpawnCoordinates(store, config, out var spawnCoords))
-        {
-            Sawmill.Warning($"[Contracts] Ghost role init failed for '{contractId}': cannot resolve spawn coordinates.");
+        config.GhostRolePrototype = ghostRoleProtoId;
+        if (!TryResolveGhostRoleSpawnCoordinates(store, contractId, config, out var spawnCoords))
             return false;
-        }
 
-        EntityUid spawner;
+        if (!TrySpawnGhostRoleSpawner(contractId, spawnCoords, out var spawner))
+            return false;
+
+        ConfigureGhostRoleSpawner(spawner, contract, ghostRoleProtoId);
+        RegisterGhostRoleObjectiveState((store, contractId), spawner, contract);
+        return true;
+    }
+
+    private bool TryResolveGhostRolePrototype(
+        string contractId,
+        ContractServerData contract,
+        out string ghostRoleProtoId)
+    {
+        ghostRoleProtoId = ResolveTrackedObjectivePrototypeId(EnsureContractConfig(contract).GhostRolePrototype, contract.TargetItem);
+        if (!string.IsNullOrWhiteSpace(ghostRoleProtoId) && _prototypes.HasIndex<EntityPrototype>(ghostRoleProtoId))
+            return true;
+
+        Sawmill.Warning(
+            $"[Contracts] Ghost role init failed for '{contractId}': ghost role prototype '{ghostRoleProtoId}' is missing.");
+        return false;
+    }
+
+    private bool TryResolveGhostRoleSpawnCoordinates(
+        EntityUid store,
+        string contractId,
+        ContractObjectiveConfigData config,
+        out EntityCoordinates spawnCoords)
+    {
+        if (TryResolveObjectiveSpawnCoordinates(store, config, out spawnCoords))
+            return true;
+
+        Sawmill.Warning($"[Contracts] Ghost role init failed for '{contractId}': cannot resolve spawn coordinates.");
+        return false;
+    }
+
+    private bool TrySpawnGhostRoleSpawner(
+        string contractId,
+        EntityCoordinates spawnCoords,
+        out EntityUid spawner)
+    {
         try
         {
             spawner = Spawn(null, spawnCoords);
+            return true;
         }
         catch (Exception e)
         {
             Sawmill.Error($"[Contracts] Ghost role init failed for '{contractId}': runtime spawner creation threw: {e}");
+            spawner = EntityUid.Invalid;
             return false;
         }
+    }
 
+    private void ConfigureGhostRoleSpawner(EntityUid spawner, ContractServerData contract, string ghostRoleProtoId)
+    {
         var ghostRole = EnsureComp<GhostRoleComponent>(spawner);
         ghostRole.RoleName = contract.Name;
         ghostRole.RoleDescription = contract.Description;
 
         var spawnerComp = EnsureComp<NcContractGhostRoleSpawnerComponent>(spawner);
         spawnerComp.TargetPrototype = ghostRoleProtoId;
+    }
 
-        var key = (store, contractId);
+    private void RegisterGhostRoleObjectiveState(
+        (EntityUid Store, string ContractId) key,
+        EntityUid spawner,
+        ContractServerData contract)
+    {
+        var config = EnsureContractConfig(contract);
+        var runtime = EnsureContractRuntime(contract);
         var state = GetOrCreateObjectiveRuntimeState(key);
         state.TargetEntity = spawner;
         state.GhostRoleTaken = false;
@@ -66,8 +109,6 @@ public sealed partial class NcContractSystem : EntitySystem
         runtime.AcceptTimeoutRemainingSeconds = runtime.GhostRolePendingAcceptance
             ? Math.Max(0, config.AcceptTimeoutSeconds)
             : 0;
-
-        return true;
     }
 
     private void OnContractGhostRoleTakeover(EntityUid uid, NcContractGhostRoleSpawnerComponent comp, ref TakeGhostRoleEvent args)
@@ -120,10 +161,12 @@ public sealed partial class NcContractSystem : EntitySystem
             !contract.Taken ||
             contract.Completed ||
             !contract.IsGhostRoleObjective ||
-            contract.Runtime.Failed)
+            EnsureContractRuntime(contract).Failed)
         {
             return false;
         }
+
+        EnsureObjectiveRuntimeDefaults(contract);
 
         if (!state.GhostRoleTaken && state.GhostRoleAcceptDeadline is { } deadline && _timing.CurTime >= deadline)
         {
@@ -135,8 +178,9 @@ public sealed partial class NcContractSystem : EntitySystem
         state.TargetEntity = target;
         state.GhostRoleTaken = true;
         state.GhostRoleAcceptDeadline = null;
-        contract.Runtime.GhostRolePendingAcceptance = false;
-        contract.Runtime.AcceptTimeoutRemainingSeconds = 0;
+        var runtime = EnsureContractRuntime(contract);
+        runtime.GhostRolePendingAcceptance = false;
+        runtime.AcceptTimeoutRemainingSeconds = 0;
         _objectiveRuntimeByTarget[target] = key;
 
         foreach (var pinpointer in state.PinpointerEntities)
@@ -145,13 +189,14 @@ public sealed partial class NcContractSystem : EntitySystem
                 _pinpointer.SetTarget(pinpointer, target);
         }
 
-        if (contract.Config.GuardCount <= 0 || string.IsNullOrWhiteSpace(contract.Config.GuardPrototype))
+        var config = EnsureContractConfig(contract);
+        if (config.GuardCount <= 0 || string.IsNullOrWhiteSpace(config.GuardPrototype))
             return true;
 
         if (!TryComp(target, out TransformComponent? targetXform))
             return true;
 
-        if (TrySpawnObjectiveGuards(key, state, contract.Config, targetXform.Coordinates))
+        if (TrySpawnObjectiveGuards(key, state, config, targetXform.Coordinates))
             return true;
 
         Sawmill.Warning($"[Contracts] Ghost role guard wave failed for '{key.ContractId}'.");
@@ -229,7 +274,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             EnsureObjectiveRuntimeDefaults(contract);
-            if (contract.Runtime.Failed || contract.Completed)
+            if (EnsureContractRuntime(contract).Failed || contract.Completed)
                 continue;
 
             if (contract.IsGhostRoleObjective ||
@@ -260,7 +305,7 @@ public sealed partial class NcContractSystem : EntitySystem
     private void SyncGhostRoleObjectiveProgress(EntityUid store, string contractId, ContractServerData contract)
     {
         var key = (store, contractId);
-        var runtime = contract.Runtime;
+        var runtime = EnsureContractRuntime(contract);
 
         if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
         {
@@ -290,8 +335,8 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         var isDead = TryComp(target, out MobStateComponent? mobState) && mobState.CurrentState == MobState.Dead;
-        contract.Runtime.Stage = state.GhostRoleTaken && isDead && IsGhostRoleTargetAtStore(store, target)
-            ? Math.Max(1, contract.Runtime.StageGoal)
+        runtime.Stage = state.GhostRoleTaken && isDead && IsGhostRoleTargetAtStore(store, target)
+            ? Math.Max(1, runtime.StageGoal)
             : 0;
     }
 }

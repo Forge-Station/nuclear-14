@@ -15,7 +15,7 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract
     )
     {
-        var config = contract.Config;
+        var config = EnsureContractConfig(contract);
         var structureProtoId = ResolveTrackedObjectivePrototypeId(config.StructurePrototype, contract.TargetItem);
 
         if (string.IsNullOrWhiteSpace(structureProtoId))
@@ -62,11 +62,12 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryGetActiveRepairContract(uid, out _, out _, out var contract))
             return;
 
+        var config = EnsureContractConfig(contract);
         var quality = ResolveRepairToolQuality(
-            string.IsNullOrWhiteSpace(comp.ToolQuality) ? contract.Config.RepairToolQuality : comp.ToolQuality);
+            string.IsNullOrWhiteSpace(comp.ToolQuality) ? config.RepairToolQuality : comp.ToolQuality);
 
         var delay = ResolveRepairDoAfterSeconds(
-            comp.DoAfterSeconds > 0f ? comp.DoAfterSeconds : contract.Config.RepairDoAfterSeconds);
+            comp.DoAfterSeconds > 0f ? comp.DoAfterSeconds : config.RepairDoAfterSeconds);
 
         runtimeState.RepairInProgress = true;
 
@@ -94,19 +95,20 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryGetActiveRepairContract(uid, out var key, out var state, out var contract))
             return;
 
-        var runtime = contract.Runtime;
+        var runtime = EnsureContractRuntime(contract);
+        var config = EnsureContractConfig(contract);
         if (runtime.Stage >= Math.Max(1, runtime.StageGoal))
             return;
 
         SetObjectiveStage(contract, runtime.Stage + 1);
 
-        PlayRepairObjectiveStageEffects(uid, contract.Config);
+        PlayRepairObjectiveStageEffects(uid, config);
 
-        if (contract.Config.GuardCount <= 0 || string.IsNullOrWhiteSpace(contract.Config.GuardPrototype))
+        if (config.GuardCount <= 0 || string.IsNullOrWhiteSpace(config.GuardPrototype))
             return;
 
         if (TryComp(uid, out TransformComponent? structureXform) &&
-            !TrySpawnObjectiveGuards(key, state, contract.Config, structureXform.Coordinates))
+            !TrySpawnObjectiveGuards(key, state, config, structureXform.Coordinates))
             Sawmill.Warning($"[Contracts] Repair stage wave failed for '{key.ContractId}'.");
     }
 
@@ -154,7 +156,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         EnsureObjectiveRuntimeDefaults(contract);
-        return !contract.Runtime.Failed;
+        return !EnsureContractRuntime(contract).Failed;
     }
 
     private void PlayRepairObjectiveStageEffects(EntityUid structure, ContractObjectiveConfigData config)

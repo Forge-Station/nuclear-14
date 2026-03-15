@@ -14,92 +14,126 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
-        foreach (var e in ctx.TakePlan)
-        {
-            if (!EntityManager.EntityExists(e.Entity))
-            {
-                fail = ClaimAttemptResult.Fail(
-                    ClaimFailureReason.ExecutionFailed,
-                    $"Planned entity no longer exists: {ToPrettyString(e.Entity)}");
-                return false;
-            }
+        if (!TryValidateClaimTakePlan(ctx.TakePlan, out fail))
+            return false;
 
-            if (_logic.IsProtectedFromDirectSale(e.Root, e.Entity))
-            {
-                fail = ClaimAttemptResult.Fail(
-                    ClaimFailureReason.ExecutionFailed,
-                    $"Planned entity is protected: {ToPrettyString(e.Entity)}");
-                return false;
-            }
-
-            if (!e.IsStack)
-                continue;
-
-            if (!TryComp(e.Entity, out StackComponent? stack))
-            {
-                fail = ClaimAttemptResult.Fail(
-                    ClaimFailureReason.ExecutionFailed,
-                    $"Planned stack has no StackComponent: {ToPrettyString(e.Entity)}");
-                return false;
-            }
-
-            var have = Math.Max(stack.Count, 0);
-            if (have < e.Amount)
-            {
-                fail = ClaimAttemptResult.Fail(
-                    ClaimFailureReason.ExecutionFailed,
-                    $"Planned stack count mismatch: need {e.Amount}, have {have} on {ToPrettyString(e.Entity)}");
-                return false;
-            }
-        }
-
-        // Execute
-        foreach (var e in ctx.TakePlan)
-        {
-            if (!EntityManager.EntityExists(e.Entity))
-                continue;
-
-            if (e.IsStack)
-            {
-                if (!TryComp(e.Entity, out StackComponent? stack))
-                    continue;
-
-                var have = Math.Max(stack.Count, 0);
-                var left = have - e.Amount;
-
-                _stacks.SetCount(e.Entity, left, stack);
-
-                if (stack.Count <= 0)
-                    EntityManager.DeleteEntity(e.Entity);
-
-                continue;
-            }
-
-            EntityManager.DeleteEntity(e.Entity);
-        }
-
-        _inventory.InvalidateInventoryCache(ctx.User);
-        if (ctx.Crate is { } c)
-            _inventory.InvalidateInventoryCache(c);
-
-        // Mark targets as completed.
-        for (var i = 0; i < ctx.Contract.Targets.Count; i++)
-        {
-            var t = ctx.Contract.Targets[i];
-            if (string.IsNullOrWhiteSpace(t.TargetItem) || t.Required <= 0)
-                continue;
-
-            t.Progress = t.Required;
-            ctx.Contract.Targets[i] = t;
-        }
-
+        ExecuteClaimTakePlan(ctx.TakePlan);
+        InvalidateClaimExecutionCaches(ctx);
+        MarkClaimTargetsCompleted(ctx.Contract);
         GiveContractRewards(ctx.User, ctx.Contract.Rewards);
 
         return true;
     }
 
-    private void GiveContractRewards(EntityUid user, List<ContractRewardData> rewards)
+    private bool TryValidateClaimTakePlan(
+        List<ClaimTakeEntry> takePlan,
+        out ClaimAttemptResult fail
+    )
     {
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+
+        foreach (var entry in takePlan)
+        {
+            if (!TryValidateClaimTakeEntry(entry, out fail))
+                return false;
+        }
+
+        return true;
+    }
+
+    private bool TryValidateClaimTakeEntry(ClaimTakeEntry entry, out ClaimAttemptResult fail)
+    {
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+
+        if (!EntityManager.EntityExists(entry.Entity))
+        {
+            fail = CreateClaimExecutionFailure($"Planned entity no longer exists: {ToPrettyString(entry.Entity)}");
+            return false;
+        }
+
+        if (_logic.IsProtectedFromDirectSale(entry.Root, entry.Entity))
+        {
+            fail = CreateClaimExecutionFailure($"Planned entity is protected: {ToPrettyString(entry.Entity)}");
+            return false;
+        }
+
+        if (!entry.IsStack)
+            return true;
+
+        if (!TryComp(entry.Entity, out StackComponent? stack))
+        {
+            fail = CreateClaimExecutionFailure($"Planned stack has no StackComponent: {ToPrettyString(entry.Entity)}");
+            return false;
+        }
+
+        var have = Math.Max(stack.Count, 0);
+        if (have >= entry.Amount)
+            return true;
+
+        fail = CreateClaimExecutionFailure(
+            $"Planned stack count mismatch: need {entry.Amount}, have {have} on {ToPrettyString(entry.Entity)}");
+        return false;
+    }
+
+    private static ClaimAttemptResult CreateClaimExecutionFailure(string message)
+    {
+        return ClaimAttemptResult.Fail(ClaimFailureReason.ExecutionFailed, message);
+    }
+
+    private void ExecuteClaimTakePlan(List<ClaimTakeEntry> takePlan)
+    {
+        foreach (var entry in takePlan)
+            ExecuteClaimTakeEntry(entry);
+    }
+
+    private void ExecuteClaimTakeEntry(ClaimTakeEntry entry)
+    {
+        if (!EntityManager.EntityExists(entry.Entity))
+            return;
+
+        if (!entry.IsStack)
+        {
+            EntityManager.DeleteEntity(entry.Entity);
+            return;
+        }
+
+        if (!TryComp(entry.Entity, out StackComponent? stack))
+            return;
+
+        var left = Math.Max(stack.Count, 0) - entry.Amount;
+        _stacks.SetCount(entry.Entity, left, stack);
+
+        if (stack.Count <= 0)
+            EntityManager.DeleteEntity(entry.Entity);
+    }
+
+    private void InvalidateClaimExecutionCaches(ClaimContext ctx)
+    {
+        _inventory.InvalidateInventoryCache(ctx.User);
+
+        if (ctx.Crate is { } crate)
+            _inventory.InvalidateInventoryCache(crate);
+    }
+
+    private static void MarkClaimTargetsCompleted(ContractServerData contract)
+    {
+        var targets = GetEffectiveTargets(contract);
+        for (var i = 0; i < targets.Count; i++)
+        {
+            var target = targets[i];
+            if (string.IsNullOrWhiteSpace(target.TargetItem) || target.Required <= 0)
+                continue;
+
+            target.Progress = target.Required;
+            targets[i] = target;
+        }
+    }
+
+    private void GiveContractRewards(EntityUid user, IReadOnlyList<ContractRewardData>? rewards)
+    {
+        if (rewards == null || rewards.Count == 0)
+            return;
+
         foreach (var reward in rewards)
         {
             if (reward.Amount <= 0 || string.IsNullOrWhiteSpace(reward.Id))

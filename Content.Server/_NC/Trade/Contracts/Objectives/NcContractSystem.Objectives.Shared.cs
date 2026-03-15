@@ -35,7 +35,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return;
 
         EnsureObjectiveRuntimeDefaults(contract);
-        if (contract.Runtime.Failed)
+        if (EnsureContractRuntime(contract).Failed)
             return;
 
         switch (contract.ExecutionKind)
@@ -63,8 +63,11 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static void EnsureObjectiveRuntimeDefaults(ContractServerData contract)
     {
-        NormalizeRuntimeState(contract.ExecutionKind, contract.Runtime);
-        NormalizeObjectiveConfig(contract.Config);
+        var runtime = EnsureContractRuntime(contract);
+        var config = EnsureContractConfig(contract);
+
+        NormalizeRuntimeState(contract.ExecutionKind, runtime);
+        NormalizeObjectiveConfig(config);
 
         if (!contract.UsesStageObjectiveProgress)
         {
@@ -75,14 +78,14 @@ public sealed partial class NcContractSystem : EntitySystem
         SyncObjectiveProgressFromRuntime(contract);
 
         if (string.IsNullOrWhiteSpace(contract.TargetItem))
-            contract.TargetItem = ResolveObjectiveTargetId(contract.Config);
+            contract.TargetItem = ResolveObjectiveTargetId(config);
 
         SyncContractFlowStatus(contract);
     }
 
     private static void ResetObjectiveTransientState(ContractServerData contract)
     {
-        var runtime = contract.Runtime;
+        var runtime = EnsureContractRuntime(contract);
         runtime.GhostRolePendingAcceptance = false;
         runtime.AcceptTimeoutRemainingSeconds = 0;
         runtime.Failed = false;
@@ -91,7 +94,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static void ResetObjectiveState(ContractServerData contract)
     {
-        var runtime = contract.Runtime;
+        var runtime = EnsureContractRuntime(contract);
         runtime.Stage = 0;
         ResetObjectiveTransientState(contract);
 
@@ -102,32 +105,46 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static void SyncObjectiveProgressFromRuntime(ContractServerData contract)
     {
-        var stageGoal = Math.Max(1, contract.Runtime.StageGoal);
+        var runtime = EnsureContractRuntime(contract);
+        var stageGoal = Math.Max(1, runtime.StageGoal);
         contract.Required = stageGoal;
-        contract.Progress = Math.Clamp(contract.Runtime.Stage, 0, stageGoal);
+        contract.Progress = Math.Clamp(runtime.Stage, 0, stageGoal);
         SyncContractFlowStatus(contract);
     }
 
     private static void SetObjectiveStage(ContractServerData contract, int stage)
     {
-        var stageGoal = Math.Max(1, contract.Runtime.StageGoal);
-        contract.Runtime.Stage = Math.Clamp(stage, 0, stageGoal);
+        var runtime = EnsureContractRuntime(contract);
+        var stageGoal = Math.Max(1, runtime.StageGoal);
+        runtime.Stage = Math.Clamp(stage, 0, stageGoal);
         SyncObjectiveProgressFromRuntime(contract);
     }
 
     private static void MarkObjectiveComplete(ContractServerData contract)
     {
-        SetObjectiveStage(contract, contract.Runtime.StageGoal);
+        SetObjectiveStage(contract, EnsureContractRuntime(contract).StageGoal);
     }
 
     private static void MarkObjectiveFailed(ContractServerData contract, string failureReason)
     {
-        var runtime = contract.Runtime;
+        var runtime = EnsureContractRuntime(contract);
         runtime.Failed = true;
         runtime.FailureReason = failureReason;
         runtime.GhostRolePendingAcceptance = false;
         runtime.AcceptTimeoutRemainingSeconds = 0;
         SyncContractFlowStatus(contract);
+    }
+
+    private static ContractRuntimeContextData EnsureContractRuntime(ContractServerData contract)
+    {
+        contract.Runtime ??= new();
+        return contract.Runtime;
+    }
+
+    private static ContractObjectiveConfigData EnsureContractConfig(ContractServerData contract)
+    {
+        contract.Config ??= new();
+        return contract.Config;
     }
 
     private void FinalizeObjectiveCompletion((EntityUid Store, string ContractId) key, ContractServerData contract)

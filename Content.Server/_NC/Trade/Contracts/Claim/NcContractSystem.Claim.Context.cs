@@ -1,4 +1,4 @@
-﻿using Content.Shared._NC.Trade;
+using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 
 namespace Content.Server._NC.Trade;
@@ -28,60 +28,13 @@ public sealed partial class NcContractSystem : EntitySystem
         ctx = default;
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
-        if (!TryComp(store, out NcStoreComponent? comp))
-        {
-            fail = ClaimAttemptResult.Fail(
-                ClaimFailureReason.StoreMissing,
-                $"Store {ToPrettyString(store)} has no NcStoreComponent.");
+        if (!TryResolveClaimContract(store, contractId, out var comp, out var contract, out var targets, out fail))
             return false;
-        }
 
-        if (!comp.Contracts.TryGetValue(contractId, out var contract))
-        {
-            fail = ClaimAttemptResult.Fail(
-                ClaimFailureReason.ContractMissing,
-                $"Store {ToPrettyString(store)} has no contract '{contractId}'.");
-            return false;
-        }
+        PrepareClaimSources(store, user, contract, out var crateEntity, out var crateItems, out var storeNearbyItems);
 
-        if (!contract.Taken)
-        {
-            fail = ClaimAttemptResult.Fail(
-                ClaimFailureReason.NotTaken,
-                $"Contract '{contractId}' is not taken yet.");
-            return false;
-        }
-
-        var targets = GetEffectiveTargets(contract);
-        if (targets.Count == 0)
-        {
-            fail = ClaimAttemptResult.Fail(
-                ClaimFailureReason.NoValidTargets,
-                $"Contract '{contractId}' has no valid targets.");
-            return false;
-        }
-
-        _logic.ScanInventoryItems(user, _scratchUserItems);
-
-        EntityUid? crateEntity = null;
-        List<EntityUid>? crateItems = null;
-
-        var crateUid = _logic.GetPulledClosedCrate(user);
-        if (crateUid is { } c0 && Exists(c0))
-        {
-            crateEntity = c0;
-            _logic.ScanInventoryItems(c0, _scratchCrateItems);
-            crateItems = _scratchCrateItems;
-        }
-
-        if (contract.AllowsStoreWorldTurnIn)
-            ScanStoreNearbyTurnInItems(store, _scratchStoreNearbyItems);
-        else
-            _scratchStoreNearbyItems.Clear();
-
-        if (targets.Count == 1)
-        {
-            return TryPrepareSingleTargetClaimContext(
+        return targets.Count == 1
+            ? TryPrepareSingleTargetClaimContext(
                 store,
                 user,
                 contractId,
@@ -90,27 +43,164 @@ public sealed partial class NcContractSystem : EntitySystem
                 targets,
                 crateEntity,
                 crateItems,
-                _scratchStoreNearbyItems,
+                storeNearbyItems,
+                out ctx,
+                out fail)
+            : TryPrepareMultiTargetClaimContext(
+                store,
+                user,
+                comp,
+                contract,
+                targets,
+                crateEntity,
+                crateItems,
+                storeNearbyItems,
                 out ctx,
                 out fail);
+    }
+
+    private bool TryResolveClaimContract(
+        EntityUid store,
+        string contractId,
+        out NcStoreComponent comp,
+        out ContractServerData contract,
+        out List<ContractTargetServerData> targets,
+        out ClaimAttemptResult fail
+    )
+    {
+        comp = default!;
+        contract = default!;
+        targets = default!;
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+
+        if (!TryResolveStoreComponentForClaim(store, out var storeComp, out fail))
+            return false;
+
+        if (!TryResolveClaimContractData(store, contractId, storeComp, out var foundContract, out fail))
+            return false;
+
+        if (!TryResolveClaimTargets(contractId, foundContract, out var effectiveTargets, out fail))
+            return false;
+
+        comp = storeComp;
+        contract = foundContract;
+        targets = effectiveTargets;
+        return true;
+    }
+
+    private bool TryResolveStoreComponentForClaim(
+        EntityUid store,
+        out NcStoreComponent comp,
+        out ClaimAttemptResult fail)
+    {
+        if (TryComp(store, out NcStoreComponent? storeComp))
+        {
+            comp = storeComp;
+            fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+            return true;
         }
+
+        comp = default!;
+        fail = ClaimAttemptResult.Fail(
+            ClaimFailureReason.StoreMissing,
+            $"Store {ToPrettyString(store)} has no NcStoreComponent.");
+        return false;
+    }
+
+    private bool TryResolveClaimContractData(
+        EntityUid store,
+        string contractId,
+        NcStoreComponent comp,
+        out ContractServerData contract,
+        out ClaimAttemptResult fail)
+    {
+        if (!comp.Contracts.TryGetValue(contractId, out contract!))
+        {
+            fail = ClaimAttemptResult.Fail(
+                ClaimFailureReason.ContractMissing,
+                $"Store {ToPrettyString(store)} has no contract '{contractId}'.");
+            return false;
+        }
+
+        if (contract.Taken)
+        {
+            fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+            return true;
+        }
+
+        fail = ClaimAttemptResult.Fail(
+            ClaimFailureReason.NotTaken,
+            $"Contract '{contractId}' is not taken yet.");
+        return false;
+    }
+
+    private static bool TryResolveClaimTargets(
+        string contractId,
+        ContractServerData contract,
+        out List<ContractTargetServerData> targets,
+        out ClaimAttemptResult fail)
+    {
+        targets = GetEffectiveTargets(contract);
+        if (targets.Count > 0)
+        {
+            fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+            return true;
+        }
+
+        fail = ClaimAttemptResult.Fail(
+            ClaimFailureReason.NoValidTargets,
+            $"Contract '{contractId}' has no valid targets.");
+        return false;
+    }
+
+    private void PrepareClaimSources(
+        EntityUid store,
+        EntityUid user,
+        ContractServerData contract,
+        out EntityUid? crateEntity,
+        out List<EntityUid>? crateItems,
+        out List<EntityUid> storeNearbyItems
+    )
+    {
+        _logic.ScanInventoryItems(user, _scratchUserItems);
+
+        crateEntity = null;
+        crateItems = null;
+        storeNearbyItems = _scratchStoreNearbyItems;
+
+        var crateUid = _logic.GetPulledClosedCrate(user);
+        if (crateUid is { } pulledCrate && Exists(pulledCrate))
+        {
+            crateEntity = pulledCrate;
+            _logic.ScanInventoryItems(pulledCrate, _scratchCrateItems);
+            crateItems = _scratchCrateItems;
+        }
+
+        if (contract.AllowsStoreWorldTurnIn)
+            ScanStoreNearbyTurnInItems(store, storeNearbyItems);
+        else
+            storeNearbyItems.Clear();
+    }
+
+    private bool TryPrepareMultiTargetClaimContext(
+        EntityUid store,
+        EntityUid user,
+        NcStoreComponent comp,
+        ContractServerData contract,
+        List<ContractTargetServerData> targets,
+        EntityUid? crateEntity,
+        List<EntityUid>? crateItems,
+        List<EntityUid> storeNearbyItems,
+        out ClaimContext ctx,
+        out ClaimAttemptResult fail
+    )
+    {
+        ctx = default;
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
         ClearClaimPlanningScratch();
-
-        foreach (var t in targets)
-        {
-            if (string.IsNullOrWhiteSpace(t.TargetItem) || t.Required <= 0)
-            {
-                ClearClaimPlanningScratch();
-                fail = ClaimAttemptResult.Fail(
-                    ClaimFailureReason.InvalidTarget,
-                    $"Invalid target '{t.TargetItem}' (required={t.Required}).");
-                return false;
-            }
-
-            var key = (t.TargetItem, t.MatchMode);
-            _claimRequiredByKeyScratch[key] = SaturatingAdd(_claimRequiredByKeyScratch.GetValueOrDefault(key, 0), t.Required);
-        }
+        if (!TryCollectClaimRequirements(targets, out fail))
+            return false;
 
         var takePlan = new List<ClaimTakeEntry>(Math.Max(8, Math.Min(64, targets.Count * 4)));
         BuildOrderedRequiredKeys(_claimRequiredByKeyScratch, _claimOrderedKeysScratch);
@@ -127,7 +217,7 @@ public sealed partial class NcContractSystem : EntitySystem
                     user,
                     crateEntity,
                     crateItems,
-                    _scratchStoreNearbyItems,
+                    storeNearbyItems,
                     ordered.ProtoId,
                     ordered.MatchMode,
                     required,
@@ -140,8 +230,47 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         ClearClaimPlanningScratch();
+        ctx = CreateClaimContext(store, user, crateEntity, comp, contract, targets, crateItems, takePlan);
+        return true;
+    }
 
-        ctx = new ClaimContext(
+    private bool TryCollectClaimRequirements(
+        List<ContractTargetServerData> targets,
+        out ClaimAttemptResult fail
+    )
+    {
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+
+        foreach (var target in targets)
+        {
+            if (string.IsNullOrWhiteSpace(target.TargetItem) || target.Required <= 0)
+            {
+                ClearClaimPlanningScratch();
+                fail = ClaimAttemptResult.Fail(
+                    ClaimFailureReason.InvalidTarget,
+                    $"Invalid target '{target.TargetItem}' (required={target.Required}).");
+                return false;
+            }
+
+            var key = (target.TargetItem, target.MatchMode);
+            _claimRequiredByKeyScratch[key] = SaturatingAdd(_claimRequiredByKeyScratch.GetValueOrDefault(key, 0), target.Required);
+        }
+
+        return true;
+    }
+
+    private ClaimContext CreateClaimContext(
+        EntityUid store,
+        EntityUid user,
+        EntityUid? crateEntity,
+        NcStoreComponent comp,
+        ContractServerData contract,
+        List<ContractTargetServerData> targets,
+        List<EntityUid>? crateItems,
+        List<ClaimTakeEntry> takePlan
+    )
+    {
+        return new ClaimContext(
             store,
             user,
             crateEntity,
@@ -151,8 +280,6 @@ public sealed partial class NcContractSystem : EntitySystem
             _scratchUserItems,
             crateItems,
             takePlan);
-
-        return true;
     }
 
     private bool TryPrepareSingleTargetClaimContext(
@@ -200,18 +327,7 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         ClearClaimPlanningScratch();
-
-        ctx = new ClaimContext(
-            store,
-            user,
-            crateEntity,
-            comp,
-            contract,
-            targets,
-            _scratchUserItems,
-            crateItems,
-            takePlan);
-
+        ctx = CreateClaimContext(store, user, crateEntity, comp, contract, targets, crateItems, takePlan);
         return true;
     }
 
@@ -230,65 +346,60 @@ public sealed partial class NcContractSystem : EntitySystem
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
         var need = required;
-
-        if (crateEntity is { } crate && crateItems != null)
-        {
-            var reserved = ReserveTakePlanFromItems(
-                crate,
-                crateItems,
-                targetItem,
-                matchMode,
-                need,
-                _claimVirtualStackLeftScratch,
-                takePlan);
-
-            need -= reserved;
-        }
-
-        if (need > 0)
-        {
-            var reserved = ReserveTakePlanFromItems(
-                user,
-                _scratchUserItems,
-                targetItem,
-                matchMode,
-                need,
-                _claimVirtualStackLeftScratch,
-                takePlan);
-
-            need -= reserved;
-        }
-
-        if (need > 0 && storeNearbyItems is { Count: > 0 })
-        {
-            var reserved = ReserveTakePlanFromItems(
-                store,
-                storeNearbyItems,
-                targetItem,
-                matchMode,
-                need,
-                _claimVirtualStackLeftScratch,
-                takePlan,
-                worldTurnInSource: true);
-
-            need -= reserved;
-        }
+        need -= AppendTakePlanFromSource(crateEntity, crateItems, targetItem, matchMode, need, takePlan);
+        need -= AppendTakePlanFromSource(user, _scratchUserItems, targetItem, matchMode, need, takePlan);
+        need -= AppendTakePlanFromSource(store, storeNearbyItems, targetItem, matchMode, need, takePlan, worldTurnInSource: true);
 
         if (need <= 0)
             return true;
 
+        fail = CreateClaimPlanningFailure(crateEntity, storeNearbyItems, targetItem, matchMode, required, need);
+        return false;
+    }
+
+    private int AppendTakePlanFromSource(
+        EntityUid? root,
+        List<EntityUid>? items,
+        string targetItem,
+        PrototypeMatchMode matchMode,
+        int need,
+        List<ClaimTakeEntry> takePlan,
+        bool worldTurnInSource = false
+    )
+    {
+        if (need <= 0 || root is not { } source || items == null)
+            return 0;
+
+        return ReserveTakePlanFromItems(
+            source,
+            items,
+            targetItem,
+            matchMode,
+            need,
+            _claimVirtualStackLeftScratch,
+            takePlan,
+            worldTurnInSource);
+    }
+
+    private static ClaimAttemptResult CreateClaimPlanningFailure(
+        EntityUid? crateEntity,
+        List<EntityUid>? storeNearbyItems,
+        string targetItem,
+        PrototypeMatchMode matchMode,
+        int required,
+        int missing
+    )
+    {
         if (crateEntity == null && (storeNearbyItems == null || storeNearbyItems.Count == 0))
         {
-            fail = ClaimAttemptResult.Fail(
+            return ClaimAttemptResult.Fail(
                 ClaimFailureReason.MissingCrate,
-                $"need {required}x {targetItem} (mode={matchMode}), missing {need}. Pull a closed crate to claim from it.");
-            return false;
+                $"need {required}x {targetItem} (mode={matchMode}), missing {missing}. Pull a closed crate to claim from it.");
         }
 
-        fail = ClaimAttemptResult.Fail(
+        return ClaimAttemptResult.Fail(
             ClaimFailureReason.NotEnoughItems,
-            $"need {required}x {targetItem} (mode={matchMode}), missing {need} after planning.");
-        return false;
+            $"need {required}x {targetItem} (mode={matchMode}), missing {missing} after planning.");
     }
 
     private int ReserveTakePlanFromItems(
@@ -305,114 +416,106 @@ public sealed partial class NcContractSystem : EntitySystem
         if (need <= 0)
             return 0;
 
+        return TryGetStackTypeId(expectedProtoId, out var stackTypeId)
+            ? ReserveTakePlanFromStackItems(root, items, stackTypeId, need, virtualStackLeft, planOut, worldTurnInSource)
+            : ReserveTakePlanFromPrototypeItems(root, items, expectedProtoId, matchMode, need, virtualStackLeft, planOut, worldTurnInSource);
+    }
+
+    private int ReserveTakePlanFromStackItems(
+        EntityUid root,
+        List<EntityUid> items,
+        string stackTypeId,
+        int need,
+        Dictionary<EntityUid, int> virtualStackLeft,
+        List<ClaimTakeEntry> planOut,
+        bool worldTurnInSource
+    )
+    {
         var reserved = 0;
-
-        if (TryGetStackTypeId(expectedProtoId, out var stackTypeId))
-        {
-            for (var i = 0; i < items.Count && reserved < need; i++)
-            {
-                var ent = items[i];
-                if (ent == EntityUid.Invalid || !EntityManager.EntityExists(ent))
-                    continue;
-
-                if (worldTurnInSource)
-                {
-                    if (!CanUseNearbyStoreTurnInEntity(ent))
-                        continue;
-                }
-                else if (_logic.IsProtectedFromDirectSale(root, ent))
-                    continue;
-
-                if (!TryComp(ent, out StackComponent? stack) || stack.StackTypeId != stackTypeId)
-                    continue;
-
-                var have = virtualStackLeft.TryGetValue(ent, out var v)
-                    ? v
-                    : Math.Max(stack.Count, 0);
-
-                if (have <= 0)
-                {
-                    items[i] = EntityUid.Invalid;
-                    continue;
-                }
-
-                var take = Math.Min(have, need - reserved);
-                if (take <= 0)
-                    continue;
-
-                planOut.Add(new ClaimTakeEntry(root, ent, take, true));
-                reserved += take;
-
-                var left = have - take;
-                if (left > 0)
-                    virtualStackLeft[ent] = left;
-                else
-                {
-                    virtualStackLeft.Remove(ent);
-                    items[i] = EntityUid.Invalid;
-                }
-            }
-
-            return reserved;
-        }
 
         for (var i = 0; i < items.Count && reserved < need; i++)
         {
             var ent = items[i];
-            if (ent == EntityUid.Invalid || !EntityManager.EntityExists(ent))
+            if (!CanUseContractPlanningEntity(root, ent, worldTurnInSource))
                 continue;
 
-            if (worldTurnInSource)
-            {
-                if (!CanUseNearbyStoreTurnInEntity(ent))
-                    continue;
-            }
-            else if (_logic.IsProtectedFromDirectSale(root, ent))
+            if (!TryComp(ent, out StackComponent? stack) || stack.StackTypeId != stackTypeId)
                 continue;
 
-            if (!TryComp(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
-                continue;
-
-            if (!MatchesPrototypeId(meta.EntityPrototype.ID, expectedProtoId, matchMode))
-                continue;
-
-            if (TryComp(ent, out StackComponent? st) && st.Count > 0)
-            {
-                var have = virtualStackLeft.TryGetValue(ent, out var v)
-                    ? v
-                    : Math.Max(st.Count, 0);
-
-                if (have <= 0)
-                {
-                    items[i] = EntityUid.Invalid;
-                    continue;
-                }
-
-                var take = Math.Min(have, need - reserved);
-                if (take <= 0)
-                    continue;
-
-                planOut.Add(new ClaimTakeEntry(root, ent, take, true));
-                reserved += take;
-
-                var left = have - take;
-                if (left > 0)
-                    virtualStackLeft[ent] = left;
-                else
-                {
-                    virtualStackLeft.Remove(ent);
-                    items[i] = EntityUid.Invalid;
-                }
-
-                continue;
-            }
-
-            planOut.Add(new ClaimTakeEntry(root, ent, 1, false));
-            reserved += 1;
-            items[i] = EntityUid.Invalid;
+            reserved += AppendClaimStackTake(root, ent, need - reserved, virtualStackLeft, planOut, items, i);
         }
 
         return reserved;
     }
-}
 
+    private int ReserveTakePlanFromPrototypeItems(
+        EntityUid root,
+        List<EntityUid> items,
+        string expectedProtoId,
+        PrototypeMatchMode matchMode,
+        int need,
+        Dictionary<EntityUid, int> virtualStackLeft,
+        List<ClaimTakeEntry> planOut,
+        bool worldTurnInSource
+    )
+    {
+        var reserved = 0;
+
+        for (var i = 0; i < items.Count && reserved < need; i++)
+        {
+            var ent = items[i];
+            if (!CanUseContractPlanningEntity(root, ent, worldTurnInSource))
+                continue;
+
+            if (!TryGetPlanningEntityPrototypeId(ent, out var candidateId) ||
+                !MatchesPrototypeId(candidateId, expectedProtoId, matchMode))
+            {
+                continue;
+            }
+
+            if (TryComp(ent, out StackComponent? _))
+            {
+                reserved += AppendClaimStackTake(root, ent, need - reserved, virtualStackLeft, planOut, items, i);
+                continue;
+            }
+
+            reserved += AppendClaimEntityTake(root, ent, planOut, items, i);
+        }
+
+        return reserved;
+    }
+
+    private int AppendClaimStackTake(
+        EntityUid root,
+        EntityUid ent,
+        int need,
+        Dictionary<EntityUid, int> virtualStackLeft,
+        List<ClaimTakeEntry> planOut,
+        List<EntityUid> items,
+        int index
+    )
+    {
+        var take = ReserveAvailableStackAmount(ent, need, virtualStackLeft, out var exhausted);
+        if (exhausted)
+            items[index] = EntityUid.Invalid;
+
+        if (take <= 0)
+            return 0;
+
+        planOut.Add(new ClaimTakeEntry(root, ent, take, true));
+        return take;
+    }
+
+    private static int AppendClaimEntityTake(
+        EntityUid root,
+        EntityUid ent,
+        List<ClaimTakeEntry> planOut,
+        List<EntityUid> items,
+        int index
+    )
+    {
+        planOut.Add(new ClaimTakeEntry(root, ent, 1, false));
+        items[index] = EntityUid.Invalid;
+        return 1;
+    }
+}

@@ -6,11 +6,12 @@ public sealed partial class NcContractSystem : EntitySystem
 {
     private static ContractRuntimeContextData CreateInitialRuntimeState(StoreContractPrototype proto)
     {
-        var executionKind = ContractExecutionKinds.Resolve(proto.ObjectiveType, proto.Runtime.TargetPrototype);
+        var runtimeProto = GetRuntimePrototypeOrDefault(proto);
+        var executionKind = ContractExecutionKinds.Resolve(proto.ObjectiveType, runtimeProto.TargetPrototype);
         var runtime = new ContractRuntimeContextData
         {
             Stage = 0,
-            StageGoal = proto.Runtime.StageGoal,
+            StageGoal = runtimeProto.StageGoal,
             AcceptTimeoutRemainingSeconds = 0,
             GhostRolePendingAcceptance = false,
             Failed = false,
@@ -23,7 +24,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static ContractObjectiveConfigData CreateObjectiveConfig(StoreContractPrototype proto)
     {
-        var runtimeProto = proto.Runtime;
+        var runtimeProto = GetRuntimePrototypeOrDefault(proto);
         var config = new ContractObjectiveConfigData
         {
             AcceptTimeoutSeconds = runtimeProto.AcceptTimeoutSeconds,
@@ -53,6 +54,11 @@ public sealed partial class NcContractSystem : EntitySystem
 
         NormalizeObjectiveConfig(config);
         return config;
+    }
+
+    private static StoreContractRuntimePrototype GetRuntimePrototypeOrDefault(StoreContractPrototype proto)
+    {
+        return proto.Runtime ?? new();
     }
 
     private static void NormalizeRuntimeState(ContractExecutionKind executionKind, ContractRuntimeContextData runtime)
@@ -108,7 +114,9 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static ContractFlowStatus ComputeContractFlowStatus(ContractServerData contract)
     {
-        if (contract.Runtime.Failed)
+        var runtime = contract.Runtime ??= new ContractRuntimeContextData();
+
+        if (runtime.Failed)
             return ContractFlowStatus.Failed;
 
         if (!contract.Taken)
@@ -117,7 +125,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (contract.Completed)
             return ContractFlowStatus.ReadyToTurnIn;
 
-        if (contract.ExecutionKind == ContractExecutionKind.GhostRoleObjective && contract.Runtime.GhostRolePendingAcceptance)
+        if (contract.ExecutionKind == ContractExecutionKind.GhostRoleObjective && runtime.GhostRolePendingAcceptance)
             return ContractFlowStatus.AwaitingActivation;
 
         return ContractFlowStatus.InProgress;

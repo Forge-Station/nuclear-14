@@ -7,79 +7,168 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcStoreLogicSystem
 {
+    private readonly record struct BuyExecutionPlan(
+        string Currency,
+        int UnitPrice,
+        int Purchases,
+        int TotalPrice,
+        int TotalUnits,
+        int UnitsPerPurchase);
+
     public bool TryBuy(string listingId, EntityUid machine, NcStoreComponent? store, EntityUid user, int count = 1)
     {
+        if (!TryPrepareBuy(listingId, store, user, count, out var listing, out var proto, out var plan))
+            return false;
+
+        if (!TryTakeCurrency(user, plan.Currency, plan.TotalPrice))
+            return false;
+
+        var spawnedUnits = SpawnPurchasedProduct(
+            user,
+            listing.ProductEntity,
+            proto,
+            plan.TotalUnits,
+            plan.UnitPrice,
+            plan.Currency);
+        _inventory.InvalidateInventoryCache(user);
+
+        return FinalizeBuy(user, listing, plan, spawnedUnits);
+    }
+
+    private bool TryPrepareBuy(
+        string listingId,
+        NcStoreComponent? store,
+        EntityUid user,
+        int count,
+        out NcStoreListingDef listing,
+        out EntityPrototype proto,
+        out BuyExecutionPlan plan)
+    {
+        listing = default!;
+        proto = default!;
+        plan = default;
+
         if (store == null || store.Listings.Count == 0 || count <= 0)
             return false;
-        if (!store.ListingIndex.TryGetValue(NcStoreComponent.MakeListingKey(StoreMode.Buy, listingId), out var listing))
+
+        if (!store.ListingIndex.TryGetValue(
+                NcStoreComponent.MakeListingKey(StoreMode.Buy, listingId),
+                out NcStoreListingDef? foundListing))
             return false;
-        if (!_protos.TryIndex<EntityPrototype>(listing.ProductEntity, out var proto))
+
+        if (!_protos.TryIndex<EntityPrototype>(foundListing.ProductEntity, out EntityPrototype? foundProto))
             return false;
+
+        listing = foundListing;
+        proto = foundProto;
 
         _inventory.InvalidateInventoryCache(user);
-        var snap = _inventory.BuildInventorySnapshot(user);
+        var snapshot = _inventory.BuildInventorySnapshot(user);
 
-        if (!TryPickCurrencyForBuy(store, listing, snap, out var currency, out var unitPrice, out var balance))
+        if (!TryPickCurrencyForBuy(store, listing, snapshot, out var currency, out var unitPrice, out var balance))
             return false;
 
-        var unitsPerPurchase = Math.Max(1, listing.UnitsPerPurchase);
+        return TryBuildBuyPlan(currency, unitPrice, balance, count, listing, out plan);
+    }
 
+    private static bool TryBuildBuyPlan(
+        string currency,
+        int unitPrice,
+        int balance,
+        int requestedCount,
+        NcStoreListingDef listing,
+        out BuyExecutionPlan plan)
+    {
+        plan = default;
+
+        var unitsPerPurchase = Math.Max(1, listing.UnitsPerPurchase);
         var maxByRemainingPurchases = listing.RemainingCount >= 0 ? listing.RemainingCount : int.MaxValue;
         var maxByMoneyPurchases = unitPrice > 0 ? balance / unitPrice : int.MaxValue;
-
         var maxPurchases = Math.Min(maxByRemainingPurchases, maxByMoneyPurchases);
         if (maxPurchases <= 0)
             return false;
 
-        var purchases = Math.Min(count, maxPurchases);
-
-        var totalPriceL = (long) unitPrice * purchases;
-        if (totalPriceL > int.MaxValue)
+        var purchases = Math.Min(requestedCount, maxPurchases);
+        if (!TryComputeBuyTotals(unitPrice, purchases, unitsPerPurchase, out var totalPrice, out var totalUnits))
             return false;
 
-        var totalUnitsL = (long) purchases * unitsPerPurchase;
-        if (totalUnitsL <= 0 || totalUnitsL > int.MaxValue)
+        plan = new(currency, unitPrice, purchases, totalPrice, totalUnits, unitsPerPurchase);
+        return true;
+    }
+
+    private static bool TryComputeBuyTotals(
+        int unitPrice,
+        int purchases,
+        int unitsPerPurchase,
+        out int totalPrice,
+        out int totalUnits)
+    {
+        totalPrice = 0;
+        totalUnits = 0;
+
+        var totalPriceLong = (long) unitPrice * purchases;
+        if (totalPriceLong > int.MaxValue)
             return false;
 
-        var totalPrice = (int) totalPriceL;
-        var totalUnits = (int) totalUnitsL;
-
-        if (!TryTakeCurrency(user, currency, totalPrice))
+        var totalUnitsLong = (long) purchases * unitsPerPurchase;
+        if (totalUnitsLong <= 0 || totalUnitsLong > int.MaxValue)
             return false;
 
-        var spawnedUnits = SpawnPurchasedProduct(user, listing.ProductEntity, proto, totalUnits, unitPrice, currency);
+        totalPrice = (int) totalPriceLong;
+        totalUnits = (int) totalUnitsLong;
+        return true;
+    }
 
-        _inventory.InvalidateInventoryCache(user);
-
+    private bool FinalizeBuy(
+        EntityUid user,
+        NcStoreListingDef listing,
+        BuyExecutionPlan plan,
+        int spawnedUnits)
+    {
         if (spawnedUnits <= 0)
-        {
-            // Full refund for failed delivery.
-            GiveCurrency(user, currency, totalPrice);
-            return false;
-        }
+            return RefundFailedBuy(user, plan);
 
-        var deliveredPurchases = spawnedUnits / unitsPerPurchase;
+        var deliveredPurchases = spawnedUnits / plan.UnitsPerPurchase;
         if (deliveredPurchases <= 0)
-        {
-            GiveCurrency(user, currency, totalPrice);
-            return false;
-        }
+            return RefundFailedBuy(user, plan);
 
-        if (deliveredPurchases < purchases)
-        {
-            var refundPurchases = purchases - deliveredPurchases;
-            var refundL = (long) refundPurchases * unitPrice;
-            if (refundL > 0 && refundL <= int.MaxValue)
-                GiveCurrency(user, currency, (int) refundL);
-        }
+        RefundUndeliveredBuyPurchases(user, plan, deliveredPurchases);
+        ApplyDeliveredBuyPurchases(listing, deliveredPurchases);
+        LogSuccessfulBuy(listing, plan, spawnedUnits, deliveredPurchases);
+        return true;
+    }
 
+    private bool RefundFailedBuy(EntityUid user, BuyExecutionPlan plan)
+    {
+        GiveCurrency(user, plan.Currency, plan.TotalPrice);
+        return false;
+    }
+
+    private void RefundUndeliveredBuyPurchases(EntityUid user, BuyExecutionPlan plan, int deliveredPurchases)
+    {
+        if (deliveredPurchases >= plan.Purchases)
+            return;
+
+        var refundPurchases = plan.Purchases - deliveredPurchases;
+        var refund = (long) refundPurchases * plan.UnitPrice;
+        if (refund > 0 && refund <= int.MaxValue)
+            GiveCurrency(user, plan.Currency, (int) refund);
+    }
+
+    private static void ApplyDeliveredBuyPurchases(NcStoreListingDef listing, int deliveredPurchases)
+    {
         if (listing.RemainingCount >= 0)
             listing.RemainingCount = Math.Max(0, listing.RemainingCount - deliveredPurchases);
+    }
 
+    private void LogSuccessfulBuy(
+        NcStoreListingDef listing,
+        BuyExecutionPlan plan,
+        int spawnedUnits,
+        int deliveredPurchases)
+    {
         Sawmill.Info(
-            $"TryBuy: OK {listing.ProductEntity} x{spawnedUnits} ({deliveredPurchases} purchases) for {unitPrice} {currency} each");
-        return true;
-
+            $"TryBuy: OK {listing.ProductEntity} x{spawnedUnits} ({deliveredPurchases} purchases) for {plan.UnitPrice} {plan.Currency} each");
     }
 
     public bool TrySell(string listingId, EntityUid machine, NcStoreComponent? store, EntityUid user, int count = 1)

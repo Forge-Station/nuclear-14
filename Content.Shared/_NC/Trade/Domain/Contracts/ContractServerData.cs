@@ -20,14 +20,14 @@ public sealed class ContractServerData
     public ContractObjectiveConfigData Config { get; set; } = new();
     public ContractFlowStatus FlowStatus { get; set; } = ContractFlowStatus.Available;
 
-    public ContractExecutionKind ExecutionKind => ContractExecutionKinds.Resolve(ObjectiveType, Config?.TargetPrototype);
+    public ContractExecutionKind ExecutionKind => ContractExecutionKinds.Resolve(ObjectiveType, EnsureConfig().TargetPrototype);
     public bool IsInventoryDelivery => ExecutionKind == ContractExecutionKind.InventoryDelivery;
     public bool IsTrackedDeliveryObjective => ExecutionKind == ContractExecutionKind.TrackedDeliveryObjective;
     public bool IsHuntObjective => ExecutionKind == ContractExecutionKind.HuntObjective;
     public bool IsRepairObjective => ExecutionKind == ContractExecutionKind.RepairObjective;
     public bool IsGhostRoleObjective => ExecutionKind == ContractExecutionKind.GhostRoleObjective;
-    public bool HasInventoryDeliverySpawnSupport => IsInventoryDelivery && !string.IsNullOrWhiteSpace(Config?.DeliverySpawnPrototype);
-    public bool AllowsStoreWorldTurnIn => IsInventoryDelivery && (Config?.AllowStoreWorldTurnIn ?? false);
+    public bool HasInventoryDeliverySpawnSupport => IsInventoryDelivery && !string.IsNullOrWhiteSpace(EnsureConfig().DeliverySpawnPrototype);
+    public bool AllowsStoreWorldTurnIn => IsInventoryDelivery && EnsureConfig().AllowStoreWorldTurnIn;
     public bool UsesWorldObjectiveRuntime => ContractExecutionKinds.UsesWorldRuntime(ExecutionKind);
     public bool UsesWorldRuntimeSupport => UsesWorldObjectiveRuntime || HasInventoryDeliverySpawnSupport;
     public bool UsesStageObjectiveProgress => ContractExecutionKinds.UsesStageProgress(ExecutionKind);
@@ -44,13 +44,15 @@ public sealed class ContractServerData
     {
         get
         {
+            var targets = EnsureTargets();
+
             if (UsesStageObjectiveProgress)
                 return Required > 0 && Progress >= Required;
 
-            if (Targets.Count > 0)
+            if (targets.Count > 0)
             {
                 var any = false;
-                foreach (var t in Targets)
+                foreach (var t in targets)
                 {
                     if (t.Required <= 0)
                         continue;
@@ -65,5 +67,23 @@ public sealed class ContractServerData
 
             return Required > 0 && Progress >= Required;
         }
+    }
+
+    private ContractObjectiveConfigData EnsureConfig()
+    {
+        Config ??= new();
+        return Config;
+    }
+
+    private List<ContractTargetServerData> EnsureTargets()
+    {
+        Targets ??= new();
+        for (var i = Targets.Count - 1; i >= 0; i--)
+        {
+            if (Targets[i] == null)
+                Targets.RemoveAt(i);
+        }
+
+        return Targets;
     }
 }

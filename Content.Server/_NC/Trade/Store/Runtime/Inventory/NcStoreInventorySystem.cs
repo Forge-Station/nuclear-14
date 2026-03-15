@@ -13,6 +13,11 @@ namespace Content.Server._NC.Trade;
 
 public sealed class NcStoreInventorySystem : EntitySystem
 {
+    private readonly record struct ProductTakeRequest(
+        string ProtoId,
+        string? StackType,
+        PrototypeMatchMode EffectiveMatch);
+
     [Dependency] private readonly IComponentFactory _compFactory = default!;
     [Dependency] private readonly IEntityManager _ents = default!;
     private readonly Dictionary<EntityUid, List<EntityUid>> _inventoryCache = new();
@@ -323,130 +328,202 @@ public void ScanInventoryItems(EntityUid root, List<EntityUid> itemsBuffer)
         if (amount <= 0)
             return true;
 
-        var stackType = GetProductStackType(protoId);
-        var effective = ResolveMatchMode(protoId, matchMode);
-        var availableTotal = 0;
+        var request = CreateProductTakeRequest(protoId, matchMode);
+        if (CalculateAvailableTakeUnits(root, cachedItems, request, amount) < amount)
+            return false;
 
-        bool Matches(EntityPrototype proto)
-        {
-            if (effective == PrototypeMatchMode.Exact)
-                return proto.ID == protoId;
-            return proto.ID == protoId || IsProtoOrDescendant(proto, protoId);
-        }
+        return ExecuteTakeUnitsFromCachedItems(root, cachedItems, request, amount);
+    }
+
+    private ProductTakeRequest CreateProductTakeRequest(string protoId, PrototypeMatchMode matchMode)
+    {
+        return new(protoId, GetProductStackType(protoId), ResolveMatchMode(protoId, matchMode));
+    }
+
+    private int CalculateAvailableTakeUnits(
+        EntityUid root,
+        IReadOnlyList<EntityUid> cachedItems,
+        ProductTakeRequest request,
+        int maxNeeded)
+    {
+        var availableTotal = 0;
 
         foreach (var ent in cachedItems)
         {
-            if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
-                continue;
-            if (IsProtectedFromDirectSale(root, ent))
+            if (ShouldSkipTakeEntity(root, ent))
                 continue;
 
-            if (stackType != null)
-            {
-                if (_ents.TryGetComponent(ent, out StackComponent? stack) && stack.StackTypeId == stackType)
-                    availableTotal += Math.Max(stack.Count, 0);
-            }
-            else
-            {
-                if (_ents.TryGetComponent(ent, out MetaDataComponent? meta) && meta.EntityPrototype != null)
-                {
-                    if (Matches(meta.EntityPrototype))
-                    {
-                        if (_ents.TryGetComponent(ent, out StackComponent? st) && st.Count > 0)
-                            availableTotal += st.Count;
-                        else
-                            availableTotal += 1;
-                    }
-                }
-            }
-
-            if (availableTotal >= amount)
+            availableTotal += CountTakeableUnits(ent, request);
+            if (availableTotal >= maxNeeded)
                 break;
         }
 
-        if (availableTotal < amount)
-            return false;
+        return availableTotal;
+    }
 
+    private bool ExecuteTakeUnitsFromCachedItems(
+        EntityUid root,
+        List<EntityUid> cachedItems,
+        ProductTakeRequest request,
+        int amount)
+    {
         var left = amount;
         var compactNeeded = false;
 
         for (var i = 0; i < cachedItems.Count && left > 0; i++)
         {
-            var ent = cachedItems[i];
-            if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
+            if (!TryConsumeTakeUnitsFromEntity(root, cachedItems, i, request, ref left, ref compactNeeded))
                 continue;
-            if (IsProtectedFromDirectSale(root, ent))
-                continue;
-
-            if (stackType != null)
-            {
-                if (!_ents.TryGetComponent(ent, out StackComponent? stack) || stack.StackTypeId != stackType)
-                    continue;
-
-                var have = Math.Max(stack.Count, 0);
-                if (have <= 0)
-                    continue;
-
-                var take = Math.Min(have, left);
-                _stacks.SetCount(ent, have - take, stack);
-
-                if (stack.Count <= 0)
-                {
-                    _ents.DeleteEntity(ent);
-                    cachedItems[i] = EntityUid.Invalid;
-                compactNeeded = true;
-                }
-
-                left -= take;
-                continue;
-            }
-
-            if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
-                continue;
-
-            if (meta.EntityPrototype.ID == protoId)
-            {
-                ProcessTake(i, ent);
-                continue;
-            }
-
-            if (Matches(meta.EntityPrototype))
-                ProcessTake(i, ent);
-        }
-
-        void ProcessTake(int index, EntityUid item)
-        {
-            if (left <= 0)
-                return;
-
-            if (_ents.TryGetComponent(item, out StackComponent? st))
-            {
-                var have = Math.Max(st.Count, 0);
-                var take = Math.Min(have, left);
-                _stacks.SetCount(item, have - take, st);
-
-                if (st.Count <= 0)
-                {
-                    _ents.DeleteEntity(item);
-                    cachedItems[index] = EntityUid.Invalid;
-                compactNeeded = true;
-                }
-
-                left -= take;
-            }
-            else
-            {
-                _ents.DeleteEntity(item);
-                cachedItems[index] = EntityUid.Invalid;
-                compactNeeded = true;
-                left -= 1;
-            }
         }
 
         if (compactNeeded)
             CompactCachedItemsIfNeeded(cachedItems);
 
         return left <= 0;
+    }
+
+    private bool TryConsumeTakeUnitsFromEntity(
+        EntityUid root,
+        List<EntityUid> cachedItems,
+        int index,
+        ProductTakeRequest request,
+        ref int left,
+        ref bool compactNeeded)
+    {
+        var ent = cachedItems[index];
+        if (ShouldSkipTakeEntity(root, ent))
+            return false;
+
+        if (request.StackType != null)
+            return TryConsumeStackTypeTake(cachedItems, index, ent, request.StackType, ref left, ref compactNeeded);
+
+        return TryConsumePrototypeTake(cachedItems, index, ent, request, ref left, ref compactNeeded);
+    }
+
+    private bool ShouldSkipTakeEntity(EntityUid root, EntityUid ent)
+    {
+        return ent == EntityUid.Invalid || !_ents.EntityExists(ent) || IsProtectedFromDirectSale(root, ent);
+    }
+
+    private int CountTakeableUnits(EntityUid ent, ProductTakeRequest request)
+    {
+        if (request.StackType != null)
+            return CountTakeableStackUnits(ent, request.StackType);
+
+        return CountTakeablePrototypeUnits(ent, request);
+    }
+
+    private int CountTakeableStackUnits(EntityUid ent, string stackType)
+    {
+        if (_ents.TryGetComponent(ent, out StackComponent? stack) && stack.StackTypeId == stackType)
+            return Math.Max(stack.Count, 0);
+
+        return 0;
+    }
+
+    private int CountTakeablePrototypeUnits(EntityUid ent, ProductTakeRequest request)
+    {
+        if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
+            return 0;
+
+        if (!MatchesTakeRequest(meta.EntityPrototype, request))
+            return 0;
+
+        if (_ents.TryGetComponent(ent, out StackComponent? stack) && stack.Count > 0)
+            return stack.Count;
+
+        return 1;
+    }
+
+    private bool TryConsumeStackTypeTake(
+        List<EntityUid> cachedItems,
+        int index,
+        EntityUid ent,
+        string stackType,
+        ref int left,
+        ref bool compactNeeded)
+    {
+        if (!_ents.TryGetComponent(ent, out StackComponent? stack) || stack.StackTypeId != stackType)
+            return false;
+
+        var have = Math.Max(stack.Count, 0);
+        if (have <= 0)
+            return false;
+
+        ConsumeStackUnits(cachedItems, index, ent, stack, ref left, ref compactNeeded);
+        return true;
+    }
+
+    private bool TryConsumePrototypeTake(
+        List<EntityUid> cachedItems,
+        int index,
+        EntityUid ent,
+        ProductTakeRequest request,
+        ref int left,
+        ref bool compactNeeded)
+    {
+        if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
+            return false;
+
+        if (!MatchesTakeRequest(meta.EntityPrototype, request))
+            return false;
+
+        if (_ents.TryGetComponent(ent, out StackComponent? stack))
+        {
+            ConsumeStackUnits(cachedItems, index, ent, stack, ref left, ref compactNeeded);
+            return true;
+        }
+
+        DeleteConsumedEntity(cachedItems, index, ent, ref left, ref compactNeeded);
+        return true;
+    }
+
+    private bool MatchesTakeRequest(EntityPrototype proto, ProductTakeRequest request)
+    {
+        if (request.EffectiveMatch == PrototypeMatchMode.Exact)
+            return proto.ID == request.ProtoId;
+
+        return proto.ID == request.ProtoId || IsProtoOrDescendant(proto, request.ProtoId);
+    }
+
+    private void ConsumeStackUnits(
+        List<EntityUid> cachedItems,
+        int index,
+        EntityUid ent,
+        StackComponent stack,
+        ref int left,
+        ref bool compactNeeded)
+    {
+        var have = Math.Max(stack.Count, 0);
+        var take = Math.Min(have, left);
+        _stacks.SetCount(ent, have - take, stack);
+
+        if (stack.Count <= 0)
+            DeleteConsumedEntity(cachedItems, index, ent, ref compactNeeded);
+
+        left -= take;
+    }
+
+    private void DeleteConsumedEntity(
+        List<EntityUid> cachedItems,
+        int index,
+        EntityUid ent,
+        ref int left,
+        ref bool compactNeeded)
+    {
+        DeleteConsumedEntity(cachedItems, index, ent, ref compactNeeded);
+        left -= 1;
+    }
+
+    private void DeleteConsumedEntity(
+        List<EntityUid> cachedItems,
+        int index,
+        EntityUid ent,
+        ref bool compactNeeded)
+    {
+        _ents.DeleteEntity(ent);
+        cachedItems[index] = EntityUid.Invalid;
+        compactNeeded = true;
     }
 
 

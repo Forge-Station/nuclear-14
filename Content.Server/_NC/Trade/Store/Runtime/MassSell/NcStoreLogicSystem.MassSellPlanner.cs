@@ -6,6 +6,15 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcStoreLogicSystem
 {
+    private readonly record struct MassSellInventoryState(
+        Dictionary<string, int> StackTypeCounts,
+        Dictionary<string, int> ProtoCounts,
+        Dictionary<string, EntityPrototype> ProtoCache,
+        Dictionary<string, string> StackProtoToType)
+    {
+        public bool IsEmpty => StackTypeCounts.Count == 0 && ProtoCounts.Count == 0;
+    }
+
     private readonly Dictionary<string, int> _inheritanceDepthCache = new(StringComparer.Ordinal);
     private readonly List<string> _protoIdsScratch = new();
     private readonly HashSet<string> _protoIdsSeenScratch = new(StringComparer.Ordinal);
@@ -30,13 +39,36 @@ public sealed partial class NcStoreLogicSystem
 
     private MassSellPlan ComputeMassSellPlanInternal(NcStoreComponent store, IEnumerable<EntityUid> items)
     {
-        var incomeByCurrency = new Dictionary<string, int>(StringComparer.Ordinal);
-        var unitsByListingId = new Dictionary<string, int>(StringComparer.Ordinal);
-        var priceByListingId = new Dictionary<string, (string, int)>(StringComparer.Ordinal);
-        var steps = new List<MassSellStep>();
+        var plan = CreateEmptyMassSellPlan();
         if (store.Listings.Count == 0)
-            return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
+            return plan;
 
+        var inventory = BuildMassSellInventoryState(items);
+        if (inventory.IsEmpty)
+            return plan;
+
+        PrepareMassSellProtoIds(inventory);
+        var listingQuotes = BuildMassSellListingQuotes(store);
+        PrepareMassSellListings(store, listingQuotes);
+        if (_sellListingsScratch.Count == 0)
+            return plan;
+
+        var matchesByExpected = BuildMassSellDescendantMatches(inventory.ProtoCache);
+        ApplyMassSellListings(inventory, listingQuotes, matchesByExpected, plan);
+        return plan;
+    }
+
+    private static MassSellPlan CreateEmptyMassSellPlan()
+    {
+        return new(
+            new Dictionary<string, int>(StringComparer.Ordinal),
+            new Dictionary<string, int>(StringComparer.Ordinal),
+            new Dictionary<string, (string, int)>(StringComparer.Ordinal),
+            new List<MassSellStep>());
+    }
+
+    private MassSellInventoryState BuildMassSellInventoryState(IEnumerable<EntityUid> items)
+    {
         var stackTypeCounts = new Dictionary<string, int>(StringComparer.Ordinal);
         var protoCounts = new Dictionary<string, int>(StringComparer.Ordinal);
         var protoCache = new Dictionary<string, EntityPrototype>(StringComparer.Ordinal);
@@ -46,240 +78,370 @@ public sealed partial class NcStoreLogicSystem
         {
             if (!_ents.EntityExists(ent))
                 continue;
-            if (_ents.TryGetComponent(ent, out StackComponent? st))
+
+            if (_ents.TryGetComponent(ent, out StackComponent? stack))
             {
-                var cnt = Math.Max(st.Count, 0);
-                if (cnt > 0 && !string.IsNullOrWhiteSpace(st.StackTypeId))
-                {
-                    stackTypeCounts.TryGetValue(st.StackTypeId, out var prev);
-                    stackTypeCounts[st.StackTypeId] = prev + cnt;
-                }
-
-                if (_ents.TryGetComponent(ent, out MetaDataComponent? stMeta) && stMeta.EntityPrototype is { } stProto)
-                {
-                    protoCache[stProto.ID] = stProto;
-                    if (!string.IsNullOrWhiteSpace(st.StackTypeId))
-                        stackProtoToType.TryAdd(stProto.ID, st.StackTypeId);
-                }
-
+                TrackMassSellStackEntity(ent, stack, stackTypeCounts, protoCache, stackProtoToType);
                 continue;
             }
 
-            if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is null)
-                continue;
-            var proto = meta.EntityPrototype;
-            if (!protoCounts.TryAdd(proto.ID, 1))
-                protoCounts[proto.ID] += 1;
-            protoCache[proto.ID] = proto;
+            TrackMassSellPrototypeEntity(ent, protoCounts, protoCache);
         }
 
-        if (stackTypeCounts.Count == 0 && protoCounts.Count == 0)
-            return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
+        return new(stackTypeCounts, protoCounts, protoCache, stackProtoToType);
+    }
 
+    private void TrackMassSellStackEntity(
+        EntityUid ent,
+        StackComponent stack,
+        Dictionary<string, int> stackTypeCounts,
+        Dictionary<string, EntityPrototype> protoCache,
+        Dictionary<string, string> stackProtoToType)
+    {
+        var count = Math.Max(stack.Count, 0);
+        if (count > 0 && !string.IsNullOrWhiteSpace(stack.StackTypeId))
+            AddMassSellCount(stackTypeCounts, stack.StackTypeId, count);
+
+        if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is not { } proto)
+            return;
+
+        protoCache[proto.ID] = proto;
+        if (!string.IsNullOrWhiteSpace(stack.StackTypeId))
+            stackProtoToType.TryAdd(proto.ID, stack.StackTypeId);
+    }
+
+    private void TrackMassSellPrototypeEntity(
+        EntityUid ent,
+        Dictionary<string, int> protoCounts,
+        Dictionary<string, EntityPrototype> protoCache)
+    {
+        if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is not { } proto)
+            return;
+
+        AddMassSellCount(protoCounts, proto.ID, 1);
+        protoCache[proto.ID] = proto;
+    }
+
+    private static void AddMassSellCount(Dictionary<string, int> counts, string key, int amount)
+    {
+        if (amount <= 0 || string.IsNullOrWhiteSpace(key))
+            return;
+
+        if (!counts.TryAdd(key, amount))
+            counts[key] += amount;
+    }
+
+    private void PrepareMassSellProtoIds(MassSellInventoryState inventory)
+    {
         _protoIdsSeenScratch.Clear();
         _protoIdsScratch.Clear();
 
-        foreach (var protoId in protoCounts.Keys)
-        {
-            if (_protoIdsSeenScratch.Add(protoId))
-                _protoIdsScratch.Add(protoId);
-        }
+        foreach (var protoId in inventory.ProtoCounts.Keys)
+            AddMassSellProtoId(protoId);
 
-        foreach (var protoId in stackProtoToType.Keys)
-        {
-            if (_protoIdsSeenScratch.Add(protoId))
-                _protoIdsScratch.Add(protoId);
-        }
+        foreach (var protoId in inventory.StackProtoToType.Keys)
+            AddMassSellProtoId(protoId);
 
-        _protoIdsScratch.Sort((left, right) =>
-        {
-            var depth = GetInheritanceDepth(right).CompareTo(GetInheritanceDepth(left));
-            if (depth != 0)
-                return depth;
+        _protoIdsScratch.Sort(CompareMassSellProtoIds);
+    }
 
-            return OrdinalIds.Compare(left, right);
-        });
+    private void AddMassSellProtoId(string protoId)
+    {
+        if (_protoIdsSeenScratch.Add(protoId))
+            _protoIdsScratch.Add(protoId);
+    }
 
-        var listingPrices = new Dictionary<string, int>(StringComparer.Ordinal);
-        foreach (var l in store.Listings)
-        {
-            if (l.Mode != StoreMode.Sell)
-                continue;
-            if (TryPickCurrencyForSell(store, l, out _, out var price))
-                listingPrices[l.Id] = price;
-            else
-                listingPrices[l.Id] = 0;
-        }
+    private int CompareMassSellProtoIds(string left, string right)
+    {
+        var depth = GetInheritanceDepth(right).CompareTo(GetInheritanceDepth(left));
+        if (depth != 0)
+            return depth;
 
-        _sellListingsScratch.Clear();
-        foreach (var l in store.Listings)
+        return OrdinalIds.Compare(left, right);
+    }
+
+    private Dictionary<string, (string CurrencyId, int UnitPrice)> BuildMassSellListingQuotes(NcStoreComponent store)
+    {
+        var listingQuotes = new Dictionary<string, (string CurrencyId, int UnitPrice)>(StringComparer.Ordinal);
+
+        foreach (var listing in store.Listings)
         {
-            if (l.Mode != StoreMode.Sell || string.IsNullOrEmpty(l.ProductEntity) || l.RemainingCount == 0)
+            if (listing.Mode != StoreMode.Sell)
                 continue;
 
-            if (!listingPrices.TryGetValue(l.Id, out var price) || price <= 0)
-                continue;
-
-            _sellListingsScratch.Add(l);
-        }
-
-        _sellListingsScratch.Sort((left, right) =>
-        {
-            var leftPrice = listingPrices[left.Id];
-            var rightPrice = listingPrices[right.Id];
-
-            var priceCmp = rightPrice.CompareTo(leftPrice);
-            if (priceCmp != 0)
-                return priceCmp;
-
-            var depthCmp = GetInheritanceDepth(right.ProductEntity).CompareTo(GetInheritanceDepth(left.ProductEntity));
-            if (depthCmp != 0)
-                return depthCmp;
-
-            var productCmp = OrdinalIds.Compare(left.ProductEntity, right.ProductEntity);
-            if (productCmp != 0)
-                return productCmp;
-
-            return OrdinalIds.Compare(left.Id, right.Id);
-        });
-
-        if (_sellListingsScratch.Count == 0)
-            return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
-
-        var descendantExpected = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var l in _sellListingsScratch)
-        {
-            if (_inventory.ResolveMatchMode(l.ProductEntity, l.MatchMode) == PrototypeMatchMode.Descendants)
-                descendantExpected.Add(l.ProductEntity);
-        }
-
-        Dictionary<string, List<string>>? matchesByExpected = null;
-        if (descendantExpected.Count > 0 && _protoIdsScratch.Count > 0)
-        {
-            matchesByExpected = new Dictionary<string, List<string>>(StringComparer.Ordinal);
-
-            for (var i = 0; i < _protoIdsScratch.Count; i++)
+            if (TryPickCurrencyForSell(store, listing, out var currencyId, out var unitPrice) &&
+                unitPrice > 0 &&
+                !string.IsNullOrWhiteSpace(currencyId))
             {
-                var protoId = _protoIdsScratch[i];
-                if (!protoCache.TryGetValue(protoId, out var proto) && !_protos.TryIndex(protoId, out proto))
-                    continue;
-                protoCache[protoId] = proto;
-
-                foreach (var anc in _inventory.GetProtoAndAncestors(proto))
-                {
-                    if (!descendantExpected.Contains(anc))
-                        continue;
-
-                    if (!matchesByExpected.TryGetValue(anc, out var list))
-                    {
-                        list = new List<string>();
-                        matchesByExpected[anc] = list;
-                    }
-
-                    list.Add(protoId);
-                }
+                listingQuotes[listing.Id] = (currencyId, unitPrice);
+            }
+            else
+            {
+                listingQuotes[listing.Id] = (string.Empty, 0);
             }
         }
 
-        var stackName = _compFactory.GetComponentName(typeof(StackComponent));
+        return listingQuotes;
+    }
+
+    private void PrepareMassSellListings(
+        NcStoreComponent store,
+        Dictionary<string, (string CurrencyId, int UnitPrice)> listingQuotes)
+    {
+        _sellListingsScratch.Clear();
+
+        foreach (var listing in store.Listings)
+        {
+            if (listing.Mode != StoreMode.Sell || string.IsNullOrEmpty(listing.ProductEntity) || listing.RemainingCount == 0)
+                continue;
+
+            if (!listingQuotes.TryGetValue(listing.Id, out var quote) || quote.UnitPrice <= 0)
+                continue;
+
+            _sellListingsScratch.Add(listing);
+        }
+
+        _sellListingsScratch.Sort((left, right) => CompareMassSellListings(left, right, listingQuotes));
+    }
+
+    private int CompareMassSellListings(
+        NcStoreListingDef left,
+        NcStoreListingDef right,
+        Dictionary<string, (string CurrencyId, int UnitPrice)> listingQuotes)
+    {
+        var leftPrice = listingQuotes[left.Id].UnitPrice;
+        var rightPrice = listingQuotes[right.Id].UnitPrice;
+
+        var priceCmp = rightPrice.CompareTo(leftPrice);
+        if (priceCmp != 0)
+            return priceCmp;
+
+        var depthCmp = GetInheritanceDepth(right.ProductEntity).CompareTo(GetInheritanceDepth(left.ProductEntity));
+        if (depthCmp != 0)
+            return depthCmp;
+
+        var productCmp = OrdinalIds.Compare(left.ProductEntity, right.ProductEntity);
+        if (productCmp != 0)
+            return productCmp;
+
+        return OrdinalIds.Compare(left.Id, right.Id);
+    }
+
+    private Dictionary<string, List<string>>? BuildMassSellDescendantMatches(
+        Dictionary<string, EntityPrototype> protoCache)
+    {
+        var descendantExpected = CollectMassSellDescendantExpected();
+        if (descendantExpected.Count == 0 || _protoIdsScratch.Count == 0)
+            return null;
+
+        var matchesByExpected = new Dictionary<string, List<string>>(StringComparer.Ordinal);
+
+        for (var i = 0; i < _protoIdsScratch.Count; i++)
+        {
+            var protoId = _protoIdsScratch[i];
+            if (!TryResolveMassSellPrototype(protoId, protoCache, out var proto))
+                continue;
+
+            foreach (var ancestor in _inventory.GetProtoAndAncestors(proto))
+            {
+                if (!descendantExpected.Contains(ancestor))
+                    continue;
+
+                AddMassSellDescendantMatch(matchesByExpected, ancestor, protoId);
+            }
+        }
+
+        return matchesByExpected;
+    }
+
+    private HashSet<string> CollectMassSellDescendantExpected()
+    {
+        var descendantExpected = new HashSet<string>(StringComparer.Ordinal);
 
         foreach (var listing in _sellListingsScratch)
         {
-            if (!TryPickCurrencyForSell(store, listing, out var currencyId, out var unitPrice))
-                continue;
-            if (unitPrice <= 0 || string.IsNullOrWhiteSpace(currencyId))
-                continue;
+            if (_inventory.ResolveMatchMode(listing.ProductEntity, listing.MatchMode) == PrototypeMatchMode.Descendants)
+                descendantExpected.Add(listing.ProductEntity);
+        }
 
-            var remaining = listing.RemainingCount;
-            if (remaining < -1)
-                remaining = -1;
-            var maxByRemaining = remaining >= 0 ? remaining : int.MaxValue;
-            if (maxByRemaining <= 0)
-                continue;
-            var maxTakeByInt = int.MaxValue / unitPrice;
-            if (maxTakeByInt <= 0)
-                continue;
-            var want = Math.Min(maxByRemaining, maxTakeByInt);
+        return descendantExpected;
+    }
 
-            string? expectedStackType = null;
-            if (_protos.TryIndex<EntityPrototype>(listing.ProductEntity, out var prodProto) &&
-                prodProto.TryGetComponent(stackName, out StackComponent? prodStackDef))
-                expectedStackType = prodStackDef.StackTypeId;
+    private bool TryResolveMassSellPrototype(
+        string protoId,
+        Dictionary<string, EntityPrototype> protoCache,
+        out EntityPrototype proto)
+    {
+        if (protoCache.TryGetValue(protoId, out proto!))
+            return true;
 
-            var taken = 0;
-            var effectiveMatch = _inventory.ResolveMatchMode(listing.ProductEntity, listing.MatchMode);
+        if (!_protos.TryIndex<EntityPrototype>(protoId, out proto!))
+            return false;
 
-            if (!string.IsNullOrEmpty(expectedStackType))
+        protoCache[protoId] = proto;
+        return true;
+    }
+
+    private static void AddMassSellDescendantMatch(
+        Dictionary<string, List<string>> matchesByExpected,
+        string expectedProtoId,
+        string actualProtoId)
+    {
+        if (!matchesByExpected.TryGetValue(expectedProtoId, out var matches))
+        {
+            matches = new List<string>();
+            matchesByExpected[expectedProtoId] = matches;
+        }
+
+        matches.Add(actualProtoId);
+    }
+
+    private void ApplyMassSellListings(
+        MassSellInventoryState inventory,
+        Dictionary<string, (string CurrencyId, int UnitPrice)> listingQuotes,
+        Dictionary<string, List<string>>? matchesByExpected,
+        MassSellPlan plan)
+    {
+        var stackComponentName = _compFactory.GetComponentName(typeof(StackComponent));
+
+        foreach (var listing in _sellListingsScratch)
+        {
+            if (!listingQuotes.TryGetValue(listing.Id, out var quote) ||
+                quote.UnitPrice <= 0 ||
+                string.IsNullOrWhiteSpace(quote.CurrencyId))
             {
-                if (!stackTypeCounts.TryGetValue(expectedStackType, out var available) || available <= 0)
-                    continue;
-                taken = Math.Min(available, want);
-                stackTypeCounts[expectedStackType] = available - taken;
-            }
-            else
-            {
-                if (_protoIdsScratch.Count == 0)
-                    continue;
-                if (effectiveMatch != PrototypeMatchMode.Descendants)
-                {
-                    if (!protoCounts.TryGetValue(listing.ProductEntity, out var available) || available <= 0)
-                        continue;
-                    taken = Math.Min(available, want);
-                    protoCounts[listing.ProductEntity] = available - taken;
-                }
-                else
-                {
-                    if (matchesByExpected == null ||
-                        !matchesByExpected.TryGetValue(listing.ProductEntity, out var matchingProtoIds) ||
-                        matchingProtoIds.Count == 0)
-                        continue;
-
-                    for (var i = 0; i < matchingProtoIds.Count; i++)
-                    {
-                        if (taken >= want)
-                            break;
-
-                        var protoId = matchingProtoIds[i];
-                        var isStackProto = stackProtoToType.TryGetValue(protoId, out var stType) &&
-                            !string.IsNullOrWhiteSpace(stType);
-
-                        int available;
-                        if (isStackProto)
-                        {
-                            if (!stackTypeCounts.TryGetValue(stType!, out available) || available <= 0)
-                                continue;
-                        }
-                        else
-                        {
-                            if (!protoCounts.TryGetValue(protoId, out available) || available <= 0)
-                                continue;
-                        }
-
-                        var take = Math.Min(available, want - taken);
-                        if (take <= 0)
-                            continue;
-
-                        if (isStackProto)
-                            stackTypeCounts[stType!] = available - take;
-                        else
-                            protoCounts[protoId] = available - take;
-
-                        taken += take;
-                    }
-                }
+                continue;
             }
 
+            var taken = ComputeMassSellListingTake(
+                listing,
+                quote.UnitPrice,
+                stackComponentName,
+                inventory,
+                matchesByExpected);
             if (taken <= 0)
                 continue;
 
-            var total = (long) unitPrice * taken;
-            SafeAddIncome(incomeByCurrency, currencyId, total);
-            unitsByListingId[listing.Id] = taken;
-            priceByListingId[listing.Id] = (currencyId, unitPrice);
-            steps.Add(new(listing, currencyId, unitPrice, taken));
+            RecordMassSellStep(plan, listing, quote, taken);
+        }
+    }
+
+    private int ComputeMassSellListingTake(
+        NcStoreListingDef listing,
+        int unitPrice,
+        string stackComponentName,
+        MassSellInventoryState inventory,
+        Dictionary<string, List<string>>? matchesByExpected)
+    {
+        if (!TryComputeMassSellWantedUnits(listing.RemainingCount, unitPrice, out var want))
+            return 0;
+
+        var expectedStackType = TryGetMassSellExpectedStackType(listing.ProductEntity, stackComponentName);
+        if (!string.IsNullOrEmpty(expectedStackType))
+            return ReserveMassSellStackUnits(expectedStackType, want, inventory.StackTypeCounts);
+
+        if (_protoIdsScratch.Count == 0)
+            return 0;
+
+        var effectiveMatch = _inventory.ResolveMatchMode(listing.ProductEntity, listing.MatchMode);
+        return effectiveMatch != PrototypeMatchMode.Descendants
+            ? ReserveMassSellProtoUnits(listing.ProductEntity, want, inventory.ProtoCounts)
+            : ReserveMassSellDescendantUnits(listing.ProductEntity, want, inventory, matchesByExpected);
+    }
+
+    private static bool TryComputeMassSellWantedUnits(int remainingCount, int unitPrice, out int want)
+    {
+        var remaining = remainingCount < -1 ? -1 : remainingCount;
+        var maxByRemaining = remaining >= 0 ? remaining : int.MaxValue;
+        var maxTakeByInt = unitPrice > 0 ? int.MaxValue / unitPrice : 0;
+        want = maxByRemaining > 0 && maxTakeByInt > 0
+            ? Math.Min(maxByRemaining, maxTakeByInt)
+            : 0;
+        return want > 0;
+    }
+
+    private string? TryGetMassSellExpectedStackType(string productEntity, string stackComponentName)
+    {
+        if (_protos.TryIndex<EntityPrototype>(productEntity, out var productProto) &&
+            productProto.TryGetComponent(stackComponentName, out StackComponent? productStack))
+        {
+            return productStack.StackTypeId;
         }
 
-        return new(incomeByCurrency, unitsByListingId, priceByListingId, steps);
+        return null;
+    }
+
+    private static int ReserveMassSellStackUnits(
+        string stackTypeId,
+        int want,
+        Dictionary<string, int> stackTypeCounts)
+    {
+        return ReserveMassSellUnits(stackTypeCounts, stackTypeId, want);
+    }
+
+    private static int ReserveMassSellProtoUnits(
+        string protoId,
+        int want,
+        Dictionary<string, int> protoCounts)
+    {
+        return ReserveMassSellUnits(protoCounts, protoId, want);
+    }
+
+    private int ReserveMassSellDescendantUnits(
+        string expectedProtoId,
+        int want,
+        MassSellInventoryState inventory,
+        Dictionary<string, List<string>>? matchesByExpected)
+    {
+        if (matchesByExpected == null ||
+            !matchesByExpected.TryGetValue(expectedProtoId, out var matchingProtoIds) ||
+            matchingProtoIds.Count == 0)
+        {
+            return 0;
+        }
+
+        var taken = 0;
+
+        for (var i = 0; i < matchingProtoIds.Count && taken < want; i++)
+        {
+            var protoId = matchingProtoIds[i];
+            var isStackProto = inventory.StackProtoToType.TryGetValue(protoId, out var stackTypeId) &&
+                !string.IsNullOrWhiteSpace(stackTypeId);
+
+            var reserved = isStackProto
+                ? ReserveMassSellStackUnits(stackTypeId!, want - taken, inventory.StackTypeCounts)
+                : ReserveMassSellProtoUnits(protoId, want - taken, inventory.ProtoCounts);
+
+            taken += reserved;
+        }
+
+        return taken;
+    }
+
+    private static int ReserveMassSellUnits(
+        Dictionary<string, int> counts,
+        string key,
+        int want)
+    {
+        if (want <= 0 || !counts.TryGetValue(key, out var available) || available <= 0)
+            return 0;
+
+        var taken = Math.Min(available, want);
+        counts[key] = available - taken;
+        return taken;
+    }
+
+    private static void RecordMassSellStep(
+        MassSellPlan plan,
+        NcStoreListingDef listing,
+        (string CurrencyId, int UnitPrice) quote,
+        int taken)
+    {
+        var total = (long) quote.UnitPrice * taken;
+        SafeAddIncome(plan.IncomeByCurrency, quote.CurrencyId, total);
+        plan.UnitsByListingId[listing.Id] = taken;
+        plan.PriceByListingId[listing.Id] = quote;
+        plan.Steps.Add(new(listing, quote.CurrencyId, quote.UnitPrice, taken));
     }
 
     private int GetInheritanceDepth(string protoId)
