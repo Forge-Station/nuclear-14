@@ -21,3 +21,13 @@ N14DoorWoodSecureLockedCaravanLeader: null
 N14ToolboxFilled1 : N14ToolboxFilled
 N14ToolboxFilled2 : N14ToolboxFilledLoot
 N14ClothingBeltMilitaryFilled : N14ClothingBeltAssaultFilled
+
+N14ClothingOuterNCRVestDesert : N14ClothingOuterNCRVest
+N14ClothingOuterNCRPouchedVestWoods : null
+N14ClothingOuterNCRPouchedVestSnow : null
+N14ClothingOuterNCRPouchedVestDesert : null
+N14ClothingOuterNCRLightPouchedVest : null
+N14ClothingOuterNCRVestpaddedWebDesert : null
+N14ClothingOuterNCRVeteranArmorDesert : null
+
+N14ClothingOuterNCRVestDesertBlueprint : N14ClothingOuterNCRVestBlueprint

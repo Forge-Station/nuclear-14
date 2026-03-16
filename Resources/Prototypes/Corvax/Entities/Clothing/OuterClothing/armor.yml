@@ -285,8 +285,8 @@
     damageCoefficient: 0.8
 
 - type: entity
-  parent: N14ClothingOuterNCRVestDesert
-  id: N14ClothingOuterNCRVestpaddedWebDesert
+  parent: N14ClothingOuterNCRVest # _Nuclear14\Entities\Clothing\OuterClothing\falloutarmor.yml
+  id: N14ClothingOuterNCRVestpaddedWeb
   components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRpaddedwebvest.rsi
@@ -301,21 +301,10 @@
         Heat: 0.775
   - type: ExplosionResistance
     damageCoefficient: 0.9
-  - type: Storage
-    grid:
-    - 0,0,2,1
-  - type: ContainerContainer
-    containers:
-      storagebase: !type:Container
-        ents: []
-  - type: UserInterface
-    interfaces:
-      enum.StorageUiKey.Key:
-        type: StorageBoundUserInterface
 
 - type: entity
-  parent: N14ClothingOuterNCRVestDesert
-  id: N14ClothingOuterNCRVeteranArmorDesert
+  parent: N14ClothingOuterNCRVest # _Nuclear14\Entities\Clothing\OuterClothing\falloutarmor.yml
+  id: N14ClothingOuterNCRVeteranArmor
   components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRveteranarmor.rsi

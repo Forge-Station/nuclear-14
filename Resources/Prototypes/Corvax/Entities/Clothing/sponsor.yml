@@ -251,7 +251,7 @@
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutcombatveterankiltNCR.rsi
 
 - type: entity
-  parent: N14ClothingOuterNCRVestpaddedWebDesert
+  parent: N14ClothingOuterNCRVestpaddedWeb
   id: N14ClothingOuterNCRVestpaddedWebKiltDesert
   categories: [ HideSpawnMenu ]
   components: 
@@ -261,7 +261,7 @@
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRpaddedwebvestkilt.rsi
 
 - type: entity
-  parent: N14ClothingOuterNCRVeteranArmorDesert
+  parent: N14ClothingOuterNCRVeteranArmor
   id: N14ClothingOuterNCRVeteranArmorKiltDesert
   categories: [ HideSpawnMenu ]
   components: 
@@ -271,7 +271,7 @@
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRveteranarmorkilt.rsi
 
 - type: entity
-  parent: N14ClothingOuterNCRVestDesert
+  parent: N14ClothingOuterNCRVest
   id: N14ClothingOuterNCRVestDesertCoat
   categories: [ HideSpawnMenu ]
   components: 

@@ -29,7 +29,7 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterNCRVestDesert # Forge-Change
+      - id: N14ClothingOuterNCRVest # Forge-Change
       - id: ClothingBeltNCRPouches
       - id: N14WeaponRifle556Service
       - id: Magazine556Rifle
@@ -57,7 +57,7 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterNCRVestDesert # Forge-Change
+      - id: N14ClothingOuterNCRVest # Forge-Change
       - id: ClothingBeltNCRPouches
       - id: N14WeaponRifle556Butchered
       - id: Magazine556Rifle
@@ -85,7 +85,7 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterNCRVestDesert # Forge-Change
+      - id: N14ClothingOuterNCRVest # Forge-Change
       - id: ClothingBeltNCRBandolier
       - id: N14WeaponSniper44LeverCarbine
       - id: MagazineBox44
