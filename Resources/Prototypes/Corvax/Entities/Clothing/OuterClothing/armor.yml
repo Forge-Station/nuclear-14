@@ -322,7 +322,7 @@
 
 - type: entity
   parent: N14ClothingOuterNCRCombatArmor
-  id: N14ClothingOuterNCRCombatVeteranArmorDesert
+  id: N14ClothingOuterNCRCombatVeteranArmor
   components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutcombatveteranNCR.rsi
