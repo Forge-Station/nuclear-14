@@ -324,14 +324,14 @@
 
 - type: entity
   parent: N14ClothingHeadHatBaseHelmetMetal
-  id: N14ClothingHeadHatNCRHelmetMetalDesert
-  name: NCR desert metal helmet
+  id: N14ClothingHeadHatNCRHelmet
+  name: NCR helmet # Forge-Change
   description: A rounded NCR helmet offering some protection. This one is covered on classic desert camo.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Clothing/Head/FalloutHelmets/ncrhelmet3.rsi
+    sprite: _Nuclear14/Clothing/Head/FalloutHelmets/falloutNCRhelmetBase.rsi # Forge-Change
   - type: Clothing
-    sprite: _Nuclear14/Clothing/Head/FalloutHelmets/ncrhelmet3.rsi
+    sprite: _Nuclear14/Clothing/Head/FalloutHelmets/falloutNCRhelmetBase.rsi # Forge-Change
 
 - type: entity
   parent: N14ClothingHeadHatBaseHelmetMetal

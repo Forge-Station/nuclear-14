@@ -31,7 +31,7 @@
 - type: startingGear
   id: NCREngineerGear
   equipment:
-    head: N14ClothingHeadHatNCRHelmetMetalDesert # Corvax-Change
+    head: N14ClothingHeadHatNCRHelmet # Corvax-Change
     back: N14ClothingBackpackNCR # Corvax-Change
     jumpsuit: N14ClothingUniformNCR # Corvax-Change
     outerClothing: N14ClothingOuterNCRVest # Forge-Change
