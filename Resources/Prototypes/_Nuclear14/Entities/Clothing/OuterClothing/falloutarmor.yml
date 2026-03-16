@@ -727,7 +727,6 @@
 
 #MARK: NCR
 
-#Forge-Change-Start
 - type: entity
   parent: N14FalloutArmorBase
   id: N14ClothingOuterNCRVest # Forge-Change
@@ -735,9 +734,9 @@
   description: A light ballistic plate inside a leather vest, cheap and easy to mass produce, perfect armor for light infantry. This one is covered in classic desert camo.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutNCRvestBase.rsi # Forge-Change
+    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutNCRvest.rsi # Forge-Change
   - type: Clothing
-    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutNCRvestBase.rsi # Forge-Change
+    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutNCRvest.rsi # Forge-Change
   - type: Armor
     modifiers:
       coefficients:
@@ -783,7 +782,6 @@
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutNCRvestWoods.rsi # Forge-Change
   - type: Clothing
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutNCRvestWoods.rsi # Forge-Change
-#Forge-Change-End
 
 - type: entity
   parent: N14FalloutArmorBase
@@ -956,6 +954,17 @@
   - type: Clothing
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatNCR.rsi
 
+# Forge-Add-Start
+- type: entity
+  parent: N14ClothingOuterNCRCombatArmor
+  id: N14ClothingOuterNCRCombatArmorSnow
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatNCRsnow.rsi
+  - type: Clothing
+    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatNCRsnow.rsi
+# Forge-Add-End
+
 - type: entity
   parent: N14ClothingOuterCombatArmorMK2
   id: N14ClothingOuterNCRCombatArmorMK2
@@ -966,6 +975,17 @@
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatNCRmk2.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatNCRmk2.rsi
+
+# Forge-Add-Start
+- type: entity
+  parent: N14ClothingOuterNCRCombatArmorMK2
+  id: N14ClothingOuterNCRCombatArmorMK2Snow
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatNCRmk2Snow.rsi
+  - type: Clothing
+    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatNCRmk2Snow.rsi
+# Forge-Add-End
 
 - type: entity
   parent: ClothingOuterBase
