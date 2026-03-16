@@ -47,7 +47,7 @@ ent-N14ClothingOuterNCRVeteranArmor = кожаный жилет ветерана
     .desc = Кожанный жилет, используемый ветеранами армии НКР, что уже достаточно времени провели в суровой пустоши. На ней видны следы ручных модификаций, показывающих - что она пережила на одну перестрелку.
 ent-N14ClothingOuterNCRVeteranArmorKiltDesert = кожаный жилет ветерана НКР с кителем
     .desc = { ent-N14ClothingOuterNCRVeteranArmor.desc }
-ent-N14ClothingOuterNCRCombatVeteranArmorDesert = боевая броня ветерана НКР
+ent-N14ClothingOuterNCRCombatVeteranArmor = боевая броня ветерана НКР
     .desc = Старая довоенная боевая броня, перекрашенная в цвета Новой Калифорнийской Республики. Этот комплект прослужил не один год, и имеет дополнительные защитные вставки, которые правда не очень защищают от пуль.
 ent-N14ClothingOuterBOSInquisitorBattleArmor = боевая броня инквизитора СЗБС
     .desc = Усиленная броня чёрного цвета с гербами Братства Стали, созданная для защиты инквизиторов в ближнем бою и при штурмах.
@@ -62,4 +62,4 @@ ent-N14ClothingOuterRangerRedwood = комплект патрульной бро
 
 #Спонсорские вещи
 ent-N14ClothingOuterNCRCombatVeteranKiltArmorDesert = боевая броня ветерана нкр с кителем
-    .desc = { ent-N14ClothingOuterNCRCombatVeteranArmorDesert.desc }
+    .desc = { ent-N14ClothingOuterNCRCombatVeteranArmor.desc }
