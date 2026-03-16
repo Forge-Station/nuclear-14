@@ -41,11 +41,11 @@ ent-N14ClothingOuterNCRVestDesertCoat = кожаный жилет НКР с ки
     .desc = Кожанный жилет, надетый поверх кителя, идеален для прохладных условий пустоши.
 ent-N14ClothingOuterNCRVestpaddedWeb = укреплённый жилет НКР
     .desc = Лёгкая баллистическая броня, интегрированная в кожаный жилет, является экономически выгодным и простым в производстве решением для оснащения лёгкой пехоты. Броня выполнена в классическом пустынном камуфляже. Эта версия оборудована дополнительными наплечниками.
-ent-N14ClothingOuterNCRVestpaddedWebKiltDesert = укреплённый жилет НКР с кителем
+ent-N14ClothingOuterNCRVestpaddedWebKilt = укреплённый жилет НКР с кителем
     .desc = { ent-N14ClothingOuterNCRVestpaddedWeb.desc }
 ent-N14ClothingOuterNCRVeteranArmor = кожаный жилет ветерана НКР
     .desc = Кожанный жилет, используемый ветеранами армии НКР, что уже достаточно времени провели в суровой пустоши. На ней видны следы ручных модификаций, показывающих - что она пережила на одну перестрелку.
-ent-N14ClothingOuterNCRVeteranArmorKiltDesert = кожаный жилет ветерана НКР с кителем
+ent-N14ClothingOuterNCRVeteranArmorKilt = кожаный жилет ветерана НКР с кителем
     .desc = { ent-N14ClothingOuterNCRVeteranArmor.desc }
 ent-N14ClothingOuterNCRCombatVeteranArmor = боевая броня ветерана НКР
     .desc = Старая довоенная боевая броня, перекрашенная в цвета Новой Калифорнийской Республики. Этот комплект прослужил не один год, и имеет дополнительные защитные вставки, которые правда не очень защищают от пуль.
@@ -61,5 +61,5 @@ ent-N14ClothingOuterRangerRedwood = комплект патрульной бро
     .desc = модифицированная версия патрульной боевой брони, поверх которой надета тёмно-коричневая кожаная куртка. Используется рейндерами НКР, патрулирующими густые районы и горные перевалы Калифорнии. Комплект обеспечивает хорошую защиту, при этом не ограничивая движения.
 
 #Спонсорские вещи
-ent-N14ClothingOuterNCRCombatVeteranKiltArmorDesert = боевая броня ветерана нкр с кителем
+ent-N14ClothingOuterNCRCombatVeteranKiltArmor = боевая броня ветерана нкр с кителем
     .desc = { ent-N14ClothingOuterNCRCombatVeteranArmor.desc }

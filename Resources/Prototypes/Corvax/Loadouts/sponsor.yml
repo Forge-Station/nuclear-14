@@ -166,7 +166,7 @@
   - N14ClothingOuterNCRVestDesertCoat
 
 - type: loadout
-  id: LoadoutClothingOuterNCRVestpaddedWebKiltDesert
+  id: LoadoutClothingOuterNCRVestpaddedWebKilt
   customName: false
   customDescription: false
   category: Outer
@@ -184,10 +184,10 @@
     tracker: NCRSoldier
     min: 36000 # 10 hours veterancy unlock
   items:
-  - N14ClothingOuterNCRVestpaddedWebKiltDesert
+  - N14ClothingOuterNCRVestpaddedWebKilt
 
 - type: loadout
-  id: LoadoutClothingOuterNCRVeteranArmorKiltDesert
+  id: LoadoutClothingOuterNCRVeteranArmorKilt
   customName: false
   customDescription: false
   category: Outer
@@ -205,10 +205,10 @@
     tracker: NCRSoldier
     min: 72000 # 20 hours veterancy unlock
   items:
-  - N14ClothingOuterNCRVeteranArmorKiltDesert
+  - N14ClothingOuterNCRVeteranArmorKilt
 
 - type: loadout
-  id: LoadoutClothingOuterNCRCombatVeteranKiltArmorDesert
+  id: LoadoutClothingOuterNCRCombatVeteranKiltArmor
   customName: false
   customDescription: false
   category: Outer
@@ -223,7 +223,7 @@
     tracker: NCRNCO
     min: 72000 # 20 hours veterancy unlock
   items:
-  - N14ClothingOuterNCRCombatVeteranKiltArmorDesert
+  - N14ClothingOuterNCRCombatVeteranKiltArmor
 
 - type: loadout
   id: LoadoutClothingOuterJacketCowboyOld

@@ -241,8 +241,8 @@
       - HeadSide
 
 - type: entity
-  parent: N14ClothingOuterNCRCombatVeteranArmorDesert
-  id: N14ClothingOuterNCRCombatVeteranKiltArmorDesert
+  parent: N14ClothingOuterNCRCombatVeteranArmor
+  id: N14ClothingOuterNCRCombatVeteranKiltArmor
   categories: [ HideSpawnMenu ]
   components: 
   - type: Sprite
@@ -252,7 +252,7 @@
 
 - type: entity
   parent: N14ClothingOuterNCRVestpaddedWeb
-  id: N14ClothingOuterNCRVestpaddedWebKiltDesert
+  id: N14ClothingOuterNCRVestpaddedWebKilt
   categories: [ HideSpawnMenu ]
   components: 
   - type: Sprite
@@ -262,7 +262,7 @@
 
 - type: entity
   parent: N14ClothingOuterNCRVeteranArmor
-  id: N14ClothingOuterNCRVeteranArmorKiltDesert
+  id: N14ClothingOuterNCRVeteranArmorKilt
   categories: [ HideSpawnMenu ]
   components: 
   - type: Sprite
