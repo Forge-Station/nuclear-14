@@ -32,11 +32,11 @@
   equipment:
     head: N14ClothingHeadHatNCRSidecap
     back: N14ClothingBackpackNCR # Corvax-Change
-    jumpsuit: N14ClothingUniformNCRDesert # Corvax-Change
+    jumpsuit: N14ClothingUniformNCR # Corvax-Change
     shoes: N14ClothingBootsLeatherFilled
     pocket1: NCRcadetloadoutkits
     id: N14IDNCRDogtag
-  innerClothingSkirt: N14ClothingUniformNCRDesert # Corvax-Change
+  innerClothingSkirt: N14ClothingUniformNCR # Corvax-Change
   satchel: N14ClothingBackpackSatchelNCRFilled
   storage: # Corvax-Change
     back:

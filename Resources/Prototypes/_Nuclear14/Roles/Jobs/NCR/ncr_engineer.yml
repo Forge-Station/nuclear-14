@@ -33,13 +33,13 @@
   equipment:
     head: N14ClothingHeadHatNCRHelmetMetalDesert # Corvax-Change
     back: N14ClothingBackpackNCR # Corvax-Change
-    jumpsuit: N14ClothingUniformNCRDesert # Corvax-Change
+    jumpsuit: N14ClothingUniformNCR # Corvax-Change
     outerClothing: N14ClothingOuterNCRVest # Forge-Change
     shoes: N14ClothingBootsLeatherFilled
     gloves: N14ClothingHandsGlovesCombat
     id: N14IDNCRDogtagEngineer
     pocket1: NCRengineerloadoutkits
-  innerClothingSkirt: N14ClothingUniformNCRDesert # Corvax-Change
+  innerClothingSkirt: N14ClothingUniformNCR # Corvax-Change
   satchel: N14ClothingBackpackSatchelNCRFilled
   storage: # Corvax-Change
     back:

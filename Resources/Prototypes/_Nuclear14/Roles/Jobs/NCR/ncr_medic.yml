@@ -33,13 +33,13 @@
 - type: startingGear
   id: NCRMedicGear
   equipment:
-    jumpsuit: N14ClothingUniformNCRDesert # Corvax-Change
+    jumpsuit: N14ClothingUniformNCR # Corvax-Change
     outerClothing: N14ClothingOuterNCRVest # Forge-Change
     back: N14ClothingBackpackNCR # Corvax-Change
     shoes: N14ClothingBootsLeatherFilled
     id: N14IDNCRDogtagDoctor
     pocket2: NCRmedicloadoutkits
-  innerClothingSkirt: N14ClothingUniformNCRDesert # Corvax-Change
+  innerClothingSkirt: N14ClothingUniformNCR # Corvax-Change
   satchel: N14ClothingBackpackSatchelNCRFilled
   storage: # Corvax-Change
     back:
