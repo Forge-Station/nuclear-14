@@ -1,93 +1,4 @@
 # Forge-Change
-- type: entity
-  id: OrganSupermutantHeart
-  parent: OrganHumanHeart
-  name: Supermutant heart
-  components:
-  - type: Metabolizer
-    metabolizerTypes: [ Human ]
-
-- type: entity
-  id: OrganSupermutantLiver
-  parent: OrganHumanLiver
-  name: Supermutant liver
-  components:
-  - type: Metabolizer
-    metabolizerTypes: [ Human ]
-
-- type: entity
-  id: OrganSupermutantStomach
-  parent: OrganHumanStomach
-  name: Supermutant stomach
-  components:
-  - type: Sprite
-    state: stomach
-  - type: Organ
-  - type: SolutionContainerManager
-    solutions:
-      stomach:
-        maxVol: 100
-      food:
-        maxVol: 5
-        reagents:
-        - ReagentId: UncookedAnimalProteins
-          Quantity: 5
-  - type: Stomach
-  - type: Metabolizer
-    # mm very yummy
-    maxReagents: 5
-    metabolizerTypes: [ Human ]
-
-- type: body
-  id: Supermutant
-  name: "Supermutant"
-  root: torso
-  slots:
-    head:
-      part: HeadSupermutant
-      connections:
-      - torso
-      organs:
-        brain: OrganHumanBrain
-        eyes: OrganHumanEyes
-    torso:
-      part: TorsoSupermutant
-      connections:
-      - right arm
-      - left arm
-      - right leg
-      - left leg
-      organs:
-        heart: OrganSupermutantHeart
-        lungs: OrganHumanLungs
-        stomach: OrganHumanStomach
-        liver: OrganSupermutantLiver
-        kidneys: OrganHumanKidneys
-    right arm:
-      part: RightArmSupermutant
-      connections:
-      - right hand
-    left arm:
-      part: LeftArmSupermutant
-      connections:
-      - left hand
-    right hand:
-      part: RightHandSupermutant
-    left hand:
-      part: LeftHandSupermutant
-    right leg:
-      part: RightLegSupermutant
-      connections:
-      - right foot
-    left leg:
-      part: LeftLegSupermutant
-      connections:
-      - left foot
-    right foot:
-      part: RightFootSupermutant
-    left foot:
-      part: LeftFootSupermutant
-
 - type: metabolizerType
   id: supermutant
   name: metabolizer-type-supermutant
@@ -272,8 +183,6 @@
     whitelistState: humanoid
   - type: Stamina
     critThreshold: 200
-
-
 
   - type: Bloodstream
     bloodlossDamage:
@@ -463,16 +372,6 @@
   baseSprite:
     sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
     state: r_foot
-
-- type: entity
-  save: false
-  name: Urist Supermutant
-  parent: BaseMobSupermutant
-  id: MobSupermutant
-  components:
-    - type: NpcFactionMember
-      factions:
-      - Wastelander
 
 - type: emoteSounds
   id: MaleSupermutant

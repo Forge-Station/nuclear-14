@@ -17,3 +17,9 @@
   id: FullRadiationProtection
   coefficients:
     Radiation: 0.0
+
+- type: damageModifierSet
+  id: SupermutantPartDamage
+  coefficients:
+    Slash: 0.5
+    Cold: 0.5

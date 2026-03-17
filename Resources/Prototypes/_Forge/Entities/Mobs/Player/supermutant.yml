@@ -1,0 +1,10 @@
+# Forge-Change
+- type: entity
+  save: false
+  name: Urist Supermutant
+  parent: BaseMobSupermutant
+  id: MobSupermutant
+  components:
+    - type: NpcFactionMember
+      factions:
+      - Wastelander

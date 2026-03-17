@@ -16,7 +16,7 @@
 - type: entity
   parent: [N14FalloutMutantArmorBase, N14ClothingOuterBase]
   id: N14ClothingMutantwild
-  name: броня супермутанта
+  name: Supermutant armor wild
   description: Наспех сделан из грубой кожи и метлолома.
   components:
   - type: Sprite
@@ -43,7 +43,7 @@
 - type: entity
   parent: [N14FalloutMutantArmorBase, N14ClothingOuterBase]
   id: N14ClothingMutantmetal
-  name: металлическая броня супермутанта.
+  name: Supermutant armor metal
   description: Массивная броня, сварен из нескольких полированных стальных пластин.
   components:
   - type: Sprite
@@ -70,7 +70,7 @@
 - type: entity
   parent: [N14FalloutMutantArmorBase, N14ClothingOuterBase]
   id: N14ClothingOuterMutantmaster
-  name: броня мутанта мастера.
+  name: Supermutant armor master
   description: Куча газовых труб и пластин, мастерски свареных и нанизанных на кожаное основание.
   components:
   - type: Sprite

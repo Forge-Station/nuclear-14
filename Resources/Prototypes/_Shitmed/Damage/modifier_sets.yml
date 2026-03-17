@@ -13,10 +13,3 @@
   coefficients:
     Decay: 1.0
     Trauma: 1.0
-# Forge-Change-start
-- type: damageModifierSet
-  id: SupermutantPartDamage
-  coefficients:
-    Slash: 0.5
-    Cold: 0.5
-# Forge-Change-end

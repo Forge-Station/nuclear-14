@@ -1,0 +1,39 @@
+# Forge-Change
+- type: entity
+  id: OrganSupermutantHeart
+  parent: OrganHumanHeart
+  name: Supermutant heart
+  components:
+  - type: Metabolizer
+    metabolizerTypes: [ Human ]
+
+- type: entity
+  id: OrganSupermutantLiver
+  parent: OrganHumanLiver
+  name: Supermutant liver
+  components:
+  - type: Metabolizer
+    metabolizerTypes: [ Human ]
+
+- type: entity
+  id: OrganSupermutantStomach
+  parent: OrganHumanStomach
+  name: Supermutant stomach
+  components:
+  - type: Sprite
+    state: stomach
+  - type: Organ
+  - type: SolutionContainerManager
+    solutions:
+      stomach:
+        maxVol: 100
+      food:
+        maxVol: 5
+        reagents:
+        - ReagentId: UncookedAnimalProteins
+          Quantity: 5
+  - type: Stomach
+  - type: Metabolizer
+    # mm very yummy
+    maxReagents: 5
+    metabolizerTypes: [ Human ]
