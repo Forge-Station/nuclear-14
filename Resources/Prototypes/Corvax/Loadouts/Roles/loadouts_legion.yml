@@ -156,3 +156,35 @@
       min: 72000
   items:
     - N14ClothingNeckCloakLegionRed
+
+- type: loadout
+  id: LoadoutConquerorCenturioArmor
+  category: Roles
+  cost: 6
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionCenturion
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionCenturion
+      min: 144000
+  items:
+    - N14ClothingOuterConquerorCenturionArmor
+
+- type: loadout
+  id: LoadoutConquerorCenturioHelmet
+  category: Roles
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionCenturion
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionCenturion
+      min: 144000
+  items:
+    - N14ClothingHeadHatCenturionConquerorHelmet
+
+
