@@ -100,6 +100,8 @@ ent-N14ClothingHeadHatNCRHelmetMetalRadioSnow = Шлем радиста НКР
     .desc = Округлый шлем НКР, обеспечивающий некоторую защиту. Обычно используется радистами и унтер-офицерами.
 ent-N14ClothingHeadHatNCRHelmetMetalRadioWood = { ent-N14ClothingHeadHatNCRHelmetMetalRadioSnow }
     .desc = { ent-N14ClothingHeadHatNCRHelmetMetalRadioSnow.desc }
+ent-N14ClothingHeadHatNCRCombatHelmet = боевой шлем НКР
+    .desc = Стальной шлем, обеспечивающий лучшие защиту по сравнению с обычным. Ожидайте проблемы с шеей если носите его все время.
 
 # Племя 
 ent-N14ClothingHeadHatTribalPowerhelm = тяжёлый шлем старейшины

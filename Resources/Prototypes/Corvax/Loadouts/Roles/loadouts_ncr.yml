@@ -78,3 +78,29 @@
     min: 72000 # 20 hours veterancy unlock
   items:
   - N14ClothingHeadHatNCRMPBeret
+
+- type: loadout
+  id: LoadoutClothingNeckNCRShoulderPad
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRSoldier
+        - NCRSGT
+        - NCRWS
+  items:
+    - N14ClothingNeckNCRShoulderPad
+
+- type: loadout
+  id: LoadoutClothingNeckNCRShoulderPadFlag
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRLT
+  items:
+    - N14ClothingNeckNCRShoulderPadFlag

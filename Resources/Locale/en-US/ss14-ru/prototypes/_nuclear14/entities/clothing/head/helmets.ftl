@@ -56,3 +56,5 @@ ent-N14ClothingHeadHatBrotherhoodMidwestHelmetVeteran = veteran midwest BoS helm
     .desc = A modified combat helmet with extra metal plates to cover the face.
 ent-ClothingHeadBrotherhoodScribeHeadset = scribe headset
     .desc = A simple headset with a built-in flashlight.
+ent-N14ClothingHeadHatNCRCombatHelmet = NCR combat helmet
+    .desc = { ent-ClothingHeadBase.desc }
