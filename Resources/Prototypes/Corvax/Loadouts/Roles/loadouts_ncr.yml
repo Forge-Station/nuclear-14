@@ -47,7 +47,7 @@
     tracker: NCRNCO
     min: 72000 # 20 hours veterancy unlock
   items:
-  - N14ClothingOuterNCRCombatVeteranArmorDesert
+  - N14ClothingOuterNCRCombatVeteranArmor
 
 - type: loadout
   id: LoadoutClothingNeckNCRMPCoat
