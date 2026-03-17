@@ -59,7 +59,7 @@
   parent: [PartSupermutant, BaseTorso]
   components:
   - type: Sprite
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: "torso_m"
   - type: Extractable
     juiceSolution:
@@ -75,7 +75,7 @@
   parent: [PartSupermutant, BaseHead]
   components:
   - type: Sprite
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: "head_m"
 
 - type: entity
@@ -84,7 +84,7 @@
   parent: [PartSupermutant, BaseLeftArm]
   components:
   - type: Sprite
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: "l_arm"
 
 - type: entity
@@ -93,7 +93,7 @@
   parent: [PartSupermutant, BaseRightArm]
   components:
   - type: Sprite
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: "r_arm"
 
 - type: entity
@@ -102,7 +102,7 @@
   parent: [PartSupermutant, BaseLeftHand]
   components:
   - type: Sprite
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: "l_hand"
 
 - type: entity
@@ -111,7 +111,7 @@
   parent: [PartSupermutant, BaseRightHand]
   components:
   - type: Sprite
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: "r_hand"
 
 - type: entity
@@ -120,7 +120,7 @@
   parent: [PartSupermutant, BaseLeftLeg]
   components:
   - type: Sprite
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: "l_leg"
 
 - type: entity
@@ -129,7 +129,7 @@
   parent: [PartSupermutant, BaseRightLeg]
   components:
   - type: Sprite
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: "r_leg"
 
 - type: entity
@@ -138,7 +138,7 @@
   parent: [PartSupermutant, BaseLeftFoot]
   components:
   - type: Sprite
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: "l_foot"
 
 - type: entity
@@ -147,5 +147,5 @@
   parent: [PartSupermutant, BaseRightFoot]
   components:
   - type: Sprite
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: "r_foot"

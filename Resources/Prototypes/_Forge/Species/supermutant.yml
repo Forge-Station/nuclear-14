@@ -11,7 +11,7 @@
   abstract: true
   components:
   - type: Sprite
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     netsync: false
     noRot: true
     drawdepth: Mobs
@@ -25,7 +25,7 @@
       - map: [ "enum.HumanoidVisualLayers.RLeg" ]
       - map: [ "enum.HumanoidVisualLayers.LLeg" ]
       - shader: StencilClear
-        sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+        sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
         state: l_leg
       - shader: StencilMask
         map: [ "enum.HumanoidVisualLayers.StencilMask" ]
@@ -292,85 +292,85 @@
 - type: humanoidBaseSprite
   id: MobSupermutantHead
   baseSprite:
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: head_m
 
 - type: humanoidBaseSprite
   id: MobSupermutantHeadMale
   baseSprite:
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: head_m
 
 - type: humanoidBaseSprite
   id: MobSupermutantHeadFemale
   baseSprite:
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: head_f
 
 - type: humanoidBaseSprite
   id: MobSupermutantTorso
   baseSprite:
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: torso_m
 
 - type: humanoidBaseSprite
   id: MobSupermutantTorsoMale
   baseSprite:
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: torso_m
 
 - type: humanoidBaseSprite
   id: MobSupermutantTorsoFemale
   baseSprite:
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: torso_f
 
 - type: humanoidBaseSprite
   id: MobSupermutantLLeg
   baseSprite:
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: l_leg
 
 - type: humanoidBaseSprite
   id: MobSupermutantLArm
   baseSprite:
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: l_arm
 
 - type: humanoidBaseSprite
   id: MobSupermutantLHand
   baseSprite:
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: l_hand
 
 - type: humanoidBaseSprite
   id: MobSupermutantLFoot
   baseSprite:
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: l_foot
 
 - type: humanoidBaseSprite
   id: MobSupermutantRLeg
   baseSprite:
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: r_leg
 
 - type: humanoidBaseSprite
   id: MobSupermutantRArm
   baseSprite:
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: r_arm
 
 - type: humanoidBaseSprite
   id: MobSupermutantRHand
   baseSprite:
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: r_hand
 
 - type: humanoidBaseSprite
   id: MobSupermutantRFoot
   baseSprite:
-    sprite: _Nuclear14/Mobs/Species/Supermutant/parts.rsi
+    sprite: _Corvax/Mobs/Species/Supermutant/parts.rsi
     state: r_foot
 
 - type: emoteSounds
