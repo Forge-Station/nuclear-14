@@ -4,17 +4,18 @@ using Content.Shared.Hands.Components;
 using Content.Shared.Interaction;
 using Content.Shared.Interaction.Events;
 using Content.Shared.Pulling.Events;
-using Robust.Shared.Map;
 using Robust.Shared.Physics.Events;
 using Robust.Shared.Timing;
 
+
 namespace Content.Shared._Forge.Cross;
+
 
 public sealed class CrossSystem : EntitySystem
 {
     [Dependency] private readonly SharedInteractionSystem _interaction = default!;
-    [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly SharedTransformSystem _transform = default!;
 
     public override void Initialize()
     {
@@ -31,16 +32,17 @@ public sealed class CrossSystem : EntitySystem
     {
         var user = args.User;
         var dragged = args.Dragged;
-        var crossUid = cross.Owner;
 
-        if (args.Handled || dragged == crossUid || TerminatingOrDeleted(dragged) || !TryComp<HandsComponent>(dragged, out var hands) || hands.Count <= 0)
+        if (args.Handled || dragged == cross.Owner || TerminatingOrDeleted(dragged))
             return;
 
-        bool Ignored(EntityUid ent) => ent == user || ent == dragged || ent == crossUid;
+        if (!TryComp<HandsComponent>(dragged, out var hands) || hands.Count == 0)
+            return;
+
         args.CanDrop = _interaction.InRangeUnobstructed(
             dragged,
-            crossUid,
-            predicate: Ignored,
+            cross.Owner,
+            predicate: e => e == user || e == dragged || e == cross.Owner,
             popup: false);
 
         args.Handled = true;
@@ -51,51 +53,43 @@ public sealed class CrossSystem : EntitySystem
         if (args.Cancelled)
             return;
 
-        if (ent.Comp.Cross is not { } cross || !HasComp<CrossComponent>(cross))
-            return;
-
-        args.Cancel();
+        if (ent.Comp.Cross is { } cross && HasComp<CrossComponent>(cross))
+            args.Cancel();
     }
 
-    private void OnHungChangeDirectionAttempt(Entity<HungOnCrossComponent> ent, ref ChangeDirectionAttemptEvent args)
-    {
+    private void OnHungChangeDirectionAttempt(Entity<HungOnCrossComponent> ent, ref ChangeDirectionAttemptEvent args) =>
         args.Cancel();
-    }
 
     private void OnCrossPreventCollide(Entity<CrossComponent> cross, ref PreventCollideEvent args)
     {
-        if (args.Cancelled)
+        if (args.Cancelled || !TryComp<HungOnCrossComponent>(args.OtherEntity, out var hung))
             return;
 
-        if (!TryComp<HungOnCrossComponent>(args.OtherEntity, out var hung))
-            return;
-
-        if (hung.Cross != cross.Owner)
-            return;
-
-        args.Cancelled = true;
+        if (hung.Cross == cross.Owner)
+            args.Cancelled = true;
     }
 
     private void OnHungMove(Entity<HungOnCrossComponent> ent, ref MoveEvent args)
     {
-        if (_timing.ApplyingState)
+        if (_timing.ApplyingState || TerminatingOrDeleted(ent.Owner) || ent.Comp.Cross is not { } cross ||
+            TerminatingOrDeleted(cross))
             return;
 
-        if (ent.Comp.Cross is not { } cross || !TryComp<CrossComponent>(cross, out var crossComp))
+        if (!TryComp<CrossComponent>(cross, out var crossComp))
             return;
-
-        if (TerminatingOrDeleted(cross))
-            return;
-
-        var direction = _transform.GetWorldRotation(cross).GetCardinalDir();
-        var offset = crossComp.GetBuckleOffset(direction, Vector2.Zero);
 
         var xform = args.Component;
+        var offset = GetHangOffset(cross, crossComp);
+
         if (xform.ParentUid == cross && (xform.LocalPosition - offset).LengthSquared() <= 1e-5f)
             return;
 
-        var coords = new EntityCoordinates(cross, offset);
-        _transform.SetCoordinates(ent.Owner, xform, coords, rotation: Angle.Zero);
+        _transform.SetCoordinates(ent.Owner, xform, new(cross, offset), Angle.Zero);
+    }
+
+    public Vector2 GetHangOffset(EntityUid cross, CrossComponent comp)
+    {
+        var direction = _transform.GetWorldRotation(cross).GetCardinalDir();
+        return comp.GetBuckleOffset(direction, Vector2.Zero);
     }
 }
-

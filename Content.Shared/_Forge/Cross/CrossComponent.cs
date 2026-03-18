@@ -5,68 +5,72 @@ using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 
+
 namespace Content.Shared._Forge.Cross;
+
 
 [RegisterComponent]
 public sealed partial class CrossComponent : Component
 {
-    [DataField("hangDelay")]
-    public TimeSpan HangDelay = TimeSpan.FromSeconds(20);
-
-    [DataField("unhangDelay")]
-    public TimeSpan UnhangDelay = TimeSpan.FromSeconds(20);
-
-    [DataField("restraintPrototype")]
-    public EntProtoId RestraintPrototype = "CrossRestraints";
-
-    [DataField("occupiedOverlayPrototype")]
-    public EntProtoId OccupiedOverlayPrototype = "CrossOccupiedOverlay";
-
-    [DataField("unstrapDistance")]
-    public float UnstrapDistance = 0.85f;
-
-    [DataField("northBuckleOffset")]
-    public Vector2 NorthBuckleOffset = new(0.08f, 0.25f);
-
-    [DataField("southBuckleOffset")]
-    public Vector2 SouthBuckleOffset = new(0.03f, 0.23f);
-
-    [DataField("eastBuckleOffset")]
-    public Vector2 EastBuckleOffset = new(0.24f, 0.22f);
-
-    [DataField("westBuckleOffset")]
-    public Vector2 WestBuckleOffset = new(-0.24f, 0.22f);
-
-    [DataField("breakStunDuration")]
-    public TimeSpan BreakStunDuration = TimeSpan.FromSeconds(4);
-
-    [DataField("breakDamage")]
-    public DamageSpecifier BreakDamage = new() { DamageDict = new() { ["Blunt"] = 10 } };
+    [ViewVariables]
+    public TimeSpan? ActionDeadline;
 
     [ViewVariables]
-    public bool BreakInProgress;
-
-    [ViewVariables]
-    public EntityUid? HungTarget;
+    public uint ActionId;
 
     [ViewVariables]
     public CrossActionState ActionState = CrossActionState.Idle;
 
     [ViewVariables]
-    public TimeSpan? ActionDeadline;
+    public EntityUid? ActiveTarget;
 
     [ViewVariables]
     public EntityUid? ActiveUser;
 
-    [ViewVariables]
-    public EntityUid? ActiveTarget;
+    [DataField("breakDamage")]
+    public DamageSpecifier BreakDamage = new() { DamageDict = new() { ["Blunt"] = 10, }, };
 
     [ViewVariables]
-    public uint ActionId;
+    public bool BreakInProgress;
 
-    public Vector2 GetBuckleOffset(Direction direction, Vector2 fallback)
-    {
-        return direction switch
+    [DataField("breakStunDuration")]
+    public TimeSpan BreakStunDuration = TimeSpan.FromSeconds(4);
+
+    [DataField("eastBuckleOffset")]
+    public Vector2 EastBuckleOffset = new(0.24f, 0.22f);
+
+    [DataField("hangDelay")]
+    public TimeSpan HangDelay = TimeSpan.FromSeconds(20);
+
+    [ViewVariables]
+    public EntityUid? HungTarget;
+
+    [DataField("northBuckleOffset")]
+    public Vector2 NorthBuckleOffset = new(0.08f, 0.25f);
+
+    [ViewVariables]
+    public EntityUid? OccupiedOverlayEntity;
+
+    [DataField("occupiedOverlayPrototype")]
+    public EntProtoId OccupiedOverlayPrototype = "CrossOccupiedOverlay";
+
+    [DataField("restraintPrototype")]
+    public EntProtoId RestraintPrototype = "CrossRestraints";
+
+    [DataField("southBuckleOffset")]
+    public Vector2 SouthBuckleOffset = new(0.03f, 0.23f);
+
+    [DataField("unhangDelay")]
+    public TimeSpan UnhangDelay = TimeSpan.FromSeconds(20);
+
+    [DataField("unstrapDistance")]
+    public float UnstrapDistance = 0.85f;
+
+    [DataField("westBuckleOffset")]
+    public Vector2 WestBuckleOffset = new(-0.24f, 0.22f);
+
+    public Vector2 GetBuckleOffset(Direction direction, Vector2 fallback) =>
+        direction switch
         {
             Direction.North => NorthBuckleOffset,
             Direction.South => SouthBuckleOffset,
@@ -74,6 +78,13 @@ public sealed partial class CrossComponent : Component
             Direction.West => WestBuckleOffset,
             _ => fallback
         };
+
+    public uint NextActionId()
+    {
+        ActionId++;
+        if (ActionId == 0)
+            ActionId = 1;
+        return ActionId;
     }
 }
 
@@ -84,29 +95,32 @@ public enum CrossActionState : byte
     UnhangPending
 }
 
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState,]
 public sealed partial class HungOnCrossComponent : Component
 {
-    [DataField, AutoNetworkedField]
+    [DataField, AutoNetworkedField,]
     public EntityUid? Cross;
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public sealed partial class CrossHangDoAfterEvent : SimpleDoAfterEvent
 {
     [DataField]
-    public NetEntity HangTarget;
+    public uint ActionId;
 
     [DataField]
-    public uint ActionId;
+    public NetEntity HangTarget;
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public sealed partial class CrossUnhangDoAfterEvent : SimpleDoAfterEvent
 {
     [DataField]
-    public NetEntity UnhangTarget;
+    public uint ActionId;
 
     [DataField]
-    public uint ActionId;
+    public NetEntity UnhangTarget;
 }
+
+[RegisterComponent]
+public sealed partial class CrossRestraintComponent : Component { }
