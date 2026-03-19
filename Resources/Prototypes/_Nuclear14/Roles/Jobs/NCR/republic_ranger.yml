@@ -16,7 +16,7 @@
       min: 7200 # 20 hours as NCR
     - !type:CharacterWhitelistRequirement
   startingGear: NCRRangerGear
-  icon: "JobIconNcrRanger" # Corvax-Change
+  icon: "JobIconNcrRanger" # Forge-Change
   supervisors: job-supervisors-ncr-ranger
   requireAdminNotify: true
   access:
@@ -46,11 +46,11 @@
     outerClothing: N14ClothingOuterRangerArmor
     head: N14ClothingHeadHatRanger
     id: N14IDBadgeNCRRanger
-    back: N14ClothingBackpackMilitary # Corvax-Change
+    back: N14ClothingBackpackMilitary # Forge-Change
   innerClothingSkirt: N14ClothingUniformRangerV3 #placeholder
   satchel: N14ClothingBackpackSatchelMilitaryFilled
   duffelbag: N14ClothingBackpackDuffelMilitaryFilled
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledMilitary
 

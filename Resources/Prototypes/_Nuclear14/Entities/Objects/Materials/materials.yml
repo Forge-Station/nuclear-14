@@ -11,7 +11,7 @@
     sprite: _Nuclear14/Objects/Misc/materials.rsi
   - type: Material
   - type: Appearance
-  - type: Craftable # Corvax-Change
+  - type: Craftable # Forge-Change
 
 - type: entity
   parent: N14MaterialBase
@@ -449,7 +449,7 @@
     sprite: /Textures/_Nuclear14/Objects/Misc/materials.rsi
   - type: Item
     size: Small
-  - type: Craftable # Corvax-Change
+  - type: Craftable # Forge-Change
   - type: Tag
     tags:
     - Scrap

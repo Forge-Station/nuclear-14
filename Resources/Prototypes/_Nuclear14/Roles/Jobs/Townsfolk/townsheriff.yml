@@ -18,14 +18,14 @@
       tracker: TownDeputy
       min: 14400 # 4 hours
   startingGear: TownSheriffGear
-  icon: "JobIconTownSheriff" # Corvax-Change
+  icon: "JobIconTownSheriff" # Forge-Change
   supervisors: job-supervisors-townsfolk
   access:
   - TownieLaw
   - TownieMechanic
   - TownieDoctor
   - WastelandReporter
-  - TownsPerson # Corvax-Change
+  - TownsPerson # Forge-Change
   special:
   - !type:AddComponentSpecial
     components:

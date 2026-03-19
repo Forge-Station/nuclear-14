@@ -8,7 +8,7 @@
     sprite: _Nuclear14/Structures/Furniture/barricades.rsi
     netsync: false
     state: sandbag_single
-    drawdepth: Mobs # Corvax-Change
+    drawdepth: Mobs # Forge-Change
   - type: Damageable
     damageModifierSet: Wood
     damageContainer: Inorganic
@@ -120,7 +120,7 @@
     damage:
       types:
         Piercing: 5
-    targetPart: Legs # Corvax-Change
+    targetPart: Legs # Forge-Change
   - type: SpeedModifierContacts
     walkSpeedModifier: 0.5
     sprintSpeedModifier: 0.5
@@ -161,7 +161,7 @@
   - type: Damageable
     damageModifierSet: Metallic
     damageContainer: Inorganic
-  - type: Fixtures # Corvax-Change
+  - type: Fixtures # Forge-Change
     fixtures:
       fix1:
         shape:
@@ -172,7 +172,7 @@
         - MachineMask
         layer:
         - TableLayer
-  - type: Destructible # Corvax-Change
+  - type: Destructible # Forge-Change
     thresholds:
     - trigger:
         !type:DamageTrigger
@@ -201,7 +201,7 @@
     state: green
 
 - type: entity
-  parent: N14BarricadeSandbagSingle # Corvax-Change
+  parent: N14BarricadeSandbagSingle # Forge-Change
   id: N14DecorConcreteBarrier
   name: concrete barrier
   description: an old concrete barrier for stopping traffic.
@@ -209,7 +209,7 @@
   - type: Sprite
     sprite: _Nuclear14/Structures/Decoration/barriers.rsi
     state: concrete_barrier
-  - type: Fixtures # Corvax-Change
+  - type: Fixtures # Forge-Change
     fixtures:
       fix1:
         shape:

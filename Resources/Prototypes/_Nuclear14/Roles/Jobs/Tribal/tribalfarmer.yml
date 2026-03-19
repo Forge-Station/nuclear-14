@@ -16,7 +16,7 @@
       min: 7200 # 2 hours
   startingGear: TribalFarmerGear
   alwaysUseSpawner: true
-  icon: "JobIconTribalFarmer" # Corvax-Change
+  icon: "JobIconTribalFarmer" # Forge-Change
   supervisors: job-supervisors-tribal
   access:
   - TribeMember
@@ -37,14 +37,14 @@
     outerClothing: N14ClothingOuterTribalArmor
     shoes: N14ClothingShoesTribal
     gloves: N14ClothingHandsGlovesTribal
-    back: N14ClothingBackpackTrekker # Corvax-Change
+    back: N14ClothingBackpackTrekker # Forge-Change
     belt: ClothingBeltFarmerFilled # Forge-Change
     pocket1: N14TribalKnife
     pocket2: Triballoadoutkits #given to them until i sort out this role
     id: N14IDTribeEnforcerPendant
   innerClothingSkirt: N14ClothingUniformJumpskirtTribal
   satchel: N14ClothingBackpackSatchelTribalFilled
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - Torch
     - Torch

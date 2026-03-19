@@ -15,11 +15,11 @@
       department: Townsfolk
       min: 7200 # 2 hours
   startingGear: WastelandReporterGear
-  icon: "JobIconTownReporter" # Corvax-Change
+  icon: "JobIconTownReporter" # Forge-Change
   supervisors: job-supervisors-townsfolk
   access:
   - WastelandReporter
-  - TownsPerson # Corvax-Change
+  - TownsPerson # Forge-Change
   special:
   - !type:AddComponentSpecial
     components:
@@ -32,13 +32,13 @@
   id: WastelandReporterGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitDetectiveAlt
-    back: N14ClothingBackpackExplorer # Corvax-Change
+    back: N14ClothingBackpackExplorer # Forge-Change
     shoes: N14ClothingShoesBlack
     id: N14IDReporterTown
   innerClothingSkirt: N14ClothingUniformJumpsuitDetectiveAlt
   satchel: N14ClothingBackpackSatchelWastelanderFilled
   duffelbag: N14ClothingBackpackDuffelFilled
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledWastelander
 

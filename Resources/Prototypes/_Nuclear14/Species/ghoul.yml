@@ -7,13 +7,13 @@
   markingLimits: MobGhoulMarkingLimits
   dollPrototype: N14MobGhoulDummy
   skinColoration: HumanToned
-  minHeight: 0.937 # Corvax-Change
-  maxHeight: 1.249 # Corvax-Change
-  minWidth: 0.825 # Corvax-Change
-  maxWidth: 1.05 # Corvax-Change
-  minAge: 200 # Corvax-Change
-  oldAge: 250 # Corvax-Change
-  maxAge: 300 # Corvax-Change
+  minHeight: 0.937 # Forge-Change
+  maxHeight: 1.249 # Forge-Change
+  minWidth: 0.825 # Forge-Change
+  maxWidth: 1.05 # Forge-Change
+  minAge: 200 # Forge-Change
+  oldAge: 250 # Forge-Change
+  maxAge: 300 # Forge-Change
 # The lack of a layer means that
 # this person cannot have round-start anything
 # applied to that layer. It has to instead

@@ -277,10 +277,10 @@
     autoRecharge: true
     autoRechargeRate: 25
   - type: Gun
-    minAngle: 25 # Corvax-Change
-    maxAngle: 60 # Corvax-Change
-    angleIncrease: 4 # Corvax-Change
-    angleDecay: 16 # Corvax-Change
+    minAngle: 25 # Forge-Change
+    maxAngle: 60 # Forge-Change
+    angleIncrease: 4 # Forge-Change
+    angleDecay: 16 # Forge-Change
     soundGunshot:
       collection: N14RechargerRifleGunshot
     selectedMode: SemiAuto

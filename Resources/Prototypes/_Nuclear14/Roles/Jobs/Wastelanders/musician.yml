@@ -26,12 +26,12 @@
   id: WastelandMusicianGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitManagerSuit
-    back: N14ClothingBackpackTrekker # Corvax-Change
+    back: N14ClothingBackpackTrekker # Forge-Change
     eyes: ClothingEyesGlassesSunglasses
     shoes: N14ClothingShoesBrown
   satchel: N14ClothingBackpackSatchelMusicianFilled
   duffelbag: N14ClothingBackpackDuffelMusicianFilled
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledWastelander
     - AcousticGuitarInstrument

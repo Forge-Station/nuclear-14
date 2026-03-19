@@ -7,17 +7,17 @@
   description: job-description-farmer
   playTimeTracker: Farmer
   startingGear: FarmerGear
-  icon: "JobIconWastelandFarmer" # Corvax-Change
+  icon: "JobIconWastelandFarmer" # Forge-Change
   supervisors: job-supervisors-wastelander
   access:
   - WastelandFarmer
-  - TownsPerson # Corvax-Change
+  - TownsPerson # Forge-Change
 
 - type: startingGear
   id: FarmerGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitBrahminFarmer
-    back: N14ClothingBackpackExplorer # Corvax-Change
+    back: N14ClothingBackpackExplorer # Forge-Change
     shoes: N14ClothingBootsLeather
     outerClothing: ClothingOuterApronBotanist
     belt: ClothingBeltFarmerFilled
@@ -25,7 +25,7 @@
   innerClothingSkirt: N14ClothingUniformJumpsuitBrahminFarmer #placeholder
   satchel: N14ClothingBackpackSatchelWastelanderFilled
   duffelbag: N14ClothingBackpackDuffelFilled
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledWastelander
 

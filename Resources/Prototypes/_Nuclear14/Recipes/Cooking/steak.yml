@@ -162,9 +162,9 @@
       steps:
       - minTemperature: 305
   - node: MeatCooked
-    entity: N14FoodMeatSquirrelCooked # Corvax-Change
+    entity: N14FoodMeatSquirrelCooked # Forge-Change
 
-- type: constructionGraph # Corvax-Change
+- type: constructionGraph # Forge-Change
   id: FoodMeatRad
   start: start
   graph:

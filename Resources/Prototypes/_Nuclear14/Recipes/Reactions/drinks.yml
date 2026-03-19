@@ -1,7 +1,7 @@
 # Water Purification
 - type: reaction
   id: WaterClean
-  minTemp: 372.15 # Corvax-Change
+  minTemp: 372.15 # Forge-Change
   reactants:
     WaterFiltered:
       amount: 1
@@ -33,7 +33,7 @@
   minTemp: 373.15 # 100 degrees Celcius.
   reactants:
     WaterSalt:
-      amount: 2 # Corvax-Change
+      amount: 2 # Forge-Change
   products:
     TableSalt: 1
 # Water vapor reaction?

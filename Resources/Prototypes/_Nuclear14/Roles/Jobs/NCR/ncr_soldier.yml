@@ -15,7 +15,7 @@
       department: NCR
       min: 10800 # 3 hours Corvax-Change
   startingGear: NCRSoldierGear
-  icon: "JobIconNcrSoldier" # Corvax-Change
+  icon: "JobIconNcrSoldier" # Forge-Change
   supervisors: job-supervisors-ncr
   alwaysUseSpawner: true
   access:
@@ -31,16 +31,16 @@
 - type: startingGear
   id: NCRSoldierGear
   equipment:
-    head: N14ClothingHeadHatNCRHelmet # Corvax-Change
-    back: N14ClothingBackpackNCR # Corvax-Change
-    jumpsuit: N14ClothingUniformNCR # Corvax-Change
+    head: N14ClothingHeadHatNCRHelmet # Forge-Change
+    back: N14ClothingBackpackNCR # Forge-Change
+    jumpsuit: N14ClothingUniformNCR # Forge-Change
     outerClothing: N14ClothingOuterNCRVest # Forge-Change
     shoes: N14ClothingBootsLeatherFilled
     id: N14IDNCRDogtag
     pocket1: NCRtrooperloadoutkits
-  innerClothingSkirt: N14ClothingUniformNCR # Corvax-Change
+  innerClothingSkirt: N14ClothingUniformNCR # Forge-Change
   satchel: N14ClothingBackpackSatchelNCRFilled
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledMilitaryNCR
 

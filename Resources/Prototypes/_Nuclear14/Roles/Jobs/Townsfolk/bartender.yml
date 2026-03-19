@@ -19,7 +19,7 @@
   supervisors: job-supervisors-townsfolk
   access:
   - WastelandBartender
-  - TownsPerson # Corvax-Change
+  - TownsPerson # Forge-Change
   - InnRoomOne
   - InnRoomTwo
   - InnRoomThree
@@ -38,13 +38,13 @@
     head: ClothingHeadHatTophat
     jumpsuit: N14ClothingUniformJumpsuitBartenderAlt
     outerClothing: N14ClothingOuterLeatherArmor
-    back: N14ClothingBackpackExplorer # Corvax-Change
+    back: N14ClothingBackpackExplorer # Forge-Change
     shoes: N14ClothingBootsLeather
     id: N14IDBartenderTown
   innerClothingSkirt: N14ClothingUniformJumpsuitBartenderAlt #placeholder
   satchel: N14ClothingBackpackSatchelWastelanderFilled
   duffelbag: N14ClothingBackpackDuffelFilled
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledWastelander
 

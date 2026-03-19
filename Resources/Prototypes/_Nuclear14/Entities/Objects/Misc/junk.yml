@@ -8,7 +8,7 @@
   components:
   - type: Sprite
     sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi
-  - type: Craftable # Corvax-Change
+  - type: Craftable # Forge-Change
   - type: Tag
     tags:
     - JunkItem
@@ -714,7 +714,7 @@
   name: circuit board
   description: A silver looking circuit board.
   components:
-  - type: Tag # Corvax-Change
+  - type: Tag # Forge-Change
     tags:
     - N14Board
     - JunkItem
@@ -723,7 +723,7 @@
     state: board_1
 
 - type: entity
-  parent: N14JunkComponentBoard1 # Corvax-Change
+  parent: N14JunkComponentBoard1 # Forge-Change
   id: N14JunkComponentBoard2
   name: circuit board
   description: A gold looking circuit board.
@@ -732,7 +732,7 @@
     state: board_2
 
 - type: entity
-  parent: N14JunkComponentBoard1 # Corvax-Change
+  parent: N14JunkComponentBoard1 # Forge-Change
   id: N14JunkComponentBoard3
   name: circuit board
   description: A green looking circuit board.
@@ -782,7 +782,7 @@
   name: capacitor
   description: An electrolytic capacitor.
   components:
-  - type: Tag # Corvax-Change
+  - type: Tag # Forge-Change
     tags:
     - N14Capacitor
     - JunkItem
@@ -791,7 +791,7 @@
     state: capacitor_1
 
 - type: entity
-  parent: N14JunkComponentCapacitor1 # Corvax-Change
+  parent: N14JunkComponentCapacitor1 # Forge-Change
   id: N14JunkComponentCapacitor2
   name: capacitor
   description: A ceramic type capacitor.
@@ -800,7 +800,7 @@
     state: capacitor_2
 
 - type: entity
-  parent: N14JunkComponentCapacitor1 # Corvax-Change
+  parent: N14JunkComponentCapacitor1 # Forge-Change
   id: N14JunkComponentCapacitor3
   name: capacitor
   description: A paper type capacitor.
@@ -816,14 +816,14 @@
   components:
   - type: Sprite
     state: diode_1
-  - type: Tag # Corvax-Change
+  - type: Tag # Forge-Change
     tags:
     - JunkItem
     - Trash
     - N14Diode
 
 - type: entity
-  parent: N14JunkComponentDiode1 # Corvax-Change
+  parent: N14JunkComponentDiode1 # Forge-Change
   id: N14JunkComponentDiode2
   name: diode
   description: A more advanced zener diode.
@@ -832,7 +832,7 @@
     state: diode_2
 
 - type: entity
-  parent: N14JunkComponentDiode1 # Corvax-Change
+  parent: N14JunkComponentDiode1 # Forge-Change
   id: N14JunkComponentDiode3
   name: diode
   description: A standard diode.
@@ -860,14 +860,14 @@
   components:
   - type: Sprite
     state: fuse_1
-  - type: Tag # Corvax-Change
+  - type: Tag # Forge-Change
     tags:
     - JunkItem
     - Trash
     - N14Fuse
 
 - type: entity
-  parent: N14JunkComponentFuse1 # Corvax-Change
+  parent: N14JunkComponentFuse1 # Forge-Change
   id: N14JunkComponentFuse2
   name: fuse
   description: A small capacity, fast blow fuse.
@@ -935,14 +935,14 @@
   components:
   - type: Sprite
     state: resistor_1
-  - type: Tag # Corvax-Change
+  - type: Tag # Forge-Change
     tags:
     - JunkItem
     - Trash
     - N14Resistor
 
 - type: entity
-  parent: N14JunkComponentResistor1 # Corvax-Change
+  parent: N14JunkComponentResistor1 # Forge-Change
   id: N14JunkComponentResistor2
   name: resistor
   description: A medium resistance resistor.
@@ -951,7 +951,7 @@
     state: resistor_2
 
 - type: entity
-  parent: N14JunkComponentResistor1 # Corvax-Change
+  parent: N14JunkComponentResistor1 # Forge-Change
   id: N14JunkComponentResistor3
   name: resistor
   description: A high resistance resistor.
@@ -1017,14 +1017,14 @@
   components:
   - type: Sprite
     state: transistor_1
-  - type: Tag # Corvax-Change
+  - type: Tag # Forge-Change
     tags:
     - JunkItem
     - Trash
     - N14Transistor
 
 - type: entity
-  parent: N14JunkComponentTransistor1 # Corvax-Change
+  parent: N14JunkComponentTransistor1 # Forge-Change
   id: N14JunkComponentTransistor2
   name: transistor
   description: A bipolar junction transistor.
@@ -1033,7 +1033,7 @@
     state: transistor_2
 
 - type: entity
-  parent: N14JunkComponentTransistor1 # Corvax-Change
+  parent: N14JunkComponentTransistor1 # Forge-Change
   id: N14JunkComponentTransistor3
   name: transistor
   description: A junction FET.

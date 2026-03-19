@@ -70,7 +70,7 @@
   - type: Clothing
     equipSound: /Audio/Mecha/mechmove03.ogg
     unequipSound: /Audio/Mecha/mechmove03.ogg
-  - type: HideLayerClothing # Corvax-Change
+  - type: HideLayerClothing # Forge-Change
     force: true
     slots:
     - Hair
@@ -97,7 +97,7 @@
     priceMultiplier: 0.5
   - type: ExplosionResistance
     damageCoefficient: 0.95
-  - type: HideLayerClothing # Corvax-Change
+  - type: HideLayerClothing # Forge-Change
     slots:
     - Hair
 
@@ -118,7 +118,7 @@
     priceMultiplier: 0.5
   - type: ExplosionResistance
     damageCoefficient: 0.9
-  - type: HideLayerClothing # Corvax-Change
+  - type: HideLayerClothing # Forge-Change
     slots:
     - Hair
 
@@ -544,7 +544,7 @@
     sprite: _Nuclear14/Clothing/Head/FalloutHelmets/midwest-brotherhood/bosreconhelmet.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/Head/FalloutHelmets/midwest-brotherhood/bosreconhelmet.rsi
-  - type: NightVision # Corvax-Change
+  - type: NightVision # Forge-Change
     isEquipment: true
   - type: Tag
     tags:

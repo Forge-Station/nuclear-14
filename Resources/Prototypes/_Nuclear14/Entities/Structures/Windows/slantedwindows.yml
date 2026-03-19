@@ -92,7 +92,7 @@
     damage:
       types:
         Piercing: 5
-    targetPart: All # Corvax-Change
+    targetPart: All # Forge-Change
   - type: SpeedModifierContacts
     walkSpeedModifier: 0.5
     sprintSpeedModifier: 0.5

@@ -10,11 +10,11 @@
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t45.rsi
     equipDelay: 3 # Power armour should not be easily stealable, it should take time to take off or put on.
     unequipDelay: 6
-    equipSound: # Corvax-Change
+    equipSound: # Forge-Change
       path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Enter_01.ogg
       params:
         volume: -12
-    unequipSound: # Corvax-Change
+    unequipSound: # Forge-Change
       path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Enter_01.ogg
       params:
         volume: -12
@@ -66,7 +66,7 @@
   - type: Reflect
     reflectProb: 0.1
     spread: 150
-  - type: EmitsSoundOnMove # Corvax-Change
+  - type: EmitsSoundOnMove # Forge-Change
     soundCollection:
       collection: N14FootstepPowerArmor
       params:

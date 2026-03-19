@@ -31,17 +31,17 @@
 - type: startingGear
   id: NCREngineerGear
   equipment:
-    head: N14ClothingHeadHatNCRHelmet # Corvax-Change
-    back: N14ClothingBackpackNCR # Corvax-Change
-    jumpsuit: N14ClothingUniformNCR # Corvax-Change
+    head: N14ClothingHeadHatNCRHelmet # Forge-Change
+    back: N14ClothingBackpackNCR # Forge-Change
+    jumpsuit: N14ClothingUniformNCR # Forge-Change
     outerClothing: N14ClothingOuterNCRVest # Forge-Change
     shoes: N14ClothingBootsLeatherFilled
     gloves: N14ClothingHandsGlovesCombat
     id: N14IDNCRDogtagEngineer
     pocket1: NCRengineerloadoutkits
-  innerClothingSkirt: N14ClothingUniformNCR # Corvax-Change
+  innerClothingSkirt: N14ClothingUniformNCR # Forge-Change
   satchel: N14ClothingBackpackSatchelNCRFilled
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledMilitaryNCR
 

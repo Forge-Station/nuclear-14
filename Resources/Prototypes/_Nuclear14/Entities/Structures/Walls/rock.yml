@@ -157,7 +157,7 @@
 
 - type: entity
   id: N14RockGreyMining
-  parent: AsteroidAltRock # Corvax-Change
+  parent: AsteroidAltRock # Forge-Change
   name: ore vein
   suffix: higher ore yield .44
   description: An asteroid.
@@ -165,10 +165,10 @@
   - type: OreVein
     oreChance: 0.44
     oreRarityPrototypeId: RandomOreDistributionStandard
-  - type: Damageable # Corvax-Change
+  - type: Damageable # Forge-Change
     damageContainer: StructuralInorganic
     damageModifierSet: Rock
-  - type: Destructible # Corvax-Change
+  - type: Destructible # Forge-Change
     thresholds:
       - trigger:
           !type:DamageTrigger

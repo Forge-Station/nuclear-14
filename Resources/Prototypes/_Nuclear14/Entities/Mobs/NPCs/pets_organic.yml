@@ -75,7 +75,7 @@
         Burn: -0.5
         Toxin: -0.5
         Airloss: -3 # Basically immune to it, it's necessary because they lack organs to process smelling salts and such
-  - type: Hunger # Corvax-Change
+  - type: Hunger # Forge-Change
     currentHunger: 180
     thresholds:
       Overfed: 200
@@ -84,7 +84,7 @@
       Starving: 50
       Dead: 0
     baseDecayRate: 0.0
-  - type: Thirst # Corvax-Change
+  - type: Thirst # Forge-Change
     startingThirst: 180
     thresholds:
       OverHydrated: 200
@@ -122,9 +122,9 @@
     - Tribal
     - Chinese
     - Sign
-  - type: Speech # Corvax-Change
+  - type: Speech # Forge-Change
     speechSounds: Dog
-  - type: DogVision # Corvax-Change
+  - type: DogVision # Forge-Change
 
 - type: entity
   name: MBoS Mutt
@@ -289,7 +289,7 @@
     grid:
     - 0,0,4,3
     maxItemSize: Small
-    clickInsert: false # Corvax-Change
+    clickInsert: false # Forge-Change
   - type: UserInterface
     interfaces:
       enum.StorageUiKey.Key:
@@ -401,7 +401,7 @@
       path: /Audio/Animals/small_dog_bark_happy.ogg
   - type: ReplacementAccent
     accent: xeno
-  - type: NpcFactionMember # Corvax-Change
+  - type: NpcFactionMember # Forge-Change
     factions:
     - Passive
   - type: LanguageKnowledge
@@ -556,6 +556,6 @@
       path: /Audio/Animals/small_dog_bark_happy.ogg
   - type: ReplacementAccent
     accent: xeno
-  - type: NpcFactionMember # Corvax-Change
+  - type: NpcFactionMember # Forge-Change
     factions:
     - Passive

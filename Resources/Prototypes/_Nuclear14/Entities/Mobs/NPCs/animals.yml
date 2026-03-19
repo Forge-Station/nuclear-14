@@ -362,7 +362,7 @@
       maxAmount: 1
   - type: ReproductivePartner
   - type: MobPrice
-    price: 250 # Corvax-Change
+    price: 250 # Forge-Change
 
 #MARK: Bighorner
 - type: entity
