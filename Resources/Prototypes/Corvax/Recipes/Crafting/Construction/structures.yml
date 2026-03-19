@@ -128,4 +128,21 @@
   conditions:
     - !type:TileNotBlocked
 
+- type: construction # Forge-Change
+  name: Cross
+  id: Cross
+  graph: Cross14
+  startNode: start
+  targetNode: cross
+  category: construction-category-utilities
+  description: A heavy wooden cross for public punishment.
+  icon:
+   sprite: Corvax/Structures/Misc/cross.rsi
+   state: cross_empty
+  objectType: Structure
+  placementMode: SnapgridCenter
+  hide: false
+  conditions:
+    - !type:TileNotBlocked
+
 #Flags
