@@ -724,7 +724,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotAssaultronHostile
+      - N14MobRobotHostileAssaultron
       
 - type: entity
   name: Protectron Spawner
@@ -739,7 +739,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotProtectronHostile
+      - N14MobRobotHostileProtectron
       
 - type: entity
   name: Protectron Builder Spawner
@@ -754,7 +754,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotProtectronBuilderHostile
+      - N14MobRobotHostileProtectronBuilder
       
 - type: entity
   name: Protectron Fire Spawner
@@ -769,7 +769,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotProtectronFireHostile
+      - N14MobRobotHostileProtectronFire
       
 - type: entity
   name: Protectron Police Spawner
@@ -784,7 +784,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotProtectronPoliceHostile
+      - N14MobRobotHostileProtectronPolice
       
 - type: entity
   name: Mr Handy Spawner
@@ -799,7 +799,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotMrHandyClaw
+      - N14MobRobotHostileMrHandyClaw
       
 - type: entity
   name: Mr Handy Gun Spawner
@@ -814,7 +814,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotMrHandyGun
+      - N14MobRobotHostileMrHandyGun
       
 - type: entity
   name: Mr Handy Saw Spawner
@@ -829,7 +829,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotMrHandySaw
+      - N14MobRobotHostileMrHandySaw
       
 - type: entity
   name: Mr Gutsy Spawner
@@ -844,7 +844,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotMrHandyGutsy
+      - N14MobRobotHostileMrHandyGutsy
       
 - type: entity
   name: Robobrain Spawner
@@ -859,7 +859,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotRobobrain
+      - N14MobRobotHostileRobobrain
       
 - type: entity
   name: Eyebot Spawner
@@ -874,7 +874,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotEyebot
+      - N14MobRobotHostileEyebot
 
 - type: entity
   name: Spore Plant Spawner
