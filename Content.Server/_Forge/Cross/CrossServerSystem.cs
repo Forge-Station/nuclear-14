@@ -142,7 +142,7 @@ public sealed class CrossServerSystem : EntitySystem
         if (target == cross.Owner)
             return false;
 
-        if (TryComp<HungOnCrossComponent>(target, out var hung) && hung.Cross != null)
+        if (IsHungOnCross(target))
         {
             if (popup)
                 _popup.PopupEntity(Loc.GetString("n14-cross-popup-hang-fail", ("target", target)), cross.Owner, user);
@@ -156,7 +156,7 @@ public sealed class CrossServerSystem : EntitySystem
             return false;
         }
 
-        if (cross.Comp.HungTarget is { } current && current != target)
+        if (TryGetHungTarget(cross, out var current) && current != target)
         {
             if (popup)
                 _popup.PopupEntity(Loc.GetString("n14-cross-popup-busy"), cross.Owner, user);
@@ -190,9 +190,9 @@ public sealed class CrossServerSystem : EntitySystem
         if (!Exists(user) || !Exists(target) || TerminatingOrDeleted(cross.Owner))
             return false;
 
-        if (cross.Comp.HungTarget != target ||
-            !TryComp<HungOnCrossComponent>(target, out var hung) ||
-            hung.Cross != cross.Owner)
+        if (!TryGetHungTarget(cross, out var currentTarget) ||
+            currentTarget != target ||
+            !IsHungOnCross(target, cross.Owner))
         {
             if (popup)
                 _popup.PopupEntity(Loc.GetString("n14-cross-popup-unhang-fail", ("target", target)), cross.Owner, user);
@@ -352,9 +352,67 @@ public sealed class CrossServerSystem : EntitySystem
 
     #region Hang / Unhang Core Logic
 
+    private bool TryGetHungTarget(Entity<CrossComponent> cross, out EntityUid target)
+    {
+        if (TryResolveCachedHungTarget(cross, out target))
+            return true;
+
+        if (TryFindHungTarget(cross, out target))
+            return true;
+
+        cross.Comp.HungTarget = null;
+        target = default;
+        return false;
+    }
+
+    private bool TryResolveCachedHungTarget(Entity<CrossComponent> cross, out EntityUid target)
+    {
+        target = default;
+
+        if (cross.Comp.HungTarget is not { } current || !IsHungOnCross(current, cross.Owner))
+        {
+            cross.Comp.HungTarget = null;
+            return false;
+        }
+
+        target = current;
+        return true;
+    }
+
+    private bool TryFindHungTarget(Entity<CrossComponent> cross, out EntityUid target)
+    {
+        var children = Transform(cross.Owner).ChildEnumerator;
+        while (children.MoveNext(out var child))
+        {
+            if (!IsHungOnCross(child, cross.Owner))
+                continue;
+
+            cross.Comp.HungTarget = child;
+            target = child;
+            return true;
+        }
+
+        target = default;
+        return false;
+    }
+
+    private bool IsHungOnCross(EntityUid target) =>
+        TryComp<HungOnCrossComponent>(target, out var hung) &&
+        hung.Cross is { } cross &&
+        HasComp<CrossComponent>(cross) &&
+        !TerminatingOrDeleted(target) &&
+        !TerminatingOrDeleted(cross);
+
+    private bool IsHungOnCross(EntityUid target, EntityUid crossUid) =>
+        TryComp<HungOnCrossComponent>(target, out var hung) &&
+        hung.Cross == crossUid &&
+        HasComp<CrossComponent>(crossUid) &&
+        !TerminatingOrDeleted(target) &&
+        !TerminatingOrDeleted(crossUid);
+
     private bool TryHangTarget(Entity<CrossComponent> cross, EntityUid target, EntityUid? user)
     {
-        if (cross.Comp.HungTarget is { } current && current != target)
+        if (TryGetHungTarget(cross, out var current) && current != target)
             return false;
 
         var hung = EnsureComp<HungOnCrossComponent>(target);
@@ -430,9 +488,7 @@ public sealed class CrossServerSystem : EntitySystem
         cross.Comp.BreakInProgress = false;
         ClearAction(cross);
 
-        if (cross.Comp.HungTarget is { } target &&
-            TryComp<HungOnCrossComponent>(target, out var hung) &&
-            hung.Cross == cross.Owner)
+        if (TryGetHungTarget(cross, out var target))
         {
             PositionHungTarget(cross, target);
             RefreshMobStateVisual(target);
@@ -443,9 +499,7 @@ public sealed class CrossServerSystem : EntitySystem
 
     private void OnCrossMove(Entity<CrossComponent> cross, ref MoveEvent args)
     {
-        if (cross.Comp.HungTarget is { } target &&
-            TryComp<HungOnCrossComponent>(target, out var hung) &&
-            hung.Cross == cross.Owner)
+        if (TryGetHungTarget(cross, out var target))
             PositionHungTarget(cross, target);
     }
 
@@ -465,9 +519,7 @@ public sealed class CrossServerSystem : EntitySystem
 
         ClearAction(cross);
 
-        if (cross.Comp.HungTarget is { } target &&
-            TryComp<HungOnCrossComponent>(target, out var hung) &&
-            hung.Cross == cross.Owner)
+        if (TryGetHungTarget(cross, out var target))
             TryUnhangTarget(cross, target, cross.Comp.BreakInProgress);
 
         if (cross.Comp.OccupiedOverlayEntity is { } overlay && !TerminatingOrDeleted(overlay))
@@ -479,7 +531,10 @@ public sealed class CrossServerSystem : EntitySystem
 
     private void UpdateOccupiedOverlay(Entity<CrossComponent> cross)
     {
-        var hasTarget = cross.Comp.HungTarget != null;
+        if (cross.Comp.OccupiedOverlayEntity is { } staleOverlay && TerminatingOrDeleted(staleOverlay))
+            cross.Comp.OccupiedOverlayEntity = null;
+
+        var hasTarget = TryGetHungTarget(cross, out _);
 
         if (hasTarget && cross.Comp.OccupiedOverlayEntity == null)
         {
@@ -487,10 +542,11 @@ public sealed class CrossServerSystem : EntitySystem
                 cross.Comp.OccupiedOverlayPrototype,
                 new(cross.Owner, Vector2.Zero));
         }
-        else if (!hasTarget && cross.Comp.OccupiedOverlayEntity is { } overlay)
+        else if (!hasTarget && cross.Comp.OccupiedOverlayEntity is { } existingOverlay)
         {
-            if (!TerminatingOrDeleted(overlay))
-                QueueDel(overlay);
+            if (!TerminatingOrDeleted(existingOverlay))
+                QueueDel(existingOverlay);
+
             cross.Comp.OccupiedOverlayEntity = null;
         }
     }
@@ -501,8 +557,12 @@ public sealed class CrossServerSystem : EntitySystem
 
     private void OnUncuffAttempt(ref UncuffAttemptEvent args)
     {
-        if (args.Cancelled || !TryComp<HungOnCrossComponent>(args.Target, out var hung) ||
-            hung.Cross is not { } crossUid)
+        if (args.Cancelled ||
+            !TryComp<HungOnCrossComponent>(args.Target, out var hung) ||
+            hung.Cross is not { } crossUid ||
+            !HasComp<CrossComponent>(crossUid) ||
+            TerminatingOrDeleted(args.Target) ||
+            TerminatingOrDeleted(crossUid))
             return;
 
         if (HasCrossRestraints(args.Target))
@@ -587,7 +647,7 @@ public sealed class CrossServerSystem : EntitySystem
         if (!TryComp<MobStateComponent>(target, out var mobState))
             return;
 
-        var isHung = TryComp<HungOnCrossComponent>(target, out var hung) && hung.Cross != null;
+        var isHung = IsHungOnCross(target);
         var visualState = isHung && mobState.CurrentState is MobState.Critical or MobState.SoftCritical
             ? MobState.Alive
             : mobState.CurrentState;
