@@ -395,7 +395,6 @@
     sprite: _Nuclear14/Clothing/Uniforms/FalloutSuits/prewaruniform.rsi
 #NCR
 
-# Forge-Change-Start
 - type: entity
   parent: N14ClothingUniformBase
   id: N14ClothingUniformNCR # Forge-Change
@@ -414,10 +413,9 @@
   description: The NCR-designated uniform for all infantry soldiers in the Republic army.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Clothing/Uniforms/FalloutSuits/NCRuniformSnow.rsi # Forge-Change
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/NCRuniformSnow.rsi # Forge-Change
   - type: Clothing
-    sprite: _Nuclear14/Clothing/Uniforms/FalloutSuits/NCRuniformSnow.rsi # Forge-Change
-# Forge-Change-End
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/NCRuniformSnow.rsi # Forge-Change
 
 - type: entity
   parent: N14ClothingUniformBase
