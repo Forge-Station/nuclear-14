@@ -329,9 +329,9 @@
   description: A rounded NCR helmet offering some protection. This one is covered on classic desert camo.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Clothing/Head/FalloutHelmets/falloutNCRhelmetBase.rsi # Forge-Change
+    sprite: Corvax\Clothing\Head\Helmets\falloutNCRhelmet.rsi # Forge-Change
   - type: Clothing
-    sprite: _Nuclear14/Clothing/Head/FalloutHelmets/falloutNCRhelmetBase.rsi # Forge-Change
+    sprite: Corvax\Clothing\Head\Helmets\falloutNCRhelmet.rsi # Forge-Change
 
 - type: entity
   parent: N14ClothingHeadHatBaseHelmetMetal

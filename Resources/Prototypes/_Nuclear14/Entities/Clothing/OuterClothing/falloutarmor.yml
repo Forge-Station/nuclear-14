@@ -734,9 +734,9 @@
   description: A light ballistic plate inside a leather vest, cheap and easy to mass produce, perfect armor for light infantry. This one is covered in classic desert camo.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutNCRvest.rsi # Forge-Change
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRvest.rsi # Forge-Change
   - type: Clothing
-    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutNCRvest.rsi # Forge-Change
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRvest.rsi # Forge-Change
   - type: Armor
     modifiers:
       coefficients:
@@ -768,9 +768,9 @@
   description: A light ballistic plate inside a leather vest, cheap and easy to mass produce, perfect armor for light infantry. This one is covered in snow-white camo.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutNCRvestSnow.rsi # Forge-Change
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRvestSnow.rsi # Forge-Change
   - type: Clothing
-    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutNCRvestSnow.rsi # Forge-Change
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRvestSnow.rsi # Forge-Change
 
 - type: entity
   parent: N14ClothingOuterNCRVest
@@ -779,9 +779,9 @@
   description: A light ballistic plate inside a leather vest, cheap and easy to mass produce, perfect armor for light infantry. This one is covered in green camo.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutNCRvestWoods.rsi # Forge-Change
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRvestWoods.rsi # Forge-Change
   - type: Clothing
-    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutNCRvestWoods.rsi # Forge-Change
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRvestWoods.rsi # Forge-Change
 
 - type: entity
   parent: N14FalloutArmorBase
@@ -950,20 +950,9 @@
   description: An old military grade pre-war combat armor, repainted to the colour scheme of the New California Republic.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatNCR.rsi
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutcombatNCR.rsi # Forge-Change
   - type: Clothing
-    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatNCR.rsi
-
-# Forge-Add-Start
-- type: entity
-  parent: N14ClothingOuterNCRCombatArmor
-  id: N14ClothingOuterNCRCombatArmorSnow
-  components:
-  - type: Sprite
-    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatNCRsnow.rsi
-  - type: Clothing
-    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatNCRsnow.rsi
-# Forge-Add-End
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutcombatNCR.rsi # Forge-Change
 
 - type: entity
   parent: N14ClothingOuterCombatArmorMK2
@@ -972,20 +961,9 @@
   description: A reinforced set of bracers, greaves, and torso plating of pre-war design. This one is kitted with additional plates, repainted to the colour scheme of the New California Republic.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatNCRmk2.rsi
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutcombatNCRmk2.rsi # Forge-Change
   - type: Clothing
-    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatNCRmk2.rsi
-
-# Forge-Add-Start
-- type: entity
-  parent: N14ClothingOuterNCRCombatArmorMK2
-  id: N14ClothingOuterNCRCombatArmorMK2Snow
-  components:
-  - type: Sprite
-    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatNCRmk2Snow.rsi
-  - type: Clothing
-    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatNCRmk2Snow.rsi
-# Forge-Add-End
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutcombatNCRmk2.rsi # Forge-Change
 
 - type: entity
   parent: ClothingOuterBase

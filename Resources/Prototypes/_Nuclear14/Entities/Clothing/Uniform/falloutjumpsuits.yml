@@ -403,9 +403,9 @@
   description: The NCR-designated uniform for all infantry soldiers in the Republic army.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Clothing/Uniforms/FalloutSuits/NCRuniformBase.rsi # Forge-Change
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/NCRuniform.rsi # Forge-Change
   - type: Clothing
-    sprite: _Nuclear14/Clothing/Uniforms/FalloutSuits/NCRuniformBase.rsi # Forge-Change
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/NCRuniform.rsi # Forge-Change
 
 - type: entity
   parent: N14ClothingUniformBase

@@ -310,7 +310,7 @@
     damageCoefficient: 0.8
 
 - type: entity
-  parent: N14ClothingOuterNCRVest # _Nuclear14\Entities\Clothing\OuterClothing\falloutarmor.yml
+  parent: N14ClothingOuterNCRVest # _Nuclear14/Entities/Clothing/OuterClothing/falloutarmor.yml
   id: N14ClothingOuterNCRVestpaddedWeb
   components:
   - type: Sprite
@@ -337,7 +337,7 @@
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRpaddedwebvestSnow.rsi
 
 - type: entity
-  parent: N14ClothingOuterNCRVest # _Nuclear14\Entities\Clothing\OuterClothing\falloutarmor.yml
+  parent: N14ClothingOuterNCRVest # _Nuclear14/Entities/Clothing/OuterClothing/falloutarmor.yml
   id: N14ClothingOuterNCRVeteranArmor
   components:
   - type: Sprite
@@ -355,7 +355,7 @@
     damageCoefficient: 0.9
 
 - type: entity
-  parent: N14ClothingOuterNCRVest # _Nuclear14\Entities\Clothing\OuterClothing\falloutarmor.yml
+  parent: N14ClothingOuterNCRVest # _Nuclear14/Entities/Clothing/OuterClothing/falloutarmor.yml
   id: N14ClothingOuterNCRVeteranArmorSnow
   components:
   - type: Sprite
@@ -500,3 +500,21 @@
     sprite: Corvax/Clothing/OuterClothing/Armor/RangerStandartArmor.rsi
   - type: Clothing
     sprite: Corvax/Clothing/OuterClothing/Armor/RangerStandartArmor.rsi
+
+- type: entity
+  parent: N14ClothingOuterNCRCombatArmorMK2
+  id: N14ClothingOuterNCRCombatArmorMK2Snow
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutcombatNCRmk2Snow.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutcombatNCRmk2Snow.rsi
+
+- type: entity
+  parent: N14ClothingOuterNCRCombatArmor
+  id: N14ClothingOuterNCRCombatArmorSnow
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutcombatNCRsnow.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutcombatNCRsnow.rsi
