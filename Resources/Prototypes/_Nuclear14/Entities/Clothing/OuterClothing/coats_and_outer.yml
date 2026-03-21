@@ -526,9 +526,9 @@
   description: Warm and comfy, this nice white coat is used by officers of the 3rd battalion to warm themselves.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Clothing/OuterClothing/Coats/falloutNCRtrenchcoat.rsi # Forge-Change
+    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/falloutNCRtrenchcoat.rsi # Forge-Change
   - type: Clothing
-    sprite: _Nuclear14/Clothing/OuterClothing/Coats/falloutNCRtrenchcoat.rsi # Forge-Change
+    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/falloutNCRtrenchcoat.rsi # Forge-Change
 # Forge-Change-Start
   - type: Armor 
     modifiers:
