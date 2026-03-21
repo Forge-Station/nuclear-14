@@ -70,6 +70,94 @@
 #    strengthModifier: 2
 
 - type: entity
+  parent: N14ClothingOuterLegionnaireVeteranArmor
+  id: N14ClothingOuterLegionnaireVeteranArmorGastat
+  name: legionary gastat armor
+  description: "Roughly stitched leather and a pair of worn shoulder pads conquered Arizona"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/gastatveteranarmor.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/gastatveteranarmor.rsi
+
+- type: entity
+  parent: N14ClothingOuterLegionnaireVeteranArmor
+  id: N14ClothingOuterLegionnaireVeteranArmorPrimeGastat
+  name: legionary prime gastat armor
+  description: "One of the most impressive serial bull armors"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/gastatveteranarmor++.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/gastatveteranarmor++.rsi
+
+- type: entity
+  parent: N14ClothingOuterLegionnaireVeteranArmor
+  id: N14ClothingOuterLegionnaireVeteranArmorVeteranGastat
+  name: legionary veteran gastat armor
+  description: "Forged in the forges of the Phoenix, this is armor that only the best in the Legion deserves."
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/gastatveteranarmor+.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/gastatveteranarmor+.rsi
+
+- type: entity
+  parent: N14FalloutArmorBase
+  id: N14ClothingOuterLegionnaireTriariumArmor
+  name: legionary triarium armor
+  description: "It is thanks to the soldiers in this armor that the Legion's roads remain safe"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/triariumarmor.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/triariumarmor.rsi
+
+- type: entity
+  parent: N14ClothingOuterDeanLegionnairePrimeArmor
+  id: N14ClothingOuterLegionnairePrinceps+Armor
+  name: legionary veteran princeps armor
+  description: "The wearers of this armor act as the first line in the bellum"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/princepsarmor+.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/princepsarmor+.rsi
+
+- type: entity
+  parent: N14ClothingOuterDeanLegionnairePrimeArmor
+  id: N14ClothingOuterLegionnairePrincepsArmor
+  name: legionary princeps armor
+  description: "Usually such armor is given to the most courageous and fanatical"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/princepsarmor.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/princepsarmor.rsi
+
+- type: entity
+  parent: N14ClothingOuterLegionnaireReconnaissanceArmor
+  id: N14ClothingOuterLegionnaireAssassinArmor
+  name: legionary assassin armor
+  description: "This armor combines maneuverability and dynamism"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/assassinarmor.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/assassinarmor.rsi
+
+- type: entity
+  parent: N14ClothingOuterLegionnaireReconnaissanceArmor
+  id: N14ClothingOuterLegionnaireAssassin+Armor
+  name: legionary veteran assassin armor
+  description: "given only to the most dedicated and experienced human hunters"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/assassinarmor+.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/assassinarmor+.rsi
+
+- type: entity
   parent: N14FalloutArmorBase
   id: N14ClothingOuterDeanLegionnairePrimeArmor
   name: heavy legionary armor

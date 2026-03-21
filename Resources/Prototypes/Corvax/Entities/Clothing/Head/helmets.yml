@@ -162,6 +162,25 @@
     - Hair
 
 - type: entity
+  parent: N14ClothingHeadHatLightBaseballHelmet
+  id: N14ClothingHeadHatVeteran
+  name: veteran assassin helmet
+  description: "given only to the most dedicated and experienced human hunters"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/veteranassassinhelmet.rsi
+    visible: true
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/veteranassassinhelmet.rsi
+    clothingVisuals:
+      head:
+      # Нижний слой на голове
+      - state: folded
+      # Верхний слой на голове
+      - state: equipped-HELMET
+        visible: true
+
+- type: entity
   parent: ClothingHeadEVAHelmetBase
   id: N14ClothingHeadHelmetChinaStealth
   name: шлем стелс-брони
