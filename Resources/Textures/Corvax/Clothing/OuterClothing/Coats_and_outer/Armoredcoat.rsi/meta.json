@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "license": "All Rights Reserved",
-  "copyright": "londorondondon - for Corvax Forge",
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Created by baohe (1145019224566288424)",
   "size": {
     "x": 32,
     "y": 32
@@ -11,15 +11,11 @@
       "name": "icon"
     },
     {
-      "name": "equipped-HELMET",
+      "name": "equipped-OUTERCLOTHING",
       "directions": 4
     },
     {
       "name": "inhand-left",
-      "directions": 4
-    },
-    {
-      "name": "folded",
       "directions": 4
     },
     {

@@ -34,6 +34,17 @@
   - type: StaticPrice
     price: 50
 
+- type: entity # Corvax-change
+  parent: ClothingOuterWinterCoat
+  id: ClothingOuterArmoredWinterCoat
+  name: armored winter coat
+  description: A heavy jacket made from 'synthetic' animal furs.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/Armoredcoat.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/Armoredcoat.rsi
+
 - type: entity
   parent: ClothingOuterWinterCoat
   id: ClothingOuterWinterCoatToggleable

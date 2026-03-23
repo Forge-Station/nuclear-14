@@ -162,20 +162,153 @@
     - Hair
 
 - type: entity
-  parent: N14ClothingHeadHatLightBaseballHelmet
-  id: N14ClothingHeadHatVeteran
-  name: veteran assassin helmet
+  parent: N14ClothingHeadHatBaseballHelmet
+  id: N14ClothingHeadHatPrimeAssasin
+  name: prime assassin helmet
   description: "given only to the most dedicated and experienced human hunters"
   components:
   - type: Sprite
-    sprite: Corvax/Clothing/Head/Helmets/veteranassassinhelmet.rsi
+    sprite: Corvax/Clothing/Head/Helmets/primeassassinhelmet.rsi
     visible: true
   - type: Clothing
-    sprite: Corvax/Clothing/Head/Helmets/veteranassassinhelmet.rsi
+    sprite: Corvax/Clothing/Head/Helmets/primeassassinhelmet.rsi
     clothingVisuals:
       head:
       # Нижний слой на голове
-      - state: folded
+      - state: equipped-HELMET1
+      # Верхний слой на голове
+      - state: equipped-HELMET
+        visible: true
+
+- type: entity
+  parent: N14ClothingHeadHatBaseballHelmet
+  id: N14ClothingHeadHatGastat
+  name: gastat helmet
+  description: "Roughly stitched leather and a pair of worn shoulder pads conquered Arizona"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/gastathelmet.rsi
+    visible: true
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/gastathelmet.rsi
+    clothingVisuals:
+      head:
+      # Нижний слой на голове
+      - state: equipped-HELMET1
+      # Верхний слой на голове
+      - state: equipped-HELMET
+        visible: true
+
+- type: entity
+  parent: N14ClothingHeadHatBaseballHelmet
+  id: N14ClothingHeadHatGastatPrime
+  name: gastat prime helmet
+  description: "One of the most impressive serial bull helmets"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/gastatprimehelmet.rsi
+    visible: true
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/gastatprimehelmet.rsi
+    clothingVisuals:
+      head:
+      # Нижний слой на голове
+      - state: equipped-HELMET1
+      # Верхний слой на голове
+      - state: equipped-HELMET
+        visible: true
+
+- type: entity
+  parent: N14ClothingHeadHatBaseballHelmet
+  id: N14ClothingHeadHatGastatVeteran
+  name: gastat veteran helmet
+  description: "Forged in the forges of the Phoenix, this is helmet that only the best in the Legion deserves."
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/gastatveteranhelmet.rsi
+    visible: true
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/gastatveteranhelmet.rsi
+    clothingVisuals:
+      head:
+      # Нижний слой на голове
+      - state: equipped-HELMET1
+      # Верхний слой на голове
+      - state: equipped-HELMET
+        visible: true
+
+- type: entity
+  parent: N14ClothingHeadHatLightBaseballHelmet
+  id: N14ClothingHeadHatTriarium
+  name: triarium helmet
+  description: "It is thanks to the soldiers in this helmet that the Legion's roads remain safe"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/triariumhelmet.rsi
+    visible: true
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/triariumhelmet.rsi
+    clothingVisuals:
+      head:
+      # Нижний слой на голове
+      - state: equipped-HELMET1
+      # Верхний слой на голове
+      - state: equipped-HELMET
+        visible: true
+
+- type: entity
+  parent: N14ClothingHeadHatLightBaseballHelmet
+  id: N14ClothingHeadHatPrimeAssasin
+  name: assassin helmet
+  description: "This helmet combines maneuverability and dynamism"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/assassinhelmet.rsi
+    visible: true
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/assassinhelmet.rsi
+    clothingVisuals:
+      head:
+      # Нижний слой на голове
+      - state: equipped-HELMET1
+      # Верхний слой на голове
+      - state: equipped-HELMET
+        visible: true
+
+- type: entity
+  parent: N14ClothingHeadHatDeanRecruitHelmet
+  id: N14ClothingHeadHatPrinceps
+  name: princeps helmet
+  description: "Usually such helmet is given to the most courageous and fanatical"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/princepshelmet.rsi
+    visible: true
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/princepshelmet.rsi
+    clothingVisuals:
+      head:
+      # Нижний слой на голове
+      - state: equipped-HELMET1
+      # Верхний слой на голове
+      - state: equipped-HELMET
+        visible: true
+
+- type: entity
+  parent: 14ClothingHeadHatDeanPrimeHelmet
+  id: N14ClothingHeadHatPrincepsPrime
+  name: princeps prime helmet
+  description: "The wearers of this helmet act as the first line in the bellum"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/princepsprimehelmet.rsi
+    visible: true
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/princepsprimehelmet.rsi
+    clothingVisuals:
+      head:
+      # Нижний слой на голове
+      - state: equipped-HELMET1
       # Верхний слой на голове
       - state: equipped-HELMET
         visible: true

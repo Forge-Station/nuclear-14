@@ -116,7 +116,7 @@
 - type: entity
   parent: N14ClothingOuterDeanLegionnairePrimeArmor
   id: N14ClothingOuterLegionnairePrinceps+Armor
-  name: legionary veteran princeps armor
+  name: legionary prime princeps armor
   description: "The wearers of this armor act as the first line in the bellum"
   components:
   - type: Sprite
