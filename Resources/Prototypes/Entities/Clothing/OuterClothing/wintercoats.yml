@@ -38,7 +38,7 @@
   parent: ClothingOuterWinterCoat
   id: ClothingOuterArmoredWinterCoat
   name: armored winter coat
-  description: A heavy jacket made from 'synthetic' animal furs.
+  description: Roughly stitched together fragments of armor and a sturdy bomber jacket
   components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/Armoredcoat.rsi

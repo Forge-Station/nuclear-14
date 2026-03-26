@@ -175,7 +175,7 @@
     clothingVisuals:
       head:
       # Нижний слой на голове
-      - state: equipped-HELMET1
+      - state: folded
       # Верхний слой на голове
       - state: equipped-HELMET
         visible: true
@@ -194,7 +194,7 @@
     clothingVisuals:
       head:
       # Нижний слой на голове
-      - state: equipped-HELMET1
+      - state: folded
       # Верхний слой на голове
       - state: equipped-HELMET
         visible: true
@@ -213,7 +213,7 @@
     clothingVisuals:
       head:
       # Нижний слой на голове
-      - state: equipped-HELMET1
+      - state: folded
       # Верхний слой на голове
       - state: equipped-HELMET
         visible: true
@@ -232,7 +232,7 @@
     clothingVisuals:
       head:
       # Нижний слой на голове
-      - state: equipped-HELMET1
+      - state: folded
       # Верхний слой на голове
       - state: equipped-HELMET
         visible: true
@@ -251,14 +251,14 @@
     clothingVisuals:
       head:
       # Нижний слой на голове
-      - state: equipped-HELMET1
+      - state: folded
       # Верхний слой на голове
       - state: equipped-HELMET
         visible: true
 
 - type: entity
   parent: N14ClothingHeadHatLightBaseballHelmet
-  id: N14ClothingHeadHatPrimeAssasin
+  id: N14ClothingHeadHatAssasin
   name: assassin helmet
   description: "This helmet combines maneuverability and dynamism"
   components:
@@ -270,7 +270,7 @@
     clothingVisuals:
       head:
       # Нижний слой на голове
-      - state: equipped-HELMET1
+      - state: folded
       # Верхний слой на голове
       - state: equipped-HELMET
         visible: true
@@ -289,13 +289,13 @@
     clothingVisuals:
       head:
       # Нижний слой на голове
-      - state: equipped-HELMET1
+      - state: folded
       # Верхний слой на голове
       - state: equipped-HELMET
         visible: true
 
 - type: entity
-  parent: 14ClothingHeadHatDeanPrimeHelmet
+  parent: N14ClothingHeadHatDeanPrimeHelmet
   id: N14ClothingHeadHatPrincepsPrime
   name: princeps prime helmet
   description: "The wearers of this helmet act as the first line in the bellum"
@@ -308,7 +308,7 @@
     clothingVisuals:
       head:
       # Нижний слой на голове
-      - state: equipped-HELMET1
+      - state: folded
       # Верхний слой на голове
       - state: equipped-HELMET
         visible: true

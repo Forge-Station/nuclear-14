@@ -234,7 +234,7 @@
   parent: N14ClothingOuterNCRCombatVeteranArmorDesert
   id: N14ClothingOuterNCRCombatVeteranKiltArmorDesert
   categories: [ HideSpawnMenu ]
-  components: 
+  components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutcombatveterankiltNCR.rsi
   - type: Clothing
@@ -244,7 +244,7 @@
   parent: N14ClothingOuterNCRVestpaddedWebDesert
   id: N14ClothingOuterNCRVestpaddedWebKiltDesert
   categories: [ HideSpawnMenu ]
-  components: 
+  components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRpaddedwebvestkilt.rsi
   - type: Clothing
@@ -254,7 +254,7 @@
   parent: N14ClothingOuterNCRVeteranArmorDesert
   id: N14ClothingOuterNCRVeteranArmorKiltDesert
   categories: [ HideSpawnMenu ]
-  components: 
+  components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRveteranarmorkilt.rsi
   - type: Clothing
@@ -264,7 +264,7 @@
   parent: N14ClothingOuterNCRVestDesert
   id: N14ClothingOuterNCRVestDesertCoat
   categories: [ HideSpawnMenu ]
-  components: 
+  components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRarmorcoat.rsi
   - type: Clothing
@@ -323,3 +323,100 @@
     sprite: Corvax/Clothing/Head/Hats/HatOfAManWithNoName.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Head/Hats/HatOfAManWithNoName.rsi
+
+- type: entity
+  parent: N14ClothingHeadHatLightBaseballHelmet
+  id: N14ClothingHeadHatTriariumVeteranHelmet
+  categories: [ HideSpawnMenu ]
+  name: triarium veteran helmet
+  description: "It is thanks to the soldiers in this helmet that the Legion's roads remain safe"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/veterantriariumhelmet.rsi
+    visible: true
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/veterantriariumhelmet.rsi
+    clothingVisuals:
+      head:
+      # Нижний слой на голове
+      - state: folded
+      # Верхний слой на голове
+      - state: equipped-HELMET
+        visible: true
+
+- type: entity
+  parent: N14FalloutArmorBase
+  id: N14ClothingTriariumVeteranArmor
+  categories: [ HideSpawnMenu ]
+  name: legionary triarium veteran armor
+  description: "It is thanks to the soldiers in this armor that the Legion's roads remain safe"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/triariumveteranarmor.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/triariumveteranarmor.rsi
+
+- type: entity
+  parent: N14ClothingHeadHatDeanRecruitHelmet
+  id: N14ClothingHeadHatPrincepsVeteranHelmet
+  categories: [ HideSpawnMenu ]
+  name: princeps veteran helmet
+  description: "Usually such helmet is given to the most courageous and fanatical"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/veteranprincepshelmet.rsi
+    visible: true
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/veteranprincepshelmet.rsi
+    clothingVisuals:
+      head:
+      # Нижний слой на голове
+      - state: folded
+      # Верхний слой на голове
+      - state: equipped-HELMET
+        visible: true
+
+- type: entity
+  parent: N14ClothingOuterDeanLegionnairePrimeArmor
+  id: N14ClothingPrincepsVeteranArmor
+  categories: [ HideSpawnMenu ]
+  name: legionary princeps veteran armor
+  description: "The wearers of this armor act as the first line in the bellum"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/princepsveteranarmor.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/princepsveteranarmor.rsi
+
+- type: entity
+  parent: N14ClothingHeadHatBaseballHelmet
+  id: N14ClothingHeadHatAssassinVeteranHelmet
+  categories: [ HideSpawnMenu ]
+  name: assassin veteran helmet
+  description: "given only to the most dedicated and experienced human hunters"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/veteranassassinhelmet.rsi
+    visible: true
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/veteranassassinhelmet.rsi
+    clothingVisuals:
+      head:
+      # Нижний слой на голове
+      - state: folded
+      # Верхний слой на голове
+      - state: equipped-HELMET
+        visible: true
+
+- type: entity
+  parent: N14ClothingOuterLegionnaireReconnaissanceArmor
+  id: N14ClothingAssassinVeteranArmor
+  categories: [ HideSpawnMenu ]
+  name: legionary assassin veteran armor
+  description: "This armor combines maneuverability and dynamism"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/assassinveteranarmor.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/assassinveteranarmor.rsi
+

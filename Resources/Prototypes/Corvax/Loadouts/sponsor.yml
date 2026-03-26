@@ -128,6 +128,114 @@
   - !type:LoadoutDeleteHelmet
 
 - type: loadout
+  id: LoadoutN14ClothingHeadHatTriariumVeteranHelmet
+  customName: false
+  customDescription: false
+  category: Roles
+  cost: 0
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - CaesarLegionLegionnaireWarrior
+  - !type:CharacterPlaytimeRequirement
+    tracker: CaesarLegionLegionnaireWarrior
+    min: 216000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingHeadHatTriariumVeteranHelmet
+
+- type: loadout
+  id: LoadoutN14ClothingTriariumVeteranArmor
+  customName: false
+  customDescription: false
+  category: Roles
+  cost: 0
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - CaesarLegionLegionnaireWarrior
+  - !type:CharacterPlaytimeRequirement
+    tracker: CaesarLegionLegionnaireWarrior
+    min: 216000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingTriariumVeteranArmor
+
+- type: loadout
+  id: LoadoutN14ClothingHeadHatPrincepsVeteranHelmet
+  customName: false
+  customDescription: false
+  category: Roles
+  cost: 0
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - CaesarLegionDean
+  - !type:CharacterPlaytimeRequirement
+    tracker: CaesarLegionDean
+    min: 216000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingHeadHatPrincepsVeteranHelmet
+
+- type: loadout
+  id: LoadoutN14ClothingPrincepsVeteranArmor
+  customName: false
+  customDescription: false
+  category: Roles
+  cost: 0
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - CaesarLegionDean
+  - !type:CharacterPlaytimeRequirement
+    tracker: CaesarLegionDean
+    min: 216000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingPrincepsVeteranArmor
+
+- type: loadout
+  id: LoadoutN14ClothingHeadHatAssassinVeteranHelmet
+  customName: false
+  customDescription: false
+  category: Roles
+  cost: 0
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - CaesarLegionVenator
+  - !type:CharacterPlaytimeRequirement
+    tracker: CaesarLegionVenator
+    min: 216000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingHeadHatAssassinVeteranHelmet
+
+- type: loadout
+  id: LoadoutN14ClothingAssassinVeteranArmor
+  customName: false
+  customDescription: false
+  category: Roles
+  cost: 0
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - CaesarLegionVenator
+  - !type:CharacterPlaytimeRequirement
+    tracker: CaesarLegionVenator
+    min: 216000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingAssassinVeteranArmor
+
+- type: loadout
   id: LoadoutClothingOuterNCRVestDesertCoat
   customName: false
   customDescription: false

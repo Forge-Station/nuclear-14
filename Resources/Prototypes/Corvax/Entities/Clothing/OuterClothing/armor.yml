@@ -71,7 +71,7 @@
 
 - type: entity
   parent: N14ClothingOuterLegionnaireVeteranArmor
-  id: N14ClothingOuterLegionnaireVeteranArmorGastat
+  id: N14ClothingOuterLegionnaireArmorGastat
   name: legionary gastat armor
   description: "Roughly stitched leather and a pair of worn shoulder pads conquered Arizona"
   components:
@@ -82,7 +82,7 @@
 
 - type: entity
   parent: N14ClothingOuterLegionnaireVeteranArmor
-  id: N14ClothingOuterLegionnaireVeteranArmorPrimeGastat
+  id: N14ClothingOuterLegionnaireArmorPrimeGastat
   name: legionary prime gastat armor
   description: "One of the most impressive serial bull armors"
   components:
@@ -115,7 +115,7 @@
 
 - type: entity
   parent: N14ClothingOuterDeanLegionnairePrimeArmor
-  id: N14ClothingOuterLegionnairePrinceps+Armor
+  id: N14ClothingOuterLegionnairePrincepsPrimeArmor
   name: legionary prime princeps armor
   description: "The wearers of this armor act as the first line in the bellum"
   components:
@@ -148,7 +148,7 @@
 
 - type: entity
   parent: N14ClothingOuterLegionnaireReconnaissanceArmor
-  id: N14ClothingOuterLegionnaireAssassin+Armor
+  id: N14ClothingOuterLegionnaireAssassinPrimeArmor
   name: legionary veteran assassin armor
   description: "given only to the most dedicated and experienced human hunters"
   components:
