@@ -1,5 +1,5 @@
 - type: entity
-  parent: ClothingOuterBase
+  parent: [ClothingOuterBase, AllowSuitStorageClothing] # Forge-Change
   id: ClothingOuterVestFlak
   name: flak jacket
   description: A dusty and weathered flak jacket.
@@ -19,7 +19,7 @@
     damageCoefficient: 0.9
 
 - type: entity
-  parent: ClothingOuterBase
+  parent: [ClothingOuterBase, AllowSuitStorageClothing] # Forge-Change
   id: ClothingOuterVestFlakPress
   name: flak jacket (press)
   description: A flak jacket for reporters in wartorn zones.

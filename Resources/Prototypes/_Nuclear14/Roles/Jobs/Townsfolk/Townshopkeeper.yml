@@ -18,11 +18,12 @@
       tracker: TownShopkeeperHelper
       min: 14400 # 4 hours
   startingGear: TownShopkeeperGear
-  icon: "JobIconTownShopKeeper" # Corvax-Change
+  icon: "JobIconTownShopKeeper" # Forge-Change
   supervisors: job-supervisors-townsfolk
+  alwaysUseSpawner: true # Forge-Change
   access:
   - TownieShopkeeper
-  - TownsPerson # Corvax-Change
+  - TownsPerson # Forge-Change
   special:
   - !type:AddComponentSpecial
     components:

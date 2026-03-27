@@ -1,0 +1,77 @@
+- type: entity
+  id: Cross
+  parent: BaseStructure
+  name: cross
+  description: A heavy wooden cross for public punishment.
+  components:
+  - type: Sprite
+    drawdepth: Objects
+    sprite: Corvax/Structures/Misc/cross.rsi
+    layers:
+    - state: cross_empty
+  - type: Cross
+    hangDelay: 20
+    unhangDelay: 20
+    restraintPrototype: CrossRestraints
+    occupiedOverlayPrototype: CrossOccupiedOverlay
+    unstrapDistance: 0.85
+    northBuckleOffset: "0,-0.23"
+    southBuckleOffset: "0,0.23"
+    eastBuckleOffset: "0.07,-0.19"
+    westBuckleOffset: "-0.07,-0.16"
+    breakStunDuration: 4
+    breakDamage:
+      types:
+        Blunt: 10
+  - type: InteractionOutline
+  - type: Damageable
+    damageContainer: Inorganic
+    damageModifierSet: Wood
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 200
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: WoodDestroy
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          N14FloraLogTimber:
+            min: 2
+            max: 4
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+  - type: Tag
+    tags:
+    - Wooden
+  - type: Construction
+    graph: Cross14
+    node: cross
+
+- type: entity
+  id: CrossOccupiedOverlay
+  save: false
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    drawdepth: OverMobs
+    sprite: Corvax/Structures/Misc/cross.rsi
+    state: cross_occupied
+  - type: Tag
+    tags:
+    - HideContextMenu
+
+- type: entity
+  id: CrossRestraints
+  parent: BaseItem
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Handcuff
+    breakoutTime: 5
+    uncuffTime: 2
+    breakOnRemove: true
+  - type: UseDelay
+    delay: 1
+  - type: CrossRestraint

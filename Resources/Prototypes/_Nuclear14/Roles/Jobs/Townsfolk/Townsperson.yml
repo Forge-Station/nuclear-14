@@ -14,10 +14,11 @@
     - !type:CharacterOverallTimeRequirement
       min: 3600 # 1 hour
   startingGear: TownspersonGear
-  icon: "JobIconTownPerson" # Corvax-Change
+  icon: "JobIconTownPerson" # Forge-Change
   supervisors: job-supervisors-townsfolk
+  alwaysUseSpawner: true # Forge-Change
   access:
-  - TownsPerson # Corvax-Change
+  - TownsPerson # Forge-Change
   special:
   - !type:AddComponentSpecial
     components:
@@ -30,13 +31,13 @@
   id: TownspersonGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitSettlerRags
-    back: N14ClothingBackpackExplorer # Corvax-Change
+    back: N14ClothingBackpackExplorer # Forge-Change
     shoes: N14ClothingShoesBlack
     id: N14IDPassportTownsfolk
   innerClothingSkirt: N14ClothingUniformJumpskirtFalloutBlack
   satchel: N14ClothingBackpackSatchelWastelanderFilled
   duffelbag: N14ClothingBackpackDuffelFilled
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledWastelander
 

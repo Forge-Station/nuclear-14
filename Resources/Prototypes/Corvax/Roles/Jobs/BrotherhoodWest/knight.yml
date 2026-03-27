@@ -10,7 +10,7 @@
       - Human
     - !type:CharacterDepartmentTimeRequirement
       department: BrotherhoodWest
-      min: 54000 # 15 hours
+      min: 18000 # 5 hours
   startingGear: BoSWestKnightGear
   alwaysUseSpawner: true
   icon: "JobIconBosMKnight"

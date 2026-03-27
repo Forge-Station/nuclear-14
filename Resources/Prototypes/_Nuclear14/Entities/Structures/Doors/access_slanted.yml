@@ -403,3 +403,35 @@
     access: [["SilverKey"]]
   - type: Wires
     layoutId: AirlockCargo
+
+# Forge-Change-Start
+- type: entity
+  parent: N14DoorWoodRedSlanted
+  id: N14DoorWoodSlantedLockedTownsPerson
+  suffix: Townie, Locked
+  components:
+  - type: AccessReader
+    access: [["TownsPerson"]]
+  - type: Wires
+    layoutId: AirlockService
+
+- type: entity
+  parent: N14DoorMetalBarSlanted
+  id: N14DoorCellSlantedLockedTownsPerson
+  suffix: Townie, Locked
+  components:
+  - type: AccessReader
+    access: [["TownsPerson"]]
+  - type: Wires
+    layoutId: AirlockService
+
+- type: entity
+  parent: N14DoorMetalBlueSlanted
+  id: N14DoorMetalSlantedLockedIronTownsPerson
+  suffix: Townie, Locked
+  components:
+  - type: AccessReader
+    access: [["TownsPerson"]]
+  - type: Wires
+    layoutId: AirlockService
+# Forge-Change-End

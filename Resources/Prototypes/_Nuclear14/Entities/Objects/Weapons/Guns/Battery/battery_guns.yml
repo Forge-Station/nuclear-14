@@ -1060,4 +1060,4 @@
   - type: FollowDistance
     backStrength: 6
   - type: StaticPrice
-    price: 400
+    price: 400 

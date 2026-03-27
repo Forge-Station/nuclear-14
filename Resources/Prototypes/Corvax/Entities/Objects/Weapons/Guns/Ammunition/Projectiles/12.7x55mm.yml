@@ -1,0 +1,12 @@
+- type: entity
+  id: N14Bullet127x55
+  name: bullet (12.7x55mm)
+  parent: BaseBullet
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Projectile
+    damage:
+      types:
+        Piercing: 40
+        Blunt: 10
+        Structural: 10

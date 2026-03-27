@@ -8,7 +8,7 @@
     whitelist:
       tags:
         - N14Cartridge68Rifle
-    proto: N14Cartridge68ifle
+    proto: N14Cartridge68Rifle
     capacity: 60
   - type: ContainerContainer
     containers:

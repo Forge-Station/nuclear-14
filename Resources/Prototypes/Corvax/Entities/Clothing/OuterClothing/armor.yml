@@ -49,6 +49,31 @@
 
 - type: entity
   parent: N14FalloutArmorBase
+  id: N14ClothingOuterConquerorCenturionArmor
+  name: сenturion conqueror armor
+  description: "Smelted armor is issued only to particularly distinguished centurions"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/centurionconquerorarmor.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/centurionconquerorarmor.rsi
+  - type: ClothingSpeedModifier
+    walkModifier: 0.9
+    sprintModifier: 0.9
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.55
+        Slash: 0.55
+        Piercing: 0.5
+        Heat: 0.5
+  - type: ExplosionResistance
+    damageCoefficient: 0.65
+  - type: StaminaDamageResistance
+    coefficient: 0.85
+
+- type: entity
+  parent: N14FalloutArmorBase
   id: N14ClothingOuterDeanLegionnaireVeteranArmor
   name: heavy legionary armor
   description: "The heavy version of legionary armor slows down the wearer, but gives good protection from external threats."

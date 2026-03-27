@@ -1,0 +1,40 @@
+- type: entity
+  id: N14BaseSpeedLoader12-7x55mm
+  name: "speed loader (12-7x55mm)"
+  parent: BaseItem
+  abstract: true
+  components:
+  - type: Tag
+    tags:
+      - SpeedLoader12-7x55mm
+  - type: SpeedLoader
+  - type: BallisticAmmoProvider
+    whitelist:
+      tags:
+        - N14Cartridge12-7x55mm
+    capacity: 5
+  - type: Sprite
+  - type: ContainerContainer
+    containers:
+      ballistic-ammo: !type:Container
+        ents: []
+
+- type: entity
+  id: SpeedLoader12-7x55mm
+  name: "speed loader (12-7x55mm)"
+  parent: N14BaseSpeedLoader12-7x55mm
+  components:
+  - type: BallisticAmmoProvider
+    proto: N14Cartridge12-7x55mm
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Guns/Ammunition/Speedloaders/12-7-55mmloader.rsi
+    layers:
+      - state: base
+        map: [ "enum.GunVisualLayers.Base" ]
+      - state: base-5
+        map: [ "enum.GunVisualLayers.Mag" ]
+  - type: MagazineVisuals
+    magState: base
+    steps: 6
+    zeroVisible: false
+  - type: Appearance

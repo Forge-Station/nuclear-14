@@ -1,0 +1,28 @@
+- type: constructionGraph
+  id: Cross14
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: cross
+          steps:
+            - material: N14Timber
+              amount: 5
+              doAfter: 40
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+
+    - node: cross
+      entity: Cross
+      edges:
+        - to: start
+          steps:
+            - tool: Prying
+              doAfter: 20
+          completed:
+            - !type:GivePrototype
+              prototype: N14FloraLogTimber
+              amount: 2
+            - !type:DeleteEntity {}
+

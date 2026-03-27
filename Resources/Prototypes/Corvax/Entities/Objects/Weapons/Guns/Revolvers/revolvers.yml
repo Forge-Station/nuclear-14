@@ -1,0 +1,24 @@
+- type: entity
+  parent: N14WeaponRevolverBase
+  id: N14WeaponRevolver12-7x55mmRSH12
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Guns/Revolvers/rsh12.rsi
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Guns/Revolvers/rsh12.rsi
+  - type: Gun
+    fireRate: 1.5
+    resetOnHandSelected: false
+    soundGunshot:
+      collection: N14RSH12Gunshot
+  - type: RevolverAmmoProvider
+    whitelist:
+      tags:
+        - N14Cartridge12-7x55mm
+        - SpeedLoader12-7x55mm
+    proto: N14Cartridge12-7x55mm
+    capacity: 5
+    chambers: [ True, True, True, True, True ]
+    ammoSlots: [ null, null, null, null, null ]
+  - type: StaticPrice
+    price: 90
