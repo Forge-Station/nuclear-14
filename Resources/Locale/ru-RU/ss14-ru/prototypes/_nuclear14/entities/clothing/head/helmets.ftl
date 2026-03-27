@@ -88,12 +88,12 @@ ent-N14ClothingHeadHatRangerHelmetSnowFox = боевой шлем рейндже
     .desc = { ent-N14ClothingHeadHatRangerHelmetFox.desc }
 ent-N14ClothingHeadHatRangerHelmetModif = модифицированный боевой шлем рейнджера
     .desc = Усиленный шлем, который носят рейнджеры в самых опасных уголках Пустоши. Маска намертво приварена к корпусу, а сам шлем явно подвергался кустарным модификациям.
-ent-N14ClothingHeadHatNCRHelmetMetalSnow = шлем бойца НКР зимний
-    .desc = Простой шлем, защищающий головы бойцов, отстаивающих идеалы НКР. Этот шлем покрыт белоснежным камуфляжем.
-ent-N14ClothingHeadHatNCRHelmetMetalWoods = шлем бойца НКР лесной
+ent-N14ClothingHeadHatNCRHelmetMetalWoods = Лесной металлический шлем НКР
     .desc = Простой шлем, защищающий головы бойцов, отстаивающих идеалы НКР. Этот шлем покрыт лесным камуфляжем.
 ent-N14ClothingHeadHatNCRHelmet = шлем бойца НКР
     .desc = Простой шлем, защищающий головы бойцов, отстаивающих идеалы НКР. Этот шлем покрыт пустынным камуфляжем.
+ent-N14ClothingHeadHatNCRHelmetSnow = шлем бойца НКР зимний
+    .desc = Простой шлем, защищающий головы бойцов, отстаивающих идеалы НКР. Этот шлем покрыт зимним камуфляжем.
 ent-N14ClothingHeadHatNCRHelmetMetalGhillie = Шлем НКР с маскировочной сеткой
     .desc = Округлый шлем НКР, обеспечивающий некоторую защиту. Этот экземпляр покрыт лесным камуфляжем типа "маскировочная сеть".
 ent-N14ClothingHeadHatNCRHelmetMetalRadioSnow = Шлем радиста НКР
@@ -101,7 +101,9 @@ ent-N14ClothingHeadHatNCRHelmetMetalRadioSnow = Шлем радиста НКР
 ent-N14ClothingHeadHatNCRHelmetMetalRadioWood = { ent-N14ClothingHeadHatNCRHelmetMetalRadioSnow }
     .desc = { ent-N14ClothingHeadHatNCRHelmetMetalRadioSnow.desc }
 ent-N14ClothingHeadHatNCRCombatHelmet = боевой шлем НКР
-    .desc = Стальной шлем, обеспечивающий лучшие защиту по сравнению с обычным. Ожидайте проблемы с шеей если носите его все время.
+    .desc = Стальной шлем, обеспечивающий лучшие защитные свойства по сравнению с обычным. Ожидайте проблемы с шеей если носите его все время.
+ent-N14ClothingHeadHatNCRCombatHelmetSnow = боевой шлем НКР зимний
+    .desc = { N14ClothingHeadHatNCRCombatHelmetSnow.desc }
 
 # Племя 
 ent-N14ClothingHeadHatTribalPowerhelm = тяжёлый шлем старейшины

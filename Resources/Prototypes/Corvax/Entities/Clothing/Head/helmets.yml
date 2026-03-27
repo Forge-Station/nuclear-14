@@ -292,3 +292,34 @@
   - type: HideLayerClothing
     slots:
     - Hair
+
+- type: entity
+  parent: N14ClothingHeadHatNCRCombatHelmet
+  id: N14ClothingHeadHatNCRCombatHelmetSnow
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/falloutNCRcombathelmetSnow.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/falloutNCRcombathelmetSnow.rsi
+
+- type: entity
+  parent: N14ClothingHeadHatBaseHelmetMetal # \Prototypes\_Nuclear14\Entities\Clothing\Head\helmets.yml
+  id: N14ClothingHeadHatNCRHelmet
+  name: NCR helmet
+  description: A rounded NCR helmet offering some protection. This one is covered on classic desert camo.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/falloutNCRhelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/falloutNCRhelmet.rsi
+
+- type: entity
+  parent: N14ClothingHeadHatNCRHelmet
+  id: N14ClothingHeadHatNCRHelmetSnow
+  name: snow NCR helmet
+  description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/falloutNCRhelmetSnow.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/falloutNCRhelmetSnow.rsi
