@@ -64,7 +64,7 @@
 - type: radioChannel
   id: BrotherhoodWashington
   name: chat-radio-boswashington
-  keycode: 'w'
+  keycode: 'в'
   frequency: 1313
   color: "#a2000f"
 

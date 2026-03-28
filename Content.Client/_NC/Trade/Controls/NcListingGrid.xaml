@@ -11,12 +11,12 @@
 
     <BoxContainer Name="ItemsHost"
                   Orientation="Vertical"
-                  SeparationOverride="0"
+                  SeparationOverride="3"
                   HorizontalExpand="True"
                   VerticalExpand="True" />
 
     <Button Name="MoreButton"
             HorizontalExpand="True"
-            Margin="0 8 0 8"
+            Margin="0 6 0 4"
             Visible="False" />
 </BoxContainer>

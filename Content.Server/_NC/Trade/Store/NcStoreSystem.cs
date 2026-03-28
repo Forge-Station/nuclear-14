@@ -184,7 +184,6 @@ public sealed class NcStoreSystem : EntitySystem
         }
 
         _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid, AudioParams.Default.WithVolume(-2f));
-        _storeUi.UpdateDynamicState(uid, comp, actor);
     }
 
     private void OnSellRequest(EntityUid uid, NcStoreComponent comp, StoreSellListingBoundUiMessage msg)
@@ -240,7 +239,7 @@ public sealed class NcStoreSystem : EntitySystem
         }
 
         _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid, AudioParams.Default.WithVolume(-2f));
-        _storeUi.UpdateDynamicState(uid, comp, actor);
+        _storeUi.RequestDynamicRefresh(uid, comp, actor);
     }
 
 
@@ -278,6 +277,6 @@ public sealed class NcStoreSystem : EntitySystem
         }
 
         _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid, AudioParams.Default.WithVolume(-2f));
-        _storeUi.UpdateDynamicState(uid, comp, actor);
+        _storeUi.RequestDynamicRefresh(uid, comp, actor);
     }
 }

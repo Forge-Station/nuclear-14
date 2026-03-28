@@ -16,7 +16,9 @@ public sealed class StoreDynamicState : BoundUserInterfaceState
         List<ContractClientData> contracts,
         bool hasBuyTab,
         bool hasSellTab,
-        bool hasContractsTab)
+        bool hasContractsTab,
+        int contractSkipCost,
+        string contractSkipCurrency)
     {
         Revision = revision;
         CatalogRevision = catalogRevision;
@@ -29,6 +31,8 @@ public sealed class StoreDynamicState : BoundUserInterfaceState
         HasBuyTab = hasBuyTab;
         HasSellTab = hasSellTab;
         HasContractsTab = hasContractsTab;
+        ContractSkipCost = contractSkipCost;
+        ContractSkipCurrency = contractSkipCurrency;
     }
 
     public int Revision { get; }
@@ -46,4 +50,10 @@ public sealed class StoreDynamicState : BoundUserInterfaceState
     public bool HasBuyTab { get; }
     public bool HasSellTab { get; }
     public bool HasContractsTab { get; }
+
+    /// <summary>Стоимость пропуска одного контракта. 0 — пропуск отключён.</summary>
+    public int ContractSkipCost { get; }
+
+    /// <summary>Валюта для оплаты пропуска (stack type id).</summary>
+    public string ContractSkipCurrency { get; }
 }

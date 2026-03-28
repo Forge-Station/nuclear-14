@@ -14,26 +14,40 @@ public sealed partial class NcContractSystem : EntitySystem
     private const int DepthInProgress = -1;
     private static readonly ISawmill Sawmill = Logger.GetSawmill("nccontracts");
     private readonly Dictionary<string, List<string>> _ancestorsCache = new(StringComparer.Ordinal);
+    private readonly List<(EntityUid Store, string Difficulty)> _cooldownKeysToRemoveScratch = new();
     private readonly Dictionary<(EntityUid Store, string Difficulty), CooldownState> _contractCooldown = new();
     private readonly Dictionary<string, int> _depthCache = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, Dictionary<string, (StoreContractPrototype Proto, int Weight)>> _flattenedPoolCache = new(StringComparer.Ordinal);
     [Dependency] private readonly NcStoreInventorySystem _inventory = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
+    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _progressClaimableByKeyScratch = new();
+    private readonly HashSet<EntityUid> _progressConsumedEntitiesScratch = new();
+    private readonly List<(string ProtoId, PrototypeMatchMode MatchMode, int Depth)> _progressOrderedKeysScratch = new();
+    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _progressRequiredByKeyScratch = new();
+    private readonly Stack<List<int>> _progressTargetIndexPool = new();
+    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), List<int>> _progressTargetIndexesByKeyScratch = new();
+    private readonly Dictionary<EntityUid, int> _progressVirtualStackLeftScratch = new();
     private readonly Dictionary<QuasiKey, double> _quasiPhase = new();
     [Dependency] private readonly IRobustRandom _random = default!;
+    private readonly List<string> _progressContractIdsScratch = new();
     private readonly List<EntityUid> _scratchCrateItems = new();
+    private readonly List<EntityUid> _scratchStoreNearbyItems = new();
     private readonly List<EntityUid> _scratchUserItems = new();
     private readonly Dictionary<QuasiKey, SmallBagState> _smallBags = new();
+    [Dependency] private readonly EntityLookupSystem _lookup = default!;
 
     public override void Initialize()
     {
         base.Initialize();
+        InitializeObjectiveRuntime();
         _prototypes.PrototypesReloaded += OnPrototypesReloaded;
     }
 
     public override void Shutdown()
     {
         _prototypes.PrototypesReloaded -= OnPrototypesReloaded;
+        ShutdownObjectiveRuntime();
         base.Shutdown();
     }
 
@@ -47,10 +61,45 @@ public sealed partial class NcContractSystem : EntitySystem
         _quasiPhase.Clear();
         _smallBags.Clear();
 
+        _cooldownKeysToRemoveScratch.Clear();
         _contractCooldown.Clear();
+        _flattenedPoolCache.Clear();
     }
 
-    private static List<ContractTargetServerData> GetEffectiveTargets(ContractServerData contract) => contract.Targets;
+    public void ClearStoreRuntimeCaches(EntityUid store)
+    {
+        if (store == EntityUid.Invalid)
+            return;
+
+        if (_contractCooldown.Count > 0)
+        {
+            _cooldownKeysToRemoveScratch.Clear();
+            foreach (var key in _contractCooldown.Keys)
+            {
+                if (key.Store == store)
+                    _cooldownKeysToRemoveScratch.Add(key);
+            }
+
+            for (var i = 0; i < _cooldownKeysToRemoveScratch.Count; i++)
+                _contractCooldown.Remove(_cooldownKeysToRemoveScratch[i]);
+
+            _cooldownKeysToRemoveScratch.Clear();
+        }
+
+        ClearStoreObjectiveRuntime(store, deleteTrackedEntities: true);
+    }
+
+    private static List<ContractTargetServerData> GetEffectiveTargets(ContractServerData contract)
+    {
+        contract.Targets ??= new();
+        for (var i = contract.Targets.Count - 1; i >= 0; i--)
+        {
+            if (contract.Targets[i] == null)
+                contract.Targets.RemoveAt(i);
+        }
+
+        return contract.Targets;
+    }
 
     private int GetProtoDepth(string protoId)
     {

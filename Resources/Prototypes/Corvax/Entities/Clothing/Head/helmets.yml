@@ -420,3 +420,39 @@
     sprite: Corvax/Clothing/Head/Helmets/InquisitorHelmetHood.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/InquisitorHelmetHood.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatWBoSBattleHelmet
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/wbosbattlehelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/wbosbattlehelmet.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.9
+        Slash: 0.9
+        Piercing: 0.9
+        Heat: 0.9
+  - type: HideLayerClothing
+    slots:
+    - Hair
+  
+
+- type: entity
+  parent: N14ClothingHeadHatWBoSBattleHelmet
+  id: N14ClothingHeadHatWBoSLordHelmet
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/wboslordhelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/wboslordhelmet.rsi
+  - type: NightVision
+    isEquipment: true
+  - type: HideLayerClothing
+    force: true
+    slots:
+    - Hair
+    - FacialHair

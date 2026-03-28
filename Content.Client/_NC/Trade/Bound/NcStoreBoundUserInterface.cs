@@ -25,6 +25,9 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         menu.OnSellPressed -= OnSell;
         menu.OnMassSellPulledCrate -= OnMassSellPulledCrate;
         menu.OnContractClaim -= OnContractClaim;
+        menu.OnContractTake -= OnContractTake;
+        menu.OnContractSkip -= OnContractSkip;
+        menu.OnContractRequestPinpointer -= OnContractRequestPinpointer;
         menu.OnVisibleListingIdsChanged -= OnVisibleListingIdsChanged;
         menu.OnClose -= OnMenuClosed;
     }
@@ -102,7 +105,9 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
             st.HasBuyTab,
             st.HasSellTab,
             st.HasContractsTab,
-            st.Contracts);
+            st.Contracts,
+            st.ContractSkipCost,
+            st.ContractSkipCurrency);
 
     private void EnsureMenuCreated()
     {
@@ -123,6 +128,9 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         _menu.OnSellPressed += OnSell;
         _menu.OnMassSellPulledCrate += OnMassSellPulledCrate;
         _menu.OnContractClaim += OnContractClaim;
+        _menu.OnContractTake += OnContractTake;
+        _menu.OnContractSkip += OnContractSkip;
+        _menu.OnContractRequestPinpointer += OnContractRequestPinpointer;
         _menu.OnVisibleListingIdsChanged += OnVisibleListingIdsChanged;
 
         _menu.OnClose += OnMenuClosed;
@@ -164,6 +172,31 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
             return;
 
         SendMessage(new ClaimContractBoundMessage(contractId));
+    }
+
+
+    private void OnContractTake(string contractId)
+    {
+        if (Actor == null)
+            return;
+
+        SendMessage(new TakeContractBoundMessage(contractId));
+    }
+
+    private void OnContractSkip(string contractId)
+    {
+        if (Actor == null)
+            return;
+
+        SendMessage(new SkipContractBoundMessage(contractId));
+    }
+
+    private void OnContractRequestPinpointer(string contractId)
+    {
+        if (Actor == null)
+            return;
+
+        SendMessage(new RequestContractPinpointerBoundMessage(contractId));
     }
 
     private void OnMassSellPulledCrate()

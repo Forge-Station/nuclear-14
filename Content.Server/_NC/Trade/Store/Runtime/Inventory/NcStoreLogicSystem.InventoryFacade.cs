@@ -7,6 +7,8 @@ public sealed partial class NcStoreLogicSystem
 
     public NcInventorySnapshot BuildInventorySnapshot(EntityUid root) => _inventory.BuildInventorySnapshot(root);
 
+    public int GetInventoryRevision(EntityUid root) => _inventory.GetInventoryRevision(root);
+
     public void FillInventorySnapshot(EntityUid root, NcInventorySnapshot buffer) => _inventory.FillInventorySnapshot(root, buffer);
 
     public void ScanInventory(EntityUid root, List<EntityUid> itemsBuffer, NcInventorySnapshot snapshotBuffer) => _inventory.ScanInventory(root, itemsBuffer, snapshotBuffer);

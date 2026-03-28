@@ -1,0 +1,49 @@
+# Author Info
+# GitHub: https://github.com/Forge-Station/nuclear-14
+# Discord: pekl0l
+# License: CC-BY-NC-ND-3.0
+# Corvax_forge
+
+- type: gameMap
+  id: Juneau
+  mapName: 'Джуно'
+  mapPath: /Maps/Corvax/Juneau.yml
+  minPlayers: 0
+  stations:
+    Juneau:
+      stationProto: FalloutStation
+      components:
+      - type: StationNameSetup
+        mapNameTemplate: 'Джуно'
+      - type: StationJobs
+        overflowJobs:
+        - Wastelander
+        availableJobs:
+          Wastelander: [ -1, -1 ]
+          # WastelandScavenger: [ 3, 5 ]
+          WastelandReporter: [ 1, 1 ]
+          # WastelandMusician: [ 2, 3 ]
+          WastelandFarmer: [ 1, 1 ]
+          WastelandChaplain: [ 1, 1 ]
+          WastelandBartender: [ 2, 2 ]
+          TownMayor: [ 1, 1 ]
+          TownSheriff: [ 1, 1 ]
+          TownDeputy: [ 4, 4 ]
+          TownDoctor: [ 2, 2 ]
+          TownMechanic: [ 1, 1 ]
+          TownShopkeeper: [ 1, 1 ]
+          TownShopkeeperHelper: [ 1, 1 ] # Forge-Town
+          Townsperson: [ 8, 8 ]
+          NCRLT: [ 1, 1 ]
+          NCRRangerVeteran: [ 1, 1 ]
+          NCRRanger: [ 2, 2 ]
+          NCRSGT: [ 1, 1 ]
+          NCRWS: [ 1, 1 ]
+          NCRMedic: [ 1, 1 ]
+          NCRSoldier: [ 4, 4 ]
+          NCRCadet: [ 2, 2 ]
+          BoSWashingtonCommander: [ 1, 1 ]
+          BoSWashingtonPaladin: [ 1, 1 ]
+          BoSWashingtonScribe: [ 1, 1 ]
+          BoSWashingtonKnight: [ 2, 2 ]
+          BoSWashingtonInitiate: [ 0, 4 ]

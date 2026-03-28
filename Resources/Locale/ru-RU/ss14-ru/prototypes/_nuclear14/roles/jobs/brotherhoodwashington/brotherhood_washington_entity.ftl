@@ -1,10 +1,10 @@
 ent-N14MobHumanBoSWashingtonPaladin = Паладин Вашингтонского БС
     .desc = { ent-MobHuman.desc }
-ent-N14MobHumanBoSWashingtonCommander = Командир Вашингтонского БС
+ent-N14MobHumanBoSWashingtonCommander = Лорд Вашингтонского БС
     .desc = { ent-MobHuman.desc }
-ent-N14MobHumanBoSWashingtonInitiate = Послушник Вашингтонского БС
+ent-N14MobHumanBoSWashingtonInitiate = Аколит Вашингтонского БС
     .desc = { ent-MobHuman.desc }
-ent-N14MobHumanBoSWashingtonScribe = Скриптер Вашингтонского БС
+ent-N14MobHumanBoSWashingtonScribe = Писец Вашингтонского БС
     .desc = { ent-MobHuman.desc }
 ent-N14MobHumanBoSWashingtonKnight = Рыцарь Вашингтонского БС
     .desc = { ent-MobHuman.desc }

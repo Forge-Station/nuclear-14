@@ -12,4 +12,18 @@ public sealed class NcInventorySnapshot
         AncestorCounts.Clear();
         StackTypeCounts.Clear();
     }
+
+    public void CopyFrom(NcInventorySnapshot other)
+    {
+        Clear();
+
+        foreach (var (key, value) in other.ProtoCounts)
+            ProtoCounts[key] = value;
+
+        foreach (var (key, value) in other.AncestorCounts)
+            AncestorCounts[key] = value;
+
+        foreach (var (key, value) in other.StackTypeCounts)
+            StackTypeCounts[key] = value;
+    }
 }

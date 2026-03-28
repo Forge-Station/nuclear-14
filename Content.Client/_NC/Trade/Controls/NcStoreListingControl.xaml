@@ -3,13 +3,14 @@
                 xmlns:graphics="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
                 xmlns:controls="clr-namespace:Content.Client._NC.Trade.Controls"
                 HorizontalExpand="True"
+                RectClipContent="True"
                 Margin="0">
 
     <PanelContainer.PanelOverride>
         <graphics:StyleBoxFlat BackgroundColor="#141417E6"
                                BorderColor="#B08D3B"
                                BorderThickness="1"
-                               Padding="10 8 10 8"/>
+                               Padding="8 3 8 3"/>
     </PanelContainer.PanelOverride>
 
     <BoxContainer Orientation="Vertical"
@@ -17,28 +18,28 @@
                   HorizontalExpand="True">
 
         <Label Name="TitleLabel"
-               StyleClasses="LabelHeading"
+               StyleClasses="LabelKeyText"
                ClipText="True"
                HorizontalExpand="True"
-               Margin="2 0 2 2"/>
+               Margin="1 0 1 1"/>
 
         <PanelContainer Name="TitleDivider"
                         HorizontalExpand="True"
                         MinSize="0 1"
-                        Margin="0">
+                        Margin="0 0 0 1">
             <PanelContainer.PanelOverride>
                 <graphics:StyleBoxFlat BackgroundColor="#B08D3BCC"/>
             </PanelContainer.PanelOverride>
         </PanelContainer>
 
-        <BoxContainer Orientation="Horizontal"
+        <BoxContainer Name="ContentRow" Orientation="Horizontal"
                       SeparationOverride="0"
                       HorizontalExpand="True"
                       Margin="0">
 
             <PanelContainer Name="IconSlotBackground"
-                            MinSize="96 96"
-                            MaxSize="96 96"
+                            MinSize="72 72"
+                            MaxSize="72 72"
                             Margin="0 0 4 0">
                 <EntityPrototypeView Name="IconView"
                                      HorizontalAlignment="Center"
@@ -56,14 +57,16 @@
             </PanelContainer>
 
             <controls:NcListingDescriptionBox Name="DescriptionBox"
-                                      HorizontalExpand="True"
-                                      VerticalExpand="True"
-                                      Margin="2 0 0 0"/>
+                                              HorizontalExpand="True"
+                                              VerticalExpand="True"
+                                              Margin="2 0 6 0"/>
 
-            <BoxContainer Orientation="Vertical"
-                          SeparationOverride="4"
+            <BoxContainer Name="ActionColumn"
+                          Orientation="Vertical"
+                          SeparationOverride="2"
                           HorizontalExpand="False"
-                          MinWidth="96"
+                          MinWidth="124"
+                          RectClipContent="True"
                           Margin="0 0 0 0">
 
                 <controls:NcListingQuantityControl Name="QtyControl" />

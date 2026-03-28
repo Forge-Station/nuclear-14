@@ -1,11 +1,12 @@
 <BoxContainer xmlns="https://spacestation14.io"
               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
               Orientation="Horizontal"
-              SeparationOverride="4"
+              SeparationOverride="3"
+              RectClipContent="True"
               HorizontalExpand="False"
               HorizontalAlignment="Center">
     <Button Name="MinusButton" Text="-" MinSize="24 24"/>
-    <Label Name="QtyLabel" MinWidth="28" HorizontalAlignment="Center"/>
-    <LineEdit Name="QtyEdit" MinWidth="40" HorizontalExpand="False"/>
+    <Label Name="QtyLabel" Visible="False" MinWidth="0" HorizontalAlignment="Center"/>
+    <LineEdit Name="QtyEdit" MinWidth="36" HorizontalExpand="False"/>
     <Button Name="PlusButton" Text="+" MinSize="24 24"/>
 </BoxContainer>

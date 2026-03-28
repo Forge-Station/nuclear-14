@@ -73,63 +73,114 @@ public sealed class NcStoreCurrencySystem : EntitySystem
         if (listing.Cost.Count == 0)
             return false;
 
-        var hasWhitelist = false;
-        foreach (var c in store.CurrencyWhitelist)
-            if (!string.IsNullOrWhiteSpace(c))
-            {
-                hasWhitelist = true;
-                break;
-            }
+        if (HasWhitelistedCurrency(store))
+            return TryPickWhitelistedBuyCurrency(store, listing, snapshot, out currency, out unitPrice, out balance);
 
-        if (hasWhitelist)
-        {
-            foreach (var cur in store.CurrencyWhitelist)
-            {
-                if (string.IsNullOrWhiteSpace(cur))
-                    continue;
-                if (!listing.Cost.TryGetValue(cur, out var price))
-                    continue;
-                if (price <= 0)
-                    continue;
+        return TryPickFallbackBuyCurrency(listing, snapshot, out currency, out unitPrice, out balance);
+    }
 
-                if (!TryGetBalance(snapshot, cur, out var bal))
-                    bal = 0;
-                if (bal < price)
-                    continue;
-
-                currency = cur;
-                unitPrice = price;
-                balance = bal;
+    private static bool HasWhitelistedCurrency(NcStoreComponent store)
+    {
+        foreach (var currencyId in store.CurrencyWhitelist)
+            if (!string.IsNullOrWhiteSpace(currencyId))
                 return true;
-            }
 
-            return false;
-        }
+        return false;
+    }
 
-        KeyValuePair<string, int>? best = null;
-        foreach (var kv in listing.Cost)
+    private bool TryPickWhitelistedBuyCurrency(
+        NcStoreComponent store,
+        NcStoreListingDef listing,
+        in NcInventorySnapshot snapshot,
+        out string currency,
+        out int unitPrice,
+        out int balance)
+    {
+        currency = string.Empty;
+        unitPrice = 0;
+        balance = 0;
+
+        foreach (var currencyId in store.CurrencyWhitelist)
         {
-            if (string.IsNullOrWhiteSpace(kv.Key) || kv.Value <= 0)
+            if (!TryGetAffordableBuyCurrency(snapshot, listing, currencyId, out var price, out var currentBalance))
                 continue;
-            if (best == null || string.CompareOrdinal(kv.Key, best.Value.Key) < 0)
-                best = kv;
+
+            currency = currencyId;
+            unitPrice = price;
+            balance = currentBalance;
+            return true;
         }
 
-        if (best == null)
+        return false;
+    }
+
+    private bool TryPickFallbackBuyCurrency(
+        NcStoreListingDef listing,
+        in NcInventorySnapshot snapshot,
+        out string currency,
+        out int unitPrice,
+        out int balance)
+    {
+        currency = string.Empty;
+        unitPrice = 0;
+        balance = 0;
+
+        if (!TryGetBestBuyCurrency(listing, out var best))
             return false;
 
-        var fallbackCur = best.Value.Key;
-        var fallbackPrice = best.Value.Value;
-        if (!TryGetBalance(snapshot, fallbackCur, out var fallbackBal))
-            fallbackBal = 0;
+        if (!TryGetBalance(snapshot, best.Key, out balance))
+            balance = 0;
 
-        if (fallbackBal < fallbackPrice)
+        if (balance < best.Value)
             return false;
 
-        currency = fallbackCur;
-        unitPrice = fallbackPrice;
-        balance = fallbackBal;
+        currency = best.Key;
+        unitPrice = best.Value;
         return true;
+    }
+
+    private bool TryGetAffordableBuyCurrency(
+        in NcInventorySnapshot snapshot,
+        NcStoreListingDef listing,
+        string currencyId,
+        out int price,
+        out int balance)
+    {
+        price = 0;
+        balance = 0;
+
+        if (string.IsNullOrWhiteSpace(currencyId))
+            return false;
+
+        if (!listing.Cost.TryGetValue(currencyId, out price) || price <= 0)
+            return false;
+
+        if (!TryGetBalance(snapshot, currencyId, out balance))
+            balance = 0;
+
+        return balance >= price;
+    }
+
+    private static bool TryGetBestBuyCurrency(
+        NcStoreListingDef listing,
+        out KeyValuePair<string, int> best)
+    {
+        best = default;
+        var found = false;
+
+        foreach (var candidate in listing.Cost)
+        {
+            if (string.IsNullOrWhiteSpace(candidate.Key) || candidate.Value <= 0)
+                continue;
+
+            if (!found || string.CompareOrdinal(candidate.Key, best.Key) < 0)
+            {
+                best = candidate;
+                found = true;
+            }
+        }
+
+        return found;
     }
 
     public bool TryPickCurrencyForSell(

@@ -14,7 +14,7 @@
             - Human
             - Ghoul
     - !type:CharacterOverallTimeRequirement
-      min: 3600
+      min: 21600 # Forge-Change (6 hours)
   startingGear: BoSWashingtonInitiateGear
   alwaysUseSpawner: true
   icon: "JobIconPassenger"
@@ -32,14 +32,16 @@
 - type: startingGear
   id: BoSWashingtonInitiateGear
   equipment:
-    head: N14ClothingHeadHatBrotherhoodBeret
-    jumpsuit: N14ClothingUniformJumpsuitBOSRed
-    back: N14ClothingBackpackMilitaryFilled
+    jumpsuit: N14ClothingUniformJumpsuitWBoSAcolyte # Forge-Change
+    back: N14ClothingBackpackMilitary # Forge-Change
     shoes: N14ClothingBootsLeatherFilled
     id: N14IDBrotherhoodWashingtonHolotagInitiate
-    outerClothing: N14ClothingOuterWBoSInitiateArmor
-    belt: ClothingBeltBoSWebbing
+    outerClothing: N14ClothingOuterWBoSAcolyteCoat # Forge-Change
+    belt: ClothingBeltRope # Forge-Change
     pocket1: BoSWashingtonInitSet
+  storage: # Forge-Change
+    back:
+    - N14BoxPlasticFilledMilitary
 
 - type: playTimeTracker
   id: BoSWashingtonInitiate

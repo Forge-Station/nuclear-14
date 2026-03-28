@@ -77,3 +77,11 @@
   - type: Sprite
     netsync: false
     sprite: Corvax/Clothing/Head/PowerArmorHelmets/t51westboselder.rsi
+
+- type: entity
+  parent: N14ClothingHeadHelmetPowerArmorT51
+  id: N14ClothingHeadHelmetPowerArmorWBoSHelmet
+  components:
+  - type: Sprite
+    netsync: false
+    sprite: Corvax/Clothing/Head/PowerArmorHelmets/wboshelmet.rsi

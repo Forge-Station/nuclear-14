@@ -3,6 +3,6 @@
         ClipText="True"
         ToggleMode="True"
         HorizontalExpand="True"
-        MinSize="0 34"
+        MinSize="0 30"
         TextAlign="Left"
         Margin="0" />
