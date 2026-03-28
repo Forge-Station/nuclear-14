@@ -1,0 +1,20 @@
+- type: entity
+  parent: PaperOffice
+  id: NcTradeContractProofRepairPhoto
+  name: "фотокарточка ремонта"
+  description: "Небольшая фотокарточка с отметкой о том, что объект действительно был приведён в рабочее состояние."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperOffice
+  id: NcTradeContractProofDeliveryReceipt
+  name: "накладная о доставке"
+  description: "Подтверждение того, что контрактный груз был доставлен в нужную точку и принят на месте."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofGhoulTrophy
+  name: "трофейная метка гуля"
+  description: "Окровавленная контрактная метка, снятая с подтверждённой цели."
+  categories: [ HideSpawnMenu ]

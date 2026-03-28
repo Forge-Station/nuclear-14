@@ -1281,7 +1281,7 @@
       - id: N14WeaponPistolWebley
       - id: N14MagazinePistol9mm
         amount: 2
-      - id: N14CleanGauze10
+      - id: N14AloeSalve
       - id: N14BoxCardboardMREBoxKFilled
 
 - type: entity
@@ -1296,12 +1296,8 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14WeaponRifle556CarbineOld
-      - id: Magazine556Rifle
-        amount: 3
-      - id: N14WeaponPlasmaPistol
-      - id: N14PlasmaCell
-        amount: 2
+      - id: N14WeaponSniper556TribalUpgraded # Forge-Change
+      - id: MagazineBox556 # Forge-Change
       - id: N14CleanGauze10
       - id: N14BoxCardboardMREBoxKFilled
 
@@ -1320,11 +1316,8 @@
     items:
       - id: N14WeaponPlasmaRifle
       - id: N14PlasmaCartridge
-        amount: 3
-      - id: N14WeaponPistolWebley
-      - id: N14MagazinePistol9mm
-        amount: 2
-      - id: N14CleanGauze10
+        amount: 4
+      - id: N14AloeSalve
       - id: N14BoxCardboardMREBoxKFilled
 
 - type: entity
@@ -1339,8 +1332,8 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14WeaponRifle556Carbine
-      - id: LongMagazine556Rifle
+      - id: N14WeaponRifle762Chinese # Forge-Change
+      - id: Magazine762Rifle # Forge-Change
         amount: 3
       - id: N14WeaponPlasmaPistol
       - id: N14PlasmaCell
@@ -1431,17 +1424,14 @@
     state: rifleman
   - type: Item
     size: Huge
-  - type: SpawnItemsOnUse
+  - type: SpawnItemsOnUse # Forge-Change-Start
     items:
-      - id: N14WeaponPlasmaRifleAuto
+      - id: N14WeaponPlasmaMultiplas 
       - id: N14PlasmaCartridge
         amount: 3
-      - id: N14WeaponPistolWebley
-      - id: N14MagazinePistol9mm
-        amount: 2
-      - id: N14CleanGauze10
+      - id: N14MedkitCombatFilled
       - id: N14Stimpak
-      - id: N14BoxCardboardMREBoxKFilled
+      - id: N14BoxCardboardMREBoxKFilled # Forge-Change-End
 
 - type: entity
   name: Brotherhood Paladin sniper kit
@@ -1453,17 +1443,14 @@
     state: rifleman
   - type: Item
     size: Huge
-  - type: SpawnItemsOnUse
+  - type: SpawnItemsOnUse # Forge-Change-Start
     items:
-      - id: N14WeaponRifle762MarksmanCanadian
-      - id: Magazine762AmmoShort
+      - id: N14WeaponRifle762MarksmanChinese
+      - id: Magazine308Rifle
         amount: 3
-      - id: N14WeaponPlasmaPistol
-      - id: N14PlasmaCell
-        amount: 2
-      - id: N14CleanGauze10
+      - id: N14MedkitCombatFilled
       - id: N14Stimpak
-      - id: N14BoxCardboardMREBoxKFilled
+      - id: N14BoxCardboardMREBoxKFilled # Forge-Change-End
 
 - type: entity
   name: Brotherhood Paladin ballistic kit

@@ -17,6 +17,7 @@
   startingGear: WastelandReporterGear
   icon: "JobIconTownReporter" # Forge-Change
   supervisors: job-supervisors-townsfolk
+  alwaysUseSpawner: true # Forge-Change
   access:
   - WastelandReporter
   - TownsPerson # Forge-Change

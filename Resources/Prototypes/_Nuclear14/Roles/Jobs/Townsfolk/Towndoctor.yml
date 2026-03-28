@@ -17,6 +17,7 @@
   startingGear: TownDoctorGear
   icon: "JobIconTownMedic" # Forge-Change
   supervisors: job-supervisors-townsfolk
+  alwaysUseSpawner: true # Forge-Change
   access:
   - TownieDoctor
   - TownsPerson # Forge-Change

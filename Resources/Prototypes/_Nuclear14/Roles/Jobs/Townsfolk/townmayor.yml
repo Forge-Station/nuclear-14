@@ -17,6 +17,7 @@
   startingGear: TownMayorGear
   icon: "JobIconTownMayor" # Forge-Change
   supervisors: job-supervisors-townsfolk
+  alwaysUseSpawner: true # Forge-Change
   accessGroups:
   - Townie
   special:

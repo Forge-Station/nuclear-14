@@ -1,0 +1,16 @@
+- type: gameMap
+  id: BSvsNCR
+  mapName: 'BSvsNCR'
+  mapPath: /Maps/Corvax/BSvsNCR.yml # Forge-Change
+  minPlayers: 0
+  stations:
+    Sunnyvale:
+      stationProto: FalloutStation
+      components:
+        - type: StationNameSetup
+          mapNameTemplate: 'BSvsNCR'
+        - type: StationJobs
+          availableJobs:
+            NCRRanger: [ 4, 4 ]
+            NCRSoldier: [ 42, 42 ]
+            BoSWestGunsmith: [ 25, 25 ]

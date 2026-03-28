@@ -17,6 +17,7 @@
   startingGear: WastelandBartenderGear
   icon: "JobIconBartender"
   supervisors: job-supervisors-townsfolk
+  alwaysUseSpawner: true # Forge-Change
   access:
   - WastelandBartender
   - TownsPerson # Forge-Change

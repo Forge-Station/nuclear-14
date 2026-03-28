@@ -17,6 +17,7 @@ public sealed class StackCurrencyHandler : ICurrencyHandler
     private readonly SharedStackSystem _stacks;
     private readonly SharedTransformSystem _xform;
     private readonly List<(EntityUid Ent, int Count)> _scratchCandidates = new();
+    private readonly List<EntityUid> _scratchItems = new();
 
     public StackCurrencyHandler(
         IEntityManager ents,
@@ -62,12 +63,12 @@ public sealed class StackCurrencyHandler : ICurrencyHandler
         if (!CanHandle(currencyId))
             return false;
 
-        var cachedItems = _inventory.GetOrBuildDeepItemsCache(user);
+        _inventory.ScanInventoryItems(user, _scratchItems);
 
         _scratchCandidates.Clear();
         var total = 0;
 
-        foreach (var ent in cachedItems)
+        foreach (var ent in _scratchItems)
         {
             if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
                 continue;
@@ -131,8 +132,8 @@ public sealed class StackCurrencyHandler : ICurrencyHandler
 
         long remaining = amount;
 
-        var cached = _inventory.GetOrBuildDeepItemsCacheCompacted(user);
-        foreach (var ent in cached)
+        _inventory.ScanInventoryItems(user, _scratchItems);
+        foreach (var ent in _scratchItems)
         {
             if (remaining <= 0)
                 break;

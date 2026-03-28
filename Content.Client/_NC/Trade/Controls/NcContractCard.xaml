@@ -1,0 +1,224 @@
+<PanelContainer xmlns="https://spacestation14.io"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:graphics="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
+                HorizontalExpand="True"
+                Margin="4 0 4 6"
+                RectClipContent="True">
+    <BoxContainer Orientation="Horizontal"
+                  HorizontalExpand="True"
+                  SeparationOverride="0">
+        <PanelContainer Name="AccentStrip"
+                        MinSize="5 0"
+                        VerticalExpand="True"
+                        Margin="0 0 6 0">
+            <PanelContainer.PanelOverride>
+                <graphics:StyleBoxFlat BackgroundColor="#4CAF50" />
+            </PanelContainer.PanelOverride>
+        </PanelContainer>
+
+        <PanelContainer Name="CardFrame"
+                        HorizontalExpand="True"
+                        RectClipContent="True">
+            <PanelContainer.PanelOverride>
+                <graphics:StyleBoxFlat BackgroundColor="#1B1B20"
+                                       BorderColor="#7A6338"
+                                       BorderThickness="2"
+                                       Padding="8 7 8 7" />
+            </PanelContainer.PanelOverride>
+
+            <BoxContainer Orientation="Vertical"
+                          HorizontalExpand="True"
+                          SeparationOverride="0">
+                <BoxContainer Orientation="Vertical"
+                              HorizontalExpand="True"
+                              Margin="0 0 0 5">
+                    <Label Name="TitleLabel"
+                           StyleClasses="LabelKeyText"
+                           HorizontalExpand="True"
+                           ClipText="True"
+                           Margin="0 0 0 1" />
+
+                    <BoxContainer Name="BadgesRow"
+                                  Orientation="Horizontal"
+                                  HorizontalExpand="True"
+                                  Margin="0 0 0 1" />
+                </BoxContainer>
+
+                <PanelContainer Name="HeaderDivider"
+                                HorizontalExpand="True"
+                                MinSize="0 1"
+                                Margin="0 0 0 6">
+                    <PanelContainer.PanelOverride>
+                        <graphics:StyleBoxFlat BackgroundColor="#8A7241AA" />
+                    </PanelContainer.PanelOverride>
+                </PanelContainer>
+
+                <RichTextLabel Name="DescriptionLabel"
+                               HorizontalExpand="True"
+                               Margin="0 0 0 5" />
+
+                <Label Name="StatusLabel"
+                       Visible="False"
+                       HorizontalExpand="True"
+                       ClipText="True"
+                       Margin="0 0 0 4" />
+
+                <Label Name="StageLabel"
+                       Visible="False"
+                       Margin="0 0 0 4"
+                       Modulate="#8DB7E8" />
+
+                <BoxContainer Orientation="Horizontal"
+                              HorizontalExpand="True"
+                              Margin="0 0 0 0"
+                              SeparationOverride="8">
+                    <BoxContainer Name="GoalsPanel"
+                                  Orientation="Vertical"
+                                  HorizontalExpand="True"
+                                  VerticalExpand="True"
+                                  SeparationOverride="2"
+                                  Margin="0 2 0 0">
+                        <Label Name="GoalsHeaderLabel"
+                               Text="{Loc 'nc-store-contract-goals-header'}"
+                               StyleClasses="LabelSubText"
+                               Modulate="#B8AB8D"
+                               Margin="0 0 0 2" />
+
+                        <BoxContainer Name="GoalsHost"
+                                      Orientation="Vertical"
+                                      HorizontalExpand="True"
+                                      SeparationOverride="2" />
+
+                        <Label Name="TurnInNoteLabel"
+                               Visible="False"
+                               HorizontalExpand="True"
+                               ClipText="True"
+                               Margin="0 4 0 0"
+                               Modulate="#C2B7A5" />
+
+                        <BoxContainer Name="TurnInSection"
+                                      Orientation="Vertical"
+                                      Visible="False"
+                                      HorizontalExpand="True"
+                                      Margin="0 4 0 0">
+                            <Label Name="TurnInHeaderLabel"
+                                   Text="{Loc 'nc-store-contract-turn-in-header'}"
+                                   StyleClasses="LabelSubText"
+                                   Modulate="#BBAE91"
+                                   Margin="0 0 0 2" />
+
+                            <BoxContainer Name="TurnInHost"
+                                          Orientation="Vertical"
+                                          HorizontalExpand="True"
+                                          SeparationOverride="2" />
+                        </BoxContainer>
+
+                        <BoxContainer Name="ProgressSection"
+                                      Orientation="Vertical"
+                                      HorizontalExpand="True"
+                                      Margin="0 4 0 0">
+                            <BoxContainer Orientation="Horizontal"
+                                          HorizontalExpand="True"
+                                          Margin="0 0 0 2">
+                                <Label Name="ProgressLabel"
+                                       StyleClasses="LabelSubText"
+                                       HorizontalExpand="True"
+                                       ClipText="True"
+                                       Modulate="#B9AC90" />
+
+                                <Label Name="ProgressValueLabel"
+                                       StyleClasses="LabelSubText"
+                                       HorizontalAlignment="Right"
+                                       Modulate="#D9C596"
+                                       Margin="6 0 0 0" />
+                            </BoxContainer>
+
+                            <PanelContainer Name="ProgressTrack"
+                                            HorizontalExpand="True"
+                                            MinSize="0 6">
+                                <PanelContainer.PanelOverride>
+                                    <graphics:StyleBoxFlat BackgroundColor="#131318"
+                                                           BorderColor="#6C5A38"
+                                                           BorderThickness="1"
+                                                           Padding="1" />
+                                </PanelContainer.PanelOverride>
+
+                                <PanelContainer Name="ProgressFill"
+                                                HorizontalAlignment="Left"
+                                                MinSize="0 2"
+                                                Margin="1 1 1 1"
+                                                Visible="False">
+                                    <PanelContainer.PanelOverride>
+                                        <graphics:StyleBoxFlat BackgroundColor="#C49A4F" />
+                                    </PanelContainer.PanelOverride>
+                                </PanelContainer>
+                            </PanelContainer>
+                        </BoxContainer>
+                    </BoxContainer>
+
+                    <BoxContainer Name="SideColumn"
+                                  Orientation="Vertical"
+                                  MinWidth="280"
+                                  MaxWidth="300"
+                                  SeparationOverride="6">
+                        <PanelContainer Name="SidePanel"
+                                        HorizontalExpand="True">
+                            <PanelContainer.PanelOverride>
+                                <graphics:StyleBoxFlat BackgroundColor="#202026E6"
+                                                       BorderColor="#765F37"
+                                                       BorderThickness="2"
+                                                       Padding="8 6 8 6" />
+                            </PanelContainer.PanelOverride>
+
+                            <BoxContainer Orientation="Vertical"
+                                          HorizontalExpand="True"
+                                          SeparationOverride="3">
+                                <Label Name="RewardsHeaderLabel"
+                                       Text="{Loc 'nc-store-contract-reward-header'}"
+                                       StyleClasses="LabelSubText"
+                                       Modulate="#B9AD90"
+                                       Margin="0 0 0 1" />
+
+                                <BoxContainer Name="RewardsHost"
+                                              Orientation="Vertical"
+                                              HorizontalExpand="True"
+                                              SeparationOverride="2"
+                                              Margin="0 0 0 2" />
+
+                                <PanelContainer HorizontalExpand="True"
+                                                MinSize="0 1"
+                                                Margin="0 2 0 3">
+                                    <PanelContainer.PanelOverride>
+                                        <graphics:StyleBoxFlat BackgroundColor="#81683C80" />
+                                    </PanelContainer.PanelOverride>
+                                </PanelContainer>
+
+                                <BoxContainer Orientation="Vertical"
+                                              HorizontalExpand="True"
+                                              SeparationOverride="0">
+                                    <Label Name="ActionHintLabel"
+                                           StyleClasses="LabelSubText"
+                                           HorizontalExpand="True"
+                                           ClipText="True"
+                                           Modulate="#B8AD98"
+                                           Margin="0 0 0 4" />
+
+                                    <Button Name="PrimaryActionButton"
+                                            HorizontalExpand="True"
+                                            MinSize="0 28" />
+
+                                    <BoxContainer Name="SecondaryButtonsRow"
+                                                  Orientation="Horizontal"
+                                                  HorizontalExpand="True"
+                                                  Margin="0 5 0 0"
+                                                  SeparationOverride="6"
+                                                  Visible="False" />
+                                </BoxContainer>
+                            </BoxContainer>
+                        </PanelContainer>
+                    </BoxContainer>
+                </BoxContainer>
+            </BoxContainer>
+        </PanelContainer>
+    </BoxContainer>
+</PanelContainer>

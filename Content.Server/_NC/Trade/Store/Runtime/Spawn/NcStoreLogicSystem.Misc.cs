@@ -11,6 +11,8 @@ namespace Content.Server._NC.Trade;
 public sealed partial class NcStoreLogicSystem
 {
     private const int DefaultMaxStackFallback = 1000;
+    private readonly List<EntityUid> _batchExecutionItemsScratch = new();
+    private readonly List<EntityUid> _stackFillItemsScratch = new();
 
     public bool TrySpawnProduct(string protoId, EntityUid user) => TrySpawnProductInternal(protoId, user, true);
 
@@ -113,7 +115,8 @@ public sealed partial class NcStoreLogicSystem
 
     private bool ProcessSingleRootExecution(EntityUid root, Dictionary<string, int> reqs)
     {
-        var cachedItems = _inventory.GetOrBuildDeepItemsCacheCompacted(root);
+        _inventory.ScanInventoryItems(root, _batchExecutionItemsScratch);
+        var cachedItems = _batchExecutionItemsScratch;
         var mutated = false;
 
         foreach (var (protoId, totalAmount) in reqs)
@@ -175,9 +178,9 @@ public sealed partial class NcStoreLogicSystem
     {
         var remaining = toAdd;
         var addedTotal = 0;
-        var cachedItems = _inventory.GetOrBuildDeepItemsCacheCompacted(user);
+        _inventory.ScanInventoryItems(user, _stackFillItemsScratch);
 
-        foreach (var ent in cachedItems)
+        foreach (var ent in _stackFillItemsScratch)
         {
             if (remaining <= 0)
                 break;
@@ -274,7 +277,7 @@ public sealed partial class NcStoreLogicSystem
 
     private bool SlowTake(ref List<EntityUid> cachedItems, EntityUid root, string protoId, int amount)
     {
-        cachedItems = _inventory.GetOrBuildDeepItemsCacheCompacted(root);
+        _inventory.ScanInventoryItems(root, cachedItems);
         return _inventory.TryTakeProductUnitsFromCachedList(
             root,
             cachedItems,

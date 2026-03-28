@@ -20,6 +20,7 @@
   startingGear: TownShopkeeperGear
   icon: "JobIconTownShopKeeper" # Forge-Change
   supervisors: job-supervisors-townsfolk
+  alwaysUseSpawner: true # Forge-Change
   access:
   - TownieShopkeeper
   - TownsPerson # Forge-Change

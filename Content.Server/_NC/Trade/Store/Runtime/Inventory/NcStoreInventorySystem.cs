@@ -13,10 +13,25 @@ namespace Content.Server._NC.Trade;
 
 public sealed class NcStoreInventorySystem : EntitySystem
 {
+    private const int UncachedRevision = int.MinValue;
+
+    private sealed class InventoryCacheEntry
+    {
+        public readonly List<EntityUid> Items = new();
+        public readonly NcInventorySnapshot Snapshot = new();
+        public int Revision;
+        public int ItemsRevision = UncachedRevision;
+        public int SnapshotRevision = UncachedRevision;
+    }
+
+    private readonly record struct ProductTakeRequest(
+        string ProtoId,
+        string? StackType,
+        PrototypeMatchMode EffectiveMatch);
+
     [Dependency] private readonly IComponentFactory _compFactory = default!;
     [Dependency] private readonly IEntityManager _ents = default!;
-    private readonly Dictionary<EntityUid, List<EntityUid>> _inventoryCache = new();
-    private readonly HashSet<EntityUid> _inventoryDirty = new();
+    private readonly Dictionary<EntityUid, InventoryCacheEntry> _inventoryCache = new();
     private readonly Dictionary<string, string?> _productStackTypeCache = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string[]> _protoAndAncestorsCache = new(StringComparer.Ordinal);
     private readonly HashSet<string> _scratchProtoVisited = new(StringComparer.Ordinal);
@@ -51,46 +66,93 @@ public sealed class NcStoreInventorySystem : EntitySystem
     private void OnEntityTerminating(ref EntityTerminatingEvent ev)
     {
         _inventoryCache.Remove(ev.Entity);
-        _inventoryDirty.Remove(ev.Entity);
+
+        foreach (var entry in _inventoryCache.Values)
+        {
+            if (entry.ItemsRevision != entry.Revision || !entry.Items.Contains(ev.Entity))
+                continue;
+
+            entry.Revision = unchecked(entry.Revision + 1);
+        }
     }
 
 
     public void InvalidateInventoryCache(EntityUid root)
     {
-        // Keep the list instance to reduce GC; mark it dirty for rebuild.
-        if (!_inventoryCache.ContainsKey(root))
-            _inventoryCache[root] = new List<EntityUid>();
-        _inventoryDirty.Add(root);
+        var entry = GetOrCreateInventoryCacheEntry(root);
+        MarkInventoryDirty(entry, itemsStillCurrent: false);
     }
 
     public void InvalidateAllCaches()
     {
-        _inventoryDirty.Clear();
         _inventoryCache.Clear();
     }
 
-    public List<EntityUid> GetOrBuildDeepItemsCache(EntityUid owner)
+    public int GetInventoryRevision(EntityUid root)
     {
-        if (_inventoryCache.TryGetValue(owner, out var cached))
-        {
-            if (_inventoryDirty.Remove(owner))
-                BuildDeepItemsCache(owner, cached);
-            return cached;
-        }
-
-        cached = new List<EntityUid>();
-        _inventoryCache[owner] = cached;
-        BuildDeepItemsCache(owner, cached);
-        return cached;
+        return _inventoryCache.TryGetValue(root, out var entry)
+            ? entry.Revision
+            : 0;
     }
 
-    public List<EntityUid> GetOrBuildDeepItemsCacheCompacted(EntityUid owner)
+    private List<EntityUid> GetOrBuildDeepItemsCache(EntityUid owner)
     {
-        var cached = GetOrBuildDeepItemsCache(owner);
-        CompactCachedItemsIfNeeded(cached);
-        return cached;
+        var entry = GetOrCreateInventoryCacheEntry(owner);
+        EnsureItemsCache(owner, entry);
+        MarkSnapshotCacheEscaped(entry);
+        return entry.Items;
     }
 
+    private List<EntityUid> GetOrBuildDeepItemsCacheCompacted(EntityUid owner)
+    {
+        var entry = GetOrCreateInventoryCacheEntry(owner);
+        EnsureItemsCache(owner, entry);
+        CompactCachedItemsIfNeeded(entry.Items);
+        MarkSnapshotCacheEscaped(entry);
+        return entry.Items;
+    }
+
+    private InventoryCacheEntry GetOrCreateInventoryCacheEntry(EntityUid owner)
+    {
+        if (_inventoryCache.TryGetValue(owner, out var entry))
+            return entry;
+
+        entry = new();
+        _inventoryCache[owner] = entry;
+        return entry;
+    }
+
+    private void EnsureItemsCache(EntityUid owner, InventoryCacheEntry entry)
+    {
+        if (entry.ItemsRevision == entry.Revision)
+            return;
+
+        BuildDeepItemsCache(owner, entry.Items);
+        entry.ItemsRevision = entry.Revision;
+    }
+
+    private void EnsureSnapshotCache(EntityUid owner, InventoryCacheEntry entry)
+    {
+        EnsureItemsCache(owner, entry);
+        if (entry.SnapshotRevision == entry.Revision)
+            return;
+
+        FillInventorySnapshotFromItems(owner, entry.Items, entry.Snapshot);
+        entry.SnapshotRevision = entry.Revision;
+    }
+
+    private static void MarkSnapshotCacheEscaped(InventoryCacheEntry entry)
+    {
+        // Callers receive the live internal items list and may mutate it in-place.
+        entry.SnapshotRevision = UncachedRevision;
+    }
+
+    private static void MarkInventoryDirty(InventoryCacheEntry entry, bool itemsStillCurrent)
+    {
+        entry.Revision = unchecked(entry.Revision + 1);
+        entry.ItemsRevision = itemsStillCurrent ? entry.Revision : UncachedRevision;
+        entry.SnapshotRevision = UncachedRevision;
+    }
 
     private void BuildDeepItemsCache(EntityUid owner, List<EntityUid> cached)
     {
@@ -151,7 +213,7 @@ public sealed class NcStoreInventorySystem : EntitySystem
         if (cached.Capacity < _scratchResult.Count)
             cached.Capacity = _scratchResult.Count;
         cached.AddRange(_scratchResult);
-        }
+    }
 
     private void CompactCachedItems(List<EntityUid> cached)
     {
@@ -195,8 +257,7 @@ public sealed class NcStoreInventorySystem : EntitySystem
         CompactCachedItems(cached);
     }
 
-
-public NcInventorySnapshot BuildInventorySnapshot(EntityUid root)
+    public NcInventorySnapshot BuildInventorySnapshot(EntityUid root)
     {
         var snap = new NcInventorySnapshot();
         FillInventorySnapshot(root, snap);
@@ -205,25 +266,33 @@ public NcInventorySnapshot BuildInventorySnapshot(EntityUid root)
 
     public void FillInventorySnapshot(EntityUid root, NcInventorySnapshot buffer)
     {
-        var items = GetOrBuildDeepItemsCache(root);
-        FillInventorySnapshotFromItems(root, items, buffer);
+        var entry = GetOrCreateInventoryCacheEntry(root);
+        EnsureSnapshotCache(root, entry);
+        buffer.CopyFrom(entry.Snapshot);
     }
 
     public void ScanInventory(EntityUid root, List<EntityUid> itemsBuffer, NcInventorySnapshot snapshotBuffer)
     {
+        var entry = GetOrCreateInventoryCacheEntry(root);
+        EnsureItemsCache(root, entry);
+        CompactCachedItemsIfNeeded(entry.Items);
+
         itemsBuffer.Clear();
-        var cached = GetOrBuildDeepItemsCacheCompacted(root);
-        itemsBuffer.AddRange(cached);
-        FillInventorySnapshotFromItems(root, itemsBuffer, snapshotBuffer);
+        itemsBuffer.AddRange(entry.Items);
+
+        EnsureSnapshotCache(root, entry);
+        snapshotBuffer.CopyFrom(entry.Snapshot);
     }
 
+    public void ScanInventoryItems(EntityUid root, List<EntityUid> itemsBuffer)
+    {
+        var entry = GetOrCreateInventoryCacheEntry(root);
+        EnsureItemsCache(root, entry);
+        CompactCachedItemsIfNeeded(entry.Items);
 
-public void ScanInventoryItems(EntityUid root, List<EntityUid> itemsBuffer)
-{
-    itemsBuffer.Clear();
-    var cached = GetOrBuildDeepItemsCacheCompacted(root);
-    itemsBuffer.AddRange(cached);
-}
+        itemsBuffer.Clear();
+        itemsBuffer.AddRange(entry.Items);
+    }
 
 
     private void FillInventorySnapshotFromItems(
@@ -323,130 +392,206 @@ public void ScanInventoryItems(EntityUid root, List<EntityUid> itemsBuffer)
         if (amount <= 0)
             return true;
 
-        var stackType = GetProductStackType(protoId);
-        var effective = ResolveMatchMode(protoId, matchMode);
-        var availableTotal = 0;
+        var request = CreateProductTakeRequest(protoId, matchMode);
+        if (CalculateAvailableTakeUnits(root, cachedItems, request, amount) < amount)
+            return false;
 
-        bool Matches(EntityPrototype proto)
-        {
-            if (effective == PrototypeMatchMode.Exact)
-                return proto.ID == protoId;
-            return proto.ID == protoId || IsProtoOrDescendant(proto, protoId);
-        }
+        var success = ExecuteTakeUnitsFromCachedItems(root, cachedItems, request, amount);
+        if (success && _inventoryCache.TryGetValue(root, out var entry))
+            MarkInventoryDirty(entry, ReferenceEquals(entry.Items, cachedItems));
+
+        return success;
+    }
+
+    private ProductTakeRequest CreateProductTakeRequest(string protoId, PrototypeMatchMode matchMode)
+    {
+        return new(protoId, GetProductStackType(protoId), ResolveMatchMode(protoId, matchMode));
+    }
+
+    private int CalculateAvailableTakeUnits(
+        EntityUid root,
+        IReadOnlyList<EntityUid> cachedItems,
+        ProductTakeRequest request,
+        int maxNeeded)
+    {
+        var availableTotal = 0;
 
         foreach (var ent in cachedItems)
         {
-            if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
-                continue;
-            if (IsProtectedFromDirectSale(root, ent))
+            if (ShouldSkipTakeEntity(root, ent))
                 continue;
 
-            if (stackType != null)
-            {
-                if (_ents.TryGetComponent(ent, out StackComponent? stack) && stack.StackTypeId == stackType)
-                    availableTotal += Math.Max(stack.Count, 0);
-            }
-            else
-            {
-                if (_ents.TryGetComponent(ent, out MetaDataComponent? meta) && meta.EntityPrototype != null)
-                {
-                    if (Matches(meta.EntityPrototype))
-                    {
-                        if (_ents.TryGetComponent(ent, out StackComponent? st) && st.Count > 0)
-                            availableTotal += st.Count;
-                        else
-                            availableTotal += 1;
-                    }
-                }
-            }
-
-            if (availableTotal >= amount)
+            availableTotal += CountTakeableUnits(ent, request);
+            if (availableTotal >= maxNeeded)
                 break;
         }
 
-        if (availableTotal < amount)
-            return false;
+        return availableTotal;
+    }
 
+    private bool ExecuteTakeUnitsFromCachedItems(
+        EntityUid root,
+        List<EntityUid> cachedItems,
+        ProductTakeRequest request,
+        int amount)
+    {
         var left = amount;
         var compactNeeded = false;
 
         for (var i = 0; i < cachedItems.Count && left > 0; i++)
         {
-            var ent = cachedItems[i];
-            if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
+            if (!TryConsumeTakeUnitsFromEntity(root, cachedItems, i, request, ref left, ref compactNeeded))
                 continue;
-            if (IsProtectedFromDirectSale(root, ent))
-                continue;
-
-            if (stackType != null)
-            {
-                if (!_ents.TryGetComponent(ent, out StackComponent? stack) || stack.StackTypeId != stackType)
-                    continue;
-
-                var have = Math.Max(stack.Count, 0);
-                if (have <= 0)
-                    continue;
-
-                var take = Math.Min(have, left);
-                _stacks.SetCount(ent, have - take, stack);
-
-                if (stack.Count <= 0)
-                {
-                    _ents.DeleteEntity(ent);
-                    cachedItems[i] = EntityUid.Invalid;
-                compactNeeded = true;
-                }
-
-                left -= take;
-                continue;
-            }
-
-            if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
-                continue;
-
-            if (meta.EntityPrototype.ID == protoId)
-            {
-                ProcessTake(i, ent);
-                continue;
-            }
-
-            if (Matches(meta.EntityPrototype))
-                ProcessTake(i, ent);
-        }
-
-        void ProcessTake(int index, EntityUid item)
-        {
-            if (left <= 0)
-                return;
-
-            if (_ents.TryGetComponent(item, out StackComponent? st))
-            {
-                var have = Math.Max(st.Count, 0);
-                var take = Math.Min(have, left);
-                _stacks.SetCount(item, have - take, st);
-
-                if (st.Count <= 0)
-                {
-                    _ents.DeleteEntity(item);
-                    cachedItems[index] = EntityUid.Invalid;
-                compactNeeded = true;
-                }
-
-                left -= take;
-            }
-            else
-            {
-                _ents.DeleteEntity(item);
-                cachedItems[index] = EntityUid.Invalid;
-                compactNeeded = true;
-                left -= 1;
-            }
         }
 
         if (compactNeeded)
             CompactCachedItemsIfNeeded(cachedItems);
 
         return left <= 0;
+    }
+
+    private bool TryConsumeTakeUnitsFromEntity(
+        EntityUid root,
+        List<EntityUid> cachedItems,
+        int index,
+        ProductTakeRequest request,
+        ref int left,
+        ref bool compactNeeded)
+    {
+        var ent = cachedItems[index];
+        if (ShouldSkipTakeEntity(root, ent))
+            return false;
+
+        if (request.StackType != null)
+            return TryConsumeStackTypeTake(cachedItems, index, ent, request.StackType, ref left, ref compactNeeded);
+
+        return TryConsumePrototypeTake(cachedItems, index, ent, request, ref left, ref compactNeeded);
+    }
+
+    private bool ShouldSkipTakeEntity(EntityUid root, EntityUid ent)
+    {
+        return ent == EntityUid.Invalid || !_ents.EntityExists(ent) || IsProtectedFromDirectSale(root, ent);
+    }
+
+    private int CountTakeableUnits(EntityUid ent, ProductTakeRequest request)
+    {
+        if (request.StackType != null)
+            return CountTakeableStackUnits(ent, request.StackType);
+
+        return CountTakeablePrototypeUnits(ent, request);
+    }
+
+    private int CountTakeableStackUnits(EntityUid ent, string stackType)
+    {
+        if (_ents.TryGetComponent(ent, out StackComponent? stack) && stack.StackTypeId == stackType)
+            return Math.Max(stack.Count, 0);
+
+        return 0;
+    }
+
+    private int CountTakeablePrototypeUnits(EntityUid ent, ProductTakeRequest request)
+    {
+        if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
+            return 0;
+
+        if (!MatchesTakeRequest(meta.EntityPrototype, request))
+            return 0;
+
+        if (_ents.TryGetComponent(ent, out StackComponent? stack) && stack.Count > 0)
+            return stack.Count;
+
+        return 1;
+    }
+
+    private bool TryConsumeStackTypeTake(
+        List<EntityUid> cachedItems,
+        int index,
+        EntityUid ent,
+        string stackType,
+        ref int left,
+        ref bool compactNeeded)
+    {
+        if (!_ents.TryGetComponent(ent, out StackComponent? stack) || stack.StackTypeId != stackType)
+            return false;
+
+        var have = Math.Max(stack.Count, 0);
+        if (have <= 0)
+            return false;
+
+        ConsumeStackUnits(cachedItems, index, ent, stack, ref left, ref compactNeeded);
+        return true;
+    }
+
+    private bool TryConsumePrototypeTake(
+        List<EntityUid> cachedItems,
+        int index,
+        EntityUid ent,
+        ProductTakeRequest request,
+        ref int left,
+        ref bool compactNeeded)
+    {
+        if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
+            return false;
+
+        if (!MatchesTakeRequest(meta.EntityPrototype, request))
+            return false;
+
+        if (_ents.TryGetComponent(ent, out StackComponent? stack))
+        {
+            ConsumeStackUnits(cachedItems, index, ent, stack, ref left, ref compactNeeded);
+            return true;
+        }
+
+        DeleteConsumedEntity(cachedItems, index, ent, ref left, ref compactNeeded);
+        return true;
+    }
+
+    private bool MatchesTakeRequest(EntityPrototype proto, ProductTakeRequest request)
+    {
+        if (request.EffectiveMatch == PrototypeMatchMode.Exact)
+            return proto.ID == request.ProtoId;
+
+        return proto.ID == request.ProtoId || IsProtoOrDescendant(proto, request.ProtoId);
+    }
+
+    private void ConsumeStackUnits(
+        List<EntityUid> cachedItems,
+        int index,
+        EntityUid ent,
+        StackComponent stack,
+        ref int left,
+        ref bool compactNeeded)
+    {
+        var have = Math.Max(stack.Count, 0);
+        var take = Math.Min(have, left);
+        _stacks.SetCount(ent, have - take, stack);
+
+        if (stack.Count <= 0)
+            DeleteConsumedEntity(cachedItems, index, ent, ref compactNeeded);
+
+        left -= take;
+    }
+
+    private void DeleteConsumedEntity(
+        List<EntityUid> cachedItems,
+        int index,
+        EntityUid ent,
+        ref int left,
+        ref bool compactNeeded)
+    {
+        DeleteConsumedEntity(cachedItems, index, ent, ref compactNeeded);
+        left -= 1;
+    }
+
+    private void DeleteConsumedEntity(
+        List<EntityUid> cachedItems,
+        int index,
+        EntityUid ent,
+        ref bool compactNeeded)
+    {
+        _ents.DeleteEntity(ent);
+        cachedItems[index] = EntityUid.Invalid;
+        compactNeeded = true;
     }
 
 

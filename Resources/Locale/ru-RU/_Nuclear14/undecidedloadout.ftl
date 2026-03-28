@@ -360,25 +360,25 @@ undecided-loadout-category-mbos-pal-pla-description =
 undecided-loadout-category-wbos-init-pla-name = Набор послушника (плазма)
 undecided-loadout-category-wbos-init-pla-description =
     Тайник с вещами послушника Вашингтонского Братства.
-    Содержит: 1 самодельную плазменную винтовку, 3 плазменных картриджа, 1 пистолет Webley,
-    2 пистолетных магазина (9mm Parabellum), 1 рулон бинтов и сухпаёк типа K.
+    Содержит: 1 самодельную плазменную винтовку, 3 плазменных картриджа,
+    1 рулон бинтов и сухпаёк типа K.
 
 undecided-loadout-category-wbos-init-bal-name = Набор послушника (баллистика)
 undecided-loadout-category-wbos-init-bal-description =
     Тайник с вещами послушника Вашингтонского Братства.
-    Содержит: 1 старый карабин, 3 магазина 5.56, 1 плазменный пистолет, 2
-    плазменные ячейки, 1 рулон бинтов и сухпаёк типа K.
+    Содержит: 1 племенную штурмовую винтовку, 1 коробку патрон,
+    1 рулон бинтов и сухпаёк типа K.
 
 undecided-loadout-category-wbos-kni-pla-name = Набор рыцаря (плазма)
 undecided-loadout-category-wbos-kni-pla-description =
     Тайник с вещами рыцаря Вашингтонского Братства.
-    Содержит: 1 плазменную винтовку, 3 плазменных картриджа, 1 пистолет Webley,
-    2 пистолетных магазина (9mm Parabellum), 1 рулон бинтов, сухпаёк типа K.
+    Содержит: 1 плазменную винтовку, 4 плазменных картриджа,
+    1 рулон бинтов, сухпаёк типа K.
 
 undecided-loadout-category-wbos-kni-bal-name = Набор рыцаря (баллистика)
 undecided-loadout-category-wbos-kni-bal-description =
     Тайник с вещами рыцаря Вашингтонского Братства.
-    Содержит: 1 штурмовой карабин, 3 магазина 5.56, 1 плазменный пистолет,
+    Содержит: 1 китайскую штурмовую винтовку, 3 магазина 7.62, 1 плазменный пистолет,
     2 плазменные ячейки, 1 рулон бинтов и сухпаёк типа K.
 
 undecided-loadout-category-wbos-scribe-medic-name = Набор писаря-медика
@@ -406,8 +406,7 @@ undecided-loadout-category-wbos-pal-pla-name = Набор паладина (пл
 undecided-loadout-category-wbos-pal-pla-description =
     Тайник с вещами паладина Вашингтонского Братства.
     Содержит: 1 автоматическую плазменную винтовку, 3 плазменных картриджа,
-    1 пистолет Webley, 2 пистолетных магазина (9mm Parabellum), 1 рулон бинтов,
-    1 стимпак и сухпаёк типа K.
+    1 боевую аптечку, 1 стимпак и сухпаёк типа K.
 
 undecided-loadout-category-wbos-pal-bal-name = Набор паладина (баллистика)
 undecided-loadout-category-wbos-pal-bal-description =
@@ -418,15 +417,27 @@ undecided-loadout-category-wbos-pal-bal-description =
 undecided-loadout-category-wbos-pal-sni-name = Набор паладина-снайпера
 undecided-loadout-category-wbos-pal-sni-description =
     Тайник с вещами паладина Вашингтонского Братства.
-    Содержит: 1 снайперскую винтовку F2, 3 коротких магазина 7.62,
-    1 плазменный пистолет, 2 плазменные ячейки, 1 рулон бинтов,
-    1 стимпак и сухпаёк типа K.
+    Содержит: 1 китайскую снайперскую винтовку, 3  магазина .308,
+    1 боевую аптечку, 1 стимпак и сухпаёк типа K.
 
 undecided-loadout-category-wbos-pal-las-name = Набор паладина (лазеры)
 undecided-loadout-category-wbos-pal-las-description =
     Тайник с вещами паладина Вашингтонского Братства.
     Содержит: 1 AER-9, 3 микрофьюжн-ячейки, 1 плазменный пистолет,
     2 плазменные ячейки, 1 рулон бинтов, 1 стимпак и сухпаёк типа K.
+
+undecided-loadout-category-washington-lord-sniper-name = Набор Командира (снайпер)
+undecided-loadout-category-wbos-pal-pla-description = 
+    Содержит набор снайпера-лорда.
+    В набор входит: Wattz 3000, 3 батареи к нему, боевую аптечку, 
+    Сухпаёк типа К.
+
+undecided-loadout-category-washington-lord-storm-name = Набор Командира (Штурмовик)
+undecided-loadout-category-wbos-pal-pla-description = 
+    Содержит набор штурмовика-лорда.
+    В набор входит: Автоматическую винтовку, 3 магазина к нему, боевую аптечку, 
+    Сухпаёк типа К.
+
 
 # Наборы племён
 

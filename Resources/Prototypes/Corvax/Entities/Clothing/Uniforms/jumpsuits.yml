@@ -158,3 +158,30 @@
     sprite: Corvax/Clothing/Uniforms/Jumpsuit/NCRMPUniform.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Uniforms/Jumpsuit/NCRMPUniform.rsi
+
+- type: entity
+  parent: N14ClothingUniformBase
+  id: N14ClothingUniformJumpsuitWBoSAcolyte
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/wbosacolytesuit.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/wbosacolytesuit.rsi
+
+- type: entity
+  parent: N14ClothingUniformBase
+  id: N14ClothingUniformJumpsuitWBoSClassic
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/wbosclassicsuit.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/wbosclassicsuit.rsi
+  
+- type: entity
+  parent: N14ClothingUniformBase
+  id: N14ClothingUniformJumpsuitWBoSLord
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/wboslordsuit.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/wboslordsuit.rsi

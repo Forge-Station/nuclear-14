@@ -6,7 +6,7 @@ job-name-bos-mid-paladin = паладин СЗБС
 job-description-bos-mid-paladin = Следуйте за командиром, и добивайтесь выполнения миссии!
 job-name-bos-mid-knight = рыцарь СЗБС
 job-description-bos-mid-knight = Следуйте за командиром, и добивайтесь выполнения миссии!
-job-name-bos-mid-scribe = скриптер СЗБС
+job-name-bos-mid-scribe = писец СЗБС
 job-description-bos-mid-scribe = Проводите научные миссии и исследования для вашего отделения Братства.
 job-name-bos-mid-squire = оруженосец СЗБС
 job-description-bos-mid-squire = Следуйте за своим рыцарем в бой и выполняйте его приказы.
@@ -16,15 +16,15 @@ job-name-BoS-Mid-Serf = серф СЗБС
 job-description-bos-mid-Serf = Вы раб, вы обязаны служить СЗБС, ваша жизнь в их руках.
 
 # Вашингтонское Братство Стали (ВБС)
-job-name-bos-washington-commander = командир ВБС
-job-description-bos-washington-commander = Ведите Вашингтонское Братство Стали к выполнению вашей задачи.
-job-name-bos-washington-initiate = послушник ВБС
-job-description-bos-washington-initiate = Докажите свою ценность отделению, чтобы продвинуться по рангам.
+job-name-bos-washington-commander = лорд ВБС
+job-description-bos-washington-commander = Вы... Одна из немногих причин почему Бессмертный все ещё правит братством. Вы его одна из самых верных дланей. Ну-же, ведите братство к террору....
+job-name-bos-washington-initiate = аколит ВБС
+job-description-bos-washington-initiate = Ты юн, неопытен и скорее всего являешься пушечным мясом для Вашингтонского Братства Стали
 job-name-bos-washington-knight = рыцарь ВБС
-job-description-bos-washington-knight = Военная сила Братства Стали. Защищайте свое отделение в их целях и производите снаряжение.
+job-description-bos-washington-knight = Военная сила Братства Стали. Защищайте свое отделение в их целях.
 job-name-bos-washington-paladin = паладин ВБС
 job-description-bos-washington-paladin = Защищайте Братство любой ценой. Воплощайте волю командира в пустоши.
-job-name-bos-washington-scribe = скриптер ВБС
+job-name-bos-washington-scribe = писец ВБС
 job-description-bos-washington-scribe = Проводите научные миссии и исследования для вашего отделения Братства.
 
 # Караван

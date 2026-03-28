@@ -74,45 +74,79 @@ public sealed partial class NcContractSystem : EntitySystem
         if (depth > MaxRewardDepth)
             return output;
 
-        List<ContractRewardDef>? options = null;
-        if (poolDef.Options is { Count: > 0 })
-            options = poolDef.Options;
-        else if (!string.IsNullOrWhiteSpace(poolDef.Id) &&
-            _prototypes.TryIndex<NcContractRewardPoolPrototype>(poolDef.Id, out var poolProto) &&
-            poolProto.Entries is { Count: > 0 })
-            options = poolProto.Entries;
-
-        if (options == null || options.Count == 0)
+        if (!TryResolveRewardPoolOptions(poolDef, out var options))
             return output;
 
-        var deck = new List<PoolEntry>(options.Count);
-        for (var i = 0; i < options.Count; i++)
-        {
-            var def = options[i];
-            var key = $"{i}:{def.Type}:{def.Id}";
-            deck.Add(new(def, key));
-        }
-
+        var deck = CreateRewardPoolDeck(options);
         var dropCounts = new Dictionary<string, int>(StringComparer.Ordinal);
 
         for (var i = 0; i < rolls; i++)
         {
-            if (deck.Count == 0)
+            if (!TryRollRewardPoolEntry(store, contractProtoId, deck, dropCounts, depth, output))
                 break;
-
-            var winner = PickWeighted(_random, deck, x => x.Def.Weight);
-            var key = winner.Key;
-
-            if (!dropCounts.TryAdd(key, 1))
-                dropCounts[key] = dropCounts[key] + 1;
-
-            if (winner.Def.MaxRepeats > 0 && dropCounts[key] >= winner.Def.MaxRepeats)
-                deck.Remove(winner);
-
-            output.AddRange(BakeRewardsRecursive(store, contractProtoId, new() { winner.Def }, depth));
         }
 
         return output;
+    }
+
+    private bool TryResolveRewardPoolOptions(ContractRewardDef poolDef, out List<ContractRewardDef> options)
+    {
+        if (poolDef.Options is { Count: > 0 } inlineOptions)
+        {
+            options = inlineOptions;
+            return true;
+        }
+
+        if (!string.IsNullOrWhiteSpace(poolDef.Id) &&
+            _prototypes.TryIndex<NcContractRewardPoolPrototype>(poolDef.Id, out var poolProto) &&
+            poolProto.Entries is { Count: > 0 } prototypeOptions)
+        {
+            options = prototypeOptions;
+            return true;
+        }
+
+        options = default!;
+        return false;
+    }
+
+    private static List<PoolEntry> CreateRewardPoolDeck(IReadOnlyList<ContractRewardDef> options)
+    {
+        var deck = new List<PoolEntry>(options.Count);
+        for (var i = 0; i < options.Count; i++)
+        {
+            var def = options[i];
+            deck.Add(new(def, $"{i}:{def.Type}:{def.Id}"));
+        }
+
+        return deck;
+    }
+
+    private bool TryRollRewardPoolEntry(
+        EntityUid store,
+        string contractProtoId,
+        List<PoolEntry> deck,
+        Dictionary<string, int> dropCounts,
+        int depth,
+        List<ContractRewardData> output)
+    {
+        if (deck.Count == 0)
+            return false;
+
+        var winner = PickWeighted(_random, deck, x => x.Def.Weight);
+        var dropCount = IncrementRewardPoolDropCount(dropCounts, winner.Key);
+        if (winner.Def.MaxRepeats > 0 && dropCount >= winner.Def.MaxRepeats)
+            deck.Remove(winner);
+
+        output.AddRange(BakeRewardsRecursive(store, contractProtoId, new() { winner.Def }, depth));
+        return true;
+    }
+
+    private static int IncrementRewardPoolDropCount(Dictionary<string, int> dropCounts, string key)
+    {
+        if (!dropCounts.TryAdd(key, 1))
+            dropCounts[key] = dropCounts[key] + 1;
+
+        return dropCounts[key];
     }
 
     private static List<ContractRewardData> AggregateRewards(List<ContractRewardData> rewards)

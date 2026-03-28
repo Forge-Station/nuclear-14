@@ -62,4 +62,23 @@ public sealed partial class NcContractSystem : EntitySystem
         _ancestorsCache[protoId] = result;
         return result;
     }
+
+    private bool IsDescendantId(string candidateId, string expectedProtoId)
+    {
+        if (string.IsNullOrWhiteSpace(candidateId) || string.IsNullOrWhiteSpace(expectedProtoId))
+            return false;
+
+        if (candidateId == expectedProtoId)
+            return true;
+
+        var ancestors = GetAncestorsInclusive(candidateId);
+        for (var i = 0; i < ancestors.Count; i++)
+        {
+            if (ancestors[i] == expectedProtoId)
+                return true;
+        }
+
+        return false;
+    }
 }
+

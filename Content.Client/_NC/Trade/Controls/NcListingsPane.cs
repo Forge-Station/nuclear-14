@@ -79,7 +79,8 @@ public sealed partial class NcListingsPane : PanelContainer
         {
             HorizontalExpand = true,
             VerticalExpand = true,
-            HScrollEnabled = false
+            HScrollEnabled = false,
+            ReserveScrollbarSpace = true
         };
 
         _host = new BoxContainer
@@ -88,7 +89,7 @@ public sealed partial class NcListingsPane : PanelContainer
             HorizontalExpand = true,
             VerticalExpand = true,
 
-            Margin = new Thickness(0, 0, 14, 0)
+            Margin = new Thickness(0, 0, 0, 0)
         };
 
         _scroll.AddChild(_host);

@@ -1,4 +1,4 @@
-using Robust.Shared.Prototypes;
+﻿using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 
 namespace Content.Shared._NC.Trade;
@@ -74,6 +74,8 @@ public sealed partial class StoreContractPrototype : IPrototype
 
     [DataField("difficulty")] public string Difficulty { get; private set; } = "Easy";
     [DataField("repeatable")] public bool Repeatable { get; private set; } = true;
+    [DataField("objectiveType")] public ContractObjectiveType ObjectiveType { get; private set; } = ContractObjectiveType.Delivery;
+    [DataField("runtime")] public StoreContractRuntimePrototype Runtime { get; private set; } = new();
 
     [DataField("targetItem")] public string? TargetItem { get; private set; }
 
@@ -95,6 +97,90 @@ public sealed partial class StoreContractTargetEntry
     [DataField("weight")] public int Weight { get; set; } = 1;
 }
 
+
+[DataDefinition]
+public sealed partial class StoreContractRuntimePrototype
+{
+    [DataField("stageGoal")]
+    public int StageGoal { get; set; } = 1;
+
+    [DataField("spawnPointTag")]
+    public string SpawnPointTag { get; set; } = string.Empty;
+
+    [DataField("spawnPointTags")]
+    public List<WeightedTagEntry> SpawnPointTags { get; set; } = new();
+
+    [DataField("dropoffPointTag")]
+    public string DropoffPointTag { get; set; } = string.Empty;
+
+    [DataField("dropoffPointTags")]
+    public List<WeightedTagEntry> DropoffPointTags { get; set; } = new();
+
+    [DataField("targetPrototype")]
+    public string TargetPrototype { get; set; } = string.Empty;
+
+    [DataField("deliverySpawnPrototype")]
+    public string DeliverySpawnPrototype { get; set; } = string.Empty;
+
+    [DataField("structurePrototype")]
+    public string StructurePrototype { get; set; } = string.Empty;
+
+    [DataField("ghostRole")]
+    public string GhostRole { get; set; } = string.Empty;
+
+    [DataField("proofPrototype")]
+    public string ProofPrototype { get; set; } = string.Empty;
+
+    [DataField("spawnAtStore")]
+    public bool SpawnAtStore { get; set; }
+
+    [DataField("preserveTargetOnComplete")]
+    public bool PreserveTargetOnComplete { get; set; }
+
+    [DataField("allowStoreWorldTurnIn")]
+    public bool AllowStoreWorldTurnIn { get; set; }
+
+    [DataField("acceptTimeoutSeconds")]
+    public int AcceptTimeoutSeconds { get; set; } = 300;
+
+    [DataField("givePinpointer")]
+    public bool GivePinpointer { get; set; } = true;
+
+    [DataField("pinpointerPrototype")]
+    public string PinpointerPrototype { get; set; } = "PinpointerUniversal";
+
+    [DataField("guardPrototype")]
+    public string GuardPrototype { get; set; } = string.Empty;
+
+    [DataField("guardCount")]
+    public int GuardCount { get; set; } = 0;
+
+    [DataField("repairToolQuality")]
+    public string RepairToolQuality { get; set; } = "Welding";
+
+    [DataField("repairDoAfterSeconds")]
+    public float RepairDoAfterSeconds { get; set; } = 2f;
+
+    [DataField("repairStageSound")]
+    public string RepairStageSound { get; set; } = "/Audio/Effects/sparks4.ogg";
+}
+
+[DataDefinition, Serializable, NetSerializable]
+public partial struct WeightedTagEntry
+{
+    [DataField("tag", required: true)]
+    public string Tag;
+
+    [DataField("weight")]
+    public int Weight;
+
+    public WeightedTagEntry(string tag, int weight)
+    {
+        Tag = tag;
+        Weight = weight;
+    }
+}
+
 [Prototype("storeContractsPreset")]
 public sealed partial class StoreContractsPresetPrototype : IPrototype
 {
@@ -105,6 +191,12 @@ public sealed partial class StoreContractsPresetPrototype : IPrototype
 
     [DataField("packs")]
     public List<PackIncludeEntry> Packs { get; set; } = new();
+
+    [DataField("skipCost")]
+    public int SkipCost { get; set; } = 150;
+
+    [DataField("skipCurrency")]
+    public string SkipCurrency { get; set; } = string.Empty;
 }
 
 [DataDefinition]
@@ -158,6 +250,15 @@ public sealed partial class NcContractRewardPoolPrototype : IPrototype
 
 
 
+
+[Serializable, NetSerializable]
+public enum ContractObjectiveType : byte
+{
+    Delivery = 0,
+    Hunt = 1,
+    Repair = 2,
+    GhostRole = 3
+}
 [Serializable, NetSerializable]
 public enum PrototypeMatchMode : byte
 {
@@ -171,3 +272,5 @@ public sealed class ListingConditionPrototype
     [DataField("condition")]
     public object? Condition;
 }
+
+

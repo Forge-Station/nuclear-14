@@ -12,7 +12,8 @@
       - Human
     - !type:CharacterDepartmentTimeRequirement
       department: BrotherhoodWashington
-      min: 54000 # 15 hours
+      min: 32400 # Forge-Change (9 hours)
+    - !type:CharacterWhitelistRequirement # Forge-Add
   startingGear: BoSWashingtonPaladinGear
   alwaysUseSpawner: true
   icon: "JobIconPassenger"
@@ -33,14 +34,18 @@
 - type: startingGear
   id: BoSWashingtonPaladinGear
   equipment:
-    jumpsuit: N14ClothingUniformJumpsuitBOSRed
-    back: N14ClothingBackpackSatchelMilitaryFilled
-    shoes: N14ClothingBootsLeatherFilled
-    outerClothing: N14ClothingOuterWBoSPaladinArmor
+    jumpsuit: N14ClothingUniformJumpsuitWBoSClassic # Forge-Change
+    back: N14ClothingBackpackMilitary # Forge-Change
+    shoes: N14ClothingBootsCombatMK2Filled # Forge-Change
+    gloves: N14ClothingHandsGlovesCombat # Forge-Change
+    outerClothing: N14ClothingOuterPowerArmorWBoSPowerArmor # Forge-Change
     id: N14IDBrotherhoodWashingtonHolotagPaladin
     ears: N14ClothingHeadsetBOSWashington
     belt: ClothingBeltBoSWebbing
     pocket1: BoSWashingtonPaladinKits
+  storage: # Forge-Change
+    back:
+    - N14BoxPlasticFilledMilitary
 
 - type: playTimeTracker
   id: BoSWashingtonPaladin

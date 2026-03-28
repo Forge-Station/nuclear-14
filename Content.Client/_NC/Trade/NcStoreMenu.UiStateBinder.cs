@@ -1,12 +1,10 @@
-using Content.Shared._NC.Trade;
-
+﻿using Content.Shared._NC.Trade;
 
 namespace Content.Client._NC.Trade;
 
-
 public sealed partial class NcStoreMenu
 {
-    private sealed class UiStateBinder
+    private sealed partial class UiStateBinder
     {
         private readonly NcStoreMenu _m;
 
@@ -14,60 +12,14 @@ public sealed partial class NcStoreMenu
         private int _lastContractsHash;
         private int _lastCrateMembershipHash;
         private int _lastReadyMembershipHash;
+        private int _lastSkipCost;
+        private string _lastSkipCurrency = string.Empty;
+        private int _lastSkipBalance;
+        private readonly HashSet<string> _buyListingIds = new();
 
         public UiStateBinder(NcStoreMenu menu)
         {
             _m = menu;
-        }
-
-        private static bool DictEquals(Dictionary<string, int> a, Dictionary<string, int> b)
-        {
-            if (ReferenceEquals(a, b))
-                return true;
-
-            if (a.Count != b.Count)
-                return false;
-
-            foreach (var (k, v) in a)
-                if (!b.TryGetValue(k, out var other) || other != v)
-                    return false;
-
-            return true;
-        }
-
-        private static void ApplySparseSnapshot(Dictionary<string, int> src, Dictionary<string, int> dst)
-        {
-            dst.Clear();
-
-            foreach (var (k, v) in src)
-            {
-                if (string.IsNullOrWhiteSpace(k))
-                    continue;
-
-                dst[k] = v;
-            }
-        }
-
-        private static int ComputeContractsHash(List<ContractClientData> contracts)
-        {
-            unchecked
-            {
-                var h = 17;
-                for (var i = 0; i < contracts.Count; i++)
-                {
-                    var c = contracts[i];
-                    h = h * 31 + (c.Id?.GetHashCode() ?? 0);
-                    h = h * 31 + (c.Completed ? 1 : 0);
-                    h = h * 31 + c.Progress;
-                    h = h * 31 + c.Required;
-                    h = h * 31 + (c.Difficulty?.GetHashCode() ?? 0);
-                    h = h * 31 + (c.Name?.GetHashCode() ?? 0);
-                    h = h * 31 + (c.Targets?.Count ?? 0);
-                    h = h * 31 + (c.Rewards?.Count ?? 0);
-                }
-
-                return h;
-            }
         }
 
         private int ComputeReadyMembershipHash(Dictionary<string, int> ownedById, Dictionary<string, int> remainingById)
@@ -89,6 +41,7 @@ public sealed partial class NcStoreMenu
                     var remaining = remainingById.GetValueOrDefault(s.Id, -1);
                     if (remaining == 0)
                         continue;
+
                     h = h * 31 + (s.Id?.GetHashCode() ?? 0);
                 }
 
@@ -101,7 +54,6 @@ public sealed partial class NcStoreMenu
             unchecked
             {
                 var h = 17;
-
                 var catalog = _m._catalogModel.Catalog;
                 for (var i = 0; i < catalog.Count; i++)
                 {
@@ -112,6 +64,7 @@ public sealed partial class NcStoreMenu
                     var take = crateUnitsById.GetValueOrDefault(s.Id, 0);
                     if (take <= 0)
                         continue;
+
                     h = h * 31 + (s.Id?.GetHashCode() ?? 0);
                 }
 
@@ -146,6 +99,14 @@ public sealed partial class NcStoreMenu
 
             _m._catalogModel.SetCatalog(filtered);
 
+            _buyListingIds.Clear();
+            for (var i = 0; i < filtered.Count; i++)
+            {
+                var listing = filtered[i];
+                if (listing.Mode == StoreMode.Buy && !string.IsNullOrWhiteSpace(listing.Id))
+                    _buyListingIds.Add(listing.Id);
+            }
+
             var productProtos = new List<string>(filtered.Count);
             for (var i = 0; i < filtered.Count; i++)
                 productProtos.Add(filtered[i].ProductEntity);
@@ -154,6 +115,8 @@ public sealed partial class NcStoreMenu
             _m.SellView.PrepareSearchIndex(productProtos);
 
             _m.RebuildCategoriesFromCatalog();
+            _m.RebuildItemsFromCatalogAndDynamic();
+            _m.UpdateVirtualSellCategories();
 
             _m.BuyView.SetSearch(string.Empty);
             _m.SellView.SetSearch(string.Empty);
@@ -162,6 +125,9 @@ public sealed partial class NcStoreMenu
             _lastContractsHash = 0;
             _lastReadyMembershipHash = 0;
             _lastCrateMembershipHash = 0;
+            _lastSkipCost = 0;
+            _lastSkipCurrency = string.Empty;
+            _lastSkipBalance = 0;
         }
 
         public void ApplyDynamicState(
@@ -173,7 +139,9 @@ public sealed partial class NcStoreMenu
             bool hasBuyTab,
             bool hasSellTab,
             bool hasContractsTab,
-            List<ContractClientData> contracts
+            List<ContractClientData> contracts,
+            int contractSkipCost,
+            string contractSkipCurrency
         )
         {
             var tabsChanged = !_hasLastDynamic ||
@@ -194,26 +162,55 @@ public sealed partial class NcStoreMenu
             var balancesChanged = !DictEquals(balancesByCurrency, _m._balancesByCurrency);
             if (balancesChanged)
                 _m.SetBalancesByCurrency(balancesByCurrency);
-            var remainingChanged = !DictEquals(remainingById, _m._catalogModel.RemainingById);
-            var ownedChanged = !DictEquals(ownedById, _m._catalogModel.OwnedById);
+
+            var remainingChanged =
+                !SparseDictEqualsPreservingHiddenBuyListings(
+                    remainingById,
+                    _m._catalogModel.RemainingById,
+                    _buyListingIds);
+            var ownedChanged =
+                !SparseDictEqualsPreservingHiddenBuyListings(
+                    ownedById,
+                    _m._catalogModel.OwnedById,
+                    _buyListingIds);
             var crateChanged = !DictEquals(crateUnitsById, _m._catalogModel.CrateUnitsById);
 
             if (remainingChanged)
-                ApplySparseSnapshot(remainingById, _m._catalogModel.RemainingById);
+                ApplySparseSnapshotPreservingHiddenBuyListings(
+                    remainingById,
+                    _m._catalogModel.RemainingById,
+                    _buyListingIds);
 
             if (ownedChanged)
-                ApplySparseSnapshot(ownedById, _m._catalogModel.OwnedById);
+                ApplySparseSnapshotPreservingHiddenBuyListings(
+                    ownedById,
+                    _m._catalogModel.OwnedById,
+                    _buyListingIds);
 
             if (crateChanged)
                 ApplySparseSnapshot(crateUnitsById, _m._catalogModel.CrateUnitsById);
+
             if (!DictEquals(massTotals, _m._massSellTotals))
                 _m.SetMassSellTotals(massTotals);
 
+            var skipChanged = !_hasLastDynamic ||
+                contractSkipCost != _lastSkipCost ||
+                !string.Equals(contractSkipCurrency, _lastSkipCurrency, StringComparison.Ordinal);
+
+            var trackSkipBalance = contractSkipCost > 0 && !string.IsNullOrWhiteSpace(contractSkipCurrency);
+            var currentSkipBalance = trackSkipBalance
+                ? balancesByCurrency.GetValueOrDefault(contractSkipCurrency, 0)
+                : 0;
+            var skipBalanceChanged = trackSkipBalance && (!_hasLastDynamic || currentSkipBalance != _lastSkipBalance);
+
             var contractsHash = ComputeContractsHash(contracts);
-            if (!_hasLastDynamic || contractsHash != _lastContractsHash)
+            if (!_hasLastDynamic || contractsHash != _lastContractsHash || skipChanged || skipBalanceChanged)
             {
                 _lastContractsHash = contractsHash;
-                _m.PopulateContracts(contracts);
+                _lastSkipCost = contractSkipCost;
+                _lastSkipCurrency = contractSkipCurrency;
+                _lastSkipBalance = currentSkipBalance;
+                _m.PopulateContracts(contracts, contractSkipCost, contractSkipCurrency, currentSkipBalance);
             }
 
             var readyMembershipHash = ComputeReadyMembershipHash(ownedById, remainingById);
@@ -238,11 +235,12 @@ public sealed partial class NcStoreMenu
                 _m.RefreshListingsDynamicOnly();
             }
             else if (balancesChanged || tabsChanged)
+            {
                 _m.RefreshListingsDynamicOnly();
+            }
 
             _lastReadyMembershipHash = readyMembershipHash;
             _lastCrateMembershipHash = crateMembershipHash;
-
             _hasLastDynamic = true;
         }
     }

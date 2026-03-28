@@ -1,0 +1,20 @@
+- type: entity
+  id: TradeContractDropoffBeacon
+  name: unloading beacon
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Transform
+    anchored: true
+  - type: Clickable
+  - type: InteractionOutline
+  - type: Sprite
+    drawdepth: Overdoors
+    sprite: Objects/Devices/station_beacon.rsi
+    layers:
+    - state: blink
+      shader: unshaded
+  - type: PointLight
+    enabled: true
+    radius: 3
+    energy: 1.8
+    color: "#4FA9FF"

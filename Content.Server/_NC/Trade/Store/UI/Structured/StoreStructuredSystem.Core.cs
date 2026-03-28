@@ -29,7 +29,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     [Dependency] private readonly AudioSystem _audio = default!;
     private readonly Dictionary<EntityUid, (int Revision, List<StoreListingStaticData> List)> _catalogCache = new();
     [Dependency] private readonly NcContractSystem _contracts = default!;
-    private readonly NcInventorySnapshot _crateSnapScratch = new();
     private readonly List<EntityUid> _deepCrateItemsScratch = new();
     private readonly List<EntityUid> _deepUserItemsScratch = new();
     private readonly HashSet<EntityUid> _dirtyStores = new();
@@ -77,7 +76,11 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         SubscribeLocalEvent<ContainerManagerComponent, EntInsertedIntoContainerMessage>(OnUserEntInserted);
         SubscribeLocalEvent<ContainerManagerComponent, EntRemovedFromContainerMessage>(OnUserEntRemoved);
         SubscribeLocalEvent<StackComponent, StackCountChangedEvent>(OnStackCountChanged);
+        SubscribeLocalEvent<EntParentChangedMessage>(OnWatchedEntityParentChanged);
         SubscribeLocalEvent<NcStoreComponent, ClaimContractBoundMessage>(OnClaimContract);
+        SubscribeLocalEvent<NcStoreComponent, TakeContractBoundMessage>(OnTakeContract);
+        SubscribeLocalEvent<NcStoreComponent, SkipContractBoundMessage>(OnSkipContract);
+        SubscribeLocalEvent<NcStoreComponent, RequestContractPinpointerBoundMessage>(OnRequestContractPinpointer);
         SubscribeLocalEvent<EntityStorageComponent, StorageAfterOpenEvent>(OnStorageOpen);
         SubscribeLocalEvent<EntityStorageComponent, StorageAfterCloseEvent>(OnStorageClose);
     }
@@ -119,15 +122,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         var scratch = GetDynamicScratch(uid);
         if (!scratch.UpdateVisibleIds(ids))
             return;
-        MarkDirty(uid);
-
-        var now = _timing.CurTime;
-        if (now >= scratch.NextDynamicAllowed)
-        {
-            _dirtyStores.Remove(uid);
-            UpdateDynamicState(uid, comp, user);
-            scratch.NextDynamicAllowed = now + TimeSpan.FromSeconds(MinDynamicInterval);
-        }
+        RequestDynamicRefresh(uid, comp, user);
     }
 
     private void OnStorageOpen(EntityUid uid, EntityStorageComponent comp, ref StorageAfterOpenEvent args)
@@ -146,6 +141,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     {
         _catalogCache.Remove(uid);
         _dynamicScratchByStore.Remove(uid);
+        _contracts.ClearStoreRuntimeCaches(uid);
 
         if (_openStoreUids.Contains(uid) || _watchByStore.ContainsKey(uid) || _dirtyStores.Contains(uid))
         {
@@ -174,103 +170,181 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             return;
 
         SendCatalog(uid, comp, user);
+        RequestDynamicRefresh(uid, comp, user);
+    }
+
+    public void RequestDynamicRefresh(EntityUid uid, NcStoreComponent comp, EntityUid user)
+    {
+        MarkDirty(uid);
+
+        var now = _timing.CurTime;
+        var scratch = GetDynamicScratch(uid);
+        if (now < scratch.NextDynamicAllowed)
+            return;
+
+        _dirtyStores.Remove(uid);
         UpdateDynamicState(uid, comp, user);
+        SetNextDynamicUpdateTime(scratch, now);
     }
 
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
-
         ProcessPendingRefreshes();
+        ProcessRealtimeOpenStoreUpdates();
+        ProcessDirtyStoreUpdates();
+        ProcessOpenStoreValidityChecks();
+    }
 
-        if (_openStoreUids.Count > 0)
-        {
-            _openStoresScratch.Clear();
-            _openStoresScratch.AddRange(_openStoreUids);
-
-            foreach (var uid in _openStoresScratch)
-            {
-                if (!TryComp(uid, out NcStoreComponent? store) || store.CurrentUser is not { } user)
-                    continue;
-
-                if (EnsureCrateWatchUpToDate(uid, user))
-                    MarkDirty(uid);
-            }
-        }
-
-        if (_dirtyStores.Count > 0)
-        {
-            var now = _timing.CurTime;
-
-            _dirtyStoresScratch.Clear();
-            _dirtyStoresScratch.AddRange(_dirtyStores);
-
-            var processed = 0;
-
-            foreach (var uid in _dirtyStoresScratch)
-            {
-                if (processed >= MaxDynamicUpdatesPerTick)
-                    break;
-
-                if (!TryComp(uid, out NcStoreComponent? store) || store.CurrentUser is not { } user)
-                {
-                    _dirtyStores.Remove(uid);
-                    continue;
-                }
-
-                var scratch = GetDynamicScratch(uid);
-
-                if (now < scratch.NextDynamicAllowed)
-                    continue;
-
-                UpdateDynamicState(uid, store, user);
-
-                scratch.NextDynamicAllowed = now + TimeSpan.FromSeconds(MinDynamicInterval);
-                _dirtyStores.Remove(uid);
-
-                processed++;
-            }
-        }
-
-        if (_timing.CurTime < _nextCheck)
-            return;
-
-        _nextCheck = _timing.CurTime + TimeSpan.FromSeconds(CheckInterval);
-
+    private void ProcessRealtimeOpenStoreUpdates()
+    {
         if (_openStoreUids.Count == 0)
             return;
+
+        var now = _timing.CurTime;
         _openStoresScratch.Clear();
         _openStoresScratch.AddRange(_openStoreUids);
 
         foreach (var uid in _openStoresScratch)
+            ProcessRealtimeOpenStoreUpdate(uid, now);
+    }
+
+    private void ProcessRealtimeOpenStoreUpdate(EntityUid uid, TimeSpan now)
+    {
+        if (!TryGetOpenStoreUser(uid, out var store, out var user))
+            return;
+
+        if (EnsureCrateWatchUpToDate(uid, user))
+            MarkDirty(uid);
+
+        if (!_contracts.HasRealtimeContractState(store) || !TryGetDynamicScratchForUpdate(uid, now, out var scratch))
+            return;
+
+        _dirtyStores.Remove(uid);
+        UpdateDynamicState(uid, store, user);
+        SetNextDynamicUpdateTime(scratch, now);
+    }
+
+    private void ProcessDirtyStoreUpdates()
+    {
+        if (_dirtyStores.Count == 0)
+            return;
+
+        var now = _timing.CurTime;
+        var processed = 0;
+
+        _dirtyStoresScratch.Clear();
+        _dirtyStoresScratch.AddRange(_dirtyStores);
+
+        foreach (var uid in _dirtyStoresScratch)
         {
-            if (!TryComp(uid, out NcStoreComponent? store) || !TryComp(uid, out TransformComponent? xform))
+            if (processed >= MaxDynamicUpdatesPerTick)
+                break;
+
+            if (!TryGetOpenStoreUser(uid, out var store, out var user))
             {
-                CloseAndCleanUp(uid);
+                _dirtyStores.Remove(uid);
                 continue;
             }
 
-            if (store.CurrentUser is not { } userUid)
-            {
-                CloseAndCleanUp(uid);
+            if (!TryGetDynamicScratchForUpdate(uid, now, out var scratch))
                 continue;
-            }
 
-            if (!TryComp(userUid, out TransformComponent? userXform) ||
-                !_xform.InRange(xform.Coordinates, userXform.Coordinates, AutoCloseDistance))
-            {
-                CloseAndCleanUp(uid, userUid);
-                store.CurrentUser = null;
-                continue;
-            }
-
-            if (!_storeSystem.CanUseStore(uid, store, userUid))
-            {
-                CloseAndCleanUp(uid, userUid);
-                store.CurrentUser = null;
-                _popups.PopupEntity(Loc.GetString("nc-store-no-access"), uid, userUid);
-            }
+            UpdateDynamicState(uid, store, user);
+            SetNextDynamicUpdateTime(scratch, now);
+            _dirtyStores.Remove(uid);
+            processed++;
         }
+    }
+
+    private void ProcessOpenStoreValidityChecks()
+    {
+        if (!ShouldRunOpenStoreValidityCheck())
+            return;
+
+        _openStoresScratch.Clear();
+        _openStoresScratch.AddRange(_openStoreUids);
+
+        foreach (var uid in _openStoresScratch)
+            ValidateOpenStore(uid);
+    }
+
+    private bool ShouldRunOpenStoreValidityCheck()
+    {
+        if (_timing.CurTime < _nextCheck)
+            return false;
+
+        _nextCheck = _timing.CurTime + TimeSpan.FromSeconds(CheckInterval);
+        return _openStoreUids.Count > 0;
+    }
+
+    private bool TryGetOpenStoreUser(EntityUid uid, out NcStoreComponent store, out EntityUid user)
+    {
+        store = default!;
+        user = default;
+
+        if (!TryComp(uid, out NcStoreComponent? foundStore) || foundStore.CurrentUser is not { } currentUser)
+            return false;
+
+        store = foundStore;
+        user = currentUser;
+        return true;
+    }
+
+    private bool TryGetDynamicScratchForUpdate(EntityUid uid, TimeSpan now, out DynamicScratch scratch)
+    {
+        scratch = GetDynamicScratch(uid);
+        return now >= scratch.NextDynamicAllowed;
+    }
+
+    private void SetNextDynamicUpdateTime(DynamicScratch scratch, TimeSpan now)
+    {
+        scratch.NextDynamicAllowed = now + TimeSpan.FromSeconds(MinDynamicInterval);
+    }
+
+    private void ValidateOpenStore(EntityUid uid)
+    {
+        if (!TryComp(uid, out NcStoreComponent? store) || !TryComp(uid, out TransformComponent? xform))
+        {
+            CloseAndCleanUp(uid);
+            return;
+        }
+
+        if (store.CurrentUser is not { } userUid)
+        {
+            CloseAndCleanUp(uid);
+            return;
+        }
+
+        if (!IsStoreUserInRange(xform, userUid))
+        {
+            CloseStoreForDetachedUser(uid, store, userUid);
+            return;
+        }
+
+        if (_storeSystem.CanUseStore(uid, store, userUid))
+            return;
+
+        CloseStoreForNoAccess(uid, store, userUid);
+    }
+
+    private bool IsStoreUserInRange(TransformComponent storeXform, EntityUid userUid)
+    {
+        return TryComp(userUid, out TransformComponent? userXform) &&
+               _xform.InRange(storeXform.Coordinates, userXform.Coordinates, AutoCloseDistance);
+    }
+
+    private void CloseStoreForDetachedUser(EntityUid uid, NcStoreComponent store, EntityUid userUid)
+    {
+        CloseAndCleanUp(uid, userUid);
+        store.CurrentUser = null;
+    }
+
+    private void CloseStoreForNoAccess(EntityUid uid, NcStoreComponent store, EntityUid userUid)
+    {
+        CloseAndCleanUp(uid, userUid);
+        store.CurrentUser = null;
+        _popups.PopupEntity(Loc.GetString("nc-store-no-access"), uid, userUid);
     }
 
     private void CloseAndCleanUp(EntityUid storeUid, EntityUid? user = null)
@@ -417,7 +491,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         _loader.EnsureLoaded(uid, comp, "UiOpenAttempt");
 
         SendCatalog(uid, comp, user);
-        UpdateDynamicState(uid, comp, user);
+        RequestDynamicRefresh(uid, comp, user);
     }
 
 
@@ -426,87 +500,98 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (!_ui.IsUiOpen(store, StoreUiKey.Key, user))
             return;
 
+        var catalog = GetOrBuildCatalog(store, comp);
+        var msg = BuildCatalogMessage(comp, catalog);
+        _ui.ServerSendUiMessage((store, null), StoreUiKey.Key, msg, user);
+    }
+
+    private List<StoreListingStaticData> GetOrBuildCatalog(EntityUid store, NcStoreComponent comp)
+    {
         if (_catalogCache.TryGetValue(store, out var cached) && cached.Revision == comp.CatalogRevision)
-        {
-            var cachedList = cached.List;
+            return cached.List;
 
-            var hasBuy = false;
-            var hasSell = false;
+        var list = BuildCatalogEntries(comp);
+        _catalogCache[store] = (comp.CatalogRevision, list);
+        return list;
+    }
 
-            foreach (var l in cachedList)
-            {
-                if (l.Mode == StoreMode.Buy)
-                    hasBuy = true;
-                else if (l.Mode == StoreMode.Sell)
-                    hasSell = true;
-
-                if (hasBuy && hasSell)
-                    break;
-            }
-
-            var msg = new StoreCatalogMessage(
-                comp.CatalogRevision,
-                cachedList,
-                hasBuy,
-                hasSell,
-                comp.ContractPresets.Count > 0
-            );
-            _ui.ServerSendUiMessage((store, null), StoreUiKey.Key, msg, user);
-            return;
-        }
-
-
+    private List<StoreListingStaticData> BuildCatalogEntries(NcStoreComponent comp)
+    {
         var list = new List<StoreListingStaticData>(comp.Listings.Count);
 
-        foreach (var l in comp.Listings)
+        foreach (var listing in comp.Listings)
         {
-            if (string.IsNullOrWhiteSpace(l.Id) || string.IsNullOrWhiteSpace(l.ProductEntity))
+            if (!TryBuildCatalogEntry(comp, listing, out var entry))
                 continue;
 
-            var cat = l.Categories.Count > 0 ? l.Categories[0] : Loc.GetString("nc-store-category-fallback");
-
-            if (!TryPickUiCurrencyAndPrice(comp, l, out var cur, out var price))
-                continue;
-
-            list.Add(
-                new(
-                    l.Id,
-                    l.Mode,
-                    cat,
-                    l.ProductEntity,
-                    price,
-                    cur,
-                    l.UnitsPerPurchase
-                ));
+            list.Add(entry);
         }
 
-        _catalogCache[store] = (comp.CatalogRevision, list);
+        return list;
+    }
 
+    private bool TryBuildCatalogEntry(
+        NcStoreComponent comp,
+        NcStoreListingDef listing,
+        out StoreListingStaticData entry)
+    {
+        entry = null!;
+
+        if (string.IsNullOrWhiteSpace(listing.Id) || string.IsNullOrWhiteSpace(listing.ProductEntity))
+            return false;
+
+        if (!TryPickUiCurrencyAndPrice(comp, listing, out var currencyId, out var price))
+            return false;
+
+        var category = listing.Categories.Count > 0
+            ? listing.Categories[0]
+            : Loc.GetString("nc-store-category-fallback");
+
+        entry = new(
+            listing.Id,
+            listing.Mode,
+            category,
+            listing.ProductEntity,
+            price,
+            currencyId,
+            listing.UnitsPerPurchase
+        );
+
+        return true;
+    }
+
+    private StoreCatalogMessage BuildCatalogMessage(
+        NcStoreComponent comp,
+        List<StoreListingStaticData> list)
+    {
+        var (hasBuy, hasSell) = GetCatalogModeFlags(list);
+
+        return new(
+            comp.CatalogRevision,
+            list,
+            hasBuy,
+            hasSell,
+            comp.ContractPresets.Count > 0
+        );
+    }
+
+    private static (bool HasBuy, bool HasSell) GetCatalogModeFlags(List<StoreListingStaticData> list)
+    {
+        var hasBuy = false;
+        var hasSell = false;
+
+        foreach (var listing in list)
         {
-            var hasBuy = false;
-            var hasSell = false;
+            if (listing.Mode == StoreMode.Buy)
+                hasBuy = true;
+            else if (listing.Mode == StoreMode.Sell)
+                hasSell = true;
 
-            foreach (var l in list)
-            {
-                if (l.Mode == StoreMode.Buy)
-                    hasBuy = true;
-                else if (l.Mode == StoreMode.Sell)
-                    hasSell = true;
-
-                if (hasBuy && hasSell)
-                    break;
-            }
-
-            var msg = new StoreCatalogMessage(
-                comp.CatalogRevision,
-                list,
-                hasBuy,
-                hasSell,
-                comp.ContractPresets.Count > 0
-            );
-
-            _ui.ServerSendUiMessage((store, null), StoreUiKey.Key, msg, user);
+            if (hasBuy && hasSell)
+                break;
         }
+
+        return (hasBuy, hasSell);
     }
 
     private void OnUiClosed(EntityUid uid, NcStoreComponent comp, BoundUIClosedEvent ev)
@@ -543,7 +628,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
 
         EnsureCrateWatchUpToDate(uid, user);
-        UpdateDynamicState(uid, comp, user);
+        RequestDynamicRefresh(uid, comp, user);
     }
 
     private void OnAccessReaderChanged(
@@ -562,37 +647,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             }
         }
     }
-
-    private void OnClaimContract(EntityUid uid, NcStoreComponent comp, ClaimContractBoundMessage msg)
-    {
-        if (!TryGetLockedUiUser(uid, comp, out var user))
-            return;
-
-        if (!_storeSystem.CanUseStore(uid, comp, user))
-            return;
-
-        if (TryComp(uid, out TransformComponent? sX) && TryComp(user, out TransformComponent? uX) &&
-            !_xform.InRange(sX.Coordinates, uX.Coordinates, AutoCloseDistance))
-            return;
-
-        if (_contracts.TryClaim(uid, user, msg.ContractId))
-        {
-            _audio.PlayPvs(new SoundPathSpecifier("/Audio/Effects/Cargo/ping.ogg"), user);
-            _popups.PopupEntity(Loc.GetString("nc-store-contract-completed"), uid, user);
-            UpdateDynamicState(uid, comp, user);
-            return;
-        }
-
-        NcInventorySnapshot? crateSnap = null;
-        EntityUid crate = default;
-        _logic.TryGetPulledClosedCrate(user, out crate);
-        var userSnap = _logic.BuildInventorySnapshot(user);
-        if (crate != default)
-            crateSnap = _logic.BuildInventorySnapshot(crate);
-
-        UpdateContractsProgress(comp, userSnap, crateSnap);
-    }
-
     private void MarkDirty(EntityUid storeUid)
     {
         if (storeUid != EntityUid.Invalid)
@@ -640,219 +694,5 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         return true;
     }
 
-    private ContractClientData MapContractToClient(ContractServerData c)
-    {
-        var targets = new List<ContractTargetClientData>();
-
-        if (c.Targets is { Count: > 0, })
-        {
-            foreach (var t in c.Targets)
-            {
-                if (string.IsNullOrWhiteSpace(t.TargetItem) || t.Required <= 0)
-                    continue;
-
-                targets.Add(
-                    new(t.TargetItem, t.Required, t.Progress)
-                    {
-                        MatchMode = t.MatchMode
-                    });
-            }
-        }
-        else if (!string.IsNullOrWhiteSpace(c.TargetItem) && c.Required > 0)
-        {
-            targets.Add(
-                new(c.TargetItem, c.Required, c.Progress)
-                {
-                    MatchMode = c.MatchMode
-                });
-        }
-
-        var rewards = c.Rewards is { Count: > 0, }
-            ? new(c.Rewards)
-            : new List<ContractRewardData>();
-
-        return new(
-            c.Id,
-            c.Name,
-            c.Difficulty,
-            c.Description,
-            c.Repeatable,
-            c.Completed,
-            c.TargetItem,
-            c.Required,
-            c.Progress,
-            targets,
-            rewards
-        );
-    }
-
-    private sealed class DynamicScratch
-    {
-        private readonly DynamicStateBuffer[] _buffers = { new(), new(), };
-        private readonly HashSet<string> _visibleListingIds = new();
-        private int _activeIndex;
-        private int _catalogRevision;
-        private bool _hasBuyTab;
-        private bool _hasContracts;
-        private bool _hasMeta;
-        private bool _hasSellTab;
-        private bool _hasVisibleIds;
-        private int _visibleSig;
-        public TimeSpan NextDynamicAllowed = TimeSpan.Zero;
-
-
-        public DynamicStateBuffer GetReadBuffer() => _buffers[_activeIndex];
-
-        public DynamicStateBuffer GetWriteBuffer() => _buffers[1 - _activeIndex];
-
-        public bool UpdateVisibleIds(string[]? ids)
-        {
-            if (ids == null || ids.Length == 0)
-            {
-                if (!_hasVisibleIds)
-                    return false;
-
-                _visibleListingIds.Clear();
-                _visibleSig = 0;
-                _hasVisibleIds = false;
-                return true;
-            }
-
-            var sig = 17;
-            for (var i = 0; i < ids.Length; i++)
-            {
-                var id = ids[i];
-                if (string.IsNullOrWhiteSpace(id))
-                    continue;
-                sig = unchecked(sig * 31 + id.GetHashCode());
-            }
-
-            if (_hasVisibleIds && sig == _visibleSig && _visibleListingIds.Count == ids.Length)
-            {
-                var all = true;
-                for (var i = 0; i < ids.Length; i++)
-                {
-                    var id = ids[i];
-                    if (string.IsNullOrWhiteSpace(id))
-                        continue;
-                    if (!_visibleListingIds.Contains(id))
-                    {
-                        all = false;
-                        break;
-                    }
-                }
-
-                if (all)
-                    return false;
-            }
-
-            _visibleListingIds.Clear();
-            for (var i = 0; i < ids.Length; i++)
-            {
-                var id = ids[i];
-                if (!string.IsNullOrWhiteSpace(id))
-                    _visibleListingIds.Add(id);
-            }
-
-            _visibleSig = sig;
-            _hasVisibleIds = true;
-            return true;
-        }
-
-        public bool ShouldSendBuyDynamicFor(string listingId)
-        {
-            if (!_hasVisibleIds)
-                return true;
-
-            return _visibleListingIds.Contains(listingId);
-        }
-
-        public bool EqualsLast(
-            DynamicStateBuffer next,
-            int catalogRevision,
-            bool hasBuyTab,
-            bool hasSellTab,
-            bool hasContracts
-        )
-        {
-            if (!_hasMeta)
-                return false;
-
-            if (_catalogRevision != catalogRevision ||
-                _hasBuyTab != hasBuyTab ||
-                _hasSellTab != hasSellTab ||
-                _hasContracts != hasContracts)
-                return false;
-
-            var prev = GetReadBuffer();
-
-            return DictEquals(prev.BalancesByCurrency, next.BalancesByCurrency) &&
-                DictEquals(prev.RemainingById, next.RemainingById) &&
-                DictEquals(prev.OwnedById, next.OwnedById) &&
-                DictEquals(prev.CrateUnitsById, next.CrateUnitsById) &&
-                DictEquals(prev.CrateTotals, next.CrateTotals) &&
-                ListEquals(prev.Contracts, next.Contracts);
-        }
-
-        public void Commit(int catalogRevision, bool hasBuyTab, bool hasSellTab, bool hasContracts)
-        {
-            _activeIndex = 1 - _activeIndex;
-
-            _catalogRevision = catalogRevision;
-            _hasBuyTab = hasBuyTab;
-            _hasSellTab = hasSellTab;
-            _hasContracts = hasContracts;
-            _hasMeta = true;
-        }
-
-        private static bool DictEquals(Dictionary<string, int> a, Dictionary<string, int> b)
-        {
-            if (ReferenceEquals(a, b))
-                return true;
-
-            if (a.Count != b.Count)
-                return false;
-
-            foreach (var (k, v) in a)
-                if (!b.TryGetValue(k, out var bv) || bv != v)
-                    return false;
-
-            return true;
-        }
-
-        private static bool ListEquals(List<ContractClientData> a, List<ContractClientData> b)
-        {
-            if (ReferenceEquals(a, b))
-                return true;
-
-            if (a.Count != b.Count)
-                return false;
-
-            for (var i = 0; i < a.Count; i++)
-                if (!EqualityComparer<ContractClientData>.Default.Equals(a[i], b[i]))
-                    return false;
-
-            return true;
-        }
-    }
-
-    private sealed class DynamicStateBuffer
-    {
-        public readonly Dictionary<string, int> BalancesByCurrency = new();
-        public readonly List<ContractClientData> Contracts = new();
-        public readonly Dictionary<string, int> CrateTotals = new();
-        public readonly Dictionary<string, int> CrateUnitsById = new();
-        public readonly Dictionary<string, int> OwnedById = new();
-        public readonly Dictionary<string, int> RemainingById = new();
-
-        public void Clear()
-        {
-            BalancesByCurrency.Clear();
-            RemainingById.Clear();
-            OwnedById.Clear();
-            CrateUnitsById.Clear();
-            CrateTotals.Clear();
-            Contracts.Clear();
-        }
-    }
 }
+

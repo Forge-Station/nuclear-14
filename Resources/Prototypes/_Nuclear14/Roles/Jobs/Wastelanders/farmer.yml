@@ -9,6 +9,7 @@
   startingGear: FarmerGear
   icon: "JobIconWastelandFarmer" # Forge-Change
   supervisors: job-supervisors-wastelander
+  alwaysUseSpawner: true # Forge-Change
   access:
   - WastelandFarmer
   - TownsPerson # Forge-Change
