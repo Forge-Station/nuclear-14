@@ -13,7 +13,7 @@
       - Ghoul
     - !type:CharacterDepartmentTimeRequirement
       department: BrotherhoodWashington
-      min: 18000 # 5 hours
+      min: 28800 # Forge-Change (8 hours)
   startingGear: BoSWashingtonScribeGear
   alwaysUseSpawner: true
   icon: "JobIconScientist"
@@ -33,12 +33,19 @@
 - type: startingGear
   id: BoSWashingtonScribeGear
   equipment:
-    jumpsuit: N14ClothingUniformJumpsuitBOSBlack
-    back: N14ClothingBackpackSatchelMilitaryFilled
-    shoes: N14ClothingBootsLeatherFilled
+    jumpsuit: N14ClothingUniformJumpsuitWBoSClassic # Forge-Change
+    back: N14ClothingBackpackMilitary # Forge-Change
+    gloves: N14ClothingHandsGlovesCombat # Forge-Add
+    shoes: N14ClothingBootsCombatFilled # Forge-Change
     id: N14IDBrotherhoodWashingtonHolotagScribe
+    outerClothing: N14ClothingOuterWBoSScripterCoat # Forge-Add
+    eyes: N14ClothingEyesGlassesWBoSEyepiece # Forge-Add
+    head: N14ClothingHeadHatWBoSBeret # Forge-Add
     ears: N14ClothingHeadsetBOSWashingtonLightScribe
     pocket1: BoSWashingtonScribeKits
+  storage: # Forge-Change
+    back:
+    - N14BoxPlasticFilledMilitary
 
 - type: playTimeTracker
   id: BoSWashingtonScribe

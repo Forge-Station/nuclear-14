@@ -756,16 +756,9 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: SheetSteel10
-      - id: SheetPlastic10
-      - id: ClothingHandsGlovesColorYellow
       - id: N14ClothingBeltUtilityFilled
-      - id: ClothingHeadBrotherhoodScribeHeadset
-      - id: N14WeaponLaserPistol
-      - id: N14PowerCellSmall
-        amount: 2
-      - id: N14WeaponLaserRifleAuto
-      - id: N14PowerCellHigh
+      - id: N14WeaponPlasmaRifle
+      - id: N14PlasmaCartridge
         amount: 3
       - id: N14Stimpak
       - id: BoxMRE
@@ -788,7 +781,7 @@
       - id: N14CombatKnife
       - id: N14ClothingBeltMedicalFilled
       - id: ClothingHeadBrotherhoodScribeHeadset
-      - id: N14WeaponLaserPistolRecharger
+      - id: N14WeaponLaserRifleRecharger
       - id: ClothingHandsGlovesChemist
       - id: N14Stimpak
       - id: BoxMRE
@@ -1274,3 +1267,46 @@
       - id: Handcuffs
         amount: 2
 
+- type: entity
+  name: WBoS Lord Sniper Kit
+  parent: KitBase
+  id: KitWBoSLordSniper
+  description: Sniper Lord kit
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponLaserRifleWattz3000
+      - id: N14Stimpak
+        amount: 1
+      - id: N14PowerCellFocused
+        amount: 4
+      - id: N14BoxCardboardMREBoxKFilled
+      - id: N14MedkitCombatFilled
+      - id: Handcuffs
+        amount: 2
+
+- type: entity
+  name: WBoS Lord Stormtrooper Kit
+  parent: KitBase
+  id: KitWBoSLordStorm
+  description: Stormtrooper Lord kit
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponLMGAutoRifle
+      - id: N14Stimpak
+        amount: 1
+      - id: Magazine308Rifle
+        amount: 4
+      - id: N14BoxCardboardMREBoxKFilled
+      - id: N14MedkitCombatFilled
+      - id: Handcuffs
+        amount: 2

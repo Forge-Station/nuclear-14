@@ -157,6 +157,26 @@
       enum.UndecidedLoadoutBackpackUIKey.Key:
         type: UndecidedLoadoutBackpackBoundUserInterface
 
+- type: entity
+  id: BoSWashingtonLordKits
+  name: неразобранный набор лорда ВБС
+  description: Выбери один пж
+  parent: BaseItem
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  - type: UndecidedLoadoutBackpack
+    possibleSets:
+    - LordSniperWashingtonBoSSet
+    - LordStormWashingtonBoSSet
+  - type: ActivatableUI
+    key: enum.UndecidedLoadoutBackpackUIKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.UndecidedLoadoutBackpackUIKey.Key:
+        type: UndecidedLoadoutBackpackBoundUserInterface
+
 # Broother Western kits Elden
 - type: entity
   id: BoSWesternEldenKits
@@ -564,6 +584,26 @@
     state: medic
   content:
   - KitScribeMedicWashingtonBoS
+
+- type: UndecidedLoadoutBackpackSet
+  id: LordSniperWashingtonBoSSet
+  name: undecided-loadout-category-washington-lord-sniper-name
+  description: undecided-loadout-category-washington-lord-sniper-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: medic
+  content:
+  - KitWBoSLordSniper
+
+- type: UndecidedLoadoutBackpackSet
+  id: LordStormWashingtonBoSSet
+  name: undecided-loadout-category-washington-lord-storm-name
+  description: undecided-loadout-category-washington-lord-storm-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: medic
+  content:
+  - KitWBoSLordStorm
 
 # Ranger
 

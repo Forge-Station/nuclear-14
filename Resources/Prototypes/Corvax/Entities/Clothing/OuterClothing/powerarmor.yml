@@ -170,3 +170,18 @@
       gloves: N14ClothingPAGauntlets
       shoes: N14ClothingPABoots
       back: N14ClothingPowerSystemsBack
+
+- type: entity
+  parent: N14ClothingOuterPowerArmorMidwest
+  id: N14ClothingOuterPowerArmorWBoSPowerArmor
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/PowerArmor/WBoSPowerArmor.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/PowerArmor/WBoSPowerArmor.rsi
+  - type: ToggleableClothing
+    clothingPrototypes:
+      head: N14ClothingHeadHelmetPowerArmorWBoSHelmet
+      gloves: N14ClothingPAGauntlets
+      shoes: N14ClothingPABoots
+      back: N14ClothingPowerSystemsBack

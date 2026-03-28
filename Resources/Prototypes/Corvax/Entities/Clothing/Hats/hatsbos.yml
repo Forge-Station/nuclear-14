@@ -63,3 +63,12 @@
     sprite: Corvax/Clothing/Head/Hats/capscout.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Head/Hats/capscout.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatWBoSBeret
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Hats/wbosberet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Hats/wbosberet.rsi

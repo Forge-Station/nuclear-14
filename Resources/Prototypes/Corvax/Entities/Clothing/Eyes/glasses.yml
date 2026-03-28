@@ -1,0 +1,17 @@
+- type: entity
+  parent: ClothingEyesBase
+  id: N14ClothingEyesGlassesWBoS
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Eyes/wbosrifleglass.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Eyes/wbosrifleglass.rsi
+
+- type: entity
+  parent: ClothingEyesBase
+  id: N14ClothingEyesGlassesWBoSEyepiece
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Eyes/wboseyepiece.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Eyes/wboseyepiece.rsi
