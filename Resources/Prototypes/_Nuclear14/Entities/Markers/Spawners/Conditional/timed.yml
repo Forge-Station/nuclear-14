@@ -759,7 +759,7 @@
     - type: Timer
     - type: TimedSpawner
       prototypes:
-        - N14MobRobotHostileAssaultron
+        - N14MobRobotHostileAssaultron # Forge-Change
       chance: 0.65
       intervalSeconds: 1500
       minimumEntitiesSpawned: 1
@@ -779,7 +779,7 @@
     - type: Timer
     - type: TimedSpawner
       prototypes:
-        - N14MobRobotHostileProtectron
+        - N14MobRobotHostileProtectron # Forge-Change
       chance: 0.65
       intervalSeconds: 1500
       minimumEntitiesSpawned: 1
@@ -799,7 +799,7 @@
     - type: Timer
     - type: TimedSpawner
       prototypes:
-        - N14MobRobotHostileProtectronBuilder
+        - N14MobRobotHostileProtectronBuilder # Forge-Change
       chance: 0.65
       intervalSeconds: 1500
       minimumEntitiesSpawned: 1
@@ -819,7 +819,7 @@
     - type: Timer
     - type: TimedSpawner
       prototypes:
-        - N14MobRobotHostileProtectronFire
+        - N14MobRobotHostileProtectronFire # Forge-Change
       chance: 0.65
       intervalSeconds: 1500
       minimumEntitiesSpawned: 1
@@ -839,7 +839,7 @@
     - type: Timer
     - type: TimedSpawner
       prototypes:
-        - N14MobRobotHostileProtectronPolice
+        - N14MobRobotHostileProtectronPolice # Forge-Change
       chance: 0.65
       intervalSeconds: 1500
       minimumEntitiesSpawned: 1
@@ -859,7 +859,7 @@
     - type: Timer
     - type: TimedSpawner
       prototypes:
-        - N14MobRobotHostileMrHandyClaw
+        - N14MobRobotHostileMrHandyClaw # Forge-Change
       chance: 0.65
       intervalSeconds: 1500
       minimumEntitiesSpawned: 1
@@ -879,7 +879,7 @@
     - type: Timer
     - type: TimedSpawner
       prototypes:
-        - N14MobRobotHostileMrHandyGun
+        - N14MobRobotHostileMrHandyGun # Forge-Change
       chance: 0.65
       intervalSeconds: 1500
       minimumEntitiesSpawned: 1
@@ -899,7 +899,7 @@
     - type: Timer
     - type: TimedSpawner
       prototypes:
-        - N14MobRobotHostileMrHandySaw
+        - N14MobRobotHostileMrHandySaw # Forge-Change
       chance: 0.65
       intervalSeconds: 1500
       minimumEntitiesSpawned: 1
@@ -919,7 +919,7 @@
     - type: Timer
     - type: TimedSpawner
       prototypes:
-        - N14MobRobotHostileMrHandyGutsy
+        - N14MobRobotHostileMrHandyGutsy # Forge-Change
       chance: 0.65
       intervalSeconds: 1500
       minimumEntitiesSpawned: 1
@@ -939,7 +939,7 @@
     - type: Timer
     - type: TimedSpawner
       prototypes:
-        - N14MobRobotHostileRobobrain
+        - N14MobRobotHostileRobobrain # Forge-Change
       chance: 0.65
       intervalSeconds: 1500
       minimumEntitiesSpawned: 1
@@ -959,7 +959,7 @@
     - type: Timer
     - type: TimedSpawner
       prototypes:
-        - N14MobRobotHostileEyebot
+        - N14MobRobotHostileEyebot # Forge-Change
       chance: 0.65
       intervalSeconds: 1500
       minimumEntitiesSpawned: 1

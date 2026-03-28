@@ -82,7 +82,7 @@
 - type: entity
   name: Waster Eyebot
   id: N14MobPetEyebot #Basic Eyebot every other inherits from.
-  parent: N14MobRobotFriendly
+  parent: N14MobRobotFriendly # Forge-Change
   description: A military Eyebot with a smiling face to look at!
   components:
   - type: HTN

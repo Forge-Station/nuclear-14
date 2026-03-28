@@ -724,7 +724,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotHostileAssaultron
+      - N14MobRobotHostileAssaultron # Forge-Change
       
 - type: entity
   name: Protectron Spawner
@@ -739,7 +739,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotHostileProtectron
+      - N14MobRobotHostileProtectron # Forge-Change
       
 - type: entity
   name: Protectron Builder Spawner
@@ -754,7 +754,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotHostileProtectronBuilder
+      - N14MobRobotHostileProtectronBuilder # Forge-Change
       
 - type: entity
   name: Protectron Fire Spawner
@@ -769,7 +769,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotHostileProtectronFire
+      - N14MobRobotHostileProtectronFire # Forge-Change
       
 - type: entity
   name: Protectron Police Spawner
@@ -784,7 +784,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotHostileProtectronPolice
+      - N14MobRobotHostileProtectronPolice # Forge-Change
       
 - type: entity
   name: Mr Handy Spawner
@@ -799,7 +799,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotHostileMrHandyClaw
+      - N14MobRobotHostileMrHandyClaw # Forge-Change
       
 - type: entity
   name: Mr Handy Gun Spawner
@@ -814,7 +814,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotHostileMrHandyGun
+      - N14MobRobotHostileMrHandyGun # Forge-Change
       
 - type: entity
   name: Mr Handy Saw Spawner
@@ -829,7 +829,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotHostileMrHandySaw
+      - N14MobRobotHostileMrHandySaw # Forge-Change
       
 - type: entity
   name: Mr Gutsy Spawner
@@ -844,7 +844,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotHostileMrHandyGutsy
+      - N14MobRobotHostileMrHandyGutsy # Forge-Change
       
 - type: entity
   name: Robobrain Spawner
@@ -859,7 +859,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotHostileRobobrain
+      - N14MobRobotHostileRobobrain # Forge-Change
       
 - type: entity
   name: Eyebot Spawner
@@ -874,7 +874,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotHostileEyebot
+      - N14MobRobotHostileEyebot # Forge-Change
 
 - type: entity
   name: Spore Plant Spawner
