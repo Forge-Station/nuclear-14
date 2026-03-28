@@ -187,4 +187,277 @@
   items:
     - N14ClothingHeadHatCenturionConquerorHelmet
 
+# Шлема спрайтов Ханса
+# ассасины
+- type: loadout
+  id: LoadoutHeadHatPrimeAssasin
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionVenator
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 144000
+  items:
+    - N14ClothingHeadHatPrimeAssasin
 
+- type: loadout
+  id: LoadoutHeadHatAssasin
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionVenator
+        - CaesarLegionLegionnaireRecruit
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 72000
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionLegionnaireRecruit
+      min: 108000
+  items:
+    - N14ClothingHeadHatAssasin
+# гастаты
+- type: loadout
+  id: LoadoutHeadHatGastat
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionLegionnaireVeteran
+        - CaesarLegionLegionnaireWarrior
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 72000
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionLegionnaireWarrior
+      min: 108000
+  items:
+    - N14ClothingHeadHatGastat
+
+- type: loadout
+  id: LoadoutHeadHatGastatPrime
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionLegionnaireVeteran
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 144000
+  items:
+    - N14ClothingHeadHatGastatPrime
+
+- type: loadout
+  id: LoadoutHeadHatGastatVeteran
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionLegionnaireVeteran
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 216000
+  items:
+    - N14ClothingHeadHatGastatVeteran
+# Триарий
+- type: loadout
+  id: LoadoutHeadHatHeadHatTriarium
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionLegionnaireWarrior
+        - CaesarLegionLegionnaireRecruit
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 72000
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionLegionnaireRecruit
+      min: 108000
+  items:
+    - N14ClothingHeadHatTriarium
+# Принцепсы
+- type: loadout
+  id: LoadoutHeadHatPrinceps
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionDean
+        - CaesarLegionLegionnaireVeteran
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 72000
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionLegionnaireVeteran
+      min: 108000
+  items:
+    - N14ClothingHeadHatPrinceps
+
+- type: loadout
+  id: LoadoutHeadHatPrincepsPrime
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionDean
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 144000
+  items:
+    - N14ClothingHeadHatPrincepsPrime
+# Броня спрайтов Ханса
+# ассасины
+- type: loadout
+  id: LoadoutOuterLegionnaireAssassin+Armor
+  category: Outer
+  cost: 5
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionVenator
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 144000
+  items:
+    - N14ClothingOuterLegionnaireAssassinPrimeArmor
+
+- type: loadout
+  id: LoadoutOuterLegionnaireAssassinArmor
+  category: Outer
+  cost: 5
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionVenator
+        - CaesarLegionLegionnaireRecruit
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 72000
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionLegionnaireRecruit
+      min: 108000
+  items:
+    - N14ClothingOuterLegionnaireAssassinArmor
+# гастаты
+- type: loadout
+  id: LoadoutOuterLegionnaireArmorGastat
+  category: Outer
+  cost: 5
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionLegionnaireVeteran
+        - CaesarLegionLegionnaireWarrior
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 72000
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionLegionnaireWarrior
+      min: 108000
+  items:
+    - N14ClothingOuterLegionnaireArmorGastat
+
+- type: loadout
+  id: LoadoutOuterLegionnaireArmorPrimeGastat
+  category: Outer
+  cost: 5
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionLegionnaireVeteran
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 144000
+  items:
+    - N14ClothingOuterLegionnaireArmorPrimeGastat
+
+- type: loadout
+  id: LoadoutOuterLegionnaireVeteranArmorVeteranGastat
+  category: Outer
+  cost: 5
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionLegionnaireVeteran
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 216000
+  items:
+    - N14ClothingOuterLegionnaireVeteranArmorVeteranGastat
+# Триарий
+- type: loadout
+  id: LoadoutOuterLegionnaireTriariumArmor
+  category: Outer
+  cost: 5
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionLegionnaireWarrior
+        - CaesarLegionLegionnaireRecruit
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 72000
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionLegionnaireRecruit
+      min: 108000
+  items:
+    - N14ClothingOuterLegionnaireTriariumArmor
+# Принцепсы
+- type: loadout
+  id: LoadoutOuterLegionnairePrincepsArmor
+  category: Outer
+  cost: 5
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionDean
+        - CaesarLegionLegionnaireVeteran
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 72000
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionLegionnaireVeteran
+      min: 108000
+  items:
+    - N14ClothingOuterLegionnairePrincepsArmor
+
+- type: loadout
+  id: LoadoutOuterLegionnairePrinceps+Armor
+  category: Outer
+  cost: 5
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionDean
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 144000
+  items:
+    - N14ClothingOuterLegionnairePrincepsPrimeArmor

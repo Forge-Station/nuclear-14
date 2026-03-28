@@ -151,7 +151,7 @@
   id: LoadoutN14ClothingHeadHatTriariumVeteranHelmet
   customName: false
   customDescription: false
-  category: Roles
+  category: Head
   cost: 0
   exclusive: true
   sponsorLevel: 3
@@ -169,7 +169,7 @@
   id: LoadoutN14ClothingTriariumVeteranArmor
   customName: false
   customDescription: false
-  category: Roles
+  category: Outer
   cost: 0
   exclusive: true
   sponsorLevel: 3
@@ -187,7 +187,7 @@
   id: LoadoutN14ClothingHeadHatPrincepsVeteranHelmet
   customName: false
   customDescription: false
-  category: Roles
+  category: Head
   cost: 0
   exclusive: true
   sponsorLevel: 3
@@ -205,7 +205,7 @@
   id: LoadoutN14ClothingPrincepsVeteranArmor
   customName: false
   customDescription: false
-  category: Roles
+  category: Outer
   cost: 0
   exclusive: true
   sponsorLevel: 3
@@ -223,7 +223,7 @@
   id: LoadoutN14ClothingHeadHatAssassinVeteranHelmet
   customName: false
   customDescription: false
-  category: Roles
+  category: Head
   cost: 0
   exclusive: true
   sponsorLevel: 3
@@ -241,7 +241,7 @@
   id: LoadoutN14ClothingAssassinVeteranArmor
   customName: false
   customDescription: false
-  category: Roles
+  category: Outer
   cost: 0
   exclusive: true
   sponsorLevel: 3
