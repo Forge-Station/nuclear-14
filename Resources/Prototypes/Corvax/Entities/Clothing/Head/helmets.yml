@@ -324,6 +324,7 @@
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/falloutNCRhelmetSnow.rsi
 
+- type: entity
   id: N14ClothingHeadHatWBoSBattleHelmet
   components:
   - type: Sprite

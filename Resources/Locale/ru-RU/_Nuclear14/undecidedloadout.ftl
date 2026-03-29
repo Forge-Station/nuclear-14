@@ -427,13 +427,13 @@ undecided-loadout-category-wbos-pal-las-description =
     2 плазменные ячейки, 1 рулон бинтов, 1 стимпак и сухпаёк типа K.
 
 undecided-loadout-category-washington-lord-sniper-name = Набор Командира (снайпер)
-undecided-loadout-category-wbos-pal-pla-description = 
+undecided-loadout-category-washington-lord-sniper-description = 
     Содержит набор снайпера-лорда.
     В набор входит: Wattz 3000, 3 батареи к нему, боевую аптечку, 
     Сухпаёк типа К.
 
 undecided-loadout-category-washington-lord-storm-name = Набор Командира (Штурмовик)
-undecided-loadout-category-wbos-pal-pla-description = 
+undecided-loadout-category-washington-lord-storm-description = 
     Содержит набор штурмовика-лорда.
     В набор входит: Автоматическую винтовку, 3 магазина к нему, боевую аптечку, 
     Сухпаёк типа К.
