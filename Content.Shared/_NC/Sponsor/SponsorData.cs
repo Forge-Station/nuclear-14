@@ -12,14 +12,17 @@ public sealed class SponsorData
         { "1388840103966933003", SponsorLevel.Level4 }, // Великий Кузнец
         { "1388840314860736512", SponsorLevel.Level5 }, // Архитектор Горна
         { "1388840456921550942", SponsorLevel.Level6 }, // Демиург Форжа
-        { "1228303275833425992", SponsorLevel.Level6 }, // Руководитель Проекта
-        { "1381007703425679522", SponsorLevel.Level6 }, // Помощник Рука
-        { "1228659342668988416", SponsorLevel.Level4 }, // Старший Модер
-        { "1351127483432570910", SponsorLevel.Level4 }, // ГГМ
+
+        { "1487709251777331220", SponsorLevel.Level1 }, // заслужил
+        { "1226554881398280272", SponsorLevel.Level2 }, // Модератор
+        { "1257637477196370000", SponsorLevel.Level3 }, // Ведущий ментор
+        { "1257628115988119562", SponsorLevel.Level3 }, // Смотритель Сервера
         { "1227934528442728498", SponsorLevel.Level4 }, // Начкар
         { "1229422799362195577", SponsorLevel.Level4 }, // Старший ментор
-        { "1257628115988119562", SponsorLevel.Level3 }, // Смотритель Сервера
-        { "1226554881398280272", SponsorLevel.Level2 } // Модератор
+        { "1351127483432570910", SponsorLevel.Level4 }, // ГГМ
+        { "1228659342668988416", SponsorLevel.Level4 }, // Старший Модер
+        { "1381007703425679522", SponsorLevel.Level6 }, // Помощник Рука
+        { "1228303275833425992", SponsorLevel.Level6 } // Руководитель Проекта
     };
 
     public static readonly Dictionary<SponsorLevel, string> SponsorColor = new()

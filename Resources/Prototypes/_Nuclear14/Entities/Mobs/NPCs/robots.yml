@@ -83,7 +83,7 @@
   parent: N14MobRobot
   id: N14MobRobotHostile
   categories: [ HideSpawnMenu ]
-  suffix: hostile npc 
+  suffix: hostile npc
   name: robot
   description: Designed to serve humankind. Maybe it ended it.
   components:
@@ -280,7 +280,7 @@
   description: A protectron firefighter looking for a fight.
   components:
   - type: Sprite
-    sprite: _Nuclear14\Mobs\Robots\protectron-fire.rsi
+    sprite: _Nuclear14/Mobs/Robots/protectron-fire.rsi
   # Forge-Change-Start
     # - state: icon # change me
     #   map: ["enum.BorgVisualLayers.Light"]
@@ -299,7 +299,7 @@
   description: A protectron police bot looking for a fight.
   components:
   - type: Sprite
-    sprite: _Nuclear14\Mobs\Robots\protectron-police.rsi
+    sprite: _Nuclear14/Mobs/Robots/protectron-police.rsi
   # Forge-Change-Start
     # - state: icon # change me
     #   map: ["enum.BorgVisualLayers.Light"]
