@@ -24,7 +24,7 @@
     zeroVisible: true
   - type: Appearance
   - type: FollowDistance
-    backStrength: 4 # Corvax-Change
+    backStrength: 4 # Forge-Change
   - type: StaticPrice
     price: 100
   - type: Craftable
@@ -97,7 +97,7 @@
         map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
     minAngle: 24
-    maxAngle: 46 # Corvax-Change
+    maxAngle: 46 # Forge-Change
     angleIncrease: 4
     angleDecay: 16
     fireRate: 4
@@ -207,7 +207,7 @@
     selectedMode: SemiAuto
     availableModes:
     - SemiAuto
-    - FullAuto # Corvax-Change
+    - FullAuto # Forge-Change
   - type: ItemSlots
     slots:
       gun_magazine:
@@ -309,11 +309,11 @@
       - state: mag-0
         map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
-    minAngle: 21 # Corvax-Change
-    maxAngle: 38 # Corvax-Change
+    minAngle: 21 # Forge-Change
+    maxAngle: 38 # Forge-Change
     angleIncrease: 4
     angleDecay: 16
-    fireRate: 4 # Corvax-Change
+    fireRate: 4 # Forge-Change
     soundGunshot:
       collection: N14ServiceGunshot
     selectedMode: SemiAuto
@@ -470,7 +470,7 @@
         map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
     minAngle: 24
-    maxAngle: 46 # Corvax-Change
+    maxAngle: 46 # Forge-Change
     angleIncrease: 4
     angleDecay: 16
     fireRate: 4
@@ -521,8 +521,8 @@
       map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
     minAngle: 24
-    maxAngle: 46 # Corvax-Change
-    angleIncrease: 5 # Corvax-Change
+    maxAngle: 46 # Forge-Change
+    angleIncrease: 5 # Forge-Change
     angleDecay: 16
     soundGunshot:
       collection: N14MarksmanGunshot
@@ -530,7 +530,7 @@
     selectedMode: SemiAuto
     availableModes:
     - SemiAuto
-    - FullAuto # Corvax-Change
+    - FullAuto # Forge-Change
   - type: ItemSlots
     slots:
       gun_magazine:
@@ -835,12 +835,12 @@
       map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
     minAngle: 24
-    maxAngle: 40 # Corvax-Change
+    maxAngle: 40 # Forge-Change
     angleIncrease: 4
     angleDecay: 16
     soundGunshot:
       collection: N14MarksmanGunshot
-    fireRate: 2.5 # Corvax-Change
+    fireRate: 2.5 # Forge-Change
     selectedMode: SemiAuto
     availableModes:
     - SemiAuto

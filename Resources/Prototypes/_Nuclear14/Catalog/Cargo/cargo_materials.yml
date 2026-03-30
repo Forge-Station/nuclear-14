@@ -44,7 +44,7 @@
     sprite: /Textures/_Nuclear14/Objects/Misc/materials.rsi
     state: powder_lead
   product: N14CrateBreakPlainFilledGunpowder
-  cost: 200 # Corvax-Change
+  cost: 200 # Forge-Change
   category: Materials
   group: market
 

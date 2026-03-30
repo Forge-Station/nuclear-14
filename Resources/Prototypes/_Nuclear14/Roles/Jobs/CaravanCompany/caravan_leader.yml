@@ -16,7 +16,7 @@
 #      min: 7200 # 2 hours as Caravan member
 #  weight: 10
 #  startingGear: CaravanLeaderGear
-#  icon: "JobIconCaravanLeader" # Corvax-Change
+#  icon: "JobIconCaravanLeader" # Forge-Change
 #  supervisors: job-supervisors-caravan-leader
 #  alwaysUseSpawner: true
 #  accessGroups:
@@ -35,11 +35,11 @@
 #  equipment:
 #    head: N14ClothingHeadHatCaravanSuit
 #    jumpsuit: N14ClothingUniformJumpsuitCaravanSuit
-#    back: N14ClothingBackpackHiking # Corvax-Change
+#    back: N14ClothingBackpackHiking # Forge-Change
 #    shoes: N14ClothingShoesBlack
 #    pocket1: N14WeaponPistol12mm
 #    id: N14IDPassportCaravanLeader
-#  storage: # Corvax-Change
+#  storage: # Forge-Change
 #    back:
 #    - N14BoxPlasticFilledWastelander
 #    - N14MagazinePistol12mm

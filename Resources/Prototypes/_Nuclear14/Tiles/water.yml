@@ -70,7 +70,7 @@
       pool:
         maxVol: 9999999 #.inf seems to break the whole yaml file, but would definitely be preferable.
         reagents:
-        - ReagentId: WaterDirty # Corvax-Change
+        - ReagentId: WaterDirty # Forge-Change
           Quantity: 9999999
 
 - type: entity
@@ -157,7 +157,7 @@
       pool:
         maxVol: 9999999 #.inf seems to break the whole yaml file, but would definitely be preferable.
         reagents:
-        - ReagentId: WaterSalt # Corvax-Change
+        - ReagentId: WaterSalt # Forge-Change
           Quantity: 9999999
 
 - type: entity

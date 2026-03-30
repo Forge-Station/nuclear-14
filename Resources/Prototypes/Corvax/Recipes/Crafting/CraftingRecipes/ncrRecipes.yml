@@ -157,15 +157,15 @@
 
 #MARK: Armor
 - type: craftRecipe
-  id: N14ClothingOuterNCRVestDesertRecipe
+  id: N14ClothingOuterNCRVestRecipe
   resultProtos:
-    - N14ClothingOuterNCRVestDesert
+    - N14ClothingOuterNCRVest
   requiredWorkbench: N14WorkbenchArmorbench
   availableFaction:
     - NCR
   craftTime: 7.5
   items:
-    N14ClothingOuterNCRVestDesertBlueprint:
+    N14ClothingOuterNCRVestBlueprint:
       amount: 1
       catalyzer: true
     N14ClothingOuterReinforcedLeatherArmor:

@@ -319,7 +319,7 @@
       fix1:
         shape:
           !type:PhysShapeAabb
-          bounds: "-1,-0,0,0.5" # Corvax-Change
+          bounds: "-1,-0,0,0.5" # Forge-Change
         density: 500
         mask:
         - TabletopMachineMask
@@ -620,7 +620,7 @@
       tags:
       - Sheet
       - RawMaterial
-      - Ingot # Corvax-Change
+      - Ingot # Forge-Change
   - type: Lathe
     producingSound: /Audio/Machines/circuitprinter.ogg
     idleState: icon
@@ -654,7 +654,7 @@
     - HolotagMidwestSquire
     - HolotagMidwestKnight
     - HolotagMidwestPaladin
-    - NCClothingBandageBoS # Corvax-Change
+    - NCClothingBandageBoS # Forge-Change
 
 - type: entity
   parent: N14WorkbenchIDPrinter
@@ -690,7 +690,7 @@
     staticRecipes:
     - DogtagNCR
     - DogtagNCRNCO
-    - NCClothingBandageNCR # Corvax-Change
+    - NCClothingBandageNCR # Forge-Change
 
 - type: entity
   parent: N14WorkbenchIDPrinter

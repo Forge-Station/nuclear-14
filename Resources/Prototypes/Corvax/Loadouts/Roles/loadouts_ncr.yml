@@ -1,21 +1,4 @@
 - type: loadout
-  id: LoadoutClothingOuterNCRPouchedVestDesert
-  category: Outer
-  cost: 2
-  exclusive: true
-  requirements:
-  - !type:CharacterJobRequirement
-    jobs:
-    - NCRSoldier
-    - NCREngineer
-    - NCRMedic
-  - !type:CharacterPlaytimeRequirement
-    tracker: NCRSoldier
-    min: 12000 # 5 hours veterancy unlock
-  items:
-  - N14ClothingOuterNCRPouchedVestDesert
-
-- type: loadout
   id: LoadoutClothingOuterNCRVestpaddedWebDesert
   category: Outer
   cost: 3
@@ -31,7 +14,7 @@
     tracker: NCRSoldier
     min: 36000 # 10 hours veterancy unlock
   items:
-  - N14ClothingOuterNCRVestpaddedWebDesert
+  - N14ClothingOuterNCRVestpaddedWeb
 
 - type: loadout
   id: LoadoutClothingOuterNCRVeteranArmorDesert
@@ -49,10 +32,10 @@
     tracker: NCRSoldier
     min: 72000 # 20 hours veterancy unlock
   items:
-  - N14ClothingOuterNCRVeteranArmorDesert
+  - N14ClothingOuterNCRVeteranArmor
 
 - type: loadout
-  id: LoadoutClothingOuterNCRCombatVeteranArmorDesert
+  id: LoadoutClothingOuterNCRCombatVeteranArmor
   category: Outer
   cost: 4
   exclusive: true
@@ -64,7 +47,7 @@
     tracker: NCRNCO
     min: 72000 # 20 hours veterancy unlock
   items:
-  - N14ClothingOuterNCRCombatVeteranArmorDesert
+  - N14ClothingOuterNCRCombatVeteranArmor
 
 - type: loadout
   id: LoadoutClothingNeckNCRMPCoat
@@ -95,3 +78,29 @@
     min: 72000 # 20 hours veterancy unlock
   items:
   - N14ClothingHeadHatNCRMPBeret
+
+- type: loadout
+  id: LoadoutClothingNeckNCRShoulderPad
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRSoldier
+        - NCRSGT
+        - NCRWS
+  items:
+    - N14ClothingNeckNCRShoulderPad
+
+- type: loadout
+  id: LoadoutClothingNeckNCRShoulderPadFlag
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRLT
+  items:
+    - N14ClothingNeckNCRShoulderPadFlag

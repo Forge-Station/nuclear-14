@@ -219,7 +219,7 @@
   unit: materials-unit-bill
   stackEntity: N14CurrencyNCRDollar
   icon: { sprite: /Textures/_Nuclear14/Objects/Misc/currency.rsi, state: ncr3 }
-  price: 0.5 # Corvax-Change
+  price: 0.5 # Forge-Change
 
 # NCR Dollars
 - type: entity

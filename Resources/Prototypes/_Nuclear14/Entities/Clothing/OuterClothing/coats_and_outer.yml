@@ -422,8 +422,8 @@
     modifiers:
      coefficients:
         Blunt: 0.85
-        Slash: 0.90 # Corvax-Change
-        Piercing: 0.85 # Corvax-Change
+        Slash: 0.90 # Forge-Change
+        Piercing: 0.85 # Forge-Change
         Heat: 0.85
     priceMultiplier: 0.5
   - type: Butcherable
@@ -526,10 +526,11 @@
   description: Warm and comfy, this nice white coat is used by officers of the 3rd battalion to warm themselves.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Clothing/OuterClothing/Coats/ncr_trenchcoat.rsi
+    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/falloutNCRtrenchcoat.rsi # Forge-Change
   - type: Clothing
-    sprite: _Nuclear14/Clothing/OuterClothing/Coats/ncr_trenchcoat.rsi
-  - type: Armor # Corvax-Change
+    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/falloutNCRtrenchcoat.rsi # Forge-Change
+# Forge-Change-Start
+  - type: Armor 
     modifiers:
      coefficients:
         Blunt: 0.85
@@ -537,6 +538,7 @@
         Piercing: 0.8
         Heat: 0.85
     priceMultiplier: 0.5
+# Forge-Change-End
     
 - type: entity
   parent: N14ClothingOuterBase
@@ -657,7 +659,7 @@
     sprite: _Nuclear14/Clothing/OuterClothing/Coats/washington_bos_scribe.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/OuterClothing/Coats/washington_bos_scribe.rsi
-  - type: Armor # Corvax-Change
+  - type: Armor # Forge-Change
     modifiers:
      coefficients:
         Blunt: 0.85

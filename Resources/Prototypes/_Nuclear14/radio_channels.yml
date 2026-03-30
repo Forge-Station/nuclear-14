@@ -43,7 +43,7 @@
 - type: radioChannel
   id: VaultCommon
   name: chat-radio-vault-common
-  keycode: 'м' # Corvax-Change
+  keycode: 'м' # Forge-Change
   frequency: 1349
   color: "#3E7BD1"
 
@@ -57,7 +57,7 @@
 - type: radioChannel
   id: BrotherhoodMidwest
   name: chat-radio-bosmidwest
-  keycode: 'с' # Corvax-Change
+  keycode: 'с' # Forge-Change
   frequency: 1213
   color: "#3B72BF"
 
@@ -78,7 +78,7 @@
 - type: radioChannel
   id: NCR
   name: chat-radio-ncr
-  keycode: 'к' # Corvax-Change
+  keycode: 'к' # Forge-Change
   frequency: 1546
   color: "#d77715"
 

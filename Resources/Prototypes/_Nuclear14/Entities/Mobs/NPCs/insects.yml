@@ -186,7 +186,7 @@
       sprite: _Nuclear14/Mobs/Insects/radroach.rsi
   - type: MovementSpeedModifier
     baseWalkSpeed : 3
-    baseSprintSpeed : 5 # Corvax-Change
+    baseSprintSpeed : 5 # Forge-Change
   - type: Fixtures
     fixtures:
       fix1:
@@ -415,4 +415,4 @@
   - type: MobThresholds
     thresholds:
       0: Alive
-      100: Dead # Corvax-Change
+      100: Dead # Forge-Change

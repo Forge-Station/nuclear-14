@@ -77,7 +77,7 @@
     inHandsOnly: false
     singleUser: true
     key: enum.ApcUiKey.Key
-  - type: Construction # Corvax-Change
+  - type: Construction # Forge-Change
     graph: N14APC
     node: apc
   - type: PowerNetworkBattery
@@ -140,7 +140,7 @@
     drawdepth: Overdoors
     sprite: _Nuclear14/Structures/Power/breakerbox.rsi
     state: frame
-  - type: Construction # Corvax-Change
+  - type: Construction # Forge-Change
     graph: N14APC
     node: apcFrame
   - type: WallMount

@@ -510,7 +510,7 @@
   footstepSounds:
     collection: N14FootstepWood
   friction: 0.30
-  itemDrop: FloorTilesItemMS13WoodCommon # Corvax-Change
+  itemDrop: FloorTilesItemMS13WoodCommon # Forge-Change
   thermalConductivity: 0.04
   heatCapacity: 10000
   weather: true
@@ -544,7 +544,7 @@
   footstepSounds:
     collection: N14FootstepWood
   friction: 0.30
-  itemDrop: FloorTilesItemMS13WoodFancy # Corvax-Change
+  itemDrop: FloorTilesItemMS13WoodFancy # Forge-Change
   thermalConductivity: 0.04
   heatCapacity: 10000
   weather: true
@@ -578,7 +578,7 @@
   footstepSounds:
     collection: N14FootstepWood
   friction: 0.30
-  itemDrop: FloorTilesItemMS13WoodMosaic # Corvax-Change
+  itemDrop: FloorTilesItemMS13WoodMosaic # Forge-Change
   thermalConductivity: 0.04
   heatCapacity: 10000
   weather: true
@@ -612,7 +612,7 @@
   footstepSounds:
     collection: N14FootstepWood
   friction: 0.30
-  itemDrop: FloorTilesItemMS13WoodWide # Corvax-Change
+  itemDrop: FloorTilesItemMS13WoodWide # Forge-Change
   thermalConductivity: 0.04
   heatCapacity: 10000
   weather: true

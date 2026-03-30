@@ -6,7 +6,7 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
-    - !type:CharacterDepartmentRequirement # Corvax-Change
+    - !type:CharacterDepartmentRequirement # Forge-Change
       inverted: true
       departments:
       - Vault
@@ -26,7 +26,7 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
-    - !type:CharacterDepartmentRequirement # Corvax-Change
+    - !type:CharacterDepartmentRequirement # Forge-Change
       inverted: true
       departments:
       - Vault
@@ -46,7 +46,7 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
-    - !type:CharacterDepartmentRequirement # Corvax-Change
+    - !type:CharacterDepartmentRequirement # Forge-Change
       inverted: true
       departments:
       - Vault
@@ -66,7 +66,7 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
-    - !type:CharacterDepartmentRequirement # Corvax-Change
+    - !type:CharacterDepartmentRequirement # Forge-Change
       inverted: true
       departments:
       - Vault
@@ -89,7 +89,7 @@
       min: 3600
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
-    - !type:CharacterDepartmentRequirement # Corvax-Change
+    - !type:CharacterDepartmentRequirement # Forge-Change
       inverted: true
       departments:
       - Vault
@@ -113,7 +113,7 @@
       min: 6800
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
-    - !type:CharacterDepartmentRequirement # Corvax-Change
+    - !type:CharacterDepartmentRequirement # Forge-Change
       inverted: true
       departments:
       - Vault
@@ -134,7 +134,7 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutAmmo
-    - !type:CharacterDepartmentRequirement # Corvax-Change
+    - !type:CharacterDepartmentRequirement # Forge-Change
       inverted: true
       departments:
       - Vault
@@ -173,7 +173,7 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMelee
-    - !type:CharacterDepartmentRequirement # Corvax-Change
+    - !type:CharacterDepartmentRequirement # Forge-Change
       inverted: true
       departments:
       - Vault

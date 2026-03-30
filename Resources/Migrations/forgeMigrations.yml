@@ -23,6 +23,19 @@ N14ToolboxFilled2 : N14ToolboxFilledLoot
 
 N14ClothingBeltMilitaryFilled : N14ClothingBeltAssaultFilled
 
+N14ClothingOuterNCRVestDesertBlueprint : N14ClothingOuterNCRVestBlueprint
+
+N14ClothingOuterNCRVestDesert : N14ClothingOuterNCRVest
+N14ClothingOuterNCRPouchedVestWoods : null
+N14ClothingOuterNCRPouchedVestSnow : null
+N14ClothingOuterNCRPouchedVestDesert : null
+N14ClothingOuterNCRLightPouchedVest : null
+N14ClothingOuterNCRVestpaddedWebDesert : null
+N14ClothingOuterNCRVeteranArmorDesert : null
+N14ClothingUniformNCRDesert : N14ClothingUniformNCR
+N14ClothingHeadHatNCRHelmetMetalDesert : N14ClothingHeadHatNCRHelmet
+N14ClothingHeadHatNCRHelmetMetalSnow : N14ClothingHeadHatNCRHelmetSnow
+
 N14MobFriendlyRobot : null
 
 N14MobRobotAssaultronHostile : N14MobRobotHostileAssaultron
@@ -36,3 +49,4 @@ N14MobRobotMrHandyGun : N14MobRobotHostileMrHandyGun
 N14MobRobotMrHandyGutsy : N14MobRobotHostileMrHandyGutsy
 N14MobRobotRobobrain : N14MobRobotHostileRobobrain
 N14MobRobotEyebot : N14MobRobotHostileEyebot
+

@@ -184,7 +184,7 @@
   - type: MobThresholds
     thresholds:
       0: Alive
-      200: Dead # Corvax-Change
+      200: Dead # Forge-Change
   - type: MovementSpeedModifier
     baseWalkSpeed : 3
     baseSprintSpeed : 6

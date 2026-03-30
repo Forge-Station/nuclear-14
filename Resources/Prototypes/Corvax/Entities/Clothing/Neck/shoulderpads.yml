@@ -1,0 +1,17 @@
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckNCRShoulderPad
+  name: NCR shoulder pad
+  description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/falloutNCRshoulderpad.rsi
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckNCRShoulderPadFlag
+  name: NCR shoulder pad with flag
+  description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/falloutNCRshoulderpadFlag.rsi

@@ -280,19 +280,21 @@
   items:
     - ClothingNeckPinNCRChiefPhysician
 
-- type: loadout
-  id: LoadoutNCRSnowHelmet
-  category: Head # Forge-Change
-  cost: 1
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRSoldier
-        - NCRSGT
-        - NCRWS # Forge-Change
-  items:
-    - N14ClothingHeadHatNCRHelmetMetalSnow
+# Forge-Delete-Start
+# - type: loadout
+#   id: LoadoutNCRSnowHelmet
+#   category: Head # Forge-Change
+#   cost: 1
+#   exclusive: true
+#   requirements:
+#     - !type:CharacterJobRequirement
+#       jobs:
+#         - NCRSoldier
+#         - NCRSGT
+#         - NCRWS # Forge-Change
+#   items:
+#     - N14ClothingHeadHatNCRHelmetMetalSnow
+# Forge-Delete-End 
 
 - type: loadout
   id: LoadoutNCRWoodsHelmet

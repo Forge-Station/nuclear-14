@@ -11,7 +11,7 @@
       netsync: true
       scale: 0.75, 0.75
     - type: StaticPrice
-      price: 1 # Corvax-Change
+      price: 1 # Forge-Change
 
 - type: entity
   parent: N14SeedBase

@@ -47,7 +47,7 @@
     speed: 0.6
   - type: Scalpel
     speed: 0.4
-  - type: Craftable # Corvax-Change
+  - type: Craftable # Forge-Change
 
 - type: entity
   name: screwdriver
@@ -82,7 +82,7 @@
     speed: 0.4
   - type: Tweezers
     speed: 0.4
-  - type: Craftable # Corvax-Change
+  - type: Craftable # Forge-Change
 
 - type: entity
   name: wrench
@@ -105,7 +105,7 @@
         Blunt: 8
     soundHit:
       collection: MetalThud
-  - type: Craftable # Corvax-Change
+  - type: Craftable # Forge-Change
 
 - type: entity
   name: multitool
