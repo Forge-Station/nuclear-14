@@ -325,6 +325,7 @@
     sprite: Corvax/Clothing/Head/Helmets/falloutNCRhelmetSnow.rsi
 
 - type: entity
+  parent: ClothingHeadBase
   id: N14ClothingHeadHatWBoSBattleHelmet
   components:
   - type: Sprite
