@@ -680,14 +680,3 @@
     sprite: Clothing/OuterClothing/WinterCoats/corpo_jacket_zeng_hu_pharma.rsi
   - type: GuideHelp
     guides: [ ZengHuPharmaceuticals ]
-
-- type: entity # Forge-change
-  parent: ClothingOuterWinterCoat
-  id: ClothingOuterArmoredWinterCoat
-  name: armored winter coat
-  description: Roughly stitched together fragments of armor and a sturdy bomber jacket
-  components:
-  - type: Sprite
-    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/Armoredcoat.rsi
-  - type: Clothing
-    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/Armoredcoat.rsi

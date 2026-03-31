@@ -115,3 +115,14 @@
     reduction: 0.1
   - type: ExplosionResistance
     damageCoefficient: 0.9
+
+- type: entity
+  parent: ClothingOuterWinterCoat
+  id: ClothingOuterArmoredWinterCoat
+  name: armored winter coat
+  description: Roughly stitched together fragments of armor and a sturdy bomber jacket
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/Armoredcoat.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/Armoredcoat.rsi
