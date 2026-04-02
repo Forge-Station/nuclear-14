@@ -87,8 +87,8 @@
       coefficients:
         Blunt: 0.825
         Slash: 0.825
-        Piercing: 0.775
-        Heat: 0.775
+        Piercing: 0.8
+        Heat: 0.8
         Caustic: 0.95
   - type: FireProtection
     reduction: 0.1

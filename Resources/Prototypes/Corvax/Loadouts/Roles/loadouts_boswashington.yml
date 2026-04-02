@@ -1,17 +1,5 @@
 - type: loadout
-  id: LoadoutBoSWashingtonCommanderT60Armor
-  category: Roles
-  cost: 10
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - BoSWashingtonCommander
-  items:
-    - N14ClothingOuterPowerArmorT60
-
-- type: loadout
-  id: LoadoutBoSWashingtonPaladinT51Armor
+  id: LoadoutClothingOuterWBoSReconBattleArmor
   category: Roles
   cost: 10
   exclusive: true
@@ -19,5 +7,36 @@
     - !type:CharacterJobRequirement
       jobs:
         - BoSWashingtonPaladin
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSWashingtonPaladin
+      min: 96000
   items:
-    - N14ClothingOuterPowerArmorT51
+    - N14ClothingOuterWBoSReconBattleArmor
+
+- type: loadout
+  id: LoadoutClothingOuterWBoSKnightBattleArmorKilt
+  category: Roles
+  cost: 6
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSWashingtonKnight
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSWashingtonKnight
+      min: 96000
+  items:
+    - N14ClothingOuterWBoSKnightBattleArmorKilt
+
+- type: loadout
+  id: LoadoutClothingHeadHatWBoSBeret
+  category: Roles
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSWashingtonKnight
+        - BoSWashingtonPaladin
+  items:
+    - N14ClothingHeadHatWBoSBeret

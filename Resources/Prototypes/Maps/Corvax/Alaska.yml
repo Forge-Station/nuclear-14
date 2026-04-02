@@ -24,7 +24,6 @@
           WastelandReporter: [ 1, 1 ]
           # WastelandMusician: [ 2, 3 ]
           WastelandFarmer: [ 1, 1 ]
-          WastelandChaplain: [ 1, 1 ]
           WastelandBartender: [ 2, 2 ]
           TownMayor: [ 1, 1 ]
           TownSheriff: [ 1, 1 ]

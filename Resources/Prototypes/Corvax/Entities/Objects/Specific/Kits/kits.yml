@@ -757,8 +757,8 @@
   - type: SpawnItemsOnUse
     items:
       - id: N14ClothingBeltUtilityFilled
-      - id: N14WeaponPlasmaRifle
-      - id: N14PlasmaCartridge
+      - id: N14WeaponPlasmaPistol
+      - id: N14PlasmaCell
         amount: 3
       - id: N14Stimpak
       - id: BoxMRE
@@ -780,8 +780,7 @@
       - id: N14MedkitBruteFilled
       - id: N14CombatKnife
       - id: N14ClothingBeltMedicalFilled
-      - id: ClothingHeadBrotherhoodScribeHeadset
-      - id: N14WeaponLaserRifleRecharger
+      - id: N14WeaponLaserPistolRecharger
       - id: ClothingHandsGlovesChemist
       - id: N14Stimpak
       - id: BoxMRE
