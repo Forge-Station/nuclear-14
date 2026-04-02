@@ -709,3 +709,25 @@
   - type: ToggleableClothing
     clothingPrototype: N14ClothingHeadHatWBoSReconHood
     slot: head
+
+- type: entity
+  parent: N14ClothingOuterRangerCombat
+  id: N14ClothingOuterDeserted
+  categories: [ HideSpawnMenu ]
+  name: элитная броня пустынного рейнджера
+  description: Модифицированный штурмовой комплект брони спецназа Морской Пехоты, который использовался довоенными "Морскими Котиками". Теперь служит роду Аквиллий, как реликвия прошлого, сохраняющая дух старой Америки. На всей броне виднеются следы боя, вмятины на пластинах, сажа от взрывов, отверстия на тренче от пуль, всё это следствие десятков лет сражений за свободу тех, кто не может защитить себя сам в пустынях Невады. Когда угнетённые видят силуэт в этой броне, они знают что их не оставят погибать.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/ranger_dust_armor.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/ranger_dust_armor.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.65
+        Slash: 0.65
+        Piercing: 0.6
+        Heat: 0.6
+    priceMultiplier: 0.6
+  - type: ExplosionResistance
+    damageCoefficient: 0.7

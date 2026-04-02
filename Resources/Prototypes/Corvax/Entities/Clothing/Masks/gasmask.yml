@@ -40,3 +40,26 @@
         Heat: 0.95
   - type: NightVision
     isEquipment: true
+
+- type: entity
+  parent: ClothingMaskGasCombat
+  id: N14ClothingMaskGasRangerEliteDeserted
+  categories: [ HideSpawnMenu ]
+  name: элитный штурмовой противогаз пустынного рейнджера
+  description: Баллистическая маска с респиратором и золотистыми окулярами. Раньше защищала спецназ Морской Пехоты в воде, теперь защищает Рейнджера в песке.
+  components:
+  - type: Item
+    size: Tiny
+  - type: FlashImmunity
+  - type: EyeProtection
+  - type: Sprite
+    sprite: Corvax/Clothing/Mask/ranger_dust_mask.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Mask/ranger_dust_mask.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.95
+        Slash: 0.95
+        Piercing: 0.95
+        Heat: 0.95
