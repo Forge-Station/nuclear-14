@@ -1,3 +1,15 @@
 ﻿- type: statusEffect
   id: NocturineNightVision
   alwaysAllowed: true
+
+- type: statusEffect
+  id: PainImmunity
+  alwaysAllowed: true
+
+- type: statusEffect
+  id: ThresholdAdjustment
+  alwaysAllowed: true
+
+- type: statusEffect
+  id: DoAfterSpeed
+  alwaysAllowed: true
