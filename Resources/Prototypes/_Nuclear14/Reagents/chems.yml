@@ -223,18 +223,7 @@
     Narcotic:
       metabolismRate: 0.2
       effects:
-        - !type:DoAfterSpeedEffect
-          DurationPerUnit: 0.2         # 20 секунд за 20 юнитов
-          Tiers:
-            - Threshold: 1
-              Multiplier: 1.33          # +33% (ускорение в 1.33 раза)
-            - Threshold: 21
-              Multiplier: 1.66          # +66%
-            - Threshold: 41
-              Multiplier: 1.99          # +99%
-          AffectedDoAfters:
-            - "HealDoAfterEvent"
-            - "SurgeryDoAfterEvent"
+      - !type:Jitter #Placeholder for when we get Special working again.
 
 
 - type: reagent
