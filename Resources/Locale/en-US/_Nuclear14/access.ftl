@@ -40,3 +40,5 @@ id-card-access-level-washington-paladin = WBoS Suits
 id-card-access-level-washington-knight = WBoS Armory
 id-card-access-level-washington-scribe = WBoS Labs
 id-card-access-level-washington-initiate = WBoS Gates
+
+id-card-access-level-town-master-key = Town Master Key

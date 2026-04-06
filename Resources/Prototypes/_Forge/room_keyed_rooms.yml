@@ -1,0 +1,128 @@
+- type: entity
+  parent: N14DoorWoodSecure
+  id: N14DoorWoodSecureUniqueKeyTemplate
+  suffix: UniqueKeyDoor, Шаблон, Деревянная защищенная
+  components:
+  - type: AccessReader
+    access: []
+  - type: UniqueKeyDoor
+    maxLinkedKeys: 2
+    masterKeyTags:
+    - TownMasterKey
+  - type: Wires
+    layoutId: AirlockService
+
+- type: entity
+  parent: N14DoorWoodRoom
+  id: N14DoorWoodRoomUniqueKeyTemplate
+  suffix: UniqueKeyDoor, Шаблон, Комнатная деревянная
+  components:
+  - type: AccessReader
+    access: []
+  - type: UniqueKeyDoor
+    maxLinkedKeys: 2
+    masterKeyTags:
+    - TownMasterKey
+
+- type: entity
+  parent: N14DoorMetalSecure
+  id: N14DoorMetalSecureUniqueKeyTemplate
+  suffix: UniqueKeyDoor, Шаблон, Металлическая защищенная
+  components:
+  - type: AccessReader
+    access: []
+  - type: UniqueKeyDoor
+    maxLinkedKeys: 2
+    masterKeyTags:
+    - TownMasterKey
+
+- type: entity
+  parent: N14DoorCellMetal
+  id: N14DoorCellMetalUniqueKeyTemplate
+  suffix: UniqueKeyDoor, Шаблон, Камерная
+  components:
+  - type: AccessReader
+    access: []
+  - type: UniqueKeyDoor
+    maxLinkedKeys: 2
+    masterKeyTags:
+    - TownMasterKey
+
+
+# Room #1
+- type: entity
+  parent: N14IDCard
+  id: N14IDKeyInnRoomOne
+  name: ключ от комнаты #1
+  description: Подходит к двери комнаты #1.
+  suffix: UniqueKeyDoor, Комната #1
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: iron
+  - type: UniqueDoorKey
+    keyId: inn_room_1
+
+- type: entity
+  parent: N14DoorWoodSecureUniqueKeyTemplate
+  id: N14DoorWoodSecureLockedInnRoomOneKeyed
+  suffix: UniqueKeyDoor, Комната #1
+  components:
+  - type: UniqueKeyDoor
+    doorKeyId: inn_room_1
+    linkedKeyCount: 2
+    maxLinkedKeys: 2
+    masterKeyTags:
+    - TownMasterKey
+
+# Room #2
+- type: entity
+  parent: N14IDCard
+  id: N14IDKeyInnRoomTwo
+  name: ключ от комнаты #2
+  description: Подходит к двери комнаты #2.
+  suffix: UniqueKeyDoor, Комната #2
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: brass
+  - type: UniqueDoorKey
+    keyId: inn_room_2
+
+- type: entity
+  parent: N14DoorWoodSecureUniqueKeyTemplate
+  id: N14DoorWoodSecureLockedInnRoomTwoKeyed
+  suffix: UniqueKeyDoor, Комната #2
+  components:
+  - type: UniqueKeyDoor
+    doorKeyId: inn_room_2
+    linkedKeyCount: 2
+    maxLinkedKeys: 2
+    masterKeyTags:
+    - TownMasterKey
+
+# Room #3
+- type: entity
+  parent: N14IDCard
+  id: N14IDKeyInnRoomThree
+  name: ключ от комнаты #3
+  description: Подходит к двери комнаты #3.
+  suffix: UniqueKeyDoor, Комната #3
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: bronze
+  - type: UniqueDoorKey
+    keyId: inn_room_3
+
+- type: entity
+  parent: N14DoorWoodSecureUniqueKeyTemplate
+  id: N14DoorWoodSecureLockedInnRoomThreeKeyed
+  suffix: UniqueKeyDoor, Комната #3
+  components:
+  - type: UniqueKeyDoor
+    doorKeyId: inn_room_3
+    linkedKeyCount: 2
+    maxLinkedKeys: 2
+    masterKeyTags:
+    - TownMasterKey
