@@ -26,6 +26,7 @@
       - type: NpcFactionMember
         factions:
           - BrotherhoodWest
+          - Wastelander
 
 - type: startingGear
   id: BoSWestPaladinGear
