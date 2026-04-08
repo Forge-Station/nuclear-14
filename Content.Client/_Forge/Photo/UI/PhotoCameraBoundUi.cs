@@ -79,7 +79,7 @@ public sealed class PhotoCameraBoundUserInterface : BoundUserInterface
                 _viewInitialized = true;
             }
 
-            _photoSystem.OpenCameraUi(component, this);
+            _photoSystem.OpenCameraUi(_cameraEntity.Value, this);
             UpdateControl(component, 1);
         }
 
@@ -95,9 +95,7 @@ public sealed class PhotoCameraBoundUserInterface : BoundUserInterface
 
         if (_cameraEntity != null)
         {
-            if (EntMan.TryGetComponent<PhotoCameraComponent>(_cameraEntity, out var component))
-                _photoSystem.CloseCameraUi(component);
-
+            _photoSystem.CloseCameraUi(_cameraEntity.Value);
             _cameraEntity = null;
         }
 
@@ -152,7 +150,7 @@ public sealed class PhotoCameraBoundUserInterface : BoundUserInterface
 
     private void AttemptTakeImage()
     {
-        if (_window == null)
+        if (_window == null || _cameraEntity == null)
             return;
 
         _window.RenderImage(bytes =>
@@ -160,7 +158,12 @@ public sealed class PhotoCameraBoundUserInterface : BoundUserInterface
             if (!EntMan.TryGetComponent<TransformComponent>(_cameraEntity, out var transform))
                 return;
 
-            var message = new PhotoCameraTakeImageMessage(bytes, new MapCoordinates(_zoomPos, transform.MapID), _zoomValue);
+            // Compute actual world position: camera world pos + rotated offset
+            var worldPos = _transform.GetWorldPosition(_cameraEntity.Value);
+            var angle = _transform.GetWorldRotation(_cameraEntity.Value);
+            var photoWorldPos = worldPos + angle.RotateVec(_zoomPos);
+
+            var message = new PhotoCameraTakeImageMessage(bytes, new MapCoordinates(photoWorldPos, transform.MapID), _zoomValue);
             SendMessage(message);
         });
     }

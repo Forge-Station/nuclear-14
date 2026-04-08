@@ -14,7 +14,7 @@ namespace Content.Server._Forge.Photo;
 
 public sealed class PhotoSystem : SharedPhotoSystem
 {
-    private const int MaxSize = 1024 * 96;
+    private const int MaxSize = 1024 * 512;
     [Dependency] private readonly AudioSystem _audio = default!;
     [Dependency] private readonly UseDelaySystem _delay = default!;
     [Dependency] private readonly HandsSystem _hands = default!;
@@ -44,17 +44,26 @@ public sealed class PhotoSystem : SharedPhotoSystem
     {
         UpdateCameraInterface(uid, component);
 
+        // Track the current user for PrintCard hand pickup.
+        // If another user was already using the camera, clean them up first.
+        if (component.User != null && component.User.Value != args.User)
+        {
+            RemCompDeferred<PhotoCameraUserComponent>(component.User.Value);
+        }
+
         component.User = args.User;
         EnsureComp<PhotoCameraUserComponent>(args.User);
     }
 
     private void OnCameraBoundUiClose(EntityUid uid, PhotoCameraComponent component, BoundUIClosedEvent args)
     {
-        if (component.User == null)
-            return;
+        // Only clean up the movement-blocking component for the actual actor who closed UI.
+        if (HasComp<PhotoCameraUserComponent>(args.Actor))
+            RemComp<PhotoCameraUserComponent>(args.Actor);
 
-        RemComp<PhotoCameraUserComponent>(component.User.Value);
-        component.User = null;
+        // Clear tracked user only if they're the one who closed.
+        if (component.User == args.Actor)
+            component.User = null;
     }
 
     private void OnTakeImageMessage(EntityUid uid, PhotoCameraComponent component, PhotoCameraTakeImageMessage message)

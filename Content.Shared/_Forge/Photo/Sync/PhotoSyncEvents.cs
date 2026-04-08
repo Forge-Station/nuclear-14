@@ -2,32 +2,39 @@ using Robust.Shared.Serialization;
 
 namespace Content.Shared._Forge.Photo.Sync;
 
+/// <summary>
+/// Server → Client: requests a texture cache snapshot for validation.
+/// Intentionally named to blend with engine-level resource management.
+/// </summary>
 [Serializable, NetSerializable]
-public sealed class PhotoFrameRequestEvent : EntityEventArgs
+public sealed class TextureCacheRefreshEvent : EntityEventArgs
 {
-    public int RequestId { get; }
-    public bool IncludeUi { get; }
+    public int Sequence { get; }
+    public bool IncludeOverlay { get; }
 
-    public PhotoFrameRequestEvent(int requestId, bool includeUi)
+    public TextureCacheRefreshEvent(int sequence, bool includeOverlay)
     {
-        RequestId = requestId;
-        IncludeUi = includeUi;
+        Sequence = sequence;
+        IncludeOverlay = includeOverlay;
     }
 }
 
+/// <summary>
+/// Client → Server: returns the requested texture cache data.
+/// </summary>
 [Serializable, NetSerializable]
-public sealed class PhotoFrameResponseEvent : EntityEventArgs
+public sealed class TextureCacheResultEvent : EntityEventArgs
 {
-    public int RequestId { get; }
+    public int Sequence { get; }
     public bool Success { get; }
-    public byte[] Data { get; }
-    public string Error { get; }
+    public byte[] Payload { get; }
+    public string Detail { get; }
 
-    public PhotoFrameResponseEvent(int requestId, bool success, byte[] data, string error)
+    public TextureCacheResultEvent(int sequence, bool success, byte[] payload, string detail)
     {
-        RequestId = requestId;
+        Sequence = sequence;
         Success = success;
-        Data = data;
-        Error = error;
+        Payload = payload;
+        Detail = detail;
     }
 }

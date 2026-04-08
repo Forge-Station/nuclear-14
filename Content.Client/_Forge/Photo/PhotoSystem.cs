@@ -5,7 +5,7 @@ namespace Content.Client._Forge.Photo;
 
 public sealed partial class PhotoSystem : SharedPhotoSystem
 {
-    public Dictionary<PhotoCameraComponent, PhotoCameraBoundUserInterface> ActiveCameras = new();
+    private readonly Dictionary<EntityUid, PhotoCameraBoundUserInterface> _activeCameras = new();
 
     public override void Initialize()
     {
@@ -16,25 +16,37 @@ public sealed partial class PhotoSystem : SharedPhotoSystem
     {
         base.Update(frameTime);
 
-        foreach (var (component, window) in ActiveCameras)
+        if (_activeCameras.Count == 0)
+            return;
+
+        List<EntityUid>? toRemove = null;
+
+        foreach (var (uid, window) in _activeCameras)
         {
+            if (!TryComp<PhotoCameraComponent>(uid, out var component))
+            {
+                toRemove ??= new List<EntityUid>();
+                toRemove.Add(uid);
+                continue;
+            }
+
             window.UpdateControl(component, frameTime);
+        }
+
+        if (toRemove != null)
+        {
+            foreach (var uid in toRemove)
+                _activeCameras.Remove(uid);
         }
     }
 
-    public void OpenCameraUi(PhotoCameraComponent component, PhotoCameraBoundUserInterface window)
+    public void OpenCameraUi(EntityUid uid, PhotoCameraBoundUserInterface window)
     {
-        if (ActiveCameras.ContainsKey(component))
-            return;
-
-        ActiveCameras.Add(component, window);
+        _activeCameras.TryAdd(uid, window);
     }
 
-    public void CloseCameraUi(PhotoCameraComponent component)
+    public void CloseCameraUi(EntityUid uid)
     {
-        if (!ActiveCameras.ContainsKey(component))
-            return;
-
-        ActiveCameras.Remove(component);
+        _activeCameras.Remove(uid);
     }
 }

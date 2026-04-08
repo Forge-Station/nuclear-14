@@ -11,6 +11,7 @@ using Robust.Shared.Utility;
 using SixLabors.ImageSharp;
 using System.IO;
 using System.Numerics;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Content.Client._Forge.Photo.UI;
@@ -23,6 +24,7 @@ public sealed partial class PhotoCameraWindow : FancyWindow
 
     public Vector2 MoveInput = Vector2.Zero;
     public float ZoomInput = 0;
+    private CancellationTokenSource _cts = new();
 
     public event Action? OnTakeImageAttempt;
 
@@ -72,13 +74,13 @@ public sealed partial class PhotoCameraWindow : FancyWindow
     private void HandleMoveKey(BoundKeyFunction function, float delta)
     {
         if (function == EngineKeyFunctions.MoveUp)
-            MoveInput.Y = MoveInput.Y + delta;
-        if (function == EngineKeyFunctions.MoveDown)
-            MoveInput.Y = MoveInput.Y - delta;
-        if (function == EngineKeyFunctions.MoveRight)
-            MoveInput.X = MoveInput.X + delta;
-        if (function == EngineKeyFunctions.MoveLeft)
-            MoveInput.X = MoveInput.X - delta;
+            MoveInput.Y += delta;
+        else if (function == EngineKeyFunctions.MoveDown)
+            MoveInput.Y -= delta;
+        else if (function == EngineKeyFunctions.MoveRight)
+            MoveInput.X += delta;
+        else if (function == EngineKeyFunctions.MoveLeft)
+            MoveInput.X -= delta;
     }
     //endregion Control
 
@@ -96,10 +98,18 @@ public sealed partial class PhotoCameraWindow : FancyWindow
 
     public void RenderImage(Action<byte[]> callback)
     {
+        var token = _cts.Token;
+
         CameraView.Screenshot(image =>
         {
             _ = Task.Run(() =>
             {
+                if (token.IsCancellationRequested)
+                {
+                    image.Dispose();
+                    return;
+                }
+
                 try
                 {
                     using var frame = image;
@@ -107,19 +117,27 @@ public sealed partial class PhotoCameraWindow : FancyWindow
                     frame.SaveAsPng(data);
                     var bytes = data.ToArray();
 
-                    _taskManager.RunOnMainThread(() => callback(bytes));
+                    if (!token.IsCancellationRequested)
+                    {
+                        _taskManager.RunOnMainThread(() =>
+                        {
+                            if (!token.IsCancellationRequested)
+                                callback(bytes);
+                        });
+                    }
                 }
                 catch (Exception e)
                 {
                     Logger.ErrorS("photo-camera", $"Failed to encode photo: {e}");
                 }
-            });
+            }, token);
         });
     }
 
     public void OnDispose()
     {
-        // Dispose sound source
+        _cts.Cancel();
+        _cts.Dispose();
         PhotoButton.ClickSound = null;
     }
 }
