@@ -3,8 +3,8 @@ using Robust.Shared.Serialization;
 namespace Content.Shared._Forge.Photo;
 
 /// <summary>
-/// Lightweight UI state — contains only the image ID, not the actual data.
-/// Client checks its local cache and requests data via network event if needed.
+/// Lightweight UI state that contains only image ID, not image bytes.
+/// Client checks local cache first and requests bytes only when needed.
 /// </summary>
 [Serializable, NetSerializable]
 public sealed class PhotoCardUiState : BoundUserInterfaceState
@@ -27,8 +27,7 @@ public enum PhotoCardUiKey : byte
 }
 
 /// <summary>
-/// Client → Server: requests image data by ID.
-/// Sent only when the client does not have the image in its local cache.
+/// Client to server: requests image bytes by ID.
 /// </summary>
 [Serializable, NetSerializable]
 public sealed class PhotoImageRequestEvent : EntityEventArgs
@@ -42,7 +41,7 @@ public sealed class PhotoImageRequestEvent : EntityEventArgs
 }
 
 /// <summary>
-/// Server → Client: delivers image bytes in response to a request.
+/// Server to client: image bytes for the requested ID.
 /// </summary>
 [Serializable, NetSerializable]
 public sealed class PhotoImageDataEvent : EntityEventArgs

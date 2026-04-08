@@ -4,14 +4,8 @@ namespace Content.Server._Forge.Photo;
 public sealed partial class PhotoCardComponent : Component
 {
     /// <summary>
-    /// Raw image data. Persisted via DataField for map saves.
-    /// </summary>
-    [DataField]
-    public byte[]? ImageData;
-
-    /// <summary>
-    /// Runtime-assigned image ID for network deduplication.
-    /// Not persisted — reassigned on MapInit from ImageData.
+    /// Round-local photo blob ID in <see cref="PhotoBlobStoreSystem"/>.
+    /// -1 means no image attached.
     /// </summary>
     [ViewVariables]
     public int ImageId = -1;

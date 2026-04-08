@@ -23,12 +23,12 @@ public sealed class PhotoStatsCommand : IConsoleCommand
             return;
         }
 
-        var system = _entities.System<PhotoSystem>();
-        var used = system.StoredImageBytes;
-        var limit = system.MaxStoredImageBytes;
+        var system = _entities.System<PhotoBlobStoreSystem>();
+        var used = system.StoredBlobBytes;
+        var limit = system.MaxBlobBytes;
         var usagePercent = limit > 0 ? used * 100.0 / limit : 0;
 
-        shell.WriteLine($"Stored photos: {system.StoredImageCount}");
+        shell.WriteLine($"Stored photos: {system.StoredBlobCount}");
         shell.WriteLine($"Photo memory: {FormatBytes(used)} / {FormatBytes(limit)} ({usagePercent:F1}%)");
     }
 

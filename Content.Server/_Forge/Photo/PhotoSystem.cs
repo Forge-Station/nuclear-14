@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Content.Server.Hands.Systems;
 using Content.Server.Materials;
 using Content.Server.Popups;
@@ -8,18 +7,12 @@ using Content.Shared.Timing;
 using Content.Shared.UserInterface;
 using Robust.Server.Audio;
 using Robust.Server.GameObjects;
-using Robust.Server.Player;
-using Robust.Shared.Enums;
-using Robust.Shared.Network;
-using Robust.Shared.Player;
-using Robust.Shared.Timing;
 
 namespace Content.Server._Forge.Photo;
 
 public sealed class PhotoSystem : SharedPhotoSystem
 {
     private const int MaxSize = 1024 * 512;
-    private const long MaxTotalPhotoBytes = 128L * 1024 * 1024;
 
     /// <summary>
     /// Max allowed PNG dimensions (width or height).
@@ -35,128 +28,10 @@ public sealed class PhotoSystem : SharedPhotoSystem
     [Dependency] private readonly UseDelaySystem _delay = default!;
     [Dependency] private readonly HandsSystem _hands = default!;
     [Dependency] private readonly MaterialStorageSystem _material = default!;
+    [Dependency] private readonly PhotoBlobStoreSystem _photoBlobStore = default!;
     [Dependency] private readonly PopupSystem _popup = default!;
     [Dependency] private readonly TransformSystem _transform = default!;
     [Dependency] private readonly UserInterfaceSystem _userInterface = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IPlayerManager _players = default!;
-
-    #region Image Storage
-
-    /// <summary>
-    /// Runtime image store. Maps ImageId -> raw PNG bytes.
-    /// Entries are removed when their PhotoCardComponent is deleted.
-    /// </summary>
-    private readonly Dictionary<int, byte[]> _imageStore = new();
-
-    /// <summary>
-    /// Reverse index: ImageId -> set of card EntityUids that use this image.
-    /// Allows O(1) access check instead of iterating all PhotoCardComponents.
-    /// </summary>
-    private readonly Dictionary<int, HashSet<EntityUid>> _imageIndex = new();
-
-    private int _nextImageId;
-    private long _storedImageBytes;
-
-    private int RegisterImage(byte[] data, EntityUid card)
-    {
-        var id = ++_nextImageId;
-        _imageStore[id] = data;
-        _storedImageBytes += data.Length;
-
-        if (!_imageIndex.TryGetValue(id, out var set))
-        {
-            set = new HashSet<EntityUid>();
-            _imageIndex[id] = set;
-        }
-
-        set.Add(card);
-        return id;
-    }
-
-    private void UnregisterImage(int imageId, EntityUid card)
-    {
-        if (imageId <= 0)
-            return;
-
-        if (_imageIndex.TryGetValue(imageId, out var set))
-        {
-            set.Remove(card);
-
-            if (set.Count == 0)
-            {
-                _imageIndex.Remove(imageId);
-                RemoveImageFromStore(imageId);
-            }
-        }
-        else
-        {
-            RemoveImageFromStore(imageId);
-        }
-    }
-
-    public byte[]? GetImageData(int imageId)
-    {
-        return _imageStore.GetValueOrDefault(imageId);
-    }
-
-    public int StoredImageCount => _imageStore.Count;
-    public long StoredImageBytes => _storedImageBytes;
-    public long MaxStoredImageBytes => MaxTotalPhotoBytes;
-
-    private bool CanStoreNewImage(int imageSizeBytes)
-    {
-        return _storedImageBytes + imageSizeBytes <= MaxTotalPhotoBytes;
-    }
-
-    private void RemoveImageFromStore(int imageId)
-    {
-        if (!_imageStore.TryGetValue(imageId, out var data))
-            return;
-
-        _imageStore.Remove(imageId);
-        _storedImageBytes = Math.Max(0, _storedImageBytes - data.Length);
-    }
-
-    #endregion
-
-    #region Rate Limiting
-
-    /// <summary>
-    /// Per-session rate limit for image data requests.
-    /// </summary>
-    private const int MaxImageRequestsPerWindow = 5;
-    private const float RateLimitWindowSec = 2f;
-
-    private readonly Dictionary<NetUserId, RateLimitEntry> _requestRateLimits = new();
-
-    private sealed class RateLimitEntry
-    {
-        public TimeSpan WindowStart;
-        public int Count;
-    }
-
-    private bool CheckRateLimit(ICommonSession session)
-    {
-        var now = _timing.CurTime;
-
-        if (!_requestRateLimits.TryGetValue(session.UserId, out var entry))
-        {
-            entry = new RateLimitEntry { WindowStart = now, Count = 0 };
-            _requestRateLimits[session.UserId] = entry;
-        }
-
-        if ((now - entry.WindowStart).TotalSeconds > RateLimitWindowSec)
-        {
-            entry.WindowStart = now;
-            entry.Count = 0;
-        }
-
-        entry.Count++;
-        return entry.Count <= MaxImageRequestsPerWindow;
-    }
-
-    #endregion
 
     public override void Initialize()
     {
@@ -172,30 +47,6 @@ public sealed class PhotoSystem : SharedPhotoSystem
                 subs.Event<PhotoCameraTakeImageMessage>(OnTakeImageMessage);
             });
         SubscribeLocalEvent<PhotoCameraComponent, MaterialAmountChangedEvent>(OnPaperInserted);
-
-        // Card
-        SubscribeLocalEvent<PhotoCardComponent, AfterActivatableUIOpenEvent>(OnOpenCardInterface);
-        SubscribeLocalEvent<PhotoCardComponent, MapInitEvent>(OnCardMapInit);
-        SubscribeLocalEvent<PhotoCardComponent, ComponentRemove>(OnCardRemoved);
-        SubscribeNetworkEvent<PhotoImageRequestEvent>(OnImageDataRequested);
-
-        _players.PlayerStatusChanged += OnPlayerStatusChanged;
-    }
-
-    public override void Shutdown()
-    {
-        base.Shutdown();
-        _players.PlayerStatusChanged -= OnPlayerStatusChanged;
-        _imageStore.Clear();
-        _imageIndex.Clear();
-        _requestRateLimits.Clear();
-        _storedImageBytes = 0;
-    }
-
-    private void OnPlayerStatusChanged(object? sender, SessionStatusEventArgs args)
-    {
-        if (args.NewStatus == SessionStatus.Disconnected)
-            _requestRateLimits.Remove(args.Session.UserId);
     }
 
     #region Camera
@@ -291,7 +142,7 @@ public sealed class PhotoSystem : SharedPhotoSystem
 
     private bool PrintCard(EntityUid uid, PhotoCameraComponent component, byte[] imageData)
     {
-        if (!CanStoreNewImage(imageData.Length))
+        if (!_photoBlobStore.HasCapacityFor(imageData.Length))
         {
             if (component.User != null)
                 _popup.PopupEntity(Loc.GetString("photo-camera-memory-full"), uid, component.User.Value);
@@ -310,82 +161,33 @@ public sealed class PhotoSystem : SharedPhotoSystem
         var card = Spawn(component.CardPrototype);
         _transform.SetMapCoordinates(card, _transform.GetMapCoordinates(uid));
 
-        if (TryComp<PhotoCardComponent>(card, out var photo))
+        if (!TryComp(card, out PhotoCardComponent? photo))
         {
-            photo.ImageData = imageData;
-            photo.ImageId = RegisterImage(imageData, card);
+            _material.TryChangeMaterialAmount(uid, component.CardMaterial, component.CardCost);
+            QueueDel(card);
+            UpdateCameraInterface(uid, component);
+            return false;
         }
+
+        if (!_photoBlobStore.TryStoreForCard(card, imageData, out var imageId))
+        {
+            _material.TryChangeMaterialAmount(uid, component.CardMaterial, component.CardCost);
+            QueueDel(card);
+
+            if (component.User != null)
+                _popup.PopupEntity(Loc.GetString("photo-camera-memory-full"), uid, component.User.Value);
+
+            UpdateCameraInterface(uid, component);
+            return false;
+        }
+
+        photo.ImageId = imageId;
 
         if (component.User != null)
             _hands.TryPickupAnyHand(component.User.Value, card);
 
         UpdateCameraInterface(uid, component);
         return true;
-    }
-
-    #endregion
-
-    #region Card
-
-    private void OnCardMapInit(EntityUid uid, PhotoCardComponent component, MapInitEvent args)
-    {
-        if (component.ImageData != null && component.ImageId == -1)
-        {
-            component.ImageId = RegisterImage(component.ImageData, uid);
-        }
-    }
-
-    /// <summary>
-    /// Clean up image data from runtime store when card entity is removed.
-    /// Prevents unbounded memory growth over long rounds.
-    /// </summary>
-    private void OnCardRemoved(EntityUid uid, PhotoCardComponent component, ComponentRemove args)
-    {
-        UnregisterImage(component.ImageId, uid);
-    }
-
-    private void OnOpenCardInterface(EntityUid uid, PhotoCardComponent component, AfterActivatableUIOpenEvent args)
-    {
-        var state = new PhotoCardUiState(component.ImageId);
-        _userInterface.SetUiState(uid, PhotoCardUiKey.Key, state);
-    }
-
-    /// <summary>
-    /// Client requested image data. Rate-limited and access-checked:
-    /// only responds if the requesting player has a card with this ImageId
-    /// in their hands or inventory (via open BUI).
-    /// Uses _imageIndex for O(1) lookup instead of iterating all cards.
-    /// </summary>
-    private void OnImageDataRequested(PhotoImageRequestEvent ev, EntitySessionEventArgs args)
-    {
-        if (!CheckRateLimit(args.SenderSession))
-            return;
-
-        var data = GetImageData(ev.ImageId);
-        if (data == null)
-            return;
-
-        // Access check via index: find cards with this ImageId, verify BUI is open.
-        if (!_imageIndex.TryGetValue(ev.ImageId, out var cardUids))
-            return;
-
-        if (args.SenderSession.AttachedEntity is not { } actor)
-            return;
-
-        var found = false;
-        foreach (var cardUid in cardUids)
-        {
-            if (_userInterface.IsUiOpen(cardUid, PhotoCardUiKey.Key, actor))
-            {
-                found = true;
-                break;
-            }
-        }
-
-        if (!found)
-            return;
-
-        RaiseNetworkEvent(new PhotoImageDataEvent(ev.ImageId, data), args.SenderSession.Channel);
     }
 
     #endregion
