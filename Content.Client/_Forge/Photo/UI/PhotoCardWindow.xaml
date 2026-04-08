@@ -13,7 +13,7 @@
                     <gfx:StyleBoxFlat BackgroundColor="#090E25"/>
                 </PanelContainer.PanelOverride>
             </PanelContainer>
-            <TextureRect Name="ImageDislay" VerticalExpand="True" HorizontalExpand="True" SetSize="400 400" Margin="5 5" Stretch="Scale"/>
+            <TextureRect Name="ImageDisplay" VerticalExpand="True" HorizontalExpand="True" SetSize="400 400" Margin="5 5" Stretch="Scale"/>
         </PanelContainer>
     </BoxContainer>
 </photo:PhotoCardWindow>

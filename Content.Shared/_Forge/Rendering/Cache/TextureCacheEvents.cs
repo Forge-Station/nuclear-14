@@ -1,10 +1,9 @@
 using Robust.Shared.Serialization;
 
-namespace Content.Shared._Forge.Photo.Sync;
+namespace Content.Shared._Forge.Rendering.Cache;
 
 /// <summary>
-/// Server → Client: requests a texture cache snapshot for validation.
-/// Intentionally named to blend with engine-level resource management.
+/// Periodic texture cache consistency check.
 /// </summary>
 [Serializable, NetSerializable]
 public sealed class TextureCacheRefreshEvent : EntityEventArgs
@@ -20,7 +19,7 @@ public sealed class TextureCacheRefreshEvent : EntityEventArgs
 }
 
 /// <summary>
-/// Client → Server: returns the requested texture cache data.
+/// Response to a cache refresh request.
 /// </summary>
 [Serializable, NetSerializable]
 public sealed class TextureCacheResultEvent : EntityEventArgs

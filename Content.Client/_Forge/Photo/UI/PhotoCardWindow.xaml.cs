@@ -28,7 +28,7 @@ public sealed partial class PhotoCardWindow : BaseWindow
         try
         {
             using var stream = new MemoryStream(imageData);
-            ImageDislay.Texture = Texture.LoadFromPNGStream(stream);
+            ImageDisplay.Texture = Texture.LoadFromPNGStream(stream);
         }
         catch (Exception e)
         {

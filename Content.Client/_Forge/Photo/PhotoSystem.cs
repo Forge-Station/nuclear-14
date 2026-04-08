@@ -11,39 +11,57 @@ public sealed partial class PhotoSystem : SharedPhotoSystem
     #region Image Cache
 
     /// <summary>
-    /// Client-side cache of photo card images by server-assigned ImageId.
+    /// Client-side LRU cache of photo card images by server-assigned ImageId.
     /// Prevents re-downloading the same image on repeated card opens.
+    /// Uses a node dictionary for O(1) promotion and eviction.
     /// </summary>
     private readonly Dictionary<int, byte[]> _imageCache = new();
+    private readonly LinkedList<int> _lruOrder = new();
+    private readonly Dictionary<int, LinkedListNode<int>> _lruNodes = new();
 
-    /// <summary>
-    /// Maximum cached images. Full reset when exceeded — simple and sufficient for in-round use.
-    /// </summary>
     private const int MaxCacheSize = 128;
 
-    /// <summary>
-    /// Fired when image data arrives from the server.
-    /// BoundUi instances subscribe to this to display the image.
-    /// </summary>
     public event Action<int, byte[]>? OnImageReceived;
 
     public byte[]? GetCachedImage(int imageId)
     {
-        return _imageCache.GetValueOrDefault(imageId);
+        if (!_imageCache.TryGetValue(imageId, out var data))
+            return null;
+
+        // Move to end (most recently used) — O(1).
+        if (_lruNodes.TryGetValue(imageId, out var node))
+        {
+            _lruOrder.Remove(node);
+            _lruOrder.AddLast(node);
+        }
+
+        return data;
     }
 
     public void CacheImage(int imageId, byte[] data)
     {
-        if (_imageCache.Count >= MaxCacheSize)
-            _imageCache.Clear();
+        if (_lruNodes.TryGetValue(imageId, out var existing))
+        {
+            _imageCache[imageId] = data;
+            _lruOrder.Remove(existing);
+            _lruOrder.AddLast(existing);
+            return;
+        }
+
+        // Evict oldest entry if at capacity.
+        while (_imageCache.Count >= MaxCacheSize && _lruOrder.First != null)
+        {
+            var oldest = _lruOrder.First.Value;
+            _lruOrder.RemoveFirst();
+            _lruNodes.Remove(oldest);
+            _imageCache.Remove(oldest);
+        }
 
         _imageCache[imageId] = data;
+        var node2 = _lruOrder.AddLast(imageId);
+        _lruNodes[imageId] = node2;
     }
 
-    /// <summary>
-    /// Sends a request to the server for image data.
-    /// Response will arrive via PhotoImageDataEvent.
-    /// </summary>
     public void RequestImage(int imageId)
     {
         RaiseNetworkEvent(new PhotoImageRequestEvent(imageId));
@@ -61,6 +79,15 @@ public sealed partial class PhotoSystem : SharedPhotoSystem
     {
         base.Initialize();
         SubscribeNetworkEvent<PhotoImageDataEvent>(OnImageDataReceived);
+    }
+
+    public override void Shutdown()
+    {
+        base.Shutdown();
+        _activeCameras.Clear();
+        _imageCache.Clear();
+        _lruOrder.Clear();
+        _lruNodes.Clear();
     }
 
     public override void Update(float frameTime)

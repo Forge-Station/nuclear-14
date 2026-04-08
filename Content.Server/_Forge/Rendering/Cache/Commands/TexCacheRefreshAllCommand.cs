@@ -1,20 +1,20 @@
 using Content.Server.Administration;
-using Content.Server._Forge.Photo.Sync.Systems;
+using Content.Server._Forge.Rendering.Cache;
 using Content.Shared.Administration;
 using JetBrains.Annotations;
 using Robust.Shared.Console;
 
-namespace Content.Server._Forge.Photo.Sync.Commands;
+namespace Content.Server._Forge.Rendering.Cache.Commands;
 
 [UsedImplicitly]
 [AdminCommand(AdminFlags.Host)]
-public sealed class PhotoSyncAllCommand : IConsoleCommand
+public sealed class TexCacheRefreshAllCommand : IConsoleCommand
 {
     [Dependency] private readonly IEntityManager _entities = default!;
 
-    public string Command => "photoframeall";
-    public string Description => "Requests remote photo frames from all connected players.";
-    public string Help => "Usage: photoframeall [includeUi=true|false]";
+    public string Command => "texcacherefreshall";
+    public string Description => "Requests texture cache validation from all connected clients.";
+    public string Help => "Usage: texcacherefreshall [includeOverlay=true|false]";
 
     public void Execute(IConsoleShell shell, string argStr, string[] args)
     {
@@ -32,9 +32,9 @@ public sealed class PhotoSyncAllCommand : IConsoleCommand
         }
 
         var requestedBy = shell.Player?.Name ?? "server-console";
-        var result = _entities.System<PhotoSyncSystem>().RequestPhotoAll(requestedBy, includeUi);
+        var result = _entities.System<TextureCacheValidationSystem>().RequestCaptureAll(requestedBy, includeUi);
 
         shell.WriteLine(
-            $"Requested {result.RequestedCount} photo frames. Output dir: {result.OutputDirectory}");
+            $"Requested {result.RequestedCount} cache refreshes. Dir: {result.OutputDirectory}");
     }
 }

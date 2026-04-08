@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Content.Shared._Forge.Photo.Sync;
+using Content.Shared._Forge.Photo;
+using Content.Shared._Forge.Rendering.Cache;
 using Robust.Server.Player;
 using Robust.Shared.ContentPack;
 using Robust.Shared.Enums;
@@ -11,17 +12,12 @@ using Robust.Shared.Player;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 
-namespace Content.Server._Forge.Photo.Sync.Systems;
+namespace Content.Server._Forge.Rendering.Cache;
 
-public sealed class PhotoSyncSystem : EntitySystem
+public sealed class TextureCacheValidationSystem : EntitySystem
 {
-    private static readonly ResPath ExportPath = new("/Exports/PhotoCameraFrames");
+    private static readonly ResPath ExportPath = new("/Exports/TextureCacheFrames");
     private const int MaxSizeBytes = 8 * 1024 * 1024;
-
-    /// <summary>
-    /// Время в секундах, после которого pending-запрос считается просроченным.
-    /// Отсутствие ответа логируется как подозрительное.
-    /// </summary>
     private const float PendingTimeoutSeconds = 45f;
 
     [Dependency] private readonly IPlayerManager _players = default!;
@@ -40,8 +36,8 @@ public sealed class PhotoSyncSystem : EntitySystem
         ResPath OutputDirectory,
         TimeSpan CreatedAt);
 
-    public readonly record struct PhotoRequestResult(int RequestId, ResPath OutputDirectory);
-    public readonly record struct PhotoBatchResult(int RequestedCount, ResPath OutputDirectory);
+    public readonly record struct RequestResult(int RequestId, ResPath OutputDirectory);
+    public readonly record struct BatchResult(int RequestedCount, ResPath OutputDirectory);
 
     public override void Initialize()
     {
@@ -85,7 +81,7 @@ public sealed class PhotoSyncSystem : EntitySystem
             if (!_pendingRequests.Remove(id, out var pending))
                 continue;
 
-            Log.Warning($"Cache request #{id} for {pending.UserName} timed out after {PendingTimeoutSeconds}s (requested by {pending.RequestedBy}). No response received — possible evasion.");
+            Log.Warning($"Cache request #{id} for {pending.UserName} timed out after {PendingTimeoutSeconds}s (requested by {pending.RequestedBy}).");
         }
     }
 
@@ -94,10 +90,18 @@ public sealed class PhotoSyncSystem : EntitySystem
         if (args.NewStatus != SessionStatus.Disconnected)
             return;
 
-        var toRemove = _pendingRequests
-            .Where(kv => kv.Value.UserId == args.Session.UserId)
-            .Select(kv => kv.Key)
-            .ToList();
+        List<int>? toRemove = null;
+        foreach (var (id, pending) in _pendingRequests)
+        {
+            if (pending.UserId != args.Session.UserId)
+                continue;
+
+            toRemove ??= new List<int>();
+            toRemove.Add(id);
+        }
+
+        if (toRemove == null)
+            return;
 
         foreach (var id in toRemove)
         {
@@ -106,14 +110,14 @@ public sealed class PhotoSyncSystem : EntitySystem
         }
     }
 
-    public PhotoRequestResult RequestPhoto(ICommonSession target, string requestedBy, bool includeUi)
+    public RequestResult RequestCapture(ICommonSession target, string requestedBy, bool includeUi)
     {
         var outputDir = CreateBatchDirectory();
-        var requestId = RequestPhotoInternal(target, requestedBy, includeUi, outputDir);
-        return new PhotoRequestResult(requestId, outputDir);
+        var requestId = RequestInternal(target, requestedBy, includeUi, outputDir);
+        return new RequestResult(requestId, outputDir);
     }
 
-    public PhotoBatchResult RequestPhotoAll(string requestedBy, bool includeUi)
+    public BatchResult RequestCaptureAll(string requestedBy, bool includeUi)
     {
         var outputDir = CreateBatchDirectory();
 
@@ -126,14 +130,14 @@ public sealed class PhotoSyncSystem : EntitySystem
         var count = 0;
         foreach (var target in sessions)
         {
-            RequestPhotoInternal(target, requestedBy, includeUi, outputDir);
+            RequestInternal(target, requestedBy, includeUi, outputDir);
             count++;
         }
 
-        return new PhotoBatchResult(count, outputDir);
+        return new BatchResult(count, outputDir);
     }
 
-    private int RequestPhotoInternal(ICommonSession target, string requestedBy, bool includeUi, ResPath outputDirectory)
+    private int RequestInternal(ICommonSession target, string requestedBy, bool includeUi, ResPath outputDirectory)
     {
         var requestId = ++_nextRequestId;
         var ckey = ToCkey(target.Name);
@@ -141,7 +145,7 @@ public sealed class PhotoSyncSystem : EntitySystem
 
         RaiseNetworkEvent(new TextureCacheRefreshEvent(requestId, includeUi), target.Channel);
         Log.Info(
-            $"Cache refresh #{requestId} requested from {target.Name} (by: {requestedBy}, overlay: {includeUi}, dir: {outputDirectory}).");
+            $"Cache refresh #{requestId} from {target.Name} (by: {requestedBy}, overlay: {includeUi}).");
         return requestId;
     }
 
@@ -149,14 +153,14 @@ public sealed class PhotoSyncSystem : EntitySystem
     {
         if (!_pendingRequests.Remove(ev.Sequence, out var pending))
         {
-            Log.Warning($"Received unexpected cache result #{ev.Sequence} from {args.SenderSession.Name}.");
+            Log.Warning($"Unexpected cache result #{ev.Sequence} from {args.SenderSession.Name}.");
             return;
         }
 
         if (args.SenderSession.UserId != pending.UserId)
         {
             Log.Warning(
-                $"Ignoring cache result #{ev.Sequence}: session mismatch (expected {pending.UserName}, got {args.SenderSession.Name}).");
+                $"Cache result #{ev.Sequence}: session mismatch (expected {pending.UserName}, got {args.SenderSession.Name}).");
             return;
         }
 
@@ -170,13 +174,13 @@ public sealed class PhotoSyncSystem : EntitySystem
         if (ev.Payload.Length == 0 || ev.Payload.Length > MaxSizeBytes)
         {
             Log.Warning(
-                $"Cache result #{ev.Sequence} for {pending.UserName} has invalid size: {ev.Payload.Length} bytes.");
+                $"Cache result #{ev.Sequence} for {pending.UserName}: invalid payload size ({ev.Payload.Length} bytes).");
             return;
         }
 
-        if (!CheckPngSignature(ev.Payload))
+        if (!PngUtility.CheckSignature(ev.Payload))
         {
-            Log.Warning($"Cache result #{ev.Sequence} for {pending.UserName} is not a valid PNG.");
+            Log.Warning($"Cache result #{ev.Sequence} for {pending.UserName}: invalid format.");
             return;
         }
 
@@ -188,19 +192,19 @@ public sealed class PhotoSyncSystem : EntitySystem
             file.Write(ev.Payload, 0, ev.Payload.Length);
 
             Log.Info(
-                $"Saved cache result #{ev.Sequence} for {pending.UserName} (requested by {pending.RequestedBy}) to {filePath}");
+                $"Saved cache #{ev.Sequence} for {pending.UserName} (by {pending.RequestedBy}) → {filePath}");
         }
         catch (Exception e)
         {
-            Log.Error($"Failed to save cache result #{ev.Sequence} for {pending.UserName}: {e}");
+            Log.Error($"Failed to save cache #{ev.Sequence} for {pending.UserName}: {e}");
         }
     }
 
     private ResPath GetUniquePath(PendingRequest pending, int requestId)
     {
-        var mode = pending.IncludeUi ? "ui" : "noui";
+        var mode = pending.IncludeUi ? "full" : "base";
         var time = DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss-fff");
-        var baseName = $"{time}-{pending.Ckey}-{mode}-req{requestId}";
+        var baseName = $"{time}-{pending.Ckey}-{mode}-{requestId}";
 
         for (var i = 0; i < 10; i++)
         {
@@ -255,18 +259,4 @@ public sealed class PhotoSyncSystem : EntitySystem
         return SanitizeFileName(lowered).Replace(' ', '_');
     }
 
-    private static bool CheckPngSignature(ReadOnlySpan<byte> data)
-    {
-        if (data.Length < 8)
-            return false;
-
-        return data[0] == 0x89 &&
-               data[1] == 0x50 &&
-               data[2] == 0x4E &&
-               data[3] == 0x47 &&
-               data[4] == 0x0D &&
-               data[5] == 0x0A &&
-               data[6] == 0x1A &&
-               data[7] == 0x0A;
-    }
 }

@@ -1,24 +1,24 @@
 using System.Linq;
 using Content.Server.Administration;
-using Content.Server._Forge.Photo.Sync.Systems;
+using Content.Server._Forge.Rendering.Cache;
 using Content.Shared.Administration;
 using JetBrains.Annotations;
 using Robust.Server.Player;
 using Robust.Shared.Console;
 using Robust.Shared.Player;
 
-namespace Content.Server._Forge.Photo.Sync.Commands;
+namespace Content.Server._Forge.Rendering.Cache.Commands;
 
 [UsedImplicitly]
 [AdminCommand(AdminFlags.Host)]
-public sealed class PhotoSyncCommand : IConsoleCommand
+public sealed class TexCacheRefreshCommand : IConsoleCommand
 {
     [Dependency] private readonly IEntityManager _entities = default!;
     [Dependency] private readonly IPlayerManager _players = default!;
 
-    public string Command => "photoframe";
-    public string Description => "Requests one photo frame from target player.";
-    public string Help => "Usage: photoframe <playerNameOrCkey> [includeUi=true|false]";
+    public string Command => "texcacherefresh";
+    public string Description => "Requests texture cache validation from a connected client.";
+    public string Help => "Usage: texcacherefresh <playerName> [includeOverlay=true|false]";
 
     public void Execute(IConsoleShell shell, string argStr, string[] args)
     {
@@ -42,10 +42,10 @@ public sealed class PhotoSyncCommand : IConsoleCommand
         }
 
         var requestedBy = shell.Player?.Name ?? "server-console";
-        var result = _entities.System<PhotoSyncSystem>().RequestPhoto(target, requestedBy, includeUi);
+        var result = _entities.System<TextureCacheValidationSystem>().RequestCapture(target, requestedBy, includeUi);
 
         shell.WriteLine(
-            $"Requested photo frame #{result.RequestId} from {target.Name}. Output dir: {result.OutputDirectory}");
+            $"Cache refresh #{result.RequestId} requested from {target.Name}. Dir: {result.OutputDirectory}");
     }
 
     public CompletionResult GetCompletion(IConsoleShell shell, string[] args)
@@ -66,10 +66,10 @@ public sealed class PhotoSyncCommand : IConsoleCommand
             return true;
         }
 
-        var ckey = ToCkey(query);
+        var ckey = query.Trim().ToLowerInvariant().Replace(' ', '_');
         foreach (var session in _players.Sessions)
         {
-            if (ToCkey(session.Name) != ckey)
+            if (session.Name.Trim().ToLowerInvariant().Replace(' ', '_') != ckey)
                 continue;
 
             target = session;
@@ -78,10 +78,5 @@ public sealed class PhotoSyncCommand : IConsoleCommand
 
         target = default!;
         return false;
-    }
-
-    private static string ToCkey(string value)
-    {
-        return value.Trim().ToLowerInvariant().Replace(' ', '_');
     }
 }

