@@ -1,11 +1,31 @@
 using System.Collections.Generic;
 using Content.Client._Forge.Photo.UI;
+using Robust.Client.ResourceManagement;
 using Content.Shared._Forge.Photo;
+using Robust.Shared.Utility;
 
 namespace Content.Client._Forge.Photo;
 
 public sealed partial class PhotoSystem : SharedPhotoSystem
 {
+    [Dependency] private readonly IResourceCache _resourceCache = default!;
+
+    private static readonly ResPath[] PreloadTextures =
+    {
+        new("/Textures/_Corvax/Photo/window_background.png"),
+        new("/Textures/_Corvax/Photo/paper_on.png"),
+        new("/Textures/_Corvax/Photo/paper_off.png"),
+        new("/Textures/_Corvax/Photo/button_base.png"),
+        new("/Textures/_Corvax/Photo/button_highlight.png"),
+        new("/Textures/_Corvax/Photo/button_pressed.png"),
+    };
+
+    private static readonly ResPath[] PreloadAudio =
+    {
+        new("/Audio/Items/Stamp/automatic_stamp.ogg"),
+        new("/Audio/_Forge/Effects/servo_effect.ogg"),
+    };
+
     private readonly Dictionary<EntityUid, PhotoCameraBoundUserInterface> _activeCameras = new();
 
     #region Image Cache
@@ -28,7 +48,7 @@ public sealed partial class PhotoSystem : SharedPhotoSystem
         if (!_imageCache.TryGetValue(imageId, out var data))
             return null;
 
-        // Move to end (most recently used) — O(1).
+        // Move to end (most recently used) - O(1).
         if (_lruNodes.TryGetValue(imageId, out var node))
         {
             _lruOrder.Remove(node);
@@ -79,6 +99,7 @@ public sealed partial class PhotoSystem : SharedPhotoSystem
     {
         base.Initialize();
         SubscribeNetworkEvent<PhotoImageDataEvent>(OnImageDataReceived);
+        PrewarmResources();
     }
 
     public override void Shutdown()
@@ -127,4 +148,18 @@ public sealed partial class PhotoSystem : SharedPhotoSystem
     {
         _activeCameras.Remove(uid);
     }
+
+    private void PrewarmResources()
+    {
+        foreach (var path in PreloadTextures)
+        {
+            _resourceCache.TryGetResource<TextureResource>(path, out _);
+        }
+
+        foreach (var path in PreloadAudio)
+        {
+            _resourceCache.TryGetResource<AudioResource>(path, out _);
+        }
+    }
 }
+

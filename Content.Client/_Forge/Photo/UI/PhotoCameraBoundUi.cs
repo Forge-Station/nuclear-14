@@ -1,4 +1,5 @@
 using Content.Shared._Forge.Photo;
+using Content.Shared.Timing;
 using Robust.Client.Audio;
 using Robust.Client.GameObjects;
 using Robust.Client.ResourceManagement;
@@ -46,20 +47,6 @@ public sealed class PhotoCameraBoundUserInterface : BoundUserInterface
         _viewInitialized = false;
 
         _window.OnTakeImageAttempt += AttemptTakeImage;
-
-        if (!_cache.TryGetResource("/Audio/_Forge/Effects/servo_effect.ogg", out AudioResource? resource))
-            return;
-
-        var source = _audioManager.CreateAudioSource(resource);
-        if (source == null)
-            return;
-
-        source.Global = true;
-        source.Looping = true;
-        source.Volume = float.NegativeInfinity;
-        source.Restart();
-
-        _controlSound = source;
     }
 
     protected override void UpdateState(BoundUserInterfaceState state)
@@ -79,8 +66,11 @@ public sealed class PhotoCameraBoundUserInterface : BoundUserInterface
                 _viewInitialized = true;
             }
 
+            if (EntMan.TryGetComponent<UseDelayComponent>(_cameraEntity, out var useDelay))
+                _window.SetButtonCooldown((float) useDelay.Delay.TotalSeconds);
+
             _photoSystem.OpenCameraUi(_cameraEntity.Value, this);
-            UpdateControl(component, 1);
+            UpdateControl(component, 0f);
         }
 
         if (EntMan.TryGetComponent<EyeComponent>(_cameraEntity, out var eye))
@@ -140,6 +130,9 @@ public sealed class PhotoCameraBoundUserInterface : BoundUserInterface
         _eyeSystem.SetZoom(_cameraEntity.Value, new Vector2(zoom));
         _eyeSystem.SetRotation(_cameraEntity.Value, -rotateAngle);
 
+        if (_controlSound == null && delta != System.Numerics.Vector3.Zero)
+            EnsureControlSound();
+
         if (_controlSound == null)
             return;
 
@@ -148,6 +141,26 @@ public sealed class PhotoCameraBoundUserInterface : BoundUserInterface
         _controlVolume = Math.Clamp(_controlVolume + (targetVolume - _controlVolume) * frameTime, -20f, 2f);
 
         _controlSound.Volume = _controlVolume > -20f ? _controlVolume : float.NegativeInfinity;
+    }
+
+    private void EnsureControlSound()
+    {
+        if (_controlSound != null)
+            return;
+
+        if (!_cache.TryGetResource("/Audio/_Forge/Effects/servo_effect.ogg", out AudioResource? resource))
+            return;
+
+        var source = _audioManager.CreateAudioSource(resource);
+        if (source == null)
+            return;
+
+        source.Global = true;
+        source.Looping = true;
+        source.Volume = float.NegativeInfinity;
+        source.Restart();
+
+        _controlSound = source;
     }
 
     private void AttemptTakeImage()

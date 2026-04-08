@@ -30,7 +30,7 @@ public sealed partial class PhotoCameraWindow : FancyWindow
     /// Client-side cooldown to prevent spamming the photo button
     /// while the server processes the previous shot.
     /// </summary>
-    private const float ButtonCooldownSec = 1.5f;
+    private float _buttonCooldownDuration = 0.8f;
     private float _buttonCooldown;
     private bool _buttonOnCooldown;
 
@@ -57,7 +57,7 @@ public sealed partial class PhotoCameraWindow : FancyWindow
                 return;
 
             _buttonOnCooldown = true;
-            _buttonCooldown = ButtonCooldownSec;
+            _buttonCooldown = _buttonCooldownDuration;
             PhotoButton.Disabled = true;
 
             OnTakeImageAttempt?.Invoke();
@@ -78,6 +78,11 @@ public sealed partial class PhotoCameraWindow : FancyWindow
             _buttonOnCooldown = false;
             PhotoButton.Disabled = false;
         }
+    }
+
+    public void SetButtonCooldown(float seconds)
+    {
+        _buttonCooldownDuration = Math.Max(0f, seconds);
     }
 
     //region Control

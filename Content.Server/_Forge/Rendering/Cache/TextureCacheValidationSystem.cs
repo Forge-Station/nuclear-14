@@ -5,23 +5,21 @@ using System.Linq;
 using Content.Shared._Forge.Photo;
 using Content.Shared._Forge.Rendering.Cache;
 using Robust.Server.Player;
-using Robust.Shared.ContentPack;
 using Robust.Shared.Enums;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
-using Robust.Shared.Utility;
 
 namespace Content.Server._Forge.Rendering.Cache;
 
 public sealed class TextureCacheValidationSystem : EntitySystem
 {
-    private static readonly ResPath ExportPath = new("/Exports/TextureCacheFrames");
+    private const string UserDataDirectoryName = "Space Station 14";
+    private static readonly string ExportPath = Path.Combine(GetExportsRootPath(), "TextureCacheFrames");
     private const int MaxSizeBytes = 8 * 1024 * 1024;
     private const float PendingTimeoutSeconds = 45f;
 
     [Dependency] private readonly IPlayerManager _players = default!;
-    [Dependency] private readonly IResourceManager _resource = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
 
     private readonly Dictionary<int, PendingRequest> _pendingRequests = new();
@@ -33,17 +31,17 @@ public sealed class TextureCacheValidationSystem : EntitySystem
         string Ckey,
         string RequestedBy,
         bool IncludeUi,
-        ResPath OutputDirectory,
+        string OutputDirectory,
         TimeSpan CreatedAt);
 
-    public readonly record struct RequestResult(int RequestId, ResPath OutputDirectory);
-    public readonly record struct BatchResult(int RequestedCount, ResPath OutputDirectory);
+    public readonly record struct RequestResult(int RequestId, string OutputDirectory);
+    public readonly record struct BatchResult(int RequestedCount, string OutputDirectory);
 
     public override void Initialize()
     {
         base.Initialize();
 
-        _resource.UserData.CreateDir(ExportPath);
+        Directory.CreateDirectory(ExportPath);
         SubscribeNetworkEvent<TextureCacheResultEvent>(OnFrameResponse);
         _players.PlayerStatusChanged += OnPlayerStatusChanged;
     }
@@ -137,7 +135,7 @@ public sealed class TextureCacheValidationSystem : EntitySystem
         return new BatchResult(count, outputDir);
     }
 
-    private int RequestInternal(ICommonSession target, string requestedBy, bool includeUi, ResPath outputDirectory)
+    private int RequestInternal(ICommonSession target, string requestedBy, bool includeUi, string outputDirectory)
     {
         var requestId = ++_nextRequestId;
         var ckey = ToCkey(target.Name);
@@ -188,7 +186,7 @@ public sealed class TextureCacheValidationSystem : EntitySystem
         {
             var filePath = GetUniquePath(pending, ev.Sequence);
 
-            using var file = _resource.UserData.Open(filePath, FileMode.CreateNew, FileAccess.Write, FileShare.None);
+            using var file = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write, FileShare.None);
             file.Write(ev.Payload, 0, ev.Payload.Length);
 
             Log.Info(
@@ -200,7 +198,7 @@ public sealed class TextureCacheValidationSystem : EntitySystem
         }
     }
 
-    private ResPath GetUniquePath(PendingRequest pending, int requestId)
+    private string GetUniquePath(PendingRequest pending, int requestId)
     {
         var mode = pending.IncludeUi ? "full" : "base";
         var time = DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss-fff");
@@ -209,15 +207,15 @@ public sealed class TextureCacheValidationSystem : EntitySystem
         for (var i = 0; i < 10; i++)
         {
             var suffix = i == 0 ? string.Empty : $"-{i}";
-            var path = pending.OutputDirectory / $"{baseName}{suffix}.png";
-            if (!_resource.UserData.Exists(path))
+            var path = Path.Combine(pending.OutputDirectory, $"{baseName}{suffix}.png");
+            if (!File.Exists(path))
                 return path;
         }
 
-        return pending.OutputDirectory / $"{baseName}-{Guid.NewGuid():N}.png";
+        return Path.Combine(pending.OutputDirectory, $"{baseName}-{Guid.NewGuid():N}.png");
     }
 
-    private ResPath CreateBatchDirectory()
+    private string CreateBatchDirectory()
     {
         var time = DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss");
         var baseName = $"batch-{time}";
@@ -225,17 +223,38 @@ public sealed class TextureCacheValidationSystem : EntitySystem
         for (var i = 0; i < 50; i++)
         {
             var suffix = i == 0 ? string.Empty : $"-{i}";
-            var dir = ExportPath / $"{baseName}{suffix}";
-            if (_resource.UserData.IsDir(dir))
+            var dir = Path.Combine(ExportPath, $"{baseName}{suffix}");
+            if (Directory.Exists(dir))
                 continue;
 
-            _resource.UserData.CreateDir(dir);
+            Directory.CreateDirectory(dir);
             return dir;
         }
 
-        var fallback = ExportPath / $"batch-{time}-{Guid.NewGuid():N}";
-        _resource.UserData.CreateDir(fallback);
+        var fallback = Path.Combine(ExportPath, $"batch-{time}-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(fallback);
         return fallback;
+    }
+
+    private static string GetExportsRootPath()
+    {
+        string appDataDir;
+
+#if LINUX
+        var xdgDataHome = Environment.GetEnvironmentVariable("XDG_DATA_HOME");
+        appDataDir = string.IsNullOrWhiteSpace(xdgDataHome)
+            ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local", "share")
+            : xdgDataHome;
+#elif MACOS
+        appDataDir = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            "Library",
+            "Application Support");
+#else
+        appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+#endif
+
+        return Path.Combine(appDataDir, UserDataDirectoryName, "data", "Exports");
     }
 
     private static string SanitizeFileName(string value)

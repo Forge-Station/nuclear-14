@@ -43,13 +43,13 @@ public sealed class PhotoSystem : SharedPhotoSystem
     #region Image Storage
 
     /// <summary>
-    /// Runtime image store. Maps ImageId → raw PNG bytes.
+    /// Runtime image store. Maps ImageId -> raw PNG bytes.
     /// Entries are removed when their PhotoCardComponent is deleted.
     /// </summary>
     private readonly Dictionary<int, byte[]> _imageStore = new();
 
     /// <summary>
-    /// Reverse index: ImageId → set of card EntityUids that use this image.
+    /// Reverse index: ImageId -> set of card EntityUids that use this image.
     /// Allows O(1) access check instead of iterating all PhotoCardComponents.
     /// </summary>
     private readonly Dictionary<int, HashSet<EntityUid>> _imageIndex = new();
@@ -360,3 +360,4 @@ public sealed class PhotoSystem : SharedPhotoSystem
 
     #endregion
 }
+
