@@ -1,10 +1,12 @@
-using System.Collections.Generic;
+using Content.Shared.GameTicking;
+
 
 namespace Content.Server._Forge.Photo;
 
 /// <summary>
 /// Round-scoped photo blob storage.
 /// Keeps image bytes in RAM and tracks which cards reference each blob.
+/// For persisted cards, blobs are restored from PhotoCardComponent.ImageData on MapInit.
 /// </summary>
 public sealed class PhotoBlobStoreSystem : EntitySystem
 {
@@ -26,15 +28,13 @@ public sealed class PhotoBlobStoreSystem : EntitySystem
 
         SubscribeLocalEvent<PhotoCardComponent, ComponentRemove>(OnCardRemoved);
         SubscribeLocalEvent<PhotoCardComponent, MapInitEvent>(OnCardMapInit);
+        SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestartCleanup);
     }
 
     public override void Shutdown()
     {
         base.Shutdown();
-        _blobs.Clear();
-        _blobToCards.Clear();
-        _storedBytes = 0;
-        _nextBlobId = 0;
+        ClearAll();
     }
 
     public bool HasCapacityFor(int imageSizeBytes)
@@ -48,11 +48,7 @@ public sealed class PhotoBlobStoreSystem : EntitySystem
         if (!HasCapacityFor(data.Length))
             return false;
 
-        blobId = ++_nextBlobId;
-        _blobs[blobId] = data;
-        _storedBytes += data.Length;
-
-        _blobToCards[blobId] = new HashSet<EntityUid> { card };
+        blobId = StoreBlobForCard(card, data);
         return true;
     }
 
@@ -68,14 +64,32 @@ public sealed class PhotoBlobStoreSystem : EntitySystem
 
     private void OnCardMapInit(EntityUid uid, PhotoCardComponent component, MapInitEvent args)
     {
-        // Round-only storage: stale IDs from old serialized states are invalid here.
-        if (component.ImageId > 0 && !_blobs.ContainsKey(component.ImageId))
+        if (component.ImageData == null)
+        {
             component.ImageId = -1;
+            return;
+        }
+
+        // If runtime ID is already valid, just ensure reverse index contains this card.
+        if (component.ImageId > 0 && _blobs.ContainsKey(component.ImageId))
+        {
+            AttachCardReference(component.ImageId, uid);
+            return;
+        }
+
+        // Restore from persisted bytes. We intentionally bypass capacity checks here:
+        // existing map content should remain viewable after load.
+        component.ImageId = StoreBlobForCard(uid, component.ImageData);
     }
 
     private void OnCardRemoved(EntityUid uid, PhotoCardComponent component, ComponentRemove args)
     {
         DetachCard(component.ImageId, uid);
+    }
+
+    private void OnRoundRestartCleanup(RoundRestartCleanupEvent ev)
+    {
+        ClearAll();
     }
 
     private void DetachCard(int blobId, EntityUid card)
@@ -98,11 +112,39 @@ public sealed class PhotoBlobStoreSystem : EntitySystem
         RemoveBlob(blobId);
     }
 
+    private int StoreBlobForCard(EntityUid card, byte[] data)
+    {
+        var blobId = ++_nextBlobId;
+        _blobs[blobId] = data;
+        _storedBytes += data.Length;
+        _blobToCards[blobId] = new HashSet<EntityUid> { card };
+        return blobId;
+    }
+
+    private void AttachCardReference(int blobId, EntityUid card)
+    {
+        if (!_blobToCards.TryGetValue(blobId, out var cards))
+        {
+            cards = new HashSet<EntityUid>();
+            _blobToCards[blobId] = cards;
+        }
+
+        cards.Add(card);
+    }
+
     private void RemoveBlob(int blobId)
     {
         if (!_blobs.Remove(blobId, out var data))
             return;
 
         _storedBytes = Math.Max(0, _storedBytes - data.Length);
+    }
+
+    private void ClearAll()
+    {
+        _blobs.Clear();
+        _blobToCards.Clear();
+        _storedBytes = 0;
+        _nextBlobId = 0;
     }
 }

@@ -181,6 +181,8 @@ public sealed class PhotoSystem : SharedPhotoSystem
             return false;
         }
 
+        // Keep raw bytes for map save/load persistence.
+        photo.ImageData = imageData;
         photo.ImageId = imageId;
 
         if (component.User != null)
