@@ -26,6 +26,14 @@ public sealed partial class PhotoCameraWindow : FancyWindow
     public float ZoomInput = 0;
     private CancellationTokenSource _cts = new();
 
+    /// <summary>
+    /// Client-side cooldown to prevent spamming the photo button
+    /// while the server processes the previous shot.
+    /// </summary>
+    private const float ButtonCooldownSec = 1.5f;
+    private float _buttonCooldown;
+    private bool _buttonOnCooldown;
+
     public event Action? OnTakeImageAttempt;
 
     public PhotoCameraWindow()
@@ -43,10 +51,33 @@ public sealed partial class PhotoCameraWindow : FancyWindow
         if (_cache.TryGetResource("/Audio/Items/Stamp/automatic_stamp.ogg", out AudioResource? resource))
             PhotoButton.ClickSound = resource;
 
-        PhotoButton.OnPressed += args =>
+        PhotoButton.OnPressed += _ =>
         {
+            if (_buttonOnCooldown)
+                return;
+
+            _buttonOnCooldown = true;
+            _buttonCooldown = ButtonCooldownSec;
+            PhotoButton.Disabled = true;
+
             OnTakeImageAttempt?.Invoke();
         };
+    }
+
+    /// <summary>
+    /// Called from BoundUi's UpdateControl every frame while camera UI is open.
+    /// </summary>
+    public void UpdateCooldown(float frameTime)
+    {
+        if (!_buttonOnCooldown)
+            return;
+
+        _buttonCooldown -= frameTime;
+        if (_buttonCooldown <= 0f)
+        {
+            _buttonOnCooldown = false;
+            PhotoButton.Disabled = false;
+        }
     }
 
     //region Control

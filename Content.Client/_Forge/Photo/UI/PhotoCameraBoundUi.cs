@@ -106,14 +106,16 @@ public sealed class PhotoCameraBoundUserInterface : BoundUserInterface
 
     public void UpdateControl(PhotoCameraComponent component, float frameTime)
     {
-        //This looks so bad
         if (_cameraEntity == null || _window == null)
             return;
+
+        _window.UpdateCooldown(frameTime);
 
         Vector2 pos = _zoomPos + _window.MoveInput * _zoomValue * frameTime;
 
         float zoom = Math.Clamp(_zoomValue + _window.ZoomInput * frameTime * (component.MaxZoom - component.MinZoom), component.MinZoom, component.MaxZoom);
-        float zoomRatio = (zoom - component.MinZoom) / (component.MaxZoom - component.MinZoom);
+        float zoomRange = component.MaxZoom - component.MinZoom;
+        float zoomRatio = zoomRange > 0f ? (zoom - component.MinZoom) / zoomRange : 0f;
 
         float xClamp = component.ViewBox.X * 0.5f * (1 - zoomRatio);
         float yClamp = component.ViewBox.Y * 0.5f * (1 - zoomRatio);

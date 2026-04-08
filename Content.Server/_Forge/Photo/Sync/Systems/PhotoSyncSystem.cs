@@ -18,6 +18,10 @@ public sealed class PhotoSyncSystem : EntitySystem
     private static readonly ResPath ExportPath = new("/Exports/PhotoCameraFrames");
     private const int MaxSizeBytes = 8 * 1024 * 1024;
 
+    /// <summary>
+    /// Время в секундах, после которого pending-запрос считается просроченным.
+    /// Отсутствие ответа логируется как подозрительное.
+    /// </summary>
     private const float PendingTimeoutSeconds = 45f;
 
     [Dependency] private readonly IPlayerManager _players = default!;
