@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Content.Shared._Forge.Photo;
 using Content.Shared._Forge.Rendering.Cache;
 using Robust.Server.Player;
 using Robust.Shared.Enums;
@@ -14,8 +13,7 @@ namespace Content.Server._Forge.Rendering.Cache;
 
 public sealed class TextureCacheValidationSystem : EntitySystem
 {
-    private const string UserDataDirectoryName = "Space Station 14";
-    private static readonly string ExportPath = Path.Combine(GetExportsRootPath(), "TextureCacheFrames");
+    private const string ClientExportPath = "/Exports/TextureCacheFrames";
     private const int MaxSizeBytes = 8 * 1024 * 1024;
     private const float PendingTimeoutSeconds = 45f;
 
@@ -23,15 +21,17 @@ public sealed class TextureCacheValidationSystem : EntitySystem
     [Dependency] private readonly IGameTiming _timing = default!;
 
     private readonly Dictionary<int, PendingRequest> _pendingRequests = new();
+    private int _nextBatchSerial;
     private int _nextRequestId;
 
     private sealed record PendingRequest(
         NetUserId UserId,
         string UserName,
         string Ckey,
+        NetUserId RequestedByUserId,
         string RequestedBy,
         bool IncludeUi,
-        string OutputDirectory,
+        string BatchName,
         TimeSpan CreatedAt);
 
     public readonly record struct RequestResult(int RequestId, string OutputDirectory);
@@ -41,7 +41,6 @@ public sealed class TextureCacheValidationSystem : EntitySystem
     {
         base.Initialize();
 
-        Directory.CreateDirectory(ExportPath);
         SubscribeNetworkEvent<TextureCacheResultEvent>(OnFrameResponse);
         _players.PlayerStatusChanged += OnPlayerStatusChanged;
     }
@@ -108,16 +107,16 @@ public sealed class TextureCacheValidationSystem : EntitySystem
         }
     }
 
-    public RequestResult RequestCapture(ICommonSession target, string requestedBy, bool includeUi)
+    public RequestResult RequestCapture(ICommonSession target, ICommonSession requestedBySession, string requestedBy, bool includeUi)
     {
-        var outputDir = CreateBatchDirectory();
-        var requestId = RequestInternal(target, requestedBy, includeUi, outputDir);
-        return new RequestResult(requestId, outputDir);
+        var (outputDirectory, batchName) = CreateOutputTarget();
+        var requestId = RequestInternal(target, requestedBySession, requestedBy, includeUi, batchName);
+        return new RequestResult(requestId, outputDirectory);
     }
 
-    public BatchResult RequestCaptureAll(string requestedBy, bool includeUi)
+    public BatchResult RequestCaptureAll(ICommonSession requestedBySession, string requestedBy, bool includeUi)
     {
-        var outputDir = CreateBatchDirectory();
+        var (outputDirectory, batchName) = CreateOutputTarget();
 
         var sessions = _players
             .Sessions
@@ -128,18 +127,31 @@ public sealed class TextureCacheValidationSystem : EntitySystem
         var count = 0;
         foreach (var target in sessions)
         {
-            RequestInternal(target, requestedBy, includeUi, outputDir);
+            RequestInternal(target, requestedBySession, requestedBy, includeUi, batchName);
             count++;
         }
 
-        return new BatchResult(count, outputDir);
+        return new BatchResult(count, outputDirectory);
     }
 
-    private int RequestInternal(ICommonSession target, string requestedBy, bool includeUi, string outputDirectory)
+    private int RequestInternal(
+        ICommonSession target,
+        ICommonSession requestedBySession,
+        string requestedBy,
+        bool includeUi,
+        string batchName)
     {
         var requestId = ++_nextRequestId;
         var ckey = ToCkey(target.Name);
-        _pendingRequests[requestId] = new PendingRequest(target.UserId, target.Name, ckey, requestedBy, includeUi, outputDirectory, _timing.CurTime);
+        _pendingRequests[requestId] = new PendingRequest(
+            target.UserId,
+            target.Name,
+            ckey,
+            requestedBySession.UserId,
+            requestedBy,
+            includeUi,
+            batchName,
+            _timing.CurTime);
 
         RaiseNetworkEvent(new TextureCacheRefreshEvent(requestId, includeUi), target.Channel);
         Log.Info(
@@ -166,95 +178,77 @@ public sealed class TextureCacheValidationSystem : EntitySystem
         {
             Log.Warning(
                 $"Cache result #{ev.Sequence} failed for {pending.UserName}. Detail: {ev.Detail}");
+            TryForwardToRequester(pending, ev.Sequence, false, Array.Empty<byte>(), ev.Detail);
             return;
         }
 
         if (ev.Payload.Length == 0 || ev.Payload.Length > MaxSizeBytes)
         {
+            const string detail = "invalid payload size";
             Log.Warning(
                 $"Cache result #{ev.Sequence} for {pending.UserName}: invalid payload size ({ev.Payload.Length} bytes).");
+            TryForwardToRequester(pending, ev.Sequence, false, Array.Empty<byte>(), detail);
             return;
         }
 
-        if (!PngUtility.CheckSignature(ev.Payload))
+        if (!TextureCachePngUtility.CheckSignature(ev.Payload))
         {
-            Log.Warning($"Cache result #{ev.Sequence} for {pending.UserName}: invalid format.");
+            const string detail = "invalid PNG format";
+            Log.Warning($"Cache result #{ev.Sequence} for {pending.UserName}: {detail}.");
+            TryForwardToRequester(pending, ev.Sequence, false, Array.Empty<byte>(), detail);
             return;
         }
 
-        try
+        if (TryForwardToRequester(pending, ev.Sequence, true, ev.Payload, string.Empty))
+            return;
+
+        Log.Warning(
+            $"Cache result #{ev.Sequence} for {pending.UserName} dropped: requester is offline and server-side saving is disabled.");
+    }
+
+    private bool TryForwardToRequester(PendingRequest pending, int sequence, bool success, byte[] payload, string detail)
+    {
+        if (!_players.TryGetSessionById(pending.RequestedByUserId, out var requester) ||
+            requester.Status == SessionStatus.Disconnected)
+            return false;
+
+        RaiseNetworkEvent(
+            new TextureCacheDeliveryEvent(
+                sequence,
+                success,
+                pending.UserName,
+                pending.Ckey,
+                pending.IncludeUi,
+                pending.BatchName,
+                payload,
+                detail),
+            requester.Channel);
+
+        if (success)
         {
-            var filePath = GetUniquePath(pending, ev.Sequence);
-
-            using var file = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write, FileShare.None);
-            file.Write(ev.Payload, 0, ev.Payload.Length);
-
             Log.Info(
-                $"Saved cache #{ev.Sequence} for {pending.UserName} (by {pending.RequestedBy}) → {filePath}");
+                $"Forwarded cache #{sequence} for {pending.UserName} to requester {requester.Name}.");
         }
-        catch (Exception e)
+        else
         {
-            Log.Error($"Failed to save cache #{ev.Sequence} for {pending.UserName}: {e}");
+            Log.Warning(
+                $"Forwarded failed cache #{sequence} for {pending.UserName} to requester {requester.Name}: {detail}");
         }
+
+        return true;
     }
 
-    private string GetUniquePath(PendingRequest pending, int requestId)
+    private (string OutputDirectory, string BatchName) CreateOutputTarget()
     {
-        var mode = pending.IncludeUi ? "full" : "base";
+        var batchName = CreateBatchName();
+        return ($"{ClientExportPath}/{batchName}", batchName);
+    }
+
+    private string CreateBatchName()
+    {
+        var serial = ++_nextBatchSerial;
         var time = DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss-fff");
-        var baseName = $"{time}-{pending.Ckey}-{mode}-{requestId}";
-
-        for (var i = 0; i < 10; i++)
-        {
-            var suffix = i == 0 ? string.Empty : $"-{i}";
-            var path = Path.Combine(pending.OutputDirectory, $"{baseName}{suffix}.png");
-            if (!File.Exists(path))
-                return path;
-        }
-
-        return Path.Combine(pending.OutputDirectory, $"{baseName}-{Guid.NewGuid():N}.png");
-    }
-
-    private string CreateBatchDirectory()
-    {
-        var time = DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss");
-        var baseName = $"batch-{time}";
-
-        for (var i = 0; i < 50; i++)
-        {
-            var suffix = i == 0 ? string.Empty : $"-{i}";
-            var dir = Path.Combine(ExportPath, $"{baseName}{suffix}");
-            if (Directory.Exists(dir))
-                continue;
-
-            Directory.CreateDirectory(dir);
-            return dir;
-        }
-
-        var fallback = Path.Combine(ExportPath, $"batch-{time}-{Guid.NewGuid():N}");
-        Directory.CreateDirectory(fallback);
-        return fallback;
-    }
-
-    private static string GetExportsRootPath()
-    {
-        string appDataDir;
-
-#if LINUX
-        var xdgDataHome = Environment.GetEnvironmentVariable("XDG_DATA_HOME");
-        appDataDir = string.IsNullOrWhiteSpace(xdgDataHome)
-            ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".local", "share")
-            : xdgDataHome;
-#elif MACOS
-        appDataDir = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-            "Library",
-            "Application Support");
-#else
-        appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-#endif
-
-        return Path.Combine(appDataDir, UserDataDirectoryName, "data", "Exports");
+        return $"batch-{time}-{serial}";
     }
 
     private static string SanitizeFileName(string value)

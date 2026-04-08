@@ -41,11 +41,21 @@ public sealed class TexCacheRefreshCommand : IConsoleCommand
             return;
         }
 
-        var requestedBy = shell.Player?.Name ?? "server-console";
-        var result = _entities.System<TextureCacheValidationSystem>().RequestCapture(target, requestedBy, includeUi);
+        if (shell.Player == null)
+        {
+            shell.WriteError("This command must be executed by an in-game admin client. Results are saved only on the requester's PC.");
+            return;
+        }
+
+        var requestedBy = shell.Player.Name;
+        var result = _entities.System<TextureCacheValidationSystem>().RequestCapture(
+            target,
+            shell.Player,
+            requestedBy,
+            includeUi);
 
         shell.WriteLine(
-            $"Cache refresh #{result.RequestId} requested from {target.Name}. Dir: {result.OutputDirectory}");
+            $"Cache refresh #{result.RequestId} requested from {target.Name}. Dir (requester local): {result.OutputDirectory}");
     }
 
     public CompletionResult GetCompletion(IConsoleShell shell, string[] args)
