@@ -1,5 +1,3 @@
-# Мастер-ключи для дверей с UniqueKeyDoor.
-
 - type: accessLevel
   id: TownMasterKey
   name: id-card-access-level-town-master-key
