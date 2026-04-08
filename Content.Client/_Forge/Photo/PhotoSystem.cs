@@ -27,6 +27,7 @@ public sealed partial class PhotoSystem : SharedPhotoSystem
     };
 
     private readonly Dictionary<EntityUid, PhotoCameraBoundUserInterface> _activeCameras = new();
+    private readonly List<EntityUid> _staleCameras = new();
 
     #region Image Cache
 
@@ -106,6 +107,7 @@ public sealed partial class PhotoSystem : SharedPhotoSystem
     {
         base.Shutdown();
         _activeCameras.Clear();
+        _staleCameras.Clear();
         _imageCache.Clear();
         _lruOrder.Clear();
         _lruNodes.Clear();
@@ -118,25 +120,21 @@ public sealed partial class PhotoSystem : SharedPhotoSystem
         if (_activeCameras.Count == 0)
             return;
 
-        List<EntityUid>? toRemove = null;
+        _staleCameras.Clear();
 
         foreach (var (uid, window) in _activeCameras)
         {
             if (!TryComp<PhotoCameraComponent>(uid, out var component))
             {
-                toRemove ??= new List<EntityUid>();
-                toRemove.Add(uid);
+                _staleCameras.Add(uid);
                 continue;
             }
 
             window.UpdateControl(component, frameTime);
         }
 
-        if (toRemove != null)
-        {
-            foreach (var uid in toRemove)
-                _activeCameras.Remove(uid);
-        }
+        foreach (var uid in _staleCameras)
+            _activeCameras.Remove(uid);
     }
 
     public void OpenCameraUi(EntityUid uid, PhotoCameraBoundUserInterface window)
@@ -162,4 +160,3 @@ public sealed partial class PhotoSystem : SharedPhotoSystem
         }
     }
 }
-
