@@ -1,29 +1,15 @@
-# Общие ключи для системы UniqueKeyDoor.
+# Мастер-ключи для дверей с UniqueKeyDoor.
 
 - type: accessLevel
   id: TownMasterKey
   name: id-card-access-level-town-master-key
 
-# Болванка для привязки к двери в раунде.
-- type: entity
-  parent: N14IDCard
-  id: N14IDKeyBlank
-  name: болванка ключа
-  description: Пустой ключ для привязки к двери с UniqueKeyDoor.
-  suffix: UniqueKeyDoor
-  components:
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Misc/identification.rsi
-    state: iron
-  - type: UniqueDoorKey
-
-# Мастер-ключи города.
 - type: entity
   parent: N14IDCard
   id: N14IDKeyTownMasterMayor
   name: мастер-ключ мэра
-  description: Городской мастер-ключ. Открывает двери с UniqueKeyDoor и TownMasterKey.
-  suffix: UniqueKeyDoor
+  description: Тяжелый позолоченный ключ с печатью мэрии. Подходит к служебным городским замкам.
+  suffix: MasterKey
   components:
   - type: Sprite
     sprite: _Nuclear14/Objects/Misc/identification.rsi
@@ -36,8 +22,8 @@
   parent: N14IDCard
   id: N14IDKeyTownMasterSheriff
   name: мастер-ключ шерифа
-  description: Городской мастер-ключ. Открывает двери с UniqueKeyDoor и TownMasterKey.
-  suffix: UniqueKeyDoor
+  description: Прочный служебный ключ со звездой шерифа. Открывает городские двери по долгу службы.
+  suffix: MasterKey
   components:
   - type: Sprite
     sprite: _Nuclear14/Objects/Misc/identification.rsi
