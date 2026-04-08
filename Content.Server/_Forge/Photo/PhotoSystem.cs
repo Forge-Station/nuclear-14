@@ -19,6 +19,7 @@ namespace Content.Server._Forge.Photo;
 public sealed class PhotoSystem : SharedPhotoSystem
 {
     private const int MaxSize = 1024 * 512;
+    private const long MaxTotalPhotoBytes = 128L * 1024 * 1024;
 
     /// <summary>
     /// Max allowed PNG dimensions (width or height).
@@ -55,11 +56,13 @@ public sealed class PhotoSystem : SharedPhotoSystem
     private readonly Dictionary<int, HashSet<EntityUid>> _imageIndex = new();
 
     private int _nextImageId;
+    private long _storedImageBytes;
 
     private int RegisterImage(byte[] data, EntityUid card)
     {
         var id = ++_nextImageId;
         _imageStore[id] = data;
+        _storedImageBytes += data.Length;
 
         if (!_imageIndex.TryGetValue(id, out var set))
         {
@@ -83,18 +86,36 @@ public sealed class PhotoSystem : SharedPhotoSystem
             if (set.Count == 0)
             {
                 _imageIndex.Remove(imageId);
-                _imageStore.Remove(imageId);
+                RemoveImageFromStore(imageId);
             }
         }
         else
         {
-            _imageStore.Remove(imageId);
+            RemoveImageFromStore(imageId);
         }
     }
 
     public byte[]? GetImageData(int imageId)
     {
         return _imageStore.GetValueOrDefault(imageId);
+    }
+
+    public int StoredImageCount => _imageStore.Count;
+    public long StoredImageBytes => _storedImageBytes;
+    public long MaxStoredImageBytes => MaxTotalPhotoBytes;
+
+    private bool CanStoreNewImage(int imageSizeBytes)
+    {
+        return _storedImageBytes + imageSizeBytes <= MaxTotalPhotoBytes;
+    }
+
+    private void RemoveImageFromStore(int imageId)
+    {
+        if (!_imageStore.TryGetValue(imageId, out var data))
+            return;
+
+        _imageStore.Remove(imageId);
+        _storedImageBytes = Math.Max(0, _storedImageBytes - data.Length);
     }
 
     #endregion
@@ -168,6 +189,7 @@ public sealed class PhotoSystem : SharedPhotoSystem
         _imageStore.Clear();
         _imageIndex.Clear();
         _requestRateLimits.Clear();
+        _storedImageBytes = 0;
     }
 
     private void OnPlayerStatusChanged(object? sender, SessionStatusEventArgs args)
@@ -269,6 +291,14 @@ public sealed class PhotoSystem : SharedPhotoSystem
 
     private bool PrintCard(EntityUid uid, PhotoCameraComponent component, byte[] imageData)
     {
+        if (!CanStoreNewImage(imageData.Length))
+        {
+            if (component.User != null)
+                _popup.PopupEntity(Loc.GetString("photo-camera-memory-full"), uid, component.User.Value);
+
+            return false;
+        }
+
         if (!_material.TryChangeMaterialAmount(uid, component.CardMaterial, -component.CardCost))
         {
             if (component.User != null)
