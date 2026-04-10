@@ -1,0 +1,25 @@
+{
+    "version": 1,
+    "license": "CC-BY-NC-SA-3.0",
+    "copyright": "Copyright, Corvax Forge Fallout",
+    "size": {
+        "x": 64,
+        "y": 128
+    },
+    "states": [
+        {
+            "name": "icon",
+            "delays": [
+                [
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3
+                ]
+            ]
+
+        }
+    ]
+}
