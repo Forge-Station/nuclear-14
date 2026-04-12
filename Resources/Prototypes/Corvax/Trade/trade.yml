@@ -403,7 +403,7 @@
   - proto: N14WeaponShotgunShort
     price: 50
   - proto: N14WeaponShotgunSawedOff
-    price: 125
+    price: 25
   - proto: N14WeaponShotgunRiot
     price: 290
   - proto: N14WeaponShotgunAuto
@@ -415,7 +415,7 @@
     price: 450
     count: 4
   - proto: N14WeaponBlowback
-    price: 350
+    price: 370
     count: 2
 
 - type: storeCategoryStructured
@@ -664,8 +664,6 @@
     price: 65
   - proto: N14ClothingOuterPressArmor
     price: 65
-  - proto: ClothingOuterArmorBasicSlim
-    price: 65
   - proto: N14ClothingOuterCombatRusted
     price: 65
   - proto: N14ClothingOuterCombatRaider
@@ -686,6 +684,8 @@
     price: 230
   - proto: N14ClothingOuterCombatArmor
     price: 230
+  - proto: ClothingOuterArmorBasicSlim
+    price: 250
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Rigs
@@ -706,10 +706,10 @@
   entries:
   - proto: N14DirtyGauze10
     amount: 10
-    price: 10
+    price: 20
   - proto: N14CleanGauze10
     amount: 10
-    price: 15
+    price: 25
   - proto: N14RadAwayPhial
     price: 30
   - proto: N14RadAwayBloodbag
@@ -953,7 +953,7 @@
   - proto: N14WeaponShotgunCaravan
     price: 15
   - proto: N14WeaponShotgunSawedOff
-    price: 70
+    price: 15
   - proto: N14WeaponShotgun
     price: 45
   - proto: N14WeaponShotgunShort
@@ -967,7 +967,7 @@
   - proto: N14WeaponShotgunRiot
     price: 160
   - proto: N14WeaponBlowback
-    price: 550
+    price: 180
 
 - type: storeCategoryStructured
   id: CaravanSell2_AssaultRifles
@@ -1231,7 +1231,7 @@
   name: "Материалы и хлам"
   entries:
   - proto: MaterialCloth1
-    price: 4
+    price: 1
   - proto: N14MaterialThread1
     price: 4
   - proto: N14JunkDuctTape
@@ -1334,7 +1334,7 @@
   - proto: N14CurrencyLegionDenarius
     price: 4
   - proto: N14CurrencyLegionAureus
-    price: 100
+    price: 80
 
 - type: storeCategoryStructured
   id: CaravanSell2_Alcohol
