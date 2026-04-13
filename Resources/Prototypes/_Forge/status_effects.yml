@@ -7,9 +7,5 @@
   alwaysAllowed: true
 
 - type: statusEffect
-  id: ThresholdAdjustment
-  alwaysAllowed: true
-
-- type: statusEffect
-  id: DoAfterSpeed
+  id: CritThresholdRaised
   alwaysAllowed: true
