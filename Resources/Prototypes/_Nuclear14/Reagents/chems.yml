@@ -96,7 +96,7 @@
           min: 12
 
 
-- type: reagent
+- type: reagent #Forge-Change start
   id: DamageModifyingMixture #used in psycho. TODO: figure out how to make a reagent give you a dmg buff
   name: reagent-name-damage-mod-mixture
   group: Chems
@@ -122,7 +122,7 @@
           min: 21
         damage:
           types:
-            Poison: 1
+            Poison: 1 #Forge-Change end
 
 - type: reagent
   id: Daytripper
@@ -267,13 +267,13 @@
       effects:
       - !type:Jitter #Placeholder for when we get Special working again.
 
-- type: reagent
+- type: reagent #Forge-Change start
   id: DamageResistMixture
   name: reagent-name-damage-resist-mixture
   group: Medicine
   desc: reagent-desc-damage-resist-mixture
   physicalDesc: reagent-physical-desc-reasonably-metallic
-  color: "#00e5ff"
+  color: "#ae00ff"
   metabolisms:
     Medicine:
       metabolismRate: 0.2 # Effectively once every 5 seconds.
@@ -289,7 +289,7 @@
           min: 21
         damage:
           types:
-            Poison: 1
+            Poison: 1 #Forge-Change end
 
 - type: reagent
   id: Hydra
