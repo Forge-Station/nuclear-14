@@ -3,11 +3,14 @@ using Content.Shared.DoAfter;
 using Content.Shared._Forge.Weapons.Ranged.Components;
 using Content.Shared._Forge.Weapons.Ranged.Systems;
 using Content.Shared.Interaction;
+using Content.Shared.Interaction.Events;
 using Content.Shared.Item;
 using Content.Shared.Popups;
 using Content.Shared.Tools.Systems;
 using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Weapons.Ranged.Systems;
+using Robust.Shared.Audio;
+using Robust.Shared.Audio.Systems;
 using Robust.Shared.Random;
 
 
@@ -16,7 +19,11 @@ namespace Content.Server._Forge.Weapons.Ranged.Systems;
 
 public sealed class GunConditionSystem : SharedGunConditionSystem
 {
+    private static readonly SoundSpecifier UnjamFallbackSound = new SoundPathSpecifier("/Audio/Weapons/Guns/Cock/smg_cock.ogg");
+
+    [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly DoAfterSystem _doAfter = default!;
+    [Dependency] private readonly SharedGunSystem _gun = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly SharedToolSystem _tool = default!;
@@ -27,7 +34,7 @@ public sealed class GunConditionSystem : SharedGunConditionSystem
         SubscribeLocalEvent<GunComponent, ComponentStartup>(OnGunStartup);
         SubscribeLocalEvent<GunConditionRepairToolComponent, ComponentStartup>(OnRepairToolStartup);
         SubscribeLocalEvent<GunConditionComponent, GunShotEvent>(OnGunShot);
-        SubscribeLocalEvent<GunConditionComponent, InteractHandEvent>(OnInteractHand);
+        SubscribeLocalEvent<GunConditionComponent, UseInHandEvent>(OnUseInHand, before: new[] { typeof(SharedGunSystem) });
         SubscribeLocalEvent<GunConditionComponent, InteractUsingEvent>(OnInteractUsing);
         SubscribeLocalEvent<GunConditionComponent, GunConditionRepairDoAfterEvent>(OnRepairFinished);
         SubscribeLocalEvent<GunConditionComponent, GunConditionUnjamDoAfterEvent>(OnUnjamFinished);
@@ -57,6 +64,8 @@ public sealed class GunConditionSystem : SharedGunConditionSystem
         if (IsBroken(ent.Comp))
             return;
 
+        var wasJammed = ent.Comp.Jammed;
+
         // 1) Применяем износ от текущей серии выстрелов.
         var shotsFired = Math.Max(args.Ammo.Count, 1);
         var wearAmount = ent.Comp.WearPerShot * shotsFired;
@@ -67,6 +76,8 @@ public sealed class GunConditionSystem : SharedGunConditionSystem
         if (IsBroken(ent.Comp))
         {
             ent.Comp.Jammed = true;
+            if (!wasJammed)
+                SetBoltForJammed(ent.Owner, true);
             Dirty(ent);
             return;
         }
@@ -75,27 +86,16 @@ public sealed class GunConditionSystem : SharedGunConditionSystem
         if (!ent.Comp.Jammed && _random.Prob(GetJamChance(ent.Comp)))
             ent.Comp.Jammed = true;
 
+        if (!wasJammed && ent.Comp.Jammed)
+            SetBoltForJammed(ent.Owner, true);
+
         Dirty(ent);
     }
 
-    private void OnInteractHand(Entity<GunConditionComponent> ent, ref InteractHandEvent args)
+    private void OnUseInHand(Entity<GunConditionComponent> ent, ref UseInHandEvent args)
     {
-        if (!ent.Comp.Jammed || IsBroken(ent.Comp))
-            return;
-
-        var doAfter = new DoAfterArgs(EntityManager, args.User, ent.Comp.UnjamTime, new GunConditionUnjamDoAfterEvent(), ent, target: ent)
-        {
-            BreakOnDamage = true,
-            BreakOnMove = true,
-            NeedHand = true,
-            RequireCanInteract = true,
-        };
-
-        if (!_doAfter.TryStartDoAfter(doAfter))
-            return;
-
-        args.Handled = true;
-        _popup.PopupEntity(Loc.GetString("gun-condition-unjam-started"), ent, args.User);
+        if (TryStartUnjam(ent, args.User))
+            args.Handled = true;
     }
 
     private void OnInteractUsing(Entity<GunConditionComponent> ent, ref InteractUsingEvent args)
@@ -138,8 +138,10 @@ public sealed class GunConditionSystem : SharedGunConditionSystem
             return;
 
         ent.Comp.Jammed = false;
+        SetBoltForJammed(ent.Owner, false);
         Dirty(ent);
 
+        PlayUnjamSound(ent, args.User);
         _popup.PopupEntity(Loc.GetString("gun-condition-unjam-finished"), ent, args.User);
     }
 
@@ -156,5 +158,54 @@ public sealed class GunConditionSystem : SharedGunConditionSystem
         }
 
         Dirty(toolUid, tool);
+    }
+
+    private bool TryStartUnjam(Entity<GunConditionComponent> ent, EntityUid user)
+    {
+        if (!ent.Comp.Jammed || IsBroken(ent.Comp))
+            return false;
+
+        var doAfter = new DoAfterArgs(EntityManager, user, ent.Comp.UnjamTime, new GunConditionUnjamDoAfterEvent(), ent, target: ent)
+        {
+            BreakOnDamage = true,
+            BreakOnMove = true,
+            NeedHand = true,
+            RequireCanInteract = true,
+        };
+
+        if (!_doAfter.TryStartDoAfter(doAfter))
+            return false;
+
+        _popup.PopupEntity(Loc.GetString("gun-condition-unjam-started"), ent, user);
+        return true;
+    }
+
+    private void PlayUnjamSound(EntityUid gunUid, EntityUid user)
+    {
+        SoundSpecifier? sound = null;
+
+        if (TryComp<ChamberMagazineAmmoProviderComponent>(gunUid, out var chamber))
+        {
+            if (chamber.BoltClosed != null)
+                return;
+            sound = chamber.RackSound ?? chamber.BoltClosedSound ?? chamber.BoltOpenedSound;
+        }
+
+        if (sound == null && TryComp<BallisticAmmoProviderComponent>(gunUid, out var ballistic))
+            sound = ballistic.SoundRack;
+
+        sound ??= UnjamFallbackSound;
+        _audio.PlayPredicted(sound, gunUid, user);
+    }
+
+    private void SetBoltForJammed(EntityUid gunUid, bool jammed)
+    {
+        if (!TryComp<ChamberMagazineAmmoProviderComponent>(gunUid, out var chamber) ||
+            chamber.BoltClosed == null)
+        {
+            return;
+        }
+
+        _gun.SetBoltClosed(gunUid, chamber, !jammed, user: null);
     }
 }
