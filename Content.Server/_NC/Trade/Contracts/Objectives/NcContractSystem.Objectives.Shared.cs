@@ -5,7 +5,6 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
-    // Shared objective lifecycle, resolution and progress.
     private void OnObjectiveTrackedEntityTerminating(ref EntityTerminatingEvent args)
     {
         if (_objectiveRuntimeByTarget.TryGetValue(args.Entity, out var targetKey))
@@ -205,9 +204,10 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (state.GuardEntities.Count > 0)
         {
-            for (var i = 0; i < state.GuardEntities.Count; i++)
+            var guardsSnapshot = state.GuardEntities.ToArray();
+            for (var i = 0; i < guardsSnapshot.Length; i++)
             {
-                var guard = state.GuardEntities[i];
+                var guard = guardsSnapshot[i];
                 _objectiveRuntimeByGuard.Remove(guard);
 
                 if (deleteGuards && !TerminatingOrDeleted(guard))
@@ -278,7 +278,3 @@ public sealed partial class NcContractSystem : EntitySystem
         public EntityUid? TargetEntity;
     }
 }
-
-
-
-

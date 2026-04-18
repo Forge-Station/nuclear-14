@@ -135,10 +135,25 @@ public sealed partial class NcContractSystem : EntitySystem
         var winner = PickWeighted(_random, deck, x => x.Def.Weight);
         var dropCount = IncrementRewardPoolDropCount(dropCounts, winner.Key);
         if (winner.Def.MaxRepeats > 0 && dropCount >= winner.Def.MaxRepeats)
-            deck.Remove(winner);
+            RemovePoolEntrySwap(deck, winner);
 
         output.AddRange(BakeRewardsRecursive(store, contractProtoId, new() { winner.Def }, depth));
         return true;
+    }
+
+    private static void RemovePoolEntrySwap(List<PoolEntry> deck, PoolEntry entry)
+    {
+        for (var idx = 0; idx < deck.Count; idx++)
+        {
+            if (!deck[idx].Equals(entry))
+                continue;
+
+            var lastIndex = deck.Count - 1;
+            if (idx != lastIndex)
+                deck[idx] = deck[lastIndex];
+            deck.RemoveAt(lastIndex);
+            return;
+        }
     }
 
     private static int IncrementRewardPoolDropCount(Dictionary<string, int> dropCounts, string key)
@@ -165,7 +180,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
             var k = (r.Type, r.Id);
             if (!map.TryAdd(k, r.Amount))
-                map[k] = checked(map[k] + r.Amount);
+                map[k] = SaturatingAdd(map[k], r.Amount);
         }
 
         var outList = new List<ContractRewardData>(map.Count);

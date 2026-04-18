@@ -8,6 +8,11 @@ public sealed partial class NcContractSystem : EntitySystem
     private const int SmallBagThreshold = 8;
     private const int MaxRngCache = 4096;
 
+    private const int RngEvictChunk = 256;
+
+    private readonly Queue<QuasiKey> _quasiPhaseOrder = new();
+    private readonly Queue<QuasiKey> _smallBagsOrder = new();
+
     private double NextUnit() => _random.NextFloat();
 
     private static bool TryNormalizeRange(
@@ -40,11 +45,15 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private int RollSmooth(in QuasiKey key, int min, int buckets, double jitter)
     {
-        if (_quasiPhase.Count >= MaxRngCache)
-            _quasiPhase.Clear();
+        var existing = _quasiPhase.TryGetValue(key, out var p);
+        if (!existing)
+        {
+            if (_quasiPhase.Count >= MaxRngCache)
+                EvictQuasiPhaseOldest(RngEvictChunk);
 
-        if (!_quasiPhase.TryGetValue(key, out var p))
             p = NextUnit();
+            _quasiPhaseOrder.Enqueue(key);
+        }
 
         var j = (NextUnit() - 0.5) * 2.0 * jitter;
 
@@ -52,8 +61,8 @@ public sealed partial class NcContractSystem : EntitySystem
         p -= Math.Floor(p);
         _quasiPhase[key] = p;
 
-        var idx = (int)Math.Floor(p * buckets);
-        if ((uint)idx >= (uint)buckets)
+        var idx = (int) Math.Floor(p * buckets);
+        if ((uint) idx >= (uint) buckets)
             idx = buckets - 1;
 
         return min + idx;
@@ -76,19 +85,21 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private int RollFromSmallBag(QuasiKey key, int min, int buckets)
     {
-        if (_smallBags.Count >= MaxRngCache)
-            _smallBags.Clear();
-
-        if (!_smallBags.TryGetValue(key, out var state))
+        var existing = _smallBags.TryGetValue(key, out var state);
+        if (!existing)
         {
+            if (_smallBags.Count >= MaxRngCache)
+                EvictSmallBagsOldest(RngEvictChunk);
+
             state = new();
             _smallBags[key] = state;
+            _smallBagsOrder.Enqueue(key);
         }
 
         var max = min + buckets - 1;
 
         var needsReset =
-            state.Min != min ||
+            state!.Min != min ||
             state.Max != max ||
             state.Order.Count != buckets ||
             state.Cursor >= state.Order.Count;
@@ -119,6 +130,48 @@ public sealed partial class NcContractSystem : EntitySystem
         return min + idx;
     }
 
+    private void EvictQuasiPhaseOldest(int count)
+    {
+        var evicted = 0;
+        while (evicted < count && _quasiPhaseOrder.Count > 0)
+        {
+            var oldest = _quasiPhaseOrder.Dequeue();
+            if (_quasiPhase.Remove(oldest))
+                evicted++;
+        }
+
+        if (evicted == 0 && _quasiPhase.Count >= MaxRngCache)
+        {
+            _quasiPhase.Clear();
+            _quasiPhaseOrder.Clear();
+        }
+    }
+
+    private void EvictSmallBagsOldest(int count)
+    {
+        var evicted = 0;
+        while (evicted < count && _smallBagsOrder.Count > 0)
+        {
+            var oldest = _smallBagsOrder.Dequeue();
+            if (_smallBags.Remove(oldest))
+                evicted++;
+        }
+
+        if (evicted == 0 && _smallBags.Count >= MaxRngCache)
+        {
+            _smallBags.Clear();
+            _smallBagsOrder.Clear();
+        }
+    }
+
+    private void ClearRngCachesInternal()
+    {
+        _quasiPhase.Clear();
+        _quasiPhaseOrder.Clear();
+        _smallBags.Clear();
+        _smallBagsOrder.Clear();
+    }
+
     private static T PickWeighted<T>(
         IRobustRandom random,
         IReadOnlyList<T> list,
@@ -147,8 +200,8 @@ public sealed partial class NcContractSystem : EntitySystem
             return list[random.Next(list.Count)];
 
         var r = total <= int.MaxValue
-            ? random.Next((int)total)
-            : (long)(random.NextDouble() * total);
+            ? random.Next((int) total)
+            : (long) (random.NextDouble() * total);
 
         long acc = 0;
         for (var i = 0; i < list.Count; i++)

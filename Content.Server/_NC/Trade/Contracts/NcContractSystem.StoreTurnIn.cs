@@ -28,9 +28,6 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool CanUseNearbyStoreTurnInEntity(EntityUid ent)
     {
-        if (HasComp<ItemComponent>(ent))
-            return false;
-
-        return !TryComp(ent, out MobStateComponent? mobState) || mobState.CurrentState == MobState.Dead;
+        return HasComp<ItemComponent>(ent);
     }
 }

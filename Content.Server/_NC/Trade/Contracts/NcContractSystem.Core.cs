@@ -57,9 +57,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         _ancestorsCache.Clear();
         _depthCache.Clear();
-
-        _quasiPhase.Clear();
-        _smallBags.Clear();
+        ClearRngCachesInternal();
 
         _cooldownKeysToRemoveScratch.Clear();
         _contractCooldown.Clear();

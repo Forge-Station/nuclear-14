@@ -14,6 +14,7 @@ public sealed partial class NcStoreLogicSystem
     {
         public bool IsEmpty => StackTypeCounts.Count == 0 && ProtoCounts.Count == 0;
     }
+    private const int MassSellDepthInProgress = -1;
 
     private readonly Dictionary<string, int> _inheritanceDepthCache = new(StringComparer.Ordinal);
     private readonly List<EntityUid> _massSellItemsScratch = new();
@@ -448,12 +449,15 @@ public sealed partial class NcStoreLogicSystem
     private int GetInheritanceDepth(string protoId)
     {
         if (_inheritanceDepthCache.TryGetValue(protoId, out var depth))
-            return depth;
+            return depth >= 0 ? depth : 0;   // IN_PROGRESS => treat as 0
+
         if (!_protos.TryIndex<EntityPrototype>(protoId, out var proto))
         {
             _inheritanceDepthCache[protoId] = 0;
             return 0;
         }
+
+        _inheritanceDepthCache[protoId] = MassSellDepthInProgress;
 
         var max = 0;
         if (proto.Parents != null)

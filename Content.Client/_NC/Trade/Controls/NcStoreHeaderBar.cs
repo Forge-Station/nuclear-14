@@ -14,9 +14,48 @@ namespace Content.Client._NC.Trade.Controls;
 public sealed class NcStoreHeaderBar : BoxContainer
 {
     private const int DefaultSearchDebounceMs = 120;
-    private readonly RichTextLabel _balanceInfo;
+    private const int CurrencyGroupSpacing = 14;
+    private const int CurrencyIconSize = 24;
 
-    private readonly TextureRect _currencyIcon;
+    private sealed class CurrencyGroup
+    {
+        public readonly BoxContainer Container;
+        public readonly TextureRect Icon;
+        public readonly RichTextLabel Amount;
+
+        public CurrencyGroup()
+        {
+            Icon = new TextureRect
+            {
+                MinSize = new(CurrencyIconSize, CurrencyIconSize),
+                Stretch = TextureRect.StretchMode.KeepAspectCentered,
+                Margin = new(0, 0, 4, 0),
+                VerticalAlignment = VAlignment.Center
+            };
+
+            Amount = new RichTextLabel
+            {
+                HorizontalExpand = false,
+                VerticalAlignment = VAlignment.Center
+            };
+            Amount.AddStyleClass("LabelHeading");
+
+            Container = new BoxContainer
+            {
+                Orientation = LayoutOrientation.Horizontal,
+                HorizontalExpand = false,
+                VerticalAlignment = VAlignment.Center,
+                Margin = new(0, 0, CurrencyGroupSpacing, 0)
+            };
+            Container.AddChild(Icon);
+            Container.AddChild(Amount);
+        }
+    }
+
+    private readonly BoxContainer _balancesRow;
+    private readonly Label _emptyBalanceLabel;
+    private readonly List<CurrencyGroup> _balanceGroups = new();
+    private int _activeGroupCount;
 
     private readonly Dictionary<string, Texture> _currencyIconCache = new();
     private readonly LineEdit _searchBar;
@@ -29,20 +68,18 @@ public sealed class NcStoreHeaderBar : BoxContainer
     {
         Orientation = LayoutOrientation.Horizontal;
 
-        _currencyIcon = new()
+        _balancesRow = new BoxContainer
         {
-            MinSize = new(24, 24),
-            Stretch = TextureRect.StretchMode.KeepAspectCentered,
-            Margin = new(4, 0, 4, 0),
-            VerticalAlignment = VAlignment.Center
-        };
-
-        _balanceInfo = new()
-        {
+            Orientation = LayoutOrientation.Horizontal,
             HorizontalExpand = false,
             VerticalAlignment = VAlignment.Center
         };
-        _balanceInfo.AddStyleClass("LabelHeading");
+
+        _emptyBalanceLabel = new Label
+        {
+            VerticalAlignment = VAlignment.Center
+        };
+        _emptyBalanceLabel.AddStyleClass("LabelHeading");
 
         _searchBar = new()
         {
@@ -51,13 +88,13 @@ public sealed class NcStoreHeaderBar : BoxContainer
             Access = AccessLevel.Public
         };
 
-        AddChild(_currencyIcon);
-        AddChild(_balanceInfo);
+        AddChild(_balancesRow);
+        AddChild(_emptyBalanceLabel);
         AddChild(new() { HorizontalExpand = true, });
         AddChild(new Label { Text = "🔍", Margin = new(0, 0, 4, 0), VerticalAlignment = VAlignment.Center, });
         AddChild(_searchBar);
 
-        _balanceInfo.SetMarkup("[font size=14][color=yellow]0[/color][/font]");
+        ShowEmptyBalance();
 
         _searchBar.OnTextChanged += _ => HandleSearchTextChanged();
     }
@@ -83,60 +120,90 @@ public sealed class NcStoreHeaderBar : BoxContainer
     {
         if (balancesByCurrency.Count == 0)
         {
-            SetBalanceMarkup(0);
-            _currencyIcon.Texture = null;
+            ShowEmptyBalance();
             return;
         }
 
-        string? displayCurrency = null;
-        var displayAmount = 0;
-
-        if (balancesByCurrency.Count == 1)
+        // Collect non-empty entries in insertion order (server iterates CurrencyWhitelist in order
+        // and writes into BalancesByCurrency, so dictionary iteration gives the intended display order).
+        var ordered = new List<(string Currency, int Amount)>(balancesByCurrency.Count);
+        foreach (var (cur, amt) in balancesByCurrency)
         {
-            foreach (var (cur, amt) in balancesByCurrency)
-            {
-                displayCurrency = cur;
-                displayAmount = amt;
-                break;
-            }
-        }
-        else
-        {
-            string? bestKey = null;
-            var bestValue = int.MinValue;
-
-            foreach (var (key, value) in balancesByCurrency)
-            {
-                displayAmount += value;
-                if (bestKey == null || value > bestValue || value == bestValue &&
-                    string.CompareOrdinal(key, bestKey) < 0)
-                {
-                    bestKey = key;
-                    bestValue = value;
-                }
-            }
-
-            displayCurrency = bestKey;
+            if (string.IsNullOrWhiteSpace(cur))
+                continue;
+            ordered.Add((cur, amt));
         }
 
-        SetBalanceMarkup(displayAmount);
-        SetCurrencyIcon(displayCurrency);
+        if (ordered.Count == 0)
+        {
+            ShowEmptyBalance();
+            return;
+        }
+
+        _emptyBalanceLabel.Visible = false;
+        ShowBalanceGroups(ordered);
     }
 
-    private void SetBalanceMarkup(int amount) =>
-        _balanceInfo.SetMarkup($"[font size=14][color=yellow]{amount}[/color][/font]");
+    private void ShowEmptyBalance()
+    {
+        HideAllBalanceGroups();
+        _emptyBalanceLabel.Visible = true;
+        _emptyBalanceLabel.Text = "0";
+    }
 
-    private void SetCurrencyIcon(string? currencyId)
+    private void HideAllBalanceGroups()
+    {
+        for (var i = 0; i < _activeGroupCount; i++)
+            _balanceGroups[i].Container.Visible = false;
+
+        _activeGroupCount = 0;
+    }
+
+    private void ShowBalanceGroups(List<(string Currency, int Amount)> ordered)
+    {
+        EnsureBalanceGroupCount(ordered.Count);
+
+        for (var i = 0; i < ordered.Count; i++)
+        {
+            var (cur, amt) = ordered[i];
+            var group = _balanceGroups[i];
+            group.Container.Visible = true;
+            // Remove trailing margin on the last group so the balances row ends tidily.
+            group.Container.Margin = i == ordered.Count - 1
+                ? new(0, 0, 0, 0)
+                : new(0, 0, CurrencyGroupSpacing, 0);
+            group.Amount.SetMarkup($"[font size=14][color=yellow]{amt}[/color][/font]");
+            SetCurrencyIconFor(group.Icon, cur);
+        }
+
+        // Hide groups from a previous, larger balance set.
+        for (var i = ordered.Count; i < _activeGroupCount; i++)
+            _balanceGroups[i].Container.Visible = false;
+
+        _activeGroupCount = ordered.Count;
+    }
+
+    private void EnsureBalanceGroupCount(int count)
+    {
+        while (_balanceGroups.Count < count)
+        {
+            var group = new CurrencyGroup();
+            _balanceGroups.Add(group);
+            _balancesRow.AddChild(group.Container);
+        }
+    }
+
+    private void SetCurrencyIconFor(TextureRect target, string? currencyId)
     {
         if (string.IsNullOrWhiteSpace(currencyId) || _proto == null || _sprites == null)
         {
-            _currencyIcon.Texture = null;
+            target.Texture = null;
             return;
         }
 
         if (_currencyIconCache.TryGetValue(currencyId, out var cached))
         {
-            _currencyIcon.Texture = cached;
+            target.Texture = cached;
             return;
         }
 
@@ -145,11 +212,11 @@ public sealed class NcStoreHeaderBar : BoxContainer
         {
             var tex = _sprites.GetPrototypeIcon(entProto).Default;
             _currencyIconCache[currencyId] = tex;
-            _currencyIcon.Texture = tex;
+            target.Texture = tex;
             return;
         }
 
-        _currencyIcon.Texture = null;
+        target.Texture = null;
     }
 
     private void HandleSearchTextChanged()

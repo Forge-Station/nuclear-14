@@ -17,6 +17,9 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
 
     private StoreDynamicState? _pendingDynamic;
 
+    private static readonly TimeSpan CatalogRetryGracePeriod = TimeSpan.FromSeconds(3);
+    private DateTime? _pendingDynamicSince;
+
     private EntityUid? Actor => _player.LocalSession?.AttachedEntity;
 
     private void DetachMenuHandlers(NcStoreMenu menu)
@@ -48,6 +51,20 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         {
             _pendingDynamic = st;
             _menu.Visible = false;
+            var now = DateTime.UtcNow;
+            if (_pendingDynamicSince is { } since)
+            {
+                if (now - since >= CatalogRetryGracePeriod)
+                {
+                    SendMessage(new RequestUiRefreshMessage());
+                    _pendingDynamicSince = now;
+                }
+            }
+            else
+            {
+                _pendingDynamicSince = now;
+            }
+
             return;
         }
 
@@ -55,6 +72,8 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
             return;
 
         _lastStateRevision = st.Revision;
+
+        _pendingDynamicSince = null;
 
         ApplyDynamic(st);
         _menu.Visible = true;
@@ -87,6 +106,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
             pending.CatalogRevision == _lastCatalogRevision)
         {
             _pendingDynamic = null;
+            _pendingDynamicSince = null;
             _lastStateRevision = pending.Revision;
             ApplyDynamic(pending);
             _menu.Visible = true;
@@ -120,6 +140,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         _lastCatalogRevision = int.MinValue;
         _lastStateRevision = int.MinValue;
         _pendingDynamic = null;
+        _pendingDynamicSince = null;
 
         if (EntMan.TryGetComponent(Owner, out MetaDataComponent? meta))
             _menu.Title = meta.EntityName;
@@ -148,6 +169,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         _lastCatalogRevision = int.MinValue;
         _lastStateRevision = int.MinValue;
         _pendingDynamic = null;
+        _pendingDynamicSince = null;
     }
 
     private void OnBuy(StoreListingData data, int qty)
@@ -227,6 +249,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         _lastCatalogRevision = int.MinValue;
         _lastStateRevision = int.MinValue;
         _pendingDynamic = null;
+        _pendingDynamicSince = null;
 
         base.Dispose(disposing);
     }

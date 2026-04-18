@@ -267,6 +267,7 @@ public sealed partial class NcStoreLogicSystem
         return true;
     }
 
+    // TODO(NC): TryExchange / StoreMode.Exchange are an incomplete feature reserved for a future
     public bool TryExchange(string listingId, EntityUid machine, NcStoreComponent? store, EntityUid user)
     {
         if (store == null || store.Listings.Count == 0)
