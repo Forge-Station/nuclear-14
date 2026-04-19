@@ -140,4 +140,5 @@ nc-store-contract-ghost-role-active-line = Цель вышла в поле. Уб
 
 nc-store-contract-delivery-target-lost = Груз утрачен. Контракт сорван.
 nc-store-contract-proof-generation-failed = Подтверждение выполнения не сформировалось. Контракт сорван.
+nc-store-contract-proof-destroyed = Доказательство для контракта было уничтожено, контракт провален.
 

@@ -26,6 +26,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByGuard = new();
     private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByPinpointer = new();
+    private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByProof = new();
+
     private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByTarget = new();
     private readonly List<(EntityUid Store, string ContractId)> _objectiveRuntimeKeysScratch = new();
 
@@ -87,6 +89,7 @@ public sealed partial class NcContractSystem : EntitySystem
         _objectiveRuntimeByTarget.Clear();
         _objectiveRuntimeByPinpointer.Clear();
         _objectiveRuntimeByGuard.Clear();
+        _objectiveRuntimeByProof.Clear();   // Fix (B39): keep proof index in sync with everything else.
         _activeTrackedDeliveryDropoffObjectives = 0;
     }
 

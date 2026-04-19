@@ -18,6 +18,38 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             guardState.GuardEntities.Remove(args.Entity);
         }
+        if (_objectiveRuntimeByProof.Remove(args.Entity, out var proofKey))
+            OnObjectiveTrackedProofDestroyed(proofKey, args.Entity);
+    }
+
+    private void OnObjectiveTrackedProofDestroyed(
+        (EntityUid Store, string ContractId) key,
+        EntityUid proof)
+    {
+        if (_objectiveRuntimeByContract.TryGetValue(key, out var state) && state.ProofEntity == proof)
+        {
+            state.ProofEntity = null;
+            state.ProofSpawned = false;
+        }
+
+        if (!TryGetObjectiveContract(key, out var comp, out var contract))
+            return;
+
+        if (!contract.Taken)
+            return;
+
+        if (contract.Runtime.Failed)
+            return;
+
+        Sawmill.Info(
+            $"[Contracts] Proof for '{key.ContractId}' destroyed externally on {ToPrettyString(key.Store)}; failing contract.");
+
+        FinalizeObjectiveFailure(
+            key,
+            comp,
+            contract,
+            Loc.GetString("nc-store-contract-proof-destroyed"),
+            deleteGuards: false);
     }
 
     private void OnObjectiveTrackedTargetResolved((EntityUid Store, string ContractId) key, EntityUid target)
@@ -134,9 +166,6 @@ public sealed partial class NcContractSystem : EntitySystem
         SyncContractFlowStatus(contract);
     }
 
-    // Phase 2.2: EnsureContractRuntime / EnsureContractConfig helpers removed — Runtime/Config
-    // are non-nullable and always initialized. Callers now access contract.Runtime / contract.Config
-    // directly.
 
     private void FinalizeObjectiveCompletion((EntityUid Store, string ContractId) key, ContractServerData contract)
     {
@@ -208,8 +237,13 @@ public sealed partial class NcContractSystem : EntitySystem
             state.GuardEntities.Clear();
         }
 
-        if (state.ProofEntity is { } proof && !TerminatingOrDeleted(proof))
-            Del(proof);
+        if (state.ProofEntity is { } proof)
+        {
+            _objectiveRuntimeByProof.Remove(proof);
+
+            if (!TerminatingOrDeleted(proof))
+                Del(proof);
+        }
 
         state.ProofEntity = null;
         state.ProofSpawned = false;
@@ -269,3 +303,7 @@ public sealed partial class NcContractSystem : EntitySystem
         public EntityUid? TargetEntity;
     }
 }
+
+
+
+

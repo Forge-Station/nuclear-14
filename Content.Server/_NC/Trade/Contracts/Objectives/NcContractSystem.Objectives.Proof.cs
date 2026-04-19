@@ -79,6 +79,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         state.ProofEntity = proof;
         state.ProofSpawned = true;
+        _objectiveRuntimeByProof[proof] = key;
         return true;
     }
 
@@ -125,6 +126,10 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             currentState.ProofEntity = null;
         }
+
+        // Fix (B39): remove from the proof-index BEFORE Del(). Otherwise the subsequent
+        // EntityTerminatingEvent would look it up and fail the contract we are actively claiming.
+        _objectiveRuntimeByProof.Remove(proof);
 
         if (EntityManager.EntityExists(proof))
             Del(proof);
