@@ -24,7 +24,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static bool TryGetObjectiveProofPrototype(ContractServerData contract, out string proofPrototype)
     {
-        proofPrototype = EnsureContractConfig(contract).ProofPrototype;
+        proofPrototype = contract.Config.ProofPrototype;
         return !string.IsNullOrWhiteSpace(proofPrototype);
     }
 

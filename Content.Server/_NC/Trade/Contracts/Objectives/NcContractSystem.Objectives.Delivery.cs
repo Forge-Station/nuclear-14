@@ -73,7 +73,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         state.DeliveryDropoffCompleted = true;
 
-        var config = EnsureContractConfig(contract);
+        var config = contract.Config;
         if (!config.PreserveTargetOnComplete)
         {
             _objectiveRuntimeByTarget.Remove(target);
@@ -307,7 +307,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail))
             return proofFail;
 
-        var config = EnsureContractConfig(contract);
+        var config = contract.Config;
         GiveContractRewards(user, contract.Rewards);
         FinalizeClaim(
             store,
@@ -369,7 +369,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static bool UsesTrackedDeliveryDropoff(ContractServerData contract)
     {
-        var config = EnsureContractConfig(contract);
+        var config = contract.Config;
         return !string.IsNullOrWhiteSpace(config.DropoffPointTag) ||
                config.DropoffPointTags is { Count: > 0 };
     }

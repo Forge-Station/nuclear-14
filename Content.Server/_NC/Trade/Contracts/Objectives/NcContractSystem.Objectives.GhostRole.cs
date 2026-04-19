@@ -24,7 +24,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryResolveGhostRolePrototype(contractId, contract, out var ghostRoleProtoId))
             return false;
 
-        var config = EnsureContractConfig(contract);
+        var config = contract.Config;
         ResetObjectiveState(contract);
         config.GhostRolePrototype = ghostRoleProtoId;
         if (!TryResolveGhostRoleSpawnCoordinates(store, contractId, config, out var spawnCoords))
@@ -45,7 +45,7 @@ public sealed partial class NcContractSystem : EntitySystem
     )
     {
         ghostRoleProtoId = ResolveTrackedObjectivePrototypeId(
-            EnsureContractConfig(contract).GhostRolePrototype,
+            contract.Config.GhostRolePrototype,
             contract.TargetItem);
         if (!string.IsNullOrWhiteSpace(ghostRoleProtoId) && _prototypes.HasIndex<EntityPrototype>(ghostRoleProtoId))
             return true;
@@ -91,7 +91,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void ConfigureGhostRoleSpawner(EntityUid spawner, ContractServerData contract, string ghostRoleProtoId)
     {
-        var config = EnsureContractConfig(contract);
+        var config = contract.Config;
         var ghostRole = EnsureComp<GhostRoleComponent>(spawner);
         ghostRole.RoleName = ResolveContractGhostRoleName(config, contract);
         ghostRole.RoleDescription = ResolveContractGhostRoleDescription(config, contract);
@@ -129,8 +129,8 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract
     )
     {
-        var config = EnsureContractConfig(contract);
-        var runtime = EnsureContractRuntime(contract);
+        var config = contract.Config;
+        var runtime = contract.Runtime;
         var state = GetOrCreateObjectiveRuntimeState(key);
         state.TargetEntity = spawner;
         state.GhostRoleTaken = false;
@@ -203,7 +203,7 @@ public sealed partial class NcContractSystem : EntitySystem
             !contract.Taken ||
             contract.Completed ||
             !contract.IsGhostRoleObjective ||
-            EnsureContractRuntime(contract).Failed)
+            contract.Runtime.Failed)
             return false;
 
         EnsureObjectiveRuntimeDefaults(contract);
@@ -218,7 +218,7 @@ public sealed partial class NcContractSystem : EntitySystem
         state.TargetEntity = target;
         state.GhostRoleTaken = true;
         state.GhostRoleAcceptDeadline = null;
-        var runtime = EnsureContractRuntime(contract);
+        var runtime = contract.Runtime;
         runtime.GhostRolePendingAcceptance = false;
         runtime.AcceptTimeoutRemainingSeconds = 0;
         _objectiveRuntimeByTarget[target] = key;
@@ -227,7 +227,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (!TerminatingOrDeleted(pinpointer))
                 _pinpointer.SetTarget(pinpointer, target);
 
-        var config = EnsureContractConfig(contract);
+        var config = contract.Config;
         if (config.GuardCount <= 0 || string.IsNullOrWhiteSpace(config.GuardPrototype))
             return true;
 
@@ -306,7 +306,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             EnsureObjectiveRuntimeDefaults(contract);
-            if (EnsureContractRuntime(contract).Failed || contract.Completed)
+            if (contract.Runtime.Failed || contract.Completed)
                 continue;
 
             if (contract.IsGhostRoleObjective ||
@@ -336,7 +336,7 @@ public sealed partial class NcContractSystem : EntitySystem
     private void SyncGhostRoleObjectiveProgress(EntityUid store, string contractId, ContractServerData contract)
     {
         var key = (store, contractId);
-        var runtime = EnsureContractRuntime(contract);
+        var runtime = contract.Runtime;
 
         if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
         {

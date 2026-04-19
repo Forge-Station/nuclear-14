@@ -81,7 +81,7 @@ public sealed partial class NcContractSystem : EntitySystem
         EnsureObjectiveRuntimeDefaults(contract);
         UpdateObjectiveContractProgress(store, contractId, contract);
 
-        var runtime = EnsureContractRuntime(contract);
+        var runtime = contract.Runtime;
         if (runtime.Failed)
             return ClaimAttemptResult.Fail(ClaimFailureReason.ObjectiveFailed, runtime.FailureReason);
 

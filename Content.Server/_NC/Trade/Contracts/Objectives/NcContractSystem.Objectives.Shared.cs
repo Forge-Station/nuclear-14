@@ -34,7 +34,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return;
 
         EnsureObjectiveRuntimeDefaults(contract);
-        if (EnsureContractRuntime(contract).Failed)
+        if (contract.Runtime.Failed)
             return;
 
         switch (contract.ExecutionKind)
@@ -62,8 +62,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static void EnsureObjectiveRuntimeDefaults(ContractServerData contract)
     {
-        var runtime = EnsureContractRuntime(contract);
-        var config = EnsureContractConfig(contract);
+        var runtime = contract.Runtime;
+        var config = contract.Config;
 
         NormalizeRuntimeState(contract.ExecutionKind, runtime);
         NormalizeObjectiveConfig(config);
@@ -84,7 +84,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static void ResetObjectiveTransientState(ContractServerData contract)
     {
-        var runtime = EnsureContractRuntime(contract);
+        var runtime = contract.Runtime;
         runtime.GhostRolePendingAcceptance = false;
         runtime.AcceptTimeoutRemainingSeconds = 0;
         runtime.Failed = false;
@@ -93,7 +93,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static void ResetObjectiveState(ContractServerData contract)
     {
-        var runtime = EnsureContractRuntime(contract);
+        var runtime = contract.Runtime;
         runtime.Stage = 0;
         ResetObjectiveTransientState(contract);
 
@@ -104,7 +104,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static void SyncObjectiveProgressFromRuntime(ContractServerData contract)
     {
-        var runtime = EnsureContractRuntime(contract);
+        var runtime = contract.Runtime;
         var stageGoal = Math.Max(1, runtime.StageGoal);
         contract.Required = stageGoal;
         contract.Progress = Math.Clamp(runtime.Stage, 0, stageGoal);
@@ -113,7 +113,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static void SetObjectiveStage(ContractServerData contract, int stage)
     {
-        var runtime = EnsureContractRuntime(contract);
+        var runtime = contract.Runtime;
         var stageGoal = Math.Max(1, runtime.StageGoal);
         runtime.Stage = Math.Clamp(stage, 0, stageGoal);
         SyncObjectiveProgressFromRuntime(contract);
@@ -121,12 +121,12 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static void MarkObjectiveComplete(ContractServerData contract)
     {
-        SetObjectiveStage(contract, EnsureContractRuntime(contract).StageGoal);
+        SetObjectiveStage(contract, contract.Runtime.StageGoal);
     }
 
     private static void MarkObjectiveFailed(ContractServerData contract, string failureReason)
     {
-        var runtime = EnsureContractRuntime(contract);
+        var runtime = contract.Runtime;
         runtime.Failed = true;
         runtime.FailureReason = failureReason;
         runtime.GhostRolePendingAcceptance = false;
@@ -134,17 +134,9 @@ public sealed partial class NcContractSystem : EntitySystem
         SyncContractFlowStatus(contract);
     }
 
-    private static ContractRuntimeContextData EnsureContractRuntime(ContractServerData contract)
-    {
-        contract.Runtime ??= new();
-        return contract.Runtime;
-    }
-
-    private static ContractObjectiveConfigData EnsureContractConfig(ContractServerData contract)
-    {
-        contract.Config ??= new();
-        return contract.Config;
-    }
+    // Phase 2.2: EnsureContractRuntime / EnsureContractConfig helpers removed — Runtime/Config
+    // are non-nullable and always initialized. Callers now access contract.Runtime / contract.Config
+    // directly.
 
     private void FinalizeObjectiveCompletion((EntityUid Store, string ContractId) key, ContractServerData contract)
     {
@@ -204,10 +196,9 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (state.GuardEntities.Count > 0)
         {
-            var guardsSnapshot = state.GuardEntities.ToArray();
-            for (var i = 0; i < guardsSnapshot.Length; i++)
+            for (var i = 0; i < state.GuardEntities.Count; i++)
             {
-                var guard = guardsSnapshot[i];
+                var guard = state.GuardEntities[i];
                 _objectiveRuntimeByGuard.Remove(guard);
 
                 if (deleteGuards && !TerminatingOrDeleted(guard))

@@ -142,7 +142,7 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract
     )
     {
-        var config = EnsureContractConfig(contract);
+        var config = contract.Config;
         var spawnProtoId = config.DeliverySpawnPrototype;
         if (string.IsNullOrWhiteSpace(spawnProtoId))
             return true;
@@ -223,7 +223,7 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract
     )
     {
-        var config = EnsureContractConfig(contract);
+        var config = contract.Config;
 
         if (string.IsNullOrWhiteSpace(config.TargetPrototype))
             return true;
@@ -248,7 +248,7 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract
     )
     {
-        var config = EnsureContractConfig(contract);
+        var config = contract.Config;
 
         var targetProtoId = ResolveTrackedObjectivePrototypeId(config.TargetPrototype, contract.TargetItem);
 
@@ -274,7 +274,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryValidateObjectiveTargetPrototype(contractId, targetProtoId))
             return false;
 
-        var config = EnsureContractConfig(contract);
+        var config = contract.Config;
         if (!TryResolveTrackedTargetSpawnCoordinates(store, contractId, config, spawnAtStore, out var spawnCoords))
             return false;
 
@@ -449,7 +449,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         EnsureObjectiveRuntimeDefaults(contract);
 
-        var config = EnsureContractConfig(contract);
+        var config = contract.Config;
         if (!config.GivePinpointer)
             return false;
 

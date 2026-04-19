@@ -17,7 +17,7 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract
     )
     {
-        var config = EnsureContractConfig(contract);
+        var config = contract.Config;
         var structureProtoId = ResolveTrackedObjectivePrototypeId(config.StructurePrototype, contract.TargetItem);
 
         if (string.IsNullOrWhiteSpace(structureProtoId))
@@ -64,7 +64,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryGetActiveRepairContract(uid, out _, out _, out var contract))
             return;
 
-        var config = EnsureContractConfig(contract);
+        var config = contract.Config;
         var quality = ResolveRepairToolQuality(
             string.IsNullOrWhiteSpace(comp.ToolQuality) ? config.RepairToolQuality : comp.ToolQuality);
 
@@ -97,8 +97,8 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryGetActiveRepairContract(uid, out var key, out var state, out var contract))
             return;
 
-        var runtime = EnsureContractRuntime(contract);
-        var config = EnsureContractConfig(contract);
+        var runtime = contract.Runtime;
+        var config = contract.Config;
         if (runtime.Stage >= Math.Max(1, runtime.StageGoal))
             return;
 
@@ -165,7 +165,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         EnsureObjectiveRuntimeDefaults(contract);
-        return !EnsureContractRuntime(contract).Failed;
+        return !contract.Runtime.Failed;
     }
 
     private void PlayRepairObjectiveStageEffects(EntityUid structure, ContractObjectiveConfigData config)
