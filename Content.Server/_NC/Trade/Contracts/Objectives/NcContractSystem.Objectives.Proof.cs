@@ -139,15 +139,17 @@ public sealed partial class NcContractSystem : EntitySystem
         string proofToken,
         out EntityUid proof)
     {
-        _logic.ScanInventoryItems(user, _scratchUserItems);
-        if (TryFindObjectiveProofInSource(user, _scratchUserItems, key, proofToken, out proof))
+        var userItems = new List<EntityUid>(32);
+        _logic.ScanInventoryItems(user, userItems);
+        if (TryFindObjectiveProofInSource(user, userItems, key, proofToken, out proof))
             return true;
 
         var crateUid = _logic.GetPulledClosedCrate(user);
         if (crateUid is { } pulledCrate && Exists(pulledCrate))
         {
-            _logic.ScanInventoryItems(pulledCrate, _scratchCrateItems);
-            if (TryFindObjectiveProofInSource(pulledCrate, _scratchCrateItems, key, proofToken, out proof))
+            var crateItems = new List<EntityUid>(32);
+            _logic.ScanInventoryItems(pulledCrate, crateItems);
+            if (TryFindObjectiveProofInSource(pulledCrate, crateItems, key, proofToken, out proof))
                 return true;
         }
 

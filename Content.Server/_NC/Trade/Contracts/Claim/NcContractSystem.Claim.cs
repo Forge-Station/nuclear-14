@@ -4,22 +4,40 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
+    private bool _inTryClaim;
+
     public bool TryClaim(EntityUid store, EntityUid user, string contractId)
     {
-        var res = TryClaimDetailed(store, user, contractId);
-        if (!res.Success)
+        if (_inTryClaim)
         {
-            if (res.Reason is ClaimFailureReason.NotEnoughItems or
-                ClaimFailureReason.NoValidTargets or
-                ClaimFailureReason.MissingCrate or
-                ClaimFailureReason.MissingProof or
-                ClaimFailureReason.ObjectiveNotCompleted)
-                Sawmill.Info($"[Claim] Failed ({res.Reason}) '{contractId}' on {ToPrettyString(store)}: {res.Details}");
-            else
-                Sawmill.Warning($"[Claim] Failed ({res.Reason}) '{contractId}' on {ToPrettyString(store)}: {res.Details}");
+            Sawmill.Warning(
+                $"[Claim] Re-entrant TryClaim for '{contractId}' on {ToPrettyString(store)} rejected. " +
+                "Something invoked claim inside an existing claim — check event handlers.");
+            return false;
         }
 
-        return res.Success;
+        _inTryClaim = true;
+        try
+        {
+            var res = TryClaimDetailed(store, user, contractId);
+            if (!res.Success)
+            {
+                if (res.Reason is ClaimFailureReason.NotEnoughItems or
+                    ClaimFailureReason.NoValidTargets or
+                    ClaimFailureReason.MissingCrate or
+                    ClaimFailureReason.MissingProof or
+                    ClaimFailureReason.ObjectiveNotCompleted)
+                    Sawmill.Info($"[Claim] Failed ({res.Reason}) '{contractId}' on {ToPrettyString(store)}: {res.Details}");
+                else
+                    Sawmill.Warning($"[Claim] Failed ({res.Reason}) '{contractId}' on {ToPrettyString(store)}: {res.Details}");
+            }
+
+            return res.Success;
+        }
+        finally
+        {
+            _inTryClaim = false;
+        }
     }
 
     private ClaimAttemptResult TryClaimDetailed(EntityUid store, EntityUid user, string contractId)

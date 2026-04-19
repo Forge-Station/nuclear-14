@@ -1,4 +1,4 @@
-﻿using Content.Shared._NC.Trade;
+using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 using Robust.Shared.Containers;
 
@@ -20,30 +20,47 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         bool NeedUserItems,
         bool NeedCrateScan);
 
+    private bool _inUpdateDynamicState;
+
     public void UpdateDynamicState(EntityUid uid, NcStoreComponent comp, EntityUid user)
     {
         if (!_ui.IsUiOpen(uid, StoreUiKey.Key, user))
             return;
 
-        var crateUid = GetDynamicCrate(user);
-        UpdateStoreWatch(uid, user, crateUid);
-        var tabs = GetDynamicTabState(comp);
-        var contractNeeds = GetDynamicContractNeeds(comp, tabs.HasContractsTab);
-        var scanNeeds = GetDynamicScanNeeds(comp, crateUid, tabs.HasSellTab, contractNeeds);
-        var userSnap = ScanDynamicUserInventory(user, scanNeeds);
-        ScanDynamicCrateInventory(crateUid, scanNeeds);
-        UpdateDynamicContractProgress(uid, comp, user, crateUid, tabs, contractNeeds);
+        if (_inUpdateDynamicState)
+        {
+            Logger.GetSawmill("ncstore-structured").Warning(
+                $"[StoreStructured] Re-entrant UpdateDynamicState on {ToPrettyString(uid)} skipped.");
+            return;
+        }
 
-        var scratch = GetDynamicScratch(uid);
-        var buf = scratch.GetWriteBuffer();
-        buf.Clear();
+        _inUpdateDynamicState = true;
+        try
+        {
+            var crateUid = GetDynamicCrate(user);
+            UpdateStoreWatch(uid, user, crateUid);
+            var tabs = GetDynamicTabState(comp);
+            var contractNeeds = GetDynamicContractNeeds(comp, tabs.HasContractsTab);
+            var scanNeeds = GetDynamicScanNeeds(comp, crateUid, tabs.HasSellTab, contractNeeds);
+            var userSnap = ScanDynamicUserInventory(user, scanNeeds);
+            ScanDynamicCrateInventory(crateUid, scanNeeds);
+            UpdateDynamicContractProgress(uid, comp, user, crateUid, tabs, contractNeeds);
 
-        PopulateDynamicBalances(comp, userSnap, buf);
-        PopulateDynamicListings(comp, userSnap, scratch, buf);
-        PopulateDynamicCratePreview(comp, crateUid, tabs.HasSellTab, scanNeeds.NeedCrateScan, scratch, buf);
-        PopulateDynamicContracts(comp, tabs.HasContractsTab, scratch, buf);
-        PopulateDynamicContractSkip(uid, comp, tabs.HasContractsTab, buf);
-        PushDynamicState(uid, comp, tabs, scratch, buf);
+            var scratch = GetDynamicScratch(uid);
+            var buf = scratch.GetWriteBuffer();
+            buf.Clear();
+
+            PopulateDynamicBalances(comp, userSnap, buf);
+            PopulateDynamicListings(comp, userSnap, scratch, buf);
+            PopulateDynamicCratePreview(comp, crateUid, tabs.HasSellTab, scanNeeds.NeedCrateScan, scratch, buf);
+            PopulateDynamicContracts(comp, tabs.HasContractsTab, scratch, buf);
+            PopulateDynamicContractSkip(uid, comp, tabs.HasContractsTab, buf);
+            PushDynamicState(uid, comp, tabs, scratch, buf);
+        }
+        finally
+        {
+            _inUpdateDynamicState = false;
+        }
     }
 
     private EntityUid? GetDynamicCrate(EntityUid user)
@@ -261,17 +278,18 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             return;
         }
 
-        var contractsFingerprint = ComputeContractsFingerprint(comp.Contracts);
-        if (!scratch.ShouldRebuildContracts(contractsFingerprint))
-        {
-            buf.Contracts.AddRange(scratch.GetReadBuffer().Contracts);
-            return;
-        }
-
         foreach (var contract in comp.Contracts.Values)
             buf.Contracts.Add(MapContractToClient(contract));
 
         buf.Contracts.Sort(static (left, right) => string.CompareOrdinal(left.Id, right.Id));
+
+        var contractsFingerprint = buf.Contracts.ComputeFingerprint();
+        if (!scratch.ShouldRebuildContracts(contractsFingerprint))
+        {
+            // Unchanged — discard what we just mapped and replay the cached read buffer.
+            buf.Contracts.Clear();
+            buf.Contracts.AddRange(scratch.GetReadBuffer().Contracts);
+        }
     }
 
     private void PopulateDynamicContractSkip(
@@ -305,12 +323,12 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             new StoreDynamicState(
                 comp.UiRevision,
                 comp.CatalogRevision,
-                new Dictionary<string, int>(buf.BalancesByCurrency, StringComparer.Ordinal),
-                new Dictionary<string, int>(buf.RemainingById, StringComparer.Ordinal),
-                new Dictionary<string, int>(buf.OwnedById, StringComparer.Ordinal),
-                new Dictionary<string, int>(buf.CrateUnitsById, StringComparer.Ordinal),
-                new Dictionary<string, int>(buf.CrateTotals, StringComparer.Ordinal),
-                new List<ContractClientData>(buf.Contracts),
+                buf.BalancesByCurrency,
+                buf.RemainingById,
+                buf.OwnedById,
+                buf.CrateUnitsById,
+                buf.CrateTotals,
+                buf.Contracts,
                 tabs.HasBuyTab,
                 tabs.HasSellTab,
                 tabs.HasContractsTab,
@@ -454,76 +472,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             MarkDirty(s);
     }
 
-    private static int ComputeContractsFingerprint(IReadOnlyDictionary<string, ContractServerData> contracts)
-    {
-        unchecked
-        {
-            var sum = 0;
-            var mix = 17;
-
-            foreach (var contract in contracts.Values)
-            {
-                var h = ComputeContractFingerprint(contract);
-                sum += h;
-                mix ^= h * 397;
-            }
-
-            return (sum * 31) ^ mix ^ contracts.Count;
-        }
-    }
-
-    private static int ComputeContractFingerprint(ContractServerData contract)
-    {
-        unchecked
-        {
-            var h = 17;
-            h = h * 31 + (contract.Id?.GetHashCode() ?? 0);
-            h = h * 31 + (contract.Name?.GetHashCode() ?? 0);
-            h = h * 31 + (contract.Difficulty?.GetHashCode() ?? 0);
-            h = h * 31 + (contract.Description?.GetHashCode() ?? 0);
-            h = h * 31 + (contract.TargetItem?.GetHashCode() ?? 0);
-            h = h * 31 + (EnsureClientContractConfig(contract).ProofPrototype?.GetHashCode() ?? 0);
-            h = h * 31 + (contract.Repeatable ? 1 : 0);
-            h = h * 31 + (contract.Taken ? 1 : 0);
-            h = h * 31 + (int) contract.ExecutionKind;
-            h = h * 31 + (int) contract.FlowStatus;
-            h = h * 31 + (contract.Completed ? 1 : 0);
-            h = h * 31 + contract.Required;
-            h = h * 31 + contract.Progress;
-            h = h * 31 + (int) contract.MatchMode;
-            h = h * 31 + (SupportsContractPinpointer(contract) ? 1 : 0);
-            var runtime = EnsureClientContractRuntime(contract);
-            h = h * 31 + runtime.Stage;
-            h = h * 31 + runtime.StageGoal;
-            h = h * 31 + runtime.AcceptTimeoutRemainingSeconds;
-            h = h * 31 + (runtime.GhostRolePendingAcceptance ? 1 : 0);
-            h = h * 31 + (runtime.Failed ? 1 : 0);
-            h = h * 31 + (runtime.FailureReason?.GetHashCode() ?? 0);
-
-            var targets = EnsureClientContractTargets(contract);
-            h = h * 31 + targets.Count;
-            for (var iTarget = 0; iTarget < targets.Count; iTarget++)
-            {
-                var target = targets[iTarget];
-                h = h * 31 + (target.TargetItem?.GetHashCode() ?? 0);
-                h = h * 31 + target.Required;
-                h = h * 31 + target.Progress;
-                h = h * 31 + (int) target.MatchMode;
-            }
-
-            var rewards = EnsureClientContractRewards(contract);
-            h = h * 31 + rewards.Count;
-            for (var iReward = 0; iReward < rewards.Count; iReward++)
-            {
-                var reward = rewards[iReward];
-                h = h * 31 + (int) reward.Type;
-                h = h * 31 + (reward.Id?.GetHashCode() ?? 0);
-                h = h * 31 + reward.Amount;
-            }
-
-            return h;
-        }
-    }
 }
 
 

@@ -12,97 +12,41 @@ public sealed partial class NcContractCard
     {
         unchecked
         {
-            var hash = 17;
-            hash = AppendContractHash(hash, data);
-            hash = hash * 31 + skipCost;
-            hash = hash * 31 + (skipCurrency?.GetHashCode() ?? 0);
-            hash = hash * 31 + skipBalance;
+            var hash = data.ComputeFingerprint();
+            hash = MixInt(hash, skipCost);
+            hash = MixString(hash, skipCurrency);
+            hash = MixInt(hash, skipBalance);
             return hash;
         }
     }
 
-    private static int AppendContractHash(int hash, ContractClientData contract)
+    private const int FnvPrime = 16777619;
+
+    private static int MixInt(int hash, int value)
     {
         unchecked
         {
             var h = hash;
-            h = h * 31 + (contract.Id?.GetHashCode() ?? 0);
-            h = h * 31 + (contract.Name?.GetHashCode() ?? 0);
-            h = h * 31 + (contract.Difficulty?.GetHashCode() ?? 0);
-            h = h * 31 + (contract.Description?.GetHashCode() ?? 0);
-            h = h * 31 + (contract.TargetItem?.GetHashCode() ?? 0);
-            h = h * 31 + (contract.TurnInItem?.GetHashCode() ?? 0);
-            h = h * 31 + (contract.Repeatable ? 1 : 0);
-            h = h * 31 + (contract.Taken ? 1 : 0);
-            h = h * 31 + (int) contract.ExecutionKind;
-            h = h * 31 + (int) contract.FlowStatus;
-            h = h * 31 + (contract.Completed ? 1 : 0);
-            h = h * 31 + contract.Progress;
-            h = h * 31 + contract.Required;
-            h = h * 31 + (contract.SupportsPinpointer ? 1 : 0);
-            h = AppendRuntimeHash(h, contract.Runtime);
-            h = AppendTargetsHash(h, contract.Targets);
-            h = AppendRewardsHash(h, contract.Rewards);
+            h = (h ^ (value & 0xFF)) * FnvPrime;
+            h = (h ^ ((value >> 8) & 0xFF)) * FnvPrime;
+            h = (h ^ ((value >> 16) & 0xFF)) * FnvPrime;
+            h = (h ^ ((value >> 24) & 0xFF)) * FnvPrime;
             return h;
         }
     }
 
-    private static int AppendRuntimeHash(int hash, ContractRuntimeContextData? runtime)
+    private static int MixString(int hash, string? value)
     {
         unchecked
         {
+            if (value == null)
+                return MixInt(hash, -1);
+
             var h = hash;
-            if (runtime == null)
-                return h;
+            for (var i = 0; i < value.Length; i++)
+                h = (h ^ value[i]) * FnvPrime;
 
-            h = h * 31 + runtime.Stage;
-            h = h * 31 + runtime.StageGoal;
-            h = h * 31 + runtime.AcceptTimeoutRemainingSeconds;
-            h = h * 31 + (runtime.GhostRolePendingAcceptance ? 1 : 0);
-            h = h * 31 + (runtime.Failed ? 1 : 0);
-            h = h * 31 + (runtime.FailureReason?.GetHashCode() ?? 0);
-            return h;
-        }
-    }
-
-    private static int AppendTargetsHash(int hash, List<ContractTargetClientData>? targets)
-    {
-        unchecked
-        {
-            var h = hash * 31 + (targets?.Count ?? 0);
-            if (targets == null)
-                return h;
-
-            for (var i = 0; i < targets.Count; i++)
-            {
-                var target = targets[i];
-                h = h * 31 + (target.TargetItem?.GetHashCode() ?? 0);
-                h = h * 31 + target.Required;
-                h = h * 31 + target.Progress;
-                h = h * 31 + (int) target.MatchMode;
-            }
-
-            return h;
-        }
-    }
-
-    private static int AppendRewardsHash(int hash, List<ContractRewardData>? rewards)
-    {
-        unchecked
-        {
-            var h = hash * 31 + (rewards?.Count ?? 0);
-            if (rewards == null)
-                return h;
-
-            for (var i = 0; i < rewards.Count; i++)
-            {
-                var reward = rewards[i];
-                h = h * 31 + (int) reward.Type;
-                h = h * 31 + (reward.Id?.GetHashCode() ?? 0);
-                h = h * 31 + reward.Amount;
-            }
-
-            return h;
+            return MixInt(h, value.Length);
         }
     }
 }

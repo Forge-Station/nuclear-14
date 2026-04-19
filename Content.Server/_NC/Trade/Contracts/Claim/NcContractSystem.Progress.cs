@@ -5,6 +5,8 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
+    private bool _inUpdateContractsProgress;
+
     public void UpdateContractsProgress(
         EntityUid store,
         NcStoreComponent comp,
@@ -18,28 +20,45 @@ public sealed partial class NcContractSystem : EntitySystem
         if (comp.Contracts.Count == 0)
             return;
 
-        var storeNearbyItemsPrepared = false;
-        var hasCrateWork = crate is { } && crateItems is { Count: > 0 };
-        PopulateProgressContractIds(comp);
+        if (_inUpdateContractsProgress)
+        {
+            Sawmill.Warning(
+                $"[Contracts] Re-entrant UpdateContractsProgress on {ToPrettyString(store)} skipped. " +
+                "Check event handlers — some action triggered inside a progress update call. " +
+                "Outer call will proceed; inner call skipped to preserve scratch state.");
+            return;
+        }
 
+        _inUpdateContractsProgress = true;
         try
         {
-            for (var i = 0; i < _progressContractIdsScratch.Count; i++)
-                UpdateProgressForContract(
-                    comp,
-                    _progressContractIdsScratch[i],
-                    store,
-                    user,
-                    userItems,
-                    crate,
-                    crateItems,
-                    includeStoreWorldItems,
-                    hasCrateWork,
-                    ref storeNearbyItemsPrepared);
+            var storeNearbyItemsPrepared = false;
+            var hasCrateWork = crate is { } && crateItems is { Count: > 0 };
+            PopulateProgressContractIds(comp);
+
+            try
+            {
+                for (var i = 0; i < _progressContractIdsScratch.Count; i++)
+                    UpdateProgressForContract(
+                        comp,
+                        _progressContractIdsScratch[i],
+                        store,
+                        user,
+                        userItems,
+                        crate,
+                        crateItems,
+                        includeStoreWorldItems,
+                        hasCrateWork,
+                        ref storeNearbyItemsPrepared);
+            }
+            finally
+            {
+                _progressContractIdsScratch.Clear();
+            }
         }
         finally
         {
-            _progressContractIdsScratch.Clear();
+            _inUpdateContractsProgress = false;
         }
     }
 

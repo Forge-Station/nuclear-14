@@ -1,4 +1,4 @@
-﻿using Content.Shared._NC.Trade;
+using Content.Shared._NC.Trade;
 
 namespace Content.Client._NC.Trade;
 
@@ -203,7 +203,7 @@ public sealed partial class NcStoreMenu
                 : 0;
             var skipBalanceChanged = trackSkipBalance && (!_hasLastDynamic || currentSkipBalance != _lastSkipBalance);
 
-            var contractsHash = ComputeContractsHash(contracts);
+            var contractsHash = contracts.ComputeFingerprint();
             if (!_hasLastDynamic || contractsHash != _lastContractsHash || skipChanged || skipBalanceChanged)
             {
                 _lastContractsHash = contractsHash;

@@ -14,7 +14,10 @@ public sealed partial class NcStoreLogicSystem
     {
         public bool IsEmpty => StackTypeCounts.Count == 0 && ProtoCounts.Count == 0;
     }
+
     private const int MassSellDepthInProgress = -1;
+
+    private bool _inComputeMassSellPlan;
 
     private readonly Dictionary<string, int> _inheritanceDepthCache = new(StringComparer.Ordinal);
     private readonly List<EntityUid> _massSellItemsScratch = new();
@@ -25,6 +28,14 @@ public sealed partial class NcStoreLogicSystem
     public MassSellPlan ComputeMassSellPlan(NcStoreComponent store, EntityUid container)
     {
         _inventory.InvalidateInventoryCache(container);
+
+        if (_inComputeMassSellPlan)
+        {
+            var localItems = new List<EntityUid>(64);
+            _inventory.ScanInventoryItems(container, localItems);
+            return ComputeMassSellPlanInternal(store, localItems);
+        }
+
         _inventory.ScanInventoryItems(container, _massSellItemsScratch);
         return ComputeMassSellPlanInternal(store, _massSellItemsScratch);
     }
@@ -41,23 +52,39 @@ public sealed partial class NcStoreLogicSystem
 
     private MassSellPlan ComputeMassSellPlanInternal(NcStoreComponent store, IEnumerable<EntityUid> items)
     {
-        var plan = CreateEmptyMassSellPlan();
-        if (store.Listings.Count == 0)
-            return plan;
+        if (_inComputeMassSellPlan)
+        {
+            Sawmill.Warning(
+                $"[MassSell] Re-entrant ComputeMassSellPlan rejected for store {ToPrettyString(store.Owner)}. " +
+                "Returning empty plan to avoid scratch corruption. Check event handlers in the call path.");
+            return CreateEmptyMassSellPlan();
+        }
 
-        var inventory = BuildMassSellInventoryState(items);
-        if (inventory.IsEmpty)
-            return plan;
+        _inComputeMassSellPlan = true;
+        try
+        {
+            var plan = CreateEmptyMassSellPlan();
+            if (store.Listings.Count == 0)
+                return plan;
 
-        PrepareMassSellProtoIds(inventory);
-        var listingQuotes = BuildMassSellListingQuotes(store);
-        PrepareMassSellListings(store, listingQuotes);
-        if (_sellListingsScratch.Count == 0)
-            return plan;
+            var inventory = BuildMassSellInventoryState(items);
+            if (inventory.IsEmpty)
+                return plan;
 
-        var matchesByExpected = BuildMassSellDescendantMatches(inventory.ProtoCache);
-        ApplyMassSellListings(inventory, listingQuotes, matchesByExpected, plan);
-        return plan;
+            PrepareMassSellProtoIds(inventory);
+            var listingQuotes = BuildMassSellListingQuotes(store);
+            PrepareMassSellListings(store, listingQuotes);
+            if (_sellListingsScratch.Count == 0)
+                return plan;
+
+            var matchesByExpected = BuildMassSellDescendantMatches(inventory.ProtoCache);
+            ApplyMassSellListings(inventory, listingQuotes, matchesByExpected, plan);
+            return plan;
+        }
+        finally
+        {
+            _inComputeMassSellPlan = false;
+        }
     }
 
     private static MassSellPlan CreateEmptyMassSellPlan()

@@ -242,9 +242,9 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryGetLiveTrackedDeliveryTarget(state, out var target))
             return FailTrackedDeliveryObjective(key, comp, contract);
 
-        ScanTrackedDeliveryTransferSources(user, out var crateEntity, out var crateItems);
+        ScanTrackedDeliveryTransferSources(user, out var userItems, out var crateEntity, out var crateItems);
 
-        var inUserInventory = ContainsTrackedDeliveryEntity(_scratchUserItems, target);
+        var inUserInventory = ContainsTrackedDeliveryEntity(userItems, target);
         var inCrate = ContainsTrackedDeliveryEntity(crateItems, target);
         var atStore = IsTrackedDeliveryTargetAtStore(store, target);
         if (!inUserInventory && !inCrate && !atStore)
@@ -335,11 +335,13 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void ScanTrackedDeliveryTransferSources(
         EntityUid user,
+        out List<EntityUid> userItems,
         out EntityUid? crateEntity,
         out List<EntityUid>? crateItems
     )
     {
-        _logic.ScanInventoryItems(user, _scratchUserItems);
+        userItems = new List<EntityUid>(32);
+        _logic.ScanInventoryItems(user, userItems);
 
         crateEntity = null;
         crateItems = null;
@@ -349,8 +351,8 @@ public sealed partial class NcContractSystem : EntitySystem
             return;
 
         crateEntity = pulledCrate;
-        _logic.ScanInventoryItems(pulledCrate, _scratchCrateItems);
-        crateItems = _scratchCrateItems;
+        crateItems = new List<EntityUid>(32);
+        _logic.ScanInventoryItems(pulledCrate, crateItems);
     }
 
     private bool IsTrackedDeliveryProtectedFromDirectSale(
