@@ -32,6 +32,10 @@ public sealed class NcStoreInventorySystem : EntitySystem
     [Dependency] private readonly IComponentFactory _compFactory = default!;
     [Dependency] private readonly IEntityManager _ents = default!;
     private readonly Dictionary<EntityUid, InventoryCacheEntry> _inventoryCache = new();
+
+    private readonly Dictionary<EntityUid, HashSet<EntityUid>> _rootsByItem = new();
+    private readonly HashSet<EntityUid> _rebuildOldItemsScratch = new();
+
     private readonly Dictionary<string, string?> _productStackTypeCache = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string[]> _protoAndAncestorsCache = new(StringComparer.Ordinal);
     private readonly HashSet<string> _scratchProtoVisited = new(StringComparer.Ordinal);
@@ -48,6 +52,21 @@ public sealed class NcStoreInventorySystem : EntitySystem
         base.Initialize();
         _protos.PrototypesReloaded += OnPrototypesReloaded;
         SubscribeLocalEvent<EntityTerminatingEvent>(OnEntityTerminating);
+        SubscribeLocalEvent<EntParentChangedMessage>(OnEntityParentChanged);
+    }
+
+    private void OnEntityParentChanged(ref EntParentChangedMessage ev)
+    {
+        if (!_rootsByItem.TryGetValue(ev.Entity, out var affectedRoots) || affectedRoots.Count == 0)
+            return;
+
+        foreach (var root in affectedRoots)
+        {
+            if (_inventoryCache.TryGetValue(root, out var entry))
+            {
+                MarkInventoryDirty(entry, itemsStillCurrent: false);
+            }
+        }
     }
 
     public override void Shutdown()
@@ -65,14 +84,21 @@ public sealed class NcStoreInventorySystem : EntitySystem
 
     private void OnEntityTerminating(ref EntityTerminatingEvent ev)
     {
-        _inventoryCache.Remove(ev.Entity);
+        // Phase A1 (B21): when the terminating entity was itself a cached root, remove its entry
+        // and unlink its items from the reverse-index (those items are still alive, but no longer
+        // associated with THIS root).
+        if (_inventoryCache.Remove(ev.Entity, out var ownerEntry))
+            UnlinkAllReverseEdges(ev.Entity, ownerEntry.Items);
 
-        foreach (var entry in _inventoryCache.Values)
+        // Phase A1 (B21): look up which roots had this terminating entity in their cached Items
+        // list and bump their revision — O(roots_with_this_item) instead of O(all_roots).
+        if (!_rootsByItem.Remove(ev.Entity, out var affectedRoots))
+            return;
+
+        foreach (var root in affectedRoots)
         {
-            if (entry.ItemsRevision != entry.Revision || !entry.Items.Contains(ev.Entity))
-                continue;
-
-            entry.Revision = unchecked(entry.Revision + 1);
+            if (_inventoryCache.TryGetValue(root, out var entry))
+                entry.Revision = unchecked(entry.Revision + 1);
         }
     }
 
@@ -86,6 +112,7 @@ public sealed class NcStoreInventorySystem : EntitySystem
     public void InvalidateAllCaches()
     {
         _inventoryCache.Clear();
+        _rootsByItem.Clear(); // Phase A1: keep reverse index in sync with main cache.
     }
 
     public int GetInventoryRevision(EntityUid root)
@@ -209,10 +236,73 @@ public sealed class NcStoreInventorySystem : EntitySystem
                     Enqueue(child);
         }
 
+        RefreshReverseIndexForRebuild(owner, cached, _scratchResult);
+
         cached.Clear();
         if (cached.Capacity < _scratchResult.Count)
             cached.Capacity = _scratchResult.Count;
         cached.AddRange(_scratchResult);
+    }
+
+    private void RefreshReverseIndexForRebuild(
+        EntityUid owner,
+        List<EntityUid> oldItems,
+        List<EntityUid> newItems)
+    {
+        _rebuildOldItemsScratch.Clear();
+        for (var i = 0; i < oldItems.Count; i++)
+        {
+            var ent = oldItems[i];
+            if (ent != EntityUid.Invalid)
+                _rebuildOldItemsScratch.Add(ent);
+        }
+
+        for (var i = 0; i < newItems.Count; i++)
+        {
+            var ent = newItems[i];
+            if (ent == EntityUid.Invalid)
+                continue;
+
+            if (_rebuildOldItemsScratch.Remove(ent))
+                continue;
+
+            if (!_rootsByItem.TryGetValue(ent, out var rootsSet))
+            {
+                rootsSet = new HashSet<EntityUid>();
+                _rootsByItem[ent] = rootsSet;
+            }
+
+            rootsSet.Add(owner);
+        }
+
+        foreach (var droppedItem in _rebuildOldItemsScratch)
+        {
+            if (!_rootsByItem.TryGetValue(droppedItem, out var rootsSet))
+                continue;
+
+            rootsSet.Remove(owner);
+            if (rootsSet.Count == 0)
+                _rootsByItem.Remove(droppedItem);
+        }
+
+        _rebuildOldItemsScratch.Clear();
+    }
+
+    private void UnlinkAllReverseEdges(EntityUid owner, List<EntityUid> items)
+    {
+        for (var i = 0; i < items.Count; i++)
+        {
+            var item = items[i];
+            if (item == EntityUid.Invalid)
+                continue;
+
+            if (!_rootsByItem.TryGetValue(item, out var rootsSet))
+                continue;
+
+            rootsSet.Remove(owner);
+            if (rootsSet.Count == 0)
+                _rootsByItem.Remove(item);
+        }
     }
 
     private void CompactCachedItems(List<EntityUid> cached)
@@ -239,7 +329,6 @@ public sealed class NcStoreInventorySystem : EntitySystem
         var invalid = 0;
         var threshold = Math.Max(64, cached.Count / 4);
 
-        // Fast detection: stop as soon as we know we must compact.
         for (var i = 0; i < cached.Count; i++)
         {
             var ent = cached[i];
