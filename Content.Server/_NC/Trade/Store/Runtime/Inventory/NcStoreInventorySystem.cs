@@ -26,8 +26,7 @@ public sealed class NcStoreInventorySystem : EntitySystem
 
     private readonly record struct ProductTakeRequest(
         string ProtoId,
-        string? StackType,
-        PrototypeMatchMode EffectiveMatch);
+        string? StackType);
 
     [Dependency] private readonly IComponentFactory _compFactory = default!;
     [Dependency] private readonly IEntityManager _ents = default!;
@@ -37,10 +36,6 @@ public sealed class NcStoreInventorySystem : EntitySystem
     private readonly HashSet<EntityUid> _rebuildOldItemsScratch = new();
 
     private readonly Dictionary<string, string?> _productStackTypeCache = new(StringComparer.Ordinal);
-    private readonly Dictionary<string, string[]> _protoAndAncestorsCache = new(StringComparer.Ordinal);
-    private readonly HashSet<string> _scratchProtoVisited = new(StringComparer.Ordinal);
-    private readonly List<string> _scratchProtoResult = new();
-    private readonly List<string> _scratchProtoStack = new();
     [Dependency] private readonly IPrototypeManager _protos = default!;
     private readonly Queue<EntityUid> _scratchQueue = new();
     private readonly List<EntityUid> _scratchResult = new();
@@ -78,7 +73,6 @@ public sealed class NcStoreInventorySystem : EntitySystem
     private void OnPrototypesReloaded(PrototypesReloadedEventArgs ev)
     {
         _productStackTypeCache.Clear();
-        _protoAndAncestorsCache.Clear();
         InvalidateAllCaches();
     }
 
@@ -414,12 +408,6 @@ public sealed class NcStoreInventorySystem : EntitySystem
                 {
                     if (!buffer.ProtoCounts.TryAdd(proto.ID, cnt))
                         buffer.ProtoCounts[proto.ID] += cnt;
-
-                    foreach (var id in GetProtoAndAncestors(proto))
-                    {
-                        buffer.AncestorCounts.TryGetValue(id, out var prev);
-                        buffer.AncestorCounts[id] = prev + cnt;
-                    }
                 }
 
                 continue;
@@ -430,12 +418,6 @@ public sealed class NcStoreInventorySystem : EntitySystem
 
             if (!buffer.ProtoCounts.TryAdd(proto.ID, 1))
                 buffer.ProtoCounts[proto.ID] += 1;
-
-            foreach (var id in GetProtoAndAncestors(proto))
-            {
-                buffer.AncestorCounts.TryGetValue(id, out var prev);
-                buffer.AncestorCounts[id] = prev + 1;
-            }
         }
     }
 
@@ -448,11 +430,7 @@ public sealed class NcStoreInventorySystem : EntitySystem
         var stackType = GetProductStackType(productProtoId);
         if (stackType != null)
             return snapshot.StackTypeCounts.TryGetValue(stackType, out var cnt) ? cnt : 0;
-
-        var effective = ResolveMatchMode(productProtoId, matchMode);
-        if (effective == PrototypeMatchMode.Descendants)
-            return snapshot.AncestorCounts.TryGetValue(productProtoId, out var units) ? units : 0;
-
+        _ = matchMode;
         return snapshot.ProtoCounts.TryGetValue(productProtoId, out var exact) ? exact : 0;
     }
 
@@ -494,7 +472,8 @@ public sealed class NcStoreInventorySystem : EntitySystem
 
     private ProductTakeRequest CreateProductTakeRequest(string protoId, PrototypeMatchMode matchMode)
     {
-        return new(protoId, GetProductStackType(protoId), ResolveMatchMode(protoId, matchMode));
+        _ = matchMode;
+        return new(protoId, GetProductStackType(protoId));
     }
 
     private int CalculateAvailableTakeUnits(
@@ -637,10 +616,7 @@ public sealed class NcStoreInventorySystem : EntitySystem
 
     private bool MatchesTakeRequest(EntityPrototype proto, ProductTakeRequest request)
     {
-        if (request.EffectiveMatch == PrototypeMatchMode.Exact)
-            return proto.ID == request.ProtoId;
-
-        return proto.ID == request.ProtoId || IsProtoOrDescendant(proto, request.ProtoId);
+        return proto.ID == request.ProtoId;
     }
 
     private void ConsumeStackUnits(
@@ -727,60 +703,4 @@ public sealed class NcStoreInventorySystem : EntitySystem
         return stackType;
     }
 
-    public PrototypeMatchMode ResolveMatchMode(string expectedProtoId, PrototypeMatchMode configured)
-    {
-        if (configured == PrototypeMatchMode.Descendants)
-            return PrototypeMatchMode.Descendants;
-        if (_protos.TryIndex<EntityPrototype>(expectedProtoId, out var p) && p.Abstract)
-            return PrototypeMatchMode.Descendants;
-        return PrototypeMatchMode.Exact;
-    }
-
-    public string[] GetProtoAndAncestors(EntityPrototype proto)
-    {
-        if (_protoAndAncestorsCache.TryGetValue(proto.ID, out var cached))
-            return cached;
-
-        _scratchProtoVisited.Clear();
-        _scratchProtoResult.Clear();
-        _scratchProtoStack.Clear();
-
-        _scratchProtoStack.Add(proto.ID);
-
-        while (_scratchProtoStack.Count > 0)
-        {
-            var idx = _scratchProtoStack.Count - 1;
-            var cur = _scratchProtoStack[idx];
-            _scratchProtoStack.RemoveAt(idx);
-
-            if (!_scratchProtoVisited.Add(cur))
-                continue;
-
-            _scratchProtoResult.Add(cur);
-
-            if (_protos.TryIndex<EntityPrototype>(cur, out var curProto) && curProto.Parents != null)
-            {
-                foreach (var p in curProto.Parents)
-                {
-                    if (!string.IsNullOrWhiteSpace(p))
-                        _scratchProtoStack.Add(p);
-                }
-            }
-        }
-
-        var arr = _scratchProtoResult.ToArray();
-        _protoAndAncestorsCache[proto.ID] = arr;
-        return arr;
-    }
-
-    private bool IsProtoOrDescendant(EntityPrototype candidate, string expectedId)
-    {
-        if (candidate.ID == expectedId)
-            return true;
-        var ancestors = GetProtoAndAncestors(candidate);
-        foreach (var t in ancestors)
-            if (t == expectedId)
-                return true;
-        return false;
-    }
 }

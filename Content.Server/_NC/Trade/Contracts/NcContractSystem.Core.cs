@@ -13,7 +13,6 @@ public sealed partial class NcContractSystem : EntitySystem
     private const int MaxRewardDepth = 6;
     private const int DepthInProgress = -1;
     private static readonly ISawmill Sawmill = Logger.GetSawmill("nccontracts");
-    private readonly Dictionary<string, List<string>> _ancestorsCache = new(StringComparer.Ordinal);
     private readonly List<(EntityUid Store, string Difficulty)> _cooldownKeysToRemoveScratch = new();
     private readonly Dictionary<(EntityUid Store, string Difficulty), CooldownState> _contractCooldown = new();
     private readonly Dictionary<string, int> _depthCache = new(StringComparer.Ordinal);
@@ -55,7 +54,6 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void ClearCaches()
     {
-        _ancestorsCache.Clear();
         _depthCache.Clear();
         ClearRngCachesInternal();
 

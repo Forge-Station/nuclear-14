@@ -262,8 +262,7 @@ public enum ContractObjectiveType : byte
 [Serializable, NetSerializable]
 public enum PrototypeMatchMode : byte
 {
-    Exact = 0,
-    Descendants = 1
+    Exact = 0
 }
 
 [Serializable]

@@ -46,9 +46,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool MatchesPrototypeId(string candidateId, string expectedProtoId, PrototypeMatchMode matchMode)
     {
-        return matchMode == PrototypeMatchMode.Exact
-            ? candidateId == expectedProtoId
-            : candidateId == expectedProtoId || IsDescendantId(candidateId, expectedProtoId);
+        _ = matchMode;
+        return candidateId == expectedProtoId;
     }
 
     private bool CanUseContractPlanningEntity(EntityUid root, EntityUid ent, bool worldTurnInSource)
