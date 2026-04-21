@@ -438,18 +438,26 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (_storesByWatchedRoot.Count == 0)
             return;
 
-        if (!IsNearAnyOpenStore(args.Entity))
+        var nearEntity = IsNearAnyOpenStore(args.Entity);
+        var nearOldParent = args.OldParent is { } oldParentCandidate &&
+                            oldParentCandidate != EntityUid.Invalid &&
+                            IsNearAnyOpenStore(oldParentCandidate);
+
+        if (!nearEntity && !nearOldParent)
             return;
 
         EntityUid? refreshedRoot = null;
 
-        if (TryFindWatchedRoot(args.Entity, out var currentRoot))
+        if (nearEntity && TryFindWatchedRoot(args.Entity, out var currentRoot))
         {
             RefreshStoresAffectedBy(currentRoot);
             refreshedRoot = currentRoot;
         }
 
         if (args.OldParent is not { } oldParent || oldParent == EntityUid.Invalid)
+            return;
+
+        if (!nearOldParent)
             return;
 
         if (!TryFindWatchedRoot(oldParent, out var previousRoot))
@@ -464,8 +472,16 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
     private void ProcessPendingRefreshes()
     {
-        if (_pendingRefreshEntities.Count == 0 || _storesByWatchedRoot.Count == 0)
+        if (_pendingRefreshEntities.Count == 0)
             return;
+
+        if (_storesByWatchedRoot.Count == 0)
+        {
+            // No active watchers: drop stale pending roots to avoid carrying "air cache"
+            // between unrelated store sessions.
+            _pendingRefreshEntities.Clear();
+            return;
+        }
         _affectedStoresScratch.Clear();
         foreach (var root in _pendingRefreshEntities)
         {

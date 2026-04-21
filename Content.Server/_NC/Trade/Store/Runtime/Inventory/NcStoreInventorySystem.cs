@@ -446,6 +446,23 @@ public sealed class NcStoreInventorySystem : EntitySystem
                     total += count;
             }
 
+            if (matcher.Tags.Count == 0)
+                return total;
+
+            foreach (var (protoId, count) in snapshot.ProtoCounts)
+            {
+                if (count <= 0)
+                    continue;
+
+                if (matcher.Items.Contains(protoId))
+                    continue;
+
+                if (!ProtoHasAnyMatcherTag(protoId, matcher.Tags))
+                    continue;
+
+                total += count;
+            }
+
             return total;
         }
 
@@ -806,6 +823,26 @@ public sealed class NcStoreInventorySystem : EntitySystem
 
         _productStackTypeCache[productProtoId] = stackType;
         return stackType;
+    }
+
+    private bool ProtoHasAnyMatcherTag(string protoId, IReadOnlyList<string> matcherTags)
+    {
+        if (matcherTags.Count == 0)
+            return false;
+
+        if (!_protos.TryIndex<EntityPrototype>(protoId, out var proto))
+            return false;
+
+        if (!proto.TryGetComponent(out TagComponent? tagComponent, _compFactory) || tagComponent == null)
+            return false;
+
+        for (var i = 0; i < matcherTags.Count; i++)
+        {
+            if (_tags.HasTag(tagComponent, matcherTags[i]))
+                return true;
+        }
+
+        return false;
     }
 
 }
