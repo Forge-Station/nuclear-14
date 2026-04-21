@@ -4,3 +4,5 @@ ent-N14MagazinePistol45 = pistol magazine (45. auto)
     .desc = { ent-N14BaseMagazine45Pistol.desc }
 ent-Magazine45SubMachineGun = SMG magazine (45. auto)
     .desc = { ent-BaseItem.desc }
+ent-DrumMagazine45SubMachineGun = SMG drum magazine (45. auto)
+    .desc = { ent-BaseItem.desc }
