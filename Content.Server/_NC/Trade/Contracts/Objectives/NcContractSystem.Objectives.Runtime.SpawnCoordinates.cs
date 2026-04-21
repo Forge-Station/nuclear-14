@@ -1,7 +1,5 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Tag;
 using Robust.Shared.Map;
-using Robust.Shared.Prototypes;
 
 namespace Content.Server._NC.Trade;
 
@@ -14,12 +12,7 @@ public sealed partial class NcContractSystem : EntitySystem
         bool fallbackToStore = true
     )
     {
-        return TryResolveObjectiveSpawnCoordinates(
-            store,
-            config.SpawnPointTag,
-            config.SpawnPointTags,
-            out coordinates,
-            fallbackToStore);
+        return TryResolveObjectiveSpawnCoordinates(store, config.SpawnPoint, out coordinates, fallbackToStore);
     }
 
     private bool TryResolveObjectiveDropoffCoordinates(
@@ -29,58 +22,46 @@ public sealed partial class NcContractSystem : EntitySystem
         bool fallbackToStore = false
     )
     {
-        return TryResolveObjectiveSpawnCoordinates(
-            store,
-            config.DropoffPointTag,
-            config.DropoffPointTags,
-            out coordinates,
-            fallbackToStore);
+        return TryResolveObjectiveSpawnCoordinates(store, config.DropoffPoint, out coordinates, fallbackToStore);
     }
 
     private static bool HasConfiguredObjectiveDropoff(ContractObjectiveConfigData config)
     {
-        return !string.IsNullOrWhiteSpace(config.DropoffPointTag) ||
-               config.DropoffPointTags is { Count: > 0 };
+        return config.DropoffPoint != null;
     }
 
     private bool TryResolveObjectiveSpawnCoordinates(
         EntityUid store,
-        string? spawnTag,
-        out EntityCoordinates coordinates,
-        bool fallbackToStore = true
-    )
-    {
-        return TryResolveObjectiveSpawnCoordinates(store, spawnTag, null, out coordinates, fallbackToStore);
-    }
-
-    private bool TryResolveObjectiveSpawnCoordinates(
-        EntityUid store,
-        string? spawnTag,
-        IReadOnlyList<WeightedTagEntry>? weightedSpawnTags,
+        ContractPointSelectorPrototype? selector,
         out EntityCoordinates coordinates,
         bool fallbackToStore = true
     )
     {
         GetObjectiveSpawnFallback(store, out var storeXform, out coordinates);
 
-        var selectedSpawnTag = ResolveObjectiveSpawnTag(storeXform?.MapID ?? MapId.Nullspace, spawnTag, weightedSpawnTags);
-
-        if (string.IsNullOrWhiteSpace(selectedSpawnTag))
-            return fallbackToStore && coordinates != EntityCoordinates.Invalid;
-
-        if (!_prototypes.HasIndex<TagPrototype>(selectedSpawnTag))
-            return HandleMissingObjectiveSpawnTag(selectedSpawnTag, coordinates, fallbackToStore);
-
         if (storeXform == null)
             return false;
 
-        if (TryPickObjectiveSpawnCoordinate(storeXform.MapID, selectedSpawnTag, out var selectedCoordinates))
+        var effectiveSelector = selector ?? new ContractPointSelectorPrototype();
+        if (effectiveSelector.Type == ContractPointSelectorType.Store)
+            return coordinates != EntityCoordinates.Invalid;
+
+        if (TryPickObjectiveSpawnCoordinate(storeXform.MapID, effectiveSelector, out var selectedCoordinates))
         {
             coordinates = selectedCoordinates;
             return true;
         }
 
-        return HandleUnavailableObjectiveSpawnTag(store, selectedSpawnTag, coordinates, fallbackToStore);
+        if (fallbackToStore)
+        {
+            Sawmill.Warning(
+                $"[Contracts] Spawn point selector '{DescribeContractPointSelector(effectiveSelector)}' not found for {ToPrettyString(store)}. Fallback to store coordinates.");
+            return coordinates != EntityCoordinates.Invalid;
+        }
+
+        Sawmill.Warning(
+            $"[Contracts] Spawn point selector '{DescribeContractPointSelector(effectiveSelector)}' not found for {ToPrettyString(store)}.");
+        return false;
     }
 
     private void GetObjectiveSpawnFallback(
@@ -98,53 +79,90 @@ public sealed partial class NcContractSystem : EntitySystem
         coordinates = EntityCoordinates.Invalid;
     }
 
-    private string? ResolveObjectiveSpawnTag(
-        MapId mapId,
-        string? spawnTag,
-        IReadOnlyList<WeightedTagEntry>? weightedSpawnTags
-    )
-    {
-        var selectedSpawnTag = spawnTag;
-        if (weightedSpawnTags is not { Count: > 0 })
-            return selectedSpawnTag;
-
-        var weightedTag = PickAvailableObjectiveSpawnTag(mapId, weightedSpawnTags);
-        if (!string.IsNullOrWhiteSpace(weightedTag))
-            selectedSpawnTag = weightedTag;
-
-        return selectedSpawnTag;
-    }
-
-    private bool HandleMissingObjectiveSpawnTag(
-        string selectedSpawnTag,
-        EntityCoordinates fallbackCoordinates,
-        bool fallbackToStore
-    )
-    {
-        if (fallbackToStore)
-        {
-            Sawmill.Warning($"[Contracts] Spawn tag '{selectedSpawnTag}' is not defined. Fallback to store coordinates.");
-            return fallbackCoordinates != EntityCoordinates.Invalid;
-        }
-
-        Sawmill.Warning($"[Contracts] Spawn tag '{selectedSpawnTag}' is not defined.");
-        return false;
-    }
-
     private bool TryPickObjectiveSpawnCoordinate(
         MapId storeMap,
-        string selectedSpawnTag,
+        ContractPointSelectorPrototype selector,
         out EntityCoordinates coordinates
     )
     {
         coordinates = EntityCoordinates.Invalid;
+
+        return selector.Type switch
+        {
+            ContractPointSelectorType.Store => false,
+            ContractPointSelectorType.MarkerId => TryPickObjectiveSpawnCoordinateById(storeMap, selector.Id, out coordinates),
+            ContractPointSelectorType.MarkerGroup => TryPickObjectiveSpawnCoordinateByGroup(storeMap, selector.Id, out coordinates),
+            ContractPointSelectorType.Weighted => TryPickObjectiveSpawnCoordinateWeighted(storeMap, selector.Options, out coordinates),
+            _ => false
+        };
+    }
+
+    private bool TryPickObjectiveSpawnCoordinateWeighted(
+        MapId storeMap,
+        IReadOnlyList<WeightedContractPointOptionEntry>? options,
+        out EntityCoordinates coordinates)
+    {
+        coordinates = EntityCoordinates.Invalid;
+
+        if (options == null || options.Count == 0)
+            return false;
+
+        var totalWeight = 0;
+        var found = false;
+
+        for (var i = 0; i < options.Count; i++)
+        {
+            var option = options[i];
+            if (option.Weight <= 0 || !IsContractPointOptionUsable(option))
+                continue;
+
+            if (!TryPickObjectiveSpawnCoordinate(storeMap, option, out var candidate))
+                continue;
+
+            totalWeight += option.Weight;
+            if (_random.Next(totalWeight) >= option.Weight)
+                continue;
+
+            coordinates = candidate;
+            found = true;
+        }
+
+        return found;
+    }
+
+    private bool TryPickObjectiveSpawnCoordinate(
+        MapId storeMap,
+        in WeightedContractPointOptionEntry option,
+        out EntityCoordinates coordinates)
+    {
+        coordinates = EntityCoordinates.Invalid;
+
+        return option.Type switch
+        {
+            ContractPointSelectorType.Store => false,
+            ContractPointSelectorType.MarkerId => TryPickObjectiveSpawnCoordinateById(storeMap, option.Id, out coordinates),
+            ContractPointSelectorType.MarkerGroup => TryPickObjectiveSpawnCoordinateByGroup(storeMap, option.Id, out coordinates),
+            _ => false
+        };
+    }
+
+    private bool TryPickObjectiveSpawnCoordinateById(
+        MapId storeMap,
+        string id,
+        out EntityCoordinates coordinates)
+    {
+        coordinates = EntityCoordinates.Invalid;
+
+        if (string.IsNullOrWhiteSpace(id))
+            return false;
+
         var matches = 0;
         var found = false;
 
-        var query = EntityQueryEnumerator<TagComponent, TransformComponent>();
-        while (query.MoveNext(out _, out var tagComp, out var xform))
+        var query = EntityQueryEnumerator<NcContractSpawnPointComponent, TransformComponent>();
+        while (query.MoveNext(out _, out var point, out var xform))
         {
-            if (xform.MapID != storeMap || !_tags.HasTag(tagComp, selectedSpawnTag))
+            if (xform.MapID != storeMap || !string.Equals(point.Id, id, StringComparison.Ordinal))
                 continue;
 
             matches++;
@@ -158,63 +176,60 @@ public sealed partial class NcContractSystem : EntitySystem
         return found;
     }
 
-    private bool HandleUnavailableObjectiveSpawnTag(
-        EntityUid store,
-        string selectedSpawnTag,
-        EntityCoordinates fallbackCoordinates,
-        bool fallbackToStore
-    )
+    private bool TryPickObjectiveSpawnCoordinateByGroup(
+        MapId storeMap,
+        string groupId,
+        out EntityCoordinates coordinates)
     {
-        if (fallbackToStore)
+        coordinates = EntityCoordinates.Invalid;
+
+        if (string.IsNullOrWhiteSpace(groupId))
+            return false;
+
+        var matches = 0;
+        var found = false;
+
+        var query = EntityQueryEnumerator<NcContractSpawnPointComponent, TransformComponent>();
+        while (query.MoveNext(out _, out var point, out var xform))
         {
-            Sawmill.Warning(
-                $"[Contracts] Spawn tag '{selectedSpawnTag}' not found on map for {ToPrettyString(store)}. Fallback to store coordinates.");
-            return fallbackCoordinates != EntityCoordinates.Invalid;
-        }
-
-        Sawmill.Warning($"[Contracts] Spawn tag '{selectedSpawnTag}' not found on map for {ToPrettyString(store)}.");
-        return false;
-    }
-
-    private string? PickAvailableObjectiveSpawnTag(
-        MapId mapId,
-        IReadOnlyList<WeightedTagEntry>? weightedSpawnTags
-    )
-    {
-        if (weightedSpawnTags == null || weightedSpawnTags.Count == 0)
-            return null;
-
-        var totalWeight = 0;
-        string? selectedTag = null;
-
-        for (var i = 0; i < weightedSpawnTags.Count; i++)
-        {
-            var entry = weightedSpawnTags[i];
-            if (string.IsNullOrWhiteSpace(entry.Tag) ||
-                entry.Weight <= 0 ||
-                !_prototypes.HasIndex<TagPrototype>(entry.Tag) ||
-                !HasObjectiveSpawnTagOnMap(mapId, entry.Tag))
-            {
+            if (xform.MapID != storeMap || !ContractPointHasGroup(point, groupId))
                 continue;
-            }
 
-            totalWeight += entry.Weight;
-            if (_random.Next(totalWeight) < entry.Weight)
-                selectedTag = entry.Tag;
+            matches++;
+            if (_random.Next(matches) != 0)
+                continue;
+
+            coordinates = xform.Coordinates;
+            found = true;
         }
 
-        return selectedTag;
+        return found;
     }
 
-    private bool HasObjectiveSpawnTagOnMap(MapId mapId, string tag)
+    private static bool ContractPointHasGroup(NcContractSpawnPointComponent point, string groupId)
     {
-        var query = EntityQueryEnumerator<TagComponent, TransformComponent>();
-        while (query.MoveNext(out _, out var tagComp, out var xform))
+        var groups = point.Groups;
+        if (groups.Count == 0)
+            return false;
+
+        for (var i = 0; i < groups.Count; i++)
         {
-            if (xform.MapID == mapId && _tags.HasTag(tagComp, tag))
+            if (string.Equals(groups[i], groupId, StringComparison.Ordinal))
                 return true;
         }
 
         return false;
+    }
+
+    private static string DescribeContractPointSelector(ContractPointSelectorPrototype selector)
+    {
+        return selector.Type switch
+        {
+            ContractPointSelectorType.Store => "Store",
+            ContractPointSelectorType.MarkerId => $"MarkerId:{selector.Id}",
+            ContractPointSelectorType.MarkerGroup => $"MarkerGroup:{selector.Id}",
+            ContractPointSelectorType.Weighted => $"Weighted[{selector.Options.Count}]",
+            _ => "Unknown"
+        };
     }
 }

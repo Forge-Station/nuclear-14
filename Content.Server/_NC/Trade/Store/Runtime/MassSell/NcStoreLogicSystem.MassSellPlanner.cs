@@ -1,5 +1,6 @@
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
+using Content.Shared.Tag;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server._NC.Trade;
@@ -8,7 +9,8 @@ public sealed partial class NcStoreLogicSystem
 {
     private readonly record struct MassSellInventoryState(
         Dictionary<string, int> StackTypeCounts,
-        Dictionary<string, int> ProtoCounts)
+        Dictionary<string, int> ProtoCounts,
+        Dictionary<string, Dictionary<string, int>> StackTypeProtoCounts)
     {
         public bool IsEmpty => StackTypeCounts.Count == 0 && ProtoCounts.Count == 0;
     }
@@ -91,6 +93,7 @@ public sealed partial class NcStoreLogicSystem
     {
         var stackTypeCounts = new Dictionary<string, int>(StringComparer.Ordinal);
         var protoCounts = new Dictionary<string, int>(StringComparer.Ordinal);
+        var stackTypeProtoCounts = new Dictionary<string, Dictionary<string, int>>(StringComparer.Ordinal);
 
         foreach (var ent in items)
         {
@@ -99,34 +102,57 @@ public sealed partial class NcStoreLogicSystem
 
             if (_ents.TryGetComponent(ent, out StackComponent? stack))
             {
-                TrackMassSellStackEntity(ent, stack, stackTypeCounts);
+                TrackMassSellStackEntity(ent, stack, stackTypeCounts, protoCounts, stackTypeProtoCounts);
                 continue;
             }
 
-            TrackMassSellPrototypeEntity(ent, protoCounts);
+            TrackMassSellPrototypeEntity(ent, protoCounts, 1);
         }
 
-        return new(stackTypeCounts, protoCounts);
+        return new(stackTypeCounts, protoCounts, stackTypeProtoCounts);
     }
 
     private void TrackMassSellStackEntity(
         EntityUid ent,
         StackComponent stack,
-        Dictionary<string, int> stackTypeCounts)
+        Dictionary<string, int> stackTypeCounts,
+        Dictionary<string, int> protoCounts,
+        Dictionary<string, Dictionary<string, int>> stackTypeProtoCounts)
     {
         var count = Math.Max(stack.Count, 0);
-        if (count > 0 && !string.IsNullOrWhiteSpace(stack.StackTypeId))
-            AddMassSellCount(stackTypeCounts, stack.StackTypeId, count);
+        if (count <= 0)
+            return;
+
+        var stackTypeId = stack.StackTypeId;
+        if (!string.IsNullOrWhiteSpace(stackTypeId))
+            AddMassSellCount(stackTypeCounts, stackTypeId, count);
+
+        if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is not { } proto)
+            return;
+
+        AddMassSellCount(protoCounts, proto.ID, count);
+
+        if (string.IsNullOrWhiteSpace(stackTypeId))
+            return;
+
+        if (!stackTypeProtoCounts.TryGetValue(stackTypeId, out var perProto))
+        {
+            perProto = new Dictionary<string, int>(StringComparer.Ordinal);
+            stackTypeProtoCounts[stackTypeId] = perProto;
+        }
+
+        AddMassSellCount(perProto, proto.ID, count);
     }
 
     private void TrackMassSellPrototypeEntity(
         EntityUid ent,
-        Dictionary<string, int> protoCounts)
+        Dictionary<string, int> protoCounts,
+        int amount)
     {
         if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is not { } proto)
             return;
 
-        AddMassSellCount(protoCounts, proto.ID, 1);
+        AddMassSellCount(protoCounts, proto.ID, amount);
     }
 
     private static void AddMassSellCount(Dictionary<string, int> counts, string key, int amount)
@@ -187,6 +213,10 @@ public sealed partial class NcStoreLogicSystem
         NcStoreListingDef right,
         Dictionary<string, (string CurrencyId, int UnitPrice)> listingQuotes)
     {
+        var matchModeCmp = CompareMassSellMatchModePriority(left.MatchMode, right.MatchMode);
+        if (matchModeCmp != 0)
+            return matchModeCmp;
+
         var leftPrice = listingQuotes[left.Id].UnitPrice;
         var rightPrice = listingQuotes[right.Id].UnitPrice;
 
@@ -199,6 +229,21 @@ public sealed partial class NcStoreLogicSystem
             return productCmp;
 
         return OrdinalIds.Compare(left.Id, right.Id);
+    }
+
+    private static int CompareMassSellMatchModePriority(PrototypeMatchMode left, PrototypeMatchMode right)
+    {
+        return GetMassSellMatchModePriority(left).CompareTo(GetMassSellMatchModePriority(right));
+    }
+
+    private static int GetMassSellMatchModePriority(PrototypeMatchMode mode)
+    {
+        return mode switch
+        {
+            PrototypeMatchMode.Exact => 0,
+            PrototypeMatchMode.Matcher => 1,
+            _ => 2
+        };
     }
 
     private void ApplyMassSellListings(
@@ -238,11 +283,13 @@ public sealed partial class NcStoreLogicSystem
         if (!TryComputeMassSellWantedUnits(listing.RemainingCount, unitPrice, out var want))
             return 0;
 
+        if (listing.MatchMode == PrototypeMatchMode.Matcher)
+            return ReserveMassSellMatcherUnits(listing.ProductEntity, want, inventory.ProtoCounts);
+
         var expectedStackType = TryGetMassSellExpectedStackType(listing.ProductEntity, stackComponentName);
         if (!string.IsNullOrEmpty(expectedStackType))
-            return ReserveMassSellStackUnits(expectedStackType, want, inventory.StackTypeCounts);
+            return ReserveMassSellStackUnits(expectedStackType, want, inventory);
 
-        _ = listing.MatchMode;
         return ReserveMassSellProtoUnits(listing.ProductEntity, want, inventory.ProtoCounts);
     }
 
@@ -271,9 +318,41 @@ public sealed partial class NcStoreLogicSystem
     private static int ReserveMassSellStackUnits(
         string stackTypeId,
         int want,
-        Dictionary<string, int> stackTypeCounts)
+        MassSellInventoryState inventory)
     {
-        return ReserveMassSellUnits(stackTypeCounts, stackTypeId, want);
+        var taken = ReserveMassSellUnits(inventory.StackTypeCounts, stackTypeId, want);
+        if (taken <= 0)
+            return 0;
+
+        if (!inventory.StackTypeProtoCounts.TryGetValue(stackTypeId, out var perProto) || perProto.Count == 0)
+            return taken;
+
+        var left = taken;
+        var protoIds = new List<string>(perProto.Keys);
+        protoIds.Sort(StringComparer.Ordinal);
+
+        foreach (var protoId in protoIds)
+        {
+            if (left <= 0)
+                break;
+
+            if (!perProto.TryGetValue(protoId, out var available) || available <= 0)
+                continue;
+
+            var take = Math.Min(available, left);
+            perProto[protoId] = available - take;
+
+            if (inventory.ProtoCounts.TryGetValue(protoId, out var protoAvailable) && protoAvailable > 0)
+                inventory.ProtoCounts[protoId] = Math.Max(0, protoAvailable - take);
+
+            left -= take;
+        }
+
+        var actualTaken = taken - left;
+        if (actualTaken < taken)
+            inventory.StackTypeCounts[stackTypeId] += taken - actualTaken;
+
+        return actualTaken;
     }
 
     private static int ReserveMassSellProtoUnits(
@@ -282,6 +361,83 @@ public sealed partial class NcStoreLogicSystem
         Dictionary<string, int> protoCounts)
     {
         return ReserveMassSellUnits(protoCounts, protoId, want);
+    }
+
+    private int ReserveMassSellMatcherUnits(
+        string matcherId,
+        int want,
+        Dictionary<string, int> protoCounts)
+    {
+        if (want <= 0)
+            return 0;
+
+        if (!_protos.TryIndex<NcMatcherPrototype>(matcherId, out var matcher))
+            return 0;
+
+        if (matcher.Items.Count == 0 && matcher.Tags.Count == 0)
+            return 0;
+
+        HashSet<string>? matcherItems = null;
+        if (matcher.Items.Count > 0)
+            matcherItems = new HashSet<string>(matcher.Items, StringComparer.Ordinal);
+
+        var matchingProtoIds = new List<string>();
+        foreach (var pair in protoCounts)
+        {
+            var protoId = pair.Key;
+            var available = pair.Value;
+
+            if (available <= 0)
+                continue;
+
+            if (!MassSellProtoMatchesMatcher(protoId, matcherItems, matcher.Tags))
+                continue;
+
+            matchingProtoIds.Add(protoId);
+        }
+
+        if (matchingProtoIds.Count == 0)
+            return 0;
+
+        matchingProtoIds.Sort(StringComparer.Ordinal);
+
+        var takenTotal = 0;
+        foreach (var protoId in matchingProtoIds)
+        {
+            if (takenTotal >= want)
+                break;
+
+            var left = want - takenTotal;
+            takenTotal += ReserveMassSellProtoUnits(protoId, left, protoCounts);
+        }
+
+        return takenTotal;
+    }
+
+    private bool MassSellProtoMatchesMatcher(
+        string protoId,
+        HashSet<string>? matcherItems,
+        IReadOnlyList<string> matcherTags)
+    {
+        if (matcherItems != null && matcherItems.Contains(protoId))
+            return true;
+
+        if (matcherTags.Count == 0)
+            return false;
+
+        if (!_protos.TryIndex<EntityPrototype>(protoId, out var proto))
+            return false;
+
+        if (!proto.TryGetComponent(out TagComponent? tagComponent, _compFactory) || tagComponent == null)
+            return false;
+
+        for (var i = 0; i < matcherTags.Count; i++)
+        {
+            if (_tags.HasTag(tagComponent, matcherTags[i]))
+                return true;
+        }
+
+        return false;
     }
 
     private static int ReserveMassSellUnits(

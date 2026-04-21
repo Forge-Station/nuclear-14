@@ -45,6 +45,12 @@
                                      HorizontalAlignment="Center"
                                      VerticalAlignment="Top"
                                      Margin="2"/>
+                <TextureRect Name="MatcherIconView"
+                             Visible="False"
+                             Stretch="KeepAspectCentered"
+                             HorizontalExpand="True"
+                             VerticalExpand="True"
+                             Margin="4"/>
             </PanelContainer>
 
             <PanelContainer Name="IconDivider"

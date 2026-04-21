@@ -370,8 +370,7 @@ public sealed partial class NcContractSystem : EntitySystem
     private static bool UsesTrackedDeliveryDropoff(ContractServerData contract)
     {
         var config = contract.Config;
-        return !string.IsNullOrWhiteSpace(config.DropoffPointTag) ||
-               config.DropoffPointTags is { Count: > 0 };
+        return config.DropoffPoint != null;
     }
 
     private bool IsTrackedDeliveryTargetAtDropoff(EntityUid target, ObjectiveRuntimeState state)

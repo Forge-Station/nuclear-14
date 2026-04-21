@@ -4,6 +4,7 @@ using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Hands.Components;
 using Content.Shared.Inventory;
 using Content.Shared.Stacks;
+using Content.Shared.Tag;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 
@@ -13,6 +14,7 @@ namespace Content.Server._NC.Trade;
 
 public sealed class NcStoreInventorySystem : EntitySystem
 {
+    private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore-inventory");
     private const int UncachedRevision = int.MinValue;
 
     private sealed class InventoryCacheEntry
@@ -26,11 +28,16 @@ public sealed class NcStoreInventorySystem : EntitySystem
 
     private readonly record struct ProductTakeRequest(
         string ProtoId,
-        string? StackType);
+        string? StackType,
+        PrototypeMatchMode MatchMode,
+        HashSet<string>? MatcherItems,
+        HashSet<string>? MatcherTags,
+        bool IsValid);
 
     [Dependency] private readonly IComponentFactory _compFactory = default!;
     [Dependency] private readonly IEntityManager _ents = default!;
     private readonly Dictionary<EntityUid, InventoryCacheEntry> _inventoryCache = new();
+    [Dependency] private readonly TagSystem _tags = default!;
 
     private readonly Dictionary<EntityUid, HashSet<EntityUid>> _rootsByItem = new();
     private readonly HashSet<EntityUid> _rebuildOldItemsScratch = new();
@@ -427,11 +434,39 @@ public sealed class NcStoreInventorySystem : EntitySystem
         PrototypeMatchMode matchMode
     )
     {
+        if (matchMode == PrototypeMatchMode.Matcher)
+        {
+            if (!_protos.TryIndex<NcMatcherPrototype>(productProtoId, out var matcher))
+                return 0;
+
+            var total = 0;
+            for (var i = 0; i < matcher.Items.Count; i++)
+            {
+                if (snapshot.ProtoCounts.TryGetValue(matcher.Items[i], out var count))
+                    total += count;
+            }
+
+            return total;
+        }
+
         var stackType = GetProductStackType(productProtoId);
         if (stackType != null)
             return snapshot.StackTypeCounts.TryGetValue(stackType, out var cnt) ? cnt : 0;
-        _ = matchMode;
+
         return snapshot.ProtoCounts.TryGetValue(productProtoId, out var exact) ? exact : 0;
+    }
+
+    public int GetOwnedFromRootCached(
+        EntityUid root,
+        string protoId,
+        PrototypeMatchMode matchMode)
+    {
+        var request = CreateProductTakeRequest(protoId, matchMode);
+        if (!request.IsValid)
+            return 0;
+
+        var cachedItems = GetOrBuildDeepItemsCache(root);
+        return CalculateAvailableTakeUnits(root, cachedItems, request, int.MaxValue);
     }
 
 
@@ -460,6 +495,9 @@ public sealed class NcStoreInventorySystem : EntitySystem
             return true;
 
         var request = CreateProductTakeRequest(protoId, matchMode);
+        if (!request.IsValid)
+            return false;
+
         if (CalculateAvailableTakeUnits(root, cachedItems, request, amount) < amount)
             return false;
 
@@ -472,8 +510,55 @@ public sealed class NcStoreInventorySystem : EntitySystem
 
     private ProductTakeRequest CreateProductTakeRequest(string protoId, PrototypeMatchMode matchMode)
     {
-        _ = matchMode;
-        return new(protoId, GetProductStackType(protoId));
+        if (matchMode == PrototypeMatchMode.Matcher)
+        {
+            if (!_protos.TryIndex<NcMatcherPrototype>(protoId, out var matcher))
+            {
+                Sawmill.Warning($"[NcStore] matcher '{protoId}' not found for take request.");
+                return new(
+                    protoId,
+                    null,
+                    matchMode,
+                    null,
+                    null,
+                    false);
+            }
+
+            var matcherItems = matcher.Items.Count > 0
+                ? new HashSet<string>(matcher.Items, StringComparer.Ordinal)
+                : null;
+            var matcherTags = matcher.Tags.Count > 0
+                ? new HashSet<string>(matcher.Tags, StringComparer.Ordinal)
+                : null;
+
+            if (matcherItems == null && matcherTags == null)
+            {
+                Sawmill.Warning($"[NcStore] matcher '{protoId}' has no items and no tags; take request rejected.");
+                return new(
+                    protoId,
+                    null,
+                    matchMode,
+                    null,
+                    null,
+                    false);
+            }
+
+            return new(
+                protoId,
+                null,
+                matchMode,
+                matcherItems,
+                matcherTags,
+                true);
+        }
+
+        return new(
+            protoId,
+            GetProductStackType(protoId),
+            matchMode,
+            null,
+            null,
+            true);
     }
 
     private int CalculateAvailableTakeUnits(
@@ -562,7 +647,7 @@ public sealed class NcStoreInventorySystem : EntitySystem
         if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
             return 0;
 
-        if (!MatchesTakeRequest(meta.EntityPrototype, request))
+        if (!MatchesTakeRequest(ent, meta.EntityPrototype, request))
             return 0;
 
         if (_ents.TryGetComponent(ent, out StackComponent? stack) && stack.Count > 0)
@@ -601,7 +686,7 @@ public sealed class NcStoreInventorySystem : EntitySystem
         if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
             return false;
 
-        if (!MatchesTakeRequest(meta.EntityPrototype, request))
+        if (!MatchesTakeRequest(ent, meta.EntityPrototype, request))
             return false;
 
         if (_ents.TryGetComponent(ent, out StackComponent? stack))
@@ -614,8 +699,28 @@ public sealed class NcStoreInventorySystem : EntitySystem
         return true;
     }
 
-    private bool MatchesTakeRequest(EntityPrototype proto, ProductTakeRequest request)
+    private bool MatchesTakeRequest(EntityUid ent, EntityPrototype proto, ProductTakeRequest request)
     {
+        if (request.MatchMode == PrototypeMatchMode.Matcher)
+        {
+            if (request.MatcherItems != null && request.MatcherItems.Contains(proto.ID))
+                return true;
+
+            if (request.MatcherTags == null || request.MatcherTags.Count == 0)
+                return false;
+
+            if (!TryComp<TagComponent>(ent, out var tagComponent))
+                return false;
+
+            foreach (var matcherTag in request.MatcherTags)
+            {
+                if (_tags.HasTag(tagComponent, matcherTag))
+                    return true;
+            }
+
+            return false;
+        }
+
         return proto.ID == request.ProtoId;
     }
 

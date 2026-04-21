@@ -18,16 +18,26 @@ public sealed partial class NcContractSystem : EntitySystem
         if (string.IsNullOrWhiteSpace(config.TargetPrototype))
             return true;
 
+        if (!TryResolveTrackedObjectiveSpawnPrototype(
+                contractId,
+                contract,
+                config.TargetPrototype,
+                allowSpawnSpecific: false,
+                out var targetProtoId))
+        {
+            return false;
+        }
+
         if (!TryInitializeTrackedTargetAndSupport(
                 store,
                 user,
                 contractId,
                 contract,
-                config.TargetPrototype,
-                spawnGuards: true,
-                spawnAtStore: config.SpawnAtStore))
+                targetProtoId,
+                spawnGuards: true))
             return false;
 
+        config.TargetPrototype = targetProtoId;
         return true;
     }
 
@@ -40,7 +50,16 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         var config = contract.Config;
 
-        var targetProtoId = ResolveTrackedObjectivePrototypeId(config.TargetPrototype, contract.TargetItem);
+        var requestedTargetId = ResolveTrackedObjectivePrototypeId(config.TargetPrototype, contract.TargetItem);
+        if (!TryResolveTrackedObjectiveSpawnPrototype(
+                contractId,
+                contract,
+                requestedTargetId,
+                allowSpawnSpecific: true,
+                out var targetProtoId))
+        {
+            return false;
+        }
 
         if (!TryInitializeTrackedTargetAndSupport(store, user, contractId, contract, targetProtoId))
             return false;
@@ -51,21 +70,85 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
+    private bool TryResolveTrackedObjectiveSpawnPrototype(
+        string contractId,
+        ContractServerData contract,
+        string requestedTargetId,
+        bool allowSpawnSpecific,
+        out string resolvedTargetProtoId)
+    {
+        resolvedTargetProtoId = string.Empty;
+
+        var config = contract.Config;
+        if (allowSpawnSpecific &&
+            TryPickTrackedObjectiveSpecificSpawnPrototype(config.SpawnSpecific, out var specificProto))
+        {
+            resolvedTargetProtoId = specificProto;
+            return true;
+        }
+
+        if (contract.MatchMode == PrototypeMatchMode.Matcher)
+        {
+            if (TryPickMatcherSpawnPrototype(requestedTargetId, out var matcherProtoId))
+            {
+                resolvedTargetProtoId = matcherProtoId;
+                return true;
+            }
+
+            if (_prototypes.HasIndex<EntityPrototype>(requestedTargetId))
+            {
+                resolvedTargetProtoId = requestedTargetId;
+                return true;
+            }
+
+            Sawmill.Warning(
+                $"[Contracts] Objective init failed for '{contractId}': matcher target '{requestedTargetId}' has no spawnable items.");
+            return false;
+        }
+
+        resolvedTargetProtoId = requestedTargetId;
+        return true;
+    }
+
+    private bool TryPickTrackedObjectiveSpecificSpawnPrototype(
+        IReadOnlyList<string>? spawnSpecific,
+        out string prototypeId)
+    {
+        prototypeId = string.Empty;
+
+        if (spawnSpecific is not { Count: > 0 })
+            return false;
+
+        for (var i = 0; i < spawnSpecific.Count; i++)
+        {
+            var candidate = spawnSpecific[i];
+            if (string.IsNullOrWhiteSpace(candidate))
+                continue;
+
+            if (_prototypes.HasIndex<EntityPrototype>(candidate))
+            {
+                prototypeId = candidate;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private bool TryInitializeTrackedTargetAndSupport(
         EntityUid store,
         EntityUid user,
         string contractId,
         ContractServerData contract,
         string targetProtoId,
-        bool spawnGuards = true,
-        bool spawnAtStore = false
+        bool spawnGuards = true
     )
     {
         if (!TryValidateObjectiveTargetPrototype(contractId, targetProtoId))
             return false;
 
         var config = contract.Config;
-        if (!TryResolveTrackedTargetSpawnCoordinates(store, contractId, config, spawnAtStore, out var spawnCoords))
+        if (!TryResolveTrackedTargetSpawnCoordinates(store, contractId, config, out var spawnCoords))
             return false;
 
         if (!TrySpawnObjectiveTarget(contractId, targetProtoId, spawnCoords, out var target))
@@ -116,32 +199,14 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid store,
         string contractId,
         ContractObjectiveConfigData config,
-        bool spawnAtStore,
         out EntityCoordinates spawnCoords
     )
     {
-        if (spawnAtStore)
-            return TryResolveStoreObjectiveCoordinates(store, contractId, out spawnCoords);
-
         if (TryResolveObjectiveSpawnCoordinates(store, config, out spawnCoords))
             return true;
 
         Sawmill.Warning($"[Contracts] Objective init failed for '{contractId}': cannot resolve spawn coordinates.");
         return false;
-    }
-
-    private bool TryResolveStoreObjectiveCoordinates(EntityUid store, string contractId, out EntityCoordinates spawnCoords)
-    {
-        spawnCoords = EntityCoordinates.Invalid;
-
-        if (!TryComp(store, out TransformComponent? storeXform))
-        {
-            Sawmill.Warning($"[Contracts] Objective init failed for '{contractId}': store has no transform for local spawn.");
-            return false;
-        }
-
-        spawnCoords = storeXform.Coordinates;
-        return true;
     }
 
     private bool TrySpawnObjectiveTarget(string contractId, string targetProtoId, EntityCoordinates spawnCoords, out EntityUid target)

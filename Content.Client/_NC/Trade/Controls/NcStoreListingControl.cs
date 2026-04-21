@@ -48,8 +48,24 @@ public sealed partial class NcStoreListingControl : PanelContainer
         var pm = IoCManager.Resolve<IPrototypeManager>();
         pm.TryIndex<EntityPrototype>(data.ProductEntity, out var proto);
 
-        TitleLabel.Text = proto?.Name ?? data.ProductEntity;
-        TitleLabel.ToolTip = proto?.Name ?? data.ProductEntity;
+        NcMatcherPrototype? matcher = null;
+        EntityPrototype? matcherFallbackProto = null;
+
+        if (proto == null && pm.TryIndex<NcMatcherPrototype>(data.ProductEntity, out var foundMatcher))
+        {
+            matcher = foundMatcher;
+            if (matcher.Items.Count > 0)
+                pm.TryIndex<EntityPrototype>(matcher.Items[0], out matcherFallbackProto);
+        }
+
+        var displayName = proto?.Name;
+        if (string.IsNullOrWhiteSpace(displayName))
+            displayName = matcher?.Name;
+        if (string.IsNullOrWhiteSpace(displayName))
+            displayName = data.ProductEntity;
+
+        TitleLabel.Text = displayName;
+        TitleLabel.ToolTip = displayName;
 
         if (data.Mode == StoreMode.Buy && data.UnitsPerPurchase > 1)
         {
@@ -60,15 +76,27 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
         if (proto != null)
         {
+            MatcherIconView.Visible = false;
+            MatcherIconView.Texture = null;
+            IconView.Visible = true;
             IconView.SetPrototype(proto.ID);
             NcUiIconFit.Fit(IconView, sprites, proto.ID, targetPx: 72, paddingPx: 6);
+        }
+        else if (matcher != null)
+        {
+            if (!TrySetMatcherIcon(matcher, matcherFallbackProto, sprites))
+            {
+                IconSlotBackground.Visible = false;
+                IconDivider.Visible = false;
+            }
         }
         else
         {
             IconSlotBackground.Visible = false;
             IconDivider.Visible = false;
         }
-        SetDescription(proto);
+
+        SetDescription(proto?.Description ?? matcher?.Description);
 
         SetupPriceButton(data, sprites, pm);
 
@@ -147,9 +175,34 @@ public sealed partial class NcStoreListingControl : PanelContainer
         return MathF.Ceiling(desired);
     }
 
-    private void SetDescription(EntityPrototype? proto)
+    private bool TrySetMatcherIcon(NcMatcherPrototype matcher, EntityPrototype? fallbackProto, SpriteSystem sprites)
     {
-        DescriptionBox.SetDescription(proto?.Description, DescMaxChars);
+        if (matcher.Sprite != null)
+        {
+            var texture = sprites.Frame0(matcher.Sprite);
+            if (texture != null)
+            {
+                IconView.Visible = false;
+                MatcherIconView.Texture = texture;
+                MatcherIconView.Visible = true;
+                return true;
+            }
+        }
+
+        if (fallbackProto == null)
+            return false;
+
+        MatcherIconView.Visible = false;
+        MatcherIconView.Texture = null;
+        IconView.Visible = true;
+        IconView.SetPrototype(fallbackProto.ID);
+        NcUiIconFit.Fit(IconView, sprites, fallbackProto.ID, targetPx: 72, paddingPx: 6);
+        return true;
+    }
+
+    private void SetDescription(string? description)
+    {
+        DescriptionBox.SetDescription(description, DescMaxChars);
     }
 
 

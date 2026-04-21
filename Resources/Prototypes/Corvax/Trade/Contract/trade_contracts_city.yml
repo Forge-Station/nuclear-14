@@ -17,9 +17,15 @@
     weight: 100
   - id: trade_contract_ghost_raider
     weight: 100
-  - id: trade_contract_repair_generator_legacy_store
+  - id: trade_contract_repair_generator_store_anchor
     weight: 100
-  - id: trade_contract_ghost_raider_legacy_store
+  - id: trade_contract_ghost_raider_store_anchor
+    weight: 100
+  - id: trade_contract_delivery_matcher_spawn_items_test
+    weight: 100
+  - id: trade_contract_delivery_matcher_tags_turnin_test
+    weight: 100
+  - id: trade_contract_hunt_matcher_spawn_specific_test
     weight: 100
 
 - type: storeContractsPreset
@@ -41,11 +47,15 @@
   repeatable: true
   objectiveType: Delivery
   runtime:
-    spawnPointTags:
-    - tag: TradeContractMineSpawn
-      weight: 4
-    - tag: TradeContractStoreSpawn
-      weight: 1
+    spawnPoint:
+      type: Weighted
+      options:
+      - type: MarkerId
+        id: TradeContractMineSpawn
+        weight: 4
+      - type: MarkerId
+        id: TradeContractStoreSpawn
+        weight: 1
     deliverySpawnPrototype: N14IngotCopper1
   targets:
   - id: N14IngotCopper1
@@ -66,11 +76,15 @@
   repeatable: true
   objectiveType: Delivery
   runtime:
-    spawnPointTags:
-    - tag: TradeContractMineSpawn
-      weight: 5
-    - tag: TradeContractStoreSpawn
-      weight: 1
+    spawnPoint:
+      type: Weighted
+      options:
+      - type: MarkerId
+        id: TradeContractMineSpawn
+        weight: 5
+      - type: MarkerId
+        id: TradeContractStoreSpawn
+        weight: 1
     targetPrototype: N14IngotCopper1
     guardPrototype: N14MobRaiderPsycho
     guardCount: 1
@@ -95,11 +109,15 @@
   repeatable: true
   objectiveType: Delivery
   runtime:
-    spawnPointTags:
-    - tag: TradeContractMineSpawn
-      weight: 5
-    - tag: TradeContractStructureSpawn
-      weight: 2
+    spawnPoint:
+      type: Weighted
+      options:
+      - type: MarkerId
+        id: TradeContractMineSpawn
+        weight: 5
+      - type: MarkerId
+        id: TradeContractStructureSpawn
+        weight: 2
     targetPrototype: CrateGenericSteel
     allowStoreWorldTurnIn: true
     givePinpointer: true
@@ -125,12 +143,17 @@
   runtime:
     targetPrototype: CrateGenericSteel
     proofPrototype: NcTradeContractProofDeliveryReceipt
-    spawnAtStore: true
-    dropoffPointTags:
-    - tag: TradeContractMineSpawn
-      weight: 4
-    - tag: TradeContractStructureDropoff
-      weight: 1
+    spawnPoint:
+      type: Store
+    dropoffPoint:
+      type: Weighted
+      options:
+      - type: MarkerId
+        id: TradeContractMineSpawn
+        weight: 4
+      - type: MarkerId
+        id: TradeContractStructureDropoff
+        weight: 1
     givePinpointer: true
     pinpointerPrototype: PinpointerUniversal
   targets:
@@ -152,11 +175,15 @@
   repeatable: true
   objectiveType: Hunt
   runtime:
-    spawnPointTags:
-    - tag: TradeContractMineSpawn
-      weight: 5
-    - tag: TradeContractHuntSpawn
-      weight: 1
+    spawnPoint:
+      type: Weighted
+      options:
+      - type: MarkerId
+        id: TradeContractMineSpawn
+        weight: 5
+      - type: MarkerId
+        id: TradeContractHuntSpawn
+        weight: 1
     stageGoal: 1
     targetPrototype: N14MobGhoulFeral
     proofPrototype: NcTradeContractProofGhoulTrophy
@@ -178,9 +205,9 @@
   repeatable: true
   objectiveType: Repair
   runtime:
-    spawnPointTags:
-    - tag: TradeContractStoreSpawn
-      weight: 1
+    spawnPoint:
+      type: MarkerId
+      id: TradeContractStoreSpawn
     stageGoal: 3
     structurePrototype: N14GeneratorFusionMiniRusted
     proofPrototype: NcTradeContractProofRepairPhoto
@@ -207,11 +234,15 @@
   repeatable: true
   objectiveType: GhostRole
   runtime:
-    spawnPointTags:
-    - tag: TradeContractStoreSpawn
-      weight: 3
-    - tag: TradeContractGhostSpawn
-      weight: 1
+    spawnPoint:
+      type: Weighted
+      options:
+      - type: MarkerId
+        id: TradeContractStoreSpawn
+        weight: 3
+      - type: MarkerId
+        id: TradeContractGhostSpawn
+        weight: 1
     stageGoal: 1
     ghostRole: nc_contract_ghost_role_raider
     guardPrototype: N14MobRaiderPsycho
@@ -225,17 +256,19 @@
     amount: { min: 90, max: 140 }
 
 # ----------------------------
-# Legacy single-tag checks
+# Store-anchor checks
 # ----------------------------
 - type: storeContract
-  id: trade_contract_repair_generator_legacy_store
+  id: trade_contract_repair_generator_store_anchor
   name: "Проверка: генератор у магазина"
-  description: "Проверочный контракт на старом формате spawnPointTag. Генератор должен появиться в торговой зоне, а после ремонта нужно принести фотоподтверждение."
+  description: "Проверочный контракт на новом формате spawnPoint. Генератор должен появиться в торговой зоне, а после ремонта нужно принести фотоподтверждение."
   difficulty: Easy
   repeatable: true
   objectiveType: Repair
   runtime:
-    spawnPointTag: TradeContractStoreSpawn
+    spawnPoint:
+      type: MarkerId
+      id: TradeContractStoreSpawn
     stageGoal: 3
     structurePrototype: N14GeneratorFusionMiniRusted
     proofPrototype: NcTradeContractProofRepairPhoto
@@ -252,14 +285,16 @@
     amount: { min: 85, max: 125 }
 
 - type: storeContract
-  id: trade_contract_ghost_raider_legacy_store
-  name: "Проверка: рейдер по старой схеме"
-  description: "Проверочный контракт на старом формате spawnPointTag. Особая цель должна появляться в торговой зоне."
+  id: trade_contract_ghost_raider_store_anchor
+  name: "Проверка: рейдер по новой схеме"
+  description: "Проверочный контракт на новом формате spawnPoint. Особая цель должна появляться в торговой зоне."
   difficulty: Easy
   repeatable: true
   objectiveType: GhostRole
   runtime:
-    spawnPointTag: TradeContractStoreSpawn
+    spawnPoint:
+      type: MarkerId
+      id: TradeContractStoreSpawn
     stageGoal: 1
     ghostRole: nc_contract_ghost_role_raider
     guardPrototype: N14MobRaiderPsycho
@@ -271,3 +306,78 @@
   - type: Currency
     id: Caps
     amount: { min: 95, max: 145 }
+
+# ----------------------------
+# Matcher contract tests
+# ----------------------------
+- type: storeContract
+  id: trade_contract_delivery_matcher_spawn_items_test
+  match: Matcher
+  name: "Проверка Matcher: доставка со спавном"
+  description: "Тест M3: контракт с matcher-целью. Предметы спавнятся по runtime.spawnItems, а подбор идёт по matcher."
+  difficulty: Easy
+  repeatable: true
+  objectiveType: Delivery
+  targetItem: NcMatcherContractIngotTest
+  required: 3
+  runtime:
+    spawnItems: true
+    spawnPoint:
+      type: MarkerId
+      id: TradeContractStoreSpawn
+    spawnSpecific:
+    - N14IngotCopper1
+    - N14IngotIron1
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 40, max: 70 }
+
+- type: storeContract
+  id: trade_contract_delivery_matcher_tags_turnin_test
+  match: Matcher
+  name: "Проверка Matcher: сдача по тегу"
+  description: "Тест M3: сдача Delivery по matcher.tags (без spawnItems). Подходит любой предмет с tag Knife."
+  difficulty: Easy
+  repeatable: true
+  objectiveType: Delivery
+  targetItem: NcMatcherSellKnifeTagsOnlyTest
+  required: 2
+  runtime:
+    spawnPoint:
+      type: Store
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 30, max: 55 }
+
+- type: storeContract
+  id: trade_contract_hunt_matcher_spawn_specific_test
+  match: Matcher
+  name: "Проверка Matcher: охота со spawnSpecific"
+  description: "Тест M3: Hunt-контракт с matcher-целью. Конкретный моб для спавна задаётся через runtime.spawnSpecific."
+  difficulty: Easy
+  repeatable: true
+  objectiveType: Hunt
+  targetItem: NcMatcherContractHostilesTest
+  required: 1
+  runtime:
+    spawnPoint:
+      type: Weighted
+      options:
+      - type: MarkerId
+        id: TradeContractHuntSpawn
+        weight: 3
+      - type: MarkerId
+        id: TradeContractRoadSpawn
+        weight: 1
+    stageGoal: 1
+    proofPrototype: NcTradeContractProofGhoulTrophy
+    spawnSpecific:
+    - N14MobRaiderPsycho
+    givePinpointer: true
+    pinpointerPrototype: PinpointerUniversal
+  rewards:
+  - type: Currency
+    id: Caps
+    amount: { min: 55, max: 90 }

@@ -223,11 +223,11 @@ public sealed partial class NcContractCard : PanelContainer
         if (_data.Targets is { Count: > 0 })
         {
             foreach (var target in _data.Targets)
-                GoalsHost.AddChild(BuildTargetRow(target.TargetItem, target.Required));
+                GoalsHost.AddChild(BuildTargetRow(target.TargetItem, target.Required, target.MatchMode));
         }
         else if (!string.IsNullOrWhiteSpace(_data.TargetItem))
         {
-            GoalsHost.AddChild(BuildTargetRow(_data.TargetItem, _data.Required));
+            GoalsHost.AddChild(BuildTargetRow(_data.TargetItem, _data.Required, PrototypeMatchMode.Exact));
         }
     }
 
@@ -243,7 +243,7 @@ public sealed partial class NcContractCard : PanelContainer
         TurnInHost.RemoveAllChildren();
 
         if (TurnInSection.Visible)
-            TurnInHost.AddChild(BuildTargetRow(_data.TurnInItem, 1));
+            TurnInHost.AddChild(BuildTargetRow(_data.TurnInItem, 1, PrototypeMatchMode.Exact));
     }
 
     private void PopulateProgress()

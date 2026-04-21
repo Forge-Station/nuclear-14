@@ -19,6 +19,7 @@ namespace Content.Server._NC.Trade;
 public sealed partial class StoreStructuredSystem : EntitySystem
 {
     private const float AutoCloseDistance = 3f;
+    private const float ProximityRadius = 5f;
     private const float MinAccelInterval = 0.25f;
     private const float MinDynamicInterval = 0.25f;
     private const int MaxVisibleListingIds = 256;
@@ -461,6 +462,26 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (info.Crate is { } crate)
             RemoveWatchedRoot(crate, storeUid);
         _watchByStore.Remove(storeUid);
+    }
+
+    private bool IsNearAnyOpenStore(EntityUid entity)
+    {
+        if (_openStoreUids.Count == 0)
+            return false;
+
+        if (!TryComp(entity, out TransformComponent? entityXform))
+            return true;
+
+        foreach (var storeUid in _openStoreUids)
+        {
+            if (!TryComp(storeUid, out TransformComponent? storeXform))
+                continue;
+
+            if (_xform.InRange(entityXform.Coordinates, storeXform.Coordinates, ProximityRadius))
+                return true;
+        }
+
+        return false;
     }
 
     private void OnUiOpenAttempt(EntityUid uid, NcStoreComponent comp, ref ActivatableUIOpenAttemptEvent ev)

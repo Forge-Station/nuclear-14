@@ -51,13 +51,13 @@ public sealed partial class NcContractCard
                 if (t.Required <= 0 || string.IsNullOrWhiteSpace(t.TargetItem))
                     continue;
 
-                var name = ResolveProtoName(t.TargetItem);
+                var name = ResolveTargetName(t.TargetItem, t.MatchMode);
                 parts.Add(Loc.GetString("nc-store-contract-goal-inline", ("item", name), ("count", t.Required)));
             }
         }
         else if (c.Required > 0 && !string.IsNullOrWhiteSpace(c.TargetItem))
         {
-            var name = ResolveProtoName(c.TargetItem);
+            var name = ResolveTargetName(c.TargetItem, PrototypeMatchMode.Exact);
             parts.Add(Loc.GetString("nc-store-contract-goal-inline", ("item", name), ("count", c.Required)));
         }
 
@@ -120,6 +120,16 @@ public sealed partial class NcContractCard
         return protoId;
     }
 
+    private string ResolveTargetName(string protoId, PrototypeMatchMode matchMode)
+    {
+        if (matchMode == PrototypeMatchMode.Matcher &&
+            _proto.TryIndex<NcMatcherPrototype>(protoId, out var matcher) &&
+            !string.IsNullOrWhiteSpace(matcher.Name))
+            return matcher.Name;
+
+        return ResolveProtoName(protoId);
+    }
+
     private static string BuildProtoTooltip(EntityPrototype? proto)
     {
         if (proto == null)
@@ -129,6 +139,17 @@ public sealed partial class NcContractCard
             return Loc.GetString("nc-store-proto-tooltip-name-only", ("name", proto.Name));
 
         return Loc.GetString("nc-store-proto-tooltip", ("name", proto.Name), ("desc", proto.Description));
+    }
+
+    private static string BuildMatcherTooltip(NcMatcherPrototype? matcher)
+    {
+        if (matcher == null)
+            return string.Empty;
+
+        if (string.IsNullOrWhiteSpace(matcher.Description))
+            return Loc.GetString("nc-store-proto-tooltip-name-only", ("name", matcher.Name));
+
+        return Loc.GetString("nc-store-proto-tooltip", ("name", matcher.Name), ("desc", matcher.Description));
     }
 
     private string CurrencyName(string? currencyId)

@@ -6,9 +6,10 @@
   name: контракт, охота
   suffix: contracts, bounty
   components:
-  - type: Tag
-    tags:
-    - TradeContractHuntSpawn
+  - type: NcContractSpawnPoint
+    id: TradeContractHuntSpawn
+    groups:
+    - TradeContractObjectiveSpawn
 
 - type: entity
   id: MarkerTradeContractMine
@@ -16,9 +17,10 @@
   name: контракт, шахта
   suffix: contracts, mine
   components:
-  - type: Tag
-    tags:
-    - TradeContractMineSpawn
+  - type: NcContractSpawnPoint
+    id: TradeContractMineSpawn
+    groups:
+    - TradeContractObjectiveSpawn
 
 - type: entity
   id: MarkerTradeContractStore
@@ -26,9 +28,10 @@
   name: контракт, магазин
   suffix: contracts, store
   components:
-  - type: Tag
-    tags:
-    - TradeContractStoreSpawn
+  - type: NcContractSpawnPoint
+    id: TradeContractStoreSpawn
+    groups:
+    - TradeContractObjectiveSpawn
 
 - type: entity
   id: MarkerTradeContractRoad
@@ -36,9 +39,10 @@
   name: контракт, дорога
   suffix: contracts, road
   components:
-  - type: Tag
-    tags:
-    - TradeContractRoadSpawn
+  - type: NcContractSpawnPoint
+    id: TradeContractRoadSpawn
+    groups:
+    - TradeContractObjectiveSpawn
 
 - type: entity
   id: MarkerTradeContractWarehouse
@@ -46,9 +50,10 @@
   name: контракт, склад
   suffix: contracts, warehouse
   components:
-  - type: Tag
-    tags:
-    - TradeContractWarehouseSpawn
+  - type: NcContractSpawnPoint
+    id: TradeContractWarehouseSpawn
+    groups:
+    - TradeContractObjectiveSpawn
 
 - type: entity
   id: MarkerTradeContractDelivery
@@ -56,9 +61,10 @@
   name: контракт, адресная доставка
   suffix: contracts, delivery
   components:
-  - type: Tag
-    tags:
-    - TradeContractDeliverySpawn
+  - type: NcContractSpawnPoint
+    id: TradeContractDeliverySpawn
+    groups:
+    - TradeContractObjectiveSpawn
 
 - type: entity
   id: MarkerTradeContractStructure
@@ -66,9 +72,10 @@
   name: контракт, крупный груз
   suffix: contracts, structure
   components:
-  - type: Tag
-    tags:
-    - TradeContractStructureSpawn
+  - type: NcContractSpawnPoint
+    id: TradeContractStructureSpawn
+    groups:
+    - TradeContractObjectiveSpawn
 
 - type: entity
   id: MarkerTradeContractRepair
@@ -76,9 +83,10 @@
   name: контракт, ремонт
   suffix: contracts, repair
   components:
-  - type: Tag
-    tags:
-    - TradeContractRepairSpawn
+  - type: NcContractSpawnPoint
+    id: TradeContractRepairSpawn
+    groups:
+    - TradeContractObjectiveSpawn
 
 - type: entity
   id: MarkerTradeContractSpecialTarget
@@ -86,9 +94,10 @@
   name: контракт, особая цель
   suffix: contracts, special-target
   components:
-  - type: Tag
-    tags:
-    - TradeContractGhostSpawn
+  - type: NcContractSpawnPoint
+    id: TradeContractGhostSpawn
+    groups:
+    - TradeContractObjectiveSpawn
 
 - type: entity
   id: MarkerTradeContractDropoff
@@ -96,6 +105,7 @@
   name: контракт, точка выгрузки
   suffix: contracts, dropoff
   components:
-  - type: Tag
-    tags:
-    - TradeContractStructureDropoff
+  - type: NcContractSpawnPoint
+    id: TradeContractStructureDropoff
+    groups:
+    - TradeContractDropoff

@@ -29,20 +29,13 @@ public sealed partial class NcContractSystem : EntitySystem
         var config = new ContractObjectiveConfigData
         {
             AcceptTimeoutSeconds = runtimeProto.AcceptTimeoutSeconds,
-            SpawnPointTag = runtimeProto.SpawnPointTag ?? string.Empty,
-            SpawnPointTags = runtimeProto.SpawnPointTags != null
-                ? new List<WeightedTagEntry>(runtimeProto.SpawnPointTags)
-                : new List<WeightedTagEntry>(),
-            DropoffPointTag = runtimeProto.DropoffPointTag ?? string.Empty,
-            DropoffPointTags = runtimeProto.DropoffPointTags != null
-                ? new List<WeightedTagEntry>(runtimeProto.DropoffPointTags)
-                : new List<WeightedTagEntry>(),
+            SpawnPoint = CloneContractPointSelector(runtimeProto.SpawnPoint),
+            DropoffPoint = CloneContractPointSelector(runtimeProto.DropoffPoint),
             TargetPrototype = runtimeProto.TargetPrototype ?? string.Empty,
             DeliverySpawnPrototype = runtimeProto.DeliverySpawnPrototype ?? string.Empty,
             StructurePrototype = runtimeProto.StructurePrototype ?? string.Empty,
             GhostRole = runtimeProto.GhostRole ?? string.Empty,
             ProofPrototype = runtimeProto.ProofPrototype ?? string.Empty,
-            SpawnAtStore = runtimeProto.SpawnAtStore,
             PreserveTargetOnComplete = runtimeProto.PreserveTargetOnComplete,
             AllowStoreWorldTurnIn = runtimeProto.AllowStoreWorldTurnIn,
             GivePinpointer = runtimeProto.GivePinpointer,
@@ -51,7 +44,12 @@ public sealed partial class NcContractSystem : EntitySystem
             GuardCount = runtimeProto.GuardCount,
             RepairToolQuality = runtimeProto.RepairToolQuality ?? string.Empty,
             RepairDoAfterSeconds = runtimeProto.RepairDoAfterSeconds,
-            RepairStageSound = runtimeProto.RepairStageSound ?? string.Empty
+            RepairStageSound = runtimeProto.RepairStageSound ?? string.Empty,
+
+            SpawnItems = runtimeProto.SpawnItems,
+            SpawnSpecific = runtimeProto.SpawnSpecific != null
+                ? new List<string>(runtimeProto.SpawnSpecific)
+                : new List<string>()
         };
 
         ApplyGhostRoleDefinition(proto.ID, config);
@@ -98,23 +96,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private static void NormalizeObjectiveConfig(ContractObjectiveConfigData config)
     {
         config.AcceptTimeoutSeconds = Math.Max(0, config.AcceptTimeoutSeconds);
-        config.SpawnPointTag ??= string.Empty;
-        config.SpawnPointTags ??= new List<WeightedTagEntry>();
-        for (var i = config.SpawnPointTags.Count - 1; i >= 0; i--)
-        {
-            var entry = config.SpawnPointTags[i];
-            if (string.IsNullOrWhiteSpace(entry.Tag) || entry.Weight <= 0)
-                config.SpawnPointTags.RemoveAt(i);
-        }
-
-        config.DropoffPointTag ??= string.Empty;
-        config.DropoffPointTags ??= new List<WeightedTagEntry>();
-        for (var i = config.DropoffPointTags.Count - 1; i >= 0; i--)
-        {
-            var entry = config.DropoffPointTags[i];
-            if (string.IsNullOrWhiteSpace(entry.Tag) || entry.Weight <= 0)
-                config.DropoffPointTags.RemoveAt(i);
-        }
+        config.SpawnPoint = NormalizeContractPointSelector(config.SpawnPoint, defaultToStore: true);
+        config.DropoffPoint = NormalizeContractPointSelector(config.DropoffPoint, defaultToStore: false);
 
         config.TargetPrototype ??= string.Empty;
         config.DeliverySpawnPrototype ??= string.Empty;
@@ -134,11 +117,90 @@ public sealed partial class NcContractSystem : EntitySystem
         config.RepairDoAfterSeconds = ResolveRepairDoAfterSeconds(config.RepairDoAfterSeconds);
         config.RepairStageSound = ResolveRepairStageSound(config.RepairStageSound);
 
+        config.SpawnSpecific ??= new List<string>();
+        for (var i = config.SpawnSpecific.Count - 1; i >= 0; i--)
+        {
+            if (string.IsNullOrWhiteSpace(config.SpawnSpecific[i]))
+                config.SpawnSpecific.RemoveAt(i);
+        }
+
         for (var i = config.GhostRoleRequirements.Count - 1; i >= 0; i--)
         {
             if (config.GhostRoleRequirements[i] is null)
                 config.GhostRoleRequirements.RemoveAt(i);
         }
+    }
+
+    private static ContractPointSelectorPrototype? CloneContractPointSelector(ContractPointSelectorPrototype? selector)
+    {
+        if (selector == null)
+            return null;
+
+        var sourceOptions = selector.Options ?? new List<WeightedContractPointOptionEntry>();
+
+        var clone = new ContractPointSelectorPrototype
+        {
+            Type = selector.Type,
+            Id = selector.Id ?? string.Empty,
+            Options = new List<WeightedContractPointOptionEntry>(sourceOptions.Count)
+        };
+
+        for (var i = 0; i < sourceOptions.Count; i++)
+            clone.Options.Add(sourceOptions[i]);
+
+        return clone;
+    }
+
+    private static ContractPointSelectorPrototype? NormalizeContractPointSelector(
+        ContractPointSelectorPrototype? selector,
+        bool defaultToStore)
+    {
+        if (selector == null)
+            return defaultToStore ? new ContractPointSelectorPrototype() : null;
+
+        selector.Id ??= string.Empty;
+        selector.Options ??= new List<WeightedContractPointOptionEntry>();
+
+        switch (selector.Type)
+        {
+            case ContractPointSelectorType.Store:
+                selector.Id = string.Empty;
+                selector.Options.Clear();
+                return selector;
+
+            case ContractPointSelectorType.MarkerId:
+            case ContractPointSelectorType.MarkerGroup:
+                selector.Options.Clear();
+                if (!string.IsNullOrWhiteSpace(selector.Id))
+                    return selector;
+                return defaultToStore ? new ContractPointSelectorPrototype() : null;
+
+            case ContractPointSelectorType.Weighted:
+                for (var i = selector.Options.Count - 1; i >= 0; i--)
+                {
+                    var option = selector.Options[i];
+                    if (option.Weight <= 0 || !IsContractPointOptionUsable(option))
+                        selector.Options.RemoveAt(i);
+                }
+
+                selector.Id = string.Empty;
+                if (selector.Options.Count > 0)
+                    return selector;
+                return defaultToStore ? new ContractPointSelectorPrototype() : null;
+
+            default:
+                return defaultToStore ? new ContractPointSelectorPrototype() : null;
+        }
+    }
+
+    private static bool IsContractPointOptionUsable(in WeightedContractPointOptionEntry option)
+    {
+        return option.Type switch
+        {
+            ContractPointSelectorType.Store => true,
+            ContractPointSelectorType.MarkerId or ContractPointSelectorType.MarkerGroup => !string.IsNullOrWhiteSpace(option.Id),
+            _ => false
+        };
     }
 
     private static int GetDefaultObjectiveStageGoal(ContractExecutionKind executionKind)

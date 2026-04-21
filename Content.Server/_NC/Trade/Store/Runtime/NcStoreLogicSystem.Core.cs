@@ -4,7 +4,9 @@ using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Stacks;
+using Content.Shared.Tag;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
 namespace Content.Server._NC.Trade;
@@ -22,6 +24,11 @@ public sealed partial class NcStoreLogicSystem : EntitySystem
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     [Dependency] public readonly NcStoreInventorySystem _inventory = default!;
     [Dependency] public readonly IPrototypeManager _protos = default!;
+    [Dependency] private readonly TagSystem _tags = default!;
+
+    // Phase M2: used by Buy/Sell flows to random-pick a concrete prototype from matcher.Items.
+    [Dependency] private readonly IRobustRandom _random = default!;
+
     [Dependency] public readonly SharedStackSystem _stacks = default!;
 
     public override void Initialize()

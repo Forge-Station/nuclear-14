@@ -8,10 +8,8 @@ public sealed class ContractObjectiveConfigData
 {
     public int AcceptTimeoutSeconds;
 
-    public string SpawnPointTag { get; set; } = string.Empty;
-    public List<WeightedTagEntry> SpawnPointTags { get; set; } = new();
-    public string DropoffPointTag { get; set; } = string.Empty;
-    public List<WeightedTagEntry> DropoffPointTags { get; set; } = new();
+    public ContractPointSelectorPrototype? SpawnPoint { get; set; }
+    public ContractPointSelectorPrototype? DropoffPoint { get; set; }
     public string TargetPrototype { get; set; } = string.Empty;
     public string DeliverySpawnPrototype { get; set; } = string.Empty;
     public string StructurePrototype { get; set; } = string.Empty;
@@ -22,7 +20,6 @@ public sealed class ContractObjectiveConfigData
     public string GhostRoleDescription { get; set; } = string.Empty;
     public string GhostRoleRules { get; set; } = string.Empty;
     public List<CharacterRequirement> GhostRoleRequirements { get; set; } = new();
-    public bool SpawnAtStore;
     public bool PreserveTargetOnComplete;
     public bool AllowStoreWorldTurnIn;
 
@@ -35,4 +32,9 @@ public sealed class ContractObjectiveConfigData
     public string RepairToolQuality { get; set; } = string.Empty;
     public float RepairDoAfterSeconds;
     public string RepairStageSound { get; set; } = string.Empty;
+
+    // Phase M: see StoreContractRuntimePrototype for semantics. These are copied from the
+    // prototype at contract-creation time so the runtime doesn't have to re-resolve the proto.
+    public bool SpawnItems;
+    public List<string> SpawnSpecific { get; set; } = new();
 }

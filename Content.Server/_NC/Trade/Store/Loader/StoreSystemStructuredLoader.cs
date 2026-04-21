@@ -132,6 +132,12 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
             foreach (var entry in categoryProto.Entries)
             {
+                if (entry.MatchMode == PrototypeMatchMode.Matcher &&
+                    !ValidateMatcherEntry(entry, mode, presetId, categoryId))
+                {
+                    continue;
+                }
+
                 var baseId = $"{presetId}:{mode}:{categoryId}:{entry.Proto}";
                 var id = AllocateDeterministicId(baseId, ctx);
 
@@ -157,6 +163,43 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         }
 
         return count;
+    }
+
+    private bool ValidateMatcherEntry(StoreCatalogEntry entry, StoreMode mode, string presetId, string categoryId)
+    {
+        if (string.IsNullOrWhiteSpace(entry.Proto))
+        {
+            Sawmill.Warning(
+                $"[NcStore] Matcher entry в '{presetId}/{categoryId}' с пустым proto — пропущен.");
+            return false;
+        }
+
+        if (!_prototypes.TryIndex<NcMatcherPrototype>(entry.Proto, out var matcher))
+        {
+            Sawmill.Warning(
+                $"[NcStore] Matcher '{entry.Proto}' не найден (preset='{presetId}', category='{categoryId}') — пропущен.");
+            return false;
+        }
+
+        var hasItems = matcher.Items is { Count: > 0 };
+        var hasTags = matcher.Tags is { Count: > 0 };
+        if (!hasItems && !hasTags)
+        {
+            Sawmill.Warning(
+                $"[NcStore] Matcher '{entry.Proto}' не имеет ни items, ни tags — пропущен.");
+            return false;
+        }
+
+        // Buy listing must be able to spawn, which means items are required (tags don't drive spawn).
+        if (mode == StoreMode.Buy && !hasItems)
+        {
+            Sawmill.Warning(
+                $"[NcStore] Matcher '{entry.Proto}' используется в Buy-листинге без items (только tags) — " +
+                $"невозможно спавнить, пропущен (preset='{presetId}', category='{categoryId}').");
+            return false;
+        }
+
+        return true;
     }
 
     private static string AllocateDeterministicId(string baseId, LoadContext ctx)

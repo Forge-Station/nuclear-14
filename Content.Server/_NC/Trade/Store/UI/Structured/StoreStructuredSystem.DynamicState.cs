@@ -286,7 +286,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         var contractsFingerprint = buf.Contracts.ComputeFingerprint();
         if (!scratch.ShouldRebuildContracts(contractsFingerprint))
         {
-            // Unchanged — discard what we just mapped and replay the cached read buffer.
             buf.Contracts.Clear();
             buf.Contracts.AddRange(scratch.GetReadBuffer().Contracts);
         }
@@ -403,6 +402,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (_storesByWatchedRoot.Count == 0)
             return;
 
+        if (!IsNearAnyOpenStore(uid))
+            return;
+
         if (TryFindWatchedRoot(uid, out var r))
             RefreshStoresAffectedBy(r);
     }
@@ -410,6 +412,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     private void OnUserEntRemoved(EntityUid uid, ContainerManagerComponent comp, EntRemovedFromContainerMessage args)
     {
         if (_storesByWatchedRoot.Count == 0)
+            return;
+
+        if (!IsNearAnyOpenStore(uid))
             return;
 
         if (TryFindWatchedRoot(uid, out var r))
@@ -421,6 +426,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (_storesByWatchedRoot.Count == 0)
             return;
 
+        if (!IsNearAnyOpenStore(uid))
+            return;
+
         if (TryFindWatchedRoot(uid, out var r))
             RefreshStoresAffectedBy(r);
     }
@@ -428,6 +436,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     private void OnWatchedEntityParentChanged(ref EntParentChangedMessage args)
     {
         if (_storesByWatchedRoot.Count == 0)
+            return;
+
+        if (!IsNearAnyOpenStore(args.Entity))
             return;
 
         EntityUid? refreshedRoot = null;

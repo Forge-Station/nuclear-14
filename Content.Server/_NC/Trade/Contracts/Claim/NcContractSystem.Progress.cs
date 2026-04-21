@@ -616,7 +616,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             if (!TryGetPlanningEntityPrototypeId(ent, out var candidateId) ||
-                !MatchesPrototypeId(candidateId, expectedProtoId, matchMode))
+                !MatchesPrototypeId(ent, candidateId, expectedProtoId, matchMode))
             {
                 continue;
             }

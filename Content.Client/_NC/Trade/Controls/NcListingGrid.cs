@@ -303,10 +303,36 @@ public sealed partial class NcListingGrid : BoxContainer
         if (_searchIndex.ContainsKey(protoId))
             return;
 
-        if (!_proto.TryIndex<EntityPrototype>(protoId, out var p))
+        if (_proto.TryIndex<EntityPrototype>(protoId, out var p))
+        {
+            _searchIndex[protoId] = (p.Name + "\n" + p.Description).ToLowerInvariant();
+            return;
+        }
+
+        if (!_proto.TryIndex<NcMatcherPrototype>(protoId, out var matcher))
             return;
 
-        _searchIndex[protoId] = (p.Name + "\n" + p.Description).ToLowerInvariant();
+        var parts = new List<string>(matcher.Items.Count + 2)
+        {
+            matcher.Name
+        };
+
+        if (!string.IsNullOrWhiteSpace(matcher.Description))
+            parts.Add(matcher.Description);
+
+        for (var i = 0; i < matcher.Items.Count; i++)
+        {
+            var itemProtoId = matcher.Items[i];
+            if (string.IsNullOrWhiteSpace(itemProtoId))
+                continue;
+
+            if (_proto.TryIndex<EntityPrototype>(itemProtoId, out var itemProto))
+                parts.Add(itemProto.Name);
+            else
+                parts.Add(itemProtoId);
+        }
+
+        _searchIndex[protoId] = string.Join("\n", parts).ToLowerInvariant();
     }
 
     private bool MatchesSearch(string protoId)

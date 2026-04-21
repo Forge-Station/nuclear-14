@@ -87,6 +87,52 @@
       shader: unshaded
 
 # ----------------------------
+# Matcher prototypes (buy/sell/contracts tests)
+# ----------------------------
+- type: ncMatcher
+  id: NcMatcherBuyPipeGunsTest
+  name: "Случайный самопал (тест)"
+  description: "Покупка спавнит случайный самопал из списка items."
+  items:
+  - N14WeaponPistol10mmPipe
+  - N14WeaponSMG12mmPipe
+  - N14WeaponShotgunPipe
+
+- type: ncMatcher
+  id: NcMatcherSellKnivesTest
+  name: "Ножи (тест matcher)"
+  description: "Матч по списку items и по tag Knife для продаж/сдачи."
+  items:
+  - N14KitchenKnife
+  - N14CombatKnife
+  tags:
+  - Knife
+
+- type: ncMatcher
+  id: NcMatcherSellKnifeTagsOnlyTest
+  name: "Ножи по тегу (тест)"
+  description: "Только tags, без items. Валиден для Sell/Delivery turn-in."
+  tags:
+  - Knife
+
+- type: ncMatcher
+  id: NcMatcherContractIngotTest
+  name: "Слитки (тест контракта)"
+  description: "Служебный matcher для тестового Delivery контракта."
+  items:
+  - N14IngotCopper1
+  - N14IngotIron1
+  - N14IngotLead1
+
+- type: ncMatcher
+  id: NcMatcherContractHostilesTest
+  name: "Враждебные цели (тест контракта)"
+  description: "Служебный matcher для тестового Hunt контракта."
+  items:
+  - N14MobRaiderPsycho
+  - N14MobGhoulFeral
+
+# ----------------------------
 # caravan_storetickets categories
 # ----------------------------
 - type: storeCategoryStructured
@@ -536,7 +582,7 @@
   name: "Гранатомёты"
   entries:
   - proto: N14WeaponRifleGrenade
-    price: 2000 
+    price: 2000
     count: 2
 
 - type: storeCategoryStructured
@@ -776,6 +822,14 @@
     price: 75
 
 - type: storeCategoryStructured
+  id: CaravanBuy2_MatcherTests
+  name: "Тесты Matcher (Buy)"
+  entries:
+  - match: Matcher
+    proto: NcMatcherBuyPipeGunsTest
+    price: 95
+
+- type: storeCategoryStructured
   id: CaravanBuy2_Sprouts
   name: "Ростки"
   entries:
@@ -844,14 +898,15 @@
   - CaravanBuy2_Melee
   - CaravanBuy2_Headwear
   - CaravanBuy2_Armor
-  - CaravanBuy2_PowerArmor 
+  - CaravanBuy2_PowerArmor
   - CaravanBuy2_Rigs
   - CaravanBuy2_Medical
   - CaravanBuy2_Materials
   - CaravanBuy2_Alcohol
   - CaravanBuy2_Misc
+  - CaravanBuy2_MatcherTests
   - CaravanBuy2_Sprouts
-  - CaravanBuy2_WeaponGrenade 
+  - CaravanBuy2_WeaponGrenade
 # ----------------------------
 # caravan_sell2 categories
 # ----------------------------
@@ -1142,6 +1197,19 @@
     price: 30
 
 - type: storeCategoryStructured
+  id: CaravanSell2_MatcherTests
+  name: "Тесты Matcher (Sell)"
+  entries:
+  - proto: N14KitchenKnife
+    price: 16
+  - match: Matcher
+    proto: NcMatcherSellKnivesTest
+    price: 12
+  - match: Matcher
+    proto: NcMatcherSellKnifeTagsOnlyTest
+    price: 11
+
+- type: storeCategoryStructured
   id: CaravanSell2_Headwear
   name: "Головные уборы"
   entries:
@@ -1370,11 +1438,12 @@
   - CaravanSell2_EnergyWeapons
   - CaravanSell2_Ammo
   - CaravanSell2_Melee
+  - CaravanSell2_MatcherTests
   - CaravanSell2_Headwear
   - CaravanSell2_Armor
   - CaravanSell2_Rigs
   - CaravanSell2_MaterialsAndJunk
   - CaravanSell2_Ore
   - CaravanSell2_Alcohol
-  - CaravanSell2_Fish 
+  - CaravanSell2_Fish
   - CaravanSell2_WeaponGrenade

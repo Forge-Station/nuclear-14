@@ -104,17 +104,11 @@ public sealed partial class StoreContractRuntimePrototype
     [DataField("stageGoal")]
     public int StageGoal { get; set; } = 1;
 
-    [DataField("spawnPointTag")]
-    public string SpawnPointTag { get; set; } = string.Empty;
+    [DataField("spawnPoint")]
+    public ContractPointSelectorPrototype? SpawnPoint { get; set; }
 
-    [DataField("spawnPointTags")]
-    public List<WeightedTagEntry> SpawnPointTags { get; set; } = new();
-
-    [DataField("dropoffPointTag")]
-    public string DropoffPointTag { get; set; } = string.Empty;
-
-    [DataField("dropoffPointTags")]
-    public List<WeightedTagEntry> DropoffPointTags { get; set; } = new();
+    [DataField("dropoffPoint")]
+    public ContractPointSelectorPrototype? DropoffPoint { get; set; }
 
     [DataField("targetPrototype")]
     public string TargetPrototype { get; set; } = string.Empty;
@@ -130,9 +124,6 @@ public sealed partial class StoreContractRuntimePrototype
 
     [DataField("proofPrototype")]
     public string ProofPrototype { get; set; } = string.Empty;
-
-    [DataField("spawnAtStore")]
-    public bool SpawnAtStore { get; set; }
 
     [DataField("preserveTargetOnComplete")]
     public bool PreserveTargetOnComplete { get; set; }
@@ -163,22 +154,71 @@ public sealed partial class StoreContractRuntimePrototype
 
     [DataField("repairStageSound")]
     public string RepairStageSound { get; set; } = "/Audio/Effects/sparks4.ogg";
+
+    // Phase M: if true and the contract's target is a matcher, the system spawns the required
+    // number of items for the player (random picks from matcher.Items, may repeat). The player
+    // then delivers them to complete the contract. Without this flag the player must find
+    // matching items in the world by themselves.
+    //
+    // Only meaningful for Delivery contracts. Ignored for Hunt (which always spawns), Repair,
+    // GhostRole, etc.
+    //
+    // If set true on a matcher with empty Items — loader emits a warning and treats as false.
+    [DataField("spawnItems")]
+    public bool SpawnItems { get; set; }
+
+    // Phase M: explicit override list of prototypes to spawn. If non-empty, takes precedence
+    // over random picking from matcher.Items — these exact prototypes are spawned (one per
+    // required slot up to required count). Useful when the author wants a curated mix like
+    // "one pistol + one rifle + one shotgun" instead of random picks that could repeat.
+    //
+    // Applies to Hunt (spawns exactly these mobs) and to Delivery with SpawnItems=true (spawns
+    // exactly these items for the player). If the list has fewer entries than required, the
+    // remainder is filled by random picks from matcher.Items.
+    [DataField("spawnSpecific")]
+    public List<string> SpawnSpecific { get; set; } = new();
 }
 
 [DataDefinition, Serializable, NetSerializable]
-public partial struct WeightedTagEntry
+public sealed partial class ContractPointSelectorPrototype
 {
-    [DataField("tag", required: true)]
-    public string Tag;
+    [DataField("type")]
+    public ContractPointSelectorType Type { get; set; } = ContractPointSelectorType.Store;
+
+    [DataField("id")]
+    public string Id { get; set; } = string.Empty;
+
+    [DataField("options")]
+    public List<WeightedContractPointOptionEntry> Options { get; set; } = new();
+}
+
+[DataDefinition, Serializable, NetSerializable]
+public partial struct WeightedContractPointOptionEntry
+{
+    [DataField("type")]
+    public ContractPointSelectorType Type;
+
+    [DataField("id", required: true)]
+    public string Id;
 
     [DataField("weight")]
     public int Weight;
 
-    public WeightedTagEntry(string tag, int weight)
+    public WeightedContractPointOptionEntry(ContractPointSelectorType type, string id, int weight)
     {
-        Tag = tag;
+        Type = type;
+        Id = id;
         Weight = weight;
     }
+}
+
+[Serializable, NetSerializable]
+public enum ContractPointSelectorType : byte
+{
+    Store = 0,
+    MarkerId = 1,
+    MarkerGroup = 2,
+    Weighted = 3
 }
 
 [Prototype("storeContractsPreset")]
@@ -262,7 +302,12 @@ public enum ContractObjectiveType : byte
 [Serializable, NetSerializable]
 public enum PrototypeMatchMode : byte
 {
-    Exact = 0
+    Exact = 0,
+
+    // Phase M: treat the "proto" field as the ID of an NcMatcherPrototype, not an EntityPrototype.
+    // The matcher resolves to a group of prototypes (Items list) and/or tags for flexible match.
+    // See NcMatcherPrototype for semantics and loader/matching rules.
+    Matcher = 1
 }
 
 [Serializable]

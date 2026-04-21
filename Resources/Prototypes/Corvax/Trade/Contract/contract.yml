@@ -51,6 +51,12 @@
     weight: 50
   - id: caravan_contract_N14FloraProduceWildBrocFlower
     weight: 50
+  - id: trade_contract_delivery_matcher_spawn_items_test
+    weight: 10
+  - id: trade_contract_delivery_matcher_tags_turnin_test
+    weight: 10
+  - id: trade_contract_hunt_matcher_spawn_specific_test
+    weight: 10
 
 - type: storeContractsPreset
   id: PresetBazar

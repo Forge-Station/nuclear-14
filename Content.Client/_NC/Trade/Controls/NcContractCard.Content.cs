@@ -9,11 +9,24 @@ namespace Content.Client._NC.Trade.Controls;
 
 public sealed partial class NcContractCard
 {
-    private Control BuildTargetRow(string? protoId, int required)
+    private Control BuildTargetRow(string? protoId, int required, PrototypeMatchMode matchMode = PrototypeMatchMode.Exact)
     {
         EntityPrototype? targetProto = null;
+        NcMatcherPrototype? targetMatcher = null;
+        EntityPrototype? matcherFallbackProto = null;
         if (!string.IsNullOrWhiteSpace(protoId))
+        {
             _proto.TryIndex(protoId, out targetProto);
+
+            if (targetProto == null &&
+                matchMode == PrototypeMatchMode.Matcher &&
+                _proto.TryIndex<NcMatcherPrototype>(protoId, out var matcher))
+            {
+                targetMatcher = matcher;
+                if (matcher.Items.Count > 0)
+                    _proto.TryIndex<EntityPrototype>(matcher.Items[0], out matcherFallbackProto);
+            }
+        }
 
         var targetRow = new BoxContainer
         {
@@ -23,11 +36,55 @@ public sealed partial class NcContractCard
             HorizontalExpand = true
         };
 
-        var tooltip = BuildProtoTooltip(targetProto);
+        var tooltip = targetProto != null
+            ? BuildProtoTooltip(targetProto)
+            : BuildMatcherTooltip(targetMatcher);
         if (!string.IsNullOrWhiteSpace(tooltip))
             targetRow.ToolTip = tooltip;
 
-        if (!string.IsNullOrWhiteSpace(protoId))
+        if (targetProto != null)
+        {
+            var view = new EntityPrototypeView
+            {
+                MinSize = new(TargetIconPx, TargetIconPx),
+                MaxSize = new(TargetIconPx, TargetIconPx),
+                Margin = new(0, 0, 8, 0),
+                MouseFilter = MouseFilterMode.Ignore
+            };
+            view.SetPrototype(targetProto.ID);
+            NcUiIconFit.Fit(view, _sprites, targetProto.ID, targetPx: TargetIconPx, paddingPx: 4);
+            targetRow.AddChild(view);
+        }
+        else if (targetMatcher != null)
+        {
+            if (targetMatcher.Sprite != null && _sprites.Frame0(targetMatcher.Sprite) is { } matcherTexture)
+            {
+                var texture = new TextureRect
+                {
+                    Texture = matcherTexture,
+                    MinSize = new(TargetIconPx, TargetIconPx),
+                    MaxSize = new(TargetIconPx, TargetIconPx),
+                    Stretch = TextureRect.StretchMode.KeepAspectCentered,
+                    Margin = new(0, 0, 8, 0),
+                    MouseFilter = MouseFilterMode.Ignore
+                };
+                targetRow.AddChild(texture);
+            }
+            else if (matcherFallbackProto != null)
+            {
+                var view = new EntityPrototypeView
+                {
+                    MinSize = new(TargetIconPx, TargetIconPx),
+                    MaxSize = new(TargetIconPx, TargetIconPx),
+                    Margin = new(0, 0, 8, 0),
+                    MouseFilter = MouseFilterMode.Ignore
+                };
+                view.SetPrototype(matcherFallbackProto.ID);
+                NcUiIconFit.Fit(view, _sprites, matcherFallbackProto.ID, targetPx: TargetIconPx, paddingPx: 4);
+                targetRow.AddChild(view);
+            }
+        }
+        else if (!string.IsNullOrWhiteSpace(protoId))
         {
             var view = new EntityPrototypeView
             {
@@ -41,7 +98,12 @@ public sealed partial class NcContractCard
             targetRow.AddChild(view);
         }
 
-        var targetName = targetProto?.Name ?? protoId ?? Loc.GetString("nc-store-unknown-item");
+        var targetName = targetProto?.Name;
+        if (string.IsNullOrWhiteSpace(targetName))
+            targetName = targetMatcher?.Name;
+        if (string.IsNullOrWhiteSpace(targetName))
+            targetName = protoId ?? Loc.GetString("nc-store-unknown-item");
+
         var targetLabel = new Label
         {
             Text = Loc.GetString("nc-store-contract-goal-line", ("item", targetName), ("count", required)),

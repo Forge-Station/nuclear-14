@@ -1,5 +1,6 @@
 using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Random;
 
 
 namespace Content.Server._NC.Trade;
@@ -17,15 +18,18 @@ public sealed partial class NcStoreLogicSystem
 
     public bool TryBuy(string listingId, EntityUid machine, NcStoreComponent? store, EntityUid user, int count = 1)
     {
-        if (!TryPrepareBuy(listingId, store, user, count, out var listing, out var proto, out var plan))
+        if (!TryPrepareBuy(listingId, store, user, count, out var listing, out var effectiveProtoId, out var proto, out var plan))
             return false;
 
         if (!TryTakeCurrency(user, plan.Currency, plan.TotalPrice))
             return false;
 
+        // Phase M2: effectiveProtoId is the concrete prototype to spawn. For Exact listings
+        // it equals listing.ProductEntity. For Matcher listings it's a random pick from
+        // matcher.Items that was resolved in TryPrepareBuy.
         var spawnedUnits = SpawnPurchasedProduct(
             user,
-            listing.ProductEntity,
+            effectiveProtoId,
             proto,
             plan.Purchases,
             plan.UnitsPerPurchase);
@@ -40,10 +44,12 @@ public sealed partial class NcStoreLogicSystem
         EntityUid user,
         int count,
         out NcStoreListingDef listing,
+        out string effectiveProtoId,
         out EntityPrototype proto,
         out BuyExecutionPlan plan)
     {
         listing = default!;
+        effectiveProtoId = string.Empty;
         proto = default!;
         plan = default;
 
@@ -55,7 +61,11 @@ public sealed partial class NcStoreLogicSystem
                 out NcStoreListingDef? foundListing))
             return false;
 
-        if (!_protos.TryIndex<EntityPrototype>(foundListing.ProductEntity, out EntityPrototype? foundProto))
+        // Phase M2: for Matcher listings, ProductEntity is an NcMatcherPrototype id. Resolve
+        // it to a random concrete prototype from matcher.Items. For Exact listings, use the
+        // ProductEntity directly as the prototype ID.
+        if (!TryResolveBuyEffectiveProto(foundListing, out effectiveProtoId, out EntityPrototype? foundProto) ||
+            foundProto == null)
             return false;
 
         listing = foundListing;
@@ -68,6 +78,58 @@ public sealed partial class NcStoreLogicSystem
             return false;
 
         return TryBuildBuyPlan(currency, unitPrice, balance, count, listing, out plan);
+    }
+
+    /// <summary>
+    /// Phase M2: resolve a Buy listing to the concrete EntityPrototype that will be spawned.
+    /// For Exact match — the listing's ProductEntity is the prototype id directly.
+    /// For Matcher match — the listing's ProductEntity is an NcMatcherPrototype id; we load
+    /// the matcher, pick a random item from its Items list, and that becomes the effective prototype.
+    ///
+    /// Returns false (and logs a warning) if:
+    ///   - Exact: prototype doesn't exist.
+    ///   - Matcher: matcher prototype doesn't exist, matcher has no items, or the randomly
+    ///              picked item prototype doesn't exist.
+    /// </summary>
+    private bool TryResolveBuyEffectiveProto(
+        NcStoreListingDef listing,
+        out string effectiveProtoId,
+        out EntityPrototype? proto)
+    {
+        effectiveProtoId = string.Empty;
+        proto = null;
+
+        if (listing.MatchMode == PrototypeMatchMode.Matcher)
+        {
+            if (!_protos.TryIndex<NcMatcherPrototype>(listing.ProductEntity, out var matcher))
+            {
+                Sawmill.Warning(
+                    $"[NcStore] Buy prepare failed: matcher '{listing.ProductEntity}' not found for listing '{listing.Id}'.");
+                return false;
+            }
+
+            if (matcher.Items is not { Count: > 0 })
+            {
+                Sawmill.Warning(
+                    $"[NcStore] Buy prepare failed: matcher '{listing.ProductEntity}' has no items to pick from.");
+                return false;
+            }
+
+            effectiveProtoId = _random.Pick(matcher.Items);
+        }
+        else
+        {
+            effectiveProtoId = listing.ProductEntity;
+        }
+
+        if (!_protos.TryIndex<EntityPrototype>(effectiveProtoId, out proto))
+        {
+            Sawmill.Warning(
+                $"[NcStore] Buy prepare failed: resolved prototype '{effectiveProtoId}' not found (listing '{listing.Id}').");
+            return false;
+        }
+
+        return true;
     }
 
     private static bool TryBuildBuyPlan(
@@ -213,8 +275,12 @@ public sealed partial class NcStoreLogicSystem
 
         _inventory.InvalidateInventoryCache(root);
 
-        var snap = _inventory.BuildInventorySnapshot(root);
-        var owned = _inventory.GetOwnedFromSnapshot(snap, listing.ProductEntity, listing.MatchMode);
+        var owned = listing.MatchMode == PrototypeMatchMode.Matcher
+            ? _inventory.GetOwnedFromRootCached(root, listing.ProductEntity, listing.MatchMode)
+            : _inventory.GetOwnedFromSnapshot(
+                _inventory.BuildInventorySnapshot(root),
+                listing.ProductEntity,
+                listing.MatchMode);
 
         var maxByRemaining = listing.RemainingCount >= 0 ? listing.RemainingCount : int.MaxValue;
         var maxPossible = Math.Min(owned, maxByRemaining);
@@ -285,8 +351,12 @@ public sealed partial class NcStoreLogicSystem
 
         _inventory.InvalidateInventoryCache(user);
 
-        var snap = _inventory.BuildInventorySnapshot(user);
-        var owned = _inventory.GetOwnedFromSnapshot(snap, listing.ProductEntity, listing.MatchMode);
+        var owned = listing.MatchMode == PrototypeMatchMode.Matcher
+            ? _inventory.GetOwnedFromRootCached(user, listing.ProductEntity, listing.MatchMode)
+            : _inventory.GetOwnedFromSnapshot(
+                _inventory.BuildInventorySnapshot(user),
+                listing.ProductEntity,
+                listing.MatchMode);
 
         if (owned < requiredCount)
             return false;

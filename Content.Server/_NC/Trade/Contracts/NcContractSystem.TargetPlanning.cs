@@ -44,10 +44,31 @@ public sealed partial class NcContractSystem : EntitySystem
         _claimVirtualStackLeftScratch.Clear();
     }
 
-    private bool MatchesPrototypeId(string candidateId, string expectedProtoId, PrototypeMatchMode matchMode)
+    private bool MatchesPrototypeId(
+        EntityUid candidateEntity,
+        string candidateId,
+        string expectedProtoId,
+        PrototypeMatchMode matchMode)
     {
-        _ = matchMode;
-        return candidateId == expectedProtoId;
+        if (matchMode != PrototypeMatchMode.Matcher)
+            return candidateId == expectedProtoId;
+
+        if (!TryGetContractMatcherSpec(expectedProtoId, out var matcher))
+            return false;
+
+        if (matcher.MatchItems.Contains(candidateId))
+            return true;
+
+        if (matcher.MatchTags.Count == 0)
+            return false;
+
+        for (var i = 0; i < matcher.MatchTags.Count; i++)
+        {
+            if (_tags.HasTag(candidateEntity, matcher.MatchTags[i]))
+                return true;
+        }
+
+        return false;
     }
 
     private bool CanUseContractPlanningEntity(EntityUid root, EntityUid ent, bool worldTurnInSource)
