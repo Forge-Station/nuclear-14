@@ -8,7 +8,9 @@
     <BoxContainer Orientation="Vertical">
         <Control>
             <PanelContainer Name="WindowHeaderBackground"
-                            StyleClasses="WindowHeadingBackground" />
+                            StyleClasses="WindowHeadingBackground"
+                            HorizontalExpand="True"
+                            VerticalExpand="True" />
             <BoxContainer Margin="4 2 8 0" Orientation="Horizontal">
                 <Label Name="WindowTitle"
                        HorizontalExpand="True" VAlign="Center" StyleClasses="FancyWindowTitle" />

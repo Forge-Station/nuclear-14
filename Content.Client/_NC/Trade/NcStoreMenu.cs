@@ -214,20 +214,26 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         Tabs.TabFontColorOverride = activeFont;
         Tabs.TabFontColorInactiveOverride = inactiveFont;
+        var baseRules = IoCManager.Resolve<IUserInterfaceManager>().Stylesheet?.Rules ?? Array.Empty<StyleRule>();
+        Tabs.StyleIdentifier = "nc-store-tabs";
         Tabs.Stylesheet = new Stylesheet(
-            new[]
-            {
-                new StyleRule(
-                    new SelectorElement(typeof(TabContainer), null, null, null),
+            baseRules
+                .Concat(
                     new[]
                     {
-                        new StyleProperty(TabContainer.StylePropertyTabStyleBox, active),
-                        new StyleProperty(TabContainer.StylePropertyTabStyleBoxInactive, inactive),
-                        new StyleProperty(TabContainer.stylePropertyTabFontColor, activeFont),
-                        new StyleProperty(TabContainer.StylePropertyTabFontColorInactive, inactiveFont),
-                        new StyleProperty("font", tabFont)
+                        new StyleRule(
+                            new SelectorElement(typeof(TabContainer), null, "nc-store-tabs", null),
+                            new[]
+                            {
+                                new StyleProperty(TabContainer.StylePropertyPanelStyleBox, tabsBarStyle),
+                                new StyleProperty(TabContainer.StylePropertyTabStyleBox, active),
+                                new StyleProperty(TabContainer.StylePropertyTabStyleBoxInactive, inactive),
+                                new StyleProperty(TabContainer.stylePropertyTabFontColor, activeFont),
+                                new StyleProperty(TabContainer.StylePropertyTabFontColorInactive, inactiveFont),
+                                new StyleProperty("font", tabFont)
+                            })
                     })
-            });
+                .ToArray());
 
         Tabs.ForceRunStyleUpdate();
     }
