@@ -85,7 +85,10 @@ public sealed partial class NcContractSystem : EntitySystem
 
         DeactivateTrackedDeliveryDropoff(state);
 
-        CleanupObjectivePinpointers(key, state);
+        if (state.ProofEntity is { } proof && proof != EntityUid.Invalid && !TerminatingOrDeleted(proof))
+            RetargetObjectivePinpointers(key, state, proof);
+        else
+            CleanupObjectivePinpointers(key, state);
     }
 
     private void HandleTrackedDeliveryTargetResolved(

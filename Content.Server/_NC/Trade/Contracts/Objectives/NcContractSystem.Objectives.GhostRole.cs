@@ -223,9 +223,7 @@ public sealed partial class NcContractSystem : EntitySystem
         runtime.AcceptTimeoutRemainingSeconds = 0;
         _objectiveRuntimeByTarget[target] = key;
 
-        foreach (var pinpointer in state.PinpointerEntities)
-            if (!TerminatingOrDeleted(pinpointer))
-                _pinpointer.SetTarget(pinpointer, target);
+        RetargetObjectivePinpointers(key, state, target);
 
         var config = contract.Config;
         if (config.GuardCount <= 0 || string.IsNullOrWhiteSpace(config.GuardPrototype))

@@ -119,6 +119,20 @@ public sealed partial class NcStoreMenu : FancyWindow
 
     private void ApplyBaseTheme()
     {
+        var windowTitleBackground = ThemeColor(_uiColors.HeaderBackground, "#202329");
+        var windowTitleBorder = ThemeColor(_uiColors.HeaderBorder, "#4C4438");
+        WindowHeaderBackground.PanelOverride = new StyleBoxFlat
+        {
+            BackgroundColor = windowTitleBackground,
+            BorderColor = windowTitleBorder,
+            BorderThickness = new(1)
+        };
+        WindowHeaderDivider.PanelOverride = new StyleBoxFlat
+        {
+            BackgroundColor = windowTitleBorder
+        };
+        WindowTitle.ModulateSelfOverride = ThemeColor(_uiColors.TabFontActive, "#F0D49A");
+
         var headerFrameStyle = new StyleBoxFlat
         {
             BackgroundColor = ThemeColor(_uiColors.HeaderBackground, "#202329"),
@@ -153,9 +167,10 @@ public sealed partial class NcStoreMenu : FancyWindow
         TabsFrame.PanelOverride = tabsFrameStyle;
 
         var tabContentColor = ThemeColor(_uiColors.TabContentBackground, "#1E2027");
-        TabBuy.PanelOverride = new StyleBoxFlat { BackgroundColor = tabContentColor };
-        TabSell.PanelOverride = new StyleBoxFlat { BackgroundColor = tabContentColor };
-        TabContracts.PanelOverride = new StyleBoxFlat { BackgroundColor = tabContentColor };
+        var tabContentBorder = ThemeColor(_uiColors.TabsFrameBorder, "#4C4438");
+        TabBuy.PanelOverride = CreateTabContentStyle(tabContentColor, tabContentBorder);
+        TabSell.PanelOverride = CreateTabContentStyle(tabContentColor, tabContentBorder);
+        TabContracts.PanelOverride = CreateTabContentStyle(tabContentColor, tabContentBorder);
 
         BuyView.ApplyUiTheme(_uiColors);
         SellView.ApplyUiTheme(_uiColors);
@@ -163,7 +178,7 @@ public sealed partial class NcStoreMenu : FancyWindow
 
     private void ApplyLocalTabStyle()
     {
-        var tabFont = IoCManager.Resolve<IResourceCache>().NotoStack(variation: "Bold", size: 17);
+        var tabFont = IoCManager.Resolve<IResourceCache>().NotoStack(variation: "Bold", size: 18, display: true);
 
         var active = new StyleBoxFlat
         {
@@ -171,8 +186,8 @@ public sealed partial class NcStoreMenu : FancyWindow
             BorderColor = ThemeColor(_uiColors.TabActiveBorder, "#D4B06A"),
             BorderThickness = new(1)
         };
-        active.SetContentMarginOverride(StyleBox.Margin.Horizontal, 16);
-        active.SetContentMarginOverride(StyleBox.Margin.Vertical, 7);
+        active.SetContentMarginOverride(StyleBox.Margin.Horizontal, 20);
+        active.SetContentMarginOverride(StyleBox.Margin.Vertical, 9);
 
         var inactive = new StyleBoxFlat
         {
@@ -180,38 +195,51 @@ public sealed partial class NcStoreMenu : FancyWindow
             BorderColor = ThemeColor(_uiColors.TabInactiveBorder, "#665C4E"),
             BorderThickness = new(1)
         };
-        inactive.SetContentMarginOverride(StyleBox.Margin.Horizontal, 16);
-        inactive.SetContentMarginOverride(StyleBox.Margin.Vertical, 7);
+        inactive.SetContentMarginOverride(StyleBox.Margin.Horizontal, 20);
+        inactive.SetContentMarginOverride(StyleBox.Margin.Vertical, 9);
 
-        Tabs.PanelStyleBoxOverride = new StyleBoxFlat
+        var tabsBarStyle = new StyleBoxFlat
         {
             BackgroundColor = ThemeColor(_uiColors.TabsBarBackground, "#1C1E25"),
             BorderColor = ThemeColor(_uiColors.TabsBarBorder, "#665C4E"),
             BorderThickness = new(1)
         };
+        tabsBarStyle.SetContentMarginOverride(StyleBox.Margin.Left, 1);
+        tabsBarStyle.SetContentMarginOverride(StyleBox.Margin.Right, 1);
+        tabsBarStyle.SetContentMarginOverride(StyleBox.Margin.Bottom, 1);
+        Tabs.PanelStyleBoxOverride = tabsBarStyle;
 
-        var baseRules = IoCManager.Resolve<IUserInterfaceManager>().Stylesheet?.Rules ?? Array.Empty<StyleRule>();
+        var activeFont = ThemeColor(_uiColors.TabFontActive, "#F0D49A");
+        var inactiveFont = ThemeColor(_uiColors.TabFontInactive, "#B9AE95");
 
-        Tabs.StyleIdentifier = "nc-store-tabs";
+        Tabs.TabFontColorOverride = activeFont;
+        Tabs.TabFontColorInactiveOverride = inactiveFont;
         Tabs.Stylesheet = new Stylesheet(
-            baseRules
-                .Concat(
+            new[]
+            {
+                new StyleRule(
+                    new SelectorElement(typeof(TabContainer), null, null, null),
                     new[]
                     {
-                        new StyleRule(
-                            new SelectorElement(typeof(TabContainer), null, "nc-store-tabs", null),
-                            new[]
-                            {
-                                new StyleProperty(TabContainer.StylePropertyTabStyleBox, active),
-                                new StyleProperty(TabContainer.StylePropertyTabStyleBoxInactive, inactive),
-                                new StyleProperty(TabContainer.stylePropertyTabFontColor, ThemeColor(_uiColors.TabFontActive, "#F0D49A")),
-                                new StyleProperty(TabContainer.StylePropertyTabFontColorInactive, ThemeColor(_uiColors.TabFontInactive, "#B9AE95")),
-                                new StyleProperty("font", tabFont)
-                            })
+                        new StyleProperty(TabContainer.StylePropertyTabStyleBox, active),
+                        new StyleProperty(TabContainer.StylePropertyTabStyleBoxInactive, inactive),
+                        new StyleProperty(TabContainer.stylePropertyTabFontColor, activeFont),
+                        new StyleProperty(TabContainer.StylePropertyTabFontColorInactive, inactiveFont),
+                        new StyleProperty("font", tabFont)
                     })
-                .ToArray());
+            });
 
         Tabs.ForceRunStyleUpdate();
+    }
+
+    private static StyleBoxFlat CreateTabContentStyle(Color background, Color border)
+    {
+        return new StyleBoxFlat
+        {
+            BackgroundColor = background,
+            BorderColor = border,
+            BorderThickness = new(1)
+        };
     }
 
     private static Color ThemeColor(string? value, string fallback)

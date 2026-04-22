@@ -1,16 +1,22 @@
 <PanelContainer xmlns="https://spacestation14.io"
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:graphics="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
                 HorizontalExpand="True"
                 VerticalExpand="True">
+    <PanelContainer.PanelOverride>
+        <graphics:StyleBoxFlat BackgroundColor="#00000000"
+                               BorderThickness="0" />
+    </PanelContainer.PanelOverride>
+
     <ScrollContainer Name="Scroll"
                      HorizontalExpand="True"
                      VerticalExpand="True"
                      HScrollEnabled="False"
-                     ReserveScrollbarSpace="True">
+                     ReserveScrollbarSpace="False">
         <BoxContainer Name="List"
                       Orientation="Vertical"
                       HorizontalExpand="True"
-                      Margin="0 0 2 0" />
+                      Margin="0" />
     </ScrollContainer>
 </PanelContainer>
 

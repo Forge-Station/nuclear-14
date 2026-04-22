@@ -11,8 +11,12 @@ public sealed partial class NcContractCard
 
     private static bool CanRequestPinpointer(ContractClientData data)
     {
-        if (!data.SupportsPinpointer || data.FlowStatus != ContractFlowStatus.InProgress)
+        if (!data.SupportsPinpointer ||
+            (data.FlowStatus != ContractFlowStatus.InProgress &&
+             data.FlowStatus != ContractFlowStatus.ReadyToTurnIn))
+        {
             return false;
+        }
 
         return data.ExecutionKind != ContractExecutionKind.InventoryDelivery;
     }

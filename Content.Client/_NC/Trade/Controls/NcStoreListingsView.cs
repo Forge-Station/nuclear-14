@@ -135,6 +135,16 @@ public sealed partial class NcStoreListingsView : PanelContainer
             BackgroundColor = ThemeColor(_uiColors.CategoriesDivider, "#7A6334")
         };
 
+        CategoryHeaderPanel.PanelOverride = new StyleBoxFlat
+        {
+            BackgroundColor = ThemeColor(_uiColors.TabInactiveBackground, "#2C2E35"),
+            BorderColor = ThemeColor(_uiColors.TabInactiveBorder, "#665C4E"),
+            BorderThickness = new(1)
+        };
+        CategoryHeader.ModulateSelfOverride = ThemeColor(_uiColors.TabFontActive, "#F0D49A");
+        TabHeading.ModulateSelfOverride = ThemeColor(_uiColors.TabFontInactive, "#B9AE95");
+        UpdateCategoryHeaderStyle(isSelectedCategory: !string.IsNullOrEmpty(SelectedCategory));
+
         CategoryBar.SetThemeColors(
             ThemeColor(_uiColors.CategoryButtonIdle, "#7C6624"),
             ThemeColor(_uiColors.CategoryButtonSelected, "#D9A441"));
@@ -157,6 +167,7 @@ public sealed partial class NcStoreListingsView : PanelContainer
             (d, qty) => _onPressed?.Invoke(d, qty));
 
         CategoryHeader.Visible = !string.IsNullOrEmpty(SelectedCategory) || hasSearch;
+        CategoryHeaderPanel.Visible = CategoryHeader.Visible;
 
         if (!CategoryHeader.Visible)
         {
@@ -167,12 +178,35 @@ public sealed partial class NcStoreListingsView : PanelContainer
         if (!string.IsNullOrEmpty(SelectedCategory))
         {
             CategoryHeader.Text = _categoryDisplayName(SelectedCategory);
+            UpdateCategoryHeaderStyle(isSelectedCategory: true);
             return;
         }
 
         CategoryHeader.Text = _mode == StoreMode.Buy
             ? Loc.GetString("nc-store-search-results-buy", ("count", count))
             : Loc.GetString("nc-store-search-results-sell", ("count", count));
+        UpdateCategoryHeaderStyle(isSelectedCategory: false);
+    }
+
+    private void UpdateCategoryHeaderStyle(bool isSelectedCategory)
+    {
+        var background = isSelectedCategory
+            ? ThemeColor(_uiColors.TabActiveBackground, "#6B5730")
+            : ThemeColor(_uiColors.TabInactiveBackground, "#2C2E35");
+        var border = isSelectedCategory
+            ? ThemeColor(_uiColors.TabActiveBorder, "#D4B06A")
+            : ThemeColor(_uiColors.TabInactiveBorder, "#665C4E");
+        var text = isSelectedCategory
+            ? ThemeColor(_uiColors.TabFontActive, "#F0D49A")
+            : ThemeColor(_uiColors.TabFontInactive, "#B9AE95");
+
+        CategoryHeaderPanel.PanelOverride = new StyleBoxFlat
+        {
+            BackgroundColor = background,
+            BorderColor = border,
+            BorderThickness = new(1)
+        };
+        CategoryHeader.ModulateSelfOverride = text;
     }
 
     private static Color ThemeColor(string? value, string fallback)

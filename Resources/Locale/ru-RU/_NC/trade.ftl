@@ -129,6 +129,8 @@ nc-store-contract-pinpointer-issued = Пеленгатор выдан.
 nc-store-contract-pinpointer-issue-failed = Не удалось выдать пеленгатор.
 nc-store-contract-ghost-role-timeout = Никто не взял эту роль вовремя. Контракт сорван.
 nc-store-contract-ghost-role-target-lost = Цель выбыла ещё до начала операции. Контракт сорван.
+nc-store-contract-hunt-target-lost = Цель ликвидирована/утрачена до завершения всех этапов. Контракт сорван.
+nc-store-contract-hunt-next-target-spawn-failed = Не удалось определить следующую цель для этапа охоты. Контракт сорван.
 
 nc-store-contract-badge-awaiting-ghost-role = ОЖИДАНИЕ
 nc-store-contract-badge-awaiting-ghost-role-tooltip = Идёт поиск исполнителя. Если за отведённое время никто не возьмётся за дело, контракт сорвётся.

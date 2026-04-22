@@ -57,7 +57,11 @@ public sealed partial class NcContractSystem : EntitySystem
         _objectiveRuntimeByTarget.Remove(target);
 
         if (_objectiveRuntimeByContract.TryGetValue(key, out var state) && state.TargetEntity == target)
+        {
             state.TargetEntity = null;
+            if (TryComp(target, out TransformComponent? targetXform))
+                state.LastKnownTargetCoordinates = targetXform.Coordinates;
+        }
 
         if (!TryGetObjectiveContract(key, out var comp, out var contract))
             return;
@@ -80,7 +84,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 return;
 
             case ContractExecutionKind.HuntObjective:
-                HandleHuntObjectiveTargetResolved(key, contract);
+                HandleHuntObjectiveTargetResolved(key, comp, contract);
                 return;
 
             case ContractExecutionKind.GhostRoleObjective:
@@ -171,8 +175,16 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         MarkObjectiveComplete(contract);
 
-        if (_objectiveRuntimeByContract.TryGetValue(key, out var state))
-            CleanupObjectivePinpointers(key, state);
+        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+            return;
+
+        if (state.ProofEntity is { } proof && proof != EntityUid.Invalid && !TerminatingOrDeleted(proof))
+        {
+            RetargetObjectivePinpointers(key, state, proof);
+            return;
+        }
+
+        CleanupObjectivePinpointers(key, state);
     }
 
     private void FinalizeObjectiveFailure(
@@ -248,6 +260,8 @@ public sealed partial class NcContractSystem : EntitySystem
         state.ProofEntity = null;
         state.ProofSpawned = false;
         state.ProofToken = string.Empty;
+        state.HuntTargetWasKilled = false;
+        state.LastKnownTargetCoordinates = null;
         _objectiveRuntimeByContract.Remove(key);
     }
 
@@ -296,6 +310,8 @@ public sealed partial class NcContractSystem : EntitySystem
         public readonly HashSet<EntityUid> PinpointerEntities = new();
         public TimeSpan? GhostRoleAcceptDeadline;
         public bool GhostRoleTaken;
+        public bool HuntTargetWasKilled;
+        public EntityCoordinates? LastKnownTargetCoordinates;
         public EntityUid? ProofEntity;
         public bool ProofSpawned;
         public string ProofToken = string.Empty;

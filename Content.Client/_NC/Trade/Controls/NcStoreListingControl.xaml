@@ -18,7 +18,7 @@
                   HorizontalExpand="True">
 
         <Label Name="TitleLabel"
-               StyleClasses="LabelKeyText"
+               StyleClasses="LabelHeading"
                ClipText="True"
                HorizontalExpand="True"
                Margin="1 0 1 1"/>
@@ -26,7 +26,7 @@
         <PanelContainer Name="TitleDivider"
                         HorizontalExpand="True"
                         MinSize="0 1"
-                        Margin="0 0 0 1">
+                        Margin="-8 0 -8 1">
             <PanelContainer.PanelOverride>
                 <graphics:StyleBoxFlat BackgroundColor="#B08D3BCC"/>
             </PanelContainer.PanelOverride>

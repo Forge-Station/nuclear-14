@@ -237,7 +237,12 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid target
     )
     {
+        state.HuntTargetWasKilled = false;
         state.TargetEntity = target;
+
+        if (TryComp(target, out TransformComponent? targetXform))
+            state.LastKnownTargetCoordinates = targetXform.Coordinates;
+
         _objectiveRuntimeByTarget[target] = key;
     }
 

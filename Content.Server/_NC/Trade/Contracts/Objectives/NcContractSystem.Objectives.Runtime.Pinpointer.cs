@@ -14,10 +14,12 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!comp.Contracts.TryGetValue(contractId, out var contract))
             return false;
 
-        if (!contract.Taken || contract.Completed)
+        if (!contract.Taken)
             return false;
 
         EnsureObjectiveRuntimeDefaults(contract);
+        if (contract.Runtime.Failed)
+            return false;
 
         var config = contract.Config;
         if (!config.GivePinpointer)
@@ -27,20 +29,31 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
             return false;
 
-        if (contract.ExecutionKind == ContractExecutionKind.GhostRoleObjective && !state.GhostRoleTaken)
-            return false;
+        EntityUid pinpointerTarget;
+        if (contract.Completed)
+        {
+            if (state.ProofEntity is not { } proof || proof == EntityUid.Invalid || TerminatingOrDeleted(proof))
+                return false;
 
-        if (state.TargetEntity is not { } target || target == EntityUid.Invalid || TerminatingOrDeleted(target))
-            return false;
+            pinpointerTarget = proof;
+        }
+        else
+        {
+            if (contract.ExecutionKind == ContractExecutionKind.GhostRoleObjective && !state.GhostRoleTaken)
+                return false;
 
-        var pinpointerTarget = ResolveObjectivePinpointerTarget(contract, state, target);
-        if (pinpointerTarget == EntityUid.Invalid || TerminatingOrDeleted(pinpointerTarget))
-            return false;
+            if (state.TargetEntity is not { } target || target == EntityUid.Invalid || TerminatingOrDeleted(target))
+                return false;
+
+            pinpointerTarget = ResolveObjectivePinpointerTarget(contract, state, target);
+            if (pinpointerTarget == EntityUid.Invalid || TerminatingOrDeleted(pinpointerTarget))
+                return false;
+        }
 
         EntityCoordinates spawnCoords;
         if (TryComp(store, out TransformComponent? storeXform))
             spawnCoords = storeXform.Coordinates;
-        else if (TryComp(target, out TransformComponent? targetXform))
+        else if (TryComp(pinpointerTarget, out TransformComponent? targetXform))
             spawnCoords = targetXform.Coordinates;
         else
             return false;
@@ -145,6 +158,28 @@ public sealed partial class NcContractSystem : EntitySystem
         state.PinpointerEntities.Add(pinpointer);
         _objectiveRuntimeByPinpointer[pinpointer] = key;
         _logic.QueuePickupToHandsOrCrateNextTick(user, pinpointer);
+    }
+
+    private void RetargetObjectivePinpointers(
+        (EntityUid Store, string ContractId) key,
+        ObjectiveRuntimeState state,
+        EntityUid target)
+    {
+        if (target == EntityUid.Invalid || TerminatingOrDeleted(target))
+            return;
+
+        PruneInvalidPinpointers(key, state);
+        if (state.PinpointerEntities.Count == 0)
+            return;
+
+        foreach (var pinpointer in state.PinpointerEntities)
+        {
+            if (TerminatingOrDeleted(pinpointer))
+                continue;
+
+            _pinpointer.SetTarget(pinpointer, target);
+            _pinpointer.SetActive(pinpointer, true);
+        }
     }
 
     private bool CanIssueContractPinpointer((EntityUid Store, string ContractId) key, ObjectiveRuntimeState state)
