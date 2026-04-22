@@ -1,10 +1,12 @@
 using Content.Client.Message;
+using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Maths;
 using Robust.Shared.Timing;
 
 
@@ -59,10 +61,13 @@ public sealed class NcStoreHeaderBar : BoxContainer
 
     private readonly Dictionary<string, Texture> _currencyIconCache = new();
     private readonly LineEdit _searchBar;
+    private readonly Label _searchIcon;
+    private readonly List<(string Currency, int Amount)> _lastBalances = new();
     private IPrototypeManager? _proto;
 
     private int _searchToken;
     private SpriteSystem? _sprites;
+    private Color _balanceTextColor = Color.FromHex("#FFFF00");
 
     public NcStoreHeaderBar()
     {
@@ -88,12 +93,20 @@ public sealed class NcStoreHeaderBar : BoxContainer
             Access = AccessLevel.Public
         };
 
+        _searchIcon = new Label
+        {
+            Text = "🔍",
+            Margin = new(0, 0, 4, 0),
+            VerticalAlignment = VAlignment.Center,
+        };
+
         AddChild(_balancesRow);
         AddChild(_emptyBalanceLabel);
         AddChild(new() { HorizontalExpand = true, });
-        AddChild(new Label { Text = "🔍", Margin = new(0, 0, 4, 0), VerticalAlignment = VAlignment.Center, });
+        AddChild(_searchIcon);
         AddChild(_searchBar);
 
+        ApplyUiTheme(new StoreUiColorsData());
         ShowEmptyBalance();
 
         _searchBar.OnTextChanged += _ => HandleSearchTextChanged();
@@ -118,6 +131,8 @@ public sealed class NcStoreHeaderBar : BoxContainer
 
     public void SetBalances(IReadOnlyDictionary<string, int> balancesByCurrency)
     {
+        _lastBalances.Clear();
+
         if (balancesByCurrency.Count == 0)
         {
             ShowEmptyBalance();
@@ -133,6 +148,8 @@ public sealed class NcStoreHeaderBar : BoxContainer
                 continue;
             ordered.Add((cur, amt));
         }
+
+        _lastBalances.AddRange(ordered);
 
         if (ordered.Count == 0)
         {
@@ -172,7 +189,7 @@ public sealed class NcStoreHeaderBar : BoxContainer
             group.Container.Margin = i == ordered.Count - 1
                 ? new(0, 0, 0, 0)
                 : new(0, 0, CurrencyGroupSpacing, 0);
-            group.Amount.SetMarkup($"[font size=14][color=yellow]{amt}[/color][/font]");
+            group.Amount.SetMarkup($"[font size=14][color={ColorToHex(_balanceTextColor)}]{amt}[/color][/font]");
             SetCurrencyIconFor(group.Icon, cur);
         }
 
@@ -181,6 +198,29 @@ public sealed class NcStoreHeaderBar : BoxContainer
             _balanceGroups[i].Container.Visible = false;
 
         _activeGroupCount = ordered.Count;
+    }
+
+    public void ApplyUiTheme(StoreUiColorsData colors)
+    {
+        _balanceTextColor = ThemeColor(colors.HeaderBalanceText, "#FFFF00");
+        _emptyBalanceLabel.ModulateSelfOverride = _balanceTextColor;
+
+        _searchBar.StyleBoxOverride = new StyleBoxFlat
+        {
+            BackgroundColor = ThemeColor(colors.SearchBoxBackground, "#2B2E35"),
+            BorderColor = ThemeColor(colors.SearchBoxBorder, "#4C4438"),
+            BorderThickness = new(1)
+        };
+        _searchIcon.ModulateSelfOverride = ThemeColor(colors.SearchIconColor, "#FFFFFF");
+
+        if (_lastBalances.Count == 0)
+        {
+            ShowEmptyBalance();
+        }
+        else
+        {
+            ShowBalanceGroups(_lastBalances);
+        }
     }
 
     private void EnsureBalanceGroupCount(int count)
@@ -233,5 +273,30 @@ public sealed class NcStoreHeaderBar : BoxContainer
 
                 OnSearchChanged?.Invoke(text);
             });
+    }
+
+    private static Color ThemeColor(string? value, string fallback)
+    {
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            try
+            {
+                return Color.FromHex(value);
+            }
+            catch
+            {
+                // Keep defaults if YAML contains invalid colors.
+            }
+        }
+
+        return Color.FromHex(fallback);
+    }
+
+    private static string ColorToHex(Color color)
+    {
+        var r = (byte) Math.Clamp((int) MathF.Round(color.R * 255f), 0, 255);
+        var g = (byte) Math.Clamp((int) MathF.Round(color.G * 255f), 0, 255);
+        var b = (byte) Math.Clamp((int) MathF.Round(color.B * 255f), 0, 255);
+        return $"#{r:X2}{g:X2}{b:X2}";
     }
 }

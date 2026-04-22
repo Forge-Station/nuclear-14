@@ -47,6 +47,7 @@ public sealed partial class NcListingGrid : BoxContainer
 
     public event Action<IReadOnlyList<string>>? VisibleIdsChanged;
     private readonly List<string> _visibleIdsScratch = new();
+    private StoreUiColorsData _uiColors = new();
 
     public NcListingGrid(StoreMode mode, IPrototypeManager proto, SpriteSystem sprites)
     {
@@ -71,6 +72,14 @@ public sealed partial class NcListingGrid : BoxContainer
         _searchIndex.Clear();
         _cache.Clear();
         _qtyCache.Clear();
+    }
+
+    public void ApplyUiTheme(StoreUiColorsData colors)
+    {
+        _uiColors = colors;
+
+        foreach (var (ctrl, _) in _cache.Values)
+            ctrl.ApplyUiTheme(_uiColors);
     }
 
     public void SyncAvailableIds(IReadOnlyCollection<string> ids)
@@ -263,6 +272,7 @@ public sealed partial class NcListingGrid : BoxContainer
             }
 
             var ctrl = tuple.Ctrl;
+            ctrl.ApplyUiTheme(_uiColors);
 
             ctrl.OnBuyPressed = _mode == StoreMode.Buy ? qty => _emit(it, qty) : null;
             ctrl.OnSellPressed = _mode == StoreMode.Sell ? qty => _emit(it, qty) : null;

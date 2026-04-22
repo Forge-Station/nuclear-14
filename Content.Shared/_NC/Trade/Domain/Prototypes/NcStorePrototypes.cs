@@ -61,6 +61,16 @@ public sealed partial class StorePresetStructuredPrototype : IPrototype
     public string ID { get; private set; } = default!;
 }
 
+[Prototype("ncStoreUiTheme")]
+public sealed partial class StoreUiThemePrototype : IPrototype
+{
+    [IdDataField]
+    public string ID { get; private set; } = default!;
+
+    [DataField("colors", required: true)]
+    public StoreUiColorsData Colors { get; private set; } = new();
+}
+
 
 [Prototype("storeContract")]
 public sealed partial class StoreContractPrototype : IPrototype

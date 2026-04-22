@@ -33,6 +33,8 @@ public sealed partial class NcStoreMenu : FancyWindow
     private readonly HashSet<string> _visibleUnionScratch = new();
     private int _lastVisibleIdsSig;
     private readonly SpriteSystem _sprites;
+    private StoreUiColorsData _uiColors = new();
+    private int _uiThemeHash;
     private bool _disposed;
     private bool _hasBuyTab;
     private bool _hasContractsTab;
@@ -54,7 +56,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         TabContainer.SetTabTitle(TabBuy, Loc.GetString("nc-store-tab-buy"));
         TabContainer.SetTabTitle(TabSell, Loc.GetString("nc-store-tab-sell"));
         TabContainer.SetTabTitle(TabContracts, Loc.GetString("nc-store-tab-contracts"));
-        ApplyLocalTabStyle();
+        ApplyUiTheme(_uiColors);
         _sprites = IoCManager.Resolve<IEntitySystemManager>().GetEntitySystem<SpriteSystem>();
         _proto = IoCManager.Resolve<IPrototypeManager>();
 
@@ -102,6 +104,62 @@ public sealed partial class NcStoreMenu : FancyWindow
         _binder = new(this);
     }
 
+    private void ApplyUiTheme(StoreUiColorsData? uiColors)
+    {
+        var resolved = uiColors ?? new StoreUiColorsData();
+        var themeHash = ComputeUiThemeHash(resolved);
+        if (themeHash == _uiThemeHash && AreUiColorsEqual(_uiColors, resolved))
+            return;
+
+        _uiThemeHash = themeHash;
+        _uiColors = resolved;
+        ApplyBaseTheme();
+        ApplyLocalTabStyle();
+    }
+
+    private void ApplyBaseTheme()
+    {
+        var headerFrameStyle = new StyleBoxFlat
+        {
+            BackgroundColor = ThemeColor(_uiColors.HeaderBackground, "#202329"),
+            BorderColor = ThemeColor(_uiColors.HeaderBorder, "#4C4438"),
+            BorderThickness = new(1)
+        };
+        headerFrameStyle.SetContentMarginOverride(StyleBox.Margin.Left, 1);
+        headerFrameStyle.SetContentMarginOverride(StyleBox.Margin.Top, 1);
+        headerFrameStyle.SetContentMarginOverride(StyleBox.Margin.Right, 1);
+        headerFrameStyle.SetContentMarginOverride(StyleBox.Margin.Bottom, 1);
+        HeaderFrame.PanelOverride = headerFrameStyle;
+        Header.ApplyUiTheme(_uiColors);
+
+        var tabsShellStyle = new StyleBoxFlat
+        {
+            BackgroundColor = ThemeColor(_uiColors.TabsShellBackground, "#17181D"),
+            BorderColor = ThemeColor(_uiColors.TabsShellBorder, "#7A6334"),
+            BorderThickness = new(1)
+        };
+        tabsShellStyle.SetContentMarginOverride(StyleBox.Margin.Horizontal, 2);
+        tabsShellStyle.SetContentMarginOverride(StyleBox.Margin.Vertical, 2);
+        TabsShell.PanelOverride = tabsShellStyle;
+
+        var tabsFrameStyle = new StyleBoxFlat
+        {
+            BackgroundColor = ThemeColor(_uiColors.TabsFrameBackground, "#1E2027"),
+            BorderColor = ThemeColor(_uiColors.TabsFrameBorder, "#4C4438"),
+            BorderThickness = new(1)
+        };
+        tabsFrameStyle.SetContentMarginOverride(StyleBox.Margin.Horizontal, 2);
+        tabsFrameStyle.SetContentMarginOverride(StyleBox.Margin.Vertical, 2);
+        TabsFrame.PanelOverride = tabsFrameStyle;
+
+        var tabContentColor = ThemeColor(_uiColors.TabContentBackground, "#1E2027");
+        TabBuy.PanelOverride = new StyleBoxFlat { BackgroundColor = tabContentColor };
+        TabSell.PanelOverride = new StyleBoxFlat { BackgroundColor = tabContentColor };
+        TabContracts.PanelOverride = new StyleBoxFlat { BackgroundColor = tabContentColor };
+
+        BuyView.ApplyUiTheme(_uiColors);
+        SellView.ApplyUiTheme(_uiColors);
+    }
 
     private void ApplyLocalTabStyle()
     {
@@ -109,8 +167,8 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         var active = new StyleBoxFlat
         {
-            BackgroundColor = Color.FromHex("#6B5730"),
-            BorderColor = Color.FromHex("#D4B06A"),
+            BackgroundColor = ThemeColor(_uiColors.TabActiveBackground, "#6B5730"),
+            BorderColor = ThemeColor(_uiColors.TabActiveBorder, "#D4B06A"),
             BorderThickness = new(1)
         };
         active.SetContentMarginOverride(StyleBox.Margin.Horizontal, 16);
@@ -118,8 +176,8 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         var inactive = new StyleBoxFlat
         {
-            BackgroundColor = Color.FromHex("#2C2E35"),
-            BorderColor = Color.FromHex("#665C4E"),
+            BackgroundColor = ThemeColor(_uiColors.TabInactiveBackground, "#2C2E35"),
+            BorderColor = ThemeColor(_uiColors.TabInactiveBorder, "#665C4E"),
             BorderThickness = new(1)
         };
         inactive.SetContentMarginOverride(StyleBox.Margin.Horizontal, 16);
@@ -127,8 +185,8 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         Tabs.PanelStyleBoxOverride = new StyleBoxFlat
         {
-            BackgroundColor = Color.FromHex("#1C1E25"),
-            BorderColor = Color.FromHex("#665C4E"),
+            BackgroundColor = ThemeColor(_uiColors.TabsBarBackground, "#1C1E25"),
+            BorderColor = ThemeColor(_uiColors.TabsBarBorder, "#665C4E"),
             BorderThickness = new(1)
         };
 
@@ -146,14 +204,100 @@ public sealed partial class NcStoreMenu : FancyWindow
                             {
                                 new StyleProperty(TabContainer.StylePropertyTabStyleBox, active),
                                 new StyleProperty(TabContainer.StylePropertyTabStyleBoxInactive, inactive),
-                                new StyleProperty(TabContainer.stylePropertyTabFontColor, Color.FromHex("#F0D49A")),
-                                new StyleProperty(TabContainer.StylePropertyTabFontColorInactive, Color.FromHex("#B9AE95")),
+                                new StyleProperty(TabContainer.stylePropertyTabFontColor, ThemeColor(_uiColors.TabFontActive, "#F0D49A")),
+                                new StyleProperty(TabContainer.StylePropertyTabFontColorInactive, ThemeColor(_uiColors.TabFontInactive, "#B9AE95")),
                                 new StyleProperty("font", tabFont)
                             })
                     })
                 .ToArray());
 
         Tabs.ForceRunStyleUpdate();
+    }
+
+    private static Color ThemeColor(string? value, string fallback)
+    {
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            try
+            {
+                return Color.FromHex(value);
+            }
+            catch
+            {
+                // Keep UI usable even if YAML contains an invalid color token.
+            }
+        }
+
+        return Color.FromHex(fallback);
+    }
+
+    private static int ComputeUiThemeHash(StoreUiColorsData colors)
+    {
+        unchecked
+        {
+            var hash = 17;
+
+            hash = hash * 31 + (colors.TabsShellBackground?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.TabsShellBorder?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.TabsFrameBackground?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.TabsFrameBorder?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.TabContentBackground?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.TabsBarBackground?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.TabsBarBorder?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.TabActiveBackground?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.TabActiveBorder?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.TabInactiveBackground?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.TabInactiveBorder?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.TabFontActive?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.TabFontInactive?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.CategoriesPanelBackground?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.CategoriesDivider?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.CategoryButtonIdle?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.CategoryButtonSelected?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.HeaderBackground?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.HeaderBorder?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.HeaderBalanceText?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.SearchBoxBackground?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.SearchBoxBorder?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.SearchIconColor?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.ListingCardBackground?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.ListingCardBorder?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.ListingDivider?.GetHashCode() ?? 0);
+            hash = hash * 31 + (colors.ListingTitleColor?.GetHashCode() ?? 0);
+
+            return hash;
+        }
+    }
+
+    private static bool AreUiColorsEqual(StoreUiColorsData left, StoreUiColorsData right)
+    {
+        return string.Equals(left.TabsShellBackground, right.TabsShellBackground, StringComparison.Ordinal) &&
+               string.Equals(left.TabsShellBorder, right.TabsShellBorder, StringComparison.Ordinal) &&
+               string.Equals(left.TabsFrameBackground, right.TabsFrameBackground, StringComparison.Ordinal) &&
+               string.Equals(left.TabsFrameBorder, right.TabsFrameBorder, StringComparison.Ordinal) &&
+               string.Equals(left.TabContentBackground, right.TabContentBackground, StringComparison.Ordinal) &&
+               string.Equals(left.TabsBarBackground, right.TabsBarBackground, StringComparison.Ordinal) &&
+               string.Equals(left.TabsBarBorder, right.TabsBarBorder, StringComparison.Ordinal) &&
+               string.Equals(left.TabActiveBackground, right.TabActiveBackground, StringComparison.Ordinal) &&
+               string.Equals(left.TabActiveBorder, right.TabActiveBorder, StringComparison.Ordinal) &&
+               string.Equals(left.TabInactiveBackground, right.TabInactiveBackground, StringComparison.Ordinal) &&
+               string.Equals(left.TabInactiveBorder, right.TabInactiveBorder, StringComparison.Ordinal) &&
+               string.Equals(left.TabFontActive, right.TabFontActive, StringComparison.Ordinal) &&
+               string.Equals(left.TabFontInactive, right.TabFontInactive, StringComparison.Ordinal) &&
+               string.Equals(left.CategoriesPanelBackground, right.CategoriesPanelBackground, StringComparison.Ordinal) &&
+               string.Equals(left.CategoriesDivider, right.CategoriesDivider, StringComparison.Ordinal) &&
+               string.Equals(left.CategoryButtonIdle, right.CategoryButtonIdle, StringComparison.Ordinal) &&
+               string.Equals(left.CategoryButtonSelected, right.CategoryButtonSelected, StringComparison.Ordinal) &&
+               string.Equals(left.HeaderBackground, right.HeaderBackground, StringComparison.Ordinal) &&
+               string.Equals(left.HeaderBorder, right.HeaderBorder, StringComparison.Ordinal) &&
+               string.Equals(left.HeaderBalanceText, right.HeaderBalanceText, StringComparison.Ordinal) &&
+               string.Equals(left.SearchBoxBackground, right.SearchBoxBackground, StringComparison.Ordinal) &&
+               string.Equals(left.SearchBoxBorder, right.SearchBoxBorder, StringComparison.Ordinal) &&
+               string.Equals(left.SearchIconColor, right.SearchIconColor, StringComparison.Ordinal) &&
+               string.Equals(left.ListingCardBackground, right.ListingCardBackground, StringComparison.Ordinal) &&
+               string.Equals(left.ListingCardBorder, right.ListingCardBorder, StringComparison.Ordinal) &&
+               string.Equals(left.ListingDivider, right.ListingDivider, StringComparison.Ordinal) &&
+               string.Equals(left.ListingTitleColor, right.ListingTitleColor, StringComparison.Ordinal);
     }
 
     private string GetCategoryDisplayName(string catId) =>
@@ -320,9 +464,10 @@ public sealed partial class NcStoreMenu : FancyWindow
         List<StoreListingStaticData> listings,
         bool hasBuyTab,
         bool hasSellTab,
-        bool hasContractsTab
+        bool hasContractsTab,
+        StoreUiColorsData? uiColors
     ) =>
-        _binder.PopulateCatalog(listings, hasBuyTab, hasSellTab, hasContractsTab);
+        _binder.PopulateCatalog(listings, hasBuyTab, hasSellTab, hasContractsTab, uiColors);
 
 
     private void UpdateHeaderVisibility() => Header.Visible = _hasBuyTab || _hasSellTab;

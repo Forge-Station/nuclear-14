@@ -8,9 +8,11 @@
     MinWidth="1300" MinHeight="820"
     StyleClasses="WindowLarge">
     <BoxContainer Orientation="Vertical" StyleClasses="PanelBackgroundBase">
-        <controls:NcStoreHeaderBar Name="Header"
-                                   Margin="4 4 4 0"
-                                   StyleClasses="PanelBackgroundBaseDark" />
+        <PanelContainer Name="HeaderFrame"
+                        Margin="4 4 4 0">
+            <controls:NcStoreHeaderBar Name="Header"
+                                       Margin="0" />
+        </PanelContainer>
 
         <PanelContainer Name="TabsShell"
                         Margin="4"

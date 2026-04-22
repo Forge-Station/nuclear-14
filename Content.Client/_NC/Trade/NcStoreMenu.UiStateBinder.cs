@@ -76,9 +76,12 @@ public sealed partial class NcStoreMenu
             List<StoreListingStaticData> listings,
             bool hasBuyTab,
             bool hasSellTab,
-            bool hasContractsTab
+            bool hasContractsTab,
+            StoreUiColorsData? uiColors
         )
         {
+            _m.ApplyUiTheme(uiColors);
+
             _m._hasBuyTab = hasBuyTab;
             _m._hasSellTab = hasSellTab;
             _m._hasContractsTab = hasContractsTab;

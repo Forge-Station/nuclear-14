@@ -1,8 +1,26 @@
 # Markers for contract spawn zones and delivery points.
 
 - type: entity
-  id: MarkerTradeContractBounty
+  id: MarkerTradeContractObjectiveBase
+  abstract: true
   parent: MarkerBase
+  components:
+  - type: Sprite
+    layers:
+    - state: green
+
+- type: entity
+  id: MarkerTradeContractDropoffBase
+  abstract: true
+  parent: MarkerBase
+  components:
+  - type: Sprite
+    layers:
+    - state: blue
+
+- type: entity
+  id: MarkerTradeContractBounty
+  parent: MarkerTradeContractObjectiveBase
   name: контракт, охота
   suffix: contracts, bounty
   components:
@@ -13,7 +31,7 @@
 
 - type: entity
   id: MarkerTradeContractMine
-  parent: MarkerBase
+  parent: MarkerTradeContractObjectiveBase
   name: контракт, шахта
   suffix: contracts, mine
   components:
@@ -24,7 +42,7 @@
 
 - type: entity
   id: MarkerTradeContractStore
-  parent: MarkerBase
+  parent: MarkerTradeContractObjectiveBase
   name: контракт, магазин
   suffix: contracts, store
   components:
@@ -35,7 +53,7 @@
 
 - type: entity
   id: MarkerTradeContractRoad
-  parent: MarkerBase
+  parent: MarkerTradeContractObjectiveBase
   name: контракт, дорога
   suffix: contracts, road
   components:
@@ -46,7 +64,7 @@
 
 - type: entity
   id: MarkerTradeContractWarehouse
-  parent: MarkerBase
+  parent: MarkerTradeContractObjectiveBase
   name: контракт, склад
   suffix: contracts, warehouse
   components:
@@ -57,7 +75,7 @@
 
 - type: entity
   id: MarkerTradeContractDelivery
-  parent: MarkerBase
+  parent: MarkerTradeContractObjectiveBase
   name: контракт, адресная доставка
   suffix: contracts, delivery
   components:
@@ -68,7 +86,7 @@
 
 - type: entity
   id: MarkerTradeContractStructure
-  parent: MarkerBase
+  parent: MarkerTradeContractObjectiveBase
   name: контракт, крупный груз
   suffix: contracts, structure
   components:
@@ -79,7 +97,7 @@
 
 - type: entity
   id: MarkerTradeContractRepair
-  parent: MarkerBase
+  parent: MarkerTradeContractObjectiveBase
   name: контракт, ремонт
   suffix: contracts, repair
   components:
@@ -90,7 +108,7 @@
 
 - type: entity
   id: MarkerTradeContractSpecialTarget
-  parent: MarkerBase
+  parent: MarkerTradeContractObjectiveBase
   name: контракт, особая цель
   suffix: contracts, special-target
   components:
@@ -101,7 +119,7 @@
 
 - type: entity
   id: MarkerTradeContractDropoff
-  parent: MarkerBase
+  parent: MarkerTradeContractDropoffBase
   name: контракт, точка выгрузки
   suffix: contracts, dropoff
   components:

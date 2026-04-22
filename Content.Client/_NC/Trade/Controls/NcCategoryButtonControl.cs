@@ -9,8 +9,8 @@ namespace Content.Client._NC.Trade.Controls;
 [GenerateTypedNameReferences]
 public sealed partial class NcCategoryButtonControl : Button
 {
-    private static readonly Color SelectedColor = new(0xD9, 0xA4, 0x41);
-    private static readonly Color IdleColor = new(0x7C, 0x66, 0x24);
+    private Color _selectedColor = new(0xD9, 0xA4, 0x41);
+    private Color _idleColor = new(0x7C, 0x66, 0x24);
 
     public string CategoryId { get; private set; } = string.Empty;
 
@@ -23,19 +23,21 @@ public sealed partial class NcCategoryButtonControl : Button
         OnMouseEntered += _ =>
         {
             ModulateSelfOverride = Pressed
-                ? Brighten(SelectedColor, 1.2f)
-                : Brighten(IdleColor, 1.2f);
+                ? Brighten(_selectedColor, 1.2f)
+                : Brighten(_idleColor, 1.2f);
         };
 
         OnMouseExited += _ =>
         {
-            ModulateSelfOverride = Pressed ? SelectedColor : IdleColor;
+            ModulateSelfOverride = Pressed ? _selectedColor : _idleColor;
         };
 
         OnPressed += _ =>
         {
             OnCategoryPressed?.Invoke(CategoryId);
         };
+
+        ModulateSelfOverride = _idleColor;
     }
 
     public void Bind(string categoryId, string text, string? tooltip)
@@ -50,7 +52,14 @@ public sealed partial class NcCategoryButtonControl : Button
         if (Pressed != selected)
             Pressed = selected;
 
-        ModulateSelfOverride = selected ? SelectedColor : IdleColor;
+        ModulateSelfOverride = selected ? _selectedColor : _idleColor;
+    }
+
+    public void SetThemeColors(Color idleColor, Color selectedColor)
+    {
+        _idleColor = idleColor;
+        _selectedColor = selectedColor;
+        ModulateSelfOverride = Pressed ? _selectedColor : _idleColor;
     }
 
     private static Color Brighten(Color c, float f) =>

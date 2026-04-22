@@ -10,6 +10,7 @@ using Robust.Server.Audio;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio;
 using Robust.Shared.Containers;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
 
@@ -46,6 +47,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     [Dependency] private readonly NcStoreSystem _storeSystem = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
+    [Dependency] private readonly IPrototypeManager _prototypes = default!;
     private readonly NcInventorySnapshot _userSnapScratch = new();
     private readonly Dictionary<EntityUid, (EntityUid User, EntityUid? Crate)> _watchByStore = new();
 
@@ -586,14 +588,25 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         List<StoreListingStaticData> list)
     {
         var (hasBuy, hasSell) = GetCatalogModeFlags(list);
+        var uiColors = ResolveUiColors(comp);
 
         return new(
             comp.CatalogRevision,
             list,
             hasBuy,
             hasSell,
-            comp.ContractPresets.Count > 0
+            comp.ContractPresets.Count > 0,
+            uiColors
         );
+    }
+
+    private StoreUiColorsData ResolveUiColors(NcStoreComponent comp)
+    {
+        if (comp.UiTheme is { } themeId &&
+            _prototypes.TryIndex<StoreUiThemePrototype>(themeId, out var theme))
+            return theme.Colors;
+
+        return comp.UiColors;
     }
 
     private static (bool HasBuy, bool HasSell) GetCatalogModeFlags(List<StoreListingStaticData> list)

@@ -100,7 +100,8 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
             cat.Listings,
             cat.HasBuyTab,
             cat.HasSellTab,
-            cat.HasContractsTab);
+            cat.HasContractsTab,
+            cat.UiColors);
 
         if (_pendingDynamic is { } pending &&
             pending.CatalogRevision == _lastCatalogRevision)

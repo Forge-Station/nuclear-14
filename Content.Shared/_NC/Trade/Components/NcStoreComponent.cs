@@ -1,4 +1,5 @@
 using Robust.Shared.GameStates;
+using Robust.Shared.Prototypes;
 
 
 namespace Content.Shared._NC.Trade;
@@ -36,6 +37,9 @@ public sealed partial class NcStoreComponent : Component
     [DataField("contractPresets")]
     public List<string> ContractPresets { get; set; } = new();
 
+    [DataField("uiTheme")]
+    public ProtoId<StoreUiThemePrototype>? UiTheme { get; set; }
+
     public Dictionary<string, ContractServerData> Contracts { get; } = new();
 
     [DataField("rewardCurrencies")]
@@ -43,6 +47,9 @@ public sealed partial class NcStoreComponent : Component
 
     [DataField("rewardItems")]
     public Dictionary<string, int> RewardItems { get; set; } = new();
+
+    [DataField("uiColors")]
+    public StoreUiColorsData UiColors { get; set; } = new();
 
     public void BumpCatalogRevision() => CatalogRevision = unchecked(CatalogRevision + 1);
 

@@ -58,6 +58,7 @@
     - caravan_sell2
     contractPresets:
     - PresetBazar
+    uiTheme: TradeUiThemeWasteland
   - type: AccessReader
     access:
     - [ "TownieShopkeeper" ]
@@ -74,6 +75,7 @@
     - caravan_storetickets
     sellPresets:
     - caravan_storetickets_sell
+    uiTheme: TradeUiThemeWasteland
   - type: AccessReader
     access:
     - [ "TownieShopkeeper" ]
@@ -85,6 +87,26 @@
     - state: "normal-unshaded"
       map: ["enum.VendingMachineVisualLayers.BaseUnshaded"]
       shader: unshaded
+
+- type: entity
+  id: TrademachineCityNT
+  parent: TrademachineCity
+  name: торговый автомат НТ
+  description: Торговый автомат с интерфейсом в стиле NanoTrasen.
+  suffix: vendor, NT UI
+  components:
+  - type: NcStore
+    uiTheme: TradeUiThemeNT
+
+- type: entity
+  id: TrademachineCitySyndicate
+  parent: TrademachineCity
+  name: торговый автомат Синдиката
+  description: Торговый автомат с интерфейсом в стиле Синдиката.
+  suffix: vendor, Syndicate UI
+  components:
+  - type: NcStore
+    uiTheme: TradeUiThemeSyndicate
 
 # ----------------------------
 # Matcher prototypes (buy/sell/contracts tests)

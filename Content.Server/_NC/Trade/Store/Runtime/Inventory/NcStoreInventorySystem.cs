@@ -440,6 +440,7 @@ public sealed class NcStoreInventorySystem : EntitySystem
                 return 0;
 
             var total = 0;
+            HashSet<string>? matcherItemsSet = null;
             for (var i = 0; i < matcher.Items.Count; i++)
             {
                 if (snapshot.ProtoCounts.TryGetValue(matcher.Items[i], out var count))
@@ -449,12 +450,15 @@ public sealed class NcStoreInventorySystem : EntitySystem
             if (matcher.Tags.Count == 0)
                 return total;
 
+            if (matcher.Items.Count > 0)
+                matcherItemsSet = new HashSet<string>(matcher.Items, StringComparer.Ordinal);
+
             foreach (var (protoId, count) in snapshot.ProtoCounts)
             {
                 if (count <= 0)
                     continue;
 
-                if (matcher.Items.Contains(protoId))
+                if (matcherItemsSet != null && matcherItemsSet.Contains(protoId))
                     continue;
 
                 if (!ProtoHasAnyMatcherTag(protoId, matcher.Tags))
