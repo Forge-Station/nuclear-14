@@ -111,6 +111,7 @@ public sealed partial class NcStoreMenu
     private NcContractCard CreateContractCard(ContractClientData contract, int skipCost, string skipCurrency, int skipBalance)
     {
         var card = new NcContractCard(contract, _proto, _sprites, skipCost, skipCurrency, skipBalance);
+        card.ApplyUiTheme(_uiColors);
         card.OnClaim += id => OnContractClaim?.Invoke(id);
         card.OnTake += id => OnContractTake?.Invoke(id);
         card.OnSkip += id => OnContractSkip?.Invoke(id);

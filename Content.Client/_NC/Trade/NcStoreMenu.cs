@@ -432,7 +432,6 @@ public sealed partial class NcStoreMenu : FancyWindow
             : title;
 
         Title = resolved;
-        Header.SetStoreTitle(resolved);
     }
 
     private void EmitVisibleListingIdsChanged()
