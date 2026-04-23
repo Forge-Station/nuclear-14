@@ -1,0 +1,49 @@
+<BoxContainer xmlns="https://spacestation14.io"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              Orientation="Horizontal"
+              HorizontalExpand="True"
+              VerticalExpand="True"
+              SeparationOverride="10"
+              Margin="12 8 12 8">
+
+    <Label Name="StoreTitle"
+           ClipText="True"
+           MaxWidth="420"
+           VerticalAlignment="Center"
+           Margin="0 0 6 0" />
+
+    <BoxContainer Name="BalancesHost"
+                  Orientation="Horizontal"
+                  HorizontalExpand="False"
+                  VerticalAlignment="Center"
+                  SeparationOverride="0" />
+
+    <Label Name="EmptyBalanceLabel"
+           VerticalAlignment="Center"
+           Visible="False" />
+
+    <Control HorizontalExpand="True" MinWidth="12" />
+
+    <PanelContainer Name="SearchShell"
+                    MinWidth="300"
+                    MinHeight="34"
+                    HorizontalExpand="False"
+                    VerticalAlignment="Center">
+        <BoxContainer Orientation="Horizontal"
+                      HorizontalExpand="True"
+                      VerticalExpand="True"
+                      SeparationOverride="6"
+                      Margin="8 5 8 5">
+            <Label Name="SearchIcon"
+                   Text=""
+                   VerticalAlignment="Center"
+                   Margin="0 0 2 0" />
+
+            <LineEdit Name="SearchBar"
+                      HorizontalExpand="True"
+                      Access="Public"
+                      PlaceHolder="{Loc 'nc-store-search-placeholder'}" />
+        </BoxContainer>
+    </PanelContainer>
+
+</BoxContainer>

@@ -127,22 +127,26 @@ public sealed partial class NcStoreListingsView : PanelContainer
 
         CategoriesPanel.PanelOverride = new StyleBoxFlat
         {
-            BackgroundColor = ThemeColor(_uiColors.CategoriesPanelBackground, "#1A1B20")
+            BackgroundColor = ThemeColor(_uiColors.CategoriesPanelBackground, "#161A20"),
+            BorderColor = ThemeColor(_uiColors.TabsFrameBorder, "#323944"),
+            BorderThickness = new Thickness(1)
         };
 
         CategoriesDivider.PanelOverride = new StyleBoxFlat
         {
-            BackgroundColor = ThemeColor(_uiColors.CategoriesDivider, "#7A6334")
+            BackgroundColor = ThemeColor(_uiColors.CategoriesDivider, "#2E3640")
         };
 
         CategoryHeaderPanel.PanelOverride = new StyleBoxFlat
         {
-            BackgroundColor = ThemeColor(_uiColors.TabInactiveBackground, "#2C2E35"),
-            BorderColor = ThemeColor(_uiColors.TabInactiveBorder, "#665C4E"),
-            BorderThickness = new(1)
+            BackgroundColor = ThemeColor(_uiColors.TabInactiveBackground, "#20252D"),
+            BorderColor = ThemeColor(_uiColors.TabInactiveBorder, "#414955"),
+            BorderThickness = new Thickness(1)
         };
-        CategoryHeader.ModulateSelfOverride = ThemeColor(_uiColors.TabFontActive, "#F0D49A");
-        TabHeading.ModulateSelfOverride = ThemeColor(_uiColors.TabFontInactive, "#B9AE95");
+
+        CategoryHeader.ModulateSelfOverride = ThemeColor(_uiColors.TabFontActive, "#E4D5B2");
+        TabHeading.ModulateSelfOverride = ThemeColor(_uiColors.TabFontInactive, "#A9A18F");
+
         UpdateCategoryHeaderStyle(isSelectedCategory: !string.IsNullOrEmpty(SelectedCategory));
 
         CategoryBar.SetThemeColors(

@@ -23,7 +23,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
     private const float MinHorizontalDescriptionWidth = 280f;
     private const float HorizontalChromeWidth = 44f;
     private const float IconBlockWidth = 78f;
-    private const float ActionColumnMinWidth = 124f;
+    private const float ActionColumnMinWidth = 144f;
     private const int ActionColumnRightPad = 6;
 
     private readonly bool _actionsEnabled;
@@ -151,7 +151,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
         ActionColumn.RectClipContent = true;
         ActionColumn.HorizontalExpand = compact;
         ActionColumn.HorizontalAlignment = compact ? HAlignment.Stretch : HAlignment.Right;
-        ActionColumn.Margin = compact ? new(0, 6, ActionColumnRightPad, 0) : new(0, 0, ActionColumnRightPad, 0);
+        ActionColumn.Margin = compact ? new(0, 6, 2, 0) : new(6, 0, 2, 0);
         ActionColumn.MinWidth = compact ? 0f : actionWidth;
         ActionColumn.MaxWidth = compact ? float.PositiveInfinity : actionWidth;
 
@@ -223,6 +223,8 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
         if (!_actionsEnabled)
             PriceButton.ToolTip = Loc.GetString("nc-store-only-mass-sell");
+        else
+            PriceButton.ToolTip = null;
 
         PriceButton.OnPressed += _ =>
         {
@@ -272,13 +274,19 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
     private void CalculateMaxQty(StoreListingData data, int balanceHint)
     {
-        var remainingCap = data.Remaining >= 0 ? data.Remaining : int.MaxValue;
-        var ownedCap = data.Mode == StoreMode.Sell ? data.Owned : int.MaxValue;
+        var remainingCap = data.Mode == StoreMode.Buy
+            ? (data.Remaining >= 0 ? data.Remaining : int.MaxValue)
+            : int.MaxValue;
+
+        var ownedCap = data.Mode == StoreMode.Sell
+            ? Math.Max(0, data.Owned)
+            : int.MaxValue;
+
         var moneyCap = data.Mode == StoreMode.Buy && data.Price > 0
             ? balanceHint / data.Price
             : int.MaxValue;
 
-        _maxQty = Math.Min(remainingCap, Math.Min(ownedCap, moneyCap));
+        _maxQty = Math.Max(0, Math.Min(remainingCap, Math.Min(ownedCap, moneyCap)));
     }
 
     public void UpdateIdentity(StoreListingData newData) => _staticData = newData;
@@ -316,48 +324,66 @@ public sealed partial class NcStoreListingControl : PanelContainer
     {
         var noQty = _maxQty <= 0 || !_actionsEnabled;
 
-        var disablePrice = !_actionsEnabled || noQty ||
-            _staticData.Remaining == 0 ||
-            _staticData.Mode == StoreMode.Sell && _staticData.Owned <= 0;
+        var disablePrice =
+            !_actionsEnabled ||
+            (_staticData.Mode == StoreMode.Buy && (_staticData.Remaining == 0 || noQty)) ||
+            (_staticData.Mode == StoreMode.Sell && _staticData.Owned <= 0);
 
         PriceButton.Disabled = disablePrice;
+        PriceButton.RefreshVisualState();
+
         UpdateTotalPrice(_staticData);
     }
 
     private void UpdateLabelsAndVisibility(StoreListingData data)
     {
-        // Stock info block drives all label text/visibility and also tells us whether to show price.
-        var hasStock = StockInfo.Update(data.Mode, data.Remaining, data.Owned);
+        _ = StockInfo.Update(data.Mode, data.Remaining, data.Owned);
 
-        PriceButton.Visible = hasStock;
-        if (hasStock)
-            UpdateTotalPrice(data);
+        PriceButton.Visible = true;
+        UpdateTotalPrice(data);
     }
 
     private void UpdateTotalPrice(StoreListingData data)
     {
-        var value = _qty <= 0 ? data.Price : (long) data.Price * _qty;
-        PriceButton.SetPriceText(value > MaxTotalDisplay ? $"{MaxTotalDisplay}+" : value.ToString());
+        var effectiveQty = _qty > 0 ? _qty : 1;
+        var total = (long)data.Price * effectiveQty;
+        var totalText = total > MaxTotalDisplay ? $"{MaxTotalDisplay}+" : total.ToString();
+
+        PriceButton.SetPriceText(totalText);
     }
 
     public void ApplyUiTheme(StoreUiColorsData colors)
     {
+        var cardBackground = ThemeColor(colors.ListingCardBackground, "#181C22");
+        var cardBorder = ThemeColor(colors.ListingCardBorder, "#3D4652");
+        var dividerColor = ThemeColor(colors.ListingDivider, "#323944");
+        var titleColor = ThemeColor(colors.ListingTitleColor, "#E2D4B5");
+
         var frame = new StyleBoxFlat
         {
-            BackgroundColor = ThemeColor(colors.ListingCardBackground, "#141417E6"),
-            BorderColor = ThemeColor(colors.ListingCardBorder, "#B08D3B"),
-            BorderThickness = new(1)
+            BackgroundColor = cardBackground,
+            BorderColor = cardBorder,
+            BorderThickness = new Thickness(1)
         };
         frame.SetContentMarginOverride(StyleBox.Margin.Left, 8);
-        frame.SetContentMarginOverride(StyleBox.Margin.Top, 3);
+        frame.SetContentMarginOverride(StyleBox.Margin.Top, 6);
         frame.SetContentMarginOverride(StyleBox.Margin.Right, 8);
-        frame.SetContentMarginOverride(StyleBox.Margin.Bottom, 3);
+        frame.SetContentMarginOverride(StyleBox.Margin.Bottom, 6);
         PanelOverride = frame;
 
-        var dividerColor = ThemeColor(colors.ListingDivider, "#B08D3BCC");
-        TitleDivider.PanelOverride = new StyleBoxFlat { BackgroundColor = dividerColor };
-        IconDivider.PanelOverride = new StyleBoxFlat { BackgroundColor = dividerColor };
-        TitleLabel.ModulateSelfOverride = ThemeColor(colors.ListingTitleColor, "#BFA462");
+        IconDivider.PanelOverride = new StyleBoxFlat
+        {
+            BackgroundColor = dividerColor
+        };
+
+        IconSlotBackground.PanelOverride = new StyleBoxFlat
+        {
+            BackgroundColor = Color.FromHex("#13181E"),
+            BorderColor = Color.FromHex("#2E3742"),
+            BorderThickness = new Thickness(1)
+        };
+
+        TitleLabel.ModulateSelfOverride = titleColor;
     }
 
     private static Color ThemeColor(string? value, string fallback)

@@ -1,23 +1,44 @@
 <Button xmlns="https://spacestation14.io"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        ClipText="True"
-        StyleClasses="ButtonBig"
-        MinSize="96 32"
-        MaxSize="96 32"
-        Margin="0">
-    <BoxContainer Orientation="Horizontal"
-                  SeparationOverride="6"
-                  HorizontalExpand="True"
-                  VerticalExpand="True"
-                  HorizontalAlignment="Center">
-        <TextureRect Name="CurrencyIcon"
-                     Stretch="KeepAspectCentered"
-                     MinSize="26 26"
-                     MaxSize="26 26"
-                     VerticalAlignment="Center"
-                     Margin="2 2 0 2"/>
-        <Label Name="PriceLabel"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"/>
-    </BoxContainer>
+        ClipText="False"
+        MinSize="152 38"
+        MaxSize="240 38"
+        HorizontalExpand="False"
+        Margin="0"
+        Text="">
+    <PanelContainer Name="InnerSurface"
+                    HorizontalExpand="True"
+                    VerticalExpand="True"
+                    Margin="1">
+        <BoxContainer Orientation="Vertical"
+                      HorizontalExpand="True"
+                      VerticalExpand="True"
+                      SeparationOverride="0">
+            <PanelContainer Name="TopSheen"
+                            MinHeight="1"
+                            HorizontalExpand="True" />
+
+            <BoxContainer Name="LayoutRoot"
+                          Orientation="Horizontal"
+                          SeparationOverride="4"
+                          HorizontalExpand="True"
+                          VerticalExpand="True"
+                          HorizontalAlignment="Stretch"
+                          Margin="6 4 6 5">
+                <TextureRect Name="CurrencyIcon"
+                             Stretch="KeepAspectCentered"
+                             MinSize="14 14"
+                             MaxSize="14 14"
+                             VerticalAlignment="Center"
+                             Visible="False" />
+                <Label Name="PriceLabel"
+                       HorizontalAlignment="Right"
+                       HorizontalExpand="True"
+                       VerticalAlignment="Center"
+                       ClipText="False"
+                       MinWidth="24"
+                       Text="0" />
+            </BoxContainer>
+        </BoxContainer>
+    </PanelContainer>
 </Button>

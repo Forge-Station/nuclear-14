@@ -1,5 +1,4 @@
 using System.Linq;
-using Content.Client._NC.Trade.Controls;
 using Content.Client.Stylesheets;
 using Content.Client.UserInterface.Controls;
 using Content.Shared._NC.Trade;
@@ -12,6 +11,7 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Prototypes;
+
 
 namespace Content.Client._NC.Trade;
 
@@ -28,27 +28,26 @@ public sealed partial class NcStoreMenu : FancyWindow
     private readonly HashSet<string> _scratchBuyCatSet = new();
     private readonly HashSet<string> _scratchSellCatSet = new();
     private readonly List<string> _sellCats = new();
+    private readonly SpriteSystem _sprites;
+    private PanelContainer? _windowBackdropPanel;
     private readonly List<string> _visibleBuyIds = new();
     private readonly List<string> _visibleSellIds = new();
     private readonly HashSet<string> _visibleUnionScratch = new();
-    private int _lastVisibleIdsSig;
-    private readonly SpriteSystem _sprites;
-    private StoreUiColorsData _uiColors = new();
-    private int _uiThemeHash;
     private bool _disposed;
     private bool _hasBuyTab;
     private bool _hasContractsTab;
     private bool _hasSellTab;
+    private int _lastVisibleIdsSig;
     private string _search = string.Empty;
     private string _searchLower = string.Empty;
     private Control? _tabBuy;
     private Control? _tabContracts;
     private bool _tabsCaptured;
     private Control? _tabSell;
+    private StoreUiColorsData _uiColors = new();
+    private int _uiThemeHash;
     public Action<string>? OnContractClaim;
-    public event Action<string>? OnContractTake;
-    public event Action<string>? OnContractSkip;
-    public event Action<string>? OnContractRequestPinpointer;
+
     public NcStoreMenu()
     {
         RobustXamlLoader.Load(this);
@@ -104,6 +103,10 @@ public sealed partial class NcStoreMenu : FancyWindow
         _binder = new(this);
     }
 
+    public event Action<string>? OnContractTake;
+    public event Action<string>? OnContractSkip;
+    public event Action<string>? OnContractRequestPinpointer;
+
     private void ApplyUiTheme(StoreUiColorsData? uiColors)
     {
         var resolved = uiColors ?? new StoreUiColorsData();
@@ -119,23 +122,38 @@ public sealed partial class NcStoreMenu : FancyWindow
 
     private void ApplyBaseTheme()
     {
-        var windowTitleBackground = ThemeColor(_uiColors.HeaderBackground, "#202329");
-        var windowTitleBorder = ThemeColor(_uiColors.HeaderBorder, "#4C4438");
+        var windowChromeBackground = ThemeColor(_uiColors.HeaderBackground, "#1F252D");
+        var windowChromeBorder = ThemeColor(_uiColors.HeaderBorder, "#6B5633");
+        var windowChromeText = ThemeColor(_uiColors.TabFontActive, "#E4D3AF");
+        if (IsTooDark(windowChromeText))
+            windowChromeText = ThemeColor(_uiColors.HeaderBalanceText, "#E4D3AF");
+        if (IsTooDark(windowChromeText))
+            windowChromeText = Color.FromHex("#E4D3AF");
+
         WindowHeaderBackground.PanelOverride = new StyleBoxFlat
         {
-            BackgroundColor = windowTitleBackground,
-            BorderColor = windowTitleBorder,
-            BorderThickness = new(1)
+            BackgroundColor = windowChromeBackground,
+            BorderColor = windowChromeBorder,
+            BorderThickness = new(0, 0, 0, 1)
         };
+        WindowHeaderBackground.ModulateSelfOverride = Color.White;
+
         WindowHeaderDivider.PanelOverride = new StyleBoxFlat
         {
-            BackgroundColor = windowTitleBorder
+            BackgroundColor = windowChromeBorder
         };
-        WindowTitle.ModulateSelfOverride = ThemeColor(_uiColors.TabFontActive, "#F0D49A");
+        WindowHeaderDivider.ModulateSelfOverride = Color.White;
+
+        ApplyWindowBackdropTheme(
+            ThemeColor(_uiColors.TabsShellBackground, "#1A1115"),
+            ThemeColor(_uiColors.TabsShellBorder, "#6B2833"));
+
+        WindowTitle.FontColorOverride = windowChromeText;
+        WindowTitle.ModulateSelfOverride = Color.White;
 
         var headerFrameStyle = new StyleBoxFlat
         {
-            BackgroundColor = ThemeColor(_uiColors.HeaderBackground, "#202329"),
+            BackgroundColor = ThemeColor(_uiColors.HeaderBackground, "#222830"),
             BorderColor = ThemeColor(_uiColors.HeaderBorder, "#4C4438"),
             BorderThickness = new(1)
         };
@@ -144,12 +162,13 @@ public sealed partial class NcStoreMenu : FancyWindow
         headerFrameStyle.SetContentMarginOverride(StyleBox.Margin.Right, 1);
         headerFrameStyle.SetContentMarginOverride(StyleBox.Margin.Bottom, 1);
         HeaderFrame.PanelOverride = headerFrameStyle;
+
         Header.ApplyUiTheme(_uiColors);
 
         var tabsShellStyle = new StyleBoxFlat
         {
-            BackgroundColor = ThemeColor(_uiColors.TabsShellBackground, "#17181D"),
-            BorderColor = ThemeColor(_uiColors.TabsShellBorder, "#7A6334"),
+            BackgroundColor = ThemeColor(_uiColors.TabsShellBackground, "#171A20"),
+            BorderColor = ThemeColor(_uiColors.TabsShellBorder, "#5B4A2B"),
             BorderThickness = new(1)
         };
         tabsShellStyle.SetContentMarginOverride(StyleBox.Margin.Horizontal, 2);
@@ -158,16 +177,17 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         var tabsFrameStyle = new StyleBoxFlat
         {
-            BackgroundColor = ThemeColor(_uiColors.TabsFrameBackground, "#1E2027"),
-            BorderColor = ThemeColor(_uiColors.TabsFrameBorder, "#4C4438"),
+            BackgroundColor = ThemeColor(_uiColors.TabsFrameBackground, "#1B1F26"),
+            BorderColor = ThemeColor(_uiColors.TabsFrameBorder, "#40382C"),
             BorderThickness = new(1)
         };
         tabsFrameStyle.SetContentMarginOverride(StyleBox.Margin.Horizontal, 2);
         tabsFrameStyle.SetContentMarginOverride(StyleBox.Margin.Vertical, 2);
         TabsFrame.PanelOverride = tabsFrameStyle;
 
-        var tabContentColor = ThemeColor(_uiColors.TabContentBackground, "#1E2027");
-        var tabContentBorder = ThemeColor(_uiColors.TabsFrameBorder, "#4C4438");
+        var tabContentColor = ThemeColor(_uiColors.TabContentBackground, "#1B1F26");
+        var tabContentBorder = ThemeColor(_uiColors.TabsFrameBorder, "#40382C");
+
         TabBuy.PanelOverride = CreateTabContentStyle(tabContentColor, tabContentBorder);
         TabSell.PanelOverride = CreateTabContentStyle(tabContentColor, tabContentBorder);
         TabContracts.PanelOverride = CreateTabContentStyle(tabContentColor, tabContentBorder);
@@ -178,45 +198,53 @@ public sealed partial class NcStoreMenu : FancyWindow
 
     private void ApplyLocalTabStyle()
     {
-        var tabFont = IoCManager.Resolve<IResourceCache>().NotoStack(variation: "Bold", size: 18, display: true);
+        var tabFont = IoCManager.Resolve<IResourceCache>().NotoStack("Bold", 16, true);
 
         var active = new StyleBoxFlat
         {
-            BackgroundColor = ThemeColor(_uiColors.TabActiveBackground, "#6B5730"),
-            BorderColor = ThemeColor(_uiColors.TabActiveBorder, "#D4B06A"),
+            BackgroundColor = ThemeColor(_uiColors.TabActiveBackground, "#3A3123"),
+            BorderColor = ThemeColor(_uiColors.TabActiveBorder, "#A9833E"),
             BorderThickness = new(1)
         };
-        active.SetContentMarginOverride(StyleBox.Margin.Horizontal, 20);
-        active.SetContentMarginOverride(StyleBox.Margin.Vertical, 9);
+        active.SetContentMarginOverride(StyleBox.Margin.Left, 14);
+        active.SetContentMarginOverride(StyleBox.Margin.Right, 14);
+        active.SetContentMarginOverride(StyleBox.Margin.Top, 7);
+        active.SetContentMarginOverride(StyleBox.Margin.Bottom, 7);
 
         var inactive = new StyleBoxFlat
         {
-            BackgroundColor = ThemeColor(_uiColors.TabInactiveBackground, "#2C2E35"),
-            BorderColor = ThemeColor(_uiColors.TabInactiveBorder, "#665C4E"),
+            BackgroundColor = ThemeColor(_uiColors.TabInactiveBackground, "#232830"),
+            BorderColor = ThemeColor(_uiColors.TabInactiveBorder, "#444C58"),
             BorderThickness = new(1)
         };
-        inactive.SetContentMarginOverride(StyleBox.Margin.Horizontal, 20);
-        inactive.SetContentMarginOverride(StyleBox.Margin.Vertical, 9);
+        inactive.SetContentMarginOverride(StyleBox.Margin.Left, 14);
+        inactive.SetContentMarginOverride(StyleBox.Margin.Right, 14);
+        inactive.SetContentMarginOverride(StyleBox.Margin.Top, 7);
+        inactive.SetContentMarginOverride(StyleBox.Margin.Bottom, 7);
 
         var tabsBarStyle = new StyleBoxFlat
         {
-            BackgroundColor = ThemeColor(_uiColors.TabsBarBackground, "#1C1E25"),
-            BorderColor = ThemeColor(_uiColors.TabsBarBorder, "#665C4E"),
+            BackgroundColor = ThemeColor(_uiColors.TabsBarBackground, "#171B21"),
+            BorderColor = ThemeColor(_uiColors.TabsBarBorder, "#3E4652"),
             BorderThickness = new(1)
         };
-        tabsBarStyle.SetContentMarginOverride(StyleBox.Margin.Left, 1);
-        tabsBarStyle.SetContentMarginOverride(StyleBox.Margin.Right, 1);
-        tabsBarStyle.SetContentMarginOverride(StyleBox.Margin.Bottom, 1);
+        tabsBarStyle.SetContentMarginOverride(StyleBox.Margin.Left, 2);
+        tabsBarStyle.SetContentMarginOverride(StyleBox.Margin.Right, 2);
+        tabsBarStyle.SetContentMarginOverride(StyleBox.Margin.Top, 2);
+        tabsBarStyle.SetContentMarginOverride(StyleBox.Margin.Bottom, 2);
+
         Tabs.PanelStyleBoxOverride = tabsBarStyle;
 
-        var activeFont = ThemeColor(_uiColors.TabFontActive, "#F0D49A");
-        var inactiveFont = ThemeColor(_uiColors.TabFontInactive, "#B9AE95");
+        var activeFont = ThemeColor(_uiColors.TabFontActive, "#E6D6B2");
+        var inactiveFont = ThemeColor(_uiColors.TabFontInactive, "#AFA690");
 
         Tabs.TabFontColorOverride = activeFont;
         Tabs.TabFontColorInactiveOverride = inactiveFont;
+
         var baseRules = IoCManager.Resolve<IUserInterfaceManager>().Stylesheet?.Rules ?? Array.Empty<StyleRule>();
+
         Tabs.StyleIdentifier = "nc-store-tabs";
-        Tabs.Stylesheet = new Stylesheet(
+        Tabs.Stylesheet = new(
             baseRules
                 .Concat(
                     new[]
@@ -238,15 +266,13 @@ public sealed partial class NcStoreMenu : FancyWindow
         Tabs.ForceRunStyleUpdate();
     }
 
-    private static StyleBoxFlat CreateTabContentStyle(Color background, Color border)
-    {
-        return new StyleBoxFlat
+    private static StyleBoxFlat CreateTabContentStyle(Color background, Color border) =>
+        new()
         {
             BackgroundColor = background,
             BorderColor = border,
             BorderThickness = new(1)
         };
-    }
 
     private static Color ThemeColor(string? value, string fallback)
     {
@@ -263,6 +289,51 @@ public sealed partial class NcStoreMenu : FancyWindow
         }
 
         return Color.FromHex(fallback);
+    }
+
+    private void ApplyWindowBackdropTheme(Color background, Color border)
+    {
+        _windowBackdropPanel ??= ResolveWindowBackdropPanel();
+        if (_windowBackdropPanel == null)
+            return;
+
+        var shellStyle = new StyleBoxFlat
+        {
+            BackgroundColor = background,
+            BorderColor = border,
+            BorderThickness = new Thickness(1)
+        };
+        shellStyle.SetContentMarginOverride(StyleBox.Margin.Left, 1);
+        shellStyle.SetContentMarginOverride(StyleBox.Margin.Top, 1);
+        shellStyle.SetContentMarginOverride(StyleBox.Margin.Right, 1);
+        shellStyle.SetContentMarginOverride(StyleBox.Margin.Bottom, 1);
+
+        _windowBackdropPanel.PanelOverride = shellStyle;
+        _windowBackdropPanel.ModulateSelfOverride = Color.White;
+    }
+
+    private PanelContainer? ResolveWindowBackdropPanel()
+    {
+        PanelContainer? firstPanel = null;
+
+        for (var i = 0; i < ChildCount; i++)
+        {
+            if (GetChild(i) is not PanelContainer panel)
+                continue;
+
+            firstPanel ??= panel;
+
+            if (panel.HasStyleClass(StyleBase.ClassAngleRect))
+                return panel;
+        }
+
+        return firstPanel;
+    }
+
+    private static bool IsTooDark(Color color)
+    {
+        var luma = 0.299f * color.R + 0.587f * color.G + 0.114f * color.B;
+        return luma < 0.20f;
     }
 
     private static int ComputeUiThemeHash(StoreUiColorsData colors)
@@ -303,36 +374,34 @@ public sealed partial class NcStoreMenu : FancyWindow
         }
     }
 
-    private static bool AreUiColorsEqual(StoreUiColorsData left, StoreUiColorsData right)
-    {
-        return string.Equals(left.TabsShellBackground, right.TabsShellBackground, StringComparison.Ordinal) &&
-               string.Equals(left.TabsShellBorder, right.TabsShellBorder, StringComparison.Ordinal) &&
-               string.Equals(left.TabsFrameBackground, right.TabsFrameBackground, StringComparison.Ordinal) &&
-               string.Equals(left.TabsFrameBorder, right.TabsFrameBorder, StringComparison.Ordinal) &&
-               string.Equals(left.TabContentBackground, right.TabContentBackground, StringComparison.Ordinal) &&
-               string.Equals(left.TabsBarBackground, right.TabsBarBackground, StringComparison.Ordinal) &&
-               string.Equals(left.TabsBarBorder, right.TabsBarBorder, StringComparison.Ordinal) &&
-               string.Equals(left.TabActiveBackground, right.TabActiveBackground, StringComparison.Ordinal) &&
-               string.Equals(left.TabActiveBorder, right.TabActiveBorder, StringComparison.Ordinal) &&
-               string.Equals(left.TabInactiveBackground, right.TabInactiveBackground, StringComparison.Ordinal) &&
-               string.Equals(left.TabInactiveBorder, right.TabInactiveBorder, StringComparison.Ordinal) &&
-               string.Equals(left.TabFontActive, right.TabFontActive, StringComparison.Ordinal) &&
-               string.Equals(left.TabFontInactive, right.TabFontInactive, StringComparison.Ordinal) &&
-               string.Equals(left.CategoriesPanelBackground, right.CategoriesPanelBackground, StringComparison.Ordinal) &&
-               string.Equals(left.CategoriesDivider, right.CategoriesDivider, StringComparison.Ordinal) &&
-               string.Equals(left.CategoryButtonIdle, right.CategoryButtonIdle, StringComparison.Ordinal) &&
-               string.Equals(left.CategoryButtonSelected, right.CategoryButtonSelected, StringComparison.Ordinal) &&
-               string.Equals(left.HeaderBackground, right.HeaderBackground, StringComparison.Ordinal) &&
-               string.Equals(left.HeaderBorder, right.HeaderBorder, StringComparison.Ordinal) &&
-               string.Equals(left.HeaderBalanceText, right.HeaderBalanceText, StringComparison.Ordinal) &&
-               string.Equals(left.SearchBoxBackground, right.SearchBoxBackground, StringComparison.Ordinal) &&
-               string.Equals(left.SearchBoxBorder, right.SearchBoxBorder, StringComparison.Ordinal) &&
-               string.Equals(left.SearchIconColor, right.SearchIconColor, StringComparison.Ordinal) &&
-               string.Equals(left.ListingCardBackground, right.ListingCardBackground, StringComparison.Ordinal) &&
-               string.Equals(left.ListingCardBorder, right.ListingCardBorder, StringComparison.Ordinal) &&
-               string.Equals(left.ListingDivider, right.ListingDivider, StringComparison.Ordinal) &&
-               string.Equals(left.ListingTitleColor, right.ListingTitleColor, StringComparison.Ordinal);
-    }
+    private static bool AreUiColorsEqual(StoreUiColorsData left, StoreUiColorsData right) =>
+        string.Equals(left.TabsShellBackground, right.TabsShellBackground, StringComparison.Ordinal) &&
+        string.Equals(left.TabsShellBorder, right.TabsShellBorder, StringComparison.Ordinal) &&
+        string.Equals(left.TabsFrameBackground, right.TabsFrameBackground, StringComparison.Ordinal) &&
+        string.Equals(left.TabsFrameBorder, right.TabsFrameBorder, StringComparison.Ordinal) &&
+        string.Equals(left.TabContentBackground, right.TabContentBackground, StringComparison.Ordinal) &&
+        string.Equals(left.TabsBarBackground, right.TabsBarBackground, StringComparison.Ordinal) &&
+        string.Equals(left.TabsBarBorder, right.TabsBarBorder, StringComparison.Ordinal) &&
+        string.Equals(left.TabActiveBackground, right.TabActiveBackground, StringComparison.Ordinal) &&
+        string.Equals(left.TabActiveBorder, right.TabActiveBorder, StringComparison.Ordinal) &&
+        string.Equals(left.TabInactiveBackground, right.TabInactiveBackground, StringComparison.Ordinal) &&
+        string.Equals(left.TabInactiveBorder, right.TabInactiveBorder, StringComparison.Ordinal) &&
+        string.Equals(left.TabFontActive, right.TabFontActive, StringComparison.Ordinal) &&
+        string.Equals(left.TabFontInactive, right.TabFontInactive, StringComparison.Ordinal) &&
+        string.Equals(left.CategoriesPanelBackground, right.CategoriesPanelBackground, StringComparison.Ordinal) &&
+        string.Equals(left.CategoriesDivider, right.CategoriesDivider, StringComparison.Ordinal) &&
+        string.Equals(left.CategoryButtonIdle, right.CategoryButtonIdle, StringComparison.Ordinal) &&
+        string.Equals(left.CategoryButtonSelected, right.CategoryButtonSelected, StringComparison.Ordinal) &&
+        string.Equals(left.HeaderBackground, right.HeaderBackground, StringComparison.Ordinal) &&
+        string.Equals(left.HeaderBorder, right.HeaderBorder, StringComparison.Ordinal) &&
+        string.Equals(left.HeaderBalanceText, right.HeaderBalanceText, StringComparison.Ordinal) &&
+        string.Equals(left.SearchBoxBackground, right.SearchBoxBackground, StringComparison.Ordinal) &&
+        string.Equals(left.SearchBoxBorder, right.SearchBoxBorder, StringComparison.Ordinal) &&
+        string.Equals(left.SearchIconColor, right.SearchIconColor, StringComparison.Ordinal) &&
+        string.Equals(left.ListingCardBackground, right.ListingCardBackground, StringComparison.Ordinal) &&
+        string.Equals(left.ListingCardBorder, right.ListingCardBorder, StringComparison.Ordinal) &&
+        string.Equals(left.ListingDivider, right.ListingDivider, StringComparison.Ordinal) &&
+        string.Equals(left.ListingTitleColor, right.ListingTitleColor, StringComparison.Ordinal);
 
     private string GetCategoryDisplayName(string catId) =>
         catId switch
@@ -355,6 +424,16 @@ public sealed partial class NcStoreMenu : FancyWindow
     public event Action<StoreListingData, int>? OnSellPressed;
     public event Action? OnMassSellPulledCrate;
     public event Action<string[]>? OnVisibleListingIdsChanged;
+
+    public void SetDisplayTitle(string title)
+    {
+        var resolved = string.IsNullOrWhiteSpace(title)
+            ? Loc.GetString("nc-store-window-title")
+            : title;
+
+        Title = resolved;
+        Header.SetStoreTitle(resolved);
+    }
 
     private void EmitVisibleListingIdsChanged()
     {

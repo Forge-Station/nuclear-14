@@ -8,9 +8,49 @@ namespace Content.Client._NC.Trade.Controls;
 [GenerateTypedNameReferences]
 public sealed partial class NcListingPriceButtonControl : Button
 {
+    private static readonly Color FrameBackground = Color.FromHex("#2E2216");
+    private static readonly Color FrameHoverBackground = Color.FromHex("#3A2A1A");
+    private static readonly Color FrameDisabledBackground = Color.FromHex("#221A14");
+
+    private static readonly Color FrameBorder = Color.FromHex("#8D6A2F");
+    private static readonly Color FrameHoverBorder = Color.FromHex("#C4933D");
+    private static readonly Color FrameDisabledBorder = Color.FromHex("#5D4C32");
+
+    private static readonly Color SurfaceBackground = Color.FromHex("#19130E");
+    private static readonly Color SurfaceHoverBackground = Color.FromHex("#231A11");
+    private static readonly Color SurfaceDisabledBackground = Color.FromHex("#15110D");
+
+    private static readonly Color SheenColor = Color.FromHex("#B38C42");
+    private static readonly Color SheenHoverColor = Color.FromHex("#D3A953");
+    private static readonly Color SheenDisabledColor = Color.FromHex("#5E513C");
+
+    private static readonly Color PrimaryText = Color.FromHex("#F0E0BE");
+    private static readonly Color DisabledText = Color.FromHex("#B5A78D");
+
+    private bool _hovered;
+
     public NcListingPriceButtonControl()
     {
         RobustXamlLoader.Load(this);
+        PriceLabel.AddStyleClass("LabelHeading");
+        // Hide built-in Button label, we render price with a custom row (icon + text).
+        Text = string.Empty;
+        Label.Text = string.Empty;
+        Label.Visible = false;
+
+        OnMouseEntered += _ =>
+        {
+            _hovered = true;
+            ApplyVisualState();
+        };
+
+        OnMouseExited += _ =>
+        {
+            _hovered = false;
+            ApplyVisualState();
+        };
+
+        ApplyVisualState();
     }
 
     public void SetCurrencyIcon(Texture? texture)
@@ -21,6 +61,72 @@ public sealed partial class NcListingPriceButtonControl : Button
 
     public void SetPriceText(string text)
     {
-        PriceLabel.Text = text;
+        var shown = string.IsNullOrWhiteSpace(text) ? "0" : text;
+        PriceLabel.Text = shown;
+    }
+
+    public void SetUnitPriceText(string text)
+    {
+        // Intentionally no-op: unit price must not be shown as tooltip.
+    }
+
+    public void RefreshVisualState()
+    {
+        ApplyVisualState();
+    }
+
+    private void ApplyVisualState()
+    {
+        var disabled = Disabled;
+
+        var frameBackground = disabled
+            ? FrameDisabledBackground
+            : _hovered ? FrameHoverBackground : FrameBackground;
+
+        var frameBorder = disabled
+            ? FrameDisabledBorder
+            : _hovered ? FrameHoverBorder : FrameBorder;
+
+        var surfaceBackground = disabled
+            ? SurfaceDisabledBackground
+            : _hovered ? SurfaceHoverBackground : SurfaceBackground;
+
+        var sheenColor = disabled
+            ? SheenDisabledColor
+            : _hovered ? SheenHoverColor : SheenColor;
+
+        var style = new StyleBoxFlat
+        {
+            BackgroundColor = frameBackground,
+            BorderColor = frameBorder,
+            BorderThickness = new Thickness(1)
+        };
+
+        style.SetContentMarginOverride(StyleBox.Margin.Left, 0);
+        style.SetContentMarginOverride(StyleBox.Margin.Top, 0);
+        style.SetContentMarginOverride(StyleBox.Margin.Right, 0);
+        style.SetContentMarginOverride(StyleBox.Margin.Bottom, 0);
+
+        StyleBoxOverride = style;
+        // Disable default theme tint from generic Button style so our custom colors stay stable.
+        ModulateSelfOverride = Color.White;
+        Label.Visible = false;
+
+        InnerSurface.PanelOverride = new StyleBoxFlat
+        {
+            BackgroundColor = surfaceBackground,
+            BorderThickness = new Thickness(0)
+        };
+        TopSheen.PanelOverride = new StyleBoxFlat
+        {
+            BackgroundColor = sheenColor,
+            BorderThickness = new Thickness(0)
+        };
+
+        PriceLabel.FontColorOverride = disabled ? DisabledText : PrimaryText;
+        PriceLabel.ModulateSelfOverride = Color.White;
+        PriceLabel.Visible = true;
+        CurrencyIcon.ModulateSelfOverride = disabled ? DisabledText : Color.White;
     }
 }
+

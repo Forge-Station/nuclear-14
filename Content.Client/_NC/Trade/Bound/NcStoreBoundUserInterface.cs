@@ -144,7 +144,9 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         _pendingDynamicSince = null;
 
         if (EntMan.TryGetComponent(Owner, out MetaDataComponent? meta))
-            _menu.Title = meta.EntityName;
+            _menu.SetDisplayTitle(meta.EntityName);
+        else
+            _menu.SetDisplayTitle(string.Empty);
 
         _menu.OnBuyPressed += OnBuy;
         _menu.OnSellPressed += OnSell;

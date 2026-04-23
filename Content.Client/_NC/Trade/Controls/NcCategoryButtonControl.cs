@@ -10,6 +10,9 @@ namespace Content.Client._NC.Trade.Controls;
 [GenerateTypedNameReferences]
 public sealed partial class NcCategoryButtonControl : Button
 {
+    private static readonly Color IdleText = Color.FromHex("#B6B0A4");
+    private static readonly Color HoverText = Color.FromHex("#D3CDC0");
+
     private Color _selectedColor = new(0xD9, 0xA4, 0x41);
     private Color _idleColor = new(0x7C, 0x66, 0x24);
     private bool _hovered;
@@ -45,8 +48,9 @@ public sealed partial class NcCategoryButtonControl : Button
     public void Bind(string categoryId, string text, string? tooltip)
     {
         CategoryId = categoryId;
-        Text = text;
+        TitleLabel.Text = text;
         ToolTip = tooltip;
+        Text = string.Empty;
     }
 
     public void SetSelected(bool selected)
@@ -66,32 +70,116 @@ public sealed partial class NcCategoryButtonControl : Button
 
     private void ApplyVisualState()
     {
-        var baseColor = Pressed ? _selectedColor : _idleColor;
-        var fill = _hovered ? Brighten(baseColor, 1.12f) : baseColor;
-        var border = Brighten(baseColor, 0.82f);
+        var background = GetBackgroundColor();
+        var border = GetBorderColor(background);
+        var accent = GetAccentColor();
+        var text = GetTextColor();
 
         var style = new StyleBoxFlat
         {
-            BackgroundColor = fill,
+            BackgroundColor = background,
             BorderColor = border,
             BorderThickness = new(1)
         };
-        style.SetContentMarginOverride(StyleBox.Margin.Left, 8);
-        style.SetContentMarginOverride(StyleBox.Margin.Right, 8);
-        style.SetContentMarginOverride(StyleBox.Margin.Top, 3);
-        style.SetContentMarginOverride(StyleBox.Margin.Bottom, 3);
+
+        style.SetContentMarginOverride(StyleBox.Margin.Left, 0);
+        style.SetContentMarginOverride(StyleBox.Margin.Right, 0);
+        style.SetContentMarginOverride(StyleBox.Margin.Top, 0);
+        style.SetContentMarginOverride(StyleBox.Margin.Bottom, 0);
 
         StyleBoxOverride = style;
         ModulateSelfOverride = Color.White;
-        Label.ModulateSelfOverride = GetReadableTextColor(fill);
+
+        AccentBar.PanelOverride = new StyleBoxFlat
+        {
+            BackgroundColor = accent,
+            BorderThickness = new(0)
+        };
+
+        TitleLabel.ModulateSelfOverride = text;
     }
 
-    private static Color Brighten(Color c, float f) =>
-        new(MathF.Min(c.R * f, 1f), MathF.Min(c.G * f, 1f), MathF.Min(c.B * f, 1f), c.A);
-
-    private static Color GetReadableTextColor(Color background)
+    private Color GetBackgroundColor()
     {
-        var luminance = 0.299f * background.R + 0.587f * background.G + 0.114f * background.B;
-        return luminance > 0.58f ? Color.Black : Color.White;
+        var baseSurface = GetBaseSurface();
+        var hoverSurface = GetHoverSurface();
+        var selectedSurface = GetSelectedSurface();
+
+        if (Pressed)
+            return Blend(selectedSurface, _selectedColor, 0.22f);
+
+        if (_hovered)
+            return Blend(hoverSurface, _idleColor, 0.14f);
+
+        return Blend(baseSurface, _idleColor, 0.10f);
+    }
+
+    private Color GetBorderColor(Color background)
+    {
+        if (Pressed)
+            return Blend(_selectedColor, Color.White, 0.18f);
+
+        if (_hovered)
+            return Blend(background, Color.White, 0.10f);
+
+        return Blend(background, Color.White, 0.05f);
+    }
+
+    private Color GetAccentColor()
+    {
+        var baseSurface = GetBaseSurface();
+
+        if (Pressed)
+            return _selectedColor;
+
+        if (_hovered)
+            return Blend(_idleColor, Color.White, 0.12f);
+
+        return WithAlpha(Blend(_idleColor, baseSurface, 0.35f), 0.70f);
+    }
+
+    private Color GetTextColor()
+    {
+        if (Pressed)
+            return Blend(Color.FromHex("#ECE4D4"), _selectedColor, 0.10f);
+
+        if (_hovered)
+            return HoverText;
+
+        return IdleText;
+    }
+
+    private Color GetBaseSurface() => Blend(Color.FromHex("#121218"), _idleColor, 0.24f);
+
+    private Color GetHoverSurface() => Blend(Color.FromHex("#15161B"), _idleColor, 0.34f);
+
+    private Color GetSelectedSurface() => Blend(Color.FromHex("#17181E"), _selectedColor, 0.42f);
+
+    private static Color Blend(Color a, Color b, float t)
+    {
+        t = Clamp01(t);
+
+        return new Color(
+            a.R + (b.R - a.R) * t,
+            a.G + (b.G - a.G) * t,
+            a.B + (b.B - a.B) * t,
+            a.A + (b.A - a.A) * t);
+    }
+
+    private static Color WithAlpha(Color color, float alpha)
+    {
+        alpha = Clamp01(alpha);
+        return new Color(color.R, color.G, color.B, alpha);
+    }
+
+    private static float Clamp01(float value)
+    {
+        if (value < 0f)
+            return 0f;
+
+        if (value > 1f)
+            return 1f;
+
+        return value;
     }
 }
