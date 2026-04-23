@@ -23,7 +23,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
     private const float MinHorizontalDescriptionWidth = 280f;
     private const float HorizontalChromeWidth = 44f;
     private const float IconBlockWidth = 78f;
-    private const float ActionColumnMinWidth = 128f;
+    private const float ActionColumnMinWidth = 136f;
     private const int ActionColumnRightPad = 6;
 
     private readonly bool _actionsEnabled;
@@ -102,6 +102,8 @@ public sealed partial class NcStoreListingControl : PanelContainer
         SetupPriceButton(data, sprites, pm);
 
         SetupQtyLogic(data, balanceHint, initialQty);
+        PriceButton.SetMode(data.Mode);
+        QtyControl.SetMode(data.Mode);
 
         UpdateLabelsAndVisibility(data);
 
@@ -344,9 +346,8 @@ public sealed partial class NcStoreListingControl : PanelContainer
     {
         var effectiveQty = _qty > 0 ? _qty : 1;
         var total = (long)data.Price * effectiveQty;
-        var totalText = total > MaxTotalDisplay ? $"{MaxTotalDisplay}+" : total.ToString();
 
-        PriceButton.SetPriceText(totalText);
+        PriceButton.SetPriceText(FormatCompactPrice(total));
         PriceButton.SetUnitPriceText(string.Empty);
     }
 
@@ -377,6 +378,17 @@ public sealed partial class NcStoreListingControl : PanelContainer
         };
 
         TitleLabel.ModulateSelfOverride = titleColor;
+    }
+
+    private static string FormatCompactPrice(long value)
+    {
+        if (value >= 1_000_000_000)
+            return $"{value / 1_000_000_000d:0.#}B";
+
+        if (value >= 1_000_000)
+            return $"{value / 1_000_000d:0.#}M";
+
+        return value.ToString();
     }
 
     private static Color ThemeColor(string? value, string fallback)

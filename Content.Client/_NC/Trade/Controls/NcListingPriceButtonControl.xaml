@@ -1,8 +1,8 @@
 <Button xmlns="https://spacestation14.io"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         ClipText="False"
-        MinSize="112 34"
-        MaxSize="170 34"
+        MinSize="124 34"
+        MaxSize="180 34"
         HorizontalExpand="False"
         Margin="0"
         Text="">
@@ -17,8 +17,8 @@
 
         <TextureRect Name="CurrencyIcon"
                      Stretch="KeepAspectCentered"
-                     MinSize="14 14"
-                     MaxSize="14 14"
+                     MinSize="16 16"
+                     MaxSize="16 16"
                      VerticalAlignment="Center"
                      Visible="False" />
 
