@@ -1,44 +1,37 @@
 <Button xmlns="https://spacestation14.io"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         ClipText="False"
-        MinSize="152 38"
-        MaxSize="240 38"
+        MinSize="112 34"
+        MaxSize="170 34"
         HorizontalExpand="False"
         Margin="0"
         Text="">
-    <PanelContainer Name="InnerSurface"
-                    HorizontalExpand="True"
-                    VerticalExpand="True"
-                    Margin="1">
-        <BoxContainer Orientation="Vertical"
-                      HorizontalExpand="True"
-                      VerticalExpand="True"
-                      SeparationOverride="0">
-            <PanelContainer Name="TopSheen"
-                            MinHeight="1"
-                            HorizontalExpand="True" />
 
-            <BoxContainer Name="LayoutRoot"
-                          Orientation="Horizontal"
-                          SeparationOverride="4"
-                          HorizontalExpand="True"
-                          VerticalExpand="True"
-                          HorizontalAlignment="Stretch"
-                          Margin="6 4 6 5">
-                <TextureRect Name="CurrencyIcon"
-                             Stretch="KeepAspectCentered"
-                             MinSize="14 14"
-                             MaxSize="14 14"
-                             VerticalAlignment="Center"
-                             Visible="False" />
-                <Label Name="PriceLabel"
-                       HorizontalAlignment="Right"
-                       HorizontalExpand="True"
-                       VerticalAlignment="Center"
-                       ClipText="False"
-                       MinWidth="24"
-                       Text="0" />
-            </BoxContainer>
-        </BoxContainer>
-    </PanelContainer>
+    <BoxContainer Name="LayoutRoot"
+                  Orientation="Horizontal"
+                  SeparationOverride="6"
+                  HorizontalExpand="True"
+                  VerticalExpand="True"
+                  HorizontalAlignment="Right"
+                  Margin="8 4 8 4">
+
+        <TextureRect Name="CurrencyIcon"
+                     Stretch="KeepAspectCentered"
+                     MinSize="14 14"
+                     MaxSize="14 14"
+                     VerticalAlignment="Center"
+                     Visible="False" />
+
+        <Label Name="PriceLabel"
+               HorizontalAlignment="Right"
+               HorizontalExpand="True"
+               VerticalAlignment="Center"
+               ClipText="False"
+               MinWidth="24"
+               Text="0" />
+
+        <Label Name="UnitPriceLabel"
+               Visible="False"
+               Text="" />
+    </BoxContainer>
 </Button>

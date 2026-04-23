@@ -45,10 +45,6 @@
                 </BoxContainer>
             </PanelContainer>
 
-            <PanelContainer Name="IconDivider"
-                            MinSize="1 0"
-                            VerticalExpand="True" />
-
             <!-- Description -->
             <controls:NcListingDescriptionBox Name="DescriptionBox"
                                               HorizontalExpand="True"

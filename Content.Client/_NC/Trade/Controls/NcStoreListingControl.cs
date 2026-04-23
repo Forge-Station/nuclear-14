@@ -23,7 +23,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
     private const float MinHorizontalDescriptionWidth = 280f;
     private const float HorizontalChromeWidth = 44f;
     private const float IconBlockWidth = 78f;
-    private const float ActionColumnMinWidth = 144f;
+    private const float ActionColumnMinWidth = 128f;
     private const int ActionColumnRightPad = 6;
 
     private readonly bool _actionsEnabled;
@@ -90,13 +90,11 @@ public sealed partial class NcStoreListingControl : PanelContainer
             if (!TrySetMatcherIcon(matcher, matcherFallbackProto, sprites))
             {
                 IconSlotBackground.Visible = false;
-                IconDivider.Visible = false;
             }
         }
         else
         {
             IconSlotBackground.Visible = false;
-            IconDivider.Visible = false;
         }
 
         SetDescription(proto?.Description ?? matcher?.Description);
@@ -146,7 +144,6 @@ public sealed partial class NcStoreListingControl : PanelContainer
             ? BoxContainer.LayoutOrientation.Vertical
             : BoxContainer.LayoutOrientation.Horizontal;
 
-        IconDivider.Visible = !compact && IconSlotBackground.Visible;
 
         ActionColumn.RectClipContent = true;
         ActionColumn.HorizontalExpand = compact;
@@ -350,6 +347,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
         var totalText = total > MaxTotalDisplay ? $"{MaxTotalDisplay}+" : total.ToString();
 
         PriceButton.SetPriceText(totalText);
+        PriceButton.SetUnitPriceText(string.Empty);
     }
 
     public void ApplyUiTheme(StoreUiColorsData colors)
@@ -371,16 +369,11 @@ public sealed partial class NcStoreListingControl : PanelContainer
         frame.SetContentMarginOverride(StyleBox.Margin.Bottom, 6);
         PanelOverride = frame;
 
-        IconDivider.PanelOverride = new StyleBoxFlat
-        {
-            BackgroundColor = dividerColor
-        };
-
         IconSlotBackground.PanelOverride = new StyleBoxFlat
         {
-            BackgroundColor = Color.FromHex("#13181E"),
-            BorderColor = Color.FromHex("#2E3742"),
-            BorderThickness = new Thickness(1)
+            BackgroundColor = new Color(0f, 0f, 0f, 0f),
+            BorderColor = new Color(0f, 0f, 0f, 0f),
+            BorderThickness = new Thickness(0)
         };
 
         TitleLabel.ModulateSelfOverride = titleColor;

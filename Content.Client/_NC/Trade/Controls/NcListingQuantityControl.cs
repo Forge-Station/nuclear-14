@@ -5,27 +5,28 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 
-
 namespace Content.Client._NC.Trade.Controls;
-
 
 [GenerateTypedNameReferences]
 public sealed partial class NcListingQuantityControl : BoxContainer
 {
     private const int QtyMaxDigits = 6;
 
-    private static readonly Color ButtonBackground = Color.FromHex("#1A2027");
-    private static readonly Color ButtonBorder = Color.FromHex("#3C4652");
-    private static readonly Color ButtonDisabledBackground = Color.FromHex("#16191E");
-    private static readonly Color ButtonDisabledBorder = Color.FromHex("#2A313A");
+    private static readonly Color ButtonBackground = Color.FromHex("#18130F");
+    private static readonly Color ButtonBorder = Color.FromHex("#6E5833");
+    private static readonly Color ButtonDisabledBackground = Color.FromHex("#13110E");
+    private static readonly Color ButtonDisabledBorder = Color.FromHex("#3E3429");
 
-    private static readonly Color EditBackground = Color.FromHex("#13171C");
-    private static readonly Color EditBorder = Color.FromHex("#46505C");
-    private static readonly Color EditDisabledBackground = Color.FromHex("#111419");
-    private static readonly Color EditDisabledBorder = Color.FromHex("#2B3138");
+    private static readonly Color ValueFrameBackground = Color.FromHex("#17120E");
+    private static readonly Color ValueFrameBorder = Color.FromHex("#6E5833");
+    private static readonly Color ValueFrameDisabledBackground = Color.FromHex("#12100D");
+    private static readonly Color ValueFrameDisabledBorder = Color.FromHex("#3E3429");
 
-    private static readonly Color TextEnabled = Color.FromHex("#D9D2C4");
-    private static readonly Color TextDisabled = Color.FromHex("#7C7569");
+    private static readonly Color EditBackground = Color.FromHex("#0F1216");
+    private static readonly Color EditDisabledBackground = Color.FromHex("#0D1013");
+
+    private static readonly Color TextEnabled = Color.FromHex("#E3D6BF");
+    private static readonly Color TextDisabled = Color.FromHex("#8F8578");
 
     private bool _enabled = true;
     private int _max;
@@ -82,7 +83,6 @@ public sealed partial class NcListingQuantityControl : BoxContainer
     }
 
     public LineEdit Edit => QtyEdit;
-
     public int Value { get; private set; }
 
     public event Action<int>? OnValueChanged;
@@ -143,7 +143,6 @@ public sealed partial class NcListingQuantityControl : BoxContainer
         }
 
         Value = clamped;
-        QtyLabel.Text = Value.ToString();
 
         var text = Value.ToString();
         if (QtyEdit.Text != text)
@@ -179,11 +178,17 @@ public sealed partial class NcListingQuantityControl : BoxContainer
         ApplyButtonStyle(MinusButton);
         ApplyButtonStyle(PlusButton);
 
+        ValueFrame.PanelOverride = new StyleBoxFlat
+        {
+            BackgroundColor = QtyEdit.Editable ? ValueFrameBackground : ValueFrameDisabledBackground,
+            BorderColor = QtyEdit.Editable ? ValueFrameBorder : ValueFrameDisabledBorder,
+            BorderThickness = new Thickness(1)
+        };
+
         QtyEdit.StyleBoxOverride = new StyleBoxFlat
         {
             BackgroundColor = QtyEdit.Editable ? EditBackground : EditDisabledBackground,
-            BorderColor = QtyEdit.Editable ? EditBorder : EditDisabledBorder,
-            BorderThickness = new(1)
+            BorderThickness = new Thickness(0)
         };
 
         QtyEdit.ModulateSelfOverride = QtyEdit.Editable ? TextEnabled : TextDisabled;
@@ -197,7 +202,7 @@ public sealed partial class NcListingQuantityControl : BoxContainer
         {
             BackgroundColor = disabled ? ButtonDisabledBackground : ButtonBackground,
             BorderColor = disabled ? ButtonDisabledBorder : ButtonBorder,
-            BorderThickness = new(1)
+            BorderThickness = new Thickness(1)
         };
 
         button.ModulateSelfOverride = disabled ? TextDisabled : TextEnabled;

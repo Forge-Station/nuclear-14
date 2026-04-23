@@ -8,35 +8,29 @@ namespace Content.Client._NC.Trade.Controls;
 [GenerateTypedNameReferences]
 public sealed partial class NcListingPriceButtonControl : Button
 {
-    private static readonly Color FrameBackground = Color.FromHex("#2E2216");
-    private static readonly Color FrameHoverBackground = Color.FromHex("#3A2A1A");
-    private static readonly Color FrameDisabledBackground = Color.FromHex("#221A14");
+    private static readonly Color BaseBackground = Color.FromHex("#23170F");
+    private static readonly Color HoverBackground = Color.FromHex("#2B1D12");
+    private static readonly Color DisabledBackground = Color.FromHex("#1A1410");
 
-    private static readonly Color FrameBorder = Color.FromHex("#8D6A2F");
-    private static readonly Color FrameHoverBorder = Color.FromHex("#C4933D");
-    private static readonly Color FrameDisabledBorder = Color.FromHex("#5D4C32");
-
-    private static readonly Color SurfaceBackground = Color.FromHex("#19130E");
-    private static readonly Color SurfaceHoverBackground = Color.FromHex("#231A11");
-    private static readonly Color SurfaceDisabledBackground = Color.FromHex("#15110D");
-
-    private static readonly Color SheenColor = Color.FromHex("#B38C42");
-    private static readonly Color SheenHoverColor = Color.FromHex("#D3A953");
-    private static readonly Color SheenDisabledColor = Color.FromHex("#5E513C");
+    private static readonly Color BaseBorder = Color.FromHex("#8A6830");
+    private static readonly Color HoverBorder = Color.FromHex("#C1913D");
+    private static readonly Color DisabledBorder = Color.FromHex("#5A4931");
 
     private static readonly Color PrimaryText = Color.FromHex("#F0E0BE");
-    private static readonly Color DisabledText = Color.FromHex("#B5A78D");
+    private static readonly Color DisabledText = Color.FromHex("#A3947C");
 
     private bool _hovered;
 
     public NcListingPriceButtonControl()
     {
         RobustXamlLoader.Load(this);
-        PriceLabel.AddStyleClass("LabelHeading");
-        // Hide built-in Button label, we render price with a custom row (icon + text).
+
         Text = string.Empty;
         Label.Text = string.Empty;
         Label.Visible = false;
+
+        PriceLabel.AddStyleClass("LabelHeading");
+        UnitPriceLabel.Visible = false;
 
         OnMouseEntered += _ =>
         {
@@ -61,13 +55,13 @@ public sealed partial class NcListingPriceButtonControl : Button
 
     public void SetPriceText(string text)
     {
-        var shown = string.IsNullOrWhiteSpace(text) ? "0" : text;
-        PriceLabel.Text = shown;
+        PriceLabel.Text = string.IsNullOrWhiteSpace(text) ? "0" : text;
     }
 
     public void SetUnitPriceText(string text)
     {
-        // Intentionally no-op: unit price must not be shown as tooltip.
+        UnitPriceLabel.Visible = false;
+        UnitPriceLabel.Text = string.Empty;
     }
 
     public void RefreshVisualState()
@@ -79,26 +73,18 @@ public sealed partial class NcListingPriceButtonControl : Button
     {
         var disabled = Disabled;
 
-        var frameBackground = disabled
-            ? FrameDisabledBackground
-            : _hovered ? FrameHoverBackground : FrameBackground;
+        var background = disabled
+            ? DisabledBackground
+            : _hovered ? HoverBackground : BaseBackground;
 
-        var frameBorder = disabled
-            ? FrameDisabledBorder
-            : _hovered ? FrameHoverBorder : FrameBorder;
-
-        var surfaceBackground = disabled
-            ? SurfaceDisabledBackground
-            : _hovered ? SurfaceHoverBackground : SurfaceBackground;
-
-        var sheenColor = disabled
-            ? SheenDisabledColor
-            : _hovered ? SheenHoverColor : SheenColor;
+        var border = disabled
+            ? DisabledBorder
+            : _hovered ? HoverBorder : BaseBorder;
 
         var style = new StyleBoxFlat
         {
-            BackgroundColor = frameBackground,
-            BorderColor = frameBorder,
+            BackgroundColor = background,
+            BorderColor = border,
             BorderThickness = new Thickness(1)
         };
 
@@ -108,25 +94,10 @@ public sealed partial class NcListingPriceButtonControl : Button
         style.SetContentMarginOverride(StyleBox.Margin.Bottom, 0);
 
         StyleBoxOverride = style;
-        // Disable default theme tint from generic Button style so our custom colors stay stable.
         ModulateSelfOverride = Color.White;
+
         Label.Visible = false;
-
-        InnerSurface.PanelOverride = new StyleBoxFlat
-        {
-            BackgroundColor = surfaceBackground,
-            BorderThickness = new Thickness(0)
-        };
-        TopSheen.PanelOverride = new StyleBoxFlat
-        {
-            BackgroundColor = sheenColor,
-            BorderThickness = new Thickness(0)
-        };
-
         PriceLabel.FontColorOverride = disabled ? DisabledText : PrimaryText;
-        PriceLabel.ModulateSelfOverride = Color.White;
-        PriceLabel.Visible = true;
         CurrencyIcon.ModulateSelfOverride = disabled ? DisabledText : Color.White;
     }
 }
-
