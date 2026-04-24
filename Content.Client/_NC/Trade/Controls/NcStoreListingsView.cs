@@ -125,16 +125,20 @@ public sealed partial class NcStoreListingsView : PanelContainer
     {
         _uiColors = colors;
 
+        var categoriesBackground = ThemeColor(_uiColors.CategoriesPanelBackground, "#161A20");
+        var categoriesBorder = ThemeColor(_uiColors.TabsFrameBorder, "#323944");
+        var dividerColor = WithAlpha(ThemeColor(_uiColors.CategoriesDivider, "#2E3640"), 0.35f);
+
         CategoriesPanel.PanelOverride = new StyleBoxFlat
         {
-            BackgroundColor = ThemeColor(_uiColors.CategoriesPanelBackground, "#161A20"),
-            BorderColor = ThemeColor(_uiColors.TabsFrameBorder, "#323944"),
-            BorderThickness = new Thickness(1)
+            BackgroundColor = categoriesBackground,
+            BorderColor = categoriesBorder,
+            BorderThickness = new Thickness(1, 1, 0, 1)
         };
 
         CategoriesDivider.PanelOverride = new StyleBoxFlat
         {
-            BackgroundColor = ThemeColor(_uiColors.CategoriesDivider, "#2E3640")
+            BackgroundColor = dividerColor
         };
 
         CategoryHeaderPanel.PanelOverride = new StyleBoxFlat
@@ -151,7 +155,8 @@ public sealed partial class NcStoreListingsView : PanelContainer
 
         CategoryBar.SetThemeColors(
             ThemeColor(_uiColors.CategoryButtonIdle, "#7C6624"),
-            ThemeColor(_uiColors.CategoryButtonSelected, "#D9A441"));
+            ThemeColor(_uiColors.CategoryButtonSelected, "#D9A441"),
+            categoriesBackground);
 
         _grid?.ApplyUiTheme(_uiColors);
     }
@@ -211,6 +216,12 @@ public sealed partial class NcStoreListingsView : PanelContainer
             BorderThickness = new(1)
         };
         CategoryHeader.ModulateSelfOverride = text;
+    }
+
+    private static Color WithAlpha(Color color, float alpha)
+    {
+        alpha = Math.Clamp(alpha, 0f, 1f);
+        return new Color(color.R, color.G, color.B, alpha);
     }
 
     private static Color ThemeColor(string? value, string fallback)

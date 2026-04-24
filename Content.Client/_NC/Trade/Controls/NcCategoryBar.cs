@@ -17,6 +17,7 @@ public sealed partial class NcCategoryBar : PanelContainer
     private Func<string, string> _toolTip = static id => id;
     private Color _buttonIdle = new(0x7C, 0x66, 0x24);
     private Color _buttonSelected = new(0xD9, 0xA4, 0x41);
+    private Color _surfaceBase = Color.FromHex("#161A20");
 
     public NcCategoryBar()
     {
@@ -33,14 +34,15 @@ public sealed partial class NcCategoryBar : PanelContainer
         _toolTip = toolTip;
     }
 
-    public void SetThemeColors(Color idle, Color selected)
+    public void SetThemeColors(Color idle, Color selected, Color surfaceBase)
     {
         _buttonIdle = idle;
         _buttonSelected = selected;
+        _surfaceBase = surfaceBase;
 
         foreach (var btn in _buttons.Values)
         {
-            btn.SetThemeColors(_buttonIdle, _buttonSelected);
+            btn.SetThemeColors(_buttonIdle, _buttonSelected, _surfaceBase);
             btn.SetSelected(btn.CategoryId == Selected);
         }
     }
@@ -124,7 +126,7 @@ public sealed partial class NcCategoryBar : PanelContainer
     private NcCategoryButtonControl CreateButton(string catId)
     {
         var btn = new NcCategoryButtonControl();
-        btn.SetThemeColors(_buttonIdle, _buttonSelected);
+        btn.SetThemeColors(_buttonIdle, _buttonSelected, _surfaceBase);
 
         var tip = _toolTip(catId);
         btn.Bind(catId, _displayName(catId), string.IsNullOrWhiteSpace(tip) ? null : tip);

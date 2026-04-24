@@ -15,6 +15,7 @@ public sealed partial class NcCategoryButtonControl : Button
 
     private Color _selectedColor = new(0xD9, 0xA4, 0x41);
     private Color _idleColor = new(0x7C, 0x66, 0x24);
+    private Color _surfaceBase = Color.FromHex("#161A20");
     private bool _hovered;
 
     public string CategoryId { get; private set; } = string.Empty;
@@ -61,10 +62,11 @@ public sealed partial class NcCategoryButtonControl : Button
         ApplyVisualState();
     }
 
-    public void SetThemeColors(Color idleColor, Color selectedColor)
+    public void SetThemeColors(Color idleColor, Color selectedColor, Color surfaceBase)
     {
         _idleColor = idleColor;
         _selectedColor = selectedColor;
+        _surfaceBase = surfaceBase;
         ApplyVisualState();
     }
 
@@ -149,11 +151,11 @@ public sealed partial class NcCategoryButtonControl : Button
         return IdleText;
     }
 
-    private Color GetBaseSurface() => Blend(Color.FromHex("#121218"), _idleColor, 0.24f);
+    private Color GetBaseSurface() => Blend(_surfaceBase, _idleColor, 0.18f);
 
-    private Color GetHoverSurface() => Blend(Color.FromHex("#15161B"), _idleColor, 0.34f);
+    private Color GetHoverSurface() => Blend(Blend(_surfaceBase, Color.White, 0.03f), _idleColor, 0.26f);
 
-    private Color GetSelectedSurface() => Blend(Color.FromHex("#17181E"), _selectedColor, 0.42f);
+    private Color GetSelectedSurface() => Blend(Blend(_surfaceBase, _selectedColor, 0.18f), _selectedColor, 0.24f);
 
     private static Color Blend(Color a, Color b, float t)
     {

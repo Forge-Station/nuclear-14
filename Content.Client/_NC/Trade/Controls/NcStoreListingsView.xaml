@@ -14,7 +14,7 @@
         <!-- Sidebar -->
         <PanelContainer Name="CategoriesPanel"
                         VerticalExpand="True"
-                        MinWidth="228">
+                        MinWidth="256">
             <BoxContainer Orientation="Vertical"
                           VerticalExpand="True"
                           SeparationOverride="0">
