@@ -15,7 +15,7 @@
 
     <BoxContainer Name="ItemsHost"
                   Orientation="Vertical"
-                  SeparationOverride="3"
+                  SeparationOverride="2"
                   HorizontalExpand="True"
                   VerticalExpand="True" />
 

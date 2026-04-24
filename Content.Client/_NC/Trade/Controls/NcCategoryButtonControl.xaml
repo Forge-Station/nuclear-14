@@ -3,8 +3,8 @@
         ClipText="True"
         ToggleMode="True"
         HorizontalExpand="True"
-        MinSize="0 32"
-        Margin="0 0 0 4"
+        MinSize="0 30"
+        Margin="0 0 0 2"
         Text="">
 
     <BoxContainer Name="LayoutRoot"
@@ -22,6 +22,6 @@
                ClipText="True"
                HorizontalExpand="True"
                VerticalAlignment="Center"
-               Margin="0 6 8 6" />
+               Margin="0 5 7 5" />
     </BoxContainer>
 </Button>

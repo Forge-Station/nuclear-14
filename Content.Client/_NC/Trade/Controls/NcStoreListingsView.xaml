@@ -8,45 +8,45 @@
                   Orientation="Horizontal"
                   HorizontalExpand="True"
                   VerticalExpand="True"
-                  SeparationOverride="8"
-                  Margin="8">
+                  SeparationOverride="6"
+                  Margin="6">
 
         <!-- Sidebar -->
         <PanelContainer Name="CategoriesPanel"
                         VerticalExpand="True"
-                        MinWidth="256">
+                        MinWidth="238">
             <BoxContainer Orientation="Vertical"
                           VerticalExpand="True"
                           SeparationOverride="0">
 
                 <Label Name="TabHeading"
                        StyleClasses="LabelKeyText"
-                       Margin="10 8 10 6" />
+                       Margin="8 6 8 5" />
 
                 <controls:NcCategoryBar Name="CategoryBar"
                                         VerticalExpand="True"
                                         HorizontalExpand="True"
-                                        Margin="4 0 4 6" />
+                                        Margin="0 0 0 3" />
             </BoxContainer>
         </PanelContainer>
 
         <!-- Divider -->
         <PanelContainer Name="CategoriesDivider"
                         MinWidth="1"
-                        Margin="0 4 0 4" />
+                        Margin="0 1 0 1" />
 
         <!-- Content -->
         <BoxContainer Name="ContentColumn"
                       Orientation="Vertical"
                       VerticalExpand="True"
                       HorizontalExpand="True"
-                      SeparationOverride="6">
+                      SeparationOverride="5">
 
             <PanelContainer Name="CategoryHeaderPanel"
                             HorizontalExpand="True"
-                            MinHeight="42">
+                            MinHeight="38">
                 <Label Name="CategoryHeader"
-                       Margin="10 6 10 6"
+                       Margin="10 5 10 5"
                        Text="{Loc 'nc-store-select-category'}" />
             </PanelContainer>
 
