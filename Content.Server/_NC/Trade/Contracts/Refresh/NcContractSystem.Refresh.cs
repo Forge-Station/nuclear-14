@@ -355,7 +355,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (_prototypes.TryIndex<StoreContractPackPrototype>(packId, out pack!))
             return true;
 
-        Sawmill.Error($"[Contracts] Pack '{packId}' not found.");
+        Sawmill.Warning($"[Contracts] Pack '{packId}' not found. Skipping.");
         return false;
     }
 

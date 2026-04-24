@@ -20,11 +20,11 @@ public sealed partial class NcStoreComponent : Component
     [ViewVariables]
     public HashSet<string> CompletedOneTimeContracts { get; } = new();
 
-    [DataField("categories"), ViewVariables]
-    public List<string> Categories { get; private set; } = new();
+    [ViewVariables]
+    public List<string> Categories { get; } = new();
 
-    [DataField("currencyWhitelist"), ViewVariables]
-    public List<string> CurrencyWhitelist { get; private set; } = new();
+    [ViewVariables]
+    public List<string> CurrencyWhitelist { get; } = new();
 
     public List<NcStoreListingDef> Listings { get; set; } = new();
 
@@ -32,6 +32,13 @@ public sealed partial class NcStoreComponent : Component
     public Dictionary<StoreListingKey, NcStoreListingDef> ListingIndex { get; } = new();
 
     public Dictionary<string, ContractServerData> Contracts { get; } = new();
+
+    // Legacy map compatibility: old snapshots may still contain these fields on NcStore.
+    [DataField("categories")]
+    private List<string>? LegacyCategories { set { } }
+
+    [DataField("currencyWhitelist")]
+    private List<string>? LegacyCurrencyWhitelist { set { } }
 
     public void BumpCatalogRevision() => CatalogRevision = unchecked(CatalogRevision + 1);
 

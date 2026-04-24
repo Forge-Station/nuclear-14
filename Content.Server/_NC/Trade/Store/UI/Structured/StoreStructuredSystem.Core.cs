@@ -623,7 +623,10 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (!_prototypes.TryIndex<NcStoreProfilePrototype>(comp.Profile, out var profile))
             return false;
 
-        return profile.Contracts != null;
+        if (profile.Contracts is not { } contracts)
+            return false;
+
+        return _prototypes.HasIndex<StoreContractsPresetPrototype>(contracts);
     }
 
     private static StoreUiColorsData CloneUiColors(StoreUiColorsData colors)

@@ -89,10 +89,39 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
             return;
         }
 
+        WarnIfContractSkipCurrencyMissing(uid, comp, profile, reason);
+
         Sawmill.Info(
             $"[NcStore] {ToPrettyString(uid)}: profile='{profile.ID}', loaded {total} listings, " +
             $"buy={profile.Buy.Count}, sell={profile.Sell.Count}, " +
             $"contracts={(profile.Contracts != null ? profile.Contracts.Value.ToString() : "<none>")}, reason={reason}");
+    }
+
+    private void WarnIfContractSkipCurrencyMissing(
+        EntityUid uid,
+        NcStoreComponent comp,
+        NcStoreProfilePrototype profile,
+        string reason)
+    {
+        if (profile.Buy.Count > 0 || profile.Sell.Count > 0)
+            return;
+
+        if (profile.Contracts is not { } contractsId)
+            return;
+
+        if (!_prototypes.TryIndex<StoreContractsPresetPrototype>(contractsId, out var contractsPreset))
+            return;
+
+        if (contractsPreset.SkipCost <= 0 || !string.IsNullOrWhiteSpace(contractsPreset.SkipCurrency))
+            return;
+
+        if (comp.CurrencyWhitelist.Count > 0)
+            return;
+
+        Sawmill.Warning(
+            $"[NcStore] {ToPrettyString(uid)}: contract-only profile '{profile.ID}' uses contract preset " +
+            $"'{contractsPreset.ID}' with skipCost={contractsPreset.SkipCost} but no skipCurrency " +
+            $"(reason={reason}). Contract skip will be disabled.");
     }
 
     private int LoadPresetForMode(
