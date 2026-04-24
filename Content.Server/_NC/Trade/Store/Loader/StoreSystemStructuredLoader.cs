@@ -82,6 +82,8 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         foreach (var id in profile.Sell)
             total += LoadPresetForMode(id, StoreMode.Sell, comp, ctx);
 
+        AddContractSkipCurrencyIfNeeded(comp, profile, ctx);
+
         if (total == 0 && profile.Contracts == null)
         {
             Sawmill.Warning(
@@ -103,9 +105,6 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         NcStoreProfilePrototype profile,
         string reason)
     {
-        if (profile.Buy.Count > 0 || profile.Sell.Count > 0)
-            return;
-
         if (profile.Contracts is not { } contractsId)
             return;
 
@@ -119,9 +118,31 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
             return;
 
         Sawmill.Warning(
-            $"[NcStore] {ToPrettyString(uid)}: contract-only profile '{profile.ID}' uses contract preset " +
-            $"'{contractsPreset.ID}' with skipCost={contractsPreset.SkipCost} but no skipCurrency " +
-            $"(reason={reason}). Contract skip will be disabled.");
+            $"[NcStore] {ToPrettyString(uid)}: profile '{profile.ID}' uses contract preset " +
+            $"'{contractsPreset.ID}' with skipCost={contractsPreset.SkipCost}, but no skipCurrency " +
+            $"and no catalog currencies were resolved (reason={reason}). Contract skip will be disabled.");
+    }
+
+    private void AddContractSkipCurrencyIfNeeded(
+        NcStoreComponent comp,
+        NcStoreProfilePrototype profile,
+        LoadContext ctx)
+    {
+        if (profile.Contracts is not { } contractsId)
+            return;
+
+        if (!_prototypes.TryIndex<StoreContractsPresetPrototype>(contractsId, out var contractsPreset))
+            return;
+
+        if (contractsPreset.SkipCost <= 0)
+            return;
+
+        var skipCurrency = contractsPreset.SkipCurrency;
+        if (string.IsNullOrWhiteSpace(skipCurrency))
+            return;
+
+        if (ctx.CurrencySeen.Add(skipCurrency))
+            comp.CurrencyWhitelist.Add(skipCurrency);
     }
 
     private int LoadPresetForMode(

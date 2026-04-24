@@ -33,13 +33,6 @@ public sealed partial class NcStoreComponent : Component
 
     public Dictionary<string, ContractServerData> Contracts { get; } = new();
 
-    // Legacy map compatibility: old snapshots may still contain these fields on NcStore.
-    [DataField("categories")]
-    private List<string>? LegacyCategories { set { } }
-
-    [DataField("currencyWhitelist")]
-    private List<string>? LegacyCurrencyWhitelist { set { } }
-
     public void BumpCatalogRevision() => CatalogRevision = unchecked(CatalogRevision + 1);
 
     public static StoreListingKey MakeListingKey(StoreMode mode, string listingId) => new(mode, listingId);
