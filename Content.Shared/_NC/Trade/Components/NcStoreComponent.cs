@@ -10,6 +10,9 @@ public readonly record struct StoreListingKey(StoreMode Mode, string ListingId);
 [RegisterComponent, NetworkedComponent]
 public sealed partial class NcStoreComponent : Component
 {
+    [DataField("profile", required: true)]
+    public ProtoId<NcStoreProfilePrototype> Profile { get; set; } = default!;
+
     public int CatalogRevision;
     public EntityUid? CurrentUser;
     public int UiRevision;
@@ -17,39 +20,18 @@ public sealed partial class NcStoreComponent : Component
     [ViewVariables]
     public HashSet<string> CompletedOneTimeContracts { get; } = new();
 
-    [DataField("categories")]
-    public List<string> Categories { get; set; } = new();
+    [DataField("categories"), ViewVariables]
+    public List<string> Categories { get; private set; } = new();
 
-    [DataField("currencyWhitelist")]
-    public List<string> CurrencyWhitelist { get; set; } = new();
+    [DataField("currencyWhitelist"), ViewVariables]
+    public List<string> CurrencyWhitelist { get; private set; } = new();
 
     public List<NcStoreListingDef> Listings { get; set; } = new();
 
     [ViewVariables]
     public Dictionary<StoreListingKey, NcStoreListingDef> ListingIndex { get; } = new();
 
-    [DataField("buyPresets")]
-    public List<string> BuyPresets { get; set; } = new();
-
-    [DataField("sellPresets")]
-    public List<string> SellPresets { get; set; } = new();
-
-    [DataField("contractPresets")]
-    public List<string> ContractPresets { get; set; } = new();
-
-    [DataField("uiTheme")]
-    public ProtoId<StoreUiThemePrototype>? UiTheme { get; set; }
-
     public Dictionary<string, ContractServerData> Contracts { get; } = new();
-
-    [DataField("rewardCurrencies")]
-    public Dictionary<string, int> RewardCurrencies { get; set; } = new();
-
-    [DataField("rewardItems")]
-    public Dictionary<string, int> RewardItems { get; set; } = new();
-
-    [DataField("uiColors")]
-    public StoreUiColorsData UiColors { get; set; } = new();
 
     public void BumpCatalogRevision() => CatalogRevision = unchecked(CatalogRevision + 1);
 

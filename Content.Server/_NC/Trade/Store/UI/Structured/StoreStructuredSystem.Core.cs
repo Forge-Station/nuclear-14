@@ -26,7 +26,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     private const int MaxVisibleListingIds = 256;
     private const int MaxVisibleListingIdLength = 96;
     private const int WatchedRootSearchLimit = 32;
-    private const float CheckInterval = 1.0f;
+    private static readonly TimeSpan RealtimeOpenStoreUpdateInterval = TimeSpan.FromSeconds(0.25);
+    private static readonly TimeSpan OpenStoreValidityCheckInterval = TimeSpan.FromSeconds(0.5);
     private readonly HashSet<EntityUid> _affectedStoresScratch = new();
     [Dependency] private readonly AudioSystem _audio = default!;
     private readonly Dictionary<EntityUid, (int Revision, List<StoreListingStaticData> List)> _catalogCache = new();
@@ -54,7 +55,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     [Dependency] private readonly SharedTransformSystem _xform = default!;
 
     private TimeSpan _nextAccelAllowed = TimeSpan.Zero;
-    private TimeSpan _nextCheck = TimeSpan.Zero;
+    private TimeSpan _nextRealtimeOpenStoreUpdate = TimeSpan.Zero;
+    private TimeSpan _nextOpenStoreValidityCheck = TimeSpan.Zero;
     private const int MaxDynamicUpdatesPerTick = 8;
 
     private DynamicScratch GetDynamicScratch(EntityUid storeUid)
@@ -117,7 +119,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             for (var i = 0; i < ids.Length; i++)
             {
                 var id = ids[i];
-                if (id.Length is 0 or > MaxVisibleListingIdLength)
+                if (string.IsNullOrWhiteSpace(id) || id.Length > MaxVisibleListingIdLength)
                     ids[i] = string.Empty;
             }
         }
@@ -194,9 +196,21 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     {
         base.Update(frameTime);
         ProcessPendingRefreshes();
-        ProcessRealtimeOpenStoreUpdates();
         ProcessDirtyStoreUpdates();
-        ProcessOpenStoreValidityChecks();
+
+        var now = _timing.CurTime;
+
+        if (now >= _nextRealtimeOpenStoreUpdate)
+        {
+            _nextRealtimeOpenStoreUpdate = now + RealtimeOpenStoreUpdateInterval;
+            ProcessRealtimeOpenStoreUpdates();
+        }
+
+        if (now >= _nextOpenStoreValidityCheck)
+        {
+            _nextOpenStoreValidityCheck = now + OpenStoreValidityCheckInterval;
+            ProcessOpenStoreValidityChecks();
+        }
     }
 
     private void ProcessRealtimeOpenStoreUpdates()
@@ -262,7 +276,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
     private void ProcessOpenStoreValidityChecks()
     {
-        if (!ShouldRunOpenStoreValidityCheck())
+        if (_openStoreUids.Count == 0)
             return;
 
         _openStoresScratch.Clear();
@@ -272,21 +286,15 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             ValidateOpenStore(uid);
     }
 
-    private bool ShouldRunOpenStoreValidityCheck()
-    {
-        if (_timing.CurTime < _nextCheck)
-            return false;
-
-        _nextCheck = _timing.CurTime + TimeSpan.FromSeconds(CheckInterval);
-        return _openStoreUids.Count > 0;
-    }
-
     private bool TryGetOpenStoreUser(EntityUid uid, out NcStoreComponent store, out EntityUid user)
     {
         store = default!;
         user = default;
 
         if (!TryComp(uid, out NcStoreComponent? foundStore) || foundStore.CurrentUser is not { } currentUser)
+            return false;
+
+        if (!_ui.IsUiOpen(uid, StoreUiKey.Key, currentUser))
             return false;
 
         store = foundStore;
@@ -595,18 +603,61 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             list,
             hasBuy,
             hasSell,
-            comp.ContractPresets.Count > 0,
+            HasContractsProfile(comp),
             uiColors
         );
     }
 
     private StoreUiColorsData ResolveUiColors(NcStoreComponent comp)
     {
-        if (comp.UiTheme is { } themeId &&
+        if (_prototypes.TryIndex<NcStoreProfilePrototype>(comp.Profile, out var profile) &&
+            profile.Theme is { } themeId &&
             _prototypes.TryIndex<StoreUiThemePrototype>(themeId, out var theme))
-            return theme.Colors;
+            return CloneUiColors(theme.Colors);
 
-        return comp.UiColors;
+        return new StoreUiColorsData();
+    }
+
+    private bool HasContractsProfile(NcStoreComponent comp)
+    {
+        if (!_prototypes.TryIndex<NcStoreProfilePrototype>(comp.Profile, out var profile))
+            return false;
+
+        return profile.Contracts != null;
+    }
+
+    private static StoreUiColorsData CloneUiColors(StoreUiColorsData colors)
+    {
+        return new StoreUiColorsData
+        {
+            TabsShellBackground = colors.TabsShellBackground,
+            TabsShellBorder = colors.TabsShellBorder,
+            TabsFrameBackground = colors.TabsFrameBackground,
+            TabsFrameBorder = colors.TabsFrameBorder,
+            TabContentBackground = colors.TabContentBackground,
+            TabsBarBackground = colors.TabsBarBackground,
+            TabsBarBorder = colors.TabsBarBorder,
+            TabActiveBackground = colors.TabActiveBackground,
+            TabActiveBorder = colors.TabActiveBorder,
+            TabInactiveBackground = colors.TabInactiveBackground,
+            TabInactiveBorder = colors.TabInactiveBorder,
+            TabFontActive = colors.TabFontActive,
+            TabFontInactive = colors.TabFontInactive,
+            CategoriesPanelBackground = colors.CategoriesPanelBackground,
+            CategoriesDivider = colors.CategoriesDivider,
+            CategoryButtonIdle = colors.CategoryButtonIdle,
+            CategoryButtonSelected = colors.CategoryButtonSelected,
+            HeaderBackground = colors.HeaderBackground,
+            HeaderBorder = colors.HeaderBorder,
+            HeaderBalanceText = colors.HeaderBalanceText,
+            SearchBoxBackground = colors.SearchBoxBackground,
+            SearchBoxBorder = colors.SearchBoxBorder,
+            SearchIconColor = colors.SearchIconColor,
+            ListingCardBackground = colors.ListingCardBackground,
+            ListingCardBorder = colors.ListingCardBorder,
+            ListingDivider = colors.ListingDivider,
+            ListingTitleColor = colors.ListingTitleColor
+        };
     }
 
     private static (bool HasBuy, bool HasSell) GetCatalogModeFlags(List<StoreListingStaticData> list)
@@ -662,6 +713,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
 
         EnsureCrateWatchUpToDate(uid, user);
+        SendCatalog(uid, comp, user);
         RequestDynamicRefresh(uid, comp, user);
     }
 

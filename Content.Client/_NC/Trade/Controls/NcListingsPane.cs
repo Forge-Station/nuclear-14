@@ -20,7 +20,7 @@ public sealed partial class NcListingsPane : PanelContainer
         RobustXamlLoader.Load(this);
         RectClipContent = true;
 
-        RebuildScroll(resetToTop: true, preserveContent: false);
+        RebuildScroll(preserveContent: false);
     }
 
     public void SetContent(Control content)
@@ -40,12 +40,12 @@ public sealed partial class NcListingsPane : PanelContainer
 
         _key = key;
 
-        RebuildScroll(resetToTop: true, preserveContent: true);
+        RebuildScroll(preserveContent: true);
     }
 
     public void ResetScroll()
     {
-        RebuildScroll(resetToTop: true, preserveContent: true);
+        RebuildScroll(preserveContent: true);
     }
 
     private void EnsureBuilt()
@@ -53,10 +53,10 @@ public sealed partial class NcListingsPane : PanelContainer
         if (_scroll != null && _host != null)
             return;
 
-        RebuildScroll(resetToTop: true, preserveContent: false);
+        RebuildScroll(preserveContent: false);
     }
 
-    private void RebuildScroll(bool resetToTop, bool preserveContent)
+    private void RebuildScroll(bool preserveContent)
     {
         List<Control>? preserved = null;
 
@@ -100,7 +100,5 @@ public sealed partial class NcListingsPane : PanelContainer
             foreach (var c in preserved)
                 _host.AddChild(c);
         }
-
-        _ = resetToTop;
     }
 }

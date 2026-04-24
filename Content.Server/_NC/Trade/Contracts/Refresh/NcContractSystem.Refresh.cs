@@ -9,13 +9,10 @@ public sealed partial class NcContractSystem : EntitySystem
 {
     public void RefillContractsForStore(EntityUid uid, NcStoreComponent comp, string? ignoredContractId = null)
     {
-        if (comp.ContractPresets.Count == 0)
+        if (!TryResolveContractPreset(uid, comp, out var preset))
             return;
 
-        var presets = ResolveContractPresets(uid, comp.ContractPresets);
-        if (presets.Count == 0)
-            return;
-
+        var presets = new List<StoreContractsPresetPrototype> { preset };
         var limits = MergeDifficultyLimits(presets);
         if (limits.Count == 0)
             return;
@@ -27,25 +24,29 @@ public sealed partial class NcContractSystem : EntitySystem
             ProcessDifficulty(uid, comp, difficulty, limit, currentCounts, poolByDifficulty);
     }
 
-    private List<StoreContractsPresetPrototype> ResolveContractPresets(EntityUid uid, IReadOnlyList<string> presetIds)
+    private bool TryResolveContractPreset(EntityUid uid, NcStoreComponent comp, out StoreContractsPresetPrototype preset)
     {
-        var presets = new List<StoreContractsPresetPrototype>(presetIds.Count);
+        preset = default!;
 
-        foreach (var presetId in presetIds)
+        if (!_prototypes.TryIndex<NcStoreProfilePrototype>(comp.Profile, out var profile))
         {
-            if (string.IsNullOrWhiteSpace(presetId))
-                continue;
-
-            if (!_prototypes.TryIndex<StoreContractsPresetPrototype>(presetId, out var preset))
-            {
-                Sawmill.Warning($"[Contracts] Preset '{presetId}' not found for {ToPrettyString(uid)}");
-                continue;
-            }
-
-            presets.Add(preset);
+            Sawmill.Warning($"[Contracts] Store profile '{comp.Profile}' not found for {ToPrettyString(uid)}.");
+            return false;
         }
 
-        return presets;
+        if (profile.Contracts == null)
+            return false;
+
+        if (!_prototypes.TryIndex<StoreContractsPresetPrototype>(profile.Contracts.Value, out var resolvedPreset) ||
+            resolvedPreset == null)
+        {
+            Sawmill.Warning(
+                $"[Contracts] Contract profile '{profile.Contracts.Value}' not found for store profile '{profile.ID}'.");
+            return false;
+        }
+
+        preset = resolvedPreset;
+        return true;
     }
 
     private static Dictionary<string, int> MergeDifficultyLimits(IReadOnlyList<StoreContractsPresetPrototype> presets)

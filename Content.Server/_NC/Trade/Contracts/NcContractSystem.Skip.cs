@@ -11,43 +11,32 @@ public sealed partial class NcContractSystem : EntitySystem
         currency = string.Empty;
         cost = 0;
 
-        if (comp.ContractPresets.Count == 0)
+        if (!TryResolveContractPreset(store, comp, out var preset))
             return false;
 
-        foreach (var presetId in comp.ContractPresets)
+        if (preset.SkipCost <= 0)
+            return false;
+
+        cost = preset.SkipCost;
+
+        var cur = preset.SkipCurrency;
+        if (string.IsNullOrWhiteSpace(cur))
         {
-            if (string.IsNullOrWhiteSpace(presetId))
-                continue;
-
-            if (!_prototypes.TryIndex<StoreContractsPresetPrototype>(presetId, out var preset))
-                continue;
-
-            if (preset.SkipCost <= 0)
-                continue;
-
-            cost = preset.SkipCost;
-
-            var cur = preset.SkipCurrency;
-            if (string.IsNullOrWhiteSpace(cur))
+            foreach (var c in comp.CurrencyWhitelist)
             {
-                foreach (var c in comp.CurrencyWhitelist)
+                if (!string.IsNullOrWhiteSpace(c))
                 {
-                    if (!string.IsNullOrWhiteSpace(c))
-                    {
-                        cur = c;
-                        break;
-                    }
+                    cur = c;
+                    break;
                 }
             }
-
-            if (string.IsNullOrWhiteSpace(cur))
-                return false;
-
-            currency = cur;
-            return true;
         }
 
-        return false;
+        if (string.IsNullOrWhiteSpace(cur))
+            return false;
+
+        currency = cur;
+        return true;
     }
 
 

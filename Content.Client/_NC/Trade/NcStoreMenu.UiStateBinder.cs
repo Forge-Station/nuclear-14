@@ -42,7 +42,7 @@ public sealed partial class NcStoreMenu
                     if (remaining == 0)
                         continue;
 
-                    h = h * 31 + (s.Id?.GetHashCode() ?? 0);
+                    h = unchecked(h * 31 + NcStoreMenu.StableStringHash(s.Id));
                 }
 
                 return h;
@@ -65,7 +65,7 @@ public sealed partial class NcStoreMenu
                     if (take <= 0)
                         continue;
 
-                    h = h * 31 + (s.Id?.GetHashCode() ?? 0);
+                    h = unchecked(h * 31 + NcStoreMenu.StableStringHash(s.Id));
                 }
 
                 return h;

@@ -10,6 +10,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         private readonly Dictionary<string, int> _cratePreviewTotals = new();
         private readonly Dictionary<string, int> _cratePreviewUnitsById = new();
         private readonly HashSet<string> _visibleListingIds = new();
+        private readonly HashSet<string> _visibleIncomingScratch = new(StringComparer.Ordinal);
         private int _activeIndex;
         private int _catalogRevision;
         private int _cratePreviewCatalogRevision;
@@ -32,58 +33,66 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         public bool UpdateVisibleIds(string[]? ids)
         {
-            if (ids == null || ids.Length == 0)
+            _visibleIncomingScratch.Clear();
+
+            if (ids != null)
+            {
+                for (var i = 0; i < ids.Length; i++)
+                {
+                    var id = ids[i];
+                    if (!string.IsNullOrWhiteSpace(id))
+                        _visibleIncomingScratch.Add(id);
+                }
+            }
+
+            if (_visibleIncomingScratch.Count == 0)
             {
                 if (!_hasVisibleIds)
                     return false;
-
                 _visibleListingIds.Clear();
                 _visibleSig = 0;
                 _hasVisibleIds = false;
                 return true;
             }
 
-            var sig = 17;
-            for (var i = 0; i < ids.Length; i++)
-            {
-                var id = ids[i];
-                if (string.IsNullOrWhiteSpace(id))
-                    continue;
+            var sig = ComputeVisibleIdsSignature(_visibleIncomingScratch);
 
-                sig = unchecked(sig * 31 + id.GetHashCode());
-            }
-
-            if (_hasVisibleIds && sig == _visibleSig && _visibleListingIds.Count == ids.Length)
-            {
-                var all = true;
-                for (var i = 0; i < ids.Length; i++)
-                {
-                    var id = ids[i];
-                    if (string.IsNullOrWhiteSpace(id))
-                        continue;
-
-                    if (_visibleListingIds.Contains(id))
-                        continue;
-
-                    all = false;
-                    break;
-                }
-
-                if (all)
-                    return false;
-            }
+            if (_hasVisibleIds &&
+                sig == _visibleSig &&
+                _visibleListingIds.SetEquals(_visibleIncomingScratch))
+                return false;
 
             _visibleListingIds.Clear();
-            for (var i = 0; i < ids.Length; i++)
-            {
-                var id = ids[i];
-                if (!string.IsNullOrWhiteSpace(id))
-                    _visibleListingIds.Add(id);
-            }
+            foreach (var id in _visibleIncomingScratch)
+                _visibleListingIds.Add(id);
 
             _visibleSig = sig;
             _hasVisibleIds = true;
             return true;
+        }
+
+        private static int ComputeVisibleIdsSignature(HashSet<string> ids)
+        {
+            var sig = 17;
+            foreach (var id in ids)
+                sig = unchecked(sig + (StableStringHash(id) * 31));
+
+            sig = unchecked(sig * 31 + ids.Count);
+            return sig;
+        }
+
+        private static int StableStringHash(string value)
+        {
+            unchecked
+            {
+                const int fnvPrime = 16777619;
+                var hash = unchecked((int) 2166136261u);
+
+                for (var i = 0; i < value.Length; i++)
+                    hash = (hash ^ value[i]) * fnvPrime;
+
+                return hash;
+            }
         }
 
         public bool ShouldSendBuyDynamicFor(string listingId)

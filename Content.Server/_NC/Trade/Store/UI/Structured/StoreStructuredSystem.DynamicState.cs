@@ -70,7 +70,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             : null;
     }
 
-    private static DynamicTabState GetDynamicTabState(NcStoreComponent comp)
+    private DynamicTabState GetDynamicTabState(NcStoreComponent comp)
     {
         var hasBuyTab = false;
         var hasSellTab = false;
@@ -86,7 +86,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 break;
         }
 
-        return new(hasBuyTab, hasSellTab, comp.ContractPresets.Count > 0);
+        return new(hasBuyTab, hasSellTab, HasContractsProfile(comp));
     }
 
     private DynamicContractNeeds GetDynamicContractNeeds(NcStoreComponent comp, bool hasContractsTab)
@@ -322,12 +322,12 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             new StoreDynamicState(
                 comp.UiRevision,
                 comp.CatalogRevision,
-                buf.BalancesByCurrency,
-                buf.RemainingById,
-                buf.OwnedById,
-                buf.CrateUnitsById,
-                buf.CrateTotals,
-                buf.Contracts,
+                new Dictionary<string, int>(buf.BalancesByCurrency),
+                new Dictionary<string, int>(buf.RemainingById),
+                new Dictionary<string, int>(buf.OwnedById),
+                new Dictionary<string, int>(buf.CrateUnitsById),
+                new Dictionary<string, int>(buf.CrateTotals),
+                new List<ContractClientData>(buf.Contracts),
                 tabs.HasBuyTab,
                 tabs.HasSellTab,
                 tabs.HasContractsTab,
@@ -372,9 +372,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (_pendingRefreshEntities.Add(changedRoot))
             _inventory.InvalidateInventoryCache(changedRoot);
 
-        if (_timing.CurTime < _nextCheck && _timing.CurTime >= _nextAccelAllowed)
+        if (_timing.CurTime < _nextOpenStoreValidityCheck && _timing.CurTime >= _nextAccelAllowed)
         {
-            _nextCheck = _timing.CurTime;
+            _nextOpenStoreValidityCheck = _timing.CurTime;
             _nextAccelAllowed = _timing.CurTime + TimeSpan.FromSeconds(MinAccelInterval);
         }
 

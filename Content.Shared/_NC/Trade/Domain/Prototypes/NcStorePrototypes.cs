@@ -71,6 +71,25 @@ public sealed partial class StoreUiThemePrototype : IPrototype
     public StoreUiColorsData Colors { get; private set; } = new();
 }
 
+[Prototype("ncStoreProfile")]
+public sealed partial class NcStoreProfilePrototype : IPrototype
+{
+    [IdDataField]
+    public string ID { get; private set; } = default!;
+
+    [DataField("buy")]
+    public List<ProtoId<StorePresetStructuredPrototype>> Buy { get; private set; } = new();
+
+    [DataField("sell")]
+    public List<ProtoId<StorePresetStructuredPrototype>> Sell { get; private set; } = new();
+
+    [DataField("contracts")]
+    public ProtoId<StoreContractsPresetPrototype>? Contracts { get; private set; }
+
+    [DataField("theme")]
+    public ProtoId<StoreUiThemePrototype>? Theme { get; private set; }
+}
+
 
 [Prototype("storeContract")]
 public sealed partial class StoreContractPrototype : IPrototype

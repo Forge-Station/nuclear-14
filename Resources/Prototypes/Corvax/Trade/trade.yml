@@ -52,13 +52,7 @@
   suffix: vendor, normal
   components:
   - type: NcStore
-    buyPresets:
-    - caravan_buy2
-    sellPresets:
-    - caravan_sell2
-    contractPresets:
-    - PresetBazar
-    uiTheme: TradeUiThemeWasteland
+    profile: TrademachineCityProfile
   - type: AccessReader
     access:
     - [ "TownieShopkeeper" ]
@@ -71,11 +65,7 @@
   suffix: vendor, Tickets
   components:
   - type: NcStore
-    buyPresets:
-    - caravan_storetickets
-    sellPresets:
-    - caravan_storetickets_sell
-    uiTheme: TradeUiThemeWasteland
+    profile: TrademachineTicketsProfile
   - type: AccessReader
     access:
     - [ "TownieShopkeeper" ]
@@ -96,7 +86,7 @@
   suffix: vendor, NT UI
   components:
   - type: NcStore
-    uiTheme: TradeUiThemeNT
+    profile: TrademachineCityNtProfile
 
 - type: entity
   id: TrademachineCitySyndicate
@@ -106,7 +96,42 @@
   suffix: vendor, Syndicate UI
   components:
   - type: NcStore
-    uiTheme: TradeUiThemeSyndicate
+    profile: TrademachineCitySyndicateProfile
+
+- type: ncStoreProfile
+  id: TrademachineCityProfile
+  buy:
+  - caravan_buy2
+  sell:
+  - caravan_sell2
+  contracts: PresetBazar
+  theme: TradeUiThemeWasteland
+
+- type: ncStoreProfile
+  id: TrademachineTicketsProfile
+  buy:
+  - caravan_storetickets
+  sell:
+  - caravan_storetickets_sell
+  theme: TradeUiThemeWasteland
+
+- type: ncStoreProfile
+  id: TrademachineCityNtProfile
+  buy:
+  - caravan_buy2
+  sell:
+  - caravan_sell2
+  contracts: PresetBazar
+  theme: TradeUiThemeNT
+
+- type: ncStoreProfile
+  id: TrademachineCitySyndicateProfile
+  buy:
+  - caravan_buy2
+  sell:
+  - caravan_sell2
+  contracts: PresetBazar
+  theme: TradeUiThemeSyndicate
 
 # ----------------------------
 # Matcher prototypes (buy/sell/contracts tests)

@@ -342,33 +342,55 @@ public sealed partial class NcStoreMenu : FancyWindow
         {
             var hash = 17;
 
-            hash = hash * 31 + (colors.TabsShellBackground?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.TabsShellBorder?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.TabsFrameBackground?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.TabsFrameBorder?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.TabContentBackground?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.TabsBarBackground?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.TabsBarBorder?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.TabActiveBackground?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.TabActiveBorder?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.TabInactiveBackground?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.TabInactiveBorder?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.TabFontActive?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.TabFontInactive?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.CategoriesPanelBackground?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.CategoriesDivider?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.CategoryButtonIdle?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.CategoryButtonSelected?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.HeaderBackground?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.HeaderBorder?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.HeaderBalanceText?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.SearchBoxBackground?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.SearchBoxBorder?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.SearchIconColor?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.ListingCardBackground?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.ListingCardBorder?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.ListingDivider?.GetHashCode() ?? 0);
-            hash = hash * 31 + (colors.ListingTitleColor?.GetHashCode() ?? 0);
+            hash = MixStableHash(hash, colors.TabsShellBackground);
+            hash = MixStableHash(hash, colors.TabsShellBorder);
+            hash = MixStableHash(hash, colors.TabsFrameBackground);
+            hash = MixStableHash(hash, colors.TabsFrameBorder);
+            hash = MixStableHash(hash, colors.TabContentBackground);
+            hash = MixStableHash(hash, colors.TabsBarBackground);
+            hash = MixStableHash(hash, colors.TabsBarBorder);
+            hash = MixStableHash(hash, colors.TabActiveBackground);
+            hash = MixStableHash(hash, colors.TabActiveBorder);
+            hash = MixStableHash(hash, colors.TabInactiveBackground);
+            hash = MixStableHash(hash, colors.TabInactiveBorder);
+            hash = MixStableHash(hash, colors.TabFontActive);
+            hash = MixStableHash(hash, colors.TabFontInactive);
+            hash = MixStableHash(hash, colors.CategoriesPanelBackground);
+            hash = MixStableHash(hash, colors.CategoriesDivider);
+            hash = MixStableHash(hash, colors.CategoryButtonIdle);
+            hash = MixStableHash(hash, colors.CategoryButtonSelected);
+            hash = MixStableHash(hash, colors.HeaderBackground);
+            hash = MixStableHash(hash, colors.HeaderBorder);
+            hash = MixStableHash(hash, colors.HeaderBalanceText);
+            hash = MixStableHash(hash, colors.SearchBoxBackground);
+            hash = MixStableHash(hash, colors.SearchBoxBorder);
+            hash = MixStableHash(hash, colors.SearchIconColor);
+            hash = MixStableHash(hash, colors.ListingCardBackground);
+            hash = MixStableHash(hash, colors.ListingCardBorder);
+            hash = MixStableHash(hash, colors.ListingDivider);
+            hash = MixStableHash(hash, colors.ListingTitleColor);
+
+            return hash;
+        }
+    }
+
+    private static int MixStableHash(int hash, string? value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return unchecked(hash * 31);
+
+        return unchecked(hash * 31 + StableStringHash(value));
+    }
+
+    private static int StableStringHash(string value)
+    {
+        unchecked
+        {
+            const int fnvPrime = 16777619;
+            var hash = unchecked((int) 2166136261u);
+
+            for (var i = 0; i < value.Length; i++)
+                hash = (hash ^ value[i]) * fnvPrime;
 
             return hash;
         }
@@ -460,7 +482,7 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         var sig = 17;
         for (var i = 0; i < arr.Length; i++)
-            sig = unchecked(sig * 31 + arr[i].GetHashCode());
+            sig = unchecked(sig * 31 + StableStringHash(arr[i]));
 
         if (sig == _lastVisibleIdsSig)
             return;

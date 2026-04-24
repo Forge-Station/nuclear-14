@@ -1,7 +1,7 @@
 # UI themes for NcStore.
-# Use in entity:
-# - type: NcStore
-#   uiTheme: TradeUiThemeWasteland
+# Use in profile:
+# - type: ncStoreProfile
+#   theme: TradeUiThemeWasteland
 
 - type: ncStoreUiTheme
   id: TradeUiThemeWasteland

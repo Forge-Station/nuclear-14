@@ -43,21 +43,12 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
     {
         var changed = false;
 
-        if (comp.Listings.Count == 0)
+        if (_loadedStores.Add(uid))
         {
-            TryLoadPresets(uid, comp, reason);
-            if (comp.Listings.Count > 0)
-                changed = true;
-        }
-
-        if (comp.Listings.Count > 0 && comp.ListingIndex.Count == 0)
-        {
+            TryLoadProfile(uid, comp, reason);
             comp.RebuildListingIndex();
             changed = true;
         }
-
-        if (_loadedStores.Add(uid))
-            changed = true;
 
         if (changed)
             comp.BumpCatalogRevision();
@@ -69,46 +60,50 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         }
     }
 
-    private void TryLoadPresets(EntityUid uid, NcStoreComponent comp, string reason)
+    private void TryLoadProfile(EntityUid uid, NcStoreComponent comp, string reason)
     {
-        if (comp.BuyPresets.Count == 0 && comp.SellPresets.Count == 0)
-        {
-            Sawmill.Warning($"[NcStore] {ToPrettyString(uid)}: нет ни одного пресета (reason={reason})");
-            return;
-        }
-
         comp.CurrencyWhitelist.Clear();
         comp.Categories.Clear();
         comp.Listings.Clear();
         comp.ListingIndex.Clear();
 
-        var ctx = new LoadContext();
+        if (!_prototypes.TryIndex<NcStoreProfilePrototype>(comp.Profile, out var profile))
+        {
+            Sawmill.Warning($"[NcStore] {ToPrettyString(uid)}: profile '{comp.Profile}' not found (reason={reason}).");
+            return;
+        }
 
+        var ctx = new LoadContext();
         var total = 0;
 
-        foreach (var id in comp.BuyPresets)
+        foreach (var id in profile.Buy)
             total += LoadPresetForMode(id, StoreMode.Buy, comp, ctx);
 
-        foreach (var id in comp.SellPresets)
+        foreach (var id in profile.Sell)
             total += LoadPresetForMode(id, StoreMode.Sell, comp, ctx);
 
-        if (total == 0)
+        if (total == 0 && profile.Contracts == null)
         {
-            Sawmill.Warning($"[NcStore] {ToPrettyString(uid)}: ни одного лота не загружено (reason={reason})");
+            Sawmill.Warning(
+                $"[NcStore] {ToPrettyString(uid)}: profile '{profile.ID}' has no buy, sell or contracts (reason={reason}).");
             return;
         }
 
         Sawmill.Info(
-            $"[NcStore] {ToPrettyString(uid)}: загружено {total} лотов. " +
-            $"BuyPresets=[{string.Join(", ", comp.BuyPresets)}], " +
-            $"SellPresets=[{string.Join(", ", comp.SellPresets)}], reason={reason}");
+            $"[NcStore] {ToPrettyString(uid)}: profile='{profile.ID}', loaded {total} listings, " +
+            $"buy={profile.Buy.Count}, sell={profile.Sell.Count}, " +
+            $"contracts={(profile.Contracts != null ? profile.Contracts.Value.ToString() : "<none>")}, reason={reason}");
     }
 
-    private int LoadPresetForMode(string presetId, StoreMode mode, NcStoreComponent comp, LoadContext ctx)
+    private int LoadPresetForMode(
+        ProtoId<StorePresetStructuredPrototype> presetId,
+        StoreMode mode,
+        NcStoreComponent comp,
+        LoadContext ctx)
     {
         if (!_prototypes.TryIndex<StorePresetStructuredPrototype>(presetId, out var preset))
         {
-            Sawmill.Error($"[NcStore] Пресет '{presetId}' не найден");
+            Sawmill.Warning($"[NcStore] Preset '{presetId}' not found.");
             return 0;
         }
 
@@ -121,7 +116,7 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         {
             if (!_prototypes.TryIndex<StoreCategoryStructuredPrototype>(categoryId, out var categoryProto))
             {
-                Sawmill.Error($"[NcStore] Категория '{categoryId}' не найдена (preset='{presetId}')");
+                Sawmill.Error($"[NcStore] Category '{categoryId}' not found (preset='{presetId}').");
                 continue;
             }
 
@@ -165,19 +160,23 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         return count;
     }
 
-    private bool ValidateMatcherEntry(StoreCatalogEntry entry, StoreMode mode, string presetId, string categoryId)
+    private bool ValidateMatcherEntry(
+        StoreCatalogEntry entry,
+        StoreMode mode,
+        ProtoId<StorePresetStructuredPrototype> presetId,
+        string categoryId)
     {
         if (string.IsNullOrWhiteSpace(entry.Proto))
         {
             Sawmill.Warning(
-                $"[NcStore] Matcher entry в '{presetId}/{categoryId}' с пустым proto — пропущен.");
+                $"[NcStore] Matcher entry in '{presetId}/{categoryId}' has empty proto and was skipped.");
             return false;
         }
 
         if (!_prototypes.TryIndex<NcMatcherPrototype>(entry.Proto, out var matcher))
         {
             Sawmill.Warning(
-                $"[NcStore] Matcher '{entry.Proto}' не найден (preset='{presetId}', category='{categoryId}') — пропущен.");
+                $"[NcStore] Matcher '{entry.Proto}' not found (preset='{presetId}', category='{categoryId}') and was skipped.");
             return false;
         }
 
@@ -186,16 +185,16 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         if (!hasItems && !hasTags)
         {
             Sawmill.Warning(
-                $"[NcStore] Matcher '{entry.Proto}' не имеет ни items, ни tags — пропущен.");
+                $"[NcStore] Matcher '{entry.Proto}' has neither items nor tags and was skipped.");
             return false;
         }
 
-        // Buy listing must be able to spawn, which means items are required (tags don't drive spawn).
+        // Buy listing must be able to spawn, which means items are required (tags do not drive spawn).
         if (mode == StoreMode.Buy && !hasItems)
         {
             Sawmill.Warning(
-                $"[NcStore] Matcher '{entry.Proto}' используется в Buy-листинге без items (только tags) — " +
-                $"невозможно спавнить, пропущен (preset='{presetId}', category='{categoryId}').");
+                $"[NcStore] Matcher '{entry.Proto}' is used in a buy listing without items (tags-only), " +
+                $"cannot spawn and was skipped (preset='{presetId}', category='{categoryId}').");
             return false;
         }
 

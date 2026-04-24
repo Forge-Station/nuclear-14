@@ -10,5 +10,8 @@
     layers:
     - state: noticeboardstanding
   - type: NcStore
-    contractPresets:
-    - TradeContractsCityPreset
+    profile: TradeContractBoardCityProfile
+
+- type: ncStoreProfile
+  id: TradeContractBoardCityProfile
+  contracts: TradeContractsCityPreset

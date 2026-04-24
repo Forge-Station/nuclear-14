@@ -177,7 +177,6 @@ public sealed partial class NcContractCard : PanelContainer
         TitleLabel.Text = title;
         TitleLabel.ToolTip = title;
 
-        BadgesRow.DisposeAllChildren();
         BadgesRow.RemoveAllChildren();
 
         var objectiveTypeText = ObjectiveTypeName(_data.ExecutionKind);
@@ -298,7 +297,6 @@ public sealed partial class NcContractCard : PanelContainer
 
     private void PopulateGoals()
     {
-        GoalsHost.DisposeAllChildren();
         GoalsHost.RemoveAllChildren();
 
         if (_data.Targets is { Count: > 0, })
@@ -318,7 +316,6 @@ public sealed partial class NcContractCard : PanelContainer
         TurnInNoteLabel.ToolTip = turnInNote;
 
         TurnInSection.Visible = ShouldShowTurnInItem(_data);
-        TurnInHost.DisposeAllChildren();
         TurnInHost.RemoveAllChildren();
 
         if (TurnInSection.Visible)
@@ -345,7 +342,6 @@ public sealed partial class NcContractCard : PanelContainer
 
     private void PopulateRewardsSection()
     {
-        RewardsHost.DisposeAllChildren();
         RewardsHost.RemoveAllChildren();
         PopulateRewards(RewardsHost, _data.Rewards);
     }
@@ -393,7 +389,6 @@ public sealed partial class NcContractCard : PanelContainer
                     : Loc.GetString("nc-store-contract-claim-tooltip-repeatable")
                 : Loc.GetString("nc-store-contract-claim-tooltip-not-done");
 
-        SecondaryButtonsRow.DisposeAllChildren();
         SecondaryButtonsRow.RemoveAllChildren();
 
         if (canRequestPinpointer)

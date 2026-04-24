@@ -714375,6 +714375,7 @@ entities:
       pos: -126.5,55.5
       parent: 1
     - type: NcStore
+      profile: TrademachineCityProfile
       currencyWhitelist:
       - Caps
       categories:

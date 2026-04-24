@@ -70,9 +70,6 @@ public sealed class RequestContractPinpointerBoundMessage : BoundUserInterfaceMe
 public sealed class RequestUiRefreshMessage : BoundUserInterfaceMessage { }
 
 [Serializable, NetSerializable]
-public sealed class RequestContractsRefreshBoundMessage : BoundUserInterfaceMessage { }
-
-[Serializable, NetSerializable]
 public sealed class SkipContractBoundMessage : BoundUserInterfaceMessage
 {
     public SkipContractBoundMessage(string contractId)

@@ -1,4 +1,3 @@
-using System.Linq;
 using Content.Client._NC.Trade.Controls;
 using Content.Shared._NC.Trade;
 using Robust.Client.UserInterface;
@@ -9,8 +8,10 @@ namespace Content.Client._NC.Trade;
 
 public sealed partial class NcStoreMenu
 {
+    private static readonly Comparison<ContractClientData> ContractComparison = CompareContracts;
     private readonly Dictionary<string, NcContractCard> _contractCardsById = new();
     private readonly List<string> _contractCardOrder = new();
+    private readonly List<string> _staleContractIdsScratch = new();
 
     public void PopulateContracts(List<ContractClientData>? list, int skipCost, string skipCurrency, int skipBalance)
     {
@@ -34,17 +35,33 @@ public sealed partial class NcStoreMenu
 
     private static List<ContractClientData> OrderContracts(List<ContractClientData> contracts)
     {
-        return contracts
-            .OrderBy(x => x.Difficulty switch
-            {
-                "Easy" => 0,
-                "Medium" => 1,
-                "Hard" => 2,
-                _ => 99
-            })
-            .ThenBy(x => x.Name)
-            .ThenBy(x => x.Id)
-            .ToList();
+        var ordered = new List<ContractClientData>(contracts);
+        ordered.Sort(ContractComparison);
+        return ordered;
+    }
+
+    private static int CompareContracts(ContractClientData left, ContractClientData right)
+    {
+        var diff = DifficultyRank(left.Difficulty).CompareTo(DifficultyRank(right.Difficulty));
+        if (diff != 0)
+            return diff;
+
+        diff = string.Compare(left.Name, right.Name, StringComparison.Ordinal);
+        if (diff != 0)
+            return diff;
+
+        return string.Compare(left.Id, right.Id, StringComparison.Ordinal);
+    }
+
+    private static int DifficultyRank(string difficulty)
+    {
+        return difficulty switch
+        {
+            "Easy" => 0,
+            "Medium" => 1,
+            "Hard" => 2,
+            _ => 99
+        };
     }
 
     private bool TryUpdateContractsInPlace(
@@ -140,13 +157,16 @@ public sealed partial class NcStoreMenu
             ? set
             : new HashSet<string>(activeIds, StringComparer.Ordinal);
 
-        var staleIds = _contractCardsById.Keys
-            .Where(id => !active.Contains(id))
-            .ToArray();
-
-        for (var i = 0; i < staleIds.Length; i++)
+        _staleContractIdsScratch.Clear();
+        foreach (var id in _contractCardsById.Keys)
         {
-            var id = staleIds[i];
+            if (!active.Contains(id))
+                _staleContractIdsScratch.Add(id);
+        }
+
+        for (var i = 0; i < _staleContractIdsScratch.Count; i++)
+        {
+            var id = _staleContractIdsScratch[i];
             if (_contractCardsById.Remove(id, out var card))
                 card.Parent?.RemoveChild(card);
         }
