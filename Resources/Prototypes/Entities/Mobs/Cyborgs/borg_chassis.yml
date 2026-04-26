@@ -267,7 +267,7 @@
     interactSuccessSound:
       path: /Audio/Ambience/Objects/periodic_beep.ogg
   - type: TTS # Corvax-TTS
-    voice: TrainingRobot
+    voice: Glados
 
 - type: entity
   id: BorgChassisService

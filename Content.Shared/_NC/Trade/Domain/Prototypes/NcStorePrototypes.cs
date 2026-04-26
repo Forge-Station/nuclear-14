@@ -193,7 +193,7 @@ public sealed partial class StoreContractsPresetPrototype : IPrototype
     public List<PackIncludeEntry> Packs { get; set; } = new();
 
     [DataField("skipCost")]
-    public int SkipCost { get; set; } = 150;
+    public int SkipCost { get; set; } = 360;
 
     [DataField("skipCurrency")]
     public string SkipCurrency { get; set; } = string.Empty;

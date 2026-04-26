@@ -1,0 +1,55 @@
+- type: entity
+  id: N14Firetube
+  name: incenerator сhimney
+  description: Industrial chimney from which different nasties come out.
+  suffix: Mapping
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Transform
+    anchored: true
+    noRot: true
+  - type: Clickable
+  - type: Physics
+    bodyType: Static
+  - type: Tag
+    tags:
+      - Structure
+  - type: Damageable
+    damageContainer: Inorganic
+    damageModifierSet: Metallic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 1000
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+  - type: Sprite
+    sprite: _Corvax/Structures/Decoration/firetube.rsi
+    state: icon
+    snapCardinals: true
+    netsync: false
+    drawdepth: Overdoors
+  - type: SpriteFade
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.56,-0.84,0.56,-1.79"
+        density: 1000
+        mask:
+        - TableMask
+        layer:
+        - TableLayer
+  - type: PointLight
+    color: "#FFAF38FF"
+    radius: 6
+    power: 16
+    softness: 1.1
+    offset: "0, -0.5"

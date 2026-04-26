@@ -32,6 +32,10 @@
     - Paper
   - type: Appearance
   - type: FaxableObject
+  - type: Material # Forge-Change Обновленная концелярия
+  - type: PhysicalComposition
+    materialComposition:
+      Paper: 100 # Forge-Change Обновленная концелярия
   - type: PaperVisuals
   - type: Flammable
     fireSpread: true

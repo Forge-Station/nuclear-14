@@ -1,0 +1,169 @@
+- type: entity
+  parent: N14IDCard
+  id: N14IDKeyUniqueTemplateIron
+  name: ключ-болванка
+  description: 'Ключ "УКАЖИ ИМЯ КОМНАТЫ"'
+  suffix: UniqueKeyDoor, Шаблон, Железный
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: iron
+  - type: UniqueDoorKey
+
+- type: entity
+  parent: N14IDCard
+  id: N14IDKeyUniqueTemplateBrass
+  name: ключ-болванка
+  description: 'Ключ "УКАЖИ ИМЯ КОМНАТЫ"'
+  suffix: UniqueKeyDoor, Шаблон, Латунный
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: brass
+  - type: UniqueDoorKey
+
+- type: entity
+  parent: N14IDCard
+  id: N14IDKeyUniqueTemplateBronze
+  name: ключ-болванка
+  description: 'Ключ "УКАЖИ ИМЯ КОМНАТЫ"'
+  suffix: UniqueKeyDoor, Шаблон, Бронзовый
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: bronze
+  - type: UniqueDoorKey
+
+- type: entity
+  parent: N14IDCard
+  id: N14IDKeyUniqueTemplateSilver
+  name: ключ-болванка
+  description: 'Ключ "УКАЖИ ИМЯ КОМНАТЫ"'
+  suffix: UniqueKeyDoor, Шаблон, Серебряный
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: silver
+  - type: UniqueDoorKey
+
+- type: entity
+  parent: N14IDCard
+  id: N14IDKeyUniqueTemplateGold
+  name: ключ-болванка
+  description: 'Ключ "УКАЖИ ИМЯ КОМНАТЫ"'
+  suffix: UniqueKeyDoor, Шаблон, Золотой
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: gold
+  - type: UniqueDoorKey
+
+# Шаблонные двери для мапперов (разные спрайты/типы).
+# Перед сохранением карты поменяй текст в кавычках:
+# 'Дверь "Комната 7"'
+
+- type: entity
+  parent: N14DoorWoodSecureLockedPersonTall
+  id: N14DoorWoodSecureUniqueTemplate
+  description: 'Дверь "УКАЖИ ИМЯ КОМНАТЫ"'
+  suffix: UniqueKeyDoor, Шаблон, Деревянная высокая
+  components:
+  - type: AccessReader
+    access: []
+  - type: UniqueKeyDoor
+    masterKeyTags:
+    - TownMasterKey
+  - type: Wires
+    layoutId: AirlockService
+
+- type: entity
+  parent: N14DoorWoodRoom
+  id: N14DoorWoodRoomUniqueTemplate
+  description: 'Дверь "УКАЖИ ИМЯ КОМНАТЫ"'
+  suffix: UniqueKeyDoor, Шаблон, Комнатная деревянная
+  components:
+  - type: AccessReader
+    access: []
+  - type: UniqueKeyDoor
+    masterKeyTags:
+    - TownMasterKey
+
+- type: entity
+  parent: N14DoorMetalSecure
+  id: N14DoorMetalSecureUniqueTemplate
+  description: 'Дверь "УКАЖИ ИМЯ КОМНАТЫ"'
+  suffix: UniqueKeyDoor, Шаблон, Металлическая защищённая
+  components:
+  - type: AccessReader
+    access: []
+  - type: UniqueKeyDoor
+    masterKeyTags:
+    - TownMasterKey
+
+- type: entity
+  parent: N14DoorCellMetal
+  id: N14DoorCellMetalUniqueTemplate
+  description: 'Дверь "УКАЖИ ИМЯ КОМНАТЫ"'
+  suffix: UniqueKeyDoor, Шаблон, Тюремная
+  components:
+  - type: AccessReader
+    access: []
+  - type: UniqueKeyDoor
+    masterKeyTags:
+    - TownMasterKey
+
+- type: entity
+  parent: N14DoorGlass
+  id: N14DoorGlassUniqueTemplate
+  description: 'Дверь "УКАЖИ ИМЯ КОМНАТЫ"'
+  suffix: UniqueKeyDoor, Шаблон, Стеклянная
+  components:
+  - type: AccessReader
+    access: []
+  - type: UniqueKeyDoor
+    masterKeyTags:
+    - TownMasterKey
+
+# Готовые пары для примера.
+
+# Комната 1
+- type: entity
+  parent: N14IDKeyUniqueTemplateIron
+  id: N14IDKeyInnRoomOne
+  name: ключ
+  description: 'Ключ "Комната 1"'
+  suffix: Комната 1
+
+- type: entity
+  parent: N14DoorWoodSecureUniqueTemplate
+  id: N14DoorWoodSecureLockedInnRoomOneKeyed
+  description: 'Дверь "Комната 1"'
+  suffix: Комната 1
+
+# Комната 2
+- type: entity
+  parent: N14IDKeyUniqueTemplateBrass
+  id: N14IDKeyInnRoomTwo
+  name: ключ
+  description: 'Ключ "Комната 2"'
+  suffix: Комната 2
+
+- type: entity
+  parent: N14DoorWoodSecureUniqueTemplate
+  id: N14DoorWoodSecureLockedInnRoomTwoKeyed
+  description: 'Дверь "Комната 2"'
+  suffix: Комната 2
+
+# Комната 3
+- type: entity
+  parent: N14IDKeyUniqueTemplateBronze
+  id: N14IDKeyInnRoomThree
+  name: ключ
+  description: 'Ключ "Комната 3"'
+  suffix: Комната 3
+
+- type: entity
+  parent: N14DoorWoodSecureUniqueTemplate
+  id: N14DoorWoodSecureLockedInnRoomThreeKeyed
+  description: 'Дверь "Комната 3"'
+  suffix: Комната 3
