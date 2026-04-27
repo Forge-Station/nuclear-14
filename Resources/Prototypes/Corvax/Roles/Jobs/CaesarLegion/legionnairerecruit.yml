@@ -36,6 +36,7 @@
   id: CaesarLegionLegionnaireRecruitGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitLegionnaire
+    outerClothing: N14ClothingOuterLegionnaireRecruitArmor
     mask: N14ClothingMaskBrownMask
     eyes: N14ClothingEyesGlassesWelding
     back: N14ClothingBackpackMilitary

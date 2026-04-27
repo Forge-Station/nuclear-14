@@ -13,3 +13,19 @@
   completetime: 1
   materials:
     Paper: 100
+
+- type: latheRecipe
+  id: N14JunkComponentGearSmall
+  result: N14JunkComponentGearSmall
+  category: N14Parts
+  completetime: 2
+  materials:
+    Steel: 100 # Forge-Change
+
+- type: latheRecipe
+  id: N14JunkComponentGearLarge
+  result: N14JunkComponentGearLarge
+  category: N14Parts
+  completetime: 2
+  materials:
+    Steel: 100 # Forge-Change

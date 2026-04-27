@@ -1,0 +1,15 @@
+- type: latheRecipe
+  id: ChemBag
+  result: ChemBag
+  category: N14Chemistry
+  completetime: 5
+  materials:
+    Cloth: 300
+
+- type: latheRecipe
+  id: N14StimpakEmpty
+  result: N14StimpakEmpty
+  completetime: 2
+  category: N14Chemistry
+  materials:
+    Glass: 100
