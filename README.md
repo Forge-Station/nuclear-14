@@ -1,3 +1,7 @@
+## This project was archived in 2026 after months of working on the Nuclear-14 Redux project and close to 18 months of being off the main Wizards Den SS14 hub. To check out development of Nuclear-14 Redux or to play it, visit this discord. https://discord.gg/NQnfsJGQdV
+
+
+
 # Nuclear 14
 Nuclear 14 is the original Fallout fork on Space Station 14 created by Peptide90 in 2022 and a collection of other valuable contributors. It uses assets from various Fallout13 (F13)(SS13) forks as well as brand new assets created by our community. The location and theme of Nuclear14 differs from F13 for a variety of reasons but mostly to give people something new to experience rather than rehashing the old again. Thanks to the SS14 engine and our Upstream repository, Einstein Engines, we bring something highly modular to the community to enjoy. The codebase has been licensed as AGPLv3 so that the fork and its developments can be enjoyed by all.
 
