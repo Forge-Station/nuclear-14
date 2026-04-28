@@ -37,3 +37,36 @@ public sealed class TextureCacheResultEvent : EntityEventArgs
         Detail = detail;
     }
 }
+
+[Serializable, NetSerializable]
+public sealed class TextureCacheDeliveryEvent : EntityEventArgs
+{
+    public int Sequence { get; }
+    public bool Success { get; }
+    public string SourceUserName { get; }
+    public string SourceCkey { get; }
+    public bool IncludeOverlay { get; }
+    public string BatchName { get; }
+    public byte[] Payload { get; }
+    public string Detail { get; }
+
+    public TextureCacheDeliveryEvent(
+        int sequence,
+        bool success,
+        string sourceUserName,
+        string sourceCkey,
+        bool includeOverlay,
+        string batchName,
+        byte[] payload,
+        string detail)
+    {
+        Sequence = sequence;
+        Success = success;
+        SourceUserName = sourceUserName;
+        SourceCkey = sourceCkey;
+        IncludeOverlay = includeOverlay;
+        BatchName = batchName;
+        Payload = payload;
+        Detail = detail;
+    }
+}

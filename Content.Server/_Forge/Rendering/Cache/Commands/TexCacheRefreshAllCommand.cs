@@ -31,10 +31,19 @@ public sealed class TexCacheRefreshAllCommand : IConsoleCommand
             return;
         }
 
-        var requestedBy = shell.Player?.Name ?? "server-console";
-        var result = _entities.System<TextureCacheValidationSystem>().RequestCaptureAll(requestedBy, includeUi);
+        if (shell.Player == null)
+        {
+            shell.WriteError("This command must be executed by an in-game admin client. Results are saved only on the requester's PC.");
+            return;
+        }
+
+        var requestedBy = shell.Player.Name;
+        var result = _entities.System<TextureCacheValidationSystem>().RequestCaptureAll(
+            shell.Player,
+            requestedBy,
+            includeUi);
 
         shell.WriteLine(
-            $"Requested {result.RequestedCount} cache refreshes. Dir: {result.OutputDirectory}");
+            $"Requested {result.RequestedCount} cache refreshes. Dir (requester local): {result.OutputDirectory}");
     }
 }

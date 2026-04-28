@@ -163,3 +163,69 @@
       min: 36000
   items:
     - N14ClothingMaskLinerElite
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSShoulderPadFlag
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladinCommander
+  items:
+    - N14ClothingNeckMWBSShoulderPadFlag 
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSKnightShoulderPad
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidKnight
+  items:
+    - N14ClothingNeckMWBSKnightShoulderPad 
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSSeniorKnightShoulderPad
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidKnight
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidKnight
+      min: 144000
+  items:
+    - N14ClothingNeckMWBSSeniorKnightShoulderPad 
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSCommanderKnightShoulderPad
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidKnight
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidKnight
+      min: 216000
+  items:
+    - N14ClothingNeckMWBSKnightCommanderShoulderPad 
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSPaladintShoulderPad
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladin
+  items:
+    - N14ClothingNeckMWBSPaladinShoulderPad 

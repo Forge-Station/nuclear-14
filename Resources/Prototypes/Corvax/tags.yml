@@ -41,6 +41,9 @@
   id: N14Cartridge545Rifle
 
 - type: Tag
+  id: DrumMagazine45SubMachineGun
+
+- type: Tag
   id: N14PowerCellMagnetoSmall
 
 - type: Tag

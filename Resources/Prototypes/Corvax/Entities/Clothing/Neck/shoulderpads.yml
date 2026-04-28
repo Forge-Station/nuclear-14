@@ -14,4 +14,53 @@
   description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
   components:
   - type: Sprite
-    sprite: Corvax/Clothing/Neck/falloutNCRshoulderpadFlag.rsi
+    sprite: Corvax/Clothing/Neck/falloutNCRshoulderpadFlag.rsi 
+
+- type: entity
+  parent: [ClothingNeckBase, ClothingOuterFoldableBaseOpened]
+  id: N14ClothingNeckMWBSShoulderPadFlag
+  name: MWBS shoulder pad with flag
+  description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-verb
+    foldVerbText: unfold-verb
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/falloutMWBSshoulderpadFlag.rsi 
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckMWBSSeniorKnightShoulderPad
+  name: MWBS Senior Knight shoulder pad
+  description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/falloutMWBSSeniorKnightshoulderpad.rsi 
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckMWBSKnightShoulderPad
+  name: MWBS Knight shoulder pad
+  description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/falloutMWBSKnightshoulderpad.rsi 
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckMWBSKnightCommanderShoulderPad
+  name: MWBS Commander Knight shoulder pad
+  description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/falloutMWBSKnightCommandershoulderpad.rsi 
+
+- type: entity
+  parent: [ClothingNeckBase, N14ClothingNeckMWBSShoulderPadFlag]
+  id: N14ClothingNeckMWBSPaladinShoulderPad
+  name: MWBS Paladin shoulder pad
+  description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/falloutMWBSPaladinshoulderpad.rsi

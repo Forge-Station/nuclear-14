@@ -88,6 +88,7 @@ ent-N14AloeSalve1 = { ent-N14AloeSalve }
    .desc = { ent-N14AloeSalve.desc }
 ent-N14DoctorSyringeFEV = шприц ВРЭ
     .desc = { ent-N14ChemicalSyringe.desc }
+    .suffix = НЕ МАППИТЬ
 ent-N14DirtyGauze10 = грязный бинт
     .desc = Грязный бинт для перевязки кровоточащих ран, может быть не лучшим выбором для вашего здоровья в долгосрочной перспективе.
     .suffix = Полный

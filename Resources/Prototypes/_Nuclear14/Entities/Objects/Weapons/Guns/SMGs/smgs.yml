@@ -580,6 +580,7 @@
         whitelist:
           tags:
             - Magazine45SubMachineGun
+            - DrumMagazine45SubMachineGun # Forge-add
       gun_chamber:
         name: Chamber
         startingItem: N14CartridgePistol45

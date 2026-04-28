@@ -150,7 +150,7 @@
     rootTask:
       task: SimpleHostileCompound
   - type: TTS # Corvax-TTS
-    voice: Chen
+    voice: NecrophosDota2
 
 - type: entity
   name: geras
