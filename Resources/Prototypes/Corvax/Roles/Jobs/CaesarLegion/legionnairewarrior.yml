@@ -45,6 +45,7 @@
     gloves: N14ClothingHandsGlovesTribal
     pocket1: LegionWarriorloadoutkits
     id: N14IDLegionaryMedalSilver
+    belt: ClothingBeltRope
   innerClothingSkirt: N14ClothingUniformJumpsuitLegionnaireOther
   storage:
     back:

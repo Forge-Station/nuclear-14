@@ -53,7 +53,7 @@ ent-N14SpawnPointCaravanGuard = Охранник каравана
 # Новая Калифорнийская Республика (НКР) 
 ent-N14SpawnPointNCRCadet = Кадет НКР
     .desc = { ent-N14SpawnPointWastelander.desc }
-ent-N14SpawnPointNCRWS = Штурмовик НКР
+ent-N14SpawnPointNCRWS = Специалист НКР
     .desc = { ent-N14SpawnPointWastelander.desc }
 ent-N14SpawnPointNCRMedic = Врач НКР
     .desc = { ent-N14SpawnPointWastelander.desc }
