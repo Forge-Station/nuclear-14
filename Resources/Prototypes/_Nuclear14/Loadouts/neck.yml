@@ -1,12 +1,16 @@
  - type: loadout
    id: N14LoadoutNeckCloakLeather
-   category: Accessories
+   category: Neck
    cost: 2
    exclusive: true
    customColorTint: true
    requirements:
      - !type:CharacterItemGroupRequirement
        group: N14LoadoutNeck
+     - !type:CharacterDepartmentRequirement # Forge-Change
+        inverted: true
+        departments:
+        - Vault 
      - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -18,13 +22,17 @@
 
  - type: loadout
    id: N14LoadoutNeckMantleLeather
-   category: Accessories
+   category: Neck
    cost: 2
    exclusive: true
    customColorTint: true
    requirements:
      - !type:CharacterItemGroupRequirement
        group: N14LoadoutNeck
+     - !type:CharacterDepartmentRequirement # Forge-Change
+        inverted: true
+        departments:
+        - Vault 
      - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -34,27 +42,32 @@
    items:
      - N14ClothingNeckMantleLeather
 
- - type: loadout
-   id: N14LoadoutNeckCloakDarkCloak
-   category: Accessories
-   cost: 2
-   exclusive: true
-   customColorTint: true
-   requirements:
-     - !type:CharacterItemGroupRequirement
-       group: N14LoadoutNeck
-     - !type:CharacterJobRequirement # Forge-Change
-      inverted: true
-      jobs:
-      - BoSMidSerf
-      - CaesarLegionSlave
-      - NCRPisoner
-   items:
-     - N14ClothingNeckCloakDarkCloak
+# ЧЁРНЫЙ ПЛАЩ ЛИКВИДИРОВАН ПО ЗАПРОСУ ЗЛОГО.
+#  - type: loadout # Forge-Start
+#    id: N14LoadoutNeckCloakDarkCloak
+#    category: Accessories
+#    cost: 2
+#    exclusive: true
+#    customColorTint: true
+#    requirements:
+#      - !type:CharacterItemGroupRequirement
+#        group: N14LoadoutNeck
+#      - !type:CharacterDepartmentRequirement
+#         inverted: true
+#         departments:
+#         - Vault     
+#      - !type:CharacterJobRequirement # Forge-Change
+#       inverted: true
+#       jobs:
+#       - BoSMidSerf
+#       - CaesarLegionSlave
+#       - NCRPisoner
+#    items:
+#      - N14ClothingNeckCloakDarkCloak # Forge-end
 
  - type: loadout
    id: ClothingNeckScarfStripedBlack
-   category: Accessories
+   category: Neck
    cost: 2
    exclusive: true
    customColorTint: true
@@ -72,13 +85,17 @@
 
  - type: loadout
    id: ClothingNeckTribalCloak
-   category: Accessories
+   category: Neck
    cost: 2
    exclusive: true
    customColorTint: true
    requirements:
      - !type:CharacterItemGroupRequirement
        group: N14LoadoutNeck
+     - !type:CharacterDepartmentRequirement # Forge-Change
+        departments:
+          - Wastelander
+          - Tribe
      - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -90,13 +107,17 @@
 
  - type: loadout
    id: ClothingNeckTribalCloakBr
-   category: Accessories
+   category: Neck
    cost: 2
    exclusive: true
    customColorTint: true
    requirements:
      - !type:CharacterItemGroupRequirement
        group: N14LoadoutNeck
+     - !type:CharacterDepartmentRequirement # Forge-Change
+        departments:
+          - Wastelander
+          - Tribe  
      - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -108,13 +129,17 @@
 
  - type: loadout
    id: ClothingNeckShawl
-   category: Accessories
+   category: Neck
    cost: 2
    exclusive: true
    customColorTint: true
    requirements:
      - !type:CharacterItemGroupRequirement
        group: N14LoadoutNeck
+     - !type:CharacterDepartmentRequirement # Forge-Change
+        inverted: true
+        departments:
+        - Vault        
      - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:

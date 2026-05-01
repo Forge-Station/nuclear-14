@@ -42,6 +42,10 @@
       - BoSMidSerf
       - CaesarLegionSlave
       - NCRPisoner
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      departments:
+        - Wastelander
+        - Townsfolk
 
 - type: loadout
   id: N14LoadoutUniformJumpsuitDetectiveAlt

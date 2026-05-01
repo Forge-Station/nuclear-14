@@ -1,6 +1,6 @@
  - type: loadout
    id: ClothingNeckCrucifixColor
-   category: Accessories
+   category: Neck
    cost: 2
    exclusive: true
    customColorTint: true

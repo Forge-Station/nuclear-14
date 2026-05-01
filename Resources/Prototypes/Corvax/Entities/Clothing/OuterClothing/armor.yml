@@ -448,12 +448,21 @@
 
 - type: entity
   parent: N14ClothingOuterNCRVest # _Nuclear14/Entities/Clothing/OuterClothing/falloutarmor.yml
-  id: N14ClothingOuterNCRVeteranArmorSnow
+  id: N14ClothingOuterNCRVeteranArmorSnow 
   components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRveteranarmorSnow.rsi
   - type: Clothing
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRveteranarmorSnow.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.8
+        Slash: 0.8
+        Piercing: 0.75
+        Heat: 0.75
+  - type: ExplosionResistance
+    damageCoefficient: 0.9    
 
 - type: entity
   parent: N14ClothingOuterNCRCombatArmor
