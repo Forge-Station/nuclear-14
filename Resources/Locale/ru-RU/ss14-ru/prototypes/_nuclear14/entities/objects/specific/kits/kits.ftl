@@ -188,6 +188,7 @@ ent-KitTownGuard_Riot = Набор стража-подавления беспо�
     .desc = Ящик со всем необходимым для стража Города для выполнения своих обязанностей перед общественностью.
 
 # Brotherhood Western Chapter Kits
+
 # Western BoS Squire kits
 ent-KitBrootherWest_Squireplasma = Плазменный набор оруженосца Братства
     .desc = Содержит снаряжение для оруженосца Западного Братства Стали.

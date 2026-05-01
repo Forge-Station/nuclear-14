@@ -142,6 +142,8 @@ undecided-loadout-category-recruit-healer-description =
     2 целебные припарки, 2 грязных стимпака, 1 набор от ушибов, 1 мазь,
     1 рацион легионеров
 
+
+
 # Washington BoS
 undecided-loadout-category-washington-base-name = Стандартный набор Вашингтонского Братства Стали
 undecided-loadout-category-washington-base-description =
@@ -208,3 +210,97 @@ undecided-loadout-category-washington-scribe-medic-description =
     Ящик со снаряжением, необходимым для выживания бойцов Братства.
     Содержит: 1 винтовкую с подзарядкой, медицинский пояс, набор для лечения огнестрельных ранений,
     нож, стимулятор и сухпаёк.
+
+
+# West BoS
+
+undecided-loadout-category-elder-rifle-name = Ящик  Старейшены
+undecided-loadout-category-elder-rifle-description =
+    Достал. Приказал. Убил.
+    Содержит : 1 Ак-112РП, 2 барабанных магазина (5.45mm), 1 коробку патронов (5.45mm),
+    1 пистолет .45, 3 магазина (.45 ACP), 1 бинт, 1 стимпак, 1 осколочная граната.
+
+undecided-loadout-category-elder-laser-name = Ящик лазерного снаряжения Старейшены
+undecided-loadout-category-elder-laser-description =
+    Идеальный набор для талантливого Старейшены!
+    Содержит : 1 Импульсное ружьё YK42B, 3 ядерных микрореактора,
+    1 магнитно-лазерный пистолет, 2 магнитно-лазерные батареи,
+    1 бинт, 1 стимпак, 1 плазменная граната.
+
+undecided-loadout-category-paladin-rifle-name = Ящик огнестрельного снаряжения Паладина
+undecided-loadout-category-paladin-rifle-description =
+    Эффективно. Быстро. Надежно.
+    Содержит: 1 Ак-112РП, 2 барабанных магазина (5.45mm), 1 коробку патронов (5.45mm)
+    1 пистолет .45, 3 пистолетных магазина (.45 ACP), 1 бинт, 1 стимпак.
+
+undecided-loadout-category-paladin-laser-name = Ящик лазерного снаряжения Паладина
+undecided-loadout-category-paladin-laser-description =
+    Простой и эффективный способ решить проблемы,Точность не обязательна
+    Содержит : 1 автоматическая лазерная винтовка AER9, 3 микроядерные батареи,
+    1 лазерный пистолет AEP7, 2 энергобатареи, 1 бинт, 1 стимпак.
+
+undecided-loadout-category-paladin-plasma-name = Ящик плазменого снаряжения Паладина
+undecided-loadout-category-paladin-plasma-description =
+    Самое страшное попасть по союзнику. А в прочем. . .
+    Содержит : 1 плазменаная винтовка, 3 заряда плазмы,
+    1 магнитно-лазерный пистолет, 2 магнитно-лазерных батареи, 1 бинт, 1 стимпак.
+
+undecided-loadout-category-knight-rifle-name = Ящик огнестрельного снаряжения Рыцаря
+undecided-loadout-category-knight-rifle-description =
+    Снаряжение главное боевой единицы западного Братства
+    1 Ак-112, 3 магазина (5.45mm), 1 коробку патронов (5.45mm),
+    1 пистолет .45, 3 пистолетных магазина (.45 ACP), 1 бинт, 1 стимпак,
+    1 шлем капрала ЗБС, 1 тактические стрелковые очки, 1 противогаз ЗБС.
+
+undecided-loadout-category-knight-laser-name = Ящик лазерного снаряжения Рыцаря
+undecided-loadout-category-knight-laser-description =
+    Набор для ведения лазерного боя. Стильно. Мощно
+    1 лазерная винтовка AER9, 3 микроядерные батареи, 1 лазерный пистолет AEP7,
+    2 энергобатареи, бинты, 1 стимпак,
+    1 противогаз ЗБС, 1 тактические стрелковые очки.
+
+undecided-loadout-category-knight-plasma-name = Ящик плазменого снаряжения Рыцаря
+undecided-loadout-category-knight-plasma-description =
+    Набор для любителей легкости, и радиации
+    1 самодельная плазменная винтовка, 3 заряда плазмы , 1 пистолет .50,
+    2 магазин пистолетный (.50 AE) , 1 Нюка-Граната, бинты, 1 стимпак,
+    1 кепка рыцаря ЗБС, 1 противогаз ЗБС.
+
+undecided-loadout-category-squire-rifle-name = Ящик огнестрельного снаряжения Оруженосца
+undecided-loadout-category-squire-rifle-description =
+    Основной набор оруженосца . Стандарт качества
+    1 Ак-112 , 3 магазина 5.45 , 1 коробку патронов 5.45,
+    бинты, 1 стимпак, 1 шлем ЗБС, 1 противогаз ЗБС,
+    1 тактические стрелковые очки.
+
+undecided-loadout-category-squire-laser-name = Ящик лазерного снаряжения Оруженосца
+undecided-loadout-category-squire-laser-description =
+    Удобный набор на все случаи жизни и не жизни
+    1 самодельная AER-9, 2 микроядерные батареи,
+    бинты, 1 стимпак, 1 тактические стрелковые очки.
+
+undecided-loadout-category-squire-plasma-name = Ящик плазменого снаряжения Оруженосца
+undecided-loadout-category-squire-plasma-description =
+    Легкий в освоении и простой в начале набор, Осторожно : Радиоактивен
+    1 плазменный пистолет, 2 плазменные батареи,
+    2 Нюка-Гранаты, бинты, 1 стимпак, 1 противогаз ЗБС.
+
+undecided-loadout-category-scribe-rifle-name = Ящик огнестрельного снаряжения Скриптера
+undecided-loadout-category-scribe-rifle-description =
+    Набор Скриптера-Оружейника
+    1 пистолет-пулемёт 10 мм, магазин ПП (10mm Auto), 10 пороха,
+    20 слитков свинца, разгрузка оруженосца ЗБС, 1 cтимпак, бинты. 
+
+undecided-loadout-category-scribe-laser-name = Ящик лазерного снаряжения Скриптера
+undecided-loadout-category-scribe-laser-description =
+    Набор Скриптера-Медика
+    1 Магнитно-Лазерный пистолет, 2 магнитно-лазерных батареи,
+    1 анализатор здоровья, 1 стимпак, аптечка первой помощи,
+    пояс медика.
+
+undecided-loadout-category-scribe-plasma-name = Ящик плазменого снаряжения Скриптера
+undecided-loadout-category-scribe-plasma-description =
+    Набор Скриптера-Инженера , Реактор не ждет
+    1 Плазменный пистолет, 2 плазменные батареи,
+    30 Стали, 30 Стекла, бинты, 1 стимпак, пояс инструментов,
+    1 костюм радиационной защиты, 1 шлем хим.защиты.

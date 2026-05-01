@@ -1018,14 +1018,14 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14WeaponShotgunSawedOff
-      - id: MagazineBox12gauge
+      - id: N14WeaponSMG10mm
+      - id: N14MagazineSMG10mm
+        amount: 2
       - id: N14CleanGauze10
       - id: N14Stimpak
       - id: N14ClothingBeltBosLeatherunl
       - id: N14Gunpowder10
-      - id: N14IngotLead1
-        amount: 5
+      - id: N14IngotLead20
 
 - type: entity
   name: Scribe laser kit
