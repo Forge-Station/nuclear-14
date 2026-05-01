@@ -41,6 +41,8 @@
   id: CaesarLegionDeanGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitLegionnaire
+    outerClothing: N14ClothingOuterDeanLegionnaireRecruitArmor
+    head: N14ClothingHeadHatDeanRecruitHelmet
     neck: ClothingNeckRedScarf
     eyes: N14ClothingEyesGlassesWelding
     back: N14ClothingBackpackMilitary
@@ -48,7 +50,6 @@
     gloves: N14ClothingHandsGlovesTribal
     belt: ClothingBeltRope
     pocket1: LegionDeanloadoutkits
-    pocket2: N14WeaponPistol10mmPipe
     id: N14IDLegionaryMedalSilver3
   innerClothingSkirt: N14ClothingUniformJumpsuitLegionnaireOther
   storage:
