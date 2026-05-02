@@ -12,8 +12,6 @@
             - material: Plastic
               amount: 2
               doAfter: 2
-            - tool: Screwing
-              doAfter: 2
 
     - node: toolbox
       entity: N14ToolboxWeaponMaintenance

@@ -66,7 +66,7 @@
 
 - type: entity
   name: Anti-Materiel rifle
-  parent: BaseWeaponRifle
+  parent: [BaseWeaponRifle, ForgeGunConditionProfileAMR] # Forge-Change
   id: N14WeaponSniper50AntiMateriel
   description: "An anti-materiel rifle with an ergonomic, sleek, skeletonized design. Simply looking at it can you tell it'll rip some limbs apart. Uses .50 anti-material ammo."
   components:
@@ -135,7 +135,7 @@
 
 - type: entity
   name: .50 NCR rifle
-  parent: BaseWeaponSniper
+  parent: [BaseWeaponSniper, ForgeGunConditionProfileAMRPipe] # Forge-Change
   id: N14WeaponSniper50NCRRifle
   description: An attempt by the NCR to mass-produce .50 ammo weapons for normal infantry, very cheap but still deals a lot of damage. Uses .50 anti-material ammo.
   components:
@@ -367,7 +367,7 @@
 
 - type: entity
   name: .50 pipe rifle
-  parent: BaseWeaponSniper
+  parent: [BaseWeaponSniper, ForgeGunConditionProfileAMRPipe] # Forge-Change
   id: N14WeaponSniper50Pipe
   description: A bunch of scrap and pipe held together in a desperate attemp of countering power armor. Uses .50 anti-material ammo.
   components:

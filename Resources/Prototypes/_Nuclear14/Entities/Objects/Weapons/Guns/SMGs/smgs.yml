@@ -193,7 +193,7 @@
 
 - type: entity
   name: 12.7mm pipe SMG
-  parent: N14WeaponSMGBase
+  parent: [N14WeaponSMGBase, ForgeGunConditionProfileSMGPipe] # Forge-Change
   id: N14WeaponSMG12mmPipe
   description: a rickeyu makeshift 12mm submachine gun, looks like it is going to fall apart the second it shoots.
   components:
@@ -276,7 +276,7 @@
 
 - type: entity
   name: 10mm pipe SMG
-  parent: N14WeaponSMGBase
+  parent: [N14WeaponSMGBase, ForgeGunConditionProfileSMGPipe] # Forge-Change
   id: N14WeaponSMG10mmPipe
   description: A makeshift 10mm SMG, if you shake it you can hear the loose parts rattling inside of the gun.
   components:

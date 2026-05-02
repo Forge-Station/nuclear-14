@@ -294,7 +294,7 @@
 
 - type: entity
   name: 10mm pipe pistol
-  parent: N14BaseWeaponPistol
+  parent: [ N14BaseWeaponPistol, ForgeGunConditionProfilePistolPipe ] # Forge-Change
   id: N14WeaponPistol10mmPipe
   description: A shoddy makeshift 10mm pistol, the grip is incredibly uncomfortable. Uses 10mm ammo.
   components:

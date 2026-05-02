@@ -1,5 +1,5 @@
 - type: entity
-  parent: BaseWeaponRifle
+  parent: [BaseWeaponRifle, ForgeGunConditionProfileAssault] # Forge-Change
   id: N14WeaponRifleBase
   abstract: true
   components:
