@@ -5,3 +5,5 @@ ent-N14ClothingNeckMantleCaesar = накидка цезаря
     .desc = Достойная только его...
 ent-N14ClothingNeckMantleSheriff = накидка шерифа
     .desc = Маскировочная накидка регионального шерифа.
+ent-N14ClothingNeckThragg = накидка из шкуры яо гая альбиноса
+    .desc = В каком то комиксе я это уже видел.

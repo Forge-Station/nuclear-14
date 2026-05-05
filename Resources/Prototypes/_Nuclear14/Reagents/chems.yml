@@ -332,3 +332,19 @@
       - !type:GenericStatusEffect
         key: SlurredSpeech
         component: TelepathicRepeater
+
+- type: reagent
+  id: BerserkerMixture
+  name: reagent-name-robust-movespeedmod-mixture1
+  group: Medicine
+  desc: reagent-name-robust-movespeedmod-mixture1
+  physicalDesc: reagent-physical-desc-powdery1
+  color: "#D2FFFA"
+  boilingPoint: 255.0
+  meltingPoint: 36.0
+  metabolisms:
+    Narcotic:
+      effects:
+      - !type:MovespeedModifier
+        walkSpeedModifier: 1.30
+        sprintSpeedModifier: 1.30
