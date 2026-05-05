@@ -87,3 +87,6 @@
 
 - type: Tag
   id: TradeContractStructureDropoff
+
+- type: Tag
+  id: N14BoxCardboardMREBoxLegionFilled
