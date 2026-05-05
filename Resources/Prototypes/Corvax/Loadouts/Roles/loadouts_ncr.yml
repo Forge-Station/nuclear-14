@@ -36,144 +36,128 @@
   items:
     - N14ClothingOuterNCRVeteranArmor
 
-# Я забыл для чего это.
-# - type: loadout 
-#   id: LoadoutClothingOuterNCRCombatVeteranArmor
+# MARK: Снежное снаряжение.
+
+# - type: loadout
+#   id: LoadoutClothingUniformNCRSnow
+#   category: Uniform
+#   cost: 1
+#   exclusive: true
+#   requirements:
+#     - !type:CharacterJobRequirement
+#       jobs:
+#         - NCRCadet
+#         - NCRSoldier
+#         - NCREngineer
+#         - NCRMedic
+#         - NCRWS
+#   items:
+#     - N14ClothingUniformNCRSnow
+
+# - type: loadout
+#   id: LoadoutClothingOfficerUniformNCRSnow
+#   category: Uniform
+#   cost: 1
+#   exclusive: true
+#   requirements:
+#     - !type:CharacterJobRequirement
+#       jobs:
+#         - NCRSGT
+#         - NCRLT
+#   items:
+#     - N14ClothingOfficerUniformNCRSnow
+
+# - type: loadout
+#   id: LoadoutClothingMPUniformNCRSnow
+#   category: Uniform
+#   cost: 1
+#   exclusive: true
+#   requirements:
+#     - !type:CharacterJobRequirement
+#       jobs:
+#         - NCRMPinvestigator
+#   items:
+#     - N14ClothingMPUniformNCRSnow
+
+# - type: loadout
+#   id: LoadoutClothingOuterNCRVestSnow
+#   category: Outer
+#   cost: 1
+#   exclusive: true
+#   requirements:
+#     - !type:CharacterJobRequirement
+#       jobs:
+#         - NCRCadet
+#         - NCRSoldier
+#         - NCREngineer
+#         - NCRMedic
+#         - NCRWS
+#   items:
+#     - N14ClothingOuterNCRVestSnow
+
+# - type: loadout
+#   id: LoadoutClothingOuterNCRVestpaddedWebSnow
+#   category: Outer
+#   cost: 3
+#   exclusive: true
+#   requirements:
+#     - !type:CharacterJobRequirement
+#       jobs:
+#         - NCRSoldier
+#         - NCREngineer
+#         - NCRMedic
+#         - NCRWS
+#     - !type:CharacterPlaytimeRequirement
+#       tracker: NCRSoldier
+#       min: 36000 # 10 hours veterancy unlock
+#   items:
+#     - N14ClothingOuterNCRVestpaddedWebSnow
+
+# - type: loadout
+#   id: LoadoutClothingOuterNCRVeteranArmorSnow
 #   category: Outer
 #   cost: 4
 #   exclusive: true
 #   requirements:
 #     - !type:CharacterJobRequirement
 #       jobs:
-#         - NCRSGT
+#         - NCRSoldier
+#         - NCREngineer
+#         - NCRMedic
+#         - NCRWS
 #     - !type:CharacterPlaytimeRequirement
-#       tracker: NCRNCO
+#       tracker: NCRSoldier
 #       min: 72000 # 20 hours veterancy unlock
 #   items:
-#     - N14ClothingOuterNCRCombatVeteranArmor
+#     - N14ClothingOuterNCRVeteranArmorSnow
 
-# MARK: Снежное снаряжение.
+# - type: loadout
+#   id: LoadoutClothingOuterNCRCombatArmorSnow
+#   category: Outer
+#   cost: 1
+#   exclusive: true
+#   requirements:
+#     - !type:CharacterJobRequirement
+#       jobs:
+#         - NCRSGT
+#   items:
+#     - N14ClothingOuterNCRCombatArmorSnow
 
-- type: loadout
-  id: LoadoutClothingUniformNCRSnow
-  category: Uniform
-  cost: 1
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRCadet
-        - NCRSoldier
-        - NCREngineer
-        - NCRMedic
-        - NCRWS
-  items:
-    - N14ClothingUniformNCRSnow
-
-- type: loadout
-  id: LoadoutClothingOfficerUniformNCRSnow
-  category: Uniform
-  cost: 1
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRSGT
-        - NCRLT
-  items:
-    - N14ClothingOfficerUniformNCRSnow
-
-- type: loadout
-  id: LoadoutClothingMPUniformNCRSnow
-  category: Uniform
-  cost: 1
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRMPinvestigator
-  items:
-    - N14ClothingMPUniformNCRSnow
-
-- type: loadout
-  id: LoadoutClothingOuterNCRVestSnow
-  category: Outer
-  cost: 1
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRCadet
-        - NCRSoldier
-        - NCREngineer
-        - NCRMedic
-        - NCRWS
-  items:
-    - N14ClothingOuterNCRVestSnow
-
-- type: loadout
-  id: LoadoutClothingOuterNCRVestpaddedWebSnow
-  category: Outer
-  cost: 3
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRSoldier
-        - NCREngineer
-        - NCRMedic
-        - NCRWS
-    - !type:CharacterPlaytimeRequirement
-      tracker: NCRSoldier
-      min: 36000 # 10 hours veterancy unlock
-  items:
-    - N14ClothingOuterNCRVestpaddedWebSnow
-
-- type: loadout
-  id: LoadoutClothingOuterNCRVeteranArmorSnow
-  category: Outer
-  cost: 4
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRSoldier
-        - NCREngineer
-        - NCRMedic
-        - NCRWS
-    - !type:CharacterPlaytimeRequirement
-      tracker: NCRSoldier
-      min: 72000 # 20 hours veterancy unlock
-  items:
-    - N14ClothingOuterNCRVeteranArmorSnow
-
-- type: loadout
-  id: LoadoutClothingOuterNCRCombatArmorSnow
-  category: Outer
-  cost: 1
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRSGT
-  items:
-    - N14ClothingOuterNCRCombatArmorSnow
-
-- type: loadout
-  id: LoadoutClothingHeadHatNCRHelmetSnow
-  category: Head
-  cost: 1
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRSoldier
-        - NCREngineer
-        - NCRMedic
-        - NCRWS
-        - NCRSGT
-  items:
-    - N14ClothingHeadHatNCRHelmetSnow
+# - type: loadout
+#   id: LoadoutClothingHeadHatNCRHelmetSnow
+#   category: Head
+#   cost: 1
+#   exclusive: true
+#   requirements:
+#     - !type:CharacterJobRequirement
+#       jobs:
+#         - NCRSoldier
+#         - NCREngineer
+#         - NCRMedic
+#         - NCRWS
+#         - NCRSGT
+#   items:
+#     - N14ClothingHeadHatNCRHelmetSnow
 
 # MARK: Лесное снаряжение.
 
