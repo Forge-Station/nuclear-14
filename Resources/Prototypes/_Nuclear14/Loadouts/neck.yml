@@ -42,7 +42,6 @@
    items:
      - N14ClothingNeckMantleLeather
 
-# ЧЁРНЫЙ ПЛАЩ ЛИКВИДИРОВАН ПО ЗАПРОСУ ЗЛОГО.
 #  - type: loadout # Forge-Start
 #    id: N14LoadoutNeckCloakDarkCloak
 #    category: Accessories
