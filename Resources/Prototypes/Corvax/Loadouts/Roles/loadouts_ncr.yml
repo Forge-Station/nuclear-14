@@ -36,6 +36,21 @@
   items:
     - N14ClothingOuterNCRVeteranArmor
 
+- type: loadout
+  id: LoadoutClothingOuterNCRCombatVeteranArmor
+  category: Outer
+  cost: 4
+  exclusive: true
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - NCRSGT
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCRNCO
+    min: 72000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingOuterNCRCombatVeteranArmor  
+
 # MARK: Снаряжение ВП
 
 - type: loadout
