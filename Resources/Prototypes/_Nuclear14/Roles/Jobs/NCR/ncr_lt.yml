@@ -43,7 +43,7 @@
     back: N14ClothingBackpackNCR # Forge-Change
     jumpsuit: N14ClothingOfficerUniformNCRDesert # Forge-Change
     outerClothing: N14ClothingOuterNCRTrenchCoat # Forge-Change
-    belt: ClothingBeltRevolverfilled # Forge-Change
+    belt: ClothingBeltRevolverCaptainfilled # Forge-Change
     shoes: N14ClothingBootsCombatFilled
     eyes: ClothingEyesGlassesSunglasses
     ears: N14ClothingHeadsetNCR
