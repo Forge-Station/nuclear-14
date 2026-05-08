@@ -59,6 +59,7 @@
             BoSWestKnight: [ 2, 3 ]
             BoSWestScribe: [ 1, 2 ]
             BoSWestGunsmith: [ 2, 2 ]
+            Followers: [ 2, 2 ]
             #Overseer: [ 1, 1 ]
             #VaultDoctor: [ 2, 2 ]
             #VaultDweller: [ 4, 4 ]
