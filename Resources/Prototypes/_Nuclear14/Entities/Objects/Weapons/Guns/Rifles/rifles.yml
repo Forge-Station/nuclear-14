@@ -256,7 +256,7 @@
     maxAngle: 45
     angleIncrease: 4
     angleDecay: 16
-    fireRate: 5
+    fireRate: 4 # Forge-Change
     shotsPerBurst: 3 # Corvax-Add
     burstFireRate: 4 # Corvax-Add
     soundGunshot:
@@ -276,6 +276,7 @@
         whitelist:
           tags:
             - Magazine556Rifle
+            - Magazine556Rifle30 # Forge-Change
       gun_chamber:
         name: Chamber
         startingItem: N14Cartridge556Rifle
@@ -329,6 +330,7 @@
         priority: 2
         whitelist:
           tags:
+            - Magazine556Rifle30 # Forge-Change
             - Magazine556Rifle
       gun_chamber:
         name: Chamber
@@ -381,6 +383,7 @@
           tags:
             - Magazine556Rifle
             - LongMagazine556Rifle
+            - Magazine556Rifle30 # Forge-Change
       gun_chamber:
         name: Chamber
         startingItem: N14Cartridge556Rifle
@@ -906,6 +909,7 @@
         whitelist:
           tags:
             - Magazine556Rifle
+            - Magazine556Rifle30 # Forge-Change
       gun_chamber:
         name: Chamber
         startingItem: N14Cartridge556Rifle
@@ -1011,14 +1015,14 @@
     maxAngle: 50
     angleIncrease: 6
     angleDecay: 16
-    fireRate: 4
+    fireRate: 5 # Forge-Change
     soundGunshot:
       collection: N14ServiceGunshot
     selectedMode: FullAuto
     availableModes:
     - FullAuto
   - type: GunWieldBonus
-    minAngle: -23
+    minAngle: -20
     maxAngle: -40
   - type: ItemSlots
     slots:
@@ -1031,6 +1035,7 @@
         whitelist:
           tags:
             - Magazine556Rifle
+            - Magazine556Rifle30 # Forge-Change
       gun_chamber:
         name: Chamber
         startingItem: N14Cartridge556Rifle

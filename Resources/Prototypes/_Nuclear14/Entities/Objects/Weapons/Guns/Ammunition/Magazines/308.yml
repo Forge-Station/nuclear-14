@@ -13,7 +13,7 @@
       tags:
         - N14Cartridge308Rifle
     proto: N14Cartridge308Rifle
-    capacity: 21
+    capacity: 20 # Forge-Change
   - type: ContainerContainer
     containers:
       ballistic-ammo: !type:Container
