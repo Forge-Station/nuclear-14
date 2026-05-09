@@ -133,10 +133,10 @@
   result: Magazine762AmmoBelt
   category: N14AmmoMagazine
   completetime: 5
-  materials:
-    Lead: 500
-    Steel: 1100
-    N14Gunpowder: 1000
+  materials: # Forge-Change
+    Lead: 200
+    Steel: 500
+    N14Gunpowder: 200
 
 - type: latheRecipe
   id: MagazineBox762
@@ -503,20 +503,20 @@
   result: Magazine308Rifle
   category: N14AmmoMagazine
   completetime: 5
-  materials:
-    Lead: 33
-    Steel: 144
-    N14Gunpowder: 33
+  materials: # Forge-Change
+    Lead: 60
+    Steel: 180
+    N14Gunpowder: 60
 
 - type: latheRecipe
   id: Magazine308RifleLong
   result: Magazine308RifleLong
   category: N14AmmoMagazine
   completetime: 5
-  materials:
-    Lead: 300
-    Steel: 500
-    N14Gunpowder: 300
+  materials: # Forge-Change
+    Lead: 120
+    Steel: 360
+    N14Gunpowder: 120
 
 - type: latheRecipe
   id: ClipMagazine308Rifle
@@ -546,9 +546,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 33
-    Steel: 77
-    N14Gunpowder: 33
+    Lead: 30
+    Steel: 70
+    N14Gunpowder: 30
 
 # 45-70 gov't
 - type: latheRecipe

@@ -13,7 +13,7 @@
       tags:
         - N14Cartridge545Rifle
     proto: N14Cartridge545Rifle
-    capacity: 24
+    capacity: 25
   - type: ContainerContainer
     containers:
       ballistic-ammo: !type:Container
