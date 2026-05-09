@@ -9,11 +9,11 @@
 # Table: null
 
 # DD/MM/YYYY like a real human being.
-# Forge-Change-Del
-# Forge-Change-Del
-# Forge-Change-Del
+# N14ClothingHeadHatNCRHelmetMetal: N14ClothingHeadHatNCRHelmetMetalSnow # Forge-Change-Del
+# N14ClothingOfficerUniformNCR: N14ClothingOfficerUniformNCRSnow # Forge-Change-Del
+# N14ClothingUniformNCR: N14ClothingUniformNCRSnow # Forge-Change-Del
 N14ClothingOuterNCRPouchedVest: N14ClothingOuterNCRPouchedVestDesert
-# Forge-Change-Del
+# N14ClothingOuterNCRVest: N14ClothingOuterNCRVestSnow # Forge-Change-Del
 N14BedrollItem: N14Bedroll
 N14JunkStackedTires: N14JunkTire1
 N14JunkGroundTires: N14JunkTire2
