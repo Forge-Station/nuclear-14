@@ -335,10 +335,10 @@
 
 - type: reagent
   id: BerserkerMixture
-  name: reagent-name-robust-movespeedmod-mixture1
+  name: reagent-name-robust-movespeedmod-mixture
   group: Medicine
-  desc: reagent-name-robust-movespeedmod-mixture1
-  physicalDesc: reagent-physical-desc-powdery1
+  desc: reagent-name-robust-movespeedmod-mixture
+  physicalDesc: reagent-physical-desc-powdery
   color: "#D2FFFA"
   boilingPoint: 255.0
   meltingPoint: 36.0

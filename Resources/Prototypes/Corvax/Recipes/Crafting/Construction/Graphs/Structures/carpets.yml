@@ -1,0 +1,95 @@
+- type: constructionGraph
+  id: N14RugRedGraph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14RugRedNode
+          steps:
+            - material: Cloth
+              amount: 5
+              doAfter: 2
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+    - node: N14RugRedNode
+      entity: N14RugRed
+      edges:
+        - to: start
+          completed:
+            - !type:GivePrototype
+              prototype: MaterialCloth1
+              amount: 2
+            - !type:DeleteEntity {}
+
+- type: constructionGraph
+  id: N14RugYellowGraph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14RugYellowNode
+          steps:
+            - material: Cloth
+              amount: 5
+              doAfter: 2
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+    - node: N14RugYellowNode
+      entity: N14RugYellow
+      edges:
+        - to: start
+          completed:
+            - !type:GivePrototype
+              prototype: MaterialCloth1
+              amount: 2
+            - !type:DeleteEntity {}
+
+- type: constructionGraph
+  id: N14RugBrownFancyGraph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14RugBrownFancyNode
+          steps:
+            - material: Cloth
+              amount: 5
+              doAfter: 2
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+    - node: N14RugBrownFancyNode
+      entity: N14RugBrownFancy
+      edges:
+        - to: start
+          completed:
+            - !type:GivePrototype
+              prototype: MaterialCloth1
+              amount: 2
+            - !type:DeleteEntity {}
+
+- type: constructionGraph
+  id: N14RugBlueGraph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14RugBlueNode
+          steps:
+            - material: Cloth
+              amount: 5
+              doAfter: 2
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+    - node: N14RugBlueNode
+      entity: N14RugBlue
+      edges:
+        - to: start
+          completed:
+            - !type:GivePrototype
+              prototype: MaterialCloth1
+              amount: 2
+            - !type:DeleteEntity {}

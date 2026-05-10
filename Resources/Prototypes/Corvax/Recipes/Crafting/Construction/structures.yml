@@ -145,4 +145,109 @@
   conditions:
     - !type:TileNotBlocked
 
+- type: construction # Forge-Change
+  id: N14BarricadeTanktrapRusty
+  graph: N14BarricadeTanktrapRustyGraph
+  startNode: start
+  targetNode: N14BarricadeTanktrapRustyNode
+  category: construction-category-structures
+  icon:
+   sprite: _Nuclear14/Structures/Furniture/barricades.rsi
+   state: iron_barricadeA
+  objectType: Structure
+  placementMode: SnapgridCenter
+  hide: false
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction # Forge-Change
+  id: N14BarricadeRazorwire
+  graph: N14BarricadeRazorwireGraph
+  startNode: start
+  targetNode: N14BarricadeRazorwireNode
+  category: construction-category-structures
+  icon:
+   sprite: _Nuclear14/Structures/Furniture/barricades.rsi
+   state: barbedwire_single
+  objectType: Structure
+  placementMode: SnapgridCenter
+  hide: false
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction # Forge-Change
+  id: N14BarricadeSandbagSingle
+  graph: N14BarricadeSandbagSingleGraph
+  startNode: start
+  targetNode: N14BarricadeSandbagSingleNode
+  category: construction-category-structures
+  icon:
+   sprite: _Nuclear14/Structures/Furniture/barricades.rsi
+   state: sandbag_single
+  objectType: Structure
+  placementMode: SnapgridCenter
+  hide: false
+  conditions:
+    - !type:TileNotBlocked
+# Carpets
+- type: construction # Forge-Change
+  id: N14RugRed
+  graph: N14RugRedGraph
+  startNode: start
+  targetNode: N14RugRedNode
+  category: construction-category-furniture
+  icon:
+   sprite: _Nuclear14/Structures/Furniture/rugs64x64.rsi
+   state: rug_red
+  objectType: Structure
+  placementMode: SnapgridCenter
+  hide: false
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction # Forge-Change
+  id: N14RugYellow
+  graph: N14RugYellowGraph
+  startNode: start
+  targetNode: N14RugYellowNode
+  category: construction-category-furniture
+  icon:
+   sprite: _Nuclear14/Structures/Furniture/rugs64x64.rsi
+   state: rug_yellow
+  objectType: Structure
+  placementMode: SnapgridCenter
+  hide: false
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction # Forge-Change
+  id: N14RugBrownFancy
+  graph: N14RugBrownFancyGraph
+  startNode: start
+  targetNode: N14RugBrownFancyNode
+  category: construction-category-furniture
+  icon:
+   sprite: _Nuclear14/Structures/Furniture/rugs64x64.rsi
+   state: rug_fancy
+  objectType: Structure
+  placementMode: SnapgridCenter
+  hide: false
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction # Forge-Change
+  id: N14RugBlue
+  graph: N14RugBlueGraph
+  startNode: start
+  targetNode: N14RugBlueNode
+  category: construction-category-furniture
+  icon:
+   sprite: _Nuclear14/Structures/Furniture/rugs64x64.rsi
+   state: rug_blue
+  objectType: Structure
+  placementMode: SnapgridCenter
+  hide: false
+  conditions:
+    - !type:TileNotBlocked
+
 #Flags

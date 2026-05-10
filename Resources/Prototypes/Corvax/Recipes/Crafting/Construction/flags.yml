@@ -3,7 +3,7 @@
   graph: DecorationFlagEmpty
   startNode: start
   targetNode: FlagEmpty
-  category: construction-category-furniture 
+  category: construction-category-furniture
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
@@ -43,6 +43,22 @@
   icon:
     sprite: _Nuclear14/Structures/Decoration/flags.rsi
     state: cornflag
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DecorationFlagBrotherhoodWashington # Washington Brotherhood
+  graph: DecorationFlagBrotherhoodWashington
+  startNode: start
+  targetNode: FlagBrotherhoodWashington
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Decoration/flags2.rsi
+    state: wbosflag
   conditions:
     - !type:TileNotBlocked
 
