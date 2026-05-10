@@ -418,6 +418,9 @@
   - type: Storage
     grid:
     - 0,0,9,2
+    whitelist: # Corvax-Add
+      tags:
+      - Candles   
   - type: StorageFill
     contents:
       - id: Candle
@@ -443,6 +446,9 @@
   - type: Storage
     grid:
     - 0,0,9,2
+    whitelist: # Corvax-Add
+      tags:
+      - Candles 
   - type: StorageFill
     contents:
       - id: CandleSmall

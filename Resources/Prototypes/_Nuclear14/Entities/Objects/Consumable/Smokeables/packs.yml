@@ -64,6 +64,7 @@
     whitelist:
       tags:
       - Cigarette
+      - Lighter # Forge-add
   - type: StorageFill
     contents:
     - id: Cigarette

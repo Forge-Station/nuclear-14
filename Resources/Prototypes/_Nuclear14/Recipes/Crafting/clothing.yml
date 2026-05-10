@@ -1,115 +1,94 @@
 #MARK: Bandanas
+# Forge-Change-Start
 - type: construction
-  name: black bandana
-  id: N14ClothingMaskBlackMask # Forge-Change
-  graph: blackbandana
-  startNode: start
-  targetNode: bandanablack
+  abstract: true
+  id: N14BandanaConstructionBase
   category: construction-category-clothing
   objectType: Item
   description: It's a hat, and a mask.
+  hide: true 
+
+- type: construction
+  parent: N14BandanaConstructionBase
+  name: black bandana
+  id: N14ClothingMaskBlackMask
+  graph: blackbandana
+  targetNode: bandanablack
   icon:
     sprite: Clothing/Head/Bandanas/black.rsi
     state: icon_mask
-  hide: false
 
 - type: construction
+  parent: N14BandanaConstructionBase
   name: blue bandana
-  id: N14ClothingMaskBlueMask # Forge-Change
+  id: N14ClothingMaskBlueMask
   graph: bluebandana
-  startNode: start
   targetNode: bandanablue
-  category: construction-category-clothing
-  objectType: Item
-  description: It's a hat, and a mask.
   icon:
     sprite: Clothing/Head/Bandanas/blue.rsi
     state: icon_mask
-  hide: true #MARK: Hide
 
 - type: construction
+  parent: N14BandanaConstructionBase
   name: gold bandana
   id: goldbandana
   graph: goldbandana
-  startNode: start
   targetNode: bandanagold
-  category: construction-category-clothing
-  objectType: Item
-  description: It's a hat, and a mask.
   icon:
     sprite: Clothing/Head/Bandanas/gold.rsi
     state: icon_mask
-  hide: true #MARK: Hide
 
 - type: construction
+  parent: N14BandanaConstructionBase
   name: green bandana
-  id: N14ClothingMaskGreenMask # Forge-Change
+  id: N14ClothingMaskGreenMask
   graph: greenbandana
-  startNode: start
   targetNode: bandanagreen
-  category: construction-category-clothing
-  objectType: Item
-  description: It's a hat, and a mask.
   icon:
     sprite: Clothing/Head/Bandanas/green.rsi
     state: icon_mask
-  hide: true #MARK: Hide
 
 - type: construction
+  parent: N14BandanaConstructionBase
   name: red bandana
-  id: N14ClothingMaskRedMask # Forge-Change
+  id: N14ClothingMaskRedMask
   graph: redbandana
-  startNode: start
   targetNode: bandanared
-  category: construction-category-clothing
-  objectType: Item
-  description: It's a hat, and a mask.
   icon:
     sprite: Clothing/Head/Bandanas/red.rsi
     state: icon_mask
-  hide: true #MARK: Hide
 
 - type: construction
+  parent: N14BandanaConstructionBase
   name: skull bandana
-  id: N14ClothingMaskPatriotMask # Forge-Change
+  id: N14ClothingMaskPatriotMask
   graph: skullbandana
-  startNode: start
   targetNode: bandanaskull
-  category: construction-category-clothing
-  objectType: Item
-  description: It's a hat, and a mask.
   icon:
     sprite: Clothing/Head/Bandanas/skull.rsi
     state: icon_mask
-  hide: true #MARK: Hide
 
 - type: construction
+  parent: N14BandanaConstructionBase
   name: brown bandana
-  id: N14ClothingMaskBrownMask # Forge-Change
+  id: N14ClothingMaskBrownMask
   graph: brownbandana
-  startNode: start
   targetNode: bandanabrown
-  category: construction-category-clothing
-  objectType: Item
-  description: It's a hat, and a mask.
   icon:
     sprite: Clothing/Head/Bandanas/brown.rsi
     state: icon_mask
-  hide: false
 
 - type: construction
+  parent: N14BandanaConstructionBase
   name: grey bandana
-  id: N14ClothingMaskDesertMask # Forge-Change
+  id: N14ClothingMaskDesertMask
   graph: greybandana
-  startNode: start
   targetNode: bandanagrey
-  category: construction-category-clothing
-  objectType: Item
-  description: It's a hat, and a mask.
   icon:
     sprite: Clothing/Head/Bandanas/grey.rsi
     state: icon_mask
-  hide: false
+# Forge-Change-end
+
 
 #MARK: Uniform's
 - type: construction
