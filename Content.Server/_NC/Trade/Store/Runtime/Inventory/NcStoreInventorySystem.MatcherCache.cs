@@ -1,0 +1,119 @@
+using Content.Shared._NC.Trade;
+
+namespace Content.Server._NC.Trade;
+
+public sealed partial class NcStoreInventorySystem
+{
+    private sealed class CompiledMatcher
+    {
+        public readonly HashSet<string> Items = new(StringComparer.Ordinal);
+        public readonly List<string> Tags = new();
+        public readonly Dictionary<string, bool> PrototypeTagMatchCache = new(StringComparer.Ordinal);
+
+        public bool IsEmpty => Items.Count == 0 && Tags.Count == 0;
+
+        public CompiledMatcher(NcMatcherPrototype source)
+        {
+            for (var i = 0; i < source.Items.Count; i++)
+            {
+                var item = source.Items[i];
+                if (!string.IsNullOrWhiteSpace(item))
+                    Items.Add(item);
+            }
+
+            var tagSet = new HashSet<string>(StringComparer.Ordinal);
+            for (var i = 0; i < source.Tags.Count; i++)
+            {
+                var tag = source.Tags[i];
+                if (!string.IsNullOrWhiteSpace(tag))
+                    tagSet.Add(tag);
+            }
+
+            Tags.AddRange(tagSet);
+            Tags.Sort(StringComparer.Ordinal);
+        }
+    }
+
+    private readonly Dictionary<string, CompiledMatcher?> _compiledMatcherCache = new(StringComparer.Ordinal);
+
+    private CompiledMatcher? GetCompiledMatcher(string matcherId, bool warnIfInvalid)
+    {
+        if (string.IsNullOrWhiteSpace(matcherId))
+            return null;
+
+        if (_compiledMatcherCache.TryGetValue(matcherId, out var cached))
+            return cached;
+
+        if (!_protos.TryIndex<NcMatcherPrototype>(matcherId, out var matcher))
+        {
+            if (warnIfInvalid)
+                Sawmill.Warning($"[NcStore] matcher '{matcherId}' not found.");
+
+            _compiledMatcherCache[matcherId] = null;
+            return null;
+        }
+
+        var compiled = new CompiledMatcher(matcher);
+        if (compiled.IsEmpty)
+        {
+            if (warnIfInvalid)
+                Sawmill.Warning($"[NcStore] matcher '{matcherId}' has no items and no tags; request rejected.");
+
+            _compiledMatcherCache[matcherId] = null;
+            return null;
+        }
+
+        _compiledMatcherCache[matcherId] = compiled;
+        return compiled;
+    }
+
+    private bool MatcherPrototypeHasAnyTag(CompiledMatcher matcher, string protoId)
+    {
+        if (matcher.Tags.Count == 0)
+            return false;
+
+        if (matcher.PrototypeTagMatchCache.TryGetValue(protoId, out var cached))
+            return cached;
+
+        var result = ProtoHasAnyMatcherTag(protoId, matcher.Tags);
+        matcher.PrototypeTagMatchCache[protoId] = result;
+        return result;
+    }
+
+    public bool PrototypeMatchesMatcher(string matcherId, string protoId)
+    {
+        var matcher = GetCompiledMatcher(matcherId, warnIfInvalid: false);
+        if (matcher == null)
+            return false;
+
+        if (matcher.Items.Contains(protoId))
+            return true;
+
+        return MatcherPrototypeHasAnyTag(matcher, protoId);
+    }
+
+    public void FillMatchingPrototypeIdsForMatcher(
+        string matcherId,
+        IReadOnlyDictionary<string, int> protoCounts,
+        List<string> results)
+    {
+        results.Clear();
+
+        var matcher = GetCompiledMatcher(matcherId, warnIfInvalid: false);
+        if (matcher == null)
+            return;
+
+        foreach (var (protoId, count) in protoCounts)
+        {
+            if (count <= 0)
+                continue;
+
+            if (!matcher.Items.Contains(protoId) && !MatcherPrototypeHasAnyTag(matcher, protoId))
+                continue;
+
+            results.Add(protoId);
+        }
+
+        results.Sort(StringComparer.Ordinal);
+    }
+}

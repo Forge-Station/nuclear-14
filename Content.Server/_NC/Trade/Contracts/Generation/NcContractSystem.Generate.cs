@@ -5,6 +5,30 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
+    private ContractServerData CreateContractData(EntityUid store, ContractPoolCandidate candidate)
+    {
+        return candidate.Kind switch
+        {
+            ContractPoolCandidateKind.Legacy when candidate.Legacy != null => CreateContractData(store, candidate.Legacy),
+            ContractPoolCandidateKind.SupplyV2 when candidate.Supply != null => CreateSupplyContractData(store, candidate.Supply),
+            _ => CreateInvalidContractData(candidate)
+        };
+    }
+
+    private static ContractServerData CreateInvalidContractData(ContractPoolCandidate candidate)
+    {
+        return new ContractServerData
+        {
+            Id = candidate.Id,
+            Name = candidate.Id,
+            Difficulty = string.IsNullOrWhiteSpace(candidate.Difficulty) ? "Easy" : candidate.Difficulty,
+            Description = "Invalid contract candidate.",
+            Repeatable = candidate.Repeatable,
+            ObjectiveType = ContractObjectiveType.Delivery,
+            FlowStatus = ContractFlowStatus.Failed
+        };
+    }
+
     private ContractServerData CreateContractData(EntityUid store, StoreContractPrototype proto)
     {
         var targets = BuildContractTargets(store, proto);

@@ -4,7 +4,6 @@ using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Stacks;
-using Content.Shared.Tag;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
@@ -18,13 +17,12 @@ public sealed partial class NcStoreLogicSystem : EntitySystem
     private static readonly IComparer<string> OrdinalIds = new OrdinalIdComparer();
 
     [Dependency] private readonly IComponentFactory _compFactory = default!;
-    [Dependency] public readonly NcStoreCurrencySystem _currency = default!;
+    [Dependency] private readonly NcStoreCurrencySystem _currency = default!;
     [Dependency] private readonly EntityStorageSystem _entityStorage = default!;
     [Dependency] public readonly IEntityManager _ents = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     [Dependency] public readonly NcStoreInventorySystem _inventory = default!;
     [Dependency] public readonly IPrototypeManager _protos = default!;
-    [Dependency] private readonly TagSystem _tags = default!;
 
     // Phase M2: used by Buy/Sell flows to random-pick a concrete prototype from matcher.Items.
     [Dependency] private readonly IRobustRandom _random = default!;

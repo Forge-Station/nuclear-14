@@ -60,18 +60,41 @@ public sealed partial class NcContractSystem : EntitySystem
             return true;
         }
 
-        if (!_prototypes.TryIndex<NcMatcherPrototype>(matcherId, out var matcher))
+        if (_prototypes.TryIndex<NcMatcherPrototype>(matcherId, out var matcher))
         {
-            Sawmill.Warning($"[Contracts] Matcher '{matcherId}' not found.");
-            _contractMatcherCache[matcherId] = null;
-            return false;
+            BuildContractMatcherSpecFromLists(matcher.Items, matcher.Tags, out var matcherSpec);
+            if (!CacheContractMatcherSpec(matcherId, matcherSpec, "Matcher"))
+                return false;
+
+            spec = matcherSpec;
+            return true;
         }
 
+        if (_prototypes.TryIndex<NcItemGroupPrototype>(matcherId, out var group))
+        {
+            BuildContractMatcherSpecFromLists(group.Prototypes, group.Tags, out var groupSpec);
+            if (!CacheContractMatcherSpec(matcherId, groupSpec, "Item group"))
+                return false;
+
+            spec = groupSpec;
+            return true;
+        }
+
+        Sawmill.Warning($"[Contracts] Matcher/item group '{matcherId}' not found.");
+        _contractMatcherCache[matcherId] = null;
+        return false;
+    }
+
+    private void BuildContractMatcherSpecFromLists(
+        IReadOnlyList<string> items,
+        IReadOnlyList<string> tags,
+        out ContractMatcherSpec spec)
+    {
         var matchItems = new HashSet<string>(StringComparer.Ordinal);
         var spawnPool = new List<string>();
-        for (var i = 0; i < matcher.Items.Count; i++)
+        for (var i = 0; i < items.Count; i++)
         {
-            var itemId = matcher.Items[i];
+            var itemId = items[i];
             if (string.IsNullOrWhiteSpace(itemId))
                 continue;
 
@@ -81,23 +104,26 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         var matchTags = new List<string>();
-        for (var i = 0; i < matcher.Tags.Count; i++)
+        for (var i = 0; i < tags.Count; i++)
         {
-            var tag = matcher.Tags[i];
+            var tag = tags[i];
             if (!string.IsNullOrWhiteSpace(tag))
                 matchTags.Add(tag);
         }
 
-        if (matchItems.Count == 0 && matchTags.Count == 0)
+        spec = new ContractMatcherSpec(matchItems, spawnPool, matchTags);
+    }
+
+    private bool CacheContractMatcherSpec(string matcherId, ContractMatcherSpec spec, string sourceKind)
+    {
+        if (spec.MatchItems.Count == 0 && spec.MatchTags.Count == 0)
         {
-            Sawmill.Warning($"[Contracts] Matcher '{matcherId}' has no items and no tags.");
+            Sawmill.Warning($"[Contracts] {sourceKind} '{matcherId}' has no prototypes/items and no tags.");
             _contractMatcherCache[matcherId] = null;
             return false;
         }
 
-        var resolved = new ContractMatcherSpec(matchItems, spawnPool, matchTags);
-        _contractMatcherCache[matcherId] = resolved;
-        spec = resolved;
+        _contractMatcherCache[matcherId] = spec;
         return true;
     }
 

@@ -31,7 +31,7 @@ public sealed partial class NcStoreLogicSystem
     ) =>
         _currency.TryPickCurrencyForSell(store, listing, out currency, out unitPrice);
 
-    private bool TryTakeCurrency(EntityUid user, string stackType, int amount) =>
+    public bool TryTakeCurrency(EntityUid user, string stackType, int amount) =>
         _currency.TryTakeCurrency(user, stackType, amount);
 
     public void GiveCurrency(EntityUid user, string stackType, int amount) =>

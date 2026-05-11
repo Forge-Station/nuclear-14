@@ -1,0 +1,148 @@
+# ContractsV2 Supply: clean test set (Patch 3.2)
+
+- type: ncItemGroup
+  id: NcSupplyGroupBasicIngots
+  name: "Базовые слитки"
+  description: "Медные и железные слитки."
+  icon: N14IngotCopper1
+  prototypes:
+  - N14IngotCopper1
+  - N14IngotIron1
+
+- type: ncItemGroup
+  id: NcSupplyGroupKnives
+  name: "Ножи"
+  description: "Любые предметы с тегом Knife."
+  icon: N14KitchenKnife
+  tags:
+  - Knife
+
+- type: ncItemGroup
+  id: NcSupplyGroupSnacks
+  name: "Снеки"
+  description: "Любые предметы с тегом FoodSnack."
+  icon: FoodSnackChips
+  tags:
+  - FoodSnack
+
+- type: ncContractRewardPool
+  id: NcSupplyRewardPoolCityBasic
+  entries:
+  - type: Item
+    prototype: N14IngotIron1
+    amount: { min: 1, max: 2 }
+    weight: 4
+  - type: Item
+    prototype: FoodSnackChips
+    amount: { min: 1, max: 3 }
+    weight: 3
+  - type: Currency
+    currency: Caps
+    amount: { min: 15, max: 35 }
+    weight: 2
+
+- type: ncSupplyContract
+  id: NcSupplyCityBasicIngots
+  name: "Поставка: базовые слитки"
+  description: "Принесите торговцу 4 медных или железных слитка."
+  difficulty: Easy
+  icon: N14IngotCopper1
+  requirements:
+  - group: NcSupplyGroupBasicIngots
+    count: 4
+  require:
+  - group: NcSupplyGroupBasicIngots
+    count: 4
+  rewards:
+    guaranteed:
+    - type: Currency
+      currency: Caps
+      amount: 80
+    random:
+    - type: Item
+      prototype: N14IngotCopper1
+      amount: { min: 1, max: 2 }
+      chance: 0.5
+
+- type: ncSupplyContract
+  id: NcSupplyCityKnives
+  name: "Поставка: ножи"
+  description: "Принесите 3 любых ножа."
+  difficulty: Easy
+  icon: N14KitchenKnife
+  requirements:
+  - group: NcSupplyGroupKnives
+    count: 3
+  require:
+  - group: NcSupplyGroupKnives
+    count: 3
+  rewards:
+    guaranteed:
+    - type: Currency
+      currency: Caps
+      amount: 95
+    pools:
+    - pool: NcSupplyRewardPoolCityBasic
+      rolls: 1
+      chance: 1.0
+
+- type: ncSupplyContract
+  id: NcSupplyCitySnacks
+  name: "Поставка: снеки"
+  description: "Принесите 6 любых снеков."
+  difficulty: Easy
+  icon: FoodSnackChips
+  requirements:
+  - group: NcSupplyGroupSnacks
+    count: 6
+  require:
+  - group: NcSupplyGroupSnacks
+    count: 6
+  rewards:
+    guaranteed:
+    - type: Currency
+      currency: Caps
+      amount: 110
+    random:
+    - type: Item
+      prototype: FoodSnackChips
+      amount: { min: 2, max: 4 }
+      chance: 0.75
+
+- type: ncSupplyContract
+  id: NcSupplyCityKnivesAndCopper
+  name: "Поставка: ножи и медь"
+  description: "Принесите 2 ножа и 2 медных слитка."
+  difficulty: Easy
+  icon: N14CombatKnife
+  requirements:
+  - group: NcSupplyGroupKnives
+    count: 2
+  - prototype: N14IngotCopper1
+    count: 2
+  require:
+  - group: NcSupplyGroupKnives
+    count: 2
+  - prototype: N14IngotCopper1
+    count: 2
+  rewards:
+    guaranteed:
+    - type: Currency
+      currency: Caps
+      amount: 130
+    pools:
+    - pool: NcSupplyRewardPoolCityBasic
+      rolls: 2
+      chance: 1.0
+
+- type: ncContractPackV2
+  id: TradeContractsCitySupplyV2SimplePack
+  supply:
+  - id: NcSupplyCityBasicIngots
+    weight: 3
+  - id: NcSupplyCityKnives
+    weight: 3
+  - id: NcSupplyCitySnacks
+    weight: 2
+  - id: NcSupplyCityKnivesAndCopper
+    weight: 2

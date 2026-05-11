@@ -40,5 +40,22 @@ public sealed partial class NcContractSystem : EntitySystem
         RAmount
     }
 
+    private enum ContractPoolCandidateKind : byte
+    {
+        Legacy = 0,
+        SupplyV2 = 1
+    }
+
+    private sealed class ContractPoolCandidate
+    {
+        public ContractPoolCandidateKind Kind;
+        public string Id = string.Empty;
+        public string Difficulty = string.Empty;
+        public bool Repeatable = true;
+        public int Weight;
+        public StoreContractPrototype? Legacy;
+        public NcSupplyContractPrototype? Supply;
+    }
+
     private readonly record struct QuasiKey(QuasiKeyKind Kind, EntityUid Store, string ProtoId, string? Extra);
 }

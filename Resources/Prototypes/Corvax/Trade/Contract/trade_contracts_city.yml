@@ -5,28 +5,6 @@
   contracts:
   - id: trade_contract_delivery_basic_copper
     weight: 100
-  - id: trade_contract_delivery_tracked_copper
-    weight: 100
-  - id: trade_contract_delivery_structure_to_store_crate
-    weight: 100
-  - id: trade_contract_delivery_structure_to_dropoff_crate
-    weight: 100
-  - id: trade_contract_hunt_ghoul
-    weight: 100
-  - id: trade_contract_repair_generator
-    weight: 100
-  - id: trade_contract_ghost_raider
-    weight: 100
-  - id: trade_contract_repair_generator_store_anchor
-    weight: 100
-  - id: trade_contract_ghost_raider_store_anchor
-    weight: 100
-  - id: trade_contract_delivery_matcher_spawn_items_test
-    weight: 100
-  - id: trade_contract_delivery_matcher_tags_turnin_test
-    weight: 100
-  - id: trade_contract_hunt_matcher_spawn_specific_test
-    weight: 100
 
 - type: storeContractsPreset
   id: TradeContractsCityPreset
@@ -34,6 +12,9 @@
     Easy: 9
   packs:
   - id: TradeContractsCityPack
+    weight: 1
+  packsV2:
+  - id: TradeContractsCitySupplyV2SimplePack
     weight: 1
 
 # ----------------------------

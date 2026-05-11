@@ -16,7 +16,7 @@ public sealed partial class NcContractSystem : EntitySystem
     private readonly List<(EntityUid Store, string Difficulty)> _cooldownKeysToRemoveScratch = new();
     private readonly Dictionary<(EntityUid Store, string Difficulty), CooldownState> _contractCooldown = new();
     private readonly Dictionary<string, int> _depthCache = new(StringComparer.Ordinal);
-    private readonly Dictionary<string, Dictionary<string, (StoreContractPrototype Proto, int Weight)>> _flattenedPoolCache = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, Dictionary<string, ContractPoolCandidate>> _flattenedPoolCache = new(StringComparer.Ordinal);
     [Dependency] private readonly NcStoreInventorySystem _inventory = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;

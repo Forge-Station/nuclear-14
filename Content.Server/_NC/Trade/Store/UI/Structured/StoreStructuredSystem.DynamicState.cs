@@ -20,33 +20,30 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         bool NeedUserItems,
         bool NeedCrateScan);
 
-    private bool _inUpdateDynamicState;
-
     public void UpdateDynamicState(EntityUid uid, NcStoreComponent comp, EntityUid user)
     {
         if (!_ui.IsUiOpen(uid, StoreUiKey.Key, user))
             return;
 
-        if (_inUpdateDynamicState)
+        if (!_storesUpdatingDynamic.Add(uid))
         {
             Logger.GetSawmill("ncstore-structured").Warning(
                 $"[StoreStructured] Re-entrant UpdateDynamicState on {ToPrettyString(uid)} skipped.");
             return;
         }
 
-        _inUpdateDynamicState = true;
         try
         {
+            var scratch = GetDynamicScratch(uid);
             var crateUid = GetDynamicCrate(user);
             UpdateStoreWatch(uid, user, crateUid);
             var tabs = GetDynamicTabState(comp);
             var contractNeeds = GetDynamicContractNeeds(comp, tabs.HasContractsTab);
             var scanNeeds = GetDynamicScanNeeds(comp, crateUid, tabs.HasSellTab, contractNeeds);
-            var userSnap = ScanDynamicUserInventory(user, scanNeeds);
-            ScanDynamicCrateInventory(crateUid, scanNeeds);
-            UpdateDynamicContractProgress(uid, comp, user, crateUid, tabs, contractNeeds);
+            var userSnap = ScanDynamicUserInventory(user, scanNeeds, scratch);
+            ScanDynamicCrateInventory(crateUid, scanNeeds, scratch);
+            UpdateDynamicContractProgress(uid, comp, user, crateUid, tabs, contractNeeds, scratch);
 
-            var scratch = GetDynamicScratch(uid);
             var buf = scratch.GetWriteBuffer();
             buf.Clear();
 
@@ -59,7 +56,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
         finally
         {
-            _inUpdateDynamicState = false;
+            _storesUpdatingDynamic.Remove(uid);
         }
     }
 
@@ -130,35 +127,41 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         return false;
     }
 
-    private NcInventorySnapshot? ScanDynamicUserInventory(EntityUid user, DynamicScanNeeds scanNeeds)
+    private NcInventorySnapshot? ScanDynamicUserInventory(
+        EntityUid user,
+        DynamicScanNeeds scanNeeds,
+        DynamicScratch scratch)
     {
         if (scanNeeds.NeedUserSnapshot)
         {
-            _inventory.ScanInventory(user, _deepUserItemsScratch, _userSnapScratch);
-            return _userSnapScratch;
+            _inventory.ScanInventory(user, scratch.DeepUserItems, scratch.UserSnapshot);
+            return scratch.UserSnapshot;
         }
 
         if (scanNeeds.NeedUserItems)
         {
-            _inventory.ScanInventoryItems(user, _deepUserItemsScratch);
-            _userSnapScratch.Clear();
+            _inventory.ScanInventoryItems(user, scratch.DeepUserItems);
+            scratch.UserSnapshot.Clear();
             return null;
         }
 
-        _deepUserItemsScratch.Clear();
-        _userSnapScratch.Clear();
+        scratch.DeepUserItems.Clear();
+        scratch.UserSnapshot.Clear();
         return null;
     }
 
-    private void ScanDynamicCrateInventory(EntityUid? crateUid, DynamicScanNeeds scanNeeds)
+    private void ScanDynamicCrateInventory(
+        EntityUid? crateUid,
+        DynamicScanNeeds scanNeeds,
+        DynamicScratch scratch)
     {
         if (scanNeeds.NeedCrateScan && crateUid is { } crateEntity)
         {
-            _inventory.ScanInventoryItems(crateEntity, _deepCrateItemsScratch);
+            _inventory.ScanInventoryItems(crateEntity, scratch.DeepCrateItems);
             return;
         }
 
-        _deepCrateItemsScratch.Clear();
+        scratch.DeepCrateItems.Clear();
     }
 
     private void UpdateDynamicContractProgress(
@@ -167,7 +170,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         EntityUid user,
         EntityUid? crateUid,
         DynamicTabState tabs,
-        DynamicContractNeeds contractNeeds)
+        DynamicContractNeeds contractNeeds,
+        DynamicScratch scratch)
     {
         if (!tabs.HasContractsTab || !contractNeeds.HasTakenContracts)
             return;
@@ -176,9 +180,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             store,
             comp,
             user,
-            _deepUserItemsScratch,
+            scratch.DeepUserItems,
             crateUid,
-            crateUid != null ? _deepCrateItemsScratch : null,
+            crateUid != null ? scratch.DeepCrateItems : null,
             contractNeeds.NeedStoreWorldItems);
     }
 
@@ -261,7 +265,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (scratch.TryPopulateCachedCratePreview(crate, comp.CatalogRevision, inventoryRevision, buf))
             return;
 
-        var plan = _logic.ComputeMassSellPlanFromCachedItems(comp, crate, _deepCrateItemsScratch);
+        var plan = _logic.ComputeMassSellPlanFromCachedItems(comp, crate, scratch.DeepCrateItems);
         scratch.CacheCratePreview(crate, comp.CatalogRevision, inventoryRevision, plan);
         scratch.TryPopulateCachedCratePreview(crate, comp.CatalogRevision, inventoryRevision, buf);
     }

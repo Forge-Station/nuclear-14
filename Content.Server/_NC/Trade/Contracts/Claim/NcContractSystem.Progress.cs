@@ -240,7 +240,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         ClearProgressReservationScratch();
-        UpdateSingleTargetContractProgress(contract, targets[0], store, user, userItems, crate, crateItems, storeNearbyItems, hasCrateWork);
+        UpdateSingleTargetContractProgress(contract, targets, 0, store, user, userItems, crate, crateItems, storeNearbyItems, hasCrateWork);
         return true;
     }
 
@@ -367,7 +367,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void UpdateSingleTargetContractProgress(
         ContractServerData contract,
-        ContractTargetServerData target,
+        List<ContractTargetServerData> targets,
+        int targetIndex,
         EntityUid store,
         EntityUid user,
         IReadOnlyList<EntityUid> userItems,
@@ -376,11 +377,13 @@ public sealed partial class NcContractSystem : EntitySystem
         IReadOnlyList<EntityUid>? storeNearbyItems,
         bool hasCrateWork)
     {
+        var target = targets[targetIndex];
         contract.TargetItem = target.TargetItem;
 
         if (string.IsNullOrWhiteSpace(target.TargetItem) || target.Required <= 0)
         {
             target.Progress = 0;
+            targets[targetIndex] = target;
             contract.Required = 0;
             contract.Progress = 0;
             SyncContractFlowStatus(contract);
@@ -401,6 +404,7 @@ public sealed partial class NcContractSystem : EntitySystem
             required);
 
         target.Progress = progressed;
+        targets[targetIndex] = target;
         contract.Required = required;
         contract.Progress = progressed;
         SyncContractFlowStatus(contract);

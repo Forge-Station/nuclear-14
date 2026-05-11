@@ -239,6 +239,13 @@ public sealed partial class StoreContractsPresetPrototype : IPrototype
     [DataField("packs")]
     public List<PackIncludeEntry> Packs { get; set; } = new();
 
+    /// <summary>
+    /// ContractsV2 packs. Kept separate from legacy packs so new contract families can be migrated
+    /// one by one without changing the existing storeContract/storeContractPack format.
+    /// </summary>
+    [DataField("packsV2")]
+    public List<PackIncludeEntry> PacksV2 { get; set; } = new();
+
     [DataField("skipCost")]
     public int SkipCost { get; set; } = 360;
 
@@ -284,6 +291,164 @@ public sealed partial class StoreContractPackPrototype : IPrototype
     public List<PackIncludeEntry> Includes { get; set; } = new();
 }
 
+/// <summary>
+/// ContractsV2 pack. This intentionally does not reuse storeContractPack.contracts: each V2 family
+/// gets its own list, so supply/retrieval/courier/bounty/wanted can be migrated independently.
+/// </summary>
+[Prototype("ncContractPackV2")]
+public sealed partial class NcContractPackV2Prototype : IPrototype
+{
+    [IdDataField] public string ID { get; private set; } = default!;
+
+    [DataField("supply")]
+    public List<ContractWeightEntry> Supply { get; set; } = new();
+
+    [DataField("includes")]
+    public List<PackIncludeEntry> Includes { get; set; } = new();
+}
+
+/// <summary>
+/// ContractsV2 item group. Groups are only valid for checking already existing turn-in items.
+/// They must not be used for spawning or reward generation.
+/// </summary>
+[Prototype("ncItemGroup")]
+public sealed partial class NcItemGroupPrototype : IPrototype
+{
+    [IdDataField] public string ID { get; private set; } = default!;
+
+    [DataField("name", required: true)]
+    public string Name { get; private set; } = string.Empty;
+
+    [DataField("description")]
+    public string Description { get; private set; } = string.Empty;
+
+    /// <summary>Optional entity prototype id used only as a UI icon fallback.</summary>
+    [DataField("icon")]
+    public string Icon { get; private set; } = string.Empty;
+
+    [DataField("prototypes")]
+    public List<string> Prototypes { get; private set; } = new();
+
+    [DataField("tags")]
+    public List<string> Tags { get; private set; } = new();
+}
+
+[DataDefinition]
+public sealed partial class NcSupplyRequirementEntry
+{
+    /// <summary>Exact entity prototype required for turn-in.</summary>
+    [DataField("prototype")]
+    public string Prototype { get; set; } = string.Empty;
+
+    /// <summary>ncItemGroup id. Groups are matched like legacy matchers, but only for turn-in.</summary>
+    [DataField("group")]
+    public string Group { get; set; } = string.Empty;
+
+    [DataField("count")]
+    public IntRange Count { get; set; } = IntRange.Fixed(1);
+}
+
+[DataDefinition]
+public sealed partial class NcSupplyLegacyRewardData
+{
+    /// <summary>Legacy convenience currency reward. Prefer rewards.guaranteed in new YAML.</summary>
+    [DataField("money")]
+    public int Money { get; set; }
+
+    [DataField("currency")]
+    public string Currency { get; set; } = string.Empty;
+}
+
+[DataDefinition]
+public sealed partial class NcSupplyRewardsData
+{
+    /// <summary>Always granted rewards. Use type: Currency with currency, or type: Item with prototype.</summary>
+    [DataField("guaranteed")]
+    public List<NcSupplyRewardEntry> Guaranteed { get; private set; } = new();
+
+    /// <summary>Independent chance-based rewards.</summary>
+    [DataField("random")]
+    public List<NcSupplyRewardEntry> Random { get; private set; } = new();
+
+    /// <summary>Weighted pool rolls. Use pool + rolls so item amount is never confused with pool roll count.</summary>
+    [DataField("pools")]
+    public List<NcSupplyRewardPoolRollEntry> Pools { get; private set; } = new();
+}
+
+[DataDefinition]
+public sealed partial class NcSupplyRewardEntry
+{
+    [DataField("type")]
+    public StoreRewardType Type { get; set; } = StoreRewardType.Item;
+
+    [DataField("prototype")]
+    public string Prototype { get; set; } = string.Empty;
+
+    [DataField("currency")]
+    public string Currency { get; set; } = string.Empty;
+
+    [DataField("amount")]
+    public IntRange Amount { get; set; } = IntRange.Fixed(1);
+
+    [DataField("chance")]
+    public float Chance { get; set; } = 1.0f;
+}
+
+[DataDefinition]
+public sealed partial class NcSupplyRewardPoolRollEntry
+{
+    [DataField("pool", required: true)]
+    public string Pool { get; set; } = string.Empty;
+
+    [DataField("rolls")]
+    public IntRange Rolls { get; set; } = IntRange.Fixed(1);
+
+    [DataField("chance")]
+    public float Chance { get; set; } = 1.0f;
+}
+
+/// <summary>
+/// ContractsV2 Supply: the player brings already existing items and turns them in through
+/// the current server-authoritative claim/reward flow. No runtime, no spawning, no prediction.
+/// </summary>
+[Prototype("ncSupplyContract")]
+public sealed partial class NcSupplyContractPrototype : IPrototype
+{
+    [IdDataField] public string ID { get; private set; } = default!;
+
+    [DataField("name", required: true)]
+    public string Name { get; private set; } = string.Empty;
+
+    [DataField("description")]
+    public string Description { get; private set; } = string.Empty;
+
+    [DataField("difficulty")]
+    public string Difficulty { get; private set; } = "Easy";
+
+    [DataField("repeatable")]
+    public bool Repeatable { get; private set; } = true;
+
+    /// <summary>Optional entity prototype id used only as a UI icon fallback for the contract card.</summary>
+    [DataField("icon")]
+    public string Icon { get; private set; } = string.Empty;
+
+    /// <summary>Preferred ContractsV2 requirement list. Each entry must use exactly one of prototype/group.</summary>
+    [DataField("requirements", required: false)]
+    public List<NcSupplyRequirementEntry> Requirements { get; private set; } = new();
+
+    /// <summary>Legacy alias kept only so older test YAML can be migrated without crashing immediately.</summary>
+    [DataField("require", required: false)]
+    public List<NcSupplyRequirementEntry> LegacyRequire { get; private set; } = new();
+
+    /// <summary>Legacy convenience money block. Prefer rewards.guaranteed in new YAML.</summary>
+    [DataField("reward")]
+    public NcSupplyLegacyRewardData LegacyReward { get; private set; } = new();
+
+    /// <summary>Clean Supply V2 reward schema: guaranteed/random/pools.</summary>
+    [DataField("rewards")]
+    public NcSupplyRewardsData Rewards { get; private set; } = new();
+}
+
 
 
 [Prototype("ncContractRewardPool")]
@@ -323,5 +488,4 @@ public sealed class ListingConditionPrototype
     [DataField("condition")]
     public object? Condition;
 }
-
 

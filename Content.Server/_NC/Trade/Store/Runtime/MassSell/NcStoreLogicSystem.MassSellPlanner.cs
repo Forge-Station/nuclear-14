@@ -1,7 +1,5 @@
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
-using Content.Shared.Tag;
-using Robust.Shared.Prototypes;
 
 namespace Content.Server._NC.Trade;
 
@@ -15,24 +13,14 @@ public sealed partial class NcStoreLogicSystem
         public bool IsEmpty => StackTypeCounts.Count == 0 && ProtoCounts.Count == 0;
     }
 
-    private bool _inComputeMassSellPlan;
-
-    private readonly List<EntityUid> _massSellItemsScratch = new();
-    private readonly List<NcStoreListingDef> _sellListingsScratch = new();
 
     public MassSellPlan ComputeMassSellPlan(NcStoreComponent store, EntityUid container)
     {
         _inventory.InvalidateInventoryCache(container);
 
-        if (_inComputeMassSellPlan)
-        {
-            var localItems = new List<EntityUid>(64);
-            _inventory.ScanInventoryItems(container, localItems);
-            return ComputeMassSellPlanInternal(store, localItems);
-        }
-
-        _inventory.ScanInventoryItems(container, _massSellItemsScratch);
-        return ComputeMassSellPlanInternal(store, _massSellItemsScratch);
+        var items = new List<EntityUid>(64);
+        _inventory.ScanInventoryItems(container, items);
+        return ComputeMassSellPlanInternal(store, items);
     }
 
     public MassSellPlan ComputeMassSellPlanFromCachedItems(
@@ -47,37 +35,22 @@ public sealed partial class NcStoreLogicSystem
 
     private MassSellPlan ComputeMassSellPlanInternal(NcStoreComponent store, IEnumerable<EntityUid> items)
     {
-        if (_inComputeMassSellPlan)
-        {
-            Sawmill.Warning(
-                $"[MassSell] Re-entrant ComputeMassSellPlan rejected for store {ToPrettyString(store.Owner)}. " +
-                "Returning empty plan to avoid scratch corruption. Check event handlers in the call path.");
-            return CreateEmptyMassSellPlan();
-        }
-
-        _inComputeMassSellPlan = true;
-        try
-        {
-            var plan = CreateEmptyMassSellPlan();
-            if (store.Listings.Count == 0)
-                return plan;
-
-            var inventory = BuildMassSellInventoryState(items);
-            if (inventory.IsEmpty)
-                return plan;
-
-            var listingQuotes = BuildMassSellListingQuotes(store);
-            PrepareMassSellListings(store, listingQuotes);
-            if (_sellListingsScratch.Count == 0)
-                return plan;
-
-            ApplyMassSellListings(inventory, listingQuotes, plan);
+        var plan = CreateEmptyMassSellPlan();
+        if (store.Listings.Count == 0)
             return plan;
-        }
-        finally
-        {
-            _inComputeMassSellPlan = false;
-        }
+
+        var inventory = BuildMassSellInventoryState(items);
+        if (inventory.IsEmpty)
+            return plan;
+
+        var listingQuotes = BuildMassSellListingQuotes(store);
+        var sellListings = new List<NcStoreListingDef>();
+        PrepareMassSellListings(store, listingQuotes, sellListings);
+        if (sellListings.Count == 0)
+            return plan;
+
+        ApplyMassSellListings(inventory, listingQuotes, sellListings, plan);
+        return plan;
     }
 
     private static MassSellPlan CreateEmptyMassSellPlan()
@@ -190,9 +163,10 @@ public sealed partial class NcStoreLogicSystem
 
     private void PrepareMassSellListings(
         NcStoreComponent store,
-        Dictionary<string, (string CurrencyId, int UnitPrice)> listingQuotes)
+        Dictionary<string, (string CurrencyId, int UnitPrice)> listingQuotes,
+        List<NcStoreListingDef> sellListings)
     {
-        _sellListingsScratch.Clear();
+        sellListings.Clear();
 
         foreach (var listing in store.Listings)
         {
@@ -202,10 +176,10 @@ public sealed partial class NcStoreLogicSystem
             if (!listingQuotes.TryGetValue(listing.Id, out var quote) || quote.UnitPrice <= 0)
                 continue;
 
-            _sellListingsScratch.Add(listing);
+            sellListings.Add(listing);
         }
 
-        _sellListingsScratch.Sort((left, right) => CompareMassSellListings(left, right, listingQuotes));
+        sellListings.Sort((left, right) => CompareMassSellListings(left, right, listingQuotes));
     }
 
     private int CompareMassSellListings(
@@ -249,11 +223,10 @@ public sealed partial class NcStoreLogicSystem
     private void ApplyMassSellListings(
         MassSellInventoryState inventory,
         Dictionary<string, (string CurrencyId, int UnitPrice)> listingQuotes,
+        List<NcStoreListingDef> sellListings,
         MassSellPlan plan)
     {
-        var stackComponentName = _compFactory.GetComponentName(typeof(StackComponent));
-
-        foreach (var listing in _sellListingsScratch)
+        foreach (var listing in sellListings)
         {
             if (!listingQuotes.TryGetValue(listing.Id, out var quote) ||
                 quote.UnitPrice <= 0 ||
@@ -265,7 +238,6 @@ public sealed partial class NcStoreLogicSystem
             var taken = ComputeMassSellListingTake(
                 listing,
                 quote.UnitPrice,
-                stackComponentName,
                 inventory);
             if (taken <= 0)
                 continue;
@@ -277,7 +249,6 @@ public sealed partial class NcStoreLogicSystem
     private int ComputeMassSellListingTake(
         NcStoreListingDef listing,
         int unitPrice,
-        string stackComponentName,
         MassSellInventoryState inventory)
     {
         if (!TryComputeMassSellWantedUnits(listing.RemainingCount, unitPrice, out var want))
@@ -286,7 +257,7 @@ public sealed partial class NcStoreLogicSystem
         if (listing.MatchMode == PrototypeMatchMode.Matcher)
             return ReserveMassSellMatcherUnits(listing.ProductEntity, want, inventory.ProtoCounts);
 
-        var expectedStackType = TryGetMassSellExpectedStackType(listing.ProductEntity, stackComponentName);
+        var expectedStackType = _inventory.GetProductStackType(listing.ProductEntity);
         if (!string.IsNullOrEmpty(expectedStackType))
             return ReserveMassSellStackUnits(expectedStackType, want, inventory);
 
@@ -302,17 +273,6 @@ public sealed partial class NcStoreLogicSystem
             ? Math.Min(maxByRemaining, maxTakeByInt)
             : 0;
         return want > 0;
-    }
-
-    private string? TryGetMassSellExpectedStackType(string productEntity, string stackComponentName)
-    {
-        if (_protos.TryIndex<EntityPrototype>(productEntity, out var productProto) &&
-            productProto.TryGetComponent(stackComponentName, out StackComponent? productStack))
-        {
-            return productStack.StackTypeId;
-        }
-
-        return null;
     }
 
     private static int ReserveMassSellStackUnits(
@@ -371,35 +331,11 @@ public sealed partial class NcStoreLogicSystem
         if (want <= 0)
             return 0;
 
-        if (!_protos.TryIndex<NcMatcherPrototype>(matcherId, out var matcher))
-            return 0;
-
-        if (matcher.Items.Count == 0 && matcher.Tags.Count == 0)
-            return 0;
-
-        HashSet<string>? matcherItems = null;
-        if (matcher.Items.Count > 0)
-            matcherItems = new HashSet<string>(matcher.Items, StringComparer.Ordinal);
-
         var matchingProtoIds = new List<string>();
-        foreach (var pair in protoCounts)
-        {
-            var protoId = pair.Key;
-            var available = pair.Value;
-
-            if (available <= 0)
-                continue;
-
-            if (!MassSellProtoMatchesMatcher(protoId, matcherItems, matcher.Tags))
-                continue;
-
-            matchingProtoIds.Add(protoId);
-        }
+        _inventory.FillMatchingPrototypeIdsForMatcher(matcherId, protoCounts, matchingProtoIds);
 
         if (matchingProtoIds.Count == 0)
             return 0;
-
-        matchingProtoIds.Sort(StringComparer.Ordinal);
 
         var takenTotal = 0;
         foreach (var protoId in matchingProtoIds)
@@ -412,32 +348,6 @@ public sealed partial class NcStoreLogicSystem
         }
 
         return takenTotal;
-    }
-
-    private bool MassSellProtoMatchesMatcher(
-        string protoId,
-        HashSet<string>? matcherItems,
-        IReadOnlyList<string> matcherTags)
-    {
-        if (matcherItems != null && matcherItems.Contains(protoId))
-            return true;
-
-        if (matcherTags.Count == 0)
-            return false;
-
-        if (!_protos.TryIndex<EntityPrototype>(protoId, out var proto))
-            return false;
-
-        if (!proto.TryGetComponent(out TagComponent? tagComponent, _compFactory) || tagComponent == null)
-            return false;
-
-        for (var i = 0; i < matcherTags.Count; i++)
-        {
-            if (_tags.HasTag(tagComponent, matcherTags[i]))
-                return true;
-        }
-
-        return false;
     }
 
     private static int ReserveMassSellUnits(

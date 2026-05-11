@@ -1,9 +1,7 @@
 using System.Runtime.InteropServices;
 using Content.Shared._NC.Trade;
 
-
 namespace Content.Server._NC.Trade;
-
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -73,7 +71,7 @@ public sealed partial class NcContractSystem : EntitySystem
         string difficulty,
         int limit,
         Dictionary<string, int> currentCounts,
-        Dictionary<string, List<(StoreContractPrototype Proto, int Weight)>> poolByDifficulty
+        Dictionary<string, List<ContractPoolCandidate>> poolByDifficulty
     )
     {
         var current = currentCounts.GetValueOrDefault(difficulty, 0);
@@ -96,10 +94,10 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid uid,
         string difficulty,
         int needed,
-        Dictionary<string, List<(StoreContractPrototype Proto, int Weight)>> poolByDifficulty,
+        Dictionary<string, List<ContractPoolCandidate>> poolByDifficulty,
         out CooldownState cooldown,
-        out List<(StoreContractPrototype Proto, int Weight)> fresh,
-        out List<(StoreContractPrototype Proto, int Weight)>? recent)
+        out List<ContractPoolCandidate> fresh,
+        out List<ContractPoolCandidate>? recent)
     {
         cooldown = default!;
         fresh = default!;
@@ -117,11 +115,11 @@ public sealed partial class NcContractSystem : EntitySystem
     }
 
     private static void SplitDifficultyPoolByCooldown(
-        List<(StoreContractPrototype Proto, int Weight)> pool,
+        List<ContractPoolCandidate> pool,
         CooldownState cooldown,
         int cooldownLimit,
-        out List<(StoreContractPrototype Proto, int Weight)> fresh,
-        out List<(StoreContractPrototype Proto, int Weight)>? recent)
+        out List<ContractPoolCandidate> fresh,
+        out List<ContractPoolCandidate>? recent)
     {
         if (cooldownLimit <= 0)
         {
@@ -135,7 +133,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         foreach (var entry in pool)
         {
-            if (cooldown.Contains(entry.Proto.ID))
+            if (cooldown.Contains(entry.Id))
                 recent.Add(entry);
             else
                 fresh.Add(entry);
@@ -145,8 +143,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryIssueDifficultyContract(
         EntityUid store,
         NcStoreComponent comp,
-        List<(StoreContractPrototype Proto, int Weight)> fresh,
-        List<(StoreContractPrototype Proto, int Weight)>? recent,
+        List<ContractPoolCandidate> fresh,
+        List<ContractPoolCandidate>? recent,
         CooldownState cooldown)
     {
         var source = fresh.Count > 0 ? fresh : recent;
@@ -156,48 +154,45 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryPickAndRemoveWeighted(source, out var pick))
             return false;
 
-        comp.Contracts[pick.Proto.ID] = CreateContractData(store, pick.Proto);
-        cooldown.Push(pick.Proto.ID);
+        comp.Contracts[pick.Id] = CreateContractData(store, pick);
+        cooldown.Push(pick.Id);
         return true;
     }
 
-    private Dictionary<string, List<(StoreContractPrototype Proto, int Weight)>> BuildCandidatePool(
+    private Dictionary<string, List<ContractPoolCandidate>> BuildCandidatePool(
         IReadOnlyList<StoreContractsPresetPrototype> presets,
         NcStoreComponent comp,
         string? ignoredContractId
     )
     {
         var flattened = GetOrBuildFlattenedPool(presets);
-        var result = new Dictionary<string, List<(StoreContractPrototype Proto, int Weight)>>(StringComparer.Ordinal);
+        var result = new Dictionary<string, List<ContractPoolCandidate>>(StringComparer.Ordinal);
 
-        foreach (var entry in flattened.Values)
+        foreach (var candidate in flattened.Values)
         {
-            var proto = entry.Proto;
-            var weight = entry.Weight;
-
-            if (weight <= 0)
+            if (candidate.Weight <= 0)
                 continue;
 
-            if (ignoredContractId != null && proto.ID == ignoredContractId)
+            if (ignoredContractId != null && candidate.Id == ignoredContractId)
                 continue;
 
-            if (comp.Contracts.ContainsKey(proto.ID))
+            if (comp.Contracts.ContainsKey(candidate.Id))
                 continue;
 
-            if (!proto.Repeatable && comp.CompletedOneTimeContracts.Contains(proto.ID))
+            if (!candidate.Repeatable && comp.CompletedOneTimeContracts.Contains(candidate.Id))
                 continue;
 
-            ref var list = ref CollectionsMarshal.GetValueRefOrAddDefault(result, proto.Difficulty, out var exists);
+            ref var list = ref CollectionsMarshal.GetValueRefOrAddDefault(result, candidate.Difficulty, out var exists);
             if (!exists)
                 list = new();
 
-            list!.Add((proto, weight));
+            list!.Add(candidate);
         }
 
         return result;
     }
 
-    private Dictionary<string, (StoreContractPrototype Proto, int Weight)> GetOrBuildFlattenedPool(
+    private Dictionary<string, ContractPoolCandidate> GetOrBuildFlattenedPool(
         IReadOnlyList<StoreContractsPresetPrototype> presets
     )
     {
@@ -211,10 +206,10 @@ public sealed partial class NcContractSystem : EntitySystem
         return unique;
     }
 
-    private List<(StoreContractPrototype Proto, int Weight)> CollectFlattenedPoolEntries(
+    private List<ContractPoolCandidate> CollectFlattenedPoolEntries(
         IReadOnlyList<StoreContractsPresetPrototype> presets)
     {
-        var raw = new List<(StoreContractPrototype Proto, int Weight)>();
+        var raw = new List<ContractPoolCandidate>();
 
         foreach (var preset in presets)
         {
@@ -229,48 +224,66 @@ public sealed partial class NcContractSystem : EntitySystem
                     raw,
                     new HashSet<string>(StringComparer.Ordinal));
             }
+
+            foreach (var packEntry in preset.PacksV2)
+            {
+                if (string.IsNullOrWhiteSpace(packEntry.Id) || packEntry.Weight <= 0)
+                    continue;
+
+                CollectFromV2PackRecursive(
+                    packEntry.Id,
+                    packEntry.Weight,
+                    raw,
+                    new HashSet<string>(StringComparer.Ordinal));
+            }
         }
 
         return raw;
     }
 
-    private Dictionary<string, (StoreContractPrototype Proto, int Weight)> MergeFlattenedPoolEntries(
+    private Dictionary<string, ContractPoolCandidate> MergeFlattenedPoolEntries(
         string cacheKey,
-        IReadOnlyList<(StoreContractPrototype Proto, int Weight)> raw)
+        IReadOnlyList<ContractPoolCandidate> raw)
     {
-        var unique = new Dictionary<string, (StoreContractPrototype Proto, int Weight)>(StringComparer.Ordinal);
+        var unique = new Dictionary<string, ContractPoolCandidate>(StringComparer.Ordinal);
 
-        foreach (var (proto, weight) in raw)
-            AddFlattenedPoolEntry(unique, cacheKey, proto, weight);
+        foreach (var candidate in raw)
+            AddFlattenedPoolEntry(unique, cacheKey, candidate);
 
         return unique;
     }
 
     private void AddFlattenedPoolEntry(
-        Dictionary<string, (StoreContractPrototype Proto, int Weight)> unique,
+        Dictionary<string, ContractPoolCandidate> unique,
         string cacheKey,
-        StoreContractPrototype proto,
-        int weight)
+        ContractPoolCandidate candidate)
     {
-        if (weight <= 0)
+        if (candidate.Weight <= 0 || string.IsNullOrWhiteSpace(candidate.Id))
             return;
 
-        ref var slot = ref CollectionsMarshal.GetValueRefOrAddDefault(unique, proto.ID, out var exists);
-        if (!exists)
+        if (!unique.TryGetValue(candidate.Id, out var existing))
         {
-            slot = (proto, weight);
+            unique[candidate.Id] = candidate;
             return;
         }
 
-        var merged = SaturatingAdd(slot.Weight, weight);
-        if (merged == int.MaxValue && slot.Weight != int.MaxValue)
+        if (existing.Kind != candidate.Kind)
         {
             Sawmill.Warning(
-                $"[Contracts] Total weight overflow for '{proto.ID}' in preset set '{cacheKey}'. " +
+                $"[Contracts] Contract id collision for '{candidate.Id}' in preset set '{cacheKey}'. " +
+                $"Existing kind={existing.Kind}, ignored kind={candidate.Kind}.");
+            return;
+        }
+
+        var merged = SaturatingAdd(existing.Weight, candidate.Weight);
+        if (merged == int.MaxValue && existing.Weight != int.MaxValue)
+        {
+            Sawmill.Warning(
+                $"[Contracts] Total weight overflow for '{candidate.Id}' in preset set '{cacheKey}'. " +
                 $"Clamping to {int.MaxValue}.");
         }
 
-        slot.Weight = merged;
+        existing.Weight = merged;
     }
 
     private static string BuildPresetPoolCacheKey(IReadOnlyList<StoreContractsPresetPrototype> presets)
@@ -317,7 +330,7 @@ public sealed partial class NcContractSystem : EntitySystem
     private void CollectFromPackRecursive(
         string packId,
         int weightMult,
-        List<(StoreContractPrototype Proto, int FinalWeight)> acc,
+        List<ContractPoolCandidate> acc,
         HashSet<string> recursionStack
     )
     {
@@ -334,6 +347,34 @@ public sealed partial class NcContractSystem : EntitySystem
 
             CollectPackContractEntries(packId, weightMult, pack, acc);
             CollectPackIncludedEntries(packId, weightMult, pack, acc, recursionStack);
+        }
+        finally
+        {
+            recursionStack.Remove(packId);
+        }
+    }
+
+    private void CollectFromV2PackRecursive(
+        string packId,
+        int weightMult,
+        List<ContractPoolCandidate> acc,
+        HashSet<string> recursionStack
+    )
+    {
+        if (string.IsNullOrWhiteSpace(packId) || weightMult <= 0)
+            return;
+
+        if (!TryEnterPackRecursion(packId, recursionStack))
+            return;
+
+        try
+        {
+            if (!TryResolveContractPackV2(packId, out var pack))
+                return;
+
+            ValidateContractPackV2(packId, pack);
+            CollectV2SupplyEntries(packId, weightMult, pack, acc);
+            CollectV2IncludedEntries(packId, weightMult, pack, acc, recursionStack);
         }
         finally
         {
@@ -359,11 +400,29 @@ public sealed partial class NcContractSystem : EntitySystem
         return false;
     }
 
+    private bool TryResolveContractPackV2(string packId, out NcContractPackV2Prototype pack)
+    {
+        if (_prototypes.TryIndex<NcContractPackV2Prototype>(packId, out pack!))
+            return true;
+
+        Sawmill.Warning($"[ContractsV2] Pack '{packId}' not found. Skipping.");
+        return false;
+    }
+
+    private void ValidateContractPackV2(string packId, NcContractPackV2Prototype pack)
+    {
+        if (pack.Supply.Count == 0 && pack.Includes.Count == 0)
+        {
+            Sawmill.Warning(
+                $"[ContractsV2] Pack '{packId}' is empty. Add at least one supply entry or include.");
+        }
+    }
+
     private void CollectPackContractEntries(
         string packId,
         int weightMult,
         StoreContractPackPrototype pack,
-        List<(StoreContractPrototype Proto, int FinalWeight)> acc)
+        List<ContractPoolCandidate> acc)
     {
         foreach (var entry in pack.Contracts)
         {
@@ -375,8 +434,18 @@ public sealed partial class NcContractSystem : EntitySystem
                 entry.Weight,
                 $"pack '{packId}' contract '{entry.Id}'");
 
-            if (finalWeight > 0)
-                acc.Add((proto, finalWeight));
+            if (finalWeight <= 0)
+                continue;
+
+            acc.Add(new ContractPoolCandidate
+            {
+                Kind = ContractPoolCandidateKind.Legacy,
+                Id = proto.ID,
+                Difficulty = proto.Difficulty,
+                Repeatable = proto.Repeatable,
+                Weight = finalWeight,
+                Legacy = proto
+            });
         }
     }
 
@@ -384,7 +453,7 @@ public sealed partial class NcContractSystem : EntitySystem
         string packId,
         int weightMult,
         StoreContractPackPrototype pack,
-        List<(StoreContractPrototype Proto, int FinalWeight)> acc,
+        List<ContractPoolCandidate> acc,
         HashSet<string> recursionStack)
     {
         foreach (var include in pack.Includes)
@@ -399,6 +468,86 @@ public sealed partial class NcContractSystem : EntitySystem
 
             if (nestedWeight > 0)
                 CollectFromPackRecursive(include.Id, nestedWeight, acc, recursionStack);
+        }
+    }
+
+    private void CollectV2SupplyEntries(
+        string packId,
+        int weightMult,
+        NcContractPackV2Prototype pack,
+        List<ContractPoolCandidate> acc)
+    {
+        foreach (var entry in pack.Supply)
+        {
+            if (string.IsNullOrWhiteSpace(entry.Id))
+            {
+                Sawmill.Warning($"[ContractsV2] Pack '{packId}' has supply entry with empty id.");
+                continue;
+            }
+
+            if (entry.Weight <= 0)
+            {
+                Sawmill.Warning(
+                    $"[ContractsV2] Pack '{packId}' supply '{entry.Id}' has non-positive weight={entry.Weight}.");
+                continue;
+            }
+
+            if (!_prototypes.TryIndex<NcSupplyContractPrototype>(entry.Id, out var proto))
+            {
+                Sawmill.Warning(
+                    $"[ContractsV2] Pack '{packId}' references missing supply contract '{entry.Id}'.");
+                continue;
+            }
+
+            var finalWeight = MultiplyWeightsWithClamp(
+                weightMult,
+                entry.Weight,
+                $"v2 pack '{packId}' supply '{entry.Id}'");
+
+            if (finalWeight <= 0)
+                continue;
+
+            acc.Add(new ContractPoolCandidate
+            {
+                Kind = ContractPoolCandidateKind.SupplyV2,
+                Id = proto.ID,
+                Difficulty = proto.Difficulty,
+                Repeatable = proto.Repeatable,
+                Weight = finalWeight,
+                Supply = proto
+            });
+        }
+    }
+
+    private void CollectV2IncludedEntries(
+        string packId,
+        int weightMult,
+        NcContractPackV2Prototype pack,
+        List<ContractPoolCandidate> acc,
+        HashSet<string> recursionStack)
+    {
+        foreach (var include in pack.Includes)
+        {
+            if (string.IsNullOrWhiteSpace(include.Id))
+            {
+                Sawmill.Warning($"[ContractsV2] Pack '{packId}' has include entry with empty id.");
+                continue;
+            }
+
+            if (include.Weight <= 0)
+            {
+                Sawmill.Warning(
+                    $"[ContractsV2] Pack '{packId}' include '{include.Id}' has non-positive weight={include.Weight}.");
+                continue;
+            }
+
+            var nestedWeight = MultiplyWeightsWithClamp(
+                weightMult,
+                include.Weight,
+                $"v2 pack '{packId}' include '{include.Id}'");
+
+            if (nestedWeight > 0)
+                CollectFromV2PackRecursive(include.Id, nestedWeight, acc, recursionStack);
         }
     }
 
@@ -441,11 +590,11 @@ public sealed partial class NcContractSystem : EntitySystem
     }
 
     private bool TryPickAndRemoveWeighted(
-        List<(StoreContractPrototype Proto, int Weight)> list,
-        out (StoreContractPrototype Proto, int Weight) picked
+        List<ContractPoolCandidate> list,
+        out ContractPoolCandidate picked
     )
     {
-        picked = default;
+        picked = default!;
 
         var total = 0;
         for (var i = 0; i < list.Count; i++)

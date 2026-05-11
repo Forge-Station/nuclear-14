@@ -54,7 +54,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryGetContractSkipInfo(store, comp, out var currency, out var cost))
             return false;
 
-        if (cost > 0 && !_logic._currency.TryTakeCurrency(user, currency, cost))
+        if (cost > 0 && !_logic.TryTakeCurrency(user, currency, cost))
             return false;
 
         CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true);

@@ -122,10 +122,16 @@ public sealed partial class NcContractCard
 
     private string ResolveTargetName(string protoId, PrototypeMatchMode matchMode)
     {
-        if (matchMode == PrototypeMatchMode.Matcher &&
-            _proto.TryIndex<NcMatcherPrototype>(protoId, out var matcher) &&
-            !string.IsNullOrWhiteSpace(matcher.Name))
-            return matcher.Name;
+        if (matchMode == PrototypeMatchMode.Matcher)
+        {
+            if (_proto.TryIndex<NcMatcherPrototype>(protoId, out var matcher) &&
+                !string.IsNullOrWhiteSpace(matcher.Name))
+                return matcher.Name;
+
+            if (_proto.TryIndex<NcItemGroupPrototype>(protoId, out var group) &&
+                !string.IsNullOrWhiteSpace(group.Name))
+                return group.Name;
+        }
 
         return ResolveProtoName(protoId);
     }
@@ -150,6 +156,17 @@ public sealed partial class NcContractCard
             return Loc.GetString("nc-store-proto-tooltip-name-only", ("name", matcher.Name));
 
         return Loc.GetString("nc-store-proto-tooltip", ("name", matcher.Name), ("desc", matcher.Description));
+    }
+
+    private static string BuildItemGroupTooltip(NcItemGroupPrototype? group)
+    {
+        if (group == null)
+            return string.Empty;
+
+        if (string.IsNullOrWhiteSpace(group.Description))
+            return Loc.GetString("nc-store-proto-tooltip-name-only", ("name", group.Name));
+
+        return Loc.GetString("nc-store-proto-tooltip", ("name", group.Name), ("desc", group.Description));
     }
 
     private string CurrencyName(string? currencyId)

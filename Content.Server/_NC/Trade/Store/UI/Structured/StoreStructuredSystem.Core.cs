@@ -23,17 +23,19 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     private const float ProximityRadius = 5f;
     private const float MinAccelInterval = 0.25f;
     private const float MinDynamicInterval = 0.25f;
+    private const float MinManualRefreshInterval = 0.5f;
     private const int MaxVisibleListingIds = 256;
     private const int MaxVisibleListingIdLength = 96;
     private const int WatchedRootSearchLimit = 32;
     private static readonly TimeSpan RealtimeOpenStoreUpdateInterval = TimeSpan.FromSeconds(0.25);
     private static readonly TimeSpan OpenStoreValidityCheckInterval = TimeSpan.FromSeconds(0.5);
     private readonly HashSet<EntityUid> _affectedStoresScratch = new();
+    private readonly HashSet<EntityUid> _storesUpdatingDynamic = new();
+    private readonly List<string> _visibleListingIdsScratch = new(MaxVisibleListingIds);
+    private readonly HashSet<string> _visibleListingIdsSetScratch = new(StringComparer.Ordinal);
     [Dependency] private readonly AudioSystem _audio = default!;
     private readonly Dictionary<EntityUid, (int Revision, List<StoreListingStaticData> List)> _catalogCache = new();
     [Dependency] private readonly NcContractSystem _contracts = default!;
-    private readonly List<EntityUid> _deepCrateItemsScratch = new();
-    private readonly List<EntityUid> _deepUserItemsScratch = new();
     private readonly HashSet<EntityUid> _dirtyStores = new();
     private readonly List<EntityUid> _dirtyStoresScratch = new();
     private readonly Dictionary<EntityUid, DynamicScratch> _dynamicScratchByStore = new();
@@ -49,7 +51,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
-    private readonly NcInventorySnapshot _userSnapScratch = new();
     private readonly Dictionary<EntityUid, (EntityUid User, EntityUid? Crate)> _watchByStore = new();
 
     [Dependency] private readonly SharedTransformSystem _xform = default!;
@@ -110,23 +111,31 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (!TryGetLockedUiUser(uid, comp, out var user))
             return;
 
-        var ids = msg.Ids;
-        if (ids.Length > MaxVisibleListingIds)
-            ids = ids.Take(MaxVisibleListingIds).ToArray();
+        _visibleListingIdsScratch.Clear();
+        _visibleListingIdsSetScratch.Clear();
 
-        if (ids.Length > 0)
+        var ids = msg.Ids;
+        var max = Math.Min(ids.Length, MaxVisibleListingIds);
+
+        for (var i = 0; i < max; i++)
         {
-            for (var i = 0; i < ids.Length; i++)
-            {
-                var id = ids[i];
-                if (string.IsNullOrWhiteSpace(id) || id.Length > MaxVisibleListingIdLength)
-                    ids[i] = string.Empty;
-            }
+            var id = ids[i];
+            if (string.IsNullOrWhiteSpace(id) || id.Length > MaxVisibleListingIdLength)
+                continue;
+
+            if (!comp.ListingIndex.ContainsKey(NcStoreComponent.MakeListingKey(StoreMode.Buy, id)))
+                continue;
+
+            if (!_visibleListingIdsSetScratch.Add(id))
+                continue;
+
+            _visibleListingIdsScratch.Add(id);
         }
 
         var scratch = GetDynamicScratch(uid);
-        if (!scratch.UpdateVisibleIds(ids))
+        if (!scratch.UpdateVisibleIds(_visibleListingIdsScratch.Count > 0 ? _visibleListingIdsScratch.ToArray() : null))
             return;
+
         RequestDynamicRefresh(uid, comp, user);
     }
 
@@ -377,6 +386,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         _openStoreUids.Remove(storeUid);
         UnregisterStoreWatch(storeUid);
         _dirtyStores.Remove(storeUid);
+        _storesUpdatingDynamic.Remove(storeUid);
         _dynamicScratchByStore.Remove(storeUid);
     }
 
@@ -716,6 +726,16 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
 
         EnsureCrateWatchUpToDate(uid, user);
+
+        var scratch = GetDynamicScratch(uid);
+        var now = _timing.CurTime;
+        if (now < scratch.NextManualRefreshAllowed)
+        {
+            MarkDirty(uid);
+            return;
+        }
+
+        scratch.NextManualRefreshAllowed = now + TimeSpan.FromSeconds(MinManualRefreshInterval);
         SendCatalog(uid, comp, user);
         RequestDynamicRefresh(uid, comp, user);
     }

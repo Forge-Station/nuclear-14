@@ -11,6 +11,14 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         private readonly Dictionary<string, int> _cratePreviewUnitsById = new();
         private readonly HashSet<string> _visibleListingIds = new();
         private readonly HashSet<string> _visibleIncomingScratch = new(StringComparer.Ordinal);
+
+        public readonly List<EntityUid> DeepUserItems = new();
+        public readonly List<EntityUid> DeepCrateItems = new();
+        public readonly NcInventorySnapshot UserSnapshot = new();
+
+        public TimeSpan NextDynamicAllowed = TimeSpan.Zero;
+        public TimeSpan NextManualRefreshAllowed = TimeSpan.Zero;
+
         private int _activeIndex;
         private int _catalogRevision;
         private int _cratePreviewCatalogRevision;
@@ -25,8 +33,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         private bool _hasVisibleIds;
         private int _visibleSig;
         private EntityUid? _cratePreviewRoot;
-        public TimeSpan NextDynamicAllowed = TimeSpan.Zero;
-
         public DynamicStateBuffer GetReadBuffer() => _buffers[_activeIndex];
 
         public DynamicStateBuffer GetWriteBuffer() => _buffers[1 - _activeIndex];
