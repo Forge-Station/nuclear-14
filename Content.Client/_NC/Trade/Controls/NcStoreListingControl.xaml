@@ -45,18 +45,26 @@
                 </BoxContainer>
             </PanelContainer>
 
-            <!-- Description -->
-            <controls:NcListingDescriptionBox Name="DescriptionBox"
-                                              HorizontalExpand="True"
-                                              VerticalExpand="True"
-                                              Margin="0 0 4 0" />
+            <!-- Description / barter preview -->
+            <BoxContainer Name="BodyColumn"
+                          Orientation="Vertical"
+                          SeparationOverride="4"
+                          HorizontalExpand="True"
+                          VerticalExpand="True"
+                          Margin="0 0 4 0">
+                <controls:NcListingDescriptionBox Name="DescriptionBox"
+                                                  HorizontalExpand="True"
+                                                  VerticalExpand="True" />
+                <controls:NcBarterPreviewControl Name="BarterPreview"
+                                                 HorizontalExpand="True" />
+            </BoxContainer>
 
             <!-- Actions -->
             <BoxContainer Name="ActionColumn"
                           Orientation="Vertical"
                           SeparationOverride="6"
                           HorizontalExpand="False"
-                          MinWidth="112"
+                          MinWidth="148"
                           RectClipContent="True"
                           Margin="4 0 0 0">
 

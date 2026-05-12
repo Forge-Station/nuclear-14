@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Content.Client._NC.Trade.Theme;
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
@@ -18,17 +19,18 @@ namespace Content.Client._NC.Trade.Controls;
 public sealed partial class NcStoreListingControl : PanelContainer
 {
     private const int MaxTotalDisplay = 999_999;
-    private const int DescMaxChars = 220;
+    private const int DescMaxChars = 180;
 
     private const float CompactSwitchFloor = 780f;
-    private const float MinHorizontalDescriptionWidth = 280f;
+    private const float MinHorizontalDescriptionWidth = 360f;
     private const float HorizontalChromeWidth = 44f;
     private const float IconBlockWidth = 78f;
-    private const float ActionColumnMinWidth = 136f;
+    private const float ActionColumnMinWidth = 160f;
     private const int ActionColumnRightPad = 6;
 
     private readonly bool _actionsEnabled;
     private readonly IUserInterfaceManager _ui = IoCManager.Resolve<IUserInterfaceManager>();
+    private readonly IPrototypeManager _prototypeManager;
 
     private int _maxQty;
     private int _qty;
@@ -49,7 +51,8 @@ public sealed partial class NcStoreListingControl : PanelContainer
         _staticData = data;
         _actionsEnabled = actionsEnabled;
 
-        var pm = IoCManager.Resolve<IPrototypeManager>();
+        _prototypeManager = IoCManager.Resolve<IPrototypeManager>();
+        var pm = _prototypeManager;
         pm.TryIndex<EntityPrototype>(data.ProductEntity, out var proto);
 
         NcMatcherPrototype? matcher = null;
@@ -103,6 +106,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
         SetDescription(!string.IsNullOrWhiteSpace(data.Description)
             ? data.Description
             : proto?.Description ?? matcher?.Description);
+        SetupBarterPreview(data, pm);
 
         SetupPriceButton(data, sprites, pm);
 
@@ -164,6 +168,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
             ? float.PositiveInfinity
             : MathF.Max(120f, listingWidth - iconWidth - actionWidth - HorizontalChromeWidth);
 
+        BodyColumn.MaxWidth = descriptionMax;
         DescriptionBox.MaxWidth = descriptionMax;
         DescriptionBox.SetLayoutMaxWidth(descriptionMax);
 
@@ -216,7 +221,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
     private void SetupPriceButton(StoreListingData data, SpriteSystem sprites, IPrototypeManager pm)
     {
-        if (data.Mode != StoreMode.Exchange &&
+        if (data.Mode != StoreMode.Barter &&
             !string.IsNullOrEmpty(data.CurrencyId) &&
             pm.TryIndex<StackPrototype>(data.CurrencyId, out var stack) &&
             pm.TryIndex<EntityPrototype>(stack.Spawn, out var ent) &&
@@ -245,7 +250,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
                 case StoreMode.Sell:
                     OnSellPressed?.Invoke(_qty);
                     break;
-                case StoreMode.Exchange:
+                case StoreMode.Barter:
                     OnBarterPressed?.Invoke(_qty);
                     break;
             }
@@ -266,6 +271,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
         {
             _qty = v;
             UpdatePriceAndButtons();
+            SetupBarterPreview(_staticData, _prototypeManager);
             OnQtyChanged?.Invoke(_qty);
         };
 
@@ -278,18 +284,18 @@ public sealed partial class NcStoreListingControl : PanelContainer
                 OnBuyPressed?.Invoke(_qty);
             else if (data.Mode == StoreMode.Sell)
                 OnSellPressed?.Invoke(_qty);
-            else if (data.Mode == StoreMode.Exchange)
+            else if (data.Mode == StoreMode.Barter)
                 OnBarterPressed?.Invoke(_qty);
         };
     }
 
     private void CalculateMaxQty(StoreListingData data, int balanceHint)
     {
-        var remainingCap = data.Mode is StoreMode.Buy or StoreMode.Exchange
+        var remainingCap = data.Mode is StoreMode.Buy or StoreMode.Barter
             ? (data.Remaining >= 0 ? data.Remaining : int.MaxValue)
             : int.MaxValue;
 
-        var ownedCap = data.Mode is StoreMode.Sell or StoreMode.Exchange
+        var ownedCap = data.Mode is StoreMode.Sell or StoreMode.Barter
             ? Math.Max(0, data.Owned)
             : int.MaxValue;
 
@@ -327,6 +333,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
         }
 
         UpdatePriceAndButtons();
+        SetupBarterPreview(_staticData, _prototypeManager);
         UpdateLabelsAndVisibility(_staticData);
         ApplyResponsiveLayout();
     }
@@ -339,7 +346,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
             !_actionsEnabled ||
             (_staticData.Mode == StoreMode.Buy && (_staticData.Remaining == 0 || noQty)) ||
             (_staticData.Mode == StoreMode.Sell && _staticData.Owned <= 0) ||
-            (_staticData.Mode == StoreMode.Exchange && (_staticData.Remaining == 0 || _staticData.Owned <= 0));
+            (_staticData.Mode == StoreMode.Barter && (_staticData.Remaining == 0 || _staticData.Owned <= 0));
 
         PriceButton.Disabled = disablePrice;
         PriceButton.RefreshVisualState();
@@ -357,9 +364,9 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
     private void UpdateTotalPrice(StoreListingData data)
     {
-        if (data.Mode == StoreMode.Exchange)
+        if (data.Mode == StoreMode.Barter)
         {
-            PriceButton.SetPriceText("Обмен");
+            PriceButton.SetPriceText(Loc.GetString("nc-store-barter-button"));
             PriceButton.SetUnitPriceText(string.Empty);
             return;
         }
@@ -369,6 +376,184 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
         PriceButton.SetPriceText(FormatCompactPrice(total));
         PriceButton.SetUnitPriceText(string.Empty);
+    }
+
+
+    private void SetupBarterPreview(StoreListingData data, IPrototypeManager pm)
+    {
+        if (data.Mode != StoreMode.Barter)
+        {
+            BarterPreview.Clear();
+            return;
+        }
+
+        var multiplier = Math.Max(1, _qty);
+
+        var costText = FormatBarterCost(data.BarterCost, pm, multiplier);
+        var receiveText = FormatBarterReceive(data.BarterReceive, pm, multiplier);
+
+        BarterPreview.SetPreview(
+            costText,
+            receiveText,
+            ResolveCostIconPrototype(data.BarterCost, pm),
+            ResolveReceiveIconPrototype(data.BarterReceive, pm));
+    }
+
+    private static string FormatBarterCost(List<NcBarterCostEntry> entries, IPrototypeManager pm, int multiplier)
+    {
+        if (entries.Count == 0)
+            return string.Empty;
+
+        var parts = new List<string>(entries.Count);
+        for (var i = 0; i < entries.Count; i++)
+        {
+            var entry = entries[i];
+            var name = ResolveCostName(entry, pm);
+            if (string.IsNullOrWhiteSpace(name))
+                continue;
+
+            parts.Add(FormatAmountName(ScaleAmount(entry.Count, multiplier), name));
+        }
+
+        return string.Join(", ", parts);
+    }
+
+    private static string FormatBarterReceive(List<NcBarterReceiveEntry> entries, IPrototypeManager pm, int multiplier)
+    {
+        if (entries.Count == 0)
+            return string.Empty;
+
+        var parts = new List<string>(entries.Count);
+        for (var i = 0; i < entries.Count; i++)
+        {
+            var entry = entries[i];
+            var name = ResolveReceiveName(entry, pm);
+            if (string.IsNullOrWhiteSpace(name))
+                continue;
+
+            parts.Add(FormatAmountName(ScaleAmount(entry.Count, multiplier), name));
+        }
+
+        return string.Join(", ", parts);
+    }
+
+    private static int ScaleAmount(int count, int multiplier)
+    {
+        var amount = Math.Max(1, count);
+        var qty = Math.Max(1, multiplier);
+        var scaled = (long) amount * qty;
+
+        return scaled > int.MaxValue
+            ? int.MaxValue
+            : (int) scaled;
+    }
+
+    private static string FormatAmountName(int count, string name)
+    {
+        var amount = Math.Max(1, count);
+        return amount == 1 ? name : $"{amount}× {name}";
+    }
+
+    private static string ResolveCostName(NcBarterCostEntry entry, IPrototypeManager pm)
+    {
+        if (!string.IsNullOrWhiteSpace(entry.Prototype))
+            return ResolveEntityName(entry.Prototype, pm);
+
+        if (!string.IsNullOrWhiteSpace(entry.Group))
+        {
+            if (pm.TryIndex<NcItemGroupPrototype>(entry.Group, out var group))
+                return !string.IsNullOrWhiteSpace(group.Name) ? group.Name : group.ID;
+
+            return entry.Group;
+        }
+
+        if (!string.IsNullOrWhiteSpace(entry.Currency))
+            return ResolveCurrencyName(entry.Currency, pm);
+
+        return string.Empty;
+    }
+
+    private static string ResolveReceiveName(NcBarterReceiveEntry entry, IPrototypeManager pm)
+    {
+        if (!string.IsNullOrWhiteSpace(entry.Prototype))
+            return ResolveEntityName(entry.Prototype, pm);
+
+        if (!string.IsNullOrWhiteSpace(entry.Currency))
+            return ResolveCurrencyName(entry.Currency, pm);
+
+        return string.Empty;
+    }
+
+    private static string ResolveEntityName(string prototype, IPrototypeManager pm)
+    {
+        return pm.TryIndex<EntityPrototype>(prototype, out var entity)
+            ? entity.Name
+            : prototype;
+    }
+
+    private static string ResolveCurrencyName(string currency, IPrototypeManager pm)
+    {
+        if (pm.TryIndex<StackPrototype>(currency, out var stack) &&
+            pm.TryIndex<EntityPrototype>(stack.Spawn, out var entity))
+            return entity.Name;
+
+        return currency;
+    }
+
+    private static string? ResolveCostIconPrototype(List<NcBarterCostEntry> entries, IPrototypeManager pm)
+    {
+        for (var i = 0; i < entries.Count; i++)
+        {
+            var entry = entries[i];
+
+            if (!string.IsNullOrWhiteSpace(entry.Prototype))
+                return entry.Prototype;
+
+            if (!string.IsNullOrWhiteSpace(entry.Group) &&
+                pm.TryIndex<NcItemGroupPrototype>(entry.Group, out var group))
+            {
+                if (!string.IsNullOrWhiteSpace(group.Icon))
+                    return group.Icon;
+
+                if (group.Prototypes.Count > 0 && !string.IsNullOrWhiteSpace(group.Prototypes[0]))
+                    return group.Prototypes[0];
+            }
+
+            if (!string.IsNullOrWhiteSpace(entry.Currency) &&
+                TryResolveCurrencyEntity(entry.Currency, pm, out var currencyEntity))
+                return currencyEntity;
+        }
+
+        return null;
+    }
+
+    private static string? ResolveReceiveIconPrototype(List<NcBarterReceiveEntry> entries, IPrototypeManager pm)
+    {
+        for (var i = 0; i < entries.Count; i++)
+        {
+            var entry = entries[i];
+
+            if (!string.IsNullOrWhiteSpace(entry.Prototype))
+                return entry.Prototype;
+
+            if (!string.IsNullOrWhiteSpace(entry.Currency) &&
+                TryResolveCurrencyEntity(entry.Currency, pm, out var currencyEntity))
+                return currencyEntity;
+        }
+
+        return null;
+    }
+
+    private static bool TryResolveCurrencyEntity(string currency, IPrototypeManager pm, out string entity)
+    {
+        entity = string.Empty;
+
+        if (!pm.TryIndex<StackPrototype>(currency, out var stack) ||
+            string.IsNullOrWhiteSpace(stack.Spawn))
+            return false;
+
+        entity = stack.Spawn;
+        return true;
     }
 
     public void ApplyUiTheme(StoreUiColorsData colors)
@@ -406,3 +591,4 @@ public sealed partial class NcStoreListingControl : PanelContainer
     }
 
 }
+

@@ -37,7 +37,7 @@ public sealed partial class NcStoreMenu : FancyWindow
     private readonly List<string> _visibleBuyIds = new();
     private readonly List<string> _visibleSellIds = new();
     private readonly HashSet<string> _visibleUnionScratch = new();
-    private bool _disposed;
+    private bool _closed;
     private bool _hasBarterTab;
     private bool _hasBuyTab;
     private bool _hasContractsTab;
@@ -60,7 +60,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         IoCManager.InjectDependencies(this);
         TabContainer.SetTabTitle(TabBuy, Loc.GetString("nc-store-tab-buy"));
         TabContainer.SetTabTitle(TabSell, Loc.GetString("nc-store-tab-sell"));
-        TabContainer.SetTabTitle(TabBarter, "Обмен");
+        TabContainer.SetTabTitle(TabBarter, Loc.GetString("nc-store-tab-barter"));
         TabContainer.SetTabTitle(TabContracts, Loc.GetString("nc-store-tab-contracts"));
         ApplyUiTheme(_uiColors);
         _sprites = IoCManager.Resolve<IEntitySystemManager>().GetEntitySystem<SpriteSystem>();
@@ -70,7 +70,7 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         BuyView.Initialize(StoreMode.Buy, _proto, _sprites, Loc.GetString("nc-store-tab-buy"), false);
         SellView.Initialize(StoreMode.Sell, _proto, _sprites, Loc.GetString("nc-store-tab-sell"), true);
-        BarterView.Initialize(StoreMode.Exchange, _proto, _sprites, "Обмен", false);
+        BarterView.Initialize(StoreMode.Barter, _proto, _sprites, Loc.GetString("nc-store-tab-barter"), false);
 
         BuyView.ConfigureCategories(GetCategoryDisplayName, GetCategoryToolTip);
         SellView.ConfigureCategories(GetCategoryDisplayName, GetCategoryToolTip);
@@ -99,7 +99,7 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         Header.OnSearchChanged += text =>
         {
-            if (_disposed)
+            if (_closed)
                 return;
 
             _search = text;
@@ -257,11 +257,11 @@ public sealed partial class NcStoreMenu : FancyWindow
         List<StoreListingStaticData> listings,
         bool hasBuyTab,
         bool hasSellTab,
-        bool hasExchangeTab,
+        bool hasBarterTab,
         bool hasContractsTab,
         StoreUiColorsData? uiColors
     ) =>
-        _binder.PopulateCatalog(listings, hasBuyTab, hasSellTab, hasExchangeTab, hasContractsTab, uiColors);
+        _binder.PopulateCatalog(listings, hasBuyTab, hasSellTab, hasBarterTab, hasContractsTab, uiColors);
 
 
     private void RebuildCategoriesFromCatalog()
@@ -285,7 +285,7 @@ public sealed partial class NcStoreMenu : FancyWindow
                 _scratchBuyCatSet.Add(it.Category);
             else if (it.Mode == StoreMode.Sell)
                 _scratchSellCatSet.Add(it.Category);
-            else if (it.Mode == StoreMode.Exchange)
+            else if (it.Mode == StoreMode.Barter)
                 _scratchBarterCatSet.Add(it.Category);
         }
 
@@ -341,7 +341,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         Dictionary<string, int> massTotals,
         bool hasBuyTab,
         bool hasSellTab,
-        bool hasExchangeTab,
+        bool hasBarterTab,
         bool hasContractsTab,
         List<ContractClientData> contracts,
         int contractSkipCost,
@@ -355,7 +355,7 @@ public sealed partial class NcStoreMenu : FancyWindow
             massTotals,
             hasBuyTab,
             hasSellTab,
-            hasExchangeTab,
+            hasBarterTab,
             hasContractsTab,
             contracts,
             contractSkipCost,
@@ -401,15 +401,23 @@ public sealed partial class NcStoreMenu : FancyWindow
         return currencyId;
     }
 
-    [Obsolete("Controls should only be removed from UI tree instead of being disposed")]
-    protected override void Dispose(bool disposing)
+    public void CleanupBeforeClose()
     {
-        _disposed = true;
+        if (_closed)
+            return;
+
+        _closed = true;
+
         BuyView.ClearCaches();
         SellView.ClearCaches();
         BarterView.ClearCaches();
         _catalogModel.Clear();
-
-        base.Dispose(disposing);
+        _balancesByCurrency.Clear();
+        _massSellTotals.Clear();
+        _visibleBuyIds.Clear();
+        _visibleSellIds.Clear();
+        _visibleBarterIds.Clear();
+        _visibleUnionScratch.Clear();
+        _lastVisibleIdsSig = 0;
     }
 }

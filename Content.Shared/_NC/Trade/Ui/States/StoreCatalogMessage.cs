@@ -10,7 +10,7 @@ public sealed class StoreCatalogMessage : BoundUserInterfaceMessage
         List<StoreListingStaticData> listings,
         bool hasBuyTab,
         bool hasSellTab,
-        bool hasExchangeTab,
+        bool hasBarterTab,
         bool hasContractsTab,
         StoreUiColorsData? uiColors = null)
     {
@@ -18,7 +18,7 @@ public sealed class StoreCatalogMessage : BoundUserInterfaceMessage
         Listings = listings;
         HasBuyTab = hasBuyTab;
         HasSellTab = hasSellTab;
-        HasExchangeTab = hasExchangeTab;
+        HasBarterTab = hasBarterTab;
         HasContractsTab = hasContractsTab;
         UiColors = uiColors ?? new StoreUiColorsData();
     }
@@ -27,7 +27,7 @@ public sealed class StoreCatalogMessage : BoundUserInterfaceMessage
     public List<StoreListingStaticData> Listings { get; }
     public bool HasBuyTab { get; }
     public bool HasSellTab { get; }
-    public bool HasExchangeTab { get; }
+    public bool HasBarterTab { get; }
     public bool HasContractsTab { get; }
     public StoreUiColorsData UiColors { get; }
 }

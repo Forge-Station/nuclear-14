@@ -103,7 +103,7 @@ public sealed partial class NcListingPriceButtonControl : Button
             border = _hovered ? SellHoverBorder : SellBorder;
             textColor = SellText;
         }
-        else if (_mode == StoreMode.Buy || _mode == StoreMode.Exchange)
+        else if (_mode == StoreMode.Buy || _mode == StoreMode.Barter)
         {
             background = _hovered ? BuyHoverBackground : BuyBackground;
             border = _hovered ? BuyHoverBorder : BuyBorder;

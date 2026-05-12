@@ -266,7 +266,7 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
                     DisplayName = entry.Name,
                     Description = entry.Description,
                     MatchMode = PrototypeMatchMode.Exact,
-                    Mode = StoreMode.Exchange,
+                    Mode = StoreMode.Barter,
                     Categories = new List<string> { categoryName },
                     Conditions = new List<ListingConditionPrototype>(),
                     RemainingCount = entry.Count,

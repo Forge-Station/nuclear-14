@@ -1,8 +1,8 @@
 <Button xmlns="https://spacestation14.io"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         ClipText="False"
-        MinSize="124 34"
-        MaxSize="180 34"
+        MinSize="132 34"
+        MaxSize="210 34"
         HorizontalExpand="False"
         Margin="0"
         Text="">

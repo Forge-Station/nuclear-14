@@ -583,7 +583,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         var currencyId = string.Empty;
         var price = 0;
-        if (listing.Mode != StoreMode.Exchange && !TryPickUiCurrencyAndPrice(comp, listing, out currencyId, out price))
+        if (listing.Mode != StoreMode.Barter && !TryPickUiCurrencyAndPrice(comp, listing, out currencyId, out price))
             return false;
 
         var category = listing.Categories.Count > 0
@@ -611,7 +611,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         NcStoreComponent comp,
         List<StoreListingStaticData> list)
     {
-        var (hasBuy, hasSell, hasExchange) = GetCatalogModeFlags(list);
+        var (hasBuy, hasSell, hasBarter) = GetCatalogModeFlags(list);
         var uiColors = ResolveUiColors(comp);
 
         return new(
@@ -619,7 +619,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             list,
             hasBuy,
             hasSell,
-            hasExchange,
+            hasBarter,
             HasContractsProfile(comp),
             uiColors
         );
@@ -680,11 +680,11 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         };
     }
 
-    private static (bool HasBuy, bool HasSell, bool HasExchange) GetCatalogModeFlags(List<StoreListingStaticData> list)
+    private static (bool HasBuy, bool HasSell, bool HasBarter) GetCatalogModeFlags(List<StoreListingStaticData> list)
     {
         var hasBuy = false;
         var hasSell = false;
-        var hasExchange = false;
+        var hasBarter = false;
 
         foreach (var listing in list)
         {
@@ -692,14 +692,14 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 hasBuy = true;
             else if (listing.Mode == StoreMode.Sell)
                 hasSell = true;
-            else if (listing.Mode == StoreMode.Exchange)
-                hasExchange = true;
+            else if (listing.Mode == StoreMode.Barter)
+                hasBarter = true;
 
-            if (hasBuy && hasSell && hasExchange)
+            if (hasBuy && hasSell && hasBarter)
                 break;
         }
 
-        return (hasBuy, hasSell, hasExchange);
+        return (hasBuy, hasSell, hasBarter);
     }
 
     private static List<NcBarterCostEntry> CloneBarterCostForCatalog(List<NcBarterCostEntry> source)

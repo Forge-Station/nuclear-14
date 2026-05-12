@@ -7,7 +7,7 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class StoreStructuredSystem : EntitySystem
 {
-    private readonly record struct DynamicTabState(bool HasBuyTab, bool HasSellTab, bool HasExchangeTab, bool HasContractsTab);
+    private readonly record struct DynamicTabState(bool HasBuyTab, bool HasSellTab, bool HasBarterTab, bool HasContractsTab);
 
     private readonly record struct DynamicContractNeeds(
         bool HasTakenContracts,
@@ -71,7 +71,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     {
         var hasBuyTab = false;
         var hasSellTab = false;
-        var hasExchangeTab = false;
+        var hasBarterTab = false;
 
         foreach (var listing in comp.Listings)
         {
@@ -79,14 +79,14 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 hasBuyTab = true;
             else if (listing.Mode == StoreMode.Sell)
                 hasSellTab = true;
-            else if (listing.Mode == StoreMode.Exchange)
-                hasExchangeTab = true;
+            else if (listing.Mode == StoreMode.Barter)
+                hasBarterTab = true;
 
-            if (hasBuyTab && hasSellTab && hasExchangeTab)
+            if (hasBuyTab && hasSellTab && hasBarterTab)
                 break;
         }
 
-        return new(hasBuyTab, hasSellTab, hasExchangeTab, HasContractsProfile(comp));
+        return new(hasBuyTab, hasSellTab, hasBarterTab, HasContractsProfile(comp));
     }
 
     private DynamicContractNeeds GetDynamicContractNeeds(NcStoreComponent comp, bool hasContractsTab)
@@ -229,11 +229,11 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             if (userSnap == null || string.IsNullOrWhiteSpace(listing.ProductEntity))
                 continue;
 
-            var owned = listing.Mode == StoreMode.Exchange
+            var owned = listing.Mode == StoreMode.Barter
                 ? _logic.GetMaxBarterCountFromSnapshot(listing, userSnap)
                 : _inventory.GetOwnedFromSnapshot(userSnap, listing.ProductEntity, listing.MatchMode);
 
-            if (ShouldSendListingOwned(owned, isVisibleBuyListing) || listing.Mode == StoreMode.Exchange)
+            if (ShouldSendListingOwned(owned, isVisibleBuyListing) || listing.Mode == StoreMode.Barter)
                 buf.OwnedById[listing.Id] = owned;
         }
     }
@@ -321,7 +321,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         DynamicScratch scratch,
         DynamicStateBuffer buf)
     {
-        if (scratch.EqualsLast(buf, comp.CatalogRevision, tabs.HasBuyTab, tabs.HasSellTab, tabs.HasExchangeTab, tabs.HasContractsTab))
+        if (scratch.EqualsLast(buf, comp.CatalogRevision, tabs.HasBuyTab, tabs.HasSellTab, tabs.HasBarterTab, tabs.HasContractsTab))
             return;
 
         comp.UiRevision = unchecked(comp.UiRevision + 1);
@@ -340,14 +340,14 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 new List<ContractClientData>(buf.Contracts),
                 tabs.HasBuyTab,
                 tabs.HasSellTab,
-                tabs.HasExchangeTab,
+                tabs.HasBarterTab,
                 tabs.HasContractsTab,
                 buf.ContractSkipCost,
                 buf.ContractSkipCurrency
             )
         );
 
-        scratch.Commit(comp.CatalogRevision, tabs.HasBuyTab, tabs.HasSellTab, tabs.HasExchangeTab, tabs.HasContractsTab);
+        scratch.Commit(comp.CatalogRevision, tabs.HasBuyTab, tabs.HasSellTab, tabs.HasBarterTab, tabs.HasContractsTab);
     }
 
     private bool TryFindWatchedRoot(EntityUid start, out EntityUid watchedRoot)

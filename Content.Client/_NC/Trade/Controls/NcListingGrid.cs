@@ -285,7 +285,7 @@ public sealed partial class NcListingGrid : BoxContainer
             var ctrl = tuple.Ctrl;
             ctrl.ApplyUiTheme(_uiColors);
 
-            ctrl.OnBarterPressed = _mode == StoreMode.Exchange ? qty => _emit(it, qty) : null;
+            ctrl.OnBarterPressed = _mode == StoreMode.Barter ? qty => _emit(it, qty) : null;
             ctrl.OnBuyPressed = _mode == StoreMode.Buy ? qty => _emit(it, qty) : null;
             ctrl.OnSellPressed = _mode == StoreMode.Sell ? qty => _emit(it, qty) : null;
 

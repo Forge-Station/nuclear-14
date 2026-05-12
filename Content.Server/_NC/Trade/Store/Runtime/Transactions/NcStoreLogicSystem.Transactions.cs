@@ -332,11 +332,4 @@ public sealed partial class NcStoreLogicSystem
             $"TrySellFromContainer: OK {listing.ProductEntity} x{sold} for {unitPrice} {currency} each (container={ToPrettyString(container)})");
         return true;
     }
-
-    // Legacy Exchange is intentionally disabled. New barter uses TryBarter and explicit ncBarterPreset/ncBarterCategory YAML.
-    public bool TryExchange(string listingId, EntityUid machine, NcStoreComponent? store, EntityUid user)
-    {
-        Sawmill.Warning("[NcStore] Legacy TryExchange was called, but legacy Exchange is disabled. Use Barter V1.");
-        return false;
-    }
 }

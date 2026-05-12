@@ -101,7 +101,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
             cat.Listings,
             cat.HasBuyTab,
             cat.HasSellTab,
-            cat.HasExchangeTab,
+            cat.HasBarterTab,
             cat.HasContractsTab,
             cat.UiColors);
 
@@ -127,7 +127,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
             st.MassSellTotals,
             st.HasBuyTab,
             st.HasSellTab,
-            st.HasExchangeTab,
+            st.HasBarterTab,
             st.HasContractsTab,
             st.Contracts,
             st.ContractSkipCost,
@@ -171,6 +171,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
 
         DetachMenuHandlers(_menu);
 
+        _menu.CleanupBeforeClose();
         _menu.Orphan();
         _menu = null;
         _lastCatalogRevision = int.MinValue;
@@ -257,6 +258,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         if (_menu != null)
         {
             DetachMenuHandlers(_menu);
+            _menu.CleanupBeforeClose();
             _menu.Orphan();
             _menu = null;
         }

@@ -8,7 +8,7 @@ public sealed partial class NcStoreMenu
 {
     private void RefreshListingsDynamicOnly()
     {
-        if (_disposed)
+        if (_closed)
             return;
 
         BuyView.UpdateDynamicOnly(GetBalanceForCurrency);

@@ -7,5 +7,5 @@ public enum StoreMode
 {
     Buy,
     Sell,
-    Exchange
+    Barter
 }

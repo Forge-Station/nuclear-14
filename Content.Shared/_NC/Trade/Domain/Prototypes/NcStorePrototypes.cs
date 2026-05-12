@@ -62,8 +62,8 @@ public sealed partial class NcStoreProfilePrototype : IPrototype
     public List<ProtoId<StorePresetStructuredPrototype>> Sell { get; private set; } = new();
 
     /// <summary>
-    /// Barter / exchange listings. These are intentionally separate from legacy StoreMode.Exchange
-    /// transaction code: profile authors define cost/receive entries explicitly.
+    /// Barter listings. Profile authors define cost/receive entries explicitly.
+    /// Execution is handled only by the Barter V1 transaction path.
     /// </summary>
     [DataField("barter")]
     public List<ProtoId<NcBarterPresetPrototype>> Barter { get; private set; } = new();

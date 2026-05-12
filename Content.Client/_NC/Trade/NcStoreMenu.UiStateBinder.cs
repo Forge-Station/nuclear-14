@@ -76,7 +76,7 @@ public sealed partial class NcStoreMenu
             List<StoreListingStaticData> listings,
             bool hasBuyTab,
             bool hasSellTab,
-            bool hasExchangeTab,
+            bool hasBarterTab,
             bool hasContractsTab,
             StoreUiColorsData? uiColors
         )
@@ -85,7 +85,7 @@ public sealed partial class NcStoreMenu
 
             _m._hasBuyTab = hasBuyTab;
             _m._hasSellTab = hasSellTab;
-            _m._hasBarterTab = hasExchangeTab;
+            _m._hasBarterTab = hasBarterTab;
             _m._hasContractsTab = hasContractsTab;
 
             _m.ApplyTabsVisibility();
@@ -99,7 +99,7 @@ public sealed partial class NcStoreMenu
                 if (string.IsNullOrWhiteSpace(s.Id) || string.IsNullOrWhiteSpace(s.ProductEntity))
                     continue;
 
-                if (s.Mode != StoreMode.Buy && s.Mode != StoreMode.Sell && s.Mode != StoreMode.Exchange)
+                if (s.Mode != StoreMode.Buy && s.Mode != StoreMode.Sell && s.Mode != StoreMode.Barter)
                     continue;
 
                 filtered.Add(s);
@@ -148,7 +148,7 @@ public sealed partial class NcStoreMenu
             Dictionary<string, int> massTotals,
             bool hasBuyTab,
             bool hasSellTab,
-            bool hasExchangeTab,
+            bool hasBarterTab,
             bool hasContractsTab,
             List<ContractClientData> contracts,
             int contractSkipCost,
@@ -158,12 +158,12 @@ public sealed partial class NcStoreMenu
             var tabsChanged = !_hasLastDynamic ||
                 hasBuyTab != _m._hasBuyTab ||
                 hasSellTab != _m._hasSellTab ||
-                hasExchangeTab != _m._hasBarterTab ||
+                hasBarterTab != _m._hasBarterTab ||
                 hasContractsTab != _m._hasContractsTab;
 
             _m._hasBuyTab = hasBuyTab;
             _m._hasSellTab = hasSellTab;
-            _m._hasBarterTab = hasExchangeTab;
+            _m._hasBarterTab = hasBarterTab;
             _m._hasContractsTab = hasContractsTab;
 
             if (tabsChanged)

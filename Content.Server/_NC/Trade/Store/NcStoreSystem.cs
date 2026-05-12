@@ -260,7 +260,7 @@ public sealed class NcStoreSystem : EntitySystem
         if (string.IsNullOrEmpty(requestedId))
             return;
 
-        if (!TryGetListing(uid, comp, actor, StoreMode.Exchange, requestedId, out var listing))
+        if (!TryGetListing(uid, comp, actor, StoreMode.Barter, requestedId, out var listing))
         {
             PopupFail(actor, Loc.GetString("nc-store-popup-invalid-listing"));
             return;

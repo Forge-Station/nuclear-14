@@ -1,0 +1,8 @@
+nc-store-tab-barter = Barter
+nc-store-barter-button = Barter
+nc-store-barter-unavailable = Unavailable
+nc-store-barter-available = Max: {$count}
+nc-store-barter-give = Give
+nc-store-barter-receive = Receive
+nc-store-barter-cost-empty = no cost
+nc-store-barter-receive-empty = no reward
