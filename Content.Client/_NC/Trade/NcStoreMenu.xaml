@@ -59,6 +59,15 @@
                                                       HorizontalExpand="True" />
                     </PanelContainer>
 
+                    <!-- Barter -->
+                    <PanelContainer Name="TabBarter"
+                                    VerticalExpand="True"
+                                    HorizontalExpand="True">
+                        <controls:NcStoreListingsView Name="BarterView"
+                                                      VerticalExpand="True"
+                                                      HorizontalExpand="True" />
+                    </PanelContainer>
+
                     <!-- Contracts -->
                     <PanelContainer Name="TabContracts"
                                     VerticalExpand="True"

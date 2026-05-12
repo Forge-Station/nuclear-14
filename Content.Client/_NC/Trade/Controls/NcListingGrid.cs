@@ -23,7 +23,10 @@ public sealed partial class NcListingGrid : BoxContainer
         int Price,
         string CurrencyId,
         StoreMode Mode,
-        int UnitsPerPurchase);
+        int UnitsPerPurchase,
+        string DisplayName,
+        string Description,
+        int BarterSig);
 
     private readonly Dictionary<string, (NcStoreListingControl Ctrl, ListingSig Sig)> _cache = new();
     private readonly Dictionary<string, StoreListingData> _itemById = new();
@@ -282,6 +285,7 @@ public sealed partial class NcListingGrid : BoxContainer
             var ctrl = tuple.Ctrl;
             ctrl.ApplyUiTheme(_uiColors);
 
+            ctrl.OnBarterPressed = _mode == StoreMode.Exchange ? qty => _emit(it, qty) : null;
             ctrl.OnBuyPressed = _mode == StoreMode.Buy ? qty => _emit(it, qty) : null;
             ctrl.OnSellPressed = _mode == StoreMode.Sell ? qty => _emit(it, qty) : null;
 
@@ -314,7 +318,38 @@ public sealed partial class NcListingGrid : BoxContainer
         d.Price,
         d.CurrencyId,
         d.Mode,
-        d.UnitsPerPurchase);
+        d.UnitsPerPurchase,
+        d.DisplayName,
+        d.Description,
+        ComputeBarterSig(d));
+
+
+
+    private static int ComputeBarterSig(StoreListingData d)
+    {
+        unchecked
+        {
+            var h = 17;
+            for (var i = 0; i < d.BarterCost.Count; i++)
+            {
+                var c = d.BarterCost[i];
+                h = h * 31 + (StringComparer.Ordinal.GetHashCode(c.Prototype ?? string.Empty));
+                h = h * 31 + (StringComparer.Ordinal.GetHashCode(c.Group ?? string.Empty));
+                h = h * 31 + (StringComparer.Ordinal.GetHashCode(c.Currency ?? string.Empty));
+                h = h * 31 + c.Count;
+            }
+
+            for (var i = 0; i < d.BarterReceive.Count; i++)
+            {
+                var r = d.BarterReceive[i];
+                h = h * 31 + (StringComparer.Ordinal.GetHashCode(r.Prototype ?? string.Empty));
+                h = h * 31 + (StringComparer.Ordinal.GetHashCode(r.Currency ?? string.Empty));
+                h = h * 31 + r.Count;
+            }
+
+            return h;
+        }
+    }
 
     private void AddToSearchIndex(string protoId)
     {

@@ -24,6 +24,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
 
     private void DetachMenuHandlers(NcStoreMenu menu)
     {
+        menu.OnBarterPressed -= OnBarter;
         menu.OnBuyPressed -= OnBuy;
         menu.OnSellPressed -= OnSell;
         menu.OnMassSellPulledCrate -= OnMassSellPulledCrate;
@@ -100,6 +101,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
             cat.Listings,
             cat.HasBuyTab,
             cat.HasSellTab,
+            cat.HasExchangeTab,
             cat.HasContractsTab,
             cat.UiColors);
 
@@ -125,6 +127,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
             st.MassSellTotals,
             st.HasBuyTab,
             st.HasSellTab,
+            st.HasExchangeTab,
             st.HasContractsTab,
             st.Contracts,
             st.ContractSkipCost,
@@ -148,6 +151,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         else
             _menu.SetDisplayTitle(string.Empty);
 
+        _menu.OnBarterPressed += OnBarter;
         _menu.OnBuyPressed += OnBuy;
         _menu.OnSellPressed += OnSell;
         _menu.OnMassSellPulledCrate += OnMassSellPulledCrate;
@@ -189,6 +193,14 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
             return;
 
         SendMessage(new StoreSellListingBoundUiMessage(data.ListingId, qty, data.Flavor == StoreListingFlavor.Crate));
+    }
+
+    private void OnBarter(StoreListingData data, int qty)
+    {
+        if (Actor == null)
+            return;
+
+        SendMessage(new StoreBarterListingBoundUiMessage(data.ListingId, qty));
     }
 
     private void OnContractClaim(string contractId)

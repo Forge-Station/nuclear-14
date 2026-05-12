@@ -13,5 +13,6 @@ public sealed partial class NcStoreMenu
 
         BuyView.UpdateDynamicOnly(GetBalanceForCurrency);
         SellView.UpdateDynamicOnly(static _ => int.MaxValue);
+        BarterView.UpdateDynamicOnly(static _ => int.MaxValue);
     }
 }

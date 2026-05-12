@@ -62,7 +62,9 @@ public sealed partial class NcStoreListingControl : PanelContainer
                 pm.TryIndex<EntityPrototype>(matcher.Items[0], out matcherFallbackProto);
         }
 
-        var displayName = proto?.Name;
+        var displayName = data.DisplayName;
+        if (string.IsNullOrWhiteSpace(displayName))
+            displayName = proto?.Name;
         if (string.IsNullOrWhiteSpace(displayName))
             displayName = matcher?.Name;
         if (string.IsNullOrWhiteSpace(displayName))
@@ -98,7 +100,9 @@ public sealed partial class NcStoreListingControl : PanelContainer
             IconSlotBackground.Visible = false;
         }
 
-        SetDescription(proto?.Description ?? matcher?.Description);
+        SetDescription(!string.IsNullOrWhiteSpace(data.Description)
+            ? data.Description
+            : proto?.Description ?? matcher?.Description);
 
         SetupPriceButton(data, sprites, pm);
 
@@ -116,6 +120,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
         ApplyResponsiveLayout();
     }
 
+    public Action<int>? OnBarterPressed { get; set; }
     public Action<int>? OnBuyPressed { get; set; }
     public Action<int>? OnSellPressed { get; set; }
     public Action<int>? OnQtyChanged { get; set; }
@@ -211,7 +216,8 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
     private void SetupPriceButton(StoreListingData data, SpriteSystem sprites, IPrototypeManager pm)
     {
-        if (!string.IsNullOrEmpty(data.CurrencyId) &&
+        if (data.Mode != StoreMode.Exchange &&
+            !string.IsNullOrEmpty(data.CurrencyId) &&
             pm.TryIndex<StackPrototype>(data.CurrencyId, out var stack) &&
             pm.TryIndex<EntityPrototype>(stack.Spawn, out var ent) &&
             sprites.GetPrototypeIcon(ent.ID).Default is { } currencyTex)
@@ -238,6 +244,9 @@ public sealed partial class NcStoreListingControl : PanelContainer
                     break;
                 case StoreMode.Sell:
                     OnSellPressed?.Invoke(_qty);
+                    break;
+                case StoreMode.Exchange:
+                    OnBarterPressed?.Invoke(_qty);
                     break;
             }
         };
@@ -269,16 +278,18 @@ public sealed partial class NcStoreListingControl : PanelContainer
                 OnBuyPressed?.Invoke(_qty);
             else if (data.Mode == StoreMode.Sell)
                 OnSellPressed?.Invoke(_qty);
+            else if (data.Mode == StoreMode.Exchange)
+                OnBarterPressed?.Invoke(_qty);
         };
     }
 
     private void CalculateMaxQty(StoreListingData data, int balanceHint)
     {
-        var remainingCap = data.Mode == StoreMode.Buy
+        var remainingCap = data.Mode is StoreMode.Buy or StoreMode.Exchange
             ? (data.Remaining >= 0 ? data.Remaining : int.MaxValue)
             : int.MaxValue;
 
-        var ownedCap = data.Mode == StoreMode.Sell
+        var ownedCap = data.Mode is StoreMode.Sell or StoreMode.Exchange
             ? Math.Max(0, data.Owned)
             : int.MaxValue;
 
@@ -327,7 +338,8 @@ public sealed partial class NcStoreListingControl : PanelContainer
         var disablePrice =
             !_actionsEnabled ||
             (_staticData.Mode == StoreMode.Buy && (_staticData.Remaining == 0 || noQty)) ||
-            (_staticData.Mode == StoreMode.Sell && _staticData.Owned <= 0);
+            (_staticData.Mode == StoreMode.Sell && _staticData.Owned <= 0) ||
+            (_staticData.Mode == StoreMode.Exchange && (_staticData.Remaining == 0 || _staticData.Owned <= 0));
 
         PriceButton.Disabled = disablePrice;
         PriceButton.RefreshVisualState();
@@ -345,6 +357,13 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
     private void UpdateTotalPrice(StoreListingData data)
     {
+        if (data.Mode == StoreMode.Exchange)
+        {
+            PriceButton.SetPriceText("Обмен");
+            PriceButton.SetUnitPriceText(string.Empty);
+            return;
+        }
+
         var effectiveQty = _qty > 0 ? _qty : 1;
         var total = (long)data.Price * effectiveQty;
 

@@ -33,6 +33,7 @@ public sealed class NcStoreSystem : EntitySystem
 
         SubscribeLocalEvent<NcStoreComponent, StoreBuyListingBoundUiMessage>(OnBuyRequest);
         SubscribeLocalEvent<NcStoreComponent, StoreSellListingBoundUiMessage>(OnSellRequest);
+        SubscribeLocalEvent<NcStoreComponent, StoreBarterListingBoundUiMessage>(OnBarterRequest);
         SubscribeLocalEvent<NcStoreComponent, StoreMassSellPulledCrateBoundUiMessage>(OnMassSellPulledCrateRequest);
     }
 
@@ -234,6 +235,39 @@ public sealed class NcStoreSystem : EntitySystem
             ok = _logic.TrySell(listing.Id, uid, comp, actor, count);
 
         if (!ok)
+        {
+            PopupFail(actor, Loc.GetString("nc-store-popup-transaction-failed"));
+            return;
+        }
+
+        _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid, AudioParams.Default.WithVolume(-2f));
+        _storeUi.RequestDynamicRefresh(uid, comp, actor);
+    }
+
+
+    private void OnBarterRequest(EntityUid uid, NcStoreComponent comp, StoreBarterListingBoundUiMessage msg)
+    {
+        if (!TryGetLockedUiUser(uid, comp, out var actor))
+            return;
+
+        if (!TryValidateUse(uid, comp, actor, out var fail))
+        {
+            PopupFail(actor, fail);
+            return;
+        }
+
+        var requestedId = msg.Id;
+        if (string.IsNullOrEmpty(requestedId))
+            return;
+
+        if (!TryGetListing(uid, comp, actor, StoreMode.Exchange, requestedId, out var listing))
+        {
+            PopupFail(actor, Loc.GetString("nc-store-popup-invalid-listing"));
+            return;
+        }
+
+        var count = Math.Max(1, msg.Count);
+        if (!_logic.TryBarter(listing.Id, uid, comp, actor, count))
         {
             PopupFail(actor, Loc.GetString("nc-store-popup-transaction-failed"));
             return;

@@ -499,6 +499,9 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
             }
 
+            if (!TryValidateSupplyContractForPool(packId, proto))
+                continue;
+
             var finalWeight = MultiplyWeightsWithClamp(
                 weightMult,
                 entry.Weight,

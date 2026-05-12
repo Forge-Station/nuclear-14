@@ -104,6 +104,8 @@
   - caravan_buy2
   sell:
   - caravan_sell2
+  barter:
+  - CityBarterCurrencyPreset
   contracts: PresetBazar
   theme: TradeUiThemeWasteland
 
@@ -121,6 +123,8 @@
   - caravan_buy2
   sell:
   - caravan_sell2
+  barter:
+  - CityBarterCurrencyPreset
   contracts: PresetBazar
   theme: TradeUiThemeNT
 
@@ -130,6 +134,8 @@
   - caravan_buy2
   sell:
   - caravan_sell2
+  barter:
+  - CityBarterCurrencyPreset
   contracts: PresetBazar
   theme: TradeUiThemeSyndicate
 

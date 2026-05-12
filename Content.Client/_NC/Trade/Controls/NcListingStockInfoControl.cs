@@ -40,6 +40,32 @@ public sealed partial class NcListingStockInfoControl : BoxContainer
             return hasStock;
         }
 
+        if (mode == StoreMode.Exchange)
+        {
+            var canExchange = owned > 0 && remaining != 0;
+            NoStockLabel.Visible = !canExchange;
+            if (!canExchange)
+                NoStockLabel.Text = "Недоступно";
+
+            RemainingLabel.Visible = canExchange && remaining >= 0;
+            if (RemainingLabel.Visible)
+                RemainingLabel.Text = Loc.GetString("nc-store-in-stock", ("count", remaining));
+
+            OwnedLabel.Visible = owned > 0;
+            if (OwnedLabel.Visible)
+                OwnedLabel.Text = $"Доступно обменов: {owned}";
+
+            return canExchange;
+        }
+
+        if (mode != StoreMode.Sell)
+        {
+            NoStockLabel.Visible = false;
+            RemainingLabel.Visible = false;
+            OwnedLabel.Visible = false;
+            return false;
+        }
+
         if (owned <= 0)
         {
             NoStockLabel.Visible = false;

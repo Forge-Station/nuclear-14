@@ -26,6 +26,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         private bool _hasBuyTab;
         private bool _hasCratePreview;
         private bool _hasContracts;
+        private bool _hasExchangeTab;
         private bool _hasContractsFingerprint;
         private int _contractsFingerprint;
         private bool _hasMeta;
@@ -194,6 +195,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             int catalogRevision,
             bool hasBuyTab,
             bool hasSellTab,
+            bool hasExchangeTab,
             bool hasContracts
         )
         {
@@ -203,6 +205,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             if (_catalogRevision != catalogRevision ||
                 _hasBuyTab != hasBuyTab ||
                 _hasSellTab != hasSellTab ||
+                _hasExchangeTab != hasExchangeTab ||
                 _hasContracts != hasContracts)
                 return false;
 
@@ -218,12 +221,13 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 string.Equals(prev.ContractSkipCurrency, next.ContractSkipCurrency, StringComparison.Ordinal);
         }
 
-        public void Commit(int catalogRevision, bool hasBuyTab, bool hasSellTab, bool hasContracts)
+        public void Commit(int catalogRevision, bool hasBuyTab, bool hasSellTab, bool hasExchangeTab, bool hasContracts)
         {
             _activeIndex = 1 - _activeIndex;
             _catalogRevision = catalogRevision;
             _hasBuyTab = hasBuyTab;
             _hasSellTab = hasSellTab;
+            _hasExchangeTab = hasExchangeTab;
             _hasContracts = hasContracts;
             _hasMeta = true;
         }

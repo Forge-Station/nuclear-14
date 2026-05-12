@@ -76,6 +76,7 @@ public sealed partial class NcStoreMenu
             List<StoreListingStaticData> listings,
             bool hasBuyTab,
             bool hasSellTab,
+            bool hasExchangeTab,
             bool hasContractsTab,
             StoreUiColorsData? uiColors
         )
@@ -84,6 +85,7 @@ public sealed partial class NcStoreMenu
 
             _m._hasBuyTab = hasBuyTab;
             _m._hasSellTab = hasSellTab;
+            _m._hasBarterTab = hasExchangeTab;
             _m._hasContractsTab = hasContractsTab;
 
             _m.ApplyTabsVisibility();
@@ -95,6 +97,9 @@ public sealed partial class NcStoreMenu
             {
                 var s = listings[i];
                 if (string.IsNullOrWhiteSpace(s.Id) || string.IsNullOrWhiteSpace(s.ProductEntity))
+                    continue;
+
+                if (s.Mode != StoreMode.Buy && s.Mode != StoreMode.Sell && s.Mode != StoreMode.Exchange)
                     continue;
 
                 filtered.Add(s);
@@ -116,6 +121,7 @@ public sealed partial class NcStoreMenu
 
             _m.BuyView.PrepareSearchIndex(productProtos);
             _m.SellView.PrepareSearchIndex(productProtos);
+            _m.BarterView.PrepareSearchIndex(productProtos);
 
             _m.RebuildCategoriesFromCatalog();
             _m.RebuildItemsFromCatalogAndDynamic();
@@ -123,6 +129,7 @@ public sealed partial class NcStoreMenu
 
             _m.BuyView.SetSearch(string.Empty);
             _m.SellView.SetSearch(string.Empty);
+            _m.BarterView.SetSearch(string.Empty);
             _m.RefreshListings();
             _hasLastDynamic = false;
             _lastContractsHash = 0;
@@ -141,6 +148,7 @@ public sealed partial class NcStoreMenu
             Dictionary<string, int> massTotals,
             bool hasBuyTab,
             bool hasSellTab,
+            bool hasExchangeTab,
             bool hasContractsTab,
             List<ContractClientData> contracts,
             int contractSkipCost,
@@ -150,10 +158,12 @@ public sealed partial class NcStoreMenu
             var tabsChanged = !_hasLastDynamic ||
                 hasBuyTab != _m._hasBuyTab ||
                 hasSellTab != _m._hasSellTab ||
+                hasExchangeTab != _m._hasBarterTab ||
                 hasContractsTab != _m._hasContractsTab;
 
             _m._hasBuyTab = hasBuyTab;
             _m._hasSellTab = hasSellTab;
+            _m._hasBarterTab = hasExchangeTab;
             _m._hasContractsTab = hasContractsTab;
 
             if (tabsChanged)

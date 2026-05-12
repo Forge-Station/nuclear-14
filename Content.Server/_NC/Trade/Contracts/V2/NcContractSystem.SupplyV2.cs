@@ -96,25 +96,10 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         target = default!;
 
+        if (!TryValidateSupplyRequirement(contractId, index, entry))
+            return false;
+
         var hasPrototype = !string.IsNullOrWhiteSpace(entry.Prototype);
-        var hasGroup = !string.IsNullOrWhiteSpace(entry.Group);
-
-        if (hasPrototype == hasGroup)
-        {
-            Sawmill.Warning(
-                hasPrototype
-                    ? $"[ContractsV2] Supply contract '{contractId}' requirement #{index} has both prototype and group. Use exactly one."
-                    : $"[ContractsV2] Supply contract '{contractId}' requirement #{index} has neither prototype nor group.");
-            return false;
-        }
-
-        if (!IsStrictPositiveRange(entry.Count))
-        {
-            Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{contractId}' requirement #{index} has invalid count range " +
-                $"{entry.Count.Min}..{entry.Count.Max}.");
-            return false;
-        }
 
         var required = RollFair(
             new(QuasiKeyKind.Req, store, contractId, $"supply:{index}:{entry.Prototype}:{entry.Group}"),
@@ -126,13 +111,6 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (hasPrototype)
         {
-            if (!_prototypes.HasIndex<EntityPrototype>(entry.Prototype))
-            {
-                Sawmill.Warning(
-                    $"[ContractsV2] Supply contract '{contractId}' references missing entity prototype '{entry.Prototype}'.");
-                return false;
-            }
-
             target = new ContractTargetServerData
             {
                 TargetItem = entry.Prototype,
@@ -141,21 +119,6 @@ public sealed partial class NcContractSystem : EntitySystem
                 MatchMode = PrototypeMatchMode.Exact
             };
             return true;
-        }
-
-        if (!_prototypes.HasIndex<NcItemGroupPrototype>(entry.Group))
-        {
-            Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{contractId}' references missing ncItemGroup '{entry.Group}'. " +
-                "Supply V2 group requirements must reference ncItemGroup prototypes, not legacy matchers.");
-            return false;
-        }
-
-        if (!TryGetContractMatcherSpec(entry.Group, out _))
-        {
-            Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{contractId}' references invalid item group '{entry.Group}'.");
-            return false;
         }
 
         target = new ContractTargetServerData

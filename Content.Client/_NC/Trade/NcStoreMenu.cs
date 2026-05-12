@@ -22,25 +22,30 @@ public sealed partial class NcStoreMenu : FancyWindow
 {
     private readonly Dictionary<string, int> _balancesByCurrency = new();
     private readonly UiStateBinder _binder;
+    private readonly List<string> _barterCats = new();
     private readonly List<string> _buyCats = new();
     private readonly NcStoreClientCatalogModel _catalogModel = new();
     private readonly Dictionary<string, int> _massSellTotals = new();
     private readonly IPrototypeManager _proto;
+    private readonly HashSet<string> _scratchBarterCatSet = new();
     private readonly HashSet<string> _scratchBuyCatSet = new();
     private readonly HashSet<string> _scratchSellCatSet = new();
     private readonly List<string> _sellCats = new();
     private readonly SpriteSystem _sprites;
     private PanelContainer? _windowBackdropPanel;
+    private readonly List<string> _visibleBarterIds = new();
     private readonly List<string> _visibleBuyIds = new();
     private readonly List<string> _visibleSellIds = new();
     private readonly HashSet<string> _visibleUnionScratch = new();
     private bool _disposed;
+    private bool _hasBarterTab;
     private bool _hasBuyTab;
     private bool _hasContractsTab;
     private bool _hasSellTab;
     private int _lastVisibleIdsSig;
     private string _search = string.Empty;
     private string _searchLower = string.Empty;
+    private Control? _tabBarter;
     private Control? _tabBuy;
     private Control? _tabContracts;
     private bool _tabsCaptured;
@@ -55,6 +60,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         IoCManager.InjectDependencies(this);
         TabContainer.SetTabTitle(TabBuy, Loc.GetString("nc-store-tab-buy"));
         TabContainer.SetTabTitle(TabSell, Loc.GetString("nc-store-tab-sell"));
+        TabContainer.SetTabTitle(TabBarter, "Обмен");
         TabContainer.SetTabTitle(TabContracts, Loc.GetString("nc-store-tab-contracts"));
         ApplyUiTheme(_uiColors);
         _sprites = IoCManager.Resolve<IEntitySystemManager>().GetEntitySystem<SpriteSystem>();
@@ -64,9 +70,11 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         BuyView.Initialize(StoreMode.Buy, _proto, _sprites, Loc.GetString("nc-store-tab-buy"), false);
         SellView.Initialize(StoreMode.Sell, _proto, _sprites, Loc.GetString("nc-store-tab-sell"), true);
+        BarterView.Initialize(StoreMode.Exchange, _proto, _sprites, "Обмен", false);
 
         BuyView.ConfigureCategories(GetCategoryDisplayName, GetCategoryToolTip);
         SellView.ConfigureCategories(GetCategoryDisplayName, GetCategoryToolTip);
+        BarterView.ConfigureCategories(GetCategoryDisplayName, GetCategoryToolTip);
 
         BuyView.VisibleIdsChanged += ids =>
         {
@@ -82,6 +90,13 @@ public sealed partial class NcStoreMenu : FancyWindow
             EmitVisibleListingIdsChanged();
         };
 
+        BarterView.VisibleIdsChanged += ids =>
+        {
+            _visibleBarterIds.Clear();
+            _visibleBarterIds.AddRange(ids);
+            EmitVisibleListingIdsChanged();
+        };
+
         Header.OnSearchChanged += text =>
         {
             if (_disposed)
@@ -91,6 +106,7 @@ public sealed partial class NcStoreMenu : FancyWindow
             _searchLower = text.ToLowerInvariant();
             BuyView.SetSearch(_searchLower);
             SellView.SetSearch(_searchLower);
+            BarterView.SetSearch(_searchLower);
             OnSearchChanged?.Invoke(_search);
             RefreshListings();
         };
@@ -125,6 +141,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         };
 
     public event Action<string>? OnSearchChanged;
+    public event Action<StoreListingData, int>? OnBarterPressed;
     public event Action<StoreListingData, int>? OnBuyPressed;
     public event Action<StoreListingData, int>? OnSellPressed;
     public event Action? OnMassSellPulledCrate;
@@ -156,6 +173,13 @@ public sealed partial class NcStoreMenu : FancyWindow
         for (var i = 0; i < _visibleSellIds.Count; i++)
         {
             var id = _visibleSellIds[i];
+            if (!string.IsNullOrWhiteSpace(id))
+                _visibleUnionScratch.Add(id);
+        }
+
+        for (var i = 0; i < _visibleBarterIds.Count; i++)
+        {
+            var id = _visibleBarterIds[i];
             if (!string.IsNullOrWhiteSpace(id))
                 _visibleUnionScratch.Add(id);
         }
@@ -233,17 +257,20 @@ public sealed partial class NcStoreMenu : FancyWindow
         List<StoreListingStaticData> listings,
         bool hasBuyTab,
         bool hasSellTab,
+        bool hasExchangeTab,
         bool hasContractsTab,
         StoreUiColorsData? uiColors
     ) =>
-        _binder.PopulateCatalog(listings, hasBuyTab, hasSellTab, hasContractsTab, uiColors);
+        _binder.PopulateCatalog(listings, hasBuyTab, hasSellTab, hasExchangeTab, hasContractsTab, uiColors);
 
 
     private void RebuildCategoriesFromCatalog()
     {
+        _barterCats.Clear();
         _buyCats.Clear();
         _sellCats.Clear();
 
+        _scratchBarterCatSet.Clear();
         _scratchBuyCatSet.Clear();
         _scratchSellCatSet.Clear();
 
@@ -258,11 +285,15 @@ public sealed partial class NcStoreMenu : FancyWindow
                 _scratchBuyCatSet.Add(it.Category);
             else if (it.Mode == StoreMode.Sell)
                 _scratchSellCatSet.Add(it.Category);
+            else if (it.Mode == StoreMode.Exchange)
+                _scratchBarterCatSet.Add(it.Category);
         }
 
+        _barterCats.AddRange(_scratchBarterCatSet);
         _buyCats.AddRange(_scratchBuyCatSet);
         _sellCats.AddRange(_scratchSellCatSet);
 
+        _barterCats.Sort(static (a, b) => string.Compare(a, b, StringComparison.CurrentCulture));
         _buyCats.Sort(static (a, b) => string.Compare(a, b, StringComparison.CurrentCulture));
         _sellCats.Sort(static (a, b) => string.Compare(a, b, StringComparison.CurrentCulture));
 
@@ -310,6 +341,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         Dictionary<string, int> massTotals,
         bool hasBuyTab,
         bool hasSellTab,
+        bool hasExchangeTab,
         bool hasContractsTab,
         List<ContractClientData> contracts,
         int contractSkipCost,
@@ -323,6 +355,7 @@ public sealed partial class NcStoreMenu : FancyWindow
             massTotals,
             hasBuyTab,
             hasSellTab,
+            hasExchangeTab,
             hasContractsTab,
             contracts,
             contractSkipCost,
@@ -334,6 +367,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         _catalogModel.RebuildItemsFromCatalogAndDynamic();
         BuyView.SyncAvailableIds(_catalogModel.AvailableIds);
         SellView.SyncAvailableIds(_catalogModel.AvailableIds);
+        BarterView.SyncAvailableIds(_catalogModel.AvailableIds);
     }
 
     private void RefreshListings()
@@ -341,15 +375,18 @@ public sealed partial class NcStoreMenu : FancyWindow
         var items = _catalogModel.Items;
         BuyView.BindListingsData(items, GetBalanceForCurrency, (d, qty) => OnBuyPressed?.Invoke(d, qty));
         SellView.BindListingsData(items, static _ => int.MaxValue, (d, qty) => OnSellPressed?.Invoke(d, qty));
+        BarterView.BindListingsData(items, static _ => int.MaxValue, (d, qty) => OnBarterPressed?.Invoke(d, qty));
 
         BuyView.SetSearch(_searchLower);
         SellView.SetSearch(_searchLower);
+        BarterView.SetSearch(_searchLower);
     }
 
     private void BuildCategoryButtons()
     {
         BuyView.SetCategories(_buyCats);
         SellView.SetCategories(_sellCats);
+        BarterView.SetCategories(_barterCats);
     }
 
     private string CurrencyName(string? currencyId)
@@ -370,6 +407,7 @@ public sealed partial class NcStoreMenu : FancyWindow
         _disposed = true;
         BuyView.ClearCaches();
         SellView.ClearCaches();
+        BarterView.ClearCaches();
         _catalogModel.Clear();
 
         base.Dispose(disposing);

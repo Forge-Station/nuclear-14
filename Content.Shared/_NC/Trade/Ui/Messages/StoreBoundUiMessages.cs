@@ -33,6 +33,21 @@ public sealed class StoreSellListingBoundUiMessage : BoundUserInterfaceMessage
 [Serializable, NetSerializable]
 public sealed class StoreMassSellPulledCrateBoundUiMessage : BoundUserInterfaceMessage { }
 
+
+[Serializable, NetSerializable]
+public sealed class StoreBarterListingBoundUiMessage : BoundUserInterfaceMessage
+{
+    public StoreBarterListingBoundUiMessage(string id, int count)
+    {
+        Id = id;
+        Count = count;
+    }
+
+    public string Id { get; }
+    public int Count { get; }
+}
+
+
 [Serializable, NetSerializable]
 public sealed class ClaimContractBoundMessage : BoundUserInterfaceMessage
 {

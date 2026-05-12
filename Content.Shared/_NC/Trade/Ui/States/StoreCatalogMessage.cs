@@ -10,6 +10,7 @@ public sealed class StoreCatalogMessage : BoundUserInterfaceMessage
         List<StoreListingStaticData> listings,
         bool hasBuyTab,
         bool hasSellTab,
+        bool hasExchangeTab,
         bool hasContractsTab,
         StoreUiColorsData? uiColors = null)
     {
@@ -17,6 +18,7 @@ public sealed class StoreCatalogMessage : BoundUserInterfaceMessage
         Listings = listings;
         HasBuyTab = hasBuyTab;
         HasSellTab = hasSellTab;
+        HasExchangeTab = hasExchangeTab;
         HasContractsTab = hasContractsTab;
         UiColors = uiColors ?? new StoreUiColorsData();
     }
@@ -25,6 +27,7 @@ public sealed class StoreCatalogMessage : BoundUserInterfaceMessage
     public List<StoreListingStaticData> Listings { get; }
     public bool HasBuyTab { get; }
     public bool HasSellTab { get; }
+    public bool HasExchangeTab { get; }
     public bool HasContractsTab { get; }
     public StoreUiColorsData UiColors { get; }
 }
@@ -39,7 +42,11 @@ public sealed class StoreListingStaticData
         string productEntity,
         int basePrice,
         string currencyId,
-        int unitsPerPurchase)
+        int unitsPerPurchase,
+        string displayName = "",
+        string description = "",
+        List<NcBarterCostEntry>? barterCost = null,
+        List<NcBarterReceiveEntry>? barterReceive = null)
     {
         Id = id;
         Mode = mode;
@@ -48,6 +55,10 @@ public sealed class StoreListingStaticData
         BasePrice = basePrice;
         CurrencyId = currencyId;
         UnitsPerPurchase = unitsPerPurchase;
+        DisplayName = displayName;
+        Description = description;
+        BarterCost = barterCost ?? new List<NcBarterCostEntry>();
+        BarterReceive = barterReceive ?? new List<NcBarterReceiveEntry>();
     }
 
     public string Id { get; }
@@ -57,6 +68,10 @@ public sealed class StoreListingStaticData
     public int BasePrice { get; }
     public string CurrencyId { get; }
     public int UnitsPerPurchase { get; }
+    public string DisplayName { get; }
+    public string Description { get; }
+    public List<NcBarterCostEntry> BarterCost { get; }
+    public List<NcBarterReceiveEntry> BarterReceive { get; }
 }
 
 [DataDefinition, Serializable, NetSerializable]

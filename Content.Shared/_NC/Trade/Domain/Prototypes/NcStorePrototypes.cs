@@ -61,11 +61,103 @@ public sealed partial class NcStoreProfilePrototype : IPrototype
     [DataField("sell")]
     public List<ProtoId<StorePresetStructuredPrototype>> Sell { get; private set; } = new();
 
+    /// <summary>
+    /// Barter / exchange listings. These are intentionally separate from legacy StoreMode.Exchange
+    /// transaction code: profile authors define cost/receive entries explicitly.
+    /// </summary>
+    [DataField("barter")]
+    public List<ProtoId<NcBarterPresetPrototype>> Barter { get; private set; } = new();
+
     [DataField("contracts")]
     public ProtoId<StoreContractsPresetPrototype>? Contracts { get; private set; }
 
     [DataField("theme")]
     public ProtoId<StoreUiThemePrototype>? Theme { get; private set; }
+}
+
+
+[DataDefinition, Serializable, NetSerializable]
+public sealed partial class NcBarterCostEntry
+{
+    /// <summary>Exact entity prototype the player must give.</summary>
+    [DataField("prototype")]
+    public string Prototype { get; set; } = string.Empty;
+
+    /// <summary>ncItemGroup id. Groups are valid only for checking existing player items.</summary>
+    [DataField("group")]
+    public string Group { get; set; } = string.Empty;
+
+    /// <summary>Stack currency id the player must pay.</summary>
+    [DataField("currency")]
+    public string Currency { get; set; } = string.Empty;
+
+    [DataField("count")]
+    public int Count { get; set; } = 1;
+}
+
+[DataDefinition, Serializable, NetSerializable]
+public sealed partial class NcBarterReceiveEntry
+{
+    /// <summary>Exact entity prototype to give to the player.</summary>
+    [DataField("prototype")]
+    public string Prototype { get; set; } = string.Empty;
+
+    /// <summary>Stack currency id to give to the player.</summary>
+    [DataField("currency")]
+    public string Currency { get; set; } = string.Empty;
+
+    [DataField("count")]
+    public int Count { get; set; } = 1;
+}
+
+[DataDefinition]
+public sealed partial class NcBarterCatalogEntry
+{
+    [DataField("id", required: true)]
+    public string Id { get; set; } = string.Empty;
+
+    [DataField("name")]
+    public string Name { get; set; } = string.Empty;
+
+    [DataField("description")]
+    public string Description { get; set; } = string.Empty;
+
+    /// <summary>Optional entity prototype id used as card icon. If empty, the first receive/cost item is used.</summary>
+    [DataField("icon")]
+    public string Icon { get; set; } = string.Empty;
+
+    /// <summary>How many times this barter can be performed. -1 means unlimited.</summary>
+    [DataField("count")]
+    public int Count { get; set; } = -1;
+
+    [DataField("cost", required: true)]
+    public List<NcBarterCostEntry> Cost { get; set; } = new();
+
+    [DataField("receive", required: true)]
+    public List<NcBarterReceiveEntry> Receive { get; set; } = new();
+}
+
+[Prototype("ncBarterCategory")]
+public sealed partial class NcBarterCategoryPrototype : IPrototype
+{
+    [IdDataField]
+    public string ID { get; private set; } = default!;
+
+    [DataField("name", required: true)]
+    public string Name { get; private set; } = string.Empty;
+
+    [DataField("entries", required: true)]
+    public List<NcBarterCatalogEntry> Entries { get; private set; } = new();
+}
+
+[Prototype("ncBarterPreset")]
+public sealed partial class NcBarterPresetPrototype : IPrototype
+{
+    [IdDataField]
+    public string ID { get; private set; } = default!;
+
+    [DataField("categories", required: true)]
+    public List<ProtoId<NcBarterCategoryPrototype>> Categories { get; private set; } = new();
 }
 
 

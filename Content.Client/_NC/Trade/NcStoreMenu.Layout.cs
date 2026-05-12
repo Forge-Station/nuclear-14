@@ -15,6 +15,7 @@ public sealed partial class NcStoreMenu
 
         _tabBuy = TabBuy;
         _tabSell = TabSell;
+        _tabBarter = TabBarter;
         _tabContracts = TabContracts;
     }
 
@@ -40,6 +41,7 @@ public sealed partial class NcStoreMenu
 
         EnsureTab(_tabBuy, _hasBuyTab);
         EnsureTab(_tabSell, _hasSellTab);
+        EnsureTab(_tabBarter, _hasBarterTab);
         EnsureTab(_tabContracts, _hasContractsTab);
 
         var count = Tabs.ChildCount;
@@ -53,7 +55,7 @@ public sealed partial class NcStoreMenu
 
     private void UpdateHeaderVisibility()
     {
-        var showStoreHeader = _hasBuyTab || _hasSellTab;
+        var showStoreHeader = _hasBuyTab || _hasSellTab || _hasBarterTab;
 
         HeaderFrame.Visible = showStoreHeader;
         Header.Visible = showStoreHeader;

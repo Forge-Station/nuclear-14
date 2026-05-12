@@ -581,7 +581,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (string.IsNullOrWhiteSpace(listing.Id) || string.IsNullOrWhiteSpace(listing.ProductEntity))
             return false;
 
-        if (!TryPickUiCurrencyAndPrice(comp, listing, out var currencyId, out var price))
+        var currencyId = string.Empty;
+        var price = 0;
+        if (listing.Mode != StoreMode.Exchange && !TryPickUiCurrencyAndPrice(comp, listing, out currencyId, out price))
             return false;
 
         var category = listing.Categories.Count > 0
@@ -595,7 +597,11 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             listing.ProductEntity,
             price,
             currencyId,
-            listing.UnitsPerPurchase
+            listing.UnitsPerPurchase,
+            listing.DisplayName,
+            listing.Description,
+            CloneBarterCostForCatalog(listing.BarterCost),
+            CloneBarterReceiveForCatalog(listing.BarterReceive)
         );
 
         return true;
@@ -605,7 +611,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         NcStoreComponent comp,
         List<StoreListingStaticData> list)
     {
-        var (hasBuy, hasSell) = GetCatalogModeFlags(list);
+        var (hasBuy, hasSell, hasExchange) = GetCatalogModeFlags(list);
         var uiColors = ResolveUiColors(comp);
 
         return new(
@@ -613,6 +619,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             list,
             hasBuy,
             hasSell,
+            hasExchange,
             HasContractsProfile(comp),
             uiColors
         );
@@ -673,10 +680,11 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         };
     }
 
-    private static (bool HasBuy, bool HasSell) GetCatalogModeFlags(List<StoreListingStaticData> list)
+    private static (bool HasBuy, bool HasSell, bool HasExchange) GetCatalogModeFlags(List<StoreListingStaticData> list)
     {
         var hasBuy = false;
         var hasSell = false;
+        var hasExchange = false;
 
         foreach (var listing in list)
         {
@@ -684,12 +692,49 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 hasBuy = true;
             else if (listing.Mode == StoreMode.Sell)
                 hasSell = true;
+            else if (listing.Mode == StoreMode.Exchange)
+                hasExchange = true;
 
-            if (hasBuy && hasSell)
+            if (hasBuy && hasSell && hasExchange)
                 break;
         }
 
-        return (hasBuy, hasSell);
+        return (hasBuy, hasSell, hasExchange);
+    }
+
+    private static List<NcBarterCostEntry> CloneBarterCostForCatalog(List<NcBarterCostEntry> source)
+    {
+        var result = new List<NcBarterCostEntry>(source.Count);
+        for (var i = 0; i < source.Count; i++)
+        {
+            var c = source[i];
+            result.Add(new NcBarterCostEntry
+            {
+                Prototype = c.Prototype,
+                Group = c.Group,
+                Currency = c.Currency,
+                Count = c.Count
+            });
+        }
+
+        return result;
+    }
+
+    private static List<NcBarterReceiveEntry> CloneBarterReceiveForCatalog(List<NcBarterReceiveEntry> source)
+    {
+        var result = new List<NcBarterReceiveEntry>(source.Count);
+        for (var i = 0; i < source.Count; i++)
+        {
+            var r = source[i];
+            result.Add(new NcBarterReceiveEntry
+            {
+                Prototype = r.Prototype,
+                Currency = r.Currency,
+                Count = r.Count
+            });
+        }
+
+        return result;
     }
 
     private void OnUiClosed(EntityUid uid, NcStoreComponent comp, BoundUIClosedEvent ev)

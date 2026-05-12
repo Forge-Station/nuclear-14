@@ -1,0 +1,30 @@
+- type: ncBarterCategory
+  id: CityBarterCurrencyBasic
+  name: "Currency Exchange"
+  entries:
+  - id: NCRDollarToCaps
+    name: "NCR dollars to caps"
+    description: "Exchange 2 NCR dollars for 1 cap."
+    icon: N14CurrencyNCRDollar
+    cost:
+    - currency: NCRDollar
+      count: 2
+    receive:
+    - currency: Caps
+      count: 1
+
+  - id: DenariusToCaps
+    name: "Denarius to caps"
+    description: "Exchange 2 denarii for 1 cap."
+    icon: N14CurrencyLegionDenarius
+    cost:
+    - currency: LegionDenarius
+      count: 1
+    receive:
+    - currency: Caps
+      count: 5
+
+- type: ncBarterPreset
+  id: CityBarterCurrencyPreset
+  categories:
+  - CityBarterCurrencyBasic

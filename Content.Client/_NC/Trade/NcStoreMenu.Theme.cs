@@ -88,6 +88,7 @@ public sealed partial class NcStoreMenu
 
         BuyView.ApplyUiTheme(_uiColors);
         SellView.ApplyUiTheme(_uiColors);
+        BarterView.ApplyUiTheme(_uiColors);
     }
 
     private void ApplyLocalTabStyle()

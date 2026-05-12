@@ -333,51 +333,10 @@ public sealed partial class NcStoreLogicSystem
         return true;
     }
 
-    // TODO(NC): TryExchange / StoreMode.Exchange are an incomplete feature reserved for a future
+    // Legacy Exchange is intentionally disabled. New barter uses TryBarter and explicit ncBarterPreset/ncBarterCategory YAML.
     public bool TryExchange(string listingId, EntityUid machine, NcStoreComponent? store, EntityUid user)
     {
-        if (store == null || store.Listings.Count == 0)
-            return false;
-        if (!store.ListingIndex.TryGetValue(
-            NcStoreComponent.MakeListingKey(StoreMode.Exchange, listingId),
-            out var listing))
-            return false;
-        if (string.IsNullOrEmpty(listing.ProductEntity))
-            return false;
-
-        var requiredCount = listing.RemainingCount > 0 ? listing.RemainingCount : 1;
-        if (requiredCount <= 0)
-            return false;
-
-        _inventory.InvalidateInventoryCache(user);
-
-        var owned = listing.MatchMode == PrototypeMatchMode.Matcher
-            ? _inventory.GetOwnedFromRootCached(user, listing.ProductEntity, listing.MatchMode)
-            : _inventory.GetOwnedFromSnapshot(
-                _inventory.BuildInventorySnapshot(user),
-                listing.ProductEntity,
-                listing.MatchMode);
-
-        if (owned < requiredCount)
-            return false;
-
-        if (!TryPickCurrencyForSell(store, listing, out var currencyId, out var rewardPerUnit) || rewardPerUnit <= 0)
-            return false;
-
-        var totalRewardL = (long) rewardPerUnit * requiredCount;
-        if (totalRewardL > int.MaxValue)
-            return false;
-
-        if (!_inventory.TryTakeProductUnitsFromRootCached(
-            user,
-            listing.ProductEntity,
-            requiredCount,
-            listing.MatchMode))
-            return false;
-
-        GiveCurrency(user, currencyId, (int) totalRewardL);
-        _inventory.InvalidateInventoryCache(user);
-        listing.RemainingCount = 0;
-        return true;
+        Sawmill.Warning("[NcStore] Legacy TryExchange was called, but legacy Exchange is disabled. Use Barter V1.");
+        return false;
     }
 }

@@ -182,9 +182,13 @@ public sealed partial class NcStoreListingsView : PanelContainer
             return;
         }
 
-        CategoryHeader.Text = _mode == StoreMode.Buy
-            ? Loc.GetString("nc-store-search-results-buy", ("count", count))
-            : Loc.GetString("nc-store-search-results-sell", ("count", count));
+        CategoryHeader.Text = _mode switch
+        {
+            StoreMode.Buy => Loc.GetString("nc-store-search-results-buy", ("count", count)),
+            StoreMode.Sell => Loc.GetString("nc-store-search-results-sell", ("count", count)),
+            StoreMode.Exchange => $"Найдено обменов: {count}",
+            _ => count.ToString()
+        };
         UpdateCategoryHeaderStyle(isSelectedCategory: false);
     }
 

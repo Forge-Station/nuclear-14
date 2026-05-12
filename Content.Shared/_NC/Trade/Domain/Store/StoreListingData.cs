@@ -44,7 +44,11 @@ public sealed class StoreListingData
     public int Price;
     public int UnitsPerPurchase = 1;
     public string ProductEntity = string.Empty;
+    public string DisplayName = string.Empty;
+    public string Description = string.Empty;
     public int Remaining = -1;
+    public List<NcBarterCostEntry> BarterCost = new();
+    public List<NcBarterReceiveEntry> BarterReceive = new();
 
     public StoreListingData() { }
 
@@ -58,7 +62,11 @@ public sealed class StoreListingData
         StoreMode mode,
         int owned = 0,
         int remaining = -1,
-        int unitsPerPurchase = 1)
+        int unitsPerPurchase = 1,
+        string displayName = "",
+        string description = "",
+        List<NcBarterCostEntry>? barterCost = null,
+        List<NcBarterReceiveEntry>? barterReceive = null)
     {
         ListingId = listingId;
         Flavor = flavor;
@@ -71,6 +79,10 @@ public sealed class StoreListingData
         Owned = owned;
         Remaining = remaining;
         UnitsPerPurchase = Math.Max(1, unitsPerPurchase);
+        DisplayName = displayName;
+        Description = description;
+        BarterCost = barterCost ?? new List<NcBarterCostEntry>();
+        BarterReceive = barterReceive ?? new List<NcBarterReceiveEntry>();
     }
 
     public StoreListingData(
@@ -82,7 +94,11 @@ public sealed class StoreListingData
         StoreMode mode,
         int owned = 0,
         int remaining = -1,
-        int unitsPerPurchase = 1)
+        int unitsPerPurchase = 1,
+        string displayName = "",
+        string description = "",
+        List<NcBarterCostEntry>? barterCost = null,
+        List<NcBarterReceiveEntry>? barterReceive = null)
     {
         Id = id;
         ListingId = id;
@@ -95,5 +111,9 @@ public sealed class StoreListingData
         Owned = owned;
         Remaining = remaining;
         UnitsPerPurchase = Math.Max(1, unitsPerPurchase);
+        DisplayName = displayName;
+        Description = description;
+        BarterCost = barterCost ?? new List<NcBarterCostEntry>();
+        BarterReceive = barterReceive ?? new List<NcBarterReceiveEntry>();
     }
 }
