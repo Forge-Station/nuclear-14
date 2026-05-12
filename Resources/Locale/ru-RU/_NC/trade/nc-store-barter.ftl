@@ -7,3 +7,4 @@ nc-store-barter-receive = Получаете
 nc-store-barter-cost-empty = нет цены
 nc-store-barter-receive-empty = нет награды
 nc-store-search-results-barter = Найдено обменов: {$count}
+nc-store-barter-random-receive = случайная награда

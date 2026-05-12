@@ -65,7 +65,8 @@ public sealed class NcStoreClientCatalogModel
                     s.DisplayName,
                     s.Description,
                     s.BarterCost,
-                    s.BarterReceive));
+                    s.BarterReceive,
+                    s.BarterReceivePools));
         }
 
         var baseCount = _items.Count;
@@ -98,7 +99,8 @@ public sealed class NcStoreClientCatalogModel
                     d.DisplayName,
                     d.Description,
                     d.BarterCost,
-                    d.BarterReceive));
+                    d.BarterReceive,
+                    d.BarterReceivePools));
         }
 
         if (_scratchReadyItems.Count > 0)
@@ -132,7 +134,8 @@ public sealed class NcStoreClientCatalogModel
                         s.DisplayName,
                         s.Description,
                         s.BarterCost,
-                        s.BarterReceive));
+                        s.BarterReceive,
+                        s.BarterReceivePools));
             }
         }
 

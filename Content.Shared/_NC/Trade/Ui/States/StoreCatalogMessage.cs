@@ -46,7 +46,8 @@ public sealed class StoreListingStaticData
         string displayName = "",
         string description = "",
         List<NcBarterCostEntry>? barterCost = null,
-        List<NcBarterReceiveEntry>? barterReceive = null)
+        List<NcBarterReceiveEntry>? barterReceive = null,
+        List<NcBarterReceivePoolEntry>? barterReceivePools = null)
     {
         Id = id;
         Mode = mode;
@@ -59,6 +60,7 @@ public sealed class StoreListingStaticData
         Description = description;
         BarterCost = barterCost ?? new List<NcBarterCostEntry>();
         BarterReceive = barterReceive ?? new List<NcBarterReceiveEntry>();
+        BarterReceivePools = barterReceivePools ?? new List<NcBarterReceivePoolEntry>();
     }
 
     public string Id { get; }
@@ -72,6 +74,7 @@ public sealed class StoreListingStaticData
     public string Description { get; }
     public List<NcBarterCostEntry> BarterCost { get; }
     public List<NcBarterReceiveEntry> BarterReceive { get; }
+    public List<NcBarterReceivePoolEntry> BarterReceivePools { get; }
 }
 
 [DataDefinition, Serializable, NetSerializable]

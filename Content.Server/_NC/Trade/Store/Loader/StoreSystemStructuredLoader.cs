@@ -241,47 +241,100 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
             if (ctx.CategorySeen.Add(categoryName))
                 comp.Categories.Add(categoryName);
 
-            foreach (var entry in categoryProto.Entries)
+            if (categoryProto.Listings.Count == 0 && categoryProto.Entries.Count == 0)
             {
-                if (!ValidateBarterEntry(entry, presetId, categoryId))
-                    continue;
+                Sawmill.Warning($"[NcStore] Barter category '{categoryId}' in preset '{presetId}' has no listings.");
+                continue;
+            }
 
-                AddBarterCurrenciesToWhitelist(comp, ctx, entry);
-
-                var baseId = $"{presetId}:Barter:{categoryId}:{entry.Id}";
-                var id = AllocateDeterministicId(baseId, ctx);
-                var icon = ResolveBarterIcon(entry);
-
-                if (string.IsNullOrWhiteSpace(icon))
+            for (var i = 0; i < categoryProto.Listings.Count; i++)
+            {
+                var listingId = categoryProto.Listings[i];
+                if (!_prototypes.TryIndex<NcBarterListingPrototype>(listingId, out var listingProto))
                 {
                     Sawmill.Warning(
-                        $"[NcStore] Barter entry '{entry.Id}' in '{presetId}/{categoryId}' has no resolvable icon and was skipped.");
+                        $"[NcStore] Barter listing '{listingId}' not found " +
+                        $"(preset='{presetId}', category='{categoryId}', listings[{i}]).");
                     continue;
                 }
 
-                var listing = new NcStoreListingDef
-                {
-                    Id = id,
-                    ProductEntity = icon,
-                    DisplayName = entry.Name,
-                    Description = entry.Description,
-                    MatchMode = PrototypeMatchMode.Exact,
-                    Mode = StoreMode.Barter,
-                    Categories = new List<string> { categoryName },
-                    Conditions = new List<ListingConditionPrototype>(),
-                    RemainingCount = entry.Count,
-                    UnitsPerPurchase = 1,
-                    BarterCost = CloneBarterCost(entry.Cost),
-                    BarterReceive = CloneBarterReceive(entry.Receive),
-                    Cost = new()
-                };
-
-                comp.Listings.Add(listing);
-                count++;
+                var entry = CreateBarterEntryFromPrototype(listingProto);
+                count += TryAddBarterEntry(entry, presetId, categoryId, categoryName, comp, ctx);
             }
+
+            if (categoryProto.Entries.Count > 0)
+            {
+                Sawmill.Warning(
+                    $"[NcStore] Barter category '{categoryId}' uses deprecated inline 'entries'. " +
+                    "Define standalone 'ncBarterListing' prototypes and reference them through 'listings' instead.");
+            }
+
+            foreach (var entry in categoryProto.Entries)
+                count += TryAddBarterEntry(entry, presetId, categoryId, categoryName, comp, ctx);
         }
 
         return count;
+    }
+
+    private static NcBarterCatalogEntry CreateBarterEntryFromPrototype(NcBarterListingPrototype proto)
+    {
+        return new NcBarterCatalogEntry
+        {
+            Id = proto.ID,
+            Name = proto.Name,
+            Description = proto.Description,
+            Icon = proto.Icon,
+            Count = proto.Count,
+            Cost = CloneBarterCost(proto.Cost),
+            Receive = CloneBarterReceive(proto.Receive),
+            ReceivePools = CloneBarterReceivePools(proto.ReceivePools)
+        };
+    }
+
+    private int TryAddBarterEntry(
+        NcBarterCatalogEntry entry,
+        ProtoId<NcBarterPresetPrototype> presetId,
+        ProtoId<NcBarterCategoryPrototype> categoryId,
+        string categoryName,
+        NcStoreComponent comp,
+        LoadContext ctx)
+    {
+        if (!ValidateBarterEntry(entry, presetId, categoryId))
+            return 0;
+
+        AddBarterCurrenciesToWhitelist(comp, ctx, entry);
+
+        var baseId = $"{presetId}:Barter:{categoryId}:{entry.Id}";
+        var id = AllocateDeterministicId(baseId, ctx);
+        var icon = ResolveBarterIcon(entry);
+
+        if (string.IsNullOrWhiteSpace(icon))
+        {
+            Sawmill.Warning(
+                $"[NcStore] Barter entry '{entry.Id}' in '{presetId}/{categoryId}' has no resolvable icon and was skipped.");
+            return 0;
+        }
+
+        var listing = new NcStoreListingDef
+        {
+            Id = id,
+            ProductEntity = icon,
+            DisplayName = entry.Name,
+            Description = entry.Description,
+            MatchMode = PrototypeMatchMode.Exact,
+            Mode = StoreMode.Barter,
+            Categories = new List<string> { categoryName },
+            Conditions = new List<ListingConditionPrototype>(),
+            RemainingCount = entry.Count,
+            UnitsPerPurchase = 1,
+            BarterCost = CloneBarterCost(entry.Cost),
+            BarterReceive = CloneBarterReceive(entry.Receive),
+            BarterReceivePools = CloneBarterReceivePools(entry.ReceivePools),
+            Cost = new()
+        };
+
+        comp.Listings.Add(listing);
+        return 1;
     }
 
     private void AddBarterCurrenciesToWhitelist(NcStoreComponent comp, LoadContext ctx, NcBarterCatalogEntry entry)
@@ -296,6 +349,27 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         {
             if (!string.IsNullOrWhiteSpace(receive.Currency) && ctx.CurrencySeen.Add(receive.Currency))
                 comp.CurrencyWhitelist.Add(receive.Currency);
+        }
+
+        foreach (var pool in entry.ReceivePools)
+            AddRewardPoolCurrenciesToWhitelist(comp, ctx, pool.Pool);
+    }
+
+    private void AddRewardPoolCurrenciesToWhitelist(NcStoreComponent comp, LoadContext ctx, string poolId)
+    {
+        if (string.IsNullOrWhiteSpace(poolId) ||
+            !_prototypes.TryIndex<NcContractRewardPoolPrototype>(poolId, out var pool))
+            return;
+
+        for (var i = 0; i < pool.Entries.Count; i++)
+        {
+            var reward = pool.Entries[i];
+            if (reward.Type != StoreRewardType.Currency)
+                continue;
+
+            var currency = GetRewardId(reward);
+            if (!string.IsNullOrWhiteSpace(currency) && ctx.CurrencySeen.Add(currency))
+                comp.CurrencyWhitelist.Add(currency);
         }
     }
 
@@ -316,9 +390,9 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
             return false;
         }
 
-        if (entry.Receive.Count == 0)
+        if (entry.Receive.Count == 0 && entry.ReceivePools.Count == 0)
         {
-            Sawmill.Warning($"[NcStore] Barter entry '{entry.Id}' has no receive block and was skipped.");
+            Sawmill.Warning($"[NcStore] Barter entry '{entry.Id}' has no receive or receivePools block and was skipped.");
             return false;
         }
 
@@ -329,6 +403,9 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
         for (var i = 0; i < entry.Receive.Count; i++)
             ok &= ValidateBarterReceive(entry.Id, $"receive[{i}]", entry.Receive[i]);
+
+        for (var i = 0; i < entry.ReceivePools.Count; i++)
+            ok &= ValidateBarterReceivePool(entry.Id, $"receivePools[{i}]", entry.ReceivePools[i]);
 
         if (entry.Count == 0 || entry.Count < -1)
         {
@@ -404,6 +481,98 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         return true;
     }
 
+    private bool ValidateBarterReceivePool(string entryId, string path, NcBarterReceivePoolEntry entry)
+    {
+        if (string.IsNullOrWhiteSpace(entry.Pool))
+        {
+            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} has empty pool id.");
+            return false;
+        }
+
+        if (entry.Rolls.Min <= 0 || entry.Rolls.Max <= 0 || entry.Rolls.Min > entry.Rolls.Max)
+        {
+            Sawmill.Warning(
+                $"[NcStore] Barter entry '{entryId}' {path} has invalid rolls range " +
+                $"{entry.Rolls.Min}..{entry.Rolls.Max}.");
+            return false;
+        }
+
+        if (entry.Chance < 0f || entry.Chance > 1f)
+        {
+            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} has invalid chance={entry.Chance}. Expected 0..1.");
+            return false;
+        }
+
+        if (!_prototypes.TryIndex<NcContractRewardPoolPrototype>(entry.Pool, out var pool) || pool.Entries.Count == 0)
+        {
+            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} references missing or empty reward pool '{entry.Pool}'.");
+            return false;
+        }
+
+        var ok = true;
+        for (var i = 0; i < pool.Entries.Count; i++)
+            ok &= ValidateBarterReceivePoolReward(entryId, $"{path}.pool[{i}]", pool.Entries[i]);
+
+        if (ok)
+            return true;
+
+        Sawmill.Warning(
+            $"[NcStore] Barter entry '{entryId}' {path} pool '{entry.Pool}' contains entries that are not valid for barter. " +
+            "Only Item and Currency rewards are supported; nested pools are rejected.");
+        return false;
+    }
+
+    private bool ValidateBarterReceivePoolReward(string entryId, string path, ContractRewardDef reward)
+    {
+        if (reward.Type != StoreRewardType.Item && reward.Type != StoreRewardType.Currency)
+        {
+            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} must be Item or Currency. Nested pools are not supported in Barter V1.1.");
+            return false;
+        }
+
+        if (reward.Weight <= 0)
+        {
+            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} has non-positive weight={reward.Weight}.");
+            return false;
+        }
+
+        if (reward.Amount.Min <= 0 || reward.Amount.Max <= 0 || reward.Amount.Min > reward.Amount.Max)
+        {
+            Sawmill.Warning(
+                $"[NcStore] Barter entry '{entryId}' {path} has invalid amount range " +
+                $"{reward.Amount.Min}..{reward.Amount.Max}.");
+            return false;
+        }
+
+        var chance = reward.Chance >= 0f ? reward.Chance : reward.Probability;
+        if (chance < 0f || chance > 1f)
+        {
+            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} has invalid chance={chance}. Expected 0..1.");
+            return false;
+        }
+
+        var rewardId = GetRewardId(reward);
+        if (string.IsNullOrWhiteSpace(rewardId))
+        {
+            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} has empty reward id.");
+            return false;
+        }
+
+        if (reward.Type == StoreRewardType.Item && !_prototypes.HasIndex<EntityPrototype>(rewardId))
+        {
+            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} references missing entity prototype '{rewardId}'.");
+            return false;
+        }
+
+        if (reward.Type == StoreRewardType.Currency && !_prototypes.HasIndex<StackPrototype>(rewardId))
+        {
+            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} references missing stack currency '{rewardId}'.");
+            return false;
+        }
+
+        return true;
+    }
+
     private bool ValidateBarterItemGroup(string entryId, string path, string groupId)
     {
         if (!_prototypes.TryIndex<NcItemGroupPrototype>(groupId, out var group))
@@ -455,6 +624,12 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
                 return currencyIcon;
         }
 
+        foreach (var pool in entry.ReceivePools)
+        {
+            if (TryResolveRewardPoolIcon(pool.Pool, out var poolIcon))
+                return poolIcon;
+        }
+
         foreach (var cost in entry.Cost)
         {
             if (!string.IsNullOrWhiteSpace(cost.Prototype))
@@ -471,6 +646,33 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         }
 
         return string.Empty;
+    }
+
+    private bool TryResolveRewardPoolIcon(string poolId, out string icon)
+    {
+        icon = string.Empty;
+        if (string.IsNullOrWhiteSpace(poolId) ||
+            !_prototypes.TryIndex<NcContractRewardPoolPrototype>(poolId, out var pool))
+            return false;
+
+        for (var i = 0; i < pool.Entries.Count; i++)
+        {
+            var reward = pool.Entries[i];
+            var rewardId = GetRewardId(reward);
+            if (string.IsNullOrWhiteSpace(rewardId))
+                continue;
+
+            if (reward.Type == StoreRewardType.Item && _prototypes.HasIndex<EntityPrototype>(rewardId))
+            {
+                icon = rewardId;
+                return true;
+            }
+
+            if (reward.Type == StoreRewardType.Currency && TryResolveCurrencyIcon(rewardId, out icon))
+                return true;
+        }
+
+        return false;
     }
 
     private bool TryResolveCurrencyIcon(string currency, out string icon)
@@ -519,6 +721,37 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         }
 
         return result;
+    }
+
+    private static List<NcBarterReceivePoolEntry> CloneBarterReceivePools(List<NcBarterReceivePoolEntry> source)
+    {
+        var result = new List<NcBarterReceivePoolEntry>(source.Count);
+        for (var i = 0; i < source.Count; i++)
+        {
+            var r = source[i];
+            result.Add(new NcBarterReceivePoolEntry
+            {
+                Pool = r.Pool,
+                Rolls = r.Rolls,
+                Chance = r.Chance
+            });
+        }
+
+        return result;
+    }
+
+    private static string GetRewardId(ContractRewardDef reward)
+    {
+        if (!string.IsNullOrWhiteSpace(reward.Prototype))
+            return reward.Prototype;
+
+        if (!string.IsNullOrWhiteSpace(reward.Currency))
+            return reward.Currency;
+
+        if (!string.IsNullOrWhiteSpace(reward.Pool))
+            return reward.Pool;
+
+        return reward.Id;
     }
 
     private static int CountNonEmpty(params string[] values)

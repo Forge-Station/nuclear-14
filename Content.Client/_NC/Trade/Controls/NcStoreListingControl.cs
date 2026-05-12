@@ -390,13 +390,13 @@ public sealed partial class NcStoreListingControl : PanelContainer
         var multiplier = Math.Max(1, _qty);
 
         var costText = FormatBarterCost(data.BarterCost, pm, multiplier);
-        var receiveText = FormatBarterReceive(data.BarterReceive, pm, multiplier);
+        var receiveText = FormatBarterReceive(data.BarterReceive, data.BarterReceivePools, pm, multiplier);
 
         BarterPreview.SetPreview(
             costText,
             receiveText,
             ResolveCostIconPrototype(data.BarterCost, pm),
-            ResolveReceiveIconPrototype(data.BarterReceive, pm));
+            ResolveReceiveIconPrototype(data.BarterReceive, data.BarterReceivePools, pm));
     }
 
     private static string FormatBarterCost(List<NcBarterCostEntry> entries, IPrototypeManager pm, int multiplier)
@@ -418,12 +418,16 @@ public sealed partial class NcStoreListingControl : PanelContainer
         return string.Join(", ", parts);
     }
 
-    private static string FormatBarterReceive(List<NcBarterReceiveEntry> entries, IPrototypeManager pm, int multiplier)
+    private static string FormatBarterReceive(
+        List<NcBarterReceiveEntry> entries,
+        List<NcBarterReceivePoolEntry> pools,
+        IPrototypeManager pm,
+        int multiplier)
     {
-        if (entries.Count == 0)
+        if (entries.Count == 0 && pools.Count == 0)
             return string.Empty;
 
-        var parts = new List<string>(entries.Count);
+        var parts = new List<string>(entries.Count + pools.Count);
         for (var i = 0; i < entries.Count; i++)
         {
             var entry = entries[i];
@@ -432,6 +436,14 @@ public sealed partial class NcStoreListingControl : PanelContainer
                 continue;
 
             parts.Add(FormatAmountName(ScaleAmount(entry.Count, multiplier), name));
+        }
+
+        for (var i = 0; i < pools.Count; i++)
+        {
+            var pool = pools[i];
+            var rolls = ScaleAmount(Math.Max(1, pool.Rolls.Max), multiplier);
+            var text = Loc.GetString("nc-store-barter-random-receive");
+            parts.Add(FormatAmountName(rolls, text));
         }
 
         return string.Join(", ", parts);
@@ -527,7 +539,10 @@ public sealed partial class NcStoreListingControl : PanelContainer
         return null;
     }
 
-    private static string? ResolveReceiveIconPrototype(List<NcBarterReceiveEntry> entries, IPrototypeManager pm)
+    private static string? ResolveReceiveIconPrototype(
+        List<NcBarterReceiveEntry> entries,
+        List<NcBarterReceivePoolEntry> pools,
+        IPrototypeManager pm)
     {
         for (var i = 0; i < entries.Count; i++)
         {
@@ -541,7 +556,51 @@ public sealed partial class NcStoreListingControl : PanelContainer
                 return currencyEntity;
         }
 
+        for (var i = 0; i < pools.Count; i++)
+        {
+            if (TryResolveRewardPoolIcon(pools[i].Pool, pm, out var poolIcon))
+                return poolIcon;
+        }
+
         return null;
+    }
+
+    private static bool TryResolveRewardPoolIcon(string poolId, IPrototypeManager pm, out string icon)
+    {
+        icon = string.Empty;
+        if (string.IsNullOrWhiteSpace(poolId) ||
+            !pm.TryIndex<NcContractRewardPoolPrototype>(poolId, out var pool))
+            return false;
+
+        for (var i = 0; i < pool.Entries.Count; i++)
+        {
+            var reward = pool.Entries[i];
+            var rewardId = ResolveRewardId(reward);
+            if (string.IsNullOrWhiteSpace(rewardId))
+                continue;
+
+            if (reward.Type == StoreRewardType.Item && pm.HasIndex<EntityPrototype>(rewardId))
+            {
+                icon = rewardId;
+                return true;
+            }
+
+            if (reward.Type == StoreRewardType.Currency && TryResolveCurrencyEntity(rewardId, pm, out icon))
+                return true;
+        }
+
+        return false;
+    }
+
+    private static string ResolveRewardId(ContractRewardDef reward)
+    {
+        if (!string.IsNullOrWhiteSpace(reward.Prototype))
+            return reward.Prototype;
+        if (!string.IsNullOrWhiteSpace(reward.Currency))
+            return reward.Currency;
+        if (!string.IsNullOrWhiteSpace(reward.Pool))
+            return reward.Pool;
+        return reward.Id;
     }
 
     private static bool TryResolveCurrencyEntity(string currency, IPrototypeManager pm, out string entity)

@@ -601,7 +601,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             listing.DisplayName,
             listing.Description,
             CloneBarterCostForCatalog(listing.BarterCost),
-            CloneBarterReceiveForCatalog(listing.BarterReceive)
+            CloneBarterReceiveForCatalog(listing.BarterReceive),
+            CloneBarterReceivePoolsForCatalog(listing.BarterReceivePools)
         );
 
         return true;
@@ -731,6 +732,23 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 Prototype = r.Prototype,
                 Currency = r.Currency,
                 Count = r.Count
+            });
+        }
+
+        return result;
+    }
+
+    private static List<NcBarterReceivePoolEntry> CloneBarterReceivePoolsForCatalog(List<NcBarterReceivePoolEntry> source)
+    {
+        var result = new List<NcBarterReceivePoolEntry>(source.Count);
+        for (var i = 0; i < source.Count; i++)
+        {
+            var r = source[i];
+            result.Add(new NcBarterReceivePoolEntry
+            {
+                Pool = r.Pool,
+                Rolls = r.Rolls,
+                Chance = r.Chance
             });
         }
 

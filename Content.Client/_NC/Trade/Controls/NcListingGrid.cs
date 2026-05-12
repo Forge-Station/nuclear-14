@@ -348,6 +348,15 @@ public sealed partial class NcListingGrid : BoxContainer
                 h = h * 31 + r.Count;
             }
 
+            for (var i = 0; i < d.BarterReceivePools.Count; i++)
+            {
+                var r = d.BarterReceivePools[i];
+                h = h * 31 + (StringComparer.Ordinal.GetHashCode(r.Pool ?? string.Empty));
+                h = h * 31 + r.Rolls.Min;
+                h = h * 31 + r.Rolls.Max;
+                h = h * 31 + r.Chance.GetHashCode();
+            }
+
             return h;
         }
     }
@@ -400,7 +409,7 @@ public sealed partial class NcListingGrid : BoxContainer
 
     private string BuildListingSearchText(StoreListingData listing)
     {
-        var parts = new List<string>(8 + listing.BarterCost.Count + listing.BarterReceive.Count);
+        var parts = new List<string>(8 + listing.BarterCost.Count + listing.BarterReceive.Count + listing.BarterReceivePools.Count);
 
         AddSearchPart(parts, listing.Id);
         AddSearchPart(parts, listing.ListingId);
@@ -420,6 +429,9 @@ public sealed partial class NcListingGrid : BoxContainer
 
             for (var i = 0; i < listing.BarterReceive.Count; i++)
                 AddBarterReceiveSearchPart(parts, listing.BarterReceive[i]);
+
+            for (var i = 0; i < listing.BarterReceivePools.Count; i++)
+                AddBarterReceivePoolSearchPart(parts, listing.BarterReceivePools[i]);
         }
 
         return string.Join('\n', parts).ToLowerInvariant();
@@ -436,6 +448,27 @@ public sealed partial class NcListingGrid : BoxContainer
     {
         AddPrototypeSearchPart(parts, entry.Prototype);
         AddCurrencySearchPart(parts, entry.Currency);
+    }
+
+    private void AddBarterReceivePoolSearchPart(List<string> parts, NcBarterReceivePoolEntry entry)
+    {
+        AddSearchPart(parts, entry.Pool);
+        AddSearchPart(parts, Loc.GetString("nc-store-barter-random-receive"));
+
+        if (string.IsNullOrWhiteSpace(entry.Pool) ||
+            !_proto.TryIndex<NcContractRewardPoolPrototype>(entry.Pool, out var pool))
+            return;
+
+        for (var i = 0; i < pool.Entries.Count; i++)
+        {
+            var reward = pool.Entries[i];
+            var rewardId = GetRewardId(reward);
+
+            if (reward.Type == StoreRewardType.Item)
+                AddPrototypeSearchPart(parts, rewardId);
+            else if (reward.Type == StoreRewardType.Currency)
+                AddCurrencySearchPart(parts, rewardId);
+        }
     }
 
     private void AddPrototypeSearchPart(List<string> parts, string protoId)
@@ -487,6 +520,17 @@ public sealed partial class NcListingGrid : BoxContainer
 
         AddSearchPart(parts, stack.Spawn);
         AddPrototypeSearchPart(parts, stack.Spawn);
+    }
+
+    private static string GetRewardId(ContractRewardDef reward)
+    {
+        if (!string.IsNullOrWhiteSpace(reward.Prototype))
+            return reward.Prototype;
+        if (!string.IsNullOrWhiteSpace(reward.Currency))
+            return reward.Currency;
+        if (!string.IsNullOrWhiteSpace(reward.Pool))
+            return reward.Pool;
+        return reward.Id;
     }
 
     private static void AddSearchPart(List<string> parts, string? value)

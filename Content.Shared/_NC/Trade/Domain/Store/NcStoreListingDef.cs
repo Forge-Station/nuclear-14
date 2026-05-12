@@ -14,6 +14,7 @@ public sealed class NcStoreListingDef
 
     public List<NcBarterCostEntry> BarterCost { get; set; } = new();
     public List<NcBarterReceiveEntry> BarterReceive { get; set; } = new();
+    public List<NcBarterReceivePoolEntry> BarterReceivePools { get; set; } = new();
 
     public Dictionary<string, int> Cost { get; set; } = new();
 

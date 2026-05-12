@@ -110,6 +110,22 @@ public sealed partial class NcBarterReceiveEntry
     public int Count { get; set; } = 1;
 }
 
+[DataDefinition, Serializable, NetSerializable]
+public sealed partial class NcBarterReceivePoolEntry
+{
+    /// <summary>Weighted reward pool id. Uses ncContractRewardPool entries for now.</summary>
+    [DataField("pool", required: true)]
+    public string Pool { get; set; } = string.Empty;
+
+    /// <summary>How many times the pool is rolled per one barter execution.</summary>
+    [DataField("rolls")]
+    public IntRange Rolls { get; set; } = IntRange.Fixed(1);
+
+    /// <summary>Chance to roll this pool per one barter execution.</summary>
+    [DataField("chance")]
+    public float Chance { get; set; } = 1.0f;
+}
+
 [DataDefinition]
 public sealed partial class NcBarterCatalogEntry
 {
@@ -133,8 +149,43 @@ public sealed partial class NcBarterCatalogEntry
     [DataField("cost", required: true)]
     public List<NcBarterCostEntry> Cost { get; set; } = new();
 
-    [DataField("receive", required: true)]
+    [DataField("receive", required: false)]
     public List<NcBarterReceiveEntry> Receive { get; set; } = new();
+
+    /// <summary>Optional random receive pools. Cost remains fixed; only receive side can be random.</summary>
+    [DataField("receivePools", required: false)]
+    public List<NcBarterReceivePoolEntry> ReceivePools { get; set; } = new();
+}
+
+[Prototype("ncBarterListing")]
+public sealed partial class NcBarterListingPrototype : IPrototype
+{
+    [IdDataField]
+    public string ID { get; private set; } = default!;
+
+    [DataField("name")]
+    public string Name { get; private set; } = string.Empty;
+
+    [DataField("description")]
+    public string Description { get; private set; } = string.Empty;
+
+    /// <summary>Optional entity prototype id used as card icon. If empty, the first receive/cost item is used.</summary>
+    [DataField("icon")]
+    public string Icon { get; private set; } = string.Empty;
+
+    /// <summary>How many times this barter can be performed. -1 means unlimited.</summary>
+    [DataField("count")]
+    public int Count { get; private set; } = -1;
+
+    [DataField("cost", required: true)]
+    public List<NcBarterCostEntry> Cost { get; private set; } = new();
+
+    [DataField("receive", required: false)]
+    public List<NcBarterReceiveEntry> Receive { get; private set; } = new();
+
+    /// <summary>Optional random receive pools. Cost remains fixed; only receive side can be random.</summary>
+    [DataField("receivePools", required: false)]
+    public List<NcBarterReceivePoolEntry> ReceivePools { get; private set; } = new();
 }
 
 [Prototype("ncBarterCategory")]
@@ -146,7 +197,12 @@ public sealed partial class NcBarterCategoryPrototype : IPrototype
     [DataField("name", required: true)]
     public string Name { get; private set; } = string.Empty;
 
-    [DataField("entries", required: true)]
+    /// <summary>Preferred format: references to standalone ncBarterListing prototypes.</summary>
+    [DataField("listings")]
+    public List<ProtoId<NcBarterListingPrototype>> Listings { get; private set; } = new();
+
+    /// <summary>Deprecated inline format. Keep only while migrating old YAML to ncBarterListing + listings.</summary>
+    [DataField("entries")]
     public List<NcBarterCatalogEntry> Entries { get; private set; } = new();
 }
 
@@ -580,4 +636,3 @@ public sealed class ListingConditionPrototype
     [DataField("condition")]
     public object? Condition;
 }
-

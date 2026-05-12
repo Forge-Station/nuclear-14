@@ -49,6 +49,7 @@ public sealed class StoreListingData
     public int Remaining = -1;
     public List<NcBarterCostEntry> BarterCost = new();
     public List<NcBarterReceiveEntry> BarterReceive = new();
+    public List<NcBarterReceivePoolEntry> BarterReceivePools = new();
 
     public StoreListingData() { }
 
@@ -66,7 +67,8 @@ public sealed class StoreListingData
         string displayName = "",
         string description = "",
         List<NcBarterCostEntry>? barterCost = null,
-        List<NcBarterReceiveEntry>? barterReceive = null)
+        List<NcBarterReceiveEntry>? barterReceive = null,
+        List<NcBarterReceivePoolEntry>? barterReceivePools = null)
     {
         ListingId = listingId;
         Flavor = flavor;
@@ -83,6 +85,7 @@ public sealed class StoreListingData
         Description = description;
         BarterCost = barterCost ?? new List<NcBarterCostEntry>();
         BarterReceive = barterReceive ?? new List<NcBarterReceiveEntry>();
+        BarterReceivePools = barterReceivePools ?? new List<NcBarterReceivePoolEntry>();
     }
 
     public StoreListingData(
@@ -98,7 +101,8 @@ public sealed class StoreListingData
         string displayName = "",
         string description = "",
         List<NcBarterCostEntry>? barterCost = null,
-        List<NcBarterReceiveEntry>? barterReceive = null)
+        List<NcBarterReceiveEntry>? barterReceive = null,
+        List<NcBarterReceivePoolEntry>? barterReceivePools = null)
     {
         Id = id;
         ListingId = id;
@@ -115,5 +119,6 @@ public sealed class StoreListingData
         Description = description;
         BarterCost = barterCost ?? new List<NcBarterCostEntry>();
         BarterReceive = barterReceive ?? new List<NcBarterReceiveEntry>();
+        BarterReceivePools = barterReceivePools ?? new List<NcBarterReceivePoolEntry>();
     }
 }
