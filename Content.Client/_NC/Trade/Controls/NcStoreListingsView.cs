@@ -186,7 +186,7 @@ public sealed partial class NcStoreListingsView : PanelContainer
         {
             StoreMode.Buy => Loc.GetString("nc-store-search-results-buy", ("count", count)),
             StoreMode.Sell => Loc.GetString("nc-store-search-results-sell", ("count", count)),
-            StoreMode.Barter => $"Найдено обменов: {count}",
+            StoreMode.Barter => Loc.GetString("nc-store-search-results-barter", ("count", count)),
             _ => count.ToString()
         };
         UpdateCategoryHeaderStyle(isSelectedCategory: false);

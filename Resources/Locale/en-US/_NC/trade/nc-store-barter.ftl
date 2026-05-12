@@ -6,3 +6,4 @@ nc-store-barter-give = Give
 nc-store-barter-receive = Receive
 nc-store-barter-cost-empty = no cost
 nc-store-barter-receive-empty = no reward
+nc-store-search-results-barter = Barter results: {$count}
