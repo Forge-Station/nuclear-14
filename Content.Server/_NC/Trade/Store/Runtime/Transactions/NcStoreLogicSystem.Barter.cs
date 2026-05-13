@@ -462,7 +462,7 @@ public sealed partial class NcStoreLogicSystem
             return true;
 
         var rewardId = GetRewardId(reward);
-        var amount = RollRange(reward.Amount);
+        var amount = RollRange(GetRewardAmountRange(reward));
         if (amount <= 0 || string.IsNullOrWhiteSpace(rewardId))
             return true;
 
@@ -626,7 +626,8 @@ public sealed partial class NcStoreLogicSystem
         if (reward.Weight <= 0)
             return false;
 
-        if (reward.Amount.Min <= 0 || reward.Amount.Max <= 0 || reward.Amount.Min > reward.Amount.Max)
+        var amountRange = GetRewardAmountRange(reward);
+        if (amountRange.Min < 0 || amountRange.Max <= 0 || amountRange.Min > amountRange.Max)
             return false;
 
         var chance = GetRewardChance(reward);
@@ -688,6 +689,13 @@ public sealed partial class NcStoreLogicSystem
         return min + _random.Next(max - min + 1);
     }
 
+
+    private static IntRange GetRewardAmountRange(ContractRewardDef reward)
+    {
+        return reward.Count.Min > 0 || reward.Count.Max > 0
+            ? reward.Count
+            : reward.Amount;
+    }
     private static float GetRewardChance(ContractRewardDef reward) =>
         reward.Chance >= 0f ? reward.Chance : reward.Probability;
 

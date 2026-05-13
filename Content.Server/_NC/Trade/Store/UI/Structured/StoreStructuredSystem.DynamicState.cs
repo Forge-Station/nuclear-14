@@ -48,7 +48,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             buf.Clear();
 
             PopulateDynamicBalances(comp, userSnap, buf);
-            PopulateDynamicListings(comp, userSnap, scratch, buf);
+            PopulateDynamicListings(comp, user, userSnap, scratch, buf);
             PopulateDynamicCratePreview(comp, crateUid, tabs.HasSellTab, scanNeeds.NeedCrateScan, scratch, buf);
             PopulateDynamicContracts(comp, tabs.HasContractsTab, scratch, buf);
             PopulateDynamicContractSkip(uid, comp, tabs.HasContractsTab, buf);
@@ -210,6 +210,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
     private void PopulateDynamicListings(
         NcStoreComponent comp,
+        EntityUid user,
         NcInventorySnapshot? userSnap,
         DynamicScratch scratch,
         DynamicStateBuffer buf)
@@ -230,7 +231,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 continue;
 
             var owned = listing.Mode == StoreMode.Barter
-                ? _logic.GetMaxBarterCountFromSnapshot(listing, userSnap)
+                ? _logic.GetMaxBarterCount(user, listing, userSnap)
                 : _inventory.GetOwnedFromSnapshot(userSnap, listing.ProductEntity, listing.MatchMode);
 
             if (ShouldSendListingOwned(owned, isVisibleBuyListing) || listing.Mode == StoreMode.Barter)

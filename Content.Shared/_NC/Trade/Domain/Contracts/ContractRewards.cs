@@ -39,6 +39,10 @@ public sealed partial class ContractRewardDef
     [DataField("amount")]
     public IntRange Amount { get; set; } = IntRange.Fixed(1);
 
+    /// <summary>Readable amount alias used by newer Trade YAML. If set, this overrides amount.</summary>
+    [DataField("count")]
+    public IntRange Count { get; set; } = IntRange.Fixed(0);
+
     /// <summary>Legacy probability field.</summary>
     [DataField("prob")]
     public float Probability { get; set; } = 1.0f;

@@ -38,47 +38,23 @@ public sealed partial class NcContractSystem : EntitySystem
         return contract;
     }
 
-    private IReadOnlyList<NcSupplyRequirementEntry> GetSupplyRequirements(NcSupplyContractPrototype proto)
-    {
-        if (proto.Requirements.Count > 0)
-        {
-            if (proto.LegacyRequire.Count > 0)
-            {
-                Sawmill.Warning(
-                    $"[ContractsV2] Supply contract '{proto.ID}' uses both 'requirements' and legacy 'require'. " +
-                    "Only 'requirements' will be used.");
-            }
-
-            return proto.Requirements;
-        }
-
-        if (proto.LegacyRequire.Count > 0)
-        {
-            Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{proto.ID}' uses legacy field 'require'. " +
-                "Rename it to 'requirements'.");
-            return proto.LegacyRequire;
-        }
-
-        return Array.Empty<NcSupplyRequirementEntry>();
-    }
-
     private List<ContractTargetServerData> BuildSupplyTargets(EntityUid store, NcSupplyContractPrototype proto)
     {
-        var requirements = GetSupplyRequirements(proto);
-        if (requirements.Count == 0)
+        if (proto.Targets.Count == 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{proto.ID}' has no requirements. " +
-                "Use 'requirements' with at least one entry.");
+                $"[ContractsV2] Supply contract '{proto.ID}' has no targets. " +
+                "Use 'targets' with at least one entry.");
+            return new();
         }
 
-        var targets = new List<ContractTargetServerData>(requirements.Count);
+        var selected = ResolveSupplyTargetEntries(store, proto);
+        var targets = new List<ContractTargetServerData>(selected.Count);
 
-        for (var i = 0; i < requirements.Count; i++)
+        for (var i = 0; i < selected.Count; i++)
         {
-            var entry = requirements[i];
-            if (!TryBuildSupplyTarget(store, proto.ID, i, entry, out var target))
+            var (targetIndex, entry) = selected[i];
+            if (!TryBuildSupplyTarget(store, proto.ID, targetIndex, entry, out var target))
                 continue;
 
             targets.Add(target);
@@ -87,22 +63,66 @@ public sealed partial class NcContractSystem : EntitySystem
         return targets;
     }
 
+    private List<(int Index, NcSupplyTargetEntry Entry)> ResolveSupplyTargetEntries(
+        EntityUid store,
+        NcSupplyContractPrototype proto)
+    {
+        var result = new List<(int Index, NcSupplyTargetEntry Entry)>();
+        if (proto.Targets.Count == 0)
+            return result;
+
+        if (!IsSupplyTargetCountConfigured(proto.TargetCount))
+        {
+            result.Capacity = proto.Targets.Count;
+            for (var i = 0; i < proto.Targets.Count; i++)
+                result.Add((i, proto.Targets[i]));
+
+            return result;
+        }
+
+        var targetCount = RollFair(
+            new(QuasiKeyKind.Tc, store, proto.ID, "supply-v2"),
+            proto.TargetCount,
+            1,
+            proto.Targets.Count);
+
+        var picks = Math.Clamp(targetCount, 1, proto.Targets.Count);
+        var pool = new List<int>(proto.Targets.Count);
+        for (var i = 0; i < proto.Targets.Count; i++)
+            pool.Add(i);
+
+        result.Capacity = picks;
+        for (var i = 0; i < picks && pool.Count > 0; i++)
+        {
+            var chosenIndex = PickWeighted(_random, pool, index => Math.Max(0, proto.Targets[index].Weight));
+            pool.Remove(chosenIndex);
+            result.Add((chosenIndex, proto.Targets[chosenIndex]));
+        }
+
+        return result;
+    }
+
+    private static bool IsSupplyTargetCountConfigured(IntRange targetCount)
+    {
+        return targetCount.Min > 0 || targetCount.Max > 0;
+    }
+
     private bool TryBuildSupplyTarget(
         EntityUid store,
         string contractId,
         int index,
-        NcSupplyRequirementEntry entry,
+        NcSupplyTargetEntry entry,
         out ContractTargetServerData target)
     {
         target = default!;
 
-        if (!TryValidateSupplyRequirement(contractId, index, entry))
+        if (!TryValidateSupplyTarget(contractId, index, entry))
             return false;
 
         var hasPrototype = !string.IsNullOrWhiteSpace(entry.Prototype);
 
         var required = RollFair(
-            new(QuasiKeyKind.Req, store, contractId, $"supply:{index}:{entry.Prototype}:{entry.Group}"),
+            new(QuasiKeyKind.Req, store, contractId, $"supply-target:{index}:{entry.Prototype}:{entry.Group}"),
             entry.Count,
             1);
 
@@ -133,66 +153,25 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private List<ContractRewardDef> BuildSupplyRewardDefs(EntityUid store, NcSupplyContractPrototype proto)
     {
-        var rewards = new List<ContractRewardDef>();
-        var hasRewardsBlock = HasSupplyRewards(proto.Rewards);
+        var rewards = new List<ContractRewardDef>(proto.Reward.Count);
+        for (var i = 0; i < proto.Reward.Count; i++)
+            TryAppendSupplyRewardEntry(store, proto.ID, $"reward[{i}]", proto.Reward[i], rewards);
 
-        if (hasRewardsBlock)
-        {
-            AppendSupplyRewardBlock(store, proto, rewards);
-
-            if (proto.LegacyReward.Money > 0)
-            {
-                Sawmill.Warning(
-                    $"[ContractsV2] Supply contract '{proto.ID}' uses both new 'rewards' block and legacy 'reward.money'. " +
-                    "Legacy reward.money is ignored. Put currency rewards under rewards.guaranteed.");
-            }
-
-            return rewards;
-        }
-
-        AppendLegacySupplyReward(store, proto, rewards);
         return rewards;
-    }
-
-    private static bool HasSupplyRewards(Content.Shared._NC.Trade.NcSupplyRewardsData rewards)
-    {
-        return rewards.Guaranteed.Count > 0 || rewards.Random.Count > 0 || rewards.Pools.Count > 0;
-    }
-
-    private void AppendSupplyRewardBlock(
-        EntityUid store,
-        NcSupplyContractPrototype proto,
-        List<ContractRewardDef> output)
-    {
-        for (var i = 0; i < proto.Rewards.Guaranteed.Count; i++)
-            TryAppendSupplyRewardEntry(store, proto.ID, $"rewards.guaranteed[{i}]", proto.Rewards.Guaranteed[i], 1.0f, output);
-
-        for (var i = 0; i < proto.Rewards.Random.Count; i++)
-            TryAppendSupplyRewardEntry(store, proto.ID, $"rewards.random[{i}]", proto.Rewards.Random[i], proto.Rewards.Random[i].Chance, output);
-
-        for (var i = 0; i < proto.Rewards.Pools.Count; i++)
-            TryAppendSupplyRewardPoolRoll(proto.ID, $"rewards.pools[{i}]", proto.Rewards.Pools[i], output);
     }
 
     private bool TryAppendSupplyRewardEntry(
         EntityUid store,
         string contractId,
         string path,
-        Content.Shared._NC.Trade.NcSupplyRewardEntry entry,
-        float chance,
+        NcSupplyRewardEntry entry,
         List<ContractRewardDef> output)
     {
-        if (!IsChanceValid(chance))
-        {
-            Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} has invalid chance={chance}. Expected 0..1.");
-            return false;
-        }
-
-        if (!IsStrictPositiveRange(entry.Amount))
+        if (!IsRewardCountRange(entry.Count))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{contractId}' {path} has invalid amount range " +
-                $"{entry.Amount.Min}..{entry.Amount.Max}.");
+                $"[ContractsV2] Supply contract '{contractId}' {path} has invalid count range " +
+                $"{entry.Count.Min}..{entry.Count.Max}.");
             return false;
         }
 
@@ -216,37 +195,48 @@ public sealed partial class NcContractSystem : EntitySystem
                 {
                     Type = StoreRewardType.Item,
                     Prototype = entry.Prototype,
-                    Amount = entry.Amount,
-                    Probability = chance,
+                    Amount = entry.Count,
                     Weight = 1
                 });
                 return true;
 
             case StoreRewardType.Currency:
-                var currency = ResolveSupplyRewardCurrency(store, entry.Currency);
-                if (string.IsNullOrWhiteSpace(currency))
+                if (string.IsNullOrWhiteSpace(entry.Currency))
                 {
-                    Sawmill.Warning(
-                        $"[ContractsV2] Supply contract '{contractId}' {path} is Currency but has no currency " +
-                        "and no contracts preset skipCurrency fallback.");
+                    Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} is Currency but has no currency.");
                     return false;
                 }
 
                 output.Add(new ContractRewardDef
                 {
                     Type = StoreRewardType.Currency,
-                    Currency = currency,
-                    Amount = entry.Amount,
-                    Probability = chance,
+                    Currency = entry.Currency,
+                    Amount = entry.Count,
                     Weight = 1
                 });
                 return true;
 
             case StoreRewardType.Pool:
-                Sawmill.Warning(
-                    $"[ContractsV2] Supply contract '{contractId}' {path} uses type: Pool inside guaranteed/random. " +
-                    "Use rewards.pools instead.");
-                return false;
+                if (string.IsNullOrWhiteSpace(entry.Pool))
+                {
+                    Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} is Pool but has no pool id.");
+                    return false;
+                }
+
+                if (!_prototypes.HasIndex<NcContractRewardPoolPrototype>(entry.Pool))
+                {
+                    Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} references missing reward pool '{entry.Pool}'.");
+                    return false;
+                }
+
+                output.Add(new ContractRewardDef
+                {
+                    Type = StoreRewardType.Pool,
+                    Pool = entry.Pool,
+                    Amount = entry.Count,
+                    Weight = 1
+                });
+                return true;
 
             default:
                 Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
@@ -254,98 +244,9 @@ public sealed partial class NcContractSystem : EntitySystem
         }
     }
 
-    private bool TryAppendSupplyRewardPoolRoll(
-        string contractId,
-        string path,
-        Content.Shared._NC.Trade.NcSupplyRewardPoolRollEntry entry,
-        List<ContractRewardDef> output)
-    {
-        if (string.IsNullOrWhiteSpace(entry.Pool))
-        {
-            Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} has no pool id.");
-            return false;
-        }
-
-        if (!_prototypes.HasIndex<NcContractRewardPoolPrototype>(entry.Pool))
-        {
-            Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} references missing reward pool '{entry.Pool}'.");
-            return false;
-        }
-
-        if (!IsStrictPositiveRange(entry.Rolls))
-        {
-            Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{contractId}' {path} has invalid rolls range " +
-                $"{entry.Rolls.Min}..{entry.Rolls.Max}.");
-            return false;
-        }
-
-        if (!IsChanceValid(entry.Chance))
-        {
-            Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} has invalid chance={entry.Chance}. Expected 0..1.");
-            return false;
-        }
-
-        output.Add(new ContractRewardDef
-        {
-            Type = StoreRewardType.Pool,
-            Pool = entry.Pool,
-            Amount = entry.Rolls,
-            Probability = entry.Chance,
-            Weight = 1
-        });
-        return true;
-    }
-
-    private void AppendLegacySupplyReward(EntityUid store, NcSupplyContractPrototype proto, List<ContractRewardDef> rewards)
-    {
-        var money = proto.LegacyReward.Money;
-        if (money <= 0)
-            return;
-
-        Sawmill.Warning(
-            $"[ContractsV2] Supply contract '{proto.ID}' uses legacy 'reward.money'. " +
-            "Prefer rewards.guaranteed with type: Currency.");
-
-        var currency = ResolveSupplyRewardCurrency(store, proto.LegacyReward.Currency);
-        if (string.IsNullOrWhiteSpace(currency))
-        {
-            Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{proto.ID}' has reward.money={money}, but no reward.currency " +
-                "and no contracts preset skipCurrency fallback. Money reward skipped.");
-            return;
-        }
-
-        rewards.Add(new ContractRewardDef
-        {
-            Type = StoreRewardType.Currency,
-            Currency = currency,
-            Amount = IntRange.Fixed(money),
-            Probability = 1.0f,
-            Weight = 1
-        });
-    }
-
     private static bool IsStrictPositiveRange(IntRange range)
     {
         return range.Min > 0 && range.Max > 0 && range.Min <= range.Max;
     }
 
-    private static bool IsChanceValid(float chance)
-    {
-        return chance >= 0f && chance <= 1f;
-    }
-
-    private string ResolveSupplyRewardCurrency(EntityUid store, string explicitCurrency)
-    {
-        if (!string.IsNullOrWhiteSpace(explicitCurrency))
-            return explicitCurrency;
-
-        if (!TryComp(store, out NcStoreComponent? comp))
-            return string.Empty;
-
-        return TryResolveContractPreset(store, comp, out var preset)
-            ? preset.SkipCurrency
-            : string.Empty;
-    }
 }

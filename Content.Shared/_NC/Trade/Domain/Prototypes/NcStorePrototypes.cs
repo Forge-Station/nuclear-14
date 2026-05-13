@@ -1,4 +1,4 @@
-﻿using Robust.Shared.Prototypes;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 
 namespace Content.Shared._NC.Trade;
@@ -62,8 +62,8 @@ public sealed partial class NcStoreProfilePrototype : IPrototype
     public List<ProtoId<StorePresetStructuredPrototype>> Sell { get; private set; } = new();
 
     /// <summary>
-    /// Barter listings. Profile authors define cost/receive entries explicitly.
-    /// Execution is handled only by the Barter V1 transaction path.
+    /// Barter presets. Actual exchanges are standalone ncBarterListing prototypes, grouped by ncBarterCategory listings.
+    /// Execution is handled only by the Barter transaction path.
     /// </summary>
     [DataField("barter")]
     public List<ProtoId<NcBarterPresetPrototype>> Barter { get; private set; } = new();
@@ -126,37 +126,6 @@ public sealed partial class NcBarterReceivePoolEntry
     public float Chance { get; set; } = 1.0f;
 }
 
-[DataDefinition]
-public sealed partial class NcBarterCatalogEntry
-{
-    [DataField("id", required: true)]
-    public string Id { get; set; } = string.Empty;
-
-    [DataField("name")]
-    public string Name { get; set; } = string.Empty;
-
-    [DataField("description")]
-    public string Description { get; set; } = string.Empty;
-
-    /// <summary>Optional entity prototype id used as card icon. If empty, the first receive/cost item is used.</summary>
-    [DataField("icon")]
-    public string Icon { get; set; } = string.Empty;
-
-    /// <summary>How many times this barter can be performed. -1 means unlimited.</summary>
-    [DataField("count")]
-    public int Count { get; set; } = -1;
-
-    [DataField("cost", required: true)]
-    public List<NcBarterCostEntry> Cost { get; set; } = new();
-
-    [DataField("receive", required: false)]
-    public List<NcBarterReceiveEntry> Receive { get; set; } = new();
-
-    /// <summary>Optional random receive pools. Cost remains fixed; only receive side can be random.</summary>
-    [DataField("receivePools", required: false)]
-    public List<NcBarterReceivePoolEntry> ReceivePools { get; set; } = new();
-}
-
 [Prototype("ncBarterListing")]
 public sealed partial class NcBarterListingPrototype : IPrototype
 {
@@ -197,13 +166,9 @@ public sealed partial class NcBarterCategoryPrototype : IPrototype
     [DataField("name", required: true)]
     public string Name { get; private set; } = string.Empty;
 
-    /// <summary>Preferred format: references to standalone ncBarterListing prototypes.</summary>
-    [DataField("listings")]
+    /// <summary>References to standalone ncBarterListing prototypes.</summary>
+    [DataField("listings", required: true)]
     public List<ProtoId<NcBarterListingPrototype>> Listings { get; private set; } = new();
-
-    /// <summary>Deprecated inline format. Keep only while migrating old YAML to ncBarterListing + listings.</summary>
-    [DataField("entries")]
-    public List<NcBarterCatalogEntry> Entries { get; private set; } = new();
 }
 
 [Prototype("ncBarterPreset")]
@@ -482,7 +447,7 @@ public sealed partial class NcItemGroupPrototype : IPrototype
 }
 
 [DataDefinition]
-public sealed partial class NcSupplyRequirementEntry
+public sealed partial class NcSupplyTargetEntry
 {
     /// <summary>Exact entity prototype required for turn-in.</summary>
     [DataField("prototype")]
@@ -492,37 +457,22 @@ public sealed partial class NcSupplyRequirementEntry
     [DataField("group")]
     public string Group { get; set; } = string.Empty;
 
+    /// <summary>Required amount. If this is a range, it is rolled once when the contract is generated.</summary>
     [DataField("count")]
     public IntRange Count { get; set; } = IntRange.Fixed(1);
+
+    /// <summary>Used only when targetCount is configured. Larger weight means this target is picked more often.</summary>
+    [DataField("weight")]
+    public int Weight { get; set; } = 1;
 }
 
-[DataDefinition]
-public sealed partial class NcSupplyLegacyRewardData
-{
-    /// <summary>Legacy convenience currency reward. Prefer rewards.guaranteed in new YAML.</summary>
-    [DataField("money")]
-    public int Money { get; set; }
-
-    [DataField("currency")]
-    public string Currency { get; set; } = string.Empty;
-}
-
-[DataDefinition]
-public sealed partial class NcSupplyRewardsData
-{
-    /// <summary>Always granted rewards. Use type: Currency with currency, or type: Item with prototype.</summary>
-    [DataField("guaranteed")]
-    public List<NcSupplyRewardEntry> Guaranteed { get; private set; } = new();
-
-    /// <summary>Independent chance-based rewards.</summary>
-    [DataField("random")]
-    public List<NcSupplyRewardEntry> Random { get; private set; } = new();
-
-    /// <summary>Weighted pool rolls. Use pool + rolls so item amount is never confused with pool roll count.</summary>
-    [DataField("pools")]
-    public List<NcSupplyRewardPoolRollEntry> Pools { get; private set; } = new();
-}
-
+/// <summary>
+/// ContractsV2 Supply reward entry. Unified format:
+/// reward:
+/// - type: Currency / Item / Pool
+///   currency/prototype/pool: ...
+///   count: 1 or { min, max }
+/// </summary>
 [DataDefinition]
 public sealed partial class NcSupplyRewardEntry
 {
@@ -535,24 +485,11 @@ public sealed partial class NcSupplyRewardEntry
     [DataField("currency")]
     public string Currency { get; set; } = string.Empty;
 
-    [DataField("amount")]
-    public IntRange Amount { get; set; } = IntRange.Fixed(1);
-
-    [DataField("chance")]
-    public float Chance { get; set; } = 1.0f;
-}
-
-[DataDefinition]
-public sealed partial class NcSupplyRewardPoolRollEntry
-{
-    [DataField("pool", required: true)]
+    [DataField("pool")]
     public string Pool { get; set; } = string.Empty;
 
-    [DataField("rolls")]
-    public IntRange Rolls { get; set; } = IntRange.Fixed(1);
-
-    [DataField("chance")]
-    public float Chance { get; set; } = 1.0f;
+    [DataField("count")]
+    public IntRange Count { get; set; } = IntRange.Fixed(1);
 }
 
 /// <summary>
@@ -580,21 +517,17 @@ public sealed partial class NcSupplyContractPrototype : IPrototype
     [DataField("icon")]
     public string Icon { get; private set; } = string.Empty;
 
-    /// <summary>Preferred ContractsV2 requirement list. Each entry must use exactly one of prototype/group.</summary>
-    [DataField("requirements", required: false)]
-    public List<NcSupplyRequirementEntry> Requirements { get; private set; } = new();
+    /// <summary>Supply targets. If targetCount is absent, all targets are required. If targetCount is set, a weighted subset is picked on generation.</summary>
+    [DataField("targets", required: false)]
+    public List<NcSupplyTargetEntry> Targets { get; private set; } = new();
 
-    /// <summary>Legacy alias kept only so older test YAML can be migrated without crashing immediately.</summary>
-    [DataField("require", required: false)]
-    public List<NcSupplyRequirementEntry> LegacyRequire { get; private set; } = new();
+    /// <summary>Optional number of targets to pick from the targets pool. Fixed 0 means unset / require all targets.</summary>
+    [DataField("targetCount", required: false)]
+    public IntRange TargetCount { get; private set; } = IntRange.Fixed(0);
 
-    /// <summary>Legacy convenience money block. Prefer rewards.guaranteed in new YAML.</summary>
-    [DataField("reward")]
-    public NcSupplyLegacyRewardData LegacyReward { get; private set; } = new();
-
-    /// <summary>Clean Supply V2 reward schema: guaranteed/random/pools.</summary>
-    [DataField("rewards")]
-    public NcSupplyRewardsData Rewards { get; private set; } = new();
+    /// <summary>Unified Supply rewards. Use type: Currency, Item or Pool with count.</summary>
+    [DataField("reward", required: true)]
+    public List<NcSupplyRewardEntry> Reward { get; private set; } = new();
 }
 
 

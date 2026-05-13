@@ -46,7 +46,7 @@ public sealed partial class NcContractSystem : EntitySystem
             var rewardId = GetRewardId(bp);
             var count = RollFair(
                 new(QuasiKeyKind.RAmount, store, contractProtoId, $"{depth}:{i}:{bp.Type}:{rewardId}"),
-                bp.Amount,
+                GetRewardAmountRange(bp),
                 0);
 
             if (count <= 0)
@@ -140,11 +140,12 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
             }
 
-            if (def.Amount.Min <= 0 || def.Amount.Max <= 0 || def.Amount.Min > def.Amount.Max)
+            var amountRange = GetRewardAmountRange(def);
+            if (amountRange.Min < 0 || amountRange.Max <= 0 || amountRange.Min > amountRange.Max)
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] Reward pool '{poolLabel}' entry #{i} has invalid amount range " +
-                    $"{def.Amount.Min}..{def.Amount.Max}.");
+                    $"[ContractsV2] Reward pool '{poolLabel}' entry #{i} has invalid count/amount range " +
+                    $"{amountRange.Min}..{amountRange.Max}.");
                 continue;
             }
 
@@ -253,6 +254,13 @@ public sealed partial class NcContractSystem : EntitySystem
     private static float GetRewardProbability(ContractRewardDef reward)
     {
         return reward.Chance >= 0f ? reward.Chance : reward.Probability;
+    }
+
+    private static IntRange GetRewardAmountRange(ContractRewardDef reward)
+    {
+        return reward.Count.Min > 0 || reward.Count.Max > 0
+            ? reward.Count
+            : reward.Amount;
     }
 
     private static List<ContractRewardData> AggregateRewards(List<ContractRewardData> rewards)

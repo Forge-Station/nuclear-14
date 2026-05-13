@@ -790,6 +790,25 @@ public sealed partial class NcStoreInventorySystem : EntitySystem
         return false;
     }
 
+    public bool EntityMatchesItemGroup(EntityUid entity, NcItemGroupPrototype group)
+    {
+        if (!_ents.TryGetComponent(entity, out MetaDataComponent? meta) ||
+            meta.EntityPrototype == null)
+        {
+            return false;
+        }
+
+        var protoId = meta.EntityPrototype.ID;
+
+        if (group.Prototypes.Contains(protoId))
+            return true;
+
+        if (group.Tags.Count == 0)
+            return false;
+
+        return ProtoHasAnyMatcherTag(protoId, group.Tags);
+    }
+
     public string? GetProductStackType(string productProtoId)
     {
         if (_productStackTypeCache.TryGetValue(productProtoId, out var cached))

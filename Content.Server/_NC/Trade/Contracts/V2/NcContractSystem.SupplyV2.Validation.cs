@@ -1,4 +1,5 @@
 using Content.Shared._NC.Trade;
+using Content.Shared.Stacks;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server._NC.Trade;
@@ -21,18 +22,20 @@ public sealed partial class NcContractSystem : EntitySystem
             valid = false;
         }
 
-        var requirements = GetSupplyRequirements(proto);
-        if (requirements.Count == 0)
+        if (proto.Targets.Count == 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{proto.ID}' has no requirements. " +
-                "Use 'requirements' with at least one entry. Contract skipped.");
+                $"[ContractsV2] Supply contract '{proto.ID}' has no targets. " +
+                "Use 'targets' with at least one entry. Contract skipped.");
             valid = false;
         }
 
-        for (var i = 0; i < requirements.Count; i++)
+        if (!TryValidateSupplyTargetCount(proto))
+            valid = false;
+
+        for (var i = 0; i < proto.Targets.Count; i++)
         {
-            if (!TryValidateSupplyRequirement(proto.ID, i, requirements[i]))
+            if (!TryValidateSupplyTarget(proto.ID, i, proto.Targets[i]))
                 valid = false;
         }
 
@@ -42,10 +45,35 @@ public sealed partial class NcContractSystem : EntitySystem
         return valid;
     }
 
-    private bool TryValidateSupplyRequirement(
+    private bool TryValidateSupplyTargetCount(NcSupplyContractPrototype proto)
+    {
+        if (!IsSupplyTargetCountConfigured(proto.TargetCount))
+            return true;
+
+        var range = proto.TargetCount;
+        if (range.Min < 1 || range.Max < 1 || range.Min > range.Max)
+        {
+            Sawmill.Warning(
+                $"[ContractsV2] Supply contract '{proto.ID}' has invalid targetCount range " +
+                $"{range.Min}..{range.Max}. Expected min >= 1, max >= min.");
+            return false;
+        }
+
+        if (proto.Targets.Count > 0 && range.Max > proto.Targets.Count)
+        {
+            Sawmill.Warning(
+                $"[ContractsV2] Supply contract '{proto.ID}' has targetCount max={range.Max}, " +
+                $"but only {proto.Targets.Count} targets are defined.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool TryValidateSupplyTarget(
         string contractId,
         int index,
-        NcSupplyRequirementEntry entry)
+        NcSupplyTargetEntry entry)
     {
         var hasPrototype = !string.IsNullOrWhiteSpace(entry.Prototype);
         var hasGroup = !string.IsNullOrWhiteSpace(entry.Group);
@@ -54,16 +82,24 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             Sawmill.Warning(
                 hasPrototype
-                    ? $"[ContractsV2] Supply contract '{contractId}' requirement #{index} has both prototype and group. Use exactly one."
-                    : $"[ContractsV2] Supply contract '{contractId}' requirement #{index} has neither prototype nor group.");
+                    ? $"[ContractsV2] Supply contract '{contractId}' target #{index} has both prototype and group. Use exactly one."
+                    : $"[ContractsV2] Supply contract '{contractId}' target #{index} has neither prototype nor group.");
             return false;
         }
 
         if (!IsStrictPositiveRange(entry.Count))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{contractId}' requirement #{index} has invalid count range " +
+                $"[ContractsV2] Supply contract '{contractId}' target #{index} has invalid count range " +
                 $"{entry.Count.Min}..{entry.Count.Max}. Expected min > 0, max > 0, min <= max.");
+            return false;
+        }
+
+        if (entry.Weight <= 0)
+        {
+            Sawmill.Warning(
+                $"[ContractsV2] Supply contract '{contractId}' target #{index} has non-positive weight={entry.Weight}. " +
+                "Weight is used when targetCount is configured and must be > 0.");
             return false;
         }
 
@@ -73,7 +109,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 return true;
 
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{contractId}' requirement #{index} references missing entity prototype " +
+                $"[ContractsV2] Supply contract '{contractId}' target #{index} references missing entity prototype " +
                 $"'{entry.Prototype}'.");
             return false;
         }
@@ -81,8 +117,8 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!_prototypes.TryIndex<NcItemGroupPrototype>(entry.Group, out var group))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{contractId}' requirement #{index} references missing ncItemGroup " +
-                $"'{entry.Group}'. Supply V2 group requirements must reference ncItemGroup prototypes, not legacy matchers.");
+                $"[ContractsV2] Supply contract '{contractId}' target #{index} references missing ncItemGroup " +
+                $"'{entry.Group}'. Supply V2 group targets must reference ncItemGroup prototypes, not legacy matchers.");
             return false;
         }
 
@@ -93,7 +129,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return true;
 
         Sawmill.Warning(
-            $"[ContractsV2] Supply contract '{contractId}' requirement #{index} references invalid item group '{entry.Group}'.");
+            $"[ContractsV2] Supply contract '{contractId}' target #{index} references invalid item group '{entry.Group}'.");
         return false;
     }
 
@@ -150,39 +186,20 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool TryValidateSupplyRewardsForPool(NcSupplyContractPrototype proto)
     {
-        if (!HasSupplyRewards(proto.Rewards))
-            return TryValidateLegacySupplyRewardForPool(proto);
+        if (proto.Reward.Count == 0)
+        {
+            Sawmill.Warning(
+                $"[ContractsV2] Supply contract '{proto.ID}' has no reward entries. " +
+                "Use 'reward' as a list with type: Currency, Item or Pool. Contract skipped.");
+            return false;
+        }
 
         var valid = true;
         var hasAtLeastOneValidReward = false;
 
-        if (proto.LegacyReward.Money > 0)
+        for (var i = 0; i < proto.Reward.Count; i++)
         {
-            Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{proto.ID}' uses both new 'rewards' block and legacy 'reward.money'. " +
-                "Legacy reward.money will be ignored.");
-        }
-
-        for (var i = 0; i < proto.Rewards.Guaranteed.Count; i++)
-        {
-            if (TryValidateSupplyRewardEntry(proto.ID, $"rewards.guaranteed[{i}]", proto.Rewards.Guaranteed[i], 1.0f))
-                hasAtLeastOneValidReward = true;
-            else
-                valid = false;
-        }
-
-        for (var i = 0; i < proto.Rewards.Random.Count; i++)
-        {
-            var reward = proto.Rewards.Random[i];
-            if (TryValidateSupplyRewardEntry(proto.ID, $"rewards.random[{i}]", reward, reward.Chance))
-                hasAtLeastOneValidReward = true;
-            else
-                valid = false;
-        }
-
-        for (var i = 0; i < proto.Rewards.Pools.Count; i++)
-        {
-            if (TryValidateSupplyRewardPoolRoll(proto.ID, $"rewards.pools[{i}]", proto.Rewards.Pools[i]))
+            if (TryValidateSupplyRewardEntry(proto.ID, $"reward[{i}]", proto.Reward[i]))
                 hasAtLeastOneValidReward = true;
             else
                 valid = false;
@@ -192,54 +209,28 @@ public sealed partial class NcContractSystem : EntitySystem
             return valid;
 
         Sawmill.Warning(
-            $"[ContractsV2] Supply contract '{proto.ID}' has a rewards block, but no valid reward entries. Contract skipped.");
-        return false;
-    }
-
-    private bool TryValidateLegacySupplyRewardForPool(NcSupplyContractPrototype proto)
-    {
-        if (proto.LegacyReward.Money > 0)
-        {
-            Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{proto.ID}' uses legacy 'reward.money'. " +
-                "Prefer rewards.guaranteed with type: Currency.");
-            return true;
-        }
-
-        Sawmill.Warning(
-            $"[ContractsV2] Supply contract '{proto.ID}' has no rewards. " +
-            "Add rewards.guaranteed/random/pools or a temporary legacy reward.money. Contract skipped.");
+            $"[ContractsV2] Supply contract '{proto.ID}' has reward entries, but none of them are valid. Contract skipped.");
         return false;
     }
 
     private bool TryValidateSupplyRewardEntry(
         string contractId,
         string path,
-        NcSupplyRewardEntry entry,
-        float chance)
+        NcSupplyRewardEntry entry)
     {
-        if (!IsChanceValid(chance))
-        {
-            Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} has invalid chance={chance}. Expected 0..1.");
-            return false;
-        }
-
-        if (!IsStrictPositiveRange(entry.Amount))
+        if (!IsRewardCountRange(entry.Count))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{contractId}' {path} has invalid amount range " +
-                $"{entry.Amount.Min}..{entry.Amount.Max}. Expected min > 0, max > 0, min <= max.");
+                $"[ContractsV2] Supply contract '{contractId}' {path} has invalid count range " +
+                $"{entry.Count.Min}..{entry.Count.Max}. Expected min >= 0, max > 0, min <= max.");
             return false;
         }
 
         switch (entry.Type)
         {
             case StoreRewardType.Item:
-                if (string.IsNullOrWhiteSpace(entry.Prototype))
-                {
-                    Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} is Item but has no prototype.");
+                if (!RequireOnlyRewardTarget(contractId, path, nameof(entry.Prototype), entry.Prototype, entry.Currency, entry.Pool))
                     return false;
-                }
 
                 if (_prototypes.HasIndex<EntityPrototype>(entry.Prototype))
                     return true;
@@ -250,21 +241,29 @@ public sealed partial class NcContractSystem : EntitySystem
                 return false;
 
             case StoreRewardType.Currency:
-                if (!string.IsNullOrWhiteSpace(entry.Currency))
+                if (!RequireOnlyRewardTarget(contractId, path, nameof(entry.Currency), entry.Currency, entry.Prototype, entry.Pool))
+                    return false;
+
+                if (_prototypes.HasIndex<StackPrototype>(entry.Currency))
                     return true;
 
-                // Empty currency can still be valid if the store's contracts preset has skipCurrency.
-                // That store-specific fallback is resolved later when the contract is actually generated.
                 Sawmill.Warning(
-                    $"[ContractsV2] Supply contract '{contractId}' {path} is Currency without explicit currency. " +
-                    "It will require a store contracts preset skipCurrency fallback.");
-                return true;
+                    $"[ContractsV2] Supply contract '{contractId}' {path} references missing stack currency " +
+                    $"'{entry.Currency}'.");
+                return false;
 
             case StoreRewardType.Pool:
-                Sawmill.Warning(
-                    $"[ContractsV2] Supply contract '{contractId}' {path} uses type: Pool inside guaranteed/random. " +
-                    "Use rewards.pools instead.");
-                return false;
+                if (!RequireOnlyRewardTarget(contractId, path, nameof(entry.Pool), entry.Pool, entry.Prototype, entry.Currency))
+                    return false;
+
+                if (!_prototypes.TryIndex<NcContractRewardPoolPrototype>(entry.Pool, out var pool))
+                {
+                    Sawmill.Warning(
+                        $"[ContractsV2] Supply contract '{contractId}' {path} references missing reward pool '{entry.Pool}'.");
+                    return false;
+                }
+
+                return TryValidateRewardPoolPrototype(contractId, entry.Pool, pool);
 
             default:
                 Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
@@ -272,38 +271,27 @@ public sealed partial class NcContractSystem : EntitySystem
         }
     }
 
-    private bool TryValidateSupplyRewardPoolRoll(
+    private bool RequireOnlyRewardTarget(
         string contractId,
         string path,
-        NcSupplyRewardPoolRollEntry entry)
+        string expectedField,
+        string expectedValue,
+        string otherA,
+        string otherB)
     {
-        if (string.IsNullOrWhiteSpace(entry.Pool))
+        if (string.IsNullOrWhiteSpace(expectedValue))
         {
-            Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} has no pool id.");
+            Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} requires field '{expectedField}'.");
             return false;
         }
 
-        if (!_prototypes.TryIndex<NcContractRewardPoolPrototype>(entry.Pool, out var pool))
-        {
-            Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} references missing reward pool '{entry.Pool}'.");
-            return false;
-        }
+        if (string.IsNullOrWhiteSpace(otherA) && string.IsNullOrWhiteSpace(otherB))
+            return true;
 
-        if (!IsStrictPositiveRange(entry.Rolls))
-        {
-            Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{contractId}' {path} has invalid rolls range " +
-                $"{entry.Rolls.Min}..{entry.Rolls.Max}. Expected min > 0, max > 0, min <= max.");
-            return false;
-        }
-
-        if (!IsChanceValid(entry.Chance))
-        {
-            Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} has invalid chance={entry.Chance}. Expected 0..1.");
-            return false;
-        }
-
-        return TryValidateRewardPoolPrototype(contractId, entry.Pool, pool);
+        Sawmill.Warning(
+            $"[ContractsV2] Supply contract '{contractId}' {path} has extra reward target fields. " +
+            $"For each reward entry use only the field required by its type.");
+        return false;
     }
 
     private bool TryValidateRewardPoolPrototype(
@@ -348,11 +336,12 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        if (!IsStrictPositiveRange(entry.Amount))
+        var amountRange = GetRewardAmountRange(entry);
+        if (!IsRewardCountRange(amountRange))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Reward pool '{poolId}' used by '{ownerId}' entry #{index} has invalid amount range " +
-                $"{entry.Amount.Min}..{entry.Amount.Max}. Expected min > 0, max > 0, min <= max.");
+                $"[ContractsV2] Reward pool '{poolId}' used by '{ownerId}' entry #{index} has invalid count/amount range " +
+                $"{amountRange.Min}..{amountRange.Max}. Expected min >= 0, max > 0, min <= max.");
             return false;
         }
 
@@ -413,4 +402,15 @@ public sealed partial class NcContractSystem : EntitySystem
                 return false;
         }
     }
+
+    private static bool IsRewardCountRange(IntRange range)
+    {
+        return range.Min >= 0 && range.Max > 0 && range.Min <= range.Max;
+    }
+
+    private static bool IsChanceValid(float chance)
+    {
+        return chance >= 0f && chance <= 1f;
+    }
+
 }
