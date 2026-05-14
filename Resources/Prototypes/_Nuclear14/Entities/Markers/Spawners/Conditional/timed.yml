@@ -615,10 +615,13 @@
         state: raider_melee
       - state: timed
   - type: Timer
-  - type: TimedSpawner
+  - type: TimedSpawner # Forge-Change
     prototypes:
       - N14MobRaiderPsycho
-    chance: 0.95
+      - N14MobRaiderPsycho1 
+      - N14MobRaiderPsycho2
+      - N14MobRaiderPsycho3
+    chance: 0.2
     intervalSeconds: 2400
     minimumEntitiesSpawned: 1
     maximumEntitiesSpawned: 3

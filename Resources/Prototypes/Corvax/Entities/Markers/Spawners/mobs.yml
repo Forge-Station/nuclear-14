@@ -147,3 +147,35 @@
   - type: ConditionalSpawner
     prototypes:
       - N14MobDeathclawicy
+
+# Raiders
+
+- type: entity
+  name: Wild Tribal Skirmisher Spawner
+  id: N14SpawnMobNPCRaiderTribeSkir
+  parent: MarkerBase
+  components:
+    - type: Sprite
+      layers:
+        - state: green
+        - sprite: _Nuclear14/Mobs/RaidersSimpleMob/Raiders.rsi
+          state: raider_ranged
+        - state: ai
+    - type: ConditionalSpawner
+      prototypes:
+        - N14MobNPCRaiderTribeSkir
+
+- type: entity
+  name: Wild Tribal Warrior Spawner
+  id: N14SpawnMobNPCRaiderTribeWarr
+  parent: MarkerBase
+  components:
+    - type: Sprite
+      layers:
+        - state: green
+        - sprite: _Nuclear14/Mobs/RaidersSimpleMob/Raiders.rsi
+          state: raider_ranged
+        - state: ai
+    - type: ConditionalSpawner
+      prototypes:
+        - N14MobNPCRaiderTribeWarr
