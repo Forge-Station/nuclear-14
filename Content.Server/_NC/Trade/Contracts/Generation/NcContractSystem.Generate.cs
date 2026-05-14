@@ -11,6 +11,7 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             ContractPoolCandidateKind.Legacy when candidate.Legacy != null => CreateContractData(store, candidate.Legacy),
             ContractPoolCandidateKind.SupplyV2 when candidate.Supply != null => CreateSupplyContractData(store, candidate.Supply),
+            ContractPoolCandidateKind.RetrievalV2 when candidate.Retrieval != null => CreateRetrievalContractData(store, candidate.Retrieval),
             _ => CreateInvalidContractData(candidate)
         };
     }

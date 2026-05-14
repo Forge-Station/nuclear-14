@@ -437,34 +437,7 @@ public sealed partial class NcStoreInventorySystem : EntitySystem
         if (matchMode == PrototypeMatchMode.Matcher)
         {
             var matcher = GetCompiledMatcher(productProtoId, warnIfInvalid: false);
-            if (matcher == null)
-                return 0;
-
-            var total = 0;
-            foreach (var itemProtoId in matcher.Items)
-            {
-                if (snapshot.ProtoCounts.TryGetValue(itemProtoId, out var count))
-                    total += count;
-            }
-
-            if (matcher.Tags.Count == 0)
-                return total;
-
-            foreach (var (protoId, count) in snapshot.ProtoCounts)
-            {
-                if (count <= 0)
-                    continue;
-
-                if (matcher.Items.Contains(protoId))
-                    continue;
-
-                if (!MatcherPrototypeHasAnyTag(matcher, protoId))
-                    continue;
-
-                total += count;
-            }
-
-            return total;
+            return matcher == null ? 0 : GetOwnedFromSnapshotForCompiledMatcher(snapshot, matcher);
         }
 
         var stackType = GetProductStackType(productProtoId);
@@ -705,6 +678,12 @@ public sealed partial class NcStoreInventorySystem : EntitySystem
             if (request.Matcher.Items.Contains(proto.ID))
                 return true;
 
+            if (_ents.TryGetComponent(ent, out StackComponent? stack) &&
+                MatcherMatchesStackType(request.Matcher, stack.StackTypeId))
+            {
+                return true;
+            }
+
             if (request.Matcher.Tags.Count == 0)
                 return false;
 
@@ -799,14 +778,21 @@ public sealed partial class NcStoreInventorySystem : EntitySystem
         }
 
         var protoId = meta.EntityPrototype.ID;
+        var matcher = new CompiledMatcher(group.Prototypes, group.Tags);
 
-        if (group.Prototypes.Contains(protoId))
+        if (matcher.Items.Contains(protoId))
             return true;
 
-        if (group.Tags.Count == 0)
+        if (_ents.TryGetComponent(entity, out StackComponent? stack) &&
+            MatcherMatchesStackType(matcher, stack.StackTypeId))
+        {
+            return true;
+        }
+
+        if (matcher.Tags.Count == 0)
             return false;
 
-        return ProtoHasAnyMatcherTag(protoId, group.Tags);
+        return MatcherPrototypeHasAnyTag(matcher, protoId);
     }
 
     public string? GetProductStackType(string productProtoId)

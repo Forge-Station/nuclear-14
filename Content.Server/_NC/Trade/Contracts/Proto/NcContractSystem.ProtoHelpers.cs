@@ -11,15 +11,18 @@ public sealed partial class NcContractSystem : EntitySystem
     private sealed class ContractMatcherSpec
     {
         public readonly HashSet<string> MatchItems;
+        public readonly HashSet<string> MatchStackTypes;
         public readonly List<string> SpawnPool;
         public readonly List<string> MatchTags;
 
         public ContractMatcherSpec(
             HashSet<string> matchItems,
+            HashSet<string> matchStackTypes,
             List<string> spawnPool,
             List<string> matchTags)
         {
             MatchItems = matchItems;
+            MatchStackTypes = matchStackTypes;
             SpawnPool = spawnPool;
             MatchTags = matchTags;
         }
@@ -91,6 +94,7 @@ public sealed partial class NcContractSystem : EntitySystem
         out ContractMatcherSpec spec)
     {
         var matchItems = new HashSet<string>(StringComparer.Ordinal);
+        var matchStackTypes = new HashSet<string>(StringComparer.Ordinal);
         var spawnPool = new List<string>();
         for (var i = 0; i < items.Count; i++)
         {
@@ -99,6 +103,13 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             matchItems.Add(itemId);
+
+            // Stack prototypes often have several entity variants for the same logical item
+            // (for example x1/x10/x30 stack prototypes). A group that contains the x1
+            // prototype should still match a larger stack with the same StackTypeId.
+            if (TryGetStackTypeId(itemId, out var stackTypeId))
+                matchStackTypes.Add(stackTypeId);
+
             if (_prototypes.HasIndex<EntityPrototype>(itemId))
                 spawnPool.Add(itemId);
         }
@@ -111,7 +122,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 matchTags.Add(tag);
         }
 
-        spec = new ContractMatcherSpec(matchItems, spawnPool, matchTags);
+        spec = new ContractMatcherSpec(matchItems, matchStackTypes, spawnPool, matchTags);
     }
 
     private bool CacheContractMatcherSpec(string matcherId, ContractMatcherSpec spec, string sourceKind)

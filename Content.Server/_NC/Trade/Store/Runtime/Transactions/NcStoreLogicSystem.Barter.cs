@@ -83,8 +83,10 @@ public sealed partial class NcStoreLogicSystem
 
         if (!TryExecuteBarterReceivePlan(user, receivePlan))
         {
+            var refunded = TryRefundBarterCostPlan(user, costPlan);
             Sawmill.Warning(
                 $"[NcStore] Barter '{listing.Id}' consumed cost but failed to execute the prebuilt receive plan. " +
+                $"Cost refund {(refunded ? "completed" : "was incomplete")}. " +
                 "Check receive prototypes/currencies and spawn coordinates.");
             _inventory.InvalidateInventoryCache(user);
             return false;
@@ -319,7 +321,7 @@ public sealed partial class NcStoreLogicSystem
             item.UnitsLeft -= take;
             left -= take;
 
-            AddBarterCostReservation(plan, item.Entity, take, item.IsStack);
+            AddBarterCostReservation(plan, item, take);
         }
 
         return left <= 0;
@@ -346,26 +348,31 @@ public sealed partial class NcStoreLogicSystem
 
     private static void AddBarterCostReservation(
         BarterCostPlan plan,
-        EntityUid entity,
-        int count,
-        bool isStack)
+        BarterReservableItem item,
+        int count)
     {
-        if (entity == EntityUid.Invalid || count <= 0)
+        if (item.Entity == EntityUid.Invalid || count <= 0)
             return;
 
         for (var i = 0; i < plan.Reservations.Count; i++)
         {
             var existing = plan.Reservations[i];
-            if (existing.Entity != entity)
+            if (existing.Entity != item.Entity)
                 continue;
 
             existing.Count += count;
-            existing.IsStack |= isStack;
+            existing.IsStack |= item.IsStack;
             plan.Reservations[i] = existing;
             return;
         }
 
-        plan.Reservations.Add(new(entity, count, isStack));
+        plan.Reservations.Add(
+            new(
+                item.Entity,
+                count,
+                item.IsStack,
+                item.Prototype,
+                item.StackType));
     }
 
     private bool TryExecuteBarterCostPlan(EntityUid root, BarterCostPlan plan)
@@ -400,6 +407,59 @@ public sealed partial class NcStoreLogicSystem
 
         _inventory.InvalidateInventoryCache(root);
         return true;
+    }
+
+    private bool TryRefundBarterCostPlan(EntityUid root, BarterCostPlan plan)
+    {
+        if (plan.Reservations.Count == 0)
+            return false;
+
+        var refundedAll = true;
+
+        for (var i = 0; i < plan.Reservations.Count; i++)
+        {
+            var reservation = plan.Reservations[i];
+            if (reservation.Count <= 0)
+                continue;
+
+            if (reservation.IsStack)
+            {
+                if (string.IsNullOrWhiteSpace(reservation.StackType) ||
+                    !_protos.HasIndex<StackPrototype>(reservation.StackType))
+                {
+                    Sawmill.Warning(
+                        $"[NcStore] Failed to refund barter stack cost: missing stack type '{reservation.StackType}' " +
+                        $"for entity {reservation.Entity} x{reservation.Count}.");
+                    refundedAll = false;
+                    continue;
+                }
+
+                GiveCurrency(root, reservation.StackType, reservation.Count);
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(reservation.Prototype) ||
+                !_protos.HasIndex<EntityPrototype>(reservation.Prototype))
+            {
+                Sawmill.Warning(
+                    $"[NcStore] Failed to refund barter item cost: missing entity prototype '{reservation.Prototype}' " +
+                    $"for entity {reservation.Entity} x{reservation.Count}.");
+                refundedAll = false;
+                continue;
+            }
+
+            var spawned = TrySpawnProductUnits(reservation.Prototype, root, reservation.Count);
+            if (spawned >= reservation.Count)
+                continue;
+
+            Sawmill.Warning(
+                $"[NcStore] Incomplete barter item cost refund for prototype '{reservation.Prototype}': " +
+                $"refunded {spawned}/{reservation.Count}.");
+            refundedAll = false;
+        }
+
+        _inventory.InvalidateInventoryCache(root);
+        return refundedAll;
     }
 
     private bool ValidateBarterCostReservation(EntityUid root, BarterCostReservation reservation)
@@ -906,16 +966,25 @@ public sealed partial class NcStoreLogicSystem
 
     private struct BarterCostReservation
     {
-        public BarterCostReservation(EntityUid entity, int count, bool isStack)
+        public BarterCostReservation(
+            EntityUid entity,
+            int count,
+            bool isStack,
+            string prototype,
+            string stackType)
         {
             Entity = entity;
             Count = count;
             IsStack = isStack;
+            Prototype = prototype;
+            StackType = stackType;
         }
 
         public EntityUid Entity;
         public int Count;
         public bool IsStack;
+        public string Prototype;
+        public string StackType;
     }
 
     private sealed class BarterReceivePlan

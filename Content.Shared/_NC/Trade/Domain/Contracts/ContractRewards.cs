@@ -8,9 +8,12 @@ namespace Content.Shared._NC.Trade;
 [Serializable, NetSerializable]
 public enum StoreRewardType : byte
 {
-    Item,
-    Currency,
-    Pool
+    Item = 0,
+    Currency = 1,
+    Pool = 2,
+
+    /// <summary>Sentinel used by strict V2 validation when a YAML entry omits type.</summary>
+    Unspecified = byte.MaxValue
 }
 
 [DataDefinition]

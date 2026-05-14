@@ -233,6 +233,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
         DeactivateTrackedDeliveryDropoff(state);
 
+        CleanupRetrievalSpawnedEntities(state, deleteTrackedEntities);
+
         CleanupObjectivePinpointers(key, state);
 
         if (state.GuardEntities.Count > 0)
@@ -263,6 +265,21 @@ public sealed partial class NcContractSystem : EntitySystem
         state.HuntTargetWasKilled = false;
         state.LastKnownTargetCoordinates = null;
         _objectiveRuntimeByContract.Remove(key);
+    }
+
+    private void CleanupRetrievalSpawnedEntities(ObjectiveRuntimeState state, bool deleteSpawnedEntities)
+    {
+        if (state.RetrievalSpawnedEntities.Count == 0)
+            return;
+
+        for (var i = state.RetrievalSpawnedEntities.Count - 1; i >= 0; i--)
+        {
+            var ent = state.RetrievalSpawnedEntities[i];
+            if (deleteSpawnedEntities && ent != EntityUid.Invalid && !TerminatingOrDeleted(ent))
+                Del(ent);
+        }
+
+        state.RetrievalSpawnedEntities.Clear();
     }
 
     private static bool IsTargetInEntityContainer(TransformComponent xform)
@@ -308,6 +325,7 @@ public sealed partial class NcContractSystem : EntitySystem
         public EntityUid? DeliveryDropoffEntity;
         public readonly List<EntityUid> GuardEntities = new();
         public readonly HashSet<EntityUid> PinpointerEntities = new();
+        public readonly List<EntityUid> RetrievalSpawnedEntities = new();
         public TimeSpan? GhostRoleAcceptDeadline;
         public bool GhostRoleTaken;
         public bool HuntTargetWasKilled;

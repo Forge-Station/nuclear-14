@@ -59,6 +59,13 @@ public sealed partial class NcContractSystem : EntitySystem
         if (matcher.MatchItems.Contains(candidateId))
             return true;
 
+        if (TryComp(candidateEntity, out StackComponent? stack) &&
+            !string.IsNullOrWhiteSpace(stack.StackTypeId) &&
+            matcher.MatchStackTypes.Contains(stack.StackTypeId))
+        {
+            return true;
+        }
+
         if (matcher.MatchTags.Count == 0)
             return false;
 

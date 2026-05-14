@@ -37,4 +37,10 @@ public sealed class ContractObjectiveConfigData
     // prototype at contract-creation time so the runtime doesn't have to re-resolve the proto.
     public bool SpawnItems;
     public List<string> SpawnSpecific { get; set; } = new();
+
+    // Retrieval V2 Stage 2: generic marker spawn support. This does not make claim require
+    // the spawned entity; it only creates a source in the world when the contract is taken.
+    public bool RetrievalSpawnEnabled;
+    public ContractPointSelectorPrototype? RetrievalSpawnPoint { get; set; }
+    public bool RetrievalSpawnFallbackToStore;
 }

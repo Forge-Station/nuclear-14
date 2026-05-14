@@ -43,7 +43,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private enum ContractPoolCandidateKind : byte
     {
         Legacy = 0,
-        SupplyV2 = 1
+        SupplyV2 = 1,
+        RetrievalV2 = 2
     }
 
     private sealed class ContractPoolCandidate
@@ -55,6 +56,7 @@ public sealed partial class NcContractSystem : EntitySystem
         public int Weight;
         public StoreContractPrototype? Legacy;
         public NcSupplyContractPrototype? Supply;
+        public NcRetrievalContractPrototype? Retrieval;
     }
 
     private readonly record struct QuasiKey(QuasiKeyKind Kind, EntityUid Store, string ProtoId, string? Extra);

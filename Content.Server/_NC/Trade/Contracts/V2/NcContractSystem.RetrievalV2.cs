@@ -6,13 +6,13 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private ContractServerData CreateSupplyContractData(EntityUid store, NcSupplyContractPrototype proto)
+    private ContractServerData CreateRetrievalContractData(EntityUid store, NcRetrievalContractPrototype proto)
     {
-        var targets = BuildSupplyTargets(store, proto);
+        var targets = BuildRetrievalTargets(store, proto);
         var totalRequired = CalculateTotalRequired(targets);
         var mainTarget = GetPrimaryTargetId(targets);
         var matchMode = targets.Count > 0 ? targets[0].MatchMode : PrototypeMatchMode.Exact;
-        var rewards = BakeRewardsForContract(store, proto.ID, BuildSupplyRewardDefs(store, proto));
+        var rewards = BakeRewardsForContract(store, proto.ID, BuildRetrievalRewardDefs(store, proto));
 
         var contract = new ContractServerData
         {
@@ -24,7 +24,7 @@ public sealed partial class NcContractSystem : EntitySystem
             Taken = false,
             ObjectiveType = ContractObjectiveType.Delivery,
             Runtime = new ContractRuntimeContextData(),
-            Config = new ContractObjectiveConfigData(),
+            Config = CreateRetrievalObjectiveConfig(proto),
             FlowStatus = ContractFlowStatus.Available,
             MatchMode = matchMode,
             Targets = targets,
@@ -38,23 +38,39 @@ public sealed partial class NcContractSystem : EntitySystem
         return contract;
     }
 
-    private List<ContractTargetServerData> BuildSupplyTargets(EntityUid store, NcSupplyContractPrototype proto)
+    private static ContractObjectiveConfigData CreateRetrievalObjectiveConfig(NcRetrievalContractPrototype proto)
+    {
+        var config = new ContractObjectiveConfigData();
+        var spawn = proto.Spawn;
+
+        if (spawn is { Enabled: true })
+        {
+            config.RetrievalSpawnEnabled = true;
+            config.RetrievalSpawnPoint = CloneContractPointSelector(spawn.Point);
+            config.RetrievalSpawnFallbackToStore = spawn.FallbackToStore;
+            NormalizeObjectiveConfig(config);
+        }
+
+        return config;
+    }
+
+    private List<ContractTargetServerData> BuildRetrievalTargets(EntityUid store, NcRetrievalContractPrototype proto)
     {
         if (proto.Targets.Count == 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{proto.ID}' has no targets. " +
+                $"[ContractsV2] Retrieval contract '{proto.ID}' has no targets. " +
                 "Use 'targets' with at least one entry.");
             return new();
         }
 
-        var selected = ResolveSupplyTargetEntries(store, proto);
+        var selected = ResolveRetrievalTargetEntries(store, proto);
         var targets = new List<ContractTargetServerData>(selected.Count);
 
         for (var i = 0; i < selected.Count; i++)
         {
             var (targetIndex, entry) = selected[i];
-            if (!TryBuildSupplyTarget(store, proto.ID, targetIndex, entry, out var target))
+            if (!TryBuildRetrievalTarget(store, proto.ID, targetIndex, entry, out var target))
                 continue;
 
             targets.Add(target);
@@ -63,9 +79,9 @@ public sealed partial class NcContractSystem : EntitySystem
         return targets;
     }
 
-    private List<(int Index, NcSupplyTargetEntry Entry)> ResolveSupplyTargetEntries(
+    private List<(int Index, NcSupplyTargetEntry Entry)> ResolveRetrievalTargetEntries(
         EntityUid store,
-        NcSupplyContractPrototype proto)
+        NcRetrievalContractPrototype proto)
     {
         var result = new List<(int Index, NcSupplyTargetEntry Entry)>();
         if (proto.Targets.Count == 0)
@@ -81,7 +97,7 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         var targetCount = RollFair(
-            new(QuasiKeyKind.Tc, store, proto.ID, "supply-v2"),
+            new(QuasiKeyKind.Tc, store, proto.ID, "retrieval-v2"),
             proto.TargetCount,
             1,
             proto.Targets.Count);
@@ -102,12 +118,7 @@ public sealed partial class NcContractSystem : EntitySystem
         return result;
     }
 
-    private static bool IsSupplyTargetCountConfigured(IntRange targetCount)
-    {
-        return targetCount.Min > 0 || targetCount.Max > 0;
-    }
-
-    private bool TryBuildSupplyTarget(
+    private bool TryBuildRetrievalTarget(
         EntityUid store,
         string contractId,
         int index,
@@ -116,13 +127,13 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         target = default!;
 
-        if (!TryValidateSupplyTarget(contractId, index, entry))
+        if (!TryValidateRetrievalTarget(contractId, index, entry))
             return false;
 
         var hasPrototype = !string.IsNullOrWhiteSpace(entry.Prototype);
 
         var required = RollFair(
-            new(QuasiKeyKind.Req, store, contractId, $"supply-target:{index}:{entry.Prototype}:{entry.Group}"),
+            new(QuasiKeyKind.Req, store, contractId, $"retrieval-target:{index}:{entry.Prototype}:{entry.Group}"),
             entry.Count,
             1);
 
@@ -151,16 +162,16 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
-    private List<ContractRewardDef> BuildSupplyRewardDefs(EntityUid store, NcSupplyContractPrototype proto)
+    private List<ContractRewardDef> BuildRetrievalRewardDefs(EntityUid store, NcRetrievalContractPrototype proto)
     {
         var rewards = new List<ContractRewardDef>(proto.Reward.Count);
         for (var i = 0; i < proto.Reward.Count; i++)
-            TryAppendSupplyRewardEntry(store, proto.ID, $"reward[{i}]", proto.Reward[i], rewards);
+            TryAppendRetrievalRewardEntry(store, proto.ID, $"reward[{i}]", proto.Reward[i], rewards);
 
         return rewards;
     }
 
-    private bool TryAppendSupplyRewardEntry(
+    private bool TryAppendRetrievalRewardEntry(
         EntityUid store,
         string contractId,
         string path,
@@ -169,14 +180,14 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         if (!IsCountConfigured(entry.Count))
         {
-            Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} does not define 'count'.");
+            Sawmill.Warning($"[ContractsV2] Retrieval contract '{contractId}' {path} does not define 'count'.");
             return false;
         }
 
         if (!IsRewardCountRange(entry.Count))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{contractId}' {path} has invalid count range " +
+                $"[ContractsV2] Retrieval contract '{contractId}' {path} has invalid count range " +
                 $"{entry.Count.Min}..{entry.Count.Max}.");
             return false;
         }
@@ -186,14 +197,14 @@ public sealed partial class NcContractSystem : EntitySystem
             case StoreRewardType.Item:
                 if (string.IsNullOrWhiteSpace(entry.Prototype))
                 {
-                    Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} is Item but has no prototype.");
+                    Sawmill.Warning($"[ContractsV2] Retrieval contract '{contractId}' {path} is Item but has no prototype.");
                     return false;
                 }
 
                 if (!_prototypes.HasIndex<EntityPrototype>(entry.Prototype))
                 {
                     Sawmill.Warning(
-                        $"[ContractsV2] Supply contract '{contractId}' {path} references missing entity prototype '{entry.Prototype}'.");
+                        $"[ContractsV2] Retrieval contract '{contractId}' {path} references missing entity prototype '{entry.Prototype}'.");
                     return false;
                 }
 
@@ -209,7 +220,7 @@ public sealed partial class NcContractSystem : EntitySystem
             case StoreRewardType.Currency:
                 if (string.IsNullOrWhiteSpace(entry.Currency))
                 {
-                    Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} is Currency but has no currency.");
+                    Sawmill.Warning($"[ContractsV2] Retrieval contract '{contractId}' {path} is Currency but has no currency.");
                     return false;
                 }
 
@@ -225,13 +236,13 @@ public sealed partial class NcContractSystem : EntitySystem
             case StoreRewardType.Pool:
                 if (string.IsNullOrWhiteSpace(entry.Pool))
                 {
-                    Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} is Pool but has no pool id.");
+                    Sawmill.Warning($"[ContractsV2] Retrieval contract '{contractId}' {path} is Pool but has no pool id.");
                     return false;
                 }
 
                 if (!_prototypes.HasIndex<NcSupplyRewardPoolPrototype>(entry.Pool))
                 {
-                    Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} references missing Supply V2 reward pool '{entry.Pool}'. Use type: ncSupplyRewardPool.");
+                    Sawmill.Warning($"[ContractsV2] Retrieval contract '{contractId}' {path} references missing Supply V2 reward pool '{entry.Pool}'. Use type: ncSupplyRewardPool.");
                     return false;
                 }
 
@@ -245,18 +256,12 @@ public sealed partial class NcContractSystem : EntitySystem
                 return true;
 
             case StoreRewardType.Unspecified:
-                Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} does not define 'type'.");
+                Sawmill.Warning($"[ContractsV2] Retrieval contract '{contractId}' {path} does not define 'type'.");
                 return false;
 
             default:
-                Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
+                Sawmill.Warning($"[ContractsV2] Retrieval contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
                 return false;
         }
     }
-
-    private static bool IsStrictPositiveRange(IntRange range)
-    {
-        return range.Min > 0 && range.Max > 0 && range.Min <= range.Max;
-    }
-
 }

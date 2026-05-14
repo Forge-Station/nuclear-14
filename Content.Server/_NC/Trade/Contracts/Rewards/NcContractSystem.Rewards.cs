@@ -109,6 +109,16 @@ public sealed partial class NcContractSystem : EntitySystem
 
         var poolId = GetRewardId(poolDef);
         if (!string.IsNullOrWhiteSpace(poolId) &&
+            _prototypes.TryIndex<NcSupplyRewardPoolPrototype>(poolId, out var supplyPoolProto) &&
+            supplyPoolProto.Entries is { Count: > 0 } supplyOptions)
+        {
+            return TryValidateResolvedRewardPoolOptions(
+                poolDef,
+                ConvertSupplyRewardPoolEntries(supplyOptions),
+                out options);
+        }
+
+        if (!string.IsNullOrWhiteSpace(poolId) &&
             _prototypes.TryIndex<NcContractRewardPoolPrototype>(poolId, out var poolProto) &&
             poolProto.Entries is { Count: > 0 } prototypeOptions)
         {
@@ -117,6 +127,26 @@ public sealed partial class NcContractSystem : EntitySystem
 
         options = default!;
         return false;
+    }
+
+    private static List<ContractRewardDef> ConvertSupplyRewardPoolEntries(IReadOnlyList<NcSupplyRewardPoolEntry> entries)
+    {
+        var result = new List<ContractRewardDef>(entries.Count);
+        for (var i = 0; i < entries.Count; i++)
+        {
+            var entry = entries[i];
+            result.Add(new ContractRewardDef
+            {
+                Type = entry.Type,
+                Prototype = entry.Prototype,
+                Currency = entry.Currency,
+                Count = entry.Count,
+                Weight = entry.Weight,
+                MaxRepeats = entry.MaxRepeats
+            });
+        }
+
+        return result;
     }
 
     private bool TryValidateResolvedRewardPoolOptions(
@@ -154,6 +184,15 @@ public sealed partial class NcContractSystem : EntitySystem
             {
                 Sawmill.Warning(
                     $"[ContractsV2] Reward pool '{poolLabel}' entry #{i} has invalid chance={probability}. Expected 0..1.");
+                continue;
+            }
+
+            if (def.Type != StoreRewardType.Item &&
+                def.Type != StoreRewardType.Currency &&
+                def.Type != StoreRewardType.Pool)
+            {
+                Sawmill.Warning(
+                    $"[ContractsV2] Reward pool '{poolLabel}' entry #{i} has unsupported reward type {def.Type}.");
                 continue;
             }
 

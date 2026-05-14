@@ -416,6 +416,13 @@ public sealed partial class NcContractPackV2Prototype : IPrototype
     [DataField("supply")]
     public List<ContractWeightEntry> Supply { get; set; } = new();
 
+    /// <summary>
+    /// Retrieval V2 contracts. These use the same strict targets/reward/count grammar as Supply V2,
+    /// but are kept as a separate contract family so retrieval/delivery semantics can evolve independently.
+    /// </summary>
+    [DataField("retrieval")]
+    public List<ContractWeightEntry> Retrieval { get; set; } = new();
+
     [DataField("includes")]
     public List<PackIncludeEntry> Includes { get; set; } = new();
 }
@@ -458,8 +465,8 @@ public sealed partial class NcSupplyTargetEntry
     public string Group { get; set; } = string.Empty;
 
     /// <summary>Required amount. If this is a range, it is rolled once when the contract is generated.</summary>
-    [DataField("count")]
-    public IntRange Count { get; set; } = IntRange.Fixed(1);
+    [DataField("count", required: true)]
+    public IntRange Count { get; set; } = IntRange.Fixed(0);
 
     /// <summary>Used only when targetCount is configured. Larger weight means this target is picked more often.</summary>
     [DataField("weight")]
@@ -476,8 +483,8 @@ public sealed partial class NcSupplyTargetEntry
 [DataDefinition]
 public sealed partial class NcSupplyRewardEntry
 {
-    [DataField("type")]
-    public StoreRewardType Type { get; set; } = StoreRewardType.Item;
+    [DataField("type", required: true)]
+    public StoreRewardType Type { get; set; } = StoreRewardType.Unspecified;
 
     [DataField("prototype")]
     public string Prototype { get; set; } = string.Empty;
@@ -488,8 +495,28 @@ public sealed partial class NcSupplyRewardEntry
     [DataField("pool")]
     public string Pool { get; set; } = string.Empty;
 
-    [DataField("count")]
-    public IntRange Count { get; set; } = IntRange.Fixed(1);
+    [DataField("count", required: true)]
+    public IntRange Count { get; set; } = IntRange.Fixed(0);
+
+    /// <summary>Legacy trap: Supply V2 reward entries must use count, not amount.</summary>
+    [DataField("amount")]
+    public IntRange LegacyAmount { get; set; } = IntRange.Fixed(int.MinValue);
+
+    /// <summary>Legacy trap: Supply V2 uses pool weight / count range, not per-entry probability.</summary>
+    [DataField("prob")]
+    public float LegacyProbability { get; set; } = float.NaN;
+
+    /// <summary>Legacy trap: Supply V2 uses pool weight / count range, not per-entry chance.</summary>
+    [DataField("chance")]
+    public float LegacyChance { get; set; } = float.NaN;
+
+    /// <summary>Legacy trap: use prototype/currency/pool depending on type, not id.</summary>
+    [DataField("id")]
+    public string LegacyId { get; set; } = string.Empty;
+
+    /// <summary>Legacy trap: nested option lists are not part of Supply V2 rewards.</summary>
+    [DataField("options")]
+    public List<ContractRewardDef>? LegacyOptions { get; set; }
 }
 
 /// <summary>
@@ -518,7 +545,7 @@ public sealed partial class NcSupplyContractPrototype : IPrototype
     public string Icon { get; private set; } = string.Empty;
 
     /// <summary>Supply targets. If targetCount is absent, all targets are required. If targetCount is set, a weighted subset is picked on generation.</summary>
-    [DataField("targets", required: false)]
+    [DataField("targets", required: true)]
     public List<NcSupplyTargetEntry> Targets { get; private set; } = new();
 
     /// <summary>Optional number of targets to pick from the targets pool. Fixed 0 means unset / require all targets.</summary>
@@ -532,6 +559,79 @@ public sealed partial class NcSupplyContractPrototype : IPrototype
 
 
 
+/// <summary>
+/// Retrieval V2 optional spawn source. Stage 2 uses existing NcContractSpawnPoint markers
+/// through ContractPointSelectorPrototype. It spawns generic target items when the contract is taken;
+/// claim still accepts any matching item. Tracked-item identity is intentionally a later stage.
+/// </summary>
+[DataDefinition]
+public sealed partial class NcRetrievalSpawnPrototype
+{
+    /// <summary>If false, this block is ignored and the contract behaves like Stage 1 generic retrieval.</summary>
+    [DataField("enabled")]
+    public bool Enabled { get; set; } = true;
+
+    /// <summary>Where retrieval target items should be spawned. Uses NcContractSpawnPoint markers.</summary>
+    [DataField("point")]
+    public ContractPointSelectorPrototype? Point { get; set; }
+
+    /// <summary>Allow fallback to store coordinates when no configured marker is found. Keep false for real content.</summary>
+    [DataField("fallbackToStore")]
+    public bool FallbackToStore { get; set; }
+}
+
+
+[Prototype("ncRetrievalContract")]
+public sealed partial class NcRetrievalContractPrototype : IPrototype
+{
+    [IdDataField] public string ID { get; private set; } = default!;
+
+    [DataField("name", required: true)]
+    public string Name { get; private set; } = string.Empty;
+
+    [DataField("description")]
+    public string Description { get; private set; } = string.Empty;
+
+    [DataField("difficulty")]
+    public string Difficulty { get; private set; } = "Easy";
+
+    [DataField("repeatable")]
+    public bool Repeatable { get; private set; } = true;
+
+    /// <summary>Optional entity prototype id used only as a UI icon fallback for the contract card.</summary>
+    [DataField("icon")]
+    public string Icon { get; private set; } = string.Empty;
+
+    /// <summary>
+    /// Retrieval targets. Stage 1 means the player brings already existing items to the trader.
+    /// If targetCount is absent, all targets are required. If set, a weighted subset is picked on generation.
+    /// </summary>
+    [DataField("targets", required: true)]
+    public List<NcSupplyTargetEntry> Targets { get; private set; } = new();
+
+    /// <summary>Optional number of targets to pick from the targets pool. Fixed 0 means unset / require all targets.</summary>
+    [DataField("targetCount", required: false)]
+    public IntRange TargetCount { get; private set; } = IntRange.Fixed(0);
+
+    /// <summary>Unified Retrieval rewards. Use type: Currency, Item or Pool with count.</summary>
+    [DataField("reward", required: true)]
+    public List<NcSupplyRewardEntry> Reward { get; private set; } = new();
+
+    /// <summary>
+    /// Optional Stage 2 spawn source. When configured, target items are spawned at a selected marker
+    /// when the contract is taken. Claim remains generic and does not require a specific spawned entity.
+    /// </summary>
+    [DataField("spawn")]
+    public NcRetrievalSpawnPrototype? Spawn { get; private set; }
+}
+
+
+
+/// <summary>
+/// Legacy/general reward pool used by old storeContract rewards and Barter receivePools.
+/// Keep this format tolerant because legacy contracts may still use id/amount/prob/options.
+/// Supply V2 must use ncSupplyRewardPool instead.
+/// </summary>
 [Prototype("ncContractRewardPool")]
 public sealed partial class NcContractRewardPoolPrototype : IPrototype
 {
@@ -539,6 +639,65 @@ public sealed partial class NcContractRewardPoolPrototype : IPrototype
 
     [DataField("entries")]
     public List<ContractRewardDef> Entries { get; private set; } = new();
+}
+
+/// <summary>
+/// Strict Supply V2 reward pool. This format intentionally has no legacy id/amount/prob/chance/options fields.
+/// Use count + weight only; nested pools are rejected by Supply validation.
+/// </summary>
+[Prototype("ncSupplyRewardPool")]
+public sealed partial class NcSupplyRewardPoolPrototype : IPrototype
+{
+    [IdDataField] public string ID { get; private set; } = default!;
+
+    [DataField("entries", required: true)]
+    public List<NcSupplyRewardPoolEntry> Entries { get; private set; } = new();
+}
+
+[DataDefinition]
+public sealed partial class NcSupplyRewardPoolEntry
+{
+    [DataField("type", required: true)]
+    public StoreRewardType Type { get; set; } = StoreRewardType.Unspecified;
+
+    [DataField("prototype")]
+    public string Prototype { get; set; } = string.Empty;
+
+    [DataField("currency")]
+    public string Currency { get; set; } = string.Empty;
+
+    [DataField("count", required: true)]
+    public IntRange Count { get; set; } = IntRange.Fixed(0);
+
+    [DataField("weight")]
+    public int Weight { get; set; } = 1;
+
+    [DataField("max")]
+    public int MaxRepeats { get; set; } = 0;
+
+    /// <summary>Legacy trap: Supply V2 reward pool entries must use count, not amount.</summary>
+    [DataField("amount")]
+    public IntRange LegacyAmount { get; set; } = IntRange.Fixed(int.MinValue);
+
+    /// <summary>Legacy trap: Supply V2 reward pools use weight, not prob.</summary>
+    [DataField("prob")]
+    public float LegacyProbability { get; set; } = float.NaN;
+
+    /// <summary>Legacy trap: Supply V2 reward pools use weight, not chance.</summary>
+    [DataField("chance")]
+    public float LegacyChance { get; set; } = float.NaN;
+
+    /// <summary>Legacy trap: use prototype/currency depending on type, not id.</summary>
+    [DataField("id")]
+    public string LegacyId { get; set; } = string.Empty;
+
+    /// <summary>Legacy trap: nested pools are rejected explicitly by Supply V2 validation.</summary>
+    [DataField("pool")]
+    public string LegacyPool { get; set; } = string.Empty;
+
+    /// <summary>Legacy trap: nested option lists are not part of Supply V2 reward pools.</summary>
+    [DataField("options")]
+    public List<ContractRewardDef>? LegacyOptions { get; set; }
 }
 
 

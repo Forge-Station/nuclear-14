@@ -117,6 +117,21 @@ public sealed partial class NcContractSystem : EntitySystem
         config.RepairDoAfterSeconds = ResolveRepairDoAfterSeconds(config.RepairDoAfterSeconds);
         config.RepairStageSound = ResolveRepairStageSound(config.RepairStageSound);
 
+        if (config.RetrievalSpawnEnabled)
+        {
+            config.RetrievalSpawnPoint = NormalizeContractPointSelector(
+                config.RetrievalSpawnPoint,
+                defaultToStore: config.RetrievalSpawnFallbackToStore);
+
+            if (config.RetrievalSpawnPoint == null)
+                config.RetrievalSpawnEnabled = false;
+        }
+        else
+        {
+            config.RetrievalSpawnPoint = null;
+            config.RetrievalSpawnFallbackToStore = false;
+        }
+
         config.SpawnSpecific ??= new List<string>();
         for (var i = config.SpawnSpecific.Count - 1; i >= 0; i--)
         {

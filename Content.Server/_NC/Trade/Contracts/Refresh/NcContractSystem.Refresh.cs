@@ -374,6 +374,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
             ValidateContractPackV2(packId, pack);
             CollectV2SupplyEntries(packId, weightMult, pack, acc);
+            CollectV2RetrievalEntries(packId, weightMult, pack, acc);
             CollectV2IncludedEntries(packId, weightMult, pack, acc, recursionStack);
         }
         finally
@@ -411,10 +412,10 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void ValidateContractPackV2(string packId, NcContractPackV2Prototype pack)
     {
-        if (pack.Supply.Count == 0 && pack.Includes.Count == 0)
+        if (pack.Supply.Count == 0 && pack.Retrieval.Count == 0 && pack.Includes.Count == 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Pack '{packId}' is empty. Add at least one supply entry or include.");
+                $"[ContractsV2] Pack '{packId}' is empty. Add at least one supply/retrieval entry or include.");
         }
     }
 
@@ -518,6 +519,57 @@ public sealed partial class NcContractSystem : EntitySystem
                 Repeatable = proto.Repeatable,
                 Weight = finalWeight,
                 Supply = proto
+            });
+        }
+    }
+
+    private void CollectV2RetrievalEntries(
+        string packId,
+        int weightMult,
+        NcContractPackV2Prototype pack,
+        List<ContractPoolCandidate> acc)
+    {
+        foreach (var entry in pack.Retrieval)
+        {
+            if (string.IsNullOrWhiteSpace(entry.Id))
+            {
+                Sawmill.Warning($"[ContractsV2] Pack '{packId}' has retrieval entry with empty id.");
+                continue;
+            }
+
+            if (entry.Weight <= 0)
+            {
+                Sawmill.Warning(
+                    $"[ContractsV2] Pack '{packId}' retrieval '{entry.Id}' has non-positive weight={entry.Weight}.");
+                continue;
+            }
+
+            if (!_prototypes.TryIndex<NcRetrievalContractPrototype>(entry.Id, out var proto))
+            {
+                Sawmill.Warning(
+                    $"[ContractsV2] Pack '{packId}' references missing retrieval contract '{entry.Id}'.");
+                continue;
+            }
+
+            if (!TryValidateRetrievalContractForPool(packId, proto))
+                continue;
+
+            var finalWeight = MultiplyWeightsWithClamp(
+                weightMult,
+                entry.Weight,
+                $"v2 pack '{packId}' retrieval '{entry.Id}'");
+
+            if (finalWeight <= 0)
+                continue;
+
+            acc.Add(new ContractPoolCandidate
+            {
+                Kind = ContractPoolCandidateKind.RetrievalV2,
+                Id = proto.ID,
+                Difficulty = proto.Difficulty,
+                Repeatable = proto.Repeatable,
+                Weight = finalWeight,
+                Retrieval = proto
             });
         }
     }
