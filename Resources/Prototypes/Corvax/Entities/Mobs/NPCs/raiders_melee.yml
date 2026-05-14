@@ -17,12 +17,12 @@
   name: рейдер мясник
   parent: N14BaseMobRaider
   id: N14MobNPCRaiderButcher
-  suffix: NPC
+  suffix: Рейдер, мини-босс
   description: Большой, жирный ублюдок вооружённый пилой.
   components: # No gun or ammo components because this is a melee variant.
     - type: MovementSpeedModifier
-      baseWalkSpeed : 4                         # Forge-Change
-      baseSprintSpeed : 5  
+      baseWalkSpeed: 4                         
+      baseSprintSpeed: 7  
     - type: MobThresholds
       thresholds:
         0: Alive
@@ -35,6 +35,7 @@
   name: психопат
   parent: N14BaseMobRaider
   id: N14MobRaiderPsycho1
+  suffix: Рейдер
   description: Он здесь чтобы тебя убить.
   components:
     - type: Loadout
@@ -45,6 +46,7 @@
   name: психопат
   parent: N14BaseMobRaider
   id: N14MobRaiderPsycho2
+  suffix: Рейдер
   description: Он здесь чтобы тебя убить.
   components:
     - type: Loadout
@@ -55,19 +57,10 @@
   name: психопат
   parent: N14BaseMobRaider
   id: N14MobRaiderPsycho3
+  suffix: Рейдер
   description: Он здесь чтобы тебя убить.
   components:
     - type: Loadout
       prototypes:
       - PsychoRaiderGear3                
-
-- type: entity
-  name: психопат
-  parent: N14BaseMobRaider
-  id: N14MobRaiderPsycho4
-  description: Он здесь чтобы тебя убить.
-  components:
-    - type: Loadout
-      prototypes:
-      - PsychoRaiderGear4
         

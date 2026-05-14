@@ -621,7 +621,6 @@
       - N14MobRaiderPsycho1 
       - N14MobRaiderPsycho2
       - N14MobRaiderPsycho3
-      - N14MobRaiderPsycho4
 
 - type: entity
   name: Fern Spawner - Melee

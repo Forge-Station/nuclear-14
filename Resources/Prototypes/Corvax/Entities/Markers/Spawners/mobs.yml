@@ -179,3 +179,51 @@
     - type: ConditionalSpawner
       prototypes:
         - N14MobNPCRaiderTribeWarr
+
+- type: entity
+  name: спавнер рейдера в силовой броне
+  id: N14SpawnMobRaiderPowerArmorBoss
+  suffix: Рейдер, босс
+  parent: MarkerBase
+  components:
+  - type: Sprite
+    layers:
+      - state: green
+      - sprite: _Nuclear14/Mobs/RaidersSimpleMob/Raiders.rsi
+        state: raiderboss
+      - state: ai
+  - type: ConditionalSpawner
+    prototypes:
+      - N14MobNPCRaiderPowerArmorBoss
+
+- type: entity
+  name: спавнер наёмника с тяжёлой винтовкой
+  id: N14SpawnMobMercenaryHeavySniper
+  suffix: Наемник, мини-босс
+  parent: MarkerBase
+  components:
+  - type: Sprite
+    layers:
+      - state: green
+      - sprite: _Nuclear14/Mobs/RaidersSimpleMob/Raiders.rsi
+        state: raiderboss
+      - state: ai
+  - type: ConditionalSpawner
+    prototypes:
+      - N14MobNPCMercenaryHeavySniper
+
+- type: entity
+  name: спавнер рейдера мясника
+  id: N14SpawnMobRaiderButcher
+  suffix: Рейдер, мини-босс
+  parent: MarkerBase
+  components:
+  - type: Sprite
+    layers:
+      - state: green
+      - sprite: _Nuclear14/Mobs/RaidersSimpleMob/RaiderPsycho.rsi
+        state: raider_melee
+      - state: ai
+  - type: ConditionalSpawner # Forge-add
+    prototypes: 
+      - N14MobNPCRaiderButcher

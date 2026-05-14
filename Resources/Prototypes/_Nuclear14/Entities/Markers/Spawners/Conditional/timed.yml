@@ -537,6 +537,7 @@
     - type: TimedSpawner
       prototypes:
         - N14MobFernMercLieutenant
+        - N14MobFernMercLieutenant1
       chance: 0.65
       intervalSeconds: 1500
       minimumEntitiesSpawned: 1

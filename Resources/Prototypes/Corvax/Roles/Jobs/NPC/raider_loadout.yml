@@ -18,6 +18,7 @@
     eyes: ClothingEyesGlassesSunglasses
     neck: N14ClothingNeckCloakGhillie
     gloves: N14ClothingHandsGlovesCloth
+    pocket1: N14MercStash
 
 
 - type: startingGear
@@ -37,6 +38,7 @@
     outerClothing: N14ClothingOuterRaiderBlastmaster
     shoes: N14ClothingShoesTribal
     head: N14ClothingTribalMuffaloskull
+    pocket1: N14RaiderStash
   inhand:
   - N14ButchersCleaver
 
@@ -47,6 +49,7 @@
     outerClothing: N14ClothingOuterPainspike
     shoes: N14ClothingBootsBlack
     mask: N14ClothingMaskHockey
+    pocket1: N14RaiderStash
   inhand:
   - N14ScrapMachete
 
@@ -57,5 +60,20 @@
     outerClothing: N14ClothingOuterLightMetalArmor
     shoes: N14ClothingBootsLeather
     mask: N14ClothingMaskGrill
+    pocket1: N14RaiderStash
   inhand:
   - N14BrokenPipe
+
+- type: startingGear
+  id: FernMercLieutenantGear1
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitCombat
+    shoes: N14ClothingBootsCombat
+    gloves: N14ClothingHandsGlovesCombat
+    head: N14ClothingHeadHatArmyBeretSpecial
+    neck: ClothingNeckHeadphones
+    mask: N14ClothingMaskPatriotMask
+    eyes: N14ClothingEyesSunGlasses
+    outerClothing: N14ClothingOuterCoatCombatDuster
+    belt: ClothingBeltMilitary
+    pocket1: N14MercStash
