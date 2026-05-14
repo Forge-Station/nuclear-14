@@ -72,10 +72,13 @@ public sealed partial class NcStoreLogicSystem
         if (actual <= 0)
             return false;
 
+        if (!TryBuildBarterCostPlan(user, listing.BarterCost, actual, out var costPlan))
+            return false;
+
         if (!TryBuildBarterReceivePlan(listing, actual, out var receivePlan))
             return false;
 
-        if (!TryTakeBarterCostFromRoot(user, listing.BarterCost, actual))
+        if (!TryExecuteBarterCostPlan(user, costPlan))
             return false;
 
         if (!TryExecuteBarterReceivePlan(user, receivePlan))
@@ -117,95 +120,308 @@ public sealed partial class NcStoreLogicSystem
 
     private bool CanTakeBarterCostFromRoot(EntityUid root, List<NcBarterCostEntry> costs, int times)
     {
-        if (times <= 0)
-            return true;
+        return TryBuildBarterCostPlan(root, costs, times, out _);
+    }
 
-        _inventory.InvalidateInventoryCache(root);
-        var snapshot = _inventory.BuildInventorySnapshot(root);
+    private bool TryBuildBarterCostPlan(
+        EntityUid root,
+        List<NcBarterCostEntry> costs,
+        int times,
+        out BarterCostPlan plan)
+    {
+        plan = new();
 
-        foreach (var cost in costs)
+        if (times <= 0 || costs.Count == 0)
+            return false;
+
+        if (!TryBuildBarterCostDemands(costs, times, out var demands))
+            return false;
+
+        var items = BuildBarterReservableItems(root);
+        if (items.Count == 0)
+            return false;
+
+        demands.Sort((a, b) =>
         {
+            var aUnits = CountAvailableUnitsForDemand(items, a);
+            var bUnits = CountAvailableUnitsForDemand(items, b);
+            var byUnits = aUnits.CompareTo(bUnits);
+            if (byUnits != 0)
+                return byUnits;
+
+            return b.Required.CompareTo(a.Required);
+        });
+
+        for (var i = 0; i < demands.Count; i++)
+        {
+            if (!TryReserveBarterDemand(plan, items, demands[i]))
+                return false;
+        }
+
+        return plan.Reservations.Count > 0;
+    }
+
+    private bool TryBuildBarterCostDemands(
+        List<NcBarterCostEntry> costs,
+        int times,
+        out List<BarterCostDemand> demands)
+    {
+        demands = new(costs.Count);
+
+        for (var i = 0; i < costs.Count; i++)
+        {
+            var cost = costs[i];
             if (!TryMultiplyPositive(cost.Count, times, out var required))
+                return false;
+
+            var sources = 0;
+            if (!string.IsNullOrWhiteSpace(cost.Currency))
+                sources++;
+            if (!string.IsNullOrWhiteSpace(cost.Prototype))
+                sources++;
+            if (!string.IsNullOrWhiteSpace(cost.Group))
+                sources++;
+
+            if (sources != 1)
                 return false;
 
             if (!string.IsNullOrWhiteSpace(cost.Currency))
             {
-                var have = snapshot.StackTypeCounts.TryGetValue(cost.Currency, out var balance) ? balance : 0;
-                if (have < required)
+                if (!_protos.HasIndex<StackPrototype>(cost.Currency))
                     return false;
+
+                demands.Add(new()
+                {
+                    Currency = cost.Currency,
+                    Required = required
+                });
                 continue;
             }
 
             if (!string.IsNullOrWhiteSpace(cost.Prototype))
             {
-                var have = _inventory.GetOwnedFromSnapshot(snapshot, cost.Prototype, PrototypeMatchMode.Exact);
-                if (have < required)
+                if (!_protos.HasIndex<EntityPrototype>(cost.Prototype))
                     return false;
+
+                demands.Add(new()
+                {
+                    Prototype = cost.Prototype,
+                    PrototypeStackType = _inventory.GetProductStackType(cost.Prototype) ?? string.Empty,
+                    Required = required
+                });
                 continue;
             }
 
-            if (!string.IsNullOrWhiteSpace(cost.Group))
+            if (!_protos.TryIndex<NcItemGroupPrototype>(cost.Group, out var group))
+                return false;
+
+            demands.Add(new()
             {
-                if (!_protos.TryIndex<NcItemGroupPrototype>(cost.Group, out var group))
-                    return false;
-
-                var have = _inventory.GetOwnedFromSnapshotForItemGroup(snapshot, group);
-                if (have < required)
-                    return false;
-                continue;
-            }
-
-            return false;
+                Group = cost.Group,
+                GroupPrototype = group,
+                Required = required
+            });
         }
 
+        return demands.Count > 0;
+    }
+
+    private List<BarterReservableItem> BuildBarterReservableItems(EntityUid root)
+    {
+        var scanned = new List<EntityUid>();
+        _inventory.ScanInventoryItems(root, scanned);
+
+        var result = new List<BarterReservableItem>(scanned.Count);
+        for (var i = 0; i < scanned.Count; i++)
+        {
+            var ent = scanned[i];
+            if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
+                continue;
+
+            if (_inventory.IsProtectedFromDirectSale(root, ent))
+                continue;
+
+            if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
+                continue;
+
+            if (_ents.TryGetComponent(ent, out StackComponent? stack))
+            {
+                var count = Math.Max(0, stack.Count);
+                if (count <= 0)
+                    continue;
+
+                result.Add(new()
+                {
+                    Entity = ent,
+                    Prototype = meta.EntityPrototype.ID,
+                    StackType = stack.StackTypeId,
+                    UnitsLeft = count,
+                    IsStack = true
+                });
+                continue;
+            }
+
+            result.Add(new()
+            {
+                Entity = ent,
+                Prototype = meta.EntityPrototype.ID,
+                StackType = string.Empty,
+                UnitsLeft = 1,
+                IsStack = false
+            });
+        }
+
+        return result;
+    }
+
+    private int CountAvailableUnitsForDemand(List<BarterReservableItem> items, BarterCostDemand demand)
+    {
+        var total = 0;
+        for (var i = 0; i < items.Count; i++)
+        {
+            var item = items[i];
+            if (item.UnitsLeft <= 0)
+                continue;
+
+            if (BarterItemMatchesDemand(item, demand))
+                total += item.UnitsLeft;
+        }
+
+        return total;
+    }
+
+    private bool TryReserveBarterDemand(
+        BarterCostPlan plan,
+        List<BarterReservableItem> items,
+        BarterCostDemand demand)
+    {
+        var candidates = new List<BarterReservableItem>();
+        for (var i = 0; i < items.Count; i++)
+        {
+            var item = items[i];
+            if (item.UnitsLeft <= 0)
+                continue;
+
+            if (BarterItemMatchesDemand(item, demand))
+                candidates.Add(item);
+        }
+
+        candidates.Sort((a, b) => a.UnitsLeft.CompareTo(b.UnitsLeft));
+
+        var left = demand.Required;
+        for (var i = 0; i < candidates.Count && left > 0; i++)
+        {
+            var item = candidates[i];
+            if (item.UnitsLeft <= 0)
+                continue;
+
+            var take = Math.Min(item.UnitsLeft, left);
+            item.UnitsLeft -= take;
+            left -= take;
+
+            AddBarterCostReservation(plan, item.Entity, take, item.IsStack);
+        }
+
+        return left <= 0;
+    }
+
+    private bool BarterItemMatchesDemand(BarterReservableItem item, BarterCostDemand demand)
+    {
+        if (!string.IsNullOrWhiteSpace(demand.Currency))
+            return item.StackType == demand.Currency;
+
+        if (!string.IsNullOrWhiteSpace(demand.Prototype))
+        {
+            if (!string.IsNullOrWhiteSpace(demand.PrototypeStackType))
+                return item.StackType == demand.PrototypeStackType;
+
+            return item.Prototype == demand.Prototype;
+        }
+
+        if (!string.IsNullOrWhiteSpace(demand.Group) && demand.GroupPrototype != null)
+            return _inventory.EntityMatchesItemGroup(item.Entity, demand.GroupPrototype);
+
+        return false;
+    }
+
+    private static void AddBarterCostReservation(
+        BarterCostPlan plan,
+        EntityUid entity,
+        int count,
+        bool isStack)
+    {
+        if (entity == EntityUid.Invalid || count <= 0)
+            return;
+
+        for (var i = 0; i < plan.Reservations.Count; i++)
+        {
+            var existing = plan.Reservations[i];
+            if (existing.Entity != entity)
+                continue;
+
+            existing.Count += count;
+            existing.IsStack |= isStack;
+            plan.Reservations[i] = existing;
+            return;
+        }
+
+        plan.Reservations.Add(new(entity, count, isStack));
+    }
+
+    private bool TryExecuteBarterCostPlan(EntityUid root, BarterCostPlan plan)
+    {
+        if (plan.Reservations.Count == 0)
+            return false;
+
+        for (var i = 0; i < plan.Reservations.Count; i++)
+        {
+            if (!ValidateBarterCostReservation(root, plan.Reservations[i]))
+                return false;
+        }
+
+        for (var i = 0; i < plan.Reservations.Count; i++)
+        {
+            var reservation = plan.Reservations[i];
+            if (reservation.IsStack)
+            {
+                if (!_ents.TryGetComponent(reservation.Entity, out StackComponent? stack))
+                    return false;
+
+                var newCount = stack.Count - reservation.Count;
+                _stacks.SetCount(reservation.Entity, Math.Max(0, newCount), stack);
+                if (stack.Count <= 0)
+                    _ents.DeleteEntity(reservation.Entity);
+
+                continue;
+            }
+
+            _ents.DeleteEntity(reservation.Entity);
+        }
+
+        _inventory.InvalidateInventoryCache(root);
         return true;
     }
 
-    private bool TryTakeBarterCostFromRoot(EntityUid root, List<NcBarterCostEntry> costs, int times)
+    private bool ValidateBarterCostReservation(EntityUid root, BarterCostReservation reservation)
     {
-        if (times <= 0)
+        if (reservation.Entity == EntityUid.Invalid || reservation.Count <= 0)
             return false;
 
-        if (!CanTakeBarterCostFromRoot(root, costs, times))
+        if (!_ents.EntityExists(reservation.Entity))
             return false;
 
-        foreach (var cost in costs)
+        if (_inventory.IsProtectedFromDirectSale(root, reservation.Entity))
+            return false;
+
+        if (reservation.IsStack)
         {
-            if (!TryMultiplyPositive(cost.Count, times, out var required))
+            if (!_ents.TryGetComponent(reservation.Entity, out StackComponent? stack))
                 return false;
 
-            if (!string.IsNullOrWhiteSpace(cost.Currency))
-            {
-                if (!TryTakeCurrency(root, cost.Currency, required))
-                    return false;
-                continue;
-            }
-
-            if (!string.IsNullOrWhiteSpace(cost.Prototype))
-            {
-                if (!_inventory.TryTakeProductUnitsFromRootCached(
-                    root,
-                    cost.Prototype,
-                    required,
-                    PrototypeMatchMode.Exact))
-                    return false;
-                continue;
-            }
-
-            if (!string.IsNullOrWhiteSpace(cost.Group))
-            {
-                if (!_protos.TryIndex<NcItemGroupPrototype>(cost.Group, out var group))
-                    return false;
-
-                if (!_inventory.TryTakeItemGroupUnitsFromRootCached(root, group, required))
-                    return false;
-                continue;
-            }
-
-            return false;
+            return stack.Count >= reservation.Count;
         }
 
-        return true;
+        return reservation.Count == 1;
     }
 
     private bool TryBuildAggregatedBarterCost(
@@ -555,69 +771,6 @@ public sealed partial class NcStoreLogicSystem
         return true;
     }
 
-    private bool ValidateBarterReceiveEntries(NcStoreListingDef listing, int times)
-    {
-        if (times <= 0)
-            return false;
-
-        for (var i = 0; i < listing.BarterReceive.Count; i++)
-        {
-            var receive = listing.BarterReceive[i];
-            if (!TryMultiplyPositive(receive.Count, times, out _))
-                return false;
-
-            var sources = 0;
-            if (!string.IsNullOrWhiteSpace(receive.Currency))
-                sources++;
-            if (!string.IsNullOrWhiteSpace(receive.Prototype))
-                sources++;
-
-            if (sources != 1)
-                return false;
-
-            if (!string.IsNullOrWhiteSpace(receive.Currency))
-            {
-                if (!_protos.HasIndex<StackPrototype>(receive.Currency))
-                    return false;
-
-                continue;
-            }
-
-            if (string.IsNullOrWhiteSpace(receive.Prototype) || !_protos.HasIndex<EntityPrototype>(receive.Prototype))
-                return false;
-        }
-
-        for (var i = 0; i < listing.BarterReceivePools.Count; i++)
-            if (!ValidateBarterReceivePoolEntry(listing.BarterReceivePools[i], times))
-                return false;
-
-        return true;
-    }
-
-    private bool ValidateBarterReceivePoolEntry(NcBarterReceivePoolEntry entry, int times)
-    {
-        if (times <= 0)
-            return false;
-
-        if (entry.Chance < 0f || entry.Chance > 1f)
-            return false;
-
-        if (entry.Rolls.Min <= 0 || entry.Rolls.Max <= 0 || entry.Rolls.Min > entry.Rolls.Max)
-            return false;
-
-        if (!TryMultiplyPositive(entry.Rolls.Max, times, out _))
-            return false;
-
-        if (!_protos.TryIndex<NcContractRewardPoolPrototype>(entry.Pool, out var pool) || pool.Entries.Count == 0)
-            return false;
-
-        for (var i = 0; i < pool.Entries.Count; i++)
-            if (IsValidBarterRewardPoolEntry(pool.Entries[i]))
-                return true;
-
-        return false;
-    }
-
     private bool IsValidBarterRewardPoolEntry(ContractRewardDef reward)
     {
         if (reward.Type != StoreRewardType.Item && reward.Type != StoreRewardType.Currency)
@@ -725,6 +878,44 @@ public sealed partial class NcStoreLogicSystem
 
         result = (int) value;
         return true;
+    }
+
+    private sealed class BarterCostPlan
+    {
+        public readonly List<BarterCostReservation> Reservations = new();
+    }
+
+    private sealed class BarterReservableItem
+    {
+        public EntityUid Entity;
+        public bool IsStack;
+        public string Prototype = string.Empty;
+        public string StackType = string.Empty;
+        public int UnitsLeft;
+    }
+
+    private sealed class BarterCostDemand
+    {
+        public string Currency = string.Empty;
+        public string Prototype = string.Empty;
+        public string PrototypeStackType = string.Empty;
+        public string Group = string.Empty;
+        public NcItemGroupPrototype? GroupPrototype;
+        public int Required;
+    }
+
+    private struct BarterCostReservation
+    {
+        public BarterCostReservation(EntityUid entity, int count, bool isStack)
+        {
+            Entity = entity;
+            Count = count;
+            IsStack = isStack;
+        }
+
+        public EntityUid Entity;
+        public int Count;
+        public bool IsStack;
     }
 
     private sealed class BarterReceivePlan

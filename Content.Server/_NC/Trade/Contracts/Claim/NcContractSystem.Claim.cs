@@ -4,19 +4,26 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private bool _inTryClaim;
-
     public bool TryClaim(EntityUid store, EntityUid user, string contractId)
     {
-        if (_inTryClaim)
+        var claimKey = (store, user, contractId);
+        if (!_claimInProgress.Add(claimKey))
         {
             Sawmill.Warning(
-                $"[Claim] Re-entrant TryClaim for '{contractId}' on {ToPrettyString(store)} rejected. " +
-                "Something invoked claim inside an existing claim — check event handlers.");
+                $"[Claim] Duplicate/re-entrant TryClaim for '{contractId}' by {ToPrettyString(user)} on {ToPrettyString(store)} rejected.");
             return false;
         }
 
-        _inTryClaim = true;
+        if (_claimScratchInUse)
+        {
+            _claimInProgress.Remove(claimKey);
+            Sawmill.Warning(
+                $"[Claim] Nested TryClaim for '{contractId}' by {ToPrettyString(user)} on {ToPrettyString(store)} rejected. " +
+                "Claim planning scratch is already in use; check event handlers.");
+            return false;
+        }
+
+        _claimScratchInUse = true;
         try
         {
             var res = TryClaimDetailed(store, user, contractId);
@@ -36,7 +43,8 @@ public sealed partial class NcContractSystem : EntitySystem
         }
         finally
         {
-            _inTryClaim = false;
+            _claimScratchInUse = false;
+            _claimInProgress.Remove(claimKey);
         }
     }
 

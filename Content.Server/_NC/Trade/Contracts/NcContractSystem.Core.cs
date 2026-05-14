@@ -20,8 +20,12 @@ public sealed partial class NcContractSystem : EntitySystem
     [Dependency] private readonly NcStoreInventorySystem _inventory = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
+    private readonly HashSet<(EntityUid Store, EntityUid User, string ContractId)> _claimInProgress = new();
+    private bool _claimScratchInUse;
     private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _progressClaimableByKeyScratch = new();
     private readonly HashSet<EntityUid> _progressConsumedEntitiesScratch = new();
+    private readonly HashSet<EntityUid> _storesUpdatingProgress = new();
+    private bool _progressScratchInUse;
     private readonly List<(string ProtoId, PrototypeMatchMode MatchMode, int Depth)> _progressOrderedKeysScratch = new();
     private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _progressRequiredByKeyScratch = new();
     private readonly Stack<List<int>> _progressTargetIndexPool = new();
@@ -61,6 +65,10 @@ public sealed partial class NcContractSystem : EntitySystem
         _cooldownKeysToRemoveScratch.Clear();
         _contractCooldown.Clear();
         _flattenedPoolCache.Clear();
+        _claimInProgress.Clear();
+        _storesUpdatingProgress.Clear();
+        _claimScratchInUse = false;
+        _progressScratchInUse = false;
     }
 
     public void ClearStoreRuntimeCaches(EntityUid store)

@@ -5,8 +5,6 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private bool _inUpdateContractsProgress;
-
     public void UpdateContractsProgress(
         EntityUid store,
         NcStoreComponent comp,
@@ -20,16 +18,24 @@ public sealed partial class NcContractSystem : EntitySystem
         if (comp.Contracts.Count == 0)
             return;
 
-        if (_inUpdateContractsProgress)
+        if (!_storesUpdatingProgress.Add(store))
         {
             Sawmill.Warning(
                 $"[Contracts] Re-entrant UpdateContractsProgress on {ToPrettyString(store)} skipped. " +
-                "Check event handlers — some action triggered inside a progress update call. " +
-                "Outer call will proceed; inner call skipped to preserve scratch state.");
+                "The same store is already updating progress.");
             return;
         }
 
-        _inUpdateContractsProgress = true;
+        if (_progressScratchInUse)
+        {
+            _storesUpdatingProgress.Remove(store);
+            Sawmill.Warning(
+                $"[Contracts] Nested UpdateContractsProgress on {ToPrettyString(store)} skipped. " +
+                "Progress scratch is already in use by another update; check event handlers.");
+            return;
+        }
+
+        _progressScratchInUse = true;
         try
         {
             var storeNearbyItemsPrepared = false;
@@ -58,7 +64,8 @@ public sealed partial class NcContractSystem : EntitySystem
         }
         finally
         {
-            _inUpdateContractsProgress = false;
+            _progressScratchInUse = false;
+            _storesUpdatingProgress.Remove(store);
         }
     }
 

@@ -336,64 +336,60 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        var amountRange = GetRewardAmountRange(entry);
-        if (!IsRewardCountRange(amountRange))
+        if (!IsCountConfigured(entry.Count))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Reward pool '{poolId}' used by '{ownerId}' entry #{index} has invalid count/amount range " +
-                $"{amountRange.Min}..{amountRange.Max}. Expected min >= 0, max > 0, min <= max.");
+                $"[ContractsV2] Reward pool '{poolId}' used by '{ownerId}' entry #{index} does not define 'count'. " +
+                "Supply V2 pools use count, not amount.");
             return false;
         }
 
-        var probability = GetRewardProbability(entry);
-        if (!IsChanceValid(probability))
+        if (!IsRewardCountRange(entry.Count))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Reward pool '{poolId}' used by '{ownerId}' entry #{index} has invalid chance={probability}. Expected 0..1.");
+                $"[ContractsV2] Reward pool '{poolId}' used by '{ownerId}' entry #{index} has invalid count range " +
+                $"{entry.Count.Min}..{entry.Count.Max}. Expected min >= 0, max > 0, min <= max.");
             return false;
         }
 
-        var rewardId = GetRewardId(entry);
+        if (HasExplicitChance(entry))
+        {
+            Sawmill.Warning(
+                $"[ContractsV2] Reward pool '{poolId}' used by '{ownerId}' entry #{index} uses chance/prob. " +
+                "Supply V2 reward pools use count ranges and weight only.");
+            return false;
+        }
+
         switch (entry.Type)
         {
             case StoreRewardType.Item:
-                if (string.IsNullOrWhiteSpace(rewardId))
-                {
-                    Sawmill.Warning(
-                        $"[ContractsV2] Reward pool '{poolId}' used by '{ownerId}' entry #{index} is Item but has no prototype/id.");
+                if (!RequireOnlyPoolRewardTarget(ownerId, poolId, index, "prototype", entry.Prototype, entry.Currency, entry.Pool, entry.Id))
                     return false;
-                }
 
-                if (_prototypes.HasIndex<EntityPrototype>(rewardId))
+                if (_prototypes.HasIndex<EntityPrototype>(entry.Prototype))
                     return true;
 
                 Sawmill.Warning(
                     $"[ContractsV2] Reward pool '{poolId}' used by '{ownerId}' entry #{index} references missing entity prototype " +
-                    $"'{rewardId}'.");
+                    $"'{entry.Prototype}'.");
                 return false;
 
             case StoreRewardType.Currency:
-                if (!string.IsNullOrWhiteSpace(rewardId))
+                if (!RequireOnlyPoolRewardTarget(ownerId, poolId, index, "currency", entry.Currency, entry.Prototype, entry.Pool, entry.Id))
+                    return false;
+
+                if (_prototypes.HasIndex<StackPrototype>(entry.Currency))
                     return true;
 
                 Sawmill.Warning(
-                    $"[ContractsV2] Reward pool '{poolId}' used by '{ownerId}' entry #{index} is Currency but has no currency/id.");
+                    $"[ContractsV2] Reward pool '{poolId}' used by '{ownerId}' entry #{index} references missing stack currency " +
+                    $"'{entry.Currency}'.");
                 return false;
 
             case StoreRewardType.Pool:
-                if (string.IsNullOrWhiteSpace(rewardId))
-                {
-                    Sawmill.Warning(
-                        $"[ContractsV2] Reward pool '{poolId}' used by '{ownerId}' entry #{index} is Pool but has no pool/id.");
-                    return false;
-                }
-
-                if (_prototypes.HasIndex<NcContractRewardPoolPrototype>(rewardId))
-                    return true;
-
                 Sawmill.Warning(
-                    $"[ContractsV2] Reward pool '{poolId}' used by '{ownerId}' entry #{index} references missing nested reward pool " +
-                    $"'{rewardId}'.");
+                    $"[ContractsV2] Reward pool '{poolId}' used by '{ownerId}' entry #{index} is a nested Pool. " +
+                    "Nested pools are not supported for Supply V2 rewards.");
                 return false;
 
             default:
@@ -403,14 +399,49 @@ public sealed partial class NcContractSystem : EntitySystem
         }
     }
 
+    private bool RequireOnlyPoolRewardTarget(
+        string ownerId,
+        string poolId,
+        int index,
+        string expectedField,
+        string expectedValue,
+        string otherA,
+        string otherB,
+        string legacyId)
+    {
+        if (string.IsNullOrWhiteSpace(expectedValue))
+        {
+            Sawmill.Warning(
+                $"[ContractsV2] Reward pool '{poolId}' used by '{ownerId}' entry #{index} requires field '{expectedField}'.");
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(otherA) &&
+            string.IsNullOrWhiteSpace(otherB) &&
+            string.IsNullOrWhiteSpace(legacyId))
+        {
+            return true;
+        }
+
+        Sawmill.Warning(
+            $"[ContractsV2] Reward pool '{poolId}' used by '{ownerId}' entry #{index} has extra reward target fields. " +
+            "Use only prototype for Item, currency for Currency, and do not use legacy id in Supply V2 pools.");
+        return false;
+    }
+
     private static bool IsRewardCountRange(IntRange range)
     {
         return range.Min >= 0 && range.Max > 0 && range.Min <= range.Max;
     }
 
-    private static bool IsChanceValid(float chance)
+    private static bool IsCountConfigured(IntRange range)
     {
-        return chance >= 0f && chance <= 1f;
+        return range.Min > 0 || range.Max > 0;
+    }
+
+    private static bool HasExplicitChance(ContractRewardDef reward)
+    {
+        return reward.Chance >= 0f || reward.Probability != 1.0f;
     }
 
 }

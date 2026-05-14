@@ -195,7 +195,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 {
                     Type = StoreRewardType.Item,
                     Prototype = entry.Prototype,
-                    Amount = entry.Count,
+                    Count = entry.Count,
                     Weight = 1
                 });
                 return true;
@@ -211,7 +211,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 {
                     Type = StoreRewardType.Currency,
                     Currency = entry.Currency,
-                    Amount = entry.Count,
+                    Count = entry.Count,
                     Weight = 1
                 });
                 return true;
@@ -233,7 +233,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 {
                     Type = StoreRewardType.Pool,
                     Pool = entry.Pool,
-                    Amount = entry.Count,
+                    Count = entry.Count,
                     Weight = 1
                 });
                 return true;

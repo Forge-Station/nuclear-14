@@ -32,6 +32,14 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         PrepareClaimSources(store, user, contract, out var crateEntity, out var crateItems, out var storeNearbyItems);
+        RefreshInventoryDeliveryProgressForClaim(
+            store,
+            user,
+            contractId,
+            contract,
+            crateEntity,
+            crateItems,
+            storeNearbyItems);
 
         return targets.Count == 1
             ? TryPrepareSingleTargetClaimContext(
@@ -180,6 +188,42 @@ public sealed partial class NcContractSystem : EntitySystem
             ScanStoreNearbyTurnInItems(store, storeNearbyItems);
         else
             storeNearbyItems.Clear();
+    }
+
+    private void RefreshInventoryDeliveryProgressForClaim(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        ContractServerData contract,
+        EntityUid? crateEntity,
+        List<EntityUid>? crateItems,
+        List<EntityUid> storeNearbyItems)
+    {
+        if (_progressScratchInUse)
+        {
+            Sawmill.Warning(
+                $"[Claim] Progress refresh for '{contractId}' on {ToPrettyString(store)} skipped because progress scratch is already in use. " +
+                "Claim planning will still validate the current inventory state.");
+            return;
+        }
+
+        _progressScratchInUse = true;
+        try
+        {
+            UpdateContractProgressForSingleContract(
+                contract,
+                store,
+                user,
+                _scratchUserItems,
+                crateEntity,
+                crateItems,
+                storeNearbyItems,
+                crateEntity != null && crateItems is { Count: > 0 });
+        }
+        finally
+        {
+            _progressScratchInUse = false;
+        }
     }
 
     private bool TryPrepareMultiTargetClaimContext(
