@@ -1,0 +1,75 @@
+#MARK: Племенные рубахи.
+- type: loadout
+  id: N14LoadoutClothingUniformJumpsuittribalpantsm
+  category: Uniform
+  cost: 2
+  exclusive: true
+  items:
+    - N14ClothingUniformJumpsuittribalpantsm
+  requirements:
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander
+          - Tribe  
+- type: loadout
+  id: N14LoadoutNClothingUniformJumpsuittribalpantsnecklace
+  category: Uniform
+  cost: 2
+  exclusive: true
+  items:
+    - N14ClothingUniformJumpsuittribalpantsnecklace
+  requirements:
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander
+          - Tribe  
+
+- type: loadout
+  id: N14LoadoutNClothingUniformJumpsuittribalpantsf
+  category: Uniform
+  cost: 2
+  exclusive: true
+  items:
+    - N14ClothingUniformJumpsuittribalpantsf
+  requirements:
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander
+          - Tribe  
+
+- type: loadout
+  id: N14LoadoutClothingUniformJumpsuitdrylanderTribal
+  category: Uniform
+  cost: 2
+  exclusive: true
+  items:
+    - N14ClothingUniformJumpsuitdrylanderTribal
+  requirements:
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander
+          - Tribe  

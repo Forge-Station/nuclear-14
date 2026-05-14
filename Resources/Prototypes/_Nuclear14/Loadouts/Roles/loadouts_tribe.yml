@@ -1,4 +1,4 @@
-#mark Tribe
+# MARK: Tribe
 
 - type: loadout
   id: N14ClothingHeadHatTribalPowerhelm
@@ -24,9 +24,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMelee
-    - !type:CharacterDepartmentRequirement
+    - !type:CharacterDepartmentRequirement # Forge-Change
       departments:
         - Tribe
+        - Wastelander
   items:
     - N14TribalSword
 
@@ -290,9 +291,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMelee
-    - !type:CharacterDepartmentRequirement
+    - !type:CharacterDepartmentRequirement # Forge-Change
       departments:
         - Tribe
+        - Wastelander
   items:
     - N14TribalHatchet
 
@@ -303,9 +305,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMelee
-    - !type:CharacterDepartmentRequirement
+    - !type:CharacterDepartmentRequirement # Forge-Change
       departments:
         - Tribe
+        - Wastelander
   items:
     - N14TribalMachete
 
@@ -316,9 +319,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMelee
-    - !type:CharacterDepartmentRequirement
+    - !type:CharacterDepartmentRequirement # Forge-Change
       departments:
         - Tribe
+        - Wastelander
   items:
     - N14TribalClub
 

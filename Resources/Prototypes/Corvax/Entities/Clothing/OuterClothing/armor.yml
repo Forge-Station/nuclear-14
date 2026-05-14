@@ -447,8 +447,8 @@
     damageCoefficient: 0.9
 
 - type: entity
-  parent: N14ClothingOuterNCRVest # _Nuclear14/Entities/Clothing/OuterClothing/falloutarmor.yml
-  id: N14ClothingOuterNCRVeteranArmorSnow
+  parent: N14ClothingOuterNCRVeteranArmor # _Nuclear14/Entities/Clothing/OuterClothing/falloutarmor.yml
+  id: N14ClothingOuterNCRVeteranArmorSnow 
   components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRveteranarmorSnow.rsi

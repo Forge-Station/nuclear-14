@@ -5,6 +5,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -21,6 +25,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -37,6 +45,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -53,6 +65,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -60,7 +76,7 @@
       - CaesarLegionSlave
       - NCRPisoner
   items:
-    -  N14ClothingOuterConusrobe   # Forge-Change замена на фанаткую версию
+    -  N14ClothingOuterConusrobe
 
 - type: loadout
   id: N14ClothingOuterFlannelRed
@@ -69,6 +85,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -85,6 +105,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -101,6 +125,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -117,10 +145,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement # Forge-Change
-      inverted: true
+    - !type:CharacterDepartmentRequirement
       departments:
-      - Vault
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -137,10 +165,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement # Forge-Change
-      inverted: true
+    - !type:CharacterDepartmentRequirement
       departments:
-      - Vault
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -157,10 +185,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement # Forge-Change
-      inverted: true
+    - !type:CharacterDepartmentRequirement
       departments:
-      - Vault
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -177,10 +205,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement # Forge-Change
-      inverted: true
+    - !type:CharacterDepartmentRequirement
       departments:
-      - Vault
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -197,6 +225,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -213,10 +245,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement # Forge-Change
-      inverted: true
+    - !type:CharacterDepartmentRequirement
       departments:
-      - Vault
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -233,6 +265,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -249,6 +285,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -265,6 +305,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -281,10 +325,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement # Forge-Change
-      inverted: true
+    - !type:CharacterDepartmentRequirement
       departments:
-      - Vault
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -301,10 +345,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement # Forge-Change
-      inverted: true
+    - !type:CharacterDepartmentRequirement
       departments:
-      - Vault
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -321,10 +365,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement # Forge-Change
-      inverted: true
+    - !type:CharacterDepartmentRequirement
       departments:
-      - Vault
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -334,48 +378,6 @@
   items:
     - N14ClothingOuterMetalArmor
 
-# Forge-Delete-Start
-# - type: loadout
-#   id: N14LoadoutOuterTribalArmor
-#   category: Outer
-#   cost: 2
-#   requirements:
-#     - !type:CharacterItemGroupRequirement
-#       group: N14LoadoutOuter
-#     - !type:CharacterDepartmentRequirement # Forge-Change
-#       inverted: true
-#       departments:
-#       - Vault
-#     - !type:CharacterJobRequirement # Forge-Change
-#       inverted: true
-#       jobs:
-#       - BoSMidSerf
-#       - CaesarLegionSlave
-#       - NCRPisoner
-#   items:
-#     - N14ClothingOuterTribalArmor
-
-# - type: loadout
-#   id: N14LoadoutOuterTribalArmorHeavy
-#   category: Outer
-#   cost: 3
-#   requirements:
-#     - !type:CharacterItemGroupRequirement
-#       group: N14LoadoutOuter
-#     - !type:CharacterDepartmentRequirement # Forge-Change
-#       inverted: true
-#       departments:
-#       - Vault
-#     - !type:CharacterJobRequirement # Forge-Change
-#       inverted: true
-#       jobs:
-#       - BoSMidSerf
-#       - CaesarLegionSlave
-#       - NCRPisoner
-#   items:
-#     - N14ClothingOuterTribalArmorHeavy
-# Forge-Delete-End
-
 - type: loadout
   id: N14LoadoutOuterRaiderBadlands
   category: Outer
@@ -383,10 +385,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement # Forge-Change
-      inverted: true
+    - !type:CharacterDepartmentRequirement
       departments:
-      - Vault
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -403,10 +405,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement # Forge-Change
-      inverted: true
+    - !type:CharacterDepartmentRequirement
       departments:
-      - Vault
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -423,10 +425,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement # Forge-Change
-      inverted: true
+    - !type:CharacterDepartmentRequirement
       departments:
-      - Vault
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -446,10 +448,10 @@
       min: 24000
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement # Forge-Change
-      inverted: true
+    - !type:CharacterDepartmentRequirement
       departments:
-      - Vault
+        - Townsfolk
+        - Wastelander
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:

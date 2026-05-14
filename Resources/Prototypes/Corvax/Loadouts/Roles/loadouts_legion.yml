@@ -27,7 +27,7 @@
 
 - type: loadout
   id: LoadoutLegionDeadVeteranHelmet
-  category: Roles
+  category: Head
   cost: 2
   exclusive: true
   requirements:
@@ -42,7 +42,7 @@
 
 - type: loadout
   id: LoadoutLegionDeadPrimeHelmet
-  category: Roles
+  category: Head
   cost: 2
   exclusive: true
   requirements:
@@ -111,7 +111,7 @@
 
 - type: loadout
   id: LoadoutLegionCloakBlack
-  category: Roles
+  category: Neck
   cost: 2
   exclusive: true
   requirements:
@@ -128,7 +128,7 @@
 
 - type: loadout
   id: LoadoutNeckCloakLegionWhite
-  category: Roles
+  category: Neck
   cost: 2
   exclusive: true
   requirements:
@@ -144,7 +144,7 @@
 
 - type: loadout
   id: LoadoutNeckCloakLegionRed
-  category: Roles
+  category: Neck
   cost: 2
   exclusive: true
   requirements:
@@ -174,7 +174,7 @@
 
 - type: loadout
   id: LoadoutConquerorCenturioHelmet
-  category: Roles
+  category: Head
   cost: 2
   exclusive: true
   requirements:

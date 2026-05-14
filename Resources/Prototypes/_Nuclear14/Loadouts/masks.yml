@@ -5,6 +5,14 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMask
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault
+      - CaesarLegion
+      - BrotherhoodMidwest
+      - BrotherhoodWashington
+      - BrotherhoodWest
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -21,6 +29,14 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMask
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault
+      - CaesarLegion
+      - BrotherhoodMidwest
+      - BrotherhoodWashington
+      - BrotherhoodWest
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -37,6 +53,14 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMask
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault
+      - CaesarLegion
+      - BrotherhoodMidwest
+      - BrotherhoodWashington
+      - BrotherhoodWest
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -53,6 +77,14 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMask
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault
+      - CaesarLegion
+      - BrotherhoodMidwest
+      - BrotherhoodWashington
+      - BrotherhoodWest
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -69,6 +101,14 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMask
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault
+      - CaesarLegion
+      - BrotherhoodMidwest
+      - BrotherhoodWashington
+      - BrotherhoodWest
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -85,6 +125,14 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMask
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault
+      - CaesarLegion
+      - BrotherhoodMidwest
+      - BrotherhoodWashington
+      - BrotherhoodWest
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -103,6 +151,11 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMask
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault
+      - CaesarLegion
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -121,6 +174,14 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMask
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault
+      - CaesarLegion
+      - BrotherhoodMidwest
+      - BrotherhoodWashington
+      - BrotherhoodWest
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
