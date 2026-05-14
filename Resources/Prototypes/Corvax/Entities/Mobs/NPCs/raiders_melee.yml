@@ -1,0 +1,73 @@
+- type: entity
+  name: Дикий племенной воин
+  parent: N14BaseMobRaider
+  id: N14MobNPCRaiderTribeWarr
+  suffix: Рейдер
+  description: Большой и крепкий воин. Он убьёт каждого человека, что окажется не из его племени.
+  components: # No gun or ammo components because this is a melee variant.
+    - type: MobThresholds
+      thresholds:
+        0: Alive
+        125: Dead
+    - type: Loadout
+      prototypes:
+        - TribalWarriorNPC
+
+- type: entity
+  name: рейдер мясник
+  parent: N14BaseMobRaider
+  id: N14MobNPCRaiderButcher
+  suffix: NPC
+  description: Большой, жирный ублюдок вооружённый пилой.
+  components: # No gun or ammo components because this is a melee variant.
+    - type: MovementSpeedModifier
+      baseWalkSpeed : 4                         # Forge-Change
+      baseSprintSpeed : 5  
+    - type: MobThresholds
+      thresholds:
+        0: Alive
+        150: Dead
+    - type: Loadout
+      prototypes:
+        - RaiderButcherNPC
+
+- type: entity
+  name: психопат
+  parent: N14BaseMobRaider
+  id: N14MobRaiderPsycho1
+  description: Он здесь чтобы тебя убить.
+  components:
+    - type: Loadout
+      prototypes:
+      - PsychoRaiderGear1
+
+- type: entity
+  name: психопат
+  parent: N14BaseMobRaider
+  id: N14MobRaiderPsycho2
+  description: Он здесь чтобы тебя убить.
+  components:
+    - type: Loadout
+      prototypes:
+      - PsychoRaiderGear2
+
+- type: entity
+  name: психопат
+  parent: N14BaseMobRaider
+  id: N14MobRaiderPsycho3
+  description: Он здесь чтобы тебя убить.
+  components:
+    - type: Loadout
+      prototypes:
+      - PsychoRaiderGear3                
+
+- type: entity
+  name: психопат
+  parent: N14BaseMobRaider
+  id: N14MobRaiderPsycho4
+  description: Он здесь чтобы тебя убить.
+  components:
+    - type: Loadout
+      prototypes:
+      - PsychoRaiderGear4
+        

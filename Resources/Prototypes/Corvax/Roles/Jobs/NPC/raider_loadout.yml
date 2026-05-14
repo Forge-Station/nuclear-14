@@ -1,0 +1,61 @@
+- type: startingGear
+  id: RaiderPowerArmorBossNPC
+  equipment:
+    jumpsuit: ClothingUniformMNKUnderGarment
+    outerClothing: N14ClothingOuterPowerArmorRaider
+    mask: N14ClothingMaskLiner
+    eyes: N14ClothingEyesGlassesPilot
+    back: N14ClothingPowerSystemsBackForNPC
+
+- type: startingGear
+  id: MercenaryHeavySniperNPC
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitMilUniform
+    outerClothing: N14ClothingOuterVestChinese
+    head: ClothingHeadHatBeretMerc
+    shoes: N14ClothingBootsCombat
+    mask: N14ClothingMaskPatriotMask
+    eyes: ClothingEyesGlassesSunglasses
+    neck: N14ClothingNeckCloakGhillie
+    gloves: N14ClothingHandsGlovesCloth
+
+
+- type: startingGear
+  id: RaiderButcherNPC
+  equipment:
+    outerClothing: ClothingOuterApronChemist
+    shoes: ClothingShoesBootsFishing
+    mask: N14ClothingMaskPlate
+    gloves: ClothingHandsGlovesChemist
+  inhand:
+  - N14ripper
+
+- type: startingGear
+  id: PsychoRaiderGear1
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitRags
+    outerClothing: N14ClothingOuterRaiderBlastmaster
+    shoes: N14ClothingShoesTribal
+    head: N14ClothingTribalMuffaloskull
+  inhand:
+  - N14ButchersCleaver
+
+- type: startingGear
+  id: PsychoRaiderGear2
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitRags
+    outerClothing: N14ClothingOuterPainspike
+    shoes: N14ClothingBootsBlack
+    mask: N14ClothingMaskHockey
+  inhand:
+  - N14ScrapMachete
+
+- type: startingGear
+  id: PsychoRaiderGear3
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitRags
+    outerClothing: N14ClothingOuterLightMetalArmor
+    shoes: N14ClothingBootsLeather
+    mask: N14ClothingMaskGrill
+  inhand:
+  - N14SledgeHammer

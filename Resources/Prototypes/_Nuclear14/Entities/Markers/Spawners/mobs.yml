@@ -615,9 +615,13 @@
       - sprite: _Nuclear14/Mobs/RaidersSimpleMob/RaiderPsycho.rsi
         state: raider_melee
       - state: ai
-  - type: ConditionalSpawner
+  - type: ConditionalSpawner # Forge-add
     prototypes:
       - N14MobRaiderPsycho
+      - N14MobRaiderPsycho1 
+      - N14MobRaiderPsycho2
+      - N14MobRaiderPsycho3
+      - N14MobRaiderPsycho4
 
 - type: entity
   name: Fern Spawner - Melee
