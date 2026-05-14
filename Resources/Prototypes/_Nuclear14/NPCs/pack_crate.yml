@@ -1,0 +1,39 @@
+# HTN compound for the N14 Pack Brahmin Crate.
+# When FollowTarget is set in the blackboard the brahmin follows it.
+# When FollowTarget is absent the brahmin simply idles (waits in place).
+
+- type: htnCompound
+  id: N14PackCrateCompound
+  branches:
+    # Branch 1: Move toward follow target when out of range
+    - tasks:
+        - !type:HTNPrimitiveTask
+          preconditions:
+            - !type:KeyExistsPrecondition
+              key: FollowTarget
+            - !type:CoordinatesNotInRangePrecondition
+              targetKey: FollowTarget
+              rangeKey: FollowRange
+          operator: !type:MoveToOperator
+            pathfindInPlanning: true
+            targetKey: FollowTarget
+            rangeKey: FollowCloseRange
+            removeKeyOnFinish: false
+
+    # Branch 2: Wait near follow target when already in range
+    - tasks:
+        - !type:HTNPrimitiveTask
+          preconditions:
+            - !type:KeyExistsPrecondition
+              key: FollowTarget
+            - !type:CoordinatesInRangePrecondition
+              targetKey: FollowTarget
+              rangeKey: FollowRange
+          operator: !type:WaitOperator
+            key: MaximumIdleTime
+
+    # Branch 3: Idle in place — fallback when no follow target is set
+    - tasks:
+        - !type:HTNPrimitiveTask
+          operator: !type:WaitOperator
+            key: MaximumIdleTime
