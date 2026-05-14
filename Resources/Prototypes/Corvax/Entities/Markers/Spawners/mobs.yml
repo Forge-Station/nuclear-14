@@ -151,8 +151,9 @@
 # Raiders
 
 - type: entity
-  name: Wild Tribal Skirmisher Spawner
+  name: спавнер дикого племенного разведчика
   id: N14SpawnMobNPCRaiderTribeSkir
+  suffix: Рейдер
   parent: MarkerBase
   components:
     - type: Sprite
@@ -166,8 +167,9 @@
         - N14MobNPCRaiderTribeSkir
 
 - type: entity
-  name: Wild Tribal Warrior Spawner
+  name: спавнер дикого племенного бойца
   id: N14SpawnMobNPCRaiderTribeWarr
+  suffix: Рейдер
   parent: MarkerBase
   components:
     - type: Sprite
