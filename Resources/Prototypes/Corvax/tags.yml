@@ -88,10 +88,10 @@
 - type: Tag
   id: TradeContractStructureDropoff
 
-- type: tag
+- type: Tag
   id: Candles
 
-- type: tag
+- type: Tag
   id: Lighter
 
 - type: Tag
