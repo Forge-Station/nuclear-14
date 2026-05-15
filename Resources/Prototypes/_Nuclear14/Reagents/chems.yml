@@ -346,5 +346,5 @@
     Narcotic:
       effects:
       - !type:MovespeedModifier
-        walkSpeedModifier: 1.30
-        sprintSpeedModifier: 1.30
+        walkSpeedModifier: 1.20
+        sprintSpeedModifier: 1.20
