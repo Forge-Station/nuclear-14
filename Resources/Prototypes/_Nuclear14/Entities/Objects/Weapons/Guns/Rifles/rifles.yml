@@ -276,7 +276,6 @@
         whitelist:
           tags:
             - Magazine556Rifle
-            - Magazine556Rifle30 # Forge-Change
       gun_chamber:
         name: Chamber
         startingItem: N14Cartridge556Rifle
@@ -330,7 +329,6 @@
         priority: 2
         whitelist:
           tags:
-            - Magazine556Rifle30 # Forge-Change
             - Magazine556Rifle
       gun_chamber:
         name: Chamber
@@ -383,7 +381,6 @@
           tags:
             - Magazine556Rifle
             - LongMagazine556Rifle
-            - Magazine556Rifle30 # Forge-Change
       gun_chamber:
         name: Chamber
         startingItem: N14Cartridge556Rifle
