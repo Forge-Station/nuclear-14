@@ -8,10 +8,10 @@ public sealed partial class NcContractSystem : EntitySystem
 {
     private ContractServerData CreateRetrievalContractData(EntityUid store, NcRetrievalContractPrototype proto)
     {
-        var targets = BuildRetrievalTargets(store, proto);
-        var totalRequired = CalculateTotalRequired(targets);
-        var mainTarget = GetPrimaryTargetId(targets);
-        var matchMode = targets.Count > 0 ? targets[0].MatchMode : PrototypeMatchMode.Exact;
+        var cargo = BuildRetrievalCargoTargets(store, proto);
+        var totalRequired = CalculateTotalRequired(cargo);
+        var mainTarget = GetPrimaryTargetId(cargo);
+        var matchMode = cargo.Count > 0 ? cargo[0].MatchMode : PrototypeMatchMode.Exact;
         var rewards = BakeRewardsForContract(store, proto.ID, BuildRetrievalRewardDefs(store, proto));
 
         var contract = new ContractServerData
@@ -27,7 +27,7 @@ public sealed partial class NcContractSystem : EntitySystem
             Config = CreateRetrievalObjectiveConfig(proto),
             FlowStatus = ContractFlowStatus.Available,
             MatchMode = matchMode,
-            Targets = targets,
+            Targets = cargo,
             TargetItem = mainTarget,
             Required = totalRequired,
             Progress = 0,
@@ -38,39 +38,127 @@ public sealed partial class NcContractSystem : EntitySystem
         return contract;
     }
 
-    private static ContractObjectiveConfigData CreateRetrievalObjectiveConfig(NcRetrievalContractPrototype proto)
+    private ContractObjectiveConfigData CreateRetrievalObjectiveConfig(NcRetrievalContractPrototype proto)
     {
         var config = new ContractObjectiveConfigData();
-        var spawn = proto.Spawn;
 
-        if (spawn is { Enabled: true })
+        if (!TryResolveRetrievalRoute(proto.ID, proto.Route, out var route, out var source, out var destination, out var proof, out var guidance))
+            return config;
+
+        config.RetrievalRouteId = route.ID;
+        config.RetrievalDestinationType = destination.Target.Type;
+        config.RetrievalDestinationId = destination.Target.Id;
+        config.RetrievalDestinationRadius = Math.Max(0.25f, destination.Radius);
+        if (destination.Target.Type == NcRetrievalDestinationTargetType.MarkerGroup)
+        {
+            config.RetrievalDestinationPoint = new ContractPointSelectorPrototype
+            {
+                Type = ContractPointSelectorType.MarkerGroup,
+                Id = destination.Target.Id
+            };
+        }
+        config.RetrievalConsumeCargo = route.Delivery.ConsumeCargo;
+        config.RetrievalLockDeliveredCargo = route.Delivery.LockDeliveredCargo;
+
+        if (source != null && source.SpawnCargo)
         {
             config.RetrievalSpawnEnabled = true;
-            config.RetrievalSpawnPoint = CloneContractPointSelector(spawn.Point);
-            config.RetrievalSpawnFallbackToStore = spawn.FallbackToStore;
-            NormalizeObjectiveConfig(config);
+            config.RetrievalSpawnPoint = CloneContractPointSelector(source.Point);
+            config.RetrievalSpawnFallbackToStore = source.FallbackToStore;
+            config.RetrievalRequireSpawnedEntities = true;
         }
 
+        if (proof != null)
+        {
+            config.RetrievalProofEnabled = true;
+            config.ProofPrototype = proof.Prototype;
+            config.RetrievalProofConsumeOnRewardClaim = proof.ConsumeOnRewardClaim;
+            config.RetrievalProofOwnership = proof.Ownership;
+            config.RetrievalProofReissue = proof.Reissue;
+        }
+
+        if (guidance != null)
+        {
+            config.RetrievalSourceHint = guidance.SourceHint;
+            config.RetrievalDestinationHint = guidance.DestinationHint;
+
+            if (guidance.Pinpointer.Enabled)
+            {
+                config.RetrievalGuidancePinpointerEnabled = true;
+                config.RetrievalGuidancePinpointerTarget = guidance.Pinpointer.Target;
+                config.RetrievalGuidancePinpointerPrototype = guidance.Pinpointer.Prototype;
+                config.RetrievalGuidanceMaxActivePinpointers = Math.Max(1, guidance.Pinpointer.MaxActive);
+                config.GivePinpointer = true;
+                config.PinpointerPrototype = guidance.Pinpointer.Prototype;
+            }
+        }
+
+        NormalizeObjectiveConfig(config);
         return config;
     }
 
-    private List<ContractTargetServerData> BuildRetrievalTargets(EntityUid store, NcRetrievalContractPrototype proto)
+    private bool TryResolveRetrievalRoute(
+        string contractId,
+        ProtoId<NcRetrievalRoutePresetPrototype> routeId,
+        out NcRetrievalRoutePresetPrototype route,
+        out NcRetrievalSourcePresetPrototype? source,
+        out NcRetrievalDestinationPresetPrototype destination,
+        out NcRetrievalProofPresetPrototype? proof,
+        out NcRetrievalGuidancePresetPrototype? guidance)
     {
-        if (proto.Targets.Count == 0)
+        source = null;
+        proof = null;
+        guidance = null;
+        route = default!;
+        destination = default!;
+
+        if (!_prototypes.TryIndex(routeId, out route!))
+        {
+            Sawmill.Warning($"[ContractsV2] Retrieval contract '{contractId}' references missing route preset '{routeId}'.");
+            return false;
+        }
+
+        if (!_prototypes.TryIndex(route.Destination, out destination!))
+        {
+            Sawmill.Warning($"[ContractsV2] Retrieval route '{route.ID}' references missing destination preset '{route.Destination}'.");
+            return false;
+        }
+
+        if (route.Source is { } sourceId && !_prototypes.TryIndex(sourceId, out source!))
+        {
+            Sawmill.Warning($"[ContractsV2] Retrieval route '{route.ID}' references missing source preset '{sourceId}'.");
+            return false;
+        }
+
+        if (route.Proof is { } proofId && !_prototypes.TryIndex(proofId, out proof!))
+        {
+            Sawmill.Warning($"[ContractsV2] Retrieval route '{route.ID}' references missing proof preset '{proofId}'.");
+            return false;
+        }
+
+        if (route.Guidance is { } guidanceId && !_prototypes.TryIndex(guidanceId, out guidance!))
+        {
+            Sawmill.Warning($"[ContractsV2] Retrieval route '{route.ID}' references missing guidance preset '{guidanceId}'.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private List<ContractTargetServerData> BuildRetrievalCargoTargets(EntityUid store, NcRetrievalContractPrototype proto)
+    {
+        if (proto.Cargo.Count == 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval contract '{proto.ID}' has no targets. " +
-                "Use 'targets' with at least one entry.");
+                $"[ContractsV2] Retrieval contract '{proto.ID}' has no cargo. " +
+                "Use 'cargo' with at least one entry.");
             return new();
         }
 
-        var selected = ResolveRetrievalTargetEntries(store, proto);
-        var targets = new List<ContractTargetServerData>(selected.Count);
-
-        for (var i = 0; i < selected.Count; i++)
+        var targets = new List<ContractTargetServerData>(proto.Cargo.Count);
+        for (var i = 0; i < proto.Cargo.Count; i++)
         {
-            var (targetIndex, entry) = selected[i];
-            if (!TryBuildRetrievalTarget(store, proto.ID, targetIndex, entry, out var target))
+            if (!TryBuildRetrievalCargoTarget(store, proto.ID, i, proto.Cargo[i], out var target))
                 continue;
 
             targets.Add(target);
@@ -79,46 +167,7 @@ public sealed partial class NcContractSystem : EntitySystem
         return targets;
     }
 
-    private List<(int Index, NcSupplyTargetEntry Entry)> ResolveRetrievalTargetEntries(
-        EntityUid store,
-        NcRetrievalContractPrototype proto)
-    {
-        var result = new List<(int Index, NcSupplyTargetEntry Entry)>();
-        if (proto.Targets.Count == 0)
-            return result;
-
-        if (!IsSupplyTargetCountConfigured(proto.TargetCount))
-        {
-            result.Capacity = proto.Targets.Count;
-            for (var i = 0; i < proto.Targets.Count; i++)
-                result.Add((i, proto.Targets[i]));
-
-            return result;
-        }
-
-        var targetCount = RollFair(
-            new(QuasiKeyKind.Tc, store, proto.ID, "retrieval-v2"),
-            proto.TargetCount,
-            1,
-            proto.Targets.Count);
-
-        var picks = Math.Clamp(targetCount, 1, proto.Targets.Count);
-        var pool = new List<int>(proto.Targets.Count);
-        for (var i = 0; i < proto.Targets.Count; i++)
-            pool.Add(i);
-
-        result.Capacity = picks;
-        for (var i = 0; i < picks && pool.Count > 0; i++)
-        {
-            var chosenIndex = PickWeighted(_random, pool, index => Math.Max(0, proto.Targets[index].Weight));
-            pool.Remove(chosenIndex);
-            result.Add((chosenIndex, proto.Targets[chosenIndex]));
-        }
-
-        return result;
-    }
-
-    private bool TryBuildRetrievalTarget(
+    private bool TryBuildRetrievalCargoTarget(
         EntityUid store,
         string contractId,
         int index,
@@ -127,13 +176,13 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         target = default!;
 
-        if (!TryValidateRetrievalTarget(contractId, index, entry))
+        if (!TryValidateRetrievalCargo(contractId, index, entry))
             return false;
 
         var hasPrototype = !string.IsNullOrWhiteSpace(entry.Prototype);
 
         var required = RollFair(
-            new(QuasiKeyKind.Req, store, contractId, $"retrieval-target:{index}:{entry.Prototype}:{entry.Group}"),
+            new(QuasiKeyKind.Req, store, contractId, $"retrieval-cargo:{index}:{entry.Prototype}:{entry.Group}"),
             entry.Count,
             1);
 

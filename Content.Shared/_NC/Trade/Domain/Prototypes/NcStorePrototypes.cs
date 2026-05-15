@@ -559,28 +559,191 @@ public sealed partial class NcSupplyContractPrototype : IPrototype
 
 
 
+
 /// <summary>
-/// Retrieval V2 optional spawn source. Stage 2 uses existing NcContractSpawnPoint markers
-/// through ContractPointSelectorPrototype. It spawns generic target items when the contract is taken;
-/// claim still accepts any matching item. Tracked-item identity is intentionally a later stage.
+/// Retrieval route source preset. Source owns only where cargo appears.
+/// The actual cargo prototypes/counts live on ncRetrievalContract.cargo.
 /// </summary>
-[DataDefinition]
-public sealed partial class NcRetrievalSpawnPrototype
+[Prototype("ncRetrievalSourcePreset")]
+public sealed partial class NcRetrievalSourcePresetPrototype : IPrototype
 {
-    /// <summary>If false, this block is ignored and the contract behaves like Stage 1 generic retrieval.</summary>
-    [DataField("enabled")]
-    public bool Enabled { get; set; } = true;
+    [IdDataField] public string ID { get; private set; } = default!;
 
-    /// <summary>Where retrieval target items should be spawned. Uses NcContractSpawnPoint markers.</summary>
-    [DataField("point")]
-    public ContractPointSelectorPrototype? Point { get; set; }
+    /// <summary>If true, cargo entries are spawned when the contract is taken.</summary>
+    [DataField("spawnCargo")]
+    public bool SpawnCargo { get; private set; } = true;
 
-    /// <summary>Allow fallback to store coordinates when no configured marker is found. Keep false for real content.</summary>
+    /// <summary>Where cargo should be spawned. Store is rejected for route sources.</summary>
+    [DataField("point", required: true)]
+    public ContractPointSelectorPrototype Point { get; private set; } = new();
+
+    /// <summary>Debug fallback only. Real content should keep this false.</summary>
     [DataField("fallbackToStore")]
-    public bool FallbackToStore { get; set; }
+    public bool FallbackToStore { get; private set; }
+}
+
+[Serializable, NetSerializable]
+public enum NcRetrievalDestinationTargetType : byte
+{
+    StoreUi = 0,
+    MarkerGroup = 1,
+    ContainerGroup = 2
+}
+
+/// <summary>Destination target for route delivery.</summary>
+[DataDefinition]
+public sealed partial class NcRetrievalDestinationTargetData
+{
+    [DataField("type")]
+    public NcRetrievalDestinationTargetType Type { get; set; } = NcRetrievalDestinationTargetType.StoreUi;
+
+    /// <summary>Marker group id or NcContractTurnInContainer group id depending on Type.</summary>
+    [DataField("id")]
+    public string Id { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Retrieval route destination preset. The target type derives delivery behavior:
+/// StoreUi = claim at trader, MarkerGroup = cargo in radius, ContainerGroup = cargo inside turn-in container.
+/// </summary>
+[Prototype("ncRetrievalDestinationPreset")]
+public sealed partial class NcRetrievalDestinationPresetPrototype : IPrototype
+{
+    [IdDataField] public string ID { get; private set; } = default!;
+
+    [DataField("target", required: true)]
+    public NcRetrievalDestinationTargetData Target { get; private set; } = new();
+
+    [DataField("radius")]
+    public float Radius { get; private set; } = 2.0f;
+}
+
+[Serializable, NetSerializable]
+public enum NcRetrievalProofOwnership : byte
+{
+    /// <summary>Whoever physically brings the proof to the store may redeem it.</summary>
+    Bearer = 0,
+
+    /// <summary>Reserved for later. Not used by default because theft/trade of proofs is intended gameplay.</summary>
+    ContractOwner = 1
+}
+
+[Serializable, NetSerializable]
+public enum NcRetrievalProofReissuePolicy : byte
+{
+    Never = 0
+}
+
+/// <summary>Proof behavior preset. Proof is a transferable bearer receipt by default.</summary>
+[Prototype("ncRetrievalProofPreset")]
+public sealed partial class NcRetrievalProofPresetPrototype : IPrototype
+{
+    [IdDataField] public string ID { get; private set; } = default!;
+
+    [DataField("prototype", required: true)]
+    public string Prototype { get; private set; } = string.Empty;
+
+    [DataField("ownership")]
+    public NcRetrievalProofOwnership Ownership { get; private set; } = NcRetrievalProofOwnership.Bearer;
+
+    [DataField("reissue")]
+    public NcRetrievalProofReissuePolicy Reissue { get; private set; } = NcRetrievalProofReissuePolicy.Never;
+
+    [DataField("consumeOnRewardClaim")]
+    public bool ConsumeOnRewardClaim { get; private set; } = true;
+}
+
+[Serializable, NetSerializable]
+public enum NcRetrievalPinpointerTargetMode : byte
+{
+    None = 0,
+    CargoThenDestinationThenStore = 1
+}
+
+[DataDefinition]
+public sealed partial class NcRetrievalPinpointerData
+{
+    [DataField("enabled")]
+    public bool Enabled { get; set; }
+
+    [DataField("target")]
+    public NcRetrievalPinpointerTargetMode Target { get; set; } = NcRetrievalPinpointerTargetMode.None;
+
+    [DataField("prototype")]
+    public string Prototype { get; set; } = string.Empty;
+
+    [DataField("maxActive")]
+    public int MaxActive { get; set; } = 1;
+}
+
+/// <summary>Guidance preset. Guidance never controls spawn/claim; it only gives hints and pinpointer behavior.</summary>
+[Prototype("ncRetrievalGuidancePreset")]
+public sealed partial class NcRetrievalGuidancePresetPrototype : IPrototype
+{
+    [IdDataField] public string ID { get; private set; } = default!;
+
+    [DataField("sourceHint")]
+    public string SourceHint { get; private set; } = string.Empty;
+
+    [DataField("destinationHint")]
+    public string DestinationHint { get; private set; } = string.Empty;
+
+    [DataField("pinpointer")]
+    public NcRetrievalPinpointerData Pinpointer { get; private set; } = new();
+}
+
+[DataDefinition]
+public sealed partial class NcRetrievalRouteDeliveryData
+{
+    [DataField("consumeCargo")]
+    public bool ConsumeCargo { get; set; } = true;
+
+    [DataField("lockDeliveredCargo")]
+    public bool LockDeliveredCargo { get; set; } = true;
+}
+
+/// <summary>
+/// Route preset composes repeated mechanics: source, destination, bearer proof, guidance and delivery flags.
+/// Contracts keep only cargo + route + reward.
+/// </summary>
+[Prototype("ncRetrievalRoutePreset")]
+public sealed partial class NcRetrievalRoutePresetPrototype : IPrototype
+{
+    [IdDataField] public string ID { get; private set; } = default!;
+
+    [DataField("source")]
+    public ProtoId<NcRetrievalSourcePresetPrototype>? Source { get; private set; }
+
+    [DataField("destination", required: true)]
+    public ProtoId<NcRetrievalDestinationPresetPrototype> Destination { get; private set; }
+
+    [DataField("proof")]
+    public ProtoId<NcRetrievalProofPresetPrototype>? Proof { get; private set; }
+
+    [DataField("guidance")]
+    public ProtoId<NcRetrievalGuidancePresetPrototype>? Guidance { get; private set; }
+
+    [DataField("delivery")]
+    public NcRetrievalRouteDeliveryData Delivery { get; private set; } = new();
 }
 
 
+[DataDefinition]
+public sealed partial class NcRetrievalLegacySpawnTrap
+{
+    [DataField("enabled")] public bool Enabled { get; set; }
+    [DataField("point")] public ContractPointSelectorPrototype? Point { get; set; }
+    [DataField("fallbackToStore")] public bool FallbackToStore { get; set; }
+    [DataField("requireSpawned")] public bool RequireSpawned { get; set; }
+    [DataField("givePinpointer")] public bool GivePinpointer { get; set; }
+    [DataField("pinpointerPrototype")] public string PinpointerPrototype { get; set; } = string.Empty;
+    [DataField("hint")] public string Hint { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Retrieval V2 Route layout: content defines cargo, route and reward.
+/// Route presets define where cargo appears, where it is delivered, whether proof exists, and guidance.
+/// </summary>
 [Prototype("ncRetrievalContract")]
 public sealed partial class NcRetrievalContractPrototype : IPrototype
 {
@@ -602,29 +765,34 @@ public sealed partial class NcRetrievalContractPrototype : IPrototype
     [DataField("icon")]
     public string Icon { get; private set; } = string.Empty;
 
-    /// <summary>
-    /// Retrieval targets. Stage 1 means the player brings already existing items to the trader.
-    /// If targetCount is absent, all targets are required. If set, a weighted subset is picked on generation.
-    /// </summary>
-    [DataField("targets", required: true)]
-    public List<NcSupplyTargetEntry> Targets { get; private set; } = new();
+    /// <summary>Retrieval cargo. This replaces Retrieval Stage 1/2 'targets'.</summary>
+    [DataField("cargo", required: true)]
+    public List<NcSupplyTargetEntry> Cargo { get; private set; } = new();
 
-    /// <summary>Optional number of targets to pick from the targets pool. Fixed 0 means unset / require all targets.</summary>
-    [DataField("targetCount", required: false)]
-    public IntRange TargetCount { get; private set; } = IntRange.Fixed(0);
+    /// <summary>The route preset defines source/destination/proof/guidance. Required for Retrieval Route layout.</summary>
+    [DataField("route", required: true)]
+    public ProtoId<NcRetrievalRoutePresetPrototype> Route { get; private set; }
 
     /// <summary>Unified Retrieval rewards. Use type: Currency, Item or Pool with count.</summary>
     [DataField("reward", required: true)]
     public List<NcSupplyRewardEntry> Reward { get; private set; } = new();
 
-    /// <summary>
-    /// Optional Stage 2 spawn source. When configured, target items are spawned at a selected marker
-    /// when the contract is taken. Claim remains generic and does not require a specific spawned entity.
-    /// </summary>
-    [DataField("spawn")]
-    public NcRetrievalSpawnPrototype? Spawn { get; private set; }
-}
+    // Legacy traps. The route layout intentionally rejects the old Stage 1-4 shape.
+    [DataField("targets")]
+    public List<NcSupplyTargetEntry> LegacyTargets { get; private set; } = new();
 
+    [DataField("targetCount")]
+    public IntRange LegacyTargetCount { get; private set; } = IntRange.Fixed(0);
+
+    [DataField("spawn")]
+    public NcRetrievalLegacySpawnTrap? LegacySpawn { get; private set; }
+
+    // Compatibility properties used only by older helper methods that remain in partial files.
+    // Runtime and validation for Route layout must use Cargo/Route and reject these legacy fields.
+    public List<NcSupplyTargetEntry> Targets => Cargo;
+    public IntRange TargetCount => IntRange.Fixed(0);
+    public NcRetrievalLegacySpawnTrap? Spawn => LegacySpawn;
+}
 
 
 /// <summary>

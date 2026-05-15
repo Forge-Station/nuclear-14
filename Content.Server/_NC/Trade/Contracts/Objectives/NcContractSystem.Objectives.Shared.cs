@@ -262,6 +262,15 @@ public sealed partial class NcContractSystem : EntitySystem
         state.ProofEntity = null;
         state.ProofSpawned = false;
         state.ProofToken = string.Empty;
+
+        if (state.RetrievalRouteDeliveryActive)
+        {
+            state.RetrievalRouteDeliveryActive = false;
+            _activeRetrievalRouteDeliveries = Math.Max(0, _activeRetrievalRouteDeliveries - 1);
+        }
+
+        state.RetrievalDeliveredEntities.Clear();
+        state.RetrievalRouteDeliveryCompleted = false;
         state.HuntTargetWasKilled = false;
         state.LastKnownTargetCoordinates = null;
         _objectiveRuntimeByContract.Remove(key);
@@ -326,6 +335,10 @@ public sealed partial class NcContractSystem : EntitySystem
         public readonly List<EntityUid> GuardEntities = new();
         public readonly HashSet<EntityUid> PinpointerEntities = new();
         public readonly List<EntityUid> RetrievalSpawnedEntities = new();
+        public readonly HashSet<EntityUid> RetrievalDeliveredEntities = new();
+        public bool RetrievalRouteDeliveryActive;
+        public bool RetrievalRouteDeliveryCompleted;
+        public EntityCoordinates? RetrievalDeliveryCoordinates;
         public TimeSpan? GhostRoleAcceptDeadline;
         public bool GhostRoleTaken;
         public bool HuntTargetWasKilled;

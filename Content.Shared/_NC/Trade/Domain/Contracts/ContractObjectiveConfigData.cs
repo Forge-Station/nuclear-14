@@ -38,9 +38,29 @@ public sealed class ContractObjectiveConfigData
     public bool SpawnItems;
     public List<string> SpawnSpecific { get; set; } = new();
 
-    // Retrieval V2 Stage 2: generic marker spawn support. This does not make claim require
-    // the spawned entity; it only creates a source in the world when the contract is taken.
+    // Retrieval V2 Route: copied from ncRetrievalRoutePreset at contract generation time.
+    public string RetrievalRouteId { get; set; } = string.Empty;
     public bool RetrievalSpawnEnabled;
     public ContractPointSelectorPrototype? RetrievalSpawnPoint { get; set; }
     public bool RetrievalSpawnFallbackToStore;
+    public bool RetrievalRequireSpawnedEntities;
+
+    public NcRetrievalDestinationTargetType RetrievalDestinationType;
+    public string RetrievalDestinationId { get; set; } = string.Empty;
+    public ContractPointSelectorPrototype? RetrievalDestinationPoint { get; set; }
+    public float RetrievalDestinationRadius;
+    public bool RetrievalConsumeCargo;
+    public bool RetrievalLockDeliveredCargo;
+
+    public bool RetrievalProofEnabled;
+    public bool RetrievalProofConsumeOnRewardClaim;
+    public NcRetrievalProofOwnership RetrievalProofOwnership;
+    public NcRetrievalProofReissuePolicy RetrievalProofReissue;
+
+    public bool RetrievalGuidancePinpointerEnabled;
+    public NcRetrievalPinpointerTargetMode RetrievalGuidancePinpointerTarget;
+    public string RetrievalGuidancePinpointerPrototype { get; set; } = string.Empty;
+    public int RetrievalGuidanceMaxActivePinpointers;
+    public string RetrievalSourceHint { get; set; } = string.Empty;
+    public string RetrievalDestinationHint { get; set; } = string.Empty;
 }

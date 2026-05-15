@@ -124,13 +124,26 @@ public sealed partial class NcContractSystem : EntitySystem
                 defaultToStore: config.RetrievalSpawnFallbackToStore);
 
             if (config.RetrievalSpawnPoint == null)
+            {
                 config.RetrievalSpawnEnabled = false;
+                config.RetrievalRequireSpawnedEntities = false;
+            }
         }
         else
         {
             config.RetrievalSpawnPoint = null;
             config.RetrievalSpawnFallbackToStore = false;
+            config.RetrievalRequireSpawnedEntities = false;
         }
+
+        config.RetrievalRouteId ??= string.Empty;
+        config.RetrievalDestinationId ??= string.Empty;
+        config.RetrievalDestinationRadius = Math.Max(0.25f, config.RetrievalDestinationRadius);
+        config.RetrievalDestinationPoint = NormalizeContractPointSelector(config.RetrievalDestinationPoint, defaultToStore: false);
+        config.RetrievalGuidancePinpointerPrototype = ResolvePinpointerPrototypeId(config.RetrievalGuidancePinpointerPrototype);
+        config.RetrievalGuidanceMaxActivePinpointers = Math.Max(0, config.RetrievalGuidanceMaxActivePinpointers);
+        config.RetrievalSourceHint ??= string.Empty;
+        config.RetrievalDestinationHint ??= string.Empty;
 
         config.SpawnSpecific ??= new List<string>();
         for (var i = config.SpawnSpecific.Count - 1; i >= 0; i--)

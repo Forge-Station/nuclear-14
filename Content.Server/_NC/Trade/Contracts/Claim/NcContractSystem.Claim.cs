@@ -62,6 +62,9 @@ public sealed partial class NcContractSystem : EntitySystem
         switch (contract.ExecutionKind)
         {
             case ContractExecutionKind.InventoryDelivery:
+                if (RequiresRetrievalRouteProofReward(contract))
+                    return TryClaimRetrievalRouteProofReward(store, user, contractId, comp, contract);
+
                 if (!TryPrepareClaimContext(store, user, contractId, out var ctx, out var prepFail))
                     return prepFail;
 
@@ -77,6 +80,34 @@ public sealed partial class NcContractSystem : EntitySystem
             default:
                 return TryClaimObjectiveContract(store, user, contractId, comp, contract);
         }
+    }
+
+
+    private static bool RequiresRetrievalRouteProofReward(ContractServerData contract)
+    {
+        return contract.IsInventoryDelivery && contract.Config.RetrievalProofEnabled;
+    }
+
+    private ClaimAttemptResult TryClaimRetrievalRouteProofReward(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        NcStoreComponent comp,
+        ContractServerData contract)
+    {
+        if (!contract.Completed)
+        {
+            return ClaimAttemptResult.Fail(
+                ClaimFailureReason.ObjectiveNotCompleted,
+                $"Retrieval route cargo for '{contractId}' has not been delivered yet.");
+        }
+
+        if (!TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail))
+            return proofFail;
+
+        GiveContractRewards(user, contract.Rewards);
+        FinalizeClaim(store, comp, contractId, contract.Repeatable, deleteTrackedEntities: contract.Config.RetrievalConsumeCargo);
+        return ClaimAttemptResult.Ok();
     }
 
     private ClaimAttemptResult TryClaimObjectiveContract(

@@ -19,7 +19,10 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         var config = contract.Config;
 
-        if (!TryInitializeRetrievalSpawnRuntime(store, contractId, contract))
+        if (!TryInitializeRetrievalSpawnRuntime(store, user, contractId, contract))
+            return false;
+
+        if (!TryInitializeRetrievalRouteDeliveryRuntime(store, contractId, contract))
             return false;
 
         if (config.SpawnItems && contract.MatchMode != PrototypeMatchMode.Matcher)

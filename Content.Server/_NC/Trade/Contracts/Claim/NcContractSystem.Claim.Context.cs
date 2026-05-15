@@ -32,6 +32,32 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         PrepareClaimSources(store, user, contract, out var crateEntity, out var crateItems, out var storeNearbyItems);
+
+        if (RequiresRetrievalSpawnedTurnIn(contract))
+        {
+            RefreshRetrievalSpawnedProgressForClaim(
+                store,
+                user,
+                contractId,
+                contract,
+                crateEntity,
+                crateItems,
+                storeNearbyItems);
+
+            return TryPrepareRetrievalSpawnedClaimContext(
+                store,
+                user,
+                contractId,
+                comp,
+                contract,
+                targets,
+                crateEntity,
+                crateItems,
+                storeNearbyItems,
+                out ctx,
+                out fail);
+        }
+
         RefreshInventoryDeliveryProgressForClaim(
             store,
             user,

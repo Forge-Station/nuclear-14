@@ -10,6 +10,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool TryInitializeRetrievalSpawnRuntime(
         EntityUid store,
+        EntityUid user,
         string contractId,
         ContractServerData contract)
     {
@@ -45,6 +46,14 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         _retrievalSpawnQueueScratch.Clear();
+
+        if (ShouldAutoIssueRetrievalRoutePinpointer(contract) &&
+            !TryIssueInitialRetrievalRoutePinpointer(user, key, state, contract, spawnCoords))
+        {
+            CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true);
+            return false;
+        }
+
         return true;
     }
 
@@ -59,14 +68,14 @@ public sealed partial class NcContractSystem : EntitySystem
         if (config.RetrievalSpawnPoint == null)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval spawn init failed for '{contractId}': spawn point is missing.");
+                $"[ContractsV2] Retrieval route init failed for '{contractId}': source point is missing.");
             return false;
         }
 
         if (config.RetrievalSpawnPoint.Type == ContractPointSelectorType.Store)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval spawn init failed for '{contractId}': Store spawn point is not valid for Retrieval V2 Stage 2.");
+                $"[ContractsV2] Retrieval route init failed for '{contractId}': Store source point is not valid.");
             return false;
         }
 
@@ -80,7 +89,7 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         Sawmill.Warning(
-            $"[ContractsV2] Retrieval spawn init failed for '{contractId}': cannot resolve spawn marker.");
+            $"[ContractsV2] Retrieval route init failed for '{contractId}': cannot resolve source marker.");
         return false;
     }
 
@@ -135,7 +144,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
             default:
                 Sawmill.Warning(
-                    $"[ContractsV2] Retrieval spawn init failed for '{contractId}': unsupported target match mode {target.MatchMode}.");
+                    $"[ContractsV2] Retrieval route init failed for '{contractId}': unsupported cargo match mode {target.MatchMode}.");
                 return false;
         }
     }
@@ -148,7 +157,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!_prototypes.HasIndex<EntityPrototype>(target.TargetItem))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval spawn init failed for '{contractId}': target prototype '{target.TargetItem}' is missing.");
+                $"[ContractsV2] Retrieval route init failed for '{contractId}': cargo prototype '{target.TargetItem}' is missing.");
             return false;
         }
 
@@ -172,7 +181,7 @@ public sealed partial class NcContractSystem : EntitySystem
             }
 
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval spawn init failed for '{contractId}': target group/matcher '{target.TargetItem}' has no spawnable prototypes.");
+                $"[ContractsV2] Retrieval route init failed for '{contractId}': cargo group '{target.TargetItem}' has no spawnable prototypes.");
             return false;
         }
 
@@ -194,8 +203,30 @@ public sealed partial class NcContractSystem : EntitySystem
         catch (Exception e)
         {
             Sawmill.Error(
-                $"[ContractsV2] Retrieval spawn init failed for '{key.ContractId}': cannot spawn '{protoId}': {e}");
+                $"[ContractsV2] Retrieval route init failed for '{key.ContractId}': cannot spawn cargo '{protoId}': {e}");
             return false;
         }
+    }
+
+    private static bool ShouldAutoIssueRetrievalRoutePinpointer(ContractServerData contract)
+    {
+        var config = contract.Config;
+        return contract.IsInventoryDelivery &&
+               config.RetrievalSpawnEnabled &&
+               config.RetrievalGuidancePinpointerEnabled &&
+               config.RetrievalGuidancePinpointerTarget == NcRetrievalPinpointerTargetMode.CargoThenDestinationThenStore;
+    }
+
+    private bool TryIssueInitialRetrievalRoutePinpointer(
+        EntityUid user,
+        (EntityUid Store, string ContractId) key,
+        ObjectiveRuntimeState state,
+        ContractServerData contract,
+        EntityCoordinates spawnCoords)
+    {
+        if (!TryResolveRetrievalSpawnedPinpointerTarget(contract, state, out var target))
+            return false;
+
+        return TrySpawnObjectivePinpointer(user, target, key, state, contract.Config, spawnCoords);
     }
 }

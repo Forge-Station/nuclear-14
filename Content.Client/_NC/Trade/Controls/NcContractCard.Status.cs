@@ -18,7 +18,7 @@ public sealed partial class NcContractCard
             return false;
         }
 
-        return data.ExecutionKind != ContractExecutionKind.InventoryDelivery;
+        return true;
     }
 
     private static bool IsGhostRoleAwaitingAcceptance(ContractClientData data)

@@ -86,7 +86,18 @@ public sealed partial class StoreStructuredSystem
         if (!config.GivePinpointer)
             return false;
 
+        if (SupportsRetrievalSpawnedPinpointer(contract))
+            return true;
+
         return contract.UsesWorldObjectiveRuntime;
+    }
+
+    private static bool SupportsRetrievalSpawnedPinpointer(ContractServerData contract)
+    {
+        var config = contract.Config;
+        return contract.IsInventoryDelivery &&
+               config.RetrievalSpawnEnabled &&
+               config.RetrievalRequireSpawnedEntities;
     }
 
 

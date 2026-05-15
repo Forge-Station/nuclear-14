@@ -30,7 +30,16 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         EntityUid pinpointerTarget;
-        if (contract.Completed)
+        if (UsesRetrievalRouteReturnPinpointerTarget(contract, state))
+        {
+            pinpointerTarget = store;
+        }
+        else if (UsesRetrievalSpawnedPinpointerTarget(contract))
+        {
+            if (!TryResolveRetrievalSpawnedPinpointerTarget(contract, state, out pinpointerTarget))
+                return false;
+        }
+        else if (contract.Completed)
         {
             if (state.ProofEntity is not { } proof || proof == EntityUid.Invalid || TerminatingOrDeleted(proof))
                 return false;
@@ -75,6 +84,50 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         return fallbackTarget;
+    }
+
+    private static bool UsesRetrievalRouteReturnPinpointerTarget(
+        ContractServerData contract,
+        ObjectiveRuntimeState state)
+    {
+        var config = contract.Config;
+        return contract.IsInventoryDelivery &&
+               contract.Completed &&
+               state.ProofSpawned &&
+               config.RetrievalProofEnabled &&
+               config.RetrievalGuidancePinpointerEnabled &&
+               config.RetrievalGuidancePinpointerTarget == NcRetrievalPinpointerTargetMode.CargoThenDestinationThenStore;
+    }
+
+    private static bool UsesRetrievalSpawnedPinpointerTarget(ContractServerData contract)
+    {
+        var config = contract.Config;
+        return contract.IsInventoryDelivery &&
+               config.RetrievalSpawnEnabled &&
+               config.RetrievalRequireSpawnedEntities;
+    }
+
+    private bool TryResolveRetrievalSpawnedPinpointerTarget(
+        ContractServerData contract,
+        ObjectiveRuntimeState state,
+        out EntityUid target)
+    {
+        target = EntityUid.Invalid;
+        if (!UsesRetrievalSpawnedPinpointerTarget(contract))
+            return false;
+
+        PruneRetrievalSpawnedEntities(state);
+        for (var i = 0; i < state.RetrievalSpawnedEntities.Count; i++)
+        {
+            var candidate = state.RetrievalSpawnedEntities[i];
+            if (candidate == EntityUid.Invalid || TerminatingOrDeleted(candidate))
+                continue;
+
+            target = candidate;
+            return true;
+        }
+
+        return false;
     }
 
     private bool TrySpawnObjectivePinpointer(

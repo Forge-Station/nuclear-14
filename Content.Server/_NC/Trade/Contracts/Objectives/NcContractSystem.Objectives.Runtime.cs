@@ -47,7 +47,9 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private TimeSpan _nextGhostRoleTimeoutCheck = TimeSpan.Zero;
     private TimeSpan _nextTrackedDeliveryDropoffCheck = TimeSpan.Zero;
+    private TimeSpan _nextRetrievalRouteDeliveryCheck = TimeSpan.Zero;
     private int _activeTrackedDeliveryDropoffObjectives;
+    private int _activeRetrievalRouteDeliveries;
     private void ShutdownObjectiveRuntime() => ClearAllObjectiveRuntime(false, deleteGuards: false);
     public override void Update(float frameTime)
     {
@@ -58,6 +60,12 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             _nextTrackedDeliveryDropoffCheck = _timing.CurTime + NcContractTuning.TrackedDeliveryDropoffCheckInterval;
             UpdateTrackedDeliveryDropoffObjectives();
+        }
+
+        if (_activeRetrievalRouteDeliveries > 0 && _timing.CurTime >= _nextRetrievalRouteDeliveryCheck)
+        {
+            _nextRetrievalRouteDeliveryCheck = _timing.CurTime + NcContractTuning.TrackedDeliveryDropoffCheckInterval;
+            UpdateRetrievalRouteDeliveries();
         }
 
         if (_timing.CurTime < _nextGhostRoleTimeoutCheck)
@@ -88,6 +96,7 @@ public sealed partial class NcContractSystem : EntitySystem
         _objectiveRuntimeByGuard.Clear();
         _objectiveRuntimeByProof.Clear();   // Fix (B39): keep proof index in sync with everything else.
         _activeTrackedDeliveryDropoffObjectives = 0;
+        _activeRetrievalRouteDeliveries = 0;
     }
 
     private void ClearStoreObjectiveRuntime(EntityUid store, bool deleteTrackedEntities, bool deleteGuards = true)

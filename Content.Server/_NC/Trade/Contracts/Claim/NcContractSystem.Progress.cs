@@ -115,6 +115,20 @@ public sealed partial class NcContractSystem : EntitySystem
             includeStoreWorldItems,
             ref storeNearbyItemsPrepared);
 
+        if (TryUpdateRetrievalSpawnedProgress(
+                store,
+                contractId,
+                contract,
+                user,
+                userItems,
+                crate,
+                crateItems,
+                _scratchStoreNearbyItems,
+                hasCrateWork))
+        {
+            return;
+        }
+
         UpdateContractProgressForSingleContract(
             contract,
             store,
