@@ -418,7 +418,7 @@
   - type: Storage
     grid:
     - 0,0,9,2
-    whitelist: # Corvax-Add
+    whitelist: # Forge-Add
       tags:
       - Candles   
   - type: StorageFill
@@ -446,7 +446,7 @@
   - type: Storage
     grid:
     - 0,0,9,2
-    whitelist: # Corvax-Add
+    whitelist: # Forge-Add
       tags:
       - Candles 
   - type: StorageFill
