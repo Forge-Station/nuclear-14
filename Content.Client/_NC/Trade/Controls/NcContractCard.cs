@@ -246,8 +246,11 @@ public sealed partial class NcContractCard : PanelContainer
 
     private void PopulateStatus()
     {
-        var ghostRoleStatus = BuildGhostRoleStatusText(_data);
-        if (string.IsNullOrWhiteSpace(ghostRoleStatus))
+        var statusText = BuildGhostRoleStatusText(_data);
+        if (string.IsNullOrWhiteSpace(statusText))
+            statusText = BuildRouteStatusText(_data);
+
+        if (string.IsNullOrWhiteSpace(statusText))
         {
             StatusLabel.Visible = false;
             StatusLabel.Text = string.Empty;
@@ -256,13 +259,15 @@ public sealed partial class NcContractCard : PanelContainer
         }
 
         StatusLabel.Visible = true;
-        StatusLabel.Text = ghostRoleStatus;
-        StatusLabel.ToolTip = ghostRoleStatus;
+        StatusLabel.Text = statusText;
+        StatusLabel.ToolTip = statusText;
         StatusLabel.Modulate = IsGhostRoleAwaitingAcceptance(_data)
             ? Color.FromHex("#D3B06A")
             : _data.FlowStatus == ContractFlowStatus.Failed
                 ? Color.FromHex("#D97575")
-                : Color.FromHex("#8DB7E8");
+                : _data.FlowStatus == ContractFlowStatus.ReadyToTurnIn
+                    ? Color.FromHex("#9FCB81")
+                    : Color.FromHex("#8DB7E8");
     }
 
     private void PopulateStage()
@@ -320,7 +325,9 @@ public sealed partial class NcContractCard : PanelContainer
         var val = Math.Clamp(_data.Progress, 0, max);
         _progressRatio = max > 0 ? (float) val / max : 0f;
 
-        ProgressLabel.Text = Loc.GetString("nc-store-contract-progress-caption");
+        ProgressLabel.Text = _data.IsRetrievalRoute
+            ? "Доставлено"
+            : Loc.GetString("nc-store-contract-progress-caption");
         ProgressValueLabel.Text = Loc.GetString(
             "nc-store-contract-progress-value",
             ("progress", val),

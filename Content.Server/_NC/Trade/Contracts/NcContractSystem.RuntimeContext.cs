@@ -140,6 +140,18 @@ public sealed partial class NcContractSystem : EntitySystem
         config.RetrievalDestinationId ??= string.Empty;
         config.RetrievalDestinationRadius = Math.Max(0.25f, config.RetrievalDestinationRadius);
         config.RetrievalDestinationPoint = NormalizeContractPointSelector(config.RetrievalDestinationPoint, defaultToStore: false);
+
+        if (config.RetrievalClaimMode == NcRetrievalClaimMode.StoreCargo)
+        {
+            config.RetrievalProofEnabled = false;
+            config.RetrievalProofConsumeOnRewardClaim = false;
+            config.RetrievalProofOwnership = NcRetrievalProofOwnership.Bearer;
+            config.RetrievalProofReissue = NcRetrievalProofReissuePolicy.Never;
+
+            if (!string.IsNullOrWhiteSpace(config.RetrievalRouteId))
+                config.ProofPrototype = string.Empty;
+        }
+
         config.RetrievalGuidancePinpointerPrototype = ResolvePinpointerPrototypeId(config.RetrievalGuidancePinpointerPrototype);
         config.RetrievalGuidanceMaxActivePinpointers = Math.Max(0, config.RetrievalGuidanceMaxActivePinpointers);
         config.RetrievalSourceHint ??= string.Empty;

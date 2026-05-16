@@ -62,8 +62,8 @@ public sealed partial class NcContractSystem : EntitySystem
         switch (contract.ExecutionKind)
         {
             case ContractExecutionKind.InventoryDelivery:
-                if (RequiresRetrievalRouteProofReward(contract))
-                    return TryClaimRetrievalRouteProofReward(store, user, contractId, comp, contract);
+                if (RequiresRetrievalRouteRewardClaim(contract))
+                    return TryClaimRetrievalRouteReward(store, user, contractId, comp, contract);
 
                 if (!TryPrepareClaimContext(store, user, contractId, out var ctx, out var prepFail))
                     return prepFail;
@@ -83,27 +83,32 @@ public sealed partial class NcContractSystem : EntitySystem
     }
 
 
-    private static bool RequiresRetrievalRouteProofReward(ContractServerData contract)
+    private static bool RequiresRetrievalRouteRewardClaim(ContractServerData contract)
     {
-        return contract.IsInventoryDelivery && contract.Config.RetrievalProofEnabled;
+        return RequiresRetrievalRouteDelivery(contract);
     }
 
-    private ClaimAttemptResult TryClaimRetrievalRouteProofReward(
+    private ClaimAttemptResult TryClaimRetrievalRouteReward(
         EntityUid store,
         EntityUid user,
         string contractId,
         NcStoreComponent comp,
         ContractServerData contract)
     {
+        RefreshRetrievalRouteDeliveryForClaim(store, contractId, contract);
+
         if (!contract.Completed)
         {
             return ClaimAttemptResult.Fail(
                 ClaimFailureReason.ObjectiveNotCompleted,
-                $"Retrieval route cargo for '{contractId}' has not been delivered yet.");
+                $"Retrieval route cargo for '{contractId}' has not been fully delivered yet.");
         }
 
-        if (!TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail))
+        if (contract.Config.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof &&
+            !TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail))
+        {
             return proofFail;
+        }
 
         GiveContractRewards(user, contract.Rewards);
         FinalizeClaim(store, comp, contractId, contract.Repeatable, deleteTrackedEntities: contract.Config.RetrievalConsumeCargo);

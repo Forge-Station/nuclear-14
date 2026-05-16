@@ -6,6 +6,23 @@ namespace Content.Server._NC.Trade;
 public sealed partial class NcContractSystem : EntitySystem
 {
     private readonly List<EntityUid> _retrievalRouteContainerItemsScratch = new();
+    private readonly List<EntityUid> _retrievalRouteDeliveredPruneScratch = new();
+
+    private static bool RequiresRetrievalRouteDelivery(ContractServerData contract)
+    {
+        var config = contract.Config;
+        return contract.IsInventoryDelivery &&
+               !string.IsNullOrWhiteSpace(config.RetrievalRouteId) &&
+               config.RetrievalSpawnEnabled &&
+               config.RetrievalRequireSpawnedEntities &&
+               config.RetrievalDestinationType != NcRetrievalDestinationTargetType.StoreUi;
+    }
+
+    private static bool RequiresRetrievalDestinationProofClaim(ContractServerData contract)
+    {
+        return RequiresRetrievalRouteDelivery(contract) &&
+               contract.Config.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof;
+    }
 
     private bool TryInitializeRetrievalRouteDeliveryRuntime(
         EntityUid store,
@@ -13,18 +30,22 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract)
     {
         var config = contract.Config;
-        if (!config.RetrievalProofEnabled)
+        if (!RequiresRetrievalRouteDelivery(contract))
             return true;
 
         if (!config.RetrievalSpawnEnabled || !config.RetrievalRequireSpawnedEntities)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval route init failed for '{contractId}': proof routes require spawned tracked cargo.");
+                $"[ContractsV2] Retrieval route init failed for '{contractId}': route delivery requires spawned tracked cargo.");
             return false;
         }
 
-        if (config.RetrievalDestinationType == NcRetrievalDestinationTargetType.StoreUi)
-            return true;
+        if (config.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof && !config.RetrievalProofEnabled)
+        {
+            Sawmill.Warning(
+                $"[ContractsV2] Retrieval route init failed for '{contractId}': DestinationProof route has no proof configured.");
+            return false;
+        }
 
         var key = (store, contractId);
         var state = GetOrCreateObjectiveRuntimeState(key);
@@ -70,9 +91,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
             if (!TryGetObjectiveContract(key, out _, out var contract) ||
                 !contract.Taken ||
-                !contract.IsInventoryDelivery ||
-                !contract.Config.RetrievalProofEnabled ||
-                contract.Completed && state.ProofSpawned)
+                !RequiresRetrievalRouteDelivery(contract) ||
+                contract.Completed && state.RetrievalRouteDeliveryCompleted)
             {
                 continue;
             }
@@ -86,6 +106,32 @@ public sealed partial class NcContractSystem : EntitySystem
         _objectiveRuntimeKeysScratch.Clear();
     }
 
+    private void RefreshRetrievalRouteDeliveryForClaim(EntityUid store, string contractId, ContractServerData contract)
+    {
+        if (!RequiresRetrievalRouteDelivery(contract))
+            return;
+
+        var key = (store, contractId);
+        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state) ||
+            state.RetrievalRouteDeliveryCompleted ||
+            !state.RetrievalRouteDeliveryActive)
+        {
+            return;
+        }
+
+        UpdateRetrievalRouteDelivery(key);
+    }
+
+    private bool TryUpdateRetrievalRouteDeliveryProgress(EntityUid store, string contractId, ContractServerData contract)
+    {
+        if (!RequiresRetrievalRouteDelivery(contract))
+            return false;
+
+        RefreshRetrievalRouteDeliveryForClaim(store, contractId, contract);
+        SyncContractFlowStatus(contract);
+        return true;
+    }
+
     private void UpdateRetrievalRouteDelivery((EntityUid Store, string ContractId) key)
     {
         if (!_objectiveRuntimeByContract.TryGetValue(key, out var state) ||
@@ -94,31 +140,32 @@ public sealed partial class NcContractSystem : EntitySystem
             return;
         }
 
-        if (!contract.Taken || !contract.IsInventoryDelivery || !contract.Config.RetrievalProofEnabled)
+        if (!contract.Taken || !RequiresRetrievalRouteDelivery(contract))
             return;
 
         PruneRetrievalSpawnedEntities(state);
-        if (state.RetrievalSpawnedEntities.Count == 0)
+        PruneRetrievalDeliveredEntities(state);
+        if (TryFailRetrievalRouteIfTrackedCargoWasLost(key, comp, contract, state))
+            return;
+
+        UpdateRetrievalDeliveredCargoProgress(key.Store, contract, state);
+        SetTrackedDeliveryProgress(contract, GetRetrievalRouteDeliveryProgress(state));
+
+        if (!contract.Completed)
+            return;
+
+        if (RequiresRetrievalDestinationProofClaim(contract) && !state.ProofSpawned)
         {
-            ResetContractProgress(contract);
-            return;
+            if (!TryResolveRetrievalRouteProofCoordinates(contract, state, out var proofCoords))
+            {
+                Sawmill.Warning(
+                    $"[ContractsV2] Retrieval route '{key.ContractId}' completed but proof coordinates could not be resolved.");
+                return;
+            }
+
+            if (!TrySpawnRequiredObjectiveProofOrFail(key, comp, contract, proofCoords))
+                return;
         }
-
-        UpdateRetrievalDeliveredCargoSet(key.Store, contract, state);
-        SetTrackedDeliveryProgress(contract, state.RetrievalDeliveredEntities.Count);
-
-        if (!contract.Completed || state.ProofSpawned)
-            return;
-
-        if (!TryResolveRetrievalRouteProofCoordinates(contract, state, out var proofCoords))
-        {
-            Sawmill.Warning(
-                $"[ContractsV2] Retrieval route '{key.ContractId}' completed but proof coordinates could not be resolved.");
-            return;
-        }
-
-        if (!TrySpawnRequiredObjectiveProofOrFail(key, comp, contract, proofCoords))
-            return;
 
         state.RetrievalRouteDeliveryCompleted = true;
         state.RetrievalRouteDeliveryActive = false;
@@ -133,13 +180,59 @@ public sealed partial class NcContractSystem : EntitySystem
             CleanupObjectivePinpointers(key, state);
     }
 
-    private void UpdateRetrievalDeliveredCargoSet(
+    private static int GetRetrievalRouteDeliveryProgress(ObjectiveRuntimeState state)
+    {
+        return Math.Max(0, state.RetrievalAcceptedCargoCount) + state.RetrievalDeliveredEntities.Count;
+    }
+
+    private bool TryFailRetrievalRouteIfTrackedCargoWasLost(
+        (EntityUid Store, string ContractId) key,
+        NcStoreComponent comp,
+        ContractServerData contract,
+        ObjectiveRuntimeState state)
+    {
+        var config = contract.Config;
+        if (!RequiresRetrievalRouteDelivery(contract) ||
+            !config.RetrievalSpawnEnabled ||
+            !config.RetrievalRequireSpawnedEntities ||
+            state.ProofSpawned ||
+            state.RetrievalRouteDeliveryCompleted)
+        {
+            return false;
+        }
+
+        var required = GetTrackedDeliveryCompletionAmount(contract);
+        if (required <= 0)
+            return false;
+
+        var accepted = GetRetrievalRouteDeliveryProgress(state);
+        if (accepted >= required)
+            return false;
+
+        var stillPossible = accepted + state.RetrievalSpawnedEntities.Count;
+        if (stillPossible >= required)
+            return false;
+
+        Sawmill.Warning(
+            $"[ContractsV2] Retrieval route '{key.ContractId}' lost required tracked cargo before route delivery completed " +
+            $"({accepted}/{required} delivered, {state.RetrievalSpawnedEntities.Count} remaining). Contract failed.");
+
+        FinalizeObjectiveFailure(
+            key,
+            comp,
+            contract,
+            Loc.GetString("nc-store-contract-delivery-target-lost"),
+            deleteGuards: false);
+        return true;
+    }
+
+    private void UpdateRetrievalDeliveredCargoProgress(
         EntityUid store,
         ContractServerData contract,
         ObjectiveRuntimeState state)
     {
         var config = contract.Config;
-        for (var i = 0; i < state.RetrievalSpawnedEntities.Count; i++)
+        for (var i = state.RetrievalSpawnedEntities.Count - 1; i >= 0; i--)
         {
             var cargo = state.RetrievalSpawnedEntities[i];
             if (cargo == EntityUid.Invalid || TerminatingOrDeleted(cargo))
@@ -148,8 +241,24 @@ public sealed partial class NcContractSystem : EntitySystem
             if (state.RetrievalDeliveredEntities.Contains(cargo))
                 continue;
 
-            if (IsRetrievalCargoDelivered(store, cargo, config, state))
-                state.RetrievalDeliveredEntities.Add(cargo);
+            if (!IsRetrievalCargoDelivered(store, cargo, config, state))
+                continue;
+
+            if (TryResolveRetrievalDeliveredCargoCoordinates(cargo, config, state, out var acceptedCoords))
+                state.RetrievalLastAcceptedCargoCoordinates = acceptedCoords;
+
+            if (config.RetrievalConsumeCargo)
+            {
+                state.RetrievalAcceptedCargoCount++;
+                state.RetrievalSpawnedEntities.RemoveAt(i);
+
+                if (!TerminatingOrDeleted(cargo))
+                    Del(cargo);
+
+                continue;
+            }
+
+            state.RetrievalDeliveredEntities.Add(cargo);
         }
     }
 
@@ -197,6 +306,46 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid cargo,
         ContractObjectiveConfigData config)
     {
+        return TryResolveRetrievalContainerCargoCoordinates(cargo, config, out _);
+    }
+
+    private bool TryResolveRetrievalDeliveredCargoCoordinates(
+        EntityUid cargo,
+        ContractObjectiveConfigData config,
+        ObjectiveRuntimeState state,
+        out EntityCoordinates coords)
+    {
+        coords = EntityCoordinates.Invalid;
+
+        if (config.RetrievalDestinationType == NcRetrievalDestinationTargetType.ContainerGroup &&
+            TryResolveRetrievalContainerCargoCoordinates(cargo, config, out coords))
+        {
+            return true;
+        }
+
+        if (config.RetrievalDestinationType == NcRetrievalDestinationTargetType.MarkerGroup &&
+            state.RetrievalDeliveryCoordinates is { } destinationCoords)
+        {
+            coords = destinationCoords;
+            return true;
+        }
+
+        if (TryComp(cargo, out TransformComponent? cargoXform))
+        {
+            coords = cargoXform.Coordinates;
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool TryResolveRetrievalContainerCargoCoordinates(
+        EntityUid cargo,
+        ContractObjectiveConfigData config,
+        out EntityCoordinates coords)
+    {
+        coords = EntityCoordinates.Invalid;
+
         var query = EntityQueryEnumerator<NcContractTurnInContainerComponent>();
         while (query.MoveNext(out var container, out var turnIn))
         {
@@ -208,11 +357,25 @@ public sealed partial class NcContractSystem : EntitySystem
 
             for (var i = 0; i < _retrievalRouteContainerItemsScratch.Count; i++)
             {
-                if (_retrievalRouteContainerItemsScratch[i] == cargo)
+                if (_retrievalRouteContainerItemsScratch[i] != cargo)
+                    continue;
+
+                if (TryComp(container, out TransformComponent? containerXform))
                 {
+                    coords = containerXform.Coordinates;
                     _retrievalRouteContainerItemsScratch.Clear();
                     return true;
                 }
+
+                if (TryComp(cargo, out TransformComponent? cargoXform))
+                {
+                    coords = cargoXform.Coordinates;
+                    _retrievalRouteContainerItemsScratch.Clear();
+                    return true;
+                }
+
+                _retrievalRouteContainerItemsScratch.Clear();
+                return true;
             }
         }
 
@@ -227,20 +390,16 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         coords = EntityCoordinates.Invalid;
 
-        if (contract.Config.RetrievalDestinationType == NcRetrievalDestinationTargetType.ContainerGroup)
+        if (contract.Config.RetrievalDestinationType == NcRetrievalDestinationTargetType.ContainerGroup &&
+            TryResolveRetrievalContainerProofCoordinates(contract.Config, state, out coords))
         {
-            var query = EntityQueryEnumerator<NcContractTurnInContainerComponent>();
-            while (query.MoveNext(out var container, out var turnIn))
-            {
-                if (!turnIn.Groups.Contains(contract.Config.RetrievalDestinationId))
-                    continue;
+            return true;
+        }
 
-                if (TryComp(container, out TransformComponent? containerXform))
-                {
-                    coords = containerXform.Coordinates;
-                    return true;
-                }
-            }
+        if (state.RetrievalLastAcceptedCargoCoordinates is { } lastAcceptedCoords)
+        {
+            coords = lastAcceptedCoords;
+            return true;
         }
 
         if (state.RetrievalDeliveryCoordinates is { } destinationCoords)
@@ -259,6 +418,70 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         return false;
+    }
+
+    private bool TryResolveRetrievalContainerProofCoordinates(
+        ContractObjectiveConfigData config,
+        ObjectiveRuntimeState state,
+        out EntityCoordinates coords)
+    {
+        coords = EntityCoordinates.Invalid;
+
+        if (state.RetrievalDeliveredEntities.Count == 0)
+            return false;
+
+        var query = EntityQueryEnumerator<NcContractTurnInContainerComponent>();
+        while (query.MoveNext(out var container, out var turnIn))
+        {
+            if (!turnIn.Groups.Contains(config.RetrievalDestinationId))
+                continue;
+
+            _retrievalRouteContainerItemsScratch.Clear();
+            _logic.ScanInventoryItems(container, _retrievalRouteContainerItemsScratch);
+
+            for (var i = 0; i < _retrievalRouteContainerItemsScratch.Count; i++)
+            {
+                var item = _retrievalRouteContainerItemsScratch[i];
+                if (!state.RetrievalDeliveredEntities.Contains(item))
+                    continue;
+
+                if (TryComp(container, out TransformComponent? containerXform))
+                {
+                    coords = containerXform.Coordinates;
+                    _retrievalRouteContainerItemsScratch.Clear();
+                    return true;
+                }
+
+                if (TryComp(item, out TransformComponent? itemXform))
+                {
+                    coords = itemXform.Coordinates;
+                    _retrievalRouteContainerItemsScratch.Clear();
+                    return true;
+                }
+            }
+
+            _retrievalRouteContainerItemsScratch.Clear();
+        }
+
+        return false;
+    }
+
+    private void PruneRetrievalDeliveredEntities(ObjectiveRuntimeState state)
+    {
+        if (state.RetrievalDeliveredEntities.Count == 0)
+            return;
+
+        _retrievalRouteDeliveredPruneScratch.Clear();
+        foreach (var delivered in state.RetrievalDeliveredEntities)
+        {
+            if (delivered == EntityUid.Invalid || TerminatingOrDeleted(delivered))
+                _retrievalRouteDeliveredPruneScratch.Add(delivered);
+        }
+
+        for (var i = 0; i < _retrievalRouteDeliveredPruneScratch.Count; i++)
+            state.RetrievalDeliveredEntities.Remove(_retrievalRouteDeliveredPruneScratch[i]);
+
+        _retrievalRouteDeliveredPruneScratch.Clear();
     }
 
     private void ConsumeDeliveredRetrievalCargo(ObjectiveRuntimeState state)

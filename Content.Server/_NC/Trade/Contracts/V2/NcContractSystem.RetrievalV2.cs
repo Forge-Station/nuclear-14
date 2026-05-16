@@ -46,6 +46,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return config;
 
         config.RetrievalRouteId = route.ID;
+        config.RetrievalClaimMode = ResolveRetrievalClaimMode(route, proof);
         config.RetrievalDestinationType = destination.Target.Type;
         config.RetrievalDestinationId = destination.Target.Id;
         config.RetrievalDestinationRadius = Math.Max(0.25f, destination.Radius);
@@ -68,7 +69,7 @@ public sealed partial class NcContractSystem : EntitySystem
             config.RetrievalRequireSpawnedEntities = true;
         }
 
-        if (proof != null)
+        if (config.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof && proof != null)
         {
             config.RetrievalProofEnabled = true;
             config.ProofPrototype = proof.Prototype;
@@ -130,9 +131,10 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        if (route.Proof is { } proofId && !_prototypes.TryIndex(proofId, out proof!))
+        var proofId = ResolveRetrievalProofPresetId(route);
+        if (proofId is { } resolvedProofId && !_prototypes.TryIndex(resolvedProofId, out proof!))
         {
-            Sawmill.Warning($"[ContractsV2] Retrieval route '{route.ID}' references missing proof preset '{proofId}'.");
+            Sawmill.Warning($"[ContractsV2] Retrieval route '{route.ID}' references missing proof preset '{resolvedProofId}'.");
             return false;
         }
 
@@ -143,6 +145,23 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         return true;
+    }
+
+    private static NcRetrievalClaimMode ResolveRetrievalClaimMode(
+        NcRetrievalRoutePresetPrototype route,
+        NcRetrievalProofPresetPrototype? proof)
+    {
+        // Migration bridge: old 5.8R routes used route.proof without claim.mode.
+        // Treat them as DestinationProof at runtime so existing content remains loadable while audit can reject new legacy YAML.
+        if (route.Claim.Proof == null && route.Proof != null && proof != null)
+            return NcRetrievalClaimMode.DestinationProof;
+
+        return route.Claim.Mode;
+    }
+
+    private static ProtoId<NcRetrievalProofPresetPrototype>? ResolveRetrievalProofPresetId(NcRetrievalRoutePresetPrototype route)
+    {
+        return route.Claim.Proof ?? route.Proof;
     }
 
     private List<ContractTargetServerData> BuildRetrievalCargoTargets(EntityUid store, NcRetrievalContractPrototype proto)

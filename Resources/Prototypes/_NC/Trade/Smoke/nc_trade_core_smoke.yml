@@ -1,0 +1,564 @@
+# NC Trade Core Smoke Pack
+#
+# Dev-only prototype set for manual Trade / NcStore verification.
+# Nothing references NcTradeSmokeProfile by default. Attach this profile to a test vendor/store
+# when you want to exercise buy, sell, barter and Supply V2 after Patch 5.3 Stage 1.
+#
+# Required baseline ids in the content pack this was written for:
+# - Caps
+# - FoodSnackChips
+# - N14KitchenKnife
+# - N14IngotCopper1
+# Optional manual stack test item:
+# - N14IngotCopper30, or any larger copper stack variant sharing StackTypeId with N14IngotCopper1.
+
+# -----------------------------------------------------------------------------
+# Store profile
+# -----------------------------------------------------------------------------
+
+- type: ncStoreProfile
+  id: NcTradeSmokeProfile
+  buy:
+  - NcTradeSmokeBuyPreset
+  sell:
+  - NcTradeSmokeSellPreset
+  barter:
+  - NcTradeSmokeBarterPreset
+  contracts: NcTradeSmokeContractsPreset
+
+# -----------------------------------------------------------------------------
+# Buy / Sell
+# -----------------------------------------------------------------------------
+
+- type: storePresetStructured
+  id: NcTradeSmokeBuyPreset
+  currency: Caps
+  categories:
+  - NcTradeSmokeBuyCategory
+
+- type: storeCategoryStructured
+  id: NcTradeSmokeBuyCategory
+  name: "Smoke: покупка"
+  entries:
+  - proto: FoodSnackChips
+    price: 1
+    amount: 1
+  - proto: N14KitchenKnife
+    price: 6
+    amount: 1
+
+- type: storePresetStructured
+  id: NcTradeSmokeSellPreset
+  currency: Caps
+  categories:
+  - NcTradeSmokeSellCategory
+
+- type: storeCategoryStructured
+  id: NcTradeSmokeSellCategory
+  name: "Smoke: продажа"
+  entries:
+  - proto: FoodSnackChips
+    price: 1
+    amount: 1
+  - proto: N14IngotCopper1
+    price: 2
+    amount: 1
+
+# -----------------------------------------------------------------------------
+# Item groups used by Barter and Supply V2
+# -----------------------------------------------------------------------------
+
+- type: ncItemGroup
+  id: NcTradeSmokeGroupSnacks
+  name: "Smoke snacks"
+  icon: FoodSnackChips
+  prototypes:
+  - FoodSnackChips
+
+- type: ncItemGroup
+  id: NcTradeSmokeGroupKnives
+  name: "Smoke knives"
+  icon: N14KitchenKnife
+  prototypes:
+  - N14KitchenKnife
+
+# This group intentionally contains only the x1 prototype.
+# Larger copper stack variants should still match through StackTypeId after Patch 5.2.
+- type: ncItemGroup
+  id: NcTradeSmokeGroupCopperStacks
+  name: "Smoke copper stacks"
+  icon: N14IngotCopper1
+  prototypes:
+  - N14IngotCopper1
+
+# -----------------------------------------------------------------------------
+# Retrieval V2 Stage 2 spawn markers
+# -----------------------------------------------------------------------------
+
+# Place this marker entity on the test map to verify Retrieval V2 Stage 2 marker spawn.
+# The contract still accepts any matching item; tracked-item identity is a later stage.
+- type: entity
+  id: NcTradeSmokeRetrievalSpawnMarker
+  name: trade smoke retrieval spawn marker
+  suffix: NC, Smoke
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: NcContractSpawnPoint
+    id: NcTradeSmokeRetrievalMarker
+    groups:
+    - NcTradeSmokeRetrieval
+
+# -----------------------------------------------------------------------------
+# Barter V1.1
+# -----------------------------------------------------------------------------
+
+- type: ncBarterPreset
+  id: NcTradeSmokeBarterPreset
+  categories:
+  - NcTradeSmokeBarterCategory
+
+- type: ncBarterCategory
+  id: NcTradeSmokeBarterCategory
+  name: "Smoke: бартер"
+  listings:
+  - NcTradeSmokeBarterCapsToCaps
+  - NcTradeSmokeBarterPrototypeToPrototype
+  - NcTradeSmokeBarterGroupToCurrency
+  - NcTradeSmokeBarterReceivePool
+  - NcTradeSmokeBarterDuplicateCurrencyCost
+  - NcTradeSmokeBarterGroupPrototypeOverlap
+
+- type: ncBarterListing
+  id: NcTradeSmokeBarterCapsToCaps
+  name: "Smoke: currency → currency"
+  description: "Проверка фиксированного обмена валюты. Намеренно убыточный обмен: 2 caps → 1 cap."
+  icon: FoodSnackChips
+  cost:
+  - currency: Caps
+    count: 2
+  receive:
+  - currency: Caps
+    count: 1
+
+- type: ncBarterListing
+  id: NcTradeSmokeBarterPrototypeToPrototype
+  name: "Smoke: prototype → prototype"
+  description: "Проверка списания и выдачи обычных entity prototype."
+  icon: N14KitchenKnife
+  cost:
+  - prototype: FoodSnackChips
+    count: 1
+  receive:
+  - prototype: N14KitchenKnife
+    count: 1
+
+- type: ncBarterListing
+  id: NcTradeSmokeBarterGroupToCurrency
+  name: "Smoke: group → currency"
+  description: "Проверка cost по ncItemGroup и выдачи валюты."
+  icon: N14KitchenKnife
+  cost:
+  - group: NcTradeSmokeGroupKnives
+    count: 1
+  receive:
+  - currency: Caps
+    count: 2
+
+- type: ncBarterListing
+  id: NcTradeSmokeBarterReceivePool
+  name: "Smoke: receive pool"
+  description: "Проверка Barter receivePools. Pool остаётся legacy ncContractRewardPool, не ncSupplyRewardPool."
+  icon: FoodSnackChips
+  cost:
+  - currency: Caps
+    count: 1
+  receivePools:
+  - pool: NcTradeSmokeBarterReceivePoolBasic
+    rolls: 1
+
+- type: ncBarterListing
+  id: NcTradeSmokeBarterDuplicateCurrencyCost
+  name: "Smoke: duplicate currency cost"
+  description: "Проверка суммарного резервирования одинаковой валюты в нескольких cost entries."
+  icon: FoodSnackChips
+  cost:
+  - currency: Caps
+    count: 1
+  - currency: Caps
+    count: 2
+  receive:
+  - prototype: FoodSnackChips
+    count: 1
+
+- type: ncBarterListing
+  id: NcTradeSmokeBarterGroupPrototypeOverlap
+  name: "Smoke: group + prototype overlap"
+  description: "Критичный кейс: group включает N14KitchenKnife, а второй cost требует тот же prototype. 2 ножа не должны пройти; 4 подходящие единицы должны пройти."
+  icon: N14KitchenKnife
+  cost:
+  - group: NcTradeSmokeGroupKnives
+    count: 2
+  - prototype: N14KitchenKnife
+    count: 2
+  receive:
+  - currency: Caps
+    count: 10
+
+# Barter receivePools still intentionally use the legacy/general pool type.
+- type: ncContractRewardPool
+  id: NcTradeSmokeBarterReceivePoolBasic
+  entries:
+  - type: Currency
+    currency: Caps
+    count: { min: 1, max: 3 }
+    weight: 3
+  - type: Item
+    prototype: FoodSnackChips
+    count: 1
+    weight: 1
+
+# -----------------------------------------------------------------------------
+# Contracts / Supply V2
+# -----------------------------------------------------------------------------
+
+- type: storeContractsPreset
+  id: NcTradeSmokeContractsPreset
+  limits:
+    Easy: 6
+    Medium: 5
+  packsV2:
+  - id: NcTradeSmokeSupplyPackV2
+    weight: 1
+  - id: NcTradeSmokeRetrievalPackV2
+    weight: 1
+  skipCost: 0
+  skipCurrency: Caps
+
+- type: ncContractPackV2
+  id: NcTradeSmokeSupplyPackV2
+  supply:
+  - id: NcTradeSmokeSupplyPrototypeTarget
+    weight: 1
+  - id: NcTradeSmokeSupplyGroupTarget
+    weight: 1
+  - id: NcTradeSmokeSupplyStackGroupTarget
+    weight: 1
+  - id: NcTradeSmokeSupplyMultiTarget
+    weight: 1
+  - id: NcTradeSmokeSupplyWeightedTargets
+    weight: 1
+
+- type: ncSupplyRewardPool
+  id: NcTradeSmokeSupplyRewardPoolBasic
+  entries:
+  - type: Currency
+    currency: Caps
+    count: { min: 3, max: 6 }
+    weight: 3
+  - type: Item
+    prototype: FoodSnackChips
+    count: { min: 1, max: 2 }
+    weight: 1
+
+- type: ncSupplyContract
+  id: NcTradeSmokeSupplyPrototypeTarget
+  name: "Smoke supply: prototype target"
+  description: "Принесите 2 снека. Проверяет exact prototype target + Currency reward."
+  difficulty: Easy
+  icon: FoodSnackChips
+  targets:
+  - prototype: FoodSnackChips
+    count: 2
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 5
+
+- type: ncSupplyContract
+  id: NcTradeSmokeSupplyGroupTarget
+  name: "Smoke supply: group target"
+  description: "Принесите 2 ножа из ncItemGroup. Проверяет group target + Item reward."
+  difficulty: Easy
+  icon: N14KitchenKnife
+  targets:
+  - group: NcTradeSmokeGroupKnives
+    count: 2
+  reward:
+  - type: Item
+    prototype: FoodSnackChips
+    count: 1
+
+- type: ncSupplyContract
+  id: NcTradeSmokeSupplyStackGroupTarget
+  name: "Smoke supply: stack group target"
+  description: "Группа содержит N14IngotCopper1; больший copper stack с тем же StackTypeId должен засчитываться."
+  difficulty: Easy
+  icon: N14IngotCopper1
+  targets:
+  - group: NcTradeSmokeGroupCopperStacks
+    count: 2
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 6
+
+- type: ncSupplyContract
+  id: NcTradeSmokeSupplyMultiTarget
+  name: "Smoke supply: multi target"
+  description: "Принесите ножи и слитки. Проверяет несколько обязательных targets и mixed rewards."
+  difficulty: Medium
+  icon: N14IngotCopper1
+  targets:
+  - group: NcTradeSmokeGroupKnives
+    count: 2
+  - prototype: N14IngotCopper1
+    count: 2
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 12
+  - type: Item
+    prototype: FoodSnackChips
+    count: { min: 0, max: 2 }
+
+- type: ncSupplyContract
+  id: NcTradeSmokeSupplyWeightedTargets
+  name: "Smoke supply: targetCount"
+  description: "Выбирает 1–2 цели из weighted pool. Проверяет targetCount, count ranges и Pool reward."
+  difficulty: Medium
+  icon: FoodSnackChips
+  targetCount: { min: 1, max: 2 }
+  targets:
+  - group: NcTradeSmokeGroupSnacks
+    count: { min: 2, max: 4 }
+    weight: 5
+  - group: NcTradeSmokeGroupCopperStacks
+    count: { min: 1, max: 3 }
+    weight: 3
+  - group: NcTradeSmokeGroupKnives
+    count: { min: 1, max: 2 }
+    weight: 1
+  reward:
+  - type: Pool
+    pool: NcTradeSmokeSupplyRewardPoolBasic
+    count: 1
+
+
+# -----------------------------------------------------------------------------
+# Retrieval Route Presets 5.8R
+# -----------------------------------------------------------------------------
+
+- type: entity
+  id: NcTradeSmokeTraderTurnInBox
+  name: trade smoke turn-in box
+  suffix: NC, Smoke
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Storage
+  - type: NcContractTurnInContainer
+    groups:
+    - NcTradeSmokeTraderBox
+
+- type: ncRetrievalSourcePreset
+  id: NcTradeSmokeSourceRetrievalMarker
+  spawnCargo: true
+  point:
+    type: MarkerGroup
+    id: NcTradeSmokeRetrieval
+
+- type: ncRetrievalDestinationPreset
+  id: NcTradeSmokeDestinationStoreUi
+  target:
+    type: StoreUi
+
+- type: ncRetrievalDestinationPreset
+  id: NcTradeSmokeDestinationMarker
+  target:
+    type: MarkerGroup
+    id: NcTradeSmokeRetrieval
+  radius: 2.0
+
+- type: ncRetrievalDestinationPreset
+  id: NcTradeSmokeDestinationTraderBox
+  target:
+    type: ContainerGroup
+    id: NcTradeSmokeTraderBox
+
+- type: ncRetrievalProofPreset
+  id: NcTradeSmokeProofBearerReceipt
+  prototype: NcTradeSmokeDeliveryReceipt
+  ownership: Bearer
+  reissue: Never
+  consumeOnRewardClaim: true
+
+- type: entity
+  id: NcTradeSmokeDeliveryReceipt
+  name: smoke delivery receipt
+  suffix: NC, Smoke
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: NcContractProof
+
+- type: ncRetrievalGuidancePreset
+  id: NcTradeSmokeGuidanceCargoToStore
+  sourceHint: "Груз появился на smoke-маркере."
+  destinationHint: "Верните доказательство торговцу."
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 1
+
+- type: ncRetrievalRoutePreset
+  id: NcTradeSmokeRouteAnyToStoreUi
+  destination: NcTradeSmokeDestinationStoreUi
+  claim:
+    mode: StoreCargo
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: NcTradeSmokeRouteMarkerToStoreUiTracked
+  source: NcTradeSmokeSourceRetrievalMarker
+  destination: NcTradeSmokeDestinationStoreUi
+  claim:
+    mode: StoreCargo
+  guidance: NcTradeSmokeGuidanceCargoToStore
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: NcTradeSmokeRouteMarkerToMarkerProof
+  source: NcTradeSmokeSourceRetrievalMarker
+  destination: NcTradeSmokeDestinationMarker
+  claim:
+    mode: DestinationProof
+    proof: NcTradeSmokeProofBearerReceipt
+  guidance: NcTradeSmokeGuidanceCargoToStore
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: NcTradeSmokeRouteMarkerToTraderBoxProof
+  source: NcTradeSmokeSourceRetrievalMarker
+  destination: NcTradeSmokeDestinationTraderBox
+  claim:
+    mode: DestinationProof
+    proof: NcTradeSmokeProofBearerReceipt
+  guidance: NcTradeSmokeGuidanceCargoToStore
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+# -----------------------------------------------------------------------------
+# Contracts / Retrieval Route 5.8R
+# -----------------------------------------------------------------------------
+
+- type: ncContractPackV2
+  id: NcTradeSmokeRetrievalPackV2
+  retrieval:
+  - id: NcTradeSmokeRetrievalAnySnack
+    weight: 1
+  - id: NcTradeSmokeRetrievalThreeSnacksStoreUi
+    weight: 1
+  - id: NcTradeSmokeRetrievalTrackedSnackStoreUi
+    weight: 1
+  - id: NcTradeSmokeRetrievalThreeCratesToMarkerProof
+    weight: 1
+  - id: NcTradeSmokeRetrievalSnackToTraderBoxProof
+    weight: 1
+  - id: NcTradeSmokeRetrievalPinpointerReadyToTurnIn
+    weight: 1
+
+- type: ncRetrievalContract
+  id: NcTradeSmokeRetrievalAnySnack
+  name: "Smoke retrieval route: any snack"
+  description: "Принесите любой снек через StoreUi. Проверяет cargo + route без source/proof."
+  difficulty: Easy
+  icon: FoodSnackChips
+  cargo:
+  - prototype: FoodSnackChips
+    count: 1
+  route: NcTradeSmokeRouteAnyToStoreUi
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 4
+
+- type: ncRetrievalContract
+  id: NcTradeSmokeRetrievalThreeSnacksStoreUi
+  name: "Smoke retrieval route: 3 snacks StoreCargo"
+  description: "Принесите 3 снека через StoreUi. Проверяет StoreCargo с cargo.count: 3 без proof."
+  difficulty: Medium
+  icon: FoodSnackChips
+  cargo:
+  - prototype: FoodSnackChips
+    count: 3
+  route: NcTradeSmokeRouteAnyToStoreUi
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 12
+
+- type: ncRetrievalContract
+  id: NcTradeSmokeRetrievalTrackedSnackStoreUi
+  name: "Smoke retrieval route: spawned snack StoreUi"
+  description: "Спавнит снек на маркере и требует spawned cargo через StoreUi."
+  difficulty: Medium
+  icon: FoodSnackChips
+  cargo:
+  - prototype: FoodSnackChips
+    count: 1
+  route: NcTradeSmokeRouteMarkerToStoreUiTracked
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 8
+
+- type: ncRetrievalContract
+  id: NcTradeSmokeRetrievalThreeCratesToMarkerProof
+  name: "Smoke retrieval route: 3 snacks to marker proof"
+  description: "Спавнит 3 cargo, доставка к marker destination создаёт transferable bearer proof."
+  difficulty: Hard
+  icon: FoodSnackChips
+  cargo:
+  - prototype: FoodSnackChips
+    count: 3
+  route: NcTradeSmokeRouteMarkerToMarkerProof
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 30
+
+- type: ncRetrievalContract
+  id: NcTradeSmokeRetrievalSnackToTraderBoxProof
+  name: "Smoke retrieval route: cargo to trader box proof"
+  description: "Спавнит cargo, надо положить его в NcContractTurnInContainer, затем принести proof торговцу."
+  difficulty: Hard
+  icon: FoodSnackChips
+  cargo:
+  - prototype: FoodSnackChips
+    count: 1
+  route: NcTradeSmokeRouteMarkerToTraderBoxProof
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 40
+
+- type: ncRetrievalContract
+  id: NcTradeSmokeRetrievalPinpointerReadyToTurnIn
+  name: "Smoke retrieval route: pinpointer after proof"
+  description: "Проверка 5.8R-B: после выдачи proof и even при consumeCargo=true повторный запрос pinpointer должен вести к торговцу."
+  difficulty: Hard
+  icon: FoodSnackChips
+  cargo:
+  - prototype: FoodSnackChips
+    count: 1
+  route: NcTradeSmokeRouteMarkerToTraderBoxProof
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 45

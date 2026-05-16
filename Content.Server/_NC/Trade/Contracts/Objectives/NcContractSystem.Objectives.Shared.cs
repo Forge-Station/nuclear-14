@@ -270,6 +270,8 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         state.RetrievalDeliveredEntities.Clear();
+        state.RetrievalAcceptedCargoCount = 0;
+        state.RetrievalLastAcceptedCargoCoordinates = null;
         state.RetrievalRouteDeliveryCompleted = false;
         state.HuntTargetWasKilled = false;
         state.LastKnownTargetCoordinates = null;
@@ -336,6 +338,8 @@ public sealed partial class NcContractSystem : EntitySystem
         public readonly HashSet<EntityUid> PinpointerEntities = new();
         public readonly List<EntityUid> RetrievalSpawnedEntities = new();
         public readonly HashSet<EntityUid> RetrievalDeliveredEntities = new();
+        public int RetrievalAcceptedCargoCount;
+        public EntityCoordinates? RetrievalLastAcceptedCargoCoordinates;
         public bool RetrievalRouteDeliveryActive;
         public bool RetrievalRouteDeliveryCompleted;
         public EntityCoordinates? RetrievalDeliveryCoordinates;

@@ -51,6 +51,7 @@ public sealed class ContractObjectiveConfigData
     public float RetrievalDestinationRadius;
     public bool RetrievalConsumeCargo;
     public bool RetrievalLockDeliveredCargo;
+    public NcRetrievalClaimMode RetrievalClaimMode;
 
     public bool RetrievalProofEnabled;
     public bool RetrievalProofConsumeOnRewardClaim;

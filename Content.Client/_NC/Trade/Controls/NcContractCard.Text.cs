@@ -22,6 +22,20 @@ public sealed partial class NcContractCard
 
     private string BuildPrettyDescription(ContractClientData c)
     {
+        var description = ResolveBaseDescription(c);
+        var routeHint = BuildRouteHintText(c);
+
+        if (string.IsNullOrWhiteSpace(routeHint))
+            return description;
+
+        if (string.IsNullOrWhiteSpace(description))
+            return routeHint;
+
+        return $"{description}\n{routeHint}";
+    }
+
+    private string ResolveBaseDescription(ContractClientData c)
+    {
         if (!string.IsNullOrWhiteSpace(c.Description))
             return c.Description.Trim();
 
@@ -30,6 +44,24 @@ public sealed partial class NcContractCard
             return Loc.GetString("nc-store-contract-desc-default");
 
         return Loc.GetString("nc-store-contract-desc-generated", ("goals", goal.Replace(", ", "; ")));
+    }
+
+    private static string BuildRouteHintText(ContractClientData c)
+    {
+        var parts = new List<string>(3);
+
+        if (!string.IsNullOrWhiteSpace(c.SourceHint))
+            parts.Add(c.SourceHint.Trim());
+
+        if (!string.IsNullOrWhiteSpace(c.DestinationHint))
+            parts.Add(c.DestinationHint.Trim());
+
+        if (c.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof && c.RetrievalProofIsBearer)
+            parts.Add("Доказательство доставки — предъявительское: награду получит тот, кто принесёт его торговцу.");
+
+        return parts.Count == 0
+            ? string.Empty
+            : string.Join("\n", parts);
     }
 
     private string BuildDisplayDescription(ContractClientData c, int maxChars)

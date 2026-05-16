@@ -1,0 +1,40 @@
+# Production Retrieval Route examples.
+# Keep contracts short: cargo + route + reward. Route mechanics live in route/source/destination/proof/guidance presets.
+
+- type: ncRetrievalContract
+  id: NcRetrievalCitySnacksStoreUi
+  name: "Поиск: снеки"
+  description: "Принесите торговцу любой найденный снек."
+  difficulty: Easy
+  icon: FoodSnackChips
+  cargo:
+  - group: NcSupplyGroupSnacks
+    count: 3
+  route: NcRetrievalRouteAnyMatchingToStoreUi
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 70
+
+- type: ncRetrievalContract
+  id: NcRetrievalCityThreeSnackCargoDropoff
+  name: "Доставка: три ящика припасов"
+  description: "Найдите три груза с припасами, доставьте их к точке выгрузки и принесите торговцу накладную."
+  difficulty: Medium
+  icon: FoodSnackChips
+  cargo:
+  - prototype: FoodSnackChips
+    count: 3
+  route: NcRetrievalRouteObjectiveToDropoffBearerProof
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 180
+
+- type: ncContractPackV2
+  id: TradeContractsCityRetrievalRoutePack
+  retrieval:
+  - id: NcRetrievalCitySnacksStoreUi
+    weight: 3
+  - id: NcRetrievalCityThreeSnackCargoDropoff
+    weight: 1

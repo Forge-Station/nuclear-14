@@ -139,10 +139,11 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityCoordinates spawnCoords
     )
     {
-        if (!CanIssueContractPinpointer(key, state))
+        if (!CanIssueContractPinpointer(key, state, config))
         {
+            var limit = GetContractPinpointerLimit(config);
             Sawmill.Info(
-                $"[Contracts] Objective init blocked for '{key.ContractId}': contract pinpointer limit reached ({NcContractTuning.MaxActiveContractPinpointers}).");
+                $"[Contracts] Objective init blocked for '{key.ContractId}': contract pinpointer limit reached ({limit}).");
             return false;
         }
 
@@ -235,10 +236,21 @@ public sealed partial class NcContractSystem : EntitySystem
         }
     }
 
-    private bool CanIssueContractPinpointer((EntityUid Store, string ContractId) key, ObjectiveRuntimeState state)
+    private bool CanIssueContractPinpointer(
+        (EntityUid Store, string ContractId) key,
+        ObjectiveRuntimeState state,
+        ContractObjectiveConfigData config)
     {
         PruneInvalidPinpointers(key, state);
-        return state.PinpointerEntities.Count < NcContractTuning.MaxActiveContractPinpointers;
+        return state.PinpointerEntities.Count < GetContractPinpointerLimit(config);
+    }
+
+    private static int GetContractPinpointerLimit(ContractObjectiveConfigData config)
+    {
+        if (config.RetrievalGuidancePinpointerEnabled && config.RetrievalGuidanceMaxActivePinpointers > 0)
+            return config.RetrievalGuidanceMaxActivePinpointers;
+
+        return NcContractTuning.MaxActiveContractPinpointers;
     }
 
     private void PruneInvalidPinpointers((EntityUid Store, string ContractId) key, ObjectiveRuntimeState state)

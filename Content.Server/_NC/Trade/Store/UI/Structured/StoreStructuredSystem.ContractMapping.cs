@@ -26,7 +26,12 @@ public sealed partial class StoreStructuredSystem
             contract.Required,
             contract.Progress,
             targets,
-            rewards
+            rewards,
+            contract.Config.RetrievalSourceHint,
+            contract.Config.RetrievalDestinationHint,
+            IsRetrievalRouteContract(contract),
+            contract.Config.RetrievalClaimMode,
+            IsRetrievalBearerProofContract(contract)
         );
     }
 
@@ -100,6 +105,19 @@ public sealed partial class StoreStructuredSystem
                config.RetrievalRequireSpawnedEntities;
     }
 
+    private static bool IsRetrievalRouteContract(ContractServerData contract)
+    {
+        return contract.IsInventoryDelivery &&
+               !string.IsNullOrWhiteSpace(contract.Config.RetrievalRouteId);
+    }
+
+    private static bool IsRetrievalBearerProofContract(ContractServerData contract)
+    {
+        var config = contract.Config;
+        return IsRetrievalRouteContract(contract) &&
+               config.RetrievalProofEnabled &&
+               config.RetrievalProofOwnership == NcRetrievalProofOwnership.Bearer;
+    }
 
     private static ContractRuntimeContextData CloneRuntimeContext(ContractRuntimeContextData? runtime)
     {

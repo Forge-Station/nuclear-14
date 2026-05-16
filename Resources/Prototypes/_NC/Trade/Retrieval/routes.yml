@@ -1,0 +1,24 @@
+# Retrieval route presets.
+# A route composes repeated mechanics: source, destination, proof, guidance and delivery flags.
+
+- type: ncRetrievalRoutePreset
+  id: NcRetrievalRouteAnyMatchingToStoreUi
+  destination: NcRetrievalDestinationStoreUi
+  claim:
+    mode: StoreCargo
+  guidance: NcRetrievalGuidanceFindAndReturn
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: NcRetrievalRouteObjectiveToDropoffBearerProof
+  source: NcRetrievalSourceTradeContractObjective
+  destination: NcRetrievalDestinationTradeContractDropoff
+  claim:
+    mode: DestinationProof
+    proof: NcRetrievalProofBearerDeliveryReceipt
+  guidance: NcRetrievalGuidanceObjectiveToDropoff
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false

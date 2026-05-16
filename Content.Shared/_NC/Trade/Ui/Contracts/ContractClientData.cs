@@ -23,6 +23,11 @@ public sealed class ContractClientData
 
     public string TargetItem = string.Empty;
     public string TurnInItem = string.Empty;
+    public string SourceHint = string.Empty;
+    public string DestinationHint = string.Empty;
+    public bool IsRetrievalRoute;
+    public NcRetrievalClaimMode RetrievalClaimMode;
+    public bool RetrievalProofIsBearer;
     public List<ContractTargetClientData> Targets = new();
 
     public ContractClientData() { }
@@ -44,7 +49,12 @@ public sealed class ContractClientData
         int required,
         int progress,
         List<ContractTargetClientData> targets,
-        List<ContractRewardData> rewards)
+        List<ContractRewardData> rewards,
+        string sourceHint = "",
+        string destinationHint = "",
+        bool isRetrievalRoute = false,
+        NcRetrievalClaimMode retrievalClaimMode = NcRetrievalClaimMode.StoreCargo,
+        bool retrievalProofIsBearer = false)
     {
         Id = id;
         Name = name;
@@ -63,6 +73,11 @@ public sealed class ContractClientData
         Progress = progress;
         Targets = targets;
         Rewards = rewards;
+        SourceHint = sourceHint;
+        DestinationHint = destinationHint;
+        IsRetrievalRoute = isRetrievalRoute;
+        RetrievalClaimMode = retrievalClaimMode;
+        RetrievalProofIsBearer = retrievalProofIsBearer;
     }
 }
 
@@ -102,6 +117,11 @@ public static class ContractFingerprint
             h = MixString(h, contract.Description);
             h = MixString(h, contract.TargetItem);
             h = MixString(h, contract.TurnInItem);
+            h = MixString(h, contract.SourceHint);
+            h = MixString(h, contract.DestinationHint);
+            h = MixBool(h, contract.IsRetrievalRoute);
+            h = MixInt(h, (int) contract.RetrievalClaimMode);
+            h = MixBool(h, contract.RetrievalProofIsBearer);
             h = MixBool(h, contract.Repeatable);
             h = MixBool(h, contract.Taken);
             h = MixBool(h, contract.SupportsPinpointer);

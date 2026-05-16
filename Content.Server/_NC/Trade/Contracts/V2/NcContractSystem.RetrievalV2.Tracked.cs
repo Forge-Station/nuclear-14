@@ -9,7 +9,8 @@ public sealed partial class NcContractSystem : EntitySystem
         var config = contract.Config;
         return contract.IsInventoryDelivery &&
                config.RetrievalSpawnEnabled &&
-               config.RetrievalRequireSpawnedEntities;
+               config.RetrievalRequireSpawnedEntities &&
+               !RequiresRetrievalRouteDelivery(contract);
     }
 
     private bool TryPrepareRetrievalSpawnedClaimContext(

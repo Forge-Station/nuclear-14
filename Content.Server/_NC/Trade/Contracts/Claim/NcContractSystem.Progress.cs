@@ -109,6 +109,9 @@ public sealed partial class NcContractSystem : EntitySystem
         if (TryUpdateContractProgressByExecutionKind(store, contractId, contract, userItems, crateItems))
             return;
 
+        if (TryUpdateRetrievalRouteDeliveryProgress(store, contractId, contract))
+            return;
+
         EnsureStoreNearbyProgressItems(
             store,
             contract,

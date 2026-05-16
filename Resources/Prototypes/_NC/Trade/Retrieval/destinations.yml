@@ -1,0 +1,15 @@
+# Retrieval destination presets.
+# Destination target type derives delivery behavior:
+# StoreUi = claim at trader, MarkerGroup = cargo in radius, ContainerGroup = cargo inside turn-in container.
+
+- type: ncRetrievalDestinationPreset
+  id: NcRetrievalDestinationStoreUi
+  target:
+    type: StoreUi
+
+- type: ncRetrievalDestinationPreset
+  id: NcRetrievalDestinationTradeContractDropoff
+  target:
+    type: MarkerGroup
+    id: TradeContractDropoff
+  radius: 2.0

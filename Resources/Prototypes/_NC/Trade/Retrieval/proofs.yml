@@ -1,0 +1,9 @@
+# Retrieval proof presets.
+# Bearer proof is intentionally transferable: whoever brings the proof to the trader may redeem it.
+
+- type: ncRetrievalProofPreset
+  id: NcRetrievalProofBearerDeliveryReceipt
+  prototype: NcTradeContractProofDeliveryReceipt
+  ownership: Bearer
+  reissue: Never
+  consumeOnRewardClaim: true

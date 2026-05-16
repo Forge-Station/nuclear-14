@@ -1,0 +1,115 @@
+# NC Trade Smoke: Patch 5.8R-B (Pinpointer ReadyToTurnIn)
+#
+# Отдельный набор для ручной проверки сценария:
+# 1) пинпоинтер сначала ведет к грузу,
+# 2) после доставки и выдачи proof ведет к торговцу,
+# 3) повторный запрос пинпоинтера в ReadyToTurnIn тоже ведет к торговцу,
+# 4) даже если cargo уже удален (consumeCargo: true).
+
+- type: ncStoreProfile
+  id: NcTrade58RBProfile
+  contracts: NcTrade58RBContractsPreset
+
+- type: entity
+  id: NcTrade58RBSourceMarkerEntity
+  name: marker source 5.8R-B
+  suffix: NC, Smoke
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: NcContractSpawnPoint
+    id: NcTrade58RBSourceMarker
+    groups:
+    - NcTrade58RBSourceGroup
+
+- type: entity
+  id: NcTrade58RBDestinationMarkerEntity
+  name: marker destination 5.8R-B
+  suffix: NC, Smoke
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: NcContractSpawnPoint
+    id: NcTrade58RBDestinationMarker
+    groups:
+    - NcTrade58RBDestinationGroup
+
+- type: entity
+  id: NcTrade58RBProofReceipt
+  name: квитанция доставки 5.8R-B
+  suffix: NC, Smoke
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: NcContractProof
+
+- type: ncRetrievalSourcePreset
+  id: NcTrade58RBSourcePreset
+  spawnCargo: true
+  point:
+    type: MarkerGroup
+    id: NcTrade58RBSourceGroup
+
+- type: ncRetrievalDestinationPreset
+  id: NcTrade58RBDestinationPreset
+  target:
+    type: MarkerGroup
+    id: NcTrade58RBDestinationGroup
+  radius: 2.0
+
+- type: ncRetrievalProofPreset
+  id: NcTrade58RBProofPreset
+  prototype: NcTrade58RBProofReceipt
+  ownership: Bearer
+  reissue: Never
+  consumeOnRewardClaim: true
+
+- type: ncRetrievalGuidancePreset
+  id: NcTrade58RBGuidancePreset
+  sourceHint: "Груз отмечен на источнике 5.8R-B."
+  destinationHint: "После proof вернитесь к торговцу."
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 1
+
+- type: ncRetrievalRoutePreset
+  id: NcTrade58RBRoute
+  source: NcTrade58RBSourcePreset
+  destination: NcTrade58RBDestinationPreset
+  claim:
+    mode: DestinationProof
+    proof: NcTrade58RBProofPreset
+  guidance: NcTrade58RBGuidancePreset
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalContract
+  id: NcTrade58RBRetrievalPinpointerReadyToTurnIn
+  name: "Smoke 5.8R-B: пинпоинтер после proof"
+  description: "Проверка повторной выдачи пинпоинтера в состоянии ReadyToTurnIn."
+  difficulty: Hard
+  icon: FoodSnackChips
+  cargo:
+  - prototype: FoodSnackChips
+    count: 1
+  route: NcTrade58RBRoute
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 25
+
+- type: ncContractPackV2
+  id: NcTrade58RBPackV2
+  retrieval:
+  - id: NcTrade58RBRetrievalPinpointerReadyToTurnIn
+    weight: 1
+
+- type: storeContractsPreset
+  id: NcTrade58RBContractsPreset
+  limits:
+    Hard: 3
+  packsV2:
+  - id: NcTrade58RBPackV2
+    weight: 1
+  skipCost: 0
+  skipCurrency: Caps
