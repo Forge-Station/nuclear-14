@@ -29,9 +29,6 @@
     sprite: Corvax/Clothing/OuterClothing/PowerArmor/t51NCR.rsi
     equipDelay: 3
     unequipDelay: 6
-  - type: ClothingSpeedModifier
-    walkModifier: 0.15
-    sprintModifier: 0.15
   - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorT51NCR
@@ -52,9 +49,6 @@
     sprite: Corvax/Clothing/OuterClothing/PowerArmor/t60NCR.rsi
     equipDelay: 3
     unequipDelay: 6
-  - type: ClothingSpeedModifier
-    walkModifier: 0.15
-    sprintModifier: 0.15
   - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorT60NCR
@@ -75,9 +69,6 @@
     sprite: Corvax/Clothing/OuterClothing/PowerArmor/advanced1NCR.rsi
     equipDelay: 3
     unequipDelay: 6
-  - type: ClothingSpeedModifier
-    walkModifier: 0.17
-    sprintModifier: 0.17
   - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorX01NCR
