@@ -48,8 +48,10 @@ public sealed partial class NcContractSystem : EntitySystem
     private TimeSpan _nextGhostRoleTimeoutCheck = TimeSpan.Zero;
     private TimeSpan _nextTrackedDeliveryDropoffCheck = TimeSpan.Zero;
     private TimeSpan _nextRetrievalRouteDeliveryCheck = TimeSpan.Zero;
+    private TimeSpan _nextHuntV2PinpointerCheck = TimeSpan.Zero;
     private int _activeTrackedDeliveryDropoffObjectives;
     private int _activeRetrievalRouteDeliveries;
+    private int _activeHuntV2Objectives;
     private void ShutdownObjectiveRuntime() => ClearAllObjectiveRuntime(false, deleteGuards: false);
     public override void Update(float frameTime)
     {
@@ -66,6 +68,12 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             _nextRetrievalRouteDeliveryCheck = _timing.CurTime + NcContractTuning.TrackedDeliveryDropoffCheckInterval;
             UpdateRetrievalRouteDeliveries();
+        }
+
+        if (_activeHuntV2Objectives > 0 && _timing.CurTime >= _nextHuntV2PinpointerCheck)
+        {
+            _nextHuntV2PinpointerCheck = _timing.CurTime + NcContractTuning.TrackedDeliveryDropoffCheckInterval;
+            UpdateHuntV2PinpointerTargets();
         }
 
         if (_timing.CurTime < _nextGhostRoleTimeoutCheck)
@@ -97,6 +105,7 @@ public sealed partial class NcContractSystem : EntitySystem
         _objectiveRuntimeByProof.Clear();   // Fix (B39): keep proof index in sync with everything else.
         _activeTrackedDeliveryDropoffObjectives = 0;
         _activeRetrievalRouteDeliveries = 0;
+        _activeHuntV2Objectives = 0;
     }
 
     private void ClearStoreObjectiveRuntime(EntityUid store, bool deleteTrackedEntities, bool deleteGuards = true)
@@ -137,7 +146,7 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             ContractExecutionKind.InventoryDelivery => TryInitializeInventoryDeliverySupportRuntime(store, user, contractId, contract),
             ContractExecutionKind.TrackedDeliveryObjective => TryInitializeDeliveryObjectiveRuntime(store, user, contractId, contract),
-            ContractExecutionKind.HuntObjective => TryInitializeHuntObjective(store, user, contractId, contract),
+            ContractExecutionKind.HuntObjective => TryInitializeHuntObjectiveRuntimeOnTake(store, user, contractId, contract),
             ContractExecutionKind.RepairObjective => TryInitializeRepairObjective(store, user, contractId, contract),
             ContractExecutionKind.GhostRoleObjective => TryInitializeGhostRoleObjective(store, user, contractId, contract),
             _ => true

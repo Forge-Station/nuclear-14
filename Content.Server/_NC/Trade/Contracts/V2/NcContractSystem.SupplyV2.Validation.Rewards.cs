@@ -265,11 +265,21 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryValidateRewardPoolPrototype(
         string ownerId,
         string poolId,
-        NcSupplyRewardPoolPrototype pool)
+        NcSupplyRewardPoolPrototype pool,
+        HashSet<string>? visited = null)
     {
+        visited ??= new HashSet<string>(StringComparer.Ordinal);
+        if (!visited.Add(poolId))
+        {
+            Sawmill.Warning(
+                $"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' creates a nested pool cycle.");
+            return false;
+        }
+
         if (pool.Entries.Count == 0)
         {
             Sawmill.Warning($"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' has no entries.");
+            visited.Remove(poolId);
             return false;
         }
 
@@ -278,11 +288,13 @@ public sealed partial class NcContractSystem : EntitySystem
 
         for (var i = 0; i < pool.Entries.Count; i++)
         {
-            if (TryValidateRewardPoolEntry(ownerId, poolId, i, pool.Entries[i]))
+            if (TryValidateRewardPoolEntry(ownerId, poolId, i, pool.Entries[i], visited))
                 hasAtLeastOneValidEntry = true;
             else
                 valid = false;
         }
+
+        visited.Remove(poolId);
 
         if (hasAtLeastOneValidEntry)
             return valid;
@@ -295,13 +307,14 @@ public sealed partial class NcContractSystem : EntitySystem
         string ownerId,
         string poolId,
         int index,
-        NcSupplyRewardPoolEntry entry)
+        NcSupplyRewardPoolEntry entry,
+        HashSet<string> visited)
     {
         if (HasLegacySupplyRewardPoolFields(entry, out var legacyField))
         {
             Sawmill.Warning(
                 $"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} uses legacy field '{legacyField}'. " +
-                "Supply V2 reward pools must use only type + prototype/currency + count + weight/max.");
+                "Supply V2 reward pools must use only type + prototype/currency/pool + count + weight/max.");
             return false;
         }
 
@@ -337,7 +350,7 @@ public sealed partial class NcContractSystem : EntitySystem
         switch (entry.Type)
         {
             case StoreRewardType.Item:
-                if (!RequireOnlyPoolRewardTarget(ownerId, poolId, index, "prototype", entry.Prototype, entry.Currency))
+                if (!RequireOnlyPoolRewardTarget(ownerId, poolId, index, "prototype", entry.Prototype, entry.Currency, entry.Pool))
                     return false;
 
                 if (_prototypes.HasIndex<EntityPrototype>(entry.Prototype))
@@ -349,7 +362,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 return false;
 
             case StoreRewardType.Currency:
-                if (!RequireOnlyPoolRewardTarget(ownerId, poolId, index, "currency", entry.Currency, entry.Prototype))
+                if (!RequireOnlyPoolRewardTarget(ownerId, poolId, index, "currency", entry.Currency, entry.Prototype, entry.Pool))
                     return false;
 
                 if (_prototypes.HasIndex<StackPrototype>(entry.Currency))
@@ -361,10 +374,18 @@ public sealed partial class NcContractSystem : EntitySystem
                 return false;
 
             case StoreRewardType.Pool:
-                Sawmill.Warning(
-                    $"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} is a nested Pool. " +
-                    "Nested pools are not supported for Supply V2 rewards.");
-                return false;
+                if (!RequireOnlyPoolRewardTarget(ownerId, poolId, index, "pool", entry.Pool, entry.Prototype, entry.Currency))
+                    return false;
+
+                if (!_prototypes.TryIndex<NcSupplyRewardPoolPrototype>(entry.Pool, out var nestedPool))
+                {
+                    Sawmill.Warning(
+                        $"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} " +
+                        $"references missing nested Supply V2 reward pool '{entry.Pool}'.");
+                    return false;
+                }
+
+                return TryValidateRewardPoolPrototype(ownerId, entry.Pool, nestedPool, visited);
 
             case StoreRewardType.Unspecified:
                 Sawmill.Warning(
@@ -384,7 +405,8 @@ public sealed partial class NcContractSystem : EntitySystem
         int index,
         string expectedField,
         string expectedValue,
-        string other)
+        string otherA,
+        string otherB)
     {
         if (string.IsNullOrWhiteSpace(expectedValue))
         {
@@ -393,12 +415,12 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        if (string.IsNullOrWhiteSpace(other))
+        if (string.IsNullOrWhiteSpace(otherA) && string.IsNullOrWhiteSpace(otherB))
             return true;
 
         Sawmill.Warning(
             $"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} has extra reward target fields. " +
-            "Use only prototype for Item or currency for Currency.");
+            "Use only prototype for Item, currency for Currency, or pool for Pool.");
         return false;
     }
 

@@ -49,10 +49,14 @@ public sealed partial class StoreStructuredSystem
 
             if (!string.Equals(a.Id, b.Id, StringComparison.Ordinal) ||
                 !string.Equals(a.Name, b.Name, StringComparison.Ordinal) ||
-                !string.Equals(a.Difficulty, b.Difficulty, StringComparison.Ordinal) ||
                 !string.Equals(a.Description, b.Description, StringComparison.Ordinal) ||
+                !string.Equals(a.OfferPoolId, b.OfferPoolId, StringComparison.Ordinal) ||
+                !string.Equals(a.OfferPoolName, b.OfferPoolName, StringComparison.Ordinal) ||
+                !string.Equals(a.OfferPoolColor, b.OfferPoolColor, StringComparison.Ordinal) ||
                 !string.Equals(a.TargetItem, b.TargetItem, StringComparison.Ordinal) ||
-                !string.Equals(a.TurnInItem, b.TurnInItem, StringComparison.Ordinal))
+                !string.Equals(a.TurnInItem, b.TurnInItem, StringComparison.Ordinal) ||
+                !string.Equals(a.SourceHint, b.SourceHint, StringComparison.Ordinal) ||
+                !string.Equals(a.DestinationHint, b.DestinationHint, StringComparison.Ordinal))
                 return false;
 
             if (a.Repeatable != b.Repeatable ||
@@ -62,7 +66,11 @@ public sealed partial class StoreStructuredSystem
                 a.FlowStatus != b.FlowStatus ||
                 a.Completed != b.Completed ||
                 a.Required != b.Required ||
-                a.Progress != b.Progress)
+                a.Progress != b.Progress ||
+                a.OfferPoolOrder != b.OfferPoolOrder ||
+                a.IsRetrievalRoute != b.IsRetrievalRoute ||
+                a.RetrievalClaimMode != b.RetrievalClaimMode ||
+                a.RetrievalProofIsBearer != b.RetrievalProofIsBearer)
                 return false;
 
             return TargetsEquals(a.Targets, b.Targets) &&

@@ -48,26 +48,7 @@ public sealed partial class NcStoreLogicSystem
         if (!_protos.TryIndex<EntityPrototype>(protoId, out var productProto))
             return 0;
 
-        if (!TryGetStackInfo(productProto, out var stackTypeId, out var maxPerStack))
-            return SpawnNonStackable(protoId, user, units);
-
-        var remaining = units;
-        var totalSpawned = 0;
-
-        var added = FillExistingStacks(user, stackTypeId, maxPerStack, remaining);
-        remaining -= added;
-        totalSpawned += added;
-
-        if (remaining > 0)
-        {
-            if (TryComp(user, out TransformComponent? xform))
-                totalSpawned += SpawnNewStackChunks(xform.Coordinates, user, protoId, remaining, maxPerStack);
-        }
-
-        if (totalSpawned > 0)
-            _inventory.InvalidateInventoryCache(user);
-
-        return totalSpawned;
+        return _spawnService.SpawnRewardProduct(user, protoId, productProto, units);
     }
 
     #region Private Helpers

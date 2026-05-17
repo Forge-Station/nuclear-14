@@ -5,84 +5,6 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private static ContractRuntimeContextData CreateInitialRuntimeState(StoreContractPrototype proto)
-    {
-        var runtimeProto = GetRuntimePrototypeOrDefault(proto);
-        var executionKind = ContractExecutionKinds.Resolve(proto.ObjectiveType, runtimeProto.TargetPrototype);
-        var runtime = new ContractRuntimeContextData
-        {
-            Stage = 0,
-            StageGoal = runtimeProto.StageGoal,
-            AcceptTimeoutRemainingSeconds = 0,
-            GhostRolePendingAcceptance = false,
-            Failed = false,
-            FailureReason = string.Empty
-        };
-
-        NormalizeRuntimeState(executionKind, runtime);
-        return runtime;
-    }
-
-    private ContractObjectiveConfigData CreateObjectiveConfig(StoreContractPrototype proto)
-    {
-        var runtimeProto = GetRuntimePrototypeOrDefault(proto);
-        var config = new ContractObjectiveConfigData
-        {
-            AcceptTimeoutSeconds = runtimeProto.AcceptTimeoutSeconds,
-            SpawnPoint = CloneContractPointSelector(runtimeProto.SpawnPoint),
-            DropoffPoint = CloneContractPointSelector(runtimeProto.DropoffPoint),
-            TargetPrototype = runtimeProto.TargetPrototype ?? string.Empty,
-            DeliverySpawnPrototype = runtimeProto.DeliverySpawnPrototype ?? string.Empty,
-            StructurePrototype = runtimeProto.StructurePrototype ?? string.Empty,
-            GhostRole = runtimeProto.GhostRole ?? string.Empty,
-            ProofPrototype = runtimeProto.ProofPrototype ?? string.Empty,
-            PreserveTargetOnComplete = runtimeProto.PreserveTargetOnComplete,
-            AllowStoreWorldTurnIn = runtimeProto.AllowStoreWorldTurnIn,
-            GivePinpointer = runtimeProto.GivePinpointer,
-            PinpointerPrototype = runtimeProto.PinpointerPrototype ?? string.Empty,
-            GuardPrototype = runtimeProto.GuardPrototype ?? string.Empty,
-            GuardCount = runtimeProto.GuardCount,
-            RepairToolQuality = runtimeProto.RepairToolQuality ?? string.Empty,
-            RepairDoAfterSeconds = runtimeProto.RepairDoAfterSeconds,
-            RepairStageSound = runtimeProto.RepairStageSound ?? string.Empty,
-
-            SpawnItems = runtimeProto.SpawnItems,
-            SpawnSpecific = runtimeProto.SpawnSpecific != null
-                ? new List<string>(runtimeProto.SpawnSpecific)
-                : new List<string>()
-        };
-
-        ApplyGhostRoleDefinition(proto.ID, config);
-        NormalizeObjectiveConfig(config);
-        return config;
-    }
-
-    private void ApplyGhostRoleDefinition(string contractId, ContractObjectiveConfigData config)
-    {
-        if (string.IsNullOrWhiteSpace(config.GhostRole))
-            return;
-
-        if (!_prototypes.TryIndex<StoreContractGhostRolePrototype>(config.GhostRole, out var ghostRole))
-        {
-            Sawmill.Warning(
-                $"[Contracts] Ghost role config resolve failed for '{contractId}': ghost role '{config.GhostRole}' is missing.");
-            return;
-        }
-
-        config.GhostRolePrototype = ghostRole.EntityPrototype ?? string.Empty;
-        config.GhostRoleName = ghostRole.Name ?? string.Empty;
-        config.GhostRoleDescription = ghostRole.Description ?? string.Empty;
-        config.GhostRoleRules = ghostRole.Rules ?? string.Empty;
-        config.GhostRoleRequirements = ghostRole.Requirements.Count > 0
-            ? new List<CharacterRequirement>(ghostRole.Requirements)
-            : new List<CharacterRequirement>();
-    }
-
-    private static StoreContractRuntimePrototype GetRuntimePrototypeOrDefault(StoreContractPrototype proto)
-    {
-        return proto.Runtime ?? new();
-    }
-
     private static void NormalizeRuntimeState(ContractExecutionKind executionKind, ContractRuntimeContextData runtime)
     {
         runtime.StageGoal = runtime.StageGoal > 0
@@ -116,6 +38,8 @@ public sealed partial class NcContractSystem : EntitySystem
         config.RepairToolQuality = ResolveRepairToolQuality(config.RepairToolQuality);
         config.RepairDoAfterSeconds = ResolveRepairDoAfterSeconds(config.RepairDoAfterSeconds);
         config.RepairStageSound = ResolveRepairStageSound(config.RepairStageSound);
+        config.HuntV2TargetGroup ??= string.Empty;
+        config.HuntV2TargetPrototype ??= string.Empty;
 
         if (config.RetrievalSpawnEnabled)
         {
@@ -335,4 +259,3 @@ public sealed partial class NcContractSystem : EntitySystem
         }
     }
 }
-

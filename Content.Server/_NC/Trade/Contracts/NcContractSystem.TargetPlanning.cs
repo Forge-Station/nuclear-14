@@ -83,9 +83,15 @@ public sealed partial class NcContractSystem : EntitySystem
         if (ent == EntityUid.Invalid || !EntityManager.EntityExists(ent))
             return false;
 
-        return worldTurnInSource
-            ? CanUseNearbyStoreTurnInEntity(ent)
-            : !_logic.IsProtectedFromDirectSale(root, ent);
+        if (worldTurnInSource)
+        {
+            if (!TryComp(ent, out TransformComponent? xform))
+                return false;
+
+            return CanUseNearbyStoreTurnInEntity(ent, xform);
+        }
+
+        return !_logic.IsProtectedFromDirectSale(root, ent);
     }
 
     private int ReserveAvailableStackAmount(

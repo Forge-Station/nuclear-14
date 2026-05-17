@@ -42,21 +42,24 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private enum ContractPoolCandidateKind : byte
     {
-        Legacy = 0,
         SupplyV2 = 1,
-        RetrievalV2 = 2
+        RetrievalV2 = 2,
+        HuntV2 = 3
     }
 
     private sealed class ContractPoolCandidate
     {
         public ContractPoolCandidateKind Kind;
         public string Id = string.Empty;
-        public string Difficulty = string.Empty;
         public bool Repeatable = true;
         public int Weight;
-        public StoreContractPrototype? Legacy;
+        public string OfferPoolId = string.Empty;
+        public string OfferPoolName = string.Empty;
+        public int OfferPoolOrder = int.MaxValue;
+        public string OfferPoolColor = string.Empty;
         public NcSupplyContractPrototype? Supply;
         public NcRetrievalContractPrototype? Retrieval;
+        public NcHuntContractPrototype? Hunt;
     }
 
     private readonly record struct QuasiKey(QuasiKeyKind Kind, EntityUid Store, string ProtoId, string? Extra);

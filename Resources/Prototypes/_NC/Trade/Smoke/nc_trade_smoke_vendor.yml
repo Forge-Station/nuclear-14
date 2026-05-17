@@ -1,0 +1,92 @@
+- type: entity
+  id: NcTradeSmokeVendor
+  parent: Trademachine
+  name: торговый автомат проверки контрактов
+  description: Отдельный автомат для ручной проверки торговли, бартера и контрактов.
+  suffix: NC, Smoke
+  components:
+  - type: NcStore
+    profile: NcTradeSmokeVendorProfile
+
+- type: entity
+  id: NcTradeSmokeContractBoard
+  parent: TradeContractBoardCity
+  name: доска проверки контрактов
+  description: Доска с тестовыми заказами в понятном порядке.
+  suffix: NC, Smoke
+  components:
+  - type: NcStore
+    profile: NcTradeSmokeBoardProfile
+
+- type: entity
+  id: NcTradeSmokeHuntVendor
+  parent: Trademachine
+  name: торговый автомат проверки охоты
+  description: Отдельный автомат только для ручной проверки Hunt V2 TrophyTurnIn.
+  suffix: NC, Smoke, Hunt
+  components:
+  - type: NcStore
+    profile: NcTradeSmokeHuntProfile
+
+- type: entity
+  id: NcTradeSmokeHuntBoard
+  parent: TradeContractBoardCity
+  name: доска проверки охоты
+  description: Показывает оба ручных Hunt V2 теста: prototype target и group target.
+  suffix: NC, Smoke, Hunt
+  components:
+  - type: NcStore
+    profile: NcTradeSmokeHuntProfile
+
+- type: ncStoreProfile
+  id: NcTradeSmokeVendorProfile
+  buy:
+  - NcTradeSmokeBuyPreset
+  sell:
+  - NcTradeSmokeSellPreset
+  barter:
+  - NcTradeSmokeBarterPreset
+  contracts: NcTradeSmokeQuestContractsPreset
+  theme: TradeUiThemeWasteland
+
+- type: ncStoreProfile
+  id: NcTradeSmokeBoardProfile
+  contracts: NcTradeSmokeQuestContractsPreset
+  theme: TradeUiThemeWasteland
+
+- type: ncStoreProfile
+  id: NcTradeSmokeHuntProfile
+  contracts: NcTradeSmokeHuntContractsPreset
+  theme: TradeUiThemeWasteland
+
+- type: storeContractsPreset
+  id: NcTradeSmokeQuestContractsPreset
+  contractOffers:
+    maxVisible: 12
+    groups:
+    - pool: NcTradeSmokeOfferPoolSupply
+      minVisible: 4
+      maxVisible: 5
+      fillWeight: 5
+    - pool: NcTradeSmokeOfferPoolRetrieval
+      minVisible: 4
+      maxVisible: 6
+      fillWeight: 5
+    - pool: NcTradeSmokeOfferPoolHunt
+      minVisible: 1
+      maxVisible: 1
+      fillWeight: 1
+  skipCost: 0
+  skipCurrency: Caps
+
+- type: storeContractsPreset
+  id: NcTradeSmokeHuntContractsPreset
+  contractOffers:
+    maxVisible: 2
+    groups:
+    - pool: NcTradeSmokeOfferPoolHunt
+      minVisible: 2
+      maxVisible: 2
+      fillWeight: 1
+  skipCost: 0
+  skipCurrency: Caps

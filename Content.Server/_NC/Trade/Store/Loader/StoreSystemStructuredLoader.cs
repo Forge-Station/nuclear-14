@@ -331,19 +331,20 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
     private void AddRewardPoolCurrenciesToWhitelist(NcStoreComponent comp, LoadContext ctx, string poolId)
     {
-        if (string.IsNullOrWhiteSpace(poolId) ||
-            !_prototypes.TryIndex<NcContractRewardPoolPrototype>(poolId, out var pool))
+        if (string.IsNullOrWhiteSpace(poolId))
             return;
 
-        for (var i = 0; i < pool.Entries.Count; i++)
+        if (!_prototypes.TryIndex<NcSupplyRewardPoolPrototype>(poolId, out var supplyPool))
+            return;
+
+        for (var i = 0; i < supplyPool.Entries.Count; i++)
         {
-            var reward = pool.Entries[i];
+            var reward = supplyPool.Entries[i];
             if (reward.Type != StoreRewardType.Currency)
                 continue;
 
-            var currency = GetRewardId(reward);
-            if (!string.IsNullOrWhiteSpace(currency) && ctx.CurrencySeen.Add(currency))
-                comp.CurrencyWhitelist.Add(currency);
+            if (!string.IsNullOrWhiteSpace(reward.Currency) && ctx.CurrencySeen.Add(reward.Currency))
+                comp.CurrencyWhitelist.Add(reward.Currency);
         }
     }
 
@@ -477,30 +478,37 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
             return false;
         }
 
-        if (!_prototypes.TryIndex<NcContractRewardPoolPrototype>(entry.Pool, out var pool) || pool.Entries.Count == 0)
+        if (!_prototypes.TryIndex<NcSupplyRewardPoolPrototype>(entry.Pool, out var pool) || pool.Entries.Count == 0)
         {
             Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} references missing or empty reward pool '{entry.Pool}'.");
             return false;
         }
 
         var ok = true;
+        var visited = new HashSet<string>(StringComparer.Ordinal) { entry.Pool };
         for (var i = 0; i < pool.Entries.Count; i++)
-            ok &= ValidateBarterReceivePoolReward(entryId, $"{path}.pool[{i}]", pool.Entries[i]);
+            ok &= ValidateBarterReceivePoolReward(entryId, $"{path}.pool[{i}]", pool.Entries[i], visited);
 
         if (ok)
             return true;
 
         Sawmill.Warning(
             $"[NcStore] Barter entry '{entryId}' {path} pool '{entry.Pool}' contains entries that are not valid for barter. " +
-            "Only Item and Currency rewards are supported; nested pools are rejected.");
+            "Only Item, Currency and acyclic nested Pool rewards are supported.");
         return false;
     }
 
-    private bool ValidateBarterReceivePoolReward(string entryId, string path, ContractRewardDef reward)
+    private bool ValidateBarterReceivePoolReward(
+        string entryId,
+        string path,
+        NcSupplyRewardPoolEntry reward,
+        HashSet<string> visited)
     {
-        if (reward.Type != StoreRewardType.Item && reward.Type != StoreRewardType.Currency)
+        if (reward.Type != StoreRewardType.Item &&
+            reward.Type != StoreRewardType.Currency &&
+            reward.Type != StoreRewardType.Pool)
         {
-            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} must be Item or Currency. Nested pools are not supported in Barter V1.1.");
+            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} must be Item, Currency or Pool.");
             return false;
         }
 
@@ -510,39 +518,78 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
             return false;
         }
 
-        var amountRange = GetRewardAmountRange(reward);
-        if (amountRange.Min < 0 || amountRange.Max <= 0 || amountRange.Min > amountRange.Max)
+        if (reward.Count.Min < 0 || reward.Count.Max <= 0 || reward.Count.Min > reward.Count.Max)
         {
             Sawmill.Warning(
-                $"[NcStore] Barter entry '{entryId}' {path} has invalid count/amount range " +
-                $"{amountRange.Min}..{amountRange.Max}.");
+                $"[NcStore] Barter entry '{entryId}' {path} has invalid count range " +
+                $"{reward.Count.Min}..{reward.Count.Max}.");
             return false;
         }
 
-        var chance = reward.Chance >= 0f ? reward.Chance : reward.Probability;
-        if (chance < 0f || chance > 1f)
+        if (reward.MaxRepeats < 0)
         {
-            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} has invalid chance={chance}. Expected 0..1.");
+            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} has invalid max={reward.MaxRepeats}.");
             return false;
         }
 
-        var rewardId = GetRewardId(reward);
-        if (string.IsNullOrWhiteSpace(rewardId))
+        if (reward.Type == StoreRewardType.Item)
         {
-            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} has empty reward id.");
-            return false;
+            if (string.IsNullOrWhiteSpace(reward.Prototype))
+            {
+                Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} has empty item prototype.");
+                return false;
+            }
+
+            if (!_prototypes.HasIndex<EntityPrototype>(reward.Prototype))
+            {
+                Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} references missing entity prototype '{reward.Prototype}'.");
+                return false;
+            }
         }
 
-        if (reward.Type == StoreRewardType.Item && !_prototypes.HasIndex<EntityPrototype>(rewardId))
+        if (reward.Type == StoreRewardType.Currency)
         {
-            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} references missing entity prototype '{rewardId}'.");
-            return false;
+            if (string.IsNullOrWhiteSpace(reward.Currency))
+            {
+                Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} has empty currency.");
+                return false;
+            }
+
+            if (!_prototypes.HasIndex<StackPrototype>(reward.Currency))
+            {
+                Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} references missing stack currency '{reward.Currency}'.");
+                return false;
+            }
         }
 
-        if (reward.Type == StoreRewardType.Currency && !_prototypes.HasIndex<StackPrototype>(rewardId))
+        if (reward.Type == StoreRewardType.Pool)
         {
-            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} references missing stack currency '{rewardId}'.");
-            return false;
+            if (string.IsNullOrWhiteSpace(reward.Pool))
+            {
+                Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} has empty nested pool id.");
+                return false;
+            }
+
+            if (!visited.Add(reward.Pool))
+            {
+                Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} creates a nested reward pool cycle.");
+                return false;
+            }
+
+            if (!_prototypes.TryIndex<NcSupplyRewardPoolPrototype>(reward.Pool, out var nestedPool) ||
+                nestedPool.Entries.Count == 0)
+            {
+                Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} references missing or empty nested reward pool '{reward.Pool}'.");
+                visited.Remove(reward.Pool);
+                return false;
+            }
+
+            var ok = true;
+            for (var i = 0; i < nestedPool.Entries.Count; i++)
+                ok &= ValidateBarterReceivePoolReward(entryId, $"{path}.pool[{i}]", nestedPool.Entries[i], visited);
+
+            visited.Remove(reward.Pool);
+            return ok;
         }
 
         return true;
@@ -626,25 +673,28 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
     private bool TryResolveRewardPoolIcon(string poolId, out string icon)
     {
         icon = string.Empty;
-        if (string.IsNullOrWhiteSpace(poolId) ||
-            !_prototypes.TryIndex<NcContractRewardPoolPrototype>(poolId, out var pool))
+        if (string.IsNullOrWhiteSpace(poolId))
             return false;
 
-        for (var i = 0; i < pool.Entries.Count; i++)
+        if (_prototypes.TryIndex<NcSupplyRewardPoolPrototype>(poolId, out var supplyPool))
         {
-            var reward = pool.Entries[i];
-            var rewardId = GetRewardId(reward);
-            if (string.IsNullOrWhiteSpace(rewardId))
-                continue;
-
-            if (reward.Type == StoreRewardType.Item && _prototypes.HasIndex<EntityPrototype>(rewardId))
+            for (var i = 0; i < supplyPool.Entries.Count; i++)
             {
-                icon = rewardId;
-                return true;
-            }
+                var reward = supplyPool.Entries[i];
 
-            if (reward.Type == StoreRewardType.Currency && TryResolveCurrencyIcon(rewardId, out icon))
-                return true;
+                if (reward.Type == StoreRewardType.Item &&
+                    !string.IsNullOrWhiteSpace(reward.Prototype) &&
+                    _prototypes.HasIndex<EntityPrototype>(reward.Prototype))
+                {
+                    icon = reward.Prototype;
+                    return true;
+                }
+
+                if (reward.Type == StoreRewardType.Currency &&
+                    !string.IsNullOrWhiteSpace(reward.Currency) &&
+                    TryResolveCurrencyIcon(reward.Currency, out icon))
+                    return true;
+            }
         }
 
         return false;
@@ -715,26 +765,6 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         return result;
     }
 
-
-    private static IntRange GetRewardAmountRange(ContractRewardDef reward)
-    {
-        return reward.Count.Min > 0 || reward.Count.Max > 0
-            ? reward.Count
-            : reward.Amount;
-    }
-    private static string GetRewardId(ContractRewardDef reward)
-    {
-        if (!string.IsNullOrWhiteSpace(reward.Prototype))
-            return reward.Prototype;
-
-        if (!string.IsNullOrWhiteSpace(reward.Currency))
-            return reward.Currency;
-
-        if (!string.IsNullOrWhiteSpace(reward.Pool))
-            return reward.Pool;
-
-        return reward.Id;
-    }
 
     private static int CountNonEmpty(params string[] values)
     {

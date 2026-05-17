@@ -307,6 +307,9 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract
     )
     {
+        if (!TryValidateContractRewards(user, contract.Rewards, out var rewardFail))
+            return rewardFail;
+
         if (!TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail))
             return proofFail;
 

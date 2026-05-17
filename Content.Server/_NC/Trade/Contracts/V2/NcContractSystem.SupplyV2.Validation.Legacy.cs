@@ -68,12 +68,6 @@ public sealed partial class NcContractSystem : EntitySystem
             return true;
         }
 
-        if (!string.IsNullOrWhiteSpace(entry.LegacyPool))
-        {
-            field = "pool";
-            return true;
-        }
-
         if (entry.LegacyOptions is { Count: > 0 })
         {
             field = "options";

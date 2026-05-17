@@ -42,7 +42,7 @@ public sealed partial class NcStoreMenu
 
     private static int CompareContracts(ContractClientData left, ContractClientData right)
     {
-        var diff = DifficultyRank(left.Difficulty).CompareTo(DifficultyRank(right.Difficulty));
+        var diff = left.OfferPoolOrder.CompareTo(right.OfferPoolOrder);
         if (diff != 0)
             return diff;
 
@@ -51,17 +51,6 @@ public sealed partial class NcStoreMenu
             return diff;
 
         return string.Compare(left.Id, right.Id, StringComparison.Ordinal);
-    }
-
-    private static int DifficultyRank(string difficulty)
-    {
-        return difficulty switch
-        {
-            "Easy" => 0,
-            "Medium" => 1,
-            "Hard" => 2,
-            _ => 99
-        };
     }
 
     private bool TryUpdateContractsInPlace(

@@ -1,4 +1,4 @@
-﻿using Robust.Shared.Serialization;
+using Robust.Shared.Serialization;
 
 namespace Content.Shared._NC.Trade;
 
@@ -35,8 +35,11 @@ public sealed class ContractServerData
     public string Id { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
 
-    public string Difficulty { get; set; } = "Easy";
     public string Description { get; set; } = string.Empty;
+    public string OfferPoolId { get; set; } = string.Empty;
+    public string OfferPoolName { get; set; } = string.Empty;
+    public int OfferPoolOrder { get; set; } = int.MaxValue;
+    public string OfferPoolColor { get; set; } = string.Empty;
 
     public List<ContractRewardData> Rewards { get; set; } = new();
 

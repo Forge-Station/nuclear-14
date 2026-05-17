@@ -51,12 +51,20 @@ public sealed partial class NcContractSystem : EntitySystem
             if (contract.ExecutionKind == ContractExecutionKind.GhostRoleObjective && !state.GhostRoleTaken)
                 return false;
 
-            if (state.TargetEntity is not { } target || target == EntityUid.Invalid || TerminatingOrDeleted(target))
-                return false;
+            if (IsHuntV2Contract(contract))
+            {
+                if (!TryResolveHuntV2PinpointerTarget(store, contract, state, out pinpointerTarget))
+                    return false;
+            }
+            else
+            {
+                if (state.TargetEntity is not { } target || target == EntityUid.Invalid || TerminatingOrDeleted(target))
+                    return false;
 
-            pinpointerTarget = ResolveObjectivePinpointerTarget(contract, state, target);
-            if (pinpointerTarget == EntityUid.Invalid || TerminatingOrDeleted(pinpointerTarget))
-                return false;
+                pinpointerTarget = ResolveObjectivePinpointerTarget(contract, state, target);
+                if (pinpointerTarget == EntityUid.Invalid || TerminatingOrDeleted(pinpointerTarget))
+                    return false;
+            }
         }
 
         EntityCoordinates spawnCoords;

@@ -50,22 +50,9 @@ public sealed partial class NcSupplyRewardEntry
 }
 
 /// <summary>
-/// Legacy/general reward pool used by old storeContract rewards and Barter receivePools.
-/// Keep this format tolerant because legacy contracts may still use id/amount/prob/options.
-/// Supply V2 must use ncSupplyRewardPool instead.
-/// </summary>
-[Prototype("ncContractRewardPool")]
-public sealed partial class NcContractRewardPoolPrototype : IPrototype
-{
-    [IdDataField] public string ID { get; private set; } = default!;
-
-    [DataField("entries")]
-    public List<ContractRewardDef> Entries { get; private set; } = new();
-}
-
-/// <summary>
-/// Strict Supply V2 reward pool. This format intentionally has no legacy id/amount/prob/chance/options fields.
-/// Use count + weight only; nested pools are rejected by Supply validation.
+/// Strict Trade reward pool shared by Contracts V2 and Barter receivePools.
+/// Use count + weight only; entries target prototype/currency/pool by reward type.
+/// Legacy id/amount/prob/chance/options fields are rejected by validation.
 /// </summary>
 [Prototype("ncSupplyRewardPool")]
 public sealed partial class NcSupplyRewardPoolPrototype : IPrototype
@@ -88,6 +75,9 @@ public sealed partial class NcSupplyRewardPoolEntry
     [DataField("currency")]
     public string Currency { get; set; } = string.Empty;
 
+    [DataField("pool")]
+    public string Pool { get; set; } = string.Empty;
+
     [DataField("count", required: true)]
     public IntRange Count { get; set; } = IntRange.Fixed(0);
 
@@ -109,18 +99,12 @@ public sealed partial class NcSupplyRewardPoolEntry
     [DataField("chance")]
     public float LegacyChance { get; set; } = float.NaN;
 
-    /// <summary>Legacy trap: use prototype/currency depending on type, not id.</summary>
+    /// <summary>Legacy trap: use prototype/currency/pool depending on type, not id.</summary>
     [DataField("id")]
     public string LegacyId { get; set; } = string.Empty;
-
-    /// <summary>Legacy trap: nested pools are rejected explicitly by Supply V2 validation.</summary>
-    [DataField("pool")]
-    public string LegacyPool { get; set; } = string.Empty;
 
     /// <summary>Legacy trap: nested option lists are not part of Supply V2 reward pools.</summary>
     [DataField("options")]
     public List<ContractRewardDef>? LegacyOptions { get; set; }
 }
-
-
 

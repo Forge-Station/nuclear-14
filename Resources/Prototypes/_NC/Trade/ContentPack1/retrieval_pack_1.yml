@@ -1,0 +1,331 @@
+# NC Trade 7.0 - Contract Content Pack 1 (Retrieval)
+
+- type: ncRetrievalDestinationPreset
+  id: NcRetrievalDestinationPack1RemoteWarehouse
+  target:
+    type: MarkerGroup
+    id: TradeContractDropoff
+  radius: 2.0
+
+- type: ncRetrievalDestinationPreset
+  id: NcRetrievalDestinationPack1RepairDepot
+  target:
+    type: MarkerGroup
+    id: TradeContractDropoff
+  radius: 2.0
+
+- type: ncRetrievalDestinationPreset
+  id: NcRetrievalDestinationPack1Outpost
+  target:
+    type: MarkerGroup
+    id: TradeContractDropoff
+  radius: 2.0
+
+- type: ncRetrievalDestinationPreset
+  id: NcRetrievalDestinationPack1Camp
+  target:
+    type: MarkerGroup
+    id: TradeContractDropoff
+  radius: 2.0
+
+- type: ncRetrievalGuidancePreset
+  id: NcRetrievalGuidancePack1StoreCargo
+  sourceHint: "Груз отмечен в одной из контрактных зон."
+  destinationHint: "Доставьте груз торговцу и сдайте через интерфейс."
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 1
+
+- type: ncRetrievalGuidancePreset
+  id: NcRetrievalGuidancePack1Warehouse
+  sourceHint: "Заберите груз с контрактной точки."
+  destinationHint: "Доставьте груз на удаленный склад и верните торговцу накладную."
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 1
+
+- type: ncRetrievalGuidancePreset
+  id: NcRetrievalGuidancePack1RepairDepot
+  sourceHint: "Груз ожидает вывоза из контрактной зоны."
+  destinationHint: "Сдайте груз в ремонтный пункт и принесите подтверждение торговцу."
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 1
+
+- type: ncRetrievalGuidancePreset
+  id: NcRetrievalGuidancePack1Outpost
+  sourceHint: "Заберите груз и удерживайте его до точки доставки."
+  destinationHint: "Передайте груз на аванпост, затем вернитесь с подтверждением."
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 1
+
+- type: ncRetrievalGuidancePreset
+  id: NcRetrievalGuidancePack1Camp
+  sourceHint: "Найдите продовольственный груз в зоне задания."
+  destinationHint: "Доставьте его в лагерь и принесите торговцу накладную."
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 1
+
+- type: ncRetrievalRoutePreset
+  id: NcRetrievalRoutePack1ObjectiveToStoreCargo
+  source: NcRetrievalSourceTradeContractObjective
+  destination: NcRetrievalDestinationStoreUi
+  claim:
+    mode: StoreCargo
+  guidance: NcRetrievalGuidancePack1StoreCargo
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: NcRetrievalRoutePack1ToRemoteWarehouseProof
+  source: NcRetrievalSourceTradeContractObjective
+  destination: NcRetrievalDestinationPack1RemoteWarehouse
+  claim:
+    mode: DestinationProof
+    proof: NcRetrievalProofBearerDeliveryReceipt
+  guidance: NcRetrievalGuidancePack1Warehouse
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: NcRetrievalRoutePack1ToRepairDepotProof
+  source: NcRetrievalSourceTradeContractObjective
+  destination: NcRetrievalDestinationPack1RepairDepot
+  claim:
+    mode: DestinationProof
+    proof: NcRetrievalProofBearerDeliveryReceipt
+  guidance: NcRetrievalGuidancePack1RepairDepot
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: NcRetrievalRoutePack1ToOutpostProof
+  source: NcRetrievalSourceTradeContractObjective
+  destination: NcRetrievalDestinationPack1Outpost
+  claim:
+    mode: DestinationProof
+    proof: NcRetrievalProofBearerDeliveryReceipt
+  guidance: NcRetrievalGuidancePack1Outpost
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: NcRetrievalRoutePack1ToCampProof
+  source: NcRetrievalSourceTradeContractObjective
+  destination: NcRetrievalDestinationPack1Camp
+  claim:
+    mode: DestinationProof
+    proof: NcRetrievalProofBearerDeliveryReceipt
+  guidance: NcRetrievalGuidancePack1Camp
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalContract
+  id: NcRetrievalPack1MedicalCrateStoreCargo
+  name: "Забрать медицинский ящик"
+  description: "Найдите отмеченный медицинский ящик и верните его торговцу."
+  icon: N14CrateBreakPlainFilledStimpak
+  cargo:
+  - prototype: N14CrateBreakPlainFilledStimpak
+    count: 1
+  route: NcRetrievalRoutePack1ObjectiveToStoreCargo
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 140
+  - type: Pool
+    pool: NcSupplyPack1PoolEasy
+    count: 1
+
+- type: ncRetrievalContract
+  id: NcRetrievalPack1ThreeMedicalCratesStoreCargo
+  name: "Забрать 3 медицинских ящика"
+  description: "Найдите три отмеченных медицинских ящика и доставьте их торговцу."
+  icon: N14CrateBreakPlainFilledStimpak
+  cargo:
+  - prototype: N14CrateBreakPlainFilledStimpak
+    count: 3
+  route: NcRetrievalRoutePack1ObjectiveToStoreCargo
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 300
+  - type: Pool
+    pool: NcSupplyPack1PoolHard
+    count: 1
+
+- type: ncRetrievalContract
+  id: NcRetrievalPack1AmmoCrateStoreCargo
+  name: "Забрать ящик боеприпасов"
+  description: "Найдите отмеченный ящик боеприпасов и верните его торговцу."
+  icon: N14CrateBreakPlainFilledEnergyCell
+  cargo:
+  - prototype: N14CrateBreakPlainFilledEnergyCell
+    count: 1
+  route: NcRetrievalRoutePack1ObjectiveToStoreCargo
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 210
+  - type: Pool
+    pool: NcSupplyPack1PoolMedium
+    count: 1
+
+- type: ncRetrievalContract
+  id: NcRetrievalPack1ToolsCrateStoreCargo
+  name: "Забрать ящик инструментов"
+  description: "Найдите отмеченный ящик инструментов и доставьте его торговцу."
+  icon: N14CrateBreakPlainFilledHandheld
+  cargo:
+  - prototype: N14CrateBreakPlainFilledHandheld
+    count: 1
+  route: NcRetrievalRoutePack1ObjectiveToStoreCargo
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 210
+  - type: Pool
+    pool: NcSupplyPack1PoolMedium
+    count: 1
+
+- type: ncRetrievalContract
+  id: NcRetrievalPack1RarePartsCrateStoreCargo
+  name: "Забрать редкий ящик деталей"
+  description: "Найдите отмеченный редкий ящик деталей и верните его торговцу."
+  icon: N14CrateRedFilledMk2
+  cargo:
+  - prototype: N14CrateRedFilledMk2
+    count: 1
+  route: NcRetrievalRoutePack1ObjectiveToStoreCargo
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 360
+  - type: Pool
+    pool: NcSupplyPack1PoolDangerous
+    count: 1
+  - type: Pool
+    pool: NcSupplyPack1PoolRareBonus
+    count: 1
+
+- type: ncRetrievalContract
+  id: NcRetrievalPack1PianoStoreCargo
+  name: "Забрать пианино"
+  description: "Найдите отмеченное пианино и доставьте его торговцу."
+  icon: PianoInstrument
+  cargo:
+  - prototype: PianoInstrument
+    count: 1
+  route: NcRetrievalRoutePack1ObjectiveToStoreCargo
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 420
+  - type: Pool
+    pool: NcSupplyPack1PoolHard
+    count: 1
+  - type: Pool
+    pool: NcSupplyPack1PoolRareBonus
+    count: 1
+
+- type: ncRetrievalContract
+  id: NcRetrievalPack1MedsToWarehouseProof
+  name: "Медикаменты на удалённый склад"
+  description: "Доставьте ящик медикаментов на удалённый склад и принесите торговцу накладную."
+  icon: N14CrateBreakPlainFilledOintment
+  cargo:
+  - prototype: N14CrateBreakPlainFilledOintment
+    count: 1
+  route: NcRetrievalRoutePack1ToRemoteWarehouseProof
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 260
+  - type: Pool
+    pool: NcSupplyPack1PoolHard
+    count: 1
+
+- type: ncRetrievalContract
+  id: NcRetrievalPack1ThreeMedsToWarehouseProof
+  name: "3 ящика медикаментов на удалённый склад"
+  description: "Доставьте три ящика медикаментов на удалённый склад и принесите торговцу одну итоговую накладную."
+  icon: N14CrateBreakPlainFilledOintment
+  cargo:
+  - prototype: N14CrateBreakPlainFilledOintment
+    count: 3
+  route: NcRetrievalRoutePack1ToRemoteWarehouseProof
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 780
+  - type: Pool
+    pool: NcSupplyPack1PoolDangerous
+    count: 1
+
+- type: ncRetrievalContract
+  id: NcRetrievalPack1PartsToRepairDepotProof
+  name: "Доставка: детали в ремонтный пункт"
+  description: "Доставьте ящик деталей в ремонтный пункт и верните торговцу накладную."
+  icon: N14CrateBreakPlainFilledMechanicParts
+  cargo:
+  - prototype: N14CrateBreakPlainFilledMechanicParts
+    count: 1
+  route: NcRetrievalRoutePack1ToRepairDepotProof
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 270
+  - type: Pool
+    pool: NcSupplyPack1PoolHard
+    count: 1
+
+- type: ncRetrievalContract
+  id: NcRetrievalPack1AmmoToOutpostProof
+  name: "Доставка: боеприпасы на аванпост"
+  description: "Доставьте ящик боеприпасов на аванпост и принесите подтверждение."
+  icon: N14CrateBreakPlainFilledEnergyCell
+  cargo:
+  - prototype: N14CrateBreakPlainFilledEnergyCell
+    count: 1
+  route: NcRetrievalRoutePack1ToOutpostProof
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 320
+  - type: Pool
+    pool: NcSupplyPack1PoolDangerous
+    count: 1
+
+- type: ncRetrievalContract
+  id: NcRetrievalPack1FoodToCampProof
+  name: "Доставка: еда в лагерь"
+  description: "Доставьте продовольственный ящик в лагерь и верните торговцу накладную."
+  icon: N14CrateBreakPlainFilledEmergencyRations
+  cargo:
+  - prototype: N14CrateBreakPlainFilledEmergencyRations
+    count: 1
+  route: NcRetrievalRoutePack1ToCampProof
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 250
+  - type: Pool
+    pool: NcSupplyPack1PoolMedium
+    count: 1

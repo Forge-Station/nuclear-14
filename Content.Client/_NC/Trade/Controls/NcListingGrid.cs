@@ -455,20 +455,24 @@ public sealed partial class NcListingGrid : BoxContainer
         AddSearchPart(parts, entry.Pool);
         AddSearchPart(parts, Loc.GetString("nc-store-barter-random-receive"));
 
-        if (string.IsNullOrWhiteSpace(entry.Pool) ||
-            !_proto.TryIndex<NcContractRewardPoolPrototype>(entry.Pool, out var pool))
+        if (string.IsNullOrWhiteSpace(entry.Pool))
             return;
 
-        for (var i = 0; i < pool.Entries.Count; i++)
+        if (_proto.TryIndex<NcSupplyRewardPoolPrototype>(entry.Pool, out var supplyPool))
         {
-            var reward = pool.Entries[i];
-            var rewardId = GetRewardId(reward);
+            for (var i = 0; i < supplyPool.Entries.Count; i++)
+            {
+                var reward = supplyPool.Entries[i];
 
-            if (reward.Type == StoreRewardType.Item)
-                AddPrototypeSearchPart(parts, rewardId);
-            else if (reward.Type == StoreRewardType.Currency)
-                AddCurrencySearchPart(parts, rewardId);
+                if (reward.Type == StoreRewardType.Item)
+                    AddPrototypeSearchPart(parts, reward.Prototype);
+                else if (reward.Type == StoreRewardType.Currency)
+                    AddCurrencySearchPart(parts, reward.Currency);
+            }
+
+            return;
         }
+
     }
 
     private void AddPrototypeSearchPart(List<string> parts, string protoId)
@@ -520,17 +524,6 @@ public sealed partial class NcListingGrid : BoxContainer
 
         AddSearchPart(parts, stack.Spawn);
         AddPrototypeSearchPart(parts, stack.Spawn);
-    }
-
-    private static string GetRewardId(ContractRewardDef reward)
-    {
-        if (!string.IsNullOrWhiteSpace(reward.Prototype))
-            return reward.Prototype;
-        if (!string.IsNullOrWhiteSpace(reward.Currency))
-            return reward.Currency;
-        if (!string.IsNullOrWhiteSpace(reward.Pool))
-            return reward.Pool;
-        return reward.Id;
     }
 
     private static void AddSearchPart(List<string> parts, string? value)

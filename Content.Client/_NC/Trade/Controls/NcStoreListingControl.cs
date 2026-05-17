@@ -568,39 +568,31 @@ public sealed partial class NcStoreListingControl : PanelContainer
     private static bool TryResolveRewardPoolIcon(string poolId, IPrototypeManager pm, out string icon)
     {
         icon = string.Empty;
-        if (string.IsNullOrWhiteSpace(poolId) ||
-            !pm.TryIndex<NcContractRewardPoolPrototype>(poolId, out var pool))
+        if (string.IsNullOrWhiteSpace(poolId))
             return false;
 
-        for (var i = 0; i < pool.Entries.Count; i++)
+        if (pm.TryIndex<NcSupplyRewardPoolPrototype>(poolId, out var supplyPool))
         {
-            var reward = pool.Entries[i];
-            var rewardId = ResolveRewardId(reward);
-            if (string.IsNullOrWhiteSpace(rewardId))
-                continue;
-
-            if (reward.Type == StoreRewardType.Item && pm.HasIndex<EntityPrototype>(rewardId))
+            for (var i = 0; i < supplyPool.Entries.Count; i++)
             {
-                icon = rewardId;
-                return true;
-            }
+                var reward = supplyPool.Entries[i];
 
-            if (reward.Type == StoreRewardType.Currency && TryResolveCurrencyEntity(rewardId, pm, out icon))
-                return true;
+                if (reward.Type == StoreRewardType.Item &&
+                    !string.IsNullOrWhiteSpace(reward.Prototype) &&
+                    pm.HasIndex<EntityPrototype>(reward.Prototype))
+                {
+                    icon = reward.Prototype;
+                    return true;
+                }
+
+                if (reward.Type == StoreRewardType.Currency &&
+                    !string.IsNullOrWhiteSpace(reward.Currency) &&
+                    TryResolveCurrencyEntity(reward.Currency, pm, out icon))
+                    return true;
+            }
         }
 
         return false;
-    }
-
-    private static string ResolveRewardId(ContractRewardDef reward)
-    {
-        if (!string.IsNullOrWhiteSpace(reward.Prototype))
-            return reward.Prototype;
-        if (!string.IsNullOrWhiteSpace(reward.Currency))
-            return reward.Currency;
-        if (!string.IsNullOrWhiteSpace(reward.Pool))
-            return reward.Pool;
-        return reward.Id;
     }
 
     private static bool TryResolveCurrencyEntity(string currency, IPrototypeManager pm, out string entity)
@@ -650,4 +642,3 @@ public sealed partial class NcStoreListingControl : PanelContainer
     }
 
 }
-

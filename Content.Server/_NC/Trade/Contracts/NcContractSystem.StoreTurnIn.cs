@@ -1,4 +1,5 @@
 using Content.Shared.Item;
+using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Robust.Shared.GameObjects;
@@ -19,15 +20,26 @@ public sealed partial class NcContractSystem : EntitySystem
             if (!TryComp(ent, out TransformComponent? xform) || IsTargetInEntityContainer(xform))
                 continue;
 
-            if (!CanUseNearbyStoreTurnInEntity(ent))
+            if (!CanUseNearbyStoreTurnInEntity(ent, xform))
                 continue;
 
             itemsBuffer.Add(ent);
         }
     }
 
-    private bool CanUseNearbyStoreTurnInEntity(EntityUid ent)
+    private bool CanUseNearbyStoreTurnInEntity(EntityUid ent, TransformComponent xform)
     {
-        return HasComp<ItemComponent>(ent);
+        if (HasComp<ItemComponent>(ent))
+            return true;
+
+        // Allow non-item movable world objects (e.g. placeable structures like pianos)
+        // while excluding mobs and anchored world geometry/decor.
+        if (HasComp<MobStateComponent>(ent))
+            return false;
+
+        if (xform.Anchored)
+            return false;
+
+        return HasComp<PullableComponent>(ent);
     }
 }

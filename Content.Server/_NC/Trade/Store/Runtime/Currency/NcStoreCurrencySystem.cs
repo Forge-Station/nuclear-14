@@ -228,6 +228,9 @@ public sealed class NcStoreCurrencySystem : EntitySystem
         return true;
     }
 
+    public bool CanHandleCurrency(string currencyId) =>
+        !string.IsNullOrWhiteSpace(currencyId) && TryResolveHandler(currencyId, out _);
+
     public bool TryTakeCurrency(EntityUid user, string currencyId, int amount)
     {
         if (amount <= 0)
@@ -237,12 +240,17 @@ public sealed class NcStoreCurrencySystem : EntitySystem
         return h.TryTake(user, currencyId, amount);
     }
 
-    public void GiveCurrency(EntityUid user, string currencyId, int amount)
+    public bool TryGiveCurrency(EntityUid user, string currencyId, int amount)
     {
         if (amount <= 0)
-            return;
+            return true;
         if (!TryResolveHandler(currencyId, out var h))
-            return;
-        h.TryGiveCurrency(user, currencyId, amount);
+            return false;
+        return h.TryGiveCurrency(user, currencyId, amount);
+    }
+
+    public void GiveCurrency(EntityUid user, string currencyId, int amount)
+    {
+        TryGiveCurrency(user, currencyId, amount);
     }
 }

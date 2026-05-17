@@ -14,6 +14,8 @@ public sealed partial class NcContractSystem : EntitySystem
         if (args.NewMobState != MobState.Dead || args.OldMobState == MobState.Dead)
             return;
 
+        TryHandleHuntV2TargetKilled(args.Target);
+
         if (!_objectiveRuntimeByTarget.TryGetValue(args.Target, out var key))
             return;
 

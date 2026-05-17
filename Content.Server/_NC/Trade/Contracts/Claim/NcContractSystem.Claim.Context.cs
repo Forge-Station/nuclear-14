@@ -207,6 +207,9 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             crateEntity = pulledCrate;
             _logic.ScanInventoryItems(pulledCrate, _scratchCrateItems);
+            // Include the pulled crate entity itself: some retrieval contracts require delivering
+            // the container prototype, not only items inside it.
+            _scratchCrateItems.Add(pulledCrate);
             crateItems = _scratchCrateItems;
         }
 

@@ -161,6 +161,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (scanNeeds.NeedCrateScan && crateUid is { } crateEntity)
         {
             _inventory.ScanInventoryItems(crateEntity, scratch.DeepCrateItems);
+            // Keep progress preview consistent with claim planning: the pulled closed crate
+            // itself may be the turn-in target.
+            scratch.DeepCrateItems.Add(crateEntity);
             return;
         }
 
@@ -292,7 +295,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         foreach (var contract in comp.Contracts.Values)
             buf.Contracts.Add(MapContractToClient(contract));
 
-        buf.Contracts.Sort(static (left, right) => string.CompareOrdinal(left.Id, right.Id));
+        buf.Contracts.Sort(CompareContractsForUi);
 
         var contractsFingerprint = buf.Contracts.ComputeFingerprint();
         if (!scratch.ShouldRebuildContracts(contractsFingerprint))
@@ -313,6 +316,19 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         buf.ContractSkipCost = skipCost;
         buf.ContractSkipCurrency = skipCurrency;
+    }
+
+    private static int CompareContractsForUi(ContractClientData left, ContractClientData right)
+    {
+        var poolOrder = left.OfferPoolOrder.CompareTo(right.OfferPoolOrder);
+        if (poolOrder != 0)
+            return poolOrder;
+
+        var name = string.Compare(left.Name, right.Name, StringComparison.OrdinalIgnoreCase);
+        if (name != 0)
+            return name;
+
+        return string.CompareOrdinal(left.Id, right.Id);
     }
 
     private void PushDynamicState(

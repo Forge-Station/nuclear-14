@@ -17,6 +17,9 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryValidateClaimTakePlan(ctx.TakePlan, out fail))
             return false;
 
+        if (!TryValidateContractRewards(ctx.User, ctx.Contract.Rewards, out fail))
+            return false;
+
         ExecuteClaimTakePlan(ctx.TakePlan);
         InvalidateClaimExecutionCaches(ctx);
         MarkClaimTargetsCompleted(ctx.Contract);
@@ -129,27 +132,26 @@ public sealed partial class NcContractSystem : EntitySystem
         }
     }
 
+    private bool TryValidateContractRewards(
+        EntityUid user,
+        IReadOnlyList<ContractRewardData>? rewards,
+        out ClaimAttemptResult fail)
+    {
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+
+        if (_logic.TryValidateRewardList(user, rewards, out var reason))
+            return true;
+
+        fail = CreateClaimExecutionFailure(reason);
+        return false;
+    }
+
     private void GiveContractRewards(EntityUid user, IReadOnlyList<ContractRewardData>? rewards)
     {
-        if (rewards == null || rewards.Count == 0)
+        if (_logic.TryExecuteRewardList(user, rewards, "Claim", out var reason))
             return;
 
-        foreach (var reward in rewards)
-        {
-            if (reward.Amount <= 0 || string.IsNullOrWhiteSpace(reward.Id))
-                continue;
-
-            switch (reward.Type)
-            {
-                case StoreRewardType.Currency:
-                    _logic.GiveCurrency(user, reward.Id, reward.Amount);
-                    break;
-
-                case StoreRewardType.Item:
-                    _logic.TrySpawnProductUnits(reward.Id, user, reward.Amount);
-                    break;
-            }
-        }
+        Sawmill.Error($"[Claim] Reward execution failed after claim validation: {reason}");
     }
 
     private void FinalizeClaim(

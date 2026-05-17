@@ -13,10 +13,7 @@ public sealed partial class NcContractSystem : EntitySystem
     private const int MaxRewardDepth = 6;
     private const int DepthInProgress = -1;
     private static readonly ISawmill Sawmill = Logger.GetSawmill("nccontracts");
-    private readonly List<(EntityUid Store, string Difficulty)> _cooldownKeysToRemoveScratch = new();
-    private readonly Dictionary<(EntityUid Store, string Difficulty), CooldownState> _contractCooldown = new();
     private readonly Dictionary<string, int> _depthCache = new(StringComparer.Ordinal);
-    private readonly Dictionary<string, Dictionary<string, ContractPoolCandidate>> _flattenedPoolCache = new(StringComparer.Ordinal);
     [Dependency] private readonly NcStoreInventorySystem _inventory = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
@@ -62,9 +59,6 @@ public sealed partial class NcContractSystem : EntitySystem
         _contractMatcherCache.Clear();
         ClearRngCachesInternal();
 
-        _cooldownKeysToRemoveScratch.Clear();
-        _contractCooldown.Clear();
-        _flattenedPoolCache.Clear();
         _claimInProgress.Clear();
         _storesUpdatingProgress.Clear();
         _claimScratchInUse = false;
@@ -75,21 +69,6 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         if (store == EntityUid.Invalid)
             return;
-
-        if (_contractCooldown.Count > 0)
-        {
-            _cooldownKeysToRemoveScratch.Clear();
-            foreach (var key in _contractCooldown.Keys)
-            {
-                if (key.Store == store)
-                    _cooldownKeysToRemoveScratch.Add(key);
-            }
-
-            for (var i = 0; i < _cooldownKeysToRemoveScratch.Count; i++)
-                _contractCooldown.Remove(_cooldownKeysToRemoveScratch[i]);
-
-            _cooldownKeysToRemoveScratch.Clear();
-        }
 
         ClearStoreObjectiveRuntime(store, deleteTrackedEntities: true);
     }
@@ -145,50 +124,4 @@ public sealed partial class NcContractSystem : EntitySystem
         public int Min;
     }
 
-    private sealed class CooldownState
-    {
-        public readonly Dictionary<string, int> Counts = new(StringComparer.Ordinal);
-        public readonly Queue<string> Queue = new();
-
-        public int Limit;
-
-        public bool Contains(string id) => Limit > 0 && Counts.ContainsKey(id);
-
-        public void TrimToLimit()
-        {
-            if (Limit <= 0)
-            {
-                Queue.Clear();
-                Counts.Clear();
-                return;
-            }
-
-            while (Queue.Count > Limit)
-            {
-                var old = Queue.Dequeue();
-
-                if (!Counts.TryGetValue(old, out var c))
-                    continue;
-
-                c--;
-                if (c <= 0)
-                    Counts.Remove(old);
-                else
-                    Counts[old] = c;
-            }
-        }
-
-        public void Push(string id)
-        {
-            if (Limit <= 0 || string.IsNullOrWhiteSpace(id))
-                return;
-
-            Queue.Enqueue(id);
-
-            Counts.TryGetValue(id, out var c);
-            Counts[id] = c + 1;
-
-            TrimToLimit();
-        }
-    }
 }

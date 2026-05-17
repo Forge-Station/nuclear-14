@@ -1,5 +1,4 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server._NC.Trade;
@@ -14,20 +13,6 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             Sawmill.Warning($"[ContractsV2] Pack '{packId}' contains a retrieval contract with an empty prototype id.");
             return false;
-        }
-
-        if (string.IsNullOrWhiteSpace(proto.Difficulty))
-        {
-            Sawmill.Warning($"[ContractsV2] Retrieval contract '{proto.ID}' has empty difficulty. Contract skipped.");
-            valid = false;
-        }
-
-        if (proto.LegacyTargets.Count > 0 || proto.LegacySpawn != null || IsSupplyTargetCountConfigured(proto.LegacyTargetCount))
-        {
-            Sawmill.Warning(
-                $"[ContractsV2] Retrieval contract '{proto.ID}' uses legacy Retrieval Stage 1-4 fields. " +
-                "Use cargo + route + reward. Legacy fields targets/targetCount/spawn are rejected.");
-            valid = false;
         }
 
         if (proto.Cargo.Count == 0)
@@ -88,8 +73,7 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         NcRetrievalProofPresetPrototype? proof = null;
-        var proofId = ResolveRetrievalProofPresetId(route);
-        if (proofId is { } resolvedProofId)
+        if (route.Claim.Proof is { } resolvedProofId)
         {
             if (!_prototypes.TryIndex(resolvedProofId, out proof))
             {
@@ -126,6 +110,14 @@ public sealed partial class NcContractSystem : EntitySystem
             valid = false;
         }
 
+        if (route.Delivery.LockDeliveredCargo)
+        {
+            Sawmill.Warning(
+                $"[ContractsV2] Retrieval route '{route.ID}' uses delivery.lockDeliveredCargo=true. " +
+                "Persistent locked cargo is not implemented yet; use consumeCargo=true and lockDeliveredCargo=false.");
+            valid = false;
+        }
+
         return valid;
     }
 
@@ -137,22 +129,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         var valid = true;
 
-        if (route.Claim.Proof != null && route.Proof != null && !Equals(route.Claim.Proof, route.Proof))
-        {
-            Sawmill.Warning(
-                $"[ContractsV2] Retrieval route '{route.ID}' defines both legacy proof and claim.proof with different values. " +
-                "Use claim.proof only.");
-            valid = false;
-        }
-
-        if (route.Proof != null && route.Claim.Proof == null)
-        {
-            Sawmill.Warning(
-                $"[ContractsV2] Retrieval route '{route.ID}' uses legacy top-level proof. " +
-                "Move it to claim.proof and set claim.mode: DestinationProof.");
-        }
-
-        var claimMode = ResolveRetrievalClaimMode(route, proof);
+        var claimMode = route.Claim.Mode;
         switch (claimMode)
         {
             case NcRetrievalClaimMode.StoreCargo:
@@ -307,43 +284,6 @@ public sealed partial class NcContractSystem : EntitySystem
         return valid;
     }
 
-    private bool TryValidateRetrievalSpawn(NcRetrievalContractPrototype proto)
-    {
-        var spawn = proto.Spawn;
-        if (spawn == null || !spawn.Enabled)
-            return true;
-
-        var valid = true;
-
-        if (spawn.Point == null)
-        {
-            Sawmill.Warning(
-                $"[ContractsV2] Retrieval contract '{proto.ID}' has spawn enabled but no spawn.point selector.");
-            valid = false;
-        }
-        else if (!TryValidateRetrievalSpawnPointSelector(proto.ID, spawn.Point))
-        {
-            valid = false;
-        }
-
-        for (var i = 0; i < proto.Targets.Count; i++)
-        {
-            var target = proto.Targets[i];
-            if (string.IsNullOrWhiteSpace(target.Group))
-                continue;
-
-            if (!_prototypes.TryIndex<NcItemGroupPrototype>(target.Group, out var group))
-                continue;
-
-            if (TryValidateRetrievalSpawnableGroup(proto.ID, i, target.Group, group))
-                continue;
-
-            valid = false;
-        }
-
-        return valid;
-    }
-
     private bool TryValidateRetrievalSpawnPointSelector(
         string contractId,
         ContractPointSelectorPrototype selector)
@@ -432,53 +372,6 @@ public sealed partial class NcContractSystem : EntitySystem
         Sawmill.Warning(
             $"[ContractsV2] Retrieval contract '{contractId}' spawn.point has unsupported selector type {type}.");
         return false;
-    }
-
-    private bool TryValidateRetrievalSpawnableGroup(
-        string contractId,
-        int index,
-        string groupId,
-        NcItemGroupPrototype group)
-    {
-        for (var i = 0; i < group.Prototypes.Count; i++)
-        {
-            var prototypeId = group.Prototypes[i];
-            if (string.IsNullOrWhiteSpace(prototypeId))
-                continue;
-
-            if (_prototypes.HasIndex<EntityPrototype>(prototypeId))
-                return true;
-        }
-
-        Sawmill.Warning(
-            $"[ContractsV2] Retrieval contract '{contractId}' has spawn enabled but target #{index} uses group '{groupId}' " +
-            "with no spawnable entity prototypes. Tags-only groups can match turn-in items, but cannot spawn retrieval items.");
-        return false;
-    }
-
-    private bool TryValidateRetrievalTargetCount(NcRetrievalContractPrototype proto)
-    {
-        if (!IsSupplyTargetCountConfigured(proto.TargetCount))
-            return true;
-
-        var range = proto.TargetCount;
-        if (range.Min < 1 || range.Max < 1 || range.Min > range.Max)
-        {
-            Sawmill.Warning(
-                $"[ContractsV2] Retrieval contract '{proto.ID}' has invalid targetCount range " +
-                $"{range.Min}..{range.Max}. Expected min >= 1, max >= min.");
-            return false;
-        }
-
-        if (proto.Targets.Count > 0 && range.Max > proto.Targets.Count)
-        {
-            Sawmill.Warning(
-                $"[ContractsV2] Retrieval contract '{proto.ID}' has targetCount max={range.Max}, " +
-                $"but only {proto.Targets.Count} targets are defined.");
-            return false;
-        }
-
-        return true;
     }
 
     private bool TryValidateRetrievalCargo(

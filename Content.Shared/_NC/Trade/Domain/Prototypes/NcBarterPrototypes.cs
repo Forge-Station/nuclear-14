@@ -40,7 +40,7 @@ public sealed partial class NcBarterReceiveEntry
 [DataDefinition, Serializable, NetSerializable]
 public sealed partial class NcBarterReceivePoolEntry
 {
-    /// <summary>Weighted reward pool id. Uses ncContractRewardPool entries for now.</summary>
+    /// <summary>Weighted reward pool id. Uses ncSupplyRewardPool entries.</summary>
     [DataField("pool", required: true)]
     public string Pool { get; set; } = string.Empty;
 
@@ -107,4 +107,3 @@ public sealed partial class NcBarterPresetPrototype : IPrototype
     [DataField("categories", required: true)]
     public List<ProtoId<NcBarterCategoryPrototype>> Categories { get; private set; } = new();
 }
-

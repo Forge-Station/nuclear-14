@@ -62,7 +62,7 @@ public sealed partial class NcContractCard : PanelContainer
     public void ApplyUiTheme(StoreUiColorsData colors)
     {
         _uiColors = colors;
-        ApplyDifficultyChrome();
+        ApplyOfferChrome();
         PopulateActionsSection();
     }
 
@@ -74,9 +74,25 @@ public sealed partial class NcContractCard : PanelContainer
             color.B * factor,
             color.A);
 
+    private Color ResolveOfferAccent()
+    {
+        var themed = NcStoreUiTheme.ResolveColor(_uiColors.CategoryButtonSelected, "#4F86B7");
+        if (string.IsNullOrWhiteSpace(_data.OfferPoolColor))
+            return themed;
+
+        try
+        {
+            return Color.FromHex(_data.OfferPoolColor.Trim());
+        }
+        catch
+        {
+            return themed;
+        }
+    }
+
     private void PopulateUi()
     {
-        ApplyDifficultyChrome();
+        ApplyOfferChrome();
         PopulateHeader();
         PopulateDescription();
         PopulateStatus();
@@ -89,9 +105,9 @@ public sealed partial class NcContractCard : PanelContainer
         SyncDescriptionWidth(Size.X);
     }
 
-    private void ApplyDifficultyChrome()
+    private void ApplyOfferChrome()
     {
-        var baseAccent = NcStoreUiTheme.ResolveColor(_uiColors.CategoryButtonSelected, "#4F86B7");
+        var baseAccent = ResolveOfferAccent();
         var accent = _data.Completed
             ? Dim(baseAccent, 0.55f)
             : baseAccent;
@@ -166,6 +182,18 @@ public sealed partial class NcContractCard : PanelContainer
         TitleLabel.ToolTip = title;
 
         BadgesRow.RemoveAllChildren();
+
+        if (!string.IsNullOrWhiteSpace(_data.OfferPoolName))
+        {
+            var poolName = _data.OfferPoolName.Trim();
+            var accent = ResolveOfferAccent();
+            BadgesRow.AddChild(
+                BuildBadge(
+                    poolName,
+                    $"Группа витрины: {poolName}",
+                    Dim(accent, 0.28f),
+                    accent));
+        }
 
         var objectiveTypeText = ObjectiveTypeName(_data.ExecutionKind);
         var objectiveTypeTip = ObjectiveTypeTooltip(_data.ExecutionKind);

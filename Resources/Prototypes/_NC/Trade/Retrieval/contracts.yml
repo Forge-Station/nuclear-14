@@ -5,7 +5,6 @@
   id: NcRetrievalCitySnacksStoreUi
   name: "Поиск: снеки"
   description: "Принесите торговцу любой найденный снек."
-  difficulty: Easy
   icon: FoodSnackChips
   cargo:
   - group: NcSupplyGroupSnacks
@@ -20,7 +19,6 @@
   id: NcRetrievalCityThreeSnackCargoDropoff
   name: "Доставка: три ящика припасов"
   description: "Найдите три груза с припасами, доставьте их к точке выгрузки и принесите торговцу накладную."
-  difficulty: Medium
   icon: FoodSnackChips
   cargo:
   - prototype: FoodSnackChips
@@ -30,11 +28,3 @@
   - type: Currency
     currency: Caps
     count: 180
-
-- type: ncContractPackV2
-  id: TradeContractsCityRetrievalRoutePack
-  retrieval:
-  - id: NcRetrievalCitySnacksStoreUi
-    weight: 3
-  - id: NcRetrievalCityThreeSnackCargoDropoff
-    weight: 1

@@ -38,7 +38,7 @@
 
 - type: storeCategoryStructured
   id: NcTradeSmokeBuyCategory
-  name: "Smoke: покупка"
+  name: "Покупка"
   entries:
   - proto: FoodSnackChips
     price: 1
@@ -55,7 +55,7 @@
 
 - type: storeCategoryStructured
   id: NcTradeSmokeSellCategory
-  name: "Smoke: продажа"
+  name: "Продажа"
   entries:
   - proto: FoodSnackChips
     price: 1
@@ -70,14 +70,14 @@
 
 - type: ncItemGroup
   id: NcTradeSmokeGroupSnacks
-  name: "Smoke snacks"
+  name: "Снеки"
   icon: FoodSnackChips
   prototypes:
   - FoodSnackChips
 
 - type: ncItemGroup
   id: NcTradeSmokeGroupKnives
-  name: "Smoke knives"
+  name: "Ножи"
   icon: N14KitchenKnife
   prototypes:
   - N14KitchenKnife
@@ -86,7 +86,7 @@
 # Larger copper stack variants should still match through StackTypeId after Patch 5.2.
 - type: ncItemGroup
   id: NcTradeSmokeGroupCopperStacks
-  name: "Smoke copper stacks"
+  name: "Медные слитки"
   icon: N14IngotCopper1
   prototypes:
   - N14IngotCopper1
@@ -99,7 +99,7 @@
 # The contract still accepts any matching item; tracked-item identity is a later stage.
 - type: entity
   id: NcTradeSmokeRetrievalSpawnMarker
-  name: trade smoke retrieval spawn marker
+  name: контрактная точка появления груза
   suffix: NC, Smoke
   categories: [ HideSpawnMenu ]
   components:
@@ -119,7 +119,7 @@
 
 - type: ncBarterCategory
   id: NcTradeSmokeBarterCategory
-  name: "Smoke: бартер"
+  name: "Бартер"
   listings:
   - NcTradeSmokeBarterCapsToCaps
   - NcTradeSmokeBarterPrototypeToPrototype
@@ -130,8 +130,8 @@
 
 - type: ncBarterListing
   id: NcTradeSmokeBarterCapsToCaps
-  name: "Smoke: currency → currency"
-  description: "Проверка фиксированного обмена валюты. Намеренно убыточный обмен: 2 caps → 1 cap."
+  name: "Обмен крышек"
+  description: "Обменяйте 2 крышки на 1 крышку. Тестовый убыточный обмен для проверки списания валюты."
   icon: FoodSnackChips
   cost:
   - currency: Caps
@@ -142,8 +142,8 @@
 
 - type: ncBarterListing
   id: NcTradeSmokeBarterPrototypeToPrototype
-  name: "Smoke: prototype → prototype"
-  description: "Проверка списания и выдачи обычных entity prototype."
+  name: "Снек на нож"
+  description: "Сдайте снек и получите кухонный нож."
   icon: N14KitchenKnife
   cost:
   - prototype: FoodSnackChips
@@ -154,8 +154,8 @@
 
 - type: ncBarterListing
   id: NcTradeSmokeBarterGroupToCurrency
-  name: "Smoke: group → currency"
-  description: "Проверка cost по ncItemGroup и выдачи валюты."
+  name: "Ножи за крышки"
+  description: "Сдайте любой подходящий нож и получите крышки."
   icon: N14KitchenKnife
   cost:
   - group: NcTradeSmokeGroupKnives
@@ -166,8 +166,8 @@
 
 - type: ncBarterListing
   id: NcTradeSmokeBarterReceivePool
-  name: "Smoke: receive pool"
-  description: "Проверка Barter receivePools. Pool остаётся legacy ncContractRewardPool, не ncSupplyRewardPool."
+  name: "Случайная награда"
+  description: "Обменяйте крышку на одну случайную награду из тестового пула."
   icon: FoodSnackChips
   cost:
   - currency: Caps
@@ -178,8 +178,8 @@
 
 - type: ncBarterListing
   id: NcTradeSmokeBarterDuplicateCurrencyCost
-  name: "Smoke: duplicate currency cost"
-  description: "Проверка суммарного резервирования одинаковой валюты в нескольких cost entries."
+  name: "Двойная цена в крышках"
+  description: "Проверяет, что несколько строк цены в одной валюте суммируются правильно."
   icon: FoodSnackChips
   cost:
   - currency: Caps
@@ -192,8 +192,8 @@
 
 - type: ncBarterListing
   id: NcTradeSmokeBarterGroupPrototypeOverlap
-  name: "Smoke: group + prototype overlap"
-  description: "Критичный кейс: group включает N14KitchenKnife, а второй cost требует тот же prototype. 2 ножа не должны пройти; 4 подходящие единицы должны пройти."
+  name: "Сложный обмен ножей"
+  description: "Сдайте 4 подходящих ножа. Один и тот же предмет не должен засчитываться дважды."
   icon: N14KitchenKnife
   cost:
   - group: NcTradeSmokeGroupKnives
@@ -204,8 +204,8 @@
   - currency: Caps
     count: 10
 
-# Barter receivePools still intentionally use the legacy/general pool type.
-- type: ncContractRewardPool
+# Barter receivePools use the same strict reward pool format as contracts.
+- type: ncSupplyRewardPool
   id: NcTradeSmokeBarterReceivePoolBasic
   entries:
   - type: Currency
@@ -223,29 +223,57 @@
 
 - type: storeContractsPreset
   id: NcTradeSmokeContractsPreset
-  limits:
-    Easy: 6
-    Medium: 5
-  packsV2:
-  - id: NcTradeSmokeSupplyPackV2
-    weight: 1
-  - id: NcTradeSmokeRetrievalPackV2
-    weight: 1
+  contractOffers:
+    maxVisible: 11
+    groups:
+    - pool: NcTradeSmokeOfferPoolSupply
+      minVisible: 3
+      maxVisible: 5
+      fillWeight: 5
+    - pool: NcTradeSmokeOfferPoolRetrieval
+      minVisible: 3
+      maxVisible: 5
+      fillWeight: 5
+    - pool: NcTradeSmokeOfferPoolHunt
+      minVisible: 1
+      maxVisible: 1
+      fillWeight: 1
   skipCost: 0
   skipCurrency: Caps
 
-- type: ncContractPackV2
-  id: NcTradeSmokeSupplyPackV2
-  supply:
-  - id: NcTradeSmokeSupplyPrototypeTarget
+- type: ncContractOfferPool
+  id: NcTradeSmokeOfferPoolSupply
+  name: "Поставки"
+  order: 10
+  color: "#9EBD6E"
+  entries:
+  - type: Supply
+    id: NcTradeSmokeSupplyPrototypeTarget
     weight: 1
-  - id: NcTradeSmokeSupplyGroupTarget
+  - type: Supply
+    id: NcTradeSmokeSupplyGroupTarget
     weight: 1
-  - id: NcTradeSmokeSupplyStackGroupTarget
+  - type: Supply
+    id: NcTradeSmokeSupplyStackGroupTarget
     weight: 1
-  - id: NcTradeSmokeSupplyMultiTarget
+  - type: Supply
+    id: NcTradeSmokeSupplyMultiTarget
     weight: 1
-  - id: NcTradeSmokeSupplyWeightedTargets
+  - type: Supply
+    id: NcTradeSmokeSupplyWeightedTargets
+    weight: 1
+
+- type: ncContractOfferPool
+  id: NcTradeSmokeOfferPoolHunt
+  name: "Охота"
+  order: 30
+  color: "#D86B58"
+  entries:
+  - type: Hunt
+    id: NcTradeSmokeHuntTrophyTurnInRadroach
+    weight: 1
+  - type: Hunt
+    id: NcTradeSmokeHuntTrophyTurnInRadroachGroup
     weight: 1
 
 - type: ncSupplyRewardPool
@@ -260,11 +288,18 @@
     count: { min: 1, max: 2 }
     weight: 1
 
+- type: ncSupplyRewardPool
+  id: NcTradeSmokeSupplyRewardPoolNested
+  entries:
+  - type: Pool
+    pool: NcTradeSmokeSupplyRewardPoolBasic
+    count: 1
+    weight: 1
+
 - type: ncSupplyContract
   id: NcTradeSmokeSupplyPrototypeTarget
-  name: "Smoke supply: prototype target"
-  description: "Принесите 2 снека. Проверяет exact prototype target + Currency reward."
-  difficulty: Easy
+  name: "Поставка: снеки"
+  description: "Принесите торговцу 2 пачки снеков."
   icon: FoodSnackChips
   targets:
   - prototype: FoodSnackChips
@@ -276,9 +311,8 @@
 
 - type: ncSupplyContract
   id: NcTradeSmokeSupplyGroupTarget
-  name: "Smoke supply: group target"
-  description: "Принесите 2 ножа из ncItemGroup. Проверяет group target + Item reward."
-  difficulty: Easy
+  name: "Поставка: кухонные ножи"
+  description: "Принесите торговцу 2 подходящих ножа."
   icon: N14KitchenKnife
   targets:
   - group: NcTradeSmokeGroupKnives
@@ -290,9 +324,8 @@
 
 - type: ncSupplyContract
   id: NcTradeSmokeSupplyStackGroupTarget
-  name: "Smoke supply: stack group target"
-  description: "Группа содержит N14IngotCopper1; больший copper stack с тем же StackTypeId должен засчитываться."
-  difficulty: Easy
+  name: "Поставка: медные слитки"
+  description: "Принесите медные слитки. Большие стаки тоже должны засчитываться."
   icon: N14IngotCopper1
   targets:
   - group: NcTradeSmokeGroupCopperStacks
@@ -304,9 +337,8 @@
 
 - type: ncSupplyContract
   id: NcTradeSmokeSupplyMultiTarget
-  name: "Smoke supply: multi target"
-  description: "Принесите ножи и слитки. Проверяет несколько обязательных targets и mixed rewards."
-  difficulty: Medium
+  name: "Поставка: ножи и медь"
+  description: "Принесите ножи и медные слитки одним заказом."
   icon: N14IngotCopper1
   targets:
   - group: NcTradeSmokeGroupKnives
@@ -323,9 +355,8 @@
 
 - type: ncSupplyContract
   id: NcTradeSmokeSupplyWeightedTargets
-  name: "Smoke supply: targetCount"
-  description: "Выбирает 1–2 цели из weighted pool. Проверяет targetCount, count ranges и Pool reward."
-  difficulty: Medium
+  name: "Поставка: случайная заявка"
+  description: "Торговец выберет одну или две позиции из списка поставки."
   icon: FoodSnackChips
   targetCount: { min: 1, max: 2 }
   targets:
@@ -340,8 +371,75 @@
     weight: 1
   reward:
   - type: Pool
-    pool: NcTradeSmokeSupplyRewardPoolBasic
+    pool: NcTradeSmokeSupplyRewardPoolNested
     count: 1
+
+# -----------------------------------------------------------------------------
+# Hunt V2 smoke content (stage 8.0-A: prototype + validation only)
+# -----------------------------------------------------------------------------
+
+- type: ncHuntGroup
+  id: NcTradeSmokeHuntGroupRadroaches
+  name: "Радтараканы"
+  description: "Контрактные цели: обычные радтараканы."
+  icon: N14MobRadroach
+  prototypes:
+  - N14MobRadroach
+
+- type: entity
+  id: NcTradeSmokeHuntProofRadroach
+  parent: FoodSnackChips
+  name: трофей радтаракана
+  description: Финальный трофей Hunt V2. Появляется только после последнего нужного убийства.
+  suffix: NC, Smoke, Hunt
+  categories: [ HideSpawnMenu ]
+
+- type: ncHuntContract
+  id: NcTradeSmokeHuntConfirmedKillRadroach
+  name: "Охота: стая радтараканов"
+  description: "Убейте указанное количество радтараканов."
+  icon: N14MobRadroach
+  target:
+    group: NcTradeSmokeHuntGroupRadroaches
+    count: 5
+  completion:
+    mode: ConfirmedKill
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 120
+
+- type: ncHuntContract
+  id: NcTradeSmokeHuntTrophyTurnInRadroach
+  name: "Охота: трофей радтаракана"
+  description: "Убейте 3 радтараканов и принесите финальный трофей торговцу."
+  icon: N14MobRadroach
+  target:
+    prototype: N14MobRadroach
+    count: 3
+  completion:
+    mode: TrophyTurnIn
+    trophy: NcTradeSmokeHuntProofRadroach
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 180
+
+- type: ncHuntContract
+  id: NcTradeSmokeHuntTrophyTurnInRadroachGroup
+  name: "Охота: гнездо радтараканов"
+  description: "Убейте 3 цели из группы радтараканов и принесите финальный трофей."
+  icon: N14MobRadroach
+  target:
+    group: NcTradeSmokeHuntGroupRadroaches
+    count: 3
+  completion:
+    mode: TrophyTurnIn
+    trophy: NcTradeSmokeHuntProofRadroach
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 200
 
 
 # -----------------------------------------------------------------------------
@@ -350,7 +448,7 @@
 
 - type: entity
   id: NcTradeSmokeTraderTurnInBox
-  name: trade smoke turn-in box
+  name: контрактный ящик сдачи
   suffix: NC, Smoke
   categories: [ HideSpawnMenu ]
   components:
@@ -393,7 +491,7 @@
 
 - type: entity
   id: NcTradeSmokeDeliveryReceipt
-  name: smoke delivery receipt
+  name: контрактная накладная
   suffix: NC, Smoke
   categories: [ HideSpawnMenu ]
   components:
@@ -401,8 +499,8 @@
 
 - type: ncRetrievalGuidancePreset
   id: NcTradeSmokeGuidanceCargoToStore
-  sourceHint: "Груз появился на smoke-маркере."
-  destinationHint: "Верните доказательство торговцу."
+  sourceHint: "Груз отмечен в контрактной зоне."
+  destinationHint: "Верните накладную торговцу."
   pinpointer:
     enabled: true
     target: CargoThenDestinationThenStore
@@ -457,27 +555,35 @@
 # Contracts / Retrieval Route 5.8R
 # -----------------------------------------------------------------------------
 
-- type: ncContractPackV2
-  id: NcTradeSmokeRetrievalPackV2
-  retrieval:
-  - id: NcTradeSmokeRetrievalAnySnack
+- type: ncContractOfferPool
+  id: NcTradeSmokeOfferPoolRetrieval
+  name: "Доставка"
+  order: 20
+  color: "#6BA7D8"
+  entries:
+  - type: Retrieval
+    id: NcTradeSmokeRetrievalAnySnack
     weight: 1
-  - id: NcTradeSmokeRetrievalThreeSnacksStoreUi
+  - type: Retrieval
+    id: NcTradeSmokeRetrievalThreeSnacksStoreUi
     weight: 1
-  - id: NcTradeSmokeRetrievalTrackedSnackStoreUi
+  - type: Retrieval
+    id: NcTradeSmokeRetrievalTrackedSnackStoreUi
     weight: 1
-  - id: NcTradeSmokeRetrievalThreeCratesToMarkerProof
+  - type: Retrieval
+    id: NcTradeSmokeRetrievalThreeCratesToMarkerProof
     weight: 1
-  - id: NcTradeSmokeRetrievalSnackToTraderBoxProof
+  - type: Retrieval
+    id: NcTradeSmokeRetrievalSnackToTraderBoxProof
     weight: 1
-  - id: NcTradeSmokeRetrievalPinpointerReadyToTurnIn
+  - type: Retrieval
+    id: NcTradeSmokeRetrievalPinpointerReadyToTurnIn
     weight: 1
 
 - type: ncRetrievalContract
   id: NcTradeSmokeRetrievalAnySnack
-  name: "Smoke retrieval route: any snack"
-  description: "Принесите любой снек через StoreUi. Проверяет cargo + route без source/proof."
-  difficulty: Easy
+  name: "Доставка: снек торговцу"
+  description: "Принесите торговцу один подходящий снек."
   icon: FoodSnackChips
   cargo:
   - prototype: FoodSnackChips
@@ -490,9 +596,8 @@
 
 - type: ncRetrievalContract
   id: NcTradeSmokeRetrievalThreeSnacksStoreUi
-  name: "Smoke retrieval route: 3 snacks StoreCargo"
-  description: "Принесите 3 снека через StoreUi. Проверяет StoreCargo с cargo.count: 3 без proof."
-  difficulty: Medium
+  name: "Доставка: партия снеков"
+  description: "Принесите торговцу 3 снека. Накладная для этого заказа не нужна."
   icon: FoodSnackChips
   cargo:
   - prototype: FoodSnackChips
@@ -505,9 +610,8 @@
 
 - type: ncRetrievalContract
   id: NcTradeSmokeRetrievalTrackedSnackStoreUi
-  name: "Smoke retrieval route: spawned snack StoreUi"
-  description: "Спавнит снек на маркере и требует spawned cargo через StoreUi."
-  difficulty: Medium
+  name: "Поиск: отмеченный снек"
+  description: "Найдите отмеченный груз в контрактной зоне и сдайте его торговцу."
   icon: FoodSnackChips
   cargo:
   - prototype: FoodSnackChips
@@ -520,9 +624,8 @@
 
 - type: ncRetrievalContract
   id: NcTradeSmokeRetrievalThreeCratesToMarkerProof
-  name: "Smoke retrieval route: 3 snacks to marker proof"
-  description: "Спавнит 3 cargo, доставка к marker destination создаёт transferable bearer proof."
-  difficulty: Hard
+  name: "Доставка: 3 груза к точке"
+  description: "Доставьте 3 груза в точку выгрузки и принесите торговцу накладную."
   icon: FoodSnackChips
   cargo:
   - prototype: FoodSnackChips
@@ -535,9 +638,8 @@
 
 - type: ncRetrievalContract
   id: NcTradeSmokeRetrievalSnackToTraderBoxProof
-  name: "Smoke retrieval route: cargo to trader box proof"
-  description: "Спавнит cargo, надо положить его в NcContractTurnInContainer, затем принести proof торговцу."
-  difficulty: Hard
+  name: "Доставка: груз в ящик"
+  description: "Положите груз в контрактный ящик и принесите торговцу накладную."
   icon: FoodSnackChips
   cargo:
   - prototype: FoodSnackChips
@@ -550,9 +652,8 @@
 
 - type: ncRetrievalContract
   id: NcTradeSmokeRetrievalPinpointerReadyToTurnIn
-  name: "Smoke retrieval route: pinpointer after proof"
-  description: "Проверка 5.8R-B: после выдачи proof и even при consumeCargo=true повторный запрос pinpointer должен вести к торговцу."
-  difficulty: Hard
+  name: "Доставка: проверка пеленгатора"
+  description: "После доставки накладной пеленгатор должен вести обратно к торговцу."
   icon: FoodSnackChips
   cargo:
   - prototype: FoodSnackChips

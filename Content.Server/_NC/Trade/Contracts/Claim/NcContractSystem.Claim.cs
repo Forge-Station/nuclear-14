@@ -104,6 +104,9 @@ public sealed partial class NcContractSystem : EntitySystem
                 $"Retrieval route cargo for '{contractId}' has not been fully delivered yet.");
         }
 
+        if (!TryValidateContractRewards(user, contract.Rewards, out var rewardFail))
+            return rewardFail;
+
         if (contract.Config.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof &&
             !TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail))
         {
@@ -135,6 +138,9 @@ public sealed partial class NcContractSystem : EntitySystem
                 ClaimFailureReason.ObjectiveNotCompleted,
                 $"Objective progress {contract.Progress}/{contract.Required} for '{contractId}'.");
         }
+
+        if (!TryValidateContractRewards(user, contract.Rewards, out var rewardFail))
+            return rewardFail;
 
         if (!TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail))
             return proofFail;

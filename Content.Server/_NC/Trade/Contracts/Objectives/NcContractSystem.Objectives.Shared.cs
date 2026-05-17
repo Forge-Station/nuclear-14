@@ -263,6 +263,12 @@ public sealed partial class NcContractSystem : EntitySystem
         state.ProofSpawned = false;
         state.ProofToken = string.Empty;
 
+        if (state.HuntV2Active)
+        {
+            state.HuntV2Active = false;
+            _activeHuntV2Objectives = Math.Max(0, _activeHuntV2Objectives - 1);
+        }
+
         if (state.RetrievalRouteDeliveryActive)
         {
             state.RetrievalRouteDeliveryActive = false;
@@ -346,6 +352,7 @@ public sealed partial class NcContractSystem : EntitySystem
         public TimeSpan? GhostRoleAcceptDeadline;
         public bool GhostRoleTaken;
         public bool HuntTargetWasKilled;
+        public bool HuntV2Active;
         public EntityCoordinates? LastKnownTargetCoordinates;
         public EntityUid? ProofEntity;
         public bool ProofSpawned;
@@ -354,7 +361,6 @@ public sealed partial class NcContractSystem : EntitySystem
         public EntityUid? TargetEntity;
     }
 }
-
 
 
 

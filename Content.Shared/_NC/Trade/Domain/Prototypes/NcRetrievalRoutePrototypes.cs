@@ -158,7 +158,7 @@ public sealed partial class NcRetrievalRouteDeliveryData
     public bool ConsumeCargo { get; set; } = true;
 
     [DataField("lockDeliveredCargo")]
-    public bool LockDeliveredCargo { get; set; } = true;
+    public bool LockDeliveredCargo { get; set; } = false;
 }
 
 [DataDefinition]
@@ -186,13 +186,6 @@ public sealed partial class NcRetrievalRoutePresetPrototype : IPrototype
 
     [DataField("destination", required: true)]
     public ProtoId<NcRetrievalDestinationPresetPrototype> Destination { get; private set; }
-
-    /// <summary>
-    /// Legacy 5.8R field. New route YAML should use claim.proof with claim.mode: DestinationProof.
-    /// Kept for migration so existing content can still load while the audit rejects new usage.
-    /// </summary>
-    [DataField("proof")]
-    public ProtoId<NcRetrievalProofPresetPrototype>? Proof { get; private set; }
 
     [DataField("claim")]
     public NcRetrievalRouteClaimData Claim { get; private set; } = new();

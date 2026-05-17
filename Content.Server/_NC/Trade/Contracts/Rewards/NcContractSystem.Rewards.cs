@@ -7,11 +7,6 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private List<ContractRewardData> BakeRewardsForContract(EntityUid store, StoreContractPrototype proto)
-    {
-        return BakeRewardsForContract(store, proto.ID, proto.Rewards);
-    }
-
     private List<ContractRewardData> BakeRewardsForContract(
         EntityUid store,
         string contractProtoId,
@@ -118,13 +113,6 @@ public sealed partial class NcContractSystem : EntitySystem
                 out options);
         }
 
-        if (!string.IsNullOrWhiteSpace(poolId) &&
-            _prototypes.TryIndex<NcContractRewardPoolPrototype>(poolId, out var poolProto) &&
-            poolProto.Entries is { Count: > 0 } prototypeOptions)
-        {
-            return TryValidateResolvedRewardPoolOptions(poolDef, prototypeOptions, out options);
-        }
-
         options = default!;
         return false;
     }
@@ -140,6 +128,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 Type = entry.Type,
                 Prototype = entry.Prototype,
                 Currency = entry.Currency,
+                Pool = entry.Pool,
                 Count = entry.Count,
                 Weight = entry.Weight,
                 MaxRepeats = entry.MaxRepeats

@@ -1,253 +1,303 @@
-- type: ncContractRewardPool
+- type: ncSupplyRewardPool
   id: caravan_easy
   entries:
   - type: Item
-    id: N14Stimpak
-    amount: { min: 1, max: 2 }
+    prototype: N14Stimpak
+    count: { min: 1, max: 2 }
     weight: 2
   - type: Item
-    id: N14ScrapMachete
+    prototype: N14ScrapMachete
+    count: 1
     weight: 2
   - type: Item
-    id: N14WeaponLaserRevolver
+    prototype: N14WeaponLaserRevolver
+    count: 1
     weight: 1
   - type: Item
-    id: N14WeaponPistol9mmChinese
+    prototype: N14WeaponPistol9mmChinese
+    count: 1
     weight: 1
   - type: Item
-    id: N14Gunpowder1
-    amount: { min: 4, max: 8 }
+    prototype: N14Gunpowder1
+    count: { min: 4, max: 8 }
     weight: 3
   - type: Item
-    id: SheetSteel1
-    amount: { min: 4, max: 8 }
+    prototype: SheetSteel1
+    count: { min: 4, max: 8 }
     weight: 3
   - type: Item
-    id: N14IngotLead1
-    amount: { min: 4, max: 8 }
+    prototype: N14IngotLead1
+    count: { min: 4, max: 8 }
     weight: 2
   - type: Item
-    id: N14IngotBrass1
-    amount: { min: 4, max: 8 }
+    prototype: N14IngotBrass1
+    count: { min: 4, max: 8 }
     weight: 3
   - type: Item
-    id: N14WeaponSMG10mmSuppressed
+    prototype: N14WeaponSMG10mmSuppressed
+    count: 1
     weight: 1
   - type: Item
-    id: N14RadAwayBloodbag
-    amount: { min: 1, max: 2 }
+    prototype: N14RadAwayBloodbag
+    count: { min: 1, max: 2 }
     weight: 3
   - type: Item
-    id: N14Antidote
-    amount: { min: 1, max: 2 }
+    prototype: N14Antidote
+    count: { min: 1, max: 2 }
     weight: 3
   - type: Item
-    id: N14ClothingOuterLeatherArmor
+    prototype: N14ClothingOuterLeatherArmor
+    count: 1
     weight: 3
   - type: Item
-    id: N14WeaponPistol10mmPipe
+    prototype: N14WeaponPistol10mmPipe
+    count: 1
     weight: 1
   - type: Item
-    id: N14ClothingHeadHatPrewarMilitaryHelmet
+    prototype: N14ClothingHeadHatPrewarMilitaryHelmet
+    count: 1
     weight: 1
   - type: Item
-    id: N14WeaponPistol9mmSpy
+    prototype: N14WeaponPistol9mmSpy
+    count: 1
     weight: 1
   - type: Item
-    id: N14LongSword
+    prototype: N14LongSword
+    count: 1
     weight: 1
   - type: Item
-    id: N14ClothingOuterCombatRusted
+    prototype: N14ClothingOuterCombatRusted
+    count: 1
     weight: 2
   - type: Item
-    id: N14ClothingOuterPainspike
+    prototype: N14ClothingOuterPainspike
+    count: 1
     weight: 2
   - type: Item
-    id: N14WeaponSMG12mmPipe
+    prototype: N14WeaponSMG12mmPipe
+    count: 1
     weight: 1
 
 
-- type: ncContractRewardPool
+- type: ncSupplyRewardPool
   id: caravan_medium
   entries:
   - type: Item
-    id: N14Stimpak
-    amount: { min: 2, max: 4 }
+    prototype: N14Stimpak
+    count: { min: 2, max: 4 }
     weight: 2
   - type: Item
-    id: N14WeaponShotgun
+    prototype: N14WeaponShotgun
+    count: 1
     weight: 1
   - type: Item
-    id: N14WeaponLaserRifleCrude
+    prototype: N14WeaponLaserRifleCrude
+    count: 1
     weight: 1
   - type: Item
-    id: N14WeaponPistol9mmSpy
+    prototype: N14WeaponPistol9mmSpy
+    count: 1
     weight: 1
   - type: Item
-    id: N14MedkitFilled
+    prototype: N14MedkitFilled
+    count: 1
     weight: 1
   - type: Item
-    id: N14ClothingOuterTownHeavyCoat
+    prototype: N14ClothingOuterTownHeavyCoat
+    count: 1
     weight: 1
   - type: Item
-    id: N14ClothingOuterZealotDuster
+    prototype: N14ClothingOuterZealotDuster
+    count: 1
     weight: 1
   - type: Item
-    id: N14ClothingMaskGasZealotGasMask
+    prototype: N14ClothingMaskGasZealotGasMask
+    count: 1
     weight: 1
   - type: Item
-    id: N14WeaponSniper308TribalUpgraded
+    prototype: N14WeaponSniper308TribalUpgraded
+    count: 1
     weight: 2
   - type: Item
-    id: N14RadAwayInhaler
-    amount: { min: 2, max: 3 }
+    prototype: N14RadAwayInhaler
+    count: { min: 2, max: 3 }
     weight: 2
   - type: Item
-    id: N14Antidote
-    amount: { min: 2, max: 3 }
+    prototype: N14Antidote
+    count: { min: 2, max: 3 }
     weight: 2
   - type: Item
-    id: N14ClothingOuterCombatArmor
+    prototype: N14ClothingOuterCombatArmor
+    count: 1
     weight: 1
   - type: Item
-    id: N14WeaponSMG10mm
+    prototype: N14WeaponSMG10mm
+    count: 1
     weight: 2
   - type: Item
-    id: N14ClothingHeadHatCombatHelmet
+    prototype: N14ClothingHeadHatCombatHelmet
+    count: 1
     weight: 1
   - type: Item
-    id: N14ChineseSword
+    prototype: N14ChineseSword
+    count: 1
     weight: 2
   - type: Item
-    id: N14WeaponRifle762SKS
+    prototype: N14WeaponRifle762SKS
+    count: 1
     weight: 1
   - type: Item
-    id: N14ClothingHeadHatChineseHelmet
+    prototype: N14ClothingHeadHatChineseHelmet
+    count: 1
     weight: 2
   - type: Item
-    id: N14ClothingOuterPoliceVest
+    prototype: N14ClothingOuterPoliceVest
+    count: 1
     weight: 2
   - type: Item
-    id: N14ClothingScavengerHeavyArmor
+    prototype: N14ClothingScavengerHeavyArmor
+    count: 1
     weight: 2
   - type: Item
-    id: N14WeaponSniper44LeverCarbine
+    prototype: N14WeaponSniper44LeverCarbine
+    count: 1
     weight: 1
   - type: Item
-    id: N14WeaponSniperHunting
+    prototype: N14WeaponSniperHunting
+    count: 1
     weight: 1
   - type: Item
-    id: N14WeaponRifle556R91
+    prototype: N14WeaponRifle556R91
+    count: 1
     weight: 1
   - type: Item
-    id: N14WeaponRifle556CarbineOld
+    prototype: N14WeaponRifle556CarbineOld
+    count: 1
     weight: 1
   - type: Item
-    id: JunkCannon
+    prototype: JunkCannon
+    count: 1
     weight: 1
 
 
 
-- type: ncContractRewardPool
+- type: ncSupplyRewardPool
   id: caravan_hard
   entries:
   - type: Item
-    id: N14SuperStimpak
-    amount: { min: 1, max: 2 }
+    prototype: N14SuperStimpak
+    count: { min: 1, max: 2 }
     weight: 2
   - type: Item
-    id: N14UltraStimpak
-    amount: { min: 1, max: 2 }
+    prototype: N14UltraStimpak
+    count: { min: 1, max: 2 }
     weight: 2
   - type: Item
-    id: N14WeaponShotgunCanadian
+    prototype: N14WeaponShotgunCanadian
+    count: 1
     weight: 1
   - type: Item
-    id: N14WeaponShotgunChinese
+    prototype: N14WeaponShotgunChinese
+    count: 1
     weight: 1
   - type: Item
-    id: N14WeaponSMG12mmAdvanced
+    prototype: N14WeaponSMG12mmAdvanced
+    count: 1
     weight: 1
   - type: Item
-    id: N14MedkitCombatFilled
+    prototype: N14MedkitCombatFilled
+    count: 1
     weight: 1
   - type: Item
-    id: N14WeaponPlasmaRifleUrban
+    prototype: N14WeaponPlasmaRifleUrban
+    count: 1
     weight: 1
   - type: Item
-    id: N14WeaponRifle762MarksmanCanadian
+    prototype: N14WeaponRifle762MarksmanCanadian
+    count: 1
     weight: 1
   - type: Item
-    id: N14RadAwayInhaler
-    amount: { min: 3, max: 5 }
+    prototype: N14RadAwayInhaler
+    count: { min: 3, max: 5 }
     weight: 4
   - type: Item
-    id: N14ChemicalSyringeAntidote
-    amount: { min: 3, max: 5 }
+    prototype: N14ChemicalSyringeAntidote
+    count: { min: 3, max: 5 }
     weight: 4
   - type: Item
-    id: N14ClothingOuterCombatArmorMK2
+    prototype: N14ClothingOuterCombatArmorMK2
+    count: 1
     weight: 1
   - type: Item
-    id: N14WeaponSMG12mmAdvanced
+    prototype: N14WeaponSMG12mmAdvanced
+    count: 1
     weight: 1
   - type: Item
-    id: N14ClothingHeadHatCombatHelmetMK2
+    prototype: N14ClothingHeadHatCombatHelmetMK2
+    count: 1
     weight: 1
   - type: Item
-    id: N14WeaponShotgunAuto
+    prototype: N14WeaponShotgunAuto
+    count: 1
     weight: 1
   - type: Item
-    id: N14WeaponRifle762MarksmanChinese
+    prototype: N14WeaponRifle762MarksmanChinese
+    count: 1
     weight: 1
   - type: Item
-    id: N14WeaponRifleBozarGRA
+    prototype: N14WeaponRifleBozarGRA
+    count: 1
     weight: 1
   - type: Item
-    id: JunkCannon
+    prototype: JunkCannon
+    count: 1
     weight: 1
 
 
-- type: ncContractRewardPool
+- type: ncSupplyRewardPool
   id: caravan_easy_nonweapons
   entries:
   - type: Item
-    id: N14Stimpak
-    amount: { min: 1, max: 2 }
+    prototype: N14Stimpak
+    count: { min: 1, max: 2 }
     weight: 2
   - type: Item
-    id: N14Gunpowder1
-    amount: { min: 4, max: 8 }
+    prototype: N14Gunpowder1
+    count: { min: 4, max: 8 }
     weight: 3
   - type: Item
-    id: SheetSteel1
-    amount: { min: 4, max: 8 }
+    prototype: SheetSteel1
+    count: { min: 4, max: 8 }
     weight: 3
   - type: Item
-    id: N14IngotLead1
-    amount: { min: 4, max: 8 }
+    prototype: N14IngotLead1
+    count: { min: 4, max: 8 }
     weight: 3
   - type: Item
-    id: N14IngotBrass1
-    amount: { min: 4, max: 8 }
+    prototype: N14IngotBrass1
+    count: { min: 4, max: 8 }
     weight: 3
   - type: Item
-    id: N14RadAwayBloodbag
-    amount: { min: 1, max: 3 }
+    prototype: N14RadAwayBloodbag
+    count: { min: 1, max: 3 }
     weight: 3
   - type: Item
-    id: N14Antidote
-    amount: { min: 1, max: 3 }
+    prototype: N14Antidote
+    count: { min: 1, max: 3 }
     weight: 3
   - type: Item
-    id: N14ClothingOuterReinforcedLeatherArmor
+    prototype: N14ClothingOuterReinforcedLeatherArmor
+    count: 1
     weight: 1
   - type: Item
-    id: N14ClothingHeadHatPrewarMilitaryHelmet
+    prototype: N14ClothingHeadHatPrewarMilitaryHelmet
+    count: 1
     weight: 2
   - type: Item
-    id: N14ClothingOuterCombatRusted
+    prototype: N14ClothingOuterCombatRusted
+    count: 1
     weight: 2
   - type: Item
-    id: N14ClothingOuterPainspike
+    prototype: N14ClothingOuterPainspike
+    count: 1
     weight: 2

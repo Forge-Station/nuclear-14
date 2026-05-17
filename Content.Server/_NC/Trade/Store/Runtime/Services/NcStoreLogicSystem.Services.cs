@@ -31,8 +31,14 @@ public sealed partial class NcStoreLogicSystem
     ) =>
         _currency.TryPickCurrencyForSell(store, listing, out currency, out unitPrice);
 
+    public bool CanHandleCurrency(string stackType) =>
+        _currency.CanHandleCurrency(stackType);
+
     public bool TryTakeCurrency(EntityUid user, string stackType, int amount) =>
         _currency.TryTakeCurrency(user, stackType, amount);
+
+    public bool TryGiveCurrency(EntityUid user, string stackType, int amount) =>
+        _currency.TryGiveCurrency(user, stackType, amount);
 
     public void GiveCurrency(EntityUid user, string stackType, int amount) =>
         _currency.GiveCurrency(user, stackType, amount);
@@ -49,6 +55,16 @@ public sealed partial class NcStoreLogicSystem
         {
             _sys = sys;
             _stackComponentName = _sys._compFactory.GetComponentName(typeof(StackComponent));
+        }
+
+        public int SpawnRewardProduct(
+            EntityUid user,
+            string productEntity,
+            EntityPrototype productProto,
+            int units
+        )
+        {
+            return SpawnPurchasedProduct(user, productEntity, productProto, 1, units);
         }
 
         public int SpawnPurchasedProduct(

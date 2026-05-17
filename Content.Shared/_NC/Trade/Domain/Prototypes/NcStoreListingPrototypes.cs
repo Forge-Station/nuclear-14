@@ -76,33 +76,6 @@ public sealed partial class NcStoreProfilePrototype : IPrototype
 }
 
 
-[Prototype("storeContract")]
-public sealed partial class StoreContractPrototype : IPrototype
-{
-    [IdDataField] public string ID { get; private set; } = default!;
-
-    [DataField("match")] public PrototypeMatchMode MatchMode { get; private set; } = PrototypeMatchMode.Exact;
-
-    [DataField("name")] public string Name { get; private set; } = string.Empty;
-    [DataField("description")] public string Description { get; private set; } = string.Empty;
-
-    [DataField("difficulty")] public string Difficulty { get; private set; } = "Easy";
-    [DataField("repeatable")] public bool Repeatable { get; private set; } = true;
-    [DataField("objectiveType")] public ContractObjectiveType ObjectiveType { get; private set; } = ContractObjectiveType.Delivery;
-    [DataField("runtime")] public StoreContractRuntimePrototype Runtime { get; private set; } = new();
-
-    [DataField("targetItem")] public string? TargetItem { get; private set; }
-
-    [DataField("required")] public IntRange Required { get; private set; } = IntRange.Fixed(0);
-
-    [DataField("targets")] public List<StoreContractTargetEntry>? Targets { get; private set; }
-
-    [DataField("targetCount")] public IntRange TargetCount { get; private set; } = IntRange.Fixed(1);
-
-    [DataField("rewards")]
-    public List<ContractRewardDef> Rewards { get; private set; } = new();
-}
-
 [DataDefinition]
 public sealed partial class StoreContractTargetEntry
 {
@@ -240,18 +213,8 @@ public sealed partial class StoreContractsPresetPrototype : IPrototype
 {
     [IdDataField] public string ID { get; private set; } = default!;
 
-    [DataField("limits", required: true)]
-    public Dictionary<string, int> Limits { get; set; } = new();
-
-    [DataField("packs")]
-    public List<PackIncludeEntry> Packs { get; set; } = new();
-
-    /// <summary>
-    /// ContractsV2 packs. Kept separate from legacy packs so new contract families can be migrated
-    /// one by one without changing the existing storeContract/storeContractPack format.
-    /// </summary>
-    [DataField("packsV2")]
-    public List<PackIncludeEntry> PacksV2 { get; set; } = new();
+    [DataField("contractOffers", required: true)]
+    public NcContractOffersPrototype? ContractOffers { get; set; }
 
     [DataField("skipCost")]
     public int SkipCost { get; set; } = 360;
@@ -260,65 +223,77 @@ public sealed partial class StoreContractsPresetPrototype : IPrototype
     public string SkipCurrency { get; set; } = string.Empty;
 }
 
-[DataDefinition]
-public partial struct ContractWeightEntry
-{
-    [DataField("id", required: true)] public string Id = string.Empty;
-    [DataField("weight")] public int Weight = 1;
-
-    public ContractWeightEntry(string id, int weight)
-    {
-        Id = id;
-        Weight = weight;
-    }
-}
-
-[DataDefinition]
-public partial struct PackIncludeEntry
-{
-    [DataField("id", required: true)] public string Id = string.Empty;
-    [DataField("weight")] public int Weight = 1;
-
-    public PackIncludeEntry(string id, int weight)
-    {
-        Id = id;
-        Weight = weight;
-    }
-}
-
-[Prototype("storeContractPack")]
-public sealed partial class StoreContractPackPrototype : IPrototype
+[Prototype("ncContractOfferPool")]
+public sealed partial class NcContractOfferPoolPrototype : IPrototype
 {
     [IdDataField] public string ID { get; private set; } = default!;
 
-    [DataField("contracts")]
-    public List<ContractWeightEntry> Contracts { get; set; } = new();
+    [DataField("name", required: true)]
+    public string Name { get; private set; } = string.Empty;
 
-    [DataField("includes")]
-    public List<PackIncludeEntry> Includes { get; set; } = new();
+    [DataField("order")]
+    public int Order { get; private set; }
+
+    [DataField("color")]
+    public string Color { get; private set; } = string.Empty;
+
+    [DataField("entries", required: true)]
+    public List<NcContractOfferEntry> Entries { get; private set; } = new();
 }
 
-/// <summary>
-/// ContractsV2 pack. This intentionally does not reuse storeContractPack.contracts: each V2 family
-/// gets its own list, so supply/retrieval/courier/bounty/wanted can be migrated independently.
-/// </summary>
-[Prototype("ncContractPackV2")]
-public sealed partial class NcContractPackV2Prototype : IPrototype
+[DataDefinition, Serializable, NetSerializable]
+public sealed partial class NcContractOffersPrototype
 {
-    [IdDataField] public string ID { get; private set; } = default!;
+    [DataField("maxVisible")]
+    public int MaxVisible { get; set; } = 8;
 
-    [DataField("supply")]
-    public List<ContractWeightEntry> Supply { get; set; } = new();
+    [DataField("groups", required: true)]
+    public List<NcContractOfferGroupEntry> Groups { get; set; } = new();
+}
 
-    /// <summary>
-    /// Retrieval V2 contracts. These use the same strict targets/reward/count grammar as Supply V2,
-    /// but are kept as a separate contract family so retrieval/delivery semantics can evolve independently.
-    /// </summary>
-    [DataField("retrieval")]
-    public List<ContractWeightEntry> Retrieval { get; set; } = new();
+[DataDefinition, Serializable, NetSerializable]
+public partial struct NcContractOfferGroupEntry
+{
+    [DataField("pool", required: true)]
+    public ProtoId<NcContractOfferPoolPrototype> Pool;
 
-    [DataField("includes")]
-    public List<PackIncludeEntry> Includes { get; set; } = new();
+    [DataField("minVisible")]
+    public int MinVisible;
+
+    [DataField("maxVisible")]
+    public int MaxVisible = 1;
+
+    [DataField("fillWeight")]
+    public int FillWeight = 1;
+
+    public NcContractOfferGroupEntry()
+    {
+    }
+}
+
+[DataDefinition, Serializable, NetSerializable]
+public partial struct NcContractOfferEntry
+{
+    [DataField("type", required: true)]
+    public NcContractOfferType Type;
+
+    [DataField("id", required: true)]
+    public string Id = string.Empty;
+
+    [DataField("weight")]
+    public int Weight = 1;
+
+    public NcContractOfferEntry()
+    {
+    }
+}
+
+[Serializable, NetSerializable]
+public enum NcContractOfferType : byte
+{
+    Supply = 0,
+    Retrieval = 1,
+    Hunt = 2,
 }
 
 /// <summary>

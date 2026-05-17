@@ -12,7 +12,6 @@ public sealed partial class StoreStructuredSystem
         return new(
             contract.Id,
             contract.Name,
-            contract.Difficulty,
             contract.Description,
             contract.Repeatable,
             contract.Taken,
@@ -31,7 +30,11 @@ public sealed partial class StoreStructuredSystem
             contract.Config.RetrievalDestinationHint,
             IsRetrievalRouteContract(contract),
             contract.Config.RetrievalClaimMode,
-            IsRetrievalBearerProofContract(contract)
+            IsRetrievalBearerProofContract(contract),
+            contract.OfferPoolId,
+            contract.OfferPoolName,
+            contract.OfferPoolOrder,
+            contract.OfferPoolColor
         );
     }
 

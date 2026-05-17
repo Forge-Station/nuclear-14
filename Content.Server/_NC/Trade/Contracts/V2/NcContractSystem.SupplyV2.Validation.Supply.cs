@@ -16,12 +16,6 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        if (string.IsNullOrWhiteSpace(proto.Difficulty))
-        {
-            Sawmill.Warning($"[ContractsV2] Supply contract '{proto.ID}' has empty difficulty. Contract skipped.");
-            valid = false;
-        }
-
         if (proto.Targets.Count == 0)
         {
             Sawmill.Warning(

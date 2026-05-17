@@ -7,13 +7,19 @@ public sealed partial class NcContractSystem : EntitySystem
 {
     private ContractServerData CreateContractData(EntityUid store, ContractPoolCandidate candidate)
     {
-        return candidate.Kind switch
+        var contract = candidate.Kind switch
         {
-            ContractPoolCandidateKind.Legacy when candidate.Legacy != null => CreateContractData(store, candidate.Legacy),
             ContractPoolCandidateKind.SupplyV2 when candidate.Supply != null => CreateSupplyContractData(store, candidate.Supply),
             ContractPoolCandidateKind.RetrievalV2 when candidate.Retrieval != null => CreateRetrievalContractData(store, candidate.Retrieval),
+            ContractPoolCandidateKind.HuntV2 when candidate.Hunt != null => CreateHuntContractData(store, candidate.Hunt),
             _ => CreateInvalidContractData(candidate)
         };
+
+        contract.OfferPoolId = candidate.OfferPoolId;
+        contract.OfferPoolName = candidate.OfferPoolName;
+        contract.OfferPoolOrder = candidate.OfferPoolOrder;
+        contract.OfferPoolColor = candidate.OfferPoolColor;
+        return contract;
     }
 
     private static ContractServerData CreateInvalidContractData(ContractPoolCandidate candidate)
@@ -22,119 +28,10 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             Id = candidate.Id,
             Name = candidate.Id,
-            Difficulty = string.IsNullOrWhiteSpace(candidate.Difficulty) ? "Easy" : candidate.Difficulty,
             Description = "Invalid contract candidate.",
             Repeatable = candidate.Repeatable,
             ObjectiveType = ContractObjectiveType.Delivery,
             FlowStatus = ContractFlowStatus.Failed
-        };
-    }
-
-    private ContractServerData CreateContractData(EntityUid store, StoreContractPrototype proto)
-    {
-        var targets = BuildContractTargets(store, proto);
-        var totalRequired = CalculateTotalRequired(targets);
-        var mainTarget = GetPrimaryTargetId(targets);
-
-        var objectiveType = proto.ObjectiveType;
-        var runtime = CreateInitialRuntimeState(proto);
-        var config = CreateObjectiveConfig(proto);
-        ApplyStageObjectiveContractShape(objectiveType, runtime, config, targets, ref totalRequired, ref mainTarget);
-
-        var contract = new ContractServerData
-        {
-            Id = proto.ID,
-            Name = proto.Name,
-            Difficulty = proto.Difficulty,
-            Description = proto.Description,
-            Repeatable = proto.Repeatable,
-            Taken = false,
-            ObjectiveType = objectiveType,
-            Runtime = runtime,
-            Config = config,
-            FlowStatus = ContractFlowStatus.Available,
-            Targets = targets,
-            TargetItem = mainTarget,
-            Required = totalRequired,
-            Progress = 0,
-            Rewards = BakeRewardsForContract(store, proto)
-        };
-
-        SyncContractFlowStatus(contract);
-        return contract;
-    }
-
-    private List<ContractTargetServerData> BuildContractTargets(EntityUid store, StoreContractPrototype proto)
-    {
-        var baseTargetItem = proto.TargetItem ?? string.Empty;
-        var baseRequired = RollFair(new(QuasiKeyKind.Req, store, proto.ID, null), proto.Required, 1);
-        var fallbackTarget = CreateFallbackContractTarget(baseTargetItem, baseRequired, proto.MatchMode);
-
-        var targets = proto.Targets is { Count: > 0 }
-            ? BuildWeightedContractTargets(store, proto, baseRequired)
-            : new List<ContractTargetServerData>();
-
-        if (targets.Count == 0 && fallbackTarget != null)
-            targets.Add(fallbackTarget);
-
-        return targets;
-    }
-
-    private List<ContractTargetServerData> BuildWeightedContractTargets(
-        EntityUid store,
-        StoreContractPrototype proto,
-        int baseRequired
-    )
-    {
-        var targetCount = Math.Max(1, RollFair(new(QuasiKeyKind.Tc, store, proto.ID, null), proto.TargetCount, 1));
-        var pool = new List<StoreContractTargetEntry>(proto.Targets!);
-        var picks = Math.Min(targetCount, pool.Count);
-        var targets = new List<ContractTargetServerData>(picks);
-
-        for (var i = 0; i < picks && pool.Count > 0; i++)
-        {
-            var chosen = PickWeighted(_random, pool, static t => t.Weight);
-            pool.Remove(chosen);
-
-            var required = RollTargetRequirement(store, proto.ID, chosen, baseRequired);
-            var target = CreateFallbackContractTarget(chosen.TargetItemId, required, proto.MatchMode);
-            if (target != null)
-                targets.Add(target);
-        }
-
-        return targets;
-    }
-
-    private int RollTargetRequirement(
-        EntityUid store,
-        string contractProtoId,
-        StoreContractTargetEntry chosen,
-        int baseRequired
-    )
-    {
-        var rolledReq = RollFair(
-            new(QuasiKeyKind.TReq, store, contractProtoId, chosen.TargetItemId),
-            chosen.Required,
-            1);
-
-        return rolledReq > 0 ? rolledReq : baseRequired;
-    }
-
-    private static ContractTargetServerData? CreateFallbackContractTarget(
-        string targetItem,
-        int required,
-        PrototypeMatchMode matchMode
-    )
-    {
-        if (string.IsNullOrWhiteSpace(targetItem) || required <= 0)
-            return null;
-
-        return new()
-        {
-            TargetItem = targetItem,
-            Required = required,
-            Progress = 0,
-            MatchMode = matchMode
         };
     }
 
@@ -152,21 +49,4 @@ public sealed partial class NcContractSystem : EntitySystem
         return targets.Count > 0 ? targets[0].TargetItem : string.Empty;
     }
 
-    private static void ApplyStageObjectiveContractShape(
-        ContractObjectiveType objectiveType,
-        ContractRuntimeContextData runtime,
-        ContractObjectiveConfigData config,
-        List<ContractTargetServerData> targets,
-        ref int totalRequired,
-        ref string mainTarget
-    )
-    {
-        var executionKind = ContractExecutionKinds.Resolve(objectiveType, config.TargetPrototype);
-        if (!ContractExecutionKinds.UsesStageProgress(executionKind))
-            return;
-
-        targets.Clear();
-        totalRequired = Math.Max(1, runtime.StageGoal);
-        mainTarget = ResolveObjectiveTargetId(config);
-    }
 }

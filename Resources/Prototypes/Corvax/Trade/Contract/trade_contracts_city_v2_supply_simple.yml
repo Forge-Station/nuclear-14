@@ -25,7 +25,7 @@
   tags:
   - FoodSnack
 
-- type: ncContractRewardPool
+- type: ncSupplyRewardPool
   id: NcSupplyRewardPoolCityBasic
   entries:
   - type: Item
@@ -45,7 +45,6 @@
   id: NcSupplyCityBasicIngots
   name: "Поставка: базовые слитки"
   description: "Принесите торговцу 4 медных или железных слитка."
-  difficulty: Easy
   icon: N14IngotCopper1
   targets:
   - group: NcSupplyGroupBasicIngots
@@ -62,7 +61,6 @@
   id: NcSupplyCityKnives
   name: "Поставка: ножи"
   description: "Принесите 3 любых ножа."
-  difficulty: Easy
   icon: N14KitchenKnife
   targets:
   - group: NcSupplyGroupKnives
@@ -79,7 +77,6 @@
   id: NcSupplyCitySnacks
   name: "Поставка: снеки"
   description: "Принесите 6 любых снеков."
-  difficulty: Easy
   icon: FoodSnackChips
   targets:
   - group: NcSupplyGroupSnacks
@@ -96,7 +93,6 @@
   id: NcSupplyCityKnivesAndCopper
   name: "Поставка: ножи и медь"
   description: "Принесите 2 ножа и 2 медных слитка."
-  difficulty: Easy
   icon: N14CombatKnife
   targets:
   - group: NcSupplyGroupKnives
@@ -110,15 +106,3 @@
   - type: Pool
     pool: NcSupplyRewardPoolCityBasic
     count: 2
-
-- type: ncContractPackV2
-  id: TradeContractsCitySupplyV2SimplePack
-  supply:
-  - id: NcSupplyCityBasicIngots
-    weight: 3
-  - id: NcSupplyCityKnives
-    weight: 3
-  - id: NcSupplyCitySnacks
-    weight: 2
-  - id: NcSupplyCityKnivesAndCopper
-    weight: 2

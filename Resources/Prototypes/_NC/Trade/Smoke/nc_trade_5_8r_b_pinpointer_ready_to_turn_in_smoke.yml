@@ -12,7 +12,7 @@
 
 - type: entity
   id: NcTrade58RBSourceMarkerEntity
-  name: marker source 5.8R-B
+  name: контрактная точка груза
   suffix: NC, Smoke
   categories: [ HideSpawnMenu ]
   components:
@@ -23,7 +23,7 @@
 
 - type: entity
   id: NcTrade58RBDestinationMarkerEntity
-  name: marker destination 5.8R-B
+  name: контрактная точка доставки
   suffix: NC, Smoke
   categories: [ HideSpawnMenu ]
   components:
@@ -34,7 +34,7 @@
 
 - type: entity
   id: NcTrade58RBProofReceipt
-  name: квитанция доставки 5.8R-B
+  name: контрактная накладная
   suffix: NC, Smoke
   categories: [ HideSpawnMenu ]
   components:
@@ -64,7 +64,7 @@
 - type: ncRetrievalGuidancePreset
   id: NcTrade58RBGuidancePreset
   sourceHint: "Груз отмечен на источнике 5.8R-B."
-  destinationHint: "После proof вернитесь к торговцу."
+  destinationHint: "После получения накладной вернитесь к торговцу."
   pinpointer:
     enabled: true
     target: CargoThenDestinationThenStore
@@ -85,9 +85,8 @@
 
 - type: ncRetrievalContract
   id: NcTrade58RBRetrievalPinpointerReadyToTurnIn
-  name: "Smoke 5.8R-B: пинпоинтер после proof"
-  description: "Проверка повторной выдачи пинпоинтера в состоянии ReadyToTurnIn."
-  difficulty: Hard
+  name: "Доставка: проверка пеленгатора"
+  description: "Доставьте груз, получите накладную и проверьте, что пеленгатор ведёт обратно к торговцу."
   icon: FoodSnackChips
   cargo:
   - prototype: FoodSnackChips
@@ -98,18 +97,24 @@
     currency: Caps
     count: 25
 
-- type: ncContractPackV2
-  id: NcTrade58RBPackV2
-  retrieval:
-  - id: NcTrade58RBRetrievalPinpointerReadyToTurnIn
+- type: ncContractOfferPool
+  id: NcTrade58RBOfferPool
+  name: "Проверка доставки"
+  order: 10
+  color: "#6BA7D8"
+  entries:
+  - type: Retrieval
+    id: NcTrade58RBRetrievalPinpointerReadyToTurnIn
     weight: 1
 
 - type: storeContractsPreset
   id: NcTrade58RBContractsPreset
-  limits:
-    Hard: 3
-  packsV2:
-  - id: NcTrade58RBPackV2
-    weight: 1
+  contractOffers:
+    maxVisible: 3
+    groups:
+    - pool: NcTrade58RBOfferPool
+      minVisible: 1
+      maxVisible: 1
+      fillWeight: 1
   skipCost: 0
   skipCurrency: Caps

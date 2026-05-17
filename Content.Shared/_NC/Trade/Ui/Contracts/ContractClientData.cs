@@ -7,11 +7,14 @@ public sealed class ContractClientData
 {
     public bool Completed;
     public string Description = string.Empty;
-    public string Difficulty = string.Empty;
     public ContractFlowStatus FlowStatus;
     public string Id = string.Empty;
     public string Name = string.Empty;
     public int Progress;
+    public string OfferPoolId = string.Empty;
+    public string OfferPoolName = string.Empty;
+    public int OfferPoolOrder = int.MaxValue;
+    public string OfferPoolColor = string.Empty;
 
     public bool Repeatable;
     public bool Taken;
@@ -35,7 +38,6 @@ public sealed class ContractClientData
     public ContractClientData(
         string id,
         string name,
-        string difficulty,
         string description,
         bool repeatable,
         bool taken,
@@ -54,11 +56,14 @@ public sealed class ContractClientData
         string destinationHint = "",
         bool isRetrievalRoute = false,
         NcRetrievalClaimMode retrievalClaimMode = NcRetrievalClaimMode.StoreCargo,
-        bool retrievalProofIsBearer = false)
+        bool retrievalProofIsBearer = false,
+        string offerPoolId = "",
+        string offerPoolName = "",
+        int offerPoolOrder = int.MaxValue,
+        string offerPoolColor = "")
     {
         Id = id;
         Name = name;
-        Difficulty = difficulty;
         Description = description;
         Repeatable = repeatable;
         Taken = taken;
@@ -71,6 +76,10 @@ public sealed class ContractClientData
         TurnInItem = turnInItem;
         Required = required;
         Progress = progress;
+        OfferPoolId = offerPoolId;
+        OfferPoolName = offerPoolName;
+        OfferPoolOrder = offerPoolOrder;
+        OfferPoolColor = offerPoolColor;
         Targets = targets;
         Rewards = rewards;
         SourceHint = sourceHint;
@@ -113,8 +122,11 @@ public static class ContractFingerprint
             var h = seed;
             h = MixString(h, contract.Id);
             h = MixString(h, contract.Name);
-            h = MixString(h, contract.Difficulty);
             h = MixString(h, contract.Description);
+            h = MixString(h, contract.OfferPoolId);
+            h = MixString(h, contract.OfferPoolName);
+            h = MixInt(h, contract.OfferPoolOrder);
+            h = MixString(h, contract.OfferPoolColor);
             h = MixString(h, contract.TargetItem);
             h = MixString(h, contract.TurnInItem);
             h = MixString(h, contract.SourceHint);

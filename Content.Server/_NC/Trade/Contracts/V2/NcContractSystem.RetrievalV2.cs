@@ -18,7 +18,6 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             Id = proto.ID,
             Name = proto.Name,
-            Difficulty = proto.Difficulty,
             Description = proto.Description,
             Repeatable = proto.Repeatable,
             Taken = false,
@@ -46,10 +45,12 @@ public sealed partial class NcContractSystem : EntitySystem
             return config;
 
         config.RetrievalRouteId = route.ID;
-        config.RetrievalClaimMode = ResolveRetrievalClaimMode(route, proof);
+        config.RetrievalClaimMode = route.Claim.Mode;
         config.RetrievalDestinationType = destination.Target.Type;
         config.RetrievalDestinationId = destination.Target.Id;
         config.RetrievalDestinationRadius = Math.Max(0.25f, destination.Radius);
+        if (destination.Target.Type == NcRetrievalDestinationTargetType.StoreUi)
+            config.AllowStoreWorldTurnIn = true;
         if (destination.Target.Type == NcRetrievalDestinationTargetType.MarkerGroup)
         {
             config.RetrievalDestinationPoint = new ContractPointSelectorPrototype
@@ -131,8 +132,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        var proofId = ResolveRetrievalProofPresetId(route);
-        if (proofId is { } resolvedProofId && !_prototypes.TryIndex(resolvedProofId, out proof!))
+        if (route.Claim.Proof is { } resolvedProofId && !_prototypes.TryIndex(resolvedProofId, out proof!))
         {
             Sawmill.Warning($"[ContractsV2] Retrieval route '{route.ID}' references missing proof preset '{resolvedProofId}'.");
             return false;
@@ -145,23 +145,6 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         return true;
-    }
-
-    private static NcRetrievalClaimMode ResolveRetrievalClaimMode(
-        NcRetrievalRoutePresetPrototype route,
-        NcRetrievalProofPresetPrototype? proof)
-    {
-        // Migration bridge: old 5.8R routes used route.proof without claim.mode.
-        // Treat them as DestinationProof at runtime so existing content remains loadable while audit can reject new legacy YAML.
-        if (route.Claim.Proof == null && route.Proof != null && proof != null)
-            return NcRetrievalClaimMode.DestinationProof;
-
-        return route.Claim.Mode;
-    }
-
-    private static ProtoId<NcRetrievalProofPresetPrototype>? ResolveRetrievalProofPresetId(NcRetrievalRoutePresetPrototype route)
-    {
-        return route.Claim.Proof ?? route.Proof;
     }
 
     private List<ContractTargetServerData> BuildRetrievalCargoTargets(EntityUid store, NcRetrievalContractPrototype proto)

@@ -38,9 +38,6 @@ public sealed partial class NcSupplyContractPrototype : IPrototype
     [DataField("description")]
     public string Description { get; private set; } = string.Empty;
 
-    [DataField("difficulty")]
-    public string Difficulty { get; private set; } = "Easy";
-
     [DataField("repeatable")]
     public bool Repeatable { get; private set; } = true;
 
@@ -60,6 +57,5 @@ public sealed partial class NcSupplyContractPrototype : IPrototype
     [DataField("reward", required: true)]
     public List<NcSupplyRewardEntry> Reward { get; private set; } = new();
 }
-
 
 

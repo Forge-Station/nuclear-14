@@ -12,12 +12,14 @@ public sealed partial class NcContractCard
         if (!string.IsNullOrWhiteSpace(c.Name))
             return c.Name.Trim();
 
-        var diff = DifficultyName(c.Difficulty);
         var goal = BuildGoalsInline(c, 2);
+        var group = string.IsNullOrWhiteSpace(c.OfferPoolName)
+            ? "Контракт"
+            : c.OfferPoolName.Trim();
 
         return string.IsNullOrWhiteSpace(goal)
-            ? Loc.GetString("nc-store-contract-title-pretty-nogoal", ("difficulty", diff))
-            : Loc.GetString("nc-store-contract-title-pretty", ("difficulty", diff), ("goal", goal));
+            ? group
+            : $"{group}: {goal}";
     }
 
     private string BuildPrettyDescription(ContractClientData c)
@@ -213,31 +215,6 @@ public sealed partial class NcContractCard
         return currencyId;
     }
 
-    private Color DifficultyColor(string diff, bool completed)
-    {
-        var baseColor = diff switch
-        {
-            "Easy" => Color.FromHex("#4CAF50"),
-            "Medium" => Color.FromHex("#FFC107"),
-            "Hard" => Color.FromHex("#F44336"),
-            _ => Color.FromHex("#9E9E9E")
-        };
-
-        return completed ? Brighten(baseColor, 0.7f) : baseColor;
-    }
-
-    private string DifficultyName(string diff) =>
-        diff switch
-        {
-            "Easy" => Loc.GetString("nc-store-difficulty-easy"),
-            "Medium" => Loc.GetString("nc-store-difficulty-medium"),
-            "Hard" => Loc.GetString("nc-store-difficulty-hard"),
-            _ => diff
-        };
-
-    private static Color Brighten(Color c, float f) =>
-        new(MathF.Min(c.R * f, 1f), MathF.Min(c.G * f, 1f), MathF.Min(c.B * f, 1f), c.A);
-
     private static string TrimToChars(string text, int maxChars)
     {
         if (maxChars <= 0 || text.Length <= maxChars)
@@ -246,4 +223,3 @@ public sealed partial class NcContractCard
         return text[..maxChars].TrimEnd() + "...";
     }
 }
-

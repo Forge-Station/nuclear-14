@@ -1,364 +1,123 @@
-﻿# City contract board set for supported execution modes.
+# City contract board set for supported execution modes.
 
-- type: storeContractPack
-  id: TradeContractsCityPack
-  contracts:
-  - id: trade_contract_delivery_basic_copper
-    weight: 100
+- type: ncContractOfferPool
+  id: CityTraderSimpleOrders
+  name: "Простые заказы"
+  order: 10
+  color: "#C9A45A"
+  entries:
+  - type: Supply
+    id: NcSupplyPack1BasicIngots
+    weight: 3
+  - type: Supply
+    id: NcSupplyPack1Copper
+    weight: 3
+  - type: Supply
+    id: NcSupplyPack1Iron
+    weight: 3
+  - type: Supply
+    id: NcSupplyPack1CopperDirectPrototype
+    weight: 2
+
+- type: ncContractOfferPool
+  id: CityTraderSupplyOrders
+  name: "Заказы на поставку"
+  order: 20
+  color: "#6FA65F"
+  entries:
+  - type: Supply
+    id: NcSupplyPack1Food
+    weight: 3
+  - type: Supply
+    id: NcSupplyPack1Meds
+    weight: 2
+  - type: Supply
+    id: NcSupplyPack1Scrap
+    weight: 2
+  - type: Supply
+    id: NcSupplyPack1WeaponComponents
+    weight: 1
+
+- type: ncContractOfferPool
+  id: CityTraderDeliveryOrders
+  name: "Доставка торговцу"
+  order: 30
+  color: "#4F86B7"
+  entries:
+  - type: Retrieval
+    id: NcRetrievalPack1MedicalCrateStoreCargo
+    weight: 3
+  - type: Retrieval
+    id: NcRetrievalPack1ThreeMedicalCratesStoreCargo
+    weight: 2
+  - type: Retrieval
+    id: NcRetrievalPack1AmmoCrateStoreCargo
+    weight: 2
+  - type: Retrieval
+    id: NcRetrievalPack1ToolsCrateStoreCargo
+    weight: 2
+
+- type: ncContractOfferPool
+  id: CityTraderRemoteOrders
+  name: "Удаленная доставка"
+  order: 40
+  color: "#5F7EC7"
+  entries:
+  - type: Retrieval
+    id: NcRetrievalPack1MedsToWarehouseProof
+    weight: 2
+  - type: Retrieval
+    id: NcRetrievalPack1ThreeMedsToWarehouseProof
+    weight: 1
+  - type: Retrieval
+    id: NcRetrievalPack1PartsToRepairDepotProof
+    weight: 2
+  - type: Retrieval
+    id: NcRetrievalPack1AmmoToOutpostProof
+    weight: 1
+  - type: Retrieval
+    id: NcRetrievalPack1FoodToCampProof
+    weight: 2
+
+- type: ncContractOfferPool
+  id: CityTraderRareOrders
+  name: "Редкие заказы"
+  order: 50
+  color: "#B66AC9"
+  entries:
+  - type: Retrieval
+    id: NcRetrievalPack1RarePartsCrateStoreCargo
+    weight: 2
+  - type: Retrieval
+    id: NcRetrievalPack1PianoStoreCargo
+    weight: 1
+  - type: Retrieval
+    id: NcRetrievalPack1ThreeMedsToWarehouseProof
+    weight: 1
 
 - type: storeContractsPreset
   id: TradeContractsCityPreset
-  limits:
-    Easy: 9
-  packs:
-  - id: TradeContractsCityPack
-    weight: 1
-  packsV2:
-  - id: TradeContractsCitySupplyV2SimplePack
-    weight: 1
+  contractOffers:
+    maxVisible: 8
+    groups:
+    - pool: CityTraderSimpleOrders
+      minVisible: 2
+      maxVisible: 3
+      fillWeight: 5
+    - pool: CityTraderSupplyOrders
+      minVisible: 1
+      maxVisible: 2
+      fillWeight: 4
+    - pool: CityTraderDeliveryOrders
+      minVisible: 1
+      maxVisible: 2
+      fillWeight: 4
+    - pool: CityTraderRemoteOrders
+      minVisible: 1
+      maxVisible: 2
+      fillWeight: 3
+    - pool: CityTraderRareOrders
+      minVisible: 0
+      maxVisible: 1
+      fillWeight: 1
 
-# ----------------------------
-# Regular delivery
-# ----------------------------
-- type: storeContract
-  id: trade_contract_delivery_basic_copper
-  name: "Поставка медного слитка"
-  description: "Заказ на медь. Слиток для наводки может появиться на шахтной точке или на складе, но для сдачи подойдёт любой такой же слиток."
-  difficulty: Easy
-  repeatable: true
-  objectiveType: Delivery
-  runtime:
-    spawnPoint:
-      type: Weighted
-      options:
-      - type: MarkerId
-        id: TradeContractMineSpawn
-        weight: 4
-      - type: MarkerId
-        id: TradeContractStoreSpawn
-        weight: 1
-    deliverySpawnPrototype: N14IngotCopper1
-  targets:
-  - id: N14IngotCopper1
-    required: 1
-  rewards:
-  - type: Currency
-    id: Caps
-    amount: { min: 20, max: 35 }
-
-# ----------------------------
-# Tracked delivery
-# ----------------------------
-- type: storeContract
-  id: trade_contract_delivery_tracked_copper
-  name: "Помеченный медный слиток"
-  description: "Один из помеченных слитков затерялся между шахтой и складом. Найдите его и сдайте именно этот груз."
-  difficulty: Easy
-  repeatable: true
-  objectiveType: Delivery
-  runtime:
-    spawnPoint:
-      type: Weighted
-      options:
-      - type: MarkerId
-        id: TradeContractMineSpawn
-        weight: 5
-      - type: MarkerId
-        id: TradeContractStoreSpawn
-        weight: 1
-    targetPrototype: N14IngotCopper1
-    guardPrototype: N14MobRaiderPsycho
-    guardCount: 1
-    givePinpointer: true
-    pinpointerPrototype: PinpointerUniversal
-  targets:
-  - id: N14IngotCopper1
-    required: 1
-  rewards:
-  - type: Currency
-    id: Caps
-    amount: { min: 35, max: 60 }
-
-# ----------------------------
-# Structure delivery to store
-# ----------------------------
-- type: storeContract
-  id: trade_contract_delivery_structure_to_store_crate
-  name: "Вывезти стальной ящик с шахты"
-  description: "Стальной ящик появится на одной из шахтных грузовых точек. Дотащите его до торгового автомата целым. Если груз уничтожат, заказ будет сорван."
-  difficulty: Easy
-  repeatable: true
-  objectiveType: Delivery
-  runtime:
-    spawnPoint:
-      type: Weighted
-      options:
-      - type: MarkerId
-        id: TradeContractMineSpawn
-        weight: 5
-      - type: MarkerId
-        id: TradeContractStructureSpawn
-        weight: 2
-    targetPrototype: CrateGenericSteel
-    allowStoreWorldTurnIn: true
-    givePinpointer: true
-    pinpointerPrototype: PinpointerUniversal
-  targets:
-  - id: CrateGenericSteel
-    required: 1
-  rewards:
-  - type: Currency
-    id: Caps
-    amount: { min: 55, max: 90 }
-
-# ----------------------------
-# Structure delivery to dropoff
-# ----------------------------
-- type: storeContract
-  id: trade_contract_delivery_structure_to_dropoff_crate
-  name: "Доставить стальной ящик на шахту"
-  description: "Стальной ящик появится возле торгового автомата. Доставьте его на одну из шахтных точек целым, заберите накладную о приёмке и принесите её обратно за оплатой."
-  difficulty: Easy
-  repeatable: true
-  objectiveType: Delivery
-  runtime:
-    targetPrototype: CrateGenericSteel
-    proofPrototype: NcTradeContractProofDeliveryReceipt
-    spawnPoint:
-      type: Store
-    dropoffPoint:
-      type: Weighted
-      options:
-      - type: MarkerId
-        id: TradeContractMineSpawn
-        weight: 4
-      - type: MarkerId
-        id: TradeContractStructureDropoff
-        weight: 1
-    givePinpointer: true
-    pinpointerPrototype: PinpointerUniversal
-  targets:
-  - id: CrateGenericSteel
-    required: 1
-  rewards:
-  - type: Currency
-    id: Caps
-    amount: { min: 55, max: 90 }
-
-# ----------------------------
-# Hunt objective
-# ----------------------------
-- type: storeContract
-  id: trade_contract_hunt_ghoul
-  name: "Контракт на голову гуля"
-  description: "В окрестностях шахты заметили дикого гуля. Найдите цель, устраните её, подберите трофейную метку с тела и принесите её к доске за оплатой."
-  difficulty: Easy
-  repeatable: true
-  objectiveType: Hunt
-  runtime:
-    spawnPoint:
-      type: Weighted
-      options:
-      - type: MarkerId
-        id: TradeContractMineSpawn
-        weight: 5
-      - type: MarkerId
-        id: TradeContractHuntSpawn
-        weight: 1
-    stageGoal: 1
-    targetPrototype: N14MobGhoulFeral
-    proofPrototype: NcTradeContractProofGhoulTrophy
-    givePinpointer: true
-    pinpointerPrototype: PinpointerUniversal
-  rewards:
-  - type: Currency
-    id: Caps
-    amount: { min: 50, max: 80 }
-
-# ----------------------------
-# Multi-stage repair objective
-# ----------------------------
-- type: storeContract
-  id: trade_contract_repair_generator
-  name: "Запустить ржавый генератор"
-  description: "В городской торговой зоне стоит заглохший генератор. Проведите три этапа ремонта сваркой, заберите фотоподтверждение выполненной работы и сдайте его к торговому автомату."
-  difficulty: Easy
-  repeatable: true
-  objectiveType: Repair
-  runtime:
-    spawnPoint:
-      type: MarkerId
-      id: TradeContractStoreSpawn
-    stageGoal: 3
-    structurePrototype: N14GeneratorFusionMiniRusted
-    proofPrototype: NcTradeContractProofRepairPhoto
-    guardPrototype: N14MobRaiderPsycho
-    guardCount: 2
-    givePinpointer: true
-    pinpointerPrototype: PinpointerUniversal
-    repairToolQuality: Welding
-    repairDoAfterSeconds: 2
-    repairStageSound: /Audio/Effects/sparks4.ogg
-  rewards:
-  - type: Currency
-    id: Caps
-    amount: { min: 80, max: 120 }
-
-# ----------------------------
-# Ghost-role objective
-# ----------------------------
-- type: storeContract
-  id: trade_contract_ghost_raider
-  name: "Особая цель: рейдер"
-  description: "Сначала подбирается исполнитель. Когда цель объявится в городе, устраните её и доставьте тело к торговому автомату."
-  difficulty: Easy
-  repeatable: true
-  objectiveType: GhostRole
-  runtime:
-    spawnPoint:
-      type: Weighted
-      options:
-      - type: MarkerId
-        id: TradeContractStoreSpawn
-        weight: 3
-      - type: MarkerId
-        id: TradeContractGhostSpawn
-        weight: 1
-    stageGoal: 1
-    ghostRole: nc_contract_ghost_role_raider
-    guardPrototype: N14MobRaiderPsycho
-    guardCount: 2
-    givePinpointer: true
-    pinpointerPrototype: PinpointerUniversal
-    acceptTimeoutSeconds: 60
-  rewards:
-  - type: Currency
-    id: Caps
-    amount: { min: 90, max: 140 }
-
-# ----------------------------
-# Store-anchor checks
-# ----------------------------
-- type: storeContract
-  id: trade_contract_repair_generator_store_anchor
-  name: "Проверка: генератор у магазина"
-  description: "Проверочный контракт на новом формате spawnPoint. Генератор должен появиться в торговой зоне, а после ремонта нужно принести фотоподтверждение."
-  difficulty: Easy
-  repeatable: true
-  objectiveType: Repair
-  runtime:
-    spawnPoint:
-      type: MarkerId
-      id: TradeContractStoreSpawn
-    stageGoal: 3
-    structurePrototype: N14GeneratorFusionMiniRusted
-    proofPrototype: NcTradeContractProofRepairPhoto
-    guardPrototype: N14MobRaiderPsycho
-    guardCount: 2
-    givePinpointer: true
-    pinpointerPrototype: PinpointerUniversal
-    repairToolQuality: Welding
-    repairDoAfterSeconds: 2
-    repairStageSound: /Audio/Effects/sparks4.ogg
-  rewards:
-  - type: Currency
-    id: Caps
-    amount: { min: 85, max: 125 }
-
-- type: storeContract
-  id: trade_contract_ghost_raider_store_anchor
-  name: "Проверка: рейдер по новой схеме"
-  description: "Проверочный контракт на новом формате spawnPoint. Особая цель должна появляться в торговой зоне."
-  difficulty: Easy
-  repeatable: true
-  objectiveType: GhostRole
-  runtime:
-    spawnPoint:
-      type: MarkerId
-      id: TradeContractStoreSpawn
-    stageGoal: 1
-    ghostRole: nc_contract_ghost_role_raider
-    guardPrototype: N14MobRaiderPsycho
-    guardCount: 2
-    givePinpointer: true
-    pinpointerPrototype: PinpointerUniversal
-    acceptTimeoutSeconds: 60
-  rewards:
-  - type: Currency
-    id: Caps
-    amount: { min: 95, max: 145 }
-
-# ----------------------------
-# Matcher contract tests
-# ----------------------------
-- type: storeContract
-  id: trade_contract_delivery_matcher_spawn_items_test
-  match: Matcher
-  name: "Проверка Matcher: доставка со спавном"
-  description: "Тест M3: контракт с matcher-целью. Предметы спавнятся по runtime.spawnItems, а подбор идёт по matcher."
-  difficulty: Easy
-  repeatable: true
-  objectiveType: Delivery
-  targetItem: NcMatcherContractIngotTest
-  required: 3
-  runtime:
-    spawnItems: true
-    spawnPoint:
-      type: MarkerId
-      id: TradeContractStoreSpawn
-    spawnSpecific:
-    - N14IngotCopper1
-    - N14IngotIron1
-  rewards:
-  - type: Currency
-    id: Caps
-    amount: { min: 40, max: 70 }
-
-- type: storeContract
-  id: trade_contract_delivery_matcher_tags_turnin_test
-  match: Matcher
-  name: "Проверка Matcher: сдача по тегу"
-  description: "Тест M3: сдача Delivery по matcher.tags (без spawnItems). Подходит любой предмет с tag Knife."
-  difficulty: Easy
-  repeatable: true
-  objectiveType: Delivery
-  targetItem: NcMatcherSellKnifeTagsOnlyTest
-  required: 2
-  runtime:
-    spawnPoint:
-      type: Store
-  rewards:
-  - type: Currency
-    id: Caps
-    amount: { min: 30, max: 55 }
-
-- type: storeContract
-  id: trade_contract_hunt_matcher_spawn_specific_test
-  match: Matcher
-  name: "Проверка Matcher: охота со spawnSpecific"
-  description: "Тест M3: Hunt-контракт с matcher-целью. Конкретный моб для спавна задаётся через runtime.spawnSpecific."
-  difficulty: Easy
-  repeatable: true
-  objectiveType: Hunt
-  targetItem: NcMatcherContractHostilesTest
-  required: 1
-  runtime:
-    spawnPoint:
-      type: Weighted
-      options:
-      - type: MarkerId
-        id: TradeContractHuntSpawn
-        weight: 3
-      - type: MarkerId
-        id: TradeContractRoadSpawn
-        weight: 1
-    stageGoal: 1
-    proofPrototype: NcTradeContractProofGhoulTrophy
-    spawnSpecific:
-    - N14MobRaiderPsycho
-    givePinpointer: true
-    pinpointerPrototype: PinpointerUniversal
-  rewards:
-  - type: Currency
-    id: Caps
-    amount: { min: 55, max: 90 }
