@@ -10,8 +10,10 @@ public readonly record struct StoreListingKey(StoreMode Mode, string ListingId);
 [RegisterComponent, NetworkedComponent]
 public sealed partial class NcStoreComponent : Component
 {
-    [DataField("profile", required: true)]
-    public ProtoId<NcStoreProfilePrototype> Profile { get; set; } = default!;
+    // Legacy Corvax maps only stored generated categories/currencies.
+    // If the map has no profile yet, load it as the city trade profile and save back in the new compact format.
+    [DataField("profile")]
+    public ProtoId<NcStoreProfilePrototype> Profile { get; set; } = "TrademachineCityProfile";
 
     public int CatalogRevision;
     public EntityUid? CurrentUser;
@@ -25,6 +27,13 @@ public sealed partial class NcStoreComponent : Component
 
     [ViewVariables]
     public List<string> CurrencyWhitelist { get; } = new();
+
+    // Legacy map-save bridge: old maps may contain these runtime caches, but stores rebuild them from Profile.
+    [DataField("categories", readOnly: true)]
+    private List<string> LegacyMapCategories = new();
+
+    [DataField("currencyWhitelist", readOnly: true)]
+    private List<string> LegacyMapCurrencyWhitelist = new();
 
     public List<NcStoreListingDef> Listings { get; set; } = new();
 

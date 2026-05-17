@@ -163,6 +163,7 @@
   parent: FoodSnackChips
   id: NcBazarHuntProofRadroach
   name: трофей радтаракана
+  description: "Засохший хитиновый трофей: доказательство, что гнездо радтараканов стало тише."
   suffix: NC, Test
   components:
   - type: NcContractProof
@@ -170,7 +171,7 @@
 - type: ncSupplyContract
   id: BazarSupplyThreads
   name: "Поставка: нитки"
-  description: "Портным нужны нитки для новой одежды."
+  description: "Швейная лавка снова сидит без ниток. Принесите несколько мотков, пока караванщики не начали латать одежду проволокой."
   icon: N14MaterialThread1
   targets:
   - prototype: N14MaterialThread1
@@ -186,7 +187,7 @@
 - type: ncSupplyContract
   id: BazarSupplyBrocFlower
   name: "Поставка: брок"
-  description: "Медику нужен запас цветков брока."
+  description: "Местный лекарь варит мази на все поселение. Цветки брока разошлись быстрее, чем ожидали, и нужен свежий запас."
   icon: N14FloraProduceWildBrocFlower
   targets:
   - prototype: N14FloraProduceWildBrocFlower
@@ -202,7 +203,7 @@
 - type: ncSupplyContract
   id: BazarSupplyCloth
   name: "Поставка: ткань"
-  description: "Мастерской нужна ткань для ремонта одежды."
+  description: "После последней пыльной бури в мастерскую несут рваную одежду мешками. Нужна ткань для заплат и перевязей."
   icon: MaterialCloth1
   targets:
   - prototype: MaterialCloth1
@@ -218,7 +219,7 @@
 - type: ncSupplyContract
   id: BazarSupplyFirewood
   name: "Поставка: дрова"
-  description: "Нужны дрова для отопления и строительства."
+  description: "Ночами у стен холодает, а костры жрут дрова без остановки. Принесите сухие бревна для печей и сторожевых постов."
   icon: N14FloraLogTimber
   targets:
   - prototype: N14FloraLogTimber
@@ -234,7 +235,7 @@
 - type: ncSupplyContract
   id: BazarSupplyPlanks
   name: "Поставка: древесина"
-  description: "Плотнику нужна партия досок."
+  description: "Плотник чинит настилы и торговые лавки после каждой драки у ворот. Ему нужна партия ровных досок."
   icon: MaterialWoodPlank1
   targets:
   - prototype: MaterialWoodPlank1
@@ -250,7 +251,7 @@
 - type: ncSupplyContract
   id: BazarSupplyCoyoteTobacco
   name: "Поставка: табак"
-  description: "Караванщики просят койотий табак для самокруток."
+  description: "Караванщики готовы спорить за хороший табак громче, чем за воду. Принесите койотий табак для самокруток и обмена."
   icon: N14FloraProduceWildCoyoteTobacco
   targets:
   - prototype: N14FloraProduceWildCoyoteTobacco
@@ -266,7 +267,7 @@
 - type: ncSupplyContract
   id: BazarSupplyDogfood
   name: "Поставка: собачий корм"
-  description: "Нужен корм для сторожевой собаки."
+  description: "Сторожевой пес опять смотрит на людей как на обед. Нужны банки корма, пока он не решил, что охрана тоже съедобная."
   repeatable: false
   icon: N14FoodDogfood
   targets:
@@ -283,7 +284,7 @@
 - type: ncSupplyContract
   id: BazarSupplyVarmintRifles
   name: "Поставка: винтовки для охраны"
-  description: "Охране нужны исправные варминт-винтовки."
+  description: "Охрана жалуется, что по крысам и рейдерам приходится целиться почти молитвами. Нужны рабочие варминт-винтовки."
   icon: N14WeaponSniper556VarmintRifle
   targets:
   - prototype: N14WeaponSniper556VarmintRifle
@@ -299,7 +300,7 @@
 - type: ncSupplyContract
   id: BazarSupplyRawMeat
   name: "Поставка: сырое мясо"
-  description: "Кухне нужна партия сырого мяса для переработки."
+  description: "Кухня готовит похлебку для караванщиков и ночной смены. Принесите сырое мясо, пока котел не стал совсем пустым."
   icon: N14FoodMeatRadRaw
   targets:
   - prototype: N14FoodMeatRadRaw
@@ -315,7 +316,7 @@
 - type: ncSupplyContract
   id: BazarSupplyScrap
   name: "Поставка: металлолом"
-  description: "Мастерская принимает металлолом на переплавку."
+  description: "Мастерская берет любой годный металл: латать двери, паять трубы, чинить оружие. Главное, чтобы лом еще можно было пустить в дело."
   icon: N14Scrap1
   targets:
   - prototype: N14Scrap1
@@ -331,7 +332,7 @@
 - type: ncSupplyContract
   id: BazarSupplyColoredScrap
   name: "Поставка: цветной металлолом"
-  description: "Нужен один вид цветного лома: медь, латунь или свинец."
+  description: "Механик ищет цветной лом для мелких деталей и контактов. Медь, латунь или свинец, все уйдет в работу."
   icon: N14ScrapCopper1
   targetCount: 1
   targets:
@@ -349,7 +350,7 @@
 - type: ncSupplyContract
   id: BazarSupplyNineMillimeterWeapons
   name: "Поставка: оружие 9 мм"
-  description: "Бар просит один ствол под 9 мм."
+  description: "Бармен просит запасной ствол под 9 мм для тревожных вечеров. Подойдет пистолет или револьвер, лишь бы не разваливался в руках."
   icon: N14WeaponPistol9mm
   targets:
   - group: BazarGroupNineMillimeterWeapons
@@ -365,7 +366,7 @@
 - type: ncSupplyContract
   id: BazarSupplyLeather
   name: "Поставка: кожа"
-  description: "Кожевнику нужна выделанная кожа."
+  description: "Кожевник чинит ремни, кобуры и броню для тех, кто еще возвращается с дороги. Ему нужна выделанная кожа."
   icon: N14MaterialLeather1
   targets:
   - prototype: N14MaterialLeather1
@@ -381,7 +382,7 @@
 - type: ncSupplyContract
   id: BazarSupplyNukaCola
   name: "Поставка: Ядер-кола"
-  description: "Коллекционер ищет любую бутылку Ядер-колы."
+  description: "Коллекционер собирает бутылки Ядер-колы и уверяет, что различает их по звуку крышки. Принесите любую из базовой коллекции."
   icon: N14DrinkNukaCola
   targets:
   - group: BazarGroupNukaCola
@@ -397,7 +398,7 @@
 - type: ncSupplyContract
   id: BazarSupplyCarrots
   name: "Поставка: морковь"
-  description: "Нужна свежая морковь для кухни."
+  description: "Кухня просит свежую морковь: не все же кормить людей консервами и обещаниями. Чем меньше песка на корнях, тем лучше."
   icon: N14FloraProduceWildCarrot
   targets:
   - prototype: N14FloraProduceWildCarrot
@@ -413,7 +414,7 @@
 - type: ncSupplyContract
   id: BazarSupplyBrassKnives
   name: "Поставка: латунные ножи"
-  description: "Каравану нужны латунные ножи для обмена."
+  description: "Каравану нужны латунные ножи для обмена с дальними стоянками. Красоты не требуют, но лезвие должно держаться."
   icon: N14BrassKnife
   targets:
   - prototype: N14BrassKnife
@@ -429,7 +430,7 @@
 - type: ncSupplyContract
   id: BazarSupplyCaveFungus
   name: "Поставка: пещерный гриб"
-  description: "Химику нужен радиоактивный пещерный гриб."
+  description: "Химик шепчет, что пещерный гриб нужен для мирных опытов. Никто не верит, но крышки он платит настоящие."
   icon: N14FloraProduceWildCaveFungusRad
   targets:
   - prototype: N14FloraProduceWildCaveFungusRad
@@ -445,7 +446,7 @@
 - type: ncSupplyContract
   id: BazarSupplySuperSledge
   name: "Поставка: суперкувалда"
-  description: "Редкий заказ на тяжёлое оружие."
+  description: "Один покупатель ищет суперкувалду и не задает лишних вопросов. Лучше и вам не задавать, если найдете."
   icon: N14SuperSledgeHammer
   targets:
   - prototype: N14SuperSledgeHammer
@@ -461,7 +462,7 @@
 - type: ncSupplyContract
   id: BazarSupplyDeathclawEggs
   name: "Поставка: яйцо когтя смерти"
-  description: "Опасный заказ на варёное яйцо когтя смерти."
+  description: "Повар мечтает удивить богатых гостей блюдом, после которого они запомнят счет. Вареное яйцо когтя смерти подойдет идеально."
   icon: N14CookedFoodEggDeathclawBoiled
   targets:
   - prototype: N14CookedFoodEggDeathclawBoiled
@@ -477,7 +478,7 @@
 - type: ncHuntContract
   id: BazarTestHuntRadroaches
   name: "Охота: радтараканы"
-  description: "Убейте 3 радтараканов. После последней цели заберите трофей и сдайте его торговцу."
+  description: "В подвалах и у мусорных куч расплодились радтараканы. Перебейте гнездо, заберите последний трофей и принесите его торговцу."
   icon: N14MobRadroach
   target:
     group: BazarHuntGroupRadroaches

@@ -28,24 +28,11 @@ public sealed partial class NcStoreMenu
 
     private void ApplyBaseTheme()
     {
-        var windowChromeBackground = NcStoreUiTheme.ResolveColor(_uiColors.HeaderBackground, "#1F252D");
-        var windowChromeBorder = NcStoreUiTheme.ResolveColor(_uiColors.HeaderBorder, "#6B5633");
         var windowChromeText = NcStoreUiTheme.ResolveColor(_uiColors.TabFontActive, "#E4D3AF");
         if (NcStoreUiTheme.IsTooDark(windowChromeText))
             windowChromeText = NcStoreUiTheme.ResolveColor(_uiColors.HeaderBalanceText, "#E4D3AF");
         if (NcStoreUiTheme.IsTooDark(windowChromeText))
             windowChromeText = Color.FromHex("#E4D3AF");
-
-        WindowHeaderBackground.PanelOverride = new StyleBoxFlat
-        {
-            BackgroundColor = windowChromeBackground,
-            BorderColor = windowChromeBorder,
-            BorderThickness = new(0, 0, 0, 1)
-        };
-        WindowHeaderBackground.ModulateSelfOverride = Color.White;
-
-        WindowHeaderDivider.PanelOverride = NcStoreUiTheme.Fill(new Color(0f, 0f, 0f, 0f));
-        WindowHeaderDivider.ModulateSelfOverride = Color.White;
 
         ApplyWindowBackdropTheme(
             NcStoreUiTheme.ResolveColor(_uiColors.TabsShellBackground, "#1A1115"),

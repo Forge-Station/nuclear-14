@@ -100,12 +100,12 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
-        if (!TryGetObjectiveProofPrototype(contract, out _))
+        if (!TryGetObjectiveProofPrototype(contract, out var proofPrototype))
             return true;
 
         var key = (store, contractId);
         if (!_objectiveRuntimeByContract.TryGetValue(key, out var state) ||
-            string.IsNullOrWhiteSpace(state.ProofToken))
+            (string.IsNullOrWhiteSpace(state.ProofToken) && !CanUseTrackedProofEntityFallback(contract, state)))
         {
             fail = ClaimAttemptResult.Fail(
                 ClaimFailureReason.MissingProof,
@@ -113,8 +113,9 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        if (!TryFindObjectiveProofEntity(store, user, key, state.ProofToken, out var proof))
+        if (!TryFindObjectiveProofEntity(store, user, key, state, proofPrototype, out var proof))
         {
+            LogObjectiveProofClaimDebug(store, user, key, state, proofPrototype);
             fail = ClaimAttemptResult.Fail(
                 ClaimFailureReason.MissingProof,
                 $"Contract '{contractId}' requires its proof item to be brought back to the store.");
@@ -141,12 +142,13 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid store,
         EntityUid user,
         (EntityUid Store, string ContractId) key,
-        string proofToken,
+        ObjectiveRuntimeState state,
+        string proofPrototype,
         out EntityUid proof)
     {
         var userItems = new List<EntityUid>(32);
         _logic.ScanInventoryItems(user, userItems);
-        if (TryFindObjectiveProofInSource(user, userItems, key, proofToken, out proof))
+        if (TryFindObjectiveProofInSource(user, userItems, key, state, proofPrototype, out proof))
             return true;
 
         var crateUid = _logic.GetPulledClosedCrate(user);
@@ -154,18 +156,19 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             var crateItems = new List<EntityUid>(32);
             _logic.ScanInventoryItems(pulledCrate, crateItems);
-            if (TryFindObjectiveProofInSource(pulledCrate, crateItems, key, proofToken, out proof))
+            if (TryFindObjectiveProofInSource(pulledCrate, crateItems, key, state, proofPrototype, out proof))
                 return true;
         }
 
-        return TryFindNearbyStoreObjectiveProof(store, key, proofToken, out proof);
+        return TryFindNearbyStoreObjectiveProof(store, key, state, proofPrototype, out proof);
     }
 
     private bool TryFindObjectiveProofInSource(
         EntityUid root,
         IReadOnlyList<EntityUid> items,
         (EntityUid Store, string ContractId) key,
-        string proofToken,
+        ObjectiveRuntimeState state,
+        string proofPrototype,
         out EntityUid proof)
     {
         for (var i = 0; i < items.Count; i++)
@@ -174,7 +177,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (!CanUseContractPlanningEntity(root, ent, worldTurnInSource: false))
                 continue;
 
-            if (IsMatchingObjectiveProof(ent, key, proofToken))
+            if (IsMatchingObjectiveProof(ent, key, state, proofPrototype, out _))
             {
                 proof = ent;
                 return true;
@@ -188,7 +191,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryFindNearbyStoreObjectiveProof(
         EntityUid store,
         (EntityUid Store, string ContractId) key,
-        string proofToken,
+        ObjectiveRuntimeState state,
+        string proofPrototype,
         out EntityUid proof)
     {
         foreach (var ent in _lookup.GetEntitiesInRange(
@@ -199,7 +203,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (!CanUseNearbyStoreObjectiveProofEntity(store, ent))
                 continue;
 
-            if (IsMatchingObjectiveProof(ent, key, proofToken))
+            if (IsMatchingObjectiveProof(ent, key, state, proofPrototype, out _))
             {
                 proof = ent;
                 return true;
@@ -221,11 +225,98 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool IsMatchingObjectiveProof(
         EntityUid ent,
         (EntityUid Store, string ContractId) key,
-        string proofToken)
+        ObjectiveRuntimeState state,
+        string proofPrototype,
+        out string rejectReason)
     {
-        return TryComp(ent, out NcContractProofComponent? proofComp) &&
-               proofComp.Store == key.Store &&
-               proofComp.ContractId == key.ContractId &&
-               proofComp.ProofToken == proofToken;
+        if (!TryComp(ent, out NcContractProofComponent? proofComp))
+        {
+            rejectReason = "missing component";
+            return false;
+        }
+
+        if (!string.IsNullOrWhiteSpace(proofPrototype) &&
+            (!TryGetPlanningEntityPrototypeId(ent, out var candidatePrototype) ||
+             !string.Equals(candidatePrototype, proofPrototype, StringComparison.Ordinal)))
+        {
+            rejectReason = "wrong prototype";
+            return false;
+        }
+
+        if (proofComp.Store != key.Store)
+        {
+            rejectReason = "wrong store";
+            return false;
+        }
+
+        if (!string.Equals(proofComp.ContractId, key.ContractId, StringComparison.Ordinal))
+        {
+            rejectReason = "wrong contract id";
+            return false;
+        }
+
+        if (!string.IsNullOrWhiteSpace(state.ProofToken) &&
+            string.Equals(proofComp.ProofToken, state.ProofToken, StringComparison.Ordinal))
+        {
+            rejectReason = string.Empty;
+            return true;
+        }
+
+        if (CanUseTrackedProofEntityFallback(key, state, ent))
+        {
+            rejectReason = string.Empty;
+            return true;
+        }
+
+        rejectReason = "wrong proof token";
+        return false;
+    }
+
+    private static bool CanUseTrackedProofEntityFallback(
+        ContractServerData contract,
+        ObjectiveRuntimeState state)
+    {
+        return contract.Config.HuntV2Enabled &&
+               state.ProofEntity is { } proof &&
+               proof != EntityUid.Invalid;
+    }
+
+    private static bool CanUseTrackedProofEntityFallback(
+        (EntityUid Store, string ContractId) key,
+        ObjectiveRuntimeState state,
+        EntityUid ent)
+    {
+        return state.HuntV2Active &&
+               state.ProofEntity == ent;
+    }
+
+    private void LogObjectiveProofClaimDebug(
+        EntityUid store,
+        EntityUid user,
+        (EntityUid Store, string ContractId) key,
+        ObjectiveRuntimeState state,
+        string proofPrototype)
+    {
+        var scanned = new List<EntityUid>(32);
+        _logic.ScanInventoryItems(user, scanned);
+
+        var candidates = 0;
+        for (var i = 0; i < scanned.Count; i++)
+        {
+            var ent = scanned[i];
+            if (!TryComp(ent, out NcContractProofComponent? _))
+                continue;
+
+            candidates++;
+            IsMatchingObjectiveProof(ent, key, state, proofPrototype, out var reason);
+            Sawmill.Info(
+                $"[Contracts] Proof candidate rejected for '{key.ContractId}' in user inventory: " +
+                $"{ToPrettyString(ent)}, reason='{reason}', expectedProto='{proofPrototype}'.");
+        }
+
+        Sawmill.Info(
+            $"[Contracts] Proof claim debug for '{key.ContractId}' on {ToPrettyString(store)} by {ToPrettyString(user)}: " +
+            $"expectedProto='{proofPrototype}', tokenRegistered={!string.IsNullOrWhiteSpace(state.ProofToken)}, " +
+            $"trackedProof='{state.ProofEntity}', candidatesInInventory={candidates}.");
     }
 }
