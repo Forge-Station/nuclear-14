@@ -118,7 +118,7 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             Sawmill.Warning(
                 $"[Contracts] Supply contract '{contractId}' target #{index} references missing ncItemGroup " +
-                $"'{entry.Group}'. Supply group targets must reference ncItemGroup prototypes, not legacy matchers.");
+                $"'{entry.Group}'. Supply group targets must reference ncItemGroup prototypes, not matcher prototypes.");
             return false;
         }
 

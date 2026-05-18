@@ -144,14 +144,16 @@ public sealed partial class NcStoreLogicSystem
         return new ContractRewardDef
         {
             Type = entry.Type,
-            Prototype = entry.Prototype,
-            Currency = entry.Currency,
-            Pool = entry.Pool,
+            RewardId = entry.Type switch
+            {
+                StoreRewardType.Item => entry.Prototype,
+                StoreRewardType.Currency => entry.Currency,
+                StoreRewardType.Pool => entry.Pool,
+                _ => string.Empty
+            },
             Count = entry.Count,
             Weight = entry.Weight,
             MaxRepeats = entry.MaxRepeats,
-            Chance = 1f,
-            Probability = 1f
         };
     }
 
@@ -176,12 +178,8 @@ public sealed partial class NcStoreLogicSystem
         if (reward.MaxRepeats > 0 && nextDrop >= reward.MaxRepeats)
             deck.Remove(reward);
 
-        var chance = GetRewardChance(reward);
-        if (chance < 1f && !_random.Prob(chance))
-            return true;
-
         var rewardId = GetRewardId(reward);
-        var amount = RollRange(GetRewardAmountRange(reward));
+        var amount = RollRange(reward.Count);
         if (amount <= 0 || string.IsNullOrWhiteSpace(rewardId))
             return true;
 
@@ -278,12 +276,8 @@ public sealed partial class NcStoreLogicSystem
         if (reward.Weight <= 0)
             return false;
 
-        var amountRange = GetRewardAmountRange(reward);
+        var amountRange = reward.Count;
         if (amountRange.Min < 0 || amountRange.Max <= 0 || amountRange.Min > amountRange.Max)
-            return false;
-
-        var chance = GetRewardChance(reward);
-        if (chance < 0f || chance > 1f)
             return false;
 
         var rewardId = GetRewardId(reward);
@@ -343,28 +337,7 @@ public sealed partial class NcStoreLogicSystem
     }
 
 
-    private static IntRange GetRewardAmountRange(ContractRewardDef reward)
-    {
-        return reward.Count.Min > 0 || reward.Count.Max > 0
-            ? reward.Count
-            : reward.Amount;
-    }
-    private static float GetRewardChance(ContractRewardDef reward) =>
-        reward.Chance >= 0f ? reward.Chance : reward.Probability;
-
-    private static string GetRewardId(ContractRewardDef reward)
-    {
-        if (!string.IsNullOrWhiteSpace(reward.Prototype))
-            return reward.Prototype;
-
-        if (!string.IsNullOrWhiteSpace(reward.Currency))
-            return reward.Currency;
-
-        if (!string.IsNullOrWhiteSpace(reward.Pool))
-            return reward.Pool;
-
-        return reward.Id;
-    }
+    private static string GetRewardId(ContractRewardDef reward) => reward.RewardId;
 
     private sealed class BarterReceivePlan
     {

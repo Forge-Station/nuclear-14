@@ -17,6 +17,18 @@ public sealed partial class NcStoreLogicSystem
         if (plan.Steps.Count == 0 || plan.IncomeByCurrency.Count == 0)
             return false;
 
+        foreach (var (currency, amount) in plan.IncomeByCurrency)
+        {
+            if (amount <= 0)
+                continue;
+
+            if (CanHandleCurrency(currency))
+                continue;
+
+            Sawmill.Error($"TryMassSellFromContainer: payout currency '{currency}' is not supported; refusing to consume items.");
+            return false;
+        }
+
         var incomeActual = new Dictionary<string, int>(StringComparer.Ordinal);
         var any = false;
 
@@ -60,7 +72,12 @@ public sealed partial class NcStoreLogicSystem
         {
             if (amount <= 0)
                 continue;
-            GiveCurrency(user, currency, amount);
+
+            if (TryGiveCurrency(user, currency, amount))
+                continue;
+
+            Sawmill.Error($"TryMassSellFromContainer: failed to issue payout '{currency}' x{amount}.");
+            return false;
         }
 
         _inventory.InvalidateInventoryCache(container);

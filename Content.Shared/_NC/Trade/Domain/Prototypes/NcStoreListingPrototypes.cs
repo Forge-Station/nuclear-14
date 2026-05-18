@@ -239,7 +239,6 @@ public enum ContractObjectiveType : byte
 {
     Delivery = 0,
     Hunt = 1,
-    Repair = 2,
     GhostRole = 3
 }
 [Serializable, NetSerializable]

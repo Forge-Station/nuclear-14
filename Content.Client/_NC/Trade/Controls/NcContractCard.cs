@@ -328,7 +328,6 @@ public sealed partial class NcContractCard : PanelContainer
     private void PopulateStage()
     {
         var hasStage = _data.ExecutionKind is ContractExecutionKind.HuntObjective
-                or ContractExecutionKind.RepairObjective
                 or ContractExecutionKind.GhostRoleObjective &&
             _data.Runtime.StageGoal > 1;
 

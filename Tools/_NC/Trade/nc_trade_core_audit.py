@@ -242,6 +242,14 @@ REPAIR_QUARANTINE_KEYS = {
     "repairStageSound",
 }
 
+REWARD_LEGACY_KEYS = {
+    "amount",
+    "prob",
+    "chance",
+    "id",
+    "options",
+}
+
 
 VALID_OFFER_ENTRY_TYPES = {
     "Supply": "ncSupplyContract",
@@ -580,6 +588,8 @@ def audit_supply_contract(block: ProtoBlock, issues: list[Issue]) -> None:
         add_issue(issues, "P1", block.path, block.start_line, "ncSupplyContract must define targets")
     if not has_key(block, "reward"):
         add_issue(issues, "P1", block.path, block.start_line, "ncSupplyContract must define reward")
+    else:
+        audit_reward_entries_have_type_and_count(block, issues, "ncSupplyContract", block.start_line)
 
 
 def audit_repair_quarantine(block: ProtoBlock, issues: list[Issue]) -> None:
@@ -617,6 +627,8 @@ def audit_retrieval_contract(block: ProtoBlock, issues: list[Issue]) -> None:
         add_issue(issues, "P1", block.path, block.start_line, "ncRetrievalContract must define route")
     if not has_key(block, "reward"):
         add_issue(issues, "P1", block.path, block.start_line, "ncRetrievalContract must define reward")
+    else:
+        audit_reward_entries_have_type_and_count(block, issues, "ncRetrievalContract", block.start_line)
 
 
 def audit_retrieval_route(block: ProtoBlock, issues: list[Issue]) -> None:
@@ -699,8 +711,26 @@ def audit_reward_entries_have_type_and_count(
     owner_kind: str,
     owner_id_line: int,
 ) -> None:
-    reward_indent: int | None = None
-    reward_line: int | None = None
+    audit_typed_reward_like_entries(block, issues, owner_kind, owner_id_line, "reward")
+
+
+def audit_supply_reward_pool_entries(block: ProtoBlock, issues: list[Issue]) -> None:
+    if not has_key(block, "entries"):
+        add_issue(issues, "P1", block.path, block.start_line, "ncSupplyRewardPool must define entries")
+        return
+
+    audit_typed_reward_like_entries(block, issues, "ncSupplyRewardPool", block.start_line, "entries")
+
+
+def audit_typed_reward_like_entries(
+    block: ProtoBlock,
+    issues: list[Issue],
+    owner_kind: str,
+    owner_id_line: int,
+    list_key: str,
+) -> None:
+    list_indent: int | None = None
+    list_line: int | None = None
     entry_line: int | None = None
     entry_has_type = False
     entry_has_count = False
@@ -713,12 +743,22 @@ def audit_reward_entries_have_type_and_count(
         if entry_line is None:
             return
         if not entry_has_type:
-            add_issue(issues, "P1", block.path, entry_line, f"{owner_kind} reward entry must define type")
+            add_issue(issues, "P1", block.path, entry_line, f"{owner_kind} {list_key} entry must define type")
         if not entry_has_count:
-            add_issue(issues, "P1", block.path, entry_line, f"{owner_kind} reward entry must define count")
+            add_issue(issues, "P1", block.path, entry_line, f"{owner_kind} {list_key} entry must define count")
         entry_line = None
         entry_has_type = False
         entry_has_count = False
+
+    def audit_legacy_key(num: int, key: str) -> None:
+        if key in REWARD_LEGACY_KEYS:
+            add_issue(
+                issues,
+                "P1",
+                block.path,
+                num,
+                f"{owner_kind} {list_key} entry uses legacy reward field '{key}'; use type + prototype/currency/pool + count",
+            )
 
     for num, line in block.lines:
         stripped = line.strip()
@@ -730,24 +770,26 @@ def audit_reward_entries_have_type_and_count(
             key = key_match.group("key")
             indent = indent_of(line)
 
-            if key == "reward":
-                reward_indent = indent
-                reward_line = num
+            if key == list_key:
+                list_indent = indent
+                list_line = num
                 finalize_entry()
                 continue
 
-            if reward_indent is not None and indent <= reward_indent and num > (reward_line or 0):
+            if list_indent is not None and indent <= list_indent and num > (list_line or 0):
                 finalize_entry()
-                reward_indent = None
-                reward_line = None
+                list_indent = None
+                list_line = None
 
-            if reward_indent is not None and indent > reward_indent and entry_line is not None and key == "count":
-                entry_has_count = True
+            if list_indent is not None and indent > list_indent and entry_line is not None:
+                if key == "count":
+                    entry_has_count = True
+                audit_legacy_key(num, key)
 
-        if reward_indent is None or reward_line is None:
+        if list_indent is None or list_line is None:
             continue
 
-        if indent_of(line) < reward_indent or num <= reward_line:
+        if indent_of(line) < list_indent or num <= list_line:
             continue
 
         item_match = list_item_re.match(line)
@@ -758,16 +800,18 @@ def audit_reward_entries_have_type_and_count(
         seen_entries += 1
         entry_line = num
         rest = item_match.group("rest").strip()
+        rest_key = rest.split(":", 1)[0].strip() if ":" in rest else ""
 
         if rest.startswith("type:"):
             entry_has_type = True
         if rest.startswith("count:") or " count:" in rest:
             entry_has_count = True
+        audit_legacy_key(num, rest_key)
 
     finalize_entry()
 
-    if reward_line is not None and seen_entries == 0:
-        add_issue(issues, "P1", block.path, owner_id_line, f"{owner_kind} must define at least one reward entry")
+    if list_line is not None and seen_entries == 0:
+        add_issue(issues, "P1", block.path, owner_id_line, f"{owner_kind} must define at least one {list_key} entry")
 
 
 def audit_hunt_contract(block: ProtoBlock, issues: list[Issue]) -> None:
@@ -1306,6 +1350,8 @@ def audit_trade_yaml(issues: list[Issue]) -> None:
             audit_ghost_role_perk(block, issues)
         elif block.type_name == "ncGhostRoleContract":
             audit_ghost_role_contract(block, issues, ghost_role_preset_ids)
+        elif block.type_name == "ncSupplyRewardPool":
+            audit_supply_reward_pool_entries(block, issues)
         elif block.type_name == "ncContractOfferPool":
             audit_contract_offer_pool(block, issues, contract_ids_by_type)
         elif block.type_name == "storeContractsPreset":

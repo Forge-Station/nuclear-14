@@ -25,7 +25,6 @@ public sealed partial class NcContractSystem : EntitySystem
 
         config.TargetPrototype ??= string.Empty;
         config.DeliverySpawnPrototype ??= string.Empty;
-        config.StructurePrototype ??= string.Empty;
         config.GhostRole ??= string.Empty;
         config.ProofPrototype ??= string.Empty;
         config.GhostRolePrototype ??= string.Empty;
@@ -45,9 +44,6 @@ public sealed partial class NcContractSystem : EntitySystem
         config.PinpointerPrototype = ResolvePinpointerPrototypeId(config.PinpointerPrototype);
         config.GuardPrototype ??= string.Empty;
         config.GuardCount = Math.Max(0, config.GuardCount);
-        config.RepairToolQuality = ResolveRepairToolQuality(config.RepairToolQuality);
-        config.RepairDoAfterSeconds = ResolveRepairDoAfterSeconds(config.RepairDoAfterSeconds);
-        config.RepairStageSound = ResolveRepairStageSound(config.RepairStageSound);
         config.HuntBodyPrototype ??= string.Empty;
         if (config.RetrievalSpawnEnabled)
         {
@@ -177,9 +173,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static int GetDefaultObjectiveStageGoal(ContractExecutionKind executionKind)
     {
-        return executionKind == ContractExecutionKind.RepairObjective
-            ? NcContractTuning.DefaultRepairStageGoal
-            : NcContractTuning.DefaultObjectiveStageGoal;
+        return NcContractTuning.DefaultObjectiveStageGoal;
     }
 
     private static ContractFlowStatus ComputeContractFlowStatus(ContractServerData contract)
@@ -211,9 +205,6 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!string.IsNullOrWhiteSpace(config.TargetPrototype))
             return config.TargetPrototype;
 
-        if (!string.IsNullOrWhiteSpace(config.StructurePrototype))
-            return config.StructurePrototype;
-
         if (!string.IsNullOrWhiteSpace(config.GhostRolePrototype))
             return config.GhostRolePrototype;
 
@@ -232,28 +223,6 @@ public sealed partial class NcContractSystem : EntitySystem
         return string.IsNullOrWhiteSpace(prototypeId)
             ? NcContractTuning.DefaultContractPinpointerPrototypeId
             : prototypeId;
-    }
-
-    private static string ResolveRepairToolQuality(string? quality)
-    {
-        return string.IsNullOrWhiteSpace(quality)
-            ? NcContractTuning.DefaultRepairToolQuality
-            : quality;
-    }
-
-    private static float ResolveRepairDoAfterSeconds(float seconds)
-    {
-        if (seconds <= 0f)
-            return NcContractTuning.DefaultRepairDoAfterSeconds;
-
-        return Math.Max(NcContractTuning.MinRepairDoAfterSeconds, seconds);
-    }
-
-    private static string ResolveRepairStageSound(string? sound)
-    {
-        return string.IsNullOrWhiteSpace(sound)
-            ? NcContractTuning.DefaultRepairStageSoundPath
-            : sound;
     }
 
     private static void ResetContractTargetProgress(ContractServerData contract)

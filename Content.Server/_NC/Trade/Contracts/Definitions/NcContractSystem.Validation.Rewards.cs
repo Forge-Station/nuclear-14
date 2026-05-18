@@ -69,14 +69,6 @@ public sealed partial class NcContractSystem : EntitySystem
         string path,
         NcSupplyRewardEntry entry)
     {
-        if (HasLegacySupplyRewardFields(entry, out var legacyField))
-        {
-            Sawmill.Warning(
-                $"[Contracts] Supply contract '{contractId}' {path} uses legacy field '{legacyField}'. " +
-                "Supply rewards must use only type + prototype/currency/pool + count.");
-            return false;
-        }
-
         if (!IsCountConfigured(entry.Count))
         {
             Sawmill.Warning($"[Contracts] Supply contract '{contractId}' {path} does not define 'count'.");
@@ -145,14 +137,6 @@ public sealed partial class NcContractSystem : EntitySystem
         string path,
         NcSupplyRewardEntry entry)
     {
-        if (HasLegacySupplyRewardFields(entry, out var legacyField))
-        {
-            Sawmill.Warning(
-                $"[Contracts] Retrieval contract '{contractId}' {path} uses legacy field '{legacyField}'. " +
-                "Retrieval rewards must use only type + prototype/currency/pool + count.");
-            return false;
-        }
-
         if (!IsCountConfigured(entry.Count))
         {
             Sawmill.Warning($"[Contracts] Retrieval contract '{contractId}' {path} does not define 'count'.");
@@ -310,14 +294,6 @@ public sealed partial class NcContractSystem : EntitySystem
         NcSupplyRewardPoolEntry entry,
         HashSet<string> visited)
     {
-        if (HasLegacySupplyRewardPoolFields(entry, out var legacyField))
-        {
-            Sawmill.Warning(
-                $"[Contracts] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} uses legacy field '{legacyField}'. " +
-                "Supply reward pools must use only type + prototype/currency/pool + count + weight/max.");
-            return false;
-        }
-
         if (entry.Weight <= 0)
         {
             Sawmill.Warning(

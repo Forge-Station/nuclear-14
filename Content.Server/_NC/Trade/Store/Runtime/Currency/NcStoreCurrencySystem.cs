@@ -248,9 +248,4 @@ public sealed class NcStoreCurrencySystem : EntitySystem
             return false;
         return h.TryGiveCurrency(user, currencyId, amount);
     }
-
-    public void GiveCurrency(EntityUid user, string currencyId, int amount)
-    {
-        TryGiveCurrency(user, currencyId, amount);
-    }
 }

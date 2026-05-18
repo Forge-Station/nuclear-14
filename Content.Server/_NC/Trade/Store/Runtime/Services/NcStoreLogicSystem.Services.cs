@@ -40,9 +40,6 @@ public sealed partial class NcStoreLogicSystem
     public bool TryGiveCurrency(EntityUid user, string stackType, int amount) =>
         _currency.TryGiveCurrency(user, stackType, amount);
 
-    public void GiveCurrency(EntityUid user, string stackType, int amount) =>
-        _currency.GiveCurrency(user, stackType, amount);
-
 
     private sealed class StoreSpawnService
     {

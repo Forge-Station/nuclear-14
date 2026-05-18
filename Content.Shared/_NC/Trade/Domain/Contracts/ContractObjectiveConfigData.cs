@@ -15,7 +15,6 @@ public sealed class ContractObjectiveConfigData
     public ContractPointSelectorPrototype? DropoffPoint { get; set; }
     public string TargetPrototype { get; set; } = string.Empty;
     public string DeliverySpawnPrototype { get; set; } = string.Empty;
-    public string StructurePrototype { get; set; } = string.Empty;
     public string GhostRole { get; set; } = string.Empty;
     public string ProofPrototype { get; set; } = string.Empty;
     public string GhostRolePrototype { get; set; } = string.Empty;
@@ -44,17 +43,12 @@ public sealed class ContractObjectiveConfigData
     public string GuardPrototype { get; set; } = string.Empty;
     public int GuardCount;
 
-    public string RepairToolQuality { get; set; } = string.Empty;
-    public float RepairDoAfterSeconds;
-    public string RepairStageSound { get; set; } = string.Empty;
-
-    // Spawned Hunt runtime metadata (stage 8.0-B).
+    // Spawned Hunt runtime metadata.
     public bool HuntEnabled;
     public NcHuntCompletionMode HuntCompletionMode = NcHuntCompletionMode.ConfirmedKill;
     public string HuntBodyPrototype { get; set; } = string.Empty;
 
-    // Legacy objective support: copied at contract-creation time so runtime code
-    // doesn't have to re-resolve prototype data for active objectives.
+    // Inventory-delivery helper spawn metadata copied at contract creation time.
     public bool SpawnItems;
     public List<string> SpawnSpecific { get; set; } = new();
 

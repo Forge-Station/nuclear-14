@@ -201,7 +201,10 @@ public sealed partial class NcStoreLogicSystem
 
     private bool RefundFailedBuy(EntityUid user, BuyExecutionPlan plan)
     {
-        GiveCurrency(user, plan.Currency, plan.TotalPrice);
+        if (!TryGiveCurrency(user, plan.Currency, plan.TotalPrice))
+            Sawmill.Error(
+                $"[NcStore] Failed to refund failed buy: {plan.TotalPrice} {plan.Currency} to {ToPrettyString(user)}.");
+
         return false;
     }
 
@@ -213,7 +216,11 @@ public sealed partial class NcStoreLogicSystem
         var refundPurchases = plan.Purchases - deliveredPurchases;
         var refund = (long) refundPurchases * plan.UnitPrice;
         if (refund > 0 && refund <= int.MaxValue)
-            GiveCurrency(user, plan.Currency, (int) refund);
+        {
+            if (!TryGiveCurrency(user, plan.Currency, (int) refund))
+                Sawmill.Error(
+                    $"[NcStore] Failed to refund undelivered buy purchases: {refund} {plan.Currency} to {ToPrettyString(user)}.");
+        }
     }
 
     private static void ApplyDeliveredBuyPurchases(NcStoreListingDef listing, int deliveredPurchases)
@@ -299,11 +306,23 @@ public sealed partial class NcStoreLogicSystem
         if (totalL > int.MaxValue)
             return false;
 
+        if (!CanHandleCurrency(currency))
+        {
+            Sawmill.Error(
+                $"TrySell: payout currency '{currency}' is not supported; refusing to consume '{listing.ProductEntity}'.");
+            return false;
+        }
+
         var ok = _inventory.TryTakeProductUnitsFromRootCached(root, listing.ProductEntity, actual, listing.MatchMode);
         if (!ok)
             return false;
 
-        GiveCurrency(user, currency, (int) totalL);
+        if (!TryGiveCurrency(user, currency, (int) totalL))
+        {
+            Sawmill.Error(
+                $"TrySell: failed to issue payout '{currency}' x{totalL} after selling '{listing.ProductEntity}' x{actual}.");
+            return false;
+        }
 
         _inventory.InvalidateInventoryCache(user);
         if (root != user)

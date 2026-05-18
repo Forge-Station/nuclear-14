@@ -33,23 +33,16 @@ public sealed partial class NcContractSystem : EntitySystem
         for (var i = 0; i < blueprints.Count; i++)
         {
             var bp = blueprints[i];
-            var probability = GetRewardProbability(bp);
-
-            if (probability < 1.0f && !_random.Prob(Math.Clamp(probability, 0f, 1f)))
-                continue;
-
             var rewardId = GetRewardId(bp);
             var count = RollFair(
                 new(QuasiKeyKind.RAmount, store, contractProtoId, $"{depth}:{i}:{bp.Type}:{rewardId}"),
-                GetRewardAmountRange(bp),
+                bp.Count,
                 0);
 
             if (count <= 0)
                 continue;
 
-            var isPool = bp.Type == StoreRewardType.Pool || bp.Options is { Count: > 0 };
-
-            if (isPool)
+            if (bp.Type == StoreRewardType.Pool)
             {
                 var rolled = RollPool(store, contractProtoId, bp, count, depth + 1);
                 result.AddRange(rolled);
@@ -97,11 +90,6 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool TryResolveRewardPoolOptions(ContractRewardDef poolDef, out List<ContractRewardDef> options)
     {
-        if (poolDef.Options is { Count: > 0 } inlineOptions)
-        {
-            return TryValidateResolvedRewardPoolOptions(poolDef, inlineOptions, out options);
-        }
-
         var poolId = GetRewardId(poolDef);
         if (!string.IsNullOrWhiteSpace(poolId) &&
             _prototypes.TryIndex<NcSupplyRewardPoolPrototype>(poolId, out var supplyPoolProto) &&
@@ -126,9 +114,7 @@ public sealed partial class NcContractSystem : EntitySystem
             result.Add(new ContractRewardDef
             {
                 Type = entry.Type,
-                Prototype = entry.Prototype,
-                Currency = entry.Currency,
-                Pool = entry.Pool,
+                RewardId = GetSupplyRewardEntryId(entry),
                 Count = entry.Count,
                 Weight = entry.Weight,
                 MaxRepeats = entry.MaxRepeats
@@ -136,6 +122,17 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         return result;
+    }
+
+    private static string GetSupplyRewardEntryId(NcSupplyRewardPoolEntry entry)
+    {
+        return entry.Type switch
+        {
+            StoreRewardType.Item => entry.Prototype,
+            StoreRewardType.Currency => entry.Currency,
+            StoreRewardType.Pool => entry.Pool,
+            _ => string.Empty
+        };
     }
 
     private bool TryValidateResolvedRewardPoolOptions(
@@ -159,20 +156,11 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
             }
 
-            var amountRange = GetRewardAmountRange(def);
-            if (amountRange.Min < 0 || amountRange.Max <= 0 || amountRange.Min > amountRange.Max)
+            if (def.Count.Min < 0 || def.Count.Max <= 0 || def.Count.Min > def.Count.Max)
             {
                 Sawmill.Warning(
-                    $"[Contracts] Reward pool '{poolLabel}' entry #{i} has invalid count/amount range " +
-                    $"{amountRange.Min}..{amountRange.Max}.");
-                continue;
-            }
-
-            var probability = GetRewardProbability(def);
-            if (probability < 0f || probability > 1f)
-            {
-                Sawmill.Warning(
-                    $"[Contracts] Reward pool '{poolLabel}' entry #{i} has invalid chance={probability}. Expected 0..1.");
+                    $"[Contracts] Reward pool '{poolLabel}' entry #{i} has invalid count range " +
+                    $"{def.Count.Min}..{def.Count.Max}.");
                 continue;
             }
 
@@ -267,28 +255,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static string GetRewardId(ContractRewardDef reward)
     {
-        if (!string.IsNullOrWhiteSpace(reward.Id))
-            return reward.Id;
-
-        return reward.Type switch
-        {
-            StoreRewardType.Item => reward.Prototype,
-            StoreRewardType.Currency => reward.Currency,
-            StoreRewardType.Pool => reward.Pool,
-            _ => string.Empty
-        };
-    }
-
-    private static float GetRewardProbability(ContractRewardDef reward)
-    {
-        return reward.Chance >= 0f ? reward.Chance : reward.Probability;
-    }
-
-    private static IntRange GetRewardAmountRange(ContractRewardDef reward)
-    {
-        return reward.Count.Min > 0 || reward.Count.Max > 0
-            ? reward.Count
-            : reward.Amount;
+        return reward.RewardId;
     }
 
     private static List<ContractRewardData> AggregateRewards(List<ContractRewardData> rewards)

@@ -121,7 +121,7 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             Sawmill.Warning(
                 $"[Contracts] Retrieval route '{route.ID}' uses delivery.consumeCargo=false. " +
-                "Stage 5.8R-E only supports consuming delivered cargo; persistent locked cargo is not implemented yet.");
+                "Retrieval routes currently require consuming delivered cargo; persistent locked cargo is not implemented yet.");
             valid = false;
         }
 
@@ -246,13 +246,13 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (proof.Ownership != NcRetrievalProofOwnership.Bearer)
         {
-            Sawmill.Warning($"[Contracts] Retrieval proof preset '{proof.ID}' uses ownership={proof.Ownership}. Stage 5.8R supports Bearer only.");
+            Sawmill.Warning($"[Contracts] Retrieval proof preset '{proof.ID}' uses ownership={proof.Ownership}. Retrieval proof claim currently supports Bearer only.");
             valid = false;
         }
 
         if (proof.Reissue != NcRetrievalProofReissuePolicy.Never)
         {
-            Sawmill.Warning($"[Contracts] Retrieval proof preset '{proof.ID}' uses reissue={proof.Reissue}. Stage 5.8R supports Never only.");
+            Sawmill.Warning($"[Contracts] Retrieval proof preset '{proof.ID}' uses reissue={proof.Reissue}. Retrieval proof claim currently supports Never only.");
             valid = false;
         }
 
@@ -260,7 +260,7 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             Sawmill.Warning(
                 $"[Contracts] Retrieval proof preset '{proof.ID}' uses consumeOnRewardClaim=false. " +
-                "Stage 5.8R-C always consumes bearer proof on reward claim.");
+                "Retrieval proof claim currently always consumes bearer proof on reward claim.");
             valid = false;
         }
 
@@ -443,7 +443,7 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             Sawmill.Warning(
                 $"[Contracts] Retrieval contract '{contractId}' cargo #{index} references missing ncItemGroup " +
-                $"'{entry.Group}'. Retrieval cargo groups must reference ncItemGroup prototypes, not legacy matchers.");
+                $"'{entry.Group}'. Retrieval cargo groups must reference ncItemGroup prototypes, not matcher prototypes.");
             return false;
         }
 

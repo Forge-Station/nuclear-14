@@ -3,24 +3,18 @@ using Content.Server.Ghost.Roles.Components;
 using Content.Server.GameTicking;
 using Content.Server.Mind;
 using Content.Server.Pinpointer;
-using Content.Server.Tools;
 using Content.Shared._NC.Trade;
 using Content.Shared.Damage;
 using Content.Shared.GameTicking;
-using Content.Shared.Interaction;
-using Content.Shared.Jittering;
 using Content.Shared.Mobs;
 using Content.Shared.Objectives.Components;
 using Content.Shared.Tag;
-using Robust.Shared.Audio.Systems;
 using Robust.Shared.Timing;
 
 namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly SharedJitteringSystem _jitter = default!;
     private readonly List<EntityUid> _objectivePinpointersScratch = new();
 
     private readonly Dictionary<(EntityUid Store, string ContractId), ObjectiveRuntimeState>
@@ -36,7 +30,6 @@ public sealed partial class NcContractSystem : EntitySystem
 
     [Dependency] private readonly PinpointerSystem _pinpointer = default!;
     [Dependency] private readonly TagSystem _tags = default!;
-    [Dependency] private readonly ToolSystem _tool = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly GhostRoleSystem _ghostRoles = default!;
     [Dependency] private readonly MindSystem _contractMind = default!;
@@ -49,8 +42,6 @@ public sealed partial class NcContractSystem : EntitySystem
         SubscribeLocalEvent<MobStateChangedEvent>(OnObjectiveTrackedMobStateChanged);
         SubscribeLocalEvent<NcContractGhostRoleSpawnerComponent, GhostRoleGetRequirementsEvent>(OnContractGhostRoleGetRequirements);
         SubscribeLocalEvent<NcContractGhostRoleSpawnerComponent, TakeGhostRoleEvent>(OnContractGhostRoleTakeover);
-        SubscribeLocalEvent<NcContractRepairObjectiveComponent, InteractUsingEvent>(OnRepairObjectiveInteractUsing);
-        SubscribeLocalEvent<NcContractRepairObjectiveComponent, ContractRepairDoAfterEvent>(OnRepairObjectiveDoAfter);
         SubscribeLocalEvent<NcContractGhostRoleSurvivalObjectiveComponent, ObjectiveGetProgressEvent>(
             OnGhostRoleSurvivalObjectiveGetProgress);
         SubscribeLocalEvent<EntParentChangedMessage>(OnObjectiveTrackedEntityParentChanged);
@@ -238,7 +229,6 @@ public sealed partial class NcContractSystem : EntitySystem
             ContractExecutionKind.InventoryDelivery => TryInitializeInventoryDeliverySupportRuntime(store, user, contractId, contract),
             ContractExecutionKind.TrackedDeliveryObjective => TryInitializeDeliveryObjectiveRuntime(store, user, contractId, contract),
             ContractExecutionKind.HuntObjective => TryInitializeHuntObjectiveRuntimeOnTake(store, user, contractId, contract),
-            ContractExecutionKind.RepairObjective => TryInitializeRepairObjective(store, user, contractId, contract),
             ContractExecutionKind.GhostRoleObjective => TryInitializeGhostRoleObjective(store, user, contractId, contract),
             _ => true
         };

@@ -8,6 +8,5 @@ public enum ContractExecutionKind : byte
     InventoryDelivery = 0,
     TrackedDeliveryObjective,
     HuntObjective,
-    RepairObjective,
     GhostRoleObjective
 }

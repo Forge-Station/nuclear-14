@@ -314,7 +314,9 @@ public sealed partial class NcContractSystem : EntitySystem
             return proofFail;
 
         var config = contract.Config;
-        GiveContractRewards(user, contract.Rewards);
+        if (!TryGiveContractRewards(user, contract.Rewards, out var rewardExecFail))
+            return rewardExecFail;
+
         FinalizeClaim(
             store,
             comp,

@@ -10,7 +10,6 @@ public static class ContractExecutionKinds
                 ? ContractExecutionKind.InventoryDelivery
                 : ContractExecutionKind.TrackedDeliveryObjective,
             ContractObjectiveType.Hunt => ContractExecutionKind.HuntObjective,
-            ContractObjectiveType.Repair => ContractExecutionKind.RepairObjective,
             ContractObjectiveType.GhostRole => ContractExecutionKind.GhostRoleObjective,
             _ => ContractExecutionKind.InventoryDelivery
         };
@@ -21,7 +20,6 @@ public static class ContractExecutionKinds
         return kind switch
         {
             ContractExecutionKind.HuntObjective => ContractObjectiveType.Hunt,
-            ContractExecutionKind.RepairObjective => ContractObjectiveType.Repair,
             ContractExecutionKind.GhostRoleObjective => ContractObjectiveType.GhostRole,
             _ => ContractObjectiveType.Delivery
         };
@@ -35,7 +33,6 @@ public static class ContractExecutionKinds
     public static bool UsesStageProgress(ContractExecutionKind kind)
     {
         return kind is ContractExecutionKind.HuntObjective or
-            ContractExecutionKind.RepairObjective or
             ContractExecutionKind.GhostRoleObjective;
     }
 }

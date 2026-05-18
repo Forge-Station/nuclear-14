@@ -157,7 +157,6 @@ public sealed partial class NcContractSystem : EntitySystem
                 return true;
 
             case ContractExecutionKind.HuntObjective:
-            case ContractExecutionKind.RepairObjective:
             case ContractExecutionKind.GhostRoleObjective:
                 UpdateObjectiveContractProgress(store, contractId, contract);
                 return true;

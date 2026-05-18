@@ -319,7 +319,6 @@ public sealed partial class NcContractCard
         ContractExecutionKinds.ToObjectiveType(executionKind) switch
         {
             ContractObjectiveType.Hunt => Loc.GetString("nc-store-contract-type-hunt"),
-            ContractObjectiveType.Repair => Loc.GetString("nc-store-contract-type-repair"),
             ContractObjectiveType.GhostRole => Loc.GetString("nc-store-contract-type-ghost-role"),
             _ => Loc.GetString("nc-store-contract-type-delivery")
         };
@@ -328,7 +327,6 @@ public sealed partial class NcContractCard
         ContractExecutionKinds.ToObjectiveType(executionKind) switch
         {
             ContractObjectiveType.Hunt => Loc.GetString("nc-store-contract-type-hunt-tooltip"),
-            ContractObjectiveType.Repair => Loc.GetString("nc-store-contract-type-repair-tooltip"),
             ContractObjectiveType.GhostRole => Loc.GetString("nc-store-contract-type-ghost-role-tooltip"),
             _ => Loc.GetString("nc-store-contract-type-delivery-tooltip")
         };

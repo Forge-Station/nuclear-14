@@ -5,14 +5,9 @@ namespace Content.Server._NC.Trade;
 internal static class NcContractTuning
 {
     public const int DefaultObjectiveStageGoal = 1;
-    public const int DefaultRepairStageGoal = 3;
 
-    public const float MinRepairDoAfterSeconds = 0.1f;
     public const string DefaultContractPinpointerPrototypeId = "PinpointerUniversal";
     public const string DefaultTrackedDeliveryDropoffBeaconPrototypeId = "TradeContractDropoffBeacon";
-    public const string DefaultRepairToolQuality = "Welding";
-    public const float DefaultRepairDoAfterSeconds = 2f;
-    public const string DefaultRepairStageSoundPath = "/Audio/Effects/sparks4.ogg";
 
     public const int MaxActiveContractPinpointers = 5;
     public const float GhostRoleStoreDeliveryRange = 2.5f;
@@ -35,9 +30,4 @@ internal static class NcContractTuning
         new(-0.75f, -0.75f)
     };
 
-    public const float RepairStageEffectVariation = 0.125f;
-    public const float RepairStageEffectVolume = -1f;
-    public const float RepairStageJitterAmplitude = 12f;
-    public const float RepairStageJitterFrequency = 7f;
-    public static readonly TimeSpan RepairStageEffectDuration = TimeSpan.FromSeconds(1.2);
 }

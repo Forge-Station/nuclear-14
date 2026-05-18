@@ -27,32 +27,13 @@ public sealed partial class NcSupplyRewardEntry
 
     [DataField("count", required: true)]
     public IntRange Count { get; set; } = IntRange.Fixed(0);
-
-    /// <summary>Legacy trap: Supply reward entries must use count, not amount.</summary>
-    [DataField("amount")]
-    public IntRange LegacyAmount { get; set; } = IntRange.Fixed(int.MinValue);
-
-    /// <summary>Legacy trap: Supply uses pool weight / count range, not per-entry probability.</summary>
-    [DataField("prob")]
-    public float LegacyProbability { get; set; } = float.NaN;
-
-    /// <summary>Legacy trap: Supply uses pool weight / count range, not per-entry chance.</summary>
-    [DataField("chance")]
-    public float LegacyChance { get; set; } = float.NaN;
-
-    /// <summary>Legacy trap: use prototype/currency/pool depending on type, not id.</summary>
-    [DataField("id")]
-    public string LegacyId { get; set; } = string.Empty;
-
-    /// <summary>Legacy trap: nested option lists are not part of Supply rewards.</summary>
-    [DataField("options")]
-    public List<ContractRewardDef>? LegacyOptions { get; set; }
 }
 
 /// <summary>
 /// Strict Trade reward pool shared by Trade contracts and Barter receivePools.
 /// Use count + weight only; entries target prototype/currency/pool by reward type.
-/// Legacy id/amount/prob/chance/options fields are rejected by validation.
+/// Old id/amount/prob/chance/options aliases are intentionally not represented.
+/// The audit rejects them so reward YAML stays on the strict type + id + count shape.
 /// </summary>
 [Prototype("ncSupplyRewardPool")]
 public sealed partial class NcSupplyRewardPoolPrototype : IPrototype
@@ -86,25 +67,5 @@ public sealed partial class NcSupplyRewardPoolEntry
 
     [DataField("max")]
     public int MaxRepeats { get; set; } = 0;
-
-    /// <summary>Legacy trap: Supply reward pool entries must use count, not amount.</summary>
-    [DataField("amount")]
-    public IntRange LegacyAmount { get; set; } = IntRange.Fixed(int.MinValue);
-
-    /// <summary>Legacy trap: Supply reward pools use weight, not prob.</summary>
-    [DataField("prob")]
-    public float LegacyProbability { get; set; } = float.NaN;
-
-    /// <summary>Legacy trap: Supply reward pools use weight, not chance.</summary>
-    [DataField("chance")]
-    public float LegacyChance { get; set; } = float.NaN;
-
-    /// <summary>Legacy trap: use prototype/currency/pool depending on type, not id.</summary>
-    [DataField("id")]
-    public string LegacyId { get; set; } = string.Empty;
-
-    /// <summary>Legacy trap: nested option lists are not part of Supply reward pools.</summary>
-    [DataField("options")]
-    public List<ContractRewardDef>? LegacyOptions { get; set; }
 }
 

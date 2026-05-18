@@ -32,7 +32,14 @@ public sealed partial class NcStoreLogicSystem
                     continue;
                 }
 
-                GiveCurrency(root, reservation.StackType, reservation.Count);
+                if (!TryGiveCurrency(root, reservation.StackType, reservation.Count))
+                {
+                    Sawmill.Error(
+                        $"[NcStore] Failed to refund barter stack cost: could not give {reservation.Count} " +
+                        $"{reservation.StackType} to {ToPrettyString(root)}.");
+                    refundedAll = false;
+                }
+
                 continue;
             }
 

@@ -10,7 +10,7 @@ public sealed partial class NcSupplyTargetEntry
     [DataField("prototype")]
     public string Prototype { get; set; } = string.Empty;
 
-    /// <summary>ncItemGroup id. Groups are matched like legacy matchers, but only for turn-in.</summary>
+    /// <summary>ncItemGroup id. Groups are matched only for turn-in items.</summary>
     [DataField("group")]
     public string Group { get; set; } = string.Empty;
 

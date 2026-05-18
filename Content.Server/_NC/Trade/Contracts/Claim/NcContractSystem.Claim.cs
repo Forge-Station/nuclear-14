@@ -114,7 +114,9 @@ public sealed partial class NcContractSystem : EntitySystem
             return proofFail;
         }
 
-        GiveContractRewards(user, contract.Rewards);
+        if (!TryGiveContractRewards(user, contract.Rewards, out var rewardExecFail))
+            return rewardExecFail;
+
         FinalizeClaim(store, comp, contractId, contract.Repeatable, deleteTrackedEntities: contract.Config.RetrievalConsumeCargo);
         return ClaimAttemptResult.Ok();
     }
@@ -157,7 +159,10 @@ public sealed partial class NcContractSystem : EntitySystem
             return proofFail;
 
         TryMarkGhostRoleRoundEndClaimed(store, contractId, contract);
-        GiveContractRewards(user, contract.Rewards);
+
+        if (!TryGiveContractRewards(user, contract.Rewards, out var rewardExecFail))
+            return rewardExecFail;
+
         FinalizeClaim(store, comp, contractId, contract.Repeatable);
 
         return ClaimAttemptResult.Ok();

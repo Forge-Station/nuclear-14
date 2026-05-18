@@ -82,10 +82,6 @@ public sealed partial class NcContractSystem : EntitySystem
                 HandleTrackedDeliveryTargetResolved(key, comp, contract);
                 return;
 
-            case ContractExecutionKind.RepairObjective:
-                HandleRepairObjectiveTargetResolved(key, comp, contract);
-                return;
-
             case ContractExecutionKind.HuntObjective:
                 HandleHuntObjectiveTargetResolved(key, comp, contract);
                 return;
@@ -245,7 +241,6 @@ public sealed partial class NcContractSystem : EntitySystem
         if (state.TargetEntity is { } target)
         {
             _objectiveRuntimeByTarget.Remove(target);
-            RemComp<NcContractRepairObjectiveComponent>(target);
             state.TargetEntity = null;
 
             if (deleteTrackedEntities && !TerminatingOrDeleted(target))
@@ -451,7 +446,6 @@ public sealed partial class NcContractSystem : EntitySystem
         public EntityUid? ProofEntity;
         public bool ProofSpawned;
         public string ProofToken = string.Empty;
-        public bool RepairInProgress;
         public EntityUid? TargetEntity;
     }
 }

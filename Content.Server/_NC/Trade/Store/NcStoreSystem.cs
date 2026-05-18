@@ -17,6 +17,7 @@ public sealed class NcStoreSystem : EntitySystem
 {
     private const float MaxUseDistance = 2.5f;
     private const float MaxCrateDistance = 4f;
+    private const int MaxTransactionCount = 1000;
     private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore");
     [Dependency] private readonly AccessReaderSystem _accessReader = default!;
     [Dependency] private readonly AudioSystem _audio = default!;
@@ -177,7 +178,7 @@ public sealed class NcStoreSystem : EntitySystem
             return;
         }
 
-        var count = Math.Max(1, msg.Count);
+        var count = Math.Clamp(msg.Count, 1, MaxTransactionCount);
         if (!_logic.TryBuy(listing.Id, uid, comp, actor, count))
         {
             PopupFail(actor, Loc.GetString("nc-store-popup-transaction-failed"));
@@ -211,7 +212,7 @@ public sealed class NcStoreSystem : EntitySystem
         }
 
 
-        var count = Math.Max(1, msg.Count);
+        var count = Math.Clamp(msg.Count, 1, MaxTransactionCount);
 
         bool ok;
 
@@ -266,7 +267,7 @@ public sealed class NcStoreSystem : EntitySystem
             return;
         }
 
-        var count = Math.Max(1, msg.Count);
+        var count = Math.Clamp(msg.Count, 1, MaxTransactionCount);
         if (!_logic.TryBarter(listing.Id, uid, comp, actor, count))
         {
             PopupFail(actor, Loc.GetString("nc-store-popup-transaction-failed"));

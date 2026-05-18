@@ -143,7 +143,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 output.Add(new ContractRewardDef
                 {
                     Type = StoreRewardType.Item,
-                    Prototype = entry.Prototype,
+                    RewardId = entry.Prototype,
                     Count = entry.Count,
                     Weight = 1
                 });
@@ -159,7 +159,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 output.Add(new ContractRewardDef
                 {
                     Type = StoreRewardType.Currency,
-                    Currency = entry.Currency,
+                    RewardId = entry.Currency,
                     Count = entry.Count,
                     Weight = 1
                 });
@@ -182,7 +182,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 output.Add(new ContractRewardDef
                 {
                     Type = StoreRewardType.Pool,
-                    Pool = entry.Pool,
+                    RewardId = entry.Pool,
                     Count = entry.Count,
                     Weight = 1
                 });

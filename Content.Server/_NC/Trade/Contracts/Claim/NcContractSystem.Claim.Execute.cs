@@ -22,8 +22,11 @@ public sealed partial class NcContractSystem : EntitySystem
 
         ExecuteClaimTakePlan(ctx.TakePlan);
         InvalidateClaimExecutionCaches(ctx);
+
+        if (!TryGiveContractRewards(ctx.User, ctx.Contract.Rewards, out fail))
+            return false;
+
         MarkClaimTargetsCompleted(ctx.Contract);
-        GiveContractRewards(ctx.User, ctx.Contract.Rewards);
 
         return true;
     }
@@ -146,12 +149,19 @@ public sealed partial class NcContractSystem : EntitySystem
         return false;
     }
 
-    private void GiveContractRewards(EntityUid user, IReadOnlyList<ContractRewardData>? rewards)
+    private bool TryGiveContractRewards(
+        EntityUid user,
+        IReadOnlyList<ContractRewardData>? rewards,
+        out ClaimAttemptResult fail)
     {
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+
         if (_logic.TryExecuteRewardList(user, rewards, "Claim", out var reason))
-            return;
+            return true;
 
         Sawmill.Error($"[Claim] Reward execution failed after claim validation: {reason}");
+        fail = CreateClaimExecutionFailure(reason);
+        return false;
     }
 
     private void FinalizeClaim(

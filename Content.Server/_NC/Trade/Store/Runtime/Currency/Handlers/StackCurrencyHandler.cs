@@ -40,8 +40,11 @@ public sealed class StackCurrencyHandler : ICurrencyHandler
         if (string.IsNullOrWhiteSpace(currencyId))
             return false;
 
-        // StackType ids are stack prototype ids.
-        return _protos.HasIndex<StackPrototype>(currencyId);
+        // StackType ids are stack prototype ids. Payout also needs a valid spawn prototype,
+        // otherwise sell/claim validation could accept currency that cannot actually be issued.
+        return _protos.TryIndex<StackPrototype>(currencyId, out var proto) &&
+               !string.IsNullOrWhiteSpace(proto.Spawn) &&
+               _protos.HasIndex<EntityPrototype>(proto.Spawn);
     }
 
     public bool TryGetBalance(in NcInventorySnapshot snapshot, string currencyId, out int balance)
@@ -164,7 +167,17 @@ public sealed class StackCurrencyHandler : ICurrencyHandler
             var addL = Math.Min(remaining, maxPerStack);
             var add = (int) Math.Clamp(addL, 1L, maxPerStack);
 
-            var spawned = _ents.SpawnEntity(proto.Spawn, coords);
+            EntityUid spawned;
+            try
+            {
+                spawned = _ents.SpawnEntity(proto.Spawn, coords);
+            }
+            catch (Exception e)
+            {
+                Logger.GetSawmill("ncstore-logic")
+                    .Error($"[NcStore] Failed to spawn currency stack '{currencyId}' using '{proto.Spawn}': {e}");
+                return false;
+            }
 
             if (_ents.TryGetComponent(spawned, out StackComponent? newStack))
                 _stacks.SetCount(spawned, add, newStack);
