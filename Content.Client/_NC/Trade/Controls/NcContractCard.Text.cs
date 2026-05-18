@@ -165,6 +165,10 @@ public sealed partial class NcContractCard
             if (_proto.TryIndex<NcItemGroupPrototype>(protoId, out var group) &&
                 !string.IsNullOrWhiteSpace(group.Name))
                 return group.Name;
+
+            if (_proto.TryIndex<NcHuntGroupPrototype>(protoId, out var huntGroup) &&
+                !string.IsNullOrWhiteSpace(huntGroup.Name))
+                return huntGroup.Name;
         }
 
         return ResolveProtoName(protoId);
@@ -193,6 +197,17 @@ public sealed partial class NcContractCard
     }
 
     private static string BuildItemGroupTooltip(NcItemGroupPrototype? group)
+    {
+        if (group == null)
+            return string.Empty;
+
+        if (string.IsNullOrWhiteSpace(group.Description))
+            return Loc.GetString("nc-store-proto-tooltip-name-only", ("name", group.Name));
+
+        return Loc.GetString("nc-store-proto-tooltip", ("name", group.Name), ("desc", group.Description));
+    }
+
+    private static string BuildHuntGroupTooltip(NcHuntGroupPrototype? group)
     {
         if (group == null)
             return string.Empty;

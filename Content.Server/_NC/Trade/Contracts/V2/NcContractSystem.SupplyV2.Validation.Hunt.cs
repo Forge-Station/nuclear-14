@@ -18,10 +18,13 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryValidateHuntLegacyFields(proto))
             valid = false;
 
-        if (!TryValidateHuntTarget(proto.ID, proto.Target))
+        if (!TryValidateHuntTargets(proto.ID, proto.Targets))
             valid = false;
 
         if (!TryValidateHuntCompletion(proto.ID, proto.Completion))
+            valid = false;
+
+        if (!TryValidateHuntSpawn(proto.ID, proto.Spawn))
             valid = false;
 
         if (!TryValidateHuntRewardsForPool(proto))
@@ -30,7 +33,109 @@ public sealed partial class NcContractSystem : EntitySystem
         return valid;
     }
 
-    private bool TryValidateHuntTarget(string contractId, NcHuntTargetData target)
+    private bool TryValidateHuntSpawn(string contractId, NcHuntSpawnData spawn)
+    {
+        if (spawn.Point == null)
+        {
+            Sawmill.Warning($"[ContractsV2] Hunt contract '{contractId}' must define spawn.point.");
+            return false;
+        }
+
+        return spawn.Point.Type switch
+        {
+            ContractPointSelectorType.MarkerId => RequireHuntSpawnPointId(contractId, spawn.Point),
+            ContractPointSelectorType.MarkerGroup => RequireHuntSpawnPointId(contractId, spawn.Point),
+            ContractPointSelectorType.Weighted => TryValidateHuntSpawnWeightedSelector(contractId, spawn.Point),
+            ContractPointSelectorType.Store => RejectHuntStoreSpawnPoint(contractId),
+            _ => RejectHuntUnknownSpawnPoint(contractId, spawn.Point.Type)
+        };
+    }
+
+    private static bool RequireHuntSpawnPointId(string contractId, ContractPointSelectorPrototype selector)
+    {
+        if (!string.IsNullOrWhiteSpace(selector.Id))
+            return true;
+
+        Sawmill.Warning(
+            $"[ContractsV2] Hunt contract '{contractId}' spawn.point type {selector.Type} requires id.");
+        return false;
+    }
+
+    private bool TryValidateHuntSpawnWeightedSelector(string contractId, ContractPointSelectorPrototype selector)
+    {
+        if (selector.Options.Count == 0)
+        {
+            Sawmill.Warning($"[ContractsV2] Hunt contract '{contractId}' spawn.point weighted selector has no options.");
+            return false;
+        }
+
+        var valid = true;
+        for (var i = 0; i < selector.Options.Count; i++)
+        {
+            var option = selector.Options[i];
+            if (option.Weight <= 0)
+            {
+                Sawmill.Warning(
+                    $"[ContractsV2] Hunt contract '{contractId}' spawn.point options[{i}] weight must be > 0.");
+                valid = false;
+            }
+
+            switch (option.Type)
+            {
+                case ContractPointSelectorType.MarkerId:
+                case ContractPointSelectorType.MarkerGroup:
+                    if (string.IsNullOrWhiteSpace(option.Id))
+                    {
+                        Sawmill.Warning(
+                            $"[ContractsV2] Hunt contract '{contractId}' spawn.point options[{i}] type {option.Type} requires id.");
+                        valid = false;
+                    }
+                    break;
+
+                default:
+                    Sawmill.Warning(
+                        $"[ContractsV2] Hunt contract '{contractId}' spawn.point options[{i}] type {option.Type} is not supported. Use MarkerId or MarkerGroup.");
+                    valid = false;
+                    break;
+            }
+        }
+
+        return valid;
+    }
+
+    private static bool RejectHuntStoreSpawnPoint(string contractId)
+    {
+        Sawmill.Warning(
+            $"[ContractsV2] Hunt contract '{contractId}' spawn.point.type=Store is forbidden. Hunt V2 targets must spawn at contract markers.");
+        return false;
+    }
+
+    private static bool RejectHuntUnknownSpawnPoint(string contractId, ContractPointSelectorType type)
+    {
+        Sawmill.Warning(
+            $"[ContractsV2] Hunt contract '{contractId}' spawn.point.type={type} is not supported.");
+        return false;
+    }
+
+    private bool TryValidateHuntTargets(string contractId, List<NcHuntTargetData> targets)
+    {
+        if (targets.Count == 0)
+        {
+            Sawmill.Warning($"[ContractsV2] Hunt contract '{contractId}' must define at least one targets entry.");
+            return false;
+        }
+
+        var valid = true;
+        for (var i = 0; i < targets.Count; i++)
+        {
+            if (!TryValidateHuntTarget(contractId, i, targets[i]))
+                valid = false;
+        }
+
+        return valid;
+    }
+
+    private bool TryValidateHuntTarget(string contractId, int index, NcHuntTargetData target)
     {
         var hasGroup = !string.IsNullOrWhiteSpace(target.Group);
         var hasPrototype = !string.IsNullOrWhiteSpace(target.Prototype);
@@ -39,14 +144,14 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             Sawmill.Warning(
                 hasGroup
-                    ? $"[ContractsV2] Hunt contract '{contractId}' target has both group and prototype. Use exactly one."
-                    : $"[ContractsV2] Hunt contract '{contractId}' target has neither group nor prototype.");
+                    ? $"[ContractsV2] Hunt contract '{contractId}' targets[{index}] has both group and prototype. Use exactly one."
+                    : $"[ContractsV2] Hunt contract '{contractId}' targets[{index}] has neither group nor prototype.");
             return false;
         }
 
         if (target.Count <= 0)
         {
-            Sawmill.Warning($"[ContractsV2] Hunt contract '{contractId}' target count must be > 0.");
+            Sawmill.Warning($"[ContractsV2] Hunt contract '{contractId}' targets[{index}] count must be > 0.");
             return false;
         }
 
@@ -56,14 +161,14 @@ public sealed partial class NcContractSystem : EntitySystem
                 return true;
 
             Sawmill.Warning(
-                $"[ContractsV2] Hunt contract '{contractId}' target references missing entity prototype '{target.Prototype}'.");
+                $"[ContractsV2] Hunt contract '{contractId}' targets[{index}] references missing entity prototype '{target.Prototype}'.");
             return false;
         }
 
         if (!_prototypes.TryIndex<NcHuntGroupPrototype>(target.Group, out var group))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Hunt contract '{contractId}' target references missing ncHuntGroup '{target.Group}'.");
+                $"[ContractsV2] Hunt contract '{contractId}' targets[{index}] references missing ncHuntGroup '{target.Group}'.");
             return false;
         }
 
@@ -196,9 +301,9 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        if (proto.LegacyTargets is { Count: > 0 })
+        if (proto.LegacyTarget is not null)
         {
-            Sawmill.Warning($"[ContractsV2] Hunt contract '{proto.ID}' uses legacy field 'targets'.");
+            Sawmill.Warning($"[ContractsV2] Hunt contract '{proto.ID}' uses legacy field 'target'. Use targets as a list.");
             return false;
         }
 

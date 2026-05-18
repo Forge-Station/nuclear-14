@@ -32,7 +32,7 @@
   id: NcTradeSmokeHuntBoard
   parent: TradeContractBoardCity
   name: доска проверки охоты
-  description: Показывает оба ручных Hunt V2 теста: prototype target и group target.
+  description: "Показывает оба ручных Hunt V2 теста: prototype target и group target."
   suffix: NC, Smoke, Hunt
   components:
   - type: NcStore
@@ -62,19 +62,19 @@
 - type: storeContractsPreset
   id: NcTradeSmokeQuestContractsPreset
   contractOffers:
-    maxVisible: 12
+    maxVisible: 17
     groups:
     - pool: NcTradeSmokeOfferPoolSupply
       minVisible: 4
       maxVisible: 5
       fillWeight: 5
     - pool: NcTradeSmokeOfferPoolRetrieval
-      minVisible: 4
-      maxVisible: 6
+      minVisible: 11
+      maxVisible: 11
       fillWeight: 5
     - pool: NcTradeSmokeOfferPoolHunt
-      minVisible: 1
-      maxVisible: 1
+      minVisible: 2
+      maxVisible: 2
       fillWeight: 1
   skipCost: 0
   skipCurrency: Caps
@@ -82,11 +82,11 @@
 - type: storeContractsPreset
   id: NcTradeSmokeHuntContractsPreset
   contractOffers:
-    maxVisible: 2
+    maxVisible: 3
     groups:
     - pool: NcTradeSmokeOfferPoolHunt
-      minVisible: 2
-      maxVisible: 2
+      minVisible: 3
+      maxVisible: 3
       fillWeight: 1
   skipCost: 0
   skipCurrency: Caps

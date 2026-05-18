@@ -38,9 +38,6 @@ public sealed partial class NcContractSystem : EntitySystem
         config.RepairToolQuality = ResolveRepairToolQuality(config.RepairToolQuality);
         config.RepairDoAfterSeconds = ResolveRepairDoAfterSeconds(config.RepairDoAfterSeconds);
         config.RepairStageSound = ResolveRepairStageSound(config.RepairStageSound);
-        config.HuntV2TargetGroup ??= string.Empty;
-        config.HuntV2TargetPrototype ??= string.Empty;
-
         if (config.RetrievalSpawnEnabled)
         {
             config.RetrievalSpawnPoint = NormalizeContractPointSelector(

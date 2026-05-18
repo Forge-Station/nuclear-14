@@ -61,6 +61,21 @@ public sealed partial class NcContractSystem : EntitySystem
                 valid = false;
             }
         }
+        else
+        {
+            Sawmill.Warning(
+                $"[ContractsV2] Retrieval route '{route.ID}' must define a source. " +
+                "Retrieval is spawned cargo delivery; existing-world item turn-in belongs to Supply.");
+            valid = false;
+        }
+
+        if (source != null && !source.SpawnCargo)
+        {
+            Sawmill.Warning(
+                $"[ContractsV2] Retrieval route '{route.ID}' source must use spawnCargo=true. " +
+                "Retrieval is spawned cargo delivery; existing-world item turn-in belongs to Supply.");
+            valid = false;
+        }
 
         if (!_prototypes.TryIndex<NcRetrievalDestinationPresetPrototype>(route.Destination, out var destination))
         {

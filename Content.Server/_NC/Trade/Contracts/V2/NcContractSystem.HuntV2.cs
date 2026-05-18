@@ -7,8 +7,9 @@ public sealed partial class NcContractSystem : EntitySystem
 {
     private ContractServerData CreateHuntContractData(EntityUid store, NcHuntContractPrototype proto)
     {
-        var target = BuildHuntV2Target(proto);
-        var required = Math.Max(1, target.Required);
+        var targets = BuildHuntV2Targets(proto);
+        var required = Math.Max(1, CalculateTotalRequired(targets));
+        var mainTarget = GetPrimaryTargetId(targets);
         var rewards = BakeRewardsForContract(store, proto.ID, BuildHuntV2RewardDefs(store, proto));
 
         var runtime = new ContractRuntimeContextData
@@ -30,8 +31,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 : string.Empty,
             HuntV2Enabled = true,
             HuntV2CompletionMode = proto.Completion.Mode,
-            HuntV2TargetGroup = proto.Target.Group,
-            HuntV2TargetPrototype = proto.Target.Prototype
+            SpawnPoint = CloneContractPointSelector(proto.Spawn.Point)
         };
         NormalizeObjectiveConfig(config);
 
@@ -46,9 +46,9 @@ public sealed partial class NcContractSystem : EntitySystem
             Runtime = runtime,
             Config = config,
             FlowStatus = ContractFlowStatus.Available,
-            MatchMode = target.MatchMode,
-            Targets = new List<ContractTargetServerData> { target },
-            TargetItem = target.TargetItem,
+            MatchMode = targets.Count > 0 ? targets[0].MatchMode : PrototypeMatchMode.Exact,
+            Targets = targets,
+            TargetItem = mainTarget,
             Required = required,
             Progress = 0,
             Rewards = rewards
@@ -58,16 +58,23 @@ public sealed partial class NcContractSystem : EntitySystem
         return contract;
     }
 
-    private static ContractTargetServerData BuildHuntV2Target(NcHuntContractPrototype proto)
+    private static List<ContractTargetServerData> BuildHuntV2Targets(NcHuntContractPrototype proto)
     {
-        var hasPrototype = !string.IsNullOrWhiteSpace(proto.Target.Prototype);
-        return new ContractTargetServerData
+        var targets = new List<ContractTargetServerData>(proto.Targets.Count);
+        for (var i = 0; i < proto.Targets.Count; i++)
         {
-            TargetItem = hasPrototype ? proto.Target.Prototype : proto.Target.Group,
-            Required = Math.Max(1, proto.Target.Count),
-            Progress = 0,
-            MatchMode = hasPrototype ? PrototypeMatchMode.Exact : PrototypeMatchMode.Matcher
-        };
+            var target = proto.Targets[i];
+            var hasPrototype = !string.IsNullOrWhiteSpace(target.Prototype);
+            targets.Add(new ContractTargetServerData
+            {
+                TargetItem = hasPrototype ? target.Prototype : target.Group,
+                Required = Math.Max(1, target.Count),
+                Progress = 0,
+                MatchMode = hasPrototype ? PrototypeMatchMode.Exact : PrototypeMatchMode.Matcher
+            });
+        }
+
+        return targets;
     }
 
     private List<ContractRewardDef> BuildHuntV2RewardDefs(EntityUid store, NcHuntContractPrototype proto)

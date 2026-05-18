@@ -234,6 +234,7 @@ public sealed partial class NcContractSystem : EntitySystem
         DeactivateTrackedDeliveryDropoff(state);
 
         CleanupRetrievalSpawnedEntities(state, deleteTrackedEntities);
+        CleanupHuntV2SpawnedTargets(state, deleteTrackedEntities);
 
         CleanupObjectivePinpointers(key, state);
 
@@ -299,6 +300,21 @@ public sealed partial class NcContractSystem : EntitySystem
         state.RetrievalSpawnedEntities.Clear();
     }
 
+    private void CleanupHuntV2SpawnedTargets(ObjectiveRuntimeState state, bool deleteSpawnedTargets)
+    {
+        if (state.HuntV2SpawnedTargets.Count == 0)
+            return;
+
+        for (var i = state.HuntV2SpawnedTargets.Count - 1; i >= 0; i--)
+        {
+            var ent = state.HuntV2SpawnedTargets[i];
+            if (deleteSpawnedTargets && ent != EntityUid.Invalid && !TerminatingOrDeleted(ent))
+                Del(ent);
+        }
+
+        state.HuntV2SpawnedTargets.Clear();
+    }
+
     private static bool IsTargetInEntityContainer(TransformComponent xform)
     {
         var parent = xform.ParentUid;
@@ -343,6 +359,7 @@ public sealed partial class NcContractSystem : EntitySystem
         public readonly List<EntityUid> GuardEntities = new();
         public readonly HashSet<EntityUid> PinpointerEntities = new();
         public readonly List<EntityUid> RetrievalSpawnedEntities = new();
+        public readonly List<EntityUid> HuntV2SpawnedTargets = new();
         public readonly HashSet<EntityUid> RetrievalDeliveredEntities = new();
         public int RetrievalAcceptedCargoCount;
         public EntityCoordinates? RetrievalLastAcceptedCargoCoordinates;
@@ -361,6 +378,5 @@ public sealed partial class NcContractSystem : EntitySystem
         public EntityUid? TargetEntity;
     }
 }
-
 
 

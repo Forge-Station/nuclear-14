@@ -33,6 +33,13 @@ public sealed partial class NcHuntCompletionData
     public string Trophy { get; set; } = string.Empty;
 }
 
+[DataDefinition]
+public sealed partial class NcHuntSpawnData
+{
+    [DataField("point", required: true)]
+    public ContractPointSelectorPrototype Point { get; set; } = new();
+}
+
 [Prototype("ncHuntGroup")]
 public sealed partial class NcHuntGroupPrototype : IPrototype
 {
@@ -68,11 +75,14 @@ public sealed partial class NcHuntContractPrototype : IPrototype
     [DataField("icon")]
     public string Icon { get; private set; } = string.Empty;
 
-    [DataField("target", required: true)]
-    public NcHuntTargetData Target { get; private set; } = new();
+    [DataField("targets", required: true)]
+    public List<NcHuntTargetData> Targets { get; private set; } = new();
 
     [DataField("completion", required: true)]
     public NcHuntCompletionData Completion { get; private set; } = new();
+
+    [DataField("spawn", required: true)]
+    public NcHuntSpawnData Spawn { get; private set; } = new();
 
     [DataField("reward", required: true)]
     public List<NcSupplyRewardEntry> Reward { get; private set; } = new();
@@ -80,6 +90,9 @@ public sealed partial class NcHuntContractPrototype : IPrototype
     // Legacy traps for old storeContract hunt shape.
     [DataField("targetItem")]
     public string LegacyTargetItem { get; set; } = string.Empty;
+
+    [DataField("target")]
+    public NcHuntTargetData? LegacyTarget { get; set; }
 
     [DataField("required")]
     public IntRange LegacyRequired { get; set; } = IntRange.Fixed(int.MinValue);
@@ -92,9 +105,6 @@ public sealed partial class NcHuntContractPrototype : IPrototype
 
     [DataField("runtime")]
     public StoreContractRuntimePrototype? LegacyRuntime { get; set; }
-
-    [DataField("targets")]
-    public List<StoreContractTargetEntry>? LegacyTargets { get; set; }
 
     [DataField("targetCount")]
     public IntRange LegacyTargetCount { get; set; } = IntRange.Fixed(int.MinValue);

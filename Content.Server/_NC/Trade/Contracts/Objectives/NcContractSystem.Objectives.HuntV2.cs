@@ -2,6 +2,8 @@ using Content.Shared._NC.Trade;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Robust.Shared.Map;
+using Robust.Shared.Prototypes;
+using Robust.Shared.Random;
 
 namespace Content.Server._NC.Trade;
 
@@ -47,16 +49,23 @@ public sealed partial class NcContractSystem : EntitySystem
         var key = (store, contractId);
         var state = GetOrCreateObjectiveRuntimeState(key);
         state.TargetEntity = null;
+        state.HuntV2SpawnedTargets.Clear();
         state.HuntTargetWasKilled = false;
         state.LastKnownTargetCoordinates = null;
+
+        ResetObjectiveState(contract);
+
+        if (!TrySpawnHuntV2Targets(store, contractId, contract, state))
+        {
+            CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true);
+            return false;
+        }
 
         if (!state.HuntV2Active)
         {
             state.HuntV2Active = true;
             _activeHuntV2Objectives++;
         }
-
-        ResetObjectiveState(contract);
 
         if (!contract.Config.GivePinpointer)
             return true;
@@ -105,7 +114,8 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
             }
 
-            if (!IsMatchingHuntV2Target(killedTarget, contract, allowDeadTarget: true))
+            if (!IsHuntV2SpawnedTarget(state, killedTarget) ||
+                !IsMatchingHuntV2Target(killedTarget, contract, allowDeadTarget: true))
                 continue;
 
             candidates ??= new();
@@ -126,10 +136,13 @@ public sealed partial class NcContractSystem : EntitySystem
                 contract.Runtime.Failed ||
                 contract.Completed ||
                 !IsHuntV2Contract(contract) ||
+                !IsHuntV2SpawnedTarget(state, killedTarget) ||
                 !IsMatchingHuntV2Target(killedTarget, contract, allowDeadTarget: true))
             {
                 continue;
             }
+
+            RemoveHuntV2SpawnedTarget(state, killedTarget);
 
             if (TryComp(killedTarget, out TransformComponent? killedXform))
                 state.LastKnownTargetCoordinates = killedXform.Coordinates;
@@ -137,9 +150,18 @@ public sealed partial class NcContractSystem : EntitySystem
             SetObjectiveStage(contract, contract.Runtime.Stage + 1);
             if (!contract.Completed)
             {
-                if (TryResolveHuntV2PinpointerTarget(key.Store, contract, state, out var liveTarget))
+                if (TryFindNearestLiveHuntV2Target(key.Store, contract, state, out var liveTarget))
+                {
                     RetargetObjectivePinpointers(key, state, liveTarget);
+                    continue;
+                }
 
+                FinalizeObjectiveFailure(
+                    key,
+                    comp,
+                    contract,
+                    Loc.GetString("nc-store-contract-hunt-target-lost"),
+                    deleteGuards: false);
                 continue;
             }
 
@@ -205,7 +227,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return true;
         }
 
-        if (TryFindNearestLiveHuntV2Target(store, contract, out var liveTarget))
+        if (TryFindNearestLiveHuntV2Target(store, contract, state, out var liveTarget))
         {
             target = liveTarget;
             return true;
@@ -215,7 +237,11 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
-    private bool TryFindNearestLiveHuntV2Target(EntityUid origin, ContractServerData contract, out EntityUid target)
+    private bool TryFindNearestLiveHuntV2Target(
+        EntityUid origin,
+        ContractServerData contract,
+        ObjectiveRuntimeState state,
+        out EntityUid target)
     {
         target = EntityUid.Invalid;
 
@@ -226,9 +252,16 @@ public sealed partial class NcContractSystem : EntitySystem
         var originPos = _xform.GetWorldPosition(originXform);
         var bestDistSq = float.MaxValue;
 
-        var query = EntityQueryEnumerator<MobStateComponent, TransformComponent>();
-        while (query.MoveNext(out var candidate, out var mobState, out var candidateXform))
+        for (var i = 0; i < state.HuntV2SpawnedTargets.Count; i++)
         {
+            var candidate = state.HuntV2SpawnedTargets[i];
+            if (candidate == EntityUid.Invalid || TerminatingOrDeleted(candidate))
+                continue;
+
+            if (!TryComp(candidate, out MobStateComponent? mobState) ||
+                !TryComp(candidate, out TransformComponent? candidateXform))
+                continue;
+
             if (mobState.CurrentState == MobState.Dead)
                 continue;
 
@@ -251,6 +284,106 @@ public sealed partial class NcContractSystem : EntitySystem
         return target != EntityUid.Invalid;
     }
 
+    private bool TrySpawnHuntV2Targets(
+        EntityUid store,
+        string contractId,
+        ContractServerData contract,
+        ObjectiveRuntimeState state)
+    {
+        var targets = GetEffectiveTargets(contract);
+        var required = Math.Max(1, CalculateTotalRequired(targets));
+        for (var targetIndex = 0; targetIndex < targets.Count; targetIndex++)
+        {
+            var targetDef = targets[targetIndex];
+            var targetRequired = Math.Max(0, targetDef.Required);
+            if (targetRequired <= 0)
+                continue;
+
+            for (var i = 0; i < targetRequired; i++)
+            {
+                if (!TryResolveHuntV2SpawnPrototype(contractId, targetDef, out var targetProtoId))
+                    return false;
+
+                if (!TryResolveObjectiveSpawnCoordinates(store, contract.Config, out var spawnCoords, fallbackToStore: false))
+                {
+                    Sawmill.Warning(
+                        $"[ContractsV2] Hunt runtime init failed for '{contractId}': cannot resolve hunt spawn point.");
+                    return false;
+                }
+
+                if (!TrySpawnObjectiveTarget(contractId, targetProtoId, spawnCoords, out var target))
+                    return false;
+
+                state.HuntV2SpawnedTargets.Add(target);
+                if (state.LastKnownTargetCoordinates == null && TryComp(target, out TransformComponent? targetXform))
+                    state.LastKnownTargetCoordinates = targetXform.Coordinates;
+            }
+        }
+
+        return state.HuntV2SpawnedTargets.Count == required;
+    }
+
+    private bool TryResolveHuntV2SpawnPrototype(
+        string contractId,
+        ContractTargetServerData target,
+        out string prototypeId)
+    {
+        prototypeId = string.Empty;
+
+        if (target.MatchMode == PrototypeMatchMode.Exact)
+        {
+            prototypeId = target.TargetItem;
+            return _prototypes.HasIndex<EntityPrototype>(prototypeId);
+        }
+
+        if (string.IsNullOrWhiteSpace(target.TargetItem) ||
+            !_prototypes.TryIndex<NcHuntGroupPrototype>(target.TargetItem, out var group) ||
+            group.Prototypes.Count == 0)
+        {
+            Sawmill.Warning(
+                $"[ContractsV2] Hunt runtime init failed for '{contractId}': target group has no spawnable prototypes.");
+            return false;
+        }
+
+        var candidates = new List<string>(group.Prototypes.Count);
+        for (var i = 0; i < group.Prototypes.Count; i++)
+        {
+            var candidate = group.Prototypes[i];
+            if (!string.IsNullOrWhiteSpace(candidate) && _prototypes.HasIndex<EntityPrototype>(candidate))
+                candidates.Add(candidate);
+        }
+
+        if (candidates.Count == 0)
+        {
+            Sawmill.Warning(
+                $"[ContractsV2] Hunt runtime init failed for '{contractId}': target group '{group.ID}' has no valid entity prototypes.");
+            return false;
+        }
+
+        prototypeId = _random.Pick(candidates);
+        return true;
+    }
+
+    private static bool IsHuntV2SpawnedTarget(ObjectiveRuntimeState state, EntityUid target)
+    {
+        for (var i = 0; i < state.HuntV2SpawnedTargets.Count; i++)
+        {
+            if (state.HuntV2SpawnedTargets[i] == target)
+                return true;
+        }
+
+        return false;
+    }
+
+    private static void RemoveHuntV2SpawnedTarget(ObjectiveRuntimeState state, EntityUid target)
+    {
+        for (var i = state.HuntV2SpawnedTargets.Count - 1; i >= 0; i--)
+        {
+            if (state.HuntV2SpawnedTargets[i] == target)
+                state.HuntV2SpawnedTargets.RemoveAt(i);
+        }
+    }
+
     private bool IsMatchingHuntV2Target(EntityUid entity, ContractServerData contract, bool allowDeadTarget)
     {
         if (entity == EntityUid.Invalid || TerminatingOrDeleted(entity))
@@ -265,14 +398,25 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryGetPlanningEntityPrototypeId(entity, out var prototypeId))
             return false;
 
-        var config = contract.Config;
-        if (!string.IsNullOrWhiteSpace(config.HuntV2TargetPrototype))
-            return prototypeId == config.HuntV2TargetPrototype;
+        var targets = GetEffectiveTargets(contract);
+        for (var i = 0; i < targets.Count; i++)
+        {
+            if (MatchesHuntV2TargetEntry(prototypeId, targets[i]))
+                return true;
+        }
 
-        if (string.IsNullOrWhiteSpace(config.HuntV2TargetGroup))
+        return false;
+    }
+
+    private bool MatchesHuntV2TargetEntry(string prototypeId, ContractTargetServerData target)
+    {
+        if (string.IsNullOrWhiteSpace(prototypeId) || string.IsNullOrWhiteSpace(target.TargetItem))
             return false;
 
-        if (!_prototypes.TryIndex<NcHuntGroupPrototype>(config.HuntV2TargetGroup, out var group))
+        if (target.MatchMode == PrototypeMatchMode.Exact)
+            return prototypeId == target.TargetItem;
+
+        if (!_prototypes.TryIndex<NcHuntGroupPrototype>(target.TargetItem, out var group))
             return false;
 
         for (var i = 0; i < group.Prototypes.Count; i++)

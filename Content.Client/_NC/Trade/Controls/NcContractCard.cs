@@ -391,6 +391,7 @@ public sealed partial class NcContractCard : PanelContainer
                     ("progress", _data.Progress),
                     ("required", CalculateRequiredTotal(_data)));
 
+        PrimaryActionButton.ClipText = true;
         PrimaryActionButton.Disabled = !(canTake || canClaim);
         PrimaryActionButton.StyleBoxOverride = canTake
             ? BuildButtonStyle(Color.FromHex("#203248"), Color.FromHex("#4F86B7"))
@@ -421,6 +422,7 @@ public sealed partial class NcContractCard : PanelContainer
                 Text = Loc.GetString("nc-store-contract-action-pinpointer"),
                 HorizontalExpand = true,
                 MinSize = new(0, 24),
+                ClipText = true,
                 ToolTip = Loc.GetString("nc-store-contract-action-pinpointer-tooltip")
             };
             pointerBtn.StyleBoxOverride = BuildButtonStyle(Color.FromHex("#1F2833"), Color.FromHex("#4F86B7"));
@@ -430,10 +432,10 @@ public sealed partial class NcContractCard : PanelContainer
             SecondaryButtonsRow.AddChild(pointerBtn);
         }
 
-        if (_skipCost > 0 && !string.IsNullOrWhiteSpace(_skipCurrency))
+        if (canTake && _skipCost > 0 && !string.IsNullOrWhiteSpace(_skipCurrency))
         {
             var skipCurrencyName = CurrencyName(_skipCurrency);
-            var canSkip = _data.FlowStatus == ContractFlowStatus.Available && _skipBalance >= _skipCost;
+            var canSkip = _skipBalance >= _skipCost;
             var skipBtn = new Button
             {
                 Text = Loc.GetString(
@@ -442,6 +444,7 @@ public sealed partial class NcContractCard : PanelContainer
                     ("currency", skipCurrencyName)),
                 HorizontalExpand = true,
                 MinSize = new(0, 24),
+                ClipText = true,
                 Disabled = !canSkip
             };
 
@@ -456,11 +459,9 @@ public sealed partial class NcContractCard : PanelContainer
                 "nc-store-contract-skip-tooltip",
                 ("cost", _skipCost),
                 ("currency", skipCurrencyName));
-            skipBtn.ToolTip = _data.FlowStatus != ContractFlowStatus.Available
-                ? Loc.GetString("nc-store-contract-skip-locked")
-                : canSkip
-                    ? baseTip
-                    : $"{baseTip}\n{Loc.GetString("nc-store-contract-skip-failed")}";
+            skipBtn.ToolTip = canSkip
+                ? baseTip
+                : $"{baseTip}\n{Loc.GetString("nc-store-contract-skip-failed")}";
 
             skipBtn.OnPressed += _ =>
             {

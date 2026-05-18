@@ -4,7 +4,8 @@ namespace Content.Shared._NC.Trade;
 
 /// <summary>
 /// Retrieval V2 Route layout: content defines cargo, route and reward.
-/// Route presets define where cargo appears, where it is delivered, whether proof exists, and guidance.
+/// Retrieval is spawned cargo delivery: the contract creates cargo, then the player moves that cargo along a route.
+/// Existing-world item turn-in belongs to Supply, not Retrieval.
 /// </summary>
 [Prototype("ncRetrievalContract")]
 public sealed partial class NcRetrievalContractPrototype : IPrototype
@@ -24,7 +25,7 @@ public sealed partial class NcRetrievalContractPrototype : IPrototype
     [DataField("icon")]
     public string Icon { get; private set; } = string.Empty;
 
-    /// <summary>Retrieval cargo. This replaces Retrieval Stage 1/2 'targets'.</summary>
+    /// <summary>Retrieval cargo spawned by the route source. This replaces Retrieval Stage 1/2 'targets'.</summary>
     [DataField("cargo", required: true)]
     public List<NcSupplyTargetEntry> Cargo { get; private set; } = new();
 

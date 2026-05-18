@@ -143,6 +143,9 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void SyncHuntObjectiveProgress(EntityUid store, string contractId, ContractServerData contract)
     {
+        if (IsHuntV2Contract(contract))
+            return;
+
         var key = (store, contractId);
         if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
             return;

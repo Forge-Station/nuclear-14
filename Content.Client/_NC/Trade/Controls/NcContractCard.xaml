@@ -159,10 +159,10 @@
                                         MinSize="0 26" />
 
                                 <BoxContainer Name="SecondaryButtonsRow"
-                                              Orientation="Horizontal"
+                                              Orientation="Vertical"
                                               HorizontalExpand="True"
                                               Margin="0 3 0 0"
-                                              SeparationOverride="4"
+                                              SeparationOverride="3"
                                               Visible="False" />
                             </BoxContainer>
                         </PanelContainer>

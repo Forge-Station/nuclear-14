@@ -30,23 +30,20 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         EntityUid pinpointerTarget;
-        if (UsesRetrievalRouteReturnPinpointerTarget(contract, state))
+        if (!TryResolveRetrievalRouteReturnPinpointerTargetForUser(store, user, contract, state, out pinpointerTarget) &&
+            UsesRetrievalSpawnedPinpointerTarget(contract))
         {
-            pinpointerTarget = store;
-        }
-        else if (UsesRetrievalSpawnedPinpointerTarget(contract))
-        {
-            if (!TryResolveRetrievalSpawnedPinpointerTarget(contract, state, out pinpointerTarget))
+            if (!TryResolveRetrievalSpawnedPinpointerTargetForUser(store, user, contract, state, out pinpointerTarget))
                 return false;
         }
-        else if (contract.Completed)
+        else if (pinpointerTarget == EntityUid.Invalid && contract.Completed)
         {
             if (state.ProofEntity is not { } proof || proof == EntityUid.Invalid || TerminatingOrDeleted(proof))
                 return false;
 
             pinpointerTarget = proof;
         }
-        else
+        else if (pinpointerTarget == EntityUid.Invalid)
         {
             if (contract.ExecutionKind == ContractExecutionKind.GhostRoleObjective && !state.GhostRoleTaken)
                 return false;
@@ -107,6 +104,58 @@ public sealed partial class NcContractSystem : EntitySystem
                config.RetrievalGuidancePinpointerTarget == NcRetrievalPinpointerTargetMode.CargoThenDestinationThenStore;
     }
 
+    private bool TryResolveRetrievalRouteReturnPinpointerTarget(
+        EntityUid store,
+        ContractServerData contract,
+        ObjectiveRuntimeState state,
+        out EntityUid target)
+    {
+        target = EntityUid.Invalid;
+        if (!UsesRetrievalRouteReturnPinpointerTarget(contract, state))
+            return false;
+
+        if (state.ProofEntity is { } proof &&
+            proof != EntityUid.Invalid &&
+            !TerminatingOrDeleted(proof))
+        {
+            target = IsObjectiveProofCarried(proof) ? store : proof;
+            return true;
+        }
+
+        target = store;
+        return true;
+    }
+
+    private bool TryResolveRetrievalRouteReturnPinpointerTargetForUser(
+        EntityUid store,
+        EntityUid user,
+        ContractServerData contract,
+        ObjectiveRuntimeState state,
+        out EntityUid target)
+    {
+        target = EntityUid.Invalid;
+        if (!UsesRetrievalRouteReturnPinpointerTarget(contract, state))
+            return false;
+
+        if (state.ProofEntity is { } proof &&
+            proof != EntityUid.Invalid &&
+            !TerminatingOrDeleted(proof))
+        {
+            target = TryGetContainedEntityRoot(proof, out var proofCarrier) && proofCarrier == user
+                ? store
+                : proof;
+            return true;
+        }
+
+        target = store;
+        return true;
+    }
+
+    private bool IsObjectiveProofCarried(EntityUid proof)
+    {
+        return TryComp(proof, out TransformComponent? xform) && IsTargetInEntityContainer(xform);
+    }
+
     private static bool UsesRetrievalSpawnedPinpointerTarget(ContractServerData contract)
     {
         var config = contract.Config;
@@ -116,6 +165,7 @@ public sealed partial class NcContractSystem : EntitySystem
     }
 
     private bool TryResolveRetrievalSpawnedPinpointerTarget(
+        EntityUid store,
         ContractServerData contract,
         ObjectiveRuntimeState state,
         out EntityUid target)
@@ -124,7 +174,24 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!UsesRetrievalSpawnedPinpointerTarget(contract))
             return false;
 
+        if (contract.Completed &&
+            contract.Config.RetrievalDestinationType == NcRetrievalDestinationTargetType.StoreUi)
+        {
+            target = store;
+            return true;
+        }
+
         PruneRetrievalSpawnedEntities(state);
+
+        for (var i = 0; i < state.RetrievalSpawnedEntities.Count; i++)
+        {
+            var candidate = state.RetrievalSpawnedEntities[i];
+            if (!TryResolveRetrievalCarriedCargoPinpointerTarget(store, contract, state, candidate, out target))
+                continue;
+
+            return true;
+        }
+
         for (var i = 0; i < state.RetrievalSpawnedEntities.Count; i++)
         {
             var candidate = state.RetrievalSpawnedEntities[i];
@@ -132,6 +199,152 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             target = candidate;
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool TryResolveRetrievalSpawnedPinpointerTargetForUser(
+        EntityUid store,
+        EntityUid user,
+        ContractServerData contract,
+        ObjectiveRuntimeState state,
+        out EntityUid target)
+    {
+        target = EntityUid.Invalid;
+        if (!UsesRetrievalSpawnedPinpointerTarget(contract))
+            return false;
+
+        if (contract.Completed &&
+            contract.Config.RetrievalDestinationType == NcRetrievalDestinationTargetType.StoreUi)
+        {
+            target = store;
+            return true;
+        }
+
+        PruneRetrievalSpawnedEntities(state);
+
+        for (var i = 0; i < state.RetrievalSpawnedEntities.Count; i++)
+        {
+            var candidate = state.RetrievalSpawnedEntities[i];
+            if (!TryGetContainedEntityRoot(candidate, out var cargoCarrier) || cargoCarrier != user)
+                continue;
+
+            if (!TryResolveRetrievalCarriedCargoPinpointerTarget(store, contract, state, candidate, out target))
+                continue;
+
+            return true;
+        }
+
+        for (var i = 0; i < state.RetrievalSpawnedEntities.Count; i++)
+        {
+            var candidate = state.RetrievalSpawnedEntities[i];
+            if (candidate == EntityUid.Invalid || TerminatingOrDeleted(candidate))
+                continue;
+
+            target = candidate;
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool TryResolveRetrievalCarriedCargoPinpointerTarget(
+        EntityUid store,
+        ContractServerData contract,
+        ObjectiveRuntimeState state,
+        EntityUid cargo,
+        out EntityUid target)
+    {
+        target = EntityUid.Invalid;
+
+        if (cargo == EntityUid.Invalid || TerminatingOrDeleted(cargo))
+            return false;
+
+        if (!TryComp(cargo, out TransformComponent? xform) || !IsTargetInEntityContainer(xform))
+            return false;
+
+        var config = contract.Config;
+        switch (config.RetrievalDestinationType)
+        {
+            case NcRetrievalDestinationTargetType.StoreUi:
+                target = store;
+                return true;
+
+            case NcRetrievalDestinationTargetType.MarkerGroup:
+                if (state.DeliveryDropoffEntity is { } beacon &&
+                    beacon != EntityUid.Invalid &&
+                    !TerminatingOrDeleted(beacon))
+                {
+                    target = beacon;
+                    return true;
+                }
+
+                return false;
+
+            case NcRetrievalDestinationTargetType.ContainerGroup:
+                return TryResolveRetrievalContainerDestinationPinpointerTarget(config, out target);
+
+            default:
+                return false;
+        }
+    }
+
+    private bool TryResolveRetrievalContainerDestinationPinpointerTarget(
+        ContractObjectiveConfigData config,
+        out EntityUid target)
+    {
+        target = EntityUid.Invalid;
+        if (string.IsNullOrWhiteSpace(config.RetrievalDestinationId))
+            return false;
+
+        var query = EntityQueryEnumerator<NcContractTurnInContainerComponent>();
+        while (query.MoveNext(out var container, out var turnIn))
+        {
+            if (!turnIn.Groups.Contains(config.RetrievalDestinationId))
+                continue;
+
+            target = container;
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool TryResolveRetrievalSpawnedParentChangePinpointerTarget(
+        EntityUid cargo,
+        out (EntityUid Store, string ContractId) key,
+        out ObjectiveRuntimeState state,
+        out EntityUid target,
+        out EntityUid carrier)
+    {
+        key = default;
+        state = default!;
+        target = EntityUid.Invalid;
+        carrier = EntityUid.Invalid;
+
+        foreach (var (candidateKey, candidateState) in _objectiveRuntimeByContract)
+        {
+            if (!candidateState.RetrievalSpawnedEntities.Contains(cargo))
+                continue;
+
+            if (!TryGetObjectiveContract(candidateKey, out _, out var contract) ||
+                !contract.Taken ||
+                contract.Runtime.Failed ||
+                !UsesRetrievalSpawnedPinpointerTarget(contract))
+            {
+                continue;
+            }
+
+            if (!TryResolveRetrievalSpawnedPinpointerTarget(candidateKey.Store, contract, candidateState, out target))
+                continue;
+
+            if (TryGetContainedEntityRoot(cargo, out var cargoCarrier))
+                carrier = cargoCarrier;
+
+            key = candidateKey;
+            state = candidateState;
             return true;
         }
 
@@ -219,6 +432,7 @@ public sealed partial class NcContractSystem : EntitySystem
         _pinpointer.SetActive(pinpointer, true);
         state.PinpointerEntities.Add(pinpointer);
         _objectiveRuntimeByPinpointer[pinpointer] = key;
+        _objectiveRuntimePinpointerOwners[pinpointer] = user;
         _logic.QueuePickupToHandsOrCrateNextTick(user, pinpointer);
     }
 
@@ -238,6 +452,40 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             if (TerminatingOrDeleted(pinpointer))
                 continue;
+
+            _pinpointer.SetTarget(pinpointer, target);
+            _pinpointer.SetActive(pinpointer, true);
+        }
+    }
+
+    private void RetargetObjectivePinpointersForOwner(
+        (EntityUid Store, string ContractId) key,
+        ObjectiveRuntimeState state,
+        EntityUid owner,
+        EntityUid target)
+    {
+        if (owner == EntityUid.Invalid ||
+            target == EntityUid.Invalid ||
+            TerminatingOrDeleted(owner) ||
+            TerminatingOrDeleted(target))
+        {
+            return;
+        }
+
+        PruneInvalidPinpointers(key, state);
+        if (state.PinpointerEntities.Count == 0)
+            return;
+
+        foreach (var pinpointer in state.PinpointerEntities)
+        {
+            if (TerminatingOrDeleted(pinpointer))
+                continue;
+
+            if (!_objectiveRuntimePinpointerOwners.TryGetValue(pinpointer, out var pinpointerOwner) ||
+                pinpointerOwner != owner)
+            {
+                continue;
+            }
 
             _pinpointer.SetTarget(pinpointer, target);
             _pinpointer.SetActive(pinpointer, true);
@@ -280,6 +528,7 @@ public sealed partial class NcContractSystem : EntitySystem
     private void UnregisterIssuedPinpointer(EntityUid pinpointer, (EntityUid Store, string ContractId) key)
     {
         _objectiveRuntimeByPinpointer.Remove(pinpointer);
+        _objectiveRuntimePinpointerOwners.Remove(pinpointer);
 
         if (_objectiveRuntimeByContract.TryGetValue(key, out var state))
             state.PinpointerEntities.Remove(pinpointer);
@@ -307,5 +556,38 @@ public sealed partial class NcContractSystem : EntitySystem
 
         state.PinpointerEntities.Clear();
         _objectivePinpointersScratch.Clear();
+    }
+
+    private bool TryGetContainedEntityRoot(EntityUid entity, out EntityUid root)
+    {
+        root = EntityUid.Invalid;
+        if (!TryComp(entity, out TransformComponent? xform) || !IsTargetInEntityContainer(xform))
+            return false;
+
+        var current = xform.ParentUid;
+        for (var guard = 0; guard < 32; guard++)
+        {
+            if (current == EntityUid.Invalid)
+                break;
+
+            root = current;
+
+            if (!TryComp(current, out TransformComponent? parentXform))
+                break;
+
+            var parent = parentXform.ParentUid;
+            if (parent == EntityUid.Invalid)
+                break;
+
+            if (parentXform.MapUid is { } mapUid && parent == mapUid)
+                break;
+
+            if (parentXform.GridUid is { } gridUid && parent == gridUid)
+                break;
+
+            current = parent;
+        }
+
+        return root != EntityUid.Invalid;
     }
 }

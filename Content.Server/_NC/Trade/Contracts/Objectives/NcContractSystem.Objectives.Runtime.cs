@@ -23,6 +23,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByGuard = new();
     private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByPinpointer = new();
+    private readonly Dictionary<EntityUid, EntityUid> _objectiveRuntimePinpointerOwners = new();
     private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByProof = new();
 
     private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByTarget = new();
@@ -43,6 +44,40 @@ public sealed partial class NcContractSystem : EntitySystem
         SubscribeLocalEvent<NcContractGhostRoleSpawnerComponent, TakeGhostRoleEvent>(OnContractGhostRoleTakeover);
         SubscribeLocalEvent<NcContractRepairObjectiveComponent, InteractUsingEvent>(OnRepairObjectiveInteractUsing);
         SubscribeLocalEvent<NcContractRepairObjectiveComponent, ContractRepairDoAfterEvent>(OnRepairObjectiveDoAfter);
+        SubscribeLocalEvent<EntParentChangedMessage>(OnObjectiveTrackedEntityParentChanged);
+    }
+
+    private void OnObjectiveTrackedEntityParentChanged(ref EntParentChangedMessage args)
+    {
+        if (_objectiveRuntimeByProof.TryGetValue(args.Entity, out var key))
+        {
+            if (_objectiveRuntimeByContract.TryGetValue(key, out var state) &&
+                TryGetObjectiveContract(key, out _, out var contract) &&
+                contract.Taken &&
+                !contract.Runtime.Failed &&
+                TryResolveRetrievalRouteReturnPinpointerTarget(key.Store, contract, state, out var target))
+            {
+                if (target == key.Store && TryGetContainedEntityRoot(args.Entity, out var proofCarrier))
+                    RetargetObjectivePinpointersForOwner(key, state, proofCarrier, target);
+                else
+                    RetargetObjectivePinpointers(key, state, target);
+            }
+
+            return;
+        }
+
+        if (TryResolveRetrievalSpawnedParentChangePinpointerTarget(
+                args.Entity,
+                out var spawnedKey,
+                out var spawnedState,
+                out var spawnedTarget,
+                out var spawnedCarrier))
+        {
+            if (spawnedCarrier != EntityUid.Invalid)
+                RetargetObjectivePinpointersForOwner(spawnedKey, spawnedState, spawnedCarrier, spawnedTarget);
+            else
+                RetargetObjectivePinpointers(spawnedKey, spawnedState, spawnedTarget);
+        }
     }
 
     private TimeSpan _nextGhostRoleTimeoutCheck = TimeSpan.Zero;
@@ -101,6 +136,7 @@ public sealed partial class NcContractSystem : EntitySystem
         _objectiveRuntimeKeysScratch.Clear();
         _objectiveRuntimeByTarget.Clear();
         _objectiveRuntimeByPinpointer.Clear();
+        _objectiveRuntimePinpointerOwners.Clear();
         _objectiveRuntimeByGuard.Clear();
         _objectiveRuntimeByProof.Clear();   // Fix (B39): keep proof index in sync with everything else.
         _activeTrackedDeliveryDropoffObjectives = 0;

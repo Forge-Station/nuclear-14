@@ -14,6 +14,7 @@ public sealed partial class NcContractCard
         EntityPrototype? targetProto = null;
         NcMatcherPrototype? targetMatcher = null;
         NcItemGroupPrototype? targetGroup = null;
+        NcHuntGroupPrototype? targetHuntGroup = null;
         EntityPrototype? matcherFallbackProto = null;
         EntityPrototype? groupIconProto = null;
         if (!string.IsNullOrWhiteSpace(protoId))
@@ -37,6 +38,15 @@ public sealed partial class NcContractCard
                     if (groupIconProto == null && group.Prototypes.Count > 0)
                         _proto.TryIndex<EntityPrototype>(group.Prototypes[0], out groupIconProto);
                 }
+                else if (_proto.TryIndex<NcHuntGroupPrototype>(protoId, out var huntGroup))
+                {
+                    targetHuntGroup = huntGroup;
+                    if (!string.IsNullOrWhiteSpace(huntGroup.Icon))
+                        _proto.TryIndex<EntityPrototype>(huntGroup.Icon, out groupIconProto);
+
+                    if (groupIconProto == null && huntGroup.Prototypes.Count > 0)
+                        _proto.TryIndex<EntityPrototype>(huntGroup.Prototypes[0], out groupIconProto);
+                }
             }
         }
 
@@ -52,7 +62,9 @@ public sealed partial class NcContractCard
             ? BuildProtoTooltip(targetProto)
             : targetMatcher != null
                 ? BuildMatcherTooltip(targetMatcher)
-                : BuildItemGroupTooltip(targetGroup);
+                : targetGroup != null
+                    ? BuildItemGroupTooltip(targetGroup)
+                    : BuildHuntGroupTooltip(targetHuntGroup);
         if (!string.IsNullOrWhiteSpace(tooltip))
             targetRow.ToolTip = tooltip;
 
@@ -80,11 +92,11 @@ public sealed partial class NcContractCard
                 AddPrototypeIcon(targetRow, matcherFallbackProto.ID);
             }
         }
-        else if (targetGroup != null && groupIconProto != null)
+        else if ((targetGroup != null || targetHuntGroup != null) && groupIconProto != null)
         {
             AddPrototypeIcon(targetRow, groupIconProto.ID);
         }
-        else if (targetGroup == null && !string.IsNullOrWhiteSpace(protoId))
+        else if (targetGroup == null && targetHuntGroup == null && !string.IsNullOrWhiteSpace(protoId))
         {
             AddPrototypeIcon(targetRow, protoId);
         }
@@ -94,6 +106,8 @@ public sealed partial class NcContractCard
             targetName = targetMatcher?.Name;
         if (string.IsNullOrWhiteSpace(targetName))
             targetName = targetGroup?.Name;
+        if (string.IsNullOrWhiteSpace(targetName))
+            targetName = targetHuntGroup?.Name;
         if (string.IsNullOrWhiteSpace(targetName))
             targetName = protoId ?? Loc.GetString("nc-store-unknown-item");
 

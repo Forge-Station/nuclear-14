@@ -43,10 +43,11 @@ public sealed partial class NcContractSystem : EntitySystem
 
         ClearClaimPlanningScratch();
         var takePlan = new List<ClaimTakeEntry>(Math.Max(4, Math.Min(64, CalculateTotalRequired(targets))));
+        var used = new HashSet<EntityUid>();
 
-        if (targets.Count == 1)
+        for (var i = 0; i < targets.Count; i++)
         {
-            var target = targets[0];
+            var target = targets[i];
             if (string.IsNullOrWhiteSpace(target.TargetItem) || target.Required <= 0)
             {
                 ClearClaimPlanningScratch();
@@ -56,7 +57,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 return false;
             }
 
-            if (!TryAppendRetrievalSpawnedTakePlanForRequirement(
+            if (!TryAppendRetrievalSpawnedEntityTakePlanForRequirement(
                     store,
                     user,
                     crateEntity,
@@ -67,44 +68,11 @@ public sealed partial class NcContractSystem : EntitySystem
                     target.MatchMode,
                     target.Required,
                     takePlan,
+                    used,
                     out fail))
             {
                 ClearClaimPlanningScratch();
                 return false;
-            }
-        }
-        else
-        {
-            if (!TryCollectClaimRequirements(targets, out fail))
-            {
-                ClearClaimPlanningScratch();
-                return false;
-            }
-
-            BuildOrderedRequiredKeys(_claimRequiredByKeyScratch, _claimOrderedKeysScratch);
-            foreach (var ordered in _claimOrderedKeysScratch)
-            {
-                var key = (ordered.ProtoId, ordered.MatchMode);
-                var required = _claimRequiredByKeyScratch.GetValueOrDefault(key, 0);
-                if (required <= 0)
-                    continue;
-
-                if (!TryAppendRetrievalSpawnedTakePlanForRequirement(
-                        store,
-                        user,
-                        crateEntity,
-                        trackedCrateItems,
-                        trackedUserItems,
-                        trackedStoreNearbyItems,
-                        ordered.ProtoId,
-                        ordered.MatchMode,
-                        required,
-                        takePlan,
-                        out fail))
-                {
-                    ClearClaimPlanningScratch();
-                    return false;
-                }
             }
         }
 
@@ -113,7 +81,7 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
-    private bool TryAppendRetrievalSpawnedTakePlanForRequirement(
+    private bool TryAppendRetrievalSpawnedEntityTakePlanForRequirement(
         EntityUid store,
         EntityUid user,
         EntityUid? crateEntity,
@@ -124,14 +92,15 @@ public sealed partial class NcContractSystem : EntitySystem
         PrototypeMatchMode matchMode,
         int required,
         List<ClaimTakeEntry> takePlan,
+        HashSet<EntityUid> used,
         out ClaimAttemptResult fail)
     {
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
         var need = required;
-        need -= AppendTakePlanFromSource(crateEntity, trackedCrateItems, targetItem, matchMode, need, takePlan);
-        need -= AppendTakePlanFromSource(user, trackedUserItems, targetItem, matchMode, need, takePlan);
-        need -= AppendTakePlanFromSource(store, trackedStoreNearbyItems, targetItem, matchMode, need, takePlan, worldTurnInSource: true);
+        need -= AppendRetrievalSpawnedEntityTakePlanFromSource(crateEntity, trackedCrateItems, targetItem, matchMode, need, takePlan, used);
+        need -= AppendRetrievalSpawnedEntityTakePlanFromSource(user, trackedUserItems, targetItem, matchMode, need, takePlan, used);
+        need -= AppendRetrievalSpawnedEntityTakePlanFromSource(store, trackedStoreNearbyItems, targetItem, matchMode, need, takePlan, used, worldTurnInSource: true);
 
         if (need <= 0)
             return true;
@@ -140,6 +109,40 @@ public sealed partial class NcContractSystem : EntitySystem
             ClaimFailureReason.NotEnoughItems,
             $"need {required}x {targetItem} (mode={matchMode}) from spawned Retrieval entities, missing {need}.");
         return false;
+    }
+
+    private int AppendRetrievalSpawnedEntityTakePlanFromSource(
+        EntityUid? root,
+        List<EntityUid>? items,
+        string targetItem,
+        PrototypeMatchMode matchMode,
+        int need,
+        List<ClaimTakeEntry> takePlan,
+        HashSet<EntityUid> used,
+        bool worldTurnInSource = false)
+    {
+        if (need <= 0 || root is not { } source || items == null)
+            return 0;
+
+        var taken = 0;
+        for (var i = 0; i < items.Count && taken < need; i++)
+        {
+            var ent = items[i];
+            if (ent == EntityUid.Invalid || used.Contains(ent))
+                continue;
+
+            if (!CanUseContractPlanningEntity(source, ent, worldTurnInSource))
+                continue;
+
+            if (!MatchesRetrievalSpawnedEntityTarget(ent, targetItem, matchMode))
+                continue;
+
+            used.Add(ent);
+            takePlan.Add(new ClaimTakeEntry(source, ent, 1, false));
+            taken++;
+        }
+
+        return taken;
     }
 
     private void RefreshRetrievalSpawnedProgressForClaim(
@@ -213,7 +216,7 @@ public sealed partial class NcContractSystem : EntitySystem
             : new List<EntityUid>();
         var hasTrackedCrateWork = crate is { } && hasCrateWork && trackedCrateItems.Count > 0;
 
-        UpdateContractProgressForSingleContract(
+        UpdateRetrievalSpawnedEntityProgress(
             contract,
             store,
             user,
@@ -223,6 +226,123 @@ public sealed partial class NcContractSystem : EntitySystem
             trackedStoreNearbyItems,
             hasTrackedCrateWork);
         return true;
+    }
+
+    private void UpdateRetrievalSpawnedEntityProgress(
+        ContractServerData contract,
+        EntityUid store,
+        EntityUid user,
+        List<EntityUid> trackedUserItems,
+        EntityUid? crate,
+        List<EntityUid> trackedCrateItems,
+        List<EntityUid> trackedStoreNearbyItems,
+        bool hasTrackedCrateWork)
+    {
+        var targets = GetEffectiveTargets(contract);
+        var totalRequired = CalculateTotalRequired(targets);
+        var totalProgress = 0;
+        var used = new HashSet<EntityUid>();
+
+        for (var i = 0; i < targets.Count; i++)
+        {
+            var target = targets[i];
+            if (string.IsNullOrWhiteSpace(target.TargetItem) || target.Required <= 0)
+            {
+                target.Progress = 0;
+                continue;
+            }
+
+            var required = Math.Max(0, target.Required);
+            var progress = CountRetrievalSpawnedEntitiesForRequirement(
+                store,
+                user,
+                trackedUserItems,
+                crate,
+                trackedCrateItems,
+                trackedStoreNearbyItems,
+                hasTrackedCrateWork,
+                target.TargetItem,
+                target.MatchMode,
+                required,
+                used);
+
+            target.Progress = Math.Min(required, progress);
+            totalProgress = SaturatingAdd(totalProgress, target.Progress);
+        }
+
+        contract.Required = totalRequired;
+        contract.Progress = Math.Min(totalRequired, totalProgress);
+        if (targets.Count > 0)
+            contract.TargetItem = targets[0].TargetItem;
+
+        SyncContractFlowStatus(contract);
+    }
+
+    private int CountRetrievalSpawnedEntitiesForRequirement(
+        EntityUid store,
+        EntityUid user,
+        List<EntityUid> trackedUserItems,
+        EntityUid? crate,
+        List<EntityUid> trackedCrateItems,
+        List<EntityUid> trackedStoreNearbyItems,
+        bool hasTrackedCrateWork,
+        string targetItem,
+        PrototypeMatchMode matchMode,
+        int required,
+        HashSet<EntityUid> used)
+    {
+        var need = required;
+
+        if (crate is { } crateRoot && hasTrackedCrateWork)
+            need -= CountRetrievalSpawnedEntitiesFromSource(crateRoot, trackedCrateItems, targetItem, matchMode, need, used);
+
+        need -= CountRetrievalSpawnedEntitiesFromSource(user, trackedUserItems, targetItem, matchMode, need, used);
+        need -= CountRetrievalSpawnedEntitiesFromSource(store, trackedStoreNearbyItems, targetItem, matchMode, need, used, worldTurnInSource: true);
+
+        return required - Math.Max(0, need);
+    }
+
+    private int CountRetrievalSpawnedEntitiesFromSource(
+        EntityUid root,
+        List<EntityUid>? items,
+        string targetItem,
+        PrototypeMatchMode matchMode,
+        int need,
+        HashSet<EntityUid> used,
+        bool worldTurnInSource = false)
+    {
+        if (need <= 0 || items == null)
+            return 0;
+
+        var counted = 0;
+        for (var i = 0; i < items.Count && counted < need; i++)
+        {
+            var ent = items[i];
+            if (ent == EntityUid.Invalid || used.Contains(ent))
+                continue;
+
+            if (!CanUseContractPlanningEntity(root, ent, worldTurnInSource))
+                continue;
+
+            if (!MatchesRetrievalSpawnedEntityTarget(ent, targetItem, matchMode))
+                continue;
+
+            used.Add(ent);
+            counted++;
+        }
+
+        return counted;
+    }
+
+    private bool MatchesRetrievalSpawnedEntityTarget(
+        EntityUid ent,
+        string targetItem,
+        PrototypeMatchMode matchMode)
+    {
+        if (!TryGetPlanningEntityPrototypeId(ent, out var candidateId))
+            return false;
+
+        return MatchesPrototypeId(ent, candidateId, targetItem, matchMode);
     }
 
     private bool TryGetRetrievalSpawnedRuntimeState(

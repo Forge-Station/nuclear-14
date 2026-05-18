@@ -20,8 +20,8 @@
       maxVisible: 1
       fillWeight: 1
     - pool: BazarTestHuntOrders
-      minVisible: 0
-      maxVisible: 1
+      minVisible: 4
+      maxVisible: 4
       fillWeight: 1
 
 - type: ncContractOfferPool
@@ -117,6 +117,15 @@
   entries:
   - type: Hunt
     id: BazarTestHuntRadroaches
+    weight: 3
+  - type: Hunt
+    id: BazarTestHuntGeckoPack
+    weight: 2
+  - type: Hunt
+    id: BazarTestHuntYaoguaiBoss
+    weight: 1
+  - type: Hunt
+    id: BazarTestHuntYaoguaiDen
     weight: 1
 
 - type: ncItemGroup
@@ -159,11 +168,48 @@
   prototypes:
   - N14MobRadroach
 
+- type: ncHuntGroup
+  id: BazarHuntGroupGeckos
+  name: "Гекконы"
+  description: "Контрактные цели: обычные, огненные и золотые гекконы."
+  icon: N14MobGecko
+  prototypes:
+  - N14MobGecko
+  - N14MobGeckoFire
+  - N14MobGeckoGolden
+
 - type: entity
   parent: FoodSnackChips
   id: NcBazarHuntProofRadroach
   name: трофей радтаракана
   description: "Засохший хитиновый трофей: доказательство, что гнездо радтараканов стало тише."
+  suffix: NC, Test
+  components:
+  - type: NcContractProof
+
+- type: entity
+  parent: N14FoodMeatGecko
+  id: NcBazarHuntProofGecko
+  name: трофей геккона
+  description: "Грубый кусок шкуры и мяса: достаточно узнаваемый след удачной охоты на гекконов."
+  suffix: NC, Test
+  components:
+  - type: NcContractProof
+
+- type: entity
+  parent: N14MaterialYaoguaiHide
+  id: NcBazarHuntProofYaoguai
+  name: шкура вожака яо-гая
+  description: "Тяжелая шкура мутировавшего медведя. Лучшее доказательство того, что охотник вернулся не с пустыми руками."
+  suffix: NC, Test
+  components:
+  - type: NcContractProof
+
+- type: entity
+  parent: N14MaterialYaoguaiHide
+  id: NcBazarHuntProofYaoguaiDen
+  name: шкура вожака логова
+  description: "Меченая шкура яо-гая. Торговец примет её только после зачистки всего контрактного логова."
   suffix: NC, Test
   components:
   - type: NcContractProof
@@ -480,16 +526,91 @@
   name: "Охота: радтараканы"
   description: "В подвалах и у мусорных куч расплодились радтараканы. Перебейте гнездо, заберите последний трофей и принесите его торговцу."
   icon: N14MobRadroach
-  target:
-    group: BazarHuntGroupRadroaches
+  targets:
+  - group: BazarHuntGroupRadroaches
     count: 3
   completion:
     mode: TrophyTurnIn
     trophy: NcBazarHuntProofRadroach
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractHuntSpawn
   reward:
   - type: Currency
     currency: Caps
     count: 120
   - type: Pool
     pool: caravan_easy
+    count: 1
+
+- type: ncHuntContract
+  id: BazarTestHuntGeckoPack
+  name: "Охота: гекконы у дороги"
+  description: "На старой дороге видели гекконов. Разгоните стаю, заберите трофей с последней твари и принесите его торговцу."
+  icon: N14MobGecko
+  targets:
+  - group: BazarHuntGroupGeckos
+    count: 2
+  completion:
+    mode: TrophyTurnIn
+    trophy: NcBazarHuntProofGecko
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractHuntSpawn
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 180
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+- type: ncHuntContract
+  id: BazarTestHuntYaoguaiBoss
+  name: "Охота: старый яо-гай"
+  description: "У тропы объявился матерый яо-гай. Завалите зверя, снимите шкуру как доказательство и принесите торговцу."
+  icon: N14MobYaoguai
+  targets:
+  - prototype: N14MobYaoguai
+    count: 1
+  completion:
+    mode: TrophyTurnIn
+    trophy: NcBazarHuntProofYaoguai
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractHuntSpawn
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 350
+  - type: Pool
+    pool: caravan_hard
+    count: 1
+
+- type: ncHuntContract
+  id: BazarTestHuntYaoguaiDen
+  name: "Охота: логово яо-гая"
+  description: "У старого вожака появились мелкие твари на подхвате. Убейте яо-гая и двух гекконов, затем принесите шкуру вожака как доказательство."
+  icon: N14MobYaoguai
+  targets:
+  - prototype: N14MobYaoguai
+    count: 1
+  - group: BazarHuntGroupGeckos
+    count: 2
+  completion:
+    mode: TrophyTurnIn
+    trophy: NcBazarHuntProofYaoguaiDen
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractHuntSpawn
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 460
+  - type: Pool
+    pool: caravan_hard
     count: 1

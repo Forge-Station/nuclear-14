@@ -3,13 +3,13 @@
 
 - type: ncRetrievalContract
   id: NcRetrievalCitySnacksStoreUi
-  name: "Поиск: снеки"
-  description: "Принесите торговцу любой найденный снек."
+  name: "Доставка: ящик припасов"
+  description: "Заберите контрактный груз с припасами в отмеченной зоне и доставьте его торговцу."
   icon: FoodSnackChips
   cargo:
   - group: NcSupplyGroupSnacks
     count: 3
-  route: NcRetrievalRouteAnyMatchingToStoreUi
+  route: NcRetrievalRouteObjectiveToStoreUi
   reward:
   - type: Currency
     currency: Caps

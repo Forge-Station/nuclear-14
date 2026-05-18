@@ -95,10 +95,29 @@
     id: NcRetrievalPack1ThreeMedsToWarehouseProof
     weight: 1
 
+- type: ncContractOfferPool
+  id: CityTraderHuntOrders
+  name: "Охота"
+  order: 60
+  color: "#C4553D"
+  entries:
+  - type: Hunt
+    id: BazarTestHuntRadroaches
+    weight: 3
+  - type: Hunt
+    id: BazarTestHuntGeckoPack
+    weight: 2
+  - type: Hunt
+    id: BazarTestHuntYaoguaiBoss
+    weight: 1
+  - type: Hunt
+    id: BazarTestHuntYaoguaiDen
+    weight: 1
+
 - type: storeContractsPreset
   id: TradeContractsCityPreset
   contractOffers:
-    maxVisible: 8
+    maxVisible: 9
     groups:
     - pool: CityTraderSimpleOrders
       minVisible: 2
@@ -119,5 +138,9 @@
     - pool: CityTraderRareOrders
       minVisible: 0
       maxVisible: 1
+      fillWeight: 1
+    - pool: CityTraderHuntOrders
+      minVisible: 4
+      maxVisible: 4
       fillWeight: 1
 

@@ -224,7 +224,7 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract,
         EntityCoordinates spawnCoords)
     {
-        if (!TryResolveRetrievalSpawnedPinpointerTarget(contract, state, out var target))
+        if (!TryResolveRetrievalSpawnedPinpointerTarget(key.Store, contract, state, out var target))
             return false;
 
         return TrySpawnObjectivePinpointer(user, target, key, state, contract.Config, spawnCoords);

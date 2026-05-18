@@ -67,6 +67,8 @@ public sealed partial class NcContractSystem : EntitySystem
             }
 
             state.RetrievalDeliveryCoordinates = destCoords;
+            if (!TrySpawnDeliveryDropoffMarker(contractId, state, destCoords))
+                return false;
         }
 
         if (!state.RetrievalRouteDeliveryActive)
@@ -170,12 +172,18 @@ public sealed partial class NcContractSystem : EntitySystem
         state.RetrievalRouteDeliveryCompleted = true;
         state.RetrievalRouteDeliveryActive = false;
         _activeRetrievalRouteDeliveries = Math.Max(0, _activeRetrievalRouteDeliveries - 1);
+        DeactivateTrackedDeliveryDropoff(state);
 
         if (contract.Config.RetrievalConsumeCargo)
             ConsumeDeliveredRetrievalCargo(state);
 
         if (contract.Config.RetrievalGuidancePinpointerEnabled)
-            RetargetObjectivePinpointers(key, state, key.Store);
+        {
+            if (TryResolveRetrievalRouteReturnPinpointerTarget(key.Store, contract, state, out var pinpointerTarget))
+                RetargetObjectivePinpointers(key, state, pinpointerTarget);
+            else
+                RetargetObjectivePinpointers(key, state, key.Store);
+        }
         else
             CleanupObjectivePinpointers(key, state);
     }

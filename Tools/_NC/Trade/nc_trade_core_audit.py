@@ -226,12 +226,12 @@ RETRIEVAL_LEGACY_KEYS = {
 
 
 HUNT_LEGACY_KEYS = {
+    "target",
     "targetItem",
     "required",
     "match",
     "objectiveType",
     "runtime",
-    "targets",
     "targetCount",
 }
 
@@ -256,6 +256,14 @@ class OfferGroupEntry(NamedTuple):
     min_visible: int
     max_visible: int
     fill_weight: int | None
+
+
+class HuntTargetEntry(NamedTuple):
+    line: int
+    group_line: int | None
+    prototype_line: int | None
+    count_line: int | None
+    count_value: str | None
 
 
 def parse_int(value: str) -> int | None:
@@ -426,6 +434,87 @@ def parse_contract_offer_groups(block: ProtoBlock) -> list[OfferGroupEntry]:
     return groups
 
 
+def parse_hunt_targets(block: ProtoBlock) -> list[HuntTargetEntry]:
+    targets: list[HuntTargetEntry] = []
+    targets_indent: int | None = None
+    current_line: int | None = None
+    current_group_line: int | None = None
+    current_prototype_line: int | None = None
+    current_count_line: int | None = None
+    current_count_value: str | None = None
+    list_item_re = re.compile(r"^(?P<indent>\s*)-\s*(?P<rest>.*)$")
+
+    def finalize() -> None:
+        nonlocal current_line, current_group_line, current_prototype_line, current_count_line, current_count_value
+        if current_line is not None:
+            targets.append(
+                HuntTargetEntry(
+                    current_line,
+                    current_group_line,
+                    current_prototype_line,
+                    current_count_line,
+                    current_count_value,
+                )
+            )
+        current_line = None
+        current_group_line = None
+        current_prototype_line = None
+        current_count_line = None
+        current_count_value = None
+
+    for num, line in block.lines:
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+
+        match = KEY_RE.match(line)
+        if match and match.group("key") == "targets" and indent_of(line) == 2:
+            targets_indent = indent_of(line)
+            continue
+
+        if targets_indent is None:
+            continue
+
+        indent = indent_of(line)
+        if indent <= targets_indent and num > block.start_line and not stripped.startswith("-"):
+            finalize()
+            break
+
+        item_match = list_item_re.match(line)
+        if item_match and indent >= targets_indent:
+            finalize()
+            current_line = num
+            rest = item_match.group("rest").strip()
+            if rest.startswith("group:"):
+                current_group_line = num
+            elif rest.startswith("prototype:"):
+                current_prototype_line = num
+            elif rest.startswith("count:"):
+                current_count_line = num
+                current_count_value = rest.split(":", 1)[1].strip()
+            continue
+
+        if current_line is None:
+            continue
+
+        key_match = KEY_RE.match(line)
+        if not key_match:
+            continue
+
+        key = key_match.group("key")
+        value = key_match.group("value").strip()
+        if key == "group":
+            current_group_line = num
+        elif key == "prototype":
+            current_prototype_line = num
+        elif key == "count":
+            current_count_line = num
+            current_count_value = value
+
+    finalize()
+    return targets
+
+
 def audit_supply_contract(block: ProtoBlock, issues: list[Issue]) -> None:
     for key in sorted(SUPPLY_LEGACY_KEYS):
         if has_key(block, key):
@@ -462,6 +551,7 @@ def audit_retrieval_route(block: ProtoBlock, issues: list[Issue]) -> None:
     claim_line: int | None = None
     claim_mode: str | None = None
     claim_proof_line: int | None = None
+    source_line: int | None = None
     top_level_proof_line: int | None = None
 
     for num, line in lines:
@@ -479,6 +569,9 @@ def audit_retrieval_route(block: ProtoBlock, issues: list[Issue]) -> None:
 
         if key == "proof" and indent <= 2:
             top_level_proof_line = num
+
+        if key == "source" and indent <= 2:
+            source_line = num
 
         if key == "claim":
             claim_indent = indent
@@ -504,6 +597,9 @@ def audit_retrieval_route(block: ProtoBlock, issues: list[Issue]) -> None:
 
     if top_level_proof_line is not None:
         add_issue(issues, "P1", block.path, top_level_proof_line, "top-level route proof is forbidden; use claim.proof")
+
+    if source_line is None:
+        add_issue(issues, "P1", block.path, block.start_line, "ncRetrievalRoutePreset must define source; Retrieval is spawned cargo delivery, use Supply for existing items")
 
     if claim_line is None:
         add_issue(issues, "P1", block.path, block.start_line, "ncRetrievalRoutePreset must define claim.mode")
@@ -608,24 +704,26 @@ def audit_hunt_contract(block: ProtoBlock, issues: list[Issue]) -> None:
     if has_key(block, "difficulty"):
         add_issue(issues, "P1", block.path, first_key_line(block, "difficulty"), "ncHuntContract difficulty is forbidden; use offer pool grouping/order/color")
 
-    if not has_key(block, "target"):
-        add_issue(issues, "P1", block.path, block.start_line, "ncHuntContract must define target")
+    if not has_key(block, "targets"):
+        add_issue(issues, "P1", block.path, block.start_line, "ncHuntContract must define targets")
     if not has_key(block, "completion"):
         add_issue(issues, "P1", block.path, block.start_line, "ncHuntContract must define completion")
+    if not has_key(block, "spawn"):
+        add_issue(issues, "P1", block.path, block.start_line, "ncHuntContract must define spawn")
     if not has_key(block, "reward"):
         add_issue(issues, "P1", block.path, block.start_line, "ncHuntContract must define reward")
-
-    target_indent: int | None = None
-    target_line: int | None = None
-    target_group_line: int | None = None
-    target_prototype_line: int | None = None
-    target_count_line: int | None = None
-    target_count_value: str | None = None
 
     completion_indent: int | None = None
     completion_line: int | None = None
     completion_mode: str | None = None
     completion_trophy_line: int | None = None
+
+    spawn_indent: int | None = None
+    spawn_line: int | None = None
+    spawn_point_indent: int | None = None
+    spawn_point_line: int | None = None
+    spawn_point_type: str | None = None
+    spawn_point_id_line: int | None = None
 
     for num, line in block.lines:
         stripped = line.strip()
@@ -639,23 +737,6 @@ def audit_hunt_contract(block: ProtoBlock, issues: list[Issue]) -> None:
         key = match.group("key")
         value = match.group("value").strip()
         indent = indent_of(line)
-
-        if key == "target":
-            target_indent = indent
-            target_line = num
-            continue
-
-        if target_indent is not None and indent <= target_indent and num > (target_line or 0):
-            target_indent = None
-
-        if target_indent is not None and indent > target_indent:
-            if key == "group":
-                target_group_line = num
-            elif key == "prototype":
-                target_prototype_line = num
-            elif key == "count":
-                target_count_line = num
-                target_count_value = value
 
         if key == "completion":
             completion_indent = indent
@@ -671,23 +752,50 @@ def audit_hunt_contract(block: ProtoBlock, issues: list[Issue]) -> None:
             elif key == "trophy":
                 completion_trophy_line = num
 
-    if target_line is not None:
-        has_group = target_group_line is not None
-        has_prototype = target_prototype_line is not None
+        if key == "spawn":
+            spawn_indent = indent
+            spawn_line = num
+            continue
+
+        if spawn_indent is not None and indent <= spawn_indent and num > (spawn_line or 0):
+            spawn_indent = None
+            spawn_point_indent = None
+
+        if spawn_indent is not None and indent > spawn_indent and key == "point":
+            spawn_point_indent = indent
+            spawn_point_line = num
+            continue
+
+        if spawn_point_indent is not None and indent <= spawn_point_indent and num > (spawn_point_line or 0):
+            spawn_point_indent = None
+
+        if spawn_point_indent is not None and indent > spawn_point_indent:
+            if key == "type":
+                spawn_point_type = value
+            elif key == "id":
+                spawn_point_id_line = num
+
+    hunt_targets = parse_hunt_targets(block)
+    if not hunt_targets and has_key(block, "targets"):
+        add_issue(issues, "P1", block.path, first_key_line(block, "targets"), "ncHuntContract targets must not be empty")
+
+    for target in hunt_targets:
+        has_group = target.group_line is not None
+        has_prototype = target.prototype_line is not None
         if has_group == has_prototype:
             add_issue(
                 issues,
                 "P1",
                 block.path,
-                target_line,
-                "ncHuntContract target must define exactly one of group/prototype",
+                target.line,
+                "ncHuntContract targets entry must define exactly one of group/prototype",
             )
 
-        if target_count_line is None:
-            add_issue(issues, "P1", block.path, target_line, "ncHuntContract target must define count")
-        elif target_count_value is not None and re.fullmatch(r"-?\d+", target_count_value):
-            if int(target_count_value) <= 0:
-                add_issue(issues, "P1", block.path, target_count_line, "ncHuntContract target count must be > 0")
+        if target.count_line is None:
+            add_issue(issues, "P1", block.path, target.line, "ncHuntContract targets entry must define count")
+        elif target.count_value is not None and re.fullmatch(r"-?\d+", target.count_value):
+            if int(target.count_value) <= 0:
+                add_issue(issues, "P1", block.path, target.count_line, "ncHuntContract targets count must be > 0")
 
     if completion_line is not None:
         if not completion_mode:
@@ -699,6 +807,18 @@ def audit_hunt_contract(block: ProtoBlock, issues: list[Issue]) -> None:
             pass
         else:
             add_issue(issues, "P1", block.path, completion_line, f"unknown Hunt completion.mode '{completion_mode}'")
+
+    if spawn_line is not None:
+        if spawn_point_line is None:
+            add_issue(issues, "P1", block.path, spawn_line, "ncHuntContract spawn must define point")
+        elif not spawn_point_type:
+            add_issue(issues, "P1", block.path, spawn_point_line, "ncHuntContract spawn.point must define type")
+        elif spawn_point_type == "Store":
+            add_issue(issues, "P1", block.path, spawn_point_line, "ncHuntContract spawn.point.type=Store is forbidden")
+        elif spawn_point_type in {"MarkerId", "MarkerGroup"} and spawn_point_id_line is None:
+            add_issue(issues, "P1", block.path, spawn_point_line, f"ncHuntContract spawn.point type {spawn_point_type} must define id")
+        elif spawn_point_type not in {"MarkerId", "MarkerGroup", "Weighted"}:
+            add_issue(issues, "P1", block.path, spawn_point_line, f"unknown Hunt spawn.point.type '{spawn_point_type}'")
 
     audit_reward_entries_have_type_and_count(block, issues, "ncHuntContract", block.start_line)
 

@@ -2,9 +2,14 @@
 # Guidance does not control spawn or claim. It only provides player-facing hints and pinpointer behavior.
 
 - type: ncRetrievalGuidancePreset
-  id: NcRetrievalGuidanceFindAndReturn
-  sourceHint: "Найдите груз в отмеченной зоне задания."
-  destinationHint: "Вернитесь к торговцу и сдайте подходящий груз через интерфейс."
+  id: NcRetrievalGuidanceObjectiveToStoreUi
+  sourceHint: "Заберите контрактный груз в отмеченной зоне."
+  destinationHint: "Доставьте этот груз торговцу и сдайте через интерфейс."
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 1
 
 - type: ncRetrievalGuidancePreset
   id: NcRetrievalGuidanceObjectiveToDropoff

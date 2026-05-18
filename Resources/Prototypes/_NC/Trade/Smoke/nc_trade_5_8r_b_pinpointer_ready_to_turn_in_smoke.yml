@@ -12,10 +12,13 @@
 
 - type: entity
   id: NcTrade58RBSourceMarkerEntity
+  parent: MarkerBase
   name: контрактная точка груза
   suffix: NC, Smoke
-  categories: [ HideSpawnMenu ]
   components:
+  - type: Sprite
+    layers:
+    - state: blue
   - type: NcContractSpawnPoint
     id: NcTrade58RBSourceMarker
     groups:
@@ -23,18 +26,23 @@
 
 - type: entity
   id: NcTrade58RBDestinationMarkerEntity
+  parent: MarkerBase
   name: контрактная точка доставки
   suffix: NC, Smoke
-  categories: [ HideSpawnMenu ]
   components:
+  - type: Sprite
+    layers:
+    - state: green
   - type: NcContractSpawnPoint
     id: NcTrade58RBDestinationMarker
     groups:
     - NcTrade58RBDestinationGroup
 
 - type: entity
+  parent: PaperOffice
   id: NcTrade58RBProofReceipt
   name: контрактная накладная
+  description: "Подтверждение доставки контрактного груза. Верните эту накладную торговцу, чтобы получить награду."
   suffix: NC, Smoke
   categories: [ HideSpawnMenu ]
   components:

@@ -113,7 +113,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        if (!TryFindObjectiveProofEntity(store, user, key, state, proofPrototype, out var proof))
+        if (!TryFindObjectiveProofEntity(store, user, key, contract, state, proofPrototype, out var proof))
         {
             LogObjectiveProofClaimDebug(store, user, key, state, proofPrototype);
             fail = ClaimAttemptResult.Fail(
@@ -142,6 +142,7 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid store,
         EntityUid user,
         (EntityUid Store, string ContractId) key,
+        ContractServerData contract,
         ObjectiveRuntimeState state,
         string proofPrototype,
         out EntityUid proof)
@@ -158,6 +159,12 @@ public sealed partial class NcContractSystem : EntitySystem
             _logic.ScanInventoryItems(pulledCrate, crateItems);
             if (TryFindObjectiveProofInSource(pulledCrate, crateItems, key, state, proofPrototype, out proof))
                 return true;
+        }
+
+        if (contract.Config.HuntV2Enabled)
+        {
+            proof = EntityUid.Invalid;
+            return false;
         }
 
         return TryFindNearbyStoreObjectiveProof(store, key, state, proofPrototype, out proof);
