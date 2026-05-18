@@ -68,14 +68,14 @@ public sealed partial class NcContractSystem : EntitySystem
         if (config.RetrievalSpawnPoint == null)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval route init failed for '{contractId}': source point is missing.");
+                $"[Contracts] Retrieval route init failed for '{contractId}': source point is missing.");
             return false;
         }
 
         if (config.RetrievalSpawnPoint.Type == ContractPointSelectorType.Store)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval route init failed for '{contractId}': Store source point is not valid.");
+                $"[Contracts] Retrieval route init failed for '{contractId}': Store source point is not valid.");
             return false;
         }
 
@@ -89,7 +89,7 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         Sawmill.Warning(
-            $"[ContractsV2] Retrieval route init failed for '{contractId}': cannot resolve source marker.");
+            $"[Contracts] Retrieval route init failed for '{contractId}': cannot resolve source marker.");
         return false;
     }
 
@@ -144,7 +144,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
             default:
                 Sawmill.Warning(
-                    $"[ContractsV2] Retrieval route init failed for '{contractId}': unsupported cargo match mode {target.MatchMode}.");
+                    $"[Contracts] Retrieval route init failed for '{contractId}': unsupported cargo match mode {target.MatchMode}.");
                 return false;
         }
     }
@@ -157,7 +157,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!_prototypes.HasIndex<EntityPrototype>(target.TargetItem))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval route init failed for '{contractId}': cargo prototype '{target.TargetItem}' is missing.");
+                $"[Contracts] Retrieval route init failed for '{contractId}': cargo prototype '{target.TargetItem}' is missing.");
             return false;
         }
 
@@ -181,7 +181,7 @@ public sealed partial class NcContractSystem : EntitySystem
             }
 
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval route init failed for '{contractId}': cargo group '{target.TargetItem}' has no spawnable prototypes.");
+                $"[Contracts] Retrieval route init failed for '{contractId}': cargo group '{target.TargetItem}' has no spawnable prototypes.");
             return false;
         }
 
@@ -203,7 +203,7 @@ public sealed partial class NcContractSystem : EntitySystem
         catch (Exception e)
         {
             Sawmill.Error(
-                $"[ContractsV2] Retrieval route init failed for '{key.ContractId}': cannot spawn cargo '{protoId}': {e}");
+                $"[Contracts] Retrieval route init failed for '{key.ContractId}': cannot spawn cargo '{protoId}': {e}");
             return false;
         }
     }

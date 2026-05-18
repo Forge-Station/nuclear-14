@@ -12,14 +12,14 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (string.IsNullOrWhiteSpace(proto.ID))
         {
-            Sawmill.Warning($"[ContractsV2] Offer pool '{poolId}' contains a ghost role contract with an empty prototype id.");
+            Sawmill.Warning($"[Contracts] Offer pool '{poolId}' contains a ghost role contract with an empty prototype id.");
             return false;
         }
 
         if (!_prototypes.TryIndex<NcGhostRolePresetPrototype>(proto.Role.Id, out var role))
         {
             Sawmill.Warning(
-                $"[ContractsV2] GhostRole contract '{proto.ID}' references missing ncGhostRolePreset '{proto.Role}'.");
+                $"[Contracts] GhostRole contract '{proto.ID}' references missing ncGhostRolePreset '{proto.Role}'.");
             valid = false;
         }
         else if (!TryValidateGhostRolePreset(proto.ID, role))
@@ -48,21 +48,21 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (string.IsNullOrWhiteSpace(role.EntityPrototype))
         {
-            Sawmill.Warning($"[ContractsV2] GhostRole contract '{contractId}' role preset '{role.ID}' has no entityPrototype.");
+            Sawmill.Warning($"[Contracts] GhostRole contract '{contractId}' role preset '{role.ID}' has no entityPrototype.");
             return false;
         }
 
         if (!_prototypes.HasIndex<EntityPrototype>(role.EntityPrototype))
         {
             Sawmill.Warning(
-                $"[ContractsV2] GhostRole contract '{contractId}' role preset '{role.ID}' references missing entity prototype '{role.EntityPrototype}'.");
+                $"[Contracts] GhostRole contract '{contractId}' role preset '{role.ID}' references missing entity prototype '{role.EntityPrototype}'.");
             valid = false;
         }
 
         if (role.Character.Age is <= 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] GhostRole contract '{contractId}' role preset '{role.ID}' character.age must be > 0 when defined.");
+                $"[Contracts] GhostRole contract '{contractId}' role preset '{role.ID}' character.age must be > 0 when defined.");
             valid = false;
         }
 
@@ -82,7 +82,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (!seen.Add(perkId.Id))
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] GhostRole contract '{contractId}' role preset '{role.ID}' repeats perk '{perkId}'.");
+                    $"[Contracts] GhostRole contract '{contractId}' role preset '{role.ID}' repeats perk '{perkId}'.");
                 valid = false;
                 continue;
             }
@@ -90,7 +90,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (!_prototypes.TryIndex<NcGhostRolePerkPrototype>(perkId.Id, out var perk))
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] GhostRole contract '{contractId}' role preset '{role.ID}' references missing ncGhostRolePerk '{perkId}'.");
+                    $"[Contracts] GhostRole contract '{contractId}' role preset '{role.ID}' references missing ncGhostRolePerk '{perkId}'.");
                 valid = false;
                 continue;
             }
@@ -113,7 +113,7 @@ public sealed partial class NcContractSystem : EntitySystem
             perk.ArmorIncomingDamageMultiplier <= 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' multipliers must be > 0.");
+                $"[Contracts] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' multipliers must be > 0.");
             valid = false;
         }
 
@@ -122,7 +122,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (string.IsNullOrWhiteSpace(proto) || !_prototypes.HasIndex<EntityPrototype>(proto))
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' references missing weapon prototype '{proto}'.");
+                    $"[Contracts] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' references missing weapon prototype '{proto}'.");
                 valid = false;
             }
         }
@@ -132,7 +132,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (string.IsNullOrWhiteSpace(proto) || !_prototypes.HasIndex<EntityPrototype>(proto))
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' references missing armor item prototype '{proto}'.");
+                    $"[Contracts] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' references missing armor item prototype '{proto}'.");
                 valid = false;
             }
         }
@@ -143,14 +143,14 @@ public sealed partial class NcContractSystem : EntitySystem
                 !_prototypes.HasIndex<DamageTypePrototype>(damageType))
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' references missing damage type '{damageType}'.");
+                    $"[Contracts] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' references missing damage type '{damageType}'.");
                 valid = false;
             }
 
             if (reduction <= 0f)
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' incomingFlatReductions values must be > 0.");
+                    $"[Contracts] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' incomingFlatReductions values must be > 0.");
                 valid = false;
             }
         }
@@ -162,13 +162,13 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         if (spawn.Point == null)
         {
-            Sawmill.Warning($"[ContractsV2] GhostRole contract '{contractId}' must define spawn.point.");
+            Sawmill.Warning($"[Contracts] GhostRole contract '{contractId}' must define spawn.point.");
             return false;
         }
 
         if (spawn.AcceptTimeoutSeconds < 0)
         {
-            Sawmill.Warning($"[ContractsV2] GhostRole contract '{contractId}' spawn.acceptTimeoutSeconds must be >= 0.");
+            Sawmill.Warning($"[Contracts] GhostRole contract '{contractId}' spawn.acceptTimeoutSeconds must be >= 0.");
             return false;
         }
 
@@ -188,7 +188,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return true;
 
         Sawmill.Warning(
-            $"[ContractsV2] GhostRole contract '{contractId}' spawn.point type {selector.Type} requires id.");
+            $"[Contracts] GhostRole contract '{contractId}' spawn.point type {selector.Type} requires id.");
         return false;
     }
 
@@ -196,7 +196,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         if (selector.Options.Count == 0)
         {
-            Sawmill.Warning($"[ContractsV2] GhostRole contract '{contractId}' spawn.point weighted selector has no options.");
+            Sawmill.Warning($"[Contracts] GhostRole contract '{contractId}' spawn.point weighted selector has no options.");
             return false;
         }
 
@@ -207,7 +207,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (option.Weight <= 0)
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] GhostRole contract '{contractId}' spawn.point options[{i}] weight must be > 0.");
+                    $"[Contracts] GhostRole contract '{contractId}' spawn.point options[{i}] weight must be > 0.");
                 valid = false;
             }
 
@@ -218,14 +218,14 @@ public sealed partial class NcContractSystem : EntitySystem
                     if (string.IsNullOrWhiteSpace(option.Id))
                     {
                         Sawmill.Warning(
-                            $"[ContractsV2] GhostRole contract '{contractId}' spawn.point options[{i}] type {option.Type} requires id.");
+                            $"[Contracts] GhostRole contract '{contractId}' spawn.point options[{i}] type {option.Type} requires id.");
                         valid = false;
                     }
                     break;
 
                 default:
                     Sawmill.Warning(
-                        $"[ContractsV2] GhostRole contract '{contractId}' spawn.point options[{i}] type {option.Type} is not supported. Use MarkerId or MarkerGroup.");
+                        $"[Contracts] GhostRole contract '{contractId}' spawn.point options[{i}] type {option.Type} is not supported. Use MarkerId or MarkerGroup.");
                     valid = false;
                     break;
             }
@@ -237,14 +237,14 @@ public sealed partial class NcContractSystem : EntitySystem
     private static bool RejectGhostRoleStoreSpawnPoint(string contractId)
     {
         Sawmill.Warning(
-            $"[ContractsV2] GhostRole contract '{contractId}' spawn.point.type=Store is forbidden. Ghost role spawners must use contract markers.");
+            $"[Contracts] GhostRole contract '{contractId}' spawn.point.type=Store is forbidden. Ghost role spawners must use contract markers.");
         return false;
     }
 
     private static bool RejectGhostRoleUnknownSpawnPoint(string contractId, ContractPointSelectorType type)
     {
         Sawmill.Warning(
-            $"[ContractsV2] GhostRole contract '{contractId}' spawn.point.type={type} is not supported.");
+            $"[Contracts] GhostRole contract '{contractId}' spawn.point.type={type} is not supported.");
         return false;
     }
 
@@ -260,7 +260,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (survival.DurationSeconds > 0)
             return true;
 
-        Sawmill.Warning($"[ContractsV2] GhostRole contract '{contractId}' survival.durationSeconds must be > 0.");
+        Sawmill.Warning($"[Contracts] GhostRole contract '{contractId}' survival.durationSeconds must be > 0.");
         return false;
     }
 
@@ -269,7 +269,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (proto.Reward.Count == 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] GhostRole contract '{proto.ID}' has no reward entries. " +
+                $"[Contracts] GhostRole contract '{proto.ID}' has no reward entries. " +
                 "Use 'reward' as a list with type: Currency, Item or Pool. Contract skipped.");
             return false;
         }
@@ -289,7 +289,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return valid;
 
         Sawmill.Warning(
-            $"[ContractsV2] GhostRole contract '{proto.ID}' has reward entries, but none of them are valid. Contract skipped.");
+            $"[Contracts] GhostRole contract '{proto.ID}' has reward entries, but none of them are valid. Contract skipped.");
         return false;
     }
 }

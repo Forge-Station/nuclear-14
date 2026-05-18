@@ -1009,7 +1009,7 @@ def audit_ghost_role_contract(block: ProtoBlock, issues: list[Issue], preset_ids
     if has_key(block, "difficulty"):
         add_issue(issues, "P1", block.path, first_key_line(block, "difficulty"), "ncGhostRoleContract difficulty is forbidden; use offer pool grouping/order/color")
     if has_key(block, "guard"):
-        add_issue(issues, "P1", block.path, first_key_line(block, "guard"), "ncGhostRoleContract guard is forbidden; GhostRole V2 completion uses role + spawn + completion only")
+        add_issue(issues, "P1", block.path, first_key_line(block, "guard"), "ncGhostRoleContract guard is forbidden; GhostRole completion uses role + spawn + completion only")
 
     role = top_level_value(block, "role")
     if role is None:
@@ -1394,11 +1394,11 @@ def audit_required_code_shapes(issues: list[Issue]) -> None:
         if "NcGhostRoleCompletionMode" not in text or "DeadBodyTurnIn" not in text or "AliveCuffedTurnIn" not in text:
             add_issue(issues, "P0", ghost_role_proto, 1, "NcGhostRoleCompletionMode must include DeadBodyTurnIn and AliveCuffedTurnIn")
         if "NcGhostRoleGuardData" in text or "DataField(\"guard\")" in text:
-            add_issue(issues, "P1", ghost_role_proto, 1, "GhostRole V2 guard data must not return; use completion.mode")
+            add_issue(issues, "P1", ghost_role_proto, 1, "GhostRole guard data must not return; use completion.mode")
     else:
         add_issue(issues, "P0", ghost_role_proto, 0, "NcGhostRoleContractPrototypes.cs missing")
 
-    retrieval_runtime = REPO_ROOT / "Content.Server/_NC/Trade/Contracts/V2/NcContractSystem.RetrievalV2.cs"
+    retrieval_runtime = REPO_ROOT / "Content.Server/_NC/Trade/Contracts/Definitions/NcContractSystem.Retrieval.cs"
     if retrieval_runtime.exists():
         text = read_text(retrieval_runtime)
         for token in ("ResolveRetrievalProofPresetId", "ResolveRetrievalClaimMode", "route.Proof"):

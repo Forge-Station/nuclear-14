@@ -43,10 +43,10 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private enum ContractPoolCandidateKind : byte
     {
-        SupplyV2 = 1,
-        RetrievalV2 = 2,
-        HuntV2 = 3,
-        GhostRoleV2 = 4
+        Supply = 1,
+        Retrieval = 2,
+        Hunt = 3,
+        GhostRole = 4
     }
 
     private sealed class ContractPoolCandidate

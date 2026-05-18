@@ -2,7 +2,7 @@
 #
 # Dev-only prototype set for manual Trade / NcStore verification.
 # Nothing references NcTradeSmokeProfile by default. Attach this profile to a test vendor/store
-# when you want to exercise buy, sell, barter and Supply V2 after Patch 5.3 Stage 1.
+# when you want to exercise buy, sell, barter and Supply after Patch 5.3 Stage 1.
 #
 # Required baseline ids in the content pack this was written for:
 # - Caps
@@ -65,7 +65,7 @@
     amount: 1
 
 # -----------------------------------------------------------------------------
-# Item groups used by Barter and Supply V2
+# Item groups used by Barter and Supply
 # -----------------------------------------------------------------------------
 
 - type: ncItemGroup
@@ -92,10 +92,10 @@
   - N14IngotCopper1
 
 # -----------------------------------------------------------------------------
-# Retrieval V2 Stage 2 spawn markers
+# Retrieval spawn route spawn markers
 # -----------------------------------------------------------------------------
 
-# Place this marker entity on the test map to verify Retrieval V2 Stage 2 marker spawn.
+# Place this marker entity on the test map to verify Retrieval spawn route marker spawn.
 # The contract still accepts any matching item; tracked-item identity is a later stage.
 - type: entity
   id: NcTradeSmokeRetrievalSpawnMarker
@@ -277,7 +277,7 @@
     weight: 1
 
 # -----------------------------------------------------------------------------
-# Contracts / Supply V2
+# Contracts / Supply
 # -----------------------------------------------------------------------------
 
 - type: storeContractsPreset
@@ -576,7 +576,7 @@
     count: 1
 
 # -----------------------------------------------------------------------------
-# Hunt V2 smoke content (stage 8.0-A: prototype + validation only)
+# Spawned Hunt smoke content (stage 8.0-A: prototype + validation only)
 # -----------------------------------------------------------------------------
 
 - type: ncHuntGroup
@@ -591,7 +591,7 @@
   id: NcTradeSmokeHuntProofRadroach
   parent: FoodSnackChips
   name: трофей радтаракана
-  description: Финальный трофей Hunt V2. Появляется только после последнего нужного убийства.
+  description: Финальный трофей Spawned Hunt. Появляется только после последнего нужного убийства.
   suffix: NC, Smoke, Hunt
   categories: [ HideSpawnMenu ]
 

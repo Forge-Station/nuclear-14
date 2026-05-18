@@ -9,7 +9,7 @@ public sealed partial class NcContractSystem : EntitySystem
     private ContractServerData CreateGhostRoleContractData(EntityUid store, NcGhostRoleContractPrototype proto)
     {
         var role = _prototypes.Index<NcGhostRolePresetPrototype>(proto.Role.Id);
-        var rewards = BakeRewardsForContract(store, proto.ID, BuildGhostRoleV2RewardDefs(proto));
+        var rewards = BakeRewardsForContract(store, proto.ID, BuildGhostRoleRewardDefs(proto));
 
         var runtime = new ContractRuntimeContextData
         {
@@ -84,16 +84,16 @@ public sealed partial class NcContractSystem : EntitySystem
         return contract;
     }
 
-    private List<ContractRewardDef> BuildGhostRoleV2RewardDefs(NcGhostRoleContractPrototype proto)
+    private List<ContractRewardDef> BuildGhostRoleRewardDefs(NcGhostRoleContractPrototype proto)
     {
         var rewards = new List<ContractRewardDef>(proto.Reward.Count);
         for (var i = 0; i < proto.Reward.Count; i++)
-            TryAppendGhostRoleV2RewardEntry(proto.ID, $"reward[{i}]", proto.Reward[i], rewards);
+            TryAppendGhostRoleRewardEntry(proto.ID, $"reward[{i}]", proto.Reward[i], rewards);
 
         return rewards;
     }
 
-    private bool TryAppendGhostRoleV2RewardEntry(
+    private bool TryAppendGhostRoleRewardEntry(
         string contractId,
         string path,
         NcSupplyRewardEntry entry,
@@ -101,14 +101,14 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         if (!IsCountConfigured(entry.Count))
         {
-            Sawmill.Warning($"[ContractsV2] GhostRole contract '{contractId}' {path} does not define 'count'.");
+            Sawmill.Warning($"[Contracts] GhostRole contract '{contractId}' {path} does not define 'count'.");
             return false;
         }
 
         if (!IsRewardCountRange(entry.Count))
         {
             Sawmill.Warning(
-                $"[ContractsV2] GhostRole contract '{contractId}' {path} has invalid count range " +
+                $"[Contracts] GhostRole contract '{contractId}' {path} has invalid count range " +
                 $"{entry.Count.Min}..{entry.Count.Max}.");
             return false;
         }
@@ -118,14 +118,14 @@ public sealed partial class NcContractSystem : EntitySystem
             case StoreRewardType.Item:
                 if (string.IsNullOrWhiteSpace(entry.Prototype))
                 {
-                    Sawmill.Warning($"[ContractsV2] GhostRole contract '{contractId}' {path} is Item but has no prototype.");
+                    Sawmill.Warning($"[Contracts] GhostRole contract '{contractId}' {path} is Item but has no prototype.");
                     return false;
                 }
 
                 if (!_prototypes.HasIndex<EntityPrototype>(entry.Prototype))
                 {
                     Sawmill.Warning(
-                        $"[ContractsV2] GhostRole contract '{contractId}' {path} references missing entity prototype '{entry.Prototype}'.");
+                        $"[Contracts] GhostRole contract '{contractId}' {path} references missing entity prototype '{entry.Prototype}'.");
                     return false;
                 }
 
@@ -141,7 +141,7 @@ public sealed partial class NcContractSystem : EntitySystem
             case StoreRewardType.Currency:
                 if (string.IsNullOrWhiteSpace(entry.Currency))
                 {
-                    Sawmill.Warning($"[ContractsV2] GhostRole contract '{contractId}' {path} is Currency but has no currency.");
+                    Sawmill.Warning($"[Contracts] GhostRole contract '{contractId}' {path} is Currency but has no currency.");
                     return false;
                 }
 
@@ -157,14 +157,14 @@ public sealed partial class NcContractSystem : EntitySystem
             case StoreRewardType.Pool:
                 if (string.IsNullOrWhiteSpace(entry.Pool))
                 {
-                    Sawmill.Warning($"[ContractsV2] GhostRole contract '{contractId}' {path} is Pool but has no pool id.");
+                    Sawmill.Warning($"[Contracts] GhostRole contract '{contractId}' {path} is Pool but has no pool id.");
                     return false;
                 }
 
                 if (!_prototypes.HasIndex<NcSupplyRewardPoolPrototype>(entry.Pool))
                 {
                     Sawmill.Warning(
-                        $"[ContractsV2] GhostRole contract '{contractId}' {path} references missing Supply V2 reward pool '{entry.Pool}'. Use type: ncSupplyRewardPool.");
+                        $"[Contracts] GhostRole contract '{contractId}' {path} references missing Supply reward pool '{entry.Pool}'. Use type: ncSupplyRewardPool.");
                     return false;
                 }
 
@@ -178,11 +178,11 @@ public sealed partial class NcContractSystem : EntitySystem
                 return true;
 
             case StoreRewardType.Unspecified:
-                Sawmill.Warning($"[ContractsV2] GhostRole contract '{contractId}' {path} does not define 'type'.");
+                Sawmill.Warning($"[Contracts] GhostRole contract '{contractId}' {path} does not define 'type'.");
                 return false;
 
             default:
-                Sawmill.Warning($"[ContractsV2] GhostRole contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
+                Sawmill.Warning($"[Contracts] GhostRole contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
                 return false;
         }
     }

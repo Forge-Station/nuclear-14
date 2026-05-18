@@ -22,7 +22,7 @@
   id: NcTradeSmokeHuntVendor
   parent: Trademachine
   name: торговый автомат проверки охоты
-  description: Отдельный автомат только для ручной проверки Hunt V2 TrophyTurnIn.
+  description: Отдельный автомат только для ручной проверки Spawned Hunt TrophyTurnIn.
   suffix: NC, Smoke, Hunt
   components:
   - type: NcStore
@@ -32,7 +32,7 @@
   id: NcTradeSmokeHuntBoard
   parent: TradeContractBoardCity
   name: доска проверки охоты
-  description: "Показывает ручные Hunt V2 тесты: трофей, группа, смешанные цели и сдача тела."
+  description: "Показывает ручные Spawned Hunt тесты: трофей, группа, смешанные цели и сдача тела."
   suffix: NC, Smoke, Hunt
   components:
   - type: NcStore
@@ -42,7 +42,7 @@
   id: NcTradeSmokeGhostRoleVendor
   parent: Trademachine
   name: торговый автомат проверки особых ролей
-  description: Отдельный автомат для ручной проверки GhostRole V2.
+  description: Отдельный автомат для ручной проверки GhostRole.
   suffix: NC, Smoke, GhostRole
   components:
   - type: NcStore
@@ -52,7 +52,7 @@
   id: NcTradeSmokeGhostRoleBoard
   parent: TradeContractBoardCity
   name: доска проверки особых ролей
-  description: "Показывает GhostRole V2 тесты: захват живым, сдача тела и таймаут принятия роли."
+  description: "Показывает GhostRole тесты: захват живым, сдача тела и таймаут принятия роли."
   suffix: NC, Smoke, GhostRole
   components:
   - type: NcStore

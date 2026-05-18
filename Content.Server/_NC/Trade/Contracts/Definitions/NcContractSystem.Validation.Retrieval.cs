@@ -11,14 +11,14 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (string.IsNullOrWhiteSpace(proto.ID))
         {
-            Sawmill.Warning($"[ContractsV2] Pack '{packId}' contains a retrieval contract with an empty prototype id.");
+            Sawmill.Warning($"[Contracts] Pack '{packId}' contains a retrieval contract with an empty prototype id.");
             return false;
         }
 
         if (proto.Cargo.Count == 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval contract '{proto.ID}' has no cargo. " +
+                $"[Contracts] Retrieval contract '{proto.ID}' has no cargo. " +
                 "Use 'cargo' with at least one entry. Contract skipped.");
             valid = false;
         }
@@ -42,7 +42,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         if (!_prototypes.TryIndex<NcRetrievalRoutePresetPrototype>(proto.Route, out var route))
         {
-            Sawmill.Warning($"[ContractsV2] Retrieval contract '{proto.ID}' references missing route preset '{proto.Route}'.");
+            Sawmill.Warning($"[Contracts] Retrieval contract '{proto.ID}' references missing route preset '{proto.Route}'.");
             return false;
         }
 
@@ -53,7 +53,7 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             if (!_prototypes.TryIndex(sourceId, out source))
             {
-                Sawmill.Warning($"[ContractsV2] Retrieval route '{route.ID}' references missing source preset '{sourceId}'.");
+                Sawmill.Warning($"[Contracts] Retrieval route '{route.ID}' references missing source preset '{sourceId}'.");
                 valid = false;
             }
             else if (!TryValidateRetrievalRouteSource(route.ID, source))
@@ -64,7 +64,7 @@ public sealed partial class NcContractSystem : EntitySystem
         else
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval route '{route.ID}' must define a source. " +
+                $"[Contracts] Retrieval route '{route.ID}' must define a source. " +
                 "Retrieval is spawned cargo delivery; existing-world item turn-in belongs to Supply.");
             valid = false;
         }
@@ -72,14 +72,14 @@ public sealed partial class NcContractSystem : EntitySystem
         if (source != null && !source.SpawnCargo)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval route '{route.ID}' source must use spawnCargo=true. " +
+                $"[Contracts] Retrieval route '{route.ID}' source must use spawnCargo=true. " +
                 "Retrieval is spawned cargo delivery; existing-world item turn-in belongs to Supply.");
             valid = false;
         }
 
         if (!_prototypes.TryIndex<NcRetrievalDestinationPresetPrototype>(route.Destination, out var destination))
         {
-            Sawmill.Warning($"[ContractsV2] Retrieval route '{route.ID}' references missing destination preset '{route.Destination}'.");
+            Sawmill.Warning($"[Contracts] Retrieval route '{route.ID}' references missing destination preset '{route.Destination}'.");
             valid = false;
         }
         else if (!TryValidateRetrievalRouteDestination(route.ID, destination))
@@ -92,7 +92,7 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             if (!_prototypes.TryIndex(resolvedProofId, out proof))
             {
-                Sawmill.Warning($"[ContractsV2] Retrieval route '{route.ID}' references missing proof preset '{resolvedProofId}'.");
+                Sawmill.Warning($"[Contracts] Retrieval route '{route.ID}' references missing proof preset '{resolvedProofId}'.");
                 valid = false;
             }
             else if (!TryValidateRetrievalRouteProof(route.ID, proof))
@@ -108,7 +108,7 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             if (!_prototypes.TryIndex<NcRetrievalGuidancePresetPrototype>(guidanceId, out var guidance))
             {
-                Sawmill.Warning($"[ContractsV2] Retrieval route '{route.ID}' references missing guidance preset '{guidanceId}'.");
+                Sawmill.Warning($"[Contracts] Retrieval route '{route.ID}' references missing guidance preset '{guidanceId}'.");
                 valid = false;
             }
             else if (!TryValidateRetrievalRouteGuidance(route.ID, guidance, source, proof))
@@ -120,7 +120,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!route.Delivery.ConsumeCargo)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval route '{route.ID}' uses delivery.consumeCargo=false. " +
+                $"[Contracts] Retrieval route '{route.ID}' uses delivery.consumeCargo=false. " +
                 "Stage 5.8R-E only supports consuming delivered cargo; persistent locked cargo is not implemented yet.");
             valid = false;
         }
@@ -128,7 +128,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (route.Delivery.LockDeliveredCargo)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval route '{route.ID}' uses delivery.lockDeliveredCargo=true. " +
+                $"[Contracts] Retrieval route '{route.ID}' uses delivery.lockDeliveredCargo=true. " +
                 "Persistent locked cargo is not implemented yet; use consumeCargo=true and lockDeliveredCargo=false.");
             valid = false;
         }
@@ -151,7 +151,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 if (proof != null)
                 {
                     Sawmill.Warning(
-                        $"[ContractsV2] Retrieval route '{route.ID}' uses claim.mode=StoreCargo but also defines proof. " +
+                        $"[Contracts] Retrieval route '{route.ID}' uses claim.mode=StoreCargo but also defines proof. " +
                         "StoreCargo routes must be completed by delivered cargo only.");
                     valid = false;
                 }
@@ -159,7 +159,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 if (destination != null && destination.Target.Type == NcRetrievalDestinationTargetType.MarkerGroup)
                 {
                     Sawmill.Warning(
-                        $"[ContractsV2] Retrieval route '{route.ID}' uses claim.mode=StoreCargo with MarkerGroup destination. " +
+                        $"[Contracts] Retrieval route '{route.ID}' uses claim.mode=StoreCargo with MarkerGroup destination. " +
                         "Use StoreUi/ContainerGroup for store-owned delivery or DestinationProof for remote marker delivery.");
                     valid = false;
                 }
@@ -169,14 +169,14 @@ public sealed partial class NcContractSystem : EntitySystem
                 if (proof == null)
                 {
                     Sawmill.Warning(
-                        $"[ContractsV2] Retrieval route '{route.ID}' uses claim.mode=DestinationProof but has no claim.proof preset.");
+                        $"[Contracts] Retrieval route '{route.ID}' uses claim.mode=DestinationProof but has no claim.proof preset.");
                     valid = false;
                 }
 
                 if (source == null || !source.SpawnCargo)
                 {
                     Sawmill.Warning(
-                        $"[ContractsV2] Retrieval route '{route.ID}' uses claim.mode=DestinationProof but has no spawned cargo source. " +
+                        $"[Contracts] Retrieval route '{route.ID}' uses claim.mode=DestinationProof but has no spawned cargo source. " +
                         "Remote proof delivery requires source.spawnCargo: true.");
                     valid = false;
                 }
@@ -184,14 +184,14 @@ public sealed partial class NcContractSystem : EntitySystem
                 if (destination != null && destination.Target.Type == NcRetrievalDestinationTargetType.StoreUi)
                 {
                     Sawmill.Warning(
-                        $"[ContractsV2] Retrieval route '{route.ID}' uses claim.mode=DestinationProof with StoreUi destination. " +
+                        $"[Contracts] Retrieval route '{route.ID}' uses claim.mode=DestinationProof with StoreUi destination. " +
                         "Use StoreCargo for direct store delivery.");
                     valid = false;
                 }
                 break;
 
             default:
-                Sawmill.Warning($"[ContractsV2] Retrieval route '{route.ID}' uses unsupported claim.mode={claimMode}.");
+                Sawmill.Warning($"[Contracts] Retrieval route '{route.ID}' uses unsupported claim.mode={claimMode}.");
                 valid = false;
                 break;
         }
@@ -218,18 +218,18 @@ public sealed partial class NcContractSystem : EntitySystem
                 if (!string.IsNullOrWhiteSpace(destination.Target.Id) && destination.Radius > 0)
                     return true;
 
-                Sawmill.Warning($"[ContractsV2] Retrieval destination '{destination.ID}' for route '{routeId}' must define MarkerGroup id and radius > 0.");
+                Sawmill.Warning($"[Contracts] Retrieval destination '{destination.ID}' for route '{routeId}' must define MarkerGroup id and radius > 0.");
                 return false;
 
             case NcRetrievalDestinationTargetType.ContainerGroup:
                 if (!string.IsNullOrWhiteSpace(destination.Target.Id))
                     return true;
 
-                Sawmill.Warning($"[ContractsV2] Retrieval destination '{destination.ID}' for route '{routeId}' must define ContainerGroup id.");
+                Sawmill.Warning($"[Contracts] Retrieval destination '{destination.ID}' for route '{routeId}' must define ContainerGroup id.");
                 return false;
 
             default:
-                Sawmill.Warning($"[ContractsV2] Retrieval destination '{destination.ID}' for route '{routeId}' uses unsupported type {destination.Target.Type}.");
+                Sawmill.Warning($"[Contracts] Retrieval destination '{destination.ID}' for route '{routeId}' uses unsupported type {destination.Target.Type}.");
                 return false;
         }
     }
@@ -240,26 +240,26 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (string.IsNullOrWhiteSpace(proof.Prototype) || !_prototypes.HasIndex<EntityPrototype>(proof.Prototype))
         {
-            Sawmill.Warning($"[ContractsV2] Retrieval proof preset '{proof.ID}' for route '{routeId}' references missing proof prototype '{proof.Prototype}'.");
+            Sawmill.Warning($"[Contracts] Retrieval proof preset '{proof.ID}' for route '{routeId}' references missing proof prototype '{proof.Prototype}'.");
             valid = false;
         }
 
         if (proof.Ownership != NcRetrievalProofOwnership.Bearer)
         {
-            Sawmill.Warning($"[ContractsV2] Retrieval proof preset '{proof.ID}' uses ownership={proof.Ownership}. Stage 5.8R supports Bearer only.");
+            Sawmill.Warning($"[Contracts] Retrieval proof preset '{proof.ID}' uses ownership={proof.Ownership}. Stage 5.8R supports Bearer only.");
             valid = false;
         }
 
         if (proof.Reissue != NcRetrievalProofReissuePolicy.Never)
         {
-            Sawmill.Warning($"[ContractsV2] Retrieval proof preset '{proof.ID}' uses reissue={proof.Reissue}. Stage 5.8R supports Never only.");
+            Sawmill.Warning($"[Contracts] Retrieval proof preset '{proof.ID}' uses reissue={proof.Reissue}. Stage 5.8R supports Never only.");
             valid = false;
         }
 
         if (!proof.ConsumeOnRewardClaim)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval proof preset '{proof.ID}' uses consumeOnRewardClaim=false. " +
+                $"[Contracts] Retrieval proof preset '{proof.ID}' uses consumeOnRewardClaim=false. " +
                 "Stage 5.8R-C always consumes bearer proof on reward claim.");
             valid = false;
         }
@@ -281,7 +281,7 @@ public sealed partial class NcContractSystem : EntitySystem
             (source == null || !source.SpawnCargo))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval guidance '{guidance.ID}' for route '{routeId}' targets cargo, " +
+                $"[Contracts] Retrieval guidance '{guidance.ID}' for route '{routeId}' targets cargo, " +
                 "but the route has no source.spawnCargo.");
             valid = false;
         }
@@ -292,7 +292,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (!_prototypes.HasIndex<EntityPrototype>(proto))
         {
-            Sawmill.Warning($"[ContractsV2] Retrieval guidance '{guidance.ID}' references missing pinpointer prototype '{proto}'.");
+            Sawmill.Warning($"[Contracts] Retrieval guidance '{guidance.ID}' references missing pinpointer prototype '{proto}'.");
             valid = false;
         }
 
@@ -319,7 +319,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return true;
 
         Sawmill.Warning(
-            $"[ContractsV2] Retrieval contract '{contractId}' spawn.point uses {selector.Type} but has no id.");
+            $"[Contracts] Retrieval contract '{contractId}' spawn.point uses {selector.Type} but has no id.");
         return false;
     }
 
@@ -330,7 +330,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (selector.Options.Count == 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval contract '{contractId}' spawn.point is Weighted but has no options.");
+                $"[Contracts] Retrieval contract '{contractId}' spawn.point is Weighted but has no options.");
             return false;
         }
 
@@ -342,7 +342,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (option.Weight <= 0)
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] Retrieval contract '{contractId}' spawn.point option #{i} has non-positive weight={option.Weight}.");
+                    $"[Contracts] Retrieval contract '{contractId}' spawn.point option #{i} has non-positive weight={option.Weight}.");
                 valid = false;
                 continue;
             }
@@ -354,7 +354,7 @@ public sealed partial class NcContractSystem : EntitySystem
                     if (string.IsNullOrWhiteSpace(option.Id))
                     {
                         Sawmill.Warning(
-                            $"[ContractsV2] Retrieval contract '{contractId}' spawn.point option #{i} uses {option.Type} but has no id.");
+                            $"[Contracts] Retrieval contract '{contractId}' spawn.point option #{i} uses {option.Type} but has no id.");
                         valid = false;
                         continue;
                     }
@@ -364,7 +364,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
                 default:
                     Sawmill.Warning(
-                        $"[ContractsV2] Retrieval contract '{contractId}' spawn.point option #{i} uses unsupported type {option.Type}. " +
+                        $"[Contracts] Retrieval contract '{contractId}' spawn.point option #{i} uses unsupported type {option.Type}. " +
                         "Retrieval spawn points must use MarkerId or MarkerGroup.");
                     valid = false;
                     break;
@@ -377,7 +377,7 @@ public sealed partial class NcContractSystem : EntitySystem
     private static bool RejectRetrievalStoreSpawnPoint(string contractId)
     {
         Sawmill.Warning(
-            $"[ContractsV2] Retrieval contract '{contractId}' spawn.point cannot be Store. " +
+            $"[Contracts] Retrieval contract '{contractId}' spawn.point cannot be Store. " +
             "Use MarkerId, MarkerGroup, or Weighted marker options.");
         return false;
     }
@@ -385,7 +385,7 @@ public sealed partial class NcContractSystem : EntitySystem
     private static bool RejectRetrievalUnknownSpawnPoint(string contractId, ContractPointSelectorType type)
     {
         Sawmill.Warning(
-            $"[ContractsV2] Retrieval contract '{contractId}' spawn.point has unsupported selector type {type}.");
+            $"[Contracts] Retrieval contract '{contractId}' spawn.point has unsupported selector type {type}.");
         return false;
     }
 
@@ -401,21 +401,21 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             Sawmill.Warning(
                 hasPrototype
-                    ? $"[ContractsV2] Retrieval contract '{contractId}' cargo #{index} has both prototype and group. Use exactly one."
-                    : $"[ContractsV2] Retrieval contract '{contractId}' cargo #{index} has neither prototype nor group.");
+                    ? $"[Contracts] Retrieval contract '{contractId}' cargo #{index} has both prototype and group. Use exactly one."
+                    : $"[Contracts] Retrieval contract '{contractId}' cargo #{index} has neither prototype nor group.");
             return false;
         }
 
         if (!IsCountConfigured(entry.Count))
         {
-            Sawmill.Warning($"[ContractsV2] Retrieval contract '{contractId}' cargo #{index} does not define 'count'.");
+            Sawmill.Warning($"[Contracts] Retrieval contract '{contractId}' cargo #{index} does not define 'count'.");
             return false;
         }
 
         if (!IsStrictPositiveRange(entry.Count))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval contract '{contractId}' cargo #{index} has invalid count range " +
+                $"[Contracts] Retrieval contract '{contractId}' cargo #{index} has invalid count range " +
                 $"{entry.Count.Min}..{entry.Count.Max}. Expected min > 0, max > 0, min <= max.");
             return false;
         }
@@ -423,7 +423,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (entry.Weight <= 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval contract '{contractId}' cargo #{index} has non-positive weight={entry.Weight}. " +
+                $"[Contracts] Retrieval contract '{contractId}' cargo #{index} has non-positive weight={entry.Weight}. " +
                 "Weight is used when targetCount is configured and must be > 0.");
             return false;
         }
@@ -434,7 +434,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 return true;
 
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval contract '{contractId}' cargo #{index} references missing entity prototype " +
+                $"[Contracts] Retrieval contract '{contractId}' cargo #{index} references missing entity prototype " +
                 $"'{entry.Prototype}'.");
             return false;
         }
@@ -442,8 +442,8 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!_prototypes.TryIndex<NcItemGroupPrototype>(entry.Group, out var group))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval contract '{contractId}' cargo #{index} references missing ncItemGroup " +
-                $"'{entry.Group}'. Retrieval V2 cargo groups must reference ncItemGroup prototypes, not legacy matchers.");
+                $"[Contracts] Retrieval contract '{contractId}' cargo #{index} references missing ncItemGroup " +
+                $"'{entry.Group}'. Retrieval cargo groups must reference ncItemGroup prototypes, not legacy matchers.");
             return false;
         }
 
@@ -454,7 +454,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return true;
 
         Sawmill.Warning(
-            $"[ContractsV2] Retrieval contract '{contractId}' cargo #{index} references invalid item group '{entry.Group}'.");
+            $"[Contracts] Retrieval contract '{contractId}' cargo #{index} references invalid item group '{entry.Group}'.");
         return false;
     }
 }

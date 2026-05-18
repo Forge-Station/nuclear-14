@@ -161,7 +161,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 return true;
         }
 
-        if (contract.Config.HuntV2Enabled)
+        if (contract.Config.HuntEnabled)
         {
             proof = EntityUid.Invalid;
             return false;
@@ -283,7 +283,7 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract,
         ObjectiveRuntimeState state)
     {
-        return contract.Config.HuntV2Enabled &&
+        return contract.Config.HuntEnabled &&
                state.ProofEntity is { } proof &&
                proof != EntityUid.Invalid;
     }
@@ -293,7 +293,7 @@ public sealed partial class NcContractSystem : EntitySystem
         ObjectiveRuntimeState state,
         EntityUid ent)
     {
-        return state.HuntV2Active &&
+        return state.HuntActive &&
                state.ProofEntity == ent;
     }
 

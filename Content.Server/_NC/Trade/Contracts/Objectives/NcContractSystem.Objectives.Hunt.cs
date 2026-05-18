@@ -14,7 +14,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (args.NewMobState != MobState.Dead || args.OldMobState == MobState.Dead)
             return;
 
-        TryHandleHuntV2TargetKilled(args.Target);
+        TryHandleSpawnedHuntTargetKilled(args.Target);
 
         if (!_objectiveRuntimeByTarget.TryGetValue(args.Target, out var key))
             return;
@@ -143,7 +143,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void SyncHuntObjectiveProgress(EntityUid store, string contractId, ContractServerData contract)
     {
-        if (IsHuntV2Contract(contract))
+        if (IsSpawnedHuntContract(contract))
             return;
 
         var key = (store, contractId);

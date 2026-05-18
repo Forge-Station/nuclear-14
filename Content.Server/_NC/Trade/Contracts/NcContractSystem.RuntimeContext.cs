@@ -1,4 +1,4 @@
-﻿using Content.Shared._NC.Trade;
+using Content.Shared._NC.Trade;
 using Content.Shared.Customization.Systems;
 
 namespace Content.Server._NC.Trade;
@@ -48,7 +48,7 @@ public sealed partial class NcContractSystem : EntitySystem
         config.RepairToolQuality = ResolveRepairToolQuality(config.RepairToolQuality);
         config.RepairDoAfterSeconds = ResolveRepairDoAfterSeconds(config.RepairDoAfterSeconds);
         config.RepairStageSound = ResolveRepairStageSound(config.RepairStageSound);
-        config.HuntV2BodyPrototype ??= string.Empty;
+        config.HuntBodyPrototype ??= string.Empty;
         if (config.RetrievalSpawnEnabled)
         {
             config.RetrievalSpawnPoint = NormalizeContractPointSelector(

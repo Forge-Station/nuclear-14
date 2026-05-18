@@ -42,7 +42,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (proto.Targets.Count == 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{proto.ID}' has no targets. " +
+                $"[Contracts] Supply contract '{proto.ID}' has no targets. " +
                 "Use 'targets' with at least one entry.");
             return new();
         }
@@ -168,14 +168,14 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         if (!IsCountConfigured(entry.Count))
         {
-            Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} does not define 'count'.");
+            Sawmill.Warning($"[Contracts] Supply contract '{contractId}' {path} does not define 'count'.");
             return false;
         }
 
         if (!IsRewardCountRange(entry.Count))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{contractId}' {path} has invalid count range " +
+                $"[Contracts] Supply contract '{contractId}' {path} has invalid count range " +
                 $"{entry.Count.Min}..{entry.Count.Max}.");
             return false;
         }
@@ -185,14 +185,14 @@ public sealed partial class NcContractSystem : EntitySystem
             case StoreRewardType.Item:
                 if (string.IsNullOrWhiteSpace(entry.Prototype))
                 {
-                    Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} is Item but has no prototype.");
+                    Sawmill.Warning($"[Contracts] Supply contract '{contractId}' {path} is Item but has no prototype.");
                     return false;
                 }
 
                 if (!_prototypes.HasIndex<EntityPrototype>(entry.Prototype))
                 {
                     Sawmill.Warning(
-                        $"[ContractsV2] Supply contract '{contractId}' {path} references missing entity prototype '{entry.Prototype}'.");
+                        $"[Contracts] Supply contract '{contractId}' {path} references missing entity prototype '{entry.Prototype}'.");
                     return false;
                 }
 
@@ -208,7 +208,7 @@ public sealed partial class NcContractSystem : EntitySystem
             case StoreRewardType.Currency:
                 if (string.IsNullOrWhiteSpace(entry.Currency))
                 {
-                    Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} is Currency but has no currency.");
+                    Sawmill.Warning($"[Contracts] Supply contract '{contractId}' {path} is Currency but has no currency.");
                     return false;
                 }
 
@@ -224,13 +224,13 @@ public sealed partial class NcContractSystem : EntitySystem
             case StoreRewardType.Pool:
                 if (string.IsNullOrWhiteSpace(entry.Pool))
                 {
-                    Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} is Pool but has no pool id.");
+                    Sawmill.Warning($"[Contracts] Supply contract '{contractId}' {path} is Pool but has no pool id.");
                     return false;
                 }
 
                 if (!_prototypes.HasIndex<NcSupplyRewardPoolPrototype>(entry.Pool))
                 {
-                    Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} references missing Supply V2 reward pool '{entry.Pool}'. Use type: ncSupplyRewardPool.");
+                    Sawmill.Warning($"[Contracts] Supply contract '{contractId}' {path} references missing Supply reward pool '{entry.Pool}'. Use type: ncSupplyRewardPool.");
                     return false;
                 }
 
@@ -244,11 +244,11 @@ public sealed partial class NcContractSystem : EntitySystem
                 return true;
 
             case StoreRewardType.Unspecified:
-                Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} does not define 'type'.");
+                Sawmill.Warning($"[Contracts] Supply contract '{contractId}' {path} does not define 'type'.");
                 return false;
 
             default:
-                Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
+                Sawmill.Warning($"[Contracts] Supply contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
                 return false;
         }
     }

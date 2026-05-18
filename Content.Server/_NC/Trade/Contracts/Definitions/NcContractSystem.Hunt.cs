@@ -7,11 +7,11 @@ public sealed partial class NcContractSystem : EntitySystem
 {
     private ContractServerData CreateHuntContractData(EntityUid store, NcHuntContractPrototype proto)
     {
-        var targets = BuildHuntV2Targets(proto);
+        var targets = BuildHuntTargets(proto);
         var required = Math.Max(1, CalculateTotalRequired(targets));
         var mainTarget = GetPrimaryTargetId(targets);
-        var bodyTarget = ResolveHuntV2BodyPrototype(targets);
-        var rewards = BakeRewardsForContract(store, proto.ID, BuildHuntV2RewardDefs(store, proto));
+        var bodyTarget = ResolveHuntBodyPrototype(targets);
+        var rewards = BakeRewardsForContract(store, proto.ID, BuildHuntRewardDefs(store, proto));
 
         var runtime = new ContractRuntimeContextData
         {
@@ -30,9 +30,9 @@ public sealed partial class NcContractSystem : EntitySystem
             ProofPrototype = proto.Completion.Mode == NcHuntCompletionMode.TrophyTurnIn
                 ? proto.Completion.Trophy
                 : string.Empty,
-            HuntV2Enabled = true,
-            HuntV2CompletionMode = proto.Completion.Mode,
-            HuntV2BodyPrototype = proto.Completion.Mode == NcHuntCompletionMode.BodyTurnIn
+            HuntEnabled = true,
+            HuntCompletionMode = proto.Completion.Mode,
+            HuntBodyPrototype = proto.Completion.Mode == NcHuntCompletionMode.BodyTurnIn
                 ? bodyTarget
                 : string.Empty,
             SpawnPoint = CloneContractPointSelector(proto.Spawn.Point)
@@ -62,7 +62,7 @@ public sealed partial class NcContractSystem : EntitySystem
         return contract;
     }
 
-    private static List<ContractTargetServerData> BuildHuntV2Targets(NcHuntContractPrototype proto)
+    private static List<ContractTargetServerData> BuildHuntTargets(NcHuntContractPrototype proto)
     {
         var targets = new List<ContractTargetServerData>(proto.Targets.Count);
         for (var i = 0; i < proto.Targets.Count; i++)
@@ -82,7 +82,7 @@ public sealed partial class NcContractSystem : EntitySystem
         return targets;
     }
 
-    private static string ResolveHuntV2BodyPrototype(List<ContractTargetServerData> targets)
+    private static string ResolveHuntBodyPrototype(List<ContractTargetServerData> targets)
     {
         for (var i = 0; i < targets.Count; i++)
         {
@@ -94,16 +94,16 @@ public sealed partial class NcContractSystem : EntitySystem
         return string.Empty;
     }
 
-    private List<ContractRewardDef> BuildHuntV2RewardDefs(EntityUid store, NcHuntContractPrototype proto)
+    private List<ContractRewardDef> BuildHuntRewardDefs(EntityUid store, NcHuntContractPrototype proto)
     {
         var rewards = new List<ContractRewardDef>(proto.Reward.Count);
         for (var i = 0; i < proto.Reward.Count; i++)
-            TryAppendHuntV2RewardEntry(store, proto.ID, $"reward[{i}]", proto.Reward[i], rewards);
+            TryAppendHuntRewardEntry(store, proto.ID, $"reward[{i}]", proto.Reward[i], rewards);
 
         return rewards;
     }
 
-    private bool TryAppendHuntV2RewardEntry(
+    private bool TryAppendHuntRewardEntry(
         EntityUid store,
         string contractId,
         string path,
@@ -112,14 +112,14 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         if (!IsCountConfigured(entry.Count))
         {
-            Sawmill.Warning($"[ContractsV2] Hunt contract '{contractId}' {path} does not define 'count'.");
+            Sawmill.Warning($"[Contracts] Hunt contract '{contractId}' {path} does not define 'count'.");
             return false;
         }
 
         if (!IsRewardCountRange(entry.Count))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Hunt contract '{contractId}' {path} has invalid count range " +
+                $"[Contracts] Hunt contract '{contractId}' {path} has invalid count range " +
                 $"{entry.Count.Min}..{entry.Count.Max}.");
             return false;
         }
@@ -129,14 +129,14 @@ public sealed partial class NcContractSystem : EntitySystem
             case StoreRewardType.Item:
                 if (string.IsNullOrWhiteSpace(entry.Prototype))
                 {
-                    Sawmill.Warning($"[ContractsV2] Hunt contract '{contractId}' {path} is Item but has no prototype.");
+                    Sawmill.Warning($"[Contracts] Hunt contract '{contractId}' {path} is Item but has no prototype.");
                     return false;
                 }
 
                 if (!_prototypes.HasIndex<EntityPrototype>(entry.Prototype))
                 {
                     Sawmill.Warning(
-                        $"[ContractsV2] Hunt contract '{contractId}' {path} references missing entity prototype '{entry.Prototype}'.");
+                        $"[Contracts] Hunt contract '{contractId}' {path} references missing entity prototype '{entry.Prototype}'.");
                     return false;
                 }
 
@@ -152,7 +152,7 @@ public sealed partial class NcContractSystem : EntitySystem
             case StoreRewardType.Currency:
                 if (string.IsNullOrWhiteSpace(entry.Currency))
                 {
-                    Sawmill.Warning($"[ContractsV2] Hunt contract '{contractId}' {path} is Currency but has no currency.");
+                    Sawmill.Warning($"[Contracts] Hunt contract '{contractId}' {path} is Currency but has no currency.");
                     return false;
                 }
 
@@ -168,14 +168,14 @@ public sealed partial class NcContractSystem : EntitySystem
             case StoreRewardType.Pool:
                 if (string.IsNullOrWhiteSpace(entry.Pool))
                 {
-                    Sawmill.Warning($"[ContractsV2] Hunt contract '{contractId}' {path} is Pool but has no pool id.");
+                    Sawmill.Warning($"[Contracts] Hunt contract '{contractId}' {path} is Pool but has no pool id.");
                     return false;
                 }
 
                 if (!_prototypes.HasIndex<NcSupplyRewardPoolPrototype>(entry.Pool))
                 {
                     Sawmill.Warning(
-                        $"[ContractsV2] Hunt contract '{contractId}' {path} references missing Supply V2 reward pool '{entry.Pool}'. Use type: ncSupplyRewardPool.");
+                        $"[Contracts] Hunt contract '{contractId}' {path} references missing Supply reward pool '{entry.Pool}'. Use type: ncSupplyRewardPool.");
                     return false;
                 }
 
@@ -189,11 +189,11 @@ public sealed partial class NcContractSystem : EntitySystem
                 return true;
 
             case StoreRewardType.Unspecified:
-                Sawmill.Warning($"[ContractsV2] Hunt contract '{contractId}' {path} does not define 'type'.");
+                Sawmill.Warning($"[Contracts] Hunt contract '{contractId}' {path} does not define 'type'.");
                 return false;
 
             default:
-                Sawmill.Warning($"[ContractsV2] Hunt contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
+                Sawmill.Warning($"[Contracts] Hunt contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
                 return false;
         }
     }

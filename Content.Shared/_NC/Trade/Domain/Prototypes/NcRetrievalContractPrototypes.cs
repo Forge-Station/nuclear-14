@@ -3,7 +3,7 @@ using Robust.Shared.Prototypes;
 namespace Content.Shared._NC.Trade;
 
 /// <summary>
-/// Retrieval V2 Route layout: content defines cargo, route and reward.
+/// Retrieval route layout: content defines cargo, route and reward.
 /// Retrieval is spawned cargo delivery: the contract creates cargo, then the player moves that cargo along a route.
 /// Existing-world item turn-in belongs to Supply, not Retrieval.
 /// </summary>
@@ -37,6 +37,6 @@ public sealed partial class NcRetrievalContractPrototype : IPrototype
     [DataField("reward", required: true)]
     public List<NcSupplyRewardEntry> Reward { get; private set; } = new();
 
-    // Retrieval V2 is intentionally strict: legacy targets/targetCount/spawn fields are not represented here.
+    // Retrieval is intentionally strict: legacy targets/targetCount/spawn fields are not represented here.
     // Invalid old YAML is blocked by nc_trade_core_audit.py before prototype load.
 }

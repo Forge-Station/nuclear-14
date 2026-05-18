@@ -4,7 +4,7 @@ using Robust.Shared.Serialization;
 namespace Content.Shared._NC.Trade;
 
 /// <summary>
-/// ContractsV2 Supply reward entry. Unified format:
+/// Trade contracts Supply reward entry. Unified format:
 /// reward:
 /// - type: Currency / Item / Pool
 ///   currency/prototype/pool: ...
@@ -28,15 +28,15 @@ public sealed partial class NcSupplyRewardEntry
     [DataField("count", required: true)]
     public IntRange Count { get; set; } = IntRange.Fixed(0);
 
-    /// <summary>Legacy trap: Supply V2 reward entries must use count, not amount.</summary>
+    /// <summary>Legacy trap: Supply reward entries must use count, not amount.</summary>
     [DataField("amount")]
     public IntRange LegacyAmount { get; set; } = IntRange.Fixed(int.MinValue);
 
-    /// <summary>Legacy trap: Supply V2 uses pool weight / count range, not per-entry probability.</summary>
+    /// <summary>Legacy trap: Supply uses pool weight / count range, not per-entry probability.</summary>
     [DataField("prob")]
     public float LegacyProbability { get; set; } = float.NaN;
 
-    /// <summary>Legacy trap: Supply V2 uses pool weight / count range, not per-entry chance.</summary>
+    /// <summary>Legacy trap: Supply uses pool weight / count range, not per-entry chance.</summary>
     [DataField("chance")]
     public float LegacyChance { get; set; } = float.NaN;
 
@@ -44,13 +44,13 @@ public sealed partial class NcSupplyRewardEntry
     [DataField("id")]
     public string LegacyId { get; set; } = string.Empty;
 
-    /// <summary>Legacy trap: nested option lists are not part of Supply V2 rewards.</summary>
+    /// <summary>Legacy trap: nested option lists are not part of Supply rewards.</summary>
     [DataField("options")]
     public List<ContractRewardDef>? LegacyOptions { get; set; }
 }
 
 /// <summary>
-/// Strict Trade reward pool shared by Contracts V2 and Barter receivePools.
+/// Strict Trade reward pool shared by Trade contracts and Barter receivePools.
 /// Use count + weight only; entries target prototype/currency/pool by reward type.
 /// Legacy id/amount/prob/chance/options fields are rejected by validation.
 /// </summary>
@@ -87,15 +87,15 @@ public sealed partial class NcSupplyRewardPoolEntry
     [DataField("max")]
     public int MaxRepeats { get; set; } = 0;
 
-    /// <summary>Legacy trap: Supply V2 reward pool entries must use count, not amount.</summary>
+    /// <summary>Legacy trap: Supply reward pool entries must use count, not amount.</summary>
     [DataField("amount")]
     public IntRange LegacyAmount { get; set; } = IntRange.Fixed(int.MinValue);
 
-    /// <summary>Legacy trap: Supply V2 reward pools use weight, not prob.</summary>
+    /// <summary>Legacy trap: Supply reward pools use weight, not prob.</summary>
     [DataField("prob")]
     public float LegacyProbability { get; set; } = float.NaN;
 
-    /// <summary>Legacy trap: Supply V2 reward pools use weight, not chance.</summary>
+    /// <summary>Legacy trap: Supply reward pools use weight, not chance.</summary>
     [DataField("chance")]
     public float LegacyChance { get; set; } = float.NaN;
 
@@ -103,7 +103,7 @@ public sealed partial class NcSupplyRewardPoolEntry
     [DataField("id")]
     public string LegacyId { get; set; } = string.Empty;
 
-    /// <summary>Legacy trap: nested option lists are not part of Supply V2 reward pools.</summary>
+    /// <summary>Legacy trap: nested option lists are not part of Supply reward pools.</summary>
     [DataField("options")]
     public List<ContractRewardDef>? LegacyOptions { get; set; }
 }

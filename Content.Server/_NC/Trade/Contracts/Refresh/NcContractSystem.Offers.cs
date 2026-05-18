@@ -154,7 +154,7 @@ public sealed partial class NcContractSystem
                     !TryValidateSupplyContractForPool(pool.ID, supply))
                     return false;
 
-                candidate.Kind = ContractPoolCandidateKind.SupplyV2;
+                candidate.Kind = ContractPoolCandidateKind.Supply;
                 candidate.Id = supply.ID;
                 candidate.Repeatable = supply.Repeatable;
                 candidate.Supply = supply;
@@ -165,7 +165,7 @@ public sealed partial class NcContractSystem
                     !TryValidateRetrievalContractForPool(pool.ID, retrieval))
                     return false;
 
-                candidate.Kind = ContractPoolCandidateKind.RetrievalV2;
+                candidate.Kind = ContractPoolCandidateKind.Retrieval;
                 candidate.Id = retrieval.ID;
                 candidate.Repeatable = retrieval.Repeatable;
                 candidate.Retrieval = retrieval;
@@ -184,7 +184,7 @@ public sealed partial class NcContractSystem
                     return false;
                 }
 
-                candidate.Kind = ContractPoolCandidateKind.HuntV2;
+                candidate.Kind = ContractPoolCandidateKind.Hunt;
                 candidate.Id = hunt.ID;
                 candidate.Repeatable = hunt.Repeatable;
                 candidate.Hunt = hunt;
@@ -195,7 +195,7 @@ public sealed partial class NcContractSystem
                     !TryValidateGhostRoleContractForPool(pool.ID, ghostRole))
                     return false;
 
-                candidate.Kind = ContractPoolCandidateKind.GhostRoleV2;
+                candidate.Kind = ContractPoolCandidateKind.GhostRole;
                 candidate.Id = ghostRole.ID;
                 candidate.Repeatable = ghostRole.Repeatable;
                 candidate.GhostRole = ghostRole;

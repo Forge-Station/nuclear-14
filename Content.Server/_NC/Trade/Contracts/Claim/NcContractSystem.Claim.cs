@@ -150,7 +150,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryValidateContractRewards(user, contract.Rewards, out var rewardFail))
             return rewardFail;
 
-        if (!TryConsumeHuntV2BodyTurnIn(store, user, contractId, contract, out var bodyFail))
+        if (!TryConsumeSpawnedHuntBodyTurnIn(store, user, contractId, contract, out var bodyFail))
             return bodyFail;
 
         if (!TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail))

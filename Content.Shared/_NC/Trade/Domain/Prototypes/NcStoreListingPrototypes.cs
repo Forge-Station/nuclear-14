@@ -76,96 +76,6 @@ public sealed partial class NcStoreProfilePrototype : IPrototype
 }
 
 
-[DataDefinition]
-public sealed partial class StoreContractTargetEntry
-{
-    [DataField("id", required: true)] public string TargetItemId { get; set; } = default!;
-    [DataField("required")] public IntRange Required { get; set; } = IntRange.Fixed(0);
-    [DataField("weight")] public int Weight { get; set; } = 1;
-}
-
-
-[DataDefinition]
-public sealed partial class StoreContractRuntimePrototype
-{
-    [DataField("stageGoal")]
-    public int StageGoal { get; set; } = 1;
-
-    [DataField("spawnPoint")]
-    public ContractPointSelectorPrototype? SpawnPoint { get; set; }
-
-    [DataField("dropoffPoint")]
-    public ContractPointSelectorPrototype? DropoffPoint { get; set; }
-
-    [DataField("targetPrototype")]
-    public string TargetPrototype { get; set; } = string.Empty;
-
-    [DataField("deliverySpawnPrototype")]
-    public string DeliverySpawnPrototype { get; set; } = string.Empty;
-
-    [DataField("structurePrototype")]
-    public string StructurePrototype { get; set; } = string.Empty;
-
-    [DataField("ghostRole")]
-    public string GhostRole { get; set; } = string.Empty;
-
-    [DataField("proofPrototype")]
-    public string ProofPrototype { get; set; } = string.Empty;
-
-    [DataField("preserveTargetOnComplete")]
-    public bool PreserveTargetOnComplete { get; set; }
-
-    [DataField("allowStoreWorldTurnIn")]
-    public bool AllowStoreWorldTurnIn { get; set; }
-
-    [DataField("acceptTimeoutSeconds")]
-    public int AcceptTimeoutSeconds { get; set; } = 300;
-
-    [DataField("givePinpointer")]
-    public bool GivePinpointer { get; set; } = true;
-
-    [DataField("pinpointerPrototype")]
-    public string PinpointerPrototype { get; set; } = "PinpointerUniversal";
-
-    [DataField("guardPrototype")]
-    public string GuardPrototype { get; set; } = string.Empty;
-
-    [DataField("guardCount")]
-    public int GuardCount { get; set; } = 0;
-
-    [DataField("repairToolQuality")]
-    public string RepairToolQuality { get; set; } = "Welding";
-
-    [DataField("repairDoAfterSeconds")]
-    public float RepairDoAfterSeconds { get; set; } = 2f;
-
-    [DataField("repairStageSound")]
-    public string RepairStageSound { get; set; } = "/Audio/Effects/sparks4.ogg";
-
-    // Phase M: if true and the contract's target is a matcher, the system spawns the required
-    // number of items for the player (random picks from matcher.Items, may repeat). The player
-    // then delivers them to complete the contract. Without this flag the player must find
-    // matching items in the world by themselves.
-    //
-    // Only meaningful for Delivery contracts. Ignored for Hunt (which always spawns), Repair,
-    // GhostRole, etc.
-    //
-    // If set true on a matcher with empty Items — loader emits a warning and treats as false.
-    [DataField("spawnItems")]
-    public bool SpawnItems { get; set; }
-
-    // Phase M: explicit override list of prototypes to spawn. If non-empty, takes precedence
-    // over random picking from matcher.Items — these exact prototypes are spawned (one per
-    // required slot up to required count). Useful when the author wants a curated mix like
-    // "one pistol + one rifle + one shotgun" instead of random picks that could repeat.
-    //
-    // Applies to Hunt (spawns exactly these mobs) and to Delivery with SpawnItems=true (spawns
-    // exactly these items for the player). If the list has fewer entries than required, the
-    // remainder is filled by random picks from matcher.Items.
-    [DataField("spawnSpecific")]
-    public List<string> SpawnSpecific { get; set; } = new();
-}
-
 [DataDefinition, Serializable, NetSerializable]
 public sealed partial class ContractPointSelectorPrototype
 {
@@ -298,7 +208,7 @@ public enum NcContractOfferType : byte
 }
 
 /// <summary>
-/// ContractsV2 item group. Groups are only valid for checking already existing turn-in items.
+/// Trade contracts item group. Groups are only valid for checking already existing turn-in items.
 /// They must not be used for spawning or reward generation.
 /// </summary>
 [Prototype("ncItemGroup")]

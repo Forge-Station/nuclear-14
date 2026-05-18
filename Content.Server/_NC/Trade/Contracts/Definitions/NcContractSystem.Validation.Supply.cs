@@ -12,14 +12,14 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (string.IsNullOrWhiteSpace(proto.ID))
         {
-            Sawmill.Warning($"[ContractsV2] Pack '{packId}' contains a supply contract with an empty prototype id.");
+            Sawmill.Warning($"[Contracts] Pack '{packId}' contains a supply contract with an empty prototype id.");
             return false;
         }
 
         if (proto.Targets.Count == 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{proto.ID}' has no targets. " +
+                $"[Contracts] Supply contract '{proto.ID}' has no targets. " +
                 "Use 'targets' with at least one entry. Contract skipped.");
             valid = false;
         }
@@ -48,7 +48,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (range.Min < 1 || range.Max < 1 || range.Min > range.Max)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{proto.ID}' has invalid targetCount range " +
+                $"[Contracts] Supply contract '{proto.ID}' has invalid targetCount range " +
                 $"{range.Min}..{range.Max}. Expected min >= 1, max >= min.");
             return false;
         }
@@ -56,7 +56,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (proto.Targets.Count > 0 && range.Max > proto.Targets.Count)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{proto.ID}' has targetCount max={range.Max}, " +
+                $"[Contracts] Supply contract '{proto.ID}' has targetCount max={range.Max}, " +
                 $"but only {proto.Targets.Count} targets are defined.");
             return false;
         }
@@ -76,21 +76,21 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             Sawmill.Warning(
                 hasPrototype
-                    ? $"[ContractsV2] Supply contract '{contractId}' target #{index} has both prototype and group. Use exactly one."
-                    : $"[ContractsV2] Supply contract '{contractId}' target #{index} has neither prototype nor group.");
+                    ? $"[Contracts] Supply contract '{contractId}' target #{index} has both prototype and group. Use exactly one."
+                    : $"[Contracts] Supply contract '{contractId}' target #{index} has neither prototype nor group.");
             return false;
         }
 
         if (!IsCountConfigured(entry.Count))
         {
-            Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' target #{index} does not define 'count'.");
+            Sawmill.Warning($"[Contracts] Supply contract '{contractId}' target #{index} does not define 'count'.");
             return false;
         }
 
         if (!IsStrictPositiveRange(entry.Count))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{contractId}' target #{index} has invalid count range " +
+                $"[Contracts] Supply contract '{contractId}' target #{index} has invalid count range " +
                 $"{entry.Count.Min}..{entry.Count.Max}. Expected min > 0, max > 0, min <= max.");
             return false;
         }
@@ -98,7 +98,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (entry.Weight <= 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{contractId}' target #{index} has non-positive weight={entry.Weight}. " +
+                $"[Contracts] Supply contract '{contractId}' target #{index} has non-positive weight={entry.Weight}. " +
                 "Weight is used when targetCount is configured and must be > 0.");
             return false;
         }
@@ -109,7 +109,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 return true;
 
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{contractId}' target #{index} references missing entity prototype " +
+                $"[Contracts] Supply contract '{contractId}' target #{index} references missing entity prototype " +
                 $"'{entry.Prototype}'.");
             return false;
         }
@@ -117,8 +117,8 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!_prototypes.TryIndex<NcItemGroupPrototype>(entry.Group, out var group))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{contractId}' target #{index} references missing ncItemGroup " +
-                $"'{entry.Group}'. Supply V2 group targets must reference ncItemGroup prototypes, not legacy matchers.");
+                $"[Contracts] Supply contract '{contractId}' target #{index} references missing ncItemGroup " +
+                $"'{entry.Group}'. Supply group targets must reference ncItemGroup prototypes, not legacy matchers.");
             return false;
         }
 
@@ -129,7 +129,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return true;
 
         Sawmill.Warning(
-            $"[ContractsV2] Supply contract '{contractId}' target #{index} references invalid item group '{entry.Group}'.");
+            $"[Contracts] Supply contract '{contractId}' target #{index} references invalid item group '{entry.Group}'.");
         return false;
     }
 
@@ -147,7 +147,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (string.IsNullOrWhiteSpace(prototypeId))
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] Item group '{groupId}' used by '{ownerId}' has empty prototypes[{i}].");
+                    $"[Contracts] Item group '{groupId}' used by '{ownerId}' has empty prototypes[{i}].");
                 valid = false;
                 continue;
             }
@@ -157,7 +157,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             Sawmill.Warning(
-                $"[ContractsV2] Item group '{groupId}' used by '{ownerId}' references missing entity prototype " +
+                $"[Contracts] Item group '{groupId}' used by '{ownerId}' references missing entity prototype " +
                 $"'{prototypeId}'.");
             valid = false;
         }
@@ -168,7 +168,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (string.IsNullOrWhiteSpace(tag))
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] Item group '{groupId}' used by '{ownerId}' has empty tags[{i}].");
+                    $"[Contracts] Item group '{groupId}' used by '{ownerId}' has empty tags[{i}].");
                 valid = false;
                 continue;
             }
@@ -180,7 +180,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return valid;
 
         Sawmill.Warning(
-            $"[ContractsV2] Item group '{groupId}' used by '{ownerId}' has no prototypes and no tags.");
+            $"[Contracts] Item group '{groupId}' used by '{ownerId}' has no prototypes and no tags.");
         return false;
     }
 }

@@ -11,7 +11,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (proto.Reward.Count == 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{proto.ID}' has no reward entries. " +
+                $"[Contracts] Supply contract '{proto.ID}' has no reward entries. " +
                 "Use 'reward' as a list with type: Currency, Item or Pool. Contract skipped.");
             return false;
         }
@@ -31,7 +31,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return valid;
 
         Sawmill.Warning(
-            $"[ContractsV2] Supply contract '{proto.ID}' has reward entries, but none of them are valid. Contract skipped.");
+            $"[Contracts] Supply contract '{proto.ID}' has reward entries, but none of them are valid. Contract skipped.");
         return false;
     }
 
@@ -40,7 +40,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (proto.Reward.Count == 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval contract '{proto.ID}' has no reward entries. " +
+                $"[Contracts] Retrieval contract '{proto.ID}' has no reward entries. " +
                 "Use 'reward' as a list with type: Currency, Item or Pool. Contract skipped.");
             return false;
         }
@@ -60,7 +60,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return valid;
 
         Sawmill.Warning(
-            $"[ContractsV2] Retrieval contract '{proto.ID}' has reward entries, but none of them are valid. Contract skipped.");
+            $"[Contracts] Retrieval contract '{proto.ID}' has reward entries, but none of them are valid. Contract skipped.");
         return false;
     }
 
@@ -72,21 +72,21 @@ public sealed partial class NcContractSystem : EntitySystem
         if (HasLegacySupplyRewardFields(entry, out var legacyField))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{contractId}' {path} uses legacy field '{legacyField}'. " +
-                "Supply V2 rewards must use only type + prototype/currency/pool + count.");
+                $"[Contracts] Supply contract '{contractId}' {path} uses legacy field '{legacyField}'. " +
+                "Supply rewards must use only type + prototype/currency/pool + count.");
             return false;
         }
 
         if (!IsCountConfigured(entry.Count))
         {
-            Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} does not define 'count'.");
+            Sawmill.Warning($"[Contracts] Supply contract '{contractId}' {path} does not define 'count'.");
             return false;
         }
 
         if (!IsRewardCountRange(entry.Count))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply contract '{contractId}' {path} has invalid count range " +
+                $"[Contracts] Supply contract '{contractId}' {path} has invalid count range " +
                 $"{entry.Count.Min}..{entry.Count.Max}. Expected min >= 0, max > 0, min <= max.");
             return false;
         }
@@ -101,7 +101,7 @@ public sealed partial class NcContractSystem : EntitySystem
                     return true;
 
                 Sawmill.Warning(
-                    $"[ContractsV2] Supply contract '{contractId}' {path} references missing entity prototype " +
+                    $"[Contracts] Supply contract '{contractId}' {path} references missing entity prototype " +
                     $"'{entry.Prototype}'.");
                 return false;
 
@@ -113,7 +113,7 @@ public sealed partial class NcContractSystem : EntitySystem
                     return true;
 
                 Sawmill.Warning(
-                    $"[ContractsV2] Supply contract '{contractId}' {path} references missing stack currency " +
+                    $"[Contracts] Supply contract '{contractId}' {path} references missing stack currency " +
                     $"'{entry.Currency}'.");
                 return false;
 
@@ -124,18 +124,18 @@ public sealed partial class NcContractSystem : EntitySystem
                 if (!_prototypes.TryIndex<NcSupplyRewardPoolPrototype>(entry.Pool, out var pool))
                 {
                     Sawmill.Warning(
-                        $"[ContractsV2] Supply contract '{contractId}' {path} references missing Supply V2 reward pool '{entry.Pool}'. Use type: ncSupplyRewardPool.");
+                        $"[Contracts] Supply contract '{contractId}' {path} references missing Supply reward pool '{entry.Pool}'. Use type: ncSupplyRewardPool.");
                     return false;
                 }
 
                 return TryValidateRewardPoolPrototype(contractId, entry.Pool, pool);
 
             case StoreRewardType.Unspecified:
-                Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} does not define 'type'.");
+                Sawmill.Warning($"[Contracts] Supply contract '{contractId}' {path} does not define 'type'.");
                 return false;
 
             default:
-                Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
+                Sawmill.Warning($"[Contracts] Supply contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
                 return false;
         }
     }
@@ -148,21 +148,21 @@ public sealed partial class NcContractSystem : EntitySystem
         if (HasLegacySupplyRewardFields(entry, out var legacyField))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval contract '{contractId}' {path} uses legacy field '{legacyField}'. " +
-                "Retrieval V2 rewards must use only type + prototype/currency/pool + count.");
+                $"[Contracts] Retrieval contract '{contractId}' {path} uses legacy field '{legacyField}'. " +
+                "Retrieval rewards must use only type + prototype/currency/pool + count.");
             return false;
         }
 
         if (!IsCountConfigured(entry.Count))
         {
-            Sawmill.Warning($"[ContractsV2] Retrieval contract '{contractId}' {path} does not define 'count'.");
+            Sawmill.Warning($"[Contracts] Retrieval contract '{contractId}' {path} does not define 'count'.");
             return false;
         }
 
         if (!IsRewardCountRange(entry.Count))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval contract '{contractId}' {path} has invalid count range " +
+                $"[Contracts] Retrieval contract '{contractId}' {path} has invalid count range " +
                 $"{entry.Count.Min}..{entry.Count.Max}. Expected min >= 0, max > 0, min <= max.");
             return false;
         }
@@ -177,7 +177,7 @@ public sealed partial class NcContractSystem : EntitySystem
                     return true;
 
                 Sawmill.Warning(
-                    $"[ContractsV2] Retrieval contract '{contractId}' {path} references missing entity prototype " +
+                    $"[Contracts] Retrieval contract '{contractId}' {path} references missing entity prototype " +
                     $"'{entry.Prototype}'.");
                 return false;
 
@@ -189,7 +189,7 @@ public sealed partial class NcContractSystem : EntitySystem
                     return true;
 
                 Sawmill.Warning(
-                    $"[ContractsV2] Retrieval contract '{contractId}' {path} references missing stack currency " +
+                    $"[Contracts] Retrieval contract '{contractId}' {path} references missing stack currency " +
                     $"'{entry.Currency}'.");
                 return false;
 
@@ -200,18 +200,18 @@ public sealed partial class NcContractSystem : EntitySystem
                 if (!_prototypes.TryIndex<NcSupplyRewardPoolPrototype>(entry.Pool, out var pool))
                 {
                     Sawmill.Warning(
-                        $"[ContractsV2] Retrieval contract '{contractId}' {path} references missing Supply V2 reward pool '{entry.Pool}'. Use type: ncSupplyRewardPool.");
+                        $"[Contracts] Retrieval contract '{contractId}' {path} references missing Supply reward pool '{entry.Pool}'. Use type: ncSupplyRewardPool.");
                     return false;
                 }
 
                 return TryValidateRewardPoolPrototype(contractId, entry.Pool, pool);
 
             case StoreRewardType.Unspecified:
-                Sawmill.Warning($"[ContractsV2] Retrieval contract '{contractId}' {path} does not define 'type'.");
+                Sawmill.Warning($"[Contracts] Retrieval contract '{contractId}' {path} does not define 'type'.");
                 return false;
 
             default:
-                Sawmill.Warning($"[ContractsV2] Retrieval contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
+                Sawmill.Warning($"[Contracts] Retrieval contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
                 return false;
         }
     }
@@ -226,7 +226,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         if (string.IsNullOrWhiteSpace(expectedValue))
         {
-            Sawmill.Warning($"[ContractsV2] Supply contract '{contractId}' {path} requires field '{expectedField}'.");
+            Sawmill.Warning($"[Contracts] Supply contract '{contractId}' {path} requires field '{expectedField}'.");
             return false;
         }
 
@@ -234,7 +234,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return true;
 
         Sawmill.Warning(
-            $"[ContractsV2] Supply contract '{contractId}' {path} has extra reward target fields. " +
+            $"[Contracts] Supply contract '{contractId}' {path} has extra reward target fields. " +
             $"For each reward entry use only the field required by its type.");
         return false;
     }
@@ -249,7 +249,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         if (string.IsNullOrWhiteSpace(expectedValue))
         {
-            Sawmill.Warning($"[ContractsV2] Retrieval contract '{contractId}' {path} requires field '{expectedField}'.");
+            Sawmill.Warning($"[Contracts] Retrieval contract '{contractId}' {path} requires field '{expectedField}'.");
             return false;
         }
 
@@ -257,7 +257,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return true;
 
         Sawmill.Warning(
-            $"[ContractsV2] Retrieval contract '{contractId}' {path} has extra reward target fields. " +
+            $"[Contracts] Retrieval contract '{contractId}' {path} has extra reward target fields. " +
             $"For each reward entry use only the field required by its type.");
         return false;
     }
@@ -272,13 +272,13 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!visited.Add(poolId))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' creates a nested pool cycle.");
+                $"[Contracts] Supply reward pool '{poolId}' used by '{ownerId}' creates a nested pool cycle.");
             return false;
         }
 
         if (pool.Entries.Count == 0)
         {
-            Sawmill.Warning($"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' has no entries.");
+            Sawmill.Warning($"[Contracts] Supply reward pool '{poolId}' used by '{ownerId}' has no entries.");
             visited.Remove(poolId);
             return false;
         }
@@ -299,7 +299,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (hasAtLeastOneValidEntry)
             return valid;
 
-        Sawmill.Warning($"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' has no valid entries.");
+        Sawmill.Warning($"[Contracts] Supply reward pool '{poolId}' used by '{ownerId}' has no valid entries.");
         return false;
     }
 
@@ -313,36 +313,36 @@ public sealed partial class NcContractSystem : EntitySystem
         if (HasLegacySupplyRewardPoolFields(entry, out var legacyField))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} uses legacy field '{legacyField}'. " +
-                "Supply V2 reward pools must use only type + prototype/currency/pool + count + weight/max.");
+                $"[Contracts] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} uses legacy field '{legacyField}'. " +
+                "Supply reward pools must use only type + prototype/currency/pool + count + weight/max.");
             return false;
         }
 
         if (entry.Weight <= 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} has non-positive weight={entry.Weight}.");
+                $"[Contracts] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} has non-positive weight={entry.Weight}.");
             return false;
         }
 
         if (entry.MaxRepeats < 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} has negative max={entry.MaxRepeats}.");
+                $"[Contracts] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} has negative max={entry.MaxRepeats}.");
             return false;
         }
 
         if (!IsCountConfigured(entry.Count))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} does not define 'count'.");
+                $"[Contracts] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} does not define 'count'.");
             return false;
         }
 
         if (!IsRewardCountRange(entry.Count))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} has invalid count range " +
+                $"[Contracts] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} has invalid count range " +
                 $"{entry.Count.Min}..{entry.Count.Max}. Expected min >= 0, max > 0, min <= max.");
             return false;
         }
@@ -357,7 +357,7 @@ public sealed partial class NcContractSystem : EntitySystem
                     return true;
 
                 Sawmill.Warning(
-                    $"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} references missing entity prototype " +
+                    $"[Contracts] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} references missing entity prototype " +
                     $"'{entry.Prototype}'.");
                 return false;
 
@@ -369,7 +369,7 @@ public sealed partial class NcContractSystem : EntitySystem
                     return true;
 
                 Sawmill.Warning(
-                    $"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} references missing stack currency " +
+                    $"[Contracts] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} references missing stack currency " +
                     $"'{entry.Currency}'.");
                 return false;
 
@@ -380,8 +380,8 @@ public sealed partial class NcContractSystem : EntitySystem
                 if (!_prototypes.TryIndex<NcSupplyRewardPoolPrototype>(entry.Pool, out var nestedPool))
                 {
                     Sawmill.Warning(
-                        $"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} " +
-                        $"references missing nested Supply V2 reward pool '{entry.Pool}'.");
+                        $"[Contracts] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} " +
+                        $"references missing nested Supply reward pool '{entry.Pool}'.");
                     return false;
                 }
 
@@ -389,12 +389,12 @@ public sealed partial class NcContractSystem : EntitySystem
 
             case StoreRewardType.Unspecified:
                 Sawmill.Warning(
-                    $"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} does not define 'type'.");
+                    $"[Contracts] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} does not define 'type'.");
                 return false;
 
             default:
                 Sawmill.Warning(
-                    $"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} has unsupported reward type {entry.Type}.");
+                    $"[Contracts] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} has unsupported reward type {entry.Type}.");
                 return false;
         }
     }
@@ -411,7 +411,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (string.IsNullOrWhiteSpace(expectedValue))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} requires field '{expectedField}'.");
+                $"[Contracts] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} requires field '{expectedField}'.");
             return false;
         }
 
@@ -419,7 +419,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return true;
 
         Sawmill.Warning(
-            $"[ContractsV2] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} has extra reward target fields. " +
+            $"[Contracts] Supply reward pool '{poolId}' used by '{ownerId}' entry #{index} has extra reward target fields. " +
             "Use only prototype for Item, currency for Currency, or pool for Pool.");
         return false;
     }

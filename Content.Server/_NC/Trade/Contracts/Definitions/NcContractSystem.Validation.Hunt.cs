@@ -11,12 +11,9 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (string.IsNullOrWhiteSpace(proto.ID))
         {
-            Sawmill.Warning($"[ContractsV2] Pack '{packId}' contains a hunt contract with an empty prototype id.");
+            Sawmill.Warning($"[Contracts] Pack '{packId}' contains a hunt contract with an empty prototype id.");
             return false;
         }
-
-        if (!TryValidateHuntLegacyFields(proto))
-            valid = false;
 
         if (!TryValidateHuntTargets(proto.ID, proto.Targets))
             valid = false;
@@ -37,7 +34,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         if (spawn.Point == null)
         {
-            Sawmill.Warning($"[ContractsV2] Hunt contract '{contractId}' must define spawn.point.");
+            Sawmill.Warning($"[Contracts] Hunt contract '{contractId}' must define spawn.point.");
             return false;
         }
 
@@ -57,7 +54,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return true;
 
         Sawmill.Warning(
-            $"[ContractsV2] Hunt contract '{contractId}' spawn.point type {selector.Type} requires id.");
+            $"[Contracts] Hunt contract '{contractId}' spawn.point type {selector.Type} requires id.");
         return false;
     }
 
@@ -65,7 +62,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         if (selector.Options.Count == 0)
         {
-            Sawmill.Warning($"[ContractsV2] Hunt contract '{contractId}' spawn.point weighted selector has no options.");
+            Sawmill.Warning($"[Contracts] Hunt contract '{contractId}' spawn.point weighted selector has no options.");
             return false;
         }
 
@@ -76,7 +73,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (option.Weight <= 0)
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] Hunt contract '{contractId}' spawn.point options[{i}] weight must be > 0.");
+                    $"[Contracts] Hunt contract '{contractId}' spawn.point options[{i}] weight must be > 0.");
                 valid = false;
             }
 
@@ -87,14 +84,14 @@ public sealed partial class NcContractSystem : EntitySystem
                     if (string.IsNullOrWhiteSpace(option.Id))
                     {
                         Sawmill.Warning(
-                            $"[ContractsV2] Hunt contract '{contractId}' spawn.point options[{i}] type {option.Type} requires id.");
+                            $"[Contracts] Hunt contract '{contractId}' spawn.point options[{i}] type {option.Type} requires id.");
                         valid = false;
                     }
                     break;
 
                 default:
                     Sawmill.Warning(
-                        $"[ContractsV2] Hunt contract '{contractId}' spawn.point options[{i}] type {option.Type} is not supported. Use MarkerId or MarkerGroup.");
+                        $"[Contracts] Hunt contract '{contractId}' spawn.point options[{i}] type {option.Type} is not supported. Use MarkerId or MarkerGroup.");
                     valid = false;
                     break;
             }
@@ -106,14 +103,14 @@ public sealed partial class NcContractSystem : EntitySystem
     private static bool RejectHuntStoreSpawnPoint(string contractId)
     {
         Sawmill.Warning(
-            $"[ContractsV2] Hunt contract '{contractId}' spawn.point.type=Store is forbidden. Hunt V2 targets must spawn at contract markers.");
+            $"[Contracts] Hunt contract '{contractId}' spawn.point.type=Store is forbidden. Spawned Hunt targets must spawn at contract markers.");
         return false;
     }
 
     private static bool RejectHuntUnknownSpawnPoint(string contractId, ContractPointSelectorType type)
     {
         Sawmill.Warning(
-            $"[ContractsV2] Hunt contract '{contractId}' spawn.point.type={type} is not supported.");
+            $"[Contracts] Hunt contract '{contractId}' spawn.point.type={type} is not supported.");
         return false;
     }
 
@@ -121,7 +118,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         if (targets.Count == 0)
         {
-            Sawmill.Warning($"[ContractsV2] Hunt contract '{contractId}' must define at least one targets entry.");
+            Sawmill.Warning($"[Contracts] Hunt contract '{contractId}' must define at least one targets entry.");
             return false;
         }
 
@@ -144,14 +141,14 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             Sawmill.Warning(
                 hasGroup
-                    ? $"[ContractsV2] Hunt contract '{contractId}' targets[{index}] has both group and prototype. Use exactly one."
-                    : $"[ContractsV2] Hunt contract '{contractId}' targets[{index}] has neither group nor prototype.");
+                    ? $"[Contracts] Hunt contract '{contractId}' targets[{index}] has both group and prototype. Use exactly one."
+                    : $"[Contracts] Hunt contract '{contractId}' targets[{index}] has neither group nor prototype.");
             return false;
         }
 
         if (target.Count <= 0)
         {
-            Sawmill.Warning($"[ContractsV2] Hunt contract '{contractId}' targets[{index}] count must be > 0.");
+            Sawmill.Warning($"[Contracts] Hunt contract '{contractId}' targets[{index}] count must be > 0.");
             return false;
         }
 
@@ -161,14 +158,14 @@ public sealed partial class NcContractSystem : EntitySystem
                 return true;
 
             Sawmill.Warning(
-                $"[ContractsV2] Hunt contract '{contractId}' targets[{index}] references missing entity prototype '{target.Prototype}'.");
+                $"[Contracts] Hunt contract '{contractId}' targets[{index}] references missing entity prototype '{target.Prototype}'.");
             return false;
         }
 
         if (!_prototypes.TryIndex<NcHuntGroupPrototype>(target.Group, out var group))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Hunt contract '{contractId}' targets[{index}] references missing ncHuntGroup '{target.Group}'.");
+                $"[Contracts] Hunt contract '{contractId}' targets[{index}] references missing ncHuntGroup '{target.Group}'.");
             return false;
         }
 
@@ -179,7 +176,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         if (group.Prototypes.Count == 0)
         {
-            Sawmill.Warning($"[ContractsV2] Hunt group '{groupId}' used by '{ownerId}' has no prototypes.");
+            Sawmill.Warning($"[Contracts] Hunt group '{groupId}' used by '{ownerId}' has no prototypes.");
             return false;
         }
 
@@ -190,7 +187,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (string.IsNullOrWhiteSpace(proto))
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] Hunt group '{groupId}' used by '{ownerId}' has empty prototypes[{i}].");
+                    $"[Contracts] Hunt group '{groupId}' used by '{ownerId}' has empty prototypes[{i}].");
                 valid = false;
                 continue;
             }
@@ -199,7 +196,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             Sawmill.Warning(
-                $"[ContractsV2] Hunt group '{groupId}' used by '{ownerId}' references missing entity prototype '{proto}'.");
+                $"[Contracts] Hunt group '{groupId}' used by '{ownerId}' references missing entity prototype '{proto}'.");
             valid = false;
         }
 
@@ -217,7 +214,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 if (!string.IsNullOrWhiteSpace(completion.Trophy))
                 {
                     Sawmill.Warning(
-                        $"[ContractsV2] Hunt contract '{contractId}' completion.mode=ConfirmedKill must not define trophy.");
+                        $"[Contracts] Hunt contract '{contractId}' completion.mode=ConfirmedKill must not define trophy.");
                     return false;
                 }
 
@@ -227,7 +224,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 if (string.IsNullOrWhiteSpace(completion.Trophy))
                 {
                     Sawmill.Warning(
-                        $"[ContractsV2] Hunt contract '{contractId}' completion.mode=TrophyTurnIn requires trophy.");
+                        $"[Contracts] Hunt contract '{contractId}' completion.mode=TrophyTurnIn requires trophy.");
                     return false;
                 }
 
@@ -235,14 +232,14 @@ public sealed partial class NcContractSystem : EntitySystem
                     return TryValidateHuntNoBodyTargets(contractId, completion.Mode, targets);
 
                 Sawmill.Warning(
-                    $"[ContractsV2] Hunt contract '{contractId}' references missing trophy prototype '{completion.Trophy}'.");
+                    $"[Contracts] Hunt contract '{contractId}' references missing trophy prototype '{completion.Trophy}'.");
                 return false;
 
             case NcHuntCompletionMode.BodyTurnIn:
                 if (!string.IsNullOrWhiteSpace(completion.Trophy))
                 {
                     Sawmill.Warning(
-                        $"[ContractsV2] Hunt contract '{contractId}' completion.mode=BodyTurnIn must not define trophy.");
+                        $"[Contracts] Hunt contract '{contractId}' completion.mode=BodyTurnIn must not define trophy.");
                     return false;
                 }
 
@@ -250,7 +247,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
             default:
                 Sawmill.Warning(
-                    $"[ContractsV2] Hunt contract '{contractId}' completion.mode={completion.Mode} is not supported.");
+                    $"[Contracts] Hunt contract '{contractId}' completion.mode={completion.Mode} is not supported.");
                 return false;
         }
     }
@@ -266,7 +263,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             Sawmill.Warning(
-                $"[ContractsV2] Hunt contract '{contractId}' targets[{i}] uses body: true but completion.mode={mode}. " +
+                $"[Contracts] Hunt contract '{contractId}' targets[{i}] uses body: true but completion.mode={mode}. " +
                 "Use body: true only with BodyTurnIn.");
             return false;
         }
@@ -289,7 +286,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (string.IsNullOrWhiteSpace(target.Prototype) || !string.IsNullOrWhiteSpace(target.Group))
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] Hunt contract '{contractId}' targets[{i}] uses body: true. " +
+                    $"[Contracts] Hunt contract '{contractId}' targets[{i}] uses body: true. " +
                     "BodyTurnIn body target must be a single direct prototype target.");
                 valid = false;
             }
@@ -297,7 +294,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (target.Count != 1)
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] Hunt contract '{contractId}' targets[{i}] uses body: true with count={target.Count}. " +
+                    $"[Contracts] Hunt contract '{contractId}' targets[{i}] uses body: true with count={target.Count}. " +
                     "BodyTurnIn requires exactly one body target.");
                 valid = false;
             }
@@ -308,8 +305,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
         Sawmill.Warning(
             bodyTargets == 0
-                ? $"[ContractsV2] Hunt contract '{contractId}' completion.mode=BodyTurnIn requires exactly one targets entry with body: true."
-                : $"[ContractsV2] Hunt contract '{contractId}' completion.mode=BodyTurnIn has {bodyTargets} body targets. Use exactly one.");
+                ? $"[Contracts] Hunt contract '{contractId}' completion.mode=BodyTurnIn requires exactly one targets entry with body: true."
+                : $"[Contracts] Hunt contract '{contractId}' completion.mode=BodyTurnIn has {bodyTargets} body targets. Use exactly one.");
         return false;
     }
 
@@ -318,7 +315,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (proto.Reward.Count == 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Hunt contract '{proto.ID}' has no reward entries. " +
+                $"[Contracts] Hunt contract '{proto.ID}' has no reward entries. " +
                 "Use 'reward' as a list with type: Currency, Item or Pool. Contract skipped.");
             return false;
         }
@@ -338,54 +335,8 @@ public sealed partial class NcContractSystem : EntitySystem
             return valid;
 
         Sawmill.Warning(
-            $"[ContractsV2] Hunt contract '{proto.ID}' has reward entries, but none of them are valid. Contract skipped.");
+            $"[Contracts] Hunt contract '{proto.ID}' has reward entries, but none of them are valid. Contract skipped.");
         return false;
     }
 
-    private bool TryValidateHuntLegacyFields(NcHuntContractPrototype proto)
-    {
-        if (!string.IsNullOrWhiteSpace(proto.LegacyTargetItem))
-        {
-            Sawmill.Warning($"[ContractsV2] Hunt contract '{proto.ID}' uses legacy field 'targetItem'.");
-            return false;
-        }
-
-        if (IsLegacyTrapRangeConfigured(proto.LegacyRequired))
-        {
-            Sawmill.Warning($"[ContractsV2] Hunt contract '{proto.ID}' uses legacy field 'required'.");
-            return false;
-        }
-
-        if (proto.LegacyMatchMode is not null)
-        {
-            Sawmill.Warning($"[ContractsV2] Hunt contract '{proto.ID}' uses legacy field 'match'.");
-            return false;
-        }
-
-        if (proto.LegacyObjectiveType is not null)
-        {
-            Sawmill.Warning($"[ContractsV2] Hunt contract '{proto.ID}' uses legacy field 'objectiveType'.");
-            return false;
-        }
-
-        if (proto.LegacyRuntime is not null)
-        {
-            Sawmill.Warning($"[ContractsV2] Hunt contract '{proto.ID}' uses legacy field 'runtime'.");
-            return false;
-        }
-
-        if (proto.LegacyTarget is not null)
-        {
-            Sawmill.Warning($"[ContractsV2] Hunt contract '{proto.ID}' uses legacy field 'target'. Use targets as a list.");
-            return false;
-        }
-
-        if (IsLegacyTrapRangeConfigured(proto.LegacyTargetCount))
-        {
-            Sawmill.Warning($"[ContractsV2] Hunt contract '{proto.ID}' uses legacy field 'targetCount'.");
-            return false;
-        }
-
-        return true;
-    }
 }

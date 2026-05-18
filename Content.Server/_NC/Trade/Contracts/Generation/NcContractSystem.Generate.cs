@@ -9,10 +9,10 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         var contract = candidate.Kind switch
         {
-            ContractPoolCandidateKind.SupplyV2 when candidate.Supply != null => CreateSupplyContractData(store, candidate.Supply),
-            ContractPoolCandidateKind.RetrievalV2 when candidate.Retrieval != null => CreateRetrievalContractData(store, candidate.Retrieval),
-            ContractPoolCandidateKind.HuntV2 when candidate.Hunt != null => CreateHuntContractData(store, candidate.Hunt),
-            ContractPoolCandidateKind.GhostRoleV2 when candidate.GhostRole != null => CreateGhostRoleContractData(store, candidate.GhostRole),
+            ContractPoolCandidateKind.Supply when candidate.Supply != null => CreateSupplyContractData(store, candidate.Supply),
+            ContractPoolCandidateKind.Retrieval when candidate.Retrieval != null => CreateRetrievalContractData(store, candidate.Retrieval),
+            ContractPoolCandidateKind.Hunt when candidate.Hunt != null => CreateHuntContractData(store, candidate.Hunt),
+            ContractPoolCandidateKind.GhostRole when candidate.GhostRole != null => CreateGhostRoleContractData(store, candidate.GhostRole),
             _ => CreateInvalidContractData(candidate)
         };
 

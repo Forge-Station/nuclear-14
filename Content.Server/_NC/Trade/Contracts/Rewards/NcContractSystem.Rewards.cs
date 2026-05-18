@@ -155,7 +155,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (def.Weight <= 0)
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] Reward pool '{poolLabel}' entry #{i} has non-positive weight={def.Weight}.");
+                    $"[Contracts] Reward pool '{poolLabel}' entry #{i} has non-positive weight={def.Weight}.");
                 continue;
             }
 
@@ -163,7 +163,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (amountRange.Min < 0 || amountRange.Max <= 0 || amountRange.Min > amountRange.Max)
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] Reward pool '{poolLabel}' entry #{i} has invalid count/amount range " +
+                    $"[Contracts] Reward pool '{poolLabel}' entry #{i} has invalid count/amount range " +
                     $"{amountRange.Min}..{amountRange.Max}.");
                 continue;
             }
@@ -172,7 +172,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (probability < 0f || probability > 1f)
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] Reward pool '{poolLabel}' entry #{i} has invalid chance={probability}. Expected 0..1.");
+                    $"[Contracts] Reward pool '{poolLabel}' entry #{i} has invalid chance={probability}. Expected 0..1.");
                 continue;
             }
 
@@ -181,14 +181,14 @@ public sealed partial class NcContractSystem : EntitySystem
                 def.Type != StoreRewardType.Pool)
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] Reward pool '{poolLabel}' entry #{i} has unsupported reward type {def.Type}.");
+                    $"[Contracts] Reward pool '{poolLabel}' entry #{i} has unsupported reward type {def.Type}.");
                 continue;
             }
 
             if (def.Type == StoreRewardType.Pool && string.IsNullOrWhiteSpace(rewardId))
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] Reward pool '{poolLabel}' entry #{i} is Pool but has no pool id.");
+                    $"[Contracts] Reward pool '{poolLabel}' entry #{i} is Pool but has no pool id.");
                 continue;
             }
 
@@ -196,7 +196,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 string.IsNullOrWhiteSpace(rewardId))
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] Reward pool '{poolLabel}' entry #{i} has empty reward id.");
+                    $"[Contracts] Reward pool '{poolLabel}' entry #{i} has empty reward id.");
                 continue;
             }
 
@@ -206,7 +206,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (validOptions.Count > 0)
             return true;
 
-        Sawmill.Warning($"[ContractsV2] Reward pool '{poolLabel}' has no valid entries after validation.");
+        Sawmill.Warning($"[Contracts] Reward pool '{poolLabel}' has no valid entries after validation.");
         return false;
     }
 

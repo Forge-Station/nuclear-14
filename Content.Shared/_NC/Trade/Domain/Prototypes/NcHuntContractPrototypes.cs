@@ -93,26 +93,4 @@ public sealed partial class NcHuntContractPrototype : IPrototype
 
     [DataField("reward", required: true)]
     public List<NcSupplyRewardEntry> Reward { get; private set; } = new();
-
-    // Legacy traps for old storeContract hunt shape.
-    [DataField("targetItem")]
-    public string LegacyTargetItem { get; set; } = string.Empty;
-
-    [DataField("target")]
-    public NcHuntTargetData? LegacyTarget { get; set; }
-
-    [DataField("required")]
-    public IntRange LegacyRequired { get; set; } = IntRange.Fixed(int.MinValue);
-
-    [DataField("match")]
-    public PrototypeMatchMode? LegacyMatchMode { get; set; }
-
-    [DataField("objectiveType")]
-    public ContractObjectiveType? LegacyObjectiveType { get; set; }
-
-    [DataField("runtime")]
-    public StoreContractRuntimePrototype? LegacyRuntime { get; set; }
-
-    [DataField("targetCount")]
-    public IntRange LegacyTargetCount { get; set; } = IntRange.Fixed(int.MinValue);
 }

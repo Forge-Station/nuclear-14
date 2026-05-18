@@ -16,78 +16,78 @@ public sealed partial class NcContractSystem : EntitySystem
         string contractId,
         ContractServerData contract)
     {
-        if (!IsHuntV2Contract(contract))
+        if (!IsSpawnedHuntContract(contract))
             return TryInitializeHuntObjective(store, user, contractId, contract);
 
-        return TryInitializeHuntV2Objective(store, user, contractId, contract);
+        return TryInitializeSpawnedHuntObjective(store, user, contractId, contract);
     }
 
-    private static bool IsHuntV2Contract(ContractServerData contract)
+    private static bool IsSpawnedHuntContract(ContractServerData contract)
     {
-        return contract.IsHuntObjective && contract.Config.HuntV2Enabled;
+        return contract.IsHuntObjective && contract.Config.HuntEnabled;
     }
 
-    private static bool RequiresHuntV2BodyTurnIn(ContractServerData contract)
+    private static bool RequiresSpawnedHuntBodyTurnIn(ContractServerData contract)
     {
-        return IsHuntV2Contract(contract) &&
-               contract.Config.HuntV2CompletionMode == NcHuntCompletionMode.BodyTurnIn;
+        return IsSpawnedHuntContract(contract) &&
+               contract.Config.HuntCompletionMode == NcHuntCompletionMode.BodyTurnIn;
     }
 
-    private bool TryInitializeHuntV2Objective(
+    private bool TryInitializeSpawnedHuntObjective(
         EntityUid store,
         EntityUid user,
         string contractId,
         ContractServerData contract)
     {
-        if (contract.Config.HuntV2CompletionMode is not (NcHuntCompletionMode.TrophyTurnIn or NcHuntCompletionMode.BodyTurnIn))
+        if (contract.Config.HuntCompletionMode is not (NcHuntCompletionMode.TrophyTurnIn or NcHuntCompletionMode.BodyTurnIn))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Hunt runtime init failed for '{contractId}': only TrophyTurnIn and BodyTurnIn are supported.");
+                $"[Contracts] Hunt runtime init failed for '{contractId}': only TrophyTurnIn and BodyTurnIn are supported.");
             return false;
         }
 
-        if (contract.Config.HuntV2CompletionMode == NcHuntCompletionMode.TrophyTurnIn &&
+        if (contract.Config.HuntCompletionMode == NcHuntCompletionMode.TrophyTurnIn &&
             string.IsNullOrWhiteSpace(contract.Config.ProofPrototype))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Hunt runtime init failed for '{contractId}': TrophyTurnIn requires proof prototype.");
+                $"[Contracts] Hunt runtime init failed for '{contractId}': TrophyTurnIn requires proof prototype.");
             return false;
         }
 
-        if (contract.Config.HuntV2CompletionMode == NcHuntCompletionMode.BodyTurnIn &&
-            string.IsNullOrWhiteSpace(contract.Config.HuntV2BodyPrototype))
+        if (contract.Config.HuntCompletionMode == NcHuntCompletionMode.BodyTurnIn &&
+            string.IsNullOrWhiteSpace(contract.Config.HuntBodyPrototype))
         {
             Sawmill.Warning(
-                $"[ContractsV2] Hunt runtime init failed for '{contractId}': BodyTurnIn requires a body target.");
+                $"[Contracts] Hunt runtime init failed for '{contractId}': BodyTurnIn requires a body target.");
             return false;
         }
 
         var key = (store, contractId);
         var state = GetOrCreateObjectiveRuntimeState(key);
         state.TargetEntity = null;
-        state.HuntV2BodyEntity = null;
-        state.HuntV2SpawnedTargets.Clear();
+        state.HuntBodyEntity = null;
+        state.HuntSpawnedTargets.Clear();
         state.HuntTargetWasKilled = false;
         state.LastKnownTargetCoordinates = null;
 
         ResetObjectiveState(contract);
 
-        if (!TrySpawnHuntV2Targets(store, contractId, contract, state))
+        if (!TrySpawnHuntTargets(store, contractId, contract, state))
         {
             CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true);
             return false;
         }
 
-        if (!state.HuntV2Active)
+        if (!state.HuntActive)
         {
-            state.HuntV2Active = true;
-            _activeHuntV2Objectives++;
+            state.HuntActive = true;
+            _activeHuntObjectives++;
         }
 
         if (!contract.Config.GivePinpointer)
             return true;
 
-        if (!TryResolveHuntV2PinpointerTargetForUser(store, user, contract, state, out var pinpointerTarget))
+        if (!TryResolveSpawnedHuntPinpointerTargetForUser(store, user, contract, state, out var pinpointerTarget))
             return false;
 
         var spawnCoords = EntityCoordinates.Invalid;
@@ -108,7 +108,7 @@ public sealed partial class NcContractSystem : EntitySystem
         return TrySpawnObjectivePinpointer(user, pinpointerTarget, key, state, contract.Config, spawnCoords);
     }
 
-    private void TryHandleHuntV2TargetKilled(EntityUid killedTarget)
+    private void TryHandleSpawnedHuntTargetKilled(EntityUid killedTarget)
     {
         if (killedTarget == EntityUid.Invalid || TerminatingOrDeleted(killedTarget))
             return;
@@ -119,20 +119,20 @@ public sealed partial class NcContractSystem : EntitySystem
         List<(EntityUid Store, string ContractId)>? candidates = null;
         foreach (var (key, state) in _objectiveRuntimeByContract)
         {
-            if (!state.HuntV2Active)
+            if (!state.HuntActive)
                 continue;
 
             if (!TryGetObjectiveContract(key, out _, out var contract) ||
                 !contract.Taken ||
                 contract.Runtime.Failed ||
                 contract.Completed ||
-                !IsHuntV2Contract(contract))
+                !IsSpawnedHuntContract(contract))
             {
                 continue;
             }
 
-            if (!IsHuntV2SpawnedTarget(state, killedTarget) ||
-                !IsMatchingHuntV2Target(killedTarget, contract, allowDeadTarget: true))
+            if (!IsSpawnedHuntTarget(state, killedTarget) ||
+                !IsMatchingSpawnedHuntTarget(killedTarget, contract, allowDeadTarget: true))
                 continue;
 
             candidates ??= new();
@@ -152,23 +152,23 @@ public sealed partial class NcContractSystem : EntitySystem
                 !contract.Taken ||
                 contract.Runtime.Failed ||
                 contract.Completed ||
-                !IsHuntV2Contract(contract) ||
-                !IsHuntV2SpawnedTarget(state, killedTarget) ||
-                !IsMatchingHuntV2Target(killedTarget, contract, allowDeadTarget: true))
+                !IsSpawnedHuntContract(contract) ||
+                !IsSpawnedHuntTarget(state, killedTarget) ||
+                !IsMatchingSpawnedHuntTarget(killedTarget, contract, allowDeadTarget: true))
             {
                 continue;
             }
 
-            RemoveHuntV2SpawnedTarget(state, killedTarget);
+            RemoveSpawnedHuntTarget(state, killedTarget);
 
             if (TryComp(killedTarget, out TransformComponent? killedXform))
                 state.LastKnownTargetCoordinates = killedXform.Coordinates;
 
-            TryAdvanceHuntV2TargetProgress(killedTarget, contract, state);
-            SetObjectiveStage(contract, CalculateHuntV2TotalProgress(contract));
+            TryAdvanceSpawnedHuntTargetProgress(killedTarget, contract, state);
+            SetObjectiveStage(contract, CalculateSpawnedHuntTotalProgress(contract));
             if (!contract.Completed)
             {
-                if (TryFindNearestLiveHuntV2Target(key.Store, contract, state, out var liveTarget))
+                if (TryFindNearestLiveSpawnedHuntTarget(key.Store, contract, state, out var liveTarget))
                 {
                     RetargetObjectivePinpointers(key, state, liveTarget);
                     continue;
@@ -183,13 +183,13 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
             }
 
-            if (contract.Config.HuntV2CompletionMode == NcHuntCompletionMode.TrophyTurnIn)
+            if (contract.Config.HuntCompletionMode == NcHuntCompletionMode.TrophyTurnIn)
             {
                 var completionCoords = ResolveHuntObjectiveCompletionCoordinates(key.Store, state);
                 if (!TrySpawnRequiredObjectiveProofOrFail(key, comp, contract, completionCoords))
                     continue;
             }
-            else if (!TryGetHuntV2BodyEntity(state, out _))
+            else if (!TryGetHuntBodyEntity(state, out _))
             {
                 FinalizeObjectiveFailure(
                     key,
@@ -204,33 +204,33 @@ public sealed partial class NcContractSystem : EntitySystem
         }
     }
 
-    private void UpdateHuntV2PinpointerTargets()
+    private void UpdateSpawnedHuntPinpointerTargets()
     {
-        if (_activeHuntV2Objectives <= 0)
+        if (_activeHuntObjectives <= 0)
             return;
 
         foreach (var (key, state) in _objectiveRuntimeByContract)
         {
-            if (!state.HuntV2Active || state.PinpointerEntities.Count == 0)
+            if (!state.HuntActive || state.PinpointerEntities.Count == 0)
                 continue;
 
             if (!TryGetObjectiveContract(key, out _, out var contract) ||
                 !contract.Taken ||
                 contract.Runtime.Failed ||
-                !IsHuntV2Contract(contract))
+                !IsSpawnedHuntContract(contract))
             {
                 continue;
             }
 
-            if (TryRetargetHuntV2CompletedPinpointersForOwners(key, contract, state))
+            if (TryRetargetSpawnedHuntCompletedPinpointersForOwners(key, contract, state))
                 continue;
 
-            if (TryResolveHuntV2PinpointerTarget(key.Store, contract, state, out var target))
+            if (TryResolveSpawnedHuntPinpointerTarget(key.Store, contract, state, out var target))
                 RetargetObjectivePinpointers(key, state, target);
         }
     }
 
-    private void TryHandleHuntV2BodyEntityTerminating(EntityUid body)
+    private void TryHandleHuntBodyEntityTerminating(EntityUid body)
     {
         if (body == EntityUid.Invalid || _objectiveRuntimeByContract.Count == 0)
             return;
@@ -238,7 +238,7 @@ public sealed partial class NcContractSystem : EntitySystem
         List<(EntityUid Store, string ContractId)>? candidates = null;
         foreach (var (key, state) in _objectiveRuntimeByContract)
         {
-            if (!state.HuntV2Active || state.HuntV2BodyEntity != body)
+            if (!state.HuntActive || state.HuntBodyEntity != body)
                 continue;
 
             candidates ??= new();
@@ -252,18 +252,18 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             var key = candidates[i];
             if (!_objectiveRuntimeByContract.TryGetValue(key, out var state) ||
-                state.HuntV2BodyEntity != body)
+                state.HuntBodyEntity != body)
             {
                 continue;
             }
 
-            state.HuntV2BodyEntity = null;
-            RemoveHuntV2SpawnedTarget(state, body);
+            state.HuntBodyEntity = null;
+            RemoveSpawnedHuntTarget(state, body);
 
             if (!TryGetObjectiveContract(key, out var comp, out var contract) ||
                 !contract.Taken ||
                 contract.Runtime.Failed ||
-                (contract.Completed && !RequiresHuntV2BodyTurnIn(contract)))
+                (contract.Completed && !RequiresSpawnedHuntBodyTurnIn(contract)))
             {
                 continue;
             }
@@ -277,7 +277,7 @@ public sealed partial class NcContractSystem : EntitySystem
         }
     }
 
-    private bool TryResolveHuntV2PinpointerTargetForUser(
+    private bool TryResolveSpawnedHuntPinpointerTargetForUser(
         EntityUid store,
         EntityUid user,
         ContractServerData contract,
@@ -285,16 +285,16 @@ public sealed partial class NcContractSystem : EntitySystem
         out EntityUid target)
     {
         target = EntityUid.Invalid;
-        if (!IsHuntV2Contract(contract))
+        if (!IsSpawnedHuntContract(contract))
             return false;
 
         if (!contract.Completed)
-            return TryResolveHuntV2PinpointerTarget(store, contract, state, out target);
+            return TryResolveSpawnedHuntPinpointerTarget(store, contract, state, out target);
 
-        if (contract.Config.HuntV2CompletionMode == NcHuntCompletionMode.BodyTurnIn &&
-            TryGetHuntV2BodyEntity(state, out var body))
+        if (contract.Config.HuntCompletionMode == NcHuntCompletionMode.BodyTurnIn &&
+            TryGetHuntBodyEntity(state, out var body))
         {
-            target = IsHuntV2BodyCarriedByUser(body, user) ? store : body;
+            target = IsSpawnedHuntBodyCarriedByUser(body, user) ? store : body;
             return true;
         }
 
@@ -312,7 +312,7 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
-    private bool TryRetargetHuntV2CompletedPinpointersForOwners(
+    private bool TryRetargetSpawnedHuntCompletedPinpointersForOwners(
         (EntityUid Store, string ContractId) key,
         ContractServerData contract,
         ObjectiveRuntimeState state)
@@ -330,7 +330,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             if (!_objectiveRuntimePinpointerOwners.TryGetValue(pinpointer, out var owner) ||
-                !TryResolveHuntV2PinpointerTargetForUser(key.Store, owner, contract, state, out var target) ||
+                !TryResolveSpawnedHuntPinpointerTargetForUser(key.Store, owner, contract, state, out var target) ||
                 target == EntityUid.Invalid ||
                 TerminatingOrDeleted(target))
             {
@@ -344,20 +344,20 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
-    private bool TryResolveHuntV2PinpointerTarget(
+    private bool TryResolveSpawnedHuntPinpointerTarget(
         EntityUid store,
         ContractServerData contract,
         ObjectiveRuntimeState state,
         out EntityUid target)
     {
         target = EntityUid.Invalid;
-        if (!IsHuntV2Contract(contract))
+        if (!IsSpawnedHuntContract(contract))
             return false;
 
         if (contract.Completed)
         {
-            if (contract.Config.HuntV2CompletionMode == NcHuntCompletionMode.BodyTurnIn &&
-                TryGetHuntV2BodyEntity(state, out var body))
+            if (contract.Config.HuntCompletionMode == NcHuntCompletionMode.BodyTurnIn &&
+                TryGetHuntBodyEntity(state, out var body))
             {
                 target = body;
                 return true;
@@ -382,7 +382,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return true;
         }
 
-        if (TryFindNearestLiveHuntV2Target(store, contract, state, out var liveTarget))
+        if (TryFindNearestLiveSpawnedHuntTarget(store, contract, state, out var liveTarget))
         {
             target = liveTarget;
             return true;
@@ -392,7 +392,7 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
-    private bool TryFindNearestLiveHuntV2Target(
+    private bool TryFindNearestLiveSpawnedHuntTarget(
         EntityUid origin,
         ContractServerData contract,
         ObjectiveRuntimeState state,
@@ -407,9 +407,9 @@ public sealed partial class NcContractSystem : EntitySystem
         var originPos = _xform.GetWorldPosition(originXform);
         var bestDistSq = float.MaxValue;
 
-        for (var i = 0; i < state.HuntV2SpawnedTargets.Count; i++)
+        for (var i = 0; i < state.HuntSpawnedTargets.Count; i++)
         {
-            var candidate = state.HuntV2SpawnedTargets[i];
+            var candidate = state.HuntSpawnedTargets[i];
             if (candidate == EntityUid.Invalid || TerminatingOrDeleted(candidate))
                 continue;
 
@@ -420,7 +420,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (mobState.CurrentState == MobState.Dead)
                 continue;
 
-            if (!IsMatchingHuntV2Target(candidate, contract, allowDeadTarget: false))
+            if (!IsMatchingSpawnedHuntTarget(candidate, contract, allowDeadTarget: false))
                 continue;
 
             var candidateMap = _xform.ToMapCoordinates(candidateXform.Coordinates);
@@ -439,7 +439,7 @@ public sealed partial class NcContractSystem : EntitySystem
         return target != EntityUid.Invalid;
     }
 
-    private bool TrySpawnHuntV2Targets(
+    private bool TrySpawnHuntTargets(
         EntityUid store,
         string contractId,
         ContractServerData contract,
@@ -456,32 +456,32 @@ public sealed partial class NcContractSystem : EntitySystem
 
             for (var i = 0; i < targetRequired; i++)
             {
-                if (!TryResolveHuntV2SpawnPrototype(contractId, targetDef, out var targetProtoId))
+                if (!TryResolveSpawnedHuntPrototype(contractId, targetDef, out var targetProtoId))
                     return false;
 
                 if (!TryResolveObjectiveSpawnCoordinates(store, contract.Config, out var spawnCoords, fallbackToStore: false))
                 {
                     Sawmill.Warning(
-                        $"[ContractsV2] Hunt runtime init failed for '{contractId}': cannot resolve hunt spawn point.");
+                        $"[Contracts] Hunt runtime init failed for '{contractId}': cannot resolve hunt spawn point.");
                     return false;
                 }
 
                 if (!TrySpawnObjectiveTarget(contractId, targetProtoId, spawnCoords, out var target))
                     return false;
 
-                state.HuntV2SpawnedTargets.Add(target);
+                state.HuntSpawnedTargets.Add(target);
                 if (targetDef.BodyRequired)
-                    state.HuntV2BodyEntity = target;
+                    state.HuntBodyEntity = target;
 
                 if (state.LastKnownTargetCoordinates == null && TryComp(target, out TransformComponent? targetXform))
                     state.LastKnownTargetCoordinates = targetXform.Coordinates;
             }
         }
 
-        return state.HuntV2SpawnedTargets.Count == required;
+        return state.HuntSpawnedTargets.Count == required;
     }
 
-    private bool TryAdvanceHuntV2TargetProgress(
+    private bool TryAdvanceSpawnedHuntTargetProgress(
         EntityUid killedTarget,
         ContractServerData contract,
         ObjectiveRuntimeState state)
@@ -490,7 +490,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         var targets = GetEffectiveTargets(contract);
-        if (state.HuntV2BodyEntity == killedTarget)
+        if (state.HuntBodyEntity == killedTarget)
         {
             for (var i = 0; i < targets.Count; i++)
             {
@@ -498,7 +498,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 if (!target.BodyRequired || target.Progress >= target.Required)
                     continue;
 
-                if (!MatchesHuntV2TargetEntry(prototypeId, target))
+                if (!MatchesSpawnedHuntTargetEntry(prototypeId, target))
                     continue;
 
                 target.Progress = Math.Min(target.Required, target.Progress + 1);
@@ -513,7 +513,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (target.Progress >= target.Required)
                 continue;
 
-            if (!MatchesHuntV2TargetEntry(prototypeId, target))
+            if (!MatchesSpawnedHuntTargetEntry(prototypeId, target))
                 continue;
 
             target.Progress = Math.Min(target.Required, target.Progress + 1);
@@ -524,7 +524,7 @@ public sealed partial class NcContractSystem : EntitySystem
         return false;
     }
 
-    private static int CalculateHuntV2TotalProgress(ContractServerData contract)
+    private static int CalculateSpawnedHuntTotalProgress(ContractServerData contract)
     {
         var progress = 0;
         var targets = GetEffectiveTargets(contract);
@@ -534,10 +534,10 @@ public sealed partial class NcContractSystem : EntitySystem
         return progress;
     }
 
-    private bool TryGetHuntV2BodyEntity(ObjectiveRuntimeState state, out EntityUid body)
+    private bool TryGetHuntBodyEntity(ObjectiveRuntimeState state, out EntityUid body)
     {
         body = EntityUid.Invalid;
-        if (state.HuntV2BodyEntity is not { } candidate ||
+        if (state.HuntBodyEntity is not { } candidate ||
             candidate == EntityUid.Invalid ||
             TerminatingOrDeleted(candidate))
         {
@@ -554,7 +554,7 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
-    private bool TryConsumeHuntV2BodyTurnIn(
+    private bool TryConsumeSpawnedHuntBodyTurnIn(
         EntityUid store,
         EntityUid user,
         string contractId,
@@ -563,12 +563,12 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
-        if (!RequiresHuntV2BodyTurnIn(contract))
+        if (!RequiresSpawnedHuntBodyTurnIn(contract))
             return true;
 
         var key = (store, contractId);
         if (!_objectiveRuntimeByContract.TryGetValue(key, out var state) ||
-            !TryGetHuntV2BodyEntity(state, out var body))
+            !TryGetHuntBodyEntity(state, out var body))
         {
             fail = ClaimAttemptResult.Fail(
                 ClaimFailureReason.MissingBody,
@@ -576,7 +576,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        if (!IsHuntV2BodyInTurnInScope(store, user, body))
+        if (!IsSpawnedHuntBodyInTurnInScope(store, user, body))
         {
             fail = ClaimAttemptResult.Fail(
                 ClaimFailureReason.MissingBody,
@@ -584,17 +584,17 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        state.HuntV2BodyEntity = null;
-        RemoveHuntV2SpawnedTarget(state, body);
+        state.HuntBodyEntity = null;
+        RemoveSpawnedHuntTarget(state, body);
         if (EntityManager.EntityExists(body))
             Del(body);
 
         return true;
     }
 
-    private bool IsHuntV2BodyInTurnInScope(EntityUid store, EntityUid user, EntityUid body)
+    private bool IsSpawnedHuntBodyInTurnInScope(EntityUid store, EntityUid user, EntityUid body)
     {
-        if (IsHuntV2BodyCarriedByUser(body, user))
+        if (IsSpawnedHuntBodyCarriedByUser(body, user))
             return true;
 
         if (!TryComp(store, out TransformComponent? storeXform) ||
@@ -614,7 +614,7 @@ public sealed partial class NcContractSystem : EntitySystem
                NcContractTuning.TrackedDeliveryStoreRange * NcContractTuning.TrackedDeliveryStoreRange;
     }
 
-    private bool IsHuntV2BodyCarriedByUser(EntityUid body, EntityUid user)
+    private bool IsSpawnedHuntBodyCarriedByUser(EntityUid body, EntityUid user)
     {
         if (TryComp(body, out PullableComponent? pullable) && pullable.Puller == user)
             return true;
@@ -622,7 +622,7 @@ public sealed partial class NcContractSystem : EntitySystem
         return TryGetContainedEntityRoot(body, out var root) && root == user;
     }
 
-    private bool TryResolveHuntV2SpawnPrototype(
+    private bool TryResolveSpawnedHuntPrototype(
         string contractId,
         ContractTargetServerData target,
         out string prototypeId)
@@ -640,7 +640,7 @@ public sealed partial class NcContractSystem : EntitySystem
             group.Prototypes.Count == 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Hunt runtime init failed for '{contractId}': target group has no spawnable prototypes.");
+                $"[Contracts] Hunt runtime init failed for '{contractId}': target group has no spawnable prototypes.");
             return false;
         }
 
@@ -655,7 +655,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (candidates.Count == 0)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Hunt runtime init failed for '{contractId}': target group '{group.ID}' has no valid entity prototypes.");
+                $"[Contracts] Hunt runtime init failed for '{contractId}': target group '{group.ID}' has no valid entity prototypes.");
             return false;
         }
 
@@ -663,27 +663,27 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
-    private static bool IsHuntV2SpawnedTarget(ObjectiveRuntimeState state, EntityUid target)
+    private static bool IsSpawnedHuntTarget(ObjectiveRuntimeState state, EntityUid target)
     {
-        for (var i = 0; i < state.HuntV2SpawnedTargets.Count; i++)
+        for (var i = 0; i < state.HuntSpawnedTargets.Count; i++)
         {
-            if (state.HuntV2SpawnedTargets[i] == target)
+            if (state.HuntSpawnedTargets[i] == target)
                 return true;
         }
 
         return false;
     }
 
-    private static void RemoveHuntV2SpawnedTarget(ObjectiveRuntimeState state, EntityUid target)
+    private static void RemoveSpawnedHuntTarget(ObjectiveRuntimeState state, EntityUid target)
     {
-        for (var i = state.HuntV2SpawnedTargets.Count - 1; i >= 0; i--)
+        for (var i = state.HuntSpawnedTargets.Count - 1; i >= 0; i--)
         {
-            if (state.HuntV2SpawnedTargets[i] == target)
-                state.HuntV2SpawnedTargets.RemoveAt(i);
+            if (state.HuntSpawnedTargets[i] == target)
+                state.HuntSpawnedTargets.RemoveAt(i);
         }
     }
 
-    private bool IsMatchingHuntV2Target(EntityUid entity, ContractServerData contract, bool allowDeadTarget)
+    private bool IsMatchingSpawnedHuntTarget(EntityUid entity, ContractServerData contract, bool allowDeadTarget)
     {
         if (entity == EntityUid.Invalid || TerminatingOrDeleted(entity))
             return false;
@@ -700,14 +700,14 @@ public sealed partial class NcContractSystem : EntitySystem
         var targets = GetEffectiveTargets(contract);
         for (var i = 0; i < targets.Count; i++)
         {
-            if (MatchesHuntV2TargetEntry(prototypeId, targets[i]))
+            if (MatchesSpawnedHuntTargetEntry(prototypeId, targets[i]))
                 return true;
         }
 
         return false;
     }
 
-    private bool MatchesHuntV2TargetEntry(string prototypeId, ContractTargetServerData target)
+    private bool MatchesSpawnedHuntTargetEntry(string prototypeId, ContractTargetServerData target)
     {
         if (string.IsNullOrWhiteSpace(prototypeId) || string.IsNullOrWhiteSpace(target.TargetItem))
             return false;

@@ -22,7 +22,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (_objectiveRuntimeByProof.Remove(args.Entity, out var proofKey))
             OnObjectiveTrackedProofDestroyed(proofKey, args.Entity);
 
-        TryHandleHuntV2BodyEntityTerminating(args.Entity);
+        TryHandleHuntBodyEntityTerminating(args.Entity);
     }
 
     private void OnObjectiveTrackedProofDestroyed(
@@ -191,7 +191,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return;
         }
 
-        if (RequiresHuntV2BodyTurnIn(contract) && TryGetHuntV2BodyEntity(state, out var body))
+        if (RequiresSpawnedHuntBodyTurnIn(contract) && TryGetHuntBodyEntity(state, out var body))
         {
             RetargetObjectivePinpointers(key, state, body);
             return;
@@ -255,8 +255,8 @@ public sealed partial class NcContractSystem : EntitySystem
         DeactivateTrackedDeliveryDropoff(state);
 
         CleanupRetrievalSpawnedEntities(state, deleteTrackedEntities);
-        CleanupHuntV2BodyTarget(state, deleteTrackedEntities);
-        CleanupHuntV2SpawnedTargets(state, deleteTrackedEntities);
+        CleanupSpawnedHuntBodyTarget(state, deleteTrackedEntities);
+        CleanupHuntSpawnedTargets(state, deleteTrackedEntities);
 
         CleanupObjectivePinpointers(key, state);
         CleanupGhostRoleSurvivalObjective(state);
@@ -287,10 +287,10 @@ public sealed partial class NcContractSystem : EntitySystem
         state.ProofSpawned = false;
         state.ProofToken = string.Empty;
 
-        if (state.HuntV2Active)
+        if (state.HuntActive)
         {
-            state.HuntV2Active = false;
-            _activeHuntV2Objectives = Math.Max(0, _activeHuntV2Objectives - 1);
+            state.HuntActive = false;
+            _activeHuntObjectives = Math.Max(0, _activeHuntObjectives - 1);
         }
 
         if (state.RetrievalRouteDeliveryActive)
@@ -355,28 +355,28 @@ public sealed partial class NcContractSystem : EntitySystem
         state.RetrievalSpawnedEntities.Clear();
     }
 
-    private void CleanupHuntV2SpawnedTargets(ObjectiveRuntimeState state, bool deleteSpawnedTargets)
+    private void CleanupHuntSpawnedTargets(ObjectiveRuntimeState state, bool deleteSpawnedTargets)
     {
-        if (state.HuntV2SpawnedTargets.Count == 0)
+        if (state.HuntSpawnedTargets.Count == 0)
             return;
 
-        for (var i = state.HuntV2SpawnedTargets.Count - 1; i >= 0; i--)
+        for (var i = state.HuntSpawnedTargets.Count - 1; i >= 0; i--)
         {
-            var ent = state.HuntV2SpawnedTargets[i];
+            var ent = state.HuntSpawnedTargets[i];
             if (deleteSpawnedTargets && ent != EntityUid.Invalid && !TerminatingOrDeleted(ent))
                 Del(ent);
         }
 
-        state.HuntV2SpawnedTargets.Clear();
+        state.HuntSpawnedTargets.Clear();
     }
 
-    private void CleanupHuntV2BodyTarget(ObjectiveRuntimeState state, bool deleteBody)
+    private void CleanupSpawnedHuntBodyTarget(ObjectiveRuntimeState state, bool deleteBody)
     {
-        if (state.HuntV2BodyEntity is not { } body || body == EntityUid.Invalid)
+        if (state.HuntBodyEntity is not { } body || body == EntityUid.Invalid)
             return;
 
-        state.HuntV2BodyEntity = null;
-        RemoveHuntV2SpawnedTarget(state, body);
+        state.HuntBodyEntity = null;
+        RemoveSpawnedHuntTarget(state, body);
 
         if (deleteBody && !TerminatingOrDeleted(body))
             Del(body);
@@ -406,7 +406,7 @@ public sealed partial class NcContractSystem : EntitySystem
             case ContractExecutionKind.HuntObjective:
                 SyncHuntObjectiveProgress(store, contractId, contract);
                 SyncObjectiveProgressFromRuntime(contract);
-                if (IsHuntV2Contract(contract))
+                if (IsSpawnedHuntContract(contract))
                     return;
                 break;
 
@@ -429,7 +429,7 @@ public sealed partial class NcContractSystem : EntitySystem
         public readonly List<EntityUid> GuardEntities = new();
         public readonly HashSet<EntityUid> PinpointerEntities = new();
         public readonly List<EntityUid> RetrievalSpawnedEntities = new();
-        public readonly List<EntityUid> HuntV2SpawnedTargets = new();
+        public readonly List<EntityUid> HuntSpawnedTargets = new();
         public readonly HashSet<EntityUid> RetrievalDeliveredEntities = new();
         public int RetrievalAcceptedCargoCount;
         public EntityCoordinates? RetrievalLastAcceptedCargoCoordinates;
@@ -445,8 +445,8 @@ public sealed partial class NcContractSystem : EntitySystem
         public bool GhostRoleSurvivalSucceeded;
         public bool GhostRoleTaken;
         public bool HuntTargetWasKilled;
-        public bool HuntV2Active;
-        public EntityUid? HuntV2BodyEntity;
+        public bool HuntActive;
+        public EntityUid? HuntBodyEntity;
         public EntityCoordinates? LastKnownTargetCoordinates;
         public EntityUid? ProofEntity;
         public bool ProofSpawned;

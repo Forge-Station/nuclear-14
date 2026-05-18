@@ -1,4 +1,4 @@
-﻿using Content.Shared._NC.Trade;
+using Content.Shared._NC.Trade;
 
 namespace Content.Server._NC.Trade;
 
@@ -31,7 +31,7 @@ public sealed partial class StoreStructuredSystem
             IsRetrievalRouteContract(contract),
             contract.Config.RetrievalClaimMode,
             IsRetrievalBearerProofContract(contract),
-            contract.Config.HuntV2CompletionMode,
+            contract.Config.HuntCompletionMode,
             contract.Config.GhostRoleCompletionMode,
             contract.OfferPoolId,
             contract.OfferPoolName,
@@ -88,10 +88,10 @@ public sealed partial class StoreStructuredSystem
     {
         var config = contract.Config;
         if (contract.IsHuntObjective &&
-            config.HuntV2Enabled &&
-            config.HuntV2CompletionMode == NcHuntCompletionMode.BodyTurnIn)
+            config.HuntEnabled &&
+            config.HuntCompletionMode == NcHuntCompletionMode.BodyTurnIn)
         {
-            return config.HuntV2BodyPrototype ?? string.Empty;
+            return config.HuntBodyPrototype ?? string.Empty;
         }
 
         return config.ProofPrototype ?? string.Empty;

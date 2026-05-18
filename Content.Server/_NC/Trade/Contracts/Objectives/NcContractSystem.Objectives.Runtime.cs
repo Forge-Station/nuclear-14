@@ -138,10 +138,10 @@ public sealed partial class NcContractSystem : EntitySystem
     private TimeSpan _nextGhostRoleTimeoutCheck = TimeSpan.Zero;
     private TimeSpan _nextTrackedDeliveryDropoffCheck = TimeSpan.Zero;
     private TimeSpan _nextRetrievalRouteDeliveryCheck = TimeSpan.Zero;
-    private TimeSpan _nextHuntV2PinpointerCheck = TimeSpan.Zero;
+    private TimeSpan _nextHuntPinpointerCheck = TimeSpan.Zero;
     private int _activeTrackedDeliveryDropoffObjectives;
     private int _activeRetrievalRouteDeliveries;
-    private int _activeHuntV2Objectives;
+    private int _activeHuntObjectives;
     private void ShutdownObjectiveRuntime() => ClearAllObjectiveRuntime(false, deleteGuards: false);
     public override void Update(float frameTime)
     {
@@ -160,10 +160,10 @@ public sealed partial class NcContractSystem : EntitySystem
             UpdateRetrievalRouteDeliveries();
         }
 
-        if (_activeHuntV2Objectives > 0 && _timing.CurTime >= _nextHuntV2PinpointerCheck)
+        if (_activeHuntObjectives > 0 && _timing.CurTime >= _nextHuntPinpointerCheck)
         {
-            _nextHuntV2PinpointerCheck = _timing.CurTime + NcContractTuning.TrackedDeliveryDropoffCheckInterval;
-            UpdateHuntV2PinpointerTargets();
+            _nextHuntPinpointerCheck = _timing.CurTime + NcContractTuning.TrackedDeliveryDropoffCheckInterval;
+            UpdateSpawnedHuntPinpointerTargets();
         }
 
         if (_timing.CurTime < _nextGhostRoleTimeoutCheck)
@@ -196,7 +196,7 @@ public sealed partial class NcContractSystem : EntitySystem
         _objectiveRuntimeByProof.Clear();   // Fix (B39): keep proof index in sync with everything else.
         _activeTrackedDeliveryDropoffObjectives = 0;
         _activeRetrievalRouteDeliveries = 0;
-        _activeHuntV2Objectives = 0;
+        _activeHuntObjectives = 0;
     }
 
     private void ClearStoreObjectiveRuntime(EntityUid store, bool deleteTrackedEntities, bool deleteGuards = true)

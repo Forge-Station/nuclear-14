@@ -36,14 +36,14 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!config.RetrievalSpawnEnabled || !config.RetrievalRequireSpawnedEntities)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval route init failed for '{contractId}': route delivery requires spawned tracked cargo.");
+                $"[Contracts] Retrieval route init failed for '{contractId}': route delivery requires spawned tracked cargo.");
             return false;
         }
 
         if (config.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof && !config.RetrievalProofEnabled)
         {
             Sawmill.Warning(
-                $"[ContractsV2] Retrieval route init failed for '{contractId}': DestinationProof route has no proof configured.");
+                $"[Contracts] Retrieval route init failed for '{contractId}': DestinationProof route has no proof configured.");
             return false;
         }
 
@@ -55,14 +55,14 @@ public sealed partial class NcContractSystem : EntitySystem
             if (config.RetrievalDestinationPoint == null)
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] Retrieval route init failed for '{contractId}': marker destination selector is missing.");
+                    $"[Contracts] Retrieval route init failed for '{contractId}': marker destination selector is missing.");
                 return false;
             }
 
             if (!TryResolveObjectiveSpawnCoordinates(store, config.RetrievalDestinationPoint, out var destCoords, fallbackToStore: false))
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] Retrieval route init failed for '{contractId}': cannot resolve destination marker group '{config.RetrievalDestinationId}'.");
+                    $"[Contracts] Retrieval route init failed for '{contractId}': cannot resolve destination marker group '{config.RetrievalDestinationId}'.");
                 return false;
             }
 
@@ -161,7 +161,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (!TryResolveRetrievalRouteProofCoordinates(contract, state, out var proofCoords))
             {
                 Sawmill.Warning(
-                    $"[ContractsV2] Retrieval route '{key.ContractId}' completed but proof coordinates could not be resolved.");
+                    $"[Contracts] Retrieval route '{key.ContractId}' completed but proof coordinates could not be resolved.");
                 return;
             }
 
@@ -222,7 +222,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         Sawmill.Warning(
-            $"[ContractsV2] Retrieval route '{key.ContractId}' lost required tracked cargo before route delivery completed " +
+            $"[Contracts] Retrieval route '{key.ContractId}' lost required tracked cargo before route delivery completed " +
             $"({accepted}/{required} delivered, {state.RetrievalSpawnedEntities.Count} remaining). Contract failed.");
 
         FinalizeObjectiveFailure(

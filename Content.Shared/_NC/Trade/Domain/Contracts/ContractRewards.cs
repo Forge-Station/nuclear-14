@@ -12,7 +12,7 @@ public enum StoreRewardType : byte
     Currency = 1,
     Pool = 2,
 
-    /// <summary>Sentinel used by strict V2 validation when a YAML entry omits type.</summary>
+    /// <summary>Sentinel used by strict contract validation when a YAML entry omits type.</summary>
     Unspecified = byte.MaxValue
 }
 
@@ -23,19 +23,19 @@ public sealed partial class ContractRewardDef
     [DataField("type")]
     public StoreRewardType Type { get; set; } = StoreRewardType.Item;
 
-    /// <summary>Legacy generic reward id. Prefer prototype/currency/pool in new ContractsV2 YAML.</summary>
+    /// <summary>Legacy generic reward id. Prefer prototype/currency/pool in new Trade contracts YAML.</summary>
     [DataField("id")]
     public string Id { get; set; } = string.Empty;
 
-    /// <summary>ContractsV2 alias for Item rewards.</summary>
+    /// <summary>Trade contracts alias for Item rewards.</summary>
     [DataField("prototype")]
     public string Prototype { get; set; } = string.Empty;
 
-    /// <summary>ContractsV2 alias for Currency rewards.</summary>
+    /// <summary>Trade contracts alias for Currency rewards.</summary>
     [DataField("currency")]
     public string Currency { get; set; } = string.Empty;
 
-    /// <summary>ContractsV2 alias for Pool rewards.</summary>
+    /// <summary>Trade contracts alias for Pool rewards.</summary>
     [DataField("pool")]
     public string Pool { get; set; } = string.Empty;
 
@@ -50,7 +50,7 @@ public sealed partial class ContractRewardDef
     [DataField("prob")]
     public float Probability { get; set; } = 1.0f;
 
-    /// <summary>ContractsV2 readable probability alias. Set to 0..1 to override prob; negative means unset.</summary>
+    /// <summary>Trade contracts readable probability alias. Set to 0..1 to override prob; negative means unset.</summary>
     [DataField("chance")]
     public float Chance { get; set; } = -1.0f;
 

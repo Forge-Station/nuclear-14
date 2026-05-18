@@ -48,9 +48,9 @@ public sealed partial class NcContractSystem : EntitySystem
             if (contract.ExecutionKind == ContractExecutionKind.GhostRoleObjective && !state.GhostRoleTaken)
                 return false;
 
-            if (IsHuntV2Contract(contract))
+            if (IsSpawnedHuntContract(contract))
             {
-                if (!TryResolveHuntV2PinpointerTargetForUser(store, user, contract, state, out pinpointerTarget))
+                if (!TryResolveSpawnedHuntPinpointerTargetForUser(store, user, contract, state, out pinpointerTarget))
                     return false;
             }
             else

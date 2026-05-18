@@ -48,17 +48,17 @@ public sealed class ContractObjectiveConfigData
     public float RepairDoAfterSeconds;
     public string RepairStageSound { get; set; } = string.Empty;
 
-    // Hunt V2 runtime metadata (stage 8.0-B).
-    public bool HuntV2Enabled;
-    public NcHuntCompletionMode HuntV2CompletionMode = NcHuntCompletionMode.ConfirmedKill;
-    public string HuntV2BodyPrototype { get; set; } = string.Empty;
+    // Spawned Hunt runtime metadata (stage 8.0-B).
+    public bool HuntEnabled;
+    public NcHuntCompletionMode HuntCompletionMode = NcHuntCompletionMode.ConfirmedKill;
+    public string HuntBodyPrototype { get; set; } = string.Empty;
 
-    // Phase M: see StoreContractRuntimePrototype for semantics. These are copied from the
-    // prototype at contract-creation time so the runtime doesn't have to re-resolve the proto.
+    // Legacy objective support: copied at contract-creation time so runtime code
+    // doesn't have to re-resolve prototype data for active objectives.
     public bool SpawnItems;
     public List<string> SpawnSpecific { get; set; } = new();
 
-    // Retrieval V2 Route: copied from ncRetrievalRoutePreset at contract generation time.
+    // Retrieval route: copied from ncRetrievalRoutePreset at contract generation time.
     public string RetrievalRouteId { get; set; } = string.Empty;
     public bool RetrievalSpawnEnabled;
     public ContractPointSelectorPrototype? RetrievalSpawnPoint { get; set; }
