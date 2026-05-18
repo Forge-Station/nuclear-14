@@ -74,16 +74,18 @@ public sealed partial class NcStoreLogicSystem
         if (!TryMultiplyPositive(entry.Rolls.Max, times, out _))
             return false;
 
-        if (!TryCreateValidBarterRewardDeck(entry.Pool, out var deck) || deck.Count == 0)
+        if (!TryCreateValidBarterRewardDeck(entry.Pool, out var validationDeck) || validationDeck.Count == 0)
             return false;
-
-        var dropCounts = new Dictionary<string, int>(StringComparer.Ordinal);
 
         for (var trade = 0; trade < times; trade++)
         {
             if (entry.Chance < 1f && !_random.Prob(entry.Chance))
                 continue;
 
+            if (!TryCreateValidBarterRewardDeck(entry.Pool, out var deck) || deck.Count == 0)
+                return false;
+
+            var dropCounts = new Dictionary<string, int>(StringComparer.Ordinal);
             var rolls = RollRange(entry.Rolls);
             for (var roll = 0; roll < rolls; roll++)
                 if (!TryRollBarterRewardToPlan(plan, deck, dropCounts, 0))

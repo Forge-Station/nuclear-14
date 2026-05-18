@@ -161,6 +161,9 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
             return 0;
         }
 
+        if (!ValidateStructuredPresetCurrency(preset, mode, presetId))
+            return 0;
+
         var count = 0;
 
         if (!string.IsNullOrWhiteSpace(preset.Currency) && ctx.CurrencySeen.Add(preset.Currency))
@@ -181,11 +184,8 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
             foreach (var entry in categoryProto.Entries)
             {
-                if (entry.MatchMode == PrototypeMatchMode.Matcher &&
-                    !ValidateMatcherEntry(entry, mode, presetId, categoryId))
-                {
+                if (!ValidateCatalogEntry(entry, mode, presetId, categoryId))
                     continue;
-                }
 
                 var baseId = $"{presetId}:{mode}:{categoryId}:{entry.Proto}";
                 var id = AllocateDeterministicId(baseId, ctx);
@@ -775,6 +775,78 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
         return count;
     }
+
+    private bool ValidateStructuredPresetCurrency(
+        StorePresetStructuredPrototype preset,
+        StoreMode mode,
+        ProtoId<StorePresetStructuredPrototype> presetId)
+    {
+        if (string.IsNullOrWhiteSpace(preset.Currency))
+        {
+            Sawmill.Warning($"[NcStore] {mode} preset '{presetId}' has empty currency and was skipped.");
+            return false;
+        }
+
+        if (_prototypes.TryIndex<StackPrototype>(preset.Currency, out var stack) &&
+            !string.IsNullOrWhiteSpace(stack.Spawn) &&
+            _prototypes.HasIndex<EntityPrototype>(stack.Spawn))
+            return true;
+
+        Sawmill.Warning(
+            $"[NcStore] {mode} preset '{presetId}' uses invalid currency '{preset.Currency}'. " +
+            "Expected a stack prototype with a valid spawn entity.");
+        return false;
+    }
+
+    private bool ValidateCatalogEntry(
+        StoreCatalogEntry entry,
+        StoreMode mode,
+        ProtoId<StorePresetStructuredPrototype> presetId,
+        string categoryId)
+    {
+        var ok = true;
+
+        if (string.IsNullOrWhiteSpace(entry.Proto))
+        {
+            Sawmill.Warning($"[NcStore] {mode} entry in '{presetId}/{categoryId}' has empty proto and was skipped.");
+            return false;
+        }
+
+        if (entry.Price <= 0)
+        {
+            Sawmill.Warning(
+                $"[NcStore] {mode} entry '{entry.Proto}' in '{presetId}/{categoryId}' has non-positive price={entry.Price}.");
+            ok = false;
+        }
+
+        if (entry.Amount <= 0)
+        {
+            Sawmill.Warning(
+                $"[NcStore] {mode} entry '{entry.Proto}' in '{presetId}/{categoryId}' has non-positive amount={entry.Amount}.");
+            ok = false;
+        }
+
+        if (entry.Count is { } count && (count == 0 || count < -1))
+        {
+            Sawmill.Warning(
+                $"[NcStore] {mode} entry '{entry.Proto}' in '{presetId}/{categoryId}' has invalid count={count}. " +
+                "Use -1 or a positive value.");
+            ok = false;
+        }
+
+        if (entry.MatchMode == PrototypeMatchMode.Matcher)
+            return ok && ValidateMatcherEntry(entry, mode, presetId, categoryId);
+
+        if (!_prototypes.HasIndex<EntityPrototype>(entry.Proto))
+        {
+            Sawmill.Warning(
+                $"[NcStore] {mode} entry '{entry.Proto}' in '{presetId}/{categoryId}' references missing entity prototype.");
+            ok = false;
+        }
+
+        return ok;
+    }
+
     private bool ValidateMatcherEntry(
         StoreCatalogEntry entry,
         StoreMode mode,

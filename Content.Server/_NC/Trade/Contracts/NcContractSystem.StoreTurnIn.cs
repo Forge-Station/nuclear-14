@@ -32,10 +32,10 @@ public sealed partial class NcContractSystem : EntitySystem
         if (HasComp<ItemComponent>(ent))
             return true;
 
-        // Allow non-item movable world objects (e.g. placeable structures like pianos)
-        // while excluding mobs and anchored world geometry/decor.
-        if (HasComp<MobStateComponent>(ent))
-            return false;
+        if (TryComp(ent, out MobStateComponent? mobState))
+            return mobState.CurrentState == MobState.Dead &&
+                   !xform.Anchored &&
+                   HasComp<PullableComponent>(ent);
 
         if (xform.Anchored)
             return false;

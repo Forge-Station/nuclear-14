@@ -20,10 +20,8 @@ from typing import Iterable, NamedTuple
 
 
 ROOT_MARKERS = ("Content.Shared", "Content.Server", "Resources")
-TRADE_RESOURCE_DIR = Path("Resources/Prototypes/_NC/Trade")
 TRADE_YAML_DIRS = (
-    TRADE_RESOURCE_DIR,
-    Path("Resources/Prototypes/Corvax/Trade/Contract"),
+    Path("Resources/Prototypes/Corvax/Trade"),
 )
 
 
@@ -110,7 +108,7 @@ def audit_no_live_exchange(issues: list[Issue]) -> None:
         Path("Content.Shared/_NC/Trade"),
         Path("Content.Server/_NC/Trade"),
         Path("Content.Client/_NC/Trade"),
-        TRADE_RESOURCE_DIR,
+        *TRADE_YAML_DIRS,
     ], TEXT_SUFFIXES):
         text = read_text(path)
         for pattern, message in patterns.items():
@@ -119,7 +117,7 @@ def audit_no_live_exchange(issues: list[Issue]) -> None:
                 add_issue(issues, "P0", path, line_no(text, idx), message)
 
 
-TYPE_RE = re.compile(r"^-\s*type:\s*([A-Za-z0-9_]+)\s*$")
+TYPE_RE = re.compile(r"^-\s*type:\s*([A-Za-z0-9_]+)\s*(?:#.*)?$")
 KEY_RE = re.compile(r"^(?P<indent>\s*)(?P<key>[A-Za-z0-9_]+)\s*:(?P<value>.*)$")
 HEX_COLOR_RE = re.compile(r'^"?#(?:[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})"?$')
 
@@ -274,6 +272,20 @@ class OfferGroupEntry(NamedTuple):
     fill_weight: int | None
 
 
+class StoreCatalogAuditEntry(NamedTuple):
+    line: int
+    proto: str | None
+    price: int | None
+    amount: int | None
+    count: int | None
+    match_mode: str | None
+
+
+class MatcherAuditInfo(NamedTuple):
+    items: set[str]
+    tags: set[str]
+
+
 class HuntTargetEntry(NamedTuple):
     line: int
     group_line: int | None
@@ -316,14 +328,101 @@ def parse_top_level_list_values(block: ProtoBlock, key: str) -> list[tuple[int, 
             continue
 
         indent = indent_of(line)
+        item = list_item_re.match(line)
+        if item and indent >= key_indent:
+            values.append((num, item.group("value").strip()))
+            continue
+
         if indent <= key_indent and num > (key_line or 0):
             break
 
-        item = list_item_re.match(line)
-        if item and indent > key_indent:
-            values.append((num, item.group("value").strip()))
-
     return values
+
+
+def parse_store_catalog_entries(block: ProtoBlock) -> list[StoreCatalogAuditEntry]:
+    entries: list[StoreCatalogAuditEntry] = []
+    entries_indent: int | None = None
+    current_line: int | None = None
+    current_proto: str | None = None
+    current_price: int | None = None
+    current_amount: int | None = None
+    current_count: int | None = None
+    current_match: str | None = None
+    list_item_re = re.compile(r"^(?P<indent>\s*)-\s*(?P<rest>.*)$")
+
+    def set_field(key: str, value: str) -> None:
+        nonlocal current_proto, current_price, current_amount, current_count, current_match
+        value = value.strip()
+        if key == "proto":
+            current_proto = value
+        elif key == "price":
+            current_price = parse_int(value)
+        elif key == "amount":
+            current_amount = parse_int(value)
+        elif key == "count":
+            current_count = parse_int(value)
+        elif key == "match":
+            current_match = value
+
+    def finalize() -> None:
+        nonlocal current_line, current_proto, current_price, current_amount, current_count, current_match
+        if current_line is not None:
+            entries.append(
+                StoreCatalogAuditEntry(
+                    current_line,
+                    current_proto,
+                    current_price,
+                    current_amount,
+                    current_count,
+                    current_match,
+                )
+            )
+        current_line = None
+        current_proto = None
+        current_price = None
+        current_amount = None
+        current_count = None
+        current_match = None
+
+    for num, line in block.lines:
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+
+        match = KEY_RE.match(line)
+        if match and match.group("key") == "entries" and indent_of(line) == 2:
+            entries_indent = indent_of(line)
+            continue
+
+        if entries_indent is None:
+            continue
+
+        indent = indent_of(line)
+        if indent <= entries_indent and num > block.start_line and not stripped.startswith("-"):
+            finalize()
+            break
+
+        item_match = list_item_re.match(line)
+        if item_match and indent >= entries_indent:
+            finalize()
+            current_line = num
+            rest = item_match.group("rest").strip()
+            if ":" in rest:
+                key, value = rest.split(":", 1)
+                set_field(key.strip(), value)
+            continue
+
+        if current_line is None:
+            continue
+
+        key_match = KEY_RE.match(line)
+        if not key_match:
+            continue
+
+        set_field(key_match.group("key"), key_match.group("value"))
+
+    finalize()
+    return entries
 
 
 def parse_offer_pool_entries(block: ProtoBlock) -> list[OfferPoolEntry]:
@@ -1303,19 +1402,201 @@ def collect_trade_proto_blocks() -> list[ProtoBlock]:
     return blocks
 
 
+def collect_resource_proto_blocks() -> list[ProtoBlock]:
+    blocks: list[ProtoBlock] = []
+    for path in iter_files([Path("Resources/Prototypes")], {".yml", ".yaml"}):
+        blocks.extend(split_proto_blocks(path))
+    return blocks
+
+
+def collect_resource_metadata() -> tuple[set[str], set[str], set[str], dict[str, MatcherAuditInfo]]:
+    entity_ids: set[str] = set()
+    stack_ids: set[str] = set()
+    stack_ids_with_spawn: set[str] = set()
+    matchers: dict[str, MatcherAuditInfo] = {}
+    blocks = collect_resource_proto_blocks()
+
+    for block in blocks:
+        block_id = proto_id(block)
+        if block_id and block.type_name == "entity":
+            entity_ids.add(block_id)
+
+    for block in blocks:
+        block_id = proto_id(block)
+        if not block_id:
+            continue
+
+        if block.type_name == "entity":
+            continue
+
+        if block.type_name == "stack":
+            stack_ids.add(block_id)
+            spawn = top_level_value(block, "spawn")
+            if spawn and spawn[1] in entity_ids:
+                stack_ids_with_spawn.add(block_id)
+            continue
+
+        if block.type_name == "ncMatcher":
+            items = {value for _, value in parse_top_level_list_values(block, "items") if value}
+            tags = {value for _, value in parse_top_level_list_values(block, "tags") if value}
+            matchers[block_id] = MatcherAuditInfo(items, tags)
+
+    return entity_ids, stack_ids, stack_ids_with_spawn, matchers
+
+
+def audit_store_preset(
+    block: ProtoBlock,
+    issues: list[Issue],
+    category_ids: set[str],
+    stack_ids_with_spawn: set[str],
+) -> None:
+    preset_id = proto_id(block)
+
+    currency = top_level_value(block, "currency")
+    if currency is None or not currency[1]:
+        add_issue(issues, "P1", block.path, first_key_line(block, "currency"), "storePresetStructured must define currency")
+    elif currency[1] not in stack_ids_with_spawn:
+        add_issue(
+            issues,
+            "P1",
+            block.path,
+            currency[0],
+            f"storePresetStructured '{preset_id}' currency '{currency[1]}' must be a stack with a valid spawn entity",
+        )
+
+    categories = parse_top_level_list_values(block, "categories")
+    if not categories:
+        add_issue(issues, "P1", block.path, first_key_line(block, "categories"), "storePresetStructured must define categories")
+        return
+
+    for line, category_id in categories:
+        if category_id not in category_ids:
+            add_issue(
+                issues,
+                "P1",
+                block.path,
+                line,
+                f"storePresetStructured '{preset_id}' references missing storeCategoryStructured '{category_id}'",
+            )
+
+
+def audit_store_category(
+    block: ProtoBlock,
+    issues: list[Issue],
+    category_modes: dict[str, set[str]],
+    entity_ids: set[str],
+    matchers: dict[str, MatcherAuditInfo],
+) -> None:
+    category_id = proto_id(block)
+    entries = parse_store_catalog_entries(block)
+    if not entries:
+        add_issue(issues, "P1", block.path, first_key_line(block, "entries"), "storeCategoryStructured must define entries")
+        return
+
+    modes = category_modes.get(category_id, set())
+    used_for_buy = not modes or "buy" in modes
+
+    for entry in entries:
+        if not entry.proto:
+            add_issue(issues, "P1", block.path, entry.line, f"storeCategoryStructured '{category_id}' entry must define proto")
+            continue
+
+        if entry.price is None or entry.price <= 0:
+            add_issue(
+                issues,
+                "P1",
+                block.path,
+                entry.line,
+                f"storeCategoryStructured '{category_id}' entry '{entry.proto}' price must be > 0",
+            )
+
+        if entry.amount is not None and entry.amount <= 0:
+            add_issue(
+                issues,
+                "P1",
+                block.path,
+                entry.line,
+                f"storeCategoryStructured '{category_id}' entry '{entry.proto}' amount must be > 0",
+            )
+
+        if entry.count is not None and (entry.count == 0 or entry.count < -1):
+            add_issue(
+                issues,
+                "P1",
+                block.path,
+                entry.line,
+                f"storeCategoryStructured '{category_id}' entry '{entry.proto}' count must be -1 or > 0",
+            )
+
+        match_mode = entry.match_mode or "Exact"
+        if match_mode == "Matcher":
+            matcher = matchers.get(entry.proto)
+            if matcher is None:
+                add_issue(
+                    issues,
+                    "P1",
+                    block.path,
+                    entry.line,
+                    f"storeCategoryStructured '{category_id}' entry references missing ncMatcher '{entry.proto}'",
+                )
+                continue
+
+            if not matcher.items and not matcher.tags:
+                add_issue(
+                    issues,
+                    "P1",
+                    block.path,
+                    entry.line,
+                    f"ncMatcher '{entry.proto}' used by storeCategoryStructured '{category_id}' must define items or tags",
+                )
+
+            if used_for_buy and not matcher.items:
+                add_issue(
+                    issues,
+                    "P1",
+                    block.path,
+                    entry.line,
+                    f"buy storeCategoryStructured '{category_id}' cannot use tags-only matcher '{entry.proto}'",
+                )
+            continue
+
+        if match_mode != "Exact":
+            add_issue(
+                issues,
+                "P1",
+                block.path,
+                entry.line,
+                f"storeCategoryStructured '{category_id}' entry '{entry.proto}' has unsupported match mode '{match_mode}'",
+            )
+            continue
+
+        if entry.proto not in entity_ids:
+            add_issue(
+                issues,
+                "P1",
+                block.path,
+                entry.line,
+                f"storeCategoryStructured '{category_id}' entry references missing entity prototype '{entry.proto}'",
+            )
+
+
 def audit_trade_yaml(issues: list[Issue]) -> None:
-    trade_dir = REPO_ROOT / TRADE_RESOURCE_DIR
-    if not trade_dir.exists():
-        add_issue(issues, "P0", trade_dir, 0, "Trade prototype directory is missing")
+    trade_dirs = [REPO_ROOT / path for path in TRADE_YAML_DIRS]
+    if not any(path.exists() for path in trade_dirs):
+        add_issue(issues, "P0", TRADE_YAML_DIRS[0], 0, "Trade prototype directory is missing")
         return
 
     blocks = collect_trade_proto_blocks()
+    entity_ids, _stack_ids, stack_ids_with_spawn, matchers = collect_resource_metadata()
     contract_ids_by_type: dict[str, set[str]] = {
         "ncSupplyContract": set(),
         "ncRetrievalContract": set(),
         "ncHuntContract": set(),
         "ncGhostRoleContract": set(),
     }
+    store_category_ids: set[str] = set()
+    store_preset_categories: dict[str, list[str]] = {}
+    store_preset_modes: dict[str, set[str]] = {}
     offer_pool_ids: set[str] = set()
     ghost_role_preset_ids: set[str] = set()
     ghost_role_perk_ids: set[str] = set()
@@ -1330,12 +1611,31 @@ def audit_trade_yaml(issues: list[Issue]) -> None:
             ghost_role_preset_ids.add(block_id)
         elif block.type_name == "ncGhostRolePerk" and block_id:
             ghost_role_perk_ids.add(block_id)
+        elif block.type_name == "storeCategoryStructured" and block_id:
+            store_category_ids.add(block_id)
+        elif block.type_name == "storePresetStructured" and block_id:
+            store_preset_categories[block_id] = [value for _, value in parse_top_level_list_values(block, "categories")]
+        elif block.type_name == "ncStoreProfile":
+            for _, preset_id in parse_top_level_list_values(block, "buy"):
+                store_preset_modes.setdefault(preset_id, set()).add("buy")
+            for _, preset_id in parse_top_level_list_values(block, "sell"):
+                store_preset_modes.setdefault(preset_id, set()).add("sell")
+
+    category_modes: dict[str, set[str]] = {}
+    for preset_id, categories in store_preset_categories.items():
+        modes = store_preset_modes.get(preset_id, set())
+        for category_id in categories:
+            category_modes.setdefault(category_id, set()).update(modes)
 
     for block in blocks:
         audit_repair_quarantine(block, issues)
 
         if block.type_name == "ncBarterCategory":
             audit_barter_category(block, issues)
+        elif block.type_name == "storePresetStructured":
+            audit_store_preset(block, issues, store_category_ids, stack_ids_with_spawn)
+        elif block.type_name == "storeCategoryStructured":
+            audit_store_category(block, issues, category_modes, entity_ids, matchers)
         elif block.type_name == "ncSupplyContract":
             audit_supply_contract(block, issues)
         elif block.type_name == "ncRetrievalContract":

@@ -1,4 +1,20 @@
-# Shared contract ghost-role definitions.
+
+- type: entity
+  parent: BaseObjective
+  id: NcContractGhostRoleSurvivalObjective
+  name: "Выжить"
+  description: "Продержитесь до конца таймера."
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Objective
+    difficulty: 0
+    issuer: "Контрактная роль"
+    unique: false
+    icon:
+      sprite: Mobs/Ghosts/ghost_human.rsi
+      state: icon
+  - type: NcContractGhostRoleSurvivalObjective
+
 
 - type: ncGhostRolePreset
   id: NcGhostRoleRaider

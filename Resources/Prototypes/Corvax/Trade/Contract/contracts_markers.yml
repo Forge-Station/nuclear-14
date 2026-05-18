@@ -1,4 +1,3 @@
-# Markers for contract spawn zones and delivery points.
 
 - type: entity
   id: MarkerTradeContractObjectiveBase

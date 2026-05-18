@@ -1,0 +1,642 @@
+- type: storeContractsPreset
+  id: PresetBazar
+  contractOffers:
+    maxVisible: 7
+    groups:
+    - pool: BazarEverydayOrders
+      minVisible: 3
+      maxVisible: 4
+      fillWeight: 5
+    - pool: BazarCaravanOrders
+      minVisible: 2
+      maxVisible: 3
+      fillWeight: 3
+    - pool: BazarDangerOrders
+      minVisible: 1
+      maxVisible: 2
+      fillWeight: 1
+
+# -----------------------------------------------------------------------------
+# Категории заказов базара
+# -----------------------------------------------------------------------------
+
+- type: ncContractOfferPool
+  id: BazarEverydayOrders
+  name: "Будничные поручения"
+  order: 10
+  color: "#C9A45A"
+  entries:
+  - type: Supply
+    id: BazarSupplyThreads
+    weight: 3
+  - type: Supply
+    id: BazarSupplyCloth
+    weight: 3
+  - type: Supply
+    id: BazarSupplyFirewood
+    weight: 2
+  - type: Supply
+    id: BazarSupplyPlanks
+    weight: 2
+  - type: Supply
+    id: BazarSupplyLeather
+    weight: 2
+  - type: Supply
+    id: BazarSupplyBrocFlower
+    weight: 3
+  - type: Supply
+    id: BazarSupplyCoyoteTobacco
+    weight: 2
+  - type: Supply
+    id: BazarSupplyDogfood
+    weight: 2
+  - type: Supply
+    id: BazarSupplyRawMeat
+    weight: 2
+  - type: Supply
+    id: BazarSupplyVarmintRifles
+    weight: 1
+  - type: Supply
+    id: BazarSupplyNineMillimeterWeapons
+    weight: 1
+
+- type: ncContractOfferPool
+  id: BazarCaravanOrders
+  name: "Караванные заказы"
+  order: 20
+  color: "#6FA65F"
+  entries:
+  - type: Supply
+    id: BazarSupplyScrap
+    weight: 3
+  - type: Supply
+    id: BazarSupplyColoredScrap
+    weight: 2
+  - type: Supply
+    id: BazarSupplyBrassKnives
+    weight: 1
+  - type: Supply
+    id: BazarSupplyNukaCola
+    weight: 1
+  - type: Supply
+    id: BazarSupplyCaveFungus
+    weight: 1
+  - type: Supply
+    id: BazarSupplyCarrots
+    weight: 1
+  - type: Supply
+    id: BazarCorpseFeralGhouls
+    weight: 2
+  - type: Supply
+    id: BazarCorpseRaiderPsychos
+    weight: 2
+
+- type: ncContractOfferPool
+  id: BazarDangerOrders
+  name: "Опасная работа"
+  order: 30
+  color: "#A94D3D"
+  entries:
+  - type: Supply
+    id: BazarSupplySuperSledge
+    weight: 1
+  - type: Supply
+    id: BazarSupplyDeathclawEggs
+    weight: 1
+  - type: Supply
+    id: BazarCorpseCazadors
+    weight: 2
+  - type: Supply
+    id: BazarCorpseDeathclaw
+    weight: 1
+  - type: Supply
+    id: BazarCorpseMetalDeathclaw
+    weight: 1
+  - type: Supply
+    id: BazarCorpseRaiderBoss
+    weight: 1
+
+# -----------------------------------------------------------------------------
+# Группы обычных предметов
+# -----------------------------------------------------------------------------
+
+- type: ncItemGroup
+  id: BazarGroupColoredScrap
+  name: "Цветной металлолом"
+  description: "Медный, латунный или свинцовый лом."
+  icon: N14ScrapCopper1
+  prototypes:
+  - N14ScrapCopper1
+  - N14ScrapBrass1
+  - N14ScrapLead1
+
+- type: ncItemGroup
+  id: BazarGroupNineMillimeterWeapons
+  name: "Оружие 9 мм"
+  description: "Пистолет или револьвер под 9 мм."
+  icon: N14WeaponPistol9mm
+  prototypes:
+  - N14WeaponPistol9mm
+  - N14WeaponRevolver9mm
+
+- type: ncItemGroup
+  id: BazarGroupNukaCola
+  name: "Ядер-кола"
+  description: "Любая бутылка Ядер-колы из базовой коллекции."
+  icon: N14DrinkNukaCola
+  prototypes:
+  - N14DrinkNukaColaCherry
+  - N14DrinkNukaCola
+  - N14DrinkNukaColaOrange
+  - N14DrinkNukaColaGrape
+  - N14DrinkNukaColaWild
+  - N14DrinkNukaColaYellow
+
+# -----------------------------------------------------------------------------
+# Группы тел и опасных целей
+# -----------------------------------------------------------------------------
+
+- type: ncItemGroup
+  id: BazarGroupFeralGhoulBodies
+  name: "Тела диких гулей"
+  description: "Дикие гули и их опасные разновидности."
+  icon: N14MobGhoulFeral
+  prototypes:
+  - N14MobGhoulFeral
+  - N14MobGhoulFeralReaver
+  - N14MobGhoulFeralRotter
+
+- type: ncItemGroup
+  id: BazarGroupRaiderBodies
+  name: "Тела рейдеров"
+  description: "Обычные рейдеры, психи и стрелки из ближайших банд."
+  icon: N14MobRaiderPsycho
+  prototypes:
+  - N14MobRaiderPsycho
+  - N14MobRaiderPsychoRanged
+  - N14MobRaiderFernMelee
+  - N14MobRaiderEnforcerMelee
+  - N14MobRaiderHunter
+  - N14MobRaiderSkrimisher
+
+- type: ncItemGroup
+  id: BazarGroupDeathclawBodies
+  name: "Туши когтей смерти"
+  description: "Обычные когти смерти и близкие разновидности без металлической брони."
+  icon: N14MobDeathclaw
+  prototypes:
+  - N14MobDeathclaw
+  - N14MobDeathclawAlbino
+  - N14MobDeathclawicy
+  - N14MobDeathclawWave
+  - N14MobDeathclawWaveBoss
+  - N14MobDeathclawAlbinoWave
+  - N14MobDeathclawAlbinoWaveBoss
+  - N14MobDeathclawDespawning
+  - N14MobDeathclawAlbinoDespawning
+
+- type: ncItemGroup
+  id: BazarGroupMetalDeathclawBodies
+  name: "Туши бронированных когтей смерти"
+  description: "Металлические и бронированные когти смерти."
+  icon: N14MobDeathclawMetal
+  prototypes:
+  - N14MobDeathclawMetal
+  - N14MobDeathclawMetalWave
+  - N14MobDeathclawMetalWaveBoss
+  - N14MobDeathclawMetalDespawning
+
+- type: ncItemGroup
+  id: BazarGroupCazadorBodies
+  name: "Тела казадоров"
+  description: "Казадоры из пустоши и временных нашествий."
+  icon: N14MobCazador
+  prototypes:
+  - N14MobCazador
+  - N14MobCazadorWave
+  - N14MobCazadorDespawning
+
+- type: ncItemGroup
+  id: BazarGroupRaiderBossBodies
+  name: "Тела главарей рейдеров"
+  description: "Главари, надсмотрщики и командиры рейдерских банд."
+  icon: N14MobRaiderBoss
+  prototypes:
+  - N14MobRaiderBoss
+  - N14MobEnforcerWarden
+  - N14MobEnforcerChief
+
+# -----------------------------------------------------------------------------
+# Будничные поручения
+# -----------------------------------------------------------------------------
+
+- type: ncSupplyContract
+  id: BazarSupplyThreads
+  name: "Нитки для швейной лавки"
+  description: "Швейная лавка снова сидит без ниток. Принесите несколько мотков, пока караванщики не начали латать одежду проволокой."
+  icon: N14MaterialThread1
+  targets:
+  - prototype: N14MaterialThread1
+    count: { min: 10, max: 15 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 50, max: 90 }
+  - type: Pool
+    pool: caravan_easy
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyCloth
+  name: "Ткань для заплат"
+  description: "После последней пыльной бури в мастерскую несут рваную одежду мешками. Нужна ткань для заплат и перевязей."
+  icon: MaterialCloth1
+  targets:
+  - prototype: MaterialCloth1
+    count: { min: 10, max: 20 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 100, max: 120 }
+  - type: Pool
+    pool: caravan_easy
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyFirewood
+  name: "Дрова для постов"
+  description: "Ночами у стен холодает, а костры жрут дрова без остановки. Принесите сухие бревна для печей и сторожевых постов."
+  icon: N14FloraLogTimber
+  targets:
+  - prototype: N14FloraLogTimber
+    count: { min: 6, max: 10 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 100, max: 150 }
+  - type: Pool
+    pool: caravan_easy
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyPlanks
+  name: "Доски для плотника"
+  description: "Плотник чинит настилы и торговые лавки после каждой драки у ворот. Ему нужна партия ровных досок."
+  icon: MaterialWoodPlank1
+  targets:
+  - prototype: MaterialWoodPlank1
+    count: { min: 15, max: 30 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 50, max: 80 }
+  - type: Pool
+    pool: caravan_easy
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyLeather
+  name: "Выделанная кожа для кожевника"
+  description: "Кожевник чинит ремни, кобуры и броню для тех, кто еще возвращается с дороги. Ему нужна выделанная кожа."
+  icon: N14MaterialLeather1
+  targets:
+  - prototype: N14MaterialLeather1
+    count: { min: 5, max: 15 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 80, max: 120 }
+  - type: Pool
+    pool: caravan_easy
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyBrocFlower
+  name: "Цветки брока для лекаря"
+  description: "Местный лекарь варит мази на все поселение. Цветки брока разошлись быстрее, чем ожидали, и нужен свежий запас."
+  icon: N14FloraProduceWildBrocFlower
+  targets:
+  - prototype: N14FloraProduceWildBrocFlower
+    count: { min: 5, max: 10 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 60, max: 100 }
+  - type: Pool
+    pool: caravan_easy
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyCoyoteTobacco
+  name: "Койотий табак"
+  description: "Караванщики готовы спорить за хороший табак громче, чем за воду. Принесите койотий табак для самокруток и обмена."
+  icon: N14FloraProduceWildCoyoteTobacco
+  targets:
+  - prototype: N14FloraProduceWildCoyoteTobacco
+    count: { min: 5, max: 10 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 50, max: 75 }
+  - type: Pool
+    pool: caravan_easy
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyDogfood
+  name: "Корм для сторожевого пса"
+  description: "Сторожевой пес опять смотрит на людей как на обед. Нужны банки корма, пока он не решил, что охрана тоже съедобная."
+  repeatable: false
+  icon: N14FoodDogfood
+  targets:
+  - prototype: N14FoodDogfood
+    count: { min: 2, max: 5 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 75, max: 100 }
+  - type: Pool
+    pool: caravan_easy
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyRawMeat
+  name: "Мясо для кухни"
+  description: "Кухня готовит похлебку для караванщиков и ночной смены. Принесите сырое мясо, пока котел не стал совсем пустым."
+  icon: N14FoodMeatRadRaw
+  targets:
+  - prototype: N14FoodMeatRadRaw
+    count: { min: 5, max: 10 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 100, max: 120 }
+  - type: Pool
+    pool: caravan_easy
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyVarmintRifles
+  name: "Варминт-винтовки для охраны"
+  description: "Охрана жалуется, что по крысам и рейдерам приходится целиться почти молитвами. Нужны рабочие варминт-винтовки."
+  icon: N14WeaponSniper556VarmintRifle
+  targets:
+  - prototype: N14WeaponSniper556VarmintRifle
+    count: { min: 1, max: 2 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 100, max: 140 }
+  - type: Pool
+    pool: caravan_easy_nonweapons
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyNineMillimeterWeapons
+  name: "Ствол под 9 мм"
+  description: "Бармен просит запасной ствол под 9 мм для тревожных вечеров. Подойдет пистолет или револьвер, лишь бы не разваливался в руках."
+  icon: N14WeaponPistol9mm
+  targets:
+  - group: BazarGroupNineMillimeterWeapons
+    count: 1
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 50, max: 75 }
+  - type: Pool
+    pool: caravan_easy_nonweapons
+    count: 1
+
+# -----------------------------------------------------------------------------
+# Караванные заказы
+# -----------------------------------------------------------------------------
+
+- type: ncSupplyContract
+  id: BazarSupplyScrap
+  name: "Металлолом для мастерской"
+  description: "Мастерская берет любой годный металл: латать двери, паять трубы, чинить оружие. Главное, чтобы лом еще можно было пустить в дело."
+  icon: N14Scrap1
+  targets:
+  - prototype: N14Scrap1
+    count: { min: 15, max: 30 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 100, max: 150 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyColoredScrap
+  name: "Цветной лом для механика"
+  description: "Механик ищет цветной лом для мелких деталей и контактов. Медь, латунь или свинец, все уйдет в работу."
+  icon: N14ScrapCopper1
+  targetCount: 1
+  targets:
+  - group: BazarGroupColoredScrap
+    count: { min: 5, max: 10 }
+    weight: 1
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 100, max: 120 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyBrassKnives
+  name: "Латунные ножи"
+  description: "Каравану нужны латунные ножи для обмена с дальними стоянками. Красоты не требуют, но лезвие должно держаться."
+  icon: N14BrassKnife
+  targets:
+  - prototype: N14BrassKnife
+    count: { min: 2, max: 4 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 120, max: 180 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyNukaCola
+  name: "Бутылка Ядер-колы"
+  description: "Коллекционер собирает бутылки Ядер-колы и уверяет, что различает их по звуку крышки. Принесите любую из базовой коллекции."
+  icon: N14DrinkNukaCola
+  targets:
+  - group: BazarGroupNukaCola
+    count: 1
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 100, max: 200 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyCaveFungus
+  name: "Пещерный гриб для химика"
+  description: "Химик шепчет, что пещерный гриб нужен для мирных опытов. Никто не верит, но крышки он платит настоящие."
+  icon: N14FloraProduceWildCaveFungusRad
+  targets:
+  - prototype: N14FloraProduceWildCaveFungusRad
+    count: { min: 3, max: 6 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 120, max: 190 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyCarrots
+  name: "Свежая морковь"
+  description: "Кухня просит свежую морковь: не все же кормить людей консервами и обещаниями. Чем меньше песка на корнях, тем лучше."
+  icon: N14FloraProduceWildCarrot
+  targets:
+  - prototype: N14FloraProduceWildCarrot
+    count: { min: 5, max: 10 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 100, max: 150 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarCorpseFeralGhouls
+  name: "Тела диких гулей"
+  description: "Одному врачу нужны мертвые дикие гули для грязной, но хорошо оплачиваемой работы. Притащите тела к торговцу."
+  icon: N14MobGhoulFeral
+  targets:
+  - group: BazarGroupFeralGhoulBodies
+    count: { min: 2, max: 3 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 150, max: 250 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarCorpseRaiderPsychos
+  name: "Мертвые рейдеры"
+  description: "Рейдеры снова давят на дороги. Убейте несколько психов и доставьте тела к торговцу, чтобы никто не спорил о награде."
+  icon: N14MobRaiderPsycho
+  targets:
+  - group: BazarGroupRaiderBodies
+    count: { min: 2, max: 5 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 150, max: 250 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+# -----------------------------------------------------------------------------
+# Опасная работа
+# -----------------------------------------------------------------------------
+
+- type: ncSupplyContract
+  id: BazarSupplySuperSledge
+  name: "Суперкувалда без вопросов"
+  description: "Один покупатель ищет суперкувалду и не задает лишних вопросов. Лучше и вам не задавать, если найдете."
+  icon: N14SuperSledgeHammer
+  targets:
+  - prototype: N14SuperSledgeHammer
+    count: 1
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 260, max: 420 }
+  - type: Pool
+    pool: caravan_hard
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyDeathclawEggs
+  name: "Яйцо когтя смерти для гурмана"
+  description: "Повар мечтает удивить богатых гостей блюдом, после которого они запомнят счет. Вареное яйцо когтя смерти подойдет идеально."
+  icon: N14CookedFoodEggDeathclawBoiled
+  targets:
+  - prototype: N14CookedFoodEggDeathclawBoiled
+    count: 1
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 220, max: 360 }
+  - type: Pool
+    pool: caravan_hard
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarCorpseCazadors
+  name: "Казадоры для вскрытия"
+  description: "Токсиколог просит тела казадоров: яд, железы, хитин, все пойдет на опыты. Доставьте тушки к торговцу."
+  icon: N14MobCazador
+  targets:
+  - group: BazarGroupCazadorBodies
+    count: 3
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 600, max: 1000 }
+  - type: Pool
+    pool: caravan_hard
+    count: { min: 3, max: 5 }
+
+- type: ncSupplyContract
+  id: BazarCorpseDeathclaw
+  name: "Туша когтя смерти"
+  description: "Караванщики поклялись, что видели когтя смерти у старой тропы. Завалите тварь и притащите тушу к торговцу."
+  icon: N14MobDeathclaw
+  targets:
+  - group: BazarGroupDeathclawBodies
+    count: 1
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 600, max: 1000 }
+  - type: Pool
+    pool: caravan_hard
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarCorpseMetalDeathclaw
+  name: "Бронированный коготь смерти"
+  description: "Говорят, по пустоши ходит старый бронированный коготь смерти. Если слухи правдивы, его туша стоит очень дорого."
+  icon: N14MobDeathclawMetal
+  targets:
+  - group: BazarGroupMetalDeathclawBodies
+    count: 1
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 600, max: 1000 }
+  - type: Pool
+    pool: caravan_hard
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarCorpseRaiderBoss
+  name: "Труп главаря рейдеров"
+  description: "У местной банды появился слишком громкий главарь. Убейте его и привезите тело к торговцу, чтобы заказчик поверил в результат."
+  icon: N14MobRaiderBoss
+  targets:
+  - group: BazarGroupRaiderBossBodies
+    count: 1
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 600, max: 1000 }
+  - type: Pool
+    pool: caravan_hard
+    count: 1

@@ -1,4 +1,5 @@
 using Content.Shared._NC.Trade;
+using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
@@ -17,6 +18,7 @@ public sealed partial class NcContractSystem : EntitySystem
     [Dependency] private readonly NcStoreInventorySystem _inventory = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
+    [Dependency] private readonly IComponentFactory _compFactory = default!;
     private readonly HashSet<(EntityUid Store, EntityUid User, string ContractId)> _claimInProgress = new();
     private bool _claimScratchInUse;
     private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _progressClaimableByKeyScratch = new();

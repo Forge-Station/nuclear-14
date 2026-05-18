@@ -1,0 +1,143 @@
+
+
+- type: entity
+  id: Trademachine
+  abstract: true
+  name: Торговый автомат Города
+  description: Нужно срочно — он рядом. Выбирай, плати, забирай.
+  suffix: vendor, normal
+  components:
+  - type: UserInterface
+    interfaces:
+      enum.StoreUiKey.Key:
+        type: NcStoreStructuredBoundUi
+  - type: ActivatableUI
+    key: enum.StoreUiKey.Key
+  - type: Clickable
+  - type: InteractionOutline
+  - type: Transform
+    anchored: true
+    noRot: true
+  - type: Physics
+    bodyType: Static
+  - type: Fixtures
+    fixtures:
+      fix1:
+        density: 300
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.5,-0.5,0.5,0.5"
+        mask:
+        - MachineMask
+        layer:
+        - MachineLayer
+  - type: Sprite
+    sprite: Structures/Machines/VendingMachines/ammo.rsi
+    layers:
+    - state: "off"
+      map: ["enum.VendingMachineVisualLayers.Base"]
+    - state: "normal-unshaded"
+      map: ["enum.VendingMachineVisualLayers.BaseUnshaded"]
+      shader: unshaded
+  - type: PointLight
+    radius: 2.5
+    energy: 1
+    color: "#b34747"
+    mask: /Textures/Effects/LightMasks/cone.png
+    autoRot: true
+
+- type: entity
+  id: TrademachineCity
+  parent: Trademachine
+  name: Торговый автомат Города
+  description: Нужно срочно — он рядом. Выбирай, плати, забирай.
+  suffix: vendor, normal
+  components:
+  - type: NcStore
+    profile: TrademachineCityProfile
+  - type: AccessReader
+    access:
+    - [ "TownieShopkeeper" ]
+
+- type: entity
+  id: TrademachineTickets
+  parent: Trademachine
+  name: торговый автомат каравана
+  description: Специфичный по своей сути торговый автомат, который принимает талоны каравана, взамен предоставляя отличное снаряжение.
+  suffix: vendor, Tickets
+  components:
+  - type: NcStore
+    profile: TrademachineTicketsProfile
+  - type: AccessReader
+    access:
+    - [ "TownieShopkeeper" ]
+  - type: Sprite
+    sprite: _NF/Structures/Machines/VendingMachines/yarrrdrobe.rsi
+    layers:
+    - state: "off"
+      map: ["enum.VendingMachineVisualLayers.Base"]
+    - state: "normal-unshaded"
+      map: ["enum.VendingMachineVisualLayers.BaseUnshaded"]
+      shader: unshaded
+
+- type: entity
+  id: TrademachineCityNT
+  parent: TrademachineCity
+  name: торговый автомат НТ
+  description: Торговый автомат с интерфейсом в стиле NanoTrasen.
+  suffix: vendor, NT UI
+  components:
+  - type: NcStore
+    profile: TrademachineCityNtProfile
+
+- type: entity
+  id: TrademachineCitySyndicate
+  parent: TrademachineCity
+  name: торговый автомат Синдиката
+  description: Торговый автомат с интерфейсом в стиле Синдиката.
+  suffix: vendor, Syndicate UI
+  components:
+  - type: NcStore
+    profile: TrademachineCitySyndicateProfile
+
+- type: ncStoreProfile
+  id: TrademachineCityProfile
+  buy:
+  - caravan_buy2
+  sell:
+  - caravan_sell2
+  barter:
+  - BarterPresetCityCurrency
+  contracts: PresetBazar
+  theme: TradeUiThemeWasteland
+
+- type: ncStoreProfile
+  id: TrademachineTicketsProfile
+  buy:
+  - caravan_storetickets
+  sell:
+  - caravan_storetickets_sell
+  theme: TradeUiThemeWasteland
+
+- type: ncStoreProfile
+  id: TrademachineCityNtProfile
+  buy:
+  - caravan_buy2
+  sell:
+  - caravan_sell2
+  barter:
+  - BarterPresetCityCurrency
+  contracts: PresetBazar
+  theme: TradeUiThemeNT
+
+- type: ncStoreProfile
+  id: TrademachineCitySyndicateProfile
+  buy:
+  - caravan_buy2
+  sell:
+  - caravan_sell2
+  barter:
+  - BarterPresetCityCurrency
+  contracts: PresetBazar
+  theme: TradeUiThemeSyndicate
+

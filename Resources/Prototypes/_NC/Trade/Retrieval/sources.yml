@@ -1,9 +1,0 @@
-# Retrieval source presets.
-# A source answers only one question: where cargo appears.
-
-- type: ncRetrievalSourcePreset
-  id: NcRetrievalSourceTradeContractObjective
-  spawnCargo: true
-  point:
-    type: MarkerGroup
-    id: TradeContractObjectiveSpawn

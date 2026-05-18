@@ -1,4 +1,7 @@
 using System;
+using Content.Shared.Mobs.Components;
+using Content.Shared.Movement.Pulling.Components;
+using Content.Shared.Prototypes;
 using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
 
@@ -23,7 +26,7 @@ public sealed partial class NcContractSystem : EntitySystem
             Taken = false,
             ObjectiveType = ContractObjectiveType.Delivery,
             Runtime = new ContractRuntimeContextData(),
-            Config = new ContractObjectiveConfigData(),
+            Config = CreateSupplyObjectiveConfig(proto),
             FlowStatus = ContractFlowStatus.Available,
             MatchMode = matchMode,
             Targets = targets,
@@ -35,6 +38,49 @@ public sealed partial class NcContractSystem : EntitySystem
 
         SyncContractFlowStatus(contract);
         return contract;
+    }
+
+    private ContractObjectiveConfigData CreateSupplyObjectiveConfig(NcSupplyContractPrototype proto)
+    {
+        return new ContractObjectiveConfigData
+        {
+            AllowStoreWorldTurnIn = ShouldAllowSupplyStoreWorldTurnIn(proto)
+        };
+    }
+
+    private bool ShouldAllowSupplyStoreWorldTurnIn(NcSupplyContractPrototype proto)
+    {
+        for (var i = 0; i < proto.Targets.Count; i++)
+        {
+            var target = proto.Targets[i];
+
+            if (!string.IsNullOrWhiteSpace(target.Prototype) &&
+                IsSupplyWorldTurnInPrototype(target.Prototype))
+            {
+                return true;
+            }
+
+            if (string.IsNullOrWhiteSpace(target.Group) ||
+                !_prototypes.TryIndex<NcItemGroupPrototype>(target.Group, out var group))
+            {
+                continue;
+            }
+
+            for (var j = 0; j < group.Prototypes.Count; j++)
+            {
+                if (IsSupplyWorldTurnInPrototype(group.Prototypes[j]))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool IsSupplyWorldTurnInPrototype(string prototypeId)
+    {
+        return _prototypes.TryIndex<EntityPrototype>(prototypeId, out var proto) &&
+               proto.HasComponent<MobStateComponent>(_compFactory) &&
+               proto.HasComponent<PullableComponent>(_compFactory);
     }
 
     private List<ContractTargetServerData> BuildSupplyTargets(EntityUid store, NcSupplyContractPrototype proto)

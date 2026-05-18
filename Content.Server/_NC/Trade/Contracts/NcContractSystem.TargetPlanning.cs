@@ -1,4 +1,6 @@
 using Content.Shared._NC.Trade;
+using Content.Shared.Mobs;
+using Content.Shared.Mobs.Components;
 using Content.Shared.Stacks;
 
 namespace Content.Server._NC.Trade;
@@ -81,6 +83,9 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool CanUseContractPlanningEntity(EntityUid root, EntityUid ent, bool worldTurnInSource)
     {
         if (ent == EntityUid.Invalid || !EntityManager.EntityExists(ent))
+            return false;
+
+        if (TryComp(ent, out MobStateComponent? mobState) && mobState.CurrentState != MobState.Dead)
             return false;
 
         if (worldTurnInSource)
