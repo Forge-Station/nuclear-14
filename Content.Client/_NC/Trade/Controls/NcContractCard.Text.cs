@@ -25,7 +25,19 @@ public sealed partial class NcContractCard
     private string BuildPrettyDescription(ContractClientData c)
     {
         var description = ResolveBaseDescription(c);
+        var ghostRoleHint = BuildGhostRoleDescriptionHint(c);
+        var huntHint = BuildHuntDescriptionHint(c);
         var routeHint = BuildRouteHintText(c);
+
+        if (!string.IsNullOrWhiteSpace(ghostRoleHint))
+            description = string.IsNullOrWhiteSpace(description)
+                ? ghostRoleHint
+                : $"{description}\n{ghostRoleHint}";
+
+        if (!string.IsNullOrWhiteSpace(huntHint))
+            description = string.IsNullOrWhiteSpace(description)
+                ? huntHint
+                : $"{description}\n{huntHint}";
 
         if (string.IsNullOrWhiteSpace(routeHint))
             return description;
@@ -46,6 +58,27 @@ public sealed partial class NcContractCard
             return Loc.GetString("nc-store-contract-desc-default");
 
         return Loc.GetString("nc-store-contract-desc-generated", ("goals", goal.Replace(", ", "; ")));
+    }
+
+    private static string BuildGhostRoleDescriptionHint(ContractClientData c)
+    {
+        if (ContractExecutionKinds.ToObjectiveType(c.ExecutionKind) != ContractObjectiveType.GhostRole)
+            return string.Empty;
+
+        return Loc.GetString("nc-store-contract-ghost-role-mode-line-short", ("mode", BuildGhostRoleModeName(c)));
+    }
+
+    private static string BuildHuntDescriptionHint(ContractClientData c)
+    {
+        if (ContractExecutionKinds.ToObjectiveType(c.ExecutionKind) != ContractObjectiveType.Hunt)
+            return string.Empty;
+
+        return c.HuntCompletionMode switch
+        {
+            NcHuntCompletionMode.BodyTurnIn => Loc.GetString("nc-store-contract-hunt-mode-body-desc"),
+            NcHuntCompletionMode.TrophyTurnIn => Loc.GetString("nc-store-contract-hunt-mode-trophy-desc"),
+            _ => string.Empty
+        };
     }
 
     private static string BuildRouteHintText(ContractClientData c)
@@ -100,15 +133,57 @@ public sealed partial class NcContractCard
 
     private static bool ShouldShowTurnInItem(ContractClientData c)
     {
+        if (IsHuntBodyTurnIn(c))
+            return true;
+
         return c.FlowStatus == ContractFlowStatus.ReadyToTurnIn && HasDistinctTurnInItem(c);
+    }
+
+    private static string BuildTurnInHeaderText(ContractClientData c)
+    {
+        if (ContractExecutionKinds.ToObjectiveType(c.ExecutionKind) == ContractObjectiveType.Hunt)
+        {
+            return c.HuntCompletionMode switch
+            {
+                NcHuntCompletionMode.BodyTurnIn => Loc.GetString("nc-store-contract-hunt-body-turn-in-header"),
+                NcHuntCompletionMode.TrophyTurnIn => Loc.GetString("nc-store-contract-hunt-trophy-turn-in-header"),
+                _ => Loc.GetString("nc-store-contract-turn-in-header")
+            };
+        }
+
+        return Loc.GetString("nc-store-contract-turn-in-header");
     }
 
     private string BuildTurnInNoteText(ContractClientData c)
     {
-        if (!HasDistinctTurnInItem(c) || c.FlowStatus == ContractFlowStatus.ReadyToTurnIn)
+        if (string.IsNullOrWhiteSpace(c.TurnInItem) || c.FlowStatus == ContractFlowStatus.ReadyToTurnIn)
+            return string.Empty;
+
+        if (ContractExecutionKinds.ToObjectiveType(c.ExecutionKind) == ContractObjectiveType.Hunt)
+        {
+            return c.HuntCompletionMode switch
+            {
+                NcHuntCompletionMode.BodyTurnIn => Loc.GetString(
+                    "nc-store-contract-hunt-body-turn-in-note",
+                    ("item", ResolveProtoName(c.TurnInItem))),
+                NcHuntCompletionMode.TrophyTurnIn => Loc.GetString(
+                    "nc-store-contract-hunt-trophy-turn-in-note",
+                    ("item", ResolveProtoName(c.TurnInItem))),
+                _ => string.Empty
+            };
+        }
+
+        if (!HasDistinctTurnInItem(c))
             return string.Empty;
 
         return Loc.GetString("nc-store-contract-turn-in-note", ("item", ResolveProtoName(c.TurnInItem)));
+    }
+
+    private static bool IsHuntBodyTurnIn(ContractClientData c)
+    {
+        return ContractExecutionKinds.ToObjectiveType(c.ExecutionKind) == ContractObjectiveType.Hunt &&
+               c.HuntCompletionMode == NcHuntCompletionMode.BodyTurnIn &&
+               !string.IsNullOrWhiteSpace(c.TurnInItem);
     }
 
     private static bool HasDistinctTurnInItem(ContractClientData c)

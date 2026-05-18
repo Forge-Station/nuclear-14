@@ -31,6 +31,8 @@ public sealed class ContractClientData
     public bool IsRetrievalRoute;
     public NcRetrievalClaimMode RetrievalClaimMode;
     public bool RetrievalProofIsBearer;
+    public NcHuntCompletionMode HuntCompletionMode = NcHuntCompletionMode.TrophyTurnIn;
+    public NcGhostRoleCompletionMode GhostRoleCompletionMode = NcGhostRoleCompletionMode.DeadBodyTurnIn;
     public List<ContractTargetClientData> Targets = new();
 
     public ContractClientData() { }
@@ -57,6 +59,8 @@ public sealed class ContractClientData
         bool isRetrievalRoute = false,
         NcRetrievalClaimMode retrievalClaimMode = NcRetrievalClaimMode.StoreCargo,
         bool retrievalProofIsBearer = false,
+        NcHuntCompletionMode huntCompletionMode = NcHuntCompletionMode.TrophyTurnIn,
+        NcGhostRoleCompletionMode ghostRoleCompletionMode = NcGhostRoleCompletionMode.DeadBodyTurnIn,
         string offerPoolId = "",
         string offerPoolName = "",
         int offerPoolOrder = int.MaxValue,
@@ -87,6 +91,8 @@ public sealed class ContractClientData
         IsRetrievalRoute = isRetrievalRoute;
         RetrievalClaimMode = retrievalClaimMode;
         RetrievalProofIsBearer = retrievalProofIsBearer;
+        HuntCompletionMode = huntCompletionMode;
+        GhostRoleCompletionMode = ghostRoleCompletionMode;
     }
 }
 
@@ -134,6 +140,8 @@ public static class ContractFingerprint
             h = MixBool(h, contract.IsRetrievalRoute);
             h = MixInt(h, (int) contract.RetrievalClaimMode);
             h = MixBool(h, contract.RetrievalProofIsBearer);
+            h = MixInt(h, (int) contract.HuntCompletionMode);
+            h = MixInt(h, (int) contract.GhostRoleCompletionMode);
             h = MixBool(h, contract.Repeatable);
             h = MixBool(h, contract.Taken);
             h = MixBool(h, contract.SupportsPinpointer);
@@ -160,9 +168,11 @@ public static class ContractFingerprint
             h = MixInt(h, runtime.Stage);
             h = MixInt(h, runtime.StageGoal);
             h = MixInt(h, runtime.AcceptTimeoutRemainingSeconds);
+            h = MixInt(h, runtime.GhostRoleSurvivalRemainingSeconds);
             h = MixBool(h, runtime.GhostRolePendingAcceptance);
             h = MixBool(h, runtime.Failed);
             h = MixString(h, runtime.FailureReason);
+            h = MixString(h, runtime.StatusHint);
             return h;
         }
     }

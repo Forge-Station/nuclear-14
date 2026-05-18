@@ -1,5 +1,8 @@
-﻿using Robust.Shared.Serialization;
+using Robust.Shared.Serialization;
 using Content.Shared.Customization.Systems;
+using Content.Shared.Humanoid;
+using Robust.Shared.Enums;
+using Robust.Shared.Maths;
 
 namespace Content.Shared._NC.Trade;
 
@@ -20,7 +23,18 @@ public sealed class ContractObjectiveConfigData
     public string GhostRoleDescription { get; set; } = string.Empty;
     public string GhostRoleRules { get; set; } = string.Empty;
     public List<CharacterRequirement> GhostRoleRequirements { get; set; } = new();
+    public string GhostRoleCharacterName { get; set; } = string.Empty;
+    public Sex? GhostRoleCharacterSex;
+    public Gender? GhostRoleCharacterGender;
+    public int? GhostRoleCharacterAge;
+    public string GhostRoleCharacterHair { get; set; } = string.Empty;
+    public Color? GhostRoleCharacterHairColor;
+    public List<string> GhostRolePerks { get; set; } = new();
     public NcGhostRoleCompletionMode GhostRoleCompletionMode = NcGhostRoleCompletionMode.DeadBodyTurnIn;
+    public int GhostRoleSurvivalDurationSeconds;
+    public string GhostRoleSurvivalBriefing { get; set; } = string.Empty;
+    public string GhostRoleSurvivalObjectiveTitle { get; set; } = string.Empty;
+    public string GhostRoleSurvivalObjectiveDescription { get; set; } = string.Empty;
     public bool PreserveTargetOnComplete;
     public bool AllowStoreWorldTurnIn;
 

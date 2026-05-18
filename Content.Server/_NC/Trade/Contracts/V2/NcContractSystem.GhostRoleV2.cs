@@ -1,3 +1,4 @@
+using System.Linq;
 using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
 
@@ -29,7 +30,18 @@ public sealed partial class NcContractSystem : EntitySystem
             GhostRoleDescription = role.Description,
             GhostRoleRules = role.Rules,
             GhostRoleRequirements = new(role.Requirements),
+            GhostRoleCharacterName = role.Character.Name,
+            GhostRoleCharacterSex = role.Character.Sex,
+            GhostRoleCharacterGender = role.Character.Gender,
+            GhostRoleCharacterAge = role.Character.Age,
+            GhostRoleCharacterHair = role.Character.Hair,
+            GhostRoleCharacterHairColor = role.Character.HairColor,
+            GhostRolePerks = role.Perks.Select(p => p.Id).ToList(),
             GhostRoleCompletionMode = proto.Completion.Mode,
+            GhostRoleSurvivalDurationSeconds = proto.Survival.DurationSeconds,
+            GhostRoleSurvivalBriefing = proto.Survival.Briefing,
+            GhostRoleSurvivalObjectiveTitle = proto.Survival.ObjectiveTitle,
+            GhostRoleSurvivalObjectiveDescription = proto.Survival.ObjectiveDescription,
             AcceptTimeoutSeconds = proto.Spawn.AcceptTimeoutSeconds,
             SpawnPoint = CloneContractPointSelector(proto.Spawn.Point),
             GivePinpointer = true

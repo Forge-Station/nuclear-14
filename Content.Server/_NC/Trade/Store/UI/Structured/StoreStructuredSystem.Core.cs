@@ -77,6 +77,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         SubscribeLocalEvent<NcStoreComponent, BoundUIClosedEvent>(OnUiClosed);
         SubscribeLocalEvent<NcStoreComponent, RequestUiRefreshMessage>(OnUiRefreshRequest);
         SubscribeLocalEvent<NcStoreComponent, StoreSetVisibleListingsBoundUiMessage>(OnSetVisibleListings);
+        SubscribeLocalEvent<NcStoreComponent, NcContractsChangedEvent>(OnContractsChanged);
         SubscribeLocalEvent<AccessReaderComponent, AccessReaderConfigurationChangedEvent>(OnAccessReaderChanged);
         SubscribeLocalEvent<NcStoreComponent, ComponentShutdown>(OnStoreShutdown);
         SubscribeLocalEvent<ContainerManagerComponent, EntInsertedIntoContainerMessage>(OnUserEntInserted);
@@ -143,6 +144,11 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     {
         if (_storesByWatchedRoot.ContainsKey(uid))
             RefreshStoresAffectedBy(uid);
+    }
+
+    private void OnContractsChanged(EntityUid uid, NcStoreComponent comp, ref NcContractsChangedEvent args)
+    {
+        MarkDirty(uid);
     }
 
     private void OnStorageClose(EntityUid uid, EntityStorageComponent comp, ref StorageAfterCloseEvent args)
@@ -867,4 +873,3 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     }
 
 }
-

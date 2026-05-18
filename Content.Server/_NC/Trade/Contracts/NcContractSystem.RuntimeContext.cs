@@ -12,7 +12,9 @@ public sealed partial class NcContractSystem : EntitySystem
             : GetDefaultObjectiveStageGoal(executionKind);
         runtime.Stage = Math.Clamp(runtime.Stage, 0, runtime.StageGoal);
         runtime.AcceptTimeoutRemainingSeconds = Math.Max(0, runtime.AcceptTimeoutRemainingSeconds);
+        runtime.GhostRoleSurvivalRemainingSeconds = Math.Max(0, runtime.GhostRoleSurvivalRemainingSeconds);
         runtime.FailureReason ??= string.Empty;
+        runtime.StatusHint ??= string.Empty;
     }
 
     private static void NormalizeObjectiveConfig(ContractObjectiveConfigData config)
@@ -31,6 +33,14 @@ public sealed partial class NcContractSystem : EntitySystem
         config.GhostRoleDescription ??= string.Empty;
         config.GhostRoleRules ??= string.Empty;
         config.GhostRoleRequirements ??= new List<CharacterRequirement>();
+        config.GhostRoleCharacterName ??= string.Empty;
+        config.GhostRoleCharacterHair ??= string.Empty;
+        config.GhostRolePerks ??= new List<string>();
+        if (config.GhostRoleSurvivalDurationSeconds <= 0)
+            config.GhostRoleSurvivalDurationSeconds = NcGhostRoleSurvivalData.DefaultDurationSeconds;
+        config.GhostRoleSurvivalBriefing ??= string.Empty;
+        config.GhostRoleSurvivalObjectiveTitle ??= string.Empty;
+        config.GhostRoleSurvivalObjectiveDescription ??= string.Empty;
         config.GivePinpointer = config.GivePinpointer;
         config.PinpointerPrototype = ResolvePinpointerPrototypeId(config.PinpointerPrototype);
         config.GuardPrototype ??= string.Empty;

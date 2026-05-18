@@ -140,6 +140,13 @@ public sealed partial class NcContractSystem : EntitySystem
                 $"Objective progress {contract.Progress}/{contract.Required} for '{contractId}'.");
         }
 
+        if (IsGhostRoleSelfClaim(store, contractId, user, contract))
+        {
+            return ClaimAttemptResult.Fail(
+                ClaimFailureReason.InvalidTarget,
+                $"Contract ghost role target cannot claim its own contract '{contractId}'.");
+        }
+
         if (!TryValidateContractRewards(user, contract.Rewards, out var rewardFail))
             return rewardFail;
 
@@ -149,6 +156,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail))
             return proofFail;
 
+        TryMarkGhostRoleRoundEndClaimed(store, contractId, contract);
         GiveContractRewards(user, contract.Rewards);
         FinalizeClaim(store, comp, contractId, contract.Repeatable);
 

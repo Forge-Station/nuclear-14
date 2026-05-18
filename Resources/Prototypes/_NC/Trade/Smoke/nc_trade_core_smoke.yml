@@ -367,20 +367,51 @@
 - type: ncGhostRolePreset
   id: NcTradeSmokeGhostRoleRaiderPreset
   entityPrototype: N14MobHumanRaider
-  name: "Контрактная роль: рейдер"
-  description: "Тестовая гост-роль для проверки контрактной доски."
-  rules: "Примите роль, создайте угрозу и завершите контрактную сцену."
+  name: "Рейдер пустоши"
+  description: "Вы — рейдер, на которого открыт контракт. Сорвите охоту и постарайтесь выжить."
+  rules: "Действуйте как рейдер пустоши, не нарушайте правила сервера и помните: за вами могут прийти."
+  character:
+    name: "Норман Канделл"
+    sex: Male
+    gender: Male
+    age: 34
+  perks:
+  - NcTradeSmokePerkRaiderKnifeFighter
 
 - type: ncGhostRolePreset
   id: NcTradeSmokeGhostRoleGhoulPreset
   entityPrototype: N14MobGhoul
-  name: "Контрактная роль: беглый гуль"
-  description: "Тестовая гост-роль с другим playable prototype."
-  rules: "Примите роль, не умирайте раньше времени и дайте проверить живую сдачу."
+  name: "Беглый гуль"
+  description: "Вы — гуль, которого хотят доставить торговцу. Продержитесь до конца таймера."
+  rules: "Оставайтесь в роли, не сдавайтесь добровольно и постарайтесь сорвать контракт охотников."
+  character:
+    name: "Старый Рой"
+    sex: Male
+    gender: Male
+    age: 72
+  perks:
+  - NcTradeSmokePerkFastGhoul
+
+- type: ncGhostRolePerk
+  id: NcTradeSmokePerkRaiderKnifeFighter
+  name: "Ножевой боец"
+  description: "Тестовый перк: рейдер быстрее двигается и сильнее бьёт ножом."
+  walkSpeedMultiplier: 1.08
+  sprintSpeedMultiplier: 1.12
+  meleeDamageMultiplier: 1.25
+  weaponPrototypes:
+  - N14CombatKnife
+
+- type: ncGhostRolePerk
+  id: NcTradeSmokePerkFastGhoul
+  name: "Пустошный рывок"
+  description: "Тестовый перк: гуль быстрее бегает, но без бонуса к урону."
+  walkSpeedMultiplier: 1.12
+  sprintSpeedMultiplier: 1.20
 
 - type: ncGhostRoleContract
   id: NcTradeSmokeGhostRoleRaiderAlive
-  name: "Smoke ghost-role: захват рейдера"
+  name: "Захват рейдера"
   description: "Дождитесь принятия роли, затем доставьте цель живой, полностью здоровой, в наручниках и без гниения."
   role: NcTradeSmokeGhostRoleRaiderPreset
   completion:
@@ -397,7 +428,7 @@
 
 - type: ncGhostRoleContract
   id: NcTradeSmokeGhostRoleRaiderDead
-  name: "Smoke ghost-role: тело рейдера"
+  name: "Тело рейдера"
   description: "Дождитесь принятия роли, затем доставьте тело цели к торговцу. Сгнившее тело должно провалить контракт."
   role: NcTradeSmokeGhostRoleRaiderPreset
   completion:
@@ -414,8 +445,8 @@
 
 - type: ncGhostRoleContract
   id: NcTradeSmokeGhostRoleGhoulAlive
-  name: "Smoke ghost-role: захват гуля"
-  description: "Дождитесь принятия роли гуля, затем приведите цель живой, полностью здоровой и в наручниках к торговцу."
+  name: "Захват гуля"
+  description: "Дождитесь принятия роли гуля, затем приведите цель живой, без обычных повреждений и в наручниках к торговцу. Если гуль переживёт таймер, контракт сорвётся."
   role: NcTradeSmokeGhostRoleGhoulPreset
   completion:
     mode: AliveCuffedTurnIn
@@ -431,7 +462,7 @@
 
 - type: ncGhostRoleContract
   id: NcTradeSmokeGhostRoleRaiderShortTimeout
-  name: "Smoke ghost-role: короткий таймер"
+  name: "Срочный захват рейдера"
   description: "Проверяет провал, если роль никто не взял за короткое время."
   role: NcTradeSmokeGhostRoleRaiderPreset
   completion:

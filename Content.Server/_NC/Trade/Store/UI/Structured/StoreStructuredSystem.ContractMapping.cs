@@ -31,6 +31,8 @@ public sealed partial class StoreStructuredSystem
             IsRetrievalRouteContract(contract),
             contract.Config.RetrievalClaimMode,
             IsRetrievalBearerProofContract(contract),
+            contract.Config.HuntV2CompletionMode,
+            contract.Config.GhostRoleCompletionMode,
             contract.OfferPoolId,
             contract.OfferPoolName,
             contract.OfferPoolOrder,
@@ -139,9 +141,11 @@ public sealed partial class StoreStructuredSystem
             Stage = runtime.Stage,
             StageGoal = runtime.StageGoal,
             AcceptTimeoutRemainingSeconds = runtime.AcceptTimeoutRemainingSeconds,
+            GhostRoleSurvivalRemainingSeconds = runtime.GhostRoleSurvivalRemainingSeconds,
             GhostRolePendingAcceptance = runtime.GhostRolePendingAcceptance,
             Failed = runtime.Failed,
-            FailureReason = runtime.FailureReason
+            FailureReason = runtime.FailureReason,
+            StatusHint = runtime.StatusHint
         };
     }
 }

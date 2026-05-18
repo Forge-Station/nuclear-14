@@ -1,4 +1,5 @@
 using Content.Shared._NC.Trade;
+using Content.Shared.Mind;
 using Robust.Shared.Map;
 
 namespace Content.Server._NC.Trade;
@@ -125,8 +126,10 @@ public sealed partial class NcContractSystem : EntitySystem
         var runtime = contract.Runtime;
         runtime.GhostRolePendingAcceptance = false;
         runtime.AcceptTimeoutRemainingSeconds = 0;
+        runtime.GhostRoleSurvivalRemainingSeconds = 0;
         runtime.Failed = false;
         runtime.FailureReason = string.Empty;
+        runtime.StatusHint = string.Empty;
     }
 
     private static void ResetObjectiveState(ContractServerData contract)
@@ -167,8 +170,10 @@ public sealed partial class NcContractSystem : EntitySystem
         var runtime = contract.Runtime;
         runtime.Failed = true;
         runtime.FailureReason = failureReason;
+        runtime.StatusHint = failureReason;
         runtime.GhostRolePendingAcceptance = false;
         runtime.AcceptTimeoutRemainingSeconds = 0;
+        runtime.GhostRoleSurvivalRemainingSeconds = 0;
         SyncContractFlowStatus(contract);
     }
 
@@ -200,6 +205,7 @@ public sealed partial class NcContractSystem : EntitySystem
         NcStoreComponent comp,
         ContractServerData contract,
         string failureReason,
+        bool deleteTrackedEntities = true,
         bool deleteGuards = false)
     {
         MarkObjectiveFailed(contract, failureReason);
@@ -207,14 +213,21 @@ public sealed partial class NcContractSystem : EntitySystem
         if (_objectiveRuntimeByContract.TryGetValue(key, out var state))
             CleanupObjectivePinpointers(key, state);
 
-        FailObjectiveContract(key, comp, deleteGuards);
+        FailObjectiveContract(key, comp, deleteTrackedEntities, deleteGuards);
     }
 
-    private void FailObjectiveContract((EntityUid Store, string ContractId) key, NcStoreComponent comp, bool deleteGuards)
+    private void FailObjectiveContract(
+        (EntityUid Store, string ContractId) key,
+        NcStoreComponent comp,
+        bool deleteTrackedEntities,
+        bool deleteGuards)
     {
-        CleanupObjectiveRuntime(key.Store, key.ContractId, deleteTrackedEntities: true, deleteGuards: deleteGuards);
+        CleanupObjectiveRuntime(key.Store, key.ContractId, deleteTrackedEntities, deleteGuards);
         comp.Contracts.Remove(key.ContractId);
         RefillContractsForStore(key.Store, comp, key.ContractId);
+
+        var ev = new NcContractsChangedEvent();
+        RaiseLocalEvent(key.Store, ref ev);
     }
 
     private void CleanupObjectiveRuntime(
@@ -246,6 +259,7 @@ public sealed partial class NcContractSystem : EntitySystem
         CleanupHuntV2SpawnedTargets(state, deleteTrackedEntities);
 
         CleanupObjectivePinpointers(key, state);
+        CleanupGhostRoleSurvivalObjective(state);
 
         if (state.GuardEntities.Count > 0)
         {
@@ -290,8 +304,40 @@ public sealed partial class NcContractSystem : EntitySystem
         state.RetrievalLastAcceptedCargoCoordinates = null;
         state.RetrievalRouteDeliveryCompleted = false;
         state.HuntTargetWasKilled = false;
+        state.GhostRoleSurvivalStart = null;
+        state.GhostRoleSurvivalDeadline = null;
+        state.GhostRoleSurvivalMind = null;
+        state.GhostRoleSurvivalObjective = null;
+        state.GhostRoleSurvivalSucceeded = false;
         state.LastKnownTargetCoordinates = null;
         _objectiveRuntimeByContract.Remove(key);
+    }
+
+    private void CleanupGhostRoleSurvivalObjective(ObjectiveRuntimeState state)
+    {
+        if (state.GhostRoleSurvivalObjective is not { } objective || objective == EntityUid.Invalid)
+            return;
+
+        if (state.GhostRoleSurvivalSucceeded)
+        {
+            if (!TerminatingOrDeleted(objective) &&
+                TryComp(objective, out NcContractGhostRoleSurvivalObjectiveComponent? survival))
+            {
+                survival.Finished = true;
+                survival.Succeeded = true;
+            }
+
+            return;
+        }
+
+        if (state.GhostRoleSurvivalMind is { } mindId &&
+            TryComp(mindId, out MindComponent? mind))
+        {
+            mind.Objectives.Remove(objective);
+        }
+
+        if (!TerminatingOrDeleted(objective))
+            Del(objective);
     }
 
     private void CleanupRetrievalSpawnedEntities(ObjectiveRuntimeState state, bool deleteSpawnedEntities)
@@ -391,6 +437,12 @@ public sealed partial class NcContractSystem : EntitySystem
         public bool RetrievalRouteDeliveryCompleted;
         public EntityCoordinates? RetrievalDeliveryCoordinates;
         public TimeSpan? GhostRoleAcceptDeadline;
+        public TimeSpan? GhostRoleSurvivalStart;
+        public TimeSpan? GhostRoleSurvivalDeadline;
+        public EntityUid? GhostRoleSurvivalMind;
+        public EntityUid? GhostRoleSurvivalObjective;
+        public long GhostRoleRoundEndId;
+        public bool GhostRoleSurvivalSucceeded;
         public bool GhostRoleTaken;
         public bool HuntTargetWasKilled;
         public bool HuntV2Active;

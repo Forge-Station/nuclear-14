@@ -1,12 +1,17 @@
 using Content.Server.Atmos.Rotting;
 using Content.Server.Cuffs;
 using Content.Server.Ghost.Roles.Components;
+using Content.Server.Humanoid;
 using Content.Server.Mind.Commands;
+using Content.Server.Roles;
 using Content.Shared._NC.Trade;
 using Content.Shared.Cuffs.Components;
 using Content.Shared.Customization.Systems;
 using Content.Shared.Damage;
 using Content.Shared.FixedPoint;
+using Content.Shared.Humanoid;
+using Content.Shared.Humanoid.Markings;
+using Content.Shared.Mind;
 using Content.Shared.Mind.Components;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Mobs;
@@ -22,6 +27,7 @@ public sealed partial class NcContractSystem : EntitySystem
 {
     [Dependency] private readonly RottingSystem _contractGhostRoleRotting = default!;
     [Dependency] private readonly CuffableSystem _contractGhostRoleCuffs = default!;
+    [Dependency] private readonly HumanoidAppearanceSystem _contractGhostRoleHumanoid = default!;
 
     private bool TryInitializeGhostRoleObjective(
         EntityUid store,
@@ -146,12 +152,17 @@ public sealed partial class NcContractSystem : EntitySystem
         state.GhostRoleAcceptDeadline = config.AcceptTimeoutSeconds > 0
             ? _timing.CurTime + TimeSpan.FromSeconds(config.AcceptTimeoutSeconds)
             : null;
+        RegisterGhostRoleRoundEndRecord(key, contract, state);
         _objectiveRuntimeByTarget[spawner] = key;
 
         runtime.GhostRolePendingAcceptance = state.GhostRoleAcceptDeadline != null;
         runtime.AcceptTimeoutRemainingSeconds = runtime.GhostRolePendingAcceptance
             ? Math.Max(0, config.AcceptTimeoutSeconds)
             : 0;
+        runtime.GhostRoleSurvivalRemainingSeconds = 0;
+        runtime.StatusHint = runtime.GhostRolePendingAcceptance
+            ? Loc.GetString("nc-store-contract-ghost-role-hint-waiting")
+            : string.Empty;
     }
 
     private void OnContractGhostRoleTakeover(
@@ -192,6 +203,15 @@ public sealed partial class NcContractSystem : EntitySystem
 
         EnsureComp<MindContainerComponent>(mob);
         _ghostRoles.GhostRoleInternalCreateMindAndTransfer(args.Player, uid, mob, ghostRole);
+        TryAttachGhostRoleCharacterInfo(mob);
+        if (_objectiveRuntimeByTarget.TryGetValue(mob, out var activeKey) &&
+            _objectiveRuntimeByContract.TryGetValue(activeKey, out var state) &&
+            TryGetObjectiveContract(activeKey, out _, out var activeContract))
+        {
+            ApplyContractGhostRoleCharacter(mob, activeContract.Config);
+            ApplyContractGhostRolePerks(mob, activeContract.Config);
+            MarkGhostRoleRoundEndTaken(state, activeContract, mob, args.Player.Name);
+        }
 
         comp.Claimed = true;
         _ghostRoles.UnregisterGhostRole((uid, ghostRole));
@@ -227,12 +247,337 @@ public sealed partial class NcContractSystem : EntitySystem
         state.TargetEntity = target;
         state.GhostRoleTaken = true;
         state.GhostRoleAcceptDeadline = null;
+        if (contract.Config.GhostRoleSurvivalDurationSeconds > 0)
+        {
+            state.GhostRoleSurvivalStart = _timing.CurTime;
+            state.GhostRoleSurvivalDeadline =
+                _timing.CurTime + TimeSpan.FromSeconds(contract.Config.GhostRoleSurvivalDurationSeconds);
+            state.GhostRoleSurvivalSucceeded = false;
+        }
+
         var runtime = contract.Runtime;
         runtime.GhostRolePendingAcceptance = false;
         runtime.AcceptTimeoutRemainingSeconds = 0;
+        SyncGhostRoleSurvivalRemaining(state, runtime);
+        runtime.StatusHint = Loc.GetString("nc-store-contract-ghost-role-hint-deliver");
         _objectiveRuntimeByTarget[target] = key;
 
         RetargetObjectivePinpointers(key, state, target);
+        return true;
+    }
+
+    private void ApplyContractGhostRoleCharacter(EntityUid mob, ContractObjectiveConfigData config)
+    {
+        if (!string.IsNullOrWhiteSpace(config.GhostRoleCharacterName))
+            _contractMeta.SetEntityName(mob, config.GhostRoleCharacterName);
+
+        if (!TryComp(mob, out HumanoidAppearanceComponent? humanoid))
+            return;
+
+        var dirty = false;
+
+        if (config.GhostRoleCharacterSex is { } sex)
+            _contractGhostRoleHumanoid.SetSex(mob, sex, false, humanoid);
+
+        if (config.GhostRoleCharacterGender is { } gender)
+        {
+            humanoid.Gender = gender;
+            dirty = true;
+        }
+
+        if (config.GhostRoleCharacterAge is { } age)
+        {
+            humanoid.Age = Math.Max(0, age);
+            dirty = true;
+        }
+
+        if (!string.IsNullOrWhiteSpace(config.GhostRoleCharacterHair))
+        {
+            humanoid.MarkingSet.RemoveCategory(MarkingCategories.Hair);
+            _contractGhostRoleHumanoid.AddMarking(
+                mob,
+                config.GhostRoleCharacterHair,
+                config.GhostRoleCharacterHairColor,
+                false,
+                true,
+                humanoid);
+            dirty = true;
+        }
+
+        if (dirty)
+            Dirty(mob, humanoid);
+    }
+
+    private void ApplyContractGhostRolePerks(EntityUid mob, ContractObjectiveConfigData config)
+    {
+        if (config.GhostRolePerks.Count == 0)
+            return;
+
+        var perks = EnsureComp<NcContractGhostRolePerksComponent>(mob);
+        perks.PerkIds.Clear();
+        perks.WalkSpeedMultiplier = 1f;
+        perks.SprintSpeedMultiplier = 1f;
+        perks.IncomingDamageMultiplier = 1f;
+        perks.MeleeDamageMultiplier = 1f;
+        perks.ProjectileDamageMultiplier = 1f;
+        perks.WeaponPrototypes.Clear();
+        perks.ArmorItemPrototypes.Clear();
+        perks.ArmorIncomingDamageMultiplier = 1f;
+        perks.IncomingFlatReductions.Clear();
+
+        foreach (var perkId in config.GhostRolePerks)
+        {
+            if (!_prototypes.TryIndex<NcGhostRolePerkPrototype>(perkId, out var perk))
+                continue;
+
+            perks.PerkIds.Add(perk.ID);
+            perks.WalkSpeedMultiplier *= perk.WalkSpeedMultiplier;
+            perks.SprintSpeedMultiplier *= perk.SprintSpeedMultiplier;
+            perks.IncomingDamageMultiplier *= perk.IncomingDamageMultiplier;
+            perks.MeleeDamageMultiplier *= perk.MeleeDamageMultiplier;
+            perks.ProjectileDamageMultiplier *= perk.ProjectileDamageMultiplier;
+            perks.ArmorIncomingDamageMultiplier *= perk.ArmorIncomingDamageMultiplier;
+            AddUnique(perks.WeaponPrototypes, perk.WeaponPrototypes);
+            AddUnique(perks.ArmorItemPrototypes, perk.ArmorItemPrototypes);
+            AddFlatReductions(perks.IncomingFlatReductions, perk.IncomingFlatReductions);
+        }
+
+        Dirty(mob, perks);
+    }
+
+    private static void AddUnique(List<string> target, IEnumerable<string> source)
+    {
+        foreach (var value in source)
+        {
+            if (!string.IsNullOrWhiteSpace(value) && !target.Contains(value))
+                target.Add(value);
+        }
+    }
+
+    private static void AddFlatReductions(
+        Dictionary<string, float> target,
+        IReadOnlyDictionary<string, float> source)
+    {
+        foreach (var (damageType, reduction) in source)
+        {
+            if (string.IsNullOrWhiteSpace(damageType) || reduction <= 0f)
+                continue;
+
+            target[damageType] = target.TryGetValue(damageType, out var existing)
+                ? existing + reduction
+                : reduction;
+        }
+    }
+
+    private void TryAttachGhostRoleCharacterInfo(EntityUid mob)
+    {
+        if (!_objectiveRuntimeByTarget.TryGetValue(mob, out var key) ||
+            !_objectiveRuntimeByContract.TryGetValue(key, out var state) ||
+            !TryGetObjectiveContract(key, out _, out var contract) ||
+            !_contractMind.TryGetMind(mob, out var mindId, out var mind))
+        {
+            return;
+        }
+
+        AddGhostRoleBriefing(mindId, contract);
+        TryAddGhostRoleSurvivalObjective(key, state, contract, mindId, mind);
+    }
+
+    private void AddGhostRoleBriefing(EntityUid mindId, ContractServerData contract)
+    {
+        var briefing = BuildGhostRoleBriefing(contract);
+        if (string.IsNullOrWhiteSpace(briefing))
+            return;
+
+        var briefingComp = EnsureComp<RoleBriefingComponent>(mindId);
+        if (string.IsNullOrWhiteSpace(briefingComp.Briefing))
+        {
+            briefingComp.Briefing = briefing;
+            return;
+        }
+
+        if (!briefingComp.Briefing.Contains(briefing, StringComparison.Ordinal))
+            briefingComp.Briefing += "\n" + briefing;
+    }
+
+    private string BuildGhostRoleBriefing(ContractServerData contract)
+    {
+        var config = contract.Config;
+        var description = string.IsNullOrWhiteSpace(config.GhostRoleDescription)
+            ? contract.Description
+            : ResolveGhostRoleLocaleText(config.GhostRoleDescription);
+        var rules = string.IsNullOrWhiteSpace(config.GhostRoleRules)
+            ? string.Empty
+            : ResolveGhostRoleLocaleText(config.GhostRoleRules);
+        if (!string.IsNullOrWhiteSpace(rules))
+            description = string.IsNullOrWhiteSpace(description)
+                ? rules
+                : $"{description}\n{rules}";
+
+        var survival = config.GhostRoleSurvivalDurationSeconds > 0
+            ? ResolveGhostRoleSurvivalBriefing(config)
+            : string.Empty;
+
+        if (string.IsNullOrWhiteSpace(description))
+            return survival;
+
+        if (string.IsNullOrWhiteSpace(survival))
+            return Loc.GetString("nc-store-contract-ghost-role-character-briefing", ("contract", contract.Name), ("description", description));
+
+        return Loc.GetString(
+            "nc-store-contract-ghost-role-character-briefing-survival",
+            ("contract", contract.Name),
+            ("description", description),
+            ("survival", survival));
+    }
+
+    private string ResolveGhostRoleSurvivalBriefing(ContractObjectiveConfigData config)
+    {
+        if (!string.IsNullOrWhiteSpace(config.GhostRoleSurvivalBriefing))
+            return ResolveGhostRoleLocaleText(config.GhostRoleSurvivalBriefing);
+
+        return Loc.GetString(
+            "nc-store-contract-ghost-role-survival-briefing",
+            ("time", FormatGhostRoleDurationText(config.GhostRoleSurvivalDurationSeconds)));
+    }
+
+    private void TryAddGhostRoleSurvivalObjective(
+        (EntityUid Store, string ContractId) key,
+        ObjectiveRuntimeState state,
+        ContractServerData contract,
+        EntityUid mindId,
+        MindComponent mind)
+    {
+        var config = contract.Config;
+        if (config.GhostRoleSurvivalDurationSeconds <= 0 ||
+            state.GhostRoleSurvivalObjective is { } existing && existing != EntityUid.Invalid)
+        {
+            return;
+        }
+
+        var start = state.GhostRoleSurvivalStart ?? _timing.CurTime;
+        var deadline = state.GhostRoleSurvivalDeadline ??
+                       start + TimeSpan.FromSeconds(config.GhostRoleSurvivalDurationSeconds);
+
+        var objective = Spawn("NcContractGhostRoleSurvivalObjective", MapCoordinates.Nullspace);
+        _contractMeta.SetEntityName(objective, ResolveGhostRoleSurvivalObjectiveTitle(contract));
+        _contractMeta.SetEntityDescription(objective, ResolveGhostRoleSurvivalObjectiveDescription(contract));
+
+        var survival = EnsureComp<NcContractGhostRoleSurvivalObjectiveComponent>(objective);
+        survival.Store = key.Store;
+        survival.ContractId = key.ContractId;
+        survival.StartedAt = start;
+        survival.Deadline = deadline;
+        survival.Finished = false;
+        survival.Succeeded = false;
+
+        _contractMind.AddObjective(mindId, mind, objective);
+        state.GhostRoleSurvivalMind = mindId;
+        state.GhostRoleSurvivalObjective = objective;
+    }
+
+    private string ResolveGhostRoleSurvivalObjectiveTitle(ContractServerData contract)
+    {
+        if (!string.IsNullOrWhiteSpace(contract.Config.GhostRoleSurvivalObjectiveTitle))
+            return ResolveGhostRoleLocaleText(contract.Config.GhostRoleSurvivalObjectiveTitle);
+
+        return Loc.GetString(
+            "nc-store-contract-ghost-role-survival-objective-title",
+            ("contract", contract.Name));
+    }
+
+    private string ResolveGhostRoleSurvivalObjectiveDescription(ContractServerData contract)
+    {
+        if (!string.IsNullOrWhiteSpace(contract.Config.GhostRoleSurvivalObjectiveDescription))
+            return ResolveGhostRoleLocaleText(contract.Config.GhostRoleSurvivalObjectiveDescription);
+
+        return Loc.GetString(
+            "nc-store-contract-ghost-role-survival-objective-description",
+            ("time", FormatGhostRoleDurationText(contract.Config.GhostRoleSurvivalDurationSeconds)));
+    }
+
+    private string ResolveGhostRoleLocaleText(string text)
+    {
+        return Loc.TryGetString(text, out var localized)
+            ? localized
+            : text;
+    }
+
+    private static string FormatGhostRoleDurationText(int totalSeconds)
+    {
+        var seconds = Math.Max(1, totalSeconds);
+        var span = TimeSpan.FromSeconds(seconds);
+        var parts = new List<string>(2);
+
+        if (span.Hours + (span.Days * 24) > 0)
+        {
+            var hours = span.Hours + (span.Days * 24);
+            parts.Add($"{hours} {PluralRu(hours, "час", "часа", "часов")}");
+        }
+
+        if (span.Minutes > 0 && parts.Count < 2)
+            parts.Add($"{span.Minutes} {PluralRu(span.Minutes, "минуту", "минуты", "минут")}");
+
+        if (parts.Count == 0)
+            parts.Add($"{span.Seconds} {PluralRu(span.Seconds, "секунду", "секунды", "секунд")}");
+
+        return string.Join(" ", parts);
+    }
+
+    private static string PluralRu(int value, string one, string few, string many)
+    {
+        var n = Math.Abs(value);
+        var mod100 = n % 100;
+        if (mod100 is >= 11 and <= 14)
+            return many;
+
+        return (n % 10) switch
+        {
+            1 => one,
+            >= 2 and <= 4 => few,
+            _ => many
+        };
+    }
+
+    private bool TryCompleteGhostRoleSurvivalObjective(
+        (EntityUid Store, string ContractId) key,
+        ObjectiveRuntimeState state,
+        NcStoreComponent comp,
+        ContractServerData contract)
+    {
+        if (contract.Config.GhostRoleSurvivalDurationSeconds <= 0 ||
+            state.GhostRoleSurvivalSucceeded ||
+            state.GhostRoleSurvivalDeadline is not { } deadline ||
+            _timing.CurTime < deadline ||
+            state.TargetEntity is not { } target ||
+            target == EntityUid.Invalid ||
+            TerminatingOrDeleted(target) ||
+            _contractGhostRoleRotting.IsRotten(target) ||
+            !IsGhostRoleTargetAlive(target) ||
+            IsGhostRoleCompletionSatisfied(key.Store, target, contract))
+        {
+            return false;
+        }
+
+        state.GhostRoleSurvivalSucceeded = true;
+        MarkGhostRoleRoundEndOutcome(
+            state,
+            GhostRoleRoundEndOutcome.RoleSurvived,
+            Loc.GetString("nc-store-contract-ghost-role-survival-succeeded"));
+        if (state.GhostRoleSurvivalObjective is { } objective &&
+            !TerminatingOrDeleted(objective) &&
+            TryComp(objective, out NcContractGhostRoleSurvivalObjectiveComponent? survival))
+        {
+            survival.Finished = true;
+            survival.Succeeded = true;
+        }
+
+        FinalizeObjectiveFailure(
+            key,
+            comp,
+            contract,
+            Loc.GetString("nc-store-contract-ghost-role-survival-succeeded"),
+            deleteTrackedEntities: false);
         return true;
     }
 
@@ -252,6 +597,9 @@ public sealed partial class NcContractSystem : EntitySystem
                 {
                     continue;
                 }
+
+                if (TryCompleteGhostRoleSurvivalObjective(key, state, comp, contract))
+                    continue;
 
                 TryRetargetGhostRolePinpointersForOwners(key, state);
                 continue;
@@ -356,6 +704,10 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!contract.Taken || !contract.IsGhostRoleObjective || contract.Completed)
             return;
 
+        MarkGhostRoleRoundEndOutcome(
+            state,
+            GhostRoleRoundEndOutcome.NotAccepted,
+            Loc.GetString("nc-store-contract-ghost-role-timeout"));
         FinalizeObjectiveFailure(
             key,
             comp,
@@ -367,12 +719,20 @@ public sealed partial class NcContractSystem : EntitySystem
         (EntityUid Store, string ContractId) key,
         NcStoreComponent comp,
         ContractServerData contract
-    ) =>
+    )
+    {
+        if (_objectiveRuntimeByContract.TryGetValue(key, out var state))
+            MarkGhostRoleRoundEndOutcome(
+                state,
+                GhostRoleRoundEndOutcome.TargetLost,
+                Loc.GetString("nc-store-contract-ghost-role-target-lost"));
+
         FinalizeObjectiveFailure(
             key,
             comp,
             contract,
             Loc.GetString("nc-store-contract-ghost-role-target-lost"));
+    }
 
     public bool HasRealtimeContractState(NcStoreComponent comp)
     {
@@ -418,6 +778,8 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             runtime.GhostRolePendingAcceptance = false;
             runtime.AcceptTimeoutRemainingSeconds = 0;
+            runtime.GhostRoleSurvivalRemainingSeconds = 0;
+            runtime.StatusHint = string.Empty;
             return;
         }
 
@@ -427,15 +789,21 @@ public sealed partial class NcContractSystem : EntitySystem
             runtime.AcceptTimeoutRemainingSeconds = Math.Max(
                 0,
                 (int) Math.Ceiling((deadline - _timing.CurTime).TotalSeconds));
+            runtime.GhostRoleSurvivalRemainingSeconds = 0;
+            runtime.StatusHint = Loc.GetString("nc-store-contract-ghost-role-hint-waiting");
             runtime.Stage = 0;
             return;
         }
 
         runtime.GhostRolePendingAcceptance = false;
         runtime.AcceptTimeoutRemainingSeconds = 0;
+        SyncGhostRoleSurvivalRemaining(state, runtime);
 
         if (state.TargetEntity is not { } target || target == EntityUid.Invalid)
+        {
+            runtime.StatusHint = string.Empty;
             return;
+        }
 
         if (TerminatingOrDeleted(target))
         {
@@ -452,8 +820,66 @@ public sealed partial class NcContractSystem : EntitySystem
         runtime.Stage = state.GhostRoleTaken && IsGhostRoleCompletionSatisfied(store, target, contract)
             ? Math.Max(1, runtime.StageGoal)
             : 0;
+        runtime.StatusHint = BuildGhostRoleObjectiveStatusHint(store, target, contract);
 
         TryRetargetGhostRolePinpointersForOwners(key, state);
+    }
+
+    private void SyncGhostRoleSurvivalRemaining(ObjectiveRuntimeState state, ContractRuntimeContextData runtime)
+    {
+        runtime.GhostRoleSurvivalRemainingSeconds = 0;
+
+        if (!state.GhostRoleTaken ||
+            state.GhostRoleSurvivalSucceeded ||
+            state.GhostRoleSurvivalDeadline is not { } deadline)
+        {
+            return;
+        }
+
+        runtime.GhostRoleSurvivalRemainingSeconds = Math.Max(
+            0,
+            (int) Math.Ceiling((deadline - _timing.CurTime).TotalSeconds));
+    }
+
+    private string BuildGhostRoleObjectiveStatusHint(EntityUid store, EntityUid target, ContractServerData contract)
+    {
+        if (_contractGhostRoleRotting.IsRotten(target))
+            return Loc.GetString("nc-store-contract-ghost-role-target-rotten");
+
+        return contract.Config.GhostRoleCompletionMode switch
+        {
+            NcGhostRoleCompletionMode.AliveCuffedTurnIn => BuildAliveCuffedGhostRoleStatusHint(store, target),
+            NcGhostRoleCompletionMode.DeadBodyTurnIn => BuildDeadBodyGhostRoleStatusHint(store, target),
+            _ => Loc.GetString("nc-store-contract-ghost-role-hint-deliver")
+        };
+    }
+
+    private string BuildAliveCuffedGhostRoleStatusHint(EntityUid store, EntityUid target)
+    {
+        if (!IsGhostRoleTargetAlive(target))
+            return Loc.GetString("nc-store-contract-ghost-role-hint-alive-revive");
+
+        if (!IsGhostRoleTargetCuffed(target))
+            return Loc.GetString("nc-store-contract-ghost-role-hint-alive-cuff");
+
+        if (!IsGhostRoleTargetFullyHealed(target))
+            return Loc.GetString("nc-store-contract-ghost-role-hint-alive-heal");
+
+        if (!IsGhostRoleTargetAtStore(store, target))
+            return Loc.GetString("nc-store-contract-ghost-role-hint-deliver");
+
+        return Loc.GetString("nc-store-contract-ghost-role-hint-alive-ready");
+    }
+
+    private string BuildDeadBodyGhostRoleStatusHint(EntityUid store, EntityUid target)
+    {
+        if (!IsGhostRoleTargetDead(target))
+            return Loc.GetString("nc-store-contract-ghost-role-hint-dead-kill");
+
+        if (!IsGhostRoleTargetAtStore(store, target))
+            return Loc.GetString("nc-store-contract-ghost-role-hint-dead-deliver");
+
+        return Loc.GetString("nc-store-contract-ghost-role-hint-dead-ready");
     }
 
     private bool TryFailGhostRoleTargetIfInvalidOrRotten(
@@ -478,6 +904,10 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!_contractGhostRoleRotting.IsRotten(target))
             return false;
 
+        MarkGhostRoleRoundEndOutcome(
+            state,
+            GhostRoleRoundEndOutcome.TargetRotten,
+            Loc.GetString("nc-store-contract-ghost-role-target-rotten"));
         FinalizeObjectiveFailure(
             key,
             comp,
@@ -491,6 +921,29 @@ public sealed partial class NcContractSystem : EntitySystem
         return !TerminatingOrDeleted(target) &&
                !_contractGhostRoleRotting.IsRotten(target) &&
                IsGhostRoleCompletionSatisfied(store, target, contract);
+    }
+
+    private bool IsGhostRoleSelfClaim(
+        EntityUid store,
+        string contractId,
+        EntityUid user,
+        ContractServerData contract)
+    {
+        if (!contract.IsGhostRoleObjective ||
+            !_objectiveRuntimeByContract.TryGetValue((store, contractId), out var state) ||
+            !state.GhostRoleTaken ||
+            state.TargetEntity is not { } target ||
+            target == EntityUid.Invalid)
+        {
+            return false;
+        }
+
+        if (target == user)
+            return true;
+
+        return _contractMind.TryGetMind(target, out var targetMindId, out _) &&
+               _contractMind.TryGetMind(user, out var userMindId, out _) &&
+               targetMindId == userMindId;
     }
 
     private bool IsGhostRoleCompletionSatisfied(EntityUid store, EntityUid target, ContractServerData contract)
@@ -530,6 +983,23 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         return TryComp(target, out DamageableComponent? damageable) &&
                damageable.TotalDamage <= FixedPoint2.Zero;
+    }
+
+    private void OnObjectiveTrackedDamageChanged(EntityUid uid, DamageableComponent component, DamageChangedEvent args)
+    {
+        if (!_objectiveRuntimeByTarget.TryGetValue(uid, out var key))
+            return;
+
+        if (!TryGetObjectiveContract(key, out _, out var contract) ||
+            contract.ExecutionKind != ContractExecutionKind.GhostRoleObjective)
+        {
+            return;
+        }
+
+        UpdateObjectiveContractProgress(key.Store, key.ContractId, contract);
+
+        var ev = new NcContractsChangedEvent();
+        RaiseLocalEvent(key.Store, ref ev);
     }
 
     private bool IsGhostRoleTargetCarriedByUser(EntityUid target, EntityUid user)

@@ -213,7 +213,6 @@ public sealed partial class NcContractSystem : EntitySystem
             key,
             comp,
             contract,
-            Loc.GetString("nc-store-contract-repair-structure-lost"),
-            false);
+            Loc.GetString("nc-store-contract-repair-structure-lost"));
     }
 }

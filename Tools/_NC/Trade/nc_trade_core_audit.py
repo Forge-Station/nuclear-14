@@ -281,6 +281,43 @@ def parse_int(value: str) -> int | None:
     return None
 
 
+def parse_float(value: str) -> float | None:
+    if re.fullmatch(r"-?(?:\d+(?:\.\d*)?|\.\d+)", value):
+        return float(value)
+    return None
+
+
+def parse_top_level_list_values(block: ProtoBlock, key: str) -> list[tuple[int, str]]:
+    values: list[tuple[int, str]] = []
+    key_indent: int | None = None
+    key_line: int | None = None
+    list_item_re = re.compile(r"^(?P<indent>\s*)-\s*(?P<value>.+?)\s*$")
+
+    for num, line in block.lines:
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+
+        match = KEY_RE.match(line)
+        if match and indent_of(line) == 2 and match.group("key") == key:
+            key_indent = indent_of(line)
+            key_line = num
+            continue
+
+        if key_indent is None:
+            continue
+
+        indent = indent_of(line)
+        if indent <= key_indent and num > (key_line or 0):
+            break
+
+        item = list_item_re.match(line)
+        if item and indent > key_indent:
+            values.append((num, item.group("value").strip()))
+
+    return values
+
+
 def parse_offer_pool_entries(block: ProtoBlock) -> list[OfferPoolEntry]:
     entries: list[OfferPoolEntry] = []
     entries_indent: int | None = None
@@ -880,9 +917,92 @@ def audit_hunt_contract(block: ProtoBlock, issues: list[Issue]) -> None:
     audit_reward_entries_have_type_and_count(block, issues, "ncHuntContract", block.start_line)
 
 
-def audit_ghost_role_preset(block: ProtoBlock, issues: list[Issue]) -> None:
+def audit_ghost_role_perk(block: ProtoBlock, issues: list[Issue]) -> None:
+    if not has_key(block, "name"):
+        add_issue(issues, "P1", block.path, block.start_line, "ncGhostRolePerk must define name")
+
+    multiplier_keys = {
+        "walkSpeedMultiplier",
+        "sprintSpeedMultiplier",
+        "incomingDamageMultiplier",
+        "meleeDamageMultiplier",
+        "projectileDamageMultiplier",
+        "armorIncomingDamageMultiplier",
+    }
+
+    for key in multiplier_keys:
+        value = top_level_value(block, key)
+        if value is None:
+            continue
+
+        parsed = parse_float(value[1])
+        if parsed is None or parsed <= 0:
+            add_issue(issues, "P1", block.path, value[0], f"ncGhostRolePerk {key} must be > 0")
+
+    reductions_indent: int | None = None
+    reductions_line: int | None = None
+    for num, line in block.lines:
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+
+        match = KEY_RE.match(line)
+        if not match:
+            continue
+
+        key = match.group("key")
+        value = match.group("value").strip()
+        indent = indent_of(line)
+
+        if key == "incomingFlatReductions" and indent == 2:
+            reductions_indent = indent
+            reductions_line = num
+            continue
+
+        if reductions_indent is not None and indent <= reductions_indent and num > (reductions_line or 0):
+            reductions_indent = None
+
+        if reductions_indent is not None and indent > reductions_indent:
+            parsed = parse_float(value)
+            if parsed is None or parsed <= 0:
+                add_issue(issues, "P1", block.path, num, "ncGhostRolePerk incomingFlatReductions values must be > 0")
+
+
+def audit_ghost_role_preset(block: ProtoBlock, issues: list[Issue], perk_ids: set[str]) -> None:
     if not has_key(block, "entityPrototype"):
         add_issue(issues, "P1", block.path, block.start_line, "ncGhostRolePreset must define entityPrototype")
+
+    character_indent: int | None = None
+    character_line: int | None = None
+    for num, line in block.lines:
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+
+        match = KEY_RE.match(line)
+        if not match:
+            continue
+
+        key = match.group("key")
+        value = match.group("value").strip()
+        indent = indent_of(line)
+
+        if key == "character" and indent == 2:
+            character_indent = indent
+            character_line = num
+            continue
+
+        if character_indent is not None and indent <= character_indent and num > (character_line or 0):
+            character_indent = None
+
+        if character_indent is not None and indent > character_indent and key == "age":
+            parsed = parse_int(value)
+            if parsed is None or parsed <= 0:
+                add_issue(issues, "P1", block.path, num, "ncGhostRolePreset character.age must be > 0")
+
+    for line, perk_id in parse_top_level_list_values(block, "perks"):
+        if perk_id not in perk_ids:
+            add_issue(issues, "P1", block.path, line, f"ncGhostRolePreset references missing ncGhostRolePerk '{perk_id}'")
 
 
 def audit_ghost_role_contract(block: ProtoBlock, issues: list[Issue], preset_ids: set[str]) -> None:
@@ -914,6 +1034,9 @@ def audit_ghost_role_contract(block: ProtoBlock, issues: list[Issue], preset_ids
     spawn_point_line: int | None = None
     spawn_point_type: str | None = None
     spawn_point_id_line: int | None = None
+    survival_indent: int | None = None
+    survival_line: int | None = None
+    survival_duration_line: int | None = None
 
     for num, line in block.lines:
         stripped = line.strip()
@@ -946,6 +1069,11 @@ def audit_ghost_role_contract(block: ProtoBlock, issues: list[Issue], preset_ids
             spawn_line = num
             continue
 
+        if key == "survival":
+            survival_indent = indent
+            survival_line = num
+            continue
+
         if spawn_indent is not None and indent <= spawn_indent and num > (spawn_line or 0):
             spawn_indent = None
             spawn_point_indent = None
@@ -969,6 +1097,16 @@ def audit_ghost_role_contract(block: ProtoBlock, issues: list[Issue], preset_ids
                 spawn_point_type = value
             elif key == "id":
                 spawn_point_id_line = num
+
+        if survival_indent is not None and indent <= survival_indent and num > (survival_line or 0):
+            survival_indent = None
+
+        if survival_indent is not None and indent > survival_indent:
+            if key == "durationSeconds":
+                survival_duration_line = num
+                parsed = parse_int(value)
+                if parsed is None or parsed <= 0:
+                    add_issue(issues, "P1", block.path, num, "ncGhostRoleContract survival.durationSeconds must be > 0")
 
     if completion_line is not None:
         if completion_mode_line is None:
@@ -1136,6 +1274,7 @@ def audit_trade_yaml(issues: list[Issue]) -> None:
     }
     offer_pool_ids: set[str] = set()
     ghost_role_preset_ids: set[str] = set()
+    ghost_role_perk_ids: set[str] = set()
 
     for block in blocks:
         block_id = proto_id(block)
@@ -1145,6 +1284,8 @@ def audit_trade_yaml(issues: list[Issue]) -> None:
             offer_pool_ids.add(block_id)
         elif block.type_name == "ncGhostRolePreset" and block_id:
             ghost_role_preset_ids.add(block_id)
+        elif block.type_name == "ncGhostRolePerk" and block_id:
+            ghost_role_perk_ids.add(block_id)
 
     for block in blocks:
         audit_repair_quarantine(block, issues)
@@ -1160,7 +1301,9 @@ def audit_trade_yaml(issues: list[Issue]) -> None:
         elif block.type_name == "ncHuntContract":
             audit_hunt_contract(block, issues)
         elif block.type_name == "ncGhostRolePreset":
-            audit_ghost_role_preset(block, issues)
+            audit_ghost_role_preset(block, issues, ghost_role_perk_ids)
+        elif block.type_name == "ncGhostRolePerk":
+            audit_ghost_role_perk(block, issues)
         elif block.type_name == "ncGhostRoleContract":
             audit_ghost_role_contract(block, issues, ghost_role_preset_ids)
         elif block.type_name == "ncContractOfferPool":
@@ -1244,6 +1387,8 @@ def audit_required_code_shapes(issues: list[Issue]) -> None:
         text = read_text(ghost_role_proto)
         if "Prototype(\"ncGhostRolePreset\")" not in text:
             add_issue(issues, "P0", ghost_role_proto, 1, "ncGhostRolePreset prototype definition is missing")
+        if "Prototype(\"ncGhostRolePerk\")" not in text:
+            add_issue(issues, "P0", ghost_role_proto, 1, "ncGhostRolePerk prototype definition is missing")
         if "Prototype(\"ncGhostRoleContract\")" not in text:
             add_issue(issues, "P0", ghost_role_proto, 1, "ncGhostRoleContract prototype definition is missing")
         if "NcGhostRoleCompletionMode" not in text or "DeadBodyTurnIn" not in text or "AliveCuffedTurnIn" not in text:

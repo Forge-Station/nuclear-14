@@ -67,3 +67,6 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private readonly record struct QuasiKey(QuasiKeyKind Kind, EntityUid Store, string ProtoId, string? Extra);
 }
+
+[ByRefEvent]
+public readonly record struct NcContractsChangedEvent;

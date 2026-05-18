@@ -1,11 +1,16 @@
 using Content.Server.Ghost.Roles;
 using Content.Server.Ghost.Roles.Components;
+using Content.Server.GameTicking;
+using Content.Server.Mind;
 using Content.Server.Pinpointer;
 using Content.Server.Tools;
 using Content.Shared._NC.Trade;
+using Content.Shared.Damage;
+using Content.Shared.GameTicking;
 using Content.Shared.Interaction;
 using Content.Shared.Jittering;
 using Content.Shared.Mobs;
+using Content.Shared.Objectives.Components;
 using Content.Shared.Tag;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Timing;
@@ -34,6 +39,8 @@ public sealed partial class NcContractSystem : EntitySystem
     [Dependency] private readonly ToolSystem _tool = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly GhostRoleSystem _ghostRoles = default!;
+    [Dependency] private readonly MindSystem _contractMind = default!;
+    [Dependency] private readonly MetaDataSystem _contractMeta = default!;
     [Dependency] private readonly SharedTransformSystem _xform = default!;
 
     private void InitializeObjectiveRuntime()
@@ -44,7 +51,55 @@ public sealed partial class NcContractSystem : EntitySystem
         SubscribeLocalEvent<NcContractGhostRoleSpawnerComponent, TakeGhostRoleEvent>(OnContractGhostRoleTakeover);
         SubscribeLocalEvent<NcContractRepairObjectiveComponent, InteractUsingEvent>(OnRepairObjectiveInteractUsing);
         SubscribeLocalEvent<NcContractRepairObjectiveComponent, ContractRepairDoAfterEvent>(OnRepairObjectiveDoAfter);
+        SubscribeLocalEvent<NcContractGhostRoleSurvivalObjectiveComponent, ObjectiveGetProgressEvent>(
+            OnGhostRoleSurvivalObjectiveGetProgress);
         SubscribeLocalEvent<EntParentChangedMessage>(OnObjectiveTrackedEntityParentChanged);
+        SubscribeLocalEvent<DamageableComponent, DamageChangedEvent>(OnObjectiveTrackedDamageChanged);
+        SubscribeLocalEvent<RoundEndTextAppendEvent>(OnGhostRoleRoundEndText);
+        SubscribeLocalEvent<RoundRestartCleanupEvent>(OnGhostRoleRoundRestartCleanup);
+    }
+
+    private void OnGhostRoleSurvivalObjectiveGetProgress(
+        EntityUid uid,
+        NcContractGhostRoleSurvivalObjectiveComponent component,
+        ref ObjectiveGetProgressEvent args)
+    {
+        if (component.Finished)
+        {
+            args.Progress = component.Succeeded ? 1f : 0f;
+            _contractMeta.SetEntityName(
+                uid,
+                Loc.GetString("nc-store-contract-ghost-role-survival-objective-title-done"));
+            return;
+        }
+
+        var total = (component.Deadline - component.StartedAt).TotalSeconds;
+        if (total <= 0)
+        {
+            args.Progress = 1f;
+            _contractMeta.SetEntityName(
+                uid,
+                Loc.GetString("nc-store-contract-ghost-role-survival-objective-title-live", ("time", FormatGhostRoleCountdown(0))));
+            return;
+        }
+
+        var elapsed = (_timing.CurTime - component.StartedAt).TotalSeconds;
+        var remaining = Math.Max(0, (int) Math.Ceiling((component.Deadline - _timing.CurTime).TotalSeconds));
+        _contractMeta.SetEntityName(
+            uid,
+            Loc.GetString(
+                "nc-store-contract-ghost-role-survival-objective-title-live",
+                ("time", FormatGhostRoleCountdown(remaining))));
+        args.Progress = Math.Clamp((float) (elapsed / total), 0f, 1f);
+    }
+
+    private static string FormatGhostRoleCountdown(int totalSeconds)
+    {
+        var clamped = Math.Max(0, totalSeconds);
+        var span = TimeSpan.FromSeconds(clamped);
+        return span.TotalHours >= 1
+            ? span.ToString(@"hh\:mm\:ss")
+            : span.ToString(@"mm\:ss");
     }
 
     private void OnObjectiveTrackedEntityParentChanged(ref EntParentChangedMessage args)

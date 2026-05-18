@@ -126,11 +126,20 @@
   - type: GhostRole
     id: NcGhostRoleContractRaiderReturn
     weight: 1
+  - type: GhostRole
+    id: NcGhostRoleContractEscapedWorkerAlive
+    weight: 1
+  - type: GhostRole
+    id: NcGhostRoleContractNCRDeserterDead
+    weight: 1
+  - type: GhostRole
+    id: NcGhostRoleContractFreshDead
+    weight: 1
 
 - type: storeContractsPreset
   id: TradeContractsCityPreset
   contractOffers:
-    maxVisible: 11
+    maxVisible: 14
     groups:
     - pool: CityTraderSimpleOrders
       minVisible: 2
@@ -157,7 +166,7 @@
       maxVisible: 5
       fillWeight: 1
     - pool: CityTraderGhostRoleOrders
-      minVisible: 1
-      maxVisible: 1
+      minVisible: 4
+      maxVisible: 4
       fillWeight: 1
 

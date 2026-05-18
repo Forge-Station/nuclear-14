@@ -70,7 +70,9 @@ public sealed partial class StoreStructuredSystem
                 a.OfferPoolOrder != b.OfferPoolOrder ||
                 a.IsRetrievalRoute != b.IsRetrievalRoute ||
                 a.RetrievalClaimMode != b.RetrievalClaimMode ||
-                a.RetrievalProofIsBearer != b.RetrievalProofIsBearer)
+                a.RetrievalProofIsBearer != b.RetrievalProofIsBearer ||
+                a.HuntCompletionMode != b.HuntCompletionMode ||
+                a.GhostRoleCompletionMode != b.GhostRoleCompletionMode)
                 return false;
 
             return TargetsEquals(a.Targets, b.Targets) &&
@@ -89,9 +91,11 @@ public sealed partial class StoreStructuredSystem
             return a.Stage == b.Stage &&
                 a.StageGoal == b.StageGoal &&
                 a.AcceptTimeoutRemainingSeconds == b.AcceptTimeoutRemainingSeconds &&
+                a.GhostRoleSurvivalRemainingSeconds == b.GhostRoleSurvivalRemainingSeconds &&
                 a.GhostRolePendingAcceptance == b.GhostRolePendingAcceptance &&
                 a.Failed == b.Failed &&
-                string.Equals(a.FailureReason, b.FailureReason, StringComparison.Ordinal);
+                string.Equals(a.FailureReason, b.FailureReason, StringComparison.Ordinal) &&
+                string.Equals(a.StatusHint, b.StatusHint, StringComparison.Ordinal);
         }
 
         private static bool TargetsEquals(List<ContractTargetClientData>? a, List<ContractTargetClientData>? b)

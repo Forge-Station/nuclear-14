@@ -15,7 +15,7 @@ namespace Content.Client._NC.Trade.Controls;
 public sealed partial class NcContractCard : PanelContainer
 {
     private const float DescriptionHorizontalBudget = 40f;
-    private const int DescriptionMaxChars = 240;
+    private const int DescriptionMaxChars = 175;
     private const int TargetIconPx = 56;
     private const int RewardIconPx = 26;
     private const float ProgressFillMinVisibleWidth = 8f;
@@ -204,6 +204,30 @@ public sealed partial class NcContractCard : PanelContainer
                 Color.FromHex("#232127"),
                 Color.FromHex("#8A7442")));
 
+        if (GetObjectiveType(_data) == ContractObjectiveType.Hunt)
+        {
+            var modeName = BuildHuntModeName(_data);
+            var modeHint = BuildHuntModeHint(_data);
+            BadgesRow.AddChild(
+                BuildBadge(
+                    modeName,
+                    modeHint,
+                    Color.FromHex("#2D241E"),
+                    Color.FromHex("#B06B44")));
+        }
+
+        if (GetObjectiveType(_data) == ContractObjectiveType.GhostRole)
+        {
+            var modeName = BuildGhostRoleModeName(_data);
+            var modeHint = BuildGhostRoleModeHint(_data);
+            BadgesRow.AddChild(
+                BuildBadge(
+                    modeName,
+                    modeHint,
+                    Color.FromHex("#272331"),
+                    Color.FromHex("#8E6FC2")));
+        }
+
         if (!_data.Repeatable)
         {
             var tip = Loc.GetString("nc-store-contract-badge-single-tooltip");
@@ -276,6 +300,9 @@ public sealed partial class NcContractCard : PanelContainer
     {
         var statusText = BuildGhostRoleStatusText(_data);
         if (string.IsNullOrWhiteSpace(statusText))
+            statusText = BuildHuntStatusText(_data);
+
+        if (string.IsNullOrWhiteSpace(statusText))
             statusText = BuildRouteStatusText(_data);
 
         if (string.IsNullOrWhiteSpace(statusText))
@@ -340,7 +367,10 @@ public sealed partial class NcContractCard : PanelContainer
         TurnInHost.RemoveAllChildren();
 
         if (TurnInSection.Visible)
+        {
+            TurnInHeaderLabel.Text = BuildTurnInHeaderText(_data);
             TurnInHost.AddChild(BuildTargetRow(_data.TurnInItem, 1));
+        }
     }
 
     private void PopulateProgress()

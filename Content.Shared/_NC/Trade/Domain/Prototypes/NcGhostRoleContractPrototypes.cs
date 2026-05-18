@@ -1,4 +1,7 @@
 using Content.Shared.Customization.Systems;
+using Content.Shared.Humanoid;
+using Robust.Shared.Enums;
+using Robust.Shared.Maths;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 
@@ -23,6 +26,73 @@ public sealed partial class NcGhostRolePresetPrototype : IPrototype
 
     [DataField("requirements")]
     public List<CharacterRequirement> Requirements { get; private set; } = new();
+
+    [DataField("character")]
+    public NcGhostRoleCharacterData Character { get; private set; } = new();
+
+    [DataField("perks")]
+    public List<ProtoId<NcGhostRolePerkPrototype>> Perks { get; private set; } = new();
+}
+
+[Prototype("ncGhostRolePerk")]
+public sealed partial class NcGhostRolePerkPrototype : IPrototype
+{
+    [IdDataField] public string ID { get; private set; } = default!;
+
+    [DataField("name", required: true)]
+    public string Name { get; private set; } = string.Empty;
+
+    [DataField("description")]
+    public string Description { get; private set; } = string.Empty;
+
+    [DataField("walkSpeedMultiplier")]
+    public float WalkSpeedMultiplier { get; private set; } = 1f;
+
+    [DataField("sprintSpeedMultiplier")]
+    public float SprintSpeedMultiplier { get; private set; } = 1f;
+
+    [DataField("incomingDamageMultiplier")]
+    public float IncomingDamageMultiplier { get; private set; } = 1f;
+
+    [DataField("meleeDamageMultiplier")]
+    public float MeleeDamageMultiplier { get; private set; } = 1f;
+
+    [DataField("projectileDamageMultiplier")]
+    public float ProjectileDamageMultiplier { get; private set; } = 1f;
+
+    [DataField("weaponPrototypes")]
+    public List<string> WeaponPrototypes { get; private set; } = new();
+
+    [DataField("armorItemPrototypes")]
+    public List<string> ArmorItemPrototypes { get; private set; } = new();
+
+    [DataField("armorIncomingDamageMultiplier")]
+    public float ArmorIncomingDamageMultiplier { get; private set; } = 1f;
+
+    [DataField("incomingFlatReductions")]
+    public Dictionary<string, float> IncomingFlatReductions { get; private set; } = new();
+}
+
+[DataDefinition]
+public sealed partial class NcGhostRoleCharacterData
+{
+    [DataField("name")]
+    public string Name { get; set; } = string.Empty;
+
+    [DataField("sex")]
+    public Sex? Sex { get; set; }
+
+    [DataField("gender")]
+    public Gender? Gender { get; set; }
+
+    [DataField("age")]
+    public int? Age { get; set; }
+
+    [DataField("hair")]
+    public string Hair { get; set; } = string.Empty;
+
+    [DataField("hairColor")]
+    public Color? HairColor { get; set; }
 }
 
 [DataDefinition]
@@ -40,6 +110,24 @@ public sealed partial class NcGhostRoleCompletionData
 {
     [DataField("mode", required: true)]
     public NcGhostRoleCompletionMode Mode { get; set; } = NcGhostRoleCompletionMode.DeadBodyTurnIn;
+}
+
+[DataDefinition]
+public sealed partial class NcGhostRoleSurvivalData
+{
+    public const int DefaultDurationSeconds = 3600;
+
+    [DataField("durationSeconds")]
+    public int DurationSeconds { get; set; } = DefaultDurationSeconds;
+
+    [DataField("briefing")]
+    public string Briefing { get; set; } = string.Empty;
+
+    [DataField("objectiveTitle")]
+    public string ObjectiveTitle { get; set; } = string.Empty;
+
+    [DataField("objectiveDescription")]
+    public string ObjectiveDescription { get; set; } = string.Empty;
 }
 
 [Serializable, NetSerializable]
@@ -71,6 +159,9 @@ public sealed partial class NcGhostRoleContractPrototype : IPrototype
 
     [DataField("completion", required: true)]
     public NcGhostRoleCompletionData Completion { get; private set; } = new();
+
+    [DataField("survival")]
+    public NcGhostRoleSurvivalData Survival { get; private set; } = new();
 
     [DataField("reward", required: true)]
     public List<NcSupplyRewardEntry> Reward { get; private set; } = new();

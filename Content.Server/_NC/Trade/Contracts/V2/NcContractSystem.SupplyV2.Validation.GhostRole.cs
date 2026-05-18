@@ -1,4 +1,5 @@
 using Content.Shared._NC.Trade;
+using Content.Shared.Damage.Prototypes;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server._NC.Trade;
@@ -32,6 +33,9 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryValidateGhostRoleCompletion(proto.ID, proto.Completion))
             valid = false;
 
+        if (!TryValidateGhostRoleSurvival(proto.ID, proto.Survival))
+            valid = false;
+
         if (!TryValidateGhostRoleRewardsForPool(proto))
             valid = false;
 
@@ -40,18 +44,118 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool TryValidateGhostRolePreset(string contractId, NcGhostRolePresetPrototype role)
     {
+        var valid = true;
+
         if (string.IsNullOrWhiteSpace(role.EntityPrototype))
         {
             Sawmill.Warning($"[ContractsV2] GhostRole contract '{contractId}' role preset '{role.ID}' has no entityPrototype.");
             return false;
         }
 
-        if (_prototypes.HasIndex<EntityPrototype>(role.EntityPrototype))
-            return true;
+        if (!_prototypes.HasIndex<EntityPrototype>(role.EntityPrototype))
+        {
+            Sawmill.Warning(
+                $"[ContractsV2] GhostRole contract '{contractId}' role preset '{role.ID}' references missing entity prototype '{role.EntityPrototype}'.");
+            valid = false;
+        }
 
-        Sawmill.Warning(
-            $"[ContractsV2] GhostRole contract '{contractId}' role preset '{role.ID}' references missing entity prototype '{role.EntityPrototype}'.");
-        return false;
+        if (role.Character.Age is <= 0)
+        {
+            Sawmill.Warning(
+                $"[ContractsV2] GhostRole contract '{contractId}' role preset '{role.ID}' character.age must be > 0 when defined.");
+            valid = false;
+        }
+
+        if (!TryValidateGhostRolePerks(contractId, role))
+            valid = false;
+
+        return valid;
+    }
+
+    private bool TryValidateGhostRolePerks(string contractId, NcGhostRolePresetPrototype role)
+    {
+        var valid = true;
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+
+        foreach (var perkId in role.Perks)
+        {
+            if (!seen.Add(perkId.Id))
+            {
+                Sawmill.Warning(
+                    $"[ContractsV2] GhostRole contract '{contractId}' role preset '{role.ID}' repeats perk '{perkId}'.");
+                valid = false;
+                continue;
+            }
+
+            if (!_prototypes.TryIndex<NcGhostRolePerkPrototype>(perkId.Id, out var perk))
+            {
+                Sawmill.Warning(
+                    $"[ContractsV2] GhostRole contract '{contractId}' role preset '{role.ID}' references missing ncGhostRolePerk '{perkId}'.");
+                valid = false;
+                continue;
+            }
+
+            valid &= TryValidateGhostRolePerk(contractId, role.ID, perk);
+        }
+
+        return valid;
+    }
+
+    private bool TryValidateGhostRolePerk(string contractId, string roleId, NcGhostRolePerkPrototype perk)
+    {
+        var valid = true;
+
+        if (perk.WalkSpeedMultiplier <= 0 ||
+            perk.SprintSpeedMultiplier <= 0 ||
+            perk.IncomingDamageMultiplier <= 0 ||
+            perk.MeleeDamageMultiplier <= 0 ||
+            perk.ProjectileDamageMultiplier <= 0 ||
+            perk.ArmorIncomingDamageMultiplier <= 0)
+        {
+            Sawmill.Warning(
+                $"[ContractsV2] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' multipliers must be > 0.");
+            valid = false;
+        }
+
+        foreach (var proto in perk.WeaponPrototypes)
+        {
+            if (string.IsNullOrWhiteSpace(proto) || !_prototypes.HasIndex<EntityPrototype>(proto))
+            {
+                Sawmill.Warning(
+                    $"[ContractsV2] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' references missing weapon prototype '{proto}'.");
+                valid = false;
+            }
+        }
+
+        foreach (var proto in perk.ArmorItemPrototypes)
+        {
+            if (string.IsNullOrWhiteSpace(proto) || !_prototypes.HasIndex<EntityPrototype>(proto))
+            {
+                Sawmill.Warning(
+                    $"[ContractsV2] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' references missing armor item prototype '{proto}'.");
+                valid = false;
+            }
+        }
+
+        foreach (var (damageType, reduction) in perk.IncomingFlatReductions)
+        {
+            if (string.IsNullOrWhiteSpace(damageType) ||
+                !_prototypes.HasIndex<DamageTypePrototype>(damageType))
+            {
+                Sawmill.Warning(
+                    $"[ContractsV2] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' references missing damage type '{damageType}'.");
+                valid = false;
+            }
+
+            if (reduction <= 0f)
+            {
+                Sawmill.Warning(
+                    $"[ContractsV2] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' incomingFlatReductions values must be > 0.");
+                valid = false;
+            }
+        }
+
+        return valid;
     }
 
     private bool TryValidateGhostRoleSpawn(string contractId, NcGhostRoleSpawnData spawn)
@@ -149,6 +253,15 @@ public sealed partial class NcContractSystem : EntitySystem
         return completion.Mode is
             NcGhostRoleCompletionMode.DeadBodyTurnIn or
             NcGhostRoleCompletionMode.AliveCuffedTurnIn;
+    }
+
+    private static bool TryValidateGhostRoleSurvival(string contractId, NcGhostRoleSurvivalData survival)
+    {
+        if (survival.DurationSeconds > 0)
+            return true;
+
+        Sawmill.Warning($"[ContractsV2] GhostRole contract '{contractId}' survival.durationSeconds must be > 0.");
+        return false;
     }
 
     private bool TryValidateGhostRoleRewardsForPool(NcGhostRoleContractPrototype proto)

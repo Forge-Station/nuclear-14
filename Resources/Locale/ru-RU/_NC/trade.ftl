@@ -117,6 +117,31 @@ nc-store-contract-type-delivery-tooltip = Обычный заказ на дос�
 nc-store-contract-type-hunt = Контракт на голову
 nc-store-contract-type-hunt-tooltip = После принятия появится цель. Уберите её, заберите доказательство и вернитесь за платой.
 
+nc-store-contract-hunt-mode-trophy = Сдать трофей
+nc-store-contract-hunt-mode-trophy-tooltip = После последнего нужного убийства появится финальный трофей. Его надо принести торговцу.
+nc-store-contract-hunt-mode-trophy-desc = Доказательство: финальный трофей появится после последней цели. Заберите его и принесите торговцу.
+nc-store-contract-hunt-mode-unknown = Особая охота
+nc-store-contract-hunt-trophy-turn-in-header = Сдать трофей:
+nc-store-contract-hunt-trophy-turn-in-note = После последней цели появится трофей: { $item }. Заберите его и принесите торговцу.
+nc-store-contract-hunt-trophy-status-available = После принятия появятся контрактные цели. Трофей появится только после последнего убийства.
+nc-store-contract-hunt-trophy-status-progress = Убейте контрактные цели: { $progress }/{ $required }. Трофей ещё не появился.
+nc-store-contract-hunt-trophy-status-ready = Трофей получен. Принесите его торговцу и завершите заказ.
+nc-store-contract-hunt-trophy-action-available = Примите охоту.
+nc-store-contract-hunt-trophy-action-progress = Цели: { $progress }/{ $required }. Трофей будет после последней.
+nc-store-contract-hunt-trophy-action-ready = Сдайте трофей торговцу.
+
+nc-store-contract-hunt-mode-body = Принести тело
+nc-store-contract-hunt-mode-body-tooltip = Доказательством является тело отмеченной цели. Убейте цели и притащите нужное тело к торговцу.
+nc-store-contract-hunt-mode-body-desc = Доказательство: тело отмеченной цели. После убийств притащите его к торговцу.
+nc-store-contract-hunt-body-turn-in-header = Принести тело:
+nc-store-contract-hunt-body-turn-in-note = После убийства притащите тело к торговцу: { $item }.
+nc-store-contract-hunt-body-status-available = После принятия появятся контрактные цели. Отмеченное тело надо будет притащить торговцу.
+nc-store-contract-hunt-body-status-progress = Убейте цели: { $progress }/{ $required }. Отмеченное тело не уничтожать: его надо принести.
+nc-store-contract-hunt-body-status-ready = Все цели убиты. Притащите отмеченное тело к торговцу и завершите заказ.
+nc-store-contract-hunt-body-action-available = Примите охоту.
+nc-store-contract-hunt-body-action-progress = Цели: { $progress }/{ $required }. Сохраните тело.
+nc-store-contract-hunt-body-action-ready = Притащите тело к торговцу.
+
 nc-store-contract-type-repair = Ремонт
 nc-store-contract-type-repair-tooltip = Заказ на восстановление объекта в несколько этапов. После ремонта нужно принести подтверждение работы.
 
@@ -132,6 +157,7 @@ nc-store-contract-pinpointer-issue-failed = Не удалось выдать п�
 nc-store-contract-ghost-role-timeout = Никто не взял эту роль вовремя. Контракт сорван.
 nc-store-contract-ghost-role-target-lost = Цель выбыла ещё до начала операции. Контракт сорван.
 nc-store-contract-ghost-role-target-rotten = Цель сгнила. Контракт сорван.
+nc-store-contract-ghost-role-survival-succeeded = Цель пережила отведённое время. Контракт сорван.
 nc-store-contract-hunt-target-lost = Цель ликвидирована/утрачена до завершения всех этапов. Контракт сорван.
 nc-store-contract-hunt-next-target-spawn-failed = Не удалось определить следующую цель для этапа охоты. Контракт сорван.
 
@@ -140,7 +166,49 @@ nc-store-contract-badge-awaiting-ghost-role-tooltip = Идёт поиск исп
 nc-store-contract-badge-ghost-role-active = ЦЕЛЬ АКТИВНА
 nc-store-contract-badge-ghost-role-active-tooltip = Цель уже в деле. Выполните условия заказа и доставьте её к торговому автомату.
 nc-store-contract-ghost-role-waiting-line = Идёт поиск исполнителя: { $time }
+nc-store-contract-ghost-role-waiting-action = Ожидание: { $time }
 nc-store-contract-ghost-role-active-line = Цель вышла в поле. Выполните условия заказа и доставьте её к торговому автомату.
+nc-store-contract-ghost-role-active-short = Цель активна
+nc-store-contract-ghost-role-survival-line = До провала: { $time }.
+nc-store-contract-ghost-role-survival-action = Таймер: { $time }
+nc-store-contract-ghost-role-mode-alive = Сдать живым
+nc-store-contract-ghost-role-mode-alive-hint = Цель должна быть жива, без обычных повреждений, в наручниках, рядом с торговцем и без гниения.
+nc-store-contract-ghost-role-mode-dead = Сдать мёртвым
+nc-store-contract-ghost-role-mode-dead-hint = Доставьте тело цели к торговцу до гниения. Если тело сгниёт или будет уничтожено, контракт сорвётся.
+nc-store-contract-ghost-role-mode-unknown = Особая сдача
+nc-store-contract-ghost-role-mode-line = Режим: { $mode }. { $hint }
+nc-store-contract-ghost-role-mode-line-short = Режим: { $mode }.
+nc-store-contract-ghost-role-hint-waiting = Ожидайте, пока кто-нибудь примет особую роль.
+nc-store-contract-ghost-role-hint-deliver = Доставьте цель к торговцу.
+nc-store-contract-ghost-role-hint-alive-revive = Цель мертва. Для этого заказа её нужно оживить, вылечить обычные повреждения и заковать в наручники.
+nc-store-contract-ghost-role-hint-alive-cuff = Цель жива, но не в наручниках. Наденьте наручники.
+nc-store-contract-ghost-role-hint-alive-heal = Цель ранена. Вылечите обычные повреждения перед сдачей.
+nc-store-contract-ghost-role-hint-alive-ready = Цель жива, без обычных повреждений и в наручниках. Можно сдавать контракт.
+nc-store-contract-ghost-role-hint-dead-kill = Для этого заказа нужно тело цели. Убейте цель и доставьте тело торговцу.
+nc-store-contract-ghost-role-hint-dead-deliver = Тело цели готово. Доставьте его к торговцу до гниения.
+nc-store-contract-ghost-role-hint-dead-ready = Тело доставлено. Можно сдавать контракт.
+nc-store-contract-ghost-role-character-briefing = Контрактная роль: { $contract }.
+    { $description }
+nc-store-contract-ghost-role-character-briefing-survival = Контрактная роль: { $contract }.
+    { $description }
+    { $survival }
+nc-store-contract-ghost-role-survival-briefing = Выживите { $time }. Если вы продержитесь до конца, контракт охотников будет сорван.
+nc-store-contract-ghost-role-survival-objective-title = Выжить: { $contract }
+nc-store-contract-ghost-role-survival-objective-title-live = Выжить: { $time }
+nc-store-contract-ghost-role-survival-objective-title-done = Выживание выполнено
+nc-store-contract-ghost-role-survival-objective-description = Продержитесь { $time }. Если вы выживете, контракт против вас будет провален.
+nc-store-contract-ghost-role-roundend-header = [bold]Итоги контрактных ролей[/bold]
+nc-store-contract-ghost-role-roundend-line = - Заказ «{ $contract }»: { $role } ({ $player }) — { $result }
+nc-store-contract-ghost-role-roundend-unknown-role = неизвестная роль
+nc-store-contract-ghost-role-roundend-no-player = роль не занята
+nc-store-contract-ghost-role-roundend-result-waiting = роль не была принята до конца раунда
+nc-store-contract-ghost-role-roundend-result-active = роль оставалась активной к концу раунда
+nc-store-contract-ghost-role-roundend-result-delivered-alive = роль сдана живой; контрактчики победили
+nc-store-contract-ghost-role-roundend-result-delivered-dead = роль убита/сдана; контрактчики победили
+nc-store-contract-ghost-role-roundend-result-survived = роль выжила { $time }; контракт охотников сорван
+nc-store-contract-ghost-role-roundend-result-not-accepted = роль никто не принял; контракт сорван
+nc-store-contract-ghost-role-roundend-result-target-lost = цель была утрачена; контракт сорван
+nc-store-contract-ghost-role-roundend-result-target-rotten = тело сгнило; контракт сорван
 
 
 nc-store-contract-delivery-target-lost = Груз утрачен. Контракт сорван.

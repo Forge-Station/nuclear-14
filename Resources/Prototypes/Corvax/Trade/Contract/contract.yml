@@ -1,7 +1,7 @@
 - type: storeContractsPreset
   id: PresetBazar
   contractOffers:
-    maxVisible: 10
+    maxVisible: 13
     groups:
     - pool: BazarSimpleSupplyOrders
       minVisible: 2
@@ -24,8 +24,8 @@
       maxVisible: 5
       fillWeight: 1
     - pool: BazarTestGhostRoleOrders
-      minVisible: 1
-      maxVisible: 1
+      minVisible: 4
+      maxVisible: 4
       fillWeight: 1
 
 - type: ncContractOfferPool
@@ -143,6 +143,15 @@
   entries:
   - type: GhostRole
     id: NcGhostRoleContractRaiderReturn
+    weight: 1
+  - type: GhostRole
+    id: NcGhostRoleContractEscapedWorkerAlive
+    weight: 1
+  - type: GhostRole
+    id: NcGhostRoleContractNCRDeserterDead
+    weight: 1
+  - type: GhostRole
+    id: NcGhostRoleContractFreshDead
     weight: 1
 
 - type: ncItemGroup
