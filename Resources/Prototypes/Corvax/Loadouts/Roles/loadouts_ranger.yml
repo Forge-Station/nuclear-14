@@ -1,0 +1,289 @@
+#MARK: Комбинезоны рейнджеров.
+
+- type: loadout
+  id: LoadoutNCRRangerRoman
+  category: Uniform
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRanger
+        - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRanger
+      min: 216000 # 60 hours veterancy unlock "First Tour"
+  items:
+    - N14ClothingUniformJumpsuitRangerRoman
+
+- type: loadout
+  id: LoadoutNCRN14ClothingUniformRangerVeteranRed
+  category: Uniform
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRanger
+        - NCRRangerVeteran
+  items:
+    - N14ClothingUniformRangerVeteranRed
+
+- type: loadout
+  id: LoadoutNCRN14ClothingUniformRangerVeteran
+  category: Uniform
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRanger
+        - NCRRangerVeteran
+  items:
+    - N14ClothingUniformRangerVeteran
+
+- type: loadout
+  id: LoadoutNCRN14ClothingUniformRangerVeteranBlack
+  category: Uniform
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRanger
+        - NCRRangerVeteran
+  items:
+    - N14ClothingUniformRangerVeteranBlack
+
+- type: loadout
+  id: LoadoutNCRN14ClothingUniformRangerBlue
+  category: Uniform
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRanger
+        - NCRRangerVeteran
+  items:
+    - N14ClothingUniformRangerBlue
+
+- type: loadout
+  id: LoadoutNCRN14ClothingUniformRangerModif
+  category: Uniform
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRanger
+        - NCRRangerVeteran
+  items:
+    - N14ClothingUniformRangerModif
+
+#MARK: Броня рейнджеров.
+
+- type: loadout
+  id: LoadoutNCRN14ClothingOuterRangerWeathered
+  category: Outer
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 72000 # 1200 minutes
+  items:
+    - N14ClothingOuterRangerWeathered
+
+- type: loadout
+  id: LoadoutNCRN14ClothingOuterRangerFox
+  category: Outer
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 72000 # 1200 minutes
+  items:
+    - N14ClothingOuterRangerFox
+
+- type: loadout
+  id: LoadoutNCRN14ClothingOuterRangerPrice
+  category: Outer
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 72000 # 1200 minutes
+  items:
+    - N14ClothingOuterRangerPrice
+
+#MARK: Маски рейнджера-ветерана.
+
+- type: loadout
+  id: LoadoutNCRClothingMaskGasRangerElite2
+  category: Mask
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 216000 # 60 hours veterancy unlock "First Tour"
+  items:
+    - ClothingMaskGasRangerElite
+
+- type: loadout
+  id: LoadoutNCRClothingMaskGasRangerPrice2
+  category: Mask
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 72000 # 1200 minutes
+  items:
+    - ClothingMaskGasRangerPrice
+
+- type: loadout
+  id: LoadoutNCRClothingMaskGasRangerModif2
+  category: Mask
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 72000 # 1200 minutes
+  items:
+    - ClothingMaskGasRangerModif
+
+- type: loadout
+  id: LoadoutNCRClothingMaskGasRanger2
+  category: Mask
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 216000 # 60 hours veterancy unlock "First Tour"
+  items:
+    - ClothingMaskGasRanger
+
+- type: loadout
+  id: LoadoutNCRClothingMaskGasRiot2
+  category: Mask
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRangerVeteran
+  items:
+    - ClothingMaskGasRiot
+
+#MARK: Шлема рейнджеров.
+
+- type: loadout
+  id: LoadoutNCRN14ClothingHeadHatRangerHelmetFox2
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 72000 # 1200 minutes
+  items:
+    - N14ClothingHeadHatRangerHelmetFox
+
+- type: loadout
+  id: LoadoutNCRN14ClothingHeadHatRangerHelmetPrice2
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 72000 # 1200 minutes
+  items:
+    - N14ClothingHeadHatRangerHelmetPrice
+
+- type: loadout
+  id: LoadoutNCRN14ClothingHeadHatRangerHelmetModif2
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRangerVeteran
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRRangerVeteran
+      min: 216000 # 60 hours veterancy unlock "First Tour"
+  items:
+    - N14ClothingHeadHatRangerHelmetModif
+
+- type: loadout
+  id: LoadoutNCRN14ClothingHeadHatRangerHelmet2
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRangerVeteran
+  items:
+    - N14ClothingHeadHatRangerHelmet
+
+# MARK: Плащи рейнджеров.
+
+- type: loadout
+  id: LoadoutNCRNeckCloakRangerPoncho
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRangerVeteran
+  items:
+    - N14ClothingNeckCloakRangerPoncho
+
+- type: loadout
+  id: LoadoutNCRClothingNeckOldMantle
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRRanger
+        - NCRRangerVeteran
+  items:
+    - ClothingNeckOldMantle

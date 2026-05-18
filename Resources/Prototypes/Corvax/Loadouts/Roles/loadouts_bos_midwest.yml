@@ -1,6 +1,6 @@
 - type: loadout
   id: LoadoutBoSMidwestUnknown
-  category: Roles
+  category: Outer
   cost: 10
   exclusive: true
   requirements:
@@ -12,7 +12,7 @@
 
 - type: loadout
   id: LoadoutBoSMidwestUnknown2
-  category: Roles
+  category: Outer
   cost: 10
   exclusive: true
   requirements:
@@ -24,7 +24,7 @@
 
 - type: loadout
   id: LoadoutClothingOuterBOSInquisitorBlackCoat
-  category: Roles
+  category: Outer
   cost: 8
   exclusive: true
   requirements:
@@ -39,7 +39,7 @@
 
 - type: loadout
   id: LoadoutClothingOuterBOSInquisitorBattleArmor
-  category: Roles
+  category: Outer
   cost: 8
   exclusive: true
   requirements:
@@ -54,7 +54,7 @@
 
 - type: loadout
   id: LoadoutClothingHeadHatBoSInquisitorHat
-  category: Roles
+  category: Head
   cost: 1
   exclusive: true
   requirements:
@@ -66,7 +66,7 @@
 
 - type: loadout
   id: LoadoutClothingHeadHatBoSInquisitorBlackHat
-  category: Roles
+  category: Head
   cost: 1
   exclusive: true
   requirements:
@@ -81,7 +81,7 @@
 
 - type: loadout
   id: LoadoutClothingHeadHatBoSInquisitorBattleHelmet
-  category: Roles
+  category: Head
   cost: 4
   exclusive: true
   requirements:
@@ -98,7 +98,7 @@
 
 - type: loadout
   id: LoadoutClothingHeadHatBoSInquisitorBattleHelmetHood
-  category: Roles
+  category: Head
   cost: 4
   exclusive: true
   requirements:
@@ -125,9 +125,25 @@
         - BoSMidPaladin
         - BoSMidKnight
         - BoSMidSquire
-    - !type:CharacterPlaytimeRequirement
-      tracker: BoSMidSquire
-      min: 18000
+        - BoSWashingtonCommander
+        - BoSWashingtonPaladin
+        - BoSWashingtonKnight
+        - BoSWashingtonInitiate
+        - BoSWestElderCommander
+        - BoSWestPaladin
+        - BoSWestKnight
+        - BoSWestGunsmith
+    - !type:CharacterLogicOrRequirement
+      requirements:
+        - !type:CharacterDepartmentTimeRequirement
+          department: BrotherhoodMidwest
+          min: 18000
+        - !type:CharacterDepartmentTimeRequirement
+          department: BrotherhoodWashington
+          min: 18000
+        - !type:CharacterDepartmentTimeRequirement
+          department: BrotherhoodWest
+          min: 18000
   items:
     - N14ClothingMaskLiner
 
@@ -142,9 +158,25 @@
         - BoSMidPaladinCommander
         - BoSMidPaladin
         - BoSMidKnight
-    - !type:CharacterPlaytimeRequirement
-      tracker: BoSMidKnight
-      min: 36000
+        - BoSWashingtonCommander
+        - BoSWashingtonPaladin
+        - BoSWashingtonKnight
+        - BoSWashingtonInitiate
+        - BoSWestElderCommander
+        - BoSWestPaladin
+        - BoSWestKnight
+        - BoSWestGunsmith
+    - !type:CharacterLogicOrRequirement
+      requirements:
+        - !type:CharacterDepartmentTimeRequirement
+          department: BrotherhoodMidwest
+          min: 36000
+        - !type:CharacterDepartmentTimeRequirement
+          department: BrotherhoodWashington
+          min: 36000
+        - !type:CharacterDepartmentTimeRequirement
+          department: BrotherhoodWest
+          min: 36000
   items:
     - N14ClothingMaskLinerBlack
 
@@ -158,9 +190,21 @@
       jobs:
         - BoSMidPaladinCommander
         - BoSMidPaladin
-    - !type:CharacterPlaytimeRequirement
-      tracker: BoSMidPaladin
-      min: 36000
+        - BoSWashingtonCommander
+        - BoSWashingtonPaladin
+        - BoSWestElderCommander
+        - BoSWestPaladin
+    - !type:CharacterLogicOrRequirement
+      requirements:
+        - !type:CharacterDepartmentTimeRequirement
+          department: BrotherhoodMidwest
+          min: 36000
+        - !type:CharacterDepartmentTimeRequirement
+          department: BrotherhoodWashington
+          min: 36000
+        - !type:CharacterDepartmentTimeRequirement
+          department: BrotherhoodWest
+          min: 36000
   items:
     - N14ClothingMaskLinerElite
 

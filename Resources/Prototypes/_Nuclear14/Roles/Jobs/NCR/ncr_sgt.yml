@@ -42,6 +42,7 @@
     neck: N14ClothingNeckMantleNCR
     belt: ClothingBeltNCR
     outerClothing: N14ClothingOuterNCRCombatArmor
+    head: N14ClothingHeadHatNCRHelmet # Forge-Change
     pocket1: NCRSGTloadoutkits
     pocket2: RadioHandheld
     id: N14IDNCRDogtagNCO

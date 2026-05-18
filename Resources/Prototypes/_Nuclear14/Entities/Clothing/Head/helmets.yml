@@ -389,7 +389,7 @@
     sprite: _Nuclear14/Clothing/Head/FalloutHelmets/ncrhelmetmp.rsi
 
 - type: entity
-  parent: N14ClothingHeadHatBaseHelmetMetal
+  parent: ClothingHeadBase # Forge-Change
   id: N14ClothingHeadHatNCRHelmetMetalMedic
   name: NCR medic helmet
   description: A rounded NCR helmet offering some protection, worn by Field Medics.

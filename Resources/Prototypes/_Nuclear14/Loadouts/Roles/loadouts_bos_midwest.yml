@@ -15,7 +15,7 @@
 
 - type: loadout
   id: LoadoutBoSMidwestReconHelmet
-  category: Roles
+  category: Head
   cost: 6
   exclusive: true
   requirements:
@@ -30,9 +30,9 @@
 
 - type: loadout
   id: LoadoutClothingOuterMBoSSquireArmor
-  category: Roles
-  cost: 10
-  exclusive: true
+  category: Outer
+  cost: 4 
+  exclusive: True
   requirements:
     - !type:CharacterJobRequirement
       jobs:

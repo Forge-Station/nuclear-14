@@ -56,6 +56,9 @@
         behaviors:
         - !type:DoActsBehavior
           acts: [ "Destruction" ]
+    - type: Tag               # Forge-add
+      tags:
+      - Candles               
 
 - type: entity
   name: red candle
@@ -173,6 +176,9 @@
         - !type:SpawnEntitiesBehavior
         - !type:DoActsBehavior
           acts: [ "Destruction" ]
+    - type: Tag               # Forge-add
+      tags:
+      - Candles      
 
 - type: entity
   name: small red candle
@@ -285,6 +291,9 @@
     color: "#e39c40"
     radius: 2.5
     power: 10
+  - type: Tag               # Forge-add
+    tags:
+    - Candles  
 
 - type: entity
   name: magic red candle

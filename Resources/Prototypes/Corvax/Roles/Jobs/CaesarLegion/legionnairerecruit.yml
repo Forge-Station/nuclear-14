@@ -42,6 +42,7 @@
     shoes: N14ClothingShoesKaligi
     head: N14ClothingHeadHatTribalOutcastHood
     gloves: N14ClothingHandsGlovesTribal
+    belt: ClothingBeltRope
     pocket1: LegionRecruitloadoutkits
     id: N14IDLegionaryBadge
   innerClothingSkirt: N14ClothingUniformJumpsuitLegionnaireOther

@@ -35,8 +35,10 @@
     back: N14ClothingBackpackNCR # Forge-Change
     jumpsuit: N14ClothingUniformNCR # Forge-Change
     outerClothing: N14ClothingOuterNCRVest # Forge-Change
+    belt: N14ClothingBeltUtilityFilled # Forge-Change
     shoes: N14ClothingBootsLeatherFilled
     gloves: N14ClothingHandsGlovesCombat
+    eyes: N14ClothingEyesGlassesWelding # Forge-Change
     id: N14IDNCRDogtagEngineer
     pocket1: NCRengineerloadoutkits
   innerClothingSkirt: N14ClothingUniformNCR # Forge-Change

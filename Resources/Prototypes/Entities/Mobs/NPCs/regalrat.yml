@@ -139,7 +139,7 @@
     activateSound: null
     deactivateSound: null
   - type: TTS # Corvax-TTS
-    voice: Rat
+    voice: SkywrathMageDota2
 
 - type: entity
   id: MobRatKingBuff

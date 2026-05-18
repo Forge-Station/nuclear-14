@@ -35,6 +35,7 @@
     back: N14ClothingBackpackNCR # Forge-Change
     jumpsuit: N14ClothingUniformNCR # Forge-Change
     outerClothing: N14ClothingOuterNCRVest # Forge-Change
+    belt: ClothingBeltNCR # Forge-Change
     shoes: N14ClothingBootsLeatherFilled
     id: N14IDNCRDogtag
     pocket1: NCRtrooperloadoutkits

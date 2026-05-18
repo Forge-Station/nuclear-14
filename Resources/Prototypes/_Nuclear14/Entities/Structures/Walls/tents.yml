@@ -1,4 +1,3 @@
-# 
 - type: entity
   parent: BaseStructure
   id: N14TentLeatherWall
@@ -42,7 +41,10 @@
   - type: RadiationBlocker
     resistance: 1
   - type: BlockWeather
-        
+  - type: Construction # Forge-Change
+    graph: N14TentLeatherWallGraph
+    node: N14TentLeatherWallNode
+
 - type: entity
   parent: N14TentLeatherWall
   id: N14TentLeatherCorner
@@ -50,7 +52,10 @@
   components:
   - type: Sprite
     state: leather_corner
-    
+  - type: Construction # Forge-Change
+    graph: N14TentLeatherCornerGraph
+    node: N14TentLeatherCornerNode
+
 - type: entity
   parent: N14TentLeatherWall
   id: N14TentClothWall
@@ -68,7 +73,9 @@
       behaviors:
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
-        
+  - type: Construction # Forge-Change
+    graph: N14TentClothWallGraph
+    node: N14TentClothWallNode
 - type: entity
   parent: N14TentClothWall
   id: N14TentClothCorner
@@ -76,3 +83,6 @@
   components:
   - type: Sprite
     state: cloth_corner
+  - type: Construction # Forge-Change
+    graph: N14TentClothCornerGraph
+    node: N14TentClothCornerNode
