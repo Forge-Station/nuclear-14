@@ -283,7 +283,7 @@
 - type: storeContractsPreset
   id: NcTradeSmokeContractsPreset
   contractOffers:
-    maxVisible: 16
+    maxVisible: 18
     groups:
     - pool: NcTradeSmokeOfferPoolSupply
       minVisible: 3
@@ -294,6 +294,10 @@
       maxVisible: 11
       fillWeight: 5
     - pool: NcTradeSmokeOfferPoolHunt
+      minVisible: 3
+      maxVisible: 3
+      fillWeight: 1
+    - pool: NcTradeSmokeOfferPoolGhostRole
       minVisible: 2
       maxVisible: 2
       fillWeight: 1
@@ -337,6 +341,110 @@
   - type: Hunt
     id: NcTradeSmokeHuntYaoguaiAndRadroaches
     weight: 1
+  - type: Hunt
+    id: NcTradeSmokeHuntBodyTurnInYaoguai
+    weight: 1
+
+- type: ncContractOfferPool
+  id: NcTradeSmokeOfferPoolGhostRole
+  name: "Особые роли"
+  order: 40
+  color: "#8B6BC7"
+  entries:
+  - type: GhostRole
+    id: NcTradeSmokeGhostRoleRaiderAlive
+    weight: 1
+  - type: GhostRole
+    id: NcTradeSmokeGhostRoleRaiderDead
+    weight: 1
+  - type: GhostRole
+    id: NcTradeSmokeGhostRoleGhoulAlive
+    weight: 1
+  - type: GhostRole
+    id: NcTradeSmokeGhostRoleRaiderShortTimeout
+    weight: 1
+
+- type: ncGhostRolePreset
+  id: NcTradeSmokeGhostRoleRaiderPreset
+  entityPrototype: N14MobHumanRaider
+  name: "Контрактная роль: рейдер"
+  description: "Тестовая гост-роль для проверки контрактной доски."
+  rules: "Примите роль, создайте угрозу и завершите контрактную сцену."
+
+- type: ncGhostRolePreset
+  id: NcTradeSmokeGhostRoleGhoulPreset
+  entityPrototype: N14MobGhoul
+  name: "Контрактная роль: беглый гуль"
+  description: "Тестовая гост-роль с другим playable prototype."
+  rules: "Примите роль, не умирайте раньше времени и дайте проверить живую сдачу."
+
+- type: ncGhostRoleContract
+  id: NcTradeSmokeGhostRoleRaiderAlive
+  name: "Smoke ghost-role: захват рейдера"
+  description: "Дождитесь принятия роли, затем доставьте цель живой, полностью здоровой, в наручниках и без гниения."
+  role: NcTradeSmokeGhostRoleRaiderPreset
+  completion:
+    mode: AliveCuffedTurnIn
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostSpawn
+    acceptTimeoutSeconds: 300
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 20
+
+- type: ncGhostRoleContract
+  id: NcTradeSmokeGhostRoleRaiderDead
+  name: "Smoke ghost-role: тело рейдера"
+  description: "Дождитесь принятия роли, затем доставьте тело цели к торговцу. Сгнившее тело должно провалить контракт."
+  role: NcTradeSmokeGhostRoleRaiderPreset
+  completion:
+    mode: DeadBodyTurnIn
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostSpawn
+    acceptTimeoutSeconds: 300
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 20
+
+- type: ncGhostRoleContract
+  id: NcTradeSmokeGhostRoleGhoulAlive
+  name: "Smoke ghost-role: захват гуля"
+  description: "Дождитесь принятия роли гуля, затем приведите цель живой, полностью здоровой и в наручниках к торговцу."
+  role: NcTradeSmokeGhostRoleGhoulPreset
+  completion:
+    mode: AliveCuffedTurnIn
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostSpawn
+    acceptTimeoutSeconds: 300
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 20
+
+- type: ncGhostRoleContract
+  id: NcTradeSmokeGhostRoleRaiderShortTimeout
+  name: "Smoke ghost-role: короткий таймер"
+  description: "Проверяет провал, если роль никто не взял за короткое время."
+  role: NcTradeSmokeGhostRoleRaiderPreset
+  completion:
+    mode: AliveCuffedTurnIn
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostSpawn
+    acceptTimeoutSeconds: 30
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 20
 
 - type: ncSupplyRewardPool
   id: NcTradeSmokeSupplyRewardPoolBasic
@@ -544,6 +652,28 @@
   - type: Currency
     currency: Caps
     count: 300
+
+- type: ncHuntContract
+  id: NcTradeSmokeHuntBodyTurnInYaoguai
+  name: "Охота: тело вожака"
+  description: "Убейте контрактного яо-гая, притащите его тело к торговцу и завершите заказ."
+  icon: N14MobYaoguai
+  targets:
+  - prototype: N14MobYaoguai
+    count: 1
+    body: true
+  - group: NcTradeSmokeHuntGroupRadroaches
+    count: 2
+  completion:
+    mode: BodyTurnIn
+  spawn:
+    point:
+      type: MarkerId
+      id: NcTradeSmokeHuntSpawn
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 360
 
 
 # -----------------------------------------------------------------------------

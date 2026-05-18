@@ -7,7 +7,8 @@ namespace Content.Shared._NC.Trade;
 public enum NcHuntCompletionMode : byte
 {
     ConfirmedKill = 0,
-    TrophyTurnIn = 1
+    TrophyTurnIn = 1,
+    BodyTurnIn = 2
 }
 
 [DataDefinition]
@@ -21,6 +22,12 @@ public sealed partial class NcHuntTargetData
 
     [DataField("count", required: true)]
     public int Count { get; set; } = 0;
+
+    /// <summary>
+    /// For BodyTurnIn hunts, marks the spawned target whose corpse must be brought back.
+    /// </summary>
+    [DataField("body")]
+    public bool Body { get; set; }
 }
 
 [DataDefinition]

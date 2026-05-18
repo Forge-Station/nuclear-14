@@ -113,11 +113,24 @@
   - type: Hunt
     id: BazarTestHuntYaoguaiDen
     weight: 1
+  - type: Hunt
+    id: BazarTestHuntYaoguaiBody
+    weight: 1
+
+- type: ncContractOfferPool
+  id: CityTraderGhostRoleOrders
+  name: "Особые роли"
+  order: 70
+  color: "#8B6BC7"
+  entries:
+  - type: GhostRole
+    id: NcGhostRoleContractRaiderReturn
+    weight: 1
 
 - type: storeContractsPreset
   id: TradeContractsCityPreset
   contractOffers:
-    maxVisible: 9
+    maxVisible: 11
     groups:
     - pool: CityTraderSimpleOrders
       minVisible: 2
@@ -140,7 +153,11 @@
       maxVisible: 1
       fillWeight: 1
     - pool: CityTraderHuntOrders
-      minVisible: 4
-      maxVisible: 4
+      minVisible: 5
+      maxVisible: 5
+      fillWeight: 1
+    - pool: CityTraderGhostRoleOrders
+      minVisible: 1
+      maxVisible: 1
       fillWeight: 1
 

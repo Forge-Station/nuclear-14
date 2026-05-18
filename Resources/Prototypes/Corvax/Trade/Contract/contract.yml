@@ -1,7 +1,7 @@
 - type: storeContractsPreset
   id: PresetBazar
   contractOffers:
-    maxVisible: 8
+    maxVisible: 10
     groups:
     - pool: BazarSimpleSupplyOrders
       minVisible: 2
@@ -20,8 +20,12 @@
       maxVisible: 1
       fillWeight: 1
     - pool: BazarTestHuntOrders
-      minVisible: 4
-      maxVisible: 4
+      minVisible: 5
+      maxVisible: 5
+      fillWeight: 1
+    - pool: BazarTestGhostRoleOrders
+      minVisible: 1
+      maxVisible: 1
       fillWeight: 1
 
 - type: ncContractOfferPool
@@ -126,6 +130,19 @@
     weight: 1
   - type: Hunt
     id: BazarTestHuntYaoguaiDen
+    weight: 1
+  - type: Hunt
+    id: BazarTestHuntYaoguaiBody
+    weight: 1
+
+- type: ncContractOfferPool
+  id: BazarTestGhostRoleOrders
+  name: "Особые роли"
+  order: 60
+  color: "#8B6BC7"
+  entries:
+  - type: GhostRole
+    id: NcGhostRoleContractRaiderReturn
     weight: 1
 
 - type: ncItemGroup
@@ -611,6 +628,31 @@
   - type: Currency
     currency: Caps
     count: 460
+  - type: Pool
+    pool: caravan_hard
+    count: 1
+
+- type: ncHuntContract
+  id: BazarTestHuntYaoguaiBody
+  name: "Охота: туша яо-гая"
+  description: "Убейте старого яо-гая, разгоните мелких тварей вокруг него и притащите тушу вожака торговцу как доказательство."
+  icon: N14MobYaoguai
+  targets:
+  - prototype: N14MobYaoguai
+    count: 1
+    body: true
+  - group: BazarHuntGroupGeckos
+    count: 2
+  completion:
+    mode: BodyTurnIn
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractHuntSpawn
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 520
   - type: Pool
     pool: caravan_hard
     count: 1

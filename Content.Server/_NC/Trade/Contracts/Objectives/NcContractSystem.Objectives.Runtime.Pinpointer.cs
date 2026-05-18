@@ -50,7 +50,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
             if (IsHuntV2Contract(contract))
             {
-                if (!TryResolveHuntV2PinpointerTarget(store, contract, state, out pinpointerTarget))
+                if (!TryResolveHuntV2PinpointerTargetForUser(store, user, contract, state, out pinpointerTarget))
                     return false;
             }
             else

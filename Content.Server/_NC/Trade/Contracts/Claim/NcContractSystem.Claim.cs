@@ -32,6 +32,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 if (res.Reason is ClaimFailureReason.NotEnoughItems or
                     ClaimFailureReason.NoValidTargets or
                     ClaimFailureReason.MissingCrate or
+                    ClaimFailureReason.MissingBody or
                     ClaimFailureReason.MissingProof or
                     ClaimFailureReason.ObjectiveNotCompleted)
                     Sawmill.Info($"[Claim] Failed ({res.Reason}) '{contractId}' on {ToPrettyString(store)}: {res.Details}");
@@ -141,6 +142,9 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (!TryValidateContractRewards(user, contract.Rewards, out var rewardFail))
             return rewardFail;
+
+        if (!TryConsumeHuntV2BodyTurnIn(store, user, contractId, contract, out var bodyFail))
+            return bodyFail;
 
         if (!TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail))
             return proofFail;

@@ -32,11 +32,31 @@
   id: NcTradeSmokeHuntBoard
   parent: TradeContractBoardCity
   name: доска проверки охоты
-  description: "Показывает оба ручных Hunt V2 теста: prototype target и group target."
+  description: "Показывает ручные Hunt V2 тесты: трофей, группа, смешанные цели и сдача тела."
   suffix: NC, Smoke, Hunt
   components:
   - type: NcStore
     profile: NcTradeSmokeHuntProfile
+
+- type: entity
+  id: NcTradeSmokeGhostRoleVendor
+  parent: Trademachine
+  name: торговый автомат проверки особых ролей
+  description: Отдельный автомат для ручной проверки GhostRole V2.
+  suffix: NC, Smoke, GhostRole
+  components:
+  - type: NcStore
+    profile: NcTradeSmokeGhostRoleProfile
+
+- type: entity
+  id: NcTradeSmokeGhostRoleBoard
+  parent: TradeContractBoardCity
+  name: доска проверки особых ролей
+  description: "Показывает GhostRole V2 тесты: захват живым, сдача тела и таймаут принятия роли."
+  suffix: NC, Smoke, GhostRole
+  components:
+  - type: NcStore
+    profile: NcTradeSmokeGhostRoleProfile
 
 - type: ncStoreProfile
   id: NcTradeSmokeVendorProfile
@@ -59,10 +79,15 @@
   contracts: NcTradeSmokeHuntContractsPreset
   theme: TradeUiThemeWasteland
 
+- type: ncStoreProfile
+  id: NcTradeSmokeGhostRoleProfile
+  contracts: NcTradeSmokeGhostRoleContractsPreset
+  theme: TradeUiThemeWasteland
+
 - type: storeContractsPreset
   id: NcTradeSmokeQuestContractsPreset
   contractOffers:
-    maxVisible: 17
+    maxVisible: 18
     groups:
     - pool: NcTradeSmokeOfferPoolSupply
       minVisible: 4
@@ -73,8 +98,8 @@
       maxVisible: 11
       fillWeight: 5
     - pool: NcTradeSmokeOfferPoolHunt
-      minVisible: 2
-      maxVisible: 2
+      minVisible: 3
+      maxVisible: 3
       fillWeight: 1
   skipCost: 0
   skipCurrency: Caps
@@ -82,11 +107,23 @@
 - type: storeContractsPreset
   id: NcTradeSmokeHuntContractsPreset
   contractOffers:
-    maxVisible: 3
+    maxVisible: 4
     groups:
     - pool: NcTradeSmokeOfferPoolHunt
-      minVisible: 3
-      maxVisible: 3
+      minVisible: 4
+      maxVisible: 4
+      fillWeight: 1
+  skipCost: 0
+  skipCurrency: Caps
+
+- type: storeContractsPreset
+  id: NcTradeSmokeGhostRoleContractsPreset
+  contractOffers:
+    maxVisible: 4
+    groups:
+    - pool: NcTradeSmokeOfferPoolGhostRole
+      minVisible: 4
+      maxVisible: 4
       fillWeight: 1
   skipCost: 0
   skipCurrency: Caps

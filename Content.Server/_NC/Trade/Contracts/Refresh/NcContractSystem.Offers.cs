@@ -176,11 +176,11 @@ public sealed partial class NcContractSystem
                     !TryValidateHuntContractForPool(pool.ID, hunt))
                     return false;
 
-                if (hunt.Completion.Mode != NcHuntCompletionMode.TrophyTurnIn)
+                if (hunt.Completion.Mode is not (NcHuntCompletionMode.TrophyTurnIn or NcHuntCompletionMode.BodyTurnIn))
                 {
                     Sawmill.Warning(
                         $"[Contracts] Hunt offer '{hunt.ID}' uses completion.mode={hunt.Completion.Mode}. " +
-                        "Runtime currently supports only TrophyTurnIn; contract skipped.");
+                        "Runtime currently supports only TrophyTurnIn and BodyTurnIn; contract skipped.");
                     return false;
                 }
 
@@ -188,6 +188,17 @@ public sealed partial class NcContractSystem
                 candidate.Id = hunt.ID;
                 candidate.Repeatable = hunt.Repeatable;
                 candidate.Hunt = hunt;
+                return true;
+
+            case NcContractOfferType.GhostRole:
+                if (!_prototypes.TryIndex<NcGhostRoleContractPrototype>(entry.Id, out var ghostRole) ||
+                    !TryValidateGhostRoleContractForPool(pool.ID, ghostRole))
+                    return false;
+
+                candidate.Kind = ContractPoolCandidateKind.GhostRoleV2;
+                candidate.Id = ghostRole.ID;
+                candidate.Repeatable = ghostRole.Repeatable;
+                candidate.GhostRole = ghostRole;
                 return true;
 
             default:

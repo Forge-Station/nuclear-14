@@ -20,6 +20,7 @@ public sealed class ContractObjectiveConfigData
     public string GhostRoleDescription { get; set; } = string.Empty;
     public string GhostRoleRules { get; set; } = string.Empty;
     public List<CharacterRequirement> GhostRoleRequirements { get; set; } = new();
+    public NcGhostRoleCompletionMode GhostRoleCompletionMode = NcGhostRoleCompletionMode.DeadBodyTurnIn;
     public bool PreserveTargetOnComplete;
     public bool AllowStoreWorldTurnIn;
 
@@ -36,6 +37,7 @@ public sealed class ContractObjectiveConfigData
     // Hunt V2 runtime metadata (stage 8.0-B).
     public bool HuntV2Enabled;
     public NcHuntCompletionMode HuntV2CompletionMode = NcHuntCompletionMode.ConfirmedKill;
+    public string HuntV2BodyPrototype { get; set; } = string.Empty;
 
     // Phase M: see StoreContractRuntimePrototype for semantics. These are copied from the
     // prototype at contract-creation time so the runtime doesn't have to re-resolve the proto.

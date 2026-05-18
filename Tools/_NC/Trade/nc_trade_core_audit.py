@@ -236,10 +236,18 @@ HUNT_LEGACY_KEYS = {
 }
 
 
+REPAIR_QUARANTINE_KEYS = {
+    "repairToolQuality",
+    "repairDoAfterSeconds",
+    "repairStageSound",
+}
+
+
 VALID_OFFER_ENTRY_TYPES = {
     "Supply": "ncSupplyContract",
     "Retrieval": "ncRetrievalContract",
     "Hunt": "ncHuntContract",
+    "GhostRole": "ncGhostRoleContract",
 }
 
 
@@ -264,6 +272,7 @@ class HuntTargetEntry(NamedTuple):
     prototype_line: int | None
     count_line: int | None
     count_value: str | None
+    body_line: int | None
 
 
 def parse_int(value: str) -> int | None:
@@ -442,10 +451,11 @@ def parse_hunt_targets(block: ProtoBlock) -> list[HuntTargetEntry]:
     current_prototype_line: int | None = None
     current_count_line: int | None = None
     current_count_value: str | None = None
+    current_body_line: int | None = None
     list_item_re = re.compile(r"^(?P<indent>\s*)-\s*(?P<rest>.*)$")
 
     def finalize() -> None:
-        nonlocal current_line, current_group_line, current_prototype_line, current_count_line, current_count_value
+        nonlocal current_line, current_group_line, current_prototype_line, current_count_line, current_count_value, current_body_line
         if current_line is not None:
             targets.append(
                 HuntTargetEntry(
@@ -454,6 +464,7 @@ def parse_hunt_targets(block: ProtoBlock) -> list[HuntTargetEntry]:
                     current_prototype_line,
                     current_count_line,
                     current_count_value,
+                    current_body_line,
                 )
             )
         current_line = None
@@ -461,6 +472,7 @@ def parse_hunt_targets(block: ProtoBlock) -> list[HuntTargetEntry]:
         current_prototype_line = None
         current_count_line = None
         current_count_value = None
+        current_body_line = None
 
     for num, line in block.lines:
         stripped = line.strip()
@@ -492,6 +504,8 @@ def parse_hunt_targets(block: ProtoBlock) -> list[HuntTargetEntry]:
             elif rest.startswith("count:"):
                 current_count_line = num
                 current_count_value = rest.split(":", 1)[1].strip()
+            elif rest.startswith("body:"):
+                current_body_line = num
             continue
 
         if current_line is None:
@@ -510,6 +524,8 @@ def parse_hunt_targets(block: ProtoBlock) -> list[HuntTargetEntry]:
         elif key == "count":
             current_count_line = num
             current_count_value = value
+        elif key == "body" and value.lower() == "true":
+            current_body_line = num
 
     finalize()
     return targets
@@ -527,6 +543,27 @@ def audit_supply_contract(block: ProtoBlock, issues: list[Issue]) -> None:
         add_issue(issues, "P1", block.path, block.start_line, "ncSupplyContract must define targets")
     if not has_key(block, "reward"):
         add_issue(issues, "P1", block.path, block.start_line, "ncSupplyContract must define reward")
+
+
+def audit_repair_quarantine(block: ProtoBlock, issues: list[Issue]) -> None:
+    for key in sorted(REPAIR_QUARANTINE_KEYS):
+        if has_key(block, key):
+            add_issue(
+                issues,
+                "P1",
+                block.path,
+                first_key_line(block, key),
+                f"legacy Repair field '{key}' is quarantined; use Supply, Retrieval, Hunt TrophyTurnIn or Hunt BodyTurnIn",
+            )
+
+    if has_key_value(block, "objectiveType", "Repair"):
+        add_issue(
+            issues,
+            "P1",
+            block.path,
+            first_key_line(block, "objectiveType"),
+            "legacy objectiveType: Repair is quarantined; do not add new Repair contracts",
+        )
 
 
 def audit_retrieval_contract(block: ProtoBlock, issues: list[Issue]) -> None:
@@ -803,8 +840,28 @@ def audit_hunt_contract(block: ProtoBlock, issues: list[Issue]) -> None:
         elif completion_mode == "TrophyTurnIn":
             if completion_trophy_line is None:
                 add_issue(issues, "P1", block.path, completion_line, "TrophyTurnIn completion must define trophy")
+            for target in hunt_targets:
+                if target.body_line is not None:
+                    add_issue(issues, "P1", block.path, target.body_line, "TrophyTurnIn targets must not use body: true")
+        elif completion_mode == "BodyTurnIn":
+            if completion_trophy_line is not None:
+                add_issue(issues, "P1", block.path, completion_trophy_line, "BodyTurnIn completion must not define trophy")
+
+            body_targets = [target for target in hunt_targets if target.body_line is not None]
+            if len(body_targets) != 1:
+                add_issue(issues, "P1", block.path, completion_line, "BodyTurnIn completion requires exactly one targets entry with body: true")
+            else:
+                body_target = body_targets[0]
+                if body_target.prototype_line is None or body_target.group_line is not None:
+                    add_issue(issues, "P1", block.path, body_target.body_line or body_target.line, "BodyTurnIn body target must be a direct prototype target")
+                if body_target.count_value != "1":
+                    add_issue(issues, "P1", block.path, body_target.count_line or body_target.line, "BodyTurnIn body target count must be 1")
         elif completion_mode == "ConfirmedKill":
-            pass
+            if completion_trophy_line is not None:
+                add_issue(issues, "P1", block.path, completion_trophy_line, "ConfirmedKill completion must not define trophy")
+            for target in hunt_targets:
+                if target.body_line is not None:
+                    add_issue(issues, "P1", block.path, target.body_line, "ConfirmedKill targets must not use body: true")
         else:
             add_issue(issues, "P1", block.path, completion_line, f"unknown Hunt completion.mode '{completion_mode}'")
 
@@ -821,6 +878,117 @@ def audit_hunt_contract(block: ProtoBlock, issues: list[Issue]) -> None:
             add_issue(issues, "P1", block.path, spawn_point_line, f"unknown Hunt spawn.point.type '{spawn_point_type}'")
 
     audit_reward_entries_have_type_and_count(block, issues, "ncHuntContract", block.start_line)
+
+
+def audit_ghost_role_preset(block: ProtoBlock, issues: list[Issue]) -> None:
+    if not has_key(block, "entityPrototype"):
+        add_issue(issues, "P1", block.path, block.start_line, "ncGhostRolePreset must define entityPrototype")
+
+
+def audit_ghost_role_contract(block: ProtoBlock, issues: list[Issue], preset_ids: set[str]) -> None:
+    if has_key(block, "difficulty"):
+        add_issue(issues, "P1", block.path, first_key_line(block, "difficulty"), "ncGhostRoleContract difficulty is forbidden; use offer pool grouping/order/color")
+    if has_key(block, "guard"):
+        add_issue(issues, "P1", block.path, first_key_line(block, "guard"), "ncGhostRoleContract guard is forbidden; GhostRole V2 completion uses role + spawn + completion only")
+
+    role = top_level_value(block, "role")
+    if role is None:
+        add_issue(issues, "P1", block.path, block.start_line, "ncGhostRoleContract must define role")
+    elif role[1] not in preset_ids:
+        add_issue(issues, "P1", block.path, role[0], f"ncGhostRoleContract references missing ncGhostRolePreset '{role[1]}'")
+
+    if not has_key(block, "spawn"):
+        add_issue(issues, "P1", block.path, block.start_line, "ncGhostRoleContract must define spawn")
+    if not has_key(block, "completion"):
+        add_issue(issues, "P1", block.path, block.start_line, "ncGhostRoleContract must define completion")
+    if not has_key(block, "reward"):
+        add_issue(issues, "P1", block.path, block.start_line, "ncGhostRoleContract must define reward")
+
+    completion_indent: int | None = None
+    completion_line: int | None = None
+    completion_mode: str | None = None
+    completion_mode_line: int | None = None
+    spawn_indent: int | None = None
+    spawn_line: int | None = None
+    spawn_point_indent: int | None = None
+    spawn_point_line: int | None = None
+    spawn_point_type: str | None = None
+    spawn_point_id_line: int | None = None
+
+    for num, line in block.lines:
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+
+        match = KEY_RE.match(line)
+        if not match:
+            continue
+
+        key = match.group("key")
+        value = match.group("value").strip()
+        indent = indent_of(line)
+
+        if key == "completion":
+            completion_indent = indent
+            completion_line = num
+            continue
+
+        if completion_indent is not None and indent <= completion_indent and num > (completion_line or 0):
+            completion_indent = None
+
+        if completion_indent is not None and indent > completion_indent:
+            if key == "mode":
+                completion_mode = value
+                completion_mode_line = num
+
+        if key == "spawn":
+            spawn_indent = indent
+            spawn_line = num
+            continue
+
+        if spawn_indent is not None and indent <= spawn_indent and num > (spawn_line or 0):
+            spawn_indent = None
+            spawn_point_indent = None
+
+        if spawn_indent is not None and indent > spawn_indent:
+            if key == "acceptTimeoutSeconds":
+                parsed = parse_int(value)
+                if parsed is not None and parsed < 0:
+                    add_issue(issues, "P1", block.path, num, "ncGhostRoleContract spawn.acceptTimeoutSeconds must be >= 0")
+
+            if key == "point":
+                spawn_point_indent = indent
+                spawn_point_line = num
+                continue
+
+        if spawn_point_indent is not None and indent <= spawn_point_indent and num > (spawn_point_line or 0):
+            spawn_point_indent = None
+
+        if spawn_point_indent is not None and indent > spawn_point_indent:
+            if key == "type":
+                spawn_point_type = value
+            elif key == "id":
+                spawn_point_id_line = num
+
+    if completion_line is not None:
+        if completion_mode_line is None:
+            add_issue(issues, "P1", block.path, completion_line, "ncGhostRoleContract completion must define mode")
+        elif completion_mode not in {"DeadBodyTurnIn", "AliveCuffedTurnIn"}:
+            add_issue(issues, "P1", block.path, completion_mode_line, f"unknown GhostRole completion.mode '{completion_mode}'")
+
+    if spawn_line is not None:
+        if spawn_point_line is None:
+            add_issue(issues, "P1", block.path, spawn_line, "ncGhostRoleContract spawn must define point")
+        elif not spawn_point_type:
+            add_issue(issues, "P1", block.path, spawn_point_line, "ncGhostRoleContract spawn.point must define type")
+        elif spawn_point_type == "Store":
+            add_issue(issues, "P1", block.path, spawn_point_line, "ncGhostRoleContract spawn.point.type=Store is forbidden")
+        elif spawn_point_type in {"MarkerId", "MarkerGroup"} and spawn_point_id_line is None:
+            add_issue(issues, "P1", block.path, spawn_point_line, f"ncGhostRoleContract spawn.point type {spawn_point_type} must define id")
+        elif spawn_point_type not in {"MarkerId", "MarkerGroup", "Weighted"}:
+            add_issue(issues, "P1", block.path, spawn_point_line, f"unknown GhostRole spawn.point.type '{spawn_point_type}'")
+
+    audit_reward_entries_have_type_and_count(block, issues, "ncGhostRoleContract", block.start_line)
 
 
 def audit_contract_offer_pool(
@@ -857,7 +1025,7 @@ def audit_contract_offer_pool(
                 "P1",
                 block.path,
                 entry.line,
-                f"ncContractOfferPool entry type '{entry.type_name}' must be Supply, Retrieval, or Hunt",
+                f"ncContractOfferPool entry type '{entry.type_name}' must be Supply, Retrieval, Hunt, or GhostRole",
             )
             continue
 
@@ -964,8 +1132,10 @@ def audit_trade_yaml(issues: list[Issue]) -> None:
         "ncSupplyContract": set(),
         "ncRetrievalContract": set(),
         "ncHuntContract": set(),
+        "ncGhostRoleContract": set(),
     }
     offer_pool_ids: set[str] = set()
+    ghost_role_preset_ids: set[str] = set()
 
     for block in blocks:
         block_id = proto_id(block)
@@ -973,8 +1143,12 @@ def audit_trade_yaml(issues: list[Issue]) -> None:
             contract_ids_by_type[block.type_name].add(block_id)
         elif block.type_name == "ncContractOfferPool" and block_id:
             offer_pool_ids.add(block_id)
+        elif block.type_name == "ncGhostRolePreset" and block_id:
+            ghost_role_preset_ids.add(block_id)
 
     for block in blocks:
+        audit_repair_quarantine(block, issues)
+
         if block.type_name == "ncBarterCategory":
             audit_barter_category(block, issues)
         elif block.type_name == "ncSupplyContract":
@@ -985,6 +1159,10 @@ def audit_trade_yaml(issues: list[Issue]) -> None:
             audit_retrieval_route(block, issues)
         elif block.type_name == "ncHuntContract":
             audit_hunt_contract(block, issues)
+        elif block.type_name == "ncGhostRolePreset":
+            audit_ghost_role_preset(block, issues)
+        elif block.type_name == "ncGhostRoleContract":
+            audit_ghost_role_contract(block, issues, ghost_role_preset_ids)
         elif block.type_name == "ncContractOfferPool":
             audit_contract_offer_pool(block, issues, contract_ids_by_type)
         elif block.type_name == "storeContractsPreset":
@@ -1003,7 +1181,15 @@ def audit_trade_yaml(issues: list[Issue]) -> None:
                 "P1",
                 block.path,
                 block.start_line,
-                f"legacy contract prototype '{block.type_name}' is forbidden; use ncSupplyContract/ncRetrievalContract/ncHuntContract and ncContractOfferPool",
+                f"legacy contract prototype '{block.type_name}' is forbidden; use ncSupplyContract/ncRetrievalContract/ncHuntContract/ncGhostRoleContract and ncContractOfferPool",
+            )
+        elif block.type_name == "storeContractGhostRole":
+            add_issue(
+                issues,
+                "P1",
+                block.path,
+                block.start_line,
+                "legacy storeContractGhostRole is forbidden; use ncGhostRolePreset",
             )
 
 
@@ -1040,14 +1226,32 @@ def audit_required_code_shapes(issues: list[Issue]) -> None:
     hunt_proto = REPO_ROOT / "Content.Shared/_NC/Trade/Domain/Prototypes/NcHuntContractPrototypes.cs"
     if hunt_proto.exists():
         text = read_text(hunt_proto)
-        if "NcHuntCompletionMode" not in text or "ConfirmedKill" not in text or "TrophyTurnIn" not in text:
-            add_issue(issues, "P0", hunt_proto, 1, "NcHuntCompletionMode must include ConfirmedKill and TrophyTurnIn")
+        if "NcHuntCompletionMode" not in text or "ConfirmedKill" not in text or "TrophyTurnIn" not in text or "BodyTurnIn" not in text:
+            add_issue(issues, "P0", hunt_proto, 1, "NcHuntCompletionMode must include ConfirmedKill, TrophyTurnIn and BodyTurnIn")
         if "Prototype(\"ncHuntContract\")" not in text:
             add_issue(issues, "P0", hunt_proto, 1, "ncHuntContract prototype definition is missing")
         if "Prototype(\"ncHuntGroup\")" not in text:
             add_issue(issues, "P0", hunt_proto, 1, "ncHuntGroup prototype definition is missing")
     else:
         add_issue(issues, "P0", hunt_proto, 0, "NcHuntContractPrototypes.cs missing")
+
+    legacy_ghost_role_proto = REPO_ROOT / "Content.Shared/_NC/Trade/Domain/Prototypes/NcStoreContractGhostRolePrototype.cs"
+    if legacy_ghost_role_proto.exists():
+        add_issue(issues, "P1", legacy_ghost_role_proto, 1, "legacy storeContractGhostRole prototype file must not return; use ncGhostRolePreset")
+
+    ghost_role_proto = REPO_ROOT / "Content.Shared/_NC/Trade/Domain/Prototypes/NcGhostRoleContractPrototypes.cs"
+    if ghost_role_proto.exists():
+        text = read_text(ghost_role_proto)
+        if "Prototype(\"ncGhostRolePreset\")" not in text:
+            add_issue(issues, "P0", ghost_role_proto, 1, "ncGhostRolePreset prototype definition is missing")
+        if "Prototype(\"ncGhostRoleContract\")" not in text:
+            add_issue(issues, "P0", ghost_role_proto, 1, "ncGhostRoleContract prototype definition is missing")
+        if "NcGhostRoleCompletionMode" not in text or "DeadBodyTurnIn" not in text or "AliveCuffedTurnIn" not in text:
+            add_issue(issues, "P0", ghost_role_proto, 1, "NcGhostRoleCompletionMode must include DeadBodyTurnIn and AliveCuffedTurnIn")
+        if "NcGhostRoleGuardData" in text or "DataField(\"guard\")" in text:
+            add_issue(issues, "P1", ghost_role_proto, 1, "GhostRole V2 guard data must not return; use completion.mode")
+    else:
+        add_issue(issues, "P0", ghost_role_proto, 0, "NcGhostRoleContractPrototypes.cs missing")
 
     retrieval_runtime = REPO_ROOT / "Content.Server/_NC/Trade/Contracts/V2/NcContractSystem.RetrievalV2.cs"
     if retrieval_runtime.exists():

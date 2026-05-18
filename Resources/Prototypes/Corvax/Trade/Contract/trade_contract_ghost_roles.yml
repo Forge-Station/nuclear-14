@@ -1,7 +1,7 @@
 # Shared contract ghost-role definitions.
 
-- type: storeContractGhostRole
-  id: nc_contract_ghost_role_raider
+- type: ncGhostRolePreset
+  id: NcGhostRoleRaider
   entityPrototype: N14MobHumanRaider
   name: nc-contract-ghost-role-raider-name
   description: nc-contract-ghost-role-raider-description
@@ -9,3 +9,23 @@
   requirements:
   - !type:CharacterOverallTimeRequirement
     min: 36000 # 10 hours
+
+- type: ncGhostRoleContract
+  id: NcGhostRoleContractRaiderReturn
+  name: "Особый заказ: захват рейдера"
+  description: "На связь вышел опасный рейдер. Дождитесь, пока кто-то примет роль, затем доставьте цель живой, здоровой и в наручниках."
+  role: NcGhostRoleRaider
+  completion:
+    mode: AliveCuffedTurnIn
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostSpawn
+    acceptTimeoutSeconds: 300
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 180
+  - type: Pool
+    pool: caravan_medium
+    count: 1

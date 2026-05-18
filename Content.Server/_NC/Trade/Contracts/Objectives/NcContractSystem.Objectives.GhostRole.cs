@@ -1,8 +1,14 @@
+using Content.Server.Atmos.Rotting;
+using Content.Server.Cuffs;
 using Content.Server.Ghost.Roles.Components;
 using Content.Server.Mind.Commands;
 using Content.Shared._NC.Trade;
+using Content.Shared.Cuffs.Components;
 using Content.Shared.Customization.Systems;
+using Content.Shared.Damage;
+using Content.Shared.FixedPoint;
 using Content.Shared.Mind.Components;
+using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Robust.Shared.Map;
@@ -14,6 +20,9 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
+    [Dependency] private readonly RottingSystem _contractGhostRoleRotting = default!;
+    [Dependency] private readonly CuffableSystem _contractGhostRoleCuffs = default!;
+
     private bool TryInitializeGhostRoleObjective(
         EntityUid store,
         EntityUid user,
@@ -224,18 +233,6 @@ public sealed partial class NcContractSystem : EntitySystem
         _objectiveRuntimeByTarget[target] = key;
 
         RetargetObjectivePinpointers(key, state, target);
-
-        var config = contract.Config;
-        if (config.GuardCount <= 0 || string.IsNullOrWhiteSpace(config.GuardPrototype))
-            return true;
-
-        if (!TryComp(target, out TransformComponent? targetXform))
-            return true;
-
-        if (TrySpawnObjectiveGuards(key, state, config, targetXform.Coordinates))
-            return true;
-
-        Sawmill.Warning($"[Contracts] Ghost role guard wave failed for '{key.ContractId}'.");
         return true;
     }
 
@@ -248,7 +245,19 @@ public sealed partial class NcContractSystem : EntitySystem
         _objectiveRuntimeKeysScratch.Clear();
         foreach (var (key, state) in _objectiveRuntimeByContract)
         {
-            if (state.GhostRoleTaken || state.GhostRoleAcceptDeadline is not { } deadline)
+            if (state.GhostRoleTaken)
+            {
+                if (TryGetObjectiveContract(key, out var comp, out var contract) &&
+                    TryFailGhostRoleTargetIfInvalidOrRotten(key, state, comp, contract))
+                {
+                    continue;
+                }
+
+                TryRetargetGhostRolePinpointersForOwners(key, state);
+                continue;
+            }
+
+            if (state.GhostRoleAcceptDeadline is not { } deadline)
                 continue;
 
             if (_timing.CurTime >= deadline)
@@ -259,6 +268,75 @@ public sealed partial class NcContractSystem : EntitySystem
             FailExpiredGhostRoleObjective(_objectiveRuntimeKeysScratch[i]);
 
         _objectiveRuntimeKeysScratch.Clear();
+    }
+
+    private bool TryRetargetGhostRolePinpointersForOwners(
+        (EntityUid Store, string ContractId) key,
+        ObjectiveRuntimeState state)
+    {
+        if (state.PinpointerEntities.Count == 0)
+            return false;
+
+        if (!TryGetObjectiveContract(key, out _, out var contract) ||
+            !contract.Taken ||
+            contract.Runtime.Failed ||
+            !contract.IsGhostRoleObjective ||
+            !state.GhostRoleTaken)
+        {
+            return false;
+        }
+
+        PruneInvalidPinpointers(key, state);
+        if (state.PinpointerEntities.Count == 0)
+            return true;
+
+        foreach (var pinpointer in state.PinpointerEntities)
+        {
+            if (TerminatingOrDeleted(pinpointer))
+                continue;
+
+            if (!_objectiveRuntimePinpointerOwners.TryGetValue(pinpointer, out var owner) ||
+                !TryResolveGhostRolePinpointerTargetForUser(key.Store, owner, contract, state, out var target) ||
+                target == EntityUid.Invalid ||
+                TerminatingOrDeleted(target))
+            {
+                continue;
+            }
+
+            _pinpointer.SetTarget(pinpointer, target);
+            _pinpointer.SetActive(pinpointer, true);
+        }
+
+        return true;
+    }
+
+    private bool TryResolveGhostRolePinpointerTargetForUser(
+        EntityUid store,
+        EntityUid user,
+        ContractServerData contract,
+        ObjectiveRuntimeState state,
+        out EntityUid target)
+    {
+        target = EntityUid.Invalid;
+        if (!contract.IsGhostRoleObjective || !state.GhostRoleTaken)
+            return false;
+
+        if (state.TargetEntity is not { } tracked ||
+            tracked == EntityUid.Invalid ||
+            TerminatingOrDeleted(tracked))
+        {
+            return false;
+        }
+
+        if (IsGhostRoleTargetReadyForClaim(store, tracked, contract) ||
+            IsGhostRoleTargetCarriedByUser(tracked, user))
+        {
+            target = store;
+            return true;
+        }
+
+        target = tracked;
+        return true;
     }
 
     private void FailExpiredGhostRoleObjective((EntityUid Store, string ContractId) key)
@@ -365,9 +443,100 @@ public sealed partial class NcContractSystem : EntitySystem
             return;
         }
 
-        var isDead = TryComp(target, out MobStateComponent? mobState) && mobState.CurrentState == MobState.Dead;
-        runtime.Stage = state.GhostRoleTaken && isDead && IsGhostRoleTargetAtStore(store, target)
+        if (TryGetObjectiveContract(key, out var comp, out var liveContract) &&
+            TryFailGhostRoleTargetIfInvalidOrRotten(key, state, comp, liveContract))
+        {
+            return;
+        }
+
+        runtime.Stage = state.GhostRoleTaken && IsGhostRoleCompletionSatisfied(store, target, contract)
             ? Math.Max(1, runtime.StageGoal)
             : 0;
+
+        TryRetargetGhostRolePinpointersForOwners(key, state);
+    }
+
+    private bool TryFailGhostRoleTargetIfInvalidOrRotten(
+        (EntityUid Store, string ContractId) key,
+        ObjectiveRuntimeState state,
+        NcStoreComponent comp,
+        ContractServerData contract)
+    {
+        if (!state.GhostRoleTaken ||
+            state.TargetEntity is not { } target ||
+            target == EntityUid.Invalid)
+        {
+            return false;
+        }
+
+        if (TerminatingOrDeleted(target))
+        {
+            OnObjectiveTrackedTargetResolved(key, target);
+            return true;
+        }
+
+        if (!_contractGhostRoleRotting.IsRotten(target))
+            return false;
+
+        FinalizeObjectiveFailure(
+            key,
+            comp,
+            contract,
+            Loc.GetString("nc-store-contract-ghost-role-target-rotten"));
+        return true;
+    }
+
+    private bool IsGhostRoleTargetReadyForClaim(EntityUid store, EntityUid target, ContractServerData contract)
+    {
+        return !TerminatingOrDeleted(target) &&
+               !_contractGhostRoleRotting.IsRotten(target) &&
+               IsGhostRoleCompletionSatisfied(store, target, contract);
+    }
+
+    private bool IsGhostRoleCompletionSatisfied(EntityUid store, EntityUid target, ContractServerData contract)
+    {
+        if (!IsGhostRoleTargetAtStore(store, target))
+            return false;
+
+        return contract.Config.GhostRoleCompletionMode switch
+        {
+            NcGhostRoleCompletionMode.DeadBodyTurnIn => IsGhostRoleTargetDead(target),
+            NcGhostRoleCompletionMode.AliveCuffedTurnIn => IsGhostRoleTargetAlive(target) &&
+                                                           IsGhostRoleTargetCuffed(target) &&
+                                                           IsGhostRoleTargetFullyHealed(target),
+            _ => false
+        };
+    }
+
+    private bool IsGhostRoleTargetDead(EntityUid target)
+    {
+        return TryComp(target, out MobStateComponent? mobState) &&
+               mobState.CurrentState == MobState.Dead;
+    }
+
+    private bool IsGhostRoleTargetAlive(EntityUid target)
+    {
+        return TryComp(target, out MobStateComponent? mobState) &&
+               mobState.CurrentState != MobState.Dead;
+    }
+
+    private bool IsGhostRoleTargetCuffed(EntityUid target)
+    {
+        return TryComp(target, out CuffableComponent? cuffable) &&
+               _contractGhostRoleCuffs.IsCuffed((target, cuffable));
+    }
+
+    private bool IsGhostRoleTargetFullyHealed(EntityUid target)
+    {
+        return TryComp(target, out DamageableComponent? damageable) &&
+               damageable.TotalDamage <= FixedPoint2.Zero;
+    }
+
+    private bool IsGhostRoleTargetCarriedByUser(EntityUid target, EntityUid user)
+    {
+        if (TryComp(target, out PullableComponent? pullable) && pullable.Puller == user)
+            return true;
+
+        return TryGetContainedEntityRoot(target, out var root) && root == user;
     }
 }

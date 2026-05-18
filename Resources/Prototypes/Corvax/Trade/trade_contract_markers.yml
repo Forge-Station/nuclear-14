@@ -96,17 +96,6 @@
     - TradeContractObjectiveSpawn
 
 - type: entity
-  id: MarkerTradeContractRepair
-  parent: MarkerTradeContractObjectiveBase
-  name: контракт, ремонт
-  suffix: contracts, repair
-  components:
-  - type: NcContractSpawnPoint
-    id: TradeContractRepairSpawn
-    groups:
-    - TradeContractObjectiveSpawn
-
-- type: entity
   id: MarkerTradeContractSpecialTarget
   parent: MarkerTradeContractObjectiveBase
   name: контракт, особая цель

@@ -20,6 +20,8 @@ public sealed partial class NcContractSystem : EntitySystem
         }
         if (_objectiveRuntimeByProof.Remove(args.Entity, out var proofKey))
             OnObjectiveTrackedProofDestroyed(proofKey, args.Entity);
+
+        TryHandleHuntV2BodyEntityTerminating(args.Entity);
     }
 
     private void OnObjectiveTrackedProofDestroyed(
@@ -184,6 +186,12 @@ public sealed partial class NcContractSystem : EntitySystem
             return;
         }
 
+        if (RequiresHuntV2BodyTurnIn(contract) && TryGetHuntV2BodyEntity(state, out var body))
+        {
+            RetargetObjectivePinpointers(key, state, body);
+            return;
+        }
+
         CleanupObjectivePinpointers(key, state);
     }
 
@@ -234,6 +242,7 @@ public sealed partial class NcContractSystem : EntitySystem
         DeactivateTrackedDeliveryDropoff(state);
 
         CleanupRetrievalSpawnedEntities(state, deleteTrackedEntities);
+        CleanupHuntV2BodyTarget(state, deleteTrackedEntities);
         CleanupHuntV2SpawnedTargets(state, deleteTrackedEntities);
 
         CleanupObjectivePinpointers(key, state);
@@ -315,6 +324,18 @@ public sealed partial class NcContractSystem : EntitySystem
         state.HuntV2SpawnedTargets.Clear();
     }
 
+    private void CleanupHuntV2BodyTarget(ObjectiveRuntimeState state, bool deleteBody)
+    {
+        if (state.HuntV2BodyEntity is not { } body || body == EntityUid.Invalid)
+            return;
+
+        state.HuntV2BodyEntity = null;
+        RemoveHuntV2SpawnedTarget(state, body);
+
+        if (deleteBody && !TerminatingOrDeleted(body))
+            Del(body);
+    }
+
     private static bool IsTargetInEntityContainer(TransformComponent xform)
     {
         var parent = xform.ParentUid;
@@ -338,6 +359,9 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             case ContractExecutionKind.HuntObjective:
                 SyncHuntObjectiveProgress(store, contractId, contract);
+                SyncObjectiveProgressFromRuntime(contract);
+                if (IsHuntV2Contract(contract))
+                    return;
                 break;
 
             case ContractExecutionKind.GhostRoleObjective:
@@ -370,6 +394,7 @@ public sealed partial class NcContractSystem : EntitySystem
         public bool GhostRoleTaken;
         public bool HuntTargetWasKilled;
         public bool HuntV2Active;
+        public EntityUid? HuntV2BodyEntity;
         public EntityCoordinates? LastKnownTargetCoordinates;
         public EntityUid? ProofEntity;
         public bool ProofSpawned;
@@ -378,5 +403,3 @@ public sealed partial class NcContractSystem : EntitySystem
         public EntityUid? TargetEntity;
     }
 }
-
-

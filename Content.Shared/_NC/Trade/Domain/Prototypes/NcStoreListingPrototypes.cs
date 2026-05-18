@@ -294,6 +294,7 @@ public enum NcContractOfferType : byte
     Supply = 0,
     Retrieval = 1,
     Hunt = 2,
+    GhostRole = 3,
 }
 
 /// <summary>

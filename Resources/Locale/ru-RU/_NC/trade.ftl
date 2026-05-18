@@ -131,15 +131,16 @@ nc-store-contract-pinpointer-issued = Пеленгатор выдан.
 nc-store-contract-pinpointer-issue-failed = Не удалось выдать пеленгатор.
 nc-store-contract-ghost-role-timeout = Никто не взял эту роль вовремя. Контракт сорван.
 nc-store-contract-ghost-role-target-lost = Цель выбыла ещё до начала операции. Контракт сорван.
+nc-store-contract-ghost-role-target-rotten = Цель сгнила. Контракт сорван.
 nc-store-contract-hunt-target-lost = Цель ликвидирована/утрачена до завершения всех этапов. Контракт сорван.
 nc-store-contract-hunt-next-target-spawn-failed = Не удалось определить следующую цель для этапа охоты. Контракт сорван.
 
 nc-store-contract-badge-awaiting-ghost-role = ОЖИДАНИЕ
 nc-store-contract-badge-awaiting-ghost-role-tooltip = Идёт поиск исполнителя. Если за отведённое время никто не возьмётся за дело, контракт сорвётся.
 nc-store-contract-badge-ghost-role-active = ЦЕЛЬ АКТИВНА
-nc-store-contract-badge-ghost-role-active-tooltip = Цель уже в деле. Уберите её и доставьте тело к торговому автомату.
+nc-store-contract-badge-ghost-role-active-tooltip = Цель уже в деле. Выполните условия заказа и доставьте её к торговому автомату.
 nc-store-contract-ghost-role-waiting-line = Идёт поиск исполнителя: { $time }
-nc-store-contract-ghost-role-active-line = Цель вышла в поле. Уберите её и доставьте тело к торговому автомату.
+nc-store-contract-ghost-role-active-line = Цель вышла в поле. Выполните условия заказа и доставьте её к торговому автомату.
 
 
 nc-store-contract-delivery-target-lost = Груз утрачен. Контракт сорван.

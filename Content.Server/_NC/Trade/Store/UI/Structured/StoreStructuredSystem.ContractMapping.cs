@@ -85,6 +85,13 @@ public sealed partial class StoreStructuredSystem
     private static string ResolveContractTurnInItem(ContractServerData contract)
     {
         var config = contract.Config;
+        if (contract.IsHuntObjective &&
+            config.HuntV2Enabled &&
+            config.HuntV2CompletionMode == NcHuntCompletionMode.BodyTurnIn)
+        {
+            return config.HuntV2BodyPrototype ?? string.Empty;
+        }
+
         return config.ProofPrototype ?? string.Empty;
     }
 

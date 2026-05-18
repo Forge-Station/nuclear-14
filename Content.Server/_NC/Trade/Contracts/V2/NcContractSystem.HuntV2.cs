@@ -10,6 +10,7 @@ public sealed partial class NcContractSystem : EntitySystem
         var targets = BuildHuntV2Targets(proto);
         var required = Math.Max(1, CalculateTotalRequired(targets));
         var mainTarget = GetPrimaryTargetId(targets);
+        var bodyTarget = ResolveHuntV2BodyPrototype(targets);
         var rewards = BakeRewardsForContract(store, proto.ID, BuildHuntV2RewardDefs(store, proto));
 
         var runtime = new ContractRuntimeContextData
@@ -31,6 +32,9 @@ public sealed partial class NcContractSystem : EntitySystem
                 : string.Empty,
             HuntV2Enabled = true,
             HuntV2CompletionMode = proto.Completion.Mode,
+            HuntV2BodyPrototype = proto.Completion.Mode == NcHuntCompletionMode.BodyTurnIn
+                ? bodyTarget
+                : string.Empty,
             SpawnPoint = CloneContractPointSelector(proto.Spawn.Point)
         };
         NormalizeObjectiveConfig(config);
@@ -70,11 +74,24 @@ public sealed partial class NcContractSystem : EntitySystem
                 TargetItem = hasPrototype ? target.Prototype : target.Group,
                 Required = Math.Max(1, target.Count),
                 Progress = 0,
+                BodyRequired = target.Body,
                 MatchMode = hasPrototype ? PrototypeMatchMode.Exact : PrototypeMatchMode.Matcher
             });
         }
 
         return targets;
+    }
+
+    private static string ResolveHuntV2BodyPrototype(List<ContractTargetServerData> targets)
+    {
+        for (var i = 0; i < targets.Count; i++)
+        {
+            var target = targets[i];
+            if (target.BodyRequired && target.MatchMode == PrototypeMatchMode.Exact)
+                return target.TargetItem;
+        }
+
+        return string.Empty;
     }
 
     private List<ContractRewardDef> BuildHuntV2RewardDefs(EntityUid store, NcHuntContractPrototype proto)

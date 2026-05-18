@@ -21,7 +21,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryValidateHuntTargets(proto.ID, proto.Targets))
             valid = false;
 
-        if (!TryValidateHuntCompletion(proto.ID, proto.Completion))
+        if (!TryValidateHuntCompletion(proto.ID, proto.Completion, proto.Targets))
             valid = false;
 
         if (!TryValidateHuntSpawn(proto.ID, proto.Spawn))
@@ -206,17 +206,22 @@ public sealed partial class NcContractSystem : EntitySystem
         return valid;
     }
 
-    private bool TryValidateHuntCompletion(string contractId, NcHuntCompletionData completion)
+    private bool TryValidateHuntCompletion(
+        string contractId,
+        NcHuntCompletionData completion,
+        List<NcHuntTargetData> targets)
     {
         switch (completion.Mode)
         {
             case NcHuntCompletionMode.ConfirmedKill:
-                if (string.IsNullOrWhiteSpace(completion.Trophy))
-                    return true;
+                if (!string.IsNullOrWhiteSpace(completion.Trophy))
+                {
+                    Sawmill.Warning(
+                        $"[ContractsV2] Hunt contract '{contractId}' completion.mode=ConfirmedKill must not define trophy.");
+                    return false;
+                }
 
-                Sawmill.Warning(
-                    $"[ContractsV2] Hunt contract '{contractId}' completion.mode=ConfirmedKill must not define trophy.");
-                return false;
+                return TryValidateHuntNoBodyTargets(contractId, completion.Mode, targets);
 
             case NcHuntCompletionMode.TrophyTurnIn:
                 if (string.IsNullOrWhiteSpace(completion.Trophy))
@@ -227,17 +232,85 @@ public sealed partial class NcContractSystem : EntitySystem
                 }
 
                 if (_prototypes.HasIndex<EntityPrototype>(completion.Trophy))
-                    return true;
+                    return TryValidateHuntNoBodyTargets(contractId, completion.Mode, targets);
 
                 Sawmill.Warning(
                     $"[ContractsV2] Hunt contract '{contractId}' references missing trophy prototype '{completion.Trophy}'.");
                 return false;
+
+            case NcHuntCompletionMode.BodyTurnIn:
+                if (!string.IsNullOrWhiteSpace(completion.Trophy))
+                {
+                    Sawmill.Warning(
+                        $"[ContractsV2] Hunt contract '{contractId}' completion.mode=BodyTurnIn must not define trophy.");
+                    return false;
+                }
+
+                return TryValidateHuntBodyTurnInTarget(contractId, targets);
 
             default:
                 Sawmill.Warning(
                     $"[ContractsV2] Hunt contract '{contractId}' completion.mode={completion.Mode} is not supported.");
                 return false;
         }
+    }
+
+    private bool TryValidateHuntNoBodyTargets(
+        string contractId,
+        NcHuntCompletionMode mode,
+        List<NcHuntTargetData> targets)
+    {
+        for (var i = 0; i < targets.Count; i++)
+        {
+            if (!targets[i].Body)
+                continue;
+
+            Sawmill.Warning(
+                $"[ContractsV2] Hunt contract '{contractId}' targets[{i}] uses body: true but completion.mode={mode}. " +
+                "Use body: true only with BodyTurnIn.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool TryValidateHuntBodyTurnInTarget(string contractId, List<NcHuntTargetData> targets)
+    {
+        var bodyTargets = 0;
+        var valid = true;
+
+        for (var i = 0; i < targets.Count; i++)
+        {
+            var target = targets[i];
+            if (!target.Body)
+                continue;
+
+            bodyTargets++;
+            if (string.IsNullOrWhiteSpace(target.Prototype) || !string.IsNullOrWhiteSpace(target.Group))
+            {
+                Sawmill.Warning(
+                    $"[ContractsV2] Hunt contract '{contractId}' targets[{i}] uses body: true. " +
+                    "BodyTurnIn body target must be a single direct prototype target.");
+                valid = false;
+            }
+
+            if (target.Count != 1)
+            {
+                Sawmill.Warning(
+                    $"[ContractsV2] Hunt contract '{contractId}' targets[{i}] uses body: true with count={target.Count}. " +
+                    "BodyTurnIn requires exactly one body target.");
+                valid = false;
+            }
+        }
+
+        if (bodyTargets == 1)
+            return valid;
+
+        Sawmill.Warning(
+            bodyTargets == 0
+                ? $"[ContractsV2] Hunt contract '{contractId}' completion.mode=BodyTurnIn requires exactly one targets entry with body: true."
+                : $"[ContractsV2] Hunt contract '{contractId}' completion.mode=BodyTurnIn has {bodyTargets} body targets. Use exactly one.");
+        return false;
     }
 
     private bool TryValidateHuntRewardsForPool(NcHuntContractPrototype proto)

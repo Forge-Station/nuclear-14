@@ -18,6 +18,7 @@ public sealed partial class NcContractSystem : EntitySystem
         InvalidTarget,
         NotEnoughItems,
         MissingCrate,
+        MissingBody,
         MissingProof,
         ObjectiveNotCompleted,
         ObjectiveFailed,
@@ -44,7 +45,8 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         SupplyV2 = 1,
         RetrievalV2 = 2,
-        HuntV2 = 3
+        HuntV2 = 3,
+        GhostRoleV2 = 4
     }
 
     private sealed class ContractPoolCandidate
@@ -60,6 +62,7 @@ public sealed partial class NcContractSystem : EntitySystem
         public NcSupplyContractPrototype? Supply;
         public NcRetrievalContractPrototype? Retrieval;
         public NcHuntContractPrototype? Hunt;
+        public NcGhostRoleContractPrototype? GhostRole;
     }
 
     private readonly record struct QuasiKey(QuasiKeyKind Kind, EntityUid Store, string ProtoId, string? Extra);
