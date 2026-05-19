@@ -124,7 +124,8 @@ public sealed class StackCurrencyHandler : ICurrencyHandler
     {
         if (amount <= 0 || string.IsNullOrWhiteSpace(currencyId))
             return true; // Nothing to give, operation is trivially successful.
-        if (!_protos.TryIndex<StackPrototype>(currencyId, out var proto))
+        if (!CanGiveCurrency(user, currencyId, amount) ||
+            !_protos.TryIndex<StackPrototype>(currencyId, out var proto))
             return false;
 
         _inventory.InvalidateInventoryCache(user);
@@ -188,5 +189,17 @@ public sealed class StackCurrencyHandler : ICurrencyHandler
 
         _inventory.InvalidateInventoryCache(user);
         return true;
+    }
+
+    public bool CanGiveCurrency(EntityUid user, string currencyId, int amount)
+    {
+        if (amount <= 0)
+            return true;
+
+        if (!CanHandle(currencyId))
+            return false;
+
+        return _ents.EntityExists(user) &&
+               _ents.TryGetComponent(user, out TransformComponent? _);
     }
 }

@@ -22,10 +22,12 @@ public sealed partial class NcStoreLogicSystem
             if (amount <= 0)
                 continue;
 
-            if (CanHandleCurrency(currency))
+            if (CanGiveCurrency(user, currency, amount))
                 continue;
 
-            Sawmill.Error($"TryMassSellFromContainer: payout currency '{currency}' is not supported; refusing to consume items.");
+            Sawmill.Error(
+                $"TryMassSellFromContainer: payout currency '{currency}' cannot be issued to {ToPrettyString(user)}; " +
+                "refusing to consume items.");
             return false;
         }
 

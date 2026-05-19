@@ -1,8 +1,9 @@
 
 
 - type: entity
-  id: TradeContractDropoffBeacon
-  name: unloading beacon
+  id: TradeContractDropoffSign
+  name: контрактный указатель доставки
+  description: Временная доска приёмки. Доставьте сюда контрактный груз; после подтверждения указатель исчезнет.
   categories: [ HideSpawnMenu ]
   components:
   - type: Transform
@@ -10,13 +11,12 @@
   - type: Clickable
   - type: InteractionOutline
   - type: Sprite
-    drawdepth: Overdoors
-    sprite: Objects/Devices/station_beacon.rsi
+    sprite: Corvax/Structures/Misc/noticeboard2.rsi
     layers:
-    - state: blink
-      shader: unshaded
+    - state: noticeboardstanding
+    - state: notice-3
   - type: PointLight
     enabled: true
-    radius: 3
-    energy: 1.8
-    color: "#4FA9FF"
+    radius: 2
+    energy: 0.8
+    color: "#C9A45A"

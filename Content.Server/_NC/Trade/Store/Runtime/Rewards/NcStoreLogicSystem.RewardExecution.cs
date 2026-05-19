@@ -1,5 +1,4 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server._NC.Trade;
@@ -164,10 +163,10 @@ public sealed partial class NcStoreLogicSystem
             switch (entry.Type)
             {
                 case StoreRewardType.Currency:
-                    if (_protos.HasIndex<StackPrototype>(entry.Id) && CanHandleCurrency(entry.Id))
+                    if (CanGiveCurrency(receiver, entry.Id, entry.Amount))
                         continue;
 
-                    reason = $"Reward plan entry #{i} references missing or unsupported currency stack prototype '{entry.Id}'.";
+                    reason = $"Reward plan entry #{i} references missing, unsupported, or undeliverable currency stack prototype '{entry.Id}'.";
                     return false;
 
                 case StoreRewardType.Item:
@@ -204,37 +203,96 @@ public sealed partial class NcStoreLogicSystem
         if (!TryValidateRewardExecutionPlan(receiver, plan, out reason))
             return false;
 
-        for (var i = 0; i < plan.Entries.Count; i++)
+        if (!_spawnService.BeginRewardTransaction())
         {
-            var entry = plan.Entries[i];
-            if (entry.Type != StoreRewardType.Item)
-                continue;
-
-            var spawned = TrySpawnProductUnits(entry.Id, receiver, entry.Amount);
-            if (spawned >= entry.Amount)
-                continue;
-
-            reason = $"{context}: item reward spawn shortfall for '{entry.Id}': spawned {spawned}/{entry.Amount}.";
+            reason = $"{context}: reward execution is already in progress.";
             Sawmill.Error($"[NcStore] {reason}");
             return false;
         }
 
-        for (var i = 0; i < plan.Entries.Count; i++)
+        var issuedCurrencies = new List<NcRewardExecutionEntry>(plan.Entries.Count);
+
+        try
         {
-            var entry = plan.Entries[i];
-            if (entry.Type != StoreRewardType.Currency)
-                continue;
+            for (var i = 0; i < plan.Entries.Count; i++)
+            {
+                var entry = plan.Entries[i];
+                if (entry.Type != StoreRewardType.Item)
+                    continue;
 
-            if (TryGiveCurrency(receiver, entry.Id, entry.Amount))
-                continue;
+                if (!_protos.TryIndex<EntityPrototype>(entry.Id, out var proto))
+                {
+                    _spawnService.RollbackRewardTransaction();
+                    InvalidateInventoryCache(receiver);
+                    reason = $"{context}: item reward prototype '{entry.Id}' disappeared before execution.";
+                    Sawmill.Error($"[NcStore] {reason}");
+                    return false;
+                }
 
-            reason = $"{context}: failed to give currency '{entry.Id}' x{entry.Amount}.";
+                var spawned = _spawnService.SpawnRewardProduct(receiver, entry.Id, proto, entry.Amount);
+                if (spawned >= entry.Amount)
+                    continue;
+
+                _spawnService.RollbackRewardTransaction();
+                InvalidateInventoryCache(receiver);
+                reason = $"{context}: item reward spawn shortfall for '{entry.Id}': spawned {spawned}/{entry.Amount}.";
+                Sawmill.Error($"[NcStore] {reason}");
+                return false;
+            }
+
+            for (var i = 0; i < plan.Entries.Count; i++)
+            {
+                var entry = plan.Entries[i];
+                if (entry.Type != StoreRewardType.Currency)
+                    continue;
+
+                if (TryGiveCurrency(receiver, entry.Id, entry.Amount))
+                {
+                    issuedCurrencies.Add(entry);
+                    continue;
+                }
+
+                _spawnService.RollbackRewardTransaction();
+                RollbackIssuedRewardCurrencies(receiver, issuedCurrencies, context);
+                InvalidateInventoryCache(receiver);
+                reason = $"{context}: failed to give currency '{entry.Id}' x{entry.Amount}.";
+                Sawmill.Error($"[NcStore] {reason}");
+                return false;
+            }
+
+            _spawnService.CommitRewardTransaction(receiver);
+            reason = string.Empty;
+            return true;
+        }
+        catch (Exception e)
+        {
+            _spawnService.RollbackRewardTransaction();
+            RollbackIssuedRewardCurrencies(receiver, issuedCurrencies, context);
+            InvalidateInventoryCache(receiver);
+            reason = $"{context}: unexpected reward execution exception: {e.Message}";
             Sawmill.Error($"[NcStore] {reason}");
             return false;
         }
+    }
 
-        reason = string.Empty;
-        return true;
+    private void RollbackIssuedRewardCurrencies(
+        EntityUid receiver,
+        IReadOnlyList<NcRewardExecutionEntry> issuedCurrencies,
+        string context)
+    {
+        for (var i = issuedCurrencies.Count - 1; i >= 0; i--)
+        {
+            var entry = issuedCurrencies[i];
+            if (entry.Type != StoreRewardType.Currency || entry.Amount <= 0)
+                continue;
+
+            if (TryTakeCurrency(receiver, entry.Id, entry.Amount))
+                continue;
+
+            Sawmill.Error(
+                $"[NcStore] {context}: failed to roll back issued currency '{entry.Id}' x{entry.Amount} " +
+                $"from {ToPrettyString(receiver)} after reward execution failure.");
+        }
     }
 
     private sealed class NcRewardExecutionPlan

@@ -303,12 +303,12 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid dropoffMarker;
         try
         {
-            dropoffMarker = Spawn(NcContractTuning.DefaultTrackedDeliveryDropoffBeaconPrototypeId, dropoffCoords);
+            dropoffMarker = Spawn(NcContractTuning.DefaultTrackedDeliveryDropoffSignPrototypeId, dropoffCoords);
         }
         catch (Exception e)
         {
             Sawmill.Error(
-                $"[Contracts] Objective init failed for '{contractId}': cannot spawn dropoff beacon '{NcContractTuning.DefaultTrackedDeliveryDropoffBeaconPrototypeId}': {e}");
+                $"[Contracts] Objective init failed for '{contractId}': cannot spawn dropoff sign '{NcContractTuning.DefaultTrackedDeliveryDropoffSignPrototypeId}': {e}");
             return false;
         }
 

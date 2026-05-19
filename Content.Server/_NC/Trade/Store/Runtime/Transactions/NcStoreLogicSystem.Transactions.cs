@@ -306,10 +306,11 @@ public sealed partial class NcStoreLogicSystem
         if (totalL > int.MaxValue)
             return false;
 
-        if (!CanHandleCurrency(currency))
+        if (!CanGiveCurrency(user, currency, (int) totalL))
         {
             Sawmill.Error(
-                $"TrySell: payout currency '{currency}' is not supported; refusing to consume '{listing.ProductEntity}'.");
+                $"TrySell: payout currency '{currency}' cannot be issued to {ToPrettyString(user)}; " +
+                $"refusing to consume '{listing.ProductEntity}'.");
             return false;
         }
 

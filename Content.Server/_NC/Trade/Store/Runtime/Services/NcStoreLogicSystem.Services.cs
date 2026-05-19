@@ -34,6 +34,9 @@ public sealed partial class NcStoreLogicSystem
     public bool CanHandleCurrency(string stackType) =>
         _currency.CanHandleCurrency(stackType);
 
+    public bool CanGiveCurrency(EntityUid user, string stackType, int amount) =>
+        _currency.CanGiveCurrency(user, stackType, amount);
+
     public bool TryTakeCurrency(EntityUid user, string stackType, int amount) =>
         _currency.TryTakeCurrency(user, stackType, amount);
 
@@ -47,6 +50,9 @@ public sealed partial class NcStoreLogicSystem
         private readonly List<EntityUid> _scratchItems = new();
         private readonly List<EntityUid> _spawnedScratch = new();
         private readonly List<(EntityUid Ent, int PreviousCount)> _stackRestoreScratch = new();
+        private readonly List<EntityUid> _transactionSpawnedScratch = new();
+        private readonly List<(EntityUid Ent, int PreviousCount)> _transactionStackRestoreScratch = new();
+        private bool _rewardTransactionActive;
         private readonly NcStoreLogicSystem _sys;
         public StoreSpawnService(NcStoreLogicSystem sys)
         {
@@ -62,6 +68,62 @@ public sealed partial class NcStoreLogicSystem
         )
         {
             return SpawnPurchasedProduct(user, productEntity, productProto, 1, units);
+        }
+
+        public bool BeginRewardTransaction()
+        {
+            if (_rewardTransactionActive)
+                return false;
+
+            ResetPurchaseBatchState();
+            _transactionSpawnedScratch.Clear();
+            _transactionStackRestoreScratch.Clear();
+            _rewardTransactionActive = true;
+            return true;
+        }
+
+        public void CommitRewardTransaction(EntityUid user)
+        {
+            if (!_rewardTransactionActive)
+                return;
+
+            for (var i = 0; i < _transactionSpawnedScratch.Count; i++)
+                _sys.QueuePickupToHandsOrCrateNextTick(user, _transactionSpawnedScratch[i]);
+
+            _sys._inventory.InvalidateInventoryCache(user);
+            _rewardTransactionActive = false;
+            _transactionSpawnedScratch.Clear();
+            _transactionStackRestoreScratch.Clear();
+            ResetPurchaseBatchState();
+        }
+
+        public void RollbackRewardTransaction()
+        {
+            if (!_rewardTransactionActive)
+                return;
+
+            RollbackPurchaseBatch();
+
+            for (var i = 0; i < _transactionStackRestoreScratch.Count; i++)
+            {
+                var (ent, previousCount) = _transactionStackRestoreScratch[i];
+                if (!_sys._ents.TryGetComponent(ent, out StackComponent? stack))
+                    continue;
+
+                _sys._stacks.SetCount(ent, previousCount, stack);
+            }
+
+            for (var i = 0; i < _transactionSpawnedScratch.Count; i++)
+            {
+                var ent = _transactionSpawnedScratch[i];
+                if (_sys.Exists(ent))
+                    _sys._ents.DeleteEntity(ent);
+            }
+
+            _rewardTransactionActive = false;
+            _transactionSpawnedScratch.Clear();
+            _transactionStackRestoreScratch.Clear();
+            ResetPurchaseBatchState();
         }
 
         public int SpawnPurchasedProduct(
@@ -282,10 +344,39 @@ public sealed partial class NcStoreLogicSystem
 
         private void CommitPurchaseBatch(EntityUid user)
         {
+            if (_rewardTransactionActive)
+            {
+                MergeBatchIntoRewardTransaction();
+                ResetPurchaseBatchState();
+                return;
+            }
+
             for (var i = 0; i < _spawnedScratch.Count; i++)
                 _sys.QueuePickupToHandsOrCrateNextTick(user, _spawnedScratch[i]);
 
             ResetPurchaseBatchState();
+        }
+
+        private void MergeBatchIntoRewardTransaction()
+        {
+            for (var i = 0; i < _stackRestoreScratch.Count; i++)
+            {
+                var restore = _stackRestoreScratch[i];
+                var alreadyTracked = false;
+                for (var j = 0; j < _transactionStackRestoreScratch.Count; j++)
+                {
+                    if (_transactionStackRestoreScratch[j].Ent != restore.Ent)
+                        continue;
+
+                    alreadyTracked = true;
+                    break;
+                }
+
+                if (!alreadyTracked)
+                    _transactionStackRestoreScratch.Add(restore);
+            }
+
+            _transactionSpawnedScratch.AddRange(_spawnedScratch);
         }
 
         private void ResetPurchaseBatchState()

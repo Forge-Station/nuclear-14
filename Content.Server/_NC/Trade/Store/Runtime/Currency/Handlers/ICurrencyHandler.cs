@@ -28,4 +28,10 @@ public interface ICurrencyHandler
     /// Gives a positive amount of currency to the user.
     /// </summary>
     bool TryGiveCurrency(EntityUid user, string currencyId, int amount);
+
+    /// <summary>
+    /// Returns true when a later <see cref="TryGiveCurrency"/> call is expected to be able to pay this receiver.
+    /// This is used before destructive sell/claim operations so unsupported currencies fail before items are removed.
+    /// </summary>
+    bool CanGiveCurrency(EntityUid user, string currencyId, int amount);
 }

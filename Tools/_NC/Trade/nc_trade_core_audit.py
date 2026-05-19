@@ -24,6 +24,20 @@ TRADE_YAML_DIRS = (
     Path("Resources/Prototypes/Corvax/Trade"),
 )
 
+FORBIDDEN_TRADE_PATHS = (
+    Path("Resources/Prototypes/_NC/Trade"),
+    Path("Resources/Prototypes/Corvax/Trade/trade.yml"),
+    Path("Resources/Prototypes/Corvax/Trade/trade_barter_v1.yml"),
+    Path("Resources/Prototypes/Corvax/Trade/trade_contract_board_city.yml"),
+    Path("Resources/Prototypes/Corvax/Trade/trade_contract_markers.yml"),
+    Path("Resources/Prototypes/Corvax/Trade/trade_contract_runtime.yml"),
+    Path("Resources/Prototypes/Corvax/Trade/Contract/contract.yml"),
+    Path("Resources/Prototypes/Corvax/Trade/Contract/contractpool.yml"),
+    Path("Resources/Prototypes/Corvax/Trade/Contract/lootcontract.yml"),
+    Path("Resources/Prototypes/Corvax/Trade/Contract/trade_contract_ghost_roles.yml"),
+    Path("Resources/Prototypes/Corvax/Trade/Contract/trade_contract_proofs.yml"),
+)
+
 
 class Issue(NamedTuple):
     severity: str
@@ -115,6 +129,19 @@ def audit_no_live_exchange(issues: list[Issue]) -> None:
             idx = text.find(pattern)
             if idx >= 0:
                 add_issue(issues, "P0", path, line_no(text, idx), message)
+
+
+def audit_trade_file_layout(issues: list[Issue]) -> None:
+    for path in FORBIDDEN_TRADE_PATHS:
+        abs_path = REPO_ROOT / path
+        if abs_path.exists():
+            add_issue(
+                issues,
+                "P1",
+                abs_path,
+                1,
+                "legacy Trade prototype path/name must not return; use the Corvax/Trade trade_* and contracts_* split layout",
+            )
 
 
 TYPE_RE = re.compile(r"^-\s*type:\s*([A-Za-z0-9_]+)\s*(?:#.*)?$")
@@ -1848,6 +1875,7 @@ def audit_required_code_shapes(issues: list[Issue]) -> None:
 def main() -> int:
     issues: list[Issue] = []
 
+    audit_trade_file_layout(issues)
     audit_no_live_exchange(issues)
     audit_trade_yaml(issues)
     audit_required_code_shapes(issues)
