@@ -16,10 +16,7 @@
     items:
       - id: N14CurrencyCap10
         prob: 0.6
-        orGroup: StashCashN14
-      - id: CurrencyCap50
-        prob: 0.275
-        orGroup: StashCashN14        
+        orGroup: StashCashN14      
       - id: N14CurrencyCap100
         prob: 0.125
         orGroup: StashCash  

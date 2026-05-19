@@ -557,6 +557,7 @@
   - type: ConditionalSpawner
     prototypes:
       - N14MobFernMercLieutenant
+      - N14MobFernMercLieutenant1
 
 - type: entity
   name: Enforcer Spawner - Trooper
