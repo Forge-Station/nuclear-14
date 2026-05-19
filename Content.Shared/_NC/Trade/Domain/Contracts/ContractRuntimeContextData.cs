@@ -11,6 +11,7 @@ public sealed class ContractRuntimeContextData
     public int GhostRoleSurvivalRemainingSeconds;
     public bool GhostRolePendingAcceptance;
     public bool Failed;
+    public ContractObjectiveOutcome Outcome;
 
     public string FailureReason = string.Empty;
     public string StatusHint = string.Empty;

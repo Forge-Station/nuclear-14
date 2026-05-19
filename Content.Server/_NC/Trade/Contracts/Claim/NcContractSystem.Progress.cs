@@ -156,6 +156,10 @@ public sealed partial class NcContractSystem : EntitySystem
                 UpdateTrackedDeliveryObjectiveProgress(store, contractId, contract, userItems, crateItems);
                 return true;
 
+            case ContractExecutionKind.RetrievalRouteDelivery:
+                TryUpdateRetrievalRouteDeliveryProgress(store, contractId, contract);
+                return true;
+
             case ContractExecutionKind.HuntObjective:
             case ContractExecutionKind.GhostRoleObjective:
                 UpdateObjectiveContractProgress(store, contractId, contract);

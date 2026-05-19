@@ -81,7 +81,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!state.HuntActive)
         {
             state.HuntActive = true;
-            _activeHuntObjectives++;
+            _activeHuntObjectives.Add((store, contractId));
         }
 
         if (!contract.Config.GivePinpointer)
@@ -113,12 +113,15 @@ public sealed partial class NcContractSystem : EntitySystem
         if (killedTarget == EntityUid.Invalid || TerminatingOrDeleted(killedTarget))
             return;
 
-        if (_objectiveRuntimeByContract.Count == 0)
+        if (_activeHuntObjectives.Count == 0)
             return;
 
         List<(EntityUid Store, string ContractId)>? candidates = null;
-        foreach (var (key, state) in _objectiveRuntimeByContract)
+        foreach (var key in _activeHuntObjectives)
         {
+            if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+                continue;
+
             if (!state.HuntActive)
                 continue;
 
@@ -206,11 +209,22 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void UpdateSpawnedHuntPinpointerTargets()
     {
-        if (_activeHuntObjectives <= 0)
+        if (_activeHuntObjectives.Count == 0)
             return;
 
-        foreach (var (key, state) in _objectiveRuntimeByContract)
+        _objectiveRuntimeKeysScratch.Clear();
+        foreach (var key in _activeHuntObjectives)
+            _objectiveRuntimeKeysScratch.Add(key);
+
+        for (var i = 0; i < _objectiveRuntimeKeysScratch.Count; i++)
         {
+            var key = _objectiveRuntimeKeysScratch[i];
+            if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+            {
+                _activeHuntObjectives.Remove(key);
+                continue;
+            }
+
             if (!state.HuntActive || state.PinpointerEntities.Count == 0)
                 continue;
 
@@ -228,16 +242,21 @@ public sealed partial class NcContractSystem : EntitySystem
             if (TryResolveSpawnedHuntPinpointerTarget(key.Store, contract, state, out var target))
                 RetargetObjectivePinpointers(key, state, target);
         }
+
+        _objectiveRuntimeKeysScratch.Clear();
     }
 
     private void TryHandleHuntBodyEntityTerminating(EntityUid body)
     {
-        if (body == EntityUid.Invalid || _objectiveRuntimeByContract.Count == 0)
+        if (body == EntityUid.Invalid || _activeHuntObjectives.Count == 0)
             return;
 
         List<(EntityUid Store, string ContractId)>? candidates = null;
-        foreach (var (key, state) in _objectiveRuntimeByContract)
+        foreach (var key in _activeHuntObjectives)
         {
+            if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+                continue;
+
             if (!state.HuntActive || state.HuntBodyEntity != body)
                 continue;
 

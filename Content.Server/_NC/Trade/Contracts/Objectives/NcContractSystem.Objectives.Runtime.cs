@@ -131,34 +131,35 @@ public sealed partial class NcContractSystem : EntitySystem
     private TimeSpan _nextTrackedDeliveryDropoffCheck = TimeSpan.Zero;
     private TimeSpan _nextRetrievalRouteDeliveryCheck = TimeSpan.Zero;
     private TimeSpan _nextHuntPinpointerCheck = TimeSpan.Zero;
-    private int _activeTrackedDeliveryDropoffObjectives;
-    private int _activeRetrievalRouteDeliveries;
-    private int _activeHuntObjectives;
+    private readonly HashSet<(EntityUid Store, string ContractId)> _activeTrackedDeliveryDropoffObjectives = new();
+    private readonly HashSet<(EntityUid Store, string ContractId)> _activeRetrievalRouteDeliveries = new();
+    private readonly HashSet<(EntityUid Store, string ContractId)> _activeHuntObjectives = new();
+    private readonly HashSet<(EntityUid Store, string ContractId)> _activeGhostRoleObjectives = new();
     private void ShutdownObjectiveRuntime() => ClearAllObjectiveRuntime(false, deleteGuards: false);
     public override void Update(float frameTime)
     {
         if (_objectiveRuntimeByContract.Count == 0)
             return;
 
-        if (_activeTrackedDeliveryDropoffObjectives > 0 && _timing.CurTime >= _nextTrackedDeliveryDropoffCheck)
+        if (_activeTrackedDeliveryDropoffObjectives.Count > 0 && _timing.CurTime >= _nextTrackedDeliveryDropoffCheck)
         {
             _nextTrackedDeliveryDropoffCheck = _timing.CurTime + NcContractTuning.TrackedDeliveryDropoffCheckInterval;
             UpdateTrackedDeliveryDropoffObjectives();
         }
 
-        if (_activeRetrievalRouteDeliveries > 0 && _timing.CurTime >= _nextRetrievalRouteDeliveryCheck)
+        if (_activeRetrievalRouteDeliveries.Count > 0 && _timing.CurTime >= _nextRetrievalRouteDeliveryCheck)
         {
             _nextRetrievalRouteDeliveryCheck = _timing.CurTime + NcContractTuning.TrackedDeliveryDropoffCheckInterval;
             UpdateRetrievalRouteDeliveries();
         }
 
-        if (_activeHuntObjectives > 0 && _timing.CurTime >= _nextHuntPinpointerCheck)
+        if (_activeHuntObjectives.Count > 0 && _timing.CurTime >= _nextHuntPinpointerCheck)
         {
             _nextHuntPinpointerCheck = _timing.CurTime + NcContractTuning.TrackedDeliveryDropoffCheckInterval;
             UpdateSpawnedHuntPinpointerTargets();
         }
 
-        if (_timing.CurTime < _nextGhostRoleTimeoutCheck)
+        if (_activeGhostRoleObjectives.Count == 0 || _timing.CurTime < _nextGhostRoleTimeoutCheck)
             return;
 
         _nextGhostRoleTimeoutCheck = _timing.CurTime + NcContractTuning.GhostRoleTimeoutCheckInterval;
@@ -186,9 +187,10 @@ public sealed partial class NcContractSystem : EntitySystem
         _objectiveRuntimePinpointerOwners.Clear();
         _objectiveRuntimeByGuard.Clear();
         _objectiveRuntimeByProof.Clear();   // Fix (B39): keep proof index in sync with everything else.
-        _activeTrackedDeliveryDropoffObjectives = 0;
-        _activeRetrievalRouteDeliveries = 0;
-        _activeHuntObjectives = 0;
+        _activeTrackedDeliveryDropoffObjectives.Clear();
+        _activeRetrievalRouteDeliveries.Clear();
+        _activeHuntObjectives.Clear();
+        _activeGhostRoleObjectives.Clear();
     }
 
     private void ClearStoreObjectiveRuntime(EntityUid store, bool deleteTrackedEntities, bool deleteGuards = true)
@@ -229,6 +231,7 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             ContractExecutionKind.InventoryDelivery => TryInitializeInventoryDeliverySupportRuntime(store, user, contractId, contract),
             ContractExecutionKind.TrackedDeliveryObjective => TryInitializeDeliveryObjectiveRuntime(store, user, contractId, contract),
+            ContractExecutionKind.RetrievalRouteDelivery => TryInitializeInventoryDeliverySupportRuntime(store, user, contractId, contract),
             ContractExecutionKind.HuntObjective => TryInitializeHuntObjectiveRuntimeOnTake(store, user, contractId, contract),
             ContractExecutionKind.GhostRoleObjective => TryInitializeGhostRoleObjective(store, user, contractId, contract),
             _ => true

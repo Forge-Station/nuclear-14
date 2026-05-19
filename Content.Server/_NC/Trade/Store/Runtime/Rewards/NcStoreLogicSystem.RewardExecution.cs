@@ -28,6 +28,19 @@ public sealed partial class NcStoreLogicSystem
         return TryExecuteRewardExecutionPlan(receiver, plan, context, out reason);
     }
 
+    public bool TryExecuteRewardListWithPreCommit(
+        EntityUid receiver,
+        IReadOnlyList<ContractRewardData>? rewards,
+        string context,
+        Func<string?> preCommit,
+        out string reason)
+    {
+        if (!TryBuildRewardExecutionPlan(rewards, out var plan, out reason))
+            return false;
+
+        return TryExecuteRewardExecutionPlan(receiver, plan, context, out reason, preCommit);
+    }
+
     private bool TryBuildRewardExecutionPlan(
         IReadOnlyList<ContractRewardData>? rewards,
         out NcRewardExecutionPlan plan,
@@ -198,7 +211,8 @@ public sealed partial class NcStoreLogicSystem
         EntityUid receiver,
         NcRewardExecutionPlan plan,
         string context,
-        out string reason)
+        out string reason,
+        Func<string?>? preCommit = null)
     {
         if (!TryValidateRewardExecutionPlan(receiver, plan, out reason))
             return false;
@@ -258,6 +272,20 @@ public sealed partial class NcStoreLogicSystem
                 reason = $"{context}: failed to give currency '{entry.Id}' x{entry.Amount}.";
                 Sawmill.Error($"[NcStore] {reason}");
                 return false;
+            }
+
+            if (preCommit != null)
+            {
+                var preCommitFailure = preCommit();
+                if (!string.IsNullOrWhiteSpace(preCommitFailure))
+                {
+                    _spawnService.RollbackRewardTransaction();
+                    RollbackIssuedRewardCurrencies(receiver, issuedCurrencies, context);
+                    InvalidateInventoryCache(receiver);
+                    reason = $"{context}: pre-commit action failed: {preCommitFailure}";
+                    Sawmill.Warning($"[NcStore] {reason}");
+                    return false;
+                }
             }
 
             _spawnService.CommitRewardTransaction(receiver);

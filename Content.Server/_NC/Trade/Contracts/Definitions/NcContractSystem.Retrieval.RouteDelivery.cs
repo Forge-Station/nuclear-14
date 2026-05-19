@@ -11,7 +11,7 @@ public sealed partial class NcContractSystem : EntitySystem
     private static bool RequiresRetrievalRouteDelivery(ContractServerData contract)
     {
         var config = contract.Config;
-        return contract.IsInventoryDelivery &&
+        return contract.IsRetrievalRouteDelivery &&
                !string.IsNullOrWhiteSpace(config.RetrievalRouteId) &&
                config.RetrievalSpawnEnabled &&
                config.RetrievalRequireSpawnedEntities &&
@@ -74,7 +74,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!state.RetrievalRouteDeliveryActive)
         {
             state.RetrievalRouteDeliveryActive = true;
-            _activeRetrievalRouteDeliveries++;
+            _activeRetrievalRouteDeliveries.Add((store, contractId));
         }
 
         return true;
@@ -82,12 +82,22 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void UpdateRetrievalRouteDeliveries()
     {
-        if (_objectiveRuntimeByContract.Count == 0)
+        if (_activeRetrievalRouteDeliveries.Count == 0)
             return;
 
         _objectiveRuntimeKeysScratch.Clear();
-        foreach (var (key, state) in _objectiveRuntimeByContract)
+        foreach (var key in _activeRetrievalRouteDeliveries)
+            _objectiveRuntimeKeysScratch.Add(key);
+
+        for (var i = 0; i < _objectiveRuntimeKeysScratch.Count; i++)
         {
+            var key = _objectiveRuntimeKeysScratch[i];
+            if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+            {
+                _activeRetrievalRouteDeliveries.Remove(key);
+                continue;
+            }
+
             if (!state.RetrievalRouteDeliveryActive || state.RetrievalRouteDeliveryCompleted)
                 continue;
 
@@ -99,11 +109,8 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
             }
 
-            _objectiveRuntimeKeysScratch.Add(key);
+            UpdateRetrievalRouteDelivery(key);
         }
-
-        for (var i = 0; i < _objectiveRuntimeKeysScratch.Count; i++)
-            UpdateRetrievalRouteDelivery(_objectiveRuntimeKeysScratch[i]);
 
         _objectiveRuntimeKeysScratch.Clear();
     }
@@ -171,8 +178,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
         state.RetrievalRouteDeliveryCompleted = true;
         state.RetrievalRouteDeliveryActive = false;
-        _activeRetrievalRouteDeliveries = Math.Max(0, _activeRetrievalRouteDeliveries - 1);
-        DeactivateTrackedDeliveryDropoff(state);
+        _activeRetrievalRouteDeliveries.Remove(key);
+        DeactivateTrackedDeliveryDropoff(key, state);
 
         if (contract.Config.RetrievalConsumeCargo)
             ConsumeDeliveredRetrievalCargo(state);
@@ -259,6 +266,7 @@ public sealed partial class NcContractSystem : EntitySystem
             {
                 state.RetrievalAcceptedCargoCount++;
                 state.RetrievalSpawnedEntities.RemoveAt(i);
+                state.RetrievalSpawnedEntitySet.Remove(cargo);
                 UnregisterRetrievalSpawnedCargo(cargo);
 
                 if (!TerminatingOrDeleted(cargo))
@@ -355,11 +363,10 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         coords = EntityCoordinates.Invalid;
 
-        var query = EntityQueryEnumerator<NcContractTurnInContainerComponent>();
-        while (query.MoveNext(out var container, out var turnIn))
+        CollectTurnInContainersByGroup(config.RetrievalDestinationId, _turnInContainerQueryScratch);
+        for (var containerIndex = 0; containerIndex < _turnInContainerQueryScratch.Count; containerIndex++)
         {
-            if (!turnIn.Groups.Contains(config.RetrievalDestinationId))
-                continue;
+            var container = _turnInContainerQueryScratch[containerIndex];
 
             _retrievalRouteContainerItemsScratch.Clear();
             _logic.ScanInventoryItems(container, _retrievalRouteContainerItemsScratch);
@@ -373,6 +380,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 {
                     coords = containerXform.Coordinates;
                     _retrievalRouteContainerItemsScratch.Clear();
+                    _turnInContainerQueryScratch.Clear();
                     return true;
                 }
 
@@ -380,15 +388,18 @@ public sealed partial class NcContractSystem : EntitySystem
                 {
                     coords = cargoXform.Coordinates;
                     _retrievalRouteContainerItemsScratch.Clear();
+                    _turnInContainerQueryScratch.Clear();
                     return true;
                 }
 
                 _retrievalRouteContainerItemsScratch.Clear();
+                _turnInContainerQueryScratch.Clear();
                 return true;
             }
         }
 
         _retrievalRouteContainerItemsScratch.Clear();
+        _turnInContainerQueryScratch.Clear();
         return false;
     }
 
@@ -439,11 +450,10 @@ public sealed partial class NcContractSystem : EntitySystem
         if (state.RetrievalDeliveredEntities.Count == 0)
             return false;
 
-        var query = EntityQueryEnumerator<NcContractTurnInContainerComponent>();
-        while (query.MoveNext(out var container, out var turnIn))
+        CollectTurnInContainersByGroup(config.RetrievalDestinationId, _turnInContainerQueryScratch);
+        for (var containerIndex = 0; containerIndex < _turnInContainerQueryScratch.Count; containerIndex++)
         {
-            if (!turnIn.Groups.Contains(config.RetrievalDestinationId))
-                continue;
+            var container = _turnInContainerQueryScratch[containerIndex];
 
             _retrievalRouteContainerItemsScratch.Clear();
             _logic.ScanInventoryItems(container, _retrievalRouteContainerItemsScratch);
@@ -458,6 +468,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 {
                     coords = containerXform.Coordinates;
                     _retrievalRouteContainerItemsScratch.Clear();
+                    _turnInContainerQueryScratch.Clear();
                     return true;
                 }
 
@@ -465,6 +476,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 {
                     coords = itemXform.Coordinates;
                     _retrievalRouteContainerItemsScratch.Clear();
+                    _turnInContainerQueryScratch.Clear();
                     return true;
                 }
             }
@@ -472,6 +484,7 @@ public sealed partial class NcContractSystem : EntitySystem
             _retrievalRouteContainerItemsScratch.Clear();
         }
 
+        _turnInContainerQueryScratch.Clear();
         return false;
     }
 
@@ -498,6 +511,7 @@ public sealed partial class NcContractSystem : EntitySystem
         foreach (var cargo in state.RetrievalDeliveredEntities)
         {
             state.RetrievalSpawnedEntities.Remove(cargo);
+            state.RetrievalSpawnedEntitySet.Remove(cargo);
             UnregisterRetrievalSpawnedCargo(cargo);
             if (cargo != EntityUid.Invalid && !TerminatingOrDeleted(cargo))
                 Del(cargo);

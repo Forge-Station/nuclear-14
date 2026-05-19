@@ -153,6 +153,7 @@ public sealed partial class NcContractSystem : EntitySystem
             ? _timing.CurTime + TimeSpan.FromSeconds(config.AcceptTimeoutSeconds)
             : null;
         RegisterGhostRoleRoundEndRecord(key, contract, state);
+        _activeGhostRoleObjectives.Add(key);
         _objectiveRuntimeByTarget[spawner] = key;
 
         runtime.GhostRolePendingAcceptance = state.GhostRoleAcceptDeadline != null;
@@ -577,6 +578,7 @@ public sealed partial class NcContractSystem : EntitySystem
             comp,
             contract,
             Loc.GetString("nc-store-contract-ghost-role-survival-succeeded"),
+            ContractObjectiveOutcome.RoleSurvived,
             deleteTrackedEntities: false);
         return true;
     }
@@ -584,12 +586,22 @@ public sealed partial class NcContractSystem : EntitySystem
     // Ghost role objective runtime.
     private void UpdateGhostRoleObjectiveTimeouts()
     {
-        if (_objectiveRuntimeByContract.Count == 0)
+        if (_activeGhostRoleObjectives.Count == 0)
             return;
 
         _objectiveRuntimeKeysScratch.Clear();
-        foreach (var (key, state) in _objectiveRuntimeByContract)
+        foreach (var key in _activeGhostRoleObjectives)
+            _objectiveRuntimeKeysScratch.Add(key);
+
+        for (var i = 0; i < _objectiveRuntimeKeysScratch.Count; i++)
         {
+            var key = _objectiveRuntimeKeysScratch[i];
+            if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+            {
+                _activeGhostRoleObjectives.Remove(key);
+                continue;
+            }
+
             if (state.GhostRoleTaken)
             {
                 if (TryGetObjectiveContract(key, out var comp, out var contract) &&
@@ -609,11 +621,8 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             if (_timing.CurTime >= deadline)
-                _objectiveRuntimeKeysScratch.Add(key);
+                FailExpiredGhostRoleObjective(key);
         }
-
-        for (var i = 0; i < _objectiveRuntimeKeysScratch.Count; i++)
-            FailExpiredGhostRoleObjective(_objectiveRuntimeKeysScratch[i]);
 
         _objectiveRuntimeKeysScratch.Clear();
     }
@@ -712,7 +721,8 @@ public sealed partial class NcContractSystem : EntitySystem
             key,
             comp,
             contract,
-            Loc.GetString("nc-store-contract-ghost-role-timeout"));
+            Loc.GetString("nc-store-contract-ghost-role-timeout"),
+            ContractObjectiveOutcome.NotAccepted);
     }
 
     private void HandleGhostRoleTargetResolved(
@@ -731,7 +741,8 @@ public sealed partial class NcContractSystem : EntitySystem
             key,
             comp,
             contract,
-            Loc.GetString("nc-store-contract-ghost-role-target-lost"));
+            Loc.GetString("nc-store-contract-ghost-role-target-lost"),
+            ContractObjectiveOutcome.TargetLost);
     }
 
     public bool HasRealtimeContractState(NcStoreComponent comp)
@@ -912,7 +923,8 @@ public sealed partial class NcContractSystem : EntitySystem
             key,
             comp,
             contract,
-            Loc.GetString("nc-store-contract-ghost-role-target-rotten"));
+            Loc.GetString("nc-store-contract-ghost-role-target-rotten"),
+            ContractObjectiveOutcome.TargetRotten);
         return true;
     }
 

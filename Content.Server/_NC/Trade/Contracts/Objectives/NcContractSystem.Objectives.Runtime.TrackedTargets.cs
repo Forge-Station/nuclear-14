@@ -255,7 +255,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         if (!HasConfiguredObjectiveDropoff(config))
         {
-            DeactivateTrackedDeliveryDropoff(state);
+            DeactivateTrackedDeliveryDropoff((store, contractId), state);
             return true;
         }
 
@@ -269,7 +269,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TrySpawnDeliveryDropoffMarker(contractId, state, dropoffCoords))
             return false;
 
-        ActivateTrackedDeliveryDropoff(state);
+        ActivateTrackedDeliveryDropoff((store, contractId), state);
         return true;
     }
 
@@ -316,25 +316,21 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
-    private void ActivateTrackedDeliveryDropoff(ObjectiveRuntimeState state)
+    private void ActivateTrackedDeliveryDropoff((EntityUid Store, string ContractId) key, ObjectiveRuntimeState state)
     {
         if (state.ActiveDeliveryDropoff)
             return;
 
         state.DeliveryDropoffCompleted = false;
         state.ActiveDeliveryDropoff = true;
-        _activeTrackedDeliveryDropoffObjectives++;
+        _activeTrackedDeliveryDropoffObjectives.Add(key);
     }
 
-    private void DeactivateTrackedDeliveryDropoff(ObjectiveRuntimeState state)
+    private void DeactivateTrackedDeliveryDropoff((EntityUid Store, string ContractId) key, ObjectiveRuntimeState state)
     {
         if (state.ActiveDeliveryDropoff)
-        {
             state.ActiveDeliveryDropoff = false;
-
-            if (_activeTrackedDeliveryDropoffObjectives > 0)
-                _activeTrackedDeliveryDropoffObjectives--;
-        }
+        _activeTrackedDeliveryDropoffObjectives.Remove(key);
 
         state.DeliveryDropoffCoordinates = null;
 

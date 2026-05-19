@@ -46,6 +46,20 @@
   description: Пустой алюминиевый ящик с контрактной биркой. Используется для заказов доставки в мастерскую.
   categories: [ HideSpawnMenu ]
 
+- type: entity
+  parent: N14CrateMilitary
+  id: NcTradeCargoAmmoCrate
+  name: контрактный ящик боеприпасов
+  description: Закрытый военный ящик с контрактной биркой. Это груз для доставки, а не бесплатный склад патронов.
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: N14CrateWooden
+  id: NcTradeCargoProvisionCrate
+  name: контрактный ящик провизии
+  description: Пустой деревянный ящик с биркой каравана. Используется как груз для доставки еды и припасов.
+  categories: [ HideSpawnMenu ]
+
 # -----------------------------------------------------------------------------
 # Light city Retrieval routes for mapper-placed marker pools
 # -----------------------------------------------------------------------------
@@ -180,6 +194,171 @@
     mode: DestinationProof
     proof: BazarDeliveryReceiptProof
   guidance: BazarLightGuidanceWarehouseToWorkshop
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+# -----------------------------------------------------------------------------
+# Medium caravan Retrieval routes for mapper-placed marker pools
+# -----------------------------------------------------------------------------
+
+- type: ncRetrievalSourcePreset
+  id: BazarMediumSourceCityCargo
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractMediumCityCargoSource
+
+- type: ncRetrievalSourcePreset
+  id: BazarMediumSourceFarCargo
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractMediumFarCargoSource
+
+- type: ncRetrievalDestinationPreset
+  id: BazarMediumDestinationCheckpoint
+  target:
+    type: MarkerGroup
+    id: TradeContractMediumCheckpointDropoff
+  radius: 2.0
+
+- type: ncRetrievalDestinationPreset
+  id: BazarMediumDestinationCamp
+  target:
+    type: MarkerGroup
+    id: TradeContractMediumCampDropoff
+  radius: 2.0
+
+- type: ncRetrievalGuidancePreset
+  id: BazarMediumGuidanceFarToTrader
+  sourceHint: "Потерянный ящик появился дальше от города, у одной из отмеченных дорог."
+  destinationHint: "Верните найденный ящик торговцу и сдайте его через интерфейс."
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 1
+
+- type: ncRetrievalGuidancePreset
+  id: BazarMediumGuidanceCityToCheckpoint
+  sourceHint: "Ящик появился у городского склада или ворот."
+  destinationHint: "Отнесите ящик на дальний блокпост. После доставки заберите накладную и верните её торговцу."
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 1
+
+- type: ncRetrievalGuidancePreset
+  id: BazarMediumGuidanceCityToCamp
+  sourceHint: "Ящик появился у городского склада или ворот."
+  destinationHint: "Отнесите ящик в дальний лагерь. После доставки заберите накладную и верните её торговцу."
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 1
+
+- type: ncRetrievalRoutePreset
+  id: BazarMediumRouteFarToTrader
+  source: BazarMediumSourceFarCargo
+  destination: BazarLightDestinationStoreUi
+  claim:
+    mode: StoreCargo
+  guidance: BazarMediumGuidanceFarToTrader
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: BazarMediumRouteCityToCheckpointProof
+  source: BazarMediumSourceCityCargo
+  destination: BazarMediumDestinationCheckpoint
+  claim:
+    mode: DestinationProof
+    proof: BazarDeliveryReceiptProof
+  guidance: BazarMediumGuidanceCityToCheckpoint
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: BazarMediumRouteCityToCampProof
+  source: BazarMediumSourceCityCargo
+  destination: BazarMediumDestinationCamp
+  claim:
+    mode: DestinationProof
+    proof: BazarDeliveryReceiptProof
+  guidance: BazarMediumGuidanceCityToCamp
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+# -----------------------------------------------------------------------------
+# Heavy Retrieval routes for mapper-placed marker pools
+# -----------------------------------------------------------------------------
+
+- type: ncRetrievalSourcePreset
+  id: BazarHeavySourcePiano
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractHeavyPianoSource
+
+- type: ncRetrievalSourcePreset
+  id: BazarHeavySourceCargo
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractHeavyCargoSource
+
+- type: ncRetrievalDestinationPreset
+  id: BazarHeavyDestinationOutpost
+  target:
+    type: MarkerGroup
+    id: TradeContractHeavyOutpostDropoff
+  radius: 2.5
+
+- type: ncRetrievalGuidancePreset
+  id: BazarHeavyGuidancePianoToTrader
+  sourceHint: "Пианино стоит далеко за городом, в отмеченной опасной зоне."
+  destinationHint: "Притащите пианино к торговцу и сдайте его через интерфейс. Накладная не нужна: заказчик ждёт сам инструмент."
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 1
+
+- type: ncRetrievalGuidancePreset
+  id: BazarHeavyGuidanceCargoToOutpost
+  sourceHint: "Ценный ящик появился в дальней опасной зоне."
+  destinationHint: "Доставьте груз на укреплённый пост. После приёмки заберите накладную и верните её торговцу."
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 1
+
+- type: ncRetrievalRoutePreset
+  id: BazarHeavyRoutePianoToTrader
+  source: BazarHeavySourcePiano
+  destination: BazarLightDestinationStoreUi
+  claim:
+    mode: StoreCargo
+  guidance: BazarHeavyGuidancePianoToTrader
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: BazarHeavyRouteCargoToOutpostProof
+  source: BazarHeavySourceCargo
+  destination: BazarHeavyDestinationOutpost
+  claim:
+    mode: DestinationProof
+    proof: BazarDeliveryReceiptProof
+  guidance: BazarHeavyGuidanceCargoToOutpost
   delivery:
     consumeCargo: true
     lockDeliveredCargo: false

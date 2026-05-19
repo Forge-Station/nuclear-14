@@ -7,12 +7,22 @@ public sealed partial class NcContractSystem : EntitySystem
 {
     private void UpdateTrackedDeliveryDropoffObjectives()
     {
-        if (_objectiveRuntimeByContract.Count == 0)
+        if (_activeTrackedDeliveryDropoffObjectives.Count == 0)
             return;
 
         _objectiveRuntimeKeysScratch.Clear();
-        foreach (var (key, state) in _objectiveRuntimeByContract)
+        foreach (var key in _activeTrackedDeliveryDropoffObjectives)
+            _objectiveRuntimeKeysScratch.Add(key);
+
+        for (var i = 0; i < _objectiveRuntimeKeysScratch.Count; i++)
         {
+            var key = _objectiveRuntimeKeysScratch[i];
+            if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+            {
+                _activeTrackedDeliveryDropoffObjectives.Remove(key);
+                continue;
+            }
+
             if (state.TargetEntity is not { } target ||
                 target == EntityUid.Invalid ||
                 TerminatingOrDeleted(target) ||
@@ -31,11 +41,8 @@ public sealed partial class NcContractSystem : EntitySystem
             }
 
             if (IsTrackedDeliveryTargetAtDropoff(target, state))
-                _objectiveRuntimeKeysScratch.Add(key);
+                CompleteTrackedDeliveryDropoffObjective(key);
         }
-
-        for (var i = 0; i < _objectiveRuntimeKeysScratch.Count; i++)
-            CompleteTrackedDeliveryDropoffObjective(_objectiveRuntimeKeysScratch[i]);
 
         _objectiveRuntimeKeysScratch.Clear();
     }
@@ -83,7 +90,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 Del(target);
         }
 
-        DeactivateTrackedDeliveryDropoff(state);
+        DeactivateTrackedDeliveryDropoff(key, state);
 
         if (state.ProofEntity is { } proof && proof != EntityUid.Invalid && !TerminatingOrDeleted(proof))
             RetargetObjectivePinpointers(key, state, proof);
@@ -310,12 +317,17 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryValidateContractRewards(user, contract.Rewards, out var rewardFail))
             return rewardFail;
 
-        if (!TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail))
-            return proofFail;
-
         var config = contract.Config;
-        if (!TryGiveContractRewards(user, contract.Rewards, out var rewardExecFail))
+        if (!TryGiveContractRewardsWithPreCommit(
+                user,
+                contract.Rewards,
+                () => TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail)
+                    ? ClaimAttemptResult.Ok()
+                    : proofFail,
+                out var rewardExecFail))
+        {
             return rewardExecFail;
+        }
 
         FinalizeClaim(
             store,

@@ -78,6 +78,9 @@ public sealed partial class NcContractSystem : EntitySystem
             case ContractExecutionKind.TrackedDeliveryObjective:
                 return TryClaimTrackedDeliveryContract(store, user, contractId, comp, contract);
 
+            case ContractExecutionKind.RetrievalRouteDelivery:
+                return TryClaimRetrievalRouteReward(store, user, contractId, comp, contract);
+
             default:
                 return TryClaimObjectiveContract(store, user, contractId, comp, contract);
         }
@@ -108,14 +111,22 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryValidateContractRewards(user, contract.Rewards, out var rewardFail))
             return rewardFail;
 
-        if (contract.Config.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof &&
-            !TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail))
-        {
-            return proofFail;
-        }
+        if (!TryGiveContractRewardsWithPreCommit(
+                user,
+                contract.Rewards,
+                () =>
+                {
+                    if (contract.Config.RetrievalClaimMode != NcRetrievalClaimMode.DestinationProof)
+                        return ClaimAttemptResult.Ok();
 
-        if (!TryGiveContractRewards(user, contract.Rewards, out var rewardExecFail))
+                    return TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail)
+                        ? ClaimAttemptResult.Ok()
+                        : proofFail;
+                },
+                out var rewardExecFail))
+        {
             return rewardExecFail;
+        }
 
         FinalizeClaim(store, comp, contractId, contract.Repeatable, deleteTrackedEntities: contract.Config.RetrievalConsumeCargo);
         return ClaimAttemptResult.Ok();
@@ -152,16 +163,24 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryValidateContractRewards(user, contract.Rewards, out var rewardFail))
             return rewardFail;
 
-        if (!TryConsumeSpawnedHuntBodyTurnIn(store, user, contractId, contract, out var bodyFail))
-            return bodyFail;
+        if (!TryGiveContractRewardsWithPreCommit(
+                user,
+                contract.Rewards,
+                () =>
+                {
+                    if (!TryConsumeSpawnedHuntBodyTurnIn(store, user, contractId, contract, out var bodyFail))
+                        return bodyFail;
 
-        if (!TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail))
-            return proofFail;
+                    if (!TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail))
+                        return proofFail;
 
-        TryMarkGhostRoleRoundEndClaimed(store, contractId, contract);
-
-        if (!TryGiveContractRewards(user, contract.Rewards, out var rewardExecFail))
+                    TryMarkGhostRoleRoundEndClaimed(store, contractId, contract);
+                    return ClaimAttemptResult.Ok();
+                },
+                out var rewardExecFail))
+        {
             return rewardExecFail;
+        }
 
         FinalizeClaim(store, comp, contractId, contract.Repeatable);
 

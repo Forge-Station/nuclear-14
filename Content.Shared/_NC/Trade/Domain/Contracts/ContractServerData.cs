@@ -23,6 +23,7 @@ public sealed class ContractServerData
     public ContractExecutionKind ExecutionKind { get; set; } = ContractExecutionKind.InventoryDelivery;
     public bool IsInventoryDelivery => ExecutionKind == ContractExecutionKind.InventoryDelivery;
     public bool IsTrackedDeliveryObjective => ExecutionKind == ContractExecutionKind.TrackedDeliveryObjective;
+    public bool IsRetrievalRouteDelivery => ExecutionKind == ContractExecutionKind.RetrievalRouteDelivery;
     public bool IsHuntObjective => ExecutionKind == ContractExecutionKind.HuntObjective;
     public bool IsGhostRoleObjective => ExecutionKind == ContractExecutionKind.GhostRoleObjective;
     public bool HasInventoryDeliverySpawnSupport => IsInventoryDelivery && !string.IsNullOrWhiteSpace(Config.DeliverySpawnPrototype);

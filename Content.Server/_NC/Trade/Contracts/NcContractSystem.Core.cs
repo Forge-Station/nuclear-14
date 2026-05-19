@@ -43,12 +43,14 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         base.Initialize();
         InitializeObjectiveRuntime();
+        InitializeTurnInContainerIndex();
         _prototypes.PrototypesReloaded += OnPrototypesReloaded;
     }
 
     public override void Shutdown()
     {
         _prototypes.PrototypesReloaded -= OnPrototypesReloaded;
+        ShutdownTurnInContainerIndex();
         ShutdownObjectiveRuntime();
         base.Shutdown();
     }

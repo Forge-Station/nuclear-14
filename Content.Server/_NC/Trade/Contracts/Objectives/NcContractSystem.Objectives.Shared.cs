@@ -127,6 +127,7 @@ public sealed partial class NcContractSystem : EntitySystem
         runtime.AcceptTimeoutRemainingSeconds = 0;
         runtime.GhostRoleSurvivalRemainingSeconds = 0;
         runtime.Failed = false;
+        runtime.Outcome = ContractObjectiveOutcome.None;
         runtime.FailureReason = string.Empty;
         runtime.StatusHint = string.Empty;
     }
@@ -161,13 +162,18 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static void MarkObjectiveComplete(ContractServerData contract)
     {
+        contract.Runtime.Outcome = ContractObjectiveOutcome.Success;
         SetObjectiveStage(contract, contract.Runtime.StageGoal);
     }
 
-    private static void MarkObjectiveFailed(ContractServerData contract, string failureReason)
+    private static void MarkObjectiveFailed(
+        ContractServerData contract,
+        string failureReason,
+        ContractObjectiveOutcome outcome = ContractObjectiveOutcome.Failed)
     {
         var runtime = contract.Runtime;
         runtime.Failed = true;
+        runtime.Outcome = outcome;
         runtime.FailureReason = failureReason;
         runtime.StatusHint = failureReason;
         runtime.GhostRolePendingAcceptance = false;
@@ -204,10 +210,11 @@ public sealed partial class NcContractSystem : EntitySystem
         NcStoreComponent comp,
         ContractServerData contract,
         string failureReason,
+        ContractObjectiveOutcome outcome = ContractObjectiveOutcome.Failed,
         bool deleteTrackedEntities = true,
         bool deleteGuards = false)
     {
-        MarkObjectiveFailed(contract, failureReason);
+        MarkObjectiveFailed(contract, failureReason, outcome);
 
         if (_objectiveRuntimeByContract.TryGetValue(key, out var state))
             CleanupObjectivePinpointers(key, state);
@@ -250,7 +257,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 Del(target);
         }
 
-        DeactivateTrackedDeliveryDropoff(state);
+        DeactivateTrackedDeliveryDropoff(key, state);
 
         CleanupRetrievalSpawnedEntities(state, deleteTrackedEntities);
         CleanupSpawnedHuntBodyTarget(state, deleteTrackedEntities);
@@ -288,14 +295,16 @@ public sealed partial class NcContractSystem : EntitySystem
         if (state.HuntActive)
         {
             state.HuntActive = false;
-            _activeHuntObjectives = Math.Max(0, _activeHuntObjectives - 1);
+            _activeHuntObjectives.Remove(key);
         }
 
         if (state.RetrievalRouteDeliveryActive)
         {
             state.RetrievalRouteDeliveryActive = false;
-            _activeRetrievalRouteDeliveries = Math.Max(0, _activeRetrievalRouteDeliveries - 1);
+            _activeRetrievalRouteDeliveries.Remove(key);
         }
+
+        _activeGhostRoleObjectives.Remove(key);
 
         state.RetrievalDeliveredEntities.Clear();
         state.RetrievalAcceptedCargoCount = 0;
@@ -341,7 +350,10 @@ public sealed partial class NcContractSystem : EntitySystem
     private void CleanupRetrievalSpawnedEntities(ObjectiveRuntimeState state, bool deleteSpawnedEntities)
     {
         if (state.RetrievalSpawnedEntities.Count == 0)
+        {
+            state.RetrievalSpawnedEntitySet.Clear();
             return;
+        }
 
         for (var i = state.RetrievalSpawnedEntities.Count - 1; i >= 0; i--)
         {
@@ -353,6 +365,7 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         state.RetrievalSpawnedEntities.Clear();
+        state.RetrievalSpawnedEntitySet.Clear();
     }
 
     private void CleanupHuntSpawnedTargets(ObjectiveRuntimeState state, bool deleteSpawnedTargets)
@@ -429,6 +442,7 @@ public sealed partial class NcContractSystem : EntitySystem
         public readonly List<EntityUid> GuardEntities = new();
         public readonly HashSet<EntityUid> PinpointerEntities = new();
         public readonly List<EntityUid> RetrievalSpawnedEntities = new();
+        public readonly HashSet<EntityUid> RetrievalSpawnedEntitySet = new();
         public readonly List<EntityUid> HuntSpawnedTargets = new();
         public readonly HashSet<EntityUid> RetrievalDeliveredEntities = new();
         public int RetrievalAcceptedCargoCount;

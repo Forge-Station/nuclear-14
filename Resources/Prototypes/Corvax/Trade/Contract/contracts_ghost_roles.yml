@@ -42,7 +42,7 @@
 - type: entity
   parent: MobHuman
   id: NcGhostRoleMobEscapedWorker
-  name: беглянка из салуна
+  name: София Миллер
   components:
   - type: RandomHumanoidAppearance
     randomizeName: true
@@ -76,11 +76,11 @@
 - type: ncGhostRolePreset
   id: NcGhostRoleEscapedWorker
   entityPrototype: NcGhostRoleMobEscapedWorker
-  name: "Беглянка из салуна"
+  name: "София Миллер"
   description: "Вас разыскивают по контракту. Охотники получат награду только если доставят вас живой, полностью здоровой и в наручниках."
   rules: "Вы можете скрываться, договариваться или отбиваться, но ваша цель — пережить один час и не быть сданной торговцу."
   character:
-    name: "Рыжая Мэгги"
+    name: "София Миллер"
     sex: Female
     gender: Female
     age: 25
@@ -101,8 +101,6 @@
     outerClothing: N14ClothingOuterNCRCombatArmor
     suitstorage: N14WeaponRifle556Service
     pocket1: NCRSGTloadoutkits
-    pocket2: RadioHandheld
-    id: N14IDNCRDogtagNCO
   storage:
     back:
     - Magazine556Rifle
@@ -156,16 +154,76 @@
   - NcGhostRolePerkNCRDeserter
 
 - type: startingGear
+  id: NcGhostRoleZoyaDarbyGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpskirtDressBlack
+    shoes: N14ClothingBootsCombatMK2
+    gloves: N14ClothingHandsGlovesCombat
+    back: ClothingBackpackDuffel
+    outerClothing: N14ClothingOuterCombatArmorMK2
+    head: N14ClothingHeadHatCombatHelmetMK2
+    suitstorage: N14WeaponRifleBozarGRA
+  storage:
+    back:
+    - Magazine556Rifle30
+    - Magazine556Rifle30
+    - Magazine556Rifle30
+    - N14Stimpak
+
+- type: entity
+  parent: MobHuman
+  id: NcGhostRoleMobZoyaDarby
+  name: Зоя Дарби
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: true
+  - type: Loadout
+    prototypes: [NcGhostRoleZoyaDarbyGear]
+  - type: NpcFactionMember
+    factions:
+    - Wastelander
+
+- type: ncGhostRolePerk
+  id: NcGhostRolePerkZoyaDarby
+  name: "Наёмница-легенда"
+  description: "Зоя быстрее обычного человека, крепче держит удар и особенно опасна с Bozar."
+  sprintSpeedMultiplier: 1.30
+  projectileDamageMultiplier: 1.35
+  weaponPrototypes:
+  - N14WeaponRifleBozarGRA
+  incomingFlatReductions:
+    Slash: 5
+    Piercing: 5
+    Heat: 5
+
+- type: ncGhostRolePreset
+  id: NcGhostRoleZoyaDarby
+  entityPrototype: NcGhostRoleMobZoyaDarby
+  name: "Зоя Дарби"
+  description: "Вы Зоя Дарби, опасная наёмница в боевой броне MK2 с Bozar. За вами охотятся, но заказчик требует взять вас живой."
+  rules: "Не дайте охотникам доставить вас живой, здоровой и в наручниках. Если вы переживёте час, контракт против вас будет провален."
+  character:
+    name: "Зоя Дарби"
+    sex: Female
+    gender: Female
+    age: 31
+    hair: CMlonghair
+    hairColor: "#2F211C"
+  perks:
+  - NcGhostRolePerkZoyaDarby
+
+- type: startingGear
   id: NcGhostRoleFreshGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitRags
     shoes: N14ClothingShoesRaider
     back: ClothingBackpackSatchel
-    suitstorage: N14WeaponSMG10mmPipe
+    suitstorage: N14WeaponPistol10mmPipe
   storage:
     back:
-    - N14MagazineSMG10mm
-    - N14MagazineSMG10mm
+    - N14MagazinePistol10mm
+    - N14MagazinePistol10mm
+    - N14MagazinePistol10mm
 
 - type: entity
   parent: MobHuman
@@ -184,14 +242,20 @@
 - type: ncGhostRolePerk
   id: NcGhostRolePerkFresh
   name: "Ломка и адреналин"
-  description: "Фреш быстрее убегает и предпочитает стрелять, а не лезть в ближний бой."
+  description: "Фреш быстрее убегает и опаснее стреляет из пистолетов."
   sprintSpeedMultiplier: 1.30
+  projectileDamageMultiplier: 1.30
+  weaponPrototypes:
+  - N14WeaponPistol10mmPipe
+  - N14WeaponPistol10mm
+  - N14WeaponPistol9mm
+  - N14WeaponRevolver9mm
 
 - type: ncGhostRolePreset
   id: NcGhostRoleFresh
   entityPrototype: NcGhostRoleMobFresh
   name: "Фреш"
-  description: "Вы сорвавшийся наркоман с самодельным пистолетом-пулеметом. Охотники получат награду только если принесут ваше тело торговцу."
+  description: "Вы сорвавшийся наркоман с самодельным пистолетом. Охотники получат награду только если принесут ваше тело торговцу."
   rules: "Держитесь подальше от охотников и переживите один час. Если выживете, контракт против вас будет провален."
   character:
     name: "Фреш"
@@ -227,32 +291,32 @@
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractEscapedWorkerAlive
-  name: "Особый заказ: беглянка из салуна"
-  description: "Поймайте рыжую беглянку и доставьте её живой, полностью здоровой и в наручниках. Мертвую цель торговец не примет."
+  name: "Особый заказ: София Миллер"
+  description: "София Миллер сбежала от караванщиков и прячется поблизости. Доставьте её живой, полностью здоровой и в наручниках. Мертвую цель торговец не примет."
   role: NcGhostRoleEscapedWorker
   completion:
     mode: AliveCuffedTurnIn
   survival:
-    briefing: "Вы беглянка из салуна. Продержитесь один час и не дайте охотникам сдать вас живой торговцу."
+    briefing: "Вы София Миллер. Продержитесь один час и не дайте охотникам сдать вас живой торговцу."
     objectiveTitle: "Выжить один час"
     objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
   spawn:
     point:
       type: MarkerId
-      id: TradeContractGhostSpawn
+      id: TradeContractGhostSofiaMillerSpawn
     acceptTimeoutSeconds: 300
   reward:
   - type: Currency
     currency: Caps
-    count: 260
+    count: { min: 450, max: 650 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: 3
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractNCRDeserterDead
   name: "Особый заказ: дезертир НКР"
-  description: "Патроу, бывший сержант НКР, ушел с оружием и припасами. Убейте дезертира и доставьте тело торговцу."
+  description: "Патроу, бывший сержант НКР, ушел с оружием и припасами. Это тяжёлый заказ: убейте дезертира и доставьте тело торговцу."
   role: NcGhostRoleNCRDeserter
   completion:
     mode: DeadBodyTurnIn
@@ -263,20 +327,44 @@
   spawn:
     point:
       type: MarkerId
-      id: TradeContractGhostSpawn
+      id: TradeContractGhostPatrouSpawn
     acceptTimeoutSeconds: 300
   reward:
   - type: Currency
     currency: Caps
-    count: 340
+    count: { min: 650, max: 900 }
   - type: Pool
     pool: caravan_hard
-    count: 1
+    count: 2
+
+- type: ncGhostRoleContract
+  id: NcGhostRoleContractZoyaDarbyAlive
+  name: "Особый заказ: Зоя Дарби"
+  description: "Зоя Дарби пережила слишком много перестрелок и оставила за собой слишком много тел. Заказчик хочет её живой: доставьте Зою полностью здоровой и в наручниках. Мёртвую цель торговец не примет."
+  role: NcGhostRoleZoyaDarby
+  completion:
+    mode: AliveCuffedTurnIn
+  survival:
+    briefing: "Вы Зоя Дарби. Продержитесь один час и не дайте охотникам сдать вас живой торговцу."
+    objectiveTitle: "Выжить один час"
+    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostZoyaDarbySpawn
+    acceptTimeoutSeconds: 300
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 800, max: 1100 }
+  - type: Pool
+    pool: caravan_hard
+    count: 2
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractFreshDead
   name: "Особый заказ: Фреш"
-  description: "Фреш снова сорвался и палит из самодельного ПП. Убейте его и доставьте тело торговцу."
+  description: "Фреш снова сорвался и палит из самодельного пистолета. Убейте его и доставьте тело торговцу."
   role: NcGhostRoleFresh
   completion:
     mode: DeadBodyTurnIn
@@ -287,12 +375,12 @@
   spawn:
     point:
       type: MarkerId
-      id: TradeContractGhostSpawn
+      id: TradeContractGhostFreshSpawn
     acceptTimeoutSeconds: 300
   reward:
   - type: Currency
     currency: Caps
-    count: 220
+    count: { min: 420, max: 620 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: 3

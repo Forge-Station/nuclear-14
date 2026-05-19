@@ -371,7 +371,9 @@ public sealed partial class NcContractSystem : EntitySystem
         ObjectiveRuntimeState state,
         EntityUid cargo)
     {
-        state.RetrievalSpawnedEntities.Add(cargo);
+        if (state.RetrievalSpawnedEntitySet.Add(cargo))
+            state.RetrievalSpawnedEntities.Add(cargo);
+
         _objectiveRuntimeByRetrievalCargo[cargo] = key;
     }
 
@@ -397,6 +399,7 @@ public sealed partial class NcContractSystem : EntitySystem
     private void RemoveRetrievalSpawnedCargoFromState(ObjectiveRuntimeState state, EntityUid cargo)
     {
         state.RetrievalSpawnedEntities.Remove(cargo);
+        state.RetrievalSpawnedEntitySet.Remove(cargo);
         state.RetrievalDeliveredEntities.Remove(cargo);
     }
 
@@ -476,6 +479,7 @@ public sealed partial class NcContractSystem : EntitySystem
             {
                 UnregisterRetrievalSpawnedCargo(ent);
                 state.RetrievalSpawnedEntities.RemoveAt(i);
+                state.RetrievalSpawnedEntitySet.Remove(ent);
             }
         }
     }
@@ -503,12 +507,6 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static bool IsRetrievalSpawnedEntity(EntityUid ent, ObjectiveRuntimeState state)
     {
-        for (var i = 0; i < state.RetrievalSpawnedEntities.Count; i++)
-        {
-            if (state.RetrievalSpawnedEntities[i] == ent)
-                return true;
-        }
-
-        return false;
+        return state.RetrievalSpawnedEntitySet.Contains(ent);
     }
 }

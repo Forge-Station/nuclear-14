@@ -28,3 +28,52 @@
   name: "трофейная метка радтаракана"
   description: "Маленькая окровавленная метка с последней контрактной твари. Принесите её торговцу как доказательство выполненной охоты."
   categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofGeckoTrophy
+  name: "трофейная метка геккона"
+  description: "Контрактная метка с последней убитой цели. Принесите её торговцу как доказательство зачистки."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofRadscorpionTrophy
+  name: "трофейная метка радскорпиона"
+  description: "Контрактная метка с последней убитой цели. Принесите её торговцу как доказательство зачистки."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofNightstalkerTrophy
+  name: "трофейная метка ночной твари"
+  description: "Контрактная метка с последней убитой цели. Принесите её торговцу как доказательство зачистки."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofMoleratTrophy
+  name: "трофейная метка кротокрыса"
+  description: "Контрактная метка с последней убитой цели. Принесите её торговцу как доказательство зачистки."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofCrabTrophy
+  name: "трофейная метка краба"
+  description: "Контрактная метка с последней убитой цели. Принесите её торговцу как доказательство зачистки."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofRaiderTrophy
+  name: "трофейная метка рейдера"
+  description: "Контрактная метка с последней убитой цели. Принесите её торговцу как доказательство зачистки."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofCazadorTrophy
+  name: "трофейная метка казадора"
+  description: "Контрактная метка с последней убитой цели. Принесите её торговцу как доказательство зачистки."
+  categories: [ HideSpawnMenu ]

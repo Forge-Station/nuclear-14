@@ -23,7 +23,7 @@ public sealed partial class NcContractSystem : EntitySystem
             Repeatable = proto.Repeatable,
             Taken = false,
             ObjectiveType = ContractObjectiveType.Delivery,
-            ExecutionKind = ContractExecutionKinds.Resolve(ContractObjectiveType.Delivery, config.TargetPrototype),
+            ExecutionKind = ResolveRetrievalExecutionKind(config),
             Runtime = new ContractRuntimeContextData(),
             Config = config,
             FlowStatus = ContractFlowStatus.Available,
@@ -37,6 +37,19 @@ public sealed partial class NcContractSystem : EntitySystem
 
         SyncContractFlowStatus(contract);
         return contract;
+    }
+
+    private static ContractExecutionKind ResolveRetrievalExecutionKind(ContractObjectiveConfigData config)
+    {
+        if (!string.IsNullOrWhiteSpace(config.RetrievalRouteId) &&
+            config.RetrievalSpawnEnabled &&
+            config.RetrievalRequireSpawnedEntities &&
+            config.RetrievalDestinationType != NcRetrievalDestinationTargetType.StoreUi)
+        {
+            return ContractExecutionKind.RetrievalRouteDelivery;
+        }
+
+        return ContractExecutionKinds.Resolve(ContractObjectiveType.Delivery, config.TargetPrototype);
     }
 
     private ContractObjectiveConfigData CreateRetrievalObjectiveConfig(NcRetrievalContractPrototype proto)

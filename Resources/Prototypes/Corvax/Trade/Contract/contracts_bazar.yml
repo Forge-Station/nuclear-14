@@ -128,6 +128,28 @@
     id: BazarCorpseRaiderBoss
     weight: 1
 
+- type: ncContractOfferPool
+  id: BazarHeavyMappedOrders
+  name: "Тяжёлые вылазки"
+  order: 35
+  color: "#8F3D2F"
+  entries:
+  - type: GhostRole
+    id: NcGhostRoleContractNCRDeserterDead
+    weight: 2
+  - type: GhostRole
+    id: NcGhostRoleContractZoyaDarbyAlive
+    weight: 1
+  - type: Retrieval
+    id: BazarHeavyRecoverPiano
+    weight: 2
+  - type: Retrieval
+    id: BazarHeavyCourierWeaponPartsToOutpost
+    weight: 2
+  - type: Retrieval
+    id: BazarHeavyCourierAmmoToOutpost
+    weight: 1
+
 # -----------------------------------------------------------------------------
 # Группы обычных предметов
 # -----------------------------------------------------------------------------
@@ -855,4 +877,426 @@
     count: { min: 55, max: 90 }
   - type: Pool
     pool: caravan_easy
+    count: 1
+
+# -----------------------------------------------------------------------------
+# Средние поручения с маркерами
+#
+# Этот пул пока НЕ подключён к PresetBazar. Он рассчитан на карты, где мапперы
+# расставят средние точки охоты, дальние точки груза и точки доставки.
+# После расстановки добавьте BazarMediumMappedOrders в contractOffers.groups.
+# -----------------------------------------------------------------------------
+
+- type: ncContractOfferPool
+  id: BazarMediumMappedOrders
+  name: "Караванные вылазки"
+  order: 25
+  color: "#8FA65F"
+  entries:
+  - type: Hunt
+    id: BazarMediumHuntWaterGeckos
+    weight: 2
+  - type: Hunt
+    id: BazarMediumHuntYoungRadscorpions
+    weight: 2
+  - type: Hunt
+    id: BazarMediumHuntRoadNightstalkers
+    weight: 1
+  - type: Hunt
+    id: BazarMediumHuntMoleratBurrow
+    weight: 2
+  - type: Hunt
+    id: BazarMediumHuntCrabNest
+    weight: 2
+  - type: Hunt
+    id: BazarMediumHuntRaiderScoutCamp
+    weight: 1
+  - type: Hunt
+    id: BazarMediumHuntCazadorNest
+    weight: 1
+  - type: Retrieval
+    id: BazarMediumRecoverFarCrate
+    weight: 3
+  - type: Retrieval
+    id: BazarMediumCourierAmmoToCheckpoint
+    weight: 2
+  - type: Retrieval
+    id: BazarMediumCourierMedsToCheckpoint
+    weight: 2
+  - type: Retrieval
+    id: BazarMediumCourierFoodToCamp
+    weight: 2
+  - type: Retrieval
+    id: BazarMediumCourierPartsToCheckpoint
+    weight: 2
+  - type: GhostRole
+    id: NcGhostRoleContractEscapedWorkerAlive
+    weight: 1
+  - type: GhostRole
+    id: NcGhostRoleContractFreshDead
+    weight: 1
+
+- type: ncHuntGroup
+  id: BazarMediumHuntGroupGeckos
+  name: "Гекконы"
+  description: "Гекконы и огненные гекконы для средних контрактов у водокачек и сухих ручьёв."
+  icon: N14MobGecko
+  prototypes:
+  - N14MobGecko
+  - N14MobGeckoFire
+
+- type: ncHuntGroup
+  id: BazarMediumHuntGroupRadscorpions
+  name: "Молодые радскорпионы"
+  description: "Радскорпионы из небольших выводков, которых ещё можно зачистить без полноценной боевой группы."
+  icon: N14MobRadscorpion
+  prototypes:
+  - N14MobRadscorpion
+  - N14MobRadscorpionBark
+
+- type: ncHuntGroup
+  id: BazarMediumHuntGroupNightstalkers
+  name: "Ночные твари"
+  description: "Молодые ночные охотники, которые выходят к дорогам после заката."
+  icon: N14MobNightstalkerCub
+  prototypes:
+  - N14MobNightstalkerCub
+
+- type: ncHuntGroup
+  id: BazarMediumHuntGroupMolerats
+  name: "Кротокрысы"
+  description: "Кротокрысы из свежих нор рядом с караванными тропами."
+  icon: N14MobMolerat
+  prototypes:
+  - N14MobMolerat
+
+- type: ncHuntGroup
+  id: BazarMediumHuntGroupCrabs
+  name: "Крабы"
+  description: "Агрессивные крабы из заболоченных низин и старых водостоков."
+  icon: MobCrab
+  prototypes:
+  - MobCrab
+
+- type: ncHuntGroup
+  id: BazarMediumHuntGroupRaiders
+  name: "Рейдерская разведка"
+  description: "Небольшие рейдерские группы, которые проверяют дороги перед налётом."
+  icon: N14MobRaiderPsycho
+  prototypes:
+  - N14MobRaiderPsycho
+  - N14MobRaiderPsychoRanged
+  - N14MobRaiderHunter
+  - N14MobRaiderSkrimisher
+
+- type: ncHuntGroup
+  id: BazarMediumHuntGroupCazadors
+  name: "Малое гнездо казадоров"
+  description: "Один-два казадора из опасного, но ещё не разросшегося гнезда."
+  icon: N14MobCazador
+  prototypes:
+  - N14MobCazador
+
+- type: ncHuntContract
+  id: BazarMediumHuntWaterGeckos
+  name: "Гекконы у водокачки"
+  description: "У старой водокачки поселились гекконы: днём пугают рабочих, ночью лезут к запасам воды. Возьмите заказ, зачистите отмеченное место и принесите торговцу трофейную метку с последней твари."
+  icon: N14MobGecko
+  targets:
+  - group: BazarMediumHuntGroupGeckos
+    count: 5
+  completion:
+    mode: TrophyTurnIn
+    trophy: NcTradeContractProofGeckoTrophy
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractMediumGeckoHuntSpawn
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 160, max: 240 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+- type: ncHuntContract
+  id: BazarMediumHuntYoungRadscorpions
+  name: "Молодые радскорпионы"
+  description: "Караванщики нашли свежую нору радскорпионов недалеко от дороги. Пока выводок не вырос, его можно выбить малой группой. Убейте всех контрактных целей и принесите метку торговцу."
+  icon: N14MobRadscorpion
+  targets:
+  - group: BazarMediumHuntGroupRadscorpions
+    count: 3
+  completion:
+    mode: TrophyTurnIn
+    trophy: NcTradeContractProofRadscorpionTrophy
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractMediumRadscorpionHuntSpawn
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 190, max: 280 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+- type: ncHuntContract
+  id: BazarMediumHuntRoadNightstalkers
+  name: "Ночные твари у дороги"
+  description: "На дороге заметили молодых ночных тварей: они не нападают на караван открыто, но ночью уводят одиночек. Найдите отмеченную стаю, зачистите её и верните трофейную метку."
+  icon: N14MobNightstalkerCub
+  targets:
+  - group: BazarMediumHuntGroupNightstalkers
+    count: 3
+  completion:
+    mode: TrophyTurnIn
+    trophy: NcTradeContractProofNightstalkerTrophy
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractMediumNightstalkerHuntSpawn
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 220, max: 320 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+- type: ncHuntContract
+  id: BazarMediumHuntMoleratBurrow
+  name: "Нора кротокрысов"
+  description: "Кротокрысы роют ходы под дорогой и уже провалили одну тележку. Найдите отмеченную нору, перебейте зверьё и принесите последнюю метку обратно."
+  icon: N14MobMolerat
+  targets:
+  - group: BazarMediumHuntGroupMolerats
+    count: 5
+  completion:
+    mode: TrophyTurnIn
+    trophy: NcTradeContractProofMoleratTrophy
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractMediumMoleratHuntSpawn
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 140, max: 220 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+- type: ncHuntContract
+  id: BazarMediumHuntCrabNest
+  name: "Крабы в низине"
+  description: "В сырой низине рядом с маршрутом завелись злые крабы. Они не выглядят страшно, пока не сбиваются кучей у ног. Разгоните гнездо и верните торговцу трофейную метку."
+  icon: MobCrab
+  targets:
+  - group: BazarMediumHuntGroupCrabs
+    count: 4
+  completion:
+    mode: TrophyTurnIn
+    trophy: NcTradeContractProofCrabTrophy
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractMediumCrabHuntSpawn
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 130, max: 200 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+- type: ncHuntContract
+  id: BazarMediumHuntRaiderScoutCamp
+  name: "Рейдерский дозор"
+  description: "У дороги заметили небольшой рейдерский дозор. Если их не убрать сейчас, через пару дней там будет засада. Зачистите отмеченный лагерь и принесите торговцу метку с последнего рейдера."
+  icon: N14MobRaiderPsycho
+  targets:
+  - group: BazarMediumHuntGroupRaiders
+    count: 3
+  completion:
+    mode: TrophyTurnIn
+    trophy: NcTradeContractProofRaiderTrophy
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractMediumRaiderHuntSpawn
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 240, max: 360 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+- type: ncHuntContract
+  id: BazarMediumHuntCazadorNest
+  name: "Малое гнездо казадоров"
+  description: "Разведчики нашли молодое гнездо казадоров. Пока там всего пара тварей, его ещё можно зачистить без полноценной экспедиции. Убейте контрактных целей и принесите трофейную метку."
+  icon: N14MobCazador
+  targets:
+  - group: BazarMediumHuntGroupCazadors
+    count: 2
+  completion:
+    mode: TrophyTurnIn
+    trophy: NcTradeContractProofCazadorTrophy
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractMediumCazadorHuntSpawn
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 280, max: 420 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+- type: ncRetrievalContract
+  id: BazarMediumRecoverFarCrate
+  name: "Потерянный ящик за городом"
+  description: "Караван потерял ящик уже не у самых ворот, а дальше по дороге. Найдите отмеченный груз, осторожно верните его торговцу и сдайте через интерфейс. Накладная не нужна: заказчик ждёт сам ящик."
+  icon: NcTradeCargoWoodenCrate
+  cargo:
+  - prototype: NcTradeCargoWoodenCrate
+    count: 1
+  route: BazarMediumRouteFarToTrader
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 120, max: 180 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+- type: ncRetrievalContract
+  id: BazarMediumCourierAmmoToCheckpoint
+  name: "Патроны на дальний пост"
+  description: "У города подготовили ящик боеприпасов для дальнего поста. Заберите груз, донесите его до указанной точки приёмки, получите накладную и верните её торговцу."
+  icon: NcTradeCargoAmmoCrate
+  cargo:
+  - prototype: NcTradeCargoAmmoCrate
+    count: 1
+  route: BazarMediumRouteCityToCheckpointProof
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 180, max: 260 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+- type: ncRetrievalContract
+  id: BazarMediumCourierMedsToCheckpoint
+  name: "Медикаменты на окраину"
+  description: "Медицинский ящик нужно отправить не в городской медпункт, а на удалённую точку у маршрута. Доставьте груз к указателю, заберите накладную и принесите её торговцу."
+  icon: NcTradeCargoMedicalCrate
+  cargo:
+  - prototype: NcTradeCargoMedicalCrate
+    count: 1
+  route: BazarMediumRouteCityToCheckpointProof
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 170, max: 250 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+- type: ncRetrievalContract
+  id: BazarMediumCourierFoodToCamp
+  name: "Провизия в лагерь"
+  description: "Небольшой лагерь за городом ждёт ящик с провизией. Заберите его у городской точки выдачи, отнесите к лагерному указателю, затем верните торговцу накладную."
+  icon: NcTradeCargoProvisionCrate
+  cargo:
+  - prototype: NcTradeCargoProvisionCrate
+    count: 1
+  route: BazarMediumRouteCityToCampProof
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 150, max: 230 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+- type: ncRetrievalContract
+  id: BazarMediumCourierPartsToCheckpoint
+  name: "Детали в ремонтную точку"
+  description: "Ремонтники на внешнем маршруте ждут ящик запчастей. Заберите груз в городе, доставьте его к указанной точке, получите накладную и верните её торговцу."
+  icon: NcTradeCargoPartsCrate
+  cargo:
+  - prototype: NcTradeCargoPartsCrate
+    count: 1
+  route: BazarMediumRouteCityToCheckpointProof
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 170, max: 260 }
+  - type: Pool
+    pool: caravan_medium
+    count: 1
+
+# -----------------------------------------------------------------------------
+# Тяжёлые поручения с маркерами
+#
+# Этот пул пока НЕ подключён к PresetBazar. Он требует расставленных тяжёлых
+# cargo-маркеров и ghost-role spawn marker на карте.
+# -----------------------------------------------------------------------------
+
+- type: ncRetrievalContract
+  id: BazarHeavyRecoverPiano
+  name: "Пианино из дальнего салуна"
+  description: "Один заказчик решил, что без старого пианино город окончательно скатится в уныние. Инструмент стоит далеко за городом: найдите его, притащите к торговцу и сдайте через интерфейс. Накладная не нужна — заказчик ждёт именно пианино."
+  icon: PianoInstrument
+  cargo:
+  - prototype: PianoInstrument
+    count: 1
+  route: BazarHeavyRoutePianoToTrader
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 500, max: 750 }
+  - type: Pool
+    pool: caravan_hard
+    count: 1
+
+- type: ncRetrievalContract
+  id: BazarHeavyCourierWeaponPartsToOutpost
+  name: "Оружейные детали на дальний пост"
+  description: "В дальней точке ждут два ящика редких оружейных деталей. Заберите груз в опасной зоне, доставьте его на укреплённый пост, получите накладную и верните её торговцу."
+  icon: NcTradeCargoPartsCrate
+  cargo:
+  - prototype: NcTradeCargoPartsCrate
+    count: 2
+  route: BazarHeavyRouteCargoToOutpostProof
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 520, max: 780 }
+  - type: Pool
+    pool: caravan_hard
+    count: 1
+
+- type: ncRetrievalContract
+  id: BazarHeavyCourierAmmoToOutpost
+  name: "Боеприпасы на опасную заставу"
+  description: "Застава на дальнем маршруте просит срочную партию боеприпасов. Заберите два ящика в опасной зоне, донесите их до поста, затем принесите торговцу накладную о приёмке."
+  icon: NcTradeCargoAmmoCrate
+  cargo:
+  - prototype: NcTradeCargoAmmoCrate
+    count: 2
+  route: BazarHeavyRouteCargoToOutpostProof
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 560, max: 820 }
+  - type: Pool
+    pool: caravan_hard
     count: 1

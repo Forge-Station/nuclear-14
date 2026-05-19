@@ -20,11 +20,11 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryValidateContractRewards(ctx.User, ctx.Contract.Rewards, out fail))
             return false;
 
-        UnregisterRetrievalSpawnedCargoTakePlan(ctx.Contract, ctx.TakePlan);
-        ExecuteClaimTakePlan(ctx.TakePlan);
-        InvalidateClaimExecutionCaches(ctx);
-
-        if (!TryGiveContractRewards(ctx.User, ctx.Contract.Rewards, out fail))
+        if (!TryGiveContractRewardsWithPreCommit(
+                ctx.User,
+                ctx.Contract.Rewards,
+                () => TryExecuteClaimTakePlanPreCommit(ctx),
+                out fail))
             return false;
 
         MarkClaimTargetsCompleted(ctx.Contract);
@@ -150,19 +150,51 @@ public sealed partial class NcContractSystem : EntitySystem
         return false;
     }
 
-    private bool TryGiveContractRewards(
+    private bool TryGiveContractRewardsWithPreCommit(
         EntityUid user,
         IReadOnlyList<ContractRewardData>? rewards,
+        Func<ClaimAttemptResult> preCommit,
         out ClaimAttemptResult fail)
     {
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+        var preCommitFail = ClaimAttemptResult.Ok();
 
-        if (_logic.TryExecuteRewardList(user, rewards, "Claim", out var reason))
+        if (_logic.TryExecuteRewardListWithPreCommit(
+                user,
+                rewards,
+                "Claim",
+                () =>
+                {
+                    preCommitFail = preCommit();
+                    return preCommitFail.Success
+                        ? null
+                        : $"{preCommitFail.Reason}: {preCommitFail.Details}";
+                },
+                out var reason))
+        {
             return true;
+        }
+
+        if (!preCommitFail.Success)
+        {
+            fail = preCommitFail;
+            return false;
+        }
 
         Sawmill.Error($"[Claim] Reward execution failed after claim validation: {reason}");
         fail = CreateClaimExecutionFailure(reason);
         return false;
+    }
+
+    private ClaimAttemptResult TryExecuteClaimTakePlanPreCommit(ClaimContext ctx)
+    {
+        if (!TryValidateClaimTakePlan(ctx.TakePlan, out var fail))
+            return fail;
+
+        UnregisterRetrievalSpawnedCargoTakePlan(ctx.Contract, ctx.TakePlan);
+        ExecuteClaimTakePlan(ctx.TakePlan);
+        InvalidateClaimExecutionCaches(ctx);
+        return ClaimAttemptResult.Ok();
     }
 
     private void FinalizeClaim(

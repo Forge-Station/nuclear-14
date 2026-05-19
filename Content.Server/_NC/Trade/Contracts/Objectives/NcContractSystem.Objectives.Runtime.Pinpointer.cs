@@ -299,16 +299,16 @@ public sealed partial class NcContractSystem : EntitySystem
         if (string.IsNullOrWhiteSpace(config.RetrievalDestinationId))
             return false;
 
-        var query = EntityQueryEnumerator<NcContractTurnInContainerComponent>();
-        while (query.MoveNext(out var container, out var turnIn))
+        CollectTurnInContainersByGroup(config.RetrievalDestinationId, _turnInContainerQueryScratch);
+        for (var i = 0; i < _turnInContainerQueryScratch.Count; i++)
         {
-            if (!turnIn.Groups.Contains(config.RetrievalDestinationId))
-                continue;
-
+            var container = _turnInContainerQueryScratch[i];
             target = container;
+            _turnInContainerQueryScratch.Clear();
             return true;
         }
 
+        _turnInContainerQueryScratch.Clear();
         return false;
     }
 
@@ -324,31 +324,23 @@ public sealed partial class NcContractSystem : EntitySystem
         target = EntityUid.Invalid;
         carrier = EntityUid.Invalid;
 
-        foreach (var (candidateKey, candidateState) in _objectiveRuntimeByContract)
+        if (!_objectiveRuntimeByRetrievalCargo.TryGetValue(cargo, out var candidateKey) ||
+            !_objectiveRuntimeByContract.TryGetValue(candidateKey, out var candidateState) ||
+            !TryGetObjectiveContract(candidateKey, out _, out var contract) ||
+            !contract.Taken ||
+            contract.Runtime.Failed ||
+            !UsesRetrievalSpawnedPinpointerTarget(contract) ||
+            !TryResolveRetrievalSpawnedPinpointerTarget(candidateKey.Store, contract, candidateState, out target))
         {
-            if (!candidateState.RetrievalSpawnedEntities.Contains(cargo))
-                continue;
-
-            if (!TryGetObjectiveContract(candidateKey, out _, out var contract) ||
-                !contract.Taken ||
-                contract.Runtime.Failed ||
-                !UsesRetrievalSpawnedPinpointerTarget(contract))
-            {
-                continue;
-            }
-
-            if (!TryResolveRetrievalSpawnedPinpointerTarget(candidateKey.Store, contract, candidateState, out target))
-                continue;
-
-            if (TryGetContainedEntityRoot(cargo, out var cargoCarrier))
-                carrier = cargoCarrier;
-
-            key = candidateKey;
-            state = candidateState;
-            return true;
+            return false;
         }
 
-        return false;
+        if (TryGetContainedEntityRoot(cargo, out var cargoCarrier))
+            carrier = cargoCarrier;
+
+        key = candidateKey;
+        state = candidateState;
+        return true;
     }
 
     private bool TrySpawnObjectivePinpointer(
