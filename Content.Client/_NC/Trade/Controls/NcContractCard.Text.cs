@@ -26,18 +26,12 @@ public sealed partial class NcContractCard
     {
         var description = ResolveBaseDescription(c);
         var ghostRoleHint = BuildGhostRoleDescriptionHint(c);
-        var huntHint = BuildHuntDescriptionHint(c);
         var routeHint = BuildRouteHintText(c);
 
         if (!string.IsNullOrWhiteSpace(ghostRoleHint))
             description = string.IsNullOrWhiteSpace(description)
                 ? ghostRoleHint
                 : $"{description}\n{ghostRoleHint}";
-
-        if (!string.IsNullOrWhiteSpace(huntHint))
-            description = string.IsNullOrWhiteSpace(description)
-                ? huntHint
-                : $"{description}\n{huntHint}";
 
         if (string.IsNullOrWhiteSpace(routeHint))
             return description;
@@ -66,19 +60,6 @@ public sealed partial class NcContractCard
             return string.Empty;
 
         return Loc.GetString("nc-store-contract-ghost-role-mode-line-short", ("mode", BuildGhostRoleModeName(c)));
-    }
-
-    private static string BuildHuntDescriptionHint(ContractClientData c)
-    {
-        if (ContractExecutionKinds.ToObjectiveType(c.ExecutionKind) != ContractObjectiveType.Hunt)
-            return string.Empty;
-
-        return c.HuntCompletionMode switch
-        {
-            NcHuntCompletionMode.BodyTurnIn => Loc.GetString("nc-store-contract-hunt-mode-body-desc"),
-            NcHuntCompletionMode.TrophyTurnIn => Loc.GetString("nc-store-contract-hunt-mode-trophy-desc"),
-            _ => string.Empty
-        };
     }
 
     private static string BuildRouteHintText(ContractClientData c)
@@ -152,6 +133,9 @@ public sealed partial class NcContractCard
     private string BuildTurnInNoteText(ContractClientData c)
     {
         if (string.IsNullOrWhiteSpace(c.TurnInItem) || c.FlowStatus == ContractFlowStatus.ReadyToTurnIn)
+            return string.Empty;
+
+        if (c.IsRetrievalRoute && c.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof)
             return string.Empty;
 
         if (ContractExecutionKinds.ToObjectiveType(c.ExecutionKind) == ContractObjectiveType.Hunt)

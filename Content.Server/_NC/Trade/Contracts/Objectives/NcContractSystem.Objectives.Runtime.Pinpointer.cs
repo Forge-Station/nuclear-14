@@ -231,7 +231,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (!IsRetrievalCargoControlledByUser(candidate, user))
                 continue;
 
-            if (!TryResolveRetrievalCarriedCargoPinpointerTarget(store, contract, state, candidate, out target))
+            if (!TryResolveRetrievalControlledCargoPinpointerTarget(store, contract, state, candidate, out target))
                 continue;
 
             return true;
@@ -250,6 +250,21 @@ public sealed partial class NcContractSystem : EntitySystem
         return false;
     }
 
+    private bool TryResolveRetrievalControlledCargoPinpointerTarget(
+        EntityUid store,
+        ContractServerData contract,
+        ObjectiveRuntimeState state,
+        EntityUid cargo,
+        out EntityUid target)
+    {
+        target = EntityUid.Invalid;
+
+        if (cargo == EntityUid.Invalid || TerminatingOrDeleted(cargo))
+            return false;
+
+        return TryResolveRetrievalCargoDestinationPinpointerTarget(store, contract, state, out target);
+    }
+
     private bool TryResolveRetrievalCarriedCargoPinpointerTarget(
         EntityUid store,
         ContractServerData contract,
@@ -265,6 +280,16 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryComp(cargo, out TransformComponent? xform) || !IsTargetInEntityContainer(xform))
             return false;
 
+        return TryResolveRetrievalCargoDestinationPinpointerTarget(store, contract, state, out target);
+    }
+
+    private bool TryResolveRetrievalCargoDestinationPinpointerTarget(
+        EntityUid store,
+        ContractServerData contract,
+        ObjectiveRuntimeState state,
+        out EntityUid target)
+    {
+        target = EntityUid.Invalid;
         var config = contract.Config;
         switch (config.RetrievalDestinationType)
         {

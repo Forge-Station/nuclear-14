@@ -60,7 +60,7 @@
 - type: entity
   parent: PaperScrap
   id: NcTradeContractProofCrabTrophy
-  name: "трофейная метка краба"
+  name: "трофейная метка грязнокраба"
   description: "Контрактная метка с последней убитой цели. Принесите её торговцу как доказательство зачистки."
   categories: [ HideSpawnMenu ]
 

@@ -787,7 +787,7 @@
 - type: ncHuntContract
   id: BazarLightHuntBasementRadroaches
   name: "Радтараканы в подвале"
-  description: "В городском подвале снова шуршат радтараканы. Спуститесь туда, зачистите гнездо и принесите торговцу знак, который останется после последней твари."
+  description: "В городском подвале снова шуршат радтараканы. Гнездо уже мешает лавкам над ним и расползается по подсобкам."
   icon: N14MobRadroach
   targets:
   - group: BazarLightHuntGroupRadroaches
@@ -810,7 +810,7 @@
 - type: ncRetrievalContract
   id: BazarLightRecoverRoadCrate
   name: "Потерянный ящик у дороги"
-  description: "Караван потерял небольшой деревянный ящик сразу за городом. Найдите груз у ближайшей дороги и верните торговцу целым. Бумаг не будет: заказчик хочет увидеть сам ящик."
+  description: "Караван потерял небольшой деревянный ящик сразу за городом. Заказчик нервничает: груз небольшой, но отмечен караванной пломбой."
   icon: NcTradeCargoWoodenCrate
   cargo:
   - prototype: NcTradeCargoWoodenCrate
@@ -827,7 +827,7 @@
 - type: ncRetrievalContract
   id: BazarLightDeliverGateCrateOutside
   name: "Ящик на ближайший пост"
-  description: "У городских ворот ждёт деревянный ящик с мелкими припасами. Отнесите его на ближайший пост за городом. После приёмки заберите накладную и верните её торговцу."
+  description: "У городских ворот ждёт деревянный ящик с мелкими припасами. Пост за городом снова просит пополнение."
   icon: NcTradeCargoWoodenCrate
   cargo:
   - prototype: NcTradeCargoWoodenCrate
@@ -844,7 +844,7 @@
 - type: ncRetrievalContract
   id: BazarLightCourierMedsToClinic
   name: "Медицинский ящик в медпункт"
-  description: "Для медпункта подготовили отдельный медицинский ящик. Заберите его с малого склада, отнесите врачам, затем заберите накладную и верните её торговцу."
+  description: "Для медпункта подготовили отдельный медицинский ящик. Врачи уже считают бинты поштучно."
   icon: NcTradeCargoMedicalCrate
   cargo:
   - prototype: NcTradeCargoMedicalCrate
@@ -861,7 +861,7 @@
 - type: ncRetrievalContract
   id: BazarLightCourierPartsToWorkshop
   name: "Детали для мастерской"
-  description: "Мастерская ждёт ящик с мелкими деталями и инструментами. Заберите груз у кладовой, доставьте мастерам, получите накладную и принесите её обратно торговцу."
+  description: "Мастерская ждёт ящик с мелкими деталями и инструментами. Без него ремонт встанет до вечера."
   icon: NcTradeCargoPartsCrate
   cargo:
   - prototype: NcTradeCargoPartsCrate
@@ -967,11 +967,11 @@
 
 - type: ncHuntGroup
   id: BazarMediumHuntGroupCrabs
-  name: "Крабы"
-  description: "Агрессивные крабы из заболоченных низин и старых водостоков."
-  icon: MobCrab
+  name: "Грязнокрабы"
+  description: "Болотники из заболоченных низин и старых водостоков."
+  icon: N14MobSwamper
   prototypes:
-  - MobCrab
+  - N14MobSwamper
 
 - type: ncHuntGroup
   id: BazarMediumHuntGroupRaiders
@@ -995,7 +995,7 @@
 - type: ncHuntContract
   id: BazarMediumHuntWaterGeckos
   name: "Гекконы у водокачки"
-  description: "У старой водокачки поселились гекконы: днём пугают рабочих, ночью лезут к запасам воды. Зачистите логово и принесите торговцу знак с последней твари."
+  description: "У старой водокачки поселились гекконы: днём пугают рабочих, ночью лезут к запасам воды."
   icon: N14MobGecko
   targets:
   - group: BazarMediumHuntGroupGeckos
@@ -1018,7 +1018,7 @@
 - type: ncHuntContract
   id: BazarMediumHuntYoungRadscorpions
   name: "Молодые радскорпионы"
-  description: "Караванщики нашли свежую нору радскорпионов недалеко от дороги. Пока выводок не вырос, его можно выбить малой группой. Зачистите нору и принесите торговцу знак с последней твари."
+  description: "Караванщики нашли свежую нору радскорпионов недалеко от дороги. Пока выводок не вырос, его можно выбить малой группой."
   icon: N14MobRadscorpion
   targets:
   - group: BazarMediumHuntGroupRadscorpions
@@ -1041,7 +1041,7 @@
 - type: ncHuntContract
   id: BazarMediumHuntRoadNightstalkers
   name: "Ночные твари у дороги"
-  description: "На дороге заметили молодых ночных тварей: они не нападают на караван открыто, но ночью уводят одиночек. Найдите стаю, зачистите её и верните торговцу знак с последней твари."
+  description: "На дороге заметили молодых ночных тварей: они не нападают на караван открыто, но ночью уводят одиночек."
   icon: N14MobNightstalkerCub
   targets:
   - group: BazarMediumHuntGroupNightstalkers
@@ -1064,7 +1064,7 @@
 - type: ncHuntContract
   id: BazarMediumHuntMoleratBurrow
   name: "Нора кротокрысов"
-  description: "Кротокрысы роют ходы под дорогой и уже провалили одну тележку. Найдите нору, перебейте зверьё и принесите торговцу знак с последней туши."
+  description: "Кротокрысы роют ходы под дорогой и уже провалили одну тележку. Нора слишком близко к маршруту."
   icon: N14MobMolerat
   targets:
   - group: BazarMediumHuntGroupMolerats
@@ -1086,9 +1086,9 @@
 
 - type: ncHuntContract
   id: BazarMediumHuntCrabNest
-  name: "Крабы в низине"
-  description: "В сырой низине рядом с маршрутом завелись злые крабы. Они не выглядят страшно, пока не сбиваются кучей у ног. Разгоните гнездо и принесите торговцу знак с последнего краба."
-  icon: MobCrab
+  name: "Грязнокрабы в низине"
+  description: "В сырой низине рядом с маршрутом завелись болотники. Они не выглядят страшно, пока не сбиваются кучей у ног."
+  icon: N14MobSwamper
   targets:
   - group: BazarMediumHuntGroupCrabs
     count: 4
@@ -1110,7 +1110,7 @@
 - type: ncHuntContract
   id: BazarMediumHuntRaiderScoutCamp
   name: "Рейдерский дозор"
-  description: "У дороги заметили небольшой рейдерский дозор. Если их не убрать сейчас, через пару дней там будет засада. Зачистите лагерь и принесите торговцу знак с последнего рейдера."
+  description: "У дороги заметили небольшой рейдерский дозор. Если их не убрать сейчас, через пару дней там будет засада."
   icon: N14MobRaiderPsycho
   targets:
   - group: BazarMediumHuntGroupRaiders
@@ -1133,7 +1133,7 @@
 - type: ncHuntContract
   id: BazarMediumHuntCazadorNest
   name: "Малое гнездо казадоров"
-  description: "Разведчики нашли молодое гнездо казадоров. Пока там всего пара тварей, его ещё можно зачистить без полноценной экспедиции. Убейте казадоров и принесите торговцу знак с последней твари."
+  description: "Разведчики нашли молодое гнездо казадоров. Пока там всего пара тварей, его ещё можно зачистить без полноценной экспедиции."
   icon: N14MobCazador
   targets:
   - group: BazarMediumHuntGroupCazadors
@@ -1156,7 +1156,7 @@
 - type: ncRetrievalContract
   id: BazarMediumRecoverFarCrate
   name: "Потерянный ящик за городом"
-  description: "Караван потерял ящик уже не у самых ворот, а дальше по дороге. Найдите груз, осторожно верните его торговцу целым. Накладная не нужна: заказчик ждёт сам ящик."
+  description: "Караван потерял ящик уже не у самых ворот, а дальше по дороге. Груз отмечен пломбой, и заказчик хочет получить его целым."
   icon: NcTradeCargoWoodenCrate
   cargo:
   - prototype: NcTradeCargoWoodenCrate
@@ -1173,7 +1173,7 @@
 - type: ncRetrievalContract
   id: BazarMediumCourierAmmoToCheckpoint
   name: "Патроны на дальний пост"
-  description: "У города подготовили ящик боеприпасов для дальнего поста. Заберите груз, донесите его до караульных, получите накладную и верните её торговцу."
+  description: "У города подготовили ящик боеприпасов для дальнего поста. Караульные ждут пополнение перед ночной сменой."
   icon: NcTradeCargoAmmoCrate
   cargo:
   - prototype: NcTradeCargoAmmoCrate
@@ -1190,7 +1190,7 @@
 - type: ncRetrievalContract
   id: BazarMediumCourierMedsToCheckpoint
   name: "Медикаменты на окраину"
-  description: "Медицинский ящик нужно отправить не в городской медпункт, а на окраину маршрута. Доставьте груз принимающим, заберите накладную и принесите её торговцу."
+  description: "Медицинский ящик нужно отправить не в городской медпункт, а на окраину маршрута. Там снова ждут раненых с дальних троп."
   icon: NcTradeCargoMedicalCrate
   cargo:
   - prototype: NcTradeCargoMedicalCrate
@@ -1207,7 +1207,7 @@
 - type: ncRetrievalContract
   id: BazarMediumCourierFoodToCamp
   name: "Провизия в лагерь"
-  description: "Небольшой лагерь за городом ждёт ящик с провизией. Заберите его у городской точки выдачи, отнесите караванщикам, затем верните торговцу накладную."
+  description: "Небольшой лагерь за городом ждёт ящик с провизией. У них осталось больше обещаний, чем еды."
   icon: NcTradeCargoProvisionCrate
   cargo:
   - prototype: NcTradeCargoProvisionCrate
@@ -1224,7 +1224,7 @@
 - type: ncRetrievalContract
   id: BazarMediumCourierPartsToCheckpoint
   name: "Детали в ремонтную точку"
-  description: "Ремонтники на внешнем маршруте ждут ящик запчастей. Заберите груз в городе, доставьте его в ремонтную точку, получите накладную и верните её торговцу."
+  description: "Ремонтники на внешнем маршруте ждут ящик запчастей. Без него их точка снова останется на честном слове."
   icon: NcTradeCargoPartsCrate
   cargo:
   - prototype: NcTradeCargoPartsCrate
@@ -1393,7 +1393,7 @@
 - type: ncHuntContract
   id: BazarHeavyHuntDeathclawNest
   name: "Логово когтей смерти"
-  description: "Разведчики нашли дальнее логово когтей смерти. Туда не ходят без хорошего оружия и плана отхода. Убейте всех тварей в логове и принесите торговцу знак с последней."
+  description: "Разведчики нашли дальнее логово когтей смерти. Туда не ходят без хорошего оружия и плана отхода."
   icon: N14MobDeathclaw
   targets:
   - group: BazarHeavyHuntGroupDeathclaws
@@ -1416,7 +1416,7 @@
 - type: ncHuntContract
   id: BazarHeavyHuntMetalDeathclaw
   name: "Бронированный коготь"
-  description: "В старой зоне видели бронированного когтя смерти. Обычных охотников туда не отправляют. Убейте тварь и верните торговцу знак, который останется после неё."
+  description: "В старой зоне видели бронированного когтя смерти. Обычных охотников туда не отправляют."
   icon: N14MobDeathclawMetal
   targets:
   - group: BazarHeavyHuntGroupMetalDeathclaws
@@ -1439,7 +1439,7 @@
 - type: ncHuntContract
   id: BazarHeavyHuntRaiderWarband
   name: "Рейдерский лагерь"
-  description: "За городом собирается большая банда: десяток головорезов и главарь, который держит их вместе. Это полноценная зачистка лагеря, а не мелкая стычка. Убейте всех и принесите торговцу знак с главаря."
+  description: "За городом собирается большая банда: десяток головорезов и главарь, который держит их вместе. Это полноценная зачистка лагеря, а не мелкая стычка."
   icon: N14MobRaiderBoss
   targets:
   - group: BazarHeavyHuntGroupRaiderWarband
@@ -1464,7 +1464,7 @@
 - type: ncHuntContract
   id: BazarHeavyHuntYaoguaiCave
   name: "Берлога яо-гаев"
-  description: "В дальней пещере поселились яо-гаи. Караваны обходят место кругом, но дорога слишком важная, чтобы бросить её навсегда. Зачистите берлогу и верните торговцу знак с последнего зверя."
+  description: "В дальней пещере поселились яо-гаи. Караваны обходят место кругом, но дорога слишком важная, чтобы бросить её навсегда."
   icon: N14MobYaoguai
   targets:
   - group: BazarHeavyHuntGroupYaoguai
@@ -1487,7 +1487,7 @@
 - type: ncHuntContract
   id: BazarHeavyHuntCazadorSwarm
   name: "Большое гнездо казадоров"
-  description: "Малое гнездо ещё можно разогнать парой выстрелов. Это другое: полноценный рой, который перекрывает путь. Убейте казадоров и принесите торговцу знак с последней твари."
+  description: "Малое гнездо ещё можно разогнать парой выстрелов. Это другое: полноценный рой, который перекрывает путь."
   icon: N14MobCazador
   targets:
   - group: BazarHeavyHuntGroupCazadorSwarm
@@ -1510,7 +1510,7 @@
 - type: ncHuntContract
   id: BazarHeavyHuntRobotPatrol
   name: "Ржавый патруль"
-  description: "На дальнем маршруте ожил старый роботизированный патруль. Они мешают караванам и не берут взятки. Уничтожьте патруль и принесите торговцу знак с последней машины."
+  description: "На дальнем маршруте ожил старый роботизированный патруль. Они мешают караванам и не берут взятки."
   icon: N14MobRobotHostileProtectron
   targets:
   - group: BazarHeavyHuntGroupRobots
@@ -1533,7 +1533,7 @@
 - type: ncHuntContract
   id: BazarHeavyHuntRobobrainGuard
   name: "Охрана старого терминала"
-  description: "У старого терминала сидят робомозги и военные роботы. Пока они активны, туда не пройдут ни караваны, ни ремонтники. Уничтожьте охрану и верните торговцу знак с последней машины."
+  description: "У старого терминала сидят робомозги и военные роботы. Пока они активны, туда не пройдут ни караваны, ни ремонтники."
   icon: N14MobRobotHostileRobobrain
   targets:
   - group: BazarHeavyHuntGroupRobobrains
@@ -1556,7 +1556,7 @@
 - type: ncHuntContract
   id: BazarHeavyHuntAssaultronSignal
   name: "Сигнальная станция"
-  description: "На старой сигнальной станции проснулся штурмотрон, а рядом бродит мелкая охрана. Зачистите станцию полностью и принесите торговцу знак с последней уничтоженной машины."
+  description: "На старой сигнальной станции проснулся штурмотрон, а рядом бродит мелкая охрана."
   icon: N14MobRobotHostileAssaultron
   targets:
   - group: BazarHeavyHuntGroupAssaultrons
@@ -1581,7 +1581,7 @@
 - type: ncRetrievalContract
   id: BazarHeavyRecoverPiano
   name: "Пианино из дальнего салуна"
-  description: "Один заказчик решил, что без старого пианино город окончательно скатится в уныние. Инструмент стоит далеко за городом: найдите его и притащите торговцу. Накладная не нужна — заказчик ждёт именно пианино."
+  description: "Один заказчик решил, что без старого пианино город окончательно скатится в уныние. Инструмент стоит далеко за городом, в опасном старом салуне."
   icon: PianoInstrument
   cargo:
   - prototype: PianoInstrument
@@ -1598,7 +1598,7 @@
 - type: ncRetrievalContract
   id: BazarHeavyCourierWeaponPartsToOutpost
   name: "Оружейные детали на дальний пост"
-  description: "В дальней точке ждут два ящика редких оружейных деталей. Заберите груз в опасной зоне, доставьте его на укреплённый пост, получите накладную и верните её торговцу."
+  description: "В дальней точке ждут два ящика редких оружейных деталей. Укреплённый пост давно просит нормальный ремонтный запас."
   icon: NcTradeCargoPartsCrate
   cargo:
   - prototype: NcTradeCargoPartsCrate
@@ -1615,7 +1615,7 @@
 - type: ncRetrievalContract
   id: BazarHeavyCourierAmmoToOutpost
   name: "Боеприпасы на опасную заставу"
-  description: "Застава на дальнем маршруте просит срочную партию боеприпасов. Заберите два ящика в опасной зоне, донесите их до поста, затем принесите торговцу накладную о приёмке."
+  description: "Застава на дальнем маршруте просит срочную партию боеприпасов. Запас у них тает быстрее, чем караваны доходят до поста."
   icon: NcTradeCargoAmmoCrate
   cargo:
   - prototype: NcTradeCargoAmmoCrate
@@ -1632,7 +1632,7 @@
 - type: ncRetrievalContract
   id: BazarHeavyRecoverFarSupplyCache
   name: "Тайник на краю карты"
-  description: "Старый караванный тайник лежит почти у края разведанной зоны. Найдите три ящика и верните их торговцу целыми. Накладной нет: заказчик хочет увидеть сами ящики."
+  description: "Старый караванный тайник лежит почти у края разведанной зоны. Заказчик хочет увидеть сами ящики, а не рассказы о них."
   icon: NcTradeCargoProvisionCrate
   cargo:
   - prototype: NcTradeCargoProvisionCrate
@@ -1649,7 +1649,7 @@
 - type: ncRetrievalContract
   id: BazarHeavyCourierAmmoToRadioTower
   name: "Патроны к радиовышке"
-  description: "Дальний наблюдательный пункт у радиовышки просит боеприпасы. Заберите три меченых ящика в опасной зоне, доставьте их к вышке, получите накладную и верните её торговцу."
+  description: "Дальний наблюдательный пункт у радиовышки просит боеприпасы. Без пополнения они скоро останутся с пустыми магазинами."
   icon: NcTradeCargoAmmoCrate
   cargo:
   - prototype: NcTradeCargoAmmoCrate
@@ -1666,7 +1666,7 @@
 - type: ncRetrievalContract
   id: BazarHeavyCourierPartsToBunker
   name: "Детали в старый бункер"
-  description: "В старом бункере пытаются поднять генератор. Нужны три ящика деталей, а дорога туда неприятная даже по меркам пустоши. Доставьте груз, заберите накладную и верните её торговцу."
+  description: "В старом бункере пытаются поднять генератор. Нужны три ящика деталей, а дорога туда неприятная даже по меркам пустоши."
   icon: NcTradeCargoPartsCrate
   cargo:
   - prototype: NcTradeCargoPartsCrate
@@ -1683,7 +1683,7 @@
 - type: ncRetrievalContract
   id: BazarHeavyCourierMedicalToLastCamp
   name: "Медицинский груз в последний лагерь"
-  description: "Дальний лагерь просит не один ящик, а целую маленькую партию медикаментов. Заберите четыре меченых медицинских ящика, довезите их до лагеря и верните накладную торговцу."
+  description: "Дальний лагерь просит не один ящик, а целую маленькую партию медикаментов. Их запас уже ушёл на тех, кто добрался туда раньше."
   icon: NcTradeCargoMedicalCrate
   cargo:
   - prototype: NcTradeCargoMedicalCrate

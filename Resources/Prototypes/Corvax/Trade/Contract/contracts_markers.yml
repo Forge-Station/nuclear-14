@@ -338,8 +338,8 @@
 - type: entity
   id: MarkerTradeMediumCrabHuntSpawn
   parent: MarkerTradeContractDangerBase
-  name: "средний контракт: крабы в низине"
-  description: "Поставьте у воды, сырой низины или старого водостока. Здесь появляются крабы для среднего охотничьего контракта."
+  name: "средний контракт: грязнокрабы в низине"
+  description: "Поставьте у воды, сырой низины или старого водостока. Здесь появляются болотники для среднего охотничьего контракта."
   suffix: NC, Contracts, Medium, Hunt, Mapper
   components:
   - type: NcContractSpawnPoint
