@@ -147,3 +147,21 @@
   - type: ConditionalSpawner
     prototypes:
       - N14MobDeathclawicy
+
+# Iguana
+
+- type: entity
+  name: спавнер игуаны
+  id: N14SpawnMobIguana
+  parent: MarkerBase
+  components:
+  - type: Sprite
+    layers:
+      - state: green
+      - sprite: _Nuclear14/Mobs/Animals/iguana.rsi
+        state: iguana
+      - state: ai
+  - type: ConditionalSpawner
+    prototypes:
+      - N14MobIguana
+      

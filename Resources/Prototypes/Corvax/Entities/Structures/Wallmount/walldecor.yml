@@ -6,7 +6,7 @@
   description: You notice something in common with this bird...
   components:
   - type: Sprite
-    sprite: Corvax/Structures/Wallmount/flag.rsi
+    sprite: Corvax/Structures/Wallmount/wallflags.rsi
     state: flag_bazar
 
 - type: entity
@@ -50,3 +50,14 @@
   components:
   - type: Sprite
     state: flag_alaska
+
+- type: entity
+  parent: N14SignBase
+  id: NCFlagWallWoodland
+  name: " Вудленд "
+  suffix: woodland
+  description: Двуглавый олень напоминает о одном инциденте в городе.
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/wallflags_64x64.rsi
+    state: flag_woodland

@@ -827,6 +827,8 @@
     price: 5
   - proto: N14FloraWildXanderRootClippingSeed
     price: 5
+  - proto: CottonSeeds
+    price: 5  
 
 - type: storePresetStructured
   id: caravan_buy2

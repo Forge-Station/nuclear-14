@@ -1,14 +1,14 @@
 {
   "version": 1,
   "license": "CC-BY-NC-SA-3.0",
-  "copyright": "Taken from bao",
+  "copyright": "made by rozycosmic",
   "size": {
-    "x": 32,
+    "x": 64,
     "y": 64
   },
   "states": [
     {
-      "name": "zbos"
+      "name": "flag_woodland"
     }
   ]
 }

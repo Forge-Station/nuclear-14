@@ -5,7 +5,7 @@
   description: Upon seeing this pole, you feel a strange urge to undress...
   components:
   - type: Sprite
-    sprite: Corvax/Structures/Decoration/metal_pole.rsi
+    sprite: Corvax/Objects/Decoration/metal_pole.rsi
     state: metal_pole
     drawdepth: Mobs
 
@@ -15,7 +15,7 @@
   name: скелет с костюмом убежища
   components:
   - type: Sprite
-    sprite: Corvax/Structures/Decoration/vault_bones.rsi
+    sprite: Corvax/Objects/Decoration/vault_bones.rsi
     state: bones
 
 # graves
@@ -26,7 +26,7 @@
   name: надгробие
   components:
   - type: Sprite
-    sprite: Corvax/Structures/Decoration/graves.rsi
+    sprite: Corvax/Objects/Decoration/graves.rsi
     state: grob1
 
 - type: entity
@@ -585,8 +585,11 @@
   description: A flag with a two Wester Brotherhood
   components:
   - type: Sprite
-    sprite: Corvax/Structures/Decoration/flag1.rsi
-    state: zbos
+    sprite: Corvax/Structures/Decoration/flags.rsi
+    state: westbosflag
+  - type: Construction
+    graph: DecorationFlagWesterBoS
+    node: FlagWesterBoS
 
 - type: entity
   parent: N14DecorationFlagpoleNCR
@@ -595,8 +598,8 @@
   description: A Western Brotherhood flag on a wooden pole.
   components:
   - type: Sprite
-    sprite: Corvax/Structures/Decoration/flag2.rsi
-    state: zbosflagshtock
+    sprite: Corvax/Objects/Decoration/Flags/westbos_flagpole.rsi
+    state: icon
     noRot: true
 
 - type: entity
@@ -631,6 +634,16 @@
     sprite: _Nuclear14/Objects/Misc/clutter.rsi
     state: flagpole_legion
     noRot: true
+
+- type: entity
+  parent: N14DecorationFlagFlammable
+  id: N14DecorationFlagWoodland
+  name: флаг Вудленда
+  description: Флаг Вудленда с символом двуглавого оленя.
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/flags_64x64.rsi
+    state: woodlandflag
 
 # Decormini
 

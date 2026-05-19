@@ -264,6 +264,8 @@
     - N14ClothingOuterCombatArmorMK2Blueprint
     # Forge-Change-End
     # Other
+    - MaterialCloth # Forge-add
+    - N14MaterialThread # Forge-add
     - N14MaterialLeather
     - ClothingBeltQuiver # In misc.yml
     - ClothingBeltQuiverSpear

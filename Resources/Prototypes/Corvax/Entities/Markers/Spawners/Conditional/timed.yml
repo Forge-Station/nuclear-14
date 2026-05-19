@@ -57,3 +57,23 @@
       intervalSeconds: 2400
       minimumEntitiesSpawned: 1
       maximumEntitiesSpawned: 2
+
+- type: entity
+  parent: N14TimedSpawnerMolerat
+  id: N14TimedSpawnMobIguana
+  name: периодический спавнер игуаны
+  components:
+    - type: Sprite
+      layers:
+        - state: blue
+        - sprite: _Nuclear14/Mobs/Animals/iguana.rsi
+          state: iguana
+        - state: timed
+    - type: Timer
+    - type: TimedSpawner
+      prototypes:
+        - N14MobIguana
+      chance: 0.95
+      intervalSeconds: 2400
+      minimumEntitiesSpawned: 1
+      maximumEntitiesSpawned: 3
