@@ -36,7 +36,6 @@ public sealed partial class NcContractSystem : EntitySystem
     private readonly List<EntityUid> _scratchCrateItems = new();
     private readonly List<EntityUid> _scratchStoreNearbyItems = new();
     private readonly List<EntityUid> _scratchUserItems = new();
-    private readonly Dictionary<QuasiKey, SmallBagState> _smallBags = new();
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
 
     public override void Initialize()
@@ -119,13 +118,13 @@ public sealed partial class NcContractSystem : EntitySystem
         return best;
     }
 
-    private sealed class SmallBagState
+    private sealed class SoftFairState
     {
-        public readonly List<int> Order = new();
-        public int Cursor;
+        public readonly List<double> Heat = new();
         public int LastIdx = -1;
         public int Max;
         public int Min;
+        public int Streak;
     }
 
 }

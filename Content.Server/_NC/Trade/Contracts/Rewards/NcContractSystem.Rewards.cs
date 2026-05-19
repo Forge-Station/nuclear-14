@@ -34,7 +34,7 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             var bp = blueprints[i];
             var rewardId = GetRewardId(bp);
-            var count = RollFair(
+            var count = RollSoft(
                 new(QuasiKeyKind.RAmount, store, contractProtoId, $"{depth}:{i}:{bp.Type}:{rewardId}"),
                 bp.Count,
                 0);

@@ -5,13 +5,15 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private const int SmallBagThreshold = 8;
+    private const int SoftFairThreshold = 8;
+    private const int SoftRewardThreshold = 512;
     private const int MaxRngCache = 4096;
 
     private const int RngEvictChunk = 256;
 
     private readonly Queue<QuasiKey> _quasiPhaseOrder = new();
-    private readonly Queue<QuasiKey> _smallBagsOrder = new();
+    private readonly Dictionary<QuasiKey, SoftFairState> _softFair = new();
+    private readonly Queue<QuasiKey> _softFairOrder = new();
 
     private double NextUnit() => _random.NextFloat();
 
@@ -78,22 +80,32 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryNormalizeRange(range, minClamp, maxClamp, out var min, out var buckets))
             return min;
 
-        return buckets <= SmallBagThreshold
-            ? RollFromSmallBag(key, min, buckets)
+        return buckets <= SoftFairThreshold
+            ? RollSoftFair(key, min, buckets)
             : RollSmooth(key, min, buckets, jitter);
     }
 
-    private int RollFromSmallBag(QuasiKey key, int min, int buckets)
+    private int RollSoft(QuasiKey key, IntRange range, int minClamp, int maxClamp = int.MaxValue)
     {
-        var existing = _smallBags.TryGetValue(key, out var state);
+        if (!TryNormalizeRange(range, minClamp, maxClamp, out var min, out var buckets))
+            return min;
+
+        return buckets <= SoftRewardThreshold
+            ? RollSoftFair(key, min, buckets)
+            : min + _random.Next(buckets);
+    }
+
+    private int RollSoftFair(QuasiKey key, int min, int buckets)
+    {
+        var existing = _softFair.TryGetValue(key, out var state);
         if (!existing)
         {
-            if (_smallBags.Count >= MaxRngCache)
-                EvictSmallBagsOldest(RngEvictChunk);
+            if (_softFair.Count >= MaxRngCache)
+                EvictSoftFairOldest(RngEvictChunk);
 
             state = new();
-            _smallBags[key] = state;
-            _smallBagsOrder.Enqueue(key);
+            _softFair[key] = state;
+            _softFairOrder.Enqueue(key);
         }
 
         var max = min + buckets - 1;
@@ -101,30 +113,49 @@ public sealed partial class NcContractSystem : EntitySystem
         var needsReset =
             state!.Min != min ||
             state.Max != max ||
-            state.Order.Count != buckets ||
-            state.Cursor >= state.Order.Count;
+            state.Heat.Count != buckets;
 
         if (needsReset)
         {
             state.Min = min;
             state.Max = max;
-            state.Cursor = 0;
-            state.Order.Clear();
-
+            state.LastIdx = -1;
+            state.Streak = 0;
+            state.Heat.Clear();
             for (var i = 0; i < buckets; i++)
-                state.Order.Add(i);
-
-            for (var i = buckets - 1; i > 0; i--)
-            {
-                var j = _random.Next(i + 1);
-                (state.Order[i], state.Order[j]) = (state.Order[j], state.Order[i]);
-            }
-
-            if (state.LastIdx >= 0 && buckets > 1 && state.Order[0] == state.LastIdx)
-                (state.Order[0], state.Order[1]) = (state.Order[1], state.Order[0]);
+                state.Heat.Add(0);
         }
 
-        var idx = state.Order[state.Cursor++];
+        Span<double> weights = stackalloc double[buckets];
+        var total = 0.0;
+        for (var i = 0; i < buckets; i++)
+        {
+            var weight = 1.0 / (1.0 + state.Heat[i] * 0.75);
+            if (i == state.LastIdx)
+                weight *= state.Streak > 1 ? 0.35 : 0.6;
+
+            weight = Math.Max(weight, 0.08);
+            weights[i] = weight;
+            total += weight;
+        }
+
+        var idx = 0;
+        var roll = _random.NextDouble() * total;
+        for (var i = 0; i < buckets; i++)
+        {
+            roll -= weights[i];
+            if (roll > 0)
+                continue;
+
+            idx = i;
+            break;
+        }
+
+        for (var i = 0; i < state.Heat.Count; i++)
+            state.Heat[i] *= 0.55;
+
+        state.Heat[idx] += 1.0;
+        state.Streak = idx == state.LastIdx ? state.Streak + 1 : 1;
         state.LastIdx = idx;
 
         return min + idx;
@@ -147,20 +178,20 @@ public sealed partial class NcContractSystem : EntitySystem
         }
     }
 
-    private void EvictSmallBagsOldest(int count)
+    private void EvictSoftFairOldest(int count)
     {
         var evicted = 0;
-        while (evicted < count && _smallBagsOrder.Count > 0)
+        while (evicted < count && _softFairOrder.Count > 0)
         {
-            var oldest = _smallBagsOrder.Dequeue();
-            if (_smallBags.Remove(oldest))
+            var oldest = _softFairOrder.Dequeue();
+            if (_softFair.Remove(oldest))
                 evicted++;
         }
 
-        if (evicted == 0 && _smallBags.Count >= MaxRngCache)
+        if (evicted == 0 && _softFair.Count >= MaxRngCache)
         {
-            _smallBags.Clear();
-            _smallBagsOrder.Clear();
+            _softFair.Clear();
+            _softFairOrder.Clear();
         }
     }
 
@@ -168,8 +199,8 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         _quasiPhase.Clear();
         _quasiPhaseOrder.Clear();
-        _smallBags.Clear();
-        _smallBagsOrder.Clear();
+        _softFair.Clear();
+        _softFairOrder.Clear();
     }
 
     private static T PickWeighted<T>(
