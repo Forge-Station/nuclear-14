@@ -14,6 +14,10 @@ public sealed partial class NcSupplyTargetEntry
     [DataField("group")]
     public string Group { get; set; } = string.Empty;
 
+    /// <summary>ncTradeTag id. Trade tag targets wrap a TagPrototype plus UI metadata.</summary>
+    [DataField("tagTarget")]
+    public string TagTarget { get; set; } = string.Empty;
+
     /// <summary>Required amount. If this is a range, it is rolled once when the contract is generated.</summary>
     [DataField("count", required: true)]
     public IntRange Count { get; set; } = IntRange.Fixed(0);

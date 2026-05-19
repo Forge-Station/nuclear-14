@@ -14,6 +14,10 @@ public sealed partial class NcBarterCostEntry
     [DataField("group")]
     public string Group { get; set; } = string.Empty;
 
+    /// <summary>ncTradeTag id. Trade tag targets wrap a TagPrototype plus UI metadata.</summary>
+    [DataField("tagTarget")]
+    public string TagTarget { get; set; } = string.Empty;
+
     /// <summary>Stack currency id the player must pay.</summary>
     [DataField("currency")]
     public string Currency { get; set; } = string.Empty;

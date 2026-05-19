@@ -52,7 +52,13 @@ public sealed partial class NcContractSystem : EntitySystem
         try
         {
             UnregisterRetrievalSpawnedCargoTakePlan(ctx.Contract, ctx.TakePlan, journal);
-            ExecuteClaimTakePlan(ctx.TakePlan, journal);
+            if (!TryExecuteClaimTakeEntries(ctx.TakePlan, journal, out fail))
+            {
+                RollbackClaimTakeJournal(journal);
+                InvalidateClaimExecutionCaches(ctx);
+                return false;
+            }
+
             RecordPartialTurnInProgress(ctx.Store, contractId, ctx.Contract, ctx.TakePlan, journal);
             CommitClaimTakeJournal(journal);
         }
@@ -126,46 +132,69 @@ public sealed partial class NcContractSystem : EntitySystem
         return ClaimAttemptResult.Fail(ClaimFailureReason.ExecutionFailed, message);
     }
 
-    private void ExecuteClaimTakePlan(List<ClaimTakeEntry> takePlan)
+    private bool TryExecuteClaimTakeEntries(
+        List<ClaimTakeEntry> takePlan,
+        ClaimTakeJournal journal,
+        out ClaimAttemptResult fail)
     {
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+
         foreach (var entry in takePlan)
-            ExecuteClaimTakeEntry(entry, null);
+        {
+            if (!TryExecuteClaimTakeEntry(entry, journal, out fail))
+                return false;
+        }
+
+        return true;
     }
 
-    private void ExecuteClaimTakePlan(List<ClaimTakeEntry> takePlan, ClaimTakeJournal journal)
+    private bool TryExecuteClaimTakeEntry(
+        ClaimTakeEntry entry,
+        ClaimTakeJournal journal,
+        out ClaimAttemptResult fail)
     {
-        foreach (var entry in takePlan)
-            ExecuteClaimTakeEntry(entry, journal);
-    }
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
-    private void ExecuteClaimTakeEntry(ClaimTakeEntry entry, ClaimTakeJournal? journal)
-    {
         if (!EntityManager.EntityExists(entry.Entity))
-            return;
+        {
+            fail = CreateClaimExecutionFailure($"Planned entity no longer exists: {ToPrettyString(entry.Entity)}");
+            return false;
+        }
+
+        if (_logic.IsProtectedFromDirectSale(entry.Root, entry.Entity))
+        {
+            fail = CreateClaimExecutionFailure($"Planned entity is protected: {ToPrettyString(entry.Entity)}");
+            return false;
+        }
 
         if (!entry.IsStack)
         {
-            if (journal != null)
-                journal.PendingDeletes.Add(entry.Entity);
-            else
-                EntityManager.DeleteEntity(entry.Entity);
-            return;
+            journal.PendingDeletes.Add(entry.Entity);
+            return true;
         }
 
         if (!TryComp(entry.Entity, out StackComponent? stack))
-            return;
+        {
+            fail = CreateClaimExecutionFailure($"Planned stack has no StackComponent: {ToPrettyString(entry.Entity)}");
+            return false;
+        }
 
-        var left = Math.Max(stack.Count, 0) - entry.Amount;
-        journal?.TrackStack(entry.Entity, stack.Count);
+        var have = Math.Max(stack.Count, 0);
+        if (have < entry.Amount)
+        {
+            fail = CreateClaimExecutionFailure(
+                $"Planned stack count mismatch: need {entry.Amount}, have {have} on {ToPrettyString(entry.Entity)}");
+            return false;
+        }
+
+        var left = have - entry.Amount;
+        journal.TrackStack(entry.Entity, stack.Count);
         _stacks.SetCount(entry.Entity, left, stack);
 
-        if (stack.Count <= 0)
-        {
-            if (journal != null)
-                journal.PendingDeletes.Add(entry.Entity);
-            else
-                EntityManager.DeleteEntity(entry.Entity);
-        }
+        if (left <= 0)
+            journal.PendingDeletes.Add(entry.Entity);
+
+        return true;
     }
 
     private void CommitClaimTakeJournal(ClaimTakeJournal journal)
@@ -349,15 +378,24 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryValidateClaimTakePlan(ctx.TakePlan, out var fail))
             return fail;
 
+        var journal = new ClaimTakeJournal();
         try
         {
-            UnregisterRetrievalSpawnedCargoTakePlan(ctx.Contract, ctx.TakePlan);
-            ExecuteClaimTakePlan(ctx.TakePlan);
+            UnregisterRetrievalSpawnedCargoTakePlan(ctx.Contract, ctx.TakePlan, journal);
+            if (!TryExecuteClaimTakeEntries(ctx.TakePlan, journal, out var executeFail))
+            {
+                RollbackClaimTakeJournal(journal);
+                InvalidateClaimExecutionCaches(ctx);
+                return executeFail;
+            }
+
+            CommitClaimTakeJournal(journal);
             InvalidateClaimExecutionCaches(ctx);
             return ClaimAttemptResult.Ok();
         }
         catch (Exception e)
         {
+            RollbackClaimTakeJournal(journal);
             Sawmill.Error($"[Claim] Claim take pre-commit failed unexpectedly: {e}");
             InvalidateClaimExecutionCaches(ctx);
             return CreateClaimExecutionFailure($"Claim take pre-commit threw {e.GetType().Name}: {e.Message}");

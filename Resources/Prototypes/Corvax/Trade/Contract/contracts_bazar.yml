@@ -150,6 +150,16 @@
 # Группы обычных предметов
 # -----------------------------------------------------------------------------
 
+- type: ncTradeTag
+  id: BazarTradeTagDogFoodCan
+  name: "консервированный собачий корм"
+  description: "Любые целые банки собачьего корма, подходящие для сдачи по заказу."
+  tag: N14PlasmaShell
+  icon: N14FoodDogfood
+  sprite:
+    sprite: _Nuclear14/Objects/Consumable/Food/dogfood.rsi
+    state: icon
+
 - type: ncItemGroup
   id: BazarGroupColoredScrap
   name: "Цветной металлолом"

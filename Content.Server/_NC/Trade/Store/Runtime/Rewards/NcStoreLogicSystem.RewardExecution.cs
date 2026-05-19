@@ -224,10 +224,23 @@ public sealed partial class NcStoreLogicSystem
             return false;
         }
 
-        var issuedCurrencies = new List<NcRewardExecutionEntry>(plan.Entries.Count);
+        var currencyTransactionActive = false;
 
         try
         {
+            if (PlanHasCurrencyRewards(plan))
+            {
+                if (!BeginCurrencyIssueTransaction())
+                {
+                    _spawnService.RollbackRewardTransaction();
+                    reason = $"{context}: currency issue transaction is already in progress.";
+                    Sawmill.Error($"[NcStore] {reason}");
+                    return false;
+                }
+
+                currencyTransactionActive = true;
+            }
+
             for (var i = 0; i < plan.Entries.Count; i++)
             {
                 var entry = plan.Entries[i];
@@ -237,6 +250,7 @@ public sealed partial class NcStoreLogicSystem
                 if (!_protos.TryIndex<EntityPrototype>(entry.Id, out var proto))
                 {
                     _spawnService.RollbackRewardTransaction();
+                    RollbackCurrencyIssueTransactionIfNeeded(receiver, ref currencyTransactionActive);
                     InvalidateInventoryCache(receiver);
                     reason = $"{context}: item reward prototype '{entry.Id}' disappeared before execution.";
                     Sawmill.Error($"[NcStore] {reason}");
@@ -248,6 +262,7 @@ public sealed partial class NcStoreLogicSystem
                     continue;
 
                 _spawnService.RollbackRewardTransaction();
+                RollbackCurrencyIssueTransactionIfNeeded(receiver, ref currencyTransactionActive);
                 InvalidateInventoryCache(receiver);
                 reason = $"{context}: item reward spawn shortfall for '{entry.Id}': spawned {spawned}/{entry.Amount}.";
                 Sawmill.Error($"[NcStore] {reason}");
@@ -261,13 +276,10 @@ public sealed partial class NcStoreLogicSystem
                     continue;
 
                 if (TryGiveCurrency(receiver, entry.Id, entry.Amount))
-                {
-                    issuedCurrencies.Add(entry);
                     continue;
-                }
 
                 _spawnService.RollbackRewardTransaction();
-                RollbackIssuedRewardCurrencies(receiver, issuedCurrencies, context);
+                RollbackCurrencyIssueTransactionIfNeeded(receiver, ref currencyTransactionActive);
                 InvalidateInventoryCache(receiver);
                 reason = $"{context}: failed to give currency '{entry.Id}' x{entry.Amount}.";
                 Sawmill.Error($"[NcStore] {reason}");
@@ -280,12 +292,18 @@ public sealed partial class NcStoreLogicSystem
                 if (!string.IsNullOrWhiteSpace(preCommitFailure))
                 {
                     _spawnService.RollbackRewardTransaction();
-                    RollbackIssuedRewardCurrencies(receiver, issuedCurrencies, context);
+                    RollbackCurrencyIssueTransactionIfNeeded(receiver, ref currencyTransactionActive);
                     InvalidateInventoryCache(receiver);
                     reason = $"{context}: pre-commit action failed: {preCommitFailure}";
                     Sawmill.Warning($"[NcStore] {reason}");
                     return false;
                 }
+            }
+
+            if (currencyTransactionActive)
+            {
+                CommitCurrencyIssueTransaction(receiver);
+                currencyTransactionActive = false;
             }
 
             _spawnService.CommitRewardTransaction(receiver);
@@ -295,7 +313,7 @@ public sealed partial class NcStoreLogicSystem
         catch (Exception e)
         {
             _spawnService.RollbackRewardTransaction();
-            RollbackIssuedRewardCurrencies(receiver, issuedCurrencies, context);
+            RollbackCurrencyIssueTransactionIfNeeded(receiver, ref currencyTransactionActive);
             InvalidateInventoryCache(receiver);
             reason = $"{context}: unexpected reward execution exception: {e.Message}";
             Sawmill.Error($"[NcStore] {reason}");
@@ -303,24 +321,25 @@ public sealed partial class NcStoreLogicSystem
         }
     }
 
-    private void RollbackIssuedRewardCurrencies(
-        EntityUid receiver,
-        IReadOnlyList<NcRewardExecutionEntry> issuedCurrencies,
-        string context)
+    private static bool PlanHasCurrencyRewards(NcRewardExecutionPlan plan)
     {
-        for (var i = issuedCurrencies.Count - 1; i >= 0; i--)
+        for (var i = 0; i < plan.Entries.Count; i++)
         {
-            var entry = issuedCurrencies[i];
-            if (entry.Type != StoreRewardType.Currency || entry.Amount <= 0)
-                continue;
-
-            if (TryTakeCurrency(receiver, entry.Id, entry.Amount))
-                continue;
-
-            Sawmill.Error(
-                $"[NcStore] {context}: failed to roll back issued currency '{entry.Id}' x{entry.Amount} " +
-                $"from {ToPrettyString(receiver)} after reward execution failure.");
+            var entry = plan.Entries[i];
+            if (entry.Type == StoreRewardType.Currency && entry.Amount > 0)
+                return true;
         }
+
+        return false;
+    }
+
+    private void RollbackCurrencyIssueTransactionIfNeeded(EntityUid receiver, ref bool currencyTransactionActive)
+    {
+        if (!currencyTransactionActive)
+            return;
+
+        RollbackCurrencyIssueTransaction(receiver);
+        currencyTransactionActive = false;
     }
 
     private sealed class NcRewardExecutionPlan

@@ -1,5 +1,6 @@
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
+using Content.Shared.Tag;
 using Robust.Shared.Prototypes;
 
 
@@ -188,13 +189,14 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
                 if (!ValidateCatalogEntry(entry, mode, presetId, categoryId))
                     continue;
 
-                var baseId = $"{presetId}:{mode}:{categoryId}:{entry.Proto}";
+                var productId = GetCatalogEntryProductId(entry);
+                var baseId = $"{presetId}:{mode}:{categoryId}:{productId}";
                 var id = AllocateDeterministicId(baseId, ctx);
 
                 var listing = new NcStoreListingDef
                 {
                     Id = id,
-                    ProductEntity = entry.Proto,
+                    ProductEntity = productId,
                     MatchMode = entry.MatchMode,
                     Mode = mode,
                     Categories = new List<string> { categoryName },
@@ -203,6 +205,8 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
                     UnitsPerPurchase = Math.Max(1, entry.Amount),
                     Cost = new()
                 };
+
+                ApplyCatalogEntryDisplayMetadata(listing);
 
                 if (!string.IsNullOrWhiteSpace(preset.Currency))
                     listing.Cost[preset.Currency] = entry.Price;
@@ -403,11 +407,11 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
     private bool ValidateBarterCost(string entryId, string path, NcBarterCostEntry cost)
     {
-        var sources = CountNonEmpty(cost.Prototype, cost.Group, cost.Currency);
+        var sources = CountNonEmpty(cost.Prototype, cost.Group, cost.TagTarget, cost.Currency);
         if (sources != 1)
         {
             Sawmill.Warning(
-                $"[NcStore] Barter entry '{entryId}' {path} must specify exactly one of prototype/group/currency.");
+                $"[NcStore] Barter entry '{entryId}' {path} must specify exactly one of prototype/group/tagTarget/currency.");
             return false;
         }
 
@@ -424,6 +428,9 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         }
 
         if (!string.IsNullOrWhiteSpace(cost.Group) && !ValidateBarterItemGroup(entryId, path, cost.Group))
+            return false;
+
+        if (!string.IsNullOrWhiteSpace(cost.TagTarget) && !ValidateTradeTagTarget(entryId, path, cost.TagTarget))
             return false;
 
         if (!string.IsNullOrWhiteSpace(cost.Currency) && !_prototypes.HasIndex<StackPrototype>(cost.Currency))
@@ -613,7 +620,7 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
             return false;
         }
 
-        if (group.Prototypes.Count == 0 && group.Tags.Count == 0)
+        if (group.Prototypes.Count == 0)
         {
             Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} references empty item group '{groupId}'.");
             return false;
@@ -626,15 +633,6 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
             {
                 Sawmill.Warning(
                     $"[NcStore] Barter entry '{entryId}' {path} item group '{groupId}' has invalid prototype '{protoId}'.");
-                return false;
-            }
-        }
-
-        for (var i = 0; i < group.Tags.Count; i++)
-        {
-            if (string.IsNullOrWhiteSpace(group.Tags[i]))
-            {
-                Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} item group '{groupId}' has empty tag.");
                 return false;
             }
         }
@@ -672,6 +670,12 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
                 !string.IsNullOrWhiteSpace(group.Icon) &&
                 _prototypes.HasIndex<EntityPrototype>(group.Icon))
                 return group.Icon;
+
+            if (!string.IsNullOrWhiteSpace(cost.TagTarget) &&
+                _prototypes.TryIndex<NcTradeTagPrototype>(cost.TagTarget, out var tagTarget) &&
+                !string.IsNullOrWhiteSpace(tagTarget.Icon) &&
+                _prototypes.HasIndex<EntityPrototype>(tagTarget.Icon))
+                return tagTarget.Icon;
 
             if (!string.IsNullOrWhiteSpace(cost.Currency) && TryResolveCurrencyIcon(cost.Currency, out var currencyIcon))
                 return currencyIcon;
@@ -757,6 +761,7 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
             {
                 Prototype = c.Prototype,
                 Group = c.Group,
+                TagTarget = c.TagTarget,
                 Currency = c.Currency,
                 Count = c.Count
             });
@@ -810,6 +815,18 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         return count;
     }
 
+    private void ApplyCatalogEntryDisplayMetadata(NcStoreListingDef listing)
+    {
+        if (listing.MatchMode != PrototypeMatchMode.Tag)
+            return;
+
+        if (!_prototypes.TryIndex<NcTradeTagPrototype>(listing.ProductEntity, out var tagTarget))
+            return;
+
+        listing.DisplayName = tagTarget.Name;
+        listing.Description = tagTarget.Description;
+    }
+
     private bool ValidateStructuredPresetCurrency(
         StorePresetStructuredPrototype preset,
         StoreMode mode,
@@ -840,36 +857,54 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
     {
         var ok = true;
 
-        if (string.IsNullOrWhiteSpace(entry.Proto))
+        var hasProto = !string.IsNullOrWhiteSpace(entry.Proto);
+        var hasTagTarget = !string.IsNullOrWhiteSpace(entry.TagTarget);
+
+        if (entry.MatchMode == PrototypeMatchMode.Tag)
         {
-            Sawmill.Warning($"[NcStore] {mode} entry in '{presetId}/{categoryId}' has empty proto and was skipped.");
+            if (!hasTagTarget || hasProto)
+            {
+                Sawmill.Warning(
+                    $"[NcStore] {mode} tag entry in '{presetId}/{categoryId}' must specify tagTarget and no proto.");
+                return false;
+            }
+        }
+        else if (!hasProto || hasTagTarget)
+        {
+            Sawmill.Warning(
+                $"[NcStore] {mode} entry in '{presetId}/{categoryId}' must specify proto and no tagTarget.");
             return false;
         }
+
+        var productId = GetCatalogEntryProductId(entry);
 
         if (entry.Price <= 0)
         {
             Sawmill.Warning(
-                $"[NcStore] {mode} entry '{entry.Proto}' in '{presetId}/{categoryId}' has non-positive price={entry.Price}.");
+                $"[NcStore] {mode} entry '{productId}' in '{presetId}/{categoryId}' has non-positive price={entry.Price}.");
             ok = false;
         }
 
         if (entry.Amount <= 0)
         {
             Sawmill.Warning(
-                $"[NcStore] {mode} entry '{entry.Proto}' in '{presetId}/{categoryId}' has non-positive amount={entry.Amount}.");
+                $"[NcStore] {mode} entry '{productId}' in '{presetId}/{categoryId}' has non-positive amount={entry.Amount}.");
             ok = false;
         }
 
         if (entry.Count is { } count && (count == 0 || count < -1))
         {
             Sawmill.Warning(
-                $"[NcStore] {mode} entry '{entry.Proto}' in '{presetId}/{categoryId}' has invalid count={count}. " +
+                $"[NcStore] {mode} entry '{productId}' in '{presetId}/{categoryId}' has invalid count={count}. " +
                 "Use -1 or a positive value.");
             ok = false;
         }
 
         if (entry.MatchMode == PrototypeMatchMode.Matcher)
             return ok && ValidateMatcherEntry(entry, mode, presetId, categoryId);
+
+        if (entry.MatchMode == PrototypeMatchMode.Tag)
+            return ok && ValidateTagEntry(entry, mode, presetId, categoryId);
 
         if (!_prototypes.HasIndex<EntityPrototype>(entry.Proto))
         {
@@ -880,6 +915,9 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
         return ok;
     }
+
+    private static string GetCatalogEntryProductId(StoreCatalogEntry entry) =>
+        entry.MatchMode == PrototypeMatchMode.Tag ? entry.TagTarget : entry.Proto;
 
     private bool ValidateMatcherEntry(
         StoreCatalogEntry entry,
@@ -902,20 +940,48 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         }
 
         var hasItems = matcher.Items is { Count: > 0 };
-        var hasTags = matcher.Tags is { Count: > 0 };
-        if (!hasItems && !hasTags)
+        if (!hasItems)
         {
             Sawmill.Warning(
-                $"[NcStore] Matcher '{entry.Proto}' has neither items nor tags and was skipped.");
+                $"[NcStore] Matcher '{entry.Proto}' has no items and was skipped.");
             return false;
         }
 
-        // Buy listing must be able to spawn, which means items are required (tags do not drive spawn).
-        if (mode == StoreMode.Buy && !hasItems)
+        return true;
+    }
+
+    private bool ValidateTagEntry(
+        StoreCatalogEntry entry,
+        StoreMode mode,
+        ProtoId<StorePresetStructuredPrototype> presetId,
+        string categoryId)
+    {
+        if (mode == StoreMode.Buy)
         {
             Sawmill.Warning(
-                $"[NcStore] Matcher '{entry.Proto}' is used in a buy listing without items (tags-only), " +
-                $"cannot spawn and was skipped (preset='{presetId}', category='{categoryId}').");
+                $"[NcStore] Tag target '{entry.TagTarget}' is used in a buy listing, cannot spawn and was skipped " +
+                $"(preset='{presetId}', category='{categoryId}').");
+            return false;
+        }
+
+        if (ValidateTradeTagTarget(presetId.ToString(), $"category '{categoryId}'", entry.TagTarget))
+            return true;
+
+        return false;
+    }
+
+    private bool ValidateTradeTagTarget(string ownerId, string path, string tagTargetId)
+    {
+        if (!_prototypes.TryIndex<NcTradeTagPrototype>(tagTargetId, out var tagTarget))
+        {
+            Sawmill.Warning($"[NcStore] '{ownerId}' {path} references missing ncTradeTag '{tagTargetId}'.");
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(tagTarget.Tag) || !_prototypes.HasIndex<TagPrototype>(tagTarget.Tag))
+        {
+            Sawmill.Warning(
+                $"[NcStore] '{ownerId}' {path} ncTradeTag '{tagTargetId}' references missing raw tag '{tagTarget.Tag}'.");
             return false;
         }
 

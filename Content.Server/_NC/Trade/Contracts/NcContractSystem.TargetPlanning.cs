@@ -52,6 +52,10 @@ public sealed partial class NcContractSystem : EntitySystem
         string expectedProtoId,
         PrototypeMatchMode matchMode)
     {
+        if (matchMode == PrototypeMatchMode.Tag)
+            return TryResolveContractTagTargetId(expectedProtoId, out var tagId) &&
+                ContractPrototypeHasTag(candidateId, tagId);
+
         if (matchMode != PrototypeMatchMode.Matcher)
             return candidateId == expectedProtoId;
 
@@ -66,15 +70,6 @@ public sealed partial class NcContractSystem : EntitySystem
             matcher.MatchStackTypes.Contains(stack.StackTypeId))
         {
             return true;
-        }
-
-        if (matcher.MatchTags.Count == 0)
-            return false;
-
-        for (var i = 0; i < matcher.MatchTags.Count; i++)
-        {
-            if (_tags.HasTag(candidateEntity, matcher.MatchTags[i]))
-                return true;
         }
 
         return false;

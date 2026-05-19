@@ -26,6 +26,7 @@ public sealed class ContractClientData
     public List<ContractRewardData> Rewards = new();
 
     public string TargetItem = string.Empty;
+    public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
     public string TurnInItem = string.Empty;
     public string SourceHint = string.Empty;
     public string DestinationHint = string.Empty;
@@ -51,6 +52,7 @@ public sealed class ContractClientData
         ContractFlowStatus flowStatus,
         bool completed,
         string targetItem,
+        PrototypeMatchMode matchMode,
         string turnInItem,
         int required,
         int progress,
@@ -80,6 +82,7 @@ public sealed class ContractClientData
         FlowStatus = flowStatus;
         Completed = completed;
         TargetItem = targetItem;
+        MatchMode = matchMode;
         TurnInItem = turnInItem;
         Required = required;
         Progress = progress;

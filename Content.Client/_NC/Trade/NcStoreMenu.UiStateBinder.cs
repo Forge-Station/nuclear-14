@@ -117,7 +117,8 @@ public sealed partial class NcStoreMenu
             var productProtos = new List<string>(filtered.Count);
             for (var i = 0; i < filtered.Count; i++)
             {
-                if (!string.IsNullOrWhiteSpace(filtered[i].ProductEntity))
+                if (filtered[i].MatchMode != PrototypeMatchMode.Tag &&
+                    !string.IsNullOrWhiteSpace(filtered[i].ProductEntity))
                     productProtos.Add(filtered[i].ProductEntity);
             }
 

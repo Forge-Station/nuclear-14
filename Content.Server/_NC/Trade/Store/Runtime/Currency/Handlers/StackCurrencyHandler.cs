@@ -18,8 +18,13 @@ public sealed class StackCurrencyHandler : ICurrencyHandler
     private readonly SharedTransformSystem _xform;
     private readonly List<(EntityUid Ent, int Count)> _scratchCandidates = new();
     private readonly List<EntityUid> _scratchItems = new();
+    private readonly List<EntityUid> _takePendingDeletesScratch = new();
+    private readonly List<(EntityUid Ent, int PreviousCount)> _takeStackRestoreScratch = new();
     private readonly List<EntityUid> _issueSpawnedScratch = new();
     private readonly List<(EntityUid Ent, int PreviousCount)> _issueStackRestoreScratch = new();
+    private readonly List<EntityUid> _transactionIssueSpawnedScratch = new();
+    private readonly List<(EntityUid Ent, int PreviousCount)> _transactionIssueStackRestoreScratch = new();
+    private bool _currencyIssueTransactionActive;
 
     public StackCurrencyHandler(
         IEntityManager ents,
@@ -96,30 +101,63 @@ public sealed class StackCurrencyHandler : ICurrencyHandler
 
         _scratchCandidates.Sort((a, b) => a.Count.CompareTo(b.Count));
 
-        var left = amount;
-        foreach (var (ent, have) in _scratchCandidates)
-        {
-            if (left <= 0)
-                break;
-            var take = Math.Min(have, left);
+        _takePendingDeletesScratch.Clear();
+        _takeStackRestoreScratch.Clear();
 
-            if (_ents.TryGetComponent(ent, out StackComponent? st))
+        try
+        {
+            var left = amount;
+            foreach (var (ent, _) in _scratchCandidates)
             {
-                _stacks.SetCount(ent, st.Count - take, st);
+                if (left <= 0)
+                    break;
+
+                if (!_ents.EntityExists(ent) ||
+                    _inventory.IsProtectedFromDirectSale(user, ent) ||
+                    !_ents.TryGetComponent(ent, out StackComponent? st) ||
+                    st.StackTypeId != currencyId)
+                {
+                    continue;
+                }
+
+                var have = Math.Max(st.Count, 0);
+                if (have <= 0)
+                    continue;
+
+                var take = Math.Min(have, left);
+                TrackTakeStackRestore(ent, st.Count);
+                _stacks.SetCount(ent, have - take, st);
+                left -= take;
+
                 if (st.Count <= 0)
+                    _takePendingDeletesScratch.Add(ent);
+            }
+
+            if (left > 0)
+            {
+                RollbackTakeJournal(user);
+                return false;
+            }
+
+            for (var i = 0; i < _takePendingDeletesScratch.Count; i++)
+            {
+                var ent = _takePendingDeletesScratch[i];
+                if (_ents.EntityExists(ent))
                     _ents.DeleteEntity(ent);
             }
 
-            left -= take;
+            ClearTakeJournal();
         }
-
-        if (left <= 0)
+        catch (Exception e)
         {
-            _inventory.InvalidateInventoryCache(user);
-            return true;
+            Logger.GetSawmill("ncstore-logic")
+                .Error($"[NcStore] Failed to take currency '{currencyId}' x{amount}: {e}");
+            RollbackTakeJournal(user);
+            return false;
         }
 
-        return false;
+        _inventory.InvalidateInventoryCache(user);
+        return true;
     }
 
     public bool TryGiveCurrency(EntityUid user, string currencyId, int amount)
@@ -165,7 +203,7 @@ public sealed class StackCurrencyHandler : ICurrencyHandler
             if (remaining <= 0)
             {
                 _inventory.InvalidateInventoryCache(user);
-                ClearIssueJournal();
+                HandleSuccessfulIssueJournal(user);
                 return true;
             }
 
@@ -194,7 +232,7 @@ public sealed class StackCurrencyHandler : ICurrencyHandler
                 if (_ents.TryGetComponent(spawned, out StackComponent? newStack))
                     _stacks.SetCount(spawned, add, newStack);
 
-                if (!_hands.TryPickupAnyHand(user, spawned, false))
+                if (!_currencyIssueTransactionActive && !_hands.TryPickupAnyHand(user, spawned, false))
                 {
                     Logger.GetSawmill("ncstore-logic")
                         .Warning($"[NcStore] Failed to place issued currency stack '{currencyId}' on {user}.");
@@ -206,7 +244,7 @@ public sealed class StackCurrencyHandler : ICurrencyHandler
             }
 
             _inventory.InvalidateInventoryCache(user);
-            ClearIssueJournal();
+            HandleSuccessfulIssueJournal(user);
             return true;
         }
         catch (Exception e)
@@ -216,6 +254,105 @@ public sealed class StackCurrencyHandler : ICurrencyHandler
             RollbackIssueJournal(user);
             return false;
         }
+    }
+
+    public bool BeginCurrencyIssueTransaction()
+    {
+        if (_currencyIssueTransactionActive)
+            return false;
+
+        ClearIssueJournal();
+        _transactionIssueSpawnedScratch.Clear();
+        _transactionIssueStackRestoreScratch.Clear();
+        _currencyIssueTransactionActive = true;
+        return true;
+    }
+
+    public void CommitCurrencyIssueTransaction(EntityUid user)
+    {
+        if (!_currencyIssueTransactionActive)
+            return;
+
+        for (var i = 0; i < _transactionIssueSpawnedScratch.Count; i++)
+        {
+            var ent = _transactionIssueSpawnedScratch[i];
+            if (!_ents.EntityExists(ent))
+                continue;
+
+            // Placement is best-effort at commit time. If hands are still full, the stack remains
+            // at the receiver's coordinates instead of failing an already validated payout.
+            _hands.TryPickupAnyHand(user, ent, false);
+        }
+
+        _inventory.InvalidateInventoryCache(user);
+        _currencyIssueTransactionActive = false;
+        _transactionIssueSpawnedScratch.Clear();
+        _transactionIssueStackRestoreScratch.Clear();
+        ClearIssueJournal();
+    }
+
+    public void RollbackCurrencyIssueTransaction(EntityUid user)
+    {
+        if (!_currencyIssueTransactionActive)
+            return;
+
+        RollbackIssueJournal(user);
+
+        for (var i = _transactionIssueStackRestoreScratch.Count - 1; i >= 0; i--)
+        {
+            var (ent, previousCount) = _transactionIssueStackRestoreScratch[i];
+            if (_ents.TryGetComponent(ent, out StackComponent? stack))
+                _stacks.SetCount(ent, previousCount, stack);
+        }
+
+        for (var i = 0; i < _transactionIssueSpawnedScratch.Count; i++)
+        {
+            var ent = _transactionIssueSpawnedScratch[i];
+            if (_ents.EntityExists(ent))
+                _ents.DeleteEntity(ent);
+        }
+
+        _inventory.InvalidateInventoryCache(user);
+        _currencyIssueTransactionActive = false;
+        _transactionIssueSpawnedScratch.Clear();
+        _transactionIssueStackRestoreScratch.Clear();
+        ClearIssueJournal();
+    }
+
+    private void HandleSuccessfulIssueJournal(EntityUid user)
+    {
+        if (_currencyIssueTransactionActive)
+        {
+            MergeIssueJournalIntoTransaction();
+            ClearIssueJournal();
+            _inventory.InvalidateInventoryCache(user);
+            return;
+        }
+
+        ClearIssueJournal();
+    }
+
+    private void MergeIssueJournalIntoTransaction()
+    {
+        for (var i = 0; i < _issueStackRestoreScratch.Count; i++)
+        {
+            var restore = _issueStackRestoreScratch[i];
+            var alreadyTracked = false;
+
+            for (var j = 0; j < _transactionIssueStackRestoreScratch.Count; j++)
+            {
+                if (_transactionIssueStackRestoreScratch[j].Ent != restore.Ent)
+                    continue;
+
+                alreadyTracked = true;
+                break;
+            }
+
+            if (!alreadyTracked)
+                _transactionIssueStackRestoreScratch.Add(restore);
+        }
+
+        _transactionIssueSpawnedScratch.AddRange(_issueSpawnedScratch);
     }
 
     private void TrackIssueStackRestore(EntityUid ent, int previousCount)
@@ -253,6 +390,36 @@ public sealed class StackCurrencyHandler : ICurrencyHandler
     {
         _issueSpawnedScratch.Clear();
         _issueStackRestoreScratch.Clear();
+    }
+
+    private void TrackTakeStackRestore(EntityUid ent, int previousCount)
+    {
+        for (var i = 0; i < _takeStackRestoreScratch.Count; i++)
+        {
+            if (_takeStackRestoreScratch[i].Ent == ent)
+                return;
+        }
+
+        _takeStackRestoreScratch.Add((ent, previousCount));
+    }
+
+    private void RollbackTakeJournal(EntityUid user)
+    {
+        for (var i = _takeStackRestoreScratch.Count - 1; i >= 0; i--)
+        {
+            var (ent, previousCount) = _takeStackRestoreScratch[i];
+            if (_ents.TryGetComponent(ent, out StackComponent? stack))
+                _stacks.SetCount(ent, previousCount, stack);
+        }
+
+        _inventory.InvalidateInventoryCache(user);
+        ClearTakeJournal();
+    }
+
+    private void ClearTakeJournal()
+    {
+        _takePendingDeletesScratch.Clear();
+        _takeStackRestoreScratch.Clear();
     }
 
     public bool CanGiveCurrency(EntityUid user, string currencyId, int amount)

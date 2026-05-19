@@ -1,5 +1,6 @@
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
+using Content.Shared.Tag;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server._NC.Trade;
@@ -71,13 +72,12 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         var hasPrototype = !string.IsNullOrWhiteSpace(entry.Prototype);
         var hasGroup = !string.IsNullOrWhiteSpace(entry.Group);
+        var hasTagTarget = !string.IsNullOrWhiteSpace(entry.TagTarget);
 
-        if (hasPrototype == hasGroup)
+        if (CountNonEmpty(entry.Prototype, entry.Group, entry.TagTarget) != 1)
         {
             Sawmill.Warning(
-                hasPrototype
-                    ? $"[Contracts] Supply contract '{contractId}' target #{index} has both prototype and group. Use exactly one."
-                    : $"[Contracts] Supply contract '{contractId}' target #{index} has neither prototype nor group.");
+                $"[Contracts] Supply contract '{contractId}' target #{index} must specify exactly one of prototype/group/tagTarget.");
             return false;
         }
 
@@ -111,6 +111,14 @@ public sealed partial class NcContractSystem : EntitySystem
             Sawmill.Warning(
                 $"[Contracts] Supply contract '{contractId}' target #{index} references missing entity prototype " +
                 $"'{entry.Prototype}'.");
+            return false;
+        }
+
+        if (hasTagTarget)
+        {
+            if (TryValidateTradeTagTarget(contractId, $"target #{index}", entry.TagTarget))
+                return true;
+
             return false;
         }
 
@@ -162,25 +170,41 @@ public sealed partial class NcContractSystem : EntitySystem
             valid = false;
         }
 
-        for (var i = 0; i < group.Tags.Count; i++)
-        {
-            var tag = group.Tags[i];
-            if (string.IsNullOrWhiteSpace(tag))
-            {
-                Sawmill.Warning(
-                    $"[Contracts] Item group '{groupId}' used by '{ownerId}' has empty tags[{i}].");
-                valid = false;
-                continue;
-            }
-
-            hasAnyEntry = true;
-        }
-
         if (hasAnyEntry)
             return valid;
 
         Sawmill.Warning(
-            $"[Contracts] Item group '{groupId}' used by '{ownerId}' has no prototypes and no tags.");
+            $"[Contracts] Item group '{groupId}' used by '{ownerId}' has no prototypes.");
         return false;
+    }
+
+    private static int CountNonEmpty(params string[] values)
+    {
+        var count = 0;
+        for (var i = 0; i < values.Length; i++)
+        {
+            if (!string.IsNullOrWhiteSpace(values[i]))
+                count++;
+        }
+
+        return count;
+    }
+
+    private bool TryValidateTradeTagTarget(string ownerId, string path, string tagTargetId)
+    {
+        if (!_prototypes.TryIndex<NcTradeTagPrototype>(tagTargetId, out var tagTarget))
+        {
+            Sawmill.Warning($"[Contracts] '{ownerId}' {path} references missing ncTradeTag '{tagTargetId}'.");
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(tagTarget.Tag) || !_prototypes.HasIndex<TagPrototype>(tagTarget.Tag))
+        {
+            Sawmill.Warning(
+                $"[Contracts] '{ownerId}' {path} ncTradeTag '{tagTargetId}' references missing raw tag '{tagTarget.Tag}'.");
+            return false;
+        }
+
+        return true;
     }
 }

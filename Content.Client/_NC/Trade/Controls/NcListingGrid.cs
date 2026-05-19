@@ -21,6 +21,7 @@ public sealed partial class NcListingGrid : BoxContainer
     private readonly record struct ListingSig(
         string Id,
         string ProductEntity,
+        PrototypeMatchMode MatchMode,
         string Category,
         int Price,
         string CurrencyId,
@@ -377,6 +378,7 @@ public sealed partial class NcListingGrid : BoxContainer
     private static ListingSig MakeSig(StoreListingData d) => new(
         d.Id,
         d.ProductEntity,
+        d.MatchMode,
         d.Category,
         d.Price,
         d.CurrencyId,
@@ -398,6 +400,7 @@ public sealed partial class NcListingGrid : BoxContainer
                 var c = d.BarterCost[i];
                 h = MixStableString(h, c.Prototype);
                 h = MixStableString(h, c.Group);
+                h = MixStableString(h, c.TagTarget);
                 h = MixStableString(h, c.Currency);
                 h = MixStableInt(h, c.Count);
             }
@@ -463,7 +466,18 @@ public sealed partial class NcListingGrid : BoxContainer
         }
 
         if (!_proto.TryIndex<NcMatcherPrototype>(protoId, out var matcher))
+        {
+            if (_proto.TryIndex<NcTradeTagPrototype>(protoId, out var tagTarget))
+            {
+                _searchIndex[protoId] = (
+                    tagTarget.Name + "\n" +
+                    tagTarget.Description + "\n" +
+                    tagTarget.Tag + "\n" +
+                    tagTarget.Icon).ToLowerInvariant();
+            }
+
             return;
+        }
 
         var parts = new List<string>(matcher.Items.Count + 2)
         {
@@ -537,6 +551,7 @@ public sealed partial class NcListingGrid : BoxContainer
     {
         AddPrototypeSearchPart(parts, entry.Prototype);
         AddItemGroupSearchPart(parts, entry.Group);
+        AddTradeTagSearchPart(parts, entry.TagTarget);
         AddCurrencySearchPart(parts, entry.Currency);
     }
 
@@ -617,11 +632,24 @@ public sealed partial class NcListingGrid : BoxContainer
         AddSearchPart(parts, group.Description);
         AddSearchPart(parts, group.Icon);
 
-        for (var i = 0; i < group.Tags.Count; i++)
-            AddSearchPart(parts, group.Tags[i]);
-
         for (var i = 0; i < group.Prototypes.Count; i++)
             AddPrototypeSearchPart(parts, group.Prototypes[i]);
+    }
+
+    private void AddTradeTagSearchPart(List<string> parts, string tagTargetId)
+    {
+        if (string.IsNullOrWhiteSpace(tagTargetId))
+            return;
+
+        AddSearchPart(parts, tagTargetId);
+
+        if (!_proto.TryIndex<NcTradeTagPrototype>(tagTargetId, out var tagTarget))
+            return;
+
+        AddSearchPart(parts, tagTarget.Name);
+        AddSearchPart(parts, tagTarget.Description);
+        AddSearchPart(parts, tagTarget.Tag);
+        AddPrototypeSearchPart(parts, tagTarget.Icon);
     }
 
     private void AddCurrencySearchPart(List<string> parts, string currencyId)

@@ -54,16 +54,30 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
         _prototypeManager = IoCManager.Resolve<IPrototypeManager>();
         var pm = _prototypeManager;
-        pm.TryIndex<EntityPrototype>(data.ProductEntity, out var proto);
+        EntityPrototype? proto = null;
+        if (data.MatchMode != PrototypeMatchMode.Tag)
+            pm.TryIndex<EntityPrototype>(data.ProductEntity, out proto);
 
         NcMatcherPrototype? matcher = null;
         EntityPrototype? matcherFallbackProto = null;
+        NcTradeTagPrototype? tagTarget = null;
+        EntityPrototype? tagIconProto = null;
 
-        if (proto == null && pm.TryIndex<NcMatcherPrototype>(data.ProductEntity, out var foundMatcher))
+        if (proto == null &&
+            data.MatchMode == PrototypeMatchMode.Matcher &&
+            pm.TryIndex<NcMatcherPrototype>(data.ProductEntity, out var foundMatcher))
         {
             matcher = foundMatcher;
             if (matcher.Items.Count > 0)
                 pm.TryIndex<EntityPrototype>(matcher.Items[0], out matcherFallbackProto);
+        }
+        else if (proto == null &&
+                 data.MatchMode == PrototypeMatchMode.Tag &&
+                 pm.TryIndex<NcTradeTagPrototype>(data.ProductEntity, out var foundTagTarget))
+        {
+            tagTarget = foundTagTarget;
+            if (!string.IsNullOrWhiteSpace(tagTarget.Icon))
+                pm.TryIndex<EntityPrototype>(tagTarget.Icon, out tagIconProto);
         }
 
         var displayName = data.DisplayName;
@@ -71,6 +85,10 @@ public sealed partial class NcStoreListingControl : PanelContainer
             displayName = proto?.Name;
         if (string.IsNullOrWhiteSpace(displayName))
             displayName = matcher?.Name;
+        if (string.IsNullOrWhiteSpace(displayName))
+            displayName = tagTarget?.Name;
+        if (string.IsNullOrWhiteSpace(displayName) && data.MatchMode == PrototypeMatchMode.Tag)
+            displayName = data.ProductEntity;
         if (string.IsNullOrWhiteSpace(displayName))
             displayName = data.ProductEntity;
         if (string.IsNullOrWhiteSpace(displayName))
@@ -101,6 +119,13 @@ public sealed partial class NcStoreListingControl : PanelContainer
                 IconSlotBackground.Visible = false;
             }
         }
+        else if (tagTarget != null)
+        {
+            if (!TrySetTradeTagIcon(tagTarget, tagIconProto, sprites))
+            {
+                IconSlotBackground.Visible = false;
+            }
+        }
         else
         {
             IconSlotBackground.Visible = false;
@@ -108,7 +133,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
         SetDescription(!string.IsNullOrWhiteSpace(data.Description)
             ? data.Description
-            : proto?.Description ?? matcher?.Description);
+            : proto?.Description ?? matcher?.Description ?? tagTarget?.Description);
         SetupBarterPreview(data, pm);
 
         SetupPriceButton(data, sprites, pm);
@@ -208,6 +233,31 @@ public sealed partial class NcStoreListingControl : PanelContainer
         if (matcher.Sprite != null)
         {
             var texture = sprites.Frame0(matcher.Sprite);
+            if (texture != null)
+            {
+                IconView.Visible = false;
+                MatcherIconView.Texture = texture;
+                MatcherIconView.Visible = true;
+                return true;
+            }
+        }
+
+        if (fallbackProto == null)
+            return false;
+
+        MatcherIconView.Visible = false;
+        MatcherIconView.Texture = null;
+        IconView.Visible = true;
+        IconView.SetPrototype(fallbackProto.ID);
+        NcUiIconFit.Fit(IconView, sprites, fallbackProto.ID, targetPx: 72, paddingPx: 6);
+        return true;
+    }
+
+    private bool TrySetTradeTagIcon(NcTradeTagPrototype tagTarget, EntityPrototype? fallbackProto, SpriteSystem sprites)
+    {
+        if (tagTarget.Sprite != null)
+        {
+            var texture = sprites.Frame0(tagTarget.Sprite);
             if (texture != null)
             {
                 IconView.Visible = false;
@@ -494,6 +544,14 @@ public sealed partial class NcStoreListingControl : PanelContainer
             return entry.Group;
         }
 
+        if (!string.IsNullOrWhiteSpace(entry.TagTarget))
+        {
+            if (pm.TryIndex<NcTradeTagPrototype>(entry.TagTarget, out var tagTarget))
+                return !string.IsNullOrWhiteSpace(tagTarget.Name) ? tagTarget.Name : tagTarget.ID;
+
+            return entry.TagTarget;
+        }
+
         if (!string.IsNullOrWhiteSpace(entry.Currency))
             return ResolveCurrencyName(entry.Currency, pm);
 
@@ -545,6 +603,11 @@ public sealed partial class NcStoreListingControl : PanelContainer
                 if (group.Prototypes.Count > 0 && !string.IsNullOrWhiteSpace(group.Prototypes[0]))
                     return group.Prototypes[0];
             }
+
+            if (!string.IsNullOrWhiteSpace(entry.TagTarget) &&
+                pm.TryIndex<NcTradeTagPrototype>(entry.TagTarget, out var tagTarget) &&
+                !string.IsNullOrWhiteSpace(tagTarget.Icon))
+                return tagTarget.Icon;
 
             if (!string.IsNullOrWhiteSpace(entry.Currency) &&
                 TryResolveCurrencyEntity(entry.Currency, pm, out var currencyEntity))

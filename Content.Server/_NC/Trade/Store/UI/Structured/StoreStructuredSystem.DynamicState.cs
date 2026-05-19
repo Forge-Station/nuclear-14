@@ -57,7 +57,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
             PopulateDynamicBalances(comp, userSnap, buf);
             PopulateDynamicListings(comp, user, userSnap, scratch, buf);
-            PopulateDynamicCratePreview(comp, crateUid, tabs.HasSellTab, scanNeeds.NeedCrateScan, scratch, buf);
+            PopulateDynamicCratePreview(uid, comp, crateUid, tabs.HasSellTab, scanNeeds.NeedCrateScan, scratch, buf);
             PopulateDynamicContracts(uid, comp, tabs.HasContractsTab, scratch, buf);
             PopulateDynamicContractSkip(uid, comp, tabs.HasContractsTab, buf);
             PushDynamicState(uid, comp, tabs, scratch, buf);
@@ -318,6 +318,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     }
 
     private void PopulateDynamicCratePreview(
+        EntityUid store,
         NcStoreComponent comp,
         EntityUid? crateUid,
         bool hasSellTab,
@@ -336,7 +337,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             return;
 
         var started = System.Diagnostics.Stopwatch.GetTimestamp();
-        var plan = _logic.ComputeMassSellPlanFromCachedItems(comp, crate, scratch.DeepCrateItems);
+        var plan = _logic.ComputeMassSellPlanFromCachedItems(store, comp, crate, scratch.DeepCrateItems);
         var elapsed = GetElapsedMilliseconds(started);
         if (elapsed > SlowCratePreviewMs)
         {
@@ -374,9 +375,13 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     {
         unchecked
         {
-            var hash = comp.Contracts.Count;
-            foreach (var contract in comp.Contracts.Values)
-                hash += ComputeContractSignature(store, contract);
+            var contracts = new List<ContractServerData>(comp.Contracts.Values);
+            contracts.Sort(static (a, b) => string.CompareOrdinal(a.Id, b.Id));
+
+            var hash = 17;
+            AddHash(ref hash, contracts.Count);
+            for (var i = 0; i < contracts.Count; i++)
+                AddHash(ref hash, ComputeContractSignature(store, contracts[i]));
 
             return hash;
         }
@@ -398,6 +403,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             AddHash(ref hash, contract.FlowStatus);
             AddHash(ref hash, contract.Completed);
             AddHash(ref hash, contract.TargetItem);
+            AddHash(ref hash, contract.MatchMode);
             AddHash(ref hash, ResolveContractTurnInItem(contract));
             AddHash(ref hash, contract.Required);
             AddHash(ref hash, contract.Progress);

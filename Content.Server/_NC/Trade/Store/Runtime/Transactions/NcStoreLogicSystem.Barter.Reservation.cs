@@ -7,78 +7,32 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcStoreLogicSystem
 {
-    private bool TryExecuteBarterCostPlan(EntityUid root, BarterCostPlan plan)
+    private string? TryExecuteBarterCostPlan(EntityUid root, BarterCostPlan plan)
     {
         if (plan.Reservations.Count == 0)
-            return false;
+            return "barter cost plan is empty";
 
-        for (var i = 0; i < plan.Reservations.Count; i++)
-        {
-            if (!ValidateBarterCostReservation(root, plan.Reservations[i]))
-                return false;
-        }
-
-        var stackRestore = new List<(EntityUid Ent, int PreviousCount)>(plan.Reservations.Count);
-        var pendingDeletes = new List<EntityUid>(plan.Reservations.Count);
-
-        try
-        {
-            for (var i = 0; i < plan.Reservations.Count; i++)
+        return _transactionCoordinator.TryCommitInventoryTake(
+            "BarterCost",
+            () =>
             {
-                var reservation = plan.Reservations[i];
-                if (reservation.IsStack)
+                for (var i = 0; i < plan.Reservations.Count; i++)
                 {
-                    if (!_ents.TryGetComponent(reservation.Entity, out StackComponent? stack))
-                        return false;
+                    var reservation = plan.Reservations[i];
+                    if (!ValidateBarterCostReservation(root, reservation))
+                        return $"barter cost reservation #{i} is no longer valid";
 
-                    stackRestore.Add((reservation.Entity, stack.Count));
-                    var newCount = stack.Count - reservation.Count;
-                    _stacks.SetCount(reservation.Entity, Math.Max(0, newCount), stack);
-                    if (stack.Count <= 0)
-                        pendingDeletes.Add(reservation.Entity);
-
-                    continue;
+                    if (!_inventory.TryTakeReservedEntityUnitsFromRoot(root, reservation.Entity, reservation.Count))
+                        return $"failed to consume barter cost reservation #{i}";
                 }
 
-                pendingDeletes.Add(reservation.Entity);
-            }
-
-            for (var i = 0; i < pendingDeletes.Count; i++)
-            {
-                var ent = pendingDeletes[i];
-                if (_ents.EntityExists(ent))
-                    _ents.DeleteEntity(ent);
-            }
-        }
-        catch
-        {
-            for (var i = stackRestore.Count - 1; i >= 0; i--)
-            {
-                var (ent, previousCount) = stackRestore[i];
-                if (_ents.TryGetComponent(ent, out StackComponent? stack))
-                    _stacks.SetCount(ent, previousCount, stack);
-            }
-
-            throw;
-        }
-
-        _inventory.InvalidateInventoryCache(root);
-        return true;
+                return null;
+            });
     }
 
     private string? TryExecuteBarterCostPlanPreCommit(EntityUid root, BarterCostPlan plan)
     {
-        try
-        {
-            return TryExecuteBarterCostPlan(root, plan)
-                ? null
-                : "barter cost could not be consumed";
-        }
-        catch (Exception e)
-        {
-            Sawmill.Error($"[NcStore] Barter cost pre-commit failed unexpectedly: {e}");
-            return $"barter cost consumption threw {e.GetType().Name}: {e.Message}";
-        }
+        return TryExecuteBarterCostPlan(root, plan);
     }
 
     private bool ValidateBarterCostReservation(EntityUid root, BarterCostReservation reservation)

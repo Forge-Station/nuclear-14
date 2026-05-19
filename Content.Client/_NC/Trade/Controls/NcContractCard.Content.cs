@@ -11,15 +11,26 @@ public sealed partial class NcContractCard
 {
     private Control BuildTargetRow(string? protoId, int required, PrototypeMatchMode matchMode = PrototypeMatchMode.Exact)
     {
+        var isTagTarget = matchMode == PrototypeMatchMode.Tag;
         EntityPrototype? targetProto = null;
         NcMatcherPrototype? targetMatcher = null;
         NcItemGroupPrototype? targetGroup = null;
         NcHuntGroupPrototype? targetHuntGroup = null;
+        NcTradeTagPrototype? targetTag = null;
         EntityPrototype? matcherFallbackProto = null;
         EntityPrototype? groupIconProto = null;
+        EntityPrototype? tagIconProto = null;
         if (!string.IsNullOrWhiteSpace(protoId))
         {
-            _proto.TryIndex(protoId, out targetProto);
+            if (!isTagTarget)
+                _proto.TryIndex(protoId, out targetProto);
+
+            if (isTagTarget && _proto.TryIndex<NcTradeTagPrototype>(protoId, out var tagTarget))
+            {
+                targetTag = tagTarget;
+                if (!string.IsNullOrWhiteSpace(tagTarget.Icon))
+                    _proto.TryIndex<EntityPrototype>(tagTarget.Icon, out tagIconProto);
+            }
 
             if (targetProto == null && matchMode == PrototypeMatchMode.Matcher)
             {
@@ -64,7 +75,9 @@ public sealed partial class NcContractCard
                 ? BuildMatcherTooltip(targetMatcher)
                 : targetGroup != null
                     ? BuildItemGroupTooltip(targetGroup)
-                    : BuildHuntGroupTooltip(targetHuntGroup);
+                    : targetTag != null
+                        ? BuildTradeTagTooltip(targetTag)
+                        : BuildHuntGroupTooltip(targetHuntGroup);
         if (!string.IsNullOrWhiteSpace(tooltip))
             targetRow.ToolTip = tooltip;
 
@@ -96,7 +109,27 @@ public sealed partial class NcContractCard
         {
             AddPrototypeIcon(targetRow, groupIconProto.ID);
         }
-        else if (targetGroup == null && targetHuntGroup == null && !string.IsNullOrWhiteSpace(protoId))
+        else if (targetTag != null)
+        {
+            if (targetTag.Sprite != null && _sprites.Frame0(targetTag.Sprite) is { } tagTexture)
+            {
+                var texture = new TextureRect
+                {
+                    Texture = tagTexture,
+                    MinSize = new(TargetIconPx, TargetIconPx),
+                    MaxSize = new(TargetIconPx, TargetIconPx),
+                    Stretch = TextureRect.StretchMode.KeepAspectCentered,
+                    Margin = new(0, 0, 8, 0),
+                    MouseFilter = MouseFilterMode.Ignore
+                };
+                targetRow.AddChild(texture);
+            }
+            else if (tagIconProto != null)
+            {
+                AddPrototypeIcon(targetRow, tagIconProto.ID);
+            }
+        }
+        else if (!isTagTarget && targetGroup == null && targetHuntGroup == null && !string.IsNullOrWhiteSpace(protoId))
         {
             AddPrototypeIcon(targetRow, protoId);
         }
@@ -108,6 +141,8 @@ public sealed partial class NcContractCard
             targetName = targetGroup?.Name;
         if (string.IsNullOrWhiteSpace(targetName))
             targetName = targetHuntGroup?.Name;
+        if (string.IsNullOrWhiteSpace(targetName))
+            targetName = targetTag?.Name;
         if (string.IsNullOrWhiteSpace(targetName))
             targetName = protoId ?? Loc.GetString("nc-store-unknown-item");
 

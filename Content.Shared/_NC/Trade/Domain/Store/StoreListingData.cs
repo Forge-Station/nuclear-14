@@ -32,6 +32,7 @@ public sealed class StoreListingData
     /// <summary>Client-only flavor to distinguish derived entries.</summary>
     public StoreListingFlavor Flavor = StoreListingFlavor.Base;
     public StoreMode Mode;
+    public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
 
     public static string MakeUiId(string listingId, StoreListingFlavor flavor)
     {
@@ -60,6 +61,7 @@ public sealed class StoreListingData
         string listingId,
         StoreListingFlavor flavor,
         string productEntity,
+        PrototypeMatchMode matchMode,
         int price,
         string category,
         string currencyId,
@@ -77,6 +79,7 @@ public sealed class StoreListingData
         Flavor = flavor;
         Id = flavor == StoreListingFlavor.Base ? listingId : MakeUiId(listingId, flavor);
         ProductEntity = productEntity;
+        MatchMode = matchMode;
         Price = price;
         Category = category;
         CurrencyId = currencyId;
@@ -94,6 +97,7 @@ public sealed class StoreListingData
     public StoreListingData(
         string id,
         string productEntity,
+        PrototypeMatchMode matchMode,
         int price,
         string category,
         string currencyId,
@@ -111,6 +115,7 @@ public sealed class StoreListingData
         ListingId = id;
         Flavor = StoreListingFlavor.Base;
         ProductEntity = productEntity;
+        MatchMode = matchMode;
         Price = price;
         Category = category;
         CurrencyId = currencyId;

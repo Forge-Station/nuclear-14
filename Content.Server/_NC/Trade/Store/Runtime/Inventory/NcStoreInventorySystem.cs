@@ -444,6 +444,24 @@ public sealed partial class NcStoreInventorySystem : EntitySystem
             return matcher == null ? 0 : GetOwnedFromSnapshotForCompiledMatcher(snapshot, matcher);
         }
 
+        if (matchMode == PrototypeMatchMode.Tag)
+        {
+            if (!TryResolveTradeTagId(productProtoId, out var tagId))
+                return 0;
+
+            var total = 0;
+            foreach (var (protoId, count) in snapshot.ProtoCounts)
+            {
+                if (count <= 0)
+                    continue;
+
+                if (PrototypeHasTag(protoId, tagId))
+                    total += count;
+            }
+
+            return total;
+        }
+
         var stackType = GetProductStackType(productProtoId);
         if (stackType != null)
             return snapshot.StackTypeCounts.TryGetValue(stackType, out var cnt) ? cnt : 0;
@@ -528,6 +546,38 @@ public sealed partial class NcStoreInventorySystem : EntitySystem
         _takeTransactionStackRestoreScratch.Add((ent, previousCount));
     }
 
+    public bool TryTakeReservedEntityUnitsFromRoot(EntityUid root, EntityUid ent, int amount)
+    {
+        if (amount <= 0 || ShouldSkipTakeEntity(root, ent))
+            return false;
+
+        if (_ents.TryGetComponent(ent, out StackComponent? stack))
+        {
+            var have = Math.Max(stack.Count, 0);
+            if (have < amount)
+                return false;
+
+            TrackTakeTransactionStackRestore(ent, stack.Count);
+            _stacks.SetCount(ent, have - amount, stack);
+            if (stack.Count <= 0)
+                DeleteConsumedEntity(ent);
+
+            if (!_takeTransactionActive)
+                InvalidateInventoryCache(root);
+
+            return true;
+        }
+
+        if (amount != 1)
+            return false;
+
+        DeleteConsumedEntity(ent);
+        if (!_takeTransactionActive)
+            InvalidateInventoryCache(root);
+
+        return true;
+    }
+
     public bool TryTakeProductUnitsFromRootCached(
         EntityUid root,
         string protoId,
@@ -586,6 +636,26 @@ public sealed partial class NcStoreInventorySystem : EntitySystem
                 null,
                 matchMode,
                 matcher,
+                true);
+        }
+
+        if (matchMode == PrototypeMatchMode.Tag)
+        {
+            if (!TryResolveTradeTagId(protoId, out var tagId))
+            {
+                return new(
+                    protoId,
+                    null,
+                    matchMode,
+                    null,
+                    false);
+            }
+
+            return new(
+                tagId,
+                null,
+                matchMode,
+                null,
                 true);
         }
 
@@ -751,10 +821,12 @@ public sealed partial class NcStoreInventorySystem : EntitySystem
                 return true;
             }
 
-            if (request.Matcher.Tags.Count == 0)
-                return false;
+            return false;
+        }
 
-            return MatcherPrototypeHasAnyTag(request.Matcher, proto.ID);
+        if (request.MatchMode == PrototypeMatchMode.Tag)
+        {
+            return PrototypeHasTag(proto.ID, request.ProtoId);
         }
 
         return proto.ID == request.ProtoId;
@@ -796,13 +868,18 @@ public sealed partial class NcStoreInventorySystem : EntitySystem
         EntityUid ent,
         ref bool compactNeeded)
     {
+        DeleteConsumedEntity(ent);
+
+        cachedItems[index] = EntityUid.Invalid;
+        compactNeeded = true;
+    }
+
+    private void DeleteConsumedEntity(EntityUid ent)
+    {
         if (_takeTransactionActive)
             _takeTransactionDeleteScratch.Add(ent);
         else
             _ents.DeleteEntity(ent);
-
-        cachedItems[index] = EntityUid.Invalid;
-        compactNeeded = true;
     }
 
 
@@ -854,10 +931,7 @@ public sealed partial class NcStoreInventorySystem : EntitySystem
             return true;
         }
 
-        if (matcher.Tags.Count == 0)
-            return false;
-
-        return MatcherPrototypeHasAnyTag(matcher, protoId);
+        return false;
     }
 
     public string? GetProductStackType(string productProtoId)
@@ -875,26 +949,6 @@ public sealed partial class NcStoreInventorySystem : EntitySystem
 
         _productStackTypeCache[productProtoId] = stackType;
         return stackType;
-    }
-
-    private bool ProtoHasAnyMatcherTag(string protoId, IReadOnlyList<string> matcherTags)
-    {
-        if (matcherTags.Count == 0)
-            return false;
-
-        if (!_protos.TryIndex<EntityPrototype>(protoId, out var proto))
-            return false;
-
-        if (!proto.TryGetComponent(out TagComponent? tagComponent, _compFactory) || tagComponent == null)
-            return false;
-
-        for (var i = 0; i < matcherTags.Count; i++)
-        {
-            if (_tags.HasTag(tagComponent, matcherTags[i]))
-                return true;
-        }
-
-        return false;
     }
 
 }

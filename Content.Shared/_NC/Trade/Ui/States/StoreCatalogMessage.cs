@@ -40,6 +40,7 @@ public sealed class StoreListingStaticData
         StoreMode mode,
         string category,
         string productEntity,
+        PrototypeMatchMode matchMode,
         int basePrice,
         string currencyId,
         int unitsPerPurchase,
@@ -53,6 +54,7 @@ public sealed class StoreListingStaticData
         Mode = mode;
         Category = category;
         ProductEntity = productEntity;
+        MatchMode = matchMode;
         BasePrice = basePrice;
         CurrencyId = currencyId;
         UnitsPerPurchase = unitsPerPurchase;
@@ -67,6 +69,7 @@ public sealed class StoreListingStaticData
     public StoreMode Mode { get; }
     public string Category { get; }
     public string ProductEntity { get; }
+    public PrototypeMatchMode MatchMode { get; }
     public int BasePrice { get; }
     public string CurrencyId { get; }
     public int UnitsPerPurchase { get; }

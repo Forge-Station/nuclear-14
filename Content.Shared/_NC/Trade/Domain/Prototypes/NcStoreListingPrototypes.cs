@@ -1,5 +1,6 @@
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
+using Robust.Shared.Utility;
 
 namespace Content.Shared._NC.Trade;
 
@@ -8,7 +9,8 @@ public sealed partial class StoreCatalogEntry
 {
     [DataField("match")] public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
     [DataField("price", required: true)] public int Price;
-    [DataField("proto", required: true)] public string Proto = string.Empty;
+    [DataField("proto")] public string Proto = string.Empty;
+    [DataField("tagTarget")] public string TagTarget = string.Empty;
     [DataField("count")] public int? Count { get; set; }
     [DataField("amount")] public int Amount { get; set; } = 1;
 }
@@ -208,8 +210,9 @@ public enum NcContractOfferType : byte
 }
 
 /// <summary>
-/// Trade contracts item group. Groups are only valid for checking already existing turn-in items.
-/// They must not be used for spawning or reward generation.
+/// Trade contracts item group. Groups are prototype lists only and are valid for checking already
+/// existing turn-in items. They must not be used for spawning or reward generation unless the
+/// caller explicitly resolves one of the contained prototypes.
 /// </summary>
 [Prototype("ncItemGroup")]
 public sealed partial class NcItemGroupPrototype : IPrototype
@@ -228,9 +231,34 @@ public sealed partial class NcItemGroupPrototype : IPrototype
 
     [DataField("prototypes")]
     public List<string> Prototypes { get; private set; } = new();
+}
 
-    [DataField("tags")]
-    public List<string> Tags { get; private set; } = new();
+/// <summary>
+/// Trade-visible wrapper around a raw TagPrototype. Store/listing/contract YAML references this
+/// prototype instead of referencing engine tags directly, so tag targets can carry UI metadata.
+/// </summary>
+[Prototype("ncTradeTag")]
+public sealed partial class NcTradeTagPrototype : IPrototype
+{
+    [IdDataField] public string ID { get; private set; } = default!;
+
+    [DataField("name", required: true)]
+    public string Name { get; private set; } = string.Empty;
+
+    [DataField("description")]
+    public string Description { get; private set; } = string.Empty;
+
+    /// <summary>Raw TagPrototype id used for matching entity prototype tags.</summary>
+    [DataField("tag", required: true)]
+    public string Tag { get; private set; } = string.Empty;
+
+    /// <summary>Optional entity prototype id used only as a UI icon fallback.</summary>
+    [DataField("icon")]
+    public string Icon { get; private set; } = string.Empty;
+
+    /// <summary>Optional sprite used by store/contract UI when no entity icon is desired.</summary>
+    [DataField("sprite")]
+    public SpriteSpecifier? Sprite { get; private set; }
 }
 
 
@@ -248,10 +276,14 @@ public enum PrototypeMatchMode : byte
 {
     Exact = 0,
 
-    // Phase M: treat the "proto" field as the ID of an NcMatcherPrototype, not an EntityPrototype.
-    // The matcher resolves to a group of prototypes (Items list) and/or tags for flexible match.
-    // See NcMatcherPrototype for semantics and loader/matching rules.
-    Matcher = 1
+    // Treat the "proto" field as the ID of an NcMatcherPrototype or ncItemGroup, not an EntityPrototype.
+    // Matchers/groups are prototype collections. They no longer own tag matching.
+    Matcher = 1,
+
+    // Treat the "tagTarget" field as the ID of an NcTradeTagPrototype. The target wraps a raw
+    // TagPrototype and UI metadata. Runtime matching checks tags declared on entity prototypes,
+    // not runtime-added tags. Tags are never valid for spawn/buy contexts.
+    Tag = 2
 }
 
 [Serializable]

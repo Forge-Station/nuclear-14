@@ -1,5 +1,6 @@
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
+using Content.Shared.Tag;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
@@ -13,18 +14,15 @@ public sealed partial class NcContractSystem : EntitySystem
         public readonly HashSet<string> MatchItems;
         public readonly HashSet<string> MatchStackTypes;
         public readonly List<string> SpawnPool;
-        public readonly List<string> MatchTags;
 
         public ContractMatcherSpec(
             HashSet<string> matchItems,
             HashSet<string> matchStackTypes,
-            List<string> spawnPool,
-            List<string> matchTags)
+            List<string> spawnPool)
         {
             MatchItems = matchItems;
             MatchStackTypes = matchStackTypes;
             SpawnPool = spawnPool;
-            MatchTags = matchTags;
         }
     }
 
@@ -65,7 +63,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (_prototypes.TryIndex<NcMatcherPrototype>(matcherId, out var matcher))
         {
-            BuildContractMatcherSpecFromLists(matcher.Items, matcher.Tags, out var matcherSpec);
+            BuildContractMatcherSpecFromLists(matcher.Items, out var matcherSpec);
             if (!CacheContractMatcherSpec(matcherId, matcherSpec, "Matcher"))
                 return false;
 
@@ -75,7 +73,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (_prototypes.TryIndex<NcItemGroupPrototype>(matcherId, out var group))
         {
-            BuildContractMatcherSpecFromLists(group.Prototypes, group.Tags, out var groupSpec);
+            BuildContractMatcherSpecFromLists(group.Prototypes, out var groupSpec);
             if (!CacheContractMatcherSpec(matcherId, groupSpec, "Item group"))
                 return false;
 
@@ -90,7 +88,6 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void BuildContractMatcherSpecFromLists(
         IReadOnlyList<string> items,
-        IReadOnlyList<string> tags,
         out ContractMatcherSpec spec)
     {
         var matchItems = new HashSet<string>(StringComparer.Ordinal);
@@ -114,22 +111,14 @@ public sealed partial class NcContractSystem : EntitySystem
                 spawnPool.Add(itemId);
         }
 
-        var matchTags = new List<string>();
-        for (var i = 0; i < tags.Count; i++)
-        {
-            var tag = tags[i];
-            if (!string.IsNullOrWhiteSpace(tag))
-                matchTags.Add(tag);
-        }
-
-        spec = new ContractMatcherSpec(matchItems, matchStackTypes, spawnPool, matchTags);
+        spec = new ContractMatcherSpec(matchItems, matchStackTypes, spawnPool);
     }
 
     private bool CacheContractMatcherSpec(string matcherId, ContractMatcherSpec spec, string sourceKind)
     {
-        if (spec.MatchItems.Count == 0 && spec.MatchTags.Count == 0)
+        if (spec.MatchItems.Count == 0)
         {
-            Sawmill.Warning($"[Contracts] {sourceKind} '{matcherId}' has no prototypes/items and no tags.");
+            Sawmill.Warning($"[Contracts] {sourceKind} '{matcherId}' has no prototypes/items.");
             _contractMatcherCache[matcherId] = null;
             return false;
         }
@@ -149,6 +138,37 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         prototypeId = _random.Pick(spec.SpawnPool);
+        return true;
+    }
+
+    private bool ContractPrototypeHasTag(string protoId, string tagId)
+    {
+        if (string.IsNullOrWhiteSpace(tagId))
+            return false;
+
+        if (!_prototypes.TryIndex<EntityPrototype>(protoId, out var proto))
+            return false;
+
+        if (!proto.TryGetComponent(out TagComponent? tagComponent, _compFactory) || tagComponent == null)
+            return false;
+
+        return _tags.HasTag(tagComponent, tagId);
+    }
+
+    private bool TryResolveContractTagTargetId(string tagTargetId, out string tagId)
+    {
+        tagId = string.Empty;
+
+        if (string.IsNullOrWhiteSpace(tagTargetId))
+            return false;
+
+        if (!_prototypes.TryIndex<NcTradeTagPrototype>(tagTargetId, out var tagTarget))
+            return false;
+
+        if (string.IsNullOrWhiteSpace(tagTarget.Tag) || !_prototypes.HasIndex<TagPrototype>(tagTarget.Tag))
+            return false;
+
+        tagId = tagTarget.Tag;
         return true;
     }
 

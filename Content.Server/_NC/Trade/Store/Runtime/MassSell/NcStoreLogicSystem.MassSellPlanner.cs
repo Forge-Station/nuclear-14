@@ -20,35 +20,37 @@ public sealed partial class NcStoreLogicSystem
         public bool IsEmpty => StackTypeCounts.Count == 0 && ProtoCounts.Count == 0;
     }
 
-    private readonly Dictionary<NcStoreComponent, MassSellCatalogCache> _massSellCatalogCache = new();
+    private readonly Dictionary<EntityUid, MassSellCatalogCache> _massSellCatalogCache = new();
     private readonly List<string> _massSellMatchingProtoIdsScratch = new();
+    private readonly List<string> _massSellMatchingStackTypeIdsScratch = new();
     private readonly List<string> _massSellProtoIdsScratch = new();
 
-    public MassSellPlan ComputeMassSellPlan(NcStoreComponent store, EntityUid container)
+    public MassSellPlan ComputeMassSellPlan(EntityUid storeUid, NcStoreComponent store, EntityUid container)
     {
         _inventory.InvalidateInventoryCache(container);
 
         var items = new List<EntityUid>(64);
         _inventory.ScanInventoryItems(container, items);
-        return ComputeMassSellPlanInternal(store, items);
+        return ComputeMassSellPlanInternal(storeUid, store, items);
     }
 
     public MassSellPlan ComputeMassSellPlanFromCachedItems(
+        EntityUid storeUid,
         NcStoreComponent store,
         EntityUid container,
         IReadOnlyList<EntityUid> cachedItems
     ) =>
-        ComputeMassSellPlanInternal(store, cachedItems);
+        ComputeMassSellPlanInternal(storeUid, store, cachedItems);
 
-    public Dictionary<string, int> GetMassSellValue(NcStoreComponent store, EntityUid container) =>
-        ComputeMassSellPlan(store, container).IncomeByCurrency;
+    public Dictionary<string, int> GetMassSellValue(EntityUid storeUid, NcStoreComponent store, EntityUid container) =>
+        ComputeMassSellPlan(storeUid, store, container).IncomeByCurrency;
 
-    public void ClearStoreRuntimeCaches(NcStoreComponent store)
+    public void ClearStoreRuntimeCaches(EntityUid store)
     {
         _massSellCatalogCache.Remove(store);
     }
 
-    private MassSellPlan ComputeMassSellPlanInternal(NcStoreComponent store, IEnumerable<EntityUid> items)
+    private MassSellPlan ComputeMassSellPlanInternal(EntityUid storeUid, NcStoreComponent store, IEnumerable<EntityUid> items)
     {
         var plan = CreateEmptyMassSellPlan();
         if (store.Listings.Count == 0)
@@ -58,7 +60,7 @@ public sealed partial class NcStoreLogicSystem
         if (inventory.IsEmpty)
             return plan;
 
-        var catalog = GetMassSellCatalogCache(store);
+        var catalog = GetMassSellCatalogCache(storeUid, store);
         if (catalog.SellListings.Count == 0)
             return plan;
 
@@ -150,12 +152,12 @@ public sealed partial class NcStoreLogicSystem
             counts[key] += amount;
     }
 
-    private MassSellCatalogCache GetMassSellCatalogCache(NcStoreComponent store)
+    private MassSellCatalogCache GetMassSellCatalogCache(EntityUid storeUid, NcStoreComponent store)
     {
-        if (!_massSellCatalogCache.TryGetValue(store, out var cache))
+        if (!_massSellCatalogCache.TryGetValue(storeUid, out var cache))
         {
             cache = new MassSellCatalogCache();
-            _massSellCatalogCache[store] = cache;
+            _massSellCatalogCache[storeUid] = cache;
         }
 
         if (cache.CatalogRevision == store.CatalogRevision)
@@ -246,7 +248,8 @@ public sealed partial class NcStoreLogicSystem
         {
             PrototypeMatchMode.Exact => 0,
             PrototypeMatchMode.Matcher => 1,
-            _ => 2
+            PrototypeMatchMode.Tag => 2,
+            _ => 3
         };
     }
 
@@ -285,7 +288,10 @@ public sealed partial class NcStoreLogicSystem
             return 0;
 
         if (listing.MatchMode == PrototypeMatchMode.Matcher)
-            return ReserveMassSellMatcherUnits(listing.ProductEntity, want, inventory.ProtoCounts);
+            return ReserveMassSellMatcherUnits(listing.ProductEntity, want, inventory);
+
+        if (listing.MatchMode == PrototypeMatchMode.Tag)
+            return ReserveMassSellTagUnits(listing.ProductEntity, want, inventory);
 
         var expectedStackType = _inventory.GetProductStackType(listing.ProductEntity);
         if (!string.IsNullOrEmpty(expectedStackType))
@@ -361,25 +367,64 @@ public sealed partial class NcStoreLogicSystem
     private int ReserveMassSellMatcherUnits(
         string matcherId,
         int want,
-        Dictionary<string, int> protoCounts)
+        MassSellInventoryState inventory)
     {
         if (want <= 0)
             return 0;
 
+        var takenTotal = 0;
+        var matchingStackTypeIds = _massSellMatchingStackTypeIdsScratch;
+        _inventory.FillMatchingStackTypeIdsForMatcher(matcherId, inventory.StackTypeCounts, matchingStackTypeIds);
+
+        foreach (var stackTypeId in matchingStackTypeIds)
+        {
+            if (takenTotal >= want)
+                break;
+
+            var left = want - takenTotal;
+            takenTotal += ReserveMassSellStackUnits(stackTypeId, left, inventory);
+        }
+
+        matchingStackTypeIds.Clear();
+
         var matchingProtoIds = _massSellMatchingProtoIdsScratch;
-        _inventory.FillMatchingPrototypeIdsForMatcher(matcherId, protoCounts, matchingProtoIds);
+        _inventory.FillMatchingPrototypeIdsForMatcher(matcherId, inventory.ProtoCounts, matchingProtoIds);
 
         if (matchingProtoIds.Count == 0)
-            return 0;
+            return takenTotal;
 
-        var takenTotal = 0;
         foreach (var protoId in matchingProtoIds)
         {
             if (takenTotal >= want)
                 break;
 
             var left = want - takenTotal;
-            takenTotal += ReserveMassSellProtoUnits(protoId, left, protoCounts);
+            takenTotal += ReserveMassSellProtoUnits(protoId, left, inventory.ProtoCounts);
+        }
+
+        matchingProtoIds.Clear();
+        return takenTotal;
+    }
+
+    private int ReserveMassSellTagUnits(
+        string tagTargetId,
+        int want,
+        MassSellInventoryState inventory)
+    {
+        if (want <= 0)
+            return 0;
+
+        var takenTotal = 0;
+        var matchingProtoIds = _massSellMatchingProtoIdsScratch;
+        _inventory.FillMatchingPrototypeIdsForTag(tagTargetId, inventory.ProtoCounts, matchingProtoIds);
+
+        foreach (var protoId in matchingProtoIds)
+        {
+            if (takenTotal >= want)
+                break;
+
+            var left = want - takenTotal;
+            takenTotal += ReserveMassSellProtoUnits(protoId, left, inventory.ProtoCounts);
         }
 
         matchingProtoIds.Clear();

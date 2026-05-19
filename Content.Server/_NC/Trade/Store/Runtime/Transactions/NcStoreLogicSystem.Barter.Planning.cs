@@ -1,5 +1,6 @@
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
+using Content.Shared.Tag;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
@@ -144,6 +145,8 @@ public sealed partial class NcStoreLogicSystem
                 sources++;
             if (!string.IsNullOrWhiteSpace(cost.Group))
                 sources++;
+            if (!string.IsNullOrWhiteSpace(cost.TagTarget))
+                sources++;
 
             if (sources != 1)
                 return false;
@@ -175,13 +178,28 @@ public sealed partial class NcStoreLogicSystem
                 continue;
             }
 
-            if (!_protos.TryIndex<NcItemGroupPrototype>(cost.Group, out var group))
+            if (!string.IsNullOrWhiteSpace(cost.Group))
+            {
+                if (!_protos.TryIndex<NcItemGroupPrototype>(cost.Group, out var group))
+                    return false;
+
+                demands.Add(new()
+                {
+                    Group = cost.Group,
+                    GroupPrototype = group,
+                    Required = required
+                });
+                continue;
+            }
+
+            if (!_protos.TryIndex<NcTradeTagPrototype>(cost.TagTarget, out var tagTarget) ||
+                string.IsNullOrWhiteSpace(tagTarget.Tag) ||
+                !_protos.HasIndex<TagPrototype>(tagTarget.Tag))
                 return false;
 
             demands.Add(new()
             {
-                Group = cost.Group,
-                GroupPrototype = group,
+                Tag = tagTarget.Tag,
                 Required = required
             });
         }
@@ -346,6 +364,9 @@ public sealed partial class NcStoreLogicSystem
         if (!string.IsNullOrWhiteSpace(demand.Group) && demand.GroupPrototype != null)
             return _inventory.EntityMatchesItemGroup(item.Entity, demand.GroupPrototype);
 
+        if (!string.IsNullOrWhiteSpace(demand.Tag))
+            return _inventory.PrototypeHasTag(item.Prototype, demand.Tag);
+
         return false;
     }
 
@@ -389,6 +410,7 @@ public sealed partial class NcStoreLogicSystem
         var currencies = new Dictionary<string, int>(StringComparer.Ordinal);
         var prototypes = new Dictionary<string, int>(StringComparer.Ordinal);
         var groups = new Dictionary<string, int>(StringComparer.Ordinal);
+        var tags = new Dictionary<string, int>(StringComparer.Ordinal);
 
         for (var i = 0; i < listing.BarterCost.Count; i++)
         {
@@ -402,6 +424,8 @@ public sealed partial class NcStoreLogicSystem
             if (!string.IsNullOrWhiteSpace(cost.Prototype))
                 sources++;
             if (!string.IsNullOrWhiteSpace(cost.Group))
+                sources++;
+            if (!string.IsNullOrWhiteSpace(cost.TagTarget))
                 sources++;
 
             if (sources != 1)
@@ -424,6 +448,13 @@ public sealed partial class NcStoreLogicSystem
             if (!string.IsNullOrWhiteSpace(cost.Group))
             {
                 if (!TryAddAggregatedCost(groups, cost.Group, cost.Count))
+                    return false;
+                continue;
+            }
+
+            if (!string.IsNullOrWhiteSpace(cost.TagTarget))
+            {
+                if (!TryAddAggregatedCost(tags, cost.TagTarget, cost.Count))
                     return false;
             }
         }
@@ -449,6 +480,14 @@ public sealed partial class NcStoreLogicSystem
                 new()
                 {
                     Group = group,
+                    Count = count
+                });
+
+        foreach (var (tagTarget, count) in tags)
+            aggregated.Add(
+                new()
+                {
+                    TagTarget = tagTarget,
                     Count = count
                 });
 
@@ -500,6 +539,13 @@ public sealed partial class NcStoreLogicSystem
                 return false;
 
             var owned = _inventory.GetOwnedFromSnapshotForItemGroup(snapshot, group);
+            possible = owned / cost.Count;
+            return true;
+        }
+
+        if (!string.IsNullOrWhiteSpace(cost.TagTarget))
+        {
+            var owned = _inventory.GetOwnedFromSnapshot(snapshot, cost.TagTarget, PrototypeMatchMode.Tag);
             possible = owned / cost.Count;
             return true;
         }
@@ -559,6 +605,7 @@ public sealed partial class NcStoreLogicSystem
         public string Prototype = string.Empty;
         public string PrototypeStackType = string.Empty;
         public string Group = string.Empty;
+        public string Tag = string.Empty;
         public NcItemGroupPrototype? GroupPrototype;
         public int Required;
     }

@@ -261,4 +261,32 @@ public sealed class NcStoreCurrencySystem : EntitySystem
             return false;
         return h.TryGiveCurrency(user, currencyId, amount);
     }
+
+    public bool BeginCurrencyIssueTransaction()
+    {
+        foreach (var h in _handlers)
+        {
+            if (h.BeginCurrencyIssueTransaction())
+                continue;
+
+            foreach (var rollback in _handlers)
+                rollback.RollbackCurrencyIssueTransaction(EntityUid.Invalid);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    public void CommitCurrencyIssueTransaction(EntityUid user)
+    {
+        foreach (var h in _handlers)
+            h.CommitCurrencyIssueTransaction(user);
+    }
+
+    public void RollbackCurrencyIssueTransaction(EntityUid user)
+    {
+        foreach (var h in _handlers)
+            h.RollbackCurrencyIssueTransaction(user);
+    }
 }

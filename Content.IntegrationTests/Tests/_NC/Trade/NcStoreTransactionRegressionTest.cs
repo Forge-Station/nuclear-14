@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Content.Server._NC.Trade;
 using Content.Shared;
 using Content.Shared._NC.Trade;
@@ -18,12 +19,17 @@ public sealed class NcStoreTransactionRegressionTest
 {
     private const string TestCurrency = "NcTradeTestCredit";
     private const string TestCurrencyStack = "NcTradeTestCreditStack";
+    private const string TestPlaceableCurrency = "NcTradeTestPlaceableCredit";
+    private const string TestPlaceableCurrencyStack = "NcTradeTestPlaceableCreditStack";
     private const string TestSaleItem = "NcTradeTestSaleItem";
     private const string TestStackedSaleItem = "NcTradeTestStackedSaleItem";
+    private const string TestAltStackedSaleItem = "NcTradeTestAltStackedSaleItem";
     private const string TestAbstractProduct = "NcTradeTestAbstractProduct";
     private const string TestStaticTaggedItem = "NcTradeTestStaticTaggedItem";
     private const string TestRuntimeTaggedItem = "NcTradeTestRuntimeTaggedItem";
-    private const string TestMatcher = "NcTradeTestMatcher";
+    private const string TestStaticTagTarget = "NcTradeTestStaticTagTarget";
+    private const string TestRuntimeTagTarget = "NcTradeTestRuntimeTagTarget";
+    private const string TestStackMatcher = "NcTradeTestStackMatcher";
 
     private static readonly (string Cvar, string Value)[] TestCvars =
     {
@@ -62,6 +68,20 @@ public sealed class NcStoreTransactionRegressionTest
 - type: Tag
   id: NcTradeTestRuntimeTag
 
+- type: ncTradeTag
+  id: NcTradeTestStaticTagTarget
+  name: static tag target
+  description: prototype-declared tag target
+  tag: NcTradeTestStaticTag
+  icon: NcTradeTestStaticTaggedItem
+
+- type: ncTradeTag
+  id: NcTradeTestRuntimeTagTarget
+  name: runtime tag target
+  description: runtime-only tag target
+  tag: NcTradeTestRuntimeTag
+  icon: NcTradeTestRuntimeTaggedItem
+
 - type: entity
   id: N14ClothingOuterNCRPouchedVestDesert
 
@@ -88,6 +108,20 @@ public sealed class NcStoreTransactionRegressionTest
     stackType: NcTradeTestCredit
     count: 1
 
+- type: stack
+  id: NcTradeTestPlaceableCredit
+  name: placeable test credit
+  spawn: NcTradeTestPlaceableCreditStack
+  maxCount: 10
+
+- type: entity
+  parent: BaseItem
+  id: NcTradeTestPlaceableCreditStack
+  components:
+  - type: Stack
+    stackType: NcTradeTestPlaceableCredit
+    count: 1
+
 - type: entity
   parent: BaseItem
   id: NcTradeTestSaleItem
@@ -101,6 +135,14 @@ public sealed class NcStoreTransactionRegressionTest
 - type: entity
   parent: BaseItem
   id: NcTradeTestStackedSaleItem
+  components:
+  - type: Stack
+    stackType: NcTradeTestSaleStack
+    count: 1
+
+- type: entity
+  parent: BaseItem
+  id: NcTradeTestAltStackedSaleItem
   components:
   - type: Stack
     stackType: NcTradeTestSaleStack
@@ -124,11 +166,10 @@ public sealed class NcStoreTransactionRegressionTest
   id: NcTradeTestRuntimeTaggedItem
 
 - type: ncMatcher
-  id: NcTradeTestMatcher
-  name: test matcher
-  tags:
-  - NcTradeTestStaticTag
-  - NcTradeTestRuntimeTag
+  id: NcTradeTestStackMatcher
+  name: test stack matcher
+  items:
+  - NcTradeTestStackedSaleItem
 ";
 
     [Test]
@@ -161,6 +202,62 @@ public sealed class NcStoreTransactionRegressionTest
             Assert.That(entMan.GetComponent<StackComponent>(currency).Count, Is.EqualTo(9));
         });
 
+    }
+
+    [Test]
+    public async Task RewardCurrencyTransactionWaitsForPreCommitToFreeHands()
+    {
+        using var server = await StartServer();
+
+        var entMan = server.ResolveDependency<IEntityManager>();
+        var hands = entMan.System<SharedHandsSystem>();
+        var inventory = entMan.System<NcStoreInventorySystem>();
+        var logic = entMan.System<NcStoreLogicSystem>();
+
+        EntityUid user = default;
+        EntityUid heldA = default;
+        EntityUid heldB = default;
+
+        await server.WaitPost(() =>
+        {
+            user = entMan.SpawnEntity("MobHumanDummy", MapCoordinates.Nullspace);
+
+            heldA = entMan.SpawnEntity(TestSaleItem, MapCoordinates.Nullspace);
+            Assert.That(hands.TryPickupAnyHand(user, heldA), Is.True);
+
+            heldB = entMan.SpawnEntity(TestSaleItem, MapCoordinates.Nullspace);
+            Assert.That(hands.TryPickupAnyHand(user, heldB), Is.True);
+        });
+
+        await server.WaitRunTicks(5);
+
+        var rewards = new List<ContractRewardData>
+        {
+            new(StoreRewardType.Currency, TestPlaceableCurrency, 2)
+        };
+
+        await server.WaitAssertion(() =>
+        {
+            var ok = logic.TryExecuteRewardListWithPreCommit(
+                user,
+                rewards,
+                "Claim",
+                () =>
+                {
+                    entMan.DeleteEntity(heldA);
+                    entMan.DeleteEntity(heldB);
+                    return null;
+                },
+                out var reason);
+
+            Assert.That(ok, Is.True, reason);
+            Assert.That(entMan.EntityExists(heldA), Is.False);
+            Assert.That(entMan.EntityExists(heldB), Is.False);
+
+            var snapshot = inventory.BuildInventorySnapshot(user);
+            Assert.That(snapshot.StackTypeCounts.TryGetValue(TestPlaceableCurrency, out var balance), Is.True);
+            Assert.That(balance, Is.EqualTo(2));
+        });
     }
 
     [Test]
@@ -312,6 +409,60 @@ public sealed class NcStoreTransactionRegressionTest
     }
 
     [Test]
+    public async Task MassSellMatcherPreviewCountsMatchingStackTypes()
+    {
+        using var server = await StartServer();
+
+        var entMan = server.ResolveDependency<IEntityManager>();
+        var hands = entMan.System<SharedHandsSystem>();
+        var stack = entMan.System<SharedStackSystem>();
+        var inventory = entMan.System<NcStoreInventorySystem>();
+        var logic = entMan.System<NcStoreLogicSystem>();
+
+        EntityUid storeUid = default;
+        EntityUid container = default;
+        EntityUid stacked = default;
+        NcStoreComponent store = default!;
+
+        await server.WaitPost(() =>
+        {
+            storeUid = entMan.SpawnEntity("MobHumanDummy", MapCoordinates.Nullspace);
+            container = entMan.SpawnEntity("MobHumanDummy", MapCoordinates.Nullspace);
+            store = new NcStoreComponent();
+
+            stacked = entMan.SpawnEntity(TestAltStackedSaleItem, MapCoordinates.Nullspace);
+            stack.SetCount(stacked, 4);
+            Assert.That(hands.TryPickupAnyHand(container, stacked), Is.True);
+
+            store.Listings.Add(new NcStoreListingDef
+            {
+                Id = "mass-sell-stack-matcher",
+                Mode = StoreMode.Sell,
+                ProductEntity = TestStackMatcher,
+                MatchMode = PrototypeMatchMode.Matcher,
+                RemainingCount = 10,
+                Cost = { [TestPlaceableCurrency] = 1 },
+            });
+            store.RebuildListingIndex();
+        });
+
+        await server.WaitRunTicks(5);
+
+        await server.WaitAssertion(() =>
+        {
+            var items = new List<EntityUid>();
+            inventory.ScanInventoryItems(container, items);
+            var plan = logic.ComputeMassSellPlanFromCachedItems(storeUid, store, container, items);
+
+            Assert.That(plan.UnitsByListingId.TryGetValue("mass-sell-stack-matcher", out var units), Is.True);
+            Assert.That(units, Is.EqualTo(4));
+            Assert.That(plan.IncomeByCurrency.TryGetValue(TestPlaceableCurrency, out var income), Is.True);
+            Assert.That(income, Is.EqualTo(4));
+        });
+
+    }
+
+    [Test]
     public async Task InventoryTakeTransactionRollbackRestoresStacksAndDeferredDeletes()
     {
         using var server = await StartServer();
@@ -360,7 +511,7 @@ public sealed class NcStoreTransactionRegressionTest
     }
 
     [Test]
-    public async Task MatcherTagsUsePrototypeTagsNotRuntimeTags()
+    public async Task TagMatchModeUsesPrototypeTagsNotRuntimeTags()
     {
         using var server = await StartServer();
 
@@ -391,9 +542,12 @@ public sealed class NcStoreTransactionRegressionTest
         await server.WaitAssertion(() =>
         {
             var snapshot = inventory.BuildInventorySnapshot(user);
-            Assert.That(inventory.GetOwnedFromSnapshot(snapshot, TestMatcher, PrototypeMatchMode.Matcher), Is.EqualTo(1));
-            Assert.That(inventory.GetOwnedFromRootCached(user, TestMatcher, PrototypeMatchMode.Matcher), Is.EqualTo(1));
-            Assert.That(inventory.PrototypeMatchesMatcher(TestMatcher, TestRuntimeTaggedItem), Is.False);
+            Assert.That(inventory.GetOwnedFromSnapshot(snapshot, TestStaticTagTarget, PrototypeMatchMode.Tag), Is.EqualTo(1));
+            Assert.That(inventory.GetOwnedFromRootCached(user, TestStaticTagTarget, PrototypeMatchMode.Tag), Is.EqualTo(1));
+            Assert.That(inventory.GetOwnedFromSnapshot(snapshot, TestRuntimeTagTarget, PrototypeMatchMode.Tag), Is.EqualTo(0));
+            Assert.That(inventory.GetOwnedFromRootCached(user, TestRuntimeTagTarget, PrototypeMatchMode.Tag), Is.EqualTo(0));
+            Assert.That(inventory.GetOwnedFromSnapshot(snapshot, "NcTradeTestStaticTag", PrototypeMatchMode.Tag), Is.EqualTo(0));
+            Assert.That(inventory.PrototypeHasTag(TestRuntimeTaggedItem, "NcTradeTestRuntimeTag"), Is.False);
         });
 
     }

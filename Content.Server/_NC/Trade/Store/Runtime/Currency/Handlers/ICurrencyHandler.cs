@@ -21,6 +21,7 @@ public interface ICurrencyHandler
 
     /// <summary>
     /// Attempts to take a positive amount of currency from the user.
+    /// Implementations must be atomic: a false return must not leave a partial charge behind.
     /// </summary>
     bool TryTake(EntityUid user, string currencyId, int amount);
 
@@ -29,6 +30,21 @@ public interface ICurrencyHandler
     /// Implementations must be atomic: a false return must not leave a partial payout behind.
     /// </summary>
     bool TryGiveCurrency(EntityUid user, string currencyId, int amount);
+
+    /// <summary>
+    /// Opens a short-lived issue transaction. While active, spawned currency may be staged until commit.
+    /// </summary>
+    bool BeginCurrencyIssueTransaction();
+
+    /// <summary>
+    /// Commits staged currency payout side effects for the receiver.
+    /// </summary>
+    void CommitCurrencyIssueTransaction(EntityUid user);
+
+    /// <summary>
+    /// Rolls back staged currency payout side effects for the receiver.
+    /// </summary>
+    void RollbackCurrencyIssueTransaction(EntityUid user);
 
     /// <summary>
     /// Returns true when a later <see cref="TryGiveCurrency"/> call is expected to be able to pay this receiver.

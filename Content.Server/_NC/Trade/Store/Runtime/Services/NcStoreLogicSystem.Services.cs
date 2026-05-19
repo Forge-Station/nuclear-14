@@ -48,6 +48,15 @@ public sealed partial class NcStoreLogicSystem
     public bool TryGiveCurrency(EntityUid user, string stackType, int amount) =>
         _currency.TryGiveCurrency(user, stackType, amount);
 
+    private bool BeginCurrencyIssueTransaction() =>
+        _currency.BeginCurrencyIssueTransaction();
+
+    private void CommitCurrencyIssueTransaction(EntityUid user) =>
+        _currency.CommitCurrencyIssueTransaction(user);
+
+    private void RollbackCurrencyIssueTransaction(EntityUid user) =>
+        _currency.RollbackCurrencyIssueTransaction(user);
+
 
     private sealed class StoreSpawnService
     {

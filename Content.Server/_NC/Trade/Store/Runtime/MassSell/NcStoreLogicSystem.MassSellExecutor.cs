@@ -13,7 +13,7 @@ public sealed partial class NcStoreLogicSystem
         var items = new List<EntityUid>();
         _inventory.ScanInventoryItems(container, items);
 
-        var plan = ComputeMassSellPlanFromCachedItems(store, container, items);
+        var plan = ComputeMassSellPlanFromCachedItems(machine, store, container, items);
         if (plan.Steps.Count == 0 || plan.IncomeByCurrency.Count == 0)
             return false;
 

@@ -396,6 +396,15 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         var hasPrototype = !string.IsNullOrWhiteSpace(entry.Prototype);
         var hasGroup = !string.IsNullOrWhiteSpace(entry.Group);
+        var hasTagTarget = !string.IsNullOrWhiteSpace(entry.TagTarget);
+
+        if (hasTagTarget)
+        {
+            Sawmill.Warning(
+                $"[Contracts] Retrieval contract '{contractId}' cargo #{index} uses tagTarget '{entry.TagTarget}'. " +
+                "Retrieval cargo must be spawnable; use prototype or group.");
+            return false;
+        }
 
         if (hasPrototype == hasGroup)
         {

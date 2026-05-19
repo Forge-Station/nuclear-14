@@ -162,7 +162,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         _catalogCache.Clear(uid);
         _dynamicScratchByStore.Remove(uid);
         _contracts.ClearStoreRuntimeCaches(uid);
-        _logic.ClearStoreRuntimeCaches(comp);
+        _logic.ClearStoreRuntimeCaches(uid);
 
         if (_openStoreUids.Contains(uid) || _watchByStore.ContainsKey(uid) || _dirtyStores.Contains(uid))
         {
@@ -585,6 +585,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             listing.Mode,
             category,
             listing.ProductEntity,
+            listing.MatchMode,
             price,
             currencyId,
             listing.UnitsPerPurchase,
@@ -703,6 +704,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             {
                 Prototype = c.Prototype,
                 Group = c.Group,
+                TagTarget = c.TagTarget,
                 Currency = c.Currency,
                 Count = c.Count
             });

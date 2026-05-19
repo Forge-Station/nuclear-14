@@ -83,6 +83,7 @@ public sealed partial class StoreStructuredSystem
                 a.Completed != b.Completed ||
                 a.Required != b.Required ||
                 a.Progress != b.Progress ||
+                a.MatchMode != b.MatchMode ||
                 a.OfferPoolOrder != b.OfferPoolOrder ||
                 a.IsRetrievalRoute != b.IsRetrievalRoute ||
                 a.RetrievalClaimMode != b.RetrievalClaimMode ||

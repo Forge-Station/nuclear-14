@@ -5,7 +5,7 @@ using Robust.Shared.Utility;
 namespace Content.Shared._NC.Trade;
 
 /// <summary>
-/// Phase M: a "matcher" groups multiple entity prototypes and/or tags into a single logical
+/// Phase M: a "matcher" groups multiple entity prototypes into a single logical
 /// catalog entry / contract target. Lets the YAML author express "any bread-like item" or
 /// "any basic ingot" as one listing row with a custom name/description/sprite, instead of
 /// enumerating a dozen separate entries.
@@ -21,20 +21,13 @@ namespace Content.Shared._NC.Trade;
 ///     items:                  # strict list of prototype IDs
 ///       - FoodBreadLoaf
 ///       - FoodBreadBaguette
-///     tags:                   # wider net — any entity carrying any of these tags
-///       - BreadLike
 ///
 /// Semantics:
 ///   - items — used for EVERY spawn context (Buy-listings, Hunt-targets, spawn-delivery)
 ///             AND for match-checking brought items.
-///   - tags  — used ONLY for match-checking brought items (Sell-listings, Delivery turn-in).
-///             Match-checking uses tags declared on entity prototypes, not runtime-added tags,
-///             so UI availability and server consumption stay consistent.
-///             Tags are never used for spawning — a tag can't uniquely identify a prototype.
 ///
 /// A matcher used in a spawn context must have at least one item in <see cref="Items"/>.
-/// A matcher with only tags is valid but only for Sell/Delivery turn-in, not for Buy/Hunt.
-/// The store loader validates this and skips invalid listings with a warning.
+/// Tag matching is represented by PrototypeMatchMode.Tag and standalone ncTradeTag targets.
 /// </summary>
 [Prototype("ncMatcher")]
 public sealed partial class NcMatcherPrototype : IPrototype
@@ -63,14 +56,4 @@ public sealed partial class NcMatcherPrototype : IPrototype
     /// </summary>
     [DataField("items")]
     public List<string> Items { get; private set; } = new();
-
-    /// <summary>
-    /// Tag names. An entity matches this matcher if its entity prototype declares any one of
-    /// these tags on TagComponent. Runtime-added tags are intentionally ignored so snapshots,
-    /// UI counts, and consumption agree. Used ONLY for match-check on brought items
-    /// (Sell-listings, Delivery turn-in). NOT used for spawn — a tag doesn't uniquely identify
-    /// a prototype to spawn.
-    /// </summary>
-    [DataField("tags")]
-    public List<string> Tags { get; private set; } = new();
 }

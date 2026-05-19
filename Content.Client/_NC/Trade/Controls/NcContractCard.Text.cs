@@ -103,7 +103,7 @@ public sealed partial class NcContractCard
         }
         else if (c.Required > 0 && !string.IsNullOrWhiteSpace(c.TargetItem))
         {
-            var name = ResolveTargetName(c.TargetItem, PrototypeMatchMode.Exact);
+            var name = ResolveTargetName(c.TargetItem, c.MatchMode);
             parts.Add(Loc.GetString("nc-store-contract-goal-inline", ("item", name), ("count", c.Required)));
         }
 
@@ -213,6 +213,15 @@ public sealed partial class NcContractCard
 
     private string ResolveTargetName(string protoId, PrototypeMatchMode matchMode)
     {
+        if (matchMode == PrototypeMatchMode.Tag)
+        {
+            if (_proto.TryIndex<NcTradeTagPrototype>(protoId, out var tagTarget) &&
+                !string.IsNullOrWhiteSpace(tagTarget.Name))
+                return tagTarget.Name;
+
+            return protoId;
+        }
+
         if (matchMode == PrototypeMatchMode.Matcher)
         {
             if (_proto.TryIndex<NcMatcherPrototype>(protoId, out var matcher) &&
@@ -262,6 +271,17 @@ public sealed partial class NcContractCard
             return Loc.GetString("nc-store-proto-tooltip-name-only", ("name", group.Name));
 
         return Loc.GetString("nc-store-proto-tooltip", ("name", group.Name), ("desc", group.Description));
+    }
+
+    private static string BuildTradeTagTooltip(NcTradeTagPrototype? tagTarget)
+    {
+        if (tagTarget == null)
+            return string.Empty;
+
+        if (string.IsNullOrWhiteSpace(tagTarget.Description))
+            return Loc.GetString("nc-store-proto-tooltip-name-only", ("name", tagTarget.Name));
+
+        return Loc.GetString("nc-store-proto-tooltip", ("name", tagTarget.Name), ("desc", tagTarget.Description));
     }
 
     private static string BuildHuntGroupTooltip(NcHuntGroupPrototype? group)

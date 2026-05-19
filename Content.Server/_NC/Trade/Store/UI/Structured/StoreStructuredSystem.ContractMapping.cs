@@ -22,6 +22,7 @@ public sealed partial class StoreStructuredSystem
             contract.FlowStatus,
             contract.Completed,
             contract.TargetItem,
+            contract.MatchMode,
             ResolveContractTurnInItem(contract),
             contract.Required,
             contract.Progress,

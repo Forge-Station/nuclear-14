@@ -61,6 +61,9 @@ public sealed partial class NcContractSystem : EntitySystem
                 return true;
             }
 
+            if (!string.IsNullOrWhiteSpace(target.TagTarget) && IsSupplyWorldTurnInTagTarget(target.TagTarget))
+                return true;
+
             if (string.IsNullOrWhiteSpace(target.Group) ||
                 !_prototypes.TryIndex<NcItemGroupPrototype>(target.Group, out var group))
             {
@@ -82,6 +85,23 @@ public sealed partial class NcContractSystem : EntitySystem
         return _prototypes.TryIndex<EntityPrototype>(prototypeId, out var proto) &&
                proto.HasComponent<MobStateComponent>(_compFactory) &&
                proto.HasComponent<PullableComponent>(_compFactory);
+    }
+
+    private bool IsSupplyWorldTurnInTagTarget(string tagTargetId)
+    {
+        if (!TryResolveContractTagTargetId(tagTargetId, out var tagId))
+            return false;
+
+        foreach (var proto in _prototypes.EnumeratePrototypes<EntityPrototype>())
+        {
+            if (!ContractPrototypeHasTag(proto.ID, tagId))
+                continue;
+
+            if (IsSupplyWorldTurnInPrototype(proto.ID))
+                return true;
+        }
+
+        return false;
     }
 
     private List<ContractTargetServerData> BuildSupplyTargets(EntityUid store, NcSupplyContractPrototype proto)
@@ -166,9 +186,10 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         var hasPrototype = !string.IsNullOrWhiteSpace(entry.Prototype);
+        var hasTagTarget = !string.IsNullOrWhiteSpace(entry.TagTarget);
 
         var required = RollFair(
-            new(QuasiKeyKind.Req, store, contractId, $"supply-target:{index}:{entry.Prototype}:{entry.Group}"),
+            new(QuasiKeyKind.Req, store, contractId, $"supply-target:{index}:{entry.Prototype}:{entry.Group}:{entry.TagTarget}"),
             entry.Count,
             1);
 
@@ -183,6 +204,18 @@ public sealed partial class NcContractSystem : EntitySystem
                 Required = required,
                 Progress = 0,
                 MatchMode = PrototypeMatchMode.Exact
+            };
+            return true;
+        }
+
+        if (hasTagTarget)
+        {
+            target = new ContractTargetServerData
+            {
+                TargetItem = entry.TagTarget,
+                Required = required,
+                Progress = 0,
+                MatchMode = PrototypeMatchMode.Tag
             };
             return true;
         }
