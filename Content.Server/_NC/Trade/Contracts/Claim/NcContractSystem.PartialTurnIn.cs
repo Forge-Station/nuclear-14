@@ -27,7 +27,7 @@ public sealed partial class NcContractSystem : EntitySystem
         string contractId,
         ContractTargetServerData target)
     {
-        return _objectiveRuntimeByContract.TryGetValue((store, contractId), out var state)
+        return _objectiveRuntime.ByContract.TryGetValue((store, contractId), out var state)
             ? GetTurnedInCount(state, target.TargetItem, target.MatchMode)
             : 0;
     }
@@ -70,7 +70,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid store,
         string contractId,
         ContractServerData contract,
-        List<ClaimTakeEntry> takePlan)
+        List<ClaimTakeEntry> takePlan,
+        ClaimTakeJournal? journal = null)
     {
         if (takePlan.Count == 0)
             return;
@@ -83,6 +84,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             var key = MakeTurnInKey(entry.TargetItem, entry.MatchMode);
+            journal?.TrackTurnIn(state, key);
             state.TurnedInByTarget[key] = SaturatingAdd(
                 state.TurnedInByTarget.GetValueOrDefault(key, 0),
                 entry.Amount);
@@ -143,7 +145,7 @@ public sealed partial class NcContractSystem : EntitySystem
         string contractId,
         ContractServerData contract)
     {
-        if (!_objectiveRuntimeByContract.TryGetValue((store, contractId), out var state) ||
+        if (!_objectiveRuntime.ByContract.TryGetValue((store, contractId), out var state) ||
             state.TurnedInByTarget.Count == 0)
         {
             return;
@@ -212,7 +214,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        if (!_objectiveRuntimeByContract.TryGetValue((store, contractId), out var state) ||
+        if (!_objectiveRuntime.ByContract.TryGetValue((store, contractId), out var state) ||
             state.TurnedInByTarget.Count == 0)
         {
             return true;
@@ -260,7 +262,7 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract)
     {
         var key = (store, contractId);
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+        if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state))
             return;
 
         if (TryResolveRetrievalRouteReturnPinpointerTarget(store, contract, state, out var returnTarget))

@@ -48,23 +48,27 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryValidateClaimTakePlan(ctx.TakePlan, out fail))
             return false;
 
+        var journal = new ClaimTakeJournal();
         try
         {
-            UnregisterRetrievalSpawnedCargoTakePlan(ctx.Contract, ctx.TakePlan);
-            ExecuteClaimTakePlan(ctx.TakePlan);
-            RecordPartialTurnInProgress(ctx.Store, contractId, ctx.Contract, ctx.TakePlan);
-            InvalidateClaimExecutionCaches(ctx);
-            RefreshProgressAfterPartialTurnIn(ctx, contractId);
-            RetargetContractPinpointersAfterTurnIn(ctx.Store, contractId, ctx.Contract);
-            return true;
+            UnregisterRetrievalSpawnedCargoTakePlan(ctx.Contract, ctx.TakePlan, journal);
+            ExecuteClaimTakePlan(ctx.TakePlan, journal);
+            RecordPartialTurnInProgress(ctx.Store, contractId, ctx.Contract, ctx.TakePlan, journal);
+            CommitClaimTakeJournal(journal);
         }
         catch (Exception e)
         {
+            RollbackClaimTakeJournal(journal);
             Sawmill.Error($"[Claim] Partial turn-in failed unexpectedly for '{contractId}': {e}");
             InvalidateClaimExecutionCaches(ctx);
             fail = CreateClaimExecutionFailure($"Partial turn-in threw {e.GetType().Name}: {e.Message}");
             return false;
         }
+
+        InvalidateClaimExecutionCaches(ctx);
+        RefreshProgressAfterPartialTurnIn(ctx, contractId);
+        RetargetContractPinpointersAfterTurnIn(ctx.Store, contractId, ctx.Contract);
+        return true;
     }
 
     private bool TryValidateClaimTakePlan(
@@ -125,17 +129,26 @@ public sealed partial class NcContractSystem : EntitySystem
     private void ExecuteClaimTakePlan(List<ClaimTakeEntry> takePlan)
     {
         foreach (var entry in takePlan)
-            ExecuteClaimTakeEntry(entry);
+            ExecuteClaimTakeEntry(entry, null);
     }
 
-    private void ExecuteClaimTakeEntry(ClaimTakeEntry entry)
+    private void ExecuteClaimTakePlan(List<ClaimTakeEntry> takePlan, ClaimTakeJournal journal)
+    {
+        foreach (var entry in takePlan)
+            ExecuteClaimTakeEntry(entry, journal);
+    }
+
+    private void ExecuteClaimTakeEntry(ClaimTakeEntry entry, ClaimTakeJournal? journal)
     {
         if (!EntityManager.EntityExists(entry.Entity))
             return;
 
         if (!entry.IsStack)
         {
-            EntityManager.DeleteEntity(entry.Entity);
+            if (journal != null)
+                journal.PendingDeletes.Add(entry.Entity);
+            else
+                EntityManager.DeleteEntity(entry.Entity);
             return;
         }
 
@@ -143,11 +156,121 @@ public sealed partial class NcContractSystem : EntitySystem
             return;
 
         var left = Math.Max(stack.Count, 0) - entry.Amount;
+        journal?.TrackStack(entry.Entity, stack.Count);
         _stacks.SetCount(entry.Entity, left, stack);
 
         if (stack.Count <= 0)
-            EntityManager.DeleteEntity(entry.Entity);
+        {
+            if (journal != null)
+                journal.PendingDeletes.Add(entry.Entity);
+            else
+                EntityManager.DeleteEntity(entry.Entity);
+        }
     }
+
+    private void CommitClaimTakeJournal(ClaimTakeJournal journal)
+    {
+        for (var i = 0; i < journal.PendingDeletes.Count; i++)
+        {
+            var ent = journal.PendingDeletes[i];
+            if (EntityManager.EntityExists(ent))
+                EntityManager.DeleteEntity(ent);
+        }
+
+        journal.Clear();
+    }
+
+    private void RollbackClaimTakeJournal(ClaimTakeJournal journal)
+    {
+        if (journal.TurnInState != null)
+        {
+            for (var i = journal.TurnInRestores.Count - 1; i >= 0; i--)
+            {
+                var restore = journal.TurnInRestores[i];
+                if (restore.HadValue)
+                    journal.TurnInState.TurnedInByTarget[restore.Key] = restore.PreviousValue;
+                else
+                    journal.TurnInState.TurnedInByTarget.Remove(restore.Key);
+            }
+        }
+
+        for (var i = journal.RetrievalCargoRestores.Count - 1; i >= 0; i--)
+        {
+            var (cargo, key) = journal.RetrievalCargoRestores[i];
+            if (EntityManager.EntityExists(cargo))
+                _objectiveRuntime.ByRetrievalCargo[cargo] = key;
+        }
+
+        for (var i = journal.StackRestores.Count - 1; i >= 0; i--)
+        {
+            var (ent, previousCount) = journal.StackRestores[i];
+            if (TryComp(ent, out StackComponent? stack))
+                _stacks.SetCount(ent, previousCount, stack);
+        }
+
+        journal.Clear();
+    }
+
+    private sealed class ClaimTakeJournal
+    {
+        public readonly List<EntityUid> PendingDeletes = new();
+        public readonly List<(EntityUid Cargo, (EntityUid Store, string ContractId) Key)> RetrievalCargoRestores = new();
+        public readonly List<(EntityUid Ent, int PreviousCount)> StackRestores = new();
+        public readonly List<TurnInRestore> TurnInRestores = new();
+        public ObjectiveRuntimeState? TurnInState;
+
+        public void TrackStack(EntityUid ent, int previousCount)
+        {
+            for (var i = 0; i < StackRestores.Count; i++)
+            {
+                if (StackRestores[i].Ent == ent)
+                    return;
+            }
+
+            StackRestores.Add((ent, previousCount));
+        }
+
+        public void TrackRetrievalCargo(EntityUid cargo, (EntityUid Store, string ContractId) key)
+        {
+            for (var i = 0; i < RetrievalCargoRestores.Count; i++)
+            {
+                if (RetrievalCargoRestores[i].Cargo == cargo)
+                    return;
+            }
+
+            RetrievalCargoRestores.Add((cargo, key));
+        }
+
+        public void TrackTurnIn(
+            ObjectiveRuntimeState state,
+            (string TargetItem, PrototypeMatchMode MatchMode) key)
+        {
+            TurnInState ??= state;
+
+            for (var i = 0; i < TurnInRestores.Count; i++)
+            {
+                if (TurnInRestores[i].Key == key)
+                    return;
+            }
+
+            var hadValue = state.TurnedInByTarget.TryGetValue(key, out var previousValue);
+            TurnInRestores.Add(new TurnInRestore(key, hadValue, previousValue));
+        }
+
+        public void Clear()
+        {
+            PendingDeletes.Clear();
+            RetrievalCargoRestores.Clear();
+            StackRestores.Clear();
+            TurnInRestores.Clear();
+            TurnInState = null;
+        }
+    }
+
+    private readonly record struct TurnInRestore(
+        (string TargetItem, PrototypeMatchMode MatchMode) Key,
+        bool HadValue,
+        int PreviousValue);
 
     private void InvalidateClaimExecutionCaches(ClaimContext ctx)
     {

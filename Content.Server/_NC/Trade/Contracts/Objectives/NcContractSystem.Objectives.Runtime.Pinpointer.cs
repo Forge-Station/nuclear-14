@@ -7,8 +7,6 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private readonly List<EntityUid> _retrievalPulledCargoScratch = new();
-
     public bool TryIssueContractPinpointer(EntityUid store, EntityUid user, string contractId)
     {
         if (!TryComp(store, out NcStoreComponent? comp))
@@ -29,11 +27,11 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         var key = (store, contractId);
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+        if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state))
             return false;
 
         RefreshPinpointerRuntimeState(store, contractId, contract);
-        if (contract.Runtime.Failed || !_objectiveRuntimeByContract.TryGetValue(key, out state))
+        if (contract.Runtime.Failed || !_objectiveRuntime.ByContract.TryGetValue(key, out state))
             return false;
 
         EntityUid pinpointerTarget;
@@ -450,8 +448,8 @@ public sealed partial class NcContractSystem : EntitySystem
         target = EntityUid.Invalid;
         carrier = EntityUid.Invalid;
 
-        if (!_objectiveRuntimeByRetrievalCargo.TryGetValue(cargo, out var candidateKey) ||
-            !_objectiveRuntimeByContract.TryGetValue(candidateKey, out var candidateState) ||
+        if (!_objectiveRuntime.ByRetrievalCargo.TryGetValue(cargo, out var candidateKey) ||
+            !_objectiveRuntime.ByContract.TryGetValue(candidateKey, out var candidateState) ||
             !TryGetObjectiveContract(candidateKey, out _, out var contract) ||
             !contract.Taken ||
             contract.Runtime.Failed ||
@@ -461,7 +459,7 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         RefreshPinpointerRuntimeState(candidateKey.Store, candidateKey.ContractId, contract);
-        if (contract.Runtime.Failed || !_objectiveRuntimeByContract.TryGetValue(candidateKey, out candidateState))
+        if (contract.Runtime.Failed || !_objectiveRuntime.ByContract.TryGetValue(candidateKey, out candidateState))
             return false;
 
         if (!TryResolveRetrievalRouteReturnPinpointerTarget(candidateKey.Store, contract, candidateState, out target) &&
@@ -557,9 +555,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         _pinpointer.SetTarget(pinpointer, target);
         _pinpointer.SetActive(pinpointer, true);
-        state.PinpointerEntities.Add(pinpointer);
-        _objectiveRuntimeByPinpointer[pinpointer] = key;
-        _objectiveRuntimePinpointerOwners[pinpointer] = user;
+        _pinpointerService.RegisterIssuedPinpointer(_objectiveRuntime, key, state, user, pinpointer);
         _logic.QueuePickupToHandsOrCrateNextTick(user, pinpointer);
     }
 
@@ -609,7 +605,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (TerminatingOrDeleted(pinpointer))
                 continue;
 
-            if (!_objectiveRuntimePinpointerOwners.TryGetValue(pinpointer, out var pinpointerOwner) ||
+            if (!_pinpointerService.TryGetOwner(_objectiveRuntime, pinpointer, out var pinpointerOwner) ||
                 pinpointerOwner != owner)
             {
                 continue;
@@ -630,24 +626,24 @@ public sealed partial class NcContractSystem : EntitySystem
 
         RetargetRetrievalCargoPinpointersForUser(pulled, user);
 
-        _retrievalPulledCargoScratch.Clear();
-        _logic.ScanInventoryItems(pulled, _retrievalPulledCargoScratch);
-        for (var i = 0; i < _retrievalPulledCargoScratch.Count; i++)
+        _pinpointerService.RetrievalPulledCargoScratch.Clear();
+        _logic.ScanInventoryItems(pulled, _pinpointerService.RetrievalPulledCargoScratch);
+        for (var i = 0; i < _pinpointerService.RetrievalPulledCargoScratch.Count; i++)
         {
-            var cargo = _retrievalPulledCargoScratch[i];
+            var cargo = _pinpointerService.RetrievalPulledCargoScratch[i];
             if (cargo == pulled)
                 continue;
 
             RetargetRetrievalCargoPinpointersForUser(cargo, user);
         }
 
-        _retrievalPulledCargoScratch.Clear();
+        _pinpointerService.RetrievalPulledCargoScratch.Clear();
     }
 
     private bool RetargetRetrievalCargoPinpointersForUser(EntityUid cargo, EntityUid user)
     {
-        if (!_objectiveRuntimeByRetrievalCargo.TryGetValue(cargo, out var key) ||
-            !_objectiveRuntimeByContract.TryGetValue(key, out var state) ||
+        if (!_objectiveRuntime.ByRetrievalCargo.TryGetValue(cargo, out var key) ||
+            !_objectiveRuntime.ByContract.TryGetValue(key, out var state) ||
             !TryGetObjectiveContract(key, out _, out var contract) ||
             !contract.Taken ||
             contract.Runtime.Failed ||
@@ -657,7 +653,7 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         RefreshPinpointerRuntimeState(key.Store, key.ContractId, contract);
-        if (contract.Runtime.Failed || !_objectiveRuntimeByContract.TryGetValue(key, out state))
+        if (contract.Runtime.Failed || !_objectiveRuntime.ByContract.TryGetValue(key, out state))
             return false;
 
         if (!TryResolveRetrievalRouteReturnPinpointerTargetForUser(key.Store, user, contract, state, out var target) &&
@@ -672,8 +668,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool RetargetRetrievalCargoPinpointersForCurrentControllers(EntityUid cargo)
     {
-        if (!_objectiveRuntimeByRetrievalCargo.TryGetValue(cargo, out var key) ||
-            !_objectiveRuntimeByContract.TryGetValue(key, out var state) ||
+        if (!_objectiveRuntime.ByRetrievalCargo.TryGetValue(cargo, out var key) ||
+            !_objectiveRuntime.ByContract.TryGetValue(key, out var state) ||
             !TryGetObjectiveContract(key, out _, out var contract) ||
             !contract.Taken ||
             contract.Runtime.Failed ||
@@ -683,7 +679,7 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         RefreshPinpointerRuntimeState(key.Store, key.ContractId, contract);
-        if (contract.Runtime.Failed || !_objectiveRuntimeByContract.TryGetValue(key, out state))
+        if (contract.Runtime.Failed || !_objectiveRuntime.ByContract.TryGetValue(key, out state))
             return false;
 
         if (TryResolveRetrievalRouteReturnPinpointerTarget(key.Store, contract, state, out var returnTarget))
@@ -706,7 +702,7 @@ public sealed partial class NcContractSystem : EntitySystem
         foreach (var pinpointer in state.PinpointerEntities)
         {
             if (TerminatingOrDeleted(pinpointer) ||
-                !_objectiveRuntimePinpointerOwners.TryGetValue(pinpointer, out var owner) ||
+                !_pinpointerService.TryGetOwner(_objectiveRuntime, pinpointer, out var owner) ||
                 owner == EntityUid.Invalid ||
                 !IsRetrievalCargoControlledByUser(cargo, owner))
             {
@@ -736,17 +732,17 @@ public sealed partial class NcContractSystem : EntitySystem
         if (state.PinpointerEntities.Count == 0)
             return;
 
-        _objectivePinpointersScratch.Clear();
-        _objectivePinpointersScratch.AddRange(state.PinpointerEntities);
+        _pinpointerService.ObjectivePinpointersScratch.Clear();
+        _pinpointerService.ObjectivePinpointersScratch.AddRange(state.PinpointerEntities);
 
-        for (var i = 0; i < _objectivePinpointersScratch.Count; i++)
+        for (var i = 0; i < _pinpointerService.ObjectivePinpointersScratch.Count; i++)
         {
-            var pinpointer = _objectivePinpointersScratch[i];
+            var pinpointer = _pinpointerService.ObjectivePinpointersScratch[i];
             if (TerminatingOrDeleted(pinpointer))
                 continue;
 
             EntityUid target;
-            if (_objectiveRuntimePinpointerOwners.TryGetValue(pinpointer, out var owner) &&
+            if (_pinpointerService.TryGetOwner(_objectiveRuntime, pinpointer, out var owner) &&
                 owner != EntityUid.Invalid &&
                 !TerminatingOrDeleted(owner))
             {
@@ -769,7 +765,7 @@ public sealed partial class NcContractSystem : EntitySystem
             _pinpointer.SetActive(pinpointer, true);
         }
 
-        _objectivePinpointersScratch.Clear();
+        _pinpointerService.ObjectivePinpointersScratch.Clear();
     }
 
     private bool CanIssueContractPinpointer(
@@ -794,24 +790,20 @@ public sealed partial class NcContractSystem : EntitySystem
         if (state.PinpointerEntities.Count == 0)
             return;
 
-        _objectivePinpointersScratch.Clear();
+        _pinpointerService.ObjectivePinpointersScratch.Clear();
         foreach (var pinpointer in state.PinpointerEntities)
             if (TerminatingOrDeleted(pinpointer))
-                _objectivePinpointersScratch.Add(pinpointer);
+                _pinpointerService.ObjectivePinpointersScratch.Add(pinpointer);
 
-        for (var i = 0; i < _objectivePinpointersScratch.Count; i++)
-            UnregisterIssuedPinpointer(_objectivePinpointersScratch[i], key);
+        for (var i = 0; i < _pinpointerService.ObjectivePinpointersScratch.Count; i++)
+            UnregisterIssuedPinpointer(_pinpointerService.ObjectivePinpointersScratch[i], key);
 
-        _objectivePinpointersScratch.Clear();
+        _pinpointerService.ObjectivePinpointersScratch.Clear();
     }
 
     private void UnregisterIssuedPinpointer(EntityUid pinpointer, (EntityUid Store, string ContractId) key)
     {
-        _objectiveRuntimeByPinpointer.Remove(pinpointer);
-        _objectiveRuntimePinpointerOwners.Remove(pinpointer);
-
-        if (_objectiveRuntimeByContract.TryGetValue(key, out var state))
-            state.PinpointerEntities.Remove(pinpointer);
+        _pinpointerService.UnregisterIssuedPinpointer(_objectiveRuntime, pinpointer, key);
     }
 
     private void CleanupObjectivePinpointers(
@@ -822,12 +814,12 @@ public sealed partial class NcContractSystem : EntitySystem
         if (state.PinpointerEntities.Count == 0)
             return;
 
-        _objectivePinpointersScratch.Clear();
-        _objectivePinpointersScratch.AddRange(state.PinpointerEntities);
+        _pinpointerService.ObjectivePinpointersScratch.Clear();
+        _pinpointerService.ObjectivePinpointersScratch.AddRange(state.PinpointerEntities);
 
-        for (var i = 0; i < _objectivePinpointersScratch.Count; i++)
+        for (var i = 0; i < _pinpointerService.ObjectivePinpointersScratch.Count; i++)
         {
-            var pinpointer = _objectivePinpointersScratch[i];
+            var pinpointer = _pinpointerService.ObjectivePinpointersScratch[i];
             UnregisterIssuedPinpointer(pinpointer, key);
 
             if (!TerminatingOrDeleted(pinpointer))
@@ -835,7 +827,7 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         state.PinpointerEntities.Clear();
-        _objectivePinpointersScratch.Clear();
+        _pinpointerService.ObjectivePinpointersScratch.Clear();
     }
 
     private bool TryGetContainedEntityRoot(EntityUid entity, out EntityUid root)

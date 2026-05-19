@@ -8,21 +8,21 @@ public sealed partial class NcContractSystem : EntitySystem
 {
     private void OnObjectiveTrackedEntityTerminating(ref EntityTerminatingEvent args)
     {
-        if (_objectiveRuntimeByTarget.TryGetValue(args.Entity, out var targetKey))
+        if (_objectiveRuntime.ByTarget.TryGetValue(args.Entity, out var targetKey))
             OnObjectiveTrackedTargetResolved(targetKey, args.Entity);
 
-        if (_objectiveRuntimeByPinpointer.TryGetValue(args.Entity, out var pinpointerKey))
+        if (_objectiveRuntime.ByPinpointer.TryGetValue(args.Entity, out var pinpointerKey))
             UnregisterIssuedPinpointer(args.Entity, pinpointerKey);
 
-        if (_objectiveRuntimeByGuard.Remove(args.Entity, out var guardKey) &&
-            _objectiveRuntimeByContract.TryGetValue(guardKey, out var guardState))
+        if (_objectiveRuntime.ByGuard.Remove(args.Entity, out var guardKey) &&
+            _objectiveRuntime.ByContract.TryGetValue(guardKey, out var guardState))
         {
             guardState.GuardEntities.Remove(args.Entity);
         }
-        if (_objectiveRuntimeByProof.Remove(args.Entity, out var proofKey))
+        if (_objectiveRuntime.ByProof.Remove(args.Entity, out var proofKey))
             OnObjectiveTrackedProofDestroyed(proofKey, args.Entity);
 
-        if (_objectiveRuntimeByRetrievalCargo.Remove(args.Entity, out var retrievalCargoKey))
+        if (_objectiveRuntime.ByRetrievalCargo.Remove(args.Entity, out var retrievalCargoKey))
             OnRetrievalSpawnedCargoDestroyed(retrievalCargoKey, args.Entity);
 
         TryHandleHuntBodyEntityTerminating(args.Entity);
@@ -32,7 +32,7 @@ public sealed partial class NcContractSystem : EntitySystem
         (EntityUid Store, string ContractId) key,
         EntityUid proof)
     {
-        if (_objectiveRuntimeByContract.TryGetValue(key, out var state) && state.ProofEntity == proof)
+        if (_objectiveRuntime.ByContract.TryGetValue(key, out var state) && state.ProofEntity == proof)
         {
             state.ProofEntity = null;
             state.ProofSpawned = false;
@@ -60,9 +60,9 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void OnObjectiveTrackedTargetResolved((EntityUid Store, string ContractId) key, EntityUid target)
     {
-        _objectiveRuntimeByTarget.Remove(target);
+        _objectiveRuntime.ByTarget.Remove(target);
 
-        if (_objectiveRuntimeByContract.TryGetValue(key, out var state) && state.TargetEntity == target)
+        if (_objectiveRuntime.ByContract.TryGetValue(key, out var state) && state.TargetEntity == target)
         {
             state.TargetEntity = null;
             if (TryComp(target, out TransformComponent? targetXform))
@@ -187,7 +187,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         MarkObjectiveComplete(contract);
 
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+        if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state))
             return;
 
         if (state.ProofEntity is { } proof && proof != EntityUid.Invalid && !TerminatingOrDeleted(proof))
@@ -216,7 +216,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         MarkObjectiveFailed(contract, failureReason, outcome);
 
-        if (_objectiveRuntimeByContract.TryGetValue(key, out var state))
+        if (_objectiveRuntime.ByContract.TryGetValue(key, out var state))
             CleanupObjectivePinpointers(key, state);
 
         FailObjectiveContract(key, comp, deleteTrackedEntities, deleteGuards);
@@ -245,12 +245,12 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         var key = (store, contractId);
 
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+        if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state))
             return;
 
         if (state.TargetEntity is { } target)
         {
-            _objectiveRuntimeByTarget.Remove(target);
+            _objectiveRuntime.ByTarget.Remove(target);
             state.TargetEntity = null;
 
             if (deleteTrackedEntities && !TerminatingOrDeleted(target))
@@ -271,7 +271,7 @@ public sealed partial class NcContractSystem : EntitySystem
             for (var i = 0; i < state.GuardEntities.Count; i++)
             {
                 var guard = state.GuardEntities[i];
-                _objectiveRuntimeByGuard.Remove(guard);
+                _objectiveRuntime.ByGuard.Remove(guard);
 
                 if (deleteGuards && !TerminatingOrDeleted(guard))
                     Del(guard);
@@ -282,7 +282,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (state.ProofEntity is { } proof)
         {
-            _objectiveRuntimeByProof.Remove(proof);
+            _objectiveRuntime.ByProof.Remove(proof);
 
             if (!TerminatingOrDeleted(proof))
                 Del(proof);
@@ -295,16 +295,16 @@ public sealed partial class NcContractSystem : EntitySystem
         if (state.HuntActive)
         {
             state.HuntActive = false;
-            _activeHuntObjectives.Remove(key);
+            _objectiveRuntime.ActiveHuntObjectives.Remove(key);
         }
 
         if (state.RetrievalRouteDeliveryActive)
         {
             state.RetrievalRouteDeliveryActive = false;
-            _activeRetrievalRouteDeliveries.Remove(key);
+            _objectiveRuntime.ActiveRetrievalRouteDeliveries.Remove(key);
         }
 
-        _activeGhostRoleObjectives.Remove(key);
+        _objectiveRuntime.ActiveGhostRoleObjectives.Remove(key);
 
         state.RetrievalDeliveredEntities.Clear();
         state.RetrievalAcceptedCargoCount = 0;
@@ -317,7 +317,7 @@ public sealed partial class NcContractSystem : EntitySystem
         state.GhostRoleSurvivalObjective = null;
         state.GhostRoleSurvivalSucceeded = false;
         state.LastKnownTargetCoordinates = null;
-        _objectiveRuntimeByContract.Remove(key);
+        _objectiveRuntime.ByContract.Remove(key);
     }
 
     private void CleanupGhostRoleSurvivalObjective(ObjectiveRuntimeState state)
@@ -358,7 +358,7 @@ public sealed partial class NcContractSystem : EntitySystem
         for (var i = state.RetrievalSpawnedEntities.Count - 1; i >= 0; i--)
         {
             var ent = state.RetrievalSpawnedEntities[i];
-            _objectiveRuntimeByRetrievalCargo.Remove(ent);
+            _objectiveRuntime.ByRetrievalCargo.Remove(ent);
 
             if (deleteSpawnedEntities && ent != EntityUid.Invalid && !TerminatingOrDeleted(ent))
                 Del(ent);

@@ -8,6 +8,7 @@ using Content.Shared.Movement.Pulling.Components;
 using Robust.Server.Audio;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio;
+using Robust.Shared.Timing;
 
 
 namespace Content.Server._NC.Trade;
@@ -15,9 +16,9 @@ namespace Content.Server._NC.Trade;
 
 public sealed class NcStoreSystem : EntitySystem
 {
-    private const float MaxUseDistance = 2.5f;
     private const float MaxCrateDistance = 4f;
     private const int MaxTransactionCount = 1000;
+    private static readonly TimeSpan InvalidMessageWarningInterval = TimeSpan.FromSeconds(5);
     private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore");
     [Dependency] private readonly AccessReaderSystem _accessReader = default!;
     [Dependency] private readonly AudioSystem _audio = default!;
@@ -25,8 +26,10 @@ public sealed class NcStoreSystem : EntitySystem
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     [Dependency] private readonly PopupSystem _popups = default!;
     [Dependency] private readonly StoreStructuredSystem _storeUi = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly TransformSystem _transform = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
+    private readonly Dictionary<string, TimeSpan> _nextInvalidListingWarningByActor = new(StringComparer.Ordinal);
 
     public override void Initialize()
     {
@@ -68,7 +71,7 @@ public sealed class NcStoreSystem : EntitySystem
         return Vector2.Distance(aPos, bPos) <= maxDistance;
     }
 
-    private bool IsInUseRange(EntityUid store, EntityUid user) => IsInRange(store, user, MaxUseDistance);
+    private bool IsInUseRange(EntityUid store, EntityUid user) => IsInRange(store, user, StoreTradeLimits.StoreUseDistance);
 
 
     private bool TryValidateUse(EntityUid store, NcStoreComponent comp, EntityUid actor, out string failMessage)
@@ -112,15 +115,33 @@ public sealed class NcStoreSystem : EntitySystem
 
         EnsureListingIndex(store, comp);
 
+        if (!StoreTradeLimits.IsValidMessageId(id))
+        {
+            WarnInvalidListingId(actor, store, mode, id, "invalid message id");
+            return false;
+        }
+
         if (!comp.ListingIndex.TryGetValue(NcStoreComponent.MakeListingKey(mode, id), out var found))
         {
-            Sawmill.Warning(
-                $"[NcStore] {ToPrettyString(actor)} tried to use invalid listing '{id}' (mode={mode}) at {ToPrettyString(store)}");
+            WarnInvalidListingId(actor, store, mode, id, "unknown listing id");
             return false;
         }
 
         listing = found;
         return true;
+    }
+
+    private void WarnInvalidListingId(EntityUid actor, EntityUid store, StoreMode mode, string? id, string reason)
+    {
+        var key = $"{actor}:{mode}";
+        var now = _timing.CurTime;
+        if (_nextInvalidListingWarningByActor.TryGetValue(key, out var nextAllowed) && now < nextAllowed)
+            return;
+
+        _nextInvalidListingWarningByActor[key] = now + InvalidMessageWarningInterval;
+        Sawmill.Warning(
+            $"[NcStore] {ToPrettyString(actor)} tried to use {reason} '{StoreTradeLimits.ToLogSafeId(id)}' " +
+            $"(mode={mode}) at {ToPrettyString(store)}");
     }
 
     private bool TryGetPulledClosedCrate(EntityUid actor, out EntityUid crate, out string failMessage)
@@ -205,8 +226,6 @@ public sealed class NcStoreSystem : EntitySystem
 
         var requestedId = msg.Id;
         var fromCrate = msg.FromCrate;
-        if (string.IsNullOrEmpty(requestedId))
-            return;
 
         if (!TryGetListing(uid, comp, actor, StoreMode.Sell, requestedId, out var listing))
         {
@@ -264,8 +283,6 @@ public sealed class NcStoreSystem : EntitySystem
         }
 
         var requestedId = msg.Id;
-        if (string.IsNullOrEmpty(requestedId))
-            return;
 
         if (!TryGetListing(uid, comp, actor, StoreMode.Barter, requestedId, out var listing))
         {

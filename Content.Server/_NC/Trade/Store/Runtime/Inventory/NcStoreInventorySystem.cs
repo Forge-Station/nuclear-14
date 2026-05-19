@@ -36,7 +36,10 @@ public sealed partial class NcStoreInventorySystem : EntitySystem
     [Dependency] private readonly IComponentFactory _compFactory = default!;
     [Dependency] private readonly IEntityManager _ents = default!;
     private readonly Dictionary<EntityUid, InventoryCacheEntry> _inventoryCache = new();
+    private readonly List<(EntityUid Ent, int PreviousCount)> _takeTransactionStackRestoreScratch = new();
+    private readonly List<EntityUid> _takeTransactionDeleteScratch = new();
     [Dependency] private readonly TagSystem _tags = default!;
+    private bool _takeTransactionActive;
 
     private readonly Dictionary<EntityUid, HashSet<EntityUid>> _rootsByItem = new();
     private readonly HashSet<EntityUid> _rebuildOldItemsScratch = new();
@@ -79,7 +82,8 @@ public sealed partial class NcStoreInventorySystem : EntitySystem
     private void OnPrototypesReloaded(PrototypesReloadedEventArgs ev)
     {
         _productStackTypeCache.Clear();
-        _compiledMatcherCache.Clear();
+        _matcherService.Clear();
+
         InvalidateAllCaches();
     }
 
@@ -460,6 +464,69 @@ public sealed partial class NcStoreInventorySystem : EntitySystem
         return CalculateAvailableTakeUnits(root, cachedItems, request, int.MaxValue);
     }
 
+    public bool BeginTakeTransaction()
+    {
+        if (_takeTransactionActive)
+            return false;
+
+        _takeTransactionStackRestoreScratch.Clear();
+        _takeTransactionDeleteScratch.Clear();
+        _takeTransactionActive = true;
+        return true;
+    }
+
+    public void CommitTakeTransaction()
+    {
+        if (!_takeTransactionActive)
+            return;
+
+        for (var i = 0; i < _takeTransactionDeleteScratch.Count; i++)
+        {
+            var ent = _takeTransactionDeleteScratch[i];
+            if (_ents.EntityExists(ent))
+                _ents.DeleteEntity(ent);
+        }
+
+        InvalidateAllCaches();
+        ResetTakeTransaction();
+    }
+
+    public void RollbackTakeTransaction()
+    {
+        if (!_takeTransactionActive)
+            return;
+
+        for (var i = _takeTransactionStackRestoreScratch.Count - 1; i >= 0; i--)
+        {
+            var (ent, previousCount) = _takeTransactionStackRestoreScratch[i];
+            if (_ents.TryGetComponent(ent, out StackComponent? stack))
+                _stacks.SetCount(ent, previousCount, stack);
+        }
+
+        InvalidateAllCaches();
+        ResetTakeTransaction();
+    }
+
+    private void ResetTakeTransaction()
+    {
+        _takeTransactionActive = false;
+        _takeTransactionStackRestoreScratch.Clear();
+        _takeTransactionDeleteScratch.Clear();
+    }
+
+    private void TrackTakeTransactionStackRestore(EntityUid ent, int previousCount)
+    {
+        if (!_takeTransactionActive)
+            return;
+
+        for (var i = 0; i < _takeTransactionStackRestoreScratch.Count; i++)
+        {
+            if (_takeTransactionStackRestoreScratch[i].Ent == ent)
+                return;
+        }
+
+        _takeTransactionStackRestoreScratch.Add((ent, previousCount));
+    }
 
     public bool TryTakeProductUnitsFromRootCached(
         EntityUid root,
@@ -687,16 +754,7 @@ public sealed partial class NcStoreInventorySystem : EntitySystem
             if (request.Matcher.Tags.Count == 0)
                 return false;
 
-            if (!TryComp<TagComponent>(ent, out var tagComponent))
-                return false;
-
-            for (var i = 0; i < request.Matcher.Tags.Count; i++)
-            {
-                if (_tags.HasTag(tagComponent, request.Matcher.Tags[i]))
-                    return true;
-            }
-
-            return false;
+            return MatcherPrototypeHasAnyTag(request.Matcher, proto.ID);
         }
 
         return proto.ID == request.ProtoId;
@@ -712,6 +770,7 @@ public sealed partial class NcStoreInventorySystem : EntitySystem
     {
         var have = Math.Max(stack.Count, 0);
         var take = Math.Min(have, left);
+        TrackTakeTransactionStackRestore(ent, stack.Count);
         _stacks.SetCount(ent, have - take, stack);
 
         if (stack.Count <= 0)
@@ -737,7 +796,11 @@ public sealed partial class NcStoreInventorySystem : EntitySystem
         EntityUid ent,
         ref bool compactNeeded)
     {
-        _ents.DeleteEntity(ent);
+        if (_takeTransactionActive)
+            _takeTransactionDeleteScratch.Add(ent);
+        else
+            _ents.DeleteEntity(ent);
+
         cachedItems[index] = EntityUid.Invalid;
         compactNeeded = true;
     }
@@ -778,7 +841,9 @@ public sealed partial class NcStoreInventorySystem : EntitySystem
         }
 
         var protoId = meta.EntityPrototype.ID;
-        var matcher = new CompiledMatcher(group.Prototypes, group.Tags);
+        var matcher = GetCompiledItemGroupMatcher(group);
+        if (matcher == null)
+            return false;
 
         if (matcher.Items.Contains(protoId))
             return true;

@@ -4,12 +4,28 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcStoreInventorySystem
 {
+    private readonly InventoryMatcherService _matcherService = new();
+
+    private sealed class InventoryMatcherService
+    {
+        public readonly Dictionary<string, CompiledMatcher?> CompiledItemGroupCache = new(StringComparer.Ordinal);
+        public readonly Dictionary<string, CompiledMatcher?> CompiledMatcherCache = new(StringComparer.Ordinal);
+        public readonly HashSet<string> OwnedCountedStackTypesScratch = new(StringComparer.Ordinal);
+
+        public void Clear()
+        {
+            CompiledMatcherCache.Clear();
+            CompiledItemGroupCache.Clear();
+            OwnedCountedStackTypesScratch.Clear();
+        }
+    }
+
     private sealed class CompiledMatcher
     {
         public readonly HashSet<string> Items = new(StringComparer.Ordinal);
+        public readonly HashSet<string> MatchStackTypes = new(StringComparer.Ordinal);
         public readonly List<string> Tags = new();
         public readonly Dictionary<string, bool> PrototypeTagMatchCache = new(StringComparer.Ordinal);
-        public readonly Dictionary<string, bool> StackTypeMatchCache = new(StringComparer.Ordinal);
 
         public bool IsEmpty => Items.Count == 0 && Tags.Count == 0;
 
@@ -38,14 +54,12 @@ public sealed partial class NcStoreInventorySystem
         }
     }
 
-    private readonly Dictionary<string, CompiledMatcher?> _compiledMatcherCache = new(StringComparer.Ordinal);
-
     private CompiledMatcher? GetCompiledMatcher(string matcherId, bool warnIfInvalid)
     {
         if (string.IsNullOrWhiteSpace(matcherId))
             return null;
 
-        if (_compiledMatcherCache.TryGetValue(matcherId, out var cached))
+        if (_matcherService.CompiledMatcherCache.TryGetValue(matcherId, out var cached))
             return cached;
 
         if (!_protos.TryIndex<NcMatcherPrototype>(matcherId, out var matcher))
@@ -53,22 +67,54 @@ public sealed partial class NcStoreInventorySystem
             if (warnIfInvalid)
                 Sawmill.Warning($"[NcStore] matcher '{matcherId}' not found.");
 
-            _compiledMatcherCache[matcherId] = null;
+            _matcherService.CompiledMatcherCache[matcherId] = null;
             return null;
         }
 
         var compiled = new CompiledMatcher(matcher);
+        PrecomputeMatcherStackTypes(compiled);
         if (compiled.IsEmpty)
         {
             if (warnIfInvalid)
                 Sawmill.Warning($"[NcStore] matcher '{matcherId}' has no items and no tags; request rejected.");
 
-            _compiledMatcherCache[matcherId] = null;
+            _matcherService.CompiledMatcherCache[matcherId] = null;
             return null;
         }
 
-        _compiledMatcherCache[matcherId] = compiled;
+        _matcherService.CompiledMatcherCache[matcherId] = compiled;
         return compiled;
+    }
+
+    private CompiledMatcher? GetCompiledItemGroupMatcher(NcItemGroupPrototype group)
+    {
+        if (string.IsNullOrWhiteSpace(group.ID))
+            return null;
+
+        if (_matcherService.CompiledItemGroupCache.TryGetValue(group.ID, out var cached))
+            return cached;
+
+        var compiled = new CompiledMatcher(group.Prototypes, group.Tags);
+        PrecomputeMatcherStackTypes(compiled);
+        if (compiled.IsEmpty)
+        {
+            _matcherService.CompiledItemGroupCache[group.ID] = null;
+            return null;
+        }
+
+        _matcherService.CompiledItemGroupCache[group.ID] = compiled;
+        return compiled;
+    }
+
+    private void PrecomputeMatcherStackTypes(CompiledMatcher matcher)
+    {
+        matcher.MatchStackTypes.Clear();
+        foreach (var itemProtoId in matcher.Items)
+        {
+            var stackTypeId = GetProductStackType(itemProtoId);
+            if (!string.IsNullOrWhiteSpace(stackTypeId))
+                matcher.MatchStackTypes.Add(stackTypeId);
+        }
     }
 
     private bool MatcherPrototypeHasAnyTag(CompiledMatcher matcher, string protoId)
@@ -89,21 +135,7 @@ public sealed partial class NcStoreInventorySystem
         if (string.IsNullOrWhiteSpace(stackTypeId))
             return false;
 
-        if (matcher.StackTypeMatchCache.TryGetValue(stackTypeId, out var cached))
-            return cached;
-
-        var result = false;
-        foreach (var itemProtoId in matcher.Items)
-        {
-            if (GetProductStackType(itemProtoId) == stackTypeId)
-            {
-                result = true;
-                break;
-            }
-        }
-
-        matcher.StackTypeMatchCache[stackTypeId] = result;
-        return result;
+        return matcher.MatchStackTypes.Contains(stackTypeId);
     }
 
     private int GetOwnedFromSnapshotForCompiledMatcher(in NcInventorySnapshot snapshot, CompiledMatcher matcher)
@@ -112,48 +144,57 @@ public sealed partial class NcStoreInventorySystem
             return 0;
 
         var total = 0;
-        var countedStackTypes = new HashSet<string>(StringComparer.Ordinal);
+        var countedStackTypes = _matcherService.OwnedCountedStackTypesScratch;
+        countedStackTypes.Clear();
 
-        foreach (var itemProtoId in matcher.Items)
+        try
         {
-            var stackTypeId = GetProductStackType(itemProtoId);
-            if (!string.IsNullOrWhiteSpace(stackTypeId))
+            foreach (var stackTypeId in matcher.MatchStackTypes)
             {
                 if (countedStackTypes.Add(stackTypeId) &&
                     snapshot.StackTypeCounts.TryGetValue(stackTypeId, out var stackCount))
                 {
                     total += stackCount;
                 }
-
-                continue;
             }
 
-            if (snapshot.ProtoCounts.TryGetValue(itemProtoId, out var protoCount))
-                total += protoCount;
-        }
+            foreach (var itemProtoId in matcher.Items)
+            {
+                var stackTypeId = GetProductStackType(itemProtoId);
+                if (!string.IsNullOrWhiteSpace(stackTypeId))
+                    continue;
 
-        if (matcher.Tags.Count == 0)
+                if (snapshot.ProtoCounts.TryGetValue(itemProtoId, out var protoCount))
+                    total += protoCount;
+            }
+
+            if (matcher.Tags.Count == 0)
+                return total;
+
+            foreach (var (protoId, count) in snapshot.ProtoCounts)
+            {
+                if (count <= 0)
+                    continue;
+
+                if (matcher.Items.Contains(protoId))
+                    continue;
+
+                var stackTypeId = GetProductStackType(protoId);
+                if (!string.IsNullOrWhiteSpace(stackTypeId) && countedStackTypes.Contains(stackTypeId))
+                    continue;
+
+                if (!MatcherPrototypeHasAnyTag(matcher, protoId))
+                    continue;
+
+                total += count;
+            }
+
             return total;
-
-        foreach (var (protoId, count) in snapshot.ProtoCounts)
-        {
-            if (count <= 0)
-                continue;
-
-            if (matcher.Items.Contains(protoId))
-                continue;
-
-            var stackTypeId = GetProductStackType(protoId);
-            if (!string.IsNullOrWhiteSpace(stackTypeId) && countedStackTypes.Contains(stackTypeId))
-                continue;
-
-            if (!MatcherPrototypeHasAnyTag(matcher, protoId))
-                continue;
-
-            total += count;
         }
-
-        return total;
+        finally
+        {
+            countedStackTypes.Clear();
+        }
     }
 
     public bool PrototypeMatchesMatcher(string matcherId, string protoId)
@@ -195,30 +236,30 @@ public sealed partial class NcStoreInventorySystem
 
     public int GetOwnedFromSnapshotForItemGroup(in NcInventorySnapshot snapshot, NcItemGroupPrototype group)
     {
-        var matcher = new CompiledMatcher(group.Prototypes, group.Tags);
-        return GetOwnedFromSnapshotForCompiledMatcher(snapshot, matcher);
+        var matcher = GetCompiledItemGroupMatcher(group);
+        return matcher == null ? 0 : GetOwnedFromSnapshotForCompiledMatcher(snapshot, matcher);
     }
 
-        public bool TryTakeItemGroupUnitsFromRootCached(EntityUid root, NcItemGroupPrototype group, int amount)
-        {
-            if (amount <= 0)
-                return true;
+    public bool TryTakeItemGroupUnitsFromRootCached(EntityUid root, NcItemGroupPrototype group, int amount)
+    {
+        if (amount <= 0)
+            return true;
 
-            var matcher = new CompiledMatcher(group.Prototypes, group.Tags);
-            if (matcher.IsEmpty)
-                return false;
+        var matcher = GetCompiledItemGroupMatcher(group);
+        if (matcher == null)
+            return false;
 
-            var request = new ProductTakeRequest(group.ID, null, PrototypeMatchMode.Matcher, matcher, true);
-            var cachedItems = GetOrBuildDeepItemsCache(root);
+        var request = new ProductTakeRequest(group.ID, null, PrototypeMatchMode.Matcher, matcher, true);
+        var cachedItems = GetOrBuildDeepItemsCache(root);
 
-            if (CalculateAvailableTakeUnits(root, cachedItems, request, amount) < amount)
-                return false;
+        if (CalculateAvailableTakeUnits(root, cachedItems, request, amount) < amount)
+            return false;
 
-            var success = ExecuteTakeUnitsFromCachedItems(root, cachedItems, request, amount);
-            if (success && _inventoryCache.TryGetValue(root, out var entry))
-                MarkInventoryDirty(entry, ReferenceEquals(entry.Items, cachedItems));
+        var success = ExecuteTakeUnitsFromCachedItems(root, cachedItems, request, amount);
+        if (success && _inventoryCache.TryGetValue(root, out var entry))
+            MarkInventoryDirty(entry, ReferenceEquals(entry.Items, cachedItems));
 
-            return success;
-        }
+        return success;
+    }
 
 }

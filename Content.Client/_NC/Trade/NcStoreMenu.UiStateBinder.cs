@@ -12,6 +12,7 @@ public sealed partial class NcStoreMenu
         private ulong _lastCrateMembershipHash;
         private ulong _lastReadyMembershipHash;
         private readonly HashSet<string> _snapshotScopeIds = new();
+        private readonly List<string> _scopedRemoveScratch = new();
 
         public UiStateBinder(NcStoreMenu menu)
         {

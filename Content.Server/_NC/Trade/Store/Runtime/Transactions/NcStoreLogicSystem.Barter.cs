@@ -36,13 +36,17 @@ public sealed partial class NcStoreLogicSystem
         return Math.Max(0, max);
     }
 
-    public int GetMaxBarterCount(EntityUid user, NcStoreListingDef listing, in NcInventorySnapshot snapshot)
+    public int GetMaxBarterCount(
+        EntityUid user,
+        NcStoreListingDef listing,
+        in NcInventorySnapshot snapshot,
+        BarterAvailabilityContext? context = null)
     {
         var upper = GetMaxBarterCountFromSnapshot(listing, snapshot);
         if (upper <= 0)
             return 0;
 
-        return FindPlannedBarterCount(user, listing, upper);
+        return FindPlannedBarterCount(user, listing, upper, context);
     }
 
     public bool TryBarter(string listingId, EntityUid machine, NcStoreComponent? store, EntityUid user, int count = 1)
@@ -61,16 +65,18 @@ public sealed partial class NcStoreLogicSystem
 
         _inventory.InvalidateInventoryCache(user);
         var snapshot = _inventory.BuildInventorySnapshot(user);
-        var maxPossible = GetMaxBarterCount(user, listing, snapshot);
+        var context = new BarterAvailabilityContext();
+        PrepareBarterAvailabilityContext(user, context);
+        var maxPossible = GetMaxBarterCount(user, listing, snapshot, context);
         if (maxPossible <= 0)
             return false;
 
         var requested = Math.Min(count, maxPossible);
-        var actual = FindPlannedBarterCount(user, listing, requested);
+        var actual = FindPlannedBarterCount(user, listing, requested, context);
         if (actual <= 0)
             return false;
 
-        if (!TryBuildBarterCostPlan(user, listing.BarterCost, actual, out var costPlan))
+        if (!TryBuildBarterCostPlan(user, listing.BarterCost, actual, out var costPlan, context))
             return false;
 
         if (!TryBuildBarterReceivePlan(listing, actual, out var receivePlan))

@@ -444,7 +444,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         var key = (store, contractId);
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out state!))
+        if (!_objectiveRuntime.ByContract.TryGetValue(key, out state!))
             return false;
 
         PruneRetrievalSpawnedEntities(state);
@@ -462,7 +462,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (state.RetrievalSpawnedEntitySet.Add(cargo))
             state.RetrievalSpawnedEntities.Add(cargo);
 
-        _objectiveRuntimeByRetrievalCargo[cargo] = key;
+        _objectiveRuntime.ByRetrievalCargo[cargo] = key;
     }
 
     private void UnregisterRetrievalSpawnedCargo(EntityUid cargo)
@@ -470,18 +470,25 @@ public sealed partial class NcContractSystem : EntitySystem
         if (cargo == EntityUid.Invalid)
             return;
 
-        _objectiveRuntimeByRetrievalCargo.Remove(cargo);
+        _objectiveRuntime.ByRetrievalCargo.Remove(cargo);
     }
 
     private void UnregisterRetrievalSpawnedCargoTakePlan(
         ContractServerData contract,
-        List<ClaimTakeEntry> takePlan)
+        List<ClaimTakeEntry> takePlan,
+        ClaimTakeJournal? journal = null)
     {
         if (!RequiresRetrievalSpawnedTurnIn(contract))
             return;
 
         for (var i = 0; i < takePlan.Count; i++)
-            UnregisterRetrievalSpawnedCargo(takePlan[i].Entity);
+        {
+            var cargo = takePlan[i].Entity;
+            if (journal != null && _objectiveRuntime.ByRetrievalCargo.TryGetValue(cargo, out var key))
+                journal.TrackRetrievalCargo(cargo, key);
+
+            UnregisterRetrievalSpawnedCargo(cargo);
+        }
     }
 
     private void RemoveRetrievalSpawnedCargoFromState(ObjectiveRuntimeState state, EntityUid cargo)
@@ -495,7 +502,7 @@ public sealed partial class NcContractSystem : EntitySystem
         (EntityUid Store, string ContractId) key,
         EntityUid cargo)
     {
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+        if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state))
             return;
 
         RemoveRetrievalSpawnedCargoFromState(state, cargo);

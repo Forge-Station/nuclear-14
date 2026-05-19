@@ -78,7 +78,7 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract)
     {
         if (!contract.IsGhostRoleObjective ||
-            !_objectiveRuntimeByContract.TryGetValue((store, contractId), out var state))
+            !_objectiveRuntime.ByContract.TryGetValue((store, contractId), out var state))
         {
             return;
         }
@@ -129,7 +129,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void RefreshActiveGhostRoleRoundEndRecords()
     {
-        foreach (var (key, state) in _objectiveRuntimeByContract)
+        foreach (var (key, state) in _objectiveRuntime.ByContract)
         {
             if (!TryGetGhostRoleRoundEndRecord(state, out var record) ||
                 IsFinalGhostRoleRoundEndOutcome(record.Outcome))

@@ -58,13 +58,13 @@ public sealed partial class NcStoreMenu
             }
         }
 
-        private static void ApplyScopedSnapshot(
+        private void ApplyScopedSnapshot(
             Dictionary<string, int> authoritativeValues,
             Dictionary<string, int> cachedValues,
             HashSet<string> snapshotScopeIds
         )
         {
-            var toRemove = new List<string>();
+            _scopedRemoveScratch.Clear();
 
             foreach (var key in cachedValues.Keys)
             {
@@ -72,11 +72,13 @@ public sealed partial class NcStoreMenu
                     continue;
 
                 if (snapshotScopeIds.Contains(key))
-                    toRemove.Add(key);
+                    _scopedRemoveScratch.Add(key);
             }
 
-            for (var i = 0; i < toRemove.Count; i++)
-                cachedValues.Remove(toRemove[i]);
+            for (var i = 0; i < _scopedRemoveScratch.Count; i++)
+                cachedValues.Remove(_scopedRemoveScratch[i]);
+
+            _scopedRemoveScratch.Clear();
 
             foreach (var (key, value) in authoritativeValues)
             {

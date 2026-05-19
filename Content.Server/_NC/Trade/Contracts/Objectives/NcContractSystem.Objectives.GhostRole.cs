@@ -153,8 +153,8 @@ public sealed partial class NcContractSystem : EntitySystem
             ? _timing.CurTime + TimeSpan.FromSeconds(config.AcceptTimeoutSeconds)
             : null;
         RegisterGhostRoleRoundEndRecord(key, contract, state);
-        _activeGhostRoleObjectives.Add(key);
-        _objectiveRuntimeByTarget[spawner] = key;
+        _objectiveRuntime.ActiveGhostRoleObjectives.Add(key);
+        _objectiveRuntime.ByTarget[spawner] = key;
 
         runtime.GhostRolePendingAcceptance = state.GhostRoleAcceptDeadline != null;
         runtime.AcceptTimeoutRemainingSeconds = runtime.GhostRolePendingAcceptance
@@ -205,8 +205,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EnsureComp<MindContainerComponent>(mob);
         _ghostRoles.GhostRoleInternalCreateMindAndTransfer(args.Player, uid, mob, ghostRole);
         TryAttachGhostRoleCharacterInfo(mob);
-        if (_objectiveRuntimeByTarget.TryGetValue(mob, out var activeKey) &&
-            _objectiveRuntimeByContract.TryGetValue(activeKey, out var state) &&
+        if (_objectiveRuntime.ByTarget.TryGetValue(mob, out var activeKey) &&
+            _objectiveRuntime.ByContract.TryGetValue(activeKey, out var state) &&
             TryGetObjectiveContract(activeKey, out _, out var activeContract))
         {
             ApplyContractGhostRoleCharacter(mob, activeContract.Config);
@@ -223,10 +223,10 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool TryActivateGhostRoleContractTarget(EntityUid spawner, EntityUid target)
     {
-        if (!_objectiveRuntimeByTarget.TryGetValue(spawner, out var key))
+        if (!_objectiveRuntime.ByTarget.TryGetValue(spawner, out var key))
             return false;
 
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+        if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state))
             return false;
 
         if (!TryGetObjectiveContract(key, out _, out var contract) ||
@@ -244,7 +244,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        _objectiveRuntimeByTarget.Remove(spawner);
+        _objectiveRuntime.ByTarget.Remove(spawner);
         state.TargetEntity = target;
         state.GhostRoleTaken = true;
         state.GhostRoleAcceptDeadline = null;
@@ -261,7 +261,7 @@ public sealed partial class NcContractSystem : EntitySystem
         runtime.AcceptTimeoutRemainingSeconds = 0;
         SyncGhostRoleSurvivalRemaining(state, runtime);
         runtime.StatusHint = Loc.GetString("nc-store-contract-ghost-role-hint-deliver");
-        _objectiveRuntimeByTarget[target] = key;
+        _objectiveRuntime.ByTarget[target] = key;
 
         RetargetObjectivePinpointers(key, state, target);
         return true;
@@ -378,8 +378,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void TryAttachGhostRoleCharacterInfo(EntityUid mob)
     {
-        if (!_objectiveRuntimeByTarget.TryGetValue(mob, out var key) ||
-            !_objectiveRuntimeByContract.TryGetValue(key, out var state) ||
+        if (!_objectiveRuntime.ByTarget.TryGetValue(mob, out var key) ||
+            !_objectiveRuntime.ByContract.TryGetValue(key, out var state) ||
             !TryGetObjectiveContract(key, out _, out var contract) ||
             !_contractMind.TryGetMind(mob, out var mindId, out var mind))
         {
@@ -577,19 +577,19 @@ public sealed partial class NcContractSystem : EntitySystem
     // Ghost role objective runtime.
     private void UpdateGhostRoleObjectiveTimeouts()
     {
-        if (_activeGhostRoleObjectives.Count == 0)
+        if (_objectiveRuntime.ActiveGhostRoleObjectives.Count == 0)
             return;
 
-        _objectiveRuntimeKeysScratch.Clear();
-        foreach (var key in _activeGhostRoleObjectives)
-            _objectiveRuntimeKeysScratch.Add(key);
+        _objectiveRuntime.KeysScratch.Clear();
+        foreach (var key in _objectiveRuntime.ActiveGhostRoleObjectives)
+            _objectiveRuntime.KeysScratch.Add(key);
 
-        for (var i = 0; i < _objectiveRuntimeKeysScratch.Count; i++)
+        for (var i = 0; i < _objectiveRuntime.KeysScratch.Count; i++)
         {
-            var key = _objectiveRuntimeKeysScratch[i];
-            if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+            var key = _objectiveRuntime.KeysScratch[i];
+            if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state))
             {
-                _activeGhostRoleObjectives.Remove(key);
+                _objectiveRuntime.ActiveGhostRoleObjectives.Remove(key);
                 continue;
             }
 
@@ -615,7 +615,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 FailExpiredGhostRoleObjective(key);
         }
 
-        _objectiveRuntimeKeysScratch.Clear();
+        _objectiveRuntime.KeysScratch.Clear();
     }
 
     private bool TryRetargetGhostRolePinpointersForOwners(
@@ -643,7 +643,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (TerminatingOrDeleted(pinpointer))
                 continue;
 
-            if (!_objectiveRuntimePinpointerOwners.TryGetValue(pinpointer, out var owner) ||
+            if (!_pinpointerService.TryGetOwner(_objectiveRuntime, pinpointer, out var owner) ||
                 !TryResolveGhostRolePinpointerTargetForUser(key.Store, owner, contract, state, out var target) ||
                 target == EntityUid.Invalid ||
                 TerminatingOrDeleted(target))
@@ -689,7 +689,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void FailExpiredGhostRoleObjective((EntityUid Store, string ContractId) key)
     {
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state) ||
+        if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state) ||
             state.GhostRoleTaken ||
             state.GhostRoleAcceptDeadline is not { } deadline ||
             _timing.CurTime < deadline)
@@ -722,7 +722,7 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract
     )
     {
-        if (_objectiveRuntimeByContract.TryGetValue(key, out var state))
+        if (_objectiveRuntime.ByContract.TryGetValue(key, out var state))
             MarkGhostRoleRoundEndOutcome(
                 state,
                 GhostRoleRoundEndOutcome.TargetLost,
@@ -776,7 +776,7 @@ public sealed partial class NcContractSystem : EntitySystem
         var key = (store, contractId);
         var runtime = contract.Runtime;
 
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+        if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state))
         {
             runtime.GhostRolePendingAcceptance = false;
             runtime.AcceptTimeoutRemainingSeconds = 0;
@@ -933,7 +933,7 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract)
     {
         if (!contract.IsGhostRoleObjective ||
-            !_objectiveRuntimeByContract.TryGetValue((store, contractId), out var state) ||
+            !_objectiveRuntime.ByContract.TryGetValue((store, contractId), out var state) ||
             !state.GhostRoleTaken ||
             state.TargetEntity is not { } target ||
             target == EntityUid.Invalid)
@@ -990,7 +990,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void OnObjectiveTrackedDamageChanged(EntityUid uid, DamageableComponent component, DamageChangedEvent args)
     {
-        if (!_objectiveRuntimeByTarget.TryGetValue(uid, out var key))
+        if (!_objectiveRuntime.ByTarget.TryGetValue(uid, out var key))
             return;
 
         if (!TryGetObjectiveContract(key, out _, out var contract) ||

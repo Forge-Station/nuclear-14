@@ -7,6 +7,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     private sealed partial class DynamicScratch
     {
         private readonly DynamicStateBuffer[] _buffers = { new(), new() };
+        private readonly List<ContractClientData> _contractsCache = new();
         private readonly Dictionary<string, int> _cratePreviewTotals = new();
         private readonly Dictionary<string, int> _cratePreviewUnitsById = new();
         private readonly HashSet<string> _visibleListingIds = new();
@@ -15,15 +16,18 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         public readonly List<EntityUid> DeepUserItems = new();
         public readonly List<EntityUid> DeepCrateItems = new();
         public readonly NcInventorySnapshot UserSnapshot = new();
+        public readonly NcStoreLogicSystem.BarterAvailabilityContext BarterAvailability = new();
 
         public TimeSpan NextDynamicAllowed = TimeSpan.Zero;
         public TimeSpan NextManualRefreshAllowed = TimeSpan.Zero;
 
         private int _activeIndex;
         private int _catalogRevision;
+        private int _contractsCacheSignature;
         private int _cratePreviewCatalogRevision;
         private int _cratePreviewInventoryRevision;
         private bool _hasBuyTab;
+        private bool _hasContractsCache;
         private bool _hasCratePreview;
         private bool _hasContracts;
         private bool _hasBarterTab;
@@ -39,13 +43,13 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         public bool HasVisibleIds => _hasVisibleIds;
 
-        public bool UpdateVisibleIds(string[]? ids)
+        public bool UpdateVisibleIds(IReadOnlyList<string>? ids)
         {
             _visibleIncomingScratch.Clear();
 
             if (ids != null)
             {
-                for (var i = 0; i < ids.Length; i++)
+                for (var i = 0; i < ids.Count; i++)
                 {
                     var id = ids[i];
                     if (!string.IsNullOrWhiteSpace(id))
@@ -171,6 +175,23 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
             foreach (var (key, value) in _cratePreviewTotals)
                 buf.CrateTotals[key] = value;
+        }
+
+        public bool TryPopulateCachedContracts(int signature, DynamicStateBuffer buf)
+        {
+            if (!_hasContractsCache || _contractsCacheSignature != signature)
+                return false;
+
+            buf.Contracts.AddRange(_contractsCache);
+            return true;
+        }
+
+        public void CacheContracts(int signature, List<ContractClientData> contracts)
+        {
+            _contractsCache.Clear();
+            _contractsCache.AddRange(contracts);
+            _contractsCacheSignature = signature;
+            _hasContractsCache = true;
         }
 
         public bool EqualsLast(

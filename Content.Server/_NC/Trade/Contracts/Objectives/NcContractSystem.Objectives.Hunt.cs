@@ -16,13 +16,13 @@ public sealed partial class NcContractSystem : EntitySystem
 
         TryHandleSpawnedHuntTargetKilled(args.Target);
 
-        if (!_objectiveRuntimeByTarget.TryGetValue(args.Target, out var key))
+        if (!_objectiveRuntime.ByTarget.TryGetValue(args.Target, out var key))
             return;
 
         if (!TryGetObjectiveContract(key, out _, out var contract) || !contract.IsHuntObjective)
             return;
 
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+        if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state))
             return;
 
         state.HuntTargetWasKilled = true;
@@ -38,7 +38,7 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract
     )
     {
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+        if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state))
             return;
 
         var targetWasKilled = state.HuntTargetWasKilled;
@@ -147,7 +147,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return;
 
         var key = (store, contractId);
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+        if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state))
             return;
 
         if (state.TargetEntity is not { } target || target == EntityUid.Invalid)

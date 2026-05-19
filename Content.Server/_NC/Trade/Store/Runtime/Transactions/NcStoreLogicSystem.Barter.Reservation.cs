@@ -18,23 +18,48 @@ public sealed partial class NcStoreLogicSystem
                 return false;
         }
 
-        for (var i = 0; i < plan.Reservations.Count; i++)
+        var stackRestore = new List<(EntityUid Ent, int PreviousCount)>(plan.Reservations.Count);
+        var pendingDeletes = new List<EntityUid>(plan.Reservations.Count);
+
+        try
         {
-            var reservation = plan.Reservations[i];
-            if (reservation.IsStack)
+            for (var i = 0; i < plan.Reservations.Count; i++)
             {
-                if (!_ents.TryGetComponent(reservation.Entity, out StackComponent? stack))
-                    return false;
+                var reservation = plan.Reservations[i];
+                if (reservation.IsStack)
+                {
+                    if (!_ents.TryGetComponent(reservation.Entity, out StackComponent? stack))
+                        return false;
 
-                var newCount = stack.Count - reservation.Count;
-                _stacks.SetCount(reservation.Entity, Math.Max(0, newCount), stack);
-                if (stack.Count <= 0)
-                    _ents.DeleteEntity(reservation.Entity);
+                    stackRestore.Add((reservation.Entity, stack.Count));
+                    var newCount = stack.Count - reservation.Count;
+                    _stacks.SetCount(reservation.Entity, Math.Max(0, newCount), stack);
+                    if (stack.Count <= 0)
+                        pendingDeletes.Add(reservation.Entity);
 
-                continue;
+                    continue;
+                }
+
+                pendingDeletes.Add(reservation.Entity);
             }
 
-            _ents.DeleteEntity(reservation.Entity);
+            for (var i = 0; i < pendingDeletes.Count; i++)
+            {
+                var ent = pendingDeletes[i];
+                if (_ents.EntityExists(ent))
+                    _ents.DeleteEntity(ent);
+            }
+        }
+        catch
+        {
+            for (var i = stackRestore.Count - 1; i >= 0; i--)
+            {
+                var (ent, previousCount) = stackRestore[i];
+                if (_ents.TryGetComponent(ent, out StackComponent? stack))
+                    _stacks.SetCount(ent, previousCount, stack);
+            }
+
+            throw;
         }
 
         _inventory.InvalidateInventoryCache(root);

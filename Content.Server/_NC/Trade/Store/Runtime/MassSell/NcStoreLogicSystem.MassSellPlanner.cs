@@ -5,6 +5,13 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcStoreLogicSystem
 {
+    private sealed class MassSellCatalogCache
+    {
+        public readonly Dictionary<string, (string CurrencyId, int UnitPrice)> ListingQuotes = new(StringComparer.Ordinal);
+        public readonly List<NcStoreListingDef> SellListings = new();
+        public int CatalogRevision = int.MinValue;
+    }
+
     private readonly record struct MassSellInventoryState(
         Dictionary<string, int> StackTypeCounts,
         Dictionary<string, int> ProtoCounts,
@@ -13,6 +20,9 @@ public sealed partial class NcStoreLogicSystem
         public bool IsEmpty => StackTypeCounts.Count == 0 && ProtoCounts.Count == 0;
     }
 
+    private readonly Dictionary<NcStoreComponent, MassSellCatalogCache> _massSellCatalogCache = new();
+    private readonly List<string> _massSellMatchingProtoIdsScratch = new();
+    private readonly List<string> _massSellProtoIdsScratch = new();
 
     public MassSellPlan ComputeMassSellPlan(NcStoreComponent store, EntityUid container)
     {
@@ -33,6 +43,11 @@ public sealed partial class NcStoreLogicSystem
     public Dictionary<string, int> GetMassSellValue(NcStoreComponent store, EntityUid container) =>
         ComputeMassSellPlan(store, container).IncomeByCurrency;
 
+    public void ClearStoreRuntimeCaches(NcStoreComponent store)
+    {
+        _massSellCatalogCache.Remove(store);
+    }
+
     private MassSellPlan ComputeMassSellPlanInternal(NcStoreComponent store, IEnumerable<EntityUid> items)
     {
         var plan = CreateEmptyMassSellPlan();
@@ -43,13 +58,11 @@ public sealed partial class NcStoreLogicSystem
         if (inventory.IsEmpty)
             return plan;
 
-        var listingQuotes = BuildMassSellListingQuotes(store);
-        var sellListings = new List<NcStoreListingDef>();
-        PrepareMassSellListings(store, listingQuotes, sellListings);
-        if (sellListings.Count == 0)
+        var catalog = GetMassSellCatalogCache(store);
+        if (catalog.SellListings.Count == 0)
             return plan;
 
-        ApplyMassSellListings(inventory, listingQuotes, sellListings, plan);
+        ApplyMassSellListings(inventory, catalog.ListingQuotes, catalog.SellListings, plan);
         return plan;
     }
 
@@ -137,9 +150,25 @@ public sealed partial class NcStoreLogicSystem
             counts[key] += amount;
     }
 
-    private Dictionary<string, (string CurrencyId, int UnitPrice)> BuildMassSellListingQuotes(NcStoreComponent store)
+    private MassSellCatalogCache GetMassSellCatalogCache(NcStoreComponent store)
     {
-        var listingQuotes = new Dictionary<string, (string CurrencyId, int UnitPrice)>(StringComparer.Ordinal);
+        if (!_massSellCatalogCache.TryGetValue(store, out var cache))
+        {
+            cache = new MassSellCatalogCache();
+            _massSellCatalogCache[store] = cache;
+        }
+
+        if (cache.CatalogRevision == store.CatalogRevision)
+            return cache;
+
+        RebuildMassSellCatalogCache(store, cache);
+        return cache;
+    }
+
+    private void RebuildMassSellCatalogCache(NcStoreComponent store, MassSellCatalogCache cache)
+    {
+        cache.ListingQuotes.Clear();
+        cache.SellListings.Clear();
 
         foreach (var listing in store.Listings)
         {
@@ -150,20 +179,21 @@ public sealed partial class NcStoreLogicSystem
                 unitPrice > 0 &&
                 !string.IsNullOrWhiteSpace(currencyId))
             {
-                listingQuotes[listing.Id] = (currencyId, unitPrice);
+                cache.ListingQuotes[listing.Id] = (currencyId, unitPrice);
             }
             else
             {
-                listingQuotes[listing.Id] = (string.Empty, 0);
+                cache.ListingQuotes[listing.Id] = (string.Empty, 0);
             }
         }
 
-        return listingQuotes;
+        PrepareMassSellListings(store, cache.ListingQuotes, cache.SellListings);
+        cache.CatalogRevision = store.CatalogRevision;
     }
 
     private void PrepareMassSellListings(
         NcStoreComponent store,
-        Dictionary<string, (string CurrencyId, int UnitPrice)> listingQuotes,
+        IReadOnlyDictionary<string, (string CurrencyId, int UnitPrice)> listingQuotes,
         List<NcStoreListingDef> sellListings)
     {
         sellListings.Clear();
@@ -185,7 +215,7 @@ public sealed partial class NcStoreLogicSystem
     private int CompareMassSellListings(
         NcStoreListingDef left,
         NcStoreListingDef right,
-        Dictionary<string, (string CurrencyId, int UnitPrice)> listingQuotes)
+        IReadOnlyDictionary<string, (string CurrencyId, int UnitPrice)> listingQuotes)
     {
         var matchModeCmp = CompareMassSellMatchModePriority(left.MatchMode, right.MatchMode);
         if (matchModeCmp != 0)
@@ -222,8 +252,8 @@ public sealed partial class NcStoreLogicSystem
 
     private void ApplyMassSellListings(
         MassSellInventoryState inventory,
-        Dictionary<string, (string CurrencyId, int UnitPrice)> listingQuotes,
-        List<NcStoreListingDef> sellListings,
+        IReadOnlyDictionary<string, (string CurrencyId, int UnitPrice)> listingQuotes,
+        IReadOnlyList<NcStoreListingDef> sellListings,
         MassSellPlan plan)
     {
         foreach (var listing in sellListings)
@@ -275,7 +305,7 @@ public sealed partial class NcStoreLogicSystem
         return want > 0;
     }
 
-    private static int ReserveMassSellStackUnits(
+    private int ReserveMassSellStackUnits(
         string stackTypeId,
         int want,
         MassSellInventoryState inventory)
@@ -288,7 +318,11 @@ public sealed partial class NcStoreLogicSystem
             return taken;
 
         var left = taken;
-        var protoIds = new List<string>(perProto.Keys);
+        var protoIds = _massSellProtoIdsScratch;
+        protoIds.Clear();
+        foreach (var protoId in perProto.Keys)
+            protoIds.Add(protoId);
+
         protoIds.Sort(StringComparer.Ordinal);
 
         foreach (var protoId in protoIds)
@@ -312,6 +346,7 @@ public sealed partial class NcStoreLogicSystem
         if (actualTaken < taken)
             inventory.StackTypeCounts[stackTypeId] += taken - actualTaken;
 
+        protoIds.Clear();
         return actualTaken;
     }
 
@@ -331,7 +366,7 @@ public sealed partial class NcStoreLogicSystem
         if (want <= 0)
             return 0;
 
-        var matchingProtoIds = new List<string>();
+        var matchingProtoIds = _massSellMatchingProtoIdsScratch;
         _inventory.FillMatchingPrototypeIdsForMatcher(matcherId, protoCounts, matchingProtoIds);
 
         if (matchingProtoIds.Count == 0)
@@ -347,6 +382,7 @@ public sealed partial class NcStoreLogicSystem
             takenTotal += ReserveMassSellProtoUnits(protoId, left, protoCounts);
         }
 
+        matchingProtoIds.Clear();
         return takenTotal;
     }
 

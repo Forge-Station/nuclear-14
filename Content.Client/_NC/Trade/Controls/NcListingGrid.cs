@@ -16,6 +16,7 @@ namespace Content.Client._NC.Trade.Controls;
 public sealed partial class NcListingGrid : BoxContainer
 {
     private const int PageSize = 96;
+    private const int MaxRewardPoolSearchDepth = 6;
 
     private readonly record struct ListingSig(
         string Id,
@@ -42,7 +43,9 @@ public sealed partial class NcListingGrid : BoxContainer
 
     private readonly List<string> _scratchKeys = new();
     private readonly HashSet<string> _scratchSeenProtos = new();
+    private readonly HashSet<string> _rewardPoolSearchVisitedScratch = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string> _searchIndex = new();
+    private readonly Dictionary<string, (ListingSig Sig, string Text)> _listingSearchTextByUiId = new();
 
     private IReadOnlyList<StoreListingData> _allItems = Array.Empty<StoreListingData>();
     private Func<string, int> _balanceResolver = _ => int.MaxValue;
@@ -77,6 +80,7 @@ public sealed partial class NcListingGrid : BoxContainer
     public void ClearCaches()
     {
         _searchIndex.Clear();
+        _listingSearchTextByUiId.Clear();
         _cache.Clear();
         _qtyCache.Clear();
     }
@@ -111,6 +115,14 @@ public sealed partial class NcListingGrid : BoxContainer
 
         for (var i = 0; i < _scratchKeys.Count; i++)
             _cache.Remove(_scratchKeys[i]);
+
+        _scratchKeys.Clear();
+        foreach (var key in _listingSearchTextByUiId.Keys)
+            if (!ids.Contains(key))
+                _scratchKeys.Add(key);
+
+        for (var i = 0; i < _scratchKeys.Count; i++)
+            _listingSearchTextByUiId.Remove(_scratchKeys[i]);
     }
 
     public void PrepareSearchIndex(IEnumerable<string> productEntities)
@@ -235,8 +247,7 @@ public sealed partial class NcListingGrid : BoxContainer
         var total = _scratchFiltered.Count;
         var take = Math.Min(total, PageSize * _page);
 
-        ClearItemsHost();
-        AddListingRange(_scratchFiltered, 0, take);
+        RefreshListingRange(_scratchFiltered, take);
         UpdateMoreButton(total, take);
 
         NotifyVisibleIdsChanged();
@@ -264,40 +275,90 @@ public sealed partial class NcListingGrid : BoxContainer
         for (var i = startInclusive; i < endExclusive; i++)
         {
             var it = source[i];
-
-            var balanceHint = _mode == StoreMode.Buy
-                ? _balanceResolver(it.CurrencyId)
-                : int.MaxValue;
-
-            var sig = MakeSig(it);
-
-            if (!_cache.TryGetValue(it.Id, out var tuple) || tuple.Sig != sig)
-            {
-                var initQty = _qtyCache.GetValueOrDefault(it.Id, 1);
-                var actionsEnabled = true;
-
-                var created = new NcStoreListingControl(it, _sprites, _entMan, balanceHint, initQty, actionsEnabled);
-
-                _cache[it.Id] = (created, sig);
-                tuple = (created, sig);
-            }
-
-            var ctrl = tuple.Ctrl;
-            ctrl.ApplyUiTheme(_uiColors);
-
-            ctrl.BindActions(
-                _mode == StoreMode.Barter ? qty => _emit(it, qty) : null,
-                _mode == StoreMode.Buy ? qty => _emit(it, qty) : null,
-                _mode == StoreMode.Sell ? qty => _emit(it, qty) : null,
-                newQty => _qtyCache[it.Id] = newQty);
-
-            ctrl.UpdateDynamicData(balanceHint, it.Remaining, it.Owned);
+            var ctrl = GetOrCreateListingControl(it);
+            ConfigureListingControl(ctrl, it);
 
             if (ctrl.Parent != null)
                 ctrl.Orphan();
 
             ItemsHost.AddChild(ctrl);
         }
+    }
+
+    private void RefreshListingRange(List<StoreListingData> source, int take)
+    {
+        if (TryRefreshCurrentListingRange(source, take))
+            return;
+
+        ClearItemsHost();
+        AddListingRange(source, 0, take);
+    }
+
+    private bool TryRefreshCurrentListingRange(List<StoreListingData> source, int take)
+    {
+        if (ItemsHost.ChildCount != take)
+            return false;
+
+        for (var i = 0; i < take; i++)
+        {
+            if (ItemsHost.GetChild(i) is not NcStoreListingControl ctrl)
+                return false;
+
+            var it = source[i];
+            if (!string.Equals(ctrl.UiId, it.Id, StringComparison.Ordinal))
+                return false;
+
+            var sig = MakeSig(it);
+            if (!_cache.TryGetValue(it.Id, out var tuple) ||
+                tuple.Ctrl != ctrl ||
+                tuple.Sig != sig)
+            {
+                return false;
+            }
+        }
+
+        for (var i = 0; i < take; i++)
+        {
+            var it = source[i];
+            var ctrl = ((NcStoreListingControl) ItemsHost.GetChild(i));
+            ConfigureListingControl(ctrl, it);
+        }
+
+        return true;
+    }
+
+    private NcStoreListingControl GetOrCreateListingControl(StoreListingData it)
+    {
+        var sig = MakeSig(it);
+        if (_cache.TryGetValue(it.Id, out var tuple) && tuple.Sig == sig)
+            return tuple.Ctrl;
+
+        var balanceHint = _mode == StoreMode.Buy
+            ? _balanceResolver(it.CurrencyId)
+            : int.MaxValue;
+        var initQty = _qtyCache.GetValueOrDefault(it.Id, 1);
+        var created = new NcStoreListingControl(it, _sprites, _entMan, balanceHint, initQty);
+
+        _cache[it.Id] = (created, sig);
+        return created;
+    }
+
+    private void ConfigureListingControl(NcStoreListingControl ctrl, StoreListingData it)
+    {
+        var balanceHint = _mode == StoreMode.Buy
+            ? _balanceResolver(it.CurrencyId)
+            : int.MaxValue;
+
+        ctrl.ApplyUiTheme(_uiColors);
+
+        ctrl.BindActions(
+            _mode == StoreMode.Barter ? qty => _emit(it, qty) : null,
+            _mode == StoreMode.Buy ? qty => _emit(it, qty) : null,
+            _mode == StoreMode.Sell ? qty => _emit(it, qty) : null,
+            newQty => _qtyCache[it.Id] = newQty);
+
+        ctrl.UpdateIdentity(it);
+        ctrl.UpdateDynamicData(balanceHint, it.Remaining, it.Owned);
     }
 
     private void UpdateMoreButton(int totalCount, int shown)
@@ -438,6 +499,10 @@ public sealed partial class NcListingGrid : BoxContainer
 
     private string BuildListingSearchText(StoreListingData listing)
     {
+        var sig = MakeSig(listing);
+        if (_listingSearchTextByUiId.TryGetValue(listing.Id, out var cached) && cached.Sig == sig)
+            return cached.Text;
+
         var parts = new List<string>(8 + listing.BarterCost.Count + listing.BarterReceive.Count + listing.BarterReceivePools.Count);
 
         AddSearchPart(parts, listing.Id);
@@ -463,7 +528,9 @@ public sealed partial class NcListingGrid : BoxContainer
                 AddBarterReceivePoolSearchPart(parts, listing.BarterReceivePools[i]);
         }
 
-        return string.Join('\n', parts).ToLowerInvariant();
+        var text = string.Join('\n', parts).ToLowerInvariant();
+        _listingSearchTextByUiId[listing.Id] = (sig, text);
+        return text;
     }
 
     private void AddBarterCostSearchPart(List<string> parts, NcBarterCostEntry entry)
@@ -487,21 +554,37 @@ public sealed partial class NcListingGrid : BoxContainer
         if (string.IsNullOrWhiteSpace(entry.Pool))
             return;
 
-        if (_proto.TryIndex<NcSupplyRewardPoolPrototype>(entry.Pool, out var supplyPool))
+        _rewardPoolSearchVisitedScratch.Clear();
+        AddRewardPoolSearchParts(parts, entry.Pool, 0);
+        _rewardPoolSearchVisitedScratch.Clear();
+    }
+
+    private void AddRewardPoolSearchParts(List<string> parts, string poolId, int depth)
+    {
+        if (string.IsNullOrWhiteSpace(poolId) ||
+            depth > MaxRewardPoolSearchDepth ||
+            !_rewardPoolSearchVisitedScratch.Add(poolId))
+            return;
+
+        if (!_proto.TryIndex<NcSupplyRewardPoolPrototype>(poolId, out var supplyPool))
         {
-            for (var i = 0; i < supplyPool.Entries.Count; i++)
-            {
-                var reward = supplyPool.Entries[i];
-
-                if (reward.Type == StoreRewardType.Item)
-                    AddPrototypeSearchPart(parts, reward.Prototype);
-                else if (reward.Type == StoreRewardType.Currency)
-                    AddCurrencySearchPart(parts, reward.Currency);
-            }
-
+            _rewardPoolSearchVisitedScratch.Remove(poolId);
             return;
         }
 
+        for (var i = 0; i < supplyPool.Entries.Count; i++)
+        {
+            var reward = supplyPool.Entries[i];
+
+            if (reward.Type == StoreRewardType.Item)
+                AddPrototypeSearchPart(parts, reward.Prototype);
+            else if (reward.Type == StoreRewardType.Currency)
+                AddCurrencySearchPart(parts, reward.Currency);
+            else if (reward.Type == StoreRewardType.Pool)
+                AddRewardPoolSearchParts(parts, reward.Pool, depth + 1);
+        }
+
+        _rewardPoolSearchVisitedScratch.Remove(poolId);
     }
 
     private void AddPrototypeSearchPart(List<string> parts, string protoId)

@@ -17,20 +17,6 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private readonly List<EntityUid> _objectivePinpointersScratch = new();
-
-    private readonly Dictionary<(EntityUid Store, string ContractId), ObjectiveRuntimeState>
-        _objectiveRuntimeByContract = new();
-
-    private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByGuard = new();
-    private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByPinpointer = new();
-    private readonly Dictionary<EntityUid, EntityUid> _objectiveRuntimePinpointerOwners = new();
-    private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByProof = new();
-
-    private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByTarget = new();
-    private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByRetrievalCargo = new();
-    private readonly List<(EntityUid Store, string ContractId)> _objectiveRuntimeKeysScratch = new();
-
     [Dependency] private readonly PinpointerSystem _pinpointer = default!;
     [Dependency] private readonly TagSystem _tags = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
@@ -100,9 +86,9 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void OnObjectiveTrackedEntityParentChanged(ref EntParentChangedMessage args)
     {
-        if (_objectiveRuntimeByProof.TryGetValue(args.Entity, out var key))
+        if (_objectiveRuntime.ByProof.TryGetValue(args.Entity, out var key))
         {
-            if (_objectiveRuntimeByContract.TryGetValue(key, out var state) &&
+            if (_objectiveRuntime.ByContract.TryGetValue(key, out var state) &&
                 TryGetObjectiveContract(key, out _, out var contract) &&
                 contract.Taken &&
                 !contract.Runtime.Failed &&
@@ -148,35 +134,31 @@ public sealed partial class NcContractSystem : EntitySystem
     private TimeSpan _nextTrackedDeliveryDropoffCheck = TimeSpan.Zero;
     private TimeSpan _nextRetrievalRouteDeliveryCheck = TimeSpan.Zero;
     private TimeSpan _nextHuntPinpointerCheck = TimeSpan.Zero;
-    private readonly HashSet<(EntityUid Store, string ContractId)> _activeTrackedDeliveryDropoffObjectives = new();
-    private readonly HashSet<(EntityUid Store, string ContractId)> _activeRetrievalRouteDeliveries = new();
-    private readonly HashSet<(EntityUid Store, string ContractId)> _activeHuntObjectives = new();
-    private readonly HashSet<(EntityUid Store, string ContractId)> _activeGhostRoleObjectives = new();
     private void ShutdownObjectiveRuntime() => ClearAllObjectiveRuntime(false, deleteGuards: false);
     public override void Update(float frameTime)
     {
-        if (_objectiveRuntimeByContract.Count == 0)
+        if (_objectiveRuntime.ByContract.Count == 0)
             return;
 
-        if (_activeTrackedDeliveryDropoffObjectives.Count > 0 && _timing.CurTime >= _nextTrackedDeliveryDropoffCheck)
+        if (_objectiveRuntime.ActiveTrackedDeliveryDropoffObjectives.Count > 0 && _timing.CurTime >= _nextTrackedDeliveryDropoffCheck)
         {
             _nextTrackedDeliveryDropoffCheck = _timing.CurTime + NcContractTuning.TrackedDeliveryDropoffCheckInterval;
             UpdateTrackedDeliveryDropoffObjectives();
         }
 
-        if (_activeRetrievalRouteDeliveries.Count > 0 && _timing.CurTime >= _nextRetrievalRouteDeliveryCheck)
+        if (_objectiveRuntime.ActiveRetrievalRouteDeliveries.Count > 0 && _timing.CurTime >= _nextRetrievalRouteDeliveryCheck)
         {
             _nextRetrievalRouteDeliveryCheck = _timing.CurTime + NcContractTuning.TrackedDeliveryDropoffCheckInterval;
             UpdateRetrievalRouteDeliveries();
         }
 
-        if (_activeHuntObjectives.Count > 0 && _timing.CurTime >= _nextHuntPinpointerCheck)
+        if (_objectiveRuntime.ActiveHuntObjectives.Count > 0 && _timing.CurTime >= _nextHuntPinpointerCheck)
         {
             _nextHuntPinpointerCheck = _timing.CurTime + NcContractTuning.TrackedDeliveryDropoffCheckInterval;
             UpdateSpawnedHuntPinpointerTargets();
         }
 
-        if (_activeGhostRoleObjectives.Count == 0 || _timing.CurTime < _nextGhostRoleTimeoutCheck)
+        if (_objectiveRuntime.ActiveGhostRoleObjectives.Count == 0 || _timing.CurTime < _nextGhostRoleTimeoutCheck)
             return;
 
         _nextGhostRoleTimeoutCheck = _timing.CurTime + NcContractTuning.GhostRoleTimeoutCheckInterval;
@@ -185,48 +167,40 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void ClearAllObjectiveRuntime(bool deleteTrackedEntities, bool deleteGuards = true)
     {
-        if (_objectiveRuntimeByContract.Count == 0)
+        if (_objectiveRuntime.ByContract.Count == 0)
             return;
 
-        _objectiveRuntimeKeysScratch.Clear();
-        foreach (var key in _objectiveRuntimeByContract.Keys)
-            _objectiveRuntimeKeysScratch.Add(key);
+        _objectiveRuntime.KeysScratch.Clear();
+        foreach (var key in _objectiveRuntime.ByContract.Keys)
+            _objectiveRuntime.KeysScratch.Add(key);
 
-        for (var i = 0; i < _objectiveRuntimeKeysScratch.Count; i++)
+        for (var i = 0; i < _objectiveRuntime.KeysScratch.Count; i++)
         {
-            var key = _objectiveRuntimeKeysScratch[i];
+            var key = _objectiveRuntime.KeysScratch[i];
             CleanupObjectiveRuntime(key.Store, key.ContractId, deleteTrackedEntities, deleteGuards);
         }
 
-        _objectiveRuntimeKeysScratch.Clear();
-        _objectiveRuntimeByTarget.Clear();
-        _objectiveRuntimeByPinpointer.Clear();
-        _objectiveRuntimePinpointerOwners.Clear();
-        _objectiveRuntimeByGuard.Clear();
-        _objectiveRuntimeByProof.Clear();   // Fix (B39): keep proof index in sync with everything else.
-        _activeTrackedDeliveryDropoffObjectives.Clear();
-        _activeRetrievalRouteDeliveries.Clear();
-        _activeHuntObjectives.Clear();
-        _activeGhostRoleObjectives.Clear();
+        _objectiveRuntime.KeysScratch.Clear();
+        _objectiveRuntime.ClearSecondaryIndexesAndActiveSets();
     }
 
     private void ClearStoreObjectiveRuntime(EntityUid store, bool deleteTrackedEntities, bool deleteGuards = true)
     {
-        if (store == EntityUid.Invalid || _objectiveRuntimeByContract.Count == 0)
+        if (store == EntityUid.Invalid || _objectiveRuntime.ByContract.Count == 0)
             return;
 
-        _objectiveRuntimeKeysScratch.Clear();
-        foreach (var key in _objectiveRuntimeByContract.Keys)
+        _objectiveRuntime.KeysScratch.Clear();
+        foreach (var key in _objectiveRuntime.ByContract.Keys)
             if (key.Store == store)
-                _objectiveRuntimeKeysScratch.Add(key);
+                _objectiveRuntime.KeysScratch.Add(key);
 
-        for (var i = 0; i < _objectiveRuntimeKeysScratch.Count; i++)
+        for (var i = 0; i < _objectiveRuntime.KeysScratch.Count; i++)
         {
-            var key = _objectiveRuntimeKeysScratch[i];
+            var key = _objectiveRuntime.KeysScratch[i];
             CleanupObjectiveRuntime(key.Store, key.ContractId, deleteTrackedEntities, deleteGuards);
         }
 
-        _objectiveRuntimeKeysScratch.Clear();
+        _objectiveRuntime.KeysScratch.Clear();
     }
 
     // Objective initialization.
@@ -257,11 +231,11 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private ObjectiveRuntimeState GetOrCreateObjectiveRuntimeState((EntityUid Store, string ContractId) key)
     {
-        if (_objectiveRuntimeByContract.TryGetValue(key, out var state))
+        if (_objectiveRuntime.ByContract.TryGetValue(key, out var state))
             return state;
 
         state = new();
-        _objectiveRuntimeByContract[key] = state;
+        _objectiveRuntime.ByContract[key] = state;
         return state;
     }
 

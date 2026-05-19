@@ -26,6 +26,7 @@ public interface ICurrencyHandler
 
     /// <summary>
     /// Gives a positive amount of currency to the user.
+    /// Implementations must be atomic: a false return must not leave a partial payout behind.
     /// </summary>
     bool TryGiveCurrency(EntityUid user, string currencyId, int amount);
 

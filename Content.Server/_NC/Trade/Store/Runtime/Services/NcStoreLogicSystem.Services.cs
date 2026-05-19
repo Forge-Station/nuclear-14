@@ -10,8 +10,13 @@ namespace Content.Server._NC.Trade;
 public sealed partial class NcStoreLogicSystem
 {
     private StoreSpawnService _spawnService = default!;
+    private StoreTransactionCoordinator _transactionCoordinator = default!;
 
-    private void InitializeServices() => _spawnService = new(this);
+    private void InitializeServices()
+    {
+        _spawnService = new(this);
+        _transactionCoordinator = new(this);
+    }
 
     public bool TryPickCurrencyForBuy(
         NcStoreComponent store,

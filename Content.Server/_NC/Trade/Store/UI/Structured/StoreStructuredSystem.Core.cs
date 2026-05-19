@@ -19,14 +19,14 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class StoreStructuredSystem : EntitySystem
 {
-    private const float AutoCloseDistance = 3f;
-    private const float ProximityRadius = 5f;
+    private const float AutoCloseDistance = StoreTradeLimits.StoreUiCloseDistance;
     private const float MinAccelInterval = 0.25f;
     private const float MinDynamicInterval = 0.25f;
     private const float MinManualRefreshInterval = 0.5f;
-    private const int MaxVisibleListingIds = 256;
-    private const int MaxVisibleListingIdLength = 96;
+    private const int MaxVisibleListingIds = StoreTradeLimits.MaxVisibleListingIds;
     private const int WatchedRootSearchLimit = 32;
+    private static readonly TimeSpan InvalidContractWarningInterval = TimeSpan.FromSeconds(5);
+    private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore-structured");
     private static readonly TimeSpan RealtimeOpenStoreUpdateInterval = TimeSpan.FromSeconds(0.25);
     private static readonly TimeSpan OpenStoreValidityCheckInterval = TimeSpan.FromSeconds(0.5);
     private readonly HashSet<EntityUid> _affectedStoresScratch = new();
@@ -34,7 +34,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     private readonly List<string> _visibleListingIdsScratch = new(MaxVisibleListingIds);
     private readonly HashSet<string> _visibleListingIdsSetScratch = new(StringComparer.Ordinal);
     [Dependency] private readonly AudioSystem _audio = default!;
-    private readonly Dictionary<EntityUid, (int Revision, List<StoreListingStaticData> List)> _catalogCache = new();
     [Dependency] private readonly NcContractSystem _contracts = default!;
     private readonly HashSet<EntityUid> _dirtyStores = new();
     private readonly List<EntityUid> _dirtyStoresScratch = new();
@@ -46,6 +45,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     private readonly HashSet<EntityUid> _openStoreUids = new();
     private readonly HashSet<EntityUid> _pendingRefreshEntities = new();
     [Dependency] private readonly PopupSystem _popups = default!;
+    private readonly Dictionary<string, TimeSpan> _nextInvalidContractWarningByActor = new(StringComparer.Ordinal);
     private readonly Dictionary<EntityUid, HashSet<EntityUid>> _storesByWatchedRoot = new();
     [Dependency] private readonly NcStoreSystem _storeSystem = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
@@ -121,7 +121,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         for (var i = 0; i < max; i++)
         {
             var id = ids[i];
-            if (string.IsNullOrWhiteSpace(id) || id.Length > MaxVisibleListingIdLength)
+            if (!StoreTradeLimits.IsValidMessageId(id))
                 continue;
 
             if (!comp.ListingIndex.ContainsKey(NcStoreComponent.MakeListingKey(StoreMode.Buy, id)))
@@ -134,7 +134,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
 
         var scratch = GetDynamicScratch(uid);
-        if (!scratch.UpdateVisibleIds(_visibleListingIdsScratch.Count > 0 ? _visibleListingIdsScratch.ToArray() : null))
+        if (!scratch.UpdateVisibleIds(_visibleListingIdsScratch.Count > 0 ? _visibleListingIdsScratch : null))
             return;
 
         RequestDynamicRefresh(uid, comp, user);
@@ -159,9 +159,10 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
     private void OnStoreShutdown(EntityUid uid, NcStoreComponent comp, ComponentShutdown args)
     {
-        _catalogCache.Remove(uid);
+        _catalogCache.Clear(uid);
         _dynamicScratchByStore.Remove(uid);
         _contracts.ClearStoreRuntimeCaches(uid);
+        _logic.ClearStoreRuntimeCaches(comp);
 
         if (_openStoreUids.Contains(uid) || _watchByStore.ContainsKey(uid) || _dirtyStores.Contains(uid))
         {
@@ -178,7 +179,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
     public void RefreshCatalog(EntityUid uid, NcStoreComponent comp)
     {
-        _catalogCache.Remove(uid);
+        _catalogCache.Clear(uid);
         _dynamicScratchByStore.Remove(uid);
 
         comp.BumpCatalogRevision();
@@ -490,26 +491,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         _watchByStore.Remove(storeUid);
     }
 
-    private bool IsNearAnyOpenStore(EntityUid entity)
-    {
-        if (_openStoreUids.Count == 0)
-            return false;
-
-        if (!TryComp(entity, out TransformComponent? entityXform))
-            return true;
-
-        foreach (var storeUid in _openStoreUids)
-        {
-            if (!TryComp(storeUid, out TransformComponent? storeXform))
-                continue;
-
-            if (_xform.InRange(entityXform.Coordinates, storeXform.Coordinates, ProximityRadius))
-                return true;
-        }
-
-        return false;
-    }
-
     private void OnUiOpenAttempt(EntityUid uid, NcStoreComponent comp, ref ActivatableUIOpenAttemptEvent ev)
     {
         ev.Cancel();
@@ -554,11 +535,11 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
     private List<StoreListingStaticData> GetOrBuildCatalog(EntityUid store, NcStoreComponent comp)
     {
-        if (_catalogCache.TryGetValue(store, out var cached) && cached.Revision == comp.CatalogRevision)
-            return cached.List;
+        if (_catalogCache.TryGet(store, comp.CatalogRevision, out var cached))
+            return cached;
 
         var list = BuildCatalogEntries(comp);
-        _catalogCache[store] = (comp.CatalogRevision, list);
+        _catalogCache.Set(store, comp.CatalogRevision, list);
         return list;
     }
 

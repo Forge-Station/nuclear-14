@@ -7,18 +7,67 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcStoreLogicSystem
 {
-    private int FindPlannedBarterCount(EntityUid user, NcStoreListingDef listing, int requested)
+    public sealed class BarterAvailabilityContext
+    {
+        internal readonly List<EntityUid> ScannedItems = new();
+        internal readonly List<BarterReservableItem> BaseItems = new();
+        internal readonly List<BarterReservableItem> WorkItems = new();
+        internal EntityUid Root = EntityUid.Invalid;
+        internal bool Prepared;
+
+        internal void Reset(EntityUid root)
+        {
+            Root = root;
+            Prepared = true;
+            BaseItems.Clear();
+            WorkItems.Clear();
+        }
+    }
+
+    public void PrepareBarterAvailabilityContext(EntityUid root, BarterAvailabilityContext context)
+    {
+        context.ScannedItems.Clear();
+        _inventory.ScanInventoryItems(root, context.ScannedItems);
+        PrepareBarterAvailabilityContext(root, context.ScannedItems, context);
+    }
+
+    public void PrepareBarterAvailabilityContext(
+        EntityUid root,
+        IReadOnlyList<EntityUid> scannedItems,
+        BarterAvailabilityContext context)
+    {
+        context.Reset(root);
+        FillBarterReservableItems(root, scannedItems, context.BaseItems);
+    }
+
+    private void EnsureBarterAvailabilityContext(EntityUid root, BarterAvailabilityContext context)
+    {
+        if (!context.Prepared || context.Root != root)
+            PrepareBarterAvailabilityContext(root, context);
+    }
+
+    private int FindPlannedBarterCount(
+        EntityUid user,
+        NcStoreListingDef listing,
+        int requested,
+        BarterAvailabilityContext? context = null)
     {
         if (requested <= 0)
             return 0;
 
+        if (CanTakeBarterCostFromRoot(user, listing.BarterCost, requested, context))
+            return requested;
+
+        if (requested == 1)
+            return 0;
+
         var low = 0;
-        var high = requested;
+        var high = requested - 1;
 
         while (low < high)
         {
             var mid = low + (high - low + 1) / 2;
-            if (CanTakeBarterCostFromRoot(user, listing.BarterCost, mid))
+            if (CanTakeBarterCostFromRoot(user, listing.BarterCost, mid, context))
                 low = mid;
             else
                 high = mid - 1;
@@ -27,16 +76,21 @@ public sealed partial class NcStoreLogicSystem
         return low;
     }
 
-    private bool CanTakeBarterCostFromRoot(EntityUid root, List<NcBarterCostEntry> costs, int times)
+    private bool CanTakeBarterCostFromRoot(
+        EntityUid root,
+        List<NcBarterCostEntry> costs,
+        int times,
+        BarterAvailabilityContext? context = null)
     {
-        return TryBuildBarterCostPlan(root, costs, times, out _);
+        return TryBuildBarterCostPlan(root, costs, times, out _, context);
     }
 
     private bool TryBuildBarterCostPlan(
         EntityUid root,
         List<NcBarterCostEntry> costs,
         int times,
-        out BarterCostPlan plan)
+        out BarterCostPlan plan,
+        BarterAvailabilityContext? context = null)
     {
         plan = new();
 
@@ -46,7 +100,7 @@ public sealed partial class NcStoreLogicSystem
         if (!TryBuildBarterCostDemands(costs, times, out var demands))
             return false;
 
-        var items = BuildBarterReservableItems(root);
+        var items = GetBarterReservableItemsForPlan(root, context);
         if (items.Count == 0)
             return false;
 
@@ -141,6 +195,16 @@ public sealed partial class NcStoreLogicSystem
         _inventory.ScanInventoryItems(root, scanned);
 
         var result = new List<BarterReservableItem>(scanned.Count);
+        FillBarterReservableItems(root, scanned, result);
+        return result;
+    }
+
+    private void FillBarterReservableItems(
+        EntityUid root,
+        IReadOnlyList<EntityUid> scanned,
+        List<BarterReservableItem> result)
+    {
+        var write = 0;
         for (var i = 0; i < scanned.Count; i++)
         {
             var ent = scanned[i];
@@ -159,28 +223,60 @@ public sealed partial class NcStoreLogicSystem
                 if (count <= 0)
                     continue;
 
-                result.Add(new()
-                {
-                    Entity = ent,
-                    Prototype = meta.EntityPrototype.ID,
-                    StackType = stack.StackTypeId,
-                    UnitsLeft = count,
-                    IsStack = true
-                });
+                GetOrAddBarterReservableItem(result, write++).Set(
+                    ent,
+                    isStack: true,
+                    meta.EntityPrototype.ID,
+                    stack.StackTypeId,
+                    count);
                 continue;
             }
 
-            result.Add(new()
-            {
-                Entity = ent,
-                Prototype = meta.EntityPrototype.ID,
-                StackType = string.Empty,
-                UnitsLeft = 1,
-                IsStack = false
-            });
+            GetOrAddBarterReservableItem(result, write++).Set(
+                ent,
+                isStack: false,
+                meta.EntityPrototype.ID,
+                string.Empty,
+                1);
         }
 
-        return result;
+        if (write < result.Count)
+            result.RemoveRange(write, result.Count - write);
+    }
+
+    private List<BarterReservableItem> GetBarterReservableItemsForPlan(
+        EntityUid root,
+        BarterAvailabilityContext? context)
+    {
+        if (context == null)
+            return BuildBarterReservableItems(root);
+
+        EnsureBarterAvailabilityContext(root, context);
+        CopyBarterReservableItems(context.BaseItems, context.WorkItems);
+        return context.WorkItems;
+    }
+
+    private static void CopyBarterReservableItems(
+        List<BarterReservableItem> source,
+        List<BarterReservableItem> target)
+    {
+        for (var i = 0; i < source.Count; i++)
+            GetOrAddBarterReservableItem(target, i).CopyFrom(source[i]);
+
+        if (source.Count < target.Count)
+            target.RemoveRange(source.Count, target.Count - source.Count);
+    }
+
+    private static BarterReservableItem GetOrAddBarterReservableItem(
+        List<BarterReservableItem> items,
+        int index)
+    {
+        if (index < items.Count)
+            return items[index];
+
+        var item = new BarterReservableItem();
+        items.Add(item);
+        return item;
     }
 
     private int CountAvailableUnitsForDemand(List<BarterReservableItem> items, BarterCostDemand demand)
@@ -430,13 +526,31 @@ public sealed partial class NcStoreLogicSystem
         public readonly List<BarterCostReservation> Reservations = new();
     }
 
-    private sealed class BarterReservableItem
+    internal sealed class BarterReservableItem
     {
         public EntityUid Entity;
         public bool IsStack;
         public string Prototype = string.Empty;
         public string StackType = string.Empty;
         public int UnitsLeft;
+
+        public void Set(EntityUid entity, bool isStack, string prototype, string stackType, int unitsLeft)
+        {
+            Entity = entity;
+            IsStack = isStack;
+            Prototype = prototype;
+            StackType = stackType;
+            UnitsLeft = unitsLeft;
+        }
+
+        public void CopyFrom(BarterReservableItem other)
+        {
+            Entity = other.Entity;
+            IsStack = other.IsStack;
+            Prototype = other.Prototype;
+            StackType = other.StackType;
+            UnitsLeft = other.UnitsLeft;
+        }
     }
 
     private sealed class BarterCostDemand

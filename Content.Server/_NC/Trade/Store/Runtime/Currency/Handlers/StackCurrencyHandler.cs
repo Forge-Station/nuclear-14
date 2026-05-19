@@ -18,6 +18,8 @@ public sealed class StackCurrencyHandler : ICurrencyHandler
     private readonly SharedTransformSystem _xform;
     private readonly List<(EntityUid Ent, int Count)> _scratchCandidates = new();
     private readonly List<EntityUid> _scratchItems = new();
+    private readonly List<EntityUid> _issueSpawnedScratch = new();
+    private readonly List<(EntityUid Ent, int PreviousCount)> _issueStackRestoreScratch = new();
 
     public StackCurrencyHandler(
         IEntityManager ents,
@@ -129,66 +131,128 @@ public sealed class StackCurrencyHandler : ICurrencyHandler
             return false;
 
         _inventory.InvalidateInventoryCache(user);
+        _issueSpawnedScratch.Clear();
+        _issueStackRestoreScratch.Clear();
 
-        var maxPerStack = proto.MaxCount ?? int.MaxValue;
-        if (maxPerStack <= 0)
-            maxPerStack = 1;
-
-        long remaining = amount;
-
-        _inventory.ScanInventoryItems(user, _scratchItems);
-        foreach (var ent in _scratchItems)
+        try
         {
+            var maxPerStack = proto.MaxCount ?? int.MaxValue;
+            if (maxPerStack <= 0)
+                maxPerStack = 1;
+
+            long remaining = amount;
+
+            _inventory.ScanInventoryItems(user, _scratchItems);
+            foreach (var ent in _scratchItems)
+            {
+                if (remaining <= 0)
+                    break;
+                if (!_ents.TryGetComponent(ent, out StackComponent? st) || st.StackTypeId != currencyId)
+                    continue;
+
+                var canAdd = (long) maxPerStack - st.Count;
+                if (canAdd <= 0)
+                    continue;
+
+                var add = Math.Min(canAdd, remaining);
+                var newCount = (int) Math.Clamp(st.Count + add, 0L, maxPerStack);
+
+                TrackIssueStackRestore(ent, st.Count);
+                _stacks.SetCount(ent, newCount, st);
+                remaining -= add;
+            }
+
             if (remaining <= 0)
-                break;
-            if (!_ents.TryGetComponent(ent, out StackComponent? st) || st.StackTypeId != currencyId)
-                continue;
+            {
+                _inventory.InvalidateInventoryCache(user);
+                ClearIssueJournal();
+                return true;
+            }
 
-            var canAdd = (long) maxPerStack - st.Count;
-            if (canAdd <= 0)
-                continue;
+            var coords = _xform.GetMoverCoordinates(user);
 
-            var add = Math.Min(canAdd, remaining);
-            var newCount = (int) Math.Clamp(st.Count + add, 0L, maxPerStack);
+            while (remaining > 0)
+            {
+                var addL = Math.Min(remaining, maxPerStack);
+                var add = (int) Math.Clamp(addL, 1L, maxPerStack);
 
-            _stacks.SetCount(ent, newCount, st);
-            remaining -= add;
-        }
+                EntityUid spawned;
+                try
+                {
+                    spawned = _ents.SpawnEntity(proto.Spawn, coords);
+                }
+                catch (Exception e)
+                {
+                    Logger.GetSawmill("ncstore-logic")
+                        .Error($"[NcStore] Failed to spawn currency stack '{currencyId}' using '{proto.Spawn}': {e}");
+                    RollbackIssueJournal(user);
+                    return false;
+                }
 
-        if (remaining <= 0)
-        {
+                _issueSpawnedScratch.Add(spawned);
+
+                if (_ents.TryGetComponent(spawned, out StackComponent? newStack))
+                    _stacks.SetCount(spawned, add, newStack);
+
+                if (!_hands.TryPickupAnyHand(user, spawned, false))
+                {
+                    Logger.GetSawmill("ncstore-logic")
+                        .Warning($"[NcStore] Failed to place issued currency stack '{currencyId}' on {user}.");
+                    RollbackIssueJournal(user);
+                    return false;
+                }
+
+                remaining -= add;
+            }
+
             _inventory.InvalidateInventoryCache(user);
+            ClearIssueJournal();
             return true;
         }
-
-        var coords = _xform.GetMoverCoordinates(user);
-
-        while (remaining > 0)
+        catch (Exception e)
         {
-            var addL = Math.Min(remaining, maxPerStack);
-            var add = (int) Math.Clamp(addL, 1L, maxPerStack);
+            Logger.GetSawmill("ncstore-logic")
+                .Error($"[NcStore] Failed to issue currency '{currencyId}' x{amount}: {e}");
+            RollbackIssueJournal(user);
+            return false;
+        }
+    }
 
-            EntityUid spawned;
-            try
-            {
-                spawned = _ents.SpawnEntity(proto.Spawn, coords);
-            }
-            catch (Exception e)
-            {
-                Logger.GetSawmill("ncstore-logic")
-                    .Error($"[NcStore] Failed to spawn currency stack '{currencyId}' using '{proto.Spawn}': {e}");
-                return false;
-            }
+    private void TrackIssueStackRestore(EntityUid ent, int previousCount)
+    {
+        for (var i = 0; i < _issueStackRestoreScratch.Count; i++)
+        {
+            if (_issueStackRestoreScratch[i].Ent == ent)
+                return;
+        }
 
-            if (_ents.TryGetComponent(spawned, out StackComponent? newStack))
-                _stacks.SetCount(spawned, add, newStack);
+        _issueStackRestoreScratch.Add((ent, previousCount));
+    }
 
-            _hands.TryPickupAnyHand(user, spawned, false);
-            remaining -= add;
+    private void RollbackIssueJournal(EntityUid user)
+    {
+        for (var i = _issueStackRestoreScratch.Count - 1; i >= 0; i--)
+        {
+            var (ent, previousCount) = _issueStackRestoreScratch[i];
+            if (_ents.TryGetComponent(ent, out StackComponent? stack))
+                _stacks.SetCount(ent, previousCount, stack);
+        }
+
+        for (var i = 0; i < _issueSpawnedScratch.Count; i++)
+        {
+            var ent = _issueSpawnedScratch[i];
+            if (_ents.EntityExists(ent))
+                _ents.DeleteEntity(ent);
         }
 
         _inventory.InvalidateInventoryCache(user);
-        return true;
+        ClearIssueJournal();
+    }
+
+    private void ClearIssueJournal()
+    {
+        _issueSpawnedScratch.Clear();
+        _issueStackRestoreScratch.Clear();
     }
 
     public bool CanGiveCurrency(EntityUid user, string currencyId, int amount)

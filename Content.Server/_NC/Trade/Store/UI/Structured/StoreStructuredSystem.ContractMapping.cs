@@ -145,6 +145,7 @@ public sealed partial class StoreStructuredSystem
             GhostRoleSurvivalRemainingSeconds = runtime.GhostRoleSurvivalRemainingSeconds,
             GhostRolePendingAcceptance = runtime.GhostRolePendingAcceptance,
             Failed = runtime.Failed,
+            Outcome = runtime.Outcome,
             FailureReason = runtime.FailureReason,
             StatusHint = runtime.StatusHint
         };

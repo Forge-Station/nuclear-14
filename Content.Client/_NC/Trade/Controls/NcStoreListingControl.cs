@@ -20,6 +20,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
 {
     private const int MaxTotalDisplay = 999_999;
     private const int DescMaxChars = 180;
+    private const int MaxRewardPoolIconDepth = 6;
 
     private const float CompactSwitchFloor = 780f;
     private const float MinHorizontalDescriptionWidth = 360f;
@@ -581,8 +582,20 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
     private static bool TryResolveRewardPoolIcon(string poolId, IPrototypeManager pm, out string icon)
     {
+        return TryResolveRewardPoolIcon(poolId, pm, out icon, new HashSet<string>(StringComparer.Ordinal), 0);
+    }
+
+    private static bool TryResolveRewardPoolIcon(
+        string poolId,
+        IPrototypeManager pm,
+        out string icon,
+        HashSet<string> visited,
+        int depth)
+    {
         icon = string.Empty;
-        if (string.IsNullOrWhiteSpace(poolId))
+        if (string.IsNullOrWhiteSpace(poolId) ||
+            depth > MaxRewardPoolIconDepth ||
+            !visited.Add(poolId))
             return false;
 
         if (pm.TryIndex<NcSupplyRewardPoolPrototype>(poolId, out var supplyPool))
@@ -596,16 +609,29 @@ public sealed partial class NcStoreListingControl : PanelContainer
                     pm.HasIndex<EntityPrototype>(reward.Prototype))
                 {
                     icon = reward.Prototype;
+                    visited.Remove(poolId);
                     return true;
                 }
 
                 if (reward.Type == StoreRewardType.Currency &&
                     !string.IsNullOrWhiteSpace(reward.Currency) &&
                     TryResolveCurrencyEntity(reward.Currency, pm, out icon))
+                {
+                    visited.Remove(poolId);
                     return true;
+                }
+
+                if (reward.Type == StoreRewardType.Pool &&
+                    !string.IsNullOrWhiteSpace(reward.Pool) &&
+                    TryResolveRewardPoolIcon(reward.Pool, pm, out icon, visited, depth + 1))
+                {
+                    visited.Remove(poolId);
+                    return true;
+                }
             }
         }
 
+        visited.Remove(poolId);
         return false;
     }
 

@@ -1,5 +1,6 @@
 ﻿using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
+using Robust.Server.GameObjects;
 using Robust.Shared.Containers;
 
 
@@ -7,6 +8,10 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class StoreStructuredSystem : EntitySystem
 {
+    private const double SlowBarterAvailabilityMs = 5d;
+    private const double SlowCratePreviewMs = 5d;
+    private const double SlowDynamicStateMs = 10d;
+
     private readonly record struct DynamicTabState(bool HasBuyTab, bool HasSellTab, bool HasBarterTab, bool HasContractsTab);
 
     private readonly record struct DynamicContractNeeds(
@@ -20,11 +25,14 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         bool NeedUserItems,
         bool NeedCrateScan);
 
+    private readonly StoreDynamicStatePublisher _dynamicStatePublisher = new();
+
     public void UpdateDynamicState(EntityUid uid, NcStoreComponent comp, EntityUid user)
     {
         if (!_ui.IsUiOpen(uid, StoreUiKey.Key, user))
             return;
 
+        var dynamicStarted = System.Diagnostics.Stopwatch.GetTimestamp();
         if (!_storesUpdatingDynamic.Add(uid))
         {
             Logger.GetSawmill("ncstore-structured").Warning(
@@ -53,11 +61,25 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             PopulateDynamicContracts(uid, comp, tabs.HasContractsTab, scratch, buf);
             PopulateDynamicContractSkip(uid, comp, tabs.HasContractsTab, buf);
             PushDynamicState(uid, comp, tabs, scratch, buf);
+
+            var elapsed = GetElapsedMilliseconds(dynamicStarted);
+            if (elapsed > SlowDynamicStateMs)
+            {
+                Sawmill.Info(
+                    $"[StoreStructured] UpdateDynamicState took {elapsed:F2} ms for {ToPrettyString(uid)} " +
+                    $"(listings={comp.Listings.Count}, contracts={comp.Contracts.Count}).");
+            }
         }
         finally
         {
             _storesUpdatingDynamic.Remove(uid);
         }
+    }
+
+    private static double GetElapsedMilliseconds(long started)
+    {
+        return (System.Diagnostics.Stopwatch.GetTimestamp() - started) * 1000d /
+               System.Diagnostics.Stopwatch.Frequency;
     }
 
     private EntityUid? GetDynamicCrate(EntityUid user)
@@ -221,6 +243,10 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         DynamicScratch scratch,
         DynamicStateBuffer buf)
     {
+        var barterContextPrepared = false;
+        var barterListings = 0;
+        long barterTicks = 0;
+
         foreach (var listing in comp.Listings)
         {
             if (string.IsNullOrWhiteSpace(listing.Id))
@@ -241,12 +267,38 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             if (listing.Mode != StoreMode.Barter && string.IsNullOrWhiteSpace(listing.ProductEntity))
                 continue;
 
-            var owned = listing.Mode == StoreMode.Barter
-                ? _logic.GetMaxBarterCount(user, listing, userSnap)
-                : _inventory.GetOwnedFromSnapshot(userSnap, listing.ProductEntity, listing.MatchMode);
+            int owned;
+            if (listing.Mode == StoreMode.Barter)
+            {
+                var barterStarted = System.Diagnostics.Stopwatch.GetTimestamp();
+                if (!barterContextPrepared)
+                {
+                    _logic.PrepareBarterAvailabilityContext(user, scratch.DeepUserItems, scratch.BarterAvailability);
+                    barterContextPrepared = true;
+                }
+
+                owned = _logic.GetMaxBarterCount(user, listing, userSnap, scratch.BarterAvailability);
+                barterTicks += System.Diagnostics.Stopwatch.GetTimestamp() - barterStarted;
+                barterListings++;
+            }
+            else
+            {
+                owned = _inventory.GetOwnedFromSnapshot(userSnap, listing.ProductEntity, listing.MatchMode);
+            }
 
             if (ShouldSendListingOwned(owned, isVisibleBuyListing) || listing.Mode == StoreMode.Barter)
                 buf.OwnedById[listing.Id] = owned;
+        }
+
+        if (barterListings > 0)
+        {
+            var barterMs = barterTicks * 1000d / System.Diagnostics.Stopwatch.Frequency;
+            if (barterMs > SlowBarterAvailabilityMs)
+            {
+                Sawmill.Info(
+                    $"[StoreStructured] Barter availability took {barterMs:F2} ms " +
+                    $"for {barterListings} listings in profile '{comp.Profile}'.");
+            }
         }
     }
 
@@ -283,7 +335,16 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (scratch.TryPopulateCachedCratePreview(crate, comp.CatalogRevision, inventoryRevision, buf))
             return;
 
+        var started = System.Diagnostics.Stopwatch.GetTimestamp();
         var plan = _logic.ComputeMassSellPlanFromCachedItems(comp, crate, scratch.DeepCrateItems);
+        var elapsed = GetElapsedMilliseconds(started);
+        if (elapsed > SlowCratePreviewMs)
+        {
+            Sawmill.Info(
+                $"[StoreStructured] Crate preview took {elapsed:F2} ms for {ToPrettyString(crate)} " +
+                $"(items={scratch.DeepCrateItems.Count}, listings={comp.Listings.Count}).");
+        }
+
         scratch.CacheCratePreview(crate, comp.CatalogRevision, inventoryRevision, plan);
         scratch.TryPopulateCachedCratePreview(crate, comp.CatalogRevision, inventoryRevision, buf);
     }
@@ -298,10 +359,128 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (!hasContractsTab || comp.Contracts.Count == 0)
             return;
 
+        var signature = ComputeContractsSignature(store, comp);
+        if (scratch.TryPopulateCachedContracts(signature, buf))
+            return;
+
         foreach (var contract in comp.Contracts.Values)
             buf.Contracts.Add(MapContractToClient(store, contract));
 
         buf.Contracts.Sort(CompareContractsForUi);
+        scratch.CacheContracts(signature, buf.Contracts);
+    }
+
+    private int ComputeContractsSignature(EntityUid store, NcStoreComponent comp)
+    {
+        unchecked
+        {
+            var hash = comp.Contracts.Count;
+            foreach (var contract in comp.Contracts.Values)
+                hash += ComputeContractSignature(store, contract);
+
+            return hash;
+        }
+    }
+
+    private int ComputeContractSignature(EntityUid store, ContractServerData contract)
+    {
+        unchecked
+        {
+            var hash = 17;
+            AddHash(ref hash, contract.Id);
+            AddHash(ref hash, contract.Name);
+            AddHash(ref hash, contract.Description);
+            AddHash(ref hash, contract.Repeatable);
+            AddHash(ref hash, contract.Taken);
+            AddHash(ref hash, SupportsContractPinpointer(contract));
+            AddHash(ref hash, _contracts.CanPartiallyTurnInNow(store, contract.Id, contract));
+            AddHash(ref hash, contract.ExecutionKind);
+            AddHash(ref hash, contract.FlowStatus);
+            AddHash(ref hash, contract.Completed);
+            AddHash(ref hash, contract.TargetItem);
+            AddHash(ref hash, ResolveContractTurnInItem(contract));
+            AddHash(ref hash, contract.Required);
+            AddHash(ref hash, contract.Progress);
+            AddHash(ref hash, contract.Config.RetrievalSourceHint);
+            AddHash(ref hash, contract.Config.RetrievalDestinationHint);
+            AddHash(ref hash, IsRetrievalRouteContract(contract));
+            AddHash(ref hash, contract.Config.RetrievalClaimMode);
+            AddHash(ref hash, IsRetrievalBearerProofContract(contract));
+            AddHash(ref hash, contract.Config.HuntCompletionMode);
+            AddHash(ref hash, contract.Config.GhostRoleCompletionMode);
+            AddHash(ref hash, contract.OfferPoolId);
+            AddHash(ref hash, contract.OfferPoolName);
+            AddHash(ref hash, contract.OfferPoolOrder);
+            AddHash(ref hash, contract.OfferPoolColor);
+            AddRuntimeHash(ref hash, contract.Runtime);
+            AddTargetsHash(ref hash, contract.Targets);
+            AddRewardsHash(ref hash, contract.Rewards);
+            return hash;
+        }
+    }
+
+    private static void AddRuntimeHash(ref int hash, ContractRuntimeContextData? runtime)
+    {
+        if (runtime == null)
+        {
+            AddHash(ref hash, 0);
+            return;
+        }
+
+        AddHash(ref hash, runtime.Stage);
+        AddHash(ref hash, runtime.StageGoal);
+        AddHash(ref hash, runtime.AcceptTimeoutRemainingSeconds);
+        AddHash(ref hash, runtime.GhostRoleSurvivalRemainingSeconds);
+        AddHash(ref hash, runtime.GhostRolePendingAcceptance);
+        AddHash(ref hash, runtime.Failed);
+        AddHash(ref hash, runtime.Outcome);
+        AddHash(ref hash, runtime.FailureReason);
+        AddHash(ref hash, runtime.StatusHint);
+    }
+
+    private static void AddTargetsHash(ref int hash, List<ContractTargetServerData>? targets)
+    {
+        if (targets == null)
+        {
+            AddHash(ref hash, 0);
+            return;
+        }
+
+        AddHash(ref hash, targets.Count);
+        for (var i = 0; i < targets.Count; i++)
+        {
+            var target = targets[i];
+            AddHash(ref hash, target.TargetItem);
+            AddHash(ref hash, target.Required);
+            AddHash(ref hash, target.Progress);
+            AddHash(ref hash, target.MatchMode);
+        }
+    }
+
+    private static void AddRewardsHash(ref int hash, List<ContractRewardData>? rewards)
+    {
+        if (rewards == null)
+        {
+            AddHash(ref hash, 0);
+            return;
+        }
+
+        AddHash(ref hash, rewards.Count);
+        for (var i = 0; i < rewards.Count; i++)
+        {
+            var reward = rewards[i];
+            AddHash(ref hash, reward.Type);
+            AddHash(ref hash, reward.Id);
+            AddHash(ref hash, reward.Amount);
+        }
+    }
+
+    private static void AddHash<T>(ref int hash, T value)
+    {
+        unchecked
+        {
+            hash = hash * 31 + EqualityComparer<T>.Default.GetHashCode(value!);
+        }
     }
 
     private void PopulateDynamicContractSkip(
@@ -337,35 +516,57 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         DynamicScratch scratch,
         DynamicStateBuffer buf)
     {
-        if (scratch.EqualsLast(buf, comp.CatalogRevision, tabs.HasBuyTab, tabs.HasSellTab, tabs.HasBarterTab, tabs.HasContractsTab))
-            return;
+        _dynamicStatePublisher.PublishIfChanged(_ui, store, comp, tabs, scratch, buf);
+    }
 
-        comp.UiRevision = unchecked(comp.UiRevision + 1);
+    private sealed class StoreDynamicStatePublisher
+    {
+        public void PublishIfChanged(
+            UserInterfaceSystem ui,
+            EntityUid store,
+            NcStoreComponent comp,
+            DynamicTabState tabs,
+            DynamicScratch scratch,
+            DynamicStateBuffer buf)
+        {
+            if (scratch.EqualsLast(
+                    buf,
+                    comp.CatalogRevision,
+                    tabs.HasBuyTab,
+                    tabs.HasSellTab,
+                    tabs.HasBarterTab,
+                    tabs.HasContractsTab))
+            {
+                return;
+            }
 
-        _ui.SetUiState(
-            store,
-            StoreUiKey.Key,
-            new StoreDynamicState(
-                comp.UiRevision,
-                comp.CatalogRevision,
-                new Dictionary<string, int>(buf.BalancesByCurrency),
-                new Dictionary<string, int>(buf.RemainingById),
-                new Dictionary<string, int>(buf.OwnedById),
-                new Dictionary<string, int>(buf.CrateUnitsById),
-                new Dictionary<string, int>(buf.CrateTotals),
-                new List<ContractClientData>(buf.Contracts),
-                tabs.HasBuyTab,
-                tabs.HasSellTab,
-                tabs.HasBarterTab,
-                tabs.HasContractsTab,
-                buf.ContractSkipCost,
-                buf.ContractSkipCurrency,
-                scratch.HasVisibleIds,
-                new List<string>(buf.ListingScopeIds)
-            )
-        );
+            comp.UiRevision = unchecked(comp.UiRevision + 1);
 
-        scratch.Commit(comp.CatalogRevision, tabs.HasBuyTab, tabs.HasSellTab, tabs.HasBarterTab, tabs.HasContractsTab);
+            ui.SetUiState(
+                store,
+                StoreUiKey.Key,
+                new StoreDynamicState(
+                    comp.UiRevision,
+                    comp.CatalogRevision,
+                    new Dictionary<string, int>(buf.BalancesByCurrency),
+                    new Dictionary<string, int>(buf.RemainingById),
+                    new Dictionary<string, int>(buf.OwnedById),
+                    new Dictionary<string, int>(buf.CrateUnitsById),
+                    new Dictionary<string, int>(buf.CrateTotals),
+                    new List<ContractClientData>(buf.Contracts),
+                    tabs.HasBuyTab,
+                    tabs.HasSellTab,
+                    tabs.HasBarterTab,
+                    tabs.HasContractsTab,
+                    buf.ContractSkipCost,
+                    buf.ContractSkipCurrency,
+                    scratch.HasVisibleIds,
+                    new List<string>(buf.ListingScopeIds)
+                )
+            );
+
+            scratch.Commit(comp.CatalogRevision, tabs.HasBuyTab, tabs.HasSellTab, tabs.HasBarterTab, tabs.HasContractsTab);
+        }
     }
 
     private bool TryFindWatchedRoot(EntityUid start, out EntityUid watchedRoot)
@@ -431,9 +632,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (_storesByWatchedRoot.Count == 0)
             return;
 
-        if (!IsNearAnyOpenStore(uid))
-            return;
-
         if (TryFindWatchedRoot(uid, out var r))
             RefreshStoresAffectedBy(r);
     }
@@ -441,9 +639,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     private void OnUserEntRemoved(EntityUid uid, ContainerManagerComponent comp, EntRemovedFromContainerMessage args)
     {
         if (_storesByWatchedRoot.Count == 0)
-            return;
-
-        if (!IsNearAnyOpenStore(uid))
             return;
 
         if (TryFindWatchedRoot(uid, out var r))
@@ -455,9 +650,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (_storesByWatchedRoot.Count == 0)
             return;
 
-        if (!IsNearAnyOpenStore(uid))
-            return;
-
         if (TryFindWatchedRoot(uid, out var r))
             RefreshStoresAffectedBy(r);
     }
@@ -467,26 +659,15 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (_storesByWatchedRoot.Count == 0)
             return;
 
-        var nearEntity = IsNearAnyOpenStore(args.Entity);
-        var nearOldParent = args.OldParent is { } oldParentCandidate &&
-                            oldParentCandidate != EntityUid.Invalid &&
-                            IsNearAnyOpenStore(oldParentCandidate);
-
-        if (!nearEntity && !nearOldParent)
-            return;
-
         EntityUid? refreshedRoot = null;
 
-        if (nearEntity && TryFindWatchedRoot(args.Entity, out var currentRoot))
+        if (TryFindWatchedRoot(args.Entity, out var currentRoot))
         {
             RefreshStoresAffectedBy(currentRoot);
             refreshedRoot = currentRoot;
         }
 
         if (args.OldParent is not { } oldParent || oldParent == EntityUid.Invalid)
-            return;
-
-        if (!nearOldParent)
             return;
 
         if (!TryFindWatchedRoot(oldParent, out var previousRoot))

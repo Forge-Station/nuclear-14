@@ -8,6 +8,7 @@ namespace Content.Server._NC.Trade;
 
 public sealed class StoreSystemStructuredLoader : EntitySystem
 {
+    private const int MaxRewardPoolTraversalDepth = 6;
     private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore-loader");
 
     [Dependency] private readonly NcContractSystem _contracts = default!;
@@ -319,26 +320,42 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         }
 
         foreach (var pool in listingProto.ReceivePools)
-            AddRewardPoolCurrenciesToWhitelist(comp, ctx, pool.Pool);
+            AddRewardPoolCurrenciesToWhitelist(comp, ctx, pool.Pool, new HashSet<string>(StringComparer.Ordinal), 0);
     }
 
-    private void AddRewardPoolCurrenciesToWhitelist(NcStoreComponent comp, LoadContext ctx, string poolId)
+    private void AddRewardPoolCurrenciesToWhitelist(
+        NcStoreComponent comp,
+        LoadContext ctx,
+        string poolId,
+        HashSet<string> visited,
+        int depth)
     {
-        if (string.IsNullOrWhiteSpace(poolId))
+        if (string.IsNullOrWhiteSpace(poolId) || depth > MaxRewardPoolTraversalDepth)
             return;
 
         if (!_prototypes.TryIndex<NcSupplyRewardPoolPrototype>(poolId, out var supplyPool))
             return;
 
+        if (!visited.Add(poolId))
+            return;
+
         for (var i = 0; i < supplyPool.Entries.Count; i++)
         {
             var reward = supplyPool.Entries[i];
+            if (reward.Type == StoreRewardType.Pool)
+            {
+                AddRewardPoolCurrenciesToWhitelist(comp, ctx, reward.Pool, visited, depth + 1);
+                continue;
+            }
+
             if (reward.Type != StoreRewardType.Currency)
                 continue;
 
             if (!string.IsNullOrWhiteSpace(reward.Currency) && ctx.CurrencySeen.Add(reward.Currency))
                 comp.CurrencyWhitelist.Add(reward.Currency);
         }
+
+        visited.Remove(poolId);
     }
 
     private bool ValidateBarterListing(
@@ -665,31 +682,55 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
     private bool TryResolveRewardPoolIcon(string poolId, out string icon)
     {
+        return TryResolveRewardPoolIcon(poolId, out icon, new HashSet<string>(StringComparer.Ordinal), 0);
+    }
+
+    private bool TryResolveRewardPoolIcon(
+        string poolId,
+        out string icon,
+        HashSet<string> visited,
+        int depth)
+    {
         icon = string.Empty;
-        if (string.IsNullOrWhiteSpace(poolId))
+        if (string.IsNullOrWhiteSpace(poolId) || depth > MaxRewardPoolTraversalDepth)
             return false;
 
-        if (_prototypes.TryIndex<NcSupplyRewardPoolPrototype>(poolId, out var supplyPool))
+        if (!_prototypes.TryIndex<NcSupplyRewardPoolPrototype>(poolId, out var supplyPool))
+            return false;
+
+        if (!visited.Add(poolId))
+            return false;
+
+        for (var i = 0; i < supplyPool.Entries.Count; i++)
         {
-            for (var i = 0; i < supplyPool.Entries.Count; i++)
+            var reward = supplyPool.Entries[i];
+
+            if (reward.Type == StoreRewardType.Item &&
+                !string.IsNullOrWhiteSpace(reward.Prototype) &&
+                _prototypes.HasIndex<EntityPrototype>(reward.Prototype))
             {
-                var reward = supplyPool.Entries[i];
+                icon = reward.Prototype;
+                visited.Remove(poolId);
+                return true;
+            }
 
-                if (reward.Type == StoreRewardType.Item &&
-                    !string.IsNullOrWhiteSpace(reward.Prototype) &&
-                    _prototypes.HasIndex<EntityPrototype>(reward.Prototype))
-                {
-                    icon = reward.Prototype;
-                    return true;
-                }
+            if (reward.Type == StoreRewardType.Currency &&
+                !string.IsNullOrWhiteSpace(reward.Currency) &&
+                TryResolveCurrencyIcon(reward.Currency, out icon))
+            {
+                visited.Remove(poolId);
+                return true;
+            }
 
-                if (reward.Type == StoreRewardType.Currency &&
-                    !string.IsNullOrWhiteSpace(reward.Currency) &&
-                    TryResolveCurrencyIcon(reward.Currency, out icon))
-                    return true;
+            if (reward.Type == StoreRewardType.Pool &&
+                TryResolveRewardPoolIcon(reward.Pool, out icon, visited, depth + 1))
+            {
+                visited.Remove(poolId);
+                return true;
             }
         }
 
+        visited.Remove(poolId);
         return false;
     }
 

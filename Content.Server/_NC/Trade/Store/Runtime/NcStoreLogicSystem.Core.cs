@@ -19,21 +19,22 @@ public sealed partial class NcStoreLogicSystem : EntitySystem
     [Dependency] private readonly IComponentFactory _compFactory = default!;
     [Dependency] private readonly NcStoreCurrencySystem _currency = default!;
     [Dependency] private readonly EntityStorageSystem _entityStorage = default!;
-    [Dependency] public readonly IEntityManager _ents = default!;
+    [Dependency] private readonly IEntityManager _ents = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
-    [Dependency] public readonly NcStoreInventorySystem _inventory = default!;
-    [Dependency] public readonly IPrototypeManager _protos = default!;
+    [Dependency] private readonly NcStoreInventorySystem _inventory = default!;
+    [Dependency] private readonly IPrototypeManager _protos = default!;
 
     // Phase M2: used by Buy/Sell flows to random-pick a concrete prototype from matcher.Items.
     [Dependency] private readonly IRobustRandom _random = default!;
 
-    [Dependency] public readonly SharedStackSystem _stacks = default!;
+    [Dependency] private readonly SharedStackSystem _stacks = default!;
 
     public override void Initialize()
     {
         base.Initialize();
         InitializeServices();
     }
+
     public void InvalidateInventoryCache(EntityUid root) => _inventory.InvalidateInventoryCache(root);
 
     public void QueuePickupToHandsOrCrateNextTick(EntityUid user, EntityUid spawned)

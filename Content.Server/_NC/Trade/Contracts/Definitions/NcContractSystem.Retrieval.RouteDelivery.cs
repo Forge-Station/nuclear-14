@@ -76,7 +76,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!state.RetrievalRouteDeliveryActive)
         {
             state.RetrievalRouteDeliveryActive = true;
-            _activeRetrievalRouteDeliveries.Add((store, contractId));
+            _objectiveRuntime.ActiveRetrievalRouteDeliveries.Add((store, contractId));
         }
 
         return true;
@@ -107,19 +107,19 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void UpdateRetrievalRouteDeliveries()
     {
-        if (_activeRetrievalRouteDeliveries.Count == 0)
+        if (_objectiveRuntime.ActiveRetrievalRouteDeliveries.Count == 0)
             return;
 
-        _objectiveRuntimeKeysScratch.Clear();
-        foreach (var key in _activeRetrievalRouteDeliveries)
-            _objectiveRuntimeKeysScratch.Add(key);
+        _objectiveRuntime.KeysScratch.Clear();
+        foreach (var key in _objectiveRuntime.ActiveRetrievalRouteDeliveries)
+            _objectiveRuntime.KeysScratch.Add(key);
 
-        for (var i = 0; i < _objectiveRuntimeKeysScratch.Count; i++)
+        for (var i = 0; i < _objectiveRuntime.KeysScratch.Count; i++)
         {
-            var key = _objectiveRuntimeKeysScratch[i];
-            if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+            var key = _objectiveRuntime.KeysScratch[i];
+            if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state))
             {
-                _activeRetrievalRouteDeliveries.Remove(key);
+                _objectiveRuntime.ActiveRetrievalRouteDeliveries.Remove(key);
                 continue;
             }
 
@@ -137,7 +137,7 @@ public sealed partial class NcContractSystem : EntitySystem
             UpdateRetrievalRouteDelivery(key);
         }
 
-        _objectiveRuntimeKeysScratch.Clear();
+        _objectiveRuntime.KeysScratch.Clear();
     }
 
     private void RefreshRetrievalRouteDeliveryForClaim(EntityUid store, string contractId, ContractServerData contract)
@@ -146,7 +146,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return;
 
         var key = (store, contractId);
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state) ||
+        if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state) ||
             state.RetrievalRouteDeliveryCompleted ||
             !state.RetrievalRouteDeliveryActive)
         {
@@ -168,7 +168,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void UpdateRetrievalRouteDelivery((EntityUid Store, string ContractId) key)
     {
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state) ||
+        if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state) ||
             !TryGetObjectiveContract(key, out var comp, out var contract))
         {
             return;
@@ -206,7 +206,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         state.RetrievalRouteDeliveryCompleted = true;
         state.RetrievalRouteDeliveryActive = false;
-        _activeRetrievalRouteDeliveries.Remove(key);
+        _objectiveRuntime.ActiveRetrievalRouteDeliveries.Remove(key);
         DeactivateTrackedDeliveryDropoff(key, state);
 
         if (contract.Config.RetrievalConsumeCargo)

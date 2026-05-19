@@ -243,7 +243,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (TryComp(target, out TransformComponent? targetXform))
             state.LastKnownTargetCoordinates = targetXform.Coordinates;
 
-        _objectiveRuntimeByTarget[target] = key;
+        _objectiveRuntime.ByTarget[target] = key;
     }
 
     private bool TryInitializeTrackedTargetDropoff(
@@ -323,14 +323,14 @@ public sealed partial class NcContractSystem : EntitySystem
 
         state.DeliveryDropoffCompleted = false;
         state.ActiveDeliveryDropoff = true;
-        _activeTrackedDeliveryDropoffObjectives.Add(key);
+        _objectiveRuntime.ActiveTrackedDeliveryDropoffObjectives.Add(key);
     }
 
     private void DeactivateTrackedDeliveryDropoff((EntityUid Store, string ContractId) key, ObjectiveRuntimeState state)
     {
         if (state.ActiveDeliveryDropoff)
             state.ActiveDeliveryDropoff = false;
-        _activeTrackedDeliveryDropoffObjectives.Remove(key);
+        _objectiveRuntime.ActiveTrackedDeliveryDropoffObjectives.Remove(key);
 
         state.DeliveryDropoffCoordinates = null;
 

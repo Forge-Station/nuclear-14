@@ -17,6 +17,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             !_xform.InRange(sX.Coordinates, uX.Coordinates, AutoCloseDistance))
             return;
 
+        if (!TryValidateContractMessageId(uid, user, msg.ContractId, "claim"))
+            return;
+
         if (_contracts.TryClaim(uid, user, msg.ContractId))
         {
             _audio.PlayPvs(new SoundPathSpecifier("/Audio/Effects/Cargo/ping.ogg"), user);
@@ -45,6 +48,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             !_xform.InRange(sX.Coordinates, uX.Coordinates, AutoCloseDistance))
             return;
 
+        if (!TryValidateContractMessageId(uid, user, msg.ContractId, "take"))
+            return;
+
         if (_contracts.TryTakeContract(uid, user, msg.ContractId))
             _popups.PopupEntity(Loc.GetString("nc-store-contract-taken"), uid, user);
         else
@@ -63,6 +69,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         if (TryComp(uid, out TransformComponent? sX) && TryComp(user, out TransformComponent? uX) &&
             !_xform.InRange(sX.Coordinates, uX.Coordinates, AutoCloseDistance))
+            return;
+
+        if (!TryValidateContractMessageId(uid, user, msg.ContractId, "pinpointer"))
             return;
 
         if (_contracts.TryIssueContractPinpointer(uid, user, msg.ContractId))
@@ -85,11 +94,36 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             !_xform.InRange(sX.Coordinates, uX.Coordinates, AutoCloseDistance))
             return;
 
+        if (!TryValidateContractMessageId(uid, user, msg.ContractId, "skip"))
+            return;
+
         if (_contracts.TrySkipContract(uid, user, msg.ContractId))
             _popups.PopupEntity(Loc.GetString("nc-store-contract-skipped"), uid, user);
         else
             _popups.PopupEntity(Loc.GetString("nc-store-contract-skip-failed"), uid, user);
 
         RequestDynamicRefresh(uid, comp, user);
+    }
+
+    private bool TryValidateContractMessageId(EntityUid store, EntityUid user, string? contractId, string action)
+    {
+        if (StoreTradeLimits.IsValidMessageId(contractId))
+            return true;
+
+        WarnInvalidContractMessageId(store, user, contractId, action);
+        return false;
+    }
+
+    private void WarnInvalidContractMessageId(EntityUid store, EntityUid user, string? contractId, string action)
+    {
+        var key = $"{user}:{action}";
+        var now = _timing.CurTime;
+        if (_nextInvalidContractWarningByActor.TryGetValue(key, out var nextAllowed) && now < nextAllowed)
+            return;
+
+        _nextInvalidContractWarningByActor[key] = now + InvalidContractWarningInterval;
+        Sawmill.Warning(
+            $"[StoreStructured] {ToPrettyString(user)} sent invalid contract id " +
+            $"'{StoreTradeLimits.ToLogSafeId(contractId)}' for {action} at {ToPrettyString(store)}.");
     }
 }

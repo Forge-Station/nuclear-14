@@ -7,19 +7,19 @@ public sealed partial class NcContractSystem : EntitySystem
 {
     private void UpdateTrackedDeliveryDropoffObjectives()
     {
-        if (_activeTrackedDeliveryDropoffObjectives.Count == 0)
+        if (_objectiveRuntime.ActiveTrackedDeliveryDropoffObjectives.Count == 0)
             return;
 
-        _objectiveRuntimeKeysScratch.Clear();
-        foreach (var key in _activeTrackedDeliveryDropoffObjectives)
-            _objectiveRuntimeKeysScratch.Add(key);
+        _objectiveRuntime.KeysScratch.Clear();
+        foreach (var key in _objectiveRuntime.ActiveTrackedDeliveryDropoffObjectives)
+            _objectiveRuntime.KeysScratch.Add(key);
 
-        for (var i = 0; i < _objectiveRuntimeKeysScratch.Count; i++)
+        for (var i = 0; i < _objectiveRuntime.KeysScratch.Count; i++)
         {
-            var key = _objectiveRuntimeKeysScratch[i];
-            if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+            var key = _objectiveRuntime.KeysScratch[i];
+            if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state))
             {
-                _activeTrackedDeliveryDropoffObjectives.Remove(key);
+                _objectiveRuntime.ActiveTrackedDeliveryDropoffObjectives.Remove(key);
                 continue;
             }
 
@@ -44,12 +44,12 @@ public sealed partial class NcContractSystem : EntitySystem
                 CompleteTrackedDeliveryDropoffObjective(key);
         }
 
-        _objectiveRuntimeKeysScratch.Clear();
+        _objectiveRuntime.KeysScratch.Clear();
     }
 
     private void CompleteTrackedDeliveryDropoffObjective((EntityUid Store, string ContractId) key)
     {
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state) ||
+        if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state) ||
             state.TargetEntity is not { } target ||
             target == EntityUid.Invalid ||
             TerminatingOrDeleted(target))
@@ -83,7 +83,7 @@ public sealed partial class NcContractSystem : EntitySystem
         var config = contract.Config;
         if (!config.PreserveTargetOnComplete)
         {
-            _objectiveRuntimeByTarget.Remove(target);
+            _objectiveRuntime.ByTarget.Remove(target);
             state.TargetEntity = null;
 
             if (!TerminatingOrDeleted(target))
@@ -121,7 +121,7 @@ public sealed partial class NcContractSystem : EntitySystem
         EnsureObjectiveRuntimeDefaults(contract);
 
         var key = (store, contractId);
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+        if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state))
         {
             SetTrackedDeliveryProgress(contract, 0);
             return;
@@ -197,7 +197,7 @@ public sealed partial class NcContractSystem : EntitySystem
         EnsureObjectiveRuntimeDefaults(contract);
 
         var key = (store, contractId);
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+        if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state))
             return CreateTrackedDeliveryTargetLostResult();
 
         return UsesTrackedDeliveryDropoff(contract)

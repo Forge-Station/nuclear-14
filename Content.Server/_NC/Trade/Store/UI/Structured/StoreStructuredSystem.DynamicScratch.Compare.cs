@@ -110,6 +110,7 @@ public sealed partial class StoreStructuredSystem
                 a.GhostRoleSurvivalRemainingSeconds == b.GhostRoleSurvivalRemainingSeconds &&
                 a.GhostRolePendingAcceptance == b.GhostRolePendingAcceptance &&
                 a.Failed == b.Failed &&
+                a.Outcome == b.Outcome &&
                 string.Equals(a.FailureReason, b.FailureReason, StringComparison.Ordinal) &&
                 string.Equals(a.StatusHint, b.StatusHint, StringComparison.Ordinal);
         }

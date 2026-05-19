@@ -54,7 +54,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryGetObjectiveProofPrototype(contract, out var proofPrototype))
             return true;
 
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
+        if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state))
             return false;
 
         if (state.ProofSpawned)
@@ -79,7 +79,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         state.ProofEntity = proof;
         state.ProofSpawned = true;
-        _objectiveRuntimeByProof[proof] = key;
+        _objectiveRuntime.ByProof[proof] = key;
         return true;
     }
 
@@ -104,7 +104,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return true;
 
         var key = (store, contractId);
-        if (!_objectiveRuntimeByContract.TryGetValue(key, out var state) ||
+        if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state) ||
             (string.IsNullOrWhiteSpace(state.ProofToken) && !CanUseTrackedProofEntityFallback(contract, state)))
         {
             fail = ClaimAttemptResult.Fail(
@@ -122,7 +122,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        if (_objectiveRuntimeByContract.TryGetValue(key, out var currentState) &&
+        if (_objectiveRuntime.ByContract.TryGetValue(key, out var currentState) &&
             currentState.ProofEntity == proof)
         {
             currentState.ProofEntity = null;
@@ -130,7 +130,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         // Fix (B39): remove from the proof-index BEFORE Del(). Otherwise the subsequent
         // EntityTerminatingEvent would look it up and fail the contract we are actively claiming.
-        _objectiveRuntimeByProof.Remove(proof);
+        _objectiveRuntime.ByProof.Remove(proof);
 
         if (EntityManager.EntityExists(proof))
             Del(proof);
