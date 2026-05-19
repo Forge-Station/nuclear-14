@@ -100,6 +100,16 @@
   - type: NcStore
     profile: TrademachineCitySyndicateProfile
 
+- type: entity
+  id: TrademachineMapperContracts
+  parent: Trademachine
+  name: автомат проверки маршрутов
+  description: Служебный автомат для мапперов. Показывает только заказы, которым нужны расставленные точки охоты, доставки или целей.
+  suffix: NC, Contracts, Mapper Test
+  components:
+  - type: NcStore
+    profile: TrademachineMapperContractsProfile
+
 - type: ncStoreProfile
   id: TrademachineCityProfile
   buy:
@@ -140,4 +150,9 @@
   - BarterPresetCityCurrency
   contracts: PresetBazar
   theme: TradeUiThemeSyndicate
+
+- type: ncStoreProfile
+  id: TrademachineMapperContractsProfile
+  contracts: PresetBazarMapperTests
+  theme: TradeUiThemeWasteland
 

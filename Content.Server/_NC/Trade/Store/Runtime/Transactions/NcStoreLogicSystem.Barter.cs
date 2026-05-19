@@ -76,19 +76,11 @@ public sealed partial class NcStoreLogicSystem
         if (!TryBuildBarterReceivePlan(listing, actual, out var receivePlan))
             return false;
 
-        if (!TryExecuteBarterCostPlan(user, costPlan))
+        if (!TryExecuteBarterReceivePlan(
+                user,
+                receivePlan,
+                () => TryExecuteBarterCostPlanPreCommit(user, costPlan)))
             return false;
-
-        if (!TryExecuteBarterReceivePlan(user, receivePlan))
-        {
-            var refunded = TryRefundBarterCostPlan(user, costPlan);
-            Sawmill.Warning(
-                $"[NcStore] Barter '{listing.Id}' consumed cost but failed to execute the prebuilt receive plan. " +
-                $"Cost refund {(refunded ? "completed" : "was incomplete")}. " +
-                "Check receive prototypes/currencies and spawn coordinates.");
-            _inventory.InvalidateInventoryCache(user);
-            return false;
-        }
 
         if (listing.RemainingCount > 0)
             listing.RemainingCount = Math.Max(0, listing.RemainingCount - actual);

@@ -40,6 +40,21 @@ public sealed partial class StoreStructuredSystem
             return true;
         }
 
+        private static bool StringListEquals(List<string> a, List<string> b)
+        {
+            if (ReferenceEquals(a, b))
+                return true;
+
+            if (a.Count != b.Count)
+                return false;
+
+            for (var i = 0; i < a.Count; i++)
+                if (!string.Equals(a[i], b[i], StringComparison.Ordinal))
+                    return false;
+
+            return true;
+        }
+
         private static bool ContractEquals(ContractClientData? a, ContractClientData? b)
         {
             if (ReferenceEquals(a, b))

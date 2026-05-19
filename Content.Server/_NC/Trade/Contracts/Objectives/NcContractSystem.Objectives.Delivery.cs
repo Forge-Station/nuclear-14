@@ -103,7 +103,7 @@ public sealed partial class NcContractSystem : EntitySystem
         NcStoreComponent comp,
         ContractServerData contract)
     {
-        FinalizeObjectiveFailure(
+        FinalizeObjectiveTerminalOutcome(
             key,
             comp,
             contract,
@@ -296,7 +296,7 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract
     )
     {
-        FinalizeObjectiveFailure(
+        FinalizeObjectiveTerminalOutcome(
             key,
             comp,
             contract,

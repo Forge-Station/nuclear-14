@@ -40,6 +40,9 @@ public sealed class StoreListingData
     }
 
     // Dynamic
+    /// <summary>
+    /// Per-listing action capacity: player-owned item count for Sell, max affordable execution count for Barter.
+    /// </summary>
     public int Owned;
     public int Price;
     public int UnitsPerPurchase = 1;

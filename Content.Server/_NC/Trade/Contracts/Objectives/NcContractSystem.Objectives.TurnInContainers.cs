@@ -37,9 +37,12 @@ public sealed partial class NcContractSystem
         RemoveTurnInContainerFromIndex(uid);
     }
 
-    private void ReindexTurnInContainer(EntityUid uid, NcContractTurnInContainerComponent comp)
+    public void ReindexTurnInContainer(EntityUid uid, NcContractTurnInContainerComponent? comp = null)
     {
         RemoveTurnInContainerFromIndex(uid);
+
+        if (comp == null && !TryComp(uid, out comp))
+            return;
 
         if (comp.Groups.Count == 0)
             return;

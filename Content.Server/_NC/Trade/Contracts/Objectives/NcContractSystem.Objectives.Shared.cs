@@ -50,7 +50,7 @@ public sealed partial class NcContractSystem : EntitySystem
         Sawmill.Info(
             $"[Contracts] Proof for '{key.ContractId}' destroyed externally on {ToPrettyString(key.Store)}; failing contract.");
 
-        FinalizeObjectiveFailure(
+        FinalizeObjectiveTerminalOutcome(
             key,
             comp,
             contract,
@@ -205,7 +205,7 @@ public sealed partial class NcContractSystem : EntitySystem
         CleanupObjectivePinpointers(key, state);
     }
 
-    private void FinalizeObjectiveFailure(
+    private void FinalizeObjectiveTerminalOutcome(
         (EntityUid Store, string ContractId) key,
         NcStoreComponent comp,
         ContractServerData contract,

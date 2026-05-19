@@ -41,6 +41,21 @@ public sealed partial class NcStoreLogicSystem
         return true;
     }
 
+    private string? TryExecuteBarterCostPlanPreCommit(EntityUid root, BarterCostPlan plan)
+    {
+        try
+        {
+            return TryExecuteBarterCostPlan(root, plan)
+                ? null
+                : "barter cost could not be consumed";
+        }
+        catch (Exception e)
+        {
+            Sawmill.Error($"[NcStore] Barter cost pre-commit failed unexpectedly: {e}");
+            return $"barter cost consumption threw {e.GetType().Name}: {e.Message}";
+        }
+    }
+
     private bool ValidateBarterCostReservation(EntityUid root, BarterCostReservation reservation)
     {
         if (reservation.Entity == EntityUid.Invalid || reservation.Count <= 0)

@@ -211,8 +211,7 @@ public sealed partial class NcContractSystem : EntitySystem
     private static bool ShouldAutoIssueRetrievalRoutePinpointer(ContractServerData contract)
     {
         var config = contract.Config;
-        return contract.IsInventoryDelivery &&
-               config.RetrievalSpawnEnabled &&
+        return UsesRetrievalSpawnedCargoSupport(contract) &&
                config.RetrievalGuidancePinpointerEnabled &&
                config.RetrievalGuidancePinpointerTarget == NcRetrievalPinpointerTargetMode.CargoThenDestinationThenStore;
     }

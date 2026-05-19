@@ -46,7 +46,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (!targetWasKilled)
         {
-            FinalizeObjectiveFailure(
+            FinalizeObjectiveTerminalOutcome(
                 key,
                 comp,
                 contract,
@@ -78,7 +78,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (TrySpawnNextHuntObjectiveTarget(key, contract, state))
             return;
 
-        FinalizeObjectiveFailure(
+        FinalizeObjectiveTerminalOutcome(
             key,
             comp,
             contract,

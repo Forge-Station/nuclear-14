@@ -2,19 +2,6 @@
 
 public static class ContractExecutionKinds
 {
-    public static ContractExecutionKind Resolve(ContractObjectiveType objectiveType, string? targetPrototype)
-    {
-        return objectiveType switch
-        {
-            ContractObjectiveType.Delivery => string.IsNullOrWhiteSpace(targetPrototype)
-                ? ContractExecutionKind.InventoryDelivery
-                : ContractExecutionKind.TrackedDeliveryObjective,
-            ContractObjectiveType.Hunt => ContractExecutionKind.HuntObjective,
-            ContractObjectiveType.GhostRole => ContractExecutionKind.GhostRoleObjective,
-            _ => ContractExecutionKind.InventoryDelivery
-        };
-    }
-
     public static ContractObjectiveType ToObjectiveType(ContractExecutionKind kind)
     {
         return kind switch

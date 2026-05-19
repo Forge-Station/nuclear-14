@@ -7,6 +7,8 @@ using Content.Shared._NC.Trade;
 using Content.Shared.Damage;
 using Content.Shared.GameTicking;
 using Content.Shared.Mobs;
+using Content.Shared.Movement.Pulling.Components;
+using Content.Shared.Movement.Pulling.Events;
 using Content.Shared.Objectives.Components;
 using Content.Shared.Tag;
 using Robust.Shared.Timing;
@@ -46,6 +48,8 @@ public sealed partial class NcContractSystem : EntitySystem
         SubscribeLocalEvent<NcContractGhostRoleSurvivalObjectiveComponent, ObjectiveGetProgressEvent>(
             OnGhostRoleSurvivalObjectiveGetProgress);
         SubscribeLocalEvent<EntParentChangedMessage>(OnObjectiveTrackedEntityParentChanged);
+        SubscribeLocalEvent<PullableComponent, PullStartedMessage>(OnObjectiveTrackedEntityPullStarted);
+        SubscribeLocalEvent<PullableComponent, PullStoppedMessage>(OnObjectiveTrackedEntityPullStopped);
         SubscribeLocalEvent<DamageableComponent, DamageChangedEvent>(OnObjectiveTrackedDamageChanged);
         SubscribeLocalEvent<RoundEndTextAppendEvent>(OnGhostRoleRoundEndText);
         SubscribeLocalEvent<RoundRestartCleanupEvent>(OnGhostRoleRoundRestartCleanup);
@@ -125,6 +129,16 @@ public sealed partial class NcContractSystem : EntitySystem
             else
                 RetargetObjectivePinpointers(spawnedKey, spawnedState, spawnedTarget);
         }
+    }
+
+    private void OnObjectiveTrackedEntityPullStarted(EntityUid uid, PullableComponent component, PullStartedMessage args)
+    {
+        RetargetRetrievalPulledCargoPinpointersForUser(uid, args.PullerUid);
+    }
+
+    private void OnObjectiveTrackedEntityPullStopped(EntityUid uid, PullableComponent component, PullStoppedMessage args)
+    {
+        RetargetRetrievalPulledCargoPinpointersForUser(uid, args.PullerUid);
     }
 
     private TimeSpan _nextGhostRoleTimeoutCheck = TimeSpan.Zero;

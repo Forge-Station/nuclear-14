@@ -25,6 +25,20 @@ nc-store-contract-route-action-proof-bearer = Bring the proof to the trader. It 
 nc-store-contract-route-action-proof = Bring the proof to the trader.
 nc-store-contract-route-action-store-cargo-ready = Reward is available from the trader. No proof is needed.
 nc-store-contract-route-action-ready = Claim the reward from the trader.
+nc-store-contract-offer-pool-tooltip = Offer group: { $pool }
+nc-store-contract-route-proof-bearer-note = Delivery proof is bearer-held: the reward goes to whoever brings it to the trader.
+nc-store-contract-duration-hours = { $count ->
+    [one] { $count } hour
+   *[other] { $count } hours
+}
+nc-store-contract-duration-minutes = { $count ->
+    [one] { $count } minute
+   *[other] { $count } minutes
+}
+nc-store-contract-duration-seconds = { $count ->
+    [one] { $count } second
+   *[other] { $count } seconds
+}
 nc-store-contract-ghost-role-roundend-header = [bold]Contract target results[/bold]
 nc-store-contract-ghost-role-roundend-line = - Contract "{ $contract }": { $role } ({ $player }) - { $result }
 nc-store-contract-ghost-role-roundend-unknown-role = unknown target

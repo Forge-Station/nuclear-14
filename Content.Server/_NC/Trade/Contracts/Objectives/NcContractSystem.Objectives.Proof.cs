@@ -37,7 +37,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (TrySpawnObjectiveProof(key, contract, spawnCoords))
             return true;
 
-        FinalizeObjectiveFailure(
+        FinalizeObjectiveTerminalOutcome(
             key,
             comp,
             contract,

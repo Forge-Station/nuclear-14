@@ -267,19 +267,19 @@
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractRaiderReturn
-  name: "Особый заказ: захват рейдера"
-  description: "На связь вышел опасный рейдер. Дождитесь, пока кто-то примет роль, затем доставьте цель живой, здоровой и в наручниках."
+  name: "Рейдер для допроса"
+  description: "Один рейдер слишком много знает о ближайших налётах. Заказчик хочет допросить его лично: поймайте цель живой, без тяжёлых ран, закуйте в наручники и приведите к торговцу."
   role: NcGhostRoleRaider
   completion:
     mode: AliveCuffedTurnIn
   survival:
-    briefing: "Вы цель особого заказа. Продержитесь один час и не дайте охотникам сдать вас торговцу."
+    briefing: "За вами охотятся по контракту. Продержитесь один час и не дайте охотникам сдать вас торговцу."
     objectiveTitle: "Выжить один час"
     objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
   spawn:
     point:
       type: MarkerId
-      id: TradeContractGhostSpawn
+      id: TradeContractGhostRaiderReturnSpawn
     acceptTimeoutSeconds: 300
   reward:
   - type: Currency
@@ -291,8 +291,8 @@
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractEscapedWorkerAlive
-  name: "Особый заказ: София Миллер"
-  description: "София Миллер сбежала от караванщиков и прячется поблизости. Доставьте её живой, полностью здоровой и в наручниках. Мертвую цель торговец не примет."
+  name: "Вернуть Софию Миллер"
+  description: "София Миллер сбежала от караванщиков и ушла в городские закоулки. Её хотят вернуть живой: цель должна быть здорова, в наручниках и рядом с торговцем. Мёртвую Софию никто не примет."
   role: NcGhostRoleEscapedWorker
   completion:
     mode: AliveCuffedTurnIn
@@ -315,8 +315,8 @@
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractNCRDeserterDead
-  name: "Особый заказ: дезертир НКР"
-  description: "Патроу, бывший сержант НКР, ушел с оружием и припасами. Это тяжёлый заказ: убейте дезертира и доставьте тело торговцу."
+  name: "Дезертир Патроу"
+  description: "Патроу, бывший сержант НКР, ушёл с оружием, припасами и чужими секретами. Живым его брать не просят: убейте дезертира и доставьте тело торговцу."
   role: NcGhostRoleNCRDeserter
   completion:
     mode: DeadBodyTurnIn
@@ -339,8 +339,8 @@
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractZoyaDarbyAlive
-  name: "Особый заказ: Зоя Дарби"
-  description: "Зоя Дарби пережила слишком много перестрелок и оставила за собой слишком много тел. Заказчик хочет её живой: доставьте Зою полностью здоровой и в наручниках. Мёртвую цель торговец не примет."
+  name: "Зоя Дарби нужна живой"
+  description: "Зоя Дарби пережила слишком много перестрелок и оставила за собой слишком много тел. Заказчик хочет услышать её ответы, а не смотреть на труп: приведите Зою живой, здоровой и в наручниках."
   role: NcGhostRoleZoyaDarby
   completion:
     mode: AliveCuffedTurnIn
@@ -363,8 +363,8 @@
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractFreshDead
-  name: "Особый заказ: Фреш"
-  description: "Фреш снова сорвался и палит из самодельного пистолета. Убейте его и доставьте тело торговцу."
+  name: "Остановить Фреша"
+  description: "Фреш сорвался окончательно: бегает по окраине, стреляет первым и разговаривать уже не собирается. Остановите его и доставьте тело торговцу."
   role: NcGhostRoleFresh
   completion:
     mode: DeadBodyTurnIn

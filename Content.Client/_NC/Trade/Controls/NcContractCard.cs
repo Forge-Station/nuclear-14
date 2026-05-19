@@ -188,7 +188,7 @@ public sealed partial class NcContractCard : PanelContainer
             BadgesRow.AddChild(
                 BuildBadge(
                     poolName,
-                    $"Группа витрины: {poolName}",
+                    Loc.GetString("nc-store-contract-offer-pool-tooltip", ("pool", poolName)),
                     Dim(accent, 0.28f),
                     accent));
         }

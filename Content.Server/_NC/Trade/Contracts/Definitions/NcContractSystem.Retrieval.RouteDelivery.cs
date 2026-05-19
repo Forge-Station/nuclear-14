@@ -12,10 +12,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         var config = contract.Config;
         return contract.IsRetrievalRouteDelivery &&
-               !string.IsNullOrWhiteSpace(config.RetrievalRouteId) &&
-               config.RetrievalSpawnEnabled &&
-               config.RetrievalRequireSpawnedEntities &&
-               config.RetrievalDestinationType != NcRetrievalDestinationTargetType.StoreUi;
+               IsTrackedRetrievalRouteDeliveryConfig(config);
     }
 
     private static bool RequiresRetrievalDestinationProofClaim(ContractServerData contract)
@@ -232,7 +229,7 @@ public sealed partial class NcContractSystem : EntitySystem
             $"[Contracts] Retrieval route '{key.ContractId}' lost required tracked cargo before route delivery completed " +
             $"({accepted}/{required} delivered, {state.RetrievalSpawnedEntities.Count} remaining). Contract failed.");
 
-        FinalizeObjectiveFailure(
+        FinalizeObjectiveTerminalOutcome(
             key,
             comp,
             contract,

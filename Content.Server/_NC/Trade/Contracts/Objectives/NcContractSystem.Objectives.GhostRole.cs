@@ -504,7 +504,7 @@ public sealed partial class NcContractSystem : EntitySystem
             : text;
     }
 
-    private static string FormatGhostRoleDurationText(int totalSeconds)
+    private string FormatGhostRoleDurationText(int totalSeconds)
     {
         var seconds = Math.Max(1, totalSeconds);
         var span = TimeSpan.FromSeconds(seconds);
@@ -513,31 +513,16 @@ public sealed partial class NcContractSystem : EntitySystem
         if (span.Hours + (span.Days * 24) > 0)
         {
             var hours = span.Hours + (span.Days * 24);
-            parts.Add($"{hours} {PluralRu(hours, "час", "часа", "часов")}");
+            parts.Add(Loc.GetString("nc-store-contract-duration-hours", ("count", hours)));
         }
 
         if (span.Minutes > 0 && parts.Count < 2)
-            parts.Add($"{span.Minutes} {PluralRu(span.Minutes, "минуту", "минуты", "минут")}");
+            parts.Add(Loc.GetString("nc-store-contract-duration-minutes", ("count", span.Minutes)));
 
         if (parts.Count == 0)
-            parts.Add($"{span.Seconds} {PluralRu(span.Seconds, "секунду", "секунды", "секунд")}");
+            parts.Add(Loc.GetString("nc-store-contract-duration-seconds", ("count", span.Seconds)));
 
         return string.Join(" ", parts);
-    }
-
-    private static string PluralRu(int value, string one, string few, string many)
-    {
-        var n = Math.Abs(value);
-        var mod100 = n % 100;
-        if (mod100 is >= 11 and <= 14)
-            return many;
-
-        return (n % 10) switch
-        {
-            1 => one,
-            >= 2 and <= 4 => few,
-            _ => many
-        };
     }
 
     private bool TryCompleteGhostRoleSurvivalObjective(
@@ -573,7 +558,7 @@ public sealed partial class NcContractSystem : EntitySystem
             survival.Succeeded = true;
         }
 
-        FinalizeObjectiveFailure(
+        FinalizeObjectiveTerminalOutcome(
             key,
             comp,
             contract,
@@ -717,7 +702,7 @@ public sealed partial class NcContractSystem : EntitySystem
             state,
             GhostRoleRoundEndOutcome.NotAccepted,
             Loc.GetString("nc-store-contract-ghost-role-timeout"));
-        FinalizeObjectiveFailure(
+        FinalizeObjectiveTerminalOutcome(
             key,
             comp,
             contract,
@@ -737,7 +722,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 GhostRoleRoundEndOutcome.TargetLost,
                 Loc.GetString("nc-store-contract-ghost-role-target-lost"));
 
-        FinalizeObjectiveFailure(
+            FinalizeObjectiveTerminalOutcome(
             key,
             comp,
             contract,
@@ -919,7 +904,7 @@ public sealed partial class NcContractSystem : EntitySystem
             state,
             GhostRoleRoundEndOutcome.TargetRotten,
             Loc.GetString("nc-store-contract-ghost-role-target-rotten"));
-        FinalizeObjectiveFailure(
+        FinalizeObjectiveTerminalOutcome(
             key,
             comp,
             contract,

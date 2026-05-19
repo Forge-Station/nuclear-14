@@ -147,6 +147,23 @@ nc-store-contract-type-repair-tooltip = Заказ на восстановлен
 
 nc-store-contract-type-ghost-role = Особая цель
 nc-store-contract-type-ghost-role-tooltip = После принятия откроется особая роль. Если её займут, появится живая цель.
+nc-store-contract-offer-pool-tooltip = Группа витрины: { $pool }
+nc-store-contract-route-proof-bearer-note = Доказательство доставки — предъявительское: награду получит тот, кто принесёт его торговцу.
+nc-store-contract-duration-hours = { $count ->
+    [one] { $count } час
+    [few] { $count } часа
+   *[other] { $count } часов
+}
+nc-store-contract-duration-minutes = { $count ->
+    [one] { $count } минуту
+    [few] { $count } минуты
+   *[other] { $count } минут
+}
+nc-store-contract-duration-seconds = { $count ->
+    [one] { $count } секунду
+    [few] { $count } секунды
+   *[other] { $count } секунд
+}
 
 nc-store-contract-runtime-stage = Этап: { $stage } из { $goal }
 

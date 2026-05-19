@@ -248,7 +248,10 @@ public sealed partial class NcStoreLogicSystem
             });
     }
 
-    private bool TryExecuteBarterReceivePlan(EntityUid user, BarterReceivePlan plan)
+    private bool TryExecuteBarterReceivePlan(
+        EntityUid user,
+        BarterReceivePlan plan,
+        Func<string?> preCommit)
     {
         if (!TryBuildRewardExecutionPlan(plan, out var rewardPlan, out var reason))
         {
@@ -256,7 +259,7 @@ public sealed partial class NcStoreLogicSystem
             return false;
         }
 
-        if (!TryExecuteRewardExecutionPlan(user, rewardPlan, "BarterReceive", out reason))
+        if (!TryExecuteRewardExecutionPlan(user, rewardPlan, "BarterReceive", out reason, preCommit))
         {
             Sawmill.Warning($"[NcStore] Failed to execute barter receive reward plan: {reason}");
             return false;

@@ -112,14 +112,14 @@ public sealed partial class StoreStructuredSystem
     private static bool SupportsRetrievalSpawnedPinpointer(ContractServerData contract)
     {
         var config = contract.Config;
-        return contract.IsInventoryDelivery &&
+        return (contract.IsInventoryDelivery || contract.IsRetrievalRouteDelivery) &&
                config.RetrievalSpawnEnabled &&
                config.RetrievalRequireSpawnedEntities;
     }
 
     private static bool IsRetrievalRouteContract(ContractServerData contract)
     {
-        return contract.IsInventoryDelivery &&
+        return (contract.IsInventoryDelivery || contract.IsRetrievalRouteDelivery) &&
                !string.IsNullOrWhiteSpace(contract.Config.RetrievalRouteId);
     }
 

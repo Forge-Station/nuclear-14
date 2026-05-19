@@ -191,10 +191,19 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryValidateClaimTakePlan(ctx.TakePlan, out var fail))
             return fail;
 
-        UnregisterRetrievalSpawnedCargoTakePlan(ctx.Contract, ctx.TakePlan);
-        ExecuteClaimTakePlan(ctx.TakePlan);
-        InvalidateClaimExecutionCaches(ctx);
-        return ClaimAttemptResult.Ok();
+        try
+        {
+            UnregisterRetrievalSpawnedCargoTakePlan(ctx.Contract, ctx.TakePlan);
+            ExecuteClaimTakePlan(ctx.TakePlan);
+            InvalidateClaimExecutionCaches(ctx);
+            return ClaimAttemptResult.Ok();
+        }
+        catch (Exception e)
+        {
+            Sawmill.Error($"[Claim] Claim take pre-commit failed unexpectedly: {e}");
+            InvalidateClaimExecutionCaches(ctx);
+            return CreateClaimExecutionFailure($"Claim take pre-commit threw {e.GetType().Name}: {e.Message}");
+        }
     }
 
     private void FinalizeClaim(

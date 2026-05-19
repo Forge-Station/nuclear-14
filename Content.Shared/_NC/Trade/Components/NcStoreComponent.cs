@@ -11,8 +11,6 @@ public readonly record struct StoreListingKey(StoreMode Mode, string ListingId);
 [RegisterComponent, NetworkedComponent]
 public sealed partial class NcStoreComponent : Component
 {
-    private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore");
-
     // Older Corvax maps only stored generated categories/currencies.
     // If the map has no profile yet, load it as the city trade profile and save back in the new compact format.
     [DataField("profile")]
@@ -60,7 +58,7 @@ public sealed partial class NcStoreComponent : Component
             var key = MakeListingKey(l.Mode, l.Id);
             if (ListingIndex.ContainsKey(key))
             {
-                Sawmill.Error($"[NcStore] Duplicate listing id '{l.Id}' for mode '{l.Mode}' was ignored while rebuilding index.");
+                Logger.GetSawmill("ncstore").Error($"[NcStore] Duplicate listing id '{l.Id}' for mode '{l.Mode}' was ignored while rebuilding index.");
                 continue;
             }
 

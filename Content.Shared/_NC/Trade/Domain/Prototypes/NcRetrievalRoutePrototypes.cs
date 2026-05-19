@@ -132,7 +132,7 @@ public sealed partial class NcRetrievalPinpointerData
     public string Prototype { get; set; } = string.Empty;
 
     [DataField("maxActive")]
-    public int MaxActive { get; set; } = 1;
+    public int MaxActive { get; set; } = 7;
 }
 
 /// <summary>Guidance preset. Guidance never controls spawn/claim; it only gives hints and pinpointer behavior.</summary>

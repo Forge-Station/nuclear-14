@@ -177,7 +177,7 @@ public sealed partial class NcContractSystem : EntitySystem
                     continue;
                 }
 
-                FinalizeObjectiveFailure(
+                FinalizeObjectiveTerminalOutcome(
                     key,
                     comp,
                     contract,
@@ -194,7 +194,7 @@ public sealed partial class NcContractSystem : EntitySystem
             }
             else if (!TryGetHuntBodyEntity(state, out _))
             {
-                FinalizeObjectiveFailure(
+                FinalizeObjectiveTerminalOutcome(
                     key,
                     comp,
                     contract,
@@ -287,7 +287,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
             }
 
-            FinalizeObjectiveFailure(
+            FinalizeObjectiveTerminalOutcome(
                 key,
                 comp,
                 contract,

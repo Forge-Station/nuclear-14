@@ -430,7 +430,7 @@ public sealed partial class NcContractSystem : EntitySystem
         Sawmill.Warning(
             $"[Contracts] Retrieval cargo for '{key.ContractId}' was destroyed before turn-in on {ToPrettyString(key.Store)}; contract failed.");
 
-        FinalizeObjectiveFailure(
+        FinalizeObjectiveTerminalOutcome(
             key,
             comp,
             contract,
@@ -461,7 +461,7 @@ public sealed partial class NcContractSystem : EntitySystem
             $"[Contracts] Retrieval cargo for '{key.ContractId}' is no longer available " +
             $"({state.RetrievalSpawnedEntities.Count}/{required} remaining). Contract failed.");
 
-        FinalizeObjectiveFailure(
+        FinalizeObjectiveTerminalOutcome(
             key,
             comp,
             contract,

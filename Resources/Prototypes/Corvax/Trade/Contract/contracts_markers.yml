@@ -1,7 +1,7 @@
 # Mapper-only contract anchors.
 #
-# Эти сущности нужны мапперам. Они не добавляют контракты сами по себе,
-# а дают стабильные NcContractSpawnPoint id/groups для будущих marker-based заказов.
+# Эти сущности нужны мапперам. Они не добавляют заказы сами по себе,
+# а дают стабильные NcContractSpawnPoint id/groups для заказов с живыми точками на карте.
 #
 # Зелёные маркеры = где появляется груз.
 # Синие маркеры = куда груз надо доставить.
@@ -45,41 +45,27 @@
     - state: red
 
 # -----------------------------------------------------------------------------
-# Generic mapper anchors
+# Ghost-role anchors
 # -----------------------------------------------------------------------------
 
 - type: entity
-  id: MarkerTradeContractHuntSpawn
+  id: MarkerTradeGhostRoleRaiderReturnSpawn
   parent: MarkerTradeContractDangerBase
-  name: "контракт: место охоты"
-  description: "Общая точка появления контрактных целей охоты. Ставьте в логичных опасных местах: подвал, логово, лагерь, тоннель."
-  suffix: NC, Contracts, Mapper
+  name: "цель: рейдер для допроса"
+  description: "Точка появления рейдера, которого надо взять живым. Лучше ставить у маленькой засады, старого костра или укрытия за городом."
+  suffix: NC, Contracts, GhostRole, Mapper
   components:
   - type: NcContractSpawnPoint
-    id: TradeContractHuntSpawn
+    id: TradeContractGhostRaiderReturnSpawn
     groups:
-    - TradeContractHuntSpawn
-    - TradeContractHunt
-    - TradeContractObjectiveSpawn
-
-- type: entity
-  id: MarkerTradeContractGhostRoleSpawn
-  parent: MarkerTradeContractDangerBase
-  name: "контракт: место особой роли"
-  description: "Общая точка появления цели для контрактной гост-роли. Ставьте там, где роль должна начать сцену."
-  suffix: NC, Contracts, Mapper
-  components:
-  - type: NcContractSpawnPoint
-    id: TradeContractGhostSpawn
-    groups:
-    - TradeContractGhostSpawn
+    - TradeContractGhostRaiderReturnSpawn
     - TradeContractGhostRole
     - TradeContractObjectiveSpawn
 
 - type: entity
   id: MarkerTradeGhostRoleSofiaMillerSpawn
   parent: MarkerTradeContractDangerBase
-  name: "особая роль: София Миллер"
+  name: "цель: София Миллер"
   description: "Точка появления Софии Миллер. Лучше ставить у салуна, гостиницы, заднего двора или места, откуда она могла сбежать."
   suffix: NC, Contracts, GhostRole, Mapper
   components:
@@ -93,7 +79,7 @@
 - type: entity
   id: MarkerTradeGhostRoleFreshSpawn
   parent: MarkerTradeContractDangerBase
-  name: "особая роль: Фреш"
+  name: "цель: Фреш"
   description: "Точка появления Фреша. Лучше ставить у притона, мусорной стоянки, заброшенного дома или укрытия у дороги."
   suffix: NC, Contracts, GhostRole, Mapper
   components:
@@ -107,7 +93,7 @@
 - type: entity
   id: MarkerTradeGhostRolePatrouSpawn
   parent: MarkerTradeContractDangerBase
-  name: "особая роль: Патроу"
+  name: "цель: Патроу"
   description: "Точка появления Патроу, дезертира НКР. Лучше ставить у старого поста, брошенного лагеря или военного тайника."
   suffix: NC, Contracts, GhostRole, Mapper
   components:
@@ -121,7 +107,7 @@
 - type: entity
   id: MarkerTradeGhostRoleZoyaDarbySpawn
   parent: MarkerTradeContractDangerBase
-  name: "особая роль: Зоя Дарби"
+  name: "цель: Зоя Дарби"
   description: "Точка появления Зои Дарби. Лучше ставить в опасном укрытии наёмников, у заброшенного аванпоста или рядом с дорогой, где она могла устроить засаду."
   suffix: NC, Contracts, GhostRole, Mapper
   components:
@@ -132,106 +118,6 @@
     - TradeContractGhostRole
     - TradeContractObjectiveSpawn
 
-- type: entity
-  id: MarkerTradeContractStoreCargoSource
-  parent: MarkerTradeContractSpawnBase
-  name: "контракт: груз у торговца"
-  description: "Источник груза рядом с торговцем или доской. Подходит для заказов: забрать груз здесь и отнести в другую точку."
-  suffix: NC, Contracts, Mapper
-  components:
-  - type: NcContractSpawnPoint
-    id: TradeContractStoreSpawn
-    groups:
-    - TradeContractStoreSpawn
-    - TradeContractCargoSource
-    - TradeContractObjectiveSpawn
-
-- type: entity
-  id: MarkerTradeContractWarehouseCargoSource
-  parent: MarkerTradeContractSpawnBase
-  name: "контракт: груз на складе"
-  description: "Источник груза на складе. Используйте для городских доставок: склад -> медпункт, склад -> мастерская, склад -> кухня."
-  suffix: NC, Contracts, Mapper
-  components:
-  - type: NcContractSpawnPoint
-    id: TradeContractWarehouseSpawn
-    groups:
-    - TradeContractWarehouseSpawn
-    - TradeContractCargoSource
-    - TradeContractObjectiveSpawn
-
-- type: entity
-  id: MarkerTradeContractRoadCargoSource
-  parent: MarkerTradeContractSpawnBase
-  name: "контракт: груз у дороги"
-  description: "Источник потерянного груза рядом с дорогой. Подходит для заказов: найти ящик недалеко от города и вернуть торговцу."
-  suffix: NC, Contracts, Mapper
-  components:
-  - type: NcContractSpawnPoint
-    id: TradeContractRoadSpawn
-    groups:
-    - TradeContractRoadSpawn
-    - TradeContractCargoSource
-    - TradeContractObjectiveSpawn
-
-- type: entity
-  id: MarkerTradeContractMineCargoSource
-  parent: MarkerTradeContractSpawnBase
-  name: "контракт: груз у шахты"
-  description: "Источник груза у шахты или промзоны. Это заготовка для будущих средних маршрутов."
-  suffix: NC, Contracts, Mapper
-  components:
-  - type: NcContractSpawnPoint
-    id: TradeContractMineSpawn
-    groups:
-    - TradeContractMineSpawn
-    - TradeContractCargoSource
-    - TradeContractObjectiveSpawn
-
-- type: entity
-  id: MarkerTradeContractLargeCargoSource
-  parent: MarkerTradeContractSpawnBase
-  name: "контракт: крупный груз, источник"
-  description: "Источник крупного груза или структуры. Используйте осторожно: игрок должен физически довезти именно этот объект."
-  suffix: NC, Contracts, Mapper
-  components:
-  - type: NcContractSpawnPoint
-    id: TradeContractStructureSpawn
-    groups:
-    - TradeContractStructureSpawn
-    - TradeContractCargoSource
-    - TradeContractLargeCargo
-    - TradeContractObjectiveSpawn
-
-- type: entity
-  id: MarkerTradeContractDeliveryPoint
-  parent: MarkerTradeContractDestinationBase
-  name: "контракт: точка доставки"
-  description: "Общая точка приёмки груза. Если маршрут выдаёт накладную, груз надо доставить сюда, затем отнести накладную торговцу."
-  suffix: NC, Contracts, Mapper
-  components:
-  - type: NcContractSpawnPoint
-    id: TradeContractDeliverySpawn
-    groups:
-    - TradeContractDeliverySpawn
-    - TradeContractDestination
-    - TradeContractDropoff
-
-- type: entity
-  id: MarkerTradeContractLargeCargoDropoff
-  parent: MarkerTradeContractDestinationBase
-  name: "контракт: выгрузка крупного груза"
-  description: "Точка приёмки крупного груза или структуры. Ставьте на просторном месте, чтобы объект не застрял в мебели."
-  suffix: NC, Contracts, Mapper
-  components:
-  - type: NcContractSpawnPoint
-    id: TradeContractStructureDropoff
-    groups:
-    - TradeContractStructureDropoff
-    - TradeContractDestination
-    - TradeContractLargeCargo
-    - TradeContractDropoff
-
 # -----------------------------------------------------------------------------
 # Light city contract anchors
 # -----------------------------------------------------------------------------
@@ -240,7 +126,7 @@
   id: MarkerTradeLightCityBasementHunt
   parent: MarkerTradeContractDangerBase
   name: "лёгкий контракт: радтараканы в подвале"
-  description: "Поставьте в городском подвале, канализации или другом маленьком опасном помещении. Здесь появятся цели лёгкой охоты."
+  description: "Поставьте в городском подвале, канализации или другом маленьком опасном помещении. Здесь будет гнездо радтараканов."
   suffix: NC, Contracts, Light, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -301,16 +187,32 @@
     - TradeContractDropoff
 
 - type: entity
-  id: MarkerTradeLightCityWarehouseSource
+  id: MarkerTradeLightClinicMedsSource
   parent: MarkerTradeContractSpawnBase
-  name: "лёгкий контракт: городской склад"
-  description: "Поставьте на складе или у подсобки. Здесь появляются ящики для коротких доставок по городу."
+  name: "лёгкий контракт: медящик для медпункта"
+  description: "Поставьте у малого склада или подсобки. Здесь появится медицинский ящик для короткой доставки в медпункт."
   suffix: NC, Contracts, Light, Mapper
   components:
   - type: NcContractSpawnPoint
-    id: TradeContractLightCityWarehouseSource
+    id: TradeContractLightClinicMedsSource
     groups:
-    - TradeContractLightCityWarehouseSource
+    - TradeContractLightClinicMedsSource
+    - TradeContractLight
+    - TradeContractLightCargoSource
+    - TradeContractCargoSource
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeLightWorkshopPartsSource
+  parent: MarkerTradeContractSpawnBase
+  name: "лёгкий контракт: детали для мастерской"
+  description: "Поставьте у кладовой, склада или гаража. Здесь появится ящик с деталями для короткой доставки в мастерскую."
+  suffix: NC, Contracts, Light, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractLightWorkshopPartsSource
+    groups:
+    - TradeContractLightWorkshopPartsSource
     - TradeContractLight
     - TradeContractLightCargoSource
     - TradeContractCargoSource
@@ -347,52 +249,6 @@
     - TradeContractLightDestination
     - TradeContractDestination
     - TradeContractDropoff
-
-- type: entity
-  id: MarkerTradeLightKitchenDropoff
-  parent: MarkerTradeContractDestinationBase
-  name: "лёгкий контракт: приёмка кухни"
-  description: "Поставьте у кухни, бара или столовой. Это точка для будущих доставок еды по городу."
-  suffix: NC, Contracts, Light, Mapper
-  components:
-  - type: NcContractSpawnPoint
-    id: TradeContractLightKitchenDropoff
-    groups:
-    - TradeContractLightKitchenDropoff
-    - TradeContractLight
-    - TradeContractLightDestination
-    - TradeContractDestination
-    - TradeContractDropoff
-
-- type: entity
-  id: MarkerTradeLightMarketDropoff
-  parent: MarkerTradeContractDestinationBase
-  name: "лёгкий контракт: приёмка рынка"
-  description: "Поставьте на рынке или у лавки. Это точка для будущих коротких доставок между торговцами."
-  suffix: NC, Contracts, Light, Mapper
-  components:
-  - type: NcContractSpawnPoint
-    id: TradeContractLightMarketDropoff
-    groups:
-    - TradeContractLightMarketDropoff
-    - TradeContractLight
-    - TradeContractLightDestination
-    - TradeContractDestination
-    - TradeContractDropoff
-
-- type: entity
-  id: MarkerTradeLightGarden
-  parent: MarkerTradeContractSpawnBase
-  name: "лёгкий контракт: огород или грядки"
-  description: "Поставьте рядом с грядками. Это заготовка под будущие ботанические поручения вроде выращивания брока."
-  suffix: NC, Contracts, Light, Mapper
-  components:
-  - type: NcContractSpawnPoint
-    id: TradeContractLightGarden
-    groups:
-    - TradeContractLightGarden
-    - TradeContractLight
-    - TradeContractObjectiveSpawn
 
 # -----------------------------------------------------------------------------
 # Medium caravan contract anchors
@@ -511,64 +367,144 @@
     - TradeContractObjectiveSpawn
 
 - type: entity
-  id: MarkerTradeMediumCityCargoSource
+  id: MarkerTradeMediumFarCrateSource
   parent: MarkerTradeContractSpawnBase
-  name: "средний контракт: городской груз"
-  description: "Поставьте у склада, ворот или торговой площадки. Отсюда забирают ящики для более дальних доставок."
+  name: "средний контракт: потерянный ящик у дороги"
+  description: "Поставьте дальше от города, у дороги или старой стоянки. Здесь появится потерянный ящик, который надо вернуть торговцу."
   suffix: NC, Contracts, Medium, Mapper
   components:
   - type: NcContractSpawnPoint
-    id: TradeContractMediumCityCargoSource
+    id: TradeContractMediumFarCrateSource
     groups:
-    - TradeContractMediumCityCargoSource
+    - TradeContractMediumFarCrateSource
     - TradeContractMedium
     - TradeContractMediumCargoSource
     - TradeContractCargoSource
     - TradeContractObjectiveSpawn
 
 - type: entity
-  id: MarkerTradeMediumFarCargoSource
+  id: MarkerTradeMediumAmmoCheckpointSource
   parent: MarkerTradeContractSpawnBase
-  name: "средний контракт: дальний потерянный груз"
-  description: "Поставьте заметно дальше от города, но не в смертельной зоне. Здесь появляется потерянный ящик, который надо вернуть торговцу."
+  name: "средний контракт: патроны для поста"
+  description: "Поставьте у склада, ворот или оружейной кладовой. Здесь появится ящик боеприпасов для дальнего поста."
   suffix: NC, Contracts, Medium, Mapper
   components:
   - type: NcContractSpawnPoint
-    id: TradeContractMediumFarCargoSource
+    id: TradeContractMediumAmmoCheckpointSource
     groups:
-    - TradeContractMediumFarCargoSource
+    - TradeContractMediumAmmoCheckpointSource
     - TradeContractMedium
     - TradeContractMediumCargoSource
     - TradeContractCargoSource
     - TradeContractObjectiveSpawn
 
 - type: entity
-  id: MarkerTradeMediumCheckpointDropoff
+  id: MarkerTradeMediumAmmoCheckpointDropoff
   parent: MarkerTradeContractDestinationBase
-  name: "средний контракт: дальний блокпост"
-  description: "Поставьте на внешнем блокпосту, у дальней дороги или у сторожевого поста. Сюда доставляют патроны, медикаменты и срочные ящики."
+  name: "средний контракт: приёмка патронов на посту"
+  description: "Поставьте на внешнем блокпосту или у сторожевой вышки. Сюда доставляют ящик боеприпасов."
   suffix: NC, Contracts, Medium, Mapper
   components:
   - type: NcContractSpawnPoint
-    id: TradeContractMediumCheckpointDropoff
+    id: TradeContractMediumAmmoCheckpointDropoff
     groups:
-    - TradeContractMediumCheckpointDropoff
+    - TradeContractMediumAmmoCheckpointDropoff
     - TradeContractMedium
     - TradeContractMediumDestination
     - TradeContractDestination
     - TradeContractDropoff
 
 - type: entity
-  id: MarkerTradeMediumCampDropoff
-  parent: MarkerTradeContractDestinationBase
-  name: "средний контракт: дальний лагерь"
-  description: "Поставьте в лагере за городом или на временной стоянке каравана. Сюда доставляют еду и припасы."
+  id: MarkerTradeMediumMedsCheckpointSource
+  parent: MarkerTradeContractSpawnBase
+  name: "средний контракт: медикаменты на окраину"
+  description: "Поставьте у медпункта, склада или ворот. Здесь появится медицинский ящик для доставки на окраину."
   suffix: NC, Contracts, Medium, Mapper
   components:
   - type: NcContractSpawnPoint
-    id: TradeContractMediumCampDropoff
+    id: TradeContractMediumMedsCheckpointSource
     groups:
-    - TradeContractMediumCampDropoff
+    - TradeContractMediumMedsCheckpointSource
+    - TradeContractMedium
+    - TradeContractMediumCargoSource
+    - TradeContractCargoSource
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeMediumMedsCheckpointDropoff
+  parent: MarkerTradeContractDestinationBase
+  name: "средний контракт: приёмка медикаментов"
+  description: "Поставьте на окраине маршрута, у дальнего поста или временного лазарета. Сюда доставляют медицинский ящик."
+  suffix: NC, Contracts, Medium, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractMediumMedsCheckpointDropoff
+    groups:
+    - TradeContractMediumMedsCheckpointDropoff
+    - TradeContractMedium
+    - TradeContractMediumDestination
+    - TradeContractDestination
+    - TradeContractDropoff
+
+- type: entity
+  id: MarkerTradeMediumFoodCampSource
+  parent: MarkerTradeContractSpawnBase
+  name: "средний контракт: провизия для лагеря"
+  description: "Поставьте у городской точки выдачи или склада. Здесь появится ящик провизии для дальнего лагеря."
+  suffix: NC, Contracts, Medium, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractMediumFoodCampSource
+    groups:
+    - TradeContractMediumFoodCampSource
+    - TradeContractMedium
+    - TradeContractMediumCargoSource
+    - TradeContractCargoSource
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeMediumFoodCampDropoff
+  parent: MarkerTradeContractDestinationBase
+  name: "средний контракт: приёмка провизии в лагере"
+  description: "Поставьте в лагере за городом или на временной стоянке каравана. Сюда доставляют провизию."
+  suffix: NC, Contracts, Medium, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractMediumFoodCampDropoff
+    groups:
+    - TradeContractMediumFoodCampDropoff
+    - TradeContractMedium
+    - TradeContractMediumDestination
+    - TradeContractDestination
+    - TradeContractDropoff
+
+- type: entity
+  id: MarkerTradeMediumPartsRepairSource
+  parent: MarkerTradeContractSpawnBase
+  name: "средний контракт: детали для ремонта"
+  description: "Поставьте у склада, мастерской или ворот. Здесь появится ящик деталей для ремонтной точки."
+  suffix: NC, Contracts, Medium, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractMediumPartsRepairSource
+    groups:
+    - TradeContractMediumPartsRepairSource
+    - TradeContractMedium
+    - TradeContractMediumCargoSource
+    - TradeContractCargoSource
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeMediumPartsRepairDropoff
+  parent: MarkerTradeContractDestinationBase
+  name: "средний контракт: ремонтная точка"
+  description: "Поставьте у внешней мастерской, сломанной техники или ремонтного поста. Сюда доставляют ящик деталей."
+  suffix: NC, Contracts, Medium, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractMediumPartsRepairDropoff
+    groups:
+    - TradeContractMediumPartsRepairDropoff
     - TradeContractMedium
     - TradeContractMediumDestination
     - TradeContractDestination
@@ -595,33 +531,305 @@
     - TradeContractObjectiveSpawn
 
 - type: entity
-  id: MarkerTradeHeavyCargoSource
+  id: MarkerTradeHeavyWeaponPartsOutpostSource
   parent: MarkerTradeContractSpawnBase
-  name: "тяжёлый контракт: дальний ценный груз"
-  description: "Поставьте в опасной дальней зоне. Здесь появляются тяжёлые или ценные грузы, которые надо доставить по заказу."
+  name: "тяжёлый контракт: оружейные детали"
+  description: "Поставьте в опасной дальней зоне, у тайника или разбитого склада. Здесь будут ящики деталей для укреплённого поста."
   suffix: NC, Contracts, Heavy, Mapper
   components:
   - type: NcContractSpawnPoint
-    id: TradeContractHeavyCargoSource
+    id: TradeContractHeavyWeaponPartsOutpostSource
     groups:
-    - TradeContractHeavyCargoSource
+    - TradeContractHeavyWeaponPartsOutpostSource
     - TradeContractHeavy
     - TradeContractHeavyCargoSource
     - TradeContractCargoSource
     - TradeContractObjectiveSpawn
 
 - type: entity
-  id: MarkerTradeHeavyOutpostDropoff
+  id: MarkerTradeHeavyWeaponPartsOutpostDropoff
   parent: MarkerTradeContractDestinationBase
-  name: "тяжёлый контракт: дальний укреплённый пост"
-  description: "Поставьте на опасном внешнем посту или у дальней заставы. Сюда доставляют тяжёлые ящики с оружием, боеприпасами или редкими деталями."
+  name: "тяжёлый контракт: приёмка деталей на посту"
+  description: "Поставьте на опасной дальней заставе или укреплённом посту. Сюда доставляют оружейные детали."
   suffix: NC, Contracts, Heavy, Mapper
   components:
   - type: NcContractSpawnPoint
-    id: TradeContractHeavyOutpostDropoff
+    id: TradeContractHeavyWeaponPartsOutpostDropoff
     groups:
-    - TradeContractHeavyOutpostDropoff
+    - TradeContractHeavyWeaponPartsOutpostDropoff
     - TradeContractHeavy
     - TradeContractHeavyDestination
     - TradeContractDestination
     - TradeContractDropoff
+
+- type: entity
+  id: MarkerTradeHeavyAmmoOutpostSource
+  parent: MarkerTradeContractSpawnBase
+  name: "тяжёлый контракт: боеприпасы для заставы"
+  description: "Поставьте в опасной дальней зоне, отдельно от оружейных деталей. Здесь будут ящики боеприпасов для заставы."
+  suffix: NC, Contracts, Heavy, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractHeavyAmmoOutpostSource
+    groups:
+    - TradeContractHeavyAmmoOutpostSource
+    - TradeContractHeavy
+    - TradeContractHeavyCargoSource
+    - TradeContractCargoSource
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeHeavyAmmoOutpostDropoff
+  parent: MarkerTradeContractDestinationBase
+  name: "тяжёлый контракт: приёмка боеприпасов на заставе"
+  description: "Поставьте на опасной заставе, которая принимает боеприпасы. Лучше отделить от точки деталей, чтобы маршруты читались на карте."
+  suffix: NC, Contracts, Heavy, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractHeavyAmmoOutpostDropoff
+    groups:
+    - TradeContractHeavyAmmoOutpostDropoff
+    - TradeContractHeavy
+    - TradeContractHeavyDestination
+    - TradeContractDestination
+    - TradeContractDropoff
+
+- type: entity
+  id: MarkerTradeHeavyFarSupplyCacheSource
+  parent: MarkerTradeContractSpawnBase
+  name: "тяжёлый контракт: дальний караванный тайник"
+  description: "Поставьте почти у края разведанной зоны или в опасных руинах. Здесь появится партия ящиков, которую надо вернуть торговцу."
+  suffix: NC, Contracts, Heavy, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractHeavyFarSupplyCacheSource
+    groups:
+    - TradeContractHeavyFarSupplyCacheSource
+    - TradeContractHeavy
+    - TradeContractHeavyCargoSource
+    - TradeContractCargoSource
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeHeavyRadioAmmoSource
+  parent: MarkerTradeContractSpawnBase
+  name: "тяжёлый контракт: патроны для радиовышки"
+  description: "Поставьте далеко от города, в опасной зоне. Здесь будут ящики боеприпасов для радиовышки."
+  suffix: NC, Contracts, Heavy, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractHeavyRadioAmmoSource
+    groups:
+    - TradeContractHeavyRadioAmmoSource
+    - TradeContractHeavy
+    - TradeContractHeavyCargoSource
+    - TradeContractCargoSource
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeHeavyBunkerPartsSource
+  parent: MarkerTradeContractSpawnBase
+  name: "тяжёлый контракт: детали для бункера"
+  description: "Поставьте в опасной дальней зоне. Здесь будут ящики деталей для старого бункера."
+  suffix: NC, Contracts, Heavy, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractHeavyBunkerPartsSource
+    groups:
+    - TradeContractHeavyBunkerPartsSource
+    - TradeContractHeavy
+    - TradeContractHeavyCargoSource
+    - TradeContractCargoSource
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeHeavyLastCampMedicalSource
+  parent: MarkerTradeContractSpawnBase
+  name: "тяжёлый контракт: медикаменты для дальнего лагеря"
+  description: "Поставьте далеко от города, у опасного тайника или разбитого каравана. Здесь появится партия медицинских ящиков."
+  suffix: NC, Contracts, Heavy, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractHeavyLastCampMedicalSource
+    groups:
+    - TradeContractHeavyLastCampMedicalSource
+    - TradeContractHeavy
+    - TradeContractHeavyCargoSource
+    - TradeContractCargoSource
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeHeavyRadioTowerDropoff
+  parent: MarkerTradeContractDestinationBase
+  name: "тяжёлый контракт: радиовышка"
+  description: "Поставьте у дальней радиовышки, наблюдательного пункта или ретранслятора. Сюда доставляют боеприпасы и срочные ящики."
+  suffix: NC, Contracts, Heavy, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractHeavyRadioTowerDropoff
+    groups:
+    - TradeContractHeavyRadioTowerDropoff
+    - TradeContractHeavy
+    - TradeContractHeavyDestination
+    - TradeContractDestination
+    - TradeContractDropoff
+
+- type: entity
+  id: MarkerTradeHeavyBunkerDropoff
+  parent: MarkerTradeContractDestinationBase
+  name: "тяжёлый контракт: старый бункер"
+  description: "Поставьте у входа в старый бункер или технический объект. Сюда доставляют детали, генераторные ящики и ремонтные грузы."
+  suffix: NC, Contracts, Heavy, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractHeavyBunkerDropoff
+    groups:
+    - TradeContractHeavyBunkerDropoff
+    - TradeContractHeavy
+    - TradeContractHeavyDestination
+    - TradeContractDestination
+    - TradeContractDropoff
+
+- type: entity
+  id: MarkerTradeHeavyLastCampDropoff
+  parent: MarkerTradeContractDestinationBase
+  name: "тяжёлый контракт: дальний лагерь"
+  description: "Поставьте в самом дальнем лагере или на краевой стоянке каравана. Сюда доставляют большие партии медикаментов и провизии."
+  suffix: NC, Contracts, Heavy, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractHeavyLastCampDropoff
+    groups:
+    - TradeContractHeavyLastCampDropoff
+    - TradeContractHeavy
+    - TradeContractHeavyDestination
+    - TradeContractDestination
+    - TradeContractDropoff
+
+- type: entity
+  id: MarkerTradeHeavyDeathclawHunt
+  parent: MarkerTradeContractDangerBase
+  name: "тяжёлый контракт: логово когтей смерти"
+  description: "Поставьте в дальнем логове, пещере, каньоне или у костей крупной добычи. Здесь будет логово когтей смерти."
+  suffix: NC, Contracts, Heavy, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractHeavyDeathclawHuntSpawn
+    groups:
+    - TradeContractHeavyDeathclawHuntSpawn
+    - TradeContractHeavy
+    - TradeContractHeavyHunt
+    - TradeContractHunt
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeHeavyMetalDeathclawHunt
+  parent: MarkerTradeContractDangerBase
+  name: "тяжёлый контракт: бронированный коготь"
+  description: "Поставьте в крайне опасной зоне. Здесь появляется бронированный коготь смерти для отдельного тяжёлого заказа."
+  suffix: NC, Contracts, Heavy, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractHeavyMetalDeathclawHuntSpawn
+    groups:
+    - TradeContractHeavyMetalDeathclawHuntSpawn
+    - TradeContractHeavy
+    - TradeContractHeavyHunt
+    - TradeContractHunt
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeHeavyRobotPatrolHunt
+  parent: MarkerTradeContractDangerBase
+  name: "тяжёлый контракт: роботизированный патруль"
+  description: "Поставьте у старой дороги, складов, довоенного КПП или технических руин. Здесь будет старый роботизированный патруль."
+  suffix: NC, Contracts, Heavy, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractHeavyRobotPatrolHuntSpawn
+    groups:
+    - TradeContractHeavyRobotPatrolHuntSpawn
+    - TradeContractHeavy
+    - TradeContractHeavyHunt
+    - TradeContractHunt
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeHeavyRobobrainHunt
+  parent: MarkerTradeContractDangerBase
+  name: "тяжёлый контракт: робомозги"
+  description: "Поставьте у старого терминала, лаборатории или закрытого военного объекта. Здесь появляются робомозги и тяжёлая охрана."
+  suffix: NC, Contracts, Heavy, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractHeavyRobobrainHuntSpawn
+    groups:
+    - TradeContractHeavyRobobrainHuntSpawn
+    - TradeContractHeavy
+    - TradeContractHeavyHunt
+    - TradeContractHunt
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeHeavyAssaultronHunt
+  parent: MarkerTradeContractDangerBase
+  name: "тяжёлый контракт: штурмотрон"
+  description: "Поставьте у сигнальной станции, старой военной точки или закрытого бункера. Здесь появляется штурмотрон с контрактной охраной."
+  suffix: NC, Contracts, Heavy, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractHeavyAssaultronHuntSpawn
+    groups:
+    - TradeContractHeavyAssaultronHuntSpawn
+    - TradeContractHeavy
+    - TradeContractHeavyHunt
+    - TradeContractHunt
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeHeavyRaiderWarbandHunt
+  parent: MarkerTradeContractDangerBase
+  name: "тяжёлый контракт: рейдерский лагерь"
+  description: "Поставьте в большом рейдерском лагере или опасной стоянке. Здесь появляется крупная банда: 10 обычных рейдеров и главарь."
+  suffix: NC, Contracts, Heavy, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractHeavyRaiderWarbandHuntSpawn
+    groups:
+    - TradeContractHeavyRaiderWarbandHuntSpawn
+    - TradeContractHeavy
+    - TradeContractHeavyHunt
+    - TradeContractHunt
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeHeavyYaoguaiHunt
+  parent: MarkerTradeContractDangerBase
+  name: "тяжёлый контракт: берлога яо-гаев"
+  description: "Поставьте в дальней пещере, лесистой низине или берлоге. Здесь будет берлога яо-гаев."
+  suffix: NC, Contracts, Heavy, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractHeavyYaoguaiHuntSpawn
+    groups:
+    - TradeContractHeavyYaoguaiHuntSpawn
+    - TradeContractHeavy
+    - TradeContractHeavyHunt
+    - TradeContractHunt
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeHeavyCazadorSwarmHunt
+  parent: MarkerTradeContractDangerBase
+  name: "тяжёлый контракт: большое гнездо казадоров"
+  description: "Поставьте в дальнем гнезде или у опасного прохода. Здесь появляется большой контрактный рой казадоров."
+  suffix: NC, Contracts, Heavy, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractHeavyCazadorSwarmHuntSpawn
+    groups:
+    - TradeContractHeavyCazadorSwarmHuntSpawn
+    - TradeContractHeavy
+    - TradeContractHeavyHunt
+    - TradeContractHunt
+    - TradeContractObjectiveSpawn

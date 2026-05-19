@@ -46,6 +46,9 @@ public sealed class StoreDynamicState : BoundUserInterfaceState
 
     public Dictionary<string, int> BalanceByCurrency { get; }
     public Dictionary<string, int> RemainingById { get; }
+    /// <summary>
+    /// Per-listing action capacity: player-owned item count for Sell, max affordable execution count for Barter.
+    /// </summary>
     public Dictionary<string, int> OwnedById { get; }
     public Dictionary<string, int> CrateUnitsById { get; }
 

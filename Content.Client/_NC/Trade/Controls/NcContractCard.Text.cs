@@ -92,7 +92,7 @@ public sealed partial class NcContractCard
             parts.Add(c.DestinationHint.Trim());
 
         if (c.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof && c.RetrievalProofIsBearer)
-            parts.Add("Доказательство доставки — предъявительское: награду получит тот, кто принесёт его торговцу.");
+            parts.Add(Loc.GetString("nc-store-contract-route-proof-bearer-note"));
 
         return parts.Count == 0
             ? string.Empty

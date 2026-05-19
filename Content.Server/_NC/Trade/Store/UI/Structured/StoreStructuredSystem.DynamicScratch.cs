@@ -30,6 +30,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         private bool _hasMeta;
         private bool _hasSellTab;
         private bool _hasVisibleIds;
+        private bool _lastHasVisibleIds;
         private int _visibleSig;
         private EntityUid? _cratePreviewRoot;
         public DynamicStateBuffer GetReadBuffer() => _buffers[_activeIndex];
@@ -188,7 +189,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 _hasBuyTab != hasBuyTab ||
                 _hasSellTab != hasSellTab ||
                 _hasBarterTab != hasBarterTab ||
-                _hasContracts != hasContracts)
+                _hasContracts != hasContracts ||
+                _lastHasVisibleIds != _hasVisibleIds)
                 return false;
 
             var prev = GetReadBuffer();
@@ -198,6 +200,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 DictEquals(prev.OwnedById, next.OwnedById) &&
                 DictEquals(prev.CrateUnitsById, next.CrateUnitsById) &&
                 DictEquals(prev.CrateTotals, next.CrateTotals) &&
+                StringListEquals(prev.ListingScopeIds, next.ListingScopeIds) &&
                 ListEquals(prev.Contracts, next.Contracts) &&
                 prev.ContractSkipCost == next.ContractSkipCost &&
                 string.Equals(prev.ContractSkipCurrency, next.ContractSkipCurrency, StringComparison.Ordinal);
@@ -211,6 +214,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             _hasSellTab = hasSellTab;
             _hasBarterTab = hasBarterTab;
             _hasContracts = hasContracts;
+            _lastHasVisibleIds = _hasVisibleIds;
             _hasMeta = true;
         }
     }

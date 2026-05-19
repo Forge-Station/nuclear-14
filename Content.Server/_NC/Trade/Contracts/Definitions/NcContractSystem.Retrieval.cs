@@ -41,15 +41,28 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static ContractExecutionKind ResolveRetrievalExecutionKind(ContractObjectiveConfigData config)
     {
-        if (!string.IsNullOrWhiteSpace(config.RetrievalRouteId) &&
-            config.RetrievalSpawnEnabled &&
-            config.RetrievalRequireSpawnedEntities &&
-            config.RetrievalDestinationType != NcRetrievalDestinationTargetType.StoreUi)
-        {
+        if (IsTrackedRetrievalRouteDeliveryConfig(config))
             return ContractExecutionKind.RetrievalRouteDelivery;
-        }
 
-        return ContractExecutionKinds.Resolve(ContractObjectiveType.Delivery, config.TargetPrototype);
+        return string.IsNullOrWhiteSpace(config.TargetPrototype)
+            ? ContractExecutionKind.InventoryDelivery
+            : ContractExecutionKind.TrackedDeliveryObjective;
+    }
+
+    private static bool IsTrackedRetrievalRouteDeliveryConfig(ContractObjectiveConfigData config)
+    {
+        return !string.IsNullOrWhiteSpace(config.RetrievalRouteId) &&
+               config.RetrievalSpawnEnabled &&
+               config.RetrievalRequireSpawnedEntities &&
+               config.RetrievalDestinationType != NcRetrievalDestinationTargetType.StoreUi;
+    }
+
+    private static bool UsesRetrievalSpawnedCargoSupport(ContractServerData contract)
+    {
+        var config = contract.Config;
+        return (contract.IsInventoryDelivery || contract.IsRetrievalRouteDelivery) &&
+               config.RetrievalSpawnEnabled &&
+               config.RetrievalRequireSpawnedEntities;
     }
 
     private ContractObjectiveConfigData CreateRetrievalObjectiveConfig(NcRetrievalContractPrototype proto)
