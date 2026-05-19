@@ -72,6 +72,8 @@ public sealed partial class NcStoreListingControl : PanelContainer
             displayName = matcher?.Name;
         if (string.IsNullOrWhiteSpace(displayName))
             displayName = data.ProductEntity;
+        if (string.IsNullOrWhiteSpace(displayName))
+            displayName = data.ListingId;
 
         TitleLabel.Text = displayName;
         TitleLabel.ToolTip = displayName;
@@ -133,6 +135,18 @@ public sealed partial class NcStoreListingControl : PanelContainer
     public string ListingId => _staticData.ListingId;
     public StoreListingFlavor Flavor => _staticData.Flavor;
     private int MinAllowed => _maxQty <= 0 ? 0 : 1;
+
+    public void BindActions(
+        Action<int>? onBarterPressed,
+        Action<int>? onBuyPressed,
+        Action<int>? onSellPressed,
+        Action<int>? onQtyChanged)
+    {
+        OnBarterPressed = onBarterPressed;
+        OnBuyPressed = onBuyPressed;
+        OnSellPressed = onSellPressed;
+        OnQtyChanged = onQtyChanged;
+    }
 
     protected override void Resized()
     {

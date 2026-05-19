@@ -42,7 +42,7 @@ public sealed partial class NcStoreMenu : FancyWindow
     private bool _hasBuyTab;
     private bool _hasContractsTab;
     private bool _hasSellTab;
-    private int _lastVisibleIdsSig;
+    private ulong _lastVisibleIdsSig;
     private string _search = string.Empty;
     private string _searchLower = string.Empty;
     private Control? _tabBarter;
@@ -51,7 +51,7 @@ public sealed partial class NcStoreMenu : FancyWindow
     private bool _tabsCaptured;
     private Control? _tabSell;
     private StoreUiColorsData _uiColors = new();
-    private int _uiThemeHash;
+    private ulong _uiThemeHash;
     public Action<string>? OnContractClaim;
 
     public NcStoreMenu()
@@ -187,9 +187,9 @@ public sealed partial class NcStoreMenu : FancyWindow
         var arr = _visibleUnionScratch.ToArray();
         Array.Sort(arr, static (a, b) => string.CompareOrdinal(a, b));
 
-        var sig = 17;
+        var sig = 14695981039346656037UL;
         for (var i = 0; i < arr.Length; i++)
-            sig = unchecked(sig * 31 + StableStringHash(arr[i]));
+            sig = unchecked((sig ^ (uint) StableStringHash(arr[i])) * 1099511628211UL);
 
         if (sig == _lastVisibleIdsSig)
             return;
@@ -345,7 +345,9 @@ public sealed partial class NcStoreMenu : FancyWindow
         bool hasContractsTab,
         List<ContractClientData> contracts,
         int contractSkipCost,
-        string contractSkipCurrency
+        string contractSkipCurrency,
+        bool isSparseDynamicSnapshot,
+        List<string> snapshotScopeIds
     ) =>
         _binder.ApplyDynamicState(
             balancesByCurrency,
@@ -359,7 +361,9 @@ public sealed partial class NcStoreMenu : FancyWindow
             hasContractsTab,
             contracts,
             contractSkipCost,
-            contractSkipCurrency);
+            contractSkipCurrency,
+            isSparseDynamicSnapshot,
+            snapshotScopeIds);
 
 
     private void RebuildItemsFromCatalogAndDynamic()
@@ -418,6 +422,6 @@ public sealed partial class NcStoreMenu : FancyWindow
         _visibleSellIds.Clear();
         _visibleBarterIds.Clear();
         _visibleUnionScratch.Clear();
-        _lastVisibleIdsSig = 0;
+        _lastVisibleIdsSig = 0UL;
     }
 }

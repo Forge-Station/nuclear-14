@@ -197,7 +197,7 @@ public sealed partial class NcContractSystem : EntitySystem
         try
         {
             var spawned = Spawn(protoId, spawnCoords);
-            state.RetrievalSpawnedEntities.Add(spawned);
+            RegisterRetrievalSpawnedCargo(key, state, spawned);
             return true;
         }
         catch (Exception e)

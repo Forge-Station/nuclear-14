@@ -27,8 +27,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         private bool _hasCratePreview;
         private bool _hasContracts;
         private bool _hasBarterTab;
-        private bool _hasContractsFingerprint;
-        private int _contractsFingerprint;
         private bool _hasMeta;
         private bool _hasSellTab;
         private bool _hasVisibleIds;
@@ -37,6 +35,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         public DynamicStateBuffer GetReadBuffer() => _buffers[_activeIndex];
 
         public DynamicStateBuffer GetWriteBuffer() => _buffers[1 - _activeIndex];
+
+        public bool HasVisibleIds => _hasVisibleIds;
 
         public bool UpdateVisibleIds(string[]? ids)
         {
@@ -108,24 +108,6 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 return true;
 
             return _visibleListingIds.Contains(listingId);
-        }
-
-        public bool ShouldRebuildContracts(int fingerprint)
-        {
-            if (!_hasContractsFingerprint || _contractsFingerprint != fingerprint)
-            {
-                _contractsFingerprint = fingerprint;
-                _hasContractsFingerprint = true;
-                return true;
-            }
-
-            return false;
-        }
-
-        public void ResetContractsFingerprint()
-        {
-            _hasContractsFingerprint = false;
-            _contractsFingerprint = 0;
         }
 
         public bool TryPopulateCachedCratePreview(
@@ -239,6 +221,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         public readonly List<ContractClientData> Contracts = new();
         public readonly Dictionary<string, int> CrateTotals = new();
         public readonly Dictionary<string, int> CrateUnitsById = new();
+        public readonly List<string> ListingScopeIds = new();
         public readonly Dictionary<string, int> OwnedById = new();
         public readonly Dictionary<string, int> RemainingById = new();
         public int ContractSkipCost;
@@ -251,6 +234,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             OwnedById.Clear();
             CrateUnitsById.Clear();
             CrateTotals.Clear();
+            ListingScopeIds.Clear();
             Contracts.Clear();
             ContractSkipCost = 0;
             ContractSkipCurrency = string.Empty;

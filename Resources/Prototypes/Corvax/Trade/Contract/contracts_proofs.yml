@@ -12,3 +12,19 @@
   name: "трофейная метка гуля"
   description: "Окровавленная контрактная метка, снятая с подтверждённой цели."
   categories: [ HideSpawnMenu ]
+
+# Proof preset used by marker-based DeliveryProof routes.
+# Bearer means whoever physically brings this paper back to the trader may claim the reward.
+- type: ncRetrievalProofPreset
+  id: BazarDeliveryReceiptProof
+  prototype: NcTradeContractProofDeliveryReceipt
+  ownership: Bearer
+  reissue: Never
+  consumeOnRewardClaim: true
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofRadroachTrophy
+  name: "трофейная метка радтаракана"
+  description: "Маленькая окровавленная метка с последней контрактной твари. Принесите её торговцу как доказательство выполненной охоты."
+  categories: [ HideSpawnMenu ]

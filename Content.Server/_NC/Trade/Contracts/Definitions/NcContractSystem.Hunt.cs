@@ -47,6 +47,7 @@ public sealed partial class NcContractSystem : EntitySystem
             Repeatable = proto.Repeatable,
             Taken = false,
             ObjectiveType = ContractObjectiveType.Hunt,
+            ExecutionKind = ContractExecutionKind.HuntObjective,
             Runtime = runtime,
             Config = config,
             FlowStatus = ContractFlowStatus.Available,

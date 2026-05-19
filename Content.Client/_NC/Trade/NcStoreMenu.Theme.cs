@@ -71,6 +71,7 @@ public sealed partial class NcStoreMenu
 
         TabBuy.PanelOverride = CreateTabContentStyle(tabContentColor, tabContentBorder);
         TabSell.PanelOverride = CreateTabContentStyle(tabContentColor, tabContentBorder);
+        TabBarter.PanelOverride = CreateTabContentStyle(tabContentColor, tabContentBorder);
         TabContracts.PanelOverride = CreateTabContentStyle(tabContentColor, tabContentBorder);
 
         BuyView.ApplyUiTheme(_uiColors);
@@ -148,8 +149,14 @@ public sealed partial class NcStoreMenu
         Tabs.ForceRunStyleUpdate();
     }
 
-    private static StyleBoxFlat CreateTabContentStyle(Color background, Color border) =>
-        NcStoreUiTheme.Fill(background);
+    private static StyleBoxFlat CreateTabContentStyle(Color background, Color border)
+    {
+        var style = NcStoreUiTheme.Flat(background, border);
+        style.BorderThickness = new Thickness(1);
+        style.SetContentMarginOverride(StyleBox.Margin.Horizontal, 0);
+        style.SetContentMarginOverride(StyleBox.Margin.Vertical, 0);
+        return style;
+    }
 
     private void ApplyWindowBackdropTheme(Color background, Color border)
     {
@@ -190,11 +197,11 @@ public sealed partial class NcStoreMenu
         return firstPanel;
     }
 
-    private static int ComputeUiThemeHash(StoreUiColorsData colors)
+    private static ulong ComputeUiThemeHash(StoreUiColorsData colors)
     {
         unchecked
         {
-            var hash = 17;
+            var hash = 14695981039346656037UL;
 
             hash = MixStableHash(hash, colors.TabsShellBackground);
             hash = MixStableHash(hash, colors.TabsShellBorder);
@@ -228,12 +235,12 @@ public sealed partial class NcStoreMenu
         }
     }
 
-    private static int MixStableHash(int hash, string? value)
+    private static ulong MixStableHash(ulong hash, string? value)
     {
         if (string.IsNullOrEmpty(value))
-            return unchecked(hash * 31);
+            return unchecked((hash ^ 0U) * 1099511628211UL);
 
-        return unchecked(hash * 31 + StableStringHash(value));
+        return unchecked((hash ^ (uint) StableStringHash(value)) * 1099511628211UL);
     }
 
     private static int StableStringHash(string value)

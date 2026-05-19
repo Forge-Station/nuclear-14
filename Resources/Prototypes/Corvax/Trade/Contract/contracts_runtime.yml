@@ -20,3 +20,166 @@
     radius: 2
     energy: 0.8
     color: "#C9A45A"
+
+# Empty Retrieval cargo prototypes.
+# These are intentionally separate from loot/fill crates: contract cargo should not
+# give free supplies, and destroying this spawned cargo makes the contract fail.
+
+- type: entity
+  parent: N14CrateWooden
+  id: NcTradeCargoWoodenCrate
+  name: контрактный деревянный ящик
+  description: Пустой деревянный ящик с контрактной биркой. Его надо доставить целым; содержимое не важно, важен сам груз.
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: N14CrateMedical
+  id: NcTradeCargoMedicalCrate
+  name: контрактный медицинский ящик
+  description: Пустой медицинский ящик с контрактной биркой. Его приняли как груз, а не как источник бесплатных медикаментов.
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: N14CrateAluminium
+  id: NcTradeCargoPartsCrate
+  name: контрактный ящик с деталями
+  description: Пустой алюминиевый ящик с контрактной биркой. Используется для заказов доставки в мастерскую.
+  categories: [ HideSpawnMenu ]
+
+# -----------------------------------------------------------------------------
+# Light city Retrieval routes for mapper-placed marker pools
+# -----------------------------------------------------------------------------
+
+- type: ncRetrievalSourcePreset
+  id: BazarLightSourceCityGateCargo
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractLightCityGateCargoSource
+
+- type: ncRetrievalSourcePreset
+  id: BazarLightSourceOutsideCargo
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractLightOutsideCargoSource
+
+- type: ncRetrievalSourcePreset
+  id: BazarLightSourceCityWarehouse
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractLightCityWarehouseSource
+
+- type: ncRetrievalDestinationPreset
+  id: BazarLightDestinationStoreUi
+  target:
+    type: StoreUi
+
+- type: ncRetrievalDestinationPreset
+  id: BazarLightDestinationOutsideDropoff
+  target:
+    type: MarkerGroup
+    id: TradeContractLightOutsideDropoff
+  radius: 2.0
+
+- type: ncRetrievalDestinationPreset
+  id: BazarLightDestinationClinicDropoff
+  target:
+    type: MarkerGroup
+    id: TradeContractLightClinicDropoff
+  radius: 2.0
+
+- type: ncRetrievalDestinationPreset
+  id: BazarLightDestinationWorkshopDropoff
+  target:
+    type: MarkerGroup
+    id: TradeContractLightWorkshopDropoff
+  radius: 2.0
+
+- type: ncRetrievalGuidancePreset
+  id: BazarLightGuidanceOutsideToTrader
+  sourceHint: "Ящик появился за городом, недалеко от безопасной дороги."
+  destinationHint: "Верните найденный ящик торговцу и сдайте его через интерфейс."
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 1
+
+- type: ncRetrievalGuidancePreset
+  id: BazarLightGuidanceGateToOutside
+  sourceHint: "Ящик появился у городских ворот."
+  destinationHint: "Отнесите ящик к ближайшей разгрузочной точке за городом. После доставки заберите накладную и верните её торговцу."
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 1
+
+- type: ncRetrievalGuidancePreset
+  id: BazarLightGuidanceWarehouseToClinic
+  sourceHint: "Медицинский ящик появился на городском складе."
+  destinationHint: "Отнесите ящик к указателю медпункта. После доставки заберите накладную и верните её торговцу."
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 1
+
+- type: ncRetrievalGuidancePreset
+  id: BazarLightGuidanceWarehouseToWorkshop
+  sourceHint: "Ящик с деталями появился на городском складе."
+  destinationHint: "Отнесите ящик к указателю мастерской. После доставки заберите накладную и верните её торговцу."
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 1
+
+- type: ncRetrievalRoutePreset
+  id: BazarLightRouteOutsideToTrader
+  source: BazarLightSourceOutsideCargo
+  destination: BazarLightDestinationStoreUi
+  claim:
+    mode: StoreCargo
+  guidance: BazarLightGuidanceOutsideToTrader
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: BazarLightRouteGateToOutsideProof
+  source: BazarLightSourceCityGateCargo
+  destination: BazarLightDestinationOutsideDropoff
+  claim:
+    mode: DestinationProof
+    proof: BazarDeliveryReceiptProof
+  guidance: BazarLightGuidanceGateToOutside
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: BazarLightRouteWarehouseToClinicProof
+  source: BazarLightSourceCityWarehouse
+  destination: BazarLightDestinationClinicDropoff
+  claim:
+    mode: DestinationProof
+    proof: BazarDeliveryReceiptProof
+  guidance: BazarLightGuidanceWarehouseToClinic
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: BazarLightRouteWarehouseToWorkshopProof
+  source: BazarLightSourceCityWarehouse
+  destination: BazarLightDestinationWorkshopDropoff
+  claim:
+    mode: DestinationProof
+    proof: BazarDeliveryReceiptProof
+  guidance: BazarLightGuidanceWarehouseToWorkshop
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false

@@ -19,7 +19,9 @@ public sealed class StoreDynamicState : BoundUserInterfaceState
         bool hasBarterTab,
         bool hasContractsTab,
         int contractSkipCost,
-        string contractSkipCurrency)
+        string contractSkipCurrency,
+        bool isSparseDynamicSnapshot = false,
+        List<string>? snapshotScopeIds = null)
     {
         Revision = revision;
         CatalogRevision = catalogRevision;
@@ -35,6 +37,8 @@ public sealed class StoreDynamicState : BoundUserInterfaceState
         HasContractsTab = hasContractsTab;
         ContractSkipCost = contractSkipCost;
         ContractSkipCurrency = contractSkipCurrency;
+        IsSparseDynamicSnapshot = isSparseDynamicSnapshot;
+        SnapshotScopeIds = snapshotScopeIds ?? new List<string>();
     }
 
     public int Revision { get; }
@@ -59,4 +63,14 @@ public sealed class StoreDynamicState : BoundUserInterfaceState
 
     /// <summary>Валюта для оплаты пропуска (stack type id).</summary>
     public string ContractSkipCurrency { get; }
+
+    /// <summary>
+    /// True when listing dynamic data is intentionally scoped to visible buy listings plus always-authoritative modes.
+    /// </summary>
+    public bool IsSparseDynamicSnapshot { get; }
+
+    /// <summary>
+    /// Listing ids whose dynamic values are authoritative in this snapshot. Missing values for these ids mean zero/default.
+    /// </summary>
+    public List<string> SnapshotScopeIds { get; }
 }

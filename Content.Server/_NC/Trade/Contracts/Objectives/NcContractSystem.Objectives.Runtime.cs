@@ -26,6 +26,7 @@ public sealed partial class NcContractSystem : EntitySystem
     private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByProof = new();
 
     private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByTarget = new();
+    private readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> _objectiveRuntimeByRetrievalCargo = new();
     private readonly List<(EntityUid Store, string ContractId)> _objectiveRuntimeKeysScratch = new();
 
     [Dependency] private readonly PinpointerSystem _pinpointer = default!;

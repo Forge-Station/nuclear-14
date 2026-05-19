@@ -21,10 +21,10 @@ public sealed partial class NcStoreMenu
             return true;
         }
 
-        private static bool SparseDictEqualsPreservingHiddenBuyListings(
+        private static bool ScopedDictEquals(
             Dictionary<string, int> authoritativeValues,
             Dictionary<string, int> cachedValues,
-            HashSet<string> buyListingIds
+            HashSet<string> snapshotScopeIds
         )
         {
             foreach (var (key, value) in authoritativeValues)
@@ -38,7 +38,7 @@ public sealed partial class NcStoreMenu
                 if (authoritativeValues.ContainsKey(key))
                     continue;
 
-                if (!buyListingIds.Contains(key))
+                if (snapshotScopeIds.Contains(key))
                     return false;
             }
 
@@ -58,10 +58,10 @@ public sealed partial class NcStoreMenu
             }
         }
 
-        private static void ApplySparseSnapshotPreservingHiddenBuyListings(
+        private static void ApplyScopedSnapshot(
             Dictionary<string, int> authoritativeValues,
             Dictionary<string, int> cachedValues,
-            HashSet<string> buyListingIds
+            HashSet<string> snapshotScopeIds
         )
         {
             var toRemove = new List<string>();
@@ -71,7 +71,7 @@ public sealed partial class NcStoreMenu
                 if (authoritativeValues.ContainsKey(key))
                     continue;
 
-                if (!buyListingIds.Contains(key))
+                if (snapshotScopeIds.Contains(key))
                     toRemove.Add(key);
             }
 

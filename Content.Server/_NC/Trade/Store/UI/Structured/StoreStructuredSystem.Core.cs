@@ -584,7 +584,10 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     {
         entry = null!;
 
-        if (string.IsNullOrWhiteSpace(listing.Id) || string.IsNullOrWhiteSpace(listing.ProductEntity))
+        if (string.IsNullOrWhiteSpace(listing.Id))
+            return false;
+
+        if (listing.Mode != StoreMode.Barter && string.IsNullOrWhiteSpace(listing.ProductEntity))
             return false;
 
         var currencyId = string.Empty;

@@ -22,6 +22,9 @@ public sealed partial class NcContractSystem : EntitySystem
         if (_objectiveRuntimeByProof.Remove(args.Entity, out var proofKey))
             OnObjectiveTrackedProofDestroyed(proofKey, args.Entity);
 
+        if (_objectiveRuntimeByRetrievalCargo.Remove(args.Entity, out var retrievalCargoKey))
+            OnRetrievalSpawnedCargoDestroyed(retrievalCargoKey, args.Entity);
+
         TryHandleHuntBodyEntityTerminating(args.Entity);
     }
 
@@ -343,6 +346,8 @@ public sealed partial class NcContractSystem : EntitySystem
         for (var i = state.RetrievalSpawnedEntities.Count - 1; i >= 0; i--)
         {
             var ent = state.RetrievalSpawnedEntities[i];
+            _objectiveRuntimeByRetrievalCargo.Remove(ent);
+
             if (deleteSpawnedEntities && ent != EntityUid.Invalid && !TerminatingOrDeleted(ent))
                 Del(ent);
         }

@@ -14,7 +14,7 @@ public sealed partial class NcContractCard
 
         var goal = BuildGoalsInline(c, 2);
         var group = string.IsNullOrWhiteSpace(c.OfferPoolName)
-            ? "Контракт"
+            ? Loc.GetString("nc-store-contract-title-fallback")
             : c.OfferPoolName.Trim();
 
         return string.IsNullOrWhiteSpace(goal)

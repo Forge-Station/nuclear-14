@@ -282,13 +282,6 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         var id = AllocateDeterministicId(baseId, ctx);
         var icon = ResolveBarterIcon(listingProto);
 
-        if (string.IsNullOrWhiteSpace(icon))
-        {
-            Sawmill.Warning(
-                $"[NcStore] Barter listing '{listingProto.ID}' in '{presetId}/{categoryId}' has no resolvable icon and was skipped.");
-            return 0;
-        }
-
         var listing = new NcStoreListingDef
         {
             Id = id,

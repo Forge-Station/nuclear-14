@@ -239,6 +239,8 @@ public enum ContractObjectiveType : byte
 {
     Delivery = 0,
     Hunt = 1,
+
+    // Value 2 is intentionally left open for old/future delivery variants.
     GhostRole = 3
 }
 [Serializable, NetSerializable]

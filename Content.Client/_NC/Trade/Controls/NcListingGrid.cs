@@ -27,7 +27,7 @@ public sealed partial class NcListingGrid : BoxContainer
         int UnitsPerPurchase,
         string DisplayName,
         string Description,
-        int BarterSig);
+        ulong BarterSig);
 
     private readonly Dictionary<string, (NcStoreListingControl Ctrl, ListingSig Sig)> _cache = new();
     private readonly Dictionary<string, StoreListingData> _itemById = new();
@@ -277,7 +277,6 @@ public sealed partial class NcListingGrid : BoxContainer
                 var actionsEnabled = true;
 
                 var created = new NcStoreListingControl(it, _sprites, _entMan, balanceHint, initQty, actionsEnabled);
-                created.OnQtyChanged = newQty => _qtyCache[it.Id] = newQty;
 
                 _cache[it.Id] = (created, sig);
                 tuple = (created, sig);
@@ -286,9 +285,11 @@ public sealed partial class NcListingGrid : BoxContainer
             var ctrl = tuple.Ctrl;
             ctrl.ApplyUiTheme(_uiColors);
 
-            ctrl.OnBarterPressed = _mode == StoreMode.Barter ? qty => _emit(it, qty) : null;
-            ctrl.OnBuyPressed = _mode == StoreMode.Buy ? qty => _emit(it, qty) : null;
-            ctrl.OnSellPressed = _mode == StoreMode.Sell ? qty => _emit(it, qty) : null;
+            ctrl.BindActions(
+                _mode == StoreMode.Barter ? qty => _emit(it, qty) : null,
+                _mode == StoreMode.Buy ? qty => _emit(it, qty) : null,
+                _mode == StoreMode.Sell ? qty => _emit(it, qty) : null,
+                newQty => _qtyCache[it.Id] = newQty);
 
             ctrl.UpdateDynamicData(balanceHint, it.Remaining, it.Owned);
 
@@ -326,37 +327,65 @@ public sealed partial class NcListingGrid : BoxContainer
 
 
 
-    private static int ComputeBarterSig(StoreListingData d)
+    private static ulong ComputeBarterSig(StoreListingData d)
     {
         unchecked
         {
-            var h = 17;
+            var h = 14695981039346656037UL;
             for (var i = 0; i < d.BarterCost.Count; i++)
             {
                 var c = d.BarterCost[i];
-                h = h * 31 + (StringComparer.Ordinal.GetHashCode(c.Prototype ?? string.Empty));
-                h = h * 31 + (StringComparer.Ordinal.GetHashCode(c.Group ?? string.Empty));
-                h = h * 31 + (StringComparer.Ordinal.GetHashCode(c.Currency ?? string.Empty));
-                h = h * 31 + c.Count;
+                h = MixStableString(h, c.Prototype);
+                h = MixStableString(h, c.Group);
+                h = MixStableString(h, c.Currency);
+                h = MixStableInt(h, c.Count);
             }
 
             for (var i = 0; i < d.BarterReceive.Count; i++)
             {
                 var r = d.BarterReceive[i];
-                h = h * 31 + (StringComparer.Ordinal.GetHashCode(r.Prototype ?? string.Empty));
-                h = h * 31 + (StringComparer.Ordinal.GetHashCode(r.Currency ?? string.Empty));
-                h = h * 31 + r.Count;
+                h = MixStableString(h, r.Prototype);
+                h = MixStableString(h, r.Currency);
+                h = MixStableInt(h, r.Count);
             }
 
             for (var i = 0; i < d.BarterReceivePools.Count; i++)
             {
                 var r = d.BarterReceivePools[i];
-                h = h * 31 + (StringComparer.Ordinal.GetHashCode(r.Pool ?? string.Empty));
-                h = h * 31 + r.Rolls.Min;
-                h = h * 31 + r.Rolls.Max;
-                h = h * 31 + r.Chance.GetHashCode();
+                h = MixStableString(h, r.Pool);
+                h = MixStableInt(h, r.Rolls.Min);
+                h = MixStableInt(h, r.Rolls.Max);
+                h = MixStableInt(h, BitConverter.SingleToInt32Bits(r.Chance));
             }
 
+            return h;
+        }
+    }
+
+    private static ulong MixStableString(ulong hash, string? value)
+    {
+        unchecked
+        {
+            if (value == null)
+                return MixStableInt(hash, -1);
+
+            var h = hash;
+            for (var i = 0; i < value.Length; i++)
+                h = (h ^ (uint) value[i]) * 1099511628211UL;
+
+            return MixStableInt(h, value.Length);
+        }
+    }
+
+    private static ulong MixStableInt(ulong hash, int value)
+    {
+        unchecked
+        {
+            var h = hash;
+            h = (h ^ (uint) (value & 0xFF)) * 1099511628211UL;
+            h = (h ^ (uint) ((value >> 8) & 0xFF)) * 1099511628211UL;
+            h = (h ^ (uint) ((value >> 16) & 0xFF)) * 1099511628211UL;
+            h = (h ^ (uint) ((value >> 24) & 0xFF)) * 1099511628211UL;
             return h;
         }
     }

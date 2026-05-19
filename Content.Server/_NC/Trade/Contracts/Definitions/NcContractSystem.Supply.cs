@@ -25,6 +25,7 @@ public sealed partial class NcContractSystem : EntitySystem
             Repeatable = proto.Repeatable,
             Taken = false,
             ObjectiveType = ContractObjectiveType.Delivery,
+            ExecutionKind = ContractExecutionKind.InventoryDelivery,
             Runtime = new ContractRuntimeContextData(),
             Config = CreateSupplyObjectiveConfig(proto),
             FlowStatus = ContractFlowStatus.Available,

@@ -20,6 +20,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryValidateContractRewards(ctx.User, ctx.Contract.Rewards, out fail))
             return false;
 
+        UnregisterRetrievalSpawnedCargoTakePlan(ctx.Contract, ctx.TakePlan);
         ExecuteClaimTakePlan(ctx.TakePlan);
         InvalidateClaimExecutionCaches(ctx);
 

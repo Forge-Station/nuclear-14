@@ -125,6 +125,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         {
             if (!string.IsNullOrWhiteSpace(listing.ProductEntity))
                 return true;
+
+            if (listing.Mode == StoreMode.Barter && listing.BarterCost.Count > 0)
+                return true;
         }
 
         return false;
@@ -227,10 +230,15 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             if (listing.Mode == StoreMode.Buy && !isVisibleBuyListing)
                 continue;
 
+            buf.ListingScopeIds.Add(listing.Id);
+
             if (ShouldSendListingRemaining(listing, isVisibleBuyListing))
                 buf.RemainingById[listing.Id] = listing.RemainingCount;
 
-            if (userSnap == null || string.IsNullOrWhiteSpace(listing.ProductEntity))
+            if (userSnap == null)
+                continue;
+
+            if (listing.Mode != StoreMode.Barter && string.IsNullOrWhiteSpace(listing.ProductEntity))
                 continue;
 
             var owned = listing.Mode == StoreMode.Barter
@@ -287,22 +295,12 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         DynamicStateBuffer buf)
     {
         if (!hasContractsTab || comp.Contracts.Count == 0)
-        {
-            scratch.ResetContractsFingerprint();
             return;
-        }
 
         foreach (var contract in comp.Contracts.Values)
             buf.Contracts.Add(MapContractToClient(contract));
 
         buf.Contracts.Sort(CompareContractsForUi);
-
-        var contractsFingerprint = buf.Contracts.ComputeFingerprint();
-        if (!scratch.ShouldRebuildContracts(contractsFingerprint))
-        {
-            buf.Contracts.Clear();
-            buf.Contracts.AddRange(scratch.GetReadBuffer().Contracts);
-        }
     }
 
     private void PopulateDynamicContractSkip(
@@ -360,7 +358,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 tabs.HasBarterTab,
                 tabs.HasContractsTab,
                 buf.ContractSkipCost,
-                buf.ContractSkipCurrency
+                buf.ContractSkipCurrency,
+                scratch.HasVisibleIds,
+                new List<string>(buf.ListingScopeIds)
             )
         );
 

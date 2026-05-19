@@ -20,7 +20,7 @@ public sealed class ContractServerData
     public ContractObjectiveConfigData Config { get; set; } = new();
     public ContractFlowStatus FlowStatus { get; set; } = ContractFlowStatus.Available;
 
-    public ContractExecutionKind ExecutionKind => ContractExecutionKinds.Resolve(ObjectiveType, Config.TargetPrototype);
+    public ContractExecutionKind ExecutionKind { get; set; } = ContractExecutionKind.InventoryDelivery;
     public bool IsInventoryDelivery => ExecutionKind == ContractExecutionKind.InventoryDelivery;
     public bool IsTrackedDeliveryObjective => ExecutionKind == ContractExecutionKind.TrackedDeliveryObjective;
     public bool IsHuntObjective => ExecutionKind == ContractExecutionKind.HuntObjective;

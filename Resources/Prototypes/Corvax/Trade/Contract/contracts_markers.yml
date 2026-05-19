@@ -1,0 +1,339 @@
+# Mapper-only contract anchors.
+#
+# Эти сущности нужны мапперам. Они не добавляют контракты сами по себе,
+# а дают стабильные NcContractSpawnPoint id/groups для будущих marker-based заказов.
+#
+# Зелёные маркеры = где появляется груз.
+# Синие маркеры = куда груз надо доставить.
+# Красные маркеры = где появляются опасные цели/особые роли.
+
+- type: entity
+  id: MarkerTradeContractBase
+  abstract: true
+  parent: MarkerBase
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    sprite: Markers/cross.rsi
+
+- type: entity
+  id: MarkerTradeContractSpawnBase
+  abstract: true
+  parent: MarkerTradeContractBase
+  components:
+  - type: Sprite
+    layers:
+    - state: green
+
+- type: entity
+  id: MarkerTradeContractDestinationBase
+  abstract: true
+  parent: MarkerTradeContractBase
+  components:
+  - type: Sprite
+    layers:
+    - state: blue
+
+- type: entity
+  id: MarkerTradeContractDangerBase
+  abstract: true
+  parent: MarkerTradeContractBase
+  components:
+  - type: Sprite
+    layers:
+    - state: red
+
+# -----------------------------------------------------------------------------
+# Generic mapper anchors
+# -----------------------------------------------------------------------------
+
+- type: entity
+  id: MarkerTradeContractHuntSpawn
+  parent: MarkerTradeContractDangerBase
+  name: "контракт: место охоты"
+  description: "Общая точка появления контрактных целей охоты. Ставьте в логичных опасных местах: подвал, логово, лагерь, тоннель."
+  suffix: NC, Contracts, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractHuntSpawn
+    groups:
+    - TradeContractHuntSpawn
+    - TradeContractHunt
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeContractGhostRoleSpawn
+  parent: MarkerTradeContractDangerBase
+  name: "контракт: место особой роли"
+  description: "Общая точка появления цели для контрактной гост-роли. Ставьте там, где роль должна начать сцену."
+  suffix: NC, Contracts, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractGhostSpawn
+    groups:
+    - TradeContractGhostSpawn
+    - TradeContractGhostRole
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeContractStoreCargoSource
+  parent: MarkerTradeContractSpawnBase
+  name: "контракт: груз у торговца"
+  description: "Источник груза рядом с торговцем или доской. Подходит для заказов: забрать груз здесь и отнести в другую точку."
+  suffix: NC, Contracts, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractStoreSpawn
+    groups:
+    - TradeContractStoreSpawn
+    - TradeContractCargoSource
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeContractWarehouseCargoSource
+  parent: MarkerTradeContractSpawnBase
+  name: "контракт: груз на складе"
+  description: "Источник груза на складе. Используйте для городских доставок: склад -> медпункт, склад -> мастерская, склад -> кухня."
+  suffix: NC, Contracts, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractWarehouseSpawn
+    groups:
+    - TradeContractWarehouseSpawn
+    - TradeContractCargoSource
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeContractRoadCargoSource
+  parent: MarkerTradeContractSpawnBase
+  name: "контракт: груз у дороги"
+  description: "Источник потерянного груза рядом с дорогой. Подходит для заказов: найти ящик недалеко от города и вернуть торговцу."
+  suffix: NC, Contracts, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractRoadSpawn
+    groups:
+    - TradeContractRoadSpawn
+    - TradeContractCargoSource
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeContractMineCargoSource
+  parent: MarkerTradeContractSpawnBase
+  name: "контракт: груз у шахты"
+  description: "Источник груза у шахты или промзоны. Это заготовка для будущих средних маршрутов."
+  suffix: NC, Contracts, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractMineSpawn
+    groups:
+    - TradeContractMineSpawn
+    - TradeContractCargoSource
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeContractLargeCargoSource
+  parent: MarkerTradeContractSpawnBase
+  name: "контракт: крупный груз, источник"
+  description: "Источник крупного груза или структуры. Используйте осторожно: игрок должен физически довезти именно этот объект."
+  suffix: NC, Contracts, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractStructureSpawn
+    groups:
+    - TradeContractStructureSpawn
+    - TradeContractCargoSource
+    - TradeContractLargeCargo
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeContractDeliveryPoint
+  parent: MarkerTradeContractDestinationBase
+  name: "контракт: точка доставки"
+  description: "Общая точка приёмки груза. Если маршрут выдаёт накладную, груз надо доставить сюда, затем отнести накладную торговцу."
+  suffix: NC, Contracts, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractDeliverySpawn
+    groups:
+    - TradeContractDeliverySpawn
+    - TradeContractDestination
+    - TradeContractDropoff
+
+- type: entity
+  id: MarkerTradeContractLargeCargoDropoff
+  parent: MarkerTradeContractDestinationBase
+  name: "контракт: выгрузка крупного груза"
+  description: "Точка приёмки крупного груза или структуры. Ставьте на просторном месте, чтобы объект не застрял в мебели."
+  suffix: NC, Contracts, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractStructureDropoff
+    groups:
+    - TradeContractStructureDropoff
+    - TradeContractDestination
+    - TradeContractLargeCargo
+    - TradeContractDropoff
+
+# -----------------------------------------------------------------------------
+# Light city contract anchors
+# -----------------------------------------------------------------------------
+
+- type: entity
+  id: MarkerTradeLightCityBasementHunt
+  parent: MarkerTradeContractDangerBase
+  name: "лёгкий контракт: радтараканы в подвале"
+  description: "Поставьте в городском подвале, канализации или другом маленьком опасном помещении. Здесь появятся цели лёгкой охоты."
+  suffix: NC, Contracts, Light, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractLightCityBasementHuntSpawn
+    groups:
+    - TradeContractLightCityBasementHuntSpawn
+    - TradeContractLight
+    - TradeContractLightHunt
+    - TradeContractHunt
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeLightCityGateCargoSource
+  parent: MarkerTradeContractSpawnBase
+  name: "лёгкий контракт: ящик у городских ворот"
+  description: "Поставьте возле ворот или рядом с торговым автоматом. Здесь появится ящик, который надо отнести за город."
+  suffix: NC, Contracts, Light, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractLightCityGateCargoSource
+    groups:
+    - TradeContractLightCityGateCargoSource
+    - TradeContractLight
+    - TradeContractLightCargoSource
+    - TradeContractCargoSource
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeLightOutsideCargoSource
+  parent: MarkerTradeContractSpawnBase
+  name: "лёгкий контракт: потерянный ящик за городом"
+  description: "Поставьте недалеко от города, но уже за безопасной чертой. Здесь появится потерянный ящик для возврата торговцу."
+  suffix: NC, Contracts, Light, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractLightOutsideCargoSource
+    groups:
+    - TradeContractLightOutsideCargoSource
+    - TradeContractLight
+    - TradeContractLightCargoSource
+    - TradeContractCargoSource
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeLightOutsideDropoff
+  parent: MarkerTradeContractDestinationBase
+  name: "лёгкий контракт: разгрузка за городом"
+  description: "Поставьте у ближайшего поста, стоянки или складской точки за городом. Сюда доставляют ящик из города."
+  suffix: NC, Contracts, Light, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractLightOutsideDropoff
+    groups:
+    - TradeContractLightOutsideDropoff
+    - TradeContractLight
+    - TradeContractLightDestination
+    - TradeContractDestination
+    - TradeContractDropoff
+
+- type: entity
+  id: MarkerTradeLightCityWarehouseSource
+  parent: MarkerTradeContractSpawnBase
+  name: "лёгкий контракт: городской склад"
+  description: "Поставьте на складе или у подсобки. Здесь появляются ящики для коротких доставок по городу."
+  suffix: NC, Contracts, Light, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractLightCityWarehouseSource
+    groups:
+    - TradeContractLightCityWarehouseSource
+    - TradeContractLight
+    - TradeContractLightCargoSource
+    - TradeContractCargoSource
+    - TradeContractObjectiveSpawn
+
+- type: entity
+  id: MarkerTradeLightClinicDropoff
+  parent: MarkerTradeContractDestinationBase
+  name: "лёгкий контракт: приёмка медпункта"
+  description: "Поставьте внутри медпункта или у его двери. Сюда доставляют медицинские ящики со склада."
+  suffix: NC, Contracts, Light, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractLightClinicDropoff
+    groups:
+    - TradeContractLightClinicDropoff
+    - TradeContractLight
+    - TradeContractLightDestination
+    - TradeContractDestination
+    - TradeContractDropoff
+
+- type: entity
+  id: MarkerTradeLightWorkshopDropoff
+  parent: MarkerTradeContractDestinationBase
+  name: "лёгкий контракт: приёмка мастерской"
+  description: "Поставьте в мастерской или гараже. Сюда доставляют ящики с инструментами и деталями."
+  suffix: NC, Contracts, Light, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractLightWorkshopDropoff
+    groups:
+    - TradeContractLightWorkshopDropoff
+    - TradeContractLight
+    - TradeContractLightDestination
+    - TradeContractDestination
+    - TradeContractDropoff
+
+- type: entity
+  id: MarkerTradeLightKitchenDropoff
+  parent: MarkerTradeContractDestinationBase
+  name: "лёгкий контракт: приёмка кухни"
+  description: "Поставьте у кухни, бара или столовой. Это точка для будущих доставок еды по городу."
+  suffix: NC, Contracts, Light, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractLightKitchenDropoff
+    groups:
+    - TradeContractLightKitchenDropoff
+    - TradeContractLight
+    - TradeContractLightDestination
+    - TradeContractDestination
+    - TradeContractDropoff
+
+- type: entity
+  id: MarkerTradeLightMarketDropoff
+  parent: MarkerTradeContractDestinationBase
+  name: "лёгкий контракт: приёмка рынка"
+  description: "Поставьте на рынке или у лавки. Это точка для будущих коротких доставок между торговцами."
+  suffix: NC, Contracts, Light, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractLightMarketDropoff
+    groups:
+    - TradeContractLightMarketDropoff
+    - TradeContractLight
+    - TradeContractLightDestination
+    - TradeContractDestination
+    - TradeContractDropoff
+
+- type: entity
+  id: MarkerTradeLightGarden
+  parent: MarkerTradeContractSpawnBase
+  name: "лёгкий контракт: огород или грядки"
+  description: "Поставьте рядом с грядками. Это заготовка под будущие ботанические поручения вроде выращивания брока."
+  suffix: NC, Contracts, Light, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractLightGarden
+    groups:
+    - TradeContractLightGarden
+    - TradeContractLight
+    - TradeContractObjectiveSpawn

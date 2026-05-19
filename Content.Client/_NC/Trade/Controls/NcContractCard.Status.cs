@@ -113,16 +113,19 @@ public sealed partial class NcContractCard
 
         return data.FlowStatus switch
         {
-            ContractFlowStatus.Available => "Маршрут ещё не принят.",
-            ContractFlowStatus.InProgress when max > 1 => $"Доставлено груза: {progress} / {max}.",
+            ContractFlowStatus.Available => Loc.GetString("nc-store-contract-route-status-available"),
+            ContractFlowStatus.InProgress when max > 1 => Loc.GetString(
+                "nc-store-contract-route-status-progress",
+                ("progress", progress),
+                ("max", max)),
             ContractFlowStatus.InProgress => progress > 0
-                ? "Груз доставлен. Завершите маршрут."
-                : "Найдите груз и доставьте его по маршруту.",
+                ? Loc.GetString("nc-store-contract-route-status-delivered")
+                : Loc.GetString("nc-store-contract-route-status-find-cargo"),
             ContractFlowStatus.ReadyToTurnIn when data.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof && !string.IsNullOrWhiteSpace(data.TurnInItem) => data.RetrievalProofIsBearer
-                ? "Доставка подтверждена. Верните доказательство торговцу; награду получит предъявитель."
-                : "Доставка подтверждена. Вернитесь к торговцу с доказательством.",
-            ContractFlowStatus.ReadyToTurnIn when data.RetrievalClaimMode == NcRetrievalClaimMode.StoreCargo => "Груз доставлен. Заберите награду у торговца.",
-            ContractFlowStatus.ReadyToTurnIn => "Маршрут выполнен. Получите награду у торговца.",
+                ? Loc.GetString("nc-store-contract-route-status-proof-bearer")
+                : Loc.GetString("nc-store-contract-route-status-proof-return"),
+            ContractFlowStatus.ReadyToTurnIn when data.RetrievalClaimMode == NcRetrievalClaimMode.StoreCargo => Loc.GetString("nc-store-contract-route-status-store-cargo-ready"),
+            ContractFlowStatus.ReadyToTurnIn => Loc.GetString("nc-store-contract-route-status-ready"),
             _ => string.Empty
         };
     }
@@ -276,15 +279,18 @@ public sealed partial class NcContractCard
 
         return data.FlowStatus switch
         {
-            ContractFlowStatus.Available => "Примите маршрут доставки.",
-            ContractFlowStatus.InProgress when progress < max => $"Доставьте груз: {progress} / {max}.",
-            ContractFlowStatus.InProgress when data.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof => "После полной сдачи получите одно доказательство доставки.",
-            ContractFlowStatus.InProgress => "Дождитесь подтверждения доставки.",
+            ContractFlowStatus.Available => Loc.GetString("nc-store-contract-route-action-available"),
+            ContractFlowStatus.InProgress when progress < max => Loc.GetString(
+                "nc-store-contract-route-action-progress",
+                ("progress", progress),
+                ("max", max)),
+            ContractFlowStatus.InProgress when data.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof => Loc.GetString("nc-store-contract-route-action-proof-after-delivery"),
+            ContractFlowStatus.InProgress => Loc.GetString("nc-store-contract-route-action-wait-confirmation"),
             ContractFlowStatus.ReadyToTurnIn when data.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof && !string.IsNullOrWhiteSpace(data.TurnInItem) => data.RetrievalProofIsBearer
-                ? "Принесите доказательство торговцу. Его можно передать, украсть или продать."
-                : "Принесите доказательство торговцу.",
-            ContractFlowStatus.ReadyToTurnIn when data.RetrievalClaimMode == NcRetrievalClaimMode.StoreCargo => "Награда доступна у торговца. Proof не нужен.",
-            ContractFlowStatus.ReadyToTurnIn => "Получите награду у торговца.",
+                ? Loc.GetString("nc-store-contract-route-action-proof-bearer")
+                : Loc.GetString("nc-store-contract-route-action-proof"),
+            ContractFlowStatus.ReadyToTurnIn when data.RetrievalClaimMode == NcRetrievalClaimMode.StoreCargo => Loc.GetString("nc-store-contract-route-action-store-cargo-ready"),
+            ContractFlowStatus.ReadyToTurnIn => Loc.GetString("nc-store-contract-route-action-ready"),
             _ => string.Empty
         };
     }

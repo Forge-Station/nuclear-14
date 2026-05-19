@@ -60,6 +60,7 @@ public sealed partial class NcContractSystem : EntitySystem
             Repeatable = proto.Repeatable,
             Taken = false,
             ObjectiveType = ContractObjectiveType.GhostRole,
+            ExecutionKind = ContractExecutionKind.GhostRoleObjective,
             Runtime = runtime,
             Config = config,
             FlowStatus = ContractFlowStatus.Available,

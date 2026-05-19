@@ -178,7 +178,10 @@ public sealed class NcStoreSystem : EntitySystem
             return;
         }
 
-        var count = Math.Clamp(msg.Count, 1, MaxTransactionCount);
+        if (msg.Count <= 0)
+            return;
+
+        var count = Math.Min(msg.Count, MaxTransactionCount);
         if (!_logic.TryBuy(listing.Id, uid, comp, actor, count))
         {
             PopupFail(actor, Loc.GetString("nc-store-popup-transaction-failed"));
@@ -212,7 +215,10 @@ public sealed class NcStoreSystem : EntitySystem
         }
 
 
-        var count = Math.Clamp(msg.Count, 1, MaxTransactionCount);
+        if (msg.Count <= 0)
+            return;
+
+        var count = Math.Min(msg.Count, MaxTransactionCount);
 
         bool ok;
 
@@ -267,7 +273,10 @@ public sealed class NcStoreSystem : EntitySystem
             return;
         }
 
-        var count = Math.Clamp(msg.Count, 1, MaxTransactionCount);
+        if (msg.Count <= 0)
+            return;
+
+        var count = Math.Min(msg.Count, MaxTransactionCount);
         if (!_logic.TryBarter(listing.Id, uid, comp, actor, count))
         {
             PopupFail(actor, Loc.GetString("nc-store-popup-transaction-failed"));

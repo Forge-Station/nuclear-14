@@ -24,7 +24,6 @@ public sealed partial class NcContractCard : PanelContainer
 
     private ContractClientData _data;
     private float _lastDescriptionMaxWidth = -1f;
-    private int _presentationHash;
     private float _progressRatio;
     private int _skipBalance;
     private int _skipCost;
@@ -48,7 +47,6 @@ public sealed partial class NcContractCard : PanelContainer
         _skipCost = skipCost;
         _skipCurrency = skipCurrency;
         _skipBalance = skipBalance;
-        _presentationHash = ComputePresentationHash(data, skipCost, skipCurrency, skipBalance);
         PrimaryActionButton.OnPressed += OnPrimaryActionPressed;
 
         PopulateUi();
@@ -327,8 +325,8 @@ public sealed partial class NcContractCard : PanelContainer
 
     private void PopulateStage()
     {
-        var hasStage = _data.ExecutionKind is ContractExecutionKind.HuntObjective
-                or ContractExecutionKind.GhostRoleObjective &&
+        var hasStage = (_data.ExecutionKind is ContractExecutionKind.HuntObjective
+                or ContractExecutionKind.GhostRoleObjective) &&
             _data.Runtime.StageGoal > 1;
 
         StageLabel.Visible = hasStage;
@@ -383,7 +381,7 @@ public sealed partial class NcContractCard : PanelContainer
         _progressRatio = max > 0 ? (float) val / max : 0f;
 
         ProgressLabel.Text = _data.IsRetrievalRoute
-            ? "Доставлено"
+            ? Loc.GetString("nc-store-contract-progress-caption-delivered")
             : Loc.GetString("nc-store-contract-progress-caption");
         ProgressValueLabel.Text = Loc.GetString(
             "nc-store-contract-progress-value",
@@ -567,11 +565,6 @@ public sealed partial class NcContractCard : PanelContainer
 
     public void UpdateData(ContractClientData data, int skipCost, string skipCurrency, int skipBalance)
     {
-        var presentationHash = ComputePresentationHash(data, skipCost, skipCurrency, skipBalance);
-        if (_presentationHash == presentationHash)
-            return;
-
-        _presentationHash = presentationHash;
         _data = data;
         _skipCost = skipCost;
         _skipCurrency = skipCurrency;

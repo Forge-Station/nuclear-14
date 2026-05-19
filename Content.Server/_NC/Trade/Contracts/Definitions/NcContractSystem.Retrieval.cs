@@ -13,6 +13,7 @@ public sealed partial class NcContractSystem : EntitySystem
         var mainTarget = GetPrimaryTargetId(cargo);
         var matchMode = cargo.Count > 0 ? cargo[0].MatchMode : PrototypeMatchMode.Exact;
         var rewards = BakeRewardsForContract(store, proto.ID, BuildRetrievalRewardDefs(store, proto));
+        var config = CreateRetrievalObjectiveConfig(proto);
 
         var contract = new ContractServerData
         {
@@ -22,8 +23,9 @@ public sealed partial class NcContractSystem : EntitySystem
             Repeatable = proto.Repeatable,
             Taken = false,
             ObjectiveType = ContractObjectiveType.Delivery,
+            ExecutionKind = ContractExecutionKinds.Resolve(ContractObjectiveType.Delivery, config.TargetPrototype),
             Runtime = new ContractRuntimeContextData(),
-            Config = CreateRetrievalObjectiveConfig(proto),
+            Config = config,
             FlowStatus = ContractFlowStatus.Available,
             MatchMode = matchMode,
             Targets = cargo,

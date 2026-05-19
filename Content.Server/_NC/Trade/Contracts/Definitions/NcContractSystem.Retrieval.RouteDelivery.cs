@@ -259,6 +259,7 @@ public sealed partial class NcContractSystem : EntitySystem
             {
                 state.RetrievalAcceptedCargoCount++;
                 state.RetrievalSpawnedEntities.RemoveAt(i);
+                UnregisterRetrievalSpawnedCargo(cargo);
 
                 if (!TerminatingOrDeleted(cargo))
                     Del(cargo);
@@ -497,6 +498,7 @@ public sealed partial class NcContractSystem : EntitySystem
         foreach (var cargo in state.RetrievalDeliveredEntities)
         {
             state.RetrievalSpawnedEntities.Remove(cargo);
+            UnregisterRetrievalSpawnedCargo(cargo);
             if (cargo != EntityUid.Invalid && !TerminatingOrDeleted(cargo))
                 Del(cargo);
         }

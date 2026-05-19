@@ -131,7 +131,9 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
             st.HasContractsTab,
             st.Contracts,
             st.ContractSkipCost,
-            st.ContractSkipCurrency);
+            st.ContractSkipCurrency,
+            st.IsSparseDynamicSnapshot,
+            st.SnapshotScopeIds);
 
     private void EnsureMenuCreated()
     {

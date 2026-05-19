@@ -54,6 +54,18 @@
     id: BazarSupplyRawMeat
     weight: 2
   - type: Supply
+    id: BazarSupplyHealingPowder
+    weight: 2
+  - type: Supply
+    id: BazarSupplyCookedRadMeat
+    weight: 2
+  - type: Supply
+    id: BazarSupplyAbraxo
+    weight: 1
+  - type: Supply
+    id: BazarSupplyCigarettePacks
+    weight: 1
+  - type: Supply
     id: BazarSupplyVarmintRifles
     weight: 1
   - type: Supply
@@ -151,6 +163,18 @@
   - N14DrinkNukaColaGrape
   - N14DrinkNukaColaWild
   - N14DrinkNukaColaYellow
+
+- type: ncItemGroup
+  id: BazarGroupCigarettePacks
+  name: "Пачки сигарет"
+  description: "Любая целая пачка довоенных сигарет, пригодная для обмена и караванных привалов."
+  icon: N14CigarettePackWinston
+  prototypes:
+  - N14CigarettePackSalem
+  - N14CigarettePackKool
+  - N14CigarettePackMarlboro
+  - N14CigarettePackWinston
+  - N14CigarettePackRepublics
 
 # -----------------------------------------------------------------------------
 # Группы тел и опасных целей
@@ -373,6 +397,70 @@
     count: { min: 100, max: 120 }
   - type: Pool
     pool: caravan_easy
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyHealingPowder
+  name: "Лечебный порошок"
+  description: "Лекарь просит запас лечебного порошка для простых ран и ожогов. Не самая редкая вещь, но когда она заканчивается, все сразу вспоминают, что пустошь кусается."
+  icon: N14HealingPowder
+  targets:
+  - prototype: N14HealingPowder
+    count: 1
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 55, max: 90 }
+  - type: Pool
+    pool: caravan_easy
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyCookedRadMeat
+  name: "Жареное рад-мясо в дорогу"
+  description: "Караванщики не хотят выходить на маршрут с пустыми желудками. Принесите готовое жареное рад-мясо: не праздничный ужин, зато сытно, привычно и не портится от одного взгляда на пустошь."
+  icon: N14FoodMeatCooked
+  targets:
+  - prototype: N14FoodMeatCooked
+    count: { min: 3, max: 6 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 55, max: 95 }
+  - type: Pool
+    pool: caravan_easy
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyAbraxo
+  name: "Абраксо для уборки"
+  description: "После рынка, мастерской и медпункта город пахнет так, будто его уже похоронили. Принесите пару коробок Абраксо, чтобы уборщики хотя бы сделали вид, что справляются."
+  icon: N14JunkAbraxoCleaner
+  targets:
+  - prototype: N14JunkAbraxoCleaner
+    count: 1
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 40, max: 70 }
+  - type: Pool
+    pool: caravan_easy_nonweapons
+    count: 1
+
+- type: ncSupplyContract
+  id: BazarSupplyCigarettePacks
+  name: "Пачки сигарет для привала"
+  description: "На дальних стоянках сигареты иногда меняют охотнее, чем патроны. Принесите целые пачки, и караванщики сами решат, курить их или пустить в обмен."
+  icon: N14CigarettePackWinston
+  targets:
+  - group: BazarGroupCigarettePacks
+    count: { min: 1, max: 3 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 45, max: 85 }
+  - type: Pool
+    pool: caravan_easy_nonweapons
     count: 1
 
 - type: ncSupplyContract
@@ -639,4 +727,132 @@
     count: { min: 600, max: 1000 }
   - type: Pool
     pool: caravan_hard
+    count: 1
+
+# -----------------------------------------------------------------------------
+# Лёгкие городские поручения с маркерами
+#
+# Этот пул пока НЕ подключён к PresetBazar. Он нужен как готовый набор для мапперов:
+# расставили маркеры из contracts_markers.yml -> добавили этот pool в contractOffers.groups.
+# -----------------------------------------------------------------------------
+
+- type: ncContractOfferPool
+  id: BazarLightMappedOrders
+  name: "Городские поручения"
+  order: 15
+  color: "#D6B36A"
+  entries:
+  - type: Hunt
+    id: BazarLightHuntBasementRadroaches
+    weight: 2
+  - type: Retrieval
+    id: BazarLightRecoverRoadCrate
+    weight: 3
+  - type: Retrieval
+    id: BazarLightDeliverGateCrateOutside
+    weight: 3
+  - type: Retrieval
+    id: BazarLightCourierMedsToClinic
+    weight: 2
+  - type: Retrieval
+    id: BazarLightCourierPartsToWorkshop
+    weight: 2
+
+- type: ncHuntGroup
+  id: BazarLightHuntGroupRadroaches
+  name: "Радтараканы"
+  description: "Обычные радтараканы для лёгких контрактов в подвалах и подсобках."
+  icon: N14MobRadroach
+  prototypes:
+  - N14MobRadroach
+
+- type: ncHuntContract
+  id: BazarLightHuntBasementRadroaches
+  name: "Радтараканы в подвале"
+  description: "В одном из городских подвалов снова шуршат радтараканы. Возьмите заказ, спуститесь к отмеченному месту, перебейте всю стаю и принесите торговцу трофейную метку с последней твари."
+  icon: N14MobRadroach
+  targets:
+  - group: BazarLightHuntGroupRadroaches
+    count: 4
+  completion:
+    mode: TrophyTurnIn
+    trophy: NcTradeContractProofRadroachTrophy
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractLightCityBasementHuntSpawn
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 80, max: 120 }
+  - type: Pool
+    pool: caravan_easy
+    count: 1
+
+- type: ncRetrievalContract
+  id: BazarLightRecoverRoadCrate
+  name: "Потерянный ящик у дороги"
+  description: "Караван потерял небольшой деревянный ящик сразу за городом. Найдите его у ближайшей дороги, верните торговцу и сдайте через интерфейс автомата или доски. Накладная для этого заказа не нужна: важен сам ящик."
+  icon: NcTradeCargoWoodenCrate
+  cargo:
+  - prototype: NcTradeCargoWoodenCrate
+    count: 1
+  route: BazarLightRouteOutsideToTrader
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 35, max: 55 }
+  - type: Pool
+    pool: caravan_easy
+    count: 1
+
+- type: ncRetrievalContract
+  id: BazarLightDeliverGateCrateOutside
+  name: "Ящик на ближайший пост"
+  description: "У городских ворот ждёт деревянный ящик с мелкими припасами. Отнесите его к ближайшей разгрузочной точке за городом. Когда груз примут, появится накладная; принесите её торговцу, чтобы получить награду."
+  icon: NcTradeCargoWoodenCrate
+  cargo:
+  - prototype: NcTradeCargoWoodenCrate
+    count: 1
+  route: BazarLightRouteGateToOutsideProof
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 45, max: 70 }
+  - type: Pool
+    pool: caravan_easy
+    count: 1
+
+- type: ncRetrievalContract
+  id: BazarLightCourierMedsToClinic
+  name: "Медицинский ящик в медпункт"
+  description: "На городском складе подготовили медицинский ящик для медпункта. Заберите груз, отнесите его к указателю приёмки в медпункте, затем заберите накладную и верните её торговцу."
+  icon: NcTradeCargoMedicalCrate
+  cargo:
+  - prototype: NcTradeCargoMedicalCrate
+    count: 1
+  route: BazarLightRouteWarehouseToClinicProof
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 55, max: 85 }
+  - type: Pool
+    pool: caravan_easy
+    count: 1
+
+- type: ncRetrievalContract
+  id: BazarLightCourierPartsToWorkshop
+  name: "Детали для мастерской"
+  description: "Мастерская ждёт ящик с мелкими деталями и инструментами. Заберите его на городском складе, доставьте к указателю мастерской, получите накладную и принесите её обратно торговцу."
+  icon: NcTradeCargoPartsCrate
+  cargo:
+  - prototype: NcTradeCargoPartsCrate
+    count: 1
+  route: BazarLightRouteWarehouseToWorkshopProof
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 55, max: 90 }
+  - type: Pool
+    pool: caravan_easy
     count: 1

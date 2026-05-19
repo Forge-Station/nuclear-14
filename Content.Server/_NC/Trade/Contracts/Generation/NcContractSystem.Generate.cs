@@ -32,6 +32,7 @@ public sealed partial class NcContractSystem : EntitySystem
             Description = "Invalid contract candidate.",
             Repeatable = candidate.Repeatable,
             ObjectiveType = ContractObjectiveType.Delivery,
+            ExecutionKind = ContractExecutionKind.InventoryDelivery,
             FlowStatus = ContractFlowStatus.Failed
         };
     }
