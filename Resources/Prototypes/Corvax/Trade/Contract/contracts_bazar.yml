@@ -810,7 +810,7 @@
 - type: ncRetrievalContract
   id: BazarLightRecoverRoadCrate
   name: "Потерянный ящик у дороги"
-  description: "Караван потерял небольшой деревянный ящик сразу за городом. Заказчик нервничает: груз небольшой, но отмечен караванной пломбой."
+  description: "Караван потерял пломбированный деревянный ящик. Заказчик нервничает: груз небольшой, но числится за торговцем."
   icon: NcTradeCargoWoodenCrate
   cargo:
   - prototype: NcTradeCargoWoodenCrate
@@ -827,7 +827,7 @@
 - type: ncRetrievalContract
   id: BazarLightDeliverGateCrateOutside
   name: "Ящик на ближайший пост"
-  description: "У городских ворот ждёт деревянный ящик с мелкими припасами. Пост за городом снова просит пополнение."
+  description: "Ближайший пост снова просит мелкие припасы. Торговец выделил пломбированный деревянный ящик."
   icon: NcTradeCargoWoodenCrate
   cargo:
   - prototype: NcTradeCargoWoodenCrate
@@ -844,7 +844,7 @@
 - type: ncRetrievalContract
   id: BazarLightCourierMedsToClinic
   name: "Медицинский ящик в медпункт"
-  description: "Для медпункта подготовили отдельный медицинский ящик. Врачи уже считают бинты поштучно."
+  description: "Медпункт просит пополнить запас. Врачи уже считают бинты поштучно."
   icon: NcTradeCargoMedicalCrate
   cargo:
   - prototype: NcTradeCargoMedicalCrate
@@ -861,7 +861,7 @@
 - type: ncRetrievalContract
   id: BazarLightCourierPartsToWorkshop
   name: "Детали для мастерской"
-  description: "Мастерская ждёт ящик с мелкими деталями и инструментами. Без него ремонт встанет до вечера."
+  description: "Мастера ждут мелкие детали и инструменты. Без них ремонт встанет до вечера."
   icon: NcTradeCargoPartsCrate
   cargo:
   - prototype: NcTradeCargoPartsCrate
@@ -1156,7 +1156,7 @@
 - type: ncRetrievalContract
   id: BazarMediumRecoverFarCrate
   name: "Потерянный ящик за городом"
-  description: "Караван потерял ящик уже не у самых ворот, а дальше по дороге. Груз отмечен пломбой, и заказчик хочет получить его целым."
+  description: "Караван списал пломбированный ящик как потерянный. Торговец всё ещё надеется вернуть его целым."
   icon: NcTradeCargoWoodenCrate
   cargo:
   - prototype: NcTradeCargoWoodenCrate
@@ -1173,7 +1173,7 @@
 - type: ncRetrievalContract
   id: BazarMediumCourierAmmoToCheckpoint
   name: "Патроны на дальний пост"
-  description: "У города подготовили ящик боеприпасов для дальнего поста. Караульные ждут пополнение перед ночной сменой."
+  description: "Караульные ждут пополнение перед ночной сменой. Боеприпасы нужно провести по маршруту без вскрытия пломбы."
   icon: NcTradeCargoAmmoCrate
   cargo:
   - prototype: NcTradeCargoAmmoCrate
@@ -1190,7 +1190,7 @@
 - type: ncRetrievalContract
   id: BazarMediumCourierMedsToCheckpoint
   name: "Медикаменты на окраину"
-  description: "Медицинский ящик нужно отправить не в городской медпункт, а на окраину маршрута. Там снова ждут раненых с дальних троп."
+  description: "На окраине маршрута снова ждут раненых. Медицинский груз нужен там быстрее, чем в городе."
   icon: NcTradeCargoMedicalCrate
   cargo:
   - prototype: NcTradeCargoMedicalCrate
@@ -1207,7 +1207,7 @@
 - type: ncRetrievalContract
   id: BazarMediumCourierFoodToCamp
   name: "Провизия в лагерь"
-  description: "Небольшой лагерь за городом ждёт ящик с провизией. У них осталось больше обещаний, чем еды."
+  description: "У лагеря осталось больше обещаний, чем еды. Караван выделил пломбированный ящик провизии."
   icon: NcTradeCargoProvisionCrate
   cargo:
   - prototype: NcTradeCargoProvisionCrate
@@ -1224,7 +1224,7 @@
 - type: ncRetrievalContract
   id: BazarMediumCourierPartsToCheckpoint
   name: "Детали в ремонтную точку"
-  description: "Ремонтники на внешнем маршруте ждут ящик запчастей. Без него их точка снова останется на честном слове."
+  description: "Ремонтники на внешнем маршруте держат точку на честном слове. Им нужны запчасти, а не очередные обещания."
   icon: NcTradeCargoPartsCrate
   cargo:
   - prototype: NcTradeCargoPartsCrate
@@ -1581,7 +1581,7 @@
 - type: ncRetrievalContract
   id: BazarHeavyRecoverPiano
   name: "Пианино из дальнего салуна"
-  description: "Один заказчик решил, что без старого пианино город окончательно скатится в уныние. Инструмент стоит далеко за городом, в опасном старом салуне."
+  description: "Один заказчик решил, что без старого пианино город окончательно скатится в уныние. Инструмент тяжёлый, капризный и почему-то срочный."
   icon: PianoInstrument
   cargo:
   - prototype: PianoInstrument
@@ -1598,7 +1598,7 @@
 - type: ncRetrievalContract
   id: BazarHeavyCourierWeaponPartsToOutpost
   name: "Оружейные детали на дальний пост"
-  description: "В дальней точке ждут два ящика редких оружейных деталей. Укреплённый пост давно просит нормальный ремонтный запас."
+  description: "Укреплённый пост давно просит нормальный ремонтный запас. На этот раз торговец отправляет сразу два пломбированных ящика."
   icon: NcTradeCargoPartsCrate
   cargo:
   - prototype: NcTradeCargoPartsCrate
@@ -1615,7 +1615,7 @@
 - type: ncRetrievalContract
   id: BazarHeavyCourierAmmoToOutpost
   name: "Боеприпасы на опасную заставу"
-  description: "Застава на дальнем маршруте просит срочную партию боеприпасов. Запас у них тает быстрее, чем караваны доходят до поста."
+  description: "Застава просит срочную партию боеприпасов. Их запас тает быстрее, чем караваны доходят до поста."
   icon: NcTradeCargoAmmoCrate
   cargo:
   - prototype: NcTradeCargoAmmoCrate
@@ -1632,7 +1632,7 @@
 - type: ncRetrievalContract
   id: BazarHeavyRecoverFarSupplyCache
   name: "Тайник на краю карты"
-  description: "Старый караванный тайник лежит почти у края разведанной зоны. Заказчик хочет увидеть сами ящики, а не рассказы о них."
+  description: "Караванщики спорят, стоит ли вообще возвращаться за этой партией. Торговцу нужны сами ящики, а не рассказы о них."
   icon: NcTradeCargoProvisionCrate
   cargo:
   - prototype: NcTradeCargoProvisionCrate
@@ -1649,7 +1649,7 @@
 - type: ncRetrievalContract
   id: BazarHeavyCourierAmmoToRadioTower
   name: "Патроны к радиовышке"
-  description: "Дальний наблюдательный пункт у радиовышки просит боеприпасы. Без пополнения они скоро останутся с пустыми магазинами."
+  description: "Наблюдатели у радиовышки скоро останутся с пустыми магазинами. Боеприпасы нужны им до следующего налёта."
   icon: NcTradeCargoAmmoCrate
   cargo:
   - prototype: NcTradeCargoAmmoCrate
@@ -1666,7 +1666,7 @@
 - type: ncRetrievalContract
   id: BazarHeavyCourierPartsToBunker
   name: "Детали в старый бункер"
-  description: "В старом бункере пытаются поднять генератор. Нужны три ящика деталей, а дорога туда неприятная даже по меркам пустоши."
+  description: "В старом бункере пытаются поднять генератор. Нужны три ящика деталей, и дорога туда неприятная даже по меркам пустоши."
   icon: NcTradeCargoPartsCrate
   cargo:
   - prototype: NcTradeCargoPartsCrate
@@ -1683,7 +1683,7 @@
 - type: ncRetrievalContract
   id: BazarHeavyCourierMedicalToLastCamp
   name: "Медицинский груз в последний лагерь"
-  description: "Дальний лагерь просит не один ящик, а целую маленькую партию медикаментов. Их запас уже ушёл на тех, кто добрался туда раньше."
+  description: "Последний лагерь просит не один ящик, а маленькую партию медикаментов. Их запас уже ушёл на тех, кто добрался туда раньше."
   icon: NcTradeCargoMedicalCrate
   cargo:
   - prototype: NcTradeCargoMedicalCrate

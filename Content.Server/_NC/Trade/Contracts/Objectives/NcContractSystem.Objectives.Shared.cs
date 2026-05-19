@@ -441,6 +441,7 @@ public sealed partial class NcContractSystem : EntitySystem
         public EntityUid? DeliveryDropoffEntity;
         public readonly List<EntityUid> GuardEntities = new();
         public readonly HashSet<EntityUid> PinpointerEntities = new();
+        public readonly Dictionary<(string TargetItem, PrototypeMatchMode MatchMode), int> TurnedInByTarget = new();
         public readonly List<EntityUid> RetrievalSpawnedEntities = new();
         public readonly HashSet<EntityUid> RetrievalSpawnedEntitySet = new();
         public readonly List<EntityUid> HuntSpawnedTargets = new();

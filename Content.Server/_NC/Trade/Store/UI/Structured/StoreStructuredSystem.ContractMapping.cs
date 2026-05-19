@@ -4,7 +4,7 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class StoreStructuredSystem
 {
-    private ContractClientData MapContractToClient(ContractServerData contract)
+    private ContractClientData MapContractToClient(EntityUid store, ContractServerData contract)
     {
         var targets = MapContractTargetsToClient(contract);
         var rewards = CloneContractRewards(contract);
@@ -16,6 +16,7 @@ public sealed partial class StoreStructuredSystem
             contract.Repeatable,
             contract.Taken,
             SupportsContractPinpointer(contract),
+            _contracts.CanPartiallyTurnInNow(store, contract.Id, contract),
             contract.ExecutionKind,
             CloneRuntimeContext(contract.Runtime),
             contract.FlowStatus,

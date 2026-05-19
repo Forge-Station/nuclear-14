@@ -20,7 +20,13 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (_contracts.TryClaim(uid, user, msg.ContractId))
         {
             _audio.PlayPvs(new SoundPathSpecifier("/Audio/Effects/Cargo/ping.ogg"), user);
-            _popups.PopupEntity(Loc.GetString("nc-store-contract-completed"), uid, user);
+            var popup = comp.Contracts.TryGetValue(msg.ContractId, out var contract) &&
+                        contract.Taken &&
+                        !contract.Completed
+                ? Loc.GetString("nc-store-contract-partial-turned-in")
+                : Loc.GetString("nc-store-contract-completed");
+
+            _popups.PopupEntity(popup, uid, user);
         }
 
         RequestDynamicRefresh(uid, comp, user);

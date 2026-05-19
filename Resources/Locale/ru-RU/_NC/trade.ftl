@@ -70,9 +70,11 @@ nc-store-contract-action-not-done = Не выполнено
 nc-store-contract-action-take = Взять контракт
 nc-store-contract-claim-tooltip-single = Завершить разовый контракт и получить полную награду.
 nc-store-contract-claim-tooltip-repeatable = Сдать текущий результат по контракту и получить награду.
+nc-store-contract-claim-tooltip-partial = Внести доступную часть груза. Награда будет выдана после полной сдачи.
 nc-store-contract-claim-tooltip-not-done = Условия контракта ещё не выполнены. Недостаточно предметов.
 nc-store-contract-take-tooltip = Принять контракт. После принятия его нельзя пропустить.
 nc-store-contract-completed = Контракт успешно выполнен!
+nc-store-contract-partial-turned-in = Часть груза принята.
 nc-store-contract-taken = Контракт принят.
 nc-store-contract-take-failed = Не удалось принять контракт.
 nc-store-contract-goal-line = { $item }: { $count } шт.
@@ -148,7 +150,9 @@ nc-store-contract-type-repair-tooltip = Заказ на восстановлен
 nc-store-contract-type-ghost-role = Особая цель
 nc-store-contract-type-ghost-role-tooltip = После принятия откроется особая роль. Если её займут, появится живая цель.
 nc-store-contract-offer-pool-tooltip = Группа витрины: { $pool }
-nc-store-contract-route-proof-bearer-note = Доказательство доставки — предъявительское: награду получит тот, кто принесёт его торговцу.
+nc-store-contract-route-source-line = Загрузка: { $hint }
+nc-store-contract-route-destination-line = Выгрузка: { $hint }
+nc-store-contract-route-proof-bearer-note = После выгрузки появится накладная. Она предъявительская: награду получит тот, кто принесёт её торговцу.
 nc-store-contract-duration-hours = { $count ->
     [one] { $count } час
     [few] { $count } часа

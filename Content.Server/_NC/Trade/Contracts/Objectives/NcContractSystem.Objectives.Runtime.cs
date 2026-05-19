@@ -117,6 +117,9 @@ public sealed partial class NcContractSystem : EntitySystem
             return;
         }
 
+        if (RetargetRetrievalCargoPinpointersForCurrentControllers(args.Entity))
+            return;
+
         if (TryResolveRetrievalSpawnedParentChangePinpointerTarget(
                 args.Entity,
                 out var spawnedKey,

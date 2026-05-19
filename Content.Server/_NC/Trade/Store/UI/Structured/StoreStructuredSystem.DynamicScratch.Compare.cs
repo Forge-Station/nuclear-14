@@ -77,6 +77,7 @@ public sealed partial class StoreStructuredSystem
             if (a.Repeatable != b.Repeatable ||
                 a.Taken != b.Taken ||
                 a.SupportsPinpointer != b.SupportsPinpointer ||
+                a.PartialTurnInAvailable != b.PartialTurnInAvailable ||
                 a.ExecutionKind != b.ExecutionKind ||
                 a.FlowStatus != b.FlowStatus ||
                 a.Completed != b.Completed ||

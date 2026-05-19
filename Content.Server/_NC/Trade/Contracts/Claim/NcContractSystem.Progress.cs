@@ -129,6 +129,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 _scratchStoreNearbyItems,
                 hasCrateWork))
         {
+            ApplyPartialTurnInProgress(store, contractId, contract);
             return;
         }
 
@@ -141,6 +142,7 @@ public sealed partial class NcContractSystem : EntitySystem
             crateItems,
             _scratchStoreNearbyItems,
             hasCrateWork);
+        ApplyPartialTurnInProgress(store, contractId, contract);
     }
 
     private bool TryUpdateContractProgressByExecutionKind(

@@ -83,6 +83,7 @@ public sealed partial class NcContractSystem : EntitySystem
             : TryPrepareMultiTargetClaimContext(
                 store,
                 user,
+                contractId,
                 comp,
                 contract,
                 targets,
@@ -248,6 +249,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 crateItems,
                 storeNearbyItems,
                 crateEntity != null && crateItems is { Count: > 0 });
+            ApplyPartialTurnInProgress(store, contractId, contract);
         }
         finally
         {
@@ -258,6 +260,7 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryPrepareMultiTargetClaimContext(
         EntityUid store,
         EntityUid user,
+        string contractId,
         NcStoreComponent comp,
         ContractServerData contract,
         List<ContractTargetServerData> targets,
@@ -272,7 +275,7 @@ public sealed partial class NcContractSystem : EntitySystem
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
         ClearClaimPlanningScratch();
-        if (!TryCollectClaimRequirements(targets, out fail))
+        if (!TryCollectClaimRequirements(store, contractId, targets, out fail))
             return false;
 
         var takePlan = new List<ClaimTakeEntry>(Math.Max(8, Math.Min(64, targets.Count * 4)));
@@ -308,12 +311,15 @@ public sealed partial class NcContractSystem : EntitySystem
     }
 
     private bool TryCollectClaimRequirements(
+        EntityUid store,
+        string contractId,
         List<ContractTargetServerData> targets,
         out ClaimAttemptResult fail
     )
     {
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
+        var turnedInLeftByKey = new Dictionary<(string TargetItem, PrototypeMatchMode MatchMode), int>();
         foreach (var target in targets)
         {
             if (string.IsNullOrWhiteSpace(target.TargetItem) || target.Required <= 0)
@@ -326,7 +332,11 @@ public sealed partial class NcContractSystem : EntitySystem
             }
 
             var key = (target.TargetItem, target.MatchMode);
-            _claimRequiredByKeyScratch[key] = SaturatingAdd(_claimRequiredByKeyScratch.GetValueOrDefault(key, 0), target.Required);
+            var remaining = GetRemainingTurnInRequirement(store, contractId, target, turnedInLeftByKey);
+            if (remaining <= 0)
+                continue;
+
+            _claimRequiredByKeyScratch[key] = SaturatingAdd(_claimRequiredByKeyScratch.GetValueOrDefault(key, 0), remaining);
         }
 
         return true;
@@ -381,7 +391,15 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         ClearClaimPlanningScratch();
-        var takePlan = new List<ClaimTakeEntry>(Math.Max(4, Math.Min(32, target.Required)));
+        var remaining = GetRemainingTurnInRequirement(store, contractId, target);
+        var takePlan = new List<ClaimTakeEntry>(Math.Max(4, Math.Min(32, Math.Max(remaining, 1))));
+
+        if (remaining <= 0)
+        {
+            ClearClaimPlanningScratch();
+            ctx = CreateClaimContext(store, user, crateEntity, comp, contract, targets, crateItems, takePlan);
+            return true;
+        }
 
         if (!TryAppendTakePlanForRequirement(
                 store,
@@ -391,7 +409,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 storeNearbyItems,
                 target.TargetItem,
                 target.MatchMode,
-                target.Required,
+                remaining,
                 takePlan,
                 out fail))
         {
@@ -400,6 +418,115 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         ClearClaimPlanningScratch();
+        ctx = CreateClaimContext(store, user, crateEntity, comp, contract, targets, crateItems, takePlan);
+        return true;
+    }
+
+    private bool TryPreparePartialClaimContext(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        out ClaimContext ctx,
+        out ClaimAttemptResult fail)
+    {
+        ctx = default;
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+
+        if (!TryResolveClaimContract(store, contractId, out var comp, out var contract, out var targets, out fail))
+            return false;
+
+        PrepareClaimSources(store, user, contract, out var crateEntity, out var crateItems, out var storeNearbyItems);
+
+        if (RequiresRetrievalSpawnedTurnIn(contract))
+        {
+            RefreshRetrievalSpawnedProgressForClaim(
+                store,
+                user,
+                contractId,
+                contract,
+                crateEntity,
+                crateItems,
+                storeNearbyItems);
+
+            return TryPreparePartialRetrievalSpawnedClaimContext(
+                store,
+                user,
+                contractId,
+                comp,
+                contract,
+                targets,
+                crateEntity,
+                crateItems,
+                storeNearbyItems,
+                out ctx,
+                out fail);
+        }
+
+        RefreshInventoryDeliveryProgressForClaim(
+            store,
+            user,
+            contractId,
+            contract,
+            crateEntity,
+            crateItems,
+            storeNearbyItems);
+
+        return TryPreparePartialInventoryClaimContext(
+            store,
+            user,
+            contractId,
+            comp,
+            contract,
+            targets,
+            crateEntity,
+            crateItems,
+            storeNearbyItems,
+            out ctx,
+            out fail);
+    }
+
+    private bool TryPreparePartialInventoryClaimContext(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        NcStoreComponent comp,
+        ContractServerData contract,
+        List<ContractTargetServerData> targets,
+        EntityUid? crateEntity,
+        List<EntityUid>? crateItems,
+        List<EntityUid> storeNearbyItems,
+        out ClaimContext ctx,
+        out ClaimAttemptResult fail)
+    {
+        ctx = default;
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+
+        ClearClaimPlanningScratch();
+        var takePlan = new List<ClaimTakeEntry>(Math.Max(4, Math.Min(64, targets.Count * 2)));
+        var turnedInLeftByKey = new Dictionary<(string TargetItem, PrototypeMatchMode MatchMode), int>();
+        for (var i = 0; i < targets.Count; i++)
+        {
+            var target = targets[i];
+            if (string.IsNullOrWhiteSpace(target.TargetItem) || target.Required <= 0)
+                continue;
+
+            var remaining = GetRemainingTurnInRequirement(store, contractId, target, turnedInLeftByKey);
+            if (remaining <= 0)
+                continue;
+
+            var need = remaining;
+            need -= AppendTakePlanFromSource(crateEntity, crateItems, target.TargetItem, target.MatchMode, need, takePlan);
+            need -= AppendTakePlanFromSource(user, _scratchUserItems, target.TargetItem, target.MatchMode, need, takePlan);
+            need -= AppendTakePlanFromSource(store, storeNearbyItems, target.TargetItem, target.MatchMode, need, takePlan, worldTurnInSource: true);
+        }
+
+        ClearClaimPlanningScratch();
+        if (takePlan.Count == 0)
+        {
+            fail = ClaimAttemptResult.Fail(ClaimFailureReason.NotEnoughItems, $"No partial turn-in items available for '{contractId}'.");
+            return false;
+        }
+
         ctx = CreateClaimContext(store, user, crateEntity, comp, contract, targets, crateItems, takePlan);
         return true;
     }
@@ -490,13 +617,32 @@ public sealed partial class NcContractSystem : EntitySystem
             return 0;
 
         return TryGetStackTypeId(expectedProtoId, out var stackTypeId)
-            ? ReserveTakePlanFromStackItems(root, items, stackTypeId, need, virtualStackLeft, planOut, worldTurnInSource)
-            : ReserveTakePlanFromPrototypeItems(root, items, expectedProtoId, matchMode, need, virtualStackLeft, planOut, worldTurnInSource);
+            ? ReserveTakePlanFromStackItems(
+                root,
+                items,
+                expectedProtoId,
+                matchMode,
+                stackTypeId,
+                need,
+                virtualStackLeft,
+                planOut,
+                worldTurnInSource)
+            : ReserveTakePlanFromPrototypeItems(
+                root,
+                items,
+                expectedProtoId,
+                matchMode,
+                need,
+                virtualStackLeft,
+                planOut,
+                worldTurnInSource);
     }
 
     private int ReserveTakePlanFromStackItems(
         EntityUid root,
         List<EntityUid> items,
+        string targetItem,
+        PrototypeMatchMode matchMode,
         string stackTypeId,
         int need,
         Dictionary<EntityUid, int> virtualStackLeft,
@@ -515,7 +661,16 @@ public sealed partial class NcContractSystem : EntitySystem
             if (!TryComp(ent, out StackComponent? stack) || stack.StackTypeId != stackTypeId)
                 continue;
 
-            reserved += AppendClaimStackTake(root, ent, need - reserved, virtualStackLeft, planOut, items, i);
+            reserved += AppendClaimStackTake(
+                root,
+                ent,
+                targetItem,
+                matchMode,
+                need - reserved,
+                virtualStackLeft,
+                planOut,
+                items,
+                i);
         }
 
         return reserved;
@@ -548,11 +703,20 @@ public sealed partial class NcContractSystem : EntitySystem
 
             if (TryComp(ent, out StackComponent? _))
             {
-                reserved += AppendClaimStackTake(root, ent, need - reserved, virtualStackLeft, planOut, items, i);
+                reserved += AppendClaimStackTake(
+                    root,
+                    ent,
+                    expectedProtoId,
+                    matchMode,
+                    need - reserved,
+                    virtualStackLeft,
+                    planOut,
+                    items,
+                    i);
                 continue;
             }
 
-            reserved += AppendClaimEntityTake(root, ent, planOut, items, i);
+            reserved += AppendClaimEntityTake(root, ent, expectedProtoId, matchMode, planOut, items, i);
         }
 
         return reserved;
@@ -561,6 +725,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private int AppendClaimStackTake(
         EntityUid root,
         EntityUid ent,
+        string targetItem,
+        PrototypeMatchMode matchMode,
         int need,
         Dictionary<EntityUid, int> virtualStackLeft,
         List<ClaimTakeEntry> planOut,
@@ -575,19 +741,21 @@ public sealed partial class NcContractSystem : EntitySystem
         if (take <= 0)
             return 0;
 
-        planOut.Add(new ClaimTakeEntry(root, ent, take, true));
+        planOut.Add(new ClaimTakeEntry(root, ent, take, true, targetItem, matchMode));
         return take;
     }
 
     private static int AppendClaimEntityTake(
         EntityUid root,
         EntityUid ent,
+        string targetItem,
+        PrototypeMatchMode matchMode,
         List<ClaimTakeEntry> planOut,
         List<EntityUid> items,
         int index
     )
     {
-        planOut.Add(new ClaimTakeEntry(root, ent, 1, false));
+        planOut.Add(new ClaimTakeEntry(root, ent, 1, false, targetItem, matchMode));
         items[index] = EntityUid.Invalid;
         return 1;
     }

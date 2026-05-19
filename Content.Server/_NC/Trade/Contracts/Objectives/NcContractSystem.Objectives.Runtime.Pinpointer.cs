@@ -32,6 +32,10 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!_objectiveRuntimeByContract.TryGetValue(key, out var state))
             return false;
 
+        RefreshPinpointerRuntimeState(store, contractId, contract);
+        if (contract.Runtime.Failed || !_objectiveRuntimeByContract.TryGetValue(key, out state))
+            return false;
+
         EntityUid pinpointerTarget;
         if (!TryResolveRetrievalRouteReturnPinpointerTargetForUser(store, user, contract, state, out pinpointerTarget) &&
             UsesRetrievalSpawnedPinpointerTarget(contract))
@@ -76,6 +80,11 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         return TrySpawnObjectivePinpointer(user, pinpointerTarget, key, state, config, spawnCoords);
+    }
+
+    private bool RefreshPinpointerRuntimeState(EntityUid store, string contractId, ContractServerData contract)
+    {
+        return TryUpdateRetrievalRouteDeliveryProgress(store, contractId, contract);
     }
 
     private static EntityUid ResolveObjectivePinpointerTarget(
@@ -183,6 +192,9 @@ public sealed partial class NcContractSystem : EntitySystem
 
         PruneRetrievalSpawnedEntities(state);
 
+        if (TryResolveRetrievalStoreReturnPinpointerTarget(store, contract, state, out target))
+            return true;
+
         for (var i = 0; i < state.RetrievalSpawnedEntities.Count; i++)
         {
             var candidate = state.RetrievalSpawnedEntities[i];
@@ -196,6 +208,9 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             var candidate = state.RetrievalSpawnedEntities[i];
             if (candidate == EntityUid.Invalid || TerminatingOrDeleted(candidate))
+                continue;
+
+            if (IsRetrievalCargoAlreadyAtPinpointerDestination(store, contract, state, candidate))
                 continue;
 
             target = candidate;
@@ -225,6 +240,9 @@ public sealed partial class NcContractSystem : EntitySystem
 
         PruneRetrievalSpawnedEntities(state);
 
+        if (TryResolveRetrievalStoreReturnPinpointerTarget(store, contract, state, out target))
+            return true;
+
         for (var i = 0; i < state.RetrievalSpawnedEntities.Count; i++)
         {
             var candidate = state.RetrievalSpawnedEntities[i];
@@ -241,6 +259,9 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             var candidate = state.RetrievalSpawnedEntities[i];
             if (candidate == EntityUid.Invalid || TerminatingOrDeleted(candidate))
+                continue;
+
+            if (IsRetrievalCargoAlreadyAtPinpointerDestination(store, contract, state, candidate))
                 continue;
 
             target = candidate;
@@ -262,6 +283,9 @@ public sealed partial class NcContractSystem : EntitySystem
         if (cargo == EntityUid.Invalid || TerminatingOrDeleted(cargo))
             return false;
 
+        if (IsRetrievalCargoAlreadyAtPinpointerDestination(store, contract, state, cargo))
+            return false;
+
         return TryResolveRetrievalCargoDestinationPinpointerTarget(store, contract, state, out target);
     }
 
@@ -277,10 +301,70 @@ public sealed partial class NcContractSystem : EntitySystem
         if (cargo == EntityUid.Invalid || TerminatingOrDeleted(cargo))
             return false;
 
+        if (IsRetrievalCargoAlreadyAtPinpointerDestination(store, contract, state, cargo))
+            return false;
+
         if (!TryComp(cargo, out TransformComponent? xform) || !IsTargetInEntityContainer(xform))
             return false;
 
         return TryResolveRetrievalCargoDestinationPinpointerTarget(store, contract, state, out target);
+    }
+
+    private bool TryResolveRetrievalStoreReturnPinpointerTarget(
+        EntityUid store,
+        ContractServerData contract,
+        ObjectiveRuntimeState state,
+        out EntityUid target)
+    {
+        target = EntityUid.Invalid;
+        if (contract.Config.RetrievalDestinationType != NcRetrievalDestinationTargetType.StoreUi)
+            return false;
+
+        var required = CalculateTotalRequired(GetEffectiveTargets(contract));
+        if (required <= 0)
+            return false;
+
+        var hasOutstandingCargo = false;
+        var deliveredCargo = 0;
+        for (var i = 0; i < state.RetrievalSpawnedEntities.Count; i++)
+        {
+            var cargo = state.RetrievalSpawnedEntities[i];
+            if (cargo == EntityUid.Invalid || TerminatingOrDeleted(cargo))
+                continue;
+
+            if (IsRetrievalCargoAlreadyAtPinpointerDestination(store, contract, state, cargo))
+            {
+                deliveredCargo++;
+                continue;
+            }
+
+            hasOutstandingCargo = true;
+            break;
+        }
+
+        if (hasOutstandingCargo || deliveredCargo < required)
+            return false;
+
+        target = store;
+        return true;
+    }
+
+    private bool IsRetrievalCargoAlreadyAtPinpointerDestination(
+        EntityUid store,
+        ContractServerData contract,
+        ObjectiveRuntimeState state,
+        EntityUid cargo)
+    {
+        if (cargo == EntityUid.Invalid || TerminatingOrDeleted(cargo))
+            return false;
+
+        var config = contract.Config;
+        if (config.RetrievalDestinationType == NcRetrievalDestinationTargetType.StoreUi)
+            return IsTrackedDeliveryTargetAtStore(store, cargo);
+
+        return RequiresRetrievalRouteDelivery(contract) &&
+               (state.RetrievalDeliveredEntities.Contains(cargo) ||
+                IsRetrievalCargoDelivered(store, cargo, config, state));
     }
 
     private bool TryResolveRetrievalCargoDestinationPinpointerTarget(
@@ -371,7 +455,16 @@ public sealed partial class NcContractSystem : EntitySystem
             !TryGetObjectiveContract(candidateKey, out _, out var contract) ||
             !contract.Taken ||
             contract.Runtime.Failed ||
-            !UsesRetrievalSpawnedPinpointerTarget(contract) ||
+            !UsesRetrievalSpawnedPinpointerTarget(contract))
+        {
+            return false;
+        }
+
+        RefreshPinpointerRuntimeState(candidateKey.Store, candidateKey.ContractId, contract);
+        if (contract.Runtime.Failed || !_objectiveRuntimeByContract.TryGetValue(candidateKey, out candidateState))
+            return false;
+
+        if (!TryResolveRetrievalRouteReturnPinpointerTarget(candidateKey.Store, contract, candidateState, out target) &&
             !TryResolveRetrievalSpawnedPinpointerTarget(candidateKey.Store, contract, candidateState, out target))
         {
             return false;
@@ -492,7 +585,7 @@ public sealed partial class NcContractSystem : EntitySystem
         }
     }
 
-    private void RetargetObjectivePinpointersForOwner(
+    private bool RetargetObjectivePinpointersForOwner(
         (EntityUid Store, string ContractId) key,
         ObjectiveRuntimeState state,
         EntityUid owner,
@@ -503,13 +596,14 @@ public sealed partial class NcContractSystem : EntitySystem
             TerminatingOrDeleted(owner) ||
             TerminatingOrDeleted(target))
         {
-            return;
+            return false;
         }
 
         PruneInvalidPinpointers(key, state);
         if (state.PinpointerEntities.Count == 0)
-            return;
+            return false;
 
+        var retargeted = false;
         foreach (var pinpointer in state.PinpointerEntities)
         {
             if (TerminatingOrDeleted(pinpointer))
@@ -523,7 +617,10 @@ public sealed partial class NcContractSystem : EntitySystem
 
             _pinpointer.SetTarget(pinpointer, target);
             _pinpointer.SetActive(pinpointer, true);
+            retargeted = true;
         }
+
+        return retargeted;
     }
 
     private void RetargetRetrievalPulledCargoPinpointersForUser(EntityUid pulled, EntityUid user)
@@ -554,14 +651,125 @@ public sealed partial class NcContractSystem : EntitySystem
             !TryGetObjectiveContract(key, out _, out var contract) ||
             !contract.Taken ||
             contract.Runtime.Failed ||
-            !UsesRetrievalSpawnedPinpointerTarget(contract) ||
-            !TryResolveRetrievalSpawnedPinpointerTargetForUser(key.Store, user, contract, state, out var target))
+            !UsesRetrievalSpawnedPinpointerTarget(contract))
+        {
+            return false;
+        }
+
+        RefreshPinpointerRuntimeState(key.Store, key.ContractId, contract);
+        if (contract.Runtime.Failed || !_objectiveRuntimeByContract.TryGetValue(key, out state))
+            return false;
+
+        if (!TryResolveRetrievalRouteReturnPinpointerTargetForUser(key.Store, user, contract, state, out var target) &&
+            !TryResolveRetrievalSpawnedPinpointerTargetForUser(key.Store, user, contract, state, out target))
         {
             return false;
         }
 
         RetargetObjectivePinpointersForOwner(key, state, user, target);
         return true;
+    }
+
+    private bool RetargetRetrievalCargoPinpointersForCurrentControllers(EntityUid cargo)
+    {
+        if (!_objectiveRuntimeByRetrievalCargo.TryGetValue(cargo, out var key) ||
+            !_objectiveRuntimeByContract.TryGetValue(key, out var state) ||
+            !TryGetObjectiveContract(key, out _, out var contract) ||
+            !contract.Taken ||
+            contract.Runtime.Failed ||
+            !UsesRetrievalSpawnedPinpointerTarget(contract))
+        {
+            return false;
+        }
+
+        RefreshPinpointerRuntimeState(key.Store, key.ContractId, contract);
+        if (contract.Runtime.Failed || !_objectiveRuntimeByContract.TryGetValue(key, out state))
+            return false;
+
+        if (TryResolveRetrievalRouteReturnPinpointerTarget(key.Store, contract, state, out var returnTarget))
+        {
+            RetargetObjectivePinpointers(key, state, returnTarget);
+            return true;
+        }
+
+        if (IsRetrievalCargoAlreadyAtPinpointerDestination(key.Store, contract, state, cargo) ||
+            !TryResolveRetrievalCargoDestinationPinpointerTarget(key.Store, contract, state, out var target))
+        {
+            return false;
+        }
+
+        PruneInvalidPinpointers(key, state);
+        if (state.PinpointerEntities.Count == 0)
+            return false;
+
+        var retargeted = false;
+        foreach (var pinpointer in state.PinpointerEntities)
+        {
+            if (TerminatingOrDeleted(pinpointer) ||
+                !_objectiveRuntimePinpointerOwners.TryGetValue(pinpointer, out var owner) ||
+                owner == EntityUid.Invalid ||
+                !IsRetrievalCargoControlledByUser(cargo, owner))
+            {
+                continue;
+            }
+
+            _pinpointer.SetTarget(pinpointer, target);
+            _pinpointer.SetActive(pinpointer, true);
+            retargeted = true;
+        }
+
+        return retargeted;
+    }
+
+    private void RetargetRetrievalPinpointersToCurrentStep(
+        (EntityUid Store, string ContractId) key,
+        ContractServerData contract,
+        ObjectiveRuntimeState state)
+    {
+        if (!contract.Config.RetrievalGuidancePinpointerEnabled ||
+            !UsesRetrievalSpawnedPinpointerTarget(contract))
+        {
+            return;
+        }
+
+        PruneInvalidPinpointers(key, state);
+        if (state.PinpointerEntities.Count == 0)
+            return;
+
+        _objectivePinpointersScratch.Clear();
+        _objectivePinpointersScratch.AddRange(state.PinpointerEntities);
+
+        for (var i = 0; i < _objectivePinpointersScratch.Count; i++)
+        {
+            var pinpointer = _objectivePinpointersScratch[i];
+            if (TerminatingOrDeleted(pinpointer))
+                continue;
+
+            EntityUid target;
+            if (_objectiveRuntimePinpointerOwners.TryGetValue(pinpointer, out var owner) &&
+                owner != EntityUid.Invalid &&
+                !TerminatingOrDeleted(owner))
+            {
+                if (!TryResolveRetrievalRouteReturnPinpointerTargetForUser(key.Store, owner, contract, state, out target) &&
+                    !TryResolveRetrievalSpawnedPinpointerTargetForUser(key.Store, owner, contract, state, out target))
+                {
+                    continue;
+                }
+            }
+            else if (!TryResolveRetrievalRouteReturnPinpointerTarget(key.Store, contract, state, out target) &&
+                     !TryResolveRetrievalSpawnedPinpointerTarget(key.Store, contract, state, out target))
+            {
+                continue;
+            }
+
+            if (target == EntityUid.Invalid || TerminatingOrDeleted(target))
+                continue;
+
+            _pinpointer.SetTarget(pinpointer, target);
+            _pinpointer.SetActive(pinpointer, true);
+        }
+
+        _objectivePinpointersScratch.Clear();
     }
 
     private bool CanIssueContractPinpointer(

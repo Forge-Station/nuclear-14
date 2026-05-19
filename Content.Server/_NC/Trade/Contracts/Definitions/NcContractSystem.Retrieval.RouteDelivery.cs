@@ -67,6 +67,11 @@ public sealed partial class NcContractSystem : EntitySystem
             if (!TrySpawnDeliveryDropoffMarker(contractId, state, destCoords))
                 return false;
         }
+        else if (config.RetrievalDestinationType == NcRetrievalDestinationTargetType.ContainerGroup &&
+                 !TryValidateRetrievalRouteContainerDestination(contractId, config))
+        {
+            return false;
+        }
 
         if (!state.RetrievalRouteDeliveryActive)
         {
@@ -75,6 +80,29 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         return true;
+    }
+
+    private bool TryValidateRetrievalRouteContainerDestination(
+        string contractId,
+        ContractObjectiveConfigData config)
+    {
+        if (string.IsNullOrWhiteSpace(config.RetrievalDestinationId))
+        {
+            Sawmill.Warning(
+                $"[Contracts] Retrieval route init failed for '{contractId}': container destination group is missing.");
+            return false;
+        }
+
+        CollectTurnInContainersByGroup(config.RetrievalDestinationId, _turnInContainerQueryScratch);
+        var found = _turnInContainerQueryScratch.Count > 0;
+        _turnInContainerQueryScratch.Clear();
+
+        if (found)
+            return true;
+
+        Sawmill.Warning(
+            $"[Contracts] Retrieval route init failed for '{contractId}': no turn-in container found for destination group '{config.RetrievalDestinationId}'.");
+        return false;
     }
 
     private void UpdateRetrievalRouteDeliveries()
@@ -158,7 +186,10 @@ public sealed partial class NcContractSystem : EntitySystem
         SetTrackedDeliveryProgress(contract, GetRetrievalRouteDeliveryProgress(state));
 
         if (!contract.Completed)
+        {
+            RetargetRetrievalPinpointersToCurrentStep(key, contract, state);
             return;
+        }
 
         if (RequiresRetrievalDestinationProofClaim(contract) && !state.ProofSpawned)
         {

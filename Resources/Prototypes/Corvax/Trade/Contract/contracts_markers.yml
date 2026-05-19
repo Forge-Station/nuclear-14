@@ -159,7 +159,7 @@
   id: MarkerTradeLightCityGateCargoSource
   parent: MarkerTradeContractSpawnBase
   name: "лёгкий контракт: ящик у городских ворот"
-  description: "Поставьте возле ворот или рядом с торговым автоматом. Здесь появится ящик, который надо отнести за город."
+  description: "ЗАГРУЗКА маршрута «ворота -> пост за городом». Здесь появится ящик; парная ВЫГРУЗКА: MarkerTradeLightOutsideDropoff."
   suffix: NC, Contracts, Light, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -175,7 +175,7 @@
   id: MarkerTradeLightOutsideCargoSource
   parent: MarkerTradeContractSpawnBase
   name: "лёгкий контракт: потерянный ящик за городом"
-  description: "Поставьте недалеко от города, но уже за безопасной чертой. Здесь появится потерянный ящик для возврата торговцу."
+  description: "ЗАГРУЗКА маршрута «потерянный ящик -> торговец». Здесь появится ящик; ВЫГРУЗКА находится у торговца, отдельный dropoff-маркер не нужен."
   suffix: NC, Contracts, Light, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -191,7 +191,7 @@
   id: MarkerTradeLightOutsideDropoff
   parent: MarkerTradeContractDestinationBase
   name: "лёгкий контракт: разгрузка за городом"
-  description: "Поставьте у ближайшего поста, стоянки или складской точки за городом. Сюда доставляют ящик из города."
+  description: "ВЫГРУЗКА маршрута «ворота -> пост за городом». Сюда доставляют ящик; парная ЗАГРУЗКА: MarkerTradeLightCityGateCargoSource."
   suffix: NC, Contracts, Light, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -207,7 +207,7 @@
   id: MarkerTradeLightClinicMedsSource
   parent: MarkerTradeContractSpawnBase
   name: "лёгкий контракт: медящик для медпункта"
-  description: "Поставьте у малого склада или подсобки. Здесь появится медицинский ящик для короткой доставки в медпункт."
+  description: "ЗАГРУЗКА маршрута «склад -> медпункт». Здесь появится медицинский ящик; парная ВЫГРУЗКА: MarkerTradeLightClinicDropoff."
   suffix: NC, Contracts, Light, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -223,7 +223,7 @@
   id: MarkerTradeLightWorkshopPartsSource
   parent: MarkerTradeContractSpawnBase
   name: "лёгкий контракт: детали для мастерской"
-  description: "Поставьте у кладовой, склада или гаража. Здесь появится ящик с деталями для короткой доставки в мастерскую."
+  description: "ЗАГРУЗКА маршрута «кладовая -> мастерская». Здесь появится ящик с деталями; парная ВЫГРУЗКА: MarkerTradeLightWorkshopDropoff."
   suffix: NC, Contracts, Light, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -239,7 +239,7 @@
   id: MarkerTradeLightClinicDropoff
   parent: MarkerTradeContractDestinationBase
   name: "лёгкий контракт: приёмка медпункта"
-  description: "Поставьте внутри медпункта или у его двери. Сюда доставляют медицинские ящики со склада."
+  description: "ВЫГРУЗКА маршрута «склад -> медпункт». Сюда доставляют медицинский ящик; парная ЗАГРУЗКА: MarkerTradeLightClinicMedsSource."
   suffix: NC, Contracts, Light, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -255,7 +255,7 @@
   id: MarkerTradeLightWorkshopDropoff
   parent: MarkerTradeContractDestinationBase
   name: "лёгкий контракт: приёмка мастерской"
-  description: "Поставьте в мастерской или гараже. Сюда доставляют ящики с инструментами и деталями."
+  description: "ВЫГРУЗКА маршрута «кладовая -> мастерская». Сюда доставляют ящик с деталями; парная ЗАГРУЗКА: MarkerTradeLightWorkshopPartsSource."
   suffix: NC, Contracts, Light, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -387,7 +387,7 @@
   id: MarkerTradeMediumFarCrateSource
   parent: MarkerTradeContractSpawnBase
   name: "средний контракт: потерянный ящик у дороги"
-  description: "Поставьте дальше от города, у дороги или старой стоянки. Здесь появится потерянный ящик, который надо вернуть торговцу."
+  description: "ЗАГРУЗКА маршрута «старая дорога -> торговец». Здесь появится потерянный ящик; ВЫГРУЗКА находится у торговца, отдельный dropoff-маркер не нужен."
   suffix: NC, Contracts, Medium, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -403,7 +403,7 @@
   id: MarkerTradeMediumAmmoCheckpointSource
   parent: MarkerTradeContractSpawnBase
   name: "средний контракт: патроны для поста"
-  description: "Поставьте у склада, ворот или оружейной кладовой. Здесь появится ящик боеприпасов для дальнего поста."
+  description: "ЗАГРУЗКА маршрута «точка выдачи -> дальний пост». Здесь появится ящик боеприпасов; парная ВЫГРУЗКА: MarkerTradeMediumAmmoCheckpointDropoff."
   suffix: NC, Contracts, Medium, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -419,7 +419,7 @@
   id: MarkerTradeMediumAmmoCheckpointDropoff
   parent: MarkerTradeContractDestinationBase
   name: "средний контракт: приёмка патронов на посту"
-  description: "Поставьте на внешнем блокпосту или у сторожевой вышки. Сюда доставляют ящик боеприпасов."
+  description: "ВЫГРУЗКА маршрута «точка выдачи -> дальний пост». Сюда доставляют боеприпасы; парная ЗАГРУЗКА: MarkerTradeMediumAmmoCheckpointSource."
   suffix: NC, Contracts, Medium, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -435,7 +435,7 @@
   id: MarkerTradeMediumMedsCheckpointSource
   parent: MarkerTradeContractSpawnBase
   name: "средний контракт: медикаменты на окраину"
-  description: "Поставьте у медпункта, склада или ворот. Здесь появится медицинский ящик для доставки на окраину."
+  description: "ЗАГРУЗКА маршрута «точка выдачи -> окраина». Здесь появится медицинский ящик; парная ВЫГРУЗКА: MarkerTradeMediumMedsCheckpointDropoff."
   suffix: NC, Contracts, Medium, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -451,7 +451,7 @@
   id: MarkerTradeMediumMedsCheckpointDropoff
   parent: MarkerTradeContractDestinationBase
   name: "средний контракт: приёмка медикаментов"
-  description: "Поставьте на окраине маршрута, у дальнего поста или временного лазарета. Сюда доставляют медицинский ящик."
+  description: "ВЫГРУЗКА маршрута «точка выдачи -> окраина». Сюда доставляют медикаменты; парная ЗАГРУЗКА: MarkerTradeMediumMedsCheckpointSource."
   suffix: NC, Contracts, Medium, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -467,7 +467,7 @@
   id: MarkerTradeMediumFoodCampSource
   parent: MarkerTradeContractSpawnBase
   name: "средний контракт: провизия для лагеря"
-  description: "Поставьте у городской точки выдачи или склада. Здесь появится ящик провизии для дальнего лагеря."
+  description: "ЗАГРУЗКА маршрута «точка выдачи -> лагерь». Здесь появится ящик провизии; парная ВЫГРУЗКА: MarkerTradeMediumFoodCampDropoff."
   suffix: NC, Contracts, Medium, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -483,7 +483,7 @@
   id: MarkerTradeMediumFoodCampDropoff
   parent: MarkerTradeContractDestinationBase
   name: "средний контракт: приёмка провизии в лагере"
-  description: "Поставьте в лагере за городом или на временной стоянке каравана. Сюда доставляют провизию."
+  description: "ВЫГРУЗКА маршрута «точка выдачи -> лагерь». Сюда доставляют провизию; парная ЗАГРУЗКА: MarkerTradeMediumFoodCampSource."
   suffix: NC, Contracts, Medium, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -499,7 +499,7 @@
   id: MarkerTradeMediumPartsRepairSource
   parent: MarkerTradeContractSpawnBase
   name: "средний контракт: детали для ремонта"
-  description: "Поставьте у склада, мастерской или ворот. Здесь появится ящик деталей для ремонтной точки."
+  description: "ЗАГРУЗКА маршрута «точка выдачи -> ремонтная точка». Здесь появится ящик деталей; парная ВЫГРУЗКА: MarkerTradeMediumPartsRepairDropoff."
   suffix: NC, Contracts, Medium, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -515,7 +515,7 @@
   id: MarkerTradeMediumPartsRepairDropoff
   parent: MarkerTradeContractDestinationBase
   name: "средний контракт: ремонтная точка"
-  description: "Поставьте у внешней мастерской, сломанной техники или ремонтного поста. Сюда доставляют ящик деталей."
+  description: "ВЫГРУЗКА маршрута «точка выдачи -> ремонтная точка». Сюда доставляют детали; парная ЗАГРУЗКА: MarkerTradeMediumPartsRepairSource."
   suffix: NC, Contracts, Medium, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -535,7 +535,7 @@
   id: MarkerTradeHeavyPianoSource
   parent: MarkerTradeContractSpawnBase
   name: "тяжёлый контракт: далёкое пианино"
-  description: "Поставьте далеко от города, но в месте, откуда физически можно вытащить структуру. Здесь появляется пианино, которое надо притащить торговцу."
+  description: "ЗАГРУЗКА маршрута «старый салун -> торговец». Здесь появится пианино; ВЫГРУЗКА находится у торговца, отдельный dropoff-маркер не нужен."
   suffix: NC, Contracts, Heavy, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -551,7 +551,7 @@
   id: MarkerTradeHeavyWeaponPartsOutpostSource
   parent: MarkerTradeContractSpawnBase
   name: "тяжёлый контракт: оружейные детали"
-  description: "Поставьте в опасной дальней зоне, у тайника или разбитого склада. Здесь будут ящики деталей для укреплённого поста."
+  description: "ЗАГРУЗКА маршрута «тайник деталей -> укреплённый пост». Здесь появятся ящики деталей; парная ВЫГРУЗКА: MarkerTradeHeavyWeaponPartsOutpostDropoff."
   suffix: NC, Contracts, Heavy, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -567,7 +567,7 @@
   id: MarkerTradeHeavyWeaponPartsOutpostDropoff
   parent: MarkerTradeContractDestinationBase
   name: "тяжёлый контракт: приёмка деталей на посту"
-  description: "Поставьте на опасной дальней заставе или укреплённом посту. Сюда доставляют оружейные детали."
+  description: "ВЫГРУЗКА маршрута «тайник деталей -> укреплённый пост». Сюда доставляют оружейные детали; парная ЗАГРУЗКА: MarkerTradeHeavyWeaponPartsOutpostSource."
   suffix: NC, Contracts, Heavy, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -583,7 +583,7 @@
   id: MarkerTradeHeavyAmmoOutpostSource
   parent: MarkerTradeContractSpawnBase
   name: "тяжёлый контракт: боеприпасы для заставы"
-  description: "Поставьте в опасной дальней зоне, отдельно от оружейных деталей. Здесь будут ящики боеприпасов для заставы."
+  description: "ЗАГРУЗКА маршрута «склад боеприпасов -> застава». Здесь появятся ящики боеприпасов; парная ВЫГРУЗКА: MarkerTradeHeavyAmmoOutpostDropoff."
   suffix: NC, Contracts, Heavy, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -599,7 +599,7 @@
   id: MarkerTradeHeavyAmmoOutpostDropoff
   parent: MarkerTradeContractDestinationBase
   name: "тяжёлый контракт: приёмка боеприпасов на заставе"
-  description: "Поставьте на опасной заставе, которая принимает боеприпасы. Лучше отделить от точки деталей, чтобы маршруты читались на карте."
+  description: "ВЫГРУЗКА маршрута «склад боеприпасов -> застава». Сюда доставляют боеприпасы; парная ЗАГРУЗКА: MarkerTradeHeavyAmmoOutpostSource."
   suffix: NC, Contracts, Heavy, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -615,7 +615,7 @@
   id: MarkerTradeHeavyFarSupplyCacheSource
   parent: MarkerTradeContractSpawnBase
   name: "тяжёлый контракт: дальний караванный тайник"
-  description: "Поставьте почти у края разведанной зоны или в опасных руинах. Здесь появится партия ящиков, которую надо вернуть торговцу."
+  description: "ЗАГРУЗКА маршрута «караванный тайник -> торговец». Здесь появится партия ящиков; ВЫГРУЗКА находится у торговца, отдельный dropoff-маркер не нужен."
   suffix: NC, Contracts, Heavy, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -631,7 +631,7 @@
   id: MarkerTradeHeavyRadioAmmoSource
   parent: MarkerTradeContractSpawnBase
   name: "тяжёлый контракт: патроны для радиовышки"
-  description: "Поставьте далеко от города, в опасной зоне. Здесь будут ящики боеприпасов для радиовышки."
+  description: "ЗАГРУЗКА маршрута «склад боеприпасов -> радиовышка». Здесь появятся ящики боеприпасов; парная ВЫГРУЗКА: MarkerTradeHeavyRadioTowerDropoff."
   suffix: NC, Contracts, Heavy, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -647,7 +647,7 @@
   id: MarkerTradeHeavyBunkerPartsSource
   parent: MarkerTradeContractSpawnBase
   name: "тяжёлый контракт: детали для бункера"
-  description: "Поставьте в опасной дальней зоне. Здесь будут ящики деталей для старого бункера."
+  description: "ЗАГРУЗКА маршрута «склад деталей -> старый бункер». Здесь появятся ящики деталей; парная ВЫГРУЗКА: MarkerTradeHeavyBunkerDropoff."
   suffix: NC, Contracts, Heavy, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -663,7 +663,7 @@
   id: MarkerTradeHeavyLastCampMedicalSource
   parent: MarkerTradeContractSpawnBase
   name: "тяжёлый контракт: медикаменты для дальнего лагеря"
-  description: "Поставьте далеко от города, у опасного тайника или разбитого каравана. Здесь появится партия медицинских ящиков."
+  description: "ЗАГРУЗКА маршрута «медицинский тайник -> последний лагерь». Здесь появится партия медицинских ящиков; парная ВЫГРУЗКА: MarkerTradeHeavyLastCampDropoff."
   suffix: NC, Contracts, Heavy, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -679,7 +679,7 @@
   id: MarkerTradeHeavyRadioTowerDropoff
   parent: MarkerTradeContractDestinationBase
   name: "тяжёлый контракт: радиовышка"
-  description: "Поставьте у дальней радиовышки, наблюдательного пункта или ретранслятора. Сюда доставляют боеприпасы и срочные ящики."
+  description: "ВЫГРУЗКА маршрута «склад боеприпасов -> радиовышка». Сюда доставляют боеприпасы; парная ЗАГРУЗКА: MarkerTradeHeavyRadioAmmoSource."
   suffix: NC, Contracts, Heavy, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -695,7 +695,7 @@
   id: MarkerTradeHeavyBunkerDropoff
   parent: MarkerTradeContractDestinationBase
   name: "тяжёлый контракт: старый бункер"
-  description: "Поставьте у входа в старый бункер или технический объект. Сюда доставляют детали, генераторные ящики и ремонтные грузы."
+  description: "ВЫГРУЗКА маршрута «склад деталей -> старый бункер». Сюда доставляют детали; парная ЗАГРУЗКА: MarkerTradeHeavyBunkerPartsSource."
   suffix: NC, Contracts, Heavy, Mapper
   components:
   - type: NcContractSpawnPoint
@@ -711,7 +711,7 @@
   id: MarkerTradeHeavyLastCampDropoff
   parent: MarkerTradeContractDestinationBase
   name: "тяжёлый контракт: дальний лагерь"
-  description: "Поставьте в самом дальнем лагере или на краевой стоянке каравана. Сюда доставляют большие партии медикаментов и провизии."
+  description: "ВЫГРУЗКА маршрута «медицинский тайник -> последний лагерь». Сюда доставляют медицинские ящики; парная ЗАГРУЗКА: MarkerTradeHeavyLastCampMedicalSource."
   suffix: NC, Contracts, Heavy, Mapper
   components:
   - type: NcContractSpawnPoint

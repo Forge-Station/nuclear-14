@@ -67,7 +67,22 @@ public sealed partial class NcContractSystem : EntitySystem
                     return TryClaimRetrievalRouteReward(store, user, contractId, comp, contract);
 
                 if (!TryPrepareClaimContext(store, user, contractId, out var ctx, out var prepFail))
+                {
+                    if (TryPreparePartialClaimContext(store, user, contractId, out var partialCtx, out var partialPrepFail))
+                    {
+                        return TryExecutePartialClaimTakePlan(contractId, partialCtx, out var partialExecFail)
+                            ? ClaimAttemptResult.Ok()
+                            : partialExecFail;
+                    }
+
+                    if (partialPrepFail.Reason != ClaimFailureReason.None &&
+                        prepFail.Reason is ClaimFailureReason.NotEnoughItems or ClaimFailureReason.MissingCrate)
+                    {
+                        return partialPrepFail;
+                    }
+
                     return prepFail;
+                }
 
                 if (!TryExecuteClaimTakePlan(ctx, out var execFail))
                     return execFail;

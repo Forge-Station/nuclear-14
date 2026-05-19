@@ -19,6 +19,7 @@ public sealed class ContractClientData
     public bool Repeatable;
     public bool Taken;
     public bool SupportsPinpointer;
+    public bool PartialTurnInAvailable;
     public ContractExecutionKind ExecutionKind = ContractExecutionKind.InventoryDelivery;
     public ContractRuntimeContextData Runtime = new();
     public int Required;
@@ -44,6 +45,7 @@ public sealed class ContractClientData
         bool repeatable,
         bool taken,
         bool supportsPinpointer,
+        bool partialTurnInAvailable,
         ContractExecutionKind executionKind,
         ContractRuntimeContextData runtime,
         ContractFlowStatus flowStatus,
@@ -72,6 +74,7 @@ public sealed class ContractClientData
         Repeatable = repeatable;
         Taken = taken;
         SupportsPinpointer = supportsPinpointer;
+        PartialTurnInAvailable = partialTurnInAvailable;
         ExecutionKind = executionKind;
         Runtime = runtime;
         FlowStatus = flowStatus;

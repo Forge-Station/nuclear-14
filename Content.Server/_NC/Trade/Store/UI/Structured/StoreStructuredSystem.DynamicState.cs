@@ -50,7 +50,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             PopulateDynamicBalances(comp, userSnap, buf);
             PopulateDynamicListings(comp, user, userSnap, scratch, buf);
             PopulateDynamicCratePreview(comp, crateUid, tabs.HasSellTab, scanNeeds.NeedCrateScan, scratch, buf);
-            PopulateDynamicContracts(comp, tabs.HasContractsTab, scratch, buf);
+            PopulateDynamicContracts(uid, comp, tabs.HasContractsTab, scratch, buf);
             PopulateDynamicContractSkip(uid, comp, tabs.HasContractsTab, buf);
             PushDynamicState(uid, comp, tabs, scratch, buf);
         }
@@ -289,6 +289,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     }
 
     private void PopulateDynamicContracts(
+        EntityUid store,
         NcStoreComponent comp,
         bool hasContractsTab,
         DynamicScratch scratch,
@@ -298,7 +299,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             return;
 
         foreach (var contract in comp.Contracts.Values)
-            buf.Contracts.Add(MapContractToClient(contract));
+            buf.Contracts.Add(MapContractToClient(store, contract));
 
         buf.Contracts.Sort(CompareContractsForUi);
     }

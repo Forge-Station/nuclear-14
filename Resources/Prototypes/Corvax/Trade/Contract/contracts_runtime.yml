@@ -2,8 +2,8 @@
 
 - type: entity
   id: TradeContractDropoffSign
-  name: караванный указатель доставки
-  description: Временная доска приёмки. Доставьте сюда груз; после подтверждения указатель исчезнет.
+  name: караванная веха приёмки
+  description: Временный знак караванной приёмки. Оставьте отмеченный груз рядом; после подтверждения веху уберут.
   categories: [ HideSpawnMenu ]
   components:
   - type: Transform
@@ -11,10 +11,8 @@
   - type: Clickable
   - type: InteractionOutline
   - type: Sprite
-    sprite: Corvax/Structures/Misc/noticeboard2.rsi
-    layers:
-    - state: noticeboardstanding
-    - state: notice-3
+    sprite: Objects/Decoration/mines.rsi
+    state: sign_right
   - type: PointLight
     enabled: true
     radius: 2
@@ -120,8 +118,8 @@
 
 - type: ncRetrievalGuidancePreset
   id: BazarLightGuidanceOutsideToTrader
-  sourceHint: "Ящик ищите за городом, недалеко от дороги."
-  destinationHint: "Верните найденный ящик торговцу. Накладная не нужна: заказчик ждёт сам груз."
+  sourceHint: "дорожный груз за городом"
+  destinationHint: "торговец принимает сам ящик"
   pinpointer:
     enabled: true
     target: CargoThenDestinationThenStore
@@ -130,8 +128,8 @@
 
 - type: ncRetrievalGuidancePreset
   id: BazarLightGuidanceGateToOutside
-  sourceHint: "Ящик ждёт у городских ворот."
-  destinationHint: "Отнесите ящик на ближайший пост за городом. После приёмки заберите накладную и верните её торговцу."
+  sourceHint: "городские ворота"
+  destinationHint: "ближайший пост за городом"
   pinpointer:
     enabled: true
     target: CargoThenDestinationThenStore
@@ -140,8 +138,8 @@
 
 - type: ncRetrievalGuidancePreset
   id: BazarLightGuidanceWarehouseToClinic
-  sourceHint: "Медицинский ящик ждёт на малом складе."
-  destinationHint: "Отнесите ящик в медпункт. После приёмки заберите накладную и верните её торговцу."
+  sourceHint: "малый склад или подсобка"
+  destinationHint: "медпункт"
   pinpointer:
     enabled: true
     target: CargoThenDestinationThenStore
@@ -150,8 +148,8 @@
 
 - type: ncRetrievalGuidancePreset
   id: BazarLightGuidanceWarehouseToWorkshop
-  sourceHint: "Ящик с деталями ждёт у мастерской кладовой."
-  destinationHint: "Отнесите ящик в мастерскую. После приёмки заберите накладную и верните её торговцу."
+  sourceHint: "кладовая у мастерской"
+  destinationHint: "мастерская или гараж"
   pinpointer:
     enabled: true
     target: CargoThenDestinationThenStore
@@ -274,8 +272,8 @@
 
 - type: ncRetrievalGuidancePreset
   id: BazarMediumGuidanceFarCrateToTrader
-  sourceHint: "Потерянный ящик лежит дальше от города, у старой дороги."
-  destinationHint: "Верните найденный ящик торговцу. Накладная не нужна: заказчик ждёт сам груз."
+  sourceHint: "старая дорога за городом"
+  destinationHint: "торговец принимает сам ящик"
   pinpointer:
     enabled: true
     target: CargoThenDestinationThenStore
@@ -284,8 +282,8 @@
 
 - type: ncRetrievalGuidancePreset
   id: BazarMediumGuidanceAmmoToCheckpoint
-  sourceHint: "Ящик боеприпасов ждёт у городской точки выдачи."
-  destinationHint: "Доставьте боеприпасы на дальний пост. После приёмки заберите накладную и верните её торговцу."
+  sourceHint: "городская точка выдачи боеприпасов"
+  destinationHint: "дальний пост"
   pinpointer:
     enabled: true
     target: CargoThenDestinationThenStore
@@ -294,8 +292,8 @@
 
 - type: ncRetrievalGuidancePreset
   id: BazarMediumGuidanceMedsToCheckpoint
-  sourceHint: "Медицинский ящик ждёт у отдельной городской точки выдачи."
-  destinationHint: "Доставьте медикаменты на окраину маршрута. После приёмки заберите накладную и верните её торговцу."
+  sourceHint: "городская точка выдачи медикаментов"
+  destinationHint: "окраина маршрута"
   pinpointer:
     enabled: true
     target: CargoThenDestinationThenStore
@@ -304,8 +302,8 @@
 
 - type: ncRetrievalGuidancePreset
   id: BazarMediumGuidanceFoodToCamp
-  sourceHint: "Ящик провизии ждёт у отдельной городской точки выдачи."
-  destinationHint: "Доставьте провизию в лагерь за городом. После приёмки заберите накладную и верните её торговцу."
+  sourceHint: "городская точка выдачи провизии"
+  destinationHint: "лагерь за городом"
   pinpointer:
     enabled: true
     target: CargoThenDestinationThenStore
@@ -314,8 +312,8 @@
 
 - type: ncRetrievalGuidancePreset
   id: BazarMediumGuidancePartsToRepair
-  sourceHint: "Ящик запчастей ждёт у отдельной городской точки выдачи."
-  destinationHint: "Доставьте детали в ремонтную точку. После приёмки заберите накладную и верните её торговцу."
+  sourceHint: "городская точка выдачи деталей"
+  destinationHint: "ремонтная точка"
   pinpointer:
     enabled: true
     target: CargoThenDestinationThenStore
@@ -471,8 +469,8 @@
 
 - type: ncRetrievalGuidancePreset
   id: BazarHeavyGuidancePianoToTrader
-  sourceHint: "Пианино стоит далеко за городом, в опасном старом салуне."
-  destinationHint: "Притащите пианино к торговцу. Накладная не нужна: заказчик ждёт сам инструмент."
+  sourceHint: "старый салун далеко за городом"
+  destinationHint: "торговец принимает само пианино"
   pinpointer:
     enabled: true
     target: CargoThenDestinationThenStore
@@ -481,8 +479,8 @@
 
 - type: ncRetrievalGuidancePreset
   id: BazarHeavyGuidanceWeaponPartsToOutpost
-  sourceHint: "Ящики с оружейными деталями лежат в опасной дальней зоне."
-  destinationHint: "Доставьте детали на укреплённый пост. После приёмки заберите накладную и верните её торговцу."
+  sourceHint: "тайник или разбитый склад"
+  destinationHint: "укреплённый пост"
   pinpointer:
     enabled: true
     target: CargoThenDestinationThenStore
@@ -491,8 +489,8 @@
 
 - type: ncRetrievalGuidancePreset
   id: BazarHeavyGuidanceAmmoToOutpost
-  sourceHint: "Ящики боеприпасов лежат в опасной дальней зоне."
-  destinationHint: "Доставьте боеприпасы на дальнюю заставу. После приёмки заберите накладную и верните её торговцу."
+  sourceHint: "опасная точка выдачи боеприпасов"
+  destinationHint: "дальняя застава"
   pinpointer:
     enabled: true
     target: CargoThenDestinationThenStore
@@ -501,8 +499,8 @@
 
 - type: ncRetrievalGuidancePreset
   id: BazarHeavyGuidanceFarSupplyCacheToTrader
-  sourceHint: "Старый караванный тайник лежит почти у края разведанной зоны."
-  destinationHint: "Верните все ящики торговцу. Накладная не нужна: заказчик хочет увидеть сам груз."
+  sourceHint: "караванный тайник у края карты"
+  destinationHint: "торговец принимает все ящики"
   pinpointer:
     enabled: true
     target: CargoThenDestinationThenStore
@@ -511,8 +509,8 @@
 
 - type: ncRetrievalGuidancePreset
   id: BazarHeavyGuidanceAmmoToRadioTower
-  sourceHint: "Ящики боеприпасов лежат в дальней опасной зоне."
-  destinationHint: "Доставьте боеприпасы к радиовышке. После приёмки заберите накладную и верните её торговцу."
+  sourceHint: "опасный склад боеприпасов"
+  destinationHint: "радиовышка"
   pinpointer:
     enabled: true
     target: CargoThenDestinationThenStore
@@ -521,8 +519,8 @@
 
 - type: ncRetrievalGuidancePreset
   id: BazarHeavyGuidancePartsToBunker
-  sourceHint: "Ящики с деталями лежат в дальней опасной зоне."
-  destinationHint: "Доставьте детали к старому бункеру. После приёмки заберите накладную и верните её торговцу."
+  sourceHint: "опасный склад деталей"
+  destinationHint: "старый бункер"
   pinpointer:
     enabled: true
     target: CargoThenDestinationThenStore
@@ -531,8 +529,8 @@
 
 - type: ncRetrievalGuidancePreset
   id: BazarHeavyGuidanceMedicalToLastCamp
-  sourceHint: "Медицинские ящики лежат в дальней опасной зоне."
-  destinationHint: "Доставьте всю партию в дальний лагерь. После приёмки заберите накладную и верните её торговцу."
+  sourceHint: "разбитый караван или дальний тайник"
+  destinationHint: "последний лагерь"
   pinpointer:
     enabled: true
     target: CargoThenDestinationThenStore

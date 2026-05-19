@@ -397,13 +397,15 @@ public sealed partial class NcContractCard : PanelContainer
     private void PopulateActionsSection()
     {
         var canTake = _data.FlowStatus == ContractFlowStatus.Available;
+        var requiredTotal = CalculateRequiredTotal(_data);
         var canClaim = _data.FlowStatus == ContractFlowStatus.ReadyToTurnIn;
+        var canPartialTurnIn = CanPartialTurnIn(_data, requiredTotal);
         var canRequestPinpointer = CanRequestPinpointer(_data);
 
         var actionHint = BuildActionHintText(_data);
         ActionHintLabel.Text = actionHint;
         ActionHintLabel.ToolTip = actionHint;
-        ActionHintLabel.Modulate = canClaim
+        ActionHintLabel.Modulate = canClaim || canPartialTurnIn
             ? Color.FromHex("#D7E3EE")
             : Color.FromHex("#AAB7C8");
 
@@ -414,19 +416,19 @@ public sealed partial class NcContractCard : PanelContainer
                 : Loc.GetString(
                     "nc-store-contract-action-claim-progress",
                     ("progress", _data.Progress),
-                    ("required", CalculateRequiredTotal(_data)));
+                    ("required", requiredTotal));
 
         PrimaryActionButton.ClipText = true;
-        PrimaryActionButton.Disabled = !(canTake || canClaim);
+        PrimaryActionButton.Disabled = !(canTake || canClaim || canPartialTurnIn);
         PrimaryActionButton.StyleBoxOverride = canTake
             ? BuildButtonStyle(Color.FromHex("#203248"), Color.FromHex("#4F86B7"))
-            : canClaim
+            : canClaim || canPartialTurnIn
                 ? BuildButtonStyle(Color.FromHex("#243729"), Color.FromHex("#7DA260"))
                 : BuildButtonStyle(Color.FromHex("#23272D"), Color.FromHex("#475363"));
 
         PrimaryActionButton.ModulateSelfOverride = canTake
             ? Color.FromHex("#E5EEF8")
-            : canClaim
+            : canClaim || canPartialTurnIn
                 ? Color.FromHex("#E5EEDB")
                 : Color.FromHex("#A6AFBA");
 
@@ -436,6 +438,8 @@ public sealed partial class NcContractCard : PanelContainer
                 ? !_data.Repeatable
                     ? Loc.GetString("nc-store-contract-claim-tooltip-single")
                     : Loc.GetString("nc-store-contract-claim-tooltip-repeatable")
+                : canPartialTurnIn
+                    ? Loc.GetString("nc-store-contract-claim-tooltip-partial")
                 : Loc.GetString("nc-store-contract-claim-tooltip-not-done");
 
         SecondaryButtonsRow.RemoveAllChildren();
@@ -504,6 +508,7 @@ public sealed partial class NcContractCard : PanelContainer
     {
         var canTake = _data.FlowStatus == ContractFlowStatus.Available;
         var canClaim = _data.FlowStatus == ContractFlowStatus.ReadyToTurnIn;
+        var canPartialTurnIn = CanPartialTurnIn(_data, CalculateRequiredTotal(_data));
 
         if (canTake)
         {
@@ -511,8 +516,17 @@ public sealed partial class NcContractCard : PanelContainer
             return;
         }
 
-        if (canClaim)
+        if (canClaim || canPartialTurnIn)
             OnClaim?.Invoke(_data.Id);
+    }
+
+    private static bool CanPartialTurnIn(ContractClientData data, int requiredTotal)
+    {
+        return data.ExecutionKind == ContractExecutionKind.InventoryDelivery &&
+               data.FlowStatus == ContractFlowStatus.InProgress &&
+               data.PartialTurnInAvailable &&
+               data.Progress > 0 &&
+               data.Progress < requiredTotal;
     }
 
     private static PanelContainer BuildBadge(string text, string? tooltip, Color bg, Color border)

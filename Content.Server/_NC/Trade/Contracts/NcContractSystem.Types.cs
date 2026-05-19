@@ -6,7 +6,13 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private readonly record struct ClaimTakeEntry(EntityUid Root, EntityUid Entity, int Amount, bool IsStack);
+    private readonly record struct ClaimTakeEntry(
+        EntityUid Root,
+        EntityUid Entity,
+        int Amount,
+        bool IsStack,
+        string TargetItem,
+        PrototypeMatchMode MatchMode);
 
     private enum ClaimFailureReason : byte
     {

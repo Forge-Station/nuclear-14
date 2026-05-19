@@ -32,6 +32,41 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
+    private bool TryExecutePartialClaimTakePlan(
+        string contractId,
+        ClaimContext ctx,
+        out ClaimAttemptResult fail)
+    {
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+
+        if (ctx.TakePlan.Count == 0)
+        {
+            fail = ClaimAttemptResult.Fail(ClaimFailureReason.NotEnoughItems, $"No partial turn-in items planned for '{contractId}'.");
+            return false;
+        }
+
+        if (!TryValidateClaimTakePlan(ctx.TakePlan, out fail))
+            return false;
+
+        try
+        {
+            UnregisterRetrievalSpawnedCargoTakePlan(ctx.Contract, ctx.TakePlan);
+            ExecuteClaimTakePlan(ctx.TakePlan);
+            RecordPartialTurnInProgress(ctx.Store, contractId, ctx.Contract, ctx.TakePlan);
+            InvalidateClaimExecutionCaches(ctx);
+            RefreshProgressAfterPartialTurnIn(ctx, contractId);
+            RetargetContractPinpointersAfterTurnIn(ctx.Store, contractId, ctx.Contract);
+            return true;
+        }
+        catch (Exception e)
+        {
+            Sawmill.Error($"[Claim] Partial turn-in failed unexpectedly for '{contractId}': {e}");
+            InvalidateClaimExecutionCaches(ctx);
+            fail = CreateClaimExecutionFailure($"Partial turn-in threw {e.GetType().Name}: {e.Message}");
+            return false;
+        }
+    }
+
     private bool TryValidateClaimTakePlan(
         List<ClaimTakeEntry> takePlan,
         out ClaimAttemptResult fail

@@ -24,8 +24,11 @@ public sealed partial class NcContractCard
 
     private string BuildPrettyDescription(ContractClientData c)
     {
+        var hasManualDescription = !string.IsNullOrWhiteSpace(c.Description);
         var description = ResolveBaseDescription(c);
-        var ghostRoleHint = BuildGhostRoleDescriptionHint(c);
+        var ghostRoleHint = hasManualDescription
+            ? string.Empty
+            : BuildGhostRoleDescriptionHint(c);
         var routeHint = BuildRouteHintText(c);
 
         if (!string.IsNullOrWhiteSpace(ghostRoleHint))
@@ -67,10 +70,10 @@ public sealed partial class NcContractCard
         var parts = new List<string>(3);
 
         if (!string.IsNullOrWhiteSpace(c.SourceHint))
-            parts.Add(c.SourceHint.Trim());
+            parts.Add(Loc.GetString("nc-store-contract-route-source-line", ("hint", c.SourceHint.Trim())));
 
         if (!string.IsNullOrWhiteSpace(c.DestinationHint))
-            parts.Add(c.DestinationHint.Trim());
+            parts.Add(Loc.GetString("nc-store-contract-route-destination-line", ("hint", c.DestinationHint.Trim())));
 
         if (c.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof && c.RetrievalProofIsBearer)
             parts.Add(Loc.GetString("nc-store-contract-route-proof-bearer-note"));

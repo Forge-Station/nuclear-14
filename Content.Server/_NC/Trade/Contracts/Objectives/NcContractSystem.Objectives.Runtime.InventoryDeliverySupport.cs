@@ -20,10 +20,16 @@ public sealed partial class NcContractSystem : EntitySystem
         var config = contract.Config;
 
         if (!TryInitializeRetrievalSpawnRuntime(store, user, contractId, contract))
+        {
+            CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true);
             return false;
+        }
 
         if (!TryInitializeRetrievalRouteDeliveryRuntime(store, contractId, contract))
+        {
+            CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true);
             return false;
+        }
 
         if (config.SpawnItems && contract.MatchMode != PrototypeMatchMode.Matcher)
         {

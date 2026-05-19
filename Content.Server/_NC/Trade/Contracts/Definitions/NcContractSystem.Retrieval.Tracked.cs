@@ -44,6 +44,7 @@ public sealed partial class NcContractSystem : EntitySystem
         ClearClaimPlanningScratch();
         var takePlan = new List<ClaimTakeEntry>(Math.Max(4, Math.Min(64, CalculateTotalRequired(targets))));
         var used = new HashSet<EntityUid>();
+        var turnedInLeftByKey = new Dictionary<(string TargetItem, PrototypeMatchMode MatchMode), int>();
 
         for (var i = 0; i < targets.Count; i++)
         {
@@ -57,6 +58,10 @@ public sealed partial class NcContractSystem : EntitySystem
                 return false;
             }
 
+            var remaining = GetRemainingTurnInRequirement(store, contractId, target, turnedInLeftByKey);
+            if (remaining <= 0)
+                continue;
+
             if (!TryAppendRetrievalSpawnedEntityTakePlanForRequirement(
                     store,
                     user,
@@ -66,7 +71,7 @@ public sealed partial class NcContractSystem : EntitySystem
                     trackedStoreNearbyItems,
                     target.TargetItem,
                     target.MatchMode,
-                    target.Required,
+                    remaining,
                     takePlan,
                     used,
                     out fail))
@@ -77,6 +82,88 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         ClearClaimPlanningScratch();
+        ctx = CreateClaimContext(store, user, crateEntity, comp, contract, targets, crateItems, takePlan);
+        return true;
+    }
+
+    private bool TryPreparePartialRetrievalSpawnedClaimContext(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        NcStoreComponent comp,
+        ContractServerData contract,
+        List<ContractTargetServerData> targets,
+        EntityUid? crateEntity,
+        List<EntityUid>? crateItems,
+        List<EntityUid> storeNearbyItems,
+        out ClaimContext ctx,
+        out ClaimAttemptResult fail)
+    {
+        ctx = default;
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+
+        if (!TryGetRetrievalSpawnedRuntimeState(store, contractId, contract, out var state))
+        {
+            fail = ClaimAttemptResult.Fail(
+                ClaimFailureReason.NotEnoughItems,
+                $"Tracked Retrieval '{contractId}' has no live spawned target entities available for partial turn-in.");
+            return false;
+        }
+
+        var trackedUserItems = FilterRetrievalSpawnedSourceItems(_scratchUserItems, state);
+        var trackedCrateItems = FilterRetrievalSpawnedSourceItems(crateItems, state);
+        var trackedStoreNearbyItems = FilterRetrievalSpawnedSourceItems(storeNearbyItems, state);
+
+        ClearClaimPlanningScratch();
+        var takePlan = new List<ClaimTakeEntry>(Math.Max(4, Math.Min(64, targets.Count * 2)));
+        var used = new HashSet<EntityUid>();
+        var turnedInLeftByKey = new Dictionary<(string TargetItem, PrototypeMatchMode MatchMode), int>();
+
+        for (var i = 0; i < targets.Count; i++)
+        {
+            var target = targets[i];
+            if (string.IsNullOrWhiteSpace(target.TargetItem) || target.Required <= 0)
+                continue;
+
+            var remaining = GetRemainingTurnInRequirement(store, contractId, target, turnedInLeftByKey);
+            if (remaining <= 0)
+                continue;
+
+            var need = remaining;
+            need -= AppendRetrievalSpawnedEntityTakePlanFromSource(
+                crateEntity,
+                trackedCrateItems,
+                target.TargetItem,
+                target.MatchMode,
+                need,
+                takePlan,
+                used);
+            need -= AppendRetrievalSpawnedEntityTakePlanFromSource(
+                user,
+                trackedUserItems,
+                target.TargetItem,
+                target.MatchMode,
+                need,
+                takePlan,
+                used);
+            need -= AppendRetrievalSpawnedEntityTakePlanFromSource(
+                store,
+                trackedStoreNearbyItems,
+                target.TargetItem,
+                target.MatchMode,
+                need,
+                takePlan,
+                used,
+                worldTurnInSource: true);
+        }
+
+        ClearClaimPlanningScratch();
+        if (takePlan.Count == 0)
+        {
+            fail = ClaimAttemptResult.Fail(ClaimFailureReason.NotEnoughItems, $"No tracked Retrieval cargo available for partial turn-in of '{contractId}'.");
+            return false;
+        }
+
         ctx = CreateClaimContext(store, user, crateEntity, comp, contract, targets, crateItems, takePlan);
         return true;
     }
@@ -138,7 +225,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             used.Add(ent);
-            takePlan.Add(new ClaimTakeEntry(source, ent, 1, false));
+            takePlan.Add(new ClaimTakeEntry(source, ent, 1, false, targetItem, matchMode));
             taken++;
         }
 
@@ -175,6 +262,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 crateItems,
                 storeNearbyItems,
                 crateEntity != null && crateItems is { Count: > 0 });
+            ApplyPartialTurnInProgress(store, contractId, contract);
         }
         finally
         {
@@ -451,7 +539,15 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         var required = CalculateTotalRequired(GetEffectiveTargets(contract));
-        if (required <= 0 || state.RetrievalSpawnedEntities.Count >= required)
+        if (required <= 0)
+            return false;
+
+        var accepted = CalculateAppliedTurnedInProgress(contract, state);
+        if (accepted >= required)
+            return false;
+
+        var stillPossible = accepted + state.RetrievalSpawnedEntities.Count;
+        if (stillPossible >= required)
             return false;
 
         if (!TryGetObjectiveContract(key, out var comp, out _))
@@ -459,7 +555,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         Sawmill.Warning(
             $"[Contracts] Retrieval cargo for '{key.ContractId}' is no longer available " +
-            $"({state.RetrievalSpawnedEntities.Count}/{required} remaining). Contract failed.");
+            $"({accepted}/{required} accepted, {state.RetrievalSpawnedEntities.Count} remaining). Contract failed.");
 
         FinalizeObjectiveTerminalOutcome(
             key,

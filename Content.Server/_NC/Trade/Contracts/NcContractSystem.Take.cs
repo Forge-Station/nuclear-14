@@ -16,7 +16,10 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         if (!TryInitializeObjectiveRuntimeOnTake(store, user, contractId, contract))
+        {
+            CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true);
             return false;
+        }
 
         contract.Taken = true;
         contract.Progress = 0;
