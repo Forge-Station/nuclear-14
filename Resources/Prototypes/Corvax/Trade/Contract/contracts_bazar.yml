@@ -286,7 +286,7 @@
     count: { min: 50, max: 90 }
   - type: Pool
     pool: caravan_easy
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyCloth
@@ -302,7 +302,7 @@
     count: { min: 100, max: 120 }
   - type: Pool
     pool: caravan_easy
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyFirewood
@@ -318,7 +318,7 @@
     count: { min: 100, max: 150 }
   - type: Pool
     pool: caravan_easy
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyPlanks
@@ -334,7 +334,7 @@
     count: { min: 50, max: 80 }
   - type: Pool
     pool: caravan_easy
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyLeather
@@ -350,7 +350,7 @@
     count: { min: 80, max: 120 }
   - type: Pool
     pool: caravan_easy
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyBrocFlower
@@ -366,7 +366,7 @@
     count: { min: 60, max: 100 }
   - type: Pool
     pool: caravan_easy
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyCoyoteTobacco
@@ -382,7 +382,7 @@
     count: { min: 50, max: 75 }
   - type: Pool
     pool: caravan_easy
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyDogfood
@@ -399,7 +399,7 @@
     count: { min: 75, max: 100 }
   - type: Pool
     pool: caravan_easy
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyRawMeat
@@ -415,7 +415,7 @@
     count: { min: 100, max: 120 }
   - type: Pool
     pool: caravan_easy
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyHealingPowder
@@ -431,7 +431,7 @@
     count: { min: 55, max: 90 }
   - type: Pool
     pool: caravan_easy
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyCookedRadMeat
@@ -447,7 +447,7 @@
     count: { min: 55, max: 95 }
   - type: Pool
     pool: caravan_easy
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyAbraxo
@@ -463,7 +463,7 @@
     count: { min: 40, max: 70 }
   - type: Pool
     pool: caravan_easy_nonweapons
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyCigarettePacks
@@ -479,7 +479,7 @@
     count: { min: 45, max: 85 }
   - type: Pool
     pool: caravan_easy_nonweapons
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyVarmintRifles
@@ -495,7 +495,7 @@
     count: { min: 100, max: 140 }
   - type: Pool
     pool: caravan_easy_nonweapons
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyNineMillimeterWeapons
@@ -511,7 +511,7 @@
     count: { min: 50, max: 75 }
   - type: Pool
     pool: caravan_easy_nonweapons
-    count: 1
+    count: { min: 1, max: 3 }
 
 # -----------------------------------------------------------------------------
 # Караванные заказы
@@ -531,7 +531,7 @@
     count: { min: 100, max: 150 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyColoredScrap
@@ -549,7 +549,7 @@
     count: { min: 100, max: 120 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyBrassKnives
@@ -565,7 +565,7 @@
     count: { min: 120, max: 180 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyNukaCola
@@ -581,7 +581,7 @@
     count: { min: 100, max: 200 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyCaveFungus
@@ -597,7 +597,7 @@
     count: { min: 120, max: 190 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyCarrots
@@ -613,7 +613,7 @@
     count: { min: 100, max: 150 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarCorpseFeralGhouls
@@ -629,7 +629,7 @@
     count: { min: 150, max: 250 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarCorpseRaiderPsychos
@@ -645,7 +645,7 @@
     count: { min: 150, max: 250 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 # -----------------------------------------------------------------------------
 # Опасная работа
@@ -665,7 +665,7 @@
     count: { min: 260, max: 420 }
   - type: Pool
     pool: caravan_hard
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarSupplyDeathclawEggs
@@ -681,7 +681,7 @@
     count: { min: 220, max: 360 }
   - type: Pool
     pool: caravan_hard
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarCorpseCazadors
@@ -697,7 +697,7 @@
     count: { min: 600, max: 1000 }
   - type: Pool
     pool: caravan_hard
-    count: { min: 3, max: 5 }
+    count: { min: 2, max: 6 }
 
 - type: ncSupplyContract
   id: BazarCorpseDeathclaw
@@ -713,7 +713,7 @@
     count: { min: 600, max: 1000 }
   - type: Pool
     pool: caravan_hard
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarCorpseMetalDeathclaw
@@ -729,7 +729,7 @@
     count: { min: 600, max: 1000 }
   - type: Pool
     pool: caravan_hard
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
   id: BazarCorpseRaiderBoss
@@ -745,7 +745,7 @@
     count: { min: 600, max: 1000 }
   - type: Pool
     pool: caravan_hard
-    count: 1
+    count: { min: 1, max: 3 }
 
 # -----------------------------------------------------------------------------
 # Лёгкие городские поручения с маркерами
@@ -805,7 +805,7 @@
     count: { min: 80, max: 120 }
   - type: Pool
     pool: caravan_easy
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncRetrievalContract
   id: BazarLightRecoverRoadCrate
@@ -822,7 +822,7 @@
     count: { min: 35, max: 55 }
   - type: Pool
     pool: caravan_easy
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncRetrievalContract
   id: BazarLightDeliverGateCrateOutside
@@ -839,7 +839,7 @@
     count: { min: 45, max: 70 }
   - type: Pool
     pool: caravan_easy
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncRetrievalContract
   id: BazarLightCourierMedsToClinic
@@ -856,7 +856,7 @@
     count: { min: 55, max: 85 }
   - type: Pool
     pool: caravan_easy
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncRetrievalContract
   id: BazarLightCourierPartsToWorkshop
@@ -873,7 +873,7 @@
     count: { min: 55, max: 90 }
   - type: Pool
     pool: caravan_easy
-    count: 1
+    count: { min: 1, max: 3 }
 
 # -----------------------------------------------------------------------------
 # Средние поручения с живыми точками на карте
@@ -1013,7 +1013,7 @@
     count: { min: 160, max: 240 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncHuntContract
   id: BazarMediumHuntYoungRadscorpions
@@ -1036,7 +1036,7 @@
     count: { min: 190, max: 280 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncHuntContract
   id: BazarMediumHuntRoadNightstalkers
@@ -1059,7 +1059,7 @@
     count: { min: 220, max: 320 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncHuntContract
   id: BazarMediumHuntMoleratBurrow
@@ -1082,7 +1082,7 @@
     count: { min: 140, max: 220 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncHuntContract
   id: BazarMediumHuntCrabNest
@@ -1105,7 +1105,7 @@
     count: { min: 130, max: 200 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncHuntContract
   id: BazarMediumHuntRaiderScoutCamp
@@ -1128,7 +1128,7 @@
     count: { min: 240, max: 360 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncHuntContract
   id: BazarMediumHuntCazadorNest
@@ -1151,7 +1151,7 @@
     count: { min: 280, max: 420 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncRetrievalContract
   id: BazarMediumRecoverFarCrate
@@ -1168,7 +1168,7 @@
     count: { min: 120, max: 180 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncRetrievalContract
   id: BazarMediumCourierAmmoToCheckpoint
@@ -1185,7 +1185,7 @@
     count: { min: 180, max: 260 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncRetrievalContract
   id: BazarMediumCourierMedsToCheckpoint
@@ -1202,7 +1202,7 @@
     count: { min: 170, max: 250 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncRetrievalContract
   id: BazarMediumCourierFoodToCamp
@@ -1219,7 +1219,7 @@
     count: { min: 150, max: 230 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncRetrievalContract
   id: BazarMediumCourierPartsToCheckpoint
@@ -1236,7 +1236,7 @@
     count: { min: 170, max: 260 }
   - type: Pool
     pool: caravan_medium
-    count: 1
+    count: { min: 1, max: 3 }
 
 # -----------------------------------------------------------------------------
 # Тяжёлые поручения с живыми точками на карте
@@ -1411,7 +1411,7 @@
     count: { min: 650, max: 950 }
   - type: Pool
     pool: caravan_hard
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncHuntContract
   id: BazarHeavyHuntMetalDeathclaw
@@ -1434,7 +1434,7 @@
     count: { min: 850, max: 1200 }
   - type: Pool
     pool: caravan_hard
-    count: 2
+    count: { min: 2, max: 6 }
 
 - type: ncHuntContract
   id: BazarHeavyHuntRaiderWarband
@@ -1459,7 +1459,7 @@
     count: { min: 850, max: 1250 }
   - type: Pool
     pool: caravan_hard
-    count: 2
+    count: { min: 2, max: 6 }
 
 - type: ncHuntContract
   id: BazarHeavyHuntYaoguaiCave
@@ -1482,7 +1482,7 @@
     count: { min: 720, max: 1050 }
   - type: Pool
     pool: caravan_hard
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncHuntContract
   id: BazarHeavyHuntCazadorSwarm
@@ -1505,7 +1505,7 @@
     count: { min: 760, max: 1120 }
   - type: Pool
     pool: caravan_hard
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncHuntContract
   id: BazarHeavyHuntRobotPatrol
@@ -1528,7 +1528,7 @@
     count: { min: 520, max: 760 }
   - type: Pool
     pool: caravan_hard
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncHuntContract
   id: BazarHeavyHuntRobobrainGuard
@@ -1551,7 +1551,7 @@
     count: { min: 720, max: 1050 }
   - type: Pool
     pool: caravan_hard
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncHuntContract
   id: BazarHeavyHuntAssaultronSignal
@@ -1576,7 +1576,7 @@
     count: { min: 900, max: 1300 }
   - type: Pool
     pool: caravan_hard
-    count: 2
+    count: { min: 2, max: 6 }
 
 - type: ncRetrievalContract
   id: BazarHeavyRecoverPiano
@@ -1593,7 +1593,7 @@
     count: { min: 500, max: 750 }
   - type: Pool
     pool: caravan_hard
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncRetrievalContract
   id: BazarHeavyCourierWeaponPartsToOutpost
@@ -1610,7 +1610,7 @@
     count: { min: 520, max: 780 }
   - type: Pool
     pool: caravan_hard
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncRetrievalContract
   id: BazarHeavyCourierAmmoToOutpost
@@ -1627,7 +1627,7 @@
     count: { min: 560, max: 820 }
   - type: Pool
     pool: caravan_hard
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncRetrievalContract
   id: BazarHeavyRecoverFarSupplyCache
@@ -1644,7 +1644,7 @@
     count: { min: 420, max: 650 }
   - type: Pool
     pool: caravan_hard
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncRetrievalContract
   id: BazarHeavyCourierAmmoToRadioTower
@@ -1661,7 +1661,7 @@
     count: { min: 700, max: 1000 }
   - type: Pool
     pool: caravan_hard
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncRetrievalContract
   id: BazarHeavyCourierPartsToBunker
@@ -1678,7 +1678,7 @@
     count: { min: 760, max: 1100 }
   - type: Pool
     pool: caravan_hard
-    count: 1
+    count: { min: 1, max: 3 }
 
 - type: ncRetrievalContract
   id: BazarHeavyCourierMedicalToLastCamp
@@ -1695,4 +1695,4 @@
     count: { min: 780, max: 1150 }
   - type: Pool
     pool: caravan_hard
-    count: 1
+    count: { min: 1, max: 3 }

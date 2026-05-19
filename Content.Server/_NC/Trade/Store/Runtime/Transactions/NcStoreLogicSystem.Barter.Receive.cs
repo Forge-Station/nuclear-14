@@ -86,7 +86,7 @@ public sealed partial class NcStoreLogicSystem
                 return false;
 
             var dropCounts = new Dictionary<string, int>(StringComparer.Ordinal);
-            var rolls = RollRange(entry.Rolls);
+            var rolls = RollRange(entry.Rolls, 1);
             for (var roll = 0; roll < rolls; roll++)
                 if (!TryRollBarterRewardToPlan(plan, deck, dropCounts, 0))
                     break;
@@ -181,7 +181,7 @@ public sealed partial class NcStoreLogicSystem
             deck.Remove(reward);
 
         var rewardId = GetRewardId(reward);
-        var amount = RollRange(reward.Count);
+        var amount = RollRange(reward.Count, 0);
         if (amount <= 0 || string.IsNullOrWhiteSpace(rewardId))
             return true;
 
@@ -328,14 +328,15 @@ public sealed partial class NcStoreLogicSystem
         return true;
     }
 
-    private int RollRange(IntRange range)
+    private int RollRange(IntRange range, int minClamp = 0)
     {
-        if (range.Min <= 0 || range.Max <= 0)
-            return 0;
-
         var min = Math.Min(range.Min, range.Max);
         var max = Math.Max(range.Min, range.Max);
-        if (min == max)
+
+        min = Math.Max(min, minClamp);
+        max = Math.Max(max, minClamp);
+
+        if (max <= min)
             return min;
 
         return min + _random.Next(max - min + 1);
