@@ -282,7 +282,7 @@
   id: Cotton
   stackEntity: MaterialCotton1
   name: хлопка
-  unit: цветка
+  unit: materials-unit-roll
   icon: { sprite: /Textures/Objects/Materials/materials.rsi, state: cotton  }
   color: "#ffffff"
   price: 0.01
