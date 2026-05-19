@@ -90,13 +90,13 @@
     - type: MobThresholds
       thresholds:
         0: Alive
-        500: Dead        
+        250: Dead        
     - type: Gun
       minAngle: 0
       maxAngle: 20
       angleIncrease: 1
       angleDecay: 4
-      fireRate: 10
+      fireRate: 15
       soundGunshot:
         collection: N14MinigunGunshot
       useKey: false

@@ -2,10 +2,10 @@
   id: RaiderPowerArmorBossNPC
   equipment:
     jumpsuit: ClothingUniformMNKUnderGarment
-    outerClothing: N14ClothingOuterPowerArmorRaider
+    outerClothing: N14ClothingOuterPowerArmorRaiderNPC 
+    head: N14ClothingHeadHelmetPowerArmorRaiderNPC
     mask: N14ClothingMaskLiner
-    eyes: N14ClothingEyesGlassesPilot
-    back: N14ClothingPowerSystemsBackForNPC
+    pocket1: N14AssemblyHolodiskClothingOuterPowerArmorT45 
 
 - type: startingGear
   id: MercenaryHeavySniperNPC
