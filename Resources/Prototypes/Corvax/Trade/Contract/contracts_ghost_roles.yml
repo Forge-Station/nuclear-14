@@ -84,6 +84,7 @@
     sex: Female
     gender: Female
     age: 25
+    skinColor: "#FFEACC"
     hair: CMlonghair
     hairColor: "#B94A24"
   perks:
@@ -207,6 +208,7 @@
     sex: Female
     gender: Female
     age: 31
+    skinColor: "#FFEACC"
     hair: CMlonghair
     hairColor: "#2F211C"
   perks:

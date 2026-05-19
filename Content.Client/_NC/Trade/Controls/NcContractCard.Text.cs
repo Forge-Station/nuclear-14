@@ -99,11 +99,6 @@ public sealed partial class NcContractCard
             : string.Join("\n", parts);
     }
 
-    private string BuildDisplayDescription(ContractClientData c, int maxChars)
-    {
-        return TrimToChars(BuildPrettyDescription(c), maxChars);
-    }
-
     private string BuildGoalsInline(ContractClientData c, int maxParts)
     {
         var parts = new List<string>(maxParts);
@@ -305,11 +300,4 @@ public sealed partial class NcContractCard
         return currencyId;
     }
 
-    private static string TrimToChars(string text, int maxChars)
-    {
-        if (maxChars <= 0 || text.Length <= maxChars)
-            return text;
-
-        return text[..maxChars].TrimEnd() + "...";
-    }
 }

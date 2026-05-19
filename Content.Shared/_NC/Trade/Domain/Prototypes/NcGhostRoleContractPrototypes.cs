@@ -93,6 +93,9 @@ public sealed partial class NcGhostRoleCharacterData
 
     [DataField("hairColor")]
     public Color? HairColor { get; set; }
+
+    [DataField("skinColor")]
+    public Color? SkinColor { get; set; }
 }
 
 [DataDefinition]

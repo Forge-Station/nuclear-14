@@ -28,6 +28,7 @@ public sealed class ContractObjectiveConfigData
     public int? GhostRoleCharacterAge;
     public string GhostRoleCharacterHair { get; set; } = string.Empty;
     public Color? GhostRoleCharacterHairColor;
+    public Color? GhostRoleCharacterSkinColor;
     public List<string> GhostRolePerks { get; set; } = new();
     public NcGhostRoleCompletionMode GhostRoleCompletionMode = NcGhostRoleCompletionMode.DeadBodyTurnIn;
     public int GhostRoleSurvivalDurationSeconds;

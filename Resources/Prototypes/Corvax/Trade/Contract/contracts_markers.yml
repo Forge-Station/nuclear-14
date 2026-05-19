@@ -45,6 +45,23 @@
     - state: red
 
 # -----------------------------------------------------------------------------
+# Legacy compatibility anchors
+# -----------------------------------------------------------------------------
+
+- type: entity
+  id: MarkerTradeContractRoad
+  parent: MarkerTradeContractSpawnBase
+  name: "контракт: дорожная точка"
+  description: "Старый дорожный маркер контрактов. Оставлен для совместимости с уже сохранёнными картами."
+  suffix: NC, Contracts, Legacy, Mapper
+  components:
+  - type: NcContractSpawnPoint
+    id: TradeContractRoad
+    groups:
+    - TradeContractRoad
+    - TradeContractLegacy
+
+# -----------------------------------------------------------------------------
 # Ghost-role anchors
 # -----------------------------------------------------------------------------
 

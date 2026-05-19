@@ -15,7 +15,6 @@ namespace Content.Client._NC.Trade.Controls;
 public sealed partial class NcContractCard : PanelContainer
 {
     private const float DescriptionHorizontalBudget = 40f;
-    private const int DescriptionMaxChars = 175;
     private const int TargetIconPx = 56;
     private const int RewardIconPx = 26;
     private const float ProgressFillMinVisibleWidth = 8f;
@@ -288,10 +287,9 @@ public sealed partial class NcContractCard : PanelContainer
             return;
         }
 
-        var displayText = BuildDisplayDescription(_data, DescriptionMaxChars);
         DescriptionLabel.Visible = true;
         DescriptionLabel.ToolTip = fullText;
-        DescriptionLabel.SetMessage(displayText, null, Color.FromHex("#D5CDC0"));
+        DescriptionLabel.SetMessage(fullText, null, Color.FromHex("#D5CDC0"));
     }
 
     private void PopulateStatus()

@@ -292,6 +292,12 @@ public sealed partial class NcContractSystem : EntitySystem
             dirty = true;
         }
 
+        if (config.GhostRoleCharacterSkinColor is { } skinColor)
+        {
+            _contractGhostRoleHumanoid.SetSkinColor(mob, skinColor, false, true, humanoid);
+            dirty = true;
+        }
+
         if (!string.IsNullOrWhiteSpace(config.GhostRoleCharacterHair))
         {
             humanoid.MarkingSet.RemoveCategory(MarkingCategories.Hair);
