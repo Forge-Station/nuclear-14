@@ -2,15 +2,15 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem
 {
-    private readonly ContractPinpointerService _pinpointerService = new();
+    private readonly IContractPinpointerRegistry _pinpointerService = new ContractPinpointerService();
 
-    private sealed class ContractPinpointerService
+    private sealed class ContractPinpointerService : IContractPinpointerRegistry
     {
-        public readonly List<EntityUid> ObjectivePinpointersScratch = new();
-        public readonly List<EntityUid> RetrievalPulledCargoScratch = new();
+        public List<EntityUid> ObjectivePinpointersScratch { get; } = new();
+        public List<EntityUid> RetrievalPulledCargoScratch { get; } = new();
 
         public void RegisterIssuedPinpointer(
-            ContractObjectiveRuntimeService runtime,
+            IContractObjectiveRuntimeStore runtime,
             (EntityUid Store, string ContractId) key,
             ObjectiveRuntimeState state,
             EntityUid user,
@@ -22,7 +22,7 @@ public sealed partial class NcContractSystem
         }
 
         public void UnregisterIssuedPinpointer(
-            ContractObjectiveRuntimeService runtime,
+            IContractObjectiveRuntimeStore runtime,
             EntityUid pinpointer,
             (EntityUid Store, string ContractId) key)
         {
@@ -33,7 +33,7 @@ public sealed partial class NcContractSystem
                 state.PinpointerEntities.Remove(pinpointer);
         }
 
-        public bool TryGetOwner(ContractObjectiveRuntimeService runtime, EntityUid pinpointer, out EntityUid owner)
+        public bool TryGetOwner(IContractObjectiveRuntimeStore runtime, EntityUid pinpointer, out EntityUid owner)
         {
             return runtime.PinpointerOwners.TryGetValue(pinpointer, out owner);
         }

@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Collections;
+using System.Reflection;
 using Content.Server._NC.Trade;
 using Content.Shared;
 using Content.Shared._NC.Trade;
@@ -30,6 +32,7 @@ public sealed class NcStoreTransactionRegressionTest
     private const string TestStaticTagTarget = "NcTradeTestStaticTagTarget";
     private const string TestRuntimeTagTarget = "NcTradeTestRuntimeTagTarget";
     private const string TestStackMatcher = "NcTradeTestStackMatcher";
+    private const string TestProofItem = "NcTradeTestProofItem";
 
     private static readonly (string Cvar, string Value)[] TestCvars =
     {
@@ -164,6 +167,10 @@ public sealed class NcStoreTransactionRegressionTest
 - type: entity
   parent: BaseItem
   id: NcTradeTestRuntimeTaggedItem
+
+- type: entity
+  parent: BaseItem
+  id: NcTradeTestProofItem
 
 - type: ncMatcher
   id: NcTradeTestStackMatcher
@@ -463,6 +470,86 @@ public sealed class NcStoreTransactionRegressionTest
     }
 
     [Test]
+    public async Task ObjectiveProofConsumeJournalRollsBackStagedProofRemoval()
+    {
+        using var server = await StartServer();
+
+        var entMan = server.ResolveDependency<IEntityManager>();
+        var hands = entMan.System<SharedHandsSystem>();
+        var contracts = entMan.System<NcContractSystem>();
+
+        EntityUid store = default;
+        EntityUid user = default;
+        EntityUid proof = default;
+        const string contractId = "objective-proof-journal";
+
+        await server.WaitPost(() =>
+        {
+            store = entMan.SpawnEntity(TestSaleItem, MapCoordinates.Nullspace);
+            user = entMan.SpawnEntity("MobHumanDummy", MapCoordinates.Nullspace);
+            proof = entMan.SpawnEntity(TestProofItem, MapCoordinates.Nullspace);
+
+            var proofComp = entMan.EnsureComponent<NcContractProofComponent>(proof);
+            proofComp.Store = store;
+            proofComp.ContractId = contractId;
+            proofComp.ProofToken = "proof-token";
+
+            Assert.That(hands.TryPickupAnyHand(user, proof), Is.True);
+        });
+
+        await server.WaitRunTicks(5);
+
+        await server.WaitAssertion(() =>
+        {
+            var key = (store, contractId);
+            var state = InvokePrivate<object>(contracts, "GetOrCreateObjectiveRuntimeState", key);
+            var stateType = state.GetType();
+            var proofEntityField = stateType.GetField("ProofEntity", BindingFlags.Instance | BindingFlags.Public)!;
+            var proofTokenField = stateType.GetField("ProofToken", BindingFlags.Instance | BindingFlags.Public)!;
+
+            proofEntityField.SetValue(state, proof);
+            proofTokenField.SetValue(state, "proof-token");
+
+            var runtime = GetPrivateField<object>(contracts, "_objectiveRuntime");
+            var byProof = (IDictionary) runtime.GetType()
+                .GetField("ByProof", BindingFlags.Instance | BindingFlags.Public)!
+                .GetValue(runtime)!;
+            byProof[proof] = key;
+
+            var contract = new ContractServerData
+            {
+                Id = contractId,
+                Config = new ContractObjectiveConfigData
+                {
+                    ProofPrototype = TestProofItem
+                }
+            };
+
+            var journalType = typeof(NcContractSystem).GetNestedType(
+                "ObjectiveConsumeJournal",
+                BindingFlags.Instance | BindingFlags.NonPublic)!;
+            var journal = Activator.CreateInstance(journalType, nonPublic: true)!;
+            var consume = typeof(NcContractSystem).GetMethod(
+                "TryConsumeObjectiveProof",
+                BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+            var args = new object[] { store, user, contractId, contract, journal, null! };
+            var ok = (bool) consume.Invoke(contracts, args)!;
+
+            Assert.That(ok, Is.True);
+            Assert.That(entMan.EntityExists(proof), Is.True);
+            Assert.That(proofEntityField.GetValue(state), Is.Null);
+            Assert.That(byProof.Contains(proof), Is.False);
+
+            InvokePrivateVoid(contracts, "RollbackObjectiveConsumeJournal", journal);
+
+            Assert.That(entMan.EntityExists(proof), Is.True);
+            Assert.That(proofEntityField.GetValue(state), Is.EqualTo(proof));
+            Assert.That(byProof.Contains(proof), Is.True);
+        });
+    }
+
+    [Test]
     public async Task InventoryTakeTransactionRollbackRestoresStacksAndDeferredDeletes()
     {
         using var server = await StartServer();
@@ -593,5 +680,26 @@ public sealed class NcStoreTransactionRegressionTest
             RemainingCount = remaining,
             Cost = { [TestCurrency] = price },
         };
+    }
+
+    private static T GetPrivateField<T>(object instance, string fieldName)
+    {
+        var field = instance.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
+        Assert.That(field, Is.Not.Null, $"Missing private field '{fieldName}' on {instance.GetType()}.");
+        return (T) field!.GetValue(instance)!;
+    }
+
+    private static T InvokePrivate<T>(object instance, string methodName, params object[] args)
+    {
+        var method = instance.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
+        Assert.That(method, Is.Not.Null, $"Missing private method '{methodName}' on {instance.GetType()}.");
+        return (T) method!.Invoke(instance, args)!;
+    }
+
+    private static void InvokePrivateVoid(object instance, string methodName, params object[] args)
+    {
+        var method = instance.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
+        Assert.That(method, Is.Not.Null, $"Missing private method '{methodName}' on {instance.GetType()}.");
+        method!.Invoke(instance, args);
     }
 }

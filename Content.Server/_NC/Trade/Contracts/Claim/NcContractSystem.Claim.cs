@@ -126,6 +126,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryValidateContractRewards(user, contract.Rewards, out var rewardFail))
             return rewardFail;
 
+        var objectiveJournal = new ObjectiveConsumeJournal();
         if (!TryGiveContractRewardsWithPreCommit(
                 user,
                 contract.Rewards,
@@ -134,15 +135,17 @@ public sealed partial class NcContractSystem : EntitySystem
                     if (contract.Config.RetrievalClaimMode != NcRetrievalClaimMode.DestinationProof)
                         return ClaimAttemptResult.Ok();
 
-                    return TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail)
+                    return TryConsumeObjectiveProof(store, user, contractId, contract, objectiveJournal, out var proofFail)
                         ? ClaimAttemptResult.Ok()
                         : proofFail;
                 },
                 out var rewardExecFail))
         {
+            RollbackObjectiveConsumeJournal(objectiveJournal);
             return rewardExecFail;
         }
 
+        CommitObjectiveConsumeJournal(objectiveJournal);
         FinalizeClaim(store, comp, contractId, contract.Repeatable, deleteTrackedEntities: contract.Config.RetrievalConsumeCargo);
         return ClaimAttemptResult.Ok();
     }
@@ -178,25 +181,28 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryValidateContractRewards(user, contract.Rewards, out var rewardFail))
             return rewardFail;
 
+        var objectiveJournal = new ObjectiveConsumeJournal();
         if (!TryGiveContractRewardsWithPreCommit(
                 user,
                 contract.Rewards,
                 () =>
                 {
-                    if (!TryConsumeSpawnedHuntBodyTurnIn(store, user, contractId, contract, out var bodyFail))
+                    if (!TryConsumeSpawnedHuntBodyTurnIn(store, user, contractId, contract, objectiveJournal, out var bodyFail))
                         return bodyFail;
 
-                    if (!TryConsumeObjectiveProof(store, user, contractId, contract, out var proofFail))
+                    if (!TryConsumeObjectiveProof(store, user, contractId, contract, objectiveJournal, out var proofFail))
                         return proofFail;
 
-                    TryMarkGhostRoleRoundEndClaimed(store, contractId, contract);
+                    TryMarkGhostRoleRoundEndClaimed(store, contractId, contract, objectiveJournal);
                     return ClaimAttemptResult.Ok();
                 },
                 out var rewardExecFail))
         {
+            RollbackObjectiveConsumeJournal(objectiveJournal);
             return rewardExecFail;
         }
 
+        CommitObjectiveConsumeJournal(objectiveJournal);
         FinalizeClaim(store, comp, contractId, contract.Repeatable);
 
         return ClaimAttemptResult.Ok();

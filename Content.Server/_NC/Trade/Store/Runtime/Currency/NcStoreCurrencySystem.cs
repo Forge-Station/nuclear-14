@@ -5,7 +5,7 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Server._NC.Trade;
 
-public sealed class NcStoreCurrencySystem : EntitySystem
+public sealed class NcStoreCurrencySystem : EntitySystem, IStoreCurrencyService
 {
     [Dependency] private readonly IPrototypeManager _protos = default!;
 

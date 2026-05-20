@@ -97,7 +97,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
-        if (!EntityManager.EntityExists(entry.Entity))
+        if (!Exists(entry.Entity))
         {
             fail = CreateClaimExecutionFailure($"Planned entity no longer exists: {ToPrettyString(entry.Entity)}");
             return false;
@@ -155,7 +155,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
-        if (!EntityManager.EntityExists(entry.Entity))
+        if (!Exists(entry.Entity))
         {
             fail = CreateClaimExecutionFailure($"Planned entity no longer exists: {ToPrettyString(entry.Entity)}");
             return false;
@@ -197,110 +197,6 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
-    private void CommitClaimTakeJournal(ClaimTakeJournal journal)
-    {
-        for (var i = 0; i < journal.PendingDeletes.Count; i++)
-        {
-            var ent = journal.PendingDeletes[i];
-            if (EntityManager.EntityExists(ent))
-                EntityManager.DeleteEntity(ent);
-        }
-
-        journal.Clear();
-    }
-
-    private void RollbackClaimTakeJournal(ClaimTakeJournal journal)
-    {
-        if (journal.TurnInState != null)
-        {
-            for (var i = journal.TurnInRestores.Count - 1; i >= 0; i--)
-            {
-                var restore = journal.TurnInRestores[i];
-                if (restore.HadValue)
-                    journal.TurnInState.TurnedInByTarget[restore.Key] = restore.PreviousValue;
-                else
-                    journal.TurnInState.TurnedInByTarget.Remove(restore.Key);
-            }
-        }
-
-        for (var i = journal.RetrievalCargoRestores.Count - 1; i >= 0; i--)
-        {
-            var (cargo, key) = journal.RetrievalCargoRestores[i];
-            if (EntityManager.EntityExists(cargo))
-                _objectiveRuntime.ByRetrievalCargo[cargo] = key;
-        }
-
-        for (var i = journal.StackRestores.Count - 1; i >= 0; i--)
-        {
-            var (ent, previousCount) = journal.StackRestores[i];
-            if (TryComp(ent, out StackComponent? stack))
-                _stacks.SetCount(ent, previousCount, stack);
-        }
-
-        journal.Clear();
-    }
-
-    private sealed class ClaimTakeJournal
-    {
-        public readonly List<EntityUid> PendingDeletes = new();
-        public readonly List<(EntityUid Cargo, (EntityUid Store, string ContractId) Key)> RetrievalCargoRestores = new();
-        public readonly List<(EntityUid Ent, int PreviousCount)> StackRestores = new();
-        public readonly List<TurnInRestore> TurnInRestores = new();
-        public ObjectiveRuntimeState? TurnInState;
-
-        public void TrackStack(EntityUid ent, int previousCount)
-        {
-            for (var i = 0; i < StackRestores.Count; i++)
-            {
-                if (StackRestores[i].Ent == ent)
-                    return;
-            }
-
-            StackRestores.Add((ent, previousCount));
-        }
-
-        public void TrackRetrievalCargo(EntityUid cargo, (EntityUid Store, string ContractId) key)
-        {
-            for (var i = 0; i < RetrievalCargoRestores.Count; i++)
-            {
-                if (RetrievalCargoRestores[i].Cargo == cargo)
-                    return;
-            }
-
-            RetrievalCargoRestores.Add((cargo, key));
-        }
-
-        public void TrackTurnIn(
-            ObjectiveRuntimeState state,
-            (string TargetItem, PrototypeMatchMode MatchMode) key)
-        {
-            TurnInState ??= state;
-
-            for (var i = 0; i < TurnInRestores.Count; i++)
-            {
-                if (TurnInRestores[i].Key == key)
-                    return;
-            }
-
-            var hadValue = state.TurnedInByTarget.TryGetValue(key, out var previousValue);
-            TurnInRestores.Add(new TurnInRestore(key, hadValue, previousValue));
-        }
-
-        public void Clear()
-        {
-            PendingDeletes.Clear();
-            RetrievalCargoRestores.Clear();
-            StackRestores.Clear();
-            TurnInRestores.Clear();
-            TurnInState = null;
-        }
-    }
-
-    private readonly record struct TurnInRestore(
-        (string TargetItem, PrototypeMatchMode MatchMode) Key,
-        bool HadValue,
-        int PreviousValue);
-
     private void InvalidateClaimExecutionCaches(ClaimContext ctx)
     {
         _inventory.InvalidateInventoryCache(ctx.User);
@@ -330,7 +226,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
-        if (_logic.TryValidateRewardList(user, rewards, out var reason))
+        if (Rewards.TryValidateRewardList(user, rewards, out var reason))
             return true;
 
         fail = CreateClaimExecutionFailure(reason);
@@ -346,7 +242,7 @@ public sealed partial class NcContractSystem : EntitySystem
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
         var preCommitFail = ClaimAttemptResult.Ok();
 
-        if (_logic.TryExecuteRewardListWithPreCommit(
+        if (Rewards.TryExecuteRewardListWithPreCommit(
                 user,
                 rewards,
                 "Claim",

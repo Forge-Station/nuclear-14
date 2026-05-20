@@ -10,7 +10,7 @@ public sealed partial class NcStoreLogicSystem
             return false;
 
         _inventory.InvalidateInventoryCache(container);
-        var items = new List<EntityUid>();
+        var items = new List<EntityUid>(64);
         _inventory.ScanInventoryItems(container, items);
 
         var plan = ComputeMassSellPlanFromCachedItems(machine, store, container, items);

@@ -96,6 +96,7 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid user,
         string contractId,
         ContractServerData contract,
+        ObjectiveConsumeJournal journal,
         out ClaimAttemptResult fail)
     {
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
@@ -122,18 +123,15 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
         }
 
-        if (_objectiveRuntime.ByContract.TryGetValue(key, out var currentState) &&
-            currentState.ProofEntity == proof)
-        {
-            currentState.ProofEntity = null;
-        }
+        if (_objectiveRuntime.ByContract.TryGetValue(key, out var currentState))
+            journal.TrackProofState(currentState, proof);
 
         // Fix (B39): remove from the proof-index BEFORE Del(). Otherwise the subsequent
         // EntityTerminatingEvent would look it up and fail the contract we are actively claiming.
+        journal.TrackProofIndex(proof, _objectiveRuntime.ByProof);
         _objectiveRuntime.ByProof.Remove(proof);
 
-        if (EntityManager.EntityExists(proof))
-            Del(proof);
+        journal.PendingDeletes.Add(proof);
 
         return true;
     }
@@ -223,7 +221,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool CanUseNearbyStoreObjectiveProofEntity(EntityUid store, EntityUid ent)
     {
-        if (ent == EntityUid.Invalid || ent == store || !EntityManager.EntityExists(ent))
+        if (ent == EntityUid.Invalid || ent == store || !Exists(ent))
             return false;
 
         return TryComp(ent, out TransformComponent? xform) && !IsTargetInEntityContainer(xform);

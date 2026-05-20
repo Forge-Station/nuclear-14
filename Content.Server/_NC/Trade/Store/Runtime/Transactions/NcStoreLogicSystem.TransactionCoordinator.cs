@@ -4,7 +4,7 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcStoreLogicSystem
 {
-    private sealed class StoreTransactionCoordinator
+    private sealed class StoreTransactionCoordinator : IStoreTransactionCoordinator
     {
         private readonly NcStoreLogicSystem _sys;
 

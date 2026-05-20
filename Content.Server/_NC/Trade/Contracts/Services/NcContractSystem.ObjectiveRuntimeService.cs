@@ -2,22 +2,22 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem
 {
-    private readonly ContractObjectiveRuntimeService _objectiveRuntime = new();
+    private readonly IContractObjectiveRuntimeStore _objectiveRuntime = new ContractObjectiveRuntimeService();
 
-    private sealed class ContractObjectiveRuntimeService
+    private sealed class ContractObjectiveRuntimeService : IContractObjectiveRuntimeStore
     {
-        public readonly HashSet<(EntityUid Store, string ContractId)> ActiveGhostRoleObjectives = new();
-        public readonly HashSet<(EntityUid Store, string ContractId)> ActiveHuntObjectives = new();
-        public readonly HashSet<(EntityUid Store, string ContractId)> ActiveRetrievalRouteDeliveries = new();
-        public readonly HashSet<(EntityUid Store, string ContractId)> ActiveTrackedDeliveryDropoffObjectives = new();
-        public readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> ByGuard = new();
-        public readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> ByPinpointer = new();
-        public readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> ByProof = new();
-        public readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> ByRetrievalCargo = new();
-        public readonly Dictionary<(EntityUid Store, string ContractId), ObjectiveRuntimeState> ByContract = new();
-        public readonly Dictionary<EntityUid, (EntityUid Store, string ContractId)> ByTarget = new();
-        public readonly List<(EntityUid Store, string ContractId)> KeysScratch = new();
-        public readonly Dictionary<EntityUid, EntityUid> PinpointerOwners = new();
+        public HashSet<(EntityUid Store, string ContractId)> ActiveGhostRoleObjectives { get; } = new();
+        public HashSet<(EntityUid Store, string ContractId)> ActiveHuntObjectives { get; } = new();
+        public HashSet<(EntityUid Store, string ContractId)> ActiveRetrievalRouteDeliveries { get; } = new();
+        public HashSet<(EntityUid Store, string ContractId)> ActiveTrackedDeliveryDropoffObjectives { get; } = new();
+        public Dictionary<EntityUid, (EntityUid Store, string ContractId)> ByGuard { get; } = new();
+        public Dictionary<EntityUid, (EntityUid Store, string ContractId)> ByPinpointer { get; } = new();
+        public Dictionary<EntityUid, (EntityUid Store, string ContractId)> ByProof { get; } = new();
+        public Dictionary<EntityUid, (EntityUid Store, string ContractId)> ByRetrievalCargo { get; } = new();
+        public Dictionary<(EntityUid Store, string ContractId), ObjectiveRuntimeState> ByContract { get; } = new();
+        public Dictionary<EntityUid, (EntityUid Store, string ContractId)> ByTarget { get; } = new();
+        public List<(EntityUid Store, string ContractId)> KeysScratch { get; } = new();
+        public Dictionary<EntityUid, EntityUid> PinpointerOwners { get; } = new();
 
         public bool IsEmpty => ByContract.Count == 0;
 

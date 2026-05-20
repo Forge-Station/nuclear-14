@@ -300,6 +300,10 @@ public sealed partial class NcStoreLogicSystem
                 }
             }
 
+            // From here on the reward/currency commits are finalization-only and must be
+            // best-effort/no-throw. Pre-commit actions may already have staged or committed
+            // cost-side changes, so finalization logs placement/delete failures instead of
+            // turning them into a second rollback path.
             if (currencyTransactionActive)
             {
                 CommitCurrencyIssueTransaction(receiver);

@@ -15,6 +15,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         public readonly List<EntityUid> DeepUserItems = new();
         public readonly List<EntityUid> DeepCrateItems = new();
+        public readonly List<ContractServerData> ContractsSignatureScratch = new();
         public readonly NcInventorySnapshot UserSnapshot = new();
         public readonly NcStoreLogicSystem.BarterAvailabilityContext BarterAvailability = new();
 

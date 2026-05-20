@@ -75,7 +75,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private void TryMarkGhostRoleRoundEndClaimed(
         EntityUid store,
         string contractId,
-        ContractServerData contract)
+        ContractServerData contract,
+        ObjectiveConsumeJournal journal)
     {
         if (!contract.IsGhostRoleObjective ||
             !_objectiveRuntime.ByContract.TryGetValue((store, contractId), out var state))
@@ -86,6 +87,13 @@ public sealed partial class NcContractSystem : EntitySystem
         var outcome = contract.Config.GhostRoleCompletionMode == NcGhostRoleCompletionMode.AliveCuffedTurnIn
             ? GhostRoleRoundEndOutcome.DeliveredAlive
             : GhostRoleRoundEndOutcome.DeliveredDead;
+
+        if (TryGetGhostRoleRoundEndRecord(state, out var record) &&
+            !IsFinalGhostRoleRoundEndOutcome(record.Outcome))
+        {
+            journal.TrackRoundEnd(record);
+        }
+
         MarkGhostRoleRoundEndOutcome(state, outcome);
     }
 

@@ -14,7 +14,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         foreach (var ent in _lookup.GetEntitiesInRange(store, NcContractTuning.TrackedDeliveryStoreRange, LookupFlags.Dynamic | LookupFlags.Sundries))
         {
-            if (ent == EntityUid.Invalid || ent == store || !EntityManager.EntityExists(ent))
+            if (ent == EntityUid.Invalid || ent == store || !Exists(ent))
                 continue;
 
             if (!TryComp(ent, out TransformComponent? xform) || IsTargetInEntityContainer(xform))

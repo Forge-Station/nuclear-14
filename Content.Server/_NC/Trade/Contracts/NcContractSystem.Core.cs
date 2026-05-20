@@ -19,6 +19,8 @@ public sealed partial class NcContractSystem : EntitySystem
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
     [Dependency] private readonly IComponentFactory _compFactory = default!;
+    private IStoreCurrencyDebitService CurrencyDebit => _logic;
+    private IStoreRewardExecutionService Rewards => _logic;
     private readonly HashSet<(EntityUid Store, EntityUid User, string ContractId)> _claimInProgress = new();
     private bool _claimScratchInUse;
     private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _progressClaimableByKeyScratch = new();

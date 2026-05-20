@@ -11,7 +11,7 @@ using Robust.Shared.Timing;
 namespace Content.Server._NC.Trade;
 
 
-public sealed partial class NcStoreLogicSystem : EntitySystem
+public sealed partial class NcStoreLogicSystem : EntitySystem, IStoreRewardExecutionService, IStoreCurrencyDebitService
 {
     private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore-logic");
     private static readonly IComparer<string> OrdinalIds = new OrdinalIdComparer();
@@ -52,7 +52,17 @@ public sealed partial class NcStoreLogicSystem : EntitySystem
 
             var pickedUp = false;
             if (_ents.HasComponent<HandsComponent>(user))
-                pickedUp = _hands.TryPickupAnyHand(user, spawned, false);
+            {
+                try
+                {
+                    pickedUp = _hands.TryPickupAnyHand(user, spawned, false);
+                }
+                catch (Exception e)
+                {
+                    Sawmill.Warning(
+                        $"[NcStore] Failed to pick up reward entity {ToPrettyString(spawned)} for {ToPrettyString(user)}: {e}");
+                }
+            }
 
             if (pickedUp)
             {
@@ -62,8 +72,16 @@ public sealed partial class NcStoreLogicSystem : EntitySystem
 
             if (TryGetPulledClosedCrate(user, out var crate) && Exists(crate))
             {
-                _entityStorage.Insert(spawned, crate);
-                InvalidateInventoryCache(crate);
+                try
+                {
+                    _entityStorage.Insert(spawned, crate);
+                    InvalidateInventoryCache(crate);
+                }
+                catch (Exception e)
+                {
+                    Sawmill.Warning(
+                        $"[NcStore] Failed to insert reward entity {ToPrettyString(spawned)} into crate {ToPrettyString(crate)}: {e}");
+                }
             }
 
             InvalidateInventoryCache(user);

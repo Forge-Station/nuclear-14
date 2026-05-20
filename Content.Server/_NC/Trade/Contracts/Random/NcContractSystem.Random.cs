@@ -10,6 +10,11 @@ public sealed partial class NcContractSystem : EntitySystem
     private const int MaxRngCache = 4096;
 
     private const int RngEvictChunk = 256;
+    private const double SoftFairHeatPenalty = 0.75;
+    private const double SoftFairRepeatPenalty = 0.45;
+    private const double SoftFairStreakPenalty = 0.2;
+    private const double SoftFairMinWeight = 0.04;
+    private const double SoftFairDecay = 0.55;
 
     private readonly Queue<QuasiKey> _quasiPhaseOrder = new();
     private readonly Dictionary<QuasiKey, SoftFairState> _softFair = new();
@@ -130,11 +135,11 @@ public sealed partial class NcContractSystem : EntitySystem
         var total = 0.0;
         for (var i = 0; i < buckets; i++)
         {
-            var weight = 1.0 / (1.0 + state.Heat[i] * 0.75);
+            var weight = 1.0 / (1.0 + state.Heat[i] * SoftFairHeatPenalty);
             if (i == state.LastIdx)
-                weight *= state.Streak > 1 ? 0.35 : 0.6;
+                weight *= state.Streak > 1 ? SoftFairStreakPenalty : SoftFairRepeatPenalty;
 
-            weight = Math.Max(weight, 0.08);
+            weight = Math.Max(weight, SoftFairMinWeight);
             weights[i] = weight;
             total += weight;
         }
@@ -152,7 +157,7 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         for (var i = 0; i < state.Heat.Count; i++)
-            state.Heat[i] *= 0.55;
+            state.Heat[i] *= SoftFairDecay;
 
         state.Heat[idx] += 1.0;
         state.Streak = idx == state.LastIdx ? state.Streak + 1 : 1;

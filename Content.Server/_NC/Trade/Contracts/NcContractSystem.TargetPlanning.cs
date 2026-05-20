@@ -77,7 +77,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool CanUseContractPlanningEntity(EntityUid root, EntityUid ent, bool worldTurnInSource)
     {
-        if (ent == EntityUid.Invalid || !EntityManager.EntityExists(ent))
+        if (ent == EntityUid.Invalid || !Exists(ent))
             return false;
 
         if (TryComp(ent, out MobStateComponent? mobState) && mobState.CurrentState != MobState.Dead)

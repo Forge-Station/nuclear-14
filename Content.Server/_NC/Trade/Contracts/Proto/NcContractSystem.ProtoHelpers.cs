@@ -35,7 +35,8 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!_prototypes.TryIndex<EntityPrototype>(productProtoId, out var expectedProto))
             return false;
 
-        if (!expectedProto.TryGetComponent("Stack", out StackComponent? prodStackDef))
+        var stackComponentName = _compFactory.GetComponentName(typeof(StackComponent));
+        if (!expectedProto.TryGetComponent(stackComponentName, out StackComponent? prodStackDef))
             return false;
 
         if (string.IsNullOrWhiteSpace(prodStackDef.StackTypeId))
