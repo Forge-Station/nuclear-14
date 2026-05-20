@@ -104,11 +104,8 @@ public sealed partial class NcContractSystem : EntitySystem
         if (contract.Runtime.Failed || !_objectiveRuntime.ByContract.TryGetValue(key, out state))
             return false;
 
-        if (!TryResolveRetrievalRouteReturnPinpointerTargetForUser(key.Store, user, contract, state, out var target) &&
-            !TryResolveRetrievalSpawnedPinpointerTargetForUser(key.Store, user, contract, state, out target))
-        {
+        if (!TryResolveContractPinpointerTarget(key.Store, user, key.ContractId, contract, state, out var target))
             return false;
-        }
 
         RetargetObjectivePinpointersForOwner(key, state, user, target);
         return true;
@@ -194,14 +191,10 @@ public sealed partial class NcContractSystem : EntitySystem
                 owner != EntityUid.Invalid &&
                 !TerminatingOrDeleted(owner))
             {
-                if (!TryResolveRetrievalRouteReturnPinpointerTargetForUser(key.Store, owner, contract, state, out target) &&
-                    !TryResolveRetrievalSpawnedPinpointerTargetForUser(key.Store, owner, contract, state, out target))
-                {
+                if (!TryResolveContractPinpointerTarget(key.Store, owner, key.ContractId, contract, state, out target))
                     continue;
-                }
             }
-            else if (!TryResolveRetrievalRouteReturnPinpointerTarget(key.Store, contract, state, out target) &&
-                     !TryResolveRetrievalSpawnedPinpointerTarget(key.Store, contract, state, out target))
+            else if (!TryResolveContractPinpointerTarget(key.Store, key.ContractId, contract, state, out target))
             {
                 continue;
             }

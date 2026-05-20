@@ -152,24 +152,8 @@ public sealed partial class NcContractSystem : EntitySystem
         IReadOnlyList<EntityUid> userItems,
         IReadOnlyList<EntityUid>? crateItems)
     {
-        switch (contract.ExecutionKind)
-        {
-            case ContractExecutionKind.TrackedDeliveryObjective:
-                UpdateTrackedDeliveryObjectiveProgress(store, contractId, contract, userItems, crateItems);
-                return true;
-
-            case ContractExecutionKind.RetrievalRouteDelivery:
-                TryUpdateRetrievalRouteDeliveryProgress(store, contractId, contract);
-                return true;
-
-            case ContractExecutionKind.HuntObjective:
-            case ContractExecutionKind.GhostRoleObjective:
-                UpdateObjectiveContractProgress(store, contractId, contract);
-                return true;
-
-            default:
-                return false;
-        }
+        return TryGetObjectiveHandler(contract.ExecutionKind, out var handler) &&
+               handler.TryUpdateProgress(this, store, contractId, contract, userItems, crateItems);
     }
 
     private void EnsureStoreNearbyProgressItems(

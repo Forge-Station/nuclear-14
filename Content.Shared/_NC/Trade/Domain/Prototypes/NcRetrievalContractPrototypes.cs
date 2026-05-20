@@ -37,6 +37,10 @@ public sealed partial class NcRetrievalContractPrototype : IPrototype
     [DataField("reward", required: true)]
     public List<NcSupplyRewardEntry> Reward { get; private set; } = new();
 
+    /// <summary>Optional extension conditions evaluated by registered server-side handlers.</summary>
+    [DataField("conditions")]
+    public List<ContractConditionDef> Conditions { get; private set; } = new();
+
     // Retrieval is intentionally strict: old targets/targetCount/spawn fields are not represented here.
     // Invalid old YAML is blocked by nc_trade_core_audit.py before prototype load.
 }

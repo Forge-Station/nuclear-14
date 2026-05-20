@@ -26,19 +26,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
             hasTakenContracts = true;
 
-            switch (contract.ExecutionKind)
-            {
-                case ContractExecutionKind.InventoryDelivery:
-                    needsUserItems = true;
-                    needsCrateItems = true;
-                    needsStoreWorldItems |= contract.AllowsStoreWorldTurnIn;
-                    break;
-
-                case ContractExecutionKind.TrackedDeliveryObjective:
-                    needsUserItems = true;
-                    needsCrateItems = true;
-                    break;
-            }
+            if (TryGetObjectiveHandler(contract.ExecutionKind, out var handler))
+                handler.AnalyzeProgressRequirements(contract, ref needsUserItems, ref needsCrateItems, ref needsStoreWorldItems);
         }
     }
 }

@@ -43,47 +43,12 @@ public sealed partial class NcContractSystem : EntitySystem
         GhostRoleComponent? ghostRole,
         bool popupOnFail = true)
     {
-        if (ghostRole == null || ghostRole.Taken || MetaData(spawner).EntityPaused)
-            return false;
-
-        var requirements = spawnerComp.Requirements;
-        if (requirements.Count == 0)
+        var context = new ContractConditionContext(player, spawner, spawnerComp, ghostRole);
+        if (TryEvaluateContractCondition(GhostRoleRequirementsCondition, context, out var failure))
             return true;
 
-        if (!_contractGhostRolePlayTime.TryGetTrackerTimes(player, out var playTimes))
-        {
-            Log.Error($"Unable to check contract ghost role requirements for {player}.");
-            playTimes = new Dictionary<string, TimeSpan>();
-        }
-
-        var selectedCharacter = _contractGhostRolePrefs.GetPreferences(player.UserId).SelectedCharacter;
-        var profile = selectedCharacter as HumanoidCharacterProfile
-            ?? HumanoidCharacterProfile.DefaultWithSpecies();
-        var isWhitelisted = player.ContentData()?.Whitelisted ?? false;
-
-        if (_contractGhostRoleRequirements.CheckRequirementsValid(
-                requirements,
-                new JobPrototype(),
-                profile,
-                playTimes,
-                isWhitelisted,
-                new LoadoutPrototype(),
-                EntityManager,
-                _prototypes,
-                _contractGhostRoleConfig,
-                _contractGhostRoleSponsor,
-                out var reasons))
-        {
-            return true;
-        }
-
-        if (popupOnFail)
-        {
-            _contractGhostRolePopups.PopupCursor(
-                BuildContractGhostRoleRequirementsFailureMessage(reasons),
-                player,
-                PopupType.MediumCaution);
-        }
+        if (popupOnFail && !string.IsNullOrWhiteSpace(failure))
+            _contractGhostRolePopups.PopupCursor(failure, player, PopupType.MediumCaution);
 
         return false;
     }

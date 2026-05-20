@@ -34,40 +34,8 @@ public sealed partial class NcContractSystem : EntitySystem
         if (contract.Runtime.Failed || !_objectiveRuntime.ByContract.TryGetValue(key, out state))
             return false;
 
-        EntityUid pinpointerTarget;
-        if (!TryResolveRetrievalRouteReturnPinpointerTargetForUser(store, user, contract, state, out pinpointerTarget) &&
-            UsesRetrievalSpawnedPinpointerTarget(contract))
-        {
-            if (!TryResolveRetrievalSpawnedPinpointerTargetForUser(store, user, contract, state, out pinpointerTarget))
-                return false;
-        }
-        else if (pinpointerTarget == EntityUid.Invalid && contract.Completed)
-        {
-            if (state.ProofEntity is not { } proof || proof == EntityUid.Invalid || TerminatingOrDeleted(proof))
-                return false;
-
-            pinpointerTarget = proof;
-        }
-        else if (pinpointerTarget == EntityUid.Invalid)
-        {
-            if (contract.ExecutionKind == ContractExecutionKind.GhostRoleObjective && !state.GhostRoleTaken)
-                return false;
-
-            if (IsSpawnedHuntContract(contract))
-            {
-                if (!TryResolveSpawnedHuntPinpointerTargetForUser(store, user, contract, state, out pinpointerTarget))
-                    return false;
-            }
-            else
-            {
-                if (state.TargetEntity is not { } target || target == EntityUid.Invalid || TerminatingOrDeleted(target))
-                    return false;
-
-                pinpointerTarget = ResolveObjectivePinpointerTarget(contract, state, target);
-                if (pinpointerTarget == EntityUid.Invalid || TerminatingOrDeleted(pinpointerTarget))
-                    return false;
-            }
-        }
+        if (!TryResolveContractPinpointerTarget(store, user, contractId, contract, state, out var pinpointerTarget))
+            return false;
 
         EntityCoordinates spawnCoords;
         if (TryComp(store, out TransformComponent? storeXform))
@@ -82,7 +50,33 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool RefreshPinpointerRuntimeState(EntityUid store, string contractId, ContractServerData contract)
     {
-        return TryUpdateRetrievalRouteDeliveryProgress(store, contractId, contract);
+        return TryGetTargetResolver(contract.ExecutionKind, out var resolver) &&
+               resolver.TryRefreshPinpointerState(this, store, contractId, contract);
+    }
+
+    private bool TryResolveContractPinpointerTarget(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        ContractServerData contract,
+        ObjectiveRuntimeState state,
+        out EntityUid target)
+    {
+        target = EntityUid.Invalid;
+        return TryGetTargetResolver(contract.ExecutionKind, out var resolver) &&
+               resolver.TryResolvePinpointerTarget(this, store, user, contractId, contract, state, out target);
+    }
+
+    private bool TryResolveContractPinpointerTarget(
+        EntityUid store,
+        string contractId,
+        ContractServerData contract,
+        ObjectiveRuntimeState state,
+        out EntityUid target)
+    {
+        target = EntityUid.Invalid;
+        return TryGetTargetResolver(contract.ExecutionKind, out var resolver) &&
+               resolver.TryResolvePinpointerTarget(this, store, contractId, contract, state, out target);
     }
 
     private static EntityUid ResolveObjectivePinpointerTarget(

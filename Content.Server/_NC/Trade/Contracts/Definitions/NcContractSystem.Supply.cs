@@ -28,6 +28,7 @@ public sealed partial class NcContractSystem : EntitySystem
             ExecutionKind = ContractExecutionKind.InventoryDelivery,
             Runtime = new ContractRuntimeContextData(),
             Config = CreateSupplyObjectiveConfig(proto),
+            Conditions = CloneContractConditions(proto.Conditions),
             FlowStatus = ContractFlowStatus.Available,
             MatchMode = matchMode,
             Targets = targets,

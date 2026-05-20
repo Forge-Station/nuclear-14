@@ -64,6 +64,7 @@ public sealed partial class NcContractSystem : EntitySystem
             ExecutionKind = ContractExecutionKind.GhostRoleObjective,
             Runtime = runtime,
             Config = config,
+            Conditions = CloneContractConditions(proto.Conditions),
             FlowStatus = ContractFlowStatus.Available,
             MatchMode = PrototypeMatchMode.Exact,
             TargetItem = target,

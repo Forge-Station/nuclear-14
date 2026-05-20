@@ -26,6 +26,7 @@ public sealed partial class NcContractSystem : EntitySystem
             ExecutionKind = ResolveRetrievalExecutionKind(config),
             Runtime = new ContractRuntimeContextData(),
             Config = config,
+            Conditions = CloneContractConditions(proto.Conditions),
             FlowStatus = ContractFlowStatus.Available,
             MatchMode = matchMode,
             Targets = cargo,

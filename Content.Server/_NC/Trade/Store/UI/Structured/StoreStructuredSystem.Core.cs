@@ -59,6 +59,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     private TimeSpan _nextRealtimeOpenStoreUpdate = TimeSpan.Zero;
     private TimeSpan _nextOpenStoreValidityCheck = TimeSpan.Zero;
     private const int MaxDynamicUpdatesPerTick = 8;
+    private const int MaxRealtimeDynamicUpdatesPerTick = 8;
+    private int _realtimeOpenStoreCursor;
 
     private DynamicScratch GetDynamicScratch(EntityUid storeUid)
     {

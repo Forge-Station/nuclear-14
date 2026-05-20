@@ -147,65 +147,14 @@ public sealed partial class NcContractSystem
             OfferPoolColor = pool.Color
         };
 
-        switch (entry.Type)
+        if (!TryGetDefinitionHandler(entry.Type, out var handler))
         {
-            case NcContractOfferType.Supply:
-                if (!_prototypes.TryIndex<NcSupplyContractPrototype>(entry.Id, out var supply) ||
-                    !TryValidateSupplyContractForPool(pool.ID, supply))
-                    return false;
-
-                candidate.Kind = ContractPoolCandidateKind.Supply;
-                candidate.Id = supply.ID;
-                candidate.Repeatable = supply.Repeatable;
-                candidate.Supply = supply;
-                return true;
-
-            case NcContractOfferType.Retrieval:
-                if (!_prototypes.TryIndex<NcRetrievalContractPrototype>(entry.Id, out var retrieval) ||
-                    !TryValidateRetrievalContractForPool(pool.ID, retrieval))
-                    return false;
-
-                candidate.Kind = ContractPoolCandidateKind.Retrieval;
-                candidate.Id = retrieval.ID;
-                candidate.Repeatable = retrieval.Repeatable;
-                candidate.Retrieval = retrieval;
-                return true;
-
-            case NcContractOfferType.Hunt:
-                if (!_prototypes.TryIndex<NcHuntContractPrototype>(entry.Id, out var hunt) ||
-                    !TryValidateHuntContractForPool(pool.ID, hunt))
-                    return false;
-
-                if (hunt.Completion.Mode is not (NcHuntCompletionMode.TrophyTurnIn or NcHuntCompletionMode.BodyTurnIn))
-                {
-                    Sawmill.Warning(
-                        $"[Contracts] Hunt offer '{hunt.ID}' uses completion.mode={hunt.Completion.Mode}. " +
-                        "Runtime currently supports only TrophyTurnIn and BodyTurnIn; contract skipped.");
-                    return false;
-                }
-
-                candidate.Kind = ContractPoolCandidateKind.Hunt;
-                candidate.Id = hunt.ID;
-                candidate.Repeatable = hunt.Repeatable;
-                candidate.Hunt = hunt;
-                return true;
-
-            case NcContractOfferType.GhostRole:
-                if (!_prototypes.TryIndex<NcGhostRoleContractPrototype>(entry.Id, out var ghostRole) ||
-                    !TryValidateGhostRoleContractForPool(pool.ID, ghostRole))
-                    return false;
-
-                candidate.Kind = ContractPoolCandidateKind.GhostRole;
-                candidate.Id = ghostRole.ID;
-                candidate.Repeatable = ghostRole.Repeatable;
-                candidate.GhostRole = ghostRole;
-                return true;
-
-            default:
-                Sawmill.Warning(
-                    $"[Contracts] Offer pool '{pool.ID}' contains unsupported entry type '{entry.Type}' for '{entry.Id}'.");
-                return false;
+            Sawmill.Warning(
+                $"[Contracts] Offer pool '{pool.ID}' contains unsupported entry type '{entry.Type}' for '{entry.Id}'.");
+            return false;
         }
+
+        return handler.TryCreateCandidate(this, pool, entry, candidate);
     }
 
     private bool TryPickOfferFillGroup(

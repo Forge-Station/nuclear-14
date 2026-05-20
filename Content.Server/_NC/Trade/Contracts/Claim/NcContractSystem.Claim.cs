@@ -60,51 +60,68 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!contract.Taken)
             return ClaimAttemptResult.Fail(ClaimFailureReason.NotTaken, $"Contract '{contractId}' is not taken yet.");
 
-        switch (contract.ExecutionKind)
+        if (!TryEvaluateContractConditions(
+                ContractConditionPhase.Claim,
+                store,
+                user,
+                contractId,
+                contract,
+                out var conditionFailure))
         {
-            case ContractExecutionKind.InventoryDelivery:
-                if (RequiresRetrievalRouteRewardClaim(contract))
-                    return TryClaimRetrievalRouteReward(store, user, contractId, comp, contract);
-
-                if (!TryPrepareClaimContext(store, user, contractId, out var ctx, out var prepFail))
-                {
-                    if (TryPreparePartialClaimContext(store, user, contractId, out var partialCtx, out var partialPrepFail))
-                    {
-                        return TryExecutePartialClaimTakePlan(contractId, partialCtx, out var partialExecFail)
-                            ? ClaimAttemptResult.Ok()
-                            : partialExecFail;
-                    }
-
-                    if (partialPrepFail.Reason != ClaimFailureReason.None &&
-                        prepFail.Reason is ClaimFailureReason.NotEnoughItems or ClaimFailureReason.MissingCrate)
-                    {
-                        return partialPrepFail;
-                    }
-
-                    return prepFail;
-                }
-
-                if (!TryExecuteClaimTakePlan(ctx, out var execFail))
-                    return execFail;
-
-                FinalizeClaim(ctx.Store, ctx.Comp, contractId, ctx.Contract.Repeatable);
-                return ClaimAttemptResult.Ok();
-
-            case ContractExecutionKind.TrackedDeliveryObjective:
-                return TryClaimTrackedDeliveryContract(store, user, contractId, comp, contract);
-
-            case ContractExecutionKind.RetrievalRouteDelivery:
-                return TryClaimRetrievalRouteReward(store, user, contractId, comp, contract);
-
-            default:
-                return TryClaimObjectiveContract(store, user, contractId, comp, contract);
+            return ClaimAttemptResult.Fail(
+                ClaimFailureReason.InvalidTarget,
+                string.IsNullOrWhiteSpace(conditionFailure)
+                    ? $"Claim conditions are not satisfied for '{contractId}'."
+                    : conditionFailure);
         }
+
+        if (TryGetObjectiveHandler(contract.ExecutionKind, out var handler))
+            return handler.TryClaim(this, store, user, contractId, comp, contract);
+
+        return ClaimAttemptResult.Fail(
+            ClaimFailureReason.ExecutionFailed,
+            $"No objective handler registered for execution kind {contract.ExecutionKind}.");
     }
 
 
     private static bool RequiresRetrievalRouteRewardClaim(ContractServerData contract)
     {
         return RequiresRetrievalRouteDelivery(contract);
+    }
+
+    private ClaimAttemptResult TryClaimInventoryDeliveryContract(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        NcStoreComponent comp,
+        ContractServerData contract)
+    {
+        if (RequiresRetrievalRouteRewardClaim(contract))
+            return TryClaimRetrievalRouteReward(store, user, contractId, comp, contract);
+
+        if (!TryPrepareClaimContext(store, user, contractId, out var ctx, out var prepFail))
+        {
+            if (TryPreparePartialClaimContext(store, user, contractId, out var partialCtx, out var partialPrepFail))
+            {
+                return TryExecutePartialClaimTakePlan(contractId, partialCtx, out var partialExecFail)
+                    ? ClaimAttemptResult.Ok()
+                    : partialExecFail;
+            }
+
+            if (partialPrepFail.Reason != ClaimFailureReason.None &&
+                prepFail.Reason is ClaimFailureReason.NotEnoughItems or ClaimFailureReason.MissingCrate)
+            {
+                return partialPrepFail;
+            }
+
+            return prepFail;
+        }
+
+        if (!TryExecuteClaimTakePlan(ctx, out var execFail))
+            return execFail;
+
+        FinalizeClaim(ctx.Store, ctx.Comp, contractId, ctx.Contract.Repeatable);
+        return ClaimAttemptResult.Ok();
     }
 
     private ClaimAttemptResult TryClaimRetrievalRouteReward(

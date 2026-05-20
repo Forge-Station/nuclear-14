@@ -18,6 +18,7 @@ public sealed class ContractServerData
     public ContractObjectiveType ObjectiveType { get; set; } = ContractObjectiveType.Delivery;
     public ContractRuntimeContextData Runtime { get; set; } = new();
     public ContractObjectiveConfigData Config { get; set; } = new();
+    public List<ContractConditionDef> Conditions { get; set; } = new();
     public ContractFlowStatus FlowStatus { get; set; } = ContractFlowStatus.Available;
 
     public ContractExecutionKind ExecutionKind { get; set; } = ContractExecutionKind.InventoryDelivery;

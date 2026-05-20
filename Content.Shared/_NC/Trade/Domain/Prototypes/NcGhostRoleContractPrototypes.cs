@@ -168,4 +168,8 @@ public sealed partial class NcGhostRoleContractPrototype : IPrototype
 
     [DataField("reward", required: true)]
     public List<NcSupplyRewardEntry> Reward { get; private set; } = new();
+
+    /// <summary>Optional extension conditions evaluated by registered server-side handlers.</summary>
+    [DataField("conditions")]
+    public List<ContractConditionDef> Conditions { get; private set; } = new();
 }

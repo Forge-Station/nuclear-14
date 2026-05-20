@@ -218,15 +218,8 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryValidateObjectiveProofPrototype(contractId, contract))
             return false;
 
-        return contract.ExecutionKind switch
-        {
-            ContractExecutionKind.InventoryDelivery => TryInitializeInventoryDeliverySupportRuntime(store, user, contractId, contract),
-            ContractExecutionKind.TrackedDeliveryObjective => TryInitializeDeliveryObjectiveRuntime(store, user, contractId, contract),
-            ContractExecutionKind.RetrievalRouteDelivery => TryInitializeInventoryDeliverySupportRuntime(store, user, contractId, contract),
-            ContractExecutionKind.HuntObjective => TryInitializeHuntObjectiveRuntimeOnTake(store, user, contractId, contract),
-            ContractExecutionKind.GhostRoleObjective => TryInitializeGhostRoleObjective(store, user, contractId, contract),
-            _ => true
-        };
+        return !TryGetObjectiveHandler(contract.ExecutionKind, out var handler) ||
+               handler.TryInitializeRuntimeOnTake(this, store, user, contractId, contract);
     }
 
     private ObjectiveRuntimeState GetOrCreateObjectiveRuntimeState((EntityUid Store, string ContractId) key)

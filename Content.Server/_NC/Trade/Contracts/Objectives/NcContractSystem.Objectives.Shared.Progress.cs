@@ -25,18 +25,10 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         EnsureObjectiveRuntimeDefaults(contract);
 
-        switch (contract.ExecutionKind)
+        if (TryGetObjectiveHandler(contract.ExecutionKind, out var handler))
         {
-            case ContractExecutionKind.HuntObjective:
-                SyncHuntObjectiveProgress(store, contractId, contract);
-                SyncObjectiveProgressFromRuntime(contract);
-                if (IsSpawnedHuntContract(contract))
-                    return;
-                break;
-
-            case ContractExecutionKind.GhostRoleObjective:
-                SyncGhostRoleObjectiveProgress(store, contractId, contract);
-                break;
+            handler.RefreshObjectiveProgress(this, store, contractId, contract);
+            return;
         }
 
         SyncObjectiveProgressFromRuntime(contract);

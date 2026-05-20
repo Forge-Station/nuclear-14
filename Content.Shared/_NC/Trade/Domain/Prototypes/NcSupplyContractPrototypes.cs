@@ -60,6 +60,10 @@ public sealed partial class NcSupplyContractPrototype : IPrototype
     /// <summary>Unified Supply rewards. Use type: Currency, Item or Pool with count.</summary>
     [DataField("reward", required: true)]
     public List<NcSupplyRewardEntry> Reward { get; private set; } = new();
+
+    /// <summary>Optional extension conditions evaluated by registered server-side handlers.</summary>
+    [DataField("conditions")]
+    public List<ContractConditionDef> Conditions { get; private set; } = new();
 }
 
 

@@ -35,6 +35,9 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryValidateRetrievalRewardsForPool(proto))
             valid = false;
 
+        if (!TryValidateContractConditions(proto.ID, proto.Conditions))
+            valid = false;
+
         return valid;
     }
 }

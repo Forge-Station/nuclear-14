@@ -43,6 +43,10 @@ public sealed partial class NcContractSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
+        InitializeDefinitionHandlers();
+        InitializeObjectiveHandlers();
+        InitializeTargetResolvers();
+        InitializeConditionHandlers();
         InitializeObjectiveRuntime();
         InitializeTurnInContainerIndex();
         _prototypes.PrototypesReloaded += OnPrototypesReloaded;

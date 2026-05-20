@@ -79,23 +79,8 @@ public sealed partial class NcContractSystem : EntitySystem
         if (contract.Runtime.Failed)
             return;
 
-        switch (contract.ExecutionKind)
-        {
-            case ContractExecutionKind.TrackedDeliveryObjective:
-                HandleTrackedDeliveryTargetResolved(key, comp, contract);
-                return;
-
-            case ContractExecutionKind.HuntObjective:
-                HandleHuntObjectiveTargetResolved(key, comp, contract);
-                return;
-
-            case ContractExecutionKind.GhostRoleObjective:
-                HandleGhostRoleTargetResolved(key, comp, contract);
-                return;
-
-            default:
-                return;
-        }
+        if (TryGetObjectiveHandler(contract.ExecutionKind, out var handler))
+            handler.OnTrackedTargetResolved(this, key, comp, contract);
     }
 
     private static void EnsureObjectiveRuntimeDefaults(ContractServerData contract)

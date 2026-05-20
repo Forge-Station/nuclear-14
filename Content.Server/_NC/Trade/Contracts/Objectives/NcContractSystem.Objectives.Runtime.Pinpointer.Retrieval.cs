@@ -303,11 +303,8 @@ public sealed partial class NcContractSystem : EntitySystem
         if (contract.Runtime.Failed || !_objectiveRuntime.ByContract.TryGetValue(candidateKey, out candidateState))
             return false;
 
-        if (!TryResolveRetrievalRouteReturnPinpointerTarget(candidateKey.Store, contract, candidateState, out target) &&
-            !TryResolveRetrievalSpawnedPinpointerTarget(candidateKey.Store, contract, candidateState, out target))
-        {
+        if (!TryResolveContractPinpointerTarget(candidateKey.Store, candidateKey.ContractId, contract, candidateState, out target))
             return false;
-        }
 
         if (TryGetContainedEntityRoot(cargo, out var cargoCarrier))
             carrier = cargoCarrier;

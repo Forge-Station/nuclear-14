@@ -41,30 +41,49 @@ public sealed partial class StoreStructuredSystem
     private void ProcessRealtimeOpenStoreUpdates()
     {
         if (_openStoreUids.Count == 0)
+        {
+            _realtimeOpenStoreCursor = 0;
             return;
+        }
 
         var now = _timing.CurTime;
         _openStoresScratch.Clear();
         _openStoresScratch.AddRange(_openStoreUids);
 
-        foreach (var uid in _openStoresScratch)
-            ProcessRealtimeOpenStoreUpdate(uid, now);
+        if (_realtimeOpenStoreCursor >= _openStoresScratch.Count)
+            _realtimeOpenStoreCursor = 0;
+
+        var processed = 0;
+        var inspected = 0;
+        var count = _openStoresScratch.Count;
+
+        while (inspected < count && processed < MaxRealtimeDynamicUpdatesPerTick)
+        {
+            var index = (_realtimeOpenStoreCursor + inspected) % count;
+            if (ProcessRealtimeOpenStoreUpdate(_openStoresScratch[index], now))
+                processed++;
+
+            inspected++;
+        }
+
+        _realtimeOpenStoreCursor = (_realtimeOpenStoreCursor + Math.Max(1, inspected)) % count;
     }
 
-    private void ProcessRealtimeOpenStoreUpdate(EntityUid uid, TimeSpan now)
+    private bool ProcessRealtimeOpenStoreUpdate(EntityUid uid, TimeSpan now)
     {
         if (!TryGetOpenStoreUser(uid, out var store, out var user))
-            return;
+            return false;
 
         if (EnsureCrateWatchUpToDate(uid, user))
             MarkDirty(uid);
 
         if (!_contracts.HasRealtimeContractState(store) || !TryGetDynamicScratchForUpdate(uid, now, out var scratch))
-            return;
+            return false;
 
         _dirtyStores.Remove(uid);
         UpdateDynamicState(uid, store, user);
         SetNextDynamicUpdateTime(scratch, now);
+        return true;
     }
 
     private void ProcessDirtyStoreUpdates()

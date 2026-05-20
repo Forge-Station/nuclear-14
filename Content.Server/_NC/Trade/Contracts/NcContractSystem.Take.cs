@@ -15,6 +15,18 @@ public sealed partial class NcContractSystem : EntitySystem
         if (contract.Taken)
             return false;
 
+        if (!TryEvaluateContractConditions(
+                ContractConditionPhase.Take,
+                store,
+                user,
+                contractId,
+                contract,
+                out var conditionFailure))
+        {
+            Sawmill.Info($"[Contracts] Take rejected for '{contractId}' on {ToPrettyString(store)}: {conditionFailure}");
+            return false;
+        }
+
         if (!TryInitializeObjectiveRuntimeOnTake(store, user, contractId, contract))
         {
             CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true);

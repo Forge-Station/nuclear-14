@@ -50,6 +50,7 @@ public sealed partial class NcContractSystem : EntitySystem
             ExecutionKind = ContractExecutionKind.HuntObjective,
             Runtime = runtime,
             Config = config,
+            Conditions = CloneContractConditions(proto.Conditions),
             FlowStatus = ContractFlowStatus.Available,
             MatchMode = targets.Count > 0 ? targets[0].MatchMode : PrototypeMatchMode.Exact,
             Targets = targets,
