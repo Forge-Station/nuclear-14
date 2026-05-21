@@ -1,15 +1,19 @@
 ﻿using Content.Shared._NC.Trade;
-using Robust.Client.GameObjects;
-using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Client._NC.Trade.Controls;
+
 
 public sealed partial class NcContractCard
 {
-    private Control BuildTargetRow(string? protoId, int required, PrototypeMatchMode matchMode = PrototypeMatchMode.Exact)
+    private Control BuildTargetRow(
+        string? protoId,
+        int required,
+        PrototypeMatchMode matchMode = PrototypeMatchMode.Exact
+    )
     {
         var isTagTarget = matchMode == PrototypeMatchMode.Tag;
         EntityPrototype? targetProto = null;
@@ -29,7 +33,7 @@ public sealed partial class NcContractCard
             {
                 targetTag = tagTarget;
                 if (!string.IsNullOrWhiteSpace(tagTarget.Icon))
-                    _proto.TryIndex<EntityPrototype>(tagTarget.Icon, out tagIconProto);
+                    _proto.TryIndex(tagTarget.Icon, out tagIconProto);
             }
 
             if (targetProto == null && matchMode == PrototypeMatchMode.Matcher)
@@ -38,25 +42,25 @@ public sealed partial class NcContractCard
                 {
                     targetMatcher = matcher;
                     if (matcher.Items.Count > 0)
-                        _proto.TryIndex<EntityPrototype>(matcher.Items[0], out matcherFallbackProto);
+                        _proto.TryIndex(matcher.Items[0], out matcherFallbackProto);
                 }
                 else if (_proto.TryIndex<NcItemGroupPrototype>(protoId, out var group))
                 {
                     targetGroup = group;
                     if (!string.IsNullOrWhiteSpace(group.Icon))
-                        _proto.TryIndex<EntityPrototype>(group.Icon, out groupIconProto);
+                        _proto.TryIndex(group.Icon, out groupIconProto);
 
                     if (groupIconProto == null && group.Prototypes.Count > 0)
-                        _proto.TryIndex<EntityPrototype>(group.Prototypes[0], out groupIconProto);
+                        _proto.TryIndex(group.Prototypes[0], out groupIconProto);
                 }
                 else if (_proto.TryIndex<NcHuntGroupPrototype>(protoId, out var huntGroup))
                 {
                     targetHuntGroup = huntGroup;
                     if (!string.IsNullOrWhiteSpace(huntGroup.Icon))
-                        _proto.TryIndex<EntityPrototype>(huntGroup.Icon, out groupIconProto);
+                        _proto.TryIndex(huntGroup.Icon, out groupIconProto);
 
                     if (groupIconProto == null && huntGroup.Prototypes.Count > 0)
-                        _proto.TryIndex<EntityPrototype>(huntGroup.Prototypes[0], out groupIconProto);
+                        _proto.TryIndex(huntGroup.Prototypes[0], out groupIconProto);
                 }
             }
         }
@@ -82,9 +86,7 @@ public sealed partial class NcContractCard
             targetRow.ToolTip = tooltip;
 
         if (targetProto != null)
-        {
             AddPrototypeIcon(targetRow, targetProto.ID);
-        }
         else if (targetMatcher != null)
         {
             if (targetMatcher.Sprite != null && _sprites.Frame0(targetMatcher.Sprite) is { } matcherTexture)
@@ -101,14 +103,10 @@ public sealed partial class NcContractCard
                 targetRow.AddChild(texture);
             }
             else if (matcherFallbackProto != null)
-            {
                 AddPrototypeIcon(targetRow, matcherFallbackProto.ID);
-            }
         }
         else if ((targetGroup != null || targetHuntGroup != null) && groupIconProto != null)
-        {
             AddPrototypeIcon(targetRow, groupIconProto.ID);
-        }
         else if (targetTag != null)
         {
             if (targetTag.Sprite != null && _sprites.Frame0(targetTag.Sprite) is { } tagTexture)
@@ -125,14 +123,10 @@ public sealed partial class NcContractCard
                 targetRow.AddChild(texture);
             }
             else if (tagIconProto != null)
-            {
                 AddPrototypeIcon(targetRow, tagIconProto.ID);
-            }
         }
         else if (!isTagTarget && targetGroup == null && targetHuntGroup == null && !string.IsNullOrWhiteSpace(protoId))
-        {
             AddPrototypeIcon(targetRow, protoId);
-        }
 
         var targetName = targetProto?.Name;
         if (string.IsNullOrWhiteSpace(targetName))
@@ -171,13 +165,13 @@ public sealed partial class NcContractCard
             MouseFilter = MouseFilterMode.Ignore
         };
         view.SetPrototype(protoId);
-        NcUiIconFit.Fit(view, _sprites, protoId, targetPx: TargetIconPx, paddingPx: 4);
+        NcUiIconFit.Fit(view, _sprites, protoId, TargetIconPx, 4);
         targetRow.AddChild(view);
     }
 
     private void PopulateRewards(BoxContainer rewardsCol, List<ContractRewardData>? rewards)
     {
-        if (rewards is not { Count: > 0 })
+        if (rewards is not { Count: > 0, })
         {
             rewardsCol.AddChild(BuildEmptyRewardsLabel());
             return;
@@ -211,7 +205,7 @@ public sealed partial class NcContractCard
         if (itemTotals.Count > 0)
         {
             if (currencyTotals.Count > 0)
-                rewardsCol.AddChild(new Control { MinSize = new(0, 4) });
+                rewardsCol.AddChild(new() { MinSize = new(0, 4), });
 
             foreach (var (id, count) in itemTotals)
             {
@@ -282,7 +276,7 @@ public sealed partial class NcContractCard
             MouseFilter = MouseFilterMode.Ignore
         };
         view.SetPrototype(id);
-        NcUiIconFit.Fit(view, _sprites, id, targetPx: RewardIconPx, paddingPx: 0, mul: 1.25f, variant: 1);
+        NcUiIconFit.Fit(view, _sprites, id, RewardIconPx, 0, 1.25f, 1);
         line.AddChild(view);
 
         var name = proto?.Name ?? id;

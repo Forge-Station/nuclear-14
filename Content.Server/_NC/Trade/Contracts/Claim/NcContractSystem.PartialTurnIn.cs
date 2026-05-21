@@ -1,20 +1,22 @@
 using Content.Shared._NC.Trade;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
     private static (string TargetItem, PrototypeMatchMode MatchMode) MakeTurnInKey(
         string targetItem,
-        PrototypeMatchMode matchMode)
-    {
-        return (targetItem, matchMode);
-    }
+        PrototypeMatchMode matchMode
+    ) =>
+        (targetItem, matchMode);
 
     private int GetTurnedInCount(
         ObjectiveRuntimeState state,
         string targetItem,
-        PrototypeMatchMode matchMode)
+        PrototypeMatchMode matchMode
+    )
     {
         if (string.IsNullOrWhiteSpace(targetItem))
             return 0;
@@ -25,17 +27,17 @@ public sealed partial class NcContractSystem : EntitySystem
     private int GetTurnedInCount(
         EntityUid store,
         string contractId,
-        ContractTargetServerData target)
-    {
-        return _objectiveRuntime.ByContract.TryGetValue((store, contractId), out var state)
+        ContractTargetServerData target
+    ) =>
+        _objectiveRuntime.ByContract.TryGetValue((store, contractId), out var state)
             ? GetTurnedInCount(state, target.TargetItem, target.MatchMode)
             : 0;
-    }
 
     private int GetRemainingTurnInRequirement(
         EntityUid store,
         string contractId,
-        ContractTargetServerData target)
+        ContractTargetServerData target
+    )
     {
         var required = Math.Max(0, target.Required);
         if (required <= 0 || string.IsNullOrWhiteSpace(target.TargetItem))
@@ -48,7 +50,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid store,
         string contractId,
         ContractTargetServerData target,
-        Dictionary<(string TargetItem, PrototypeMatchMode MatchMode), int> turnedInLeftByKey)
+        Dictionary<(string TargetItem, PrototypeMatchMode MatchMode), int> turnedInLeftByKey
+    )
     {
         var required = Math.Max(0, target.Required);
         if (required <= 0 || string.IsNullOrWhiteSpace(target.TargetItem))
@@ -69,9 +72,9 @@ public sealed partial class NcContractSystem : EntitySystem
     private void RecordPartialTurnInProgress(
         EntityUid store,
         string contractId,
-        ContractServerData contract,
         List<ClaimTakeEntry> takePlan,
-        ClaimTakeJournal? journal = null)
+        ClaimTakeJournal? journal = null
+    )
     {
         if (takePlan.Count == 0)
             return;
@@ -89,7 +92,6 @@ public sealed partial class NcContractSystem : EntitySystem
                 state.TurnedInByTarget.GetValueOrDefault(key, 0),
                 entry.Amount);
         }
-
     }
 
     private void RefreshProgressAfterPartialTurnIn(ClaimContext ctx, string contractId)
@@ -104,9 +106,7 @@ public sealed partial class NcContractSystem : EntitySystem
             crateItems = _scratchCrateItems;
         }
         else
-        {
             _scratchCrateItems.Clear();
-        }
 
         if (ctx.Contract.AllowsStoreWorldTurnIn)
             ScanStoreNearbyTurnInItems(ctx.Store, _scratchStoreNearbyItems);
@@ -114,15 +114,15 @@ public sealed partial class NcContractSystem : EntitySystem
             _scratchStoreNearbyItems.Clear();
 
         if (TryUpdateRetrievalSpawnedProgress(
-                ctx.Store,
-                contractId,
-                ctx.Contract,
-                ctx.User,
-                _scratchUserItems,
-                ctx.Crate,
-                crateItems,
-                _scratchStoreNearbyItems,
-                crateItems is { Count: > 0 }))
+            ctx.Store,
+            contractId,
+            ctx.Contract,
+            ctx.User,
+            _scratchUserItems,
+            ctx.Crate,
+            crateItems,
+            _scratchStoreNearbyItems,
+            crateItems is { Count: > 0, }))
         {
             ApplyPartialTurnInProgress(ctx.Store, contractId, ctx.Contract);
             return;
@@ -136,20 +136,19 @@ public sealed partial class NcContractSystem : EntitySystem
             ctx.Crate,
             crateItems,
             _scratchStoreNearbyItems,
-            crateItems is { Count: > 0 });
+            crateItems is { Count: > 0, });
         ApplyPartialTurnInProgress(ctx.Store, contractId, ctx.Contract);
     }
 
     private void ApplyPartialTurnInProgress(
         EntityUid store,
         string contractId,
-        ContractServerData contract)
+        ContractServerData contract
+    )
     {
         if (!_objectiveRuntime.ByContract.TryGetValue((store, contractId), out var state) ||
             state.TurnedInByTarget.Count == 0)
-        {
             return;
-        }
 
         var targets = GetEffectiveTargets(contract);
         if (targets.Count == 0)
@@ -196,29 +195,24 @@ public sealed partial class NcContractSystem : EntitySystem
     public bool CanPartiallyTurnInNow(
         EntityUid store,
         string contractId,
-        ContractServerData contract)
+        ContractServerData contract
+    )
     {
         if (!contract.IsInventoryDelivery ||
             !contract.Taken ||
             contract.Completed ||
             contract.FlowStatus != ContractFlowStatus.InProgress)
-        {
             return false;
-        }
 
         var requiredTotal = CalculateTotalRequired(GetEffectiveTargets(contract));
         if (requiredTotal <= 0 ||
             contract.Progress <= 0 ||
             contract.Progress >= requiredTotal)
-        {
             return false;
-        }
 
         if (!_objectiveRuntime.ByContract.TryGetValue((store, contractId), out var state) ||
             state.TurnedInByTarget.Count == 0)
-        {
             return true;
-        }
 
         var turnedInProgress = CalculateAppliedTurnedInProgress(contract, state);
         return contract.Progress > turnedInProgress;
@@ -226,7 +220,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private int CalculateAppliedTurnedInProgress(
         ContractServerData contract,
-        ObjectiveRuntimeState state)
+        ObjectiveRuntimeState state
+    )
     {
         var targets = GetEffectiveTargets(contract);
         if (targets.Count == 0 || state.TurnedInByTarget.Count == 0)
@@ -259,7 +254,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private void RetargetContractPinpointersAfterTurnIn(
         EntityUid store,
         string contractId,
-        ContractServerData contract)
+        ContractServerData contract
+    )
     {
         var key = (store, contractId);
         if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state))

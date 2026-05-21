@@ -1,8 +1,8 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Mind;
-using Robust.Shared.Map;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -16,9 +16,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (_objectiveRuntime.ByGuard.Remove(args.Entity, out var guardKey) &&
             _objectiveRuntime.ByContract.TryGetValue(guardKey, out var guardState))
-        {
             guardState.GuardEntities.Remove(args.Entity);
-        }
         if (_objectiveRuntime.ByProof.Remove(args.Entity, out var proofKey))
             OnObjectiveTrackedProofDestroyed(proofKey, args.Entity);
 
@@ -30,7 +28,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void OnObjectiveTrackedProofDestroyed(
         (EntityUid Store, string ContractId) key,
-        EntityUid proof)
+        EntityUid proof
+    )
     {
         if (_objectiveRuntime.ByContract.TryGetValue(key, out var state) && state.ProofEntity == proof)
         {
@@ -88,7 +87,7 @@ public sealed partial class NcContractSystem : EntitySystem
         var runtime = contract.Runtime;
         var config = contract.Config;
 
-        NormalizeRuntimeState(contract.ExecutionKind, runtime);
+        NormalizeRuntimeState(runtime);
         NormalizeObjectiveConfig(config);
 
         if (!contract.UsesStageObjectiveProgress)
@@ -154,7 +153,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private static void MarkObjectiveFailed(
         ContractServerData contract,
         string failureReason,
-        ContractObjectiveOutcome outcome = ContractObjectiveOutcome.Failed)
+        ContractObjectiveOutcome outcome = ContractObjectiveOutcome.Failed
+    )
     {
         var runtime = contract.Runtime;
         runtime.Failed = true;

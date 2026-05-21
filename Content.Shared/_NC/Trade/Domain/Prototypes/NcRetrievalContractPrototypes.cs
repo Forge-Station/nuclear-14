@@ -1,17 +1,17 @@
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Shared._NC.Trade;
 
+
 /// <summary>
-/// Retrieval route layout: content defines cargo, route and reward.
-/// Retrieval is spawned cargo delivery: the contract creates cargo, then the player moves that cargo along a route.
-/// Existing-world item turn-in belongs to Supply, not Retrieval.
+///     Retrieval route layout: content defines cargo, route and reward.
+///     Retrieval is spawned cargo delivery: the contract creates cargo, then the player moves that cargo along a route.
+///     Existing-world item turn-in belongs to Supply, not Retrieval.
 /// </summary>
 [Prototype("ncRetrievalContract")]
 public sealed partial class NcRetrievalContractPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; private set; } = default!;
-
     [DataField("name", required: true)]
     public string Name { get; private set; } = string.Empty;
 
@@ -40,6 +40,8 @@ public sealed partial class NcRetrievalContractPrototype : IPrototype
     /// <summary>Optional extension conditions evaluated by registered server-side handlers.</summary>
     [DataField("conditions")]
     public List<ContractConditionDef> Conditions { get; private set; } = new();
+
+    [IdDataField] public string ID { get; private set; } = default!;
 
     // Retrieval is intentionally strict: old targets/targetCount/spawn fields are not represented here.
     // Invalid old YAML is blocked by nc_trade_core_audit.py before prototype load.

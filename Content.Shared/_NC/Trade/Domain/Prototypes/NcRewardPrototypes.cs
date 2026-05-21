@@ -1,14 +1,15 @@
 using Robust.Shared.Prototypes;
-using Robust.Shared.Serialization;
+
 
 namespace Content.Shared._NC.Trade;
 
+
 /// <summary>
-/// Trade contracts Supply reward entry. Unified format:
-/// reward:
-/// - type: Currency / Item / Pool
-///   currency/prototype/pool: ...
-///   count: 1 or { min, max }
+///     Trade contracts Supply reward entry. Unified format:
+///     reward:
+///     - type: Currency / Item / Pool
+///     currency/prototype/pool: ...
+///     count: 1 or { min, max }
 /// </summary>
 [DataDefinition]
 public sealed partial class NcSupplyRewardEntry
@@ -30,18 +31,18 @@ public sealed partial class NcSupplyRewardEntry
 }
 
 /// <summary>
-/// Strict Trade reward pool shared by Trade contracts and Barter receivePools.
-/// Use count + weight only; entries target prototype/currency/pool by reward type.
-/// Old id/amount/prob/chance/options aliases are intentionally not represented.
-/// The audit rejects them so reward YAML stays on the strict type + id + count shape.
+///     Strict Trade reward pool shared by Trade contracts and Barter receivePools.
+///     Use count + weight only; entries target prototype/currency/pool by reward type.
+///     Old id/amount/prob/chance/options aliases are intentionally not represented.
+///     The audit rejects them so reward YAML stays on the strict type + id + count shape.
 /// </summary>
 [Prototype("ncSupplyRewardPool")]
 public sealed partial class NcSupplyRewardPoolPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; private set; } = default!;
-
     [DataField("entries", required: true)]
     public List<NcSupplyRewardPoolEntry> Entries { get; private set; } = new();
+
+    [IdDataField] public string ID { get; private set; } = default!;
 }
 
 [DataDefinition]
@@ -66,6 +67,5 @@ public sealed partial class NcSupplyRewardPoolEntry
     public int Weight { get; set; } = 1;
 
     [DataField("max")]
-    public int MaxRepeats { get; set; } = 0;
+    public int MaxRepeats { get; set; }
 }
-

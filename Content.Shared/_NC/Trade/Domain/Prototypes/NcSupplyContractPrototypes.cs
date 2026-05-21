@@ -1,7 +1,8 @@
 using Robust.Shared.Prototypes;
-using Robust.Shared.Serialization;
+
 
 namespace Content.Shared._NC.Trade;
+
 
 [DataDefinition]
 public sealed partial class NcSupplyTargetEntry
@@ -28,14 +29,12 @@ public sealed partial class NcSupplyTargetEntry
 }
 
 /// <summary>
-/// Trade contracts Supply: the player brings already existing items and turns them in through
-/// the current server-authoritative claim/reward flow. No runtime, no spawning, no prediction.
+///     Trade contracts Supply: the player brings already existing items and turns them in through
+///     the current server-authoritative claim/reward flow. No runtime, no spawning, no prediction.
 /// </summary>
 [Prototype("ncSupplyContract")]
 public sealed partial class NcSupplyContractPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; private set; } = default!;
-
     [DataField("name", required: true)]
     public string Name { get; private set; } = string.Empty;
 
@@ -49,7 +48,10 @@ public sealed partial class NcSupplyContractPrototype : IPrototype
     [DataField("icon")]
     public string Icon { get; private set; } = string.Empty;
 
-    /// <summary>Supply targets. If targetCount is absent, all targets are required. If targetCount is set, a weighted subset is picked on generation.</summary>
+    /// <summary>
+    ///     Supply targets. If targetCount is absent, all targets are required. If targetCount is set, a weighted subset
+    ///     is picked on generation.
+    /// </summary>
     [DataField("targets", required: true)]
     public List<NcSupplyTargetEntry> Targets { get; private set; } = new();
 
@@ -64,6 +66,6 @@ public sealed partial class NcSupplyContractPrototype : IPrototype
     /// <summary>Optional extension conditions evaluated by registered server-side handlers.</summary>
     [DataField("conditions")]
     public List<ContractConditionDef> Conditions { get; private set; } = new();
+
+    [IdDataField] public string ID { get; private set; } = default!;
 }
-
-

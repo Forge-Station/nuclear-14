@@ -1,16 +1,17 @@
 namespace Content.Shared._NC.Trade;
 
+
 public sealed class NcStoreListingDef
 {
+    public string Description = string.Empty;
+
+    public string DisplayName = string.Empty;
     public string Id = string.Empty;
 
     public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
     public StoreMode Mode = StoreMode.Buy;
 
     public string ProductEntity = string.Empty;
-
-    public string DisplayName = string.Empty;
-    public string Description = string.Empty;
 
     public List<NcBarterCostEntry> BarterCost { get; set; } = new();
     public List<NcBarterReceiveEntry> BarterReceive { get; set; } = new();

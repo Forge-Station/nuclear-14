@@ -1,9 +1,11 @@
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 
+
 namespace Content.Shared._NC.Trade;
 
-[DataDefinition, Serializable, NetSerializable]
+
+[DataDefinition, Serializable, NetSerializable,]
 public sealed partial class NcBarterCostEntry
 {
     /// <summary>Exact entity prototype the player must give.</summary>
@@ -26,7 +28,7 @@ public sealed partial class NcBarterCostEntry
     public int Count { get; set; } = 1;
 }
 
-[DataDefinition, Serializable, NetSerializable]
+[DataDefinition, Serializable, NetSerializable,]
 public sealed partial class NcBarterReceiveEntry
 {
     /// <summary>Exact entity prototype to give to the player.</summary>
@@ -41,7 +43,7 @@ public sealed partial class NcBarterReceiveEntry
     public int Count { get; set; } = 1;
 }
 
-[DataDefinition, Serializable, NetSerializable]
+[DataDefinition, Serializable, NetSerializable,]
 public sealed partial class NcBarterReceivePoolEntry
 {
     /// <summary>Weighted reward pool id. Uses ncSupplyRewardPool entries.</summary>
@@ -60,9 +62,6 @@ public sealed partial class NcBarterReceivePoolEntry
 [Prototype("ncBarterListing")]
 public sealed partial class NcBarterListingPrototype : IPrototype
 {
-    [IdDataField]
-    public string ID { get; private set; } = default!;
-
     [DataField("name")]
     public string Name { get; private set; } = string.Empty;
 
@@ -86,28 +85,31 @@ public sealed partial class NcBarterListingPrototype : IPrototype
     /// <summary>Optional random receive pools. Cost remains fixed; only receive side can be random.</summary>
     [DataField("receivePools", required: false)]
     public List<NcBarterReceivePoolEntry> ReceivePools { get; private set; } = new();
+
+    [IdDataField]
+    public string ID { get; private set; } = default!;
 }
 
 [Prototype("ncBarterCategory")]
 public sealed partial class NcBarterCategoryPrototype : IPrototype
 {
-    [IdDataField]
-    public string ID { get; private set; } = default!;
-
     [DataField("name", required: true)]
     public string Name { get; private set; } = string.Empty;
 
     /// <summary>References to standalone ncBarterListing prototypes.</summary>
     [DataField("listings", required: true)]
     public List<ProtoId<NcBarterListingPrototype>> Listings { get; private set; } = new();
+
+    [IdDataField]
+    public string ID { get; private set; } = default!;
 }
 
 [Prototype("ncBarterPreset")]
 public sealed partial class NcBarterPresetPrototype : IPrototype
 {
-    [IdDataField]
-    public string ID { get; private set; } = default!;
-
     [DataField("categories", required: true)]
     public List<ProtoId<NcBarterCategoryPrototype>> Categories { get; private set; } = new();
+
+    [IdDataField]
+    public string ID { get; private set; } = default!;
 }

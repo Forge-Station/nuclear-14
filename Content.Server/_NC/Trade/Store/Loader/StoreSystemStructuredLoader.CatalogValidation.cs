@@ -3,7 +3,9 @@ using Content.Shared.Stacks;
 using Content.Shared.Tag;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class StoreSystemStructuredLoader
 {
@@ -22,7 +24,8 @@ public sealed partial class StoreSystemStructuredLoader
     private bool ValidateStructuredPresetCurrency(
         StorePresetStructuredPrototype preset,
         StoreMode mode,
-        ProtoId<StorePresetStructuredPrototype> presetId)
+        ProtoId<StorePresetStructuredPrototype> presetId
+    )
     {
         if (string.IsNullOrWhiteSpace(preset.Currency))
         {
@@ -45,7 +48,8 @@ public sealed partial class StoreSystemStructuredLoader
         StoreCatalogEntry entry,
         StoreMode mode,
         ProtoId<StorePresetStructuredPrototype> presetId,
-        string categoryId)
+        string categoryId
+    )
     {
         var ok = true;
 
@@ -115,7 +119,8 @@ public sealed partial class StoreSystemStructuredLoader
         StoreCatalogEntry entry,
         StoreMode mode,
         ProtoId<StorePresetStructuredPrototype> presetId,
-        string categoryId)
+        string categoryId
+    )
     {
         if (string.IsNullOrWhiteSpace(entry.Proto))
         {
@@ -131,7 +136,7 @@ public sealed partial class StoreSystemStructuredLoader
             return false;
         }
 
-        var hasItems = matcher.Items is { Count: > 0 };
+        var hasItems = matcher.Items is { Count: > 0, };
         if (!hasItems)
         {
             Sawmill.Warning(
@@ -146,7 +151,8 @@ public sealed partial class StoreSystemStructuredLoader
         StoreCatalogEntry entry,
         StoreMode mode,
         ProtoId<StorePresetStructuredPrototype> presetId,
-        string categoryId)
+        string categoryId
+    )
     {
         if (mode == StoreMode.Buy)
         {

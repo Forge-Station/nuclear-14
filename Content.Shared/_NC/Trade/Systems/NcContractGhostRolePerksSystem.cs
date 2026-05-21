@@ -2,19 +2,20 @@ using System.Linq;
 using Content.Shared.Damage;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Inventory;
-using Content.Shared.Movement.Components;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Projectiles;
 using Content.Shared.Weapons.Melee;
 using Content.Shared.Weapons.Melee.Events;
 
+
 namespace Content.Shared._NC.Trade;
+
 
 public sealed class NcContractGhostRolePerksSystem : EntitySystem
 {
-    [Dependency] private readonly MovementSpeedModifierSystem _movement = default!;
-    [Dependency] private readonly InventorySystem _inventory = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
+    [Dependency] private readonly InventorySystem _inventory = default!;
+    [Dependency] private readonly MovementSpeedModifierSystem _movement = default!;
 
     public override void Initialize()
     {
@@ -28,31 +29,29 @@ public sealed class NcContractGhostRolePerksSystem : EntitySystem
         SubscribeLocalEvent<ProjectileComponent, ProjectileHitEvent>(OnProjectileHit);
     }
 
-    private void OnStartup(Entity<NcContractGhostRolePerksComponent> ent, ref ComponentStartup args)
-    {
+    private void OnStartup(Entity<NcContractGhostRolePerksComponent> ent, ref ComponentStartup args) =>
         _movement.RefreshMovementSpeedModifiers(ent.Owner);
-    }
 
-    private void OnShutdown(Entity<NcContractGhostRolePerksComponent> ent, ref ComponentShutdown args)
-    {
+    private void OnShutdown(Entity<NcContractGhostRolePerksComponent> ent, ref ComponentShutdown args) =>
         _movement.RefreshMovementSpeedModifiers(ent.Owner);
-    }
 
     private void OnRefreshMovement(
         Entity<NcContractGhostRolePerksComponent> ent,
-        ref RefreshMovementSpeedModifiersEvent args)
-    {
+        ref RefreshMovementSpeedModifiersEvent args
+    ) =>
         args.ModifySpeed(ent.Comp.WalkSpeedMultiplier, ent.Comp.SprintSpeedMultiplier, true);
-    }
 
     private void OnIncomingDamage(
         Entity<NcContractGhostRolePerksComponent> ent,
-        ref DamageModifyEvent args)
+        ref DamageModifyEvent args
+    )
     {
         if (ent.Comp.IncomingFlatReductions.Count > 0)
+        {
             args.Damage = DamageSpecifier.ApplyModifierSet(
                 args.Damage,
-                new DamageModifierSet { FlatReduction = ent.Comp.IncomingFlatReductions });
+                new() { FlatReduction = ent.Comp.IncomingFlatReductions, });
+        }
 
         if (!MathHelper.CloseTo(ent.Comp.IncomingDamageMultiplier, 1f))
             args.Damage *= ent.Comp.IncomingDamageMultiplier;
@@ -60,9 +59,7 @@ public sealed class NcContractGhostRolePerksSystem : EntitySystem
         if (!MathHelper.CloseTo(ent.Comp.ArmorIncomingDamageMultiplier, 1f) &&
             ent.Comp.ArmorItemPrototypes.Count > 0 &&
             HasMatchingCarriedItem(ent.Owner, ent.Comp.ArmorItemPrototypes))
-        {
             args.Damage *= ent.Comp.ArmorIncomingDamageMultiplier;
-        }
     }
 
     private void OnMeleeHit(Entity<MeleeWeaponComponent> ent, ref MeleeHitEvent args)
@@ -71,9 +68,7 @@ public sealed class NcContractGhostRolePerksSystem : EntitySystem
             !TryComp(args.User, out NcContractGhostRolePerksComponent? perks) ||
             MathHelper.CloseTo(perks.MeleeDamageMultiplier, 1f) ||
             !WeaponMatches(ent.Owner, perks.WeaponPrototypes))
-        {
             return;
-        }
 
         args.BonusDamage += args.BaseDamage * (perks.MeleeDamageMultiplier - 1f);
     }
@@ -84,9 +79,7 @@ public sealed class NcContractGhostRolePerksSystem : EntitySystem
             !TryComp(shooter, out NcContractGhostRolePerksComponent? perks) ||
             MathHelper.CloseTo(perks.ProjectileDamageMultiplier, 1f) ||
             !WeaponMatches(ent.Comp.Weapon, perks.WeaponPrototypes))
-        {
             return;
-        }
 
         args.Damage *= perks.ProjectileDamageMultiplier;
     }
@@ -102,27 +95,21 @@ public sealed class NcContractGhostRolePerksSystem : EntitySystem
     private bool HasMatchingCarriedItem(EntityUid uid, IReadOnlyCollection<string> prototypes)
     {
         foreach (var held in _hands.EnumerateHeld(uid))
-        {
             if (EntityPrototypeMatches(held, prototypes))
                 return true;
-        }
 
         if (!_inventory.TryGetContainerSlotEnumerator((uid, null), out var slots))
             return false;
 
         while (slots.NextItem(out var item, out _))
-        {
             if (EntityPrototypeMatches(item, prototypes))
                 return true;
-        }
 
         return false;
     }
 
-    private bool EntityPrototypeMatches(EntityUid uid, IReadOnlyCollection<string> prototypes)
-    {
-        return TryComp(uid, out MetaDataComponent? meta) &&
-               meta.EntityPrototype is { } proto &&
-               prototypes.Contains(proto.ID);
-    }
+    private bool EntityPrototypeMatches(EntityUid uid, IReadOnlyCollection<string> prototypes) =>
+        TryComp(uid, out MetaDataComponent? meta) &&
+        meta.EntityPrototype is { } proto &&
+        prototypes.Contains(proto.ID);
 }

@@ -2,7 +2,9 @@ using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem
 {
@@ -10,9 +12,10 @@ public sealed partial class NcContractSystem
         string ownerId,
         string poolId,
         NcSupplyRewardPoolPrototype pool,
-        HashSet<string>? visited = null)
+        HashSet<string>? visited = null
+    )
     {
-        visited ??= new HashSet<string>(StringComparer.Ordinal);
+        visited ??= new(StringComparer.Ordinal);
         if (!visited.Add(poolId))
         {
             Sawmill.Warning(
@@ -31,12 +34,10 @@ public sealed partial class NcContractSystem
         var hasAtLeastOneValidEntry = false;
 
         for (var i = 0; i < pool.Entries.Count; i++)
-        {
             if (TryValidateRewardPoolEntry(ownerId, poolId, i, pool.Entries[i], visited))
                 hasAtLeastOneValidEntry = true;
             else
                 valid = false;
-        }
 
         visited.Remove(poolId);
 
@@ -52,7 +53,8 @@ public sealed partial class NcContractSystem
         string poolId,
         int index,
         NcSupplyRewardPoolEntry entry,
-        HashSet<string> visited)
+        HashSet<string> visited
+    )
     {
         if (entry.Weight <= 0)
         {
@@ -86,7 +88,14 @@ public sealed partial class NcContractSystem
         switch (entry.Type)
         {
             case StoreRewardType.Item:
-                if (!RequireOnlyPoolRewardTarget(ownerId, poolId, index, "prototype", entry.Prototype, entry.Currency, entry.Pool))
+                if (!RequireOnlyPoolRewardTarget(
+                    ownerId,
+                    poolId,
+                    index,
+                    "prototype",
+                    entry.Prototype,
+                    entry.Currency,
+                    entry.Pool))
                     return false;
 
                 if (_prototypes.HasIndex<EntityPrototype>(entry.Prototype))
@@ -98,7 +107,14 @@ public sealed partial class NcContractSystem
                 return false;
 
             case StoreRewardType.Currency:
-                if (!RequireOnlyPoolRewardTarget(ownerId, poolId, index, "currency", entry.Currency, entry.Prototype, entry.Pool))
+                if (!RequireOnlyPoolRewardTarget(
+                    ownerId,
+                    poolId,
+                    index,
+                    "currency",
+                    entry.Currency,
+                    entry.Prototype,
+                    entry.Pool))
                     return false;
 
                 if (_prototypes.HasIndex<StackPrototype>(entry.Currency))
@@ -110,7 +126,14 @@ public sealed partial class NcContractSystem
                 return false;
 
             case StoreRewardType.Pool:
-                if (!RequireOnlyPoolRewardTarget(ownerId, poolId, index, "pool", entry.Pool, entry.Prototype, entry.Currency))
+                if (!RequireOnlyPoolRewardTarget(
+                    ownerId,
+                    poolId,
+                    index,
+                    "pool",
+                    entry.Pool,
+                    entry.Prototype,
+                    entry.Currency))
                     return false;
 
                 if (!_prototypes.TryIndex<NcSupplyRewardPoolPrototype>(entry.Pool, out var nestedPool))
@@ -142,7 +165,8 @@ public sealed partial class NcContractSystem
         string expectedField,
         string expectedValue,
         string otherA,
-        string otherB)
+        string otherB
+    )
     {
         if (string.IsNullOrWhiteSpace(expectedValue))
         {
@@ -160,13 +184,7 @@ public sealed partial class NcContractSystem
         return false;
     }
 
-    private static bool IsRewardCountRange(IntRange range)
-    {
-        return range.Min >= 0 && range.Max > 0 && range.Min <= range.Max;
-    }
+    private static bool IsRewardCountRange(IntRange range) => range.Min >= 0 && range.Max > 0 && range.Min <= range.Max;
 
-    private static bool IsCountConfigured(IntRange range)
-    {
-        return range.Min > 0 || range.Max > 0;
-    }
+    private static bool IsCountConfigured(IntRange range) => range.Min > 0 || range.Max > 0;
 }

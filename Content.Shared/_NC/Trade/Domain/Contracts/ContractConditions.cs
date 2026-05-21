@@ -1,13 +1,15 @@
 using Robust.Shared.Serialization;
 
+
 namespace Content.Shared._NC.Trade;
 
+
 /// <summary>
-/// Lightweight, YAML-facing condition descriptor for contract extensions.
-/// Core code only stores and dispatches these descriptors; concrete behavior lives in
-/// server-side condition handlers registered by the base system or downstream projects.
+///     Lightweight, YAML-facing condition descriptor for contract extensions.
+///     Core code only stores and dispatches these descriptors; concrete behavior lives in
+///     server-side condition handlers registered by the base system or downstream projects.
 /// </summary>
-[DataDefinition, Serializable, NetSerializable]
+[DataDefinition, Serializable, NetSerializable,]
 public sealed partial class ContractConditionDef
 {
     [DataField("type", required: true)]
@@ -26,7 +28,7 @@ public sealed partial class ContractConditionDef
     public Dictionary<string, string> Args { get; set; } = new();
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public enum ContractConditionPhase : byte
 {
     Take = 0,

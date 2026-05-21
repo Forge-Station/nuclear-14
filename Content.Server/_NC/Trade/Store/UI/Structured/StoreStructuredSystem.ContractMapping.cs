@@ -1,6 +1,8 @@
 using Content.Shared._NC.Trade;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class StoreStructuredSystem
 {
@@ -45,11 +47,11 @@ public sealed partial class StoreStructuredSystem
     private static List<ContractTargetClientData> MapContractTargetsToClient(ContractServerData contract)
     {
         var sourceTargets = contract.Targets;
-        var targets = sourceTargets is { Count: > 0 }
+        var targets = sourceTargets is { Count: > 0, }
             ? new List<ContractTargetClientData>(sourceTargets.Count)
             : new List<ContractTargetClientData>(1);
 
-        if (sourceTargets is { Count: > 0 })
+        if (sourceTargets is { Count: > 0, })
         {
             foreach (var target in sourceTargets)
             {
@@ -82,7 +84,7 @@ public sealed partial class StoreStructuredSystem
     {
         var rewards = contract.Rewards;
         return rewards.Count > 0
-            ? new List<ContractRewardData>(rewards)
+            ? new(rewards)
             : new List<ContractRewardData>(0);
     }
 
@@ -92,9 +94,7 @@ public sealed partial class StoreStructuredSystem
         if (contract.IsHuntObjective &&
             config.HuntEnabled &&
             config.HuntCompletionMode == NcHuntCompletionMode.BodyTurnIn)
-        {
             return config.HuntBodyPrototype ?? string.Empty;
-        }
 
         return config.ProofPrototype ?? string.Empty;
     }
@@ -115,30 +115,28 @@ public sealed partial class StoreStructuredSystem
     {
         var config = contract.Config;
         return (contract.IsInventoryDelivery || contract.IsRetrievalRouteDelivery) &&
-               config.RetrievalSpawnEnabled &&
-               config.RetrievalRequireSpawnedEntities;
+            config.RetrievalSpawnEnabled &&
+            config.RetrievalRequireSpawnedEntities;
     }
 
-    private static bool IsRetrievalRouteContract(ContractServerData contract)
-    {
-        return (contract.IsInventoryDelivery || contract.IsRetrievalRouteDelivery) &&
-               !string.IsNullOrWhiteSpace(contract.Config.RetrievalRouteId);
-    }
+    private static bool IsRetrievalRouteContract(ContractServerData contract) =>
+        (contract.IsInventoryDelivery || contract.IsRetrievalRouteDelivery) &&
+        !string.IsNullOrWhiteSpace(contract.Config.RetrievalRouteId);
 
     private static bool IsRetrievalBearerProofContract(ContractServerData contract)
     {
         var config = contract.Config;
         return IsRetrievalRouteContract(contract) &&
-               config.RetrievalProofEnabled &&
-               config.RetrievalProofOwnership == NcRetrievalProofOwnership.Bearer;
+            config.RetrievalProofEnabled &&
+            config.RetrievalProofOwnership == NcRetrievalProofOwnership.Bearer;
     }
 
     private static ContractRuntimeContextData CloneRuntimeContext(ContractRuntimeContextData? runtime)
     {
         if (runtime == null)
-            return new ContractRuntimeContextData();
+            return new();
 
-        return new ContractRuntimeContextData
+        return new()
         {
             Stage = runtime.Stage,
             StageGoal = runtime.StageGoal,

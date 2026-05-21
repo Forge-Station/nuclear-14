@@ -1,12 +1,9 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Movement.Pulling.Components;
-using Content.Shared.Mobs;
-using Content.Shared.Mobs.Components;
 using Robust.Shared.Map;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -14,7 +11,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid store,
         EntityUid user,
         string contractId,
-        ContractServerData contract)
+        ContractServerData contract
+    )
     {
         if (!IsSpawnedHuntContract(contract))
             return TryInitializeHuntObjective(store, user, contractId, contract);
@@ -22,24 +20,22 @@ public sealed partial class NcContractSystem : EntitySystem
         return TryInitializeSpawnedHuntObjective(store, user, contractId, contract);
     }
 
-    private static bool IsSpawnedHuntContract(ContractServerData contract)
-    {
-        return contract.IsHuntObjective && contract.Config.HuntEnabled;
-    }
+    private static bool IsSpawnedHuntContract(ContractServerData contract) =>
+        contract.IsHuntObjective && contract.Config.HuntEnabled;
 
-    private static bool RequiresSpawnedHuntBodyTurnIn(ContractServerData contract)
-    {
-        return IsSpawnedHuntContract(contract) &&
-               contract.Config.HuntCompletionMode == NcHuntCompletionMode.BodyTurnIn;
-    }
+    private static bool RequiresSpawnedHuntBodyTurnIn(ContractServerData contract) =>
+        IsSpawnedHuntContract(contract) &&
+        contract.Config.HuntCompletionMode == NcHuntCompletionMode.BodyTurnIn;
 
     private bool TryInitializeSpawnedHuntObjective(
         EntityUid store,
         EntityUid user,
         string contractId,
-        ContractServerData contract)
+        ContractServerData contract
+    )
     {
-        if (contract.Config.HuntCompletionMode is not (NcHuntCompletionMode.TrophyTurnIn or NcHuntCompletionMode.BodyTurnIn))
+        if (contract.Config.HuntCompletionMode is not (NcHuntCompletionMode.TrophyTurnIn
+            or NcHuntCompletionMode.BodyTurnIn))
         {
             Sawmill.Warning(
                 $"[Contracts] Hunt runtime init failed for '{contractId}': only TrophyTurnIn and BodyTurnIn are supported.");
@@ -74,7 +70,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (!TrySpawnHuntTargets(store, contractId, contract, state))
         {
-            CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true);
+            CleanupObjectiveRuntime(store, contractId, true);
             return false;
         }
 
@@ -98,9 +94,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (spawnCoords == EntityCoordinates.Invalid &&
             TryComp(pinpointerTarget, out TransformComponent? targetXform))
-        {
             spawnCoords = targetXform.Coordinates;
-        }
 
         if (spawnCoords == EntityCoordinates.Invalid)
             return false;

@@ -1,14 +1,17 @@
 using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
     private bool TryValidateRetrievalCargo(
         string contractId,
         int index,
-        NcSupplyTargetEntry entry)
+        NcSupplyTargetEntry entry
+    )
     {
         var hasPrototype = !string.IsNullOrWhiteSpace(entry.Prototype);
         var hasGroup = !string.IsNullOrWhiteSpace(entry.Group);

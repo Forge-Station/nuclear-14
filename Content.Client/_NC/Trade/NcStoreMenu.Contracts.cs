@@ -6,11 +6,12 @@ using Robust.Client.UserInterface.Controls;
 
 namespace Content.Client._NC.Trade;
 
+
 public sealed partial class NcStoreMenu
 {
     private static readonly Comparison<ContractClientData> ContractComparison = CompareContracts;
-    private readonly Dictionary<string, NcContractCard> _contractCardsById = new();
     private readonly List<string> _contractCardOrder = new();
+    private readonly Dictionary<string, NcContractCard> _contractCardsById = new();
     private readonly List<string> _staleContractIdsScratch = new();
 
     public void PopulateContracts(List<ContractClientData>? list, int skipCost, string skipCurrency, int skipBalance)
@@ -58,7 +59,8 @@ public sealed partial class NcStoreMenu
         List<ContractClientData> ordered,
         int skipCost,
         string skipCurrency,
-        int skipBalance)
+        int skipBalance
+    )
     {
         if (contractList.ChildCount != ordered.Count || _contractCardOrder.Count != ordered.Count)
             return false;
@@ -86,7 +88,8 @@ public sealed partial class NcStoreMenu
         List<ContractClientData> ordered,
         int skipCost,
         string skipCurrency,
-        int skipBalance)
+        int skipBalance
+    )
     {
         var activeIds = new HashSet<string>(StringComparer.Ordinal);
         contractList.RemoveAllChildren();
@@ -103,9 +106,7 @@ public sealed partial class NcStoreMenu
                 _contractCardsById[contract.Id] = card;
             }
             else
-            {
                 card.UpdateData(contract, skipCost, skipCurrency, skipBalance);
-            }
 
             contractList.AddChild(card);
             _contractCardOrder.Add(contract.Id);
@@ -114,7 +115,12 @@ public sealed partial class NcStoreMenu
         PruneContractCards(activeIds);
     }
 
-    private NcContractCard CreateContractCard(ContractClientData contract, int skipCost, string skipCurrency, int skipBalance)
+    private NcContractCard CreateContractCard(
+        ContractClientData contract,
+        int skipCost,
+        string skipCurrency,
+        int skipBalance
+    )
     {
         var card = new NcContractCard(contract, _proto, _sprites, skipCost, skipCurrency, skipBalance);
         card.ApplyUiTheme(_uiColors);
@@ -144,14 +150,12 @@ public sealed partial class NcStoreMenu
     {
         var active = activeIds is HashSet<string> set
             ? set
-            : new HashSet<string>(activeIds, StringComparer.Ordinal);
+            : new(activeIds, StringComparer.Ordinal);
 
         _staleContractIdsScratch.Clear();
         foreach (var id in _contractCardsById.Keys)
-        {
             if (!active.Contains(id))
                 _staleContractIdsScratch.Add(id);
-        }
 
         for (var i = 0; i < _staleContractIdsScratch.Count; i++)
         {

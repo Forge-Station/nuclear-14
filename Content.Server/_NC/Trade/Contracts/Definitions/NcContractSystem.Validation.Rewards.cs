@@ -2,7 +2,9 @@ using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -20,12 +22,10 @@ public sealed partial class NcContractSystem : EntitySystem
         var hasAtLeastOneValidReward = false;
 
         for (var i = 0; i < proto.Reward.Count; i++)
-        {
             if (TryValidateSupplyRewardEntry(proto.ID, $"reward[{i}]", proto.Reward[i]))
                 hasAtLeastOneValidReward = true;
             else
                 valid = false;
-        }
 
         if (hasAtLeastOneValidReward)
             return valid;
@@ -49,12 +49,10 @@ public sealed partial class NcContractSystem : EntitySystem
         var hasAtLeastOneValidReward = false;
 
         for (var i = 0; i < proto.Reward.Count; i++)
-        {
             if (TryValidateRetrievalRewardEntry(proto.ID, $"reward[{i}]", proto.Reward[i]))
                 hasAtLeastOneValidReward = true;
             else
                 valid = false;
-        }
 
         if (hasAtLeastOneValidReward)
             return valid;
@@ -67,7 +65,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryValidateSupplyRewardEntry(
         string contractId,
         string path,
-        NcSupplyRewardEntry entry)
+        NcSupplyRewardEntry entry
+    )
     {
         if (!IsCountConfigured(entry.Count))
         {
@@ -86,7 +85,13 @@ public sealed partial class NcContractSystem : EntitySystem
         switch (entry.Type)
         {
             case StoreRewardType.Item:
-                if (!RequireOnlyRewardTarget(contractId, path, nameof(entry.Prototype), entry.Prototype, entry.Currency, entry.Pool))
+                if (!RequireOnlyRewardTarget(
+                    contractId,
+                    path,
+                    nameof(entry.Prototype),
+                    entry.Prototype,
+                    entry.Currency,
+                    entry.Pool))
                     return false;
 
                 if (_prototypes.HasIndex<EntityPrototype>(entry.Prototype))
@@ -98,7 +103,13 @@ public sealed partial class NcContractSystem : EntitySystem
                 return false;
 
             case StoreRewardType.Currency:
-                if (!RequireOnlyRewardTarget(contractId, path, nameof(entry.Currency), entry.Currency, entry.Prototype, entry.Pool))
+                if (!RequireOnlyRewardTarget(
+                    contractId,
+                    path,
+                    nameof(entry.Currency),
+                    entry.Currency,
+                    entry.Prototype,
+                    entry.Pool))
                     return false;
 
                 if (_prototypes.HasIndex<StackPrototype>(entry.Currency))
@@ -110,7 +121,13 @@ public sealed partial class NcContractSystem : EntitySystem
                 return false;
 
             case StoreRewardType.Pool:
-                if (!RequireOnlyRewardTarget(contractId, path, nameof(entry.Pool), entry.Pool, entry.Prototype, entry.Currency))
+                if (!RequireOnlyRewardTarget(
+                    contractId,
+                    path,
+                    nameof(entry.Pool),
+                    entry.Pool,
+                    entry.Prototype,
+                    entry.Currency))
                     return false;
 
                 if (!_prototypes.TryIndex<NcSupplyRewardPoolPrototype>(entry.Pool, out var pool))
@@ -127,7 +144,8 @@ public sealed partial class NcContractSystem : EntitySystem
                 return false;
 
             default:
-                Sawmill.Warning($"[Contracts] Supply contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
+                Sawmill.Warning(
+                    $"[Contracts] Supply contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
                 return false;
         }
     }
@@ -135,7 +153,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryValidateRetrievalRewardEntry(
         string contractId,
         string path,
-        NcSupplyRewardEntry entry)
+        NcSupplyRewardEntry entry
+    )
     {
         if (!IsCountConfigured(entry.Count))
         {
@@ -154,7 +173,13 @@ public sealed partial class NcContractSystem : EntitySystem
         switch (entry.Type)
         {
             case StoreRewardType.Item:
-                if (!RequireOnlyRetrievalRewardTarget(contractId, path, nameof(entry.Prototype), entry.Prototype, entry.Currency, entry.Pool))
+                if (!RequireOnlyRetrievalRewardTarget(
+                    contractId,
+                    path,
+                    nameof(entry.Prototype),
+                    entry.Prototype,
+                    entry.Currency,
+                    entry.Pool))
                     return false;
 
                 if (_prototypes.HasIndex<EntityPrototype>(entry.Prototype))
@@ -166,7 +191,13 @@ public sealed partial class NcContractSystem : EntitySystem
                 return false;
 
             case StoreRewardType.Currency:
-                if (!RequireOnlyRetrievalRewardTarget(contractId, path, nameof(entry.Currency), entry.Currency, entry.Prototype, entry.Pool))
+                if (!RequireOnlyRetrievalRewardTarget(
+                    contractId,
+                    path,
+                    nameof(entry.Currency),
+                    entry.Currency,
+                    entry.Prototype,
+                    entry.Pool))
                     return false;
 
                 if (_prototypes.HasIndex<StackPrototype>(entry.Currency))
@@ -178,7 +209,13 @@ public sealed partial class NcContractSystem : EntitySystem
                 return false;
 
             case StoreRewardType.Pool:
-                if (!RequireOnlyRetrievalRewardTarget(contractId, path, nameof(entry.Pool), entry.Pool, entry.Prototype, entry.Currency))
+                if (!RequireOnlyRetrievalRewardTarget(
+                    contractId,
+                    path,
+                    nameof(entry.Pool),
+                    entry.Pool,
+                    entry.Prototype,
+                    entry.Currency))
                     return false;
 
                 if (!_prototypes.TryIndex<NcSupplyRewardPoolPrototype>(entry.Pool, out var pool))
@@ -195,7 +232,8 @@ public sealed partial class NcContractSystem : EntitySystem
                 return false;
 
             default:
-                Sawmill.Warning($"[Contracts] Retrieval contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
+                Sawmill.Warning(
+                    $"[Contracts] Retrieval contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
                 return false;
         }
     }
@@ -206,7 +244,8 @@ public sealed partial class NcContractSystem : EntitySystem
         string expectedField,
         string expectedValue,
         string otherA,
-        string otherB)
+        string otherB
+    )
     {
         if (string.IsNullOrWhiteSpace(expectedValue))
         {
@@ -229,7 +268,8 @@ public sealed partial class NcContractSystem : EntitySystem
         string expectedField,
         string expectedValue,
         string otherA,
-        string otherB)
+        string otherB
+    )
     {
         if (string.IsNullOrWhiteSpace(expectedValue))
         {
@@ -245,5 +285,4 @@ public sealed partial class NcContractSystem : EntitySystem
             $"For each reward entry use only the field required by its type.");
         return false;
     }
-
 }

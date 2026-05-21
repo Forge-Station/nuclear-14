@@ -1,4 +1,3 @@
-using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;

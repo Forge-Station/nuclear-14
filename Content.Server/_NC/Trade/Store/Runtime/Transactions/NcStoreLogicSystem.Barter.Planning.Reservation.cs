@@ -2,16 +2,18 @@ using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 using Content.Shared.Tag;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcStoreLogicSystem
 {
     private bool TryBuildBarterCostDemands(
         List<NcBarterCostEntry> costs,
         int times,
-        out List<BarterCostDemand> demands)
+        out List<BarterCostDemand> demands
+    )
     {
         demands = new(costs.Count);
 
@@ -39,11 +41,12 @@ public sealed partial class NcStoreLogicSystem
                 if (!_protos.HasIndex<StackPrototype>(cost.Currency))
                     return false;
 
-                demands.Add(new()
-                {
-                    Currency = cost.Currency,
-                    Required = required
-                });
+                demands.Add(
+                    new()
+                    {
+                        Currency = cost.Currency,
+                        Required = required
+                    });
                 continue;
             }
 
@@ -52,12 +55,13 @@ public sealed partial class NcStoreLogicSystem
                 if (!_protos.HasIndex<EntityPrototype>(cost.Prototype))
                     return false;
 
-                demands.Add(new()
-                {
-                    Prototype = cost.Prototype,
-                    PrototypeStackType = _inventory.GetProductStackType(cost.Prototype) ?? string.Empty,
-                    Required = required
-                });
+                demands.Add(
+                    new()
+                    {
+                        Prototype = cost.Prototype,
+                        PrototypeStackType = _inventory.GetProductStackType(cost.Prototype) ?? string.Empty,
+                        Required = required
+                    });
                 continue;
             }
 
@@ -66,12 +70,13 @@ public sealed partial class NcStoreLogicSystem
                 if (!_protos.TryIndex<NcItemGroupPrototype>(cost.Group, out var group))
                     return false;
 
-                demands.Add(new()
-                {
-                    Group = cost.Group,
-                    GroupPrototype = group,
-                    Required = required
-                });
+                demands.Add(
+                    new()
+                    {
+                        Group = cost.Group,
+                        GroupPrototype = group,
+                        Required = required
+                    });
                 continue;
             }
 
@@ -80,11 +85,12 @@ public sealed partial class NcStoreLogicSystem
                 !_protos.HasIndex<TagPrototype>(tagTarget.Tag))
                 return false;
 
-            demands.Add(new()
-            {
-                Tag = tagTarget.Tag,
-                Required = required
-            });
+            demands.Add(
+                new()
+                {
+                    Tag = tagTarget.Tag,
+                    Required = required
+                });
         }
 
         return demands.Count > 0;
@@ -103,7 +109,8 @@ public sealed partial class NcStoreLogicSystem
     private void FillBarterReservableItems(
         EntityUid root,
         IReadOnlyList<EntityUid> scanned,
-        List<BarterReservableItem> result)
+        List<BarterReservableItem> result
+    )
     {
         var write = 0;
         for (var i = 0; i < scanned.Count; i++)
@@ -124,21 +131,23 @@ public sealed partial class NcStoreLogicSystem
                 if (count <= 0)
                     continue;
 
-                GetOrAddBarterReservableItem(result, write++).Set(
-                    ent,
-                    isStack: true,
-                    meta.EntityPrototype.ID,
-                    stack.StackTypeId,
-                    count);
+                GetOrAddBarterReservableItem(result, write++)
+                    .Set(
+                        ent,
+                        true,
+                        meta.EntityPrototype.ID,
+                        stack.StackTypeId,
+                        count);
                 continue;
             }
 
-            GetOrAddBarterReservableItem(result, write++).Set(
-                ent,
-                isStack: false,
-                meta.EntityPrototype.ID,
-                string.Empty,
-                1);
+            GetOrAddBarterReservableItem(result, write++)
+                .Set(
+                    ent,
+                    false,
+                    meta.EntityPrototype.ID,
+                    string.Empty,
+                    1);
         }
 
         if (write < result.Count)
@@ -147,7 +156,8 @@ public sealed partial class NcStoreLogicSystem
 
     private List<BarterReservableItem> GetBarterReservableItemsForPlan(
         EntityUid root,
-        BarterAvailabilityContext? context)
+        BarterAvailabilityContext? context
+    )
     {
         if (context == null)
             return BuildBarterReservableItems(root);
@@ -159,7 +169,8 @@ public sealed partial class NcStoreLogicSystem
 
     private static void CopyBarterReservableItems(
         List<BarterReservableItem> source,
-        List<BarterReservableItem> target)
+        List<BarterReservableItem> target
+    )
     {
         for (var i = 0; i < source.Count; i++)
             GetOrAddBarterReservableItem(target, i).CopyFrom(source[i]);
@@ -170,7 +181,8 @@ public sealed partial class NcStoreLogicSystem
 
     private static BarterReservableItem GetOrAddBarterReservableItem(
         List<BarterReservableItem> items,
-        int index)
+        int index
+    )
     {
         if (index < items.Count)
             return items[index];
@@ -200,7 +212,8 @@ public sealed partial class NcStoreLogicSystem
         BarterCostPlan plan,
         List<BarterReservableItem> items,
         BarterCostDemand demand,
-        List<BarterReservableItem>? candidatesScratch = null)
+        List<BarterReservableItem>? candidatesScratch = null
+    )
     {
         var candidates = candidatesScratch ?? new List<BarterReservableItem>();
         candidates.Clear();
@@ -259,7 +272,8 @@ public sealed partial class NcStoreLogicSystem
     private static void AddBarterCostReservation(
         BarterCostPlan plan,
         BarterReservableItem item,
-        int count)
+        int count
+    )
     {
         if (item.Entity == EntityUid.Invalid || count <= 0)
             return;

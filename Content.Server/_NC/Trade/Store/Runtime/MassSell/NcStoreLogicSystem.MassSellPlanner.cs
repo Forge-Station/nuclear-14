@@ -1,25 +1,11 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
+
 
 namespace Content.Server._NC.Trade;
 
+
 public sealed partial class NcStoreLogicSystem
 {
-    private sealed class MassSellCatalogCache
-    {
-        public readonly Dictionary<string, (string CurrencyId, int UnitPrice)> ListingQuotes = new(StringComparer.Ordinal);
-        public readonly List<NcStoreListingDef> SellListings = new();
-        public int CatalogRevision = int.MinValue;
-    }
-
-    private readonly record struct MassSellInventoryState(
-        Dictionary<string, int> StackTypeCounts,
-        Dictionary<string, int> ProtoCounts,
-        Dictionary<string, Dictionary<string, int>> StackTypeProtoCounts)
-    {
-        public bool IsEmpty => StackTypeCounts.Count == 0 && ProtoCounts.Count == 0;
-    }
-
     private readonly Dictionary<EntityUid, MassSellCatalogCache> _massSellCatalogCache = new();
     private readonly List<string> _massSellMatchingProtoIdsScratch = new();
     private readonly List<string> _massSellMatchingStackTypeIdsScratch = new();
@@ -45,12 +31,13 @@ public sealed partial class NcStoreLogicSystem
     public Dictionary<string, int> GetMassSellValue(EntityUid storeUid, NcStoreComponent store, EntityUid container) =>
         ComputeMassSellPlan(storeUid, store, container).IncomeByCurrency;
 
-    public void ClearStoreRuntimeCaches(EntityUid store)
-    {
-        _massSellCatalogCache.Remove(store);
-    }
+    public void ClearStoreRuntimeCaches(EntityUid store) => _massSellCatalogCache.Remove(store);
 
-    private MassSellPlan ComputeMassSellPlanInternal(EntityUid storeUid, NcStoreComponent store, IReadOnlyList<EntityUid> items)
+    private MassSellPlan ComputeMassSellPlanInternal(
+        EntityUid storeUid,
+        NcStoreComponent store,
+        IReadOnlyList<EntityUid> items
+    )
     {
         var plan = CreateEmptyMassSellPlan();
         if (store.Listings.Count == 0)
@@ -68,12 +55,27 @@ public sealed partial class NcStoreLogicSystem
         return plan;
     }
 
-    private static MassSellPlan CreateEmptyMassSellPlan()
-    {
-        return new(
-            new Dictionary<string, int>(StringComparer.Ordinal),
-            new Dictionary<string, int>(StringComparer.Ordinal),
+    private static MassSellPlan CreateEmptyMassSellPlan() =>
+        new(
+            new(StringComparer.Ordinal),
+            new(StringComparer.Ordinal),
             new Dictionary<string, (string, int)>(StringComparer.Ordinal),
-            new List<MassSellStep>());
+            new());
+
+    private sealed class MassSellCatalogCache
+    {
+        public readonly Dictionary<string, (string CurrencyId, int UnitPrice)> ListingQuotes =
+            new(StringComparer.Ordinal);
+
+        public readonly List<NcStoreListingDef> SellListings = new();
+        public int CatalogRevision = int.MinValue;
+    }
+
+    private readonly record struct MassSellInventoryState(
+        Dictionary<string, int> StackTypeCounts,
+        Dictionary<string, int> ProtoCounts,
+        Dictionary<string, Dictionary<string, int>> StackTypeProtoCounts)
+    {
+        public bool IsEmpty => StackTypeCounts.Count == 0 && ProtoCounts.Count == 0;
     }
 }

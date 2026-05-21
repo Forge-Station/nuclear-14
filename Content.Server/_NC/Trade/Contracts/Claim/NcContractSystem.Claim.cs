@@ -1,6 +1,8 @@
 using Content.Shared._NC.Trade;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -29,15 +31,21 @@ public sealed partial class NcContractSystem : EntitySystem
             var res = TryClaimDetailed(store, user, contractId);
             if (!res.Success)
             {
-                if (res.Reason is ClaimFailureReason.NotEnoughItems or
-                    ClaimFailureReason.NoValidTargets or
-                    ClaimFailureReason.MissingCrate or
-                    ClaimFailureReason.MissingBody or
-                    ClaimFailureReason.MissingProof or
-                    ClaimFailureReason.ObjectiveNotCompleted)
-                    Sawmill.Info($"[Claim] Failed ({res.Reason}) '{contractId}' on {ToPrettyString(store)}: {res.Details}");
+                if (res.Reason is ClaimFailureReason.NotEnoughItems
+                    or ClaimFailureReason.NoValidTargets
+                    or ClaimFailureReason.MissingCrate
+                    or ClaimFailureReason.MissingBody
+                    or ClaimFailureReason.MissingProof
+                    or ClaimFailureReason.ObjectiveNotCompleted)
+                {
+                    Sawmill.Info(
+                        $"[Claim] Failed ({res.Reason}) '{contractId}' on {ToPrettyString(store)}: {res.Details}");
+                }
                 else
-                    Sawmill.Warning($"[Claim] Failed ({res.Reason}) '{contractId}' on {ToPrettyString(store)}: {res.Details}");
+                {
+                    Sawmill.Warning(
+                        $"[Claim] Failed ({res.Reason}) '{contractId}' on {ToPrettyString(store)}: {res.Details}");
+                }
             }
 
             return res.Success;
@@ -52,21 +60,29 @@ public sealed partial class NcContractSystem : EntitySystem
     private ClaimAttemptResult TryClaimDetailed(EntityUid store, EntityUid user, string contractId)
     {
         if (!TryComp(store, out NcStoreComponent? comp))
-            return ClaimAttemptResult.Fail(ClaimFailureReason.StoreMissing, $"Store {ToPrettyString(store)} has no NcStoreComponent.");
+        {
+            return ClaimAttemptResult.Fail(
+                ClaimFailureReason.StoreMissing,
+                $"Store {ToPrettyString(store)} has no NcStoreComponent.");
+        }
 
         if (!comp.Contracts.TryGetValue(contractId, out var contract))
-            return ClaimAttemptResult.Fail(ClaimFailureReason.ContractMissing, $"Store {ToPrettyString(store)} has no contract '{contractId}'.");
+        {
+            return ClaimAttemptResult.Fail(
+                ClaimFailureReason.ContractMissing,
+                $"Store {ToPrettyString(store)} has no contract '{contractId}'.");
+        }
 
         if (!contract.Taken)
             return ClaimAttemptResult.Fail(ClaimFailureReason.NotTaken, $"Contract '{contractId}' is not taken yet.");
 
         if (!TryEvaluateContractConditions(
-                ContractConditionPhase.Claim,
-                store,
-                user,
-                contractId,
-                contract,
-                out var conditionFailure))
+            ContractConditionPhase.Claim,
+            store,
+            user,
+            contractId,
+            contract,
+            out var conditionFailure))
         {
             return ClaimAttemptResult.Fail(
                 ClaimFailureReason.InvalidTarget,
@@ -84,17 +100,16 @@ public sealed partial class NcContractSystem : EntitySystem
     }
 
 
-    private static bool RequiresRetrievalRouteRewardClaim(ContractServerData contract)
-    {
-        return RequiresRetrievalRouteDelivery(contract);
-    }
+    private static bool RequiresRetrievalRouteRewardClaim(ContractServerData contract) =>
+        RequiresRetrievalRouteDelivery(contract);
 
     private ClaimAttemptResult TryClaimInventoryDeliveryContract(
         EntityUid store,
         EntityUid user,
         string contractId,
         NcStoreComponent comp,
-        ContractServerData contract)
+        ContractServerData contract
+    )
     {
         if (RequiresRetrievalRouteRewardClaim(contract))
             return TryClaimRetrievalRouteReward(store, user, contractId, comp, contract);
@@ -110,9 +125,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
             if (partialPrepFail.Reason != ClaimFailureReason.None &&
                 prepFail.Reason is ClaimFailureReason.NotEnoughItems or ClaimFailureReason.MissingCrate)
-            {
                 return partialPrepFail;
-            }
 
             return prepFail;
         }
@@ -129,7 +142,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid user,
         string contractId,
         NcStoreComponent comp,
-        ContractServerData contract)
+        ContractServerData contract
+    )
     {
         RefreshRetrievalRouteDeliveryForClaim(store, contractId, contract);
 
@@ -145,25 +159,25 @@ public sealed partial class NcContractSystem : EntitySystem
 
         var objectiveJournal = new ObjectiveConsumeJournal();
         if (!TryGiveContractRewardsWithPreCommit(
-                user,
-                contract.Rewards,
-                () =>
-                {
-                    if (contract.Config.RetrievalClaimMode != NcRetrievalClaimMode.DestinationProof)
-                        return ClaimAttemptResult.Ok();
+            user,
+            contract.Rewards,
+            () =>
+            {
+                if (contract.Config.RetrievalClaimMode != NcRetrievalClaimMode.DestinationProof)
+                    return ClaimAttemptResult.Ok();
 
-                    return TryConsumeObjectiveProof(store, user, contractId, contract, objectiveJournal, out var proofFail)
-                        ? ClaimAttemptResult.Ok()
-                        : proofFail;
-                },
-                out var rewardExecFail))
+                return TryConsumeObjectiveProof(store, user, contractId, contract, objectiveJournal, out var proofFail)
+                    ? ClaimAttemptResult.Ok()
+                    : proofFail;
+            },
+            out var rewardExecFail))
         {
             RollbackObjectiveConsumeJournal(objectiveJournal);
             return rewardExecFail;
         }
 
         CommitObjectiveConsumeJournal(objectiveJournal);
-        FinalizeClaim(store, comp, contractId, contract.Repeatable, deleteTrackedEntities: contract.Config.RetrievalConsumeCargo);
+        FinalizeClaim(store, comp, contractId, contract.Repeatable, contract.Config.RetrievalConsumeCargo);
         return ClaimAttemptResult.Ok();
     }
 
@@ -172,56 +186,96 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid user,
         string contractId,
         NcStoreComponent comp,
-        ContractServerData contract)
+        ContractServerData contract
+    )
     {
         EnsureObjectiveRuntimeDefaults(contract);
         UpdateObjectiveContractProgress(store, contractId, contract);
 
-        var runtime = contract.Runtime;
-        if (runtime.Failed)
-            return ClaimAttemptResult.Fail(ClaimFailureReason.ObjectiveFailed, runtime.FailureReason);
+        if (!TryValidateObjectiveClaim(store, user, contractId, contract, out var validationFail))
+            return validationFail;
+
+        if (!TryExecuteObjectiveClaimRewards(store, user, contractId, contract, out var rewardFail))
+            return rewardFail;
+
+        FinalizeClaim(store, comp, contractId, contract.Repeatable);
+
+        return ClaimAttemptResult.Ok();
+    }
+
+    private bool TryValidateObjectiveClaim(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        ContractServerData contract,
+        out ClaimAttemptResult fail
+    )
+    {
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+
+        if (contract.Runtime.Failed)
+        {
+            fail = ClaimAttemptResult.Fail(ClaimFailureReason.ObjectiveFailed, contract.Runtime.FailureReason);
+            return false;
+        }
 
         if (!contract.Completed)
         {
-            return ClaimAttemptResult.Fail(
+            fail = ClaimAttemptResult.Fail(
                 ClaimFailureReason.ObjectiveNotCompleted,
                 $"Objective progress {contract.Progress}/{contract.Required} for '{contractId}'.");
+            return false;
         }
 
         if (IsGhostRoleSelfClaim(store, contractId, user, contract))
         {
-            return ClaimAttemptResult.Fail(
+            fail = ClaimAttemptResult.Fail(
                 ClaimFailureReason.InvalidTarget,
                 $"Contract ghost role target cannot claim its own contract '{contractId}'.");
+            return false;
         }
 
-        if (!TryValidateContractRewards(user, contract.Rewards, out var rewardFail))
-            return rewardFail;
+        return TryValidateContractRewards(user, contract.Rewards, out fail);
+    }
 
-        var objectiveJournal = new ObjectiveConsumeJournal();
-        if (!TryGiveContractRewardsWithPreCommit(
+    private bool TryExecuteObjectiveClaimRewards(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        ContractServerData contract,
+        out ClaimAttemptResult fail
+    )
+    {
+        var journal = new ObjectiveConsumeJournal();
+        if (TryGiveContractRewardsWithPreCommit(
                 user,
                 contract.Rewards,
-                () =>
-                {
-                    if (!TryConsumeSpawnedHuntBodyTurnIn(store, user, contractId, contract, objectiveJournal, out var bodyFail))
-                        return bodyFail;
-
-                    if (!TryConsumeObjectiveProof(store, user, contractId, contract, objectiveJournal, out var proofFail))
-                        return proofFail;
-
-                    TryMarkGhostRoleRoundEndClaimed(store, contractId, contract, objectiveJournal);
-                    return ClaimAttemptResult.Ok();
-                },
-                out var rewardExecFail))
+                () => TryPreCommitObjectiveClaim(store, user, contractId, contract, journal),
+                out fail))
         {
-            RollbackObjectiveConsumeJournal(objectiveJournal);
-            return rewardExecFail;
+            CommitObjectiveConsumeJournal(journal);
+            return true;
         }
 
-        CommitObjectiveConsumeJournal(objectiveJournal);
-        FinalizeClaim(store, comp, contractId, contract.Repeatable);
+        RollbackObjectiveConsumeJournal(journal);
+        return false;
+    }
 
+    private ClaimAttemptResult TryPreCommitObjectiveClaim(
+        EntityUid store,
+        EntityUid user,
+        string contractId,
+        ContractServerData contract,
+        ObjectiveConsumeJournal journal
+    )
+    {
+        if (!TryConsumeSpawnedHuntBodyTurnIn(store, user, contractId, contract, journal, out var bodyFail))
+            return bodyFail;
+
+        if (!TryConsumeObjectiveProof(store, user, contractId, contract, journal, out var proofFail))
+            return proofFail;
+
+        TryMarkGhostRoleRoundEndClaimed(store, contractId, contract, journal);
         return ClaimAttemptResult.Ok();
     }
 }

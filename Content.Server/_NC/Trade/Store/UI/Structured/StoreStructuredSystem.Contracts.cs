@@ -1,7 +1,9 @@
 using Content.Shared._NC.Trade;
 using Robust.Shared.Audio;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class StoreStructuredSystem : EntitySystem
 {
@@ -22,12 +24,16 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         if (_contracts.TryClaim(uid, user, msg.ContractId))
         {
-            _audio.PlayPvs(new SoundPathSpecifier("/Audio/Effects/Cargo/ping.ogg"), user);
+            _audio.PlayPvs(
+                new SoundPathSpecifier("/Audio/Effects/Cargo/ping.ogg"),
+                uid,
+                AudioParams.Default.WithVolume(-2f));
+
             var popup = comp.Contracts.TryGetValue(msg.ContractId, out var contract) &&
-                        contract.Taken &&
-                        !contract.Completed
-                ? Loc.GetString("nc-store-contract-partial-turned-in")
-                : Loc.GetString("nc-store-contract-completed");
+                contract.Taken &&
+                !contract.Completed
+                    ? Loc.GetString("nc-store-contract-partial-turned-in")
+                    : Loc.GetString("nc-store-contract-completed");
 
             _popups.PopupEntity(popup, uid, user);
         }
@@ -59,7 +65,11 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         RequestDynamicRefresh(uid, comp, user);
     }
 
-    private void OnRequestContractPinpointer(EntityUid uid, NcStoreComponent comp, RequestContractPinpointerBoundMessage msg)
+    private void OnRequestContractPinpointer(
+        EntityUid uid,
+        NcStoreComponent comp,
+        RequestContractPinpointerBoundMessage msg
+    )
     {
         if (!TryGetLockedUiUser(uid, comp, out var user))
             return;

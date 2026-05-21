@@ -3,17 +3,20 @@ using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Stacks;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _claimRequiredByKeyScratch = new();
     private readonly List<(string ProtoId, PrototypeMatchMode MatchMode, int Depth)> _claimOrderedKeysScratch = new();
+    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _claimRequiredByKeyScratch = new();
     private readonly Dictionary<EntityUid, int> _claimVirtualStackLeftScratch = new();
 
     private void BuildOrderedRequiredKeys(
         Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> requiredByKey,
-        List<(string ProtoId, PrototypeMatchMode MatchMode, int Depth)> orderedKeys)
+        List<(string ProtoId, PrototypeMatchMode MatchMode, int Depth)> orderedKeys
+    )
     {
         orderedKeys.Clear();
 
@@ -50,11 +53,14 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid candidateEntity,
         string candidateId,
         string expectedProtoId,
-        PrototypeMatchMode matchMode)
+        PrototypeMatchMode matchMode
+    )
     {
         if (matchMode == PrototypeMatchMode.Tag)
+        {
             return TryResolveContractTagTargetId(expectedProtoId, out var tagId) &&
                 ContractPrototypeHasTag(candidateId, tagId);
+        }
 
         if (matchMode != PrototypeMatchMode.Matcher)
             return candidateId == expectedProtoId;
@@ -68,9 +74,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (TryComp(candidateEntity, out StackComponent? stack) &&
             !string.IsNullOrWhiteSpace(stack.StackTypeId) &&
             matcher.MatchStackTypes.Contains(stack.StackTypeId))
-        {
             return true;
-        }
 
         return false;
     }

@@ -7,25 +7,9 @@ using Robust.Shared.Random;
 
 namespace Content.Server._NC.Trade;
 
+
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private sealed class ContractMatcherSpec
-    {
-        public readonly HashSet<string> MatchItems;
-        public readonly HashSet<string> MatchStackTypes;
-        public readonly List<string> SpawnPool;
-
-        public ContractMatcherSpec(
-            HashSet<string> matchItems,
-            HashSet<string> matchStackTypes,
-            List<string> spawnPool)
-        {
-            MatchItems = matchItems;
-            MatchStackTypes = matchStackTypes;
-            SpawnPool = spawnPool;
-        }
-    }
-
     private readonly Dictionary<string, ContractMatcherSpec?> _contractMatcherCache = new(StringComparer.Ordinal);
 
     private bool TryGetStackTypeId(string productProtoId, out string stackTypeId)
@@ -89,7 +73,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void BuildContractMatcherSpecFromLists(
         IReadOnlyList<string> items,
-        out ContractMatcherSpec spec)
+        out ContractMatcherSpec spec
+    )
     {
         var matchItems = new HashSet<string>(StringComparer.Ordinal);
         var matchStackTypes = new HashSet<string>(StringComparer.Ordinal);
@@ -112,7 +97,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 spawnPool.Add(itemId);
         }
 
-        spec = new ContractMatcherSpec(matchItems, matchStackTypes, spawnPool);
+        spec = new(matchItems, matchStackTypes, spawnPool);
     }
 
     private bool CacheContractMatcherSpec(string matcherId, ContractMatcherSpec spec, string sourceKind)
@@ -173,5 +158,21 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
-}
+    private sealed class ContractMatcherSpec
+    {
+        public readonly HashSet<string> MatchItems;
+        public readonly HashSet<string> MatchStackTypes;
+        public readonly List<string> SpawnPool;
 
+        public ContractMatcherSpec(
+            HashSet<string> matchItems,
+            HashSet<string> matchStackTypes,
+            List<string> spawnPool
+        )
+        {
+            MatchItems = matchItems;
+            MatchStackTypes = matchStackTypes;
+            SpawnPool = spawnPool;
+        }
+    }
+}

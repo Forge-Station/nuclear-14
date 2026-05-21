@@ -28,13 +28,15 @@ public sealed partial class NcContractSystem : EntitySystem
         MissingProof,
         ObjectiveNotCompleted,
         ObjectiveFailed,
-        ExecutionFailed,
+        ExecutionFailed
     }
 
     private readonly record struct ClaimAttemptResult(bool Success, ClaimFailureReason Reason, string? Details)
     {
         public static ClaimAttemptResult Ok() => new(true, ClaimFailureReason.None, null);
-        public static ClaimAttemptResult Fail(ClaimFailureReason reason, string? details = null) => new(false, reason, details);
+
+        public static ClaimAttemptResult Fail(ClaimFailureReason reason, string? details = null) =>
+            new(false, reason, details);
     }
 
     private readonly record struct PoolEntry(ContractRewardDef Def, string Key);
@@ -57,18 +59,18 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private sealed class ContractPoolCandidate
     {
-        public ContractPoolCandidateKind Kind;
+        public NcGhostRoleContractPrototype? GhostRole;
+        public NcHuntContractPrototype? Hunt;
         public string Id = string.Empty;
-        public bool Repeatable = true;
-        public int Weight;
+        public ContractPoolCandidateKind Kind;
+        public string OfferPoolColor = string.Empty;
         public string OfferPoolId = string.Empty;
         public string OfferPoolName = string.Empty;
         public int OfferPoolOrder = int.MaxValue;
-        public string OfferPoolColor = string.Empty;
-        public NcSupplyContractPrototype? Supply;
+        public bool Repeatable = true;
         public NcRetrievalContractPrototype? Retrieval;
-        public NcHuntContractPrototype? Hunt;
-        public NcGhostRoleContractPrototype? GhostRole;
+        public NcSupplyContractPrototype? Supply;
+        public int Weight;
     }
 
     private readonly record struct QuasiKey(QuasiKeyKind Kind, EntityUid Store, string ProtoId, string? Extra);

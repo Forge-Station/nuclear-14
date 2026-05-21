@@ -8,6 +8,7 @@ namespace Content.Client._NC.Trade;
 
 public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : BoundUserInterface(owner, uiKey)
 {
+    private static readonly TimeSpan CatalogRetryGracePeriod = TimeSpan.FromSeconds(3);
     private readonly IPlayerManager _player = IoCManager.Resolve<IPlayerManager>();
 
     private int _lastCatalogRevision = int.MinValue;
@@ -16,8 +17,6 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
     private NcStoreMenu? _menu;
 
     private StoreDynamicState? _pendingDynamic;
-
-    private static readonly TimeSpan CatalogRetryGracePeriod = TimeSpan.FromSeconds(3);
     private DateTime? _pendingDynamicSince;
 
     private EntityUid? Actor => _player.LocalSession?.AttachedEntity;
@@ -62,9 +61,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
                 }
             }
             else
-            {
                 _pendingDynamicSince = now;
-            }
 
             return;
         }

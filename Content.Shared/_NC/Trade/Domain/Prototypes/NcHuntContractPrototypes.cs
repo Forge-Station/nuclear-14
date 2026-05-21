@@ -1,9 +1,11 @@
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 
+
 namespace Content.Shared._NC.Trade;
 
-[Serializable, NetSerializable]
+
+[Serializable, NetSerializable,]
 public enum NcHuntCompletionMode : byte
 {
     ConfirmedKill = 0,
@@ -21,10 +23,10 @@ public sealed partial class NcHuntTargetData
     public string Prototype { get; set; } = string.Empty;
 
     [DataField("count", required: true)]
-    public int Count { get; set; } = 0;
+    public int Count { get; set; }
 
     /// <summary>
-    /// For BodyTurnIn hunts, marks the spawned target whose corpse must be brought back.
+    ///     For BodyTurnIn hunts, marks the spawned target whose corpse must be brought back.
     /// </summary>
     [DataField("body")]
     public bool Body { get; set; }
@@ -50,8 +52,6 @@ public sealed partial class NcHuntSpawnData
 [Prototype("ncHuntGroup")]
 public sealed partial class NcHuntGroupPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; private set; } = default!;
-
     [DataField("name", required: true)]
     public string Name { get; private set; } = string.Empty;
 
@@ -63,13 +63,13 @@ public sealed partial class NcHuntGroupPrototype : IPrototype
 
     [DataField("prototypes", required: true)]
     public List<string> Prototypes { get; private set; } = new();
+
+    [IdDataField] public string ID { get; private set; } = default!;
 }
 
 [Prototype("ncHuntContract")]
 public sealed partial class NcHuntContractPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; private set; } = default!;
-
     [DataField("name", required: true)]
     public string Name { get; private set; } = string.Empty;
 
@@ -97,4 +97,6 @@ public sealed partial class NcHuntContractPrototype : IPrototype
     /// <summary>Optional extension conditions evaluated by registered server-side handlers.</summary>
     [DataField("conditions")]
     public List<ContractConditionDef> Conditions { get; private set; } = new();
+
+    [IdDataField] public string ID { get; private set; } = default!;
 }

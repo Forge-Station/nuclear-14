@@ -1,14 +1,10 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Clothing.Components;
-using Content.Shared.Containers.ItemSlots;
-using Content.Shared.Hands.Components;
-using Content.Shared.Inventory;
 using Content.Shared.Stacks;
-using Content.Shared.Tag;
-using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcStoreInventorySystem
 {
@@ -86,7 +82,7 @@ public sealed partial class NcStoreInventorySystem
     {
         if (matchMode == PrototypeMatchMode.Matcher)
         {
-            var matcher = GetCompiledMatcher(protoId, warnIfInvalid: true);
+            var matcher = GetCompiledMatcher(protoId, true);
             if (matcher == null)
             {
                 return new(
@@ -137,7 +133,8 @@ public sealed partial class NcStoreInventorySystem
         EntityUid root,
         IReadOnlyList<EntityUid> cachedItems,
         ProductTakeRequest request,
-        int maxNeeded)
+        int maxNeeded
+    )
     {
         var availableTotal = 0;
 
@@ -158,16 +155,15 @@ public sealed partial class NcStoreInventorySystem
         EntityUid root,
         List<EntityUid> cachedItems,
         ProductTakeRequest request,
-        int amount)
+        int amount
+    )
     {
         var left = amount;
         var compactNeeded = false;
 
         for (var i = 0; i < cachedItems.Count && left > 0; i++)
-        {
             if (!TryConsumeTakeUnitsFromEntity(root, cachedItems, i, request, ref left, ref compactNeeded))
                 continue;
-        }
 
         if (compactNeeded)
             CompactCachedItemsIfNeeded(cachedItems);
@@ -181,7 +177,8 @@ public sealed partial class NcStoreInventorySystem
         int index,
         ProductTakeRequest request,
         ref int left,
-        ref bool compactNeeded)
+        ref bool compactNeeded
+    )
     {
         var ent = cachedItems[index];
         if (ShouldSkipTakeEntity(root, ent))
@@ -193,10 +190,8 @@ public sealed partial class NcStoreInventorySystem
         return TryConsumePrototypeTake(cachedItems, index, ent, request, ref left, ref compactNeeded);
     }
 
-    private bool ShouldSkipTakeEntity(EntityUid root, EntityUid ent)
-    {
-        return ent == EntityUid.Invalid || !_ents.EntityExists(ent) || IsProtectedFromDirectSale(root, ent);
-    }
+    private bool ShouldSkipTakeEntity(EntityUid root, EntityUid ent) =>
+        ent == EntityUid.Invalid || !_ents.EntityExists(ent) || IsProtectedFromDirectSale(root, ent);
 
     private int CountTakeableUnits(EntityUid ent, ProductTakeRequest request)
     {
@@ -234,7 +229,8 @@ public sealed partial class NcStoreInventorySystem
         EntityUid ent,
         string stackType,
         ref int left,
-        ref bool compactNeeded)
+        ref bool compactNeeded
+    )
     {
         if (!_ents.TryGetComponent(ent, out StackComponent? stack) || stack.StackTypeId != stackType)
             return false;
@@ -253,7 +249,8 @@ public sealed partial class NcStoreInventorySystem
         EntityUid ent,
         ProductTakeRequest request,
         ref int left,
-        ref bool compactNeeded)
+        ref bool compactNeeded
+    )
     {
         if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
             return false;
@@ -283,17 +280,13 @@ public sealed partial class NcStoreInventorySystem
 
             if (_ents.TryGetComponent(ent, out StackComponent? stack) &&
                 MatcherMatchesStackType(request.Matcher, stack.StackTypeId))
-            {
                 return true;
-            }
 
             return false;
         }
 
         if (request.MatchMode == PrototypeMatchMode.Tag)
-        {
             return PrototypeHasTag(proto.ID, request.ProtoId);
-        }
 
         return proto.ID == request.ProtoId;
     }
@@ -304,7 +297,8 @@ public sealed partial class NcStoreInventorySystem
         EntityUid ent,
         StackComponent stack,
         ref int left,
-        ref bool compactNeeded)
+        ref bool compactNeeded
+    )
     {
         var have = Math.Max(stack.Count, 0);
         var take = Math.Min(have, left);
@@ -322,7 +316,8 @@ public sealed partial class NcStoreInventorySystem
         int index,
         EntityUid ent,
         ref int left,
-        ref bool compactNeeded)
+        ref bool compactNeeded
+    )
     {
         DeleteConsumedEntity(cachedItems, index, ent, ref compactNeeded);
         left -= 1;
@@ -332,7 +327,8 @@ public sealed partial class NcStoreInventorySystem
         List<EntityUid> cachedItems,
         int index,
         EntityUid ent,
-        ref bool compactNeeded)
+        ref bool compactNeeded
+    )
     {
         DeleteConsumedEntity(ent);
 

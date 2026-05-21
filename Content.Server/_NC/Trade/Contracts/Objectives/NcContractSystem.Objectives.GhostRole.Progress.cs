@@ -1,25 +1,14 @@
-using Content.Server.Atmos.Rotting;
-using Content.Server.Cuffs;
-using Content.Server.Ghost.Roles.Components;
-using Content.Server.Humanoid;
-using Content.Server.Mind.Commands;
-using Content.Server.Roles;
 using Content.Shared._NC.Trade;
 using Content.Shared.Cuffs.Components;
-using Content.Shared.Customization.Systems;
 using Content.Shared.Damage;
 using Content.Shared.FixedPoint;
-using Content.Shared.Humanoid;
-using Content.Shared.Humanoid.Markings;
-using Content.Shared.Mind;
-using Content.Shared.Mind.Components;
-using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
-using Robust.Shared.Map;
-using Robust.Shared.Prototypes;
+using Content.Shared.Movement.Pulling.Components;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -67,9 +56,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (TryGetObjectiveContract(key, out var comp, out var liveContract) &&
             TryFailGhostRoleTargetIfInvalidOrRotten(key, state, comp, liveContract))
-        {
             return;
-        }
 
         runtime.Stage = state.GhostRoleTaken && IsGhostRoleCompletionSatisfied(store, target, contract)
             ? Math.Max(1, runtime.StageGoal)
@@ -86,9 +73,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!state.GhostRoleTaken ||
             state.GhostRoleSurvivalSucceeded ||
             state.GhostRoleSurvivalDeadline is not { } deadline)
-        {
             return;
-        }
 
         runtime.GhostRoleSurvivalRemainingSeconds = Math.Max(
             0,
@@ -140,14 +125,13 @@ public sealed partial class NcContractSystem : EntitySystem
         (EntityUid Store, string ContractId) key,
         ObjectiveRuntimeState state,
         NcStoreComponent comp,
-        ContractServerData contract)
+        ContractServerData contract
+    )
     {
         if (!state.GhostRoleTaken ||
             state.TargetEntity is not { } target ||
             target == EntityUid.Invalid)
-        {
             return false;
-        }
 
         if (TerminatingOrDeleted(target))
         {
@@ -171,34 +155,31 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
-    private bool IsGhostRoleTargetReadyForClaim(EntityUid store, EntityUid target, ContractServerData contract)
-    {
-        return !TerminatingOrDeleted(target) &&
-               !_contractGhostRoleRotting.IsRotten(target) &&
-               IsGhostRoleCompletionSatisfied(store, target, contract);
-    }
+    private bool IsGhostRoleTargetReadyForClaim(EntityUid store, EntityUid target, ContractServerData contract) =>
+        !TerminatingOrDeleted(target) &&
+        !_contractGhostRoleRotting.IsRotten(target) &&
+        IsGhostRoleCompletionSatisfied(store, target, contract);
 
     private bool IsGhostRoleSelfClaim(
         EntityUid store,
         string contractId,
         EntityUid user,
-        ContractServerData contract)
+        ContractServerData contract
+    )
     {
         if (!contract.IsGhostRoleObjective ||
             !_objectiveRuntime.ByContract.TryGetValue((store, contractId), out var state) ||
             !state.GhostRoleTaken ||
             state.TargetEntity is not { } target ||
             target == EntityUid.Invalid)
-        {
             return false;
-        }
 
         if (target == user)
             return true;
 
         return _contractMind.TryGetMind(target, out var targetMindId, out _) &&
-               _contractMind.TryGetMind(user, out var userMindId, out _) &&
-               targetMindId == userMindId;
+            _contractMind.TryGetMind(user, out var userMindId, out _) &&
+            targetMindId == userMindId;
     }
 
     private bool IsGhostRoleCompletionSatisfied(EntityUid store, EntityUid target, ContractServerData contract)
@@ -210,35 +191,27 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             NcGhostRoleCompletionMode.DeadBodyTurnIn => IsGhostRoleTargetDead(target),
             NcGhostRoleCompletionMode.AliveCuffedTurnIn => IsGhostRoleTargetAlive(target) &&
-                                                           IsGhostRoleTargetCuffed(target) &&
-                                                           IsGhostRoleTargetFullyHealed(target),
+                IsGhostRoleTargetCuffed(target) &&
+                IsGhostRoleTargetFullyHealed(target),
             _ => false
         };
     }
 
-    private bool IsGhostRoleTargetDead(EntityUid target)
-    {
-        return TryComp(target, out MobStateComponent? mobState) &&
-               mobState.CurrentState == MobState.Dead;
-    }
+    private bool IsGhostRoleTargetDead(EntityUid target) =>
+        TryComp(target, out MobStateComponent? mobState) &&
+        mobState.CurrentState == MobState.Dead;
 
-    private bool IsGhostRoleTargetAlive(EntityUid target)
-    {
-        return TryComp(target, out MobStateComponent? mobState) &&
-               mobState.CurrentState != MobState.Dead;
-    }
+    private bool IsGhostRoleTargetAlive(EntityUid target) =>
+        TryComp(target, out MobStateComponent? mobState) &&
+        mobState.CurrentState != MobState.Dead;
 
-    private bool IsGhostRoleTargetCuffed(EntityUid target)
-    {
-        return TryComp(target, out CuffableComponent? cuffable) &&
-               _contractGhostRoleCuffs.IsCuffed((target, cuffable));
-    }
+    private bool IsGhostRoleTargetCuffed(EntityUid target) =>
+        TryComp(target, out CuffableComponent? cuffable) &&
+        _contractGhostRoleCuffs.IsCuffed((target, cuffable));
 
-    private bool IsGhostRoleTargetFullyHealed(EntityUid target)
-    {
-        return TryComp(target, out DamageableComponent? damageable) &&
-               damageable.TotalDamage <= FixedPoint2.Zero;
-    }
+    private bool IsGhostRoleTargetFullyHealed(EntityUid target) =>
+        TryComp(target, out DamageableComponent? damageable) &&
+        damageable.TotalDamage <= FixedPoint2.Zero;
 
     private void OnObjectiveTrackedDamageChanged(EntityUid uid, DamageableComponent component, DamageChangedEvent args)
     {
@@ -247,9 +220,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (!TryGetObjectiveContract(key, out _, out var contract) ||
             contract.ExecutionKind != ContractExecutionKind.GhostRoleObjective)
-        {
             return;
-        }
 
         UpdateObjectiveContractProgress(key.Store, key.ContractId, contract);
 

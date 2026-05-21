@@ -1,8 +1,9 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Mind;
 using Robust.Shared.Map;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -38,37 +39,37 @@ public sealed partial class NcContractSystem : EntitySystem
 
     internal sealed class ObjectiveRuntimeState
     {
+        public readonly List<EntityUid> GuardEntities = new();
+        public readonly List<EntityUid> HuntSpawnedTargets = new();
+        public readonly HashSet<EntityUid> PinpointerEntities = new();
+        public readonly HashSet<EntityUid> RetrievalDeliveredEntities = new();
+        public readonly List<EntityUid> RetrievalSpawnedEntities = new();
+        public readonly HashSet<EntityUid> RetrievalSpawnedEntitySet = new();
+        public readonly Dictionary<(string TargetItem, PrototypeMatchMode MatchMode), int> TurnedInByTarget = new();
         public bool ActiveDeliveryDropoff;
         public bool DeliveryDropoffCompleted;
         public MapCoordinates? DeliveryDropoffCoordinates;
         public EntityUid? DeliveryDropoffEntity;
-        public readonly List<EntityUid> GuardEntities = new();
-        public readonly HashSet<EntityUid> PinpointerEntities = new();
-        public readonly Dictionary<(string TargetItem, PrototypeMatchMode MatchMode), int> TurnedInByTarget = new();
-        public readonly List<EntityUid> RetrievalSpawnedEntities = new();
-        public readonly HashSet<EntityUid> RetrievalSpawnedEntitySet = new();
-        public readonly List<EntityUid> HuntSpawnedTargets = new();
-        public readonly HashSet<EntityUid> RetrievalDeliveredEntities = new();
-        public int RetrievalAcceptedCargoCount;
-        public EntityCoordinates? RetrievalLastAcceptedCargoCoordinates;
-        public bool RetrievalRouteDeliveryActive;
-        public bool RetrievalRouteDeliveryCompleted;
-        public EntityCoordinates? RetrievalDeliveryCoordinates;
         public TimeSpan? GhostRoleAcceptDeadline;
-        public TimeSpan? GhostRoleSurvivalStart;
+        public long GhostRoleRoundEndId;
         public TimeSpan? GhostRoleSurvivalDeadline;
         public EntityUid? GhostRoleSurvivalMind;
         public EntityUid? GhostRoleSurvivalObjective;
-        public long GhostRoleRoundEndId;
+        public TimeSpan? GhostRoleSurvivalStart;
         public bool GhostRoleSurvivalSucceeded;
         public bool GhostRoleTaken;
-        public bool HuntTargetWasKilled;
         public bool HuntActive;
         public EntityUid? HuntBodyEntity;
+        public bool HuntTargetWasKilled;
         public EntityCoordinates? LastKnownTargetCoordinates;
         public EntityUid? ProofEntity;
         public bool ProofSpawned;
         public string ProofToken = string.Empty;
+        public int RetrievalAcceptedCargoCount;
+        public EntityCoordinates? RetrievalDeliveryCoordinates;
+        public EntityCoordinates? RetrievalLastAcceptedCargoCoordinates;
+        public bool RetrievalRouteDeliveryActive;
+        public bool RetrievalRouteDeliveryCompleted;
         public EntityUid? TargetEntity;
     }
 }

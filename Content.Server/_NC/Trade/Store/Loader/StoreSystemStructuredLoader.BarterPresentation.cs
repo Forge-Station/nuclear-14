@@ -1,9 +1,10 @@
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
-using Content.Shared.Tag;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class StoreSystemStructuredLoader
 {
@@ -17,15 +18,14 @@ public sealed partial class StoreSystemStructuredLoader
             if (!string.IsNullOrWhiteSpace(receive.Prototype))
                 return receive.Prototype;
 
-            if (!string.IsNullOrWhiteSpace(receive.Currency) && TryResolveCurrencyIcon(receive.Currency, out var currencyIcon))
+            if (!string.IsNullOrWhiteSpace(receive.Currency) &&
+                TryResolveCurrencyIcon(receive.Currency, out var currencyIcon))
                 return currencyIcon;
         }
 
         foreach (var pool in listingProto.ReceivePools)
-        {
             if (TryResolveRewardPoolIcon(pool.Pool, out var poolIcon))
                 return poolIcon;
-        }
 
         foreach (var cost in listingProto.Cost)
         {
@@ -44,7 +44,8 @@ public sealed partial class StoreSystemStructuredLoader
                 _prototypes.HasIndex<EntityPrototype>(tagTarget.Icon))
                 return tagTarget.Icon;
 
-            if (!string.IsNullOrWhiteSpace(cost.Currency) && TryResolveCurrencyIcon(cost.Currency, out var currencyIcon))
+            if (!string.IsNullOrWhiteSpace(cost.Currency) &&
+                TryResolveCurrencyIcon(cost.Currency, out var currencyIcon))
                 return currencyIcon;
         }
 
@@ -55,7 +56,8 @@ public sealed partial class StoreSystemStructuredLoader
         string poolId,
         out string icon,
         HashSet<string> visited,
-        int depth)
+        int depth
+    )
     {
         icon = string.Empty;
         if (string.IsNullOrWhiteSpace(poolId) || depth > MaxRewardPoolTraversalDepth)
@@ -100,10 +102,8 @@ public sealed partial class StoreSystemStructuredLoader
         return false;
     }
 
-    private bool TryResolveRewardPoolIcon(string poolId, out string icon)
-    {
-        return TryResolveRewardPoolIcon(poolId, out icon, new HashSet<string>(StringComparer.Ordinal), 0);
-    }
+    private bool TryResolveRewardPoolIcon(string poolId, out string icon) =>
+        TryResolveRewardPoolIcon(poolId, out icon, new(StringComparer.Ordinal), 0);
 
     private bool TryResolveCurrencyIcon(string currency, out string icon)
     {
@@ -124,14 +124,15 @@ public sealed partial class StoreSystemStructuredLoader
         for (var i = 0; i < source.Count; i++)
         {
             var c = source[i];
-            result.Add(new NcBarterCostEntry
-            {
-                Prototype = c.Prototype,
-                Group = c.Group,
-                TagTarget = c.TagTarget,
-                Currency = c.Currency,
-                Count = c.Count
-            });
+            result.Add(
+                new()
+                {
+                    Prototype = c.Prototype,
+                    Group = c.Group,
+                    TagTarget = c.TagTarget,
+                    Currency = c.Currency,
+                    Count = c.Count
+                });
         }
 
         return result;
@@ -143,12 +144,13 @@ public sealed partial class StoreSystemStructuredLoader
         for (var i = 0; i < source.Count; i++)
         {
             var r = source[i];
-            result.Add(new NcBarterReceiveEntry
-            {
-                Prototype = r.Prototype,
-                Currency = r.Currency,
-                Count = r.Count
-            });
+            result.Add(
+                new()
+                {
+                    Prototype = r.Prototype,
+                    Currency = r.Currency,
+                    Count = r.Count
+                });
         }
 
         return result;
@@ -160,12 +162,13 @@ public sealed partial class StoreSystemStructuredLoader
         for (var i = 0; i < source.Count; i++)
         {
             var r = source[i];
-            result.Add(new NcBarterReceivePoolEntry
-            {
-                Pool = r.Pool,
-                Rolls = r.Rolls,
-                Chance = r.Chance
-            });
+            result.Add(
+                new()
+                {
+                    Pool = r.Pool,
+                    Rolls = r.Rolls,
+                    Chance = r.Chance
+                });
         }
 
         return result;

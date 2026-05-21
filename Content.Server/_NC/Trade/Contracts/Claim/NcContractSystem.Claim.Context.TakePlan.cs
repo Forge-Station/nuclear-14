@@ -1,7 +1,9 @@
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -15,14 +17,15 @@ public sealed partial class NcContractSystem : EntitySystem
         PrototypeMatchMode matchMode,
         int required,
         List<ClaimTakeEntry> takePlan,
-        out ClaimAttemptResult fail)
+        out ClaimAttemptResult fail
+    )
     {
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
         var need = required;
         need -= AppendTakePlanFromSource(crateEntity, crateItems, targetItem, matchMode, need, takePlan);
         need -= AppendTakePlanFromSource(user, _scratchUserItems, targetItem, matchMode, need, takePlan);
-        need -= AppendTakePlanFromSource(store, storeNearbyItems, targetItem, matchMode, need, takePlan, worldTurnInSource: true);
+        need -= AppendTakePlanFromSource(store, storeNearbyItems, targetItem, matchMode, need, takePlan, true);
 
         if (need <= 0)
             return true;
@@ -171,9 +174,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
             if (!TryGetPlanningEntityPrototypeId(ent, out var candidateId) ||
                 !MatchesPrototypeId(ent, candidateId, expectedProtoId, matchMode))
-            {
                 continue;
-            }
 
             if (TryComp(ent, out StackComponent? _))
             {
@@ -215,7 +216,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (take <= 0)
             return 0;
 
-        planOut.Add(new ClaimTakeEntry(root, ent, take, true, targetItem, matchMode));
+        planOut.Add(new(root, ent, take, true, targetItem, matchMode));
         return take;
     }
 
@@ -229,7 +230,7 @@ public sealed partial class NcContractSystem : EntitySystem
         int index
     )
     {
-        planOut.Add(new ClaimTakeEntry(root, ent, 1, false, targetItem, matchMode));
+        planOut.Add(new(root, ent, 1, false, targetItem, matchMode));
         items[index] = EntityUid.Invalid;
         return 1;
     }

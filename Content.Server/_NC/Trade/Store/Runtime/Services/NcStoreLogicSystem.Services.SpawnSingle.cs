@@ -1,10 +1,5 @@
-using Content.Shared._NC.Trade;
-using Content.Shared.Hands.Components;
-using Content.Shared.Stacks;
-using Robust.Shared.Map;
-using Robust.Shared.Prototypes;
-
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcStoreLogicSystem
 {
@@ -21,11 +16,17 @@ public sealed partial class NcStoreLogicSystem
             }
             catch (Exception e)
             {
-                Sawmill.Error($"[NcStore] {context}: failed to delete spawned reward entity {_sys.ToPrettyString(ent)}: {e}");
+                Sawmill.Error(
+                    $"[NcStore] {context}: failed to delete spawned reward entity {_sys.ToPrettyString(ent)}: {e}");
             }
         }
 
-        private int SpawnSinglePurchasedProduct(EntityUid user, string productEntity, int purchases, int unitsPerPurchase)
+        private int SpawnSinglePurchasedProduct(
+            EntityUid user,
+            string productEntity,
+            int purchases,
+            int unitsPerPurchase
+        )
         {
             var successfulPurchases = 0;
 

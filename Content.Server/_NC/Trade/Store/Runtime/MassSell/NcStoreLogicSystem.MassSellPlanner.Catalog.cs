@@ -1,7 +1,8 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcStoreLogicSystem
 {
@@ -9,7 +10,7 @@ public sealed partial class NcStoreLogicSystem
     {
         if (!_massSellCatalogCache.TryGetValue(storeUid, out var cache))
         {
-            cache = new MassSellCatalogCache();
+            cache = new();
             _massSellCatalogCache[storeUid] = cache;
         }
 
@@ -33,13 +34,9 @@ public sealed partial class NcStoreLogicSystem
             if (TryPickCurrencyForSell(store, listing, out var currencyId, out var unitPrice) &&
                 unitPrice > 0 &&
                 !string.IsNullOrWhiteSpace(currencyId))
-            {
                 cache.ListingQuotes[listing.Id] = (currencyId, unitPrice);
-            }
             else
-            {
                 cache.ListingQuotes[listing.Id] = (string.Empty, 0);
-            }
         }
 
         PrepareMassSellListings(store, cache.ListingQuotes, cache.SellListings);
@@ -49,13 +46,15 @@ public sealed partial class NcStoreLogicSystem
     private void PrepareMassSellListings(
         NcStoreComponent store,
         IReadOnlyDictionary<string, (string CurrencyId, int UnitPrice)> listingQuotes,
-        List<NcStoreListingDef> sellListings)
+        List<NcStoreListingDef> sellListings
+    )
     {
         sellListings.Clear();
 
         foreach (var listing in store.Listings)
         {
-            if (listing.Mode != StoreMode.Sell || string.IsNullOrEmpty(listing.ProductEntity) || listing.RemainingCount == 0)
+            if (listing.Mode != StoreMode.Sell || string.IsNullOrEmpty(listing.ProductEntity) ||
+                listing.RemainingCount == 0)
                 continue;
 
             if (!listingQuotes.TryGetValue(listing.Id, out var quote) || quote.UnitPrice <= 0)
@@ -70,7 +69,8 @@ public sealed partial class NcStoreLogicSystem
     private int CompareMassSellListings(
         NcStoreListingDef left,
         NcStoreListingDef right,
-        IReadOnlyDictionary<string, (string CurrencyId, int UnitPrice)> listingQuotes)
+        IReadOnlyDictionary<string, (string CurrencyId, int UnitPrice)> listingQuotes
+    )
     {
         var matchModeCmp = CompareMassSellMatchModePriority(left.MatchMode, right.MatchMode);
         if (matchModeCmp != 0)
@@ -90,19 +90,15 @@ public sealed partial class NcStoreLogicSystem
         return OrdinalIds.Compare(left.Id, right.Id);
     }
 
-    private static int CompareMassSellMatchModePriority(PrototypeMatchMode left, PrototypeMatchMode right)
-    {
-        return GetMassSellMatchModePriority(left).CompareTo(GetMassSellMatchModePriority(right));
-    }
+    private static int CompareMassSellMatchModePriority(PrototypeMatchMode left, PrototypeMatchMode right) =>
+        GetMassSellMatchModePriority(left).CompareTo(GetMassSellMatchModePriority(right));
 
-    private static int GetMassSellMatchModePriority(PrototypeMatchMode mode)
-    {
-        return mode switch
+    private static int GetMassSellMatchModePriority(PrototypeMatchMode mode) =>
+        mode switch
         {
             PrototypeMatchMode.Exact => 0,
             PrototypeMatchMode.Matcher => 1,
             PrototypeMatchMode.Tag => 2,
             _ => 3
         };
-    }
 }

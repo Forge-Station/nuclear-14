@@ -1,8 +1,8 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Mind;
-using Robust.Shared.Map;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -35,7 +35,8 @@ public sealed partial class NcContractSystem : EntitySystem
         string failureReason,
         ContractObjectiveOutcome outcome = ContractObjectiveOutcome.Failed,
         bool deleteTrackedEntities = true,
-        bool deleteGuards = false)
+        bool deleteGuards = false
+    )
     {
         MarkObjectiveFailed(contract, failureReason, outcome);
 
@@ -49,7 +50,8 @@ public sealed partial class NcContractSystem : EntitySystem
         (EntityUid Store, string ContractId) key,
         NcStoreComponent comp,
         bool deleteTrackedEntities,
-        bool deleteGuards)
+        bool deleteGuards
+    )
     {
         CleanupObjectiveRuntime(key.Store, key.ContractId, deleteTrackedEntities, deleteGuards);
         comp.Contracts.Remove(key.ContractId);

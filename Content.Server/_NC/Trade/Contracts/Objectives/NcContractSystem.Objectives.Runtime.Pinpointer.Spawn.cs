@@ -1,9 +1,10 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Movement.Pulling.Components;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -37,7 +38,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool TryResolveObjectivePinpointerPrototype(
         ContractObjectiveConfigData config,
-        out string pinpointerProtoId)
+        out string pinpointerProtoId
+    )
     {
         pinpointerProtoId = ResolvePinpointerPrototypeId(config.PinpointerPrototype);
         if (_prototypes.HasIndex<EntityPrototype>(pinpointerProtoId))
@@ -49,7 +51,10 @@ public sealed partial class NcContractSystem : EntitySystem
         return _prototypes.HasIndex<EntityPrototype>(pinpointerProtoId);
     }
 
-    private EntityCoordinates ResolveObjectivePinpointerSpawnCoordinates(EntityUid user, EntityCoordinates fallbackCoords)
+    private EntityCoordinates ResolveObjectivePinpointerSpawnCoordinates(
+        EntityUid user,
+        EntityCoordinates fallbackCoords
+    )
     {
         if (TryComp(user, out TransformComponent? userXform))
             return userXform.Coordinates;
@@ -61,7 +66,8 @@ public sealed partial class NcContractSystem : EntitySystem
         (EntityUid Store, string ContractId) key,
         string pinpointerProtoId,
         EntityCoordinates pinpointerCoords,
-        out EntityUid pinpointer)
+        out EntityUid pinpointer
+    )
     {
         try
         {
@@ -82,7 +88,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid target,
         (EntityUid Store, string ContractId) key,
         ObjectiveRuntimeState state,
-        EntityUid pinpointer)
+        EntityUid pinpointer
+    )
     {
         _pinpointer.SetTarget(pinpointer, target);
         _pinpointer.SetActive(pinpointer, true);

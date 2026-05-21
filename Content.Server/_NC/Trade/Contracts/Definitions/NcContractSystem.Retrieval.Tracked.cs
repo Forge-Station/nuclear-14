@@ -1,6 +1,8 @@
 using Content.Shared._NC.Trade;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -8,9 +10,9 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         var config = contract.Config;
         return contract.IsInventoryDelivery &&
-               config.RetrievalSpawnEnabled &&
-               config.RetrievalRequireSpawnedEntities &&
-               !RequiresRetrievalRouteDelivery(contract);
+            config.RetrievalSpawnEnabled &&
+            config.RetrievalRequireSpawnedEntities &&
+            !RequiresRetrievalRouteDelivery(contract);
     }
 
     private bool TryPrepareRetrievalSpawnedClaimContext(
@@ -24,7 +26,8 @@ public sealed partial class NcContractSystem : EntitySystem
         List<EntityUid>? crateItems,
         List<EntityUid> storeNearbyItems,
         out ClaimContext ctx,
-        out ClaimAttemptResult fail)
+        out ClaimAttemptResult fail
+    )
     {
         ctx = default;
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
@@ -63,18 +66,18 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             if (!TryAppendRetrievalSpawnedEntityTakePlanForRequirement(
-                    store,
-                    user,
-                    crateEntity,
-                    trackedCrateItems,
-                    trackedUserItems,
-                    trackedStoreNearbyItems,
-                    target.TargetItem,
-                    target.MatchMode,
-                    remaining,
-                    takePlan,
-                    used,
-                    out fail))
+                store,
+                user,
+                crateEntity,
+                trackedCrateItems,
+                trackedUserItems,
+                trackedStoreNearbyItems,
+                target.TargetItem,
+                target.MatchMode,
+                remaining,
+                takePlan,
+                used,
+                out fail))
             {
                 ClearClaimPlanningScratch();
                 return false;
@@ -97,7 +100,8 @@ public sealed partial class NcContractSystem : EntitySystem
         List<EntityUid>? crateItems,
         List<EntityUid> storeNearbyItems,
         out ClaimContext ctx,
-        out ClaimAttemptResult fail)
+        out ClaimAttemptResult fail
+    )
     {
         ctx = default;
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
@@ -154,13 +158,15 @@ public sealed partial class NcContractSystem : EntitySystem
                 need,
                 takePlan,
                 used,
-                worldTurnInSource: true);
+                true);
         }
 
         ClearClaimPlanningScratch();
         if (takePlan.Count == 0)
         {
-            fail = ClaimAttemptResult.Fail(ClaimFailureReason.NotEnoughItems, $"No tracked Retrieval cargo available for partial turn-in of '{contractId}'.");
+            fail = ClaimAttemptResult.Fail(
+                ClaimFailureReason.NotEnoughItems,
+                $"No tracked Retrieval cargo available for partial turn-in of '{contractId}'.");
             return false;
         }
 
@@ -180,14 +186,37 @@ public sealed partial class NcContractSystem : EntitySystem
         int required,
         List<ClaimTakeEntry> takePlan,
         HashSet<EntityUid> used,
-        out ClaimAttemptResult fail)
+        out ClaimAttemptResult fail
+    )
     {
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
         var need = required;
-        need -= AppendRetrievalSpawnedEntityTakePlanFromSource(crateEntity, trackedCrateItems, targetItem, matchMode, need, takePlan, used);
-        need -= AppendRetrievalSpawnedEntityTakePlanFromSource(user, trackedUserItems, targetItem, matchMode, need, takePlan, used);
-        need -= AppendRetrievalSpawnedEntityTakePlanFromSource(store, trackedStoreNearbyItems, targetItem, matchMode, need, takePlan, used, worldTurnInSource: true);
+        need -= AppendRetrievalSpawnedEntityTakePlanFromSource(
+            crateEntity,
+            trackedCrateItems,
+            targetItem,
+            matchMode,
+            need,
+            takePlan,
+            used);
+        need -= AppendRetrievalSpawnedEntityTakePlanFromSource(
+            user,
+            trackedUserItems,
+            targetItem,
+            matchMode,
+            need,
+            takePlan,
+            used);
+        need -= AppendRetrievalSpawnedEntityTakePlanFromSource(
+            store,
+            trackedStoreNearbyItems,
+            targetItem,
+            matchMode,
+            need,
+            takePlan,
+            used,
+            true);
 
         if (need <= 0)
             return true;
@@ -206,7 +235,8 @@ public sealed partial class NcContractSystem : EntitySystem
         int need,
         List<ClaimTakeEntry> takePlan,
         HashSet<EntityUid> used,
-        bool worldTurnInSource = false)
+        bool worldTurnInSource = false
+    )
     {
         if (need <= 0 || root is not { } source || items == null)
             return 0;
@@ -225,7 +255,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             used.Add(ent);
-            takePlan.Add(new ClaimTakeEntry(source, ent, 1, false, targetItem, matchMode));
+            takePlan.Add(new(source, ent, 1, false, targetItem, matchMode));
             taken++;
         }
 

@@ -10,5 +10,5 @@
 
     <PanelContainer Name="ScrollHost"
                     HorizontalExpand="True"
-                    VerticalExpand="True"/>
+                    VerticalExpand="True" />
 </PanelContainer>

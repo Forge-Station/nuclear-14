@@ -1,6 +1,8 @@
 ﻿using Content.Shared._NC.Trade;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class StoreStructuredSystem
 {
@@ -15,10 +17,8 @@ public sealed partial class StoreStructuredSystem
                 return false;
 
             foreach (var (k, v) in a)
-            {
                 if (!b.TryGetValue(k, out var bv) || bv != v)
                     return false;
-            }
 
             return true;
         }
@@ -32,10 +32,8 @@ public sealed partial class StoreStructuredSystem
                 return false;
 
             for (var i = 0; i < a.Count; i++)
-            {
                 if (!ContractEquals(a[i], b[i]))
                     return false;
-            }
 
             return true;
         }

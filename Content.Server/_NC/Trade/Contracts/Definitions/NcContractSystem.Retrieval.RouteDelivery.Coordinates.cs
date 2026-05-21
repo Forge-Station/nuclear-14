@@ -1,7 +1,9 @@
 using Content.Shared._NC.Trade;
 using Robust.Shared.Map;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -9,15 +11,14 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid cargo,
         ContractObjectiveConfigData config,
         ObjectiveRuntimeState state,
-        out EntityCoordinates coords)
+        out EntityCoordinates coords
+    )
     {
         coords = EntityCoordinates.Invalid;
 
         if (config.RetrievalDestinationType == NcRetrievalDestinationTargetType.ContainerGroup &&
             TryResolveRetrievalContainerCargoCoordinates(cargo, config, out coords))
-        {
             return true;
-        }
 
         if (config.RetrievalDestinationType == NcRetrievalDestinationTargetType.MarkerGroup &&
             state.RetrievalDeliveryCoordinates is { } destinationCoords)
@@ -38,7 +39,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryResolveRetrievalContainerCargoCoordinates(
         EntityUid cargo,
         ContractObjectiveConfigData config,
-        out EntityCoordinates coords)
+        out EntityCoordinates coords
+    )
     {
         coords = EntityCoordinates.Invalid;
 
@@ -64,12 +66,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 }
 
                 if (TryComp(cargo, out TransformComponent? cargoXform))
-                {
                     coords = cargoXform.Coordinates;
-                    _retrievalRouteContainerItemsScratch.Clear();
-                    _turnInContainerQueryScratch.Clear();
-                    return true;
-                }
 
                 _retrievalRouteContainerItemsScratch.Clear();
                 _turnInContainerQueryScratch.Clear();
@@ -85,15 +82,14 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryResolveRetrievalRouteProofCoordinates(
         ContractServerData contract,
         ObjectiveRuntimeState state,
-        out EntityCoordinates coords)
+        out EntityCoordinates coords
+    )
     {
         coords = EntityCoordinates.Invalid;
 
         if (contract.Config.RetrievalDestinationType == NcRetrievalDestinationTargetType.ContainerGroup &&
             TryResolveRetrievalContainerProofCoordinates(contract.Config, state, out coords))
-        {
             return true;
-        }
 
         if (state.RetrievalLastAcceptedCargoCoordinates is { } lastAcceptedCoords)
         {
@@ -108,13 +104,11 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         foreach (var ent in state.RetrievalDeliveredEntities)
-        {
             if (TryComp(ent, out TransformComponent? xform))
             {
                 coords = xform.Coordinates;
                 return true;
             }
-        }
 
         return false;
     }
@@ -122,7 +116,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryResolveRetrievalContainerProofCoordinates(
         ContractObjectiveConfigData config,
         ObjectiveRuntimeState state,
-        out EntityCoordinates coords)
+        out EntityCoordinates coords
+    )
     {
         coords = EntityCoordinates.Invalid;
 

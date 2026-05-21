@@ -3,7 +3,9 @@ using Content.Shared._NC.Trade;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -31,7 +33,8 @@ public sealed partial class NcContractSystem : EntitySystem
         (EntityUid Store, string ContractId) key,
         ContractObjectiveConfigData config,
         out int guardCount,
-        out string guardPrototype)
+        out string guardPrototype
+    )
     {
         guardCount = Math.Max(0, config.GuardCount);
         guardPrototype = config.GuardPrototype;
@@ -62,7 +65,8 @@ public sealed partial class NcContractSystem : EntitySystem
         (EntityUid Store, string ContractId) key,
         ObjectiveRuntimeState state,
         string guardPrototype,
-        EntityCoordinates guardCoords)
+        EntityCoordinates guardCoords
+    )
     {
         try
         {

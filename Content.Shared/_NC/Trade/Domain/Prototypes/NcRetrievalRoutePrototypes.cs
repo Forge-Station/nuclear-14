@@ -1,17 +1,17 @@
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 
+
 namespace Content.Shared._NC.Trade;
 
+
 /// <summary>
-/// Retrieval route source preset. Source owns only where cargo appears.
-/// The actual cargo prototypes/counts live on ncRetrievalContract.cargo.
+///     Retrieval route source preset. Source owns only where cargo appears.
+///     The actual cargo prototypes/counts live on ncRetrievalContract.cargo.
 /// </summary>
 [Prototype("ncRetrievalSourcePreset")]
 public sealed partial class NcRetrievalSourcePresetPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; private set; } = default!;
-
     /// <summary>If true, cargo entries are spawned when the contract is taken.</summary>
     [DataField("spawnCargo")]
     public bool SpawnCargo { get; private set; } = true;
@@ -23,9 +23,11 @@ public sealed partial class NcRetrievalSourcePresetPrototype : IPrototype
     /// <summary>Debug fallback only. Real content should keep this false.</summary>
     [DataField("fallbackToStore")]
     public bool FallbackToStore { get; private set; }
+
+    [IdDataField] public string ID { get; private set; } = default!;
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public enum NcRetrievalDestinationTargetType : byte
 {
     StoreUi = 0,
@@ -46,38 +48,39 @@ public sealed partial class NcRetrievalDestinationTargetData
 }
 
 /// <summary>
-/// Retrieval route destination preset. The target type derives delivery behavior:
-/// StoreUi = claim at trader, MarkerGroup = cargo in radius, ContainerGroup = cargo inside turn-in container.
+///     Retrieval route destination preset. The target type derives delivery behavior:
+///     StoreUi = claim at trader, MarkerGroup = cargo in radius, ContainerGroup = cargo inside turn-in container.
 /// </summary>
 [Prototype("ncRetrievalDestinationPreset")]
 public sealed partial class NcRetrievalDestinationPresetPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; private set; } = default!;
-
     [DataField("target", required: true)]
     public NcRetrievalDestinationTargetData Target { get; private set; } = new();
 
     [DataField("radius")]
     public float Radius { get; private set; } = 2.0f;
+
+    [IdDataField] public string ID { get; private set; } = default!;
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public enum NcRetrievalClaimMode : byte
 {
     /// <summary>
-    /// Cargo is delivered directly to the store/store-owned turn-in target. Reward claim consumes only the delivered cargo.
-    /// No proof item is involved.
+    ///     Cargo is delivered directly to the store/store-owned turn-in target. Reward claim consumes only the delivered
+    ///     cargo.
+    ///     No proof item is involved.
     /// </summary>
     StoreCargo = 0,
 
     /// <summary>
-    /// Cargo is delivered to a remote destination. The destination issues a physical proof item,
-    /// and the proof must be brought back to the store to claim the reward.
+    ///     Cargo is delivered to a remote destination. The destination issues a physical proof item,
+    ///     and the proof must be brought back to the store to claim the reward.
     /// </summary>
     DestinationProof = 1
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public enum NcRetrievalProofOwnership : byte
 {
     /// <summary>Whoever physically brings the proof to the store may redeem it.</summary>
@@ -87,7 +90,7 @@ public enum NcRetrievalProofOwnership : byte
     ContractOwner = 1
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public enum NcRetrievalProofReissuePolicy : byte
 {
     Never = 0
@@ -97,8 +100,6 @@ public enum NcRetrievalProofReissuePolicy : byte
 [Prototype("ncRetrievalProofPreset")]
 public sealed partial class NcRetrievalProofPresetPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; private set; } = default!;
-
     [DataField("prototype", required: true)]
     public string Prototype { get; private set; } = string.Empty;
 
@@ -110,9 +111,11 @@ public sealed partial class NcRetrievalProofPresetPrototype : IPrototype
 
     [DataField("consumeOnRewardClaim")]
     public bool ConsumeOnRewardClaim { get; private set; } = true;
+
+    [IdDataField] public string ID { get; private set; } = default!;
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public enum NcRetrievalPinpointerTargetMode : byte
 {
     None = 0,
@@ -139,8 +142,6 @@ public sealed partial class NcRetrievalPinpointerData
 [Prototype("ncRetrievalGuidancePreset")]
 public sealed partial class NcRetrievalGuidancePresetPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; private set; } = default!;
-
     [DataField("sourceHint")]
     public string SourceHint { get; private set; } = string.Empty;
 
@@ -149,6 +150,8 @@ public sealed partial class NcRetrievalGuidancePresetPrototype : IPrototype
 
     [DataField("pinpointer")]
     public NcRetrievalPinpointerData Pinpointer { get; private set; } = new();
+
+    [IdDataField] public string ID { get; private set; } = default!;
 }
 
 [DataDefinition]
@@ -158,7 +161,7 @@ public sealed partial class NcRetrievalRouteDeliveryData
     public bool ConsumeCargo { get; set; } = true;
 
     [DataField("lockDeliveredCargo")]
-    public bool LockDeliveredCargo { get; set; } = false;
+    public bool LockDeliveredCargo { get; set; }
 }
 
 [DataDefinition]
@@ -173,14 +176,12 @@ public sealed partial class NcRetrievalRouteClaimData
 }
 
 /// <summary>
-/// Route preset composes repeated mechanics: source, destination, claim behavior, guidance and delivery flags.
-/// Contracts keep only cargo + route + reward.
+///     Route preset composes repeated mechanics: source, destination, claim behavior, guidance and delivery flags.
+///     Contracts keep only cargo + route + reward.
 /// </summary>
 [Prototype("ncRetrievalRoutePreset")]
 public sealed partial class NcRetrievalRoutePresetPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; private set; } = default!;
-
     [DataField("source")]
     public ProtoId<NcRetrievalSourcePresetPrototype>? Source { get; private set; }
 
@@ -195,5 +196,6 @@ public sealed partial class NcRetrievalRoutePresetPrototype : IPrototype
 
     [DataField("delivery")]
     public NcRetrievalRouteDeliveryData Delivery { get; private set; } = new();
-}
 
+    [IdDataField] public string ID { get; private set; } = default!;
+}

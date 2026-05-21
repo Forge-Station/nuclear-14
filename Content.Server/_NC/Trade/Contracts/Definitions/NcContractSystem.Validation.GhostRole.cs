@@ -2,7 +2,9 @@ using Content.Shared._NC.Trade;
 using Content.Shared.Damage.Prototypes;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -12,7 +14,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (string.IsNullOrWhiteSpace(proto.ID))
         {
-            Sawmill.Warning($"[Contracts] Offer pool '{poolId}' contains a ghost role contract with an empty prototype id.");
+            Sawmill.Warning(
+                $"[Contracts] Offer pool '{poolId}' contains a ghost role contract with an empty prototype id.");
             return false;
         }
 
@@ -23,9 +26,7 @@ public sealed partial class NcContractSystem : EntitySystem
             valid = false;
         }
         else if (!TryValidateGhostRolePreset(proto.ID, role))
-        {
             valid = false;
-        }
 
         if (!TryValidateGhostRoleSpawn(proto.ID, proto.Spawn))
             valid = false;
@@ -51,7 +52,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (string.IsNullOrWhiteSpace(role.EntityPrototype))
         {
-            Sawmill.Warning($"[Contracts] GhostRole contract '{contractId}' role preset '{role.ID}' has no entityPrototype.");
+            Sawmill.Warning(
+                $"[Contracts] GhostRole contract '{contractId}' role preset '{role.ID}' has no entityPrototype.");
             return false;
         }
 
@@ -121,24 +123,20 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         foreach (var proto in perk.WeaponPrototypes)
-        {
             if (string.IsNullOrWhiteSpace(proto) || !_prototypes.HasIndex<EntityPrototype>(proto))
             {
                 Sawmill.Warning(
                     $"[Contracts] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' references missing weapon prototype '{proto}'.");
                 valid = false;
             }
-        }
 
         foreach (var proto in perk.ArmorItemPrototypes)
-        {
             if (string.IsNullOrWhiteSpace(proto) || !_prototypes.HasIndex<EntityPrototype>(proto))
             {
                 Sawmill.Warning(
                     $"[Contracts] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' references missing armor item prototype '{proto}'.");
                 valid = false;
             }
-        }
 
         foreach (var (damageType, reduction) in perk.IncomingFlatReductions)
         {
@@ -199,7 +197,8 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         if (selector.Options.Count == 0)
         {
-            Sawmill.Warning($"[Contracts] GhostRole contract '{contractId}' spawn.point weighted selector has no options.");
+            Sawmill.Warning(
+                $"[Contracts] GhostRole contract '{contractId}' spawn.point weighted selector has no options.");
             return false;
         }
 
@@ -224,6 +223,7 @@ public sealed partial class NcContractSystem : EntitySystem
                             $"[Contracts] GhostRole contract '{contractId}' spawn.point options[{i}] type {option.Type} requires id.");
                         valid = false;
                     }
+
                     break;
 
                 default:
@@ -251,12 +251,9 @@ public sealed partial class NcContractSystem : EntitySystem
         return false;
     }
 
-    private static bool TryValidateGhostRoleCompletion(string contractId, NcGhostRoleCompletionData completion)
-    {
-        return completion.Mode is
-            NcGhostRoleCompletionMode.DeadBodyTurnIn or
-            NcGhostRoleCompletionMode.AliveCuffedTurnIn;
-    }
+    private static bool TryValidateGhostRoleCompletion(string contractId, NcGhostRoleCompletionData completion) =>
+        completion.Mode is
+            NcGhostRoleCompletionMode.DeadBodyTurnIn or NcGhostRoleCompletionMode.AliveCuffedTurnIn;
 
     private static bool TryValidateGhostRoleSurvival(string contractId, NcGhostRoleSurvivalData survival)
     {
@@ -281,12 +278,10 @@ public sealed partial class NcContractSystem : EntitySystem
         var hasAtLeastOneValidReward = false;
 
         for (var i = 0; i < proto.Reward.Count; i++)
-        {
             if (TryValidateSupplyRewardEntry(proto.ID, $"reward[{i}]", proto.Reward[i]))
                 hasAtLeastOneValidReward = true;
             else
                 valid = false;
-        }
 
         if (hasAtLeastOneValidReward)
             return valid;

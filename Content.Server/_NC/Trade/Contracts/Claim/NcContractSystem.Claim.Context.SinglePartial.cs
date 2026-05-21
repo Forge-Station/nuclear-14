@@ -1,7 +1,8 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -16,7 +17,8 @@ public sealed partial class NcContractSystem : EntitySystem
         List<EntityUid>? crateItems,
         List<EntityUid>? storeNearbyItems,
         out ClaimContext ctx,
-        out ClaimAttemptResult fail)
+        out ClaimAttemptResult fail
+    )
     {
         ctx = default;
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
@@ -42,16 +44,16 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         if (!TryAppendTakePlanForRequirement(
-                store,
-                user,
-                crateEntity,
-                crateItems,
-                storeNearbyItems,
-                target.TargetItem,
-                target.MatchMode,
-                remaining,
-                takePlan,
-                out fail))
+            store,
+            user,
+            crateEntity,
+            crateItems,
+            storeNearbyItems,
+            target.TargetItem,
+            target.MatchMode,
+            remaining,
+            takePlan,
+            out fail))
         {
             ClearClaimPlanningScratch();
             return false;
@@ -67,7 +69,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid user,
         string contractId,
         out ClaimContext ctx,
-        out ClaimAttemptResult fail)
+        out ClaimAttemptResult fail
+    )
     {
         ctx = default;
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
@@ -136,7 +139,8 @@ public sealed partial class NcContractSystem : EntitySystem
         List<EntityUid>? crateItems,
         List<EntityUid> storeNearbyItems,
         out ClaimContext ctx,
-        out ClaimAttemptResult fail)
+        out ClaimAttemptResult fail
+    )
     {
         ctx = default;
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
@@ -155,15 +159,36 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             var need = remaining;
-            need -= AppendTakePlanFromSource(crateEntity, crateItems, target.TargetItem, target.MatchMode, need, takePlan);
-            need -= AppendTakePlanFromSource(user, _scratchUserItems, target.TargetItem, target.MatchMode, need, takePlan);
-            need -= AppendTakePlanFromSource(store, storeNearbyItems, target.TargetItem, target.MatchMode, need, takePlan, worldTurnInSource: true);
+            need -= AppendTakePlanFromSource(
+                crateEntity,
+                crateItems,
+                target.TargetItem,
+                target.MatchMode,
+                need,
+                takePlan);
+            need -= AppendTakePlanFromSource(
+                user,
+                _scratchUserItems,
+                target.TargetItem,
+                target.MatchMode,
+                need,
+                takePlan);
+            need -= AppendTakePlanFromSource(
+                store,
+                storeNearbyItems,
+                target.TargetItem,
+                target.MatchMode,
+                need,
+                takePlan,
+                true);
         }
 
         ClearClaimPlanningScratch();
         if (takePlan.Count == 0)
         {
-            fail = ClaimAttemptResult.Fail(ClaimFailureReason.NotEnoughItems, $"No partial turn-in items available for '{contractId}'.");
+            fail = ClaimAttemptResult.Fail(
+                ClaimFailureReason.NotEnoughItems,
+                $"No partial turn-in items available for '{contractId}'.");
             return false;
         }
 

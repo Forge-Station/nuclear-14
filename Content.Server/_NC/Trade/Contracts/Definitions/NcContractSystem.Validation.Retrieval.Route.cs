@@ -1,15 +1,18 @@
 using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
     private bool TryValidateRetrievalRoute(NcRetrievalContractPrototype proto)
     {
-        if (!_prototypes.TryIndex<NcRetrievalRoutePresetPrototype>(proto.Route, out var route))
+        if (!_prototypes.TryIndex(proto.Route, out var route))
         {
-            Sawmill.Warning($"[Contracts] Retrieval contract '{proto.ID}' references missing route preset '{proto.Route}'.");
+            Sawmill.Warning(
+                $"[Contracts] Retrieval contract '{proto.ID}' references missing route preset '{proto.Route}'.");
             return false;
         }
 
@@ -20,13 +23,12 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             if (!_prototypes.TryIndex(sourceId, out source))
             {
-                Sawmill.Warning($"[Contracts] Retrieval route '{route.ID}' references missing source preset '{sourceId}'.");
+                Sawmill.Warning(
+                    $"[Contracts] Retrieval route '{route.ID}' references missing source preset '{sourceId}'.");
                 valid = false;
             }
             else if (!TryValidateRetrievalRouteSource(route.ID, source))
-            {
                 valid = false;
-            }
         }
         else
         {
@@ -44,28 +46,26 @@ public sealed partial class NcContractSystem : EntitySystem
             valid = false;
         }
 
-        if (!_prototypes.TryIndex<NcRetrievalDestinationPresetPrototype>(route.Destination, out var destination))
+        if (!_prototypes.TryIndex(route.Destination, out var destination))
         {
-            Sawmill.Warning($"[Contracts] Retrieval route '{route.ID}' references missing destination preset '{route.Destination}'.");
+            Sawmill.Warning(
+                $"[Contracts] Retrieval route '{route.ID}' references missing destination preset '{route.Destination}'.");
             valid = false;
         }
         else if (!TryValidateRetrievalRouteDestination(route.ID, destination))
-        {
             valid = false;
-        }
 
         NcRetrievalProofPresetPrototype? proof = null;
         if (route.Claim.Proof is { } resolvedProofId)
         {
             if (!_prototypes.TryIndex(resolvedProofId, out proof))
             {
-                Sawmill.Warning($"[Contracts] Retrieval route '{route.ID}' references missing proof preset '{resolvedProofId}'.");
+                Sawmill.Warning(
+                    $"[Contracts] Retrieval route '{route.ID}' references missing proof preset '{resolvedProofId}'.");
                 valid = false;
             }
             else if (!TryValidateRetrievalRouteProof(route.ID, proof))
-            {
                 valid = false;
-            }
         }
 
         if (!TryValidateRetrievalRouteClaim(route, destination, source, proof))
@@ -73,15 +73,14 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (route.Guidance is { } guidanceId)
         {
-            if (!_prototypes.TryIndex<NcRetrievalGuidancePresetPrototype>(guidanceId, out var guidance))
+            if (!_prototypes.TryIndex(guidanceId, out var guidance))
             {
-                Sawmill.Warning($"[Contracts] Retrieval route '{route.ID}' references missing guidance preset '{guidanceId}'.");
+                Sawmill.Warning(
+                    $"[Contracts] Retrieval route '{route.ID}' references missing guidance preset '{guidanceId}'.");
                 valid = false;
             }
             else if (!TryValidateRetrievalRouteGuidance(route.ID, guidance, source, proof))
-            {
                 valid = false;
-            }
         }
 
         if (!route.Delivery.ConsumeCargo)
@@ -107,7 +106,8 @@ public sealed partial class NcContractSystem : EntitySystem
         NcRetrievalRoutePresetPrototype route,
         NcRetrievalDestinationPresetPrototype? destination,
         NcRetrievalSourcePresetPrototype? source,
-        NcRetrievalProofPresetPrototype? proof)
+        NcRetrievalProofPresetPrototype? proof
+    )
     {
         var valid = true;
 
@@ -130,6 +130,7 @@ public sealed partial class NcContractSystem : EntitySystem
                         "Use StoreUi/ContainerGroup for store-owned delivery or DestinationProof for remote marker delivery.");
                     valid = false;
                 }
+
                 break;
 
             case NcRetrievalClaimMode.DestinationProof:
@@ -155,6 +156,7 @@ public sealed partial class NcContractSystem : EntitySystem
                         "Use StoreCargo for direct store delivery.");
                     valid = false;
                 }
+
                 break;
 
             default:
@@ -185,18 +187,21 @@ public sealed partial class NcContractSystem : EntitySystem
                 if (!string.IsNullOrWhiteSpace(destination.Target.Id) && destination.Radius > 0)
                     return true;
 
-                Sawmill.Warning($"[Contracts] Retrieval destination '{destination.ID}' for route '{routeId}' must define MarkerGroup id and radius > 0.");
+                Sawmill.Warning(
+                    $"[Contracts] Retrieval destination '{destination.ID}' for route '{routeId}' must define MarkerGroup id and radius > 0.");
                 return false;
 
             case NcRetrievalDestinationTargetType.ContainerGroup:
                 if (!string.IsNullOrWhiteSpace(destination.Target.Id))
                     return true;
 
-                Sawmill.Warning($"[Contracts] Retrieval destination '{destination.ID}' for route '{routeId}' must define ContainerGroup id.");
+                Sawmill.Warning(
+                    $"[Contracts] Retrieval destination '{destination.ID}' for route '{routeId}' must define ContainerGroup id.");
                 return false;
 
             default:
-                Sawmill.Warning($"[Contracts] Retrieval destination '{destination.ID}' for route '{routeId}' uses unsupported type {destination.Target.Type}.");
+                Sawmill.Warning(
+                    $"[Contracts] Retrieval destination '{destination.ID}' for route '{routeId}' uses unsupported type {destination.Target.Type}.");
                 return false;
         }
     }
@@ -207,19 +212,22 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (string.IsNullOrWhiteSpace(proof.Prototype) || !_prototypes.HasIndex<EntityPrototype>(proof.Prototype))
         {
-            Sawmill.Warning($"[Contracts] Retrieval proof preset '{proof.ID}' for route '{routeId}' references missing proof prototype '{proof.Prototype}'.");
+            Sawmill.Warning(
+                $"[Contracts] Retrieval proof preset '{proof.ID}' for route '{routeId}' references missing proof prototype '{proof.Prototype}'.");
             valid = false;
         }
 
         if (proof.Ownership != NcRetrievalProofOwnership.Bearer)
         {
-            Sawmill.Warning($"[Contracts] Retrieval proof preset '{proof.ID}' uses ownership={proof.Ownership}. Retrieval proof claim currently supports Bearer only.");
+            Sawmill.Warning(
+                $"[Contracts] Retrieval proof preset '{proof.ID}' uses ownership={proof.Ownership}. Retrieval proof claim currently supports Bearer only.");
             valid = false;
         }
 
         if (proof.Reissue != NcRetrievalProofReissuePolicy.Never)
         {
-            Sawmill.Warning($"[Contracts] Retrieval proof preset '{proof.ID}' uses reissue={proof.Reissue}. Retrieval proof claim currently supports Never only.");
+            Sawmill.Warning(
+                $"[Contracts] Retrieval proof preset '{proof.ID}' uses reissue={proof.Reissue}. Retrieval proof claim currently supports Never only.");
             valid = false;
         }
 
@@ -238,7 +246,8 @@ public sealed partial class NcContractSystem : EntitySystem
         string routeId,
         NcRetrievalGuidancePresetPrototype guidance,
         NcRetrievalSourcePresetPrototype? source,
-        NcRetrievalProofPresetPrototype? proof)
+        NcRetrievalProofPresetPrototype? proof
+    )
     {
         if (!guidance.Pinpointer.Enabled)
             return true;
@@ -259,7 +268,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (!_prototypes.HasIndex<EntityPrototype>(proto))
         {
-            Sawmill.Warning($"[Contracts] Retrieval guidance '{guidance.ID}' references missing pinpointer prototype '{proto}'.");
+            Sawmill.Warning(
+                $"[Contracts] Retrieval guidance '{guidance.ID}' references missing pinpointer prototype '{proto}'.");
             valid = false;
         }
 
@@ -268,9 +278,9 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool TryValidateRetrievalSpawnPointSelector(
         string contractId,
-        ContractPointSelectorPrototype selector)
-    {
-        return selector.Type switch
+        ContractPointSelectorPrototype selector
+    ) =>
+        selector.Type switch
         {
             ContractPointSelectorType.MarkerId => RequireRetrievalSpawnPointId(contractId, selector),
             ContractPointSelectorType.MarkerGroup => RequireRetrievalSpawnPointId(contractId, selector),
@@ -278,7 +288,6 @@ public sealed partial class NcContractSystem : EntitySystem
             ContractPointSelectorType.Store => RejectRetrievalStoreSpawnPoint(contractId),
             _ => RejectRetrievalUnknownSpawnPoint(contractId, selector.Type)
         };
-    }
 
     private static bool RequireRetrievalSpawnPointId(string contractId, ContractPointSelectorPrototype selector)
     {
@@ -292,7 +301,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool TryValidateRetrievalSpawnWeightedSelector(
         string contractId,
-        ContractPointSelectorPrototype selector)
+        ContractPointSelectorPrototype selector
+    )
     {
         if (selector.Options.Count == 0)
         {

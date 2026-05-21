@@ -1,7 +1,8 @@
-using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcStoreLogicSystem
 {
@@ -13,7 +14,8 @@ public sealed partial class NcStoreLogicSystem
 
         var stackTypeCounts = new Dictionary<string, int>(stackTypeCapacity, StringComparer.Ordinal);
         var protoCounts = new Dictionary<string, int>(protoCapacity, StringComparer.Ordinal);
-        var stackTypeProtoCounts = new Dictionary<string, Dictionary<string, int>>(stackTypeProtoCapacity, StringComparer.Ordinal);
+        var stackTypeProtoCounts =
+            new Dictionary<string, Dictionary<string, int>>(stackTypeProtoCapacity, StringComparer.Ordinal);
 
         for (var i = 0; i < items.Count; i++)
         {
@@ -38,7 +40,8 @@ public sealed partial class NcStoreLogicSystem
         StackComponent stack,
         Dictionary<string, int> stackTypeCounts,
         Dictionary<string, int> protoCounts,
-        Dictionary<string, Dictionary<string, int>> stackTypeProtoCounts)
+        Dictionary<string, Dictionary<string, int>> stackTypeProtoCounts
+    )
     {
         var count = Math.Max(stack.Count, 0);
         if (count <= 0)
@@ -58,7 +61,7 @@ public sealed partial class NcStoreLogicSystem
 
         if (!stackTypeProtoCounts.TryGetValue(stackTypeId, out var perProto))
         {
-            perProto = new Dictionary<string, int>(StringComparer.Ordinal);
+            perProto = new(StringComparer.Ordinal);
             stackTypeProtoCounts[stackTypeId] = perProto;
         }
 
@@ -68,7 +71,8 @@ public sealed partial class NcStoreLogicSystem
     private void TrackMassSellPrototypeEntity(
         EntityUid ent,
         Dictionary<string, int> protoCounts,
-        int amount)
+        int amount
+    )
     {
         if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype is not { } proto)
             return;

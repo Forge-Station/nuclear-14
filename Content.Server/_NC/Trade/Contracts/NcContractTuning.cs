@@ -1,6 +1,8 @@
 using System.Numerics;
 
+
 namespace Content.Server._NC.Trade;
+
 
 internal static class NcContractTuning
 {
@@ -13,11 +15,12 @@ internal static class NcContractTuning
     public const float GhostRoleStoreDeliveryRange = 2.5f;
     public const float TrackedDeliveryStoreRange = 1.5f;
     public const float TrackedDeliveryDropoffRange = 1.5f;
-    public static readonly TimeSpan TrackedDeliveryDropoffCheckInterval = TimeSpan.FromSeconds(0.5);
-    public static readonly TimeSpan GhostRoleTimeoutCheckInterval = TimeSpan.FromSeconds(1);
 
     public const float GuardSpawnRingScaleStep = 0.65f;
     public const float GuardSpawnJitterScale = 0.2f;
+    public static readonly TimeSpan TrackedDeliveryDropoffCheckInterval = TimeSpan.FromSeconds(0.5);
+    public static readonly TimeSpan GhostRoleTimeoutCheckInterval = TimeSpan.FromSeconds(1);
+
     public static readonly Vector2[] HuntGuardSpawnOffsets =
     {
         new(0.9f, 0f),
@@ -29,5 +32,4 @@ internal static class NcContractTuning
         new(0.75f, -0.75f),
         new(-0.75f, -0.75f)
     };
-
 }

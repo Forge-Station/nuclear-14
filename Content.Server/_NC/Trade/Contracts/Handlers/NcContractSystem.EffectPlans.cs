@@ -1,31 +1,16 @@
 using Content.Shared._NC.Trade;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
-    /// <summary>
-    /// Extension contract for claim/pre-commit side effects. New objective mechanics should expose
-    /// destructive work through an effect plan or an existing journal instead of mutating state
-    /// directly from handler code.
-    /// </summary>
-    private interface IContractEffectPlan
-    {
-        bool TryPrepare(NcContractSystem system, ContractEffectContext context, out string? reason);
-        bool TryCommit(NcContractSystem system, ContractEffectContext context, out string? reason);
-        void Rollback(NcContractSystem system, ContractEffectContext context);
-    }
-
-    private readonly record struct ContractEffectContext(
-        EntityUid Store,
-        EntityUid User,
-        string ContractId,
-        ContractServerData Contract);
-
     private bool TryExecuteContractEffectPlan(
         IContractEffectPlan plan,
         ContractEffectContext context,
-        out string? reason)
+        out string? reason
+    )
     {
         reason = null;
         var prepared = false;
@@ -64,4 +49,22 @@ public sealed partial class NcContractSystem : EntitySystem
             }
         }
     }
+
+    /// <summary>
+    ///     Extension contract for claim/pre-commit side effects. New objective mechanics should expose
+    ///     destructive work through an effect plan or an existing journal instead of mutating state
+    ///     directly from handler code.
+    /// </summary>
+    private interface IContractEffectPlan
+    {
+        bool TryPrepare(NcContractSystem system, ContractEffectContext context, out string? reason);
+        bool TryCommit(NcContractSystem system, ContractEffectContext context, out string? reason);
+        void Rollback(NcContractSystem system, ContractEffectContext context);
+    }
+
+    private readonly record struct ContractEffectContext(
+        EntityUid Store,
+        EntityUid User,
+        string ContractId,
+        ContractServerData Contract);
 }

@@ -1,7 +1,9 @@
 using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -90,6 +92,7 @@ public sealed partial class NcContractSystem : EntitySystem
                             $"[Contracts] Hunt contract '{contractId}' spawn.point options[{i}] type {option.Type} requires id.");
                         valid = false;
                     }
+
                     break;
 
                 default:
@@ -127,10 +130,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
         var valid = true;
         for (var i = 0; i < targets.Count; i++)
-        {
             if (!TryValidateHuntTarget(contractId, i, targets[i]))
                 valid = false;
-        }
 
         return valid;
     }
@@ -209,7 +210,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryValidateHuntCompletion(
         string contractId,
         NcHuntCompletionData completion,
-        List<NcHuntTargetData> targets)
+        List<NcHuntTargetData> targets
+    )
     {
         switch (completion.Mode)
         {
@@ -258,7 +260,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryValidateHuntNoBodyTargets(
         string contractId,
         NcHuntCompletionMode mode,
-        List<NcHuntTargetData> targets)
+        List<NcHuntTargetData> targets
+    )
     {
         for (var i = 0; i < targets.Count; i++)
         {
@@ -327,12 +330,10 @@ public sealed partial class NcContractSystem : EntitySystem
         var hasAtLeastOneValidReward = false;
 
         for (var i = 0; i < proto.Reward.Count; i++)
-        {
             if (TryValidateSupplyRewardEntry(proto.ID, $"reward[{i}]", proto.Reward[i]))
                 hasAtLeastOneValidReward = true;
             else
                 valid = false;
-        }
 
         if (hasAtLeastOneValidReward)
             return valid;
@@ -341,5 +342,4 @@ public sealed partial class NcContractSystem : EntitySystem
             $"[Contracts] Hunt contract '{proto.ID}' has reward entries, but none of them are valid. Contract skipped.");
         return false;
     }
-
 }

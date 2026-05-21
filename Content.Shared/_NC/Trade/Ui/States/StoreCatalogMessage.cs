@@ -1,8 +1,10 @@
 using Robust.Shared.Serialization;
 
+
 namespace Content.Shared._NC.Trade;
 
-[Serializable, NetSerializable]
+
+[Serializable, NetSerializable,]
 public sealed class StoreCatalogMessage : BoundUserInterfaceMessage
 {
     public StoreCatalogMessage(
@@ -12,7 +14,8 @@ public sealed class StoreCatalogMessage : BoundUserInterfaceMessage
         bool hasSellTab,
         bool hasBarterTab,
         bool hasContractsTab,
-        StoreUiColorsData? uiColors = null)
+        StoreUiColorsData? uiColors = null
+    )
     {
         CatalogRevision = catalogRevision;
         Listings = listings;
@@ -32,7 +35,7 @@ public sealed class StoreCatalogMessage : BoundUserInterfaceMessage
     public StoreUiColorsData UiColors { get; }
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public sealed class StoreListingStaticData
 {
     public StoreListingStaticData(
@@ -48,7 +51,8 @@ public sealed class StoreListingStaticData
         string description = "",
         List<NcBarterCostEntry>? barterCost = null,
         List<NcBarterReceiveEntry>? barterReceive = null,
-        List<NcBarterReceivePoolEntry>? barterReceivePools = null)
+        List<NcBarterReceivePoolEntry>? barterReceivePools = null
+    )
     {
         Id = id;
         Mode = mode;
@@ -80,7 +84,7 @@ public sealed class StoreListingStaticData
     public List<NcBarterReceivePoolEntry> BarterReceivePools { get; }
 }
 
-[DataDefinition, Serializable, NetSerializable]
+[DataDefinition, Serializable, NetSerializable,]
 public sealed partial class StoreUiColorsData
 {
     [DataField("tabsShellBackground")] public string TabsShellBackground { get; set; } = "#17181D";
@@ -102,7 +106,9 @@ public sealed partial class StoreUiColorsData
     [DataField("tabFontActive")] public string TabFontActive { get; set; } = "#F0D49A";
     [DataField("tabFontInactive")] public string TabFontInactive { get; set; } = "#B9AE95";
 
-    [DataField("categoriesPanelBackground")] public string CategoriesPanelBackground { get; set; } = "#1A1B20";
+    [DataField("categoriesPanelBackground")]
+    public string CategoriesPanelBackground { get; set; } = "#1A1B20";
+
     [DataField("categoriesDivider")] public string CategoriesDivider { get; set; } = "#7A6334";
     [DataField("categoryButtonIdle")] public string CategoryButtonIdle { get; set; } = "#7C6624";
     [DataField("categoryButtonSelected")] public string CategoryButtonSelected { get; set; } = "#D9A441";

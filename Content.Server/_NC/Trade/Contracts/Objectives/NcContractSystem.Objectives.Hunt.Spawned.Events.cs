@@ -1,12 +1,8 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Movement.Pulling.Components;
-using Content.Shared.Mobs;
-using Content.Shared.Mobs.Components;
-using Robust.Shared.Map;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -32,12 +28,10 @@ public sealed partial class NcContractSystem : EntitySystem
                 contract.Runtime.Failed ||
                 contract.Completed ||
                 !IsSpawnedHuntContract(contract))
-            {
                 continue;
-            }
 
             if (!IsSpawnedHuntTarget(state, killedTarget) ||
-                !IsMatchingSpawnedHuntTarget(killedTarget, contract, allowDeadTarget: true))
+                !IsMatchingSpawnedHuntTarget(killedTarget, contract, true))
                 continue;
 
             candidates ??= new();
@@ -59,10 +53,8 @@ public sealed partial class NcContractSystem : EntitySystem
                 contract.Completed ||
                 !IsSpawnedHuntContract(contract) ||
                 !IsSpawnedHuntTarget(state, killedTarget) ||
-                !IsMatchingSpawnedHuntTarget(killedTarget, contract, allowDeadTarget: true))
-            {
+                !IsMatchingSpawnedHuntTarget(killedTarget, contract, true))
                 continue;
-            }
 
             RemoveSpawnedHuntTarget(state, killedTarget);
 
@@ -134,9 +126,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 !contract.Taken ||
                 contract.Runtime.Failed ||
                 !IsSpawnedHuntContract(contract))
-            {
                 continue;
-            }
 
             if (TryRetargetSpawnedHuntCompletedPinpointersForOwners(key, contract, state))
                 continue;
@@ -174,9 +164,7 @@ public sealed partial class NcContractSystem : EntitySystem
             var key = candidates[i];
             if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state) ||
                 state.HuntBodyEntity != body)
-            {
                 continue;
-            }
 
             state.HuntBodyEntity = null;
             RemoveSpawnedHuntTarget(state, body);
@@ -184,10 +172,8 @@ public sealed partial class NcContractSystem : EntitySystem
             if (!TryGetObjectiveContract(key, out var comp, out var contract) ||
                 !contract.Taken ||
                 contract.Runtime.Failed ||
-                (contract.Completed && !RequiresSpawnedHuntBodyTurnIn(contract)))
-            {
+                contract.Completed && !RequiresSpawnedHuntBodyTurnIn(contract))
                 continue;
-            }
 
             FinalizeObjectiveTerminalOutcome(
                 key,

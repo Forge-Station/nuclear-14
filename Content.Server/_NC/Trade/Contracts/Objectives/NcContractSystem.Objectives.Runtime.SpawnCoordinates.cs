@@ -1,7 +1,9 @@
 using Content.Shared._NC.Trade;
 using Robust.Shared.Map;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -10,25 +12,19 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractObjectiveConfigData config,
         out EntityCoordinates coordinates,
         bool fallbackToStore = true
-    )
-    {
-        return TryResolveObjectiveSpawnCoordinates(store, config.SpawnPoint, out coordinates, fallbackToStore);
-    }
+    ) =>
+        TryResolveObjectiveSpawnCoordinates(store, config.SpawnPoint, out coordinates, fallbackToStore);
 
     private bool TryResolveObjectiveDropoffCoordinates(
         EntityUid store,
         ContractObjectiveConfigData config,
         out EntityCoordinates coordinates,
         bool fallbackToStore = false
-    )
-    {
-        return TryResolveObjectiveSpawnCoordinates(store, config.DropoffPoint, out coordinates, fallbackToStore);
-    }
+    ) =>
+        TryResolveObjectiveSpawnCoordinates(store, config.DropoffPoint, out coordinates, fallbackToStore);
 
-    private static bool HasConfiguredObjectiveDropoff(ContractObjectiveConfigData config)
-    {
-        return config.DropoffPoint != null;
-    }
+    private static bool HasConfiguredObjectiveDropoff(ContractObjectiveConfigData config) =>
+        config.DropoffPoint != null;
 
     private bool TryResolveObjectiveSpawnCoordinates(
         EntityUid store,
@@ -90,9 +86,18 @@ public sealed partial class NcContractSystem : EntitySystem
         return selector.Type switch
         {
             ContractPointSelectorType.Store => false,
-            ContractPointSelectorType.MarkerId => TryPickObjectiveSpawnCoordinateById(storeMap, selector.Id, out coordinates),
-            ContractPointSelectorType.MarkerGroup => TryPickObjectiveSpawnCoordinateByGroup(storeMap, selector.Id, out coordinates),
-            ContractPointSelectorType.Weighted => TryPickObjectiveSpawnCoordinateWeighted(storeMap, selector.Options, out coordinates),
+            ContractPointSelectorType.MarkerId => TryPickObjectiveSpawnCoordinateById(
+                storeMap,
+                selector.Id,
+                out coordinates),
+            ContractPointSelectorType.MarkerGroup => TryPickObjectiveSpawnCoordinateByGroup(
+                storeMap,
+                selector.Id,
+                out coordinates),
+            ContractPointSelectorType.Weighted => TryPickObjectiveSpawnCoordinateWeighted(
+                storeMap,
+                selector.Options,
+                out coordinates),
             _ => false
         };
     }
@@ -100,7 +105,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryPickObjectiveSpawnCoordinateWeighted(
         MapId storeMap,
         IReadOnlyList<WeightedContractPointOptionEntry>? options,
-        out EntityCoordinates coordinates)
+        out EntityCoordinates coordinates
+    )
     {
         coordinates = EntityCoordinates.Invalid;
 
@@ -133,15 +139,22 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryPickObjectiveSpawnCoordinate(
         MapId storeMap,
         in WeightedContractPointOptionEntry option,
-        out EntityCoordinates coordinates)
+        out EntityCoordinates coordinates
+    )
     {
         coordinates = EntityCoordinates.Invalid;
 
         return option.Type switch
         {
             ContractPointSelectorType.Store => false,
-            ContractPointSelectorType.MarkerId => TryPickObjectiveSpawnCoordinateById(storeMap, option.Id, out coordinates),
-            ContractPointSelectorType.MarkerGroup => TryPickObjectiveSpawnCoordinateByGroup(storeMap, option.Id, out coordinates),
+            ContractPointSelectorType.MarkerId => TryPickObjectiveSpawnCoordinateById(
+                storeMap,
+                option.Id,
+                out coordinates),
+            ContractPointSelectorType.MarkerGroup => TryPickObjectiveSpawnCoordinateByGroup(
+                storeMap,
+                option.Id,
+                out coordinates),
             _ => false
         };
     }
@@ -149,7 +162,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryPickObjectiveSpawnCoordinateById(
         MapId storeMap,
         string id,
-        out EntityCoordinates coordinates)
+        out EntityCoordinates coordinates
+    )
     {
         coordinates = EntityCoordinates.Invalid;
 
@@ -179,7 +193,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryPickObjectiveSpawnCoordinateByGroup(
         MapId storeMap,
         string groupId,
-        out EntityCoordinates coordinates)
+        out EntityCoordinates coordinates
+    )
     {
         coordinates = EntityCoordinates.Invalid;
 
@@ -213,17 +228,14 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         for (var i = 0; i < groups.Count; i++)
-        {
             if (string.Equals(groups[i], groupId, StringComparison.Ordinal))
                 return true;
-        }
 
         return false;
     }
 
-    private static string DescribeContractPointSelector(ContractPointSelectorPrototype selector)
-    {
-        return selector.Type switch
+    private static string DescribeContractPointSelector(ContractPointSelectorPrototype selector) =>
+        selector.Type switch
         {
             ContractPointSelectorType.Store => "Store",
             ContractPointSelectorType.MarkerId => $"MarkerId:{selector.Id}",
@@ -231,5 +243,4 @@ public sealed partial class NcContractSystem : EntitySystem
             ContractPointSelectorType.Weighted => $"Weighted[{selector.Options.Count}]",
             _ => "Unknown"
         };
-    }
 }

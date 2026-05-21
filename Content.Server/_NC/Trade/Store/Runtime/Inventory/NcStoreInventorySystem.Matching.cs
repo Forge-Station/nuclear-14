@@ -1,14 +1,13 @@
 using Content.Shared._NC.Trade;
 using Content.Shared.Clothing.Components;
-using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Hands.Components;
 using Content.Shared.Inventory;
 using Content.Shared.Stacks;
-using Content.Shared.Tag;
-using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcStoreInventorySystem
 {
@@ -20,7 +19,7 @@ public sealed partial class NcStoreInventorySystem
     {
         if (matchMode == PrototypeMatchMode.Matcher)
         {
-            var matcher = GetCompiledMatcher(productProtoId, warnIfInvalid: false);
+            var matcher = GetCompiledMatcher(productProtoId, false);
             return matcher == null ? 0 : GetOwnedFromSnapshotForCompiledMatcher(snapshot, matcher);
         }
 
@@ -52,7 +51,8 @@ public sealed partial class NcStoreInventorySystem
     public int GetOwnedFromRootCached(
         EntityUid root,
         string protoId,
-        PrototypeMatchMode matchMode)
+        PrototypeMatchMode matchMode
+    )
     {
         var request = CreateProductTakeRequest(protoId, matchMode);
         if (!request.IsValid)
@@ -92,9 +92,7 @@ public sealed partial class NcStoreInventorySystem
     {
         if (!_ents.TryGetComponent(entity, out MetaDataComponent? meta) ||
             meta.EntityPrototype == null)
-        {
             return false;
-        }
 
         var protoId = meta.EntityPrototype.ID;
         var matcher = GetCompiledItemGroupMatcher(group);
@@ -106,9 +104,7 @@ public sealed partial class NcStoreInventorySystem
 
         if (_ents.TryGetComponent(entity, out StackComponent? stack) &&
             MatcherMatchesStackType(matcher, stack.StackTypeId))
-        {
             return true;
-        }
 
         return false;
     }

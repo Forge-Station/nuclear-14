@@ -1,8 +1,10 @@
 using Robust.Shared.Serialization;
 
+
 namespace Content.Shared._NC.Trade;
 
-[Serializable, NetSerializable]
+
+[Serializable, NetSerializable,]
 public sealed class StoreDynamicState : BoundUserInterfaceState
 {
     public StoreDynamicState(
@@ -21,7 +23,8 @@ public sealed class StoreDynamicState : BoundUserInterfaceState
         int contractSkipCost,
         string contractSkipCurrency,
         bool isSparseDynamicSnapshot = false,
-        List<string>? snapshotScopeIds = null)
+        List<string>? snapshotScopeIds = null
+    )
     {
         Revision = revision;
         CatalogRevision = catalogRevision;
@@ -46,10 +49,12 @@ public sealed class StoreDynamicState : BoundUserInterfaceState
 
     public Dictionary<string, int> BalanceByCurrency { get; }
     public Dictionary<string, int> RemainingById { get; }
+
     /// <summary>
-    /// Per-listing action capacity: player-owned item count for Sell, max affordable execution count for Barter.
+    ///     Per-listing action capacity: player-owned item count for Sell, max affordable execution count for Barter.
     /// </summary>
     public Dictionary<string, int> OwnedById { get; }
+
     public Dictionary<string, int> CrateUnitsById { get; }
 
     public Dictionary<string, int> MassSellTotals { get; }
@@ -68,12 +73,13 @@ public sealed class StoreDynamicState : BoundUserInterfaceState
     public string ContractSkipCurrency { get; }
 
     /// <summary>
-    /// True when listing dynamic data is intentionally scoped to visible buy listings plus always-authoritative modes.
+    ///     True when listing dynamic data is intentionally scoped to visible buy listings plus always-authoritative modes.
     /// </summary>
     public bool IsSparseDynamicSnapshot { get; }
 
     /// <summary>
-    /// Listing ids whose dynamic values are authoritative in this snapshot. Missing values for these ids mean zero/default.
+    ///     Listing ids whose dynamic values are authoritative in this snapshot. Missing values for these ids mean
+    ///     zero/default.
     /// </summary>
     public List<string> SnapshotScopeIds { get; }
 }

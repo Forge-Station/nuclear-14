@@ -1,25 +1,8 @@
-using Content.Server.Atmos.Rotting;
-using Content.Server.Cuffs;
-using Content.Server.Ghost.Roles.Components;
-using Content.Server.Humanoid;
-using Content.Server.Mind.Commands;
-using Content.Server.Roles;
 using Content.Shared._NC.Trade;
-using Content.Shared.Cuffs.Components;
-using Content.Shared.Customization.Systems;
-using Content.Shared.Damage;
-using Content.Shared.FixedPoint;
-using Content.Shared.Humanoid;
-using Content.Shared.Humanoid.Markings;
-using Content.Shared.Mind;
-using Content.Shared.Mind.Components;
-using Content.Shared.Movement.Pulling.Components;
-using Content.Shared.Mobs;
-using Content.Shared.Mobs.Components;
-using Robust.Shared.Map;
-using Robust.Shared.Prototypes;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -27,7 +10,8 @@ public sealed partial class NcContractSystem : EntitySystem
         (EntityUid Store, string ContractId) key,
         ObjectiveRuntimeState state,
         NcStoreComponent comp,
-        ContractServerData contract)
+        ContractServerData contract
+    )
     {
         if (contract.Config.GhostRoleSurvivalDurationSeconds <= 0 ||
             state.GhostRoleSurvivalSucceeded ||
@@ -39,9 +23,7 @@ public sealed partial class NcContractSystem : EntitySystem
             _contractGhostRoleRotting.IsRotten(target) ||
             !IsGhostRoleTargetAlive(target) ||
             IsGhostRoleCompletionSatisfied(key.Store, target, contract))
-        {
             return false;
-        }
 
         state.GhostRoleSurvivalSucceeded = true;
         MarkGhostRoleRoundEndOutcome(
@@ -62,7 +44,7 @@ public sealed partial class NcContractSystem : EntitySystem
             contract,
             Loc.GetString("nc-store-contract-ghost-role-survival-succeeded"),
             ContractObjectiveOutcome.RoleSurvived,
-            deleteTrackedEntities: false);
+            false);
         return true;
     }
 
@@ -89,9 +71,7 @@ public sealed partial class NcContractSystem : EntitySystem
             {
                 if (TryGetObjectiveContract(key, out var comp, out var contract) &&
                     TryFailGhostRoleTargetIfInvalidOrRotten(key, state, comp, contract))
-                {
                     continue;
-                }
 
                 if (TryCompleteGhostRoleSurvivalObjective(key, state, comp, contract))
                     continue;

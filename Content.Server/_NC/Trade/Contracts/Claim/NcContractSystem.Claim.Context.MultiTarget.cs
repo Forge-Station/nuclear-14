@@ -1,7 +1,8 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -37,16 +38,16 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             if (!TryAppendTakePlanForRequirement(
-                    store,
-                    user,
-                    crateEntity,
-                    crateItems,
-                    storeNearbyItems,
-                    ordered.ProtoId,
-                    ordered.MatchMode,
-                    required,
-                    takePlan,
-                    out fail))
+                store,
+                user,
+                crateEntity,
+                crateItems,
+                storeNearbyItems,
+                ordered.ProtoId,
+                ordered.MatchMode,
+                required,
+                takePlan,
+                out fail))
             {
                 ClearClaimPlanningScratch();
                 return false;
@@ -84,7 +85,9 @@ public sealed partial class NcContractSystem : EntitySystem
             if (remaining <= 0)
                 continue;
 
-            _claimRequiredByKeyScratch[key] = SaturatingAdd(_claimRequiredByKeyScratch.GetValueOrDefault(key, 0), remaining);
+            _claimRequiredByKeyScratch[key] = SaturatingAdd(
+                _claimRequiredByKeyScratch.GetValueOrDefault(key, 0),
+                remaining);
         }
 
         return true;
@@ -99,9 +102,8 @@ public sealed partial class NcContractSystem : EntitySystem
         List<ContractTargetServerData> targets,
         List<EntityUid>? crateItems,
         List<ClaimTakeEntry> takePlan
-    )
-    {
-        return new ClaimContext(
+    ) =>
+        new(
             store,
             user,
             crateEntity,
@@ -111,5 +113,4 @@ public sealed partial class NcContractSystem : EntitySystem
             _scratchUserItems,
             crateItems,
             takePlan);
-    }
 }

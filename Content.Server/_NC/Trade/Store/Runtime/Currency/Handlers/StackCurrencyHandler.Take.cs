@@ -1,8 +1,8 @@
 using Content.Shared.Stacks;
-using Content.Shared.Hands.EntitySystems;
-using Robust.Shared.Prototypes;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class StackCurrencyHandler : ICurrencyHandler
 {
@@ -56,9 +56,7 @@ public sealed partial class StackCurrencyHandler : ICurrencyHandler
                     _inventory.IsProtectedFromDirectSale(user, ent) ||
                     !_ents.TryGetComponent(ent, out StackComponent? st) ||
                     st.StackTypeId != currencyId)
-                {
                     continue;
-                }
 
                 var have = Math.Max(st.Count, 0);
                 if (have <= 0)

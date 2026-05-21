@@ -1,7 +1,8 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -27,18 +28,14 @@ public sealed partial class NcContractSystem : EntitySystem
                 target == EntityUid.Invalid ||
                 TerminatingOrDeleted(target) ||
                 state.DeliveryDropoffCoordinates == null)
-            {
                 continue;
-            }
 
             if (!TryGetObjectiveContract(key, out _, out var contract) ||
                 !contract.Taken ||
                 !contract.IsTrackedDeliveryObjective ||
                 !UsesTrackedDeliveryDropoff(contract) ||
                 contract.Completed)
-            {
                 continue;
-            }
 
             if (IsTrackedDeliveryTargetAtDropoff(target, state))
                 CompleteTrackedDeliveryDropoffObjective(key);
@@ -53,9 +50,7 @@ public sealed partial class NcContractSystem : EntitySystem
             state.TargetEntity is not { } target ||
             target == EntityUid.Invalid ||
             TerminatingOrDeleted(target))
-        {
             return;
-        }
 
         if (!TryGetObjectiveContract(key, out var comp, out var contract))
         {
@@ -67,9 +62,7 @@ public sealed partial class NcContractSystem : EntitySystem
             !contract.IsTrackedDeliveryObjective ||
             !UsesTrackedDeliveryDropoff(contract) ||
             contract.Completed)
-        {
             return;
-        }
 
         SetTrackedDeliveryProgress(contract, GetTrackedDeliveryAmount(contract, target));
         if (!contract.Completed)
@@ -101,22 +94,22 @@ public sealed partial class NcContractSystem : EntitySystem
     private void HandleTrackedDeliveryTargetResolved(
         (EntityUid Store, string ContractId) key,
         NcStoreComponent comp,
-        ContractServerData contract)
-    {
+        ContractServerData contract
+    ) =>
         FinalizeObjectiveTerminalOutcome(
             key,
             comp,
             contract,
             Loc.GetString("nc-store-contract-delivery-target-lost"),
             deleteGuards: false);
-    }
 
     private void UpdateTrackedDeliveryObjectiveProgress(
         EntityUid store,
         string contractId,
         ContractServerData contract,
         IReadOnlyList<EntityUid> userItems,
-        IReadOnlyList<EntityUid>? crateItems)
+        IReadOnlyList<EntityUid>? crateItems
+    )
     {
         EnsureObjectiveRuntimeDefaults(contract);
 
@@ -135,7 +128,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool TryUpdateTrackedDeliveryDropoffProgress(
         ContractServerData contract,
-        ObjectiveRuntimeState state)
+        ObjectiveRuntimeState state
+    )
     {
         if (!UsesTrackedDeliveryDropoff(contract))
             return false;
@@ -160,7 +154,8 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract,
         ObjectiveRuntimeState state,
         IReadOnlyList<EntityUid> userItems,
-        IReadOnlyList<EntityUid>? crateItems)
+        IReadOnlyList<EntityUid>? crateItems
+    )
     {
         var target = GetLiveTrackedDeliveryObjectiveTarget(state);
         if (target is not { } storeTarget)

@@ -1,14 +1,16 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
     private void RegisterRetrievalSpawnedCargo(
         (EntityUid Store, string ContractId) key,
         ObjectiveRuntimeState state,
-        EntityUid cargo)
+        EntityUid cargo
+    )
     {
         if (state.RetrievalSpawnedEntitySet.Add(cargo))
             state.RetrievalSpawnedEntities.Add(cargo);
@@ -27,7 +29,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private void UnregisterRetrievalSpawnedCargoTakePlan(
         ContractServerData contract,
         List<ClaimTakeEntry> takePlan,
-        ClaimTakeJournal? journal = null)
+        ClaimTakeJournal? journal = null
+    )
     {
         if (!RequiresRetrievalSpawnedTurnIn(contract))
             return;
@@ -51,7 +54,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void OnRetrievalSpawnedCargoDestroyed(
         (EntityUid Store, string ContractId) key,
-        EntityUid cargo)
+        EntityUid cargo
+    )
     {
         if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state))
             return;
@@ -66,9 +70,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (!RequiresRetrievalSpawnedTurnIn(contract) &&
             !RequiresRetrievalRouteDelivery(contract))
-        {
             return;
-        }
 
         if (state.ProofSpawned || state.RetrievalRouteDeliveryCompleted)
             return;
@@ -87,14 +89,13 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryFailRetrievalSpawnedTurnInIfTrackedCargoWasLost(
         (EntityUid Store, string ContractId) key,
         ContractServerData contract,
-        ObjectiveRuntimeState state)
+        ObjectiveRuntimeState state
+    )
     {
         if (!RequiresRetrievalSpawnedTurnIn(contract) ||
             !contract.Taken ||
             contract.Runtime.Failed)
-        {
             return false;
-        }
 
         var required = CalculateTotalRequired(GetEffectiveTargets(contract));
         if (required <= 0)
@@ -140,7 +141,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private List<EntityUid> FilterRetrievalSpawnedSourceItems(
         IReadOnlyList<EntityUid>? sourceItems,
-        ObjectiveRuntimeState state)
+        ObjectiveRuntimeState state
+    )
     {
         var filtered = new List<EntityUid>();
         if (sourceItems == null || sourceItems.Count == 0 || state.RetrievalSpawnedEntities.Count == 0)
@@ -159,8 +161,6 @@ public sealed partial class NcContractSystem : EntitySystem
         return filtered;
     }
 
-    private static bool IsRetrievalSpawnedEntity(EntityUid ent, ObjectiveRuntimeState state)
-    {
-        return state.RetrievalSpawnedEntitySet.Contains(ent);
-    }
+    private static bool IsRetrievalSpawnedEntity(EntityUid ent, ObjectiveRuntimeState state) =>
+        state.RetrievalSpawnedEntitySet.Contains(ent);
 }

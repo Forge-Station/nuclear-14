@@ -1,25 +1,30 @@
 using Content.Shared._NC.Trade;
 
+
 namespace Content.Client._NC.Trade;
+
 
 public sealed partial class NcStoreMenu
 {
     private sealed partial class UiStateBinder
     {
         private readonly NcStoreMenu _m;
+        private readonly List<string> _scopedRemoveScratch = new();
+        private readonly HashSet<string> _snapshotScopeIds = new();
 
         private bool _hasLastDynamic;
         private ulong _lastCrateMembershipHash;
         private ulong _lastReadyMembershipHash;
-        private readonly HashSet<string> _snapshotScopeIds = new();
-        private readonly List<string> _scopedRemoveScratch = new();
 
         public UiStateBinder(NcStoreMenu menu)
         {
             _m = menu;
         }
 
-        private ulong ComputeReadyMembershipHash(Dictionary<string, int> ownedById, Dictionary<string, int> remainingById)
+        private ulong ComputeReadyMembershipHash(
+            Dictionary<string, int> ownedById,
+            Dictionary<string, int> remainingById
+        )
         {
             unchecked
             {
@@ -39,7 +44,7 @@ public sealed partial class NcStoreMenu
                     if (remaining == 0)
                         continue;
 
-                    h = (h ^ (uint) NcStoreMenu.StableStringHash(s.Id)) * 1099511628211UL;
+                    h = (h ^ (uint) StableStringHash(s.Id)) * 1099511628211UL;
                 }
 
                 return h;
@@ -62,7 +67,7 @@ public sealed partial class NcStoreMenu
                     if (take <= 0)
                         continue;
 
-                    h = (h ^ (uint) NcStoreMenu.StableStringHash(s.Id)) * 1099511628211UL;
+                    h = (h ^ (uint) StableStringHash(s.Id)) * 1099511628211UL;
                 }
 
                 return h;
@@ -116,11 +121,9 @@ public sealed partial class NcStoreMenu
 
             var productProtos = new List<string>(filtered.Count);
             for (var i = 0; i < filtered.Count; i++)
-            {
                 if (filtered[i].MatchMode != PrototypeMatchMode.Tag &&
                     !string.IsNullOrWhiteSpace(filtered[i].ProductEntity))
                     productProtos.Add(filtered[i].ProductEntity);
-            }
 
             _m.BuyView.PrepareSearchIndex(productProtos);
             _m.SellView.PrepareSearchIndex(productProtos);
@@ -203,10 +206,12 @@ public sealed partial class NcStoreMenu
             if (remainingChanged)
             {
                 if (hasExplicitScope)
+                {
                     ApplyScopedSnapshot(
                         remainingById,
                         _m._catalogModel.RemainingById,
                         _snapshotScopeIds);
+                }
                 else
                     ApplySparseSnapshot(remainingById, _m._catalogModel.RemainingById);
             }
@@ -214,10 +219,12 @@ public sealed partial class NcStoreMenu
             if (ownedChanged)
             {
                 if (hasExplicitScope)
+                {
                     ApplyScopedSnapshot(
                         ownedById,
                         _m._catalogModel.OwnedById,
                         _snapshotScopeIds);
+                }
                 else
                     ApplySparseSnapshot(ownedById, _m._catalogModel.OwnedById);
             }
@@ -257,9 +264,7 @@ public sealed partial class NcStoreMenu
                 _m.RefreshListingsDynamicOnly();
             }
             else if (balancesChanged || tabsChanged)
-            {
                 _m.RefreshListingsDynamicOnly();
-            }
 
             _lastReadyMembershipHash = readyMembershipHash;
             _lastCrateMembershipHash = crateMembershipHash;

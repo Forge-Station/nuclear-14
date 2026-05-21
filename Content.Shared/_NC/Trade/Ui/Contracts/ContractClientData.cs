@@ -1,41 +1,43 @@
 using Robust.Shared.Serialization;
 
+
 namespace Content.Shared._NC.Trade;
 
-[Serializable, NetSerializable]
+
+[Serializable, NetSerializable,]
 public sealed class ContractClientData
 {
     public bool Completed;
     public string Description = string.Empty;
+    public string DestinationHint = string.Empty;
+    public ContractExecutionKind ExecutionKind = ContractExecutionKind.InventoryDelivery;
     public ContractFlowStatus FlowStatus;
+    public NcGhostRoleCompletionMode GhostRoleCompletionMode = NcGhostRoleCompletionMode.DeadBodyTurnIn;
+    public NcHuntCompletionMode HuntCompletionMode = NcHuntCompletionMode.TrophyTurnIn;
     public string Id = string.Empty;
+    public bool IsRetrievalRoute;
+    public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
     public string Name = string.Empty;
-    public int Progress;
+    public string OfferPoolColor = string.Empty;
     public string OfferPoolId = string.Empty;
     public string OfferPoolName = string.Empty;
     public int OfferPoolOrder = int.MaxValue;
-    public string OfferPoolColor = string.Empty;
+    public bool PartialTurnInAvailable;
+    public int Progress;
 
     public bool Repeatable;
-    public bool Taken;
-    public bool SupportsPinpointer;
-    public bool PartialTurnInAvailable;
-    public ContractExecutionKind ExecutionKind = ContractExecutionKind.InventoryDelivery;
-    public ContractRuntimeContextData Runtime = new();
     public int Required;
-    public List<ContractRewardData> Rewards = new();
-
-    public string TargetItem = string.Empty;
-    public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
-    public string TurnInItem = string.Empty;
-    public string SourceHint = string.Empty;
-    public string DestinationHint = string.Empty;
-    public bool IsRetrievalRoute;
     public NcRetrievalClaimMode RetrievalClaimMode;
     public bool RetrievalProofIsBearer;
-    public NcHuntCompletionMode HuntCompletionMode = NcHuntCompletionMode.TrophyTurnIn;
-    public NcGhostRoleCompletionMode GhostRoleCompletionMode = NcGhostRoleCompletionMode.DeadBodyTurnIn;
+    public List<ContractRewardData> Rewards = new();
+    public ContractRuntimeContextData Runtime = new();
+    public string SourceHint = string.Empty;
+    public bool SupportsPinpointer;
+    public bool Taken;
+
+    public string TargetItem = string.Empty;
     public List<ContractTargetClientData> Targets = new();
+    public string TurnInItem = string.Empty;
 
     public ContractClientData() { }
 
@@ -68,7 +70,8 @@ public sealed class ContractClientData
         string offerPoolId = "",
         string offerPoolName = "",
         int offerPoolOrder = int.MaxValue,
-        string offerPoolColor = "")
+        string offerPoolColor = ""
+    )
     {
         Id = id;
         Name = name;

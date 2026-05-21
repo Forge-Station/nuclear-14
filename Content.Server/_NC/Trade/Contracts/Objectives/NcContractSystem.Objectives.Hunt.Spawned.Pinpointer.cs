@@ -1,12 +1,10 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
-using Robust.Shared.Map;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -15,7 +13,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid user,
         ContractServerData contract,
         ObjectiveRuntimeState state,
-        out EntityUid target)
+        out EntityUid target
+    )
     {
         target = EntityUid.Invalid;
         if (!IsSpawnedHuntContract(contract))
@@ -48,7 +47,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryRetargetSpawnedHuntCompletedPinpointersForOwners(
         (EntityUid Store, string ContractId) key,
         ContractServerData contract,
-        ObjectiveRuntimeState state)
+        ObjectiveRuntimeState state
+    )
     {
         if (!contract.Completed || state.PinpointerEntities.Count == 0)
             return false;
@@ -66,9 +66,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 !TryResolveSpawnedHuntPinpointerTargetForUser(key.Store, owner, contract, state, out var target) ||
                 target == EntityUid.Invalid ||
                 TerminatingOrDeleted(target))
-            {
                 continue;
-            }
 
             _pinpointer.SetTarget(pinpointer, target);
             _pinpointer.SetActive(pinpointer, true);
@@ -81,7 +79,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid store,
         ContractServerData contract,
         ObjectiveRuntimeState state,
-        out EntityUid target)
+        out EntityUid target
+    )
     {
         target = EntityUid.Invalid;
         if (!IsSpawnedHuntContract(contract))
@@ -129,7 +128,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid origin,
         ContractServerData contract,
         ObjectiveRuntimeState state,
-        out EntityUid target)
+        out EntityUid target
+    )
     {
         target = EntityUid.Invalid;
 
@@ -153,7 +153,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (mobState.CurrentState == MobState.Dead)
                 continue;
 
-            if (!IsMatchingSpawnedHuntTarget(candidate, contract, allowDeadTarget: false))
+            if (!IsMatchingSpawnedHuntTarget(candidate, contract, false))
                 continue;
 
             var candidateMap = _xform.ToMapCoordinates(candidateXform.Coordinates);

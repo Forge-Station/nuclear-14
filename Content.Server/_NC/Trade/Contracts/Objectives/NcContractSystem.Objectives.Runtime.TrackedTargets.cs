@@ -2,7 +2,9 @@ using Content.Shared._NC.Trade;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -19,22 +21,20 @@ public sealed partial class NcContractSystem : EntitySystem
             return true;
 
         if (!TryResolveTrackedObjectiveSpawnPrototype(
-                contractId,
-                contract,
-                config.TargetPrototype,
-                allowSpawnSpecific: false,
-                out var targetProtoId))
-        {
+            contractId,
+            contract,
+            config.TargetPrototype,
+            false,
+            out var targetProtoId))
             return false;
-        }
 
         if (!TryInitializeTrackedTargetAndSupport(
-                store,
-                user,
-                contractId,
-                contract,
-                targetProtoId,
-                spawnGuards: true))
+            store,
+            user,
+            contractId,
+            contract,
+            targetProtoId,
+            true))
             return false;
 
         config.TargetPrototype = targetProtoId;
@@ -52,14 +52,12 @@ public sealed partial class NcContractSystem : EntitySystem
 
         var requestedTargetId = ResolveTrackedObjectivePrototypeId(config.TargetPrototype, contract.TargetItem);
         if (!TryResolveTrackedObjectiveSpawnPrototype(
-                contractId,
-                contract,
-                requestedTargetId,
-                allowSpawnSpecific: true,
-                out var targetProtoId))
-        {
+            contractId,
+            contract,
+            requestedTargetId,
+            true,
+            out var targetProtoId))
             return false;
-        }
 
         if (!TryInitializeTrackedTargetAndSupport(store, user, contractId, contract, targetProtoId))
             return false;
@@ -75,7 +73,8 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract,
         string requestedTargetId,
         bool allowSpawnSpecific,
-        out string resolvedTargetProtoId)
+        out string resolvedTargetProtoId
+    )
     {
         resolvedTargetProtoId = string.Empty;
 
@@ -112,11 +111,12 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool TryPickTrackedObjectiveSpecificSpawnPrototype(
         IReadOnlyList<string>? spawnSpecific,
-        out string prototypeId)
+        out string prototypeId
+    )
     {
         prototypeId = string.Empty;
 
-        if (spawnSpecific is not { Count: > 0 })
+        if (spawnSpecific is not { Count: > 0, })
             return false;
 
         for (var i = 0; i < spawnSpecific.Count; i++)
@@ -162,15 +162,15 @@ public sealed partial class NcContractSystem : EntitySystem
             return CleanupFailedObjectiveInitialization(store, contractId);
 
         if (!TryInitializeTrackedTargetSupport(
-                store,
-                user,
-                contract,
-                key,
-                state,
-                target,
-                spawnCoords,
-                spawnGuards,
-                config))
+            store,
+            user,
+            contract,
+            key,
+            state,
+            target,
+            spawnCoords,
+            spawnGuards,
+            config))
         {
             CleanupObjectiveRuntime(store, contractId, true);
             return false;
@@ -209,7 +209,12 @@ public sealed partial class NcContractSystem : EntitySystem
         return false;
     }
 
-    private bool TrySpawnObjectiveTarget(string contractId, string targetProtoId, EntityCoordinates spawnCoords, out EntityUid target)
+    private bool TrySpawnObjectiveTarget(
+        string contractId,
+        string targetProtoId,
+        EntityCoordinates spawnCoords,
+        out EntityUid target
+    )
     {
         target = EntityUid.Invalid;
 
@@ -261,7 +266,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (!TryResolveObjectiveDropoffCoordinates(store, config, out var dropoffCoords))
         {
-            Sawmill.Warning($"[Contracts] Objective init failed for '{contractId}': cannot resolve dropoff coordinates.");
+            Sawmill.Warning(
+                $"[Contracts] Objective init failed for '{contractId}': cannot resolve dropoff coordinates.");
             return false;
         }
 
@@ -298,7 +304,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TrySpawnDeliveryDropoffMarker(
         string contractId,
         ObjectiveRuntimeState state,
-        EntityCoordinates dropoffCoords)
+        EntityCoordinates dropoffCoords
+    )
     {
         EntityUid dropoffMarker;
         try

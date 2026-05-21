@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Content.Client._NC.Trade.Theme;
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
@@ -9,11 +7,11 @@ using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
-using Robust.Shared.Maths;
 using Robust.Shared.Prototypes;
 
 
 namespace Content.Client._NC.Trade.Controls;
+
 
 [GenerateTypedNameReferences]
 public sealed partial class NcStoreListingControl : PanelContainer
@@ -30,8 +28,8 @@ public sealed partial class NcStoreListingControl : PanelContainer
     private const int ActionColumnRightPad = 6;
 
     private readonly bool _actionsEnabled;
-    private readonly IUserInterfaceManager _ui = IoCManager.Resolve<IUserInterfaceManager>();
     private readonly IPrototypeManager _prototypeManager;
+    private readonly IUserInterfaceManager _ui = IoCManager.Resolve<IUserInterfaceManager>();
 
     private int _maxQty;
     private int _qty;
@@ -47,7 +45,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
     )
     {
         RobustXamlLoader.Load(this);
-        ApplyUiTheme(new StoreUiColorsData());
+        ApplyUiTheme(new());
 
         _staticData = data;
         _actionsEnabled = actionsEnabled;
@@ -56,7 +54,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
         var pm = _prototypeManager;
         EntityPrototype? proto = null;
         if (data.MatchMode != PrototypeMatchMode.Tag)
-            pm.TryIndex<EntityPrototype>(data.ProductEntity, out proto);
+            pm.TryIndex(data.ProductEntity, out proto);
 
         NcMatcherPrototype? matcher = null;
         EntityPrototype? matcherFallbackProto = null;
@@ -69,15 +67,15 @@ public sealed partial class NcStoreListingControl : PanelContainer
         {
             matcher = foundMatcher;
             if (matcher.Items.Count > 0)
-                pm.TryIndex<EntityPrototype>(matcher.Items[0], out matcherFallbackProto);
+                pm.TryIndex(matcher.Items[0], out matcherFallbackProto);
         }
         else if (proto == null &&
-                 data.MatchMode == PrototypeMatchMode.Tag &&
-                 pm.TryIndex<NcTradeTagPrototype>(data.ProductEntity, out var foundTagTarget))
+            data.MatchMode == PrototypeMatchMode.Tag &&
+            pm.TryIndex<NcTradeTagPrototype>(data.ProductEntity, out var foundTagTarget))
         {
             tagTarget = foundTagTarget;
             if (!string.IsNullOrWhiteSpace(tagTarget.Icon))
-                pm.TryIndex<EntityPrototype>(tagTarget.Icon, out tagIconProto);
+                pm.TryIndex(tagTarget.Icon, out tagIconProto);
         }
 
         var displayName = data.DisplayName;
@@ -110,30 +108,25 @@ public sealed partial class NcStoreListingControl : PanelContainer
             MatcherIconView.Texture = null;
             IconView.Visible = true;
             IconView.SetPrototype(proto.ID);
-            NcUiIconFit.Fit(IconView, sprites, proto.ID, targetPx: 72, paddingPx: 6);
+            NcUiIconFit.Fit(IconView, sprites, proto.ID, 72, 6);
         }
         else if (matcher != null)
         {
             if (!TrySetMatcherIcon(matcher, matcherFallbackProto, sprites))
-            {
                 IconSlotBackground.Visible = false;
-            }
         }
         else if (tagTarget != null)
         {
             if (!TrySetTradeTagIcon(tagTarget, tagIconProto, sprites))
-            {
                 IconSlotBackground.Visible = false;
-            }
         }
         else
-        {
             IconSlotBackground.Visible = false;
-        }
 
-        SetDescription(!string.IsNullOrWhiteSpace(data.Description)
-            ? data.Description
-            : proto?.Description ?? matcher?.Description ?? tagTarget?.Description);
+        SetDescription(
+            !string.IsNullOrWhiteSpace(data.Description)
+                ? data.Description
+                : proto?.Description ?? matcher?.Description ?? tagTarget?.Description);
         SetupBarterPreview(data, pm);
 
         SetupPriceButton(data, sprites, pm);
@@ -166,7 +159,8 @@ public sealed partial class NcStoreListingControl : PanelContainer
         Action<int>? onBarterPressed,
         Action<int>? onBuyPressed,
         Action<int>? onSellPressed,
-        Action<int>? onQtyChanged)
+        Action<int>? onQtyChanged
+    )
     {
         OnBarterPressed = onBarterPressed;
         OnBuyPressed = onBuyPressed;
@@ -249,7 +243,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
         MatcherIconView.Texture = null;
         IconView.Visible = true;
         IconView.SetPrototype(fallbackProto.ID);
-        NcUiIconFit.Fit(IconView, sprites, fallbackProto.ID, targetPx: 72, paddingPx: 6);
+        NcUiIconFit.Fit(IconView, sprites, fallbackProto.ID, 72, 6);
         return true;
     }
 
@@ -274,14 +268,11 @@ public sealed partial class NcStoreListingControl : PanelContainer
         MatcherIconView.Texture = null;
         IconView.Visible = true;
         IconView.SetPrototype(fallbackProto.ID);
-        NcUiIconFit.Fit(IconView, sprites, fallbackProto.ID, targetPx: 72, paddingPx: 6);
+        NcUiIconFit.Fit(IconView, sprites, fallbackProto.ID, 72, 6);
         return true;
     }
 
-    private void SetDescription(string? description)
-    {
-        DescriptionBox.SetDescription(description, DescMaxChars);
-    }
+    private void SetDescription(string? description) => DescriptionBox.SetDescription(description, DescMaxChars);
 
 
     private void SetupPriceButton(StoreListingData data, SpriteSystem sprites, IPrototypeManager pm)
@@ -291,9 +282,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
             pm.TryIndex<StackPrototype>(data.CurrencyId, out var stack) &&
             pm.TryIndex<EntityPrototype>(stack.Spawn, out var ent) &&
             sprites.GetPrototypeIcon(ent.ID).Default is { } currencyTex)
-        {
             PriceButton.SetCurrencyIcon(currencyTex);
-        }
         else
             PriceButton.SetCurrencyIcon(null);
 
@@ -330,7 +319,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
         var noQty = _maxQty <= 0 || !_actionsEnabled;
         var disabledTip = !_actionsEnabled ? Loc.GetString("nc-store-only-mass-sell") : null;
 
-        QtyControl.Configure(MinAllowed, _maxQty, _qty, enabled: !noQty, disabledTooltip: disabledTip);
+        QtyControl.Configure(MinAllowed, _maxQty, _qty, !noQty, disabledTip);
 
         QtyControl.OnValueChanged += v =>
         {
@@ -357,7 +346,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
     private void CalculateMaxQty(StoreListingData data, int balanceHint)
     {
         var remainingCap = data.Mode is StoreMode.Buy or StoreMode.Barter
-            ? (data.Remaining >= 0 ? data.Remaining : int.MaxValue)
+            ? data.Remaining >= 0 ? data.Remaining : int.MaxValue
             : int.MaxValue;
 
         var ownedCap = data.Mode is StoreMode.Sell or StoreMode.Barter
@@ -393,7 +382,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
         {
             _qty = clamped;
             if (!QtyControl.IsEditing(_ui))
-                QtyControl.SetValue(_qty, notify: false);
+                QtyControl.SetValue(_qty, false);
             OnQtyChanged?.Invoke(_qty);
         }
 
@@ -409,9 +398,9 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
         var disablePrice =
             !_actionsEnabled ||
-            (_staticData.Mode == StoreMode.Buy && (_staticData.Remaining == 0 || noQty)) ||
-            (_staticData.Mode == StoreMode.Sell && _staticData.Owned <= 0) ||
-            (_staticData.Mode == StoreMode.Barter && (_staticData.Remaining == 0 || _staticData.Owned <= 0));
+            _staticData.Mode == StoreMode.Buy && (_staticData.Remaining == 0 || noQty) ||
+            _staticData.Mode == StoreMode.Sell && _staticData.Owned <= 0 ||
+            _staticData.Mode == StoreMode.Barter && (_staticData.Remaining == 0 || _staticData.Owned <= 0);
 
         PriceButton.Disabled = disablePrice;
         PriceButton.RefreshVisualState();
@@ -437,7 +426,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
         }
 
         var effectiveQty = _qty > 0 ? _qty : 1;
-        var total = (long)data.Price * effectiveQty;
+        var total = (long) data.Price * effectiveQty;
 
         PriceButton.SetPriceText(FormatCompactPrice(total));
         PriceButton.SetUnitPriceText(string.Empty);
@@ -487,7 +476,8 @@ public sealed partial class NcStoreListingControl : PanelContainer
         List<NcBarterReceiveEntry> entries,
         List<NcBarterReceivePoolEntry> pools,
         IPrototypeManager pm,
-        int multiplier)
+        int multiplier
+    )
     {
         if (entries.Count == 0 && pools.Count == 0)
             return string.Empty;
@@ -569,12 +559,10 @@ public sealed partial class NcStoreListingControl : PanelContainer
         return string.Empty;
     }
 
-    private static string ResolveEntityName(string prototype, IPrototypeManager pm)
-    {
-        return pm.TryIndex<EntityPrototype>(prototype, out var entity)
+    private static string ResolveEntityName(string prototype, IPrototypeManager pm) =>
+        pm.TryIndex<EntityPrototype>(prototype, out var entity)
             ? entity.Name
             : prototype;
-    }
 
     private static string ResolveCurrencyName(string currency, IPrototypeManager pm)
     {
@@ -620,7 +608,8 @@ public sealed partial class NcStoreListingControl : PanelContainer
     private static string? ResolveReceiveIconPrototype(
         List<NcBarterReceiveEntry> entries,
         List<NcBarterReceivePoolEntry> pools,
-        IPrototypeManager pm)
+        IPrototypeManager pm
+    )
     {
         for (var i = 0; i < entries.Count; i++)
         {
@@ -635,25 +624,22 @@ public sealed partial class NcStoreListingControl : PanelContainer
         }
 
         for (var i = 0; i < pools.Count; i++)
-        {
             if (TryResolveRewardPoolIcon(pools[i].Pool, pm, out var poolIcon))
                 return poolIcon;
-        }
 
         return null;
     }
 
-    private static bool TryResolveRewardPoolIcon(string poolId, IPrototypeManager pm, out string icon)
-    {
-        return TryResolveRewardPoolIcon(poolId, pm, out icon, new HashSet<string>(StringComparer.Ordinal), 0);
-    }
+    private static bool TryResolveRewardPoolIcon(string poolId, IPrototypeManager pm, out string icon) =>
+        TryResolveRewardPoolIcon(poolId, pm, out icon, new(StringComparer.Ordinal), 0);
 
     private static bool TryResolveRewardPoolIcon(
         string poolId,
         IPrototypeManager pm,
         out string icon,
         HashSet<string> visited,
-        int depth)
+        int depth
+    )
     {
         icon = string.Empty;
         if (string.IsNullOrWhiteSpace(poolId) ||
@@ -728,7 +714,7 @@ public sealed partial class NcStoreListingControl : PanelContainer
         frame.SetContentMarginOverride(StyleBox.Margin.Bottom, 7);
         PanelOverride = frame;
 
-        IconSlotBackground.PanelOverride = NcStoreUiTheme.Fill(new Color(0f, 0f, 0f, 0f));
+        IconSlotBackground.PanelOverride = NcStoreUiTheme.Fill(new(0f, 0f, 0f, 0f));
 
         TitleLabel.ModulateSelfOverride = titleColor;
     }
@@ -743,5 +729,4 @@ public sealed partial class NcStoreListingControl : PanelContainer
 
         return value.ToString();
     }
-
 }

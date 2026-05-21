@@ -1,9 +1,9 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Movement.Pulling.Components;
 using Robust.Shared.Map;
-using Robust.Shared.Prototypes;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -48,11 +48,9 @@ public sealed partial class NcContractSystem : EntitySystem
         return TrySpawnObjectivePinpointer(user, pinpointerTarget, key, state, config, spawnCoords);
     }
 
-    private bool RefreshPinpointerRuntimeState(EntityUid store, string contractId, ContractServerData contract)
-    {
-        return TryGetTargetResolver(contract.ExecutionKind, out var resolver) &&
-               resolver.TryRefreshPinpointerState(this, store, contractId, contract);
-    }
+    private bool RefreshPinpointerRuntimeState(EntityUid store, string contractId, ContractServerData contract) =>
+        TryGetTargetResolver(contract.ExecutionKind, out var resolver) &&
+        resolver.TryRefreshPinpointerState(this, store, contractId, contract);
 
     private bool TryResolveContractPinpointerTarget(
         EntityUid store,
@@ -60,11 +58,12 @@ public sealed partial class NcContractSystem : EntitySystem
         string contractId,
         ContractServerData contract,
         ObjectiveRuntimeState state,
-        out EntityUid target)
+        out EntityUid target
+    )
     {
         target = EntityUid.Invalid;
         return TryGetTargetResolver(contract.ExecutionKind, out var resolver) &&
-               resolver.TryResolvePinpointerTarget(this, store, user, contractId, contract, state, out target);
+            resolver.TryResolvePinpointerTarget(this, store, user, contractId, contract, state, out target);
     }
 
     private bool TryResolveContractPinpointerTarget(
@@ -72,47 +71,49 @@ public sealed partial class NcContractSystem : EntitySystem
         string contractId,
         ContractServerData contract,
         ObjectiveRuntimeState state,
-        out EntityUid target)
+        out EntityUid target
+    )
     {
         target = EntityUid.Invalid;
         return TryGetTargetResolver(contract.ExecutionKind, out var resolver) &&
-               resolver.TryResolvePinpointerTarget(this, store, contractId, contract, state, out target);
+            resolver.TryResolvePinpointerTarget(this, store, contractId, contract, state, out target);
     }
 
     private static EntityUid ResolveObjectivePinpointerTarget(
         ContractServerData contract,
         ObjectiveRuntimeState state,
-        EntityUid fallbackTarget)
+        EntityUid fallbackTarget
+    )
     {
         if (contract.IsTrackedDeliveryObjective &&
             UsesTrackedDeliveryDropoff(contract) &&
             state.DeliveryDropoffEntity is { } dropoffMarker &&
             dropoffMarker != EntityUid.Invalid)
-        {
             return dropoffMarker;
-        }
 
         return fallbackTarget;
     }
 
     private static bool UsesRetrievalRouteReturnPinpointerTarget(
         ContractServerData contract,
-        ObjectiveRuntimeState state)
+        ObjectiveRuntimeState state
+    )
     {
         var config = contract.Config;
         return (contract.IsInventoryDelivery || contract.IsRetrievalRouteDelivery) &&
-               contract.Completed &&
-               state.ProofSpawned &&
-               config.RetrievalProofEnabled &&
-               config.RetrievalGuidancePinpointerEnabled &&
-               config.RetrievalGuidancePinpointerTarget == NcRetrievalPinpointerTargetMode.CargoThenDestinationThenStore;
+            contract.Completed &&
+            state.ProofSpawned &&
+            config.RetrievalProofEnabled &&
+            config.RetrievalGuidancePinpointerEnabled &&
+            config.RetrievalGuidancePinpointerTarget == NcRetrievalPinpointerTargetMode.CargoThenDestinationThenStore;
     }
 
     private bool TryResolveRetrievalRouteReturnPinpointerTarget(
         EntityUid store,
         ContractServerData contract,
         ObjectiveRuntimeState state,
-        out EntityUid target)
+        out EntityUid target
+    )
     {
         target = EntityUid.Invalid;
         if (!UsesRetrievalRouteReturnPinpointerTarget(contract, state))
@@ -135,7 +136,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid user,
         ContractServerData contract,
         ObjectiveRuntimeState state,
-        out EntityUid target)
+        out EntityUid target
+    )
     {
         target = EntityUid.Invalid;
         if (!UsesRetrievalRouteReturnPinpointerTarget(contract, state))
@@ -155,8 +157,6 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
-    private bool IsObjectiveProofCarried(EntityUid proof)
-    {
-        return TryComp(proof, out TransformComponent? xform) && IsTargetInEntityContainer(xform);
-    }
+    private bool IsObjectiveProofCarried(EntityUid proof) =>
+        TryComp(proof, out TransformComponent? xform) && IsTargetInEntityContainer(xform);
 }

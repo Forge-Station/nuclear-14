@@ -1,6 +1,6 @@
+using Content.Server.GameTicking;
 using Content.Server.Ghost.Roles;
 using Content.Server.Ghost.Roles.Components;
-using Content.Server.GameTicking;
 using Content.Server.Mind;
 using Content.Server.Pinpointer;
 using Content.Shared._NC.Trade;
@@ -13,23 +13,31 @@ using Content.Shared.Objectives.Components;
 using Content.Shared.Tag;
 using Robust.Shared.Timing;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
+    [Dependency] private readonly MetaDataSystem _contractMeta = default!;
+    [Dependency] private readonly MindSystem _contractMind = default!;
+    [Dependency] private readonly GhostRoleSystem _ghostRoles = default!;
     [Dependency] private readonly PinpointerSystem _pinpointer = default!;
     [Dependency] private readonly TagSystem _tags = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly GhostRoleSystem _ghostRoles = default!;
-    [Dependency] private readonly MindSystem _contractMind = default!;
-    [Dependency] private readonly MetaDataSystem _contractMeta = default!;
     [Dependency] private readonly SharedTransformSystem _xform = default!;
+
+    private TimeSpan _nextGhostRoleTimeoutCheck = TimeSpan.Zero;
+    private TimeSpan _nextHuntPinpointerCheck = TimeSpan.Zero;
+    private TimeSpan _nextRetrievalRouteDeliveryCheck = TimeSpan.Zero;
+    private TimeSpan _nextTrackedDeliveryDropoffCheck = TimeSpan.Zero;
 
     private void InitializeObjectiveRuntime()
     {
         SubscribeLocalEvent<EntityTerminatingEvent>(OnObjectiveTrackedEntityTerminating);
         SubscribeLocalEvent<MobStateChangedEvent>(OnObjectiveTrackedMobStateChanged);
-        SubscribeLocalEvent<NcContractGhostRoleSpawnerComponent, GhostRoleGetRequirementsEvent>(OnContractGhostRoleGetRequirements);
+        SubscribeLocalEvent<NcContractGhostRoleSpawnerComponent, GhostRoleGetRequirementsEvent>(
+            OnContractGhostRoleGetRequirements);
         SubscribeLocalEvent<NcContractGhostRoleSpawnerComponent, TakeGhostRoleEvent>(OnContractGhostRoleTakeover);
         SubscribeLocalEvent<NcContractGhostRoleSurvivalObjectiveComponent, ObjectiveGetProgressEvent>(
             OnGhostRoleSurvivalObjectiveGetProgress);
@@ -44,7 +52,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private void OnGhostRoleSurvivalObjectiveGetProgress(
         EntityUid uid,
         NcContractGhostRoleSurvivalObjectiveComponent component,
-        ref ObjectiveGetProgressEvent args)
+        ref ObjectiveGetProgressEvent args
+    )
     {
         if (component.Finished)
         {
@@ -61,7 +70,9 @@ public sealed partial class NcContractSystem : EntitySystem
             args.Progress = 1f;
             _contractMeta.SetEntityName(
                 uid,
-                Loc.GetString("nc-store-contract-ghost-role-survival-objective-title-live", ("time", FormatGhostRoleCountdown(0))));
+                Loc.GetString(
+                    "nc-store-contract-ghost-role-survival-objective-title-live",
+                    ("time", FormatGhostRoleCountdown(0))));
             return;
         }
 
@@ -107,11 +118,11 @@ public sealed partial class NcContractSystem : EntitySystem
             return;
 
         if (TryResolveRetrievalSpawnedParentChangePinpointerTarget(
-                args.Entity,
-                out var spawnedKey,
-                out var spawnedState,
-                out var spawnedTarget,
-                out var spawnedCarrier))
+            args.Entity,
+            out var spawnedKey,
+            out var spawnedState,
+            out var spawnedTarget,
+            out var spawnedCarrier))
         {
             if (spawnedCarrier != EntityUid.Invalid)
                 RetargetObjectivePinpointersForOwner(spawnedKey, spawnedState, spawnedCarrier, spawnedTarget);
@@ -120,33 +131,36 @@ public sealed partial class NcContractSystem : EntitySystem
         }
     }
 
-    private void OnObjectiveTrackedEntityPullStarted(EntityUid uid, PullableComponent component, PullStartedMessage args)
-    {
+    private void OnObjectiveTrackedEntityPullStarted(
+        EntityUid uid,
+        PullableComponent component,
+        PullStartedMessage args
+    ) =>
         RetargetRetrievalPulledCargoPinpointersForUser(uid, args.PullerUid);
-    }
 
-    private void OnObjectiveTrackedEntityPullStopped(EntityUid uid, PullableComponent component, PullStoppedMessage args)
-    {
+    private void OnObjectiveTrackedEntityPullStopped(
+        EntityUid uid,
+        PullableComponent component,
+        PullStoppedMessage args
+    ) =>
         RetargetRetrievalPulledCargoPinpointersForUser(uid, args.PullerUid);
-    }
 
-    private TimeSpan _nextGhostRoleTimeoutCheck = TimeSpan.Zero;
-    private TimeSpan _nextTrackedDeliveryDropoffCheck = TimeSpan.Zero;
-    private TimeSpan _nextRetrievalRouteDeliveryCheck = TimeSpan.Zero;
-    private TimeSpan _nextHuntPinpointerCheck = TimeSpan.Zero;
-    private void ShutdownObjectiveRuntime() => ClearAllObjectiveRuntime(false, deleteGuards: false);
+    private void ShutdownObjectiveRuntime() => ClearAllObjectiveRuntime(false, false);
+
     public override void Update(float frameTime)
     {
         if (_objectiveRuntime.ByContract.Count == 0)
             return;
 
-        if (_objectiveRuntime.ActiveTrackedDeliveryDropoffObjectives.Count > 0 && _timing.CurTime >= _nextTrackedDeliveryDropoffCheck)
+        if (_objectiveRuntime.ActiveTrackedDeliveryDropoffObjectives.Count > 0 &&
+            _timing.CurTime >= _nextTrackedDeliveryDropoffCheck)
         {
             _nextTrackedDeliveryDropoffCheck = _timing.CurTime + NcContractTuning.TrackedDeliveryDropoffCheckInterval;
             UpdateTrackedDeliveryDropoffObjectives();
         }
 
-        if (_objectiveRuntime.ActiveRetrievalRouteDeliveries.Count > 0 && _timing.CurTime >= _nextRetrievalRouteDeliveryCheck)
+        if (_objectiveRuntime.ActiveRetrievalRouteDeliveries.Count > 0 &&
+            _timing.CurTime >= _nextRetrievalRouteDeliveryCheck)
         {
             _nextRetrievalRouteDeliveryCheck = _timing.CurTime + NcContractTuning.TrackedDeliveryDropoffCheckInterval;
             UpdateRetrievalRouteDeliveries();
@@ -219,7 +233,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         return !TryGetObjectiveHandler(contract.ExecutionKind, out var handler) ||
-               handler.TryInitializeRuntimeOnTake(this, store, user, contractId, contract);
+            handler.TryInitializeRuntimeOnTake(this, store, user, contractId, contract);
     }
 
     private ObjectiveRuntimeState GetOrCreateObjectiveRuntimeState((EntityUid Store, string ContractId) key)

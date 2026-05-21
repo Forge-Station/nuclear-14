@@ -8,6 +8,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
+
 namespace Content.Server._NC.Trade;
 
 
@@ -37,56 +38,56 @@ public sealed partial class NcStoreLogicSystem : EntitySystem, IStoreRewardExecu
 
     public void InvalidateInventoryCache(EntityUid root) => _inventory.InvalidateInventoryCache(root);
 
-    public void QueuePickupToHandsOrCrateNextTick(EntityUid user, EntityUid spawned)
-    {
-        Timer.Spawn(0, () =>
-        {
-            if (!Exists(user) || !Exists(spawned))
-                return;
-
-            if (_ents.TryGetComponent(spawned, out TransformComponent? xform) && xform.ParentUid == user)
+    public void QueuePickupToHandsOrCrateNextTick(EntityUid user, EntityUid spawned) =>
+        Timer.Spawn(
+            0,
+            () =>
             {
+                if (!Exists(user) || !Exists(spawned))
+                    return;
+
+                if (_ents.TryGetComponent(spawned, out TransformComponent? xform) && xform.ParentUid == user)
+                {
+                    InvalidateInventoryCache(user);
+                    return;
+                }
+
+                var pickedUp = false;
+                if (_ents.HasComponent<HandsComponent>(user))
+                {
+                    try
+                    {
+                        pickedUp = _hands.TryPickupAnyHand(user, spawned, false);
+                    }
+                    catch (Exception e)
+                    {
+                        Sawmill.Warning(
+                            $"[NcStore] Failed to pick up reward entity {ToPrettyString(spawned)} for {ToPrettyString(user)}: {e}");
+                    }
+                }
+
+                if (pickedUp)
+                {
+                    InvalidateInventoryCache(user);
+                    return;
+                }
+
+                if (TryGetPulledClosedCrate(user, out var crate) && Exists(crate))
+                {
+                    try
+                    {
+                        _entityStorage.Insert(spawned, crate);
+                        InvalidateInventoryCache(crate);
+                    }
+                    catch (Exception e)
+                    {
+                        Sawmill.Warning(
+                            $"[NcStore] Failed to insert reward entity {ToPrettyString(spawned)} into crate {ToPrettyString(crate)}: {e}");
+                    }
+                }
+
                 InvalidateInventoryCache(user);
-                return;
-            }
-
-            var pickedUp = false;
-            if (_ents.HasComponent<HandsComponent>(user))
-            {
-                try
-                {
-                    pickedUp = _hands.TryPickupAnyHand(user, spawned, false);
-                }
-                catch (Exception e)
-                {
-                    Sawmill.Warning(
-                        $"[NcStore] Failed to pick up reward entity {ToPrettyString(spawned)} for {ToPrettyString(user)}: {e}");
-                }
-            }
-
-            if (pickedUp)
-            {
-                InvalidateInventoryCache(user);
-                return;
-            }
-
-            if (TryGetPulledClosedCrate(user, out var crate) && Exists(crate))
-            {
-                try
-                {
-                    _entityStorage.Insert(spawned, crate);
-                    InvalidateInventoryCache(crate);
-                }
-                catch (Exception e)
-                {
-                    Sawmill.Warning(
-                        $"[NcStore] Failed to insert reward entity {ToPrettyString(spawned)} into crate {ToPrettyString(crate)}: {e}");
-                }
-            }
-
-            InvalidateInventoryCache(user);
-        });
-    }
+            });
 
     public EntityUid? GetPulledClosedCrate(EntityUid user) =>
         TryGetPulledClosedCrate(user, out var crate) ? crate : null;

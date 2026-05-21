@@ -1,22 +1,11 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
+
 
 namespace Content.Server._NC.Trade;
 
+
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private readonly record struct ClaimContext(
-        EntityUid Store,
-        EntityUid User,
-        EntityUid? Crate,
-        NcStoreComponent Comp,
-        ContractServerData Contract,
-        List<ContractTargetServerData> Targets,
-        List<EntityUid> UserItems,
-        List<EntityUid>? CrateItems,
-        List<ClaimTakeEntry> TakePlan
-    );
-
     private bool TryPrepareClaimContext(
         EntityUid store,
         EntityUid user,
@@ -126,7 +115,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryResolveStoreComponentForClaim(
         EntityUid store,
         out NcStoreComponent comp,
-        out ClaimAttemptResult fail)
+        out ClaimAttemptResult fail
+    )
     {
         if (TryComp(store, out NcStoreComponent? storeComp))
         {
@@ -147,7 +137,8 @@ public sealed partial class NcContractSystem : EntitySystem
         string contractId,
         NcStoreComponent comp,
         out ContractServerData contract,
-        out ClaimAttemptResult fail)
+        out ClaimAttemptResult fail
+    )
     {
         if (!comp.Contracts.TryGetValue(contractId, out contract!))
         {
@@ -173,7 +164,8 @@ public sealed partial class NcContractSystem : EntitySystem
         string contractId,
         ContractServerData contract,
         out List<ContractTargetServerData> targets,
-        out ClaimAttemptResult fail)
+        out ClaimAttemptResult fail
+    )
     {
         targets = GetEffectiveTargets(contract);
         if (targets.Count > 0)
@@ -227,7 +219,8 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract,
         EntityUid? crateEntity,
         List<EntityUid>? crateItems,
-        List<EntityUid> storeNearbyItems)
+        List<EntityUid> storeNearbyItems
+    )
     {
         if (_progressScratchInUse)
         {
@@ -248,7 +241,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 crateEntity,
                 crateItems,
                 storeNearbyItems,
-                crateEntity != null && crateItems is { Count: > 0 });
+                crateEntity != null && crateItems is { Count: > 0, });
             ApplyPartialTurnInProgress(store, contractId, contract);
         }
         finally
@@ -256,4 +249,16 @@ public sealed partial class NcContractSystem : EntitySystem
             _progressScratchInUse = false;
         }
     }
+
+    private readonly record struct ClaimContext(
+        EntityUid Store,
+        EntityUid User,
+        EntityUid? Crate,
+        NcStoreComponent Comp,
+        ContractServerData Contract,
+        List<ContractTargetServerData> Targets,
+        List<EntityUid> UserItems,
+        List<EntityUid>? CrateItems,
+        List<ClaimTakeEntry> TakePlan
+    );
 }

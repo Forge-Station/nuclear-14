@@ -2,48 +2,13 @@ using Content.Shared._NC.Trade;
 using Content.Shared.Tag;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcStoreInventorySystem
 {
     private readonly InventoryMatcherService _matcherService = new();
-
-    private sealed class InventoryMatcherService
-    {
-        public readonly Dictionary<string, CompiledMatcher?> CompiledItemGroupCache = new(StringComparer.Ordinal);
-        public readonly Dictionary<string, CompiledMatcher?> CompiledMatcherCache = new(StringComparer.Ordinal);
-        public readonly HashSet<string> OwnedCountedStackTypesScratch = new(StringComparer.Ordinal);
-        public readonly Dictionary<(string ProtoId, string TagId), bool> PrototypeTagMatchCache = new();
-
-        public void Clear()
-        {
-            CompiledMatcherCache.Clear();
-            CompiledItemGroupCache.Clear();
-            OwnedCountedStackTypesScratch.Clear();
-            PrototypeTagMatchCache.Clear();
-        }
-    }
-
-    private sealed class CompiledMatcher
-    {
-        public readonly HashSet<string> Items = new(StringComparer.Ordinal);
-        public readonly HashSet<string> MatchStackTypes = new(StringComparer.Ordinal);
-
-        public bool IsEmpty => Items.Count == 0;
-
-        public CompiledMatcher(NcMatcherPrototype source)
-            : this(source.Items) { }
-
-        public CompiledMatcher(IReadOnlyList<string> items)
-        {
-            for (var i = 0; i < items.Count; i++)
-            {
-                var item = items[i];
-                if (!string.IsNullOrWhiteSpace(item))
-                    Items.Add(item);
-            }
-        }
-    }
 
     private CompiledMatcher? GetCompiledMatcher(string matcherId, bool warnIfInvalid)
     {
@@ -128,13 +93,9 @@ public sealed partial class NcStoreInventorySystem
         try
         {
             foreach (var stackTypeId in matcher.MatchStackTypes)
-            {
                 if (countedStackTypes.Add(stackTypeId) &&
                     snapshot.StackTypeCounts.TryGetValue(stackTypeId, out var stackCount))
-                {
                     total += stackCount;
-                }
-            }
 
             foreach (var itemProtoId in matcher.Items)
             {
@@ -156,7 +117,7 @@ public sealed partial class NcStoreInventorySystem
 
     public bool PrototypeMatchesMatcher(string matcherId, string protoId)
     {
-        var matcher = GetCompiledMatcher(matcherId, warnIfInvalid: false);
+        var matcher = GetCompiledMatcher(matcherId, false);
         if (matcher == null)
             return false;
 
@@ -211,11 +172,12 @@ public sealed partial class NcStoreInventorySystem
     public void FillMatchingPrototypeIdsForMatcher(
         string matcherId,
         IReadOnlyDictionary<string, int> protoCounts,
-        List<string> results)
+        List<string> results
+    )
     {
         results.Clear();
 
-        var matcher = GetCompiledMatcher(matcherId, warnIfInvalid: false);
+        var matcher = GetCompiledMatcher(matcherId, false);
         if (matcher == null)
             return;
 
@@ -236,11 +198,12 @@ public sealed partial class NcStoreInventorySystem
     public void FillMatchingStackTypeIdsForMatcher(
         string matcherId,
         IReadOnlyDictionary<string, int> stackTypeCounts,
-        List<string> results)
+        List<string> results
+    )
     {
         results.Clear();
 
-        var matcher = GetCompiledMatcher(matcherId, warnIfInvalid: false);
+        var matcher = GetCompiledMatcher(matcherId, false);
         if (matcher == null || matcher.MatchStackTypes.Count == 0)
             return;
 
@@ -258,7 +221,8 @@ public sealed partial class NcStoreInventorySystem
     public void FillMatchingPrototypeIdsForTag(
         string tagTargetId,
         IReadOnlyDictionary<string, int> protoCounts,
-        List<string> results)
+        List<string> results
+    )
     {
         results.Clear();
 
@@ -304,4 +268,40 @@ public sealed partial class NcStoreInventorySystem
         return success;
     }
 
+    private sealed class InventoryMatcherService
+    {
+        public readonly Dictionary<string, CompiledMatcher?> CompiledItemGroupCache = new(StringComparer.Ordinal);
+        public readonly Dictionary<string, CompiledMatcher?> CompiledMatcherCache = new(StringComparer.Ordinal);
+        public readonly HashSet<string> OwnedCountedStackTypesScratch = new(StringComparer.Ordinal);
+        public readonly Dictionary<(string ProtoId, string TagId), bool> PrototypeTagMatchCache = new();
+
+        public void Clear()
+        {
+            CompiledMatcherCache.Clear();
+            CompiledItemGroupCache.Clear();
+            OwnedCountedStackTypesScratch.Clear();
+            PrototypeTagMatchCache.Clear();
+        }
+    }
+
+    private sealed class CompiledMatcher
+    {
+        public readonly HashSet<string> Items = new(StringComparer.Ordinal);
+        public readonly HashSet<string> MatchStackTypes = new(StringComparer.Ordinal);
+
+        public CompiledMatcher(NcMatcherPrototype source)
+            : this(source.Items) { }
+
+        public CompiledMatcher(IReadOnlyList<string> items)
+        {
+            for (var i = 0; i < items.Count; i++)
+            {
+                var item = items[i];
+                if (!string.IsNullOrWhiteSpace(item))
+                    Items.Add(item);
+            }
+        }
+
+        public bool IsEmpty => Items.Count == 0;
+    }
 }

@@ -3,7 +3,9 @@ using Content.Shared.Stacks;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcStoreLogicSystem
 {
@@ -95,20 +97,19 @@ public sealed partial class NcStoreLogicSystem
         return true;
     }
 
-    private bool TryCreateValidBarterRewardDeck(string poolId, out List<ContractRewardDef> deck)
-    {
-        return TryCreateValidBarterRewardDeck(
+    private bool TryCreateValidBarterRewardDeck(string poolId, out List<ContractRewardDef> deck) =>
+        TryCreateValidBarterRewardDeck(
             poolId,
             out deck,
-            new HashSet<string>(StringComparer.Ordinal),
+            new(StringComparer.Ordinal),
             0);
-    }
 
     private bool TryCreateValidBarterRewardDeck(
         string poolId,
         out List<ContractRewardDef> deck,
         HashSet<string> visited,
-        int depth)
+        int depth
+    )
     {
         deck = new();
         if (string.IsNullOrWhiteSpace(poolId) || depth > MaxBarterReceivePoolDepth)
@@ -128,7 +129,8 @@ public sealed partial class NcStoreLogicSystem
     private List<ContractRewardDef> CreateValidBarterRewardDeck(
         NcSupplyRewardPoolPrototype pool,
         HashSet<string> visited,
-        int depth)
+        int depth
+    )
     {
         var result = new List<ContractRewardDef>(pool.Entries.Count);
         for (var i = 0; i < pool.Entries.Count; i++)
@@ -141,9 +143,8 @@ public sealed partial class NcStoreLogicSystem
         return result;
     }
 
-    private static ContractRewardDef ToContractRewardDef(NcSupplyRewardPoolEntry entry)
-    {
-        return new ContractRewardDef
+    private static ContractRewardDef ToContractRewardDef(NcSupplyRewardPoolEntry entry) =>
+        new()
         {
             Type = entry.Type,
             RewardId = entry.Type switch
@@ -155,9 +156,8 @@ public sealed partial class NcStoreLogicSystem
             },
             Count = entry.Count,
             Weight = entry.Weight,
-            MaxRepeats = entry.MaxRepeats,
+            MaxRepeats = entry.MaxRepeats
         };
-    }
 
     private bool TryRollBarterRewardToPlan(
         BarterReceivePlan plan,
@@ -181,7 +181,7 @@ public sealed partial class NcStoreLogicSystem
             deck.Remove(reward);
 
         var rewardId = GetRewardId(reward);
-        var amount = RollRange(reward.Count, 0);
+        var amount = RollRange(reward.Count);
         if (amount <= 0 || string.IsNullOrWhiteSpace(rewardId))
             return true;
 
@@ -251,7 +251,8 @@ public sealed partial class NcStoreLogicSystem
     private bool TryExecuteBarterReceivePlan(
         EntityUid user,
         BarterReceivePlan plan,
-        Func<string?> preCommit)
+        Func<string?> preCommit
+    )
     {
         if (!TryBuildRewardExecutionPlan(plan, out var rewardPlan, out var reason))
         {
@@ -271,7 +272,8 @@ public sealed partial class NcStoreLogicSystem
     private bool IsValidBarterRewardPoolEntry(
         ContractRewardDef reward,
         HashSet<string> visited,
-        int depth)
+        int depth
+    )
     {
         if (reward.Type != StoreRewardType.Item &&
             reward.Type != StoreRewardType.Currency &&

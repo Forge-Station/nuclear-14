@@ -1,7 +1,9 @@
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -12,9 +14,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (state.TargetEntity is not { } existingTarget ||
             existingTarget == EntityUid.Invalid ||
             TerminatingOrDeleted(existingTarget))
-        {
             return false;
-        }
 
         target = existingTarget;
         return true;
@@ -27,7 +27,7 @@ public sealed partial class NcContractSystem : EntitySystem
         out List<EntityUid>? crateItems
     )
     {
-        userItems = new List<EntityUid>(32);
+        userItems = new(32);
         _logic.ScanInventoryItems(user, userItems);
 
         crateEntity = null;
@@ -38,7 +38,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return;
 
         crateEntity = pulledCrate;
-        crateItems = new List<EntityUid>(32);
+        crateItems = new(32);
         _logic.ScanInventoryItems(pulledCrate, crateItems);
     }
 
@@ -48,11 +48,9 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid? crateEntity,
         bool inUserInventory,
         bool inCrate
-    )
-    {
-        return (inUserInventory && _logic.IsProtectedFromDirectSale(user, target)) ||
-               (inCrate && crateEntity is { } crate && _logic.IsProtectedFromDirectSale(crate, target));
-    }
+    ) =>
+        inUserInventory && _logic.IsProtectedFromDirectSale(user, target) ||
+        inCrate && crateEntity is { } crate && _logic.IsProtectedFromDirectSale(crate, target);
 
     private static bool UsesTrackedDeliveryDropoff(ContractServerData contract)
     {
@@ -77,16 +75,15 @@ public sealed partial class NcContractSystem : EntitySystem
 
         var targetPos = _xform.GetWorldPosition(targetXform);
         var delta = targetPos - dropoff.Position;
-        return delta.LengthSquared() <= NcContractTuning.TrackedDeliveryDropoffRange * NcContractTuning.TrackedDeliveryDropoffRange;
+        return delta.LengthSquared() <=
+            NcContractTuning.TrackedDeliveryDropoffRange * NcContractTuning.TrackedDeliveryDropoffRange;
     }
 
     private bool IsTrackedDeliveryTargetAtStore(EntityUid store, EntityUid target)
     {
         if (!TryComp(store, out TransformComponent? storeXform) ||
             !TryComp(target, out TransformComponent? targetXform))
-        {
             return false;
-        }
 
         if (IsTargetInEntityContainer(targetXform))
             return false;
@@ -97,7 +94,8 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         var delta = targetMap.Position - storeMap.Position;
-        return delta.LengthSquared() <= NcContractTuning.TrackedDeliveryStoreRange * NcContractTuning.TrackedDeliveryStoreRange;
+        return delta.LengthSquared() <=
+            NcContractTuning.TrackedDeliveryStoreRange * NcContractTuning.TrackedDeliveryStoreRange;
     }
 
     private static bool ContainsTrackedDeliveryEntity(IReadOnlyList<EntityUid>? items, EntityUid target)
@@ -106,10 +104,8 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         for (var i = 0; i < items.Count; i++)
-        {
             if (items[i] == target)
                 return true;
-        }
 
         return false;
     }

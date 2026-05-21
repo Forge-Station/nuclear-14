@@ -1,22 +1,18 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
-using Robust.Shared.Map;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
     private static bool IsSpawnedHuntTarget(ObjectiveRuntimeState state, EntityUid target)
     {
         for (var i = 0; i < state.HuntSpawnedTargets.Count; i++)
-        {
             if (state.HuntSpawnedTargets[i] == target)
                 return true;
-        }
 
         return false;
     }
@@ -24,10 +20,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private static void RemoveSpawnedHuntTarget(ObjectiveRuntimeState state, EntityUid target)
     {
         for (var i = state.HuntSpawnedTargets.Count - 1; i >= 0; i--)
-        {
             if (state.HuntSpawnedTargets[i] == target)
                 state.HuntSpawnedTargets.RemoveAt(i);
-        }
     }
 
     private bool IsMatchingSpawnedHuntTarget(EntityUid entity, ContractServerData contract, bool allowDeadTarget)
@@ -46,10 +40,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
         var targets = GetEffectiveTargets(contract);
         for (var i = 0; i < targets.Count; i++)
-        {
             if (MatchesSpawnedHuntTargetEntry(prototypeId, targets[i]))
                 return true;
-        }
 
         return false;
     }
@@ -66,10 +58,8 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         for (var i = 0; i < group.Prototypes.Count; i++)
-        {
             if (group.Prototypes[i] == prototypeId)
                 return true;
-        }
 
         return false;
     }

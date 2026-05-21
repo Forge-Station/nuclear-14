@@ -1,9 +1,8 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
-using Robust.Server.GameObjects;
-using Robust.Shared.Containers;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class StoreStructuredSystem : EntitySystem
 {
@@ -12,7 +11,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         NcStoreComponent comp,
         bool hasContractsTab,
         DynamicScratch scratch,
-        DynamicStateBuffer buf)
+        DynamicStateBuffer buf
+    )
     {
         if (!hasContractsTab || comp.Contracts.Count == 0)
             return;
@@ -31,7 +31,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     private int ComputeContractsSignature(
         EntityUid store,
         NcStoreComponent comp,
-        List<ContractServerData> contractsScratch)
+        List<ContractServerData> contractsScratch
+    )
     {
         unchecked
         {
@@ -155,7 +156,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         EntityUid store,
         NcStoreComponent comp,
         bool hasContractsTab,
-        DynamicStateBuffer buf)
+        DynamicStateBuffer buf
+    )
     {
         if (!hasContractsTab || !_contracts.TryGetContractSkipInfo(store, comp, out var skipCurrency, out var skipCost))
             return;

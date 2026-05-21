@@ -1,8 +1,8 @@
-using Content.Shared._NC.Trade;
 using Content.Shared.Mind;
-using Robust.Shared.Map;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -109,9 +109,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (state.GhostRoleSurvivalMind is { } mindId &&
             TryComp(mindId, out MindComponent? mind))
-        {
             mind.Objectives.Remove(objective);
-        }
 
         if (!TerminatingOrDeleted(objective))
             Del(objective);

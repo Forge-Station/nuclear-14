@@ -2,7 +2,9 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Utility;
 
+
 namespace Content.Shared._NC.Trade;
+
 
 [DataDefinition]
 public sealed partial class StoreCatalogEntry
@@ -18,24 +20,24 @@ public sealed partial class StoreCatalogEntry
 [Prototype("storeCategoryStructured")]
 public sealed partial class StoreCategoryStructuredPrototype : IPrototype
 {
-    [IdDataField]
-    public string ID { get; private set; } = default!;
-
     [DataField("name", required: true)]
     public string Name { get; private set; } = string.Empty;
 
     [DataField("entries", required: true)]
     public List<StoreCatalogEntry> Entries { get; private set; } = new();
+
+    [IdDataField]
+    public string ID { get; private set; } = default!;
 }
 
 [Prototype("storePresetStructured")]
 public sealed partial class StorePresetStructuredPrototype : IPrototype
 {
-    [DataField("categories", required: true)]
-    public List<string> Categories { get; private set; } = new();
-
     [DataField("currency", required: true)]
     public string Currency = string.Empty;
+
+    [DataField("categories", required: true)]
+    public List<string> Categories { get; private set; } = new();
 
     [IdDataField]
     public string ID { get; private set; } = default!;
@@ -44,19 +46,16 @@ public sealed partial class StorePresetStructuredPrototype : IPrototype
 [Prototype("ncStoreUiTheme")]
 public sealed partial class StoreUiThemePrototype : IPrototype
 {
-    [IdDataField]
-    public string ID { get; private set; } = default!;
-
     [DataField("colors", required: true)]
     public StoreUiColorsData Colors { get; private set; } = new();
+
+    [IdDataField]
+    public string ID { get; private set; } = default!;
 }
 
 [Prototype("ncStoreProfile")]
 public sealed partial class NcStoreProfilePrototype : IPrototype
 {
-    [IdDataField]
-    public string ID { get; private set; } = default!;
-
     [DataField("buy")]
     public List<ProtoId<StorePresetStructuredPrototype>> Buy { get; private set; } = new();
 
@@ -64,8 +63,8 @@ public sealed partial class NcStoreProfilePrototype : IPrototype
     public List<ProtoId<StorePresetStructuredPrototype>> Sell { get; private set; } = new();
 
     /// <summary>
-    /// Barter presets. Actual exchanges are standalone ncBarterListing prototypes, grouped by ncBarterCategory listings.
-    /// Execution is handled only by the Barter transaction path.
+    ///     Barter presets. Actual exchanges are standalone ncBarterListing prototypes, grouped by ncBarterCategory listings.
+    ///     Execution is handled only by the Barter transaction path.
     /// </summary>
     [DataField("barter")]
     public List<ProtoId<NcBarterPresetPrototype>> Barter { get; private set; } = new();
@@ -75,10 +74,12 @@ public sealed partial class NcStoreProfilePrototype : IPrototype
 
     [DataField("theme")]
     public ProtoId<StoreUiThemePrototype>? Theme { get; private set; }
+
+    [IdDataField]
+    public string ID { get; private set; } = default!;
 }
 
-
-[DataDefinition, Serializable, NetSerializable]
+[DataDefinition, Serializable, NetSerializable,]
 public sealed partial class ContractPointSelectorPrototype
 {
     [DataField("type")]
@@ -91,7 +92,7 @@ public sealed partial class ContractPointSelectorPrototype
     public List<WeightedContractPointOptionEntry> Options { get; set; } = new();
 }
 
-[DataDefinition, Serializable, NetSerializable]
+[DataDefinition, Serializable, NetSerializable,]
 public partial struct WeightedContractPointOptionEntry
 {
     [DataField("type")]
@@ -111,7 +112,7 @@ public partial struct WeightedContractPointOptionEntry
     }
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public enum ContractPointSelectorType : byte
 {
     Store = 0,
@@ -123,8 +124,6 @@ public enum ContractPointSelectorType : byte
 [Prototype("storeContractsPreset")]
 public sealed partial class StoreContractsPresetPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; private set; } = default!;
-
     [DataField("contractOffers", required: true)]
     public NcContractOffersPrototype? ContractOffers { get; set; }
 
@@ -133,13 +132,13 @@ public sealed partial class StoreContractsPresetPrototype : IPrototype
 
     [DataField("skipCurrency")]
     public string SkipCurrency { get; set; } = string.Empty;
+
+    [IdDataField] public string ID { get; private set; } = default!;
 }
 
 [Prototype("ncContractOfferPool")]
 public sealed partial class NcContractOfferPoolPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; private set; } = default!;
-
     [DataField("name", required: true)]
     public string Name { get; private set; } = string.Empty;
 
@@ -151,9 +150,11 @@ public sealed partial class NcContractOfferPoolPrototype : IPrototype
 
     [DataField("entries", required: true)]
     public List<NcContractOfferEntry> Entries { get; private set; } = new();
+
+    [IdDataField] public string ID { get; private set; } = default!;
 }
 
-[DataDefinition, Serializable, NetSerializable]
+[DataDefinition, Serializable, NetSerializable,]
 public sealed partial class NcContractOffersPrototype
 {
     [DataField("maxVisible")]
@@ -163,7 +164,7 @@ public sealed partial class NcContractOffersPrototype
     public List<NcContractOfferGroupEntry> Groups { get; set; } = new();
 }
 
-[DataDefinition, Serializable, NetSerializable]
+[DataDefinition, Serializable, NetSerializable,]
 public partial struct NcContractOfferGroupEntry
 {
     [DataField("pool", required: true)]
@@ -178,12 +179,10 @@ public partial struct NcContractOfferGroupEntry
     [DataField("fillWeight")]
     public int FillWeight = 1;
 
-    public NcContractOfferGroupEntry()
-    {
-    }
+    public NcContractOfferGroupEntry() { }
 }
 
-[DataDefinition, Serializable, NetSerializable]
+[DataDefinition, Serializable, NetSerializable,]
 public partial struct NcContractOfferEntry
 {
     [DataField("type", required: true)]
@@ -195,30 +194,26 @@ public partial struct NcContractOfferEntry
     [DataField("weight")]
     public int Weight = 1;
 
-    public NcContractOfferEntry()
-    {
-    }
+    public NcContractOfferEntry() { }
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public enum NcContractOfferType : byte
 {
     Supply = 0,
     Retrieval = 1,
     Hunt = 2,
-    GhostRole = 3,
+    GhostRole = 3
 }
 
 /// <summary>
-/// Trade contracts item group. Groups are prototype lists only and are valid for checking already
-/// existing turn-in items. They must not be used for spawning or reward generation unless the
-/// caller explicitly resolves one of the contained prototypes.
+///     Trade contracts item group. Groups are prototype lists only and are valid for checking already
+///     existing turn-in items. They must not be used for spawning or reward generation unless the
+///     caller explicitly resolves one of the contained prototypes.
 /// </summary>
 [Prototype("ncItemGroup")]
 public sealed partial class NcItemGroupPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; private set; } = default!;
-
     [DataField("name", required: true)]
     public string Name { get; private set; } = string.Empty;
 
@@ -231,17 +226,17 @@ public sealed partial class NcItemGroupPrototype : IPrototype
 
     [DataField("prototypes")]
     public List<string> Prototypes { get; private set; } = new();
+
+    [IdDataField] public string ID { get; private set; } = default!;
 }
 
 /// <summary>
-/// Trade-visible wrapper around a raw TagPrototype. Store/listing/contract YAML references this
-/// prototype instead of referencing engine tags directly, so tag targets can carry UI metadata.
+///     Trade-visible wrapper around a raw TagPrototype. Store/listing/contract YAML references this
+///     prototype instead of referencing engine tags directly, so tag targets can carry UI metadata.
 /// </summary>
 [Prototype("ncTradeTag")]
 public sealed partial class NcTradeTagPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; private set; } = default!;
-
     [DataField("name", required: true)]
     public string Name { get; private set; } = string.Empty;
 
@@ -259,10 +254,11 @@ public sealed partial class NcTradeTagPrototype : IPrototype
     /// <summary>Optional sprite used by store/contract UI when no entity icon is desired.</summary>
     [DataField("sprite")]
     public SpriteSpecifier? Sprite { get; private set; }
+
+    [IdDataField] public string ID { get; private set; } = default!;
 }
 
-
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public enum ContractObjectiveType : byte
 {
     Delivery = 0,
@@ -271,7 +267,8 @@ public enum ContractObjectiveType : byte
     // Value 2 is intentionally left open for old/future delivery variants.
     GhostRole = 3
 }
-[Serializable, NetSerializable]
+
+[Serializable, NetSerializable,]
 public enum PrototypeMatchMode : byte
 {
     Exact = 0,

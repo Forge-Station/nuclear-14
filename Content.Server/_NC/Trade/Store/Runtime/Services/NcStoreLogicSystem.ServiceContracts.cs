@@ -1,7 +1,9 @@
 using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 internal interface IStoreCurrencyService
 {
@@ -13,13 +15,15 @@ internal interface IStoreCurrencyService
         in NcInventorySnapshot snapshot,
         out string currency,
         out int unitPrice,
-        out int balance);
+        out int balance
+    );
 
     bool TryPickCurrencyForSell(
         NcStoreComponent store,
         NcStoreListingDef listing,
         out string currency,
-        out int unitPrice);
+        out int unitPrice
+    );
 
     bool CanHandleCurrency(string currencyId);
     bool CanGiveCurrency(EntityUid user, string currencyId, int amount);
@@ -38,7 +42,15 @@ internal interface IStoreCurrencyDebitService
 internal interface IStoreRewardSpawner
 {
     int SpawnRewardProduct(EntityUid user, string productEntity, EntityPrototype productProto, int units);
-    int SpawnPurchasedProduct(EntityUid user, string productEntity, EntityPrototype productProto, int purchases, int unitsPerPurchase);
+
+    int SpawnPurchasedProduct(
+        EntityUid user,
+        string productEntity,
+        EntityPrototype productProto,
+        int purchases,
+        int unitsPerPurchase
+    );
+
     bool BeginRewardTransaction();
     void CommitRewardTransaction(EntityUid user);
     void RollbackRewardTransaction();
@@ -49,20 +61,23 @@ internal interface IStoreRewardExecutionService
     bool TryValidateRewardList(
         EntityUid receiver,
         IReadOnlyList<ContractRewardData>? rewards,
-        out string reason);
+        out string reason
+    );
 
     bool TryExecuteRewardList(
         EntityUid receiver,
         IReadOnlyList<ContractRewardData>? rewards,
         string context,
-        out string reason);
+        out string reason
+    );
 
     bool TryExecuteRewardListWithPreCommit(
         EntityUid receiver,
         IReadOnlyList<ContractRewardData>? rewards,
         string context,
         Func<string?> preCommit,
-        out string reason);
+        out string reason
+    );
 }
 
 internal interface IStoreTransactionCoordinator

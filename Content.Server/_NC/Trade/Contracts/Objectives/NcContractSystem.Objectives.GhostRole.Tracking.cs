@@ -1,31 +1,15 @@
-using Content.Server.Atmos.Rotting;
-using Content.Server.Cuffs;
-using Content.Server.Ghost.Roles.Components;
-using Content.Server.Humanoid;
-using Content.Server.Mind.Commands;
-using Content.Server.Roles;
 using Content.Shared._NC.Trade;
-using Content.Shared.Cuffs.Components;
-using Content.Shared.Customization.Systems;
-using Content.Shared.Damage;
-using Content.Shared.FixedPoint;
-using Content.Shared.Humanoid;
-using Content.Shared.Humanoid.Markings;
-using Content.Shared.Mind;
-using Content.Shared.Mind.Components;
-using Content.Shared.Movement.Pulling.Components;
-using Content.Shared.Mobs;
-using Content.Shared.Mobs.Components;
-using Robust.Shared.Map;
-using Robust.Shared.Prototypes;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
     private bool TryRetargetGhostRolePinpointersForOwners(
         (EntityUid Store, string ContractId) key,
-        ObjectiveRuntimeState state)
+        ObjectiveRuntimeState state
+    )
     {
         if (state.PinpointerEntities.Count == 0)
             return false;
@@ -35,9 +19,7 @@ public sealed partial class NcContractSystem : EntitySystem
             contract.Runtime.Failed ||
             !contract.IsGhostRoleObjective ||
             !state.GhostRoleTaken)
-        {
             return false;
-        }
 
         PruneInvalidPinpointers(key, state);
         if (state.PinpointerEntities.Count == 0)
@@ -52,9 +34,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 !TryResolveGhostRolePinpointerTargetForUser(key.Store, owner, contract, state, out var target) ||
                 target == EntityUid.Invalid ||
                 TerminatingOrDeleted(target))
-            {
                 continue;
-            }
 
             _pinpointer.SetTarget(pinpointer, target);
             _pinpointer.SetActive(pinpointer, true);
@@ -68,7 +48,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid user,
         ContractServerData contract,
         ObjectiveRuntimeState state,
-        out EntityUid target)
+        out EntityUid target
+    )
     {
         target = EntityUid.Invalid;
         if (!contract.IsGhostRoleObjective || !state.GhostRoleTaken)
@@ -77,9 +58,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (state.TargetEntity is not { } tracked ||
             tracked == EntityUid.Invalid ||
             TerminatingOrDeleted(tracked))
-        {
             return false;
-        }
 
         if (IsGhostRoleTargetReadyForClaim(store, tracked, contract) ||
             IsGhostRoleTargetCarriedByUser(tracked, user))
@@ -128,12 +107,14 @@ public sealed partial class NcContractSystem : EntitySystem
     )
     {
         if (_objectiveRuntime.ByContract.TryGetValue(key, out var state))
+        {
             MarkGhostRoleRoundEndOutcome(
                 state,
                 GhostRoleRoundEndOutcome.TargetLost,
                 Loc.GetString("nc-store-contract-ghost-role-target-lost"));
+        }
 
-            FinalizeObjectiveTerminalOutcome(
+        FinalizeObjectiveTerminalOutcome(
             key,
             comp,
             contract,

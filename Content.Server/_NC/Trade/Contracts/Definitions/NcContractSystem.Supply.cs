@@ -1,11 +1,12 @@
-using System;
+using Content.Shared._NC.Trade;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Prototypes;
-using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -26,7 +27,7 @@ public sealed partial class NcContractSystem : EntitySystem
             Taken = false,
             ObjectiveType = ContractObjectiveType.Delivery,
             ExecutionKind = ContractExecutionKind.InventoryDelivery,
-            Runtime = new ContractRuntimeContextData(),
+            Runtime = new(),
             Config = CreateSupplyObjectiveConfig(proto),
             Conditions = CloneContractConditions(proto.Conditions),
             FlowStatus = ContractFlowStatus.Available,
@@ -42,13 +43,11 @@ public sealed partial class NcContractSystem : EntitySystem
         return contract;
     }
 
-    private ContractObjectiveConfigData CreateSupplyObjectiveConfig(NcSupplyContractPrototype proto)
-    {
-        return new ContractObjectiveConfigData
+    private ContractObjectiveConfigData CreateSupplyObjectiveConfig(NcSupplyContractPrototype proto) =>
+        new()
         {
             AllowStoreWorldTurnIn = ShouldAllowSupplyStoreWorldTurnIn(proto)
         };
-    }
 
     private bool ShouldAllowSupplyStoreWorldTurnIn(NcSupplyContractPrototype proto)
     {
@@ -58,35 +57,27 @@ public sealed partial class NcContractSystem : EntitySystem
 
             if (!string.IsNullOrWhiteSpace(target.Prototype) &&
                 IsSupplyWorldTurnInPrototype(target.Prototype))
-            {
                 return true;
-            }
 
             if (!string.IsNullOrWhiteSpace(target.TagTarget) && IsSupplyWorldTurnInTagTarget(target.TagTarget))
                 return true;
 
             if (string.IsNullOrWhiteSpace(target.Group) ||
                 !_prototypes.TryIndex<NcItemGroupPrototype>(target.Group, out var group))
-            {
                 continue;
-            }
 
             for (var j = 0; j < group.Prototypes.Count; j++)
-            {
                 if (IsSupplyWorldTurnInPrototype(group.Prototypes[j]))
                     return true;
-            }
         }
 
         return false;
     }
 
-    private bool IsSupplyWorldTurnInPrototype(string prototypeId)
-    {
-        return _prototypes.TryIndex<EntityPrototype>(prototypeId, out var proto) &&
-               proto.HasComponent<MobStateComponent>(_compFactory) &&
-               proto.HasComponent<PullableComponent>(_compFactory);
-    }
+    private bool IsSupplyWorldTurnInPrototype(string prototypeId) =>
+        _prototypes.TryIndex<EntityPrototype>(prototypeId, out var proto) &&
+        proto.HasComponent<MobStateComponent>(_compFactory) &&
+        proto.HasComponent<PullableComponent>(_compFactory);
 
     private bool IsSupplyWorldTurnInTagTarget(string tagTargetId)
     {
@@ -132,7 +123,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private List<(int Index, NcSupplyTargetEntry Entry)> ResolveSupplyTargetEntries(
         EntityUid store,
-        NcSupplyContractPrototype proto)
+        NcSupplyContractPrototype proto
+    )
     {
         var result = new List<(int Index, NcSupplyTargetEntry Entry)>();
         if (proto.Targets.Count == 0)
@@ -169,17 +161,16 @@ public sealed partial class NcContractSystem : EntitySystem
         return result;
     }
 
-    private static bool IsSupplyTargetCountConfigured(IntRange targetCount)
-    {
-        return targetCount.Min > 0 || targetCount.Max > 0;
-    }
+    private static bool IsSupplyTargetCountConfigured(IntRange targetCount) =>
+        targetCount.Min > 0 || targetCount.Max > 0;
 
     private bool TryBuildSupplyTarget(
         EntityUid store,
         string contractId,
         int index,
         NcSupplyTargetEntry entry,
-        out ContractTargetServerData target)
+        out ContractTargetServerData target
+    )
     {
         target = default!;
 
@@ -190,7 +181,11 @@ public sealed partial class NcContractSystem : EntitySystem
         var hasTagTarget = !string.IsNullOrWhiteSpace(entry.TagTarget);
 
         var required = RollFair(
-            new(QuasiKeyKind.Req, store, contractId, $"supply-target:{index}:{entry.Prototype}:{entry.Group}:{entry.TagTarget}"),
+            new(
+                QuasiKeyKind.Req,
+                store,
+                contractId,
+                $"supply-target:{index}:{entry.Prototype}:{entry.Group}:{entry.TagTarget}"),
             entry.Count,
             1);
 
@@ -199,7 +194,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (hasPrototype)
         {
-            target = new ContractTargetServerData
+            target = new()
             {
                 TargetItem = entry.Prototype,
                 Required = required,
@@ -211,7 +206,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (hasTagTarget)
         {
-            target = new ContractTargetServerData
+            target = new()
             {
                 TargetItem = entry.TagTarget,
                 Required = required,
@@ -221,7 +216,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return true;
         }
 
-        target = new ContractTargetServerData
+        target = new()
         {
             TargetItem = entry.Group,
             Required = required,
@@ -245,7 +240,8 @@ public sealed partial class NcContractSystem : EntitySystem
         string contractId,
         string path,
         NcSupplyRewardEntry entry,
-        List<ContractRewardDef> output)
+        List<ContractRewardDef> output
+    )
     {
         if (!IsCountConfigured(entry.Count))
         {
@@ -277,29 +273,32 @@ public sealed partial class NcContractSystem : EntitySystem
                     return false;
                 }
 
-                output.Add(new ContractRewardDef
-                {
-                    Type = StoreRewardType.Item,
-                    RewardId = entry.Prototype,
-                    Count = entry.Count,
-                    Weight = 1
-                });
+                output.Add(
+                    new()
+                    {
+                        Type = StoreRewardType.Item,
+                        RewardId = entry.Prototype,
+                        Count = entry.Count,
+                        Weight = 1
+                    });
                 return true;
 
             case StoreRewardType.Currency:
                 if (string.IsNullOrWhiteSpace(entry.Currency))
                 {
-                    Sawmill.Warning($"[Contracts] Supply contract '{contractId}' {path} is Currency but has no currency.");
+                    Sawmill.Warning(
+                        $"[Contracts] Supply contract '{contractId}' {path} is Currency but has no currency.");
                     return false;
                 }
 
-                output.Add(new ContractRewardDef
-                {
-                    Type = StoreRewardType.Currency,
-                    RewardId = entry.Currency,
-                    Count = entry.Count,
-                    Weight = 1
-                });
+                output.Add(
+                    new()
+                    {
+                        Type = StoreRewardType.Currency,
+                        RewardId = entry.Currency,
+                        Count = entry.Count,
+                        Weight = 1
+                    });
                 return true;
 
             case StoreRewardType.Pool:
@@ -311,17 +310,19 @@ public sealed partial class NcContractSystem : EntitySystem
 
                 if (!_prototypes.HasIndex<NcSupplyRewardPoolPrototype>(entry.Pool))
                 {
-                    Sawmill.Warning($"[Contracts] Supply contract '{contractId}' {path} references missing Supply reward pool '{entry.Pool}'. Use type: ncSupplyRewardPool.");
+                    Sawmill.Warning(
+                        $"[Contracts] Supply contract '{contractId}' {path} references missing Supply reward pool '{entry.Pool}'. Use type: ncSupplyRewardPool.");
                     return false;
                 }
 
-                output.Add(new ContractRewardDef
-                {
-                    Type = StoreRewardType.Pool,
-                    RewardId = entry.Pool,
-                    Count = entry.Count,
-                    Weight = 1
-                });
+                output.Add(
+                    new()
+                    {
+                        Type = StoreRewardType.Pool,
+                        RewardId = entry.Pool,
+                        Count = entry.Count,
+                        Weight = 1
+                    });
                 return true;
 
             case StoreRewardType.Unspecified:
@@ -329,14 +330,12 @@ public sealed partial class NcContractSystem : EntitySystem
                 return false;
 
             default:
-                Sawmill.Warning($"[Contracts] Supply contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
+                Sawmill.Warning(
+                    $"[Contracts] Supply contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
                 return false;
         }
     }
 
-    private static bool IsStrictPositiveRange(IntRange range)
-    {
-        return range.Min > 0 && range.Max > 0 && range.Min <= range.Max;
-    }
-
+    private static bool IsStrictPositiveRange(IntRange range) =>
+        range.Min > 0 && range.Max > 0 && range.Min <= range.Max;
 }

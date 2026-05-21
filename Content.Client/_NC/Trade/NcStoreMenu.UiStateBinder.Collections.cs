@@ -1,5 +1,6 @@
 ﻿namespace Content.Client._NC.Trade;
 
+
 public sealed partial class NcStoreMenu
 {
     private sealed partial class UiStateBinder
@@ -13,10 +14,8 @@ public sealed partial class NcStoreMenu
                 return false;
 
             foreach (var (k, v) in a)
-            {
                 if (!b.TryGetValue(k, out var other) || other != v)
                     return false;
-            }
 
             return true;
         }
@@ -28,10 +27,8 @@ public sealed partial class NcStoreMenu
         )
         {
             foreach (var (key, value) in authoritativeValues)
-            {
                 if (!cachedValues.TryGetValue(key, out var other) || other != value)
                     return false;
-            }
 
             foreach (var key in cachedValues.Keys)
             {

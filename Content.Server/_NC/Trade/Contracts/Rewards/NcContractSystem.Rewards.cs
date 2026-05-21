@@ -1,5 +1,4 @@
 using Content.Shared._NC.Trade;
-using Robust.Shared.Random;
 
 
 namespace Content.Server._NC.Trade;
@@ -10,7 +9,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private List<ContractRewardData> BakeRewardsForContract(
         EntityUid store,
         string contractProtoId,
-        List<ContractRewardDef> rewards)
+        List<ContractRewardDef> rewards
+    )
     {
         if (rewards.Count == 0)
             return new();
@@ -80,10 +80,8 @@ public sealed partial class NcContractSystem : EntitySystem
         var dropCounts = new Dictionary<string, int>(StringComparer.Ordinal);
 
         for (var i = 0; i < rolls; i++)
-        {
             if (!TryRollRewardPoolEntry(store, contractProtoId, deck, dropCounts, depth, output))
                 break;
-        }
 
         return output;
     }
@@ -93,7 +91,7 @@ public sealed partial class NcContractSystem : EntitySystem
         var poolId = GetRewardId(poolDef);
         if (!string.IsNullOrWhiteSpace(poolId) &&
             _prototypes.TryIndex<NcSupplyRewardPoolPrototype>(poolId, out var supplyPoolProto) &&
-            supplyPoolProto.Entries is { Count: > 0 } supplyOptions)
+            supplyPoolProto.Entries is { Count: > 0, } supplyOptions)
         {
             return TryValidateResolvedRewardPoolOptions(
                 poolDef,
@@ -105,42 +103,44 @@ public sealed partial class NcContractSystem : EntitySystem
         return false;
     }
 
-    private static List<ContractRewardDef> ConvertSupplyRewardPoolEntries(IReadOnlyList<NcSupplyRewardPoolEntry> entries)
+    private static List<ContractRewardDef> ConvertSupplyRewardPoolEntries(
+        IReadOnlyList<NcSupplyRewardPoolEntry> entries
+    )
     {
         var result = new List<ContractRewardDef>(entries.Count);
         for (var i = 0; i < entries.Count; i++)
         {
             var entry = entries[i];
-            result.Add(new ContractRewardDef
-            {
-                Type = entry.Type,
-                RewardId = GetSupplyRewardEntryId(entry),
-                Count = entry.Count,
-                Weight = entry.Weight,
-                MaxRepeats = entry.MaxRepeats
-            });
+            result.Add(
+                new()
+                {
+                    Type = entry.Type,
+                    RewardId = GetSupplyRewardEntryId(entry),
+                    Count = entry.Count,
+                    Weight = entry.Weight,
+                    MaxRepeats = entry.MaxRepeats
+                });
         }
 
         return result;
     }
 
-    private static string GetSupplyRewardEntryId(NcSupplyRewardPoolEntry entry)
-    {
-        return entry.Type switch
+    private static string GetSupplyRewardEntryId(NcSupplyRewardPoolEntry entry) =>
+        entry.Type switch
         {
             StoreRewardType.Item => entry.Prototype,
             StoreRewardType.Currency => entry.Currency,
             StoreRewardType.Pool => entry.Pool,
             _ => string.Empty
         };
-    }
 
     private bool TryValidateResolvedRewardPoolOptions(
         ContractRewardDef poolDef,
         IReadOnlyList<ContractRewardDef> rawOptions,
-        out List<ContractRewardDef> validOptions)
+        out List<ContractRewardDef> validOptions
+    )
     {
-        validOptions = new List<ContractRewardDef>(rawOptions.Count);
+        validOptions = new(rawOptions.Count);
         var poolId = GetRewardId(poolDef);
         var poolLabel = string.IsNullOrWhiteSpace(poolId) ? "<inline>" : poolId;
 
@@ -216,7 +216,8 @@ public sealed partial class NcContractSystem : EntitySystem
         List<PoolEntry> deck,
         Dictionary<string, int> dropCounts,
         int depth,
-        List<ContractRewardData> output)
+        List<ContractRewardData> output
+    )
     {
         if (deck.Count == 0)
             return false;
@@ -226,7 +227,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (winner.Def.MaxRepeats > 0 && dropCount >= winner.Def.MaxRepeats)
             RemovePoolEntrySwap(deck, winner);
 
-        output.AddRange(BakeRewardsRecursive(store, contractProtoId, new() { winner.Def }, depth));
+        output.AddRange(BakeRewardsRecursive(store, contractProtoId, new() { winner.Def, }, depth));
         return true;
     }
 
@@ -253,10 +254,7 @@ public sealed partial class NcContractSystem : EntitySystem
         return dropCounts[key];
     }
 
-    private static string GetRewardId(ContractRewardDef reward)
-    {
-        return reward.RewardId;
-    }
+    private static string GetRewardId(ContractRewardDef reward) => reward.RewardId;
 
     private static List<ContractRewardData> AggregateRewards(List<ContractRewardData> rewards)
     {

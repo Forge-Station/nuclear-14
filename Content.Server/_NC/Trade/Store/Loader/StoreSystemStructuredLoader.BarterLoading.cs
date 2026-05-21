@@ -1,16 +1,17 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
-using Content.Shared.Tag;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class StoreSystemStructuredLoader
 {
     private int LoadBarterPreset(
         ProtoId<NcBarterPresetPrototype> presetId,
         NcStoreComponent comp,
-        LoadContext ctx)
+        LoadContext ctx
+    )
     {
         if (!_prototypes.TryIndex<NcBarterPresetPrototype>(presetId, out var preset))
         {
@@ -22,7 +23,7 @@ public sealed partial class StoreSystemStructuredLoader
 
         foreach (var categoryId in preset.Categories)
         {
-            if (!_prototypes.TryIndex<NcBarterCategoryPrototype>(categoryId, out var categoryProto))
+            if (!_prototypes.TryIndex(categoryId, out var categoryProto))
             {
                 Sawmill.Error($"[NcStore] Barter category '{categoryId}' not found (preset='{presetId}').");
                 continue;
@@ -41,7 +42,7 @@ public sealed partial class StoreSystemStructuredLoader
             for (var i = 0; i < categoryProto.Listings.Count; i++)
             {
                 var listingId = categoryProto.Listings[i];
-                if (!_prototypes.TryIndex<NcBarterListingPrototype>(listingId, out var listingProto))
+                if (!_prototypes.TryIndex(listingId, out var listingProto))
                 {
                     Sawmill.Warning(
                         $"[NcStore] Barter listing '{listingId}' not found " +
@@ -62,7 +63,8 @@ public sealed partial class StoreSystemStructuredLoader
         ProtoId<NcBarterCategoryPrototype> categoryId,
         string categoryName,
         NcStoreComponent comp,
-        LoadContext ctx)
+        LoadContext ctx
+    )
     {
         if (!ValidateBarterListing(listingProto, presetId, categoryId))
             return 0;
@@ -81,8 +83,8 @@ public sealed partial class StoreSystemStructuredLoader
             Description = listingProto.Description,
             MatchMode = PrototypeMatchMode.Exact,
             Mode = StoreMode.Barter,
-            Categories = new List<string> { categoryName },
-            Conditions = new List<ListingConditionPrototype>(),
+            Categories = new() { categoryName, },
+            Conditions = new(),
             RemainingCount = listingProto.Count,
             UnitsPerPurchase = 1,
             BarterCost = CloneBarterCost(listingProto.Cost),
@@ -95,22 +97,22 @@ public sealed partial class StoreSystemStructuredLoader
         return 1;
     }
 
-    private void AddBarterCurrenciesToWhitelist(NcStoreComponent comp, LoadContext ctx, NcBarterListingPrototype listingProto)
+    private void AddBarterCurrenciesToWhitelist(
+        NcStoreComponent comp,
+        LoadContext ctx,
+        NcBarterListingPrototype listingProto
+    )
     {
         foreach (var cost in listingProto.Cost)
-        {
             if (!string.IsNullOrWhiteSpace(cost.Currency) && ctx.CurrencySeen.Add(cost.Currency))
                 comp.CurrencyWhitelist.Add(cost.Currency);
-        }
 
         foreach (var receive in listingProto.Receive)
-        {
             if (!string.IsNullOrWhiteSpace(receive.Currency) && ctx.CurrencySeen.Add(receive.Currency))
                 comp.CurrencyWhitelist.Add(receive.Currency);
-        }
 
         foreach (var pool in listingProto.ReceivePools)
-            AddRewardPoolCurrenciesToWhitelist(comp, ctx, pool.Pool, new HashSet<string>(StringComparer.Ordinal), 0);
+            AddRewardPoolCurrenciesToWhitelist(comp, ctx, pool.Pool, new(StringComparer.Ordinal), 0);
     }
 
     private void AddRewardPoolCurrenciesToWhitelist(
@@ -118,7 +120,8 @@ public sealed partial class StoreSystemStructuredLoader
         LoadContext ctx,
         string poolId,
         HashSet<string> visited,
-        int depth)
+        int depth
+    )
     {
         if (string.IsNullOrWhiteSpace(poolId) || depth > MaxRewardPoolTraversalDepth)
             return;

@@ -1,12 +1,14 @@
 using Content.Shared._NC.Trade;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem
 {
-    private readonly Dictionary<string, HashSet<EntityUid>> _turnInContainersByGroup = new(StringComparer.Ordinal);
     private readonly Dictionary<EntityUid, HashSet<string>> _turnInContainerGroupsByEntity = new();
     private readonly List<EntityUid> _turnInContainerQueryScratch = new();
+    private readonly Dictionary<string, HashSet<EntityUid>> _turnInContainersByGroup = new(StringComparer.Ordinal);
 
     private void InitializeTurnInContainerIndex()
     {
@@ -24,18 +26,16 @@ public sealed partial class NcContractSystem
     private void OnTurnInContainerStartup(
         EntityUid uid,
         NcContractTurnInContainerComponent comp,
-        ComponentStartup args)
-    {
+        ComponentStartup args
+    ) =>
         ReindexTurnInContainer(uid, comp);
-    }
 
     private void OnTurnInContainerShutdown(
         EntityUid uid,
         NcContractTurnInContainerComponent comp,
-        ComponentShutdown args)
-    {
+        ComponentShutdown args
+    ) =>
         RemoveTurnInContainerFromIndex(uid);
-    }
 
     public void ReindexTurnInContainer(EntityUid uid, NcContractTurnInContainerComponent? comp = null)
     {
@@ -55,7 +55,7 @@ public sealed partial class NcContractSystem
 
             if (!_turnInContainersByGroup.TryGetValue(group, out var containers))
             {
-                containers = new HashSet<EntityUid>();
+                containers = new();
                 _turnInContainersByGroup[group] = containers;
             }
 
@@ -88,9 +88,7 @@ public sealed partial class NcContractSystem
 
         if (string.IsNullOrWhiteSpace(group) ||
             !_turnInContainersByGroup.TryGetValue(group, out var containers))
-        {
             return;
-        }
 
         foreach (var container in containers)
             output.Add(container);
@@ -102,9 +100,7 @@ public sealed partial class NcContractSystem
                 Exists(container) &&
                 TryComp(container, out NcContractTurnInContainerComponent? turnIn) &&
                 turnIn.Groups.Contains(group))
-            {
                 continue;
-            }
 
             RemoveTurnInContainerFromIndex(container);
             output.RemoveAt(i);

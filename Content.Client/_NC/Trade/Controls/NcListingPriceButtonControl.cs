@@ -4,7 +4,9 @@ using Robust.Client.Graphics;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 
+
 namespace Content.Client._NC.Trade.Controls;
+
 
 [GenerateTypedNameReferences]
 public sealed partial class NcListingPriceButtonControl : Button
@@ -67,10 +69,7 @@ public sealed partial class NcListingPriceButtonControl : Button
         CurrencyIcon.Visible = texture != null;
     }
 
-    public void SetPriceText(string text)
-    {
-        PriceLabel.Text = string.IsNullOrWhiteSpace(text) ? "0" : text;
-    }
+    public void SetPriceText(string text) => PriceLabel.Text = string.IsNullOrWhiteSpace(text) ? "0" : text;
 
     public void SetUnitPriceText(string text)
     {
@@ -78,10 +77,7 @@ public sealed partial class NcListingPriceButtonControl : Button
         UnitPriceLabel.Text = string.Empty;
     }
 
-    public void RefreshVisualState()
-    {
-        ApplyVisualState();
-    }
+    public void RefreshVisualState() => ApplyVisualState();
 
     private void ApplyVisualState()
     {
@@ -120,7 +116,7 @@ public sealed partial class NcListingPriceButtonControl : Button
         {
             BackgroundColor = background,
             BorderColor = border,
-            BorderThickness = new Thickness(1)
+            BorderThickness = new(1)
         };
 
         style.SetContentMarginOverride(StyleBox.Margin.Left, 0);

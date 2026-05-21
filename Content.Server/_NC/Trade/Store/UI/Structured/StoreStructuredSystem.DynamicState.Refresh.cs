@@ -3,7 +3,9 @@ using Content.Shared.Stacks;
 using Robust.Server.GameObjects;
 using Robust.Shared.Containers;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class StoreStructuredSystem : EntitySystem
 {
@@ -12,60 +14,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         NcStoreComponent comp,
         DynamicTabState tabs,
         DynamicScratch scratch,
-        DynamicStateBuffer buf)
-    {
+        DynamicStateBuffer buf
+    ) =>
         _dynamicStatePublisher.PublishIfChanged(_ui, store, comp, tabs, scratch, buf);
-    }
-
-    private sealed class StoreDynamicStatePublisher
-    {
-        public void PublishIfChanged(
-            UserInterfaceSystem ui,
-            EntityUid store,
-            NcStoreComponent comp,
-            DynamicTabState tabs,
-            DynamicScratch scratch,
-            DynamicStateBuffer buf)
-        {
-            if (scratch.EqualsLast(
-                    buf,
-                    comp.CatalogRevision,
-                    tabs.HasBuyTab,
-                    tabs.HasSellTab,
-                    tabs.HasBarterTab,
-                    tabs.HasContractsTab))
-            {
-                return;
-            }
-
-            comp.UiRevision = unchecked(comp.UiRevision + 1);
-
-            ui.SetUiState(
-                store,
-                StoreUiKey.Key,
-                new StoreDynamicState(
-                    comp.UiRevision,
-                    comp.CatalogRevision,
-                    new Dictionary<string, int>(buf.BalancesByCurrency),
-                    new Dictionary<string, int>(buf.RemainingById),
-                    new Dictionary<string, int>(buf.OwnedById),
-                    new Dictionary<string, int>(buf.CrateUnitsById),
-                    new Dictionary<string, int>(buf.CrateTotals),
-                    new List<ContractClientData>(buf.Contracts),
-                    tabs.HasBuyTab,
-                    tabs.HasSellTab,
-                    tabs.HasBarterTab,
-                    tabs.HasContractsTab,
-                    buf.ContractSkipCost,
-                    buf.ContractSkipCurrency,
-                    scratch.HasVisibleIds,
-                    new List<string>(buf.ListingScopeIds)
-                )
-            );
-
-            scratch.Commit(comp.CatalogRevision, tabs.HasBuyTab, tabs.HasSellTab, tabs.HasBarterTab, tabs.HasContractsTab);
-        }
-    }
 
     private bool TryFindWatchedRoot(EntityUid start, out EntityUid watchedRoot)
     {
@@ -190,6 +141,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             _pendingRefreshEntities.Clear();
             return;
         }
+
         _affectedStoresScratch.Clear();
         foreach (var root in _pendingRefreshEntities)
         {
@@ -205,5 +157,59 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         _pendingRefreshEntities.Clear();
         foreach (var s in _affectedStoresScratch)
             MarkDirty(s);
+    }
+
+    private sealed class StoreDynamicStatePublisher
+    {
+        public void PublishIfChanged(
+            UserInterfaceSystem ui,
+            EntityUid store,
+            NcStoreComponent comp,
+            DynamicTabState tabs,
+            DynamicScratch scratch,
+            DynamicStateBuffer buf
+        )
+        {
+            if (scratch.EqualsLast(
+                buf,
+                comp.CatalogRevision,
+                tabs.HasBuyTab,
+                tabs.HasSellTab,
+                tabs.HasBarterTab,
+                tabs.HasContractsTab))
+                return;
+
+            comp.UiRevision = unchecked(comp.UiRevision + 1);
+
+            ui.SetUiState(
+                store,
+                StoreUiKey.Key,
+                new StoreDynamicState(
+                    comp.UiRevision,
+                    comp.CatalogRevision,
+                    new(buf.BalancesByCurrency),
+                    new(buf.RemainingById),
+                    new(buf.OwnedById),
+                    new(buf.CrateUnitsById),
+                    new(buf.CrateTotals),
+                    new(buf.Contracts),
+                    tabs.HasBuyTab,
+                    tabs.HasSellTab,
+                    tabs.HasBarterTab,
+                    tabs.HasContractsTab,
+                    buf.ContractSkipCost,
+                    buf.ContractSkipCurrency,
+                    scratch.HasVisibleIds,
+                    new(buf.ListingScopeIds)
+                )
+            );
+
+            scratch.Commit(
+                comp.CatalogRevision,
+                tabs.HasBuyTab,
+                tabs.HasSellTab,
+                tabs.HasBarterTab,
+                tabs.HasContractsTab);
+        }
     }
 }

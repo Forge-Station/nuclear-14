@@ -1,7 +1,8 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -18,18 +19,16 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         var targets = GetEffectiveTargets(contract);
         if (TryUpdateSimpleContractProgress(
-                contract,
-                targets,
-                store,
-                user,
-                userItems,
-                crate,
-                crateItems,
-                storeNearbyItems,
-                hasCrateWork))
-        {
+            contract,
+            targets,
+            store,
+            user,
+            userItems,
+            crate,
+            crateItems,
+            storeNearbyItems,
+            hasCrateWork))
             return;
-        }
 
         ClearProgressPerContractScratch();
         var totalRequired = CollectProgressRequirements(targets);
@@ -76,7 +75,17 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         ClearProgressReservationScratch();
-        UpdateSingleTargetContractProgress(contract, targets, 0, store, user, userItems, crate, crateItems, storeNearbyItems, hasCrateWork);
+        UpdateSingleTargetContractProgress(
+            contract,
+            targets,
+            0,
+            store,
+            user,
+            userItems,
+            crate,
+            crateItems,
+            storeNearbyItems,
+            hasCrateWork);
         return true;
     }
 
@@ -95,7 +104,9 @@ public sealed partial class NcContractSystem : EntitySystem
             }
 
             var key = (target.TargetItem, target.MatchMode);
-            _progressRequiredByKeyScratch[key] = SaturatingAdd(_progressRequiredByKeyScratch.GetValueOrDefault(key, 0), target.Required);
+            _progressRequiredByKeyScratch[key] = SaturatingAdd(
+                _progressRequiredByKeyScratch.GetValueOrDefault(key, 0),
+                target.Required);
 
             if (!_progressTargetIndexesByKeyScratch.TryGetValue(key, out var indexes))
             {

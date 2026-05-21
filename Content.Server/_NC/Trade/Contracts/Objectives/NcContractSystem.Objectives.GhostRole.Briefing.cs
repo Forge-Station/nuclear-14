@@ -1,25 +1,11 @@
-using Content.Server.Atmos.Rotting;
-using Content.Server.Cuffs;
-using Content.Server.Ghost.Roles.Components;
-using Content.Server.Humanoid;
-using Content.Server.Mind.Commands;
 using Content.Server.Roles;
 using Content.Shared._NC.Trade;
-using Content.Shared.Cuffs.Components;
-using Content.Shared.Customization.Systems;
-using Content.Shared.Damage;
-using Content.Shared.FixedPoint;
-using Content.Shared.Humanoid;
-using Content.Shared.Humanoid.Markings;
 using Content.Shared.Mind;
-using Content.Shared.Mind.Components;
-using Content.Shared.Movement.Pulling.Components;
-using Content.Shared.Mobs;
-using Content.Shared.Mobs.Components;
 using Robust.Shared.Map;
-using Robust.Shared.Prototypes;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -50,9 +36,11 @@ public sealed partial class NcContractSystem : EntitySystem
             ? string.Empty
             : ResolveGhostRoleLocaleText(config.GhostRoleRules);
         if (!string.IsNullOrWhiteSpace(rules))
+        {
             description = string.IsNullOrWhiteSpace(description)
                 ? rules
                 : $"{description}\n{rules}";
+        }
 
         var survival = config.GhostRoleSurvivalDurationSeconds > 0
             ? ResolveGhostRoleSurvivalBriefing(config)
@@ -62,7 +50,10 @@ public sealed partial class NcContractSystem : EntitySystem
             return survival;
 
         if (string.IsNullOrWhiteSpace(survival))
-            return Loc.GetString("nc-store-contract-ghost-role-character-briefing", ("contract", contract.Name), ("description", description));
+            return Loc.GetString(
+                "nc-store-contract-ghost-role-character-briefing",
+                ("contract", contract.Name),
+                ("description", description));
 
         return Loc.GetString(
             "nc-store-contract-ghost-role-character-briefing-survival",
@@ -86,18 +77,17 @@ public sealed partial class NcContractSystem : EntitySystem
         ObjectiveRuntimeState state,
         ContractServerData contract,
         EntityUid mindId,
-        MindComponent mind)
+        MindComponent mind
+    )
     {
         var config = contract.Config;
         if (config.GhostRoleSurvivalDurationSeconds <= 0 ||
             state.GhostRoleSurvivalObjective is { } existing && existing != EntityUid.Invalid)
-        {
             return;
-        }
 
         var start = state.GhostRoleSurvivalStart ?? _timing.CurTime;
         var deadline = state.GhostRoleSurvivalDeadline ??
-                       start + TimeSpan.FromSeconds(config.GhostRoleSurvivalDurationSeconds);
+            start + TimeSpan.FromSeconds(config.GhostRoleSurvivalDurationSeconds);
 
         var objective = Spawn("NcContractGhostRoleSurvivalObjective", MapCoordinates.Nullspace);
         _contractMeta.SetEntityName(objective, ResolveGhostRoleSurvivalObjectiveTitle(contract));
@@ -136,12 +126,10 @@ public sealed partial class NcContractSystem : EntitySystem
             ("time", FormatGhostRoleDurationText(contract.Config.GhostRoleSurvivalDurationSeconds)));
     }
 
-    private string ResolveGhostRoleLocaleText(string text)
-    {
-        return Loc.TryGetString(text, out var localized)
+    private string ResolveGhostRoleLocaleText(string text) =>
+        Loc.TryGetString(text, out var localized)
             ? localized
             : text;
-    }
 
     private string FormatGhostRoleDurationText(int totalSeconds)
     {
@@ -149,9 +137,9 @@ public sealed partial class NcContractSystem : EntitySystem
         var span = TimeSpan.FromSeconds(seconds);
         var parts = new List<string>(2);
 
-        if (span.Hours + (span.Days * 24) > 0)
+        if (span.Hours + span.Days * 24 > 0)
         {
-            var hours = span.Hours + (span.Days * 24);
+            var hours = span.Hours + span.Days * 24;
             parts.Add(Loc.GetString("nc-store-contract-duration-hours", ("count", hours)));
         }
 

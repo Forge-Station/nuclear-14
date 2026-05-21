@@ -1,9 +1,10 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
 using Content.Shared.Tag;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -29,10 +30,8 @@ public sealed partial class NcContractSystem : EntitySystem
             valid = false;
 
         for (var i = 0; i < proto.Targets.Count; i++)
-        {
             if (!TryValidateSupplyTarget(proto.ID, i, proto.Targets[i]))
                 valid = false;
-        }
 
         if (!TryValidateSupplyRewardsForPool(proto))
             valid = false;
@@ -71,7 +70,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryValidateSupplyTarget(
         string contractId,
         int index,
-        NcSupplyTargetEntry entry)
+        NcSupplyTargetEntry entry
+    )
     {
         var hasPrototype = !string.IsNullOrWhiteSpace(entry.Prototype);
         var hasGroup = !string.IsNullOrWhiteSpace(entry.Group);
@@ -147,7 +147,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryValidateItemGroup(
         string ownerId,
         string groupId,
-        NcItemGroupPrototype group)
+        NcItemGroupPrototype group
+    )
     {
         var valid = true;
         var hasAnyEntry = false;
@@ -185,10 +186,8 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         var count = 0;
         for (var i = 0; i < values.Length; i++)
-        {
             if (!string.IsNullOrWhiteSpace(values[i]))
                 count++;
-        }
 
         return count;
     }

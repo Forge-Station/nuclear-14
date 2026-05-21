@@ -20,16 +20,19 @@ public sealed class NcStoreSystem : EntitySystem
     private const int MaxTransactionCount = 1000;
     private static readonly TimeSpan InvalidMessageWarningInterval = TimeSpan.FromSeconds(5);
     private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore");
+    private static readonly SoundSpecifier TransactionSuccessSound =
+        new SoundPathSpecifier("/Audio/Effects/Cargo/ping.ogg");
+
     [Dependency] private readonly AccessReaderSystem _accessReader = default!;
     [Dependency] private readonly AudioSystem _audio = default!;
     [Dependency] private readonly IEntityManager _entMan = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
+    private readonly Dictionary<string, TimeSpan> _nextInvalidListingWarningByActor = new(StringComparer.Ordinal);
     [Dependency] private readonly PopupSystem _popups = default!;
     [Dependency] private readonly StoreStructuredSystem _storeUi = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly TransformSystem _transform = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
-    private readonly Dictionary<string, TimeSpan> _nextInvalidListingWarningByActor = new(StringComparer.Ordinal);
 
     public override void Initialize()
     {
@@ -71,7 +74,8 @@ public sealed class NcStoreSystem : EntitySystem
         return Vector2.Distance(aPos, bPos) <= maxDistance;
     }
 
-    private bool IsInUseRange(EntityUid store, EntityUid user) => IsInRange(store, user, StoreTradeLimits.StoreUseDistance);
+    private bool IsInUseRange(EntityUid store, EntityUid user) =>
+        IsInRange(store, user, StoreTradeLimits.StoreUseDistance);
 
 
     private bool TryValidateUse(EntityUid store, NcStoreComponent comp, EntityUid actor, out string failMessage)
@@ -209,7 +213,7 @@ public sealed class NcStoreSystem : EntitySystem
             return;
         }
 
-        _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid, AudioParams.Default.WithVolume(-2f));
+        _audio.PlayPvs(TransactionSuccessSound, uid, AudioParams.Default.WithVolume(-2f));
         _storeUi.RequestDynamicRefresh(uid, comp, actor);
     }
 
@@ -266,7 +270,7 @@ public sealed class NcStoreSystem : EntitySystem
             return;
         }
 
-        _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid, AudioParams.Default.WithVolume(-2f));
+        _audio.PlayPvs(TransactionSuccessSound, uid, AudioParams.Default.WithVolume(-2f));
         _storeUi.RequestDynamicRefresh(uid, comp, actor);
     }
 
@@ -300,7 +304,7 @@ public sealed class NcStoreSystem : EntitySystem
             return;
         }
 
-        _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid, AudioParams.Default.WithVolume(-2f));
+        _audio.PlayPvs(TransactionSuccessSound, uid, AudioParams.Default.WithVolume(-2f));
         _storeUi.RequestDynamicRefresh(uid, comp, actor);
     }
 
@@ -338,7 +342,7 @@ public sealed class NcStoreSystem : EntitySystem
             return;
         }
 
-        _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid, AudioParams.Default.WithVolume(-2f));
+        _audio.PlayPvs(TransactionSuccessSound, uid, AudioParams.Default.WithVolume(-2f));
         _storeUi.RequestDynamicRefresh(uid, comp, actor);
     }
 }

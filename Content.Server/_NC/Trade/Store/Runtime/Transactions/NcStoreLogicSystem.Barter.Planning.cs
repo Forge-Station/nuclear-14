@@ -1,32 +1,11 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
-using Content.Shared.Tag;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
+
 
 namespace Content.Server._NC.Trade;
 
+
 public sealed partial class NcStoreLogicSystem
 {
-    public sealed class BarterAvailabilityContext
-    {
-        internal readonly List<EntityUid> ScannedItems = new();
-        internal readonly List<BarterReservableItem> BaseItems = new();
-        internal readonly List<BarterReservableItem> WorkItems = new();
-        internal readonly List<BarterReservableItem> DemandCandidates = new();
-        internal EntityUid Root = EntityUid.Invalid;
-        internal bool Prepared;
-
-        internal void Reset(EntityUid root)
-        {
-            Root = root;
-            Prepared = true;
-            BaseItems.Clear();
-            WorkItems.Clear();
-            DemandCandidates.Clear();
-        }
-    }
-
     public void PrepareBarterAvailabilityContext(EntityUid root, BarterAvailabilityContext context)
     {
         context.ScannedItems.Clear();
@@ -37,7 +16,8 @@ public sealed partial class NcStoreLogicSystem
     public void PrepareBarterAvailabilityContext(
         EntityUid root,
         IReadOnlyList<EntityUid> scannedItems,
-        BarterAvailabilityContext context)
+        BarterAvailabilityContext context
+    )
     {
         context.Reset(root);
         FillBarterReservableItems(root, scannedItems, context.BaseItems);
@@ -53,7 +33,8 @@ public sealed partial class NcStoreLogicSystem
         EntityUid user,
         NcStoreListingDef listing,
         int requested,
-        BarterAvailabilityContext? context = null)
+        BarterAvailabilityContext? context = null
+    )
     {
         if (requested <= 0)
             return 0;
@@ -83,17 +64,17 @@ public sealed partial class NcStoreLogicSystem
         EntityUid root,
         List<NcBarterCostEntry> costs,
         int times,
-        BarterAvailabilityContext? context = null)
-    {
-        return TryBuildBarterCostPlan(root, costs, times, out _, context);
-    }
+        BarterAvailabilityContext? context = null
+    ) =>
+        TryBuildBarterCostPlan(root, costs, times, out _, context);
 
     private bool TryBuildBarterCostPlan(
         EntityUid root,
         List<NcBarterCostEntry> costs,
         int times,
         out BarterCostPlan plan,
-        BarterAvailabilityContext? context = null)
+        BarterAvailabilityContext? context = null
+    )
     {
         plan = new();
 
@@ -119,11 +100,28 @@ public sealed partial class NcStoreLogicSystem
         });
 
         for (var i = 0; i < demands.Count; i++)
-        {
             if (!TryReserveBarterDemand(plan, items, demands[i], context?.DemandCandidates))
                 return false;
-        }
 
         return plan.Reservations.Count > 0;
+    }
+
+    public sealed class BarterAvailabilityContext
+    {
+        internal readonly List<BarterReservableItem> BaseItems = new();
+        internal readonly List<BarterReservableItem> DemandCandidates = new();
+        internal readonly List<EntityUid> ScannedItems = new();
+        internal readonly List<BarterReservableItem> WorkItems = new();
+        internal bool Prepared;
+        internal EntityUid Root = EntityUid.Invalid;
+
+        internal void Reset(EntityUid root)
+        {
+            Root = root;
+            Prepared = true;
+            BaseItems.Clear();
+            WorkItems.Clear();
+            DemandCandidates.Clear();
+        }
     }
 }

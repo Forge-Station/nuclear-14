@@ -1,12 +1,13 @@
-using System;
 using Robust.Shared.Serialization;
+
 
 namespace Content.Shared._NC.Trade;
 
+
 /// <summary>
-/// Flavor of a listing entry on the client (base listing vs derived virtual entries).
+///     Flavor of a listing entry on the client (base listing vs derived virtual entries).
 /// </summary>
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public enum StoreListingFlavor : byte
 {
     Base = 0,
@@ -14,46 +15,42 @@ public enum StoreListingFlavor : byte
     Crate = 2
 }
 
-
 /// <summary>
-/// Client-side listing view model (static + dynamic fields).
-/// Constructed on the client from <see cref="StoreListingStaticData"/> and <see cref="StoreDynamicState"/>.
+///     Client-side listing view model (static + dynamic fields).
+///     Constructed on the client from <see cref="StoreListingStaticData" /> and <see cref="StoreDynamicState" />.
 /// </summary>
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public sealed class StoreListingData
 {
+    public List<NcBarterCostEntry> BarterCost = new();
+    public List<NcBarterReceiveEntry> BarterReceive = new();
+    public List<NcBarterReceivePoolEntry> BarterReceivePools = new();
     public string Category = string.Empty;
     public string CurrencyId = string.Empty;
+    public string Description = string.Empty;
+    public string DisplayName = string.Empty;
+
+    /// <summary>Client-only flavor to distinguish derived entries.</summary>
+    public StoreListingFlavor Flavor = StoreListingFlavor.Base;
+
     public string Id = string.Empty;
 
     /// <summary>Base listing id used for server transactions.</summary>
     public string ListingId = string.Empty;
 
-    /// <summary>Client-only flavor to distinguish derived entries.</summary>
-    public StoreListingFlavor Flavor = StoreListingFlavor.Base;
-    public StoreMode Mode;
     public PrototypeMatchMode MatchMode = PrototypeMatchMode.Exact;
-
-    public static string MakeUiId(string listingId, StoreListingFlavor flavor)
-    {
-        // Unit Separator (0x1F) is extremely unlikely to appear in prototype ids; we use it to avoid collisions.
-        return listingId + "\u001f" + ((byte) flavor).ToString();
-    }
+    public StoreMode Mode;
 
     // Dynamic
     /// <summary>
-    /// Per-listing action capacity: player-owned item count for Sell, max affordable execution count for Barter.
+    ///     Per-listing action capacity: player-owned item count for Sell, max affordable execution count for Barter.
     /// </summary>
     public int Owned;
+
     public int Price;
-    public int UnitsPerPurchase = 1;
     public string ProductEntity = string.Empty;
-    public string DisplayName = string.Empty;
-    public string Description = string.Empty;
     public int Remaining = -1;
-    public List<NcBarterCostEntry> BarterCost = new();
-    public List<NcBarterReceiveEntry> BarterReceive = new();
-    public List<NcBarterReceivePoolEntry> BarterReceivePools = new();
+    public int UnitsPerPurchase = 1;
 
     public StoreListingData() { }
 
@@ -73,7 +70,8 @@ public sealed class StoreListingData
         string description = "",
         List<NcBarterCostEntry>? barterCost = null,
         List<NcBarterReceiveEntry>? barterReceive = null,
-        List<NcBarterReceivePoolEntry>? barterReceivePools = null)
+        List<NcBarterReceivePoolEntry>? barterReceivePools = null
+    )
     {
         ListingId = listingId;
         Flavor = flavor;
@@ -109,7 +107,8 @@ public sealed class StoreListingData
         string description = "",
         List<NcBarterCostEntry>? barterCost = null,
         List<NcBarterReceiveEntry>? barterReceive = null,
-        List<NcBarterReceivePoolEntry>? barterReceivePools = null)
+        List<NcBarterReceivePoolEntry>? barterReceivePools = null
+    )
     {
         Id = id;
         ListingId = id;
@@ -129,4 +128,8 @@ public sealed class StoreListingData
         BarterReceive = barterReceive ?? new List<NcBarterReceiveEntry>();
         BarterReceivePools = barterReceivePools ?? new List<NcBarterReceivePoolEntry>();
     }
+
+    public static string MakeUiId(string listingId, StoreListingFlavor flavor) =>
+        // Unit Separator (0x1F) is extremely unlikely to appear in prototype ids; we use it to avoid collisions.
+        listingId + "\u001f" + (byte) flavor;
 }

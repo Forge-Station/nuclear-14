@@ -1,7 +1,8 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -12,7 +13,8 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract,
         EntityUid? crateEntity,
         List<EntityUid>? crateItems,
-        List<EntityUid> storeNearbyItems)
+        List<EntityUid> storeNearbyItems
+    )
     {
         if (_progressScratchInUse)
         {
@@ -34,7 +36,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 crateEntity,
                 crateItems,
                 storeNearbyItems,
-                crateEntity != null && crateItems is { Count: > 0 });
+                crateEntity != null && crateItems is { Count: > 0, });
             ApplyPartialTurnInProgress(store, contractId, contract);
         }
         finally
@@ -52,7 +54,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid? crate,
         IReadOnlyList<EntityUid>? crateItems,
         IReadOnlyList<EntityUid>? storeNearbyItems,
-        bool hasCrateWork)
+        bool hasCrateWork
+    )
     {
         if (!RequiresRetrievalSpawnedTurnIn(contract))
             return false;
@@ -74,8 +77,8 @@ public sealed partial class NcContractSystem : EntitySystem
         var trackedCrateItems = FilterRetrievalSpawnedSourceItems(crateItems, state);
         var trackedStoreNearbyItems = contract.AllowsStoreWorldTurnIn
             ? FilterRetrievalSpawnedSourceItems(storeNearbyItems, state)
-            : new List<EntityUid>();
-        var hasTrackedCrateWork = crate is { } && hasCrateWork && trackedCrateItems.Count > 0;
+            : new();
+        var hasTrackedCrateWork = crate is not null && hasCrateWork && trackedCrateItems.Count > 0;
 
         UpdateRetrievalSpawnedEntityProgress(
             contract,
@@ -97,7 +100,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid? crate,
         List<EntityUid> trackedCrateItems,
         List<EntityUid> trackedStoreNearbyItems,
-        bool hasTrackedCrateWork)
+        bool hasTrackedCrateWork
+    )
     {
         var targets = GetEffectiveTargets(contract);
         var totalRequired = CalculateTotalRequired(targets);
@@ -150,15 +154,29 @@ public sealed partial class NcContractSystem : EntitySystem
         string targetItem,
         PrototypeMatchMode matchMode,
         int required,
-        HashSet<EntityUid> used)
+        HashSet<EntityUid> used
+    )
     {
         var need = required;
 
         if (crate is { } crateRoot && hasTrackedCrateWork)
-            need -= CountRetrievalSpawnedEntitiesFromSource(crateRoot, trackedCrateItems, targetItem, matchMode, need, used);
+            need -= CountRetrievalSpawnedEntitiesFromSource(
+                crateRoot,
+                trackedCrateItems,
+                targetItem,
+                matchMode,
+                need,
+                used);
 
         need -= CountRetrievalSpawnedEntitiesFromSource(user, trackedUserItems, targetItem, matchMode, need, used);
-        need -= CountRetrievalSpawnedEntitiesFromSource(store, trackedStoreNearbyItems, targetItem, matchMode, need, used, worldTurnInSource: true);
+        need -= CountRetrievalSpawnedEntitiesFromSource(
+            store,
+            trackedStoreNearbyItems,
+            targetItem,
+            matchMode,
+            need,
+            used,
+            true);
 
         return required - Math.Max(0, need);
     }
@@ -170,7 +188,8 @@ public sealed partial class NcContractSystem : EntitySystem
         PrototypeMatchMode matchMode,
         int need,
         HashSet<EntityUid> used,
-        bool worldTurnInSource = false)
+        bool worldTurnInSource = false
+    )
     {
         if (need <= 0 || items == null)
             return 0;
@@ -198,7 +217,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool MatchesRetrievalSpawnedEntityTarget(
         EntityUid ent,
         string targetItem,
-        PrototypeMatchMode matchMode)
+        PrototypeMatchMode matchMode
+    )
     {
         if (!TryGetPlanningEntityPrototypeId(ent, out var candidateId))
             return false;
@@ -210,7 +230,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid store,
         string contractId,
         ContractServerData contract,
-        out ObjectiveRuntimeState state)
+        out ObjectiveRuntimeState state
+    )
     {
         state = default!;
         if (!RequiresRetrievalSpawnedTurnIn(contract))

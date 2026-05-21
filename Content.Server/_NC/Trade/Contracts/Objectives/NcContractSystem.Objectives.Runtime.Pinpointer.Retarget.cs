@@ -1,16 +1,16 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Movement.Pulling.Components;
-using Robust.Shared.Map;
-using Robust.Shared.Prototypes;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
     private void RetargetObjectivePinpointers(
         (EntityUid Store, string ContractId) key,
         ObjectiveRuntimeState state,
-        EntityUid target)
+        EntityUid target
+    )
     {
         if (target == EntityUid.Invalid || TerminatingOrDeleted(target))
             return;
@@ -33,15 +33,14 @@ public sealed partial class NcContractSystem : EntitySystem
         (EntityUid Store, string ContractId) key,
         ObjectiveRuntimeState state,
         EntityUid owner,
-        EntityUid target)
+        EntityUid target
+    )
     {
         if (owner == EntityUid.Invalid ||
             target == EntityUid.Invalid ||
             TerminatingOrDeleted(owner) ||
             TerminatingOrDeleted(target))
-        {
             return false;
-        }
 
         PruneInvalidPinpointers(key, state);
         if (state.PinpointerEntities.Count == 0)
@@ -55,9 +54,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
             if (!_pinpointerService.TryGetOwner(_objectiveRuntime, pinpointer, out var pinpointerOwner) ||
                 pinpointerOwner != owner)
-            {
                 continue;
-            }
 
             _pinpointer.SetTarget(pinpointer, target);
             _pinpointer.SetActive(pinpointer, true);
@@ -96,9 +93,7 @@ public sealed partial class NcContractSystem : EntitySystem
             !contract.Taken ||
             contract.Runtime.Failed ||
             !UsesRetrievalSpawnedPinpointerTarget(contract))
-        {
             return false;
-        }
 
         RefreshPinpointerRuntimeState(key.Store, key.ContractId, contract);
         if (contract.Runtime.Failed || !_objectiveRuntime.ByContract.TryGetValue(key, out state))
@@ -119,9 +114,7 @@ public sealed partial class NcContractSystem : EntitySystem
             !contract.Taken ||
             contract.Runtime.Failed ||
             !UsesRetrievalSpawnedPinpointerTarget(contract))
-        {
             return false;
-        }
 
         RefreshPinpointerRuntimeState(key.Store, key.ContractId, contract);
         if (contract.Runtime.Failed || !_objectiveRuntime.ByContract.TryGetValue(key, out state))
@@ -135,9 +128,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (IsRetrievalCargoAlreadyAtPinpointerDestination(key.Store, contract, state, cargo) ||
             !TryResolveRetrievalCargoDestinationPinpointerTarget(key.Store, contract, state, out var target))
-        {
             return false;
-        }
 
         PruneInvalidPinpointers(key, state);
         if (state.PinpointerEntities.Count == 0)
@@ -150,9 +141,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 !_pinpointerService.TryGetOwner(_objectiveRuntime, pinpointer, out var owner) ||
                 owner == EntityUid.Invalid ||
                 !IsRetrievalCargoControlledByUser(cargo, owner))
-            {
                 continue;
-            }
 
             _pinpointer.SetTarget(pinpointer, target);
             _pinpointer.SetActive(pinpointer, true);
@@ -165,13 +154,12 @@ public sealed partial class NcContractSystem : EntitySystem
     private void RetargetRetrievalPinpointersToCurrentStep(
         (EntityUid Store, string ContractId) key,
         ContractServerData contract,
-        ObjectiveRuntimeState state)
+        ObjectiveRuntimeState state
+    )
     {
         if (!contract.Config.RetrievalGuidancePinpointerEnabled ||
             !UsesRetrievalSpawnedPinpointerTarget(contract))
-        {
             return;
-        }
 
         PruneInvalidPinpointers(key, state);
         if (state.PinpointerEntities.Count == 0)
@@ -195,9 +183,7 @@ public sealed partial class NcContractSystem : EntitySystem
                     continue;
             }
             else if (!TryResolveContractPinpointerTarget(key.Store, key.ContractId, contract, state, out target))
-            {
                 continue;
-            }
 
             if (target == EntityUid.Invalid || TerminatingOrDeleted(target))
                 continue;

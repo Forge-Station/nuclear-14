@@ -1,7 +1,8 @@
-using System;
 using Content.Shared._NC.Trade;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -18,9 +19,8 @@ public sealed partial class NcContractSystem : EntitySystem
         return contract;
     }
 
-    private static ContractServerData CreateInvalidContractData(ContractPoolCandidate candidate)
-    {
-        return new ContractServerData
+    private static ContractServerData CreateInvalidContractData(ContractPoolCandidate candidate) =>
+        new()
         {
             Id = candidate.Id,
             Name = candidate.Id,
@@ -30,7 +30,6 @@ public sealed partial class NcContractSystem : EntitySystem
             ExecutionKind = ContractExecutionKind.InventoryDelivery,
             FlowStatus = ContractFlowStatus.Failed
         };
-    }
 
     private static int CalculateTotalRequired(List<ContractTargetServerData> targets)
     {
@@ -41,9 +40,6 @@ public sealed partial class NcContractSystem : EntitySystem
         return totalRequired;
     }
 
-    private static string GetPrimaryTargetId(List<ContractTargetServerData> targets)
-    {
-        return targets.Count > 0 ? targets[0].TargetItem : string.Empty;
-    }
-
+    private static string GetPrimaryTargetId(List<ContractTargetServerData> targets) =>
+        targets.Count > 0 ? targets[0].TargetItem : string.Empty;
 }

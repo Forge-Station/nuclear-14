@@ -1,6 +1,4 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
-using Content.Shared.Tag;
 using Robust.Shared.Prototypes;
 
 
@@ -70,7 +68,7 @@ public sealed partial class StoreSystemStructuredLoader : EntitySystem
         comp.Listings.Clear();
         comp.ListingIndex.Clear();
 
-        if (!_prototypes.TryIndex<NcStoreProfilePrototype>(comp.Profile, out var profile))
+        if (!_prototypes.TryIndex(comp.Profile, out var profile))
         {
             Sawmill.Warning($"[NcStore] {ToPrettyString(uid)}: profile '{comp.Profile}' not found (reason={reason}).");
             return;
@@ -109,12 +107,13 @@ public sealed partial class StoreSystemStructuredLoader : EntitySystem
         EntityUid uid,
         NcStoreComponent comp,
         NcStoreProfilePrototype profile,
-        string reason)
+        string reason
+    )
     {
         if (profile.Contracts is not { } contractsId)
             return;
 
-        if (!_prototypes.TryIndex<StoreContractsPresetPrototype>(contractsId, out var contractsPreset))
+        if (!_prototypes.TryIndex(contractsId, out var contractsPreset))
             return;
 
         if (contractsPreset.SkipCost <= 0 || !string.IsNullOrWhiteSpace(contractsPreset.SkipCurrency))
@@ -132,12 +131,13 @@ public sealed partial class StoreSystemStructuredLoader : EntitySystem
     private void AddContractSkipCurrencyIfNeeded(
         NcStoreComponent comp,
         NcStoreProfilePrototype profile,
-        LoadContext ctx)
+        LoadContext ctx
+    )
     {
         if (profile.Contracts is not { } contractsId)
             return;
 
-        if (!_prototypes.TryIndex<StoreContractsPresetPrototype>(contractsId, out var contractsPreset))
+        if (!_prototypes.TryIndex(contractsId, out var contractsPreset))
             return;
 
         if (contractsPreset.SkipCost <= 0)
@@ -155,7 +155,8 @@ public sealed partial class StoreSystemStructuredLoader : EntitySystem
         ProtoId<StorePresetStructuredPrototype> presetId,
         StoreMode mode,
         NcStoreComponent comp,
-        LoadContext ctx)
+        LoadContext ctx
+    )
     {
         if (!_prototypes.TryIndex<StorePresetStructuredPrototype>(presetId, out var preset))
         {
@@ -199,8 +200,8 @@ public sealed partial class StoreSystemStructuredLoader : EntitySystem
                     ProductEntity = productId,
                     MatchMode = entry.MatchMode,
                     Mode = mode,
-                    Categories = new List<string> { categoryName },
-                    Conditions = new List<ListingConditionPrototype>(),
+                    Categories = new() { categoryName, },
+                    Conditions = new(),
                     RemainingCount = entry.Count ?? -1,
                     UnitsPerPurchase = Math.Max(1, entry.Amount),
                     Cost = new()
@@ -218,10 +219,6 @@ public sealed partial class StoreSystemStructuredLoader : EntitySystem
 
         return count;
     }
-
-
-
-
 
 
     private sealed class LoadContext

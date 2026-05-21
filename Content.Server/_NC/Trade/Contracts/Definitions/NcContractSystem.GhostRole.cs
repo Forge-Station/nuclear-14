@@ -2,7 +2,9 @@ using System.Linq;
 using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -20,7 +22,7 @@ public sealed partial class NcContractSystem : EntitySystem
             Failed = false,
             FailureReason = string.Empty
         };
-        NormalizeRuntimeState(ContractExecutionKind.GhostRoleObjective, runtime);
+        NormalizeRuntimeState(runtime);
 
         var config = new ContractObjectiveConfigData
         {
@@ -72,7 +74,7 @@ public sealed partial class NcContractSystem : EntitySystem
             Progress = 0,
             Targets = new()
             {
-                new ContractTargetServerData
+                new()
                 {
                     TargetItem = target,
                     Required = 1,
@@ -96,16 +98,17 @@ public sealed partial class NcContractSystem : EntitySystem
         return rewards;
     }
 
-    private bool TryAppendGhostRoleRewardEntry(
+    private void TryAppendGhostRoleRewardEntry(
         string contractId,
         string path,
         NcSupplyRewardEntry entry,
-        List<ContractRewardDef> output)
+        List<ContractRewardDef> output
+    )
     {
         if (!IsCountConfigured(entry.Count))
         {
             Sawmill.Warning($"[Contracts] GhostRole contract '{contractId}' {path} does not define 'count'.");
-            return false;
+            return;
         }
 
         if (!IsRewardCountRange(entry.Count))
@@ -113,7 +116,7 @@ public sealed partial class NcContractSystem : EntitySystem
             Sawmill.Warning(
                 $"[Contracts] GhostRole contract '{contractId}' {path} has invalid count range " +
                 $"{entry.Count.Min}..{entry.Count.Max}.");
-            return false;
+            return;
         }
 
         switch (entry.Type)
@@ -121,72 +124,79 @@ public sealed partial class NcContractSystem : EntitySystem
             case StoreRewardType.Item:
                 if (string.IsNullOrWhiteSpace(entry.Prototype))
                 {
-                    Sawmill.Warning($"[Contracts] GhostRole contract '{contractId}' {path} is Item but has no prototype.");
-                    return false;
+                    Sawmill.Warning(
+                        $"[Contracts] GhostRole contract '{contractId}' {path} is Item but has no prototype.");
+                    return;
                 }
 
                 if (!_prototypes.HasIndex<EntityPrototype>(entry.Prototype))
                 {
                     Sawmill.Warning(
                         $"[Contracts] GhostRole contract '{contractId}' {path} references missing entity prototype '{entry.Prototype}'.");
-                    return false;
+                    return;
                 }
 
-                output.Add(new ContractRewardDef
-                {
-                    Type = StoreRewardType.Item,
-                    RewardId = entry.Prototype,
-                    Count = entry.Count,
-                    Weight = 1
-                });
-                return true;
+                output.Add(
+                    new()
+                    {
+                        Type = StoreRewardType.Item,
+                        RewardId = entry.Prototype,
+                        Count = entry.Count,
+                        Weight = 1
+                    });
+                return;
 
             case StoreRewardType.Currency:
                 if (string.IsNullOrWhiteSpace(entry.Currency))
                 {
-                    Sawmill.Warning($"[Contracts] GhostRole contract '{contractId}' {path} is Currency but has no currency.");
-                    return false;
+                    Sawmill.Warning(
+                        $"[Contracts] GhostRole contract '{contractId}' {path} is Currency but has no currency.");
+                    return;
                 }
 
-                output.Add(new ContractRewardDef
-                {
-                    Type = StoreRewardType.Currency,
-                    RewardId = entry.Currency,
-                    Count = entry.Count,
-                    Weight = 1
-                });
-                return true;
+                output.Add(
+                    new()
+                    {
+                        Type = StoreRewardType.Currency,
+                        RewardId = entry.Currency,
+                        Count = entry.Count,
+                        Weight = 1
+                    });
+                return;
 
             case StoreRewardType.Pool:
                 if (string.IsNullOrWhiteSpace(entry.Pool))
                 {
-                    Sawmill.Warning($"[Contracts] GhostRole contract '{contractId}' {path} is Pool but has no pool id.");
-                    return false;
+                    Sawmill.Warning(
+                        $"[Contracts] GhostRole contract '{contractId}' {path} is Pool but has no pool id.");
+                    return;
                 }
 
                 if (!_prototypes.HasIndex<NcSupplyRewardPoolPrototype>(entry.Pool))
                 {
                     Sawmill.Warning(
                         $"[Contracts] GhostRole contract '{contractId}' {path} references missing Supply reward pool '{entry.Pool}'. Use type: ncSupplyRewardPool.");
-                    return false;
+                    return;
                 }
 
-                output.Add(new ContractRewardDef
-                {
-                    Type = StoreRewardType.Pool,
-                    RewardId = entry.Pool,
-                    Count = entry.Count,
-                    Weight = 1
-                });
-                return true;
+                output.Add(
+                    new()
+                    {
+                        Type = StoreRewardType.Pool,
+                        RewardId = entry.Pool,
+                        Count = entry.Count,
+                        Weight = 1
+                    });
+                return;
 
             case StoreRewardType.Unspecified:
                 Sawmill.Warning($"[Contracts] GhostRole contract '{contractId}' {path} does not define 'type'.");
-                return false;
+                return;
 
             default:
-                Sawmill.Warning($"[Contracts] GhostRole contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
-                return false;
+                Sawmill.Warning(
+                    $"[Contracts] GhostRole contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
+                return;
         }
     }
 }

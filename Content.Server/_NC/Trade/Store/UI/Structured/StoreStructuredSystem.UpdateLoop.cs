@@ -1,19 +1,8 @@
-using System.Linq;
-using Content.Server.Popups;
-using Content.Server.Storage.Components;
 using Content.Shared._NC.Trade;
-using Content.Shared.Access.Components;
-using Content.Shared.Stacks;
-using Content.Shared.Storage.Components;
-using Content.Shared.UserInterface;
-using Robust.Server.Audio;
-using Robust.Server.GameObjects;
-using Robust.Shared.Audio;
-using Robust.Shared.Containers;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Timing;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class StoreStructuredSystem
 {
@@ -152,10 +141,8 @@ public sealed partial class StoreStructuredSystem
         return now >= scratch.NextDynamicAllowed;
     }
 
-    private void SetNextDynamicUpdateTime(DynamicScratch scratch, TimeSpan now)
-    {
+    private void SetNextDynamicUpdateTime(DynamicScratch scratch, TimeSpan now) =>
         scratch.NextDynamicAllowed = now + TimeSpan.FromSeconds(MinDynamicInterval);
-    }
 
     private void ValidateOpenStore(EntityUid uid)
     {
@@ -183,11 +170,9 @@ public sealed partial class StoreStructuredSystem
         CloseStoreForNoAccess(uid, store, userUid);
     }
 
-    private bool IsStoreUserInRange(TransformComponent storeXform, EntityUid userUid)
-    {
-        return TryComp(userUid, out TransformComponent? userXform) &&
-               _xform.InRange(storeXform.Coordinates, userXform.Coordinates, AutoCloseDistance);
-    }
+    private bool IsStoreUserInRange(TransformComponent storeXform, EntityUid userUid) =>
+        TryComp(userUid, out TransformComponent? userXform) &&
+        _xform.InRange(storeXform.Coordinates, userXform.Coordinates, AutoCloseDistance);
 
     private void CloseStoreForDetachedUser(EntityUid uid, NcStoreComponent store, EntityUid userUid)
     {

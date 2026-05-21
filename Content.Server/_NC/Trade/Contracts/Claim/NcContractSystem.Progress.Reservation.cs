@@ -1,7 +1,9 @@
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -15,7 +17,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid? crate,
         IReadOnlyList<EntityUid>? crateItems,
         IReadOnlyList<EntityUid>? storeNearbyItems,
-        bool hasCrateWork)
+        bool hasCrateWork
+    )
     {
         var target = targets[targetIndex];
         contract.TargetItem = target.TargetItem;
@@ -60,7 +63,8 @@ public sealed partial class NcContractSystem : EntitySystem
         bool hasCrateWork,
         string targetItem,
         PrototypeMatchMode matchMode,
-        int required)
+        int required
+    )
     {
         if (string.IsNullOrWhiteSpace(targetItem) || required <= 0)
             return 0;
@@ -99,7 +103,7 @@ public sealed partial class NcContractSystem : EntitySystem
             need -= ReserveProgressFromSource(crateRoot, crateItems, targetItem, matchMode, need);
 
         need -= ReserveProgressFromSource(user, userItems, targetItem, matchMode, need);
-        need -= ReserveProgressFromSource(store, storeNearbyItems, targetItem, matchMode, need, worldTurnInSource: true);
+        need -= ReserveProgressFromSource(store, storeNearbyItems, targetItem, matchMode, need, true);
 
         var progressed = required - Math.Max(0, need);
         return Math.Max(0, progressed);
@@ -158,7 +162,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (_progressTargetIndexPool.Count > 0)
             return _progressTargetIndexPool.Pop();
 
-        return new List<int>(4);
+        return new(4);
     }
 
     private int ReserveProgressFromItems(
@@ -177,7 +181,15 @@ public sealed partial class NcContractSystem : EntitySystem
 
         return TryGetStackTypeId(expectedProtoId, out var stackTypeId)
             ? ReserveProgressFromStackItems(root, items, stackTypeId, need, virtualStackLeft, worldTurnInSource)
-            : ReserveProgressFromPrototypeItems(root, items, expectedProtoId, matchMode, need, virtualStackLeft, consumedNonStack, worldTurnInSource);
+            : ReserveProgressFromPrototypeItems(
+                root,
+                items,
+                expectedProtoId,
+                matchMode,
+                need,
+                virtualStackLeft,
+                consumedNonStack,
+                worldTurnInSource);
     }
 
     private int ReserveProgressFromStackItems(
@@ -227,9 +239,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
             if (!TryGetPlanningEntityPrototypeId(ent, out var candidateId) ||
                 !MatchesPrototypeId(ent, candidateId, expectedProtoId, matchMode))
-            {
                 continue;
-            }
 
             if (TryComp(ent, out StackComponent? _))
             {

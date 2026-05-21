@@ -1,27 +1,17 @@
 using Content.Shared._NC.Trade;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem
 {
-    private sealed class OfferGroupState
-    {
-        public string PoolId = string.Empty;
-        public string PoolName = string.Empty;
-        public int PoolOrder;
-        public string PoolColor = string.Empty;
-        public int MinVisible;
-        public int MaxVisible;
-        public int FillWeight;
-        public int CurrentVisible;
-        public List<ContractPoolCandidate> Candidates = new();
-    }
-
     private void RefillContractsForStoreOffers(
         EntityUid store,
         NcStoreComponent comp,
         NcContractOffersPrototype offers,
-        string? ignoredContractId)
+        string? ignoredContractId
+    )
     {
         var maxVisible = Math.Max(0, offers.MaxVisible);
         if (maxVisible <= 0 || comp.Contracts.Count >= maxVisible)
@@ -36,15 +26,11 @@ public sealed partial class NcContractSystem
             return;
 
         foreach (var group in groups)
-        {
             while (comp.Contracts.Count < maxVisible &&
-                   group.CurrentVisible < group.MinVisible &&
-                   group.CurrentVisible < group.MaxVisible)
-            {
+                group.CurrentVisible < group.MinVisible &&
+                group.CurrentVisible < group.MaxVisible)
                 if (!TryIssueOfferContract(store, comp, group, selectedIds))
                     break;
-            }
-        }
 
         while (comp.Contracts.Count < maxVisible)
         {
@@ -59,7 +45,8 @@ public sealed partial class NcContractSystem
     private List<OfferGroupState> BuildOfferGroupStates(
         NcStoreComponent comp,
         NcContractOffersPrototype offers,
-        string? ignoredContractId)
+        string? ignoredContractId
+    )
     {
         var states = new List<OfferGroupState>(offers.Groups.Count);
 
@@ -98,10 +85,8 @@ public sealed partial class NcContractSystem
     {
         var count = 0;
         foreach (var contract in comp.Contracts.Values)
-        {
             if (string.Equals(contract.OfferPoolId, poolId, StringComparison.Ordinal))
                 count++;
-        }
 
         return count;
     }
@@ -110,7 +95,8 @@ public sealed partial class NcContractSystem
         NcContractOfferPoolPrototype pool,
         NcStoreComponent comp,
         string? ignoredContractId,
-        List<ContractPoolCandidate> candidates)
+        List<ContractPoolCandidate> candidates
+    )
     {
         foreach (var entry in pool.Entries)
         {
@@ -136,9 +122,10 @@ public sealed partial class NcContractSystem
     private bool TryCreateOfferCandidate(
         NcContractOfferPoolPrototype pool,
         NcContractOfferEntry entry,
-        out ContractPoolCandidate candidate)
+        out ContractPoolCandidate candidate
+    )
     {
-        candidate = new ContractPoolCandidate
+        candidate = new()
         {
             Weight = entry.Weight,
             OfferPoolId = pool.ID,
@@ -160,7 +147,8 @@ public sealed partial class NcContractSystem
     private bool TryPickOfferFillGroup(
         IReadOnlyList<OfferGroupState> groups,
         HashSet<string> selectedIds,
-        out OfferGroupState picked)
+        out OfferGroupState picked
+    )
     {
         picked = default!;
 
@@ -199,13 +187,12 @@ public sealed partial class NcContractSystem
 
     private static bool HasAvailableOfferCandidate(
         OfferGroupState group,
-        HashSet<string> selectedIds)
+        HashSet<string> selectedIds
+    )
     {
         foreach (var candidate in group.Candidates)
-        {
             if (!selectedIds.Contains(candidate.Id))
                 return true;
-        }
 
         return false;
     }
@@ -214,7 +201,8 @@ public sealed partial class NcContractSystem
         EntityUid store,
         NcStoreComponent comp,
         OfferGroupState group,
-        HashSet<string> selectedIds)
+        HashSet<string> selectedIds
+    )
     {
         RemoveUnavailableOfferCandidates(group.Candidates, selectedIds);
         if (group.Candidates.Count == 0)
@@ -232,12 +220,24 @@ public sealed partial class NcContractSystem
 
     private static void RemoveUnavailableOfferCandidates(
         List<ContractPoolCandidate> candidates,
-        HashSet<string> selectedIds)
+        HashSet<string> selectedIds
+    )
     {
         for (var i = candidates.Count - 1; i >= 0; i--)
-        {
             if (selectedIds.Contains(candidates[i].Id))
                 candidates.RemoveAt(i);
-        }
+    }
+
+    private sealed class OfferGroupState
+    {
+        public readonly List<ContractPoolCandidate> Candidates = new();
+        public int CurrentVisible;
+        public int FillWeight;
+        public int MaxVisible;
+        public int MinVisible;
+        public string PoolColor = string.Empty;
+        public string PoolId = string.Empty;
+        public string PoolName = string.Empty;
+        public int PoolOrder;
     }
 }

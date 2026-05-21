@@ -1,6 +1,8 @@
 using Content.Shared._NC.Trade;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcStoreLogicSystem
 {
@@ -13,13 +15,11 @@ public sealed partial class NcStoreLogicSystem
             _sys = sys;
         }
 
-        public List<ContractRewardData> BuildSingleReward(StoreRewardType type, string id, int amount)
-        {
-            return new List<ContractRewardData>(1)
+        public List<ContractRewardData> BuildSingleReward(StoreRewardType type, string id, int amount) =>
+            new(1)
             {
                 new(type, id, amount)
             };
-        }
 
         public List<ContractRewardData> BuildCurrencyRewards(IReadOnlyDictionary<string, int> incomeByCurrency)
         {
@@ -29,7 +29,7 @@ public sealed partial class NcStoreLogicSystem
                 if (amount <= 0 || string.IsNullOrWhiteSpace(currency))
                     continue;
 
-                rewards.Add(new ContractRewardData(StoreRewardType.Currency, currency, amount));
+                rewards.Add(new(StoreRewardType.Currency, currency, amount));
             }
 
             return rewards;

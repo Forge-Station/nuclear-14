@@ -1,19 +1,8 @@
-using System.Linq;
-using Content.Server.Popups;
-using Content.Server.Storage.Components;
 using Content.Shared._NC.Trade;
-using Content.Shared.Access.Components;
-using Content.Shared.Stacks;
-using Content.Shared.Storage.Components;
-using Content.Shared.UserInterface;
-using Robust.Server.Audio;
-using Robust.Server.GameObjects;
-using Robust.Shared.Audio;
-using Robust.Shared.Containers;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Timing;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class StoreStructuredSystem
 {
@@ -55,7 +44,8 @@ public sealed partial class StoreStructuredSystem
     private bool TryBuildCatalogEntry(
         NcStoreComponent comp,
         NcStoreListingDef listing,
-        out StoreListingStaticData entry)
+        out StoreListingStaticData entry
+    )
     {
         entry = null!;
 
@@ -95,7 +85,8 @@ public sealed partial class StoreStructuredSystem
 
     private StoreCatalogMessage BuildCatalogMessage(
         NcStoreComponent comp,
-        List<StoreListingStaticData> list)
+        List<StoreListingStaticData> list
+    )
     {
         var (hasBuy, hasSell, hasBarter) = GetCatalogModeFlags(list);
         var uiColors = ResolveUiColors(comp);
@@ -113,28 +104,27 @@ public sealed partial class StoreStructuredSystem
 
     private StoreUiColorsData ResolveUiColors(NcStoreComponent comp)
     {
-        if (_prototypes.TryIndex<NcStoreProfilePrototype>(comp.Profile, out var profile) &&
+        if (_prototypes.TryIndex(comp.Profile, out var profile) &&
             profile.Theme is { } themeId &&
-            _prototypes.TryIndex<StoreUiThemePrototype>(themeId, out var theme))
+            _prototypes.TryIndex(themeId, out var theme))
             return CloneUiColors(theme.Colors);
 
-        return new StoreUiColorsData();
+        return new();
     }
 
     private bool HasContractsProfile(NcStoreComponent comp)
     {
-        if (!_prototypes.TryIndex<NcStoreProfilePrototype>(comp.Profile, out var profile))
+        if (!_prototypes.TryIndex(comp.Profile, out var profile))
             return false;
 
         if (profile.Contracts is not { } contracts)
             return false;
 
-        return _prototypes.HasIndex<StoreContractsPresetPrototype>(contracts);
+        return _prototypes.HasIndex(contracts);
     }
 
-    private static StoreUiColorsData CloneUiColors(StoreUiColorsData colors)
-    {
-        return new StoreUiColorsData
+    private static StoreUiColorsData CloneUiColors(StoreUiColorsData colors) =>
+        new()
         {
             TabsShellBackground = colors.TabsShellBackground,
             TabsShellBorder = colors.TabsShellBorder,
@@ -164,7 +154,6 @@ public sealed partial class StoreStructuredSystem
             ListingDivider = colors.ListingDivider,
             ListingTitleColor = colors.ListingTitleColor
         };
-    }
 
     private static (bool HasBuy, bool HasSell, bool HasBarter) GetCatalogModeFlags(List<StoreListingStaticData> list)
     {
@@ -194,14 +183,15 @@ public sealed partial class StoreStructuredSystem
         for (var i = 0; i < source.Count; i++)
         {
             var c = source[i];
-            result.Add(new NcBarterCostEntry
-            {
-                Prototype = c.Prototype,
-                Group = c.Group,
-                TagTarget = c.TagTarget,
-                Currency = c.Currency,
-                Count = c.Count
-            });
+            result.Add(
+                new()
+                {
+                    Prototype = c.Prototype,
+                    Group = c.Group,
+                    TagTarget = c.TagTarget,
+                    Currency = c.Currency,
+                    Count = c.Count
+                });
         }
 
         return result;
@@ -213,29 +203,33 @@ public sealed partial class StoreStructuredSystem
         for (var i = 0; i < source.Count; i++)
         {
             var r = source[i];
-            result.Add(new NcBarterReceiveEntry
-            {
-                Prototype = r.Prototype,
-                Currency = r.Currency,
-                Count = r.Count
-            });
+            result.Add(
+                new()
+                {
+                    Prototype = r.Prototype,
+                    Currency = r.Currency,
+                    Count = r.Count
+                });
         }
 
         return result;
     }
 
-    private static List<NcBarterReceivePoolEntry> CloneBarterReceivePoolsForCatalog(List<NcBarterReceivePoolEntry> source)
+    private static List<NcBarterReceivePoolEntry> CloneBarterReceivePoolsForCatalog(
+        List<NcBarterReceivePoolEntry> source
+    )
     {
         var result = new List<NcBarterReceivePoolEntry>(source.Count);
         for (var i = 0; i < source.Count; i++)
         {
             var r = source[i];
-            result.Add(new NcBarterReceivePoolEntry
-            {
-                Pool = r.Pool,
-                Rolls = r.Rolls,
-                Chance = r.Chance
-            });
+            result.Add(
+                new()
+                {
+                    Pool = r.Pool,
+                    Rolls = r.Rolls,
+                    Chance = r.Chance
+                });
         }
 
         return result;

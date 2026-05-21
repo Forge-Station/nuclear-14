@@ -1,5 +1,4 @@
 using Content.Shared._NC.Trade;
-using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
@@ -14,31 +13,41 @@ public sealed partial class NcContractSystem : EntitySystem
     private const int MaxRewardDepth = 6;
     private const int DepthInProgress = -1;
     private static readonly ISawmill Sawmill = Logger.GetSawmill("nccontracts");
+    private readonly HashSet<(EntityUid Store, EntityUid User, string ContractId)> _claimInProgress = new();
+    [Dependency] private readonly IComponentFactory _compFactory = default!;
     private readonly Dictionary<string, int> _depthCache = new(StringComparer.Ordinal);
     [Dependency] private readonly NcStoreInventorySystem _inventory = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
-    [Dependency] private readonly IPrototypeManager _prototypes = default!;
-    [Dependency] private readonly IComponentFactory _compFactory = default!;
-    private IStoreCurrencyDebitService CurrencyDebit => _logic;
-    private IStoreRewardExecutionService Rewards => _logic;
-    private readonly HashSet<(EntityUid Store, EntityUid User, string ContractId)> _claimInProgress = new();
-    private bool _claimScratchInUse;
-    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _progressClaimableByKeyScratch = new();
+    [Dependency] private readonly EntityLookupSystem _lookup = default!;
+
+    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _progressClaimableByKeyScratch =
+        new();
+
     private readonly HashSet<EntityUid> _progressConsumedEntitiesScratch = new();
-    private readonly HashSet<EntityUid> _storesUpdatingProgress = new();
-    private bool _progressScratchInUse;
-    private readonly List<(string ProtoId, PrototypeMatchMode MatchMode, int Depth)> _progressOrderedKeysScratch = new();
-    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _progressRequiredByKeyScratch = new();
+    private readonly List<string> _progressContractIdsScratch = new();
+
+    private readonly List<(string ProtoId, PrototypeMatchMode MatchMode, int Depth)>
+        _progressOrderedKeysScratch = new();
+
+    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _progressRequiredByKeyScratch =
+        new();
+
+    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), List<int>>
+        _progressTargetIndexesByKeyScratch = new();
+
     private readonly Stack<List<int>> _progressTargetIndexPool = new();
-    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), List<int>> _progressTargetIndexesByKeyScratch = new();
     private readonly Dictionary<EntityUid, int> _progressVirtualStackLeftScratch = new();
+    [Dependency] private readonly IPrototypeManager _prototypes = default!;
     private readonly Dictionary<QuasiKey, double> _quasiPhase = new();
     [Dependency] private readonly IRobustRandom _random = default!;
-    private readonly List<string> _progressContractIdsScratch = new();
     private readonly List<EntityUid> _scratchCrateItems = new();
     private readonly List<EntityUid> _scratchStoreNearbyItems = new();
     private readonly List<EntityUid> _scratchUserItems = new();
-    [Dependency] private readonly EntityLookupSystem _lookup = default!;
+    private readonly HashSet<EntityUid> _storesUpdatingProgress = new();
+    private bool _claimScratchInUse;
+    private bool _progressScratchInUse;
+    private IStoreCurrencyDebitService CurrencyDebit => _logic;
+    private IStoreRewardExecutionService Rewards => _logic;
 
     public override void Initialize()
     {
@@ -79,17 +88,15 @@ public sealed partial class NcContractSystem : EntitySystem
         if (store == EntityUid.Invalid)
             return;
 
-        ClearStoreObjectiveRuntime(store, deleteTrackedEntities: true);
+        ClearStoreObjectiveRuntime(store, true);
     }
 
     private static List<ContractTargetServerData> GetEffectiveTargets(ContractServerData contract)
     {
         contract.Targets ??= new();
         for (var i = contract.Targets.Count - 1; i >= 0; i--)
-        {
             if (contract.Targets[i] == null)
                 contract.Targets.RemoveAt(i);
-        }
 
         return contract.Targets;
     }
@@ -132,5 +139,4 @@ public sealed partial class NcContractSystem : EntitySystem
         public int Min;
         public int Streak;
     }
-
 }

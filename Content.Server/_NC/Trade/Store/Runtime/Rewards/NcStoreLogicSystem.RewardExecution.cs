@@ -1,14 +1,17 @@
 using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcStoreLogicSystem
 {
     public bool TryValidateRewardList(
         EntityUid receiver,
         IReadOnlyList<ContractRewardData>? rewards,
-        out string reason)
+        out string reason
+    )
     {
         if (!TryBuildRewardExecutionPlan(rewards, out var plan, out reason))
             return false;
@@ -20,7 +23,8 @@ public sealed partial class NcStoreLogicSystem
         EntityUid receiver,
         IReadOnlyList<ContractRewardData>? rewards,
         string context,
-        out string reason)
+        out string reason
+    )
     {
         if (!TryBuildRewardExecutionPlan(rewards, out var plan, out reason))
             return false;
@@ -33,7 +37,8 @@ public sealed partial class NcStoreLogicSystem
         IReadOnlyList<ContractRewardData>? rewards,
         string context,
         Func<string?> preCommit,
-        out string reason)
+        out string reason
+    )
     {
         if (!TryBuildRewardExecutionPlan(rewards, out var plan, out reason))
             return false;
@@ -44,7 +49,8 @@ public sealed partial class NcStoreLogicSystem
     private bool TryBuildRewardExecutionPlan(
         IReadOnlyList<ContractRewardData>? rewards,
         out NcRewardExecutionPlan plan,
-        out string reason)
+        out string reason
+    )
     {
         plan = new();
         reason = string.Empty;
@@ -74,7 +80,8 @@ public sealed partial class NcStoreLogicSystem
     private bool TryBuildRewardExecutionPlan(
         BarterReceivePlan receivePlan,
         out NcRewardExecutionPlan plan,
-        out string reason)
+        out string reason
+    )
     {
         plan = new();
         reason = string.Empty;
@@ -116,7 +123,8 @@ public sealed partial class NcStoreLogicSystem
         StoreRewardType type,
         string id,
         int amount,
-        out string reason)
+        out string reason
+    )
     {
         reason = string.Empty;
 
@@ -142,7 +150,7 @@ public sealed partial class NcStoreLogicSystem
                 return false;
             }
 
-            plan.Entries[i] = existing with { Amount = (int) total };
+            plan.Entries[i] = existing with { Amount = (int) total, };
             return true;
         }
 
@@ -153,7 +161,8 @@ public sealed partial class NcStoreLogicSystem
     private bool TryValidateRewardExecutionPlan(
         EntityUid receiver,
         NcRewardExecutionPlan plan,
-        out string reason)
+        out string reason
+    )
     {
         reason = string.Empty;
 
@@ -179,7 +188,8 @@ public sealed partial class NcStoreLogicSystem
                     if (CanGiveCurrency(receiver, entry.Id, entry.Amount))
                         continue;
 
-                    reason = $"Reward plan entry #{i} references missing, unsupported, or undeliverable currency stack prototype '{entry.Id}'.";
+                    reason =
+                        $"Reward plan entry #{i} references missing, unsupported, or undeliverable currency stack prototype '{entry.Id}'.";
                     return false;
 
                 case StoreRewardType.Item:
@@ -212,7 +222,8 @@ public sealed partial class NcStoreLogicSystem
         NcRewardExecutionPlan plan,
         string context,
         out string reason,
-        Func<string?>? preCommit = null)
+        Func<string?>? preCommit = null
+    )
     {
         if (!TryValidateRewardExecutionPlan(receiver, plan, out reason))
             return false;

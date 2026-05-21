@@ -2,7 +2,9 @@ using Content.Shared.Stacks;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcStoreLogicSystem
 {
@@ -11,7 +13,8 @@ public sealed partial class NcStoreLogicSystem
         private bool TryGetStackPurchaseConfig(
             EntityPrototype productProto,
             out string? stackTypeId,
-            out int maxPerStack)
+            out int maxPerStack
+        )
         {
             stackTypeId = null;
             maxPerStack = 0;
@@ -39,7 +42,8 @@ public sealed partial class NcStoreLogicSystem
             int purchases,
             int unitsPerPurchase,
             string? stackTypeId,
-            int maxPerStack)
+            int maxPerStack
+        )
         {
             var successfulPurchases = 0;
 
@@ -68,7 +72,8 @@ public sealed partial class NcStoreLogicSystem
             string productEntity,
             int unitsPerPurchase,
             string? stackTypeId,
-            int maxPerStack)
+            int maxPerStack
+        )
         {
             PrepareStackPurchaseBatch(user);
 
@@ -95,11 +100,10 @@ public sealed partial class NcStoreLogicSystem
             EntityUid user,
             string productEntity,
             int remainingToSpawn,
-            int maxPerStack)
-        {
-            return remainingToSpawn <= 0 ||
-                   TrySpawnRemainingPurchasedStacks(user, productEntity, remainingToSpawn, maxPerStack);
-        }
+            int maxPerStack
+        ) =>
+            remainingToSpawn <= 0 ||
+            TrySpawnRemainingPurchasedStacks(user, productEntity, remainingToSpawn, maxPerStack);
 
         private void HandleFailedPurchaseBatch(EntityUid user)
         {
@@ -111,7 +115,8 @@ public sealed partial class NcStoreLogicSystem
             List<EntityUid> cachedItems,
             string? stackTypeId,
             int maxPerStack,
-            ref int remainingToSpawn)
+            ref int remainingToSpawn
+        )
         {
             foreach (var ent in cachedItems)
             {
@@ -137,10 +142,8 @@ public sealed partial class NcStoreLogicSystem
         private void TrackStackRestore(EntityUid ent, int previousCount)
         {
             for (var i = 0; i < _stackRestoreScratch.Count; i++)
-            {
                 if (_stackRestoreScratch[i].Ent == ent)
                     return;
-            }
 
             _stackRestoreScratch.Add((ent, previousCount));
         }
@@ -149,7 +152,8 @@ public sealed partial class NcStoreLogicSystem
             EntityUid user,
             string productEntity,
             int remainingToSpawn,
-            int maxPerStack)
+            int maxPerStack
+        )
         {
             if (!TryGetUserSpawnCoordinates(user, out var userCoords))
                 return false;
@@ -179,7 +183,8 @@ public sealed partial class NcStoreLogicSystem
         private bool TrySpawnPurchasedStackChunk(
             string productEntity,
             EntityCoordinates userCoords,
-            int chunk)
+            int chunk
+        )
         {
             if (!TrySpawnPurchaseEntity(productEntity, userCoords, out var spawned))
                 return false;

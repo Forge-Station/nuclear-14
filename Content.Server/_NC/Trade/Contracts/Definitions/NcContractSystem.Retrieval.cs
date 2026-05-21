@@ -1,8 +1,9 @@
-using System;
 using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -24,7 +25,7 @@ public sealed partial class NcContractSystem : EntitySystem
             Taken = false,
             ObjectiveType = ContractObjectiveType.Delivery,
             ExecutionKind = ResolveRetrievalExecutionKind(config),
-            Runtime = new ContractRuntimeContextData(),
+            Runtime = new(),
             Config = config,
             Conditions = CloneContractConditions(proto.Conditions),
             FlowStatus = ContractFlowStatus.Available,
@@ -50,27 +51,32 @@ public sealed partial class NcContractSystem : EntitySystem
             : ContractExecutionKind.TrackedDeliveryObjective;
     }
 
-    private static bool IsTrackedRetrievalRouteDeliveryConfig(ContractObjectiveConfigData config)
-    {
-        return !string.IsNullOrWhiteSpace(config.RetrievalRouteId) &&
-               config.RetrievalSpawnEnabled &&
-               config.RetrievalRequireSpawnedEntities &&
-               config.RetrievalDestinationType != NcRetrievalDestinationTargetType.StoreUi;
-    }
+    private static bool IsTrackedRetrievalRouteDeliveryConfig(ContractObjectiveConfigData config) =>
+        !string.IsNullOrWhiteSpace(config.RetrievalRouteId) &&
+        config.RetrievalSpawnEnabled &&
+        config.RetrievalRequireSpawnedEntities &&
+        config.RetrievalDestinationType != NcRetrievalDestinationTargetType.StoreUi;
 
     private static bool UsesRetrievalSpawnedCargoSupport(ContractServerData contract)
     {
         var config = contract.Config;
         return (contract.IsInventoryDelivery || contract.IsRetrievalRouteDelivery) &&
-               config.RetrievalSpawnEnabled &&
-               config.RetrievalRequireSpawnedEntities;
+            config.RetrievalSpawnEnabled &&
+            config.RetrievalRequireSpawnedEntities;
     }
 
     private ContractObjectiveConfigData CreateRetrievalObjectiveConfig(NcRetrievalContractPrototype proto)
     {
         var config = new ContractObjectiveConfigData();
 
-        if (!TryResolveRetrievalRoute(proto.ID, proto.Route, out var route, out var source, out var destination, out var proof, out var guidance))
+        if (!TryResolveRetrievalRoute(
+            proto.ID,
+            proto.Route,
+            out var route,
+            out var source,
+            out var destination,
+            out var proof,
+            out var guidance))
             return config;
 
         config.RetrievalRouteId = route.ID;
@@ -82,12 +88,13 @@ public sealed partial class NcContractSystem : EntitySystem
             config.AllowStoreWorldTurnIn = true;
         if (destination.Target.Type == NcRetrievalDestinationTargetType.MarkerGroup)
         {
-            config.RetrievalDestinationPoint = new ContractPointSelectorPrototype
+            config.RetrievalDestinationPoint = new()
             {
                 Type = ContractPointSelectorType.MarkerGroup,
                 Id = destination.Target.Id
             };
         }
+
         config.RetrievalConsumeCargo = route.Delivery.ConsumeCargo;
         config.RetrievalLockDeliveredCargo = route.Delivery.LockDeliveredCargo;
 
@@ -135,7 +142,8 @@ public sealed partial class NcContractSystem : EntitySystem
         out NcRetrievalSourcePresetPrototype? source,
         out NcRetrievalDestinationPresetPrototype destination,
         out NcRetrievalProofPresetPrototype? proof,
-        out NcRetrievalGuidancePresetPrototype? guidance)
+        out NcRetrievalGuidancePresetPrototype? guidance
+    )
     {
         source = null;
         proof = null;
@@ -145,13 +153,15 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (!_prototypes.TryIndex(routeId, out route!))
         {
-            Sawmill.Warning($"[Contracts] Retrieval contract '{contractId}' references missing route preset '{routeId}'.");
+            Sawmill.Warning(
+                $"[Contracts] Retrieval contract '{contractId}' references missing route preset '{routeId}'.");
             return false;
         }
 
         if (!_prototypes.TryIndex(route.Destination, out destination!))
         {
-            Sawmill.Warning($"[Contracts] Retrieval route '{route.ID}' references missing destination preset '{route.Destination}'.");
+            Sawmill.Warning(
+                $"[Contracts] Retrieval route '{route.ID}' references missing destination preset '{route.Destination}'.");
             return false;
         }
 
@@ -163,20 +173,25 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (route.Claim.Proof is { } resolvedProofId && !_prototypes.TryIndex(resolvedProofId, out proof!))
         {
-            Sawmill.Warning($"[Contracts] Retrieval route '{route.ID}' references missing proof preset '{resolvedProofId}'.");
+            Sawmill.Warning(
+                $"[Contracts] Retrieval route '{route.ID}' references missing proof preset '{resolvedProofId}'.");
             return false;
         }
 
         if (route.Guidance is { } guidanceId && !_prototypes.TryIndex(guidanceId, out guidance!))
         {
-            Sawmill.Warning($"[Contracts] Retrieval route '{route.ID}' references missing guidance preset '{guidanceId}'.");
+            Sawmill.Warning(
+                $"[Contracts] Retrieval route '{route.ID}' references missing guidance preset '{guidanceId}'.");
             return false;
         }
 
         return true;
     }
 
-    private List<ContractTargetServerData> BuildRetrievalCargoTargets(EntityUid store, NcRetrievalContractPrototype proto)
+    private List<ContractTargetServerData> BuildRetrievalCargoTargets(
+        EntityUid store,
+        NcRetrievalContractPrototype proto
+    )
     {
         if (proto.Cargo.Count == 0)
         {
@@ -203,7 +218,8 @@ public sealed partial class NcContractSystem : EntitySystem
         string contractId,
         int index,
         NcSupplyTargetEntry entry,
-        out ContractTargetServerData target)
+        out ContractTargetServerData target
+    )
     {
         target = default!;
 
@@ -222,7 +238,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (hasPrototype)
         {
-            target = new ContractTargetServerData
+            target = new()
             {
                 TargetItem = entry.Prototype,
                 Required = required,
@@ -232,7 +248,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return true;
         }
 
-        target = new ContractTargetServerData
+        target = new()
         {
             TargetItem = entry.Group,
             Required = required,
@@ -251,17 +267,18 @@ public sealed partial class NcContractSystem : EntitySystem
         return rewards;
     }
 
-    private bool TryAppendRetrievalRewardEntry(
+    private void TryAppendRetrievalRewardEntry(
         EntityUid store,
         string contractId,
         string path,
         NcSupplyRewardEntry entry,
-        List<ContractRewardDef> output)
+        List<ContractRewardDef> output
+    )
     {
         if (!IsCountConfigured(entry.Count))
         {
             Sawmill.Warning($"[Contracts] Retrieval contract '{contractId}' {path} does not define 'count'.");
-            return false;
+            return;
         }
 
         if (!IsRewardCountRange(entry.Count))
@@ -269,7 +286,7 @@ public sealed partial class NcContractSystem : EntitySystem
             Sawmill.Warning(
                 $"[Contracts] Retrieval contract '{contractId}' {path} has invalid count range " +
                 $"{entry.Count.Min}..{entry.Count.Max}.");
-            return false;
+            return;
         }
 
         switch (entry.Type)
@@ -277,71 +294,79 @@ public sealed partial class NcContractSystem : EntitySystem
             case StoreRewardType.Item:
                 if (string.IsNullOrWhiteSpace(entry.Prototype))
                 {
-                    Sawmill.Warning($"[Contracts] Retrieval contract '{contractId}' {path} is Item but has no prototype.");
-                    return false;
+                    Sawmill.Warning(
+                        $"[Contracts] Retrieval contract '{contractId}' {path} is Item but has no prototype.");
+                    return;
                 }
 
                 if (!_prototypes.HasIndex<EntityPrototype>(entry.Prototype))
                 {
                     Sawmill.Warning(
                         $"[Contracts] Retrieval contract '{contractId}' {path} references missing entity prototype '{entry.Prototype}'.");
-                    return false;
+                    return;
                 }
 
-                output.Add(new ContractRewardDef
-                {
-                    Type = StoreRewardType.Item,
-                    RewardId = entry.Prototype,
-                    Count = entry.Count,
-                    Weight = 1
-                });
-                return true;
+                output.Add(
+                    new()
+                    {
+                        Type = StoreRewardType.Item,
+                        RewardId = entry.Prototype,
+                        Count = entry.Count,
+                        Weight = 1
+                    });
+                return;
 
             case StoreRewardType.Currency:
                 if (string.IsNullOrWhiteSpace(entry.Currency))
                 {
-                    Sawmill.Warning($"[Contracts] Retrieval contract '{contractId}' {path} is Currency but has no currency.");
-                    return false;
+                    Sawmill.Warning(
+                        $"[Contracts] Retrieval contract '{contractId}' {path} is Currency but has no currency.");
+                    return;
                 }
 
-                output.Add(new ContractRewardDef
-                {
-                    Type = StoreRewardType.Currency,
-                    RewardId = entry.Currency,
-                    Count = entry.Count,
-                    Weight = 1
-                });
-                return true;
+                output.Add(
+                    new()
+                    {
+                        Type = StoreRewardType.Currency,
+                        RewardId = entry.Currency,
+                        Count = entry.Count,
+                        Weight = 1
+                    });
+                return;
 
             case StoreRewardType.Pool:
                 if (string.IsNullOrWhiteSpace(entry.Pool))
                 {
-                    Sawmill.Warning($"[Contracts] Retrieval contract '{contractId}' {path} is Pool but has no pool id.");
-                    return false;
+                    Sawmill.Warning(
+                        $"[Contracts] Retrieval contract '{contractId}' {path} is Pool but has no pool id.");
+                    return;
                 }
 
                 if (!_prototypes.HasIndex<NcSupplyRewardPoolPrototype>(entry.Pool))
                 {
-                    Sawmill.Warning($"[Contracts] Retrieval contract '{contractId}' {path} references missing Supply reward pool '{entry.Pool}'. Use type: ncSupplyRewardPool.");
-                    return false;
+                    Sawmill.Warning(
+                        $"[Contracts] Retrieval contract '{contractId}' {path} references missing Supply reward pool '{entry.Pool}'. Use type: ncSupplyRewardPool.");
+                    return;
                 }
 
-                output.Add(new ContractRewardDef
-                {
-                    Type = StoreRewardType.Pool,
-                    RewardId = entry.Pool,
-                    Count = entry.Count,
-                    Weight = 1
-                });
-                return true;
+                output.Add(
+                    new()
+                    {
+                        Type = StoreRewardType.Pool,
+                        RewardId = entry.Pool,
+                        Count = entry.Count,
+                        Weight = 1
+                    });
+                return;
 
             case StoreRewardType.Unspecified:
                 Sawmill.Warning($"[Contracts] Retrieval contract '{contractId}' {path} does not define 'type'.");
-                return false;
+                return;
 
             default:
-                Sawmill.Warning($"[Contracts] Retrieval contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
-                return false;
+                Sawmill.Warning(
+                    $"[Contracts] Retrieval contract '{contractId}' {path} has unsupported reward type {entry.Type}.");
+                return;
         }
     }
 }

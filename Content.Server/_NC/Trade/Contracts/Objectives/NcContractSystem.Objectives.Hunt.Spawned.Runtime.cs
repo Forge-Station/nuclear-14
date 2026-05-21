@@ -1,12 +1,13 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
-using Robust.Shared.Map;
+using Content.Shared.Movement.Pulling.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -14,7 +15,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid store,
         string contractId,
         ContractServerData contract,
-        ObjectiveRuntimeState state)
+        ObjectiveRuntimeState state
+    )
     {
         var targets = GetEffectiveTargets(contract);
         var required = Math.Max(1, CalculateTotalRequired(targets));
@@ -30,7 +32,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 if (!TryResolveSpawnedHuntPrototype(contractId, targetDef, out var targetProtoId))
                     return false;
 
-                if (!TryResolveObjectiveSpawnCoordinates(store, contract.Config, out var spawnCoords, fallbackToStore: false))
+                if (!TryResolveObjectiveSpawnCoordinates(store, contract.Config, out var spawnCoords, false))
                 {
                     Sawmill.Warning(
                         $"[Contracts] Hunt runtime init failed for '{contractId}': cannot resolve hunt spawn point.");
@@ -55,7 +57,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryAdvanceSpawnedHuntTargetProgress(
         EntityUid killedTarget,
         ContractServerData contract,
-        ObjectiveRuntimeState state)
+        ObjectiveRuntimeState state
+    )
     {
         if (!TryGetPlanningEntityPrototypeId(killedTarget, out var prototypeId))
             return false;
@@ -111,15 +114,11 @@ public sealed partial class NcContractSystem : EntitySystem
         if (state.HuntBodyEntity is not { } candidate ||
             candidate == EntityUid.Invalid ||
             TerminatingOrDeleted(candidate))
-        {
             return false;
-        }
 
         if (!TryComp(candidate, out MobStateComponent? mobState) ||
             mobState.CurrentState != MobState.Dead)
-        {
             return false;
-        }
 
         body = candidate;
         return true;
@@ -131,7 +130,8 @@ public sealed partial class NcContractSystem : EntitySystem
         string contractId,
         ContractServerData contract,
         ObjectiveConsumeJournal journal,
-        out ClaimAttemptResult fail)
+        out ClaimAttemptResult fail
+    )
     {
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
@@ -172,9 +172,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryComp(store, out TransformComponent? storeXform) ||
             !TryComp(body, out TransformComponent? bodyXform) ||
             IsTargetInEntityContainer(bodyXform))
-        {
             return false;
-        }
 
         var storeMap = _xform.ToMapCoordinates(storeXform.Coordinates);
         var bodyMap = _xform.ToMapCoordinates(bodyXform.Coordinates);
@@ -183,7 +181,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         var delta = _xform.GetWorldPosition(storeXform) - _xform.GetWorldPosition(bodyXform);
         return delta.LengthSquared() <=
-               NcContractTuning.TrackedDeliveryStoreRange * NcContractTuning.TrackedDeliveryStoreRange;
+            NcContractTuning.TrackedDeliveryStoreRange * NcContractTuning.TrackedDeliveryStoreRange;
     }
 
     private bool IsSpawnedHuntBodyCarriedByUser(EntityUid body, EntityUid user)
@@ -197,7 +195,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryResolveSpawnedHuntPrototype(
         string contractId,
         ContractTargetServerData target,
-        out string prototypeId)
+        out string prototypeId
+    )
     {
         prototypeId = string.Empty;
 

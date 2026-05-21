@@ -1,7 +1,8 @@
 using Content.Shared._NC.Trade;
-using Robust.Shared.Map;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -30,9 +31,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 !contract.Taken ||
                 !RequiresRetrievalRouteDelivery(contract) ||
                 contract.Completed && state.RetrievalRouteDeliveryCompleted)
-            {
                 continue;
-            }
 
             UpdateRetrievalRouteDelivery(key);
         }
@@ -49,14 +48,16 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state) ||
             state.RetrievalRouteDeliveryCompleted ||
             !state.RetrievalRouteDeliveryActive)
-        {
             return;
-        }
 
         UpdateRetrievalRouteDelivery(key);
     }
 
-    private bool TryUpdateRetrievalRouteDeliveryProgress(EntityUid store, string contractId, ContractServerData contract)
+    private bool TryUpdateRetrievalRouteDeliveryProgress(
+        EntityUid store,
+        string contractId,
+        ContractServerData contract
+    )
     {
         if (!RequiresRetrievalRouteDelivery(contract))
             return false;
@@ -70,9 +71,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state) ||
             !TryGetObjectiveContract(key, out var comp, out var contract))
-        {
             return;
-        }
 
         if (!contract.Taken || !RequiresRetrievalRouteDelivery(contract))
             return;
@@ -123,16 +122,15 @@ public sealed partial class NcContractSystem : EntitySystem
             CleanupObjectivePinpointers(key, state);
     }
 
-    private static int GetRetrievalRouteDeliveryProgress(ObjectiveRuntimeState state)
-    {
-        return Math.Max(0, state.RetrievalAcceptedCargoCount) + state.RetrievalDeliveredEntities.Count;
-    }
+    private static int GetRetrievalRouteDeliveryProgress(ObjectiveRuntimeState state) =>
+        Math.Max(0, state.RetrievalAcceptedCargoCount) + state.RetrievalDeliveredEntities.Count;
 
     private bool TryFailRetrievalRouteIfTrackedCargoWasLost(
         (EntityUid Store, string ContractId) key,
         NcStoreComponent comp,
         ContractServerData contract,
-        ObjectiveRuntimeState state)
+        ObjectiveRuntimeState state
+    )
     {
         var config = contract.Config;
         if (!RequiresRetrievalRouteDelivery(contract) ||
@@ -140,9 +138,7 @@ public sealed partial class NcContractSystem : EntitySystem
             !config.RetrievalRequireSpawnedEntities ||
             state.ProofSpawned ||
             state.RetrievalRouteDeliveryCompleted)
-        {
             return false;
-        }
 
         var required = GetTrackedDeliveryCompletionAmount(contract);
         if (required <= 0)
@@ -172,7 +168,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private void UpdateRetrievalDeliveredCargoProgress(
         EntityUid store,
         ContractServerData contract,
-        ObjectiveRuntimeState state)
+        ObjectiveRuntimeState state
+    )
     {
         var config = contract.Config;
         for (var i = state.RetrievalSpawnedEntities.Count - 1; i >= 0; i--)
@@ -211,21 +208,21 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid store,
         EntityUid cargo,
         ContractObjectiveConfigData config,
-        ObjectiveRuntimeState state)
-    {
-        return config.RetrievalDestinationType switch
+        ObjectiveRuntimeState state
+    ) =>
+        config.RetrievalDestinationType switch
         {
             NcRetrievalDestinationTargetType.MarkerGroup => IsRetrievalCargoAtMarkerDestination(cargo, config, state),
             NcRetrievalDestinationTargetType.ContainerGroup => IsRetrievalCargoInTurnInContainer(cargo, config),
             NcRetrievalDestinationTargetType.StoreUi => IsTrackedDeliveryTargetAtStore(store, cargo),
             _ => false
         };
-    }
 
     private bool IsRetrievalCargoAtMarkerDestination(
         EntityUid cargo,
         ContractObjectiveConfigData config,
-        ObjectiveRuntimeState state)
+        ObjectiveRuntimeState state
+    )
     {
         if (state.RetrievalDeliveryCoordinates is not { } destination)
             return false;
@@ -249,8 +246,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool IsRetrievalCargoInTurnInContainer(
         EntityUid cargo,
-        ContractObjectiveConfigData config)
-    {
-        return TryResolveRetrievalContainerCargoCoordinates(cargo, config, out _);
-    }
+        ContractObjectiveConfigData config
+    ) =>
+        TryResolveRetrievalContainerCargoCoordinates(cargo, config, out _);
 }

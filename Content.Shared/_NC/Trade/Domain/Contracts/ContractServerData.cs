@@ -1,6 +1,5 @@
-using Robust.Shared.Serialization;
-
 namespace Content.Shared._NC.Trade;
+
 
 public sealed class ContractServerData
 {
@@ -27,7 +26,10 @@ public sealed class ContractServerData
     public bool IsRetrievalRouteDelivery => ExecutionKind == ContractExecutionKind.RetrievalRouteDelivery;
     public bool IsHuntObjective => ExecutionKind == ContractExecutionKind.HuntObjective;
     public bool IsGhostRoleObjective => ExecutionKind == ContractExecutionKind.GhostRoleObjective;
-    public bool HasInventoryDeliverySpawnSupport => IsInventoryDelivery && !string.IsNullOrWhiteSpace(Config.DeliverySpawnPrototype);
+
+    public bool HasInventoryDeliverySpawnSupport =>
+        IsInventoryDelivery && !string.IsNullOrWhiteSpace(Config.DeliverySpawnPrototype);
+
     public bool AllowsStoreWorldTurnIn => IsInventoryDelivery && Config.AllowStoreWorldTurnIn;
     public bool UsesWorldObjectiveRuntime => ContractExecutionKinds.UsesWorldRuntime(ExecutionKind);
     public bool UsesWorldRuntimeSupport => UsesWorldObjectiveRuntime || HasInventoryDeliverySpawnSupport;

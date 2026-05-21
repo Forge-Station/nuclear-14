@@ -1,8 +1,8 @@
 using Content.Shared.Stacks;
-using Content.Shared.Hands.EntitySystems;
-using Robust.Shared.Prototypes;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class StackCurrencyHandler : ICurrencyHandler
 {

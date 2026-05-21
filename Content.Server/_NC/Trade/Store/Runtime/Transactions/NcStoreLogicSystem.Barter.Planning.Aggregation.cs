@@ -1,10 +1,8 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
-using Content.Shared.Tag;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcStoreLogicSystem
 {
@@ -210,12 +208,12 @@ public sealed partial class NcStoreLogicSystem
     private sealed class BarterCostDemand
     {
         public string Currency = string.Empty;
+        public string Group = string.Empty;
+        public NcItemGroupPrototype? GroupPrototype;
         public string Prototype = string.Empty;
         public string PrototypeStackType = string.Empty;
-        public string Group = string.Empty;
-        public string Tag = string.Empty;
-        public NcItemGroupPrototype? GroupPrototype;
         public int Required;
+        public string Tag = string.Empty;
     }
 
     private struct BarterCostReservation
@@ -225,7 +223,8 @@ public sealed partial class NcStoreLogicSystem
             int count,
             bool isStack,
             string prototype,
-            string stackType)
+            string stackType
+        )
         {
             Entity = entity;
             Count = count;
@@ -234,7 +233,7 @@ public sealed partial class NcStoreLogicSystem
             StackType = stackType;
         }
 
-        public EntityUid Entity;
+        public readonly EntityUid Entity;
         public int Count;
         public bool IsStack;
         public string Prototype;

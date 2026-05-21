@@ -1,14 +1,8 @@
-using Content.Shared._NC.Trade;
-using Content.Shared.Clothing.Components;
-using Content.Shared.Containers.ItemSlots;
-using Content.Shared.Hands.Components;
-using Content.Shared.Inventory;
 using Content.Shared.Stacks;
-using Content.Shared.Tag;
-using Robust.Shared.Containers;
-using Robust.Shared.Prototypes;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcStoreInventorySystem
 {
@@ -82,10 +76,8 @@ public sealed partial class NcStoreInventorySystem
             return;
 
         for (var i = 0; i < _takeTransactionStackRestoreScratch.Count; i++)
-        {
             if (_takeTransactionStackRestoreScratch[i].Ent == ent)
                 return;
-        }
 
         _takeTransactionStackRestoreScratch.Add((ent, previousCount));
     }

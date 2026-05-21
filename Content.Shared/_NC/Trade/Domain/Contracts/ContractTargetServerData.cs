@@ -1,6 +1,5 @@
-using Robust.Shared.Serialization;
-
 namespace Content.Shared._NC.Trade;
+
 
 [Serializable]
 public sealed class ContractTargetServerData

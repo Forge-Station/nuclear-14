@@ -1,8 +1,7 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Hands.Components;
 using Content.Shared.Stacks;
-using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
+
 
 namespace Content.Server._NC.Trade;
 
@@ -13,6 +12,9 @@ public sealed partial class NcStoreLogicSystem
     private IStoreTransactionCoordinator _transactionCoordinator = default!;
 
     private IStoreCurrencyService Currency => _currency;
+
+    public bool TryTakeCurrency(EntityUid user, string stackType, int amount) =>
+        Currency.TryTakeCurrency(user, stackType, amount);
 
     private void InitializeServices()
     {
@@ -38,38 +40,32 @@ public sealed partial class NcStoreLogicSystem
     ) =>
         Currency.TryPickCurrencyForSell(store, listing, out currency, out unitPrice);
 
-    public bool CanHandleCurrency(string stackType) =>
-        Currency.CanHandleCurrency(stackType);
+    public bool CanHandleCurrency(string stackType) => Currency.CanHandleCurrency(stackType);
 
     public bool CanGiveCurrency(EntityUid user, string stackType, int amount) =>
         Currency.CanGiveCurrency(user, stackType, amount);
 
-    public bool TryTakeCurrency(EntityUid user, string stackType, int amount) =>
-        Currency.TryTakeCurrency(user, stackType, amount);
-
     public bool TryGiveCurrency(EntityUid user, string stackType, int amount) =>
         Currency.TryGiveCurrency(user, stackType, amount);
 
-    private bool BeginCurrencyIssueTransaction() =>
-        Currency.BeginCurrencyIssueTransaction();
+    private bool BeginCurrencyIssueTransaction() => Currency.BeginCurrencyIssueTransaction();
 
-    private void CommitCurrencyIssueTransaction(EntityUid user) =>
-        Currency.CommitCurrencyIssueTransaction(user);
+    private void CommitCurrencyIssueTransaction(EntityUid user) => Currency.CommitCurrencyIssueTransaction(user);
 
-    private void RollbackCurrencyIssueTransaction(EntityUid user) =>
-        Currency.RollbackCurrencyIssueTransaction(user);
+    private void RollbackCurrencyIssueTransaction(EntityUid user) => Currency.RollbackCurrencyIssueTransaction(user);
 
 
     private sealed partial class StoreSpawnService : IStoreRewardSpawner
     {
-        private readonly string _stackComponentName;
         private readonly List<EntityUid> _scratchItems = new();
         private readonly List<EntityUid> _spawnedScratch = new();
+        private readonly string _stackComponentName;
         private readonly List<(EntityUid Ent, int PreviousCount)> _stackRestoreScratch = new();
+        private readonly NcStoreLogicSystem _sys;
         private readonly List<EntityUid> _transactionSpawnedScratch = new();
         private readonly List<(EntityUid Ent, int PreviousCount)> _transactionStackRestoreScratch = new();
         private bool _rewardTransactionActive;
-        private readonly NcStoreLogicSystem _sys;
+
         public StoreSpawnService(NcStoreLogicSystem sys)
         {
             _sys = sys;
@@ -81,10 +77,8 @@ public sealed partial class NcStoreLogicSystem
             string productEntity,
             EntityPrototype productProto,
             int units
-        )
-        {
-            return SpawnPurchasedProduct(user, productEntity, productProto, 1, units);
-        }
+        ) =>
+            SpawnPurchasedProduct(user, productEntity, productProto, 1, units);
 
         public bool BeginRewardTransaction()
         {
@@ -153,10 +147,15 @@ public sealed partial class NcStoreLogicSystem
                 return 0;
 
             if (TryGetStackPurchaseConfig(productProto, out var stackTypeId, out var maxPerStack))
-                return SpawnStackPurchasedProduct(user, productEntity, purchases, unitsPerPurchase, stackTypeId, maxPerStack);
+                return SpawnStackPurchasedProduct(
+                    user,
+                    productEntity,
+                    purchases,
+                    unitsPerPurchase,
+                    stackTypeId,
+                    maxPerStack);
 
             return SpawnSinglePurchasedProduct(user, productEntity, purchases, unitsPerPurchase);
         }
-
     }
 }

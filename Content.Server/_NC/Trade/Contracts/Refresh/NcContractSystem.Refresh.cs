@@ -1,6 +1,8 @@
 using Content.Shared._NC.Trade;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -9,17 +11,24 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryResolveContractPreset(uid, comp, out var preset))
             return;
 
-        if (preset.ContractOffers is { Groups.Count: > 0 } offers)
+        if (preset.ContractOffers is { Groups.Count: > 0, } offers)
             RefillContractsForStoreOffers(uid, comp, offers, ignoredContractId);
         else
-            Sawmill.Warning($"[Contracts] Contract preset '{preset.ID}' has no contractOffers groups; no offers generated.");
+        {
+            Sawmill.Warning(
+                $"[Contracts] Contract preset '{preset.ID}' has no contractOffers groups; no offers generated.");
+        }
     }
 
-    private bool TryResolveContractPreset(EntityUid uid, NcStoreComponent comp, out StoreContractsPresetPrototype preset)
+    private bool TryResolveContractPreset(
+        EntityUid uid,
+        NcStoreComponent comp,
+        out StoreContractsPresetPrototype preset
+    )
     {
         preset = default!;
 
-        if (!_prototypes.TryIndex<NcStoreProfilePrototype>(comp.Profile, out var profile))
+        if (!_prototypes.TryIndex(comp.Profile, out var profile))
         {
             Sawmill.Warning($"[Contracts] Store profile '{comp.Profile}' not found for {ToPrettyString(uid)}.");
             return false;
@@ -28,8 +37,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (profile.Contracts == null)
             return false;
 
-        if (!_prototypes.TryIndex<StoreContractsPresetPrototype>(profile.Contracts.Value, out var resolvedPreset) ||
-            resolvedPreset == null)
+        if (!_prototypes.TryIndex(profile.Contracts.Value, out var resolvedPreset))
         {
             Sawmill.Warning(
                 $"[Contracts] Contract profile '{profile.Contracts.Value}' not found for store profile '{profile.ID}'.");

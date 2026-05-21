@@ -1,5 +1,6 @@
 namespace Content.Server._NC.Trade;
 
+
 internal interface IContractObjectiveRuntimeStore
 {
     HashSet<(EntityUid Store, string ContractId)> ActiveGhostRoleObjectives { get; }
@@ -29,12 +30,14 @@ internal interface IContractPinpointerRegistry
         (EntityUid Store, string ContractId) key,
         NcContractSystem.ObjectiveRuntimeState state,
         EntityUid user,
-        EntityUid pinpointer);
+        EntityUid pinpointer
+    );
 
     void UnregisterIssuedPinpointer(
         IContractObjectiveRuntimeStore runtime,
         EntityUid pinpointer,
-        (EntityUid Store, string ContractId) key);
+        (EntityUid Store, string ContractId) key
+    );
 
     bool TryGetOwner(IContractObjectiveRuntimeStore runtime, EntityUid pinpointer, out EntityUid owner);
 }

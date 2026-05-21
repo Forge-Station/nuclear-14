@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
-
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -71,10 +69,10 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private sealed class ObjectiveConsumeJournal
     {
-        public readonly List<EntityUid> PendingDeletes = new();
-        public readonly List<ProofStateRestore> ProofStateRestores = new();
-        public readonly List<ProofIndexRestore> ProofIndexRestores = new();
         public readonly List<HuntBodyRestore> HuntBodyRestores = new();
+        public readonly List<EntityUid> PendingDeletes = new();
+        public readonly List<ProofIndexRestore> ProofIndexRestores = new();
+        public readonly List<ProofStateRestore> ProofStateRestores = new();
         public readonly List<RoundEndRestore> RoundEndRestores = new();
 
         public void TrackProofState(ObjectiveRuntimeState state, EntityUid proof)
@@ -83,60 +81,53 @@ public sealed partial class NcContractSystem : EntitySystem
                 return;
 
             for (var i = 0; i < ProofStateRestores.Count; i++)
-            {
                 if (ReferenceEquals(ProofStateRestores[i].State, state))
                     return;
-            }
 
-            ProofStateRestores.Add(new ProofStateRestore(state, state.ProofEntity));
+            ProofStateRestores.Add(new(state, state.ProofEntity));
             state.ProofEntity = null;
         }
 
         public void TrackProofIndex(
             EntityUid proof,
-            Dictionary<EntityUid, (EntityUid Store, string ContractId)> proofIndex)
+            Dictionary<EntityUid, (EntityUid Store, string ContractId)> proofIndex
+        )
         {
             for (var i = 0; i < ProofIndexRestores.Count; i++)
-            {
                 if (ProofIndexRestores[i].Proof == proof)
                     return;
-            }
 
             var hadValue = proofIndex.TryGetValue(proof, out var previousKey);
-            ProofIndexRestores.Add(new ProofIndexRestore(proof, hadValue, previousKey));
+            ProofIndexRestores.Add(new(proof, hadValue, previousKey));
         }
 
         public void TrackHuntBody(ObjectiveRuntimeState state, EntityUid body)
         {
             for (var i = 0; i < HuntBodyRestores.Count; i++)
-            {
                 if (ReferenceEquals(HuntBodyRestores[i].State, state) &&
                     HuntBodyRestores[i].Body == body)
-                {
                     return;
-                }
-            }
 
-            HuntBodyRestores.Add(new HuntBodyRestore(
-                state,
-                body,
-                state.HuntBodyEntity,
-                CaptureTargetIndexes(state.HuntSpawnedTargets, body)));
+            HuntBodyRestores.Add(
+                new(
+                    state,
+                    body,
+                    state.HuntBodyEntity,
+                    CaptureTargetIndexes(state.HuntSpawnedTargets, body)));
         }
 
         public void TrackRoundEnd(GhostRoleRoundEndRecord record)
         {
             for (var i = 0; i < RoundEndRestores.Count; i++)
-            {
                 if (ReferenceEquals(RoundEndRestores[i].Record, record))
                     return;
-            }
 
-            RoundEndRestores.Add(new RoundEndRestore(
-                record,
-                record.Outcome,
-                record.Details,
-                record.FinishedAt));
+            RoundEndRestores.Add(
+                new(
+                    record,
+                    record.Outcome,
+                    record.Details,
+                    record.FinishedAt));
         }
 
         public void Clear()

@@ -1,7 +1,8 @@
 using Content.Shared._NC.Trade;
-using Robust.Shared.Prototypes;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -24,10 +25,8 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         for (var i = 0; i < proto.Cargo.Count; i++)
-        {
             if (!TryValidateRetrievalCargo(proto.ID, i, proto.Cargo[i]))
                 valid = false;
-        }
 
         if (!TryValidateRetrievalRoute(proto))
             valid = false;

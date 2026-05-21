@@ -2,7 +2,9 @@ using Content.Shared._NC.Trade;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -12,7 +14,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid store,
         EntityUid user,
         string contractId,
-        ContractServerData contract)
+        ContractServerData contract
+    )
     {
         var config = contract.Config;
         if (!config.RetrievalSpawnEnabled)
@@ -41,7 +44,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             _retrievalSpawnQueueScratch.Clear();
-            CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true);
+            CleanupObjectiveRuntime(store, contractId, true);
             return false;
         }
 
@@ -50,7 +53,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (ShouldAutoIssueRetrievalRoutePinpointer(contract) &&
             !TryIssueInitialRetrievalRoutePinpointer(user, key, state, contract, spawnCoords))
         {
-            CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true);
+            CleanupObjectiveRuntime(store, contractId, true);
             return false;
         }
 
@@ -61,7 +64,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid store,
         string contractId,
         ContractObjectiveConfigData config,
-        out EntityCoordinates spawnCoords)
+        out EntityCoordinates spawnCoords
+    )
     {
         spawnCoords = EntityCoordinates.Invalid;
 
@@ -80,13 +84,11 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         if (TryResolveObjectiveSpawnCoordinates(
-                store,
-                config.RetrievalSpawnPoint,
-                out spawnCoords,
-                fallbackToStore: config.RetrievalSpawnFallbackToStore))
-        {
+            store,
+            config.RetrievalSpawnPoint,
+            out spawnCoords,
+            config.RetrievalSpawnFallbackToStore))
             return true;
-        }
 
         Sawmill.Warning(
             $"[Contracts] Retrieval route init failed for '{contractId}': cannot resolve source marker.");
@@ -96,7 +98,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryBuildRetrievalSpawnQueue(
         string contractId,
         ContractServerData contract,
-        List<string> queue)
+        List<string> queue
+    )
     {
         queue.Clear();
 
@@ -104,10 +107,8 @@ public sealed partial class NcContractSystem : EntitySystem
         if (targets.Count > 0)
         {
             for (var i = 0; i < targets.Count; i++)
-            {
                 if (!TryAppendRetrievalSpawnTarget(contractId, targets[i], queue))
                     return false;
-            }
 
             return true;
         }
@@ -117,7 +118,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         return TryAppendRetrievalSpawnTarget(
             contractId,
-            new ContractTargetServerData
+            new()
             {
                 TargetItem = contract.TargetItem,
                 Required = contract.Required,
@@ -129,7 +130,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryAppendRetrievalSpawnTarget(
         string contractId,
         ContractTargetServerData target,
-        List<string> queue)
+        List<string> queue
+    )
     {
         if (target.Required <= 0 || string.IsNullOrWhiteSpace(target.TargetItem))
             return true;
@@ -152,7 +154,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryAppendExactRetrievalSpawnTarget(
         string contractId,
         ContractTargetServerData target,
-        List<string> queue)
+        List<string> queue
+    )
     {
         if (!_prototypes.HasIndex<EntityPrototype>(target.TargetItem))
         {
@@ -170,7 +173,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryAppendMatcherRetrievalSpawnTarget(
         string contractId,
         ContractTargetServerData target,
-        List<string> queue)
+        List<string> queue
+    )
     {
         for (var i = 0; i < target.Required; i++)
         {
@@ -192,7 +196,8 @@ public sealed partial class NcContractSystem : EntitySystem
         (EntityUid Store, string ContractId) key,
         ObjectiveRuntimeState state,
         string protoId,
-        EntityCoordinates spawnCoords)
+        EntityCoordinates spawnCoords
+    )
     {
         try
         {
@@ -212,8 +217,8 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         var config = contract.Config;
         return UsesRetrievalSpawnedCargoSupport(contract) &&
-               config.RetrievalGuidancePinpointerEnabled &&
-               config.RetrievalGuidancePinpointerTarget == NcRetrievalPinpointerTargetMode.CargoThenDestinationThenStore;
+            config.RetrievalGuidancePinpointerEnabled &&
+            config.RetrievalGuidancePinpointerTarget == NcRetrievalPinpointerTargetMode.CargoThenDestinationThenStore;
     }
 
     private bool TryIssueInitialRetrievalRoutePinpointer(
@@ -221,7 +226,8 @@ public sealed partial class NcContractSystem : EntitySystem
         (EntityUid Store, string ContractId) key,
         ObjectiveRuntimeState state,
         ContractServerData contract,
-        EntityCoordinates spawnCoords)
+        EntityCoordinates spawnCoords
+    )
     {
         if (!TryResolveRetrievalSpawnedPinpointerTarget(key.Store, contract, state, out var target))
             return false;

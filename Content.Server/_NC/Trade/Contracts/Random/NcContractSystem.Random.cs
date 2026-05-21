@@ -1,7 +1,9 @@
 using Content.Shared._NC.Trade;
 using Robust.Shared.Random;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -27,7 +29,8 @@ public sealed partial class NcContractSystem : EntitySystem
         int minClamp,
         int maxClamp,
         out int min,
-        out int buckets)
+        out int buckets
+    )
     {
         var a = range.Min;
         var b = range.Max;
@@ -80,7 +83,8 @@ public sealed partial class NcContractSystem : EntitySystem
         IntRange range,
         int minClamp,
         int maxClamp = int.MaxValue,
-        double jitter = DefaultJitter)
+        double jitter = DefaultJitter
+    )
     {
         if (!TryNormalizeRange(range, minClamp, maxClamp, out var min, out var buckets))
             return min;
@@ -211,7 +215,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private static T PickWeighted<T>(
         IRobustRandom random,
         IReadOnlyList<T> list,
-        Func<T, int> weightSelector)
+        Func<T, int> weightSelector
+    )
     {
         if (list.Count == 0)
             throw new InvalidOperationException("PickWeighted called with empty list.");

@@ -1,102 +1,92 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Customization.Systems;
+
 
 namespace Content.Server._NC.Trade;
 
+
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private static void NormalizeRuntimeState(ContractExecutionKind executionKind, ContractRuntimeContextData runtime)
+    private static void NormalizeRuntimeState(ContractRuntimeContextData runtime)
     {
         runtime.StageGoal = runtime.StageGoal > 0
             ? runtime.StageGoal
-            : GetDefaultObjectiveStageGoal(executionKind);
+            : NcContractTuning.DefaultObjectiveStageGoal;
         runtime.Stage = Math.Clamp(runtime.Stage, 0, runtime.StageGoal);
         runtime.AcceptTimeoutRemainingSeconds = Math.Max(0, runtime.AcceptTimeoutRemainingSeconds);
         runtime.GhostRoleSurvivalRemainingSeconds = Math.Max(0, runtime.GhostRoleSurvivalRemainingSeconds);
-        runtime.FailureReason ??= string.Empty;
-        runtime.StatusHint ??= string.Empty;
     }
 
     private static void NormalizeObjectiveConfig(ContractObjectiveConfigData config)
     {
         config.AcceptTimeoutSeconds = Math.Max(0, config.AcceptTimeoutSeconds);
-        config.SpawnPoint = NormalizeContractPointSelector(config.SpawnPoint, defaultToStore: true);
-        config.DropoffPoint = NormalizeContractPointSelector(config.DropoffPoint, defaultToStore: false);
-
-        config.TargetPrototype ??= string.Empty;
-        config.DeliverySpawnPrototype ??= string.Empty;
-        config.GhostRole ??= string.Empty;
-        config.ProofPrototype ??= string.Empty;
-        config.GhostRolePrototype ??= string.Empty;
-        config.GhostRoleName ??= string.Empty;
-        config.GhostRoleDescription ??= string.Empty;
-        config.GhostRoleRules ??= string.Empty;
-        config.GhostRoleRequirements ??= new List<CharacterRequirement>();
-        config.GhostRoleCharacterName ??= string.Empty;
-        config.GhostRoleCharacterHair ??= string.Empty;
-        config.GhostRolePerks ??= new List<string>();
-        if (config.GhostRoleSurvivalDurationSeconds <= 0)
-            config.GhostRoleSurvivalDurationSeconds = NcGhostRoleSurvivalData.DefaultDurationSeconds;
-        config.GhostRoleSurvivalBriefing ??= string.Empty;
-        config.GhostRoleSurvivalObjectiveTitle ??= string.Empty;
-        config.GhostRoleSurvivalObjectiveDescription ??= string.Empty;
-        config.GivePinpointer = config.GivePinpointer;
+        config.SpawnPoint = NormalizeContractPointSelector(config.SpawnPoint, true);
+        config.DropoffPoint = NormalizeContractPointSelector(config.DropoffPoint, false);
+        config.GhostRoleSurvivalDurationSeconds = NormalizePositiveOrDefault(
+            config.GhostRoleSurvivalDurationSeconds,
+            NcGhostRoleSurvivalData.DefaultDurationSeconds);
         config.PinpointerPrototype = ResolvePinpointerPrototypeId(config.PinpointerPrototype);
-        config.GuardPrototype ??= string.Empty;
         config.GuardCount = Math.Max(0, config.GuardCount);
-        config.HuntBodyPrototype ??= string.Empty;
-        if (config.RetrievalSpawnEnabled)
-        {
-            config.RetrievalSpawnPoint = NormalizeContractPointSelector(
-                config.RetrievalSpawnPoint,
-                defaultToStore: config.RetrievalSpawnFallbackToStore);
 
-            if (config.RetrievalSpawnPoint == null)
-            {
-                config.RetrievalSpawnEnabled = false;
-                config.RetrievalRequireSpawnedEntities = false;
-            }
-        }
-        else
-        {
-            config.RetrievalSpawnPoint = null;
-            config.RetrievalSpawnFallbackToStore = false;
-            config.RetrievalRequireSpawnedEntities = false;
-        }
-
-        config.RetrievalRouteId ??= string.Empty;
-        config.RetrievalDestinationId ??= string.Empty;
+        NormalizeRetrievalSpawnConfig(config);
         config.RetrievalDestinationRadius = Math.Max(0.25f, config.RetrievalDestinationRadius);
-        config.RetrievalDestinationPoint = NormalizeContractPointSelector(config.RetrievalDestinationPoint, defaultToStore: false);
+        config.RetrievalDestinationPoint = NormalizeContractPointSelector(config.RetrievalDestinationPoint, false);
 
-        if (config.RetrievalClaimMode == NcRetrievalClaimMode.StoreCargo)
-        {
-            config.RetrievalProofEnabled = false;
-            config.RetrievalProofConsumeOnRewardClaim = false;
-            config.RetrievalProofOwnership = NcRetrievalProofOwnership.Bearer;
-            config.RetrievalProofReissue = NcRetrievalProofReissuePolicy.Never;
-
-            if (!string.IsNullOrWhiteSpace(config.RetrievalRouteId))
-                config.ProofPrototype = string.Empty;
-        }
-
-        config.RetrievalGuidancePinpointerPrototype = ResolvePinpointerPrototypeId(config.RetrievalGuidancePinpointerPrototype);
+        NormalizeRetrievalClaimConfig(config);
+        config.RetrievalGuidancePinpointerPrototype =
+            ResolvePinpointerPrototypeId(config.RetrievalGuidancePinpointerPrototype);
         config.RetrievalGuidanceMaxActivePinpointers = Math.Max(0, config.RetrievalGuidanceMaxActivePinpointers);
-        config.RetrievalSourceHint ??= string.Empty;
-        config.RetrievalDestinationHint ??= string.Empty;
 
-        config.SpawnSpecific ??= new List<string>();
-        for (var i = config.SpawnSpecific.Count - 1; i >= 0; i--)
+        RemoveBlankStrings(config.SpawnSpecific);
+    }
+
+    private static int NormalizePositiveOrDefault(int value, int fallback) =>
+        value > 0 ? value : fallback;
+
+    private static void NormalizeRetrievalSpawnConfig(ContractObjectiveConfigData config)
+    {
+        if (!config.RetrievalSpawnEnabled)
         {
-            if (string.IsNullOrWhiteSpace(config.SpawnSpecific[i]))
-                config.SpawnSpecific.RemoveAt(i);
+            ClearRetrievalSpawnConfig(config);
+            return;
         }
 
-        for (var i = config.GhostRoleRequirements.Count - 1; i >= 0; i--)
-        {
-            if (config.GhostRoleRequirements[i] is null)
-                config.GhostRoleRequirements.RemoveAt(i);
-        }
+        config.RetrievalSpawnPoint = NormalizeContractPointSelector(
+            config.RetrievalSpawnPoint,
+            config.RetrievalSpawnFallbackToStore);
+
+        if (config.RetrievalSpawnPoint != null)
+            return;
+
+        config.RetrievalSpawnEnabled = false;
+        config.RetrievalRequireSpawnedEntities = false;
+    }
+
+    private static void ClearRetrievalSpawnConfig(ContractObjectiveConfigData config)
+    {
+        config.RetrievalSpawnPoint = null;
+        config.RetrievalSpawnFallbackToStore = false;
+        config.RetrievalRequireSpawnedEntities = false;
+    }
+
+    private static void NormalizeRetrievalClaimConfig(ContractObjectiveConfigData config)
+    {
+        if (config.RetrievalClaimMode != NcRetrievalClaimMode.StoreCargo)
+            return;
+
+        config.RetrievalProofEnabled = false;
+        config.RetrievalProofConsumeOnRewardClaim = false;
+        config.RetrievalProofOwnership = NcRetrievalProofOwnership.Bearer;
+        config.RetrievalProofReissue = NcRetrievalProofReissuePolicy.Never;
+
+        if (!string.IsNullOrWhiteSpace(config.RetrievalRouteId))
+            config.ProofPrototype = string.Empty;
+    }
+
+    private static void RemoveBlankStrings(List<string> values)
+    {
+        for (var i = values.Count - 1; i >= 0; i--)
+            if (string.IsNullOrWhiteSpace(values[i]))
+                values.RemoveAt(i);
     }
 
     private static ContractPointSelectorPrototype? CloneContractPointSelector(ContractPointSelectorPrototype? selector)
@@ -104,13 +94,12 @@ public sealed partial class NcContractSystem : EntitySystem
         if (selector == null)
             return null;
 
-        var sourceOptions = selector.Options ?? new List<WeightedContractPointOptionEntry>();
-
+        var sourceOptions = selector.Options;
         var clone = new ContractPointSelectorPrototype
         {
             Type = selector.Type,
-            Id = selector.Id ?? string.Empty,
-            Options = new List<WeightedContractPointOptionEntry>(sourceOptions.Count)
+            Id = selector.Id,
+            Options = new(sourceOptions.Count)
         };
 
         for (var i = 0; i < sourceOptions.Count; i++)
@@ -121,64 +110,74 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private static ContractPointSelectorPrototype? NormalizeContractPointSelector(
         ContractPointSelectorPrototype? selector,
-        bool defaultToStore)
+        bool defaultToStore
+    )
     {
         if (selector == null)
             return defaultToStore ? new ContractPointSelectorPrototype() : null;
 
-        selector.Id ??= string.Empty;
-        selector.Options ??= new List<WeightedContractPointOptionEntry>();
-
-        switch (selector.Type)
+        return selector.Type switch
         {
-            case ContractPointSelectorType.Store:
-                selector.Id = string.Empty;
-                selector.Options.Clear();
-                return selector;
-
-            case ContractPointSelectorType.MarkerId:
-            case ContractPointSelectorType.MarkerGroup:
-                selector.Options.Clear();
-                if (!string.IsNullOrWhiteSpace(selector.Id))
-                    return selector;
-                return defaultToStore ? new ContractPointSelectorPrototype() : null;
-
-            case ContractPointSelectorType.Weighted:
-                for (var i = selector.Options.Count - 1; i >= 0; i--)
-                {
-                    var option = selector.Options[i];
-                    if (option.Weight <= 0 || !IsContractPointOptionUsable(option))
-                        selector.Options.RemoveAt(i);
-                }
-
-                selector.Id = string.Empty;
-                if (selector.Options.Count > 0)
-                    return selector;
-                return defaultToStore ? new ContractPointSelectorPrototype() : null;
-
-            default:
-                return defaultToStore ? new ContractPointSelectorPrototype() : null;
-        }
-    }
-
-    private static bool IsContractPointOptionUsable(in WeightedContractPointOptionEntry option)
-    {
-        return option.Type switch
-        {
-            ContractPointSelectorType.Store => true,
-            ContractPointSelectorType.MarkerId or ContractPointSelectorType.MarkerGroup => !string.IsNullOrWhiteSpace(option.Id),
-            _ => false
+            ContractPointSelectorType.Store => NormalizeStorePointSelector(selector),
+            ContractPointSelectorType.MarkerId or ContractPointSelectorType.MarkerGroup =>
+                NormalizeNamedPointSelector(selector, defaultToStore),
+            ContractPointSelectorType.Weighted => NormalizeWeightedPointSelector(selector, defaultToStore),
+            _ => GetFallbackPointSelector(defaultToStore)
         };
     }
 
-    private static int GetDefaultObjectiveStageGoal(ContractExecutionKind executionKind)
+    private static ContractPointSelectorPrototype NormalizeStorePointSelector(ContractPointSelectorPrototype selector)
     {
-        return NcContractTuning.DefaultObjectiveStageGoal;
+        selector.Id = string.Empty;
+        selector.Options.Clear();
+        return selector;
     }
+
+    private static ContractPointSelectorPrototype? NormalizeNamedPointSelector(
+        ContractPointSelectorPrototype selector,
+        bool defaultToStore
+    )
+    {
+        selector.Options.Clear();
+        return !string.IsNullOrWhiteSpace(selector.Id)
+            ? selector
+            : GetFallbackPointSelector(defaultToStore);
+    }
+
+    private static ContractPointSelectorPrototype? NormalizeWeightedPointSelector(
+        ContractPointSelectorPrototype selector,
+        bool defaultToStore
+    )
+    {
+        RemoveInvalidPointOptions(selector.Options);
+        selector.Id = string.Empty;
+        return selector.Options.Count > 0
+            ? selector
+            : GetFallbackPointSelector(defaultToStore);
+    }
+
+    private static ContractPointSelectorPrototype? GetFallbackPointSelector(bool defaultToStore) =>
+        defaultToStore ? new ContractPointSelectorPrototype() : null;
+
+    private static void RemoveInvalidPointOptions(List<WeightedContractPointOptionEntry> options)
+    {
+        for (var i = options.Count - 1; i >= 0; i--)
+            if (!IsContractPointOptionUsable(options[i]))
+                options.RemoveAt(i);
+    }
+
+    private static bool IsContractPointOptionUsable(in WeightedContractPointOptionEntry option) =>
+        option.Weight > 0 && option.Type switch
+        {
+            ContractPointSelectorType.Store => true,
+            ContractPointSelectorType.MarkerId or ContractPointSelectorType.MarkerGroup =>
+                !string.IsNullOrWhiteSpace(option.Id),
+            _ => false
+        };
 
     private static ContractFlowStatus ComputeContractFlowStatus(ContractServerData contract)
     {
-        var runtime = contract.Runtime ??= new ContractRuntimeContextData();
+        var runtime = contract.Runtime;
 
         if (runtime.Failed)
             return ContractFlowStatus.Failed;
@@ -195,10 +194,8 @@ public sealed partial class NcContractSystem : EntitySystem
         return ContractFlowStatus.InProgress;
     }
 
-    private static void SyncContractFlowStatus(ContractServerData contract)
-    {
+    private static void SyncContractFlowStatus(ContractServerData contract) =>
         contract.FlowStatus = ComputeContractFlowStatus(contract);
-    }
 
     private static string ResolveObjectiveTargetId(ContractObjectiveConfigData config)
     {
@@ -211,19 +208,15 @@ public sealed partial class NcContractSystem : EntitySystem
         return string.Empty;
     }
 
-    private static string ResolveTrackedObjectivePrototypeId(string? runtimePrototype, string? fallbackTargetId)
-    {
-        return !string.IsNullOrWhiteSpace(runtimePrototype)
+    private static string ResolveTrackedObjectivePrototypeId(string? runtimePrototype, string? fallbackTargetId) =>
+        !string.IsNullOrWhiteSpace(runtimePrototype)
             ? runtimePrototype
             : fallbackTargetId ?? string.Empty;
-    }
 
-    private static string ResolvePinpointerPrototypeId(string? prototypeId)
-    {
-        return string.IsNullOrWhiteSpace(prototypeId)
+    private static string ResolvePinpointerPrototypeId(string? prototypeId) =>
+        string.IsNullOrWhiteSpace(prototypeId)
             ? NcContractTuning.DefaultContractPinpointerPrototypeId
             : prototypeId;
-    }
 
     private static void ResetContractTargetProgress(ContractServerData contract)
     {

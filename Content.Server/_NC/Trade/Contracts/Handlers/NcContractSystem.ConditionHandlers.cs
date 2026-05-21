@@ -1,17 +1,13 @@
-using Content.Server._NC.Sponsor;
 using Content.Server.Ghost.Roles.Components;
-using Content.Server.Players.PlayTimeTracking;
-using Content.Server.Preferences.Managers;
-using Content.Shared.Clothing.Loadouts.Prototypes;
-using Content.Shared.Customization.Systems;
 using Content.Shared._NC.Trade;
+using Content.Shared.Clothing.Loadouts.Prototypes;
 using Content.Shared.Players;
 using Content.Shared.Preferences;
-using Content.Shared.Roles;
-using Robust.Shared.Configuration;
 using Robust.Shared.Player;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -33,9 +29,7 @@ public sealed partial class NcContractSystem : EntitySystem
     private void RegisterConditionHandler(IContractConditionHandler handler)
     {
         if (_conditionHandlers.ContainsKey(handler.Type))
-        {
             Sawmill.Warning($"[Contracts] Duplicate condition handler '{handler.Type}'; replacing previous handler.");
-        }
 
         _conditionHandlers[handler.Type] = handler;
     }
@@ -43,7 +37,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryEvaluateContractCondition(
         string type,
         ContractConditionContext context,
-        out string? failure)
+        out string? failure
+    )
     {
         failure = null;
         if (!_conditionHandlers.TryGetValue(type, out var handler))
@@ -58,7 +53,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryEvaluateContractCondition(
         ContractConditionDef condition,
         ContractConditionContext context,
-        out string? failure)
+        out string? failure
+    )
     {
         failure = null;
         var type = condition.Type;
@@ -93,9 +89,11 @@ public sealed partial class NcContractSystem : EntitySystem
             return true;
 
         if (string.IsNullOrWhiteSpace(failure))
+        {
             failure = string.IsNullOrWhiteSpace(condition.Id)
                 ? $"Contract condition '{type}' is not satisfied."
                 : $"Contract condition '{type}:{condition.Id}' is not satisfied.";
+        }
 
         return false;
     }
@@ -106,7 +104,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid user,
         string contractId,
         ContractServerData contract,
-        out string? failure)
+        out string? failure
+    )
     {
         failure = null;
         for (var i = 0; i < contract.Conditions.Count; i++)
@@ -132,15 +131,13 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
-    private static bool ContractConditionApplies(ContractConditionPhase configured, ContractConditionPhase phase)
-    {
-        return configured switch
+    private static bool ContractConditionApplies(ContractConditionPhase configured, ContractConditionPhase phase) =>
+        configured switch
         {
             ContractConditionPhase.Always => true,
             ContractConditionPhase.TakeAndClaim => phase is ContractConditionPhase.Take or ContractConditionPhase.Claim,
             _ => configured == phase
         };
-    }
 
     private static List<ContractConditionDef> CloneContractConditions(IReadOnlyList<ContractConditionDef> conditions)
     {
@@ -148,14 +145,15 @@ public sealed partial class NcContractSystem : EntitySystem
         for (var i = 0; i < conditions.Count; i++)
         {
             var condition = conditions[i];
-            result.Add(new ContractConditionDef
-            {
-                Type = condition.Type,
-                Id = condition.Id,
-                Phase = condition.Phase,
-                Invert = condition.Invert,
-                Args = new Dictionary<string, string>(condition.Args, StringComparer.Ordinal)
-            });
+            result.Add(
+                new()
+                {
+                    Type = condition.Type,
+                    Id = condition.Id,
+                    Phase = condition.Phase,
+                    Invert = condition.Invert,
+                    Args = new(condition.Args, StringComparer.Ordinal)
+                });
         }
 
         return result;
@@ -204,7 +202,8 @@ public sealed partial class NcContractSystem : EntitySystem
         bool IsSatisfied(
             NcContractSystem system,
             ContractConditionContext context,
-            out string? failure);
+            out string? failure
+        );
     }
 
     private sealed class GhostRoleRequirementsConditionHandler : IContractConditionHandler
@@ -214,7 +213,8 @@ public sealed partial class NcContractSystem : EntitySystem
         public bool IsSatisfied(
             NcContractSystem system,
             ContractConditionContext context,
-            out string? failure)
+            out string? failure
+        )
         {
             failure = null;
 
@@ -223,9 +223,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 context.GhostRole == null ||
                 context.GhostRole.Taken ||
                 system.MetaData(context.Spawner).EntityPaused)
-            {
                 return false;
-            }
 
             var requirements = context.GhostRoleSpawner.Requirements;
             if (requirements.Count == 0)
@@ -234,29 +232,28 @@ public sealed partial class NcContractSystem : EntitySystem
             if (!system._contractGhostRolePlayTime.TryGetTrackerTimes(context.Player, out var playTimes))
             {
                 Sawmill.Error($"Unable to check contract ghost role requirements for {context.Player}.");
-                playTimes = new Dictionary<string, TimeSpan>();
+                playTimes = new();
             }
 
-            var selectedCharacter = system._contractGhostRolePrefs.GetPreferences(context.Player.UserId).SelectedCharacter;
+            var selectedCharacter =
+                system._contractGhostRolePrefs.GetPreferences(context.Player.UserId).SelectedCharacter;
             var profile = selectedCharacter as HumanoidCharacterProfile
                 ?? HumanoidCharacterProfile.DefaultWithSpecies();
             var isWhitelisted = context.Player.ContentData()?.Whitelisted ?? false;
 
             if (system._contractGhostRoleRequirements.CheckRequirementsValid(
-                    requirements,
-                    new JobPrototype(),
-                    profile,
-                    playTimes,
-                    isWhitelisted,
-                    new LoadoutPrototype(),
-                    system.EntityManager,
-                    system._prototypes,
-                    system._contractGhostRoleConfig,
-                    system._contractGhostRoleSponsor,
-                    out var reasons))
-            {
+                requirements,
+                new(),
+                profile,
+                playTimes,
+                isWhitelisted,
+                new LoadoutPrototype(),
+                system.EntityManager,
+                system._prototypes,
+                system._contractGhostRoleConfig,
+                system._contractGhostRoleSponsor,
+                out var reasons))
                 return true;
-            }
 
             failure = system.BuildContractGhostRoleRequirementsFailureMessage(reasons);
             return false;

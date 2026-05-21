@@ -1,19 +1,12 @@
-using System.Linq;
-using Content.Server.Popups;
 using Content.Server.Storage.Components;
 using Content.Shared._NC.Trade;
 using Content.Shared.Access.Components;
-using Content.Shared.Stacks;
 using Content.Shared.Storage.Components;
 using Content.Shared.UserInterface;
-using Robust.Server.Audio;
-using Robust.Server.GameObjects;
-using Robust.Shared.Audio;
-using Robust.Shared.Containers;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Timing;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class StoreStructuredSystem
 {
@@ -69,10 +62,8 @@ public sealed partial class StoreStructuredSystem
             RefreshStoresAffectedBy(uid);
     }
 
-    private void OnContractsChanged(EntityUid uid, NcStoreComponent comp, ref NcContractsChangedEvent args)
-    {
+    private void OnContractsChanged(EntityUid uid, NcStoreComponent comp, ref NcContractsChangedEvent args) =>
         MarkDirty(uid);
-    }
 
     private void OnStorageClose(EntityUid uid, EntityStorageComponent comp, ref StorageAfterCloseEvent args)
     {

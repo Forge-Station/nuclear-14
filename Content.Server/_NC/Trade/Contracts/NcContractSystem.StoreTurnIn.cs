@@ -1,10 +1,11 @@
 using Content.Shared.Item;
-using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
-using Robust.Shared.GameObjects;
+using Content.Shared.Movement.Pulling.Components;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -12,7 +13,10 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         itemsBuffer.Clear();
 
-        foreach (var ent in _lookup.GetEntitiesInRange(store, NcContractTuning.TrackedDeliveryStoreRange, LookupFlags.Dynamic | LookupFlags.Sundries))
+        foreach (var ent in _lookup.GetEntitiesInRange(
+            store,
+            NcContractTuning.TrackedDeliveryStoreRange,
+            LookupFlags.Dynamic | LookupFlags.Sundries))
         {
             if (ent == EntityUid.Invalid || ent == store || !Exists(ent))
                 continue;
@@ -33,9 +37,11 @@ public sealed partial class NcContractSystem : EntitySystem
             return true;
 
         if (TryComp(ent, out MobStateComponent? mobState))
+        {
             return mobState.CurrentState == MobState.Dead &&
-                   !xform.Anchored &&
-                   HasComp<PullableComponent>(ent);
+                !xform.Anchored &&
+                HasComp<PullableComponent>(ent);
+        }
 
         if (xform.Anchored)
             return false;

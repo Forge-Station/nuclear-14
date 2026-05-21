@@ -1,7 +1,8 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -19,10 +20,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private void SeedEmptyProgressClaims()
     {
         foreach (var (key, required) in _progressRequiredByKeyScratch)
-        {
             if (required <= 0)
                 _progressClaimableByKeyScratch[key] = 0;
-        }
     }
 
     private void ReserveGroupedContractProgress(

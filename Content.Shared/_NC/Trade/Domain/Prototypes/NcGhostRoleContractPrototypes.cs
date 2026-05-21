@@ -1,17 +1,16 @@
 using Content.Shared.Customization.Systems;
 using Content.Shared.Humanoid;
 using Robust.Shared.Enums;
-using Robust.Shared.Maths;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 
+
 namespace Content.Shared._NC.Trade;
+
 
 [Prototype("ncGhostRolePreset")]
 public sealed partial class NcGhostRolePresetPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; private set; } = default!;
-
     [DataField("entityPrototype", required: true)]
     public string EntityPrototype { get; private set; } = string.Empty;
 
@@ -32,13 +31,13 @@ public sealed partial class NcGhostRolePresetPrototype : IPrototype
 
     [DataField("perks")]
     public List<ProtoId<NcGhostRolePerkPrototype>> Perks { get; private set; } = new();
+
+    [IdDataField] public string ID { get; private set; } = default!;
 }
 
 [Prototype("ncGhostRolePerk")]
 public sealed partial class NcGhostRolePerkPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; private set; } = default!;
-
     [DataField("name", required: true)]
     public string Name { get; private set; } = string.Empty;
 
@@ -71,6 +70,8 @@ public sealed partial class NcGhostRolePerkPrototype : IPrototype
 
     [DataField("incomingFlatReductions")]
     public Dictionary<string, float> IncomingFlatReductions { get; private set; } = new();
+
+    [IdDataField] public string ID { get; private set; } = default!;
 }
 
 [DataDefinition]
@@ -133,7 +134,7 @@ public sealed partial class NcGhostRoleSurvivalData
     public string ObjectiveDescription { get; set; } = string.Empty;
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public enum NcGhostRoleCompletionMode : byte
 {
     DeadBodyTurnIn = 0,
@@ -143,7 +144,8 @@ public enum NcGhostRoleCompletionMode : byte
 [Prototype("ncGhostRoleContract")]
 public sealed partial class NcGhostRoleContractPrototype : IPrototype
 {
-    [IdDataField] public string ID { get; private set; } = default!;
+    [DataField("role", required: true)]
+    public ProtoId<NcGhostRolePresetPrototype> Role;
 
     [DataField("name", required: true)]
     public string Name { get; private set; } = string.Empty;
@@ -153,9 +155,6 @@ public sealed partial class NcGhostRoleContractPrototype : IPrototype
 
     [DataField("repeatable")]
     public bool Repeatable { get; private set; } = true;
-
-    [DataField("role", required: true)]
-    public ProtoId<NcGhostRolePresetPrototype> Role;
 
     [DataField("spawn", required: true)]
     public NcGhostRoleSpawnData Spawn { get; private set; } = new();
@@ -172,4 +171,6 @@ public sealed partial class NcGhostRoleContractPrototype : IPrototype
     /// <summary>Optional extension conditions evaluated by registered server-side handlers.</summary>
     [DataField("conditions")]
     public List<ContractConditionDef> Conditions { get; private set; } = new();
+
+    [IdDataField] public string ID { get; private set; } = default!;
 }

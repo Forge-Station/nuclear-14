@@ -1,7 +1,8 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -10,7 +11,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid user,
         string contractId,
         NcStoreComponent comp,
-        ContractServerData contract)
+        ContractServerData contract
+    )
     {
         EnsureObjectiveRuntimeDefaults(contract);
 
@@ -101,12 +103,10 @@ public sealed partial class NcContractSystem : EntitySystem
         return CompleteTrackedDeliveryClaim(store, user, contractId, comp, contract);
     }
 
-    private ClaimAttemptResult CreateTrackedDeliveryTargetLostResult()
-    {
-        return ClaimAttemptResult.Fail(
+    private ClaimAttemptResult CreateTrackedDeliveryTargetLostResult() =>
+        ClaimAttemptResult.Fail(
             ClaimFailureReason.ObjectiveFailed,
             Loc.GetString("nc-store-contract-delivery-target-lost"));
-    }
 
     private ClaimAttemptResult FailTrackedDeliveryObjective(
         (EntityUid Store, string ContractId) key,
@@ -138,12 +138,12 @@ public sealed partial class NcContractSystem : EntitySystem
         var config = contract.Config;
         var objectiveJournal = new ObjectiveConsumeJournal();
         if (!TryGiveContractRewardsWithPreCommit(
-                user,
-                contract.Rewards,
-                () => TryConsumeObjectiveProof(store, user, contractId, contract, objectiveJournal, out var proofFail)
-                    ? ClaimAttemptResult.Ok()
-                    : proofFail,
-                out var rewardExecFail))
+            user,
+            contract.Rewards,
+            () => TryConsumeObjectiveProof(store, user, contractId, contract, objectiveJournal, out var proofFail)
+                ? ClaimAttemptResult.Ok()
+                : proofFail,
+            out var rewardExecFail))
         {
             RollbackObjectiveConsumeJournal(objectiveJournal);
             return rewardExecFail;
@@ -155,7 +155,7 @@ public sealed partial class NcContractSystem : EntitySystem
             comp,
             contractId,
             contract.Repeatable,
-            deleteTrackedEntities: !config.PreserveTargetOnComplete);
+            !config.PreserveTargetOnComplete);
         return ClaimAttemptResult.Ok();
     }
 }

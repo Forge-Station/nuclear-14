@@ -1,14 +1,12 @@
-using Content.Shared._NC.Trade;
-using Content.Shared.Clothing.Components;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Hands.Components;
 using Content.Shared.Inventory;
 using Content.Shared.Stacks;
-using Content.Shared.Tag;
 using Robust.Shared.Containers;
-using Robust.Shared.Prototypes;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcStoreInventorySystem
 {
@@ -26,16 +24,14 @@ public sealed partial class NcStoreInventorySystem
             return;
 
         foreach (var root in affectedRoots)
-        {
             if (_inventoryCache.TryGetValue(root, out var entry))
                 entry.Revision = unchecked(entry.Revision + 1);
-        }
     }
 
     public void InvalidateInventoryCache(EntityUid root)
     {
         var entry = GetOrCreateInventoryCacheEntry(root);
-        MarkInventoryDirty(entry, itemsStillCurrent: false);
+        MarkInventoryDirty(entry, false);
     }
 
     public void InvalidateAllCaches()
@@ -44,12 +40,10 @@ public sealed partial class NcStoreInventorySystem
         _rootsByItem.Clear(); // Phase A1: keep reverse index in sync with main cache.
     }
 
-    public int GetInventoryRevision(EntityUid root)
-    {
-        return _inventoryCache.TryGetValue(root, out var entry)
+    public int GetInventoryRevision(EntityUid root) =>
+        _inventoryCache.TryGetValue(root, out var entry)
             ? entry.Revision
             : 0;
-    }
 
     private List<EntityUid> GetOrBuildDeepItemsCache(EntityUid owner)
     {
@@ -97,11 +91,9 @@ public sealed partial class NcStoreInventorySystem
         entry.SnapshotRevision = entry.Revision;
     }
 
-    private static void MarkSnapshotCacheEscaped(InventoryCacheEntry entry)
-    {
+    private static void MarkSnapshotCacheEscaped(InventoryCacheEntry entry) =>
         // Callers receive the live internal items list and may mutate it in-place.
         entry.SnapshotRevision = UncachedRevision;
-    }
 
     private static void MarkInventoryDirty(InventoryCacheEntry entry, bool itemsStillCurrent)
     {
@@ -136,7 +128,7 @@ public sealed partial class NcStoreInventorySystem
         if (_ents.TryGetComponent(owner, out ItemSlotsComponent? itemSlots))
         {
             foreach (var slot in itemSlots.Slots.Values)
-                if (slot is { HasItem: true, Item: not null })
+                if (slot is { HasItem: true, Item: not null, })
                     Enqueue(slot.Item.Value);
         }
 
@@ -176,7 +168,8 @@ public sealed partial class NcStoreInventorySystem
     private void RefreshReverseIndexForRebuild(
         EntityUid owner,
         List<EntityUid> oldItems,
-        List<EntityUid> newItems)
+        List<EntityUid> newItems
+    )
     {
         _rebuildOldItemsScratch.Clear();
         for (var i = 0; i < oldItems.Count; i++)
@@ -197,7 +190,7 @@ public sealed partial class NcStoreInventorySystem
 
             if (!_rootsByItem.TryGetValue(ent, out var rootsSet))
             {
-                rootsSet = new HashSet<EntityUid>();
+                rootsSet = new();
                 _rootsByItem[ent] = rootsSet;
             }
 

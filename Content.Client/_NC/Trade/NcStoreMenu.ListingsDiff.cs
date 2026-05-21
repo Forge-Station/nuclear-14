@@ -1,6 +1,3 @@
-using Content.Shared._NC.Trade;
-
-
 namespace Content.Client._NC.Trade;
 
 

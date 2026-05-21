@@ -23,13 +23,11 @@ public sealed partial class NcContractSystem : EntitySystem
         if (string.IsNullOrWhiteSpace(cur))
         {
             foreach (var c in comp.CurrencyWhitelist)
-            {
                 if (!string.IsNullOrWhiteSpace(c))
                 {
                     cur = c;
                     break;
                 }
-            }
         }
 
         if (string.IsNullOrWhiteSpace(cur))
@@ -57,7 +55,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (cost > 0 && !CurrencyDebit.TryTakeCurrency(user, currency, cost))
             return false;
 
-        CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true);
+        CleanupObjectiveRuntime(store, contractId, true);
         comp.Contracts.Remove(contractId);
         RefillContractsForStore(store, comp, contractId);
         return true;

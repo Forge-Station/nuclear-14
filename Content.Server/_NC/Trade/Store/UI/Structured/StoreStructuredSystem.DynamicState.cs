@@ -1,29 +1,15 @@
+using System.Diagnostics;
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
-using Robust.Server.GameObjects;
-using Robust.Shared.Containers;
 
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class StoreStructuredSystem : EntitySystem
 {
     private const double SlowBarterAvailabilityMs = 5d;
     private const double SlowCratePreviewMs = 5d;
     private const double SlowDynamicStateMs = 10d;
-
-    private readonly record struct DynamicTabState(bool HasBuyTab, bool HasSellTab, bool HasBarterTab, bool HasContractsTab);
-
-    private readonly record struct DynamicContractNeeds(
-        bool HasTakenContracts,
-        bool NeedUserItems,
-        bool NeedCrateItems,
-        bool NeedStoreWorldItems);
-
-    private readonly record struct DynamicScanNeeds(
-        bool NeedUserSnapshot,
-        bool NeedUserItems,
-        bool NeedCrateScan);
 
     private readonly StoreDynamicStatePublisher _dynamicStatePublisher = new();
 
@@ -32,11 +18,12 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (!_ui.IsUiOpen(uid, StoreUiKey.Key, user))
             return;
 
-        var dynamicStarted = System.Diagnostics.Stopwatch.GetTimestamp();
+        var dynamicStarted = Stopwatch.GetTimestamp();
         if (!_storesUpdatingDynamic.Add(uid))
         {
-            Logger.GetSawmill("ncstore-structured").Warning(
-                $"[StoreStructured] Re-entrant UpdateDynamicState on {ToPrettyString(uid)} skipped.");
+            Logger.GetSawmill("ncstore-structured")
+                .Warning(
+                    $"[StoreStructured] Re-entrant UpdateDynamicState on {ToPrettyString(uid)} skipped.");
             return;
         }
 
@@ -76,18 +63,14 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
     }
 
-    private static double GetElapsedMilliseconds(long started)
-    {
-        return (System.Diagnostics.Stopwatch.GetTimestamp() - started) * 1000d /
-               System.Diagnostics.Stopwatch.Frequency;
-    }
+    private static double GetElapsedMilliseconds(long started) =>
+        (Stopwatch.GetTimestamp() - started) * 1000d /
+        Stopwatch.Frequency;
 
-    private EntityUid? GetDynamicCrate(EntityUid user)
-    {
-        return _logic.TryGetPulledClosedCrate(user, out var pulledCrate)
+    private EntityUid? GetDynamicCrate(EntityUid user) =>
+        _logic.TryGetPulledClosedCrate(user, out var pulledCrate)
             ? pulledCrate
             : null;
-    }
 
     private DynamicTabState GetDynamicTabState(NcStoreComponent comp)
     {
@@ -130,7 +113,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         NcStoreComponent comp,
         EntityUid? crateUid,
         bool hasSellTab,
-        DynamicContractNeeds contractNeeds)
+        DynamicContractNeeds contractNeeds
+    )
     {
         var needUserSnapshot = NeedsDynamicUserSnapshot(comp);
         var needUserItems = needUserSnapshot || contractNeeds.NeedUserItems;
@@ -158,7 +142,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     private NcInventorySnapshot? ScanDynamicUserInventory(
         EntityUid user,
         DynamicScanNeeds scanNeeds,
-        DynamicScratch scratch)
+        DynamicScratch scratch
+    )
     {
         if (scanNeeds.NeedUserSnapshot)
         {
@@ -181,7 +166,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     private void ScanDynamicCrateInventory(
         EntityUid? crateUid,
         DynamicScanNeeds scanNeeds,
-        DynamicScratch scratch)
+        DynamicScratch scratch
+    )
     {
         if (scanNeeds.NeedCrateScan && crateUid is { } crateEntity)
         {
@@ -202,7 +188,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         EntityUid? crateUid,
         DynamicTabState tabs,
         DynamicContractNeeds contractNeeds,
-        DynamicScratch scratch)
+        DynamicScratch scratch
+    )
     {
         if (!tabs.HasContractsTab || !contractNeeds.HasTakenContracts)
             return;
@@ -220,7 +207,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
     private static void PopulateDynamicBalances(
         NcStoreComponent comp,
         NcInventorySnapshot? userSnap,
-        DynamicStateBuffer buf)
+        DynamicStateBuffer buf
+    )
     {
         if (userSnap == null)
             return;
@@ -241,7 +229,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         EntityUid user,
         NcInventorySnapshot? userSnap,
         DynamicScratch scratch,
-        DynamicStateBuffer buf)
+        DynamicStateBuffer buf
+    )
     {
         var barterContextPrepared = false;
         var barterListings = 0;
@@ -270,7 +259,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             int owned;
             if (listing.Mode == StoreMode.Barter)
             {
-                var barterStarted = System.Diagnostics.Stopwatch.GetTimestamp();
+                var barterStarted = Stopwatch.GetTimestamp();
                 if (!barterContextPrepared)
                 {
                     _logic.PrepareBarterAvailabilityContext(user, scratch.DeepUserItems, scratch.BarterAvailability);
@@ -278,13 +267,11 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 }
 
                 owned = _logic.GetMaxBarterCount(user, listing, userSnap, scratch.BarterAvailability);
-                barterTicks += System.Diagnostics.Stopwatch.GetTimestamp() - barterStarted;
+                barterTicks += Stopwatch.GetTimestamp() - barterStarted;
                 barterListings++;
             }
             else
-            {
                 owned = _inventory.GetOwnedFromSnapshot(userSnap, listing.ProductEntity, listing.MatchMode);
-            }
 
             if (ShouldSendListingOwned(owned, isVisibleBuyListing) || listing.Mode == StoreMode.Barter)
                 buf.OwnedById[listing.Id] = owned;
@@ -292,7 +279,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
 
         if (barterListings > 0)
         {
-            var barterMs = barterTicks * 1000d / System.Diagnostics.Stopwatch.Frequency;
+            var barterMs = barterTicks * 1000d / Stopwatch.Frequency;
             if (barterMs > SlowBarterAvailabilityMs)
             {
                 Sawmill.Info(
@@ -302,20 +289,13 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         }
     }
 
-    private static bool IsVisibleBuyListing(NcStoreListingDef listing, DynamicScratch scratch)
-    {
-        return listing.Mode == StoreMode.Buy && scratch.ShouldSendBuyDynamicFor(listing.Id);
-    }
+    private static bool IsVisibleBuyListing(NcStoreListingDef listing, DynamicScratch scratch) =>
+        listing.Mode == StoreMode.Buy && scratch.ShouldSendBuyDynamicFor(listing.Id);
 
-    private static bool ShouldSendListingRemaining(NcStoreListingDef listing, bool isVisibleBuyListing)
-    {
-        return listing.RemainingCount != -1 || isVisibleBuyListing;
-    }
+    private static bool ShouldSendListingRemaining(NcStoreListingDef listing, bool isVisibleBuyListing) =>
+        listing.RemainingCount != -1 || isVisibleBuyListing;
 
-    private static bool ShouldSendListingOwned(int owned, bool isVisibleBuyListing)
-    {
-        return owned > 0 || isVisibleBuyListing;
-    }
+    private static bool ShouldSendListingOwned(int owned, bool isVisibleBuyListing) => owned > 0 || isVisibleBuyListing;
 
     private void PopulateDynamicCratePreview(
         EntityUid store,
@@ -324,7 +304,8 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         bool hasSellTab,
         bool needCrateScan,
         DynamicScratch scratch,
-        DynamicStateBuffer buf)
+        DynamicStateBuffer buf
+    )
     {
         if (!hasSellTab || !needCrateScan || crateUid is not { } crate)
         {
@@ -336,7 +317,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         if (scratch.TryPopulateCachedCratePreview(crate, comp.CatalogRevision, inventoryRevision, buf))
             return;
 
-        var started = System.Diagnostics.Stopwatch.GetTimestamp();
+        var started = Stopwatch.GetTimestamp();
         var plan = _logic.ComputeMassSellPlanFromCachedItems(store, comp, crate, scratch.DeepCrateItems);
         var elapsed = GetElapsedMilliseconds(started);
         if (elapsed > SlowCratePreviewMs)
@@ -349,4 +330,21 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         scratch.CacheCratePreview(crate, comp.CatalogRevision, inventoryRevision, plan);
         scratch.TryPopulateCachedCratePreview(crate, comp.CatalogRevision, inventoryRevision, buf);
     }
+
+    private readonly record struct DynamicTabState(
+        bool HasBuyTab,
+        bool HasSellTab,
+        bool HasBarterTab,
+        bool HasContractsTab);
+
+    private readonly record struct DynamicContractNeeds(
+        bool HasTakenContracts,
+        bool NeedUserItems,
+        bool NeedCrateItems,
+        bool NeedStoreWorldItems);
+
+    private readonly record struct DynamicScanNeeds(
+        bool NeedUserSnapshot,
+        bool NeedUserItems,
+        bool NeedCrateScan);
 }

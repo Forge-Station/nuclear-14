@@ -1,7 +1,9 @@
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -21,10 +23,10 @@ public sealed partial class NcContractSystem : EntitySystem
             return false;
 
         if (!TryGiveContractRewardsWithPreCommit(
-                ctx.User,
-                ctx.Contract.Rewards,
-                () => TryExecuteClaimTakePlanPreCommit(ctx),
-                out fail))
+            ctx.User,
+            ctx.Contract.Rewards,
+            () => TryExecuteClaimTakePlanPreCommit(ctx),
+            out fail))
             return false;
 
         MarkClaimTargetsCompleted(ctx.Contract);
@@ -35,13 +37,16 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryExecutePartialClaimTakePlan(
         string contractId,
         ClaimContext ctx,
-        out ClaimAttemptResult fail)
+        out ClaimAttemptResult fail
+    )
     {
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
         if (ctx.TakePlan.Count == 0)
         {
-            fail = ClaimAttemptResult.Fail(ClaimFailureReason.NotEnoughItems, $"No partial turn-in items planned for '{contractId}'.");
+            fail = ClaimAttemptResult.Fail(
+                ClaimFailureReason.NotEnoughItems,
+                $"No partial turn-in items planned for '{contractId}'.");
             return false;
         }
 
@@ -59,7 +64,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 return false;
             }
 
-            RecordPartialTurnInProgress(ctx.Store, contractId, ctx.Contract, ctx.TakePlan, journal);
+            RecordPartialTurnInProgress(ctx.Store, contractId, ctx.TakePlan, journal);
             CommitClaimTakeJournal(journal);
         }
         catch (Exception e)
@@ -85,10 +90,8 @@ public sealed partial class NcContractSystem : EntitySystem
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
         foreach (var entry in takePlan)
-        {
             if (!TryValidateClaimTakeEntry(entry, out fail))
                 return false;
-        }
 
         return true;
     }
@@ -127,23 +130,20 @@ public sealed partial class NcContractSystem : EntitySystem
         return false;
     }
 
-    private static ClaimAttemptResult CreateClaimExecutionFailure(string message)
-    {
-        return ClaimAttemptResult.Fail(ClaimFailureReason.ExecutionFailed, message);
-    }
+    private static ClaimAttemptResult CreateClaimExecutionFailure(string message) =>
+        ClaimAttemptResult.Fail(ClaimFailureReason.ExecutionFailed, message);
 
     private bool TryExecuteClaimTakeEntries(
         List<ClaimTakeEntry> takePlan,
         ClaimTakeJournal journal,
-        out ClaimAttemptResult fail)
+        out ClaimAttemptResult fail
+    )
     {
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
         foreach (var entry in takePlan)
-        {
             if (!TryExecuteClaimTakeEntry(entry, journal, out fail))
                 return false;
-        }
 
         return true;
     }
@@ -151,7 +151,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryExecuteClaimTakeEntry(
         ClaimTakeEntry entry,
         ClaimTakeJournal journal,
-        out ClaimAttemptResult fail)
+        out ClaimAttemptResult fail
+    )
     {
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
@@ -222,7 +223,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TryValidateContractRewards(
         EntityUid user,
         IReadOnlyList<ContractRewardData>? rewards,
-        out ClaimAttemptResult fail)
+        out ClaimAttemptResult fail
+    )
     {
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
@@ -237,26 +239,25 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid user,
         IReadOnlyList<ContractRewardData>? rewards,
         Func<ClaimAttemptResult> preCommit,
-        out ClaimAttemptResult fail)
+        out ClaimAttemptResult fail
+    )
     {
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
         var preCommitFail = ClaimAttemptResult.Ok();
 
         if (Rewards.TryExecuteRewardListWithPreCommit(
-                user,
-                rewards,
-                "Claim",
-                () =>
-                {
-                    preCommitFail = preCommit();
-                    return preCommitFail.Success
-                        ? null
-                        : $"{preCommitFail.Reason}: {preCommitFail.Details}";
-                },
-                out var reason))
-        {
+            user,
+            rewards,
+            "Claim",
+            () =>
+            {
+                preCommitFail = preCommit();
+                return preCommitFail.Success
+                    ? null
+                    : $"{preCommitFail.Reason}: {preCommitFail.Details}";
+            },
+            out var reason))
             return true;
-        }
 
         if (!preCommitFail.Success)
         {
@@ -303,9 +304,10 @@ public sealed partial class NcContractSystem : EntitySystem
         NcStoreComponent comp,
         string contractId,
         bool repeatable,
-        bool deleteTrackedEntities = true)
+        bool deleteTrackedEntities = true
+    )
     {
-        CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities, deleteGuards: false);
+        CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities, false);
 
         comp.Contracts.Remove(contractId);
         if (!repeatable)

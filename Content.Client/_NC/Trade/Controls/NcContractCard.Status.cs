@@ -1,90 +1,81 @@
 ﻿using Content.Shared._NC.Trade;
 
+
 namespace Content.Client._NC.Trade.Controls;
+
 
 public sealed partial class NcContractCard
 {
-    private static ContractObjectiveType GetObjectiveType(ContractClientData data)
-    {
-        return ContractExecutionKinds.ToObjectiveType(data.ExecutionKind);
-    }
+    private static ContractObjectiveType GetObjectiveType(ContractClientData data) =>
+        ContractExecutionKinds.ToObjectiveType(data.ExecutionKind);
 
     private static bool CanRequestPinpointer(ContractClientData data)
     {
         if (!data.SupportsPinpointer ||
-            (data.FlowStatus != ContractFlowStatus.InProgress &&
-             data.FlowStatus != ContractFlowStatus.ReadyToTurnIn))
-        {
+            data.FlowStatus != ContractFlowStatus.InProgress &&
+            data.FlowStatus != ContractFlowStatus.ReadyToTurnIn)
             return false;
-        }
 
         return true;
     }
 
-    private static bool IsGhostRoleAwaitingAcceptance(ContractClientData data)
-    {
-        return GetObjectiveType(data) == ContractObjectiveType.GhostRole &&
-            data.FlowStatus == ContractFlowStatus.AwaitingActivation;
-    }
+    private static bool IsGhostRoleAwaitingAcceptance(ContractClientData data) =>
+        GetObjectiveType(data) == ContractObjectiveType.GhostRole &&
+        data.FlowStatus == ContractFlowStatus.AwaitingActivation;
 
-    private static bool IsGhostRoleActive(ContractClientData data)
-    {
-        return GetObjectiveType(data) == ContractObjectiveType.GhostRole &&
-            data.FlowStatus == ContractFlowStatus.InProgress;
-    }
+    private static bool IsGhostRoleActive(ContractClientData data) =>
+        GetObjectiveType(data) == ContractObjectiveType.GhostRole &&
+        data.FlowStatus == ContractFlowStatus.InProgress;
 
-    private static string BuildGhostRoleModeName(ContractClientData data)
-    {
-        return data.GhostRoleCompletionMode switch
+    private static string BuildGhostRoleModeName(ContractClientData data) =>
+        data.GhostRoleCompletionMode switch
         {
             NcGhostRoleCompletionMode.AliveCuffedTurnIn => Loc.GetString("nc-store-contract-ghost-role-mode-alive"),
             NcGhostRoleCompletionMode.DeadBodyTurnIn => Loc.GetString("nc-store-contract-ghost-role-mode-dead"),
             _ => Loc.GetString("nc-store-contract-ghost-role-mode-unknown")
         };
-    }
 
-    private static string BuildGhostRoleModeHint(ContractClientData data)
-    {
-        return data.GhostRoleCompletionMode switch
+    private static string BuildGhostRoleModeHint(ContractClientData data) =>
+        data.GhostRoleCompletionMode switch
         {
-            NcGhostRoleCompletionMode.AliveCuffedTurnIn => Loc.GetString("nc-store-contract-ghost-role-mode-alive-hint"),
+            NcGhostRoleCompletionMode.AliveCuffedTurnIn =>
+                Loc.GetString("nc-store-contract-ghost-role-mode-alive-hint"),
             NcGhostRoleCompletionMode.DeadBodyTurnIn => Loc.GetString("nc-store-contract-ghost-role-mode-dead-hint"),
             _ => string.Empty
         };
-    }
 
-    private static string BuildHuntModeName(ContractClientData data)
-    {
-        return data.HuntCompletionMode switch
+    private static string BuildHuntModeName(ContractClientData data) =>
+        data.HuntCompletionMode switch
         {
             NcHuntCompletionMode.BodyTurnIn => Loc.GetString("nc-store-contract-hunt-mode-body"),
             NcHuntCompletionMode.TrophyTurnIn => Loc.GetString("nc-store-contract-hunt-mode-trophy"),
             _ => Loc.GetString("nc-store-contract-hunt-mode-unknown")
         };
-    }
 
-    private static string BuildHuntModeHint(ContractClientData data)
-    {
-        return data.HuntCompletionMode switch
+    private static string BuildHuntModeHint(ContractClientData data) =>
+        data.HuntCompletionMode switch
         {
             NcHuntCompletionMode.BodyTurnIn => Loc.GetString("nc-store-contract-hunt-mode-body-tooltip"),
             NcHuntCompletionMode.TrophyTurnIn => Loc.GetString("nc-store-contract-hunt-mode-trophy-tooltip"),
             _ => string.Empty
         };
-    }
 
     private static string BuildGhostRoleStatusText(ContractClientData data)
     {
         if (IsGhostRoleAwaitingAcceptance(data))
-            return Loc.GetString("nc-store-contract-ghost-role-waiting-line", ("time", FormatCountdown(data.Runtime.AcceptTimeoutRemainingSeconds)));
+            return Loc.GetString(
+                "nc-store-contract-ghost-role-waiting-line",
+                ("time", FormatCountdown(data.Runtime.AcceptTimeoutRemainingSeconds)));
 
         if (IsGhostRoleActive(data))
         {
             var timer = BuildGhostRoleSurvivalStatusLine(data);
             if (!string.IsNullOrWhiteSpace(data.Runtime.StatusHint))
+            {
                 return string.IsNullOrWhiteSpace(timer)
                     ? data.Runtime.StatusHint
                     : $"{timer} {data.Runtime.StatusHint}";
+            }
 
             return string.IsNullOrWhiteSpace(timer)
                 ? Loc.GetString("nc-store-contract-ghost-role-active-line")
@@ -121,10 +112,12 @@ public sealed partial class NcContractCard
             ContractFlowStatus.InProgress => progress > 0
                 ? Loc.GetString("nc-store-contract-route-status-delivered")
                 : Loc.GetString("nc-store-contract-route-status-find-cargo"),
-            ContractFlowStatus.ReadyToTurnIn when data.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof && !string.IsNullOrWhiteSpace(data.TurnInItem) => data.RetrievalProofIsBearer
-                ? Loc.GetString("nc-store-contract-route-status-proof-bearer")
-                : Loc.GetString("nc-store-contract-route-status-proof-return"),
-            ContractFlowStatus.ReadyToTurnIn when data.RetrievalClaimMode == NcRetrievalClaimMode.StoreCargo => Loc.GetString("nc-store-contract-route-status-store-cargo-ready"),
+            ContractFlowStatus.ReadyToTurnIn when data.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof &&
+                !string.IsNullOrWhiteSpace(data.TurnInItem) => data.RetrievalProofIsBearer
+                    ? Loc.GetString("nc-store-contract-route-status-proof-bearer")
+                    : Loc.GetString("nc-store-contract-route-status-proof-return"),
+            ContractFlowStatus.ReadyToTurnIn when data.RetrievalClaimMode == NcRetrievalClaimMode.StoreCargo =>
+                Loc.GetString("nc-store-contract-route-status-store-cargo-ready"),
             ContractFlowStatus.ReadyToTurnIn => Loc.GetString("nc-store-contract-route-status-ready"),
             _ => string.Empty
         };
@@ -199,8 +192,11 @@ public sealed partial class NcContractCard
         {
             ContractFlowStatus.Available => Loc.GetString("nc-store-contract-action-not-taken"),
             ContractFlowStatus.ReadyToTurnIn => Loc.GetString("nc-store-contract-action-can-claim"),
-            ContractFlowStatus.AwaitingActivation => Loc.GetString("nc-store-contract-ghost-role-waiting-line", ("time", FormatCountdown(data.Runtime.AcceptTimeoutRemainingSeconds))),
-            ContractFlowStatus.Failed when !string.IsNullOrWhiteSpace(data.Runtime.FailureReason) => data.Runtime.FailureReason,
+            ContractFlowStatus.AwaitingActivation => Loc.GetString(
+                "nc-store-contract-ghost-role-waiting-line",
+                ("time", FormatCountdown(data.Runtime.AcceptTimeoutRemainingSeconds))),
+            ContractFlowStatus.Failed when !string.IsNullOrWhiteSpace(data.Runtime.FailureReason) => data.Runtime
+                .FailureReason,
             _ => IsGhostRoleActive(data)
                 ? Loc.GetString("nc-store-contract-ghost-role-active-line")
                 : Loc.GetString("nc-store-contract-action-not-done")
@@ -240,21 +236,21 @@ public sealed partial class NcContractCard
         };
     }
 
-    private static string BuildGhostRoleSurvivalStatusLine(ContractClientData data)
-    {
-        return data.Runtime.GhostRoleSurvivalRemainingSeconds > 0
+    private static string BuildGhostRoleSurvivalStatusLine(ContractClientData data) =>
+        data.Runtime.GhostRoleSurvivalRemainingSeconds > 0
             ? Loc.GetString(
                 "nc-store-contract-ghost-role-survival-line",
                 ("time", FormatCountdown(data.Runtime.GhostRoleSurvivalRemainingSeconds)))
             : string.Empty;
-    }
 
     private static string BuildGhostRoleActionHintText(ContractClientData data)
     {
         if (IsGhostRoleAwaitingAcceptance(data))
+        {
             return Loc.GetString(
                 "nc-store-contract-ghost-role-waiting-action",
                 ("time", FormatCountdown(data.Runtime.AcceptTimeoutRemainingSeconds)));
+        }
 
         if (!IsGhostRoleActive(data))
             return string.Empty;
@@ -284,12 +280,15 @@ public sealed partial class NcContractCard
                 "nc-store-contract-route-action-progress",
                 ("progress", progress),
                 ("max", max)),
-            ContractFlowStatus.InProgress when data.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof => Loc.GetString("nc-store-contract-route-action-proof-after-delivery"),
+            ContractFlowStatus.InProgress when data.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof =>
+                Loc.GetString("nc-store-contract-route-action-proof-after-delivery"),
             ContractFlowStatus.InProgress => Loc.GetString("nc-store-contract-route-action-wait-confirmation"),
-            ContractFlowStatus.ReadyToTurnIn when data.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof && !string.IsNullOrWhiteSpace(data.TurnInItem) => data.RetrievalProofIsBearer
-                ? Loc.GetString("nc-store-contract-route-action-proof-bearer")
-                : Loc.GetString("nc-store-contract-route-action-proof"),
-            ContractFlowStatus.ReadyToTurnIn when data.RetrievalClaimMode == NcRetrievalClaimMode.StoreCargo => Loc.GetString("nc-store-contract-route-action-store-cargo-ready"),
+            ContractFlowStatus.ReadyToTurnIn when data.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof &&
+                !string.IsNullOrWhiteSpace(data.TurnInItem) => data.RetrievalProofIsBearer
+                    ? Loc.GetString("nc-store-contract-route-action-proof-bearer")
+                    : Loc.GetString("nc-store-contract-route-action-proof"),
+            ContractFlowStatus.ReadyToTurnIn when data.RetrievalClaimMode == NcRetrievalClaimMode.StoreCargo =>
+                Loc.GetString("nc-store-contract-route-action-store-cargo-ready"),
             ContractFlowStatus.ReadyToTurnIn => Loc.GetString("nc-store-contract-route-action-ready"),
             _ => string.Empty
         };
@@ -297,14 +296,12 @@ public sealed partial class NcContractCard
 
     private static int CalculateRouteRequiredTotal(ContractClientData data)
     {
-        if (data.Targets is { Count: > 0 })
+        if (data.Targets is { Count: > 0, })
         {
             var sum = 0;
             foreach (var target in data.Targets)
-            {
                 if (target.Required > 0)
                     sum += target.Required;
-            }
 
             return Math.Max(1, sum);
         }

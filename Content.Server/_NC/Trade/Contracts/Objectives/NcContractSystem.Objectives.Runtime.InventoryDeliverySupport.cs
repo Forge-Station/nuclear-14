@@ -6,6 +6,7 @@ using Robust.Shared.Random;
 
 namespace Content.Server._NC.Trade;
 
+
 public sealed partial class NcContractSystem : EntitySystem
 {
     private readonly List<EntityUid> _inventoryDeliverySpawnedScratch = new();
@@ -21,13 +22,13 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (!TryInitializeRetrievalSpawnRuntime(store, user, contractId, contract))
         {
-            CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true);
+            CleanupObjectiveRuntime(store, contractId, true);
             return false;
         }
 
         if (!TryInitializeRetrievalRouteDeliveryRuntime(store, contractId, contract))
         {
-            CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities: true);
+            CleanupObjectiveRuntime(store, contractId, true);
             return false;
         }
 
@@ -89,19 +90,22 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid store,
         string contractId,
         ContractObjectiveConfigData config,
-        out EntityCoordinates spawnCoords)
+        out EntityCoordinates spawnCoords
+    )
     {
         if (TryResolveObjectiveSpawnCoordinates(store, config, out spawnCoords))
             return true;
 
-        Sawmill.Warning($"[Contracts] Delivery support init failed for '{contractId}': cannot resolve spawn coordinates.");
+        Sawmill.Warning(
+            $"[Contracts] Delivery support init failed for '{contractId}': cannot resolve spawn coordinates.");
         return false;
     }
 
     private bool TryInitializeInventoryDeliverySupportGuards(
         (EntityUid Store, string ContractId) key,
         ContractObjectiveConfigData config,
-        EntityCoordinates spawnCoords)
+        EntityCoordinates spawnCoords
+    )
     {
         if (config.GuardCount <= 0 || string.IsNullOrWhiteSpace(config.GuardPrototype))
             return true;
@@ -110,7 +114,7 @@ public sealed partial class NcContractSystem : EntitySystem
         if (TrySpawnObjectiveGuards(key, state, config, spawnCoords))
             return true;
 
-        CleanupObjectiveRuntime(key.Store, key.ContractId, deleteTrackedEntities: false);
+        CleanupObjectiveRuntime(key.Store, key.ContractId, false);
         return false;
     }
 
@@ -118,7 +122,8 @@ public sealed partial class NcContractSystem : EntitySystem
         (EntityUid Store, string ContractId) key,
         string spawnProtoId,
         EntityCoordinates spawnCoords,
-        List<EntityUid> spawnedEntities)
+        List<EntityUid> spawnedEntities
+    )
     {
         try
         {
@@ -128,7 +133,7 @@ public sealed partial class NcContractSystem : EntitySystem
         }
         catch (Exception e)
         {
-            CleanupObjectiveRuntime(key.Store, key.ContractId, deleteTrackedEntities: false);
+            CleanupObjectiveRuntime(key.Store, key.ContractId, false);
             Sawmill.Error(
                 $"[Contracts] Delivery support init failed for '{key.ContractId}': cannot spawn helper item '{spawnProtoId}': {e}");
             return false;
@@ -139,7 +144,8 @@ public sealed partial class NcContractSystem : EntitySystem
         (EntityUid Store, string ContractId) key,
         ContractServerData contract,
         EntityCoordinates spawnCoords,
-        List<EntityUid> spawnedEntities)
+        List<EntityUid> spawnedEntities
+    )
     {
         if (!TryBuildInventoryDeliverySpawnQueue(contract, out var queue))
             return false;
@@ -157,7 +163,7 @@ public sealed partial class NcContractSystem : EntitySystem
             }
             catch (Exception e)
             {
-                CleanupObjectiveRuntime(key.Store, key.ContractId, deleteTrackedEntities: false);
+                CleanupObjectiveRuntime(key.Store, key.ContractId, false);
                 Sawmill.Error(
                     $"[Contracts] Delivery support init failed for '{key.ContractId}': cannot spawn delivery item '{protoId}': {e}");
                 return false;
@@ -169,7 +175,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool TryBuildInventoryDeliverySpawnQueue(ContractServerData contract, out List<string> queue)
     {
-        queue = new List<string>();
+        queue = new();
 
         var targets = GetEffectiveTargets(contract);
         var requirements = new List<(string MatcherId, int Required)>();
@@ -252,7 +258,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool AppendDeliverySpawnSpecific(List<string> queue, List<string>? spawnSpecific, int maxCount)
     {
-        if (spawnSpecific is not { Count: > 0 } || maxCount <= 0)
+        if (spawnSpecific is not { Count: > 0, } || maxCount <= 0)
             return true;
 
         for (var i = 0; i < spawnSpecific.Count && queue.Count < maxCount; i++)

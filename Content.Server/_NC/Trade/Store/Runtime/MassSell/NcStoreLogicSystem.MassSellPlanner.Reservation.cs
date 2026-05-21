@@ -1,7 +1,8 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcStoreLogicSystem
 {
@@ -9,16 +10,15 @@ public sealed partial class NcStoreLogicSystem
         MassSellInventoryState inventory,
         IReadOnlyDictionary<string, (string CurrencyId, int UnitPrice)> listingQuotes,
         IReadOnlyList<NcStoreListingDef> sellListings,
-        MassSellPlan plan)
+        MassSellPlan plan
+    )
     {
         foreach (var listing in sellListings)
         {
             if (!listingQuotes.TryGetValue(listing.Id, out var quote) ||
                 quote.UnitPrice <= 0 ||
                 string.IsNullOrWhiteSpace(quote.CurrencyId))
-            {
                 continue;
-            }
 
             var taken = ComputeMassSellListingTake(
                 listing,
@@ -34,7 +34,8 @@ public sealed partial class NcStoreLogicSystem
     private int ComputeMassSellListingTake(
         NcStoreListingDef listing,
         int unitPrice,
-        MassSellInventoryState inventory)
+        MassSellInventoryState inventory
+    )
     {
         if (!TryComputeMassSellWantedUnits(listing.RemainingCount, unitPrice, out var want))
             return 0;
@@ -66,7 +67,8 @@ public sealed partial class NcStoreLogicSystem
     private int ReserveMassSellStackUnits(
         string stackTypeId,
         int want,
-        MassSellInventoryState inventory)
+        MassSellInventoryState inventory
+    )
     {
         var taken = ReserveMassSellUnits(inventory.StackTypeCounts, stackTypeId, want);
         if (taken <= 0)
@@ -111,15 +113,15 @@ public sealed partial class NcStoreLogicSystem
     private static int ReserveMassSellProtoUnits(
         string protoId,
         int want,
-        Dictionary<string, int> protoCounts)
-    {
-        return ReserveMassSellUnits(protoCounts, protoId, want);
-    }
+        Dictionary<string, int> protoCounts
+    ) =>
+        ReserveMassSellUnits(protoCounts, protoId, want);
 
     private int ReserveMassSellMatcherUnits(
         string matcherId,
         int want,
-        MassSellInventoryState inventory)
+        MassSellInventoryState inventory
+    )
     {
         if (want <= 0)
             return 0;
@@ -161,7 +163,8 @@ public sealed partial class NcStoreLogicSystem
     private int ReserveMassSellTagUnits(
         string tagTargetId,
         int want,
-        MassSellInventoryState inventory)
+        MassSellInventoryState inventory
+    )
     {
         if (want <= 0)
             return 0;
@@ -186,7 +189,8 @@ public sealed partial class NcStoreLogicSystem
     private static int ReserveMassSellUnits(
         Dictionary<string, int> counts,
         string key,
-        int want)
+        int want
+    )
     {
         if (want <= 0 || !counts.TryGetValue(key, out var available) || available <= 0)
             return 0;
@@ -200,7 +204,8 @@ public sealed partial class NcStoreLogicSystem
         MassSellPlan plan,
         NcStoreListingDef listing,
         (string CurrencyId, int UnitPrice) quote,
-        int taken)
+        int taken
+    )
     {
         var total = (long) quote.UnitPrice * taken;
         SafeAddIncome(plan.IncomeByCurrency, quote.CurrencyId, total);

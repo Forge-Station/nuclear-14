@@ -1,9 +1,8 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Stacks;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcStoreLogicSystem
 {
@@ -40,7 +39,8 @@ public sealed partial class NcStoreLogicSystem
         EntityUid user,
         NcStoreListingDef listing,
         in NcInventorySnapshot snapshot,
-        BarterAvailabilityContext? context = null)
+        BarterAvailabilityContext? context = null
+    )
     {
         var upper = GetMaxBarterCountFromSnapshot(listing, snapshot);
         if (upper <= 0)
@@ -83,9 +83,9 @@ public sealed partial class NcStoreLogicSystem
             return false;
 
         if (!TryExecuteBarterReceivePlan(
-                user,
-                receivePlan,
-                () => TryExecuteBarterCostPlanPreCommit(user, costPlan)))
+            user,
+            receivePlan,
+            () => TryExecuteBarterCostPlanPreCommit(user, costPlan)))
             return false;
 
         if (listing.RemainingCount > 0)

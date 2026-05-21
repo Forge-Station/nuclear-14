@@ -1,22 +1,21 @@
 using Content.Shared._NC.Trade;
 using Content.Shared.Movement.Pulling.Components;
-using Robust.Shared.Map;
-using Robust.Shared.Prototypes;
+
 
 namespace Content.Server._NC.Trade;
 
+
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private static bool UsesRetrievalSpawnedPinpointerTarget(ContractServerData contract)
-    {
-        return UsesRetrievalSpawnedCargoSupport(contract);
-    }
+    private static bool UsesRetrievalSpawnedPinpointerTarget(ContractServerData contract) =>
+        UsesRetrievalSpawnedCargoSupport(contract);
 
     private bool TryResolveRetrievalSpawnedPinpointerTarget(
         EntityUid store,
         ContractServerData contract,
         ObjectiveRuntimeState state,
-        out EntityUid target)
+        out EntityUid target
+    )
     {
         target = EntityUid.Invalid;
         if (!UsesRetrievalSpawnedPinpointerTarget(contract))
@@ -64,7 +63,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid user,
         ContractServerData contract,
         ObjectiveRuntimeState state,
-        out EntityUid target)
+        out EntityUid target
+    )
     {
         target = EntityUid.Invalid;
         if (!UsesRetrievalSpawnedPinpointerTarget(contract))
@@ -115,7 +115,8 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract,
         ObjectiveRuntimeState state,
         EntityUid cargo,
-        out EntityUid target)
+        out EntityUid target
+    )
     {
         target = EntityUid.Invalid;
 
@@ -133,7 +134,8 @@ public sealed partial class NcContractSystem : EntitySystem
         ContractServerData contract,
         ObjectiveRuntimeState state,
         EntityUid cargo,
-        out EntityUid target)
+        out EntityUid target
+    )
     {
         target = EntityUid.Invalid;
 
@@ -153,7 +155,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid store,
         ContractServerData contract,
         ObjectiveRuntimeState state,
-        out EntityUid target)
+        out EntityUid target
+    )
     {
         target = EntityUid.Invalid;
         if (contract.Config.RetrievalDestinationType != NcRetrievalDestinationTargetType.StoreUi)
@@ -192,7 +195,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid store,
         ContractServerData contract,
         ObjectiveRuntimeState state,
-        EntityUid cargo)
+        EntityUid cargo
+    )
     {
         if (cargo == EntityUid.Invalid || TerminatingOrDeleted(cargo))
             return false;
@@ -202,7 +206,7 @@ public sealed partial class NcContractSystem : EntitySystem
             return IsTrackedDeliveryTargetAtStore(store, cargo);
 
         return RequiresRetrievalRouteDelivery(contract) &&
-               (state.RetrievalDeliveredEntities.Contains(cargo) ||
+            (state.RetrievalDeliveredEntities.Contains(cargo) ||
                 IsRetrievalCargoDelivered(store, cargo, config, state));
     }
 
@@ -210,7 +214,8 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid store,
         ContractServerData contract,
         ObjectiveRuntimeState state,
-        out EntityUid target)
+        out EntityUid target
+    )
     {
         target = EntityUid.Invalid;
         var config = contract.Config;
@@ -241,7 +246,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool TryResolveRetrievalContainerDestinationPinpointerTarget(
         ContractObjectiveConfigData config,
-        out EntityUid target)
+        out EntityUid target
+    )
     {
         target = EntityUid.Invalid;
         if (string.IsNullOrWhiteSpace(config.RetrievalDestinationId))
@@ -282,7 +288,8 @@ public sealed partial class NcContractSystem : EntitySystem
         out (EntityUid Store, string ContractId) key,
         out ObjectiveRuntimeState state,
         out EntityUid target,
-        out EntityUid carrier)
+        out EntityUid carrier
+    )
     {
         key = default;
         state = default!;
@@ -295,15 +302,18 @@ public sealed partial class NcContractSystem : EntitySystem
             !contract.Taken ||
             contract.Runtime.Failed ||
             !UsesRetrievalSpawnedPinpointerTarget(contract))
-        {
             return false;
-        }
 
         RefreshPinpointerRuntimeState(candidateKey.Store, candidateKey.ContractId, contract);
         if (contract.Runtime.Failed || !_objectiveRuntime.ByContract.TryGetValue(candidateKey, out candidateState))
             return false;
 
-        if (!TryResolveContractPinpointerTarget(candidateKey.Store, candidateKey.ContractId, contract, candidateState, out target))
+        if (!TryResolveContractPinpointerTarget(
+            candidateKey.Store,
+            candidateKey.ContractId,
+            contract,
+            candidateState,
+            out target))
             return false;
 
         if (TryGetContainedEntityRoot(cargo, out var cargoCarrier))

@@ -1,11 +1,15 @@
 using Content.Shared._NC.Trade;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
+    private readonly Dictionary<ContractPoolCandidateKind, IContractDefinitionHandler>
+        _definitionHandlersByCandidateKind = new();
+
     private readonly Dictionary<NcContractOfferType, IContractDefinitionHandler> _definitionHandlersByOfferType = new();
-    private readonly Dictionary<ContractPoolCandidateKind, IContractDefinitionHandler> _definitionHandlersByCandidateKind = new();
 
     private void InitializeDefinitionHandlers()
     {
@@ -40,15 +44,11 @@ public sealed partial class NcContractSystem : EntitySystem
         _definitionHandlersByCandidateKind[handler.CandidateKind] = handler;
     }
 
-    private bool TryGetDefinitionHandler(NcContractOfferType type, out IContractDefinitionHandler handler)
-    {
-        return _definitionHandlersByOfferType.TryGetValue(type, out handler!);
-    }
+    private bool TryGetDefinitionHandler(NcContractOfferType type, out IContractDefinitionHandler handler) =>
+        _definitionHandlersByOfferType.TryGetValue(type, out handler!);
 
-    private bool TryGetDefinitionHandler(ContractPoolCandidateKind kind, out IContractDefinitionHandler handler)
-    {
-        return _definitionHandlersByCandidateKind.TryGetValue(kind, out handler!);
-    }
+    private bool TryGetDefinitionHandler(ContractPoolCandidateKind kind, out IContractDefinitionHandler handler) =>
+        _definitionHandlersByCandidateKind.TryGetValue(kind, out handler!);
 
     private interface IContractDefinitionHandler
     {
@@ -59,12 +59,14 @@ public sealed partial class NcContractSystem : EntitySystem
             NcContractSystem system,
             NcContractOfferPoolPrototype pool,
             NcContractOfferEntry entry,
-            ContractPoolCandidate candidate);
+            ContractPoolCandidate candidate
+        );
 
         ContractServerData CreateContract(
             NcContractSystem system,
             EntityUid store,
-            ContractPoolCandidate candidate);
+            ContractPoolCandidate candidate
+        );
     }
 
     private sealed class SupplyContractDefinitionHandler : IContractDefinitionHandler
@@ -76,13 +78,12 @@ public sealed partial class NcContractSystem : EntitySystem
             NcContractSystem system,
             NcContractOfferPoolPrototype pool,
             NcContractOfferEntry entry,
-            ContractPoolCandidate candidate)
+            ContractPoolCandidate candidate
+        )
         {
             if (!system._prototypes.TryIndex<NcSupplyContractPrototype>(entry.Id, out var supply) ||
                 !system.TryValidateSupplyContractForPool(pool.ID, supply))
-            {
                 return false;
-            }
 
             candidate.Kind = CandidateKind;
             candidate.Id = supply.ID;
@@ -94,12 +95,11 @@ public sealed partial class NcContractSystem : EntitySystem
         public ContractServerData CreateContract(
             NcContractSystem system,
             EntityUid store,
-            ContractPoolCandidate candidate)
-        {
-            return candidate.Supply != null
+            ContractPoolCandidate candidate
+        ) =>
+            candidate.Supply != null
                 ? system.CreateSupplyContractData(store, candidate.Supply)
                 : CreateInvalidContractData(candidate);
-        }
     }
 
     private sealed class RetrievalContractDefinitionHandler : IContractDefinitionHandler
@@ -111,13 +111,12 @@ public sealed partial class NcContractSystem : EntitySystem
             NcContractSystem system,
             NcContractOfferPoolPrototype pool,
             NcContractOfferEntry entry,
-            ContractPoolCandidate candidate)
+            ContractPoolCandidate candidate
+        )
         {
             if (!system._prototypes.TryIndex<NcRetrievalContractPrototype>(entry.Id, out var retrieval) ||
                 !system.TryValidateRetrievalContractForPool(pool.ID, retrieval))
-            {
                 return false;
-            }
 
             candidate.Kind = CandidateKind;
             candidate.Id = retrieval.ID;
@@ -129,12 +128,11 @@ public sealed partial class NcContractSystem : EntitySystem
         public ContractServerData CreateContract(
             NcContractSystem system,
             EntityUid store,
-            ContractPoolCandidate candidate)
-        {
-            return candidate.Retrieval != null
+            ContractPoolCandidate candidate
+        ) =>
+            candidate.Retrieval != null
                 ? system.CreateRetrievalContractData(store, candidate.Retrieval)
                 : CreateInvalidContractData(candidate);
-        }
     }
 
     private sealed class HuntContractDefinitionHandler : IContractDefinitionHandler
@@ -146,13 +144,12 @@ public sealed partial class NcContractSystem : EntitySystem
             NcContractSystem system,
             NcContractOfferPoolPrototype pool,
             NcContractOfferEntry entry,
-            ContractPoolCandidate candidate)
+            ContractPoolCandidate candidate
+        )
         {
             if (!system._prototypes.TryIndex<NcHuntContractPrototype>(entry.Id, out var hunt) ||
                 !system.TryValidateHuntContractForPool(pool.ID, hunt))
-            {
                 return false;
-            }
 
             if (hunt.Completion.Mode is not (NcHuntCompletionMode.TrophyTurnIn or NcHuntCompletionMode.BodyTurnIn))
             {
@@ -172,12 +169,11 @@ public sealed partial class NcContractSystem : EntitySystem
         public ContractServerData CreateContract(
             NcContractSystem system,
             EntityUid store,
-            ContractPoolCandidate candidate)
-        {
-            return candidate.Hunt != null
+            ContractPoolCandidate candidate
+        ) =>
+            candidate.Hunt != null
                 ? system.CreateHuntContractData(store, candidate.Hunt)
                 : CreateInvalidContractData(candidate);
-        }
     }
 
     private sealed class GhostRoleContractDefinitionHandler : IContractDefinitionHandler
@@ -189,13 +185,12 @@ public sealed partial class NcContractSystem : EntitySystem
             NcContractSystem system,
             NcContractOfferPoolPrototype pool,
             NcContractOfferEntry entry,
-            ContractPoolCandidate candidate)
+            ContractPoolCandidate candidate
+        )
         {
             if (!system._prototypes.TryIndex<NcGhostRoleContractPrototype>(entry.Id, out var ghostRole) ||
                 !system.TryValidateGhostRoleContractForPool(pool.ID, ghostRole))
-            {
                 return false;
-            }
 
             candidate.Kind = CandidateKind;
             candidate.Id = ghostRole.ID;
@@ -207,11 +202,10 @@ public sealed partial class NcContractSystem : EntitySystem
         public ContractServerData CreateContract(
             NcContractSystem system,
             EntityUid store,
-            ContractPoolCandidate candidate)
-        {
-            return candidate.GhostRole != null
+            ContractPoolCandidate candidate
+        ) =>
+            candidate.GhostRole != null
                 ? system.CreateGhostRoleContractData(store, candidate.GhostRole)
                 : CreateInvalidContractData(candidate);
-        }
     }
 }

@@ -1,7 +1,8 @@
 using Content.Shared._NC.Trade;
-using Robust.Shared.Map;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -12,19 +13,18 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         var config = contract.Config;
         return contract.IsRetrievalRouteDelivery &&
-               IsTrackedRetrievalRouteDeliveryConfig(config);
+            IsTrackedRetrievalRouteDeliveryConfig(config);
     }
 
-    private static bool RequiresRetrievalDestinationProofClaim(ContractServerData contract)
-    {
-        return RequiresRetrievalRouteDelivery(contract) &&
-               contract.Config.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof;
-    }
+    private static bool RequiresRetrievalDestinationProofClaim(ContractServerData contract) =>
+        RequiresRetrievalRouteDelivery(contract) &&
+        contract.Config.RetrievalClaimMode == NcRetrievalClaimMode.DestinationProof;
 
     private bool TryInitializeRetrievalRouteDeliveryRuntime(
         EntityUid store,
         string contractId,
-        ContractServerData contract)
+        ContractServerData contract
+    )
     {
         var config = contract.Config;
         if (!RequiresRetrievalRouteDelivery(contract))
@@ -56,7 +56,11 @@ public sealed partial class NcContractSystem : EntitySystem
                 return false;
             }
 
-            if (!TryResolveObjectiveSpawnCoordinates(store, config.RetrievalDestinationPoint, out var destCoords, fallbackToStore: false))
+            if (!TryResolveObjectiveSpawnCoordinates(
+                store,
+                config.RetrievalDestinationPoint,
+                out var destCoords,
+                false))
             {
                 Sawmill.Warning(
                     $"[Contracts] Retrieval route init failed for '{contractId}': cannot resolve destination marker group '{config.RetrievalDestinationId}'.");
@@ -68,10 +72,8 @@ public sealed partial class NcContractSystem : EntitySystem
                 return false;
         }
         else if (config.RetrievalDestinationType == NcRetrievalDestinationTargetType.ContainerGroup &&
-                 !TryValidateRetrievalRouteContainerDestination(contractId, config))
-        {
+            !TryValidateRetrievalRouteContainerDestination(contractId, config))
             return false;
-        }
 
         if (!state.RetrievalRouteDeliveryActive)
         {
@@ -84,7 +86,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private bool TryValidateRetrievalRouteContainerDestination(
         string contractId,
-        ContractObjectiveConfigData config)
+        ContractObjectiveConfigData config
+    )
     {
         if (string.IsNullOrWhiteSpace(config.RetrievalDestinationId))
         {

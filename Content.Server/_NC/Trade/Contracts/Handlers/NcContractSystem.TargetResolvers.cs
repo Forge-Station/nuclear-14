@@ -1,6 +1,8 @@
 using Content.Shared._NC.Trade;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -24,17 +26,13 @@ public sealed partial class NcContractSystem : EntitySystem
     private void RegisterTargetResolver(IContractTargetResolver resolver)
     {
         if (_targetResolvers.ContainsKey(resolver.Kind))
-        {
             Sawmill.Warning($"[Contracts] Duplicate target resolver for {resolver.Kind}; replacing previous resolver.");
-        }
 
         _targetResolvers[resolver.Kind] = resolver;
     }
 
-    private bool TryGetTargetResolver(ContractExecutionKind kind, out IContractTargetResolver resolver)
-    {
-        return _targetResolvers.TryGetValue(kind, out resolver!);
-    }
+    private bool TryGetTargetResolver(ContractExecutionKind kind, out IContractTargetResolver resolver) =>
+        _targetResolvers.TryGetValue(kind, out resolver!);
 
     private interface IContractTargetResolver
     {
@@ -44,7 +42,8 @@ public sealed partial class NcContractSystem : EntitySystem
             NcContractSystem system,
             EntityUid store,
             string contractId,
-            ContractServerData contract);
+            ContractServerData contract
+        );
 
         bool TryResolvePinpointerTarget(
             NcContractSystem system,
@@ -53,7 +52,8 @@ public sealed partial class NcContractSystem : EntitySystem
             string contractId,
             ContractServerData contract,
             ObjectiveRuntimeState state,
-            out EntityUid target);
+            out EntityUid target
+        );
 
         bool TryResolvePinpointerTarget(
             NcContractSystem system,
@@ -61,7 +61,8 @@ public sealed partial class NcContractSystem : EntitySystem
             string contractId,
             ContractServerData contract,
             ObjectiveRuntimeState state,
-            out EntityUid target);
+            out EntityUid target
+        );
     }
 
     private abstract class ContractTargetResolverBase : IContractTargetResolver
@@ -72,10 +73,9 @@ public sealed partial class NcContractSystem : EntitySystem
             NcContractSystem system,
             EntityUid store,
             string contractId,
-            ContractServerData contract)
-        {
-            return system.TryUpdateRetrievalRouteDeliveryProgress(store, contractId, contract);
-        }
+            ContractServerData contract
+        ) =>
+            system.TryUpdateRetrievalRouteDeliveryProgress(store, contractId, contract);
 
         public virtual bool TryResolvePinpointerTarget(
             NcContractSystem system,
@@ -84,7 +84,8 @@ public sealed partial class NcContractSystem : EntitySystem
             string contractId,
             ContractServerData contract,
             ObjectiveRuntimeState state,
-            out EntityUid target)
+            out EntityUid target
+        )
         {
             target = EntityUid.Invalid;
 
@@ -92,7 +93,12 @@ public sealed partial class NcContractSystem : EntitySystem
                 return true;
 
             if (UsesRetrievalSpawnedPinpointerTarget(contract))
-                return system.TryResolveRetrievalSpawnedPinpointerTargetForUser(store, user, contract, state, out target);
+                return system.TryResolveRetrievalSpawnedPinpointerTargetForUser(
+                    store,
+                    user,
+                    contract,
+                    state,
+                    out target);
 
             if (TryResolveCompletedProofTarget(system, contract, state, out target))
                 return true;
@@ -106,7 +112,8 @@ public sealed partial class NcContractSystem : EntitySystem
             string contractId,
             ContractServerData contract,
             ObjectiveRuntimeState state,
-            out EntityUid target)
+            out EntityUid target
+        )
         {
             target = EntityUid.Invalid;
 
@@ -115,9 +122,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
             if (UsesRetrievalSpawnedPinpointerTarget(contract) &&
                 system.TryResolveRetrievalSpawnedPinpointerTarget(store, contract, state, out target))
-            {
                 return true;
-            }
 
             if (TryResolveCompletedProofTarget(system, contract, state, out target))
                 return true;
@@ -130,7 +135,8 @@ public sealed partial class NcContractSystem : EntitySystem
             EntityUid store,
             ContractServerData contract,
             ObjectiveRuntimeState state,
-            out EntityUid target)
+            out EntityUid target
+        )
         {
             target = EntityUid.Invalid;
 
@@ -143,9 +149,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (state.TargetEntity is not { } tracked ||
                 tracked == EntityUid.Invalid ||
                 system.TerminatingOrDeleted(tracked))
-            {
                 return false;
-            }
 
             target = ResolveObjectivePinpointerTarget(contract, state, tracked);
             return target != EntityUid.Invalid && !system.TerminatingOrDeleted(target);
@@ -157,7 +161,8 @@ public sealed partial class NcContractSystem : EntitySystem
             EntityUid user,
             ContractServerData contract,
             ObjectiveRuntimeState state,
-            out EntityUid target)
+            out EntityUid target
+        )
         {
             target = EntityUid.Invalid;
 
@@ -174,7 +179,8 @@ public sealed partial class NcContractSystem : EntitySystem
             NcContractSystem system,
             ContractServerData contract,
             ObjectiveRuntimeState state,
-            out EntityUid target)
+            out EntityUid target
+        )
         {
             target = EntityUid.Invalid;
             if (!contract.Completed)
@@ -183,9 +189,7 @@ public sealed partial class NcContractSystem : EntitySystem
             if (state.ProofEntity is not { } proof ||
                 proof == EntityUid.Invalid ||
                 system.TerminatingOrDeleted(proof))
-            {
                 return false;
-            }
 
             target = proof;
             return true;

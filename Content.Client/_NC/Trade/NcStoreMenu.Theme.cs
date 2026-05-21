@@ -1,15 +1,15 @@
 using System.Linq;
-using Content.Client.Stylesheets;
-using Content.Client.UserInterface.Controls;
-using Content.Shared._NC.Trade;
 using Content.Client._NC.Trade.Theme;
+using Content.Client.Stylesheets;
+using Content.Shared._NC.Trade;
 using Robust.Client.Graphics;
 using Robust.Client.ResourceManagement;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
-using Robust.Shared.Maths;
+
 
 namespace Content.Client._NC.Trade;
+
 
 public sealed partial class NcStoreMenu
 {
@@ -45,7 +45,7 @@ public sealed partial class NcStoreMenu
         {
             BackgroundColor = NcStoreUiTheme.ResolveColor(_uiColors.HeaderBackground, "#222830"),
             BorderColor = NcStoreUiTheme.ResolveColor(_uiColors.HeaderBorder, "#4C4438"),
-            BorderThickness = new Thickness(0, 0, 0, 1)
+            BorderThickness = new(0, 0, 0, 1)
         };
         headerFrameStyle.SetContentMarginOverride(StyleBox.Margin.Left, 0);
         headerFrameStyle.SetContentMarginOverride(StyleBox.Margin.Top, 0);
@@ -109,7 +109,7 @@ public sealed partial class NcStoreMenu
         {
             BackgroundColor = NcStoreUiTheme.ResolveColor(_uiColors.TabsBarBackground, "#171B21"),
             BorderColor = NcStoreUiTheme.ResolveColor(_uiColors.TabsBarBorder, "#3E4652"),
-            BorderThickness = new Thickness(0, 0, 0, 1)
+            BorderThickness = new(0, 0, 0, 1)
         };
         tabsBarStyle.SetContentMarginOverride(StyleBox.Margin.Left, 1);
         tabsBarStyle.SetContentMarginOverride(StyleBox.Margin.Right, 1);
@@ -152,7 +152,7 @@ public sealed partial class NcStoreMenu
     private static StyleBoxFlat CreateTabContentStyle(Color background, Color border)
     {
         var style = NcStoreUiTheme.Flat(background, border);
-        style.BorderThickness = new Thickness(1);
+        style.BorderThickness = new(1);
         style.SetContentMarginOverride(StyleBox.Margin.Horizontal, 0);
         style.SetContentMarginOverride(StyleBox.Margin.Vertical, 0);
         return style;
@@ -168,7 +168,7 @@ public sealed partial class NcStoreMenu
         {
             BackgroundColor = background,
             BorderColor = border,
-            BorderThickness = new Thickness(1)
+            BorderThickness = new(1)
         };
         shellStyle.SetContentMarginOverride(StyleBox.Margin.Left, 0);
         shellStyle.SetContentMarginOverride(StyleBox.Margin.Top, 0);

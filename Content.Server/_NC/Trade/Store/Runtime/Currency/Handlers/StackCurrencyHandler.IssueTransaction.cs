@@ -1,8 +1,8 @@
 using Content.Shared.Stacks;
-using Content.Shared.Hands.EntitySystems;
-using Robust.Shared.Prototypes;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class StackCurrencyHandler : ICurrencyHandler
 {
@@ -107,10 +107,8 @@ public sealed partial class StackCurrencyHandler : ICurrencyHandler
     private void TrackIssueStackRestore(EntityUid ent, int previousCount)
     {
         for (var i = 0; i < _issueStackRestoreScratch.Count; i++)
-        {
             if (_issueStackRestoreScratch[i].Ent == ent)
                 return;
-        }
 
         _issueStackRestoreScratch.Add((ent, previousCount));
     }
@@ -170,10 +168,8 @@ public sealed partial class StackCurrencyHandler : ICurrencyHandler
     private void TrackTakeStackRestore(EntityUid ent, int previousCount)
     {
         for (var i = 0; i < _takeStackRestoreScratch.Count; i++)
-        {
             if (_takeStackRestoreScratch[i].Ent == ent)
                 return;
-        }
 
         _takeStackRestoreScratch.Add((ent, previousCount));
     }

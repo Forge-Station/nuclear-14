@@ -1,7 +1,5 @@
-using Content.Shared._NC.Trade;
-using Robust.Shared.Map;
-
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -12,10 +10,8 @@ public sealed partial class NcContractSystem : EntitySystem
 
         _retrievalRouteDeliveredPruneScratch.Clear();
         foreach (var delivered in state.RetrievalDeliveredEntities)
-        {
             if (delivered == EntityUid.Invalid || TerminatingOrDeleted(delivered))
                 _retrievalRouteDeliveredPruneScratch.Add(delivered);
-        }
 
         for (var i = 0; i < _retrievalRouteDeliveredPruneScratch.Count; i++)
             state.RetrievalDeliveredEntities.Remove(_retrievalRouteDeliveredPruneScratch[i]);

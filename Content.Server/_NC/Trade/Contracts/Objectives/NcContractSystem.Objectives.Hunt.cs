@@ -89,18 +89,17 @@ public sealed partial class NcContractSystem : EntitySystem
     private bool TrySpawnNextHuntObjectiveTarget(
         (EntityUid Store, string ContractId) key,
         ContractServerData contract,
-        ObjectiveRuntimeState state)
+        ObjectiveRuntimeState state
+    )
     {
         var requestedTargetId = ResolveHuntObjectiveRequestedTargetId(contract);
         if (!TryResolveTrackedObjectiveSpawnPrototype(
-                key.ContractId,
-                contract,
-                requestedTargetId,
-                allowSpawnSpecific: true,
-                out var targetProtoId))
-        {
+            key.ContractId,
+            contract,
+            requestedTargetId,
+            true,
+            out var targetProtoId))
             return false;
-        }
 
         if (!TryResolveObjectiveSpawnCoordinates(key.Store, contract.Config, out var spawnCoords))
             return false;
@@ -115,20 +114,16 @@ public sealed partial class NcContractSystem : EntitySystem
         if (config.GuardCount > 0 &&
             !string.IsNullOrWhiteSpace(config.GuardPrototype) &&
             !TrySpawnObjectiveGuards(key, state, config, spawnCoords))
-        {
             Sawmill.Warning($"[Contracts] Hunt stage guard wave failed for '{key.ContractId}'.");
-        }
 
         RetargetObjectivePinpointers(key, state, target);
         return true;
     }
 
-    private static string ResolveHuntObjectiveRequestedTargetId(ContractServerData contract)
-    {
-        return !string.IsNullOrWhiteSpace(contract.TargetItem)
+    private static string ResolveHuntObjectiveRequestedTargetId(ContractServerData contract) =>
+        !string.IsNullOrWhiteSpace(contract.TargetItem)
             ? contract.TargetItem
             : contract.Config.TargetPrototype;
-    }
 
     private EntityCoordinates ResolveHuntObjectiveCompletionCoordinates(EntityUid store, ObjectiveRuntimeState state)
     {
@@ -175,7 +170,8 @@ public sealed partial class NcContractSystem : EntitySystem
             return;
         }
 
-        if (TryComp(target, out TransformComponent? containerTargetXform) && IsTargetInEntityContainer(containerTargetXform))
+        if (TryComp(target, out TransformComponent? containerTargetXform) &&
+            IsTargetInEntityContainer(containerTargetXform))
             OnObjectiveTrackedTargetResolved(key, target);
     }
 }

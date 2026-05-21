@@ -1,22 +1,24 @@
+using System.Linq;
+using System.Text;
 using Content.Server.GameTicking;
 using Content.Shared._NC.Trade;
 using Content.Shared.GameTicking;
-using System;
-using System.Linq;
-using System.Text;
+
 
 namespace Content.Server._NC.Trade;
 
+
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private long _ghostRoleRoundEndNextId;
-    private readonly List<GhostRoleRoundEndRecord> _ghostRoleRoundEndRecords = new();
     private readonly Dictionary<long, GhostRoleRoundEndRecord> _ghostRoleRoundEndById = new();
+    private readonly List<GhostRoleRoundEndRecord> _ghostRoleRoundEndRecords = new();
+    private long _ghostRoleRoundEndNextId;
 
     private void RegisterGhostRoleRoundEndRecord(
         (EntityUid Store, string ContractId) key,
         ContractServerData contract,
-        ObjectiveRuntimeState state)
+        ObjectiveRuntimeState state
+    )
     {
         var record = new GhostRoleRoundEndRecord
         {
@@ -41,7 +43,8 @@ public sealed partial class NcContractSystem : EntitySystem
         ObjectiveRuntimeState state,
         ContractServerData contract,
         EntityUid target,
-        string playerName)
+        string playerName
+    )
     {
         if (!TryGetGhostRoleRoundEndRecord(state, out var record))
             return;
@@ -59,7 +62,8 @@ public sealed partial class NcContractSystem : EntitySystem
     private void MarkGhostRoleRoundEndOutcome(
         ObjectiveRuntimeState state,
         GhostRoleRoundEndOutcome outcome,
-        string details = "")
+        string details = ""
+    )
     {
         if (!TryGetGhostRoleRoundEndRecord(state, out var record))
             return;
@@ -76,13 +80,12 @@ public sealed partial class NcContractSystem : EntitySystem
         EntityUid store,
         string contractId,
         ContractServerData contract,
-        ObjectiveConsumeJournal journal)
+        ObjectiveConsumeJournal journal
+    )
     {
         if (!contract.IsGhostRoleObjective ||
             !_objectiveRuntime.ByContract.TryGetValue((store, contractId), out var state))
-        {
             return;
-        }
 
         var outcome = contract.Config.GhostRoleCompletionMode == NcGhostRoleCompletionMode.AliveCuffedTurnIn
             ? GhostRoleRoundEndOutcome.DeliveredAlive
@@ -90,22 +93,19 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (TryGetGhostRoleRoundEndRecord(state, out var record) &&
             !IsFinalGhostRoleRoundEndOutcome(record.Outcome))
-        {
             journal.TrackRoundEnd(record);
-        }
 
         MarkGhostRoleRoundEndOutcome(state, outcome);
     }
 
     private bool TryGetGhostRoleRoundEndRecord(
         ObjectiveRuntimeState state,
-        out GhostRoleRoundEndRecord record)
+        out GhostRoleRoundEndRecord record
+    )
     {
         if (state.GhostRoleRoundEndId > 0 &&
             _ghostRoleRoundEndById.TryGetValue(state.GhostRoleRoundEndId, out record!))
-        {
             return true;
-        }
 
         record = default!;
         return false;
@@ -121,16 +121,15 @@ public sealed partial class NcContractSystem : EntitySystem
         text.AppendLine(Loc.GetString("nc-store-contract-ghost-role-roundend-header"));
 
         foreach (var record in _ghostRoleRoundEndRecords
-                     .OrderBy(r => r.CreatedAt)
-                     .ThenBy(r => r.ContractName, StringComparer.Ordinal))
-        {
-            text.AppendLine(Loc.GetString(
-                "nc-store-contract-ghost-role-roundend-line",
-                ("contract", record.ContractName),
-                ("role", BuildGhostRoleRoundEndRoleName(record)),
-                ("player", BuildGhostRoleRoundEndPlayerName(record)),
-                ("result", BuildGhostRoleRoundEndResult(record))));
-        }
+            .OrderBy(r => r.CreatedAt)
+            .ThenBy(r => r.ContractName, StringComparer.Ordinal))
+            text.AppendLine(
+                Loc.GetString(
+                    "nc-store-contract-ghost-role-roundend-line",
+                    ("contract", record.ContractName),
+                    ("role", BuildGhostRoleRoundEndRoleName(record)),
+                    ("player", BuildGhostRoleRoundEndPlayerName(record)),
+                    ("result", BuildGhostRoleRoundEndResult(record))));
 
         ev.AddLine(text.ToString());
     }
@@ -141,16 +140,12 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             if (!TryGetGhostRoleRoundEndRecord(state, out var record) ||
                 IsFinalGhostRoleRoundEndOutcome(record.Outcome))
-            {
                 continue;
-            }
 
             if (!TryGetObjectiveContract(key, out _, out var contract) ||
                 !contract.Taken ||
                 contract.Runtime.Failed)
-            {
                 continue;
-            }
 
             record.Outcome = state.GhostRoleTaken
                 ? GhostRoleRoundEndOutcome.Active
@@ -172,12 +167,10 @@ public sealed partial class NcContractSystem : EntitySystem
         return Loc.GetString("nc-store-contract-ghost-role-roundend-unknown-role");
     }
 
-    private string BuildGhostRoleRoundEndPlayerName(GhostRoleRoundEndRecord record)
-    {
-        return string.IsNullOrWhiteSpace(record.PlayerName)
+    private string BuildGhostRoleRoundEndPlayerName(GhostRoleRoundEndRecord record) =>
+        string.IsNullOrWhiteSpace(record.PlayerName)
             ? Loc.GetString("nc-store-contract-ghost-role-roundend-no-player")
             : record.PlayerName;
-    }
 
     private string BuildGhostRoleRoundEndResult(GhostRoleRoundEndRecord record)
     {
@@ -207,15 +200,13 @@ public sealed partial class NcContractSystem : EntitySystem
         _ghostRoleRoundEndNextId = 0;
     }
 
-    private static bool IsFinalGhostRoleRoundEndOutcome(GhostRoleRoundEndOutcome outcome)
-    {
-        return outcome is GhostRoleRoundEndOutcome.DeliveredAlive
+    private static bool IsFinalGhostRoleRoundEndOutcome(GhostRoleRoundEndOutcome outcome) =>
+        outcome is GhostRoleRoundEndOutcome.DeliveredAlive
             or GhostRoleRoundEndOutcome.DeliveredDead
             or GhostRoleRoundEndOutcome.RoleSurvived
             or GhostRoleRoundEndOutcome.NotAccepted
             or GhostRoleRoundEndOutcome.TargetLost
             or GhostRoleRoundEndOutcome.TargetRotten;
-    }
 
     private enum GhostRoleRoundEndOutcome : byte
     {
@@ -231,20 +222,20 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private sealed class GhostRoleRoundEndRecord
     {
-        public long Id;
-        public EntityUid Store;
+        public string CharacterName = string.Empty;
+        public NcGhostRoleCompletionMode CompletionMode;
         public string ContractId = string.Empty;
         public string ContractName = string.Empty;
+        public TimeSpan CreatedAt;
+        public string Details = string.Empty;
+        public TimeSpan? FinishedAt;
+        public long Id;
+        public GhostRoleRoundEndOutcome Outcome;
+        public string PlayerName = string.Empty;
         public string RoleName = string.Empty;
         public string RolePrototype = string.Empty;
-        public string PlayerName = string.Empty;
-        public string CharacterName = string.Empty;
-        public string Details = string.Empty;
-        public NcGhostRoleCompletionMode CompletionMode;
+        public EntityUid Store;
         public int SurvivalDurationSeconds;
-        public GhostRoleRoundEndOutcome Outcome;
-        public TimeSpan CreatedAt;
         public TimeSpan? TakenAt;
-        public TimeSpan? FinishedAt;
     }
 }

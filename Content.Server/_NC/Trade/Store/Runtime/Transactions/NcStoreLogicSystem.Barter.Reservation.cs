@@ -1,9 +1,8 @@
-using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcStoreLogicSystem
 {
@@ -30,10 +29,8 @@ public sealed partial class NcStoreLogicSystem
             });
     }
 
-    private string? TryExecuteBarterCostPlanPreCommit(EntityUid root, BarterCostPlan plan)
-    {
-        return TryExecuteBarterCostPlan(root, plan);
-    }
+    private string? TryExecuteBarterCostPlanPreCommit(EntityUid root, BarterCostPlan plan) =>
+        TryExecuteBarterCostPlan(root, plan);
 
     private bool ValidateBarterCostReservation(EntityUid root, BarterCostReservation reservation)
     {

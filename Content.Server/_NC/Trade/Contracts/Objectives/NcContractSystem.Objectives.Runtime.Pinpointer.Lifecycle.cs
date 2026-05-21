@@ -1,16 +1,16 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Movement.Pulling.Components;
-using Robust.Shared.Map;
-using Robust.Shared.Prototypes;
+
 
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
     private bool CanIssueContractPinpointer(
         (EntityUid Store, string ContractId) key,
         ObjectiveRuntimeState state,
-        ContractObjectiveConfigData config)
+        ContractObjectiveConfigData config
+    )
     {
         PruneInvalidPinpointers(key, state);
         return state.PinpointerEntities.Count < GetContractPinpointerLimit(config);
@@ -40,10 +40,8 @@ public sealed partial class NcContractSystem : EntitySystem
         _pinpointerService.ObjectivePinpointersScratch.Clear();
     }
 
-    private void UnregisterIssuedPinpointer(EntityUid pinpointer, (EntityUid Store, string ContractId) key)
-    {
+    private void UnregisterIssuedPinpointer(EntityUid pinpointer, (EntityUid Store, string ContractId) key) =>
         _pinpointerService.UnregisterIssuedPinpointer(_objectiveRuntime, pinpointer, key);
-    }
 
     private void CleanupObjectivePinpointers(
         (EntityUid Store, string ContractId) key,

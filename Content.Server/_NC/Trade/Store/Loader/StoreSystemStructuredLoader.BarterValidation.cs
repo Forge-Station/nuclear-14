@@ -1,16 +1,18 @@
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
-using Content.Shared.Tag;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class StoreSystemStructuredLoader
 {
     private bool ValidateBarterListing(
         NcBarterListingPrototype listingProto,
         ProtoId<NcBarterPresetPrototype> presetId,
-        ProtoId<NcBarterCategoryPrototype> categoryId)
+        ProtoId<NcBarterCategoryPrototype> categoryId
+    )
     {
         if (string.IsNullOrWhiteSpace(listingProto.ID))
         {
@@ -26,7 +28,8 @@ public sealed partial class StoreSystemStructuredLoader
 
         if (listingProto.Receive.Count == 0 && listingProto.ReceivePools.Count == 0)
         {
-            Sawmill.Warning($"[NcStore] Barter entry '{listingProto.ID}' has no receive or receivePools block and was skipped.");
+            Sawmill.Warning(
+                $"[NcStore] Barter entry '{listingProto.ID}' has no receive or receivePools block and was skipped.");
             return false;
         }
 
@@ -43,7 +46,8 @@ public sealed partial class StoreSystemStructuredLoader
 
         if (listingProto.Count == 0 || listingProto.Count < -1)
         {
-            Sawmill.Warning($"[NcStore] Barter entry '{listingProto.ID}' has invalid count={listingProto.Count}. Use -1 or a positive value.");
+            Sawmill.Warning(
+                $"[NcStore] Barter entry '{listingProto.ID}' has invalid count={listingProto.Count}. Use -1 or a positive value.");
             ok = false;
         }
 
@@ -68,7 +72,8 @@ public sealed partial class StoreSystemStructuredLoader
 
         if (!string.IsNullOrWhiteSpace(cost.Prototype) && !_prototypes.HasIndex<EntityPrototype>(cost.Prototype))
         {
-            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} references missing entity prototype '{cost.Prototype}'.");
+            Sawmill.Warning(
+                $"[NcStore] Barter entry '{entryId}' {path} references missing entity prototype '{cost.Prototype}'.");
             return false;
         }
 
@@ -80,7 +85,8 @@ public sealed partial class StoreSystemStructuredLoader
 
         if (!string.IsNullOrWhiteSpace(cost.Currency) && !_prototypes.HasIndex<StackPrototype>(cost.Currency))
         {
-            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} references missing stack currency '{cost.Currency}'.");
+            Sawmill.Warning(
+                $"[NcStore] Barter entry '{entryId}' {path} references missing stack currency '{cost.Currency}'.");
             return false;
         }
 
@@ -105,13 +111,15 @@ public sealed partial class StoreSystemStructuredLoader
 
         if (!string.IsNullOrWhiteSpace(receive.Prototype) && !_prototypes.HasIndex<EntityPrototype>(receive.Prototype))
         {
-            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} references missing entity prototype '{receive.Prototype}'.");
+            Sawmill.Warning(
+                $"[NcStore] Barter entry '{entryId}' {path} references missing entity prototype '{receive.Prototype}'.");
             return false;
         }
 
         if (!string.IsNullOrWhiteSpace(receive.Currency) && !_prototypes.HasIndex<StackPrototype>(receive.Currency))
         {
-            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} references missing stack currency '{receive.Currency}'.");
+            Sawmill.Warning(
+                $"[NcStore] Barter entry '{entryId}' {path} references missing stack currency '{receive.Currency}'.");
             return false;
         }
 
@@ -136,18 +144,20 @@ public sealed partial class StoreSystemStructuredLoader
 
         if (entry.Chance < 0f || entry.Chance > 1f)
         {
-            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} has invalid chance={entry.Chance}. Expected 0..1.");
+            Sawmill.Warning(
+                $"[NcStore] Barter entry '{entryId}' {path} has invalid chance={entry.Chance}. Expected 0..1.");
             return false;
         }
 
         if (!_prototypes.TryIndex<NcSupplyRewardPoolPrototype>(entry.Pool, out var pool) || pool.Entries.Count == 0)
         {
-            Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} references missing or empty reward pool '{entry.Pool}'.");
+            Sawmill.Warning(
+                $"[NcStore] Barter entry '{entryId}' {path} references missing or empty reward pool '{entry.Pool}'.");
             return false;
         }
 
         var ok = true;
-        var visited = new HashSet<string>(StringComparer.Ordinal) { entry.Pool };
+        var visited = new HashSet<string>(StringComparer.Ordinal) { entry.Pool, };
         for (var i = 0; i < pool.Entries.Count; i++)
             ok &= ValidateBarterReceivePoolReward(entryId, $"{path}.pool[{i}]", pool.Entries[i], visited);
 
@@ -164,7 +174,8 @@ public sealed partial class StoreSystemStructuredLoader
         string entryId,
         string path,
         NcSupplyRewardPoolEntry reward,
-        HashSet<string> visited)
+        HashSet<string> visited
+    )
     {
         if (reward.Type != StoreRewardType.Item &&
             reward.Type != StoreRewardType.Currency &&
@@ -204,7 +215,8 @@ public sealed partial class StoreSystemStructuredLoader
 
             if (!_prototypes.HasIndex<EntityPrototype>(reward.Prototype))
             {
-                Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} references missing entity prototype '{reward.Prototype}'.");
+                Sawmill.Warning(
+                    $"[NcStore] Barter entry '{entryId}' {path} references missing entity prototype '{reward.Prototype}'.");
                 return false;
             }
         }
@@ -219,7 +231,8 @@ public sealed partial class StoreSystemStructuredLoader
 
             if (!_prototypes.HasIndex<StackPrototype>(reward.Currency))
             {
-                Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} references missing stack currency '{reward.Currency}'.");
+                Sawmill.Warning(
+                    $"[NcStore] Barter entry '{entryId}' {path} references missing stack currency '{reward.Currency}'.");
                 return false;
             }
         }
@@ -241,7 +254,8 @@ public sealed partial class StoreSystemStructuredLoader
             if (!_prototypes.TryIndex<NcSupplyRewardPoolPrototype>(reward.Pool, out var nestedPool) ||
                 nestedPool.Entries.Count == 0)
             {
-                Sawmill.Warning($"[NcStore] Barter entry '{entryId}' {path} references missing or empty nested reward pool '{reward.Pool}'.");
+                Sawmill.Warning(
+                    $"[NcStore] Barter entry '{entryId}' {path} references missing or empty nested reward pool '{reward.Pool}'.");
                 visited.Remove(reward.Pool);
                 return false;
             }

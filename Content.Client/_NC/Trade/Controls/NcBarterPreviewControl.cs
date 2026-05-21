@@ -3,7 +3,9 @@ using Robust.Client.Graphics;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 
+
 namespace Content.Client._NC.Trade.Controls;
+
 
 [GenerateTypedNameReferences]
 public sealed partial class NcBarterPreviewControl : PanelContainer
@@ -38,7 +40,8 @@ public sealed partial class NcBarterPreviewControl : PanelContainer
         string costText,
         string receiveText,
         string? costIconPrototype,
-        string? receiveIconPrototype)
+        string? receiveIconPrototype
+    )
     {
         Visible = true;
 
@@ -74,7 +77,7 @@ public sealed partial class NcBarterPreviewControl : PanelContainer
         {
             BackgroundColor = FrameBackground,
             BorderColor = FrameBorder,
-            BorderThickness = new Thickness(1)
+            BorderThickness = new(1)
         };
 
         style.SetContentMarginOverride(StyleBox.Margin.Left, 0);

@@ -1,9 +1,10 @@
 ﻿using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
-using Robust.Client.Graphics;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Client._NC.Trade.Controls;
+
 
 public sealed partial class NcContractCard
 {
@@ -32,9 +33,11 @@ public sealed partial class NcContractCard
         var routeHint = BuildRouteHintText(c);
 
         if (!string.IsNullOrWhiteSpace(ghostRoleHint))
+        {
             description = string.IsNullOrWhiteSpace(description)
                 ? ghostRoleHint
                 : $"{description}\n{ghostRoleHint}";
+        }
 
         if (string.IsNullOrWhiteSpace(routeHint))
             return description;
@@ -87,7 +90,7 @@ public sealed partial class NcContractCard
     {
         var parts = new List<string>(maxParts);
 
-        if (c.Targets is { Count: > 0 })
+        if (c.Targets is { Count: > 0, })
         {
             foreach (var t in c.Targets)
             {
@@ -161,19 +164,17 @@ public sealed partial class NcContractCard
         return Loc.GetString("nc-store-contract-turn-in-note", ("item", ResolveProtoName(c.TurnInItem)));
     }
 
-    private static bool IsHuntBodyTurnIn(ContractClientData c)
-    {
-        return ContractExecutionKinds.ToObjectiveType(c.ExecutionKind) == ContractObjectiveType.Hunt &&
-               c.HuntCompletionMode == NcHuntCompletionMode.BodyTurnIn &&
-               !string.IsNullOrWhiteSpace(c.TurnInItem);
-    }
+    private static bool IsHuntBodyTurnIn(ContractClientData c) =>
+        ContractExecutionKinds.ToObjectiveType(c.ExecutionKind) == ContractObjectiveType.Hunt &&
+        c.HuntCompletionMode == NcHuntCompletionMode.BodyTurnIn &&
+        !string.IsNullOrWhiteSpace(c.TurnInItem);
 
     private static bool HasDistinctTurnInItem(ContractClientData c)
     {
         if (string.IsNullOrWhiteSpace(c.TurnInItem))
             return false;
 
-        if (c.Targets is { Count: > 0 })
+        if (c.Targets is { Count: > 0, })
         {
             for (var i = 0; i < c.Targets.Count; i++)
             {
@@ -188,14 +189,12 @@ public sealed partial class NcContractCard
 
     private int CalculateRequiredTotal(ContractClientData c)
     {
-        if (c.Targets is { Count: > 0 })
+        if (c.Targets is { Count: > 0, })
         {
             var sum = 0;
             foreach (var t in c.Targets)
-            {
                 if (t.Required > 0)
                     sum += t.Required;
-            }
 
             return Math.Max(1, sum);
         }
@@ -306,5 +305,4 @@ public sealed partial class NcContractCard
 
         return currencyId;
     }
-
 }

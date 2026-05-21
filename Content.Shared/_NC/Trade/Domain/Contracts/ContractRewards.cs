@@ -4,8 +4,7 @@ using Robust.Shared.Serialization;
 namespace Content.Shared._NC.Trade;
 
 
-
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public enum StoreRewardType : byte
 {
     Item = 0,
@@ -29,5 +28,5 @@ public sealed partial class ContractRewardDef
     public int MaxRepeats { get; set; } = 0;
 }
 
-[Serializable, NetSerializable]
+[Serializable, NetSerializable,]
 public readonly record struct ContractRewardData(StoreRewardType Type, string Id, int Amount);

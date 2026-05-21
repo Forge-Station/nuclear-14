@@ -6,7 +6,9 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 
+
 namespace Content.Client._NC.Trade.Controls;
+
 
 [GenerateTypedNameReferences]
 public sealed partial class NcListingQuantityControl : BoxContainer
@@ -32,8 +34,8 @@ public sealed partial class NcListingQuantityControl : BoxContainer
     private bool _enabled = true;
     private int _max;
     private int _min;
-    private bool _suppressEditChange;
     private StoreMode _mode = StoreMode.Buy;
+    private bool _suppressEditChange;
 
     public NcListingQuantityControl()
     {
@@ -192,13 +194,13 @@ public sealed partial class NcListingQuantityControl : BoxContainer
         {
             BackgroundColor = QtyEdit.Editable ? ValueFrameBackground : ValueFrameDisabledBackground,
             BorderColor = QtyEdit.Editable ? accent : DisabledAccent,
-            BorderThickness = new Thickness(1)
+            BorderThickness = new(1)
         };
 
         QtyEdit.StyleBoxOverride = new StyleBoxFlat
         {
             BackgroundColor = QtyEdit.Editable ? EditBackground : EditDisabledBackground,
-            BorderThickness = new Thickness(0)
+            BorderThickness = new(0)
         };
 
         QtyEdit.ModulateSelfOverride = QtyEdit.Editable ? TextEnabled : TextDisabled;
@@ -212,7 +214,7 @@ public sealed partial class NcListingQuantityControl : BoxContainer
         {
             BackgroundColor = disabled ? ButtonDisabledBackground : ButtonBackground,
             BorderColor = disabled ? DisabledAccent : accent,
-            BorderThickness = new Thickness(1)
+            BorderThickness = new(1)
         };
 
         button.ModulateSelfOverride = disabled ? TextDisabled : TextEnabled;
