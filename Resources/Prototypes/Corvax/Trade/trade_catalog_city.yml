@@ -1010,7 +1010,7 @@
 
 - type: storeCategoryStructured
   id: CaravanSell2_Ore
-  name: "Руда и валюта"
+  name: "Руда"
   entries:
   - proto: N14IngotCopper1
     price: 10
@@ -1026,10 +1026,6 @@
     price: 20
   - proto: N14IngotGold1
     price: 25
-  - proto: N14CurrencyLegionDenarius
-    price: 4
-  - proto: N14CurrencyLegionAureus
-    price: 80
 
 - type: storeCategoryStructured
   id: CaravanSell2_Alcohol

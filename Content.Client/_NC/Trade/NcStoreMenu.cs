@@ -72,6 +72,11 @@ public sealed partial class NcStoreMenu : FancyWindow
         SellView.ConfigureCategories(GetCategoryDisplayName, GetCategoryToolTip);
         BarterView.ConfigureCategories(GetCategoryDisplayName, GetCategoryToolTip);
 
+        Tabs.OnTabChanged += _ => CloseActiveContractConfirmWindow();
+        BuyView.SelectedCategoryChanged += _ => CloseActiveContractConfirmWindow();
+        SellView.SelectedCategoryChanged += _ => CloseActiveContractConfirmWindow();
+        BarterView.SelectedCategoryChanged += _ => CloseActiveContractConfirmWindow();
+
         BuyView.VisibleIdsChanged += ids =>
         {
             _visibleBuyIds.Clear();
@@ -408,6 +413,7 @@ public sealed partial class NcStoreMenu : FancyWindow
 
         _closed = true;
 
+        CloseActiveContractConfirmWindow();
         BuyView.ClearCaches();
         SellView.ClearCaches();
         BarterView.ClearCaches();
