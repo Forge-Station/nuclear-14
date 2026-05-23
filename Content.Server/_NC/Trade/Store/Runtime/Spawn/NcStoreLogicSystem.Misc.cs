@@ -1,8 +1,6 @@
-using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Utility;
 
 
 namespace Content.Server._NC.Trade;
@@ -11,7 +9,6 @@ namespace Content.Server._NC.Trade;
 public sealed partial class NcStoreLogicSystem
 {
     private const int DefaultMaxStackFallback = 1000;
-    private readonly List<EntityUid> _batchExecutionItemsScratch = new();
     private readonly List<EntityUid> _stackFillItemsScratch = new();
 
     public bool TrySpawnProduct(string protoId, EntityUid user) => TrySpawnProductInternal(protoId, user, true);
@@ -50,108 +47,7 @@ public sealed partial class NcStoreLogicSystem
         if (!_protos.TryIndex<EntityPrototype>(protoId, out var productProto))
             return 0;
 
-        if (!TryGetStackInfo(productProto, out var stackTypeId, out var maxPerStack))
-            return SpawnNonStackable(protoId, user, units);
-
-        var remaining = units;
-        var totalSpawned = 0;
-
-        var added = FillExistingStacks(user, stackTypeId, maxPerStack, remaining);
-        remaining -= added;
-        totalSpawned += added;
-
-        if (remaining > 0)
-        {
-            if (TryComp(user, out TransformComponent? xform))
-                totalSpawned += SpawnNewStackChunks(xform.Coordinates, user, protoId, remaining, maxPerStack);
-        }
-
-        if (totalSpawned > 0)
-            _inventory.InvalidateInventoryCache(user);
-
-        return totalSpawned;
-    }
-
-    public bool ExecuteContractBatch(Dictionary<(EntityUid Root, string ProtoId), int> plan)
-    {
-        if (plan.Count == 0)
-            return true;
-
-        var grouped = GroupPlanByRoot(plan);
-
-        if (!ValidateBatchRequirements(grouped))
-            return false;
-
-        return ProcessBatchExecution(grouped);
-    }
-
-    private bool ValidateBatchRequirements(Dictionary<EntityUid, Dictionary<string, int>> grouped)
-    {
-        foreach (var (root, reqs) in grouped)
-        {
-            var snap = _inventory.BuildInventorySnapshot(root);
-            foreach (var (protoId, totalAmount) in reqs)
-            {
-                var available = _inventory.GetOwnedFromSnapshot(snap, protoId, PrototypeMatchMode.Exact);
-                if (available < totalAmount)
-                {
-                    Sawmill.Warning(
-                        $"[NcStore] Batch validation failed: {ToPrettyString(root)} lacks {protoId} ({available}/{totalAmount}).");
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    private bool ProcessBatchExecution(Dictionary<EntityUid, Dictionary<string, int>> grouped)
-    {
-        foreach (var (root, reqs) in grouped)
-            if (!ProcessSingleRootExecution(root, reqs))
-                return false;
-        return true;
-    }
-
-    private bool ProcessSingleRootExecution(EntityUid root, Dictionary<string, int> reqs)
-    {
-        _inventory.ScanInventoryItems(root, _batchExecutionItemsScratch);
-        var cachedItems = _batchExecutionItemsScratch;
-        var mutated = false;
-
-        foreach (var (protoId, totalAmount) in reqs)
-        {
-            if (totalAmount <= 0)
-                continue;
-
-            if (!TryTakeWithRetry(root, ref cachedItems, protoId, totalAmount))
-            {
-                Sawmill.Error(
-                    $"[NcStore] Post-validation take failed: {protoId} x{totalAmount} from {ToPrettyString(root)}. Aborting!");
-
-                if (mutated)
-                    _inventory.InvalidateInventoryCache(root);
-
-                return false;
-            }
-
-            mutated = true;
-        }
-
-        if (mutated)
-            _inventory.InvalidateInventoryCache(root);
-
-        return true;
-    }
-
-    private bool TryTakeWithRetry(EntityUid root, ref List<EntityUid> cachedItems, string protoId, int amount)
-    {
-        return _inventory.TryTakeProductUnitsFromCachedList(
-            root,
-            cachedItems,
-            protoId,
-            amount,
-            PrototypeMatchMode.Exact) || SlowTake(ref cachedItems, root, protoId, amount);
+        return _spawnService.SpawnRewardProduct(user, protoId, productProto, units);
     }
 
     #region Private Helpers
@@ -247,43 +143,6 @@ public sealed partial class NcStoreLogicSystem
             _inventory.InvalidateInventoryCache(user);
 
         return count;
-    }
-
-    private Dictionary<EntityUid, Dictionary<string, int>> GroupPlanByRoot(
-        Dictionary<(EntityUid Root, string ProtoId), int> plan
-    )
-    {
-        var grouped = new Dictionary<EntityUid, Dictionary<string, int>>();
-
-        foreach (var ((root, protoId), amount) in plan)
-        {
-            if (amount <= 0 || string.IsNullOrWhiteSpace(protoId))
-                continue;
-
-            var items = grouped.GetOrNew(root);
-            try
-            {
-                checked { items[protoId] = items.GetValueOrDefault(protoId) + amount; }
-            }
-            catch (OverflowException)
-            {
-                items[protoId] = int.MaxValue;
-                Sawmill.Warning($"[NcStore] Overflow in GroupPlanByRoot for {protoId} at {ToPrettyString(root)}");
-            }
-        }
-
-        return grouped;
-    }
-
-    private bool SlowTake(ref List<EntityUid> cachedItems, EntityUid root, string protoId, int amount)
-    {
-        _inventory.ScanInventoryItems(root, cachedItems);
-        return _inventory.TryTakeProductUnitsFromCachedList(
-            root,
-            cachedItems,
-            protoId,
-            amount,
-            PrototypeMatchMode.Exact);
     }
 
     #endregion

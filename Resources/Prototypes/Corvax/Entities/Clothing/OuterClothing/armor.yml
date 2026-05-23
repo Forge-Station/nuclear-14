@@ -128,7 +128,7 @@
     sprite: Corvax/Clothing/OuterClothing/Armor/gastatveteranarmor+.rsi
 
 - type: entity
-  parent: N14FalloutArmorBase
+  parent: N14ClothingOuterLegionnaireBaseArmor
   id: N14ClothingOuterLegionnaireTriariumArmor
   name: legionary triarium armor
   description: "It is thanks to the soldiers in this armor that the Legion's roads remain safe"
@@ -679,7 +679,7 @@
     priceMultiplier: 0.6
   - type: ExplosionResistance
     damageCoefficient: 0.7
-  - type: ClothingSpeedModifier 
+  - type: ClothingSpeedModifier
     walkModifier: 1.05
     sprintModifier: 1.05
 
@@ -703,7 +703,7 @@
     priceMultiplier: 0.6
   - type: ExplosionResistance
     damageCoefficient: 0.8
-  - type: ClothingSpeedModifier 
+  - type: ClothingSpeedModifier
     walkModifier: 1.05
     sprintModifier: 1.05
   - type: ToggleableClothing

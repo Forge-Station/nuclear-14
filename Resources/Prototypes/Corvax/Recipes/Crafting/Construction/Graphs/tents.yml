@@ -1,0 +1,150 @@
+#Cloth
+- type: constructionGraph
+  id: N14TentClothWallGraph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14TentClothWallNode
+          steps:
+            - material: Cloth
+              amount: 2
+              doAfter: 5
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+
+    - node: N14TentClothWallNode
+      entity: N14TentClothWall
+      edges:
+        - to: start
+          completed:
+            - !type:GivePrototype
+              prototype: MaterialCloth1
+              amount: 1
+            - !type:DeleteEntity {}
+
+- type: constructionGraph
+  id: N14TentClothCornerGraph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14TentClothCornerNode
+          steps:
+            - material: Cloth
+              amount: 2
+              doAfter: 5
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+
+    - node: N14TentClothCornerNode
+      entity: N14TentClothCorner
+      edges:
+        - to: start
+          completed:
+            - !type:GivePrototype
+              prototype: MaterialCloth1
+              amount: 1
+            - !type:DeleteEntity {}
+
+- type: constructionGraph
+  id: N14TentClothDoorGraph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14TentClothDoorNode
+          steps:
+            - material: Cloth
+              amount: 2
+              doAfter: 5
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+
+    - node: N14TentClothDoorNode
+      entity: N14DoorTentClothflap
+      edges:
+        - to: start
+          completed:
+            - !type:GivePrototype
+              prototype: MaterialCloth1
+              amount: 1
+            - !type:DeleteEntity {}
+#Leather
+- type: constructionGraph
+  id: N14TentLeatherWallGraph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14TentLeatherWallNode
+          steps:
+            - material: Leather
+              amount: 2
+              doAfter: 5
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+
+    - node: N14TentLeatherWallNode
+      entity: N14TentLeatherWall
+      edges:
+        - to: start
+          completed:
+            - !type:GivePrototype
+              prototype: N14MaterialLeather1
+              amount: 1
+            - !type:DeleteEntity {}
+
+- type: constructionGraph
+  id: N14TentLeatherCornerGraph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14TentLeatherCornerNode
+          steps:
+            - material: Leather
+              amount: 2
+              doAfter: 5
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+
+    - node: N14TentLeatherCornerNode
+      entity: N14TentLeatherCorner
+      edges:
+        - to: start
+          completed:
+            - !type:GivePrototype
+              prototype: N14MaterialLeather1
+              amount: 1
+            - !type:DeleteEntity {}
+
+- type: constructionGraph
+  id: N14TentLeatherDoorGraph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14TentLeatherDoorNode
+          steps:
+            - material: Leather
+              amount: 2
+              doAfter: 5
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+
+    - node: N14TentLeatherDoorNode
+      entity: N14DoorTentLeatherflap
+      edges:
+        - to: start
+          completed:
+            - !type:GivePrototype
+              prototype: N14MaterialLeather1
+              amount: 1
+            - !type:DeleteEntity {}

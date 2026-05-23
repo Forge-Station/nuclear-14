@@ -1,6 +1,8 @@
 using Content.Shared._NC.Trade;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -15,8 +17,24 @@ public sealed partial class NcContractSystem : EntitySystem
         if (contract.Taken)
             return false;
 
-        if (!TryInitializeObjectiveRuntimeOnTake(store, user, contractId, contract))
+        if (!TryEvaluateContractConditions(
+            ContractConditionPhase.Take,
+            store,
+            user,
+            contractId,
+            contract,
+            out var conditionFailure))
+        {
+            Sawmill.Info(
+                $"[Contracts] Take rejected for '{contractId}' on {ToPrettyString(store)}: {conditionFailure}");
             return false;
+        }
+
+        if (!TryInitializeObjectiveRuntimeOnTake(store, user, contractId, contract))
+        {
+            CleanupObjectiveRuntime(store, contractId, true);
+            return false;
+        }
 
         contract.Taken = true;
         contract.Progress = 0;

@@ -1,122 +1,129 @@
 ﻿using Content.Shared._NC.Trade;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class StoreStructuredSystem : EntitySystem
 {
     private sealed partial class DynamicScratch
     {
-        private readonly DynamicStateBuffer[] _buffers = { new(), new() };
+        private readonly DynamicStateBuffer[] _buffers = { new(), new(), };
+        private readonly List<ContractClientData> _contractsCache = new();
         private readonly Dictionary<string, int> _cratePreviewTotals = new();
         private readonly Dictionary<string, int> _cratePreviewUnitsById = new();
+        private readonly HashSet<string> _visibleIncomingScratch = new(StringComparer.Ordinal);
         private readonly HashSet<string> _visibleListingIds = new();
+        public readonly NcStoreLogicSystem.BarterAvailabilityContext BarterAvailability = new();
+        public readonly List<ContractServerData> ContractsSignatureScratch = new();
+        public readonly List<EntityUid> DeepCrateItems = new();
+
+        public readonly List<EntityUid> DeepUserItems = new();
+        public readonly NcInventorySnapshot UserSnapshot = new();
+
         private int _activeIndex;
         private int _catalogRevision;
+        private int _contractsCacheSignature;
         private int _cratePreviewCatalogRevision;
         private int _cratePreviewInventoryRevision;
+        private EntityUid? _cratePreviewRoot;
+        private bool _hasBarterTab;
         private bool _hasBuyTab;
-        private bool _hasCratePreview;
         private bool _hasContracts;
-        private bool _hasContractsFingerprint;
-        private int _contractsFingerprint;
+        private bool _hasContractsCache;
+        private bool _hasCratePreview;
         private bool _hasMeta;
         private bool _hasSellTab;
-        private bool _hasVisibleIds;
+        private bool _lastHasVisibleIds;
         private int _visibleSig;
-        private EntityUid? _cratePreviewRoot;
+
         public TimeSpan NextDynamicAllowed = TimeSpan.Zero;
+        public TimeSpan NextManualRefreshAllowed = TimeSpan.Zero;
+
+        public bool HasVisibleIds { get; private set; }
 
         public DynamicStateBuffer GetReadBuffer() => _buffers[_activeIndex];
 
         public DynamicStateBuffer GetWriteBuffer() => _buffers[1 - _activeIndex];
 
-        public bool UpdateVisibleIds(string[]? ids)
+        public bool UpdateVisibleIds(IReadOnlyList<string>? ids)
         {
-            if (ids == null || ids.Length == 0)
-            {
-                if (!_hasVisibleIds)
-                    return false;
+            _visibleIncomingScratch.Clear();
 
+            if (ids != null)
+            {
+                for (var i = 0; i < ids.Count; i++)
+                {
+                    var id = ids[i];
+                    if (!string.IsNullOrWhiteSpace(id))
+                        _visibleIncomingScratch.Add(id);
+                }
+            }
+
+            if (_visibleIncomingScratch.Count == 0)
+            {
+                if (!HasVisibleIds)
+                    return false;
                 _visibleListingIds.Clear();
                 _visibleSig = 0;
-                _hasVisibleIds = false;
+                HasVisibleIds = false;
                 return true;
             }
 
-            var sig = 17;
-            for (var i = 0; i < ids.Length; i++)
-            {
-                var id = ids[i];
-                if (string.IsNullOrWhiteSpace(id))
-                    continue;
+            var sig = ComputeVisibleIdsSignature(_visibleIncomingScratch);
 
-                sig = unchecked(sig * 31 + id.GetHashCode());
-            }
-
-            if (_hasVisibleIds && sig == _visibleSig && _visibleListingIds.Count == ids.Length)
-            {
-                var all = true;
-                for (var i = 0; i < ids.Length; i++)
-                {
-                    var id = ids[i];
-                    if (string.IsNullOrWhiteSpace(id))
-                        continue;
-
-                    if (_visibleListingIds.Contains(id))
-                        continue;
-
-                    all = false;
-                    break;
-                }
-
-                if (all)
-                    return false;
-            }
+            if (HasVisibleIds &&
+                sig == _visibleSig &&
+                _visibleListingIds.SetEquals(_visibleIncomingScratch))
+                return false;
 
             _visibleListingIds.Clear();
-            for (var i = 0; i < ids.Length; i++)
-            {
-                var id = ids[i];
-                if (!string.IsNullOrWhiteSpace(id))
-                    _visibleListingIds.Add(id);
-            }
+            foreach (var id in _visibleIncomingScratch)
+                _visibleListingIds.Add(id);
 
             _visibleSig = sig;
-            _hasVisibleIds = true;
+            HasVisibleIds = true;
             return true;
+        }
+
+        private static int ComputeVisibleIdsSignature(HashSet<string> ids)
+        {
+            var sig = 17;
+            foreach (var id in ids)
+                sig = unchecked(sig + StableStringHash(id) * 31);
+
+            sig = unchecked(sig * 31 + ids.Count);
+            return sig;
+        }
+
+        private static int StableStringHash(string value)
+        {
+            unchecked
+            {
+                const int fnvPrime = 16777619;
+                var hash = unchecked((int) 2166136261u);
+
+                for (var i = 0; i < value.Length; i++)
+                    hash = (hash ^ value[i]) * fnvPrime;
+
+                return hash;
+            }
         }
 
         public bool ShouldSendBuyDynamicFor(string listingId)
         {
-            if (!_hasVisibleIds)
+            if (!HasVisibleIds)
                 return true;
 
             return _visibleListingIds.Contains(listingId);
-        }
-
-        public bool ShouldRebuildContracts(int fingerprint)
-        {
-            if (!_hasContractsFingerprint || _contractsFingerprint != fingerprint)
-            {
-                _contractsFingerprint = fingerprint;
-                _hasContractsFingerprint = true;
-                return true;
-            }
-
-            return false;
-        }
-
-        public void ResetContractsFingerprint()
-        {
-            _hasContractsFingerprint = false;
-            _contractsFingerprint = 0;
         }
 
         public bool TryPopulateCachedCratePreview(
             EntityUid crateUid,
             int catalogRevision,
             int inventoryRevision,
-            DynamicStateBuffer buf)
+            DynamicStateBuffer buf
+        )
         {
             if (!_hasCratePreview ||
                 _cratePreviewRoot != crateUid ||
@@ -132,22 +139,19 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             EntityUid crateUid,
             int catalogRevision,
             int inventoryRevision,
-            NcStoreLogicSystem.MassSellPlan plan)
+            NcStoreLogicSystem.MassSellPlan plan
+        )
         {
             _cratePreviewUnitsById.Clear();
             _cratePreviewTotals.Clear();
 
             foreach (var (key, value) in plan.UnitsByListingId)
-            {
                 if (!string.IsNullOrWhiteSpace(key) && value > 0)
                     _cratePreviewUnitsById[key] = value;
-            }
 
             foreach (var (key, value) in plan.IncomeByCurrency)
-            {
                 if (!string.IsNullOrWhiteSpace(key) && value > 0)
                     _cratePreviewTotals[key] = value;
-            }
 
             _cratePreviewRoot = crateUid;
             _cratePreviewCatalogRevision = catalogRevision;
@@ -174,11 +178,29 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 buf.CrateTotals[key] = value;
         }
 
+        public bool TryPopulateCachedContracts(int signature, DynamicStateBuffer buf)
+        {
+            if (!_hasContractsCache || _contractsCacheSignature != signature)
+                return false;
+
+            buf.Contracts.AddRange(_contractsCache);
+            return true;
+        }
+
+        public void CacheContracts(int signature, List<ContractClientData> contracts)
+        {
+            _contractsCache.Clear();
+            _contractsCache.AddRange(contracts);
+            _contractsCacheSignature = signature;
+            _hasContractsCache = true;
+        }
+
         public bool EqualsLast(
             DynamicStateBuffer next,
             int catalogRevision,
             bool hasBuyTab,
             bool hasSellTab,
+            bool hasBarterTab,
             bool hasContracts
         )
         {
@@ -188,7 +210,9 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             if (_catalogRevision != catalogRevision ||
                 _hasBuyTab != hasBuyTab ||
                 _hasSellTab != hasSellTab ||
-                _hasContracts != hasContracts)
+                _hasBarterTab != hasBarterTab ||
+                _hasContracts != hasContracts ||
+                _lastHasVisibleIds != HasVisibleIds)
                 return false;
 
             var prev = GetReadBuffer();
@@ -198,18 +222,21 @@ public sealed partial class StoreStructuredSystem : EntitySystem
                 DictEquals(prev.OwnedById, next.OwnedById) &&
                 DictEquals(prev.CrateUnitsById, next.CrateUnitsById) &&
                 DictEquals(prev.CrateTotals, next.CrateTotals) &&
+                StringListEquals(prev.ListingScopeIds, next.ListingScopeIds) &&
                 ListEquals(prev.Contracts, next.Contracts) &&
                 prev.ContractSkipCost == next.ContractSkipCost &&
                 string.Equals(prev.ContractSkipCurrency, next.ContractSkipCurrency, StringComparison.Ordinal);
         }
 
-        public void Commit(int catalogRevision, bool hasBuyTab, bool hasSellTab, bool hasContracts)
+        public void Commit(int catalogRevision, bool hasBuyTab, bool hasSellTab, bool hasBarterTab, bool hasContracts)
         {
             _activeIndex = 1 - _activeIndex;
             _catalogRevision = catalogRevision;
             _hasBuyTab = hasBuyTab;
             _hasSellTab = hasSellTab;
+            _hasBarterTab = hasBarterTab;
             _hasContracts = hasContracts;
+            _lastHasVisibleIds = HasVisibleIds;
             _hasMeta = true;
         }
     }
@@ -220,6 +247,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         public readonly List<ContractClientData> Contracts = new();
         public readonly Dictionary<string, int> CrateTotals = new();
         public readonly Dictionary<string, int> CrateUnitsById = new();
+        public readonly List<string> ListingScopeIds = new();
         public readonly Dictionary<string, int> OwnedById = new();
         public readonly Dictionary<string, int> RemainingById = new();
         public int ContractSkipCost;
@@ -232,6 +260,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             OwnedById.Clear();
             CrateUnitsById.Clear();
             CrateTotals.Clear();
+            ListingScopeIds.Clear();
             Contracts.Clear();
             ContractSkipCost = 0;
             ContractSkipCurrency = string.Empty;

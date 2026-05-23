@@ -274,7 +274,7 @@
   parent: N14ClothingOuterNCRVestpaddedWeb
   id: N14ClothingOuterNCRVestpaddedWebKiltSnow
   categories: [ HideSpawnMenu ]
-  components: 
+  components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRpaddedwebvestkiltSnow.rsi
   - type: Clothing
@@ -294,7 +294,7 @@
   parent: N14ClothingOuterNCRVeteranArmorKilt
   id: N14ClothingOuterNCRVeteranArmorKiltSnow
   categories: [ HideSpawnMenu ]
-  components: 
+  components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRveteranarmorkiltSnow.rsi
   - type: Clothing
@@ -314,7 +314,7 @@
   parent: N14ClothingOuterNCRVestDesertCoat
   id: N14ClothingOuterNCRVestDesertCoatSnow
   categories: [ HideSpawnMenu ]
-  components: 
+  components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRarmorcoatSnow.rsi
   - type: Clothing
@@ -469,4 +469,16 @@
     sprite: Corvax/Clothing/OuterClothing/Armor/assassinveteranarmor.rsi
   - type: Clothing
     sprite: Corvax/Clothing/OuterClothing/Armor/assassinveteranarmor.rsi
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckThragg
+  categories: [ HideSpawnMenu ]
+  name: Albino Yao Gai Skin Cloak
+  description: "I've seen this in some comic before."
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/thragg.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Neck/thragg.rsi
 

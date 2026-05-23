@@ -17,9 +17,6 @@
       entity: Cross
       edges:
         - to: start
-          steps:
-            - tool: Prying
-              doAfter: 20
           completed:
             - !type:GivePrototype
               prototype: N14FloraLogTimber

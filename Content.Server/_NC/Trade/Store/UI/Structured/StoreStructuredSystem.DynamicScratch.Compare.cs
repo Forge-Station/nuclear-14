@@ -1,6 +1,8 @@
 ﻿using Content.Shared._NC.Trade;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class StoreStructuredSystem
 {
@@ -15,10 +17,8 @@ public sealed partial class StoreStructuredSystem
                 return false;
 
             foreach (var (k, v) in a)
-            {
                 if (!b.TryGetValue(k, out var bv) || bv != v)
                     return false;
-            }
 
             return true;
         }
@@ -32,10 +32,23 @@ public sealed partial class StoreStructuredSystem
                 return false;
 
             for (var i = 0; i < a.Count; i++)
-            {
                 if (!ContractEquals(a[i], b[i]))
                     return false;
-            }
+
+            return true;
+        }
+
+        private static bool StringListEquals(List<string> a, List<string> b)
+        {
+            if (ReferenceEquals(a, b))
+                return true;
+
+            if (a.Count != b.Count)
+                return false;
+
+            for (var i = 0; i < a.Count; i++)
+                if (!string.Equals(a[i], b[i], StringComparison.Ordinal))
+                    return false;
 
             return true;
         }
@@ -49,20 +62,32 @@ public sealed partial class StoreStructuredSystem
 
             if (!string.Equals(a.Id, b.Id, StringComparison.Ordinal) ||
                 !string.Equals(a.Name, b.Name, StringComparison.Ordinal) ||
-                !string.Equals(a.Difficulty, b.Difficulty, StringComparison.Ordinal) ||
                 !string.Equals(a.Description, b.Description, StringComparison.Ordinal) ||
+                !string.Equals(a.OfferPoolId, b.OfferPoolId, StringComparison.Ordinal) ||
+                !string.Equals(a.OfferPoolName, b.OfferPoolName, StringComparison.Ordinal) ||
+                !string.Equals(a.OfferPoolColor, b.OfferPoolColor, StringComparison.Ordinal) ||
                 !string.Equals(a.TargetItem, b.TargetItem, StringComparison.Ordinal) ||
-                !string.Equals(a.TurnInItem, b.TurnInItem, StringComparison.Ordinal))
+                !string.Equals(a.TurnInItem, b.TurnInItem, StringComparison.Ordinal) ||
+                !string.Equals(a.SourceHint, b.SourceHint, StringComparison.Ordinal) ||
+                !string.Equals(a.DestinationHint, b.DestinationHint, StringComparison.Ordinal))
                 return false;
 
             if (a.Repeatable != b.Repeatable ||
                 a.Taken != b.Taken ||
                 a.SupportsPinpointer != b.SupportsPinpointer ||
+                a.PartialTurnInAvailable != b.PartialTurnInAvailable ||
                 a.ExecutionKind != b.ExecutionKind ||
                 a.FlowStatus != b.FlowStatus ||
                 a.Completed != b.Completed ||
                 a.Required != b.Required ||
-                a.Progress != b.Progress)
+                a.Progress != b.Progress ||
+                a.MatchMode != b.MatchMode ||
+                a.OfferPoolOrder != b.OfferPoolOrder ||
+                a.IsRetrievalRoute != b.IsRetrievalRoute ||
+                a.RetrievalClaimMode != b.RetrievalClaimMode ||
+                a.RetrievalProofIsBearer != b.RetrievalProofIsBearer ||
+                a.HuntCompletionMode != b.HuntCompletionMode ||
+                a.GhostRoleCompletionMode != b.GhostRoleCompletionMode)
                 return false;
 
             return TargetsEquals(a.Targets, b.Targets) &&
@@ -81,9 +106,12 @@ public sealed partial class StoreStructuredSystem
             return a.Stage == b.Stage &&
                 a.StageGoal == b.StageGoal &&
                 a.AcceptTimeoutRemainingSeconds == b.AcceptTimeoutRemainingSeconds &&
+                a.GhostRoleSurvivalRemainingSeconds == b.GhostRoleSurvivalRemainingSeconds &&
                 a.GhostRolePendingAcceptance == b.GhostRolePendingAcceptance &&
                 a.Failed == b.Failed &&
-                string.Equals(a.FailureReason, b.FailureReason, StringComparison.Ordinal);
+                a.Outcome == b.Outcome &&
+                string.Equals(a.FailureReason, b.FailureReason, StringComparison.Ordinal) &&
+                string.Equals(a.StatusHint, b.StatusHint, StringComparison.Ordinal);
         }
 
         private static bool TargetsEquals(List<ContractTargetClientData>? a, List<ContractTargetClientData>? b)

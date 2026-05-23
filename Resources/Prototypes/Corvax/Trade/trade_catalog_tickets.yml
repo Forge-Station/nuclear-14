@@ -1,0 +1,216 @@
+
+- type: storeCategoryStructured
+  id: TicketsBuy_Weapons
+  name: "Оружие"
+  entries:
+  - proto: N14WeaponPistol9mmSpy
+    price: 1
+  - proto: N14WeaponPlasmaPistol
+    price: 3
+  - proto: N14WeaponRevolverWebley
+    price: 2
+  - proto: N14WeaponRevolver45-70Hunter
+    price: 2
+  - proto: N14WeaponDesertEagle44
+    price: 3
+  - proto: N14WeaponSMG12mmAdvancedChinese
+    price: 13
+  - proto: N14WeaponSMG12mmAdvanced
+    price: 14
+  - proto: N14WeaponBlowback
+    price: 3
+  - proto: N14WeaponShotgunChinese
+    price: 4
+  - proto: N14WeaponShotgunCanadian
+    price: 4
+  - proto: N14WeaponRifle556Carbine
+    price: 2
+  - proto: N14WeaponRifle762Chinese
+    price: 3
+  - proto: N14WeaponRifle762Marksman
+    price: 4
+  - proto: N14WeaponLaserRiflePrototypeAER14
+    price: 5
+  - proto: N14WeaponLaserRifleAuto
+    price: 6
+  - proto: N14WeaponPlasmaRifle
+    price: 7
+  - proto: N14WeaponRifle762MarksmanChinese
+    price: 4
+  - proto: N14WeaponLMG
+    price: 8
+  - proto: N14WeaponLMGchinese
+    price: 12
+  - proto: N14WeaponHMGcanadian
+    price: 13
+  - proto: N14WeaponLMGBren
+    price: 16
+  - proto: N14WeaponLMGAutoRifle
+    price: 14
+  - proto: N14WeaponMinigun
+    price: 18
+  - proto: N14WeaponLauncherMissile
+    price: 18
+
+- type: storeCategoryStructured
+  id: TicketsBuy_Ammo
+  name: "Патроны"
+  entries:
+  - proto: CartridgeMissile
+    price: 2
+
+- type: storeCategoryStructured
+  id: TicketsBuy_Melee
+  name: "Ближний Бой"
+  entries:
+  - proto: N14SuperSledgeHammer
+    price: 3
+  - proto: N14WeaponThermospear
+    price: 4
+
+- type: storeCategoryStructured
+  id: TicketsBuy_Explosives
+  name: "Взрывчатка"
+  entries:
+  - proto: C4
+    price: 2
+  - proto: GrenadeIncendiary
+    price: 1
+
+- type: storeCategoryStructured
+  id: TicketsBuy_Meds
+  name: "Медикаменты"
+  entries:
+  - proto: MedicatedSuture
+    price: 2
+  - proto: RegenerativeMesh
+    price: 2
+
+- type: storeCategoryStructured
+  id: TicketsBuy_PowerArmor
+  name: "Силовая Броня"
+  entries:
+  - proto: N14ClothingOuterPowerArmorRaider
+    price: 25
+    count: 2
+
+- type: storeCategoryStructured
+  id: TicketsBuy_Armor
+  name: "Броня"
+  entries:
+  - proto: N14ClothingOuterMarineArmor
+    price: 18
+  - proto: N14ClothingHeadHatBaseHelmetmarine
+    price: 5
+  - proto: N14ClothingBootsCombatMK2
+    price: 1
+
+- type: storePresetStructured
+  id: caravan_storetickets
+  currency: PrizeTicket
+  categories:
+  - TicketsBuy_Weapons
+  - TicketsBuy_Ammo
+  - TicketsBuy_Melee
+  - TicketsBuy_Explosives
+  - TicketsBuy_Meds
+  - TicketsBuy_PowerArmor
+  - TicketsBuy_Armor
+
+# ----------------------------
+# caravan_storetickets_sell categories
+# ----------------------------
+- type: storeCategoryStructured
+  id: TicketsSell_Weapons
+  name: "Оружие"
+  entries:
+  - proto: N14WeaponPistol9mmSpy
+    price: 1
+  - proto: N14WeaponPlasmaPistol
+    price: 1
+  - proto: N14WeaponRevolverWebley
+    price: 1
+  - proto: N14WeaponRevolver45-70Hunter
+    price: 1
+  - proto: N14WeaponDesertEagle44
+    price: 1
+  - proto: N14WeaponSMG12mmAdvancedChinese
+    price: 5
+  - proto: N14WeaponSMG12mmAdvanced
+    price: 5
+  - proto: N14WeaponBlowback
+    price: 1
+  - proto: N14WeaponShotgunChinese
+    price: 2
+  - proto: N14WeaponShotgunCanadian
+    price: 2
+  - proto: N14WeaponRifle556Carbine
+    price: 1
+  - proto: N14WeaponRifle762Chinese
+    price: 1
+  - proto: N14WeaponRifle762Marksman
+    price: 2
+  - proto: N14WeaponLaserRiflePrototypeAER14
+    price: 2
+  - proto: N14WeaponLaserRifleAuto
+    price: 3
+  - proto: N14WeaponPlasmaRifle
+    price: 3
+  - proto: N14WeaponRifle762MarksmanChinese
+    price: 2
+  - proto: N14WeaponLMG
+    price: 3
+  - proto: N14WeaponLMGchinese
+    price: 4
+  - proto: N14WeaponHMGcanadian
+    price: 5
+  - proto: N14WeaponLMGBren
+    price: 5
+  - proto: N14WeaponLMGAutoRifle
+    price: 6
+  - proto: N14WeaponMinigun
+    price: 9
+
+- type: storeCategoryStructured
+  id: TicketsSell_Melee
+  name: "Ближний Бой"
+  entries:
+  - proto: N14SuperSledgeHammer
+    price: 1
+  - proto: N14WeaponThermospear
+    price: 1
+
+- type: storeCategoryStructured
+  id: TicketsSell_Explosives
+  name: "Взрывчатка"
+  entries:
+  - proto: C4
+    price: 1
+  - proto: GrenadeIncendiary
+    price: 1
+
+- type: storeCategoryStructured
+  id: TicketsSell_PowerArmor
+  name: "Силовая Броня"
+  entries:
+  - proto: N14ClothingOuterPowerArmorRaider
+    price: 9
+
+- type: storeCategoryStructured
+  id: TicketsSell_Armor
+  name: "Броня"
+  entries:
+  - proto: N14ClothingOuterCombatArmorMK2
+    price: 3
+  - proto: N14ClothingOuterRaiderCombat2
+    price: 3
+
+- type: storePresetStructured
+  id: caravan_storetickets_sell
+  currency: PrizeTicket
+  categories:
+  - TicketsSell_Weapons
+  - TicketsSell_Melee
+  - TicketsSell_Explosives
+  - TicketsSell_PowerArmor
+  - TicketsSell_Armor
