@@ -215685,6 +215685,8 @@ entities:
         - 0
         - 0
     - type: RadiationGridResistance
+    - type: BecomesStation
+      id: Juneau
   - uid: 4
     components:
     - type: MetaData

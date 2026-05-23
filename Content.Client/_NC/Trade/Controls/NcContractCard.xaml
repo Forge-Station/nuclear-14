@@ -161,8 +161,8 @@
                                 <BoxContainer Name="SecondaryButtonsRow"
                                               Orientation="Vertical"
                                               HorizontalExpand="True"
-                                              Margin="0 3 0 0"
-                                              SeparationOverride="3"
+                                              Margin="0 6 0 0"
+                                              SeparationOverride="4"
                                               Visible="False" />
                             </BoxContainer>
                         </PanelContainer>

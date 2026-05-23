@@ -69,8 +69,6 @@ public sealed partial class StoreSystemStructuredLoader
         if (!ValidateBarterListing(listingProto, presetId, categoryId))
             return 0;
 
-        AddBarterCurrenciesToWhitelist(comp, ctx, listingProto);
-
         var baseId = $"{presetId}:Barter:{categoryId}:{listingProto.ID}";
         var id = AllocateDeterministicId(baseId, ctx);
         var icon = ResolveBarterIcon(listingProto);
@@ -95,59 +93,5 @@ public sealed partial class StoreSystemStructuredLoader
 
         comp.Listings.Add(listing);
         return 1;
-    }
-
-    private void AddBarterCurrenciesToWhitelist(
-        NcStoreComponent comp,
-        LoadContext ctx,
-        NcBarterListingPrototype listingProto
-    )
-    {
-        foreach (var cost in listingProto.Cost)
-            if (!string.IsNullOrWhiteSpace(cost.Currency) && ctx.CurrencySeen.Add(cost.Currency))
-                comp.CurrencyWhitelist.Add(cost.Currency);
-
-        foreach (var receive in listingProto.Receive)
-            if (!string.IsNullOrWhiteSpace(receive.Currency) && ctx.CurrencySeen.Add(receive.Currency))
-                comp.CurrencyWhitelist.Add(receive.Currency);
-
-        foreach (var pool in listingProto.ReceivePools)
-            AddRewardPoolCurrenciesToWhitelist(comp, ctx, pool.Pool, new(StringComparer.Ordinal), 0);
-    }
-
-    private void AddRewardPoolCurrenciesToWhitelist(
-        NcStoreComponent comp,
-        LoadContext ctx,
-        string poolId,
-        HashSet<string> visited,
-        int depth
-    )
-    {
-        if (string.IsNullOrWhiteSpace(poolId) || depth > MaxRewardPoolTraversalDepth)
-            return;
-
-        if (!_prototypes.TryIndex<NcSupplyRewardPoolPrototype>(poolId, out var supplyPool))
-            return;
-
-        if (!visited.Add(poolId))
-            return;
-
-        for (var i = 0; i < supplyPool.Entries.Count; i++)
-        {
-            var reward = supplyPool.Entries[i];
-            if (reward.Type == StoreRewardType.Pool)
-            {
-                AddRewardPoolCurrenciesToWhitelist(comp, ctx, reward.Pool, visited, depth + 1);
-                continue;
-            }
-
-            if (reward.Type != StoreRewardType.Currency)
-                continue;
-
-            if (!string.IsNullOrWhiteSpace(reward.Currency) && ctx.CurrencySeen.Add(reward.Currency))
-                comp.CurrencyWhitelist.Add(reward.Currency);
-        }
-
-        visited.Remove(poolId);
     }
 }
