@@ -14,6 +14,9 @@
   - type: PhysicalComposition
     materialComposition:
       Steel: 25
+  - type: Clothing # Forge-add
+    slots:
+    - ears  
 
 - type: entity
   name: magazine
