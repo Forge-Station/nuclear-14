@@ -278,15 +278,18 @@
     proto: N14ShellShotgun20
     soundInsert:
       path: /Audio/_Nuclear14/Weapons/Effects/Reload/Shotguns/shotgun_insert.ogg
-  - type: GunRequiresWield
-  - type: Gun
-    minAngle: 23
-    maxAngle: 104
-    angleIncrease: 4
+  - type: Gun # Forge-start
+    minAngle: 45              
+    maxAngle: 150             
+    angleIncrease: 15         
     angleDecay: 16
-    fireRate: 1
+    fireRate: 2
     soundGunshot:
       collection: N14LeverShotgunGunshot
+  - type: GunWieldBonus
+    minAngle: -22             
+    maxAngle: -46             
+    angleIncrease: -11  # Forge-Change
   - type: StaticPrice
     price: 45
 
