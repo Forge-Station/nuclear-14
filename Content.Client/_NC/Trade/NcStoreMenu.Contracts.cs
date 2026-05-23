@@ -1,4 +1,3 @@
-using System.Linq;
 using Content.Client._NC.Trade.Controls;
 using Content.Shared._NC.Trade;
 using Robust.Client.UserInterface;
@@ -7,10 +6,13 @@ using Robust.Client.UserInterface.Controls;
 
 namespace Content.Client._NC.Trade;
 
+
 public sealed partial class NcStoreMenu
 {
-    private readonly Dictionary<string, NcContractCard> _contractCardsById = new();
+    private static readonly Comparison<ContractClientData> ContractComparison = CompareContracts;
     private readonly List<string> _contractCardOrder = new();
+    private readonly Dictionary<string, NcContractCard> _contractCardsById = new();
+    private readonly List<string> _staleContractIdsScratch = new();
 
     public void PopulateContracts(List<ContractClientData>? list, int skipCost, string skipCurrency, int skipBalance)
     {
@@ -34,17 +36,22 @@ public sealed partial class NcStoreMenu
 
     private static List<ContractClientData> OrderContracts(List<ContractClientData> contracts)
     {
-        return contracts
-            .OrderBy(x => x.Difficulty switch
-            {
-                "Easy" => 0,
-                "Medium" => 1,
-                "Hard" => 2,
-                _ => 99
-            })
-            .ThenBy(x => x.Name)
-            .ThenBy(x => x.Id)
-            .ToList();
+        var ordered = new List<ContractClientData>(contracts);
+        ordered.Sort(ContractComparison);
+        return ordered;
+    }
+
+    private static int CompareContracts(ContractClientData left, ContractClientData right)
+    {
+        var diff = left.OfferPoolOrder.CompareTo(right.OfferPoolOrder);
+        if (diff != 0)
+            return diff;
+
+        diff = string.Compare(left.Name, right.Name, StringComparison.Ordinal);
+        if (diff != 0)
+            return diff;
+
+        return string.Compare(left.Id, right.Id, StringComparison.Ordinal);
     }
 
     private bool TryUpdateContractsInPlace(
@@ -52,7 +59,8 @@ public sealed partial class NcStoreMenu
         List<ContractClientData> ordered,
         int skipCost,
         string skipCurrency,
-        int skipBalance)
+        int skipBalance
+    )
     {
         if (contractList.ChildCount != ordered.Count || _contractCardOrder.Count != ordered.Count)
             return false;
@@ -80,7 +88,8 @@ public sealed partial class NcStoreMenu
         List<ContractClientData> ordered,
         int skipCost,
         string skipCurrency,
-        int skipBalance)
+        int skipBalance
+    )
     {
         var activeIds = new HashSet<string>(StringComparer.Ordinal);
         contractList.RemoveAllChildren();
@@ -97,9 +106,7 @@ public sealed partial class NcStoreMenu
                 _contractCardsById[contract.Id] = card;
             }
             else
-            {
                 card.UpdateData(contract, skipCost, skipCurrency, skipBalance);
-            }
 
             contractList.AddChild(card);
             _contractCardOrder.Add(contract.Id);
@@ -108,9 +115,15 @@ public sealed partial class NcStoreMenu
         PruneContractCards(activeIds);
     }
 
-    private NcContractCard CreateContractCard(ContractClientData contract, int skipCost, string skipCurrency, int skipBalance)
+    private NcContractCard CreateContractCard(
+        ContractClientData contract,
+        int skipCost,
+        string skipCurrency,
+        int skipBalance
+    )
     {
         var card = new NcContractCard(contract, _proto, _sprites, skipCost, skipCurrency, skipBalance);
+        card.ApplyUiTheme(_uiColors);
         card.OnClaim += id => OnContractClaim?.Invoke(id);
         card.OnTake += id => OnContractTake?.Invoke(id);
         card.OnSkip += id => OnContractSkip?.Invoke(id);
@@ -137,15 +150,16 @@ public sealed partial class NcStoreMenu
     {
         var active = activeIds is HashSet<string> set
             ? set
-            : new HashSet<string>(activeIds, StringComparer.Ordinal);
+            : new(activeIds, StringComparer.Ordinal);
 
-        var staleIds = _contractCardsById.Keys
-            .Where(id => !active.Contains(id))
-            .ToArray();
+        _staleContractIdsScratch.Clear();
+        foreach (var id in _contractCardsById.Keys)
+            if (!active.Contains(id))
+                _staleContractIdsScratch.Add(id);
 
-        for (var i = 0; i < staleIds.Length; i++)
+        for (var i = 0; i < _staleContractIdsScratch.Count; i++)
         {
-            var id = staleIds[i];
+            var id = _staleContractIdsScratch[i];
             if (_contractCardsById.Remove(id, out var card))
                 card.Parent?.RemoveChild(card);
         }

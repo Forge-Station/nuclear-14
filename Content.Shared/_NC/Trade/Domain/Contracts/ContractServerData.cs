@@ -1,6 +1,5 @@
-﻿using Robust.Shared.Serialization;
-
 namespace Content.Shared._NC.Trade;
+
 
 public sealed class ContractServerData
 {
@@ -18,16 +17,20 @@ public sealed class ContractServerData
     public ContractObjectiveType ObjectiveType { get; set; } = ContractObjectiveType.Delivery;
     public ContractRuntimeContextData Runtime { get; set; } = new();
     public ContractObjectiveConfigData Config { get; set; } = new();
+    public List<ContractConditionDef> Conditions { get; set; } = new();
     public ContractFlowStatus FlowStatus { get; set; } = ContractFlowStatus.Available;
 
-    public ContractExecutionKind ExecutionKind => ContractExecutionKinds.Resolve(ObjectiveType, EnsureConfig().TargetPrototype);
+    public ContractExecutionKind ExecutionKind { get; set; } = ContractExecutionKind.InventoryDelivery;
     public bool IsInventoryDelivery => ExecutionKind == ContractExecutionKind.InventoryDelivery;
     public bool IsTrackedDeliveryObjective => ExecutionKind == ContractExecutionKind.TrackedDeliveryObjective;
+    public bool IsRetrievalRouteDelivery => ExecutionKind == ContractExecutionKind.RetrievalRouteDelivery;
     public bool IsHuntObjective => ExecutionKind == ContractExecutionKind.HuntObjective;
-    public bool IsRepairObjective => ExecutionKind == ContractExecutionKind.RepairObjective;
     public bool IsGhostRoleObjective => ExecutionKind == ContractExecutionKind.GhostRoleObjective;
-    public bool HasInventoryDeliverySpawnSupport => IsInventoryDelivery && !string.IsNullOrWhiteSpace(EnsureConfig().DeliverySpawnPrototype);
-    public bool AllowsStoreWorldTurnIn => IsInventoryDelivery && EnsureConfig().AllowStoreWorldTurnIn;
+
+    public bool HasInventoryDeliverySpawnSupport =>
+        IsInventoryDelivery && !string.IsNullOrWhiteSpace(Config.DeliverySpawnPrototype);
+
+    public bool AllowsStoreWorldTurnIn => IsInventoryDelivery && Config.AllowStoreWorldTurnIn;
     public bool UsesWorldObjectiveRuntime => ContractExecutionKinds.UsesWorldRuntime(ExecutionKind);
     public bool UsesWorldRuntimeSupport => UsesWorldObjectiveRuntime || HasInventoryDeliverySpawnSupport;
     public bool UsesStageObjectiveProgress => ContractExecutionKinds.UsesStageProgress(ExecutionKind);
@@ -35,55 +38,39 @@ public sealed class ContractServerData
     public string Id { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
 
-    public string Difficulty { get; set; } = "Easy";
     public string Description { get; set; } = string.Empty;
+    public string OfferPoolId { get; set; } = string.Empty;
+    public string OfferPoolName { get; set; } = string.Empty;
+    public int OfferPoolOrder { get; set; } = int.MaxValue;
+    public string OfferPoolColor { get; set; } = string.Empty;
 
     public List<ContractRewardData> Rewards { get; set; } = new();
 
-    public bool Completed
+
+    public bool Completed => IsCompleted();
+
+    public bool IsCompleted()
     {
-        get
+        if (UsesStageObjectiveProgress)
+            return Required > 0 && Progress >= Required;
+
+        if (Targets.Count > 0)
         {
-            var targets = EnsureTargets();
-
-            if (UsesStageObjectiveProgress)
-                return Required > 0 && Progress >= Required;
-
-            if (targets.Count > 0)
+            var any = false;
+            foreach (var t in Targets)
             {
-                var any = false;
-                foreach (var t in targets)
-                {
-                    if (t.Required <= 0)
-                        continue;
+                if (t == null || t.Required <= 0)
+                    continue;
 
-                    any = true;
-                    if (t.Progress < t.Required)
-                        return false;
-                }
-
-                return any;
+                any = true;
+                if (t.Progress < t.Required)
+                    return false;
             }
 
-            return Required > 0 && Progress >= Required;
-        }
-    }
-
-    private ContractObjectiveConfigData EnsureConfig()
-    {
-        Config ??= new();
-        return Config;
-    }
-
-    private List<ContractTargetServerData> EnsureTargets()
-    {
-        Targets ??= new();
-        for (var i = Targets.Count - 1; i >= 0; i--)
-        {
-            if (Targets[i] == null)
-                Targets.RemoveAt(i);
+            if (any)
+                return true;
         }
 
-        return Targets;
+        return Required > 0 && Progress >= Required;
     }
 }

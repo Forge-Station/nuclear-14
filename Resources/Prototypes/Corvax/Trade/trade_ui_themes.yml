@@ -1,0 +1,92 @@
+- type: ncStoreUiTheme
+  id: TradeUiThemeWasteland
+  colors:
+    tabsShellBackground: "#17181D"      # Внешний фон рамки всех вкладок
+    tabsShellBorder: "#7A6334"          # Внешняя граница рамки вкладок
+    tabsFrameBackground: "#1E2027"      # Внутренний фон области вкладок
+    tabsFrameBorder: "#4C4438"          # Внутренняя граница области вкладок
+    tabContentBackground: "#1E2027"     # Фон контента вкладок (buy/sell/contracts)
+    tabsBarBackground: "#1C1E25"        # Фон полосы с кнопками вкладок
+    tabsBarBorder: "#665C4E"            # Граница полосы вкладок
+    tabActiveBackground: "#6B5730"      # Фон активной вкладки
+    tabActiveBorder: "#D4B06A"          # Граница активной вкладки
+    tabInactiveBackground: "#2C2E35"    # Фон неактивной вкладки
+    tabInactiveBorder: "#665C4E"        # Граница неактивной вкладки
+    tabFontActive: "#F0D49A"            # Цвет текста активной вкладки
+    tabFontInactive: "#B9AE95"          # Цвет текста неактивной вкладки
+    categoriesPanelBackground: "#1A1B20" # Фон левой панели категорий
+    categoriesDivider: "#7A6334"        # Вертикальная линия между категориями и списком
+    categoryButtonIdle: "#7C6624"       # Фон кнопки категории (обычное состояние)
+    categoryButtonSelected: "#D9A441"   # Фон кнопки категории (выбранная)
+    headerBackground: "#202329"         # Фон верхней шапки (баланс + поиск)
+    headerBorder: "#4C4438"             # Граница верхней шапки
+    headerBalanceText: "#FFFF00"        # Цвет числа валюты в шапке
+    searchBoxBackground: "#2B2E35"      # Фон поля поиска
+    searchBoxBorder: "#4C4438"          # Граница поля поиска
+    searchIconColor: "#FFFFFF"          # Цвет иконки лупы
+    listingCardBackground: "#141417E6"  # Фон карточки товара справа
+    listingCardBorder: "#B08D3B"        # Граница карточки товара
+    listingDivider: "#B08D3BCC"         # Линии-разделители внутри карточки товара
+    listingTitleColor: "#BFA462"        # Цвет заголовка товара в карточке
+
+- type: ncStoreUiTheme
+  id: TradeUiThemeNT
+  colors:
+    tabsShellBackground: "#152334"      # Внешний фон рамки всех вкладок
+    tabsShellBorder: "#5D8CC5"          # Внешняя граница рамки вкладок
+    tabsFrameBackground: "#1B2B3F"      # Внутренний фон области вкладок
+    tabsFrameBorder: "#4E7AAE"          # Внутренняя граница области вкладок
+    tabContentBackground: "#1B2B3F"     # Фон контента вкладок (buy/sell/contracts)
+    tabsBarBackground: "#162538"        # Фон полосы с кнопками вкладок
+    tabsBarBorder: "#4E7AAE"            # Граница полосы вкладок
+    tabActiveBackground: "#2E4C75"      # Фон активной вкладки
+    tabActiveBorder: "#9FC8FF"          # Граница активной вкладки
+    tabInactiveBackground: "#243348"    # Фон неактивной вкладки
+    tabInactiveBorder: "#526987"        # Граница неактивной вкладки
+    tabFontActive: "#D9ECFF"            # Цвет текста активной вкладки
+    tabFontInactive: "#A5BDD8"          # Цвет текста неактивной вкладки
+    categoriesPanelBackground: "#152234" # Фон левой панели категорий
+    categoriesDivider: "#5D8CC5"        # Вертикальная линия между категориями и списком
+    categoryButtonIdle: "#355A83"       # Фон кнопки категории (обычное состояние)
+    categoryButtonSelected: "#63A1E6"   # Фон кнопки категории (выбранная)
+    headerBackground: "#152334"         # Фон верхней шапки (баланс + поиск)
+    headerBorder: "#5D8CC5"             # Граница верхней шапки
+    headerBalanceText: "#9FC8FF"        # Цвет числа валюты в шапке
+    searchBoxBackground: "#1D2E44"      # Фон поля поиска
+    searchBoxBorder: "#5D8CC5"          # Граница поля поиска
+    searchIconColor: "#CDE6FF"          # Цвет иконки лупы
+    listingCardBackground: "#111826E6"  # Фон карточки товара справа
+    listingCardBorder: "#5D8CC5"        # Граница карточки товара
+    listingDivider: "#5D8CC5CC"         # Линии-разделители внутри карточки товара
+    listingTitleColor: "#9FC8FF"        # Цвет заголовка товара в карточке
+
+- type: ncStoreUiTheme
+  id: TradeUiThemeSyndicate
+  colors:
+    tabsShellBackground: "#261217"      # Внешний фон рамки всех вкладок
+    tabsShellBorder: "#A43D43"          # Внешняя граница рамки вкладок
+    tabsFrameBackground: "#1F1116"      # Внутренний фон области вкладок
+    tabsFrameBorder: "#6D2A31"          # Внутренняя граница области вкладок
+    tabContentBackground: "#1F1116"     # Фон контента вкладок (buy/sell/contracts)
+    tabsBarBackground: "#1A0E12"        # Фон полосы с кнопками вкладок
+    tabsBarBorder: "#6D2A31"            # Граница полосы вкладок
+    tabActiveBackground: "#5C1E28"      # Фон активной вкладки
+    tabActiveBorder: "#D16A7A"          # Граница активной вкладки
+    tabInactiveBackground: "#2E1A1F"    # Фон неактивной вкладки
+    tabInactiveBorder: "#6D2A31"        # Граница неактивной вкладки
+    tabFontActive: "#FFD7DE"            # Цвет текста активной вкладки
+    tabFontInactive: "#C397A1"          # Цвет текста неактивной вкладки
+    categoriesPanelBackground: "#251317" # Фон левой панели категорий
+    categoriesDivider: "#A43D43"        # Вертикальная линия между категориями и списком
+    categoryButtonIdle: "#5A232B"       # Фон кнопки категории (обычное состояние)
+    categoryButtonSelected: "#AE3B4D"   # Фон кнопки категории (выбранная)
+    headerBackground: "#261217"         # Фон верхней шапки (баланс + поиск)
+    headerBorder: "#A43D43"             # Граница верхней шапки
+    headerBalanceText: "#FFB3C0"        # Цвет числа валюты в шапке
+    searchBoxBackground: "#2A151B"      # Фон поля поиска
+    searchBoxBorder: "#A43D43"          # Граница поля поиска
+    searchIconColor: "#FFD7DE"          # Цвет иконки лупы
+    listingCardBackground: "#170E12E6"  # Фон карточки товара справа
+    listingCardBorder: "#A43D43"        # Граница карточки товара
+    listingDivider: "#A43D43CC"         # Линии-разделители внутри карточки товара
+    listingTitleColor: "#E88998"        # Цвет заголовка товара в карточке

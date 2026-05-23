@@ -1,0 +1,388 @@
+
+- type: entity
+  parent: BaseObjective
+  id: NcContractGhostRoleSurvivalObjective
+  name: "Выжить"
+  description: "Продержитесь до конца таймера."
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Objective
+    difficulty: 0
+    issuer: "Контрактная роль"
+    unique: false
+    icon:
+      sprite: Mobs/Ghosts/ghost_human.rsi
+      state: icon
+  - type: NcContractGhostRoleSurvivalObjective
+
+
+- type: ncGhostRolePreset
+  id: NcGhostRoleRaider
+  entityPrototype: N14MobHumanRaider
+  name: nc-contract-ghost-role-raider-name
+  description: nc-contract-ghost-role-raider-description
+  rules: nc-contract-ghost-role-raider-rules
+  requirements:
+  - !type:CharacterOverallTimeRequirement
+    min: 36000 # 10 hours
+
+- type: startingGear
+  id: NcGhostRoleEscapedWorkerGear
+  equipment:
+    jumpsuit: ClothingUniformDressRed
+    shoes: ClothingShoesColorBlack
+    back: ClothingBackpackSatchel
+    suitstorage: N14WeaponSMG9mm
+  storage:
+    back:
+    - N14MagazineSMG9mm
+    - N14MagazineSMG9mm
+    - N14MagazineSMG9mm
+
+- type: entity
+  parent: MobHuman
+  id: NcGhostRoleMobEscapedWorker
+  name: София Миллер
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: true
+  - type: Loadout
+    prototypes: [NcGhostRoleEscapedWorkerGear]
+  - type: NpcFactionMember
+    factions:
+    - Wastelander
+
+- type: ncGhostRolePerk
+  id: NcGhostRolePerkEscapedWorker
+  name: "Панический рывок"
+  description: "Беглянка быстрее срывается в бег и опаснее стреляет из пистолетов-пулеметов."
+  sprintSpeedMultiplier: 1.30
+  projectileDamageMultiplier: 1.30
+  weaponPrototypes:
+  - N14WeaponSMG9mm
+  - N14WeaponSMG9mminfiltrator
+  - N14WeaponSMG9mmCanadian
+  - N14WeaponSMG10mm
+  - N14WeaponSMG10mmSuppressed
+  - N14WeaponSMG10mmPipe
+  - N14WeaponSMG10mmChinese
+  - N14WeaponSMG12mm
+  - N14WeaponSMG12mmPipe
+  - N14WeaponSMG12mmAdvanced
+  - N14WeaponSMG12mmAdvancedChinese
+  - N14WeaponSMG12mmAdvancedCanadian
+  - N14WeaponSMG45
+
+- type: ncGhostRolePreset
+  id: NcGhostRoleEscapedWorker
+  entityPrototype: NcGhostRoleMobEscapedWorker
+  name: "София Миллер"
+  description: "Вас разыскивают по контракту. Охотники получат награду только если доставят вас живой, полностью здоровой и в наручниках."
+  rules: "Вы можете скрываться, договариваться или отбиваться, но ваша цель — пережить один час и не быть сданной торговцу."
+  character:
+    name: "София Миллер"
+    sex: Female
+    gender: Female
+    age: 25
+    skinColor: "#FFEACC"
+    hair: CMlonghair
+    hairColor: "#B94A24"
+  perks:
+  - NcGhostRolePerkEscapedWorker
+
+- type: startingGear
+  id: NcGhostRoleNCRDeserterGear
+  equipment:
+    back: N14ClothingBackpackNCR
+    gloves: N14ClothingHandsGlovesCombat
+    jumpsuit: N14ClothingOfficerUniformNCRDesert
+    shoes: N14ClothingBootsCombatFilled
+    neck: N14ClothingNeckMantleNCR
+    belt: ClothingBeltNCR
+    outerClothing: N14ClothingOuterNCRCombatArmor
+    suitstorage: N14WeaponRifle556Service
+    pocket1: NCRSGTloadoutkits
+  storage:
+    back:
+    - Magazine556Rifle
+    - Magazine556Rifle
+    - N14BoxPlasticFilledMilitaryNCR
+
+- type: entity
+  parent: MobHuman
+  id: NcGhostRoleMobNCRDeserter
+  name: дезертир НКР
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: true
+  - type: Loadout
+    prototypes: [NcGhostRoleNCRDeserterGear]
+  - type: NpcFactionMember
+    factions:
+    - Wastelander
+    - NCR
+
+- type: ncGhostRolePerk
+  id: NcGhostRolePerkNCRDeserter
+  name: "Сержантская выучка"
+  description: "Дезертир лучше держит строй под огнем и наносит больше урона из служебных винтовок."
+  projectileDamageMultiplier: 1.40
+  weaponPrototypes:
+  - N14WeaponRifle556Service
+  - N14WeaponRifle556ServiceScoped
+  - N14WeaponRifle556Carbine
+  - N14WeaponRifle556CarbineOld
+  - N14WeaponRifle556R91
+  - N14WeaponRifle762M14
+  - N14WeaponRifle762Marksman
+  incomingFlatReductions:
+    Slash: 5
+    Piercing: 5
+    Heat: 5
+
+- type: ncGhostRolePreset
+  id: NcGhostRoleNCRDeserter
+  entityPrototype: NcGhostRoleMobNCRDeserter
+  name: "Патроу, дезертир НКР"
+  description: "Вы дезертир НКР с хорошей броней и винтовкой. Охотники получат награду только если доставят ваше тело торговцу."
+  rules: "Скройтесь, отстреливайтесь или попытайтесь переждать час. Если выживете, контракт против вас будет провален."
+  character:
+    name: "Патроу"
+    sex: Male
+    gender: Male
+    age: 34
+  perks:
+  - NcGhostRolePerkNCRDeserter
+
+- type: startingGear
+  id: NcGhostRoleZoyaDarbyGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpskirtDressBlack
+    shoes: N14ClothingBootsCombatMK2
+    gloves: N14ClothingHandsGlovesCombat
+    back: ClothingBackpackDuffel
+    outerClothing: N14ClothingOuterCombatArmorMK2
+    head: N14ClothingHeadHatCombatHelmetMK2
+    suitstorage: N14WeaponRifleBozarGRA
+  storage:
+    back:
+    - Magazine556Rifle30
+    - Magazine556Rifle30
+    - Magazine556Rifle30
+    - N14Stimpak
+
+- type: entity
+  parent: MobHuman
+  id: NcGhostRoleMobZoyaDarby
+  name: Зоя Дарби
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: true
+  - type: Loadout
+    prototypes: [NcGhostRoleZoyaDarbyGear]
+  - type: NpcFactionMember
+    factions:
+    - Wastelander
+
+- type: ncGhostRolePerk
+  id: NcGhostRolePerkZoyaDarby
+  name: "Наёмница-легенда"
+  description: "Зоя быстрее обычного человека, крепче держит удар и особенно опасна с Bozar."
+  sprintSpeedMultiplier: 1.30
+  projectileDamageMultiplier: 1.35
+  weaponPrototypes:
+  - N14WeaponRifleBozarGRA
+  incomingFlatReductions:
+    Slash: 5
+    Piercing: 5
+    Heat: 5
+
+- type: ncGhostRolePreset
+  id: NcGhostRoleZoyaDarby
+  entityPrototype: NcGhostRoleMobZoyaDarby
+  name: "Зоя Дарби"
+  description: "Вы Зоя Дарби, опасная наёмница в боевой броне MK2 с Bozar. За вами охотятся, но заказчик требует взять вас живой."
+  rules: "Не дайте охотникам доставить вас живой, здоровой и в наручниках. Если вы переживёте час, контракт против вас будет провален."
+  character:
+    name: "Зоя Дарби"
+    sex: Female
+    gender: Female
+    age: 31
+    skinColor: "#FFEACC"
+    hair: CMlonghair
+    hairColor: "#2F211C"
+  perks:
+  - NcGhostRolePerkZoyaDarby
+
+- type: startingGear
+  id: NcGhostRoleFreshGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitRags
+    shoes: N14ClothingShoesRaider
+    back: ClothingBackpackSatchel
+    suitstorage: N14WeaponPistol10mmPipe
+  storage:
+    back:
+    - N14MagazinePistol10mm
+    - N14MagazinePistol10mm
+    - N14MagazinePistol10mm
+
+- type: entity
+  parent: MobHuman
+  id: NcGhostRoleMobFresh
+  name: фреш
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: true
+  - type: Loadout
+    prototypes: [NcGhostRoleFreshGear]
+  - type: NpcFactionMember
+    factions:
+    - Wastelander
+    - Raider
+
+- type: ncGhostRolePerk
+  id: NcGhostRolePerkFresh
+  name: "Ломка и адреналин"
+  description: "Фреш быстрее убегает и опаснее стреляет из пистолетов."
+  sprintSpeedMultiplier: 1.30
+  projectileDamageMultiplier: 1.30
+  weaponPrototypes:
+  - N14WeaponPistol10mmPipe
+  - N14WeaponPistol10mm
+  - N14WeaponPistol9mm
+  - N14WeaponRevolver9mm
+
+- type: ncGhostRolePreset
+  id: NcGhostRoleFresh
+  entityPrototype: NcGhostRoleMobFresh
+  name: "Фреш"
+  description: "Вы сорвавшийся наркоман с самодельным пистолетом. Охотники получат награду только если принесут ваше тело торговцу."
+  rules: "Держитесь подальше от охотников и переживите один час. Если выживете, контракт против вас будет провален."
+  character:
+    name: "Фреш"
+    sex: Male
+    gender: Male
+    age: 28
+  perks:
+  - NcGhostRolePerkFresh
+
+- type: ncGhostRoleContract
+  id: NcGhostRoleContractRaiderReturn
+  name: "Рейдер для допроса"
+  description: "Один рейдер слишком много знает о ближайших налётах. Заказчик хочет допросить его лично: поймайте цель живой, без тяжёлых ран, закуйте в наручники и приведите к торговцу."
+  role: NcGhostRoleRaider
+  completion:
+    mode: AliveCuffedTurnIn
+  survival:
+    briefing: "За вами охотятся по контракту. Продержитесь один час и не дайте охотникам сдать вас торговцу."
+    objectiveTitle: "Выжить один час"
+    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostRaiderReturnSpawn
+    acceptTimeoutSeconds: 300
+  reward:
+  - type: Currency
+    currency: Caps
+    count: 180
+  - type: Pool
+    pool: caravan_medium
+    count: { min: 1, max: 3 }
+
+- type: ncGhostRoleContract
+  id: NcGhostRoleContractEscapedWorkerAlive
+  name: "Вернуть Софию Миллер"
+  description: "София Миллер сбежала от караванщиков и ушла в городские закоулки. Её хотят вернуть живой: цель должна быть здорова, в наручниках и рядом с торговцем. Мёртвую Софию никто не примет."
+  role: NcGhostRoleEscapedWorker
+  completion:
+    mode: AliveCuffedTurnIn
+  survival:
+    briefing: "Вы София Миллер. Продержитесь один час и не дайте охотникам сдать вас живой торговцу."
+    objectiveTitle: "Выжить один час"
+    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostSofiaMillerSpawn
+    acceptTimeoutSeconds: 300
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 450, max: 650 }
+  - type: Pool
+    pool: caravan_medium
+    count: { min: 1, max: 3 }
+
+- type: ncGhostRoleContract
+  id: NcGhostRoleContractNCRDeserterDead
+  name: "Дезертир Патроу"
+  description: "Патроу, бывший сержант НКР, ушёл с оружием, припасами и чужими секретами. Живым его брать не просят: убейте дезертира и доставьте тело торговцу."
+  role: NcGhostRoleNCRDeserter
+  completion:
+    mode: DeadBodyTurnIn
+  survival:
+    briefing: "Вы Патроу, дезертир НКР. Продержитесь один час и не дайте охотникам принести ваше тело торговцу."
+    objectiveTitle: "Выжить один час"
+    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostPatrouSpawn
+    acceptTimeoutSeconds: 300
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 650, max: 900 }
+  - type: Pool
+    pool: caravan_hard
+    count: { min: 2, max: 6 }
+
+- type: ncGhostRoleContract
+  id: NcGhostRoleContractZoyaDarbyAlive
+  name: "Зоя Дарби нужна живой"
+  description: "Зоя Дарби пережила слишком много перестрелок и оставила за собой слишком много тел. Заказчик хочет услышать её ответы, а не смотреть на труп: приведите Зою живой, здоровой и в наручниках."
+  role: NcGhostRoleZoyaDarby
+  completion:
+    mode: AliveCuffedTurnIn
+  survival:
+    briefing: "Вы Зоя Дарби. Продержитесь один час и не дайте охотникам сдать вас живой торговцу."
+    objectiveTitle: "Выжить один час"
+    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostZoyaDarbySpawn
+    acceptTimeoutSeconds: 300
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 800, max: 1100 }
+  - type: Pool
+    pool: caravan_hard
+    count: { min: 2, max: 6 }
+
+- type: ncGhostRoleContract
+  id: NcGhostRoleContractFreshDead
+  name: "Остановить Фреша"
+  description: "Фреш сорвался окончательно: бегает по окраине, стреляет первым и разговаривать уже не собирается. Остановите его и доставьте тело торговцу."
+  role: NcGhostRoleFresh
+  completion:
+    mode: DeadBodyTurnIn
+  survival:
+    briefing: "Вы Фреш. Продержитесь один час, не подпускайте охотников и не дайте принести ваше тело торговцу."
+    objectiveTitle: "Выжить один час"
+    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostFreshSpawn
+    acceptTimeoutSeconds: 300
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 420, max: 620 }
+  - type: Pool
+    pool: caravan_medium
+    count: { min: 1, max: 3 }

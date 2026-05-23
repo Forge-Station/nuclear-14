@@ -590857,7 +590857,6 @@ entities:
     - type: Transform
       pos: 167.5,132.5
       parent: 1
-    - type: Timer
   - uid: 60607
     components:
     - type: Transform

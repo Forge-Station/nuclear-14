@@ -1,10 +1,12 @@
-﻿using Content.Shared._NC.Trade;
+using Content.Shared._NC.Trade;
+
 
 namespace Content.Server._NC.Trade;
 
+
 public sealed partial class StoreStructuredSystem
 {
-    private ContractClientData MapContractToClient(ContractServerData contract)
+    private ContractClientData MapContractToClient(EntityUid store, ContractServerData contract)
     {
         var targets = MapContractTargetsToClient(contract);
         var rewards = CloneContractRewards(contract);
@@ -12,36 +14,48 @@ public sealed partial class StoreStructuredSystem
         return new(
             contract.Id,
             contract.Name,
-            contract.Difficulty,
             contract.Description,
             contract.Repeatable,
             contract.Taken,
             SupportsContractPinpointer(contract),
+            _contracts.CanPartiallyTurnInNow(store, contract.Id, contract),
             contract.ExecutionKind,
-            CloneRuntimeContext(EnsureClientContractRuntime(contract)),
+            CloneRuntimeContext(contract.Runtime),
             contract.FlowStatus,
             contract.Completed,
             contract.TargetItem,
+            contract.MatchMode,
             ResolveContractTurnInItem(contract),
             contract.Required,
             contract.Progress,
             targets,
-            rewards
+            rewards,
+            contract.Config.RetrievalSourceHint,
+            contract.Config.RetrievalDestinationHint,
+            IsRetrievalRouteContract(contract),
+            contract.Config.RetrievalClaimMode,
+            IsRetrievalBearerProofContract(contract),
+            contract.Config.HuntCompletionMode,
+            contract.Config.GhostRoleCompletionMode,
+            contract.OfferPoolId,
+            contract.OfferPoolName,
+            contract.OfferPoolOrder,
+            contract.OfferPoolColor
         );
     }
 
     private static List<ContractTargetClientData> MapContractTargetsToClient(ContractServerData contract)
     {
-        var sourceTargets = EnsureClientContractTargets(contract);
-        var targets = sourceTargets is { Count: > 0 }
+        var sourceTargets = contract.Targets;
+        var targets = sourceTargets is { Count: > 0, }
             ? new List<ContractTargetClientData>(sourceTargets.Count)
             : new List<ContractTargetClientData>(1);
 
-        if (sourceTargets is { Count: > 0 })
+        if (sourceTargets is { Count: > 0, })
         {
             foreach (var target in sourceTargets)
             {
-                if (string.IsNullOrWhiteSpace(target.TargetItem) || target.Required <= 0)
+                if (target == null || string.IsNullOrWhiteSpace(target.TargetItem) || target.Required <= 0)
                     continue;
 
                 targets.Add(
@@ -68,70 +82,71 @@ public sealed partial class StoreStructuredSystem
 
     private static List<ContractRewardData> CloneContractRewards(ContractServerData contract)
     {
-        var rewards = EnsureClientContractRewards(contract);
+        var rewards = contract.Rewards;
         return rewards.Count > 0
-            ? new List<ContractRewardData>(rewards)
+            ? new(rewards)
             : new List<ContractRewardData>(0);
     }
 
     private static string ResolveContractTurnInItem(ContractServerData contract)
     {
-        var config = EnsureClientContractConfig(contract);
+        var config = contract.Config;
+        if (contract.IsHuntObjective &&
+            config.HuntEnabled &&
+            config.HuntCompletionMode == NcHuntCompletionMode.BodyTurnIn)
+            return config.HuntBodyPrototype ?? string.Empty;
+
         return config.ProofPrototype ?? string.Empty;
     }
 
     private static bool SupportsContractPinpointer(ContractServerData contract)
     {
-        var config = EnsureClientContractConfig(contract);
+        var config = contract.Config;
         if (!config.GivePinpointer)
             return false;
+
+        if (SupportsRetrievalSpawnedPinpointer(contract))
+            return true;
 
         return contract.UsesWorldObjectiveRuntime;
     }
 
-    private static ContractRuntimeContextData EnsureClientContractRuntime(ContractServerData contract)
+    private static bool SupportsRetrievalSpawnedPinpointer(ContractServerData contract)
     {
-        contract.Runtime ??= new();
-        return contract.Runtime;
+        var config = contract.Config;
+        return (contract.IsInventoryDelivery || contract.IsRetrievalRouteDelivery) &&
+            config.RetrievalSpawnEnabled &&
+            config.RetrievalRequireSpawnedEntities;
     }
 
-    private static ContractObjectiveConfigData EnsureClientContractConfig(ContractServerData contract)
-    {
-        contract.Config ??= new();
-        return contract.Config;
-    }
+    private static bool IsRetrievalRouteContract(ContractServerData contract) =>
+        (contract.IsInventoryDelivery || contract.IsRetrievalRouteDelivery) &&
+        !string.IsNullOrWhiteSpace(contract.Config.RetrievalRouteId);
 
-    private static List<ContractTargetServerData> EnsureClientContractTargets(ContractServerData contract)
+    private static bool IsRetrievalBearerProofContract(ContractServerData contract)
     {
-        contract.Targets ??= new();
-        for (var i = contract.Targets.Count - 1; i >= 0; i--)
-        {
-            if (contract.Targets[i] == null)
-                contract.Targets.RemoveAt(i);
-        }
-
-        return contract.Targets;
-    }
-
-    private static List<ContractRewardData> EnsureClientContractRewards(ContractServerData contract)
-    {
-        contract.Rewards ??= new();
-        return contract.Rewards;
+        var config = contract.Config;
+        return IsRetrievalRouteContract(contract) &&
+            config.RetrievalProofEnabled &&
+            config.RetrievalProofOwnership == NcRetrievalProofOwnership.Bearer;
     }
 
     private static ContractRuntimeContextData CloneRuntimeContext(ContractRuntimeContextData? runtime)
     {
         if (runtime == null)
-            return new ContractRuntimeContextData();
+            return new();
 
-        return new ContractRuntimeContextData
+        return new()
         {
             Stage = runtime.Stage,
             StageGoal = runtime.StageGoal,
             AcceptTimeoutRemainingSeconds = runtime.AcceptTimeoutRemainingSeconds,
+            GhostRoleSurvivalRemainingSeconds = runtime.GhostRoleSurvivalRemainingSeconds,
             GhostRolePendingAcceptance = runtime.GhostRolePendingAcceptance,
             Failed = runtime.Failed,
-            FailureReason = runtime.FailureReason
+            Outcome = runtime.Outcome,
+            FailureReason = runtime.FailureReason,
+            StatusHint = runtime.StatusHint
         };
     }
 }

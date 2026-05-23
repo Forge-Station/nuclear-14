@@ -9,7 +9,6 @@
         - sprite: Corvax/Mobs/Animals/swamper.rsi
           state: swamper
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobSwamper
@@ -29,7 +28,6 @@
         - sprite: Corvax/Mobs/Animals/radswamper.rsi
           state: radswamper
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRadSwamper
@@ -49,7 +47,6 @@
         - sprite: Corvax/Mobs/Animals/jackal.rsi
           state: jackal
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobJackal
