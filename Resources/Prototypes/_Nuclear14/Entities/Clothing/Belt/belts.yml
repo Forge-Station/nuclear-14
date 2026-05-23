@@ -76,7 +76,7 @@
   - type: Storage
     whitelist:
       tags:
-        - Gladius
+        - N14Gladius
 
 - type: entity
   parent: N14ClothingBeltStorageBase
@@ -142,7 +142,7 @@
     - 0,0,5,1
     whitelist:
       tags:
-        - Gladius
+        - N14Gladius
 
 - type: entity
   parent: N14ClothingBeltStorageBase
