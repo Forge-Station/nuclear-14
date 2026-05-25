@@ -45,8 +45,8 @@ namespace Content.Shared.Maps
         [DataField("baseTurf")]
         public string BaseTurf { get; private set; } = string.Empty;
 
-        [DataField("baseWhitelist", customTypeSerializer: typeof(PrototypeIdListSerializer<ContentTileDefinition>))]   /// Forge-Chane
-        public List<string> BaseWhitelist { get; private set; } = new();  /// Forge-Chane
+        [DataField("baseWhitelist", customTypeSerializer: typeof(PrototypeIdListSerializer<ContentTileDefinition>))]   /// Forge-Change
+        public List<string> BaseWhitelist { get; private set; } = new();  /// Forge-Change
 
         [DataField]
         public PrototypeFlags<ToolQualityPrototype> DeconstructTools { get; set; } = new();

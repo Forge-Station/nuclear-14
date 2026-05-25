@@ -167,7 +167,7 @@ public sealed class FloorTileSystem : EntitySystem
 
     public bool HasBaseTurf(ContentTileDefinition tileDef, string baseTurf)
     {
-        if (tileDef.BaseTurf == baseTurf)  /// Forge-Chane begind
+        if (tileDef.BaseTurf == baseTurf)  /// Forge-Change start
             return true;
 
         for (var i = 0; i < tileDef.BaseWhitelist.Count; i++)
@@ -176,7 +176,7 @@ public sealed class FloorTileSystem : EntitySystem
                 return true;
         }
 
-        return false;  /// Forge-Chane end
+        return false;  /// Forge-Change end
     }
 
     private void PlaceAt(EntityUid user, EntityUid gridUid, MapGridComponent mapGrid, EntityCoordinates location,
