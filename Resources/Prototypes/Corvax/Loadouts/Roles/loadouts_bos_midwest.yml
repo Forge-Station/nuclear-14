@@ -218,7 +218,7 @@
       jobs:
         - BoSMidPaladinCommander
   items:
-    - N14ClothingNeckMWBSShoulderPadFlag 
+    - N14ClothingNeckMWBSShoulderPadFlag
 
 - type: loadout
   id: LoadoutClothingNeckMWBSKnightShoulderPad
@@ -230,7 +230,7 @@
       jobs:
         - BoSMidKnight
   items:
-    - N14ClothingNeckMWBSKnightShoulderPad 
+    - N14ClothingNeckMWBSKnightShoulderPad
 
 - type: loadout
   id: LoadoutClothingNeckMWBSSeniorKnightShoulderPad
@@ -245,7 +245,7 @@
       tracker: BoSMidKnight
       min: 144000
   items:
-    - N14ClothingNeckMWBSSeniorKnightShoulderPad 
+    - N14ClothingNeckMWBSSeniorKnightShoulderPad
 
 - type: loadout
   id: LoadoutClothingNeckMWBSCommanderKnightShoulderPad
@@ -260,7 +260,7 @@
       tracker: BoSMidKnight
       min: 216000
   items:
-    - N14ClothingNeckMWBSKnightCommanderShoulderPad 
+    - N14ClothingNeckMWBSKnightCommanderShoulderPad
 
 - type: loadout
   id: LoadoutClothingNeckMWBSPaladintShoulderPad
@@ -272,4 +272,19 @@
       jobs:
         - BoSMidPaladin
   items:
-    - N14ClothingNeckMWBSPaladinShoulderPad 
+    - N14ClothingNeckMWBSPaladinShoulderPad
+
+- type: loadout
+  id: LoadoutN14ClothingNeckCloakTentBOS
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladinCommander
+        - BoSMidPaladin
+        - BoSMidKnight
+        - BoSMidSquire
+  items:
+    - N14ClothingNeckCloakTentBOS

@@ -73,6 +73,10 @@
   - type: Clothing
     sprite: _Nuclear14/Clothing/Belt/militarywebbing.rsi
   - type: Appearance
+  - type: Storage
+    whitelist:
+      tags:
+        - N14Gladius
 
 - type: entity
   parent: N14ClothingBeltStorageBase
@@ -136,6 +140,9 @@
     defaultStorageOrientation: Vertical
     grid:
     - 0,0,5,1
+    whitelist:
+      tags:
+        - N14Gladius
 
 - type: entity
   parent: N14ClothingBeltStorageBase
