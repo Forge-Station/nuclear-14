@@ -14,6 +14,7 @@
       - type: NpcFactionMember
         factions:
           - Wastelander
+      - type: ChineseAccent
 
 - type: startingGear
   id: ChineseRiflemanGear

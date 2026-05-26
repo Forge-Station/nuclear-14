@@ -126,6 +126,7 @@
     - N14FrontalLisp
     - N14ScottishAccent
     - N14Liar
+    - N14ChineseAccent
   functions:
   - !type:TraitAddComponent
     components:
@@ -145,6 +146,7 @@
     - N14Stutter
     - N14ScottishAccent
     - N14Liar
+    - N14ChineseAccent
   functions:
   - !type:TraitAddComponent
     components:
@@ -161,7 +163,25 @@
     - N14Stutter
     - N14FrontalLisp
     - N14Liar
+    - N14ChineseAccent
   functions:
   - !type:TraitAddComponent
     components:
     - type: ScottishAccent
+
+- type: trait
+  id: N14ChineseAccent
+  category: Speech
+  points: -1
+  requirements:
+  - !type:CharacterTraitRequirement
+    inverted: true
+    traits:
+    - N14Stutter
+    - N14FrontalLisp
+    - N14Liar
+    - N14ScottishAccent
+  functions:
+  - !type:TraitAddComponent
+    components:
+    - type: ChineseAccent
