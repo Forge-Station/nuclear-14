@@ -77,6 +77,11 @@
     whitelist:
       tags:
         - N14Gladius
+        - CigPack
+        - N14AmmoCell
+      components:
+        - BallisticAmmoProvider
+        - CartridgeAmmo
 
 - type: entity
   parent: N14ClothingBeltStorageBase
@@ -143,6 +148,11 @@
     whitelist:
       tags:
         - N14Gladius
+        - CigPack
+        - N14AmmoCell
+      components:
+        - BallisticAmmoProvider
+        - CartridgeAmmo
 
 - type: entity
   parent: N14ClothingBeltStorageBase
