@@ -1,12 +1,26 @@
 using Content.Shared._NC.Trade;
 using Robust.Shared.Random;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private const int SmallBagThreshold = 8;
+    private const int SoftFairThreshold = 8;
+    private const int SoftRewardThreshold = 512;
     private const int MaxRngCache = 4096;
+
+    private const int RngEvictChunk = 256;
+    private const double SoftFairHeatPenalty = 0.75;
+    private const double SoftFairRepeatPenalty = 0.45;
+    private const double SoftFairStreakPenalty = 0.2;
+    private const double SoftFairMinWeight = 0.04;
+    private const double SoftFairDecay = 0.55;
+
+    private readonly Queue<QuasiKey> _quasiPhaseOrder = new();
+    private readonly Dictionary<QuasiKey, SoftFairState> _softFair = new();
+    private readonly Queue<QuasiKey> _softFairOrder = new();
 
     private double NextUnit() => _random.NextFloat();
 
@@ -15,7 +29,8 @@ public sealed partial class NcContractSystem : EntitySystem
         int minClamp,
         int maxClamp,
         out int min,
-        out int buckets)
+        out int buckets
+    )
     {
         var a = range.Min;
         var b = range.Max;
@@ -40,11 +55,15 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private int RollSmooth(in QuasiKey key, int min, int buckets, double jitter)
     {
-        if (_quasiPhase.Count >= MaxRngCache)
-            _quasiPhase.Clear();
+        var existing = _quasiPhase.TryGetValue(key, out var p);
+        if (!existing)
+        {
+            if (_quasiPhase.Count >= MaxRngCache)
+                EvictQuasiPhaseOldest(RngEvictChunk);
 
-        if (!_quasiPhase.TryGetValue(key, out var p))
             p = NextUnit();
+            _quasiPhaseOrder.Enqueue(key);
+        }
 
         var j = (NextUnit() - 0.5) * 2.0 * jitter;
 
@@ -52,8 +71,8 @@ public sealed partial class NcContractSystem : EntitySystem
         p -= Math.Floor(p);
         _quasiPhase[key] = p;
 
-        var idx = (int)Math.Floor(p * buckets);
-        if ((uint)idx >= (uint)buckets)
+        var idx = (int) Math.Floor(p * buckets);
+        if ((uint) idx >= (uint) buckets)
             idx = buckets - 1;
 
         return min + idx;
@@ -64,65 +83,140 @@ public sealed partial class NcContractSystem : EntitySystem
         IntRange range,
         int minClamp,
         int maxClamp = int.MaxValue,
-        double jitter = DefaultJitter)
+        double jitter = DefaultJitter
+    )
     {
         if (!TryNormalizeRange(range, minClamp, maxClamp, out var min, out var buckets))
             return min;
 
-        return buckets <= SmallBagThreshold
-            ? RollFromSmallBag(key, min, buckets)
+        return buckets <= SoftFairThreshold
+            ? RollSoftFair(key, min, buckets)
             : RollSmooth(key, min, buckets, jitter);
     }
 
-    private int RollFromSmallBag(QuasiKey key, int min, int buckets)
+    private int RollSoft(QuasiKey key, IntRange range, int minClamp, int maxClamp = int.MaxValue)
     {
-        if (_smallBags.Count >= MaxRngCache)
-            _smallBags.Clear();
+        if (!TryNormalizeRange(range, minClamp, maxClamp, out var min, out var buckets))
+            return min;
 
-        if (!_smallBags.TryGetValue(key, out var state))
+        return buckets <= SoftRewardThreshold
+            ? RollSoftFair(key, min, buckets)
+            : min + _random.Next(buckets);
+    }
+
+    private int RollSoftFair(QuasiKey key, int min, int buckets)
+    {
+        var existing = _softFair.TryGetValue(key, out var state);
+        if (!existing)
         {
+            if (_softFair.Count >= MaxRngCache)
+                EvictSoftFairOldest(RngEvictChunk);
+
             state = new();
-            _smallBags[key] = state;
+            _softFair[key] = state;
+            _softFairOrder.Enqueue(key);
         }
 
         var max = min + buckets - 1;
 
         var needsReset =
-            state.Min != min ||
+            state!.Min != min ||
             state.Max != max ||
-            state.Order.Count != buckets ||
-            state.Cursor >= state.Order.Count;
+            state.Heat.Count != buckets;
 
         if (needsReset)
         {
             state.Min = min;
             state.Max = max;
-            state.Cursor = 0;
-            state.Order.Clear();
-
+            state.LastIdx = -1;
+            state.Streak = 0;
+            state.Heat.Clear();
             for (var i = 0; i < buckets; i++)
-                state.Order.Add(i);
-
-            for (var i = buckets - 1; i > 0; i--)
-            {
-                var j = _random.Next(i + 1);
-                (state.Order[i], state.Order[j]) = (state.Order[j], state.Order[i]);
-            }
-
-            if (state.LastIdx >= 0 && buckets > 1 && state.Order[0] == state.LastIdx)
-                (state.Order[0], state.Order[1]) = (state.Order[1], state.Order[0]);
+                state.Heat.Add(0);
         }
 
-        var idx = state.Order[state.Cursor++];
+        Span<double> weights = stackalloc double[buckets];
+        var total = 0.0;
+        for (var i = 0; i < buckets; i++)
+        {
+            var weight = 1.0 / (1.0 + state.Heat[i] * SoftFairHeatPenalty);
+            if (i == state.LastIdx)
+                weight *= state.Streak > 1 ? SoftFairStreakPenalty : SoftFairRepeatPenalty;
+
+            weight = Math.Max(weight, SoftFairMinWeight);
+            weights[i] = weight;
+            total += weight;
+        }
+
+        var idx = 0;
+        var roll = _random.NextDouble() * total;
+        for (var i = 0; i < buckets; i++)
+        {
+            roll -= weights[i];
+            if (roll > 0)
+                continue;
+
+            idx = i;
+            break;
+        }
+
+        for (var i = 0; i < state.Heat.Count; i++)
+            state.Heat[i] *= SoftFairDecay;
+
+        state.Heat[idx] += 1.0;
+        state.Streak = idx == state.LastIdx ? state.Streak + 1 : 1;
         state.LastIdx = idx;
 
         return min + idx;
     }
 
+    private void EvictQuasiPhaseOldest(int count)
+    {
+        var evicted = 0;
+        while (evicted < count && _quasiPhaseOrder.Count > 0)
+        {
+            var oldest = _quasiPhaseOrder.Dequeue();
+            if (_quasiPhase.Remove(oldest))
+                evicted++;
+        }
+
+        if (evicted == 0 && _quasiPhase.Count >= MaxRngCache)
+        {
+            _quasiPhase.Clear();
+            _quasiPhaseOrder.Clear();
+        }
+    }
+
+    private void EvictSoftFairOldest(int count)
+    {
+        var evicted = 0;
+        while (evicted < count && _softFairOrder.Count > 0)
+        {
+            var oldest = _softFairOrder.Dequeue();
+            if (_softFair.Remove(oldest))
+                evicted++;
+        }
+
+        if (evicted == 0 && _softFair.Count >= MaxRngCache)
+        {
+            _softFair.Clear();
+            _softFairOrder.Clear();
+        }
+    }
+
+    private void ClearRngCachesInternal()
+    {
+        _quasiPhase.Clear();
+        _quasiPhaseOrder.Clear();
+        _softFair.Clear();
+        _softFairOrder.Clear();
+    }
+
     private static T PickWeighted<T>(
         IRobustRandom random,
         IReadOnlyList<T> list,
-        Func<T, int> weightSelector)
+        Func<T, int> weightSelector
+    )
     {
         if (list.Count == 0)
             throw new InvalidOperationException("PickWeighted called with empty list.");
@@ -147,8 +241,8 @@ public sealed partial class NcContractSystem : EntitySystem
             return list[random.Next(list.Count)];
 
         var r = total <= int.MaxValue
-            ? random.Next((int)total)
-            : (long)(random.NextDouble() * total);
+            ? random.Next((int) total)
+            : (long) (random.NextDouble() * total);
 
         long acc = 0;
         for (var i = 0; i < list.Count; i++)

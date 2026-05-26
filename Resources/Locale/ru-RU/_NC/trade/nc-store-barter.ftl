@@ -1,0 +1,10 @@
+nc-store-tab-barter = Обмен
+nc-store-barter-button = Обмен
+nc-store-barter-unavailable = Недоступно
+nc-store-barter-available = Макс: {$count}
+nc-store-barter-give = Отдаёте
+nc-store-barter-receive = Получаете
+nc-store-barter-cost-empty = нет цены
+nc-store-barter-receive-empty = нет награды
+nc-store-search-results-barter = Найдено обменов: {$count}
+nc-store-barter-random-receive = случайная награда

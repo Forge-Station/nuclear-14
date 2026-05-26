@@ -1,6 +1,5 @@
-using Robust.Shared.Serialization;
-
 namespace Content.Shared._NC.Trade;
+
 
 [Serializable]
 public sealed class ContractTargetServerData
@@ -11,4 +10,5 @@ public sealed class ContractTargetServerData
     public string TargetItem { get; set; } = string.Empty;
     public int Required { get; set; }
     public int Progress { get; set; }
+    public bool BodyRequired { get; set; }
 }

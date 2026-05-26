@@ -58763,7 +58763,6 @@ entities:
       rot: 1.5707963267948966 rad
       pos: -15.5,-11.5
       parent: 31
-    - type: Timer
 - proto: Poweredlight
   entities:
   - uid: 41
@@ -59002,7 +59001,6 @@ entities:
       parent: 31
     - type: ApcPowerReceiver
       powerLoad: 0
-    - type: Timer
   - uid: 1324
     components:
     - type: Transform

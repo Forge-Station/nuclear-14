@@ -1,0 +1,135 @@
+
+- type: entity
+  parent: PaperOffice
+  id: NcTradeContractProofDeliveryReceipt
+  name: "накладная о доставке"
+  description: "Подтверждение того, что контрактный груз был доставлен в нужную точку и принят на месте."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofGhoulTrophy
+  name: "трофейная метка гуля"
+  description: "Окровавленная контрактная метка, снятая с подтверждённой цели."
+  categories: [ HideSpawnMenu ]
+
+# Proof preset used by marker-based DeliveryProof routes.
+# Bearer means whoever physically brings this paper back to the trader may claim the reward.
+- type: ncRetrievalProofPreset
+  id: BazarDeliveryReceiptProof
+  prototype: NcTradeContractProofDeliveryReceipt
+  ownership: Bearer
+  reissue: Never
+  consumeOnRewardClaim: true
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofRadroachTrophy
+  name: "трофейная метка радтаракана"
+  description: "Маленькая окровавленная метка с последней контрактной твари. Принесите её торговцу как доказательство выполненной охоты."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofGeckoTrophy
+  name: "трофейная метка геккона"
+  description: "Контрактная метка с последней убитой цели. Принесите её торговцу как доказательство зачистки."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofRadscorpionTrophy
+  name: "трофейная метка радскорпиона"
+  description: "Контрактная метка с последней убитой цели. Принесите её торговцу как доказательство зачистки."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofNightstalkerTrophy
+  name: "трофейная метка ночной твари"
+  description: "Контрактная метка с последней убитой цели. Принесите её торговцу как доказательство зачистки."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofMoleratTrophy
+  name: "трофейная метка кротокрыса"
+  description: "Контрактная метка с последней убитой цели. Принесите её торговцу как доказательство зачистки."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofCrabTrophy
+  name: "трофейная метка грязнокраба"
+  description: "Контрактная метка с последней убитой цели. Принесите её торговцу как доказательство зачистки."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofRaiderTrophy
+  name: "трофейная метка рейдера"
+  description: "Контрактная метка с последней убитой цели. Принесите её торговцу как доказательство зачистки."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofCazadorTrophy
+  name: "трофейная метка казадора"
+  description: "Контрактная метка с последней убитой цели. Принесите её торговцу как доказательство зачистки."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofDeathclawTrophy
+  name: "трофейная метка когтя смерти"
+  description: "Тяжёлая контрактная метка с последней убитой цели. Принесите её торговцу как доказательство зачистки логова."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofMetalDeathclawTrophy
+  name: "трофейная метка бронированного когтя"
+  description: "Контрактная метка с бронированной твари. Такая бумага стоит денег только если её принести обратно целой."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofRobotTrophy
+  name: "контрактная пломба робота"
+  description: "Сорванная пломба с последнего уничтоженного контрактного робота. Принесите её торговцу как доказательство зачистки."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofRobobrainTrophy
+  name: "пломба робомозга"
+  description: "Контрактная пломба с последнего уничтоженного робомозга или его охраны. Доказательство, что объект больше не охраняется."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofAssaultronTrophy
+  name: "пломба штурмотрона"
+  description: "Обугленная пломба со старой сигнальной станции. Принесите её торговцу как доказательство выполненного опасного заказа."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofRaiderWarbandTrophy
+  name: "метка рейдерского лагеря"
+  description: "Контрактная метка с последнего убитого рейдера из крупного лагеря. Принесите её торговцу как доказательство полной зачистки."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofYaoguaiTrophy
+  name: "трофейная метка яо-гая"
+  description: "Тяжёлая контрактная метка с последнего убитого яо-гая. Подтверждает, что берлога зачищена."
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: PaperScrap
+  id: NcTradeContractProofCazadorSwarmTrophy
+  name: "метка большого гнезда казадоров"
+  description: "Контрактная метка с последнего казадора из крупного гнезда. Принесите её торговцу как доказательство зачистки роя."
+  categories: [ HideSpawnMenu ]

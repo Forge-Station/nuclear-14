@@ -26,6 +26,9 @@
         path: /Audio/Weapons/bladeslice.ogg
   - type: Item
     sprite: Corvax/Objects/Weapons/Melee/gladius.rsi
+  - type: Tag
+    tags:
+    - N14Gladius
 
 - type: entity
   parent: BaseItem

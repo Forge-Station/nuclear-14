@@ -9,5 +9,5 @@
                    VerticalExpand="True"
                    VerticalAlignment="Top"
                    HorizontalAlignment="Left"
-                   Margin="0"/>
+                   Margin="0" />
 </PanelContainer>

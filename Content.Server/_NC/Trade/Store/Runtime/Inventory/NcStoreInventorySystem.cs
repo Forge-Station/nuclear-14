@@ -1,53 +1,51 @@
 using Content.Shared._NC.Trade;
-using Content.Shared.Clothing.Components;
-using Content.Shared.Containers.ItemSlots;
-using Content.Shared.Hands.Components;
-using Content.Shared.Inventory;
 using Content.Shared.Stacks;
-using Robust.Shared.Containers;
+using Content.Shared.Tag;
 using Robust.Shared.Prototypes;
 
 
 namespace Content.Server._NC.Trade;
 
 
-public sealed class NcStoreInventorySystem : EntitySystem
+public sealed partial class NcStoreInventorySystem : EntitySystem
 {
     private const int UncachedRevision = int.MinValue;
-
-    private sealed class InventoryCacheEntry
-    {
-        public readonly List<EntityUid> Items = new();
-        public readonly NcInventorySnapshot Snapshot = new();
-        public int Revision;
-        public int ItemsRevision = UncachedRevision;
-        public int SnapshotRevision = UncachedRevision;
-    }
-
-    private readonly record struct ProductTakeRequest(
-        string ProtoId,
-        string? StackType,
-        PrototypeMatchMode EffectiveMatch);
+    private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore-inventory");
 
     [Dependency] private readonly IComponentFactory _compFactory = default!;
     [Dependency] private readonly IEntityManager _ents = default!;
     private readonly Dictionary<EntityUid, InventoryCacheEntry> _inventoryCache = new();
+
     private readonly Dictionary<string, string?> _productStackTypeCache = new(StringComparer.Ordinal);
-    private readonly Dictionary<string, string[]> _protoAndAncestorsCache = new(StringComparer.Ordinal);
-    private readonly HashSet<string> _scratchProtoVisited = new(StringComparer.Ordinal);
-    private readonly List<string> _scratchProtoResult = new();
-    private readonly List<string> _scratchProtoStack = new();
     [Dependency] private readonly IPrototypeManager _protos = default!;
+    private readonly HashSet<EntityUid> _rebuildOldItemsScratch = new();
+
+    private readonly Dictionary<EntityUid, HashSet<EntityUid>> _rootsByItem = new();
     private readonly Queue<EntityUid> _scratchQueue = new();
     private readonly List<EntityUid> _scratchResult = new();
     private readonly HashSet<EntityUid> _scratchVisited = new();
     [Dependency] private readonly SharedStackSystem _stacks = default!;
+    [Dependency] private readonly TagSystem _tags = default!;
+    private readonly List<EntityUid> _takeTransactionDeleteScratch = new();
+    private readonly List<(EntityUid Ent, int PreviousCount)> _takeTransactionStackRestoreScratch = new();
+    private bool _takeTransactionActive;
 
     public override void Initialize()
     {
         base.Initialize();
         _protos.PrototypesReloaded += OnPrototypesReloaded;
         SubscribeLocalEvent<EntityTerminatingEvent>(OnEntityTerminating);
+        SubscribeLocalEvent<EntParentChangedMessage>(OnEntityParentChanged);
+    }
+
+    private void OnEntityParentChanged(ref EntParentChangedMessage ev)
+    {
+        if (!_rootsByItem.TryGetValue(ev.Entity, out var affectedRoots) || affectedRoots.Count == 0)
+            return;
+
+        foreach (var root in affectedRoots)
+            if (_inventoryCache.TryGetValue(root, out var entry))
+                MarkInventoryDirty(entry, false);
     }
 
     public override void Shutdown()
@@ -59,639 +57,24 @@ public sealed class NcStoreInventorySystem : EntitySystem
     private void OnPrototypesReloaded(PrototypesReloadedEventArgs ev)
     {
         _productStackTypeCache.Clear();
-        _protoAndAncestorsCache.Clear();
+        _matcherService.Clear();
+
         InvalidateAllCaches();
     }
 
-    private void OnEntityTerminating(ref EntityTerminatingEvent ev)
+    private sealed class InventoryCacheEntry
     {
-        _inventoryCache.Remove(ev.Entity);
-
-        foreach (var entry in _inventoryCache.Values)
-        {
-            if (entry.ItemsRevision != entry.Revision || !entry.Items.Contains(ev.Entity))
-                continue;
-
-            entry.Revision = unchecked(entry.Revision + 1);
-        }
+        public readonly List<EntityUid> Items = new();
+        public readonly NcInventorySnapshot Snapshot = new();
+        public int ItemsRevision = UncachedRevision;
+        public int Revision;
+        public int SnapshotRevision = UncachedRevision;
     }
 
-
-    public void InvalidateInventoryCache(EntityUid root)
-    {
-        var entry = GetOrCreateInventoryCacheEntry(root);
-        MarkInventoryDirty(entry, itemsStillCurrent: false);
-    }
-
-    public void InvalidateAllCaches()
-    {
-        _inventoryCache.Clear();
-    }
-
-    public int GetInventoryRevision(EntityUid root)
-    {
-        return _inventoryCache.TryGetValue(root, out var entry)
-            ? entry.Revision
-            : 0;
-    }
-
-    private List<EntityUid> GetOrBuildDeepItemsCache(EntityUid owner)
-    {
-        var entry = GetOrCreateInventoryCacheEntry(owner);
-        EnsureItemsCache(owner, entry);
-        MarkSnapshotCacheEscaped(entry);
-        return entry.Items;
-    }
-
-    private List<EntityUid> GetOrBuildDeepItemsCacheCompacted(EntityUid owner)
-    {
-        var entry = GetOrCreateInventoryCacheEntry(owner);
-        EnsureItemsCache(owner, entry);
-        CompactCachedItemsIfNeeded(entry.Items);
-        MarkSnapshotCacheEscaped(entry);
-        return entry.Items;
-    }
-
-    private InventoryCacheEntry GetOrCreateInventoryCacheEntry(EntityUid owner)
-    {
-        if (_inventoryCache.TryGetValue(owner, out var entry))
-            return entry;
-
-        entry = new();
-        _inventoryCache[owner] = entry;
-        return entry;
-    }
-
-    private void EnsureItemsCache(EntityUid owner, InventoryCacheEntry entry)
-    {
-        if (entry.ItemsRevision == entry.Revision)
-            return;
-
-        BuildDeepItemsCache(owner, entry.Items);
-        entry.ItemsRevision = entry.Revision;
-    }
-
-    private void EnsureSnapshotCache(EntityUid owner, InventoryCacheEntry entry)
-    {
-        EnsureItemsCache(owner, entry);
-        if (entry.SnapshotRevision == entry.Revision)
-            return;
-
-        FillInventorySnapshotFromItems(owner, entry.Items, entry.Snapshot);
-        entry.SnapshotRevision = entry.Revision;
-    }
-
-    private static void MarkSnapshotCacheEscaped(InventoryCacheEntry entry)
-    {
-        // Callers receive the live internal items list and may mutate it in-place.
-        entry.SnapshotRevision = UncachedRevision;
-    }
-
-    private static void MarkInventoryDirty(InventoryCacheEntry entry, bool itemsStillCurrent)
-    {
-        entry.Revision = unchecked(entry.Revision + 1);
-        entry.ItemsRevision = itemsStillCurrent ? entry.Revision : UncachedRevision;
-        entry.SnapshotRevision = UncachedRevision;
-    }
-
-    private void BuildDeepItemsCache(EntityUid owner, List<EntityUid> cached)
-    {
-        _scratchVisited.Clear();
-        _scratchQueue.Clear();
-        _scratchResult.Clear();
-
-        void Enqueue(EntityUid uid)
-        {
-            if (uid == EntityUid.Invalid)
-                return;
-            if (!_scratchVisited.Add(uid))
-                return;
-            _scratchQueue.Enqueue(uid);
-            _scratchResult.Add(uid);
-        }
-
-        if (_ents.TryGetComponent(owner, out InventoryComponent? inventory))
-        {
-            var slotEnum = new InventorySystem.InventorySlotEnumerator(inventory);
-            while (slotEnum.NextItem(out var item))
-                Enqueue(item);
-        }
-
-        if (_ents.TryGetComponent(owner, out ItemSlotsComponent? itemSlots))
-        {
-            foreach (var slot in itemSlots.Slots.Values)
-                if (slot is { HasItem: true, Item: not null })
-                    Enqueue(slot.Item.Value);
-        }
-
-        if (_ents.TryGetComponent(owner, out HandsComponent? hands))
-        {
-            foreach (var hand in hands.Hands.Values)
-                if (hand.HeldEntity.HasValue)
-                    Enqueue(hand.HeldEntity.Value);
-        }
-
-        if (_ents.TryGetComponent(owner, out ContainerManagerComponent? cmcRoot))
-        {
-            foreach (var container in cmcRoot.Containers.Values)
-                foreach (var entity in container.ContainedEntities)
-                    Enqueue(entity);
-        }
-
-        while (_scratchQueue.Count > 0)
-        {
-            var current = _scratchQueue.Dequeue();
-            if (!_ents.TryGetComponent(current, out ContainerManagerComponent? cmc))
-                continue;
-
-            foreach (var container in cmc.Containers.Values)
-                foreach (var child in container.ContainedEntities)
-                    Enqueue(child);
-        }
-
-        cached.Clear();
-        if (cached.Capacity < _scratchResult.Count)
-            cached.Capacity = _scratchResult.Count;
-        cached.AddRange(_scratchResult);
-    }
-
-    private void CompactCachedItems(List<EntityUid> cached)
-    {
-        var w = 0;
-        for (var r = 0; r < cached.Count; r++)
-        {
-            var ent = cached[r];
-            if (ent != EntityUid.Invalid && _ents.EntityExists(ent))
-                cached[w++] = ent;
-        }
-
-        if (w < cached.Count)
-            cached.RemoveRange(w, cached.Count - w);
-    }
-
-
-
-    private void CompactCachedItemsIfNeeded(List<EntityUid> cached)
-    {
-        if (cached.Count < 256)
-            return;
-
-        var invalid = 0;
-        var threshold = Math.Max(64, cached.Count / 4);
-
-        // Fast detection: stop as soon as we know we must compact.
-        for (var i = 0; i < cached.Count; i++)
-        {
-            var ent = cached[i];
-            if (ent == EntityUid.Invalid || !_ents.EntityExists(ent))
-            {
-                invalid++;
-                if (invalid >= threshold)
-                    break;
-            }
-        }
-
-        if (invalid < threshold)
-            return;
-
-        CompactCachedItems(cached);
-    }
-
-    public NcInventorySnapshot BuildInventorySnapshot(EntityUid root)
-    {
-        var snap = new NcInventorySnapshot();
-        FillInventorySnapshot(root, snap);
-        return snap;
-    }
-
-    public void FillInventorySnapshot(EntityUid root, NcInventorySnapshot buffer)
-    {
-        var entry = GetOrCreateInventoryCacheEntry(root);
-        EnsureSnapshotCache(root, entry);
-        buffer.CopyFrom(entry.Snapshot);
-    }
-
-    public void ScanInventory(EntityUid root, List<EntityUid> itemsBuffer, NcInventorySnapshot snapshotBuffer)
-    {
-        var entry = GetOrCreateInventoryCacheEntry(root);
-        EnsureItemsCache(root, entry);
-        CompactCachedItemsIfNeeded(entry.Items);
-
-        itemsBuffer.Clear();
-        itemsBuffer.AddRange(entry.Items);
-
-        EnsureSnapshotCache(root, entry);
-        snapshotBuffer.CopyFrom(entry.Snapshot);
-    }
-
-    public void ScanInventoryItems(EntityUid root, List<EntityUid> itemsBuffer)
-    {
-        var entry = GetOrCreateInventoryCacheEntry(root);
-        EnsureItemsCache(root, entry);
-        CompactCachedItemsIfNeeded(entry.Items);
-
-        itemsBuffer.Clear();
-        itemsBuffer.AddRange(entry.Items);
-    }
-
-
-    private void FillInventorySnapshotFromItems(
-        EntityUid root,
-        IReadOnlyList<EntityUid> items,
-        NcInventorySnapshot buffer
-    )
-    {
-        buffer.Clear();
-        foreach (var ent in items)
-        {
-            if (!_ents.EntityExists(ent))
-                continue;
-            if (IsProtectedFromDirectSale(root, ent))
-                continue;
-
-            _ents.TryGetComponent(ent, out MetaDataComponent? meta);
-            var proto = meta?.EntityPrototype;
-
-            if (_ents.TryGetComponent(ent, out StackComponent? stack))
-            {
-                var cnt = Math.Max(stack.Count, 0);
-                if (cnt > 0 && !string.IsNullOrWhiteSpace(stack.StackTypeId))
-                {
-                    buffer.StackTypeCounts.TryGetValue(stack.StackTypeId, out var prev);
-                    buffer.StackTypeCounts[stack.StackTypeId] = prev + cnt;
-                }
-
-                if (cnt > 0 && proto != null)
-                {
-                    if (!buffer.ProtoCounts.TryAdd(proto.ID, cnt))
-                        buffer.ProtoCounts[proto.ID] += cnt;
-
-                    foreach (var id in GetProtoAndAncestors(proto))
-                    {
-                        buffer.AncestorCounts.TryGetValue(id, out var prev);
-                        buffer.AncestorCounts[id] = prev + cnt;
-                    }
-                }
-
-                continue;
-            }
-
-            if (proto == null)
-                continue;
-
-            if (!buffer.ProtoCounts.TryAdd(proto.ID, 1))
-                buffer.ProtoCounts[proto.ID] += 1;
-
-            foreach (var id in GetProtoAndAncestors(proto))
-            {
-                buffer.AncestorCounts.TryGetValue(id, out var prev);
-                buffer.AncestorCounts[id] = prev + 1;
-            }
-        }
-    }
-
-    public int GetOwnedFromSnapshot(
-        in NcInventorySnapshot snapshot,
-        string productProtoId,
-        PrototypeMatchMode matchMode
-    )
-    {
-        var stackType = GetProductStackType(productProtoId);
-        if (stackType != null)
-            return snapshot.StackTypeCounts.TryGetValue(stackType, out var cnt) ? cnt : 0;
-
-        var effective = ResolveMatchMode(productProtoId, matchMode);
-        if (effective == PrototypeMatchMode.Descendants)
-            return snapshot.AncestorCounts.TryGetValue(productProtoId, out var units) ? units : 0;
-
-        return snapshot.ProtoCounts.TryGetValue(productProtoId, out var exact) ? exact : 0;
-    }
-
-
-    public bool TryTakeProductUnitsFromRootCached(
-        EntityUid root,
-        string protoId,
-        int amount,
-        PrototypeMatchMode matchMode
-    )
-    {
-        if (amount <= 0)
-            return true;
-        var cachedItems = GetOrBuildDeepItemsCache(root);
-        return TryTakeProductUnitsFromCachedList(root, cachedItems, protoId, amount, matchMode);
-    }
-
-    public bool TryTakeProductUnitsFromCachedList(
-        EntityUid root,
-        List<EntityUid> cachedItems,
-        string protoId,
-        int amount,
-        PrototypeMatchMode matchMode
-    )
-    {
-        if (amount <= 0)
-            return true;
-
-        var request = CreateProductTakeRequest(protoId, matchMode);
-        if (CalculateAvailableTakeUnits(root, cachedItems, request, amount) < amount)
-            return false;
-
-        var success = ExecuteTakeUnitsFromCachedItems(root, cachedItems, request, amount);
-        if (success && _inventoryCache.TryGetValue(root, out var entry))
-            MarkInventoryDirty(entry, ReferenceEquals(entry.Items, cachedItems));
-
-        return success;
-    }
-
-    private ProductTakeRequest CreateProductTakeRequest(string protoId, PrototypeMatchMode matchMode)
-    {
-        return new(protoId, GetProductStackType(protoId), ResolveMatchMode(protoId, matchMode));
-    }
-
-    private int CalculateAvailableTakeUnits(
-        EntityUid root,
-        IReadOnlyList<EntityUid> cachedItems,
-        ProductTakeRequest request,
-        int maxNeeded)
-    {
-        var availableTotal = 0;
-
-        foreach (var ent in cachedItems)
-        {
-            if (ShouldSkipTakeEntity(root, ent))
-                continue;
-
-            availableTotal += CountTakeableUnits(ent, request);
-            if (availableTotal >= maxNeeded)
-                break;
-        }
-
-        return availableTotal;
-    }
-
-    private bool ExecuteTakeUnitsFromCachedItems(
-        EntityUid root,
-        List<EntityUid> cachedItems,
-        ProductTakeRequest request,
-        int amount)
-    {
-        var left = amount;
-        var compactNeeded = false;
-
-        for (var i = 0; i < cachedItems.Count && left > 0; i++)
-        {
-            if (!TryConsumeTakeUnitsFromEntity(root, cachedItems, i, request, ref left, ref compactNeeded))
-                continue;
-        }
-
-        if (compactNeeded)
-            CompactCachedItemsIfNeeded(cachedItems);
-
-        return left <= 0;
-    }
-
-    private bool TryConsumeTakeUnitsFromEntity(
-        EntityUid root,
-        List<EntityUid> cachedItems,
-        int index,
-        ProductTakeRequest request,
-        ref int left,
-        ref bool compactNeeded)
-    {
-        var ent = cachedItems[index];
-        if (ShouldSkipTakeEntity(root, ent))
-            return false;
-
-        if (request.StackType != null)
-            return TryConsumeStackTypeTake(cachedItems, index, ent, request.StackType, ref left, ref compactNeeded);
-
-        return TryConsumePrototypeTake(cachedItems, index, ent, request, ref left, ref compactNeeded);
-    }
-
-    private bool ShouldSkipTakeEntity(EntityUid root, EntityUid ent)
-    {
-        return ent == EntityUid.Invalid || !_ents.EntityExists(ent) || IsProtectedFromDirectSale(root, ent);
-    }
-
-    private int CountTakeableUnits(EntityUid ent, ProductTakeRequest request)
-    {
-        if (request.StackType != null)
-            return CountTakeableStackUnits(ent, request.StackType);
-
-        return CountTakeablePrototypeUnits(ent, request);
-    }
-
-    private int CountTakeableStackUnits(EntityUid ent, string stackType)
-    {
-        if (_ents.TryGetComponent(ent, out StackComponent? stack) && stack.StackTypeId == stackType)
-            return Math.Max(stack.Count, 0);
-
-        return 0;
-    }
-
-    private int CountTakeablePrototypeUnits(EntityUid ent, ProductTakeRequest request)
-    {
-        if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
-            return 0;
-
-        if (!MatchesTakeRequest(meta.EntityPrototype, request))
-            return 0;
-
-        if (_ents.TryGetComponent(ent, out StackComponent? stack) && stack.Count > 0)
-            return stack.Count;
-
-        return 1;
-    }
-
-    private bool TryConsumeStackTypeTake(
-        List<EntityUid> cachedItems,
-        int index,
-        EntityUid ent,
-        string stackType,
-        ref int left,
-        ref bool compactNeeded)
-    {
-        if (!_ents.TryGetComponent(ent, out StackComponent? stack) || stack.StackTypeId != stackType)
-            return false;
-
-        var have = Math.Max(stack.Count, 0);
-        if (have <= 0)
-            return false;
-
-        ConsumeStackUnits(cachedItems, index, ent, stack, ref left, ref compactNeeded);
-        return true;
-    }
-
-    private bool TryConsumePrototypeTake(
-        List<EntityUid> cachedItems,
-        int index,
-        EntityUid ent,
-        ProductTakeRequest request,
-        ref int left,
-        ref bool compactNeeded)
-    {
-        if (!_ents.TryGetComponent(ent, out MetaDataComponent? meta) || meta.EntityPrototype == null)
-            return false;
-
-        if (!MatchesTakeRequest(meta.EntityPrototype, request))
-            return false;
-
-        if (_ents.TryGetComponent(ent, out StackComponent? stack))
-        {
-            ConsumeStackUnits(cachedItems, index, ent, stack, ref left, ref compactNeeded);
-            return true;
-        }
-
-        DeleteConsumedEntity(cachedItems, index, ent, ref left, ref compactNeeded);
-        return true;
-    }
-
-    private bool MatchesTakeRequest(EntityPrototype proto, ProductTakeRequest request)
-    {
-        if (request.EffectiveMatch == PrototypeMatchMode.Exact)
-            return proto.ID == request.ProtoId;
-
-        return proto.ID == request.ProtoId || IsProtoOrDescendant(proto, request.ProtoId);
-    }
-
-    private void ConsumeStackUnits(
-        List<EntityUid> cachedItems,
-        int index,
-        EntityUid ent,
-        StackComponent stack,
-        ref int left,
-        ref bool compactNeeded)
-    {
-        var have = Math.Max(stack.Count, 0);
-        var take = Math.Min(have, left);
-        _stacks.SetCount(ent, have - take, stack);
-
-        if (stack.Count <= 0)
-            DeleteConsumedEntity(cachedItems, index, ent, ref compactNeeded);
-
-        left -= take;
-    }
-
-    private void DeleteConsumedEntity(
-        List<EntityUid> cachedItems,
-        int index,
-        EntityUid ent,
-        ref int left,
-        ref bool compactNeeded)
-    {
-        DeleteConsumedEntity(cachedItems, index, ent, ref compactNeeded);
-        left -= 1;
-    }
-
-    private void DeleteConsumedEntity(
-        List<EntityUid> cachedItems,
-        int index,
-        EntityUid ent,
-        ref bool compactNeeded)
-    {
-        _ents.DeleteEntity(ent);
-        cachedItems[index] = EntityUid.Invalid;
-        compactNeeded = true;
-    }
-
-
-    public bool IsProtectedFromDirectSale(EntityUid root, EntityUid item)
-    {
-        if (!_ents.HasComponent<InventoryComponent>(root))
-            return false;
-
-        if (!IsDirectChildOf(root, item))
-            return false;
-        if (IsHeldInHands(root, item))
-            return false;
-
-        return _ents.HasComponent<ClothingComponent>(item);
-    }
-
-    private bool IsDirectChildOf(EntityUid root, EntityUid item) =>
-        _ents.TryGetComponent(item, out TransformComponent? xform) && xform.ParentUid == root;
-
-    private bool IsHeldInHands(EntityUid user, EntityUid item)
-    {
-        if (!_ents.TryGetComponent(user, out HandsComponent? hands))
-            return false;
-        foreach (var hand in hands.Hands.Values)
-            if (hand.HeldEntity == item)
-                return true;
-        return false;
-    }
-
-    public string? GetProductStackType(string productProtoId)
-    {
-        if (_productStackTypeCache.TryGetValue(productProtoId, out var cached))
-            return cached;
-
-        string? stackType = null;
-        if (_protos.TryIndex<EntityPrototype>(productProtoId, out var proto))
-        {
-            var stackName = _compFactory.GetComponentName(typeof(StackComponent));
-            if (proto.TryGetComponent(stackName, out StackComponent? prodStackDef))
-                stackType = prodStackDef.StackTypeId;
-        }
-
-        _productStackTypeCache[productProtoId] = stackType;
-        return stackType;
-    }
-
-    public PrototypeMatchMode ResolveMatchMode(string expectedProtoId, PrototypeMatchMode configured)
-    {
-        if (configured == PrototypeMatchMode.Descendants)
-            return PrototypeMatchMode.Descendants;
-        if (_protos.TryIndex<EntityPrototype>(expectedProtoId, out var p) && p.Abstract)
-            return PrototypeMatchMode.Descendants;
-        return PrototypeMatchMode.Exact;
-    }
-
-    public string[] GetProtoAndAncestors(EntityPrototype proto)
-    {
-        if (_protoAndAncestorsCache.TryGetValue(proto.ID, out var cached))
-            return cached;
-
-        _scratchProtoVisited.Clear();
-        _scratchProtoResult.Clear();
-        _scratchProtoStack.Clear();
-
-        _scratchProtoStack.Add(proto.ID);
-
-        while (_scratchProtoStack.Count > 0)
-        {
-            var idx = _scratchProtoStack.Count - 1;
-            var cur = _scratchProtoStack[idx];
-            _scratchProtoStack.RemoveAt(idx);
-
-            if (!_scratchProtoVisited.Add(cur))
-                continue;
-
-            _scratchProtoResult.Add(cur);
-
-            if (_protos.TryIndex<EntityPrototype>(cur, out var curProto) && curProto.Parents != null)
-            {
-                foreach (var p in curProto.Parents)
-                {
-                    if (!string.IsNullOrWhiteSpace(p))
-                        _scratchProtoStack.Add(p);
-                }
-            }
-        }
-
-        var arr = _scratchProtoResult.ToArray();
-        _protoAndAncestorsCache[proto.ID] = arr;
-        return arr;
-    }
-
-    private bool IsProtoOrDescendant(EntityPrototype candidate, string expectedId)
-    {
-        if (candidate.ID == expectedId)
-            return true;
-        var ancestors = GetProtoAndAncestors(candidate);
-        foreach (var t in ancestors)
-            if (t == expectedId)
-                return true;
-        return false;
-    }
+    private readonly record struct ProductTakeRequest(
+        string ProtoId,
+        string? StackType,
+        PrototypeMatchMode MatchMode,
+        CompiledMatcher? Matcher,
+        bool IsValid);
 }

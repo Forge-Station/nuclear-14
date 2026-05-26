@@ -57,36 +57,6 @@
 
 - type: Tag
   id: SpeedLoader12-7x55mm
-  
-- type: Tag
-  id: TradeContractHuntSpawn
-
-- type: Tag
-  id: TradeContractMineSpawn
-
-- type: Tag
-  id: TradeContractStoreSpawn
-
-- type: Tag
-  id: TradeContractRoadSpawn
-
-- type: Tag
-  id: TradeContractWarehouseSpawn
-
-- type: Tag
-  id: TradeContractDeliverySpawn
-
-- type: Tag
-  id: TradeContractStructureSpawn
-
-- type: Tag
-  id: TradeContractRepairSpawn
-
-- type: Tag
-  id: TradeContractGhostSpawn
-
-- type: Tag
-  id: TradeContractStructureDropoff
 
 - type: Tag
   id: Candles
@@ -96,3 +66,9 @@
 
 - type: Tag
   id: N14BoxCardboardMREBoxLegionFilled
+
+- type: Tag
+  id: N14StimpakEmpty
+
+- type: Tag
+  id: N14Gladius

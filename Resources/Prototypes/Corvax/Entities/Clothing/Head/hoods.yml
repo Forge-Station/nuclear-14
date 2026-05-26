@@ -71,3 +71,51 @@
     requiredSlot: head
     clothingPrototype: N14ClothingMaskGasWBoSRecon
     slot: mask
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingNeckCloakTentHood
+  name: tent cloak hood
+  description: A versatile cloak that can serve as both a waterproof cape and a lightweight field tent.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Hoods/tebtcloakhood.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Hoods/tebtcloakhood.rsi
+  - type: IngestionBlocker
+  - type: IdentityBlocker
+  - type: HideLayerClothing
+    slots:
+    - Hair
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingNeckCloakTentHoodNCR
+  name: ncr tent cloak hood
+  description: A versatile cloak that can serve as both a waterproof cape and a lightweight field tent.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Hoods/tebtcloakhoodNCR.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Hoods/tebtcloakhoodNCR.rsi
+  - type: IngestionBlocker
+  - type: IdentityBlocker
+  - type: HideLayerClothing
+    slots:
+    - Hair
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingNeckCloakTentHoodBOS
+  name: bos tent cloak hood
+  description: A versatile cloak that can serve as both a waterproof cape and a lightweight field tent.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Hoods/tebtcloakhoodBOS.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Hoods/tebtcloakhoodBOS.rsi
+  - type: IngestionBlocker
+  - type: IdentityBlocker
+  - type: HideLayerClothing
+    slots:
+    - Hair

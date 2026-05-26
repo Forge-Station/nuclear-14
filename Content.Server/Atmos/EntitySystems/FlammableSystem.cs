@@ -29,6 +29,7 @@ using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Events;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Random;
+using Robust.Shared.Timing;
 
 namespace Content.Server.Atmos.EntitySystems
 {
@@ -386,7 +387,7 @@ namespace Content.Server.Atmos.EntitySystems
             _stunSystem.TryParalyze(uid, TimeSpan.FromSeconds(2f), true);
 
             // TODO FLAMMABLE: Make this not use TimerComponent...
-            uid.SpawnTimer(2000, () =>
+            Timer.Spawn(2000, () =>
             {
                 flammable.Resisting = false;
                 flammable.FireStacks -= flammable.FirestackFade * 10f;

@@ -185,18 +185,17 @@
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/levercarbine.rsi
   - type: Item # Forge-Change
     size: Large # Forge-Change
-  - type: Wieldable
-  - type: GunWieldBonus
-    minAngle: -23
-    maxAngle: -104
   - type: Gun
-    minAngle: 24
-    maxAngle: 105
-    angleIncrease: 4
+    minAngle: 8              
+    maxAngle: 35            
+    angleIncrease: 1         
     angleDecay: 16
     fireRate: 2
     soundGunshot:
       collection: N14LeverCarbineGunshot
+  - type: GunWieldBonus
+    minAngle: -7            
+    maxAngle: -34          
   - type: BallisticAmmoProvider
     whitelist:
       tags:
@@ -240,10 +239,17 @@
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/brushgun.rsi
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/brushgun.rsi
-  - type: Gun
+  - type: Gun # Forge-start
+    minAngle: 9               
+    maxAngle: 36              
+    angleIncrease: 2          
+    angleDecay: 14            
     fireRate: 2.5 # Forge-Change
     soundGunshot:
       collection: N14BrushGunGunshot
+  - type: GunWieldBonus
+    minAngle: -8              
+    maxAngle: -35             # Forge-end
   - type: BallisticAmmoProvider
     whitelist:
       tags:
@@ -339,23 +345,23 @@
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/shortlevercarbine.rsi
   - type: Item # Forge-Change
     size: Normal # Forge-Change
-  - type: Wieldable
-  - type: GunWieldBonus
-    minAngle: -20
-    maxAngle: -95
-  - type: Gun
-    minAngle: 24
-    maxAngle: 105
-    angleIncrease: 4
+  - type: Gun # Forge-start
+    minAngle: 34          
+    maxAngle: 120             
+    angleIncrease: 12         
     angleDecay: 16
     fireRate: 2
     soundGunshot:
       collection: N14LeverCarbineGunshot
+  - type: GunWieldBonus
+    minAngle: -30        
+    maxAngle: -110         
+    angleIncrease: -8   # Forge-end 
   - type: BallisticAmmoProvider
     whitelist:
       tags:
       - N14Cartridge44Magnum
-    capacity: 14
+    capacity: 12 # Forge-Change
     proto: null
   - type: FollowDistance
     backStrength: 6

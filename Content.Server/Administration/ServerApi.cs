@@ -19,7 +19,9 @@ using Content.Shared.Administration.Managers;
 using Content.Shared.CCVar;
 using Content.Shared.Database;
 using Content.Shared.GameTicking.Components;
+using Content.Shared.Players.PlayTimeTracking;
 using Content.Shared.Prototypes;
+using Content.Shared.Roles;
 using Robust.Server.ServerStatus;
 using Robust.Shared.Asynchronous;
 using Robust.Shared.Configuration;
@@ -80,6 +82,7 @@ public sealed partial class ServerApi : IPostInjectInit
         RegisterHandler(HttpMethod.Get, "/admin/game_rules", GetGameRules);
         RegisterHandler(HttpMethod.Get, "/admin/presets", GetPresets);
         RegisterHandler(HttpMethod.Get, "/admin/getckey", ActionGetCkey);
+        RegisterHandler(HttpMethod.Get, "/admin/playtime_trackers", GetPlayTimeTrackers); // Forge-Change
 
         // Post
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/round/start", ActionRoundStart);
@@ -807,6 +810,64 @@ public sealed partial class ServerApi : IPostInjectInit
         await context.RespondJsonAsync(info);
     }
 
+    // Forge-Change-Start
+    /// <summary>
+    ///     Returns all play-time trackers with a human-readable display name composed of the localized
+    ///     names of every <see cref="JobPrototype"/> that references the tracker. Used by the Discord
+    ///     bot's playtime-grant flow so the role list doesn't have to be hand-mirrored in two places.
+    /// </summary>
+    private async Task GetPlayTimeTrackers(IStatusHandlerContext context)
+    {
+        var trackers = await RunOnMainThread(() =>
+        {
+            var jobsByTracker = new Dictionary<string, List<JobPrototype>>();
+            foreach (var job in _prototypeManager.EnumeratePrototypes<JobPrototype>())
+            {
+                if (string.IsNullOrEmpty(job.PlayTimeTracker))
+                    continue;
+                if (!jobsByTracker.TryGetValue(job.PlayTimeTracker, out var list))
+                {
+                    list = new List<JobPrototype>();
+                    jobsByTracker[job.PlayTimeTracker] = list;
+                }
+                list.Add(job);
+            }
+
+            var result = new List<PlayTimeTrackerResponse.Tracker>();
+            foreach (var trackerProto in _prototypeManager.EnumeratePrototypes<PlayTimeTrackerPrototype>())
+            {
+                if (trackerProto.ID == PlayTimeTrackingShared.TrackerAdmin)
+                    continue;
+
+                string name;
+                if (trackerProto.ID == PlayTimeTrackingShared.TrackerOverall)
+                {
+                    name = "Общее игровое время";
+                }
+                else if (jobsByTracker.TryGetValue(trackerProto.ID, out var jobs) && jobs.Count > 0)
+                {
+                    name = string.Join(" / ", jobs
+                        .Select(j => j.LocalizedName)
+                        .Where(n => !string.IsNullOrWhiteSpace(n))
+                        .Distinct());
+                    if (string.IsNullOrWhiteSpace(name))
+                        name = trackerProto.ID;
+                }
+                else
+                {
+                    name = trackerProto.ID;
+                }
+
+                result.Add(new PlayTimeTrackerResponse.Tracker { Id = trackerProto.ID, Name = name });
+            }
+
+            return result.OrderBy(t => t.Name, StringComparer.CurrentCultureIgnoreCase).ToList();
+        });
+
+        await context.RespondJsonAsync(new PlayTimeTrackerResponse { Trackers = trackers });
+    }
+    // Forge-Change-End
+
     #endregion
 
     private async Task<bool> CheckAccess(IStatusHandlerContext context)
@@ -1048,6 +1109,19 @@ public sealed partial class ServerApi : IPostInjectInit
     {
         public required List<string> GameRules { get; init; }
     }
+
+    // Forge-Change-Start
+    private sealed class PlayTimeTrackerResponse
+    {
+        public required List<Tracker> Trackers { get; init; }
+
+        public sealed class Tracker
+        {
+            public required string Id { get; init; }
+            public required string Name { get; init; }
+        }
+    }
+    // Forge-Change-End
 
     #endregion
 }
