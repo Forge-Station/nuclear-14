@@ -1,63 +1,67 @@
 <PanelContainer xmlns="https://spacestation14.io"
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:controls="clr-namespace:Content.Client._NC.Trade.Controls"
-                xmlns:graphics="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
                 HorizontalExpand="True"
                 VerticalExpand="True">
 
-    <PanelContainer.PanelOverride>
-        <graphics:StyleBoxFlat BackgroundColor="#1E2027" />
-    </PanelContainer.PanelOverride>
-
-    <BoxContainer Orientation="Horizontal"
+    <BoxContainer Name="BodyRow"
+                  Orientation="Horizontal"
                   HorizontalExpand="True"
-                  VerticalExpand="True">
+                  VerticalExpand="True"
+                  SeparationOverride="6"
+                  Margin="6">
 
-        <PanelContainer VerticalExpand="True"
-                        MinWidth="230">
-            <PanelContainer.PanelOverride>
-                <graphics:StyleBoxFlat BackgroundColor="#1A1B20" />
-            </PanelContainer.PanelOverride>
-
+        <!-- Sidebar -->
+        <PanelContainer Name="CategoriesPanel"
+                        VerticalExpand="True"
+                        MinWidth="238">
             <BoxContainer Orientation="Vertical"
-                          VerticalExpand="True">
+                          VerticalExpand="True"
+                          SeparationOverride="0">
+
                 <Label Name="TabHeading"
                        StyleClasses="LabelKeyText"
-                       Margin="6 2 6 2" />
+                       Margin="8 6 8 5" />
 
                 <controls:NcCategoryBar Name="CategoryBar"
                                         VerticalExpand="True"
-                                        HorizontalExpand="True" />
+                                        HorizontalExpand="True"
+                                        Margin="0 0 0 3" />
             </BoxContainer>
         </PanelContainer>
 
-        <PanelContainer MinWidth="1">
-            <PanelContainer.PanelOverride>
-                <graphics:StyleBoxFlat BackgroundColor="#7A6334" />
-            </PanelContainer.PanelOverride>
-        </PanelContainer>
+        <!-- Divider -->
+        <PanelContainer Name="CategoriesDivider"
+                        MinWidth="1"
+                        Margin="0 1 0 1" />
 
-        <BoxContainer Orientation="Vertical"
+        <!-- Content -->
+        <BoxContainer Name="ContentColumn"
+                      Orientation="Vertical"
                       VerticalExpand="True"
                       HorizontalExpand="True"
-                      Margin="3 2 3 2">
+                      SeparationOverride="5">
 
-            <Label Name="CategoryHeader"
-                   StyleClasses="LabelKeyText"
-                   Margin="2 0 0 3"
-                   Text="{Loc 'nc-store-select-category'}" />
+            <PanelContainer Name="CategoryHeaderPanel"
+                            HorizontalExpand="True"
+                            MinHeight="38">
+                <Label Name="CategoryHeader"
+                       Margin="10 5 10 5"
+                       Text="{Loc 'nc-store-select-category'}" />
+            </PanelContainer>
 
             <BoxContainer Name="MassSellRow"
                           Orientation="Horizontal"
-                          Margin="0 0 0 3"
-                          Visible="False">
+                          Visible="False"
+                          Margin="0 0 0 2">
                 <Button Name="MassSellButton"
                         MinWidth="260" />
             </BoxContainer>
 
             <controls:NcListingsPane Name="Pane"
-                                    VerticalExpand="True"
-                                    HorizontalExpand="True" />
+                                     VerticalExpand="True"
+                                     HorizontalExpand="True" />
         </BoxContainer>
+
     </BoxContainer>
 </PanelContainer>

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import argparse
 import requests
 import os
 import subprocess
@@ -18,6 +19,12 @@ ROBUST_CDN_URL = "https://cdn.corvaxforge.ru/"
 FORK_ID = "fallout"
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--fork-id", default=FORK_ID)
+
+    args = parser.parse_args()
+    fork_id = args.fork_id
+
     session = requests.Session()
     session.headers = {
         "Authorization": f"Bearer {PUBLISH_TOKEN}",
@@ -68,10 +75,14 @@ def get_files_to_publish() -> Iterable[str]:
 
 
 def get_engine_version() -> str:
-    proc = subprocess.run(["git", "describe","--tags", "--abbrev=0"], stdout=subprocess.PIPE, cwd="RobustToolbox", check=True, encoding="UTF-8")
-    tag = proc.stdout.strip()
-    assert tag.startswith("v")
-    return tag[1:] # Cut off v prefix.
+    proc = subprocess.run(
+        ["git", "config", "-f", ".gitmodules", "submodule.RobustToolbox.branch"],
+        stdout=subprocess.PIPE,
+        check=True,
+        encoding="UTF-8"
+    )
+
+    return proc.stdout.strip()
 
 
 if __name__ == '__main__':

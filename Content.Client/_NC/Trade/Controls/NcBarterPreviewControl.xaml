@@ -1,0 +1,75 @@
+<PanelContainer xmlns="https://spacestation14.io"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                RectClipContent="True"
+                HorizontalExpand="True"
+                Visible="False"
+                Margin="0 2 0 0">
+    <BoxContainer Name="PreviewRoot"
+                  Orientation="Horizontal"
+                  SeparationOverride="8"
+                  HorizontalExpand="True"
+                  Margin="0">
+
+        <PanelContainer Name="CostFrame"
+                        HorizontalExpand="True"
+                        MinHeight="42">
+            <BoxContainer Orientation="Horizontal"
+                          SeparationOverride="6"
+                          HorizontalExpand="True"
+                          Margin="6 4 6 4">
+                <EntityPrototypeView Name="CostIcon"
+                                     MinSize="32 32"
+                                     MaxSize="32 32"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center" />
+                <BoxContainer Orientation="Vertical"
+                              HorizontalExpand="True"
+                              VerticalAlignment="Center"
+                              SeparationOverride="0">
+                    <Label Name="CostHeader"
+                           Text="{Loc 'nc-store-barter-give'}"
+                           Modulate="#B6A98B"
+                           ClipText="True" />
+                    <Label Name="CostLabel"
+                           ClipText="True"
+                           ToolTip="" />
+                </BoxContainer>
+            </BoxContainer>
+        </PanelContainer>
+
+        <Label Name="ArrowLabel"
+               Text="→"
+               StyleClasses="LabelHeading"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               MinWidth="18" />
+
+        <PanelContainer Name="ReceiveFrame"
+                        HorizontalExpand="True"
+                        MinHeight="42">
+            <BoxContainer Orientation="Horizontal"
+                          SeparationOverride="6"
+                          HorizontalExpand="True"
+                          Margin="6 4 6 4">
+                <EntityPrototypeView Name="ReceiveIcon"
+                                     MinSize="32 32"
+                                     MaxSize="32 32"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center" />
+                <BoxContainer Orientation="Vertical"
+                              HorizontalExpand="True"
+                              VerticalAlignment="Center"
+                              SeparationOverride="0">
+                    <Label Name="ReceiveHeader"
+                           Text="{Loc 'nc-store-barter-receive'}"
+                           Modulate="#B6A98B"
+                           ClipText="True" />
+                    <Label Name="ReceiveLabel"
+                           ClipText="True"
+                           ToolTip="" />
+                </BoxContainer>
+            </BoxContainer>
+        </PanelContainer>
+
+    </BoxContainer>
+</PanelContainer>

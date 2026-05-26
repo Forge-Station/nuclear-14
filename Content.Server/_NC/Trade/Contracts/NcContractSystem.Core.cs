@@ -13,40 +13,58 @@ public sealed partial class NcContractSystem : EntitySystem
     private const int MaxRewardDepth = 6;
     private const int DepthInProgress = -1;
     private static readonly ISawmill Sawmill = Logger.GetSawmill("nccontracts");
-    private readonly Dictionary<string, List<string>> _ancestorsCache = new(StringComparer.Ordinal);
-    private readonly List<(EntityUid Store, string Difficulty)> _cooldownKeysToRemoveScratch = new();
-    private readonly Dictionary<(EntityUid Store, string Difficulty), CooldownState> _contractCooldown = new();
+    private readonly HashSet<(EntityUid Store, EntityUid User, string ContractId)> _claimInProgress = new();
+    [Dependency] private readonly IComponentFactory _compFactory = default!;
     private readonly Dictionary<string, int> _depthCache = new(StringComparer.Ordinal);
-    private readonly Dictionary<string, Dictionary<string, (StoreContractPrototype Proto, int Weight)>> _flattenedPoolCache = new(StringComparer.Ordinal);
     [Dependency] private readonly NcStoreInventorySystem _inventory = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
-    [Dependency] private readonly IPrototypeManager _prototypes = default!;
-    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _progressClaimableByKeyScratch = new();
+    [Dependency] private readonly EntityLookupSystem _lookup = default!;
+
+    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _progressClaimableByKeyScratch =
+        new();
+
     private readonly HashSet<EntityUid> _progressConsumedEntitiesScratch = new();
-    private readonly List<(string ProtoId, PrototypeMatchMode MatchMode, int Depth)> _progressOrderedKeysScratch = new();
-    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _progressRequiredByKeyScratch = new();
+    private readonly List<string> _progressContractIdsScratch = new();
+
+    private readonly List<(string ProtoId, PrototypeMatchMode MatchMode, int Depth)>
+        _progressOrderedKeysScratch = new();
+
+    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _progressRequiredByKeyScratch =
+        new();
+
+    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), List<int>>
+        _progressTargetIndexesByKeyScratch = new();
+
     private readonly Stack<List<int>> _progressTargetIndexPool = new();
-    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), List<int>> _progressTargetIndexesByKeyScratch = new();
     private readonly Dictionary<EntityUid, int> _progressVirtualStackLeftScratch = new();
+    [Dependency] private readonly IPrototypeManager _prototypes = default!;
     private readonly Dictionary<QuasiKey, double> _quasiPhase = new();
     [Dependency] private readonly IRobustRandom _random = default!;
-    private readonly List<string> _progressContractIdsScratch = new();
     private readonly List<EntityUid> _scratchCrateItems = new();
     private readonly List<EntityUid> _scratchStoreNearbyItems = new();
     private readonly List<EntityUid> _scratchUserItems = new();
-    private readonly Dictionary<QuasiKey, SmallBagState> _smallBags = new();
-    [Dependency] private readonly EntityLookupSystem _lookup = default!;
+    private readonly HashSet<EntityUid> _storesUpdatingProgress = new();
+    private bool _claimScratchInUse;
+    private bool _progressScratchInUse;
+    private IStoreCurrencyDebitService CurrencyDebit => _logic;
+    private IStoreRewardExecutionService Rewards => _logic;
 
     public override void Initialize()
     {
         base.Initialize();
+        InitializeDefinitionHandlers();
+        InitializeObjectiveHandlers();
+        InitializeTargetResolvers();
+        InitializeConditionHandlers();
         InitializeObjectiveRuntime();
+        InitializeTurnInContainerIndex();
         _prototypes.PrototypesReloaded += OnPrototypesReloaded;
     }
 
     public override void Shutdown()
     {
         _prototypes.PrototypesReloaded -= OnPrototypesReloaded;
+        ShutdownTurnInContainerIndex();
         ShutdownObjectiveRuntime();
         base.Shutdown();
     }
@@ -55,15 +73,14 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void ClearCaches()
     {
-        _ancestorsCache.Clear();
         _depthCache.Clear();
+        _contractMatcherCache.Clear();
+        ClearRngCachesInternal();
 
-        _quasiPhase.Clear();
-        _smallBags.Clear();
-
-        _cooldownKeysToRemoveScratch.Clear();
-        _contractCooldown.Clear();
-        _flattenedPoolCache.Clear();
+        _claimInProgress.Clear();
+        _storesUpdatingProgress.Clear();
+        _claimScratchInUse = false;
+        _progressScratchInUse = false;
     }
 
     public void ClearStoreRuntimeCaches(EntityUid store)
@@ -71,32 +88,15 @@ public sealed partial class NcContractSystem : EntitySystem
         if (store == EntityUid.Invalid)
             return;
 
-        if (_contractCooldown.Count > 0)
-        {
-            _cooldownKeysToRemoveScratch.Clear();
-            foreach (var key in _contractCooldown.Keys)
-            {
-                if (key.Store == store)
-                    _cooldownKeysToRemoveScratch.Add(key);
-            }
-
-            for (var i = 0; i < _cooldownKeysToRemoveScratch.Count; i++)
-                _contractCooldown.Remove(_cooldownKeysToRemoveScratch[i]);
-
-            _cooldownKeysToRemoveScratch.Clear();
-        }
-
-        ClearStoreObjectiveRuntime(store, deleteTrackedEntities: true);
+        ClearStoreObjectiveRuntime(store, true);
     }
 
     private static List<ContractTargetServerData> GetEffectiveTargets(ContractServerData contract)
     {
         contract.Targets ??= new();
         for (var i = contract.Targets.Count - 1; i >= 0; i--)
-        {
             if (contract.Targets[i] == null)
                 contract.Targets.RemoveAt(i);
-        }
 
         return contract.Targets;
     }
@@ -131,59 +131,12 @@ public sealed partial class NcContractSystem : EntitySystem
         return best;
     }
 
-    private sealed class SmallBagState
+    private sealed class SoftFairState
     {
-        public readonly List<int> Order = new();
-        public int Cursor;
+        public readonly List<double> Heat = new();
         public int LastIdx = -1;
         public int Max;
         public int Min;
-    }
-
-    private sealed class CooldownState
-    {
-        public readonly Dictionary<string, int> Counts = new(StringComparer.Ordinal);
-        public readonly Queue<string> Queue = new();
-
-        public int Limit;
-
-        public bool Contains(string id) => Limit > 0 && Counts.ContainsKey(id);
-
-        public void TrimToLimit()
-        {
-            if (Limit <= 0)
-            {
-                Queue.Clear();
-                Counts.Clear();
-                return;
-            }
-
-            while (Queue.Count > Limit)
-            {
-                var old = Queue.Dequeue();
-
-                if (!Counts.TryGetValue(old, out var c))
-                    continue;
-
-                c--;
-                if (c <= 0)
-                    Counts.Remove(old);
-                else
-                    Counts[old] = c;
-            }
-        }
-
-        public void Push(string id)
-        {
-            if (Limit <= 0 || string.IsNullOrWhiteSpace(id))
-                return;
-
-            Queue.Enqueue(id);
-
-            Counts.TryGetValue(id, out var c);
-            Counts[id] = c + 1;
-
-            TrimToLimit();
-        }
+        public int Streak;
     }
 }

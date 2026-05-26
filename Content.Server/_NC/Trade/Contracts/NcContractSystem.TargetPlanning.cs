@@ -1,17 +1,22 @@
 using Content.Shared._NC.Trade;
+using Content.Shared.Mobs;
+using Content.Shared.Mobs.Components;
 using Content.Shared.Stacks;
+
 
 namespace Content.Server._NC.Trade;
 
+
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _claimRequiredByKeyScratch = new();
     private readonly List<(string ProtoId, PrototypeMatchMode MatchMode, int Depth)> _claimOrderedKeysScratch = new();
+    private readonly Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> _claimRequiredByKeyScratch = new();
     private readonly Dictionary<EntityUid, int> _claimVirtualStackLeftScratch = new();
 
     private void BuildOrderedRequiredKeys(
         Dictionary<(string ProtoId, PrototypeMatchMode MatchMode), int> requiredByKey,
-        List<(string ProtoId, PrototypeMatchMode MatchMode, int Depth)> orderedKeys)
+        List<(string ProtoId, PrototypeMatchMode MatchMode, int Depth)> orderedKeys
+    )
     {
         orderedKeys.Clear();
 
@@ -44,21 +49,53 @@ public sealed partial class NcContractSystem : EntitySystem
         _claimVirtualStackLeftScratch.Clear();
     }
 
-    private bool MatchesPrototypeId(string candidateId, string expectedProtoId, PrototypeMatchMode matchMode)
+    private bool MatchesPrototypeId(
+        EntityUid candidateEntity,
+        string candidateId,
+        string expectedProtoId,
+        PrototypeMatchMode matchMode
+    )
     {
-        return matchMode == PrototypeMatchMode.Exact
-            ? candidateId == expectedProtoId
-            : candidateId == expectedProtoId || IsDescendantId(candidateId, expectedProtoId);
+        if (matchMode == PrototypeMatchMode.Tag)
+        {
+            return TryResolveContractTagTargetId(expectedProtoId, out var tagId) &&
+                ContractPrototypeHasTag(candidateId, tagId);
+        }
+
+        if (matchMode != PrototypeMatchMode.Matcher)
+            return candidateId == expectedProtoId;
+
+        if (!TryGetContractMatcherSpec(expectedProtoId, out var matcher))
+            return false;
+
+        if (matcher.MatchItems.Contains(candidateId))
+            return true;
+
+        if (TryComp(candidateEntity, out StackComponent? stack) &&
+            !string.IsNullOrWhiteSpace(stack.StackTypeId) &&
+            matcher.MatchStackTypes.Contains(stack.StackTypeId))
+            return true;
+
+        return false;
     }
 
     private bool CanUseContractPlanningEntity(EntityUid root, EntityUid ent, bool worldTurnInSource)
     {
-        if (ent == EntityUid.Invalid || !EntityManager.EntityExists(ent))
+        if (ent == EntityUid.Invalid || !Exists(ent))
             return false;
 
-        return worldTurnInSource
-            ? CanUseNearbyStoreTurnInEntity(ent)
-            : !_logic.IsProtectedFromDirectSale(root, ent);
+        if (TryComp(ent, out MobStateComponent? mobState) && mobState.CurrentState != MobState.Dead)
+            return false;
+
+        if (worldTurnInSource)
+        {
+            if (!TryComp(ent, out TransformComponent? xform))
+                return false;
+
+            return CanUseNearbyStoreTurnInEntity(ent, xform);
+        }
+
+        return !_logic.IsProtectedFromDirectSale(root, ent);
     }
 
     private int ReserveAvailableStackAmount(

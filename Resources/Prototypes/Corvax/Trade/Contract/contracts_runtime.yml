@@ -1,0 +1,620 @@
+
+
+- type: entity
+  id: TradeContractDropoffSign
+  name: караванная веха приёмки
+  description: Временный знак караванной приёмки. Оставьте отмеченный груз рядом; после подтверждения веху уберут.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Transform
+    anchored: true
+  - type: Clickable
+  - type: InteractionOutline
+  - type: Sprite
+    sprite: Objects/Decoration/mines.rsi
+    state: sign_right
+  - type: PointLight
+    enabled: true
+    radius: 2
+    energy: 0.8
+    color: "#C9A45A"
+
+# Empty Retrieval cargo prototypes.
+# These are intentionally separate from loot/fill crates: contract cargo should not
+# give free supplies, and destroying this cargo makes the contract fail.
+
+- type: entity
+  parent: N14CrateWooden
+  id: NcTradeCargoWoodenCrate
+  name: меченый деревянный ящик
+  description: Деревянный ящик с караванной пломбой. Его надо доставить целым; содержимое не важно, важен сам груз.
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: N14CrateMedical
+  id: NcTradeCargoMedicalCrate
+  name: меченый медицинский ящик
+  description: Медицинский ящик с караванной пломбой. Его приняли как груз, а не как источник бесплатных медикаментов.
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: N14CrateAluminium
+  id: NcTradeCargoPartsCrate
+  name: меченый ящик с деталями
+  description: Алюминиевый ящик с караванной пломбой. Его ждут в мастерской или ремонтной точке.
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: N14CrateMilitary
+  id: NcTradeCargoAmmoCrate
+  name: меченый ящик боеприпасов
+  description: Закрытый военный ящик с караванной пломбой. Это груз для доставки, а не бесплатный склад патронов.
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: N14CrateWooden
+  id: NcTradeCargoProvisionCrate
+  name: караванный ящик провизии
+  description: Пустой деревянный ящик с биркой каравана. Используется как груз для доставки еды и припасов.
+  categories: [ HideSpawnMenu ]
+
+# -----------------------------------------------------------------------------
+# Light city Retrieval routes for mapper-placed marker pools
+# -----------------------------------------------------------------------------
+
+- type: ncRetrievalSourcePreset
+  id: BazarLightSourceCityGateCargo
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractLightCityGateCargoSource
+
+- type: ncRetrievalSourcePreset
+  id: BazarLightSourceOutsideCargo
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractLightOutsideCargoSource
+
+- type: ncRetrievalSourcePreset
+  id: BazarLightSourceClinicMeds
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractLightClinicMedsSource
+
+- type: ncRetrievalSourcePreset
+  id: BazarLightSourceWorkshopParts
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractLightWorkshopPartsSource
+
+- type: ncRetrievalDestinationPreset
+  id: BazarLightDestinationStoreUi
+  target:
+    type: StoreUi
+
+- type: ncRetrievalDestinationPreset
+  id: BazarLightDestinationOutsideDropoff
+  target:
+    type: MarkerGroup
+    id: TradeContractLightOutsideDropoff
+  radius: 2.0
+
+- type: ncRetrievalDestinationPreset
+  id: BazarLightDestinationClinicDropoff
+  target:
+    type: MarkerGroup
+    id: TradeContractLightClinicDropoff
+  radius: 2.0
+
+- type: ncRetrievalDestinationPreset
+  id: BazarLightDestinationWorkshopDropoff
+  target:
+    type: MarkerGroup
+    id: TradeContractLightWorkshopDropoff
+  radius: 2.0
+
+- type: ncRetrievalGuidancePreset
+  id: BazarLightGuidanceOutsideToTrader
+  sourceHint: "дорожный груз за городом"
+  destinationHint: "торговец принимает сам ящик"
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 7
+
+- type: ncRetrievalGuidancePreset
+  id: BazarLightGuidanceGateToOutside
+  sourceHint: "городские ворота"
+  destinationHint: "ближайший пост за городом"
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 7
+
+- type: ncRetrievalGuidancePreset
+  id: BazarLightGuidanceWarehouseToClinic
+  sourceHint: "малый склад или подсобка"
+  destinationHint: "медпункт"
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 7
+
+- type: ncRetrievalGuidancePreset
+  id: BazarLightGuidanceWarehouseToWorkshop
+  sourceHint: "кладовая у мастерской"
+  destinationHint: "мастерская или гараж"
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 7
+
+- type: ncRetrievalRoutePreset
+  id: BazarLightRouteOutsideToTrader
+  source: BazarLightSourceOutsideCargo
+  destination: BazarLightDestinationStoreUi
+  claim:
+    mode: StoreCargo
+  guidance: BazarLightGuidanceOutsideToTrader
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: BazarLightRouteGateToOutsideProof
+  source: BazarLightSourceCityGateCargo
+  destination: BazarLightDestinationOutsideDropoff
+  claim:
+    mode: DestinationProof
+    proof: BazarDeliveryReceiptProof
+  guidance: BazarLightGuidanceGateToOutside
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: BazarLightRouteWarehouseToClinicProof
+  source: BazarLightSourceClinicMeds
+  destination: BazarLightDestinationClinicDropoff
+  claim:
+    mode: DestinationProof
+    proof: BazarDeliveryReceiptProof
+  guidance: BazarLightGuidanceWarehouseToClinic
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: BazarLightRouteWarehouseToWorkshopProof
+  source: BazarLightSourceWorkshopParts
+  destination: BazarLightDestinationWorkshopDropoff
+  claim:
+    mode: DestinationProof
+    proof: BazarDeliveryReceiptProof
+  guidance: BazarLightGuidanceWarehouseToWorkshop
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+# -----------------------------------------------------------------------------
+# Medium caravan Retrieval routes for mapper-placed marker pools
+# -----------------------------------------------------------------------------
+
+- type: ncRetrievalSourcePreset
+  id: BazarMediumSourceFarCrate
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractMediumFarCrateSource
+
+- type: ncRetrievalSourcePreset
+  id: BazarMediumSourceAmmoCheckpoint
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractMediumAmmoCheckpointSource
+
+- type: ncRetrievalSourcePreset
+  id: BazarMediumSourceMedsCheckpoint
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractMediumMedsCheckpointSource
+
+- type: ncRetrievalSourcePreset
+  id: BazarMediumSourceFoodCamp
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractMediumFoodCampSource
+
+- type: ncRetrievalSourcePreset
+  id: BazarMediumSourcePartsRepair
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractMediumPartsRepairSource
+
+- type: ncRetrievalDestinationPreset
+  id: BazarMediumDestinationAmmoCheckpoint
+  target:
+    type: MarkerGroup
+    id: TradeContractMediumAmmoCheckpointDropoff
+  radius: 2.0
+
+- type: ncRetrievalDestinationPreset
+  id: BazarMediumDestinationMedsCheckpoint
+  target:
+    type: MarkerGroup
+    id: TradeContractMediumMedsCheckpointDropoff
+  radius: 2.0
+
+- type: ncRetrievalDestinationPreset
+  id: BazarMediumDestinationFoodCamp
+  target:
+    type: MarkerGroup
+    id: TradeContractMediumFoodCampDropoff
+  radius: 2.0
+
+- type: ncRetrievalDestinationPreset
+  id: BazarMediumDestinationPartsRepair
+  target:
+    type: MarkerGroup
+    id: TradeContractMediumPartsRepairDropoff
+  radius: 2.0
+
+- type: ncRetrievalGuidancePreset
+  id: BazarMediumGuidanceFarCrateToTrader
+  sourceHint: "старая дорога за городом"
+  destinationHint: "торговец принимает сам ящик"
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 7
+
+- type: ncRetrievalGuidancePreset
+  id: BazarMediumGuidanceAmmoToCheckpoint
+  sourceHint: "городская точка выдачи боеприпасов"
+  destinationHint: "дальний пост"
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 7
+
+- type: ncRetrievalGuidancePreset
+  id: BazarMediumGuidanceMedsToCheckpoint
+  sourceHint: "городская точка выдачи медикаментов"
+  destinationHint: "окраина маршрута"
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 7
+
+- type: ncRetrievalGuidancePreset
+  id: BazarMediumGuidanceFoodToCamp
+  sourceHint: "городская точка выдачи провизии"
+  destinationHint: "лагерь за городом"
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 7
+
+- type: ncRetrievalGuidancePreset
+  id: BazarMediumGuidancePartsToRepair
+  sourceHint: "городская точка выдачи деталей"
+  destinationHint: "ремонтная точка"
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 7
+
+- type: ncRetrievalRoutePreset
+  id: BazarMediumRouteFarCrateToTrader
+  source: BazarMediumSourceFarCrate
+  destination: BazarLightDestinationStoreUi
+  claim:
+    mode: StoreCargo
+  guidance: BazarMediumGuidanceFarCrateToTrader
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: BazarMediumRouteAmmoToCheckpointProof
+  source: BazarMediumSourceAmmoCheckpoint
+  destination: BazarMediumDestinationAmmoCheckpoint
+  claim:
+    mode: DestinationProof
+    proof: BazarDeliveryReceiptProof
+  guidance: BazarMediumGuidanceAmmoToCheckpoint
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: BazarMediumRouteMedsToCheckpointProof
+  source: BazarMediumSourceMedsCheckpoint
+  destination: BazarMediumDestinationMedsCheckpoint
+  claim:
+    mode: DestinationProof
+    proof: BazarDeliveryReceiptProof
+  guidance: BazarMediumGuidanceMedsToCheckpoint
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: BazarMediumRouteFoodToCampProof
+  source: BazarMediumSourceFoodCamp
+  destination: BazarMediumDestinationFoodCamp
+  claim:
+    mode: DestinationProof
+    proof: BazarDeliveryReceiptProof
+  guidance: BazarMediumGuidanceFoodToCamp
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: BazarMediumRoutePartsToRepairProof
+  source: BazarMediumSourcePartsRepair
+  destination: BazarMediumDestinationPartsRepair
+  claim:
+    mode: DestinationProof
+    proof: BazarDeliveryReceiptProof
+  guidance: BazarMediumGuidancePartsToRepair
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+# -----------------------------------------------------------------------------
+# Heavy Retrieval routes for mapper-placed marker pools
+# -----------------------------------------------------------------------------
+
+- type: ncRetrievalSourcePreset
+  id: BazarHeavySourcePiano
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractHeavyPianoSource
+
+- type: ncRetrievalSourcePreset
+  id: BazarHeavySourceWeaponPartsOutpost
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractHeavyWeaponPartsOutpostSource
+
+- type: ncRetrievalSourcePreset
+  id: BazarHeavySourceAmmoOutpost
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractHeavyAmmoOutpostSource
+
+- type: ncRetrievalSourcePreset
+  id: BazarHeavySourceFarSupplyCache
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractHeavyFarSupplyCacheSource
+
+- type: ncRetrievalSourcePreset
+  id: BazarHeavySourceRadioAmmo
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractHeavyRadioAmmoSource
+
+- type: ncRetrievalSourcePreset
+  id: BazarHeavySourceBunkerParts
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractHeavyBunkerPartsSource
+
+- type: ncRetrievalSourcePreset
+  id: BazarHeavySourceLastCampMedical
+  spawnCargo: true
+  point:
+    type: MarkerId
+    id: TradeContractHeavyLastCampMedicalSource
+
+- type: ncRetrievalDestinationPreset
+  id: BazarHeavyDestinationWeaponPartsOutpost
+  target:
+    type: MarkerGroup
+    id: TradeContractHeavyWeaponPartsOutpostDropoff
+  radius: 2.5
+
+- type: ncRetrievalDestinationPreset
+  id: BazarHeavyDestinationAmmoOutpost
+  target:
+    type: MarkerGroup
+    id: TradeContractHeavyAmmoOutpostDropoff
+  radius: 2.5
+
+- type: ncRetrievalDestinationPreset
+  id: BazarHeavyDestinationRadioTower
+  target:
+    type: MarkerGroup
+    id: TradeContractHeavyRadioTowerDropoff
+  radius: 2.5
+
+- type: ncRetrievalDestinationPreset
+  id: BazarHeavyDestinationBunker
+  target:
+    type: MarkerGroup
+    id: TradeContractHeavyBunkerDropoff
+  radius: 2.5
+
+- type: ncRetrievalDestinationPreset
+  id: BazarHeavyDestinationLastCamp
+  target:
+    type: MarkerGroup
+    id: TradeContractHeavyLastCampDropoff
+  radius: 2.5
+
+- type: ncRetrievalGuidancePreset
+  id: BazarHeavyGuidancePianoToTrader
+  sourceHint: "старый салун далеко за городом"
+  destinationHint: "торговец принимает само пианино"
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 7
+
+- type: ncRetrievalGuidancePreset
+  id: BazarHeavyGuidanceWeaponPartsToOutpost
+  sourceHint: "тайник или разбитый склад"
+  destinationHint: "укреплённый пост"
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 7
+
+- type: ncRetrievalGuidancePreset
+  id: BazarHeavyGuidanceAmmoToOutpost
+  sourceHint: "опасная точка выдачи боеприпасов"
+  destinationHint: "дальняя застава"
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 7
+
+- type: ncRetrievalGuidancePreset
+  id: BazarHeavyGuidanceFarSupplyCacheToTrader
+  sourceHint: "караванный тайник у края карты"
+  destinationHint: "торговец принимает все ящики"
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 7
+
+- type: ncRetrievalGuidancePreset
+  id: BazarHeavyGuidanceAmmoToRadioTower
+  sourceHint: "опасный склад боеприпасов"
+  destinationHint: "радиовышка"
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 7
+
+- type: ncRetrievalGuidancePreset
+  id: BazarHeavyGuidancePartsToBunker
+  sourceHint: "опасный склад деталей"
+  destinationHint: "старый бункер"
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 7
+
+- type: ncRetrievalGuidancePreset
+  id: BazarHeavyGuidanceMedicalToLastCamp
+  sourceHint: "разбитый караван или дальний тайник"
+  destinationHint: "последний лагерь"
+  pinpointer:
+    enabled: true
+    target: CargoThenDestinationThenStore
+    prototype: PinpointerUniversal
+    maxActive: 7
+
+- type: ncRetrievalRoutePreset
+  id: BazarHeavyRoutePianoToTrader
+  source: BazarHeavySourcePiano
+  destination: BazarLightDestinationStoreUi
+  claim:
+    mode: StoreCargo
+  guidance: BazarHeavyGuidancePianoToTrader
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: BazarHeavyRouteWeaponPartsToOutpostProof
+  source: BazarHeavySourceWeaponPartsOutpost
+  destination: BazarHeavyDestinationWeaponPartsOutpost
+  claim:
+    mode: DestinationProof
+    proof: BazarDeliveryReceiptProof
+  guidance: BazarHeavyGuidanceWeaponPartsToOutpost
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: BazarHeavyRouteAmmoToOutpostProof
+  source: BazarHeavySourceAmmoOutpost
+  destination: BazarHeavyDestinationAmmoOutpost
+  claim:
+    mode: DestinationProof
+    proof: BazarDeliveryReceiptProof
+  guidance: BazarHeavyGuidanceAmmoToOutpost
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: BazarHeavyRouteFarSupplyCacheToTrader
+  source: BazarHeavySourceFarSupplyCache
+  destination: BazarLightDestinationStoreUi
+  claim:
+    mode: StoreCargo
+  guidance: BazarHeavyGuidanceFarSupplyCacheToTrader
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: BazarHeavyRouteAmmoToRadioTowerProof
+  source: BazarHeavySourceRadioAmmo
+  destination: BazarHeavyDestinationRadioTower
+  claim:
+    mode: DestinationProof
+    proof: BazarDeliveryReceiptProof
+  guidance: BazarHeavyGuidanceAmmoToRadioTower
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: BazarHeavyRoutePartsToBunkerProof
+  source: BazarHeavySourceBunkerParts
+  destination: BazarHeavyDestinationBunker
+  claim:
+    mode: DestinationProof
+    proof: BazarDeliveryReceiptProof
+  guidance: BazarHeavyGuidancePartsToBunker
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false
+
+- type: ncRetrievalRoutePreset
+  id: BazarHeavyRouteMedicalToLastCampProof
+  source: BazarHeavySourceLastCampMedical
+  destination: BazarHeavyDestinationLastCamp
+  claim:
+    mode: DestinationProof
+    proof: BazarDeliveryReceiptProof
+  guidance: BazarHeavyGuidanceMedicalToLastCamp
+  delivery:
+    consumeCargo: true
+    lockDeliveredCargo: false

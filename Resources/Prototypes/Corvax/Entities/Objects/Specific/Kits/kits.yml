@@ -187,7 +187,6 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireVeteranArmor
       - id: N14Gladius
       - id: SmokeGrenade
       - id: N14WeaponRifle762Chinese
@@ -214,7 +213,6 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireVeteranArmor
       - id: N14Gladius
       - id: N14FireAxe
       - id: ThrowingKnife
@@ -239,7 +237,6 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireVeteranArmor
       - id: N14WeaponKebab
       - id: N14LegionnaireShield
       - id: N14StimpakDirty
@@ -263,7 +260,6 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireBaseArmor
       - id: N14Gladius
       - id: N14LegionnaireBuckler
       - id: N14WeaponShotgunShort
@@ -288,7 +284,6 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireBaseArmor
       - id: N14Whip
       - id: N14WeaponRevolver44Tribal
       - id: SpeedLoader44
@@ -314,7 +309,6 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireBaseArmor
       - id: N14TribalMachete
       - id: N14Stimpak
         amount: 3
@@ -346,7 +340,6 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireBaseArmor
       - id: N14TribalMachete
       - id: N14WeaponSMG10mm
       - id: MagazineBox10mm
@@ -372,7 +365,6 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireBaseArmor
       - id: N14TrenchClub
       - id: N14LegionnaireShield
         amount: 2
@@ -397,7 +389,6 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireRecruitArmor
       - id: ClothingBeltQuiverSpear
       - id: N14WeaponSMG9mm
       - id: N14MagazineSMG9mm
@@ -425,7 +416,6 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireRecruitArmor
       - id: ClothingBeltQuiverSpear
       - id: N14PilumSpear
         amount: 4
@@ -449,7 +439,6 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireRecruitArmor
       - id: N14LongSword
       - id: N14LegionnaireBuckler
       - id: N14StimpakDirty
@@ -472,7 +461,6 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireRecruitArmor
       - id: N14TribalMachete
       - id: ClothingBeltMedical
       - id: N14StimpakDirty

@@ -60,7 +60,6 @@
   - type: FootstepModifier
     footstepSoundCollection:
       collection: Horsestep
-  - type: Timer
   - type: TimedSpawner
     prototypes:
       - N14Dung

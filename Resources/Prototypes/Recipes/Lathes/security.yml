@@ -1,6 +1,7 @@
 - type: latheRecipe
   id: Handcuffs
   result: Handcuffs
+  category: N14Weapons # Forge-Change
   completetime: 2
   materials:
     Steel: 300

@@ -4,9 +4,24 @@
               SeparationOverride="3"
               RectClipContent="True"
               HorizontalExpand="False"
-              HorizontalAlignment="Center">
-    <Button Name="MinusButton" Text="-" MinSize="24 24"/>
-    <Label Name="QtyLabel" Visible="False" MinWidth="0" HorizontalAlignment="Center"/>
-    <LineEdit Name="QtyEdit" MinWidth="36" HorizontalExpand="False"/>
-    <Button Name="PlusButton" Text="+" MinSize="24 24"/>
+              HorizontalAlignment="Center"
+              Margin="0">
+
+    <Button Name="MinusButton"
+            Text="−"
+            MinSize="28 28"
+            MaxSize="28 28" />
+
+    <PanelContainer Name="ValueFrame"
+                    MinSize="46 28"
+                    MaxSize="58 28">
+        <LineEdit Name="QtyEdit"
+                  HorizontalExpand="True"
+                  VerticalExpand="True" />
+    </PanelContainer>
+
+    <Button Name="PlusButton"
+            Text="+"
+            MinSize="28 28"
+            MaxSize="28 28" />
 </BoxContainer>
