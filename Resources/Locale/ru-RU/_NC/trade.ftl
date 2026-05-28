@@ -182,7 +182,7 @@ nc-store-contract-action-pinpointer = Выдать пеленгатор
 nc-store-contract-action-pinpointer-tooltip = Выдать новый пеленгатор для текущей цели активного контракта.
 nc-store-contract-pinpointer-issued = Пеленгатор выдан.
 nc-store-contract-pinpointer-issue-failed = Не удалось выдать пеленгатор.
-nc-store-contract-ghost-role-timeout = Никто не взял эту роль вовремя. Контракт сорван.
+nc-store-contract-ghost-role-timeout = Никто не взял эту роль вовремя. Заказ снят.
 nc-store-contract-ghost-role-target-lost = Цель выбыла ещё до начала операции. Контракт сорван.
 nc-store-contract-ghost-role-target-rotten = Цель сгнила. Контракт сорван.
 nc-store-contract-ghost-role-survival-succeeded = Цель пережила отведённое время. Контракт сорван.
@@ -234,7 +234,7 @@ nc-store-contract-ghost-role-roundend-result-active = цель не была с�
 nc-store-contract-ghost-role-roundend-result-delivered-alive = цель сдана живой; контракт выполнен
 nc-store-contract-ghost-role-roundend-result-delivered-dead = цель убита/сдана; контракт выполнен
 nc-store-contract-ghost-role-roundend-result-survived = цель пережила таймер ({ $time }); контракт сорван
-nc-store-contract-ghost-role-roundend-result-not-accepted = роль никто не занял; контракт сорван
+nc-store-contract-ghost-role-roundend-result-not-accepted = роль никто не занял; заказ снят
 nc-store-contract-ghost-role-roundend-result-target-lost = цель была утрачена; контракт сорван
 nc-store-contract-ghost-role-roundend-result-target-rotten = тело цели сгнило; контракт сорван
 

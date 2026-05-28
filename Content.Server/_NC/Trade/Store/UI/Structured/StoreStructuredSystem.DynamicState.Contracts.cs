@@ -166,16 +166,4 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         buf.ContractSkipCurrency = skipCurrency;
     }
 
-    private static int CompareContractsForUi(ContractClientData left, ContractClientData right)
-    {
-        var poolOrder = left.OfferPoolOrder.CompareTo(right.OfferPoolOrder);
-        if (poolOrder != 0)
-            return poolOrder;
-
-        var name = string.Compare(left.Name, right.Name, StringComparison.OrdinalIgnoreCase);
-        if (name != 0)
-            return name;
-
-        return string.CompareOrdinal(left.Id, right.Id);
-    }
 }

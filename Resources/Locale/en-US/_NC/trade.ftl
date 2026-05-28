@@ -55,6 +55,6 @@ nc-store-contract-ghost-role-roundend-result-active = target was not delivered b
 nc-store-contract-ghost-role-roundend-result-delivered-alive = target delivered alive; contract completed
 nc-store-contract-ghost-role-roundend-result-delivered-dead = target killed/delivered; contract completed
 nc-store-contract-ghost-role-roundend-result-survived = target survived the timer ({ $time }); contract failed
-nc-store-contract-ghost-role-roundend-result-not-accepted = target was not claimed; contract failed
+nc-store-contract-ghost-role-roundend-result-not-accepted = target was not claimed; offer expired
 nc-store-contract-ghost-role-roundend-result-target-lost = target was lost; contract failed
 nc-store-contract-ghost-role-roundend-result-target-rotten = target body rotted; contract failed

@@ -26,8 +26,8 @@
       maxVisible: 5
       fillWeight: 1
     - pool: BazarMediumMappedOrders
-      minVisible: 14
-      maxVisible: 14
+      minVisible: 16
+      maxVisible: 16
       fillWeight: 1
     - pool: BazarHeavyMappedOrders
       minVisible: 17
@@ -865,6 +865,12 @@
     weight: 2
   - type: GhostRole
     id: NcGhostRoleContractEscapedWorkerAlive
+    weight: 1
+  - type: GhostRole
+    id: NcGhostRoleContractElizabethEvilAlive
+    weight: 1
+  - type: GhostRole
+    id: NcGhostRoleContractBelkaAlive
     weight: 1
   - type: GhostRole
     id: NcGhostRoleContractFreshDead

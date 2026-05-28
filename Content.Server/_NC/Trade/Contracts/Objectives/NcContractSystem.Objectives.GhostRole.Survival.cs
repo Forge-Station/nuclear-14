@@ -84,7 +84,7 @@ public sealed partial class NcContractSystem : EntitySystem
                 continue;
 
             if (_timing.CurTime >= deadline)
-                FailExpiredGhostRoleObjective(key);
+                ExpireUnacceptedGhostRoleObjective(key);
         }
 
         _objectiveRuntime.KeysScratch.Clear();

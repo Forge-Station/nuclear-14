@@ -67,6 +67,19 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         (Stopwatch.GetTimestamp() - started) * 1000d /
         Stopwatch.Frequency;
 
+    private static int CompareContractsForUi(ContractClientData left, ContractClientData right)
+    {
+        var poolOrder = left.OfferPoolOrder.CompareTo(right.OfferPoolOrder);
+        if (poolOrder != 0)
+            return poolOrder;
+
+        var name = string.Compare(left.Name, right.Name, StringComparison.OrdinalIgnoreCase);
+        if (name != 0)
+            return name;
+
+        return string.CompareOrdinal(left.Id, right.Id);
+    }
+
     private EntityUid? GetDynamicCrate(EntityUid user) =>
         _logic.TryGetPulledClosedCrate(user, out var pulledCrate)
             ? pulledCrate
