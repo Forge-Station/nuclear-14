@@ -12,11 +12,13 @@ public sealed partial class NcContractCard
     private Control BuildTargetRow(
         string? protoId,
         int required,
-        PrototypeMatchMode matchMode = PrototypeMatchMode.Exact
+        PrototypeMatchMode matchMode = PrototypeMatchMode.Exact,
+        string? iconProtoId = null
     )
     {
         var isTagTarget = matchMode == PrototypeMatchMode.Tag;
         EntityPrototype? targetProto = null;
+        EntityPrototype? iconProto = null;
         NcMatcherPrototype? targetMatcher = null;
         NcItemGroupPrototype? targetGroup = null;
         NcHuntGroupPrototype? targetHuntGroup = null;
@@ -65,6 +67,9 @@ public sealed partial class NcContractCard
             }
         }
 
+        if (!string.IsNullOrWhiteSpace(iconProtoId))
+            _proto.TryIndex(iconProtoId, out iconProto);
+
         var targetRow = new BoxContainer
         {
             Orientation = BoxContainer.LayoutOrientation.Horizontal,
@@ -85,7 +90,9 @@ public sealed partial class NcContractCard
         if (!string.IsNullOrWhiteSpace(tooltip))
             targetRow.ToolTip = tooltip;
 
-        if (targetProto != null)
+        if (iconProto != null)
+            AddPrototypeIcon(targetRow, iconProto.ID);
+        else if (targetProto != null)
             AddPrototypeIcon(targetRow, targetProto.ID);
         else if (targetMatcher != null)
         {

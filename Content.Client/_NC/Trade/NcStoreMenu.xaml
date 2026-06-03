@@ -87,6 +87,24 @@
                                        Margin="10 6 10 6" />
                             </PanelContainer>
 
+                            <PanelContainer Name="ContractsCategoryPanel"
+                                            HorizontalExpand="True"
+                                            MinHeight="38"
+                                            Visible="False">
+                                <ScrollContainer Name="ContractsCategoryScroll"
+                                                 HorizontalExpand="True"
+                                                 HScrollEnabled="True"
+                                                 VScrollEnabled="False"
+                                                 ReserveScrollbarSpace="False">
+                                    <BoxContainer Name="ContractsCategoryRow"
+                                                  Orientation="Horizontal"
+                                                  HorizontalExpand="True"
+                                                  VerticalAlignment="Center"
+                                                  SeparationOverride="6"
+                                                  Margin="6 4 6 4" />
+                                </ScrollContainer>
+                            </PanelContainer>
+
                             <ScrollContainer Name="ContractsScroll"
                                              VerticalExpand="True"
                                              HorizontalExpand="True"

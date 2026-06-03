@@ -77,6 +77,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             AddHash(ref hash, IsRetrievalBearerProofContract(contract));
             AddHash(ref hash, contract.Config.HuntCompletionMode);
             AddHash(ref hash, contract.Config.GhostRoleCompletionMode);
+            AddHash(ref hash, contract.Config.GhostRoleIcon);
             AddHash(ref hash, contract.OfferPoolId);
             AddHash(ref hash, contract.OfferPoolName);
             AddHash(ref hash, contract.OfferPoolOrder);

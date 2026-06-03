@@ -1,7 +1,7 @@
 - type: storeContractsPreset
   id: PresetBazar
   contractOffers:
-    maxVisible: 7
+    maxVisible: 10
     groups:
     - pool: BazarEverydayOrders
       minVisible: 3
@@ -14,6 +14,10 @@
     - pool: BazarDangerOrders
       minVisible: 1
       maxVisible: 2
+      fillWeight: 1
+    - pool: BazarGhostRoleOrders
+      minVisible: 2
+      maxVisible: 3
       fillWeight: 1
 
 - type: storeContractsPreset
@@ -72,6 +76,9 @@
     id: BazarSupplyRawMeat
     weight: 2
   - type: Supply
+    id: BazarSupplyFreshFish
+    weight: 2
+  - type: Supply
     id: BazarSupplyHealingPowder
     weight: 2
   - type: Supply
@@ -95,6 +102,15 @@
   - type: Retrieval
     id: BazarLightRecoverRoadCrate
     weight: 3
+  - type: Retrieval
+    id: BazarLightDeliverGateCrateOutside
+    weight: 3
+  - type: Retrieval
+    id: BazarLightCourierMedsToClinic
+    weight: 2
+  - type: Retrieval
+    id: BazarLightCourierPartsToWorkshop
+    weight: 2
 
 - type: ncContractOfferPool
   id: BazarCaravanOrders
@@ -133,6 +149,9 @@
     id: BazarMediumHuntMoleratBurrow
     weight: 2
   - type: Hunt
+    id: BazarMediumHuntCrabNest
+    weight: 2
+  - type: Hunt
     id: BazarMediumHuntRaiderScoutCamp
     weight: 1
   - type: Hunt
@@ -143,6 +162,9 @@
     weight: 3
   - type: Retrieval
     id: BazarMediumCourierAmmoToCheckpoint
+    weight: 2
+  - type: Retrieval
+    id: BazarMediumCourierMedsToCheckpoint
     weight: 2
   - type: Retrieval
     id: BazarMediumCourierFoodToCamp
@@ -161,6 +183,12 @@
     id: BazarSupplySuperSledge
     weight: 1
   - type: Hunt
+    id: BazarHeavyHuntDeathclawNest
+    weight: 1
+  - type: Hunt
+    id: BazarHeavyHuntMetalDeathclaw
+    weight: 1
+  - type: Hunt
     id: BazarHeavyHuntRobotPatrol
     weight: 2
   - type: Hunt
@@ -169,6 +197,9 @@
   - type: Hunt
     id: BazarHeavyHuntAssaultronSignal
     weight: 1
+  - type: Hunt
+    id: BazarHeavyHuntRaiderWarband
+    weight: 2
   - type: Hunt
     id: BazarHeavyHuntYaoguaiCave
     weight: 1
@@ -179,10 +210,44 @@
     id: BazarHeavyRecoverPiano
     weight: 2
   - type: Retrieval
+    id: BazarHeavyCourierWeaponPartsToOutpost
+    weight: 2
+  - type: Retrieval
+    id: BazarHeavyCourierAmmoToOutpost
+    weight: 1
+  - type: Retrieval
     id: BazarHeavyCourierAmmoToRadioTower
     weight: 1
   - type: Retrieval
     id: BazarHeavyCourierPartsToBunker
+    weight: 1
+  - type: Retrieval
+    id: BazarHeavyCourierMedicalToLastCamp
+    weight: 1
+
+- type: ncContractOfferPool
+  id: BazarGhostRoleOrders
+  name: "Розыск"
+  order: 40
+  color: "#8A5BB0"
+  entries:
+  - type: GhostRole
+    id: NcGhostRoleContractEscapedWorkerAlive
+    weight: 1
+  - type: GhostRole
+    id: NcGhostRoleContractElizabethEvilAlive
+    weight: 1
+  - type: GhostRole
+    id: NcGhostRoleContractBelkaAlive
+    weight: 1
+  - type: GhostRole
+    id: NcGhostRoleContractFreshDead
+    weight: 1
+  - type: GhostRole
+    id: NcGhostRoleContractNCRDeserterDead
+    weight: 2
+  - type: GhostRole
+    id: NcGhostRoleContractZoyaDarbyAlive
     weight: 1
 
 # -----------------------------------------------------------------------------
@@ -242,6 +307,34 @@
   - N14CigarettePackMarlboro
   - N14CigarettePackWinston
   - N14CigarettePackRepublics
+
+- type: ncItemGroup
+  id: BazarGroupFreshFish
+  name: "Свежий улов"
+  description: "Любая рыба, выловленная из местных водоемов."
+  icon: FishCarp
+  prototypes:
+  - FishSardina
+  - FishCarp
+  - FishShrimp
+  - FishCrab
+  - FishBone
+  - FishStar
+  - FishCarrot
+  - FishYorsh
+  - FishSvarka
+  - FishPowerArmor
+  - FishAngler
+  - NF14FishAngler
+  - FishFugu
+  - FishClown
+  - FishLegion
+  - FishGun
+  - FishBomb
+  - FishGold
+  - FishExocoetidae
+  - FishOctopus
+  - FishTropic
 
 # -----------------------------------------------------------------------------
 # Группы тел и опасных целей
@@ -462,6 +555,22 @@
   - type: Currency
     currency: Caps
     count: { min: 100, max: 120 }
+  - type: Pool
+    pool: caravan_easy
+    count: { min: 1, max: 3 }
+
+- type: ncSupplyContract
+  id: BazarSupplyFreshFish
+  name: "Свежий улов для кухни"
+  description: "Повар готов заплатить за рыбу, пока улов еще пахнет водой, а не ржавым ведром. Принесите несколько свежих рыб для похлебки и обмена с караванщиками."
+  icon: FishCarp
+  targets:
+  - group: BazarGroupFreshFish
+    count: { min: 4, max: 7 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 90, max: 145 }
   - type: Pool
     pool: caravan_easy
     count: { min: 1, max: 3 }

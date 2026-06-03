@@ -351,7 +351,7 @@ public sealed partial class NcContractCard : PanelContainer
         if (_data.Targets is { Count: > 0, })
         {
             foreach (var target in _data.Targets)
-                GoalsHost.AddChild(BuildTargetRow(target.TargetItem, target.Required, target.MatchMode));
+                GoalsHost.AddChild(BuildTargetRow(target.TargetItem, target.Required, target.MatchMode, target.Icon));
         }
         else if (!string.IsNullOrWhiteSpace(_data.TargetItem))
             GoalsHost.AddChild(BuildTargetRow(_data.TargetItem, _data.Required));

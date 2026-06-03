@@ -64,6 +64,13 @@ public sealed partial class NcContractSystem : EntitySystem
             valid = false;
         }
 
+        if (!string.IsNullOrWhiteSpace(role.Icon) && !_prototypes.HasIndex<EntityPrototype>(role.Icon))
+        {
+            Sawmill.Warning(
+                $"[Contracts] GhostRole contract '{contractId}' role preset '{role.ID}' references missing icon entity prototype '{role.Icon}'.");
+            valid = false;
+        }
+
         if (role.Character.Age is <= 0)
         {
             Sawmill.Warning(
