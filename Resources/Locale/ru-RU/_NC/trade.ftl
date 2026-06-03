@@ -229,11 +229,10 @@ nc-store-contract-ghost-role-survival-objective-title-live = Выжить: { $ti
 nc-store-contract-ghost-role-survival-objective-title-done = Выживание выполнено
 nc-store-contract-ghost-role-survival-objective-description = Продержитесь { $time }. Если вы выживете, контракт против вас будет провален.
 nc-store-contract-ghost-role-roundend-header = [bold][color=#c9a66b]Контрактные цели[/color][/bold]
-nc-store-contract-ghost-role-roundend-line =
-    [color=#c9a66b]•[/color] [bold]{ $contract }[/bold]
-    [color=#9ab7d6]Цель:[/color] { $role }
-    [color=#9ab7d6]Игрок:[/color] { $player }
-    [color=#9ab7d6]Итог:[/color] { $result }
+nc-store-contract-ghost-role-roundend-line-contract = [color=#c9a66b]•[/color] [bold]{ $contract }[/bold]
+nc-store-contract-ghost-role-roundend-line-role = [color=#9ab7d6]Цель:[/color] { $role }
+nc-store-contract-ghost-role-roundend-line-player = [color=#9ab7d6]Игрок:[/color] { $player }
+nc-store-contract-ghost-role-roundend-line-result = [color=#9ab7d6]Итог:[/color] { $result }
 nc-store-contract-ghost-role-roundend-unknown-role = неизвестная цель
 nc-store-contract-ghost-role-roundend-no-player = не занята
 nc-store-contract-ghost-role-roundend-result-waiting = не занята

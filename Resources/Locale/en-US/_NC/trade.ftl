@@ -56,11 +56,10 @@ nc-store-contract-ghost-role-manifest-role = Fugitive
 nc-store-contract-ghost-role-character-briefing = You are the target of "{ $contract }". Follow the role rules.
 nc-store-contract-ghost-role-character-briefing-survival = You are the target of "{ $contract }". Survive for { $time } and keep hunters from turning you in.
 nc-store-contract-ghost-role-roundend-header = [bold][color=#c9a66b]Contract Targets[/color][/bold]
-nc-store-contract-ghost-role-roundend-line =
-    [color=#c9a66b]•[/color] [bold]{ $contract }[/bold]
-    [color=#9ab7d6]Target:[/color] { $role }
-    [color=#9ab7d6]Player:[/color] { $player }
-    [color=#9ab7d6]Result:[/color] { $result }
+nc-store-contract-ghost-role-roundend-line-contract = [color=#c9a66b]•[/color] [bold]{ $contract }[/bold]
+nc-store-contract-ghost-role-roundend-line-role = [color=#9ab7d6]Target:[/color] { $role }
+nc-store-contract-ghost-role-roundend-line-player = [color=#9ab7d6]Player:[/color] { $player }
+nc-store-contract-ghost-role-roundend-line-result = [color=#9ab7d6]Result:[/color] { $result }
 nc-store-contract-ghost-role-roundend-unknown-role = unknown target
 nc-store-contract-ghost-role-roundend-no-player = unclaimed
 nc-store-contract-ghost-role-roundend-result-waiting = unclaimed
