@@ -168,10 +168,10 @@ public sealed partial class NcStoreMenu
 
     private void ResetContractsListToEmpty(Control contractList)
     {
-        ResetContractsListToMessage(contractList, Loc.GetString("nc-store-contracts-empty"));
+        ResetContractsListToMessage(contractList, "nc-store-contracts-empty");
     }
 
-    private void ResetContractsListToMessage(Control contractList, string message)
+    private void ResetContractsListToMessage(Control contractList, string messageLocId)
     {
         CloseActiveContractConfirmWindow();
         contractList.RemoveAllChildren();
@@ -181,7 +181,7 @@ public sealed partial class NcStoreMenu
         contractList.AddChild(
             new Label
             {
-                Text = message,
+                Text = Loc.GetString(messageLocId),
                 HorizontalAlignment = HAlignment.Center,
                 Margin = new(0, 8, 0, 0)
             });

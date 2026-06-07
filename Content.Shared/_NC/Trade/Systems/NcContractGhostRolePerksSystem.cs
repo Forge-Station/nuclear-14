@@ -92,7 +92,7 @@ public sealed class NcContractGhostRolePerksSystem : EntitySystem
         if (weapon is { } weaponUid)
             return EntityPrototypeMatches(weaponUid, allowedPrototypes);
 
-        return HasMatchingCarriedItem(shooter, allowedPrototypes);
+        return HasMatchingActiveHandItem(shooter, allowedPrototypes);
     }
 
     private bool WeaponMatches(EntityUid? weapon, IReadOnlyCollection<string> allowedPrototypes)
@@ -118,6 +118,11 @@ public sealed class NcContractGhostRolePerksSystem : EntitySystem
 
         return false;
     }
+
+    private bool HasMatchingActiveHandItem(EntityUid uid, IReadOnlyCollection<string> prototypes) =>
+        _hands.TryGetActiveItem(uid, out var item) &&
+        item is { } itemUid &&
+        EntityPrototypeMatches(itemUid, prototypes);
 
     private bool EntityPrototypeMatches(EntityUid uid, IReadOnlyCollection<string> prototypes) =>
         TryComp(uid, out MetaDataComponent? meta) &&

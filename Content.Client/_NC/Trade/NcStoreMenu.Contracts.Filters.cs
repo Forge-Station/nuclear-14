@@ -60,7 +60,7 @@ public sealed partial class NcStoreMenu
 
         if (_visibleContractsScratch.Count == 0)
         {
-            ResetContractsListToMessage(contractList, Loc.GetString("nc-store-contracts-category-empty"));
+            ResetContractsListToMessage(contractList, "nc-store-contracts-category-empty");
             return;
         }
 
