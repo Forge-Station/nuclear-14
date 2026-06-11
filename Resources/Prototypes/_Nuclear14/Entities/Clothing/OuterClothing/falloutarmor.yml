@@ -838,9 +838,9 @@
   description: A bunch of light steel plates connected to a hollow regular vest, designed to protect during melee combat.
   components:
   - type: Sprite
-    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRvest.rsi # Forge-Change
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRplatearmor.rsi # Forge-Change
   - type: Clothing
-    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRvest.rsi # Forge-Change
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRplatearmor.rsi # Forge-Change
   - type: Armor
     modifiers:
       coefficients:
