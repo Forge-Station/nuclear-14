@@ -91,6 +91,7 @@ public sealed partial class ServerApi : IPostInjectInit
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/round/restartnow", ActionRoundRestartNow);
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/kick", ActionKick);
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/ban", ActionBan);
+        RegisterActorHandler(HttpMethod.Post, "/admin/actions/role_ban", ActionRoleBan); // Forge-Change
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/pardon", ActionPardon); // Forge-Change
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/add_time", ActionAddTime); // Forge-Change
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/shutdown", ShutdownAction);
@@ -407,6 +408,63 @@ public sealed partial class ServerApi : IPostInjectInit
             await RespondOk(context);
 
             _sawmill.Info($"Banned player {data.Username} ({data.UserId}) for {reason} by {FormatLogActor(actor)} to {body.Minutes}");
+        });
+    }
+
+    private async Task ActionRoleBan(IStatusHandlerContext context, Actor actor)
+    {
+        var body = await ReadJson<RoleBanActionBody>(context);
+        if (body == null)
+            return;
+
+        await RunOnMainThread(async () =>
+        {
+            var data = await _locator.LookupIdByNameOrIdAsync($"{body.TargetUsername}");
+            if (data == null)
+            {
+                await context.RespondJsonAsync(
+                    new { Error = "Player not found", },
+                    HttpStatusCode.NotFound);
+                return;
+            }
+
+            var admin = await _locator.LookupIdByNameOrIdAsync($"{actor.Guid}");
+            if (admin == null)
+            {
+                await context.RespondJsonAsync(
+                    new { Error = "Admin not found", },
+                    HttpStatusCode.NotFound);
+                return;
+            }
+
+            var adminData = await _db.GetAdminDataForAsync(admin.UserId);
+            if (adminData == null)
+            {
+                await context.RespondJsonAsync(
+                    new { Error = "Is not admin", },
+                    HttpStatusCode.NotFound);
+                return;
+            }
+
+            if (!_prototypeManager.HasIndex<JobPrototype>(body.Role))
+            {
+                await context.RespondJsonAsync(
+                    new { Error = "Role not found", },
+                    HttpStatusCode.NotFound);
+                return;
+            }
+
+            var targetHWid = data.LastHWId;
+            var targetId = data.UserId;
+            var targetUsername = data.Username;
+            var reason = body.Reason ?? "No reason supplied";
+            reason += " (role banned by admin)";
+
+            _bans.CreateRoleBan(targetId, targetUsername, admin.UserId, null, targetHWid, body.Role, (uint)body.Minutes, (NoteSeverity)body.Severity, body.Reason ?? "No reason", DateTimeOffset.UtcNow);
+
+            await RespondOk(context);
+
+            _sawmill.Info($"Role banned player {data.Username} ({data.UserId}) from {body.Role} for {reason} by {FormatLogActor(actor)} to {body.Minutes}");
         });
     }
 
@@ -986,8 +1044,17 @@ public sealed partial class ServerApi : IPostInjectInit
         public string? TargetUsername { get; init; }
         public string? Reason { get; init; }
     }
-    
+
     // Forge-Change-Start
+    private sealed class RoleBanActionBody
+    {
+        public int Minutes { get; init; }
+        public int Severity { get; init; }
+        public string? TargetUsername { get; init; }
+        public required string Role { get; init; }
+        public string? Reason { get; init; }
+    }
+
     private sealed class PardonActionBody
     {
         public int BanId { get; init; }
