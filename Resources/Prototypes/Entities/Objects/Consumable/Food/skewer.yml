@@ -52,7 +52,7 @@
   - type: Food
     trash: 
     - FoodKebabSkewer
-  # - type: SolutionContainerManager # Forge-Change
+  # - type: SolutionContainerManager # Forge-delete
   #   solutions:
   #     food:
   #       reagents:
