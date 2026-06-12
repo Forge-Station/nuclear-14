@@ -1,0 +1,31 @@
+# Forge-Change: хламобот — кустарный борг, который собирается из деталей хламотрона
+# на кустарном эндоскелете (граф N14JunktronCyborg). Наследует всю логику generic-борга
+# (спрайт, модули, мин-стейты, речь), отличается именем и принадлежностью к нашему графу.
+- type: entity
+  id: N14Junkbot
+  parent: BorgChassisGeneric
+  name: junkbot
+  components:
+  - type: Construction
+    graph: N14JunktronCyborg
+    node: cyborg
+  - type: BorgTransponder
+    name: junkbot
+  # Forge-Change: собственный свод законов хламобота (закон 1 — подчинение создателю).
+  - type: SiliconLawProvider
+    laws: N14JunkbotLaws
+  # Forge-Change: интерфейс хламобота открывается вскрытием обслуживающей панели отвёрткой,
+  # но не мгновенно — за 10 секунд (do-after прерывается движением/уроном). Панель — это и есть
+  # гейт меню борга (ActivatableUIRequiresPanel), поэтому «на ходу» дёрнуть мозг нельзя: нужно
+  # 10с простоять рядом с боргом. ID-замок отключаем (locked: false) — в нашем билде доступа
+  # почти ни у кого нет, и он лишь мешал бы вскрыть панель (LockedWiresPanel).
+  - type: WiresPanel
+    openDelay: 10
+  - type: Lock
+    locked: false
+  # База борга наследует AccessReader (access: Command/Research) — именно он давал «Доступ запрещён»
+  # при попытке тронуть замок без нужной ID-карты. В нашем билде такого доступа почти нет, а гейтом
+  # служит вскрытие панели отвёрткой (10с), поэтому ID-проверку отключаем целиком.
+  - type: AccessReader
+    enabled: false
+    access: []  # на всякий случай ещё и обнуляем унаследованные требования Command/Research

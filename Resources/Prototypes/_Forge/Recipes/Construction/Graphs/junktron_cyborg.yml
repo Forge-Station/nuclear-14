@@ -1,0 +1,52 @@
+# Forge-Change: граф сборки кустарного борга.
+# Это копия "generic"-ветки графа Cyborg, но вместо двух вспышек (component: Flash)
+# требуются два оптических сенсора (tag: N14OpticalSensor). Результат — обычное шасси
+# борга (BorgChassisGeneric): вся дальнейшая логика как у оригинальных боргов.
+- type: constructionGraph
+  id: N14JunktronCyborg
+  start: start
+  graph:
+  - node: start
+    entity: N14JunktronEndoskeleton
+    edges:
+
+    # вынуть вставленные части ломом
+    - to: start
+      conditions:
+      - !type:ContainerNotEmpty
+        container: part-container
+      steps:
+      - tool: Prying
+        doAfter: 0.5
+        completed:
+        - !type:EmptyAllContainers
+
+    - to: cyborg
+      steps:
+      - assemblyId: generic
+        guideString: borg-construction-guide-string
+
+      - material: Cable
+        amount: 1
+        doAfter: 1
+        store: part-container
+
+      - tag: N14OpticalSensor
+        name: optical sensor
+        store: part-container
+        icon:
+          sprite: Objects/Weapons/Melee/flash.rsi
+          state: flash
+
+      - tag: N14OpticalSensor
+        name: second optical sensor
+        store: part-container
+        icon:
+          sprite: Objects/Weapons/Melee/flash.rsi
+          state: flash
+
+      - tool: Screwing
+        doAfter: 0.5
+
+  - node: cyborg
+    entity: N14Junkbot

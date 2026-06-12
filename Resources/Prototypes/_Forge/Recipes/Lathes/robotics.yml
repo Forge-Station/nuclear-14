@@ -1,0 +1,96 @@
+# Forge-Change: рецепты запчастей хламотрона из скрапа для верстака изготовления роботов.
+# Цифры пока произвольные — задача показать, что детали крафтятся из лома.
+# Каждый вид лома (электроники/стали/свинца/меди/латуни/золота) задействован хотя бы
+# в одном рецепте, поэтому все они попадают в material-whitelist верстака и становятся
+# доступны для загрузки.
+
+- type: latheRecipe
+  id: N14JunktronEndoskeleton
+  result: N14JunktronEndoskeleton
+  category: Robotics
+  completetime: 3
+  materials:
+    ScrapSteel: 800
+    ScrapElectronic: 200
+
+- type: latheRecipe
+  id: N14OpticalSensor
+  result: N14OpticalSensor
+  category: Robotics
+  completetime: 2
+  materials:
+    ScrapElectronic: 100
+    ScrapGold: 25
+
+- type: latheRecipe
+  id: N14JunktronMMI
+  result: N14JunktronMMI
+  category: Robotics
+  completetime: 3
+  materials:
+    ScrapElectronic: 200
+    ScrapGold: 50
+    ScrapSteel: 100
+
+- type: latheRecipe
+  id: N14JunktronPositronicBrain
+  result: N14JunktronPositronicBrain
+  category: Robotics
+  completetime: 3
+  materials:
+    ScrapElectronic: 300
+    ScrapGold: 100
+
+- type: latheRecipe
+  id: N14JunktronTorso
+  result: N14JunktronTorso
+  category: Robotics
+  completetime: 2
+  materials:
+    ScrapSteel: 150
+    ScrapElectronic: 50
+
+- type: latheRecipe
+  id: N14JunktronHead
+  result: N14JunktronHead
+  category: Robotics
+  completetime: 2
+  materials:
+    ScrapElectronic: 100
+    ScrapGold: 25
+
+- type: latheRecipe
+  id: N14JunktronLeftArm
+  result: N14JunktronLeftArm
+  category: Robotics
+  completetime: 2
+  materials:
+    ScrapSteel: 100
+    ScrapCopper: 50
+
+- type: latheRecipe
+  id: N14JunktronRightArm
+  result: N14JunktronRightArm
+  category: Robotics
+  completetime: 2
+  materials:
+    ScrapSteel: 100
+    ScrapBrass: 50
+
+- type: latheRecipe
+  id: N14JunktronLeftLeg
+  result: N14JunktronLeftLeg
+  category: Robotics
+  completetime: 2
+  materials:
+    ScrapSteel: 100
+    ScrapLead: 50
+
+- type: latheRecipe
+  id: N14JunktronRightLeg
+  result: N14JunktronRightLeg
+  category: Robotics
+  completetime: 2
+  materials:
+    ScrapSteel: 100
+    ScrapLead: 50
