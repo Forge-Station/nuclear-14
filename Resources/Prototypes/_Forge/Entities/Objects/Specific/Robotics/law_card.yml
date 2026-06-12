@@ -1,0 +1,21 @@
+# Forge-Change: перфокарта законов. Использовать в руке — открывается редактор законов
+# (переиспользуем окно редактора законов силиконов: редактируемые поля, добавить/удалить/двигать).
+# Использовать на роботе с вскрытой панелью — законы карты заливаются в робота (LawCardSystem).
+# Дефолтные законы (3 про создателя) — стартовый шаблон, который игрок может переписать.
+- type: entity
+  parent: BaseItem
+  id: N14LawCard
+  name: law punch card
+  description: A programmable law card. Use it in hand to edit its laws, and on a robot with its panel open to upload them.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/clutter.rsi
+    state: paper
+  - type: LawCard
+    laws:
+    - lawString: law-n14-junkbot-1
+      order: 1
+    - lawString: law-n14-junkbot-2
+      order: 2
+    - lawString: law-n14-junkbot-3
+      order: 3

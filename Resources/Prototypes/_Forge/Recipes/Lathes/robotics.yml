@@ -42,6 +42,14 @@
     ScrapGold: 100
 
 - type: latheRecipe
+  id: N14LawCard
+  result: N14LawCard
+  category: Robotics
+  completetime: 2
+  materials:
+    ScrapElectronic: 50
+
+- type: latheRecipe
   id: N14JunktronTorso
   result: N14JunktronTorso
   category: Robotics

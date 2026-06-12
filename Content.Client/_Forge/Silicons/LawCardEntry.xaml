@@ -1,0 +1,28 @@
+<PanelContainer
+    xmlns="https://spacestation14.io"
+    xmlns:graphics="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
+    xmlns:customControls="clr-namespace:Content.Client.Administration.UI.CustomControls"
+    HorizontalExpand="True"
+    Margin="0 0 0 8"
+>
+    <PanelContainer.PanelOverride>
+        <graphics:StyleBoxFlat BackgroundColor="#202733" BorderColor="#4A5160" BorderThickness="1" />
+    </PanelContainer.PanelOverride>
+    <BoxContainer Orientation="Vertical" Margin="8 6 8 8">
+        <!-- "Закон N" + черта под ним -->
+        <Label Name="PositionText" StyleClasses="LabelKeyText" />
+        <customControls:HSeparator Margin="0 5 0 6" />
+        <!-- видимое поле редактирования закона -->
+        <PanelContainer>
+            <PanelContainer.PanelOverride>
+                <graphics:StyleBoxFlat BackgroundColor="#161B24" BorderColor="#313A48" BorderThickness="1" />
+            </PanelContainer.PanelOverride>
+            <TextEdit Name="LawContent" HorizontalExpand="True" Editable="True" MinHeight="60" Margin="4" />
+        </PanelContainer>
+        <!-- кнопка удаления — справа, приглушённо-красная с подсветкой при наведении (стиль Danger) -->
+        <BoxContainer Orientation="Horizontal" Margin="0 6 0 0">
+            <Control HorizontalExpand="True" />
+            <Button Name="Delete" Text="{Loc silicon-law-ui-delete}" StyleClasses="Danger" />
+        </BoxContainer>
+    </BoxContainer>
+</PanelContainer>

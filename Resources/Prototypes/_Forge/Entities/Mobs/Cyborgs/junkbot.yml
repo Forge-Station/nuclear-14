@@ -11,9 +11,12 @@
     node: cyborg
   - type: BorgTransponder
     name: junkbot
-  # Forge-Change: собственный свод законов хламобота (закон 1 — подчинение создателю).
+  # Forge-Change: законы. По умолчанию на спавне берётся СЛУЧАЙНЫЙ свод из пула IonStormLawsets
+  # (RandomSiliconLaws). N14JunkbotLaws здесь — лишь запасной свод для провайдера до рандомизации.
+  # Переписать законы можно перфокартой (N14LawCard).
   - type: SiliconLawProvider
     laws: N14JunkbotLaws
+  - type: RandomSiliconLaws
   # Forge-Change: интерфейс хламобота открывается вскрытием обслуживающей панели отвёрткой,
   # но не мгновенно — за 10 секунд (do-after прерывается движением/уроном). Панель — это и есть
   # гейт меню борга (ActivatableUIRequiresPanel), поэтому «на ходу» дёрнуть мозг нельзя: нужно

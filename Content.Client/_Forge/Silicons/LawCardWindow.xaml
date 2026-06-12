@@ -1,0 +1,17 @@
+<controls:FancyWindow
+    xmlns="https://spacestation14.io"
+    xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
+    Title="{Loc law-card-ui-title}"
+    MinSize="380 360"
+>
+    <BoxContainer Orientation="Vertical" Margin="4">
+        <ScrollContainer VerticalExpand="True" HorizontalExpand="True" HScrollEnabled="False">
+            <BoxContainer Orientation="Vertical" Name="LawContainer" Access="Public" HorizontalExpand="True" />
+        </ScrollContainer>
+        <BoxContainer Orientation="Horizontal" Margin="0 6 0 0" HorizontalExpand="True">
+            <Button Name="NewLawButton" Text="{Loc silicon-law-ui-new-law}" />
+            <Control HorizontalExpand="True" />
+            <Button Name="Save" Text="{Loc silicon-law-ui-save}" Access="Public" />
+        </BoxContainer>
+    </BoxContainer>
+</controls:FancyWindow>
