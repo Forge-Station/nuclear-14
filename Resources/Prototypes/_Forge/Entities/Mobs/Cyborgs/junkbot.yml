@@ -1,6 +1,4 @@
-# Forge-Change: хламобот — кустарный борг, который собирается из деталей хламотрона
-# на кустарном эндоскелете (граф N14JunktronCyborg). Наследует всю логику generic-борга
-# (спрайт, модули, мин-стейты, речь), отличается именем и принадлежностью к нашему графу.
+# хламобот — кустарный борг, собирается на кустарном эндоскелете (граф N14JunktronCyborg).
 - type: entity
   id: N14Junkbot
   parent: BorgChassisGeneric
@@ -11,24 +9,46 @@
     node: cyborg
   - type: BorgTransponder
     name: junkbot
-  # Forge-Change: законы. По умолчанию на спавне берётся СЛУЧАЙНЫЙ свод из пула IonStormLawsets
-  # (RandomSiliconLaws). N14JunkbotLaws здесь — лишь запасной свод для провайдера до рандомизации.
-  # Переписать законы можно перфокартой (N14LawCard).
+  # фракция Wastelander (а не унаследованная NanoTrasen): иначе пустошные мобы N14
+  # (Raider/Feral/животные/HostileRobot) не считают борга врагом — у них в hostile только
+  # пустошные фракции. Wastelander есть в их списках, как у игроков-выживших.
+  - type: NpcFactionMember
+    factions:
+    - Wastelander
+  # случайные глючные законы на спавне; переписываются перфокартой. N14JunkbotLaws — запасной свод.
   - type: SiliconLawProvider
     laws: N14JunkbotLaws
   - type: RandomSiliconLaws
-  # Forge-Change: интерфейс хламобота открывается вскрытием обслуживающей панели отвёрткой,
-  # но не мгновенно — за 10 секунд (do-after прерывается движением/уроном). Панель — это и есть
-  # гейт меню борга (ActivatableUIRequiresPanel), поэтому «на ходу» дёрнуть мозг нельзя: нужно
-  # 10с простоять рядом с боргом. ID-замок отключаем (locked: false) — в нашем билде доступа
-  # почти ни у кого нет, и он лишь мешал бы вскрыть панель (LockedWiresPanel).
+  # запрещаем ручной тоггл борга активацией (E по себе) — иначе со свободной рукой
+  # манипулятора борг выключает/включает свои модули. База ставит только onUse: false, но не onActivate.
+  - type: ItemToggle
+    onUse: false
+    onActivate: false
+  # без заряженной ячейки борг не активируется (ванильный ToggleCellDraw: гейтит ItemToggle по заряду).
+  - type: ToggleCellDraw
+  # только двоичный радиоканал (база борга даёт Binary/Common/Science).
+  - type: IntrinsicRadioTransmitter
+    channels:
+    - Binary
+  - type: ActiveRadio
+    channels:
+    - Binary
+  # гейт меню борга — вскрытие панели отвёрткой (10с), а не ID-замок: Lock и AccessReader отключены.
   - type: WiresPanel
     openDelay: 10
   - type: Lock
     locked: false
-  # База борга наследует AccessReader (access: Command/Research) — именно он давал «Доступ запрещён»
-  # при попытке тронуть замок без нужной ID-карты. В нашем билде такого доступа почти нет, а гейтом
-  # служит вскрытие панели отвёрткой (10с), поэтому ID-проверку отключаем целиком.
   - type: AccessReader
     enabled: false
-    access: []  # на всякий случай ещё и обнуляем унаследованные требования Command/Research
+    access: []
+  # убираем худ-просмотрщики иконок (job/mindshield) — иначе клиент борга падает
+  # на чужих битых статус-иконках (StatusIconOverlay). RemoveComponents снимает их на старте.
+  - type: RemoveComponents
+    components:
+    - ShowJobIcons
+    - ShowMindShieldIcons
+  # кукла урона (выбор части тела) — у борг-шасси её нет по умолчанию.
+  - type: Targeting
+  # форджевый «прицел» — CameraFollow даёт экшен ActionToggleCamera
+  # (грантится FollowDistanceSystem на MapInit); с оружием, имеющим FollowDistance, расширяет обзор.
+  - type: CameraFollow

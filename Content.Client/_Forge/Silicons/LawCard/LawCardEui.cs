@@ -1,13 +1,9 @@
 using Content.Client.Eui;
-using Content.Shared._Forge.Silicons;
+using Content.Shared._Forge.Silicons.LawCard;
 using Content.Shared.Eui;
 
-namespace Content.Client._Forge.Silicons;
+namespace Content.Client._Forge.Silicons.LawCard;
 
-/// <summary>
-/// Forge-Change: client side of the law card editor. Opens a dedicated compact editor window
-/// (<see cref="LawCardWindow"/>) and saves the edited laws back to the card.
-/// </summary>
 public sealed class LawCardEui : BaseEui
 {
     private readonly LawCardWindow _window;

@@ -1,0 +1,74 @@
+# автономная док-станция для роботов — заряжает боргов как BorgCharger, но:
+#  - работает без электросети (ApcPowerReceiver needsPower: false => всегда Powered);
+#  - неразбираемая, только маппинг: по образцу N14WorkbenchBase парентит BaseStructure
+#    и несёт компоненты напрямую, БЕЗ Construction/Machine/WiresPanel (платы/конструкции нет).
+- type: entity
+  parent: BaseStructure
+  id: N14AutonomousRobotDock
+  name: док-станция
+  description: Заряжает роботов и киборгов без подключения к электросети. Внутри неожиданно просторно.
+  suffix: Autonomous
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    sprite: Structures/Power/borg_charger.rsi
+    layers:
+      - state: borgcharger-u1
+        map: ["base"]
+      - state: borgcharger0
+        map: ["enum.PowerDeviceVisualLayers.Powered"]
+        shader: "unshaded"
+      - state: borgcharger1
+        map: ["charged"]
+        shader: "unshaded"
+        visible: false
+  - type: Appearance
+  - type: GenericVisualizer
+    visuals:
+      enum.StorageVisuals.Open:
+        base:
+          True: { state: borgcharger-u0 }
+          False: { state: borgcharger-u1 }
+        enum.PowerDeviceVisualLayers.Powered:
+          True: { state: borgcharger0 }
+          False: { state: borgcharger2 }
+        charged:
+          True: { visible: false }
+          False: { visible: true }
+      enum.PowerDeviceVisuals.Powered:
+        enum.PowerDeviceVisualLayers.Powered:
+          True: { visible: true }
+          False: { visible: false }
+        charged:
+          True: { visible: true }
+          False: { visible: false }
+      enum.CellVisual.Light:
+        charged:
+          Off: { visible: false }
+          Empty: { visible: false }
+          Charging:
+            visible: true
+            state: borgcharger3
+          Charged:
+            visible: true
+            state: borgcharger1
+  - type: Charger
+    chargeRate: 30
+    slotId: entity_storage
+    whitelist:
+      components:
+      - BorgChassis
+      - Silicon
+      - Inventory
+  - type: EntityStorage
+    capacity: 1
+    whitelist:
+      components:
+      - BorgChassis
+  - type: ContainerContainer
+    containers:
+      entity_storage: !type:Container
+  - type: ApcPowerReceiver
+    needsPower: false
+  - type: InteractionOutline

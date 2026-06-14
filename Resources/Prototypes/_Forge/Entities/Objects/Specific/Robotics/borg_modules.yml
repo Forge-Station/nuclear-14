@@ -1,0 +1,126 @@
+# модули хламобота. Все в категории "общие" (BorgModuleGeneric от BaseBorgModule),
+# рамка — n14_generic из _Nuclear14-RSI, иконки — ванильные. Наполнение скопировано с референсов.
+- type: entity
+  parent: [ BaseBorgModule, BaseProviderBorgModule ]
+  id: N14BorgModuleJunkTools
+  name: junk tool module
+  components:
+  - type: Sprite
+    layers:
+    - sprite: _Nuclear14/Objects/Specific/Robotics/borgmodule.rsi
+      state: n14_generic
+    - sprite: Objects/Specific/Robotics/borgmodule.rsi
+      state: icon-tools
+  - type: ItemBorgModule
+    items:
+    - Crowbar
+    - Wrench
+    - Screwdriver
+    - Wirecutter
+    - Multitool
+    - WelderIndustrial
+
+- type: entity
+  parent: [ BaseBorgModule, BaseProviderBorgModule ]
+  id: N14BorgModuleJunkGardening
+  name: junk gardening module
+  components:
+  - type: Sprite
+    layers:
+    - sprite: _Nuclear14/Objects/Specific/Robotics/borgmodule.rsi
+      state: n14_generic
+    - sprite: Objects/Specific/Robotics/borgmodule.rsi
+      state: icon-gardening
+  - type: ItemBorgModule
+    items:
+    - HydroponicsToolMiniHoe
+    - HydroponicsToolSpade
+    - HydroponicsToolClippers
+    - Bucket
+
+- type: entity
+  parent: [ BaseBorgModule, BaseProviderBorgModule ]
+  id: N14BorgModuleJunkBureaucracy
+  name: junk bureaucracy module
+  components:
+  - type: Sprite
+    layers:
+    - sprite: _Nuclear14/Objects/Specific/Robotics/borgmodule.rsi
+      state: n14_generic
+    - sprite: Objects/Specific/Robotics/borgmodule.rsi
+      state: icon-pen
+  - type: ItemBorgModule
+    items:
+    - Pen
+    - BooksBag
+    - HandLabeler
+    - Lighter
+    - DrinkShaker
+    - BorgDropper
+
+- type: entity
+  parent: [ BaseBorgModule, BaseProviderBorgModule ]
+  id: N14BorgModuleJunkCombat
+  name: junk combat module
+  components:
+  - type: Sprite
+    layers:
+    - sprite: _Nuclear14/Objects/Specific/Robotics/borgmodule.rsi
+      state: n14_generic
+    - sprite: Objects/Specific/Robotics/borgmodule.rsi
+      state: icon-syndicate
+  - type: ItemBorgModule
+    items:
+    - N14WeaponLaserPistolRecharger
+    - N14Machete
+
+# Хламоманипулятор: даёт боргу одну свободную руку (BorgHandModule, через выбор модуля).
+- type: entity
+  parent: [ BaseBorgModule, BaseProviderBorgModule ]
+  id: N14BorgModuleJunkManipulator
+  name: junk manipulator module
+  components:
+  - type: Sprite
+    layers:
+    - sprite: _Nuclear14/Objects/Specific/Robotics/borgmodule.rsi
+      state: n14_generic
+    - sprite: Objects/Specific/Robotics/borgmodule.rsi
+      state: icon-grappling-gun
+  - type: BorgHandModule
+    hands: 1
+
+- type: entity
+  parent: [ BaseBorgModule, BaseProviderBorgModule ]
+  id: N14BorgModuleJunkMining
+  name: junk mining module
+  components:
+  - type: Sprite
+    layers:
+    - sprite: _Nuclear14/Objects/Specific/Robotics/borgmodule.rsi
+      state: n14_generic
+    - sprite: Objects/Specific/Robotics/borgmodule.rsi
+      state: icon-mining
+  - type: ItemBorgModule
+    items:
+    - MiningDrill
+    - Shovel
+    - OreBag
+    - Crowbar
+    - RadioHandheld
+
+- type: entity
+  parent: [ BaseBorgModule, BaseProviderBorgModule ]
+  id: N14BorgModuleJunkMusique
+  name: junk musique module
+  components:
+  - type: Sprite
+    layers:
+    - sprite: _Nuclear14/Objects/Specific/Robotics/borgmodule.rsi
+      state: n14_generic
+    - sprite: Objects/Specific/Robotics/borgmodule.rsi
+      state: icon-musique
+  - type: ItemBorgModule
+    items:
+    - SynthesizerInstrument
+    - ElectricGuitarInstrument
+    - SaxophoneInstrument

@@ -1,10 +1,5 @@
-# Forge-Change: запчасти "хламотрона" — кустарные аналоги запчастей киборга,
-# которые крафтятся из скрапа на верстаке изготовления роботов (N14RobotFabricator).
-#
-# Намеренно используют те же теги (BorgGeneric*), что и обычные запчасти борга:
-# благодаря этому они надеваются на CyborgEndoskeleton через штатную сборку "generic"
-# и собираются в обычное шасси борга. Вся дальнейшая логика — как у оригинальных боргов.
-# Спрайты пока переиспользуют обычные борг-детали (cyborg_parts.rsi) — своих нет.
+# запчасти "хламотрона" из скрапа. Несут штатные теги BorgGeneric*, поэтому
+# надеваются на CyborgEndoskeleton как обычные детали борга. Спрайты — от обычных борг-деталей.
 
 - type: entity
   id: N14JunktronLeftArm
@@ -95,9 +90,7 @@
     - Trash
     - BorgGenericTorso
 
-# Оптический сенсор — заменяет вспышку при сборке кустарного борга.
-# НАМЕРЕННО не имеет компонента Flash, поэтому как вспышка-оружие не работает.
-# В графе N14JunktronCyborg требуется по тегу N14OpticalSensor.
+# Оптический сенсор: замена вспышке в графе N14JunktronCyborg (по тегу). БЕЗ компонента Flash — засветить нельзя.
 - type: entity
   id: N14OpticalSensor
   parent: BaseItem
@@ -113,9 +106,7 @@
     tags:
     - N14OpticalSensor
 
-# Кустарный эндоскелет — аналог CyborgEndoskeleton. PartAssembly, ItemMapper и контейнеры
-# наследуются от него, поэтому на него надеваются те же (generic-тегованные) детали хламотрона.
-# Отличие — собственный граф сборки N14JunktronCyborg, где вместо вспышек нужны оптические сенсоры.
+# Кустарный эндоскелет: аналог CyborgEndoskeleton, но со своим графом N14JunktronCyborg.
 - type: entity
   id: N14JunktronEndoskeleton
   parent: CyborgEndoskeleton
@@ -130,16 +121,14 @@
     - part-container
     - cell_slot
 
-# Кустарный аналог ММИ. Наследует всю логику MMI (компонент BorgBrain, слот органического
-# мозга, радио), поэтому принимается боргом как мозг. Отличается только именем и крафтом из лома.
+# Кустарный ММИ: наследует MMI (BorgBrain + слот мозга), принимается боргом.
 - type: entity
   id: N14JunktronMMI
   parent: MMI
   name: junk-machine interface
   description: A crude man-machine interface cobbled together from scrap. Lets a biological brain pilot a junkbot.
 
-# Кустарный аналог позитронного мозга. Наследует логику PositronicBrain (BorgBrain + гост-роль),
-# поэтому в нём может поселиться дух и он устанавливается в хламобота как мозг.
+# Кустарный позитронный мозг: наследует PositronicBrain (BorgBrain + гост-роль).
 - type: entity
   id: N14JunktronPositronicBrain
   parent: PositronicBrain

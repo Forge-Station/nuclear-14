@@ -9,9 +9,9 @@
             <BoxContainer Orientation="Vertical" Name="LawContainer" Access="Public" HorizontalExpand="True" />
         </ScrollContainer>
         <BoxContainer Orientation="Horizontal" Margin="0 6 0 0" HorizontalExpand="True">
-            <Button Name="NewLawButton" Text="{Loc silicon-law-ui-new-law}" />
+            <Button Name="NewLawButton" Text="{Loc law-card-ui-new-law}" />
             <Control HorizontalExpand="True" />
-            <Button Name="Save" Text="{Loc silicon-law-ui-save}" Access="Public" />
+            <Button Name="Save" Text="{Loc law-card-ui-save}" Access="Public" />
         </BoxContainer>
     </BoxContainer>
 </controls:FancyWindow>

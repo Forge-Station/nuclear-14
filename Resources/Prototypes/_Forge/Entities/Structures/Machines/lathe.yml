@@ -1,21 +1,13 @@
-# Forge-Change: "верстак изготовления роботов" — аналог фабрикатора экзокостюмов,
-# адаптированный под реалии проекта: крафтит запчасти хламотрона из скрапа.
-# Наследуется от ExosuitFabricator (спрайт, плата, хранилище материалов).
-# Получение в игре: пока только спавн админом / расстановка маппером (плата будет добавлена позже).
+# "верстак изготовления роботов" — аналог ExosuitFabricator, крафтит детали хламотрона из скрапа.
+# Получение пока только спавн/маппинг (плата будет позже).
 - type: entity
   id: N14RobotFabricator
   parent: ExosuitFabricator
   name: robot assembly workbench
   description: A workbench for printing junktron parts out of scrap to assemble robots.
   components:
-  # Разрешаем загружать в верстак кастомные N14-материалы (лом).
-  # Все виды лома (электроники, стали, свинца, меди, латуни, золота) наследуются
-  # от N14ScrapBase и имеют общий тег "Scrap", поэтому одного тега достаточно.
-  # Список тегов полностью повторяет whitelist родителя (ExosuitFabricator) + Scrap,
-  # т.к. при переопределении дочерний список тегов заменяет родительский.
-  # ВАЖНО: помимо этого тегового фильтра lathe принимает материал только если он
-  # используется в каком-либо рецепте (LatheSystem строит material-whitelist из рецептов).
-  # Поэтому скрап реально вставляется только потому, что рецепты ниже его потребляют.
+  # whitelist родителя + тег Scrap (всё лом). Важно: lathe принимает материал, только если его
+  # потребляет какой-то рецепт (material-whitelist строится из рецептов) — потому скрап и вставляется.
   - type: MaterialStorage
     whitelist:
       tags:
@@ -28,7 +20,6 @@
       - Metal
       - Scrap
   - type: Lathe
-    # Кустарный эндоскелет, запчасти хламотрона и оптический сенсор (замена вспышки).
     staticRecipes:
     - N14JunktronEndoskeleton
     - N14JunktronTorso
@@ -41,9 +32,14 @@
     - N14JunktronMMI
     - N14JunktronPositronicBrain
     - N14LawCard
-    # Никаких исследовательских рецептов — всё открыто сразу.
+    - N14BorgModuleJunkTools
+    - N14BorgModuleJunkGardening
+    - N14BorgModuleJunkBureaucracy
+    - N14BorgModuleJunkCombat
+    - N14BorgModuleJunkManipulator
+    - N14BorgModuleJunkMining
+    - N14BorgModuleJunkMusique
     dynamicRecipes: []
-  # Убираем унаследованные от ExosuitFabricator emag-рецепты (боевые части мехов),
-  # чтобы при emag'е верстак не выдавал ничего постороннего.
+  # Чистим унаследованные emag-рецепты (боевые мехи).
   - type: EmagLatheRecipes
     emagDynamicRecipes: []

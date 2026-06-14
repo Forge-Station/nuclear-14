@@ -1,8 +1,5 @@
-# Forge-Change: рецепты запчастей хламотрона из скрапа для верстака изготовления роботов.
-# Цифры пока произвольные — задача показать, что детали крафтятся из лома.
-# Каждый вид лома (электроники/стали/свинца/меди/латуни/золота) задействован хотя бы
-# в одном рецепте, поэтому все они попадают в material-whitelist верстака и становятся
-# доступны для загрузки.
+# рецепты деталей хламотрона из скрапа. Цифры черновые; задействованы все виды лома,
+# чтобы они попали в material-whitelist верстака.
 
 - type: latheRecipe
   id: N14JunktronEndoskeleton
@@ -48,6 +45,73 @@
   completetime: 2
   materials:
     ScrapElectronic: 50
+
+- type: latheRecipe
+  id: N14BorgModuleJunkTools
+  result: N14BorgModuleJunkTools
+  category: Robotics
+  completetime: 3
+  materials:
+    ScrapSteel: 250
+    ScrapElectronic: 150
+
+- type: latheRecipe
+  id: N14BorgModuleJunkGardening
+  result: N14BorgModuleJunkGardening
+  category: Robotics
+  completetime: 3
+  materials:
+    ScrapSteel: 150
+    ScrapElectronic: 150
+    ScrapBrass: 100
+
+- type: latheRecipe
+  id: N14BorgModuleJunkBureaucracy
+  result: N14BorgModuleJunkBureaucracy
+  category: Robotics
+  completetime: 3
+  materials:
+    ScrapElectronic: 200
+    ScrapCopper: 100
+
+- type: latheRecipe
+  id: N14BorgModuleJunkCombat
+  result: N14BorgModuleJunkCombat
+  category: Robotics
+  completetime: 4
+  materials:
+    ScrapSteel: 300
+    ScrapElectronic: 300
+    ScrapGold: 100
+
+- type: latheRecipe
+  id: N14BorgModuleJunkManipulator
+  result: N14BorgModuleJunkManipulator
+  category: Robotics
+  completetime: 3
+  materials:
+    ScrapSteel: 200
+    ScrapElectronic: 100
+
+- type: latheRecipe
+  id: N14BorgModuleJunkMining
+  result: N14BorgModuleJunkMining
+  category: Robotics
+  completetime: 3
+  materials:
+    ScrapSteel: 300
+    ScrapElectronic: 100
+    ScrapLead: 100
+
+- type: latheRecipe
+  id: N14BorgModuleJunkMusique
+  result: N14BorgModuleJunkMusique
+  category: Robotics
+  completetime: 3
+  materials:
+    ScrapSteel: 200
+    ScrapElectronic: 150
+    ScrapBrass: 100
 
 - type: latheRecipe
   id: N14JunktronTorso

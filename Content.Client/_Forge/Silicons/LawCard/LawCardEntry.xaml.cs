@@ -5,12 +5,8 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Utility;
 
-namespace Content.Client._Forge.Silicons;
+namespace Content.Client._Forge.Silicons.LawCard;
 
-/// <summary>
-/// Forge-Change: one editable law row in the law card editor — a position number, a text field and a
-/// delete button. Deliberately simpler than the admin law row (no reorder/corrupted controls).
-/// </summary>
 [GenerateTypedNameReferences]
 public sealed partial class LawCardEntry : PanelContainer
 {
@@ -23,7 +19,7 @@ public sealed partial class LawCardEntry : PanelContainer
         RobustXamlLoader.Load(this);
 
         LawContent.OnTextChanged += _ => _law!.LawString = Rope.Collapse(LawContent.TextRope).Trim();
-        LawContent.Placeholder = new Rope.Leaf(Loc.GetString("silicon-law-ui-placeholder"));
+        LawContent.Placeholder = new Rope.Leaf(Loc.GetString("law-card-ui-placeholder"));
         Delete.OnPressed += _ => OnDelete?.Invoke(_law!);
     }
 

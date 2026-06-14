@@ -1,13 +1,9 @@
 using Content.Server.EUI;
-using Content.Shared._Forge.Silicons;
+using Content.Shared._Forge.Silicons.LawCard;
 using Content.Shared.Eui;
 
-namespace Content.Server._Forge.Silicons;
+namespace Content.Server._Forge.Silicons.LawCard;
 
-/// <summary>
-/// Forge-Change: server side of the law card editor EUI. State is read live from the card;
-/// saving stores the edited laws back onto the card.
-/// </summary>
 public sealed class LawCardEui : BaseEui
 {
     private readonly LawCardSystem _system;
@@ -28,7 +24,13 @@ public sealed class LawCardEui : BaseEui
     {
         base.HandleMessage(msg);
 
-        if (msg is LawCardSaveMessage save)
-            _system.SaveLaws(_card, save.Laws);
+        if (msg is LawCardSaveMessage save && Player.AttachedEntity is { } user)
+            _system.SaveLaws(_card, save.Laws, user);
+    }
+
+    public override void Closed()
+    {
+        base.Closed();
+        _system.OnEditorClosed(_card, this);
     }
 }

@@ -1,5 +1,4 @@
-# Forge-Change: свод законов хламобота. Закон 1 (подчинение создателю) — фиксированный.
-# Тексты — в ru-RU/_NC/silicon-laws.ftl.
+# свод законов хламобота (про создателя). Тексты — в ru-RU/_NC/silicon-laws.ftl.
 - type: siliconLaw
   id: N14JunkbotLaw1
   order: 1

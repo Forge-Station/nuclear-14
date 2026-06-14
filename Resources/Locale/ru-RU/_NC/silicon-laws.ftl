@@ -3,8 +3,13 @@ law-n14-junkbot-2 = Робот не может вредить своему со�
 law-n14-junkbot-3 = Робот должен защищать себя и своё существование до тех пор, пока это не противоречит первому закону.
 laws-owner-creator = своим создателем
 
-law-card-ui-title = Перфокарта законов
+law-card-ui-title = Программатор
+law-card-ui-new-law = Новый закон
+law-card-ui-save = Сохранить
+law-card-ui-delete = Удалить
+law-card-ui-placeholder = Введите текст закона...
 
 law-card-panel-closed = Сначала нужно вскрыть панель { $target }.
 law-card-uploaded = Законы { $target } перезаписаны с перфокарты.
 law-card-empty = На перфокарте не вписано ни одного закона.
+law-card-borg-cant-use = Шестерёнки в кустарной башке натужно скрипят, но что делать с программатором — решительно непонятно.
