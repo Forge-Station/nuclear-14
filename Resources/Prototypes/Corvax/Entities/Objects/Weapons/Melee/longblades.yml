@@ -253,7 +253,6 @@
     soundHit:
       path: /Audio/Weapons/bladeslice.ogg
   - type: MultiHandedItem
-    speedModifier: 0
   - type: HeldSpeedModifier
     walkModifier: 1.2
     sprintModifier: 1.2
