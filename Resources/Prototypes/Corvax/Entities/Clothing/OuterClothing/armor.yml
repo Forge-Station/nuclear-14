@@ -448,7 +448,7 @@
 
 - type: entity
   parent: N14ClothingOuterNCRVeteranArmor # _Nuclear14/Entities/Clothing/OuterClothing/falloutarmor.yml
-  id: N14ClothingOuterNCRVeteranArmorSnow 
+  id: N14ClothingOuterNCRVeteranArmorSnow
   components:
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRveteranarmorSnow.rsi
@@ -731,3 +731,14 @@
     priceMultiplier: 0.6
   - type: ExplosionResistance
     damageCoefficient: 0.7
+
+- type: entity
+  parent: N14ClothingOuterLegionnaireLightReconnaissanceArmor
+  id: N14ClothingOuterLegionnaireDuster
+  name: legionary duster
+  description: "Duster with a bull symbol"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/legioduster.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/legioduster.rsi
