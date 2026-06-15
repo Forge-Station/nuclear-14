@@ -486,7 +486,7 @@
 
 - type: loadout
   id: LoadoutN14Sagum
-  category: Items
+  category: Neck
   cost: 2
   exclusive: true
   requirements:
@@ -505,7 +505,7 @@
 
 - type: loadout
   id: LoadoutOuterDogHelmet
-  category: Outer
+  category: Head
   cost: 2
   exclusive: true
   requirements:
