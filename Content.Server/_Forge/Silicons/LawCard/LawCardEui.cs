@@ -17,7 +17,7 @@ public sealed class LawCardEui : BaseEui
 
     public override EuiStateBase GetNewState()
     {
-        return new LawCardEuiState(_system.GetLaws(_card));
+        return new LawCardEuiState(_system.GetLaws(_card), _system.GetOverwriteAccess(_card));
     }
 
     public override void HandleMessage(EuiMessageBase msg)
@@ -25,7 +25,7 @@ public sealed class LawCardEui : BaseEui
         base.HandleMessage(msg);
 
         if (msg is LawCardSaveMessage save && Player.AttachedEntity is { } user)
-            _system.SaveLaws(_card, save.Laws, user);
+            _system.SaveLaws(_card, save.Laws, save.OverwriteAccess, user);
     }
 
     public override void Closed()

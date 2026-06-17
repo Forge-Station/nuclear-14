@@ -1,0 +1,44 @@
+{
+    "version": 1,
+    "license": "CC-BY-NC-SA-3.0",
+    "copyright": "Placeholder art (protectron) taken from mojave-sun-13 at https://github.com/Mojave-Sun/mojave-sun-13/blob/3c9fc470595d3106ca57e858239e8f0822630137/mojave/icons/mob/ms13robots.dmi. All other states by Peptide90, dead by Pato Grone. Renamed to borg layout for N14Junkbot.",
+    "size": {
+        "x": 32,
+        "y": 32
+    },
+    "states": [
+        {
+            "name": "robot",
+            "directions": 4
+        },
+        {
+            "name": "robot_moving",
+            "directions": 4,
+            "delays": [
+                [ 0.1, 0.2, 0.1, 0.2 ],
+                [ 0.1, 0.2, 0.1, 0.2 ],
+                [ 0.1, 0.2, 0.1, 0.2 ],
+                [ 0.1, 0.2, 0.1, 0.2 ]
+            ]
+        },
+        {
+            "name": "robot_e",
+            "directions": 4
+        },
+        {
+            "name": "robot_e_r",
+            "directions": 4
+        },
+        {
+            "name": "robot_l",
+            "directions": 4
+        },
+        {
+            "name": "robot_e_combat",
+            "directions": 4
+        },
+        {
+            "name": "dead"
+        }
+    ]
+}

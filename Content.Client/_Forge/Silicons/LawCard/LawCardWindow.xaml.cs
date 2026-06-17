@@ -63,4 +63,8 @@ public sealed partial class LawCardWindow : FancyWindow
             ordered[i].Order = FixedPoint2.New(i + 1);
         return ordered;
     }
+
+    public void SetOverwriteAccess(bool value) => OverwriteAccessCheck.Pressed = value;
+
+    public bool GetOverwriteAccess() => OverwriteAccessCheck.Pressed;
 }

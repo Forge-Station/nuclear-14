@@ -1,5 +1,4 @@
-# запчасти "хламотрона" из скрапа. Несут штатные теги BorgGeneric*, поэтому
-# надеваются на CyborgEndoskeleton как обычные детали борга. Спрайты — от обычных борг-деталей.
+# запчасти "хламотрона" из скрапа: несут теги BorgGeneric*, поэтому надеваются на CyborgEndoskeleton как обычные.
 
 - type: entity
   id: N14JunktronLeftArm
@@ -121,12 +120,25 @@
     - part-container
     - cell_slot
 
-# Кустарный ММИ: наследует MMI (BorgBrain + слот мозга), принимается боргом.
+# Кустарный ММИ: наследует MMI; спрайт упрощён до 2 стейтов — есть мозг → active, нет → inactive (тип мозга/разум игнорируем).
 - type: entity
   id: N14JunktronMMI
   parent: MMI
   name: junk-machine interface
   description: A crude man-machine interface cobbled together from scrap. Lets a biological brain pilot a junkbot.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Specific/Robotics/junktron_mmi.rsi
+    layers:
+    - state: inactive
+      map: ["enum.MMIVisualLayers.Base"]
+    - state: active
+      map: ["enum.MMIVisualLayers.Brain"]
+      visible: false
+  - type: MMI
+    noBrainState: inactive
+    hasMindState: active
+    noMindState: active
 
 # Кустарный позитронный мозг: наследует PositronicBrain (BorgBrain + гост-роль).
 - type: entity

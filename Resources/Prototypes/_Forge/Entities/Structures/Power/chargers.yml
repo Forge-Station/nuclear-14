@@ -1,12 +1,9 @@
-# автономная док-станция для роботов — заряжает боргов как BorgCharger, но:
-#  - работает без электросети (ApcPowerReceiver needsPower: false => всегда Powered);
-#  - неразбираемая, только маппинг: по образцу N14WorkbenchBase парентит BaseStructure
-#    и несёт компоненты напрямую, БЕЗ Construction/Machine/WiresPanel (платы/конструкции нет).
+# автономная док-станция: как BorgCharger, но без электросети (needsPower:false) и неразбираемая (parent BaseStructure). Только маппинг.
 - type: entity
   parent: BaseStructure
   id: N14AutonomousRobotDock
-  name: док-станция
-  description: Заряжает роботов и киборгов без подключения к электросети. Внутри неожиданно просторно.
+  name: docking station
+  description: Charges robots and cyborgs with no power connection. Surprisingly spacious inside.
   suffix: Autonomous
   placement:
     mode: SnapgridCenter
@@ -72,3 +69,12 @@
   - type: ApcPowerReceiver
     needsPower: false
   - type: InteractionOutline
+  # неразрушаемая: единственный порог 10000 заменяет пороги BaseStructure (псевдо-неразрушаемость, как у разрабов).
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 10000
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]

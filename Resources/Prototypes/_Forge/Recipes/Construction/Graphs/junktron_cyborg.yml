@@ -1,5 +1,4 @@
-# граф сборки хламобота — копия generic-ветки графа Cyborg, но 2 вспышки заменены
-# на 2 оптических сенсора (tag: N14OpticalSensor). Результат — N14Junkbot.
+# граф сборки хламобота — копия generic-ветки Cyborg, но 2 вспышки заменены на 2 оптических сенсора. Результат — N14Junkbot.
 - type: constructionGraph
   id: N14JunktronCyborg
   start: start

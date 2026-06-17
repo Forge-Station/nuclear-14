@@ -8,8 +8,10 @@ law-card-ui-new-law = Новый закон
 law-card-ui-save = Сохранить
 law-card-ui-delete = Удалить
 law-card-ui-placeholder = Введите текст закона...
+law-card-ui-overwrite-access = Перезаписать доступ
 
 law-card-panel-closed = Сначала нужно вскрыть панель { $target }.
 law-card-uploaded = Законы { $target } перезаписаны с перфокарты.
 law-card-empty = На перфокарте не вписано ни одного закона.
 law-card-borg-cant-use = Шестерёнки в кустарной башке натужно скрипят, но что делать с программатором — решительно непонятно.
+law-card-access-changed = Допуск изменён.

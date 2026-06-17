@@ -8,6 +8,7 @@
         <ScrollContainer VerticalExpand="True" HorizontalExpand="True" HScrollEnabled="False">
             <BoxContainer Orientation="Vertical" Name="LawContainer" Access="Public" HorizontalExpand="True" />
         </ScrollContainer>
+        <CheckBox Name="OverwriteAccessCheck" Text="{Loc law-card-ui-overwrite-access}" Margin="0 6 0 0" />
         <BoxContainer Orientation="Horizontal" Margin="0 6 0 0" HorizontalExpand="True">
             <Button Name="NewLawButton" Text="{Loc law-card-ui-new-law}" />
             <Control HorizontalExpand="True" />

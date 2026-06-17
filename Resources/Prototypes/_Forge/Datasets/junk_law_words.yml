@@ -1,6 +1,4 @@
-# Вордпул для глючных законов хламобота (N14JunkWord*) — копия ион-штормового ion_storm.yml,
-# адаптированная под Fallout: SS14/космос-слова заменены на пустошные, generic сохранены.
-# Слова отсюда подставляет GlitchedLawGenerator; шаблоны фраз — в silicon-laws-junk.ftl.
+# Вордпул глючных законов хламобота (N14JunkWord*): копия ion_storm.yml под Fallout; подставляет GlitchedLawGenerator, шаблоны фраз — в silicon-laws-junk.ftl.
 - type: dataset
   id: N14JunkWordAdjectives
   values:

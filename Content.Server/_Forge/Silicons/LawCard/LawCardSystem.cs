@@ -1,7 +1,9 @@
 using System.Linq;
+using Content.Server.Access.Systems;
 using Content.Server.EUI;
 using Content.Server.Silicons.Laws;
 using Content.Shared._Forge.Silicons.LawCard;
+using Content.Shared.Access.Systems;
 using Content.Shared.DoAfter;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
@@ -25,6 +27,8 @@ public sealed class LawCardSystem : EntitySystem
     [Dependency] private readonly EuiManager _euiManager = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     [Dependency] private readonly NpcFactionSystem _faction = default!;
+    [Dependency] private readonly AccessSystem _access = default!;
+    [Dependency] private readonly AccessReaderSystem _accessReader = default!;
 
     private readonly Dictionary<EntityUid, LawCardEui> _openEditors = new();
 
@@ -39,7 +43,7 @@ public sealed class LawCardSystem : EntitySystem
         SubscribeLocalEvent<LawCardComponent, EntityTerminatingEvent>(OnTerminating);
     }
 
-    private void OnUseInHand(EntityUid uid, LawCardComponent comp, UseInHandEvent args)
+    private void OnUseInHand(Entity<LawCardComponent> ent, ref UseInHandEvent args)
     {
         if (args.Handled || !TryComp<ActorComponent>(args.User, out var actor))
             return;
@@ -50,11 +54,11 @@ public sealed class LawCardSystem : EntitySystem
             return;
         }
 
-        OpenEditor(uid, actor.PlayerSession);
+        OpenEditor(ent.Owner, actor.PlayerSession);
         args.Handled = true;
     }
 
-    private void OnAfterInteract(EntityUid uid, LawCardComponent comp, AfterInteractEvent args)
+    private void OnAfterInteract(Entity<LawCardComponent> ent, ref AfterInteractEvent args)
     {
         if (args.Handled || !args.CanReach || args.Target is not { } target)
             return;
@@ -75,8 +79,8 @@ public sealed class LawCardSystem : EntitySystem
             return;
         }
 
-        _doAfter.TryStartDoAfter(new DoAfterArgs(EntityManager, args.User, TimeSpan.FromSeconds(comp.UploadDelay),
-            new LawCardDoAfterEvent(), uid, target: target, used: uid)
+        _doAfter.TryStartDoAfter(new DoAfterArgs(EntityManager, args.User, TimeSpan.FromSeconds(ent.Comp.UploadDelay),
+            new LawCardDoAfterEvent(), ent.Owner, target: target, used: ent.Owner)
         {
             BreakOnDamage = true,
             BreakOnMove = true,
@@ -85,7 +89,7 @@ public sealed class LawCardSystem : EntitySystem
         args.Handled = true;
     }
 
-    private void OnDoAfter(EntityUid uid, LawCardComponent comp, LawCardDoAfterEvent args)
+    private void OnDoAfter(Entity<LawCardComponent> ent, ref LawCardDoAfterEvent args)
     {
         if (args.Cancelled || args.Handled || args.Target is not { } target)
             return;
@@ -93,42 +97,49 @@ public sealed class LawCardSystem : EntitySystem
         if (!HasComp<SiliconLawProviderComponent>(target))
             return;
 
-        if (comp.Laws.Count == 0)
+        if (ent.Comp.Laws.Count == 0)
         {
             _popup.PopupEntity(Loc.GetString("law-card-empty"), target, args.User);
             return;
         }
 
-        var laws = comp.Laws.Select(l => l.ShallowClone()).ToList();
+        var laws = ent.Comp.Laws.Select(l => l.ShallowClone()).ToList();
         _laws.SetLaws(laws, target);
         _popup.PopupEntity(Loc.GetString("law-card-uploaded", ("target", target)), target, args.User);
 
-        // Перепрошивший «застолбляет» борга под СВОЙ набор фракций (вод-теху это даёт боргу
-        // [Wastelander, Vault] -> туррели убежища не бьют; рейдеру -> [Raider] и т.д.).
-        // Если у прошивающего фракций нет — оставляем дефолт (Wastelander).
-        if (args.User != target
-            && TryComp<NpcFactionMemberComponent>(args.User, out var userFactions)
-            && userFactions.Factions.Count > 0)
+        // OverwriteAccess: борг перенимает фракции+доступы прошившего (выкл — только законы, без смены принадлежности).
+        if (ent.Comp.OverwriteAccess && args.User != target)
+            AdoptOwnership(target, args.User);
+
+        args.Handled = true;
+    }
+
+    // Борг перенимает фракции и доступы прошившего (что носит сейчас: ID/инвентарь); попап «Допуск изменён» обоим.
+    private void AdoptOwnership(EntityUid target, EntityUid user)
+    {
+        if (TryComp<NpcFactionMemberComponent>(user, out var userFactions) && userFactions.Factions.Count > 0)
         {
             _faction.ClearFactions(target);
             _faction.AddFactions(target, userFactions.Factions);
         }
 
-        args.Handled = true;
+        _access.TrySetTags(target, _accessReader.FindAccessTags(user));
+
+        _popup.PopupEntity(Loc.GetString("law-card-access-changed"), target, user);
+        _popup.PopupEntity(Loc.GetString("law-card-access-changed"), target, target);
     }
 
-    private void OnDropped(EntityUid uid, LawCardComponent comp, DroppedEvent args)
+    private void OnDropped(Entity<LawCardComponent> ent, ref DroppedEvent args)
     {
-        CloseEditor(uid);
+        CloseEditor(ent.Owner);
     }
 
-    private void OnTerminating(EntityUid uid, LawCardComponent comp, ref EntityTerminatingEvent args)
+    private void OnTerminating(Entity<LawCardComponent> ent, ref EntityTerminatingEvent args)
     {
-        CloseEditor(uid);
+        CloseEditor(ent.Owner);
     }
 
-    // Борг не умеет пользоваться программатором: со свободной рукой манипулятора он мог бы
-    // переписать законы (в т.ч. сам себе). Шлёт попап и возвращает true, если юзер — борг.
+    // Борг не пользуется программатором (иначе со свободной рукой манипулятора переписал бы законы, в т.ч. себе).
     private bool DenyBorgUse(EntityUid user)
     {
         if (!HasComp<BorgChassisComponent>(user))
@@ -169,7 +180,12 @@ public sealed class LawCardSystem : EntitySystem
         return comp.Laws.Select(l => l.ShallowClone()).ToList();
     }
 
-    public void SaveLaws(EntityUid card, List<SiliconLaw> laws, EntityUid user)
+    public bool GetOverwriteAccess(EntityUid card)
+    {
+        return TryComp<LawCardComponent>(card, out var comp) && comp.OverwriteAccess;
+    }
+
+    public void SaveLaws(EntityUid card, List<SiliconLaw> laws, bool overwriteAccess, EntityUid user)
     {
         if (!TryComp<LawCardComponent>(card, out var comp))
             return;
@@ -182,5 +198,7 @@ public sealed class LawCardSystem : EntitySystem
             .Where(l => !string.IsNullOrWhiteSpace(l.LawString))
             .Take(LawCardComponent.MaxLaws)
             .ToList();
+
+        comp.OverwriteAccess = overwriteAccess;
     }
 }

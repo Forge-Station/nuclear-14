@@ -1,15 +1,10 @@
 namespace Content.Shared._Forge.RemoveComponents;
 
-/// <summary>
-/// Снимает с сущности перечисленные компоненты при старте. Нужно, когда требуется убрать
-/// УНАСЛЕДОВАННЫЙ компонент, а удалить его через наследование прототипов в SS14 нельзя.
-/// </summary>
+// Снимает перечисленные компоненты на старте — обход того, что унаследованный компонент в SS14 не удалить.
 [RegisterComponent]
 public sealed partial class RemoveComponentsComponent : Component
 {
-    /// <summary>
-    /// Имена компонентов на снятие (как в YAML, без суффикса Component). Неизвестные имена игнорируются.
-    /// </summary>
+    // Имена компонентов на снятие (как в YAML, без суффикса Component); неизвестные игнорируются.
     [DataField]
     public HashSet<string> Components = new();
 }

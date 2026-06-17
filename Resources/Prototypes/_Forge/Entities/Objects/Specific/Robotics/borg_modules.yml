@@ -1,9 +1,8 @@
-# модули хламобота. Все в категории "общие" (BorgModuleGeneric от BaseBorgModule),
-# рамка — n14_generic из _Nuclear14-RSI, иконки — ванильные. Наполнение скопировано с референсов.
+# модули хламобота (категория BorgModuleGeneric): рамка n14_generic из _Nuclear14-RSI + ванильные иконки.
 - type: entity
   parent: [ BaseBorgModule, BaseProviderBorgModule ]
   id: N14BorgModuleJunkTools
-  name: junk tool module
+  name: junk tool cyborg module
   components:
   - type: Sprite
     layers:
@@ -23,7 +22,7 @@
 - type: entity
   parent: [ BaseBorgModule, BaseProviderBorgModule ]
   id: N14BorgModuleJunkGardening
-  name: junk gardening module
+  name: junk gardening cyborg module
   components:
   - type: Sprite
     layers:
@@ -41,7 +40,7 @@
 - type: entity
   parent: [ BaseBorgModule, BaseProviderBorgModule ]
   id: N14BorgModuleJunkBureaucracy
-  name: junk bureaucracy module
+  name: junk bureaucracy cyborg module
   components:
   - type: Sprite
     layers:
@@ -61,7 +60,7 @@
 - type: entity
   parent: [ BaseBorgModule, BaseProviderBorgModule ]
   id: N14BorgModuleJunkCombat
-  name: junk combat module
+  name: junk combat cyborg module
   components:
   - type: Sprite
     layers:
@@ -78,7 +77,7 @@
 - type: entity
   parent: [ BaseBorgModule, BaseProviderBorgModule ]
   id: N14BorgModuleJunkManipulator
-  name: junk manipulator module
+  name: junk manipulator cyborg module
   components:
   - type: Sprite
     layers:
@@ -92,7 +91,7 @@
 - type: entity
   parent: [ BaseBorgModule, BaseProviderBorgModule ]
   id: N14BorgModuleJunkMining
-  name: junk mining module
+  name: junk mining cyborg module
   components:
   - type: Sprite
     layers:
@@ -111,7 +110,7 @@
 - type: entity
   parent: [ BaseBorgModule, BaseProviderBorgModule ]
   id: N14BorgModuleJunkMusique
-  name: junk musique module
+  name: junk musique cyborg module
   components:
   - type: Sprite
     layers:

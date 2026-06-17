@@ -14,6 +14,10 @@ public sealed partial class LawCardComponent : Component
 
     [DataField]
     public float UploadDelay = 5f;
+
+    // true — заливка законов также переписывает фракцию и доступы цели на прошившего; false — только законы.
+    [DataField]
+    public bool OverwriteAccess = true;
 }
 
 [Serializable, NetSerializable]

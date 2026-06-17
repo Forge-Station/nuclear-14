@@ -12,7 +12,7 @@ public sealed class LawCardEui : BaseEui
     {
         _window = new LawCardWindow();
         _window.OnClose += () => SendMessage(new CloseEuiMessage());
-        _window.Save.OnPressed += _ => SendMessage(new LawCardSaveMessage(_window.GetLaws()));
+        _window.Save.OnPressed += _ => SendMessage(new LawCardSaveMessage(_window.GetLaws(), _window.GetOverwriteAccess()));
     }
 
     public override void HandleState(EuiStateBase state)
@@ -21,6 +21,7 @@ public sealed class LawCardEui : BaseEui
             return;
 
         _window.SetLaws(s.Laws);
+        _window.SetOverwriteAccess(s.OverwriteAccess);
     }
 
     public override void Opened()

@@ -12,9 +12,7 @@ public sealed class BorgBrainGuardSystem : EntitySystem
         SubscribeLocalEvent<BorgChassisComponent, ContainerIsInsertingAttemptEvent>(OnInsertAttempt);
     }
 
-    // Мозг борга принимает только мозг-слот: не даём ему попасть в руку (модуль-манипулятор)
-    // или иной контейнер шасси. Иначе BorgSystem.OnInserted/OnRemoved переносит разум на любой
-    // контейнер — борг с мозгом в руке оказался бы захвачен/перенёс бы своё сознание в выроненный мозг.
+    // Мозг пускаем только в мозг-слот: иначе апстримный BorgSystem перенёс бы разум на любой контейнер (рука и т.п.).
     private void OnInsertAttempt(Entity<BorgChassisComponent> ent, ref ContainerIsInsertingAttemptEvent args)
     {
         if (args.Cancelled || args.Container.ID == ent.Comp.BrainContainerId)

@@ -8,10 +8,12 @@ namespace Content.Shared._Forge.Silicons.LawCard;
 public sealed class LawCardEuiState : EuiStateBase
 {
     public List<SiliconLaw> Laws { get; }
+    public bool OverwriteAccess { get; }
 
-    public LawCardEuiState(List<SiliconLaw> laws)
+    public LawCardEuiState(List<SiliconLaw> laws, bool overwriteAccess)
     {
         Laws = laws;
+        OverwriteAccess = overwriteAccess;
     }
 }
 
@@ -19,9 +21,11 @@ public sealed class LawCardEuiState : EuiStateBase
 public sealed class LawCardSaveMessage : EuiMessageBase
 {
     public List<SiliconLaw> Laws { get; }
+    public bool OverwriteAccess { get; }
 
-    public LawCardSaveMessage(List<SiliconLaw> laws)
+    public LawCardSaveMessage(List<SiliconLaw> laws, bool overwriteAccess)
     {
         Laws = laws;
+        OverwriteAccess = overwriteAccess;
     }
 }

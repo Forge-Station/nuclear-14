@@ -1,25 +1,16 @@
-# "верстак изготовления роботов" — аналог ExosuitFabricator, крафтит детали хламотрона из скрапа.
-# Получение пока только спавн/маппинг (плата будет позже).
+# "верстак изготовления роботов" — единообразен с верстаками N14 (parent N14WorkbenchBase); крафтит детали хламотрона из скрапа; спавн/маппинг.
 - type: entity
+  parent: N14WorkbenchBase
   id: N14RobotFabricator
-  parent: ExosuitFabricator
   name: robot assembly workbench
   description: A workbench for printing junktron parts out of scrap to assemble robots.
   components:
-  # whitelist родителя + тег Scrap (всё лом). Важно: lathe принимает материал, только если его
-  # потребляет какой-то рецепт (material-whitelist строится из рецептов) — потому скрап и вставляется.
-  - type: MaterialStorage
-    whitelist:
-      tags:
-      - Sheet
-      - RawMaterial
-      - Ingot
-      - Wooden
-      - ClothMade
-      - Gauze
-      - Metal
-      - Scrap
+  - type: Sprite
+    state: tinkerbench
+  # MaterialStorage наследуется от N14WorkbenchBase без тегового вайтлиста: что принимать, лат считает динамически из материалов рецептов (MaterialWhiteList).
   - type: Lathe
+    idleState: icon
+    runningState: icon # change this
     staticRecipes:
     - N14JunktronEndoskeleton
     - N14JunktronTorso
@@ -40,6 +31,12 @@
     - N14BorgModuleJunkMining
     - N14BorgModuleJunkMusique
     dynamicRecipes: []
-  # Чистим унаследованные emag-рецепты (боевые мехи).
-  - type: EmagLatheRecipes
-    emagDynamicRecipes: []
+  # неразрушаемый: единственный порог 10000 заменяет пороги BaseStructure (псевдо-неразрушаемость, по твоему запросу).
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 10000
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
