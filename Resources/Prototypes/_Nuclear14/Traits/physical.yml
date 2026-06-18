@@ -263,9 +263,9 @@
           damageCap: 300
           damage:
             groups:
-              Brute: -0.6 # Forge-Change
-              Burn: -0.6 # Forge-Change
-              Poison: -0.2 # Forge-Change
+              Brute: -0.75 # Forge-Change
+              Burn: -1.0 # Forge-Change
+              Toxin: -0.2 # Forge-Change
 
 - type: trait
   id: N14WorldChampion
