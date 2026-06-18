@@ -1,6 +1,5 @@
 - type: entity
-  name: N14WeaponShotgunBase
-  parent: BaseItem
+  parent: BaseWeaponShotgun
   id: N14WeaponShotgunBase
   description: A rooty tooty point and shooty.
   abstract: true
@@ -160,7 +159,8 @@
 
 - type: entity
   name: combat shotgun
-  parent: N14WeaponShotgunBase
+  # Don't parent to N14BaseWeaponShotgun because it differs significantly
+  parent: [BaseItem, BaseGunWieldable]
   id: N14WeaponShotgunAuto
   description: "It's a magazine-fed automatic shotgun designed for close quarters combat, uses 12 gauge shells."
   components:
@@ -218,6 +218,24 @@
   - type: Appearance
   - type: StaticPrice
     price: 100
+  - type: MeleeWeapon
+    attackRate: 1.4
+    damage:
+      types:
+        Blunt: 10
+    bluntStaminaDamageFactor: 1.3333
+    swapKeys: true
+    disableHeavy: true
+    animation: WeaponArcThrust
+    wideAnimationRotation: 180
+    soundHit:
+      collection: MetalThud
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Blunt: 2.5
+  - type: DamageOtherOnHit
+    staminaCost: 9.5
 
 - type: entity
   name: caravan shotgun
@@ -295,7 +313,8 @@
 
 - type: entity
   name: riot shotgun
-  parent: N14WeaponShotgunBase
+  # Don't parent to N14BaseWeaponShotgun because it differs significantly
+  parent: [BaseItem, BaseGunWieldable]
   id: N14WeaponShotgunRiot
   description: A compact semiautomatic shotgun used by pre-war police forces, chambered in 20 gauge shells and using a drum magazine.
   components:
@@ -354,6 +373,24 @@
   - type: Appearance
   - type: StaticPrice
     price: 90
+  - type: MeleeWeapon
+    attackRate: 1.4
+    damage:
+      types:
+        Blunt: 10
+    bluntStaminaDamageFactor: 1.3333
+    swapKeys: true
+    disableHeavy: true
+    animation: WeaponArcThrust
+    wideAnimationRotation: 180
+    soundHit:
+      collection: MetalThud
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Blunt: 2.5
+  - type: DamageOtherOnHit
+    staminaCost: 9.5
 
 - type: entity
   name: stockless shotgun

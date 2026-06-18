@@ -2,7 +2,7 @@
 
 - type: entity
   id: N14BaseWeaponPowerCell
-  parent: BaseItem
+  parent: BaseWeaponBattery
   abstract: true
   components:
   - type: Sprite

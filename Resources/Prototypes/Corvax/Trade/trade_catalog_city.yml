@@ -522,6 +522,8 @@
     price: 5
   - proto: N14FloraWildXanderRootClippingSeed
     price: 5
+  - proto: CottonSeeds
+    price: 5  
 
 - type: storePresetStructured
   id: caravan_buy2
@@ -761,10 +763,6 @@
   entries:
   - proto: N14WeaponLaserPistol
     price: 33
-  - proto: N14WeaponLaserRifleMakeshift
-    price: 41
-  - proto: N14WeaponLaserRevolver
-    price: 44
   - proto: N14WeaponLaserPistolRecharger
     price: 56
   - proto: N14WeaponLaserRifle
