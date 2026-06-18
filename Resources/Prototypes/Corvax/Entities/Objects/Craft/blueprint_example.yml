@@ -27,3 +27,13 @@
   components:
     - type: STBlueprint
       blueprint: N14ClothingOuterPowerArmorT45Recipe
+
+- type: entity
+  parent: N14BaseBlueprint
+  id: N14AssemblyHolodiskClothingOuterPowerArmorT45
+  name: Голодиск с чертежами Т-45
+  description: Довоенный модуль самодиагностики и чертежей силовой брони Т-45. Выполняет роль «черного ящика» и калибровочного узла для бортовой электроники доспеха.
+  suffix: Craft
+  components:
+    - type: STBlueprint
+      blueprint: N14AssemblyClothingOuterPowerArmorT45
