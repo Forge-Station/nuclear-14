@@ -483,3 +483,38 @@
       min: 36000
   items:
     - N14BerserkerPowder
+
+- type: loadout
+  id: LoadoutN14Sagum
+  category: Neck
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionDean
+        - CaesarLegionLegionnaireVeteran
+        - CaesarLegionVenator
+        - CaesarLegionLegionnaireWarrior
+        - CaesarLegionCenturion
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 108000
+  items:
+    - N14ClothingNeckCapeLegionSagum
+
+- type: loadout
+  id: LoadoutOuterDogHelmet
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionLegionnaireWarrior
+        - CaesarLegionLegionnaireRecruit
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionLegionnaireWarrior
+      min: 36000
+  items:
+    - N14ClothingHeadHatDog
