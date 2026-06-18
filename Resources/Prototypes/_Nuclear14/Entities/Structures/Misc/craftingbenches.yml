@@ -73,6 +73,8 @@
     staticRecipes: # Guns or melee weapons related only.
     # Guns
     - BowImprovised
+    # Ammo
+    - ArrowRegular # Forge-add
     # Melee
     - N14ScrapMachete
     - N14WastelandSpear
@@ -81,6 +83,7 @@
     - N14TrainingSword
     - N14LongSword
     - N14Bola
+    - Handcuffs
     # Blueprints Corvax Forge
     - N14WeaponLaserRevolverBlueprint
     - N14WeaponLaserRifleMakeshiftBlueprint
@@ -264,6 +267,8 @@
     - N14ClothingOuterCombatArmorMK2Blueprint
     # Forge-Change-End
     # Other
+    - MaterialCloth # Forge-add
+    - N14MaterialThread # Forge-add
     - N14MaterialLeather
     - ClothingBeltQuiver # In misc.yml
     - ClothingBeltQuiverSpear
@@ -422,7 +427,10 @@
     - N14HydroponicsToolScythe
     - N14HydroponicsToolClippers
     - N14HandLabeler
+    - OreBag # Forge-add
     # Kitchen
+    - N14DrinkNukaColaEmpty # Forge-add
+    - N14JunkTincan # Forge-add
     - N14ButchersCleaver
     - N14KitchenKnife
     - N14DrinkMug
@@ -449,14 +457,16 @@
     - N14LightReplacer
     - N14Mousetrap
     - N14Plunger
-    - N14WeaponSprayNozzle
-    - N14ClothingBackpackWaterTank
+    # - N14WeaponSprayNozzle # Forge-Change
+    # - N14ClothingBackpackWaterTank # Forge-Change
     # Chemistry
+    - ChemBag # Forge-add
+    - Syringe # Forge-add
     - N14Beaker
     - N14LargeBeaker
     - N14Dropper
-    - N14Syringe
-    - N14SyringeInjectable
+    # - N14Syringe
+    # - N14SyringeInjectable
     - N14PillCanister
     - N14ChemistryEmptyBottle01
     - N14PillCanisterRadX
@@ -467,27 +477,30 @@
     - N14JetInhaler
     - N14TurboInhaler
     - N14HydraInhaler
+    - N14StimpakEmpty # Forge-add
     - N14ChemicalSyringeAntidoteEmpty
     - N14PsychoSyringe
     - N14RadAwayPhialEmpty
     # Misc
-    - N14LightTube
-    - N14LedLightTube
-    - N14SodiumLightTube
-    - N14ExteriorLightTube
+    # - N14LightTube # Forge-Change
+    # - N14LedLightTube # Forge-Change
+    # - N14SodiumLightTube # Forge-Change
+    # - N14ExteriorLightTube # Forge-Change
     - N14LightBulb
     - N14LedLightBulb
     - N14Flare
     - N14Matchbox
     - N14JunkComponentScrew
+    - N14JunkComponentGearLarge # Forge-add
+    - N14JunkComponentGearSmall # Forge-add
     - FloorTileItemMetalIndustrial
     - FloorTileItemMetalMS13
     - FloorTileItemMetalGrate
     - FloorTileItemMetalSolid
     # Ammo
-    - ArrowRegular
+    # - ArrowRegular # Forge-Change
     # Machine Parts
-    - N14PortableGeneratorWeldingFuelMachineParts
+    # - N14PortableGeneratorWeldingFuelMachineParts # Forge-Change
     #Paperwork
     - N14WoodPencil # Forge-Change
     - N14PenReporter # Forge-Change

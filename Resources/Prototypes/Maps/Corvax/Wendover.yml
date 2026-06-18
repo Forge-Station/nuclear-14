@@ -81,7 +81,7 @@
           CaesarLegionVenator: [ 1, 1 ] # Forge-Legion
           CaesarLegionDean: [ 2, 2 ] # Forge-Legion
           CaesarLegionLegionnaireVeteran: [ 3, 3 ] # Forge-Legion
-          CaesarLegionLegionnaireWarrior: [ 4, 4 ] # Forge-Legion
+          CaesarLegionLegionnaireWarrior: [ 5, 5 ] # Forge-Legion
           CaesarLegionLegionnaireRecruit: [ 6, 6 ] # Forge-Legion
           CaesarLegionSlave: [ 3, 3 ] # Forge-Legion
           # Raider: [3,3]

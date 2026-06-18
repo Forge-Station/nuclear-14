@@ -73,6 +73,15 @@
   - type: Clothing
     sprite: _Nuclear14/Clothing/Belt/militarywebbing.rsi
   - type: Appearance
+  - type: Storage
+    whitelist:
+      tags:
+        - N14Gladius
+        - CigPack
+        - N14AmmoCell
+      components:
+        - BallisticAmmoProvider
+        - CartridgeAmmo
 
 - type: entity
   parent: N14ClothingBeltStorageBase
@@ -136,6 +145,14 @@
     defaultStorageOrientation: Vertical
     grid:
     - 0,0,5,1
+    whitelist:
+      tags:
+        - N14Gladius
+        - CigPack
+        - N14AmmoCell
+      components:
+        - BallisticAmmoProvider
+        - CartridgeAmmo
 
 - type: entity
   parent: N14ClothingBeltStorageBase

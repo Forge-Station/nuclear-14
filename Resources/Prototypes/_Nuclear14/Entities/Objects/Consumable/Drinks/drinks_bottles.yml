@@ -189,12 +189,6 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Consumable/Drinks/nuka_cola_new.rsi
     state: empty
-  - type: Openable # Forge-Change
-    closeable: false
-  - type: SpawnWhenOpened # Forge-Add
-    prototypes:
-    - id: N14CurrencyCap
-      amount: 1
   - type: Destructible
     thresholds:
     - trigger:

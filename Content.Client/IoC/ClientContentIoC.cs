@@ -28,6 +28,7 @@ using Content.Shared.Players.PlayTimeTracking;
 using Content.Shared.Players.RateLimiting;
 using Content.Client._NC.Sponsor; // Forge-Change
 using Content.Shared._NC.Sponsor; // Forge-Change
+using Content.Client.Corvax.ExportSprites; // Corvax-Wiki
 
 namespace Content.Client.IoC
 {
@@ -37,6 +38,8 @@ namespace Content.Client.IoC
         {
             var collection = IoCManager.Instance!;
 
+            collection.Register<EntityScreenshotRenderService>(); // Corvax-Wiki
+            collection.Register<EntityScreenshotGenerator>(); // Corvax-Wiki
             collection.Register<IParallaxManager, ParallaxManager>();
             collection.Register<IChatManager, ChatManager>();
             collection.Register<ISharedChatManager, ChatManager>();

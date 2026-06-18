@@ -28,9 +28,9 @@
   description: A steel plate with 2 eyeholes, shaped to cover the face.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Clothing/Mask/platemask.rsi
+    sprite: Corvax/Clothing/Mask/platemask.rsi # Forge-Change
   - type: Clothing
-    sprite: _Nuclear14/Clothing/Mask/platemask.rsi
+    sprite: Corvax/Clothing/Mask/platemask.rsi # Forge-Change
   - type: Mask
   - type: IngestionBlocker
   - type: Armor

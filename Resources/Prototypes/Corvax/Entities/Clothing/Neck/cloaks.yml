@@ -1,0 +1,62 @@
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckCloakTent
+  name: tent cloak
+  description: A versatile cloak that can serve as both a waterproof cape and a lightweight field tent.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/tentcloak.rsi
+  - type: ToggleableClothing
+    clothingPrototype: N14ClothingNeckCloakTentHood
+    requiredSlot: neck
+    slot: head
+  - type: ContainerContainer
+    containers:
+      toggleable-clothing: !type:Container
+  - type: Butcherable
+    butcheringType: Knife
+    spawned:
+    - id: MaterialCloth1
+      amount: 2
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckCloakTentNCR
+  name: ncr tent cloak
+  description: A versatile cloak that can serve as both a waterproof cape and a lightweight field tent.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/tentcloakNCR.rsi
+  - type: ToggleableClothing
+    clothingPrototype: N14ClothingNeckCloakTentHoodNCR
+    requiredSlot: neck
+    slot: head
+  - type: ContainerContainer
+    containers:
+      toggleable-clothing: !type:Container
+  - type: Butcherable
+    butcheringType: Knife
+    spawned:
+    - id: MaterialCloth1
+      amount: 2
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckCloakTentBOS
+  name: bos tent cloak
+  description: A versatile cloak that can serve as both a waterproof cape and a lightweight field tent.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/tentcloakBOS.rsi
+  - type: ToggleableClothing
+    clothingPrototype: N14ClothingNeckCloakTentHoodBOS
+    requiredSlot: neck
+    slot: head
+  - type: ContainerContainer
+    containers:
+      toggleable-clothing: !type:Container
+  - type: Butcherable
+    butcheringType: Knife
+    spawned:
+    - id: MaterialCloth1
+      amount: 2

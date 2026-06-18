@@ -6,8 +6,8 @@
   description: "The sign of the red bull."
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Misc/identification.rsi
-    state: sign
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: leg_recruit
   - type: PresetIdCard
     job: CaesarLegionLegionnaireRecruit
 
@@ -18,8 +18,8 @@
   description: "A distinctive medal with the sign of the bull."
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Misc/identification.rsi
-    state: medal-silver
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: leg_aux
   - type: PresetIdCard
     job: CaesarLegionLegionnaireWarrior
 
@@ -30,8 +30,8 @@
   description: "A distinctive medal with the sign of the bull."
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Misc/identification.rsi
-    state: medal-silver-2
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: leg_veteran
   - type: PresetIdCard
     job: CaesarLegionLegionnaireVeteran
 
@@ -42,8 +42,8 @@
   description: "A distinctive medal with the sign of the bull."
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Misc/identification.rsi
-    state: medal-silver-3
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: leg_prime
   - type: PresetIdCard
     job: CaesarLegionDean
 
@@ -54,10 +54,11 @@
   description: "A distinctive medal with the sign of the bull."
   components:
   - type: Sprite
-    sprite: Corvax/Objects/Misc/identification.rsi
-    state: medal-gold
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: leg_cent
   - type: PresetIdCard
     job: CaesarLegionCenturion
+
 
 ### Frumentaria
 
@@ -188,8 +189,8 @@
   description: A worn out iron key. I wonder where it goes?
   components:
   - type: Sprite
-    sprite: _Nuclear14/Objects/Misc/identification.rsi
-    state: iron
+    sprite: _Nuclear14/Objects/Misc/tapes_cards.rsi
+    state: grey
 
 #MARK: Brotherhood West
 - type: entity

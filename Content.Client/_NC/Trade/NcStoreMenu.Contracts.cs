@@ -13,6 +13,7 @@ public sealed partial class NcStoreMenu
     private readonly List<string> _contractCardOrder = new();
     private readonly Dictionary<string, NcContractCard> _contractCardsById = new();
     private readonly List<string> _staleContractIdsScratch = new();
+    private NcContractConfirmWindow? _activeContractConfirmWindow;
 
     public void PopulateContracts(List<ContractClientData>? list, int skipCost, string skipCurrency, int skipBalance)
     {
@@ -122,7 +123,14 @@ public sealed partial class NcStoreMenu
         int skipBalance
     )
     {
-        var card = new NcContractCard(contract, _proto, _sprites, skipCost, skipCurrency, skipBalance);
+        var card = new NcContractCard(
+            contract,
+            _proto,
+            _sprites,
+            skipCost,
+            skipCurrency,
+            skipBalance,
+            SetActiveContractConfirmWindow);
         card.ApplyUiTheme(_uiColors);
         card.OnClaim += id => OnContractClaim?.Invoke(id);
         card.OnTake += id => OnContractTake?.Invoke(id);
@@ -131,8 +139,30 @@ public sealed partial class NcStoreMenu
         return card;
     }
 
+    private void SetActiveContractConfirmWindow(NcContractConfirmWindow window)
+    {
+        if (_activeContractConfirmWindow == window)
+            return;
+
+        _activeContractConfirmWindow?.Close();
+        _activeContractConfirmWindow = window;
+        window.OnClose += () =>
+        {
+            if (_activeContractConfirmWindow == window)
+                _activeContractConfirmWindow = null;
+        };
+    }
+
+    private void CloseActiveContractConfirmWindow()
+    {
+        var window = _activeContractConfirmWindow;
+        _activeContractConfirmWindow = null;
+        window?.Close();
+    }
+
     private void ResetContractsListToEmpty(Control contractList)
     {
+        CloseActiveContractConfirmWindow();
         contractList.RemoveAllChildren();
         PruneContractCards(Array.Empty<string>());
         _contractCardOrder.Clear();
@@ -161,7 +191,10 @@ public sealed partial class NcStoreMenu
         {
             var id = _staleContractIdsScratch[i];
             if (_contractCardsById.Remove(id, out var card))
+            {
+                card.CloseConfirmation();
                 card.Parent?.RemoveChild(card);
+            }
         }
     }
 }

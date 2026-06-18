@@ -522,6 +522,8 @@
     price: 5
   - proto: N14FloraWildXanderRootClippingSeed
     price: 5
+  - proto: CottonSeeds
+    price: 5  
 
 - type: storePresetStructured
   id: caravan_buy2
@@ -761,10 +763,6 @@
   entries:
   - proto: N14WeaponLaserPistol
     price: 33
-  - proto: N14WeaponLaserRifleMakeshift
-    price: 41
-  - proto: N14WeaponLaserRevolver
-    price: 44
   - proto: N14WeaponLaserPistolRecharger
     price: 56
   - proto: N14WeaponLaserRifle
@@ -1010,7 +1008,7 @@
 
 - type: storeCategoryStructured
   id: CaravanSell2_Ore
-  name: "Руда и валюта"
+  name: "Руда"
   entries:
   - proto: N14IngotCopper1
     price: 10
@@ -1026,10 +1024,6 @@
     price: 20
   - proto: N14IngotGold1
     price: 25
-  - proto: N14CurrencyLegionDenarius
-    price: 4
-  - proto: N14CurrencyLegionAureus
-    price: 80
 
 - type: storeCategoryStructured
   id: CaravanSell2_Alcohol

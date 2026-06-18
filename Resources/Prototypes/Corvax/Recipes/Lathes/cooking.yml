@@ -1,0 +1,15 @@
+- type: latheRecipe
+  id: N14JunkTincan
+  result: N14JunkTincan
+  category: N14Kitchen
+  completetime: 2
+  materials:
+    Steel: 50 
+
+- type: latheRecipe
+  id: N14DrinkNukaColaEmpty
+  result: N14DrinkNukaColaEmpty
+  category: N14Kitchen
+  completetime: 2
+  materials:
+    Glass: 100

@@ -397,6 +397,10 @@
   name: cotton
   suffix: Full
   components:
+  - type: Material # Forge-add
+  - type: PhysicalComposition # Forge-add
+    materialComposition:
+      Cotton: 100  
   - type: Stack
     stackType: Cotton
     baseLayer: base

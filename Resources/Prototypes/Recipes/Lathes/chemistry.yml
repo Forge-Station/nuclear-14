@@ -36,13 +36,13 @@
     Glass: 200
     Plastic: 100
 
-- type: latheRecipe
+- type: latheRecipe # Forge-Change
   id: Syringe
   result: Syringe
   completetime: 2
+  category: N14Chemistry
   materials:
-    Plastic: 100
-    Steel: 25
+    Glass: 100
 
 - type: latheRecipe
   id: BluespaceBeaker

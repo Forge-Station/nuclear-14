@@ -24,12 +24,25 @@
   - currency: Caps
     count: 10
 
+- type: ncBarterListing
+  id: BarterAureusToCaps
+  name: "Ауреусы в крышки"
+  description: "Обмен 1 ауреуса на 80 крышек."
+  icon: N14CurrencyLegionAureus
+  cost:
+  - currency: LegionAureus
+    count: 1
+  receive:
+  - currency: Caps
+    count: 80
+
 - type: ncBarterCategory
   id: BarterCatCurrency
   name: "Обмен валюты"
   listings:
   - BarterNcrToCaps
   - BarterDenariusToCaps
+  - BarterAureusToCaps
 
 - type: ncBarterPreset
   id: BarterPresetCityCurrency

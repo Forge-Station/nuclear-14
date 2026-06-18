@@ -49,7 +49,7 @@
     tracker: NCRNCO
     min: 72000 # 20 hours veterancy unlock
   items:
-  - N14ClothingOuterNCRCombatVeteranArmor  
+  - N14ClothingOuterNCRCombatVeteranArmor
 
 # MARK: Снаряжение ВП
 
@@ -110,6 +110,21 @@
         - NCRLT
   items:
     - N14ClothingNeckNCRShoulderPadFlag
+
+- type: loadout
+  id: LoadoutN14ClothingNeckCloakTentNCR
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRCadet
+        - NCRSoldier
+        - NCRWS
+        - NCRSGT
+  items:
+    - N14ClothingNeckCloakTentNCR
 
 # MARK: Разгрузки НКР
 
@@ -174,4 +189,5 @@
         - NCRSGT
   items:
     - N14ClothingMaskPlate
-    
+
+
