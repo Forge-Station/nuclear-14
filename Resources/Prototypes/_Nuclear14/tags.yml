@@ -103,6 +103,12 @@
 - type: Tag
   id: YaoguaiHide
 
+- type: Tag 
+  id: NightstalkerPelt
+
+- type: Tag # Forge-add
+  id: GeckoHide
+
 - type: Tag
   id: GearSmall
 
@@ -423,6 +429,3 @@
 
 - type: Tag
   id: Yaoguai
-
-- type: Tag
-  id: NightstalkerPelt

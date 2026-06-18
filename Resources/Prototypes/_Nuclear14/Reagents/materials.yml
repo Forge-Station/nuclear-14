@@ -276,3 +276,14 @@
   icon: { sprite: /Textures/_Nuclear14/Objects/Misc/materials.rsi, state: thread }
   color: "#d2691e"
   price: 0.01
+
+# Forge-start
+- type: material
+  id: Cotton
+  stackEntity: MaterialCotton1
+  name: хлопка
+  unit: цветка
+  icon: { sprite: /Textures/Objects/Materials/materials.rsi, state: cotton  }
+  color: "#ffffff"
+  price: 0.01
+# Forge-end

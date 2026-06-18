@@ -1,7 +1,7 @@
 
 - type: loadout
   id: LoadoutNCRN14ClothingHeadHatRangerHelmetSnowFox2
-  category: Roles
+  category: Head
   cost: 2
   exclusive: true
   sponsorLevel: 3
@@ -14,7 +14,7 @@
 
 - type: loadout
   id: LoadoutNCRN14ClothingOuterRangerSnowFox
-  category: Roles
+  category: Outer
   cost: 2
   exclusive: true
   sponsorLevel: 3
@@ -27,7 +27,7 @@
 
 - type: loadout
   id: LoadoutN14ClothingOuterWandererCoat
-  category: Roles
+  category: Outer
   cost: 4
   exclusive: true
   sponsorLevel: 2
@@ -36,7 +36,7 @@
 
 - type: loadout
   id: LoadoutBoSMidwestHellCat
-  category: Roles
+  category: Outer
   cost: 10
   exclusive: true
   sponsorLevel: 2
@@ -134,7 +134,7 @@
   id: LoadoutN14ClothingOuterLegionPaladinKiller
   customName: false
   customDescription: false
-  category: Roles
+  category: Outer
   cost: 0
   exclusive: true
   sponsorLevel: 3
@@ -405,7 +405,7 @@
   id: LoadoutClothingNeckCloakCowboyOld
   customName: false
   customDescription: false
-  category: Roles
+  category: Outer
   cost: 0
   exclusive: true
   sponsorLevel: 3
@@ -427,7 +427,7 @@
   id: LoadoutClothingNeckThragg
   customName: false
   customDescription: false
-  category: Roles
+  category: Neck
   cost: 0
   exclusive: true
   sponsorLevel: 2
