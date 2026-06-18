@@ -33,7 +33,6 @@
     - 0,0,2,1
     - 0,1,0,1
   - type: Sprite
-    scale: 0.8, 0.8
     sprite: _Nuclear14/Objects/Weapons/Guns/SMGs/10mmSMG.rsi
     layers:
     - state: base
