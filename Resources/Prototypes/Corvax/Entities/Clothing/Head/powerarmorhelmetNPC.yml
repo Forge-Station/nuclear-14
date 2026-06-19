@@ -1,0 +1,11 @@
+- type: entity
+  parent: N14ClothingHeadHelmetPowerArmorRaider
+  id: N14ClothingHeadHelmetPowerArmorRaiderNPC
+  categories: [ HideSpawnMenu ]
+  name: рейдерский силовой шлем
+  description: Мистер мангал здесь.
+  components:
+  - type: Sprite
+    netsync: false
+    sprite: Corvax/Clothing/Head/PowerArmorHelmets/t45raider.rsi
+  - type: Unremoveable

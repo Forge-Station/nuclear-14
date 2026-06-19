@@ -1,0 +1,79 @@
+- type: startingGear
+  id: RaiderPowerArmorBossNPC
+  equipment:
+    jumpsuit: ClothingUniformMNKUnderGarment
+    outerClothing: N14ClothingOuterPowerArmorRaiderNPC 
+    head: N14ClothingHeadHelmetPowerArmorRaiderNPC
+    mask: N14ClothingMaskLiner
+    pocket1: N14CurrencyCap500 
+
+- type: startingGear
+  id: MercenaryHeavySniperNPC
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitMilUniform
+    outerClothing: N14ClothingOuterVestChinese
+    head: ClothingHeadHatBeretMerc
+    shoes: N14ClothingBootsCombat
+    mask: N14ClothingMaskPatriotMask
+    eyes: ClothingEyesGlassesSunglasses
+    neck: N14ClothingNeckCloakGhillie
+    gloves: N14ClothingHandsGlovesCloth
+    pocket1: N14MercStash
+
+
+- type: startingGear
+  id: RaiderButcherNPC
+  equipment:
+    outerClothing: ClothingOuterApronChemist
+    shoes: ClothingShoesBootsFishing
+    mask: N14ClothingMaskPlate
+    gloves: ClothingHandsGlovesChemist
+  inhand:
+  - N14ripper
+
+- type: startingGear
+  id: PsychoRaiderGear1
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitRags
+    outerClothing: N14ClothingOuterRaiderBlastmaster
+    shoes: N14ClothingShoesTribal
+    head: N14ClothingTribalMuffaloskull
+    pocket1: N14RaiderStash
+  inhand:
+  - N14ButchersCleaver
+
+- type: startingGear
+  id: PsychoRaiderGear2
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitRags
+    outerClothing: N14ClothingOuterPainspike
+    shoes: N14ClothingBootsBlack
+    mask: N14ClothingMaskHockey
+    pocket1: N14RaiderStash
+  inhand:
+  - N14ScrapMachete
+
+- type: startingGear
+  id: PsychoRaiderGear3
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitRags
+    outerClothing: N14ClothingOuterLightMetalArmor
+    shoes: N14ClothingBootsLeather
+    mask: N14ClothingMaskGrill
+    pocket1: N14RaiderStash
+  inhand:
+  - N14BrokenPipe
+
+- type: startingGear
+  id: FernMercLieutenantGear1
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitCombat
+    shoes: N14ClothingBootsCombat
+    gloves: N14ClothingHandsGlovesCombat
+    head: N14ClothingHeadHatArmyBeretSpecial
+    neck: ClothingNeckHeadphones
+    mask: N14ClothingMaskPatriotMask
+    eyes: N14ClothingEyesSunGlasses
+    outerClothing: N14ClothingOuterCoatCombatDuster
+    belt: ClothingBeltMilitary
+    pocket1: N14MercStash

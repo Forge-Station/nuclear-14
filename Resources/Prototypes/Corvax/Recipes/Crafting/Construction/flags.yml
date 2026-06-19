@@ -157,3 +157,19 @@
     state: bazarflag
   conditions:
     - !type:TileNotBlocked
+
+- type: construction
+  id: N14DecorationFlagWesterBoS # WBoS
+  graph: DecorationFlagWesterBoS
+  startNode: start
+  targetNode: FlagWesterBoS
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: Corvax/Structures/Decoration/flags.rsi
+    state: westbosflag
+  conditions:
+    - !type:TileNotBlocked

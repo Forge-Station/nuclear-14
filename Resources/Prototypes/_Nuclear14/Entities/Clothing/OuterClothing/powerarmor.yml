@@ -345,7 +345,7 @@
         type: ToggleableClothingBoundUserInterface
   - type: ToggleableClothing
     clothingPrototypes:
-      head: N14ClothingHeadHelmetPowerArmorT45 # Forge-Change
+      head: N14ClothingHeadHelmetPowerArmorRaider # Forge-Change
       gloves: N14ClothingPAGauntletsDark
       shoes: N14ClothingPABootsDark
       back: N14ClothingPowerSystemsBack

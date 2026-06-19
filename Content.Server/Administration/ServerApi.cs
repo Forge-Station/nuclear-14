@@ -83,6 +83,7 @@ public sealed partial class ServerApi : IPostInjectInit
         RegisterHandler(HttpMethod.Get, "/admin/presets", GetPresets);
         RegisterHandler(HttpMethod.Get, "/admin/getckey", ActionGetCkey);
         RegisterHandler(HttpMethod.Get, "/admin/playtime_trackers", GetPlayTimeTrackers); // Forge-Change
+        RegisterHandler(HttpMethod.Get, "/admin/jobs", GetJobs); // Forge-Change
 
         // Post
         RegisterActorHandler(HttpMethod.Post, "/admin/actions/round/start", ActionRoundStart);
@@ -924,6 +925,30 @@ public sealed partial class ServerApi : IPostInjectInit
 
         await context.RespondJsonAsync(new PlayTimeTrackerResponse { Trackers = trackers });
     }
+
+    /// <summary>
+    ///     Returns every <see cref="JobPrototype"/> with its localized display name. Used by the Discord
+    ///     bot's punishment-request flow: role bans key off job prototype IDs, not play-time tracker IDs,
+    ///     so the bot needs the real job list rather than the tracker list.
+    /// </summary>
+    private async Task GetJobs(IStatusHandlerContext context)
+    {
+        var jobs = await RunOnMainThread(() =>
+        {
+            var result = new List<JobResponse.Job>();
+            foreach (var job in _prototypeManager.EnumeratePrototypes<JobPrototype>())
+            {
+                var name = job.LocalizedName;
+                if (string.IsNullOrWhiteSpace(name))
+                    name = job.ID;
+                result.Add(new JobResponse.Job { Id = job.ID, Name = name });
+            }
+
+            return result.OrderBy(j => j.Name, StringComparer.CurrentCultureIgnoreCase).ToList();
+        });
+
+        await context.RespondJsonAsync(new JobResponse { Jobs = jobs });
+    }
     // Forge-Change-End
 
     #endregion
@@ -1183,6 +1208,17 @@ public sealed partial class ServerApi : IPostInjectInit
         public required List<Tracker> Trackers { get; init; }
 
         public sealed class Tracker
+        {
+            public required string Id { get; init; }
+            public required string Name { get; init; }
+        }
+    }
+
+    private sealed class JobResponse
+    {
+        public required List<Job> Jobs { get; init; }
+
+        public sealed class Job
         {
             public required string Id { get; init; }
             public required string Name { get; init; }
