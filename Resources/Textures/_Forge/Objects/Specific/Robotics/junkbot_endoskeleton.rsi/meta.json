@@ -1,0 +1,32 @@
+{
+    "version": 1,
+    "license": "CC-BY-SA-3.0",
+    "copyright": "robo_suit taken from tgstation at https://github.com/tgstation/tgstation/commit/cf45322c7ee16f9d7e43d5260daf24ceb77c1b25. Overlay states made for Nuclear-14 Forge. TODO: указать автора оверлеев.",
+    "size": {
+        "x": 32,
+        "y": 32
+    },
+    "states": [
+        {
+            "name": "robo_suit"
+        },
+        {
+            "name": "junkbot_head+o"
+        },
+        {
+            "name": "junkbot_torso+o"
+        },
+        {
+            "name": "junkbot_l_arm+o"
+        },
+        {
+            "name": "junkbot_r_arm+o"
+        },
+        {
+            "name": "junkbot_l_leg+o"
+        },
+        {
+            "name": "junkbot_r_leg+o"
+        }
+    ]
+}

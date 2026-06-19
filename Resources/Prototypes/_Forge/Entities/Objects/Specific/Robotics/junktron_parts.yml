@@ -6,9 +6,11 @@
   name: junktron left arm
   components:
   - type: Sprite
-    state: borg_l_arm
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_l_arm
   - type: Icon
-    state: borg_l_arm
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_l_arm
   - type: Tag
     tags:
     - BorgArm
@@ -20,9 +22,11 @@
   name: junktron right arm
   components:
   - type: Sprite
-    state: borg_r_arm
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_r_arm
   - type: Icon
-    state: borg_r_arm
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_r_arm
   - type: Tag
     tags:
     - BorgArm
@@ -34,9 +38,11 @@
   name: junktron left leg
   components:
   - type: Sprite
-    state: borg_l_leg
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_l_leg
   - type: Icon
-    state: borg_l_leg
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_l_leg
   - type: Tag
     tags:
     - BorgLeg
@@ -48,9 +54,11 @@
   name: junktron right leg
   components:
   - type: Sprite
-    state: borg_r_leg
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_r_leg
   - type: Icon
-    state: borg_r_leg
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_r_leg
   - type: Tag
     tags:
     - BorgLeg
@@ -62,9 +70,11 @@
   name: junktron head
   components:
   - type: Sprite
-    state: borg_head
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_head
   - type: Icon
-    state: borg_head
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_head
   - type: Tag
     tags:
     - BorgHead
@@ -76,9 +86,11 @@
   name: junktron torso
   components:
   - type: Sprite
-    state: borg_chest
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_torso
   - type: Icon
-    state: borg_chest
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_torso
   - type: Tag
     tags:
     - BorgGenericTorso
@@ -106,6 +118,36 @@
   name: makeshift endoskeleton
   description: A crude frame that junktron robots are built on.
   components:
+  - type: Sprite
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_endoskeleton.rsi
+    state: robo_suit
+  - type: ItemMapper
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_endoskeleton.rsi
+    mapLayers:
+      junkbot_l_arm+o:
+        whitelist:
+          tags:
+          - BorgGenericLArm
+      junkbot_r_arm+o:
+        whitelist:
+          tags:
+          - BorgGenericRArm
+      junkbot_l_leg+o:
+        whitelist:
+          tags:
+          - BorgGenericLLeg
+      junkbot_r_leg+o:
+        whitelist:
+          tags:
+          - BorgGenericRLeg
+      junkbot_head+o:
+        whitelist:
+          tags:
+          - BorgGenericHead
+      junkbot_torso+o:
+        whitelist:
+          tags:
+          - BorgGenericTorso
   - type: Construction
     graph: N14JunktronCyborg
     node: start
@@ -122,7 +164,7 @@
   description: A crude man-machine interface cobbled together from scrap. Lets a biological brain pilot a junkbot.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Objects/Specific/Robotics/junktron_mmi.rsi
+    sprite: _Forge/Objects/Specific/Robotics/junktron_mmi.rsi
     layers:
     - state: inactive
       map: ["enum.MMIVisualLayers.Base"]

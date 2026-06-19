@@ -6,7 +6,7 @@
   description: A handheld robot programmer. Use it in hand to edit, and on a robot with its panel open to upload.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Objects/Specific/Robotics/programmator.rsi
+    sprite: _Forge/Objects/Specific/Robotics/programmator.rsi
     state: icon
   - type: LawCard
     laws:
