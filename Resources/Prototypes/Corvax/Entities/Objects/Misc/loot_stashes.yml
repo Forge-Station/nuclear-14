@@ -16,13 +16,13 @@
     items:
       - id: N14CurrencyCap10
         prob: 0.6
-        orGroup: StashCashN14      
+        orGroup: StashCashN14
+      - id: N14CurrencyCap50
+        prob: 0.325
+        orGroup: StashCashN14       
       - id: N14CurrencyCap100
         prob: 0.125
-        orGroup: StashCash  
-      - id: N14DirtyGauze1 # Let's also give them some medicine or chems.
-        prob: 0.25
-        orGroup: StashMeds
+        orGroup: StashCashN14
       - id: N14Ointment1
         prob: 0.1375
         orGroup: StashMeds
