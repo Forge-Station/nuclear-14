@@ -4,9 +4,9 @@ using Robust.Client.GameObjects;
 
 namespace Content.Client._Forge.CombatModeVisuals;
 
-// Показывает/прячет оверлей-слои спрайта (CombatModeVisuals.Layers) по боевому режиму.
-// Опрашиваем в Update, а не подпиской: пару (CombatModeComponent, AfterAutoHandleStateEvent) уже занял ядровый
-// CombatModeSystem, а второй подписки на ту же пару движок не допускает. Сущностей с компонентом единицы — дёшево.
+// Показывает и прячет слои спрайта, когда существо входит/выходит из боевого режима.
+// Проверяем каждый тик, а не через подписку: на смену боевого режима уже подписан движковый CombatModeSystem,
+// а двух подписчиков на одно и то же событие движок не пускает. Существ с таким компонентом мало, так что не накладно.
 public sealed class CombatModeVisualsSystem : EntitySystem
 {
     public override void Update(float frameTime)

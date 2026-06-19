@@ -1,4 +1,4 @@
-# запчасти "хламотрона" из скрапа: несут теги BorgGeneric*, поэтому надеваются на CyborgEndoskeleton как обычные.
+# детальки для хламобота.
 
 - type: entity
   id: N14JunktronLeftArm
@@ -11,7 +11,6 @@
     state: borg_l_arm
   - type: Tag
     tags:
-    - Trash
     - BorgArm
     - BorgGenericLArm
 
@@ -26,7 +25,6 @@
     state: borg_r_arm
   - type: Tag
     tags:
-    - Trash
     - BorgArm
     - BorgGenericRArm
 
@@ -41,7 +39,6 @@
     state: borg_l_leg
   - type: Tag
     tags:
-    - Trash
     - BorgLeg
     - BorgGenericLLeg
 
@@ -56,7 +53,6 @@
     state: borg_r_leg
   - type: Tag
     tags:
-    - Trash
     - BorgLeg
     - BorgGenericRLeg
 
@@ -71,7 +67,6 @@
     state: borg_head
   - type: Tag
     tags:
-    - Trash
     - BorgHead
     - BorgGenericHead
 
@@ -86,10 +81,9 @@
     state: borg_chest
   - type: Tag
     tags:
-    - Trash
     - BorgGenericTorso
 
-# Оптический сенсор: замена вспышке в графе N14JunktronCyborg (по тегу). БЕЗ компонента Flash — засветить нельзя.
+# Оптический сенсор. Замена вспышке. Не слепит :(
 - type: entity
   id: N14OpticalSensor
   parent: BaseItem
@@ -120,7 +114,7 @@
     - part-container
     - cell_slot
 
-# Кустарный ММИ: наследует MMI; спрайт упрощён до 2 стейтов — есть мозг → active, нет → inactive (тип мозга/разум игнорируем).
+# Упрощенный в плане стейтов спрайтов ММИ.
 - type: entity
   id: N14JunktronMMI
   parent: MMI
@@ -140,7 +134,7 @@
     hasMindState: active
     noMindState: active
 
-# Кустарный позитронный мозг: наследует PositronicBrain (BorgBrain + гост-роль).
+# Кустарный позитронный мозг. Нужен, чтоб вставить свой красивый спрайт кустарного позитронного мозга.
 - type: entity
   id: N14JunktronPositronicBrain
   parent: PositronicBrain

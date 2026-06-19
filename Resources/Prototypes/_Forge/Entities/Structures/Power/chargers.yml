@@ -1,4 +1,4 @@
-# автономная док-станция: как BorgCharger, но без электросети (needsPower:false) и неразбираемая (parent BaseStructure). Только маппинг.
+# Неуязвимая, автономная док-станция для боргов. Только маппинг.
 - type: entity
   parent: BaseStructure
   id: N14AutonomousRobotDock
@@ -69,7 +69,6 @@
   - type: ApcPowerReceiver
     needsPower: false
   - type: InteractionOutline
-  # неразрушаемая: единственный порог 10000 заменяет пороги BaseStructure (псевдо-неразрушаемость, как у разрабов).
   - type: Destructible
     thresholds:
     - trigger:

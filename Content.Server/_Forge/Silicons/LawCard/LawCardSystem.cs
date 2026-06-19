@@ -103,18 +103,17 @@ public sealed class LawCardSystem : EntitySystem
             return;
         }
 
-        var laws = ent.Comp.Laws.Select(l => l.ShallowClone()).ToList();
-        _laws.SetLaws(laws, target);
+        _laws.SetLaws(CloneLaws(ent.Comp), target);
         _popup.PopupEntity(Loc.GetString("law-card-uploaded", ("target", target)), target, args.User);
 
-        // OverwriteAccess: борг перенимает фракции+доступы прошившего (выкл — только законы, без смены принадлежности).
+        // если включено, борг заодно перенимает фракции и допуски того, кто его прошил. если нет — меняем только законы.
         if (ent.Comp.OverwriteAccess && args.User != target)
             AdoptOwnership(target, args.User);
 
         args.Handled = true;
     }
 
-    // Борг перенимает фракции и доступы прошившего (что носит сейчас: ID/инвентарь); попап «Допуск изменён» обоим.
+    // борг берёт фракции и допуски прошившего — те, что у того сейчас (ID-карта, инвентарь). обоим показываем «Допуск изменён».
     private void AdoptOwnership(EntityUid target, EntityUid user)
     {
         if (TryComp<NpcFactionMemberComponent>(user, out var userFactions) && userFactions.Factions.Count > 0)
@@ -139,7 +138,7 @@ public sealed class LawCardSystem : EntitySystem
         CloseEditor(ent.Owner);
     }
 
-    // Борг не пользуется программатором (иначе со свободной рукой манипулятора переписал бы законы, в т.ч. себе).
+    // сам борг карту использовать не может — иначе свободной рукой-манипулятором переписал бы законы, в том числе себе.
     private bool DenyBorgUse(EntityUid user)
     {
         if (!HasComp<BorgChassisComponent>(user))
@@ -177,6 +176,12 @@ public sealed class LawCardSystem : EntitySystem
         if (!TryComp<LawCardComponent>(card, out var comp))
             return new List<SiliconLaw>();
 
+        return CloneLaws(comp);
+    }
+
+    // Отдаём копии законов, а не сам список карты — чтобы правки на стороне борга/окна не меняли карту.
+    private static List<SiliconLaw> CloneLaws(LawCardComponent comp)
+    {
         return comp.Laws.Select(l => l.ShallowClone()).ToList();
     }
 
@@ -193,7 +198,7 @@ public sealed class LawCardSystem : EntitySystem
         if (!_hands.IsHolding(user, card))
             return;
 
-        // Drop blank laws and cap the count (guards against crafted/autoclicked saves).
+        // выкидываем пустые законы и режем список по максимуму — на случай кривых или накликанных сохранений.
         comp.Laws = laws
             .Where(l => !string.IsNullOrWhiteSpace(l.LawString))
             .Take(LawCardComponent.MaxLaws)

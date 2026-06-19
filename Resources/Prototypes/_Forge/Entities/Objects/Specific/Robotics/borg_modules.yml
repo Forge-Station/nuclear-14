@@ -1,4 +1,4 @@
-# модули хламобота (категория BorgModuleGeneric): рамка n14_generic из _Nuclear14-RSI + ванильные иконки.
+# Модули боргов общей категории. (большая часть дублируют ваниллу, но был изобретен велосипед ради применения аутентичных*** спрайтов) 
 - type: entity
   parent: [ BaseBorgModule, BaseProviderBorgModule ]
   id: N14BorgModuleJunkTools
@@ -73,7 +73,7 @@
     - N14WeaponLaserPistolRecharger
     - N14Machete
 
-# Хламоманипулятор: даёт боргу одну свободную руку (BorgHandModule, через выбор модуля).
+# Здесь кастомный компонент для создания руки борга применяется. (добавляет N пустых рук напрямую боргу. Отбирает при выключении модуля. (на текущий момент люди (и не только) с одной рукой сталкиваются с багами, поэтому лучше пока 2, до лучших времен...)
 - type: entity
   parent: [ BaseBorgModule, BaseProviderBorgModule ]
   id: N14BorgModuleJunkManipulator
@@ -86,7 +86,7 @@
     - sprite: Objects/Specific/Robotics/borgmodule.rsi
       state: icon-grappling-gun
   - type: BorgHandModule
-    hands: 1
+    hands: 2
 
 - type: entity
   parent: [ BaseBorgModule, BaseProviderBorgModule ]
@@ -105,7 +105,6 @@
     - Shovel
     - OreBag
     - Crowbar
-    - RadioHandheld
 
 - type: entity
   parent: [ BaseBorgModule, BaseProviderBorgModule ]

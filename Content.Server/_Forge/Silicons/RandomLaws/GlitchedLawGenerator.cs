@@ -7,7 +7,7 @@ using Robust.Shared.Random;
 
 namespace Content.Server._Forge.Silicons.RandomLaws;
 
-// GenerateLaw is a copy of IonStormRule.GenerateLaw, kept here to avoid an upstream edit.
+// GenerateLaw — преимущественно калька с Ионного шторма. Велосипед изобретен потому что в Ванилле захардкожены датасеты и путь локализации.
 public sealed class GlitchedLawGenerator : EntitySystem
 {
     [Dependency] private readonly IPrototypeManager _proto = default!;

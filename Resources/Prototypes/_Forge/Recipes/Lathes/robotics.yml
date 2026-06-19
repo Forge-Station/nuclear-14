@@ -1,13 +1,12 @@
-# рецепты деталей хламотрона из скрапа (цифры черновые; все виды лома — чтобы попали в material-whitelist верстака).
-
+# Лом собирать очень нудно и неинтересно (на данный момент), поэтому такие солевые цены.
 - type: latheRecipe
   id: N14JunktronEndoskeleton
   result: N14JunktronEndoskeleton
   category: Robotics
   completetime: 3
   materials:
-    ScrapSteel: 800
-    ScrapElectronic: 200
+    ScrapSteel: 300
+    ScrapElectronic: 100
 
 - type: latheRecipe
   id: N14OpticalSensor
@@ -15,8 +14,7 @@
   category: Robotics
   completetime: 2
   materials:
-    ScrapElectronic: 100
-    ScrapGold: 25
+    ScrapElectronic: 25
 
 - type: latheRecipe
   id: N14JunktronMMI
@@ -24,7 +22,7 @@
   category: Robotics
   completetime: 3
   materials:
-    ScrapElectronic: 200
+    ScrapElectronic: 150
     ScrapGold: 50
     ScrapSteel: 100
 
@@ -35,7 +33,7 @@
   completetime: 3
   materials:
     ScrapElectronic: 300
-    ScrapGold: 100
+    ScrapGold: 50
 
 - type: latheRecipe
   id: N14LawCard

@@ -1,4 +1,4 @@
-# граф сборки хламобота — копия generic-ветки Cyborg, но 2 вспышки заменены на 2 оптических сенсора. Результат — N14Junkbot.
+# граф сборки хламобота. (вся эта фигня придумана, чтобы не крафтить вспышки из ванильной станции)
 - type: constructionGraph
   id: N14JunktronCyborg
   start: start
@@ -7,7 +7,6 @@
     entity: N14JunktronEndoskeleton
     edges:
 
-    # вынуть вставленные части ломом
     - to: start
       conditions:
       - !type:ContainerNotEmpty
@@ -27,7 +26,7 @@
         amount: 1
         doAfter: 1
         store: part-container
-
+        
       - tag: N14OpticalSensor
         name: optical sensor
         store: part-container

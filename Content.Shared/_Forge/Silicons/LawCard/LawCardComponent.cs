@@ -15,7 +15,7 @@ public sealed partial class LawCardComponent : Component
     [DataField]
     public float UploadDelay = 5f;
 
-    // true — заливка законов также переписывает фракцию и доступы цели на прошившего; false — только законы.
+    // если true, при заливке законов цель ещё и перенимает фракцию и допуски прошившего. если false — только законы.
     [DataField]
     public bool OverwriteAccess = true;
 }

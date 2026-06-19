@@ -6,15 +6,15 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Server._Forge.Radio;
 
-// Моб, который сам себе микрофон и динамик (RadioMicrophone+RadioSpeaker на самой сущности), не может вещать ванильным путём:
-// RadioDeviceSystem.OnListen роняет речь источника с RadioSpeaker (анти-петля динамик→микрофон). Ловим речь напрямую через
-// EntitySpokeEvent (на ListenEvent уже подписан RadioDeviceSystem) и сами шлём её в эфир на канал/частоту микрофона.
+// Если существо само себе и микрофон, и динамик (рация встроена прямо в него), обычная рация его собственную речь
+// в эфир не пускает — там стоит защита, чтобы динамик не зациклился на свой же микрофон. Поэтому ловим речь существа
+// напрямую и отправляем её в эфир сами, на тот канал и частоту, что выставлены у микрофона.
 public sealed class IntegratedRadioSpeechSystem : EntitySystem
 {
     [Dependency] private readonly RadioSystem _radio = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
 
-    // Рвёт петлю само-эха: динамик синхронно проговаривает принятое (EntitySpokeEvent) внутри нашего же SendRadioMessage.
+    // флаг, чтобы рация не пошла по кругу: динамик повторяет принятое сообщение вслух, и без него оно снова ушло бы в эфир.
     private bool _broadcasting;
 
     public override void Initialize()
@@ -26,7 +26,7 @@ public sealed class IntegratedRadioSpeechSystem : EntitySystem
 
     private void OnSpoke(EntityUid uid, RadioMicrophoneComponent mic, EntitySpokeEvent args)
     {
-        // открытый микрофон: только при включённом микрофоне и только обычная речь (радио-префиксы шлёт IntrinsicRadioTransmitter).
+        // только если микрофон включён и это обычная речь, а не радио-команда (команды уходят своим путём).
         if (_broadcasting || !mic.Enabled || args.Channel != null)
             return;
 

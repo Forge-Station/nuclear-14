@@ -1,10 +1,8 @@
-# хламобот — кустарный борг, собирается на кустарном эндоскелете (граф N14JunktronCyborg).
 - type: entity
   id: N14Junkbot
-  parent: [BorgChassisGeneric, BaseFrequencyRadio]
+  parent: N14BaseBorg
   name: junkbot
   components:
-  # спрайт хламобота — своя RSI (плейсхолдер: арт протектрона под борговой раскладкой, позже заменить на свой).
   - type: Sprite
     sprite: _Forge/Mobs/Cyborgs/junkbot.rsi
     layers:
@@ -18,7 +16,6 @@
       shader: unshaded
       map: ["light"]
       visible: false
-    # красные «глаза» в боевом режиме (тулбар): оверлей поверх обычных; видимостью рулит CombatModeVisuals.
     - state: robot_e_combat
       shader: unshaded
       map: ["combat_light"]
@@ -30,7 +27,6 @@
     noMovementLayers:
       movement:
         state: robot
-  # крит/смерть → лежачий спрайт dead (тело-слой общий с SpriteMovement, как у NPC-протектрона N14).
   - type: DamageStateVisuals
     states:
       Alive:
@@ -39,71 +35,25 @@
         Base: dead
       Dead:
         Base: dead
-  # оверлей-слой combat_light виден в боевом режиме (общий CombatModeVisuals).
   - type: CombatModeVisuals
     layers:
     - combat_light
   - type: Construction
+  # Кастомный граф сборки, чтоб не использовать вспышки (я хз по поводу баланса, можно отойти на граф сборки ванильного борга с обычными вспышками если пофиг)
     graph: N14JunktronCyborg
     node: cyborg
   - type: BorgTransponder
     name: junkbot
-  # Wastelander вместо унаследованной NanoTrasen — иначе пустошные мобы N14 не считают борга врагом.
+  # У родительского N14BaseBorg нет фракций. Нужно указать фракцию существу, чтоб на него НПС агрились.
   - type: NpcFactionMember
     factions:
     - Wastelander
-  # случайные глючные законы на спавне; переписываются перфокартой. N14JunkbotLaws — запасной свод.
+  # Случайные глючные законы на спавне; N14JunkbotLaws — запасной свод.
   - type: SiliconLawProvider
     laws: N14JunkbotLaws
   - type: RandomSiliconLaws
-  # запрет ручного тоггла (E по себе) — иначе со свободной рукой манипулятора борг выключает свои модули.
-  - type: ItemToggle
-    onUse: false
-    onActivate: false
-  # без заряженной ячейки борг не активируется (ванильный ToggleCellDraw: гейтит ItemToggle по заряду).
-  - type: ToggleCellDraw
-  # только двоичный радиоканал (база борга даёт Binary/Common/Science).
-  - type: IntrinsicRadioTransmitter
-    channels:
-    - Binary
-  - type: ActiveRadio
-    channels:
-    - Binary
-  # сама рация (RadioMicrophone/Speaker/IntrinsicUI + действие) приходит от parent BaseFrequencyRadio.
-  # UI редекларируем целиком (law/module/strip борга + ключ рации) — чтобы не зависеть от мерджа UserInterface между родителями.
-  - type: UserInterface
-    interfaces:
-      enum.SiliconLawsUiKey.Key:
-        type: SiliconLawBoundUserInterface
-      enum.BorgUiKey.Key:
-        type: BorgBoundUserInterface
-      enum.StrippingUiKey.Key:
-        type: StrippableBoundUserInterface
-      enum.HandheldRadioUiKey.Key:
-        type: HandheldRadioBoundUserInterface
-  # гейт меню борга — вскрытие панели отвёрткой (10с), а не ID-замок: Lock и AccessReader отключены.
-  - type: WiresPanel
-    openDelay: 10
-  - type: Lock
-    locked: false
-  - type: AccessReader
-    enabled: false
-    access: []
-  # обнуляем мастер-доступ борга (база даёт AllAccessBorg — открыл бы все шлюзы); открывает только публичные двери.
-  - type: Access
-    groups: []
-    tags: []
-  # снимаем худ-просмотрщики иконок (job/mindshield) — иначе клиент борга падает на чужих битых статус-иконках.
-  - type: RemoveComponents
-    components:
-    - ShowJobIcons
-    - ShowMindShieldIcons
-  # кукла урона (выбор части тела) — у борг-шасси её нет по умолчанию.
-  - type: Targeting
-  # форджевый «прицел»: CameraFollow даёт экшен ActionToggleCamera, с FollowDistance-оружием расширяет обзор.
-  - type: CameraFollow
 
-# отладочный хламобот: спавнится с батареей (PowerCellHyper) и хламозитронным мозгом — готов без сборки.
+# отладочный хламобот: спавнится с батареей и хламозитронным мозгом.
 - type: entity
   parent: N14Junkbot
   id: N14JunkbotDebug

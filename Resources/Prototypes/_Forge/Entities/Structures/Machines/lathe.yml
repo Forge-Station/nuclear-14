@@ -1,4 +1,3 @@
-# "верстак изготовления роботов" — единообразен с верстаками N14 (parent N14WorkbenchBase); крафтит детали хламотрона из скрапа; спавн/маппинг.
 - type: entity
   parent: N14WorkbenchBase
   id: N14RobotFabricator
@@ -7,7 +6,6 @@
   components:
   - type: Sprite
     state: tinkerbench
-  # MaterialStorage наследуется от N14WorkbenchBase без тегового вайтлиста: что принимать, лат считает динамически из материалов рецептов (MaterialWhiteList).
   - type: Lathe
     idleState: icon
     runningState: icon # change this
@@ -31,7 +29,6 @@
     - N14BorgModuleJunkMining
     - N14BorgModuleJunkMusique
     dynamicRecipes: []
-  # неразрушаемый: единственный порог 10000 заменяет пороги BaseStructure (псевдо-неразрушаемость, по твоему запросу).
   - type: Destructible
     thresholds:
     - trigger:

@@ -1,0 +1,44 @@
+# Конкретный борг наследует N14BaseBorg и добавляет своё: спрайт, фракцию, свод законов, граф сборки.
+# НЕ объявлять здесь `- type: BorgChassis` — в связке с CameraFollow роняет превью спавн-меню хз почему мб потом пофиксим. Пока живем с 6-ю модулями у борга
+- type: entity
+  abstract: true
+  id: N14BaseBorg
+  parent: [BorgChassisGeneric, BaseFrequencyRadio]
+  components:
+  - type: ItemToggle
+    onUse: false
+    onActivate: false
+  - type: ToggleCellDraw
+  - type: IntrinsicRadioTransmitter
+    channels:
+    - Binary
+  - type: ActiveRadio
+    channels:
+    - Binary
+  - type: UserInterface
+    interfaces:
+      enum.SiliconLawsUiKey.Key:
+        type: SiliconLawBoundUserInterface
+      enum.BorgUiKey.Key:
+        type: BorgBoundUserInterface
+      enum.StrippingUiKey.Key:
+        type: StrippableBoundUserInterface
+      enum.HandheldRadioUiKey.Key:
+        type: HandheldRadioBoundUserInterface
+  - type: WiresPanel
+    openDelay: 6
+  - type: Lock
+    locked: false
+  - type: AccessReader
+    enabled: false
+    access: []
+  - type: Access
+    groups: []
+    tags: []
+  # Кастомный компонент для удаления унаследованных компонентов...
+  - type: RemoveComponents
+    components:
+    - ShowJobIcons
+    - ShowMindShieldIcons
+  - type: Targeting
+  - type: CameraFollow

@@ -12,18 +12,14 @@ public sealed class BorgHandModuleSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
-
         SubscribeLocalEvent<BorgHandModuleComponent, BorgModuleSelectedEvent>(OnSelected);
         SubscribeLocalEvent<BorgHandModuleComponent, BorgModuleUnselectedEvent>(OnUnselected);
     }
 
     private void OnSelected(Entity<BorgHandModuleComponent> ent, ref BorgModuleSelectedEvent args)
     {
-        // Already provided hands (e.g. a stray re-select) — don't stack a second set.
-        if (ent.Comp.AddedHands.Count > 0)
-            return;
-
-        if (!TryComp<HandsComponent>(args.Chassis, out var hands))
+        // руки уже выданы или вешать их некуда — выходим.
+        if (ent.Comp.AddedHands.Count > 0 || !TryComp<HandsComponent>(args.Chassis, out var hands))
             return;
 
         for (var i = 0; i < ent.Comp.Hands; i++)
@@ -39,7 +35,7 @@ public sealed class BorgHandModuleSystem : EntitySystem
         if (!TryComp<HandsComponent>(args.Chassis, out var hands))
             return;
 
-        // RemoveHand drops the held item before removing the hand, so a grabbed item isn't lost.
+        // RemoveHand сам роняет то, что было в руке, перед её удалением — так предмет не пропадёт.
         foreach (var handId in ent.Comp.AddedHands)
             _hands.RemoveHand(args.Chassis, handId, hands);
 
