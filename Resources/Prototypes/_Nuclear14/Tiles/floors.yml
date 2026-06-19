@@ -336,6 +336,16 @@
   variants: 8
   placementVariants: [0, 1, 2, 3, 4, 5, 6, 7]
   baseTurf: FloorWasteland
+  baseWhitelist:
+  - N14FloorConcrete
+  - N14FloorConcreteDark
+  - ForgeFloorWasteland
+  - FloorWasteland
+  - FloorDirtNew
+  - FloorCaveDrought
+  - FloorGrayConcreteSmooth
+  - ForgeFloorGroundDesert
+  - FloorCave
   isSubfloor: false
   deconstructTools: [ Prying ]
   itemDrop: FloorTileItemMetalIndustrial
@@ -353,6 +363,16 @@
   variants: 8
   placementVariants: [0, 1, 2, 3, 4, 5, 6, 7]
   baseTurf: FloorWasteland
+  baseWhitelist:
+  - N14FloorConcrete
+  - N14FloorConcreteDark
+  - ForgeFloorWasteland
+  - FloorWasteland
+  - FloorDirtNew
+  - FloorCaveDrought
+  - FloorGrayConcreteSmooth
+  - ForgeFloorGroundDesert
+  - FloorCave
   isSubfloor: false
   deconstructTools: [ Prying ]
   itemDrop: FloorTileItemMetalMS13
@@ -370,6 +390,16 @@
   variants: 8
   placementVariants: [0, 1, 2, 3, 4, 5, 6, 7]
   baseTurf: FloorWasteland
+  baseWhitelist:
+  - N14FloorConcrete
+  - N14FloorConcreteDark
+  - ForgeFloorWasteland
+  - FloorWasteland
+  - FloorDirtNew
+  - FloorCaveDrought
+  - FloorGrayConcreteSmooth
+  - ForgeFloorGroundDesert
+  - FloorCave
   isSubfloor: false
   deconstructTools: [ Prying ]
   itemDrop: FloorTileItemMetalGrate
@@ -387,6 +417,16 @@
   variants: 4
   placementVariants: [0, 1, 2, 3]
   baseTurf: FloorWasteland
+  baseWhitelist:
+  - N14FloorConcrete
+  - N14FloorConcreteDark
+  - ForgeFloorWasteland
+  - FloorWasteland
+  - FloorDirtNew
+  - FloorCaveDrought
+  - FloorGrayConcreteSmooth
+  - ForgeFloorGroundDesert
+  - FloorCave
   isSubfloor: false
   deconstructTools: [ Prying ]
   itemDrop: FloorTileItemMetalSolid
@@ -505,6 +545,16 @@
   variants: 4
   placementVariants: [0, 1, 2, 3]
   baseTurf: FloorWasteland
+  baseWhitelist:
+  - N14FloorConcrete
+  - N14FloorConcreteDark
+  - ForgeFloorWasteland
+  - FloorWasteland
+  - FloorDirtNew
+  - FloorCaveDrought
+  - FloorGrayConcreteSmooth
+  - ForgeFloorGroundDesert
+  - FloorCave
   isSubfloor: false
   deconstructTools: [ Prying ]
   footstepSounds:
@@ -539,6 +589,16 @@
   variants: 4
   placementVariants: [0, 1, 2, 3]
   baseTurf: FloorWasteland
+  baseWhitelist:
+  - N14FloorConcrete
+  - N14FloorConcreteDark
+  - ForgeFloorWasteland
+  - FloorWasteland
+  - FloorDirtNew
+  - FloorCaveDrought
+  - FloorGrayConcreteSmooth
+  - ForgeFloorGroundDesert
+  - FloorCave
   isSubfloor: false
   deconstructTools: [ Prying ]
   footstepSounds:
@@ -573,6 +633,16 @@
   variants: 4
   placementVariants: [0, 1, 2, 3]
   baseTurf: FloorWasteland
+  baseWhitelist:
+  - N14FloorConcrete
+  - N14FloorConcreteDark
+  - ForgeFloorWasteland
+  - FloorWasteland
+  - FloorDirtNew
+  - FloorCaveDrought
+  - FloorGrayConcreteSmooth
+  - ForgeFloorGroundDesert
+  - FloorCave
   isSubfloor: false
   deconstructTools: [ Prying ]
   footstepSounds:
@@ -607,6 +677,16 @@
   variants: 4
   placementVariants: [0, 1, 2, 3]
   baseTurf: FloorWasteland
+  baseWhitelist:
+  - N14FloorConcrete
+  - N14FloorConcreteDark
+  - ForgeFloorWasteland
+  - FloorWasteland
+  - FloorDirtNew
+  - FloorCaveDrought
+  - FloorGrayConcreteSmooth
+  - ForgeFloorGroundDesert
+  - FloorCave
   isSubfloor: false
   deconstructTools: [ Prying ]
   footstepSounds:

@@ -5,64 +5,89 @@ using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Stacks;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Random;
 using Robust.Shared.Timing;
+
 
 namespace Content.Server._NC.Trade;
 
 
-public sealed partial class NcStoreLogicSystem : EntitySystem
+public sealed partial class NcStoreLogicSystem : EntitySystem, IStoreRewardExecutionService, IStoreCurrencyDebitService
 {
     private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore-logic");
     private static readonly IComparer<string> OrdinalIds = new OrdinalIdComparer();
 
     [Dependency] private readonly IComponentFactory _compFactory = default!;
-    [Dependency] public readonly NcStoreCurrencySystem _currency = default!;
+    [Dependency] private readonly NcStoreCurrencySystem _currency = default!;
     [Dependency] private readonly EntityStorageSystem _entityStorage = default!;
-    [Dependency] public readonly IEntityManager _ents = default!;
+    [Dependency] private readonly IEntityManager _ents = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
-    [Dependency] public readonly NcStoreInventorySystem _inventory = default!;
-    [Dependency] public readonly IPrototypeManager _protos = default!;
-    [Dependency] public readonly SharedStackSystem _stacks = default!;
+    [Dependency] private readonly NcStoreInventorySystem _inventory = default!;
+    [Dependency] private readonly IPrototypeManager _protos = default!;
+
+    // Phase M2: used by Buy/Sell flows to random-pick a concrete prototype from matcher.Items.
+    [Dependency] private readonly IRobustRandom _random = default!;
+
+    [Dependency] private readonly SharedStackSystem _stacks = default!;
 
     public override void Initialize()
     {
         base.Initialize();
         InitializeServices();
     }
+
     public void InvalidateInventoryCache(EntityUid root) => _inventory.InvalidateInventoryCache(root);
 
-    public void QueuePickupToHandsOrCrateNextTick(EntityUid user, EntityUid spawned)
-    {
-        Timer.Spawn(0, () =>
-        {
-            if (!Exists(user) || !Exists(spawned))
-                return;
-
-            if (_ents.TryGetComponent(spawned, out TransformComponent? xform) && xform.ParentUid == user)
+    public void QueuePickupToHandsOrCrateNextTick(EntityUid user, EntityUid spawned) =>
+        Timer.Spawn(
+            0,
+            () =>
             {
+                if (!Exists(user) || !Exists(spawned))
+                    return;
+
+                if (_ents.TryGetComponent(spawned, out TransformComponent? xform) && xform.ParentUid == user)
+                {
+                    InvalidateInventoryCache(user);
+                    return;
+                }
+
+                var pickedUp = false;
+                if (_ents.HasComponent<HandsComponent>(user))
+                {
+                    try
+                    {
+                        pickedUp = _hands.TryPickupAnyHand(user, spawned, false);
+                    }
+                    catch (Exception e)
+                    {
+                        Sawmill.Warning(
+                            $"[NcStore] Failed to pick up reward entity {ToPrettyString(spawned)} for {ToPrettyString(user)}: {e}");
+                    }
+                }
+
+                if (pickedUp)
+                {
+                    InvalidateInventoryCache(user);
+                    return;
+                }
+
+                if (TryGetPulledClosedCrate(user, out var crate) && Exists(crate))
+                {
+                    try
+                    {
+                        _entityStorage.Insert(spawned, crate);
+                        InvalidateInventoryCache(crate);
+                    }
+                    catch (Exception e)
+                    {
+                        Sawmill.Warning(
+                            $"[NcStore] Failed to insert reward entity {ToPrettyString(spawned)} into crate {ToPrettyString(crate)}: {e}");
+                    }
+                }
+
                 InvalidateInventoryCache(user);
-                return;
-            }
-
-            var pickedUp = false;
-            if (_ents.HasComponent<HandsComponent>(user))
-                pickedUp = _hands.TryPickupAnyHand(user, spawned, false);
-
-            if (pickedUp)
-            {
-                InvalidateInventoryCache(user);
-                return;
-            }
-
-            if (TryGetPulledClosedCrate(user, out var crate) && Exists(crate))
-            {
-                _entityStorage.Insert(spawned, crate);
-                InvalidateInventoryCache(crate);
-            }
-
-            InvalidateInventoryCache(user);
-        });
-    }
+            });
 
     public EntityUid? GetPulledClosedCrate(EntityUid user) =>
         TryGetPulledClosedCrate(user, out var crate) ? crate : null;

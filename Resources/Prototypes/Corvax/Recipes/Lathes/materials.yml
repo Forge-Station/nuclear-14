@@ -1,0 +1,15 @@
+- type: latheRecipe
+  id: MaterialCloth
+  result: MaterialCloth1
+  category: N14Misc
+  completetime: 2
+  materials:
+    Cotton: 200
+
+- type: latheRecipe
+  id: N14MaterialThread
+  result: N14MaterialThread1
+  category: N14Misc
+  completetime: 4
+  materials:
+    Cloth: 100

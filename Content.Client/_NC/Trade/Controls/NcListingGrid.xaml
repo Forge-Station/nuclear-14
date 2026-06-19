@@ -5,13 +5,17 @@
               HorizontalExpand="True"
               VerticalExpand="True">
 
-    <Label Name="MessageLabel"
-           HorizontalExpand="True"
-           Visible="False" />
+    <PanelContainer Name="MessagePanel"
+                    HorizontalExpand="True"
+                    Visible="False">
+        <Label Name="MessageLabel"
+               HorizontalExpand="True"
+               Margin="6 4 6 4" />
+    </PanelContainer>
 
     <BoxContainer Name="ItemsHost"
                   Orientation="Vertical"
-                  SeparationOverride="3"
+                  SeparationOverride="2"
                   HorizontalExpand="True"
                   VerticalExpand="True" />
 

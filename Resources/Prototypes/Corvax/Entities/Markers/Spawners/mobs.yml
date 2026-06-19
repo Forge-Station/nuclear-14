@@ -226,6 +226,24 @@
       - sprite: _Nuclear14/Mobs/RaidersSimpleMob/RaiderPsycho.rsi
         state: raider_melee
       - state: ai
-  - type: ConditionalSpawner # Forge-add
+  - type: ConditionalSpawner 
     prototypes: 
       - N14MobNPCRaiderButcher
+
+# Iguana
+
+- type: entity
+  name: спавнер игуаны
+  id: N14SpawnMobIguana
+  parent: MarkerBase
+  components:
+  - type: Sprite
+    layers:
+      - state: green
+      - sprite: _Nuclear14/Mobs/Animals/iguana.rsi
+        state: iguana
+      - state: ai
+  - type: ConditionalSpawner
+    prototypes:
+      - N14MobIguana
+      

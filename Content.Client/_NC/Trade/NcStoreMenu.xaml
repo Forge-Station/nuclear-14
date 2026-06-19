@@ -3,35 +3,37 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls1="clr-namespace:Content.Client.UserInterface.Controls"
     xmlns:controls="clr-namespace:Content.Client._NC.Trade.Controls"
-    xmlns:graphics="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
     Title="{Loc 'nc-store-window-title'}"
-    MinWidth="1300" MinHeight="820"
+    MinWidth="1240"
+    MinHeight="780"
     StyleClasses="WindowLarge">
-    <BoxContainer Orientation="Vertical" StyleClasses="PanelBackgroundBase">
-        <controls:NcStoreHeaderBar Name="Header"
-                                   Margin="4 4 4 0"
-                                   StyleClasses="PanelBackgroundBaseDark" />
 
+    <BoxContainer Name="Root"
+                  Orientation="Vertical"
+                  SeparationOverride="0"
+                  StyleClasses="PanelBackgroundBase"
+                  HorizontalExpand="True"
+                  VerticalExpand="True">
+
+        <!-- Header -->
+        <PanelContainer Name="HeaderFrame"
+                        Margin="4 4 4 0"
+                        MinHeight="52"
+                        HorizontalExpand="True">
+            <controls:NcStoreHeaderBar Name="Header"
+                                       Margin="0"
+                                       HorizontalExpand="True" />
+        </PanelContainer>
+
+        <!-- Main shell -->
         <PanelContainer Name="TabsShell"
-                        Margin="4"
+                        Margin="4 4 4 4"
                         VerticalExpand="True"
                         HorizontalExpand="True">
-            <PanelContainer.PanelOverride>
-                <graphics:StyleBoxFlat BackgroundColor="#17181D"
-                                       BorderColor="#7A6334"
-                                       BorderThickness="1"
-                                       Padding="2" />
-            </PanelContainer.PanelOverride>
 
             <PanelContainer Name="TabsFrame"
                             VerticalExpand="True"
                             HorizontalExpand="True">
-                <PanelContainer.PanelOverride>
-                    <graphics:StyleBoxFlat BackgroundColor="#1E2027"
-                                           BorderColor="#4C4438"
-                                           BorderThickness="1"
-                                           Padding="2" />
-                </PanelContainer.PanelOverride>
 
                 <TabContainer Name="Tabs"
                               StyleClasses="TabContainerLarge"
@@ -39,47 +41,64 @@
                               HorizontalExpand="True"
                               Margin="0">
 
+                    <!-- Buy -->
                     <PanelContainer Name="TabBuy"
-                                    VerticalExpand="True">
-                        <PanelContainer.PanelOverride>
-                            <graphics:StyleBoxFlat BackgroundColor="#1E2027" />
-                        </PanelContainer.PanelOverride>
+                                    VerticalExpand="True"
+                                    HorizontalExpand="True">
                         <controls:NcStoreListingsView Name="BuyView"
                                                       VerticalExpand="True"
                                                       HorizontalExpand="True" />
                     </PanelContainer>
 
+                    <!-- Sell -->
                     <PanelContainer Name="TabSell"
-                                    VerticalExpand="True">
-                        <PanelContainer.PanelOverride>
-                            <graphics:StyleBoxFlat BackgroundColor="#1E2027" />
-                        </PanelContainer.PanelOverride>
+                                    VerticalExpand="True"
+                                    HorizontalExpand="True">
                         <controls:NcStoreListingsView Name="SellView"
                                                       VerticalExpand="True"
                                                       HorizontalExpand="True" />
                     </PanelContainer>
 
+                    <!-- Barter -->
+                    <PanelContainer Name="TabBarter"
+                                    VerticalExpand="True"
+                                    HorizontalExpand="True">
+                        <controls:NcStoreListingsView Name="BarterView"
+                                                      VerticalExpand="True"
+                                                      HorizontalExpand="True" />
+                    </PanelContainer>
+
+                    <!-- Contracts -->
                     <PanelContainer Name="TabContracts"
-                                    VerticalExpand="True">
-                        <PanelContainer.PanelOverride>
-                            <graphics:StyleBoxFlat BackgroundColor="#1E2027" />
-                        </PanelContainer.PanelOverride>
-                        <BoxContainer Orientation="Vertical"
+                                    VerticalExpand="True"
+                                    HorizontalExpand="True">
+                        <BoxContainer Name="ContractsRoot"
+                                      Orientation="Vertical"
                                       VerticalExpand="True"
                                       HorizontalExpand="True"
-                                      Margin="6 4 6 4">
+                                      SeparationOverride="6"
+                                      Margin="8">
 
-                            <Label Text="{Loc 'nc-store-tab-contracts'}"
-                                   StyleClasses="LabelHeading"
-                                   Margin="0 0 0 6" />
+                            <PanelContainer Name="ContractsHeaderPanel"
+                                            HorizontalExpand="True"
+                                            MinHeight="42">
+                                <Label Text="{Loc 'nc-store-tab-contracts'}"
+                                       StyleClasses="LabelHeading"
+                                       Margin="10 6 10 6" />
+                            </PanelContainer>
 
-                            <ScrollContainer VerticalExpand="True"
-                                             HorizontalExpand="True">
+                            <ScrollContainer Name="ContractsScroll"
+                                             VerticalExpand="True"
+                                             HorizontalExpand="True"
+                                             HScrollEnabled="False"
+                                             ReserveScrollbarSpace="False">
                                 <BoxContainer Name="ContractList"
                                               Orientation="Vertical"
                                               HorizontalExpand="True"
-                                              SeparationOverride="8" />
+                                              SeparationOverride="8"
+                                              Margin="0 0 0 2" />
                             </ScrollContainer>
+
                         </BoxContainer>
                     </PanelContainer>
 

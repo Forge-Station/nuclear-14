@@ -1,0 +1,7 @@
+- type: latheRecipe
+  id: OreBag
+  result: OreBag
+  category: N14Tools
+  completetime: 5
+  materials:
+    Cloth: 300

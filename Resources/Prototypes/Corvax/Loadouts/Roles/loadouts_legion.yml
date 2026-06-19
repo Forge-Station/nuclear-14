@@ -1,19 +1,20 @@
-- type: loadout
-  id: LoadoutLegionVenatorLightReconnaissanceArmor
-  category: Roles
-  cost: 8
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - CaesarLegionVenator
-  items:
-    - N14ClothingOuterLegionnaireLightReconnaissanceArmor
+# Выдаётся теперь сразу
+# - type: loadout
+#   id: LoadoutLegionVenatorLightReconnaissanceArmor
+#   category: Roles
+#   cost: 8
+#   exclusive: true
+#   requirements:
+#     - !type:CharacterJobRequirement
+#       jobs:
+#         - CaesarLegionVenator
+#   items:
+#     - N14ClothingOuterLegionnaireLightReconnaissanceArmor
 
 - type: loadout
   id: LoadoutLegionVenatorReconnaissanceArmor
   category: Roles
-  cost: 8
+  cost: 4
   exclusive: true
   requirements:
     - !type:CharacterJobRequirement
@@ -55,22 +56,23 @@
   items:
     - N14ClothingHeadHatDeanPrimeHelmet
 
-- type: loadout
-  id: LoadoutLegionDeadRecruitHelmet
-  category: Roles
-  cost: 2
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - CaesarLegionDean
-  items:
-    - N14ClothingHeadHatDeanRecruitHelmet
+# Выдаётся теперь сразу
+# - type: loadout
+#   id: LoadoutLegionDeadRecruitHelmet
+#   category: Roles
+#   cost: 2
+#   exclusive: true
+#   requirements:
+#     - !type:CharacterJobRequirement
+#       jobs:
+#         - CaesarLegionDean
+#   items:
+#     - N14ClothingHeadHatDeanRecruitHelmet
 
 - type: loadout
   id: LoadoutLegionDeadVeteranArmor
   category: Roles
-  cost: 6
+  cost: 2
   exclusive: true
   requirements:
     - !type:CharacterJobRequirement
@@ -85,7 +87,7 @@
 - type: loadout
   id: LoadoutLegionDeadPrimeArmor
   category: Roles
-  cost: 6
+  cost: 2
   exclusive: true
   requirements:
     - !type:CharacterJobRequirement
@@ -97,17 +99,18 @@
   items:
     - N14ClothingOuterDeanLegionnairePrimeArmor
 
-- type: loadout
-  id: LoadoutLegionDeadRecruitArmor
-  category: Roles
-  cost: 6
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - CaesarLegionDean
-  items:
-    - N14ClothingOuterDeanLegionnaireRecruitArmor
+# Выдаётся теперь сразу
+# - type: loadout
+#   id: LoadoutLegionDeadRecruitArmor
+#   category: Roles
+#   cost: 6
+#   exclusive: true
+#   requirements:
+#     - !type:CharacterJobRequirement
+#       jobs:
+#         - CaesarLegionDean
+#   items:
+#     - N14ClothingOuterDeanLegionnaireRecruitArmor
 
 - type: loadout
   id: LoadoutLegionCloakBlack
@@ -160,7 +163,7 @@
 - type: loadout
   id: LoadoutConquerorCenturioArmor
   category: Roles
-  cost: 6
+  cost: 2
   exclusive: true
   requirements:
     - !type:CharacterJobRequirement
@@ -329,7 +332,7 @@
 - type: loadout
   id: LoadoutOuterLegionnaireAssassin+Armor
   category: Outer
-  cost: 5
+  cost: 2
   exclusive: true
   requirements:
     - !type:CharacterJobRequirement
@@ -344,7 +347,7 @@
 - type: loadout
   id: LoadoutOuterLegionnaireAssassinArmor
   category: Outer
-  cost: 5
+  cost: 2
   exclusive: true
   requirements:
     - !type:CharacterJobRequirement
@@ -363,7 +366,7 @@
 - type: loadout
   id: LoadoutOuterLegionnaireArmorGastat
   category: Outer
-  cost: 5
+  cost: 2
   exclusive: true
   requirements:
     - !type:CharacterJobRequirement
@@ -382,7 +385,7 @@
 - type: loadout
   id: LoadoutOuterLegionnaireArmorPrimeGastat
   category: Outer
-  cost: 5
+  cost: 2
   exclusive: true
   requirements:
     - !type:CharacterJobRequirement
@@ -397,7 +400,7 @@
 - type: loadout
   id: LoadoutOuterLegionnaireVeteranArmorVeteranGastat
   category: Outer
-  cost: 5
+  cost: 2
   exclusive: true
   requirements:
     - !type:CharacterJobRequirement
@@ -412,7 +415,7 @@
 - type: loadout
   id: LoadoutOuterLegionnaireTriariumArmor
   category: Outer
-  cost: 5
+  cost: 2
   exclusive: true
   requirements:
     - !type:CharacterJobRequirement
@@ -431,7 +434,7 @@
 - type: loadout
   id: LoadoutOuterLegionnairePrincepsArmor
   category: Outer
-  cost: 5
+  cost: 2
   exclusive: true
   requirements:
     - !type:CharacterJobRequirement
@@ -450,7 +453,7 @@
 - type: loadout
   id: LoadoutOuterLegionnairePrinceps+Armor
   category: Outer
-  cost: 5
+  cost: 2
   exclusive: true
   requirements:
     - !type:CharacterJobRequirement
@@ -461,3 +464,57 @@
       min: 144000
   items:
     - N14ClothingOuterLegionnairePrincepsPrimeArmor
+
+- type: loadout
+  id: LoadoutN14BerserkerPowder
+  category: Items
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionDean
+        - CaesarLegionLegionnaireVeteran
+        - CaesarLegionVenator
+        - CaesarLegionLegionnaireWarrior
+        - CaesarLegionCenturion
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 36000
+  items:
+    - N14BerserkerPowder
+
+- type: loadout
+  id: LoadoutN14Sagum
+  category: Neck
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionDean
+        - CaesarLegionLegionnaireVeteran
+        - CaesarLegionVenator
+        - CaesarLegionLegionnaireWarrior
+        - CaesarLegionCenturion
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 108000
+  items:
+    - N14ClothingNeckCapeLegionSagum
+
+- type: loadout
+  id: LoadoutOuterDogHelmet
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionLegionnaireWarrior
+        - CaesarLegionLegionnaireRecruit
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionLegionnaireWarrior
+      min: 36000
+  items:
+    - N14ClothingHeadHatDog

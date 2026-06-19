@@ -232,6 +232,7 @@
         whitelist:
           tags:
             - Magazine556Rifle30
+            - Magazine556Rifle
       gun_chamber:
         name: Chamber
         startingItem: N14Cartridge556Rifle

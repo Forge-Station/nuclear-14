@@ -1,7 +1,9 @@
 using Content.Shared._NC.Trade;
 using Content.Shared.Stacks;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -17,11 +19,66 @@ public sealed partial class NcContractSystem : EntitySystem
         if (!TryValidateClaimTakePlan(ctx.TakePlan, out fail))
             return false;
 
-        ExecuteClaimTakePlan(ctx.TakePlan);
-        InvalidateClaimExecutionCaches(ctx);
-        MarkClaimTargetsCompleted(ctx.Contract);
-        GiveContractRewards(ctx.User, ctx.Contract.Rewards);
+        if (!TryValidateContractRewards(ctx.User, ctx.Contract.Rewards, out fail))
+            return false;
 
+        if (!TryGiveContractRewardsWithPreCommit(
+            ctx.User,
+            ctx.Contract.Rewards,
+            () => TryExecuteClaimTakePlanPreCommit(ctx),
+            out fail))
+            return false;
+
+        MarkClaimTargetsCompleted(ctx.Contract);
+
+        return true;
+    }
+
+    private bool TryExecutePartialClaimTakePlan(
+        string contractId,
+        ClaimContext ctx,
+        out ClaimAttemptResult fail
+    )
+    {
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+
+        if (ctx.TakePlan.Count == 0)
+        {
+            fail = ClaimAttemptResult.Fail(
+                ClaimFailureReason.NotEnoughItems,
+                $"No partial turn-in items planned for '{contractId}'.");
+            return false;
+        }
+
+        if (!TryValidateClaimTakePlan(ctx.TakePlan, out fail))
+            return false;
+
+        var journal = new ClaimTakeJournal();
+        try
+        {
+            UnregisterRetrievalSpawnedCargoTakePlan(ctx.Contract, ctx.TakePlan, journal);
+            if (!TryExecuteClaimTakeEntries(ctx.TakePlan, journal, out fail))
+            {
+                RollbackClaimTakeJournal(journal);
+                InvalidateClaimExecutionCaches(ctx);
+                return false;
+            }
+
+            RecordPartialTurnInProgress(ctx.Store, contractId, ctx.TakePlan, journal);
+            CommitClaimTakeJournal(journal);
+        }
+        catch (Exception e)
+        {
+            RollbackClaimTakeJournal(journal);
+            Sawmill.Error($"[Claim] Partial turn-in failed unexpectedly for '{contractId}': {e}");
+            InvalidateClaimExecutionCaches(ctx);
+            fail = CreateClaimExecutionFailure($"Partial turn-in threw {e.GetType().Name}: {e.Message}");
+            return false;
+        }
+
+        InvalidateClaimExecutionCaches(ctx);
+        RefreshProgressAfterPartialTurnIn(ctx, contractId);
+        RetargetContractPinpointersAfterTurnIn(ctx.Store, contractId, ctx.Contract);
         return true;
     }
 
@@ -33,10 +90,8 @@ public sealed partial class NcContractSystem : EntitySystem
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
         foreach (var entry in takePlan)
-        {
             if (!TryValidateClaimTakeEntry(entry, out fail))
                 return false;
-        }
 
         return true;
     }
@@ -45,7 +100,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
-        if (!EntityManager.EntityExists(entry.Entity))
+        if (!Exists(entry.Entity))
         {
             fail = CreateClaimExecutionFailure($"Planned entity no longer exists: {ToPrettyString(entry.Entity)}");
             return false;
@@ -75,36 +130,72 @@ public sealed partial class NcContractSystem : EntitySystem
         return false;
     }
 
-    private static ClaimAttemptResult CreateClaimExecutionFailure(string message)
-    {
-        return ClaimAttemptResult.Fail(ClaimFailureReason.ExecutionFailed, message);
-    }
+    private static ClaimAttemptResult CreateClaimExecutionFailure(string message) =>
+        ClaimAttemptResult.Fail(ClaimFailureReason.ExecutionFailed, message);
 
-    private void ExecuteClaimTakePlan(List<ClaimTakeEntry> takePlan)
+    private bool TryExecuteClaimTakeEntries(
+        List<ClaimTakeEntry> takePlan,
+        ClaimTakeJournal journal,
+        out ClaimAttemptResult fail
+    )
     {
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+
         foreach (var entry in takePlan)
-            ExecuteClaimTakeEntry(entry);
+            if (!TryExecuteClaimTakeEntry(entry, journal, out fail))
+                return false;
+
+        return true;
     }
 
-    private void ExecuteClaimTakeEntry(ClaimTakeEntry entry)
+    private bool TryExecuteClaimTakeEntry(
+        ClaimTakeEntry entry,
+        ClaimTakeJournal journal,
+        out ClaimAttemptResult fail
+    )
     {
-        if (!EntityManager.EntityExists(entry.Entity))
-            return;
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+
+        if (!Exists(entry.Entity))
+        {
+            fail = CreateClaimExecutionFailure($"Planned entity no longer exists: {ToPrettyString(entry.Entity)}");
+            return false;
+        }
+
+        if (_logic.IsProtectedFromDirectSale(entry.Root, entry.Entity))
+        {
+            fail = CreateClaimExecutionFailure($"Planned entity is protected: {ToPrettyString(entry.Entity)}");
+            return false;
+        }
 
         if (!entry.IsStack)
         {
-            EntityManager.DeleteEntity(entry.Entity);
-            return;
+            journal.PendingDeletes.Add(entry.Entity);
+            return true;
         }
 
         if (!TryComp(entry.Entity, out StackComponent? stack))
-            return;
+        {
+            fail = CreateClaimExecutionFailure($"Planned stack has no StackComponent: {ToPrettyString(entry.Entity)}");
+            return false;
+        }
 
-        var left = Math.Max(stack.Count, 0) - entry.Amount;
+        var have = Math.Max(stack.Count, 0);
+        if (have < entry.Amount)
+        {
+            fail = CreateClaimExecutionFailure(
+                $"Planned stack count mismatch: need {entry.Amount}, have {have} on {ToPrettyString(entry.Entity)}");
+            return false;
+        }
+
+        var left = have - entry.Amount;
+        journal.TrackStack(entry.Entity, stack.Count);
         _stacks.SetCount(entry.Entity, left, stack);
 
-        if (stack.Count <= 0)
-            EntityManager.DeleteEntity(entry.Entity);
+        if (left <= 0)
+            journal.PendingDeletes.Add(entry.Entity);
+
+        return true;
     }
 
     private void InvalidateClaimExecutionCaches(ClaimContext ctx)
@@ -129,26 +220,82 @@ public sealed partial class NcContractSystem : EntitySystem
         }
     }
 
-    private void GiveContractRewards(EntityUid user, IReadOnlyList<ContractRewardData>? rewards)
+    private bool TryValidateContractRewards(
+        EntityUid user,
+        IReadOnlyList<ContractRewardData>? rewards,
+        out ClaimAttemptResult fail
+    )
     {
-        if (rewards == null || rewards.Count == 0)
-            return;
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
 
-        foreach (var reward in rewards)
-        {
-            if (reward.Amount <= 0 || string.IsNullOrWhiteSpace(reward.Id))
-                continue;
+        if (Rewards.TryValidateRewardList(user, rewards, out var reason))
+            return true;
 
-            switch (reward.Type)
+        fail = CreateClaimExecutionFailure(reason);
+        return false;
+    }
+
+    private bool TryGiveContractRewardsWithPreCommit(
+        EntityUid user,
+        IReadOnlyList<ContractRewardData>? rewards,
+        Func<ClaimAttemptResult> preCommit,
+        out ClaimAttemptResult fail
+    )
+    {
+        fail = ClaimAttemptResult.Fail(ClaimFailureReason.None);
+        var preCommitFail = ClaimAttemptResult.Ok();
+
+        if (Rewards.TryExecuteRewardListWithPreCommit(
+            user,
+            rewards,
+            "Claim",
+            () =>
             {
-                case StoreRewardType.Currency:
-                    _logic.GiveCurrency(user, reward.Id, reward.Amount);
-                    break;
+                preCommitFail = preCommit();
+                return preCommitFail.Success
+                    ? null
+                    : $"{preCommitFail.Reason}: {preCommitFail.Details}";
+            },
+            out var reason))
+            return true;
 
-                case StoreRewardType.Item:
-                    _logic.TrySpawnProductUnits(reward.Id, user, reward.Amount);
-                    break;
+        if (!preCommitFail.Success)
+        {
+            fail = preCommitFail;
+            return false;
+        }
+
+        Sawmill.Error($"[Claim] Reward execution failed after claim validation: {reason}");
+        fail = CreateClaimExecutionFailure(reason);
+        return false;
+    }
+
+    private ClaimAttemptResult TryExecuteClaimTakePlanPreCommit(ClaimContext ctx)
+    {
+        if (!TryValidateClaimTakePlan(ctx.TakePlan, out var fail))
+            return fail;
+
+        var journal = new ClaimTakeJournal();
+        try
+        {
+            UnregisterRetrievalSpawnedCargoTakePlan(ctx.Contract, ctx.TakePlan, journal);
+            if (!TryExecuteClaimTakeEntries(ctx.TakePlan, journal, out var executeFail))
+            {
+                RollbackClaimTakeJournal(journal);
+                InvalidateClaimExecutionCaches(ctx);
+                return executeFail;
             }
+
+            CommitClaimTakeJournal(journal);
+            InvalidateClaimExecutionCaches(ctx);
+            return ClaimAttemptResult.Ok();
+        }
+        catch (Exception e)
+        {
+            RollbackClaimTakeJournal(journal);
+            Sawmill.Error($"[Claim] Claim take pre-commit failed unexpectedly: {e}");
+            InvalidateClaimExecutionCaches(ctx);
+            return CreateClaimExecutionFailure($"Claim take pre-commit threw {e.GetType().Name}: {e.Message}");
         }
     }
 
@@ -157,9 +304,10 @@ public sealed partial class NcContractSystem : EntitySystem
         NcStoreComponent comp,
         string contractId,
         bool repeatable,
-        bool deleteTrackedEntities = true)
+        bool deleteTrackedEntities = true
+    )
     {
-        CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities, deleteGuards: false);
+        CleanupObjectiveRuntime(store, contractId, deleteTrackedEntities, false);
 
         comp.Contracts.Remove(contractId);
         if (!repeatable)

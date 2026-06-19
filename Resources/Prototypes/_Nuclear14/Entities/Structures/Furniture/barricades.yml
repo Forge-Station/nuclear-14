@@ -34,6 +34,9 @@
         - TableMask
         layer:
         - TableLayer
+  - type: Construction # Forge-Change
+    graph: N14BarricadeSandbagSingleGraph
+    node: N14BarricadeSandbagSingleNode
 
 - type: entity
   id: N14BarricadeTanktrap
@@ -82,6 +85,9 @@
     sprite: _Nuclear14/Structures/Furniture/barricades.rsi
     netsync: false
     state: iron_barricadeA
+  - type: Construction # Forge-Change
+    graph: N14BarricadeTanktrapRustyGraph
+    node: N14BarricadeTanktrapRustyNode
 
 - type: entity
   parent: BaseStructure
@@ -147,6 +153,9 @@
       path: /Audio/Effects/fence_rattle1.ogg
     launchForwardsMultiplier: 0
     paralyzeTime: 0
+  - type: Construction # Forge-Change
+    graph: N14BarricadeRazorwireGraph
+    node: N14BarricadeRazorwireNode
 
 - type: entity
   parent: N14BarricadeSandbagSingle

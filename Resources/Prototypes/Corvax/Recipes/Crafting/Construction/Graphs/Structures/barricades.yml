@@ -1,0 +1,74 @@
+- type: constructionGraph
+  id: N14BarricadeTanktrapRustyGraph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14BarricadeTanktrapRustyNode
+          steps:
+            - material: Steel
+              amount: 20
+              doAfter: 20
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+    - node: N14BarricadeTanktrapRustyNode
+      entity: N14BarricadeTanktrapRusty
+      edges:
+        - to: start
+          completed:
+            - !type:GivePrototype
+              prototype: SheetSteel1
+              amount: 10
+            - !type:DeleteEntity {}
+
+- type: constructionGraph
+  id: N14BarricadeRazorwireGraph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14BarricadeRazorwireNode
+          steps:
+            - material: Steel
+              amount: 5
+              doAfter: 5
+            - material: N14ScrapCopper
+              amount: 2
+              doAfter: 5
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+    - node: N14BarricadeRazorwireNode
+      entity: N14BarricadeRazorwire
+      edges:
+        - to: start
+          completed:
+            - !type:GivePrototype
+              prototype: SheetSteel1
+              amount: 2
+            - !type:DeleteEntity {}
+
+- type: constructionGraph
+  id: N14BarricadeSandbagSingleGraph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14BarricadeSandbagSingleNode
+          steps:
+            - material: Cloth
+              amount: 4
+              doAfter: 3
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+    - node: N14BarricadeSandbagSingleNode
+      entity: N14BarricadeSandbagSingle
+      edges:
+        - to: start
+          completed:
+            - !type:GivePrototype
+              prototype: MaterialCloth1
+              amount: 2
+            - !type:DeleteEntity {}

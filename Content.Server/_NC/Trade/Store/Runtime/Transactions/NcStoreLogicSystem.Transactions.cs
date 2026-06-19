@@ -1,5 +1,6 @@
 using Content.Shared._NC.Trade;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Random;
 
 
 namespace Content.Server._NC.Trade;
@@ -7,31 +8,41 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcStoreLogicSystem
 {
-    private readonly record struct BuyExecutionPlan(
-        string Currency,
-        int UnitPrice,
-        int Purchases,
-        int TotalPrice,
-        int TotalUnits,
-        int UnitsPerPurchase);
-
     public bool TryBuy(string listingId, EntityUid machine, NcStoreComponent? store, EntityUid user, int count = 1)
     {
-        if (!TryPrepareBuy(listingId, store, user, count, out var listing, out var proto, out var plan))
-            return false;
-
-        if (!TryTakeCurrency(user, plan.Currency, plan.TotalPrice))
-            return false;
-
-        var spawnedUnits = SpawnPurchasedProduct(
+        if (!TryPrepareBuy(
+            listingId,
+            store,
             user,
-            listing.ProductEntity,
-            proto,
-            plan.Purchases,
-            plan.UnitsPerPurchase);
+            count,
+            out var listing,
+            out var effectiveProtoId,
+            out _,
+            out var plan))
+            return false;
+
+        var rewards = _transactionCoordinator.BuildSingleReward(
+            StoreRewardType.Item,
+            effectiveProtoId,
+            plan.TotalUnits);
+        if (!TryExecuteRewardListWithPreCommit(
+            user,
+            rewards,
+            "Buy",
+            () => TryTakeCurrency(user, plan.Currency, plan.TotalPrice)
+                ? null
+                : $"failed to take currency '{plan.Currency}' x{plan.TotalPrice}",
+            out var reason))
+        {
+            Sawmill.Warning($"[NcStore] TryBuy failed for listing '{listing.Id}': {reason}");
+            return false;
+        }
+
         _inventory.InvalidateInventoryCache(user);
 
-        return FinalizeBuy(user, listing, plan, spawnedUnits);
+        ApplyDeliveredBuyPurchases(listing, plan.Purchases);
+        LogSuccessfulBuy(listing, plan, plan.TotalUnits, plan.Purchases);
+        return true;
     }
 
     private bool TryPrepareBuy(
@@ -40,10 +51,13 @@ public sealed partial class NcStoreLogicSystem
         EntityUid user,
         int count,
         out NcStoreListingDef listing,
+        out string effectiveProtoId,
         out EntityPrototype proto,
-        out BuyExecutionPlan plan)
+        out BuyExecutionPlan plan
+    )
     {
         listing = default!;
+        effectiveProtoId = string.Empty;
         proto = default!;
         plan = default;
 
@@ -51,11 +65,15 @@ public sealed partial class NcStoreLogicSystem
             return false;
 
         if (!store.ListingIndex.TryGetValue(
-                NcStoreComponent.MakeListingKey(StoreMode.Buy, listingId),
-                out NcStoreListingDef? foundListing))
+            NcStoreComponent.MakeListingKey(StoreMode.Buy, listingId),
+            out var foundListing))
             return false;
 
-        if (!_protos.TryIndex<EntityPrototype>(foundListing.ProductEntity, out EntityPrototype? foundProto))
+        // Phase M2: for Matcher listings, ProductEntity is an NcMatcherPrototype id. Resolve
+        // it to a random concrete prototype from matcher.Items. For Exact listings, use the
+        // ProductEntity directly as the prototype ID.
+        if (!TryResolveBuyEffectiveProto(foundListing, out effectiveProtoId, out var foundProto) ||
+            foundProto == null)
             return false;
 
         listing = foundListing;
@@ -70,13 +88,64 @@ public sealed partial class NcStoreLogicSystem
         return TryBuildBuyPlan(currency, unitPrice, balance, count, listing, out plan);
     }
 
+    /// <summary>
+    ///     Phase M2: resolve a Buy listing to the concrete EntityPrototype that will be spawned.
+    ///     For Exact match — the listing's ProductEntity is the prototype id directly.
+    ///     For Matcher match — the listing's ProductEntity is an NcMatcherPrototype id; we load
+    ///     the matcher, pick a random item from its Items list, and that becomes the effective prototype.
+    ///     Returns false (and logs a warning) if:
+    ///     - Exact: prototype doesn't exist.
+    ///     - Matcher: matcher prototype doesn't exist, matcher has no items, or the randomly
+    ///     picked item prototype doesn't exist.
+    /// </summary>
+    private bool TryResolveBuyEffectiveProto(
+        NcStoreListingDef listing,
+        out string effectiveProtoId,
+        out EntityPrototype? proto
+    )
+    {
+        effectiveProtoId = string.Empty;
+        proto = null;
+
+        if (listing.MatchMode == PrototypeMatchMode.Matcher)
+        {
+            if (!_protos.TryIndex<NcMatcherPrototype>(listing.ProductEntity, out var matcher))
+            {
+                Sawmill.Warning(
+                    $"[NcStore] Buy prepare failed: matcher '{listing.ProductEntity}' not found for listing '{listing.Id}'.");
+                return false;
+            }
+
+            if (matcher.Items is not { Count: > 0, })
+            {
+                Sawmill.Warning(
+                    $"[NcStore] Buy prepare failed: matcher '{listing.ProductEntity}' has no items to pick from.");
+                return false;
+            }
+
+            effectiveProtoId = _random.Pick(matcher.Items);
+        }
+        else
+            effectiveProtoId = listing.ProductEntity;
+
+        if (!_protos.TryIndex(effectiveProtoId, out proto))
+        {
+            Sawmill.Warning(
+                $"[NcStore] Buy prepare failed: resolved prototype '{effectiveProtoId}' not found (listing '{listing.Id}').");
+            return false;
+        }
+
+        return true;
+    }
+
     private static bool TryBuildBuyPlan(
         string currency,
         int unitPrice,
         int balance,
         int requestedCount,
         NcStoreListingDef listing,
-        out BuyExecutionPlan plan)
+        out BuyExecutionPlan plan
+    )
     {
         plan = default;
 
@@ -100,7 +169,8 @@ public sealed partial class NcStoreLogicSystem
         int purchases,
         int unitsPerPurchase,
         out int totalPrice,
-        out int totalUnits)
+        out int totalUnits
+    )
     {
         totalPrice = 0;
         totalUnits = 0;
@@ -118,42 +188,6 @@ public sealed partial class NcStoreLogicSystem
         return true;
     }
 
-    private bool FinalizeBuy(
-        EntityUid user,
-        NcStoreListingDef listing,
-        BuyExecutionPlan plan,
-        int spawnedUnits)
-    {
-        if (spawnedUnits <= 0)
-            return RefundFailedBuy(user, plan);
-
-        var deliveredPurchases = spawnedUnits / plan.UnitsPerPurchase;
-        if (deliveredPurchases <= 0)
-            return RefundFailedBuy(user, plan);
-
-        RefundUndeliveredBuyPurchases(user, plan, deliveredPurchases);
-        ApplyDeliveredBuyPurchases(listing, deliveredPurchases);
-        LogSuccessfulBuy(listing, plan, spawnedUnits, deliveredPurchases);
-        return true;
-    }
-
-    private bool RefundFailedBuy(EntityUid user, BuyExecutionPlan plan)
-    {
-        GiveCurrency(user, plan.Currency, plan.TotalPrice);
-        return false;
-    }
-
-    private void RefundUndeliveredBuyPurchases(EntityUid user, BuyExecutionPlan plan, int deliveredPurchases)
-    {
-        if (deliveredPurchases >= plan.Purchases)
-            return;
-
-        var refundPurchases = plan.Purchases - deliveredPurchases;
-        var refund = (long) refundPurchases * plan.UnitPrice;
-        if (refund > 0 && refund <= int.MaxValue)
-            GiveCurrency(user, plan.Currency, (int) refund);
-    }
-
     private static void ApplyDeliveredBuyPurchases(NcStoreListingDef listing, int deliveredPurchases)
     {
         if (listing.RemainingCount >= 0)
@@ -164,11 +198,10 @@ public sealed partial class NcStoreLogicSystem
         NcStoreListingDef listing,
         BuyExecutionPlan plan,
         int spawnedUnits,
-        int deliveredPurchases)
-    {
+        int deliveredPurchases
+    ) =>
         Sawmill.Info(
             $"TryBuy: OK {listing.ProductEntity} x{spawnedUnits} ({deliveredPurchases} purchases) for {plan.UnitPrice} {plan.Currency} each");
-    }
 
     public bool TrySell(string listingId, EntityUid machine, NcStoreComponent? store, EntityUid user, int count = 1)
     {
@@ -213,8 +246,12 @@ public sealed partial class NcStoreLogicSystem
 
         _inventory.InvalidateInventoryCache(root);
 
-        var snap = _inventory.BuildInventorySnapshot(root);
-        var owned = _inventory.GetOwnedFromSnapshot(snap, listing.ProductEntity, listing.MatchMode);
+        var owned = listing.MatchMode == PrototypeMatchMode.Matcher
+            ? _inventory.GetOwnedFromRootCached(root, listing.ProductEntity, listing.MatchMode)
+            : _inventory.GetOwnedFromSnapshot(
+                _inventory.BuildInventorySnapshot(root),
+                listing.ProductEntity,
+                listing.MatchMode);
 
         var maxByRemaining = listing.RemainingCount >= 0 ? listing.RemainingCount : int.MaxValue;
         var maxPossible = Math.Min(owned, maxByRemaining);
@@ -233,11 +270,25 @@ public sealed partial class NcStoreLogicSystem
         if (totalL > int.MaxValue)
             return false;
 
-        var ok = _inventory.TryTakeProductUnitsFromRootCached(root, listing.ProductEntity, actual, listing.MatchMode);
-        if (!ok)
+        if (!CanGiveCurrency(user, currency, (int) totalL))
+        {
+            Sawmill.Error(
+                $"TrySell: payout currency '{currency}' cannot be issued to {ToPrettyString(user)}; " +
+                $"refusing to consume '{listing.ProductEntity}'.");
             return false;
+        }
 
-        GiveCurrency(user, currency, (int) totalL);
+        var rewards = _transactionCoordinator.BuildSingleReward(StoreRewardType.Currency, currency, (int) totalL);
+        if (!TryExecuteRewardListWithPreCommit(
+            user,
+            rewards,
+            "Sell",
+            () => TryCommitSellTake(root, listing, actual),
+            out var reason))
+        {
+            Sawmill.Warning($"[NcStore] TrySell failed for listing '{listing.Id}': {reason}");
+            return false;
+        }
 
         _inventory.InvalidateInventoryCache(user);
         if (root != user)
@@ -251,6 +302,21 @@ public sealed partial class NcStoreLogicSystem
             Sawmill.Info($"TrySell: OK {listing.ProductEntity} x{actual} for {unitPrice} {currency} each");
         return true;
     }
+
+    private string? TryCommitSellTake(EntityUid root, NcStoreListingDef listing, int amount) =>
+        _transactionCoordinator.TryCommitInventoryTake(
+            "Sell",
+            () =>
+            {
+                if (!_inventory.TryTakeProductUnitsFromRootCached(
+                    root,
+                    listing.ProductEntity,
+                    amount,
+                    listing.MatchMode))
+                    return $"failed to consume sold product '{listing.ProductEntity}' x{amount}";
+
+                return null;
+            });
 
     private bool LogSellFromContainer(int sold, string listingId, NcStoreComponent store, EntityUid container)
     {
@@ -267,46 +333,11 @@ public sealed partial class NcStoreLogicSystem
         return true;
     }
 
-    public bool TryExchange(string listingId, EntityUid machine, NcStoreComponent? store, EntityUid user)
-    {
-        if (store == null || store.Listings.Count == 0)
-            return false;
-        if (!store.ListingIndex.TryGetValue(
-            NcStoreComponent.MakeListingKey(StoreMode.Exchange, listingId),
-            out var listing))
-            return false;
-        if (string.IsNullOrEmpty(listing.ProductEntity))
-            return false;
-
-        var requiredCount = listing.RemainingCount > 0 ? listing.RemainingCount : 1;
-        if (requiredCount <= 0)
-            return false;
-
-        _inventory.InvalidateInventoryCache(user);
-
-        var snap = _inventory.BuildInventorySnapshot(user);
-        var owned = _inventory.GetOwnedFromSnapshot(snap, listing.ProductEntity, listing.MatchMode);
-
-        if (owned < requiredCount)
-            return false;
-
-        if (!TryPickCurrencyForSell(store, listing, out var currencyId, out var rewardPerUnit) || rewardPerUnit <= 0)
-            return false;
-
-        var totalRewardL = (long) rewardPerUnit * requiredCount;
-        if (totalRewardL > int.MaxValue)
-            return false;
-
-        if (!_inventory.TryTakeProductUnitsFromRootCached(
-            user,
-            listing.ProductEntity,
-            requiredCount,
-            listing.MatchMode))
-            return false;
-
-        GiveCurrency(user, currencyId, (int) totalRewardL);
-        _inventory.InvalidateInventoryCache(user);
-        listing.RemainingCount = 0;
-        return true;
-    }
+    private readonly record struct BuyExecutionPlan(
+        string Currency,
+        int UnitPrice,
+        int Purchases,
+        int TotalPrice,
+        int TotalUnits,
+        int UnitsPerPurchase);
 }

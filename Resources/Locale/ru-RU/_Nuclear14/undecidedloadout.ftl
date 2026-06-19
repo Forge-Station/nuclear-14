@@ -250,7 +250,7 @@ undecided-loadout-category-veteran-ranger-service-description =
 undecided-loadout-category-veteran-ranger-precision-rifle-name = Набор снайпера ветерана-рейнджера
 undecided-loadout-category-veteran-ranger-precision-rifle-description =
     Тайник с вещами ветерана-рейнджера.
-    Содержит: 1 винтовку "Очиститель зарослей", 3 спидлоадера винтовочных (.45-70 Gov't),
+    Содержит: 1 медвежье ружьё, 3 спидлоадера винтовочных (.45-70 Gov't),
     1 коробка патронов (45-70 Gov't), 2 стимпака, 1 сухпаёк типа C.
 
 undecided-loadout-category-veteran-ranger-heavy-sniper-name = Набор тяжелого снайпера ветерана-рейнджера

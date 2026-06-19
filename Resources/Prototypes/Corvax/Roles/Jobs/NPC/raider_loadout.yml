@@ -5,7 +5,7 @@
     outerClothing: N14ClothingOuterPowerArmorRaiderNPC 
     head: N14ClothingHeadHelmetPowerArmorRaiderNPC
     mask: N14ClothingMaskLiner
-    pocket1: N14AssemblyHolodiskClothingOuterPowerArmorT45 
+    pocket1: N14CurrencyCap500 
 
 - type: startingGear
   id: MercenaryHeavySniperNPC

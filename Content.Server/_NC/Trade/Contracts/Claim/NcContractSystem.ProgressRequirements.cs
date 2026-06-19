@@ -1,6 +1,8 @@
 ﻿using Content.Shared._NC.Trade;
 
+
 namespace Content.Server._NC.Trade;
+
 
 public sealed partial class NcContractSystem : EntitySystem
 {
@@ -9,7 +11,8 @@ public sealed partial class NcContractSystem : EntitySystem
         out bool hasTakenContracts,
         out bool needsUserItems,
         out bool needsCrateItems,
-        out bool needsStoreWorldItems)
+        out bool needsStoreWorldItems
+    )
     {
         hasTakenContracts = false;
         needsUserItems = false;
@@ -26,18 +29,13 @@ public sealed partial class NcContractSystem : EntitySystem
 
             hasTakenContracts = true;
 
-            switch (contract.ExecutionKind)
+            if (TryGetObjectiveHandler(contract.ExecutionKind, out var handler))
             {
-                case ContractExecutionKind.InventoryDelivery:
-                    needsUserItems = true;
-                    needsCrateItems = true;
-                    needsStoreWorldItems |= contract.AllowsStoreWorldTurnIn;
-                    break;
-
-                case ContractExecutionKind.TrackedDeliveryObjective:
-                    needsUserItems = true;
-                    needsCrateItems = true;
-                    break;
+                handler.AnalyzeProgressRequirements(
+                    contract,
+                    ref needsUserItems,
+                    ref needsCrateItems,
+                    ref needsStoreWorldItems);
             }
         }
     }

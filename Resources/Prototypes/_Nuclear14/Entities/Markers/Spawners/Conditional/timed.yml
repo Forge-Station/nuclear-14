@@ -10,7 +10,6 @@
         - sprite: _Nuclear14/Mobs/Animals/molerat.rsi
           state: molerat
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobMolerat
@@ -30,7 +29,6 @@
         - sprite: _Nuclear14/Mobs/Animals/pigrat.rsi
           state: pigrat
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobPigrat
@@ -50,7 +48,6 @@
         - sprite: _Nuclear14/Mobs/Animals/radhog.rsi
           state: radhog
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRadhog
@@ -70,7 +67,6 @@
         - sprite: _Nuclear14/Mobs/Animals/dogferal.rsi
           state: dogferal-1
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobDogFeral
@@ -90,7 +86,6 @@
         - sprite: _Nuclear14/Mobs/Animals/gecko.rsi
           state: gecko
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobGecko
@@ -110,7 +105,6 @@
         - sprite: _Nuclear14/Mobs/Animals/firegecko.rsi
           state: gecko
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobGeckoFire
@@ -130,7 +124,6 @@
         - sprite: _Nuclear14/Mobs/Animals/goldengecko.rsi
           state: gecko
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobGeckoGolden
@@ -150,7 +143,6 @@
         - sprite: _Nuclear14/Mobs/Animals/nightstalkercub.rsi
           state: nightstalker
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobNightstalkerCub
@@ -170,7 +162,6 @@
         - sprite: _Nuclear14/Mobs/Animals/nightstalker.rsi
           state: nightstalker-1
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobNightstalker
@@ -190,7 +181,6 @@
         - sprite: _Nuclear14/Mobs/Animals/yaoguai.rsi
           state: yaoguai
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobYaoguai
@@ -211,7 +201,6 @@
         - sprite: _Nuclear14/Mobs/Animals/deathclaw.rsi
           state: deathclaw
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobDeathclaw
@@ -231,7 +220,6 @@
         - sprite: _Nuclear14/Mobs/Animals/deathclawalbino.rsi
           state: deathclawalbino
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobDeathclawAlbino
@@ -251,7 +239,6 @@
         - sprite: _Nuclear14/Mobs/Animals/deathclawmetal.rsi
           state: deathclawmetal
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobDeathclawMetal
@@ -272,7 +259,6 @@
         - sprite: _Nuclear14/Mobs/Insects/bloatfly.rsi
           state: bloatfly
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobBloatfly
@@ -292,7 +278,6 @@
         - sprite: _Nuclear14/Mobs/Insects/giantant.rsi
           state: giantant
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobGiantAnt
@@ -312,7 +297,6 @@
         - sprite: _Nuclear14/Mobs/Insects/fireant.rsi
           state: fireant
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobGiantFireAnt
@@ -332,7 +316,6 @@
         - sprite: _Nuclear14/Mobs/Insects/radroach.rsi
           state: radroach
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRadroach
@@ -352,7 +335,6 @@
         - sprite: _Nuclear14/Mobs/Insects/radscorpion.rsi
           state: radscorpion
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRadscorpion
@@ -372,7 +354,6 @@
         - sprite: _Nuclear14/Mobs/Insects/radscorpionbark.rsi
           state: radscorpion
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRadscorpionBark
@@ -392,7 +373,6 @@
         - sprite: _Nuclear14/Mobs/Insects/cazador.rsi
           state: cazador
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobCazador
@@ -413,7 +393,6 @@
       - sprite: _Nuclear14/Mobs/RaidersSimpleMob/Raiders.rsi
         state: raider_ranged
       - state: timed
-  - type: Timer
   - type: TimedSpawner
     prototypes:
       - N14MobRaiderPsychoRanged
@@ -433,7 +412,6 @@
         - sprite: _Nuclear14/Mobs/RaidersSimpleMob/Raiders.rsi
           state: raider_ranged
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRaiderHunter
@@ -453,7 +431,6 @@
         - sprite: _Nuclear14/Mobs/RaidersSimpleMob/Raiders.rsi
           state: raider_ranged
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRaiderSkrimisher
@@ -473,7 +450,6 @@
       - sprite: _Nuclear14/Mobs/RaidersSimpleMob/Raiders.rsi
         state: raiderboss
       - state: timed
-  - type: Timer
   - type: TimedSpawner
     prototypes:
       - N14MobRaiderBoss
@@ -493,7 +469,6 @@
         - sprite: _Nuclear14/Mobs/RaidersSimpleMob/Raiders.rsi
           state: raider_ranged
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobFernMercPrivate
@@ -513,7 +488,6 @@
         - sprite: _Nuclear14/Mobs/RaidersSimpleMob/Raiders.rsi
           state: raider_ranged
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobFernMercSergeant
@@ -533,7 +507,6 @@
         - sprite: _Nuclear14/Mobs/RaidersSimpleMob/Raiders.rsi
           state: raider_ranged
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobFernMercLieutenant
@@ -554,7 +527,6 @@
         - sprite: _Nuclear14/Mobs/RaidersSimpleMob/Raiders.rsi
           state: raider_ranged
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobEnforcerTrooper
@@ -574,7 +546,6 @@
         - sprite: _Nuclear14/Mobs/RaidersSimpleMob/Raiders.rsi
           state: raider_ranged
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobEnforcerWarden
@@ -594,7 +565,6 @@
         - sprite: _Nuclear14/Mobs/RaidersSimpleMob/Raiders.rsi
           state: raider_ranged
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobEnforcerChief
@@ -615,8 +585,7 @@
       - sprite: _Nuclear14/Mobs/RaidersSimpleMob/RaiderPsycho.rsi
         state: raider_melee
       - state: timed
-  - type: Timer
-  - type: TimedSpawner # Forge-Change
+  - type: TimedSpawner
     prototypes:
       - N14MobRaiderPsycho
       - N14MobRaiderPsycho1 
@@ -638,7 +607,6 @@
         - sprite: _Nuclear14/Mobs/RaidersSimpleMob/RaiderPsycho.rsi
           state: raider_melee
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRaiderFernMelee
@@ -658,7 +626,6 @@
         - sprite: _Nuclear14/Mobs/RaidersSimpleMob/RaiderPsycho.rsi
           state: raider_melee
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRaiderEnforcerMelee
@@ -679,7 +646,6 @@
         - sprite: _Nuclear14/Mobs/Ghouls/f13ghouls.rsi
           state: feralghoul
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobGhoulFeral
@@ -699,7 +665,6 @@
         - sprite: _Nuclear14/Mobs/Ghouls/ghoul-reaver.rsi
           state: alive
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobGhoulFeralReaver
@@ -719,7 +684,6 @@
         - sprite: _Nuclear14/Mobs/Ghouls/ghoul-rotter.rsi
           state: alive
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobGhoulFeralRotter
@@ -739,7 +703,6 @@
         - sprite: _Nuclear14/Mobs/Ghouls/maypole.rsi
           state: alive
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobGhoulMaypole
@@ -760,7 +723,6 @@
         - sprite: _Nuclear14/Mobs/Robots/assaultron.rsi
           state: icon
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRobotHostileAssaultron # Forge-Change
@@ -780,7 +742,6 @@
         - sprite: _Nuclear14/Mobs/Robots/protectron.rsi
           state: icon
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRobotHostileProtectron # Forge-Change
@@ -800,7 +761,6 @@
         - sprite: _Nuclear14/Mobs/Robots/protectron-builder.rsi
           state: icon
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRobotHostileProtectronBuilder # Forge-Change
@@ -820,7 +780,6 @@
         - sprite: _Nuclear14/Mobs/Robots/protectron-fire.rsi
           state: icon
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRobotHostileProtectronFire # Forge-Change
@@ -840,7 +799,6 @@
         - sprite: _Nuclear14/Mobs/Robots/protectron-police.rsi
           state: icon
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRobotHostileProtectronPolice # Forge-Change
@@ -860,7 +818,6 @@
         - sprite: _Nuclear14/Mobs/Robots/mrhandyclaw.rsi
           state: icon
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRobotHostileMrHandyClaw # Forge-Change
@@ -880,7 +837,6 @@
         - sprite: _Nuclear14/Mobs/Robots/mrhandygun.rsi
           state: icon
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRobotHostileMrHandyGun # Forge-Change
@@ -900,7 +856,6 @@
         - sprite: _Nuclear14/Mobs/Robots/mrhandysaw.rsi
           state: icon
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRobotHostileMrHandySaw # Forge-Change
@@ -920,7 +875,6 @@
         - sprite: _Nuclear14/Mobs/Robots/mrhandygutsy.rsi
           state: icon
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRobotHostileMrHandyGutsy # Forge-Change
@@ -940,7 +894,6 @@
         - sprite: _Nuclear14/Mobs/Robots/robobrain.rsi
           state: icon
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRobotHostileRobobrain # Forge-Change
@@ -960,7 +913,6 @@
         - sprite: _Nuclear14/Mobs/Robots/eyebot.rsi
           state: icon
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRobotHostileEyebot # Forge-Change
@@ -980,7 +932,6 @@
         - sprite: _Nuclear14/Mobs/Plants/sporeplant.rsi
           state: sporeplant
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobSporeplant
@@ -1001,7 +952,6 @@
         - sprite: _Nuclear14/Mobs/Animals/radstag.rsi
           state: radstag
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRadstag
@@ -1021,7 +971,6 @@
         - sprite: _Nuclear14/Mobs/Animals/chicken.rsi
           state: chicken
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobChicken
@@ -1041,7 +990,6 @@
         - sprite: _Nuclear14/Mobs/Animals/bighorner.rsi
           state: bighorner
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobBighorner
@@ -1061,7 +1009,6 @@
         - sprite: _Nuclear14/Mobs/Animals/brahmin.rsi
           state: brahmin-1
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobBrahmin
