@@ -57,6 +57,9 @@
   - type: FootstepModifier
     footstepSoundCollection:
       path: /Audio/Mecha/sound_mecha_powerloader_step.ogg
+  - type: Damageable
+    damageContainer: Silicon
+    damageModifierSet: Silicon
 
 # отладочный хламобот: спавнится с батареей и хламозитронным мозгом.
 - type: entity

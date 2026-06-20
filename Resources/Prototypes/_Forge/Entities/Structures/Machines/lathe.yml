@@ -5,10 +5,11 @@
   description: A workbench for printing junktron parts out of scrap to assemble robots.
   components:
   - type: Sprite
-    state: tinkerbench
+    sprite: _Forge/Structures/Misc/robot_fabricator.rsi
+    state: icon
   - type: Lathe
     idleState: icon
-    runningState: icon # change this
+    runningState: icon
     staticRecipes:
     - N14JunktronEndoskeleton
     - N14JunktronTorso
