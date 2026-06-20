@@ -4,9 +4,6 @@ using Robust.Client.GameObjects;
 
 namespace Content.Client._Forge.CombatModeVisuals;
 
-// Показывает и прячет слои спрайта, когда существо входит/выходит из боевого режима.
-// Проверяем каждый тик, а не через подписку: на смену боевого режима уже подписан движковый CombatModeSystem,
-// а двух подписчиков на одно и то же событие движок не пускает. Существ с таким компонентом мало, так что не накладно.
 public sealed class CombatModeVisualsSystem : EntitySystem
 {
     public override void Update(float frameTime)

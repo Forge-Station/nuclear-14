@@ -106,14 +106,12 @@ public sealed class LawCardSystem : EntitySystem
         _laws.SetLaws(CloneLaws(ent.Comp), target);
         _popup.PopupEntity(Loc.GetString("law-card-uploaded", ("target", target)), target, args.User);
 
-        // если включено, борг заодно перенимает фракции и допуски того, кто его прошил. если нет — меняем только законы.
         if (ent.Comp.OverwriteAccess && args.User != target)
             AdoptOwnership(target, args.User);
 
         args.Handled = true;
     }
 
-    // борг берёт фракции и допуски прошившего — те, что у того сейчас (ID-карта, инвентарь). обоим показываем «Допуск изменён».
     private void AdoptOwnership(EntityUid target, EntityUid user)
     {
         if (TryComp<NpcFactionMemberComponent>(user, out var userFactions) && userFactions.Factions.Count > 0)
@@ -138,7 +136,6 @@ public sealed class LawCardSystem : EntitySystem
         CloseEditor(ent.Owner);
     }
 
-    // сам борг карту использовать не может — иначе свободной рукой-манипулятором переписал бы законы, в том числе себе.
     private bool DenyBorgUse(EntityUid user)
     {
         if (!HasComp<BorgChassisComponent>(user))
@@ -179,7 +176,6 @@ public sealed class LawCardSystem : EntitySystem
         return CloneLaws(comp);
     }
 
-    // Отдаём копии законов, а не сам список карты — чтобы правки на стороне борга/окна не меняли карту.
     private static List<SiliconLaw> CloneLaws(LawCardComponent comp)
     {
         return comp.Laws.Select(l => l.ShallowClone()).ToList();
@@ -198,7 +194,6 @@ public sealed class LawCardSystem : EntitySystem
         if (!_hands.IsHolding(user, card))
             return;
 
-        // выкидываем пустые законы и режем список по максимуму — на случай кривых или накликанных сохранений.
         comp.Laws = laws
             .Where(l => !string.IsNullOrWhiteSpace(l.LawString))
             .Take(LawCardComponent.MaxLaws)

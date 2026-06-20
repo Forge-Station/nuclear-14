@@ -80,7 +80,7 @@ public sealed class GlitchedLawGenerator : EntitySystem
         {
             0 => threats,
             1 => crew1,
-            2 => objects
+            _ => objects
         };
         var crewAll = _random.Prob(0.5f) ? crew2 : Loc.GetString("n14-junk-crew");
         var objectsThreats = _random.Prob(0.5f) ? objects : threats;

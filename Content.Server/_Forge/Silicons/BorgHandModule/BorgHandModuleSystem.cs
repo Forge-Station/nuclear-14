@@ -18,7 +18,6 @@ public sealed class BorgHandModuleSystem : EntitySystem
 
     private void OnSelected(Entity<BorgHandModuleComponent> ent, ref BorgModuleSelectedEvent args)
     {
-        // руки уже выданы или вешать их некуда — выходим.
         if (ent.Comp.AddedHands.Count > 0 || !TryComp<HandsComponent>(args.Chassis, out var hands))
             return;
 
@@ -35,7 +34,6 @@ public sealed class BorgHandModuleSystem : EntitySystem
         if (!TryComp<HandsComponent>(args.Chassis, out var hands))
             return;
 
-        // RemoveHand сам роняет то, что было в руке, перед её удалением — так предмет не пропадёт.
         foreach (var handId in ent.Comp.AddedHands)
             _hands.RemoveHand(args.Chassis, handId, hands);
 

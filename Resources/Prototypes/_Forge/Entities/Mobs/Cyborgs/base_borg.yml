@@ -42,3 +42,12 @@
     - ShowMindShieldIcons
   - type: Targeting
   - type: CameraFollow
+  - type: LanguageKnowledge
+    speaks:
+    - English
+    - Chinese
+    - RobotTalk
+    understands:
+    - English
+    - Chinese
+    - RobotTalk

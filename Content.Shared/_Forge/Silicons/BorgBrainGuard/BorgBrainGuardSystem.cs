@@ -12,7 +12,6 @@ public sealed class BorgBrainGuardSystem : EntitySystem
         SubscribeLocalEvent<BorgChassisComponent, ContainerIsInsertingAttemptEvent>(OnInsertAttempt);
     }
 
-    // мозг можно вставить только в его слот. иначе борг затащил бы чужой разум в любой контейнер — хоть в руку.
     private void OnInsertAttempt(Entity<BorgChassisComponent> ent, ref ContainerIsInsertingAttemptEvent args)
     {
         if (args.Cancelled || args.Container.ID == ent.Comp.BrainContainerId)

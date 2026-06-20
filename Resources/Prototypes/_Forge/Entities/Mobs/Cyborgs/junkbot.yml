@@ -52,6 +52,11 @@
   - type: SiliconLawProvider
     laws: N14JunkbotLaws
   - type: RandomSiliconLaws
+  - type: Inventory
+    templateId: borgDutch
+  - type: FootstepModifier
+    footstepSoundCollection:
+      path: /Audio/Mecha/sound_mecha_powerloader_step.ogg
 
 # отладочный хламобот: спавнится с батареей и хламозитронным мозгом.
 - type: entity
