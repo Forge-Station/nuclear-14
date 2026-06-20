@@ -223,3 +223,36 @@
   - type: RequiresEyeProtection
   - type: IgnitionSource
     temperature: 700
+
+- type: entity
+  parent: BaseItem
+  id: N14BLadeOfTheEast
+  name: blade of the east
+  description: "A heavy sword forged in the eastern cohort of the legion."
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Melee/bladeeast.rsi
+    layers:
+    - state: icon
+  - type: Item
+    sprite: Corvax/Objects/Weapons/Melee/bladeeast.rsi
+    size: Huge
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Melee/bladeeast.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: MeleeWeapon
+    damage:
+      types:
+        Slash: 60
+        Blunt: 15
+        Structural: 25
+    resistanceBypass: true
+    soundHit:
+      path: /Audio/Weapons/bladeslice.ogg
+  - type: MultiHandedItem
+  - type: HeldSpeedModifier
+    walkModifier: 1.2
+    sprintModifier: 1.2

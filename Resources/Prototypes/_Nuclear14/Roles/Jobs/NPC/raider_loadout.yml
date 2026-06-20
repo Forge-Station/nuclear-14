@@ -41,11 +41,13 @@
   id: FernMercPrivateGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitCombat
-    shoes: N14ClothingBootsLeather
+    gloves: N14ClothingHandsGlovesDriver
+    eyes: N14ClothingEyesGlassesGoggles
+    shoes: N14ClothingBootsCombat
     head: N14ClothingHeadHatArmyCap
-    mask: N14ClothingMaskBrownMask
-    outerClothing: N14ClothingOuterRaiderBadlands
-    pocket1: N14RaiderStash
+    mask: N14ClothingMaskBlackMask
+    outerClothing: N14ClothingOuterPoliceVestCargo
+    pocket1: N14MercStash #Forge-Change
 
 - type: startingGear
   id: FernMercSergeantGear
@@ -57,7 +59,7 @@
     eyes: N14ClothingEyesGlassesWelding
     outerClothing: N14ClothingOuterCombatArmor
     belt: ClothingBeltMilitary
-    pocket1: N14RaiderStash
+    pocket1: N14MercStash #Forge-Change
 
 - type: startingGear
   id: FernMercLieutenantGear
@@ -68,7 +70,7 @@
     mask: N14ClothingMaskBrownBalaclava
     eyes: N14ClothingEyesSunGlasses
     outerClothing: N14ClothingOuterCombatArmorMK2
-    pocket1: N14RaiderStash
+    pocket1: N14MercStash #Forge-Change
 
 - type: startingGear
   id: EnforcerTrooperGear
@@ -121,7 +123,7 @@
     shoes: N14ClothingBootsLeather
     hands: N14ClothingHandsGlovesBlackBiker
     head: N14ClothingHeadHatArmyCap
-    pocket1: N14RaiderStash
+    pocket1: N14MercStash #Forge-Change
   inhand:
   - N14TrenchClub
 

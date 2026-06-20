@@ -557,6 +557,7 @@
   - type: ConditionalSpawner
     prototypes:
       - N14MobFernMercLieutenant
+      - N14MobFernMercLieutenant1
 
 - type: entity
   name: Enforcer Spawner - Trooper
@@ -615,9 +616,12 @@
       - sprite: _Nuclear14/Mobs/RaidersSimpleMob/RaiderPsycho.rsi
         state: raider_melee
       - state: ai
-  - type: ConditionalSpawner
+  - type: ConditionalSpawner # Forge-add
     prototypes:
       - N14MobRaiderPsycho
+      - N14MobRaiderPsycho1 
+      - N14MobRaiderPsycho2
+      - N14MobRaiderPsycho3
 
 - type: entity
   name: Fern Spawner - Melee

@@ -510,3 +510,24 @@
     slots:
     - Hair
     - FacialHair
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatDog
+  name: Dog helmet
+  description: "A dog head hat with built-in goggles"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/doghelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/doghelmet.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.9
+        Slash: 0.9
+        Piercing: 0.9
+        Heat: 0.9
+  - type: HideLayerClothing
+    slots:
+    - Hair
