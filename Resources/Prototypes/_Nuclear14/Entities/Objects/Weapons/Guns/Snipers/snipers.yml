@@ -25,12 +25,6 @@
     - SemiAuto
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/sniper.ogg
-  - type: BallisticAmmoProvider
-    capacity: 10
-    proto: CartridgeLightRifle
-    whitelist:
-      tags:
-      - CartridgeLightRifle
   - type: ContainerContainer
     containers:
       ballistic-ammo: !type:Container
@@ -346,6 +340,12 @@
     angleDecay: 16
     soundGunshot:
       collection: N14LeverRifleGunshot
+  - type: BallisticAmmoProvider
+    whitelist:
+      tags:
+      - N14Cartridge308Rifle
+    capacity: 8
+    proto: N14Cartridge308Rifle
   - type: GunWieldBonus
     minAngle: -6            
     maxAngle: -24  
@@ -555,6 +555,12 @@
     angleDecay: 15
     soundGunshot:
       collection: N14LeverRifleGunshot
+  - type: BallisticAmmoProvider
+    whitelist:
+      tags:
+      - N14Cartridge308Rifle
+    capacity: 8
+    proto: N14Cartridge308Rifle
   - type: GunWieldBonus
     minAngle: -6
     maxAngle: -27
@@ -582,6 +588,12 @@
     angleDecay: 15
     soundGunshot:
       collection: N14LeverRifleGunshot
+  - type: BallisticAmmoProvider
+    whitelist:
+      tags:
+      - N14Cartridge308Rifle
+    capacity: 8
+    proto: N14Cartridge308Rifle
   - type: GunWieldBonus
     minAngle: -6
     maxAngle: -27
@@ -605,6 +617,12 @@
     fireRate: 2
     soundGunshot:
       collection: N14SniperHuntingGunshot
+  - type: BallisticAmmoProvider
+    whitelist:
+      tags:
+      - N14Cartridge308Rifle
+    capacity: 10
+    proto: N14Cartridge308Rifle
   - type: FollowDistance
     backStrength: 3
   - type: StaticPrice
