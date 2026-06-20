@@ -246,4 +246,3 @@
   - type: ConditionalSpawner
     prototypes:
       - N14MobIguana
-      
