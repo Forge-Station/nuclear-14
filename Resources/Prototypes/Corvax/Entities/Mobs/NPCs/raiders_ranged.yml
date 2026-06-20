@@ -96,7 +96,7 @@
       maxAngle: 20
       angleIncrease: 1
       angleDecay: 4
-      fireRate: 15
+      fireRate: 10
       soundGunshot:
         collection: N14MinigunGunshot
       useKey: false

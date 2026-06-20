@@ -585,7 +585,7 @@
       - sprite: _Nuclear14/Mobs/RaidersSimpleMob/RaiderPsycho.rsi
         state: raider_melee
       - state: timed
-  - type: TimedSpawner # Forge-Change
+  - type: TimedSpawner
     prototypes:
       - N14MobRaiderPsycho
       - N14MobRaiderPsycho1 
