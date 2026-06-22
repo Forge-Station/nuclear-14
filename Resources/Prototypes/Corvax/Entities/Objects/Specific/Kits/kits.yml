@@ -213,10 +213,12 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14Gladius
-      - id: N14FireAxe
-      - id: ThrowingKnife
-        amount: 3
+      - id: N14WeaponShotgunAuto
+      - id: N14ClothingHandsPowerFist
+      - id: SmokeGrenade
+      - id: MagazineBox12gauge
+      - id: N14MagazineShotgun12
+        amount: 2
       - id: N14Stimpak
         amount: 2
       - id: N14BoxCardboardMREBoxLegionFilled

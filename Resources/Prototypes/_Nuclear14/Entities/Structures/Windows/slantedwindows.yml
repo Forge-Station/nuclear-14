@@ -65,7 +65,6 @@
   id: N14WindowSlantedBroken
   name: broken glass
   description: Broken remains of a window.
-  categories: [ HideSpawnMenu ]
   placement:
     mode: SnapgridCenter
   components:

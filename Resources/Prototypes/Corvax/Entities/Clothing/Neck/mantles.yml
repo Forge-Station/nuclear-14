@@ -52,3 +52,14 @@
     sprite: Corvax/Clothing/Neck/sagum.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Neck/sagum.rsi
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckCapeLegion
+  name: legionary cape
+  description: "large legion cape with a bull banner"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/capelegio.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Neck/capelegio.rsi

@@ -369,6 +369,8 @@
     price: 100
   - proto: N14ClothingOuterCoatCombatDuster
     price: 100
+  - proto: N14ClothingOuterHeavySteelArmor
+    price: 150
   - proto: N14ClothingOuterPoliceVest
     price: 200
   - proto: N14ClothingOuterVestChinese
@@ -523,7 +525,7 @@
   - proto: N14FloraWildXanderRootClippingSeed
     price: 5
   - proto: CottonSeeds
-    price: 5  
+    price: 5
 
 - type: storePresetStructured
   id: caravan_buy2
@@ -842,6 +844,8 @@
     price: 3
   - proto: N14ClothingHeadHatArmyBeretRanger
     price: 4
+  - proto: N14ClothingHeadHatCombatHelmet
+    price: 20
 
 - type: storeCategoryStructured
   id: CaravanSell2_Armor

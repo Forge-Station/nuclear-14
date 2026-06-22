@@ -9,3 +9,5 @@ ent-N14ClothingNeckThragg = накидка из шкуры яо гая альб�
     .desc = В каком то комиксе я это уже видел.
 ent-N14ClothingNeckCapeLegionSagum = легионерский сагум
     .desc = Квадратный плащ, сотканный рабами легиона.
+ent-N14ClothingNeckCapeLegion = накидка легионера
+    .desc = Большой плащ с эмблемой быка.

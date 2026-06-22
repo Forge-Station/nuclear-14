@@ -83,6 +83,8 @@
     sprite: Corvax/Clothing/Head/Helmets/veteranhelmet.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/veteranhelmet.rsi
+  - type: HelmetToggle
+    altPrefix: alt        # RSI должен иметь стейт "alt-equipped-HELMET"
   - type: Armor
     modifiers:
       coefficients:
@@ -106,6 +108,8 @@
     sprite: Corvax/Clothing/Head/Helmets/primehelmet.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/primehelmet.rsi
+  - type: HelmetToggle
+    altPrefix: alt        # RSI должен иметь стейт "alt-equipped-HELMET"
   - type: Armor
     modifiers:
       coefficients:
@@ -129,6 +133,8 @@
     sprite: Corvax/Clothing/Head/Helmets/recruithelmet.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/recruithelmet.rsi
+  - type: HelmetToggle
+    altPrefix: alt        # RSI должен иметь стейт "alt-equipped-HELMET"
   - type: Armor
     modifiers:
       coefficients:
@@ -150,8 +156,13 @@
   components:
   - type: Sprite
     sprite: Corvax/Clothing/Head/Helmets/baseballhelmet.rsi
+    layers:
+    - state: icon
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/baseballhelmet.rsi
+    slots: [ head ]
+  - type: HelmetToggle
+    altPrefix: alt        # RSI должен иметь стейт "alt-equipped-HELMET"
   - type: Armor
     modifiers:
       coefficients:
@@ -164,6 +175,18 @@
   - type: HideLayerClothing
     slots:
     - Hair
+
+
+- type: entity
+  parent: N14ClothingHeadHatBaseballHelmet
+  id: N14ClothingHeadHatBaseballHelmetV2
+  name: baseball helmet
+  description: "A helmet designed for playing baseball. Strike!"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/baseballhelmetV2.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/baseballhelmetV2.rsi
 
 - type: entity
   parent: ClothingHeadBase
@@ -521,6 +544,48 @@
     sprite: Corvax/Clothing/Head/Helmets/doghelmet.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/doghelmet.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.9
+        Slash: 0.9
+        Piercing: 0.9
+        Heat: 0.9
+  - type: HideLayerClothing
+    slots:
+    - Hair
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatRaiderbag
+  name: raider bag helmet
+  description: A bag on the head with slits for the eyes.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/raiderbaghelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/raiderbaghelmet.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.95
+        Slash: 0.95
+        Piercing: 0.95
+        Heat: 0.95
+  - type: HideLayerClothing
+    slots:
+    - Hair
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatEyeBot
+  name: eye bot helmet
+  description: The body of the eye bot without the insides.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/eyebothelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/eyebothelmet.rsi
   - type: Armor
     modifiers:
       coefficients:
