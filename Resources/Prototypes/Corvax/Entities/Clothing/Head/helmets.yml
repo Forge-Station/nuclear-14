@@ -176,18 +176,6 @@
     slots:
     - Hair
 
-
-- type: entity
-  parent: N14ClothingHeadHatBaseballHelmet
-  id: N14ClothingHeadHatBaseballHelmetV2
-  name: baseball helmet
-  description: "A helmet designed for playing baseball. Strike!"
-  components:
-  - type: Sprite
-    sprite: Corvax/Clothing/Head/Helmets/baseballhelmetV2.rsi
-  - type: Clothing
-    sprite: Corvax/Clothing/Head/Helmets/baseballhelmetV2.rsi
-
 - type: entity
   parent: ClothingHeadBase
   id: N14ClothingHeadHatLightBaseballHelmet
