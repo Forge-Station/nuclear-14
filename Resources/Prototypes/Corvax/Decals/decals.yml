@@ -1,4 +1,4 @@
-# MARK: Skulls
+# MARK: Bones
 
 - type: decal
   id: ForgeBonesSkull
@@ -11,6 +11,36 @@
   sprite:
     sprite: Corvax/Decals/bones.rsi
     state: skullDeathclaw
+
+- type: decal
+  id: ForgeBonesSkull2
+  sprite:
+    sprite: Corvax/Decals/bones.rsi
+    state: skull2
+
+- type: decal
+  id: ForgeBonesRib
+  sprite:
+    sprite: Corvax/Decals/bones.rsi
+    state: rib
+
+- type: decal
+  id: ForgeBonesRibs
+  sprite:
+    sprite: Corvax/Decals/bones.rsi
+    state: ribs
+
+- type: decal
+  id: ForgeBonesPelvic
+  sprite:
+    sprite: Corvax/Decals/bones.rsi
+    state: pelvicbone
+
+- type: decal
+  id: ForgeBonesBones
+  sprite:
+    sprite: Corvax/Decals/bones.rsi
+    state: bones
 
 # MARK: Grass
 
@@ -123,3 +153,25 @@
   sprite:
     sprite: Corvax/Decals/crater.rsi
     state: boom3
+
+#MARK: Broken
+
+- type: decal
+  id: ForgeMRhandy
+  sprite:
+    sprite: Corvax/Decals/broken.rsi
+    state: mrhandy
+
+- type: decal
+  id: ForgeT51helmet
+  sprite:
+    sprite: Corvax/Decals/broken.rsi
+    state: t51helmet
+
+#MARK: Other
+
+- type: decal
+  id: ForgeUSAemblem
+  sprite:
+    sprite: Corvax/Decals/usaemblem.rsi
+    state: usaemblem

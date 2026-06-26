@@ -119,3 +119,17 @@
   - type: HideLayerClothing
     slots:
     - Hair
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHoodWanderer
+  name: wanderer hood
+  description: A dirty bag with a large hole for the face.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Hoods/wandererHood.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Hoods/wandererHood.rsi
+  - type: HideLayerClothing
+    slots:
+    - Hair

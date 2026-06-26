@@ -10,16 +10,16 @@
     - !type:CharacterSpeciesRequirement
       species:
       - Human
-    - !type:CharacterPlaytimeRequirement # Forge-Add 
+    - !type:CharacterPlaytimeRequirement # Forge-Add
       tracker: BoSWashingtonCommander
       min: 1080000 # (Admin Only Test)
-    - !type:CharacterDepartmentTimeRequirement 
+    - !type:CharacterDepartmentTimeRequirement
       department: BrotherhoodWashington
       min: 72000 #20 hours
     - !type:CharacterWhitelistRequirement # Forge-Add
   startingGear: BoSWashingtonCommanderGear
   alwaysUseSpawner: true
-  icon: "JobIconHeadOfSecurity"
+  icon: "JobIconbosWCommander"
   supervisors: job-supervisors-bos-wash-commander
   requireAdminNotify: true
   accessGroups:

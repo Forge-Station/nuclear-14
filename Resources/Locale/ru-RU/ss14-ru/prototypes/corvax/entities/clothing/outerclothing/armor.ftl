@@ -101,8 +101,12 @@ ent-ClothingOuterArmoredWinterCoat = зимний бомбер с бронепл
     .desc = Коричневого цвета бомбер с стальными бронепластинами.
 ent-N14ClothingOuterLegionnaireDuster = пыльник легиона
     .desc = Темный пыльник с эмблемой быка на спине.
+ent-N14ClothingOuterTireArmor = броня из шин
+    .desc = Броня сделанная из обгоревших шин.
+ent-N14ClothingOuterHeavySteelArmor = тяжелая стальная броня
+    .desc = Сделана из хлама и стали, имеет подкладку из кожи.
 
-#Спонсорские вещи
+# Спонсорские вещи
 ent-N14ClothingOuterNCRCombatVeteranKiltArmor = боевая броня ветерана нкр с кителем
     .desc = { ent-N14ClothingOuterNCRCombatVeteranArmor.desc }
 ent-N14ClothingOuterNCRCombatVeteranKiltArmorSnow = боевая броня ветерана нкр с кителем зимняя

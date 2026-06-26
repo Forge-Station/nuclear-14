@@ -17,7 +17,7 @@ undecided-loadout-category-sagitaria-description =
 undecided-loadout-category-ventor-sagitaria-name = Набор вентора-сагитария
 undecided-loadout-category-ventor-sagitaria-description =
     Ящик со всем необходимым...
-    Содержит: 1 прибор ночного видения (ПНВ), 
+    Содержит: 1 прибор ночного видения (ПНВ),
     1 Анти-Материальная винтовка, 3 винтовочных магазина (.50 BMG),
     1 коробку патронов (.50 BMG), 1 ПНВ, 2 грязных стимпака,
     1 рацион легионеров
@@ -25,7 +25,7 @@ undecided-loadout-category-ventor-sagitaria-description =
 undecided-loadout-category-ventor-triaria-name = Набор вентора-триария
 undecided-loadout-category-ventor-triaria-description =
     Ящик со всем необходимым...
-    Содержит: 1 прибор ночного видения (ПНВ), 
+    Содержит: 1 прибор ночного видения (ПНВ),
     1 штурмовой дробовик, 2 коробки патронов (12 gauge), 1 церемониальный меч,
     2 грязных стимпака, 1 рацион легионеров
 
@@ -41,7 +41,7 @@ undecided-loadout-category-dean-sagitaria-description =
     Ящик со всем необходимым для ведения дальнего боя.
     Содержит: 1 автоматическую винтовку, 2 винтовочных магазина (.308 Winchester),
     1 коробка патронов (.308 Winchester), 1 аптечку первой помощи,
-    2 грязных стимпака, 1 рацион легионеров 
+    2 грязных стимпака, 1 рацион легионеров
 
 undecided-loadout-category-dean-berserker-name = Набор декана-берсерка
 undecided-loadout-category-dean-berserker-description =
@@ -60,14 +60,13 @@ undecided-loadout-category-veteran-firearm-description =
 undecided-loadout-category-veteran-berserker-name = Набор легионера-ветерана берсерка
 undecided-loadout-category-veteran-berserker-description =
     Ящик со всем необходимым для того чтобы ворваться в бой.
-    Содержит: 1 гладиус, 1 пожарный топор,
-    3 метательных ножа, 2 стимпака, 2 К-рациона, 
+    Содержит: 1 боевой дробовик, 2 магазина (.12mm), 1 коробку патронов (.12mm), 1 силовой кастет, 1 дымовую гранату, 2 стимпака, 2 К-рациона,
     1 бутылку воды, 1 горчицу.
 
 undecided-loadout-category-veteran-kebab-name = Набор легионера-ветерана "Кебаб"
 undecided-loadout-category-veteran-kebab-description =
     Ящик со всем необходимым для того чтобы оставить след на ранах ваших врагов.
-    Содержит: 1 легионерский щит, 1 шиш-кебаб,  
+    Содержит: 1 легионерский щит, 1 шиш-кебаб,
     1 топливный бак, 2 грязных стимпака, 2 К-рациона,
     1 бутылку воды, 1 горчицу.
 
@@ -102,12 +101,12 @@ undecided-loadout-category-warrior-firearm-description =
     Содержит: 1 мачете, 1 пистолет-пулемёт 10 мм,
     1 коробка патронов (10mm Auto), 2 магазина ПП (10mm Auto),
     1 грязный стимпак, 1 рацион легионеров
-    
+
 
 undecided-loadout-category-warrior-melee-name = Рукопашный набор легионера-воина
 undecided-loadout-category-warrior-melee-description =
     Ящик со всем необходимым для ведения ближнего боя.
-    Содержит: 1 булаву с шипами, 
+    Содержит: 1 булаву с шипами,
     2 легионерских щита, 1 целебный порошок,
     1 грязный стимулятор, 1 рацион легионеров
 
@@ -136,7 +135,7 @@ undecided-loadout-category-recruit-healer-description =
     Ящик со всем необходимым для ведения рукопашного боя.
     Содержит: 1 пояс медика, 1 племенное мачете, 2 целебные припарки,
     2 грязных стимпака, 1 набор от ушибов, 1 мазь, 1 рацион легионеров
-    
+
 
 
 # Washington BoS
@@ -284,7 +283,7 @@ undecided-loadout-category-scribe-rifle-name = Ящик огнестрельно
 undecided-loadout-category-scribe-rifle-description =
     Набор Скриптера-Оружейника
     1 пистолет-пулемёт 10 мм, магазин ПП (10mm Auto), 10 пороха,
-    20 слитков свинца, разгрузка оруженосца ЗБС, 1 cтимпак, бинты. 
+    20 слитков свинца, разгрузка оруженосца ЗБС, 1 cтимпак, бинты.
 
 undecided-loadout-category-scribe-laser-name = Ящик лазерного снаряжения Скриптера
 undecided-loadout-category-scribe-laser-description =

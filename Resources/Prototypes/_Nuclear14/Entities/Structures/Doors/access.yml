@@ -69,6 +69,28 @@
   - type: Wires
     layoutId: HighSec
 
+- type: entity
+  parent: N14DoorBunker
+  id: N14DoorBunkerLockedNCR
+  suffix: NCR, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsNCR ]
+  - type: Wires
+    layoutId: HighSec
+
+- type: entity
+  parent: N14DoorBunkerGlass
+  id: N14DoorBunkerGlassLockedNCR
+  suffix: NCR, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsNCR ]
+  - type: Wires
+    layoutId: HighSec
+
 #MARK: BoS Midwest
 - type: entity
   parent: N14DoorBunker

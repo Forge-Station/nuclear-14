@@ -333,3 +333,38 @@
   icon:
     sprite: Corvax/Interface/Misc/job_icons.rsi
     state: investigator
+
+- type: jobIcon
+  parent: JobIcon
+  id: JobIconbosWCommander
+  icon:
+    sprite: Corvax/Interface/Misc/job_icons.rsi
+    state: bosWCommander
+
+- type: jobIcon
+  parent: JobIcon
+  id: JobIconbosWKnight
+  icon:
+    sprite: Corvax/Interface/Misc/job_icons.rsi
+    state: bosWKnight
+
+- type: jobIcon
+  parent: JobIcon
+  id: JobIconbosWPaladin
+  icon:
+    sprite: Corvax/Interface/Misc/job_icons.rsi
+    state: bosWPaladin
+
+- type: jobIcon
+  parent: JobIcon
+  id: JobIconbosWScriptor
+  icon:
+    sprite: Corvax/Interface/Misc/job_icons.rsi
+    state: bosWScriptor
+
+- type: jobIcon
+  parent: JobIcon
+  id: JobIconbosWSquire
+  icon:
+    sprite: Corvax/Interface/Misc/job_icons.rsi
+    state: bosWSquire

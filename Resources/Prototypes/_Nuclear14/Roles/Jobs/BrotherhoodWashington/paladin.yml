@@ -16,7 +16,7 @@
     - !type:CharacterWhitelistRequirement # Forge-Add
   startingGear: BoSWashingtonPaladinGear
   alwaysUseSpawner: true
-  icon: "JobIconPassenger"
+  icon: "JobIconbosWPaladin"
   supervisors: job-name-bos-wash
   access:
   - WashingtonInitiate

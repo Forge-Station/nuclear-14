@@ -267,3 +267,66 @@
   heatCapacity: 10000
   weather: true
   indestructible: true
+
+- type: tile
+  id: ForgeFloorBones
+  name: Кости
+  sprite: /Textures/Corvax/Tiles/bones.png
+  edgeSpritePriority: 1
+  edgeSprites:
+    SouthEast: /Textures/Corvax/Tiles/bones_edge_se.png
+    NorthEast: /Textures/Corvax/Tiles/bones_edge_ne.png
+    NorthWest: /Textures/Corvax/Tiles/bones_edge_nw.png
+    SouthWest: /Textures/Corvax/Tiles/bones_edge_sw.png
+    South: /Textures/Corvax/Tiles/bones_edge_south.png
+    East: /Textures/Corvax/Tiles/bones_edge_east.png
+    North: /Textures/Corvax/Tiles/bones_edge_north.png
+    West: /Textures/Corvax/Tiles/bones_edge_west.png
+  isSubfloor: true
+  footstepSounds:
+    collection: N14FootstepDirt
+  heatCapacity: 10000
+  weather: true
+  indestructible: true
+
+- type: tile
+  id: ForgeFloorDarkConcreteTiles1
+  name: Темные бетонные плиты
+  sprite: /Textures/Corvax/Tiles/darkconcretetiles1.png
+  baseTurf: space
+  isSubfloor: true
+  footstepSounds:
+    collection: FootstepAsteroid
+  friction: 0.30
+  thermalConductivity: 0.04
+  heatCapacity: 10000
+  weather: true
+  indestructible: true
+
+- type: tile
+  id: ForgeFloorDarkConcreteTiles2
+  name: Темные бетонные плиты
+  sprite: /Textures/Corvax/Tiles/darkconcretetiles2.png
+  baseTurf: space
+  isSubfloor: true
+  footstepSounds:
+    collection: FootstepAsteroid
+  friction: 0.30
+  thermalConductivity: 0.04
+  heatCapacity: 10000
+  weather: true
+  indestructible: true
+
+- type: tile
+  id: ForgeFloorDarkConcreteTiles3
+  name: Темные бетонные плиты
+  sprite: /Textures/Corvax/Tiles/darkconcretetiles3.png
+  baseTurf: space
+  isSubfloor: true
+  footstepSounds:
+    collection: FootstepAsteroid
+  friction: 0.30
+  thermalConductivity: 0.04
+  heatCapacity: 10000
+  weather: true
+  indestructible: true
