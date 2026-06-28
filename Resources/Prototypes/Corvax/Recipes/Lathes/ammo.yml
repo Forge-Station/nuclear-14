@@ -7,3 +7,13 @@
     Lead: 90
     Steel: 190
     N14Gunpowder: 60
+
+- type: latheRecipe
+  id: DrumMagazine45SubMachineGun
+  result: DrumMagazine45SubMachineGun
+  category: N14AmmoMagazine
+  completetime: 5
+  materials:
+    Lead: 50
+    Steel: 300
+    N14Gunpowder: 100

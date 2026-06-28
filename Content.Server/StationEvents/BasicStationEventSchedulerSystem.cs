@@ -8,7 +8,6 @@ using Content.Shared.CCVar;
 using Content.Shared.GameTicking.Components;
 using JetBrains.Annotations;
 using Robust.Shared.Configuration;
-using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Toolshed;
 using Robust.Shared.Utility;
@@ -92,7 +91,7 @@ namespace Content.Server.StationEvents
         ///     to even exist) so I think it's fine.
         /// </remarks>
         [CommandImplementation("simulate")]
-        public IEnumerable<(string, float)> Simulate(EntityPrototype eventScheduler, int rounds, int playerCount, float roundEndMean, float roundEndStdDev)
+        public IEnumerable<(string, float)> Simulate(int rounds, int playerCount, float roundEndMean, float roundEndStdDev)
         {
             _stationEvent ??= GetSys<EventManagerSystem>();
             _basicScheduler ??= GetSys<BasicStationEventSchedulerSystem>();
@@ -129,7 +128,7 @@ namespace Content.Server.StationEvents
         }
 
         [CommandImplementation("lsprob")]
-        public IEnumerable<(string, float)> LsProb(EntityPrototype eventScheduler)
+        public IEnumerable<(string, float)> LsProb()
         {
             _stationEvent ??= GetSys<EventManagerSystem>();
             var events = _stationEvent.AllEvents();
@@ -143,7 +142,7 @@ namespace Content.Server.StationEvents
         }
 
         [CommandImplementation("lsprobtime")]
-        public IEnumerable<(string, float)> LsProbTime(EntityPrototype eventScheduler, float time)
+        public IEnumerable<(string, float)> LsProbTime(float time)
         {
             _stationEvent ??= GetSys<EventManagerSystem>();
             var events = _stationEvent.AllEvents().Where(pair => pair.Value.EarliestStart <= time).ToList();
@@ -157,7 +156,7 @@ namespace Content.Server.StationEvents
         }
 
         [CommandImplementation("prob")]
-        public float Prob(EntityPrototype eventScheduler, string eventId)
+        public float Prob(string eventId)
         {
             _stationEvent ??= GetSys<EventManagerSystem>();
             var events = _stationEvent.AllEvents();

@@ -35,8 +35,12 @@
   equipment:
     jumpsuit: N14ClothingUniformNCR # Forge-Change
     outerClothing: N14ClothingOuterNCRVest # Forge-Change
+    belt: N14ClothingBeltMedicalFilled # Forge-Change
     back: N14ClothingBackpackNCR # Forge-Change
     shoes: N14ClothingBootsLeatherFilled
+    gloves: N14ClothingHandsGlovesNitrile # Forge-Change
+    mask: ClothingMaskSterile # Forge-Change
+    head: N14ClothingHeadHatNCRHelmetMetalMedic # Forge-Change
     id: N14IDNCRDogtagDoctor
     pocket2: NCRmedicloadoutkits
   innerClothingSkirt: N14ClothingUniformNCR # Forge-Change

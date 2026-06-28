@@ -10,6 +10,12 @@
     - map: ["enum.DamageStateVisualLayers.Base"]
       state: jackal
       sprite: Corvax/Mobs/Animals/jackal.rsi
+  - type: Butcherable # Forge-add
+    spawned:
+    - id: N14FoodMeatRadRaw
+      amount: 1
+    - id: N14MaterialRawLeather1
+      amount: 2
   - type: MovementSpeedModifier
     baseWalkSpeed : 3.5
     baseSprintSpeed : 7

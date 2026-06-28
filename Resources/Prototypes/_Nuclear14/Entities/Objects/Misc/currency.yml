@@ -92,6 +92,7 @@
   name: caps
   icon: { sprite: _Nuclear14/Objects/Misc/currency.rsi, state: caps3 }
   spawn: N14CurrencyCap
+  maxCount: 500 # Forge-add
 
 - type: entity
   parent: N14CurrencyCap
@@ -324,12 +325,35 @@
     - state: aurelius3
       map: ["base"]
 
+#Forge-Change-start
 - type: stack
   id: LegionAureus
   name: legion aurei
   icon: { sprite: /Textures/_Nuclear14/Objects/Misc/currency.rsi, state: aurelius3 }
   spawn: N14CurrencyLegionAureus
-  maxCount: 500
+  maxCount: 10
+
+- type: entity
+  parent: N14CurrencyLegionAureus
+  id: N14CurrencyLegionAureus3
+  suffix: 3
+  components:
+  - type: Icon
+    sprite: _Nuclear14/Objects/Misc/currency.rsi
+    state: aurelius2
+  - type: Stack
+    count: 3
+
+- type: entity
+  parent: N14CurrencyLegionAureus
+  id: N14CurrencyLegionAureus5
+  suffix: 5
+  components:
+  - type: Icon
+    sprite: _Nuclear14/Objects/Misc/currency.rsi
+    state: aurelius3
+  - type: Stack
+    count: 5
 
 - type: entity
   parent: N14CurrencyLegionAureus
@@ -338,31 +362,9 @@
   components:
   - type: Icon
     sprite: _Nuclear14/Objects/Misc/currency.rsi
-    state: aurelius2
+    state: aurelius3
   - type: Stack
     count: 10
-
-- type: entity
-  parent: N14CurrencyLegionAureus
-  id: N14CurrencyLegionAureus50
-  suffix: 50
-  components:
-  - type: Icon
-    sprite: _Nuclear14/Objects/Misc/currency.rsi
-    state: aurelius3
-  - type: Stack
-    count: 50
-
-- type: entity
-  parent: N14CurrencyLegionAureus
-  id: N14CurrencyLegionAureus100
-  suffix: 100
-  components:
-  - type: Icon
-    sprite: _Nuclear14/Objects/Misc/currency.rsi
-    state: aurelius3
-  - type: Stack
-    count: 100
 
 - type: material
   id: LegionAurei
@@ -371,6 +373,7 @@
   stackEntity: N14CurrencyLegionAureus
   icon: { sprite: /Textures/_Nuclear14/Objects/Misc/currency.rsi, state: aurelius3 }
   price: 100 # Forge-Change
+#Forge-Change-end
 
 # Legion Denarius
 - type: entity
@@ -403,7 +406,7 @@
   name: legion denarii
   icon: { sprite: /Textures/_Nuclear14/Objects/Misc/currency.rsi, state: denarius3 }
   spawn: N14CurrencyLegionDenarius
-  maxCount: 500
+  maxCount: 100 # Forge-Change
 
 - type: entity
   parent: N14CurrencyLegionDenarius

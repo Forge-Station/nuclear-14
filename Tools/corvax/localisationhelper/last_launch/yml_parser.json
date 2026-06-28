@@ -4271,23 +4271,23 @@
         "desc": null,
         "suffix": null
     },
+    "N14CurrencyLegionAureus2": {
+        "parent": "N14CurrencyLegionAureus",
+        "name": null,
+        "desc": null,
+        "suffix": 2
+    },
+    "N14CurrencyLegionAureus5": {
+        "parent": "N14CurrencyLegionAureus",
+        "name": null,
+        "desc": null,
+        "suffix": 5
+    },
     "N14CurrencyLegionAureus10": {
         "parent": "N14CurrencyLegionAureus",
         "name": null,
         "desc": null,
         "suffix": 10
-    },
-    "N14CurrencyLegionAureus50": {
-        "parent": "N14CurrencyLegionAureus",
-        "name": null,
-        "desc": null,
-        "suffix": 50
-    },
-    "N14CurrencyLegionAureus100": {
-        "parent": "N14CurrencyLegionAureus",
-        "name": null,
-        "desc": null,
-        "suffix": 100
     },
     "N14CurrencyLegionDenarius": {
         "parent": "N14CurrencyCap",

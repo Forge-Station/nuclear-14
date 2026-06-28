@@ -37,6 +37,7 @@
   id: CaesarLegionLegionnaireVeteranGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitLegionnaire
+    outerClothing: N14ClothingOuterLegionnaireVeteranArmor
     neck: ClothingNeckRedScarf
     eyes: N14ClothingEyesGlassesWelding
     back: N14ClothingBackpackMilitary
@@ -45,6 +46,7 @@
     gloves: N14ClothingHandsGlovesTribal
     pocket1: LegionVeteranloadoutkits
     id: N14IDLegionaryMedalSilver2
+    belt: ClothingBeltRope
   innerClothingSkirt: N14ClothingUniformJumpsuitLegionnaireOther
   storage:
     back:

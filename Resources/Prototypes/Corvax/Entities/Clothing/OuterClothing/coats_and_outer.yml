@@ -126,3 +126,14 @@
     sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/Armoredcoat.rsi
   - type: Clothing
     sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/Armoredcoat.rsi
+
+- type: entity
+  parent: N14ClothingOuterBase
+  id: ClothingOuterToga
+  name: toga
+  description: Outerwear in the form of a huge piece of woolen fabric of an elliptical shape
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/toga.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Coats_and_outer/toga.rsi

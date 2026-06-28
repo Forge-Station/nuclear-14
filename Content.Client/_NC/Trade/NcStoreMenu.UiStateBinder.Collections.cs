@@ -1,5 +1,6 @@
 ﻿namespace Content.Client._NC.Trade;
 
+
 public sealed partial class NcStoreMenu
 {
     private sealed partial class UiStateBinder
@@ -13,32 +14,28 @@ public sealed partial class NcStoreMenu
                 return false;
 
             foreach (var (k, v) in a)
-            {
                 if (!b.TryGetValue(k, out var other) || other != v)
                     return false;
-            }
 
             return true;
         }
 
-        private static bool SparseDictEqualsPreservingHiddenBuyListings(
+        private static bool ScopedDictEquals(
             Dictionary<string, int> authoritativeValues,
             Dictionary<string, int> cachedValues,
-            HashSet<string> buyListingIds
+            HashSet<string> snapshotScopeIds
         )
         {
             foreach (var (key, value) in authoritativeValues)
-            {
                 if (!cachedValues.TryGetValue(key, out var other) || other != value)
                     return false;
-            }
 
             foreach (var key in cachedValues.Keys)
             {
                 if (authoritativeValues.ContainsKey(key))
                     continue;
 
-                if (!buyListingIds.Contains(key))
+                if (snapshotScopeIds.Contains(key))
                     return false;
             }
 
@@ -58,25 +55,27 @@ public sealed partial class NcStoreMenu
             }
         }
 
-        private static void ApplySparseSnapshotPreservingHiddenBuyListings(
+        private void ApplyScopedSnapshot(
             Dictionary<string, int> authoritativeValues,
             Dictionary<string, int> cachedValues,
-            HashSet<string> buyListingIds
+            HashSet<string> snapshotScopeIds
         )
         {
-            var toRemove = new List<string>();
+            _scopedRemoveScratch.Clear();
 
             foreach (var key in cachedValues.Keys)
             {
                 if (authoritativeValues.ContainsKey(key))
                     continue;
 
-                if (!buyListingIds.Contains(key))
-                    toRemove.Add(key);
+                if (snapshotScopeIds.Contains(key))
+                    _scopedRemoveScratch.Add(key);
             }
 
-            for (var i = 0; i < toRemove.Count; i++)
-                cachedValues.Remove(toRemove[i]);
+            for (var i = 0; i < _scopedRemoveScratch.Count; i++)
+                cachedValues.Remove(_scopedRemoveScratch[i]);
+
+            _scopedRemoveScratch.Clear();
 
             foreach (var (key, value) in authoritativeValues)
             {

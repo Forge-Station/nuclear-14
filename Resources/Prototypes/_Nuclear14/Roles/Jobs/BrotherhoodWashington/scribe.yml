@@ -16,7 +16,7 @@
       min: 28800 # Forge-Change (8 hours)
   startingGear: BoSWashingtonScribeGear
   alwaysUseSpawner: true
-  icon: "JobIconScientist"
+  icon: "JobIconbosWScriptor"
   supervisors: job-name-bos-wash
   access:
   - WashingtonInitiate

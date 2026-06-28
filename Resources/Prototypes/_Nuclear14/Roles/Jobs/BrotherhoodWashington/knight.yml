@@ -16,7 +16,7 @@
       min: 21600 # Forge-Change (6 hours)
   startingGear: BoSWashingtonKnightGear
   alwaysUseSpawner: true
-  icon: "JobIconPassenger"
+  icon: "JobIconbosWKnight"
   supervisors: job-supervisors-bos-wash-knight
   access:
   - WashingtonInitiate

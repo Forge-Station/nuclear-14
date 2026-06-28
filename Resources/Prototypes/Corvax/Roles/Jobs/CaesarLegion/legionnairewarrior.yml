@@ -37,6 +37,7 @@
   id: CaesarLegionLegionnaireWarriorGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitLegionnaire
+    outerClothing: N14ClothingOuterLegionnaireBaseArmor
     neck: ClothingNeckRedScarf
     eyes: N14ClothingEyesGlassesWelding
     back: N14ClothingBackpackMilitary
@@ -45,6 +46,7 @@
     gloves: N14ClothingHandsGlovesTribal
     pocket1: LegionWarriorloadoutkits
     id: N14IDLegionaryMedalSilver
+    belt: ClothingBeltRope
   innerClothingSkirt: N14ClothingUniformJumpsuitLegionnaireOther
   storage:
     back:

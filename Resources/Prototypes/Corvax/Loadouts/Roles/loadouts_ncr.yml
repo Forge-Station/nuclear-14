@@ -1,20 +1,22 @@
+#MARK: Пустынное снаряжение
+
 - type: loadout
   id: LoadoutClothingOuterNCRVestpaddedWebDesert
   category: Outer
   cost: 3
   exclusive: true
   requirements:
-  - !type:CharacterJobRequirement
-    jobs:
-    - NCRSoldier
-    - NCREngineer
-    - NCRMedic
-    - NCRWS
-  - !type:CharacterPlaytimeRequirement
-    tracker: NCRSoldier
-    min: 36000 # 10 hours veterancy unlock
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRSoldier
+        - NCREngineer
+        - NCRMedic
+        - NCRWS
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRSoldier
+      min: 36000 # 10 hours veterancy unlock
   items:
-  - N14ClothingOuterNCRVestpaddedWeb
+    - N14ClothingOuterNCRVestpaddedWeb
 
 - type: loadout
   id: LoadoutClothingOuterNCRVeteranArmorDesert
@@ -22,17 +24,17 @@
   cost: 4
   exclusive: true
   requirements:
-  - !type:CharacterJobRequirement
-    jobs:
-    - NCRSoldier
-    - NCREngineer
-    - NCRMedic
-    - NCRWS
-  - !type:CharacterPlaytimeRequirement
-    tracker: NCRSoldier
-    min: 72000 # 20 hours veterancy unlock
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRSoldier
+        - NCREngineer
+        - NCRMedic
+        - NCRWS
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRSoldier
+      min: 72000 # 20 hours veterancy unlock
   items:
-  - N14ClothingOuterNCRVeteranArmor
+    - N14ClothingOuterNCRVeteranArmor
 
 - type: loadout
   id: LoadoutClothingOuterNCRCombatVeteranArmor
@@ -49,35 +51,39 @@
   items:
   - N14ClothingOuterNCRCombatVeteranArmor
 
+# MARK: Снаряжение ВП
+
 - type: loadout
   id: LoadoutClothingNeckNCRMPCoat
   category: Outer
   cost: 4
   exclusive: true
   requirements:
-  - !type:CharacterJobRequirement
-    jobs:
-    - NCRMPinvestigator
-  - !type:CharacterPlaytimeRequirement
-    tracker: NCRMPinvestigator
-    min: 72000 # 20 hours veterancy unlock
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRMPinvestigator
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRMPinvestigator
+      min: 72000 # 20 hours veterancy unlock
   items:
-  - N14ClothingNeckNCRMPCoat
+    - N14ClothingNeckNCRMPCoat
 
 - type: loadout
   id: LoadoutClothingNeckNCRMPBeret
-  category: Outer
+  category: Head
   cost: 2
   exclusive: true
   requirements:
-  - !type:CharacterJobRequirement
-    jobs:
-    - NCRMPinvestigator
-  - !type:CharacterPlaytimeRequirement
-    tracker: NCRMPinvestigator
-    min: 72000 # 20 hours veterancy unlock
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRMPinvestigator
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRMPinvestigator
+      min: 72000 # 20 hours veterancy unlock
   items:
-  - N14ClothingHeadHatNCRMPBeret
+    - N14ClothingHeadHatNCRMPBeret
+
+# MARK: Наплечники НКР
 
 - type: loadout
   id: LoadoutClothingNeckNCRShoulderPad
@@ -104,3 +110,84 @@
         - NCRLT
   items:
     - N14ClothingNeckNCRShoulderPadFlag
+
+- type: loadout
+  id: LoadoutN14ClothingNeckCloakTentNCR
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRCadet
+        - NCRSoldier
+        - NCRWS
+        - NCRSGT
+  items:
+    - N14ClothingNeckCloakTentNCR
+
+# MARK: Разгрузки НКР
+
+- type: loadout
+  id: LoadoutClothingBeltNCRBandolier
+  category: Roles
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRCadet
+        - NCRSoldier
+        - NCRWS
+        - NCRSGT
+  items:
+    - ClothingBeltNCRBandolier
+
+- type: loadout
+  id: LoadoutClothingBeltNCRPouches
+  category: Roles
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRCadet
+        - NCRSoldier
+        - NCRWS
+        - NCRSGT
+  items:
+    - ClothingBeltNCRPouches
+
+- type: loadout
+  id: LoadoutClothingBeltNCRHarness
+  category: Roles
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRCadet
+        - NCRSoldier
+        - NCRWS
+        - NCRSGT
+  items:
+    - ClothingBeltNCRHarness
+
+# MARK: Прочее НКР
+
+- type: loadout
+  id: LoadoutN14ClothingMaskPlate
+  category: Mask
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRCadet
+        - NCRSoldier
+        - NCRWS
+        - NCRSGT
+  items:
+    - N14ClothingMaskPlate
+
+

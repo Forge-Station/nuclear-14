@@ -336,7 +336,6 @@
   - type: StaticPrice
     price: 15
 
-
 - type: entity
   parent: N14WeaponPistol10mmPipe
   id: N14WeaponPistol10mmPipeEmpty
@@ -395,6 +394,19 @@
       - N14CartridgePistol9
   - type: StaticPrice
     price: 20
+  - type: MeleeWeapon
+    attackRate: 1.2
+    damage:
+      types:
+        Blunt: 7.5
+    swapKeys: true
+    disableHeavy: true
+    animation: WeaponArcThrust
+    wideAnimationRotation: 135
+    soundHit:
+      collection: MetalThud
+  - type: DamageOtherOnHit
+    staminaCost: 5
 
 - type: entity
   name: the spy
@@ -429,6 +441,19 @@
       - N14CartridgePistol9
   - type: StaticPrice
     price: 75
+  - type: MeleeWeapon
+    attackRate: 1.2
+    damage:
+      types:
+        Blunt: 7.5
+    swapKeys: true
+    disableHeavy: true
+    animation: WeaponArcThrust
+    wideAnimationRotation: 135
+    soundHit:
+      collection: MetalThud
+  - type: DamageOtherOnHit
+    staminaCost: 5
 
 - type: entity
   name: 22lr Pistol

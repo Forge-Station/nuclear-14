@@ -1,6 +1,8 @@
 using Content.Shared._NC.Trade;
 
+
 namespace Content.Client._NC.Trade;
+
 
 public sealed class NcStoreClientCatalogModel
 {
@@ -10,7 +12,6 @@ public sealed class NcStoreClientCatalogModel
     private readonly List<StoreListingStaticData> _catalog = new();
     private readonly List<StoreListingData> _items = new();
     private readonly List<StoreListingData> _scratchReadyItems = new();
-    private readonly HashSet<string> _availableIds = new();
 
     public IReadOnlyList<StoreListingStaticData> Catalog => _catalog;
     public IReadOnlyList<StoreListingData> Items => _items;
@@ -19,7 +20,7 @@ public sealed class NcStoreClientCatalogModel
     public Dictionary<string, int> OwnedById { get; } = new();
     public Dictionary<string, int> CrateUnitsById { get; } = new();
 
-    public HashSet<string> AvailableIds => _availableIds;
+    public HashSet<string> AvailableIds { get; } = new();
 
     public void SetCatalog(List<StoreListingStaticData> catalog)
     {
@@ -32,7 +33,7 @@ public sealed class NcStoreClientCatalogModel
         _catalog.Clear();
         _items.Clear();
         _scratchReadyItems.Clear();
-        _availableIds.Clear();
+        AvailableIds.Clear();
         RemainingById.Clear();
         OwnedById.Clear();
         CrateUnitsById.Clear();
@@ -55,13 +56,19 @@ public sealed class NcStoreClientCatalogModel
                     s.Id,
                     StoreListingFlavor.Base,
                     s.ProductEntity,
+                    s.MatchMode,
                     s.BasePrice,
                     s.Category,
                     s.CurrencyId,
                     s.Mode,
                     owned,
                     remaining,
-                    s.UnitsPerPurchase));
+                    s.UnitsPerPurchase,
+                    s.DisplayName,
+                    s.Description,
+                    s.BarterCost,
+                    s.BarterReceive,
+                    s.BarterReceivePools));
         }
 
         var baseCount = _items.Count;
@@ -84,13 +91,19 @@ public sealed class NcStoreClientCatalogModel
                     d.ListingId,
                     StoreListingFlavor.Ready,
                     d.ProductEntity,
+                    d.MatchMode,
                     d.Price,
                     CatIdReady,
                     d.CurrencyId,
                     d.Mode,
                     d.Owned,
                     d.Remaining,
-                    d.UnitsPerPurchase));
+                    d.UnitsPerPurchase,
+                    d.DisplayName,
+                    d.Description,
+                    d.BarterCost,
+                    d.BarterReceive,
+                    d.BarterReceivePools));
         }
 
         if (_scratchReadyItems.Count > 0)
@@ -114,19 +127,25 @@ public sealed class NcStoreClientCatalogModel
                         s.Id,
                         StoreListingFlavor.Crate,
                         s.ProductEntity,
+                        s.MatchMode,
                         s.BasePrice,
                         CatIdCrate,
                         s.CurrencyId,
                         StoreMode.Sell,
                         take,
                         remaining,
-                        s.UnitsPerPurchase));
+                        s.UnitsPerPurchase,
+                        s.DisplayName,
+                        s.Description,
+                        s.BarterCost,
+                        s.BarterReceive,
+                        s.BarterReceivePools));
             }
         }
 
-        _availableIds.Clear();
+        AvailableIds.Clear();
         for (var i = 0; i < _items.Count; i++)
-            _availableIds.Add(_items[i].Id);
+            AvailableIds.Add(_items[i].Id);
     }
 
     public void UpdateItemsDynamicInPlace()

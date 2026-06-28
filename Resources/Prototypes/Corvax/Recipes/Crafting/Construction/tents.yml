@@ -1,0 +1,96 @@
+#CLOTH
+- type: construction
+  id: N14TentClothWall
+  graph: N14TentClothWallGraph
+  startNode: start
+  targetNode: N14TentClothWallNode
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Walls/nc14/tents.rsi
+    state: cloth_edge
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14TentClothCorner
+  graph: N14TentClothCornerGraph
+  startNode: start
+  targetNode: N14TentClothCornerNode
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Walls/nc14/tents.rsi
+    state: cloth_corner
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DoorTentClothflap
+  graph: N14TentClothDoorGraph
+  startNode: start
+  targetNode: N14TentClothDoorNode
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/FalloutDoors/tentcloth.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+#LEATHER
+- type: construction
+  id: N14TentLeatherWall
+  graph: N14TentLeatherWallGraph
+  startNode: start
+  targetNode: N14TentLeatherWallNode
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Walls/nc14/tents.rsi
+    state: leather_edge
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14TentLeatherCorner
+  graph: N14TentLeatherCornerGraph
+  startNode: start
+  targetNode: N14TentLeatherCornerNode
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Walls/nc14/tents.rsi
+    state: leather_corner
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DoorTentLeatherflap
+  graph: N14TentLeatherDoorGraph
+  startNode: start
+  targetNode: N14TentLeatherDoorNode
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Doors/FalloutDoors/tentleather.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked

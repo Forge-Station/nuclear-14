@@ -37,6 +37,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutShoes
+    - !type:CharacterDepartmentRequirement # Forge-Change
+        departments:
+          - Wastelander
+          - Tribe  
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:

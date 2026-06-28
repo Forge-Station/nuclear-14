@@ -8,11 +8,18 @@
   },
   "states": [
     {
+      "name": "equipped-HELMET",
+      "directions": 4
+    },
+    {
+      "name": "alt-equipped-HELMET",
+      "directions": 4
+    },
+    {
       "name": "icon"
     },
     {
-      "name": "equipped-HELMET",
-      "directions": 4
+      "name": "icon-sealed"
     },
     {
       "name": "inhand-left",

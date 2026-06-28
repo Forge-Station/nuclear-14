@@ -1,4 +1,5 @@
 using Robust.Shared.GameStates;
+using Robust.Shared.Prototypes;
 
 
 namespace Content.Shared._NC.Trade;
@@ -6,43 +7,41 @@ namespace Content.Shared._NC.Trade;
 
 public readonly record struct StoreListingKey(StoreMode Mode, string ListingId);
 
-[RegisterComponent, NetworkedComponent]
+[RegisterComponent, NetworkedComponent,]
 public sealed partial class NcStoreComponent : Component
 {
     public int CatalogRevision;
     public EntityUid? CurrentUser;
+
+    // Map-save bridge: old maps may contain these runtime caches, but stores rebuild them from Profile.
+    [DataField("categories", readOnly: true)]
+    private List<string> MapSaveCategoriesBridge = new();
+
+    [DataField("currencyWhitelist", readOnly: true)]
+    private List<string> MapSaveCurrencyWhitelistBridge = new();
+
     public int UiRevision;
+
+    // Older Corvax maps only stored generated categories/currencies.
+    // If the map has no profile yet, load it as the city trade profile and save back in the new compact format.
+    [DataField("profile")]
+    public ProtoId<NcStoreProfilePrototype> Profile { get; set; } = "TrademachineCityProfile";
 
     [ViewVariables]
     public HashSet<string> CompletedOneTimeContracts { get; } = new();
 
-    [DataField("categories")]
-    public List<string> Categories { get; set; } = new();
+    [ViewVariables]
+    public List<string> Categories { get; } = new();
 
-    [DataField("currencyWhitelist")]
-    public List<string> CurrencyWhitelist { get; set; } = new();
+    [ViewVariables]
+    public List<string> CurrencyWhitelist { get; } = new();
 
     public List<NcStoreListingDef> Listings { get; set; } = new();
 
     [ViewVariables]
     public Dictionary<StoreListingKey, NcStoreListingDef> ListingIndex { get; } = new();
 
-    [DataField("buyPresets")]
-    public List<string> BuyPresets { get; set; } = new();
-
-    [DataField("sellPresets")]
-    public List<string> SellPresets { get; set; } = new();
-
-    [DataField("contractPresets")]
-    public List<string> ContractPresets { get; set; } = new();
-
     public Dictionary<string, ContractServerData> Contracts { get; } = new();
-
-    [DataField("rewardCurrencies")]
-    public Dictionary<string, int> RewardCurrencies { get; set; } = new();
-
-    [DataField("rewardItems")]
-    public Dictionary<string, int> RewardItems { get; set; } = new();
 
     public void BumpCatalogRevision() => CatalogRevision = unchecked(CatalogRevision + 1);
 
@@ -56,7 +55,16 @@ public sealed partial class NcStoreComponent : Component
             if (string.IsNullOrWhiteSpace(l.Id))
                 continue;
 
-            ListingIndex[MakeListingKey(l.Mode, l.Id)] = l;
+            var key = MakeListingKey(l.Mode, l.Id);
+            if (ListingIndex.ContainsKey(key))
+            {
+                Logger.GetSawmill("ncstore")
+                    .Error(
+                        $"[NcStore] Duplicate listing id '{l.Id}' for mode '{l.Mode}' was ignored while rebuilding index.");
+                continue;
+            }
+
+            ListingIndex[key] = l;
         }
     }
 }

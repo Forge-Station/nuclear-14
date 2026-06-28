@@ -4,3 +4,6 @@ ent-N14MagazinePistol45 = { ent-N14BaseMagazine45Pistol }
     .desc = { ent-N14BaseMagazine45Pistol.desc }
 ent-Magazine45SubMachineGun = магазин ПП (.45 ACP)
     .desc = Магазин пистолета-пулемета калибра .45 Automatic Colt Pistol (~0.43 дюйма) на 25 патронов.
+ent-DrumMagazine45SubMachineGun = магазин барабанный (45. ACP)
+    .desc = Барабанный магазин пистолета-пулемета калибра .45 Automatic Colt Pistol (~0.43 дюйма) на 50 патронов.
+

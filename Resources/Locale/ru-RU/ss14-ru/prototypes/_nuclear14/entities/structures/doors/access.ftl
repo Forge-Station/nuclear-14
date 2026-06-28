@@ -271,6 +271,12 @@ ent-N14DoorBunkerGlass3XLockedBoSWest = { ent-N14DoorBunker3X }
 ent-N14DoorBunkerGlass3XLockedBoSElderCommander = { ent-N14DoorBunker3X }
     .desc = { ent-N14DoorBunkerGlass3X.desc }
     .suffix = Западное Братство Стали, Закрыто, Старейшина
+ent-N14DoorBunkerLockedNCR = { ent-N14DoorBunker }
+    .suffix = НКР, Закрыто
+    .desc = { ent-N14DoorBunker.desc }
+ent-N14DoorBunkerGlassLockedNCR = { ent-N14DoorBunkerGlass }
+    .suffix = НКР, Закрыто
+    .desc = { ent-N14DoorBunkerGlass.desc }
 
 ent-N14DoorWoodSecureLockedFollower = { ent-N14DoorMakeshift }
     .desc = { ent-N14DoorMakeshift.desc }

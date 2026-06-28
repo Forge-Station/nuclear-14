@@ -356,6 +356,9 @@
     damage:
       types:
         Piercing: 3
+  - type: Clothing # Forge-add
+    slots:
+    - ears
 
 - type: entity
   parent: Pen

@@ -687,8 +687,9 @@
   description: A worn out iron key. I wonder where it goes?
   components:
   - type: Sprite
-    sprite: _Nuclear14/Objects/Misc/identification.rsi
-    state: iron
+    sprite: _Nuclear14/Objects/Misc/tapes_cards.rsi
+    state: grey
+    scale: 0.6, 0.6
   - type: Access
     tags:
     - IronKey
@@ -700,7 +701,8 @@
   description: A worn out brass key. I wonder where it goes?
   components:
   - type: Sprite
-    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    sprite: _Nuclear14/Objects/Misc/tapes_cards.rsi
+    scale: 0.6, 0.6
     state: brass
   - type: Access
     tags:

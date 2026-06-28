@@ -41,3 +41,25 @@
         type: StorageBoundUserInterface
       enum.ToggleClothingUiKey.Key:
         type: ToggleableClothingBoundUserInterface
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckCapeLegionSagum
+  name: legionary sagum
+  description: "A square cloak woven by the slaves of the legion"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/sagum.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Neck/sagum.rsi
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckCapeLegion
+  name: legionary cape
+  description: "large legion cape with a bull banner"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/capelegio.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Neck/capelegio.rsi

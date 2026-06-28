@@ -1,18 +1,23 @@
-ent-LegionCenturionloadoutkits = неразобранный набор центуриона
-    .desc = Пожалуйста, выберите только 1.
-ent-LegionVenatorloadoutkits = неразобранный набор вентора
+# Legion
+ent-LegionCenturionloadoutkits = Набор центуриона (не выбран)
+    .desc = Пожалуйста, возьмите только один.
+ent-LegionVenatorloadoutkits = Набор венатора (не выбран)
     .desc = { ent-LegionCenturionloadoutkits.desc }
-ent-LegionDeanloadoutkits = неразобранный набор декана
+ent-LegionDeanloadoutkits = Набор декана (не выбран)
     .desc = { ent-LegionCenturionloadoutkits.desc }
-ent-LegionVeteranloadoutkits = неразобранный набор легионера-ветерана
+ent-LegionVeteranloadoutkits = Набор легионера-ветерана (не выбран)
     .desc = { ent-LegionCenturionloadoutkits.desc }
-ent-LegionWarriorloadoutkits = неразобранный набор легионера-воина
+ent-LegionWarriorloadoutkits = Набор легионера-воина (не выбран)
     .desc = { ent-LegionCenturionloadoutkits.desc }
-ent-LegionRecruitloadoutkits = неразобранный набор легионера-рекрута
+ent-LegionRecruitloadoutkits = Набор легионера-рекрута (не выбран)
     .desc = { ent-LegionCenturionloadoutkits.desc }
-ent-BoSWashingtonStandartKits = неразобранный набор Вашингтонского Братсва
+
+
+
+# Brotherhood of Steel (Washington) (Непонятные наборы, которые не используются)
+ent-BoSWashingtonStandartKits = Набор Солдат Вашингтонского Братства (не выбран) 
     .desc = { ent-LegionCenturionloadoutkits.desc }
-ent-BoSWashingtonScribeKits = неразобранный набор Вашингтонского Братсва
+    .suffix = НЕ ИСПОЛЬЗУЮТСЯ
+ent-BoSWashingtonCommandKits = Набор Командования Вашингтонского Братства (не выбран)
     .desc = { ent-LegionCenturionloadoutkits.desc }
-ent-BoSWashingtonCommandKits = неразобранный набор Вашингтонского Братсва
-    .desc = { ent-LegionCenturionloadoutkits.desc }
+    .suffix = НЕ ИСПОЛЬЗУЮТСЯ

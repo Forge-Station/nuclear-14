@@ -41,6 +41,9 @@
   id: N14Cartridge545Rifle
 
 - type: Tag
+  id: DrumMagazine45SubMachineGun
+
+- type: Tag
   id: N14PowerCellMagnetoSmall
 
 - type: Tag
@@ -54,33 +57,18 @@
 
 - type: Tag
   id: SpeedLoader12-7x55mm
-  
-- type: Tag
-  id: TradeContractHuntSpawn
 
 - type: Tag
-  id: TradeContractMineSpawn
+  id: Candles
 
 - type: Tag
-  id: TradeContractStoreSpawn
+  id: Lighter
 
 - type: Tag
-  id: TradeContractRoadSpawn
+  id: N14BoxCardboardMREBoxLegionFilled
 
 - type: Tag
-  id: TradeContractWarehouseSpawn
+  id: N14StimpakEmpty
 
 - type: Tag
-  id: TradeContractDeliverySpawn
-
-- type: Tag
-  id: TradeContractStructureSpawn
-
-- type: Tag
-  id: TradeContractRepairSpawn
-
-- type: Tag
-  id: TradeContractGhostSpawn
-
-- type: Tag
-  id: TradeContractStructureDropoff
+  id: N14Gladius

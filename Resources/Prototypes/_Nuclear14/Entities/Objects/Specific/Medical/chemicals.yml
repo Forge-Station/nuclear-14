@@ -635,6 +635,49 @@
     node: healingpowder
 
 - type: entity
+  name: berserker powder
+  parent: BaseItem
+  id: N14BerserkerPowder
+  description: A bag of accelerating substance made by the best chemists in Flagstaff.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Specific/Medical/drugs.rsi
+    state: berserkerpowder
+  - type: Item
+    sprite: _Nuclear14/Objects/Specific/Medical/drugs.rsi
+    size: Small
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        maxVol: 10
+        reagents:
+        - ReagentId: BerserkerMixture
+          Quantity: 10
+  - type: Food
+    forceFeedDelay: 1
+    transferAmount: 10
+    eatMessage: food-swallow
+    useSound: /Audio/Items/pill.ogg
+  - type: FlavorProfile
+    ignoreReagents: []
+  - type: SolutionSpiker
+    sourceSolution: food
+  - type: Extractable
+    grindableSolutionName: food
+  - type: Damageable
+    damageContainer: Inorganic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 10
+      behaviors:
+      - !type:SpillBehavior
+        solution: food
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+
+- type: entity
   parent: DrinkBottleGlassBaseFull
   id: N14Antidote
   name: antidote

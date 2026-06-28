@@ -9,7 +9,6 @@
         - sprite: Corvax/Mobs/Animals/swamper.rsi
           state: swamper
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobSwamper
@@ -29,7 +28,6 @@
         - sprite: Corvax/Mobs/Animals/radswamper.rsi
           state: radswamper
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobRadSwamper
@@ -49,7 +47,6 @@
         - sprite: Corvax/Mobs/Animals/jackal.rsi
           state: jackal
         - state: timed
-    - type: Timer
     - type: TimedSpawner
       prototypes:
         - N14MobJackal
@@ -57,3 +54,22 @@
       intervalSeconds: 2400
       minimumEntitiesSpawned: 1
       maximumEntitiesSpawned: 2
+
+- type: entity
+  parent: N14TimedSpawnerMolerat
+  id: N14TimedSpawnMobIguana
+  name: периодический спавнер игуаны
+  components:
+    - type: Sprite
+      layers:
+        - state: blue
+        - sprite: _Nuclear14/Mobs/Animals/iguana.rsi
+          state: iguana
+        - state: timed
+    - type: TimedSpawner
+      prototypes:
+        - N14MobIguana
+      chance: 0.95
+      intervalSeconds: 2400
+      minimumEntitiesSpawned: 1
+      maximumEntitiesSpawned: 3

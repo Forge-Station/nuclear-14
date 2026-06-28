@@ -15,17 +15,14 @@
     items:
       - id: N14WeaponThermospear
       - id: N14CeremonialSword
-      - id: ClothingBeltRope
       - id: Bola
         amount: 2
       - id: N14StimpakDirty
         amount: 3
       - id: N14SuperStimpak
         amount: 1
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -43,16 +40,12 @@
   - type: SpawnItemsOnUse
     items:
       - id: N14WeaponLMGchinese
-      - id: ClothingBeltRope
       - id: Magazine762AmmoBelt
         amount: 2
-      - id: N14DrinkTeaBroc
       - id: N14StimpakDirty
         amount: 2
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -70,17 +63,14 @@
   - type: SpawnItemsOnUse
     items:
       - id: N14WeaponSniper50AntiMateriel
-      - id: ClothingBeltRope
       - id: N14Magazine50AMR
         amount: 3
       - id: MagazineBox50
       - id: ClothingEyesNightVisionGoggles
       - id: N14StimpakDirty
         amount: 2
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -98,17 +88,14 @@
   - type: SpawnItemsOnUse
     items:
       - id: N14WeaponBlowback
-      - id: ClothingBeltRope
       - id: MagazineBox12gauge
         amount: 2
       - id: N14CeremonialSword
       - id: ClothingEyesNightVisionGoggles
       - id: N14StimpakDirty
         amount: 2
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -126,7 +113,6 @@
   - type: SpawnItemsOnUse
     items:
       - id: N14LegionnaireShield
-      - id: ClothingBeltRope
       - id: N14PoliceBaton
       - id: Bola
         amount: 2
@@ -134,10 +120,8 @@
       - id: N14StimpakDirty
         amount: 2
       - id: N14MedkitCombatFilled
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -155,17 +139,14 @@
   - type: SpawnItemsOnUse
     items:
       - id: N14WeaponLMGAutoRifle
-      - id: ClothingBeltRope
       - id: Magazine308Rifle
         amount: 2
       - id: MagazineBox308
       - id: N14MedkitFilled
       - id: N14StimpakDirty
         amount: 2
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -183,16 +164,13 @@
   - type: SpawnItemsOnUse
     items:
       - id: N14SledgeHammer
-      - id: ClothingBeltRope
       - id: ThrowingKnife
         amount: 3
       - id: N14Stimpak
         amount: 2
       - id: N14MedkitFilled
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -209,8 +187,6 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireVeteranArmor
-      - id: ClothingBeltRope
       - id: N14Gladius
       - id: SmokeGrenade
       - id: N14WeaponRifle762Chinese
@@ -219,10 +195,8 @@
         amount: 3
       - id: N14StimpakDirty
         amount: 2
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -239,18 +213,16 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireVeteranArmor
-      - id: ClothingBeltRope
-      - id: N14Gladius
-      - id: N14FireAxe
-      - id: ThrowingKnife
-        amount: 3
+      - id: N14WeaponShotgunAuto
+      - id: N14ClothingHandsPowerFist
+      - id: SmokeGrenade
+      - id: MagazineBox12gauge
+      - id: N14MagazineShotgun12
+        amount: 2
       - id: N14Stimpak
         amount: 2
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -267,17 +239,13 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireVeteranArmor
-      - id: ClothingBeltRope
       - id: N14WeaponKebab
       - id: N14LegionnaireShield
       - id: N14StimpakDirty
         amount: 2
       - id: N14FuelTankHandyRusty
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -294,18 +262,14 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireBaseArmor
-      - id: ClothingBeltRope
       - id: N14Gladius
       - id: N14LegionnaireBuckler
       - id: N14WeaponShotgunShort
       - id: MagazineBox12gauge
       - id: N14StimpakDirty
         amount: 2
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -322,8 +286,6 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireBaseArmor
-      - id: ClothingBeltRope
       - id: N14Whip
       - id: N14WeaponRevolver44Tribal
       - id: SpeedLoader44
@@ -331,10 +293,8 @@
       - id: Stunprod
       - id: Zipties
         amount: 2
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -351,7 +311,6 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireBaseArmor
       - id: N14TribalMachete
       - id: N14Stimpak
         amount: 3
@@ -365,10 +324,8 @@
         amount: 2
       - id: MagazineBox45
       - id: Ointment
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -385,8 +342,6 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireBaseArmor
-      - id: ClothingBeltRope
       - id: N14TribalMachete
       - id: N14WeaponSMG10mm
       - id: MagazineBox10mm
@@ -394,10 +349,8 @@
         amount: 2
       - id: N14StimpakDirty
         amount: 1
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -414,18 +367,14 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireBaseArmor
-      - id: ClothingBeltRope
       - id: N14TrenchClub
       - id: N14LegionnaireShield
         amount: 2
       - id: N14HealingPowder
       - id: N14StimpakDirty
         amount: 1
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -442,7 +391,6 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireRecruitArmor
       - id: ClothingBeltQuiverSpear
       - id: N14WeaponSMG9mm
       - id: N14MagazineSMG9mm
@@ -452,10 +400,8 @@
       - id: N14LegionnaireBuckler
       - id: N14StimpakDirty
         amount: 1
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -472,16 +418,13 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireRecruitArmor
       - id: ClothingBeltQuiverSpear
       - id: N14PilumSpear
         amount: 4
       - id: N14StimpakDirty
         amount: 1
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -498,15 +441,12 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireRecruitArmor
       - id: N14LongSword
       - id: N14LegionnaireBuckler
       - id: N14StimpakDirty
         amount: 1
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -523,7 +463,6 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireRecruitArmor
       - id: N14TribalMachete
       - id: ClothingBeltMedical
       - id: N14StimpakDirty
@@ -532,10 +471,8 @@
         amount: 2
       - id: Brutepack
       - id: Ointment
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -1071,14 +1008,14 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14WeaponShotgunSawedOff
-      - id: MagazineBox12gauge
+      - id: N14WeaponSMG10mm
+      - id: N14MagazineSMG10mm
+        amount: 2
       - id: N14CleanGauze10
       - id: N14Stimpak
       - id: N14ClothingBeltBosLeatherunl
       - id: N14Gunpowder10
-      - id: N14IngotLead1
-        amount: 5
+      - id: N14IngotLead20
 
 - type: entity
   name: Scribe laser kit

@@ -8,6 +8,7 @@ namespace Content.Client._NC.Trade;
 
 public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : BoundUserInterface(owner, uiKey)
 {
+    private static readonly TimeSpan CatalogRetryGracePeriod = TimeSpan.FromSeconds(3);
     private readonly IPlayerManager _player = IoCManager.Resolve<IPlayerManager>();
 
     private int _lastCatalogRevision = int.MinValue;
@@ -16,11 +17,13 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
     private NcStoreMenu? _menu;
 
     private StoreDynamicState? _pendingDynamic;
+    private DateTime? _pendingDynamicSince;
 
     private EntityUid? Actor => _player.LocalSession?.AttachedEntity;
 
     private void DetachMenuHandlers(NcStoreMenu menu)
     {
+        menu.OnBarterPressed -= OnBarter;
         menu.OnBuyPressed -= OnBuy;
         menu.OnSellPressed -= OnSell;
         menu.OnMassSellPulledCrate -= OnMassSellPulledCrate;
@@ -48,6 +51,18 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         {
             _pendingDynamic = st;
             _menu.Visible = false;
+            var now = DateTime.UtcNow;
+            if (_pendingDynamicSince is { } since)
+            {
+                if (now - since >= CatalogRetryGracePeriod)
+                {
+                    SendMessage(new RequestUiRefreshMessage());
+                    _pendingDynamicSince = now;
+                }
+            }
+            else
+                _pendingDynamicSince = now;
+
             return;
         }
 
@@ -55,6 +70,8 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
             return;
 
         _lastStateRevision = st.Revision;
+
+        _pendingDynamicSince = null;
 
         ApplyDynamic(st);
         _menu.Visible = true;
@@ -81,12 +98,15 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
             cat.Listings,
             cat.HasBuyTab,
             cat.HasSellTab,
-            cat.HasContractsTab);
+            cat.HasBarterTab,
+            cat.HasContractsTab,
+            cat.UiColors);
 
         if (_pendingDynamic is { } pending &&
             pending.CatalogRevision == _lastCatalogRevision)
         {
             _pendingDynamic = null;
+            _pendingDynamicSince = null;
             _lastStateRevision = pending.Revision;
             ApplyDynamic(pending);
             _menu.Visible = true;
@@ -104,10 +124,13 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
             st.MassSellTotals,
             st.HasBuyTab,
             st.HasSellTab,
+            st.HasBarterTab,
             st.HasContractsTab,
             st.Contracts,
             st.ContractSkipCost,
-            st.ContractSkipCurrency);
+            st.ContractSkipCurrency,
+            st.IsSparseDynamicSnapshot,
+            st.SnapshotScopeIds);
 
     private void EnsureMenuCreated()
     {
@@ -120,10 +143,14 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         _lastCatalogRevision = int.MinValue;
         _lastStateRevision = int.MinValue;
         _pendingDynamic = null;
+        _pendingDynamicSince = null;
 
         if (EntMan.TryGetComponent(Owner, out MetaDataComponent? meta))
-            _menu.Title = meta.EntityName;
+            _menu.SetDisplayTitle(meta.EntityName);
+        else
+            _menu.SetDisplayTitle(string.Empty);
 
+        _menu.OnBarterPressed += OnBarter;
         _menu.OnBuyPressed += OnBuy;
         _menu.OnSellPressed += OnSell;
         _menu.OnMassSellPulledCrate += OnMassSellPulledCrate;
@@ -143,11 +170,13 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
 
         DetachMenuHandlers(_menu);
 
+        _menu.CleanupBeforeClose();
         _menu.Orphan();
         _menu = null;
         _lastCatalogRevision = int.MinValue;
         _lastStateRevision = int.MinValue;
         _pendingDynamic = null;
+        _pendingDynamicSince = null;
     }
 
     private void OnBuy(StoreListingData data, int qty)
@@ -164,6 +193,14 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
             return;
 
         SendMessage(new StoreSellListingBoundUiMessage(data.ListingId, qty, data.Flavor == StoreListingFlavor.Crate));
+    }
+
+    private void OnBarter(StoreListingData data, int qty)
+    {
+        if (Actor == null)
+            return;
+
+        SendMessage(new StoreBarterListingBoundUiMessage(data.ListingId, qty));
     }
 
     private void OnContractClaim(string contractId)
@@ -220,6 +257,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         if (_menu != null)
         {
             DetachMenuHandlers(_menu);
+            _menu.CleanupBeforeClose();
             _menu.Orphan();
             _menu = null;
         }
@@ -227,6 +265,7 @@ public sealed class NcStoreStructuredBoundUi(EntityUid owner, Enum uiKey) : Boun
         _lastCatalogRevision = int.MinValue;
         _lastStateRevision = int.MinValue;
         _pendingDynamic = null;
+        _pendingDynamicSince = null;
 
         base.Dispose(disposing);
     }
