@@ -78,6 +78,9 @@
   - proto: N14WeaponSMG12mmAdvanced
     price: 350
     count: 2
+  - proto: N14WeaponSMGNAil
+    price: 400
+    count: 1
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Shotguns

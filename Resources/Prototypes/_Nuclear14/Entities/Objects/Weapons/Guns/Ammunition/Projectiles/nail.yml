@@ -5,9 +5,9 @@
   categories: [ HideSpawnMenu ]
   components:
   - type: Sprite
-    sprite: Objects/Weapons/Guns/Projectiles/projectiles2.rsi
-    state: buckshot
+    sprite: Corvax/Objects/Weapons/Guns/Ammunition/Casings/nail_casing.rsi
+    state: bullet
   - type: Projectile
     damage:
       types:
-        Piercing: 10
+        Piercing: 7

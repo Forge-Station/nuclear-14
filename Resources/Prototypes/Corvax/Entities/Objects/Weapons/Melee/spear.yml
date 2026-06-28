@@ -16,3 +16,40 @@
     damage:
       types:
         Piercing: 24
+
+- type: entity
+  name: Thunder spear
+  parent: baseThrowingSpear
+  id: N14WastelandThunderspear
+  description: "Technically a very short spear, but its strength doesn't come from melee combat."
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Melee/thunderspear.rsi
+    netsync: false
+    state: spear
+  - type: TileFrictionModifier
+    modifier: 0.00001
+  - type: ExplodeOnTrigger
+  - type: Explosive
+    explosionType: Default
+    maxIntensity: 2
+    intensitySlope: 10
+    totalIntensity: 20
+    canCreateVacuum: false
+    maxTileBreak: 0
+    tileBreakScale: 0
+  - type: DamageOnLand
+    damage:
+      types:
+        Blunt: 3
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 1
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:ExplodeBehavior
+  - type: Damageable
+    damageContainer: Inorganic

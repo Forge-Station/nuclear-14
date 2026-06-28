@@ -9,7 +9,7 @@
       tags:
         - N14CartridgeNail
     proto: N14CartridgeNail
-    capacity: 60
+    capacity: 100
   - type: ContainerContainer
     containers:
       ballistic-ammo: !type:Container

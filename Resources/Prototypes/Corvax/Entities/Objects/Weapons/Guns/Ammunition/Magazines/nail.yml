@@ -11,7 +11,7 @@
       whitelist:
         tags:
           - N14CartridgeNail
-      capacity: 50
+      capacity: 35
       proto: N14CartridgeNail
     - type: ContainerContainer
       containers:

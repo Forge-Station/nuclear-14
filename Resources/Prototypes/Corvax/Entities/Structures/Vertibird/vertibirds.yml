@@ -1,0 +1,77 @@
+- type: entity
+  parent: BaseStructure
+  id: N14Vertibird
+  name: Vertibird XVB02
+  description: "A massive pre-war rotorcraft with a distinctive silhouette, powerful tilting rotors, and a cargo bay, which once served as a primary transport vehicle for the US military."
+  suffix: Mapping
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/vertibird.rsi
+    state: directions1
+    offset: 0,0
+    noRot: true
+    netsync: false
+  - type: Transform
+    anchored: true
+  - type: Physics
+    canCollide: true
+    bodyStatus: OnGround
+    bodyType: Static
+  - type: Tag
+    tags:
+      - Structure
+  - type: InteractionOutline
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-1.7,-0.7,2.5,1.2"
+        density: 60
+        mask:
+        - MachineMask
+        layer:
+        - MidImpassable
+        - LowImpassable
+        - BulletImpassable
+
+- type: entity
+  parent: BaseStructure
+  id: N14CrashedVertibird
+  name: Crashed Vertibird XVB02
+  description: "At one time, this flying machine soared to great heights; evidently, something broke on board, and it crashed."
+  suffix: Mapping
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/vertibird_broken.rsi
+    state: directions1
+    offset: 0,0
+    noRot: true
+    netsync: false
+  - type: Transform
+    anchored: true
+  - type: Physics
+    canCollide: true
+    bodyStatus: OnGround
+    bodyType: Static
+  - type: Tag
+    tags:
+      - Structure
+  - type: InteractionOutline
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-1.7,-0.7,2.5,1.2"
+        density: 60
+        mask:
+        - MachineMask
+        layer:
+        - MidImpassable
+        - LowImpassable
+        - BulletImpassable

@@ -603,3 +603,21 @@
     Steel: 200
     N14Gunpowder: 150
     Cardboard: 100
+
+- type: latheRecipe
+  id: MagazineBoxNail
+  result: MagazineBoxNail
+  category: N14AmmoBox
+  completetime: 5
+  materials:
+    Steel: 900
+    Cardboard: 100
+
+- type: latheRecipe
+  id: DrumMagazineNailGun
+  result: DrumMagazineNailGun
+  category: N14AmmoMagazine
+  completetime: 5
+  materials:
+    Steel: 500
+    Cardboard: 100
