@@ -1,0 +1,37 @@
+- type: entity
+  abstract: true
+  parent: BaseItem
+  id: BaseMagazineBoxNailgun
+  components:
+  - type: BallisticAmmoProvider
+    mayTransfer: true
+    whitelist:
+      tags:
+        - N14CartridgeNail
+    proto: N14CartridgeNail
+    capacity: 60
+  - type: ContainerContainer
+    containers:
+      ballistic-ammo: !type:Container
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Guns/Ammunition/Boxes/nailBox.rsi
+    netsync: false
+  - type: MagazineVisuals
+    magState: mag
+    steps: 2
+    zeroVisible: false
+  - type: Appearance
+
+- type: entity
+  parent: BaseMagazineBoxNailgun
+  id: MagazineBoxNail
+  name: nail box
+  components:
+  - type: BallisticAmmoProvider
+    proto: N14CartridgeNail
+  - type: Sprite
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: mag-1
+      map: ["enum.GunVisualLayers.Mag"]
