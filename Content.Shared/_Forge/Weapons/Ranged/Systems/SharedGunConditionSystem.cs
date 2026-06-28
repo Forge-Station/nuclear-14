@@ -40,8 +40,6 @@ public abstract class SharedGunConditionSystem : EntitySystem
         var percent = GetConditionPercent(ent.Comp);
         var state = GetConditionState(ent.Comp);
         var stateColor = GetConditionColor(state);
-        var (jamStart, jamPeak) = GetJamThresholds(ent.Comp);
-        var shotsToBreak = GetEstimatedShotsToBreak(ent.Comp);
 
         using (args.PushGroup(nameof(GunConditionComponent)))
         {
@@ -51,46 +49,6 @@ public abstract class SharedGunConditionSystem : EntitySystem
                     ("state", Loc.GetString($"gun-condition-state-{GetConditionStateId(state)}")),
                     ("color", stateColor),
                     ("value", $"{percent:0}")));
-
-            args.PushMarkup(
-                Loc.GetString(
-                    "gun-condition-examine-reserve",
-                    ("color", stateColor),
-                    ("current", $"{GetConditionReserve(ent.Comp):0.#}"),
-                    ("max", $"{GetConditionReserveMax(ent.Comp):0.#}")));
-
-            args.PushMarkup(
-                Loc.GetString(
-                    "gun-condition-examine-jam-chance",
-                    ("color", stateColor),
-                    ("value", $"{GetJamChance(ent.Comp) * 100f:0.#}")));
-
-            args.PushMarkup(
-                Loc.GetString(
-                    "gun-condition-examine-jam-formula",
-                    ("startChance", $"{Math.Clamp(ent.Comp.JamChanceMin, 0f, 1f) * 100f:0.#}"),
-                    ("start", $"{jamStart:0.#}"),
-                    ("peakChance", $"{Math.Clamp(ent.Comp.JamChanceMax, 0f, 1f) * 100f:0.#}"),
-                    ("peak", $"{jamPeak:0.#}"),
-                    ("curve", $"{GetJamCurve(ent.Comp):0.##}")));
-
-            args.PushMarkup(
-                Loc.GetString(
-                    "gun-condition-examine-wear",
-                    ("wear", $"{ent.Comp.WearPerShot:0.##}"),
-                    ("repair", $"{ent.Comp.RepairAmount:0.##}")));
-
-            if (shotsToBreak != null)
-            {
-                args.PushMarkup(
-                    Loc.GetString(
-                        "gun-condition-examine-shots-left",
-                        ("color", stateColor),
-                        ("value", shotsToBreak.Value)));
-            }
-
-            if (ent.Comp.Jammed)
-                args.PushMarkup(Loc.GetString("gun-condition-examine-jammed"));
         }
     }
 
