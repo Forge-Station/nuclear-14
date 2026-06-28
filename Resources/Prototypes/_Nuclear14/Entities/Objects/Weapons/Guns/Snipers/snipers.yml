@@ -1,6 +1,6 @@
 - type: entity
   name: hunting rifle
-  parent: BaseWeaponSniper
+  parent: [ BaseWeaponSniper, ForgeGunConditionProfileSniper ]
   id: N14WeaponSniperHunting
   description: A rugged bolt action rifle. Uses .308 ammo.
   components:
@@ -33,7 +33,7 @@
 
 - type: entity
   name: lee enfield rifle
-  parent: BaseWeaponSniper
+  parent: [ BaseWeaponSniper, ForgeGunConditionProfileSniper ]
   id: N14WeaponSniperEnfield
   description: A well-preserved bolt action service rifle. PLING! Uses .308 ammo.
   components:
@@ -288,7 +288,7 @@
 
 - type: entity
   name: varmint rifle
-  parent: BaseWeaponSniper
+  parent: [ BaseWeaponSniper, ForgeGunConditionProfileSniper ]
   id: N14WeaponSniper556VarmintRifle
   description: A pre-war low-power bolt action rifle, originally designed to hunt small animals. This gun also works fine on anything human-sized. Uses 5.56 ammo.
   components:
@@ -492,7 +492,7 @@
 # Forge-add-start
 - type: entity
   name: 308 Sniper Rifle
-  parent: N14WeaponRifleBase
+  parent: [ BaseWeaponRifle, ForgeGunConditionProfileSniper ]
   id: N14WeaponRifle308SniperRifle
   description:  sniper rifle chambered in .308.
   components:

@@ -1,6 +1,6 @@
 - type: entity
   name: N14BasePistol
-  parent: BaseItem
+  parent: [ BaseItem, ForgeGunConditionProfileSidearm ]
   id: N14BaseWeaponPistol
   description: A rooty tooty point and shooty.
   abstract: true
@@ -71,7 +71,7 @@
 
 - type: entity
   name: N14BaseInternalPistol
-  parent: BaseItem
+  parent: [ BaseItem, ForgeGunConditionProfileSidearm ]
   id: N14BaseWeaponInternalMagPistol
   description: A rooty tooty point and shooty.
   abstract: true

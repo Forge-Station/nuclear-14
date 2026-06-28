@@ -17,7 +17,7 @@
 
 - type: entity
   name: 10mm SMG
-  parent: N14WeaponSMGBase
+  parent: [ N14WeaponSMGBase, ForgeGunConditionProfileSMG ]
   id: N14WeaponSMG10mm
   description: Fully automatic submachine gun chambered in 10mm. # TODO: Need to create projectiles, magazines and boxes for 10mm.
   components:
@@ -79,7 +79,7 @@
 
 - type: entity
   name: 10mm suppressed SMG
-  parent: N14WeaponSMGBase
+  parent: [ N14WeaponSMGBase, ForgeGunConditionProfileSMG ]
   id: N14WeaponSMG10mmSuppressed
   description: Fully automatic submachine gun chambered in 10mm, this one comes with a suppressor. # TODO: Need to create projectiles, magazines and boxes for 10mm.
   components:
@@ -136,7 +136,7 @@
 
 - type: entity
   name: 12.7mm SMG
-  parent: N14WeaponSMGBase
+  parent: [ N14WeaponSMGBase, ForgeGunConditionProfileSMG ]
   id: N14WeaponSMG12mm
   description: A heavy submachine gun chambered in 12mm.
   components:
@@ -356,7 +356,7 @@
 
 - type: entity
   name: advanced 12.7mm SMG
-  parent: N14WeaponSMGBase
+  parent: [ N14WeaponSMGBase, ForgeGunConditionProfileSMG ]
   id: N14WeaponSMG12mmAdvanced
   description: A bulky submachine gun with a top-fed magazine system, it uses 12mm ammo.
   components:
@@ -413,7 +413,7 @@
 
 - type: entity
   name: 9mm SMG
-  parent: N14WeaponSMGBase
+  parent: [ N14WeaponSMGBase, ForgeGunConditionProfileSMG ]
   id: N14WeaponSMG9mm
   description: A simple metallic pre-war submachine gun, chambered in 9mm ammo.
   components:
@@ -474,7 +474,7 @@
 
 - type: entity
   name: infiltrator
-  parent: N14WeaponSMGBase
+  parent: [ N14WeaponSMGBase, ForgeGunConditionProfileSMG ]
   id: N14WeaponSMG9mminfiltrator
   description: A simple metallic pre-war submachine gun modified with a integrated suppressor, chambered in 9mm ammo.
   components:
@@ -531,7 +531,7 @@
 
 - type: entity
   name: .45 SMG
-  parent: N14WeaponSMGBase
+  parent: [ N14WeaponSMGBase, ForgeGunConditionProfileSMG ]
   id: N14WeaponSMG45
   description: A pre-war submachine gun with a wooden stock, chambered in .45.
   components:
@@ -592,7 +592,7 @@
 
 - type: entity
   name: sten SMG
-  parent: N14WeaponSMGBase
+  parent: [ N14WeaponSMGBase, ForgeGunConditionProfileSMG ]
   id: N14WeaponSMG9mmCanadian
   description: A simple pre-war canadian submachine gun, chambered in 9mm ammo.
   components:
@@ -653,7 +653,7 @@
 
 - type: entity
   name: douglas advanced SMG
-  parent: N14WeaponSMGBase
+  parent: [ N14WeaponSMGBase, ForgeGunConditionProfileSMG ]
   id: N14WeaponSMG12mmAdvancedCanadian
   description: An advanced pre-war canadian submachine gun, chambered in 12.7mm ammo.
   components:
@@ -710,7 +710,7 @@
 
 - type: entity
   name: chinese advanced SMG
-  parent: N14WeaponSMGBase
+  parent: [ N14WeaponSMGBase, ForgeGunConditionProfileSMG ]
   id: N14WeaponSMG12mmAdvancedChinese
   description: An advanced pre-war chinese submachine gun intended for special forces, chambered in 12.7mm ammo.
   components:
@@ -767,7 +767,7 @@
 
 - type: entity
   name: chinese SMG
-  parent: N14WeaponSMGBase
+  parent: [ N14WeaponSMGBase, ForgeGunConditionProfileSMG ]
   id: N14WeaponSMG10mmChinese
   description: A chinese fully automatic silenced submachine gun chambered in 10mm.
   components:
