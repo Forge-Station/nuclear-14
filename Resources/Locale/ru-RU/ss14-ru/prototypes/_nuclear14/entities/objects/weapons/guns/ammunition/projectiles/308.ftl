@@ -1,2 +1,2 @@
-ent-N14Bullet308 = пуля (.308 Winchester)
+ent-N14BulletNail = пуля (.308 Winchester)
     .desc = { ent-BaseBullet.desc }

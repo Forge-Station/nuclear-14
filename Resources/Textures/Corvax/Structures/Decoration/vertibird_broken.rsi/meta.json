@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "license": "CC-BY-NC-SA-4.0",
+  "copyright": "Maden by Mars36",
+  "size": {
+    "x": 256,
+    "y": 256
+  },
+  "states": [
+    {
+      "name": "icon"
+    },
+    {
+      "name": "directions1",
+      "directions": 4
+    }
+  ]
+}

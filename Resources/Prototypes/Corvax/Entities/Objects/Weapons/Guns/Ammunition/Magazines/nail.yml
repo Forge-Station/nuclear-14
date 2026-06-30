@@ -1,18 +1,18 @@
   - type: entity
-    id: DrumMagazine45SubMachineGun
-    name: SMG drum magazine (45. auto)
+    id: DrumMagazineNailGun
+    name: Nailgun drum magazine
     parent: BaseItem
     components:
     - type: Tag
       tags:
-        - DrumMagazine45SubMachineGun
+        - DrumMagazineNailGun
     - type: BallisticAmmoProvider
       mayTransfer: true
       whitelist:
         tags:
-          - N14CartridgePistol45
-      capacity: 50
-      proto: N14CartridgePistol45
+          - N14CartridgeNail
+      capacity: 35
+      proto: N14CartridgeNail
     - type: ContainerContainer
       containers:
         ballistic-ammo: !type:Container

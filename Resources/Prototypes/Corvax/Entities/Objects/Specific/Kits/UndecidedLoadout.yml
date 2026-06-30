@@ -62,6 +62,7 @@
     - VeteranFirearmSet
     - VeteranBerserkerSet
     - VeteranKebabSet
+    - VeteranSuppressorSet
 
 - type: entity
   id: LegionWarriorloadoutkits
@@ -135,7 +136,7 @@
       enum.UndecidedLoadoutBackpackUIKey.Key:
         type: UndecidedLoadoutBackpackBoundUserInterface
 
-# Непонятный набор, который не используются ролью "Лорд" из BoS Washington. 
+# Непонятный набор, который не используются ролью "Лорд" из BoS Washington.
 - type: entity
   id: BoSWashingtonCommandKits
   name: Undecided BoS Washington Kit
@@ -374,6 +375,16 @@
     state: base
   content:
   - KitVeteranBerserker
+
+- type: UndecidedLoadoutBackpackSet
+  id: VeteranSuppressorSet
+  name: undecided-loadout-category-veteran-suppressor-name
+  description: undecided-loadout-category-veteran-suppressor-description
+  sprite:
+    sprite: Corvax/Objects/Misc/kits.rsi
+    state: base
+  content:
+  - KitVeteranSuppressor
 
 - type: UndecidedLoadoutBackpackSet
   id: VeteranKebabSet
