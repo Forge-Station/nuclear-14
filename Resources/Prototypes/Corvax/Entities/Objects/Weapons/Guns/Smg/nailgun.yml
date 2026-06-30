@@ -23,7 +23,7 @@
     - state: mag-0
       map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
-    fireRate: 10
+    fireRate: 6
     soundGunshot:
       path: /Audio/Corvax/Weapons/Guns/Wpn_nailgun_fire_2d_01.ogg
       params:
