@@ -518,3 +518,38 @@
       min: 36000
   items:
     - N14ClothingHeadHatDog
+
+- type: loadout
+  id: N14ClothingNeckCapeLegion
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionDean
+        - CaesarLegionLegionnaireVeteran
+        - CaesarLegionVenator
+        - CaesarLegionLegionnaireWarrior
+        - CaesarLegionCenturion
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 36000
+  items:
+    - N14ClothingNeckCapeLegion
+
+- type: loadout
+  id: ClothingOuterToga
+  category: Outer
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionDean
+        - CaesarLegionCenturion
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 36000
+  items:
+    - ClothingOuterToga

@@ -190,3 +190,26 @@
       - NCRPisoner
   items:
     - N14ClothingMaskBreather
+
+- type: loadout
+  id: N14ClothingMaskCultist
+  category: Mask
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutMask
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault
+      - BrotherhoodMidwest
+      - BrotherhoodWashington
+      - BrotherhoodWest
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingMaskCultist

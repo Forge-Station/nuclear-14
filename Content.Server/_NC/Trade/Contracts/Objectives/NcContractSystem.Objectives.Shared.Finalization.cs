@@ -39,6 +39,10 @@ public sealed partial class NcContractSystem : EntitySystem
     )
     {
         MarkObjectiveFailed(contract, failureReason, outcome);
+        if (!contract.Repeatable &&
+            contract.IsGhostRoleObjective &&
+            outcome != ContractObjectiveOutcome.NotAccepted)
+            comp.CompletedOneTimeContracts.Add(key.ContractId);
 
         if (_objectiveRuntime.ByContract.TryGetValue(key, out var state))
             CleanupObjectivePinpointers(key, state);
@@ -47,6 +51,14 @@ public sealed partial class NcContractSystem : EntitySystem
     }
 
     private void FailObjectiveContract(
+        (EntityUid Store, string ContractId) key,
+        NcStoreComponent comp,
+        bool deleteTrackedEntities,
+        bool deleteGuards
+    ) =>
+        RemoveObjectiveContractAndRefill(key, comp, deleteTrackedEntities, deleteGuards);
+
+    private void RemoveObjectiveContractAndRefill(
         (EntityUid Store, string ContractId) key,
         NcStoreComponent comp,
         bool deleteTrackedEntities,

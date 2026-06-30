@@ -57,6 +57,7 @@ public sealed class ContractObjectiveConfigData
     public string GhostRolePrototype { get; set; } = string.Empty;
     public string GhostRoleName { get; set; } = string.Empty;
     public string GhostRoleDescription { get; set; } = string.Empty;
+    public string GhostRoleIcon { get; set; } = string.Empty;
     public string GhostRoleRules { get; set; } = string.Empty;
     public List<CharacterRequirement> GhostRoleRequirements { get; set; } = new();
     public string GhostRoleCharacterName { get; set; } = string.Empty;

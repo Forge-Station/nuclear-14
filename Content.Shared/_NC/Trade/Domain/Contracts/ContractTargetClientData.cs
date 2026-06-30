@@ -20,6 +20,7 @@ public sealed class ContractTargetClientData
     }
 
     public string TargetItem { get; set; } = string.Empty;
+    public string Icon { get; set; } = string.Empty;
     public int Required { get; set; }
     public int Progress { get; set; }
 }

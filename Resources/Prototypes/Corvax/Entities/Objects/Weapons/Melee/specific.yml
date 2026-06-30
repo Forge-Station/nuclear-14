@@ -13,3 +13,66 @@
     damage:
       types:
         Slash: 10
+
+- type: entity
+  parent: ClothingHandsBase
+  id: N14ClothingHandsPowerFist
+  name: power fist
+  description: A captured Legion shock gauntlet built around a piston-assisted ram that hurls targets backward.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Melee/powerfist.rsi
+    state: icon
+  - type: Item
+    size: Normal
+    sprite: Corvax/Objects/Weapons/Melee/powerfist.rsi
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Melee/powerfist.rsi
+    slots: [gloves]
+  - type: MeleeWeapon
+    soundHit:
+      collection: MetalThud
+    range: 1.3
+    attackRate: 0.8
+    damage:
+      types:
+        Blunt: 35
+        Structural: 15
+    animation: WeaponArcFist
+    wideAnimation: WeaponArcFist
+    mustBeEquippedToUse: true
+  - type: MeleeThrowOnHit
+    speed: 10
+    lifetime: 0.025
+
+- type: entity
+  parent: ClothingHandsBase
+  id: N14ClothingHandsIndusrialPowerFist
+  name: industrial power fist
+  description: A rugged steel structure, wrapped in wires and attached to a powerful hydraulic actuator.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Melee/industrialpowerfist.rsi
+    state: icon
+  - type: Item
+    size: Normal
+    sprite: Corvax/Objects/Weapons/Melee/industrialpowerfist.rsi
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Melee/industrialpowerfist.rsi
+    slots: [gloves]
+  - type: MeleeWeapon
+    soundHit:
+      collection: MetalThud
+    range: 1.3
+    attackRate: 0.8
+    damage:
+      types:
+        Blunt: 15
+        Slash: 25
+    animation: WeaponArcFist
+    wideAnimation: WeaponArcFist
+    mustBeEquippedToUse: true
+  - type: MeleeThrowOnHit
+    speed: 10
+    lifetime: 0.025
+

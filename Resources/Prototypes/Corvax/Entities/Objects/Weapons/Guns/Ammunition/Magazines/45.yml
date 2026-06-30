@@ -18,7 +18,7 @@
         ballistic-ammo: !type:Container
     - type: Sprite
       netsync: false
-      sprite: Corvax/Objects/Weapons/Guns/Ammunition/Magazines/45/drumsmg45mag.rsi
+      sprite: Corvax/Objects/Weapons/Guns/Ammunition/Magazines/nail/nailmag.rsi
       layers:
       - state: base
         map: ["enum.GunVisualLayers.Base"]

@@ -305,6 +305,8 @@
     - N14GlowstickRed
     - N14CleanGauze1
     - DoorElectronics
+    - MagazineBoxNail # Forge-Change
+    - DrumMagazineNailGun # Forge-Change
 
 - type: entity
   parent: BaseStructure

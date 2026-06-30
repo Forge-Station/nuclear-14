@@ -271,3 +271,26 @@
       - NCRPisoner
   items:
     - N14ClothingTribalRadstagSkull
+
+- type: loadout
+  id: N14ClothingHoodWanderer
+  category: Head
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterDepartmentRequirement  # Forge-Change
+      inverted: true
+      departments:
+        - CaesarLegion
+        - BrotherhoodMidwest
+        - BrotherhoodWashington
+        - BrotherhoodWest
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingHoodWanderer

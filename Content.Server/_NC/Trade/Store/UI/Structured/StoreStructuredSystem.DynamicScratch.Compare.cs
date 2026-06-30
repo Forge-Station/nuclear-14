@@ -128,6 +128,7 @@ public sealed partial class StoreStructuredSystem
                 var at = a[i];
                 var bt = b[i];
                 if (!string.Equals(at.TargetItem, bt.TargetItem, StringComparison.Ordinal) ||
+                    !string.Equals(at.Icon, bt.Icon, StringComparison.Ordinal) ||
                     at.Required != bt.Required ||
                     at.Progress != bt.Progress ||
                     at.MatchMode != bt.MatchMode)

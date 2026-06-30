@@ -1,7 +1,7 @@
 - type: storeContractsPreset
   id: PresetBazar
   contractOffers:
-    maxVisible: 7
+    maxVisible: 10
     groups:
     - pool: BazarEverydayOrders
       minVisible: 3
@@ -15,6 +15,10 @@
       minVisible: 1
       maxVisible: 2
       fillWeight: 1
+    - pool: BazarGhostRoleOrders
+      minVisible: 2
+      maxVisible: 3
+      fillWeight: 1
 
 - type: storeContractsPreset
   id: PresetBazarMapperTests
@@ -26,8 +30,8 @@
       maxVisible: 5
       fillWeight: 1
     - pool: BazarMediumMappedOrders
-      minVisible: 14
-      maxVisible: 14
+      minVisible: 16
+      maxVisible: 16
       fillWeight: 1
     - pool: BazarHeavyMappedOrders
       minVisible: 17
@@ -72,6 +76,9 @@
     id: BazarSupplyRawMeat
     weight: 2
   - type: Supply
+    id: BazarSupplyFreshFish
+    weight: 2
+  - type: Supply
     id: BazarSupplyHealingPowder
     weight: 2
   - type: Supply
@@ -89,6 +96,21 @@
   - type: Supply
     id: BazarSupplyNineMillimeterWeapons
     weight: 1
+  - type: Hunt
+    id: BazarLightHuntBasementRadroaches
+    weight: 2
+  - type: Retrieval
+    id: BazarLightRecoverRoadCrate
+    weight: 3
+  - type: Retrieval
+    id: BazarLightDeliverGateCrateOutside
+    weight: 3
+  - type: Retrieval
+    id: BazarLightCourierMedsToClinic
+    weight: 2
+  - type: Retrieval
+    id: BazarLightCourierPartsToWorkshop
+    weight: 2
 
 - type: ncContractOfferPool
   id: BazarCaravanOrders
@@ -114,11 +136,41 @@
   - type: Supply
     id: BazarSupplyCarrots
     weight: 1
-  - type: Supply
-    id: BazarCorpseFeralGhouls
+  - type: Hunt
+    id: BazarMediumHuntWaterGeckos
     weight: 2
-  - type: Supply
-    id: BazarCorpseRaiderPsychos
+  - type: Hunt
+    id: BazarMediumHuntYoungRadscorpions
+    weight: 2
+  - type: Hunt
+    id: BazarMediumHuntRoadNightstalkers
+    weight: 1
+  - type: Hunt
+    id: BazarMediumHuntMoleratBurrow
+    weight: 2
+  - type: Hunt
+    id: BazarMediumHuntCrabNest
+    weight: 2
+  - type: Hunt
+    id: BazarMediumHuntRaiderScoutCamp
+    weight: 1
+  - type: Hunt
+    id: BazarMediumHuntCazadorNest
+    weight: 1
+  - type: Retrieval
+    id: BazarMediumRecoverFarCrate
+    weight: 3
+  - type: Retrieval
+    id: BazarMediumCourierAmmoToCheckpoint
+    weight: 2
+  - type: Retrieval
+    id: BazarMediumCourierMedsToCheckpoint
+    weight: 2
+  - type: Retrieval
+    id: BazarMediumCourierFoodToCamp
+    weight: 2
+  - type: Retrieval
+    id: BazarMediumCourierPartsToCheckpoint
     weight: 2
 
 - type: ncContractOfferPool
@@ -130,20 +182,72 @@
   - type: Supply
     id: BazarSupplySuperSledge
     weight: 1
-  - type: Supply
-    id: BazarSupplyDeathclawEggs
+  - type: Hunt
+    id: BazarHeavyHuntDeathclawNest
     weight: 1
-  - type: Supply
-    id: BazarCorpseCazadors
+  - type: Hunt
+    id: BazarHeavyHuntMetalDeathclaw
+    weight: 1
+  - type: Hunt
+    id: BazarHeavyHuntRobotPatrol
     weight: 2
-  - type: Supply
-    id: BazarCorpseDeathclaw
+  - type: Hunt
+    id: BazarHeavyHuntRobobrainGuard
     weight: 1
-  - type: Supply
-    id: BazarCorpseMetalDeathclaw
+  - type: Hunt
+    id: BazarHeavyHuntAssaultronSignal
     weight: 1
-  - type: Supply
-    id: BazarCorpseRaiderBoss
+  - type: Hunt
+    id: BazarHeavyHuntRaiderWarband
+    weight: 2
+  - type: Hunt
+    id: BazarHeavyHuntYaoguaiCave
+    weight: 1
+  - type: Hunt
+    id: BazarHeavyHuntCazadorSwarm
+    weight: 1
+  - type: Retrieval
+    id: BazarHeavyRecoverPiano
+    weight: 2
+  - type: Retrieval
+    id: BazarHeavyCourierWeaponPartsToOutpost
+    weight: 2
+  - type: Retrieval
+    id: BazarHeavyCourierAmmoToOutpost
+    weight: 1
+  - type: Retrieval
+    id: BazarHeavyCourierAmmoToRadioTower
+    weight: 1
+  - type: Retrieval
+    id: BazarHeavyCourierPartsToBunker
+    weight: 1
+  - type: Retrieval
+    id: BazarHeavyCourierMedicalToLastCamp
+    weight: 1
+
+- type: ncContractOfferPool
+  id: BazarGhostRoleOrders
+  name: "Розыск"
+  order: 40
+  color: "#8A5BB0"
+  entries:
+  - type: GhostRole
+    id: NcGhostRoleContractEscapedWorkerAlive
+    weight: 1
+  - type: GhostRole
+    id: NcGhostRoleContractElizabethEvilAlive
+    weight: 1
+  - type: GhostRole
+    id: NcGhostRoleContractBelkaAlive
+    weight: 1
+  - type: GhostRole
+    id: NcGhostRoleContractFreshDead
+    weight: 1
+  - type: GhostRole
+    id: NcGhostRoleContractNCRDeserterDead
+    weight: 2
+  - type: GhostRole
+    id: NcGhostRoleContractZoyaDarbyAlive
     weight: 1
 
 # -----------------------------------------------------------------------------
@@ -203,6 +307,34 @@
   - N14CigarettePackMarlboro
   - N14CigarettePackWinston
   - N14CigarettePackRepublics
+
+- type: ncItemGroup
+  id: BazarGroupFreshFish
+  name: "Свежий улов"
+  description: "Любая рыба, выловленная из местных водоемов."
+  icon: FishCarp
+  prototypes:
+  - FishSardina
+  - FishCarp
+  - FishShrimp
+  - FishCrab
+  - FishBone
+  - FishStar
+  - FishCarrot
+  - FishYorsh
+  - FishSvarka
+  - FishPowerArmor
+  - FishAngler
+  - NF14FishAngler
+  - FishFugu
+  - FishClown
+  - FishLegion
+  - FishGun
+  - FishBomb
+  - FishGold
+  - FishExocoetidae
+  - FishOctopus
+  - FishTropic
 
 # -----------------------------------------------------------------------------
 # Группы тел и опасных целей
@@ -428,6 +560,22 @@
     count: { min: 1, max: 3 }
 
 - type: ncSupplyContract
+  id: BazarSupplyFreshFish
+  name: "Свежий улов для кухни"
+  description: "Повар готов заплатить за рыбу, пока улов еще пахнет водой, а не ржавым ведром. Принесите несколько свежих рыб для похлебки и обмена с караванщиками."
+  icon: FishCarp
+  targets:
+  - group: BazarGroupFreshFish
+    count: { min: 4, max: 7 }
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 90, max: 145 }
+  - type: Pool
+    pool: caravan_easy
+    count: { min: 1, max: 3 }
+
+- type: ncSupplyContract
   id: BazarSupplyHealingPowder
   name: "Лечебный порошок"
   description: "Лекарь просит запас лечебного порошка для простых ран и ожогов. Не самая редкая вещь, но когда она заканчивается, все сразу вспоминают, что пустошь кусается."
@@ -625,38 +773,6 @@
     pool: caravan_medium
     count: { min: 1, max: 3 }
 
-- type: ncSupplyContract
-  id: BazarCorpseFeralGhouls
-  name: "Тела диких гулей"
-  description: "Одному врачу нужны мертвые дикие гули для грязной, но хорошо оплачиваемой работы. Притащите тела к торговцу."
-  icon: N14MobGhoulFeral
-  targets:
-  - group: BazarGroupFeralGhoulBodies
-    count: { min: 2, max: 3 }
-  reward:
-  - type: Currency
-    currency: Caps
-    count: { min: 150, max: 250 }
-  - type: Pool
-    pool: caravan_medium
-    count: { min: 1, max: 3 }
-
-- type: ncSupplyContract
-  id: BazarCorpseRaiderPsychos
-  name: "Мертвые рейдеры"
-  description: "Рейдеры снова давят на дороги. Убейте несколько психов и доставьте тела к торговцу, чтобы никто не спорил о награде."
-  icon: N14MobRaiderPsycho
-  targets:
-  - group: BazarGroupRaiderBodies
-    count: { min: 2, max: 5 }
-  reward:
-  - type: Currency
-    currency: Caps
-    count: { min: 150, max: 250 }
-  - type: Pool
-    pool: caravan_medium
-    count: { min: 1, max: 3 }
-
 # -----------------------------------------------------------------------------
 # Опасная работа
 # -----------------------------------------------------------------------------
@@ -677,91 +793,12 @@
     pool: caravan_hard
     count: { min: 1, max: 3 }
 
-- type: ncSupplyContract
-  id: BazarSupplyDeathclawEggs
-  name: "Яйцо когтя смерти для гурмана"
-  description: "Повар мечтает удивить богатых гостей блюдом, после которого они запомнят счет. Вареное яйцо когтя смерти подойдет идеально."
-  icon: N14CookedFoodEggDeathclawBoiled
-  targets:
-  - prototype: N14CookedFoodEggDeathclawBoiled
-    count: 1
-  reward:
-  - type: Currency
-    currency: Caps
-    count: { min: 220, max: 360 }
-  - type: Pool
-    pool: caravan_hard
-    count: { min: 1, max: 3 }
-
-- type: ncSupplyContract
-  id: BazarCorpseCazadors
-  name: "Казадоры для вскрытия"
-  description: "Токсиколог просит тела казадоров: яд, железы, хитин, все пойдет на опыты. Доставьте тушки к торговцу."
-  icon: N14MobCazador
-  targets:
-  - group: BazarGroupCazadorBodies
-    count: 3
-  reward:
-  - type: Currency
-    currency: Caps
-    count: { min: 600, max: 1000 }
-  - type: Pool
-    pool: caravan_hard
-    count: { min: 2, max: 6 }
-
-- type: ncSupplyContract
-  id: BazarCorpseDeathclaw
-  name: "Туша когтя смерти"
-  description: "Караванщики поклялись, что видели когтя смерти у старой тропы. Завалите тварь и притащите тушу к торговцу."
-  icon: N14MobDeathclaw
-  targets:
-  - group: BazarGroupDeathclawBodies
-    count: 1
-  reward:
-  - type: Currency
-    currency: Caps
-    count: { min: 600, max: 1000 }
-  - type: Pool
-    pool: caravan_hard
-    count: { min: 1, max: 3 }
-
-- type: ncSupplyContract
-  id: BazarCorpseMetalDeathclaw
-  name: "Бронированный коготь смерти"
-  description: "Говорят, по пустоши ходит старый бронированный коготь смерти. Если слухи правдивы, его туша стоит очень дорого."
-  icon: N14MobDeathclawMetal
-  targets:
-  - group: BazarGroupMetalDeathclawBodies
-    count: 1
-  reward:
-  - type: Currency
-    currency: Caps
-    count: { min: 600, max: 1000 }
-  - type: Pool
-    pool: caravan_hard
-    count: { min: 1, max: 3 }
-
-- type: ncSupplyContract
-  id: BazarCorpseRaiderBoss
-  name: "Труп главаря рейдеров"
-  description: "У местной банды появился слишком громкий главарь. Убейте его и привезите тело к торговцу, чтобы заказчик поверил в результат."
-  icon: N14MobRaiderBoss
-  targets:
-  - group: BazarGroupRaiderBossBodies
-    count: 1
-  reward:
-  - type: Currency
-    currency: Caps
-    count: { min: 600, max: 1000 }
-  - type: Pool
-    pool: caravan_hard
-    count: { min: 1, max: 3 }
-
 # -----------------------------------------------------------------------------
 # Лёгкие городские поручения с маркерами
 #
-# Этот пул не подключён к обычному PresetBazar. Он включён в PresetBazarMapperTests,
-# чтобы мапперы могли проверить каждую живую точку перед добавлением в основную витрину.
+# Этот пул оставлен в PresetBazarMapperTests, чтобы мапперы могли проверить каждую
+# живую точку отдельно. В BazarEverydayOrders подключены только контракты с полным
+# комплектом маркеров на Wendover.
 # -----------------------------------------------------------------------------
 
 - type: ncContractOfferPool
@@ -888,8 +925,9 @@
 # -----------------------------------------------------------------------------
 # Средние поручения с живыми точками на карте
 #
-# Этот пул не подключён к обычному PresetBazar. Он включён в PresetBazarMapperTests,
-# чтобы мапперы могли проверить средние точки охоты, груза и доставки отдельно.
+# Этот пул оставлен в PresetBazarMapperTests, чтобы мапперы могли проверить средние
+# точки охоты, груза и доставки отдельно. В BazarCaravanOrders подключены только
+# контракты с полным комплектом маркеров на Wendover.
 # -----------------------------------------------------------------------------
 
 - type: ncContractOfferPool
@@ -936,6 +974,12 @@
     weight: 2
   - type: GhostRole
     id: NcGhostRoleContractEscapedWorkerAlive
+    weight: 1
+  - type: GhostRole
+    id: NcGhostRoleContractElizabethEvilAlive
+    weight: 1
+  - type: GhostRole
+    id: NcGhostRoleContractBelkaAlive
     weight: 1
   - type: GhostRole
     id: NcGhostRoleContractFreshDead
@@ -1251,8 +1295,9 @@
 # -----------------------------------------------------------------------------
 # Тяжёлые поручения с живыми точками на карте
 #
-# Этот пул не подключён к обычному PresetBazar. Он включён в PresetBazarMapperTests,
-# чтобы тяжёлые дальние маршруты и охоту можно было проверить отдельным автоматом.
+# Этот пул оставлен в PresetBazarMapperTests, чтобы тяжёлые дальние маршруты и охоту
+# можно было проверить отдельным автоматом. В BazarDangerOrders подключены только
+# контракты с полным комплектом маркеров на Wendover.
 # -----------------------------------------------------------------------------
 
 - type: ncContractOfferPool

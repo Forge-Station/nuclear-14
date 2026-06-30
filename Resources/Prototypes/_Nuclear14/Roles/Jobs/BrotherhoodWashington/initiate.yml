@@ -17,7 +17,7 @@
       min: 21600 # Forge-Change (6 hours)
   startingGear: BoSWashingtonInitiateGear
   alwaysUseSpawner: true
-  icon: "JobIconPassenger"
+  icon: "JobIconbosWSquire"
   supervisors: job-supervisors-bos-wash-initiate
   access:
   - WashingtonInitiate

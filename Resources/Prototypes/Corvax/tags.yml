@@ -72,3 +72,9 @@
 
 - type: Tag
   id: N14Gladius
+
+- type: Tag
+  id: DrumMagazineNailGun
+
+- type: Tag
+  id: N14CartridgeNail

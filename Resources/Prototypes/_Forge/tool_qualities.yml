@@ -1,0 +1,6 @@
+- type: tool
+  id: N14GunMaintenance
+  name: tool-quality-n14-gun-maintenance-name
+  toolName: tool-quality-n14-gun-maintenance-tool-name
+  spawn: N14ToolboxWeaponMaintenance
+  icon: { sprite: Objects/Tools/Toolboxes/toolbox_blue.rsi, state: icon }

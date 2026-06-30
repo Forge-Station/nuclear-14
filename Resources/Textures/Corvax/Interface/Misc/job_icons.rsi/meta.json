@@ -150,6 +150,21 @@
     },
     {
       "name": "dean"
+    },
+    {
+      "name": "bosWCommander"
+    },
+    {
+      "name": "bosWKnight"
+    },
+    {
+      "name": "bosWPaladin"
+    },
+    {
+      "name": "bosWScriptor"
+    },
+    {
+      "name": "bosWSquire"
     }
   ]
 }

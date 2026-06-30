@@ -78,10 +78,21 @@ public sealed class NcContractGhostRolePerksSystem : EntitySystem
         if (args.Shooter is not { } shooter ||
             !TryComp(shooter, out NcContractGhostRolePerksComponent? perks) ||
             MathHelper.CloseTo(perks.ProjectileDamageMultiplier, 1f) ||
-            !WeaponMatches(ent.Comp.Weapon, perks.WeaponPrototypes))
+            !ProjectileWeaponMatches(ent.Comp.Weapon, shooter, perks.WeaponPrototypes))
             return;
 
         args.Damage *= perks.ProjectileDamageMultiplier;
+    }
+
+    private bool ProjectileWeaponMatches(EntityUid? weapon, EntityUid shooter, IReadOnlyCollection<string> allowedPrototypes)
+    {
+        if (allowedPrototypes.Count == 0)
+            return true;
+
+        if (weapon is { } weaponUid)
+            return EntityPrototypeMatches(weaponUid, allowedPrototypes);
+
+        return HasMatchingActiveHandItem(shooter, allowedPrototypes);
     }
 
     private bool WeaponMatches(EntityUid? weapon, IReadOnlyCollection<string> allowedPrototypes)
@@ -107,6 +118,11 @@ public sealed class NcContractGhostRolePerksSystem : EntitySystem
 
         return false;
     }
+
+    private bool HasMatchingActiveHandItem(EntityUid uid, IReadOnlyCollection<string> prototypes) =>
+        _hands.TryGetActiveItem(uid, out var item) &&
+        item is { } itemUid &&
+        EntityPrototypeMatches(itemUid, prototypes);
 
     private bool EntityPrototypeMatches(EntityUid uid, IReadOnlyCollection<string> prototypes) =>
         TryComp(uid, out MetaDataComponent? meta) &&

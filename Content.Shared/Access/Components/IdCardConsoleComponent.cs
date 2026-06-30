@@ -51,6 +51,7 @@ public sealed partial class IdCardConsoleComponent : Component
         "TownieDoctor",
         "TownieLaw",
         "TownieMayor",
+        "TownsPerson",
         "WastelandReporter",
         "WastelandBartender",
         "InnRoomOne",

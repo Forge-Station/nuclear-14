@@ -41,6 +41,10 @@ ent-N14ClothingHeadHatPrincepsPrime = шлем прайм принцепса
     .desc = Железный шлем с подкладкой выкованный из шлема для регби.
 ent-N14ClothingHeadHatDog = шлем из псины
     .desc = Легионерский шлем сделанный из шкуры псины.
+ent-N14ClothingHeadHatRaiderbag = рейдерский шлем из мешка
+    .desc = Большой грязный мешок с прорезями для глаз.
+ent-N14ClothingHeadHatEyeBot = шлем из робоглаза
+    .desc = Корпус робоглаза переделанный под шлем.
 # Спонсорские вещи
 ent-N14ClothingHeadHatTriariumVeteranHelmet = шлем ветерана триария
     .desc = Металический шлем с продолговатым гребнем, на бандане изображен бык.

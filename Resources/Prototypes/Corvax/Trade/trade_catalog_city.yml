@@ -78,6 +78,9 @@
   - proto: N14WeaponSMG12mmAdvanced
     price: 350
     count: 2
+  - proto: N14WeaponSMGNAil
+    price: 400
+    count: 1
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Shotguns
@@ -369,6 +372,8 @@
     price: 100
   - proto: N14ClothingOuterCoatCombatDuster
     price: 100
+  - proto: N14ClothingOuterHeavySteelArmor
+    price: 150
   - proto: N14ClothingOuterPoliceVest
     price: 200
   - proto: N14ClothingOuterVestChinese
@@ -479,6 +484,17 @@
     price: 5
 
 - type: storeCategoryStructured
+  id: CaravanBuy2_Fishing
+  name: "Рыбалка"
+  entries:
+  - proto: FishingRod
+    price: 90
+  - proto: FishingRodGoon
+    price: 125
+  - proto: FishingRodGolden
+    price: 650
+
+- type: storeCategoryStructured
   id: CaravanBuy2_Misc
   name: "Разное"
   entries:
@@ -549,7 +565,7 @@
   - proto: N14FloraWildXanderRootClippingSeed
     price: 5
   - proto: CottonSeeds
-    price: 5  
+    price: 5
 
 - type: storePresetStructured
   id: caravan_buy2
@@ -572,6 +588,7 @@
   - CaravanBuy2_Medical
   - CaravanBuy2_Materials
   - CaravanBuy2_Alcohol
+  - CaravanBuy2_Fishing
   - CaravanBuy2_Misc
   - CaravanBuy2_Sprouts
   - CaravanBuy2_WeaponGrenade
@@ -868,6 +885,8 @@
     price: 3
   - proto: N14ClothingHeadHatArmyBeretRanger
     price: 4
+  - proto: N14ClothingHeadHatCombatHelmet
+    price: 20
 
 - type: storeCategoryStructured
   id: CaravanSell2_Armor
@@ -1008,29 +1027,50 @@
 
 - type: storeCategoryStructured
   id: CaravanSell2_Fish
-  name: Рыбалка
+  name: "Рыбалка"
   entries:
+  - proto: FishSardina
+    price: 12
+  - proto: FishCarp
+    price: 15
+  - proto: FishShrimp
+    price: 15
+  - proto: FishCrab
+    price: 18
   - proto: FishBone
     price: 10
-  - proto: NF14FishAngler
-    price: 15
+  - proto: FishStar
+    price: 25
+  - proto: FishCarrot
+    price: 20
+  - proto: FishYorsh
+    price: 20
+  - proto: FishSvarka
+    price: 50
   - proto: FishPowerArmor
     price: 20
-  - proto: FishOctopus
-    price: 20
-  - proto: FishTropic
+  - proto: FishAngler
     price: 35
+  - proto: NF14FishAngler
+    price: 15
+  - proto: FishFugu
+    price: 45
   - proto: FishClown
     price: 50
+  - proto: FishLegion
+    price: 75
   - proto: FishGun
     price: 30
   - proto: FishBomb
     price: 60
-  - proto: FishLegion
-    price: 75
-  - proto: FishSvarka
-    price: 50
-
+  - proto: FishGold
+    price: 120
+  - proto: FishExocoetidae
+    price: 90
+  - proto: FishOctopus
+    price: 20
+  - proto: FishTropic
+    price: 35
 
 - type: storeCategoryStructured
   id: CaravanSell2_Ore

@@ -20,6 +20,10 @@ public sealed partial class NcGhostRolePresetPrototype : IPrototype
     [DataField("description")]
     public string Description { get; private set; } = string.Empty;
 
+    /// <summary>Optional entity prototype id used as a stable UI icon for this role.</summary>
+    [DataField("icon")]
+    public string Icon { get; private set; } = string.Empty;
+
     [DataField("rules")]
     public string Rules { get; private set; } = string.Empty;
 

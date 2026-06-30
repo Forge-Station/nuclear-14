@@ -213,11 +213,38 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14Gladius
-      - id: N14FireAxe
-      - id: ThrowingKnife
-        amount: 3
+      - id: N14WeaponShotgunAuto
+      - id: N14ClothingHandsPowerFist
+      - id: SmokeGrenade
+      - id: MagazineBox12gauge
+      - id: N14MagazineShotgun12
+        amount: 2
       - id: N14Stimpak
+        amount: 2
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
+    sound:
+      path: /Audio/Effects/unwrap.ogg
+
+- type: entity
+  name: veteran-suppressor kit
+  parent: KitBase
+  id: KitVeteranSuppressor
+  description: "A set of Legion equipment."
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Misc/kits.rsi
+    state: base
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponSMGNAil
+      - id: N14ClothingHandsIndusrialPowerFist
+      - id: MagazineBoxNail
+      - id: DrumMagazineNailGun
+      - id: N14Stimpak
+      - id: N14HealingPowder
         amount: 2
       - id: N14BoxCardboardMREBoxLegionFilled
         amount: 1

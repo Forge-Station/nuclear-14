@@ -71,7 +71,7 @@ public sealed partial class NcContractSystem : EntitySystem
         return true;
     }
 
-    private void FailExpiredGhostRoleObjective((EntityUid Store, string ContractId) key)
+    private void ExpireUnacceptedGhostRoleObjective((EntityUid Store, string ContractId) key)
     {
         if (!_objectiveRuntime.ByContract.TryGetValue(key, out var state) ||
             state.GhostRoleTaken ||
@@ -92,12 +92,11 @@ public sealed partial class NcContractSystem : EntitySystem
             state,
             GhostRoleRoundEndOutcome.NotAccepted,
             Loc.GetString("nc-store-contract-ghost-role-timeout"));
-        FinalizeObjectiveTerminalOutcome(
+        RemoveObjectiveContractAndRefill(
             key,
             comp,
-            contract,
-            Loc.GetString("nc-store-contract-ghost-role-timeout"),
-            ContractObjectiveOutcome.NotAccepted);
+            true,
+            false);
     }
 
     private void HandleGhostRoleTargetResolved(

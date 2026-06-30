@@ -1,5 +1,6 @@
 - type: entity
-  parent: BaseWeaponShotgun
+  name: N14WeaponShotgunBase
+  parent: [ BaseItem, ForgeGunConditionProfileShotgun ]
   id: N14WeaponShotgunBase
   description: A rooty tooty point and shooty.
   abstract: true

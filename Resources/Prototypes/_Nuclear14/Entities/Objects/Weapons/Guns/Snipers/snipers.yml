@@ -1,5 +1,6 @@
 - type: entity
-  parent: BaseWeaponSniper
+  name: hunting rifle
+  parent: [ BaseWeaponSniper, ForgeGunConditionProfileSniper ]
   id: N14WeaponSniperBase
   abstract: true
   components:
@@ -145,7 +146,7 @@
 
 - type: entity
   name: lee enfield rifle
-  parent: N14WeaponSniperBase
+  parent: [ BaseWeaponSniper, ForgeGunConditionProfileSniper ]
   id: N14WeaponSniperEnfield
   description: A well-preserved bolt action service rifle. PLING! Uses .308 ammo.
   components:
@@ -178,7 +179,7 @@
 
 - type: entity
   name: Anti-Materiel rifle
-  parent: BaseWeaponRifle
+  parent: [BaseWeaponRifle, ForgeGunConditionProfileAMR] # Forge-Change
   id: N14WeaponSniper50AntiMateriel
   description: "An anti-materiel rifle with an ergonomic, sleek, skeletonized design. Simply looking at it can you tell it'll rip some limbs apart. Uses .50 anti-material ammo."
   components:
@@ -247,7 +248,7 @@
 
 - type: entity
   name: .50 NCR rifle
-  parent: N14WeaponSniperBase
+  parent: [BaseWeaponSniper, ForgeGunConditionProfileAMRPipe] # Forge-Change
   id: N14WeaponSniper50NCRRifle
   description: An attempt by the NCR to mass-produce .50 ammo weapons for normal infantry, very cheap but still deals a lot of damage. Uses .50 anti-material ammo.
   components:
@@ -420,7 +421,7 @@
 
 - type: entity
   name: varmint rifle
-  parent: N14WeaponSniperBase
+  parent: [ BaseWeaponSniper, ForgeGunConditionProfileSniper ]
   id: N14WeaponSniper556VarmintRifle
   description: A pre-war low-power bolt action rifle, originally designed to hunt small animals. This gun also works fine on anything human-sized. Uses 5.56 ammo.
   components:
@@ -499,7 +500,7 @@
 
 - type: entity
   name: .50 pipe rifle
-  parent: N14WeaponSniperBase
+  parent: [BaseWeaponSniper, ForgeGunConditionProfileAMRPipe] # Forge-Change
   id: N14WeaponSniper50Pipe
   description: A bunch of scrap and pipe held together in a desperate attemp of countering power armor. Uses .50 anti-material ammo.
   components:
@@ -658,7 +659,7 @@
 # Forge-add-start
 - type: entity
   name: 308 Sniper Rifle
-  parent: N14WeaponRifleBase
+  parent: [ BaseWeaponRifle, ForgeGunConditionProfileSniper ]
   id: N14WeaponRifle308SniperRifle
   description:  sniper rifle chambered in .308.
   components:

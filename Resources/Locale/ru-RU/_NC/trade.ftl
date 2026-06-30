@@ -48,6 +48,11 @@ nc-store-will-buy = Требуется: { $count }
 nc-store-owned = У вас есть: { $count }
 nc-store-no-access = Ошибка доступа
 nc-store-contracts-empty = Активных контрактов пока нет. Проверьте позже.
+nc-store-contracts-category-empty = В этой категории сейчас нет контрактов.
+nc-store-contract-category-all = Все
+nc-store-contract-category-button = { $name } ({ $count })
+nc-store-contract-category-all-tooltip = Показать все доступные контракты.
+nc-store-contract-category-tooltip = Показать контракты категории «{ $category }».
 nc-store-difficulty-easy = Лёгкий
 nc-store-difficulty-medium = Средний
 nc-store-difficulty-hard = Сложный
@@ -182,7 +187,7 @@ nc-store-contract-action-pinpointer = Выдать пеленгатор
 nc-store-contract-action-pinpointer-tooltip = Выдать новый пеленгатор для текущей цели активного контракта.
 nc-store-contract-pinpointer-issued = Пеленгатор выдан.
 nc-store-contract-pinpointer-issue-failed = Не удалось выдать пеленгатор.
-nc-store-contract-ghost-role-timeout = Никто не взял эту роль вовремя. Контракт сорван.
+nc-store-contract-ghost-role-timeout = Никто не взял эту роль вовремя. Заказ снят.
 nc-store-contract-ghost-role-target-lost = Цель выбыла ещё до начала операции. Контракт сорван.
 nc-store-contract-ghost-role-target-rotten = Цель сгнила. Контракт сорван.
 nc-store-contract-ghost-role-survival-succeeded = Цель пережила отведённое время. Контракт сорван.
@@ -215,28 +220,29 @@ nc-store-contract-ghost-role-hint-alive-ready = Цель жива, без обы
 nc-store-contract-ghost-role-hint-dead-kill = Для этого заказа нужно тело цели. Убейте цель и доставьте тело торговцу.
 nc-store-contract-ghost-role-hint-dead-deliver = Тело цели готово. Доставьте его к торговцу до гниения.
 nc-store-contract-ghost-role-hint-dead-ready = Тело доставлено. Можно сдавать контракт.
-nc-store-contract-ghost-role-character-briefing = Контрактная роль: { $contract }.
-    { $description }
-nc-store-contract-ghost-role-character-briefing-survival = Контрактная роль: { $contract }.
-    { $description }
-    { $survival }
+nc-store-contract-ghost-role-manifest-role = Беглец
+nc-store-contract-ghost-role-character-briefing = Вы цель контракта «{ $contract }». Следуйте правилам роли.
+nc-store-contract-ghost-role-character-briefing-survival = Вы цель контракта «{ $contract }». Продержитесь { $time } и не дайте охотникам сдать вас торговцу.
 nc-store-contract-ghost-role-survival-briefing = Выживите { $time }. Если вы продержитесь до конца, контракт охотников будет сорван.
 nc-store-contract-ghost-role-survival-objective-title = Выжить: { $contract }
 nc-store-contract-ghost-role-survival-objective-title-live = Выжить: { $time }
 nc-store-contract-ghost-role-survival-objective-title-done = Выживание выполнено
 nc-store-contract-ghost-role-survival-objective-description = Продержитесь { $time }. Если вы выживете, контракт против вас будет провален.
-nc-store-contract-ghost-role-roundend-header = [bold]Итоги контрактных целей[/bold]
-nc-store-contract-ghost-role-roundend-line = - Контракт «{ $contract }»: { $role } ({ $player }) — { $result }
+nc-store-contract-ghost-role-roundend-header = [bold][color=#c9a66b]Контрактные цели[/color][/bold]
+nc-store-contract-ghost-role-roundend-line-contract = [color=#c9a66b]•[/color] [bold]{ $contract }[/bold]
+nc-store-contract-ghost-role-roundend-line-role = [color=#9ab7d6]Цель:[/color] { $role }
+nc-store-contract-ghost-role-roundend-line-player = [color=#9ab7d6]Игрок:[/color] { $player }
+nc-store-contract-ghost-role-roundend-line-result = [color=#9ab7d6]Итог:[/color] { $result }
 nc-store-contract-ghost-role-roundend-unknown-role = неизвестная цель
-nc-store-contract-ghost-role-roundend-no-player = роль не занята
-nc-store-contract-ghost-role-roundend-result-waiting = роль никто не занял
-nc-store-contract-ghost-role-roundend-result-active = цель не была сдана до конца раунда
-nc-store-contract-ghost-role-roundend-result-delivered-alive = цель сдана живой; контракт выполнен
-nc-store-contract-ghost-role-roundend-result-delivered-dead = цель убита/сдана; контракт выполнен
-nc-store-contract-ghost-role-roundend-result-survived = цель пережила таймер ({ $time }); контракт сорван
-nc-store-contract-ghost-role-roundend-result-not-accepted = роль никто не занял; контракт сорван
-nc-store-contract-ghost-role-roundend-result-target-lost = цель была утрачена; контракт сорван
-nc-store-contract-ghost-role-roundend-result-target-rotten = тело цели сгнило; контракт сорван
+nc-store-contract-ghost-role-roundend-no-player = не занята
+nc-store-contract-ghost-role-roundend-result-waiting = не занята
+nc-store-contract-ghost-role-roundend-result-active = не сдана
+nc-store-contract-ghost-role-roundend-result-delivered-alive = сдана живой
+nc-store-contract-ghost-role-roundend-result-delivered-dead = тело сдано
+nc-store-contract-ghost-role-roundend-result-survived = выжила { $time }
+nc-store-contract-ghost-role-roundend-result-not-accepted = заказ снят
+nc-store-contract-ghost-role-roundend-result-target-lost = цель утрачена
+nc-store-contract-ghost-role-roundend-result-target-rotten = тело сгнило
 
 
 nc-store-contract-delivery-target-lost = Груз утрачен. Контракт сорван.

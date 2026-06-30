@@ -1,0 +1,11 @@
+- type: entity
+  id: N14ToolboxWeaponMaintenance
+  name: weapon maintenance toolbox
+  parent: ToolboxMechanical
+  description: A reinforced toolbox for restoring and maintaining worn firearms.
+  components:
+  - type: Tool
+    qualities:
+    - N14GunMaintenance
+  - type: GunConditionRepairTool
+    uses: 1
