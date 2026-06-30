@@ -21,16 +21,22 @@ public sealed partial class NcStoreMenu
         if (contractList == null)
             return;
 
+        _contractSkipCost = skipCost;
+        _contractSkipCurrency = skipCurrency;
+        _contractSkipBalance = skipBalance;
+        _orderedContracts.Clear();
+
         if (list == null || list.Count == 0)
         {
+            SyncContractPoolFilters(_orderedContracts);
             ResetContractsListToEmpty(contractList);
             ApplyTabsVisibility();
             return;
         }
 
-        var ordered = OrderContracts(list);
-        if (!TryUpdateContractsInPlace(contractList, ordered, skipCost, skipCurrency, skipBalance))
-            RebuildContracts(contractList, ordered, skipCost, skipCurrency, skipBalance);
+        _orderedContracts.AddRange(OrderContracts(list));
+        SyncContractPoolFilters(_orderedContracts);
+        RefreshContractsList();
 
         ApplyTabsVisibility();
     }
@@ -57,7 +63,7 @@ public sealed partial class NcStoreMenu
 
     private bool TryUpdateContractsInPlace(
         Control contractList,
-        List<ContractClientData> ordered,
+        IReadOnlyList<ContractClientData> ordered,
         int skipCost,
         string skipCurrency,
         int skipBalance
@@ -86,7 +92,7 @@ public sealed partial class NcStoreMenu
 
     private void RebuildContracts(
         Control contractList,
-        List<ContractClientData> ordered,
+        IReadOnlyList<ContractClientData> ordered,
         int skipCost,
         string skipCurrency,
         int skipBalance
@@ -162,6 +168,11 @@ public sealed partial class NcStoreMenu
 
     private void ResetContractsListToEmpty(Control contractList)
     {
+        ResetContractsListToMessage(contractList, "nc-store-contracts-empty");
+    }
+
+    private void ResetContractsListToMessage(Control contractList, string messageLocId)
+    {
         CloseActiveContractConfirmWindow();
         contractList.RemoveAllChildren();
         PruneContractCards(Array.Empty<string>());
@@ -170,7 +181,7 @@ public sealed partial class NcStoreMenu
         contractList.AddChild(
             new Label
             {
-                Text = Loc.GetString("nc-store-contracts-empty"),
+                Text = Loc.GetString(messageLocId),
                 HorizontalAlignment = HAlignment.Center,
                 Margin = new(0, 8, 0, 0)
             });

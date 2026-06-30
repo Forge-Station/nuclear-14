@@ -61,7 +61,8 @@ public sealed partial class StoreStructuredSystem
                 targets.Add(
                     new(target.TargetItem, target.Required, target.Progress)
                     {
-                        MatchMode = target.MatchMode
+                        MatchMode = target.MatchMode,
+                        Icon = ResolveContractTargetIcon(contract, target.TargetItem)
                     });
             }
 
@@ -73,11 +74,21 @@ public sealed partial class StoreStructuredSystem
             targets.Add(
                 new(contract.TargetItem, contract.Required, contract.Progress)
                 {
-                    MatchMode = contract.MatchMode
+                    MatchMode = contract.MatchMode,
+                    Icon = ResolveContractTargetIcon(contract, contract.TargetItem)
                 });
         }
 
         return targets;
+    }
+
+    private static string ResolveContractTargetIcon(ContractServerData contract, string targetItem)
+    {
+        if (contract.IsGhostRoleObjective &&
+            string.Equals(targetItem, contract.Config.GhostRolePrototype, StringComparison.Ordinal))
+            return contract.Config.GhostRoleIcon;
+
+        return string.Empty;
     }
 
     private static List<ContractRewardData> CloneContractRewards(ContractServerData contract)

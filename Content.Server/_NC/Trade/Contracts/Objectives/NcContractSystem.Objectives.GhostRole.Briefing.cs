@@ -29,46 +29,15 @@ public sealed partial class NcContractSystem : EntitySystem
     private string BuildGhostRoleBriefing(ContractServerData contract)
     {
         var config = contract.Config;
-        var description = string.IsNullOrWhiteSpace(config.GhostRoleDescription)
-            ? contract.Description
-            : ResolveGhostRoleLocaleText(config.GhostRoleDescription);
-        var rules = string.IsNullOrWhiteSpace(config.GhostRoleRules)
-            ? string.Empty
-            : ResolveGhostRoleLocaleText(config.GhostRoleRules);
-        if (!string.IsNullOrWhiteSpace(rules))
-        {
-            description = string.IsNullOrWhiteSpace(description)
-                ? rules
-                : $"{description}\n{rules}";
-        }
 
-        var survival = config.GhostRoleSurvivalDurationSeconds > 0
-            ? ResolveGhostRoleSurvivalBriefing(config)
-            : string.Empty;
-
-        if (string.IsNullOrWhiteSpace(description))
-            return survival;
-
-        if (string.IsNullOrWhiteSpace(survival))
+        if (config.GhostRoleSurvivalDurationSeconds <= 0)
             return Loc.GetString(
                 "nc-store-contract-ghost-role-character-briefing",
-                ("contract", contract.Name),
-                ("description", description));
+                ("contract", contract.Name));
 
         return Loc.GetString(
             "nc-store-contract-ghost-role-character-briefing-survival",
             ("contract", contract.Name),
-            ("description", description),
-            ("survival", survival));
-    }
-
-    private string ResolveGhostRoleSurvivalBriefing(ContractObjectiveConfigData config)
-    {
-        if (!string.IsNullOrWhiteSpace(config.GhostRoleSurvivalBriefing))
-            return ResolveGhostRoleLocaleText(config.GhostRoleSurvivalBriefing);
-
-        return Loc.GetString(
-            "nc-store-contract-ghost-role-survival-briefing",
             ("time", FormatGhostRoleDurationText(config.GhostRoleSurvivalDurationSeconds)));
     }
 

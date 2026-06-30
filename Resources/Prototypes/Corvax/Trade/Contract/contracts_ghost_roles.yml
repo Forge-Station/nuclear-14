@@ -15,13 +15,79 @@
       state: icon
   - type: NcContractGhostRoleSurvivalObjective
 
+- type: entity
+  id: NcGhostRoleIconSofiaMiller
+  name: София Миллер
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    layers:
+    - sprite: Mobs/Species/Human/parts.rsi
+      state: full
+      color: "#FFEACC"
+    - sprite: Nyanotrasen/Clothing/Uniforms/Costume/red_dress.rsi
+      state: equipped-INNERCLOTHING
+    - sprite: _Nuclear14/Mobs/Customization/human_hair.rsi
+      state: hair_longest
+      color: "#B94A24"
+
+- type: entity
+  id: NcGhostRoleIconElizabethEvil
+  name: Элизабет Злая
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    layers:
+    - sprite: Mobs/Species/Human/parts.rsi
+      state: full
+      color: "#FFEACC"
+    - sprite: Nyanotrasen/Clothing/Uniforms/Costume/red_dress.rsi
+      state: equipped-INNERCLOTHING
+    - sprite: _Nuclear14/Mobs/Customization/human_hair.rsi
+      state: hair_longest
+      color: "#B94A24"
+
+- type: entity
+  id: NcGhostRoleIconBelka
+  name: Белка
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    layers:
+    - sprite: Mobs/Species/Human/parts.rsi
+      state: full
+      color: "#F0C59D"
+    - sprite: _Nuclear14/Clothing/Uniforms/FalloutSuits/wastelanderrags.rsi
+      state: equipped-INNERCLOTHING
+    - sprite: _Nuclear14/Mobs/Customization/human_hair.rsi
+      state: hair_longest
+      color: "#E8C85A"
+
+- type: entity
+  id: NcGhostRoleIconZoyaDarby
+  name: Зоя Дарби
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    layers:
+    - sprite: Mobs/Species/Human/parts.rsi
+      state: full
+      color: "#FFEACC"
+    - sprite: _Nuclear14/Clothing/Uniforms/FalloutSkirts/blackdress.rsi
+      state: equipped-INNERCLOTHING
+    - sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatmk2.rsi
+      state: equipped-OUTERCLOTHING
+    - sprite: _Nuclear14/Mobs/Customization/human_hair.rsi
+      state: hair_longest
+      color: "#2F211C"
+
 
 - type: ncGhostRolePreset
   id: NcGhostRoleRaider
   entityPrototype: N14MobHumanRaider
   name: nc-contract-ghost-role-raider-name
   description: nc-contract-ghost-role-raider-description
-  rules: nc-contract-ghost-role-raider-rules
+  rules: nc-contract-ghost-role-wanted-rules
   requirements:
   - !type:CharacterOverallTimeRequirement
     min: 36000 # 10 hours
@@ -38,6 +104,12 @@
     - N14MagazineSMG9mm
     - N14MagazineSMG9mm
     - N14MagazineSMG9mm
+    - N14MagazineSMG9mm
+    - N14MagazineSMG9mm
+    - N14Stimpak
+    - N14Stimpak
+    - N14FoodCannedFish
+    - DrinkWaterBottleFull
 
 - type: entity
   parent: MobHuman
@@ -45,7 +117,13 @@
   name: София Миллер
   components:
   - type: RandomHumanoidAppearance
-    randomizeName: true
+    randomizeName: false
+    sex: Female
+    gender: Female
+    age: 25
+    skinColor: "#FFEACC"
+    hair: CMlonghair
+    hairColor: "#B94A24"
   - type: Loadout
     prototypes: [NcGhostRoleEscapedWorkerGear]
   - type: NpcFactionMember
@@ -76,9 +154,10 @@
 - type: ncGhostRolePreset
   id: NcGhostRoleEscapedWorker
   entityPrototype: NcGhostRoleMobEscapedWorker
+  icon: NcGhostRoleIconSofiaMiller
   name: "София Миллер"
   description: "Вас разыскивают по контракту. Охотники получат награду только если доставят вас живой, полностью здоровой и в наручниках."
-  rules: "Вы можете скрываться, договариваться или отбиваться, но ваша цель — пережить один час и не быть сданной торговцу."
+  rules: nc-contract-ghost-role-wanted-rules
   character:
     name: "София Миллер"
     sex: Female
@@ -89,6 +168,146 @@
     hairColor: "#B94A24"
   perks:
   - NcGhostRolePerkEscapedWorker
+
+- type: startingGear
+  id: NcGhostRoleElizabethEvilGear
+  equipment:
+    jumpsuit: ClothingUniformDressRed
+    shoes: ClothingShoesColorBlack
+    back: ClothingBackpackSatchel
+    suitstorage: N14WeaponRevolver9mm
+  storage:
+    back:
+    - SpeedLoader9
+    - SpeedLoader9
+    - SpeedLoader9
+    - SpeedLoader9
+    - SpeedLoader9
+    - SpeedLoader9
+    - N14Stimpak
+    - N14Stimpak
+    - N14FoodCannedFish
+    - DrinkWaterBottleFull
+
+- type: entity
+  parent: MobHuman
+  id: NcGhostRoleMobElizabethEvil
+  name: Элизабет Злая
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: false
+    sex: Female
+    gender: Female
+    age: 22
+    skinColor: "#FFEACC"
+    hair: CMlonghair
+    hairColor: "#B94A24"
+  - type: Loadout
+    prototypes: [NcGhostRoleElizabethEvilGear]
+  - type: NpcFactionMember
+    factions:
+    - Wastelander
+
+- type: ncGhostRolePerk
+  id: NcGhostRolePerkElizabethEvil
+  name: "Бешеный побег"
+  description: "Элизабет быстрее уходит от погони и опаснее стреляет из револьверов."
+  sprintSpeedMultiplier: 1.30
+  projectileDamageMultiplier: 1.35
+  weaponPrototypes:
+  - N14WeaponRevolver9mm
+  - N14WeaponRevolver10mm
+  - N14WeaponRevolver44Magnun
+  - N14WeaponRevolverWebley
+
+- type: ncGhostRolePreset
+  id: NcGhostRoleElizabethEvil
+  entityPrototype: NcGhostRoleMobElizabethEvil
+  icon: NcGhostRoleIconElizabethEvil
+  name: "Элизабет Злая"
+  description: "Вы Элизабет Злая. Хозяин отправил людей вернуть вас живой, потому что мёртвая вы ему не нужны."
+  rules: nc-contract-ghost-role-wanted-rules
+  character:
+    name: "Элизабет Злая"
+    sex: Female
+    gender: Female
+    age: 22
+    skinColor: "#FFEACC"
+    hair: CMlonghair
+    hairColor: "#B94A24"
+  perks:
+  - NcGhostRolePerkElizabethEvil
+
+- type: startingGear
+  id: NcGhostRoleBelkaGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitRags
+    shoes: N14ClothingShoesRaider
+    back: ClothingBackpackSatchel
+    suitstorage: N14WeaponShotgun
+  storage:
+    back:
+    - N14ShellShotgun12
+    - N14ShellShotgun12
+    - N14ShellShotgun12
+    - N14ShellShotgun12
+    - N14ShellShotgun12
+    - N14ShellShotgun12
+    - N14ShellShotgun12
+    - N14ShellShotgun12
+    - MagazineBox12gauge
+    - N14Stimpak
+    - N14Stimpak
+    - N14FoodTinK
+    - DrinkWaterBottleFull
+
+- type: entity
+  parent: MobHuman
+  id: NcGhostRoleMobBelka
+  name: Белка
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: false
+    sex: Female
+    gender: Female
+    age: 21
+    skinColor: "#F0C59D"
+    hair: CMlonghair
+    hairColor: "#E8C85A"
+  - type: Loadout
+    prototypes: [NcGhostRoleBelkaGear]
+  - type: NpcFactionMember
+    factions:
+    - Wastelander
+
+- type: ncGhostRolePerk
+  id: NcGhostRolePerkBelka
+  name: "Рывок из неволи"
+  description: "Белка быстрее срывается с места и опаснее стреляет из дробовиков."
+  sprintSpeedMultiplier: 1.30
+  projectileDamageMultiplier: 1.30
+  weaponPrototypes:
+  - N14WeaponShotgun
+  - N14WeaponShotgunDoubleBarrel
+  - N14WeaponShotgunSawedOff
+
+- type: ncGhostRolePreset
+  id: NcGhostRoleBelka
+  entityPrototype: NcGhostRoleMobBelka
+  icon: NcGhostRoleIconBelka
+  name: "Белка"
+  description: "Вы Белка. Вы вырвались из рабства, но за вами уже идут охотники: заказчику нужна живая беглянка."
+  rules: nc-contract-ghost-role-wanted-rules
+  character:
+    name: "Белка"
+    sex: Female
+    gender: Female
+    age: 21
+    skinColor: "#F0C59D"
+    hair: CMlonghair
+    hairColor: "#E8C85A"
+  perks:
+  - NcGhostRolePerkBelka
 
 - type: startingGear
   id: NcGhostRoleNCRDeserterGear
@@ -106,7 +325,13 @@
     back:
     - Magazine556Rifle
     - Magazine556Rifle
+    - Magazine556Rifle
+    - Magazine556Rifle
     - N14BoxPlasticFilledMilitaryNCR
+    - N14Stimpak
+    - N14Stimpak
+    - N14FoodTinC3
+    - DrinkWaterBottleFull
 
 - type: entity
   parent: MobHuman
@@ -114,7 +339,10 @@
   name: дезертир НКР
   components:
   - type: RandomHumanoidAppearance
-    randomizeName: true
+    randomizeName: false
+    sex: Male
+    gender: Male
+    age: 34
   - type: Loadout
     prototypes: [NcGhostRoleNCRDeserterGear]
   - type: NpcFactionMember
@@ -145,7 +373,7 @@
   entityPrototype: NcGhostRoleMobNCRDeserter
   name: "Патроу, дезертир НКР"
   description: "Вы дезертир НКР с хорошей броней и винтовкой. Охотники получат награду только если доставят ваше тело торговцу."
-  rules: "Скройтесь, отстреливайтесь или попытайтесь переждать час. Если выживете, контракт против вас будет провален."
+  rules: nc-contract-ghost-role-wanted-rules
   character:
     name: "Патроу"
     sex: Male
@@ -169,7 +397,13 @@
     - Magazine556Rifle30
     - Magazine556Rifle30
     - Magazine556Rifle30
+    - Magazine556Rifle30
+    - Magazine556Rifle30
     - N14Stimpak
+    - N14Stimpak
+    - N14Stimpak
+    - N14FoodCannedFish
+    - DrinkWaterBottleFull
 
 - type: entity
   parent: MobHuman
@@ -177,7 +411,13 @@
   name: Зоя Дарби
   components:
   - type: RandomHumanoidAppearance
-    randomizeName: true
+    randomizeName: false
+    sex: Female
+    gender: Female
+    age: 31
+    skinColor: "#FFEACC"
+    hair: CMlonghair
+    hairColor: "#2F211C"
   - type: Loadout
     prototypes: [NcGhostRoleZoyaDarbyGear]
   - type: NpcFactionMember
@@ -200,9 +440,10 @@
 - type: ncGhostRolePreset
   id: NcGhostRoleZoyaDarby
   entityPrototype: NcGhostRoleMobZoyaDarby
+  icon: NcGhostRoleIconZoyaDarby
   name: "Зоя Дарби"
   description: "Вы Зоя Дарби, опасная наёмница в боевой броне MK2 с Bozar. За вами охотятся, но заказчик требует взять вас живой."
-  rules: "Не дайте охотникам доставить вас живой, здоровой и в наручниках. Если вы переживёте час, контракт против вас будет провален."
+  rules: nc-contract-ghost-role-wanted-rules
   character:
     name: "Зоя Дарби"
     sex: Female
@@ -226,6 +467,11 @@
     - N14MagazinePistol10mm
     - N14MagazinePistol10mm
     - N14MagazinePistol10mm
+    - N14MagazinePistol10mm
+    - N14MagazinePistol10mm
+    - N14StimpakDirty
+    - N14FoodTinKCracker
+    - DrinkWaterBottleFull
 
 - type: entity
   parent: MobHuman
@@ -233,7 +479,10 @@
   name: фреш
   components:
   - type: RandomHumanoidAppearance
-    randomizeName: true
+    randomizeName: false
+    sex: Male
+    gender: Male
+    age: 28
   - type: Loadout
     prototypes: [NcGhostRoleFreshGear]
   - type: NpcFactionMember
@@ -258,7 +507,7 @@
   entityPrototype: NcGhostRoleMobFresh
   name: "Фреш"
   description: "Вы сорвавшийся наркоман с самодельным пистолетом. Охотники получат награду только если принесут ваше тело торговцу."
-  rules: "Держитесь подальше от охотников и переживите один час. Если выживете, контракт против вас будет провален."
+  rules: nc-contract-ghost-role-wanted-rules
   character:
     name: "Фреш"
     sex: Male
@@ -271,6 +520,7 @@
   id: NcGhostRoleContractRaiderReturn
   name: "Рейдер для допроса"
   description: "Один рейдер слишком много знает о ближайших налётах. Заказчик хочет допросить его лично: поймайте цель живой, без тяжёлых ран, закуйте в наручники и приведите к торговцу."
+  repeatable: false
   role: NcGhostRoleRaider
   completion:
     mode: AliveCuffedTurnIn
@@ -286,15 +536,16 @@
   reward:
   - type: Currency
     currency: Caps
-    count: 180
+    count: { min: 700, max: 1000 }
   - type: Pool
     pool: caravan_medium
-    count: { min: 1, max: 3 }
+    count: { min: 2, max: 5 }
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractEscapedWorkerAlive
   name: "Вернуть Софию Миллер"
   description: "София Миллер сбежала от караванщиков и ушла в городские закоулки. Её хотят вернуть живой: цель должна быть здорова, в наручниках и рядом с торговцем. Мёртвую Софию никто не примет."
+  repeatable: false
   role: NcGhostRoleEscapedWorker
   completion:
     mode: AliveCuffedTurnIn
@@ -310,15 +561,66 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 450, max: 650 }
+    count: { min: 700, max: 1000 }
   - type: Pool
     pool: caravan_medium
-    count: { min: 1, max: 3 }
+    count: { min: 2, max: 5 }
+
+- type: ncGhostRoleContract
+  id: NcGhostRoleContractElizabethEvilAlive
+  name: "Вернуть Элизабет Злую"
+  description: "Элизабет Злая сбежала от хозяина и скрылась в городских закоулках. Она быстрая, вооружена револьвером и умеет им пользоваться. Заказчик платит только за живую пленницу: закуйте её в наручники и приведите к торговцу. Труп не примут."
+  repeatable: false
+  role: NcGhostRoleElizabethEvil
+  completion:
+    mode: AliveCuffedTurnIn
+  survival:
+    briefing: "Вы Элизабет Злая. Продержитесь один час и не дайте охотникам сдать вас живой торговцу."
+    objectiveTitle: "Выжить один час"
+    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostSofiaMillerSpawn
+    acceptTimeoutSeconds: 300
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 700, max: 1000 }
+  - type: Pool
+    pool: caravan_medium
+    count: { min: 2, max: 5 }
+
+- type: ncGhostRoleContract
+  id: NcGhostRoleContractBelkaAlive
+  name: "Вернуть Белку"
+  description: "Белка вырвалась из рабства и ушла с дробовиком. Она быстро бегает и не станет ждать, пока её догонят. Заказчик платит только за живую пленницу: закуйте её в наручники и приведите к торговцу. Труп не примут."
+  repeatable: false
+  role: NcGhostRoleBelka
+  completion:
+    mode: AliveCuffedTurnIn
+  survival:
+    briefing: "Вы Белка. Продержитесь один час и не дайте охотникам сдать вас живой торговцу."
+    objectiveTitle: "Выжить один час"
+    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostSofiaMillerSpawn
+    acceptTimeoutSeconds: 300
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 700, max: 1000 }
+  - type: Pool
+    pool: caravan_medium
+    count: { min: 2, max: 5 }
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractNCRDeserterDead
   name: "Дезертир Патроу"
   description: "Патроу, бывший сержант НКР, ушёл с оружием, припасами и чужими секретами. Живым его брать не просят: убейте дезертира и доставьте тело торговцу."
+  repeatable: false
   role: NcGhostRoleNCRDeserter
   completion:
     mode: DeadBodyTurnIn
@@ -334,7 +636,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 650, max: 900 }
+    count: { min: 1500, max: 2500 }
   - type: Pool
     pool: caravan_hard
     count: { min: 2, max: 6 }
@@ -343,6 +645,7 @@
   id: NcGhostRoleContractZoyaDarbyAlive
   name: "Зоя Дарби нужна живой"
   description: "Зоя Дарби пережила слишком много перестрелок и оставила за собой слишком много тел. Заказчик хочет услышать её ответы, а не смотреть на труп: приведите Зою живой, здоровой и в наручниках."
+  repeatable: false
   role: NcGhostRoleZoyaDarby
   completion:
     mode: AliveCuffedTurnIn
@@ -358,7 +661,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 800, max: 1100 }
+    count: { min: 1000, max: 2500 }
   - type: Pool
     pool: caravan_hard
     count: { min: 2, max: 6 }
@@ -367,6 +670,7 @@
   id: NcGhostRoleContractFreshDead
   name: "Остановить Фреша"
   description: "Фреш сорвался окончательно: бегает по окраине, стреляет первым и разговаривать уже не собирается. Остановите его и доставьте тело торговцу."
+  repeatable: false
   role: NcGhostRoleFresh
   completion:
     mode: DeadBodyTurnIn
@@ -382,7 +686,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 420, max: 620 }
+    count: { min: 700, max: 1000 }
   - type: Pool
     pool: caravan_medium
-    count: { min: 1, max: 3 }
+    count: { min: 2, max: 5 }

@@ -1,3 +1,4 @@
+using Content.Server.Ghost.Roles;
 using Content.Shared._NC.Trade;
 using Content.Shared.Humanoid;
 using Content.Shared.Humanoid.Markings;
@@ -123,6 +124,9 @@ public sealed partial class NcContractSystem : EntitySystem
             !TryGetObjectiveContract(key, out _, out var contract) ||
             !_contractMind.TryGetMind(mob, out var mindId, out var mind))
             return;
+
+        if (TryComp(mindId, out GhostRoleMarkerRoleComponent? marker))
+            marker.Name = Loc.GetString("nc-store-contract-ghost-role-manifest-role");
 
         AddGhostRoleBriefing(mindId, contract);
         TryAddGhostRoleSurvivalObjective(key, state, contract, mindId, mind);

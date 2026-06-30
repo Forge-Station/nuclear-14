@@ -123,13 +123,20 @@ public sealed partial class NcContractSystem : EntitySystem
         foreach (var record in _ghostRoleRoundEndRecords
             .OrderBy(r => r.CreatedAt)
             .ThenBy(r => r.ContractName, StringComparer.Ordinal))
-            text.AppendLine(
-                Loc.GetString(
-                    "nc-store-contract-ghost-role-roundend-line",
-                    ("contract", record.ContractName),
-                    ("role", BuildGhostRoleRoundEndRoleName(record)),
-                    ("player", BuildGhostRoleRoundEndPlayerName(record)),
-                    ("result", BuildGhostRoleRoundEndResult(record))));
+        {
+            text.AppendLine(Loc.GetString(
+                "nc-store-contract-ghost-role-roundend-line-contract",
+                ("contract", record.ContractName)));
+            text.AppendLine(Loc.GetString(
+                "nc-store-contract-ghost-role-roundend-line-role",
+                ("role", BuildGhostRoleRoundEndRoleName(record))));
+            text.AppendLine(Loc.GetString(
+                "nc-store-contract-ghost-role-roundend-line-player",
+                ("player", BuildGhostRoleRoundEndPlayerName(record))));
+            text.AppendLine(Loc.GetString(
+                "nc-store-contract-ghost-role-roundend-line-result",
+                ("result", BuildGhostRoleRoundEndResult(record))));
+        }
 
         ev.AddLine(text.ToString());
     }

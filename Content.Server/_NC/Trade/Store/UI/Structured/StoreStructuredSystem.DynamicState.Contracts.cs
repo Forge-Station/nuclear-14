@@ -77,6 +77,7 @@ public sealed partial class StoreStructuredSystem : EntitySystem
             AddHash(ref hash, IsRetrievalBearerProofContract(contract));
             AddHash(ref hash, contract.Config.HuntCompletionMode);
             AddHash(ref hash, contract.Config.GhostRoleCompletionMode);
+            AddHash(ref hash, contract.Config.GhostRoleIcon);
             AddHash(ref hash, contract.OfferPoolId);
             AddHash(ref hash, contract.OfferPoolName);
             AddHash(ref hash, contract.OfferPoolOrder);
@@ -166,16 +167,4 @@ public sealed partial class StoreStructuredSystem : EntitySystem
         buf.ContractSkipCurrency = skipCurrency;
     }
 
-    private static int CompareContractsForUi(ContractClientData left, ContractClientData right)
-    {
-        var poolOrder = left.OfferPoolOrder.CompareTo(right.OfferPoolOrder);
-        if (poolOrder != 0)
-            return poolOrder;
-
-        var name = string.Compare(left.Name, right.Name, StringComparison.OrdinalIgnoreCase);
-        if (name != 0)
-            return name;
-
-        return string.CompareOrdinal(left.Id, right.Id);
-    }
 }

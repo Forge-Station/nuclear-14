@@ -1,4 +1,5 @@
 using Content.Server.Ghost.Roles.Components;
+using Content.Server.Ghost.Roles.Raffles;
 using Content.Shared._NC.Trade;
 using Content.Shared.Customization.Systems;
 using Robust.Shared.Map;
@@ -10,6 +11,10 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
+    private const uint ContractGhostRoleRaffleInitialDurationSeconds = 30;
+    private const uint ContractGhostRoleRaffleJoinExtendsSeconds = 10;
+    private const uint ContractGhostRoleRaffleMaxDurationSeconds = 90;
+
     private bool TryInitializeGhostRoleObjective(
         EntityUid store,
         EntityUid user,
@@ -92,6 +97,7 @@ public sealed partial class NcContractSystem : EntitySystem
         ghostRole.RoleName = ResolveContractGhostRoleName(config, contract);
         ghostRole.RoleDescription = ResolveContractGhostRoleDescription(config, contract);
         ghostRole.RoleRules = ResolveContractGhostRoleRules(config);
+        ghostRole.RaffleConfig = CreateContractGhostRoleRaffleConfig();
 
         var spawnerComp = EnsureComp<NcContractGhostRoleSpawnerComponent>(spawner);
         spawnerComp.TargetPrototype = ghostRoleProtoId;
@@ -99,6 +105,15 @@ public sealed partial class NcContractSystem : EntitySystem
             ? new(config.GhostRoleRequirements)
             : new List<CharacterRequirement>();
     }
+
+    private static GhostRoleRaffleConfig CreateContractGhostRoleRaffleConfig() =>
+        new(
+            new GhostRoleRaffleSettings
+            {
+                InitialDuration = ContractGhostRoleRaffleInitialDurationSeconds,
+                JoinExtendsDurationBy = ContractGhostRoleRaffleJoinExtendsSeconds,
+                MaxDuration = ContractGhostRoleRaffleMaxDurationSeconds
+            });
 
     private static string
         ResolveContractGhostRoleName(ContractObjectiveConfigData config, ContractServerData contract) =>

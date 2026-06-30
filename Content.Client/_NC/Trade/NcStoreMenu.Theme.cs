@@ -74,9 +74,20 @@ public sealed partial class NcStoreMenu
         TabBarter.PanelOverride = CreateTabContentStyle(tabContentColor, tabContentBorder);
         TabContracts.PanelOverride = CreateTabContentStyle(tabContentColor, tabContentBorder);
 
+        ContractsHeaderPanel.PanelOverride = NcStoreUiTheme.Flat(
+            NcStoreUiTheme.ResolveColor(_uiColors.TabInactiveBackground, "#20252D"),
+            NcStoreUiTheme.ResolveColor(_uiColors.TabInactiveBorder, "#414955"),
+            new(0, 0, 0, 1));
+
+        ContractsCategoryPanel.PanelOverride = NcStoreUiTheme.Flat(
+            NcStoreUiTheme.ResolveColor(_uiColors.CategoriesPanelBackground, "#161A20"),
+            NcStoreUiTheme.WithAlpha(NcStoreUiTheme.ResolveColor(_uiColors.CategoriesDivider, "#2E3640"), 0.24f),
+            new(0, 0, 0, 1));
+
         BuyView.ApplyUiTheme(_uiColors);
         SellView.ApplyUiTheme(_uiColors);
         BarterView.ApplyUiTheme(_uiColors);
+        UpdateContractPoolFilterButtonStates();
     }
 
     private void ApplyLocalTabStyle()

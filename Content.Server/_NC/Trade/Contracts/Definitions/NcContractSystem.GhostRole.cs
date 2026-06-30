@@ -30,6 +30,7 @@ public sealed partial class NcContractSystem : EntitySystem
             GhostRolePrototype = role.EntityPrototype,
             GhostRoleName = role.Name,
             GhostRoleDescription = role.Description,
+            GhostRoleIcon = ResolveGhostRoleIcon(role),
             GhostRoleRules = role.Rules,
             GhostRoleRequirements = new(role.Requirements),
             GhostRoleCharacterName = role.Character.Name,
@@ -87,6 +88,14 @@ public sealed partial class NcContractSystem : EntitySystem
 
         SyncContractFlowStatus(contract);
         return contract;
+    }
+
+    private string ResolveGhostRoleIcon(NcGhostRolePresetPrototype role)
+    {
+        if (!string.IsNullOrWhiteSpace(role.Icon) && _prototypes.HasIndex<EntityPrototype>(role.Icon))
+            return role.Icon;
+
+        return string.Empty;
     }
 
     private List<ContractRewardDef> BuildGhostRoleRewardDefs(NcGhostRoleContractPrototype proto)

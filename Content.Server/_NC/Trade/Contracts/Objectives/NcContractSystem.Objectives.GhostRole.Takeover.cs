@@ -83,7 +83,7 @@ public sealed partial class NcContractSystem : EntitySystem
 
         if (!state.GhostRoleTaken && state.GhostRoleAcceptDeadline is { } deadline && _timing.CurTime >= deadline)
         {
-            FailExpiredGhostRoleObjective(key);
+            ExpireUnacceptedGhostRoleObjective(key);
             return false;
         }
 

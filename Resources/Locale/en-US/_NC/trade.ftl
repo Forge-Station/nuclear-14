@@ -1,3 +1,9 @@
+nc-store-category-fallback = Miscellaneous
+nc-store-contracts-category-empty = No contracts are currently available in this category.
+nc-store-contract-category-all = All
+nc-store-contract-category-button = { $name } ({ $count })
+nc-store-contract-category-all-tooltip = Show every available contract.
+nc-store-contract-category-tooltip = Show contracts in the "{ $category }" category.
 nc-store-contract-proof-generation-failed = Proof of completion could not be created. The contract has failed.
 nc-store-contract-proof-destroyed = Proof item for this contract has been destroyed; contract failed.
 nc-store-contract-hunt-target-lost = The hunt target was lost before all stages were completed. The contract has failed.
@@ -46,15 +52,21 @@ nc-store-contract-duration-seconds = { $count ->
     [one] { $count } second
    *[other] { $count } seconds
 }
-nc-store-contract-ghost-role-roundend-header = [bold]Contract target results[/bold]
-nc-store-contract-ghost-role-roundend-line = - Contract "{ $contract }": { $role } ({ $player }) - { $result }
+nc-store-contract-ghost-role-manifest-role = Fugitive
+nc-store-contract-ghost-role-character-briefing = You are the target of "{ $contract }". Follow the role rules.
+nc-store-contract-ghost-role-character-briefing-survival = You are the target of "{ $contract }". Survive for { $time } and keep hunters from turning you in.
+nc-store-contract-ghost-role-roundend-header = [bold][color=#c9a66b]Contract Targets[/color][/bold]
+nc-store-contract-ghost-role-roundend-line-contract = [color=#c9a66b]•[/color] [bold]{ $contract }[/bold]
+nc-store-contract-ghost-role-roundend-line-role = [color=#9ab7d6]Target:[/color] { $role }
+nc-store-contract-ghost-role-roundend-line-player = [color=#9ab7d6]Player:[/color] { $player }
+nc-store-contract-ghost-role-roundend-line-result = [color=#9ab7d6]Result:[/color] { $result }
 nc-store-contract-ghost-role-roundend-unknown-role = unknown target
 nc-store-contract-ghost-role-roundend-no-player = unclaimed
-nc-store-contract-ghost-role-roundend-result-waiting = target was not claimed
-nc-store-contract-ghost-role-roundend-result-active = target was not delivered by round end
-nc-store-contract-ghost-role-roundend-result-delivered-alive = target delivered alive; contract completed
-nc-store-contract-ghost-role-roundend-result-delivered-dead = target killed/delivered; contract completed
-nc-store-contract-ghost-role-roundend-result-survived = target survived the timer ({ $time }); contract failed
-nc-store-contract-ghost-role-roundend-result-not-accepted = target was not claimed; contract failed
-nc-store-contract-ghost-role-roundend-result-target-lost = target was lost; contract failed
-nc-store-contract-ghost-role-roundend-result-target-rotten = target body rotted; contract failed
+nc-store-contract-ghost-role-roundend-result-waiting = unclaimed
+nc-store-contract-ghost-role-roundend-result-active = not delivered
+nc-store-contract-ghost-role-roundend-result-delivered-alive = delivered alive
+nc-store-contract-ghost-role-roundend-result-delivered-dead = body delivered
+nc-store-contract-ghost-role-roundend-result-survived = survived { $time }
+nc-store-contract-ghost-role-roundend-result-not-accepted = offer expired
+nc-store-contract-ghost-role-roundend-result-target-lost = target lost
+nc-store-contract-ghost-role-roundend-result-target-rotten = body rotted
