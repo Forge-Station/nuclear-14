@@ -603,7 +603,7 @@
     Steel: 200
     N14Gunpowder: 150
     Cardboard: 100
-
+# Forge-Change-Start
 - type: latheRecipe
   id: MagazineBoxNail
   result: MagazineBoxNail
@@ -621,3 +621,4 @@
   materials:
     Steel: 500
     Cardboard: 100
+# Forge-Change-End
