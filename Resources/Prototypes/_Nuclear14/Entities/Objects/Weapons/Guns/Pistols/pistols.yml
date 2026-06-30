@@ -1,5 +1,6 @@
 - type: entity
-  parent: BaseWeaponPistol
+  name: N14BasePistol
+  parent: [ BaseItem, ForgeGunConditionProfileSidearm ]
   id: N14BaseWeaponPistol
   description: A rooty tooty point and shooty.
   abstract: true
@@ -70,7 +71,7 @@
 
 - type: entity
   name: N14BaseInternalPistol
-  parent: BaseItem
+  parent: [ BaseItem, ForgeGunConditionProfileSidearm ]
   id: N14BaseWeaponInternalMagPistol
   description: A rooty tooty point and shooty.
   abstract: true
@@ -293,7 +294,7 @@
 
 - type: entity
   name: 10mm pipe pistol
-  parent: N14BaseWeaponPistol
+  parent: [ N14BaseWeaponPistol, ForgeGunConditionProfilePistolPipe ] # Forge-Change
   id: N14WeaponPistol10mmPipe
   description: A shoddy makeshift 10mm pistol, the grip is incredibly uncomfortable. Uses 10mm ammo.
   components:

@@ -1,0 +1,17 @@
+- type: constructionGraph
+  id: N14ToolboxWeaponMaintenance
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: toolbox
+          steps:
+            - material: Steel
+              amount: 6
+              doAfter: 3
+            - material: Plastic
+              amount: 2
+              doAfter: 2
+
+    - node: toolbox
+      entity: N14ToolboxWeaponMaintenance

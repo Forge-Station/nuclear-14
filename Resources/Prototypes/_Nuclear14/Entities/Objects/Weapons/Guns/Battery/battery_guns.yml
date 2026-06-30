@@ -42,7 +42,7 @@
 
 - type: entity
   id: N14BaseWeaponPowerCellSmall
-  parent: N14BaseWeaponPowerCell
+  parent: [ N14BaseWeaponPowerCell, ForgeGunConditionProfileLaser ]
   abstract: true
   components:
   - type: Clothing
@@ -255,7 +255,7 @@
 
 - type: entity
   name: recharger rifle
-  parent: BaseWeaponBattery
+  parent: [ BaseWeaponBattery, ForgeGunConditionProfileLaser ]
   id: N14WeaponLaserRifleRecharger
   description: The first model for a self-charging laser rifle, its low energy consumption and advanced internal battery lets this gun last for centuries without recharging.
   components:
@@ -296,7 +296,7 @@
 
 - type: entity
   name: recharger pistol
-  parent: BaseWeaponBatterySmall
+  parent: [ BaseWeaponBatterySmall, ForgeGunConditionProfileLaser ]
   id: N14WeaponLaserPistolRecharger
   description: The upgraded version of the recharger rifle, compact but maintaining the same power, its low energy consumption and advanced internal battery makes this gun last for centuries without recharging.
   components:
@@ -338,7 +338,7 @@
 
 - type: entity
   name: AER-9 auto laser rifle
-  parent: N14BaseWeaponPowerCellMedium
+  parent: [ N14BaseWeaponPowerCellMedium, ForgeGunConditionProfileLaser ]
   id: N14WeaponLaserRifleAuto
   description: A sturdy pre-war laser rifle. Emits beams of concentrated light to damage targets. This one has been jury-rigged against all common sense with a rotating barrel to fire in full auto.
   components:
@@ -388,7 +388,7 @@
 
 - type: entity
   name: automatic plasma rifle
-  parent: N14BaseWeaponPowerCellMedium
+  parent: [ N14BaseWeaponPowerCellMedium, ForgeGunConditionProfileLaser ]
   id: N14WeaponPlasmaRifleAuto
   description: A highly advanced automatic plasma rifle in pristine condition.
   components:
@@ -441,7 +441,7 @@
 
 - type: entity
   name: prototype AER-14 laser rifle
-  parent: N14BaseWeaponPowerCellMedium
+  parent: [ N14BaseWeaponPowerCellMedium, ForgeGunConditionProfileLaser ]
   id: N14WeaponLaserRiflePrototypeAER14
   description: A cutting-edge, pre-war laser rifle. Extremely powerful, but drains electron charge packs like nothing else.
   components:
@@ -493,7 +493,7 @@
 
 - type: entity
   name: AER-9
-  parent: N14BaseWeaponPowerCellMedium
+  parent: [ N14BaseWeaponPowerCellMedium, ForgeGunConditionProfileLaser ]
   id: N14WeaponLaserRifle
   description: A sturdy pre-war laser rifle. Emits beams of concentrated light to damage targets.
   components:
@@ -587,7 +587,7 @@
 
 - type: entity
   name: makeshift laser rifle
-  parent: N14BaseWeaponPowerCellMedium
+  parent: [ N14BaseWeaponPowerCellMedium, ForgeGunConditionProfileLaser ]
   id: N14WeaponLaserRifleMakeshift
   description: A sturdy makeshift laser rifle. Emits beams of concentrated light to damage targets.
   components:
@@ -637,7 +637,7 @@
 
 - type: entity
   name: plasma rifle
-  parent: N14BaseWeaponPowerCellMedium
+  parent: [ N14BaseWeaponPowerCellMedium, ForgeGunConditionProfileLaser ]
   id: N14WeaponPlasmaRifle
   description: An advanced plasma rifle in almost pristine condition.
   components:
@@ -737,7 +737,7 @@
 
 - type: entity
   name: urban plasma rifle
-  parent: N14BaseWeaponPowerCellMedium
+  parent: [ N14BaseWeaponPowerCellMedium, ForgeGunConditionProfileLaser ]
   id: N14WeaponPlasmaRifleUrban
   description: A mass-produced pre-war plasma rifle designed for close quarters combat in urban environments.
   components:
@@ -792,7 +792,7 @@
 
 - type: entity
   name: multiplas
-  parent: N14BaseWeaponPowerCellMedium
+  parent: [ N14BaseWeaponPowerCellMedium, ForgeGunConditionProfileLaser ]
   id: N14WeaponPlasmaMultiplas
   description: A modified urban plasma rifle, it sacrifices accuracy to instead spread the plasma into multiple projectiles.
   components:
@@ -846,7 +846,7 @@
 
 - type: entity
   name: wattz 3000 laser rifle
-  parent: N14BaseWeaponPowerCellMedium
+  parent: [ N14BaseWeaponPowerCellMedium, ForgeGunConditionProfileLaser ]
   id: N14WeaponLaserRifleWattz3000
   description: Wattz 3000 Laser Rifle. Uses focused micro fusion cells for more powerful lasers, and an extended barrel for additional range.
   components:
@@ -896,7 +896,7 @@
 
 - type: entity
   name: wattz 2000 laser rifle
-  parent: N14BaseWeaponPowerCellMedium
+  parent: [ N14BaseWeaponPowerCellMedium, ForgeGunConditionProfileLaser ]
   id: N14WeaponLaserRifleWattz2000
   description: Wattz 2000 Laser Rifle. Uses focused micro fusion cells for more powerful lasers, and an extended barrel for additional range.
   components:
@@ -948,7 +948,7 @@
 
 - type: entity
   name: plasma caster
-  parent: N14BaseWeaponPowerCellMedium
+  parent: [ N14BaseWeaponPowerCellMedium, ForgeGunConditionProfileLaserLMG ]
   id: N14WeaponPlasmaCaster
   description: A massive plasma gun with a pretty sharp barrel, this gun is fed with plasma shells.
   components:
@@ -1006,7 +1006,7 @@
 
 - type: entity
   name: laser gatling gun
-  parent: N14BaseWeaponPowerCellMedium
+  parent: [ N14BaseWeaponPowerCellMedium, ForgeGunConditionProfileLaserLMG ]
   id: N14WeaponLaserGatling
   description: A minigun, but laser for those who really prefer ash piles to perforated corpses.
   components:

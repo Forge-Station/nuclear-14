@@ -1,6 +1,6 @@
 - type: entity
   name: M7 Spear Rifle Scope
-  parent: N14WeaponRifleBase
+  parent: [ N14WeaponRifleBase, ForgeGunConditionProfileAssault ]
   id: N14WeaponRifleM7SpearScope
   description: Prototype of a next-generation rifle that never made it into service with the US Army. Only a few units were delivered for special operations testing just days before the Great War began. Finding one in the wasteland is a real jackpot. It uses a unique caliber, so finding ammunition for it is an even greater stroke of luck.
   suffix: DO NOT SPAWN

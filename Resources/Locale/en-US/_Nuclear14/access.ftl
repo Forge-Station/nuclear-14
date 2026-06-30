@@ -1,3 +1,4 @@
+id-card-access-level-townie-person = Townsperson
 id-card-access-level-townie-sheriff = Town Jail
 id-card-access-level-townie-mayor = Town Mayor
 id-card-access-level-townie-shopkeeper = Town Store

@@ -1,5 +1,5 @@
 - type: entity
-  parent: N14WeaponRevolverBase
+  parent: [N14WeaponRevolverBase, ForgeGunConditionProfileSidearm]
   id: N14WeaponRevolver12-7x55mmRSH12
   components:
   - type: Sprite

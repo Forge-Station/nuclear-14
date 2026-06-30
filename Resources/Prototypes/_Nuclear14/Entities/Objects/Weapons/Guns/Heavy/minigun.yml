@@ -1,6 +1,6 @@
 - type: entity
   name: minigun
-  parent: BaseItem
+  parent: [ BaseItem, ForgeGunConditionProfileMinigun ]
   id: BaseWeaponMinigun
   abstract: true
   components:
