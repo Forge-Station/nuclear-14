@@ -9,3 +9,6 @@
     - N14GunMaintenance
   - type: GunConditionRepairTool
     uses: 1
+  - type: Construction
+    graph: N14ToolboxWeaponMaintenance
+    node: start
