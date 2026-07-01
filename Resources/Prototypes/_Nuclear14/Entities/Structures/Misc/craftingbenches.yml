@@ -569,6 +569,8 @@
     - N14SheetSteel
     - N14SheetGlass
     - N14IngotLead
+    - N14IngotAluminum    # Forge-add 
+    - N14IngotBrass       # Forge-add 
     - SulfurPowder
     # Scrap
     - SheetPlasticScrap

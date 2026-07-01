@@ -235,6 +235,7 @@
   - type: Stack
     stackType: UraniumOre
   - type: Sprite
+    sprite: /Textures/_Corvax/Objects/Materials/ore.rsi #Forge-change
     state: uranium
   - type: Material
   - type: PhysicalComposition
@@ -314,6 +315,7 @@
   - type: Stack
     stackType: Coal
   - type: Sprite
+    sprite: /Textures/_Corvax/Objects/Materials/ore.rsi #Forge-change
     state: coal
   - type: Material
   - type: Extractable

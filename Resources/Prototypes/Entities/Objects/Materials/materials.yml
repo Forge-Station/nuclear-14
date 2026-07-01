@@ -235,6 +235,7 @@
     - wood_2
     - wood_3
   - type: Sprite
+    sprite: /Textures/_Corvax/Objects/Materials/materials.rsi #Forge-change
     state: wood
     layers:
     - state: wood

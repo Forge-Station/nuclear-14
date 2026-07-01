@@ -42,6 +42,6 @@
   - type: Reflect
     reflectProb: 0.3
   - type: ClothingSpeedModifier 
-    walkModifier: 1
-    sprintModifier: 1
+    walkModifier: 0.6
+    sprintModifier: 0.6
   - type: Unremoveable

@@ -94,8 +94,8 @@
     - type: Gun
       minAngle: 0
       maxAngle: 20
-      angleIncrease: 1
-      angleDecay: 4
+      angleIncrease: 2
+      angleDecay: 8
       fireRate: 10
       soundGunshot:
         collection: N14MinigunGunshot

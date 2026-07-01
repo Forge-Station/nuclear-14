@@ -1,0 +1,17 @@
+- type: latheRecipe
+  id: N14IngotAluminum
+  result: N14IngotAluminum1
+  applyMaterialDiscount: false
+  comptime: 2
+  materials:
+    N14RawAluminum: 100
+    Coal: 50
+
+- type: latheRecipe
+  id: N14IngotBrass
+  result: N14IngotBrass1
+  applyMaterialDiscount: false
+  comptime: 2
+  materials:
+    N14RawBrass: 100
+    Coal: 50
