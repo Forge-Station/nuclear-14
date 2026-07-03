@@ -28,3 +28,18 @@
   impactFlash:
     sprite: Corvax/Objects/Weapons/Guns/Ammunition/projectiles/projectileslas.rsi
     state: impact_electro
+
+- type: hitscan
+  id: GreenLaser
+  damage:
+    types:
+      Heat: 25
+  muzzleFlash:
+    sprite: Corvax/Objects/Weapons/Guns/Ammunition/projectiles/greenlaser.rsi
+    state: impact_electro
+  travelFlash:
+    sprite: Corvax/Objects/Weapons/Guns/Ammunition/projectiles/greenlaser.rsi
+    state: electrobeam
+  impactFlash:
+    sprite: Corvax/Objects/Weapons/Guns/Ammunition/projectiles/greenlaser.rsi
+    state: muzzle_electro

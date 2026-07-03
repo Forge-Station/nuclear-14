@@ -29,10 +29,6 @@
           WastelandReporter: [ 1, 2 ]
           WastelandFarmer: [ 2, 3 ]
           WastelandBartender: [ 1, 2 ]
-          TribalElder: [ 1, 1 ]
-          Tribal: [ 2, 4 ]
-          TribalFarmer: [ 1, 2 ]
-          TribalHealer: [ 1, 2 ]
           TownMayor: [ 1, 1 ]
           TownSheriff: [ 1, 1 ]
           TownDeputy: [ 1, 2 ]
@@ -66,3 +62,4 @@
           CaesarLegionLegionnaireVeteran: [ 3, 3 ] # Corvax-Legion
           CaesarLegionLegionnaireWarrior: [ 4, 4 ] # Corvax-Legion
           CaesarLegionLegionnaireRecruit: [ 6, 6 ] # Corvax-Legion
+          Followers: [ 6, 6 ]

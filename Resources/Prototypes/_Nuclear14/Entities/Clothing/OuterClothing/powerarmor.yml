@@ -168,6 +168,10 @@
   - type: Reflect
     reflectProb: 0.15
     spread: 275
+  - type: PointLight
+    radius: 1.5
+    energy: 1
+    color: "#47f8ff"
   - type: UserInterface
     interfaces:
       enum.ToggleClothingUiKey.Key:

@@ -202,6 +202,16 @@
   - type: Wires
     layoutId: HighSec
 
+- type: entity
+  parent: N14DoorWoodSecureMIDWESTBOS
+  id: N14DoorWoodSecureLockedMidWest
+  suffix: BoSMidWest, Locked
+  components:
+  - type: AccessReader
+    access: [ [ "BoSMidwest" ] ]
+  - type: Wires
+    layoutId: AirlockSecurity
+
 #MARK: BoS Washington
 - type: entity
   parent: N14DoorBunker
@@ -312,6 +322,16 @@
       board: [ DoorElectronicsBoSWashingtonCommander ]
   - type: Wires
     layoutId: HighSec
+
+- type: entity
+  parent: N14DoorWoodSecureWBOS
+  id: N14DoorWoodSecureLockedWashington
+  suffix: BoSWashington, Locked
+  components:
+  - type: AccessReader
+    access: [ [ "WashingtonInitiate" ] ]
+  - type: Wires
+    layoutId: AirlockSecurity
 
 #MARK: Townie
 

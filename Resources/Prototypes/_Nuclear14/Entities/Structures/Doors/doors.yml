@@ -243,6 +243,66 @@
     graph: N14DoorGraph
     node: woodDoorSecureNCR
 
+- type: entity
+  parent: N14DoorWoodSecure
+  id: N14DoorWoodSecureLegio
+  name: secure door
+  suffix: Legion
+  description: A secure door made from wood and bearing an legion emblem.
+  components:
+  - type: Sprite
+    netsync: false
+    sprite: Corvax/Structures/Door/securedoor_legio.rsi
+    layers:
+    - state: closed
+      map: ["enum.DoorVisualLayers.Base"]
+  - type: AccessReader
+
+- type: entity
+  parent: N14DoorWoodSecure
+  id: N14DoorWoodSecureWBOS
+  name: secure door
+  suffix: BoSWashington
+  description: A secure door made from wood and bearing an washington bos emblem.
+  components:
+  - type: Sprite
+    netsync: false
+    sprite: Corvax/Structures/Door/securedoor_wbos.rsi
+    layers:
+    - state: closed
+      map: ["enum.DoorVisualLayers.Base"]
+  - type: AccessReader
+
+- type: entity
+  parent: N14DoorWoodSecure
+  id: N14DoorWoodSecureWESTBOS
+  name: secure door
+  suffix: BoSWest
+  description: A secure door made from wood and bearing an west bos emblem.
+  components:
+  - type: Sprite
+    netsync: false
+    sprite: Corvax/Structures/Door/securedoor_westbos.rsi
+    layers:
+    - state: closed
+      map: ["enum.DoorVisualLayers.Base"]
+  - type: AccessReader
+
+- type: entity
+  parent: N14DoorWoodSecure
+  id: N14DoorWoodSecureMIDWESTBOS
+  name: secure door
+  suffix: BoSMidWest
+  description: A secure door made from wood and bearing an bos emblem.
+  components:
+  - type: Sprite
+    netsync: false
+    sprite: Corvax/Structures/Door/securedoor_bos.rsi
+    layers:
+    - state: closed
+      map: ["enum.DoorVisualLayers.Base"]
+  - type: AccessReader
+
 # Metal Doors
 - type: entity
   parent: N14BaseDoor

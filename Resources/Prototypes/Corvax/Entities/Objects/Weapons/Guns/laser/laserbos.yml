@@ -45,7 +45,7 @@
     speed: 0.3
 
 - type: entity
-  name: yk42b pulse rifle 
+  name: yk42b pulse rifle
   parent: [ N14BaseWeaponPowerCellMedium, ForgeGunConditionProfileLaser ]
   id: N14WeaponLaserRifleYk42b
   description: The YK42B is a pulse weapon developed by the Yuma Flats Consortium. It is considered to be more advanced compared to the YK32 pistol, having greater range and energy capacity.
@@ -90,3 +90,59 @@
     backStrength: 4
   - type: StaticPrice
     price: 300
+
+- type: entity
+  name: laser gatling gun Sprtel-Wood 9700
+  parent: [ N14BaseWeaponPowerCellMedium, ForgeGunConditionProfileLaserLMG ]
+  id: N14WeaponLaserGatlingSprtelWood
+  description: Power and accuracy compensate for the weapon's limited ammunition capacity.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Guns/Laser/advancedgatling.rsi
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: mag-unshaded-4
+      map: ["enum.GunVisualLayers.MagUnshaded"]
+      shader: unshaded
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Guns/Laser/advancedgatling.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: MagazineVisuals
+    magState: mag
+    steps: 5
+    zeroVisible: true
+  - type: Item
+    size: Ginormous
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Magazine
+        startingItem: N14PowerCellFusionAdvanced
+        insertSound: /Audio/Weapons/Guns/MagIn/batrifle_magin.ogg
+        ejectSound: /Audio/Weapons/Guns/MagOut/batrifle_magout.ogg
+        whitelist:
+          tags:
+            - N14PowerCellFusionAdvanced
+  - type: Gun
+    minAngle: 2
+    maxAngle: 12
+    angleIncrease: 4
+    angleDecay: 12
+    fireRate: 4
+    soundGunshot:
+      collection: N14LaserGatlingGunshot
+    selectedMode: FullAuto
+    availableModes:
+    - FullAuto
+  - type: Appearance
+  - type: MultiHandedItem
+  - type: ClothingSpeedModifier
+    walkModifier: 0.9
+    sprintModifier: 0.9
+  - type: HeldSpeedModifier
+  - type: FollowDistance
+    backStrength: 6
