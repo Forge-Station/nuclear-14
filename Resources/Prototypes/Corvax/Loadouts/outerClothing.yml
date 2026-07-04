@@ -19,26 +19,6 @@
     - N14ClothingOuterPainspike
 
 - type: loadout
-  id: N14LoadoutOuterLeatherArmor
-  category: Outer
-  cost: 2
-  requirements:
-    - !type:CharacterItemGroupRequirement
-      group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement
-      departments:
-        - Townsfolk
-        - Wastelander
-    - !type:CharacterJobRequirement # Forge-Change
-      inverted: true
-      jobs:
-      - BoSMidSerf
-      - CaesarLegionSlave
-      - NCRPisoner
-  items:
-    - N14ClothingOuterLeatherArmor
-
-- type: loadout
   id: N14ClothingOuterReinforcedLeatherArmor
   category: Outer
   cost: 3
