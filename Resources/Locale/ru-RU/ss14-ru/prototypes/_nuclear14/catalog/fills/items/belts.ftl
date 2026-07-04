@@ -19,7 +19,7 @@ ent-N14ClothingBeltPlantFilled = { ent-ClothingBeltPlant }
     .desc = { ent-ClothingBeltPlant.desc }
 
 # пояс фермера 
-ent-ClothingBeltFarmerFilled = { ent-ClothingBeltFarmer }
+ent-N14ClothingBeltFarmerFilled = { ent-ClothingBeltFarmer }
     .suffix = Заполненный
     .desc = { ent-ClothingBeltFarmer.desc }
 

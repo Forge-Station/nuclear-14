@@ -1,0 +1,109 @@
+- type: loadout
+  id: N14LoadoutClothingBeltFarmerFilled
+  category: Items
+  cost: 3
+  requirements:
+    - !type:OverallTimeRequirement
+      min: 3600
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault        
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingBeltFarmerFilled
+
+- type: loadout
+  id: N14LoadoutClothingBeltMedicalFilled
+  category: Items
+  cost: 6
+  requirements:
+    - !type:OverallTimeRequirement
+      min: 3600
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault        
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingBeltMedicalFilled
+
+- type: loadout
+  id: N14LoadoutClothingBeltStorageWaistbag
+  category: Items
+  cost: 3
+  requirements:      
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - ClothingBeltStorageWaistbag
+
+- type: loadout
+  id: N14LoadoutClothingBeltRope
+  category: Items
+  cost: 4
+  requirements:      
+    - !type:OverallTimeRequirement
+      min: 3600
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault        
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - ClothingBeltRope
+
+- type: loadout
+  id: N14LoadoutPlantBag
+  category: Items
+  cost: 2
+  requirements:   
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault      
+  items:
+    - PlantBag
+
+- type: loadout
+  id: N14LoadoutOreBag
+  category: Items
+  cost: 2
+  requirements:   
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault      
+  items:
+    - OreBag
+
+- type: loadout
+  id: N14LoadoutChemBag
+  category: Items
+  cost: 2
+  requirements:   
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - Vault      
+  items:
+    - ChemBag

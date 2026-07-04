@@ -13,7 +13,7 @@
 
 - type: loadout
   id: LoadoutLegionVenatorReconnaissanceArmor
-  category: Roles
+  category: Outer
   cost: 4
   exclusive: true
   requirements:
@@ -71,7 +71,7 @@
 
 - type: loadout
   id: LoadoutLegionDeadVeteranArmor
-  category: Roles
+  category: Outer
   cost: 2
   exclusive: true
   requirements:
@@ -86,7 +86,7 @@
 
 - type: loadout
   id: LoadoutLegionDeadPrimeArmor
-  category: Roles
+  category: Outer
   cost: 2
   exclusive: true
   requirements:
@@ -162,7 +162,7 @@
 
 - type: loadout
   id: LoadoutConquerorCenturioArmor
-  category: Roles
+  category: Outer
   cost: 2
   exclusive: true
   requirements:

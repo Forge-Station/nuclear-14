@@ -196,6 +196,15 @@
 - type: Tag
   id: N14Welder
 
+- type: Tag # forge-add
+  id: N14HealingPowder
+
+- type: Tag # forge-add
+  id: N14HealingPoultice
+
+- type: Tag # forge-add
+  id: N14ClothingEyesGlassesWelding
+
 #MARK: Guns types.
 - type: Tag
   id: Revolver

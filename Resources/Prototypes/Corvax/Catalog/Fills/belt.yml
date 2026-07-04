@@ -1,5 +1,5 @@
 - type: entity
-  id: ClothingBeltFarmerFilled
+  id: N14ClothingBeltFarmerFilled
   parent: ClothingBeltFarmer
   suffix: Filled
   components:
@@ -7,4 +7,5 @@
     contents:
     - id: HydroponicsToolMiniHoe
     - id: HydroponicsToolSpade
-    - id: RobustHarvestChemistryBottle # used by tribal farmers, leave robust?
+    - id: N14FertilizerChemistryBottle 
+      amount: 2

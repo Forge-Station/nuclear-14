@@ -1,7 +1,7 @@
 - type: loadout
   id: N14ClothingBackpackDuffel
   category: Duffel
-  cost: 2
+  cost: 0
   exclusive: true
   customName: false
   customDescription: false
@@ -20,7 +20,7 @@
 - type: loadout
   id: N14ClothingBackpackDuffelSalvage
   category: Duffel
-  cost: 2
+  cost: 0
   exclusive: true
   customName: false
   customDescription: false
@@ -39,7 +39,7 @@
 - type: loadout
   id: N14ClothingBackpackDuffelMilitary
   category: Duffel
-  cost: 2
+  cost: 0
   exclusive: true
   customName: false
   customDescription: false
@@ -58,7 +58,7 @@
 - type: loadout
   id: N14ClothingBackpackDuffelMilitaryMedical
   category: Duffel
-  cost: 2
+  cost: 0
   exclusive: true
   customName: false
   customDescription: false

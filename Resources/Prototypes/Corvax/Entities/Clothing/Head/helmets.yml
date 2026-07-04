@@ -466,7 +466,7 @@
     sprite: Corvax/Clothing/Head/Helmets/falloutNCRcombathelmetSnow.rsi
 
 - type: entity
-  parent: N14ClothingHeadHatBaseHelmetMetal # \Prototypes\_Nuclear14\Entities\Clothing\Head\helmets.yml
+  parent: N14ClothingHeadHatBaseHelmetWithHair # \Prototypes\_Nuclear14\Entities\Clothing\Head\helmets.yml
   id: N14ClothingHeadHatNCRHelmet
   name: NCR helmet
   description: A rounded NCR helmet offering some protection. This one is covered on classic desert camo.

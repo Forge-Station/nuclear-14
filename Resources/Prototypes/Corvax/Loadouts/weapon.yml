@@ -1,0 +1,370 @@
+# Pistols
+- type: loadout
+  id: N14WeaponRevolver10mm
+  category: Weapons
+  cost: 1
+  requirements:
+    - !type:OverallTimeRequirement
+      min: 600
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutGuns
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14WeaponRevolver10mm
+
+- type: loadout
+  id: N14WeaponRevolver44Tribal
+  category: Weapons
+  cost: 2
+  requirements:
+    - !type:OverallTimeRequirement
+      min: 1200
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutGuns
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14WeaponRevolver44Tribal
+
+#Shotgun
+- type: loadout
+  id: N14WeaponShotgunCaravan
+  category: Weapons
+  cost: 3
+  requirements:
+    - !type:OverallTimeRequirement
+      min: 3600
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutGuns
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14WeaponShotgunCaravan
+
+# SMG
+- type: loadout
+  id: N14WeaponSMG10mmPipe
+  category: Weapons
+  cost: 3
+  requirements:
+    - !type:OverallTimeRequirement
+      min: 7200
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutGuns
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14WeaponSMG10mmPipe
+
+#Rifle
+- type: loadout
+  id: N14WeaponSniper556VarmintRifle
+  category: Weapons
+  cost: 4
+  requirements:
+    - !type:OverallTimeRequirement
+      min: 4800
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutGuns
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14WeaponSniper556VarmintRifle
+
+#Laser
+- type: loadout
+  id: N14WeaponLaserPistol
+  category: Weapons
+  cost: 4
+  requirements:
+    - !type:OverallTimeRequirement
+      min: 12800
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutGuns
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14WeaponLaserPistol
+
+- type: loadout
+  id: N14WeaponLaserRifleMakeshift
+  category: Weapons
+  cost: 8
+  requirements:
+    - !type:OverallTimeRequirement
+      min: 16800
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutGuns
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14WeaponLaserRifleMakeshift
+
+#Ammo
+- type: loadout
+  id: N14MagazinePistol22lr
+  category: Weapons
+  cost: 1
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutAmmo
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14MagazinePistol22lr
+    - N14MagazinePistol22lr
+    - N14MagazinePistol22lr
+    - N14MagazinePistol22lr
+
+- type: loadout
+  id: SpeedLoader10
+  category: Weapons
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutAmmo
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - SpeedLoader10
+    - SpeedLoader10
+    - SpeedLoader10
+    - SpeedLoader10
+
+- type: loadout
+  id: SpeedLoader44
+  category: Weapons
+  cost: 3
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutAmmo
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      departments:
+        - Wastelander
+        - Townsfolk
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - SpeedLoader44
+    - SpeedLoader44
+
+- type: loadout
+  id: N14MagazinePistol10mm
+  category: Weapons
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutAmmo
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14MagazinePistol10mm
+    - N14MagazinePistol10mm
+
+- type: loadout
+  id: MagazineBox12gauge
+  category: Weapons
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutAmmo
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - MagazineBox12gauge
+
+- type: loadout
+  id: MagazineBox20gauge
+  category: Weapons
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutAmmo
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - MagazineBox20gauge
+
+- type: loadout
+  id: N14MagazinePistol9mm
+  category: Weapons
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutAmmo
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14MagazinePistol9mm
+    - N14MagazinePistol9mm
+
+- type: loadout
+  id: N14MagazineSMG10mm
+  category: Weapons
+  cost: 4
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutAmmo
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14MagazineSMG10mm
+    - N14MagazineSMG10mm
+
+- type: loadout
+  id: Magazine556Rifle
+  category: Weapons
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutAmmo
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      departments:
+        - Wastelander
+        - Townsfolk
+  items:
+    - Magazine556Rifle
+
+- type: loadout
+  id: N14PowerCellSmall
+  category: Weapons
+  cost: 3
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutAmmo
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      departments:
+        - Wastelander
+        - Townsfolk
+  items:
+    - N14PowerCellSmall
+    - N14PowerCellSmall

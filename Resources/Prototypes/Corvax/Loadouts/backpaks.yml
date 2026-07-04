@@ -1,7 +1,7 @@
 - type: loadout
   id: N14ClothingBackpackTrekker
   category: Backpacks
-  cost: 2
+  cost: 0
   exclusive: true
   customName: false
   customDescription: false
@@ -20,7 +20,7 @@
 - type: loadout
   id: N14ClothingBackpackHiking
   category: Backpacks
-  cost: 2
+  cost: 0
   exclusive: true
   customName: false
   customDescription: false
@@ -39,7 +39,7 @@
 - type: loadout
   id: N14ClothingBackpackExplorer
   category: Backpacks
-  cost: 2
+  cost: 0
   exclusive: true
   customName: false
   customDescription: false
@@ -58,7 +58,7 @@
 - type: loadout
   id: N14ClothingBackpackMilitary
   category: Backpacks
-  cost: 2
+  cost: 0
   exclusive: true
   customName: false
   customDescription: false
@@ -77,7 +77,7 @@
 - type: loadout
   id: N14ClothingBackpackTribal
   category: Backpacks
-  cost: 2
+  cost: 0
   exclusive: true
   customName: false
   customDescription: false
@@ -96,7 +96,7 @@
 - type: loadout
   id: N14ClothingBackpackVaultBlueDark
   category: Backpacks
-  cost: 2
+  cost: 0
   exclusive: true
   customName: false
   customDescription: false
@@ -114,7 +114,7 @@
 - type: loadout
   id: N14ClothingBackpackVaultOrange
   category: Backpacks
-  cost: 2
+  cost: 0
   exclusive: true
   customName: false
   customDescription: false
@@ -132,7 +132,7 @@
 - type: loadout
   id: N14ClothingBackpackVaultGreen
   category: Backpacks
-  cost: 2
+  cost: 0
   exclusive: true
   customName: false
   customDescription: false
@@ -150,7 +150,7 @@
 - type: loadout
   id: N14ClothingBackpackVaultGreenDark
   category: Backpacks
-  cost: 2
+  cost: 0
   exclusive: true
   customName: false
   customDescription: false
@@ -168,7 +168,7 @@
 - type: loadout
   id: N14ClothingBackpackVaultPurple
   category: Backpacks
-  cost: 2
+  cost: 0
   exclusive: true
   customName: false
   customDescription: false
@@ -186,7 +186,7 @@
 - type: loadout
   id: N14ClothingBackpackVaultRed
   category: Backpacks
-  cost: 2
+  cost: 0
   exclusive: true
   customName: false
   customDescription: false

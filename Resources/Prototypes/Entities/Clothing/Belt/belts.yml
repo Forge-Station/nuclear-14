@@ -32,6 +32,7 @@
         - JawsOfLife
         - GPS
         - WeldingMask
+        - N14ClothingEyesGlassesWelding #Forge-add
       components:
         - SprayPainter
         - NetworkConfigurator
@@ -268,7 +269,9 @@
         - PillCanister
         - Radio
         - DiscreteHealthAnalyzer
-        - N14Bandage # Corvax-Change
+        - N14Bandage # Forge-start-Change
+        - N14HealingPowder
+        - N14HealingPoultice # Forge-end-Change
       components:
         - SurgeryTool # Shitmed Change
         - Hypospray
