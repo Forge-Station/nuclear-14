@@ -49,23 +49,3 @@
   icon: { sprite: /Textures/_Nuclear14/Objects/Misc/materials.rsi, state: silver }
   color: "#C0C0C0"
   price: 0.05 # Forge-Change
-
-# Forge-add-start
-- type: material
-  id: N14RawAluminum
-  stackEntity: N14AluminumOre
-  name: materials-raw-N14aluminum
-  unit: materials-unit-chunk
-  icon: { sprite: /Textures/_Corvax/Objects/Materials/ore.rsi, state: aluminium }
-  color: "#D1D5DB"
-  price: 0.05
-
-- type: material
-  id: N14RawBrass
-  stackEntity: N14BrassOre
-  name: materials-raw-N14brass
-  unit: materials-unit-chunk
-  icon: { sprite: /Textures/_Corvax/Objects/Materials/ore.rsi, state: brass }
-  color: "#B5A642"
-  price: 0.05
-# Forge-add-end

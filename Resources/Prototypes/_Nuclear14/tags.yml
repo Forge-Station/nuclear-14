@@ -429,12 +429,3 @@
 
 - type: Tag
   id: Yaoguai
-
-# Forge-Add-Start
-#MARK: Ore
-- type: Tag
-  id: N14AluminumOre
-
-- type: Tag
-  id: N14BrassOre
-# Forge-Add-End

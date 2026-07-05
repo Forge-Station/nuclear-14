@@ -1,0 +1,14 @@
+- type: stack
+  id: N14RawAluminum
+  name: raw aluminum
+  icon: { sprite: "/Textures/_Corvax/Objects/Materials/ore.rsi", state: aluminum }
+  spawn: N14AluminumOre1  
+  maxCount: 30
+  itemSize: 1
+
+- type: stack
+  id: N14RawBrass
+  name: raw brass
+  icon: { sprite: "/Textures/_Corvax/Objects/Materials/ore.rsi", state: brass }
+  spawn: N14BrassOre1  
+  itemSize: 1
