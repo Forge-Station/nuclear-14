@@ -9,7 +9,7 @@
 - type: stack
   id: WoodPlank
   name: wood plank
-  icon: { sprite: /Textures/Objects/Materials/materials.rsi, state: wood }
+  icon: { sprite: /Textures/_Corvax/Objects/Materials/materials.rsi, state: wood } #Forge-change
   spawn: MaterialWoodPlank1
   maxCount: 30
   itemSize: 1

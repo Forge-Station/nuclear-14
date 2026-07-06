@@ -1,3 +1,9 @@
-# тег оптического сенсора (замена вспышке в графе N14JunktronCyborg).
 - type: Tag
   id: N14OpticalSensor
+
+#MARK: Ore
+- type: Tag
+  id: N14AluminumOre
+
+- type: Tag
+  id: N14BrassOre

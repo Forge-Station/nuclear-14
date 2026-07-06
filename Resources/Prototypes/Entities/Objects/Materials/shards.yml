@@ -9,7 +9,7 @@
     doAfterDuration: 4.0
   - type: Sprite
     layers:
-      - sprite: Objects/Materials/Shards/shard.rsi
+      - sprite: /Textures/_Corvax/Objects/Materials/Shards/shard.rsi #Forge-change
         state: shard1
         map: [ "enum.DamageStateVisualLayers.Base" ]
   - type: RandomSprite
@@ -18,13 +18,13 @@
           shard1: ""
           shard2: ""
           shard3: ""
-  - type: MeleeWeapon
-    attackRate: 1
-    damage:
-      types:
-        Slash: 3.5
+  # - type: MeleeWeapon #Forge-change
+  #   attackRate: 1
+  #   damage:
+  #     types:
+  #       Slash: 3.5
   - type: Item
-    sprite: Objects/Materials/Shards/shard.rsi
+    sprite: /Textures/_Corvax/Objects/Materials/Shards/shard.rsi #Forge-change
     size: Tiny
   - type: CollisionWake
     enabled: false

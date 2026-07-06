@@ -274,6 +274,24 @@
   - N14ClothingOuterNCRVestDesertCoat
 
 - type: loadout
+  id: LoadoutClothingOuterNCRVestDesertCoatSnow
+  customName: false
+  customDescription: false
+  category: Outer
+  cost: 0
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - NCRSoldier
+    - NCREngineer
+    - NCRMedic
+    - NCRWS
+  items:
+  - N14ClothingOuterNCRVestDesertCoatSnow
+
+- type: loadout
   id: LoadoutClothingOuterNCRVestpaddedWebKilt
   customName: false
   customDescription: false
@@ -293,6 +311,27 @@
     min: 36000 # 10 hours veterancy unlock
   items:
   - N14ClothingOuterNCRVestpaddedWebKilt
+
+- type: loadout
+  id: LoadoutClothingOuterNCRVestpaddedWebKiltSnow
+  customName: false
+  customDescription: false
+  category: Outer
+  cost: 4
+  exclusive: true
+  sponsorLevel: 2
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - NCRSoldier
+    - NCREngineer
+    - NCRMedic
+    - NCRWS
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCRSoldier
+    min: 36000 # 10 hours veterancy unlock
+  items:
+  - N14ClothingOuterNCRVestpaddedWebKiltSnow
 
 - type: loadout
   id: LoadoutClothingOuterNCRVeteranArmorKilt
@@ -316,6 +355,27 @@
   - N14ClothingOuterNCRVeteranArmorKilt
 
 - type: loadout
+  id: LoadoutClothingOuterNCRVeteranArmorKiltSnow
+  customName: false
+  customDescription: false
+  category: Outer
+  cost: 5
+  exclusive: true
+  sponsorLevel: 2
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - NCRSoldier
+    - NCREngineer
+    - NCRMedic
+    - NCRWS
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCRSoldier
+    min: 72000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingOuterNCRVeteranArmorKiltSnow
+
+- type: loadout
   id: LoadoutClothingOuterNCRCombatVeteranKiltArmor
   customName: false
   customDescription: false
@@ -332,6 +392,24 @@
     min: 72000 # 20 hours veterancy unlock
   items:
   - N14ClothingOuterNCRCombatVeteranKiltArmor
+
+- type: loadout
+  id: LoadoutClothingOuterNCRCombatVeteranKiltArmorSnow
+  customName: false
+  customDescription: false
+  category: Outer
+  cost: 6
+  exclusive: true
+  sponsorLevel: 2
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - NCRSGT
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCRNCO
+    min: 72000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingOuterNCRCombatVeteranKiltArmorSnow
 
 - type: loadout
   id: LoadoutClothingOuterJacketCowboyOld

@@ -250,6 +250,16 @@
   - type: Wires
     layoutId: HighSec
 
+- type: entity
+  parent: N14DoorWoodSecureWESTBOS
+  id: N14DoorWoodSecureLockedWest
+  suffix: BoSWest, Locked
+  components:
+  - type: AccessReader
+    access: [ [ "BoSWest" ] ]
+  - type: Wires
+    layoutId: AirlockSecurity
+
 #MARK: BoS Midwest 3X
 - type: entity
   parent: N14DoorBunker3X
@@ -374,3 +384,15 @@
   - type: Sprite
     sprite: _Nuclear14/Structures/Doors/FalloutDoors/wooddoor.rsi
     state: closed
+
+#MARK: Caesar legion
+
+- type: entity
+  parent: N14DoorWoodSecureLegio
+  id: N14HeavyDoorWoodSecureLockedLegion
+  suffix: Legion, Locked
+  components:
+  - type: AccessReader
+    access: [ [ "CaesarLegion" ] ]
+  - type: Wires
+    layoutId: AirlockSecurity

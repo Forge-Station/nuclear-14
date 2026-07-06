@@ -162,7 +162,7 @@
 
 - type: loadout
   id: LoadoutConquerorCenturioArmor
-  category: Roles
+  category: Outer
   cost: 2
   exclusive: true
   requirements:
@@ -540,7 +540,7 @@
 
 - type: loadout
   id: ClothingOuterToga
-  category: Outer
+  category: Roles
   cost: 1
   exclusive: true
   requirements:
@@ -553,3 +553,33 @@
       min: 36000
   items:
     - ClothingOuterToga
+
+- type: loadout
+  id: LoadoutCinderCenturioArmor
+  category: Outer
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionCenturion
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionCenturion
+      min: 144000
+  items:
+    - N14ClothingOuterCinderCenturionArmor
+
+- type: loadout
+  id: LoadoutCinderCenturioHelmet
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionCenturion
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionCenturion
+      min: 144000
+  items:
+    - N14ClothingHeadHatCenturionCinderHelmet
