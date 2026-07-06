@@ -35,6 +35,7 @@
   availableJobs:
   - BoSMidScribe
   - BoSWashingtonScribe
+  - BoSWestScribe
   # requiredIntelligence: 7 #TODO: Enable it after fixing the SPECIAL system
   craftTime: 10
   items:

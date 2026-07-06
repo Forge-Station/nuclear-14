@@ -70,6 +70,9 @@
     price: 230
   - proto: N14WeaponSMG10mmSuppressed
     price: 300
+  - proto: N14WeaponSMGNAil
+    price: 300
+    count: 1
   - proto: N14WeaponSMG10mmChinese
     price: 330
   - proto: N14WeaponSMG12mmAdvancedChinese
@@ -78,9 +81,6 @@
   - proto: N14WeaponSMG12mmAdvanced
     price: 350
     count: 2
-  - proto: N14WeaponSMGNAil
-    price: 400
-    count: 1
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Shotguns
@@ -906,6 +906,8 @@
     price: 30
   - proto: N14ClothingOuterLightMetalArmor
     price: 30
+  - proto: N14ClothingOuterTireArmor
+    price: 30
   - proto: N14ClothingOuterLeatherArmor
     price: 36
   - proto: N14ClothingOuterPressArmor
@@ -920,6 +922,8 @@
     price: 36
   - proto: N14ClothingOuterVaultSecVest
     price: 39
+  - proto: N14ClothingOuterHeavySteelArmor
+    price: 100
   - proto: N14ClothingOuterVestChinese
     price: 110
   - proto: N14ClothingOuterCombatPainspike

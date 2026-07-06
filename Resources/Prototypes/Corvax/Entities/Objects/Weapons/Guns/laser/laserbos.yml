@@ -45,7 +45,7 @@
     speed: 0.3
 
 - type: entity
-  name: yk42b pulse rifle 
+  name: yk42b pulse rifle
   parent: [ N14BaseWeaponPowerCellMedium, ForgeGunConditionProfileLaser ]
   id: N14WeaponLaserRifleYk42b
   description: The YK42B is a pulse weapon developed by the Yuma Flats Consortium. It is considered to be more advanced compared to the YK32 pistol, having greater range and energy capacity.
