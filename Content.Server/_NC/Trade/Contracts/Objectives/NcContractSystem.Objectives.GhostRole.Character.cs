@@ -123,6 +123,7 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         Dirty(mob, perks);
+        _contractGhostRoleMovement.RefreshMovementSpeedModifiers(mob);
     }
 
     private static void AddUnique(List<string> target, IEnumerable<string> source)

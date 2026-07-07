@@ -279,6 +279,8 @@
     price: 20
   - proto: N14WastelandTribalJavelin
     price: 20
+  - proto: N14PoliceBaton
+    price: 40
   - proto: N14BaseAxe
     price: 50
   - proto: N14ChineseSword
@@ -461,6 +463,8 @@
     price: 5
   - proto: DrinkCognacBottleFull
     price: 5
+  - proto: N14DrinkWine
+    price: 5
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Fishing
@@ -483,6 +487,10 @@
     price: 5
   - proto: N14JunkAbraxoCleaner
     price: 15
+  - proto: Handcuffs
+    price: 20
+  - proto: N14MedkitFilled
+    price: 80
   - proto: RadioHandheld
     price: 75
 
@@ -1080,6 +1088,8 @@
   - proto: DrinkGinBottleFull
     price: 3
   - proto: DrinkCognacBottleFull
+    price: 3
+  - proto: N14DrinkWine
     price: 3
 
 - type: storeCategoryStructured

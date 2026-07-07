@@ -82,7 +82,7 @@
       color: "#2F211C"
 
 - type: entity
-  parent: BoxBase
+  parent: N14BoxPlastic
   id: NcGhostRoleSurvivalBox
   name: "коробка выживания"
   description: "Небольшой аварийный набор для контрактной роли."
@@ -101,226 +101,6 @@
     - id: DrinkWaterBottleFull
     - id: N14CateyeCanisterFilled
 
-- type: entity
-  parent: BoxBase
-  id: NcGhostRoleEscapedWorkerAmmoBox
-  name: "коробка боеприпасов"
-  description: "Компактный набор коробок патронов для контрактной роли."
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Item
-    size: Normal
-    shape:
-    - 0,0,1,1
-  - type: Storage
-    maxItemSize: Normal
-    grid:
-    - 0,0,5,3
-  - type: StorageFill
-    contents:
-    - id: MagazineBox9mm
-    - id: MagazineBox44
-    - id: SpeedLoader44
-    - id: SpeedLoader44
-
-- type: entity
-  parent: NcGhostRoleEscapedWorkerAmmoBox
-  id: NcGhostRoleElizabethEvilAmmoBox
-  categories: [ HideSpawnMenu ]
-
-- type: entity
-  parent: BoxBase
-  id: NcGhostRoleBelkaAmmoBox
-  name: "коробка боеприпасов"
-  description: "Компактный набор коробок патронов для контрактной роли."
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Item
-    size: Normal
-    shape:
-    - 0,0,1,1
-  - type: Storage
-    maxItemSize: Normal
-    grid:
-    - 0,0,5,3
-  - type: StorageFill
-    contents:
-    - id: MagazineBox12gauge
-    - id: MagazineBox12gauge
-    - id: MagazineBox44
-    - id: SpeedLoader44
-    - id: SpeedLoader44
-
-- type: entity
-  parent: BoxBase
-  id: NcGhostRoleNCRDeserterAmmoBox
-  name: "коробка боеприпасов"
-  description: "Компактный набор коробок патронов для контрактной роли."
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Item
-    size: Normal
-    shape:
-    - 0,0,1,1
-  - type: Storage
-    maxItemSize: Normal
-    grid:
-    - 0,0,5,3
-  - type: StorageFill
-    contents:
-    - id: MagazineBox556
-    - id: MagazineBox44
-    - id: SpeedLoader44
-    - id: SpeedLoader44
-
-- type: entity
-  parent: BoxBase
-  id: NcGhostRoleZoyaDarbyAmmoBox
-  name: "коробка боеприпасов"
-  description: "Компактный набор коробок патронов для контрактной роли."
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Item
-    size: Normal
-    shape:
-    - 0,0,1,1
-  - type: Storage
-    maxItemSize: Normal
-    grid:
-    - 0,0,5,3
-  - type: StorageFill
-    contents:
-    - id: MagazineBox10mm
-    - id: MagazineBox44
-    - id: SpeedLoader44
-    - id: SpeedLoader44
-
-- type: entity
-  parent: NcGhostRoleZoyaDarbyAmmoBox
-  id: NcGhostRoleFreshAmmoBox
-  categories: [ HideSpawnMenu ]
-
-- type: entity
-  parent: BoxBase
-  id: NcGhostRoleRaiderAmmoBox
-  name: "коробка боеприпасов"
-  description: "Компактный набор коробок патронов для контрактной роли."
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Item
-    size: Normal
-    shape:
-    - 0,0,1,1
-  - type: Storage
-    maxItemSize: Normal
-    grid:
-    - 0,0,5,3
-  - type: StorageFill
-    contents:
-    - id: MagazineBox45
-    - id: MagazineBox44
-    - id: SpeedLoader44
-    - id: SpeedLoader44
-
-- type: entity
-  parent: ClothingBeltMilitary
-  id: NcGhostRoleEscapedWorkerAmmoBelt
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: StorageFill
-    contents:
-    - id: N14MagazineSMG9mm
-    - id: N14MagazineSMG9mm
-    - id: N14MagazineSMG9mm
-    - id: N14MagazineSMG9mm
-    - id: N14MagazineSMG9mm
-    - id: SpeedLoader44
-    - id: SpeedLoader44
-
-- type: entity
-  parent: ClothingBeltMilitary
-  id: NcGhostRoleElizabethEvilAmmoBelt
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: StorageFill
-    contents:
-    - id: SpeedLoader9
-    - id: SpeedLoader9
-    - id: SpeedLoader9
-    - id: SpeedLoader9
-    - id: SpeedLoader9
-    - id: SpeedLoader9
-    - id: SpeedLoader44
-    - id: SpeedLoader44
-
-- type: entity
-  parent: ClothingBeltMilitary
-  id: NcGhostRoleBelkaAmmoBelt
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: StorageFill
-    contents:
-    - id: MagazineBox12gauge
-    - id: MagazineBox12gauge
-    - id: SpeedLoader44
-    - id: SpeedLoader44
-
-- type: entity
-  parent: ClothingBeltNCR
-  id: NcGhostRoleNCRDeserterAmmoBelt
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: StorageFill
-    contents:
-    - id: Magazine556Rifle
-    - id: Magazine556Rifle
-    - id: Magazine556Rifle
-    - id: Magazine556Rifle
-    - id: SpeedLoader44
-    - id: SpeedLoader44
-
-- type: entity
-  parent: ClothingBeltMilitary
-  id: NcGhostRoleZoyaDarbyAmmoBelt
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: StorageFill
-    contents:
-    - id: N14MagazineSMG10mm
-    - id: N14MagazineSMG10mm
-    - id: N14MagazineSMG10mm
-    - id: N14MagazineSMG10mm
-    - id: N14MagazineSMG10mm
-    - id: SpeedLoader44
-    - id: SpeedLoader44
-
-- type: entity
-  parent: ClothingBeltMilitary
-  id: NcGhostRoleFreshAmmoBelt
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: StorageFill
-    contents:
-    - id: N14MagazinePistol10mm
-    - id: N14MagazinePistol10mm
-    - id: N14MagazinePistol10mm
-    - id: N14MagazinePistol10mm
-    - id: N14MagazinePistol10mm
-    - id: SpeedLoader44
-    - id: SpeedLoader44
-
-- type: entity
-  parent: ClothingBeltMilitary
-  id: NcGhostRoleRaiderAmmoBelt
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: StorageFill
-    contents:
-    - id: Magazine45SubMachineGun
-    - id: Magazine45SubMachineGun
-    - id: SpeedLoader44
-    - id: SpeedLoader44
-
 - type: startingGear
   id: NcGhostRoleRaiderGear
   equipment:
@@ -330,14 +110,22 @@
     shoes: N14ClothingShoesRaider
     neck: ClothingNeckBlackScarf
     head: N14ClothingHeadHatBeanie
-    back: N14ClothingBackpackMilitary
+    back: N14ClothingBackpackSatchelTrekker
     suitstorage: N14WeaponSMG45
-    belt: NcGhostRoleRaiderAmmoBelt
+    belt: ClothingBeltCowboy
     pocket1: N14WeaponRevolver44TribalUpgradedExtra
   storage:
+    belt:
+    - Magazine45SubMachineGun
+    - Magazine45SubMachineGun
+    - SpeedLoader44
+    - SpeedLoader44
     back:
     - N14BoxPlasticFilledWastelander
-    - NcGhostRoleRaiderAmmoBox
+    - MagazineBox45
+    - MagazineBox44
+    - SpeedLoader44
+    - SpeedLoader44
     - N14FoodCannedFish
     - NcGhostRoleSurvivalBox
     - N14Flare
@@ -401,11 +189,19 @@
   equipment:
     jumpsuit: ClothingUniformDressRed
     shoes: ClothingShoesColorBlack
-    back: ClothingBackpackSatchel
-    belt: NcGhostRoleEscapedWorkerAmmoBelt
+    back: N14ClothingBackpackSatchelTrekker
+    belt: ClothingBeltCowboy
     suitstorage: N14WeaponSMG9mm
     pocket1: N14WeaponRevolver44TribalUpgradedExtra
   storage:
+    belt:
+    - N14MagazineSMG9mm
+    - N14MagazineSMG9mm
+    - N14MagazineSMG9mm
+    - N14MagazineSMG9mm
+    - N14MagazineSMG9mm
+    - SpeedLoader44
+    - SpeedLoader44
     back:
     - N14Stimpak
     - N14Stimpak
@@ -413,7 +209,10 @@
     - N14FoodCannedFish
     - DrinkWaterBottleFull
     - N14BoxPlasticFilledWastelander
-    - NcGhostRoleEscapedWorkerAmmoBox
+    - MagazineBox9mm
+    - MagazineBox44
+    - SpeedLoader44
+    - SpeedLoader44
     - NcGhostRoleSurvivalBox
     - N14Flare
     - N14Flare
@@ -500,11 +299,20 @@
   equipment:
     jumpsuit: ClothingUniformDressRed
     shoes: ClothingShoesColorBlack
-    back: ClothingBackpackSatchel
-    belt: NcGhostRoleElizabethEvilAmmoBelt
+    back: N14ClothingBackpackSatchelTrekker
+    belt: ClothingBeltCowboy
     suitstorage: N14WeaponRevolver9mm
     pocket1: N14WeaponRevolver44TribalUpgradedExtra
   storage:
+    belt:
+    - SpeedLoader9
+    - SpeedLoader9
+    - SpeedLoader9
+    - SpeedLoader9
+    - SpeedLoader9
+    - SpeedLoader9
+    - SpeedLoader44
+    - SpeedLoader44
     back:
     - N14Stimpak
     - N14Stimpak
@@ -512,7 +320,10 @@
     - N14FoodCannedFish
     - DrinkWaterBottleFull
     - N14BoxPlasticFilledWastelander
-    - NcGhostRoleElizabethEvilAmmoBox
+    - MagazineBox9mm
+    - MagazineBox44
+    - SpeedLoader44
+    - SpeedLoader44
     - NcGhostRoleSurvivalBox
     - N14Flare
     - N14Flare
@@ -586,11 +397,18 @@
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitRags
     shoes: N14ClothingShoesRaider
-    back: ClothingBackpackSatchel
-    belt: NcGhostRoleBelkaAmmoBelt
-    suitstorage: N14WeaponShotgun
+    back: N14ClothingBackpackSatchelTrekker
+    belt: ClothingBeltCowboy
+    suitstorage: N14WeaponShotgunAuto
     pocket1: N14WeaponRevolver44TribalUpgradedExtra
   storage:
+    belt:
+    - N14MagazineShotgun12
+    - N14MagazineShotgun12
+    - N14MagazineShotgun12
+    - N14MagazineShotgun12
+    - SpeedLoader44
+    - SpeedLoader44
     back:
     - N14Stimpak
     - N14Stimpak
@@ -598,7 +416,11 @@
     - N14FoodCannedFish
     - DrinkWaterBottleFull
     - N14BoxPlasticFilledWastelander
-    - NcGhostRoleBelkaAmmoBox
+    - MagazineBox12gauge
+    - MagazineBox12gauge
+    - MagazineBox44
+    - SpeedLoader44
+    - SpeedLoader44
     - NcGhostRoleSurvivalBox
     - N14Flare
     - N14Flare
@@ -636,6 +458,7 @@
       Airloss: -0.5
   weaponPrototypes:
   - N14WeaponShotgun
+  - N14WeaponShotgunAuto
   - N14WeaponShotgunDoubleBarrel
   - N14WeaponShotgunSawedOff
   - N14WeaponPistol9mm
@@ -673,25 +496,35 @@
 - type: startingGear
   id: NcGhostRoleNCRDeserterGear
   equipment:
-    back: N14ClothingBackpackNCR
+    back: N14ClothingBackpackSatchelTrekker
     gloves: N14ClothingHandsGlovesCombat
     jumpsuit: N14ClothingOfficerUniformNCRDesert
     shoes: N14ClothingBootsCombatFilled
     neck: N14ClothingNeckMantleNCR
-    belt: NcGhostRoleNCRDeserterAmmoBelt
+    belt: ClothingBeltCowboy
     outerClothing: N14ClothingOuterNCRCombatArmor
     suitstorage: N14WeaponRifle556Service
     pocket1: NCRSGTloadoutkits
     pocket2: N14WeaponRevolver44TribalUpgradedExtra
   storage:
+    belt:
+    - Magazine556Rifle
+    - Magazine556Rifle
+    - Magazine556Rifle
+    - Magazine556Rifle
+    - SpeedLoader44
+    - SpeedLoader44
     back:
-    - N14BoxPlasticFilledMilitaryNCR
+    - N14BoxPlasticFilledWastelander
     - N14Stimpak
     - N14Stimpak
     - N14FoodTinC3
     - N14FoodCannedFish
     - DrinkWaterBottleFull
-    - NcGhostRoleNCRDeserterAmmoBox
+    - MagazineBox556
+    - MagazineBox44
+    - SpeedLoader44
+    - SpeedLoader44
     - NcGhostRoleSurvivalBox
     - N14Flare
     - N14Flare
@@ -771,13 +604,21 @@
     jumpsuit: N14ClothingUniformJumpskirtDressBlack
     shoes: N14ClothingBootsCombatMK2
     gloves: N14ClothingHandsGlovesCombat
-    back: ClothingBackpackDuffel
-    belt: NcGhostRoleZoyaDarbyAmmoBelt
+    back: N14ClothingBackpackSatchelTrekker
+    belt: ClothingBeltCowboy
     outerClothing: N14ClothingOuterCombatPainspike
     head: N14ClothingHeadHatCombatHelmet
-    suitstorage: N14WeaponSMG10mmChinese
+    suitstorage: N14WeaponSMG12mmAdvancedChinese
     pocket1: N14WeaponRevolver44TribalUpgradedExtra
   storage:
+    belt:
+    - N14TopMagazineSMG12mm
+    - N14TopMagazineSMG12mm
+    - N14TopMagazineSMG12mm
+    - N14TopMagazineSMG12mm
+    - N14TopMagazineSMG12mm
+    - SpeedLoader44
+    - SpeedLoader44
     back:
     - N14Stimpak
     - N14Stimpak
@@ -786,7 +627,10 @@
     - N14FoodCannedFish
     - DrinkWaterBottleFull
     - N14BoxPlasticFilledWastelander
-    - NcGhostRoleZoyaDarbyAmmoBox
+    - MagazineBox12
+    - MagazineBox44
+    - SpeedLoader44
+    - SpeedLoader44
     - NcGhostRoleSurvivalBox
     - N14Flare
     - N14Flare
@@ -824,6 +668,7 @@
       Airloss: -0.5
   weaponPrototypes:
   - N14WeaponSMG10mmChinese
+  - N14WeaponSMG12mmAdvancedChinese
   - N14WeaponPistol9mm
   - N14WeaponPistol10mm
   - N14WeaponPistol10mmPipe
@@ -865,18 +710,29 @@
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitRags
     shoes: N14ClothingShoesRaider
-    back: ClothingBackpackSatchel
-    belt: NcGhostRoleFreshAmmoBelt
-    suitstorage: N14WeaponPistol10mmPipe
+    back: N14ClothingBackpackSatchelTrekker
+    belt: ClothingBeltCowboy
+    suitstorage: N14WeaponPistol12mm
     pocket1: N14WeaponRevolver44TribalUpgradedExtra
   storage:
+    belt:
+    - N14MagazinePistol12mm
+    - N14MagazinePistol12mm
+    - N14MagazinePistol12mm
+    - N14MagazinePistol12mm
+    - N14MagazinePistol12mm
+    - SpeedLoader44
+    - SpeedLoader44
     back:
     - N14StimpakDirty
     - N14FoodTinKCracker
     - N14FoodCannedFish
     - DrinkWaterBottleFull
     - N14BoxPlasticFilledWastelander
-    - NcGhostRoleFreshAmmoBox
+    - MagazineBox12
+    - MagazineBox44
+    - SpeedLoader44
+    - SpeedLoader44
     - NcGhostRoleSurvivalBox
     - N14Flare
     - N14Flare
@@ -929,7 +785,7 @@
   id: NcGhostRoleFresh
   entityPrototype: NcGhostRoleMobFresh
   name: "Фреш"
-  description: "Вы сорвавшийся наркоман с самодельным пистолетом. Охотники получат награду только если принесут ваше тело торговцу."
+  description: "Вы сорвавшийся наркоман с тяжёлым пистолетом. Охотники получат награду только если принесут ваше тело торговцу."
   rules: nc-contract-ghost-role-wanted-rules
   character:
     name: "Фреш"
