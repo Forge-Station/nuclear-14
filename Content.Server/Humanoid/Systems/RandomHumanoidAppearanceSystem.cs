@@ -29,9 +29,7 @@ public sealed class RandomHumanoidAppearanceSystem : EntitySystem
         if (component.Sex is { } sex)
         {
             profile = profile.WithSex(sex);
-
-            if (SharedHumanoidAppearanceSystem.DefaultSexVoice.TryGetValue(sex, out var voice))
-                profile = profile.WithVoice(voice);
+            profile = profile.WithVoice(HumanoidCharacterProfile.RandomVoiceForSex(sex));
         }
 
         if (component.Gender is { } gender)

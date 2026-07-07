@@ -19,12 +19,23 @@ public sealed partial class NcContractSystem : EntitySystem
         if (state.PinpointerEntities.Count == 0)
             return;
 
+        var hasContract = TryGetObjectiveContract(key, out _, out var contract);
         foreach (var pinpointer in state.PinpointerEntities)
         {
             if (TerminatingOrDeleted(pinpointer))
                 continue;
 
-            _pinpointer.SetTarget(pinpointer, target);
+            var pinpointerTarget = target;
+            if (hasContract &&
+                TryGetPinpointerCarrier(pinpointer, out var carrier) &&
+                TryResolveContractPinpointerTarget(key.Store, carrier, key.ContractId, contract, state, out var carrierTarget) &&
+                carrierTarget != EntityUid.Invalid &&
+                !TerminatingOrDeleted(carrierTarget))
+            {
+                pinpointerTarget = carrierTarget;
+            }
+
+            _pinpointer.SetTarget(pinpointer, pinpointerTarget);
             _pinpointer.SetActive(pinpointer, true);
         }
     }
@@ -52,8 +63,8 @@ public sealed partial class NcContractSystem : EntitySystem
             if (TerminatingOrDeleted(pinpointer))
                 continue;
 
-            if (!_pinpointerService.TryGetOwner(_objectiveRuntime, pinpointer, out var pinpointerOwner) ||
-                pinpointerOwner != owner)
+            if (!TryGetPinpointerCarrier(pinpointer, out var carrier) ||
+                carrier != owner)
                 continue;
 
             _pinpointer.SetTarget(pinpointer, target);
@@ -62,6 +73,33 @@ public sealed partial class NcContractSystem : EntitySystem
         }
 
         return retargeted;
+    }
+
+    private bool RetargetObjectivePinpointerToCurrentCarrier(
+        (EntityUid Store, string ContractId) key,
+        ContractServerData contract,
+        ObjectiveRuntimeState state,
+        EntityUid pinpointer
+    )
+    {
+        if (TerminatingOrDeleted(pinpointer))
+            return false;
+
+        EntityUid target;
+        if (TryGetPinpointerCarrier(pinpointer, out var carrier))
+        {
+            if (!TryResolveContractPinpointerTarget(key.Store, carrier, key.ContractId, contract, state, out target))
+                return false;
+        }
+        else if (!TryResolveContractPinpointerTarget(key.Store, key.ContractId, contract, state, out target))
+            return false;
+
+        if (target == EntityUid.Invalid || TerminatingOrDeleted(target))
+            return false;
+
+        _pinpointer.SetTarget(pinpointer, target);
+        _pinpointer.SetActive(pinpointer, true);
+        return true;
     }
 
     private void RetargetRetrievalPulledCargoPinpointersForUser(EntityUid pulled, EntityUid user)
@@ -138,9 +176,8 @@ public sealed partial class NcContractSystem : EntitySystem
         foreach (var pinpointer in state.PinpointerEntities)
         {
             if (TerminatingOrDeleted(pinpointer) ||
-                !_pinpointerService.TryGetOwner(_objectiveRuntime, pinpointer, out var owner) ||
-                owner == EntityUid.Invalid ||
-                !IsRetrievalCargoControlledByUser(cargo, owner))
+                !TryGetPinpointerCarrier(pinpointer, out var carrier) ||
+                !IsRetrievalCargoControlledByUser(cargo, carrier))
                 continue;
 
             _pinpointer.SetTarget(pinpointer, target);
@@ -171,25 +208,7 @@ public sealed partial class NcContractSystem : EntitySystem
         for (var i = 0; i < _pinpointerService.ObjectivePinpointersScratch.Count; i++)
         {
             var pinpointer = _pinpointerService.ObjectivePinpointersScratch[i];
-            if (TerminatingOrDeleted(pinpointer))
-                continue;
-
-            EntityUid target;
-            if (_pinpointerService.TryGetOwner(_objectiveRuntime, pinpointer, out var owner) &&
-                owner != EntityUid.Invalid &&
-                !TerminatingOrDeleted(owner))
-            {
-                if (!TryResolveContractPinpointerTarget(key.Store, owner, key.ContractId, contract, state, out target))
-                    continue;
-            }
-            else if (!TryResolveContractPinpointerTarget(key.Store, key.ContractId, contract, state, out target))
-                continue;
-
-            if (target == EntityUid.Invalid || TerminatingOrDeleted(target))
-                continue;
-
-            _pinpointer.SetTarget(pinpointer, target);
-            _pinpointer.SetActive(pinpointer, true);
+            RetargetObjectivePinpointerToCurrentCarrier(key, contract, state, pinpointer);
         }
 
         _pinpointerService.ObjectivePinpointersScratch.Clear();

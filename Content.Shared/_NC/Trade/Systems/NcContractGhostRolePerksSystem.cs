@@ -2,10 +2,13 @@ using System.Linq;
 using Content.Shared.Damage;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Inventory;
+using Content.Shared.Mobs;
+using Content.Shared.Mobs.Components;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Projectiles;
 using Content.Shared.Weapons.Melee;
 using Content.Shared.Weapons.Melee.Events;
+using Robust.Shared.Timing;
 
 
 namespace Content.Shared._NC.Trade;
@@ -13,9 +16,11 @@ namespace Content.Shared._NC.Trade;
 
 public sealed class NcContractGhostRolePerksSystem : EntitySystem
 {
+    [Dependency] private readonly DamageableSystem _damageable = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     [Dependency] private readonly InventorySystem _inventory = default!;
     [Dependency] private readonly MovementSpeedModifierSystem _movement = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
 
     public override void Initialize()
     {
@@ -27,6 +32,24 @@ public sealed class NcContractGhostRolePerksSystem : EntitySystem
         SubscribeLocalEvent<NcContractGhostRolePerksComponent, DamageModifyEvent>(OnIncomingDamage);
         SubscribeLocalEvent<MeleeWeaponComponent, MeleeHitEvent>(OnMeleeHit);
         SubscribeLocalEvent<ProjectileComponent, ProjectileHitEvent>(OnProjectileHit);
+    }
+
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+
+        var curTime = _timing.CurTime;
+        var query = EntityQueryEnumerator<NcContractGhostRolePerksComponent, DamageableComponent, MobStateComponent>();
+        while (query.MoveNext(out var uid, out var perks, out var damage, out var mobState))
+        {
+            if (perks.PassiveHealing.Empty ||
+                perks.NextPassiveHealing > curTime ||
+                mobState.CurrentState is not (MobState.Alive or MobState.Critical))
+                continue;
+
+            perks.NextPassiveHealing = curTime + TimeSpan.FromSeconds(Math.Max(0.1f, perks.PassiveHealingInterval));
+            _damageable.TryChangeDamage(uid, perks.PassiveHealing, true, false, damage);
+        }
     }
 
     private void OnStartup(Entity<NcContractGhostRolePerksComponent> ent, ref ComponentStartup args) =>

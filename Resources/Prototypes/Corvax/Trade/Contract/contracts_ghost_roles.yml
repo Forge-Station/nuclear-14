@@ -75,22 +75,326 @@
       color: "#FFEACC"
     - sprite: _Nuclear14/Clothing/Uniforms/FalloutSkirts/blackdress.rsi
       state: equipped-INNERCLOTHING
-    - sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatmk2.rsi
+    - sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatpainspike.rsi
       state: equipped-OUTERCLOTHING
     - sprite: _Nuclear14/Mobs/Customization/human_hair.rsi
       state: hair_longest
       color: "#2F211C"
 
+- type: entity
+  parent: BoxBase
+  id: NcGhostRoleSurvivalBox
+  name: "коробка выживания"
+  description: "Небольшой аварийный набор для контрактной роли."
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Storage
+    maxItemSize: Normal
+    grid:
+    - 0,0,4,3
+  - type: StorageFill
+    contents:
+    - id: N14StimpakDirty
+    - id: Brutepack
+    - id: Ointment
+    - id: N14FoodTinKCracker
+    - id: DrinkWaterBottleFull
+    - id: N14CateyeCanisterFilled
+
+- type: entity
+  parent: BoxBase
+  id: NcGhostRoleEscapedWorkerAmmoBox
+  name: "коробка боеприпасов"
+  description: "Компактный набор коробок патронов для контрактной роли."
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Item
+    size: Normal
+    shape:
+    - 0,0,1,1
+  - type: Storage
+    maxItemSize: Normal
+    grid:
+    - 0,0,5,3
+  - type: StorageFill
+    contents:
+    - id: MagazineBox9mm
+    - id: MagazineBox44
+    - id: SpeedLoader44
+    - id: SpeedLoader44
+
+- type: entity
+  parent: NcGhostRoleEscapedWorkerAmmoBox
+  id: NcGhostRoleElizabethEvilAmmoBox
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: BoxBase
+  id: NcGhostRoleBelkaAmmoBox
+  name: "коробка боеприпасов"
+  description: "Компактный набор коробок патронов для контрактной роли."
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Item
+    size: Normal
+    shape:
+    - 0,0,1,1
+  - type: Storage
+    maxItemSize: Normal
+    grid:
+    - 0,0,5,3
+  - type: StorageFill
+    contents:
+    - id: MagazineBox12gauge
+    - id: MagazineBox12gauge
+    - id: MagazineBox44
+    - id: SpeedLoader44
+    - id: SpeedLoader44
+
+- type: entity
+  parent: BoxBase
+  id: NcGhostRoleNCRDeserterAmmoBox
+  name: "коробка боеприпасов"
+  description: "Компактный набор коробок патронов для контрактной роли."
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Item
+    size: Normal
+    shape:
+    - 0,0,1,1
+  - type: Storage
+    maxItemSize: Normal
+    grid:
+    - 0,0,5,3
+  - type: StorageFill
+    contents:
+    - id: MagazineBox556
+    - id: MagazineBox44
+    - id: SpeedLoader44
+    - id: SpeedLoader44
+
+- type: entity
+  parent: BoxBase
+  id: NcGhostRoleZoyaDarbyAmmoBox
+  name: "коробка боеприпасов"
+  description: "Компактный набор коробок патронов для контрактной роли."
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Item
+    size: Normal
+    shape:
+    - 0,0,1,1
+  - type: Storage
+    maxItemSize: Normal
+    grid:
+    - 0,0,5,3
+  - type: StorageFill
+    contents:
+    - id: MagazineBox10mm
+    - id: MagazineBox44
+    - id: SpeedLoader44
+    - id: SpeedLoader44
+
+- type: entity
+  parent: NcGhostRoleZoyaDarbyAmmoBox
+  id: NcGhostRoleFreshAmmoBox
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: BoxBase
+  id: NcGhostRoleRaiderAmmoBox
+  name: "коробка боеприпасов"
+  description: "Компактный набор коробок патронов для контрактной роли."
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Item
+    size: Normal
+    shape:
+    - 0,0,1,1
+  - type: Storage
+    maxItemSize: Normal
+    grid:
+    - 0,0,5,3
+  - type: StorageFill
+    contents:
+    - id: MagazineBox45
+    - id: MagazineBox44
+    - id: SpeedLoader44
+    - id: SpeedLoader44
+
+- type: entity
+  parent: ClothingBeltMilitary
+  id: NcGhostRoleEscapedWorkerAmmoBelt
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StorageFill
+    contents:
+    - id: N14MagazineSMG9mm
+    - id: N14MagazineSMG9mm
+    - id: N14MagazineSMG9mm
+    - id: N14MagazineSMG9mm
+    - id: N14MagazineSMG9mm
+    - id: SpeedLoader44
+    - id: SpeedLoader44
+
+- type: entity
+  parent: ClothingBeltMilitary
+  id: NcGhostRoleElizabethEvilAmmoBelt
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StorageFill
+    contents:
+    - id: SpeedLoader9
+    - id: SpeedLoader9
+    - id: SpeedLoader9
+    - id: SpeedLoader9
+    - id: SpeedLoader9
+    - id: SpeedLoader9
+    - id: SpeedLoader44
+    - id: SpeedLoader44
+
+- type: entity
+  parent: ClothingBeltMilitary
+  id: NcGhostRoleBelkaAmmoBelt
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StorageFill
+    contents:
+    - id: MagazineBox12gauge
+    - id: MagazineBox12gauge
+    - id: SpeedLoader44
+    - id: SpeedLoader44
+
+- type: entity
+  parent: ClothingBeltNCR
+  id: NcGhostRoleNCRDeserterAmmoBelt
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StorageFill
+    contents:
+    - id: Magazine556Rifle
+    - id: Magazine556Rifle
+    - id: Magazine556Rifle
+    - id: Magazine556Rifle
+    - id: SpeedLoader44
+    - id: SpeedLoader44
+
+- type: entity
+  parent: ClothingBeltMilitary
+  id: NcGhostRoleZoyaDarbyAmmoBelt
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StorageFill
+    contents:
+    - id: N14MagazineSMG10mm
+    - id: N14MagazineSMG10mm
+    - id: N14MagazineSMG10mm
+    - id: N14MagazineSMG10mm
+    - id: N14MagazineSMG10mm
+    - id: SpeedLoader44
+    - id: SpeedLoader44
+
+- type: entity
+  parent: ClothingBeltMilitary
+  id: NcGhostRoleFreshAmmoBelt
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StorageFill
+    contents:
+    - id: N14MagazinePistol10mm
+    - id: N14MagazinePistol10mm
+    - id: N14MagazinePistol10mm
+    - id: N14MagazinePistol10mm
+    - id: N14MagazinePistol10mm
+    - id: SpeedLoader44
+    - id: SpeedLoader44
+
+- type: entity
+  parent: ClothingBeltMilitary
+  id: NcGhostRoleRaiderAmmoBelt
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StorageFill
+    contents:
+    - id: Magazine45SubMachineGun
+    - id: Magazine45SubMachineGun
+    - id: SpeedLoader44
+    - id: SpeedLoader44
+
+- type: startingGear
+  id: NcGhostRoleRaiderGear
+  equipment:
+    bandage: NCClothingBandageRaiders
+    jumpsuit: N14ClothingUniformJumpsuitBrahminFarmer
+    outerClothing: N14ClothingOuterRaiderBlastmaster
+    shoes: N14ClothingShoesRaider
+    neck: ClothingNeckBlackScarf
+    head: N14ClothingHeadHatBeanie
+    back: N14ClothingBackpackMilitary
+    suitstorage: N14WeaponSMG45
+    belt: NcGhostRoleRaiderAmmoBelt
+    pocket1: N14WeaponRevolver44TribalUpgradedExtra
+  storage:
+    back:
+    - N14BoxPlasticFilledWastelander
+    - NcGhostRoleRaiderAmmoBox
+    - N14FoodCannedFish
+    - NcGhostRoleSurvivalBox
+    - N14Flare
+    - N14Flare
+
+- type: entity
+  parent: MobHuman
+  id: NcGhostRoleMobRaider
+  name: Raider
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: true
+  - type: Loadout
+    prototypes: [NcGhostRoleRaiderGear]
+  - type: NpcFactionMember
+    factions:
+    - Raider
+
+- type: ncGhostRolePerk
+  id: NcGhostRolePerkRaider
+  name: "Рейдерский рывок"
+  description: "Рейдер быстрее уходит от погони и опаснее стреляет из автоматов, пистолетов и револьверов."
+  sprintSpeedMultiplier: 1.30
+  projectileDamageMultiplier: 1.45
+  passiveHealing:
+    groups:
+      Brute: -0.5
+      Burn: -0.5
+      Toxin: -0.5
+      Airloss: -0.5
+  weaponPrototypes:
+  - N14WeaponSMG45
+  - N14WeaponPistol9mm
+  - N14WeaponPistol10mm
+  - N14WeaponPistol10mmPipe
+  - N14WeaponPistol9mmChinese
+  - N14WeaponPistol45Colt
+  - N14WeaponPistol12mm
+  - N14WeaponRevolver9mm
+  - N14WeaponRevolver10mm
+  - N14WeaponRevolver44Magnun
+  - N14WeaponRevolver44Tribal
+  - N14WeaponRevolver44TribalUpgraded
+  - N14WeaponRevolver44TribalUpgradedExtra
+  - N14WeaponRevolverWebley
 
 - type: ncGhostRolePreset
   id: NcGhostRoleRaider
-  entityPrototype: N14MobHumanRaider
+  entityPrototype: NcGhostRoleMobRaider
   name: nc-contract-ghost-role-raider-name
   description: nc-contract-ghost-role-raider-description
   rules: nc-contract-ghost-role-wanted-rules
   requirements:
   - !type:CharacterOverallTimeRequirement
     min: 36000 # 10 hours
+  perks:
+  - NcGhostRolePerkRaider
 
 - type: startingGear
   id: NcGhostRoleEscapedWorkerGear
@@ -98,18 +402,21 @@
     jumpsuit: ClothingUniformDressRed
     shoes: ClothingShoesColorBlack
     back: ClothingBackpackSatchel
+    belt: NcGhostRoleEscapedWorkerAmmoBelt
     suitstorage: N14WeaponSMG9mm
+    pocket1: N14WeaponRevolver44TribalUpgradedExtra
   storage:
     back:
-    - N14MagazineSMG9mm
-    - N14MagazineSMG9mm
-    - N14MagazineSMG9mm
-    - N14MagazineSMG9mm
-    - N14MagazineSMG9mm
     - N14Stimpak
     - N14Stimpak
     - N14FoodCannedFish
+    - N14FoodCannedFish
     - DrinkWaterBottleFull
+    - N14BoxPlasticFilledWastelander
+    - NcGhostRoleEscapedWorkerAmmoBox
+    - NcGhostRoleSurvivalBox
+    - N14Flare
+    - N14Flare
 
 - type: entity
   parent: MobHuman
@@ -135,7 +442,13 @@
   name: "Панический рывок"
   description: "Беглянка быстрее срывается в бег и опаснее стреляет из пистолетов-пулеметов."
   sprintSpeedMultiplier: 1.30
-  projectileDamageMultiplier: 1.30
+  projectileDamageMultiplier: 1.45
+  passiveHealing:
+    groups:
+      Brute: -0.5
+      Burn: -0.5
+      Toxin: -0.5
+      Airloss: -0.5
   weaponPrototypes:
   - N14WeaponSMG9mm
   - N14WeaponSMG9mminfiltrator
@@ -150,6 +463,19 @@
   - N14WeaponSMG12mmAdvancedChinese
   - N14WeaponSMG12mmAdvancedCanadian
   - N14WeaponSMG45
+  - N14WeaponPistol9mm
+  - N14WeaponPistol10mm
+  - N14WeaponPistol10mmPipe
+  - N14WeaponPistol9mmChinese
+  - N14WeaponPistol45Colt
+  - N14WeaponPistol12mm
+  - N14WeaponRevolver9mm
+  - N14WeaponRevolver10mm
+  - N14WeaponRevolver44Magnun
+  - N14WeaponRevolver44Tribal
+  - N14WeaponRevolver44TribalUpgraded
+  - N14WeaponRevolver44TribalUpgradedExtra
+  - N14WeaponRevolverWebley
 
 - type: ncGhostRolePreset
   id: NcGhostRoleEscapedWorker
@@ -175,19 +501,21 @@
     jumpsuit: ClothingUniformDressRed
     shoes: ClothingShoesColorBlack
     back: ClothingBackpackSatchel
+    belt: NcGhostRoleElizabethEvilAmmoBelt
     suitstorage: N14WeaponRevolver9mm
+    pocket1: N14WeaponRevolver44TribalUpgradedExtra
   storage:
     back:
-    - SpeedLoader9
-    - SpeedLoader9
-    - SpeedLoader9
-    - SpeedLoader9
-    - SpeedLoader9
-    - SpeedLoader9
     - N14Stimpak
     - N14Stimpak
     - N14FoodCannedFish
+    - N14FoodCannedFish
     - DrinkWaterBottleFull
+    - N14BoxPlasticFilledWastelander
+    - NcGhostRoleElizabethEvilAmmoBox
+    - NcGhostRoleSurvivalBox
+    - N14Flare
+    - N14Flare
 
 - type: entity
   parent: MobHuman
@@ -213,12 +541,27 @@
   name: "Бешеный побег"
   description: "Элизабет быстрее уходит от погони и опаснее стреляет из револьверов."
   sprintSpeedMultiplier: 1.30
-  projectileDamageMultiplier: 1.35
+  projectileDamageMultiplier: 1.50
+  passiveHealing:
+    groups:
+      Brute: -0.5
+      Burn: -0.5
+      Toxin: -0.5
+      Airloss: -0.5
   weaponPrototypes:
   - N14WeaponRevolver9mm
   - N14WeaponRevolver10mm
   - N14WeaponRevolver44Magnun
+  - N14WeaponRevolver44Tribal
+  - N14WeaponRevolver44TribalUpgraded
+  - N14WeaponRevolver44TribalUpgradedExtra
   - N14WeaponRevolverWebley
+  - N14WeaponPistol9mm
+  - N14WeaponPistol10mm
+  - N14WeaponPistol10mmPipe
+  - N14WeaponPistol9mmChinese
+  - N14WeaponPistol45Colt
+  - N14WeaponPistol12mm
 
 - type: ncGhostRolePreset
   id: NcGhostRoleElizabethEvil
@@ -244,22 +587,21 @@
     jumpsuit: N14ClothingUniformJumpsuitRags
     shoes: N14ClothingShoesRaider
     back: ClothingBackpackSatchel
+    belt: NcGhostRoleBelkaAmmoBelt
     suitstorage: N14WeaponShotgun
+    pocket1: N14WeaponRevolver44TribalUpgradedExtra
   storage:
     back:
-    - N14ShellShotgun12
-    - N14ShellShotgun12
-    - N14ShellShotgun12
-    - N14ShellShotgun12
-    - N14ShellShotgun12
-    - N14ShellShotgun12
-    - N14ShellShotgun12
-    - N14ShellShotgun12
-    - MagazineBox12gauge
     - N14Stimpak
     - N14Stimpak
     - N14FoodTinK
+    - N14FoodCannedFish
     - DrinkWaterBottleFull
+    - N14BoxPlasticFilledWastelander
+    - NcGhostRoleBelkaAmmoBox
+    - NcGhostRoleSurvivalBox
+    - N14Flare
+    - N14Flare
 
 - type: entity
   parent: MobHuman
@@ -285,11 +627,30 @@
   name: "Рывок из неволи"
   description: "Белка быстрее срывается с места и опаснее стреляет из дробовиков."
   sprintSpeedMultiplier: 1.30
-  projectileDamageMultiplier: 1.30
+  projectileDamageMultiplier: 1.45
+  passiveHealing:
+    groups:
+      Brute: -0.5
+      Burn: -0.5
+      Toxin: -0.5
+      Airloss: -0.5
   weaponPrototypes:
   - N14WeaponShotgun
   - N14WeaponShotgunDoubleBarrel
   - N14WeaponShotgunSawedOff
+  - N14WeaponPistol9mm
+  - N14WeaponPistol10mm
+  - N14WeaponPistol10mmPipe
+  - N14WeaponPistol9mmChinese
+  - N14WeaponPistol45Colt
+  - N14WeaponPistol12mm
+  - N14WeaponRevolver9mm
+  - N14WeaponRevolver10mm
+  - N14WeaponRevolver44Magnun
+  - N14WeaponRevolver44Tribal
+  - N14WeaponRevolver44TribalUpgraded
+  - N14WeaponRevolver44TribalUpgradedExtra
+  - N14WeaponRevolverWebley
 
 - type: ncGhostRolePreset
   id: NcGhostRoleBelka
@@ -317,21 +678,23 @@
     jumpsuit: N14ClothingOfficerUniformNCRDesert
     shoes: N14ClothingBootsCombatFilled
     neck: N14ClothingNeckMantleNCR
-    belt: ClothingBeltNCR
+    belt: NcGhostRoleNCRDeserterAmmoBelt
     outerClothing: N14ClothingOuterNCRCombatArmor
     suitstorage: N14WeaponRifle556Service
     pocket1: NCRSGTloadoutkits
+    pocket2: N14WeaponRevolver44TribalUpgradedExtra
   storage:
     back:
-    - Magazine556Rifle
-    - Magazine556Rifle
-    - Magazine556Rifle
-    - Magazine556Rifle
     - N14BoxPlasticFilledMilitaryNCR
     - N14Stimpak
     - N14Stimpak
     - N14FoodTinC3
+    - N14FoodCannedFish
     - DrinkWaterBottleFull
+    - NcGhostRoleNCRDeserterAmmoBox
+    - NcGhostRoleSurvivalBox
+    - N14Flare
+    - N14Flare
 
 - type: entity
   parent: MobHuman
@@ -354,7 +717,14 @@
   id: NcGhostRolePerkNCRDeserter
   name: "Сержантская выучка"
   description: "Дезертир лучше держит строй под огнем и наносит больше урона из служебных винтовок."
-  projectileDamageMultiplier: 1.40
+  sprintSpeedMultiplier: 1.30
+  projectileDamageMultiplier: 1.50
+  passiveHealing:
+    groups:
+      Brute: -0.5
+      Burn: -0.5
+      Toxin: -0.5
+      Airloss: -0.5
   weaponPrototypes:
   - N14WeaponRifle556Service
   - N14WeaponRifle556ServiceScoped
@@ -363,6 +733,19 @@
   - N14WeaponRifle556R91
   - N14WeaponRifle762M14
   - N14WeaponRifle762Marksman
+  - N14WeaponPistol9mm
+  - N14WeaponPistol10mm
+  - N14WeaponPistol10mmPipe
+  - N14WeaponPistol9mmChinese
+  - N14WeaponPistol45Colt
+  - N14WeaponPistol12mm
+  - N14WeaponRevolver9mm
+  - N14WeaponRevolver10mm
+  - N14WeaponRevolver44Magnun
+  - N14WeaponRevolver44Tribal
+  - N14WeaponRevolver44TribalUpgraded
+  - N14WeaponRevolver44TribalUpgradedExtra
+  - N14WeaponRevolverWebley
   incomingFlatReductions:
     Slash: 5
     Piercing: 5
@@ -389,21 +772,24 @@
     shoes: N14ClothingBootsCombatMK2
     gloves: N14ClothingHandsGlovesCombat
     back: ClothingBackpackDuffel
-    outerClothing: N14ClothingOuterCombatArmorMK2
-    head: N14ClothingHeadHatCombatHelmetMK2
-    suitstorage: N14WeaponRifleBozarGRA
+    belt: NcGhostRoleZoyaDarbyAmmoBelt
+    outerClothing: N14ClothingOuterCombatPainspike
+    head: N14ClothingHeadHatCombatHelmet
+    suitstorage: N14WeaponSMG10mmChinese
+    pocket1: N14WeaponRevolver44TribalUpgradedExtra
   storage:
     back:
-    - Magazine556Rifle30
-    - Magazine556Rifle30
-    - Magazine556Rifle30
-    - Magazine556Rifle30
-    - Magazine556Rifle30
     - N14Stimpak
     - N14Stimpak
     - N14Stimpak
     - N14FoodCannedFish
+    - N14FoodCannedFish
     - DrinkWaterBottleFull
+    - N14BoxPlasticFilledWastelander
+    - NcGhostRoleZoyaDarbyAmmoBox
+    - NcGhostRoleSurvivalBox
+    - N14Flare
+    - N14Flare
 
 - type: entity
   parent: MobHuman
@@ -427,11 +813,30 @@
 - type: ncGhostRolePerk
   id: NcGhostRolePerkZoyaDarby
   name: "Наёмница-легенда"
-  description: "Зоя быстрее обычного человека, крепче держит удар и особенно опасна с Bozar."
+  description: "Зоя быстрее обычного человека, крепче держит удар и особенно опасна с китайским ПП."
   sprintSpeedMultiplier: 1.30
-  projectileDamageMultiplier: 1.35
+  projectileDamageMultiplier: 1.50
+  passiveHealing:
+    groups:
+      Brute: -0.5
+      Burn: -0.5
+      Toxin: -0.5
+      Airloss: -0.5
   weaponPrototypes:
-  - N14WeaponRifleBozarGRA
+  - N14WeaponSMG10mmChinese
+  - N14WeaponPistol9mm
+  - N14WeaponPistol10mm
+  - N14WeaponPistol10mmPipe
+  - N14WeaponPistol9mmChinese
+  - N14WeaponPistol45Colt
+  - N14WeaponPistol12mm
+  - N14WeaponRevolver9mm
+  - N14WeaponRevolver10mm
+  - N14WeaponRevolver44Magnun
+  - N14WeaponRevolver44Tribal
+  - N14WeaponRevolver44TribalUpgraded
+  - N14WeaponRevolver44TribalUpgradedExtra
+  - N14WeaponRevolverWebley
   incomingFlatReductions:
     Slash: 5
     Piercing: 5
@@ -442,7 +847,7 @@
   entityPrototype: NcGhostRoleMobZoyaDarby
   icon: NcGhostRoleIconZoyaDarby
   name: "Зоя Дарби"
-  description: "Вы Зоя Дарби, опасная наёмница в боевой броне MK2 с Bozar. За вами охотятся, но заказчик требует взять вас живой."
+  description: "Вы Зоя Дарби, опасная наёмница в шипованной броне с китайским ПП. За вами охотятся, но заказчик требует взять вас живой."
   rules: nc-contract-ghost-role-wanted-rules
   character:
     name: "Зоя Дарби"
@@ -461,17 +866,20 @@
     jumpsuit: N14ClothingUniformJumpsuitRags
     shoes: N14ClothingShoesRaider
     back: ClothingBackpackSatchel
+    belt: NcGhostRoleFreshAmmoBelt
     suitstorage: N14WeaponPistol10mmPipe
+    pocket1: N14WeaponRevolver44TribalUpgradedExtra
   storage:
     back:
-    - N14MagazinePistol10mm
-    - N14MagazinePistol10mm
-    - N14MagazinePistol10mm
-    - N14MagazinePistol10mm
-    - N14MagazinePistol10mm
     - N14StimpakDirty
     - N14FoodTinKCracker
+    - N14FoodCannedFish
     - DrinkWaterBottleFull
+    - N14BoxPlasticFilledWastelander
+    - NcGhostRoleFreshAmmoBox
+    - NcGhostRoleSurvivalBox
+    - N14Flare
+    - N14Flare
 
 - type: entity
   parent: MobHuman
@@ -495,12 +903,27 @@
   name: "Ломка и адреналин"
   description: "Фреш быстрее убегает и опаснее стреляет из пистолетов."
   sprintSpeedMultiplier: 1.30
-  projectileDamageMultiplier: 1.30
+  projectileDamageMultiplier: 1.45
+  passiveHealing:
+    groups:
+      Brute: -0.5
+      Burn: -0.5
+      Toxin: -0.5
+      Airloss: -0.5
   weaponPrototypes:
   - N14WeaponPistol10mmPipe
   - N14WeaponPistol10mm
   - N14WeaponPistol9mm
+  - N14WeaponPistol9mmChinese
+  - N14WeaponPistol45Colt
+  - N14WeaponPistol12mm
   - N14WeaponRevolver9mm
+  - N14WeaponRevolver10mm
+  - N14WeaponRevolver44Magnun
+  - N14WeaponRevolver44Tribal
+  - N14WeaponRevolver44TribalUpgraded
+  - N14WeaponRevolver44TribalUpgradedExtra
+  - N14WeaponRevolverWebley
 
 - type: ncGhostRolePreset
   id: NcGhostRoleFresh

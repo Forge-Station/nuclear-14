@@ -99,4 +99,19 @@ public sealed partial class NcContractSystem : EntitySystem
 
         return root != EntityUid.Invalid;
     }
+
+    private bool TryGetPinpointerCarrier(EntityUid pinpointer, out EntityUid carrier)
+    {
+        carrier = EntityUid.Invalid;
+        if (pinpointer == EntityUid.Invalid || TerminatingOrDeleted(pinpointer))
+            return false;
+
+        if (!TryGetContainedEntityRoot(pinpointer, out var root) ||
+            root == EntityUid.Invalid ||
+            TerminatingOrDeleted(root))
+            return false;
+
+        carrier = root;
+        return true;
+    }
 }

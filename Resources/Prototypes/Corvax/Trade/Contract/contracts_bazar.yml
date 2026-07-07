@@ -686,7 +686,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 100, max: 150 }
+    count: { min: 75, max: 113 }
   - type: Pool
     pool: caravan_medium
     count: { min: 1, max: 3 }
@@ -704,7 +704,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 100, max: 120 }
+    count: { min: 75, max: 90 }
   - type: Pool
     pool: caravan_medium
     count: { min: 1, max: 3 }
@@ -720,7 +720,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 120, max: 180 }
+    count: { min: 90, max: 135 }
   - type: Pool
     pool: caravan_medium
     count: { min: 1, max: 3 }
@@ -736,7 +736,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 100, max: 200 }
+    count: { min: 75, max: 150 }
   - type: Pool
     pool: caravan_medium
     count: { min: 1, max: 3 }
@@ -752,7 +752,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 120, max: 190 }
+    count: { min: 90, max: 143 }
   - type: Pool
     pool: caravan_medium
     count: { min: 1, max: 3 }
@@ -768,7 +768,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 100, max: 150 }
+    count: { min: 75, max: 113 }
   - type: Pool
     pool: caravan_medium
     count: { min: 1, max: 3 }
@@ -788,7 +788,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 260, max: 420 }
+    count: { min: 195, max: 315 }
   - type: Pool
     pool: caravan_hard
     count: { min: 1, max: 3 }
@@ -1219,7 +1219,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 120, max: 180 }
+    count: { min: 90, max: 135 }
   - type: Pool
     pool: caravan_medium
     count: { min: 1, max: 3 }
@@ -1236,7 +1236,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 180, max: 260 }
+    count: { min: 135, max: 195 }
   - type: Pool
     pool: caravan_medium
     count: { min: 1, max: 3 }
@@ -1253,7 +1253,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 170, max: 250 }
+    count: { min: 128, max: 188 }
   - type: Pool
     pool: caravan_medium
     count: { min: 1, max: 3 }
@@ -1270,7 +1270,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 150, max: 230 }
+    count: { min: 113, max: 173 }
   - type: Pool
     pool: caravan_medium
     count: { min: 1, max: 3 }
@@ -1287,7 +1287,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 170, max: 260 }
+    count: { min: 128, max: 195 }
   - type: Pool
     pool: caravan_medium
     count: { min: 1, max: 3 }
@@ -1645,7 +1645,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 500, max: 750 }
+    count: { min: 375, max: 563 }
   - type: Pool
     pool: caravan_hard
     count: { min: 1, max: 3 }
@@ -1662,7 +1662,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 520, max: 780 }
+    count: { min: 390, max: 585 }
   - type: Pool
     pool: caravan_hard
     count: { min: 1, max: 3 }
@@ -1679,7 +1679,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 560, max: 820 }
+    count: { min: 420, max: 615 }
   - type: Pool
     pool: caravan_hard
     count: { min: 1, max: 3 }
@@ -1696,7 +1696,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 420, max: 650 }
+    count: { min: 315, max: 488 }
   - type: Pool
     pool: caravan_hard
     count: { min: 1, max: 3 }
@@ -1713,7 +1713,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 700, max: 1000 }
+    count: { min: 525, max: 750 }
   - type: Pool
     pool: caravan_hard
     count: { min: 1, max: 3 }
@@ -1730,7 +1730,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 760, max: 1100 }
+    count: { min: 570, max: 825 }
   - type: Pool
     pool: caravan_hard
     count: { min: 1, max: 3 }
@@ -1747,7 +1747,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 780, max: 1150 }
+    count: { min: 585, max: 863 }
   - type: Pool
     pool: caravan_hard
     count: { min: 1, max: 3 }
