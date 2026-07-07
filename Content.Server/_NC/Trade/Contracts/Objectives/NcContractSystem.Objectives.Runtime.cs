@@ -97,6 +97,26 @@ public sealed partial class NcContractSystem : EntitySystem
 
     private void OnObjectiveTrackedEntityParentChanged(ref EntParentChangedMessage args)
     {
+        if (_objectiveRuntime.ByPinpointer.TryGetValue(args.Entity, out var pinpointerKey))
+        {
+            if (_objectiveRuntime.ByContract.TryGetValue(pinpointerKey, out var pinpointerState) &&
+                TryGetObjectiveContract(pinpointerKey, out _, out var pinpointerContract) &&
+                pinpointerContract.Taken &&
+                !pinpointerContract.Runtime.Failed)
+            {
+                RefreshPinpointerRuntimeState(pinpointerKey.Store, pinpointerKey.ContractId, pinpointerContract);
+                if (!pinpointerContract.Runtime.Failed &&
+                    _objectiveRuntime.ByContract.TryGetValue(pinpointerKey, out pinpointerState))
+                    RetargetObjectivePinpointerToCurrentCarrier(
+                        pinpointerKey,
+                        pinpointerContract,
+                        pinpointerState,
+                        args.Entity);
+            }
+
+            return;
+        }
+
         if (_objectiveRuntime.ByProof.TryGetValue(args.Entity, out var key))
         {
             if (_objectiveRuntime.ByContract.TryGetValue(key, out var state) &&

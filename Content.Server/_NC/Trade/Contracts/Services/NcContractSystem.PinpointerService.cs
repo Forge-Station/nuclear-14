@@ -14,13 +14,11 @@ public sealed partial class NcContractSystem
             IContractObjectiveRuntimeStore runtime,
             (EntityUid Store, string ContractId) key,
             ObjectiveRuntimeState state,
-            EntityUid user,
             EntityUid pinpointer
         )
         {
             state.PinpointerEntities.Add(pinpointer);
             runtime.ByPinpointer[pinpointer] = key;
-            runtime.PinpointerOwners[pinpointer] = user;
         }
 
         public void UnregisterIssuedPinpointer(
@@ -30,13 +28,9 @@ public sealed partial class NcContractSystem
         )
         {
             runtime.ByPinpointer.Remove(pinpointer);
-            runtime.PinpointerOwners.Remove(pinpointer);
 
             if (runtime.ByContract.TryGetValue(key, out var state))
                 state.PinpointerEntities.Remove(pinpointer);
         }
-
-        public bool TryGetOwner(IContractObjectiveRuntimeStore runtime, EntityUid pinpointer, out EntityUid owner) =>
-            runtime.PinpointerOwners.TryGetValue(pinpointer, out owner);
     }
 }

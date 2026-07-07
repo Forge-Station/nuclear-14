@@ -93,7 +93,7 @@ public sealed partial class NcContractSystem : EntitySystem
     {
         _pinpointer.SetTarget(pinpointer, target);
         _pinpointer.SetActive(pinpointer, true);
-        _pinpointerService.RegisterIssuedPinpointer(_objectiveRuntime, key, state, user, pinpointer);
+        _pinpointerService.RegisterIssuedPinpointer(_objectiveRuntime, key, state, pinpointer);
         _logic.QueuePickupToHandsOrCrateNextTick(user, pinpointer);
     }
 }

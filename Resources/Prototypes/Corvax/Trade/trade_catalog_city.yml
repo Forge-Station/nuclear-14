@@ -1,5 +1,45 @@
 
 
+- type: ncMatcher
+  id: NcMatcherWeaponRevolver10mm
+  name: "10mm револьвер"
+  description: "Обычный или разряженный 10mm револьвер."
+  items:
+  - N14WeaponRevolver10mm
+  - N14WeaponRevolver10mmEmpty
+
+- type: ncMatcher
+  id: NcMatcherWeaponPistol10mmPipe
+  name: "10mm самодельный пистолет"
+  description: "Обычный или разряженный самодельный 10mm пистолет."
+  items:
+  - N14WeaponPistol10mmPipe
+  - N14WeaponPistol10mmPipeEmpty
+
+- type: ncMatcher
+  id: NcMatcherWeaponSMG10mmPipe
+  name: "10mm самодельный ПП"
+  description: "Обычный или разряженный самодельный 10mm пистолет-пулемет."
+  items:
+  - N14WeaponSMG10mmPipe
+  - N14WeaponSMG10mmPipeEmpty
+
+- type: ncMatcher
+  id: NcMatcherWeaponSMG12mmPipe
+  name: "12.7mm самодельный ПП"
+  description: "Обычный или разряженный самодельный 12.7mm пистолет-пулемет."
+  items:
+  - N14WeaponSMG12mmPipe
+  - N14WeaponSMG12mmPipeEmpty
+
+- type: ncMatcher
+  id: NcMatcherWeaponShotgunSawedOff
+  name: "Обрез"
+  description: "Обычный или разряженный обрез."
+  items:
+  - N14WeaponShotgunSawedOff
+  - N14WeaponShotgunSawedOffEmpty
+
 - type: storeCategoryStructured
   id: CaravanBuy2_Revolvers
   name: "Револьверы"
@@ -279,6 +319,8 @@
     price: 20
   - proto: N14WastelandTribalJavelin
     price: 20
+  - proto: N14PoliceBaton
+    price: 40
   - proto: N14BaseAxe
     price: 50
   - proto: N14ChineseSword
@@ -461,6 +503,8 @@
     price: 5
   - proto: DrinkCognacBottleFull
     price: 5
+  - proto: N14DrinkWine
+    price: 5
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Fishing
@@ -483,6 +527,8 @@
     price: 5
   - proto: N14JunkAbraxoCleaner
     price: 15
+  - proto: Handcuffs
+    price: 20
   - proto: RadioHandheld
     price: 75
 
@@ -575,7 +621,8 @@
   entries:
   - proto: N14WeaponRevolver9mm
     price: 14
-  - proto: N14WeaponRevolver10mm
+  - proto: NcMatcherWeaponRevolver10mm
+    match: Matcher
     price: 17
   - proto: N14WeaponRevolver44Tribal
     price: 28
@@ -600,7 +647,8 @@
   entries:
   - proto: N14WeaponPistol9mm
     price: 10
-  - proto: N14WeaponPistol10mmPipe
+  - proto: NcMatcherWeaponPistol10mmPipe
+    match: Matcher
     price: 8
   - proto: N14WeaponPistol9mmChinese
     price: 10
@@ -625,9 +673,11 @@
   id: CaravanSell2_SMGs
   name: "Пистолеты-пулеметы"
   entries:
-  - proto: N14WeaponSMG10mmPipe
+  - proto: NcMatcherWeaponSMG10mmPipe
+    match: Matcher
     price: 83
-  - proto: N14WeaponSMG12mmPipe
+  - proto: NcMatcherWeaponSMG12mmPipe
+    match: Matcher
     price: 69
   - proto: N14WeaponSMG9mm
     price: 72
@@ -666,7 +716,8 @@
     price: 15
   - proto: N14WeaponShotgunCaravan
     price: 15
-  - proto: N14WeaponShotgunSawedOff
+  - proto: NcMatcherWeaponShotgunSawedOff
+    match: Matcher
     price: 15
   - proto: N14WeaponShotgun
     price: 45
@@ -1080,6 +1131,8 @@
   - proto: DrinkGinBottleFull
     price: 3
   - proto: DrinkCognacBottleFull
+    price: 3
+  - proto: N14DrinkWine
     price: 3
 
 - type: storeCategoryStructured

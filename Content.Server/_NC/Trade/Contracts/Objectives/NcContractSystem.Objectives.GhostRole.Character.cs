@@ -53,6 +53,24 @@ public sealed partial class NcContractSystem : EntitySystem
             dirty = true;
         }
 
+        if (!string.IsNullOrWhiteSpace(config.GhostRoleCharacterFacialHair))
+        {
+            humanoid.MarkingSet.RemoveCategory(MarkingCategories.FacialHair);
+            _contractGhostRoleHumanoid.AddMarking(
+                mob,
+                config.GhostRoleCharacterFacialHair,
+                config.GhostRoleCharacterFacialHairColor,
+                false,
+                true,
+                humanoid);
+            dirty = true;
+        }
+        else if (humanoid.Sex == Sex.Female)
+        {
+            humanoid.MarkingSet.RemoveCategory(MarkingCategories.FacialHair);
+            dirty = true;
+        }
+
         if (dirty)
             Dirty(mob, humanoid);
     }
@@ -69,6 +87,9 @@ public sealed partial class NcContractSystem : EntitySystem
         perks.IncomingDamageMultiplier = 1f;
         perks.MeleeDamageMultiplier = 1f;
         perks.ProjectileDamageMultiplier = 1f;
+        perks.PassiveHealing = new();
+        perks.PassiveHealingInterval = 1f;
+        perks.NextPassiveHealing = TimeSpan.Zero;
         perks.WeaponPrototypes.Clear();
         perks.ArmorItemPrototypes.Clear();
         perks.ArmorIncomingDamageMultiplier = 1f;
@@ -86,12 +107,23 @@ public sealed partial class NcContractSystem : EntitySystem
             perks.MeleeDamageMultiplier *= perk.MeleeDamageMultiplier;
             perks.ProjectileDamageMultiplier *= perk.ProjectileDamageMultiplier;
             perks.ArmorIncomingDamageMultiplier *= perk.ArmorIncomingDamageMultiplier;
+
+            var hasPassiveHealing = !perks.PassiveHealing.Empty;
+            if (!perk.PassiveHealing.Empty)
+            {
+                perks.PassiveHealing += perk.PassiveHealing;
+                perks.PassiveHealingInterval = hasPassiveHealing
+                    ? Math.Min(perks.PassiveHealingInterval, perk.PassiveHealingInterval)
+                    : perk.PassiveHealingInterval;
+            }
+
             AddUnique(perks.WeaponPrototypes, perk.WeaponPrototypes);
             AddUnique(perks.ArmorItemPrototypes, perk.ArmorItemPrototypes);
             AddFlatReductions(perks.IncomingFlatReductions, perk.IncomingFlatReductions);
         }
 
         Dirty(mob, perks);
+        _contractGhostRoleMovement.RefreshMovementSpeedModifiers(mob);
     }
 
     private static void AddUnique(List<string> target, IEnumerable<string> source)

@@ -39,6 +39,8 @@ public sealed partial class NcContractSystem : EntitySystem
             GhostRoleCharacterAge = role.Character.Age,
             GhostRoleCharacterHair = role.Character.Hair,
             GhostRoleCharacterHairColor = role.Character.HairColor,
+            GhostRoleCharacterFacialHair = role.Character.FacialHair,
+            GhostRoleCharacterFacialHairColor = role.Character.FacialHairColor,
             GhostRoleCharacterSkinColor = role.Character.SkinColor,
             GhostRolePerks = role.Perks.Select(p => p.Id).ToList(),
             GhostRoleCompletionMode = proto.Completion.Mode,

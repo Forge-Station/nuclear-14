@@ -30,8 +30,8 @@ public sealed partial class NcContractSystem : EntitySystem
             if (TerminatingOrDeleted(pinpointer))
                 continue;
 
-            if (!_pinpointerService.TryGetOwner(_objectiveRuntime, pinpointer, out var owner) ||
-                !TryResolveGhostRolePinpointerTargetForUser(key.Store, owner, contract, state, out var target) ||
+            if (!TryGetPinpointerCarrier(pinpointer, out var carrier) ||
+                !TryResolveGhostRolePinpointerTargetForUser(key.Store, carrier, contract, state, out var target) ||
                 target == EntityUid.Invalid ||
                 TerminatingOrDeleted(target))
                 continue;
