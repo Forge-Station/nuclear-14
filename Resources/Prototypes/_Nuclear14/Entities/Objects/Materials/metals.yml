@@ -198,6 +198,52 @@
           Quantity: 5
         - ReagentId: Zinc
           Quantity: 5
+  - type: UserInterface
+    interfaces:
+      enum.RadialSelectorUiKey.Key:
+        type: RadialSelectorMenuBUI
+  - type: ActivatableUI
+    key: enum.RadialSelectorUiKey.Key
+    inHandsOnly: true
+    requireActiveHand: false
+  - type: ShortConstruction
+    entries:
+    - category:
+        name: Town doors
+        icon:
+          sprite: Corvax/Structures/Wallmount/flag.rsi
+          state: flag_bazar
+        entries:
+          - prototype: N14DoorWoodSecureLockedPersonTall
+          - prototype: N14DoorCellMetalLockedPersonTall     
+          - prototype: N14DoorMetalSecureLockedPersonTall
+    - category:
+        name: NCR doors
+        icon:
+          sprite: _Nuclear14/Structures/Wallmounts/walldecor.rsi
+          state: flag_ncr
+        entries:
+          - prototype: N14DoorWoodSecureLockedNCRNew
+          - prototype: N14DoorCellMetalLockedNCRNew
+          - prototype: N14DoorMetalSecureLockedNCRNew
+    - category:
+        name: Legion doors
+        icon:
+          sprite: _Nuclear14/Structures/Wallmounts/walldecor.rsi
+          state: flag_legion
+        entries:
+          - prototype: N14DoorWoodSecureLockedLegion
+          - prototype: N14DoorCellMetalLockedLegion
+          - prototype: N14DoorMetalSecureLockedRedLegion
+    - category:
+        name: Key doors
+        icon:
+          sprite: _Nuclear14/Objects/Misc/tapes_cards.rsi
+          state: grey
+        entries:
+          - prototype: N14DoorWoodWhiteTallLoced
+          - prototype: N14DoorCellMetalLoced
+          - prototype: N14DoorMetalRedSlantedLoced              
 
 - type: entity
   parent: N14IngotBrass
