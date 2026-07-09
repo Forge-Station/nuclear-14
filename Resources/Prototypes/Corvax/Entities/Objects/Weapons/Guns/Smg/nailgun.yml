@@ -1,6 +1,6 @@
 - type: entity
   name: Nail SMG
-  parent: N14WeaponSMGBase
+  parent: [ N14WeaponSMGBase, ForgeGunConditionProfileSMG ]
   id: N14WeaponSMGNAil
   description: A pre-war submachine gun with a wooden stock, chambered in .45.
   components:
