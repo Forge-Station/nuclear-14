@@ -21,6 +21,10 @@
     steps: 2
     zeroVisible: false
   - type: Appearance
+  - type: Butcherable # Forge-add
+    spawned:
+    - id: MaterialCardboard1
+      amount: 1
 
 - type: entity
   parent: BaseMagazineBox12

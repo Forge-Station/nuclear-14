@@ -7,7 +7,11 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Misc/storage.rsi
     state: c-ration
-
+  - type: Butcherable # Forge-add
+    spawned:
+    - id: MaterialCardboard1
+      amount: 1
+      
 - type: entity
   name: C ration
   parent: N14BoxCardboardMREBox

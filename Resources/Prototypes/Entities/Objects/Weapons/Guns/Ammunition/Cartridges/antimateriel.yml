@@ -3,6 +3,12 @@
   id: CartridgeAntiMateriel
   name: cartridge (.60 anti-materiel)
   components:
+  - type: Material #Forge-add-start
+  - type: PhysicalComposition
+    materialComposition:
+      Lead: 25
+      Steel: 50
+      N14Gunpowder: 25
   - type: Tag
     tags:
     - Cartridge

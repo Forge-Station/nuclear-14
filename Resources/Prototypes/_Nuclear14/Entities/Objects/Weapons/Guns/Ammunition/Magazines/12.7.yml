@@ -29,6 +29,9 @@
     steps: 5
     zeroVisible: false
   - type: Appearance
+  - type: ToolRefinable #Forge-add
+    refineResult:
+    - id: SheetSteel1
 
 - type: entity
   id: N14MagazinePistol12mm
