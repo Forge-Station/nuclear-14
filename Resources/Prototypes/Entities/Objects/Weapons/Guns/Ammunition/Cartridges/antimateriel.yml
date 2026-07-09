@@ -6,9 +6,9 @@
   - type: Material #Forge-add-start
   - type: PhysicalComposition
     materialComposition:
-      Lead: 25
-      Steel: 50
-      N14Gunpowder: 25
+      Lead: 10
+      Steel: 5
+      N14Gunpowder: 10
   - type: Tag
     tags:
     - Cartridge
