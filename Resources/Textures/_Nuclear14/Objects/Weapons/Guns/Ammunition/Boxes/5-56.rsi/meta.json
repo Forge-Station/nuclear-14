@@ -1,7 +1,7 @@
 {
   "version": 1,
   "license": "CC-BY-NC-SA-3.0",
-  "copyright": "Made by Patogrone for N14",
+  "copyright": "Made by Patogrone for N14, Made by discord londorondondon for Forge",
   "size": {
     "x": 32,
     "y": 32
@@ -11,7 +11,22 @@
       "name": "base"
     },
     {
+      "name": "mag-4"
+    },
+    {
+      "name": "mag-3"
+    },
+    {
+      "name": "mag-2"
+    },
+    {
       "name": "mag-1"
+    },
+    {
+      "name": "inhand-left"
+    },
+    {
+      "name": "inhand-right"
     }
   ]
 }
