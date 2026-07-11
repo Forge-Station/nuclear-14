@@ -1,4 +1,5 @@
 using Content.Shared.Customization.Systems;
+using Content.Shared.Damage;
 using Content.Shared.Humanoid;
 using Robust.Shared.Enums;
 using Robust.Shared.Prototypes;
@@ -63,6 +64,12 @@ public sealed partial class NcGhostRolePerkPrototype : IPrototype
     [DataField("projectileDamageMultiplier")]
     public float ProjectileDamageMultiplier { get; private set; } = 1f;
 
+    [DataField("passiveHealing")]
+    public DamageSpecifier PassiveHealing { get; private set; } = new();
+
+    [DataField("passiveHealingInterval")]
+    public float PassiveHealingInterval { get; private set; } = 1f;
+
     [DataField("weaponPrototypes")]
     public List<string> WeaponPrototypes { get; private set; } = new();
 
@@ -98,6 +105,12 @@ public sealed partial class NcGhostRoleCharacterData
 
     [DataField("hairColor")]
     public Color? HairColor { get; set; }
+
+    [DataField("facialHair")]
+    public string FacialHair { get; set; } = string.Empty;
+
+    [DataField("facialHairColor")]
+    public Color? FacialHairColor { get; set; }
 
     [DataField("skinColor")]
     public Color? SkinColor { get; set; }

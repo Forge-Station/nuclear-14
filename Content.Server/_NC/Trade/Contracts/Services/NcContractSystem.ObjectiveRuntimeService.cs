@@ -18,15 +18,12 @@ public sealed partial class NcContractSystem
         public Dictionary<(EntityUid Store, string ContractId), ObjectiveRuntimeState> ByContract { get; } = new();
         public Dictionary<EntityUid, (EntityUid Store, string ContractId)> ByTarget { get; } = new();
         public List<(EntityUid Store, string ContractId)> KeysScratch { get; } = new();
-        public Dictionary<EntityUid, EntityUid> PinpointerOwners { get; } = new();
-
         public bool IsEmpty => ByContract.Count == 0;
 
         public void ClearSecondaryIndexesAndActiveSets()
         {
             ByTarget.Clear();
             ByPinpointer.Clear();
-            PinpointerOwners.Clear();
             ByGuard.Clear();
             ByProof.Clear();
             ByRetrievalCargo.Clear();

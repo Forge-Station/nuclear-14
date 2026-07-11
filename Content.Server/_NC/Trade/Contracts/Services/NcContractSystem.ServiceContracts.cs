@@ -14,7 +14,6 @@ internal interface IContractObjectiveRuntimeStore
     Dictionary<(EntityUid Store, string ContractId), NcContractSystem.ObjectiveRuntimeState> ByContract { get; }
     Dictionary<EntityUid, (EntityUid Store, string ContractId)> ByTarget { get; }
     List<(EntityUid Store, string ContractId)> KeysScratch { get; }
-    Dictionary<EntityUid, EntityUid> PinpointerOwners { get; }
     bool IsEmpty { get; }
 
     void ClearSecondaryIndexesAndActiveSets();
@@ -29,7 +28,6 @@ internal interface IContractPinpointerRegistry
         IContractObjectiveRuntimeStore runtime,
         (EntityUid Store, string ContractId) key,
         NcContractSystem.ObjectiveRuntimeState state,
-        EntityUid user,
         EntityUid pinpointer
     );
 
@@ -38,6 +36,4 @@ internal interface IContractPinpointerRegistry
         EntityUid pinpointer,
         (EntityUid Store, string ContractId) key
     );
-
-    bool TryGetOwner(IContractObjectiveRuntimeStore runtime, EntityUid pinpointer, out EntityUid owner);
 }

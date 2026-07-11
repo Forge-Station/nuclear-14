@@ -1,5 +1,6 @@
 using Content.Shared._NC.Trade;
 using Content.Shared.Damage.Prototypes;
+using Content.Shared.Humanoid.Markings;
 using Robust.Shared.Prototypes;
 
 
@@ -78,10 +79,34 @@ public sealed partial class NcContractSystem : EntitySystem
             valid = false;
         }
 
+        if (!TryValidateGhostRoleCharacterMarking(contractId, role.ID, "hair", role.Character.Hair))
+            valid = false;
+
+        if (!TryValidateGhostRoleCharacterMarking(contractId, role.ID, "facialHair", role.Character.FacialHair))
+            valid = false;
+
         if (!TryValidateGhostRolePerks(contractId, role))
             valid = false;
 
         return valid;
+    }
+
+    private bool TryValidateGhostRoleCharacterMarking(
+        string contractId,
+        string roleId,
+        string field,
+        string marking
+    )
+    {
+        if (string.IsNullOrWhiteSpace(marking))
+            return true;
+
+        if (_prototypes.HasIndex<MarkingPrototype>(marking))
+            return true;
+
+        Sawmill.Warning(
+            $"[Contracts] GhostRole contract '{contractId}' role preset '{roleId}' references missing character.{field} marking '{marking}'.");
+        return false;
     }
 
     private bool TryValidateGhostRolePerks(string contractId, NcGhostRolePresetPrototype role)
@@ -126,6 +151,20 @@ public sealed partial class NcContractSystem : EntitySystem
         {
             Sawmill.Warning(
                 $"[Contracts] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' multipliers must be > 0.");
+            valid = false;
+        }
+
+        if (!perk.PassiveHealing.Empty && perk.PassiveHealingInterval <= 0f)
+        {
+            Sawmill.Warning(
+                $"[Contracts] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' passiveHealingInterval must be > 0.");
+            valid = false;
+        }
+
+        if (perk.PassiveHealing.AnyPositive())
+        {
+            Sawmill.Warning(
+                $"[Contracts] GhostRole contract '{contractId}' role preset '{roleId}' perk '{perk.ID}' passiveHealing must not contain positive damage.");
             valid = false;
         }
 

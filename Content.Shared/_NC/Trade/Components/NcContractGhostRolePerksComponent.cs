@@ -1,3 +1,4 @@
+using Content.Shared.Damage;
 using Robust.Shared.GameStates;
 
 
@@ -27,6 +28,14 @@ public sealed partial class NcContractGhostRolePerksComponent : Component
 
     [DataField("projectileDamageMultiplier"), AutoNetworkedField,]
     public float ProjectileDamageMultiplier = 1f;
+
+    [DataField("passiveHealing"), AutoNetworkedField,]
+    public DamageSpecifier PassiveHealing = new();
+
+    [DataField("passiveHealingInterval"), AutoNetworkedField,]
+    public float PassiveHealingInterval = 1f;
+
+    public TimeSpan NextPassiveHealing = TimeSpan.Zero;
 
     [DataField("sprintSpeedMultiplier"), AutoNetworkedField,]
     public float SprintSpeedMultiplier = 1f;
