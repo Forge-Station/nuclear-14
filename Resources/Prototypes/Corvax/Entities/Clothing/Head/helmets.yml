@@ -233,13 +233,8 @@
     visible: true
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/primeassassinhelmet.rsi
-    clothingVisuals:
-      head:
-      # Нижний слой на голове
-      - state: folded
-      # Верхний слой на голове
-      - state: equipped-HELMET
-        visible: true
+  - type: HelmetToggle
+    altPrefix: alt
 
 - type: entity
   parent: N14ClothingHeadHatBaseballHelmet
@@ -252,13 +247,8 @@
     visible: true
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/gastathelmet.rsi
-    clothingVisuals:
-      head:
-      # Нижний слой на голове
-      - state: folded
-      # Верхний слой на голове
-      - state: equipped-HELMET
-        visible: true
+  - type: HelmetToggle
+    altPrefix: alt
 
 - type: entity
   parent: N14ClothingHeadHatBaseballHelmet
@@ -271,13 +261,8 @@
     visible: true
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/gastatprimehelmet.rsi
-    clothingVisuals:
-      head:
-      # Нижний слой на голове
-      - state: folded
-      # Верхний слой на голове
-      - state: equipped-HELMET
-        visible: true
+  - type: HelmetToggle
+    altPrefix: alt
 
 - type: entity
   parent: N14ClothingHeadHatBaseballHelmet
@@ -290,13 +275,8 @@
     visible: true
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/gastatveteranhelmet.rsi
-    clothingVisuals:
-      head:
-      # Нижний слой на голове
-      - state: folded
-      # Верхний слой на голове
-      - state: equipped-HELMET
-        visible: true
+  - type: HelmetToggle
+    altPrefix: alt
 
 - type: entity
   parent: N14ClothingHeadHatLightBaseballHelmet
@@ -309,13 +289,8 @@
     visible: true
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/triariumhelmet.rsi
-    clothingVisuals:
-      head:
-      # Нижний слой на голове
-      - state: folded
-      # Верхний слой на голове
-      - state: equipped-HELMET
-        visible: true
+  - type: HelmetToggle
+    altPrefix: alt
 
 - type: entity
   parent: N14ClothingHeadHatLightBaseballHelmet
@@ -328,13 +303,8 @@
     visible: true
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/assassinhelmet.rsi
-    clothingVisuals:
-      head:
-      # Нижний слой на голове
-      - state: folded
-      # Верхний слой на голове
-      - state: equipped-HELMET
-        visible: true
+  - type: HelmetToggle
+    altPrefix: alt
 
 - type: entity
   parent: N14ClothingHeadHatDeanRecruitHelmet
@@ -347,13 +317,8 @@
     visible: true
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/princepshelmet.rsi
-    clothingVisuals:
-      head:
-      # Нижний слой на голове
-      - state: folded
-      # Верхний слой на голове
-      - state: equipped-HELMET
-        visible: true
+  - type: HelmetToggle
+    altPrefix: alt
 
 - type: entity
   parent: N14ClothingHeadHatDeanPrimeHelmet
@@ -366,13 +331,8 @@
     visible: true
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/princepsprimehelmet.rsi
-    clothingVisuals:
-      head:
-      # Нижний слой на голове
-      - state: folded
-      # Верхний слой на голове
-      - state: equipped-HELMET
-        visible: true
+  - type: HelmetToggle
+    altPrefix: alt
 
 - type: entity
   parent: ClothingHeadEVAHelmetBase

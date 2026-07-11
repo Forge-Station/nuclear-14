@@ -76,3 +76,65 @@
     speed: 10
     lifetime: 0.025
 
+- type: entity
+  parent: ClothingHandsBase
+  id: N14ClothingHandsKnuckles
+  name: knuckles
+  description: A metal weapon worn on the hand that reinforces a punch.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Melee/knuckles.rsi
+    state: icon
+  - type: Item
+    size: Normal
+    sprite: Corvax/Objects/Weapons/Melee/knuckles.rsi
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Melee/knuckles.rsi
+    slots: [gloves]
+  - type: MeleeWeapon
+    soundHit:
+      collection: MetalThud
+    range: 1.3
+    attackRate: 0.8
+    damage:
+      types:
+        Blunt: 8
+        Structural: 8
+    animation: WeaponArcFist
+    wideAnimation: WeaponArcFist
+    mustBeEquippedToUse: true
+  - type: MeleeThrowOnHit
+    speed: 2
+    lifetime: 0.025
+
+- type: entity
+  parent: ClothingHandsBase
+  id: N14ClothingHandsKnucklesWithClaws
+  name: knuckles with claws
+  description: A metal weapon worn on the hand that reinforces a punch. The tips have metal claws.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Melee/knuckleswithclaws.rsi
+    state: icon
+  - type: Item
+    size: Normal
+    sprite: Corvax/Objects/Weapons/Melee/knuckleswithclaws.rsi
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Melee/knuckleswithclaws.rsi
+    slots: [gloves]
+  - type: MeleeWeapon
+    soundHit:
+      collection: MetalThud
+    range: 1.3
+    attackRate: 0.8
+    damage:
+      types:
+        Blunt: 8
+        Slash: 8
+    animation: WeaponArcFist
+    wideAnimation: WeaponArcFist
+    mustBeEquippedToUse: true
+  - type: MeleeThrowOnHit
+    speed: 2
+    lifetime: 0.025
+

@@ -1,0 +1,302 @@
+- type: entity
+  parent: BaseStructure
+  id: N14WoodenCart
+  name: Wooden cart
+  description: "A large wooden wagon, straight out of the Middle Ages! Apparently, no one ever actually uploaded anything to it."
+  suffix: left
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/carts/cartemptywooden.rsi
+    state: base
+    offset: 0.95,-0.2
+    noRot: true
+    netsync: false
+  - type: Transform
+    anchored: true
+  - type: Physics
+    canCollide: true
+    bodyStatus: OnGround
+    bodyType: Static
+  - type: Tag
+    tags:
+      - Structure
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 200
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          MaterialWoodPlank1:
+            min: 5
+            max: 25
+      - !type:EmptyAllContainersBehaviour
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+  - type: InteractionOutline
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.2,-0.8,2.9,0.9"
+        density: 60
+        mask:
+        - MachineMask
+        layer:
+        - MidImpassable
+        - LowImpassable
+
+- type: entity
+  parent: BaseStructure
+  id: N14WoodenCart2
+  name: Wooden cart
+  description: "A large wooden wagon, straight out of the Middle Ages! Apparently, no one ever actually uploaded anything to it."
+  suffix: right
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/carts/cartemptywooden.rsi
+    state: base
+    offset: -0.2,-0.2
+    noRot: true
+    netsync: false
+  - type: Transform
+    anchored: true
+  - type: Physics
+    canCollide: true
+    bodyStatus: OnGround
+    bodyType: Static
+  - type: Tag
+    tags:
+      - Structure
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 200
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          MaterialWoodPlank1:
+            min: 5
+            max: 25
+      - !type:EmptyAllContainersBehaviour
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+  - type: InteractionOutline
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.8,-0.9,2.3,0.8"
+        density: 60
+        mask:
+        - MachineMask
+        layer:
+        - MidImpassable
+        - LowImpassable
+
+- type: entity
+  parent: BaseStructure
+  id: N14WoodenCartWithCrates
+  name: Wooden cart with crates
+  description: "A large wooden wagon, straight out of the Middle Ages! Filled with boxes."
+  suffix: left
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/carts/cartwooden.rsi
+    state: base
+    offset: -0.9,-0.2
+    noRot: true
+    netsync: false
+  - type: Transform
+    anchored: true
+  - type: Physics
+    canCollide: true
+    bodyStatus: OnGround
+    bodyType: Static
+  - type: Tag
+    tags:
+      - Structure
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 200
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          MaterialWoodPlank1:
+            min: 10
+            max: 30
+      - !type:EmptyAllContainersBehaviour
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+  - type: InteractionOutline
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.2,-0.8,2.9,0.9"
+        density: 60
+        mask:
+        - MachineMask
+        layer:
+        - MidImpassable
+        - LowImpassable
+        - BulletImpassable
+
+- type: entity
+  parent: BaseStructure
+  id: N14WoodenCartWithCrates2
+  name: Wooden cart with crates
+  description: "A large wooden wagon, straight out of the Middle Ages! Filled with boxes."
+  suffix: right
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/carts/cartwooden.rsi
+    state: base
+    offset: -0.2,-0.2
+    noRot: true
+    netsync: false
+  - type: Transform
+    anchored: true
+  - type: Physics
+    canCollide: true
+    bodyStatus: OnGround
+    bodyType: Static
+  - type: Tag
+    tags:
+      - Structure
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 200
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          MaterialWoodPlank1:
+            min: 10
+            max: 30
+      - !type:EmptyAllContainersBehaviour
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+  - type: InteractionOutline
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.8,-0.9,2.3,0.8"
+        density: 60
+        mask:
+        - MachineMask
+        layer:
+        - MidImpassable
+        - LowImpassable
+        - BulletImpassable
+
+- type: entity
+  parent: BaseStructure
+  id: N14WoodenCartLegionShop
+  name: Legion shop
+  description: "A large wooden wagon, straight out of the Middle Ages! Filled with boxes."
+  suffix: right
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/carts/legionshop.rsi
+    state: base
+    offset: -0.9,-0.2
+    noRot: true
+    netsync: false
+  - type: Transform
+    anchored: true
+  - type: Physics
+    canCollide: true
+    bodyStatus: OnGround
+    bodyType: Static
+  - type: Tag
+    tags:
+      - Structure
+  - type: InteractionOutline
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.2,-0.8,2.9,0.9"
+        density: 60
+        mask:
+        - MachineMask
+        layer:
+        - MidImpassable
+        - LowImpassable
+        - BulletImpassable
+
+- type: entity
+  parent: BaseStructure
+  id: N14WoodenCartLegionShop2
+  name: Legion shop
+  description: "A large wooden wagon, straight out of the Middle Ages! Filled with boxes."
+  suffix: left
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/carts/legionshop.rsi
+    state: base
+    offset: 0.95,-0.2
+    noRot: true
+    netsync: false
+  - type: Transform
+    anchored: true
+  - type: Physics
+    canCollide: true
+    bodyStatus: OnGround
+    bodyType: Static
+  - type: Tag
+    tags:
+      - Structure
+  - type: InteractionOutline
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.8,-0.9,2.3,0.8"
+        density: 60
+        mask:
+        - MachineMask
+        layer:
+        - MidImpassable
+        - LowImpassable
+        - BulletImpassable
+
+
+

@@ -553,6 +553,12 @@
         - id: N14WeaponRifle762M14
           prob: 0.03
           orGroup: Weapon
+        - id: N14ClothingHandsKnuckles
+          prob: 0.04
+          orGroup: Weapon
+        - id: N14ClothingHandsKnucklesWithClaws
+          prob: 0.02
+          orGroup: Weapon
         # Forge-Change-End
         - id: N14WeaponShotgunDoubleBarrel
           prob: 0.1
