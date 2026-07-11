@@ -21,3 +21,14 @@
   - type: Construction
     graph: DecorationFlagBazar
     node: FlagBazar
+
+- type: entity
+  parent: N14DecorationFlagFlammable
+  id: N14FlagWoodland
+  name: Флаг Вудленда
+  description: Две головы и четыре рога. Радиация в снегах Аляски.
+  suffix: Woodland
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/flags_64x64.rsi
+    state: woodlandflag
