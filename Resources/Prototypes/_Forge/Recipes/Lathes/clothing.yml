@@ -522,15 +522,6 @@
     Thread: 300
 
 - type: latheRecipe
-  id: ClothingUniformJumpsuitColorGrey
-  result: ClothingUniformJumpsuitColorGrey
-  category: N14Clothes
-  completetime: 4
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
   id: ClothingUniformJumpsuitCossack
   result: ClothingUniformJumpsuitCossack
   category: N14Clothes
@@ -578,15 +569,6 @@
 - type: latheRecipe
   id: ClothingUniformJumpsuitLibrarianOrion
   result: ClothingUniformJumpsuitLibrarianOrion
-  category: N14Clothes
-  completetime: 4
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingUniformJumpsuitOperative
-  result: ClothingUniformJumpsuitOperative
   category: N14Clothes
   completetime: 4
   materials:
@@ -724,15 +706,6 @@
   result: ClothingOuterCoatMNKWhiteHoodie
   category: N14Clothes
   completetime: 3
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingOuterCoatMNKBlackTopCoat
-  result: ClothingOuterCoatMNKBlackTopCoat
-  category: N14Clothes
-  completetime: 4
   materials:
     Cloth: 300
     Thread: 300
@@ -988,15 +961,6 @@
   result: ClothingOuterToga
   category: N14Outerwear
   completetime: 3
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingOuterWinterCoat
-  result: ClothingOuterWinterCoat
-  category: N14Outerwear
-  completetime: 4
   materials:
     Cloth: 300
     Thread: 300
@@ -1678,42 +1642,6 @@
   materials:
     Cloth: 200
     Thread: 200
-
-- type: latheRecipe
-  id: ClothingNeckScarfStripedBlack
-  result: ClothingNeckScarfStripedBlack
-  category: N14Neck
-  completetime: 2
-  materials:
-    Cloth: 150
-    Thread: 100
-
-- type: latheRecipe
-  id: ClothingNeckScarfStripedBlue
-  result: ClothingNeckScarfStripedBlue
-  category: N14Neck
-  completetime: 2
-  materials:
-    Cloth: 150
-    Thread: 100
-
-- type: latheRecipe
-  id: ClothingNeckScarfStripedBrown
-  result: ClothingNeckScarfStripedBrown
-  category: N14Neck
-  completetime: 2
-  materials:
-    Cloth: 150
-    Thread: 100
-
-- type: latheRecipe
-  id: ClothingNeckScarfStripedGreen
-  result: ClothingNeckScarfStripedGreen
-  category: N14Neck
-  completetime: 2
-  materials:
-    Cloth: 150
-    Thread: 100
 
 - type: latheRecipe
   id: ClothingNeckStoleChaplain
