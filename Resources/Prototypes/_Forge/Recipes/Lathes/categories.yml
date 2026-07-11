@@ -1,0 +1,27 @@
+- type: latheCategory
+  id: N14Clothes
+  name: lathe-category-clothes
+
+- type: latheCategory
+  id: N14Shoes
+  name: lathe-category-shoes
+
+- type: latheCategory
+  id: N14Gloves
+  name: lathe-category-gloves
+
+- type: latheCategory
+  id: N14Hats
+  name: lathe-category-hats
+
+- type: latheCategory
+  id: N14Outerwear
+  name: lathe-category-outerwear
+
+- type: latheCategory
+  id: N14Eyes
+  name: lathe-category-eyes
+
+- type: latheCategory
+  id: N14Neck
+  name: lathe-category-neck
