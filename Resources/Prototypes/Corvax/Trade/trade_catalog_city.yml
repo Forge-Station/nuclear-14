@@ -136,12 +136,14 @@
     price: 25
   - proto: N14WeaponShotgunCaravan
     price: 25
+  - proto: N14WeaponShotgunSawedOff
+    price: 25
   - proto: N14WeaponShotgun
     price: 50
   - proto: N14WeaponShotgunShort
     price: 50
-  - proto: N14WeaponShotgunSawedOff
-    price: 25
+  - proto: N14WeaponShotgunLever
+    price: 60
   - proto: N14WeaponShotgunRiot
     price: 290
   - proto: N14WeaponShotgunAuto
@@ -291,7 +293,7 @@
     count: 12
   - proto: 40mmGrenadeFrag
     price: 150
-    count: 10
+    count: 20
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Melee
@@ -329,6 +331,12 @@
     price: 200
   - proto: N14SledgeHammer
     price: 250
+  - proto: N14ClothingHandsPowerFist
+    price: 300
+    count: 2
+  - proto: N14ClothingHandsIndusrialPowerFist
+    price: 350
+    count: 2
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Headwear
@@ -392,7 +400,11 @@
     price: 35
   - proto: N14ClothingOuterMetalArmor
     price: 45
+  - proto: N14ClothingOuterTireArmor
+    price: 45
   - proto: N14ClothingOuterTownMediumCoat
+    price: 50
+  - proto: N14ClothingOuterLightLeatherArmor
     price: 50
   - proto: N14ClothingOuterCoatFollowersArmored
     price: 55
@@ -400,6 +412,8 @@
     price: 55
   - proto: N14ClothingOuterLightMetalArmor
     price: 55
+  - proto: N14ClothingOuterReinforcedLeatherArmor
+    price: 60
   - proto: N14ClothingOuterLeatherArmor
     price: 65
   - proto: N14ClothingOuterPressArmor
@@ -410,6 +424,8 @@
     price: 65
   - proto: N14ClothingOuterVaultSecVest
     price: 70
+  - proto: N14ClothingOuterZealotDuster
+    price: 100
   - proto: N14ClothingOuterTownHeavyCoat
     price: 100
   - proto: N14ClothingOuterCoatCombatDuster
@@ -452,16 +468,26 @@
   - proto: N14CleanGauze10
     amount: 10
     price: 25
+  - proto: N14HealingPowder
+    price: 25
+  - proto: N14StimpakDirty
+    price: 25
   - proto: N14RadAwayPhial
     price: 30
+  - proto: N14Jet
+    price: 40
   - proto: N14RadAwayBloodbag
     price: 50
+  - proto: N14Turbo
+    price: 60
   - proto: N14Antidote
     price: 95
-  - proto: N14StimpakDirty
-    price: 50
+  - proto: N14HealingPoultice
+    price: 75
   - proto: N14Stimpak
     price: 75
+  - proto: N14BuffjetCanisterFilled
+    price: 100
   - proto: N14AloeSalve
     amount: 10
     price: 100
@@ -480,16 +506,19 @@
   entries:
   - proto: SheetSteel
     amount: 30
-    price: 350
+    price: 150
   - proto: SheetPlastic
     amount: 30
-    price: 350
+    price: 250
   - proto: N14IngotLead20
     amount: 20
     price: 400
   - proto: N14Gunpowder10
     amount: 10
     price: 350
+  - proto: N14Scrap1
+    amount: 30
+    price: 300
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Alcohol
@@ -723,6 +752,8 @@
     price: 45
   - proto: N14WeaponShotgunShort
     price: 30
+  - proto: N14WeaponShotgunLever
+    price: 30
   - proto: N14WeaponShotgunAuto
     price: 165
   - proto: N14WeaponShotgunChinese
@@ -943,14 +974,16 @@
     price: 17
   - proto: N14ClothingOuterVestLeather
     price: 19
+  - proto: N14ClothingOuterTireArmor
+    price: 20
+  - proto: N14ClothingOuterLightLeatherArmor
+    price: 25
   - proto: N14ClothingOuterMetalArmor
     price: 25
   - proto: N14ClothingOuterTownMediumCoat
     price: 28
-  - proto: N14ClothingOuterTownHeavyCoat
-    price: 55
-  - proto: N14ClothingOuterCoatCombatDuster
-    price: 55
+  - proto: N14ClothingOuterReinforcedLeatherArmor
+    price: 30
   - proto: N14ClothingOuterCoatFollowersArmored
     price: 30
   - proto: N14ClothingOuterInsectArmor
@@ -963,8 +996,6 @@
     price: 36
   - proto: N14ClothingOuterPressArmor
     price: 36
-  - proto: N14ClothingOuterPoliceVest
-    price: 110
   - proto: ClothingOuterArmorBasicSlim
     price: 36
   - proto: N14ClothingOuterCombatRusted
@@ -973,6 +1004,16 @@
     price: 36
   - proto: N14ClothingOuterVaultSecVest
     price: 39
+  - proto: N14ClothingOuterZealotDuster
+    price: 50
+  - proto: N14ClothingOuterTownHeavyCoat
+    price: 55
+  - proto: N14ClothingOuterCoatCombatDuster
+    price: 55
+  - proto: N14ClothingOuterChitinArmor
+    price: 55
+  - proto: N14ClothingOuterPoliceVest
+    price: 110
   - proto: N14ClothingOuterHeavySteelArmor
     price: 100
   - proto: N14ClothingOuterVestChinese
@@ -1140,7 +1181,7 @@
   name: "Гранатомёты"
   entries:
   - proto: N14WeaponRifleGrenade
-    price: 750
+    price: 1000
 
 - type: storePresetStructured
   id: caravan_sell2
