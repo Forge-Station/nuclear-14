@@ -1,0 +1,329 @@
+- type: entity
+  parent: BaseStructure
+  id: N14MetalCart
+  name: Metal cart
+  description: "A trailer made of steel and rust. Apparently, no one ever actually uploaded anything to it."
+  suffix: left
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/carts/cartsempty.rsi
+    state: base
+    offset: 0.95,-0.2
+    noRot: true
+    netsync: false
+  - type: Transform
+    anchored: true
+  - type: Physics
+    canCollide: true
+    bodyStatus: OnGround
+    bodyType: Static
+  - type: Tag
+    tags:
+      - Structure
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 250
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          SheetSteel1:
+            min: 1
+            max: 5
+          N14ScrapSteel1:
+            min: 3
+            max: 15
+          N14ScrapLead1:
+            min: 2
+            max: 5
+      - !type:EmptyAllContainersBehaviour
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+  - type: InteractionOutline
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.3,-0.8,2.3,0.4"
+        density: 60
+        mask:
+        - MachineMask
+        layer:
+        - MidImpassable
+        - LowImpassable
+
+- type: entity
+  parent: BaseStructure
+  id: N14MetalCart2
+  name: Metal cart
+  description: "A trailer made of steel and rust. Apparently, no one ever actually uploaded anything to it."
+  suffix: right
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/carts/cartsempty.rsi
+    state: base
+    offset: -0.9,-0.2
+    noRot: true
+    netsync: false
+  - type: Transform
+    anchored: true
+  - type: Physics
+    canCollide: true
+    bodyStatus: OnGround
+    bodyType: Static
+  - type: Tag
+    tags:
+      - Structure
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 250
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          SheetSteel1:
+            min: 1
+            max: 5
+          N14ScrapSteel1:
+            min: 3
+            max: 15
+          N14ScrapLead1:
+            min: 2
+            max: 5
+      - !type:EmptyAllContainersBehaviour
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+  - type: InteractionOutline
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.4,-0.5,2.3,0.7"
+        density: 60
+        mask:
+        - MachineMask
+        layer:
+        - MidImpassable
+        - LowImpassable
+
+- type: entity
+  parent: BaseStructure
+  id: N14MetalCartCrates
+  name: Metal cart with crates
+  description: "A trailer made of steel and rust. Filled with boxes."
+  suffix: left
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/carts/cart.rsi
+    state: base
+    offset: 0.95,-0.2
+    noRot: true
+    netsync: false
+  - type: Transform
+    anchored: true
+  - type: Physics
+    canCollide: true
+    bodyStatus: OnGround
+    bodyType: Static
+  - type: Tag
+    tags:
+      - Structure
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 250
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          SheetSteel1:
+            min: 1
+            max: 5
+          N14ScrapSteel1:
+            min: 3
+            max: 15
+          N14ScrapLead1:
+            min: 2
+            max: 5
+          MaterialWoodPlank1:
+            min: 5
+            max: 7
+      - !type:EmptyAllContainersBehaviour
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+  - type: InteractionOutline
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.3,-0.8,2.3,0.4"
+        density: 60
+        mask:
+        - MachineMask
+        layer:
+        - MidImpassable
+        - LowImpassable
+        - BulletImpassable
+
+- type: entity
+  parent: BaseStructure
+  id: N14MetalCartCrates2
+  name: Metal cart with crates
+  description: "A trailer made of steel and rust. Filled with boxes."
+  suffix: right
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/carts/cart.rsi
+    state: base
+    offset: -0.9,-0.2
+    noRot: true
+    netsync: false
+  - type: Transform
+    anchored: true
+  - type: Physics
+    canCollide: true
+    bodyStatus: OnGround
+    bodyType: Static
+  - type: Tag
+    tags:
+      - Structure
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 250
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          SheetSteel1:
+            min: 1
+            max: 5
+          N14ScrapSteel1:
+            min: 3
+            max: 15
+          N14ScrapLead1:
+            min: 2
+            max: 5
+          MaterialWoodPlank1:
+            min: 5
+            max: 7
+      - !type:EmptyAllContainersBehaviour
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+  - type: InteractionOutline
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.4,-0.5,2.3,0.7"
+        density: 60
+        mask:
+        - MachineMask
+        layer:
+        - MidImpassable
+        - LowImpassable
+        - BulletImpassable
+
+- type: entity
+  parent: BaseStructure
+  id: N14MetalCartNCRshop
+  name: NCR shop
+  description: "A trailer made of steel and rust. Filled with boxes."
+  suffix: right
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/carts/ncrshop.rsi
+    state: base
+    offset: -0.9,-0.2
+    noRot: true
+    netsync: false
+  - type: Transform
+    anchored: true
+  - type: Physics
+    canCollide: true
+    bodyStatus: OnGround
+    bodyType: Static
+  - type: Tag
+    tags:
+      - Structure
+  - type: InteractionOutline
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-2,-0.2,3.9,1"
+        density: 60
+        mask:
+        - MachineMask
+        layer:
+        - MidImpassable
+        - LowImpassable
+        - BulletImpassable
+
+- type: entity
+  parent: BaseStructure
+  id: N14MetalCartNCRshop2
+  name: NCR shop
+  description: "A trailer made of steel and rust. Filled with boxes."
+  suffix: left
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/carts/ncrshop.rsi
+    state: base
+    offset: 0.9,0.8
+    noRot: true
+    netsync: false
+  - type: Transform
+    anchored: true
+  - type: Physics
+    canCollide: true
+    bodyStatus: OnGround
+    bodyType: Static
+  - type: Tag
+    tags:
+      - Structure
+  - type: InteractionOutline
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-2,-0.2,3.9,1.2"
+        density: 60
+        mask:
+        - MachineMask
+        layer:
+        - MidImpassable
+        - LowImpassable
+        - BulletImpassable
