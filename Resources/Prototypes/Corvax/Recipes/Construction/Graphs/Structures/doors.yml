@@ -38,7 +38,7 @@
               amount: 1
               doAfter: 10
 
-        - to: WoodDoorLoced
+        - to: WoodDoorLocked
           completed:
             - !type:SnapToGrid { }
           steps:
@@ -79,7 +79,7 @@
               amount: 2
               doAfter: 10
 
-        - to: CellMetalDoorLoced
+        - to: CellMetalDoorLocked
           completed:
             - !type:SnapToGrid { }
           steps:
@@ -120,7 +120,7 @@
               amount: 2
               doAfter: 10
 
-        - to: MetalRedLoced
+        - to: MetalRedLocked
           completed:
             - !type:SnapToGrid { }
           steps:
@@ -176,8 +176,8 @@
             - tool: Anchoring
               doAfter: 15
 
-    - node: WoodDoorLoced           
-      entity: N14DoorWoodWhiteTallLoced
+    - node: WoodDoorLocked           
+      entity: N14DoorWoodWhiteTallLocked
       edges:
         - to: start
           completed:
@@ -243,8 +243,8 @@
             - tool: Anchoring
               doAfter: 15
 
-    - node: CellMetalDoorLoced      
-      entity: N14DoorCellMetalLoced
+    - node: CellMetalDoorLocked      
+      entity: N14DoorCellMetalLocked
       edges:
         - to: start
           completed:
@@ -312,8 +312,8 @@
             - tool: Anchoring
               doAfter: 15
   
-    - node: MetalRedLoced          
-      entity: N14DoorMetalRedSlantedLoced
+    - node: MetalRedLocked          
+      entity: N14DoorMetalRedSlantedLocked
       edges:
         - to: start
           completed:

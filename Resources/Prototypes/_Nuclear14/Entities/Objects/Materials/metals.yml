@@ -241,9 +241,9 @@
           sprite: _Nuclear14/Objects/Misc/tapes_cards.rsi
           state: grey
         entries:
-          - prototype: N14DoorWoodWhiteTallLoced
-          - prototype: N14DoorCellMetalLoced
-          - prototype: N14DoorMetalRedSlantedLoced              
+          - prototype: N14DoorWoodWhiteTallLocked
+          - prototype: N14DoorCellMetalLocked
+          - prototype: N14DoorMetalRedSlantedLocked              
 
 - type: entity
   parent: N14IngotBrass

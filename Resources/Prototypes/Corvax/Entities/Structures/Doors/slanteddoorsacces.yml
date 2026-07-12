@@ -1,59 +1,59 @@
 - type: entity
   parent: N14DoorWoodWhiteTall
-  id: N14DoorWoodWhiteTallLoced
+  id: N14DoorWoodWhiteTallLocked
   categories: [HideSpawnMenu]
   components:
   - type: RandomAccessKey
   - type: Construction
     graph: N14RadialDoorsGraph
-    node: WoodDoorLoced
+    node: WoodDoorLocked
 
 - type: entity
   parent: N14DoorMetalBarTall
-  id: N14DoorCellMetalLoced
+  id: N14DoorCellMetalLocked
   categories: [HideSpawnMenu]
   components:
   - type: RandomAccessKey
   - type: Construction
     graph: N14RadialDoorsGraph
-    node: CellMetalDoorLoced
+    node: CellMetalDoorLocked
 
 - type: entity
   parent: N14DoorMetalBlueSlanted
-  id: N14DoorMetalBlueSlantedLoced
+  id: N14DoorMetalBlueSlantedLocked
   categories: [HideSpawnMenu]
   components:
   - type: RandomAccessKey
   - type: Construction
     graph: N14DoorGraph
-    node: MetalBlueLoced
+    node: MetalBlueLocked
 
 - type: entity
   parent: N14DoorMetalRedSlanted
-  id: N14DoorMetalRedSlantedLoced
+  id: N14DoorMetalRedSlantedLocked
   categories: [HideSpawnMenu]
   components:
   - type: RandomAccessKey
   - type: Construction
     graph: N14RadialDoorsGraph
-    node: MetalRedLoced
+    node: MetalRedLocked
 
 - type: entity
   parent: N14DoorMetalBlueAltSlanted
-  id: N14DoorMetalBlueAltSlantedLoced
+  id: N14DoorMetalBlueAltSlantedLocked
   categories: [HideSpawnMenu]
   components:
   - type: RandomAccessKey
   - type: Construction
     graph: N14DoorGraph
-    node: MetalBlueAltLoced
+    node: MetalBlueAltLocked
 
 - type: entity
   parent: N14DoorMetalBlueWindowSlanted
-  id: N14DoorMetalBlueWindowSlantedLoced
+  id: N14DoorMetalBlueWindowSlantedLocked
   categories: [HideSpawnMenu]
   components:
   - type: RandomAccessKey
   - type: Construction
     graph: N14DoorGraph
-    node: MetalBlueWindowLoced
+    node: MetalBlueWindowLocked

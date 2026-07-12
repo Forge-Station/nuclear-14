@@ -65,10 +65,10 @@
 
 # MARK: Двери Замок
 - type: construction
-  id: N14DoorMetalBlueSlantedLoced
+  id: N14DoorMetalBlueSlantedLocked
   graph: N14DoorGraph
   startNode: start
-  targetNode: MetalBlueLoced
+  targetNode: MetalBlueLocked
   category: construction-category-structures
   objectType: Structure
   placementMode: SnapgridCenter
@@ -81,10 +81,10 @@
     - !type:TileNotBlocked
 
 - type: construction
-  id: N14DoorMetalBlueAltSlantedLoced
+  id: N14DoorMetalBlueAltSlantedLocked
   graph: N14DoorGraph
   startNode: start
-  targetNode: MetalBlueAltLoced
+  targetNode: MetalBlueAltLocked
   category: construction-category-structures
   objectType: Structure
   placementMode: SnapgridCenter
@@ -97,10 +97,10 @@
     - !type:TileNotBlocked
 
 - type: construction
-  id: N14DoorMetalBlueWindowSlantedLoced
+  id: N14DoorMetalBlueWindowSlantedLocked
   graph: N14DoorGraph
   startNode: start
-  targetNode: MetalBlueWindowLoced
+  targetNode: MetalBlueWindowLocked
   category: construction-category-structures
   objectType: Structure
   placementMode: SnapgridCenter
@@ -289,10 +289,10 @@
     - !type:TileNotBlocked
 
 - type: construction
-  id: N14DoorWoodWhiteTallLoced
+  id: N14DoorWoodWhiteTallLocked
   graph: N14RadialDoorsGraph
   startNode: start
-  targetNode: WoodDoorLoced
+  targetNode: WoodDoorLocked
   category: construction-category-structures
   objectType: Structure
   placementMode: SnapgridCenter
@@ -354,10 +354,10 @@
     - !type:TileNotBlocked
 
 - type: construction
-  id: N14DoorCellMetalLoced
+  id: N14DoorCellMetalLocked
   graph: N14RadialDoorsGraph
   startNode: start
-  targetNode: CellMetalDoorLoced
+  targetNode: CellMetalDoorLocked
   category: construction-category-structures
   objectType: Structure
   placementMode: SnapgridCenter
@@ -419,10 +419,10 @@
     - !type:TileNotBlocked
 
 - type: construction
-  id: N14DoorMetalRedSlantedLoced
+  id: N14DoorMetalRedSlantedLocked
   graph: N14RadialDoorsGraph
   startNode: start
-  targetNode: MetalRedLoced
+  targetNode: MetalRedLocked
   category: construction-category-structures
   objectType: Structure
   placementMode: SnapgridCenter
