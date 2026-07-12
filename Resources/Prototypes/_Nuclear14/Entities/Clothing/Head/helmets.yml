@@ -78,6 +78,22 @@
 
 - type: entity
   parent: ClothingHeadBase
+  id: N14ClothingHeadHatBaseHelmetWithHair
+  abstract: true
+  components:
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.9
+        Slash: 0.9
+        Piercing: 0.9
+        Heat: 0.9
+    priceMultiplier: 0.5
+  - type: ExplosionResistance
+    damageCoefficient: 0.95
+
+- type: entity
+  parent: ClothingHeadBase
   id: N14ClothingHeadHatBaseHelmetMetal
   name: metal helmet
   abstract: true
@@ -389,7 +405,7 @@
     sprite: _Nuclear14/Clothing/Head/FalloutHelmets/ncrhelmetmp.rsi
 
 - type: entity
-  parent: ClothingHeadBase # Forge-Change
+  parent: N14ClothingHeadHatBaseHelmetWithHair 
   id: N14ClothingHeadHatNCRHelmetMetalMedic
   name: NCR medic helmet
   description: A rounded NCR helmet offering some protection, worn by Field Medics.

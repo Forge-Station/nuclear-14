@@ -354,7 +354,7 @@
     price: 15
   - proto: N14ClothingHeadHatPrewarMilitaryHelmet
     price: 35
-  - proto: N14ClothingHeadHatCombatHelmetCargo
+  - proto: N14ClothingHeadHatCombatHelmet
     price: 35
 
 - type: storeCategoryStructured # Forge-change

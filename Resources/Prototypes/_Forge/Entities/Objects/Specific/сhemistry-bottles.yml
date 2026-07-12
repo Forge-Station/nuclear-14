@@ -1,0 +1,13 @@
+- type: entity
+  id: N14FertilizerChemistryBottle
+  name: бутылочка удобрения
+  description: Это повысит скорость созревание растений.
+  parent: BaseChemistryBottleFilled
+  components:
+  - type: SolutionContainerManager
+    solutions:
+      drink:
+        maxVol: 30
+        reagents:
+        - ReagentId: Fertilizer
+          Quantity: 30

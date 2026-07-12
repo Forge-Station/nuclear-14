@@ -47,8 +47,9 @@
     contents:
     - id: HydroponicsToolMiniHoe # TODO: Replace with new tools
     - id: HydroponicsToolSpade # TODO: Replace with new tools
-    - id: RobustHarvestChemistryBottle # TODO: Replace with new tools
-
+    - id: N14FertilizerChemistryBottle # TODO: Replace with new tools
+      amount: 2
+      
 - type: entity
   id: N14WalletLottaCash
   parent: N14Wallet
