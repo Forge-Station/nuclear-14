@@ -1,118 +1,138 @@
+#MARK: Двери привязанные к радиальному Z колесу.
 - type: constructionGraph
-  id: N14DoorGraph
+  id: N14RadialDoorsGraph
   start: start
   graph:
     - node: start
       actions:
         - !type:DestroyEntity {}
       edges:
-
-        - to: WoodDoor
+        # === ДЕРЕВЯННЫЕ ДВЕРИ ===
+        - to: WoodDoorTown
           completed:
             - !type:SnapToGrid { }
           steps:
             - material: WoodPlank
               amount: 4
-            - material: N14ScrapBrass
-              amount: 2
+            - material: N14Brass
+              amount: 1
               doAfter: 10
 
-        - to: woodDoorMakeshift
+        - to: WoodDoorLegion
           completed:
             - !type:SnapToGrid { }
           steps:
             - material: WoodPlank
-              amount: 3
-            - material: N14ScrapBrass
-              amount: 2
-              doAfter: 10
-# Forge-Change-Start
-        - to: MetalBlue
-          completed:
-            - !type:SnapToGrid { }
-          steps:
-            - material: N14Iron
               amount: 4
             - material: N14Brass
-              amount: 2
-              doAfter: 10
-
-        - to: MetalRed
-          completed:
-            - !type:SnapToGrid { }
-          steps:
-            - material: N14Iron
-              amount: 4
-            - material: N14Brass
-              amount: 2
-              doAfter: 10
-
-        - to: MetalBlueAlt
-          completed:
-            - !type:SnapToGrid { }
-          steps:
-            - material: N14Iron
-              amount: 4
-            - material: N14Brass
-              amount: 2
-              doAfter: 10
-
-        - to: MetalBlueWindow
-          completed:
-            - !type:SnapToGrid { }
-          steps:
-            - material: Glass
               amount: 1
-            - material: N14Iron
-              amount: 3
-            - material: N14Brass
-              amount: 2
               doAfter: 10
 
-        - to: MetalBlueLocked
+        - to: WoodDoorNCR
           completed:
             - !type:SnapToGrid { }
           steps:
-            - material: N14Iron
-              amount: 6
+            - material: WoodPlank
+              amount: 4
             - material: N14Brass
-              amount: 2
-              doAfter: 10
-
-        # - to: MetalRedLocked
-        #   completed:
-        #     - !type:SnapToGrid { }
-        #   steps:
-        #     - material: N14Iron
-        #       amount: 6
-        #     - material: N14Brass
-        #       amount: 2
-        #       doAfter: 10
-
-        - to: MetalBlueAltLocked
-          completed:
-            - !type:SnapToGrid { }
-          steps:
-            - material: N14Iron
-              amount: 6
-            - material: N14Brass
-              amount: 2
-              doAfter: 10
-
-        - to: MetalBlueWindowLocked
-          completed:
-            - !type:SnapToGrid { }
-          steps:
-            - material: Glass
               amount: 1
+              doAfter: 10
+
+        - to: WoodDoorLocked
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: WoodPlank
+              amount: 4
+            - material: N14Brass
+              amount: 1
+              doAfter: 10
+
+        # === РЕШЕТЧАТЫЕ ДВЕРИ ===
+        - to: CellMetalDoorTown
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 4
+            - material: N14Brass
+              amount: 2
+              doAfter: 10
+
+        - to: CellMetalDoorLegion
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 4
+            - material: N14Brass
+              amount: 2
+              doAfter: 10
+
+        - to: CellMetalDoorNCR
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 4
+            - material: N14Brass
+              amount: 2
+              doAfter: 10
+
+        - to: CellMetalDoorLocked
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 4
+            - material: N14Brass
+              amount: 2
+              doAfter: 10
+
+        # === КРАСНЫЕ МЕТАЛЛИЧЕСКИХ ДВЕРИ ===
+        - to: MetalDoorTown
+          completed:
+            - !type:SnapToGrid { }
+          steps:
             - material: N14Iron
               amount: 6
             - material: N14Brass
               amount: 2
               doAfter: 10
-# Forge-Change-End
-    - node: WoodDoor
-      entity: N14DoorWoodSlanted
+
+        - to: MetalDoorLegion
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 6
+            - material: N14Brass
+              amount: 2
+              doAfter: 10
+
+        - to: MetalDoorNCR
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 6
+            - material: N14Brass
+              amount: 2
+              doAfter: 10
+
+        - to: MetalRedLocked
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: N14Iron
+              amount: 6
+            - material: N14Brass
+              amount: 2
+              doAfter: 10
+
+    # === УЗЛЫ ДЛЯ ДЕРЕВЯННЫХ ДВЕРЕЙ ===
+    - node: WoodDoorTown           
+      entity: N14DoorWoodSecureLockedPersonTall
       edges:
         - to: start
           completed:
@@ -120,29 +140,60 @@
               prototype: MaterialWoodPlank1
               amount: 4
             - !type:SpawnPrototype
-              prototype: N14ScrapBrass1
-              amount: 2
+              prototype: N14IngotBrass1
+              amount: 1
           steps:
             - tool: Anchoring
               doAfter: 15
 
-    - node: woodDoorMakeshift
-      entity: N14DoorMakeshift
+    - node: WoodDoorLegion          
+      entity: N14DoorWoodSecureLockedLegion
       edges:
         - to: start
           completed:
             - !type:SpawnPrototype
               prototype: MaterialWoodPlank1
-              amount: 3 # Forge-Change
+              amount: 4
             - !type:SpawnPrototype
-              prototype: N14ScrapBrass1
-              amount: 2
+              prototype: N14IngotBrass1
+              amount: 1
           steps:
             - tool: Anchoring
               doAfter: 15
-# Forge-Change-Start
-    - node: MetalBlue
-      entity: N14DoorMetalBlueSlanted
+
+    - node: WoodDoorNCR            
+      entity: N14DoorWoodSecureLockedNCRNew
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: MaterialWoodPlank1
+              amount: 4
+            - !type:SpawnPrototype
+              prototype: N14IngotBrass1
+              amount: 1
+          steps:
+            - tool: Anchoring
+              doAfter: 15
+
+    - node: WoodDoorLocked           
+      entity: N14DoorWoodWhiteTallLocked
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: MaterialWoodPlank1
+              amount: 4
+            - !type:SpawnPrototype
+              prototype: N14IngotBrass1
+              amount: 1
+          steps:
+            - tool: Anchoring
+              doAfter: 15
+
+    # === УЗЛЫ ДЛЯ РЕШЕТЧАТЫХ ДВЕРЕЙ ===
+    - node: CellMetalDoorTown       
+      entity: N14DoorCellMetalLockedPersonTall
       edges:
         - to: start
           completed:
@@ -153,11 +204,13 @@
               prototype: N14IngotBrass1
               amount: 2
           steps:
+            - tool: Screwing
+              doAfter: 5
             - tool: Anchoring
               doAfter: 15
 
-    - node: MetalRed
-      entity: N14DoorMetalRedSlanted
+    - node: CellMetalDoorLegion    
+      entity: N14DoorCellMetalLockedLegion
       edges:
         - to: start
           completed:
@@ -168,11 +221,13 @@
               prototype: N14IngotBrass1
               amount: 2
           steps:
+            - tool: Screwing
+              doAfter: 5
             - tool: Anchoring
               doAfter: 15
 
-    - node: MetalBlueAlt
-      entity: N14DoorMetalBlueAltSlanted
+    - node: CellMetalDoorNCR       
+      entity: N14DoorCellMetalLockedNCRNew
       edges:
         - to: start
           completed:
@@ -183,28 +238,13 @@
               prototype: N14IngotBrass1
               amount: 2
           steps:
+            - tool: Screwing
+              doAfter: 5
             - tool: Anchoring
               doAfter: 15
 
-    - node: MetalBlueWindow
-      entity: N14DoorMetalBlueWindowSlanted
-      edges:
-        - to: start
-          completed:
-            - !type:SpawnPrototype
-              prototype: SheetGlass1
-            - !type:SpawnPrototype
-              prototype: N14IngotIron1
-              amount: 3
-            - !type:SpawnPrototype
-              prototype: N14IngotBrass1
-              amount: 2
-          steps:
-            - tool: Anchoring
-              doAfter: 15
-
-    - node: MetalBlueLocked
-      entity: N14DoorMetalBlueSlantedLocked
+    - node: CellMetalDoorLocked      
+      entity: N14DoorCellMetalLocked
       edges:
         - to: start
           completed:
@@ -220,8 +260,9 @@
             - tool: Anchoring
               doAfter: 15
 
-    - node: MetalBlueAltLocked
-      entity: N14DoorMetalBlueAltSlantedLocked
+    # === УЗЛЫ ДЛЯ КРАСНЫХ МЕТАЛЛИЧЕСКИХ ДВЕРЕЙ ===
+    - node: MetalDoorTown           
+      entity: N14DoorMetalSecureLockedPersonTall
       edges:
         - to: start
           completed:
@@ -237,13 +278,11 @@
             - tool: Anchoring
               doAfter: 15
 
-    - node: MetalBlueWindowLocked
-      entity: N14DoorMetalBlueWindowSlantedLocked
+    - node: MetalDoorLegion         
+      entity: N14DoorMetalSecureLockedRedLegion
       edges:
         - to: start
           completed:
-            - !type:SpawnPrototype
-              prototype: SheetGlass1
             - !type:SpawnPrototype
               prototype: N14IngotIron1
               amount: 6
@@ -255,4 +294,37 @@
               doAfter: 5
             - tool: Anchoring
               doAfter: 15
-# Forge-Change-End
+
+    - node: MetalDoorNCR            
+      entity: N14DoorMetalSecureLockedNCRNew
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: N14IngotIron1
+              amount: 6
+            - !type:SpawnPrototype
+              prototype: N14IngotBrass1
+              amount: 2
+          steps:
+            - tool: Screwing
+              doAfter: 5
+            - tool: Anchoring
+              doAfter: 15
+  
+    - node: MetalRedLocked          
+      entity: N14DoorMetalRedSlantedLocked
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: N14IngotIron1
+              amount: 6
+            - !type:SpawnPrototype
+              prototype: N14IngotBrass1
+              amount: 2
+          steps:
+            - tool: Screwing
+              doAfter: 5
+            - tool: Anchoring
+              doAfter: 15  

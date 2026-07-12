@@ -169,3 +169,22 @@ ent-N14DoorCellMetalLockedLegionCenturion = { ent-N14DoorMetalBarTall }
 ent-N14DoorMetalSecureLockedRedLegionCenturion = { ent-N14DoorMetalBarTall }
     .suffix = Легион, Закрытый, Легион Центурион
     .desc = { ent-N14DoorMetalRedTall.desc }
+
+# Дверки через радиальное меню
+ent-N14DoorWoodSecureLockedNCRNew = { ent-N14DoorWoodWhiteTall }
+    .suffix = НКР, Закрытый
+    .desc = { ent-N14DoorWoodWhiteTall.desc }
+ent-N14DoorMetalSecureLockedNCRNew = { ent-N14DoorMetalRedTall }
+    .suffix = НКР, Закрытый
+    .desc = { ent-N14DoorMetalRedTall.desc }
+ent-N14DoorCellMetalLockedNCRNew = { ent-N14DoorMetalBarTall }
+    .suffix = НКР, Закрытый
+    .desc = { ent-N14DoorMetalBarTall.desc }
+
+ent-N14DoorWoodWhiteTallLocked = { ent-N14DoorWoodWhiteTall }
+    .suffix = НКР, Закрытый
+    .desc = { ent-N14DoorWoodWhiteTall.desc }
+ent-N14DoorCellMetalLocked = { ent-N14DoorMetalBarTall }
+    .suffix = НКР, Закрытый
+    .desc = { ent-N14DoorMetalBarTall.desc }
+
