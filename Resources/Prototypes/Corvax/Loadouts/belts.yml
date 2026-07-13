@@ -16,7 +16,7 @@
       - CaesarLegionSlave
       - NCRPisoner
   items:
-    - N14ClothingBeltFarmerFilled
+    - ClothingBeltFarmerFilled
 
 - type: loadout
   id: N14LoadoutClothingBeltStorageWaistbag
