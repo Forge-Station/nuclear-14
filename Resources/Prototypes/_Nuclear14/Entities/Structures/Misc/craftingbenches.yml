@@ -180,7 +180,7 @@
     # Forge-Change-End
   - type: MaterialStorageMagnetPickup 
     magnetEnabled: True
-    range: 0.80 
+    range: 1.25 
 
 - type: entity
   categories: [ HideSpawnMenu ] # Forge-change

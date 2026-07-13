@@ -23,6 +23,8 @@
     zeroVisible: false
   - type: Appearance
   - type: Butcherable # Forge-add
+    butcheringType: Knife
+    butcherDelay: 2
     spawned:
     - id: MaterialCardboard1
       amount: 1

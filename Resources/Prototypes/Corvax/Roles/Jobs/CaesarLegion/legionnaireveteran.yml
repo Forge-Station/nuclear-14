@@ -50,7 +50,7 @@
   innerClothingSkirt: N14ClothingUniformJumpsuitLegionnaireOther
   storage:
     back:
-    - N14BoxPlasticFilledMilitary
+    - N14BoxPlasticFilledMilitaryLegion
 
 - type: playTimeTracker
   id: CaesarLegionLegionnaireVeteran

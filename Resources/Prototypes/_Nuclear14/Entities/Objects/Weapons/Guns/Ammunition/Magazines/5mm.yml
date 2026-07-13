@@ -28,6 +28,7 @@
   - type: ToolRefinable #Forge-add
     refineResult:
     - id: SheetSteel1
+    amount: 3
 
 - type: entity
   id: N14MagazineMinigun5mm
