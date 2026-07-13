@@ -1,5 +1,5 @@
 - type: entity
-  id: N14ClothingBeltFarmerFilled
+  id: ClothingBeltFarmerFilled
   parent: ClothingBeltFarmer
   suffix: Filled
   components:

@@ -21,7 +21,7 @@
     back: N14ClothingBackpackExplorer # Forge-Change
     shoes: N14ClothingBootsLeather
     outerClothing: ClothingOuterApronBotanist
-    belt: N14ClothingBeltFarmerFilled
+    belt: ClothingBeltFarmerFilled
     id: N14IDPassportWasteFarmer
   innerClothingSkirt: N14ClothingUniformJumpsuitBrahminFarmer #placeholder
   satchel: N14ClothingBackpackSatchelWastelanderFilled
