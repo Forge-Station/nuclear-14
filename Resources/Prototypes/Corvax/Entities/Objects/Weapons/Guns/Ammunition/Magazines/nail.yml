@@ -32,4 +32,4 @@
     - type: ToolRefinable #Forge-add
       refineResult:
       - id: SheetSteel1
-      amount: 1
+        amount: 1
