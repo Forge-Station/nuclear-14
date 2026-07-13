@@ -120,6 +120,7 @@
       - Sheet
       - RawMaterial
       - Ingot
+      - Cartridge
   - type: Lathe
     idleState: icon
     runningState: icon # change this
@@ -177,6 +178,9 @@
     - Magazine545Rifle
     - MagazineDrum545Rifle
     # Forge-Change-End
+  - type: MaterialStorageMagnetPickup 
+    magnetEnabled: True
+    range: 0.80 
 
 - type: entity
   categories: [ HideSpawnMenu ] # Forge-change
