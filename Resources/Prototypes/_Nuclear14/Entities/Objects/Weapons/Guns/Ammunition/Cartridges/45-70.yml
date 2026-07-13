@@ -1,7 +1,7 @@
 - type: entity
   id: N14Cartridge45-70
   name: cartridge (.45-70 gov't)
-  parent: BaseCartridgeMagnum
+  parent: BaseCartridgeHeavyRifle
   components:
   - type: CartridgeAmmo
     proto: N14Bullet45-70
