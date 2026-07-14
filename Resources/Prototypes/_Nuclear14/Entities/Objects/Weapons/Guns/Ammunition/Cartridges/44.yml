@@ -1,7 +1,7 @@
 - type: entity
   id: N14Cartridge44Magnum
   name: cartridge (.44 magnum)
-  parent: BaseCartridgeMagnum
+  parent: BaseCartridgeHeavyRifle
   components:
   - type: CartridgeAmmo
     proto: N14Bullet44

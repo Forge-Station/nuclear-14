@@ -1,7 +1,7 @@
 - type: entity
   id: N14Cartridge762Rifle
   name: cartridge (7.62mm)
-  parent: BaseCartridgeRifle
+  parent: BaseCartridgeLightRifle
   components:
   - type: CartridgeAmmo
     proto: N14Bullet762
