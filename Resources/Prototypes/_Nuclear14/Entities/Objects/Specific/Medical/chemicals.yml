@@ -603,10 +603,10 @@
   - type: SolutionContainerManager
     solutions:
       food:
-        maxVol: 20
+        maxVol: 10
         reagents:
         - ReagentId: HealingPowder
-          Quantity: 20
+          Quantity: 5
   - type: Food
     forceFeedDelay: 1
     transferAmount: null
@@ -652,7 +652,7 @@
         maxVol: 10
         reagents:
         - ReagentId: BerserkerMixture
-          Quantity: 10
+          Quantity: 5
   - type: Food
     forceFeedDelay: 1
     transferAmount: 10
@@ -736,7 +736,7 @@
         maxVol: 20
         reagents:
         - ReagentId: HealingPoultice
-          Quantity: 20
+          Quantity: 5
 
 - type: entity
   parent: DrinkBottleGlassBaseFull

@@ -21,6 +21,14 @@
           type: Animal
         reagent: Protein
         amount: 0.5
+      - !type:GenericStatusEffect
+        conditions:
+        - !type:ReagentThreshold
+          reagent: Antidote
+          max: 0.01
+        key: Drowsiness
+        time: 10
+        type: Remove
 
 - type: reagent
   id: N14RadParticleFood

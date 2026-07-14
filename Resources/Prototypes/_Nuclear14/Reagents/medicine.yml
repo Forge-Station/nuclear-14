@@ -96,7 +96,7 @@
       - !type:ChemVomit
         conditions:
         - !type:ReagentThreshold
-          min: 30
+          min: 15
 
 # Strong overtime healing
 - type: reagent
@@ -134,9 +134,12 @@
       metabolismRate: 0.1 # Slow
       effects:
       - !type:HealthChange
+        conditions:
+        - !type:ReagentThreshold
+          min: 10
         damage:
-          groups:
-            Toxin: -1 # TODO: Change this to poison only once we add toxin syringes.
+          types:
+            Poison: -0.2 # Forge-change
       - !type:ChemVomit
         probability: 0.01
 
@@ -151,10 +154,30 @@
     Medicine:
       metabolismRate: 0.5 # Medium
       effects:
+      - !type:GenericStatusEffect
+        key: Jitter
+        time: 4.0
+        type: Remove
+      - !type:GenericStatusEffect
+        key: SeeingRainbows
+        time: 10.0
+        type: Remove
+      - !type:AdjustReagent
+        reagent: FireToxin
+        amount: -3.0
+      - !type:AdjustReagent
+        reagent: NightstalkerVenom
+        amount: -3.0
+      - !type:AdjustReagent
+        reagent: CazadorVenom
+        amount: -3.0
+      - !type:AdjustReagent
+        reagent: N14UncookedAnimalProteinsRad
+        amount: -3.0
       - !type:HealthChange
         damage:
-          groups:
-            Toxin: -5 # TODO: Change this to poison only once we add toxin syringes.
+          types:
+            Poison: -3 # Forge-change
 
 - type: reagent
   id: RobustHealingMixture #used in super stimpacks
@@ -239,12 +262,15 @@
   color: "#00e5ff"
   metabolisms:
     Medicine:
-      metabolismRate: 0.1 # Effectively once every 10 seconds.
+      metabolismRate: 0.2
       effects:
       - !type:HealthChange
+        conditions:
+        - !type:ReagentThreshold
+          min: 30
         damage:
           types:
-            Radiation: -1
+            Radiation: -0.25
 
 # Other
 - type: reagent
