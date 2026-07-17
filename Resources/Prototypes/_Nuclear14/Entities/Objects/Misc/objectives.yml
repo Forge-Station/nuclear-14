@@ -79,13 +79,3 @@
   id: N14HolotapeQuestNCRplans
   name: NCR plans holotape # NCR secure objective
   description: A holotape containing battle plans and base locations for the NCR.
-
-- type: entity
-  parent: N14HolotapeBlue
-  id: ForgeHolotapeProspector
-  name: голодиск искателя
-  description: Именно здесь, одинокий искатель, что-то записал. Возможно, это поможет вам в чём-то.
-  components:
-  - type: HolotapeData
-    title: holotape-prospector-title
-    content: holotape-prospector-content
