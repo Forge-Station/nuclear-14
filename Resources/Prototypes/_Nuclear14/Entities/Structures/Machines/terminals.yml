@@ -51,6 +51,19 @@
   - type: ApcPowerReceiver
     powerLoad: 100
   - type: ExtensionCableReceiver
+  - type: HolotapeReader
+  - type: HolotapeData
+  - type: TerminalRandomContent
+    contentPool:
+      - ForgeTerminalEntries
+  - type: TerminalNotebook
+    terminalId: default-terminal
+  - type: ActivatableUI
+    key: enum.HolotapeUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.HolotapeUiKey.Key:
+        type: HolotapeBoundUserInterface
   - type: ActivatableUIRequiresPower
   - type: LitOnPowered
   - type: PointLight

@@ -1,0 +1,64 @@
+<DefaultWindow xmlns="https://spacestation14.io"
+               Title="ТЕРМИНАЛ"
+               MinSize="480 380"
+               SetSize="520 500">
+    <!-- Green-on-black Vault-Tec ASCII terminal aesthetic -->
+    <!-- Background and separator styling applied in code-behind -->
+    <PanelContainer Name="BackgroundPanel" VerticalExpand="True" HorizontalExpand="True">
+        <BoxContainer Orientation="Vertical" Margin="12 8 12 8" SeparationOverride="6">
+            <!-- Terminal header -->
+            <Label Name="HeaderLabel"
+                   Text="ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL"
+                   FontColorOverride="#33FF33"
+                   StyleClasses="monospace"
+                   HorizontalAlignment="Center" />
+            <!-- Separator line -->
+            <PanelContainer Name="SepTop" MinHeight="1" HorizontalExpand="True" />
+
+            <!-- Tab buttons row (only visible when terminal has notebook) -->
+            <BoxContainer Name="TabBar" Orientation="Horizontal" SeparationOverride="4" Visible="False">
+                <Button Name="DataTabButton" Text="[ Информация ]" MinWidth="80" />
+                <Button Name="NotesTabButton" Text="[ Заметки ]" MinWidth="80" />
+            </BoxContainer>
+
+            <!-- ═══ DATA TAB content ═══ -->
+            <BoxContainer Name="DataPanel" Orientation="Vertical" VerticalExpand="True" SeparationOverride="6">
+                <!-- Entry title -->
+                <RichTextLabel Name="EntryTitleLabel"
+                               StyleClasses="monospace"
+                               HorizontalExpand="True" />
+                <!-- Separator line -->
+                <PanelContainer Name="SepMid" MinHeight="1" HorizontalExpand="True" />
+                <!-- Scrollable content area -->
+                <ScrollContainer VerticalExpand="True" HorizontalExpand="True" HScrollEnabled="False">
+                    <RichTextLabel Name="ContentLabel"
+                                   StyleClasses="monospace"
+                                   HorizontalExpand="True" />
+                </ScrollContainer>
+                <!-- Footer -->
+                <PanelContainer Name="SepBot" MinHeight="1" HorizontalExpand="True" />
+                <Label Text="[Конец Файла]"
+                       FontColorOverride="#1a5c1a"
+                       StyleClasses="monospace"
+                       HorizontalAlignment="Center" />
+            </BoxContainer>
+
+            <!-- ═══ NOTES TAB content (hidden by default) ═══ -->
+            <BoxContainer Name="NotesPanel" Orientation="Vertical" VerticalExpand="True" SeparationOverride="4" Visible="False">
+                <!-- Scrollable note list -->
+                <ScrollContainer VerticalExpand="True" HorizontalExpand="True" HScrollEnabled="False">
+                    <BoxContainer Name="NotesList" Orientation="Vertical" SeparationOverride="4"
+                                  HorizontalExpand="True" />
+                </ScrollContainer>
+                <!-- Separator before input area -->
+                <PanelContainer Name="SepNotes" MinHeight="1" HorizontalExpand="True" />
+                <!-- Note text input - author name is auto-assigned from character name server-side -->
+                <LineEdit Name="NoteInput"
+                          PlaceHolder="Напишите вашу заметку здесь..."
+                          HorizontalExpand="True" />
+                <!-- Submit button -->
+                <Button Name="SubmitNoteButton" Text="[ ОТПРАВИТЬ ЗАМЕТКУ ]" HorizontalAlignment="Center" />
+            </BoxContainer>
+        </BoxContainer>
+    </PanelContainer>
+</DefaultWindow>
