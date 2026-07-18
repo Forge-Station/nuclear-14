@@ -1,4 +1,5 @@
 using Content.Server._NC.Discord;
+using Content.Server._Misfits.Holotape; // #Misfits Add - Terminal notes data store IoC registration
 using Content.Server.Administration;
 using Content.Server.Administration.Logs;
 using Content.Server.Administration.Managers;
@@ -82,6 +83,7 @@ namespace Content.Server.IoC
             IoCManager.Register<PlayerRateLimitManager>();
             IoCManager.Register<SharedPlayerRateLimitManager, PlayerRateLimitManager>();
             IoCManager.Register<MappingManager>();
+            IoCManager.Register<TerminalNotesDataStore>(); // #Misfits Add - Persistent terminal notes storage
         }
     }
 }
