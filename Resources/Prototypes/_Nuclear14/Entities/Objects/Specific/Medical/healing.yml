@@ -23,10 +23,21 @@
     tags:
     - N14DirtyGauze
     - Gauze
-  - type: Sprite
-    scale: 0.66, 0.66
+  - type: Appearance
+  - type: Sprite #Forge-change
+    scale: 0.7, 0.7
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_medical.rsi
-    state: gauze_diy1
+    layers:
+    - state: gauze_diy1
+      map: ["base"]
+  - type: Stack
+    stackType: N14DirtyGauze10
+    count: 10
+    baseLayer: base
+    layerStates:
+    - gauze_diy1
+    - gauze_diy2
+    - gauze_diy3
   - type: Healing
     damageContainers:
       - Biological
@@ -40,9 +51,6 @@
       path: "/Audio/Items/Medical/brutepack_begin.ogg"
     healingEndSound:
       path: "/Audio/Items/Medical/brutepack_end.ogg"
-  - type: Stack
-    stackType: N14DirtyGauze10
-    count: 10
   - type: StackPrice
     price: 2 # Forge-Change
   - type: Butcherable
@@ -120,10 +128,22 @@
   - type: Tag
     tags:
     - Ointment
+  - type: Appearance
   - type: Sprite
-    scale: 0.66, 0.66
+    scale: 0.7, 0.7
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_medical.rsi
-    state: tube1
+    layers:
+    - state: tube1
+      map: ["base"]
+  - type: Stack
+    stackType: N14Ointment10
+    count: 10
+    baseLayer: base
+    layerStates:
+    - tube1
+    - tube2
+    - tube3
+    - tube4
   - type: Healing
     damageContainers:
       - Biological
@@ -138,9 +158,6 @@
       path: "/Audio/Items/Medical/ointment_begin.ogg"
     healingEndSound:
       path: "/Audio/Items/Medical/ointment_end.ogg"
-  - type: Stack
-    stackType: N14Ointment10
-    count: 10
   - type: StackPrice
     price: 2 # Forge-Change
 
@@ -152,3 +169,81 @@
   - type: Stack
     stackType: N14Ointment10
     count: 1
+
+# Forge-change-place
+- type: entity
+  parent: BaseHealingItem
+  categories: [ HideSpawnMenu ]
+  id: N14Bandage #! Corvax-Change
+  name: bandage
+  description: A long strip of cloth which can stop bleeding. Mostly sterile.
+  suffix: full
+  components:
+  - type: Tag
+    tags:
+    - N14Bandage
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Specific/Medical/drugs.rsi
+    state: bandage
+  - type: Construction
+    graph: Bandage
+    node: bandage
+  - type: Healing
+    damageContainers:
+      - Biological
+    damage:
+      types:
+        Slash: -10 # Was 5
+        Piercing: -15 # Was 10, Buffed due to limb damage changes
+    bloodlossModifier: -10
+    healingBeginSound:
+      path: "/Audio/Items/Medical/brutepack_begin.ogg"
+    healingEndSound:
+      path: "/Audio/Items/Medical/brutepack_end.ogg"
+  - type: Stack
+    stackType: N14Bandage
+    count: 15 #Was 10, Buffed due to limb damage changes
+  - type: StackPrice
+    price: 2 # Forge-Change
+
+- type: entity
+  parent: N14Bandage
+  categories: [ HideSpawnMenu ]
+  id: N14Bandage1
+  suffix: Single
+  components:
+  - type: Stack
+    count: 1
+
+- type: entity
+  name: aloe salve
+  description: Used to treat those nasty burns. Less effective on caustic burns.
+  parent: Ointment
+  id: N14AloeSalve
+  suffix: Full
+  components:
+  - type: Appearance
+  - type: Stack
+    stackType: N14AloeSalve
+    count: 10
+    baseLayer: base
+    layerStates:
+    - aloe1
+    - aloe2
+    - aloe3
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Specific/Medical/ms13_medical_new.rsi
+    layers:
+    - state: aloe3
+      map: ["base"]
+
+- type: entity
+  id: N14AloeSalve1
+  parent: N14AloeSalve
+  suffix: Single
+  components:
+  - type: Stack
+    stackType: N14AloeSalve
+    count: 1
+  - type: Sprite
+    state: aloe1

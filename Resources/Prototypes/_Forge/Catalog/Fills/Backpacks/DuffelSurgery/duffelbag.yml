@@ -1,0 +1,22 @@
+- type: entity
+  parent: BriefcaseBase
+  name: докторский саквояж
+  description: Саквояж для хранения хирургических инструментов.
+  id: N14DoctorBag
+  components:
+  - type: Sprite
+    scale: 0.9, 0.9
+    sprite: _Nuclear14/Objects/Misc/storage.rsi
+    state: doctorsbag
+  - type: StorageFill
+    contents:
+      - id: N14Scalpel
+      - id: N14Retractor
+      - id: N14Hemostat
+      - id: N14Bonesetter
+      - id: N14Cautery
+      - id: N14SawElectric
+      - id: N14BoneGel
+      #- id: N14Drill
+      - id: N14ClothingHandsGlovesNitrile
+      - id: ClothingMaskSterile

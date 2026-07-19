@@ -47,8 +47,8 @@
     - Torch
     - Torch
     - Torch
-    - N14Bandage
-    - Ointment
+    - N14CleanGauze10
+    - N14AloeSalve
 
 - type: playTimeTracker
   id: Tribal

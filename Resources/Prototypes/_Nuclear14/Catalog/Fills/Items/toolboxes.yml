@@ -1,7 +1,7 @@
 - type: entity
   id: N14ToolboxFilled # Forge-Change
   name: toolbox
-  suffix: Filled, always
+  suffix: Filled, always, N14
   parent: ToolboxEmergency
   components:
   - type: StorageFill
@@ -18,7 +18,7 @@
 - type: entity
   id: N14ToolboxMechanical
   name: toolbox
-  suffix: Filled, always
+  suffix: Filled, always, N14
   parent: ToolboxMechanical
   components:
   - type: StorageFill
@@ -33,7 +33,7 @@
 - type: entity
   id: N14ToolboxFilledLoot # Forge-Change
   name: toolbox
-  suffix: Filled, loot
+  suffix: Filled, loot, N14
   parent: ToolboxEmergency
   components:
   - type: StorageFill
