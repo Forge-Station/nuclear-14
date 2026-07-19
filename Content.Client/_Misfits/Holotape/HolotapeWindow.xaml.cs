@@ -188,7 +188,7 @@ public sealed partial class HolotapeWindow : DefaultWindow
             var headerLabel = new RichTextLabel();
             var headerMsg = new FormattedMessage();
             headerMsg.PushColor(Color.FromHex(TermGreen));
-            headerMsg.AddMarkupPermissive($"[bold]{note.AuthorName}[/bold]  —  {note.Timestamp:yyyy-MM-dd HH:mm}");
+            headerMsg.AddMarkupPermissive($"[bold]{note.AuthorName}[/bold]");
             headerMsg.Pop();
             headerLabel.SetMessage(headerMsg);
             noteBox.AddChild(headerLabel);

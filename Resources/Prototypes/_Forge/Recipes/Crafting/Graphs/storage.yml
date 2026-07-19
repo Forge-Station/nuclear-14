@@ -7,10 +7,16 @@
         - to: toolbox
           steps:
             - material: Steel
-              amount: 6
+              amount: 5
               doAfter: 3
             - material: Plastic
-              amount: 2
+              amount: 4
+              doAfter: 2
+            - tag: DuctTape
+              icon:
+                sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi
+                state: duct_tape
+              name: duct tape
               doAfter: 2
 
     - node: toolbox

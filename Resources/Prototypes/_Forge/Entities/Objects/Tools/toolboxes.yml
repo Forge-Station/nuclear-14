@@ -1,7 +1,7 @@
 - type: entity
   id: N14ToolboxWeaponMaintenance
   name: weapon maintenance toolbox
-  parent: ToolboxMechanical
+  parent: BaseItem
   description: A reinforced toolbox for restoring and maintaining worn firearms.
   components:
   - type: Tool
@@ -11,4 +11,22 @@
     uses: 1
   - type: Construction
     graph: N14ToolboxWeaponMaintenance
-    node: start
+    node: toolbox
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/storage.rsi
+    state: toolbox-blue
+  - type: Item
+    sprite: Objects/Tools/Toolboxes/toolbox_blue.rsi
+  - type: EmitSoundOnPickup
+    sound: /Audio/SimpleStation14/Items/Handling/toolbox_pickup.ogg
+  - type: EmitSoundOnDrop
+    sound: /Audio/SimpleStation14/Items/Handling/toolbox_drop.ogg
+  - type: EmitSoundOnLand
+    sound:
+      path: /Audio/Items/toolbox_drop.ogg
+  - type: GenericVisualizer
+    visuals:
+      enum.StorageVisuals.Open:
+        base:
+          True: { state: icon-open }
+          False: { state: icon }

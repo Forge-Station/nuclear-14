@@ -115,12 +115,6 @@
     count: 1
   - proto: N14WeaponSMG10mmChinese
     price: 330
-  - proto: N14WeaponSMG12mmAdvancedChinese
-    price: 350
-    count: 2
-  - proto: N14WeaponSMG12mmAdvanced
-    price: 350
-    count: 2
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Shotguns
