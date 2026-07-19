@@ -1557,7 +1557,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 760, max: 1120 }
+    count: { min: 400, max: 620 }
   - type: Pool
     pool: caravan_hard
     count: { min: 1, max: 3 }
@@ -1603,7 +1603,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 720, max: 1050 }
+    count: { min: 300, max: 650 }
   - type: Pool
     pool: caravan_hard
     count: { min: 1, max: 3 }
@@ -1628,10 +1628,10 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 900, max: 1300 }
+    count: { min: 300, max: 500 }
   - type: Pool
     pool: caravan_hard
-    count: { min: 2, max: 6 }
+    count: { min: 2, max: 4 }
 
 - type: ncRetrievalContract
   id: BazarHeavyRecoverPiano

@@ -815,10 +815,10 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 700, max: 1000 }
+    count: { min: 400, max: 700 }
   - type: Pool
     pool: caravan_medium
-    count: { min: 2, max: 5 }
+    count: { min: 2, max: 3 }
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractEscapedWorkerAlive
@@ -840,10 +840,10 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 700, max: 1000 }
+    count: { min: 400, max: 700 }
   - type: Pool
     pool: caravan_medium
-    count: { min: 2, max: 5 }
+    count: { min: 2, max: 3 }
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractElizabethEvilAlive
@@ -865,10 +865,10 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 700, max: 1000 }
+    count: { min: 300, max: 500 }
   - type: Pool
     pool: caravan_medium
-    count: { min: 2, max: 5 }
+    count: { min: 2, max: 3 }
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractBelkaAlive
@@ -890,10 +890,10 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 700, max: 1000 }
+    count: { min: 400, max: 700 }
   - type: Pool
     pool: caravan_medium
-    count: { min: 2, max: 5 }
+    count: { min: 2, max: 3 }
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractNCRDeserterDead
@@ -915,10 +915,10 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 1500, max: 2500 }
+    count: { min: 300, max: 700 }
   - type: Pool
     pool: caravan_hard
-    count: { min: 2, max: 6 }
+    count: { min: 2, max: 3 }
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractZoyaDarbyAlive
@@ -940,10 +940,10 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 1000, max: 2500 }
+    count: { min: 300, max: 600 }
   - type: Pool
     pool: caravan_hard
-    count: { min: 2, max: 6 }
+    count: { min: 1, max: 2 }
 
 - type: ncGhostRoleContract
   id: NcGhostRoleContractFreshDead
@@ -965,7 +965,7 @@
   reward:
   - type: Currency
     currency: Caps
-    count: { min: 700, max: 1000 }
+    count: { min: 300, max: 700 }
   - type: Pool
     pool: caravan_medium
-    count: { min: 2, max: 5 }
+    count: { min: 2, max: 2 }
