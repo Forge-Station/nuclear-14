@@ -5,9 +5,9 @@
   name: fire ant nectar
   description: A small crystal of fire ant nectar.
   components:
-  - type: Sprite
-    sprite: Objects/Consumable/Food/ingredients.rsi # N14TODO:SPRITE: Change me
-    state: flour-big
+  - type: Sprite # Corvax-change
+    sprite: _Corvax/Objects/Consumble/Food/Ingredients/bloatflyacidsac.rsi
+    state: zhizhka_dutnya
   - type: SolutionContainerManager
     solutions:
       food:
@@ -37,9 +37,9 @@
   name: bloatfly acid sac
   description: A small acid sac from a bloatfly.
   components:
-  - type: Sprite
-    sprite: Objects/Consumable/Food/ingredients.rsi # N14TODO:SPRITE: Change me
-    state: flour-big
+  - type: Sprite # Corvax-change
+    sprite: _Corvax/Objects/Consumble/Food/Ingredients/fireantnectar.rsi 
+    state: nectar_muravya
   - type: SolutionContainerManager
     solutions:
       food:
@@ -63,11 +63,9 @@
   components:
   - type: Sprite #Forge-change
     sprite: _Corvax/Objects/Consumble/Food/Ingredients/cazadoracidsac.rsi 
-    layers:
-    state: hemostat
+    state: icon
   - type: Item
     sprite: _Corvax/Objects/Consumble/Food/Ingredients/cazadoracidsac.rsi
-    storedRotation: 90
   - type: SolutionContainerManager
     solutions:
       food:
