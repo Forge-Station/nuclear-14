@@ -82,10 +82,20 @@
     tags:
     - N14CleanGauze
     - Gauze
-  - type: Sprite
-    scale: 0.66, 0.66
-    sprite: _Nuclear14/Objects/Specific/Medical/ms13_medical.rsi
-    state: gauze
+  - type: Sprite #Forge-change
+    scale: 0.7, 0.7
+    sprite: _Corvax/Objects/Specific/Medical/medical.rsi
+    layers:
+      - state: clean_gauze1
+        map: ["base"]
+  - type: Stack
+    stackType: N14CleanGauze10
+    count: 10
+    baseLayer: base
+    layerStates:
+    - clean_gauze1
+    - clean_gauze2
+    - clean_gauze3
   - type: Healing
     damageContainers:
       - Biological
@@ -98,9 +108,6 @@
       path: "/Audio/Items/Medical/brutepack_begin.ogg"
     healingEndSound:
       path: "/Audio/Items/Medical/brutepack_end.ogg"
-  - type: Stack
-    stackType: N14CleanGauze10
-    count: 10
   - type: StackPrice
     price: 2 # Forge-Change
   - type: Butcherable

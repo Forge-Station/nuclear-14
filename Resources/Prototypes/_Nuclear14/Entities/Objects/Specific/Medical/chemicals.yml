@@ -44,15 +44,17 @@
   id: N14BaseSyringe
   abstract: true
   components:
-  - type: Item
-    sprite: _Nuclear14/Objects/Specific/Medical/ms13_stimpak.rsi
-    heldPrefix: stimpak
-  - type: Sprite
-    scale: 0.75, 0.75
-    sprite: _Nuclear14/Objects/Specific/Medical/ms13_stimpak.rsi
+  - type: Sprite # Forge-change
+    sprite: _Corvax/Objects/Specific/Chemistry/syringe.rsi
     layers:
-    - state: stimpak
-      map: ["enum.SolutionContainerLayers.Fill"]
+      - state: syringe1
+        map: ["enum.SolutionContainerLayers.Fill"]
+        visible: false
+      - state: syringe_base0
+        map: ["enum.SolutionContainerLayers.Base"]
+  - type: Icon
+    sprite: _Corvax/Objects/Specific/Chemistry/syringe.rsi
+    state: "syringe_base0"
   - type: SolutionContainerManager
     solutions:
       injector:
@@ -67,12 +69,10 @@
     solution: injector
   - type: Appearance
   - type: SolutionContainerVisuals
-    maxFillLevels: 1
-    changeColor: false
-    emptySpriteName: stimpak-empty
-  - type: WelderRefinable
-    refineResult:
-    - id: SheetPlastic1
+    maxFillLevels: 2
+    fillBaseName: syringe
+    inHandsMaxFillLevels: 3
+    inHandsFillBaseName: -fill-
   - type: Tag
     tags:
     - Syringe

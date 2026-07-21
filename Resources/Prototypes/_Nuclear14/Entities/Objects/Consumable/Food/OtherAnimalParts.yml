@@ -61,9 +61,13 @@
   name: cazador acid sac
   description: A small acid sac from a cazador.
   components:
-  - type: Sprite
-    sprite: Objects/Consumable/Food/ingredients.rsi # N14TODO:SPRITE: Change me
-    state: flour-big
+  - type: Sprite #Forge-change
+    sprite: _Corvax/Objects/Consumble/Food/Ingredients/cazadoracidsac.rsi 
+    layers:
+    state: hemostat
+  - type: Item
+    sprite: _Corvax/Objects/Consumble/Food/Ingredients/cazadoracidsac.rsi
+    storedRotation: 90
   - type: SolutionContainerManager
     solutions:
       food:

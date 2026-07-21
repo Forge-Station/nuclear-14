@@ -283,7 +283,6 @@
     sprite: _Corvax/Objects/Specific/Medical/Surgery/hemostat.rsi
     state: hemostat
   - type: Item
-    heldPrefix: hemostat
     sprite: _Corvax/Objects/Specific/Medical/Surgery/hemostat.rsi
     storedRotation: 90
   - type: MeleeWeapon
@@ -329,7 +328,6 @@
     sprite: _Corvax/Objects/Specific/Medical/Surgery/hemostat.rsi
     state: hemostat
   - type: Item
-    heldPrefix: hemostat
     sprite: _Corvax/Objects/Specific/Medical/Surgery/hemostat.rsi
     storedRotation: 90
   - type: Hemostat
