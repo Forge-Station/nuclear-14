@@ -82,6 +82,7 @@
     tags:
     - N14CleanGauze
     - Gauze
+  - type: Appearance
   - type: Sprite #Forge-change
     scale: 0.7, 0.7
     sprite: _Corvax/Objects/Specific/Medical/medical.rsi
