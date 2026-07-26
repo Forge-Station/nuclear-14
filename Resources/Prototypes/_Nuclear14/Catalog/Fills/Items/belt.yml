@@ -1,7 +1,7 @@
 - type: entity
   id: N14ClothingBeltUtilityFilled
   parent: ClothingBeltUtility
-  suffix: Filled
+  suffix: Filled, N14
   components:
   - type: StorageFill
     contents:
@@ -26,7 +26,7 @@
 - type: entity
   id: N14ClothingBeltMedicalFilled
   parent: ClothingBeltMedical
-  suffix: Filled
+  suffix: Filled, N14
   components:
   - type: StorageFill
     contents:
@@ -41,7 +41,7 @@
 - type: entity
   id: N14ClothingBeltPlantFilled
   parent: ClothingBeltPlant
-  suffix: Filled
+  suffix: Filled, N14
   components:
   - type: StorageFill
     contents:

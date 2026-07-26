@@ -44,15 +44,17 @@
   id: N14BaseSyringe
   abstract: true
   components:
-  - type: Item
-    sprite: _Nuclear14/Objects/Specific/Medical/ms13_stimpak.rsi
-    heldPrefix: stimpak
-  - type: Sprite
-    scale: 0.75, 0.75
-    sprite: _Nuclear14/Objects/Specific/Medical/ms13_stimpak.rsi
+  - type: Sprite # Forge-change
+    sprite: _Corvax/Objects/Specific/Chemistry/syringe.rsi
     layers:
-    - state: stimpak
-      map: ["enum.SolutionContainerLayers.Fill"]
+      - state: syringe1
+        map: ["enum.SolutionContainerLayers.Fill"]
+        visible: false
+      - state: syringe_base0
+        map: ["enum.SolutionContainerLayers.Base"]
+  - type: Icon
+    sprite: _Corvax/Objects/Specific/Chemistry/syringe.rsi
+    state: "syringe_base0"
   - type: SolutionContainerManager
     solutions:
       injector:
@@ -67,12 +69,10 @@
     solution: injector
   - type: Appearance
   - type: SolutionContainerVisuals
-    maxFillLevels: 1
-    changeColor: false
-    emptySpriteName: stimpak-empty
-  - type: WelderRefinable
-    refineResult:
-    - id: SheetPlastic1
+    maxFillLevels: 2
+    fillBaseName: syringe
+    inHandsMaxFillLevels: 3
+    inHandsFillBaseName: -fill-
   - type: Tag
     tags:
     - Syringe
@@ -603,15 +603,18 @@
   - type: SolutionContainerManager
     solutions:
       food:
-        maxVol: 20
+        maxVol: 15
         reagents:
         - ReagentId: HealingPowder
-          Quantity: 20
-  - type: Food
+          Quantity: 10
+  - type: Tag
+    tags:
+    - N14HealingPowder          
+  - type: Food # Forge-Change
     forceFeedDelay: 1
-    transferAmount: null
+    transferAmount: 5
     eatMessage: food-swallow
-    useSound: /Audio/Items/pill.ogg
+    # useSound: /Audio/Items/pill.ogg
   - type: FlavorProfile
     ignoreReagents: []
   - type: SolutionSpiker
@@ -634,7 +637,7 @@
     graph: N14HealingPowder
     node: healingpowder
 
-- type: entity
+- type: entity # Forge-add
   name: berserker powder
   parent: BaseItem
   id: N14BerserkerPowder
@@ -649,15 +652,15 @@
   - type: SolutionContainerManager
     solutions:
       food:
-        maxVol: 10
+        maxVol: 15
         reagents:
         - ReagentId: BerserkerMixture
           Quantity: 10
-  - type: Food
+  - type: Food # Forge-Change
     forceFeedDelay: 1
-    transferAmount: 10
+    transferAmount: 5
     eatMessage: food-swallow
-    useSound: /Audio/Items/pill.ogg
+    # useSound: /Audio/Items/pill.ogg
   - type: FlavorProfile
     ignoreReagents: []
   - type: SolutionSpiker
@@ -736,7 +739,7 @@
         maxVol: 20
         reagents:
         - ReagentId: HealingPoultice
-          Quantity: 20
+          Quantity: 5
 
 - type: entity
   parent: DrinkBottleGlassBaseFull
@@ -768,7 +771,7 @@
   - type: SolutionContainerManager
     solutions:
       food:
-        maxVol: 20
+        maxVol: 25
         reagents:
         - ReagentId: MourningPoultice
           Quantity: 20
@@ -820,49 +823,6 @@
         acts: [ "Destruction" ]
 
 - type: entity
-  parent: BaseHealingItem
-  id: N14Bandage #! Corvax-Change
-  name: bandage
-  description: A long strip of cloth which can stop bleeding. Mostly sterile.
-  suffix: full
-  components:
-  - type: Tag
-    tags:
-    - N14Bandage
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Specific/Medical/drugs.rsi
-    state: bandage
-  - type: Construction
-    graph: Bandage
-    node: bandage
-  - type: Healing
-    damageContainers:
-      - Biological
-    damage:
-      types:
-        Slash: -10 # Was 5
-        Piercing: -15 # Was 10, Buffed due to limb damage changes
-    bloodlossModifier: -10
-    healingBeginSound:
-      path: "/Audio/Items/Medical/brutepack_begin.ogg"
-    healingEndSound:
-      path: "/Audio/Items/Medical/brutepack_end.ogg"
-  - type: Stack
-    stackType: N14Bandage
-    count: 15 #Was 10, Buffed due to limb damage changes
-  - type: StackPrice
-    price: 2 # Forge-Change
-
-- type: entity
-  parent: N14Bandage
-  id: N14Bandage1
-  suffix: Single
-  components:
-  - type: Stack
-    count: 1
-
-
-- type: entity
   parent: DrinkBottleGlassBaseFull
   id: N14Ethanol
   name: ethanol bottle
@@ -878,35 +838,3 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Specific/Medical/drugs.rsi
     state: ethanol
-
-- type: entity
-  name: aloe salve
-  description: Used to treat those nasty burns. Less effective on caustic burns.
-  parent: Ointment
-  id: N14AloeSalve
-  suffix: Full
-  components:
-  - type: Stack
-    stackType: N14AloeSalve
-    count: 10
-    baseLayer: base
-    layerStates:
-    - aloe1
-    - aloe2
-    - aloe3
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Specific/Medical/ms13_medical_new.rsi
-    layers:
-    - state: aloe3
-      map: ["base"]
-
-- type: entity
-  id: N14AloeSalve1
-  parent: N14AloeSalve
-  suffix: Single
-  components:
-  - type: Stack
-    stackType: N14AloeSalve
-    count: 1
-  - type: Sprite
-    state: aloe1
