@@ -24,7 +24,7 @@ flavor-complex-vim = странно напоминает шоколадный п
 flavor-complex-vim-captains-blend = шоколадный пудинг с креветочным послевкусием
 flavor-complex-vim-refresh = мятный
 flavor-complex-vim-quartz = шоколадный пудинг с привкусом цезия
-
+flavor-complex-sunset-sarsaparilla = непередаваемая смесь сладкого рутбира
 
 ## Коктейли
 

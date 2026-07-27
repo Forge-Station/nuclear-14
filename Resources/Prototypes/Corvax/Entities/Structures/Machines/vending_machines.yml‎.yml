@@ -1,0 +1,51 @@
+#MARK: Sunset Sarsaparilla Storage
+- type: entity
+  parent: N14VendingMachineStorageBase
+  id: N14VendingMachineSunsetSarsaparillaNew
+  suffix: storage, empty
+  name: Sunset Sarsaparilla machine
+  description: A Pre-War vending machine that dispenses Sunset Sarsaparilla Corporation branded beverages.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Structures/Machines/VendingMachines/sunsetsarsaparilla.rsi
+    layers:
+    - state: "off"
+      map: ["enum.VendingMachineVisualLayers.Base"]
+  - type: Storage
+    grid:
+    - 0,0,3,3
+    maxItemSize: Small
+  - type: UserInterface
+    interfaces:
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+  - type: ContainerContainer
+    containers:
+      storagebase: !type:Container
+  - type: Transform
+    anchored: true
+
+#MARK: Sunset Sarsaparilla Filled
+- type: entity
+  parent: N14VendingMachineSunsetSarsaparillaNew
+  id: N14VendingMachineSunsetSarsaparillaNewFilled
+  suffix: storage, random
+  components:
+  - type: StorageFill
+    contents:
+      - id: N14DrinkSunsetSarsaparillaBottleFull
+        prob: 0.3
+      - id: N14DrinkSunsetSarsaparillaBottleFull
+        prob: 0.3
+      - id: N14DrinkSunsetSarsaparillaBottleFull
+        prob: 0.3
+      - id: N14DrinkSunsetSarsaparillaBottleFull
+        prob: 0.3
+      - id: BrokenBottle
+        prob: 0.4
+      - id: BrokenBottle
+        prob: 0.4
+      - id: BrokenBottle
+        prob: 0.4
+      - id: BrokenBottle
+        prob: 0.4
