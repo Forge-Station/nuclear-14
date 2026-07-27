@@ -203,3 +203,27 @@
   physicalDesc: reagent-physical-desc-fizzy
   flavor: vim-quartz
   color: "#E5F2AC"
+
+- type: reagent
+  parent: BaseSoda
+  id: SunsetSarsaparilla
+  name: reagent-name-sunset-sarsaparilla
+  desc: reagent-desc-sunset-sarsaparilla
+  physicalDesc: reagent-physical-desc-fizzy
+  flavor: sunset-sarsaparilla
+  color: "#362d1d"
+  metabolisms:
+    Drink:
+      effects:
+      - !type:SatiateThirst
+        factor: -3.5
+    Medicine:
+      metabolismRate: 0.1 # Slow
+      effects:
+      - !type:HealthChange
+        damage:
+          groups:
+            Burn: -1.5
+            Brute: -1.5
+      - !type:ModifyBleedAmount
+        amount: -0.5

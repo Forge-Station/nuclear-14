@@ -111,6 +111,17 @@
     HealingMixture: 1
 
 - type: reaction
+  id: SunsetSarsaparilla
+  minTemp: 353.15 # 80 degrees Celcius.
+  reactants:
+    ExtractXander:
+      amount: 1
+    ExtractAgaveNectar:
+      amount: 1
+  products:
+    SunsetSarsaparilla: 2
+
+- type: reaction
   id: StimpakConversion
   reactants:
     HealingMixture:

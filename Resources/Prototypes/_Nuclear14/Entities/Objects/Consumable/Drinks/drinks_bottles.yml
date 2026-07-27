@@ -159,6 +159,30 @@
 
 - type: entity
   parent: DrinkBottleBaseFull50
+  id: N14DrinkSunsetSarsaparillaBottleFull
+  name: Sunset Sarsaparilla bottle
+  description: A drink from the Wild West of America, with the sweet taste of root beer for real cowboys.
+  components:
+  - type: Openable # Forge-Change
+    closeable: false
+  - type: SpawnWhenOpened # Forge-Add
+    prototypes:
+    - id: N14CurrencyCap
+      amount: 1
+  - type: SolutionContainerManager
+    solutions:
+      drink:
+        maxVol: 30
+        reagents:
+        - ReagentId: SunsetSarsaparilla
+          Quantity: 30
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Consumable/Drinks/sunset_sarsaparilla.rsi
+  - type: Item
+    size: Small
+
+- type: entity
+  parent: DrinkBottleBaseFull50
   id: N14DrinkIrradiatedNukaColaBottleFull
   name: irradiated Nuka-Cola bottle
   description: An unrefreshing beverage that has a extremely sugary taste. The aftertaste is bitter and burnt.
