@@ -265,7 +265,8 @@
             groups:
               Brute: -0.75 # Forge-Change
               Burn: -1.0 # Forge-Change
-              Toxin: -0.2 # Forge-Change
+            types:
+              Poison: -0.1 # Forge-Change
 
 - type: trait
   id: N14WorldChampion

@@ -95,7 +95,7 @@
 - type: reaction
   id: Turbo
   reactants:
-    N14CazadorAcid:
+    CazadorVenom:
       amount: 1
     ExtractBroc:
       amount: 1

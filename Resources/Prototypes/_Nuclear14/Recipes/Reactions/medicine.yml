@@ -172,3 +172,27 @@
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14Ointment1
+
+#Forge-add-start
+- type: reaction
+  id: Bloodpack1
+  reactants:
+    Saline:
+      amount: 5
+    Blood:
+      amount: 15
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: Bloodpack1
+
+- type: reaction
+  id: N14RadBloodpack1
+  reactants:
+    Saline:
+      amount: 5
+    WastelandBlood:
+      amount: 15
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14RadBloodpack1
+#Forge-add-end

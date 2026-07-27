@@ -6,19 +6,19 @@
   description: A small crystal of fire ant nectar.
   components:
   - type: Sprite # Corvax-change
-    sprite: _Corvax/Objects/Consumble/Food/Ingredients/bloatflyacidsac.rsi
-    state: zhizhka_dutnya
+    sprite: _Corvax/Objects/Consumble/Food/Ingredients/fireantnectar.rsi
+    state: nectar_muravya
   - type: SolutionContainerManager
     solutions:
       food:
         maxVol: 10
         reagents:
-        - ReagentId: N14FireAntNectar
+        - ReagentId: FireToxin
           Quantity: 10
   - type: Extractable
     juiceSolution:
       reagents:
-      - ReagentId: N14FireAntNectar
+      - ReagentId: FireToxin
         Quantity: 10
   - type: Spillable
     solution: food
@@ -38,8 +38,8 @@
   description: A small acid sac from a bloatfly.
   components:
   - type: Sprite # Corvax-change
-    sprite: _Corvax/Objects/Consumble/Food/Ingredients/fireantnectar.rsi 
-    state: nectar_muravya
+    sprite: _Corvax/Objects/Consumble/Food/Ingredients/bloatflyacidsac.rsi
+    state: zhizhka_dutnya
   - type: SolutionContainerManager
     solutions:
       food:
@@ -71,12 +71,12 @@
       food:
         maxVol: 10
         reagents:
-        - ReagentId: N14CazadorAcid
+        - ReagentId: CazadorVenom
           Quantity: 10
   - type: Extractable
     juiceSolution:
       reagents:
-      - ReagentId: N14CazadorAcid
+      - ReagentId: CazadorVenom
         Quantity: 10
   - type: StaticPrice # Forge-Change
     price: 59

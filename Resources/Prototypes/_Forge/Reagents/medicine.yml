@@ -1,0 +1,28 @@
+#MARK: Healing
+- type: reagent
+  id: StimpackThrombosis #Жидкость получаемая при смешивании двух видов стимпаков
+  name: тромбоз 
+  group: Chems
+  desc: Разные стимпаки вступили в реакцию и свернулись в густую жидкость, образующие при попадании в тело тромб.
+  physicalDesc: reagent-physical-desc-viscous
+  color: "#6d1b1b"
+  metabolisms:
+    Medicine:
+      metabolismRate: 1
+      effects:
+      - !type:HealthChange
+        damage:
+          groups:
+            Burn: -6
+            Brute: -6           
+          types:
+            Asphyxiation: 2
+            Poison: 0.25
+      - !type:ModifyBleedAmount
+        amount: -4
+      - !type:PopupMessage
+        type: Local
+        visualType: Medium
+        messages: [ "generic-reagent-effect-nauseous" ]
+        probability: 0.25
+  

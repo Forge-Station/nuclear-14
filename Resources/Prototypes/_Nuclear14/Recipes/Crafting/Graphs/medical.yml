@@ -32,7 +32,7 @@
 
 # Stimpaks
 - type: constructionGraph
-  id: N14Stimpak
+  id: N14StimpakDirty # Forge-Change
   start: start
   graph:
     - node: start
@@ -47,11 +47,15 @@
               sprite: _Nuclear14/Objects/Specific/Medical/ms13_stimpak.rsi
               state: stimpak-empty # Forge-Change
             doAfter: 1
-          - material: Bloodpack
+          - tag: Bloodpack # Forge-Change
+            name: an bloodpack
+            icon:
+              sprite: _Nuclear14/Objects/Specific/Medical/bloodbags.rsi
+              state: radblood
             doAfter: 1
 
     - node: stimpak
-      entity: N14Stimpak
+      entity: N14StimpakDirty
 
 # RadAway Inhaler
 - type: constructionGraph

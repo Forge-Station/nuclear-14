@@ -101,3 +101,53 @@
   - type: Stack
     stackType: N14RegenerativeOintment
     count: 1
+
+- type: entity
+  name: грязный пакет крови
+  description: Самодельный пакет крови, который можно использовать для лечения кровопотери. Вызывает малое радиационное заражение при использовании.
+  parent: BaseHealingItem
+  id: N14RadBloodpack
+  suffix: Full
+  components:
+  - type: Tag
+    tags:
+    - Bloodpack
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Specific/Medical/bloodbags.rsi
+    state: radblood
+  - type: Healing
+    damageContainers:
+      - Biological
+    damage:
+      types:
+        Bloodloss: -2.5 #lowers bloodloss damage, was .5, buffed due to Limb Damage Changes
+        Radiation: 2
+    ModifyBloodLevel: 30 #used to restore 5% blood per use, now restores about 10% blood per use on standard Buffed due to Limb Damage Changes
+    healingBeginSound:
+      path: "/Audio/Items/Medical/brutepack_begin.ogg"
+    healingEndSound:
+      path: "/Audio/Items/Medical/brutepack_end.ogg"
+  - type: Stack
+    stackType: Bloodpack
+    count: 10 # Forge-Change
+  - type: StackPrice
+    price: 4 # Corvax-Change
+
+- type: entity
+  id: N14RadBloodpack1
+  parent: N14RadBloodpack
+  suffix: Single
+  components:
+  - type: Stack
+    stackType: N14RadBloodpack
+    count: 1
+
+- type: entity
+  name: пакет крови
+  description: Содержит универсальный кровезаменитель, разработанный в лабораториях Med-Tek. 
+  parent: Bloodpack
+  id: Bloodpack1
+  suffix: Single
+  components:
+  - type: Stack
+    count: 1

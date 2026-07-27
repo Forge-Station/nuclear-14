@@ -1,0 +1,65 @@
+- type: reaction
+  id: ThrombosisBaseRobust
+  impact: Medium
+  reactants:
+    HealingMixture:
+      amount: 1
+    RobustHealingMixture:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisBaseUltra
+  impact: Medium
+  reactants:
+    HealingMixture:
+      amount: 1
+    UltraRobustHealingMixture:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisBaseDirty
+  impact: Medium
+  reactants:
+    HealingMixture:
+      amount: 1
+    DirtyStimpak:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisRobustUltra
+  impact: Medium
+  reactants:
+    RobustHealingMixture:
+      amount: 1
+    UltraRobustHealingMixture:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisRobustDirty
+  impact: Medium
+  reactants:
+    RobustHealingMixture:
+      amount: 1
+    DirtyStimpak:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisUltraDirty
+  impact: Medium
+  reactants:
+    UltraRobustHealingMixture:
+      amount: 1
+    DirtyStimpak:
+      amount: 1
+  products:
+    StimpackThrombosis: 2

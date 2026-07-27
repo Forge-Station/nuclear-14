@@ -19,6 +19,7 @@
     maxFillLevels: 1
     changeColor: false
     emptySpriteName: stimpak-empty
+    injectOnly: true    
   - type: SolutionContainerManager
     solutions:
       pen:
@@ -26,9 +27,10 @@
   - type: ExaminableSolution
     solution: pen
   - type: Hypospray
-    onlyAffectsMobs: false
     solutionName: pen
-    transferAmount: 30
+    transferAmount: 15
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: Appearance
   - type: WelderRefinable
     refineResult:
@@ -73,6 +75,7 @@
     fillBaseName: syringe
     inHandsMaxFillLevels: 3
     inHandsFillBaseName: -fill-
+    injectOnly: true
   - type: Tag
     tags:
     - Syringe
@@ -110,16 +113,19 @@
     maxFillLevels: 1
     changeColor: false
     emptySpriteName: stimpak-empty
+    injectOnly: true 
   - type: Hypospray
     solutionName: pen
-    transferAmount: 25
+    transferAmount: 10
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: SolutionContainerManager
     solutions:
       pen:
-        maxVol: 25
+        maxVol: 10
         reagents:
         - ReagentId: HealingMixture
-          Quantity: 25
+          Quantity: 10
   - type: Construction
     graph: N14Stimpak
     node: stimpak
@@ -135,10 +141,10 @@
   - type: SolutionContainerManager
     solutions:
       pen:
-        maxVol: 25
+        maxVol: 10
         reagents:
         - ReagentId: DirtyStimpak
-          Quantity: 25
+          Quantity: 10
 
 - type: entity
   parent: N14ChemicalSyringe
@@ -163,14 +169,16 @@
     emptySpriteName: superstimpak-empty
   - type: Hypospray
     solutionName: pen
-    transferAmount: 25
+    transferAmount: 10
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: SolutionContainerManager
     solutions:
       pen:
-        maxVol: 25
+        maxVol: 10
         reagents:
         - ReagentId: RobustHealingMixture
-          Quantity: 25
+          Quantity: 10
 
 - type: entity
   parent: N14ChemicalSyringe
@@ -190,6 +198,8 @@
   - type: Hypospray
     solutionName: pen
     transferAmount: 15
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: SolutionContainerVisuals
     maxFillLevels: 1
     changeColor: false
@@ -232,7 +242,9 @@
     emptySpriteName: jet_used
   - type: Hypospray
     solutionName: pen
-    transferAmount: 18
+    transferAmount: 15
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: Construction # N14:TODO: Probably move this to lathe
     graph: N14JetInhaler
     node: jet
@@ -276,6 +288,8 @@
   - type: Hypospray
     solutionName: pen
     transferAmount: 10
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: SolutionContainerManager
     solutions:
       pen:
@@ -318,6 +332,8 @@
   - type: Hypospray
     solutionName: pen
     transferAmount: 20
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: SolutionContainerManager
     solutions:
       pen:
@@ -346,6 +362,8 @@
   - type: Hypospray
     solutionName: pen
     transferAmount: 15
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: Tag
     tags:
     - Syringe
@@ -385,6 +403,8 @@
   - type: Hypospray
     solutionName: pen
     transferAmount: 20
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: SolutionContainerManager
     solutions:
       pen:
@@ -430,6 +450,8 @@
   - type: Hypospray
     solutionName: pen
     transferAmount: 20
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: SolutionContainerManager
     solutions:
       pen:
@@ -462,6 +484,8 @@
   - type: Hypospray
     solutionName: pen
     transferAmount: 10
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: SolutionContainerManager
     solutions:
       pen:
@@ -691,7 +715,9 @@
       drink:
         reagents:
         - ReagentId: AntidoteMixture
-          Quantity: 100
+          Quantity: 50
+  - type: Item #Forge-change
+    size: Small
   - type: Sprite
     sprite: _Nuclear14/Objects/Specific/Medical/fallout2.rsi
     state: antidote
@@ -711,9 +737,9 @@
     maxFillLevels: 1
     changeColor: false
     emptySpriteName: powder1
-  - type: Hypospray
-    solutionName: pen
-    transferAmount: 15
+  # - type: Hypospray
+  #   solutionName: pen
+  #   transferAmount: 15
   - type: SolutionContainerManager
     solutions:
       pen:
@@ -736,10 +762,10 @@
   - type: SolutionContainerManager
     solutions:
       food:
-        maxVol: 20
+        maxVol: 25
         reagents:
         - ReagentId: HealingPoultice
-          Quantity: 5
+          Quantity: 20
 
 - type: entity
   parent: DrinkBottleGlassBaseFull
@@ -747,6 +773,8 @@
   name: Bitterdrink
   description: A bottle containing a mixture of plants to aid against poisons and radiation.
   components:
+  - type: Item #Forge-change
+    size: Small
   - type: SolutionContainerManager
     solutions:
       drink:
@@ -782,16 +810,16 @@
   name: ultra stimpak
   description: A special type of super-stimpak with an additional mixture of chemicals which makes a man near invincible at a great cost. It is widely deemed inhumane and outlawed.
   components:
-  - type: Hypospray
-    solutionName: pen
-    transferAmount: 25
+  # - type: Hypospray
+  #   solutionName: pen
+  #   transferAmount: 5
   - type: SolutionContainerManager
     solutions:
       pen:
-        maxVol: 25
+        maxVol: 5
         reagents:
         - ReagentId: UltraRobustHealingMixture
-          Quantity: 25
+          Quantity: 5
 
 - type: entity
   parent: N14HealingPowder
@@ -828,6 +856,8 @@
   name: ethanol bottle
   description: A small brown glass bottle containing ethanol. Great for disinfecting wounds.
   components:
+  - type: Item #Forge-change
+    size: Small
   - type: SolutionContainerManager
     solutions:
       drink:
