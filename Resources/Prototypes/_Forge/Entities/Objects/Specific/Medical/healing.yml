@@ -122,13 +122,13 @@
       types:
         Bloodloss: -2.5 #lowers bloodloss damage, was .5, buffed due to Limb Damage Changes
         Radiation: 2
-    ModifyBloodLevel: 30 #used to restore 5% blood per use, now restores about 10% blood per use on standard Buffed due to Limb Damage Changes
+    ModifyBloodLevel: 20 #used to restore 5% blood per use, now restores about 10% blood per use on standard Buffed due to Limb Damage Changes
     healingBeginSound:
       path: "/Audio/Items/Medical/brutepack_begin.ogg"
     healingEndSound:
       path: "/Audio/Items/Medical/brutepack_end.ogg"
   - type: Stack
-    stackType: Bloodpack
+    stackType: N14RadBloodpack
     count: 10 # Forge-Change
   - type: StackPrice
     price: 4 # Corvax-Change

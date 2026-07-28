@@ -23,5 +23,5 @@
       pen:
         maxVol: 10
   - type: Construction
-    graph: N14Stimpak
+    graph: N14StimpakDirty
     node: stimpak

@@ -124,7 +124,7 @@
         - ReagentId: HealingMixture
           Quantity: 10
   - type: Construction
-    graph: N14Stimpak
+    graph: N14StimpakDirty
     node: stimpak
 
 - type: entity

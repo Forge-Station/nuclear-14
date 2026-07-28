@@ -1,6 +1,6 @@
 - type: stack
   id: N14MedicatedSuture
-  name: Медицинская нить
+  name: медицинская нить
   icon: { sprite: _Nuclear14/Objects/Specific/Medical/ms13_medical.rsi, state: stitch1 }
   spawn: N14MedicatedSuture1  
   maxCount: 10 
@@ -8,7 +8,7 @@
 
 - type: stack
   id: N14RegenerativeOintment
-  name: Продвинутая мазь
+  name: продвинутая мазь
   icon: { sprite: _Nuclear14/Objects/Specific/Medical/ms13_medical_new.rsi, state: ointment1 }
   spawn: N14RegenerativeOintment1  
   maxCount: 10 
@@ -17,7 +17,7 @@
 - type: stack
   id: N14RadBloodpack
   name: грязный пакет крови
-  icon: { sprite: _Nuclear14/Objects/Specific/Medical/bloodbags.rsi, state: radblood }
+  icon: { sprite: _Nuclear14/Objects/Specific/Medical/bloodbags.rsi, state: radblood1 }
   spawn: N14RadBloodpack1  
   maxCount: 10 
   itemSize: 1
