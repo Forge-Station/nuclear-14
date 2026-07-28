@@ -52,7 +52,6 @@
             icon:
               sprite: _Nuclear14/Objects/Specific/Medical/bloodbags.rsi
               state: radblood
-            amount: 1
             doAfter: 1
 
     - node: stimpak
