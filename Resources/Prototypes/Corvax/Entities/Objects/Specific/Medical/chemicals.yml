@@ -12,7 +12,7 @@
           Quantity: 15
 
 - type: entity
-  parent: N14Stimpak
+  parent: N14DoctorSyringe
   id: N14StimpakEmpty
   suffix: пустой
   name: стимпак
@@ -21,7 +21,7 @@
   - type: SolutionContainerManager
     solutions:
       pen:
-        maxVol: 25
+        maxVol: 10
   - type: Construction
     graph: N14Stimpak
     node: stimpak

@@ -12,10 +12,7 @@
     butcheringType: Knife
     spawned:
     - id: N14MaterialLeather1
-      amount: 1
-    - id: MaterialCloth1
-      amount: 1
-
+      amount: 2
 
 - type: entity
   parent: ClothingShoesMilitaryBase
@@ -69,6 +66,11 @@
     sprite: _Nuclear14/Clothing/Shoes/FalloutBoots/firefighter.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/Shoes/FalloutBoots/firefighter.rsi
+  - type: Butcherable
+    butcheringType: Knife
+    spawned:
+    - id: N14MaterialLeather1
+      amount: 2
 
 - type: entity
   parent: ClothingShoesBase

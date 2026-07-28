@@ -207,6 +207,9 @@ reagent-desc-nightstalker-venom = The venom of a nightstalker. While not nearly 
 reagent-name-cazador-venom = cazador venom
 reagent-desc-cazador-venom = The venom of a cazador. Quick death is near guaranteed.
 
+reagent-name-thrombosis = thrombosis
+reagent-desc-thrombosis = The various stimpacks reacted and coagulated into a thick liquid, forming a clot when they entered the body.
+
 # Chems
 reagent-name-healing-powder = healing powder
 reagent-desc-healing-powder = A powder made from crushed plants.
@@ -228,6 +231,9 @@ reagent-desc-smelling-salts = A grainy mixture of rocks with an insanely potent 
 
 reagent-name-mourning-poultice = mournin poultice
 reagent-desc-mourning-poultice = A mixture of poisonous crushed plants used in tribalistic ceremonies said to make you see gods.
+
+berserker-mixture-name = berserker powder
+berserker-mixture-desc = A powder prepared from mineral plants that causes a release of adrenaline into the blood.
 
 # Medicine
 reagent-name-healing-mixture = stimpak

@@ -430,9 +430,9 @@
 
 - type: reagent # Forge-add
   id: BerserkerMixture
-  name: порошок берсерка
+  name: reagent-name-berserker-mixture
   group: Chems
-  desc: reagent-name-robust-movespeedmod-mixture
+  desc: reagent-desc-berserker-mixture
   physicalDesc: reagent-physical-desc-powdery
   color: "#fff5d2"
   boilingPoint: 255.0

@@ -14,7 +14,7 @@
         damage:
           groups:
             Burn: -15
-            Brute: -15
+            Brute: -20
             Airloss: -6
       - !type:ModifyBleedAmount
         amount: -2
@@ -25,7 +25,7 @@
         damage:
           groups:
             Burn: -7.5
-            Brute: -7.5
+            Brute: -10
             Airloss: -4
           types:
             Poison: 2
@@ -52,7 +52,7 @@
         damage:
           groups:
             Burn: -45
-            Brute: -45
+            Brute: -60
             Airloss: -15
       - !type:ModifyBleedAmount
         amount: -3
@@ -63,7 +63,7 @@
         damage:
           groups:
             Burn: -17.5
-            Brute: -17.5
+            Brute: -20
             Airloss: -7.5
           types:
             Poison: 9
@@ -94,7 +94,7 @@
         damage:
           groups:
             Burn: -60
-            Brute: -60
+            Brute: -80
             Airloss: -20
             Toxin: 2
       - !type:ModifyBleedAmount
@@ -106,7 +106,7 @@
         damage:
           groups:
             Burn: -30 # Temporary invincibility more or less
-            Brute: -30
+            Brute: -40
             Airloss: -10
           types:
             Poison: 9
@@ -137,7 +137,7 @@
         damage:
           groups:
             Burn: -12
-            Brute: -12
+            Brute: -16
             Airloss: -3
           types:
             Poison: 0.25
@@ -150,7 +150,7 @@
         damage:
           groups:
             Burn: -6
-            Brute: -6
+            Brute: -8
             Airloss: -1.5
           types:
             Poison: 0.5
@@ -179,7 +179,7 @@
         damage:
           groups:
             Burn: -1.5
-            Brute: -1.5
+            Brute: -2
       - !type:ModifyBleedAmount
         amount: -0.5
       - !type:ChemVomit
@@ -202,8 +202,8 @@
         damage:
           groups:
             Burn: -3
-            Brute: -3
-            Airloss: -1
+            Brute: -4
+            Airloss: -2
       - !type:ModifyBleedAmount
         amount: -1
       - !type:Drunk
@@ -235,6 +235,10 @@
             Poison: -1
       - !type:ModifyBleedAmount
         amount: -0.5
+      - !type:ChemVomit
+        conditions:
+        - !type:ReagentThreshold
+          min: 35
 
 #MARK: Poison
 - type: reagent
@@ -250,13 +254,14 @@
       effects:
       - !type:HealthChange
         conditions:
-        - !type:ReagentThreshold
-          min: 10
         damage:
           types:
             Poison: -0.2 # Forge-change
       - !type:ChemVomit
         probability: 0.01
+        conditions:
+        - !type:ReagentThreshold
+          min: 5
 
 - type: reagent
   id: Antidote
@@ -340,11 +345,13 @@
       effects:
       - !type:HealthChange
         conditions:
-        - !type:ReagentThreshold
-          min: 30
         damage:
           types:
             Radiation: -0.25
+      - !type:ChemVomit
+        conditions:
+        - !type:ReagentThreshold
+          min: 30
 
 # Other
 - type: reagent
@@ -437,19 +444,41 @@
   group: Chems
   desc: reagent-desc-bitterdrink
   physicalDesc: reagent-physical-desc-sticky
-  color: "#ba67f5"
+  color: "#5c4033"
   metabolisms:
     Medicine:
-      metabolismRate: 0.1 # Effectively once every 10 seconds.
+      metabolismRate: 0.25
       effects:
+      # Эффект при нахождении в организме от 10 до 20 единиц (Оптимальное лечение)
       - !type:HealthChange
-        damage:
-          groups:
-            Toxin: -2.5
-          types:
-            Radiation: -1
-      - !type:ChemVomit
-        probability: 0.05
         conditions:
         - !type:ReagentThreshold
-          min: 25
+          min: 10
+          max: 20
+        damage:
+          groups:
+            Brute: -3
+            Burn: -4
+
+      # Пониженное лечение, если в организме меньше 10 единиц
+      - !type:HealthChange
+        conditions:
+        - !type:ReagentThreshold
+          max: 10
+        damage:
+          groups:
+            Brute: -1.5
+            Burn: -2
+      - !type:ChemVomit
+        conditions:
+        - !type:ReagentThreshold
+          max: 10
+        probability: 0.15
+
+      # Наказание за превышение лимита в 21 единиц (Передозировка)
+      - !type:HealthChange
+        conditions:
+      - !type:ChemVomit
+        conditions:
+        - !type:ReagentThreshold
+          min: 21

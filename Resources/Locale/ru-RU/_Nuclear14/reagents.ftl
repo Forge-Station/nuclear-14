@@ -172,7 +172,8 @@ reagent-name-nightstalker-venom = яд ночного охотника
 reagent-desc-nightstalker-venom = Яд ночного охотника из тёмных уголков пустоши. Не столь смертелен, как яд казадора, но всё равно заставит вас пасть на колени и молить о пощаде.
 reagent-name-cazador-venom = яд казадора
 reagent-desc-cazador-venom = Яд казадора — самый страшный кошмар всех, кто блуждает по пустошам. Быстрая смерть практически неизбежна. Бегите, если можете!
-
+reagent-name-thrombosis = тромбоз
+reagent-desc-thrombosis = Различные стимпаки вступили в реакцию и коагулировали, образуя густую жидкость и сгусток при попадании в организм.
 # Chems
 reagent-name-healing-powder = целебный порошок
 reagent-desc-healing-powder = Порошок, приготовленный из измельченных растений.
@@ -188,6 +189,9 @@ reagent-name-smelling-salts = нюхательная соль
 reagent-desc-smelling-salts = Зернистая смесь камней с невероятно сильным запахом.
 reagent-name-mourning-poultice = траурная припарка
 reagent-desc-mourning-poultice = Смесь ядовитых измельченных растений, используемая в племенных церемониях. Говорят, что она позволяет увидеть богов.
+reagent-name-berserker-mixture = порошок берсерка
+reagent-desc-berserker-mixture = Порошок, приготовленный из измельченных растений, которые вызывают выброс адреналина в кровь.
+
 # Medicine
 reagent-name-healing-mixture = стимпак
 reagent-desc-healing-mixture = Смесь реагентов, которая помогает вам излечиться.

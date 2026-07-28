@@ -150,15 +150,14 @@
 
 - type: reaction
   id: Bitterdrink
+  minTemp: 373.15 # 100 degrees Celcius.
   reactants:
-    ExtractBroc:
-      amount: 1
-    ExtractXander:
+    HealingPowder:
       amount: 1
     Water:
       amount: 1
   products:
-    Bitterdrink: 1
+    Bitterdrink: 2
 
 - type: reaction
   id: N14Ointment1
@@ -172,27 +171,3 @@
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14Ointment1
-
-#Forge-add-start
-- type: reaction
-  id: Bloodpack1
-  reactants:
-    Saline:
-      amount: 5
-    Blood:
-      amount: 15
-  effects:
-    - !type:CreateEntityReactionEffect
-      entity: Bloodpack1
-
-- type: reaction
-  id: N14RadBloodpack1
-  reactants:
-    Saline:
-      amount: 5
-    WastelandBlood:
-      amount: 15
-  effects:
-    - !type:CreateEntityReactionEffect
-      entity: N14RadBloodpack1
-#Forge-add-end

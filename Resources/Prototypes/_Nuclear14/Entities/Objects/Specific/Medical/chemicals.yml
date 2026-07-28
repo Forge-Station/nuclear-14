@@ -19,7 +19,6 @@
     maxFillLevels: 1
     changeColor: false
     emptySpriteName: stimpak-empty
-    injectOnly: true    
   - type: SolutionContainerManager
     solutions:
       pen:
@@ -113,7 +112,6 @@
     maxFillLevels: 1
     changeColor: false
     emptySpriteName: stimpak-empty
-    injectOnly: true 
   - type: Hypospray
     solutionName: pen
     transferAmount: 10
@@ -571,7 +569,6 @@
     graph: N14RadAwayPhial
     node: start
     defaultTarget: fill
-
 
 - type: entity
   parent: N14JunkItemBaseBreak

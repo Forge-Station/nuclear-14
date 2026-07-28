@@ -1,9 +1,9 @@
 #MARK: Healing
 - type: reagent
   id: StimpackThrombosis #Жидкость получаемая при смешивании двух видов стимпаков
-  name: тромбоз 
+  name: reagent-name-thrombosis
   group: Chems
-  desc: Разные стимпаки вступили в реакцию и свернулись в густую жидкость, образующие при попадании в тело тромб.
+  desc: reagent-desc-thrombosis
   physicalDesc: reagent-physical-desc-viscous
   color: "#6d1b1b"
   metabolisms:

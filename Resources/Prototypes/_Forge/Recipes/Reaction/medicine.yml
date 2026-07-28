@@ -63,3 +63,35 @@
       amount: 1
   products:
     StimpackThrombosis: 2
+
+- type: reaction
+  id: Bloodpack1
+  reactants:
+    Saline:
+      amount: 5
+    Blood:
+      amount: 15
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: Bloodpack1
+
+- type: reaction
+  id: N14RadBloodpack1
+  reactants:
+    Saline:
+      amount: 5
+    WastelandBlood:
+      amount: 15
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14RadBloodpack1
+
+- type: reaction
+  id: HomemadeSmellingSalts
+  reactants:
+    TableSalt:
+      amount: 2
+    Ethanol:
+      amount: 1
+  products:
+    SmellingSalts: 2
