@@ -1,0 +1,14 @@
+- type: gamePreset
+  id: Warfront
+  name: warfront-title
+  showInVote: true
+  description: warfront-description
+  rules:
+  - WarfrontRule
+
+- type: entity
+  id: WarfrontRule
+  parent: BaseGameRule
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: WarfrontRule

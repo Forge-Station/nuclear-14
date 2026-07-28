@@ -1,0 +1,176 @@
+# ==================== НКР ====================
+
+- type: startingGear
+  id: WarfrontNCRMajorGear
+  # Стартовое снаряжение майора НКР. Заполнить.
+  # equipment:
+  #   head:
+  #   jumpsuit:
+  #   outerClothing:
+  #   shoes:
+  #   gloves:
+  #   belt:
+  #   back:
+  #   eyes:
+  #   ears:
+  #   id:
+  #   pocket1:
+  #   pocket2:
+
+- type: entity
+  parent: MobHuman
+  id: WarfrontMobNCRMajor
+  name: NCRMajor
+  suffix: warfront
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: true
+  - type: Loadout
+    prototypes: [WarfrontNCRMajorGear]
+  - type: NpcFactionMember
+    factions:
+    - Wastelander
+    - NCR
+  - type: WarfrontFaction
+    faction: NCR
+
+- type: entity
+  parent: N14MobHumanNCRLT
+  id: WarfrontMobNCRLieutenant
+  suffix: warfront
+  components:
+  - type: WarfrontFaction
+    faction: NCR
+
+- type: entity
+  parent: N14MobHumanNCRSGT
+  id: WarfrontMobNCRSergeant
+  suffix: warfront
+  components:
+  - type: WarfrontFaction
+    faction: NCR
+
+- type: entity
+  parent: N14MobHumanNCRMedic
+  id: WarfrontMobNCRMedic
+  suffix: warfront
+  components:
+  - type: WarfrontFaction
+    faction: NCR
+
+- type: entity
+  parent: N14MobHumanNCRRanger
+  id: WarfrontMobNCRAssault
+  suffix: warfront
+  components:
+  - type: WarfrontFaction
+    faction: NCR
+
+- type: entity
+  parent: N14MobHumanNCRSoldier
+  id: WarfrontMobNCRSoldier
+  suffix: warfront
+  components:
+  - type: WarfrontFaction
+    faction: NCR
+
+# ==================== Легион ====================
+
+- type: startingGear
+  id: WarfrontLegionLegateGear
+  # Стартовое снаряжение легата. Заполнить.
+  # equipment:
+  #   head:
+  #   jumpsuit:
+  #   outerClothing:
+  #   shoes:
+  #   gloves:
+  #   belt:
+  #   back:
+  #   neck:
+  #   id:
+  #   pocket1:
+  #   pocket2:
+
+- type: entity
+  parent: MobHuman
+  id: WarfrontMobLegionLegate
+  name: Legate
+  suffix: warfront
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: true
+  - type: Loadout
+    prototypes: [WarfrontLegionLegateGear]
+  - type: NpcFactionMember
+    factions:
+    - CaesarLegion
+  - type: WarfrontFaction
+    faction: Legion
+
+- type: entity
+  parent: N14MobHumanCaesarLegionCenturion
+  id: WarfrontMobLegionCenturion
+  suffix: warfront
+  components:
+  - type: WarfrontFaction
+    faction: Legion
+
+- type: entity
+  parent: N14MobHumanCaesarLegionDean
+  id: WarfrontMobLegionDecanus
+  suffix: warfront
+  components:
+  - type: WarfrontFaction
+    faction: Legion
+
+# У Легиона нет медика в основной игре — набор собран из существующей
+# экипировки декана с заменой пояса на медицинский.
+- type: startingGear
+  id: WarfrontLegionFieldMedicGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitLegionnaire
+    outerClothing: N14ClothingOuterDeanLegionnaireRecruitArmor
+    head: N14ClothingHeadHatDeanRecruitHelmet
+    neck: ClothingNeckRedScarf
+    back: N14ClothingBackpackMilitary
+    shoes: N14ClothingBootsBlack
+    gloves: N14ClothingHandsGlovesTribal
+    belt: N14ClothingBeltMedicalFilled
+    id: N14IDLegionaryMedalSilver3
+  innerClothingSkirt: N14ClothingUniformJumpsuitLegionnaireOther
+  storage:
+    back:
+    - N14BoxPlasticFilledMilitaryLegion
+
+- type: entity
+  parent: MobHuman
+  id: WarfrontMobLegionFieldMedic
+  name: Legion-FieldMedic
+  suffix: warfront
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: true
+  - type: Loadout
+    prototypes: [WarfrontLegionFieldMedicGear]
+  - type: NpcFactionMember
+    factions:
+    - CaesarLegion
+  - type: WarfrontFaction
+    faction: Legion
+
+- type: entity
+  parent: N14MobHumanCaesarLegionnaireVeteran
+  id: WarfrontMobLegionVeteran
+  suffix: warfront
+  components:
+  - type: WarfrontFaction
+    faction: Legion
+
+- type: entity
+  parent: N14MobHumanCaesarLegionnaireWarrior
+  id: WarfrontMobLegionWarrior
+  suffix: warfront
+  components:
+  - type: WarfrontFaction
+    faction: Legion

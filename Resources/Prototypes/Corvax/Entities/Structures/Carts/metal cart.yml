@@ -255,7 +255,7 @@
   id: N14MetalCartNCRshop
   name: NCR shop
   description: "A trailer made of steel and rust. Filled with boxes."
-  suffix: right
+  suffix: warfront
   placement:
     mode: SnapgridCenter
   components:
@@ -288,42 +288,38 @@
         - MidImpassable
         - LowImpassable
         - BulletImpassable
-
-- type: entity
-  parent: BaseStructure
-  id: N14MetalCartNCRshop2
-  name: NCR shop
-  description: "A trailer made of steel and rust. Filled with boxes."
-  suffix: left
-  placement:
-    mode: SnapgridCenter
-  components:
-  - type: Sprite
-    sprite: Corvax/Structures/Decoration/carts/ncrshop.rsi
-    state: base
-    offset: 0.9,0.8
-    noRot: true
-    netsync: false
-  - type: Transform
-    anchored: true
-  - type: Physics
-    canCollide: true
-    bodyStatus: OnGround
-    bodyType: Static
-  - type: Tag
-    tags:
-      - Structure
-  - type: InteractionOutline
-  - type: Fixtures
-    fixtures:
-      fix1:
-        shape:
-          !type:PhysShapeAabb
-          bounds: "-2,-0.2,3.9,1.2"
-        density: 60
-        mask:
-        - MachineMask
-        layer:
-        - MidImpassable
-        - LowImpassable
-        - BulletImpassable
+  - type: FactionShop
+    faction: NCR
+    fullCatalog:
+      N14Stimpak: 2
+      N14SuperStimpak: 5
+      N14HandheldHealthAnalyzer: 6
+      N14CleanGauze10: 1
+      N14ClothingOuterNCRCombatArmor: 5
+      N14ClothingOuterNCRCombatArmorMK2: 10
+      N14ClothingHeadHatNCRCombatHelmet: 2
+      N14WeaponRifleGrenade: 15
+      N14WeaponRifle556Carbine: 7
+      N14WeaponRifle308SniperRifle: 6
+      N14WeaponLMGAutoRifle: 12
+      N14WeaponLMG: 8
+      N14WeaponShotgunAuto: 6
+      SheetSteel: 7
+      SheetPlastic: 6
+      N14IngotLead20: 8
+      N14Gunpowder10: 7
+      40mmGrenadeFrag: 3
+      N14WeaponSMG9mminfiltrator: 5
+      FertilizerOre1: 3
+      N14WeaponSMG12mmAdvanced: 7
+      RadioHandheld: 3
+      N14FloraWildBrocFlowerClippingSeed: 3
+      N14FloraWildXanderRootClippingSeed: 3
+      N14WeaponRifle762Canadian: 9
+      N14BoxCardboardMREBoxKFilled: 2
+  - type: ActivatableUI
+    key: enum.FactionShopUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.FactionShopUiKey.Key:
+        type: FactionShopBoundUserInterface
