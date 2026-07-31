@@ -1,6 +1,5 @@
 - type: job
   id: WarfrontNCRCaptain
-  whitelisted: true
   setPreference: true
   overrideConsoleVisibility: false
   canBeAntag: false
@@ -102,7 +101,6 @@
 
 - type: job
   id: WarfrontNCRRanger
-  whitelisted: true
   setPreference: true
   overrideConsoleVisibility: false
   canBeAntag: false
@@ -141,7 +139,6 @@
 
 - type: job
   id: WarfrontNCRRangerVeteran
-  whitelisted: true
   setPreference: true
   overrideConsoleVisibility: false
   canBeAntag: false
