@@ -10,14 +10,14 @@
   - NCRSGT
   - NCRMedic
   - WarfrontNCRAssault
-  - NCRRangerVeteran
-  - NCRRanger
-  - NCRSoldier
+  - WarfrontNCRRangerVeteran
+  - WarfrontNCRRanger
+  - WarfrontNCRSoldier
   - WarfrontLegionLegate
   - CaesarLegionCenturion
   - CaesarLegionDean
   - CaesarLegionLegionnaireVeteran
-  - CaesarLegionLegionnaireWarrior
+  - WarfrontCaesarLegionLegionnaireWarrior
   rules:
   - WarfrontRule
 
@@ -33,12 +33,12 @@
     - NCRSGT
     - NCRMedic
     - WarfrontNCRAssault
-    - NCRRangerVeteran
-    - NCRRanger
-    - NCRSoldier
+    - WarfrontNCRRangerVeteran
+    - WarfrontNCRRanger
+    - WarfrontNCRSoldier
     legionJobs:
     - WarfrontLegionLegate
     - CaesarLegionCenturion
     - CaesarLegionDean
     - CaesarLegionLegionnaireVeteran
-    - CaesarLegionLegionnaireWarrior
+    - WarfrontCaesarLegionLegionnaireWarrior

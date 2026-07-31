@@ -1,7 +1,6 @@
-# ==================== НКР ====================
-
 - type: job
   id: WarfrontNCRCaptain
+  whitelisted: true
   setPreference: true
   overrideConsoleVisibility: false
   canBeAntag: false
@@ -80,7 +79,7 @@
   description: warfront-job-description-ncr-assault
   playTimeTracker: WarfrontNCRAssault
   weight: 5
-  startingGear: NCRRangerGear
+  startingGear: NCRWSGear
   icon: "JobIconNcrSerg"
   supervisors: job-supervisors-ncr-sgt
   alwaysUseSpawner: true
@@ -99,6 +98,84 @@
 
 - type: playTimeTracker
   id: WarfrontNCRAssault
+
+- type: job
+  id: WarfrontNCRRanger
+  whitelisted: true
+  setPreference: true
+  overrideConsoleVisibility: false
+  canBeAntag: false
+  name: warfront-job-name-ncr-ranger
+  description: warfront-job-description-ncr-ranger
+  playTimeTracker: WarfrontNCRRanger
+  requirements:
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: NCR
+    min: 7200 # 20 часов
+  - !type:CharacterWhitelistRequirement
+  startingGear: NCRRangerGear
+  icon: "JobIconNcrRanger"
+  supervisors: job-supervisors-ncr-ranger
+  requireAdminNotify: true
+  alwaysUseSpawner: true
+  access:
+  - NCR
+  - NCRSGT
+  - NCRMedic
+  - NCRRanger
+  special:
+  - !type:AddComponentSpecial
+    components:
+      - type: NpcFactionMember
+        factions:
+          - Wastelander
+          - NCR
+
+- type: playTimeTracker
+  id: WarfrontNCRRanger
+
+- type: job
+  id: WarfrontNCRRangerVeteran
+  whitelisted: true
+  setPreference: true
+  overrideConsoleVisibility: false
+  canBeAntag: false
+  name: warfront-job-name-ncr-ranger-veteran
+  description: warfront-job-description-ncr-ranger-veteran
+  playTimeTracker: WarfrontNCRRangerVeteran
+  requirements:
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterPlaytimeRequirement
+    tracker: WarfrontNCRRanger
+    min: 216000 # 60 часов
+  - !type:CharacterWhitelistRequirement
+  startingGear: NCRRangerVeteranGear
+  icon: "JobIconNcrVeteranRanger"
+  supervisors: ent-job-supervisors-ncr
+  requireAdminNotify: true
+  alwaysUseSpawner: true
+  access:
+  - NCR
+  - NCRSGT
+  - NCRMedic
+  - NCRRanger
+  special:
+  - !type:AddComponentSpecial
+    components:
+      - type: NpcFactionMember
+        factions:
+          - Wastelander
+          - NCR
+
+- type: playTimeTracker
+  id: WarfrontNCRRangerVeteran
 
 - type: job
   id: WarfrontLegionLegate
@@ -136,3 +213,104 @@
 
 - type: playTimeTracker
   id: WarfrontLegionLegate
+
+- type: job
+  id: WarfrontNCRSoldier
+  setPreference: true
+  overrideConsoleVisibility: false
+  canBeAntag: false
+  name: job-name-ncr-soldier
+  description: job-description-ncr-soldier
+  playTimeTracker: WarfrontNCRSoldier
+  requirements:
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  startingGear: WarfrontNCRSoldierGear
+  icon: "JobIconNcrSoldier" # Forge-Change
+  supervisors: job-supervisors-ncr
+  alwaysUseSpawner: true
+  access:
+  - NCR
+  special:
+  - !type:AddComponentSpecial
+    components:
+    - type: NpcFactionMember
+      factions:
+      - Wastelander
+      - NCR
+
+- type: startingGear
+  id: WarfrontNCRSoldierGear
+  equipment:
+    head: N14ClothingHeadHatNCRHelmet # Forge-Change
+    back: N14ClothingBackpackNCR # Forge-Change
+    jumpsuit: N14ClothingUniformNCR # Forge-Change
+    outerClothing: N14ClothingOuterNCRVest # Forge-Change
+    belt: ClothingBeltNCR # Forge-Change
+    shoes: N14ClothingBootsLeatherFilled
+    id: N14IDNCRDogtag
+    pocket1: NCRtrooperloadoutkits
+  innerClothingSkirt: N14ClothingUniformNCR # Forge-Change
+  satchel: N14ClothingBackpackSatchelNCRFilled
+  storage: # Forge-Change
+    back:
+    - N14BoxPlasticFilledMilitaryNCR
+
+- type: playTimeTracker
+  id: WarfrontNCRSoldier
+
+- type: job
+  id: WarfrontCaesarLegionLegionnaireWarrior
+  setPreference: true
+  name: job-name-caesar-legion-legionnaire-warrior
+  description: job-description-caesar-legionnaire-warrior
+  playTimeTracker: WarfrontCaesarLegionLegionnaireWarrior
+  requirements:
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+  - !type:CharacterSexRequirement
+    sex: Male
+  - !type:CharacterGenderRequirement
+    gender: Male
+  startingGear: WarfrontCaesarLegionLegionnaireWarriorGear
+  alwaysUseSpawner: true
+  icon: "JobIconlegionerWarrior"
+  supervisors: job-name-caesar-legion-other
+  canBeAntag: false
+  access:
+  - CaesarLegion
+  special:
+  - !type:AddComponentSpecial
+    components:
+    - type: NpcFactionMember
+      factions:
+      - CaesarLegion
+    - type: ReplacementAccent
+      accent: latin
+  - !type:AddTraitSpecial
+    traits: [ LanguageLatin ]
+
+- type: startingGear
+  id: WarfrontCaesarLegionLegionnaireWarriorGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitLegionnaire
+    outerClothing: N14ClothingOuterLegionnaireBaseArmor
+    neck: ClothingNeckRedScarf
+    eyes: N14ClothingEyesGlassesWelding
+    back: N14ClothingBackpackMilitary
+    shoes: N14ClothingShoesKaligi
+    head: N14ClothingHeadHatLightBaseballHelmet
+    gloves: N14ClothingHandsGlovesTribal
+    pocket1: LegionWarriorloadoutkits
+    id: N14IDLegionaryMedalSilver
+    belt: ClothingBeltRope
+  innerClothingSkirt: N14ClothingUniformJumpsuitLegionnaireOther
+  storage:
+    back:
+    - N14BoxPlasticFilledMilitaryLegion
+
+- type: playTimeTracker
+  id: WarfrontCaesarLegionLegionnaireWarrior

@@ -12,6 +12,10 @@ warfront-job-name-ncr-lieutenant = Лейтенант НКР
 warfront-job-description-ncr-lieutenant = Офицер НКР. Командует отделениями и имеет доступ к поставкам.
 warfront-job-name-ncr-assault = Штурмовик НКР
 warfront-job-description-ncr-assault = Ударная пехота НКР. Идёт в авангарде атак.
+warfront-job-name-ncr-ranger = Рейнджер НКР
+warfront-job-description-ncr-ranger = Элитный разведчик и стрелок НКР. Требуется вайтлист.
+warfront-job-name-ncr-ranger-veteran = Ветеран-рейнджер НКР
+warfront-job-description-ncr-ranger-veteran = Закалённый в боях элитный рейнджер НКР. Требуется вайтлист.
 
 warfront-job-name-legion-legate = Легат Легиона
 warfront-job-description-legion-legate = Командующий силами Легиона на этом участке фронта.

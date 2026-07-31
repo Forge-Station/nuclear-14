@@ -38,6 +38,32 @@
       - state: ranger
 
 - type: entity
+  id: SpawnPointWarfrontNCRRanger
+  parent: N14SpawnPointNCRCadet
+  name: Warfront NCR ranger
+  suffix: warfront
+  components:
+  - type: SpawnPoint
+    job_id: WarfrontNCRRanger
+  - type: Sprite
+    layers:
+      - state: green
+      - state: ranger
+
+- type: entity
+  id: SpawnPointWarfrontNCRRangerVeteran
+  parent: N14SpawnPointNCRCadet
+  name: Warfront NCR ranger veteran
+  suffix: warfront
+  components:
+  - type: SpawnPoint
+    job_id: WarfrontNCRRangerVeteran
+  - type: Sprite
+    layers:
+      - state: green
+      - state: rangerveteran
+
+- type: entity
   id: SpawnPointWarfrontLegionLegate
   parent: N14SpawnPointCenturion
   name: Warfront Legion legate
@@ -49,3 +75,29 @@
     layers:
       - state: green
       - state: centurion
+
+- type: entity
+  id: SpawnPointWarfrontNCRCadet
+  parent: N14SpawnPointNCRCadet
+  name: Warfront NCR cadet
+  suffix: warfront
+  components:
+  - type: SpawnPoint
+    job_id: WarfrontNCRSoldier
+  - type: Sprite
+    layers:
+    - state: green
+    - state: cadet
+
+- type: entity
+  id: SpawnPointWarfrontCaesarLegionLegionnaireWarrior
+  parent: N14SpawnPointCenturion
+  name: Warfront Legion warrior
+  suffix: warfront
+  components:
+  - type: SpawnPoint
+    job_id: WarfrontCaesarLegionLegionnaireWarrior
+  - type: Sprite
+    layers:
+    - state: green
+    - state: warrior

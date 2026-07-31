@@ -42,6 +42,8 @@
     head: N14ClothingHeadHatLegateHelmet
     jumpsuit: N14ClothingUniformJumpsuitLegionnaire
     outerClothing: N14ClothingOuterLegateArmor
+    shoes: N14ClothingBootsLegate
+    gloves: N14ClothingHandsGlovesLegate
     belt: ClothingBeltRope
     back: N14ClothingBackpackMilitary
     eyes: N14ClothingEyesGlassesWelding

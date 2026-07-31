@@ -51,6 +51,10 @@
   - WarfrontNCRCaptain
   - WarfrontNCRLieutenant
   - WarfrontNCRAssault
+  - WarfrontNCRRanger
+  - WarfrontNCRRangerVeteran
+  - WarfrontNCRSoldier
+  - WarfrontNCRRangerVeteran
 
 #- type: department # Disabled until roles are implemented
 #  id: Rangers
