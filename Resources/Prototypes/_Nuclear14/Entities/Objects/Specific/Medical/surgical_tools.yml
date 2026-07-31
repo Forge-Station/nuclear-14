@@ -1,15 +1,15 @@
-- type: entity
-  parent: BaseItem
-  id: N14BaseToolSurgery
-  abstract: true
-  components:
-  - type: Sprite
-  - type: Tag
-    tags:
-    - SurgeryTool
-  - type: SurgeryTool
-  - type: StaticPrice
-    price: 20
+# - type: entity
+#   parent: BaseItem
+#   id: BaseToolSurgery
+#   abstract: true
+#   components:
+#   - type: Sprite
+#   - type: Tag
+#     tags:
+#     - SurgeryTool
+#   - type: SurgeryTool
+#   - type: StaticPrice
+#     price: 20
 
 # Cautery
 
@@ -17,14 +17,15 @@
   name: cautery
   id: N14Cautery
   suffix: N14, New
-  parent: N14BaseToolSurgery
+  parent: BaseToolSurgery
   description: A surgical tool used to cauterize open wounds.
   components:
   - type: Sprite
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/cautery.rsi
+    scale: 0.8, 0.8
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/cautery.rsi
     state: cautery
   - type: Item
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/cautery.rsi
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/cautery.rsi
     storedRotation: 90
   - type: MeleeWeapon
     damage:
@@ -52,10 +53,11 @@
   description: A surgical tool used to cauterize open wounds. It's covered in rust.
   components:
   - type: Sprite
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/cautery.rsi
+    scale: 0.8, 0.8
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/cautery.rsi
     state: cautery
   - type: Item
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/cautery.rsi
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/cautery.rsi
     storedRotation: 90
   - type: Cautery
     speed: 0.8
@@ -68,14 +70,15 @@
   name: drill
   id: N14Drill
   suffix: N14, New
-  parent: N14BaseToolSurgery
+  parent: BaseToolSurgery
   description: A surgical drill for making holes into hard material.
   components:
   - type: Sprite
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/drill.rsi
+    scale: 0.8, 0.8
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/drill.rsi
     state: drill
   - type: Item
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/drill.rsi
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/drill.rsi
     shape:
     - 0,0,1,0
     - 1,1,1,1
@@ -115,10 +118,11 @@
   description: A surgical drill for making holes into hard material. It's covered in rust.
   components:
   - type: Sprite
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/drill.rsi
+    scale: 0.8, 0.8
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/drill.rsi
     state: drill
   - type: Item
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/drill.rsi
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/drill.rsi
     shape:
     - 0,0,1,0
     - 1,1,1,1
@@ -133,7 +137,7 @@
   name: scalpel
   id: N14Scalpel
   suffix: N14, New
-  parent: N14BaseToolSurgery
+  parent: BaseToolSurgery
   description: A surgical tool used to make incisions into flesh.
   components:
   - type: Sharp
@@ -145,10 +149,11 @@
     types:
       - Knife
   - type: Sprite
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/scalpel.rsi
+    scale: 0.8, 0.8
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/scalpel.rsi
     state: scalpel
   - type: Item
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/scalpel.rsi
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/scalpel.rsi
     storedRotation: 90
   - type: MeleeWeapon
     wideAnimationRotation: 90
@@ -188,10 +193,11 @@
   description: A surgical tool used to make incisions into flesh. It's covered in rust.
   components:
   - type: Sprite
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/scalpel.rsi
+    scale: 0.8, 0.8
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/scalpel.rsi
     state: scalpel
   - type: Item
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/scalpel.rsi
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/scalpel.rsi
     storedRotation: 90
   - type: Scalpel
     speed: 0.8
@@ -204,14 +210,15 @@
   name: retractor
   id: N14Retractor
   suffix: N14, New
-  parent: N14BaseToolSurgery
+  parent: BaseToolSurgery
   description: A surgical tool used to hold open incisions.
   components:
   - type: Sprite
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/retractor.rsi
-    state: retractor
+    scale: 0.8, 0.8
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/retractor.rsi
+    state: retractors
   - type: Item
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/retractor.rsi
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/retractor.rsi
     storedRotation: 90
   - type: MeleeWeapon
     wideAnimationRotation: 90
@@ -251,10 +258,11 @@
   description: A surgical tool used to hold open incisions. It's covered in rust.
   components:
   - type: Sprite
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/retractor.rsi
-    state: retractor
+    scale: 0.8, 0.8
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/retractor.rsi
+    state: retractors
   - type: Item
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/retractor.rsi
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/retractor.rsi
     storedRotation: 90
   - type: Retractor
     speed: 0.8
@@ -267,15 +275,15 @@
   name: hemostat
   id: N14Hemostat
   suffix: N14, New
-  parent: N14BaseToolSurgery
+  parent: BaseToolSurgery
   description: A surgical tool used to compress blood vessels to prevent bleeding.
   components:
   - type: Sprite
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/hemostat.rsi
+    scale: 0.8, 0.8
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/hemostat.rsi
     state: hemostat
   - type: Item
-    heldPrefix: hemostat
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/hemostat.rsi
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/hemostat.rsi
     storedRotation: 90
   - type: MeleeWeapon
     wideAnimationRotation: 90
@@ -312,15 +320,15 @@
   name: hemostat
   id: N14HemostatRusted
   suffix: N14, Old
-  parent: N14BaseToolSurgery
+  parent: BaseToolSurgery
   description: A surgical tool used to compress blood vessels to prevent bleeding. It's covered in rust
   components:
   - type: Sprite
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/hemostat.rsi
+    scale: 0.8, 0.8
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/hemostat.rsi
     state: hemostat
   - type: Item
-    heldPrefix: hemostat
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/hemostat.rsi
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/hemostat.rsi
     storedRotation: 90
   - type: Hemostat
     speed: 0.8
@@ -334,17 +342,18 @@
 # Bone setter
 
 - type: entity
-  parent: N14BaseToolSurgery
+  parent: BaseToolSurgery
   id: N14Bonesetter
   suffix: N14, New
   name: bone setter
   description: Used for setting bones back into place.
   components:
   - type: Sprite
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/bonesetter.rsi
+    scale: 0.8, 0.8
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/bonesetter.rsi
     state: bonesetter
   - type: Item
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/bonesetter.rsi
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/bonesetter.rsi
   - type: BoneSetter
   - type: StaticPrice
     price: 35
@@ -357,10 +366,11 @@
   description: Used for setting bones back into place. It's covered in rust.
   components:
   - type: Sprite
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/bonesetter.rsi
+    scale: 0.8, 0.8
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/bonesetter.rsi
     state: bonesetter
   - type: Item
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/bonesetter.rsi
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/bonesetter.rsi
   - type: BoneSetter
     speed: 0.8
   - type: StaticPrice
@@ -369,14 +379,15 @@
 # Bone Gel
 
 - type: entity
-  parent: N14BaseToolSurgery
+  parent: BaseToolSurgery
   id: N14BoneGel
   suffix: N14
   name: bottle of bone gel
   description: A container for bone gel.
   components:
   - type: Sprite
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/bone-gel.rsi
+    scale: 0.8, 0.8
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/bone-gel.rsi
     state: bone-gel
   - type: BoneGel
   - type: StaticPrice
@@ -388,14 +399,15 @@
   name: circular saw
   id: N14SawElectric
   suffix: N14, New
-  parent: N14BaseToolSurgery
+  parent: BaseToolSurgery
   description: For heavy duty cutting.
   components:
   - type: Sprite
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/circular-saw.rsi
-    state: circular-saw
+    scale: 0.8, 0.8
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/saw.rsi
+    state: saw
   - type: Item
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/circular-saw.rsi
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/saw.rsi
     storedRotation: 90
   - type: MeleeWeapon
     attackRate: .86
@@ -425,7 +437,7 @@
     speedModifier: 1.5
   - type: SurgeryTool
     startSound:
-      path: /Audio/Medical/Surgery/saw.ogg
+      path: /Audio/_Forge/Medical/Surgery/bonesaw-cutting-limb-sound.ogg
   - type: BoneSaw
 
 - type: entity
@@ -436,10 +448,11 @@
   description: For heavy duty cutting. It's covered in rust.
   components:
   - type: Sprite
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/circular-saw.rsi
-    state: circular-saw
+    scale: 0.8, 0.8
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/saw.rsi
+    state: saw
   - type: Item
-    sprite: _Shitmed/Objects/Specific/Medical/Surgery/circular-saw.rsi
+    sprite: _Corvax/Objects/Specific/Medical/Surgery/saw.rsi
     storedRotation: 90
   - type: BoneSaw
     speed: 0.8
@@ -447,6 +460,7 @@
 # BoneGel
 - type: entity
   parent: BaseItem
+  categories: [ HideSpawnMenu ]
   id: N14BioMedGel
   name: bio med gel
   description: A sticky biogel for mending bones and organic tissue.

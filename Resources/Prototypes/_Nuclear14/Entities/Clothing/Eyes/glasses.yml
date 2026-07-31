@@ -4,6 +4,9 @@
   name: welding goggles
   description: Goggles designed to protect the eyes against common work hazards, it has extra protection for welding.
   components:
+  - type: Tag
+    tags:
+    - N14ClothingEyesGlassesWelding
   - type: Sprite
     sprite: _Nuclear14/Clothing/Eyes/weldgoggles.rsi
   - type: Clothing

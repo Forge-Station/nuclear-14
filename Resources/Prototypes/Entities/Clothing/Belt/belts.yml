@@ -270,8 +270,7 @@
         - Radio
         - DiscreteHealthAnalyzer
         - N14Bandage # Forge-start-Change
-        - N14HealingPowder
-        - N14HealingPoultice # Forge-end-Change
+        - N14HealingPowder # Forge-start-Change
       components:
         - SurgeryTool # Shitmed Change
         - Hypospray

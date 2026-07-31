@@ -42,7 +42,7 @@
     gloves: ClothingHandsGlovesColorYellow # Forge-Change
   storage: # Forge-Change
     back:
-    - N14Bandage
+    - N14CleanGauze10
     - N14CurrencyPrewarMoney100
 
 - type: playTimeTracker

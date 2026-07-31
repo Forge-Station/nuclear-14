@@ -24,3 +24,53 @@
   - type: Sprite
     sprite: Corvax/Mobs/Ghost/sponsorGhostLvL5.rsi
     state: animated
+
+- type: entity
+  parent: MobObserver
+  id: SponsorGhostSeraphim
+  name: Серафим
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Ghost/seraphim.rsi
+    state: animated
+
+- type: entity
+  parent: MobObserver
+  id: SponsorGhostMauler
+  name: Смэрть от Маулера
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Ghost/mauler.rsi
+    state: animated
+
+- type: entity
+  parent: MobObserver
+  id: SponsorGhostGuardian
+  name: Проклятый страж падшей империи
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Ghost/guardian.rsi
+    state: animated
+
+- type: entity
+  parent: MobObserver
+  id: SponsorGhostGatchi
+  name: Гачи Мучи
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Ghost/gachimuchi.rsi
+    state: animated
+
+- type: entity
+  parent: MobObserver
+  id: SponsorGhostRobast
+  name: Призрак истинного Робаста
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: Corvax/Mobs/Ghost/robast.rsi
+    state: animated
