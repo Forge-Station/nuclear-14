@@ -54,11 +54,6 @@ public sealed partial class FactionShopSystem : EntitySystem
         }
     }
 
-    public TimeSpan GetNextRotationTime(WarfrontFaction faction)
-    {
-        return Comp<FactionShopStockComponent>(EnsureStock(faction)).NextRotationTime;
-    }
-
     private EntityUid EnsureStock(WarfrontFaction faction)
     {
         if (_stockAccounts.TryGetValue(faction, out var uid) && Exists(uid))
@@ -179,6 +174,7 @@ public sealed partial class FactionShopSystem : EntitySystem
             Balance = _factionPoints.GetBalance(faction),
             Faction = faction,
             AvailableListings = new Dictionary<EntProtoId, int>(stock.AvailableListings),
+            NextRotationTime = stock.NextRotationTime,
         };
     }
 }

@@ -1,0 +1,138 @@
+# ==================== НКР ====================
+
+- type: job
+  id: WarfrontNCRCaptain
+  setPreference: true
+  overrideConsoleVisibility: false
+  canBeAntag: false
+  name: warfront-job-name-ncr-captain
+  description: warfront-job-description-ncr-captain
+  playTimeTracker: WarfrontNCRCaptain
+  requirements:
+  - !type:CharacterDepartmentTimeRequirement
+    department: NCR
+    min: 216000
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCRNCO
+    min: 43200
+  weight: 10
+  startingGear: WarfrontNCRCaptainGear
+  icon: "JobIconNcrLeader"
+  supervisors: job-supervisors-ncr-lt
+  requireAdminNotify: true
+  alwaysUseSpawner: true
+  access:
+  - NCR
+  - NCRSGT
+  - NCRMedic
+  - NCRLT
+  special:
+  - !type:AddComponentSpecial
+    components:
+      - type: NpcFactionMember
+        factions:
+          - Wastelander
+          - NCR
+
+- type: playTimeTracker
+  id: WarfrontNCRCaptain
+
+- type: job
+  id: WarfrontNCRLieutenant
+  setPreference: true
+  overrideConsoleVisibility: false
+  canBeAntag: false
+  name: warfront-job-name-ncr-lieutenant
+  description: warfront-job-description-ncr-lieutenant
+  playTimeTracker: WarfrontNCRLieutenant
+  requirements:
+  - !type:CharacterDepartmentTimeRequirement
+    department: NCR
+    min: 72000
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCRSoldier
+    min: 36000
+  weight: 9
+  startingGear: WarfrontNCRLieutenantGear
+  icon: "JobIconNcrLeader"
+  supervisors: job-supervisors-ncr-lt
+  alwaysUseSpawner: true
+  access:
+  - NCR
+  - NCRSGT
+  special:
+  - !type:AddComponentSpecial
+    components:
+      - type: NpcFactionMember
+        factions:
+          - Wastelander
+          - NCR
+
+- type: playTimeTracker
+  id: WarfrontNCRLieutenant
+
+- type: job
+  id: WarfrontNCRAssault
+  setPreference: true
+  overrideConsoleVisibility: false
+  canBeAntag: false
+  name: warfront-job-name-ncr-assault
+  description: warfront-job-description-ncr-assault
+  playTimeTracker: WarfrontNCRAssault
+  weight: 5
+  startingGear: NCRRangerGear
+  icon: "JobIconNcrSerg"
+  supervisors: job-supervisors-ncr-sgt
+  alwaysUseSpawner: true
+  access:
+  - NCR
+  - NCRSGT
+  - NCRMedic
+  - NCRRanger
+  special:
+  - !type:AddComponentSpecial
+    components:
+      - type: NpcFactionMember
+        factions:
+          - Wastelander
+          - NCR
+
+- type: playTimeTracker
+  id: WarfrontNCRAssault
+
+- type: job
+  id: WarfrontLegionLegate
+  setPreference: true
+  canBeAntag: false
+  name: warfront-job-name-legion-legate
+  description: warfront-job-description-legion-legate
+  playTimeTracker: WarfrontLegionLegate
+  requirements:
+  - !type:CharacterDepartmentTimeRequirement
+    department: CaesarLegion
+    min: 216000
+  - !type:CharacterPlaytimeRequirement
+    tracker: CaesarLegionDean
+    min: 43200
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+  weight: 10
+  startingGear: WarfrontLegionLegateGear
+  icon: "JobIconlegionerCenturion"
+  supervisors: job-name-caesar-legion
+  requireAdminNotify: true
+  alwaysUseSpawner: true
+  access:
+  - CaesarLegionCenturion
+  - CaesarLegion
+  - CaesarLegionDean
+  special:
+  - !type:AddComponentSpecial
+    components:
+      - type: NpcFactionMember
+        factions:
+          - CaesarLegion
+
+- type: playTimeTracker
+  id: WarfrontLegionLegate

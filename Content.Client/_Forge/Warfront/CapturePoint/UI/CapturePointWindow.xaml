@@ -9,10 +9,6 @@
             <Label Text="{Loc 'capture-point-timer-payout-label'}" />
             <Label Name="PayoutTimerValueLabel" />
         </BoxContainer>
-        <BoxContainer Orientation="Horizontal">
-            <Label Text="{Loc 'capture-point-timer-shop-label'}" />
-            <Label Name="ShopTimerValueLabel" />
-        </BoxContainer>
         <Button Name="CaptureButton" Text="{Loc 'capture-point-button'}" />
         <Label Text="{Loc 'capture-point-timer-capture-label'}" />
         <ProgressBar Name="CooldownBar" MinValue="0" MaxValue="1" SetHeight="16" />

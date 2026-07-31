@@ -14,6 +14,5 @@ public sealed class CapturePointBoundUserInterfaceState : BoundUserInterfaceStat
     public int CooldownSeconds;
     public int PointsPerMinute;
     public TimeSpan NextPayoutTime;
-    public TimeSpan ShopNextRotationTime;
     public LocId Title;
 }

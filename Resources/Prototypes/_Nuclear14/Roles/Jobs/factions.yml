@@ -48,6 +48,9 @@
   - NCRCadet
   - NCRPisoner
   - NCRMPinvestigator
+  - WarfrontNCRCaptain
+  - WarfrontNCRLieutenant
+  - WarfrontNCRAssault
 
 #- type: department # Disabled until roles are implemented
 #  id: Rangers

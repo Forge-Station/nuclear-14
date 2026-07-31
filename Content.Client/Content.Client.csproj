@@ -34,9 +34,6 @@
       <DependentUpon>LobbyCharacterPanel.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="_Forge\Warfront\CapturePoint\UI\CapturePointWindow.xaml" />
-  </ItemGroup>
   <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
   <Import Project="..\RobustToolbox\MSBuild\XamlIL.targets" />
 </Project>

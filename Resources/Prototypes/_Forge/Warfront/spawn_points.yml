@@ -1,0 +1,51 @@
+- type: entity
+  id: SpawnPointWarfrontNCRCaptain
+  parent: N14SpawnPointNCRCadet
+  name: Warfront NCR captain
+  suffix: warfront
+  components:
+  - type: SpawnPoint
+    job_id: WarfrontNCRCaptain
+  - type: Sprite
+    layers:
+      - state: green
+      - state: lt
+
+- type: entity
+  id: SpawnPointWarfrontNCRLieutenant
+  parent: N14SpawnPointNCRCadet
+  name: Warfront NCR lieutenant
+  suffix: warfront
+  components:
+  - type: SpawnPoint
+    job_id: WarfrontNCRLieutenant
+  - type: Sprite
+    layers:
+      - state: green
+      - state: lt
+
+- type: entity
+  id: SpawnPointWarfrontNCRAssault
+  parent: N14SpawnPointNCRCadet
+  name: Warfront NCR assault
+  suffix: warfront
+  components:
+  - type: SpawnPoint
+    job_id: WarfrontNCRAssault
+  - type: Sprite
+    layers:
+      - state: green
+      - state: ranger
+
+- type: entity
+  id: SpawnPointWarfrontLegionLegate
+  parent: N14SpawnPointCenturion
+  name: Warfront Legion legate
+  suffix: warfront
+  components:
+  - type: SpawnPoint
+    job_id: WarfrontLegionLegate
+  - type: Sprite
+    layers:
+      - state: green
+      - state: centurion

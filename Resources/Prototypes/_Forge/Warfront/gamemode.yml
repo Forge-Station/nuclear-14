@@ -3,6 +3,21 @@
   name: warfront-title
   showInVote: true
   description: warfront-description
+  supportedMaps: WarfrontMapPool
+  restrictedJobs:
+  - WarfrontNCRCaptain
+  - WarfrontNCRLieutenant
+  - NCRSGT
+  - NCRMedic
+  - WarfrontNCRAssault
+  - NCRRangerVeteran
+  - NCRRanger
+  - NCRSoldier
+  - WarfrontLegionLegate
+  - CaesarLegionCenturion
+  - CaesarLegionDean
+  - CaesarLegionLegionnaireVeteran
+  - CaesarLegionLegionnaireWarrior
   rules:
   - WarfrontRule
 
@@ -12,3 +27,18 @@
   categories: [ HideSpawnMenu ]
   components:
   - type: WarfrontRule
+    ncrJobs:
+    - WarfrontNCRCaptain
+    - WarfrontNCRLieutenant
+    - NCRSGT
+    - NCRMedic
+    - WarfrontNCRAssault
+    - NCRRangerVeteran
+    - NCRRanger
+    - NCRSoldier
+    legionJobs:
+    - WarfrontLegionLegate
+    - CaesarLegionCenturion
+    - CaesarLegionDean
+    - CaesarLegionLegionnaireVeteran
+    - CaesarLegionLegionnaireWarrior

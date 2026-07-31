@@ -8,6 +8,7 @@ using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Timing;
 
 namespace Content.Client._Forge.Warfront.FactionShop.UI;
 
@@ -16,6 +17,9 @@ public sealed partial class FactionShopWindow : FancyWindow
 {
     [Dependency] private IPrototypeManager _proto = default!;
     [Dependency] private IEntityManager _entity = default!;
+    [Dependency] private IGameTiming _timing = default!;
+
+    private FactionShopBoundUserInterfaceState _state = new();
 
     public event Action<EntProtoId>? BuyRequested;
 
@@ -27,6 +31,8 @@ public sealed partial class FactionShopWindow : FancyWindow
 
     public void UpdateState(FactionShopBoundUserInterfaceState state)
     {
+        _state = state;
+
         BalanceLabel.Text = Loc.GetString("faction-shop-balance-display",
             ("amount", state.Balance),
             ("faction", FactionName(state.Faction)));
@@ -55,6 +61,19 @@ public sealed partial class FactionShopWindow : FancyWindow
 
             ListingsContainer.AddChild(row);
         }
+    }
+
+    protected override void FrameUpdate(FrameEventArgs args)
+    {
+        base.FrameUpdate(args);
+
+        var remaining = _state.NextRotationTime - _timing.CurTime;
+        if (remaining < TimeSpan.Zero)
+            remaining = TimeSpan.Zero;
+
+        RotationTimerLabel.Text = Loc.GetString("faction-shop-rotation-timer",
+            ("minutes", remaining.Minutes.ToString("00")),
+            ("seconds", remaining.Seconds.ToString("00")));
     }
 
     private static string FactionName(WarfrontFaction faction)

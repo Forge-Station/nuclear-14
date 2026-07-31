@@ -9,5 +9,6 @@
         <ScrollContainer VerticalExpand="True" HScrollEnabled="False">
             <BoxContainer Name="ListingsContainer" Orientation="Vertical" HorizontalExpand="True" />
         </ScrollContainer>
+        <Label Name="RotationTimerLabel" StyleClasses="LabelSubText" HorizontalAlignment="Left" />
     </BoxContainer>
 </controls:FancyWindow>

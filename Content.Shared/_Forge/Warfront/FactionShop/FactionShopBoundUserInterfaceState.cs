@@ -10,4 +10,5 @@ public sealed class FactionShopBoundUserInterfaceState : BoundUserInterfaceState
     public WarfrontFaction Faction;
 
     public Dictionary<EntProtoId, int> AvailableListings = new();
+    public TimeSpan NextRotationTime;
 }

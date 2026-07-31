@@ -92,10 +92,6 @@ public sealed partial class CapturePointWindow : FancyWindow
             ? FormatCountdown(_state.NextPayoutTime - now)
             : Loc.GetString("capture-point-timer-none");
 
-        ShopTimerValueLabel.Text = _state.Owner != null
-            ? FormatCountdown(_state.ShopNextRotationTime - now)
-            : Loc.GetString("capture-point-timer-none");
-
         var localFaction = GetLocalFaction();
         CaptureButton.Disabled = localFaction == null
             || _state.CaptureInProgress

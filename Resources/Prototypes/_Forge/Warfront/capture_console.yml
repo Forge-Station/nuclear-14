@@ -1,7 +1,7 @@
 - type: entity
   parent: BaseComputerAiAccess
   id: OutpostCaptureConsole
-  name: consoleoutpost
+  name: консоль аванпоста
   suffix: warfront
   components:
   - type: CapturePoint
@@ -21,7 +21,7 @@
 - type: entity
   parent: BaseComputerAiAccess
   id: CitadelCaptureConsole
-  name: consolecitadel
+  name: консоль цитадели
   suffix: warfront
   components:
   - type: CapturePoint

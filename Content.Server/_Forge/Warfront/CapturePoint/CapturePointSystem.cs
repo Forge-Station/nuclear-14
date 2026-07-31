@@ -1,5 +1,4 @@
 using Content.Server._Forge.Warfront.FactionPoints;
-using Content.Server._Forge.Warfront.FactionShop;
 using Content.Server._Forge.Warfront.GameRule;
 using Content.Server.Popups;
 using Content.Shared._Forge.Warfront;
@@ -15,7 +14,6 @@ public sealed partial class CapturePointSystem : EntitySystem
 {
     [Dependency] private IGameTiming _timing = default!;
     [Dependency] private FactionPointsSystem _factionPoints = default!;
-    [Dependency] private FactionShopSystem _factionShop = default!;
     [Dependency] private PopupSystem _popup = default!;
     [Dependency] private UserInterfaceSystem _uiSystem = default!;
     [Dependency] private WarfrontRuleSystem _warfrontRule = default!;
@@ -145,9 +143,6 @@ public sealed partial class CapturePointSystem : EntitySystem
             CooldownSeconds = (int) point.CaptureCooldown.TotalSeconds,
             PointsPerMinute = point.PointsPerMinute,
             NextPayoutTime = point.NextPayoutTime,
-            ShopNextRotationTime = point.OwnerFaction != null
-                ? _factionShop.GetNextRotationTime(point.OwnerFaction.Value)
-                : TimeSpan.Zero,
             Title = point.Title,
         };
     }

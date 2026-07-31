@@ -4,7 +4,6 @@ capture-point-owner-static-label = Владелец:
 capture-point-button = Захват
 capture-point-timer-capture-label = Кулдаун захвата:
 capture-point-timer-payout-label = Следующее очко через:
-capture-point-timer-shop-label = Обновление магазина через:
 capture-point-timer-none = —
 capture-point-faction-ncr = НКР
 capture-point-faction-legion = Легион
@@ -16,7 +15,7 @@ capture-point-already-capturing = Захват уже идёт
 capture-point-already-yours = Аванпост уже принадлежит вашей фракции
 capture-point-started = Захват начат, он займёт { $minutes } мин.
 
-ent-consoleoutpost = консоль захвата аванпоста
+ent-consoleoutpost = консоль аванпоста
     .desc = Консоль захвата аванпоста.
-ent-consolecitadel = консоль захвата цитадели
+ent-consolecitadel = консоль цитадели
     .desc = Консоль захвата цитадели. Удержите её 15 минут для победы.
