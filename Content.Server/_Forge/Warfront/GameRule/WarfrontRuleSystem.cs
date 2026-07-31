@@ -43,6 +43,14 @@ public sealed class WarfrontRuleSystem : GameRuleSystem<WarfrontRuleComponent>
         }
     }
 
+    public void AnnounceCitadelCaptured(WarfrontFaction faction)
+    {
+        _chat.DispatchGlobalAnnouncement(
+            Loc.GetString("warfront-citadel-captured-announcement", ("faction", GetFactionName(faction))),
+            Loc.GetString("warfront-victory-sender"),
+            colorOverride: Color.Gold);
+    }
+
     public void DeclareVictory(WarfrontFaction faction)
     {
         var restartDelay = (TimeSpan?) null;

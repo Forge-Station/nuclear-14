@@ -45,13 +45,17 @@ public sealed partial class CapturePointSystem : EntitySystem
 
             if (point.CaptureInProgress && now >= point.CaptureEndTime)
             {
-                point.OwnerFaction = point.Attacker;
+                var newOwner = point.Attacker!.Value;
+                point.OwnerFaction = newOwner;
                 point.CaptureInProgress = false;
                 point.Attacker = null;
                 point.NextPayoutTime = now + TimeSpan.FromMinutes(1);
 
                 if (point.VictoryHoldDuration != null)
+                {
                     point.VictoryTime = now + point.VictoryHoldDuration.Value;
+                    _warfrontRule.AnnounceCitadelCaptured(newOwner);
+                }
 
                 dirty = true;
             }

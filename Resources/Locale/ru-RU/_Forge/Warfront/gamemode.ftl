@@ -2,6 +2,7 @@ warfront-title = Фронт
 warfront-description = Армия НКР против армии Легиона. Захватывайте аванпосты и Цитадель, тратьте очки фракции в поставках.
 
 warfront-victory-announcement = Фракция { $faction } удержала Цитадель и одержала победу!
+warfront-citadel-captured-announcement = ЦИТАДЕЛЬ ПОД КОНТРОЛЕМ { $faction } !
 warfront-victory-sender = Штаб
 warfront-round-end-winner = Победу одержала фракция { $faction }.
 warfront-round-end-no-winner = Ни одна из фракций не удержала Цитадель.
