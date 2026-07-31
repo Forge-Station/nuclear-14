@@ -1,0 +1,26 @@
+- type: gameMap
+  id: warfront
+  mapName: 'Warfront'
+  mapPath: /Maps/Corvax/warfront.yml
+  minPlayers: 0
+  stations:
+    Warfront:
+      stationProto: FalloutStation
+      components:
+      - type: StationNameSetup
+        mapNameTemplate: 'Warfront'
+      - type: StationJobs
+        availableJobs:
+          WarfrontNCRCaptain: [ 1, 1 ]
+          WarfrontNCRLieutenant: [ 6, 6 ]
+          NCRSGT: [ 12, 12 ]
+          NCRMedic: [ 4, 4 ]
+          WarfrontNCRAssault: [ 12, 12 ]
+          WarfrontNCRRangerVeteran: [ 1, 1 ]
+          WarfrontNCRRanger: [ 2, 2 ]
+          WarfrontNCRSoldier: [ -1, -1 ]
+          WarfrontLegionLegate: [ 1, 1 ]
+          CaesarLegionCenturion: [ 3, 3 ]
+          CaesarLegionDean: [ 6, 6 ]
+          CaesarLegionLegionnaireVeteran: [ 16, 16 ]
+          WarfrontCaesarLegionLegionnaireWarrior: [ -1, -1 ]
