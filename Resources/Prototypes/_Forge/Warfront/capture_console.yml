@@ -6,9 +6,9 @@
   components:
   - type: CapturePoint
     title: capture-point-window-title-outpost
-    captureDuration: 10 #120
+    captureDuration: 120 #120
     captureCooldown: 30
-    pointsPerMinute: 20 #5
+    pointsPerMinute: 2
   - type: ActivatableUI
     key: enum.CapturePointUiKey.Key
   - type: UserInterface
