@@ -151,7 +151,7 @@
     - Human
     - Ghoul
   - !type:CharacterPlaytimeRequirement
-    tracker: WarfrontNCRRanger
+    tracker: NCRRanger
     min: 216000 # 60 часов
   - !type:CharacterWhitelistRequirement
   startingGear: NCRRangerVeteranGear
