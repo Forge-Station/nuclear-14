@@ -805,3 +805,6 @@
         Heat: 0.7
   - type: ExplosionResistance
     damageCoefficient: 0.8
+  - type: ClothingSpeedModifier
+    walkModifier: 0.95
+    sprintModifier: 0.95

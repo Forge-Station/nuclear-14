@@ -248,6 +248,8 @@
     price: 200
   - proto: N14WeaponSniper308TribalUpgraded
     price: 210
+  - proto: N14WeaponSniper45-70BrushGun
+    price: 300 
   - proto: N14WeaponRifle308SniperRifle
     price: 320
     count: 3
@@ -480,14 +482,21 @@
     price: 75
   - proto: N14Stimpak
     price: 75
+  - proto: N14Med-X
+    price: 80
   - proto: N14BuffjetCanisterFilled
     price: 100
   - proto: N14AloeSalve
     amount: 10
     price: 100
+  - proto: N14Psycho
+    price: 125
   - proto: N14Ointment10
     amount: 10
     price: 150
+  - proto: N14CateyeCanisterFilled
+    amount: 5
+    price: 200
   - proto: N14SuperStimpak
     price: 250
     count: 5

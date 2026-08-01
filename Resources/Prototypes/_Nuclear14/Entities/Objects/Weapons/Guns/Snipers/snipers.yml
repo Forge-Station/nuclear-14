@@ -327,6 +327,7 @@
   name: lever action rifle
   parent: N14WeaponSniperLeverBase
   id: N14WeaponSniper308LeverRifle
+  suffix: .45-70
   description: A long lever action repeater rifle. Uses .308 ammo.
   components:
   - type: Clothing
@@ -344,9 +345,9 @@
   - type: BallisticAmmoProvider
     whitelist:
       tags:
-      - N14Cartridge308Rifle
-    capacity: 8
-    proto: N14Cartridge308Rifle
+      - N14Cartridge45-70
+    capacity: 6
+    proto: N14Cartridge45-70
   - type: GunWieldBonus
     minAngle: -6            
     maxAngle: -24  
@@ -542,6 +543,7 @@
   name: huntstick
   parent: N14WeaponSniperLeverBase
   id: N14WeaponSniper308Tribal
+  suffix: .45-70
   description: A tribal lever action rifle. Uses .308 ammo.
   components:
   - type: Clothing
@@ -559,13 +561,9 @@
   - type: BallisticAmmoProvider
     whitelist:
       tags:
-      - N14Cartridge308Rifle
+      - N14Cartridge45-70
     capacity: 8
-    proto: N14Cartridge308Rifle
-  - type: GunWieldBonus
-    minAngle: -6
-    maxAngle: -27
-    angleIncrease: -1
+    proto: N14Cartridge45-70
   - type: FollowDistance
     backStrength: 3
   - type: StaticPrice
@@ -575,6 +573,7 @@
   name: master huntstick
   parent: N14WeaponSniperLeverBase
   id: N14WeaponSniper308TribalUpgraded
+  suffix: .45-70
   description: A tribal decorated lever action rifle. Uses .308 ammo.
   components:
   - type: Clothing
@@ -592,9 +591,9 @@
   - type: BallisticAmmoProvider
     whitelist:
       tags:
-      - N14Cartridge308Rifle
+      - N14Cartridge45-70
     capacity: 8
-    proto: N14Cartridge308Rifle
+    proto: N14Cartridge45-70
   - type: GunWieldBonus
     minAngle: -6
     maxAngle: -27
@@ -644,7 +643,13 @@
     minAngle: -23
     maxAngle: -104
   - type: Gun
+    minAngle: 24
+    maxAngle: 105
+    angleIncrease: 4
+    angleDecay: 16
     fireRate: 1.5
+    soundGunshot:
+      collection: N14SniperHuntingGunshot
   - type: BallisticAmmoProvider
     whitelist:
       tags:
