@@ -88,13 +88,13 @@
   materials:
     ScrapLead: 200
 
-- type: latheRecipe
-  id: SulfurPowder
-  result: SulfurPowder1
-  applyMaterialDiscount: false
-  completetime: 2
-  materials:
-    RawSulfur: 100
+# - type: latheRecipe
+#   id: SulfurPowder
+#   result: SulfurPowder1
+#   applyMaterialDiscount: false
+#   completetime: 2
+#   materials:
+#     RawSulfur: 100
 
 - type: latheRecipe
   id: Charcoal
@@ -149,4 +149,4 @@
   applyMaterialDiscount: false
   completetime: 2
   materials:
-    Charcoal: 150
+    Wood: 150

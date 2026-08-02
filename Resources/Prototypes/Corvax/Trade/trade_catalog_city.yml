@@ -187,15 +187,9 @@
   - proto: N14WeaponRifle556Carbine
     price: 400
     count: 8
-  - proto: N14WeaponRifle762MarksmanCanadian
-    price: 400
-    count: 2
   - proto: N14WeaponRifle762Marksman
     price: 500
     count: 3
-  - proto: N14WeaponRifle762MarksmanChinese
-    price: 550
-    count: 2
   - proto: N14WeaponRifle762Canadian
     price: 550
     count: 3
@@ -242,6 +236,8 @@
     price: 125
   - proto: N14WeaponSniper308Ross
     price: 125
+  - proto: N14WeaponSniper308Canadian
+    price: 165
   - proto: N14WeaponSniper308Tribal
     price: 200
   - proto: N14WeaponSniperEnfield
@@ -253,6 +249,12 @@
   - proto: N14WeaponRifle308SniperRifle
     price: 320
     count: 3
+  - proto: N14WeaponRifle762MarksmanCanadian
+    price: 400
+    count: 2
+  - proto: N14WeaponRifle762MarksmanChinese
+    price: 550
+    count: 2
 
 - type: storeCategoryStructured
   id: CaravanBuy2_EnergyWeapons
@@ -495,11 +497,11 @@
     amount: 10
     price: 150
   - proto: N14CateyeCanisterFilled
-    amount: 5
+    count: 5
     price: 200
   - proto: N14SuperStimpak
     price: 250
-    count: 5
+    count: 10
   - proto: N14HandheldHealthAnalyzer
     price: 350
 
@@ -507,21 +509,24 @@
   id: CaravanBuy2_Materials
   name: "Материалы"
   entries:
+  - proto: SulfurOre
+    amount: 10
+    price: 150
   - proto: SheetSteel
     amount: 30
     price: 150
   - proto: SheetPlastic
     amount: 30
-    price: 250
+    price: 150
   - proto: N14IngotLead20
     amount: 20
-    price: 400
+    price: 300
   - proto: N14Gunpowder10
     amount: 10
-    price: 350
+    price: 250
   - proto: N14Scrap1
     amount: 30
-    price: 300
+    price: 200
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Alcohol
@@ -554,6 +559,10 @@
   name: "Разное"
   entries:
   - proto: N14JunkDuctTape
+    price: 5
+  - proto: GlowstickYellow
+    price: 5
+  - proto: Flare
     price: 5
   - proto: CrayonBox
     price: 5
@@ -794,8 +803,6 @@
     price: 130
   - proto: N14WeaponRifle556Carbine
     price: 248
-  - proto: N14WeaponSniper308Canadian
-    price: 165
   - proto: N14WeaponRifle556EM2
     price: 135
   - proto: N14WeaponRifle762Marksman

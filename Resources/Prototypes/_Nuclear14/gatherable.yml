@@ -42,7 +42,7 @@
   id: OreSulfur
   oreEntity: SulfurOre1
   minOreYield: 1
-  maxOreYield: 3
+  maxOreYield: 5
 
 - type: ore
   id: OreFertilizer
