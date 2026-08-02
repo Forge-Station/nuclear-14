@@ -83,7 +83,7 @@
   components:
   - type: PhysicalComposition
     materialComposition:
-      Sulfur: 100
+      RawSulfur: 100
   - type: Stack
     stackType: Sulfur
     baseLayer: powder_brass
