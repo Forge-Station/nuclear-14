@@ -292,8 +292,8 @@ reagent-desc-sulfur = Молотая сера в порошкообразном 
 # Other
 reagent-name-lastbreath-poison = яд "последний вздох"
 reagent-desc-lastbreath-poison = Изысканный яд, который после попадания в организм убивает цель от асфиксии.
-reagent-name-tyaguchka-poison = яд "тягучка"
-reagent-desc-tyaguchka-poison = Не путайте с "трясучкой". Этот яд служит для замедленния жертвы.
+reagent-name-tyaguchka-toxin = яд "тягучка"
+reagent-desc-tyaguchka-toxin = Не путайте с "трясучкой". Этот яд служит для замедленния жертвы.
 reagent-name-colourlesspoison = бесцветный яд
 reagent-desc-colourlesspoison = Мощный токсин созданный из сочетании самых смертоностных ядов.
 reagent-name-scorpiontail = яд скорпиона
