@@ -104,7 +104,7 @@
     Turpentine:
       amount: 1
   products:
-    RobustMovespeedMixture: 3
+    RobustMovespeedMixture: 4
 
 - type: reaction
   id: Buffjet

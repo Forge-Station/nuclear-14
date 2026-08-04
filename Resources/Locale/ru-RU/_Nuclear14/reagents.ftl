@@ -290,7 +290,13 @@ reagent-desc-dung = Навоз животных. Созревает для пр�
 reagent-name-sulfur = сера
 reagent-desc-sulfur = Молотая сера в порошкообразном виде. Вам стоит надеть противогаз при работе с ним.
 # Other
-reagent-name-scorpiontail = хвост скорпиона
-reagent-desc-scorpiontail = Хвост скорпиона. Острый.
+reagent-name-lastbreath-poison = яд "последний вздох"
+reagent-desc-lastbreath-poison = Изысканный яд, который после попадания в организм убивает цель от асфиксии.
+reagent-name-tyaguchka-poison = яд "тягучка"
+reagent-desc-tyaguchka-poison = Не путайте с "трясучкой". Этот яд служит для замедленния жертвы.
+reagent-name-colourlesspoison = бесцветный яд
+reagent-desc-colourlesspoison = Мощный токсин созданный из сочетании самых смертоностных ядов.
+reagent-name-scorpiontail = яд скорпиона
+reagent-desc-scorpiontail = Яд скорпиона. Можно из него сделать противоядие.
 compost-mixing-success = компостная смесь
 mixing-verb-composting = Смесь компоста.
