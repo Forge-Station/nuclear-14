@@ -43,6 +43,8 @@ reagent-name-vim-refresh = Вим Освежающий
 reagent-desc-vim-refresh = Вим Освежающий
 reagent-name-vim-quartz = Вим Кварц
 reagent-desc-vim-quartz = Вим Кварц
+reagent-name-sunset-sarsaparilla = Сансет Cаспарилла
+reagent-desc-sunset-sarsaparilla = напиток Дикого запада Америки, со сладким вкусом корневого пива для настоящих ковбоев.
 
 ## Alcohol
 
