@@ -124,14 +124,18 @@
           tags:
             - N14PowerCellFusionCellAdvansed
   - type: Gun
-    fireRate: 1
+    fireRate: 0.8
     soundGunshot:
       collection: N14GaussGunshot
     selectedMode: SemiAuto
     availableModes:
     - SemiAuto
+    minAngle: 1.5
+    maxAngle: 8
+    angleIncrease: 1
+    angleDecay: 15
   - type: FollowDistance
-    backStrength: 4
+    backStrength: 1
   - type: HeldSpeedModifier
     walkModifier: 0.78
     sprintModifier: 0.78
