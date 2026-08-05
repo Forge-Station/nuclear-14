@@ -1,0 +1,29 @@
+- type: entity
+  name: advansed fusion cell
+  description: A small, standalone energy storage unit.
+  id: N14PowerCellFusionCellAdvansed
+  suffix: Full
+  parent: N14BasePowerCell
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Guns/Ammunition/battery/microfusionadvanced.rsi
+    layers:
+      - map: [ "enum.PowerCellVisualLayers.Base" ]
+        state: empty
+        scale: 0.5, 0.5
+      - map: [ "enum.PowerCellVisualLayers.Unshaded" ]
+        state: o1
+        shader: unshaded
+        scale: 0.5, 0.5
+  - type: Tag
+    tags:
+      - N14PowerCellFusionCellAdvansed
+      - N14AmmoCell
+  - type: Battery
+    maxCharge: 2000
+    startingCharge: 2000
+  - type: HitscanBatteryAmmoProvider
+    proto: LaserElectro
+    fireCost: 2000
+  - type: Projectile
+    ignoreResistances: true
