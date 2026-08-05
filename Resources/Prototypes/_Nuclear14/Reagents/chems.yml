@@ -376,8 +376,8 @@
     Narcotic:
       effects:
       - !type:MovespeedModifier
-        walkSpeedModifier: 1.3
-        sprintSpeedModifier: 1.3
+        walkSpeedModifier: 1.25
+        sprintSpeedModifier: 1.25
 
 #MARK: Tribal Chems
 - type: reagent
