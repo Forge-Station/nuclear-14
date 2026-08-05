@@ -1,0 +1,38 @@
+- type: entity
+  parent: N14IDNCRDogtagOfficer
+  id: N14IDNCRDogtagCaptain
+  name: Жетон Капитана НКР
+  description: Жетон, который носят капитаны НКР. Символ власти и командования.
+  suffix: Captain
+
+- type: entity
+  parent: N14IDNCRDogtagOfficer
+  id: N14IDNCRDogtagWarfrontLieutenant
+  name: Жетон Лейтенанта НКР
+  description: Жетон, который носят лейтенанты НКР. Символ власти и командования.
+  suffix: Warfront Lieutenant
+  components:
+  - type: PresetIdCard
+    job: NCRSGT
+
+- type: entity
+  parent: NCRLTloadoutkits
+  id: NCRCaptainloadoutkits
+  name: Набор Капитана НКР
+
+- type: entity
+  parent: NCRLTloadoutkits
+  id: NCRWarfrontLieutenantLoadoutkits
+  name: Набор Лейтенанта НКР
+
+- type: entity
+  parent: N14IDLegionaryMedalGold
+  id: N14IDLegionaryMedalLegate
+  name: Медаль Легата
+  description: "Отличительная медаль со знаком быка."
+  suffix: Legate
+
+- type: entity
+  parent: LegionCenturionloadoutkits
+  id: LegionLegateloadoutkits
+  name: Набор Легата

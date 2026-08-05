@@ -40,6 +40,11 @@ namespace Content.Server.GameTicking
             RaiseNetworkEvent(GetInfoMsg(), Filter.Empty().AddPlayers(_playerManager.NetworkedSessions));
         }
 
+        public void UpdateJobRestrictions()
+        {
+            RaiseNetworkEvent(GetJobRestrictionsMsg(), Filter.Empty().AddPlayers(_playerManager.NetworkedSessions));
+        }
+
         private string GetInfoText()
         {
             var preset = CurrentPreset ?? Preset;
@@ -108,6 +113,13 @@ namespace Content.Server.GameTicking
         private TickerLobbyInfoEvent GetInfoMsg()
         {
             return new (GetInfoText());
+        }
+
+        private TickerJobRestrictionsEvent GetJobRestrictionsMsg()
+        {
+            var preset = CurrentPreset ?? Preset;
+            var restricted = preset?.RestrictedJobs?.Select(j => j.Id).ToHashSet();
+            return new TickerJobRestrictionsEvent(restricted);
         }
 
         private void UpdateLateJoinStatus()

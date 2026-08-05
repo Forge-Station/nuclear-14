@@ -18,6 +18,7 @@
   parent: N14BaseRobotChassis
   id: N14RobotProtectron
   name: protectron
+  categories: [HideSpawnMenu] # Не используется и сломан.
   components:
   - type: Sprite
     sprite: _Nuclear14/Mobs/Robots/protectron.rsi
@@ -55,6 +56,7 @@
 - type: entity
   parent: N14RobotProtectron
   id: N14RobotProtectronBuilder
+  categories: [HideSpawnMenu] # Не используется и сломан.
   name: protectron builder
   components:
   - type: Sprite
@@ -101,6 +103,7 @@
 - type: entity
   parent: N14RobotProtectron
   id: N14RobotProtectronFire
+  categories: [HideSpawnMenu] # Не используется и сломан.
   name: protectron firefighter
   components:
   - type: Sprite
@@ -133,6 +136,7 @@
 - type: entity
   parent: N14RobotProtectron
   id: N14RobotProtectronPolice
+  categories: [HideSpawnMenu]
   name: protectron police officer
   components:
   - type: Sprite
@@ -166,6 +170,7 @@
 - type: entity
   parent: N14BaseRobotChassis
   id: N14RobotMrHandy
+  categories: [HideSpawnMenu] # Не используется и сломан.
   name: mr handy
   components:
   - type: Sprite
@@ -205,6 +210,7 @@
 - type: entity
   parent: N14RobotMrHandy
   id: N14RobotMrHandySaw
+  categories: [HideSpawnMenu] # Не используется и сломан.
   name: mr handy
   suffix: saw
   components:
@@ -214,6 +220,7 @@
 - type: entity
   parent: N14RobotMrHandy
   id: N14RobotMrHandyGun
+  categories: [HideSpawnMenu] # Не используется и сломан.
   name: mr handy
   suffix: gun
   components:
@@ -224,6 +231,7 @@
   parent: N14RobotMrHandy
   id: N14RobotMrGutsy
   name: mr gutsy
+  categories: [HideSpawnMenu] # Не используется и сломан.
   components:
   - type: Sprite
     sprite: _Nuclear14/Mobs/Robots/mrhandygutsy.rsi
@@ -240,6 +248,7 @@
 - type: entity
   parent: N14RobotMrHandy
   id: N14RobotMrHandyVault
+  categories: [HideSpawnMenu] # Не используется и сломан.
   suffix: player, vault
   components:
   - type: NpcFactionMember
@@ -271,6 +280,7 @@
 - type: entity
   parent: N14RobotMrHandySaw
   id: N14RobotMrHandySawVault
+  categories: [HideSpawnMenu] # Не используется и сломан.
   suffix: player, vault, saw
   components:
   - type: NpcFactionMember
@@ -337,16 +347,19 @@
   parent: [N14RobotMrHandy, N14RobotBOSMidwestBase]
   id: N14RobotMrHandyBOSMidwest
   suffix: player, BOS Midwest
+  categories: [HideSpawnMenu] # Не используется и сломан.
     
 - type: entity
   parent: [N14RobotMrHandySaw, N14RobotBOSMidwestBase]
   id: N14RobotMrHandySawBOSMidwest
   suffix: player, BOS Midwest, saw
+  categories: [HideSpawnMenu] # Не используется и сломан.
     
 - type: entity
   parent: [N14RobotMrGutsy, N14RobotBOSMidwestBase]
   id: N14RobotMrGutsyBOSMidwest
   suffix: player, BOS Midwest, gutsy
+  categories: [HideSpawnMenu] # Не используется и сломан.
     
 ## BOS Washington
 - type: entity
@@ -386,13 +399,16 @@
   parent: [N14RobotMrHandy, N14RobotBOSWashingtonBase]
   id: N14RobotMrHandyBOSWashington
   suffix: player, BOS Washington
+  categories: [HideSpawnMenu] # Не используется и сломан.
     
 - type: entity
   parent: [N14RobotMrHandySaw, N14RobotBOSWashingtonBase]
   id: N14RobotMrHandySawBOSWashington
   suffix: player, BOS Washington, saw
+  categories: [HideSpawnMenu] # Не используется и сломан.
     
 - type: entity
   parent: [N14RobotMrGutsy, N14RobotBOSWashingtonBase]
   id: N14RobotMrGutsyBOSWashington
   suffix: player, BOS Washington, gutsy
+  categories: [HideSpawnMenu] # Не используется и сломан.
