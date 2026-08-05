@@ -107,7 +107,14 @@ ent-N14ClothingOuterTireArmor = броня из шин
     .desc = Броня сделанная из обгоревших шин.
 ent-N14ClothingOuterHeavySteelArmor = тяжелая стальная броня
     .desc = Сделана из хлама и стали, имеет подкладку из кожи.
-
+ent-N14ClothingOuterArmoredKit = набор легкой брони
+    .desc = Грубо сшитые куски хлама и ржавчины.
+ent-N14ClothingOuterReinforcedArmorKit = усиленный набор легкой брони
+    .desc = Еще больше грубо сшитых кусков хлама и ржавчины
+ent-M14ClothingOuterKhanLeather = желетка великих ханов
+    .desc = Черная кожаная куртка. На спине — изображение: агрессивный череп с красными глазами в меховой шапке с рогами. У черепа усы монголоидного типа — это явно эмблема «Великих ханов».Ъ
+ent-M14ClothingOuterKhanLeatherArmored = бронированная желетка великих ханов
+    .desc = Черная кожаная куртка. На спине — изображение: агрессивный череп с красными глазами в меховой шапке с рогами. У черепа усы монголоидного типа — это явно эмблема «Великих ханов».
 # Спонсорские вещи
 ent-N14ClothingOuterNCRCombatVeteranKiltArmor = боевая броня ветерана нкр с кителем
     .desc = { ent-N14ClothingOuterNCRCombatVeteranArmor.desc }

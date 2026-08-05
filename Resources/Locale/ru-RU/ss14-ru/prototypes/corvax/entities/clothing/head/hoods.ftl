@@ -9,3 +9,5 @@ ent-N14ClothingNeckCloakTentHoodBOS = капюшон плащ палатки Б�
     .desc = Универсальный плащ, служащий как непромокаемой накидкой, так и лёгкой полевой палаткой.
 ent-N14ClothingHoodWanderer = капюшон скитальца
     .desc = Грязный мешок с большим прорезом для лица.
+ent-N14ClothingHeadMarksmanHood = капюшон марксмана
+    .desc = Теплый капюшон с очками.
