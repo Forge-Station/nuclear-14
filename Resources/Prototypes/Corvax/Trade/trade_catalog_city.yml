@@ -278,6 +278,28 @@
     count: 2
 
 - type: storeCategoryStructured
+  id: CaravanBuy2_Grenade
+  name: "Гранаты"
+  entries:
+  - proto: N14NukaCocktail
+    price: 30
+  - proto: SmokeGrenade
+    price: 50
+    count: 5
+  - proto: GrenadeFlashBang
+    price: 60
+    count: 10
+  - proto: GrenadeShrapnel
+    price: 80
+    count: 10
+  - proto: N14Dynamite
+    price: 100
+    count: 10
+  - proto: C4
+    price: 150
+    count: 5
+
+- type: storeCategoryStructured
   id: CaravanBuy2_Ammo
   name: "Патроны"
   entries:
@@ -289,6 +311,11 @@
   - proto: N14PlasmaCartridge
     price: 150
     count: 12
+  - proto: 40mmGrenadeShrapnel
+    price: 25
+  - proto: 40mmGrenadeSmoke
+    price: 50
+    count: 5
   - proto: 40mmGrenadeFrag
     price: 150
     count: 20
@@ -641,6 +668,7 @@
   - CaravanBuy2_Rifles
   - CaravanBuy2_EnergyWeapons
   - CaravanBuy2_Ammo
+  - CaravanBuy2_Grenade
   - CaravanBuy2_Melee
   - CaravanBuy2_Headwear
   - CaravanBuy2_Armor
