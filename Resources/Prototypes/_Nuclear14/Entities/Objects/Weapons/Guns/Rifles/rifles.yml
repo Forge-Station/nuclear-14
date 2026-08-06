@@ -29,6 +29,45 @@
     price: 100
   - type: Craftable
 
+#Перенёс из snipers.yml
+- type: entity
+  name: varmint rifle
+  parent: [ BaseWeaponSniper, ForgeGunConditionProfileSniper ]
+  id: N14WeaponSniper556VarmintRifle
+  description: A pre-war low-power bolt action rifle, originally designed to hunt small animals. This gun also works fine on anything human-sized. Uses 5.56 ammo.
+  components:
+  - type: Clothing
+    sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/varmint.rsi
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/varmint.rsi
+  - type: Item # Forge-Add
+    size: Huge
+    shape:
+    - 0,0,3,1
+    - 0,1,0,1
+  - type: Wieldable
+  - type: GunWieldBonus
+    minAngle: -23
+    maxAngle: -104
+  - type: Gun
+    minAngle: 24
+    maxAngle: 105
+    angleIncrease: 4
+    angleDecay: 16
+    fireRate: 2.2
+    soundGunshot:
+      collection: N14SniperVarmintGunshot
+  - type: BallisticAmmoProvider
+    whitelist:
+      tags:
+      - N14Cartridge556Rifle
+    capacity: 15
+    proto: N14Cartridge556Rifle
+  - type: FollowDistance
+    backStrength: 3
+  - type: StaticPrice
+    price: 50
+
 - type: entity
   name: R-91 Rifle
   parent: N14WeaponRifleBase
@@ -757,60 +796,6 @@
         whitelist:
           tags:
             - N14Cartridge762Rifle
-  - type: StaticPrice
-    price: 175
-
-- type: entity
-  name: chinese marksman rifle
-  parent: N14WeaponRifleBase
-  id: N14WeaponRifle762MarksmanChinese
-  description: A pre-war chinese marksman rifle chambered in .308.
-  components:
-  - type: Clothing
-    sprite: _Nuclear14/Objects/Weapons/Guns/Rifles/chinesemarksman.rsi
-    quickEquip: false
-    slots:
-    - Back
-    - suitStorage
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Weapons/Guns/Rifles/chinesemarksman.rsi
-    layers:
-    - state: base
-      map: ["enum.GunVisualLayers.Base"]
-    - state: mag-0
-      map: ["enum.GunVisualLayers.Mag"]
-  - type: GunWieldBonus
-    minAngle: -23
-    maxAngle: -44
-  - type: Gun
-    minAngle: 24
-    maxAngle: 45
-    angleIncrease: 4
-    angleDecay: 16
-    soundGunshot:
-      collection: N14MarksmanGunshot
-    fireRate: 2
-    selectedMode: SemiAuto
-    availableModes:
-    - SemiAuto
-  - type: ItemSlots
-    slots:
-      gun_magazine:
-        name: Magazine
-        startingItem: Magazine308Rifle
-        insertSound: /Audio/Weapons/Guns/MagIn/ltrifle_magin.ogg
-        ejectSound: /Audio/Weapons/Guns/MagOut/ltrifle_magout.ogg
-        priority: 2
-        whitelist:
-          tags:
-            - N14Magazine308Rifle
-      gun_chamber:
-        name: Chamber
-        startingItem: N14Cartridge308Rifle
-        priority: 1
-        whitelist:
-          tags:
-            - N14Cartridge308Rifle
   - type: StaticPrice
     price: 175
 

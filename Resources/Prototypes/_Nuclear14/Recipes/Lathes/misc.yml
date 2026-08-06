@@ -67,7 +67,7 @@
   completetime: 2
   materials:
     Plastic: 50
-    RawSulfur: 25
+    Sulfur: 25
 
 - type: latheRecipe
   id: N14FlashlightLantern
@@ -86,7 +86,7 @@
   completetime: 1
   materials:
     Wood: 100
-    RawSulfur: 60
+    Sulfur: 50
 
 - type: latheRecipe
   id: ClothingBeltQuiverSpear

@@ -124,7 +124,8 @@
   - type: Wieldable
   - type: GunWieldBonus
     minAngle: -23
-    maxAngle: -104
+    maxAngle: -102
+    angleIncrease: -8 # Forge-end 
   - type: Gun
     minAngle: 24
     maxAngle: 105
@@ -157,7 +158,8 @@
   - type: Wieldable
   - type: GunWieldBonus
     minAngle: -23
-    maxAngle: -104
+    maxAngle: -102
+    angleIncrease: -8 # Forge-end 
   - type: Gun
     minAngle: 24
     maxAngle: 105
@@ -301,14 +303,15 @@
   - type: Gun
     minAngle: 8              
     maxAngle: 35            
-    angleIncrease: 1         
-    angleDecay: 16
+    angleIncrease: 3         
+    angleDecay: 12
     fireRate: 2
     soundGunshot:
       collection: N14LeverCarbineGunshot
   - type: GunWieldBonus
     minAngle: -7            
-    maxAngle: -34          
+    maxAngle: -32
+    angleIncrease: -6 # Forge-end 
   - type: BallisticAmmoProvider
     whitelist:
       tags:
@@ -335,22 +338,23 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/leverrifle.rsi
   - type: Gun
-    fireRate: 1.2
-    minAngle: 7.5              
+    fireRate: 1.5
+    minAngle: 7             
     maxAngle: 30            
-    angleIncrease: 1         
+    angleIncrease: 4         
     angleDecay: 16
     soundGunshot:
       collection: N14LeverRifleGunshot
+  - type: GunWieldBonus
+    minAngle: -6            
+    maxAngle: -28  
+    angleIncrease: -4 # Forge-end
   - type: BallisticAmmoProvider
     whitelist:
       tags:
       - N14Cartridge45-70
     capacity: 6
     proto: N14Cartridge45-70
-  - type: GunWieldBonus
-    minAngle: -6            
-    maxAngle: -24  
   - type: FollowDistance
     backStrength: 3
   - type: StaticPrice
@@ -369,15 +373,15 @@
   - type: Gun # Forge-start
     minAngle: 6
     maxAngle: 45
-    angleIncrease: 12
-    angleDecay: 10
+    angleIncrease: 4
+    angleDecay: 16
     fireRate: 2.5 # Forge-Change
     soundGunshot:
       collection: N14BrushGunGunshot
   - type: GunWieldBonus
     minAngle: -4
-    maxAngle: -30  # Forge-end
-    angleIncrease: -7
+    maxAngle: -42
+    angleIncrease: -4 # Forge-end
   - type: BallisticAmmoProvider
     whitelist:
       tags:
@@ -421,44 +425,6 @@
     price: 25
 
 - type: entity
-  name: varmint rifle
-  parent: [ BaseWeaponSniper, ForgeGunConditionProfileSniper ]
-  id: N14WeaponSniper556VarmintRifle
-  description: A pre-war low-power bolt action rifle, originally designed to hunt small animals. This gun also works fine on anything human-sized. Uses 5.56 ammo.
-  components:
-  - type: Clothing
-    sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/varmint.rsi
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/varmint.rsi
-  - type: Item # Forge-Add
-    size: Huge
-    shape:
-    - 0,0,3,1
-    - 0,1,0,1
-  - type: Wieldable
-  - type: GunWieldBonus
-    minAngle: -23
-    maxAngle: -104
-  - type: Gun
-    minAngle: 24
-    maxAngle: 105
-    angleIncrease: 4
-    angleDecay: 16
-    fireRate: 2.2
-    soundGunshot:
-      collection: N14SniperVarmintGunshot
-  - type: BallisticAmmoProvider
-    whitelist:
-      tags:
-      - N14Cartridge556Rifle
-    capacity: 15
-    proto: N14Cartridge556Rifle
-  - type: FollowDistance
-    backStrength: 3
-  - type: StaticPrice
-    price: 50
-
-- type: entity
   name: stockless lever action carbine
   parent: N14WeaponSniperLeverBase
   id: N14WeaponSniper44LeverShortCarbine
@@ -477,14 +443,14 @@
     minAngle: 11
     maxAngle: 55
     angleIncrease: 15
-    angleDecay: 13
+    angleDecay: 16
     fireRate: 2
     soundGunshot:
       collection: N14LeverCarbineGunshot
   - type: GunWieldBonus
-    minAngle: -4
-    maxAngle: -35
-    angleIncrease: -9 # Forge-end 
+    minAngle: -8
+    maxAngle: -45
+    angleIncrease: -6 # Forge-end 
   - type: BallisticAmmoProvider
     whitelist:
       tags:
@@ -528,7 +494,7 @@
     maxAngle: 105
     angleIncrease: 4
     angleDecay: 16
-    fireRate: 1.2
+    fireRate: 1
     soundGunshot:
       collection: N14AntiMaterielGunshot
   - type: HeldSpeedModifier
@@ -551,13 +517,17 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/tribalhuntstick.rsi
   - type: Gun
-    fireRate: 1.2
+    fireRate: 1.5
     minAngle: 8
     maxAngle: 35
-    angleIncrease: 2
-    angleDecay: 15
+    angleIncrease: 4
+    angleDecay: 16
     soundGunshot:
       collection: N14LeverRifleGunshot
+  - type: GunWieldBonus
+    minAngle: -6            
+    maxAngle: -28  
+    angleIncrease: -4 # Forge-end
   - type: BallisticAmmoProvider
     whitelist:
       tags:
@@ -584,20 +554,20 @@
     fireRate: 2
     minAngle: 8
     maxAngle: 35
-    angleIncrease: 2
-    angleDecay: 15
+    angleIncrease: 4
+    angleDecay: 16
     soundGunshot:
       collection: N14LeverRifleGunshot
+  - type: GunWieldBonus
+    minAngle: -6
+    maxAngle: -28
+    angleIncrease: -4 # Forge-end
   - type: BallisticAmmoProvider
     whitelist:
       tags:
       - N14Cartridge45-70
     capacity: 8
     proto: N14Cartridge45-70
-  - type: GunWieldBonus
-    minAngle: -6
-    maxAngle: -27
-    angleIncrease: -1
   - type: FollowDistance
     backStrength: 3
   - type: StaticPrice
@@ -641,13 +611,14 @@
   - type: Wieldable
   - type: GunWieldBonus
     minAngle: -23
-    maxAngle: -104
+    maxAngle: -102
+    angleIncrease: -4 # Forge-end
   - type: Gun
     minAngle: 24
     maxAngle: 105
     angleIncrease: 4
     angleDecay: 16
-    fireRate: 1.5
+    fireRate: 1.8
     soundGunshot:
       collection: N14SniperHuntingGunshot
   - type: BallisticAmmoProvider
@@ -660,6 +631,63 @@
     backStrength: 3 # Forge-Change
   - type: StaticPrice
     price: 50 # Forge-Change
+
+#Переместил из rifles.yml
+- type: entity
+  name: chinese marksman rifle
+  parent: N14WeaponRifleBase
+  id: N14WeaponRifle762MarksmanChinese
+  suffix: .308
+  description: A pre-war chinese marksman rifle chambered in .308.
+  components:
+  - type: Clothing
+    sprite: _Nuclear14/Objects/Weapons/Guns/Rifles/chinesemarksman.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Weapons/Guns/Rifles/chinesemarksman.rsi
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: mag-0
+      map: ["enum.GunVisualLayers.Mag"]
+  - type: GunWieldBonus
+    minAngle: -23
+    maxAngle: -42
+    angleIncrease: -2 # Forge-end
+  - type: Gun
+    minAngle: 24
+    maxAngle: 45
+    angleIncrease: 4
+    angleDecay: 16
+    soundGunshot:
+      collection: N14MarksmanGunshot
+    fireRate: 2.5
+    selectedMode: SemiAuto
+    availableModes:
+    - SemiAuto
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Magazine
+        startingItem: Magazine308Rifle
+        insertSound: /Audio/Weapons/Guns/MagIn/ltrifle_magin.ogg
+        ejectSound: /Audio/Weapons/Guns/MagOut/ltrifle_magout.ogg
+        priority: 2
+        whitelist:
+          tags:
+            - N14Magazine308Rifle
+      gun_chamber:
+        name: Chamber
+        startingItem: N14Cartridge308Rifle
+        priority: 1
+        whitelist:
+          tags:
+            - N14Cartridge308Rifle
+  - type: StaticPrice
+    price: 175
 
 # Forge-add-start
 - type: entity
@@ -682,8 +710,9 @@
     - state: mag-0
       map: ["enum.GunVisualLayers.Mag"]
   - type: GunWieldBonus
-    minAngle: -23
-    maxAngle: -44
+    minAngle: -20
+    maxAngle: -42
+    angleIncrease: -2 # Forge-end
   - type: Gun
     minAngle: 24
     maxAngle: 45
@@ -691,7 +720,7 @@
     angleDecay: 16
     soundGunshot:
       collection: N14MarksmanGunshot
-    fireRate: 2
+    fireRate: 2.5
     selectedMode: SemiAuto
     availableModes:
     - SemiAuto

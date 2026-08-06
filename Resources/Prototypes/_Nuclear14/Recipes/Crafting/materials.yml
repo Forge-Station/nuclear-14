@@ -23,16 +23,3 @@
   icon: { sprite: /Textures/Objects/Materials/materials.rsi, state: cardboard }
   objectType: Item
   hide: false
-
-# Sulfur Ore from matches
-- type: construction
-  name: sulfur ore
-  id: N14MatchesToSulfurOre
-  graph: N14MatchesToSulfurOre
-  startNode: start
-  targetNode: sulfurore
-  category: construction-category-materials
-  description: "A unit of sulfur ore from matches."
-  icon: { sprite: /Textures/_Nuclear14/Objects/Misc/materials.rsi, state: sulfur }
-  objectType: Item
-  hide: false

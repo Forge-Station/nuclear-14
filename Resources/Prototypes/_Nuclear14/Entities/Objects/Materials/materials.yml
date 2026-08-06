@@ -83,7 +83,7 @@
   components:
   - type: PhysicalComposition
     materialComposition:
-      RawSulfur: 100
+      Sulfur: 100
   - type: Stack
     stackType: Sulfur
     baseLayer: powder_brass
@@ -95,6 +95,9 @@
       map: ["base"]
   - type: Item
     heldPrefix: powder_brass
+  - type: Construction
+    graph: N14MatchesToSulfurPowder
+    node: sulfurpowder
   - type: SolutionContainerManager
     solutions:
       powder:

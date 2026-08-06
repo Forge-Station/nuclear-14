@@ -407,7 +407,6 @@
   - type: MaterialStorage
     whitelist:
       tags:
-      - Ore
       - Sheet
       - RawMaterial
       - Ingot
@@ -578,7 +577,7 @@
     - N14IngotLead
     - N14IngotAluminum    # Forge-add 
     - N14IngotBrass       # Forge-add 
-    # - SulfurPowder # Forge-Change
+    - SulfurPowder
     # Scrap
     - SheetPlasticScrap
     - N14IngotBrassScrap
