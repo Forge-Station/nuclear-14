@@ -647,6 +647,9 @@
     inHandsMaxFillLevels: 2
     inHandsFillBaseName: -fill-
   - type: Sealable
+  - type: ToolRefinable #Forge-add
+    refineResult:
+    - id: SheetPlastic1
 
 - type: entity
   parent: DrinkWaterBottleFull

@@ -648,4 +648,15 @@
   completetime: 5
   materials:
     Steel: 500
+
+- type: latheRecipe
+  id: 40mmGrenadeShrapnel
+  result: 40mmGrenadeShrapnel
+  category: N14Ammo
+  completetime: 2
+  materials:
+    Lead: 10
+    Steel: 50
+    N14Gunpowder: 10
+
 # Forge-Change-End
