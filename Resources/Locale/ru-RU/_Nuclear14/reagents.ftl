@@ -236,6 +236,8 @@ reagent-name-movespeedmod-mixture = джет
 reagent-desc-movespeedmod-mixture = Смесь реагентов, которая заставляет вас двигаться быстро.
 reagent-name-robust-movespeedmod-mixture = турбо
 reagent-desc-robust-movespeedmod-mixture = Ноги сами несут вас вперёд, мир превращается в смазанное пятно, а когти смерти кажутся медленными улитками. Главное – не врезаться в стену на полном ходу.
+reagent-name-robust-movespeedmod-mixture-legio = порошок берсерка
+reagent-desc-robust-movespeedmod-mixture-legio = Ноги сами несут вас вперёд, мир превращается в смазанное пятно, а когти смерти кажутся медленными улитками. Главное – не врезаться в стену на полном ходу.
 reagent-name-damage-mod-mixture = психо
 reagent-desc-damage-mod-mixture = Чувствуете, как мышцы наливаются сталью, а в глазах загорается безумный огонь? Психо пробуждает в вас зверя, готового разорвать любого врага.
 # Products

@@ -327,12 +327,6 @@
     price: 200
   - proto: N14SledgeHammer
     price: 250
-  - proto: N14ClothingHandsPowerFist
-    price: 300
-    count: 2
-  - proto: N14ClothingHandsIndusrialPowerFist
-    price: 350
-    count: 2
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Headwear
