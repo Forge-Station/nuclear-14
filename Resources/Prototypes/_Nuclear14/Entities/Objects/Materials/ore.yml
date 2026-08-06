@@ -176,9 +176,6 @@
     sprite: /Textures/_Nuclear14/Objects/Misc/materials.rsi
     state: sulfur
   - type: Material
-  - type: Construction
-    graph: N14MatchesToSulfurOre
-    node: sulfurore
   - type: PhysicalComposition
     materialComposition:
       RawSulfur: 100
