@@ -10,7 +10,7 @@
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_stimpak.rsi
     heldPrefix: stimpak
   - type: Sprite
-    scale: 0.75, 0.75
+    scale: 0.80, 0.80
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_stimpak.rsi
     layers:
     - state: stimpak
@@ -102,7 +102,7 @@
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_stimpak.rsi
     heldPrefix: stimpak
   - type: Sprite
-    scale: 0.75, 0.75
+    scale: 0.80, 0.80
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_stimpak.rsi
     layers:
     - state: stimpak
@@ -155,7 +155,7 @@
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_superstimpak.rsi
     heldPrefix: superstimpak
   - type: Sprite
-    scale: 0.75, 0.75
+    scale: 0.80, 0.80
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_superstimpak.rsi
     layers:
     - state: superstimpak
@@ -227,16 +227,19 @@
   name: Jet inhaler
   description: A rare injector filled with a narcotic reagent that makes you feel as though you're speeding up. It's weaker but lasts longer than Turbo.
   components:
+  - type: Item
+    sprite: _Corvax/Objects/Specific/Medical/jet.rsi
+    heldPrefix: jet
   - type: Sprite
-    scale: 0.75, 0.75
-    sprite: _Nuclear14/Objects/Specific/Medical/ms13_drugs.rsi
+    scale: 0.80, 0.80
+    sprite: _Corvax/Objects/Specific/Medical/jet.rsi
     layers:
     - state: jet
       map: ["enum.SolutionContainerLayers.Fill"]
   - type: SolutionContainerVisuals
     maxFillLevels: 1
     changeColor: false
-    emptySpriteName: jet_used
+    emptySpriteName: jet-empty
   - type: Hypospray
     solutionName: pen
     transferAmount: 15
@@ -272,9 +275,12 @@
   name: Turbo inhaler
   description: A small injector filled with a narcotic reagent that makes you feel as though the world around you is slowing down. It's stronger and more dangerous than Jet.
   components:
+  - type: Item
+    sprite: _Corvax/Objects/Specific/Medical/turbo.rsi
+    heldPrefix: turbo
   - type: Sprite
-    scale: 0.75, 0.75
-    sprite: _Nuclear14/Objects/Specific/Medical/ms13_drugs.rsi
+    scale: 0.80, 0.80
+    sprite: _Corvax/Objects/Specific/Medical/turbo.rsi
     layers:
     - state: turbo
       map: ["enum.SolutionContainerLayers.Fill"]
@@ -316,16 +322,19 @@
   name: med-x
   description: A syringe filled with a powerful painkiller. Some believe that it makes you more resistant to pain.
   components:
+  - type: Item
+    sprite: _Corvax/Objects/Specific/Medical/medx.rsi
+    heldPrefix: medx
   - type: Sprite
-    scale: 0.75, 0.75
-    sprite: _Nuclear14/Objects/Specific/Medical/ms13_drugs.rsi
+    scale: 0.80, 0.80
+    sprite: _Corvax/Objects/Specific/Medical/medx.rsi
     layers:
     - state: medx
       map: ["enum.SolutionContainerLayers.Fill"]
   - type: SolutionContainerVisuals
     maxFillLevels: 1
     changeColor: false
-    emptySpriteName: medx_used
+    emptySpriteName: medx-empty
   - type: Hypospray
     solutionName: pen
     transferAmount: 20
@@ -346,9 +355,12 @@
   name: hydra inhaler
   description: A bottle of Supa Yum soda with several vials attached to it. Contains a mildly potent healing chemical that comes with addictive side effects.
   components:
+  - type: Item
+    sprite: _Corvax/Objects/Specific/Medical/hydra.rsi
+    heldPrefix: hydra
   - type: Sprite
-    scale: 0.75, 0.75
-    sprite: _Nuclear14/Objects/Specific/Medical/ms13_drugs.rsi
+    scale: 0.80, 0.80
+    sprite: _Corvax/Objects/Specific/Medical/hydra.rsi
     layers:
     - state: hydra
       map: ["enum.SolutionContainerLayers.Fill"]
@@ -387,16 +399,19 @@
   name: psycho syringe
   description: A syringe filled with a reagent designed to make you more violent. Legend has it that these have a military origin.
   components:
+  - type: Item
+    sprite: _Corvax/Objects/Specific/Medical/psycho.rsi
+    heldPrefix: psycho
   - type: Sprite
-    scale: 0.75, 0.75
-    sprite: _Nuclear14/Objects/Specific/Medical/ms13_drugs.rsi
+    scale: 0.80, 0.80
+    sprite: _Corvax/Objects/Specific/Medical/psycho.rsi
     layers:
     - state: psycho
       map: ["enum.SolutionContainerLayers.Fill"]
   - type: SolutionContainerVisuals
     maxFillLevels: 1
     changeColor: false
-    emptySpriteName: psycho_used
+    emptySpriteName: psycho-empty
   - type: Hypospray
     solutionName: pen
     transferAmount: 20
@@ -434,7 +449,7 @@
   - type: StaticPrice
     price: 20
   - type: Sprite
-    scale: 0.75, 0.75
+    scale: 0.80, 0.80
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_medical_new.rsi
     netsync: false
     layers:

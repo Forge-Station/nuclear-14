@@ -23,6 +23,7 @@
   id: SpeedLoader12-7x55mm
   name: "speed loader (12-7x55mm)"
   parent: N14BaseSpeedLoader12-7x55mm
+  categories: [HideSpawnMenu]
   components:
   - type: BallisticAmmoProvider
     proto: N14Cartridge12-7x55mm
