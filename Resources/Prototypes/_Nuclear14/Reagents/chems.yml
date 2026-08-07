@@ -439,22 +439,6 @@
         - !type:ReagentThreshold
           min: 30
 
-- type: reagent
-  id: BerserkerMixture
-  name: reagent-name-robust-movespeedmod-mixture-legio
-  group: Medicine
-  desc: reagent-name-robust-movespeedmod-mixture-legio
-  physicalDesc: reagent-physical-desc-powdery
-  color: "#D2FFFA"
-  boilingPoint: 255.0
-  meltingPoint: 36.0
-  metabolisms:
-    Narcotic:
-      effects:
-      - !type:MovespeedModifier
-        walkSpeedModifier: 1.2
-        sprintSpeedModifier: 1.2
-
 #MARK: Tribal Chems
 - type: reagent
   id: MourningPoultice
