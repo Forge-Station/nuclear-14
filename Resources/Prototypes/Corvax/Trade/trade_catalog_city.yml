@@ -383,9 +383,6 @@
     price: 4000
     count: 2
   - proto: N14ClothingOuterPowerArmorT45
-    price: 5000
-    count: 1
-  - proto: N14ClothingOuterPowerArmorT60
     price: 6000
     count: 1
 

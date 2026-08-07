@@ -20,9 +20,9 @@
     - N14WeaponRevolver10mm
 
 - type: loadout
-  id: N14WeaponRevolver44Tribal
+  id: N14WeaponRevolver44Magnun
   category: Weapons
-  cost: 2
+  cost: 3
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
@@ -37,13 +37,35 @@
       - CaesarLegionSlave
       - NCRPisoner
   items:
-    - N14WeaponRevolver44Tribal
+    - N14WeaponRevolver44Magnun
 
 #Shotgun
 - type: loadout
+  id: N14WeaponShotgunPipe
+  category: Weapons
+  cost: 2
+  requirements:
+    - !type:OverallTimeRequirement
+      min: 3600
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutGuns
+    - !type:CharacterDepartmentRequirement # Forge-Change
+      inverted: true
+      departments:
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14WeaponShotgunPipe
+
+- type: loadout
   id: N14WeaponShotgunCaravan
   category: Weapons
-  cost: 3
+  cost: 2
   requirements:
     - !type:OverallTimeRequirement
       min: 3600
@@ -112,7 +134,7 @@
 - type: loadout
   id: N14WeaponLaserPistol
   category: Weapons
-  cost: 4
+  cost: 3
   requirements:
     - !type:OverallTimeRequirement
       min: 12800
@@ -134,15 +156,16 @@
 - type: loadout
   id: N14WeaponLaserRifleMakeshift
   category: Weapons
-  cost: 8
+  cost: 6
   requirements:
     - !type:OverallTimeRequirement
       min: 16800
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
-    - !type:CharacterDepartmentRequirement # Forge-Change
+    - !type:CharacterDepartmentRequirement
       inverted: true
       departments:
+      - CaesarLegion
       - Vault
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
@@ -180,7 +203,7 @@
 - type: loadout
   id: SpeedLoader10
   category: Weapons
-  cost: 2
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutAmmo
@@ -203,14 +226,10 @@
 - type: loadout
   id: SpeedLoader44
   category: Weapons
-  cost: 3
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutAmmo
-    - !type:CharacterDepartmentRequirement # Forge-Change
-      departments:
-        - Wastelander
-        - Townsfolk
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -224,7 +243,7 @@
 - type: loadout
   id: N14MagazinePistol10mm
   category: Weapons
-  cost: 2
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutAmmo
@@ -245,7 +264,7 @@
 - type: loadout
   id: MagazineBox12gauge
   category: Weapons
-  cost: 2
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutAmmo
@@ -265,7 +284,7 @@
 - type: loadout
   id: MagazineBox20gauge
   category: Weapons
-  cost: 2
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutAmmo
@@ -285,7 +304,7 @@
 - type: loadout
   id: N14MagazinePistol9mm
   category: Weapons
-  cost: 2
+  cost: 1
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutAmmo
@@ -306,7 +325,7 @@
 - type: loadout
   id: N14MagazineSMG10mm
   category: Weapons
-  cost: 4
+  cost: 3
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutAmmo
@@ -325,42 +344,23 @@
     - N14MagazineSMG10mm
 
 - type: loadout
-  id: Magazine556Rifle
+  id: N14PowerCellSmall
   category: Weapons
   cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutAmmo
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - CaesarLegion
+      - Vault
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
       - BoSMidSerf
       - CaesarLegionSlave
       - NCRPisoner
-    - !type:CharacterDepartmentRequirement # Forge-Change
-      departments:
-        - Wastelander
-        - Townsfolk
-  items:
-    - Magazine556Rifle
-
-- type: loadout
-  id: N14PowerCellSmall
-  category: Weapons
-  cost: 3
-  requirements:
-    - !type:CharacterItemGroupRequirement
-      group: N14LoadoutAmmo
-    - !type:CharacterJobRequirement # Forge-Change
-      inverted: true
-      jobs:
-      - BoSMidSerf
-      - CaesarLegionSlave
-      - NCRPisoner
-    - !type:CharacterDepartmentRequirement # Forge-Change
-      departments:
-        - Wastelander
-        - Townsfolk
   items:
     - N14PowerCellSmall
     - N14PowerCellSmall
