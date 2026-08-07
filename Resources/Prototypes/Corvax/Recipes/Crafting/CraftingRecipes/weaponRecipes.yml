@@ -250,6 +250,39 @@
       tag: true
 
 - type: craftRecipe
+  id: N14WeaponPlasmaRifleCrude
+  resultProtos:
+    - N14WeaponPlasmaRifleCrude
+  requiredWorkbench: N14WorkbenchWeaponbench
+  # requiredIntelligence: 6
+  craftTime: 10
+  items:
+    N14WeaponPlasmaRifleCrudeBlueprint:
+      amount: 1
+      catalyzer: true
+    N14JunkGunpartsWeaponParts2:
+      amount: 1
+    N14JunkGunpartsTrigger:
+      amount: 1
+    N14JunkComponentScrew:
+      amount: 2
+    N14JunkGunpartsRifleScope:
+      amount: 1
+    N14JunkGunpartsWeaponParts3:
+      amount: 1
+    N14JunkGunpartsStockWood:
+      amount: 1
+    N14PlasmaCartridge:
+      amount: 1
+    N14Screwdriver:
+      amount: 1
+      catalyzer: true
+    N14Welder:
+      amount: 1
+      catalyzer: true
+      tag: true
+
+- type: craftRecipe
   id: N14WeaponRifle556Pipe
   resultProtos:
     - N14WeaponRifle556Pipe

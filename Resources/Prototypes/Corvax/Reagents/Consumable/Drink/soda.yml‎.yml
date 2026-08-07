@@ -10,14 +10,20 @@
     Drink:
       effects:
       - !type:SatiateThirst
-        factor: -3.5
+        factor: 3.5
     Medicine:
-      metabolismRate: 0.1 # Slow
+      metabolismRate: 0.25
       effects:
       - !type:HealthChange
         damage:
           groups:
-            Burn: -1.5
-            Brute: -1.5
-      - !type:ModifyBleedAmount
-        amount: -0.5
+            Burn: -0.75
+            Brute: -1
+      - !type:HealthChange
+        damage:
+          groups:
+            Burn: -0.375
+            Brute: -0.5
+        conditions:
+        - !type:ReagentThreshold
+          min: 30

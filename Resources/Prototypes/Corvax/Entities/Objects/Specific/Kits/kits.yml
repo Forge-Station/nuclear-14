@@ -1315,3 +1315,48 @@
       - id: N14MedkitCombatFilled
       - id: Handcuffs
         amount: 2
+
+##MARK: Командер Midwest Kits
+- type: entity
+  name: Снайперский набор командира паладина Братства
+  parent: KitBase
+  id: KitCommandWattzMidwestBoS
+  description: Ящик со всем необходимым для члена Братства.
+  components:
+  - type: Sprite
+    state: marksman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponLaserRifleWattz3000
+      - id: N14PowerCellFocused
+        amount: 3
+      - id: N14Stimpak
+        amount: 2
+      - id: N14CleanGauze10
+      - id: BoxMRE
+    sound:
+      path: /Audio/Effects/unwrap.ogg
+
+- type: entity
+  name: Пулемётный набор командира паладина Братства
+  parent: KitBase
+  id: KitCommandGatlingMidwestBoS
+  description: Ящик со всем необходимым для члена Братства.
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponLaserGatling
+      - id: N14PowerCellFusion
+        amount: 2
+      - id: N14Stimpak
+        amount: 2
+      - id: N14CleanGauze10
+      - id: BoxMRE
+    sound:
+      path: /Audio/Effects/unwrap.ogg
