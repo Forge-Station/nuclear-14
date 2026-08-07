@@ -24,7 +24,7 @@ flavor-complex-vim = oddly like chocolate pudding
 flavor-complex-vim-captains-blend = oddly like chocolate pudding and shrimp
 flavor-complex-vim-refresh = minty
 flavor-complex-vim-quartz = oddly like chocolate pudding and cesium
-
+flavor-complex-sunset-sarsaparilla = indescribably like sweet root beer
 
 ## Cocktails
 

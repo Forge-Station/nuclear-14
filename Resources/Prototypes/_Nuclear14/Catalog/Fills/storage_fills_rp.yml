@@ -22,6 +22,10 @@
           prob: 0.05
           amount: 1
           orGroup: Consumables
+        - id: N14DrinkSunsetSarsaparillaBottleFull #Forge-Change
+          prob: 0.05
+          amount: 1
+          orGroup: Consumables
         - id: N14DirtyGauze10
           prob: 0.05
           amount: 1
@@ -1216,6 +1220,11 @@
           amount: 1
           maxAmount: 2
           orGroup: Consumables
+        - id: N14DrinkSunsetSarsaparillaBottleFull #Forge-Change
+          prob: 0.05
+          amount: 1
+          maxAmount: 2
+          orGroup: Consumables
         - id: N14DirtyGauze10
           prob: 0.05
           orGroup: Consumables
@@ -1775,6 +1784,8 @@
         - id: N14FoodYumyumdeviledeggsTrash
           prob: 0.05
         - id: N14DrinkNukaColaBottleFull
+          prob: 0.05
+        - id: N14DrinkSunsetSarsaparillaBottleFull #Forge-Change
           prob: 0.05
         - id: N14DrinkIrradiatedNukaColaBottleFull
           prob: 0.05

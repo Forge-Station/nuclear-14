@@ -72,3 +72,9 @@
   id: vim-quartz
   flavorType: Complex
   description: flavor-complex-vim-quartz
+
+- type: flavor
+  id: sunset-sarsaparilla
+  flavorType: Complex
+  description: flavor-complex-sunset-sarsaparilla #Forge-Change
+

@@ -43,6 +43,8 @@ reagent-name-vim-refresh = Вим Освежающий
 reagent-desc-vim-refresh = Вим Освежающий
 reagent-name-vim-quartz = Вим Кварц
 reagent-desc-vim-quartz = Вим Кварц
+reagent-name-sunset-sarsaparilla = Сансет Cаспарилла
+reagent-desc-sunset-sarsaparilla = напиток Дикого запада Америки, со сладким вкусом корневого пива для настоящих ковбоев.
 
 ## Alcohol
 
@@ -238,6 +240,8 @@ reagent-name-movespeedmod-mixture = джет
 reagent-desc-movespeedmod-mixture = Смесь реагентов, которая заставляет вас двигаться быстро.
 reagent-name-robust-movespeedmod-mixture = турбо
 reagent-desc-robust-movespeedmod-mixture = Ноги сами несут вас вперёд, мир превращается в смазанное пятно, а когти смерти кажутся медленными улитками. Главное – не врезаться в стену на полном ходу.
+reagent-name-robust-movespeedmod-mixture-legio = порошок берсерка
+reagent-desc-robust-movespeedmod-mixture-legio = Ноги сами несут вас вперёд, мир превращается в смазанное пятно, а когти смерти кажутся медленными улитками. Главное – не врезаться в стену на полном ходу.
 reagent-name-damage-mod-mixture = психо
 reagent-desc-damage-mod-mixture = Чувствуете, как мышцы наливаются сталью, а в глазах загорается безумный огонь? Психо пробуждает в вас зверя, готового разорвать любого врага.
 # Products

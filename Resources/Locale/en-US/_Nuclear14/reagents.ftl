@@ -74,6 +74,7 @@ reagent-name-vim-refresh = Vim Refresh
 reagent-desc-vim-refresh = Vim Refresh
 reagent-name-vim-quartz = Vim Quartz
 reagent-desc-vim-quartz = Vim Quartz
+reagent-name-sunset-sarsaparilla = Sunset Sarsaparilla
 
 ## Alcohol
 reagent-name-beantownbrownbeer = Beantown Brown Beer

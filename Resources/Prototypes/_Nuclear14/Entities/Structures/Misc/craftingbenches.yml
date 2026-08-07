@@ -147,10 +147,10 @@
     - N14MagazineSMG12mm
     - N14TopMagazineSMG12mm
     - MagazineBox12
-    - N14ShellShotgun12
+    # - N14ShellShotgun12
     - N14MagazineShotgun12
     - MagazineBox12gauge
-    - N14ShellShotgun20
+    # - N14ShellShotgun20
     - N14MagazineShotgun20
     - MagazineBox20gauge
     - N14MagazinePistol22lr
@@ -170,6 +170,7 @@
     - SpeedLoader45-70
     - SpeedLoader45-70Tube
     - MagazineBox45-70
+    - N14Cartridge50
     - N14Magazine50AMR
     - MagazineBox50
     # Forge-Change-Start
@@ -177,6 +178,7 @@
     - MagazineBox545
     - Magazine545Rifle
     - MagazineDrum545Rifle
+    - 40mmGrenadeShrapnel
     # Forge-Change-End
   - type: MaterialStorageMagnetPickup 
     magnetEnabled: True

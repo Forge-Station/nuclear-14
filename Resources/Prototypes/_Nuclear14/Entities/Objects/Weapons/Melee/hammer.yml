@@ -44,15 +44,19 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Melee/supersledge.rsi
     state: icon
+  - type: StaminaDamageOnHit
+    damage: 34
+  - type: StaminaDamageOnCollide
+    damage: 34
   - type: MeleeWeapon
     damage:
       types:
-        Blunt: 5
+        Blunt: 15
   - type: Wieldable
   - type: IncreaseDamageOnWield
     damage:
       types:
-        Blunt: 35
+        Blunt: 60
         Structural: 20
   - type: MeleeThrowOnHit
     speed: 10

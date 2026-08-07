@@ -569,3 +569,24 @@
   - type: HideLayerClothing
     slots:
     - Hair
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadVaultTecCombatHelmet
+  name: vault-tec combat helmet
+  description: An attempt to replicate the success of the Mk II combat armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/vault-tekcombathelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/vault-tekcombathelmet.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.875
+        Slash: 0.875
+        Piercing: 0.875
+        Heat: 0.875
+  - type: HideLayerClothing
+    slots:
+    - Hair

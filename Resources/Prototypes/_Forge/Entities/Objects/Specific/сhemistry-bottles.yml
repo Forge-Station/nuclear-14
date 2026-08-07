@@ -11,3 +11,17 @@
         reagents:
         - ReagentId: Fertilizer
           Quantity: 30
+
+- type: entity
+  id: N14NightstalkerBloodChemistryBottle
+  name: бутылочка крови ночного охотника
+  description: Зачем вам кровь ночного охотника? Вы уверены, что хотите это пить?
+  parent: BaseChemistryBottleFilled
+  components:
+  - type: SolutionContainerManager
+    solutions:
+      drink:
+        maxVol: 30
+        reagents:
+        - ReagentId: NightstalkerBlood
+          Quantity: 30

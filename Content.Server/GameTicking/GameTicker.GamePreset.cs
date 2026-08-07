@@ -113,6 +113,7 @@ namespace Content.Server.GameTicking
             Preset = preset;
             ValidateMap();
             UpdateInfoText();
+            UpdateJobRestrictions();
 
             if (force)
             {
