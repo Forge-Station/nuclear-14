@@ -95,6 +95,9 @@
       map: ["base"]
   - type: Item
     heldPrefix: powder_brass
+  - type: Construction
+    graph: N14MatchesToSulfurPowder
+    node: sulfurpowder
   - type: SolutionContainerManager
     solutions:
       powder:
@@ -190,10 +193,9 @@
       Charcoal: 100
   - type: Sprite
     sprite: /Textures/_Nuclear14/Objects/Misc/materials.rsi
-    state: powder_lead
-    color: "#6f6f6f"
+    state: scrap_wood
     layers:
-    - state: powder_lead
+    - state: scrap_wood
       map: ["base"]
   - type: Item
     heldPrefix: powder_lead

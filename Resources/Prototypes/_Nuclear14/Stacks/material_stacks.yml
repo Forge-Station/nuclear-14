@@ -126,13 +126,13 @@
   maxCount: 10
   itemSize: 1
 
-# - type: stack
-  # id: FertilizerOre
-  # name: fertilizer ore
-  # icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/crafting_material.rsi", state: ore_fertilizer }
-  # spawn: FertilizerOre1
-  # maxCount: 10
-  # itemSize: 1
+- type: stack
+  id: FertilizerOre
+  name: fertilizer ore
+  icon: { sprite: "/Textures/_Nuclear14/Objects/Misc/crafting_material.rsi", state: ore_fertilizer }
+  spawn: FertilizerOre1
+  maxCount: 10
+  itemSize: 1
 
 
 # Metals etc

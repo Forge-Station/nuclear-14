@@ -4,9 +4,9 @@
   name: lead ore
   suffix: Full
   components:
-  # - type: Stack
-    # stackType: N14LeadOre
-    # count: 10
+  - type: Stack
+    stackType: N14LeadOre
+    count: 10
   - type: Sprite
     sprite: /Textures/_Nuclear14/Objects/Misc/materials.rsi
     state: lead
@@ -27,9 +27,9 @@
   id: N14LeadOre1
   parent: N14LeadOre
   suffix: Single
-  # components:
-    # - type: Stack
-      # count: 1
+  components:
+    - type: Stack
+      count: 1
 
 - type: entity
   parent: OreBase
@@ -169,16 +169,16 @@
   name: sulfur ore
   suffix: Full
   components:
-  # - type: Stack
-    # stackType: SulfurOre
-    # count: 10
+  - type: Stack
+    stackType: SulfurOre
+    count: 10
   - type: Sprite
     sprite: /Textures/_Nuclear14/Objects/Misc/materials.rsi
     state: sulfur
   - type: Material
   - type: PhysicalComposition
     materialComposition:
-      RawSulfur: 500
+      RawSulfur: 100
   - type: Extractable
     grindableSolutionName: sulfurore
   - type: SolutionContainerManager
@@ -186,15 +186,15 @@
       sulfurore:
         reagents:
         - ReagentId: Sulfur
-          Quantity: 10
+          Quantity: 50
 
 - type: entity
   id: SulfurOre1
   parent: SulfurOre
   suffix: Single
-  # components:
-    # - type: Stack
-      # count: 1
+  components:
+    - type: Stack
+      count: 1
 
 - type: entity
   parent: OreBase
@@ -202,9 +202,9 @@
   name: fertilizer
   suffix: Full
   components:
-  # - type: Stack
-    # stackType: FertilizerOre
-    # count: 10
+  - type: Stack
+    stackType: FertilizerOre
+    count: 10
   - type: Sprite
     sprite: /Textures/_Nuclear14/Objects/Misc/crafting_material.rsi
     state: ore_fertilizer
@@ -225,6 +225,6 @@
   id: FertilizerOre1
   parent: FertilizerOre
   suffix: Single
-  # components:
-    # - type: Stack
-      # count: 1
+  components:
+    - type: Stack
+      count: 1

@@ -139,55 +139,55 @@
   path:
     path: /Audio/_Nuclear14/Music/Fallout3/mus_texbeneke_guy_mono.ogg
     
-- type: jukebox
+- type: jukebox #Forge-Change
   id: AlRexHydrogenBomd
   name: Al Rex - Hydroden Bomb
   path:
     path: /Audio/_Nuclear14/Music/Fallout3/mus_al_rex_hydrogen_bomb_mono.ogg
     
-- type: jukebox
+- type: jukebox #Forge-Change
   id: MitchMillerImLookingOverAFourLeafClover
   name: Mitch Miller - I'm Looking Over A Four Leaf Clover
   path:
     path: /Audio/_Nuclear14/Music/Fallout3/mus_mitch_miller_im_looking_over_a_four_leaf_clover_mono.ogg
     
-- type: jukebox
+- type: jukebox #Forge-Change
   id: TennesseeErnieFordSixteenTons
   name: Tennessee Ernie Ford - Sixteen Tons
   path:
     path: /Audio/_Nuclear14/Music/Fallout3/mus_tennessee_ernie_ford_sixteen_tons_mono.ogg
     
-- type: jukebox
+- type: jukebox #Forge-Change
   id: BattleHymnOfTheRepublic
   name: Battle Hymn of the Republic
   path:
     path: /Audio/_Nuclear14/Music/Fallout3/mus_battle_hymn_of_the_republic_mono.ogg
     
-- type: jukebox
+- type: jukebox #Forge-Change
   id: HannyWilliamsTheYellowRoseOfTexas
   name: Hanny Williams - The Yellow Rose of Texas
   path:
     path: /Audio/_Nuclear14/Music/Fallout3/mus_hanny_williams_the_yellow_rose_of_texas_mono.ogg
     
-- type: jukebox
+- type: jukebox #Forge-Change
   id: EltonBrittUraniumFever
   name: Elton Britt - Uranium Fever
   path:
     path: /Audio/_Nuclear14/Music/Fallout3/mus_elton_britt_uranium_fever_mono.ogg
     
-- type: jukebox
+- type: jukebox #Forge-Change
   id: TerribleTomBossNigger
   name: Terrible Tom - Boss Nigger
   path:
     path: /Audio/_Nuclear14/Music/Fallout3/mus_terrible_tom_boss_nigger_mono.ogg
     
-- type: jukebox
+- type: jukebox #Forge-Change
   id: DionTheWanderer
   name: Dion - The Wanderer
   path:
     path: /Audio/_Nuclear14/Music/Fallout3/mus_dion_the_wanderer_mono.ogg
     
-- type: jukebox
+- type: jukebox #Forge-Change
   id: FrankSinatraThatsLife
   name: Frank Sinatra - That's Life
   path:

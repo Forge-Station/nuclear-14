@@ -95,6 +95,7 @@
   completetime: 2
   materials:
     RawSulfur: 100
+    Coal: 50
 
 - type: latheRecipe
   id: Charcoal
@@ -149,4 +150,4 @@
   applyMaterialDiscount: false
   completetime: 2
   materials:
-    Charcoal: 150
+    Wood: 150

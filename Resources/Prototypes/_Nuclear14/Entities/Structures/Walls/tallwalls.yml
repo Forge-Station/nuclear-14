@@ -48,6 +48,22 @@
   - type: Damageable
     damageContainer: Inorganic
     damageModifierSet: Wood
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 400
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          MaterialWoodPlank1:
+            min: 0
+            max: 4
+      - !type:PlaySoundBehavior
+        sound:
+          collection: WoodDestroyHeavy
 
 - type: entity
   parent: N14BaseWallTall

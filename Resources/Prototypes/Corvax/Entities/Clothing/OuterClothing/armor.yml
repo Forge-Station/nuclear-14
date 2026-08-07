@@ -811,72 +811,20 @@
 
 - type: entity
   parent: N14FalloutArmorBase
-  id: N14ClothingOuterArmoredKit
-  name: armor kit
-  description: Light armor worn over clothing. Its better then nothing.
+  id: N14ClothingOuterVaultTecCombatArmor
+  name: vault-tec combat armor
+  description: "A combination of two versions of combat armor developed by the corporation"
   components:
   - type: Sprite
-    sprite: Corvax/Clothing/OuterClothing/Armor/Reinforcedarmormk1.rsi
+    sprite: Corvax/Clothing/OuterClothing/Armor/vault-tekcombatarmor.rsi
   - type: Clothing
-    sprite: Corvax/Clothing/OuterClothing/Armor/Reinforcedarmormk1.rsi
+    sprite: Corvax/Clothing/OuterClothing/Armor/vault-tekcombatarmor.rsi
   - type: Armor
     modifiers:
       coefficients:
-        Blunt: 0.9
-        Slash: 0.9
-        Piercing: 0.9
-        Heat: 0.9
-
-- type: entity
-  parent: N14FalloutArmorBase
-  id: N14ClothingOuterReinforcedArmorKit
-  name: reinforced armor kit
-  description: Less light armor worn over clothing.
-  components:
-  - type: Sprite
-    sprite: Corvax/Clothing/OuterClothing/Armor/Reinforcedarmormk2.rsi
-  - type: Clothing
-    sprite: Corvax/Clothing/OuterClothing/Armor/Reinforcedarmormk2.rsi
-  - type: Armor
-    modifiers:
-      coefficients:
-        Blunt: 0.8
-        Slash: 0.85
-        Piercing: 0.85
-        Heat: 0.85
-
-- type: entity
-  parent: N14ClothingOuterBase
-  id: M14ClothingOuterKhanLeather
-  name: great khan leather vest
-  description: A black leather jacket. There is an illustration on the back - an aggressive, red-eyed skull wearing a fur hat with horns. The skull has a mongoloid moustache - it's obviously a Great Khans emblem.
-  components:
-  - type: Sprite
-    sprite: Corvax/Clothing/OuterClothing/Armor/Lightarmorgreatkhan.rsi
-  - type: Clothing
-    sprite: Corvax/Clothing/OuterClothing/Armor/Lightarmorgreatkhan.rsi
-  - type: Armor
-    modifiers:
-     coefficients:
-        Blunt: 0.9
-        Slash: 0.9
-        Piercing: 0.9
-        Heat: 0.9
-
-- type: entity
-  parent: N14ClothingOuterBase
-  id: M14ClothingOuterKhanLeatherArmored
-  name: great khan armored leather vest
-  description: A black leather jacket. There is an illustration on the back - an aggressive, red-eyed skull wearing a fur hat with horns. The skull has a mongoloid moustache - it's obviously a Great Khans emblem.
-  components:
-  - type: Sprite
-    sprite: Corvax/Clothing/OuterClothing/Armor/Midarmorgreatkhan.rsi
-  - type: Clothing
-    sprite: Corvax/Clothing/OuterClothing/Armor/Midarmorgreatkhan.rsi
-  - type: Armor
-    modifiers:
-     coefficients:
-        Blunt: 0.80
-        Slash: 0.80
-        Piercing: 0.85
-        Heat: 0.85
+        Blunt: 0.685
+        Slash: 0.685
+        Piercing: 0.685
+        Heat: 0.685
+  - type: ExplosionResistance
+    damageCoefficient: 0.95

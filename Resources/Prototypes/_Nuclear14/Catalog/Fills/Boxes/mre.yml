@@ -96,9 +96,9 @@
         - id: DrinkMREFlask
           prob: 0.1
           orGroup: Bottle
-        - id: DrinkSodaWaterBottleFull
-          prob: 0.1
-          orGroup: Bottle
+        # - id: DrinkSodaWaterBottleFull
+        #   prob: 0.1
+        #   orGroup: Bottle
         - id: N14CigarettePackWinston
           prob: 0.1
           orGroup: Cigarette
