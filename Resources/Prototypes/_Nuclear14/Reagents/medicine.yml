@@ -216,9 +216,9 @@
 # Strong overtime healing
 - type: reagent
   id: TraumaPowder
-  name: reagent-name-healing-powder
+  name: reagent-name-healing-traumapowder
   group: Medicine
-  desc: reagent-desc-healing-powder
+  desc: reagent-desc-healing-traumapowder
   physicalDesc: reagent-physical-desc-soothing
   color: "#00e5ff"
   metabolisms:

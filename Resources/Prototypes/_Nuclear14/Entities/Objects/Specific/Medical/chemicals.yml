@@ -687,10 +687,10 @@
   - type: SolutionContainerManager
     solutions:
       food:
-        maxVol: 15
+        maxVol: 25
         reagents:
         - ReagentId: BerserkerMixture
-          Quantity: 10
+          Quantity: 20
   - type: Food # Forge-Change
     forceFeedDelay: 1
     transferAmount: 5

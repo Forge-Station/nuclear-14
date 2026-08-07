@@ -179,6 +179,8 @@ reagent-desc-thrombosis = Различные стимпаки вступили �
 # Chems
 reagent-name-healing-powder = целебный порошок
 reagent-desc-healing-powder = Порошок, приготовленный из измельченных растений.
+reagent-name-healing-traumapowder = травматин
+reagent-desc-healing-traumapowder = Непонятная смесь растений.
 reagent-name-antidote-mixture = противоядие
 reagent-desc-antidote-mixture = Противоядие, приготовленное из хвоста радскорпиона и воды.
 reagent-name-antidote = антидот
