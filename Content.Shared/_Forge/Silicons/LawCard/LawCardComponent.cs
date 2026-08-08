@@ -8,6 +8,7 @@ namespace Content.Shared._Forge.Silicons.LawCard;
 public sealed partial class LawCardComponent : Component
 {
     public const int MaxLaws = 15;
+    public const int MaxLawLength = 256;
 
     [DataField]
     public List<SiliconLaw> Laws = new();

@@ -194,6 +194,9 @@ public sealed class LawCardSystem : EntitySystem
         if (!_hands.IsHolding(user, card))
             return;
 
+        if (laws.Any(law => law.LawString.Length > LawCardComponent.MaxLawLength))
+            return;
+
         comp.Laws = laws
             .Where(l => !string.IsNullOrWhiteSpace(l.LawString))
             .Take(LawCardComponent.MaxLaws)

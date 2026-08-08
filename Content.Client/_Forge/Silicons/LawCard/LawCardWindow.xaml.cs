@@ -51,9 +51,17 @@ public sealed partial class LawCardWindow : FancyWindow
             var entry = new LawCardEntry();
             entry.SetLaw(law, position);
             entry.OnDelete += DeleteLaw;
+            entry.OnLawChanged += UpdateSaveButton;
             LawContainer.AddChild(entry);
             position++;
         }
+
+        UpdateSaveButton();
+    }
+
+    private void UpdateSaveButton()
+    {
+        Save.Disabled = _laws.Any(law => law.LawString.Length > LawCardComponent.MaxLawLength);
     }
 
     public List<SiliconLaw> GetLaws()
