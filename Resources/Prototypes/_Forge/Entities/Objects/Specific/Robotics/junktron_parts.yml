@@ -175,6 +175,17 @@
     noBrainState: inactive
     hasMindState: active
     noMindState: active
+  - type: LanguageKnowledge
+    speaks:
+    - English
+    - Chinese
+    - Latin
+    - RobotTalk
+    understands:
+    - English
+    - Chinese
+    - Latin
+    - RobotTalk
 
 # Кустарный позитронный мозг. Нужен, чтоб вставить свой красивый спрайт кустарного позитронного мозга.
 - type: entity
@@ -182,3 +193,15 @@
   parent: PositronicBrain
   name: junktron positronic brain
   description: A salvaged artificial brain assembled from scrap electronics. Surprisingly, it thinks.
+  components:
+  - type: LanguageKnowledge
+    speaks:
+    - English
+    - Chinese
+    - Latin
+    - RobotTalk
+    understands:
+    - English
+    - Chinese
+    - Latin
+    - RobotTalk

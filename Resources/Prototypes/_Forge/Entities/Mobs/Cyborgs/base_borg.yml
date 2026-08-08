@@ -46,8 +46,10 @@
     speaks:
     - English
     - Chinese
+    - Latin
     - RobotTalk
     understands:
     - English
     - Chinese
+    - Latin
     - RobotTalk
