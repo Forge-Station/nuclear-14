@@ -20,8 +20,16 @@ public sealed class SponsorManager : ISharedSponsorManager
         return SponsorData.SponsorColor.TryGetValue(level, out color);
     }
 
+    // A level can unlock several skins; this returns the first one as the level's default ghost.
     public bool TryGetSponsorGhost(SponsorLevel level, [NotNullWhen(true)] out string? ghost)
     {
-        return SponsorData.SponsorGhost.TryGetValue(level, out ghost);
+        ghost = null;
+        if (SponsorData.SponsorGhost.TryGetValue(level, out var ghosts) && ghosts.Count > 0)
+        {
+            ghost = ghosts[0];
+            return true;
+        }
+
+        return false;
     }
 }

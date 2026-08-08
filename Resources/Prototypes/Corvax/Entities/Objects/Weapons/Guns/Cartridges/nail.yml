@@ -1,7 +1,7 @@
 - type: entity
   id: N14CartridgeNail
   name: cartridge nail
-  parent: BaseCartridgePistol
+  parent: BaseCartridge
   components:
   - type: Sprite
     sprite: Corvax/Objects/Weapons/Guns/Ammunition/Casings/nail_casing.rsi

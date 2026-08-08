@@ -5,6 +5,9 @@
   description: A rooty tooty point and shooty.
   abstract: true
   components:
+  - type: Tag
+    tags:
+    - Sidearm
   - type: Sprite
     layers:
       - state: base
@@ -76,6 +79,9 @@
   description: A rooty tooty point and shooty.
   abstract: true
   components:
+  - type: Tag
+    tags:
+    - Sidearm
   - type: Sprite
     layers:
       - state: base

@@ -1,10 +1,13 @@
 - type: entity
   name: cardboard box
-  parent: BoxBase
+  parent: BaseItem
   id: N14BoxPlastic
   description: An old plastic box for storing things.
   components:
+  - type: Item
+    size: Normal
   - type: Sprite
+    scale: 0.8, 0.8
     sprite: _Nuclear14/Objects/Misc/storage.rsi
     state: box
 
@@ -13,22 +16,24 @@
   parent: N14BoxPlastic
   id: N14BoxPlasticFilledWastelander
   components:
-    - type: StorageFill
-      contents:
+    - type: SpawnItemsOnUse #Forge-Change
+      items:
         - id: Flare
           amount: 3
         - id: N14RadXPill
           amount: 1
         - id: N14CleanGauze10
           amount: 1
+      sound:
+        path: /Audio/Items/can_open3.ogg          
 
 - type: entity
   name: military box
   parent: N14BoxPlastic
   id: N14BoxPlasticFilledMilitary
   components:
-    - type: StorageFill
-      contents:
+    - type: SpawnItemsOnUse #Forge-Change
+      items:
         - id: N14Stimpak
           prob: 0.7
           orGroup: RandomMed
@@ -42,21 +47,27 @@
           amount: 1
         - id: N14RadXPill
           amount: 1
-        - id: N14CurrencyCap
-          amount: 0
-          maxAmount: 100
-          prob: 0.5
-          orGroup: Currency
+        - id: N14CurrencyCap10
+          prob: 0.6
+          orGroup: StashCash
+        - id: N14CurrencyCap50
+          prob: 0.3
+          orGroup: StashCash
+        - id: N14CurrencyCap100
+          prob: 0.1
+          orGroup: StashCash
         - id: Flare
           amount: 2
+      sound:
+        path: /Audio/Items/can_open3.ogg
 
 - type: entity
   name: military box
   parent: N14BoxPlastic
   id: N14BoxPlasticFilledMilitaryNCR
   components:
-    - type: StorageFill
-      contents:
+    - type: SpawnItemsOnUse #Forge-Change
+      items:
         - id: N14Stimpak
           prob: 0.7
           orGroup: RandomMed
@@ -70,10 +81,17 @@
           amount: 1
         - id: N14RadXPill
           amount: 1
-        - id: N14CurrencyNCRDollar
-          amount: 0
-          maxAmount: 100
-          prob: 0.5
-          orGroup: Currency
+        - id: N14CurrencyNCRDollar50
+          prob: 0.6
+          orGroup: StashCash
+        - id: N14CurrencyNCRDollar100
+          prob: 0.3
+          orGroup: StashCash
+        - id: N14CurrencyNCRDollar100
+          amount: 2
+          prob: 0.1
+          orGroup: StashCash
         - id: Flare
           amount: 2
+      sound:
+        path: /Audio/Items/can_open3.ogg

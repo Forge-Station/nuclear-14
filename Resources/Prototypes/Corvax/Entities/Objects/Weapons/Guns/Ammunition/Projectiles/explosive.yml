@@ -1,0 +1,34 @@
+- type: entity
+  id: SmokeGrenadeProjectile
+  name: smoke grenade
+  parent: BaseGrenadeProjectile
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: SmokeOnTrigger
+    duration: 30
+    spreadAmount: 50
+
+- type: entity
+  id: ShrapnelGrenadeProjectile
+  name: shrapnel grenade
+  parent: BaseBullet
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: ProjectileSpread
+    proto: PelletShotgun12
+    count: 10
+    spread: 15
+
+- type: entity
+  id: PelletShrapnelGrenade
+  name: pellet (40mm gauge)
+  categories: [ HideSpawnMenu ]
+  parent: BaseBullet
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Projectiles/projectiles2.rsi
+    state: buckshot
+  - type: Projectile
+    damage:
+      types:
+        Piercing: 10

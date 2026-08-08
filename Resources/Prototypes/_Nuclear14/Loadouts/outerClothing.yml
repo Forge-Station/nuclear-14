@@ -341,7 +341,7 @@
 - type: loadout
   id: N14LoadoutOuterLeatherArmor
   category: Outer
-  cost: 3
+  cost: 2 # Forge-Change
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -361,7 +361,7 @@
 - type: loadout
   id: N14LoadoutOuterMetalArmor
   category: Outer
-  cost: 3
+  cost: 4 #Forge-change
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -381,7 +381,7 @@
 - type: loadout
   id: N14LoadoutOuterRaiderBadlands
   category: Outer
-  cost: 3
+  cost: 1 # Forge-Change
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
@@ -401,7 +401,7 @@
 - type: loadout
   id: N14LoadoutOuterRaiderBlastmaster
   category: Outer
-  cost: 3
+  cost: 2
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter

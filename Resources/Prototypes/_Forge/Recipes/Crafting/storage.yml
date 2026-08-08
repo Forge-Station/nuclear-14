@@ -12,3 +12,16 @@
     state: icon
   objectType: Item
 
+- type: construction
+  name: start disassembly
+  id: N14WreckDisassembly
+  graph: N14WreckDisassembly
+  startNode: start
+  targetNode: dismantled
+  category: construction-category-tools
+  description: Disassemble this wreck for scrap.
+  hide: true
+  icon:
+    sprite: _Nuclear14/Structures/Misc/wrecks.rsi
+    state: coupe-1
+  objectType: Structure

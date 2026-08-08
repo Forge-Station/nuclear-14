@@ -46,6 +46,7 @@ using System.Reflection;
 using Robust.Shared.Network;
 using Content.Client._NC.Sponsor;
 using Content.Client._NC.TTS; // Forge-Change
+using Content.Client.GameTicking.Managers;
 
 namespace Content.Client.Lobby.UI
 {
@@ -65,6 +66,7 @@ namespace Content.Client.Lobby.UI
         private readonly LobbyUIController _controller;
         private readonly IRobustRandom _random;
         private readonly SponsorManager _sponsorMan; // Forge-Change
+        private readonly ClientGameTicker _gameTicker;
 
         private FlavorText.FlavorText? _flavorText;
         private BoxContainer _ccustomspecienamecontainerEdit => CCustomSpecieName;
@@ -144,6 +146,8 @@ namespace Content.Client.Lobby.UI
 
             _characterRequirementsSystem = _entManager.System<CharacterRequirementsSystem>();
             _controller = UserInterfaceManager.GetUIController<LobbyUIController>();
+            _gameTicker = _entManager.System<ClientGameTicker>();
+            _gameTicker.JobRestrictionsUpdated += RefreshJobs;
 
             // Forge-Change-Start
             ExportImageButton.OnPressed += args =>
@@ -883,6 +887,11 @@ namespace Content.Client.Lobby.UI
         }
 
         /// Refreshes all job selectors
+        private bool IsJobUnrestricted(JobPrototype job)
+        {
+            return _gameTicker.RestrictedJobs == null || _gameTicker.RestrictedJobs.Contains(job.ID);
+        }
+
         public void RefreshJobs()
         {
             JobList.DisposeAllChildren();
@@ -948,7 +957,7 @@ namespace Content.Client.Lobby.UI
                 }
 
                 var jobs = department.Roles.Select(jobId => _prototypeManager.Index<JobPrototype>(jobId))
-                    .Where(job => job.SetPreference)
+                    .Where(job => job.SetPreference && IsJobUnrestricted(job))
                     .ToArray();
 
                 Array.Sort(jobs, JobUIComparer.Instance);
@@ -1080,7 +1089,7 @@ namespace Content.Client.Lobby.UI
                 }
 
                 var jobs = department.Roles.Select(jobId => _prototypeManager.Index(jobId))
-                    .Where(job => job.SetPreference)
+                    .Where(job => job.SetPreference && IsJobUnrestricted(job))
                     .ToArray();
                 Array.Sort(jobs, JobUIComparer.Instance);
 
@@ -1300,6 +1309,7 @@ namespace Content.Client.Lobby.UI
             PreviewDummy = EntityUid.Invalid;
 
             _cfgManager.UnsubValueChanged(CCVars.GameLoadoutsEnabled, LoadoutsChanged);
+            _gameTicker.JobRestrictionsUpdated -= RefreshJobs;
         }
 
         private void SetAge(int newAge)

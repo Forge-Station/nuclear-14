@@ -26,7 +26,7 @@
     maxAngle: 60
     angleIncrease: 4
     angleDecay: 16
-    fireRate: 4
+    fireRate: 3.5 # Forge-Change
     soundGunshot:
       collection: N14AutoRifleGunshot
     selectedMode: FullAuto
@@ -293,7 +293,7 @@
     maxAngle: 60
     angleIncrease: 4
     angleDecay: 16
-    fireRate: 3.5 # Forge-Change
+    fireRate: 4 # Forge-Change
     soundGunshot:
       collection: N14AutoRifleGunshot
     selectedMode: FullAuto

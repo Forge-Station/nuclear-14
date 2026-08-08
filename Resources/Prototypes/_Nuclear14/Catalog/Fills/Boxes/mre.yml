@@ -7,6 +7,12 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Misc/storage.rsi
     state: c-ration
+  - type: Butcherable # Forge-add
+    butcheringType: Knife
+    butcherDelay: 2
+    spawned:
+    - id: MaterialCardboard1
+      amount: 1
 
 - type: entity
   name: C ration
@@ -90,9 +96,9 @@
         - id: DrinkMREFlask
           prob: 0.1
           orGroup: Bottle
-        - id: DrinkSodaWaterBottleFull
-          prob: 0.1
-          orGroup: Bottle
+        # - id: DrinkSodaWaterBottleFull
+        #   prob: 0.1
+        #   orGroup: Bottle
         - id: N14CigarettePackWinston
           prob: 0.1
           orGroup: Cigarette

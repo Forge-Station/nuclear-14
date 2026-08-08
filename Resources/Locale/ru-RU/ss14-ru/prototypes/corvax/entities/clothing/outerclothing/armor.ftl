@@ -107,6 +107,8 @@ ent-N14ClothingOuterTireArmor = броня из шин
     .desc = Броня сделанная из обгоревших шин.
 ent-N14ClothingOuterHeavySteelArmor = тяжелая стальная броня
     .desc = Сделана из хлама и стали, имеет подкладку из кожи.
+ent-N14ClothingOuterVaultTecCombatArmor = боевая броня волт-тек
+    .desc = Темно синие пластины и отсутствие подкладок, сделана на тот случай если пустошь окажется не безлюдной.
 
 # Спонсорские вещи
 ent-N14ClothingOuterNCRCombatVeteranKiltArmor = боевая броня ветерана нкр с кителем

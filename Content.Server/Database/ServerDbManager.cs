@@ -42,6 +42,9 @@ namespace Content.Server.Database
 
         Task SaveAdminOOCColorAsync(NetUserId userId, Color color);
 
+        // Forge-Change: persist sponsor cosmetic preferences.
+        Task SaveSponsorPreferencesAsync(NetUserId userId, Color oocColor, Color loocColor, string ghostSkin);
+
         // Single method for two operations for transaction.
         Task DeleteSlotAndSetSelectedIndex(NetUserId userId, int deleteSlot, int newSlot);
         Task<PlayerPreferences?> GetPlayerPreferencesAsync(NetUserId userId, CancellationToken cancel);
@@ -458,6 +461,13 @@ namespace Content.Server.Database
         {
             DbWriteOpsMetric.Inc();
             return RunDbCommand(() => _db.SaveAdminOOCColorAsync(userId, color));
+        }
+
+        // Forge-Change: persist sponsor cosmetic preferences.
+        public Task SaveSponsorPreferencesAsync(NetUserId userId, Color oocColor, Color loocColor, string ghostSkin)
+        {
+            DbWriteOpsMetric.Inc();
+            return RunDbCommand(() => _db.SaveSponsorPreferencesAsync(userId, oocColor, loocColor, ghostSkin));
         }
 
         public Task<PlayerPreferences?> GetPlayerPreferencesAsync(NetUserId userId, CancellationToken cancel)

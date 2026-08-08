@@ -1030,6 +1030,7 @@
 - type: entity
   name: aloe
   parent: N14FoodProduceBase
+  categories: [ HideSpawnMenu ]
   id: N14FoodAloe
   description: A fragrant plant with soothing properties.
   components:

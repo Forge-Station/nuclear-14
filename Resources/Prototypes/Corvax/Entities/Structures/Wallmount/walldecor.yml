@@ -50,3 +50,14 @@
   components:
   - type: Sprite
     state: flag_alaska
+
+- type: entity
+  parent: N14SignBase
+  id: N14WallFlagWoodland
+  name: Флаг Вудленда.
+  description: Две головы и четыре рога. Радиация в снегах Аляски.
+  suffix: Woodland
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Wallmount/wallflags_64x64.rsi
+    state: wallflag_woodland

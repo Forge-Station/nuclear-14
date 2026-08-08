@@ -61,7 +61,19 @@ namespace Content.Server.Database
                 profiles[profile.Slot] = ConvertProfiles(profile);
             }
 
-            return new PlayerPreferences(profiles, prefs.SelectedCharacterSlot, Color.FromHex(prefs.AdminOOCColor));
+            return new PlayerPreferences(
+                profiles,
+                prefs.SelectedCharacterSlot,
+                Color.FromHex(prefs.AdminOOCColor),
+                ParseColorOrTransparent(prefs.SponsorOOCColor), // Forge-Change
+                ParseColorOrTransparent(prefs.SponsorLOOCColor), // Forge-Change
+                prefs.SponsorGhostSkin ?? ""); // Forge-Change
+        }
+
+        // Forge-Change: sponsor colors may be empty ("not set"), so parse defensively.
+        private static Color ParseColorOrTransparent(string? hex)
+        {
+            return string.IsNullOrEmpty(hex) ? Color.Transparent : Color.FromHex(hex, Color.Transparent);
         }
 
         public async Task SaveSelectedCharacterIndexAsync(NetUserId userId, int index)
@@ -146,7 +158,13 @@ namespace Content.Server.Database
 
             await db.DbContext.SaveChangesAsync();
 
-            return new PlayerPreferences(new[] { new KeyValuePair<int, ICharacterProfile>(0, defaultProfile) }, 0, Color.FromHex(prefs.AdminOOCColor));
+            return new PlayerPreferences(
+                new[] { new KeyValuePair<int, ICharacterProfile>(0, defaultProfile) },
+                0,
+                Color.FromHex(prefs.AdminOOCColor),
+                ParseColorOrTransparent(prefs.SponsorOOCColor), // Forge-Change
+                ParseColorOrTransparent(prefs.SponsorLOOCColor), // Forge-Change
+                prefs.SponsorGhostSkin ?? ""); // Forge-Change
         }
 
         public async Task DeleteSlotAndSetSelectedIndex(NetUserId userId, int deleteSlot, int newSlot)
@@ -170,6 +188,21 @@ namespace Content.Server.Database
 
             await db.DbContext.SaveChangesAsync();
 
+        }
+
+        // Forge-Change: persist sponsor cosmetic preferences.
+        public async Task SaveSponsorPreferencesAsync(NetUserId userId, Color oocColor, Color loocColor, string ghostSkin)
+        {
+            await using var db = await GetDb();
+            var prefs = await db.DbContext
+                .Preference
+                .SingleAsync(p => p.UserId == userId.UserId);
+
+            prefs.SponsorOOCColor = oocColor == Color.Transparent ? "" : oocColor.ToHex();
+            prefs.SponsorLOOCColor = loocColor == Color.Transparent ? "" : loocColor.ToHex();
+            prefs.SponsorGhostSkin = ghostSkin ?? "";
+
+            await db.DbContext.SaveChangesAsync();
         }
 
         private static async Task SetSelectedCharacterSlotAsync(NetUserId userId, int newSlot, ServerDbContext db)

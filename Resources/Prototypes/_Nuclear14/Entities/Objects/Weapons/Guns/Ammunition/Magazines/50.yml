@@ -33,6 +33,9 @@
     steps: 2
     zeroVisible: false
   - type: Appearance
+  - type: ToolRefinable #Forge-add
+    refineResult:
+    - id: SheetSteel1
 
 - type: entity
   id: N14Magazine50AMR

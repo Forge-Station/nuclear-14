@@ -35,6 +35,10 @@
     steps: 2
     zeroVisible: false
   - type: Appearance
+  - type: ToolRefinable #Forge-add
+    refineResult:
+    - id: SheetSteel1
+      amount: 2
 
 - type: entity
   id: MagazineDrum545Rifle

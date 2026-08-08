@@ -1,0 +1,11 @@
+- type: construction
+  name: серный порошок
+  id: N14MatchesToSulfurPowder
+  graph: N14MatchesToSulfurPowder
+  startNode: start
+  targetNode: sulfurpowder
+  category: construction-category-materials
+  description: "Незатейливый способ раздобыть немного серного сырья для изготовления патронов."
+  icon: { sprite: /Textures/_Nuclear14/Objects/Misc/materials.rsi, state: powder_brass }
+  objectType: Item
+  hide: false

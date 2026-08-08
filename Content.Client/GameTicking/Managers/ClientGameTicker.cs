@@ -36,10 +36,14 @@ namespace Content.Client.GameTicking.Managers
         [ViewVariables] public IReadOnlyDictionary<NetEntity, Dictionary<string, uint?>> JobsAvailable => _jobsAvailable;
         [ViewVariables] public IReadOnlyDictionary<NetEntity, string> StationNames => _stationNames;
 
+        /// <summary>If set, only these job ids should be selectable/shown while the currently selected preset is active.</summary>
+        [ViewVariables] public HashSet<string>? RestrictedJobs { get; private set; }
+
         public event Action? InfoBlobUpdated;
         public event Action? LobbyStatusUpdated;
         public event Action? LobbyLateJoinStatusUpdated;
         public event Action<IReadOnlyDictionary<NetEntity, Dictionary<string, uint?>>>? LobbyJobsAvailableUpdated;
+        public event Action? JobRestrictionsUpdated;
 
         public override void Initialize()
         {
@@ -53,6 +57,7 @@ namespace Content.Client.GameTicking.Managers
             SubscribeNetworkEvent<RequestWindowAttentionEvent>(OnAttentionRequest);
             SubscribeNetworkEvent<TickerLateJoinStatusEvent>(LateJoinStatus);
             SubscribeNetworkEvent<TickerJobsAvailableEvent>(UpdateJobsAvailable);
+            SubscribeNetworkEvent<TickerJobRestrictionsEvent>(JobRestrictions);
 
             _admin.AdminStatusUpdated += OnAdminUpdated;
             OnAdminUpdated();
@@ -130,6 +135,13 @@ namespace Content.Client.GameTicking.Managers
             ServerInfoBlob = message.TextBlob;
 
             InfoBlobUpdated?.Invoke();
+        }
+
+        private void JobRestrictions(TickerJobRestrictionsEvent message)
+        {
+            RestrictedJobs = message.RestrictedJobs;
+
+            JobRestrictionsUpdated?.Invoke();
         }
 
         private void JoinGame(TickerJoinGameEvent message)

@@ -1,5 +1,6 @@
 
 using Content.Server.Maps;
+using Content.Shared.Roles;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.List;
@@ -42,5 +43,12 @@ namespace Content.Server.GameTicking.Presets
         /// </summary>
         [DataField("supportedMaps", customTypeSerializer: typeof(PrototypeIdSerializer<GameMapPoolPrototype>))]
         public string? MapPool;
+
+        /// <summary>
+        /// If specified, only these jobs will be selectable/shown as preferences while this preset is active.
+        /// If null, no restriction is applied (every job is selectable, as before).
+        /// </summary>
+        [DataField("restrictedJobs")]
+        public HashSet<ProtoId<JobPrototype>>? RestrictedJobs;
     }
 }

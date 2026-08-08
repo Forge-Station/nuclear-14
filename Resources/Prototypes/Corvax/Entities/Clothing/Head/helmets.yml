@@ -233,13 +233,8 @@
     visible: true
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/primeassassinhelmet.rsi
-    clothingVisuals:
-      head:
-      # Нижний слой на голове
-      - state: folded
-      # Верхний слой на голове
-      - state: equipped-HELMET
-        visible: true
+  - type: HelmetToggle
+    altPrefix: alt
 
 - type: entity
   parent: N14ClothingHeadHatBaseballHelmet
@@ -252,13 +247,8 @@
     visible: true
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/gastathelmet.rsi
-    clothingVisuals:
-      head:
-      # Нижний слой на голове
-      - state: folded
-      # Верхний слой на голове
-      - state: equipped-HELMET
-        visible: true
+  - type: HelmetToggle
+    altPrefix: alt
 
 - type: entity
   parent: N14ClothingHeadHatBaseballHelmet
@@ -271,13 +261,8 @@
     visible: true
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/gastatprimehelmet.rsi
-    clothingVisuals:
-      head:
-      # Нижний слой на голове
-      - state: folded
-      # Верхний слой на голове
-      - state: equipped-HELMET
-        visible: true
+  - type: HelmetToggle
+    altPrefix: alt
 
 - type: entity
   parent: N14ClothingHeadHatBaseballHelmet
@@ -290,13 +275,8 @@
     visible: true
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/gastatveteranhelmet.rsi
-    clothingVisuals:
-      head:
-      # Нижний слой на голове
-      - state: folded
-      # Верхний слой на голове
-      - state: equipped-HELMET
-        visible: true
+  - type: HelmetToggle
+    altPrefix: alt
 
 - type: entity
   parent: N14ClothingHeadHatLightBaseballHelmet
@@ -309,13 +289,8 @@
     visible: true
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/triariumhelmet.rsi
-    clothingVisuals:
-      head:
-      # Нижний слой на голове
-      - state: folded
-      # Верхний слой на голове
-      - state: equipped-HELMET
-        visible: true
+  - type: HelmetToggle
+    altPrefix: alt
 
 - type: entity
   parent: N14ClothingHeadHatLightBaseballHelmet
@@ -328,13 +303,8 @@
     visible: true
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/assassinhelmet.rsi
-    clothingVisuals:
-      head:
-      # Нижний слой на голове
-      - state: folded
-      # Верхний слой на голове
-      - state: equipped-HELMET
-        visible: true
+  - type: HelmetToggle
+    altPrefix: alt
 
 - type: entity
   parent: N14ClothingHeadHatDeanRecruitHelmet
@@ -347,13 +317,8 @@
     visible: true
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/princepshelmet.rsi
-    clothingVisuals:
-      head:
-      # Нижний слой на голове
-      - state: folded
-      # Верхний слой на голове
-      - state: equipped-HELMET
-        visible: true
+  - type: HelmetToggle
+    altPrefix: alt
 
 - type: entity
   parent: N14ClothingHeadHatDeanPrimeHelmet
@@ -366,13 +331,8 @@
     visible: true
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/princepsprimehelmet.rsi
-    clothingVisuals:
-      head:
-      # Нижний слой на голове
-      - state: folded
-      # Верхний слой на голове
-      - state: equipped-HELMET
-        visible: true
+  - type: HelmetToggle
+    altPrefix: alt
 
 - type: entity
   parent: ClothingHeadEVAHelmetBase
@@ -491,7 +451,7 @@
     sprite: Corvax/Clothing/Head/Helmets/falloutNCRcombathelmetSnow.rsi
 
 - type: entity
-  parent: N14ClothingHeadHatBaseHelmetMetal # \Prototypes\_Nuclear14\Entities\Clothing\Head\helmets.yml
+  parent: N14ClothingHeadHatBaseHelmetWithHair # \Prototypes\_Nuclear14\Entities\Clothing\Head\helmets.yml
   id: N14ClothingHeadHatNCRHelmet
   name: NCR helmet
   description: A rounded NCR helmet offering some protection. This one is covered on classic desert camo.
@@ -606,6 +566,27 @@
         Slash: 0.9
         Piercing: 0.9
         Heat: 0.9
+  - type: HideLayerClothing
+    slots:
+    - Hair
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadVaultTecCombatHelmet
+  name: vault-tec combat helmet
+  description: An attempt to replicate the success of the Mk II combat armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/vault-tekcombathelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/vault-tekcombathelmet.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.875
+        Slash: 0.875
+        Piercing: 0.875
+        Heat: 0.875
   - type: HideLayerClothing
     slots:
     - Hair

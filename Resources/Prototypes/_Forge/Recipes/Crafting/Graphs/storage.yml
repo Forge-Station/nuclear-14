@@ -7,11 +7,38 @@
         - to: toolbox
           steps:
             - material: Steel
-              amount: 6
+              amount: 5
               doAfter: 3
             - material: Plastic
-              amount: 2
+              amount: 4
+              doAfter: 2
+            - tag: DuctTape
+              icon:
+                sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi
+                state: duct_tape
+              name: duct tape
               doAfter: 2
 
     - node: toolbox
       entity: N14ToolboxWeaponMaintenance
+
+- type: constructionGraph
+  id: N14WreckDisassembly
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: dismantled
+          steps:
+            - tool: Welding
+              doAfter: 15
+          completed:
+            - !type:SpawnPrototype
+              prototype: N14ScrapSteel1
+              amount: 20
+            - !type:SpawnPrototype
+              prototype: N14ScrapLead1
+              amount: 10
+            - !type:DeleteEntity {}
+
+    - node: dismantled

@@ -131,13 +131,13 @@
 - type: entity
   parent: N14ClothingOuterPowerArmorT45
   id: N14ClothingOuterPowerArmorT45West
-  name: T-45 West BoS Power Armor
+  name: T-51 West BoS Power Armor
   description: A fully functional suit of power armor with servos. Rare and issued exclusively to veterans of the Republic Armed Forces. The left shoulder pad features a stuffed bear head. You may see it for the first and last time in your life.
   components:
   - type: Sprite
-    sprite: Corvax/Clothing/OuterClothing/PowerArmor/t45westbos.rsi
+    sprite: Corvax/Clothing/OuterClothing/PowerArmor/t51westbos.rsi
   - type: Clothing
-    sprite: Corvax/Clothing/OuterClothing/PowerArmor/t45westbos.rsi
+    sprite: Corvax/Clothing/OuterClothing/PowerArmor/t51westbos.rsi
   - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorT45WestBOS

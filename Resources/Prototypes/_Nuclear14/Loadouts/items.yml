@@ -276,20 +276,20 @@
     - N14FoodPorkBeans
 
 # Misc
-- type: loadout
-  id: N14CurrencyCap100
-  category: Items
-  cost: 5
-  requirements:
-  - !type:CharacterDepartmentRequirement
-      inverted: true
-      departments:
-      - Vault  
-  - !type:CharacterJobRequirement # Forge-Change
-      inverted: true
-      jobs:
-      - BoSMidSerf
-      - CaesarLegionSlave
-      - NCRPisoner
-  items:
-    - N14CurrencyCap100
+# - type: loadout #Forge-change
+#   id: N14CurrencyCap100
+#   category: Items
+#   cost: 5
+#   requirements:
+#   - !type:CharacterDepartmentRequirement
+#       inverted: true
+#       departments:
+#       - Vault  
+#   - !type:CharacterJobRequirement # Forge-Change
+#       inverted: true
+#       jobs:
+#       - BoSMidSerf
+#       - CaesarLegionSlave
+#       - NCRPisoner
+#   items:
+#     - N14CurrencyCap100

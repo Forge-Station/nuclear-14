@@ -1,0 +1,124 @@
+- type: loadout
+  id: N14ClothingOuterPainspike
+  category: Outer
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingOuterPainspike
+
+- type: loadout
+  id: N14ClothingOuterReinforcedLeatherArmor
+  category: Outer
+  cost: 3
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingOuterReinforcedLeatherArmor
+
+- type: loadout
+  id: N14ClothingOuterLightLeatherArmor
+  category: Outer
+  cost: 2
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingOuterLightLeatherArmor
+
+- type: loadout
+  id: N14ClothingOuterTireArmor
+  category: Outer
+  cost: 3
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingOuterTireArmor        
+
+- type: loadout
+  id: N14ClothingOuterVestLeather
+  category: Outer
+  cost: 3
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingOuterVestLeather 
+
+- type: loadout
+  id: N14ClothingOuterInsectArmor
+  category: Outer
+  cost: 4
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterDepartmentRequirement
+      departments:
+        - Townsfolk
+        - Wastelander
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingOuterInsectArmor 
+
+
+
+
+
