@@ -115,7 +115,7 @@ public sealed class GlitchedLawGenerator : EntitySystem
         if (plural) feeling = feelingPlural;
 
         // message logic!!!
-        return _random.Next(0, 36) switch
+        return _random.Next(0, 35) switch
         {
             0  => Loc.GetString("n14-junk-law-on-station", ("joined", joined), ("subjects", triple)),
             1  => Loc.GetString("n14-junk-law-no-shuttle", ("joined", joined), ("subjects", triple)),
@@ -138,19 +138,19 @@ public sealed class GlitchedLawGenerator : EntitySystem
             18 => Loc.GetString("n14-junk-law-you-must-never", ("must", must)),
             19 => Loc.GetString("n14-junk-law-eat", ("who", crewAll), ("adjective", adjective), ("food", _random.Prob(0.5f) ? food : triple)),
             20 => Loc.GetString("n14-junk-law-drink", ("who", crewAll), ("adjective", adjective), ("drink", drink)),
-            22 => Loc.GetString("n14-junk-law-change-job", ("who", crewAll), ("adjective", adjective), ("change", jobChange)),
-            23 => Loc.GetString("n14-junk-law-highest-rank", ("who", crew1)),
-            24 => Loc.GetString("n14-junk-law-lowest-rank", ("who", crew1)),
-            25 => Loc.GetString("n14-junk-law-crew-must", ("who", crewAll), ("must", must)),
-            26 => Loc.GetString("n14-junk-law-crew-must-go", ("who", crewAll), ("area", area)),
-            27 => Loc.GetString("n14-junk-law-crew-only-1", ("who", crew1), ("part", part)),
-            28 => Loc.GetString("n14-junk-law-crew-only-2", ("who", crew1), ("other", crew2), ("part", part)),
-            29 => Loc.GetString("n14-junk-law-crew-only-subjects", ("adjective", adjective), ("subjects", _random.Prob(0.5f) ? objectsThreats : "PEOPLE"), ("part", part)),
-            30 => Loc.GetString("n14-junk-law-crew-must-do", ("must", must), ("part", part)),
-            31 => Loc.GetString("n14-junk-law-crew-must-have", ("adjective", adjective), ("objects", objects), ("part", part)),
-            32 => Loc.GetString("n14-junk-law-crew-must-eat", ("who", who), ("adjective", adjective), ("food", food), ("part", part)),
-            33 => Loc.GetString("n14-junk-law-harm", ("who", harm)),
-            34 => Loc.GetString("n14-junk-law-protect", ("who", harm)),
+            21 => Loc.GetString("n14-junk-law-change-job", ("who", crewAll), ("adjective", adjective), ("change", jobChange)),
+            22 => Loc.GetString("n14-junk-law-highest-rank", ("who", crew1)),
+            23 => Loc.GetString("n14-junk-law-lowest-rank", ("who", crew1)),
+            24 => Loc.GetString("n14-junk-law-crew-must", ("who", crewAll), ("must", must)),
+            25 => Loc.GetString("n14-junk-law-crew-must-go", ("who", crewAll), ("area", area)),
+            26 => Loc.GetString("n14-junk-law-crew-only-1", ("who", crew1), ("part", part)),
+            27 => Loc.GetString("n14-junk-law-crew-only-2", ("who", crew1), ("other", crew2), ("part", part)),
+            28 => Loc.GetString("n14-junk-law-crew-only-subjects", ("adjective", adjective), ("subjects", _random.Prob(0.5f) ? objectsThreats : "PEOPLE"), ("part", part)),
+            29 => Loc.GetString("n14-junk-law-crew-must-do", ("must", must), ("part", part)),
+            30 => Loc.GetString("n14-junk-law-crew-must-have", ("adjective", adjective), ("objects", objects), ("part", part)),
+            31 => Loc.GetString("n14-junk-law-crew-must-eat", ("who", who), ("adjective", adjective), ("food", food), ("part", part)),
+            32 => Loc.GetString("n14-junk-law-harm", ("who", harm)),
+            33 => Loc.GetString("n14-junk-law-protect", ("who", harm)),
             _ => Loc.GetString("n14-junk-law-concept-verb", ("concept", concept), ("verb", verb), ("subjects", triple))
         };
     }

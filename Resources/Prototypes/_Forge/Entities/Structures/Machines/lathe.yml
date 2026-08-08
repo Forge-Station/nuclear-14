@@ -30,6 +30,15 @@
     - N14BorgModuleJunkMining
     - N14BorgModuleJunkMusique
     dynamicRecipes: []
+  - type: MaterialStorage
+    materialWhiteList:
+    - Scrap
+    - ScrapElectronic
+    - ScrapSteel
+    - ScrapGold
+    - ScrapCopper
+    - ScrapBrass
+    - ScrapLead
   - type: Destructible
     thresholds:
     - trigger:
