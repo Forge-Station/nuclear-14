@@ -95,7 +95,7 @@
       angleDecay: 4
       fireRate: 0.8
       soundGunshot:
-        collection: /Audio/_Nuclear14/Weapons/Guns/Snipers/N14WeaponBrushGun/shot1.ogg
+        collection: N14WeaponLeverRifle
       useKey: false
       selectedMode: SemiAuto
       availableModes:
