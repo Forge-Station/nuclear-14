@@ -95,7 +95,7 @@
       angleDecay: 4
       fireRate: 0.8
       soundGunshot:
-        collection: N14WeaponLeverRifle
+        collection: N14BrushGunGunshot
       useKey: false
       selectedMode: SemiAuto
       availableModes:
