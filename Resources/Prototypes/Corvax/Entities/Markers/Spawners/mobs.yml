@@ -151,7 +151,7 @@
 # Raiders
 
 - type: entity
-  name: спавнер дикого племенного разведчика
+  name: спавнер стрелков дикого племени
   id: N14SpawnMobNPCRaiderTribeSkir
   suffix: Рейдер
   parent: MarkerBase
@@ -165,9 +165,10 @@
     - type: ConditionalSpawner
       prototypes:
         - N14MobNPCRaiderTribeSkir
+        - N14MobNPCRaiderTribeHunter
 
 - type: entity
-  name: спавнер дикого племенного бойца
+  name: спавнер диких бойцов ближнего боя
   id: N14SpawnMobNPCRaiderTribeWarr
   suffix: Рейдер
   parent: MarkerBase
@@ -181,6 +182,7 @@
     - type: ConditionalSpawner
       prototypes:
         - N14MobNPCRaiderTribeWarr
+        - N14MobNPCRaiderTribeSword
 
 - type: entity
   name: спавнер рейдера в силовой броне
@@ -246,3 +248,133 @@
   - type: ConditionalSpawner
     prototypes:
       - N14MobIguana
+
+# Китай
+
+- type: entity
+  name: спавнер захватчиков ближнего боя
+  id: N14SpawnMobNPCRaiderChineseMelee
+  suffix: Рейдер, китай
+  parent: MarkerBase
+  components:
+    - type: Sprite
+      layers:
+        - state: green
+        - state: ai
+    - type: ConditionalSpawner
+      prototypes:
+        - N14MobChineseFighter1
+        - N14MobChineseFighter2
+        - N14MobChineseFighter3
+
+- type: entity
+  name: спавнер захватчика с пистолетом 
+  id: N14SpawnMobNPCRaiderChinesePistol
+  suffix: Рейдер, китай
+  parent: MarkerBase
+  components:
+    - type: Sprite
+      layers:
+        - state: green
+        - state: ai
+    - type: ConditionalSpawner
+      prototypes:
+        - N14MobChinesePistol
+
+- type: entity
+  name: спавнер захватчика с винтовкой 
+  id: N14SpawnMobNPCRaiderChineseSKS
+  suffix: Рейдер, китай
+  parent: MarkerBase
+  components:
+    - type: Sprite
+      layers:
+        - state: green
+        - state: ai
+    - type: ConditionalSpawner
+      prototypes:
+        - N14MobChineseRifleSKS
+
+- type: entity
+  name: спавнер захватчика боевика 
+  id: N14SpawnMobNPCRaiderChineseShotgun
+  suffix: Рейдер, китай
+  parent: MarkerBase
+  components:
+    - type: Sprite
+      layers:
+        - state: green
+        - state: ai
+    - type: ConditionalSpawner
+      prototypes:
+        - N14MobChineseShotgun
+
+- type: entity
+  name: спавнер захватчика штурмовик 
+  id: N14SpawnMobNPCRaiderAssaultRifle
+  suffix: Рейдер, китай
+  parent: MarkerBase
+  components:
+    - type: Sprite
+      layers:
+        - state: green
+        - state: ai
+    - type: ConditionalSpawner
+      prototypes:
+        - N14MobChineseAssaultRifle
+
+- type: entity
+  name: спавнер захватчика снайпера 
+  id: N14SpawnMobNPCRaiderSniperRifle
+  suffix: Рейдер, китай
+  parent: MarkerBase
+  components:
+    - type: Sprite
+      layers:
+        - state: green
+        - state: ai
+    - type: ConditionalSpawner
+      prototypes:
+        - N14MobChineseSniperRifle
+
+- type: entity
+  name: спавнер захватчика профессионала 
+  id: N14SpawnMobNPCRaiderSMGAdvanced
+  suffix: Рейдер, китай, мини-босс
+  parent: MarkerBase
+  components:
+    - type: Sprite
+      layers:
+        - state: green
+        - state: ai
+    - type: ConditionalSpawner
+      prototypes:
+        - N14MobChineseSMGAdvancedGear
+
+- type: entity
+  name: спавнер тяжёлого захватчика
+  id: N14SpawnMobChinesePowerArmor
+  suffix: Рейдер, китай, босс
+  parent: MarkerBase
+  components:
+    - type: Sprite
+      layers:
+        - state: green
+        - state: ai
+    - type: ConditionalSpawner
+      prototypes:
+        - N14MobChinesePowerArmor
+
+- type: entity
+  name: спавнер офицера захватчика
+  id: N14SpawnMobChineseOfficer
+  suffix: Рейдер, китай, босс
+  parent: MarkerBase
+  components:
+    - type: Sprite
+      layers:
+        - state: green
+        - state: ai
+    - type: ConditionalSpawner
+      prototypes:
+        - N14MobChineseOfficer
