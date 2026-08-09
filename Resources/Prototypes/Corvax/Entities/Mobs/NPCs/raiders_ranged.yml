@@ -438,7 +438,7 @@
       angleIncrease: 1
       angleDecay: 4
       fireRate: 1.5
-      soundGunshot: Audio/_Nuclear14/Weapons/Guns/Pistols/N14WeaponPistol9mm/shot1.ogg
+      soundGunshot: /Audio/_Nuclear14/Weapons/Guns/Pistols/N14WeaponPistol9mm/shot1.ogg
       useKey: false
       selectedMode: SemiAuto
       availableModes:

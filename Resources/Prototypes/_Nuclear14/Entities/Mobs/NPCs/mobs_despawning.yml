@@ -170,11 +170,6 @@
   categories: [ HideSpawnMenu ]
 
 - type: entity
-  parent: [ N14MobNPCRaiderTribeHunter, N14MobDespawning ]
-  id: N14MobNPCRaiderTribeHunterDespawning
-  categories: [ HideSpawnMenu ]
-
-- type: entity
   parent: [ N14MobChinesePistol, N14MobDespawning ]
   id: N14MobChinesePistolDespawning
   categories: [ HideSpawnMenu ]
