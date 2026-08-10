@@ -38,7 +38,7 @@ undecided-loadout-category-dean-gladiator-description =
     Ящик со всем необходимым для ведения боя.
     Содержит: 1 медвежье ружьё, 2 спидлоадер ружейный, 1 коробка патронов (.45-70 Gov't),
     1 пистолет .45, 2 пистолетных магазина .45, 1 рулон бинтов,
-    2 целебные парки, 1 рацион легионеров, 1 мачете гладиус
+    2 целебные парки, 1 рацион легионеров, 1 мачете гладий
 
 undecided-loadout-category-dean-sagitaria-name = Набор декана-сагитария
 undecided-loadout-category-dean-sagitaria-description =
@@ -46,7 +46,7 @@ undecided-loadout-category-dean-sagitaria-description =
     Содержит: 1 автоматическую винтовку, 2 винтовочных магазина (.308 Winchester),
     1 коробка патронов (.308 Winchester), 2 целебные парки, 1 рулон бинтов,
     1 пистолет .45, 2 пистолетных магазина .45, 1 рацион легионеров,
-    1 мачете гладиус
+    1 мачете гладий
 
 undecided-loadout-category-dean-berserker-name = Набор декана-берсерка
 undecided-loadout-category-dean-berserker-description =
