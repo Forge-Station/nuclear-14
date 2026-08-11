@@ -91,6 +91,7 @@
     slots:
     - Belt
     - suitStorage
+  - type: MeleeWeapon
     soundHit:
         path: /Audio/Weapons/bladeslice.ogg
   - type: StaticPrice

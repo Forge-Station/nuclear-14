@@ -32,6 +32,8 @@
       types:
         Slash: 20
         Piercing: 10
+    soundHit:
+      collection: MetalThud
   - type: LandAtCursor
   - type: DamageOtherOnHit
     damage:
@@ -106,6 +108,8 @@
       types:
         Blunt: 10
         Slash: 5
+    soundHit:
+      collection: MetalThud
   - type: IncreaseDamageOnWield
     damage:
       types:
