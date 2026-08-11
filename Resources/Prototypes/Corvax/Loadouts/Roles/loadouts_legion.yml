@@ -583,3 +583,60 @@
       min: 144000
   items:
     - N14ClothingHeadHatCenturionCinderHelmet
+
+- type: loadout
+  id: LoadoutM14LegionBackpackCapeRed
+  category: Backpacks
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionLegionnaireRecruit
+        - CaesarLegionDean
+        - CaesarLegionLegionnaireVeteran
+        - CaesarLegionVenator
+        - CaesarLegionLegionnaireWarrior
+        - CaesarLegionCenturion
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 72000
+  items:
+    - M14LegionBackpackCapeRed
+
+- type: loadout
+  id: LoadoutM14LegionBackpackCapeBlack
+  category: Backpacks
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionLegionnaireRecruit
+        - CaesarLegionDean
+        - CaesarLegionLegionnaireVeteran
+        - CaesarLegionVenator
+        - CaesarLegionLegionnaireWarrior
+        - CaesarLegionCenturion
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 72000
+  items:
+    - M14LegionBackpackCapeBlack
+
+- type: loadout
+  id: LoadoutM14ClothingNeckLegionMantle
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionVenator
+        - CaesarLegionCenturion
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 36000
+  items:
+    - M14ClothingNeckLegionMantle
+

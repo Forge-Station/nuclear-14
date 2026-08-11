@@ -133,3 +133,17 @@
   - type: HideLayerClothing
     slots:
     - Hair
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadMarksmanHood
+  name: coat hood
+  description: A warm hood.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Hoods/marksmanhood.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Hoods/marksmanhood.rsi
+  - type: HideLayerClothing
+    slots:
+    - Hair

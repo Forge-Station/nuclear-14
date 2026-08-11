@@ -590,3 +590,58 @@
   - type: HideLayerClothing
     slots:
     - Hair
+
+- type: entity
+  parent: N14ClothingHeadHatCombatHelmet
+  id: N14ClothingHeadBaron
+  name: raider baron
+  description: The ayatollah of rock n rolla!
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/hockeymask.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/hockeymask.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadSackMetal
+  name: raider sackmetal
+  description: A sack hood reinforced with metal and crude spikes. Looks quite intimidating... for a sack.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/raidermetalsackhelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/raidermetalsackhelmet.rsi
+  - type: HideLayerClothing
+    slots:
+    - Hair
+    - Snout
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.95
+        Slash: 0.95
+        Piercing: 0.95
+        Heat: 0.9
+  - type: Item
+    size: Normal
+    shape:
+    - 0,0,1,0
+
+- type: entity
+  parent: ClothingHeadBase
+  id: MisfitsClothingHeadKhanHelmet
+  name: great khan helmet
+  description: A piece of headwear commonly worn by the Great Khans that appears to resemble stereotypical traditional Mongolian helmets - likely adapted from a pre-War motorcycle helmet. It is black with two horns on either side and a small spike jutting from the top, much like a pickelhaube. A leather covering protects the wearer's neck and ears from sunburn.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/greatkhanhelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/greatkhanhelmet.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.85
+        Slash: 0.95
+        Piercing: 0.90
+        Heat: 0.9
