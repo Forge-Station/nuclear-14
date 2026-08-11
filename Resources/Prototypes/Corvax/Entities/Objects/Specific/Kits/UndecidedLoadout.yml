@@ -282,27 +282,6 @@
     - KitNCRMPinvestigatorBailifSet
     - KitNCRMPinvestigatorSet
 
-#MARK: СЗБС kits
-- type: entity
-  id: BoSMidwestCommandKits
-  name: Набор командира паладина Братства (Средний Запад) (не выбран)
-  description: Пожалуйста, возьмите только один.
-  parent: BaseItem
-  components:
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Misc/kits.rsi
-    state: rifleman
-  - type: UndecidedLoadoutBackpack
-    possibleSets:
-    - BoSMidwestCommandWattzSet
-    - BoSMidwestCommandGatlingSet
-  - type: ActivatableUI
-    key: enum.UndecidedLoadoutBackpackUIKey.Key
-  - type: UserInterface
-    interfaces:
-      enum.UndecidedLoadoutBackpackUIKey.Key:
-        type: UndecidedLoadoutBackpackBoundUserInterface
-
 ### Sets
 
 # Legion
@@ -638,27 +617,6 @@
     state: medic
   content:
   - KitWBoSLordStorm
-#MARK: СЗБС КОМАНДЕР
-
-- type: UndecidedLoadoutBackpackSet
-  id: BoSMidwestCommandWattzSet
-  name: undecided-loadout-category-midwest-command-wattz-name
-  description: undecided-loadout-category-midwest-command-wattz-description
-  sprite:
-    sprite: _Nuclear14/Objects/Misc/kits.rsi
-    state: marksman
-  content:
-  - KitCommandWattzMidwestBoS
-
-- type: UndecidedLoadoutBackpackSet
-  id: BoSMidwestCommandGatlingSet
-  name: undecided-loadout-category-midwest-command-gatling-name
-  description: undecided-loadout-category-midwest-command-gatling-description
-  sprite:
-    sprite: _Nuclear14/Objects/Misc/kits.rsi
-    state: rifleman
-  content:
-  - KitCommandGatlingMidwestBoS
 
 # Ranger
 
