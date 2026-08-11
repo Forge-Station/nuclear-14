@@ -16,7 +16,7 @@
       - id: N14WeaponThermospear
       - id: N14WeaponPistol45Colt
       - id: N14MagazinePistol45
-        amount: 2      
+        amount: 2
       - id: Bola
         amount: 2
       - id: N14BerserkerPowder
@@ -48,7 +48,7 @@
         amount: 2
       - id: N14WeaponPistol45Colt
       - id: N14MagazinePistol45
-        amount: 2 
+        amount: 2
       - id: N14HealingPoultice
         amount: 2
       - id: N14CleanGauze10
@@ -75,7 +75,7 @@
       - id: MagazineBox50
       - id: N14WeaponPistol45Colt
       - id: N14MagazinePistol45
-        amount: 2 
+        amount: 2
       - id: ClothingEyesNightVisionGoggles
       - id: N14HealingPoultice
         amount: 2
@@ -102,7 +102,7 @@
         amount: 2
       - id: N14WeaponPistol45Colt
       - id: N14MagazinePistol45
-        amount: 2 
+        amount: 2
       - id: ClothingEyesNightVisionGoggles
       - id: N14HealingPoultice
         amount: 2
@@ -135,6 +135,7 @@
         amount: 2
       - id: N14CleanGauze10
       - id: N14BoxCardboardMREBoxLegionFilled
+      - id: N14MacheteGladius
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -162,6 +163,7 @@
         amount: 2
       - id: N14CleanGauze10
       - id: N14BoxCardboardMREBoxLegionFilled
+      - id: N14MacheteGladius
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -181,7 +183,7 @@
       - id: N14SuperSledgeHammer
       - id: N14WeaponPistol45Colt
       - id: N14MagazinePistol45
-        amount: 2      
+        amount: 2
       - id: Bola
         amount: 2
       - id: N14BerserkerPowder
@@ -378,7 +380,7 @@
       - id: N14AloeSalve
       - id: N14CleanGauze10
         amount: 2
-      - id: N14DoctorBag      
+      - id: N14DoctorBag
       - id: N14BoxCardboardMREBoxLegionFilled
     sound:
       path: /Audio/Effects/unwrap.ogg
@@ -508,7 +510,7 @@
       - id: N14LegionnaireBuckler
       - id: N14HealingPowder
         amount: 2
-      - id: N14CleanGauze10        
+      - id: N14CleanGauze10
       - id: N14BoxCardboardMREBoxLegionFilled
         amount: 1
     sound:
