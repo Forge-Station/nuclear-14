@@ -331,11 +331,16 @@
     speed: 0.6
 
 - type: entity
-  parent: N14Machete
+  parent: N14Gladius
   id: N14MacheteGladius
   name: machete gladius
   description: A fast and deadly machete. Highly effective and practical.
   components:
+  - type: Tag
+    tags:
+    - N14Gladius
+  - type: Item
+    sprite: Corvax/Objects/Weapons/Melee/machetegladius.rsi
   - type: Clothing
     sprite: Corvax/Objects/Weapons/Melee/machetegladius.rsi
     quickEquip: false
@@ -347,18 +352,22 @@
     sprite: Corvax/Objects/Weapons/Melee/machetegladius.rsi
     state: icon
     scale: 0.8, 0.8
-  - type: DamageOtherOnHit
+  - type: MeleeWeapon
+    wideAnimationRotation: -135
+    attackRate: 0.8
+    heavyRateModifier: 0.8
+    heavyRangeModifier: 1.2
+    heavyDamageBaseModifier: 1
+    heavyStaminaCost: 5
+    range: 1.2
+    angle: 60
     damage:
       types:
         Slash: 45
-  - type: MeleeWeapon
-    damage:
-      types:
-        Slash: 35
     soundHit:
         path: /Audio/Weapons/bladeslice.ogg
-  - type: Item
-    sprite: Corvax/Objects/Weapons/Melee/machetegladius.rsi
-  - type: Tag
-    tags:
-    - N14Gladius
+  - type: DamageOtherOnHit
+    damage:
+      types:
+        Slash: 50
+
