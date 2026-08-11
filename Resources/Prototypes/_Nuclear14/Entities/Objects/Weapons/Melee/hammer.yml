@@ -4,21 +4,6 @@
   id: N14SledgeHammer
   description: A robust sledge hammer that requires considerable strength to be wielded.
   components:
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Weapons/Melee/sledgehammer.rsi
-    state: icon
-  - type: MeleeWeapon
-    wideAnimationRotation: -135
-    attackRate: 1.35
-    damage:
-      types:
-        Blunt: 5
-  - type: Wieldable
-  - type: IncreaseDamageOnWield
-    damage:
-      types:
-        Blunt: 30
-        Structural: 25
   - type: Item
     size: Large
   - type: Clothing
@@ -27,6 +12,32 @@
     slots:
     - back
     - suitStorage
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Weapons/Melee/sledgehammer.rsi
+    state: icon
+  - type: Wieldable
+  - type: MeleeWeapon
+    damage:
+      types:
+        Blunt: 30
+    wideAnimationRotation: -135
+    attackRate: 1.2
+    heavyRateModifier: 1.4
+    heavyRangeModifier: 1.4
+    heavyDamageBaseModifier: 1.2
+    heavyStaminaCost: 20
+    range: 1.4
+    angle: 60
+  - type: StaminaDamageOnHit
+    damage: 10
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Blunt: 20
+        Structural: 25
+  - type: MeleeThrowOnHit
+    speed: 5
+    lifetime: 0.025
   # - type: Tool
     # qualities:
       # - Crushing
@@ -41,26 +52,6 @@
   id: N14SuperSledgeHammer
   description: A bigger, heavier, and more destructive sledge hammer, you really need some strong arms to swing it.
   components:
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Weapons/Melee/supersledge.rsi
-    state: icon
-  - type: StaminaDamageOnHit
-    damage: 34
-  - type: StaminaDamageOnCollide
-    damage: 34
-  - type: MeleeWeapon
-    damage:
-      types:
-        Blunt: 15
-  - type: Wieldable
-  - type: IncreaseDamageOnWield
-    damage:
-      types:
-        Blunt: 60
-        Structural: 20
-  - type: MeleeThrowOnHit
-    speed: 10
-    lifetime: 0.025
   - type: Item
     size: Large
   - type: Clothing
@@ -69,6 +60,32 @@
     slots:
     - back
     - suitStorage
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Weapons/Melee/supersledge.rsi
+    state: icon
+  - type: Wieldable
+  - type: MeleeWeapon
+    wideAnimationRotation: -135
+    attackRate: 1.2
+    heavyRateModifier: 1.4
+    heavyRangeModifier: 1.4
+    heavyDamageBaseModifier: 1.2
+    heavyStaminaCost: 25
+    range: 1.4
+    angle: 60
+    damage:
+      types:
+        Blunt: 15
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Blunt: 55
+        Structural: 20
+  - type: StaminaDamageOnHit
+    damage: 20
+  - type: MeleeThrowOnHit
+    speed: 10
+    lifetime: 0.025
   - type: StaticPrice
     price: 100
 
@@ -78,25 +95,36 @@
   id: N14TribalBigClub
   description: A big and heavy tribal club that requires considerable strength to be wielded.
   components:
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Weapons/Melee/tribalbigclub.rsi
-    state: icon
-  - type: MeleeWeapon
-    damage:
-      types:
-        Blunt: 5
-  - type: Wieldable
-  - type: IncreaseDamageOnWield
-    damage:
-      types:
-        Blunt: 30
-        Structural: 10
   - type: Clothing
     sprite: _Nuclear14/Objects/Weapons/Melee/tribalbigclub.rsi
     quickEquip: false
     slots:
     - back
     - suitStorage
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Weapons/Melee/tribalbigclub.rsi
+    state: icon
+  - type: Wieldable
+  - type: MeleeWeapon
+    damage:
+      types:
+        Blunt: 30
+    wideAnimationRotation: -135
+    attackRate: 1.2
+    heavyRateModifier: 1.4
+    heavyRangeModifier: 1.4
+    heavyDamageBaseModifier: 1.2
+    heavyStaminaCost: 15
+    range: 1.4
+    angle: 60
+    soundHit:
+      collection: MetalThud
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Blunt: 15
+  - type: StaminaDamageOnHit
+    damage: 10
   - type: StaticPrice
     price: 60
 
@@ -106,27 +134,37 @@
   id: N14TribalBigClubDecorated
   description: A big and heavy tribal hammer that requires considerable strength to be wielded, animal teeth have been added to this one.
   components:
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Weapons/Melee/tribaljaggedbigclub.rsi
-    state: icon
-  - type: MeleeWeapon
-    damage:
-      types:
-        Blunt: 5
-  - type: Wieldable
-  - type: IncreaseDamageOnWield
-    damage:
-      types:
-        Blunt: 25
-        Pierce: 5
-        Slash: 10
-        Structural: 10
   - type: Clothing
     sprite: _Nuclear14/Objects/Weapons/Melee/tribaljaggedbigclub.rsi
     quickEquip: false
     slots:
     - back
     - suitStorage
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Weapons/Melee/tribaljaggedbigclub.rsi
+    state: icon
+  - type: Wieldable
+  - type: MeleeWeapon
+    wideAnimationRotation: -135
+    attackRate: 1.2
+    heavyRateModifier: 1.4
+    heavyRangeModifier: 1.4
+    heavyDamageBaseModifier: 1.2
+    heavyStaminaCost: 20
+    range: 1.4
+    angle: 60
+    damage:
+      types:
+        Blunt: 10
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Blunt: 30
+        Pierce: 10
+        Slash: 15
+        Structural: 10
+  - type: StaminaDamageOnHit
+    damage: 10
   - type: StaticPrice
     price: 60
 
@@ -140,16 +178,17 @@
     sprite: _Nuclear14/Objects/Weapons/Melee/nail_board
     state: icon
   - type: MeleeWeapon
+    wideAnimationRotation: -135
     attackRate: 1
+    heavyRateModifier: 1
+    heavyRangeModifier: 1
+    heavyDamageBaseModifier: 1.2
+    heavyStaminaCost: 5
+    range: 1
+    angle: 60
     damage:
       types:
-        Blunt: 18
-  - type: Item
-    size: Normal
-  - type: Clothing
-    sprite: _Nuclear14/Objects/Weapons/Melee/nail_board
-    quickEquip: false
-    slots:
-    - belt
+        Blunt: 25
+        Pierce: 10
   - type: StaticPrice
     price: 0

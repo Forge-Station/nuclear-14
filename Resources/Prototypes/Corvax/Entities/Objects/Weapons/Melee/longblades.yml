@@ -4,6 +4,11 @@
   name: gladius
   description: The old sword of the Roman Empire. It is now in use by the Legion...
   components:
+  - type: Tag
+    tags:
+    - N14Gladius
+  - type: Item
+    sprite: Corvax/Objects/Weapons/Melee/gladius.rsi
   - type: Clothing
     sprite: Corvax/Objects/Weapons/Melee/gladius.rsi
     quickEquip: false
@@ -14,21 +19,9 @@
   - type: Sprite
     sprite: Corvax/Objects/Weapons/Melee/gladius.rsi
     state: icon
-  - type: DamageOtherOnHit
-    damage:
-      types:
-        Slash: 35
   - type: MeleeWeapon
-    damage:
-      types:
-        Slash: 23
     soundHit:
         path: /Audio/Weapons/bladeslice.ogg
-  - type: Item
-    sprite: Corvax/Objects/Weapons/Melee/gladius.rsi
-  - type: Tag
-    tags:
-    - N14Gladius
 
 - type: entity
   parent: BaseItem
@@ -36,6 +29,9 @@
   name: thermospear
   description: "A long two-handed thermal spear, fuel is needed for use."
   components:
+  - type: Item
+    sprite: Corvax/Objects/Weapons/Melee/thermospear.rsi
+    size: Huge
   - type: Sprite
     sprite: Corvax/Objects/Weapons/Melee/thermospear.rsi
     layers:
@@ -44,9 +40,6 @@
       visible: false
       shader: unshaded
       map: ["enum.ToggleVisuals.Layer"]
-  - type: Item
-    sprite: Corvax/Objects/Weapons/Melee/thermospear.rsi
-    size: Huge
   - type: Clothing
     sprite: Corvax/Objects/Weapons/Melee/thermospear.rsi
     quickEquip: false
@@ -77,13 +70,22 @@
         volume: -5
   - type: MeleeWeapon
     resistanceBypass: true
+    wideAnimationRotation: -135
+    heavyRateModifier: 1.2
+    heavyRangeModifier: 1.8
+    heavyDamageBaseModifier: 1
+    heavyStaminaCost: 20
+    maxTargets: 1
+    range: 1.4
+    angle: 0
+    animation: WeaponArcThrust
     soundHit:
       path: "/Audio/Weapons/smash.ogg"
       params:
         volume: -3
-    damage:
-      groups:
-        Brute: 5
+    # damage:
+    #   groups:
+    #     Brute: 5
   - type: MultiHandedItem
   - type: ItemToggleMeleeWeapon
     activatedSoundOnHit:
@@ -100,7 +102,7 @@
       collection: MetalThud
     activatedDamage:
         types:
-            Heat: 40
+            Heat: 55
   - type: SolutionContainerManager
     solutions:
       Welder:
@@ -119,6 +121,8 @@
     radius: 2
     color: orange
     netsync: false
+  - type: IgniteOnMeleeHit
+    fireStacks: 1
   - type: Appearance
   - type: RequiresEyeProtection
   - type: IgnitionSource
@@ -178,14 +182,20 @@
         variation: 0.125
         volume: -5
   - type: MeleeWeapon
-    attackRate: 1
+    attackRate: 0.9
+    heavyRateModifier: 0.9
+    heavyRangeModifier: 1.4
+    heavyDamageBaseModifier: 1
+    heavyStaminaCost: 10
+    range: 1.4
+    angle: 90
     soundHit:
       path: "/Audio/Weapons/smash.ogg"
       params:
         volume: -3
-    damage:
-      groups:
-        Brute: 5
+    # damage:
+    #   groups:
+    #     Brute: 5
   - type: ItemToggleMeleeWeapon
     activatedSoundOnHit:
       path: /Audio/Weapons/Guns/Hits/energy_meat1.ogg
@@ -201,7 +211,7 @@
       collection: MetalThud
     activatedDamage:
         types:
-            Heat: 35
+            Heat: 40
   - type: SolutionContainerManager
     solutions:
       Welder:
@@ -219,6 +229,8 @@
     radius: 1.5
     color: orange
     netsync: false
+  - type: IgniteOnMeleeHit
+    fireStacks: 1
   - type: Appearance
   - type: RequiresEyeProtection
   - type: IgnitionSource
@@ -252,3 +264,68 @@
     soundHit:
       path: /Audio/Weapons/bladeslice.ogg
   - type: MultiHandedItem
+
+#Перенёс из категории _Nuclear14\Entities\Objects\Tools\tools.yml
+- type: entity
+  parent: BaseItem
+  id: N14Chainsaw
+  name: chainsaw
+  description: A very large chainsaw. Usually you use this for cutting down trees... usually.
+  components:
+  - type: Item
+    size: Huge
+    sprite: Objects/Weapons/Melee/chainsaw.rsi
+  - type: Sprite
+    sprite: Objects/Weapons/Melee/chainsaw.rsi
+    state: icon
+  - type: Wieldable
+    wieldSound: !type:SoundPathSpecifier
+      path: /Audio/Weapons/chainsawwield.ogg
+      params:
+        volume: -3
+  - type: MeleeWeapon
+    damage:
+      types:
+        Slash: 5
+    attackRate: 1.5
+    heavyRateModifier: 1.5
+    heavyRangeModifier: 1.4
+    heavyDamageBaseModifier: 1
+    heavyStaminaCost: 20
+    maxTargets: 1
+    angle: 80
+    soundHit:
+      path: /Audio/Weapons/chainsaw.ogg
+      params:
+        volume: -3
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Piercing: 25
+        Slash: 35
+  - type: SolutionContainerManager
+    solutions:
+      melee:
+        maxVol: 9
+        reagents:
+        - ReagentId: Razorium
+          Quantity: 9
+  - type: SolutionRegeneration
+    solution: melee
+    generated:
+      reagents:
+      - ReagentId: Razorium
+        Quantity: 9
+  - type: Sharp
+  - type: DisarmMalus
+  - type: UseDelay
+    delay: 1
+  - type: Tool
+    qualities:
+      - Sawing
+    speedModifier: 3.0
+  - type: SurgeryTool
+    startSound:
+      path: /Audio/Medical/Surgery/saw.ogg
+  - type: BoneSaw
+    speed: 0.6

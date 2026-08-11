@@ -72,6 +72,19 @@
     animation: WeaponArcFist
     wideAnimation: WeaponArcFist
     mustBeEquippedToUse: true
+  - type: SolutionContainerManager
+    solutions:
+      melee:
+        maxVol: 6
+        reagents:
+        - ReagentId: Razorium
+          Quantity: 6
+  - type: SolutionRegeneration
+    solution: melee
+    generated:
+      reagents:
+      - ReagentId: Razorium
+        Quantity: 6
   - type: MeleeThrowOnHit
     speed: 10
     lifetime: 0.025
