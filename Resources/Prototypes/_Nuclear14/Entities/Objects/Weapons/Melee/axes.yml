@@ -70,6 +70,7 @@
     netsync: false
   - type: Sharp
   - type: UseDelay
+  - type: EmbeddableProjectile
     sound: /Audio/Weapons/star_hit.ogg
   - type: StaticPrice
     price: 25
