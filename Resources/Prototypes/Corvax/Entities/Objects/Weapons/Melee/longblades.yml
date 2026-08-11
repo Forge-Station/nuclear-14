@@ -252,3 +252,36 @@
     soundHit:
       path: /Audio/Weapons/bladeslice.ogg
   - type: MultiHandedItem
+
+- type: entity
+  parent: N14Machete
+  id: N14MacheteGladius
+  name: machete gladius
+  description: A fast and deadly machete. Highly effective and practical.
+  components:
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Melee/machetegladius.rsi
+    quickEquip: false
+    slots:
+    - Belt
+    - Back
+    - suitStorage
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Melee/machetegladius.rsi
+    state: icon
+    scale: 0.8, 0.8
+  - type: DamageOtherOnHit
+    damage:
+      types:
+        Slash: 45
+  - type: MeleeWeapon
+    damage:
+      types:
+        Slash: 35
+    soundHit:
+        path: /Audio/Weapons/bladeslice.ogg
+  - type: Item
+    sprite: Corvax/Objects/Weapons/Melee/machetegladius.rsi
+  - type: Tag
+    tags:
+    - N14Gladius

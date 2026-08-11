@@ -142,6 +142,24 @@
     Steel: 200
     Cloth: 200
 
+- type: latheRecipe
+  id: N14ClothingHandsKnuckles
+  result: N14ClothingHandsKnuckles
+  category: N14WeaponMelee
+  completetime: 12
+  materials:
+    Steel: 400
+    Scrap: 200
+
+- type: latheRecipe
+  id: N14ClothingHandsKnucklesWithClaws
+  result: N14ClothingHandsKnucklesWithClaws
+  category: N14WeaponMelee
+  completetime: 12
+  materials:
+    Steel: 500
+    Scrap: 300
+
 #MARK: Gun Parts
 
 - type: latheRecipe
