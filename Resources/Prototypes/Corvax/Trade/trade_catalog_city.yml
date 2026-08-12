@@ -279,7 +279,7 @@
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Grenade
-  name: "Гранаты"
+  name: "Взрывчатка"
   entries:
   - proto: N14NukaCocktail
     price: 30
@@ -287,14 +287,13 @@
     price: 50
     count: 5
   - proto: GrenadeFlashBang
-    price: 60
-    count: 10
+    price: 50
   - proto: GrenadeShrapnel
     price: 80
     count: 10
   - proto: N14Dynamite
     price: 100
-    count: 10
+    count: 20
   - proto: C4
     price: 150
     count: 5
@@ -381,11 +380,11 @@
   name: "Силовая броня"
   entries:
   - proto: N14ClothingOuterPowerArmorRaider
-    price: 5000
+    price: 4000
     count: 2
   - proto: N14ClothingOuterPowerArmorT45
-    price: 7000
-    count: 2
+    price: 6000
+    count: 1
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Armor
@@ -530,9 +529,6 @@
   id: CaravanBuy2_Materials
   name: "Материалы"
   entries:
-  - proto: SulfurOre
-    amount: 10
-    price: 150
   - proto: SheetSteel
     amount: 30
     price: 150
@@ -541,10 +537,10 @@
     price: 150
   - proto: N14IngotLead20
     amount: 20
-    price: 300
+    price: 250
   - proto: N14Gunpowder10
     amount: 10
-    price: 250
+    price: 200
   - proto: N14Scrap1
     amount: 30
     price: 200
@@ -1192,6 +1188,8 @@
     price: 20
   - proto: N14IngotGold1
     price: 25
+  - proto: UraniumOre1
+    price: 350
 
 - type: storeCategoryStructured
   id: CaravanSell2_Alcohol

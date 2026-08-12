@@ -79,29 +79,6 @@
   items:
     - N14WeaponPistol9mm
 
-# Shotguns
-- type: loadout # Forge-change-start
-  id: N14WeaponShotgunPipe
-  category: Weapons
-  cost: 3
-  requirements:
-    - !type:OverallTimeRequirement
-      min: 3600
-    - !type:CharacterItemGroupRequirement
-      group: N14LoadoutGuns
-    - !type:CharacterDepartmentRequirement # Forge-Change
-      inverted: true
-      departments:
-      - Vault
-    - !type:CharacterJobRequirement # Forge-Change
-      inverted: true
-      jobs:
-      - BoSMidSerf
-      - CaesarLegionSlave
-      - NCRPisoner
-  items:
-    - N14WeaponShotgunPipe # Forge-change-end
-
 # Rifles
 
 - type: loadout

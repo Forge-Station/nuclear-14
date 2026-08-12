@@ -335,7 +335,7 @@ undecided-loadout-category-mbos-pal-las-description =
 undecided-loadout-category-mbos-pal-bal-name = Набор паладина (баллистика)
 undecided-loadout-category-mbos-pal-bal-description =
     Тайник с вещами паладина Среднезападного Братства.
-    Содержит: 1 штурмовой карабин, 3 магазина 5.56, 1 AEP-7, 2 энергоячейки,
+    Содержит: 1 миниган, 2 коробки патрон (5мм), 1 AEP-7, 2 энергоячейки,
     1 рулон бинтов, 1 стимпак и сухпаёк типа K.
 
 undecided-loadout-category-mbos-pal-sni-name = Набор паладина-снайпера
@@ -532,6 +532,17 @@ undecided-loadout-category-inquisitorplasma-description =
     Плазменный набор, для самых жестоких Инквизиторов Братства.
     В комплект входит: автоматическая плазменная винтовка с 3 батареями,
     сухпаек, набор бинтов, набор мазей, 2 стимпака и 1 супер-стимпак, а так-же разгрузочный жилет.
+
+# Коммандер СЗБС
+undecided-loadout-category-midwest-command-wattz-name = Снайперский набор
+undecided-loadout-category-midwest-command-wattz-description = 
+    В комплект входит: 1 Wattz 3000, 3 тяжёлые микроядерные батариеи, 
+    набор бинтов, 2 стимпака, сухпаёк типа К.  
+
+undecided-loadout-category-midwest-command-gatling-name = Пулемётный набор
+undecided-loadout-category-midwest-command-gatling-description =
+    В комплект входит: 1 гатлинг-лазер, 2 ядерные батареи, 
+    набор бинтов, 2 стимпака, сухпаёк типа К.
 
 # Следователь ВП НКР
 undecided-loadout-category-NCRMPMilitaryPolice-name = Набор военного полицейского НКР

@@ -89,6 +89,7 @@
     # Blueprints Corvax Forge
     - N14WeaponLaserRevolverBlueprint
     - N14WeaponLaserRifleMakeshiftBlueprint
+    - N14WeaponPlasmaRifleCrudeBlueprint
     - N14WeaponRifle556PipeBlueprint
     # Gun Parts
     - N14JunkGunpartsAction
