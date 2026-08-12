@@ -226,8 +226,8 @@
       - sprite: _Nuclear14/Mobs/RaidersSimpleMob/RaiderPsycho.rsi
         state: raider_melee
       - state: ai
-  - type: ConditionalSpawner 
-    prototypes: 
+  - type: ConditionalSpawner
+    prototypes:
       - N14MobNPCRaiderButcher
 
 # Iguana
@@ -246,3 +246,21 @@
   - type: ConditionalSpawner
     prototypes:
       - N14MobIguana
+
+# Bramin
+
+- type: entity
+  name: спавнер вьючного брамина
+  id: N14SpawnMobBrahminCrate
+  parent: MarkerBase
+  suffix: LeLight
+  components:
+  - type: Sprite
+    layers:
+      - state: green
+      - sprite: _Nuclear14/Mobs/Animals/brahmin.rsi
+        state: brahmin-1
+      - state: ai
+  - type: ConditionalSpawner
+    prototypes:
+      - N14PackBrahminCrate

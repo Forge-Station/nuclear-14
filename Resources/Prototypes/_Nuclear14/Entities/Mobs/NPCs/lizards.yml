@@ -499,21 +499,20 @@
     # name: deathclaw
     # description: You're a smart killer. Use tactics to hunt and stalk.
   - type: NoSlip
-#  - type: Reproductive
-#     breedChance: 100
-#     birthPopup: reproductive-laid-egg-popup
-#     makeOffspringInfant: false
-#     partnerWhitelist:
-#       tags:
-#       - Deathclaw
-#       - Human
-#     offspring:
- #    - id: N14FoodEggDeathclawFertilized
- #      maxAmount: 1
- #  - type: ReproductivePartner
-#   - type: EggLayer
-#     eggSpawn:
- #    - id: N14FoodEggDeathclaw
+  # - type: Reproductive
+    # breedChance: 0.05
+    # birthPopup: reproductive-laid-egg-popup
+    # makeOffspringInfant: false
+    # partnerWhitelist:
+      # tags:
+      # - Deathclaw
+    # offspring:
+    # - id: N14FoodEggDeathclawFertilized
+      # maxAmount: 1
+  # - type: ReproductivePartner
+  # - type: EggLayer
+    # eggSpawn:
+    # - id: N14FoodEggDeathclaw
   - type: Tag
     tags:
     - Deathclaw
