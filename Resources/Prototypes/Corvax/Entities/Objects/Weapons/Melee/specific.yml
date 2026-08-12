@@ -73,7 +73,6 @@
     heavyDamageBaseModifier: 1
     heavyStaminaCost: 10
     range: 1.2
-    attackRate: 0.8
     damage:
       types:
         Blunt: 15
