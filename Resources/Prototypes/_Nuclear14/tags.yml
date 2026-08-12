@@ -103,6 +103,12 @@
 - type: Tag
   id: YaoguaiHide
 
+- type: Tag 
+  id: NightstalkerPelt
+
+- type: Tag # Forge-add
+  id: GeckoHide
+
 - type: Tag
   id: GearSmall
 
@@ -189,6 +195,15 @@
 
 - type: Tag
   id: N14Welder
+
+- type: Tag # forge-add
+  id: N14HealingPowder
+
+- type: Tag # forge-add
+  id: N14HealingPoultice
+
+- type: Tag # forge-add
+  id: N14ClothingEyesGlassesWelding
 
 #MARK: Guns types.
 - type: Tag
@@ -423,6 +438,3 @@
 
 - type: Tag
   id: Yaoguai
-
-- type: Tag
-  id: NightstalkerPelt

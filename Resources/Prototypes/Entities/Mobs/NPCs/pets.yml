@@ -818,7 +818,7 @@
     - TauCetiBasic
     - Bubblish
   - type: TTS # Corvax-TTS
-    voice: Dryad
+    voice: WindrangerDota2
 
 - type: entity
   name: Pun Pun

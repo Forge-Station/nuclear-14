@@ -49,14 +49,13 @@
     head: N14ClothingHeadHatCenturionHelmet
     gloves: N14ClothingHandsGlovesCenturion
     outerClothing: N14ClothingOuterHeavyCenturionArmor
-    belt: N14Gladius
+    belt: ClothingBeltRope
     pocket1: LegionCenturionloadoutkits
-    pocket2: N14WeaponPistol10mmPipe
     id: N14IDLegionaryMedalGold
   innerClothingSkirt: N14ClothingUniformJumpsuitLegionnaireOther
   storage:
     back:
-    - N14BoxPlasticFilledMilitary
+    - N14BoxPlasticFilledMilitaryLegion
 
 - type: playTimeTracker
   id: CaesarLegionCenturion

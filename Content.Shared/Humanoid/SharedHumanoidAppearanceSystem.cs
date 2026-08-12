@@ -51,14 +51,14 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
     [ValidatePrototypeId<BarkPrototype>]
     public const string DefaultBarkVoice = "BarksGoonSpeak1";
     // Corvax-Fallout-Barks-end
-    
+
     // Corvax-TTS-Start
-    public const string DefaultVoice = "Garithos";
+    public const string DefaultVoice = "Papich";
     public static readonly Dictionary<Sex, string> DefaultSexVoice = new()
     {
-        {Sex.Male, "Garithos"},
-        {Sex.Female, "Maiev"},
-        {Sex.Unsexed, "Myron"},
+        {Sex.Male, "Papich"},
+        {Sex.Female, "Charlotte"},
+        {Sex.Unsexed, "MisterGutsyFl3"},
     };
     // Corvax-TTS-End
 
@@ -499,7 +499,7 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
         if (sync)
             Dirty(uid, humanoid);
     }
-    
+
     // Corvax-TTS-Start
     // ReSharper disable once InconsistentNaming
     public void SetTTSVoice(EntityUid uid, string voiceId, HumanoidAppearanceComponent humanoid)

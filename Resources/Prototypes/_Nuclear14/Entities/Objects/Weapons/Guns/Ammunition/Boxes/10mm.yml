@@ -18,9 +18,15 @@
     netsync: false
   - type: MagazineVisuals
     magState: mag
-    steps: 2
+    steps: 5
     zeroVisible: false
   - type: Appearance
+  - type: Butcherable # Forge-add
+    butcheringType: Knife
+    butcherDelay: 2
+    spawned:
+    - id: MaterialCardboard1
+      amount: 1
 
 - type: entity
   parent: BaseMagazineBox10mm

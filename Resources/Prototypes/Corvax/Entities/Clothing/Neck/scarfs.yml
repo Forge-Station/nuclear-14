@@ -8,6 +8,8 @@
     sprite: Corvax/Clothing/Neck/Bandanas/blackscarf.rsi
   - type: ToggleableClothing
     clothingPrototype: N14ClothingMaskBlackMask
-    requiredSlot:
-    - neck
+    requiredSlot: neck
     slot: mask
+  - type: ContainerContainer
+    containers:
+      toggleable-clothing: !type:Container

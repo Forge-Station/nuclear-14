@@ -29,6 +29,8 @@
   storage: # Forge-Change
     back:
     - N14BoxPlasticFilledWastelander
-
+    - Bucket
+    - PlantBag
+    
 - type: playTimeTracker
   id: Farmer

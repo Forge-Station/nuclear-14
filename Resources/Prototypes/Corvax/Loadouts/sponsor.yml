@@ -1,7 +1,7 @@
 
 - type: loadout
   id: LoadoutNCRN14ClothingHeadHatRangerHelmetSnowFox2
-  category: Roles
+  category: Head
   cost: 2
   exclusive: true
   sponsorLevel: 3
@@ -14,7 +14,7 @@
 
 - type: loadout
   id: LoadoutNCRN14ClothingOuterRangerSnowFox
-  category: Roles
+  category: Outer
   cost: 2
   exclusive: true
   sponsorLevel: 3
@@ -27,7 +27,7 @@
 
 - type: loadout
   id: LoadoutN14ClothingOuterWandererCoat
-  category: Roles
+  category: Outer
   cost: 4
   exclusive: true
   sponsorLevel: 2
@@ -36,7 +36,7 @@
 
 - type: loadout
   id: LoadoutBoSMidwestHellCat
-  category: Roles
+  category: Outer
   cost: 10
   exclusive: true
   sponsorLevel: 2
@@ -134,7 +134,7 @@
   id: LoadoutN14ClothingOuterLegionPaladinKiller
   customName: false
   customDescription: false
-  category: Roles
+  category: Outer
   cost: 0
   exclusive: true
   sponsorLevel: 3
@@ -146,6 +146,114 @@
   - N14ClothingOuterLegionPaladinKiller
   functions:
   - !type:LoadoutDeleteHelmet
+
+- type: loadout
+  id: LoadoutN14ClothingHeadHatTriariumVeteranHelmet
+  customName: false
+  customDescription: false
+  category: Head
+  cost: 0
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - CaesarLegionLegionnaireWarrior
+  - !type:CharacterPlaytimeRequirement
+    tracker: CaesarLegionLegionnaireWarrior
+    min: 216000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingHeadHatTriariumVeteranHelmet
+
+- type: loadout
+  id: LoadoutN14ClothingTriariumVeteranArmor
+  customName: false
+  customDescription: false
+  category: Outer
+  cost: 0
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - CaesarLegionLegionnaireWarrior
+  - !type:CharacterPlaytimeRequirement
+    tracker: CaesarLegionLegionnaireWarrior
+    min: 216000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingTriariumVeteranArmor
+
+- type: loadout
+  id: LoadoutN14ClothingHeadHatPrincepsVeteranHelmet
+  customName: false
+  customDescription: false
+  category: Head
+  cost: 0
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - CaesarLegionDean
+  - !type:CharacterPlaytimeRequirement
+    tracker: CaesarLegionDean
+    min: 216000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingHeadHatPrincepsVeteranHelmet
+
+- type: loadout
+  id: LoadoutN14ClothingPrincepsVeteranArmor
+  customName: false
+  customDescription: false
+  category: Outer
+  cost: 0
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - CaesarLegionDean
+  - !type:CharacterPlaytimeRequirement
+    tracker: CaesarLegionDean
+    min: 216000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingPrincepsVeteranArmor
+
+- type: loadout
+  id: LoadoutN14ClothingHeadHatAssassinVeteranHelmet
+  customName: false
+  customDescription: false
+  category: Head
+  cost: 0
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - CaesarLegionVenator
+  - !type:CharacterPlaytimeRequirement
+    tracker: CaesarLegionVenator
+    min: 216000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingHeadHatAssassinVeteranHelmet
+
+- type: loadout
+  id: LoadoutN14ClothingAssassinVeteranArmor
+  customName: false
+  customDescription: false
+  category: Outer
+  cost: 0
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - CaesarLegionVenator
+  - !type:CharacterPlaytimeRequirement
+    tracker: CaesarLegionVenator
+    min: 216000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingAssassinVeteranArmor
 
 - type: loadout
   id: LoadoutClothingOuterNCRVestDesertCoat
@@ -166,7 +274,25 @@
   - N14ClothingOuterNCRVestDesertCoat
 
 - type: loadout
-  id: LoadoutClothingOuterNCRVestpaddedWebKiltDesert
+  id: LoadoutClothingOuterNCRVestDesertCoatSnow
+  customName: false
+  customDescription: false
+  category: Outer
+  cost: 0
+  exclusive: true
+  sponsorLevel: 3
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - NCRSoldier
+    - NCREngineer
+    - NCRMedic
+    - NCRWS
+  items:
+  - N14ClothingOuterNCRVestDesertCoatSnow
+
+- type: loadout
+  id: LoadoutClothingOuterNCRVestpaddedWebKilt
   customName: false
   customDescription: false
   category: Outer
@@ -184,10 +310,31 @@
     tracker: NCRSoldier
     min: 36000 # 10 hours veterancy unlock
   items:
-  - N14ClothingOuterNCRVestpaddedWebKiltDesert
+  - N14ClothingOuterNCRVestpaddedWebKilt
 
 - type: loadout
-  id: LoadoutClothingOuterNCRVeteranArmorKiltDesert
+  id: LoadoutClothingOuterNCRVestpaddedWebKiltSnow
+  customName: false
+  customDescription: false
+  category: Outer
+  cost: 4
+  exclusive: true
+  sponsorLevel: 2
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - NCRSoldier
+    - NCREngineer
+    - NCRMedic
+    - NCRWS
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCRSoldier
+    min: 36000 # 10 hours veterancy unlock
+  items:
+  - N14ClothingOuterNCRVestpaddedWebKiltSnow
+
+- type: loadout
+  id: LoadoutClothingOuterNCRVeteranArmorKilt
   customName: false
   customDescription: false
   category: Outer
@@ -205,10 +352,31 @@
     tracker: NCRSoldier
     min: 72000 # 20 hours veterancy unlock
   items:
-  - N14ClothingOuterNCRVeteranArmorKiltDesert
+  - N14ClothingOuterNCRVeteranArmorKilt
 
 - type: loadout
-  id: LoadoutClothingOuterNCRCombatVeteranKiltArmorDesert
+  id: LoadoutClothingOuterNCRVeteranArmorKiltSnow
+  customName: false
+  customDescription: false
+  category: Outer
+  cost: 5
+  exclusive: true
+  sponsorLevel: 2
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - NCRSoldier
+    - NCREngineer
+    - NCRMedic
+    - NCRWS
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCRSoldier
+    min: 72000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingOuterNCRVeteranArmorKiltSnow
+
+- type: loadout
+  id: LoadoutClothingOuterNCRCombatVeteranKiltArmor
   customName: false
   customDescription: false
   category: Outer
@@ -223,7 +391,25 @@
     tracker: NCRNCO
     min: 72000 # 20 hours veterancy unlock
   items:
-  - N14ClothingOuterNCRCombatVeteranKiltArmorDesert
+  - N14ClothingOuterNCRCombatVeteranKiltArmor
+
+- type: loadout
+  id: LoadoutClothingOuterNCRCombatVeteranKiltArmorSnow
+  customName: false
+  customDescription: false
+  category: Outer
+  cost: 6
+  exclusive: true
+  sponsorLevel: 2
+  requirements:
+  - !type:CharacterJobRequirement
+    jobs:
+    - NCRSGT
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCRNCO
+    min: 72000 # 20 hours veterancy unlock
+  items:
+  - N14ClothingOuterNCRCombatVeteranKiltArmorSnow
 
 - type: loadout
   id: LoadoutClothingOuterJacketCowboyOld
@@ -297,7 +483,7 @@
   id: LoadoutClothingNeckCloakCowboyOld
   customName: false
   customDescription: false
-  category: Roles
+  category: Outer
   cost: 0
   exclusive: true
   sponsorLevel: 3
@@ -314,3 +500,23 @@
       - Townsfolk
   items:
   - N14ClothingNeckCloakCowboyOld
+
+- type: loadout
+  id: LoadoutClothingNeckThragg
+  customName: false
+  customDescription: false
+  category: Neck
+  cost: 0
+  exclusive: true
+  sponsorLevel: 2
+  requirements:
+  - !type:CharacterLogicOrRequirement
+    requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+      - CaesarLegionCenturion
+    - !type:CharacterDepartmentRequirement
+      departments:
+      - CaesarLegion
+  items:
+  - N14ClothingNeckThragg

@@ -257,10 +257,18 @@ namespace Content.Server.Chat.Managers
 
             // Forge-Change-Start
             if (_sponsors.TryGetSponsor(player.UserId, out SponsorLevel level)
-                && _sponsors.TryGetSponsorColor(level, out var sponsorColor)
                 && !_adminManager.HasAdminFlag(player, AdminFlags.Admin))
             {
-                wrappedMessage = Loc.GetString("chat-manager-send-ooc-sponsor-wrap-message", ("sponsorColor", sponsorColor), ("playerName", player.Name), ("message", FormattedMessage.EscapeText(message)));
+                // Prefer the sponsor's chosen custom OOC color; fall back to the color tied to their level.
+                string? sponsorOocColor = null;
+                var sponsorPrefs = _preferencesManager.GetPreferencesOrNull(player.UserId);
+                if (sponsorPrefs != null && sponsorPrefs.SponsorOOCColor != Color.Transparent)
+                    sponsorOocColor = sponsorPrefs.SponsorOOCColor.ToHex();
+                else if (_sponsors.TryGetSponsorColor(level, out var sponsorColor))
+                    sponsorOocColor = sponsorColor;
+
+                if (sponsorOocColor != null)
+                    wrappedMessage = Loc.GetString("chat-manager-send-ooc-sponsor-wrap-message", ("sponsorColor", sponsorOocColor), ("playerName", player.Name), ("message", FormattedMessage.EscapeText(message)));
             }
             // Forge-Change-End
 

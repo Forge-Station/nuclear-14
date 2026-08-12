@@ -1,9 +1,9 @@
-# Legion kits
+#MARK: Legion kits
 - type: entity
   id: LegionCenturionloadoutkits
   name: kit
   description: "please only take one."
-  parent: BaseItem
+  parent: BaseLoadoutKit
   components:
   - type: Sprite
     sprite: Corvax/Objects/Misc/kits.rsi
@@ -62,6 +62,7 @@
     - VeteranFirearmSet
     - VeteranBerserkerSet
     - VeteranKebabSet
+    - VeteranSuppressorSet
 
 - type: entity
   id: LegionWarriorloadoutkits
@@ -90,8 +91,9 @@
     - RecruitMeleeSet
     - RecruitHealerSet
 
-#Washington kits
+#MARK: Washington kits
 
+# Непонятный набор, который не используются ролями BoS Washington.
 - type: entity
   id: BoSWashingtonStandartKits
   name: Undecided BoS Washington Kit
@@ -134,6 +136,7 @@
       enum.UndecidedLoadoutBackpackUIKey.Key:
         type: UndecidedLoadoutBackpackBoundUserInterface
 
+# Непонятный набор, который не используются ролью "Лорд" из BoS Washington.
 - type: entity
   id: BoSWashingtonCommandKits
   name: Undecided BoS Washington Kit
@@ -150,6 +153,26 @@
     - CommandCasterWashingtonBoSSet
     - CommandWattzWashingtonBoSSet
     - CommandGatlingWashingtonBoSSet
+  - type: ActivatableUI
+    key: enum.UndecidedLoadoutBackpackUIKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.UndecidedLoadoutBackpackUIKey.Key:
+        type: UndecidedLoadoutBackpackBoundUserInterface
+
+- type: entity
+  id: BoSWashingtonLordKits
+  name: Undecided BoS Lord Washington Kit
+  description: please only take one
+  parent: BaseItem
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  - type: UndecidedLoadoutBackpack
+    possibleSets:
+    - LordSniperWashingtonBoSSet
+    - LordStormWashingtonBoSSet
   - type: ActivatableUI
     key: enum.UndecidedLoadoutBackpackUIKey.Key
   - type: UserInterface
@@ -352,6 +375,16 @@
     state: base
   content:
   - KitVeteranBerserker
+
+- type: UndecidedLoadoutBackpackSet
+  id: VeteranSuppressorSet
+  name: undecided-loadout-category-veteran-suppressor-name
+  description: undecided-loadout-category-veteran-suppressor-description
+  sprite:
+    sprite: Corvax/Objects/Misc/kits.rsi
+    state: base
+  content:
+  - KitVeteranSuppressor
 
 - type: UndecidedLoadoutBackpackSet
   id: VeteranKebabSet
@@ -564,6 +597,26 @@
     state: medic
   content:
   - KitScribeMedicWashingtonBoS
+
+- type: UndecidedLoadoutBackpackSet
+  id: LordSniperWashingtonBoSSet
+  name: undecided-loadout-category-washington-lord-sniper-name
+  description: undecided-loadout-category-washington-lord-sniper-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: medic
+  content:
+  - KitWBoSLordSniper
+
+- type: UndecidedLoadoutBackpackSet
+  id: LordStormWashingtonBoSSet
+  name: undecided-loadout-category-washington-lord-storm-name
+  description: undecided-loadout-category-washington-lord-storm-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: medic
+  content:
+  - KitWBoSLordStorm
 
 # Ranger
 

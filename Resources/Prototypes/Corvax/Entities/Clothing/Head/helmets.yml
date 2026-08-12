@@ -75,6 +75,31 @@
 
 - type: entity
   parent: ClothingHeadBase
+  id: N14ClothingHeadHatCenturionCinderHelmet
+  name: centurion cinder galea
+  description: "A richly decorated galley, white lines are visible on its scarlet crest."
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/centurioncinderhelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/centurioncinderhelmet.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.7
+        Slash: 0.7
+        Piercing: 0.8
+        Heat: 0.8
+  - type: ExplosionResistance
+    damageCoefficient: 0.90
+  - type: HideLayerClothing
+    force: true
+    slots:
+    - Hair
+    - FacialHair
+
+- type: entity
+  parent: ClothingHeadBase
   id: N14ClothingHeadHatDeanVeteranHelmet
   name: galea
   description: "A protective helmet with a transverse crest."
@@ -83,6 +108,8 @@
     sprite: Corvax/Clothing/Head/Helmets/veteranhelmet.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/veteranhelmet.rsi
+  - type: HelmetToggle
+    altPrefix: alt        # RSI должен иметь стейт "alt-equipped-HELMET"
   - type: Armor
     modifiers:
       coefficients:
@@ -106,6 +133,8 @@
     sprite: Corvax/Clothing/Head/Helmets/primehelmet.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/primehelmet.rsi
+  - type: HelmetToggle
+    altPrefix: alt        # RSI должен иметь стейт "alt-equipped-HELMET"
   - type: Armor
     modifiers:
       coefficients:
@@ -129,6 +158,8 @@
     sprite: Corvax/Clothing/Head/Helmets/recruithelmet.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/recruithelmet.rsi
+  - type: HelmetToggle
+    altPrefix: alt        # RSI должен иметь стейт "alt-equipped-HELMET"
   - type: Armor
     modifiers:
       coefficients:
@@ -150,8 +181,13 @@
   components:
   - type: Sprite
     sprite: Corvax/Clothing/Head/Helmets/baseballhelmet.rsi
+    layers:
+    - state: icon
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/baseballhelmet.rsi
+    slots: [ head ]
+  - type: HelmetToggle
+    altPrefix: alt        # RSI должен иметь стейт "alt-equipped-HELMET"
   - type: Armor
     modifiers:
       coefficients:
@@ -185,6 +221,118 @@
   - type: HideLayerClothing
     slots:
     - Hair
+
+- type: entity
+  parent: N14ClothingHeadHatBaseballHelmet
+  id: N14ClothingHeadHatPrimeAssasin
+  name: prime assassin helmet
+  description: "given only to the most dedicated and experienced human hunters"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/primeassassinhelmet.rsi
+    visible: true
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/primeassassinhelmet.rsi
+  - type: HelmetToggle
+    altPrefix: alt
+
+- type: entity
+  parent: N14ClothingHeadHatBaseballHelmet
+  id: N14ClothingHeadHatGastat
+  name: gastat helmet
+  description: "Roughly stitched leather and a pair of worn shoulder pads conquered Arizona"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/gastathelmet.rsi
+    visible: true
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/gastathelmet.rsi
+  - type: HelmetToggle
+    altPrefix: alt
+
+- type: entity
+  parent: N14ClothingHeadHatBaseballHelmet
+  id: N14ClothingHeadHatGastatPrime
+  name: gastat prime helmet
+  description: "One of the most impressive serial bull helmets"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/gastatprimehelmet.rsi
+    visible: true
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/gastatprimehelmet.rsi
+  - type: HelmetToggle
+    altPrefix: alt
+
+- type: entity
+  parent: N14ClothingHeadHatBaseballHelmet
+  id: N14ClothingHeadHatGastatVeteran
+  name: gastat veteran helmet
+  description: "Forged in the forges of the Phoenix, this is helmet that only the best in the Legion deserves."
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/gastatveteranhelmet.rsi
+    visible: true
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/gastatveteranhelmet.rsi
+  - type: HelmetToggle
+    altPrefix: alt
+
+- type: entity
+  parent: N14ClothingHeadHatLightBaseballHelmet
+  id: N14ClothingHeadHatTriarium
+  name: triarium helmet
+  description: "It is thanks to the soldiers in this helmet that the Legion's roads remain safe"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/triariumhelmet.rsi
+    visible: true
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/triariumhelmet.rsi
+  - type: HelmetToggle
+    altPrefix: alt
+
+- type: entity
+  parent: N14ClothingHeadHatLightBaseballHelmet
+  id: N14ClothingHeadHatAssasin
+  name: assassin helmet
+  description: "This helmet combines maneuverability and dynamism"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/assassinhelmet.rsi
+    visible: true
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/assassinhelmet.rsi
+  - type: HelmetToggle
+    altPrefix: alt
+
+- type: entity
+  parent: N14ClothingHeadHatDeanRecruitHelmet
+  id: N14ClothingHeadHatPrinceps
+  name: princeps helmet
+  description: "Usually such helmet is given to the most courageous and fanatical"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/princepshelmet.rsi
+    visible: true
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/princepshelmet.rsi
+  - type: HelmetToggle
+    altPrefix: alt
+
+- type: entity
+  parent: N14ClothingHeadHatDeanPrimeHelmet
+  id: N14ClothingHeadHatPrincepsPrime
+  name: princeps prime helmet
+  description: "The wearers of this helmet act as the first line in the bellum"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/princepsprimehelmet.rsi
+    visible: true
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/princepsprimehelmet.rsi
+  - type: HelmetToggle
+    altPrefix: alt
 
 - type: entity
   parent: ClothingHeadEVAHelmetBase
@@ -268,3 +416,232 @@
     sprite: Corvax/Clothing/Head/Helmets/InquisitorHelmetHood.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/InquisitorHelmetHood.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatNCRCombatHelmet
+  name: NCR combat helmet
+  description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/falloutNCRcombathelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/falloutNCRcombathelmet.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.85
+        Slash: 0.85
+        Piercing: 0.85
+        Heat: 0.85
+    priceMultiplier: 0.5
+  - type: ExplosionResistance
+    damageCoefficient: 0.9
+  - type: HideLayerClothing
+    slots:
+    - Hair
+
+- type: entity
+  parent: N14ClothingHeadHatNCRCombatHelmet
+  id: N14ClothingHeadHatNCRCombatHelmetSnow
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/falloutNCRcombathelmetSnow.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/falloutNCRcombathelmetSnow.rsi
+
+- type: entity
+  parent: N14ClothingHeadHatBaseHelmetWithHair # \Prototypes\_Nuclear14\Entities\Clothing\Head\helmets.yml
+  id: N14ClothingHeadHatNCRHelmet
+  name: NCR helmet
+  description: A rounded NCR helmet offering some protection. This one is covered on classic desert camo.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/falloutNCRhelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/falloutNCRhelmet.rsi
+
+- type: entity
+  parent: N14ClothingHeadHatNCRHelmet
+  id: N14ClothingHeadHatNCRHelmetSnow
+  name: snow NCR helmet
+  description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/falloutNCRhelmetSnow.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/falloutNCRhelmetSnow.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatWBoSBattleHelmet
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/wbosbattlehelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/wbosbattlehelmet.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.9
+        Slash: 0.9
+        Piercing: 0.9
+        Heat: 0.9
+  - type: HideLayerClothing
+    slots:
+    - Hair
+
+- type: entity
+  parent: N14ClothingHeadHatWBoSBattleHelmet
+  id: N14ClothingHeadHatWBoSLordHelmet
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/wboslordhelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/wboslordhelmet.rsi
+  - type: NightVision
+    isEquipment: true
+  - type: HideLayerClothing
+    force: true
+    slots:
+    - Hair
+    - FacialHair
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatDog
+  name: Dog helmet
+  description: "A dog head hat with built-in goggles"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/doghelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/doghelmet.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.9
+        Slash: 0.9
+        Piercing: 0.9
+        Heat: 0.9
+  - type: HideLayerClothing
+    slots:
+    - Hair
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatRaiderbag
+  name: raider bag helmet
+  description: A bag on the head with slits for the eyes.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/raiderbaghelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/raiderbaghelmet.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.95
+        Slash: 0.95
+        Piercing: 0.95
+        Heat: 0.95
+  - type: HideLayerClothing
+    slots:
+    - Hair
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatEyeBot
+  name: eye bot helmet
+  description: The body of the eye bot without the insides.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/eyebothelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/eyebothelmet.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.9
+        Slash: 0.9
+        Piercing: 0.9
+        Heat: 0.9
+  - type: HideLayerClothing
+    slots:
+    - Hair
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadVaultTecCombatHelmet
+  name: vault-tec combat helmet
+  description: An attempt to replicate the success of the Mk II combat armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/vault-tekcombathelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/vault-tekcombathelmet.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.875
+        Slash: 0.875
+        Piercing: 0.875
+        Heat: 0.875
+  - type: HideLayerClothing
+    slots:
+    - Hair
+
+- type: entity
+  parent: N14ClothingHeadHatCombatHelmet
+  id: N14ClothingHeadBaron
+  name: raider baron
+  description: The ayatollah of rock n rolla!
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/hockeymask.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/hockeymask.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadSackMetal
+  name: raider sackmetal
+  description: A sack hood reinforced with metal and crude spikes. Looks quite intimidating... for a sack.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/raidermetalsackhelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/raidermetalsackhelmet.rsi
+  - type: HideLayerClothing
+    slots:
+    - Hair
+    - Snout
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.95
+        Slash: 0.95
+        Piercing: 0.95
+        Heat: 0.9
+  - type: Item
+    size: Normal
+    shape:
+    - 0,0,1,0
+
+- type: entity
+  parent: ClothingHeadBase
+  id: MisfitsClothingHeadKhanHelmet
+  name: great khan helmet
+  description: A piece of headwear commonly worn by the Great Khans that appears to resemble stereotypical traditional Mongolian helmets - likely adapted from a pre-War motorcycle helmet. It is black with two horns on either side and a small spike jutting from the top, much like a pickelhaube. A leather covering protects the wearer's neck and ears from sunburn.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/greatkhanhelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/greatkhanhelmet.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.85
+        Slash: 0.95
+        Piercing: 0.90
+        Heat: 0.9

@@ -39,7 +39,9 @@ chat-manager-entity-me-wrap-message = [italic]{ PROPER($entity) ->
     }
 
 chat-manager-entity-looc-wrap-message = LOOC: {$entityName}: {$message}
+chat-manager-entity-looc-sponsor-wrap-message = LOOC: [bold][color={$sponsorColor}]{$entityName}[/color]:[/bold] {$message}
 chat-manager-send-ooc-wrap-message = OOC: {$playerName}: {$message}
+chat-manager-send-ooc-sponsor-wrap-message = OOC: [bold][color={$sponsorColor}]{$playerName}[/color]:[/bold] {$message}
 chat-manager-send-ooc-patron-wrap-message = OOC: [color={$patronColor}]{$playerName}[/color]: {$message}
 
 chat-manager-send-dead-chat-wrap-message = {$deadChannelName}: [BubbleHeader]{$playerName}[/BubbleHeader]: [BubbleContent]{$message}[/BubbleContent]

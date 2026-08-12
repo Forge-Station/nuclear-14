@@ -1,3 +1,4 @@
+using Content.Server.Ghost.Roles;
 using Content.Shared.Roles;
 
 namespace Content.Server.Roles;
@@ -18,6 +19,20 @@ public sealed class RoleSystem : SharedRoleSystem
         SubscribeAntagEvents<TraitorRoleComponent>();
         SubscribeAntagEvents<ZombieRoleComponent>();
         SubscribeAntagEvents<ThiefRoleComponent>();
+        SubscribeLocalEvent<GhostRoleMarkerRoleComponent, MindGetAllRolesEvent>(OnGhostRoleMarkerGetAllRoles);
+    }
+
+    private void OnGhostRoleMarkerGetAllRoles(
+        EntityUid uid,
+        GhostRoleMarkerRoleComponent component,
+        ref MindGetAllRolesEvent args
+    )
+    {
+        var name = string.IsNullOrWhiteSpace(component.Name)
+            ? Loc.GetString("game-ticker-unknown-role")
+            : component.Name;
+
+        args.Roles.Add(new RoleInfo(component, name, false, null, string.Empty));
     }
 
     public string? MindGetBriefing(EntityUid? mindId)

@@ -13,3 +13,128 @@
     damage:
       types:
         Slash: 10
+
+- type: entity
+  parent: ClothingHandsBase
+  id: N14ClothingHandsPowerFist
+  name: power fist
+  description: A captured Legion shock gauntlet built around a piston-assisted ram that hurls targets backward.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Melee/powerfist.rsi
+    state: icon
+  - type: Item
+    size: Normal
+    sprite: Corvax/Objects/Weapons/Melee/powerfist.rsi
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Melee/powerfist.rsi
+    slots: [gloves]
+  - type: MeleeWeapon
+    soundHit:
+      collection: MetalThud
+    range: 1.3
+    attackRate: 0.8
+    damage:
+      types:
+        Blunt: 35
+        Structural: 15
+    animation: WeaponArcFist
+    wideAnimation: WeaponArcFist
+    mustBeEquippedToUse: true
+  - type: MeleeThrowOnHit
+    speed: 10
+    lifetime: 0.025
+
+- type: entity
+  parent: ClothingHandsBase
+  id: N14ClothingHandsIndusrialPowerFist
+  name: industrial power fist
+  description: A rugged steel structure, wrapped in wires and attached to a powerful hydraulic actuator.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Melee/industrialpowerfist.rsi
+    state: icon
+  - type: Item
+    size: Normal
+    sprite: Corvax/Objects/Weapons/Melee/industrialpowerfist.rsi
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Melee/industrialpowerfist.rsi
+    slots: [gloves]
+  - type: MeleeWeapon
+    soundHit:
+      collection: MetalThud
+    range: 1.3
+    attackRate: 0.8
+    damage:
+      types:
+        Blunt: 15
+        Slash: 25
+    animation: WeaponArcFist
+    wideAnimation: WeaponArcFist
+    mustBeEquippedToUse: true
+  - type: MeleeThrowOnHit
+    speed: 10
+    lifetime: 0.025
+
+- type: entity
+  parent: ClothingHandsBase
+  id: N14ClothingHandsKnuckles
+  name: knuckles
+  description: A metal weapon worn on the hand that reinforces a punch.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Melee/knuckles.rsi
+    state: icon
+  - type: Item
+    size: Normal
+    sprite: Corvax/Objects/Weapons/Melee/knuckles.rsi
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Melee/knuckles.rsi
+    slots: [gloves]
+  - type: MeleeWeapon
+    soundHit:
+      collection: MetalThud
+    range: 1.3
+    attackRate: 0.8
+    damage:
+      types:
+        Blunt: 8
+        Structural: 8
+    animation: WeaponArcFist
+    wideAnimation: WeaponArcFist
+    mustBeEquippedToUse: true
+  - type: MeleeThrowOnHit
+    speed: 2
+    lifetime: 0.025
+
+- type: entity
+  parent: ClothingHandsBase
+  id: N14ClothingHandsKnucklesWithClaws
+  name: knuckles with claws
+  description: A metal weapon worn on the hand that reinforces a punch. The tips have metal claws.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Melee/knuckleswithclaws.rsi
+    state: icon
+  - type: Item
+    size: Normal
+    sprite: Corvax/Objects/Weapons/Melee/knuckleswithclaws.rsi
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Melee/knuckleswithclaws.rsi
+    slots: [gloves]
+  - type: MeleeWeapon
+    soundHit:
+      collection: MetalThud
+    range: 1.3
+    attackRate: 0.8
+    damage:
+      types:
+        Blunt: 8
+        Slash: 8
+    animation: WeaponArcFist
+    wideAnimation: WeaponArcFist
+    mustBeEquippedToUse: true
+  - type: MeleeThrowOnHit
+    speed: 2
+    lifetime: 0.025
+

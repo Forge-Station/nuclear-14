@@ -16,6 +16,14 @@
 
 - type: entity
   parent: N14BaseBlueprintPaper
+  id: N14WeaponPlasmaRifleCrudeBlueprint
+  name: чертёж самодельной плазменной винтовки
+  components:
+    - type: STBlueprint
+      blueprint: N14WeaponLaserRifleMakeshift
+
+- type: entity
+  parent: N14BaseBlueprintPaper
   id: N14WeaponRifle556PipeBlueprint
   name: blueprint pipe assault rifle
   components:

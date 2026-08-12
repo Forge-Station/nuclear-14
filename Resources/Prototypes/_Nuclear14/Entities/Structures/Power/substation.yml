@@ -97,7 +97,7 @@
     highVoltageNode: input
     mediumVoltageNode: output
 
-- type: entity # Corvax-Change
+- type: entity # Forge-Change
   parent: BaseMachine
   id: N14BaseSubstationFrame
   name: substation frame
@@ -147,7 +147,7 @@
   - type: Battery
     maxCharge: 2500000
     startingCharge: 2500000
-  - type: Construction # Corvax-Change
+  - type: Construction # Forge-Change
     graph: N14Substation
     node: substation
 

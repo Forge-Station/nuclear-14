@@ -64,8 +64,14 @@ ent-N14ClothingHeadHatEnclaveHelmetMarine = шлем пехоты Анклава
     .desc = Шлем элитного бойца Анклава, готового выполнить любой приказ.
 
 # Новая Калифорнийская Республика (НКР) 
-ent-N14ClothingHeadHatNCRHelmetMetal = металлический шлем НКР
+ent-N14ClothingHeadHatNCRHelmetMetal =  Шлем НКР металлический
     .desc = Простой шлем, защищающий головы бойцов, отстаивающих идеалы НКР.
+ent-N14ClothingHeadHatNCRHelmetMetalSnow = Шлем НКР металлический зимний
+    .desc =  Округлый шлем НКР, обеспечивающий некоторую защиту. Этот экземпляр покрыт зимней краской.
+ent-N14ClothingHeadHatNCRHelmetMetalWoods = Шлем НКР металлический лесной
+    .desc = Простой шлем, защищающий головы бойцов, отстаивающих идеалы НКР. Этот шлем покрыт лесным камуфляжем.
+ent-N14ClothingHeadHatNCRHelmetMetalGhillie = Шлем НКР металлический с маскировочной сеткой
+    .desc = Округлый шлем НКР, обеспечивающий некоторую защиту. Этот экземпляр покрыт лесным камуфляжем типа "маскировочная сеть".
 ent-N14ClothingHeadHatNCRHelmetMetalMilitaryPolice = полицейский шлем НКР
     .desc = Шлем военной полиции НКР - символ порядка и закона в мире хаоса.
 ent-N14ClothingHeadHatNCRHelmetMetalMedic = медицинский шлем НКР
@@ -88,18 +94,18 @@ ent-N14ClothingHeadHatRangerHelmetSnowFox = боевой шлем рейндже
     .desc = { ent-N14ClothingHeadHatRangerHelmetFox.desc }
 ent-N14ClothingHeadHatRangerHelmetModif = модифицированный боевой шлем рейнджера
     .desc = Усиленный шлем, который носят рейнджеры в самых опасных уголках Пустоши. Маска намертво приварена к корпусу, а сам шлем явно подвергался кустарным модификациям.
-ent-N14ClothingHeadHatNCRHelmetMetalSnow = Зимний металлический шлем НКР
-    .desc = Простой шлем, защищающий головы бойцов, отстаивающих идеалы НКР. Этот шлем покрыт белоснежным камуфляжем.
-ent-N14ClothingHeadHatNCRHelmetMetalWoods = Лесной металлический шлем НКР
-    .desc = Простой шлем, защищающий головы бойцов, отстаивающих идеалы НКР. Этот шлем покрыт лесным камуфляжем.
-ent-N14ClothingHeadHatNCRHelmetMetalDesert = пустынный металлический шлем НКР
+ent-N14ClothingHeadHatNCRHelmet = шлем бойца НКР
     .desc = Простой шлем, защищающий головы бойцов, отстаивающих идеалы НКР. Этот шлем покрыт пустынным камуфляжем.
-ent-N14ClothingHeadHatNCRHelmetMetalGhillie = Шлем НКР с маскировочной сеткой
-    .desc = Округлый шлем НКР, обеспечивающий некоторую защиту. Этот экземпляр покрыт лесным камуфляжем типа "маскировочная сеть".
+ent-N14ClothingHeadHatNCRHelmetSnow = шлем бойца НКР зимний
+    .desc = Простой шлем, защищающий головы бойцов, отстаивающих идеалы НКР. Этот шлем покрыт зимним камуфляжем.
 ent-N14ClothingHeadHatNCRHelmetMetalRadioSnow = Шлем радиста НКР
     .desc = Округлый шлем НКР, обеспечивающий некоторую защиту. Обычно используется радистами и унтер-офицерами.
 ent-N14ClothingHeadHatNCRHelmetMetalRadioWood = { ent-N14ClothingHeadHatNCRHelmetMetalRadioSnow }
     .desc = { ent-N14ClothingHeadHatNCRHelmetMetalRadioSnow.desc }
+ent-N14ClothingHeadHatNCRCombatHelmet = боевой шлем НКР
+    .desc = Стальной шлем, обеспечивающий лучшие защитные свойства по сравнению с обычным. Ожидайте проблемы с шеей если носите его все время.
+ent-N14ClothingHeadHatNCRCombatHelmetSnow = боевой шлем НКР зимний
+    .desc = { ent-N14ClothingHeadHatNCRCombatHelmet.desc }
 
 # Племя 
 ent-N14ClothingHeadHatTribalPowerhelm = тяжёлый шлем старейшины

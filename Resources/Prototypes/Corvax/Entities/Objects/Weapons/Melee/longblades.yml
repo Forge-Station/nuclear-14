@@ -26,6 +26,9 @@
         path: /Audio/Weapons/bladeslice.ogg
   - type: Item
     sprite: Corvax/Objects/Weapons/Melee/gladius.rsi
+  - type: Tag
+    tags:
+    - N14Gladius
 
 - type: entity
   parent: BaseItem
@@ -220,3 +223,65 @@
   - type: RequiresEyeProtection
   - type: IgnitionSource
     temperature: 700
+
+- type: entity
+  parent: BaseItem
+  id: N14BLadeOfTheEast
+  name: blade of the east
+  description: "A heavy sword forged in the eastern cohort of the legion."
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Melee/bladeeast.rsi
+    layers:
+    - state: icon
+  - type: Item
+    sprite: Corvax/Objects/Weapons/Melee/bladeeast.rsi
+    size: Huge
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Melee/bladeeast.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: MeleeWeapon
+    damage:
+      types:
+        Slash: 50
+        Blunt: 15
+        Structural: 25
+    soundHit:
+      path: /Audio/Weapons/bladeslice.ogg
+  - type: MultiHandedItem
+
+- type: entity
+  parent: N14Machete
+  id: N14MacheteGladius
+  name: machete gladius
+  description: A fast and deadly machete. Highly effective and practical.
+  components:
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Melee/machetegladius.rsi
+    quickEquip: false
+    slots:
+    - Belt
+    - Back
+    - suitStorage
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Melee/machetegladius.rsi
+    state: icon
+    scale: 0.8, 0.8
+  - type: DamageOtherOnHit
+    damage:
+      types:
+        Slash: 45
+  - type: MeleeWeapon
+    damage:
+      types:
+        Slash: 35
+    soundHit:
+        path: /Audio/Weapons/bladeslice.ogg
+  - type: Item
+    sprite: Corvax/Objects/Weapons/Melee/machetegladius.rsi
+  - type: Tag
+    tags:
+    - N14Gladius

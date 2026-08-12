@@ -1,7 +1,7 @@
 - type: entity
   id: N14BaseShell12Shotgun
   name: shell (12 gauge)
-  parent: BaseCartridge
+  parent: BaseCartridgeLightRifle
   abstract: true
   components:
   - type: Tag

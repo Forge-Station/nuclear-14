@@ -7,7 +7,7 @@
     !type:SyllableObfuscation
     minSyllables: 1
     maxSyllables: 4
-    replacement: # Corvax-Change
+    replacement: # Forge-Change
     - ай
     - ан
     - ба

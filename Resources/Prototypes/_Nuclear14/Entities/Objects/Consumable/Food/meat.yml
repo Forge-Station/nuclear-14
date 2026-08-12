@@ -52,7 +52,7 @@
   - type: SliceableFood
     count: 3
     slice: N14FoodMeatRadCutlet
-  - type: Construction # Corvax-Change
+  - type: Construction # Forge-Change
     graph: FoodMeatRad
     node: start
     defaultTarget: MeatCooked
@@ -395,7 +395,7 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Consumable/Food/meat.rsi
     state: morsels_roasted
-  - type: Construction # Corvax-Change
+  - type: Construction # Forge-Change
     graph: FoodMeatRad
     node: MeatCooked
     defaultTarget: MeatCooked

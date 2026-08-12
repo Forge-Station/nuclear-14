@@ -7,6 +7,9 @@
     access: [["CaesarLegion"]]
   - type: Wires
     layoutId: AirlockService
+  - type: Construction
+    graph: N14RadialDoorsGraph
+    node: WoodDoorLegion 
 
 - type: entity
   parent: N14DoorMetalBarTall
@@ -17,6 +20,9 @@
     access: [["CaesarLegion"]]
   - type: Wires
     layoutId: AirlockService
+  - type: Construction
+    graph: N14RadialDoorsGraph
+    node: CellMetalDoorLegion   
 
 - type: entity
   parent: N14DoorMetalRedTall
@@ -27,6 +33,9 @@
     access: [["CaesarLegion"]]
   - type: Wires
     layoutId: HighSec
+  - type: Construction
+    graph: N14RadialDoorsGraph
+    node: MetalDoorLegion
 
 - type: entity
   parent: N14DoorWoodWhiteTall
@@ -97,6 +106,9 @@
     access: [["TownsPerson"]]
   - type: Wires
     layoutId: AirlockService
+  - type: Construction
+    graph: N14RadialDoorsGraph
+    node: WoodDoorTown
 
 - type: entity
   parent: N14DoorMetalBarTall
@@ -107,6 +119,9 @@
     access: [["TownsPerson"]]
   - type: Wires
     layoutId: AirlockService
+  - type: Construction
+    graph: N14RadialDoorsGraph
+    node: CellMetalDoorTown
 
 - type: entity
   parent: N14DoorMetalRedTall
@@ -117,3 +132,45 @@
     access: [["TownsPerson"]]
   - type: Wires
     layoutId: HighSec
+  - type: Construction
+    graph: N14RadialDoorsGraph
+    node: MetalDoorTown
+
+- type: entity
+  parent: N14DoorWoodWhiteTall
+  id: N14DoorWoodSecureLockedNCRNew
+  suffix: NCR, Locked
+  components:
+  - type: AccessReader
+    access: [["NCR"]]
+  - type: Wires
+    layoutId: AirlockService
+  - type: Construction
+    graph: N14RadialDoorsGraph
+    node: WoodDoorNCR
+
+- type: entity
+  parent: N14DoorMetalBarTall
+  id: N14DoorCellMetalLockedNCRNew
+  suffix: NCR, Locked
+  components:
+  - type: AccessReader
+    access: [["NCR"]]
+  - type: Wires
+    layoutId: AirlockService
+  - type: Construction
+    graph: N14RadialDoorsGraph
+    node: CellMetalDoorNCR
+
+- type: entity
+  parent: N14DoorMetalRedTall
+  id: N14DoorMetalSecureLockedNCRNew
+  suffix: NCR, Locked
+  components:
+  - type: AccessReader
+    access: [["NCR"]]
+  - type: Wires
+    layoutId: HighSec
+  - type: Construction
+    graph: N14RadialDoorsGraph
+    node: MetalDoorNCR

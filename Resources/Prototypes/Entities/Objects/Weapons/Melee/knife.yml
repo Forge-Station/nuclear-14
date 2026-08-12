@@ -101,7 +101,7 @@
   # Shitmed Change
   - type: Scalpel
     speed: 0.3
-  - type: BoneSaw 
+  - type: BoneSaw
     speed: 0.5
 
 - type: entity
@@ -324,7 +324,7 @@
     sound: /Audio/Weapons/star_hit.ogg
   - type: LandAtCursor
   - type: DamageOtherOnHit
-    ignoreResistances: true
+    # Forge Change: ignoreResistances: true
     damage:
       types:
         Slash: 10

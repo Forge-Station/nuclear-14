@@ -1,0 +1,971 @@
+
+- type: entity
+  parent: BaseObjective
+  id: NcContractGhostRoleSurvivalObjective
+  name: "Выжить"
+  description: "Продержитесь до конца таймера."
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Objective
+    difficulty: 0
+    issuer: "Контрактная роль"
+    unique: false
+    icon:
+      sprite: Mobs/Ghosts/ghost_human.rsi
+      state: icon
+  - type: NcContractGhostRoleSurvivalObjective
+
+- type: entity
+  id: NcGhostRoleIconSofiaMiller
+  name: София Миллер
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    layers:
+    - sprite: Mobs/Species/Human/parts.rsi
+      state: full
+      color: "#FFEACC"
+    - sprite: Nyanotrasen/Clothing/Uniforms/Costume/red_dress.rsi
+      state: equipped-INNERCLOTHING
+    - sprite: _Nuclear14/Mobs/Customization/human_hair.rsi
+      state: hair_longest
+      color: "#B94A24"
+
+- type: entity
+  id: NcGhostRoleIconElizabethEvil
+  name: Элизабет Злая
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    layers:
+    - sprite: Mobs/Species/Human/parts.rsi
+      state: full
+      color: "#FFEACC"
+    - sprite: Nyanotrasen/Clothing/Uniforms/Costume/red_dress.rsi
+      state: equipped-INNERCLOTHING
+    - sprite: _Nuclear14/Mobs/Customization/human_hair.rsi
+      state: hair_longest
+      color: "#B94A24"
+
+- type: entity
+  id: NcGhostRoleIconBelka
+  name: Белка
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    layers:
+    - sprite: Mobs/Species/Human/parts.rsi
+      state: full
+      color: "#F0C59D"
+    - sprite: _Nuclear14/Clothing/Uniforms/FalloutSuits/wastelanderrags.rsi
+      state: equipped-INNERCLOTHING
+    - sprite: _Nuclear14/Mobs/Customization/human_hair.rsi
+      state: hair_longest
+      color: "#E8C85A"
+
+- type: entity
+  id: NcGhostRoleIconZoyaDarby
+  name: Зоя Дарби
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    layers:
+    - sprite: Mobs/Species/Human/parts.rsi
+      state: full
+      color: "#FFEACC"
+    - sprite: _Nuclear14/Clothing/Uniforms/FalloutSkirts/blackdress.rsi
+      state: equipped-INNERCLOTHING
+    - sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatpainspike.rsi
+      state: equipped-OUTERCLOTHING
+    - sprite: _Nuclear14/Mobs/Customization/human_hair.rsi
+      state: hair_longest
+      color: "#2F211C"
+
+- type: entity
+  parent: N14BoxPlastic
+  id: NcGhostRoleSurvivalBox
+  name: "коробка выживания"
+  description: "Небольшой аварийный набор для контрактной роли."
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Storage
+    maxItemSize: Normal
+    grid:
+    - 0,0,4,3
+  - type: StorageFill
+    contents:
+    - id: N14StimpakDirty
+    - id: Brutepack
+    - id: Ointment
+    - id: N14FoodTinKCracker
+    - id: DrinkWaterBottleFull
+    - id: N14CateyeCanisterFilled
+
+- type: startingGear
+  id: NcGhostRoleRaiderGear
+  equipment:
+    bandage: NCClothingBandageRaiders
+    jumpsuit: N14ClothingUniformJumpsuitBrahminFarmer
+    outerClothing: N14ClothingOuterRaiderBlastmaster
+    shoes: N14ClothingShoesRaider
+    neck: ClothingNeckBlackScarf
+    head: N14ClothingHeadHatBeanie
+    back: N14ClothingBackpackSatchelTrekker
+    suitstorage: N14WeaponSMG45
+    belt: ClothingBeltCowboy
+    pocket1: N14WeaponRevolver44TribalUpgradedExtra
+  storage:
+    belt:
+    - Magazine45SubMachineGun
+    - Magazine45SubMachineGun
+    - SpeedLoader44
+    - SpeedLoader44
+    back:
+    - N14BoxPlasticFilledWastelander
+    - MagazineBox45
+    - MagazineBox44
+    - SpeedLoader44
+    - SpeedLoader44
+    - N14FoodCannedFish
+    - NcGhostRoleSurvivalBox
+    - N14Flare
+    - N14Flare
+
+- type: entity
+  parent: MobHuman
+  id: NcGhostRoleMobRaider
+  name: Raider
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: true
+  - type: Loadout
+    prototypes: [NcGhostRoleRaiderGear]
+  - type: NpcFactionMember
+    factions:
+    - Raider
+
+- type: ncGhostRolePerk
+  id: NcGhostRolePerkRaider
+  name: "Рейдерский рывок"
+  description: "Рейдер быстрее уходит от погони и опаснее стреляет из автоматов, пистолетов и револьверов."
+  sprintSpeedMultiplier: 1.30
+  projectileDamageMultiplier: 1.45
+  passiveHealing:
+    groups:
+      Brute: -0.5
+      Burn: -0.5
+      Toxin: -0.5
+      Airloss: -0.5
+  weaponPrototypes:
+  - N14WeaponSMG45
+  - N14WeaponPistol9mm
+  - N14WeaponPistol10mm
+  - N14WeaponPistol10mmPipe
+  - N14WeaponPistol9mmChinese
+  - N14WeaponPistol45Colt
+  - N14WeaponPistol12mm
+  - N14WeaponRevolver9mm
+  - N14WeaponRevolver10mm
+  - N14WeaponRevolver44Magnun
+  - N14WeaponRevolver44Tribal
+  - N14WeaponRevolver44TribalUpgraded
+  - N14WeaponRevolver44TribalUpgradedExtra
+  - N14WeaponRevolverWebley
+
+- type: ncGhostRolePreset
+  id: NcGhostRoleRaider
+  entityPrototype: NcGhostRoleMobRaider
+  name: nc-contract-ghost-role-raider-name
+  description: nc-contract-ghost-role-raider-description
+  rules: nc-contract-ghost-role-wanted-rules
+  requirements:
+  - !type:CharacterOverallTimeRequirement
+    min: 36000 # 10 hours
+  perks:
+  - NcGhostRolePerkRaider
+
+- type: startingGear
+  id: NcGhostRoleEscapedWorkerGear
+  equipment:
+    jumpsuit: ClothingUniformDressRed
+    shoes: ClothingShoesColorBlack
+    back: N14ClothingBackpackSatchelTrekker
+    belt: ClothingBeltCowboy
+    suitstorage: N14WeaponSMG9mm
+    pocket1: N14WeaponRevolver44TribalUpgradedExtra
+  storage:
+    belt:
+    - N14MagazineSMG9mm
+    - N14MagazineSMG9mm
+    - N14MagazineSMG9mm
+    - N14MagazineSMG9mm
+    - N14MagazineSMG9mm
+    - SpeedLoader44
+    - SpeedLoader44
+    back:
+    - N14Stimpak
+    - N14Stimpak
+    - N14FoodCannedFish
+    - N14FoodCannedFish
+    - DrinkWaterBottleFull
+    - N14BoxPlasticFilledWastelander
+    - MagazineBox9mm
+    - MagazineBox44
+    - SpeedLoader44
+    - SpeedLoader44
+    - NcGhostRoleSurvivalBox
+    - N14Flare
+    - N14Flare
+
+- type: entity
+  parent: MobHuman
+  id: NcGhostRoleMobEscapedWorker
+  name: София Миллер
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: false
+    sex: Female
+    gender: Female
+    age: 25
+    skinColor: "#FFEACC"
+    hair: CMlonghair
+    hairColor: "#B94A24"
+  - type: Loadout
+    prototypes: [NcGhostRoleEscapedWorkerGear]
+  - type: NpcFactionMember
+    factions:
+    - Wastelander
+
+- type: ncGhostRolePerk
+  id: NcGhostRolePerkEscapedWorker
+  name: "Панический рывок"
+  description: "Беглянка быстрее срывается в бег и опаснее стреляет из пистолетов-пулеметов."
+  sprintSpeedMultiplier: 1.30
+  projectileDamageMultiplier: 1.45
+  passiveHealing:
+    groups:
+      Brute: -0.5
+      Burn: -0.5
+      Toxin: -0.5
+      Airloss: -0.5
+  weaponPrototypes:
+  - N14WeaponSMG9mm
+  - N14WeaponSMG9mminfiltrator
+  - N14WeaponSMG9mmCanadian
+  - N14WeaponSMG10mm
+  - N14WeaponSMG10mmSuppressed
+  - N14WeaponSMG10mmPipe
+  - N14WeaponSMG10mmChinese
+  - N14WeaponSMG12mm
+  - N14WeaponSMG12mmPipe
+  - N14WeaponSMG12mmAdvanced
+  - N14WeaponSMG12mmAdvancedChinese
+  - N14WeaponSMG12mmAdvancedCanadian
+  - N14WeaponSMG45
+  - N14WeaponPistol9mm
+  - N14WeaponPistol10mm
+  - N14WeaponPistol10mmPipe
+  - N14WeaponPistol9mmChinese
+  - N14WeaponPistol45Colt
+  - N14WeaponPistol12mm
+  - N14WeaponRevolver9mm
+  - N14WeaponRevolver10mm
+  - N14WeaponRevolver44Magnun
+  - N14WeaponRevolver44Tribal
+  - N14WeaponRevolver44TribalUpgraded
+  - N14WeaponRevolver44TribalUpgradedExtra
+  - N14WeaponRevolverWebley
+
+- type: ncGhostRolePreset
+  id: NcGhostRoleEscapedWorker
+  entityPrototype: NcGhostRoleMobEscapedWorker
+  icon: NcGhostRoleIconSofiaMiller
+  name: "София Миллер"
+  description: "Вас разыскивают по контракту. Охотники получат награду только если доставят вас живой, полностью здоровой и в наручниках."
+  rules: nc-contract-ghost-role-wanted-rules
+  character:
+    name: "София Миллер"
+    sex: Female
+    gender: Female
+    age: 25
+    skinColor: "#FFEACC"
+    hair: CMlonghair
+    hairColor: "#B94A24"
+  perks:
+  - NcGhostRolePerkEscapedWorker
+
+- type: startingGear
+  id: NcGhostRoleElizabethEvilGear
+  equipment:
+    jumpsuit: ClothingUniformDressRed
+    shoes: ClothingShoesColorBlack
+    back: N14ClothingBackpackSatchelTrekker
+    belt: ClothingBeltCowboy
+    suitstorage: N14WeaponRevolver9mm
+    pocket1: N14WeaponRevolver44TribalUpgradedExtra
+  storage:
+    belt:
+    - SpeedLoader9
+    - SpeedLoader9
+    - SpeedLoader9
+    - SpeedLoader9
+    - SpeedLoader9
+    - SpeedLoader9
+    - SpeedLoader44
+    - SpeedLoader44
+    back:
+    - N14Stimpak
+    - N14Stimpak
+    - N14FoodCannedFish
+    - N14FoodCannedFish
+    - DrinkWaterBottleFull
+    - N14BoxPlasticFilledWastelander
+    - MagazineBox9mm
+    - MagazineBox44
+    - SpeedLoader44
+    - SpeedLoader44
+    - NcGhostRoleSurvivalBox
+    - N14Flare
+    - N14Flare
+
+- type: entity
+  parent: MobHuman
+  id: NcGhostRoleMobElizabethEvil
+  name: Элизабет Злая
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: false
+    sex: Female
+    gender: Female
+    age: 22
+    skinColor: "#FFEACC"
+    hair: CMlonghair
+    hairColor: "#B94A24"
+  - type: Loadout
+    prototypes: [NcGhostRoleElizabethEvilGear]
+  - type: NpcFactionMember
+    factions:
+    - Wastelander
+
+- type: ncGhostRolePerk
+  id: NcGhostRolePerkElizabethEvil
+  name: "Бешеный побег"
+  description: "Элизабет быстрее уходит от погони и опаснее стреляет из револьверов."
+  sprintSpeedMultiplier: 1.30
+  projectileDamageMultiplier: 1.50
+  passiveHealing:
+    groups:
+      Brute: -0.5
+      Burn: -0.5
+      Toxin: -0.5
+      Airloss: -0.5
+  weaponPrototypes:
+  - N14WeaponRevolver9mm
+  - N14WeaponRevolver10mm
+  - N14WeaponRevolver44Magnun
+  - N14WeaponRevolver44Tribal
+  - N14WeaponRevolver44TribalUpgraded
+  - N14WeaponRevolver44TribalUpgradedExtra
+  - N14WeaponRevolverWebley
+  - N14WeaponPistol9mm
+  - N14WeaponPistol10mm
+  - N14WeaponPistol10mmPipe
+  - N14WeaponPistol9mmChinese
+  - N14WeaponPistol45Colt
+  - N14WeaponPistol12mm
+
+- type: ncGhostRolePreset
+  id: NcGhostRoleElizabethEvil
+  entityPrototype: NcGhostRoleMobElizabethEvil
+  icon: NcGhostRoleIconElizabethEvil
+  name: "Элизабет Злая"
+  description: "Вы Элизабет Злая. Хозяин отправил людей вернуть вас живой, потому что мёртвая вы ему не нужны."
+  rules: nc-contract-ghost-role-wanted-rules
+  character:
+    name: "Элизабет Злая"
+    sex: Female
+    gender: Female
+    age: 22
+    skinColor: "#FFEACC"
+    hair: CMlonghair
+    hairColor: "#B94A24"
+  perks:
+  - NcGhostRolePerkElizabethEvil
+
+- type: startingGear
+  id: NcGhostRoleBelkaGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitRags
+    shoes: N14ClothingShoesRaider
+    back: N14ClothingBackpackSatchelTrekker
+    belt: ClothingBeltCowboy
+    suitstorage: N14WeaponShotgunAuto
+    pocket1: N14WeaponRevolver44TribalUpgradedExtra
+  storage:
+    belt:
+    - N14MagazineShotgun12
+    - N14MagazineShotgun12
+    - N14MagazineShotgun12
+    - N14MagazineShotgun12
+    - SpeedLoader44
+    - SpeedLoader44
+    back:
+    - N14Stimpak
+    - N14Stimpak
+    - N14FoodTinK
+    - N14FoodCannedFish
+    - DrinkWaterBottleFull
+    - N14BoxPlasticFilledWastelander
+    - MagazineBox12gauge
+    - MagazineBox12gauge
+    - MagazineBox44
+    - SpeedLoader44
+    - SpeedLoader44
+    - NcGhostRoleSurvivalBox
+    - N14Flare
+    - N14Flare
+
+- type: entity
+  parent: MobHuman
+  id: NcGhostRoleMobBelka
+  name: Белка
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: false
+    sex: Female
+    gender: Female
+    age: 21
+    skinColor: "#F0C59D"
+    hair: CMlonghair
+    hairColor: "#E8C85A"
+  - type: Loadout
+    prototypes: [NcGhostRoleBelkaGear]
+  - type: NpcFactionMember
+    factions:
+    - Wastelander
+
+- type: ncGhostRolePerk
+  id: NcGhostRolePerkBelka
+  name: "Рывок из неволи"
+  description: "Белка быстрее срывается с места и опаснее стреляет из дробовиков."
+  sprintSpeedMultiplier: 1.30
+  projectileDamageMultiplier: 1.45
+  passiveHealing:
+    groups:
+      Brute: -0.5
+      Burn: -0.5
+      Toxin: -0.5
+      Airloss: -0.5
+  weaponPrototypes:
+  - N14WeaponShotgun
+  - N14WeaponShotgunAuto
+  - N14WeaponShotgunDoubleBarrel
+  - N14WeaponShotgunSawedOff
+  - N14WeaponPistol9mm
+  - N14WeaponPistol10mm
+  - N14WeaponPistol10mmPipe
+  - N14WeaponPistol9mmChinese
+  - N14WeaponPistol45Colt
+  - N14WeaponPistol12mm
+  - N14WeaponRevolver9mm
+  - N14WeaponRevolver10mm
+  - N14WeaponRevolver44Magnun
+  - N14WeaponRevolver44Tribal
+  - N14WeaponRevolver44TribalUpgraded
+  - N14WeaponRevolver44TribalUpgradedExtra
+  - N14WeaponRevolverWebley
+
+- type: ncGhostRolePreset
+  id: NcGhostRoleBelka
+  entityPrototype: NcGhostRoleMobBelka
+  icon: NcGhostRoleIconBelka
+  name: "Белка"
+  description: "Вы Белка. Вы вырвались из рабства, но за вами уже идут охотники: заказчику нужна живая беглянка."
+  rules: nc-contract-ghost-role-wanted-rules
+  character:
+    name: "Белка"
+    sex: Female
+    gender: Female
+    age: 21
+    skinColor: "#F0C59D"
+    hair: CMlonghair
+    hairColor: "#E8C85A"
+  perks:
+  - NcGhostRolePerkBelka
+
+- type: startingGear
+  id: NcGhostRoleNCRDeserterGear
+  equipment:
+    back: N14ClothingBackpackSatchelTrekker
+    gloves: N14ClothingHandsGlovesCombat
+    jumpsuit: N14ClothingOfficerUniformNCRDesert
+    shoes: N14ClothingBootsCombatFilled
+    neck: N14ClothingNeckMantleNCR
+    belt: ClothingBeltCowboy
+    outerClothing: N14ClothingOuterNCRCombatArmor
+    suitstorage: N14WeaponRifle556Service
+    pocket1: NCRSGTloadoutkits
+    pocket2: N14WeaponRevolver44TribalUpgradedExtra
+  storage:
+    belt:
+    - Magazine556Rifle
+    - Magazine556Rifle
+    - Magazine556Rifle
+    - Magazine556Rifle
+    - SpeedLoader44
+    - SpeedLoader44
+    back:
+    - N14BoxPlasticFilledWastelander
+    - N14Stimpak
+    - N14Stimpak
+    - N14FoodTinC3
+    - N14FoodCannedFish
+    - DrinkWaterBottleFull
+    - MagazineBox556
+    - MagazineBox44
+    - SpeedLoader44
+    - SpeedLoader44
+    - NcGhostRoleSurvivalBox
+    - N14Flare
+    - N14Flare
+
+- type: entity
+  parent: MobHuman
+  id: NcGhostRoleMobNCRDeserter
+  name: дезертир НКР
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: false
+    sex: Male
+    gender: Male
+    age: 34
+  - type: Loadout
+    prototypes: [NcGhostRoleNCRDeserterGear]
+  - type: NpcFactionMember
+    factions:
+    - Wastelander
+    - NCR
+
+- type: ncGhostRolePerk
+  id: NcGhostRolePerkNCRDeserter
+  name: "Сержантская выучка"
+  description: "Дезертир лучше держит строй под огнем и наносит больше урона из служебных винтовок."
+  sprintSpeedMultiplier: 1.30
+  projectileDamageMultiplier: 1.50
+  passiveHealing:
+    groups:
+      Brute: -0.5
+      Burn: -0.5
+      Toxin: -0.5
+      Airloss: -0.5
+  weaponPrototypes:
+  - N14WeaponRifle556Service
+  - N14WeaponRifle556ServiceScoped
+  - N14WeaponRifle556Carbine
+  - N14WeaponRifle556CarbineOld
+  - N14WeaponRifle556R91
+  - N14WeaponRifle762M14
+  - N14WeaponRifle762Marksman
+  - N14WeaponPistol9mm
+  - N14WeaponPistol10mm
+  - N14WeaponPistol10mmPipe
+  - N14WeaponPistol9mmChinese
+  - N14WeaponPistol45Colt
+  - N14WeaponPistol12mm
+  - N14WeaponRevolver9mm
+  - N14WeaponRevolver10mm
+  - N14WeaponRevolver44Magnun
+  - N14WeaponRevolver44Tribal
+  - N14WeaponRevolver44TribalUpgraded
+  - N14WeaponRevolver44TribalUpgradedExtra
+  - N14WeaponRevolverWebley
+  incomingFlatReductions:
+    Slash: 5
+    Piercing: 5
+    Heat: 5
+
+- type: ncGhostRolePreset
+  id: NcGhostRoleNCRDeserter
+  entityPrototype: NcGhostRoleMobNCRDeserter
+  name: "Патроу, дезертир НКР"
+  description: "Вы дезертир НКР с хорошей броней и винтовкой. Охотники получат награду только если доставят ваше тело торговцу."
+  rules: nc-contract-ghost-role-wanted-rules
+  character:
+    name: "Патроу"
+    sex: Male
+    gender: Male
+    age: 34
+  perks:
+  - NcGhostRolePerkNCRDeserter
+
+- type: startingGear
+  id: NcGhostRoleZoyaDarbyGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpskirtDressBlack
+    shoes: N14ClothingBootsCombatMK2
+    gloves: N14ClothingHandsGlovesCombat
+    back: N14ClothingBackpackSatchelTrekker
+    belt: ClothingBeltCowboy
+    outerClothing: N14ClothingOuterCombatPainspike
+    head: N14ClothingHeadHatCombatHelmet
+    suitstorage: N14WeaponSMG12mmAdvancedChinese
+    pocket1: N14WeaponRevolver44TribalUpgradedExtra
+  storage:
+    belt:
+    - N14TopMagazineSMG12mm
+    - N14TopMagazineSMG12mm
+    - N14TopMagazineSMG12mm
+    - N14TopMagazineSMG12mm
+    - N14TopMagazineSMG12mm
+    - SpeedLoader44
+    - SpeedLoader44
+    back:
+    - N14Stimpak
+    - N14Stimpak
+    - N14Stimpak
+    - N14FoodCannedFish
+    - N14FoodCannedFish
+    - DrinkWaterBottleFull
+    - N14BoxPlasticFilledWastelander
+    - MagazineBox12
+    - MagazineBox44
+    - SpeedLoader44
+    - SpeedLoader44
+    - NcGhostRoleSurvivalBox
+    - N14Flare
+    - N14Flare
+
+- type: entity
+  parent: MobHuman
+  id: NcGhostRoleMobZoyaDarby
+  name: Зоя Дарби
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: false
+    sex: Female
+    gender: Female
+    age: 31
+    skinColor: "#FFEACC"
+    hair: CMlonghair
+    hairColor: "#2F211C"
+  - type: Loadout
+    prototypes: [NcGhostRoleZoyaDarbyGear]
+  - type: NpcFactionMember
+    factions:
+    - Wastelander
+
+- type: ncGhostRolePerk
+  id: NcGhostRolePerkZoyaDarby
+  name: "Наёмница-легенда"
+  description: "Зоя быстрее обычного человека, крепче держит удар и особенно опасна с китайским ПП."
+  sprintSpeedMultiplier: 1.30
+  projectileDamageMultiplier: 1.50
+  passiveHealing:
+    groups:
+      Brute: -0.5
+      Burn: -0.5
+      Toxin: -0.5
+      Airloss: -0.5
+  weaponPrototypes:
+  - N14WeaponSMG10mmChinese
+  - N14WeaponSMG12mmAdvancedChinese
+  - N14WeaponPistol9mm
+  - N14WeaponPistol10mm
+  - N14WeaponPistol10mmPipe
+  - N14WeaponPistol9mmChinese
+  - N14WeaponPistol45Colt
+  - N14WeaponPistol12mm
+  - N14WeaponRevolver9mm
+  - N14WeaponRevolver10mm
+  - N14WeaponRevolver44Magnun
+  - N14WeaponRevolver44Tribal
+  - N14WeaponRevolver44TribalUpgraded
+  - N14WeaponRevolver44TribalUpgradedExtra
+  - N14WeaponRevolverWebley
+  incomingFlatReductions:
+    Slash: 5
+    Piercing: 5
+    Heat: 5
+
+- type: ncGhostRolePreset
+  id: NcGhostRoleZoyaDarby
+  entityPrototype: NcGhostRoleMobZoyaDarby
+  icon: NcGhostRoleIconZoyaDarby
+  name: "Зоя Дарби"
+  description: "Вы Зоя Дарби, опасная наёмница в шипованной броне с китайским ПП. За вами охотятся, но заказчик требует взять вас живой."
+  rules: nc-contract-ghost-role-wanted-rules
+  character:
+    name: "Зоя Дарби"
+    sex: Female
+    gender: Female
+    age: 31
+    skinColor: "#FFEACC"
+    hair: CMlonghair
+    hairColor: "#2F211C"
+  perks:
+  - NcGhostRolePerkZoyaDarby
+
+- type: startingGear
+  id: NcGhostRoleFreshGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitRags
+    shoes: N14ClothingShoesRaider
+    back: N14ClothingBackpackSatchelTrekker
+    belt: ClothingBeltCowboy
+    suitstorage: N14WeaponPistol12mm
+    pocket1: N14WeaponRevolver44TribalUpgradedExtra
+  storage:
+    belt:
+    - N14MagazinePistol12mm
+    - N14MagazinePistol12mm
+    - N14MagazinePistol12mm
+    - N14MagazinePistol12mm
+    - N14MagazinePistol12mm
+    - SpeedLoader44
+    - SpeedLoader44
+    back:
+    - N14StimpakDirty
+    - N14FoodTinKCracker
+    - N14FoodCannedFish
+    - DrinkWaterBottleFull
+    - N14BoxPlasticFilledWastelander
+    - MagazineBox12
+    - MagazineBox44
+    - SpeedLoader44
+    - SpeedLoader44
+    - NcGhostRoleSurvivalBox
+    - N14Flare
+    - N14Flare
+
+- type: entity
+  parent: MobHuman
+  id: NcGhostRoleMobFresh
+  name: фреш
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: false
+    sex: Male
+    gender: Male
+    age: 28
+  - type: Loadout
+    prototypes: [NcGhostRoleFreshGear]
+  - type: NpcFactionMember
+    factions:
+    - Wastelander
+    - Raider
+
+- type: ncGhostRolePerk
+  id: NcGhostRolePerkFresh
+  name: "Ломка и адреналин"
+  description: "Фреш быстрее убегает и опаснее стреляет из пистолетов."
+  sprintSpeedMultiplier: 1.30
+  projectileDamageMultiplier: 1.45
+  passiveHealing:
+    groups:
+      Brute: -0.5
+      Burn: -0.5
+      Toxin: -0.5
+      Airloss: -0.5
+  weaponPrototypes:
+  - N14WeaponPistol10mmPipe
+  - N14WeaponPistol10mm
+  - N14WeaponPistol9mm
+  - N14WeaponPistol9mmChinese
+  - N14WeaponPistol45Colt
+  - N14WeaponPistol12mm
+  - N14WeaponRevolver9mm
+  - N14WeaponRevolver10mm
+  - N14WeaponRevolver44Magnun
+  - N14WeaponRevolver44Tribal
+  - N14WeaponRevolver44TribalUpgraded
+  - N14WeaponRevolver44TribalUpgradedExtra
+  - N14WeaponRevolverWebley
+
+- type: ncGhostRolePreset
+  id: NcGhostRoleFresh
+  entityPrototype: NcGhostRoleMobFresh
+  name: "Фреш"
+  description: "Вы сорвавшийся наркоман с тяжёлым пистолетом. Охотники получат награду только если принесут ваше тело торговцу."
+  rules: nc-contract-ghost-role-wanted-rules
+  character:
+    name: "Фреш"
+    sex: Male
+    gender: Male
+    age: 28
+  perks:
+  - NcGhostRolePerkFresh
+
+- type: ncGhostRoleContract
+  id: NcGhostRoleContractRaiderReturn
+  name: "Рейдер для допроса"
+  description: "Один рейдер слишком много знает о ближайших налётах. Заказчик хочет допросить его лично: поймайте цель живой, без тяжёлых ран, закуйте в наручники и приведите к торговцу."
+  repeatable: false
+  role: NcGhostRoleRaider
+  completion:
+    mode: AliveCuffedTurnIn
+  survival:
+    briefing: "За вами охотятся по контракту. Продержитесь один час и не дайте охотникам сдать вас торговцу."
+    objectiveTitle: "Выжить один час"
+    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostRaiderReturnSpawn
+    acceptTimeoutSeconds: 300
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 400, max: 700 }
+  - type: Pool
+    pool: caravan_medium
+    count: { min: 2, max: 3 }
+
+- type: ncGhostRoleContract
+  id: NcGhostRoleContractEscapedWorkerAlive
+  name: "Вернуть Софию Миллер"
+  description: "София Миллер сбежала от караванщиков и ушла в городские закоулки. Её хотят вернуть живой: цель должна быть здорова, в наручниках и рядом с торговцем. Мёртвую Софию никто не примет."
+  repeatable: false
+  role: NcGhostRoleEscapedWorker
+  completion:
+    mode: AliveCuffedTurnIn
+  survival:
+    briefing: "Вы София Миллер. Продержитесь один час и не дайте охотникам сдать вас живой торговцу."
+    objectiveTitle: "Выжить один час"
+    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostSofiaMillerSpawn
+    acceptTimeoutSeconds: 300
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 400, max: 700 }
+  - type: Pool
+    pool: caravan_medium
+    count: { min: 2, max: 3 }
+
+- type: ncGhostRoleContract
+  id: NcGhostRoleContractElizabethEvilAlive
+  name: "Вернуть Элизабет Злую"
+  description: "Элизабет Злая сбежала от хозяина и скрылась в городских закоулках. Она быстрая, вооружена револьвером и умеет им пользоваться. Заказчик платит только за живую пленницу: закуйте её в наручники и приведите к торговцу. Труп не примут."
+  repeatable: false
+  role: NcGhostRoleElizabethEvil
+  completion:
+    mode: AliveCuffedTurnIn
+  survival:
+    briefing: "Вы Элизабет Злая. Продержитесь один час и не дайте охотникам сдать вас живой торговцу."
+    objectiveTitle: "Выжить один час"
+    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostSofiaMillerSpawn
+    acceptTimeoutSeconds: 300
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 300, max: 500 }
+  - type: Pool
+    pool: caravan_medium
+    count: { min: 2, max: 3 }
+
+- type: ncGhostRoleContract
+  id: NcGhostRoleContractBelkaAlive
+  name: "Вернуть Белку"
+  description: "Белка вырвалась из рабства и ушла с дробовиком. Она быстро бегает и не станет ждать, пока её догонят. Заказчик платит только за живую пленницу: закуйте её в наручники и приведите к торговцу. Труп не примут."
+  repeatable: false
+  role: NcGhostRoleBelka
+  completion:
+    mode: AliveCuffedTurnIn
+  survival:
+    briefing: "Вы Белка. Продержитесь один час и не дайте охотникам сдать вас живой торговцу."
+    objectiveTitle: "Выжить один час"
+    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostSofiaMillerSpawn
+    acceptTimeoutSeconds: 300
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 400, max: 700 }
+  - type: Pool
+    pool: caravan_medium
+    count: { min: 2, max: 3 }
+
+- type: ncGhostRoleContract
+  id: NcGhostRoleContractNCRDeserterDead
+  name: "Дезертир Патроу"
+  description: "Патроу, бывший сержант НКР, ушёл с оружием, припасами и чужими секретами. Живым его брать не просят: убейте дезертира и доставьте тело торговцу."
+  repeatable: false
+  role: NcGhostRoleNCRDeserter
+  completion:
+    mode: DeadBodyTurnIn
+  survival:
+    briefing: "Вы Патроу, дезертир НКР. Продержитесь один час и не дайте охотникам принести ваше тело торговцу."
+    objectiveTitle: "Выжить один час"
+    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostPatrouSpawn
+    acceptTimeoutSeconds: 300
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 300, max: 700 }
+  - type: Pool
+    pool: caravan_hard
+    count: { min: 2, max: 3 }
+
+- type: ncGhostRoleContract
+  id: NcGhostRoleContractZoyaDarbyAlive
+  name: "Зоя Дарби нужна живой"
+  description: "Зоя Дарби пережила слишком много перестрелок и оставила за собой слишком много тел. Заказчик хочет услышать её ответы, а не смотреть на труп: приведите Зою живой, здоровой и в наручниках."
+  repeatable: false
+  role: NcGhostRoleZoyaDarby
+  completion:
+    mode: AliveCuffedTurnIn
+  survival:
+    briefing: "Вы Зоя Дарби. Продержитесь один час и не дайте охотникам сдать вас живой торговцу."
+    objectiveTitle: "Выжить один час"
+    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostZoyaDarbySpawn
+    acceptTimeoutSeconds: 300
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 300, max: 600 }
+  - type: Pool
+    pool: caravan_hard
+    count: { min: 1, max: 2 }
+
+- type: ncGhostRoleContract
+  id: NcGhostRoleContractFreshDead
+  name: "Остановить Фреша"
+  description: "Фреш сорвался окончательно: бегает по окраине, стреляет первым и разговаривать уже не собирается. Остановите его и доставьте тело торговцу."
+  repeatable: false
+  role: NcGhostRoleFresh
+  completion:
+    mode: DeadBodyTurnIn
+  survival:
+    briefing: "Вы Фреш. Продержитесь один час, не подпускайте охотников и не дайте принести ваше тело торговцу."
+    objectiveTitle: "Выжить один час"
+    objectiveDescription: "Если вы проживёте час после принятия роли, контракт против вас будет провален."
+  spawn:
+    point:
+      type: MarkerId
+      id: TradeContractGhostFreshSpawn
+    acceptTimeoutSeconds: 300
+  reward:
+  - type: Currency
+    currency: Caps
+    count: { min: 300, max: 700 }
+  - type: Pool
+    pool: caravan_medium
+    count: { min: 2, max: 2 }

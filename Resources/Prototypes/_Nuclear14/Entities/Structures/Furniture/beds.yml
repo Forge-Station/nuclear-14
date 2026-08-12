@@ -119,7 +119,7 @@
       graph: N14Bed
       node: bedroll
     - type: StaticPrice
-      price: 6 # Corvax-Change
+      price: 6 # Forge-Change
 
 - type: entity
   parent: N14Bedroll

@@ -8,6 +8,7 @@ using Content.Shared.Movement.Pulling.Components;
 using Robust.Server.Audio;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio;
+using Robust.Shared.Timing;
 
 
 namespace Content.Server._NC.Trade;
@@ -15,15 +16,21 @@ namespace Content.Server._NC.Trade;
 
 public sealed class NcStoreSystem : EntitySystem
 {
-    private const float MaxUseDistance = 2.5f;
     private const float MaxCrateDistance = 4f;
+    private const int MaxTransactionCount = 1000;
+    private static readonly TimeSpan InvalidMessageWarningInterval = TimeSpan.FromSeconds(5);
     private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore");
+    private static readonly SoundSpecifier TransactionSuccessSound =
+        new SoundPathSpecifier("/Audio/Effects/Cargo/ping.ogg");
+
     [Dependency] private readonly AccessReaderSystem _accessReader = default!;
     [Dependency] private readonly AudioSystem _audio = default!;
     [Dependency] private readonly IEntityManager _entMan = default!;
     [Dependency] private readonly NcStoreLogicSystem _logic = default!;
+    private readonly Dictionary<string, TimeSpan> _nextInvalidListingWarningByActor = new(StringComparer.Ordinal);
     [Dependency] private readonly PopupSystem _popups = default!;
     [Dependency] private readonly StoreStructuredSystem _storeUi = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly TransformSystem _transform = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
 
@@ -33,6 +40,7 @@ public sealed class NcStoreSystem : EntitySystem
 
         SubscribeLocalEvent<NcStoreComponent, StoreBuyListingBoundUiMessage>(OnBuyRequest);
         SubscribeLocalEvent<NcStoreComponent, StoreSellListingBoundUiMessage>(OnSellRequest);
+        SubscribeLocalEvent<NcStoreComponent, StoreBarterListingBoundUiMessage>(OnBarterRequest);
         SubscribeLocalEvent<NcStoreComponent, StoreMassSellPulledCrateBoundUiMessage>(OnMassSellPulledCrateRequest);
     }
 
@@ -66,7 +74,8 @@ public sealed class NcStoreSystem : EntitySystem
         return Vector2.Distance(aPos, bPos) <= maxDistance;
     }
 
-    private bool IsInUseRange(EntityUid store, EntityUid user) => IsInRange(store, user, MaxUseDistance);
+    private bool IsInUseRange(EntityUid store, EntityUid user) =>
+        IsInRange(store, user, StoreTradeLimits.StoreUseDistance);
 
 
     private bool TryValidateUse(EntityUid store, NcStoreComponent comp, EntityUid actor, out string failMessage)
@@ -110,15 +119,33 @@ public sealed class NcStoreSystem : EntitySystem
 
         EnsureListingIndex(store, comp);
 
+        if (!StoreTradeLimits.IsValidMessageId(id))
+        {
+            WarnInvalidListingId(actor, store, mode, id, "invalid message id");
+            return false;
+        }
+
         if (!comp.ListingIndex.TryGetValue(NcStoreComponent.MakeListingKey(mode, id), out var found))
         {
-            Sawmill.Warning(
-                $"[NcStore] {ToPrettyString(actor)} tried to use invalid listing '{id}' (mode={mode}) at {ToPrettyString(store)}");
+            WarnInvalidListingId(actor, store, mode, id, "unknown listing id");
             return false;
         }
 
         listing = found;
         return true;
+    }
+
+    private void WarnInvalidListingId(EntityUid actor, EntityUid store, StoreMode mode, string? id, string reason)
+    {
+        var key = $"{actor}:{mode}";
+        var now = _timing.CurTime;
+        if (_nextInvalidListingWarningByActor.TryGetValue(key, out var nextAllowed) && now < nextAllowed)
+            return;
+
+        _nextInvalidListingWarningByActor[key] = now + InvalidMessageWarningInterval;
+        Sawmill.Warning(
+            $"[NcStore] {ToPrettyString(actor)} tried to use {reason} '{StoreTradeLimits.ToLogSafeId(id)}' " +
+            $"(mode={mode}) at {ToPrettyString(store)}");
     }
 
     private bool TryGetPulledClosedCrate(EntityUid actor, out EntityUid crate, out string failMessage)
@@ -176,15 +203,18 @@ public sealed class NcStoreSystem : EntitySystem
             return;
         }
 
-        var count = Math.Max(1, msg.Count);
+        if (msg.Count <= 0)
+            return;
+
+        var count = Math.Min(msg.Count, MaxTransactionCount);
         if (!_logic.TryBuy(listing.Id, uid, comp, actor, count))
         {
             PopupFail(actor, Loc.GetString("nc-store-popup-transaction-failed"));
             return;
         }
 
-        _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid, AudioParams.Default.WithVolume(-2f));
-        _storeUi.UpdateDynamicState(uid, comp, actor);
+        _audio.PlayPvs(TransactionSuccessSound, uid, AudioParams.Default.WithVolume(-2f));
+        _storeUi.RequestDynamicRefresh(uid, comp, actor);
     }
 
     private void OnSellRequest(EntityUid uid, NcStoreComponent comp, StoreSellListingBoundUiMessage msg)
@@ -200,8 +230,6 @@ public sealed class NcStoreSystem : EntitySystem
 
         var requestedId = msg.Id;
         var fromCrate = msg.FromCrate;
-        if (string.IsNullOrEmpty(requestedId))
-            return;
 
         if (!TryGetListing(uid, comp, actor, StoreMode.Sell, requestedId, out var listing))
         {
@@ -210,7 +238,10 @@ public sealed class NcStoreSystem : EntitySystem
         }
 
 
-        var count = Math.Max(1, msg.Count);
+        if (msg.Count <= 0)
+            return;
+
+        var count = Math.Min(msg.Count, MaxTransactionCount);
 
         bool ok;
 
@@ -239,8 +270,42 @@ public sealed class NcStoreSystem : EntitySystem
             return;
         }
 
-        _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid, AudioParams.Default.WithVolume(-2f));
-        _storeUi.UpdateDynamicState(uid, comp, actor);
+        _audio.PlayPvs(TransactionSuccessSound, uid, AudioParams.Default.WithVolume(-2f));
+        _storeUi.RequestDynamicRefresh(uid, comp, actor);
+    }
+
+
+    private void OnBarterRequest(EntityUid uid, NcStoreComponent comp, StoreBarterListingBoundUiMessage msg)
+    {
+        if (!TryGetLockedUiUser(uid, comp, out var actor))
+            return;
+
+        if (!TryValidateUse(uid, comp, actor, out var fail))
+        {
+            PopupFail(actor, fail);
+            return;
+        }
+
+        var requestedId = msg.Id;
+
+        if (!TryGetListing(uid, comp, actor, StoreMode.Barter, requestedId, out var listing))
+        {
+            PopupFail(actor, Loc.GetString("nc-store-popup-invalid-listing"));
+            return;
+        }
+
+        if (msg.Count <= 0)
+            return;
+
+        var count = Math.Min(msg.Count, MaxTransactionCount);
+        if (!_logic.TryBarter(listing.Id, uid, comp, actor, count))
+        {
+            PopupFail(actor, Loc.GetString("nc-store-popup-transaction-failed"));
+            return;
+        }
+
+        _audio.PlayPvs(TransactionSuccessSound, uid, AudioParams.Default.WithVolume(-2f));
+        _storeUi.RequestDynamicRefresh(uid, comp, actor);
     }
 
 
@@ -277,7 +342,7 @@ public sealed class NcStoreSystem : EntitySystem
             return;
         }
 
-        _audio.PlayPvs("/Audio/Effects/Cargo/ping.ogg", uid, AudioParams.Default.WithVolume(-2f));
-        _storeUi.UpdateDynamicState(uid, comp, actor);
+        _audio.PlayPvs(TransactionSuccessSound, uid, AudioParams.Default.WithVolume(-2f));
+        _storeUi.RequestDynamicRefresh(uid, comp, actor);
     }
 }

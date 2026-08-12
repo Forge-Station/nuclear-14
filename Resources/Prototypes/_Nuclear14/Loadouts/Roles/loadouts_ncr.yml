@@ -1,3 +1,5 @@
+# MARK: Pins
+
 - type: loadout
   id: LoadoutNCRPinRecruit
   category: Roles
@@ -240,7 +242,7 @@
 
 - type: loadout # Corvax Fallout
   id: LoadoutNCRPowerArmorT45Sierra
-  category: Roles
+  category: Outer
   cost: 4
   exclusive: true
   requirements:
@@ -280,19 +282,23 @@
   items:
     - ClothingNeckPinNCRChiefPhysician
 
-- type: loadout
-  id: LoadoutNCRSnowHelmet
-  category: Head # Forge-Change
-  cost: 1
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRSoldier
-        - NCRSGT
-        - NCRWS # Forge-Change
-  items:
-    - N14ClothingHeadHatNCRHelmetMetalSnow
+# MARK: Cosmetic NCR
+
+# Forge-Delete-Start
+# - type: loadout
+#   id: LoadoutNCRSnowHelmet
+#   category: Head # Forge-Change
+#   cost: 1
+#   exclusive: true
+#   requirements:
+#     - !type:CharacterJobRequirement
+#       jobs:
+#         - NCRSoldier
+#         - NCRSGT
+#         - NCRWS # Forge-Change
+#   items:
+#     - N14ClothingHeadHatNCRHelmetMetalSnow
+# Forge-Delete-End 
 
 - type: loadout
   id: LoadoutNCRWoodsHelmet
@@ -314,8 +320,10 @@
   cost: 1
   exclusive: true
   requirements:
-    - !type:CharacterJobRequirement
+    - !type:CharacterJobRequirement # Forge-Change
       jobs:
+        - NCREngineer # Forge-Change
+        - NCRMedic # Forge-Change
         - NCRSoldier
         - NCRCadet
         - NCRSGT
@@ -329,8 +337,12 @@
   cost: 1
   exclusive: true
   requirements:
-    - !type:CharacterJobRequirement
+    - !type:CharacterJobRequirement # Forge-Change
       jobs:
+        - NCREngineer # Forge-Change
+        - NCRMedic # Forge-Change
+        - NCRRanger # Forge-Change
+        - NCRRangerVeteran # Forge-Change
         - NCRSoldier
         - NCRCadet
         - NCRSGT
@@ -358,8 +370,11 @@
   cost: 1
   exclusive: true
   requirements:
-    - !type:CharacterJobRequirement
+    - !type:CharacterJobRequirement # Forge-Change
       jobs:
+        - NCREngineer # Forge-Change
+        - NCRMedic # Forge-Change
+        - NCRCadet # Forge-Change
         - NCRSoldier
         - NCRSGT
         - NCRWS # Forge-Change
@@ -372,8 +387,11 @@
   cost: 1
   exclusive: true
   requirements:
-    - !type:CharacterJobRequirement
+    - !type:CharacterJobRequirement # Forge-Change
       jobs:
+        - NCREngineer # Forge-Change
+        - NCRMedic # Forge-Change
+        - NCRCadet # Forge-Change
         - NCRSoldier
         - NCRSGT
         - NCRWS # Forge-Change
@@ -386,8 +404,11 @@
   cost: 1
   exclusive: true
   requirements:
-    - !type:CharacterJobRequirement
+    - !type:CharacterJobRequirement # Forge-Change
       jobs:
+        - NCREngineer # Forge-Change
+        - NCRMedic # Forge-Change
+        - NCRCadet # Forge-Change
         - NCRSoldier
         - NCRSGT
         - NCRWS
@@ -396,12 +417,14 @@
 
 - type: loadout
   id: LoadoutNCRCloakNCR
-  category: Roles 
+  category: Neck 
   cost: 1
   exclusive: true
   requirements:
-    - !type:CharacterJobRequirement
+    - !type:CharacterJobRequirement # Forge-Change
       jobs:
+        - NCREngineer # Forge-Change
+        - NCRMedic # Forge-Change
         - NCRSoldier
         - NCRSGT
         - NCRWS # Forge-Change
@@ -410,7 +433,7 @@
 
 - type: loadout
   id: LoadoutNCRCloakNCRGhillie
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -424,12 +447,14 @@
 
 - type: loadout
   id: LoadoutNCRCloakNCRSnow
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
-    - !type:CharacterJobRequirement
+    - !type:CharacterJobRequirement # Forge-Change
       jobs:
+        - NCREngineer # Forge-Change
+        - NCRMedic # Forge-Change
         - NCRSoldier
         - NCRSGT
         - NCRWS # Forge-Change
@@ -438,12 +463,14 @@
 
 - type: loadout
   id: LoadoutNCRCloakNCRWoods
-  category: Roles
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
-    - !type:CharacterJobRequirement
+    - !type:CharacterJobRequirement # Forge-Change
       jobs:
+        - NCREngineer # Forge-Change
+        - NCRMedic # Forge-Change      
         - NCRSoldier
         - NCRSGT
         - NCRWS # Forge-Change
@@ -452,12 +479,14 @@
 
 - type: loadout
   id: LoadoutNCRMaskBalaclava
-  category: Roles
+  category: Mask
   cost: 1
   exclusive: true
   requirements:
-    - !type:CharacterJobRequirement
+    - !type:CharacterJobRequirement # Forge-Change
       jobs:
+        - NCREngineer # Forge-Change
+        - NCRMedic # Forge-Change  
         - NCRSoldier
         - NCRSGT
         - NCRWS # Forge-Change

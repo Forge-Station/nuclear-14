@@ -14,18 +14,19 @@
   - type: SpawnItemsOnUse
     items:
       - id: N14WeaponThermospear
-      - id: N14CeremonialSword
-      - id: ClothingBeltRope
+      - id: N14WeaponPistol45Colt
+      - id: N14MagazinePistol45
+        amount: 2
       - id: Bola
         amount: 2
-      - id: N14StimpakDirty
-        amount: 3
-      - id: N14SuperStimpak
-        amount: 1
-      - id: N14FoodTinK
+      - id: N14BerserkerPowder
         amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14HealingPoultice
+        amount: 2
+      - id: N14Hydra
+      - id: N14CleanGauze10
+      - id: N14MedkitCombatFilled
+      - id: N14BoxCardboardMREBoxLegionFilled
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -43,16 +44,15 @@
   - type: SpawnItemsOnUse
     items:
       - id: N14WeaponLMGchinese
-      - id: ClothingBeltRope
       - id: Magazine762AmmoBelt
         amount: 2
-      - id: N14DrinkTeaBroc
-      - id: N14StimpakDirty
+      - id: N14WeaponPistol45Colt
+      - id: N14MagazinePistol45
         amount: 2
-      - id: N14FoodTinK
+      - id: N14HealingPoultice
         amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxLegionFilled
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -70,17 +70,17 @@
   - type: SpawnItemsOnUse
     items:
       - id: N14WeaponSniper50AntiMateriel
-      - id: ClothingBeltRope
       - id: N14Magazine50AMR
         amount: 3
       - id: MagazineBox50
+      - id: N14WeaponPistol45Colt
+      - id: N14MagazinePistol45
+        amount: 2
       - id: ClothingEyesNightVisionGoggles
-      - id: N14StimpakDirty
+      - id: N14HealingPoultice
         amount: 2
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxLegionFilled
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -98,17 +98,16 @@
   - type: SpawnItemsOnUse
     items:
       - id: N14WeaponBlowback
-      - id: ClothingBeltRope
       - id: MagazineBox12gauge
         amount: 2
-      - id: N14CeremonialSword
+      - id: N14WeaponPistol45Colt
+      - id: N14MagazinePistol45
+        amount: 2
       - id: ClothingEyesNightVisionGoggles
-      - id: N14StimpakDirty
+      - id: N14HealingPoultice
         amount: 2
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxLegionFilled
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -125,19 +124,18 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14LegionnaireShield
-      - id: ClothingBeltRope
-      - id: N14PoliceBaton
-      - id: Bola
+      - id: N14WeaponSniper45-70BrushGun
+      - id: SpeedLoader45-70Tube
         amount: 2
-      - id: BoxHandcuff
-      - id: N14StimpakDirty
+      - id: MagazineBox45-70
+      - id: N14WeaponPistol45Colt
+      - id: N14MagazinePistol45
         amount: 2
-      - id: N14MedkitCombatFilled
-      - id: N14FoodTinK
+      - id: N14HealingPoultice
         amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxLegionFilled
+      - id: N14MacheteGladius
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -155,17 +153,17 @@
   - type: SpawnItemsOnUse
     items:
       - id: N14WeaponLMGAutoRifle
-      - id: ClothingBeltRope
       - id: Magazine308Rifle
         amount: 2
       - id: MagazineBox308
-      - id: N14MedkitFilled
-      - id: N14StimpakDirty
+      - id: N14WeaponPistol45Colt
+      - id: N14MagazinePistol45
         amount: 2
-      - id: N14FoodTinK
+      - id: N14HealingPoultice
         amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxLegionFilled
+      - id: N14MacheteGladius
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -182,17 +180,20 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14SledgeHammer
-      - id: ClothingBeltRope
-      - id: ThrowingKnife
-        amount: 3
-      - id: N14Stimpak
+      - id: N14SuperSledgeHammer
+      - id: N14WeaponPistol45Colt
+      - id: N14MagazinePistol45
         amount: 2
-      - id: N14MedkitFilled
-      - id: N14FoodTinK
+      - id: Bola
         amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BerserkerPowder
+        amount: 2
+      - id: N14HealingPoultice
+        amount: 2
+      - id: N14Hydra
+      - id: N14CleanGauze10
+      - id: N14MedkitCombatFilled
+      - id: N14BoxCardboardMREBoxLegionFilled
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -209,20 +210,16 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireVeteranArmor
-      - id: ClothingBeltRope
       - id: N14Gladius
       - id: SmokeGrenade
       - id: N14WeaponRifle762Chinese
       - id: MagazineBox762
       - id: Magazine762Rifle
         amount: 3
-      - id: N14StimpakDirty
-        amount: 2
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14HealingPoultice
+      - id: N14Hydra
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxLegionFilled
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -239,18 +236,40 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireVeteranArmor
-      - id: ClothingBeltRope
-      - id: N14Gladius
-      - id: N14FireAxe
-      - id: ThrowingKnife
-        amount: 3
-      - id: N14Stimpak
+      - id: N14WeaponShotgunAuto
+      - id: N14ClothingHandsPowerFist
+      - id: SmokeGrenade
+      - id: MagazineBox12gauge
+      - id: N14MagazineShotgun12
         amount: 2
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14HealingPoultice
+      - id: N14Hydra
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxLegionFilled
+    sound:
+      path: /Audio/Effects/unwrap.ogg
+
+- type: entity
+  name: veteran-suppressor kit
+  parent: KitBase
+  id: KitVeteranSuppressor
+  description: "A set of Legion equipment."
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Misc/kits.rsi
+    state: base
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponSMGNAil
+      - id: N14ClothingHandsIndusrialPowerFist
+      - id: MagazineBoxNail
+      - id: DrumMagazineNailGun
+      - id: N14HealingPoultice
+      - id: N14Hydra
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxLegionFilled
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -267,17 +286,18 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireVeteranArmor
-      - id: ClothingBeltRope
       - id: N14WeaponKebab
       - id: N14LegionnaireShield
-      - id: N14StimpakDirty
+      - id: Bola
         amount: 2
+      - id: N14BerserkerPowder
+        amount: 2
+      - id: N14HealingPoultice
+        amount: 2
+      - id: N14Hydra
+      - id: N14MedkitFilled
       - id: N14FuelTankHandyRusty
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BoxCardboardMREBoxLegionFilled
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -294,18 +314,13 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireBaseArmor
-      - id: ClothingBeltRope
-      - id: N14Gladius
+      - id: N14TribalMachete
       - id: N14LegionnaireBuckler
-      - id: N14WeaponShotgunShort
-      - id: MagazineBox12gauge
-      - id: N14StimpakDirty
-        amount: 2
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14WeaponShotgunLever
+      - id: MagazineBox20gauge
+      - id: N14HealingPoultice
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxLegionFilled
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -322,19 +337,18 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireBaseArmor
-      - id: ClothingBeltRope
       - id: N14Whip
-      - id: N14WeaponRevolver44Tribal
-      - id: SpeedLoader44
+      - id: N14WeaponSniper44LeverShortCarbine
       - id: MagazineBox44
-      - id: Stunprod
-      - id: Zipties
+      - id: N14PoliceBaton
+      - id: BoxHandcuff
+      - id: SyndicateWhistle
+      - id: N14HealingPoultice
+      - id: N14HealingPowder
         amount: 2
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -351,24 +365,23 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireBaseArmor
       - id: N14TribalMachete
-      - id: N14Stimpak
-        amount: 3
-      - id: Brutepack
-      - id: N14ClothingBeltMedicalFilled
+      - id: ClothingBeltMedical
       - id: N14MortarpestleGrinder
-      - id: N14FloraWildBrocFlowerClippingSeed
-      - id: N14FloraWildXanderRootClippingSeed
-      - id: N14WeaponPistol45Colt
-      - id: N14MagazinePistol45
+      - id: LargeBeaker
+      - id: N14WeaponShotgunShort
+      - id: MagazineBox12gauge
+      - id: N14HealingPoultice
         amount: 2
-      - id: MagazineBox45
-      - id: Ointment
-      - id: N14FoodTinK
+      - id: N14HealingPowder
         amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14Hydra
+      - id: Bloodpack
+      - id: N14AloeSalve
+      - id: N14CleanGauze10
+        amount: 2
+      - id: N14DoctorBag
+      - id: N14BoxCardboardMREBoxLegionFilled
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -385,19 +398,15 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireBaseArmor
-      - id: ClothingBeltRope
       - id: N14TribalMachete
       - id: N14WeaponSMG10mm
       - id: MagazineBox10mm
       - id: N14MagazineSMG10mm
         amount: 2
-      - id: N14StimpakDirty
-        amount: 1
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14LegionnaireBuckler
+      - id: N14HealingPoultice
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxLegionFilled
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -414,18 +423,17 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireBaseArmor
-      - id: ClothingBeltRope
       - id: N14TrenchClub
       - id: N14LegionnaireShield
+      - id: Bola
         amount: 2
       - id: N14HealingPowder
-      - id: N14StimpakDirty
-        amount: 1
-      - id: N14FoodTinK
         amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BerserkerPowder
+      - id: N14HealingPoultice
+      - id: N14Hydra
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxLegionFilled
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -442,20 +450,16 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireRecruitArmor
-      - id: ClothingBeltQuiverSpear
+      - id: N14TribalMachete
       - id: N14WeaponSMG9mm
       - id: N14MagazineSMG9mm
         amount: 2
       - id: MagazineBox9mm
-      - id: N14TribalMachete
       - id: N14LegionnaireBuckler
-      - id: N14StimpakDirty
-        amount: 1
-      - id: N14FoodTinK
+      - id: N14HealingPowder
         amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxLegionFilled
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -472,16 +476,18 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireRecruitArmor
+      - id: N14WastelandTribalSpear
+      - id: N14LegionnaireShield
       - id: ClothingBeltQuiverSpear
-      - id: N14PilumSpear
+      - id: N14WastelandSpear
         amount: 4
-      - id: N14StimpakDirty
-        amount: 1
-      - id: N14FoodTinK
+      - id: N14HealingPowder
         amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14BerserkerPowder
+      - id: N14HealingPoultice
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -498,15 +504,15 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireRecruitArmor
-      - id: N14LongSword
+      - id: N14TribalMachete
+      - id: N14WeaponShotgunBloodyStick
+      - id: MagazineBox12gauge
       - id: N14LegionnaireBuckler
-      - id: N14StimpakDirty
-        amount: 1
-      - id: N14FoodTinK
+      - id: N14HealingPowder
         amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14CleanGauze10
+      - id: N14BoxCardboardMREBoxLegionFilled
+        amount: 1
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -523,19 +529,21 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingOuterLegionnaireRecruitArmor
-      - id: N14TribalMachete
-      - id: ClothingBeltMedical
-      - id: N14StimpakDirty
+      - id: N14TribalKnife
+      - id: PlantBag
+      - id: N14FloraProduceWildCaveFungus
+        amount: 10
+      - id: N14FloraProduceWildCaveFungusRad
+        amount: 10
+      - id: N14MaterialRadscorpionTail
+        amount: 5
+      - id: N14NightstalkerBloodChemistryBottle
+        amount: 5
+      - id: N14HealingPowder
         amount: 2
-      - id: N14HealingPoultice
-        amount: 2
-      - id: Brutepack
-      - id: Ointment
-      - id: N14FoodTinK
-        amount: 2
-      - id: DrinkWaterBottleFull
-      - id: FoodCondimentPacketMustard
+      - id: N14CleanGauze10
+      - id: N14CookedFoodPizzaMushroom
+      - id: N14DrinkWine
     sound:
       path: /Audio/Effects/unwrap.ogg
 
@@ -756,16 +764,9 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: SheetSteel10
-      - id: SheetPlastic10
-      - id: ClothingHandsGlovesColorYellow
       - id: N14ClothingBeltUtilityFilled
-      - id: ClothingHeadBrotherhoodScribeHeadset
-      - id: N14WeaponLaserPistol
-      - id: N14PowerCellSmall
-        amount: 2
-      - id: N14WeaponLaserRifleAuto
-      - id: N14PowerCellHigh
+      - id: N14WeaponPlasmaPistol
+      - id: N14PlasmaCell
         amount: 3
       - id: N14Stimpak
       - id: BoxMRE
@@ -787,7 +788,6 @@
       - id: N14MedkitBruteFilled
       - id: N14CombatKnife
       - id: N14ClothingBeltMedicalFilled
-      - id: ClothingHeadBrotherhoodScribeHeadset
       - id: N14WeaponLaserPistolRecharger
       - id: ClothingHandsGlovesChemist
       - id: N14Stimpak
@@ -1079,14 +1079,14 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14WeaponShotgunSawedOff
-      - id: MagazineBox12gauge
+      - id: N14WeaponSMG10mm
+      - id: N14MagazineSMG10mm
+        amount: 2
       - id: N14CleanGauze10
       - id: N14Stimpak
       - id: N14ClothingBeltBosLeatherunl
       - id: N14Gunpowder10
-      - id: N14IngotLead1
-        amount: 5
+      - id: N14IngotLead20
 
 - type: entity
   name: Scribe laser kit
@@ -1274,3 +1274,46 @@
       - id: Handcuffs
         amount: 2
 
+- type: entity
+  name: WBoS Lord Sniper Kit
+  parent: KitBase
+  id: KitWBoSLordSniper
+  description: Sniper Lord kit
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponLaserRifleWattz3000
+      - id: N14Stimpak
+        amount: 1
+      - id: N14PowerCellFocused
+        amount: 4
+      - id: N14BoxCardboardMREBoxKFilled
+      - id: N14MedkitCombatFilled
+      - id: Handcuffs
+        amount: 2
+
+- type: entity
+  name: WBoS Lord Stormtrooper Kit
+  parent: KitBase
+  id: KitWBoSLordStorm
+  description: Stormtrooper Lord kit
+  components:
+  - type: Sprite
+    state: rifleman
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14WeaponLMGAutoRifle
+      - id: N14Stimpak
+        amount: 1
+      - id: Magazine308Rifle
+        amount: 4
+      - id: N14BoxCardboardMREBoxKFilled
+      - id: N14MedkitCombatFilled
+      - id: Handcuffs
+        amount: 2

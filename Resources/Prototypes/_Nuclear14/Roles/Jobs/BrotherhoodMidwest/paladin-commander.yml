@@ -24,7 +24,7 @@
             - Ghoul
   startingGear: BoSMidPaladinCommanderGear
   alwaysUseSpawner: true
-  icon: "JobIconBosMCommander" # Corvax-Change
+  icon: "JobIconBosMCommander" # Forge-Change
   supervisors: job-supervisors-bos-mid-commander
   accessGroups:
   - BOSMidwest
@@ -40,7 +40,7 @@
   id: BoSMidPaladinCommanderGear
   equipment:
     jumpsuit: N14ClothingUniformBosRecon
-    back: N14ClothingBackpackMilitary # Corvax-Change
+    back: N14ClothingBackpackMilitary # Forge-Change
     shoes: N14ClothingBootsLeatherFilled
     head:  N14ClothingHeadHatBrotherhoodFieldCap
     outerClothing: N14ClothingOuterMBoSPaladinArmor
@@ -49,7 +49,7 @@
     id: N14IDBrotherhoodHolotagCommander
     ears: N14ClothingHeadsetBOSMidwest
     belt: ClothingBeltMilitary
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledMilitary
 

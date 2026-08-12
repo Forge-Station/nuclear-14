@@ -34,10 +34,10 @@
           WastelandFarmer: [ 2, 3 ]
           WastelandChaplain: [ 1, 1 ]
           WastelandBartender: [ 1, 2 ]
-          TribalElder: [ 1, 1 ]
-          Tribal: [ 2, 4 ]
-          TribalFarmer: [ 1, 2 ]
-          TribalHealer: [ 1, 2 ]
+          # TribalElder: [ 1, 1 ] # Forge-DeadTribal
+          # Tribal: [ 2, 4 ]
+          # TribalFarmer: [ 1, 2 ]
+          # TribalHealer: [ 1, 2 ]
           TownMayor: [ 1, 1 ]
           TownSheriff: [ 1, 1 ]
           TownDeputy: [ 1, 2 ]
@@ -81,7 +81,7 @@
           CaesarLegionVenator: [ 1, 1 ] # Forge-Legion
           CaesarLegionDean: [ 2, 2 ] # Forge-Legion
           CaesarLegionLegionnaireVeteran: [ 3, 3 ] # Forge-Legion
-          CaesarLegionLegionnaireWarrior: [ 4, 4 ] # Forge-Legion
+          CaesarLegionLegionnaireWarrior: [ 5, 5 ] # Forge-Legion
           CaesarLegionLegionnaireRecruit: [ 6, 6 ] # Forge-Legion
           CaesarLegionSlave: [ 3, 3 ] # Forge-Legion
           # Raider: [3,3]

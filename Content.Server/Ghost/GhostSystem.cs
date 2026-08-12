@@ -1,9 +1,11 @@
 using System.Linq;
 using System.Numerics;
 using Content.Server._NC.Sponsor; // Forge-Change
+using Content.Shared._NC.Sponsor; // Forge-Change
 using Content.Server.GameTicking;
 using Content.Server.Ghost.Components;
 using Content.Server.Mind;
+using Content.Server.Preferences.Managers; // Forge-Change
 using Content.Server.Roles.Jobs;
 using Content.Server.Warps;
 using Content.Shared.Actions;
@@ -46,6 +48,7 @@ namespace Content.Server.Ghost
         [Dependency] private readonly VisibilitySystem _visibilitySystem = default!;
         [Dependency] private readonly MetaDataSystem _metaData = default!;
         [Dependency] private readonly SponsorManager _sponsors = default!; // Forge-Change
+        [Dependency] private readonly IServerPreferencesManager _preferencesManager = default!; // Forge-Change
 
         private EntityQuery<GhostComponent> _ghostQuery;
         private EntityQuery<PhysicsComponent> _physicsQuery;
@@ -444,10 +447,17 @@ namespace Content.Server.Ghost
             EntityUid ghost;
             try
             {
-                if (user != null && _sponsors.TryGetSponsor(user.Value, out var level)
-                    && _sponsors.TryGetSponsorGhost(level, out var sponsorGhost))
+                if (user != null && _sponsors.TryGetSponsor(user.Value, out var level))
                 {
-                    ghost = Spawn(sponsorGhost, spawnPosition.Value);
+                    // Forge-Change: prefer the sponsor's explicitly chosen ghost skin (validated against their level),
+                    // then fall back to the default skin tied to their level, then to the normal observer.
+                    var chosenSkin = _preferencesManager.GetPreferencesOrNull(user.Value)?.SponsorGhostSkin;
+                    if (!string.IsNullOrEmpty(chosenSkin) && SponsorData.IsGhostSkinAllowed(level, chosenSkin))
+                        ghost = Spawn(chosenSkin, spawnPosition.Value);
+                    else if (_sponsors.TryGetSponsorGhost(level, out var sponsorGhost))
+                        ghost = Spawn(sponsorGhost, spawnPosition.Value);
+                    else
+                        ghost = Spawn(GameTicker.ObserverPrototypeName, spawnPosition.Value);
                 }
                 else
                 {

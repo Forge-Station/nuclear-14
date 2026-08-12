@@ -7,7 +7,7 @@
   description: job-description-wastelander
   playTimeTracker: Wastelander
   startingGear: WastelanderGear
-  icon: "JobIconWastelander" # Corvax-Change
+  icon: "JobIconWastelander" # Forge-Change
   supervisors: job-supervisors-wastelander
   special:
   - !type:AddComponentSpecial
@@ -20,12 +20,12 @@
   id: WastelanderGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitRags
-    back: N14ClothingBackpackExplorer # Corvax-Change
+    back: N14ClothingBackpackExplorer # Forge-Change
     shoes: N14ClothingShoesRags
   innerClothingSkirt: N14ClothingUniformJumpskirtFalloutBlack
   satchel: N14ClothingBackpackSatchelWastelanderFilled
   duffelbag: N14ClothingBackpackDuffelFilled
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledWastelander
 

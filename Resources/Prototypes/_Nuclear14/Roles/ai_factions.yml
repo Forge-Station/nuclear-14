@@ -207,6 +207,8 @@
   - Raider
   - HostileRobot
   - Feral
+  - CaesarLegion #Corvax-Legion
+  - BrotherhoodWest #Corvax-West
 
 - type: npcFaction
   id: Tribal
@@ -242,6 +244,8 @@
   - Raider
   - HostileRobot
   - Feral
+  - CaesarLegion #Corvax-Legion
+  - BrotherhoodWest #Corvax-West
 
 - type: npcFaction
   id: Vault

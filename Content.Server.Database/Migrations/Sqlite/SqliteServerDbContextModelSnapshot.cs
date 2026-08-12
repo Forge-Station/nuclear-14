@@ -15,7 +15,7 @@ namespace Content.Server.Database.Migrations.Sqlite
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.0");
 
             modelBuilder.Entity("Content.Server.Database.Admin", b =>
                 {
@@ -256,8 +256,7 @@ namespace Content.Server.Database.Migrations.Sqlite
                         .HasColumnType("TEXT")
                         .HasColumnName("expiration_time");
 
-                    b.Property<DateTime?>("LastEditedAt")
-                        .IsRequired()
+                    b.Property<DateTime>("LastEditedAt")
                         .HasColumnType("TEXT")
                         .HasColumnName("last_edited_at");
 
@@ -385,8 +384,7 @@ namespace Content.Server.Database.Migrations.Sqlite
                         .HasColumnType("TEXT")
                         .HasColumnName("expiration_time");
 
-                    b.Property<DateTime?>("LastEditedAt")
-                        .IsRequired()
+                    b.Property<DateTime>("LastEditedAt")
                         .HasColumnType("TEXT")
                         .HasColumnName("last_edited_at");
 
@@ -758,6 +756,21 @@ namespace Content.Server.Database.Migrations.Sqlite
                     b.Property<int>("SelectedCharacterSlot")
                         .HasColumnType("INTEGER")
                         .HasColumnName("selected_character_slot");
+
+                    b.Property<string>("SponsorGhostSkin")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("sponsor_ghost_skin");
+
+                    b.Property<string>("SponsorLOOCColor")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("sponsor_looc_color");
+
+                    b.Property<string>("SponsorOOCColor")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("sponsor_ooc_color");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT")

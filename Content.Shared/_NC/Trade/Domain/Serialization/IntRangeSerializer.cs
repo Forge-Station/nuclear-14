@@ -31,12 +31,12 @@ public sealed class IntRangeSerializer :
     ITypeSerializer<IntRange, MappingDataNode>
 {
     public ValidationNode Validate(
-            ISerializationManager serializationManager,
-            MappingDataNode node,
-            IDependencyCollection dependencies,
-            ISerializationContext? context = null
-        ) =>
-            serializationManager.ValidateNode<Dictionary<string, int>>(node, context);
+        ISerializationManager serializationManager,
+        MappingDataNode node,
+        IDependencyCollection dependencies,
+        ISerializationContext? context = null
+    ) =>
+        serializationManager.ValidateNode<Dictionary<string, int>>(node, context);
 
     public IntRange Read(
         ISerializationManager serializationManager,

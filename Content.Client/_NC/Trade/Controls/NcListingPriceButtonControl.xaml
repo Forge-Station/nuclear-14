@@ -1,23 +1,37 @@
 <Button xmlns="https://spacestation14.io"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        ClipText="True"
-        StyleClasses="ButtonBig"
-        MinSize="96 32"
-        MaxSize="96 32"
-        Margin="0">
-    <BoxContainer Orientation="Horizontal"
+        ClipText="False"
+        MinSize="132 34"
+        MaxSize="210 34"
+        HorizontalExpand="False"
+        Margin="0"
+        Text="">
+
+    <BoxContainer Name="LayoutRoot"
+                  Orientation="Horizontal"
                   SeparationOverride="6"
                   HorizontalExpand="True"
                   VerticalExpand="True"
-                  HorizontalAlignment="Center">
+                  HorizontalAlignment="Right"
+                  Margin="8 4 8 4">
+
         <TextureRect Name="CurrencyIcon"
                      Stretch="KeepAspectCentered"
-                     MinSize="26 26"
-                     MaxSize="26 26"
+                     MinSize="16 16"
+                     MaxSize="16 16"
                      VerticalAlignment="Center"
-                     Margin="2 2 0 2"/>
+                     Visible="False" />
+
         <Label Name="PriceLabel"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"/>
+               HorizontalAlignment="Right"
+               HorizontalExpand="True"
+               VerticalAlignment="Center"
+               ClipText="False"
+               MinWidth="24"
+               Text="0" />
+
+        <Label Name="UnitPriceLabel"
+               Visible="False"
+               Text="" />
     </BoxContainer>
 </Button>

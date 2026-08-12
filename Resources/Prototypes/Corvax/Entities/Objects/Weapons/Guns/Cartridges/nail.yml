@@ -1,0 +1,18 @@
+- type: entity
+  id: N14CartridgeNail
+  name: cartridge nail
+  parent: BaseCartridge
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Guns/Ammunition/Casings/nail_casing.rsi
+    layers:
+    - state: base
+      map: ["enum.AmmoVisualLayers.Base"]
+  - type: Appearance
+  - type: Tag
+    tags:
+      - Cartridge
+      - N14CartridgeNail
+  - type: CartridgeAmmo
+    proto: N14BulletNail
+    deleteOnSpawn: true

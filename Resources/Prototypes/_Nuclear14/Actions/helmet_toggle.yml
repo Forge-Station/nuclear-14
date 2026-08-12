@@ -1,0 +1,8 @@
+- type: entity
+  id: ActionToggleHelmet
+  name: action-toggle-helmet-name
+  description: action-toggle-helmet-desc
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: InstantAction
+    event: !type:ToggleHelmetEvent

@@ -10,11 +10,11 @@
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t45.rsi
     equipDelay: 3 # Power armour should not be easily stealable, it should take time to take off or put on.
     unequipDelay: 6
-    equipSound: # Corvax-Change
+    equipSound: # Forge-Change
       path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Enter_01.ogg
       params:
         volume: -12
-    unequipSound: # Corvax-Change
+    unequipSound: # Forge-Change
       path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Enter_01.ogg
       params:
         volume: -12
@@ -66,7 +66,7 @@
   - type: Reflect
     reflectProb: 0.1
     spread: 150
-  - type: EmitsSoundOnMove # Corvax-Change
+  - type: EmitsSoundOnMove # Forge-Change
     soundCollection:
       collection: N14FootstepPowerArmor
       params:
@@ -168,6 +168,10 @@
   - type: Reflect
     reflectProb: 0.15
     spread: 275
+  - type: PointLight
+    radius: 1.5
+    energy: 1
+    color: "#47f8ff"
   - type: UserInterface
     interfaces:
       enum.ToggleClothingUiKey.Key:
@@ -345,7 +349,7 @@
         type: ToggleableClothingBoundUserInterface
   - type: ToggleableClothing
     clothingPrototypes:
-      head: N14ClothingHeadHelmetPowerArmorT45 # Forge-Change
+      head: N14ClothingHeadHelmetPowerArmorRaider # Forge-Change
       gloves: N14ClothingPAGauntletsDark
       shoes: N14ClothingPABootsDark
       back: N14ClothingPowerSystemsBack
@@ -499,32 +503,32 @@
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t45ncr.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t45ncr.rsi
-  - type: Armor
-    modifiers:
-      coefficients:
-        Blunt: 0.55
-        Slash: 0.55
-        Piercing: 0.6
-        Heat: 0.6
-        Caustic: 0.75
-        Radiation: 0.65
-      # Forge-Add-Start
-      flatReductions:
-        Blunt: 2
-        Slash: 2
-        Piercing: 2
-        Heat: 2
-        Caustic: 1
-        Radiation: 1
-      # Forge-Add-End
-  - type: TemperatureProtection
-    coefficient: 0.55
-  - type: ExplosionResistance
-    damageCoefficient: 0.65
-  - type: UserInterface
-    interfaces:
-      enum.ToggleClothingUiKey.Key:
-        type: ToggleableClothingBoundUserInterface
+  # - type: Armor #Forge-start
+  #   modifiers:
+  #     coefficients:
+  #       Blunt: 0.55
+  #       Slash: 0.55
+  #       Piercing: 0.6
+  #       Heat: 0.6
+  #       Caustic: 0.75
+  #       Radiation: 0.65
+  #     # Forge-Add-Start
+  #     flatReductions:
+  #       Blunt: 2
+  #       Slash: 2
+  #       Piercing: 2
+  #       Heat: 2
+  #       Caustic: 1
+  #       Radiation: 1
+  #     # Forge-Add-End
+  # - type: TemperatureProtection
+  #   coefficient: 0.55
+  # - type: ExplosionResistance
+  #   damageCoefficient: 0.65
+  # - type: UserInterface
+  #   interfaces:
+  #     enum.ToggleClothingUiKey.Key:
+  #       type: ToggleableClothingBoundUserInterface #Forge-end
   - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorT45NCR

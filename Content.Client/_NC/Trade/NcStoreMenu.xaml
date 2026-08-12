@@ -4,56 +4,125 @@
     xmlns:controls1="clr-namespace:Content.Client.UserInterface.Controls"
     xmlns:controls="clr-namespace:Content.Client._NC.Trade.Controls"
     Title="{Loc 'nc-store-window-title'}"
-    MinWidth="1300" MinHeight="820"
+    MinWidth="1240"
+    MinHeight="780"
     StyleClasses="WindowLarge">
-    <BoxContainer Orientation="Vertical" StyleClasses="PanelBackgroundBase">
-        <controls:NcStoreHeaderBar Name="Header"
-                               Margin="4 4 4 0"
-                               StyleClasses="PanelBackgroundBaseDark" />
 
-        <TabContainer Name="Tabs"
-                      StyleClasses="TabContainerLarge"
-                      VerticalExpand="True"
-                      Margin="4">
+    <BoxContainer Name="Root"
+                  Orientation="Vertical"
+                  SeparationOverride="0"
+                  StyleClasses="PanelBackgroundBase"
+                  HorizontalExpand="True"
+                  VerticalExpand="True">
 
-            <PanelContainer Name="TabBuy"
+        <!-- Header -->
+        <PanelContainer Name="HeaderFrame"
+                        Margin="4 4 4 0"
+                        MinHeight="52"
+                        HorizontalExpand="True">
+            <controls:NcStoreHeaderBar Name="Header"
+                                       Margin="0"
+                                       HorizontalExpand="True" />
+        </PanelContainer>
+
+        <!-- Main shell -->
+        <PanelContainer Name="TabsShell"
+                        Margin="4 4 4 4"
+                        VerticalExpand="True"
+                        HorizontalExpand="True">
+
+            <PanelContainer Name="TabsFrame"
                             VerticalExpand="True"
-                            StyleClasses="PanelBackgroundBaseDark">
-                <controls:NcStoreListingsView Name="BuyView"
-                                             VerticalExpand="True"
-                                             HorizontalExpand="True" />
-            </PanelContainer>
+                            HorizontalExpand="True">
 
-            <PanelContainer Name="TabSell"
-                            VerticalExpand="True"
-                            StyleClasses="PanelBackgroundBaseDark">
-                <controls:NcStoreListingsView Name="SellView"
-                                             VerticalExpand="True"
-                                             HorizontalExpand="True" />
-            </PanelContainer>
-
-            <PanelContainer Name="TabContracts"
-                            VerticalExpand="True"
-                            StyleClasses="PanelBackgroundBaseDark">
-                <BoxContainer Orientation="Vertical"
+                <TabContainer Name="Tabs"
+                              StyleClasses="TabContainerLarge"
                               VerticalExpand="True"
                               HorizontalExpand="True"
-                              Margin="6 4 6 4">
+                              Margin="0">
 
-                    <Label Text="{Loc 'nc-store-tab-contracts'}"
-                           StyleClasses="LabelHeading"
-                           Margin="0 0 0 6" />
+                    <!-- Buy -->
+                    <PanelContainer Name="TabBuy"
+                                    VerticalExpand="True"
+                                    HorizontalExpand="True">
+                        <controls:NcStoreListingsView Name="BuyView"
+                                                      VerticalExpand="True"
+                                                      HorizontalExpand="True" />
+                    </PanelContainer>
 
-                    <ScrollContainer VerticalExpand="True"
-                                     HorizontalExpand="True">
-                        <BoxContainer Name="ContractList"
+                    <!-- Sell -->
+                    <PanelContainer Name="TabSell"
+                                    VerticalExpand="True"
+                                    HorizontalExpand="True">
+                        <controls:NcStoreListingsView Name="SellView"
+                                                      VerticalExpand="True"
+                                                      HorizontalExpand="True" />
+                    </PanelContainer>
+
+                    <!-- Barter -->
+                    <PanelContainer Name="TabBarter"
+                                    VerticalExpand="True"
+                                    HorizontalExpand="True">
+                        <controls:NcStoreListingsView Name="BarterView"
+                                                      VerticalExpand="True"
+                                                      HorizontalExpand="True" />
+                    </PanelContainer>
+
+                    <!-- Contracts -->
+                    <PanelContainer Name="TabContracts"
+                                    VerticalExpand="True"
+                                    HorizontalExpand="True">
+                        <BoxContainer Name="ContractsRoot"
                                       Orientation="Vertical"
-                                      SeparationOverride="8" />
-                    </ScrollContainer>
-                </BoxContainer>
+                                      VerticalExpand="True"
+                                      HorizontalExpand="True"
+                                      SeparationOverride="6"
+                                      Margin="8">
+
+                            <PanelContainer Name="ContractsHeaderPanel"
+                                            HorizontalExpand="True"
+                                            MinHeight="42">
+                                <Label Text="{Loc 'nc-store-tab-contracts'}"
+                                       StyleClasses="LabelHeading"
+                                       Margin="10 6 10 6" />
+                            </PanelContainer>
+
+                            <PanelContainer Name="ContractsCategoryPanel"
+                                            HorizontalExpand="True"
+                                            MinHeight="38"
+                                            Visible="False">
+                                <ScrollContainer Name="ContractsCategoryScroll"
+                                                 HorizontalExpand="True"
+                                                 HScrollEnabled="True"
+                                                 VScrollEnabled="False"
+                                                 ReserveScrollbarSpace="False">
+                                    <BoxContainer Name="ContractsCategoryRow"
+                                                  Orientation="Horizontal"
+                                                  HorizontalExpand="True"
+                                                  VerticalAlignment="Center"
+                                                  SeparationOverride="6"
+                                                  Margin="6 4 6 4" />
+                                </ScrollContainer>
+                            </PanelContainer>
+
+                            <ScrollContainer Name="ContractsScroll"
+                                             VerticalExpand="True"
+                                             HorizontalExpand="True"
+                                             HScrollEnabled="False"
+                                             ReserveScrollbarSpace="False">
+                                <BoxContainer Name="ContractList"
+                                              Orientation="Vertical"
+                                              HorizontalExpand="True"
+                                              SeparationOverride="8"
+                                              Margin="0 0 0 2" />
+                            </ScrollContainer>
+
+                        </BoxContainer>
+                    </PanelContainer>
+
+                </TabContainer>
             </PanelContainer>
+        </PanelContainer>
 
-        </TabContainer>
-
-        </BoxContainer>
+    </BoxContainer>
 </controls1:FancyWindow>

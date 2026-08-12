@@ -38,19 +38,20 @@
   id: CaesarLegionVenatorGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitLegionnaire
+    outerClothing: N14ClothingOuterLegionnaireLightReconnaissanceArmor
     mask: N14ClothingMaskBrownMask
     back: N14ClothingBackpackMilitary
     shoes: N14ClothingShoesKaligi
     head: N14ClothingHeadHatVenator
     gloves: N14ClothingHandsGlovesTribal
-    belt: N14Gladius
+    belt: ClothingBeltRope
     suitstorage: N14PilumSpear
     pocket1: LegionVenatorloadoutkits
     id: N14IDLegionaryMedalSilver3
   innerClothingSkirt: N14ClothingUniformJumpsuitLegionnaireOther
   storage:
     back:
-    - N14BoxPlasticFilledMilitary
+    - N14BoxPlasticFilledMilitaryLegion
 
 - type: playTimeTracker
   id: CaesarLegionVenator

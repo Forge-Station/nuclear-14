@@ -9,6 +9,9 @@
     "states": [
         {
             "name": "favorite_healer"
+        },
+        {
+            "name": "favorite_venator"
         }
     ]
 }

@@ -1,0 +1,7 @@
+# Тут крч на рандом генится сообщение в терминале, если нет указанного.
+- type: dataset
+  id: ForgeTerminalEntries
+  values:
+  # Оповещения робко
+  - terminal-entry-robcohello
+  - terminal-entry-robcoerror

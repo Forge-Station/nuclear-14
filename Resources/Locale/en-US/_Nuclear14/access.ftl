@@ -1,3 +1,4 @@
+id-card-access-level-townie-person = Townsperson
 id-card-access-level-townie-sheriff = Town Jail
 id-card-access-level-townie-mayor = Town Mayor
 id-card-access-level-townie-shopkeeper = Town Store
@@ -40,3 +41,5 @@ id-card-access-level-washington-paladin = WBoS Suits
 id-card-access-level-washington-knight = WBoS Armory
 id-card-access-level-washington-scribe = WBoS Labs
 id-card-access-level-washington-initiate = WBoS Gates
+
+id-card-access-level-town-master-key = Town Master Key

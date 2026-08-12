@@ -116,6 +116,9 @@
   - type: Sprite
     sprite: _Nuclear14/Structures/Decoration/flags2.rsi
     state: wbosflag
+  - type: Construction # Forge-Change
+    graph: DecorationFlagBrotherhoodWashington
+    node: FlagBrotherhoodWashington
 
 - type: entity
   parent: N14DecorationFlagFlammable

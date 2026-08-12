@@ -9,6 +9,11 @@
     sprite: _Nuclear14/Objects/Misc/tapes_cards.rsi
     state: holotape_black
     scale: 0.75, 0.75
+  - type: HolotapeData # Forge-Add-Start
+  - type: UserInterface
+    interfaces:
+      enum.HolotapeUiKey.Key:
+        type: HolotapeBoundUserInterface #Forge-Add-End
 
 - type: entity
   parent: N14Holotape

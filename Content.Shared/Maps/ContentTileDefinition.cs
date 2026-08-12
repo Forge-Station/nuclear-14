@@ -8,6 +8,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Array;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.List;
 using Robust.Shared.Utility;
 
 namespace Content.Shared.Maps
@@ -43,6 +44,9 @@ namespace Content.Shared.Maps
 
         [DataField("baseTurf")]
         public string BaseTurf { get; private set; } = string.Empty;
+
+        [DataField("baseWhitelist", customTypeSerializer: typeof(PrototypeIdListSerializer<ContentTileDefinition>))]   /// Forge-Change
+        public List<string> BaseWhitelist { get; private set; } = new();  /// Forge-Change
 
         [DataField]
         public PrototypeFlags<ToolQualityPrototype> DeconstructTools { get; set; } = new();

@@ -51,6 +51,12 @@
     damage:
       groups:
         Brute: 3
+  - type: Butcherable # Forge-add
+    spawned:
+    - id: N14FoodMeatRadRaw
+      amount: 2
+    - id: N14MaterialRawLeather1
+      amount: 2
  #- type: Reproductive
    #breedChance: 0.05
    #birthPopup: reproductive-birth-popup
@@ -125,10 +131,12 @@
     damage:
       groups:
         Brute: 3
-  - type: Butcherable
+  - type: Butcherable # Forge-add
     spawned:
     - id: N14FoodMeatPigrat
       amount: 3
+    - id: N14MaterialRawLeather1
+      amount: 1
  #- type: Reproductive
    #breedChance: 0.05
    #birthPopup: reproductive-birth-popup
@@ -194,6 +202,12 @@
     damage:
       groups:
         Brute: 5
+  - type: Butcherable # Forge-add
+    spawned:
+    - id: N14FoodMeatRadRaw
+      amount: 1
+    - id: N14MaterialRawLeather1
+      amount: 2
  #- type: Reproductive
    #breedChance: 0.05
    #birthPopup: reproductive-birth-popup
@@ -341,7 +355,6 @@
   - type: Damageable
     damageContainer: Biological
     damageModifierSet: WastelandAnimal
-  - type: Timer
   - type: TimedSpawner
     prototypes:
       - N14BrahminDung
@@ -362,7 +375,7 @@
       maxAmount: 1
   - type: ReproductivePartner
   - type: MobPrice
-    price: 250 # Corvax-Change
+    price: 250 # Forge-Change
 
 #MARK: Bighorner
 - type: entity

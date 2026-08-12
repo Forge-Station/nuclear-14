@@ -77,3 +77,58 @@
   - type: Sprite
     netsync: false
     sprite: Corvax/Clothing/Head/PowerArmorHelmets/t51westboselder.rsi
+
+- type: entity
+  parent: N14ClothingHeadHelmetPowerArmorT51
+  id: N14ClothingHeadHelmetPowerArmorWBoSHelmet
+  components:
+  - type: Sprite
+    netsync: false
+    sprite: Corvax/Clothing/Head/PowerArmorHelmets/wboshelmet.rsi
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHelmetPowerArmorRaider
+  name: рейдерский шлем силовой брони
+  description: Самодельный шлем силовой брони, интересно, а он вообще защищает?
+  components:
+  - type: Sprite
+    netsync: false
+    sprite: Corvax/Clothing/Head/PowerArmorHelmets/t45raider.rsi
+    layers:
+    - state: icon
+  - type: Clothing
+    equipSound: # Forge-Change
+      path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Equip_Helmet_01.ogg
+      params:
+        volume: -12
+    unequipSound: # Forge-Change
+      path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Equip_Helmet_01.ogg
+      params:
+        volume: -12
+    quickEquip: true
+    clothingVisuals:
+      head:
+      - state: off-equipped-HELMET
+  - type: EyeProtection
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.8
+        Slash: 0.8
+        Piercing: 0.85
+        Heat: 0.85
+        Radiation: 0.6
+      # Forge-Add-Start
+      flatReductions:
+        Blunt: 1
+        Slash: 1
+        Piercing: 1
+        Heat: 1
+      # Forge-Add-End
+  - type: ExplosionResistance
+    damageCoefficient: 0.85
+  - type: Tag
+    tags:
+    - HidesHair
+    - HidesBeard

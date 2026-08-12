@@ -1,0 +1,60 @@
+<controls:FancyWindow xmlns="https://spacestation14.io"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
+                      Title="{Loc 'sponsor-window-title'}"
+                      MinSize="560 680"
+                      SetSize="620 800">
+    <BoxContainer Orientation="Vertical" Margin="8 8 8 8" HorizontalExpand="True" VerticalExpand="True">
+
+        <!-- Sponsor customization view -->
+        <BoxContainer Name="SponsorView" Orientation="Vertical" Visible="False"
+                      HorizontalExpand="True" VerticalExpand="True" SeparationOverride="6">
+            <Label Name="SponsorStatusLabel" StyleClasses="LabelHeading" HorizontalAlignment="Center" />
+
+            <controls:StripeBack Margin="0 4 0 0">
+                <Label Text="{Loc 'sponsor-window-ghost-skin-header'}" Align="Center" Margin="4 4 4 4" />
+            </controls:StripeBack>
+            <BoxContainer Orientation="Horizontal" SeparationOverride="8" Margin="0 4 0 0">
+                <PanelContainer StyleClasses="AngleRect" VerticalAlignment="Center">
+                    <EntityPrototypeView Name="GhostPreview" Scale="2 2" MinSize="96 96" />
+                </PanelContainer>
+                <BoxContainer Orientation="Vertical" HorizontalExpand="True" VerticalAlignment="Center" SeparationOverride="4">
+                    <OptionButton Name="GhostSkinOption" HorizontalExpand="True" />
+                    <Label Text="{Loc 'sponsor-window-ghost-skin-hint'}" StyleClasses="LabelSubText" />
+                </BoxContainer>
+            </BoxContainer>
+
+            <controls:StripeBack Margin="0 4 0 0">
+                <Label Text="{Loc 'sponsor-window-ooc-color-header'}" Align="Center" Margin="4 4 4 4" />
+            </controls:StripeBack>
+            <BoxContainer Name="OocColorContainer" Orientation="Vertical" Margin="0 4 0 0" />
+
+            <controls:StripeBack Margin="0 4 0 0">
+                <Label Text="{Loc 'sponsor-window-looc-color-header'}" Align="Center" Margin="4 4 4 4" />
+            </controls:StripeBack>
+            <BoxContainer Name="LoocColorContainer" Orientation="Vertical" Margin="0 4 0 0" />
+
+            <Control VerticalExpand="True" />
+            <BoxContainer Orientation="Horizontal" HorizontalAlignment="Right" SeparationOverride="6">
+                <Button Name="ResetButton" Text="{Loc 'sponsor-window-reset-button'}" />
+                <Button Name="SaveButton" Text="{Loc 'sponsor-window-save-button'}" StyleClasses="ButtonBig" />
+            </BoxContainer>
+        </BoxContainer>
+
+        <!-- Non-sponsor pitch view -->
+        <BoxContainer Name="NonSponsorView" Orientation="Vertical" Visible="False"
+                      HorizontalExpand="True" VerticalExpand="True" SeparationOverride="6">
+            <RichTextLabel Name="PitchLabel" HorizontalAlignment="Center" Margin="0 4 0 4" />
+            <Button Name="BecomeSponsorButton" Text="{Loc 'sponsor-window-become-button'}"
+                    StyleClasses="ButtonBig" HorizontalAlignment="Center" />
+            <controls:StripeBack Margin="0 6 0 0">
+                <Label Text="{Loc 'sponsor-window-levels-header'}" Align="Center" Margin="4 4 4 4" />
+            </controls:StripeBack>
+            <ScrollContainer HScrollEnabled="False" VerticalExpand="True" HorizontalExpand="True" Margin="0 4 0 0">
+                <BoxContainer Name="LevelCardsContainer" Orientation="Vertical" SeparationOverride="6"
+                              HorizontalExpand="True" />
+            </ScrollContainer>
+        </BoxContainer>
+
+    </BoxContainer>
+</controls:FancyWindow>

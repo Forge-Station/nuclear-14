@@ -41,10 +41,10 @@
   components:
   - type: StorageFill
     contents:
-      - id: MedicatedSuture
+      - id: N14MedicatedSuture
       - id: N14Stimpak
       - id: N14ChemicalSyringeAntidote
-      - id: RegenerativeMesh
+      - id: N14RegenerativeOintment
 
 - type: entity
   id: N14MedkitRadiationFilled

@@ -6,75 +6,29 @@ namespace Content.Client._NC.Trade;
 
 public sealed partial class NcStoreMenu
 {
-    private sealed class UiStateBinder
+    private sealed partial class UiStateBinder
     {
         private readonly NcStoreMenu _m;
+        private readonly List<string> _scopedRemoveScratch = new();
+        private readonly HashSet<string> _snapshotScopeIds = new();
 
         private bool _hasLastDynamic;
-        private int _lastContractsHash;
-        private int _lastCrateMembershipHash;
-        private int _lastReadyMembershipHash;
+        private ulong _lastCrateMembershipHash;
+        private ulong _lastReadyMembershipHash;
 
         public UiStateBinder(NcStoreMenu menu)
         {
             _m = menu;
         }
 
-        private static bool DictEquals(Dictionary<string, int> a, Dictionary<string, int> b)
-        {
-            if (ReferenceEquals(a, b))
-                return true;
-
-            if (a.Count != b.Count)
-                return false;
-
-            foreach (var (k, v) in a)
-                if (!b.TryGetValue(k, out var other) || other != v)
-                    return false;
-
-            return true;
-        }
-
-        private static void ApplySparseSnapshot(Dictionary<string, int> src, Dictionary<string, int> dst)
-        {
-            dst.Clear();
-
-            foreach (var (k, v) in src)
-            {
-                if (string.IsNullOrWhiteSpace(k))
-                    continue;
-
-                dst[k] = v;
-            }
-        }
-
-        private static int ComputeContractsHash(List<ContractClientData> contracts)
+        private ulong ComputeReadyMembershipHash(
+            Dictionary<string, int> ownedById,
+            Dictionary<string, int> remainingById
+        )
         {
             unchecked
             {
-                var h = 17;
-                for (var i = 0; i < contracts.Count; i++)
-                {
-                    var c = contracts[i];
-                    h = h * 31 + (c.Id?.GetHashCode() ?? 0);
-                    h = h * 31 + (c.Completed ? 1 : 0);
-                    h = h * 31 + c.Progress;
-                    h = h * 31 + c.Required;
-                    h = h * 31 + (c.Difficulty?.GetHashCode() ?? 0);
-                    h = h * 31 + (c.Name?.GetHashCode() ?? 0);
-                    h = h * 31 + (c.Targets?.Count ?? 0);
-                    h = h * 31 + (c.Rewards?.Count ?? 0);
-                }
-
-                return h;
-            }
-        }
-
-        private int ComputeReadyMembershipHash(Dictionary<string, int> ownedById, Dictionary<string, int> remainingById)
-        {
-            unchecked
-            {
-                var h = 17;
+                var h = 14695981039346656037UL;
                 var catalog = _m._catalogModel.Catalog;
                 for (var i = 0; i < catalog.Count; i++)
                 {
@@ -89,19 +43,19 @@ public sealed partial class NcStoreMenu
                     var remaining = remainingById.GetValueOrDefault(s.Id, -1);
                     if (remaining == 0)
                         continue;
-                    h = h * 31 + (s.Id?.GetHashCode() ?? 0);
+
+                    h = (h ^ (uint) StableStringHash(s.Id)) * 1099511628211UL;
                 }
 
                 return h;
             }
         }
 
-        private int ComputeCrateMembershipHash(Dictionary<string, int> crateUnitsById)
+        private ulong ComputeCrateMembershipHash(Dictionary<string, int> crateUnitsById)
         {
             unchecked
             {
-                var h = 17;
-
+                var h = 14695981039346656037UL;
                 var catalog = _m._catalogModel.Catalog;
                 for (var i = 0; i < catalog.Count; i++)
                 {
@@ -112,7 +66,8 @@ public sealed partial class NcStoreMenu
                     var take = crateUnitsById.GetValueOrDefault(s.Id, 0);
                     if (take <= 0)
                         continue;
-                    h = h * 31 + (s.Id?.GetHashCode() ?? 0);
+
+                    h = (h ^ (uint) StableStringHash(s.Id)) * 1099511628211UL;
                 }
 
                 return h;
@@ -123,11 +78,16 @@ public sealed partial class NcStoreMenu
             List<StoreListingStaticData> listings,
             bool hasBuyTab,
             bool hasSellTab,
-            bool hasContractsTab
+            bool hasBarterTab,
+            bool hasContractsTab,
+            StoreUiColorsData? uiColors
         )
         {
+            _m.ApplyUiTheme(uiColors);
+
             _m._hasBuyTab = hasBuyTab;
             _m._hasSellTab = hasSellTab;
+            _m._hasBarterTab = hasBarterTab;
             _m._hasContractsTab = hasContractsTab;
 
             _m.ApplyTabsVisibility();
@@ -138,7 +98,20 @@ public sealed partial class NcStoreMenu
             for (var i = 0; i < listings.Count; i++)
             {
                 var s = listings[i];
-                if (string.IsNullOrWhiteSpace(s.Id) || string.IsNullOrWhiteSpace(s.ProductEntity))
+                if (string.IsNullOrWhiteSpace(s.Id))
+                    continue;
+
+                if (s.Mode != StoreMode.Buy && s.Mode != StoreMode.Sell && s.Mode != StoreMode.Barter)
+                    continue;
+
+                if (s.Mode != StoreMode.Barter && string.IsNullOrWhiteSpace(s.ProductEntity))
+                    continue;
+
+                if (s.Mode == StoreMode.Barter &&
+                    string.IsNullOrWhiteSpace(s.ProductEntity) &&
+                    s.BarterCost.Count == 0 &&
+                    s.BarterReceive.Count == 0 &&
+                    s.BarterReceivePools.Count == 0)
                     continue;
 
                 filtered.Add(s);
@@ -148,18 +121,23 @@ public sealed partial class NcStoreMenu
 
             var productProtos = new List<string>(filtered.Count);
             for (var i = 0; i < filtered.Count; i++)
-                productProtos.Add(filtered[i].ProductEntity);
+                if (filtered[i].MatchMode != PrototypeMatchMode.Tag &&
+                    !string.IsNullOrWhiteSpace(filtered[i].ProductEntity))
+                    productProtos.Add(filtered[i].ProductEntity);
 
             _m.BuyView.PrepareSearchIndex(productProtos);
             _m.SellView.PrepareSearchIndex(productProtos);
+            _m.BarterView.PrepareSearchIndex(productProtos);
 
             _m.RebuildCategoriesFromCatalog();
+            _m.RebuildItemsFromCatalogAndDynamic();
+            _m.UpdateVirtualSellCategories();
 
             _m.BuyView.SetSearch(string.Empty);
             _m.SellView.SetSearch(string.Empty);
+            _m.BarterView.SetSearch(string.Empty);
             _m.RefreshListings();
             _hasLastDynamic = false;
-            _lastContractsHash = 0;
             _lastReadyMembershipHash = 0;
             _lastCrateMembershipHash = 0;
         }
@@ -172,17 +150,24 @@ public sealed partial class NcStoreMenu
             Dictionary<string, int> massTotals,
             bool hasBuyTab,
             bool hasSellTab,
+            bool hasBarterTab,
             bool hasContractsTab,
-            List<ContractClientData> contracts
+            List<ContractClientData> contracts,
+            int contractSkipCost,
+            string contractSkipCurrency,
+            bool isSparseDynamicSnapshot,
+            List<string> snapshotScopeIds
         )
         {
             var tabsChanged = !_hasLastDynamic ||
                 hasBuyTab != _m._hasBuyTab ||
                 hasSellTab != _m._hasSellTab ||
+                hasBarterTab != _m._hasBarterTab ||
                 hasContractsTab != _m._hasContractsTab;
 
             _m._hasBuyTab = hasBuyTab;
             _m._hasSellTab = hasSellTab;
+            _m._hasBarterTab = hasBarterTab;
             _m._hasContractsTab = hasContractsTab;
 
             if (tabsChanged)
@@ -194,27 +179,68 @@ public sealed partial class NcStoreMenu
             var balancesChanged = !DictEquals(balancesByCurrency, _m._balancesByCurrency);
             if (balancesChanged)
                 _m.SetBalancesByCurrency(balancesByCurrency);
-            var remainingChanged = !DictEquals(remainingById, _m._catalogModel.RemainingById);
-            var ownedChanged = !DictEquals(ownedById, _m._catalogModel.OwnedById);
+
+            _snapshotScopeIds.Clear();
+            for (var i = 0; i < snapshotScopeIds.Count; i++)
+            {
+                var id = snapshotScopeIds[i];
+                if (!string.IsNullOrWhiteSpace(id))
+                    _snapshotScopeIds.Add(id);
+            }
+
+            var hasExplicitScope = _snapshotScopeIds.Count > 0 || isSparseDynamicSnapshot;
+            var remainingChanged = hasExplicitScope
+                ? !ScopedDictEquals(
+                    remainingById,
+                    _m._catalogModel.RemainingById,
+                    _snapshotScopeIds)
+                : !DictEquals(remainingById, _m._catalogModel.RemainingById);
+            var ownedChanged = hasExplicitScope
+                ? !ScopedDictEquals(
+                    ownedById,
+                    _m._catalogModel.OwnedById,
+                    _snapshotScopeIds)
+                : !DictEquals(ownedById, _m._catalogModel.OwnedById);
             var crateChanged = !DictEquals(crateUnitsById, _m._catalogModel.CrateUnitsById);
 
             if (remainingChanged)
-                ApplySparseSnapshot(remainingById, _m._catalogModel.RemainingById);
+            {
+                if (hasExplicitScope)
+                {
+                    ApplyScopedSnapshot(
+                        remainingById,
+                        _m._catalogModel.RemainingById,
+                        _snapshotScopeIds);
+                }
+                else
+                    ApplySparseSnapshot(remainingById, _m._catalogModel.RemainingById);
+            }
 
             if (ownedChanged)
-                ApplySparseSnapshot(ownedById, _m._catalogModel.OwnedById);
+            {
+                if (hasExplicitScope)
+                {
+                    ApplyScopedSnapshot(
+                        ownedById,
+                        _m._catalogModel.OwnedById,
+                        _snapshotScopeIds);
+                }
+                else
+                    ApplySparseSnapshot(ownedById, _m._catalogModel.OwnedById);
+            }
 
             if (crateChanged)
                 ApplySparseSnapshot(crateUnitsById, _m._catalogModel.CrateUnitsById);
+
             if (!DictEquals(massTotals, _m._massSellTotals))
                 _m.SetMassSellTotals(massTotals);
 
-            var contractsHash = ComputeContractsHash(contracts);
-            if (!_hasLastDynamic || contractsHash != _lastContractsHash)
-            {
-                _lastContractsHash = contractsHash;
-                _m.PopulateContracts(contracts);
-            }
+            var trackSkipBalance = contractSkipCost > 0 && !string.IsNullOrWhiteSpace(contractSkipCurrency);
+            var currentSkipBalance = trackSkipBalance
+                ? balancesByCurrency.GetValueOrDefault(contractSkipCurrency, 0)
+                : 0;
+
+            _m.PopulateContracts(contracts, contractSkipCost, contractSkipCurrency, currentSkipBalance);
 
             var readyMembershipHash = ComputeReadyMembershipHash(ownedById, remainingById);
             var crateMembershipHash = ComputeCrateMembershipHash(crateUnitsById);
@@ -242,7 +268,6 @@ public sealed partial class NcStoreMenu
 
             _lastReadyMembershipHash = readyMembershipHash;
             _lastCrateMembershipHash = crateMembershipHash;
-
             _hasLastDynamic = true;
         }
     }

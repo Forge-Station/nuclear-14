@@ -13,10 +13,10 @@
       - Ghoul
     - !type:CharacterDepartmentTimeRequirement
       department: BrotherhoodWashington
-      min: 18000
+      min: 21600 # Forge-Change (6 hours)
   startingGear: BoSWashingtonKnightGear
   alwaysUseSpawner: true
-  icon: "JobIconPassenger"
+  icon: "JobIconbosWKnight"
   supervisors: job-supervisors-bos-wash-knight
   access:
   - WashingtonInitiate
@@ -32,15 +32,20 @@
 - type: startingGear
   id: BoSWashingtonKnightGear
   equipment:
-    jumpsuit: N14ClothingUniformJumpsuitBOSRed
-    back: N14ClothingBackpackMilitaryFilled
-    shoes: N14ClothingBootsLeatherFilled
-    hands: N14ClothingHandsGlovesCombat
-    head: N14ClothingHeadHatBrotherhoodHelmet
-    outerClothing: N14ClothingOuterWBoSKnightArmor
+    jumpsuit: N14ClothingUniformJumpsuitWBoSClassic # Forge-Change
+    back: N14ClothingBackpackMilitary # Forge-Change
+    shoes: N14ClothingBootsCombat
+    gloves: N14ClothingHandsGlovesCombat
+    eyes: N14ClothingEyesGlassesWBoS # Forge-Add
+    mask: ClothingMaskNeckGaiter # Forge-Add
+    head: N14ClothingHeadHatWBoSBattleHelmet # Forge-Change
+    outerClothing: N14ClothingOuterWBoSKnightBattleArmor # Forge-Change
     id: N14IDBrotherhoodWashingtonHolotagKnight
     belt: ClothingBeltBoSWebbing
     pocket1: BoSWashingtonKnightSet
+  storage: # Forge-Change
+    back:
+    - N14BoxPlasticFilledMilitary
 
 - type: playTimeTracker
   id: BoSWashingtonKnight

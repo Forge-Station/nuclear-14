@@ -125,6 +125,39 @@
             - !type:DeleteEntity {}
 
 - type: constructionGraph
+  id: DecorationFlagBrotherhoodWashington
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: FlagBrotherhoodWashington
+          steps:
+            - material: WoodPlank
+              amount: 5
+              doAfter: 3
+            - material: Cloth
+              amount: 5
+              doAfter: 3
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+    - node: FlagBrotherhoodWashington
+      entity: N14DecorationFlagBrotherhoodWashington
+      edges:
+        - to: start
+          steps:
+            - tool: Prying
+              doAfter: 5
+          completed:
+            - !type:GivePrototype
+              prototype: MaterialWoodPlank1
+              amount: 3
+            - !type:GivePrototype
+              prototype: MaterialCloth1
+              amount: 3
+            - !type:DeleteEntity {}
+
+- type: constructionGraph
   id: DecorationFlagLocust
   start: start
   graph:
@@ -242,6 +275,72 @@
               southRotation: true
     - node: FlagLegion
       entity: N14DecorationFlagLegion
+      edges:
+        - to: start
+          steps:
+            - tool: Prying
+              doAfter: 5
+          completed:
+            - !type:GivePrototype
+              prototype: MaterialWoodPlank1
+              amount: 3
+            - !type:GivePrototype
+              prototype: MaterialCloth1
+              amount: 3
+            - !type:DeleteEntity {}
+
+- type: constructionGraph
+  id: DecorationFlagBazar
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: FlagBazar
+          steps:
+            - material: WoodPlank
+              amount: 5
+              doAfter: 3
+            - material: Cloth
+              amount: 5
+              doAfter: 3
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+    - node: FlagBazar
+      entity: N14DecorationFlagBazar
+      edges:
+        - to: start
+          steps:
+            - tool: Prying
+              doAfter: 5
+          completed:
+            - !type:GivePrototype
+              prototype: MaterialWoodPlank1
+              amount: 3
+            - !type:GivePrototype
+              prototype: MaterialCloth1
+              amount: 3
+            - !type:DeleteEntity {}
+
+- type: constructionGraph
+  id: DecorationFlagWesterBoS
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: FlagWesterBoS
+          steps:
+            - material: WoodPlank
+              amount: 5
+              doAfter: 3
+            - material: Cloth
+              amount: 5
+              doAfter: 3
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+    - node: FlagWesterBoS
+      entity: N14DecorationFlagWesterBoS
       edges:
         - to: start
           steps:

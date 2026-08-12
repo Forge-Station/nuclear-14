@@ -1,0 +1,390 @@
+# Forge: профили состояния оружия по классам.
+# Использование: parent: [<БазовоеОружие>, <ForgeПрофиль>]
+
+# ============================================
+# Профили (абстрактные)
+# ============================================
+
+# Пистолеты / револьверы — надёжное короткоствольное оружие.
+- type: entity
+  id: ForgeGunConditionProfileSidearm
+  abstract: true
+  components:
+  - type: GunCondition
+    # Состояние
+    maxCondition: 100       # максимум прочности
+    condition: 100          # прочность при спавне
+    brokenThreshold: 0      # при скольки ломается
+    # Пороги износа (от лучшего к худшему)
+    wornThreshold: 70       # потёртое
+    damagedThreshold: 40    # повреждённое
+    criticalThreshold: 15   # критическое
+    # Износ и ремонт
+    wearPerShot: 0.25       # потеря прочности за выстрел
+    repairAmount: 28        # восстановление за ремонт
+    unjamTime: 0.8          # время устранения клина (DoAfter), сек
+    # Заклинивание
+    jamStart: 55            # ниже — начинает клинить
+    jamPeak: 12             # ниже — максимальный шанс клина
+    jamChanceMin: 0         # шанс клина у начала зоны
+    jamChanceMax: 0.14      # шанс клина в критической зоне
+    jamCurve: 1.35          # кривая роста (1 = линейно, >1 = резче к концу)
+
+# ПП — износ и клины ощущаются раньше.
+- type: entity
+  id: ForgeGunConditionProfileSMG
+  abstract: true
+  components:
+  - type: GunCondition
+    # Состояние
+    maxCondition: 100       # максимум прочности
+    condition: 100          # прочность при спавне
+    brokenThreshold: 0      # при скольки ломается
+    # Пороги износа (от лучшего к худшему)
+    wornThreshold: 70       # потёртое
+    damagedThreshold: 40    # повреждённое
+    criticalThreshold: 15   # критическое
+    # Износ и ремонт
+    wearPerShot: 0.21       # потеря прочности за выстрел
+    repairAmount: 34        # восстановление за ремонт
+    unjamTime: 0.8          # время устранения клина (DoAfter), сек
+    # Заклинивание
+    jamStart: 50            # ниже — начинает клинить
+    jamPeak: 20             # ниже — максимальный шанс клина
+    jamChanceMin: 0.02      # шанс клина у начала зоны
+    jamChanceMax: 0.38      # шанс клина в критической зоне
+    jamCurve: 0.95          # кривая роста (1 = линейно, >1 = резче к концу)
+
+# Дробовик — износ заметный, но клин растёт плавно.
+- type: entity
+  id: ForgeGunConditionProfileShotgun
+  abstract: true
+  components:
+  - type: GunCondition
+    # Состояние
+    maxCondition: 100       # максимум прочности
+    condition: 100          # прочность при спавне
+    brokenThreshold: 0      # при скольки ломается
+    # Пороги износа (от лучшего к худшему)
+    wornThreshold: 70       # потёртое
+    damagedThreshold: 40    # повреждённое
+    criticalThreshold: 15   # критическое
+    # Износ и ремонт
+    wearPerShot: 0.66       # потеря прочности за выстрел
+    repairAmount: 38        # восстановление за ремонт
+    unjamTime: 0.8          # время устранения клина (DoAfter), сек
+    # Заклинивание
+    jamStart: 62            # ниже — начинает клинить
+    jamPeak: 14             # ниже — максимальный шанс клина
+    jamChanceMin: 0.01      # шанс клина у начала зоны
+    jamChanceMax: 0.24      # шанс клина в критической зоне
+    jamCurve: 1.2           # кривая роста (1 = линейно, >1 = резче к концу)
+
+# Автомат / штурмовая винтовка — средний износ и шанс клина.
+- type: entity
+  id: ForgeGunConditionProfileAssault
+  abstract: true
+  components:
+  - type: GunCondition
+    # Состояние
+    maxCondition: 100       # максимум прочности
+    condition: 100          # прочность при спавне
+    brokenThreshold: 0      # при скольки ломается
+    # Пороги износа (от лучшего к худшему)
+    wornThreshold: 70       # потёртое
+    damagedThreshold: 40    # повреждённое
+    criticalThreshold: 15   # критическое
+    # Износ и ремонт
+    wearPerShot: 0.20      # потеря прочности за выстрел
+    repairAmount: 40        # восстановление за ремонт
+    unjamTime: 0.8          # время устранения клина (DoAfter), сек
+    # Заклинивание
+    jamStart: 68            # ниже — начинает клинить
+    jamPeak: 16             # ниже — максимальный шанс клина
+    jamChanceMin: 0.01      # шанс клина у начала зоны
+    jamChanceMax: 0.28      # шанс клина в критической зоне
+    jamCurve: 1.05          # кривая роста (1 = линейно, >1 = резче к концу)
+
+# Снайперка — редкий огонь, умеренный износ, клин поздний.
+- type: entity
+  id: ForgeGunConditionProfileSniper
+  abstract: true
+  components:
+  - type: GunCondition
+    # Состояние
+    maxCondition: 100       # максимум прочности
+    condition: 100          # прочность при спавне
+    brokenThreshold: 0      # при скольки ломается
+    # Пороги износа (от лучшего к худшему)
+    wornThreshold: 70       # потёртое
+    damagedThreshold: 40    # повреждённое
+    criticalThreshold: 15   # критическое
+    # Износ и ремонт
+    wearPerShot: 0.42       # потеря прочности за выстрел
+    repairAmount: 32        # восстановление за ремонт
+    unjamTime: 0.8          # время устранения клина (DoAfter), сек
+    # Заклинивание
+    jamStart: 58            # ниже — начинает клинить
+    jamPeak: 12             # ниже — максимальный шанс клина
+    jamChanceMin: 0         # шанс клина у начала зоны
+    jamChanceMax: 0.2       # шанс клина в критической зоне
+    jamCurve: 1.3           # кривая роста (1 = линейно, >1 = резче к концу)
+
+# Пулемёт — пониженный износ, но высокий шанс клина, из-за базовой скорострельности.
+- type: entity
+  id: ForgeGunConditionProfileLMG
+  abstract: true
+  components:
+  - type: GunCondition
+    # Состояние
+    maxCondition: 100       # максимум прочности
+    condition: 100          # прочность при спавне
+    brokenThreshold: 0      # при скольки ломается
+    # Пороги износа (от лучшего к худшему)
+    wornThreshold: 70       # потёртое
+    damagedThreshold: 40    # повреждённое
+    criticalThreshold: 15   # критическое
+    # Износ и ремонт
+    wearPerShot: 0.13       # потеря прочности за выстрел
+    repairAmount: 45        # восстановление за ремонт
+    unjamTime: 0.8          # время устранения клина (DoAfter), сек
+    # Заклинивание
+    jamStart: 60            # ниже — начинает клинить
+    jamPeak: 20             # ниже — максимальный шанс клина
+    jamChanceMin: 0.03      # шанс клина у начала зоны
+    jamChanceMax: 0.42      # шанс клина в критической зоне
+    jamCurve: 0.9           # кривая роста (1 = линейно, >1 = резче к концу)
+
+# Пулемёт — пониженный износ, но высокий шанс клина, из-за базовой скорострельности.
+- type: entity
+  id: ForgeGunConditionProfileMinigun
+  abstract: true
+  components:
+  - type: GunCondition
+    # Состояние
+    maxCondition: 100       # максимум прочности
+    condition: 100          # прочность при спавне
+    brokenThreshold: 0      # при скольки ломается
+    # Пороги износа (от лучшего к худшему)
+    wornThreshold: 70       # потёртое
+    damagedThreshold: 40    # повреждённое
+    criticalThreshold: 15   # критическое
+    # Износ и ремонт
+    wearPerShot: 0.08       # потеря прочности за выстрел
+    repairAmount: 45        # восстановление за ремонт
+    unjamTime: 0.8          # время устранения клина (DoAfter), сек
+    # Заклинивание
+    jamStart: 60            # ниже — начинает клинить
+    jamPeak: 20             # ниже — максимальный шанс клина
+    jamChanceMin: 0.03      # шанс клина у начала зоны
+    jamChanceMax: 0.42      # шанс клина в критической зоне
+    jamCurve: 0.9           # кривая роста (1 = линейно, >1 = резче к концу)
+
+# Граники - тоже не клинет, живет нормально, но дорого чинить
+- type: entity
+  id: ForgeGunConditionProfileLauncher
+  abstract: true
+  components:
+  - type: GunCondition
+    # Состояние
+    maxCondition: 100       # максимум прочности
+    condition: 100          # прочность при спавне
+    brokenThreshold: 0      # при скольки ломается
+    # Пороги износа (от лучшего к худшему)
+    wornThreshold: 70       # потёртое
+    damagedThreshold: 40    # повреждённое
+    criticalThreshold: 15   # критическое
+    # Износ и ремонт
+    wearPerShot: 2       # потеря прочности за выстрел
+    repairAmount: 20        # восстановление за ремонт
+    unjamTime: 0          # время устранения клина (DoAfter), сек
+    # Заклинивание
+    jamStart: 0            # ниже — начинает клинить
+    jamPeak: 0             # ниже — максимальный шанс клина
+    jamChanceMin: 0      # шанс клина у начала зоны
+    jamChanceMax: 0      # шанс клина в критической зоне
+    jamCurve: 0           # кривая роста (1 = линейно, >1 = резче к концу)
+
+# Анти-Материальная Винтовка - Отдельный высокий износ, из-за высокого калибра и большой пробиваемости.
+- type: entity 
+  id: ForgeGunConditionProfileAMR
+  abstract: true
+  components:
+  - type: GunCondition
+    # Состояние
+    maxCondition: 100       # максимум прочности
+    condition: 100          # прочность при спавне
+    brokenThreshold: 0      # при скольки ломается
+    # Пороги износа (от лучшего к худшему)
+    wornThreshold: 70       # потёртое
+    damagedThreshold: 40    # повреждённое
+    criticalThreshold: 15   # критическое
+    # Износ и ремонт
+    wearPerShot: 1      # потеря прочности за выстрел
+    repairAmount: 50        # восстановление за ремонт
+    unjamTime: 2          # время устранения клина (DoAfter), сек
+    # Заклинивание
+    jamStart: 40            # ниже — начинает клинить
+    jamPeak: 12             # ниже — максимальный шанс клина
+    jamChanceMin: 0         # шанс клина у начала зоны
+    jamChanceMax: 0.2       # шанс клина в критической зоне
+    jamCurve: 1.3           # кривая роста (1 = линейно, >1 = резче к концу)
+
+# Версия для самодельной и однозарядной АМР, из-за кустарного производства.
+- type: entity 
+  id: ForgeGunConditionProfileAMRPipe
+  abstract: true
+  components:
+  - type: GunCondition
+    # Состояние
+    maxCondition: 100       # максимум прочности
+    condition: 100          # прочность при спавне
+    brokenThreshold: 0      # при скольки ломается
+    # Пороги износа (от лучшего к худшему)
+    wornThreshold: 70       # потёртое
+    damagedThreshold: 40    # повреждённое
+    criticalThreshold: 15   # критическое
+    # Износ и ремонт
+    wearPerShot: 1.6      # потеря прочности за выстрел
+    repairAmount: 50        # восстановление за ремонт
+    unjamTime: 2          # время устранения клина (DoAfter), сек
+    # Заклинивание
+    jamStart: 50            # ниже — начинает клинить
+    jamPeak: 20             # ниже — максимальный шанс клина
+    jamChanceMin: 0         # шанс клина у начала зоны
+    jamChanceMax: 0.5       # шанс клина в критической зоне
+    jamCurve: 1.3           # кривая роста (1 = линейно, >1 = резче к концу)
+
+# Самодельные Пистолеты - очевидно крайне высокий износ и шанс клина, из-за кустарного производства и низкого качества материалов, к тому же - никогда не имеет полную прочность при спавне.
+- type: entity
+  id: ForgeGunConditionProfilePistolPipe
+  abstract: true
+  components:
+  - type: GunCondition
+    # Состояние
+    maxCondition: 100       # максимум прочности
+    condition: 80          # прочность при спавне
+    brokenThreshold: 0      # при скольки ломается
+    # Пороги износа (от лучшего к худшему)
+    wornThreshold: 70       # потёртое
+    damagedThreshold: 40    # повреждённое
+    criticalThreshold: 15   # критическое
+    # Износ и ремонт
+    wearPerShot: 0.58       # потеря прочности за выстрел
+    repairAmount: 34        # восстановление за ремонт
+    unjamTime: 0.8          # время устранения клина (DoAfter), сек
+    # Заклинивание
+    jamStart: 90            # ниже — начинает клинить
+    jamPeak: 20             # ниже — максимальный шанс клина
+    jamChanceMin: 0.02      # шанс клина у начала зоны
+    jamChanceMax: 0.32      # шанс клина в критической зоне
+    jamCurve: 0.95          # кривая роста (1 = линейно, >1 = резче к концу)
+
+# Лазерки - в основном обладают схожей или индентичной прочностью, при этом они никогда не клинят, но остаются дорогими в обслуживании
+- type: entity
+  id: ForgeGunConditionProfileLaser
+  abstract: true
+  components:
+  - type: GunCondition
+    # Состояние
+    maxCondition: 100       # максимум прочности
+    condition: 100          # прочность при спавне
+    brokenThreshold: 0      # при скольки ломается
+    # Пороги износа (от лучшего к худшему)
+    wornThreshold: 70       # потёртое
+    damagedThreshold: 40    # повреждённое
+    criticalThreshold: 15   # критическое
+    # Износ и ремонт
+    wearPerShot: 0.40       # потеря прочности за выстрел
+    repairAmount: 30        # восстановление за ремонт
+    unjamTime: 0          # время устранения клина (DoAfter), сек
+    # Заклинивание
+    jamStart: 0            # ниже — начинает клинить
+    jamPeak: 0             # ниже — максимальный шанс клина
+    jamChanceMin: 0      # шанс клина у начала зоны
+    jamChanceMax: 0      # шанс клина в критической зоне
+    jamCurve: 0          # кривая роста (1 = линейно, >1 = резче к концу)
+
+# Лазер пулик, ок
+- type: entity
+  id: ForgeGunConditionProfileLaserLMG
+  abstract: true
+  components:
+  - type: GunCondition
+    # Состояние
+    maxCondition: 100       # максимум прочности
+    condition: 100          # прочность при спавне
+    brokenThreshold: 0      # при скольки ломается
+    # Пороги износа (от лучшего к худшему)
+    wornThreshold: 70       # потёртое
+    damagedThreshold: 40    # повреждённое
+    criticalThreshold: 15   # критическое
+    # Износ и ремонт
+    wearPerShot: 0.10       # потеря прочности за выстрел
+    repairAmount: 30        # восстановление за ремонт
+    unjamTime: 0          # время устранения клина (DoAfter), сек
+    # Заклинивание
+    jamStart: 0            # ниже — начинает клинить
+    jamPeak: 0             # ниже — максимальный шанс клина
+    jamChanceMin: 0      # шанс клина у начала зоны
+    jamChanceMax: 0      # шанс клина в критической зоне
+    jamCurve: 0          # кривая роста (1 = линейно, >1 = резче к концу)
+
+- type: entity
+  id: ForgeGunConditionProfileSMGPipe
+  abstract: true
+  components:
+  - type: GunCondition
+    # Состояние
+    maxCondition: 100       # максимум прочности
+    condition: 80          # прочность при спавне
+    brokenThreshold: 0      # при скольки ломается
+    # Пороги износа (от лучшего к худшему)
+    wornThreshold: 70       # потёртое
+    damagedThreshold: 40    # повреждённое
+    criticalThreshold: 15   # критическое
+    # Износ и ремонт
+    wearPerShot: 0.58       # потеря прочности за выстрел
+    repairAmount: 34        # восстановление за ремонт
+    unjamTime: 0.9          # время устранения клина (DoAfter), сек
+    # Заклинивание
+    jamStart: 90            # ниже — начинает клинить
+    jamPeak: 20             # ниже — максимальный шанс клина
+    jamChanceMin: 0.02      # шанс клина у начала зоны
+    jamChanceMax: 0.20      # шанс клина в критической зоне
+    jamCurve: 0.95          # кривая роста (1 = линейно, >1 = резче к концу)
+
+
+# ============================================
+# Готовые Forge-варианты оружия для тестов
+# ============================================
+
+- type: entity
+  id: ForgeWeaponRevolverArgenti
+  parent: [WeaponRevolverArgenti, ForgeGunConditionProfileSidearm]
+  name: Argenti (Forge)
+
+- type: entity
+  id: ForgeWeaponSubMachineGunC20r
+  parent: [WeaponSubMachineGunC20r, ForgeGunConditionProfileSMG]
+  name: C-20r (Forge)
+
+- type: entity
+  id: ForgeWeaponShotgunKammerer
+  parent: [WeaponShotgunKammerer, ForgeGunConditionProfileShotgun]
+  name: Kammerer (Forge)
+
+- type: entity
+  id: ForgeWeaponRifleGestio
+  parent: [WeaponRifleGestio, ForgeGunConditionProfileAssault]
+  name: Gestio (Forge)
+
+- type: entity
+  id: ForgeWeaponSniperRepeater
+  parent: [WeaponSniperRepeater, ForgeGunConditionProfileSniper]
+  name: N2524 Repeater (Forge)
+
+- type: entity
+  id: ForgeWeaponLightMachineGunL6
+  parent: [WeaponLightMachineGunL6, ForgeGunConditionProfileLMG]
+  name: L6 SAW (Forge)

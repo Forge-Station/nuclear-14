@@ -244,7 +244,7 @@
 - type: trait
   id: N14UnnaturalReg
   category: Physical
-  points: -5
+  points: -8
   requirements:
     - !type:CharacterTraitRequirement
       inverted: true
@@ -259,13 +259,13 @@
         - type: PassiveDamage
           allowedStates:
           - Alive # Forge-Change
-          damageCap: 200
+          - Critical # Forge-add
+          damageCap: 300
           damage:
             groups:
-              Brute: -0.035 # Forge-Change
-              Burn: -0.035 # Forge-Change
-              Airloss: -0.035
-              Toxin: -0.015 # Forge-Change
+              Brute: -0.75 # Forge-Change
+              Burn: -1.0 # Forge-Change
+              Toxin: -0.2 # Forge-Change
 
 - type: trait
   id: N14WorldChampion
@@ -380,7 +380,7 @@
 - type: trait
   id: N14GammaShield
   category: Physical
-  points: -8
+  points: -6
   requirements:
     - !type:CharacterSpeciesRequirement
       species:
@@ -411,7 +411,7 @@
 - type: trait
   id: N14DermalArmorWaster
   category: Physical
-  points: -8
+  points: -6
   requirements:
     - !type:CharacterJobRequirement
       inverted: true

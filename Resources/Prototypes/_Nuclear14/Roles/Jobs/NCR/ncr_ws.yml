@@ -18,7 +18,7 @@
       tracker: NCRSoldier
       min: 18000 # 5 hours
   startingGear: NCRWSGear
-  icon: "JobIconNcrSpec" # Corvax-Change
+  icon: "JobIconNcrSpec" # Forge-Change
   supervisors: job-supervisors-ncr
   alwaysUseSpawner: true
   access:
@@ -34,15 +34,17 @@
 - type: startingGear
   id: NCRWSGear
   equipment:
-    back: N14ClothingBackpackNCR # Corvax-Change
-    jumpsuit: N14ClothingUniformNCRDesert # Corvax-Change
-    outerClothing: N14ClothingOuterNCRPouchedVestDesert # Forge-Change
+    back: N14ClothingBackpackNCR # Forge-Change
+    jumpsuit: N14ClothingUniformNCR # Forge-Change
+    outerClothing: N14ClothingOuterNCRVest # Forge-Change
+    head: N14ClothingHeadHatNCRHelmet # Forge-Change
+    belt: ClothingBeltNCR # Forge-Change
     shoes: N14ClothingBootsLeatherFilled
     pocket1: NCRwsloadoutkits
     id: N14IDNCRDogtagWS
-  innerClothingSkirt: N14ClothingUniformNCRDesert # Corvax-Change
+  innerClothingSkirt: N14ClothingUniformNCR # Forge-Change
   satchel: N14ClothingBackpackSatchelNCRFilled
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledMilitaryNCR
 

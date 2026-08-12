@@ -111,6 +111,6 @@ ent-PeaSeeds = пакет семян (горох)
 ent-PumpkinSeeds = пакет семян (тыква)
     .desc = { ent-SeedBase.desc }
 ent-CottonSeeds = пакет семян (хлопок)
-    .desc = { ent-SeedBase.desc }
+    .desc = Распространенное техническое растение, выращиваемое для производства ткани и одежды.
 ent-PyrottonSeeds = пакет семян (пирохлопок)
     .desc = { ent-SeedBase.desc }

@@ -4,7 +4,13 @@
             SetSize="500 300">
     <BoxContainer Orientation="Vertical"
                   HorizontalExpand="True">
-        <RichTextLabel Name="TopBanner" VerticalExpand="True"/>
+        <ScrollContainer VerticalExpand="True"
+                         HorizontalExpand="True"
+                         HScrollEnabled="False">
+            <RichTextLabel Name="TopBanner"
+                           VerticalExpand="True"
+                           HorizontalExpand="True" />
+        </ScrollContainer>
         <Button Name="RequestButton"
                 Text="{Loc 'ghost-roles-window-request-role-button'}"
                 Disabled="True"

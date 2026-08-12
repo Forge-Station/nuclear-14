@@ -235,6 +235,7 @@
     - wood_2
     - wood_3
   - type: Sprite
+    sprite: /Textures/_Corvax/Objects/Materials/materials.rsi #Forge-change
     state: wood
     layers:
     - state: wood
@@ -254,6 +255,33 @@
         reagents:
         - ReagentId: Cellulose
           Quantity: 10
+  - type: UserInterface
+    interfaces:
+      enum.RadialSelectorUiKey.Key:
+        type: RadialSelectorMenuBUI
+  - type: ActivatableUI
+    key: enum.RadialSelectorUiKey.Key
+    inHandsOnly: true
+    requireActiveHand: false
+  - type: ShortConstruction
+    entries:
+    - category:
+        name: Walls
+        icon:
+          sprite: _Nuclear14/Structures/Walls/ms13/slanted/wood.rsi
+          state: full
+        entries:
+          - prototype: N14WallWoodHalf
+          - prototype: N14WallWoodSlanted     
+          - prototype: N14WallWoodLog
+    - category:
+        name: Torch
+        icon:
+          sprite: Corvax/Structures/Decoration/torches.rsi
+          state: wall_torch_lite
+        entries:
+          - prototype: Torch
+          - prototype: N14TorchWall
 
 - type: entity
   parent: MaterialWoodPlank
@@ -397,6 +425,10 @@
   name: cotton
   suffix: Full
   components:
+  - type: Material # Forge-add
+  - type: PhysicalComposition # Forge-add
+    materialComposition:
+      Cotton: 100  
   - type: Stack
     stackType: Cotton
     baseLayer: base

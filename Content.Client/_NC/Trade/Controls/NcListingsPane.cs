@@ -3,25 +3,27 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 
+
 namespace Content.Client._NC.Trade.Controls;
+
 
 [GenerateTypedNameReferences]
 public sealed partial class NcListingsPane : PanelContainer
 {
+    private BoxContainer? _host;
     private string _key = string.Empty;
 
     private ScrollContainer? _scroll;
-    private BoxContainer? _host;
-
-    public bool RememberScrollPerKey { get; set; } = false;
 
     public NcListingsPane()
     {
         RobustXamlLoader.Load(this);
         RectClipContent = true;
 
-        RebuildScroll(resetToTop: true, preserveContent: false);
+        RebuildScroll(false);
     }
+
+    public bool RememberScrollPerKey { get; set; } = false;
 
     public void SetContent(Control content)
     {
@@ -40,34 +42,29 @@ public sealed partial class NcListingsPane : PanelContainer
 
         _key = key;
 
-        RebuildScroll(resetToTop: true, preserveContent: true);
+        RebuildScroll(true);
     }
 
-    public void ResetScroll()
-    {
-        RebuildScroll(resetToTop: true, preserveContent: true);
-    }
+    public void ResetScroll() => RebuildScroll(true);
 
     private void EnsureBuilt()
     {
         if (_scroll != null && _host != null)
             return;
 
-        RebuildScroll(resetToTop: true, preserveContent: false);
+        RebuildScroll(false);
     }
 
-    private void RebuildScroll(bool resetToTop, bool preserveContent)
+    private void RebuildScroll(bool preserveContent)
     {
         List<Control>? preserved = null;
 
         if (preserveContent && _host != null)
         {
-            preserved = new List<Control>();
+            preserved = new();
             foreach (var child in _host.Children)
-            {
                 if (child is Control c)
                     preserved.Add(c);
-            }
 
             foreach (var c in preserved)
                 _host.RemoveChild(c);
@@ -75,20 +72,21 @@ public sealed partial class NcListingsPane : PanelContainer
 
         ScrollHost.RemoveAllChildren();
 
-        _scroll = new ScrollContainer
+        _scroll = new()
         {
             HorizontalExpand = true,
             VerticalExpand = true,
-            HScrollEnabled = false
+            HScrollEnabled = false,
+            ReserveScrollbarSpace = true
         };
 
-        _host = new BoxContainer
+        _host = new()
         {
             Orientation = BoxContainer.LayoutOrientation.Vertical,
             HorizontalExpand = true,
             VerticalExpand = true,
 
-            Margin = new Thickness(0, 0, 14, 0)
+            Margin = new(0, 0, 0, 0)
         };
 
         _scroll.AddChild(_host);
@@ -99,7 +97,5 @@ public sealed partial class NcListingsPane : PanelContainer
             foreach (var c in preserved)
                 _host.AddChild(c);
         }
-
-        _ = resetToTop;
     }
 }

@@ -456,5 +456,5 @@
   - type: NavMapDoor
   - type: AutoLinkReceiver
     channel: Vaultdoor
-  - type: AccessReader # Corvax-Change
+  - type: AccessReader # Forge-Change
     access: [["VaultOverseer"]]

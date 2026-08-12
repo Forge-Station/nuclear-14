@@ -96,7 +96,7 @@
   - node: gloves
     entity: N14ClothingHandsGlovesCloth
 
-
+#MARK: Hats
 - type: constructionGraph
   id: NightstalkerhatGraph
   start: start
@@ -113,3 +113,4 @@
           doAfter: 8
   - node: head
     entity: N14ClothingHeadHatNightstalker
+

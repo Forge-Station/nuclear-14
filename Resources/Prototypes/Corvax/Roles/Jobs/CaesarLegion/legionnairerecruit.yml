@@ -36,18 +36,20 @@
   id: CaesarLegionLegionnaireRecruitGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitLegionnaire
+    outerClothing: N14ClothingOuterLegionnaireRecruitArmor
     mask: N14ClothingMaskBrownMask
     eyes: N14ClothingEyesGlassesWelding
     back: N14ClothingBackpackMilitary
     shoes: N14ClothingShoesKaligi
     head: N14ClothingHeadHatTribalOutcastHood
     gloves: N14ClothingHandsGlovesTribal
+    belt: ClothingBeltRope
     pocket1: LegionRecruitloadoutkits
     id: N14IDLegionaryBadge
   innerClothingSkirt: N14ClothingUniformJumpsuitLegionnaireOther
   storage:
     back:
-    - N14BoxPlasticFilledMilitary
+    - N14BoxPlasticFilledMilitaryLegion
 
 - type: playTimeTracker
   id: CaesarLegionLegionnaireRecruit

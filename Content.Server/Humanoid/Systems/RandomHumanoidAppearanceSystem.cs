@@ -26,6 +26,27 @@ public sealed class RandomHumanoidAppearanceSystem : EntitySystem
 
         var profile = HumanoidCharacterProfile.RandomWithSpecies(humanoid.Species);
 
+        if (component.Sex is { } sex)
+        {
+            profile = profile.WithSex(sex);
+            profile = profile.WithVoice(HumanoidCharacterProfile.RandomVoiceForSex(sex));
+        }
+
+        if (component.Gender is { } gender)
+            profile = profile.WithGender(gender);
+
+        if (component.Age is { } age)
+            profile = profile.WithAge(Math.Max(0, age));
+
+        if (component.SkinColor is { } skinColor)
+            profile = profile.WithCharacterAppearance(profile.Appearance.WithSkinColor(skinColor));
+
+        if (!string.IsNullOrWhiteSpace(component.Hair))
+            profile = profile.WithCharacterAppearance(profile.Appearance.WithHairStyleName(component.Hair));
+
+        if (component.HairColor is { } hairColor)
+            profile = profile.WithCharacterAppearance(profile.Appearance.WithHairColor(hairColor));
+
         _humanoid.LoadProfile(uid, profile, humanoid);
 
         if (component.RandomizeName)

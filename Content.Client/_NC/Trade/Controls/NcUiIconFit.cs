@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
 using Robust.Client.GameObjects;
 using Robust.Client.UserInterface.Controls;
 
+
 namespace Content.Client._NC.Trade.Controls;
+
 
 internal static class NcUiIconFit
 {
@@ -19,7 +19,8 @@ internal static class NcUiIconFit
         int targetPx,
         int paddingPx = 2,
         float mul = 1f,
-        int variant = 0)
+        int variant = 0
+    )
     {
         if (string.IsNullOrWhiteSpace(protoId) || targetPx <= 0)
             return;

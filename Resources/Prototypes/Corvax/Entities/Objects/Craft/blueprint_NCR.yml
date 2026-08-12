@@ -46,12 +46,12 @@
 #MARK: Armor
 - type: entity
   parent: N14BaseBlueprintPaper
-  id: N14ClothingOuterNCRVestDesertBlueprint
-  name: blueprint NCR vest desert
+  id: N14ClothingOuterNCRVestBlueprint
+  name: blueprint NCR vest
   suffix: Craft, NCR
   components:
     - type: STBlueprint
-      blueprint: N14ClothingOuterNCRVestDesertRecipe
+      blueprint: N14ClothingOuterNCRVestRecipe
 
 - type: entity
   parent: N14BaseBlueprintPaper

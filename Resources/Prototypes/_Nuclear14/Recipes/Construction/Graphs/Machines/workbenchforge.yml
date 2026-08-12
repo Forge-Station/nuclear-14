@@ -55,7 +55,7 @@
       edges:
         - to: WorkbenchForgeUnwrenched
           steps:
-            - material: Charcoal
+            - material: WoodPlank #Forge-Chage
               amount: 30
               doAfter: 2
 

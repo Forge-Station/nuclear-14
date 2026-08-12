@@ -28,3 +28,6 @@ ent-DoorElectronicsBOSWashingtonScribe = { ent-DoorElectronics }
 ent-DoorElectronicsBOSWashington = { ent-DoorElectronics }
     .desc = { ent-DoorElectronics.desc }
     .suffix = Общий ВБС, Закрыт
+ent-DoorElectronicsNCR = { ent-DoorElectronics }
+    .desc = { ent-DoorElectronics.desc }
+    .suffix = Общий НКР, Закрыт

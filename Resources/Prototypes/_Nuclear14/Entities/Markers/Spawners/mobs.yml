@@ -557,6 +557,7 @@
   - type: ConditionalSpawner
     prototypes:
       - N14MobFernMercLieutenant
+      - N14MobFernMercLieutenant1
 
 - type: entity
   name: Enforcer Spawner - Trooper
@@ -615,9 +616,12 @@
       - sprite: _Nuclear14/Mobs/RaidersSimpleMob/RaiderPsycho.rsi
         state: raider_melee
       - state: ai
-  - type: ConditionalSpawner
+  - type: ConditionalSpawner # Forge-add
     prototypes:
       - N14MobRaiderPsycho
+      - N14MobRaiderPsycho1 
+      - N14MobRaiderPsycho2
+      - N14MobRaiderPsycho3
 
 - type: entity
   name: Fern Spawner - Melee
@@ -724,7 +728,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotAssaultronHostile
+      - N14MobRobotHostileAssaultron # Forge-Change
       
 - type: entity
   name: Protectron Spawner
@@ -739,7 +743,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotProtectronHostile
+      - N14MobRobotHostileProtectron # Forge-Change
       
 - type: entity
   name: Protectron Builder Spawner
@@ -754,7 +758,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotProtectronBuilderHostile
+      - N14MobRobotHostileProtectronBuilder # Forge-Change
       
 - type: entity
   name: Protectron Fire Spawner
@@ -769,7 +773,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotProtectronFireHostile
+      - N14MobRobotHostileProtectronFire # Forge-Change
       
 - type: entity
   name: Protectron Police Spawner
@@ -784,7 +788,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotProtectronPoliceHostile
+      - N14MobRobotHostileProtectronPolice # Forge-Change
       
 - type: entity
   name: Mr Handy Spawner
@@ -799,7 +803,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotMrHandyClaw
+      - N14MobRobotHostileMrHandyClaw # Forge-Change
       
 - type: entity
   name: Mr Handy Gun Spawner
@@ -814,7 +818,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotMrHandyGun
+      - N14MobRobotHostileMrHandyGun # Forge-Change
       
 - type: entity
   name: Mr Handy Saw Spawner
@@ -829,7 +833,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotMrHandySaw
+      - N14MobRobotHostileMrHandySaw # Forge-Change
       
 - type: entity
   name: Mr Gutsy Spawner
@@ -844,7 +848,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotMrHandyGutsy
+      - N14MobRobotHostileMrHandyGutsy # Forge-Change
       
 - type: entity
   name: Robobrain Spawner
@@ -859,7 +863,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotRobobrain
+      - N14MobRobotHostileRobobrain # Forge-Change
       
 - type: entity
   name: Eyebot Spawner
@@ -874,7 +878,7 @@
       - state: ai
   - type: ConditionalSpawner
     prototypes:
-      - N14MobRobotEyebot
+      - N14MobRobotHostileEyebot # Forge-Change
 
 - type: entity
   name: Spore Plant Spawner

@@ -88,10 +88,30 @@
 #      state: generic_keys
   - type: InteractionOutline
 
+# Forge-Add-Start
+- type: entity
+  id: ForgeComputerTerminalBasePoweredHolo
+  parent: N14ComputerTerminalBasePowered
+  abstract: true
+  components:
+  - type: HolotapeReader
+  - type: HolotapeData
+  - type: TerminalRandomContent
+    contentPool:
+      - ForgeTerminalEntries
+  - type: TerminalNotebook
+    terminalId: default-terminal
+  - type: ActivatableUI
+    key: enum.HolotapeUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.HolotapeUiKey.Key:
+        type: HolotapeBoundUserInterface
+
 # Terminals in Use
 # New
 - type: entity
-  parent: N14ComputerTerminalBasePowered
+  parent: ForgeComputerTerminalBasePoweredHolo
   id: N14ComputerTerminalNew
   suffix: new
   name: terminal
@@ -155,7 +175,7 @@
 
 # Normal
 - type: entity
-  parent: N14ComputerTerminalBasePowered
+  parent: ForgeComputerTerminalBasePoweredHolo
   id: N14ComputerTerminal
   name: terminal
   description: A computer terminal. Looks aged.
@@ -279,7 +299,7 @@
 
 # Handmade
 - type: entity
-  parent: N14ComputerTerminalBasePowered
+  parent: ForgeComputerTerminalBasePoweredHolo
   id: N14ComputerTerminalHandmade
   suffix: handmade
   name: terminal
@@ -391,7 +411,7 @@
 # Wall Terminal
 # N14TODO: Needs a way to use it to use the off state.
 - type: entity
-  parent: [ N14ComputerTerminalWallBase, N14ComputerTerminalBasePowered ]
+  parent: [ N14ComputerTerminalWallBase, ForgeComputerTerminalBasePoweredHolo ]
   id: N14ComputerTerminalWall
   name: wall terminal
   description: A computer terminal. Looks old.
@@ -416,7 +436,7 @@
 
 # New
 - type: entity
-  parent: [ N14ComputerTerminalWallBase, N14ComputerTerminalBasePowered ]
+  parent: [ N14ComputerTerminalWallBase, ForgeComputerTerminalBasePoweredHolo ]
   id: N14ComputerTerminalWallNew
   suffix: new
   name: wall terminal
@@ -443,7 +463,7 @@
 
 # Rusted
 - type: entity
-  parent: [ N14ComputerTerminalWallBase, N14ComputerTerminalBasePowered ]
+  parent: [ N14ComputerTerminalWallBase, ForgeComputerTerminalBasePoweredHolo ]
   id: N14ComputerTerminalWallRusted
   suffix: rusted
   name: wall terminal

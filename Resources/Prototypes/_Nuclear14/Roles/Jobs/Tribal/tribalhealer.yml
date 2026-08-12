@@ -16,7 +16,7 @@
       min: 7200 # 2 hours
   startingGear: TribalHealerGear
   alwaysUseSpawner: true
-  icon: "JobIconTribalMedic" # Corvax-Change
+  icon: "JobIconTribalMedic" # Forge-Change
   supervisors: job-supervisors-tribal
   access:
   - TribeMember
@@ -38,20 +38,20 @@
     outerClothing: N14ClothingOuterTribalArmor
     shoes: N14ClothingShoesTribal
     gloves: N14ClothingHandsGlovesTribal
-    back: N14ClothingBackpackTrekker # Corvax-Change
+    back: N14ClothingBackpackTrekker # Forge-Change
     pocket1: N14TribalKnife
     pocket2: N14WeaponRevolver44Tribal
     id: N14IDTribeSawbonePendant
   innerClothingSkirt: N14ClothingUniformJumpskirtTribal
   satchel: N14ClothingBackpackSatchelTribalHealerFilled
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - Torch
     - Torch
     - Torch
-    - N14Bandage
-    - N14Bandage
-    - Ointment
+    - N14CleanGauze10
+    - N14CleanGauze10
+    - N14AloeSalve
     - N14HealingPowder
     - N14HealingPowder
 

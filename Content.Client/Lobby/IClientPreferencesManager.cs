@@ -18,5 +18,8 @@ namespace Content.Client.Lobby
         void CreateCharacter(ICharacterProfile profile);
         void DeleteCharacter(ICharacterProfile profile);
         void DeleteCharacter(int slot);
+
+        // Forge-Change: update sponsor cosmetic preferences (custom OOC/LOOC color, ghost skin).
+        void UpdateSponsorPreferences(Color oocColor, Color loocColor, string ghostSkin);
     }
 }

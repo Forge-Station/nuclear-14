@@ -23,6 +23,10 @@
   - type: Damageable
     damageContainer: Inorganic
     damageModifierSet: Metallic
+  - type: Construction #Forge-add
+    graph: N14WreckDisassembly
+    node: start
+    deconstructionTarget: dismantled
   - type: Destructible
     thresholds:
     - trigger:

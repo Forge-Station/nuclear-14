@@ -1,0 +1,40 @@
+- type: entity
+  parent: BaseComputerAiAccess
+  id: OutpostCaptureConsole
+  name: консоль аванпоста
+  suffix: warfront
+  components:
+  - type: CapturePoint
+    title: capture-point-window-title-outpost
+    captureDuration: 120 #120
+    captureCooldown: 30
+    pointsPerMinute: 2
+  - type: ActivatableUI
+    key: enum.CapturePointUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.CapturePointUiKey.Key:
+        type: CapturePointBoundUserInterface
+      enum.WiresUiKey.Key:
+        type: WiresBoundUserInterface
+
+- type: entity
+  parent: BaseComputerAiAccess
+  id: CitadelCaptureConsole
+  name: консоль цитадели
+  suffix: warfront
+  components:
+  - type: CapturePoint
+    title: capture-point-window-title-citadel
+    captureDuration: 300
+    captureCooldown: 60
+    pointsPerMinute: 3
+    victoryHoldDuration: 900
+  - type: ActivatableUI
+    key: enum.CapturePointUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.CapturePointUiKey.Key:
+        type: CapturePointBoundUserInterface
+      enum.WiresUiKey.Key:
+        type: WiresBoundUserInterface

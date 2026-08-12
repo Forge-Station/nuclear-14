@@ -1,0 +1,27 @@
+- type: construction
+  name: weapon maintenance toolbox
+  id: N14ToolboxWeaponMaintenance
+  graph: N14ToolboxWeaponMaintenance
+  startNode: start
+  targetNode: toolbox
+  category: construction-category-tools
+  description: A toolbox for repairing jammed and worn firearms.
+  hide: false
+  icon:
+    sprite: Objects/Tools/Toolboxes/toolbox_blue.rsi
+    state: icon
+  objectType: Item
+
+- type: construction
+  name: start disassembly
+  id: N14WreckDisassembly
+  graph: N14WreckDisassembly
+  startNode: start
+  targetNode: dismantled
+  category: construction-category-tools
+  description: Disassemble this wreck for scrap.
+  hide: true
+  icon:
+    sprite: _Nuclear14/Structures/Misc/wrecks.rsi
+    state: coupe-1
+  objectType: Structure

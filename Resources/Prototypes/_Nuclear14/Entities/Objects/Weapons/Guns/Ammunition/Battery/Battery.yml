@@ -111,8 +111,8 @@
       - N14PowerCellSmall
       - N14AmmoCell
   - type: Battery
-    maxCharge: 600
-    startingCharge: 600
+    maxCharge: 1000 #Forge-Change
+    startingCharge: 1000 #Forge-Change
   - type: HitscanBatteryAmmoProvider
     proto: RedLaser
     fireCost: 50

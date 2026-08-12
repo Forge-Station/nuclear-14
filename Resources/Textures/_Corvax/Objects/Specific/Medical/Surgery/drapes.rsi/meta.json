@@ -1,0 +1,22 @@
+{
+	"version": 1,
+	"license": "CC-BY-SA-3.0",
+  "copyright": "Taken from INFRARED_BARON MS13",
+	"size": {
+		"x": 32,
+		"y": 32
+	},
+	"states": [
+		{
+			"name": "noidea"
+		},
+		{
+			"name": "noidea_left",
+			"directions": 4
+		},
+		{
+			"name": "noidea_right",
+			"directions": 4
+		}
+	]
+}

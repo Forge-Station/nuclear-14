@@ -1,0 +1,269 @@
+﻿using Content.Shared._NC.Trade;
+
+
+namespace Content.Server._NC.Trade;
+
+
+public sealed partial class StoreStructuredSystem : EntitySystem
+{
+    private sealed partial class DynamicScratch
+    {
+        private readonly DynamicStateBuffer[] _buffers = { new(), new(), };
+        private readonly List<ContractClientData> _contractsCache = new();
+        private readonly Dictionary<string, int> _cratePreviewTotals = new();
+        private readonly Dictionary<string, int> _cratePreviewUnitsById = new();
+        private readonly HashSet<string> _visibleIncomingScratch = new(StringComparer.Ordinal);
+        private readonly HashSet<string> _visibleListingIds = new();
+        public readonly NcStoreLogicSystem.BarterAvailabilityContext BarterAvailability = new();
+        public readonly List<ContractServerData> ContractsSignatureScratch = new();
+        public readonly List<EntityUid> DeepCrateItems = new();
+
+        public readonly List<EntityUid> DeepUserItems = new();
+        public readonly NcInventorySnapshot UserSnapshot = new();
+
+        private int _activeIndex;
+        private int _catalogRevision;
+        private int _contractsCacheSignature;
+        private int _cratePreviewCatalogRevision;
+        private int _cratePreviewInventoryRevision;
+        private EntityUid? _cratePreviewRoot;
+        private bool _hasBarterTab;
+        private bool _hasBuyTab;
+        private bool _hasContracts;
+        private bool _hasContractsCache;
+        private bool _hasCratePreview;
+        private bool _hasMeta;
+        private bool _hasSellTab;
+        private bool _lastHasVisibleIds;
+        private int _visibleSig;
+
+        public TimeSpan NextDynamicAllowed = TimeSpan.Zero;
+        public TimeSpan NextManualRefreshAllowed = TimeSpan.Zero;
+
+        public bool HasVisibleIds { get; private set; }
+
+        public DynamicStateBuffer GetReadBuffer() => _buffers[_activeIndex];
+
+        public DynamicStateBuffer GetWriteBuffer() => _buffers[1 - _activeIndex];
+
+        public bool UpdateVisibleIds(IReadOnlyList<string>? ids)
+        {
+            _visibleIncomingScratch.Clear();
+
+            if (ids != null)
+            {
+                for (var i = 0; i < ids.Count; i++)
+                {
+                    var id = ids[i];
+                    if (!string.IsNullOrWhiteSpace(id))
+                        _visibleIncomingScratch.Add(id);
+                }
+            }
+
+            if (_visibleIncomingScratch.Count == 0)
+            {
+                if (!HasVisibleIds)
+                    return false;
+                _visibleListingIds.Clear();
+                _visibleSig = 0;
+                HasVisibleIds = false;
+                return true;
+            }
+
+            var sig = ComputeVisibleIdsSignature(_visibleIncomingScratch);
+
+            if (HasVisibleIds &&
+                sig == _visibleSig &&
+                _visibleListingIds.SetEquals(_visibleIncomingScratch))
+                return false;
+
+            _visibleListingIds.Clear();
+            foreach (var id in _visibleIncomingScratch)
+                _visibleListingIds.Add(id);
+
+            _visibleSig = sig;
+            HasVisibleIds = true;
+            return true;
+        }
+
+        private static int ComputeVisibleIdsSignature(HashSet<string> ids)
+        {
+            var sig = 17;
+            foreach (var id in ids)
+                sig = unchecked(sig + StableStringHash(id) * 31);
+
+            sig = unchecked(sig * 31 + ids.Count);
+            return sig;
+        }
+
+        private static int StableStringHash(string value)
+        {
+            unchecked
+            {
+                const int fnvPrime = 16777619;
+                var hash = unchecked((int) 2166136261u);
+
+                for (var i = 0; i < value.Length; i++)
+                    hash = (hash ^ value[i]) * fnvPrime;
+
+                return hash;
+            }
+        }
+
+        public bool ShouldSendBuyDynamicFor(string listingId)
+        {
+            if (!HasVisibleIds)
+                return true;
+
+            return _visibleListingIds.Contains(listingId);
+        }
+
+        public bool TryPopulateCachedCratePreview(
+            EntityUid crateUid,
+            int catalogRevision,
+            int inventoryRevision,
+            DynamicStateBuffer buf
+        )
+        {
+            if (!_hasCratePreview ||
+                _cratePreviewRoot != crateUid ||
+                _cratePreviewCatalogRevision != catalogRevision ||
+                _cratePreviewInventoryRevision != inventoryRevision)
+                return false;
+
+            CopyCachedCratePreviewToBuffer(buf);
+            return true;
+        }
+
+        public void CacheCratePreview(
+            EntityUid crateUid,
+            int catalogRevision,
+            int inventoryRevision,
+            NcStoreLogicSystem.MassSellPlan plan
+        )
+        {
+            _cratePreviewUnitsById.Clear();
+            _cratePreviewTotals.Clear();
+
+            foreach (var (key, value) in plan.UnitsByListingId)
+                if (!string.IsNullOrWhiteSpace(key) && value > 0)
+                    _cratePreviewUnitsById[key] = value;
+
+            foreach (var (key, value) in plan.IncomeByCurrency)
+                if (!string.IsNullOrWhiteSpace(key) && value > 0)
+                    _cratePreviewTotals[key] = value;
+
+            _cratePreviewRoot = crateUid;
+            _cratePreviewCatalogRevision = catalogRevision;
+            _cratePreviewInventoryRevision = inventoryRevision;
+            _hasCratePreview = true;
+        }
+
+        public void ResetCachedCratePreview()
+        {
+            _cratePreviewUnitsById.Clear();
+            _cratePreviewTotals.Clear();
+            _cratePreviewRoot = null;
+            _cratePreviewCatalogRevision = 0;
+            _cratePreviewInventoryRevision = 0;
+            _hasCratePreview = false;
+        }
+
+        private void CopyCachedCratePreviewToBuffer(DynamicStateBuffer buf)
+        {
+            foreach (var (key, value) in _cratePreviewUnitsById)
+                buf.CrateUnitsById[key] = value;
+
+            foreach (var (key, value) in _cratePreviewTotals)
+                buf.CrateTotals[key] = value;
+        }
+
+        public bool TryPopulateCachedContracts(int signature, DynamicStateBuffer buf)
+        {
+            if (!_hasContractsCache || _contractsCacheSignature != signature)
+                return false;
+
+            buf.Contracts.AddRange(_contractsCache);
+            return true;
+        }
+
+        public void CacheContracts(int signature, List<ContractClientData> contracts)
+        {
+            _contractsCache.Clear();
+            _contractsCache.AddRange(contracts);
+            _contractsCacheSignature = signature;
+            _hasContractsCache = true;
+        }
+
+        public bool EqualsLast(
+            DynamicStateBuffer next,
+            int catalogRevision,
+            bool hasBuyTab,
+            bool hasSellTab,
+            bool hasBarterTab,
+            bool hasContracts
+        )
+        {
+            if (!_hasMeta)
+                return false;
+
+            if (_catalogRevision != catalogRevision ||
+                _hasBuyTab != hasBuyTab ||
+                _hasSellTab != hasSellTab ||
+                _hasBarterTab != hasBarterTab ||
+                _hasContracts != hasContracts ||
+                _lastHasVisibleIds != HasVisibleIds)
+                return false;
+
+            var prev = GetReadBuffer();
+
+            return DictEquals(prev.BalancesByCurrency, next.BalancesByCurrency) &&
+                DictEquals(prev.RemainingById, next.RemainingById) &&
+                DictEquals(prev.OwnedById, next.OwnedById) &&
+                DictEquals(prev.CrateUnitsById, next.CrateUnitsById) &&
+                DictEquals(prev.CrateTotals, next.CrateTotals) &&
+                StringListEquals(prev.ListingScopeIds, next.ListingScopeIds) &&
+                ListEquals(prev.Contracts, next.Contracts) &&
+                prev.ContractSkipCost == next.ContractSkipCost &&
+                string.Equals(prev.ContractSkipCurrency, next.ContractSkipCurrency, StringComparison.Ordinal);
+        }
+
+        public void Commit(int catalogRevision, bool hasBuyTab, bool hasSellTab, bool hasBarterTab, bool hasContracts)
+        {
+            _activeIndex = 1 - _activeIndex;
+            _catalogRevision = catalogRevision;
+            _hasBuyTab = hasBuyTab;
+            _hasSellTab = hasSellTab;
+            _hasBarterTab = hasBarterTab;
+            _hasContracts = hasContracts;
+            _lastHasVisibleIds = HasVisibleIds;
+            _hasMeta = true;
+        }
+    }
+
+    private sealed class DynamicStateBuffer
+    {
+        public readonly Dictionary<string, int> BalancesByCurrency = new();
+        public readonly List<ContractClientData> Contracts = new();
+        public readonly Dictionary<string, int> CrateTotals = new();
+        public readonly Dictionary<string, int> CrateUnitsById = new();
+        public readonly List<string> ListingScopeIds = new();
+        public readonly Dictionary<string, int> OwnedById = new();
+        public readonly Dictionary<string, int> RemainingById = new();
+        public int ContractSkipCost;
+        public string ContractSkipCurrency = string.Empty;
+
+        public void Clear()
+        {
+            BalancesByCurrency.Clear();
+            RemainingById.Clear();
+            OwnedById.Clear();
+            CrateUnitsById.Clear();
+            CrateTotals.Clear();
+            ListingScopeIds.Clear();
+            Contracts.Clear();
+            ContractSkipCost = 0;
+            ContractSkipCurrency = string.Empty;
+        }
+    }
+}

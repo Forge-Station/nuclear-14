@@ -1,5 +1,6 @@
 using System.Linq;
 using Content.Server.Administration.Logs;
+using Content.Server._NC.Trade; // Forge-Change
 using Content.Server.EUI;
 using Content.Server.Ghost.Roles.Components;
 using Content.Server.Ghost.Roles.Events;
@@ -557,14 +558,17 @@ namespace Content.Server.Ghost.Roles
                 var raffleEndTime = raffle is not null
                     ? _timing.CurTime.Add(raffle.Countdown)
                     : TimeSpan.MinValue;
-
+                // Forge-Change Begin
+                var requirementsEv = new GhostRoleGetRequirementsEvent(role.Requirements);
+                RaiseLocalEvent(uid, requirementsEv);
+                // Forge-Change End
                 roles.Add(new GhostRoleInfo
                 {
                     Identifier = id,
                     Name = role.RoleName,
                     Description = role.RoleDescription,
                     Rules = role.RoleRules,
-                    Requirements = role.Requirements,
+                    Requirements = requirementsEv.Requirements, // Forge-Change
                     Kind = kind,
                     RafflePlayerCount = rafflePlayerCount,
                     RaffleEndTime = raffleEndTime

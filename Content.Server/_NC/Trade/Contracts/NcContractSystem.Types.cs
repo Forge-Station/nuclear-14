@@ -6,24 +6,37 @@ namespace Content.Server._NC.Trade;
 
 public sealed partial class NcContractSystem : EntitySystem
 {
-    private readonly record struct ClaimTakeEntry(EntityUid Root, EntityUid Entity, int Amount, bool IsStack);
+    private readonly record struct ClaimTakeEntry(
+        EntityUid Root,
+        EntityUid Entity,
+        int Amount,
+        bool IsStack,
+        string TargetItem,
+        PrototypeMatchMode MatchMode);
 
     private enum ClaimFailureReason : byte
     {
         None = 0,
         StoreMissing,
         ContractMissing,
+        NotTaken,
         NoValidTargets,
         InvalidTarget,
         NotEnoughItems,
         MissingCrate,
-        ExecutionFailed,
+        MissingBody,
+        MissingProof,
+        ObjectiveNotCompleted,
+        ObjectiveFailed,
+        ExecutionFailed
     }
 
     private readonly record struct ClaimAttemptResult(bool Success, ClaimFailureReason Reason, string? Details)
     {
         public static ClaimAttemptResult Ok() => new(true, ClaimFailureReason.None, null);
-        public static ClaimAttemptResult Fail(ClaimFailureReason reason, string? details = null) => new(false, reason, details);
+
+        public static ClaimAttemptResult Fail(ClaimFailureReason reason, string? details = null) =>
+            new(false, reason, details);
     }
 
     private readonly record struct PoolEntry(ContractRewardDef Def, string Key);
@@ -36,5 +49,32 @@ public sealed partial class NcContractSystem : EntitySystem
         RAmount
     }
 
+    private enum ContractPoolCandidateKind : byte
+    {
+        Supply = 1,
+        Retrieval = 2,
+        Hunt = 3,
+        GhostRole = 4
+    }
+
+    private sealed class ContractPoolCandidate
+    {
+        public NcGhostRoleContractPrototype? GhostRole;
+        public NcHuntContractPrototype? Hunt;
+        public string Id = string.Empty;
+        public ContractPoolCandidateKind Kind;
+        public string OfferPoolColor = string.Empty;
+        public string OfferPoolId = string.Empty;
+        public string OfferPoolName = string.Empty;
+        public int OfferPoolOrder = int.MaxValue;
+        public bool Repeatable = true;
+        public NcRetrievalContractPrototype? Retrieval;
+        public NcSupplyContractPrototype? Supply;
+        public int Weight;
+    }
+
     private readonly record struct QuasiKey(QuasiKeyKind Kind, EntityUid Store, string ProtoId, string? Extra);
 }
+
+[ByRefEvent]
+public readonly record struct NcContractsChangedEvent;

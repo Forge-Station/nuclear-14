@@ -86,6 +86,7 @@
   completetime: 1
   materials:
     Wood: 100
+    Sulfur: 50
 
 - type: latheRecipe
   id: ClothingBeltQuiverSpear
@@ -127,6 +128,14 @@
 - type: latheRecipe
   id: N14WeaponLaserRifleMakeshiftBlueprint
   result: N14WeaponLaserRifleMakeshiftBlueprint
+  category: N14Blueprints
+  completetime: 1
+  materials:
+    Paper: 100
+
+- type: latheRecipe
+  id: N14WeaponPlasmaRifleCrudeBlueprint
+  result: N14WeaponPlasmaRifleCrudeBlueprint
   category: N14Blueprints
   completetime: 1
   materials:

@@ -1,4 +1,4 @@
-﻿# New Terminal
+# New Terminal
 - type: constructionGraph
   id: TerminalNew
   start: start
@@ -158,7 +158,7 @@
           steps:
             - tool: Screwing
               doAfter: 0.5
-            - tag: Bomb # Corvax-Change
+            - tag: Bomb # Forge-Change
               store: bomb
               name: explosive
               icon:

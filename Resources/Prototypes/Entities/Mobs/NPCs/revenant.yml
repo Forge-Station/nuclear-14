@@ -44,7 +44,7 @@
   - type: Examiner
   - type: NoSlip
   - type: TTS # Corvax-TTS
-    voice: Kelthuzad
+    voice: WindrangerDota2
   - type: Eye
     drawFov: false
     visMask:

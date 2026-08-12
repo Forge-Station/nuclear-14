@@ -254,9 +254,7 @@
   - type: UndecidedLoadoutBackpack
     possibleSets:
     - WBoS_PalPla_Set
-    - WBoS_PalBal_Set
     - WBoS_PalSni_Set
-    - WBoS_PalLas_Set
 
 # Tribal kits
 - type: entity

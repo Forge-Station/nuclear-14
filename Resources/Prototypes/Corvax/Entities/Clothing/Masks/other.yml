@@ -1,0 +1,20 @@
+- type: entity
+  parent: ClothingMaskBase
+  id: N14ClothingMaskCultist
+  name: cultist mask
+  description: Rough pieces of metal covering the upper part of the face
+  components:
+  - type: Item
+    size: Tiny
+  - type: EyeProtection
+  - type: Sprite
+    sprite: Corvax/Clothing/Mask/cultistmask.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Mask/cultistmask.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.95
+        Slash: 0.95
+        Piercing: 0.95
+        Heat: 0.95

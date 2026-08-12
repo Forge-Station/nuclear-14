@@ -519,7 +519,7 @@
   - type: StorageFill
     contents:
       - id: C4
-        amount: 3 # Corvax-Change
+        amount: 3 # Forge-Change
 
 - type: entity
   parent: N14CrateBreakPlain
@@ -596,7 +596,7 @@
         amount: 3
 
 - type: entity
-  parent: N14CrateArmy # Corvax-Change
+  parent: N14CrateArmy # Forge-Change
   id: N14CrateBreakPlainFilledDartboard
   name: Dart box crate
   description: Crate containing the needed board to play the game of darts.
@@ -605,7 +605,7 @@
     contents:
       - id: TargetDarts
         amount: 1
-      - id: BoxDarts # Corvax-Change
+      - id: BoxDarts # Forge-Change
         amount: 1
 
 
@@ -659,6 +659,6 @@
   - type: StorageFill
     contents:
       - id: 40mmGrenadeFrag
-        amount: 2 # Corvax-Change
+        amount: 2 # Forge-Change
 
 
