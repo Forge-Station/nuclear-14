@@ -85,7 +85,7 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
 
     [DataField] // Corvax-Fallout-Barks
     public string BarkVoice { get; set; } = SharedHumanoidAppearanceSystem.DefaultBarkVoice; // Corvax-Fallout-Barks
-    
+
     [DataField] // Corvax-TTS
     public string Voice { get; set; } = SharedHumanoidAppearanceSystem.DefaultVoice; // Corvax-TTS
 
@@ -266,12 +266,9 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
             sex = random.Pick(speciesPrototype.Sexes);
             age = random.Next(speciesPrototype.MinAge, speciesPrototype.OldAge); // people don't look and keep making 119 year old characters with zero rp, cap it at middle aged
         }
-        
+
         // Corvax-TTS-Start
-        var voiceId = random.Pick(prototypeManager
-            .EnumeratePrototypes<TTSVoicePrototype>()
-            .Where(o => CanHaveVoice(o, sex)).ToArray()
-        ).ID;
+        var voiceId = RandomVoiceForSex(sex);
         // Corvax-TTS-End
 
         // Corvax-Fallout-Barks-start
@@ -302,6 +299,8 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
             Age = age,
             Gender = gender,
             Species = species,
+            Voice = voiceId, // Corvax-Forge
+            BarkVoice = barkvoiceId, // Corvax-Forge
             Appearance = HumanoidCharacterAppearance.Random(species, sex),
         };
     }
@@ -572,12 +571,27 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
         _loadoutPreferences.Clear();
         _loadoutPreferences.UnionWith(loadouts);
     }
-    
+
     // Corvax-TTS-Start
     // SHOULD BE NOT PUBLIC, BUT....
     public static bool CanHaveVoice(TTSVoicePrototype voice, Sex sex)
     {
-        return voice.RoundStart && sex == Sex.Unsexed || (voice.Sex == sex || voice.Sex == Sex.Unsexed);
+        return voice.RoundStart && (sex == Sex.Unsexed || voice.Sex == sex || voice.Sex == Sex.Unsexed);
+    }
+
+    public static string RandomVoiceForSex(Sex sex)
+    {
+        var prototypeManager = IoCManager.Resolve<IPrototypeManager>();
+        var random = IoCManager.Resolve<IRobustRandom>();
+        var voices = prototypeManager
+            .EnumeratePrototypes<TTSVoicePrototype>()
+            .Where(o => CanHaveVoice(o, sex))
+            .ToArray();
+
+        if (voices.Length == 0)
+            return SharedHumanoidAppearanceSystem.DefaultVoice;
+
+        return random.Pick(voices).ID;
     }
     // Corvax-TTS-End
 

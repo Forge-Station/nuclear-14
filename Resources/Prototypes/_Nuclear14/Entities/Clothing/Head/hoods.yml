@@ -8,7 +8,7 @@
     sprite: _Nuclear14/Clothing/Head/FalloutHoods/leathercloak.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/Head/FalloutHoods/leathercloak.rsi
-  - type: HideLayerClothing # Corvax-Change
+  - type: HideLayerClothing # Forge-Change
     slots:
     - Hair
 - type: entity
@@ -44,7 +44,7 @@
         Piercing: 0.95
         Heat: 0.9
     priceMultiplier: 0.6
-  - type: HideLayerClothing # Corvax-Change
+  - type: HideLayerClothing # Forge-Change
     slots:
     - Hair
 
@@ -66,7 +66,7 @@
         Piercing: 0.95
         Heat: 0.9
     priceMultiplier: 0.5
-  - type: HideLayerClothing # Corvax-Change
+  - type: HideLayerClothing # Forge-Change
     slots:
     - Hair
 
@@ -100,7 +100,7 @@
   - type: Clothing
     sprite: _Nuclear14/Clothing/Head/FalloutHoods/falloutblackrobes.rsi
   - type: IdentityBlocker
-  - type: HideLayerClothing # Corvax-Change
+  - type: HideLayerClothing # Forge-Change
     force: true
     slots:
     - Hair

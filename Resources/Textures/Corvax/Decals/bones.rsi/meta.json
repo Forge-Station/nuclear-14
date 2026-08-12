@@ -12,6 +12,21 @@
         },
         {
             "name": "skullDeathclaw"
+        },
+        {
+            "name": "bones"
+        },
+        {
+            "name": "rib"
+        },
+        {
+            "name": "ribs"
+        },
+        {
+            "name": "pelvicbone"
+        },
+        {
+            "name": "skull2"
         }
     ]
 }

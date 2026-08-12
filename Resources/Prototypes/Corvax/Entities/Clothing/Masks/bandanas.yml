@@ -8,9 +8,11 @@
     sprite: Corvax/Clothing/Mask/Bandanas/blackscarf.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Mask/Bandanas/blackscarf.rsi
-  - type: BreathMask
+  - type: Mask
   - type: IngestionBlocker
-  - type: IdentityBlocker
+  - type: Tag
+    tags:
+    - WhitelistChameleon
 
 - type: entity
   parent: ClothingMaskBase
@@ -22,3 +24,19 @@
     sprite: Corvax/Clothing/Mask/Bandanas/sheriffscarf.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Mask/Bandanas/sheriffscarf.rsi
+
+- type: entity
+  parent: ClothingMaskBase
+  id: N14ClothingHalfWraps
+  name: tan half facewrap
+  description: A tan facewrap that doesn't go all the way around your head. Still useful for what you'd normally want it for, however.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Mask/Bandanas/deserthalfwrap.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Mask/Bandanas/deserthalfwrap.rsi
+  - type: IngestionBlocker
+  - type: HideLayerClothing
+    slots:
+    - Snout
+  - type: IdentityBlocker

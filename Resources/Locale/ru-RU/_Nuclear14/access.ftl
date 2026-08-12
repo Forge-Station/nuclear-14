@@ -1,3 +1,4 @@
+id-card-access-level-townie-person = Горожанин
 id-card-access-level-townie-sheriff = Городская тюрьма
 id-card-access-level-townie-mayor = Офис мэра
 id-card-access-level-townie-shopkeeper = Городской магазин

@@ -158,3 +158,52 @@
     sprite: Corvax/Clothing/Uniforms/Jumpsuit/NCRMPUniform.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Uniforms/Jumpsuit/NCRMPUniform.rsi
+
+- type: entity
+  parent: N14ClothingUniformBase
+  id: N14ClothingUniformJumpsuitWBoSAcolyte
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/wbosacolytesuit.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/wbosacolytesuit.rsi
+
+- type: entity
+  parent: N14ClothingUniformBase
+  id: N14ClothingUniformJumpsuitWBoSClassic
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/wbosclassicsuit.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/wbosclassicsuit.rsi
+
+- type: entity
+  parent: N14ClothingUniformBase
+  id: N14ClothingUniformJumpsuitWBoSLord
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/wboslordsuit.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/wboslordsuit.rsi
+
+- type: entity
+  parent: N14ClothingUniformBase
+  id: M14ClothingUniformKhansUniform
+  name: great khan uniform
+  description: Clothing marking the wearer as one of the the Great Khans. Most common are denim pants.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/Greatkhanpants.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/Greatkhanpants.rsi
+
+- type: entity
+  parent: N14ClothingUniformBase
+  id: M14ClothingUniformKhansUniformShorts
+  name: great khan jorts
+  description: Clothing marking the wearer as one of the the Great Khans. Most common are denim pants, but jorts is a acceptable alternative.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/Greatkhanshorts.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/Greatkhanshorts.rsi

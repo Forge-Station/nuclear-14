@@ -1,0 +1,14 @@
+<controls:FancyWindow xmlns="https://spacestation14.io"
+                       xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
+                       Title="{Loc 'faction-shop-window-title'}"
+                       MinSize="550 320"
+                       Resizable="False">
+    <BoxContainer Orientation="Vertical" HorizontalExpand="True" Margin="4 4 4 4">
+        <Label Name="BalanceLabel" />
+        <PanelContainer MinHeight="2" />
+        <ScrollContainer VerticalExpand="True" HScrollEnabled="False">
+            <BoxContainer Name="ListingsContainer" Orientation="Vertical" HorizontalExpand="True" />
+        </ScrollContainer>
+        <Label Name="RotationTimerLabel" StyleClasses="LabelSubText" HorizontalAlignment="Left" />
+    </BoxContainer>
+</controls:FancyWindow>

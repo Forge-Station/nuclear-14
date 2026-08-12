@@ -88,7 +88,6 @@
   parent: N14FoodEggChicken
   suffix: Fertilized, Chicken
   components:
-  - type: Timer
   - type: TimedSpawner
     prototypes:
     - N14MobChicken
@@ -143,7 +142,6 @@
   parent: N14FoodEggDeathclaw
   suffix: Fertilized, Deathclaw
   components:
-  - type: Timer
   - type: TimedSpawner
     prototypes:
     - N14MobDeathclaw
@@ -198,7 +196,6 @@
   parent: N14FoodEggGecko
   suffix: Fertilized, Gecko
   components:
-  - type: Timer
   - type: TimedSpawner
     prototypes:
     - N14MobGecko
@@ -253,7 +250,6 @@
   parent: N14FoodEggNightstalker
   suffix: Fertilized, Nightstalker
   components:
-  - type: Timer
   - type: TimedSpawner
     prototypes:
     - N14MobNightstalkerCub

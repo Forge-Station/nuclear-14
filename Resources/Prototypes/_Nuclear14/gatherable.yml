@@ -50,11 +50,25 @@
   minOreYield: 1
   maxOreYield: 3
 
+#Forge-add-start
+- type: ore 
+  id: N14OreAluminum
+  oreEntity: N14AluminumOre1
+  minOreYield: 1
+  maxOreYield: 3
+
+- type: ore
+  id: N14OreBrass
+  oreEntity: N14BrassOre1
+  minOreYield: 1
+  maxOreYield: 3
+#Forge-add-end
+
 - type: weightedRandomOre
   id: RandomOreDistributionStandard
   weights:
     N14OreCopper: 3
-    N14OreGold : 2
+    N14OreGold: 2
     N14OreSilver: 2
     N14OreIron: 3
     OreCoal: 6
@@ -63,6 +77,8 @@
     OreLead: 2
     OreSulfur: 2
     OreFertilizer: 3
+    N14OreAluminum: 3  # Forge-add
+    N14OreBrass: 3     # Forge-add
 
 # Plants
 - type: ore

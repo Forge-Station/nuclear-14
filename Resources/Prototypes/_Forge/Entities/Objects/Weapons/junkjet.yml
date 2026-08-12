@@ -51,7 +51,7 @@
   - type: ThrowingAmmoProvider
     containerId: throwing_ammo
     capacity: 12
-    damageMultiplier: 2.0
+    damageMultiplier: 1.5
     minimumThrowFlyTime: 0.15
     soundInsert:
       path: /Audio/Weapons/Guns/MagIn/shotgun_insert.ogg

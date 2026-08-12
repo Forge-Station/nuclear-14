@@ -69,7 +69,7 @@
               amount: 2
               doAfter: 10
 
-        - to: MetalBlueLoced
+        - to: MetalBlueLocked
           completed:
             - !type:SnapToGrid { }
           steps:
@@ -79,7 +79,17 @@
               amount: 2
               doAfter: 10
 
-        - to: MetalRedLoced
+        # - to: MetalRedLocked
+        #   completed:
+        #     - !type:SnapToGrid { }
+        #   steps:
+        #     - material: N14Iron
+        #       amount: 6
+        #     - material: N14Brass
+        #       amount: 2
+        #       doAfter: 10
+
+        - to: MetalBlueAltLocked
           completed:
             - !type:SnapToGrid { }
           steps:
@@ -89,17 +99,7 @@
               amount: 2
               doAfter: 10
 
-        - to: MetalBlueAltLoced
-          completed:
-            - !type:SnapToGrid { }
-          steps:
-            - material: N14Iron
-              amount: 6
-            - material: N14Brass
-              amount: 2
-              doAfter: 10
-
-        - to: MetalBlueWindowLoced
+        - to: MetalBlueWindowLocked
           completed:
             - !type:SnapToGrid { }
           steps:
@@ -203,8 +203,8 @@
             - tool: Anchoring
               doAfter: 15
 
-    - node: MetalBlueLoced
-      entity: N14DoorMetalBlueSlantedLoced
+    - node: MetalBlueLocked
+      entity: N14DoorMetalBlueSlantedLocked
       edges:
         - to: start
           completed:
@@ -220,8 +220,8 @@
             - tool: Anchoring
               doAfter: 15
 
-    - node: MetalRedLoced
-      entity: N14DoorMetalRedSlantedLoced
+    - node: MetalBlueAltLocked
+      entity: N14DoorMetalBlueAltSlantedLocked
       edges:
         - to: start
           completed:
@@ -237,25 +237,8 @@
             - tool: Anchoring
               doAfter: 15
 
-    - node: MetalBlueAltLoced
-      entity: N14DoorMetalBlueAltSlantedLoced
-      edges:
-        - to: start
-          completed:
-            - !type:SpawnPrototype
-              prototype: N14IngotIron1
-              amount: 6
-            - !type:SpawnPrototype
-              prototype: N14IngotBrass1
-              amount: 2
-          steps:
-            - tool: Screwing
-              doAfter: 5
-            - tool: Anchoring
-              doAfter: 15
-
-    - node: MetalBlueWindowLoced
-      entity: N14DoorMetalBlueWindowSlantedLoced
+    - node: MetalBlueWindowLocked
+      entity: N14DoorMetalBlueWindowSlantedLocked
       edges:
         - to: start
           completed:

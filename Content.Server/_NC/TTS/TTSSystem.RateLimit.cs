@@ -1,5 +1,4 @@
-﻿using Content.Server._NC.CCCvars;
-using Content.Server.Chat.Managers;
+﻿using Content.Server.Chat.Managers;
 using Content.Server.Players.RateLimiting;
 using Content.Shared._NC.CorvaxVars;
 using Content.Shared.Players.RateLimiting;

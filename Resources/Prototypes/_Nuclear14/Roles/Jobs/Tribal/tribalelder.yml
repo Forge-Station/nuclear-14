@@ -16,7 +16,7 @@
       min: 14400 # 4 hours
   startingGear: TribalElderGear
   alwaysUseSpawner: true
-  icon: "JobIconTribalLeader" # Corvax-Change
+  icon: "JobIconTribalLeader" # Forge-Change
   supervisors: job-supervisors-tribal-elder
   access:
   - TribeMember
@@ -40,19 +40,19 @@
     belt: ClothingBeltElderRevolver
     shoes: N14ClothingShoesTribal
     gloves: N14ClothingHandsGlovesTribal
-    back: N14ClothingBackpackTrekker # Corvax-Change
+    back: N14ClothingBackpackTrekker # Forge-Change
     pocket1: N14TribalKnife
     pocket2: Triballoadoutkits # Forge-Change
     id: N14IDTribeBossPendant
   innerClothingSkirt: N14ClothingUniformJumpskirtTribal
   satchel: N14ClothingBackpackSatchelTribalFilled
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - Torch
     - Torch
     - Torch
-    - N14Bandage
-    - Ointment
+    - N14CleanGauze10
+    - N14AloeSalve
 
 - type: playTimeTracker
   id: TribalElder

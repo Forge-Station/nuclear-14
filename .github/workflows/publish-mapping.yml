@@ -1,6 +1,4 @@
 name: Publish Mapping
-concurrency:
-  group: publish
 
 on:
   workflow_dispatch:
@@ -35,6 +33,9 @@ jobs:
 
     - name: Package client
       run: dotnet run --project Content.Packaging client --no-wipe-release
+
+    - name: Route CDN publish through direct IP
+      run: echo "${{ secrets.CDN_DIRECT_IP }} cdn.corvaxforge.ru" | sudo tee -a /etc/hosts > /dev/null
 
     - name: Publish version
       run: Tools/publish_multi_request_mapping.py

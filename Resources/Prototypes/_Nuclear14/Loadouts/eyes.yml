@@ -62,7 +62,7 @@
   items:
     - ClothingEyesEyepatch
 
-- type: loadout # Corvax-Change
+- type: loadout # Forge-Change
   id: ClothingEyesGlassesChemist
   category: Accessories
   cost: 2

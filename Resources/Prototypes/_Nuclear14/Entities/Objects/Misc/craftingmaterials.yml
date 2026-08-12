@@ -20,7 +20,7 @@
       reagents:
       - ReagentId: ScorpionTail
         Quantity: 10
-  - type: Craftable # Corvax-Change
+  - type: Craftable # Forge-Change
 
 #MARK: Hides
 - type: entity
@@ -40,7 +40,7 @@
   - type: Material
   - type: Item
     size: Normal
-  - type: Craftable # Corvax-Change
+  - type: Craftable # Forge-Change
 
 - type: entity
   parent: N14MaterialBaseHide
@@ -86,6 +86,7 @@
   - type: Tag
     tags:
       - NightstalkerPelt
+      - RawLeather # Forge-Change
   - type: PhysicalComposition
     materialComposition:
       RawLeather: 300
@@ -111,7 +112,7 @@
     price: 50
 
 - type: entity
-  parent: BaseItem
+  parent: N14MaterialBaseHide # Forge-Change
   id: N14MaterialHideGecko
   name: silver gecko hide
   description: A thick hide from a gecko.
@@ -121,11 +122,12 @@
     state: hide_gecko
   - type: Tag
     tags:
+      - GeckoHide # Forge-Change
       - RawLeather
   - type: PhysicalComposition
     materialComposition:
       RawLeather: 600
-  - type: Craftable # Corvax-Change
+  - type: Craftable # Forge-Change
   - type: StaticPrice # Forge-Change
     price: 3
 

@@ -3,6 +3,25 @@
         ClipText="True"
         ToggleMode="True"
         HorizontalExpand="True"
-        MinSize="0 34"
-        TextAlign="Left"
-        Margin="0" />
+        MinSize="0 30"
+        Margin="0 0 0 2"
+        Text="">
+
+    <BoxContainer Name="LayoutRoot"
+                  Orientation="Horizontal"
+                  HorizontalExpand="True"
+                  VerticalExpand="True"
+                  SeparationOverride="8">
+
+        <PanelContainer Name="AccentBar"
+                        MinWidth="3"
+                        MaxWidth="3"
+                        VerticalExpand="True" />
+
+        <Label Name="TitleLabel"
+               ClipText="True"
+               HorizontalExpand="True"
+               VerticalAlignment="Center"
+               Margin="0 5 7 5" />
+    </BoxContainer>
+</Button>

@@ -2,11 +2,11 @@
 - type: loadout
   id: N14WeaponPistol22lr
   category: Weapons
-  cost: 2
+  cost: 1 # Forge-Change
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
-    - !type:CharacterDepartmentRequirement # Corvax-Change
+    - !type:CharacterDepartmentRequirement # Forge-Change
       inverted: true
       departments:
       - Vault
@@ -26,7 +26,7 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
-    - !type:CharacterDepartmentRequirement # Corvax-Change
+    - !type:CharacterDepartmentRequirement # Forge-Change
       inverted: true
       departments:
       - Vault
@@ -46,7 +46,7 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
-    - !type:CharacterDepartmentRequirement # Corvax-Change
+    - !type:CharacterDepartmentRequirement # Forge-Change
       inverted: true
       departments:
       - Vault
@@ -66,7 +66,7 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
-    - !type:CharacterDepartmentRequirement # Corvax-Change
+    - !type:CharacterDepartmentRequirement # Forge-Change
       inverted: true
       departments:
       - Vault
@@ -79,29 +79,6 @@
   items:
     - N14WeaponPistol9mm
 
-# Shotguns
-- type: loadout
-  id: N14WeaponShotgunDoubleBarrel
-  category: Weapons
-  cost: 2
-  requirements:
-    - !type:OverallTimeRequirement
-      min: 3600
-    - !type:CharacterItemGroupRequirement
-      group: N14LoadoutGuns
-    - !type:CharacterDepartmentRequirement # Corvax-Change
-      inverted: true
-      departments:
-      - Vault
-    - !type:CharacterJobRequirement # Forge-Change
-      inverted: true
-      jobs:
-      - BoSMidSerf
-      - CaesarLegionSlave
-      - NCRPisoner
-  items:
-    - N14WeaponShotgunDoubleBarrel
-
 # Rifles
 
 - type: loadout
@@ -113,7 +90,7 @@
       min: 6800
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutGuns
-    - !type:CharacterDepartmentRequirement # Corvax-Change
+    - !type:CharacterDepartmentRequirement # Forge-Change
       inverted: true
       departments:
       - Vault
@@ -130,11 +107,11 @@
 - type: loadout
   id: N14SpeedLoader9
   category: Weapons
-  cost: 1
+  cost: 2 # Forge-Change
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutAmmo
-    - !type:CharacterDepartmentRequirement # Corvax-Change
+    - !type:CharacterDepartmentRequirement # Forge-Change
       inverted: true
       departments:
       - Vault
@@ -144,7 +121,10 @@
       - BoSMidSerf
       - CaesarLegionSlave
       - NCRPisoner
-  items:
+  items: #Forge-change
+    - SpeedLoader9
+    - SpeedLoader9
+    - SpeedLoader9
     - SpeedLoader9
 
 # Melee
@@ -173,7 +153,7 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutMelee
-    - !type:CharacterDepartmentRequirement # Corvax-Change
+    - !type:CharacterDepartmentRequirement # Forge-Change
       inverted: true
       departments:
       - Vault

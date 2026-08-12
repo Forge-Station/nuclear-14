@@ -5,8 +5,9 @@ using Robust.Shared.Prototypes;
 namespace Content.Server._NC.Trade;
 
 
-public sealed class StoreSystemStructuredLoader : EntitySystem
+public sealed partial class StoreSystemStructuredLoader : EntitySystem
 {
+    private const int MaxRewardPoolTraversalDepth = 6;
     private static readonly ISawmill Sawmill = Logger.GetSawmill("ncstore-loader");
 
     [Dependency] private readonly NcContractSystem _contracts = default!;
@@ -27,6 +28,7 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
     {
         _loadedStores.Remove(uid);
         _contractsInitialized.Remove(uid);
+        _contracts.ClearStoreRuntimeCaches(uid);
     }
 
     private void OnMapInit(EntityUid uid, NcStoreComponent comp, MapInitEvent args) =>
@@ -42,21 +44,12 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
     {
         var changed = false;
 
-        if (comp.Listings.Count == 0)
+        if (_loadedStores.Add(uid))
         {
-            TryLoadPresets(uid, comp, reason);
-            if (comp.Listings.Count > 0)
-                changed = true;
-        }
-
-        if (comp.Listings.Count > 0 && comp.ListingIndex.Count == 0)
-        {
+            TryLoadProfile(uid, comp, reason);
             comp.RebuildListingIndex();
             changed = true;
         }
-
-        if (_loadedStores.Add(uid))
-            changed = true;
 
         if (changed)
             comp.BumpCatalogRevision();
@@ -68,48 +61,111 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         }
     }
 
-    private void TryLoadPresets(EntityUid uid, NcStoreComponent comp, string reason)
+    private void TryLoadProfile(EntityUid uid, NcStoreComponent comp, string reason)
     {
-        if (comp.BuyPresets.Count == 0 && comp.SellPresets.Count == 0)
-        {
-            Sawmill.Warning($"[NcStore] {ToPrettyString(uid)}: нет ни одного пресета (reason={reason})");
-            return;
-        }
-
         comp.CurrencyWhitelist.Clear();
         comp.Categories.Clear();
         comp.Listings.Clear();
         comp.ListingIndex.Clear();
 
-        var ctx = new LoadContext();
-
-        var total = 0;
-
-        foreach (var id in comp.BuyPresets)
-            total += LoadPresetForMode(id, StoreMode.Buy, comp, ctx);
-
-        foreach (var id in comp.SellPresets)
-            total += LoadPresetForMode(id, StoreMode.Sell, comp, ctx);
-
-        if (total == 0)
+        if (!_prototypes.TryIndex(comp.Profile, out var profile))
         {
-            Sawmill.Warning($"[NcStore] {ToPrettyString(uid)}: ни одного лота не загружено (reason={reason})");
+            Sawmill.Warning($"[NcStore] {ToPrettyString(uid)}: profile '{comp.Profile}' not found (reason={reason}).");
             return;
         }
 
+        var ctx = new LoadContext();
+        var total = 0;
+
+        foreach (var id in profile.Buy)
+            total += LoadPresetForMode(id, StoreMode.Buy, comp, ctx);
+
+        foreach (var id in profile.Sell)
+            total += LoadPresetForMode(id, StoreMode.Sell, comp, ctx);
+
+        foreach (var id in profile.Barter)
+            total += LoadBarterPreset(id, comp, ctx);
+
+        AddContractSkipCurrencyIfNeeded(comp, profile, ctx);
+
+        if (total == 0 && profile.Contracts == null)
+        {
+            Sawmill.Warning(
+                $"[NcStore] {ToPrettyString(uid)}: profile '{profile.ID}' has no buy, sell or contracts (reason={reason}).");
+            return;
+        }
+
+        WarnIfContractSkipCurrencyMissing(uid, comp, profile, reason);
+
         Sawmill.Info(
-            $"[NcStore] {ToPrettyString(uid)}: загружено {total} лотов. " +
-            $"BuyPresets=[{string.Join(", ", comp.BuyPresets)}], " +
-            $"SellPresets=[{string.Join(", ", comp.SellPresets)}], reason={reason}");
+            $"[NcStore] {ToPrettyString(uid)}: profile='{profile.ID}', loaded {total} listings, " +
+            $"buy={profile.Buy.Count}, sell={profile.Sell.Count}, barter={profile.Barter.Count}, " +
+            $"contracts={(profile.Contracts != null ? profile.Contracts.Value.ToString() : "<none>")}, reason={reason}");
     }
 
-    private int LoadPresetForMode(string presetId, StoreMode mode, NcStoreComponent comp, LoadContext ctx)
+    private void WarnIfContractSkipCurrencyMissing(
+        EntityUid uid,
+        NcStoreComponent comp,
+        NcStoreProfilePrototype profile,
+        string reason
+    )
+    {
+        if (profile.Contracts is not { } contractsId)
+            return;
+
+        if (!_prototypes.TryIndex(contractsId, out var contractsPreset))
+            return;
+
+        if (contractsPreset.SkipCost <= 0 || !string.IsNullOrWhiteSpace(contractsPreset.SkipCurrency))
+            return;
+
+        if (comp.CurrencyWhitelist.Count > 0)
+            return;
+
+        Sawmill.Warning(
+            $"[NcStore] {ToPrettyString(uid)}: profile '{profile.ID}' uses contract preset " +
+            $"'{contractsPreset.ID}' with skipCost={contractsPreset.SkipCost}, but no skipCurrency " +
+            $"and no catalog currencies were resolved (reason={reason}). Contract skip will be disabled.");
+    }
+
+    private void AddContractSkipCurrencyIfNeeded(
+        NcStoreComponent comp,
+        NcStoreProfilePrototype profile,
+        LoadContext ctx
+    )
+    {
+        if (profile.Contracts is not { } contractsId)
+            return;
+
+        if (!_prototypes.TryIndex(contractsId, out var contractsPreset))
+            return;
+
+        if (contractsPreset.SkipCost <= 0)
+            return;
+
+        var skipCurrency = contractsPreset.SkipCurrency;
+        if (string.IsNullOrWhiteSpace(skipCurrency))
+            return;
+
+        if (ctx.CurrencySeen.Add(skipCurrency))
+            comp.CurrencyWhitelist.Add(skipCurrency);
+    }
+
+    private int LoadPresetForMode(
+        ProtoId<StorePresetStructuredPrototype> presetId,
+        StoreMode mode,
+        NcStoreComponent comp,
+        LoadContext ctx
+    )
     {
         if (!_prototypes.TryIndex<StorePresetStructuredPrototype>(presetId, out var preset))
         {
-            Sawmill.Error($"[NcStore] Пресет '{presetId}' не найден");
+            Sawmill.Warning($"[NcStore] Preset '{presetId}' not found.");
             return 0;
         }
+
+        if (!ValidateStructuredPresetCurrency(preset, mode, presetId))
+            return 0;
 
         var count = 0;
 
@@ -120,7 +176,7 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         {
             if (!_prototypes.TryIndex<StoreCategoryStructuredPrototype>(categoryId, out var categoryProto))
             {
-                Sawmill.Error($"[NcStore] Категория '{categoryId}' не найдена (preset='{presetId}')");
+                Sawmill.Error($"[NcStore] Category '{categoryId}' not found (preset='{presetId}').");
                 continue;
             }
 
@@ -131,21 +187,27 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
 
             foreach (var entry in categoryProto.Entries)
             {
-                var baseId = $"{presetId}:{mode}:{categoryId}:{entry.Proto}";
+                if (!ValidateCatalogEntry(entry, mode, presetId, categoryId))
+                    continue;
+
+                var productId = GetCatalogEntryProductId(entry);
+                var baseId = $"{presetId}:{mode}:{categoryId}:{productId}";
                 var id = AllocateDeterministicId(baseId, ctx);
 
                 var listing = new NcStoreListingDef
                 {
                     Id = id,
-                    ProductEntity = entry.Proto,
+                    ProductEntity = productId,
                     MatchMode = entry.MatchMode,
                     Mode = mode,
-                    Categories = new List<string> { categoryName },
-                    Conditions = new List<ListingConditionPrototype>(),
+                    Categories = new() { categoryName, },
+                    Conditions = new(),
                     RemainingCount = entry.Count ?? -1,
                     UnitsPerPurchase = Math.Max(1, entry.Amount),
                     Cost = new()
                 };
+
+                ApplyCatalogEntryDisplayMetadata(listing);
 
                 if (!string.IsNullOrWhiteSpace(preset.Currency))
                     listing.Cost[preset.Currency] = entry.Price;
@@ -158,31 +220,6 @@ public sealed class StoreSystemStructuredLoader : EntitySystem
         return count;
     }
 
-    private static string AllocateDeterministicId(string baseId, LoadContext ctx)
-    {
-        if (!ctx.NextSuffixByBaseId.TryGetValue(baseId, out var nextSuffix))
-        {
-            if (ctx.ListingIds.Add(baseId))
-            {
-                ctx.NextSuffixByBaseId[baseId] = 1;
-                return baseId;
-            }
-
-            nextSuffix = 1;
-        }
-
-        while (true)
-        {
-            var candidate = $"{baseId}#{nextSuffix}";
-            if (ctx.ListingIds.Add(candidate))
-            {
-                ctx.NextSuffixByBaseId[baseId] = nextSuffix + 1;
-                return candidate;
-            }
-
-            nextSuffix++;
-        }
-    }
 
     private sealed class LoadContext
     {

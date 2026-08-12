@@ -19,7 +19,7 @@
       min: 43200 # 12 hours
   weight: 10
   startingGear: NCRLTGear
-  icon: "JobIconNcrLeader" # Corvax-Change
+  icon: "JobIconNcrLeader" # Forge-Change
   supervisors: job-supervisors-ncr-lt
   requireAdminNotify: true
   alwaysUseSpawner: true
@@ -40,17 +40,19 @@
   id: NCRLTGear
   equipment:
     head: N14ClothingHeadHatNCRBeretOfficer
-    back: N14ClothingBackpackNCR # Corvax-Change
-    jumpsuit: N14ClothingOfficerUniformNCRDesert # Corvax-Change
+    back: N14ClothingBackpackNCR # Forge-Change
+    jumpsuit: N14ClothingOfficerUniformNCRDesert # Forge-Change
+    outerClothing: N14ClothingOuterNCRTrenchCoat # Forge-Change
+    belt: ClothingBeltRevolverCaptainfilled # Forge-Change
     shoes: N14ClothingBootsCombatFilled
     eyes: ClothingEyesGlassesSunglasses
     ears: N14ClothingHeadsetNCR
     pocket1: NCRLTloadoutkits
     pocket2: RadioHandheld
     id: N14IDNCRDogtagOfficer
-  innerClothingSkirt: N14ClothingOfficerUniformNCRDesert # Corvax-Change
+  innerClothingSkirt: N14ClothingOfficerUniformNCRDesert # Forge-Change
   satchel: N14ClothingBackpackSatchelNCRFilled
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledMilitaryNCR
 

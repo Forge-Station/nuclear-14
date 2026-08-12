@@ -18,3 +18,102 @@
         Slash: 0.97
         Piercing: 0.90
         Heat: 0.90
+
+- type: entity
+  parent: ClothingMaskBase
+  id: N14ClothingMaskGasWBoSRecon
+  components:
+  - type: Item
+    size: Tiny
+  - type: EyeProtection
+  - type: IdentityBlocker
+  - type: Sprite
+    sprite: Corvax/Clothing/Mask/wbosreconmask.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Mask/wbosreconmask.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.95
+        Slash: 0.95
+        Piercing: 0.95
+        Heat: 0.95
+  - type: NightVision
+    isEquipment: true
+
+- type: entity
+  parent: ClothingMaskGasCombat
+  id: N14ClothingMaskGasRangerEliteDeserted
+  categories: [ HideSpawnMenu ]
+  name: элитный штурмовой противогаз пустынного рейнджера
+  description: Баллистическая маска с респиратором и золотистыми окулярами. Раньше защищала спецназ Морской Пехоты в воде, теперь защищает Рейнджера в песке.
+  components:
+  - type: Item
+    size: Tiny
+  - type: FlashImmunity
+  - type: EyeProtection
+  - type: Sprite
+    sprite: Corvax/Clothing/Mask/ranger_dust_mask.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Mask/ranger_dust_mask.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.95
+        Slash: 0.95
+        Piercing: 0.95
+        Heat: 0.95
+
+- type: entity
+  parent: ClothingMaskGas
+  id: ClothingMaskGasCaptainsMask
+  name: antique gas mask
+  description: This gas mask seems to be old even by pre-war standards. But it does still work, right?
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Mask/Gasmask/sackmask.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Mask/Gasmask/sackmask.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Radiation: 0.9
+  - type: HideLayerClothing
+    slots:
+    - Hair
+    - Snout
+  - type: IdentityBlocker
+  - type: Tag
+    tags:
+    - WhitelistChameleon
+  - type: Item
+    size: Normal
+    shape:
+    - 0,0,1,0
+
+- type: entity
+  parent: ClothingMaskGas
+  id: ClothingMaskGasMaskHose
+  name: hosed gas mask
+  description: A very old gas mask. This one has a long snorkel like tube with a filter on the end.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Mask/Gasmask/oldgasmask.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Mask/Gasmask/oldgasmask.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Radiation: 0.9
+  - type: HideLayerClothing
+    slots:
+    - Hair
+    - Snout
+  - type: IdentityBlocker
+  - type: Tag
+    tags:
+    - WhitelistChameleon
+  - type: Item
+    size: Normal
+    shape:
+    - 0,0,1,0

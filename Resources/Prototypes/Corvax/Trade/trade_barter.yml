@@ -1,0 +1,50 @@
+
+
+- type: ncBarterListing
+  id: BarterNcrToCaps
+  name: "NCR-доллары в крышки"
+  description: "Обмен 2 NCR-долларов на 1 крышку."
+  icon: N14CurrencyNCRDollar
+  cost:
+  - currency: NCRDollar
+    count: 2
+  receive:
+  - currency: Caps
+    count: 1
+
+- type: ncBarterListing
+  id: BarterDenariusToCaps
+  name: "Денарии в крышки"
+  description: "Обмен 1 денария на 10 крышек."
+  icon: N14CurrencyLegionDenarius
+  cost:
+  - currency: LegionDenarius
+    count: 1
+  receive:
+  - currency: Caps
+    count: 10
+
+- type: ncBarterListing
+  id: BarterAureusToCaps
+  name: "Ауреусы в крышки"
+  description: "Обмен 1 ауреуса на 80 крышек."
+  icon: N14CurrencyLegionAureus
+  cost:
+  - currency: LegionAureus
+    count: 1
+  receive:
+  - currency: Caps
+    count: 80
+
+- type: ncBarterCategory
+  id: BarterCatCurrency
+  name: "Обмен валюты"
+  listings:
+  - BarterNcrToCaps
+  - BarterDenariusToCaps
+  - BarterAureusToCaps
+
+- type: ncBarterPreset
+  id: BarterPresetCityCurrency
+  categories:
+  - BarterCatCurrency

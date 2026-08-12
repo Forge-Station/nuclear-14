@@ -24,7 +24,7 @@
   id: RangerChiefGear
   equipment:
     head: N14ClothingHeadHatRangerHelmetElite
-    back: N14ClothingBackpackMilitary # Corvax-Change
+    back: N14ClothingBackpackMilitary # Forge-Change
     jumpsuit: N14ClothingUniformRangerVeteran
     ears: N14ClothingHeadsetNCR
     shoes: N14ClothingBootsCombatMK2Filled
@@ -39,7 +39,7 @@
   innerClothingSkirt: N14ClothingUniformRangerVeteran #placeholder
   satchel: N14ClothingBackpackSatchelMilitaryFilled
   duffelbag: N14ClothingBackpackDuffelMilitaryFilled
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledMilitary
 

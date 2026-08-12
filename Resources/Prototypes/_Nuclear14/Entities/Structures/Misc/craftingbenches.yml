@@ -73,6 +73,8 @@
     staticRecipes: # Guns or melee weapons related only.
     # Guns
     - BowImprovised
+    # Ammo
+    - ArrowRegular # Forge-add
     # Melee
     - N14ScrapMachete
     - N14WastelandSpear
@@ -81,9 +83,13 @@
     - N14TrainingSword
     - N14LongSword
     - N14Bola
+    - Handcuffs
+    - N14ClothingHandsKnucklesWithClaws
+    - N14ClothingHandsKnuckles
     # Blueprints Corvax Forge
     - N14WeaponLaserRevolverBlueprint
     - N14WeaponLaserRifleMakeshiftBlueprint
+    - N14WeaponPlasmaRifleCrudeBlueprint
     - N14WeaponRifle556PipeBlueprint
     # Gun Parts
     - N14JunkGunpartsAction
@@ -117,6 +123,7 @@
       - Sheet
       - RawMaterial
       - Ingot
+      - Cartridge
   - type: Lathe
     idleState: icon
     runningState: icon # change this
@@ -143,10 +150,10 @@
     - N14MagazineSMG12mm
     - N14TopMagazineSMG12mm
     - MagazineBox12
-    - N14ShellShotgun12
+    # - N14ShellShotgun12
     - N14MagazineShotgun12
     - MagazineBox12gauge
-    - N14ShellShotgun20
+    # - N14ShellShotgun20
     - N14MagazineShotgun20
     - MagazineBox20gauge
     - N14MagazinePistol22lr
@@ -156,6 +163,7 @@
     - N14MagazinePistol44
     - N14MagazinePistol45
     - Magazine45SubMachineGun
+    - DrumMagazine45SubMachineGun # Forge-change
     - MagazineBox45
     - Magazine308Rifle
     - Magazine308RifleLong
@@ -165,6 +173,7 @@
     - SpeedLoader45-70
     - SpeedLoader45-70Tube
     - MagazineBox45-70
+    - N14Cartridge50
     - N14Magazine50AMR
     - MagazineBox50
     # Forge-Change-Start
@@ -172,7 +181,11 @@
     - MagazineBox545
     - Magazine545Rifle
     - MagazineDrum545Rifle
+    - 40mmGrenadeShrapnel
     # Forge-Change-End
+  - type: MaterialStorageMagnetPickup
+    magnetEnabled: True
+    range: 1.25
 
 - type: entity
   categories: [ HideSpawnMenu ] # Forge-change
@@ -263,6 +276,8 @@
     - N14ClothingOuterCombatArmorMK2Blueprint
     # Forge-Change-End
     # Other
+    - MaterialCloth # Forge-add
+    - N14MaterialThread # Forge-add
     - N14MaterialLeather
     - ClothingBeltQuiver # In misc.yml
     - ClothingBeltQuiverSpear
@@ -299,6 +314,8 @@
     - N14GlowstickRed
     - N14CleanGauze1
     - DoorElectronics
+    - MagazineBoxNail # Forge-Change
+    - DrumMagazineNailGun # Forge-Change
 
 - type: entity
   parent: BaseStructure
@@ -319,7 +336,7 @@
       fix1:
         shape:
           !type:PhysShapeAabb
-          bounds: "-1,-0,0,0.5" # Corvax-Change
+          bounds: "-1,-0,0,0.5" # Forge-Change
         density: 500
         mask:
         - TabletopMachineMask
@@ -421,7 +438,10 @@
     - N14HydroponicsToolScythe
     - N14HydroponicsToolClippers
     - N14HandLabeler
+    - OreBag # Forge-add
     # Kitchen
+    - N14DrinkNukaColaEmpty # Forge-add
+    - N14JunkTincan # Forge-add
     - N14ButchersCleaver
     - N14KitchenKnife
     - N14DrinkMug
@@ -448,14 +468,16 @@
     - N14LightReplacer
     - N14Mousetrap
     - N14Plunger
-    - N14WeaponSprayNozzle
-    - N14ClothingBackpackWaterTank
+    # - N14WeaponSprayNozzle # Forge-Change
+    # - N14ClothingBackpackWaterTank # Forge-Change
     # Chemistry
+    - ChemBag # Forge-add
+    - Syringe # Forge-add
     - N14Beaker
     - N14LargeBeaker
     - N14Dropper
-    - N14Syringe
-    - N14SyringeInjectable
+    # - N14Syringe
+    # - N14SyringeInjectable
     - N14PillCanister
     - N14ChemistryEmptyBottle01
     - N14PillCanisterRadX
@@ -466,27 +488,30 @@
     - N14JetInhaler
     - N14TurboInhaler
     - N14HydraInhaler
+    - N14StimpakEmpty # Forge-add
     - N14ChemicalSyringeAntidoteEmpty
     - N14PsychoSyringe
     - N14RadAwayPhialEmpty
     # Misc
-    - N14LightTube
-    - N14LedLightTube
-    - N14SodiumLightTube
-    - N14ExteriorLightTube
+    # - N14LightTube # Forge-Change
+    # - N14LedLightTube # Forge-Change
+    # - N14SodiumLightTube # Forge-Change
+    # - N14ExteriorLightTube # Forge-Change
     - N14LightBulb
     - N14LedLightBulb
     - N14Flare
     - N14Matchbox
     - N14JunkComponentScrew
+    - N14JunkComponentGearLarge # Forge-add
+    - N14JunkComponentGearSmall # Forge-add
     - FloorTileItemMetalIndustrial
     - FloorTileItemMetalMS13
     - FloorTileItemMetalGrate
     - FloorTileItemMetalSolid
     # Ammo
-    - ArrowRegular
+    # - ArrowRegular # Forge-Change
     # Machine Parts
-    - N14PortableGeneratorWeldingFuelMachineParts
+    # - N14PortableGeneratorWeldingFuelMachineParts # Forge-Change
     #Paperwork
     - N14WoodPencil # Forge-Change
     - N14PenReporter # Forge-Change
@@ -555,6 +580,8 @@
     - N14SheetSteel
     - N14SheetGlass
     - N14IngotLead
+    - N14IngotAluminum    # Forge-add
+    - N14IngotBrass       # Forge-add
     - SulfurPowder
     # Scrap
     - SheetPlasticScrap
@@ -620,7 +647,7 @@
       tags:
       - Sheet
       - RawMaterial
-      - Ingot # Corvax-Change
+      - Ingot # Forge-Change
   - type: Lathe
     producingSound: /Audio/Machines/circuitprinter.ogg
     idleState: icon
@@ -654,7 +681,7 @@
     - HolotagMidwestSquire
     - HolotagMidwestKnight
     - HolotagMidwestPaladin
-    - NCClothingBandageBoS # Corvax-Change
+    - NCClothingBandageBoS # Forge-Change
 
 - type: entity
   parent: N14WorkbenchIDPrinter
@@ -690,7 +717,7 @@
     staticRecipes:
     - DogtagNCR
     - DogtagNCRNCO
-    - NCClothingBandageNCR # Corvax-Change
+    - NCClothingBandageNCR # Forge-Change
 
 - type: entity
   parent: N14WorkbenchIDPrinter

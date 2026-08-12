@@ -24,6 +24,8 @@
 
 - type: npcFaction
   id: BrotherhoodWest
+  friendly: 
+  - BrotherhoodWest
   hostile:
   - WastelandInsect
   - WastelandAnimal
@@ -33,6 +35,8 @@
 
 - type: npcFaction
   id: BrotherhoodWestSecureArea
+  friendly:
+  - BrotherhoodWest
   hostile:
   - Wastelander
   - BrotherhoodWashington

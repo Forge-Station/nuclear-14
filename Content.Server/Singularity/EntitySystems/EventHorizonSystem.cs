@@ -483,7 +483,7 @@ public sealed class EventHorizonSystem : SharedEventHorizonSystem
         if (drop_container is null)
             _containerSystem.TryGetContainingContainer((uid, null, null), out drop_container);
 
-        foreach (var container in comp.GetAllContainers())
+        foreach (var container in _containerSystem.GetAllContainers(uid, comp))
         {
             ConsumeEntitiesInContainer(args.EventHorizonUid, container, args.EventHorizon, drop_container);
         }

@@ -4,10 +4,10 @@
   resultProtos:
   - N14ClothingOuterPowerArmorT45
   requiredWorkbench: N14WorkbenchStation
-  availableJobs:
-  - BoSMidScribe
-  - BoSWashingtonScribe
-  - BoSWestKnight
+  availableFaction:
+    - BrotherhoodMidwest
+    - BrotherhoodWest
+    - BrotherhoodWashington
   # requiredIntelligence: 5 #TODO: Enable it after fixing the SPECIAL system
   craftTime: 10
   items:
@@ -32,9 +32,10 @@
   resultProtos:
   - N14ClothingOuterPowerArmorT60Tesla
   requiredWorkbench: N14WorkbenchStation
-  availableJobs:
-  - BoSMidScribe
-  - BoSWashingtonScribe
+  availableFaction:
+    - BrotherhoodMidwest
+    - BrotherhoodWest
+    - BrotherhoodWashington
   # requiredIntelligence: 7 #TODO: Enable it after fixing the SPECIAL system
   craftTime: 10
   items:
@@ -57,6 +58,32 @@
       amount: 1
       catalyzer: true
 
+- type: craftRecipe
+  id: N14AssemblyClothingOuterPowerArmorT45
+  resultProtos:
+  - N14ClothingOuterPowerArmorT45
+  requiredWorkbench: N14WorkbenchStation
+  craftTime: 30
+  items:
+    N14AssemblyHolodiskClothingOuterPowerArmorT45:
+      amount: 1
+    N14ScrapElectronic1:
+      amount: 10
+    N14ScrapCopper1:
+      amount: 10
+    N14IngotIron1:
+      amount: 10
+    N14PowerCellHigh:
+      amount: 1
+    SheetSteel1:
+      amount: 30
+    N14Welder:
+      amount: 1
+      catalyzer: true
+      tag: true
+    N14Screwdriver:
+      amount: 1
+      catalyzer: true
 
 #MARK: Armor
 - type: craftRecipe

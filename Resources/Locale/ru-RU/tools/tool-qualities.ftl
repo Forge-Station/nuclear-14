@@ -22,3 +22,6 @@ tool-quality-rolling-name = Раскатывание
 tool-quality-rolling-tool-name = Скалка
 tool-quality-digging-name = Копание
 tool-quality-digging-tool-name = Лопата
+
+tool-quality-n14-gun-maintenance-name = Обслуживание оружия
+tool-quality-n14-gun-maintenance-tool-name = Ящик обслуживания

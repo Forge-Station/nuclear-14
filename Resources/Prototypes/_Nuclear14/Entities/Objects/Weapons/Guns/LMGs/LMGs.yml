@@ -1,6 +1,6 @@
 - type: entity
   name: automatic rifle
-  parent: BaseWeaponRifle
+  parent: [ BaseWeaponRifle, ForgeGunConditionProfileLMG ]
   id: N14WeaponLMGAutoRifle
   description: A high caliber, low-capacity heavy machine gun of the pre-war, chambered in the powerful .308 ammunition.
   components:
@@ -19,14 +19,14 @@
   - type: Wieldable
   - type: GunRequiresWield
   - type: GunWieldBonus
-    minAngle: -18 # Corvax-Change
-    maxAngle: -50 # Corvax-Change
+    minAngle: -18 # Forge-Change
+    maxAngle: -50 # Forge-Change
   - type: Gun
     minAngle: 24
     maxAngle: 60
     angleIncrease: 4
     angleDecay: 16
-    fireRate: 4
+    fireRate: 3.5 # Forge-Change
     soundGunshot:
       collection: N14AutoRifleGunshot
     selectedMode: FullAuto
@@ -66,7 +66,7 @@
 
 - type: entity
   name: canadian HMG
-  parent: BaseWeaponRifle
+  parent: [ BaseWeaponRifle, ForgeGunConditionProfileLMG ]
   id: N14WeaponHMGcanadian
   description: A powerfull belt feed machine gun commonly used by the pre-war canadian army, chambered in 7.62mm ammunition.
   components:
@@ -85,8 +85,8 @@
   - type: Wieldable
   - type: GunRequiresWield
   - type: GunWieldBonus
-    minAngle: -19 # Corvax-Change
-    maxAngle: -44 # Corvax-Change
+    minAngle: -19 # Forge-Change
+    maxAngle: -44 # Forge-Change
   - type: Gun
     minAngle: 24
     maxAngle: 60
@@ -132,7 +132,7 @@
 
 - type: entity
   name: chinese LMG
-  parent: BaseWeaponRifle
+  parent: [ BaseWeaponRifle, ForgeGunConditionProfileLMG ]
   id: N14WeaponLMGchinese
   description: A pre-war chinese light machine gun, chambered in 7.62mm ammunition.
   components:
@@ -151,8 +151,8 @@
   - type: Wieldable
   - type: GunRequiresWield
   - type: GunWieldBonus
-    minAngle: -22 # Corvax-Change
-    maxAngle: -49 # Corvax-Change
+    minAngle: -22 # Forge-Change
+    maxAngle: -49 # Forge-Change
   - type: Gun
     minAngle: 24
     maxAngle: 60
@@ -198,7 +198,7 @@
 
 - type: entity
   name: light machine gun
-  parent: BaseWeaponRifle
+  parent: [ BaseWeaponRifle, ForgeGunConditionProfileLMG ]
   id: N14WeaponLMG
   description: A light machine gun designed by the NCR for their heavy troops, chambered in 5.56 ammo.
   components:
@@ -264,7 +264,7 @@
 
 - type: entity
   name: bren machine gun
-  parent: BaseWeaponRifle
+  parent: [ BaseWeaponRifle, ForgeGunConditionProfileLMG ]
   id: N14WeaponLMGBren
   description: A high-caliber, high-damage, heavy machine gun mass-produced by the RCMP, chambered in the powerful .308 ammunition.
   components:
@@ -286,14 +286,14 @@
     sprintModifier: 0.85
   - type: GunRequiresWield
   - type: GunWieldBonus
-    minAngle: -20 # Corvax-Change
-    maxAngle: -45 # Corvax-Change
+    minAngle: -20 # Forge-Change
+    maxAngle: -45 # Forge-Change
   - type: Gun
     minAngle: 24
     maxAngle: 60
     angleIncrease: 4
     angleDecay: 16
-    fireRate: 3.5 # Corvax-Change
+    fireRate: 4 # Forge-Change
     soundGunshot:
       collection: N14AutoRifleGunshot
     selectedMode: FullAuto

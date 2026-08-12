@@ -108,6 +108,9 @@
     endSound:
       collection: lighterOffSounds
   - type: ItemTogglePointLight
+  - type: Tag           # Forge-add
+    tags:
+    - Lighter  
 
 - type: entity
   name: cheap lighter
@@ -242,6 +245,9 @@
   - type: UseDelay
   - type: IgnitionSource
     ignited: false
+  - type: Tag           # Forge-add
+    tags:
+    - Lighter
 
 - type: entity
   name: flippo engraved lighter

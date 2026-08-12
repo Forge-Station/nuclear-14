@@ -13,7 +13,7 @@
       bodypart: !type:Container
         ents: []
   - type: StaticPrice
-    price: 0 # Corvax-Change
+    price: 0 # Forge-Change
   - type: Extractable
     juiceSolution:
       reagents:

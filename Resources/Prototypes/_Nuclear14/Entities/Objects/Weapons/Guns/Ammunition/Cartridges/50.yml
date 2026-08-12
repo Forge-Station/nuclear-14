@@ -1,5 +1,5 @@
 - type: entity
-  parent: BaseCartridge
+  parent: CartridgeAntiMateriel
   id: N14Cartridge50
   name: cartridge (.50 anti-materiel)
   components:

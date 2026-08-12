@@ -1,6 +1,6 @@
 - type: entity
   name: grenade launcher
-  parent: BaseWeaponLauncher
+  parent: [ BaseWeaponLauncher, ForgeGunConditionProfileLauncher ]
   id: N14WeaponLauncherGrenade
   description: A pump-action heavy grenade launcher with a 4-grenade capacity, 4-times more fun! It uses 40mm grenades.
   components:
@@ -45,7 +45,7 @@
 
 - type: entity
   name: grenade rifle
-  parent: BaseWeaponLauncher
+  parent: [ BaseWeaponLauncher, ForgeGunConditionProfileLauncher ]
   id: N14WeaponRifleGrenade
   description: A break-action, single-shot, light grenade launcher. The coolest thing ever, launches 40mm grenades.
   components:

@@ -1,0 +1,15 @@
+- type: loadout
+  id: N14LoadoutN14ClothingShoesTribal
+  category: Shoes
+  cost: 1
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutShoes
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+  items:
+    - N14ClothingShoesTribal

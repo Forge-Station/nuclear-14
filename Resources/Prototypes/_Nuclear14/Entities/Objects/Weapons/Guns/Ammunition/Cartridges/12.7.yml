@@ -1,7 +1,7 @@
 - type: entity
   id: N14CartridgePistol127
   name: cartridge (12.7mm)
-  parent: BaseCartridgePistol
+  parent: BaseCartridgeLightRifle
   components:
   - type: CartridgeAmmo
     proto: N14Bullet127

@@ -1,0 +1,35 @@
+- type: entity
+  name: легионерские припасы
+  description: Небольшая коробочка наполненная вещами первой необходимости.
+  parent: N14BoxPlastic
+  id: N14BoxPlasticFilledMilitaryLegion
+  components:
+    - type: SpawnItemsOnUse #Forge-Change
+      items:
+        - id: N14Hydra
+          prob: 0.2
+          orGroup: RandomMed
+        - id: N14HealingPowder
+          prob: 0.5
+          orGroup: RandomMed
+        - id: N14HealingPoultice
+          prob: 0.3
+          orGroup: RandomMed
+        - id: N14CleanGauze10
+          amount: 1
+        - id: N14RadXPill
+          amount: 1
+        - id: N14CurrencyLegionDenarius
+          prob: 0.6
+          orGroup: StashCash
+        - id: N14CurrencyLegionDenarius
+          amount: 5
+          prob: 0.3
+          orGroup: StashCash
+        - id: N14CurrencyLegionDenarius10
+          prob: 0.1
+          orGroup: StashCash
+        - id: Flare
+          amount: 2
+      sound:
+        path: /Audio/Items/can_open3.ogg

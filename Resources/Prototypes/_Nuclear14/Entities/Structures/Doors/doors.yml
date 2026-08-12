@@ -535,6 +535,9 @@
     layers:
     - state: closed
       map: ["enum.DoorVisualLayers.Base"]
+  - type: Construction # Forge-Change
+    graph: N14TentLeatherDoorGraph
+    node: N14TentLeatherDoorNode
 
 - type: entity
   parent: N14DoorTentflap
@@ -548,3 +551,6 @@
     layers:
     - state: closed
       map: ["enum.DoorVisualLayers.Base"]
+  - type: Construction # Forge-Change
+    graph: N14TentClothDoorGraph
+    node: N14TentClothDoorNode

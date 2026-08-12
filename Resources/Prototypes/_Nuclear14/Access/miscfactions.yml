@@ -28,9 +28,9 @@
   id: WastelandReporter
   name: id-card-access-level-townie-reporter
 
-- type: accessLevel # Corvax-Change begin
+- type: accessLevel # Forge-Change begin
   id: TownsPerson
-  name: id-card-access-level-townie-person # Corvax-Change end
+  name: id-card-access-level-townie-person # Forge-Change end
 
 - type: accessLevel
   id: InnRoomOne
@@ -54,9 +54,9 @@
   - TownieMechanic
   - WastelandBartender
   - WastelandReporter
-  - WastelandChaplain # Corvax-Change
-  - TownsPerson # Corvax-Change
-  - WastelandFarmer # Corvax-Change
+  - WastelandChaplain # Forge-Change
+  - TownsPerson # Forge-Change
+  - WastelandFarmer # Forge-Change
   - InnRoomOne
   - InnRoomTwo
   - InnRoomThree

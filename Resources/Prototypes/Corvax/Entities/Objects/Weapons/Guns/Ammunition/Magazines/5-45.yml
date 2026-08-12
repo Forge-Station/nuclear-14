@@ -13,7 +13,7 @@
       tags:
         - N14Cartridge545Rifle
     proto: N14Cartridge545Rifle
-    capacity: 24
+    capacity: 25
   - type: ContainerContainer
     containers:
       ballistic-ammo: !type:Container
@@ -30,6 +30,10 @@
     steps: 2
     zeroVisible: false
   - type: Appearance
+  - type: ToolRefinable #Forge-add
+    refineResult:
+    - id: SheetSteel1
+      amount: 1
 
 - type: entity
   id: Magazine545Rifle

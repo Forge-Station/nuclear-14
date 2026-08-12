@@ -397,14 +397,25 @@
 
 - type: entity
   parent: N14ClothingUniformBase
-  id: N14ClothingUniformNCRDesert
+  id: N14ClothingUniformNCR # Forge-Change
   name: NCR trooper uniform
   description: The NCR-designated uniform for all infantry soldiers in the Republic army.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Clothing/Uniforms/FalloutSuits/NCRuniform2.rsi
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/NCRuniform.rsi # Forge-Change
   - type: Clothing
-    sprite: _Nuclear14/Clothing/Uniforms/FalloutSuits/NCRuniform2.rsi
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/NCRuniform.rsi # Forge-Change
+
+- type: entity
+  parent: N14ClothingUniformBase
+  id: N14ClothingUniformNCRSnow
+  name: NCR trooper uniform
+  description: The NCR-designated uniform for all infantry soldiers in the Republic army.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/NCRuniformSnow.rsi # Forge-Change
+  - type: Clothing
+    sprite: Corvax/Clothing/Uniforms/Jumpsuit/NCRuniformSnow.rsi # Forge-Change
 
 - type: entity
   parent: N14ClothingUniformBase
@@ -427,17 +438,6 @@
     sprite: _Nuclear14/Clothing/Uniforms/FalloutSuits/NCRmp2.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/Uniforms/FalloutSuits/NCRmp2.rsi
-
-- type: entity
-  parent: N14ClothingUniformBase
-  id: N14ClothingUniformNCRSnow
-  name: NCR trooper uniform
-  description: The NCR-designated uniform for all infantry soldiers in the Republic army.
-  components:
-  - type: Sprite
-    sprite: _Nuclear14/Clothing/Uniforms/FalloutSuits/NCRuniform.rsi
-  - type: Clothing
-    sprite: _Nuclear14/Clothing/Uniforms/FalloutSuits/NCRuniform.rsi
 
 - type: entity
   parent: N14ClothingUniformBase

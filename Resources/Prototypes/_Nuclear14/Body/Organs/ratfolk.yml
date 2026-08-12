@@ -128,7 +128,7 @@
     - id: Medicine
     - id: Poison
     - id: Narcotic
-    - id: N14Virus # Corvax-Change
+    - id: N14Virus # Forge-Change
 
 - type: entity
   id: N14OrganRatFolkStomach

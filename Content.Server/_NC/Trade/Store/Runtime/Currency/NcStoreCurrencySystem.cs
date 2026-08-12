@@ -3,50 +3,21 @@ using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Stacks;
 using Robust.Shared.Prototypes;
 
+
 namespace Content.Server._NC.Trade;
 
-public sealed class NcStoreCurrencySystem : EntitySystem
+
+public sealed class NcStoreCurrencySystem : EntitySystem, IStoreCurrencyService
 {
-    [Dependency] private readonly IPrototypeManager _protos = default!;
-
     [Dependency] private readonly IEntityManager _ents = default!;
-    [Dependency] private readonly SharedHandsSystem _hands = default!;
-    [Dependency] private readonly NcStoreInventorySystem _inventory = default!;
-    [Dependency] private readonly SharedStackSystem _stacks = default!;
-    [Dependency] private readonly SharedTransformSystem _xform = default!;
-
-    private readonly List<ICurrencyHandler> _handlers = new();
     private readonly Dictionary<string, ICurrencyHandler> _handlerCache = new(StringComparer.Ordinal);
 
-    public override void Initialize()
-    {
-        base.Initialize();
-        _handlers.Clear();
-        _handlerCache.Clear();
-        _handlers.Add(new StackCurrencyHandler(_ents, _hands, _inventory, _protos, _stacks, _xform));
-    }
-
-    private bool TryResolveHandler(string currencyId, out ICurrencyHandler handler)
-    {
-        if (_handlerCache.TryGetValue(currencyId, out var cached))
-        {
-            handler = cached;
-            return true;
-        }
-
-        foreach (var h in _handlers)
-        {
-            if (!h.CanHandle(currencyId))
-                continue;
-
-            _handlerCache[currencyId] = h;
-            handler = h;
-            return true;
-        }
-
-        handler = default!;
-        return false;
-    }
+    private readonly List<ICurrencyHandler> _handlers = new();
+    [Dependency] private readonly SharedHandsSystem _hands = default!;
+    [Dependency] private readonly NcStoreInventorySystem _inventory = default!;
+    [Dependency] private readonly IPrototypeManager _protos = default!;
+    [Dependency] private readonly SharedStackSystem _stacks = default!;
+    [Dependency] private readonly SharedTransformSystem _xform = default!;
 
 
     public bool TryGetBalance(in NcInventorySnapshot snapshot, string currencyId, out int balance)
@@ -73,63 +44,10 @@ public sealed class NcStoreCurrencySystem : EntitySystem
         if (listing.Cost.Count == 0)
             return false;
 
-        var hasWhitelist = false;
-        foreach (var c in store.CurrencyWhitelist)
-            if (!string.IsNullOrWhiteSpace(c))
-            {
-                hasWhitelist = true;
-                break;
-            }
+        if (HasWhitelistedCurrency(store))
+            return TryPickWhitelistedBuyCurrency(store, listing, snapshot, out currency, out unitPrice, out balance);
 
-        if (hasWhitelist)
-        {
-            foreach (var cur in store.CurrencyWhitelist)
-            {
-                if (string.IsNullOrWhiteSpace(cur))
-                    continue;
-                if (!listing.Cost.TryGetValue(cur, out var price))
-                    continue;
-                if (price <= 0)
-                    continue;
-
-                if (!TryGetBalance(snapshot, cur, out var bal))
-                    bal = 0;
-                if (bal < price)
-                    continue;
-
-                currency = cur;
-                unitPrice = price;
-                balance = bal;
-                return true;
-            }
-
-            return false;
-        }
-
-        KeyValuePair<string, int>? best = null;
-        foreach (var kv in listing.Cost)
-        {
-            if (string.IsNullOrWhiteSpace(kv.Key) || kv.Value <= 0)
-                continue;
-            if (best == null || string.CompareOrdinal(kv.Key, best.Value.Key) < 0)
-                best = kv;
-        }
-
-        if (best == null)
-            return false;
-
-        var fallbackCur = best.Value.Key;
-        var fallbackPrice = best.Value.Value;
-        if (!TryGetBalance(snapshot, fallbackCur, out var fallbackBal))
-            fallbackBal = 0;
-
-        if (fallbackBal < fallbackPrice)
-            return false;
-
-        currency = fallbackCur;
-        unitPrice = fallbackPrice;
-        balance = fallbackBal;
-        return true;
+        return TryPickFallbackBuyCurrency(listing, snapshot, out currency, out unitPrice, out balance);
     }
 
     public bool TryPickCurrencyForSell(
@@ -177,6 +95,20 @@ public sealed class NcStoreCurrencySystem : EntitySystem
         return true;
     }
 
+    public bool CanHandleCurrency(string currencyId) =>
+        !string.IsNullOrWhiteSpace(currencyId) && TryResolveHandler(currencyId, out _);
+
+    public bool CanGiveCurrency(EntityUid user, string currencyId, int amount)
+    {
+        if (amount <= 0)
+            return true;
+
+        if (!TryResolveHandler(currencyId, out var h))
+            return false;
+
+        return h.CanGiveCurrency(user, currencyId, amount);
+    }
+
     public bool TryTakeCurrency(EntityUid user, string currencyId, int amount)
     {
         if (amount <= 0)
@@ -186,12 +118,180 @@ public sealed class NcStoreCurrencySystem : EntitySystem
         return h.TryTake(user, currencyId, amount);
     }
 
-    public void GiveCurrency(EntityUid user, string currencyId, int amount)
+    public bool TryGiveCurrency(EntityUid user, string currencyId, int amount)
     {
         if (amount <= 0)
-            return;
+            return true;
         if (!TryResolveHandler(currencyId, out var h))
-            return;
-        h.TryGiveCurrency(user, currencyId, amount);
+            return false;
+        if (!h.CanGiveCurrency(user, currencyId, amount))
+            return false;
+        return h.TryGiveCurrency(user, currencyId, amount);
+    }
+
+    public bool BeginCurrencyIssueTransaction()
+    {
+        foreach (var h in _handlers)
+        {
+            if (h.BeginCurrencyIssueTransaction())
+                continue;
+
+            foreach (var rollback in _handlers)
+                rollback.RollbackCurrencyIssueTransaction(EntityUid.Invalid);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    public void CommitCurrencyIssueTransaction(EntityUid user)
+    {
+        foreach (var h in _handlers)
+            h.CommitCurrencyIssueTransaction(user);
+    }
+
+    public void RollbackCurrencyIssueTransaction(EntityUid user)
+    {
+        foreach (var h in _handlers)
+            h.RollbackCurrencyIssueTransaction(user);
+    }
+
+    public override void Initialize()
+    {
+        base.Initialize();
+        _handlers.Clear();
+        _handlerCache.Clear();
+        _handlers.Add(new StackCurrencyHandler(_ents, _hands, _inventory, _protos, _stacks, _xform));
+    }
+
+    private bool TryResolveHandler(string currencyId, out ICurrencyHandler handler)
+    {
+        if (_handlerCache.TryGetValue(currencyId, out var cached))
+        {
+            handler = cached;
+            return true;
+        }
+
+        foreach (var h in _handlers)
+        {
+            if (!h.CanHandle(currencyId))
+                continue;
+
+            _handlerCache[currencyId] = h;
+            handler = h;
+            return true;
+        }
+
+        handler = default!;
+        return false;
+    }
+
+    private static bool HasWhitelistedCurrency(NcStoreComponent store)
+    {
+        foreach (var currencyId in store.CurrencyWhitelist)
+            if (!string.IsNullOrWhiteSpace(currencyId))
+                return true;
+
+        return false;
+    }
+
+    private bool TryPickWhitelistedBuyCurrency(
+        NcStoreComponent store,
+        NcStoreListingDef listing,
+        in NcInventorySnapshot snapshot,
+        out string currency,
+        out int unitPrice,
+        out int balance
+    )
+    {
+        currency = string.Empty;
+        unitPrice = 0;
+        balance = 0;
+
+        foreach (var currencyId in store.CurrencyWhitelist)
+        {
+            if (!TryGetAffordableBuyCurrency(snapshot, listing, currencyId, out var price, out var currentBalance))
+                continue;
+
+            currency = currencyId;
+            unitPrice = price;
+            balance = currentBalance;
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool TryPickFallbackBuyCurrency(
+        NcStoreListingDef listing,
+        in NcInventorySnapshot snapshot,
+        out string currency,
+        out int unitPrice,
+        out int balance
+    )
+    {
+        currency = string.Empty;
+        unitPrice = 0;
+        balance = 0;
+
+        if (!TryGetBestBuyCurrency(listing, out var best))
+            return false;
+
+        if (!TryGetBalance(snapshot, best.Key, out balance))
+            balance = 0;
+
+        if (balance < best.Value)
+            return false;
+
+        currency = best.Key;
+        unitPrice = best.Value;
+        return true;
+    }
+
+    private bool TryGetAffordableBuyCurrency(
+        in NcInventorySnapshot snapshot,
+        NcStoreListingDef listing,
+        string currencyId,
+        out int price,
+        out int balance
+    )
+    {
+        price = 0;
+        balance = 0;
+
+        if (string.IsNullOrWhiteSpace(currencyId))
+            return false;
+
+        if (!listing.Cost.TryGetValue(currencyId, out price) || price <= 0)
+            return false;
+
+        if (!TryGetBalance(snapshot, currencyId, out balance))
+            balance = 0;
+
+        return balance >= price;
+    }
+
+    private static bool TryGetBestBuyCurrency(
+        NcStoreListingDef listing,
+        out KeyValuePair<string, int> best
+    )
+    {
+        best = default;
+        var found = false;
+
+        foreach (var candidate in listing.Cost)
+        {
+            if (string.IsNullOrWhiteSpace(candidate.Key) || candidate.Value <= 0)
+                continue;
+
+            if (!found || string.CompareOrdinal(candidate.Key, best.Key) < 0)
+            {
+                best = candidate;
+                found = true;
+            }
+        }
+
+        return found;
     }
 }

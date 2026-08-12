@@ -64,6 +64,6 @@
           completed:
           - !type:SpawnPrototype
                 prototype: N14CompostRotted
-                amount: 2
+                amount: 1 #Forge-change
           steps:
             - tool: Prying # shoveling

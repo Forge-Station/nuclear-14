@@ -1,0 +1,31 @@
+- type: accessLevel
+  id: TownMasterKey
+  name: id-card-access-level-town-master-key
+
+- type: entity
+  parent: N14IDCard
+  id: N14IDKeyTownMasterMayor
+  name: мастер-ключ мэра
+  description: Тяжелый позолоченный ключ с печатью мэрии. Подходит к служебным городским замкам.
+  suffix: MasterKey
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: gold
+  - type: Access
+    tags:
+    - TownMasterKey
+
+- type: entity
+  parent: N14IDCard
+  id: N14IDKeyTownMasterSheriff
+  name: мастер-ключ шерифа
+  description: Прочный служебный ключ со звездой шерифа. Открывает городские двери по долгу службы.
+  suffix: MasterKey
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/identification.rsi
+    state: gold
+  - type: Access
+    tags:
+    - TownMasterKey

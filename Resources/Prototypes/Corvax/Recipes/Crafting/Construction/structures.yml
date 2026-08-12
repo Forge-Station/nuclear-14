@@ -65,15 +65,15 @@
 
 # MARK: Двери Замок
 - type: construction
-  id: N14DoorMetalBlueSlantedLoced
+  id: N14DoorMetalBlueSlantedLocked
   graph: N14DoorGraph
   startNode: start
-  targetNode: MetalBlueLoced
+  targetNode: MetalBlueLocked
   category: construction-category-structures
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Structures/Doors/SlantedDoors/metalblue.rsi
     state: closed
@@ -81,31 +81,15 @@
     - !type:TileNotBlocked
 
 - type: construction
-  id: N14DoorMetalRedSlantedLoced
+  id: N14DoorMetalBlueAltSlantedLocked
   graph: N14DoorGraph
   startNode: start
-  targetNode: MetalRedLoced
+  targetNode: MetalBlueAltLocked
   category: construction-category-structures
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
-  hide: false
-  icon:
-    sprite: _Nuclear14/Structures/Doors/SlantedDoors/metalred.rsi
-    state: closed
-  conditions:
-    - !type:TileNotBlocked
-
-- type: construction
-  id: N14DoorMetalBlueAltSlantedLoced
-  graph: N14DoorGraph
-  startNode: start
-  targetNode: MetalBlueAltLoced
-  category: construction-category-structures
-  objectType: Structure
-  placementMode: SnapgridCenter
-  canBuildInImpassable: false
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Structures/Doors/SlantedDoors/metalbluealt.rsi
     state: closed
@@ -113,22 +97,23 @@
     - !type:TileNotBlocked
 
 - type: construction
-  id: N14DoorMetalBlueWindowSlantedLoced
+  id: N14DoorMetalBlueWindowSlantedLocked
   graph: N14DoorGraph
   startNode: start
-  targetNode: MetalBlueWindowLoced
+  targetNode: MetalBlueWindowLocked
   category: construction-category-structures
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: false
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Structures/Doors/SlantedDoors/metalbluewindow.rsi
     state: closed
   conditions:
     - !type:TileNotBlocked
 
-- type: construction # Forge-Change
+#MARK: Крест
+- type: construction
   name: Cross
   id: Cross
   graph: Cross14
@@ -145,4 +130,306 @@
   conditions:
     - !type:TileNotBlocked
 
-#Flags
+#MARK: Барикады.
+- type: construction
+  id: N14BarricadeTanktrapRusty
+  graph: N14BarricadeTanktrapRustyGraph
+  startNode: start
+  targetNode: N14BarricadeTanktrapRustyNode
+  category: construction-category-structures
+  icon:
+   sprite: _Nuclear14/Structures/Furniture/barricades.rsi
+   state: iron_barricadeA
+  objectType: Structure
+  placementMode: SnapgridCenter
+  hide: false
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14BarricadeRazorwire
+  graph: N14BarricadeRazorwireGraph
+  startNode: start
+  targetNode: N14BarricadeRazorwireNode
+  category: construction-category-structures
+  icon:
+   sprite: _Nuclear14/Structures/Furniture/barricades.rsi
+   state: barbedwire_single
+  objectType: Structure
+  placementMode: SnapgridCenter
+  hide: false
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14BarricadeSandbagSingle
+  graph: N14BarricadeSandbagSingleGraph
+  startNode: start
+  targetNode: N14BarricadeSandbagSingleNode
+  category: construction-category-structures
+  icon:
+   sprite: _Nuclear14/Structures/Furniture/barricades.rsi
+   state: sandbag_single
+  objectType: Structure
+  placementMode: SnapgridCenter
+  hide: false
+  conditions:
+    - !type:TileNotBlocked
+
+#MARK: Ковры
+- type: construction
+  id: N14RugRed
+  graph: N14RugRedGraph
+  startNode: start
+  targetNode: N14RugRedNode
+  category: construction-category-furniture
+  icon:
+   sprite: _Nuclear14/Structures/Furniture/rugs64x64.rsi
+   state: rug_red
+  objectType: Structure
+  placementMode: SnapgridCenter
+  hide: false
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14RugYellow
+  graph: N14RugYellowGraph
+  startNode: start
+  targetNode: N14RugYellowNode
+  category: construction-category-furniture
+  icon:
+   sprite: _Nuclear14/Structures/Furniture/rugs64x64.rsi
+   state: rug_yellow
+  objectType: Structure
+  placementMode: SnapgridCenter
+  hide: false
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14RugBrownFancy
+  graph: N14RugBrownFancyGraph
+  startNode: start
+  targetNode: N14RugBrownFancyNode
+  category: construction-category-furniture
+  icon:
+   sprite: _Nuclear14/Structures/Furniture/rugs64x64.rsi
+   state: rug_fancy
+  objectType: Structure
+  placementMode: SnapgridCenter
+  hide: false
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14RugBlue
+  graph: N14RugBlueGraph
+  startNode: start
+  targetNode: N14RugBlueNode
+  category: construction-category-furniture
+  icon:
+   sprite: _Nuclear14/Structures/Furniture/rugs64x64.rsi
+   state: rug_blue
+  objectType: Structure
+  placementMode: SnapgridCenter
+  hide: false
+  conditions:
+    - !type:TileNotBlocked
+
+#MARK: Двери привязанные к радиальному Z колесу.
+    
+# === ДЛЯ ВСЕХ ДЕРЕВЯННЫХ ДВЕРЕЙ ===
+- type: construction
+  id: N14DoorWoodSecureLockedPersonTall
+  graph: N14RadialDoorsGraph
+  startNode: start
+  targetNode: WoodDoorTown
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: true
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/wood.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DoorWoodSecureLockedLegion
+  graph: N14RadialDoorsGraph
+  startNode: start
+  targetNode: WoodDoorLegion
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: true
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/wood.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DoorWoodSecureLockedNCRNew
+  graph: N14RadialDoorsGraph
+  startNode: start
+  targetNode: WoodDoorNCR
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: true
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/wood.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DoorWoodWhiteTallLocked
+  graph: N14RadialDoorsGraph
+  startNode: start
+  targetNode: WoodDoorLocked
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: true
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/wood.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+# === ДЛЯ ВСЕХ РЕШЕТЧАТЫХ ДВЕРЕЙ ===
+- type: construction
+  id: N14DoorCellMetalLockedPersonTall
+  graph: N14RadialDoorsGraph
+  startNode: start
+  targetNode: CellMetalDoorTown
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: true
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/metal_bar.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DoorCellMetalLockedLegion
+  graph: N14RadialDoorsGraph
+  startNode: start
+  targetNode: CellMetalDoorLegion
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: true
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/metal_bar.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DoorCellMetalLockedNCRNew
+  graph: N14RadialDoorsGraph
+  startNode: start
+  targetNode: CellMetalDoorNCR
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: true
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/metal_bar.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DoorCellMetalLocked
+  graph: N14RadialDoorsGraph
+  startNode: start
+  targetNode: CellMetalDoorLocked
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: true
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/metal_bar.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+# === ДЛЯ ВСЕХ КРАСНЫХ МЕТАЛЛИЧЕСКИХ ДВЕРЕЙ ===
+- type: construction
+  id: N14DoorMetalSecureLockedPersonTall
+  graph: N14RadialDoorsGraph
+  startNode: start
+  targetNode: MetalDoorTown
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: true
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/metalred.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DoorMetalSecureLockedRedLegion
+  graph: N14RadialDoorsGraph
+  startNode: start
+  targetNode: MetalDoorLegion
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: true
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/metalred.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DoorMetalSecureLockedNCRNew
+  graph: N14RadialDoorsGraph
+  startNode: start
+  targetNode: MetalDoorNCR
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: true
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/metalred.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: N14DoorMetalRedSlantedLocked
+  graph: N14RadialDoorsGraph
+  startNode: start
+  targetNode: MetalRedLocked
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: true
+  icon:
+    sprite: _Nuclear14/Structures/Doors/SlantedDoors/metalred.rsi
+    state: closed
+  conditions:
+    - !type:TileNotBlocked

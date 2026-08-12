@@ -41,14 +41,14 @@ ent-N14DoorAirlockSlanted = воздушный шлюз
     .suffix = Наклонный
     .desc = Герметичный воздушный шлюз. Необходим для защиты от опасностей внешнего мира (или для сохранения ценного воздуха внутри).
 
-ent-N14DoorMetalBlueSlantedLoced = металлическая дверь c замком
+ent-N14DoorMetalBlueSlantedLocked = металлическая дверь c замком
     .desc = { ent-N14DoorMetalBlueSlanted.desc}
 
-ent-N14DoorMetalRedSlantedLoced = { ent-N14DoorMetalBlueSlantedLoced}
+ent-N14DoorMetalRedSlantedLocked = { ent-N14DoorMetalBlueSlantedLocked}
     .desc = { ent-N14DoorMetalRedSlanted.desc}
 
-ent-N14DoorMetalBlueAltSlantedLoced = { ent-N14DoorMetalBlueSlantedLoced}
+ent-N14DoorMetalBlueAltSlantedLocked = { ent-N14DoorMetalBlueSlantedLocked}
     .desc = { ent-N14DoorMetalBlueAltSlanted.desc}
 
-ent-N14DoorMetalBlueWindowSlantedLoced = { ent-N14DoorMetalBlueSlantedLoced}
+ent-N14DoorMetalBlueWindowSlantedLocked = { ent-N14DoorMetalBlueSlantedLocked}
     .desc = { ent-N14DoorMetalBlueWindowSlanted.desc}

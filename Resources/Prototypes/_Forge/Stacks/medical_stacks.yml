@@ -1,0 +1,15 @@
+- type: stack
+  id: N14MedicatedSuture
+  name: Медицинская нить
+  icon: { sprite: _Nuclear14/Objects/Specific/Medical/ms13_medical.rsi, state: stitch1 }
+  spawn: N14MedicatedSuture1  
+  maxCount: 10 
+  itemSize: 1
+
+- type: stack
+  id: N14RegenerativeOintment
+  name: Продвинутая мазь
+  icon: { sprite: _Nuclear14/Objects/Specific/Medical/ms13_medical_new.rsi, state: ointment1 }
+  spawn: N14RegenerativeOintment1  
+  maxCount: 10 
+  itemSize: 1

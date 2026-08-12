@@ -1,0 +1,47 @@
+- type: entity
+  parent: N14ClothingOuterPowerArmorT45
+  id: N14ClothingOuterPowerArmorRaiderNPC
+  categories: [ HideSpawnMenu ]
+  name: рейдерская силовая броня
+  description: Устрашающая, прочная, шипастая. Всё, что нужно Рейдеру от комплекта силовой брони.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/raider.rsi
+  - type: Clothing
+    sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/raider.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.5
+        Slash: 0.5
+        Piercing: 0.5
+        Heat: 0.5
+        Caustic: 0.75
+        Radiation: 0.65
+      # Forge-Add-Start
+      flatReductions:
+        Blunt: 1
+        Slash: 1
+        Piercing: 1
+        Heat: 1
+        Caustic: 1
+        Radiation: 1
+      # Forge-Add-End
+  - type: ExplosionResistance
+    damageCoefficient: 0.6
+  - type: UserInterface
+    interfaces:
+      enum.ToggleClothingUiKey.Key:
+        type: ToggleableClothingBoundUserInterface
+  - type: ToggleableClothing
+    clothingPrototypes:
+      head: N14ClothingHeadHelmetPowerArmorRaider 
+      gloves: N14ClothingPAGauntletsDark
+      shoes: N14ClothingPABootsDark
+      back: N14ClothingPowerSystemsBack
+  - type: Reflect
+    reflectProb: 0.3
+  - type: ClothingSpeedModifier 
+    walkModifier: 0.6
+    sprintModifier: 0.6
+  - type: Unremoveable

@@ -16,7 +16,7 @@
       min: 54000 # 15 hours
   startingGear: BoSMidPaladinGear
   alwaysUseSpawner: true
-  icon: "JobIconBosMPaladin" # Corvax-Change
+  icon: "JobIconBosMPaladin" # Forge-Change
   supervisors: job-supervisors-bos-mid
   access:
   - BoSMidwest
@@ -35,7 +35,7 @@
   id: BoSMidPaladinGear
   equipment:
     jumpsuit: N14ClothingUniformBosRecon
-    back: N14ClothingBackpackMilitary # Corvax-Change
+    back: N14ClothingBackpackMilitary # Forge-Change
     shoes: N14ClothingBootsLeatherFilled
     head:  N14ClothingHeadHatBrotherhoodFieldCap
     outerClothing: N14ClothingOuterMBoSPaladinArmor
@@ -44,7 +44,7 @@
     id: N14IDBrotherhoodHolotagPaladin
     ears: N14ClothingHeadsetBOSMidwest
     belt: ClothingBeltMilitary
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledMilitary
 

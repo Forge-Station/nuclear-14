@@ -47,3 +47,103 @@
     tags:
     - HidesHair
     - HidesBeard
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatWBoSReconHood
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Hoods/wbosreconhood.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Hoods/wbosreconhood.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.9
+        Slash: 0.9
+        Piercing: 0.9
+        Heat: 0.9
+  - type: IngestionBlocker
+  - type: HideLayerClothing
+    slots:
+    - Hair
+  - type: ToggleableClothing
+    requiredSlot: head
+    clothingPrototype: N14ClothingMaskGasWBoSRecon
+    slot: mask
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingNeckCloakTentHood
+  name: tent cloak hood
+  description: A versatile cloak that can serve as both a waterproof cape and a lightweight field tent.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Hoods/tebtcloakhood.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Hoods/tebtcloakhood.rsi
+  - type: IngestionBlocker
+  - type: IdentityBlocker
+  - type: HideLayerClothing
+    slots:
+    - Hair
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingNeckCloakTentHoodNCR
+  name: ncr tent cloak hood
+  description: A versatile cloak that can serve as both a waterproof cape and a lightweight field tent.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Hoods/tebtcloakhoodNCR.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Hoods/tebtcloakhoodNCR.rsi
+  - type: IngestionBlocker
+  - type: IdentityBlocker
+  - type: HideLayerClothing
+    slots:
+    - Hair
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingNeckCloakTentHoodBOS
+  name: bos tent cloak hood
+  description: A versatile cloak that can serve as both a waterproof cape and a lightweight field tent.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Hoods/tebtcloakhoodBOS.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Hoods/tebtcloakhoodBOS.rsi
+  - type: IngestionBlocker
+  - type: IdentityBlocker
+  - type: HideLayerClothing
+    slots:
+    - Hair
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHoodWanderer
+  name: wanderer hood
+  description: A dirty bag with a large hole for the face.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Hoods/wandererHood.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Hoods/wandererHood.rsi
+  - type: HideLayerClothing
+    slots:
+    - Hair
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadMarksmanHood
+  name: coat hood
+  description: A warm hood.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Hoods/marksmanhood.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Hoods/marksmanhood.rsi
+  - type: HideLayerClothing
+    slots:
+    - Hair

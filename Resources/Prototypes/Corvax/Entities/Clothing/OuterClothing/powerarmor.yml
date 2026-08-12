@@ -29,9 +29,6 @@
     sprite: Corvax/Clothing/OuterClothing/PowerArmor/t51NCR.rsi
     equipDelay: 3
     unequipDelay: 6
-  - type: ClothingSpeedModifier
-    walkModifier: 0.15
-    sprintModifier: 0.15
   - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorT51NCR
@@ -52,9 +49,6 @@
     sprite: Corvax/Clothing/OuterClothing/PowerArmor/t60NCR.rsi
     equipDelay: 3
     unequipDelay: 6
-  - type: ClothingSpeedModifier
-    walkModifier: 0.15
-    sprintModifier: 0.15
   - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorT60NCR
@@ -75,9 +69,6 @@
     sprite: Corvax/Clothing/OuterClothing/PowerArmor/advanced1NCR.rsi
     equipDelay: 3
     unequipDelay: 6
-  - type: ClothingSpeedModifier
-    walkModifier: 0.17
-    sprintModifier: 0.17
   - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorX01NCR
@@ -140,13 +131,13 @@
 - type: entity
   parent: N14ClothingOuterPowerArmorT45
   id: N14ClothingOuterPowerArmorT45West
-  name: T-45 West BoS Power Armor
+  name: T-51 West BoS Power Armor
   description: A fully functional suit of power armor with servos. Rare and issued exclusively to veterans of the Republic Armed Forces. The left shoulder pad features a stuffed bear head. You may see it for the first and last time in your life.
   components:
   - type: Sprite
-    sprite: Corvax/Clothing/OuterClothing/PowerArmor/t45westbos.rsi
+    sprite: Corvax/Clothing/OuterClothing/PowerArmor/t51westbos.rsi
   - type: Clothing
-    sprite: Corvax/Clothing/OuterClothing/PowerArmor/t45westbos.rsi
+    sprite: Corvax/Clothing/OuterClothing/PowerArmor/t51westbos.rsi
   - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorT45WestBOS
@@ -167,6 +158,21 @@
   - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorT51WestBOSElder
+      gloves: N14ClothingPAGauntlets
+      shoes: N14ClothingPABoots
+      back: N14ClothingPowerSystemsBack
+
+- type: entity
+  parent: N14ClothingOuterPowerArmorMidwest
+  id: N14ClothingOuterPowerArmorWBoSPowerArmor
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/PowerArmor/WBoSPowerArmor.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/PowerArmor/WBoSPowerArmor.rsi
+  - type: ToggleableClothing
+    clothingPrototypes:
+      head: N14ClothingHeadHelmetPowerArmorWBoSHelmet
       gloves: N14ClothingPAGauntlets
       shoes: N14ClothingPABoots
       back: N14ClothingPowerSystemsBack

@@ -1,0 +1,103 @@
+- type: entity
+  name: медицинская нить
+  description: Нить, пропитанная антисептиком, для зашивания ран. Используется для лечения кровотечений и повреждений конечностей.
+  parent: BaseHealingItem
+  id: N14MedicatedSuture
+  suffix: Full
+  components:
+  - type: Tag
+    tags:
+    - Brutepack
+  - type: Sprite
+    scale: 0.7, 0.7
+    sprite: _Nuclear14/Objects/Specific/Medical/ms13_medical.rsi
+    layers:
+    - state: stitch1
+      map: ["base"]
+  - type: Stack
+    stackType: N14MedicatedSuture
+    count: 10
+    baseLayer: base
+    layerStates:
+    - stitch1
+    - stitch2
+    - stitch3
+  - type: Appearance
+  - type: Item
+    heldPrefix: medicated-suture
+    storedRotation: -90
+  - type: Healing
+    damageContainers:
+      - Biological
+    damage:
+      groups:
+        Brute: -45 # was 10 for each, now 20 for each type in the group, Buffed due to Limb Damage Changes
+    bloodlossModifier: -10 # a suture should stop ongoing bleeding
+    healingBeginSound:
+      path: "/Audio/Items/Medical/brutepack_begin.ogg"
+    healingEndSound:
+      path: "/Audio/Items/Medical/brutepack_end.ogg"
+  - type: StackPrice
+    price: 3 # Corvax-Change
+
+- type: entity
+  id: N14MedicatedSuture1
+  parent: N14MedicatedSuture
+  suffix: 1
+  components:
+  - type: Stack
+    stackType: N14MedicatedSuture
+    count: 1
+
+- type: entity
+  name: продвинутая мазь
+  description: Используется для лечения даже самых неприятных ожогов. 
+  parent: BaseHealingItem
+  id: N14RegenerativeOintment
+  suffix: Full
+  components:
+  - type: Tag
+    tags:
+    - Ointment
+  - type: Sprite
+    scale: 0.7, 0.7
+    sprite: _Nuclear14/Objects/Specific/Medical/ms13_medical_new.rsi
+    layers:
+    - state: ointment1
+      map: ["base"]
+  - type: Stack
+    stackType: N14RegenerativeOintment
+    count: 10
+    baseLayer: base
+    layerStates:
+    - ointment1
+    - ointment2
+    - ointment3
+    - ointment4
+  - type: Appearance
+  - type: Item
+    heldPrefix: regenerative-mesh
+  - type: Healing
+    damageContainers:
+      - Biological
+    damage:
+      types:
+        Heat: -15
+        Cold: -15
+        Shock: -15
+        Caustic: -15 #Was 10 per type, Buffed due to limb damage changes
+    healingBeginSound:
+      path: "/Audio/Items/Medical/ointment_begin.ogg"
+    healingEndSound:
+      path: "/Audio/Items/Medical/ointment_end.ogg"
+  - type: StackPrice
+    price: 3 # Corvax-Change
+
+- type: entity
+  id: N14RegenerativeOintment1
+  parent: N14RegenerativeOintment
+  suffix: Single
+  components:
+  - type: Stack
+    stackType: N14RegenerativeOintment
+    count: 1

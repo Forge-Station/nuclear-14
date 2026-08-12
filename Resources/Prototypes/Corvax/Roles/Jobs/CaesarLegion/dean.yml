@@ -41,19 +41,20 @@
   id: CaesarLegionDeanGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitLegionnaire
+    outerClothing: N14ClothingOuterDeanLegionnaireRecruitArmor
+    head: N14ClothingHeadHatDeanRecruitHelmet
     neck: ClothingNeckRedScarf
     eyes: N14ClothingEyesGlassesWelding
     back: N14ClothingBackpackMilitary
     shoes: N14ClothingBootsBlack
     gloves: N14ClothingHandsGlovesTribal
-    belt: N14Gladius
+    belt: ClothingBeltRope
     pocket1: LegionDeanloadoutkits
-    pocket2: N14WeaponPistol10mmPipe
     id: N14IDLegionaryMedalSilver3
   innerClothingSkirt: N14ClothingUniformJumpsuitLegionnaireOther
   storage:
     back:
-    - N14BoxPlasticFilledMilitary
+    - N14BoxPlasticFilledMilitaryLegion
 
 - type: playTimeTracker
   id: CaesarLegionDean

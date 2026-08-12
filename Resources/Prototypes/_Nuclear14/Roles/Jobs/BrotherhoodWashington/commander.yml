@@ -10,12 +10,16 @@
     - !type:CharacterSpeciesRequirement
       species:
       - Human
+    - !type:CharacterPlaytimeRequirement # Forge-Add
+      tracker: BoSWashingtonCommander
+      min: 1080000 # (Admin Only Test)
     - !type:CharacterDepartmentTimeRequirement
       department: BrotherhoodWashington
       min: 72000 #20 hours
+    - !type:CharacterWhitelistRequirement # Forge-Add
   startingGear: BoSWashingtonCommanderGear
   alwaysUseSpawner: true
-  icon: "JobIconHeadOfSecurity"
+  icon: "JobIconbosWCommander"
   supervisors: job-supervisors-bos-wash-commander
   requireAdminNotify: true
   accessGroups:
@@ -31,15 +35,19 @@
 - type: startingGear
   id: BoSWashingtonCommanderGear
   equipment:
-    jumpsuit: N14ClothingUniformJumpsuitBOSBlack
-    back: N14ClothingBackpackSatchelMilitaryFilled
-    shoes: N14ClothingBootsLeatherFilled
-    neck: N14ClothingNeckCloakBrotherhoodWashington
-    outerClothing: N14ClothingOuterWBoSPaladinArmor
+    jumpsuit: N14ClothingUniformJumpsuitWBoSLord # Forge-Change
+    back: N14ClothingBackpackMilitary # Forge-Change
+    shoes: N14ClothingBootsCombatMK2Filled # Forge-Change
+    gloves: N14ClothingHandsGlovesCombat # Forge-Change
+    outerClothing: N14ClothingOuterWBoSLordBattleArmor # Forge-Change
+    head: N14ClothingHeadHatWBoSLordHelmet # Forge-Add
     id: N14IDBrotherhoodWashingtonHolotagCommander
     ears: N14ClothingHeadsetBOSWashington
     belt: ClothingBeltBoSWebbing
-    pocket1: BoSWashingtonPaladinKits
+    pocket1: BoSWashingtonLordKits # Forge-Change
+  storage: # Forge-Change
+    back:
+    - N14BoxPlasticFilledMilitary
 
 - type: playTimeTracker
   id: BoSWashingtonCommander

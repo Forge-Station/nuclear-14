@@ -1,5 +1,5 @@
 - type: entity
-  parent: BaseWeaponRevolver
+  parent: [ BaseWeaponRevolver, ForgeGunConditionProfileSidearm ]
   id: N14WeaponRevolverBase
   abstract: true
   components:

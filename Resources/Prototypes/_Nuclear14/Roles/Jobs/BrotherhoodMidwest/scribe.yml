@@ -16,7 +16,7 @@
       min: 18000 # 5 hours
   startingGear: BoSMidScribeGear
   alwaysUseSpawner: true
-  icon: "JobIconBosMScriptor" # Corvax-Change
+  icon: "JobIconBosMScriptor" # Forge-Change
   supervisors: job-supervisors-bos-mid
   access:
   - BoSMidwest
@@ -34,12 +34,12 @@
   id: BoSMidScribeGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitBOSScribe
-    back: N14ClothingBackpackSatchelMilitary # Corvax-Change
+    back: N14ClothingBackpackSatchelMilitary # Forge-Change
     shoes: N14ClothingBootsLeatherFilled
     pocket1: BoSMidwestScribeKits
     id: N14IDBrotherhoodHolotag
     ears: N14ClothingHeadsetBOSMidwestLightScribe
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledMilitary
 

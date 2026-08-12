@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "license": "CC-BY-NC-SA-3.0",
+  "copyright": "Created by INFRARED_BARON for MS13 and bao for N14",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "clean_gauze1"
+    },
+    {
+      "name": "clean_gauze2"
+    },
+    {
+      "name": "clean_gauze3"
+    }
+  ]
+}

@@ -52,14 +52,14 @@
   - type: Food
     trash: 
     - FoodKebabSkewer
-  - type: SolutionContainerManager
-    solutions:
-      food:
-        reagents:
-        - ReagentId: Nutriment
-          Quantity: 6
-        - ReagentId: Vitamin
-          Quantity: 2
+  # - type: SolutionContainerManager # Forge-delete
+  #   solutions:
+  #     food:
+  #       reagents:
+  #       - ReagentId: Nutriment
+  #         Quantity: 6
+  #       - ReagentId: Vitamin
+  #         Quantity: 2
 
 - type: entity
   name: double rat kebab

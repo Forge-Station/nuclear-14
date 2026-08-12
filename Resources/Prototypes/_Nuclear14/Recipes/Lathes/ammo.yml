@@ -2,8 +2,11 @@
 # Magazine = no. cartridges + 100 steel
 # Box = no. cartridges + 100 cardboard
 
+# Resources/Prototypes/Entities/Objects/Weapons/Guns/Ammunition/Cartridges по этому пути вы сможете настроить стоимость разбора патронов.
+
 # Cartridges 1,2,3 lead, 2,3,4 steel, 2,3 N14Gunpowder for:
-# Small:
+
+#Small
 # -22lr
 # -5mm
 # -9mm
@@ -16,66 +19,16 @@
 # -12 gauge
 # -5.56
 # -7.62
-# -.44
-# -.45-70 gov't
 
 # Big
 # -.308
+# -.44
+# -.45-70 gov't
+
+# Fuck
 # -.50
 
-
-# 5.56
-- type: latheRecipe
-  id: N14Cartridge556Rifle
-  result: N14Cartridge556Rifle
-  category: N14Ammo
-  completetime: 2
-  materials:
-    Lead: 2
-    Steel: 3
-    N14Gunpowder: 2
-
-- type: latheRecipe
-  id: Magazine556Rifle
-  result: Magazine556Rifle
-  category: N14AmmoMagazine
-  completetime: 5
-  materials:
-    Lead: 50
-    Steel: 175
-    N14Gunpowder: 50
-
-- type: latheRecipe
-  id: LongMagazine556Rifle
-  result: LongMagazine556Rifle
-  category: N14AmmoMagazine
-  completetime: 5
-  materials:
-    Lead: 70
-    Steel: 205
-    N14Gunpowder: 70
-
-- type: latheRecipe
-  id: LMGMagazine556Rifle
-  result: LMGMagazine556Rifle
-  category: N14AmmoMagazine
-  completetime: 5
-  materials:
-    Lead: 110
-    Steel: 265
-    N14Gunpowder: 110
-
-- type: latheRecipe
-  id: MagazineBox556
-  result: MagazineBox556
-  category: N14AmmoBox
-  completetime: 5
-  materials:
-    Lead: 150
-    Steel: 225
-    N14Gunpowder: 150
-    Cardboard: 100
-
+#MARK: Small
 # 5mm
 - type: latheRecipe
   id: N14CartridgePistol5
@@ -93,61 +46,9 @@
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 500
-    Steel: 1100
-    N14Gunpowder: 1000
-
-# 7.62
-- type: latheRecipe
-  id: N14Cartridge762Rifle
-  result: N14Cartridge762Rifle
-  category: N14Ammo
-  completetime: 2
-  materials:
-    Lead: 2
-    Steel: 3
-    N14Gunpowder: 2
-
-- type: latheRecipe
-  id: Magazine762AmmoShort
-  result: Magazine762AmmoShort
-  category: N14AmmoMagazine
-  completetime: 5
-  materials:
-    Lead: 40
-    Steel: 180
-    N14Gunpowder: 40
-
-- type: latheRecipe
-  id: Magazine762Rifle
-  result: Magazine762Rifle
-  category: N14AmmoMagazine
-  completetime: 5
-  materials:
-    Lead: 60
-    Steel: 190
-    N14Gunpowder: 60
-
-- type: latheRecipe
-  id: Magazine762AmmoBelt
-  result: Magazine762AmmoBelt
-  category: N14AmmoMagazine
-  completetime: 5
-  materials:
-    Lead: 500
-    Steel: 1100
-    N14Gunpowder: 1000
-
-- type: latheRecipe
-  id: MagazineBox762
-  result: MagazineBox762
-  category: N14AmmoBox
-  completetime: 5
-  materials:
-    Lead: 120
-    Steel: 180
-    N14Gunpowder: 120
-    Cardboard: 100
+    Lead: 200
+    Steel: 500
+    N14Gunpowder: 400
 
 # 9mm
 - type: latheRecipe
@@ -253,6 +154,251 @@
     N14Gunpowder: 160
     Cardboard: 100
 
+# .45 auto
+- type: latheRecipe
+  id: N14CartridgePistol45
+  result: N14CartridgePistol45
+  category: N14Ammo
+  completetime: 2
+  materials:
+    Lead: 1
+    Steel: 2
+    N14Gunpowder: 2
+
+- type: latheRecipe
+  id: N14MagazinePistol45
+  result: N14MagazinePistol45
+  category: N14AmmoMagazine
+  completetime: 5
+  materials:
+    Lead: 18
+    Steel: 136
+    N14Gunpowder: 36
+
+- type: latheRecipe
+  id: Magazine45SubMachineGun
+  result: Magazine45SubMachineGun
+  category: N14AmmoMagazine
+  completetime: 5
+  materials:
+    Lead: 25
+    Steel: 150
+    N14Gunpowder: 50
+
+- type: latheRecipe
+  id: MagazineBox45
+  result: MagazineBox45
+  category: N14AmmoBox
+  completetime: 5
+  materials:
+    Lead: 75
+    Steel: 150
+    N14Gunpowder: 150
+    Cardboard: 100
+
+# 20ga
+- type: latheRecipe
+  id: N14ShellShotgun20
+  result: N14ShellShotgun20
+  category: N14Ammo
+  completetime: 2
+  materials:
+    Lead: 1
+    Paper: 2
+    N14Gunpowder: 2
+
+- type: latheRecipe
+  id: N14MagazineShotgun20
+  result: N14MagazineShotgun20
+  category: N14AmmoMagazine
+  completetime: 5
+  materials:
+    Lead: 8
+    Steel: 100
+    Paper: 16
+    N14Gunpowder: 16
+
+- type: latheRecipe
+  id: MagazineBox20gauge
+  result: MagazineBox20gauge
+  category: N14AmmoBox
+  completetime: 5
+  materials:
+    Lead: 30
+    Paper: 60
+    N14Gunpowder: 60
+    Cardboard: 100
+
+# 22lr
+- type: latheRecipe
+  id: N14CartridgePistol22
+  result: N14CartridgePistol22
+  category: N14Ammo
+  completetime: 2
+  materials:
+    Lead: 1
+    Steel: 2
+    N14Gunpowder: 2
+
+- type: latheRecipe
+  id: N14MagazinePistol22lr
+  result: N14MagazinePistol22lr
+  category: N14AmmoMagazine
+  completetime: 5
+  materials:
+    Lead: 18
+    Steel: 136
+    N14Gunpowder: 36
+
+- type: latheRecipe
+  id: MagazineBox22
+  result: MagazineBox22
+  category: N14AmmoBox
+  completetime: 5
+  materials:
+    Lead: 75
+    Steel: 150
+    N14Gunpowder: 150
+    Cardboard: 100
+
+
+#MARK: Medium
+# 12ga
+- type: latheRecipe
+  id: N14ShellShotgun12
+  result: N14ShellShotgun12
+  category: N14Ammo
+  completetime: 2
+  materials:
+    Lead: 2
+    Steel: 3
+    N14Gunpowder: 2
+
+- type: latheRecipe
+  id: N14MagazineShotgun12
+  result: N14MagazineShotgun12
+  category: N14AmmoMagazine
+  completetime: 5
+  materials:
+    Lead: 16
+    Paper: 24
+    Steel: 124
+    N14Gunpowder: 16
+
+- type: latheRecipe
+  id: MagazineBox12gauge
+  result: MagazineBox12gauge
+  category: N14AmmoBox
+  completetime: 5
+  materials:
+    Lead: 60
+    Paper: 90
+    N14Gunpowder: 60
+    Cardboard: 100
+# 5.56
+- type: latheRecipe
+  id: N14Cartridge556Rifle
+  result: N14Cartridge556Rifle
+  category: N14Ammo
+  completetime: 2
+  materials:
+    Lead: 2
+    Steel: 3
+    N14Gunpowder: 2
+
+- type: latheRecipe
+  id: Magazine556Rifle
+  result: Magazine556Rifle
+  category: N14AmmoMagazine
+  completetime: 5
+  materials:
+    Lead: 50
+    Steel: 175
+    N14Gunpowder: 50
+
+- type: latheRecipe
+  id: LongMagazine556Rifle
+  result: LongMagazine556Rifle
+  category: N14AmmoMagazine
+  completetime: 5
+  materials:
+    Lead: 70
+    Steel: 205
+    N14Gunpowder: 70
+
+- type: latheRecipe
+  id: LMGMagazine556Rifle
+  result: LMGMagazine556Rifle
+  category: N14AmmoMagazine
+  completetime: 5
+  materials:
+    Lead: 110
+    Steel: 265
+    N14Gunpowder: 110
+
+- type: latheRecipe
+  id: MagazineBox556
+  result: MagazineBox556
+  category: N14AmmoBox
+  completetime: 5
+  materials:
+    Lead: 150
+    Steel: 225
+    N14Gunpowder: 150
+    Cardboard: 100
+
+# 7.62
+- type: latheRecipe
+  id: N14Cartridge762Rifle
+  result: N14Cartridge762Rifle
+  category: N14Ammo
+  completetime: 2
+  materials:
+    Lead: 2
+    Steel: 3
+    N14Gunpowder: 2
+
+- type: latheRecipe
+  id: Magazine762AmmoShort
+  result: Magazine762AmmoShort
+  category: N14AmmoMagazine
+  completetime: 5
+  materials:
+    Lead: 40
+    Steel: 180
+    N14Gunpowder: 40
+
+- type: latheRecipe
+  id: Magazine762Rifle
+  result: Magazine762Rifle
+  category: N14AmmoMagazine
+  completetime: 5
+  materials:
+    Lead: 60
+    Steel: 190
+    N14Gunpowder: 60
+
+- type: latheRecipe
+  id: Magazine762AmmoBelt
+  result: Magazine762AmmoBelt
+  category: N14AmmoMagazine
+  completetime: 5
+  materials: # Forge-Change
+    Lead: 200
+    Steel: 500
+    N14Gunpowder: 200
+
+- type: latheRecipe
+  id: MagazineBox762
+  result: MagazineBox762
+  category: N14AmmoBox
+  completetime: 5
+  materials:
+    Lead: 120
+    Steel: 180
+    N14Gunpowder: 120
+    Cardboard: 100
+
 # 12.7mm
 - type: latheRecipe
   id: N14CartridgePistol127
@@ -305,104 +451,7 @@
     N14Gunpowder: 150
     Cardboard: 100
 
-# 12ga
-- type: latheRecipe
-  id: N14ShellShotgun12
-  result: N14ShellShotgun12
-  category: N14Ammo
-  completetime: 2
-  materials:
-    Lead: 2
-    Steel: 3
-    N14Gunpowder: 2
-
-- type: latheRecipe
-  id: N14MagazineShotgun12
-  result: N14MagazineShotgun12
-  category: N14AmmoMagazine
-  completetime: 5
-  materials:
-    Lead: 16
-    Paper: 24
-    Steel: 100
-    N14Gunpowder: 16
-
-- type: latheRecipe
-  id: MagazineBox12gauge
-  result: MagazineBox12gauge
-  category: N14AmmoBox
-  completetime: 5
-  materials:
-    Lead: 60
-    Paper: 90
-    N14Gunpowder: 60
-    Cardboard: 100
-
-# 20ga
-- type: latheRecipe
-  id: N14ShellShotgun20
-  result: N14ShellShotgun20
-  category: N14Ammo
-  completetime: 2
-  materials:
-    Lead: 1
-    Paper: 2
-    N14Gunpowder: 2
-
-- type: latheRecipe
-  id: N14MagazineShotgun20
-  result: N14MagazineShotgun20
-  category: N14AmmoMagazine
-  completetime: 5
-  materials:
-    Lead: 20
-    Steel: 100
-    Paper: 40
-    N14Gunpowder: 40
-
-- type: latheRecipe
-  id: MagazineBox20gauge
-  result: MagazineBox20gauge
-  category: N14AmmoBox
-  completetime: 5
-  materials:
-    Lead: 30
-    Paper: 60
-    N14Gunpowder: 60
-    Cardboard: 100
-
-# 22lr
-- type: latheRecipe
-  id: N14CartridgePistol22
-  result: N14CartridgePistol22
-  category: N14Ammo
-  completetime: 2
-  materials:
-    Lead: 1
-    Steel: 2
-    N14Gunpowder: 2
-
-- type: latheRecipe
-  id: N14MagazinePistol22lr
-  result: N14MagazinePistol22lr
-  category: N14AmmoMagazine
-  completetime: 5
-  materials:
-    Lead: 80
-    Steel: 260
-    N14Gunpowder: 160
-
-- type: latheRecipe
-  id: MagazineBox22
-  result: MagazineBox22
-  category: N14AmmoBox
-  completetime: 5
-  materials:
-    Lead: 75
-    Steel: 150
-    N14Gunpowder: 150
-    Cardboard: 100
-
+#MARK: Big
 # 44 magnmum
 - type: latheRecipe
   id: N14Cartridge44Magnum
@@ -410,9 +459,9 @@
   category: N14Ammo
   completetime: 2
   materials:
-    Lead: 2
-    Steel: 3
-    N14Gunpowder: 2
+    Lead: 3
+    Steel: 4
+    N14Gunpowder: 3
 
 - type: latheRecipe
   id: SpeedLoader44
@@ -420,9 +469,9 @@
   category: N14AmmoMagazine # Forge-Change
   completetime: 5
   materials:
-    Lead: 10
-    Steel: 25
-    N14Gunpowder: 10
+    Lead: 18
+    Steel: 35
+    N14Gunpowder: 18
 
 - type: latheRecipe
   id: MagazineBox44
@@ -430,9 +479,9 @@
   category: N14AmmoBox
   completetime: 5
   materials:
-    Lead: 44
-    Steel: 166
-    N14Gunpowder: 44
+    Lead: 96
+    Steel: 128
+    N14Gunpowder: 96
     Cardboard: 100
 
 - type: latheRecipe
@@ -441,51 +490,9 @@
   category: N14AmmoMagazine # Forge-Change
   completetime: 5
   materials:
-    Lead: 20
-    Steel: 30
-    N14Gunpowder: 15
-
-# .45 auto
-- type: latheRecipe
-  id: N14CartridgePistol45
-  result: N14CartridgePistol45
-  category: N14Ammo
-  completetime: 2
-  materials:
-    Lead: 1
-    Steel: 2
-    N14Gunpowder: 2
-
-- type: latheRecipe
-  id: N14MagazinePistol45
-  result: N14MagazinePistol45
-  category: N14AmmoMagazine
-  completetime: 5
-  materials:
-    Lead: 18
-    Steel: 136
-    N14Gunpowder: 36
-
-- type: latheRecipe
-  id: Magazine45SubMachineGun
-  result: Magazine45SubMachineGun
-  category: N14AmmoMagazine
-  completetime: 5
-  materials:
-    Lead: 25
-    Steel: 150
-    N14Gunpowder: 50
-
-- type: latheRecipe
-  id: MagazineBox45
-  result: MagazineBox45
-  category: N14AmmoBox
-  completetime: 5
-  materials:
-    Lead: 75
-    Steel: 150
-    N14Gunpowder: 150
-    Cardboard: 100
+    Lead: 21
+    Steel: 128
+    N14Gunpowder: 21
 
 # .308
 - type: latheRecipe
@@ -503,20 +510,20 @@
   result: Magazine308Rifle
   category: N14AmmoMagazine
   completetime: 5
-  materials:
-    Lead: 33
-    Steel: 144
-    N14Gunpowder: 33
+  materials: # Forge-Change
+    Lead: 60
+    Steel: 180
+    N14Gunpowder: 60
 
 - type: latheRecipe
   id: Magazine308RifleLong
   result: Magazine308RifleLong
   category: N14AmmoMagazine
   completetime: 5
-  materials:
-    Lead: 300
-    Steel: 500
-    N14Gunpowder: 300
+  materials: # Forge-Change
+    Lead: 120
+    Steel: 360
+    N14Gunpowder: 120
 
 - type: latheRecipe
   id: ClipMagazine308Rifle
@@ -539,27 +546,36 @@
     N14Gunpowder: 96
     Cardboard: 100
 
-# forge-change
-- type: latheRecipe
-  id: Magazine308RifleSniper
+- type: latheRecipe 
+  id: Magazine308RifleSniper # Forge-add
   result: Magazine308RifleSniper
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 33
-    Steel: 77
-    N14Gunpowder: 33
+    Lead: 30
+    Steel: 140
+    N14Gunpowder: 30
 
 # 45-70 gov't
+- type: latheRecipe
+  id: N14Cartridge45-70
+  result: N14Cartridge45-70
+  category: N14Ammo
+  completetime: 2
+  materials:
+    Lead: 3
+    Steel: 4
+    N14Gunpowder: 3
+
 - type: latheRecipe
   id: SpeedLoader45-70
   result: SpeedLoader45-70
   category: N14AmmoMagazine # Forge-Change
   completetime: 5
   materials:
-    Lead: 24
-    Steel: 25
-    N14Gunpowder: 20
+    Lead: 18
+    Steel: 35
+    N14Gunpowder: 18
 
 - type: latheRecipe
   id: SpeedLoader45-70Tube
@@ -567,8 +583,8 @@
   category: N14AmmoMagazine # Forge-Change
   completetime: 5
   materials:
-    Lead: 40
-    Steel: 35
+    Lead: 30
+    Steel: 45
     N14Gunpowder: 30
 
 - type: latheRecipe
@@ -577,21 +593,32 @@
   category: N14AmmoBox
   completetime: 5
   materials:
-    Lead: 120
-    Steel: 150
-    N14Gunpowder: 100
+    Lead: 90
+    Steel: 120
+    N14Gunpowder: 90
     Cardboard: 100
 
+#MARK: BFG
 # 50
+- type: latheRecipe
+  id: N14Cartridge50
+  result: N14Cartridge50
+  category: N14Ammo
+  completetime: 2
+  materials:
+    Lead: 10
+    Steel: 5
+    N14Gunpowder: 10
+
 - type: latheRecipe
   id: N14Magazine50AMR
   result: N14Magazine50AMR
   category: N14AmmoMagazine
   completetime: 5
   materials:
-    Lead: 25
-    Steel: 50
-    N14Gunpowder: 25
+    Lead: 50
+    Steel: 125
+    N14Gunpowder: 50
 
 - type: latheRecipe
   id: MagazineBox50
@@ -599,7 +626,37 @@
   category: N14AmmoBox
   completetime: 5
   materials:
-    Lead: 150
-    Steel: 200
-    N14Gunpowder: 150
+    Lead: 300
+    Steel: 150
+    N14Gunpowder: 300
     Cardboard: 100
+
+# Forge-Change-Start
+- type: latheRecipe
+  id: MagazineBoxNail
+  result: MagazineBoxNail
+  category: N14AmmoBox
+  completetime: 5
+  materials:
+    Steel: 900
+    Cardboard: 100
+
+- type: latheRecipe
+  id: DrumMagazineNailGun
+  result: DrumMagazineNailGun
+  category: N14AmmoMagazine
+  completetime: 5
+  materials:
+    Steel: 500
+
+- type: latheRecipe
+  id: 40mmGrenadeShrapnel
+  result: 40mmGrenadeShrapnel
+  category: N14Ammo
+  completetime: 2
+  materials:
+    Lead: 10
+    Steel: 50
+    N14Gunpowder: 10
+
+# Forge-Change-End

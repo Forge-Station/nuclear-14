@@ -16,7 +16,7 @@
       min: 18000 # 5 hours
   startingGear: BoSMidKnightGear
   alwaysUseSpawner: true
-  icon: "JobIconBosMKnight" # Corvax-Change
+  icon: "JobIconBosMKnight" # Forge-Change
   supervisors: job-supervisors-bos-mid-knight
   access:
   - BoSMidwest
@@ -33,7 +33,7 @@
   id: BoSMidKnightGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitBOSGreen
-    back: N14ClothingBackpackMilitary # Corvax-Change
+    back: N14ClothingBackpackMilitary # Forge-Change
     shoes: N14ClothingBootsLeatherFilled
     head: N14ClothingHeadHatBrotherhoodMidwestHelmet
     outerClothing: N14ClothingOuterMBoSKnightArmor
@@ -41,7 +41,7 @@
     hands: N14ClothingHandsGlovesCombat
     id: N14IDBrotherhoodHolotagKnight
     belt: ClothingBeltMilitary
-  storage: # Corvax-Change
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledMilitary
 

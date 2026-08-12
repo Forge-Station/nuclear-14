@@ -21,6 +21,14 @@
           types:
             Heat: 3
             Poison: 2
+      - !type:GenericStatusEffect
+        conditions:
+        - !type:ReagentThreshold
+          reagent: Antidote
+          max: 0.01
+        key: Drowsiness
+        time: 10
+        type: Remove
 
 #MARK: Nightstalker Venom
 #While not nearly as potent as cazador venom and is a lot slower acting, it will still kill in multiple bites
@@ -47,6 +55,14 @@
             Poison: 1
           groups:
             Airloss: 2
+      - !type:GenericStatusEffect
+        conditions:
+        - !type:ReagentThreshold
+          reagent: Antidote
+          max: 0.01
+        key: Drowsiness
+        time: 10
+        type: Remove
 
 #MARK: Cazador Venom
 #Insanely potent venom which while acts at half speed, can knock down just about anyone in just a few injections
@@ -73,3 +89,11 @@
             Poison: 3
           groups:
             Airloss: 3.5
+      - !type:GenericStatusEffect
+        conditions:
+        - !type:ReagentThreshold
+          reagent: Antidote
+          max: 0.01
+        key: Drowsiness
+        time: 10
+        type: Remove        

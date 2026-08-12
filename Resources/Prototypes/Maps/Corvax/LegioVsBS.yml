@@ -1,0 +1,17 @@
+- type: gameMap
+  id: LegioVsBS
+  mapName: 'LegioVsBS'
+  mapPath: /Maps/Corvax/LEGIOvsBS.yml
+  minPlayers: 0
+  stations:
+    LegioVsBS:
+      stationProto: FalloutStation
+      components:
+      - type: StationNameSetup
+        mapNameTemplate: 'LegioVsBS'
+      - type: StationJobs
+        availableJobs:
+          BoSMidKnight: [ 6, 6 ]
+          BoSMidScribe: [ 6, 6 ]
+          BoSMidSquire: [ 20, 20 ]
+          CaesarLegionLegionnaireRecruit: [ 45, 45 ] # Forge-Legion

@@ -1,6 +1,119 @@
 - type: entity
   name: hunting rifle
-  parent: BaseWeaponSniper
+  parent: [ BaseWeaponSniper, ForgeGunConditionProfileSniper ]
+  id: N14WeaponSniperBase
+  abstract: true
+  components:
+  - type: Sprite
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+  - type: Item
+    size: Huge
+  - type: Clothing
+    sprite: Objects/Weapons/Guns/Snipers/bolt_gun_wood.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: AmmoCounter
+  - type: Appearance # Corvax-Change
+  - type: Wieldable
+  - type: Gun
+    fireRate: 0.75
+    selectedMode: SemiAuto
+    availableModes:
+    - SemiAuto
+    soundGunshot:
+      path: /Audio/Weapons/Guns/Gunshots/sniper.ogg
+  - type: ContainerContainer
+    containers:
+      ballistic-ammo: !type:Container
+        ents: []
+  - type: StaticPrice
+    price: 500
+  - type: Execution
+  - type: MeleeWeapon
+    attackRate: 1.3333
+    damage:
+      types:
+        Blunt: 8.0
+    bluntStaminaDamageFactor: 1.25
+    swapKeys: true
+    disableHeavy: true
+    wideAnimationRotation: 135
+    animation: WeaponArcThrust
+    soundHit:
+      collection: MetalThud
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Blunt: 2.5
+  - type: DamageOtherOnHit
+    staminaCost: 7.5
+
+- type: entity
+  parent: BaseItem
+  id: N14WeaponSniperLeverBase
+  abstract: true
+  components:
+  - type: Sprite
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+  - type: Item
+    size: Huge
+  - type: Clothing
+    sprite: Objects/Weapons/Guns/Snipers/bolt_gun_wood.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: AmmoCounter
+  - type: Appearance
+  - type: Wieldable           
+  - type: Gun
+    fireRate: 0.75
+    selectedMode: SemiAuto
+    availableModes:
+    - SemiAuto
+    soundGunshot:
+      path: /Audio/Weapons/Guns/Gunshots/sniper.ogg
+  - type: BallisticAmmoProvider
+    capacity: 10
+    proto: CartridgeLightRifle
+    whitelist:
+      tags:
+      - CartridgeLightRifle
+  - type: ContainerContainer
+    containers:
+      ballistic-ammo: !type:Container
+        ents: []
+  - type: StaticPrice
+    price: 500
+  - type: Execution
+  - type: MeleeWeapon
+    attackRate: 1.3333
+    damage:
+      types:
+        Blunt: 8.0
+    bluntStaminaDamageFactor: 1.25
+    swapKeys: true
+    disableHeavy: true
+    wideAnimationRotation: 135
+    animation: WeaponArcThrust
+    soundHit:
+      collection: MetalThud
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Blunt: 2.5
+  - type: DamageOtherOnHit
+    staminaCost: 7.5
+
+- type: entity
+  name: hunting rifle
+  parent: N14WeaponSniperBase
   id: N14WeaponSniperHunting
   description: A rugged bolt action rifle. Uses .308 ammo.
   components:
@@ -11,7 +124,8 @@
   - type: Wieldable
   - type: GunWieldBonus
     minAngle: -23
-    maxAngle: -104
+    maxAngle: -102
+    angleIncrease: -8 # Forge-end 
   - type: Gun
     minAngle: 24
     maxAngle: 105
@@ -33,7 +147,7 @@
 
 - type: entity
   name: lee enfield rifle
-  parent: BaseWeaponSniper
+  parent: [ BaseWeaponSniper, ForgeGunConditionProfileSniper ]
   id: N14WeaponSniperEnfield
   description: A well-preserved bolt action service rifle. PLING! Uses .308 ammo.
   components:
@@ -44,7 +158,8 @@
   - type: Wieldable
   - type: GunWieldBonus
     minAngle: -23
-    maxAngle: -104
+    maxAngle: -102
+    angleIncrease: -8 # Forge-end 
   - type: Gun
     minAngle: 24
     maxAngle: 105
@@ -66,7 +181,7 @@
 
 - type: entity
   name: Anti-Materiel rifle
-  parent: BaseWeaponRifle
+  parent: [BaseWeaponRifle, ForgeGunConditionProfileAMR] # Forge-Change
   id: N14WeaponSniper50AntiMateriel
   description: "An anti-materiel rifle with an ergonomic, sleek, skeletonized design. Simply looking at it can you tell it'll rip some limbs apart. Uses .50 anti-material ammo."
   components:
@@ -135,7 +250,7 @@
 
 - type: entity
   name: .50 NCR rifle
-  parent: BaseWeaponSniper
+  parent: [BaseWeaponSniper, ForgeGunConditionProfileAMRPipe] # Forge-Change
   id: N14WeaponSniper50NCRRifle
   description: An attempt by the NCR to mass-produce .50 ammo weapons for normal infantry, very cheap but still deals a lot of damage. Uses .50 anti-material ammo.
   components:
@@ -175,7 +290,7 @@
 
 - type: entity
   name: lever action carbine
-  parent: N14WeaponSniperHunting
+  parent: N14WeaponSniperLeverBase
   id: N14WeaponSniper44LeverCarbine
   description: A short lever action carbine. Uses .44 ammo.
   components:
@@ -185,18 +300,18 @@
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/levercarbine.rsi
   - type: Item # Forge-Change
     size: Large # Forge-Change
-  - type: Wieldable
-  - type: GunWieldBonus
-    minAngle: -23
-    maxAngle: -104
   - type: Gun
-    minAngle: 24
-    maxAngle: 105
-    angleIncrease: 4
-    angleDecay: 16
+    minAngle: 8              
+    maxAngle: 35            
+    angleIncrease: 3         
+    angleDecay: 12
     fireRate: 2
     soundGunshot:
       collection: N14LeverCarbineGunshot
+  - type: GunWieldBonus
+    minAngle: -7            
+    maxAngle: -32
+    angleIncrease: -6 # Forge-end 
   - type: BallisticAmmoProvider
     whitelist:
       tags:
@@ -213,8 +328,9 @@
 
 - type: entity
   name: lever action rifle
-  parent: N14WeaponSniperHunting
+  parent: N14WeaponSniperLeverBase
   id: N14WeaponSniper308LeverRifle
+  suffix: .45-70
   description: A long lever action repeater rifle. Uses .308 ammo.
   components:
   - type: Clothing
@@ -222,9 +338,23 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/leverrifle.rsi
   - type: Gun
-    fireRate: 1.2
+    fireRate: 1.5
+    minAngle: 7             
+    maxAngle: 30            
+    angleIncrease: 4         
+    angleDecay: 16
     soundGunshot:
       collection: N14LeverRifleGunshot
+  - type: GunWieldBonus
+    minAngle: -6            
+    maxAngle: -28  
+    angleIncrease: -4 # Forge-end
+  - type: BallisticAmmoProvider
+    whitelist:
+      tags:
+      - N14Cartridge45-70
+    capacity: 6
+    proto: N14Cartridge45-70
   - type: FollowDistance
     backStrength: 3
   - type: StaticPrice
@@ -232,7 +362,7 @@
 
 - type: entity
   name: brush gun
-  parent: N14WeaponSniperHunting
+  parent: N14WeaponSniperLeverBase
   id: N14WeaponSniper45-70BrushGun
   description: A powerful lever action carbine. Uses .45-70 gov't ammo.
   components:
@@ -240,10 +370,18 @@
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/brushgun.rsi
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/brushgun.rsi
-  - type: Gun
+  - type: Gun # Forge-start
+    minAngle: 6
+    maxAngle: 45
+    angleIncrease: 4
+    angleDecay: 16
     fireRate: 2.5 # Forge-Change
     soundGunshot:
       collection: N14BrushGunGunshot
+  - type: GunWieldBonus
+    minAngle: -4
+    maxAngle: -42
+    angleIncrease: -4 # Forge-end
   - type: BallisticAmmoProvider
     whitelist:
       tags:
@@ -258,7 +396,7 @@
 
 - type: entity
   name: pipe rifle
-  parent: N14WeaponSniperHunting
+  parent: N14WeaponSniperBase
   id: N14WeaponSniper308PipeRifle
   description: A piece of metal pipe with a wooden stock, barely works as a gun and uses .308 ammo.
   components:
@@ -287,46 +425,8 @@
     price: 25
 
 - type: entity
-  name: varmint rifle
-  parent: BaseWeaponSniper
-  id: N14WeaponSniper556VarmintRifle
-  description: A pre-war low-power bolt action rifle, originally designed to hunt small animals. This gun also works fine on anything human-sized. Uses 5.56 ammo.
-  components:
-  - type: Clothing
-    sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/varmint.rsi
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/varmint.rsi
-  - type: Item # Forge-Add
-    size: Huge
-    shape:
-    - 0,0,3,1
-    - 0,1,0,1
-  - type: Wieldable
-  - type: GunWieldBonus
-    minAngle: -23
-    maxAngle: -104
-  - type: Gun
-    minAngle: 24
-    maxAngle: 105
-    angleIncrease: 4
-    angleDecay: 16
-    fireRate: 2.2
-    soundGunshot:
-      collection: N14SniperVarmintGunshot
-  - type: BallisticAmmoProvider
-    whitelist:
-      tags:
-      - N14Cartridge556Rifle
-    capacity: 15
-    proto: N14Cartridge556Rifle
-  - type: FollowDistance
-    backStrength: 3
-  - type: StaticPrice
-    price: 50
-
-- type: entity
   name: stockless lever action carbine
-  parent: N14WeaponSniperHunting
+  parent: N14WeaponSniperLeverBase
   id: N14WeaponSniper44LeverShortCarbine
   description: An extra short lever action carbine. Uses .44 ammo.
   components:
@@ -339,23 +439,23 @@
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/shortlevercarbine.rsi
   - type: Item # Forge-Change
     size: Normal # Forge-Change
-  - type: Wieldable
-  - type: GunWieldBonus
-    minAngle: -20
-    maxAngle: -95
-  - type: Gun
-    minAngle: 24
-    maxAngle: 105
-    angleIncrease: 4
+  - type: Gun # Forge-start
+    minAngle: 11
+    maxAngle: 55
+    angleIncrease: 15
     angleDecay: 16
     fireRate: 2
     soundGunshot:
       collection: N14LeverCarbineGunshot
+  - type: GunWieldBonus
+    minAngle: -8
+    maxAngle: -45
+    angleIncrease: -6 # Forge-end 
   - type: BallisticAmmoProvider
     whitelist:
       tags:
       - N14Cartridge44Magnum
-    capacity: 14
+    capacity: 12 # Forge-Change
     proto: null
   - type: FollowDistance
     backStrength: 6
@@ -367,7 +467,7 @@
 
 - type: entity
   name: .50 pipe rifle
-  parent: BaseWeaponSniper
+  parent: [BaseWeaponSniper, ForgeGunConditionProfileAMRPipe] # Forge-Change
   id: N14WeaponSniper50Pipe
   description: A bunch of scrap and pipe held together in a desperate attemp of countering power armor. Uses .50 anti-material ammo.
   components:
@@ -394,7 +494,7 @@
     maxAngle: 105
     angleIncrease: 4
     angleDecay: 16
-    fireRate: 1.2
+    fireRate: 1
     soundGunshot:
       collection: N14AntiMaterielGunshot
   - type: HeldSpeedModifier
@@ -407,8 +507,9 @@
 
 - type: entity
   name: huntstick
-  parent: N14WeaponSniperHunting
+  parent: N14WeaponSniperLeverBase
   id: N14WeaponSniper308Tribal
+  suffix: .45-70
   description: A tribal lever action rifle. Uses .308 ammo.
   components:
   - type: Clothing
@@ -416,9 +517,23 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/tribalhuntstick.rsi
   - type: Gun
-    fireRate: 1.2
+    fireRate: 1.5
+    minAngle: 8
+    maxAngle: 35
+    angleIncrease: 4
+    angleDecay: 16
     soundGunshot:
       collection: N14LeverRifleGunshot
+  - type: GunWieldBonus
+    minAngle: -6            
+    maxAngle: -28  
+    angleIncrease: -4 # Forge-end
+  - type: BallisticAmmoProvider
+    whitelist:
+      tags:
+      - N14Cartridge45-70
+    capacity: 8
+    proto: N14Cartridge45-70
   - type: FollowDistance
     backStrength: 3
   - type: StaticPrice
@@ -426,8 +541,9 @@
 
 - type: entity
   name: master huntstick
-  parent: N14WeaponSniperHunting
+  parent: N14WeaponSniperLeverBase
   id: N14WeaponSniper308TribalUpgraded
+  suffix: .45-70
   description: A tribal decorated lever action rifle. Uses .308 ammo.
   components:
   - type: Clothing
@@ -436,8 +552,22 @@
     sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/tribalhuntstick2.rsi
   - type: Gun
     fireRate: 2
+    minAngle: 8
+    maxAngle: 35
+    angleIncrease: 4
+    angleDecay: 16
     soundGunshot:
       collection: N14LeverRifleGunshot
+  - type: GunWieldBonus
+    minAngle: -6
+    maxAngle: -28
+    angleIncrease: -4 # Forge-end
+  - type: BallisticAmmoProvider
+    whitelist:
+      tags:
+      - N14Cartridge45-70
+    capacity: 8
+    proto: N14Cartridge45-70
   - type: FollowDistance
     backStrength: 3
   - type: StaticPrice
@@ -445,7 +575,7 @@
 
 - type: entity
   name: F1 sniper rifle
-  parent: N14WeaponSniperHunting
+  parent: N14WeaponSniperBase
   id: N14WeaponSniper308Canadian
   description: A pre-war bolt action canadian sniper rifle. Uses .308 ammo.
   components:
@@ -457,6 +587,12 @@
     fireRate: 2
     soundGunshot:
       collection: N14SniperHuntingGunshot
+  - type: BallisticAmmoProvider
+    whitelist:
+      tags:
+      - N14Cartridge308Rifle
+    capacity: 10
+    proto: N14Cartridge308Rifle
   - type: FollowDistance
     backStrength: 3
   - type: StaticPrice
@@ -464,7 +600,7 @@
 
 - type: entity
   name: ross rifle
-  parent: N14WeaponSniperHunting
+  parent: N14WeaponSniperBase
   id: N14WeaponSniper308Ross
   description: A well-preserved bolt action canadian service rifle. Uses .308 ammo.
   components:
@@ -475,9 +611,16 @@
   - type: Wieldable
   - type: GunWieldBonus
     minAngle: -23
-    maxAngle: -104
+    maxAngle: -102
+    angleIncrease: -4 # Forge-end
   - type: Gun
-    fireRate: 1.5
+    minAngle: 24
+    maxAngle: 105
+    angleIncrease: 4
+    angleDecay: 16
+    fireRate: 1.8
+    soundGunshot:
+      collection: N14SniperHuntingGunshot
   - type: BallisticAmmoProvider
     whitelist:
       tags:
@@ -489,10 +632,67 @@
   - type: StaticPrice
     price: 50 # Forge-Change
 
+#Переместил из rifles.yml
+- type: entity
+  name: chinese marksman rifle
+  parent: N14WeaponRifleBase
+  id: N14WeaponRifle762MarksmanChinese
+  suffix: .308
+  description: A pre-war chinese marksman rifle chambered in .308.
+  components:
+  - type: Clothing
+    sprite: _Nuclear14/Objects/Weapons/Guns/Rifles/chinesemarksman.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Weapons/Guns/Rifles/chinesemarksman.rsi
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: mag-0
+      map: ["enum.GunVisualLayers.Mag"]
+  - type: GunWieldBonus
+    minAngle: -23
+    maxAngle: -42
+    angleIncrease: -2 # Forge-end
+  - type: Gun
+    minAngle: 24
+    maxAngle: 45
+    angleIncrease: 4
+    angleDecay: 16
+    soundGunshot:
+      collection: N14MarksmanGunshot
+    fireRate: 2.5
+    selectedMode: SemiAuto
+    availableModes:
+    - SemiAuto
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Magazine
+        startingItem: Magazine308Rifle
+        insertSound: /Audio/Weapons/Guns/MagIn/ltrifle_magin.ogg
+        ejectSound: /Audio/Weapons/Guns/MagOut/ltrifle_magout.ogg
+        priority: 2
+        whitelist:
+          tags:
+            - N14Magazine308Rifle
+      gun_chamber:
+        name: Chamber
+        startingItem: N14Cartridge308Rifle
+        priority: 1
+        whitelist:
+          tags:
+            - N14Cartridge308Rifle
+  - type: StaticPrice
+    price: 175
+
 # Forge-add-start
 - type: entity
   name: 308 Sniper Rifle
-  parent: N14WeaponRifleBase
+  parent: [ BaseWeaponRifle, ForgeGunConditionProfileSniper ]
   id: N14WeaponRifle308SniperRifle
   description:  sniper rifle chambered in .308.
   components:
@@ -510,8 +710,9 @@
     - state: mag-0
       map: ["enum.GunVisualLayers.Mag"]
   - type: GunWieldBonus
-    minAngle: -23
-    maxAngle: -44
+    minAngle: -20
+    maxAngle: -42
+    angleIncrease: -2 # Forge-end
   - type: Gun
     minAngle: 24
     maxAngle: 45
@@ -519,7 +720,7 @@
     angleDecay: 16
     soundGunshot:
       collection: N14MarksmanGunshot
-    fireRate: 2
+    fireRate: 2.5
     selectedMode: SemiAuto
     availableModes:
     - SemiAuto

@@ -1,0 +1,13 @@
+- type: entity
+  id: N14BulletNail
+  name: bullet (Nail)
+  parent: BaseBullet
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Guns/Ammunition/Casings/nail_casing.rsi
+    state: bullet
+  - type: Projectile
+    damage:
+      types:
+        Piercing: 10

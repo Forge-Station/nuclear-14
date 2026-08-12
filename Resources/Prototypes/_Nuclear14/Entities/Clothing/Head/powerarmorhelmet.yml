@@ -34,11 +34,11 @@
     autoRot: true
     netsync: false
   - type: Clothing
-    equipSound: # Corvax-Change
+    equipSound: # Forge-Change
       path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Equip_Helmet_01.ogg
       params:
         volume: -12
-    unequipSound: # Corvax-Change
+    unequipSound: # Forge-Change
       path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Equip_Helmet_01.ogg
       params:
         volume: -12
@@ -106,11 +106,11 @@
     autoRot: true
     netsync: false
   - type: Clothing
-    equipSound: # Corvax-Change
+    equipSound: # Forge-Change
       path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Equip_Helmet_01.ogg
       params:
         volume: -12
-    unequipSound: # Corvax-Change
+    unequipSound: # Forge-Change
       path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Equip_Helmet_01.ogg
       params:
         volume: -12
@@ -178,11 +178,11 @@
     autoRot: true
     netsync: false
   - type: Clothing
-    equipSound: # Corvax-Change
+    equipSound: # Forge-Change
       path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Equip_Helmet_01.ogg
       params:
         volume: -12
-    unequipSound: # Corvax-Change
+    unequipSound: # Forge-Change
       path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Equip_Helmet_01.ogg
       params:
         volume: -12
@@ -250,11 +250,11 @@
     autoRot: true
     netsync: false
   - type: Clothing
-    equipSound: # Corvax-Change
+    equipSound: # Forge-Change
       path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Equip_Helmet_01.ogg
       params:
         volume: -12
-    unequipSound: # Corvax-Change
+    unequipSound: # Forge-Change
       path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Equip_Helmet_01.ogg
       params:
         volume: -12
@@ -392,11 +392,11 @@
     autoRot: true
     netsync: false
   - type: Clothing
-    equipSound: # Corvax-Change
+    equipSound: # Forge-Change
       path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Equip_Helmet_01.ogg
       params:
         volume: -12
-    unequipSound: # Corvax-Change
+    unequipSound: # Forge-Change
       path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Equip_Helmet_01.ogg
       params:
         volume: -12
@@ -460,11 +460,11 @@
     autoRot: true
     netsync: false
   - type: Clothing
-    equipSound: # Corvax-Change
+    equipSound: # Forge-Change
       path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Equip_Helmet_01.ogg
       params:
         volume: -12
-    unequipSound: # Corvax-Change
+    unequipSound: # Forge-Change
       path: /Audio/_Nuclear14/Effects/PowerArmor/PowerArmor_Equip_Helmet_01.ogg
       params:
         volume: -12

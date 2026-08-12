@@ -1,0 +1,54 @@
+- type: startingGear
+  id: WarfrontNCRCaptainGear
+  equipment:
+    head: N14ClothingHeadHatNCRCombatHelmet
+    jumpsuit: N14ClothingOfficerUniformNCRDesert
+    outerClothing: N14ClothingOuterNCRCombatArmorMK2
+    shoes: N14ClothingBootsCombatFilled
+    gloves: N14ClothingHandsGlovesCombat
+    belt: ClothingBeltNCR
+    back: N14ClothingBackpackNCR
+    eyes: ClothingEyesGlassesSunglasses
+    ears: N14ClothingHeadsetNCR
+    id: N14IDNCRDogtagCaptain
+    pocket1: NCRCaptainloadoutkits
+  storage:
+    back:
+    - N14ClothingHeadHatNCRBeretOfficer
+    - N14BoxPlasticFilledMilitaryNCR
+
+- type: startingGear
+  id: WarfrontNCRLieutenantGear
+  equipment:
+    head: N14ClothingHeadHatNCRCombatHelmet
+    jumpsuit: N14ClothingOfficerUniformNCRDesert
+    outerClothing: N14ClothingOuterNCRCombatVeteranArmor
+    shoes: N14ClothingBootsCombatFilled
+    gloves: N14ClothingHandsGlovesCombat
+    belt: ClothingBeltNCR
+    back: N14ClothingBackpackNCR
+    eyes: ClothingEyesGlassesSunglasses
+    ears: N14ClothingHeadsetNCR
+    id: N14IDNCRDogtagWarfrontLieutenant
+    pocket1: NCRWarfrontLieutenantLoadoutkits
+  storage:
+    back:
+    - N14ClothingHeadHatArmyBeret
+    - N14BoxPlasticFilledMilitaryNCR
+
+- type: startingGear
+  id: WarfrontLegionLegateGear
+  equipment:
+    head: N14ClothingHeadHatLegateHelmet
+    jumpsuit: N14ClothingUniformJumpsuitLegionnaire
+    outerClothing: N14ClothingOuterLegateArmor
+    shoes: N14ClothingBootsLegate
+    gloves: N14ClothingHandsGlovesLegate
+    belt: ClothingBeltRope
+    back: N14ClothingBackpackMilitary
+    eyes: N14ClothingEyesGlassesWelding
+    id: N14IDLegionaryMedalLegate
+    pocket1: LegionLegateloadoutkits
+  storage:
+    back:
+    - N14BoxPlasticFilledMilitary

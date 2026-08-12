@@ -37,6 +37,10 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutShoes
+    - !type:CharacterDepartmentRequirement # Forge-Change
+        departments:
+          - Wastelander
+          - Tribe  
     - !type:CharacterJobRequirement # Forge-Change
       inverted: true
       jobs:
@@ -81,7 +85,7 @@
 - type: loadout
   id: N14ClothingBootsCombat
   category: Shoes
-  cost: 3 # Corvax-Change
+  cost: 3 # Forge-Change
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutShoes

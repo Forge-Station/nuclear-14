@@ -38,7 +38,7 @@ namespace Content.Server.Containers
             var baseCoords = EntityManager.GetComponent<TransformComponent>(uid).Coordinates;
             foreach (var v in component.Containers)
             {
-                if (mComp.TryGetContainer(v, out var container))
+                if (_container.TryGetContainer(uid, v, out var container))
                 {
                     _container.EmptyContainer(container, true, baseCoords);
                 }

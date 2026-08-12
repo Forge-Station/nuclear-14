@@ -1,8 +1,10 @@
 using Robust.Shared.Serialization;
 
+
 namespace Content.Shared._NC.Trade;
 
-[Serializable, NetSerializable]
+
+[Serializable, NetSerializable,]
 public sealed class ContractTargetClientData
 {
     [DataField("match")]
@@ -18,6 +20,7 @@ public sealed class ContractTargetClientData
     }
 
     public string TargetItem { get; set; } = string.Empty;
+    public string Icon { get; set; } = string.Empty;
     public int Required { get; set; }
     public int Progress { get; set; }
 }

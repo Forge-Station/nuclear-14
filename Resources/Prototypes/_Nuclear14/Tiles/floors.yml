@@ -336,6 +336,16 @@
   variants: 8
   placementVariants: [0, 1, 2, 3, 4, 5, 6, 7]
   baseTurf: FloorWasteland
+  baseWhitelist:
+  - N14FloorConcrete
+  - N14FloorConcreteDark
+  - ForgeFloorWasteland
+  - FloorWasteland
+  - FloorDirtNew
+  - FloorCaveDrought
+  - FloorGrayConcreteSmooth
+  - ForgeFloorGroundDesert
+  - FloorCave
   isSubfloor: false
   deconstructTools: [ Prying ]
   itemDrop: FloorTileItemMetalIndustrial
@@ -353,6 +363,16 @@
   variants: 8
   placementVariants: [0, 1, 2, 3, 4, 5, 6, 7]
   baseTurf: FloorWasteland
+  baseWhitelist:
+  - N14FloorConcrete
+  - N14FloorConcreteDark
+  - ForgeFloorWasteland
+  - FloorWasteland
+  - FloorDirtNew
+  - FloorCaveDrought
+  - FloorGrayConcreteSmooth
+  - ForgeFloorGroundDesert
+  - FloorCave
   isSubfloor: false
   deconstructTools: [ Prying ]
   itemDrop: FloorTileItemMetalMS13
@@ -370,6 +390,16 @@
   variants: 8
   placementVariants: [0, 1, 2, 3, 4, 5, 6, 7]
   baseTurf: FloorWasteland
+  baseWhitelist:
+  - N14FloorConcrete
+  - N14FloorConcreteDark
+  - ForgeFloorWasteland
+  - FloorWasteland
+  - FloorDirtNew
+  - FloorCaveDrought
+  - FloorGrayConcreteSmooth
+  - ForgeFloorGroundDesert
+  - FloorCave
   isSubfloor: false
   deconstructTools: [ Prying ]
   itemDrop: FloorTileItemMetalGrate
@@ -387,6 +417,16 @@
   variants: 4
   placementVariants: [0, 1, 2, 3]
   baseTurf: FloorWasteland
+  baseWhitelist:
+  - N14FloorConcrete
+  - N14FloorConcreteDark
+  - ForgeFloorWasteland
+  - FloorWasteland
+  - FloorDirtNew
+  - FloorCaveDrought
+  - FloorGrayConcreteSmooth
+  - ForgeFloorGroundDesert
+  - FloorCave
   isSubfloor: false
   deconstructTools: [ Prying ]
   itemDrop: FloorTileItemMetalSolid
@@ -505,12 +545,22 @@
   variants: 4
   placementVariants: [0, 1, 2, 3]
   baseTurf: FloorWasteland
+  baseWhitelist:
+  - N14FloorConcrete
+  - N14FloorConcreteDark
+  - ForgeFloorWasteland
+  - FloorWasteland
+  - FloorDirtNew
+  - FloorCaveDrought
+  - FloorGrayConcreteSmooth
+  - ForgeFloorGroundDesert
+  - FloorCave
   isSubfloor: false
   deconstructTools: [ Prying ]
   footstepSounds:
     collection: N14FootstepWood
   friction: 0.30
-  itemDrop: FloorTilesItemMS13WoodCommon # Corvax-Change
+  itemDrop: FloorTilesItemMS13WoodCommon # Forge-Change
   thermalConductivity: 0.04
   heatCapacity: 10000
   weather: true
@@ -539,12 +589,22 @@
   variants: 4
   placementVariants: [0, 1, 2, 3]
   baseTurf: FloorWasteland
+  baseWhitelist:
+  - N14FloorConcrete
+  - N14FloorConcreteDark
+  - ForgeFloorWasteland
+  - FloorWasteland
+  - FloorDirtNew
+  - FloorCaveDrought
+  - FloorGrayConcreteSmooth
+  - ForgeFloorGroundDesert
+  - FloorCave
   isSubfloor: false
   deconstructTools: [ Prying ]
   footstepSounds:
     collection: N14FootstepWood
   friction: 0.30
-  itemDrop: FloorTilesItemMS13WoodFancy # Corvax-Change
+  itemDrop: FloorTilesItemMS13WoodFancy # Forge-Change
   thermalConductivity: 0.04
   heatCapacity: 10000
   weather: true
@@ -573,12 +633,22 @@
   variants: 4
   placementVariants: [0, 1, 2, 3]
   baseTurf: FloorWasteland
+  baseWhitelist:
+  - N14FloorConcrete
+  - N14FloorConcreteDark
+  - ForgeFloorWasteland
+  - FloorWasteland
+  - FloorDirtNew
+  - FloorCaveDrought
+  - FloorGrayConcreteSmooth
+  - ForgeFloorGroundDesert
+  - FloorCave
   isSubfloor: false
   deconstructTools: [ Prying ]
   footstepSounds:
     collection: N14FootstepWood
   friction: 0.30
-  itemDrop: FloorTilesItemMS13WoodMosaic # Corvax-Change
+  itemDrop: FloorTilesItemMS13WoodMosaic # Forge-Change
   thermalConductivity: 0.04
   heatCapacity: 10000
   weather: true
@@ -607,12 +677,22 @@
   variants: 4
   placementVariants: [0, 1, 2, 3]
   baseTurf: FloorWasteland
+  baseWhitelist:
+  - N14FloorConcrete
+  - N14FloorConcreteDark
+  - ForgeFloorWasteland
+  - FloorWasteland
+  - FloorDirtNew
+  - FloorCaveDrought
+  - FloorGrayConcreteSmooth
+  - ForgeFloorGroundDesert
+  - FloorCave
   isSubfloor: false
   deconstructTools: [ Prying ]
   footstepSounds:
     collection: N14FootstepWood
   friction: 0.30
-  itemDrop: FloorTilesItemMS13WoodWide # Corvax-Change
+  itemDrop: FloorTilesItemMS13WoodWide # Forge-Change
   thermalConductivity: 0.04
   heatCapacity: 10000
   weather: true
@@ -2094,12 +2174,17 @@
 - type: tile
   id: FloorN14Snow
   name: снег (новый)
-  parent: FloorSnow
   sprite: /Textures/_Nuclear14/Tiles/SnowIce/snowtail.png
   variants: 3
   baseTurf: Plating
   isSubfloor: false
-  tileRipResistance: 50
+  footstepSounds:
+    collection: FootstepSnow
+  friction: 0.30
+  thermalConductivity: 0.04
+  heatCapacity: 10000
+  weather: true
+  indestructible: true
 
 - type: tile
   id: FloorN14Ice

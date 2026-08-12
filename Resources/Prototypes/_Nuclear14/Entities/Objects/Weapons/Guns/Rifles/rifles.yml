@@ -1,5 +1,5 @@
 - type: entity
-  parent: BaseWeaponRifle
+  parent: [BaseWeaponRifle, ForgeGunConditionProfileAssault] # Forge-Change
   id: N14WeaponRifleBase
   abstract: true
   components:
@@ -24,10 +24,49 @@
     zeroVisible: true
   - type: Appearance
   - type: FollowDistance
-    backStrength: 4 # Corvax-Change
+    backStrength: 4 # Forge-Change
   - type: StaticPrice
     price: 100
   - type: Craftable
+
+#Перенёс из snipers.yml
+- type: entity
+  name: varmint rifle
+  parent: [ BaseWeaponSniper, ForgeGunConditionProfileSniper ]
+  id: N14WeaponSniper556VarmintRifle
+  description: A pre-war low-power bolt action rifle, originally designed to hunt small animals. This gun also works fine on anything human-sized. Uses 5.56 ammo.
+  components:
+  - type: Clothing
+    sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/varmint.rsi
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/varmint.rsi
+  - type: Item # Forge-Add
+    size: Huge
+    shape:
+    - 0,0,3,1
+    - 0,1,0,1
+  - type: Wieldable
+  - type: GunWieldBonus
+    minAngle: -23
+    maxAngle: -104
+  - type: Gun
+    minAngle: 24
+    maxAngle: 105
+    angleIncrease: 4
+    angleDecay: 16
+    fireRate: 2.2
+    soundGunshot:
+      collection: N14SniperVarmintGunshot
+  - type: BallisticAmmoProvider
+    whitelist:
+      tags:
+      - N14Cartridge556Rifle
+    capacity: 15
+    proto: N14Cartridge556Rifle
+  - type: FollowDistance
+    backStrength: 3
+  - type: StaticPrice
+    price: 50
 
 - type: entity
   name: R-91 Rifle
@@ -97,7 +136,7 @@
         map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
     minAngle: 24
-    maxAngle: 46 # Corvax-Change
+    maxAngle: 46 # Forge-Change
     angleIncrease: 4
     angleDecay: 16
     fireRate: 4
@@ -207,7 +246,7 @@
     selectedMode: SemiAuto
     availableModes:
     - SemiAuto
-    - FullAuto # Corvax-Change
+    - FullAuto # Forge-Change
   - type: ItemSlots
     slots:
       gun_magazine:
@@ -256,7 +295,7 @@
     maxAngle: 45
     angleIncrease: 4
     angleDecay: 16
-    fireRate: 5
+    fireRate: 4 # Forge-Change
     shotsPerBurst: 3 # Corvax-Add
     burstFireRate: 4 # Corvax-Add
     soundGunshot:
@@ -309,11 +348,11 @@
       - state: mag-0
         map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
-    minAngle: 21 # Corvax-Change
-    maxAngle: 38 # Corvax-Change
+    minAngle: 21 # Forge-Change
+    maxAngle: 38 # Forge-Change
     angleIncrease: 4
     angleDecay: 16
-    fireRate: 4 # Corvax-Change
+    fireRate: 4 # Forge-Change
     soundGunshot:
       collection: N14ServiceGunshot
     selectedMode: SemiAuto
@@ -470,7 +509,7 @@
         map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
     minAngle: 24
-    maxAngle: 46 # Corvax-Change
+    maxAngle: 46 # Forge-Change
     angleIncrease: 4
     angleDecay: 16
     fireRate: 4
@@ -521,8 +560,8 @@
       map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
     minAngle: 24
-    maxAngle: 46 # Corvax-Change
-    angleIncrease: 5 # Corvax-Change
+    maxAngle: 46 # Forge-Change
+    angleIncrease: 5 # Forge-Change
     angleDecay: 16
     soundGunshot:
       collection: N14MarksmanGunshot
@@ -530,7 +569,7 @@
     selectedMode: SemiAuto
     availableModes:
     - SemiAuto
-    - FullAuto # Corvax-Change
+    - FullAuto # Forge-Change
   - type: ItemSlots
     slots:
       gun_magazine:
@@ -761,60 +800,6 @@
     price: 175
 
 - type: entity
-  name: chinese marksman rifle
-  parent: N14WeaponRifleBase
-  id: N14WeaponRifle762MarksmanChinese
-  description: A pre-war chinese marksman rifle chambered in .308.
-  components:
-  - type: Clothing
-    sprite: _Nuclear14/Objects/Weapons/Guns/Rifles/chinesemarksman.rsi
-    quickEquip: false
-    slots:
-    - Back
-    - suitStorage
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Weapons/Guns/Rifles/chinesemarksman.rsi
-    layers:
-    - state: base
-      map: ["enum.GunVisualLayers.Base"]
-    - state: mag-0
-      map: ["enum.GunVisualLayers.Mag"]
-  - type: GunWieldBonus
-    minAngle: -23
-    maxAngle: -44
-  - type: Gun
-    minAngle: 24
-    maxAngle: 45
-    angleIncrease: 4
-    angleDecay: 16
-    soundGunshot:
-      collection: N14MarksmanGunshot
-    fireRate: 2
-    selectedMode: SemiAuto
-    availableModes:
-    - SemiAuto
-  - type: ItemSlots
-    slots:
-      gun_magazine:
-        name: Magazine
-        startingItem: Magazine308Rifle
-        insertSound: /Audio/Weapons/Guns/MagIn/ltrifle_magin.ogg
-        ejectSound: /Audio/Weapons/Guns/MagOut/ltrifle_magout.ogg
-        priority: 2
-        whitelist:
-          tags:
-            - N14Magazine308Rifle
-      gun_chamber:
-        name: Chamber
-        startingItem: N14Cartridge308Rifle
-        priority: 1
-        whitelist:
-          tags:
-            - N14Cartridge308Rifle
-  - type: StaticPrice
-    price: 175
-
-- type: entity
   name: SKS chinese carbine
   parent: N14WeaponRifleBase
   id: N14WeaponRifle762SKS
@@ -835,12 +820,12 @@
       map: ["enum.GunVisualLayers.Mag"]
   - type: Gun
     minAngle: 24
-    maxAngle: 40 # Corvax-Change
+    maxAngle: 40 # Forge-Change
     angleIncrease: 4
     angleDecay: 16
     soundGunshot:
       collection: N14MarksmanGunshot
-    fireRate: 2.5 # Corvax-Change
+    fireRate: 2.5 # Forge-Change
     selectedMode: SemiAuto
     availableModes:
     - SemiAuto
@@ -906,6 +891,7 @@
         whitelist:
           tags:
             - Magazine556Rifle
+            - Magazine556Rifle30 # Forge-Change
       gun_chamber:
         name: Chamber
         startingItem: N14Cartridge556Rifle
@@ -1011,14 +997,14 @@
     maxAngle: 50
     angleIncrease: 6
     angleDecay: 16
-    fireRate: 4
+    fireRate: 5 # Forge-Change
     soundGunshot:
       collection: N14ServiceGunshot
     selectedMode: FullAuto
     availableModes:
     - FullAuto
   - type: GunWieldBonus
-    minAngle: -23
+    minAngle: -20
     maxAngle: -40
   - type: ItemSlots
     slots:
@@ -1031,6 +1017,7 @@
         whitelist:
           tags:
             - Magazine556Rifle
+            - Magazine556Rifle30 # Forge-Change
       gun_chamber:
         name: Chamber
         startingItem: N14Cartridge556Rifle

@@ -25,6 +25,10 @@
     - state: mag-1
       map: ["enum.GunVisualLayers.Mag"]
   - type: Appearance
+  - type: ToolRefinable #Forge-add
+    refineResult:
+    - id: SheetSteel1
+      amount: 2
 
 - type: entity
   id: N14MagazineMinigun5mm

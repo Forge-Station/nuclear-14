@@ -39,7 +39,7 @@
   unit: materials-unit-chunk
   icon: { sprite: /Textures/_Nuclear14/Objects/Misc/materials.rsi, state: gold }
   color: "#D4AF37"
-  price: 0.10 # Corvax-Change
+  price: 0.10 # Forge-Change
 
 - type: material
   id: N14RawSilver
@@ -48,4 +48,4 @@
   unit: materials-unit-chunk
   icon: { sprite: /Textures/_Nuclear14/Objects/Misc/materials.rsi, state: silver }
   color: "#C0C0C0"
-  price: 0.05 # Corvax-Change
+  price: 0.05 # Forge-Change

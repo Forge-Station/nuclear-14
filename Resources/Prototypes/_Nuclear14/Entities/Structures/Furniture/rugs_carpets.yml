@@ -122,6 +122,9 @@
   - type: Sprite
     sprite: _Nuclear14/Structures/Furniture/rugs64x64.rsi
     state: rug_blue
+  - type: Construction # Forge-Change
+    graph: N14RugBlueGraph
+    node: N14RugBlueNode
 
 - type: entity
   parent: N14RugBlue
@@ -140,6 +143,9 @@
   - type: Sprite
     sprite: _Nuclear14/Structures/Furniture/rugs64x64.rsi
     state: rug_fancy
+  - type: Construction # Forge-Change
+    graph: N14RugBrownFancyGraph
+    node: N14RugBrownFancyNode
 
 - type: entity
   parent: N14RugBlue
@@ -149,6 +155,9 @@
   - type: Sprite
     sprite: _Nuclear14/Structures/Furniture/rugs64x64.rsi
     state: rug_red
+  - type: Construction # Forge-Change
+    graph: N14RugRedGraph
+    node: N14RugRedNode
 
 - type: entity
   parent: N14RugBlue
@@ -158,6 +167,9 @@
   - type: Sprite
     sprite: _Nuclear14/Structures/Furniture/rugs64x64.rsi
     state: rug_yellow
+  - type: Construction # Forge-Change
+    graph: N14RugYellowGraph
+    node: N14RugYellowNode
 
 - type: entity
   parent: N14RugBlue

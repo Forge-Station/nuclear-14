@@ -1,0 +1,67 @@
+- type: entity
+  parent: OreBase
+  id: N14AluminumOre
+  name: алюминиевая руда
+  suffix: Full
+  components:
+  - type: Stack
+    stackType: N14RawAluminum 
+    count: 10
+  - type: Sprite
+    sprite: /Textures/_Corvax/Objects/Materials/ore.rsi
+    state: aluminium
+  - type: Material
+  - type: PhysicalComposition 
+    materialComposition:
+      N14RawAluminum: 500 
+  - type: Extractable
+    grindableSolutionName: aluminiumore
+  - type: SolutionContainerManager
+    solutions:
+      aluminiumore: 
+        reagents:
+        - ReagentId: Aluminium
+          Quantity: 10
+
+- type: entity
+  id: N14AluminumOre1
+  parent: N14AluminumOre
+  suffix: Single
+  components:
+  - type: Stack
+    count: 1
+
+- type: entity
+  parent: OreBase
+  id: N14BrassOre
+  name: латунная руда
+  suffix: Full
+  components:
+  - type: Stack
+    stackType: N14RawBrass 
+    count: 10
+  - type: Sprite
+    sprite: /Textures/_Corvax/Objects/Materials/ore.rsi
+    state: brass
+  - type: Material
+  - type: PhysicalComposition 
+    materialComposition:
+      N14RawBrass: 500 
+  - type: Extractable
+    grindableSolutionName: brassore
+  - type: SolutionContainerManager
+    solutions:
+      brassore: 
+        reagents:
+        - ReagentId: Copper
+          Quantity: 5
+        - ReagentId: Zinc
+          Quantity: 5
+
+- type: entity
+  id: N14BrassOre1
+  parent: N14BrassOre
+  suffix: Single
+  components:
+  - type: Stack
+    count: 1

@@ -36,3 +36,6 @@ tool-quality-digging-tool-name = Shovel
 
 tool-quality-axing-name = Axing
 tool-quality-axing-tool-name = Fireaxe
+
+tool-quality-n14-gun-maintenance-name = Firearm maintenance
+tool-quality-n14-gun-maintenance-tool-name = Maintenance toolbox
