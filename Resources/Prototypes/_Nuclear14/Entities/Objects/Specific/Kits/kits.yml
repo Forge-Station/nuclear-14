@@ -1206,9 +1206,9 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14WeaponRifle556Carbine
-      - id: LongMagazine556Rifle
-        amount: 3
+      - id: N14WeaponMinigun
+      - id: N14MagazineMinigun5mm
+        amount: 2
       - id: N14WeaponLaserPistol
       - id: N14PowerCellSmall
         amount: 2

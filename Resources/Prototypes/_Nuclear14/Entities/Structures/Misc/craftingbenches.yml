@@ -84,9 +84,12 @@
     - N14LongSword
     - N14Bola
     - Handcuffs
+    - N14ClothingHandsKnucklesWithClaws
+    - N14ClothingHandsKnuckles
     # Blueprints Corvax Forge
     - N14WeaponLaserRevolverBlueprint
     - N14WeaponLaserRifleMakeshiftBlueprint
+    - N14WeaponPlasmaRifleCrudeBlueprint
     - N14WeaponRifle556PipeBlueprint
     # Gun Parts
     - N14JunkGunpartsAction
@@ -180,9 +183,9 @@
     - MagazineDrum545Rifle
     - 40mmGrenadeShrapnel
     # Forge-Change-End
-  - type: MaterialStorageMagnetPickup 
+  - type: MaterialStorageMagnetPickup
     magnetEnabled: True
-    range: 1.25 
+    range: 1.25
 
 - type: entity
   categories: [ HideSpawnMenu ] # Forge-change
@@ -577,8 +580,8 @@
     - N14SheetSteel
     - N14SheetGlass
     - N14IngotLead
-    - N14IngotAluminum    # Forge-add 
-    - N14IngotBrass       # Forge-add 
+    - N14IngotAluminum    # Forge-add
+    - N14IngotBrass       # Forge-add
     - SulfurPowder
     # Scrap
     - SheetPlasticScrap

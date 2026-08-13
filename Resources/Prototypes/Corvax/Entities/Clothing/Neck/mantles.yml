@@ -63,3 +63,25 @@
     sprite: Corvax/Clothing/Neck/capelegio.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Neck/capelegio.rsi
+
+- type: entity
+  parent: ClothingNeckBase
+  id: M14ClothingNeckLegionMantle
+  name: legion mantle
+  description: A bull flag adapted to be worn, a honor not given to every warrior.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/mantlelegionred.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Neck/mantlelegionred.rsi
+
+- type: entity
+  parent: ClothingNeckBase
+  id: M14ClothingNeckCloakWesternPoncho
+  name: thick decorated poncho
+  description: Dark brown with white patterns, thick enough to provide some protection.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/westernoldponcho.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Neck/westernoldponcho.rsi

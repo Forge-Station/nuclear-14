@@ -1,6 +1,7 @@
 - type: entity
   id: 40mmGrenadeSmoke
   name: дымовая граната (40x53mm)
+  description: Тактический боеприпас мгновенного действия. Быстро создает плотную завесу, скрывая перемещения союзников или ослепляя огневые точки врага.
   parent: BaseGrenade
   components:
   - type: Tag
@@ -21,6 +22,7 @@
 - type: entity
   id: 40mmGrenadeShrapnel
   name: шрапнелевая граната (40x53mm)
+  description: Специализированный боеприпас, начиненный сотнями готовых поражающих элементов. Идеально подходит для зачистки открытых пространств от живой силы.
   parent: BaseGrenade
   components:
   - type: Tag

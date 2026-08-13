@@ -15,3 +15,14 @@
     sprite: Corvax/Clothing/Eyes/wboseyepiece.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Eyes/wboseyepiece.rsi
+
+- type: entity
+  parent: ClothingEyesBase
+  id: N14ClothingSnowGoggles
+  name: snow goggles
+  description: Thick goggles made specifically for keeping snow and dust out of the eyes.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Eyes/winterglass.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Eyes/winterglass.rsi

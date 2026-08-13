@@ -1,4 +1,4 @@
-# Legion kits
+#MARK: Legion kits
 - type: entity
   id: LegionCenturionloadoutkits
   name: kit
@@ -91,7 +91,7 @@
     - RecruitMeleeSet
     - RecruitHealerSet
 
-#Washington kits
+#MARK: Washington kits
 
 # Непонятный набор, который не используются ролями BoS Washington.
 - type: entity

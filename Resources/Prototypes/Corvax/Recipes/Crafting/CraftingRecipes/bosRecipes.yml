@@ -4,10 +4,10 @@
   resultProtos:
   - N14ClothingOuterPowerArmorT45
   requiredWorkbench: N14WorkbenchStation
-  availableJobs:
-  - BoSMidScribe
-  - BoSWashingtonScribe
-  - BoSWestKnight
+  availableFaction:
+    - BrotherhoodMidwest
+    - BrotherhoodWest
+    - BrotherhoodWashington
   # requiredIntelligence: 5 #TODO: Enable it after fixing the SPECIAL system
   craftTime: 10
   items:
@@ -32,10 +32,10 @@
   resultProtos:
   - N14ClothingOuterPowerArmorT60Tesla
   requiredWorkbench: N14WorkbenchStation
-  availableJobs:
-  - BoSMidScribe
-  - BoSWashingtonScribe
-  - BoSWestScribe
+  availableFaction:
+    - BrotherhoodMidwest
+    - BrotherhoodWest
+    - BrotherhoodWashington
   # requiredIntelligence: 7 #TODO: Enable it after fixing the SPECIAL system
   craftTime: 10
   items:

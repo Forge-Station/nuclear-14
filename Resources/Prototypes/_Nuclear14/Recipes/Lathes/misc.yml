@@ -134,6 +134,14 @@
     Paper: 100
 
 - type: latheRecipe
+  id: N14WeaponPlasmaRifleCrudeBlueprint
+  result: N14WeaponPlasmaRifleCrudeBlueprint
+  category: N14Blueprints
+  completetime: 1
+  materials:
+    Paper: 100
+
+- type: latheRecipe
   id: N14WeaponRifle556PipeBlueprint
   result: N14WeaponRifle556PipeBlueprint
   category: N14Blueprints
