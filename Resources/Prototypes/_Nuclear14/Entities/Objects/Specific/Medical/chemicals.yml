@@ -827,10 +827,10 @@
   - type: SolutionContainerManager
     solutions:
       pen:
-        maxVol: 5
+        maxVol: 10
         reagents:
         - ReagentId: UltraRobustHealingMixture
-          Quantity: 5
+          Quantity: 10
 
 - type: entity
   parent: N14HealingPowder

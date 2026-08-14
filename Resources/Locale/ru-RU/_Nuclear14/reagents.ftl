@@ -199,10 +199,12 @@ reagent-desc-berserker-mixture = Порошок, приготовленный и
 # Medicine
 reagent-name-healing-mixture = стимпак
 reagent-desc-healing-mixture = Смесь реагентов, которая помогает вам излечиться.
-reagent-name-dirty-stimpak = грязный стимпак
+reagent-name-dirty-stimpak = самодельный стимпак
 reagent-desc-dirty-stimpak = Грязная смесь реагентов, которая помогает вам излечиться.
 reagent-name-robust-healing-mixture = супер стимпак
 reagent-desc-robust-healing-mixture = Смесь реагентов, которая ускоряет заживление ран.
+reagent-name-dirty-robust-healing-mixture = самодельный супер стимпак
+reagent-desc-dirty-robust-healing-mixture = Смесь реагентов, которая ускоряет заживление ран.
 reagent-name-ultra-robust-healing-mixture = ультра стимпак
 reagent-desc-ultra-robust-healing-mixture = Смесь реагентов, которая заставляет вас исцеляться быстрее, чем вы можете это почувствовать, однако она имеет серьезные побочные эффекты.
 reagent-name-damage-resist-mixture = защитная смесь
@@ -249,11 +251,11 @@ reagent-desc-damage-mod-mixture = Чувствуете, как мышцы нал
 # Products
 reagent-name-abraxocleaner = чистящее средство Абраксо
 reagent-desc-abraxocleaner = Универсальное моющее средство, производившееся довоенной компанией Абраксодайн Кемикал - одним из филиалов РобКо.
-reagent-name-wonderglue = Чудо-клей
+reagent-name-wonderglue = чудо-клей
 reagent-desc-wonderglue = Не нюхайте.
-reagent-name-turpentine = Скипидар
+reagent-name-turpentine = скипидар
 reagent-desc-turpentine = Представляет собой жидкую смесь различных эфирных масел, получаемых из смол хвойных деревьев. Является органическим растворителем.
-reagent-name-antiseptic = Антисептик
+reagent-name-antiseptic = антисептик
 reagent-desc-antiseptic = Чистящий раствор, сделанный из Чистящего средства "Абраксо" и небольшого количества Медицинского спирта.
 # Ores, Metals, Materials
 materials-gunpowder = порох

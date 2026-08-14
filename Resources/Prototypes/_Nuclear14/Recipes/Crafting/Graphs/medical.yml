@@ -47,11 +47,9 @@
               sprite: _Nuclear14/Objects/Specific/Medical/ms13_stimpak.rsi
               state: stimpak-empty # Forge-Change
             doAfter: 1
-          - tag: Bloodpack # Forge-Change
-            name: an bloodpack
-            icon:
-              sprite: _Nuclear14/Objects/Specific/Medical/bloodbags.rsi
-              state: radblood
+          - material: Bloodpack # Forge-Change
+            sprite: _Nuclear14/Objects/Specific/Medical/bloodbags.rsi
+            state: radblood
             doAfter: 1
 
     - node: stimpak

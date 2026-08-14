@@ -35,9 +35,6 @@
       - id: N14StimpakDirty
         prob: 0.1
         orGroup: StashMeds
-      - id: N14RadBloodpack # Forge-add
-        prob: 0.05
-        orGroup: StashMeds
       - id: N14Stimpak
         prob: 0.025
         orGroup: StashMeds

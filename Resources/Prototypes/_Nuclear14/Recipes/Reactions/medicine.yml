@@ -98,17 +98,17 @@
     - !type:CreateEntityReactionEffect
       entity: N14RadAwayBloodbag
 
-- type: reaction
-  id: Stimpak
+- type: reaction #Forge-change
+  id: DirtyStimpak1
   reactants:
     ExtractBroc:
-      amount: 2
+      amount: 1
     ExtractXander:
-      amount: 2
+      amount: 1
     Blood:
-      amount: 2
+      amount: 1
   products:
-    HealingMixture: 1
+    DirtyStimpak: 1
 
 - type: reaction
   id: StimpakConversion
@@ -124,7 +124,7 @@
       entity: N14Stimpak
 
 - type: reaction
-  id: DirtyStimpak
+  id: DirtyStimpak2
   reactants:
     ExtractBroc:
       amount: 1
@@ -148,7 +148,7 @@
     - !type:CreateEntityReactionEffect
       entity: N14StimpakDirty
 
-- type: reaction
+- type: reaction #Forge-change
   id: Bitterdrink
   minTemp: 373.15 # 100 degrees Celcius.
   reactants:

@@ -2139,9 +2139,6 @@
           amount: 1
           maxAmount: 2
           orGroup: MedicalRare
-        - id: N14RadBloodpack # Forge-add
-          prob: 0.1
-          orGroup: MedicalRare
         - id: N14Jet
           prob: 0.2
           orGroup: MedicalRare

@@ -13,11 +13,3 @@
   spawn: N14RegenerativeOintment1  
   maxCount: 10 
   itemSize: 1
-
-- type: stack
-  id: N14RadBloodpack
-  name: грязный пакет крови
-  icon: { sprite: _Nuclear14/Objects/Specific/Medical/bloodbags.rsi, state: radblood }
-  spawn: N14RadBloodpack1  
-  maxCount: 10 
-  itemSize: 1

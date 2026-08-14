@@ -1,0 +1,33 @@
+- type: entity
+  parent: N14ChemicalSyringe
+  id: N14DirtySuperStimpak
+  name: самодельный суперстимпак
+  description: Самодельная версия супер-стимпака, созданная с использованием магии пустоши. Незаменим для тех, кто оказался в самом центре войны. Но будьте осторожны, передозировка может быть смертельной.
+  components:
+  - type: StaticPrice
+    price: 25
+  - type: Item
+    sprite: _Nuclear14/Objects/Specific/Medical/ms13_superstimpak.rsi
+    heldPrefix: superstimpak
+  - type: Sprite
+    scale: 0.80, 0.80
+    sprite: _Nuclear14/Objects/Specific/Medical/ms13_superstimpak.rsi
+    layers:
+    - state: superstimpak
+      map: ["enum.SolutionContainerLayers.Fill"]
+  - type: SolutionContainerVisuals
+    maxFillLevels: 1
+    changeColor: false
+    emptySpriteName: superstimpak-empty
+  - type: Hypospray
+    solutionName: pen
+    transferAmount: 10
+    onlyAffectsMobs: false
+    injectOnly: true
+  - type: SolutionContainerManager
+    solutions:
+      pen:
+        maxVol: 10
+        reagents:
+        - ReagentId: HomemadeSuperStimpack
+          Quantity: 10
