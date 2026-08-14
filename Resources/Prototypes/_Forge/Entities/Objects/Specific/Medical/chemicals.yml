@@ -29,5 +29,5 @@
       pen:
         maxVol: 10
         reagents:
-        - ReagentId: HomemadeSuperStimpack
+        - ReagentId: DirtySuperStimpack
           Quantity: 10

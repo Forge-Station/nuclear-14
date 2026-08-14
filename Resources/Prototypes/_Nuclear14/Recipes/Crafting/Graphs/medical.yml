@@ -48,8 +48,6 @@
               state: stimpak-empty # Forge-Change
             doAfter: 1
           - material: Bloodpack # Forge-Change
-            sprite: _Nuclear14/Objects/Specific/Medical/bloodbags.rsi
-            state: radblood
             doAfter: 1
 
     - node: stimpak

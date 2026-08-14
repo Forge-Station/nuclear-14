@@ -104,7 +104,7 @@
   reactants:
     DirtyStimpak:
       amount: 1
-    DirtyuperStimpack:
+    DirtySuperStimpack:
       amount: 1
   products:
     StimpackThrombosis: 2
