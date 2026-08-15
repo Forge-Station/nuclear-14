@@ -31,4 +31,4 @@
   - type: Projectile
     damage:
       types:
-        Piercing: 10
+        Piercing: 14
