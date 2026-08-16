@@ -630,15 +630,6 @@
     Thread: 300
 
 - type: latheRecipe
-  id: ClothingOuterUnathiRobe
-  result: ClothingOuterUnathiRobe
-  category: N14Clothes
-  completetime: 4
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
   id: ClothingUniformMNKOfficeSkirt
   result: ClothingUniformMNKOfficeSkirt
   category: N14Clothes
@@ -719,66 +710,12 @@
     Cloth: 300
     Thread: 300
 
-- type: latheRecipe
-  id: ClothingUniformSchoolGakuranBlack
-  result: ClothingUniformSchoolGakuranBlack
-  category: N14Clothes
-  completetime: 4
-  materials:
-    Cloth: 300
-    Thread: 300
-
 # MARK: Вверхняя одежда
 
 - type: latheRecipe
-  id: ClothingOuterBlazer
-  result: ClothingOuterBlazer
-  category: N14Outerwear
-  completetime: 4
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingOuterBlazerLong
-  result: ClothingOuterBlazerLong
-  category: N14Outerwear
-  completetime: 4
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingOuterBlazerPosh
-  result: ClothingOuterBlazerPosh
-  category: N14Outerwear
-  completetime: 4
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingOuterCardiganSweater
-  result: ClothingOuterCardiganSweater
-  category: N14Outerwear
-  completetime: 3
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingOuterClerkVest
-  result: ClothingOuterClerkVest
-  category: N14Outerwear
-  completetime: 3
-  materials:
-    Cloth: 200
-    Thread: 200
-
-- type: latheRecipe
-  id: ClothingOuterCoatAsymmetric
-  result: ClothingOuterCoatAsymmetric
-  category: N14Outerwear
+  id: ClothingOuterUnathiRobe
+  result: ClothingOuterUnathiRobe
+  category: N14Clothes
   completetime: 4
   materials:
     Cloth: 300
@@ -791,24 +728,6 @@
   completetime: 4
   materials:
     Leather: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingOuterCoatGentle
-  result: ClothingOuterCoatGentle
-  category: N14Outerwear
-  completetime: 4
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingOuterCoatGreatcoat
-  result: ClothingOuterCoatGreatcoat
-  category: N14Outerwear
-  completetime: 4
-  materials:
-    Cloth: 300
     Thread: 300
 
 - type: latheRecipe
@@ -879,88 +798,6 @@
   result: ClothingOuterCoatMNKBlackTopCoat
   category: N14Outerwear
   completetime: 4
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingOuterCoatPeacoat
-  result: ClothingOuterCoatPeacoat
-  category: N14Outerwear
-  completetime: 4
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingOuterCoatSubmariner
-  result: ClothingOuterCoatSubmariner
-  category: N14Outerwear
-  completetime: 4
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingOuterCoatTrench
-  result: ClothingOuterCoatTrench
-  category: N14Outerwear
-  completetime: 4
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingOuterCoatVictorian
-  result: ClothingOuterCoatVictorian
-  category: N14Outerwear
-  completetime: 4
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingOuterCowboyDuster
-  result: ClothingOuterCowboyDuster
-  category: N14Outerwear
-  completetime: 4
-  materials:
-    Leather: 300
-    Cloth: 100
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingOuterDenimJacket
-  result: ClothingOuterDenimJacket
-  category: N14Outerwear
-  completetime: 4
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingOuterJacketChefOrion
-  result: ClothingOuterJacketChefOrion
-  category: N14Outerwear
-  completetime: 4
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingOuterTailcoat
-  result: ClothingOuterTailcoat
-  category: N14Outerwear
-  completetime: 4
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingOuterToga
-  result: ClothingOuterToga
-  category: N14Outerwear
-  completetime: 3
   materials:
     Cloth: 300
     Thread: 300
@@ -1065,105 +902,6 @@
   materials:
     Leather: 300
     Thread: 300
-
-- type: latheRecipe
-  id: ClothingShoesBootsAnkle
-  result: ClothingShoesBootsAnkle
-  category: N14Shoes
-  completetime: 4
-  materials:
-    Leather: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingShoesBootsFishing
-  result: ClothingShoesBootsFishing
-  category: N14Shoes
-  completetime: 4
-  materials:
-    Leather: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingShoesBootsMantis
-  result: ClothingShoesBootsMantis
-  category: N14Shoes
-  completetime: 4
-  materials:
-    Leather: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingShoesBootsMud
-  result: ClothingShoesBootsMud
-  category: N14Shoes
-  completetime: 4
-  materials:
-    Leather: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingShoesBootsWinter
-  result: ClothingShoesBootsWinter
-  category: N14Shoes
-  completetime: 4
-  materials:
-    Leather: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingShoesBootsWorkColor
-  result: ClothingShoesBootsWorkColor
-  category: N14Shoes
-  completetime: 4
-  materials:
-    Leather: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingShoesEnclosedChem
-  result: ClothingShoesEnclosedChem
-  category: N14Shoes
-  completetime: 4
-  materials:
-    Leather: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingShoesFlats
-  result: ClothingShoesFlats
-  category: N14Shoes
-  completetime: 3
-  materials:
-    Leather: 200
-    Thread: 200
-
-- type: latheRecipe
-  id: ClothingShoesHighHeels
-  result: ClothingShoesHighHeels
-  category: N14Shoes
-  completetime: 3
-  materials:
-    Leather: 200
-    Thread: 200
-
-- type: latheRecipe
-  id: ClothingShoesHighHeelsLong
-  result: ClothingShoesHighHeelsLong
-  category: N14Shoes
-  completetime: 3
-  materials:
-    Leather: 200
-    Thread: 200
-
-- type: latheRecipe
-  id: ClothingShoesSandalsFlipFlops
-  result: ClothingShoesSandalsFlipFlops
-  category: N14Shoes
-  completetime: 2
-  materials:
-    Leather: 100
-    Cloth: 100
 
 # MARK: Шапки обитал
 
@@ -1423,23 +1161,6 @@
     Cloth: 100
 
 - type: latheRecipe
-  id: ClothingHeadHatHeadBandBasic
-  result: ClothingHeadHatHeadBandBasic
-  category: N14Hats
-  completetime: 2
-  materials:
-    Cloth: 100
-
-- type: latheRecipe
-  id: ClothingHeadHatHetmanHat
-  result: ClothingHeadHatHetmanHat
-  category: N14Hats
-  completetime: 4
-  materials:
-    Leather: 200
-    Cloth: 100
-
-- type: latheRecipe
   id: ClothingHeadHatTacticalMaidHeadband
   result: ClothingHeadHatTacticalMaidHeadband
   category: N14Hats
@@ -1526,23 +1247,6 @@
 - type: latheRecipe
   id: N14ClothingHandsGlovesCloth
   result: N14ClothingHandsGlovesCloth
-  category: N14Gloves
-  completetime: 2
-  materials:
-    Cloth: 100
-
-- type: latheRecipe
-  id: ClothingHandsGlovesEnviroglovesEvening
-  result: ClothingHandsGlovesEnviroglovesEvening
-  category: N14Gloves
-  completetime: 3
-  materials:
-    Cloth: 100
-    Leather: 100
-
-- type: latheRecipe
-  id: ClothingHandsGlovesFingerlessWhite
-  result: ClothingHandsGlovesFingerlessWhite
   category: N14Gloves
   completetime: 2
   materials:

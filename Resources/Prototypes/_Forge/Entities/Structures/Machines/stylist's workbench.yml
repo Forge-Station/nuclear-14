@@ -22,13 +22,6 @@
 
 # MARK: Other
     - BarberScissors
-    - SprayPaintBlue
-    - SprayPaintRed
-    - SprayPaintGreen
-    - SprayPaintBlack
-    - SprayPaintOrange
-    - SprayPaintPurple
-    - SprayPaintWhite
     - N14MaterialLeather
     - N14MaterialThread
 
@@ -121,15 +114,7 @@
 
 # MARK: Верхнее
 
-    - ClothingOuterBlazer
-    - ClothingOuterBlazerLong
-    - ClothingOuterBlazerPosh
-    - ClothingOuterCardiganSweater
-    - ClothingOuterClerkVest
-    - ClothingOuterCoatAsymmetric
     - ClothingOuterCoatBomber
-    - ClothingOuterCoatGentle
-    - ClothingOuterCoatGreatcoat
     - ClothingOuterCoatHyenhSweater
     - ClothingOuterCoatInspector
     - ClothingOuterCoatJacketBiker
@@ -138,15 +123,6 @@
     - ClothingOuterCoatJacketLettermanBrown
     - ClothingOuterCoatLeatherJacket
     - ClothingOuterCoatMNKBlackTopCoat
-    - ClothingOuterCoatPeacoat
-    - ClothingOuterCoatSubmariner
-    - ClothingOuterCoatTrench
-    - ClothingOuterCoatVictorian
-    - ClothingOuterCowboyDuster
-    - ClothingOuterDenimJacket
-    - ClothingOuterJacketChefOrion
-    - ClothingOuterTailcoat
-    - ClothingOuterToga
     - ClothingOuterWinterCoat
     - ClothingOuterWinterCoatLong
     - N14ClothingOuterCoatLab
@@ -162,17 +138,6 @@
     - N14ClothingBootsCowboy
     - N14ClothingBootsLeather
     - N14ClothingBootsMountie
-    - ClothingShoesBootsAnkle
-    - ClothingShoesBootsFishing
-    - ClothingShoesBootsMantis
-    - ClothingShoesBootsMud
-    - ClothingShoesBootsWinter
-    - ClothingShoesBootsWorkColor
-    - ClothingShoesEnclosedChem
-    - ClothingShoesFlats
-    - ClothingShoesHighHeels
-    - ClothingShoesHighHeelsLong
-    - ClothingShoesSandalsFlipFlops
 
 # MARK: Перчатки обитал
 
@@ -185,8 +150,6 @@
     - N14ClothingHandsGlovesFur
     - N14ClothingHandsGlovesTribal
     - N14ClothingHandsGlovesCloth
-    - ClothingHandsGlovesEnviroglovesEvening
-    - ClothingHandsGlovesFingerlessWhite
 
 # MARK: Шапки обитал
     - ClothingHeadCourier
@@ -196,8 +159,6 @@
     - ClothingHeadHatFedoraBrown
     - ClothingHeadHatFedoraChoc
     - ClothingHeadHatGreyFlatcap
-    - ClothingHeadHatHeadBandBasic
-    - ClothingHeadHatHetmanHat
     - ClothingHeadHatTacticalMaidHeadband
     - ClothingHeadHatUshanka
     - N14ClothingHeadHatBaseball
