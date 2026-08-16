@@ -46,6 +46,8 @@
             Burn: -30
             Brute: -22.5
             Airloss: -15
+          types:
+            Radiation: 0.5
       - !type:ModifyBleedAmount
         amount: -3
       - !type:HealthChange # Taking 2 is more or less a guaranteed death
