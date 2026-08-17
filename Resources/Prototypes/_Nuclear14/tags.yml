@@ -196,6 +196,9 @@
 - type: Tag
   id: N14Welder
 
+- type: Tag # Forge-add
+  id: Binoculars
+
 - type: Tag # forge-add
   id: N14HealingPowder
 
