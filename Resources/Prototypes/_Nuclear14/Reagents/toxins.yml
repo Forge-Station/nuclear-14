@@ -186,20 +186,3 @@
         damage:
           types:
             Poison: 1
-
-- type: reagent
-  id: N14CazadorAcid
-  name: reagent-name-cazadoracid
-  desc: reagent-desc-cazadoracid
-  physicalDesc: reagent-physical-desc-clumpy
-  color: "#9ceb4d"
-  metabolisms:
-    Poison:
-      effects:
-      - !type:HealthChange
-        conditions:
-        - !type:OrganType
-          type: Human
-        damage:
-          types:
-            Poison: 2

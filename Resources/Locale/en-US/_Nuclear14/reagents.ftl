@@ -208,12 +208,24 @@ reagent-desc-nightstalker-venom = The venom of a nightstalker. While not nearly 
 reagent-name-cazador-venom = cazador venom
 reagent-desc-cazador-venom = The venom of a cazador. Quick death is near guaranteed.
 
+reagent-name-lastbreath-poison = last breath poison
+reagent-desc-lastbreath-poison = A refined poison that, once in the body, kills the target through asphyxiation.
+
+reagent-name-tyaguchka-toxin = tyaguchka toxin
+reagent-desc-tyaguchka-toxin = Not to be confused with the shakes. This toxin serves to slow its victim down.
+
+reagent-name-colourlesspoison = colourless poison
+reagent-desc-colourlesspoison = A potent toxin created from a blend of the deadliest venoms.
+
 reagent-name-thrombosis = thrombosis
 reagent-desc-thrombosis = The various stimpacks reacted and coagulated into a thick liquid, forming a clot when they entered the body.
 
 # Chems
 reagent-name-healing-powder = healing powder
 reagent-desc-healing-powder = A powder made from crushed plants.
+
+reagent-name-healing-traumapowder = traumatin
+reagent-desc-healing-traumapowder = An odd mixture of plants.
 
 reagent-name-antidote-mixture = handmade antidote
 reagent-desc-antidote-mixture = An antidote made from radscorpion tail and water for treating poison.
@@ -233,8 +245,8 @@ reagent-desc-smelling-salts = A grainy mixture of rocks with an insanely potent 
 reagent-name-mourning-poultice = mournin poultice
 reagent-desc-mourning-poultice = A mixture of poisonous crushed plants used in tribalistic ceremonies said to make you see gods.
 
-berserker-mixture-name = berserker powder
-berserker-mixture-desc = A powder prepared from mineral plants that causes a release of adrenaline into the blood.
+reagent-name-berserker-mixture = berserker powder
+reagent-desc-berserker-mixture = A powder prepared from mineral plants that causes a release of adrenaline into the blood.
 
 # Medicine
 reagent-name-healing-mixture = stimpak
@@ -244,6 +256,9 @@ reagent-desc-dirty-stimpak = A dirty mixture of reagents that makes you heal.
 
 reagent-name-robust-healing-mixture = super stimpak
 reagent-desc-robust-healing-mixture = A mixture of reagents that makes you heal fast.
+
+reagent-name-dirty-robust-healing-mixture = dirty super stimpak
+reagent-desc-dirty-robust-healing-mixture = A mixture of reagents that makes you heal fast.
 
 reagent-name-ultra-robust-healing-mixture = ultra stimpak
 reagent-desc-ultra-robust-healing-mixture = A mixture of reagents that make you heal faster than you can feel it, however it comes with hefty side effects.
