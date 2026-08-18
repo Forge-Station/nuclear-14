@@ -29,6 +29,18 @@
         key: Drowsiness
         time: 10
         type: Remove
+      - !type:PopupMessage
+        type: Local
+        messages: [ "histamine-effect-light-itchiness" ]
+        probability: 0.1
+      - !type:PopupMessage
+        conditions:
+        - !type:ReagentThreshold
+          min: 5
+        type: Local
+        visualType: Medium
+        messages: [ "histamine-effect-heavy-itchiness" ]
+        probability: 0.2
 
 #MARK: Nightstalker Venom
 #While not nearly as potent as cazador venom and is a lot slower acting, it will still kill in multiple bites
@@ -96,4 +108,81 @@
           max: 0.01
         key: Drowsiness
         time: 10
-        type: Remove        
+        type: Remove   
+
+#MARK: Scorpion Venom
+# Оказывается у скорпиона не было своего яда. Сделал.    
+- type: reagent
+  id: ScorpionTail
+  name: reagent-name-scorpiontail
+  group: Toxins
+  desc: reagent-desc-scorpiontail
+  physicalDesc: reagent-physical-desc-clumpy
+  color: "#b0ff7b"
+  plantMetabolism:
+  - !type:PlantAdjustToxins
+    amount: 10
+  - !type:PlantAdjustHealth
+    amount: -5
+  metabolisms:
+    Poison:
+      metabolismRate: 0.01 #super slow acting, default 0.5
+      effects:
+      - !type:HealthChange
+        conditions:
+        - !type:OrganType
+          type: Human
+        damage:
+          types:
+            Poison: 0.22
+      - !type:MovespeedModifier
+        walkSpeedModifier: 0.9
+        sprintSpeedModifier: 0.9
+      - !type:GenericStatusEffect
+        conditions:
+        - !type:ReagentThreshold
+          reagent: Antidote
+          max: 0.01
+        - !type:ReagentThreshold
+          reagent: AntidoteMixture
+          max: 0.01
+        key: Drowsiness
+        time: 10
+        type: Remove  
+
+# Перенёс из food.yml
+- type: reagent
+  id: N14FireAntNectar
+  name: reagent-name-fireantnectar
+  desc: reagent-desc-fireantnectar
+  physicalDesc: reagent-physical-desc-clumpy
+  color: "#cc4814"
+  metabolisms:
+    Medicine:
+      effects:
+      - !type:HealthChange
+        damage:
+          groups:
+            Burn: -1
+    Food:
+      effects:
+      - !type:AdjustReagent
+        reagent: Sugar
+        amount: 0.4
+
+- type: reagent
+  id: N14BloatflyAcid
+  name: reagent-name-bloatflyacid
+  desc: reagent-desc-bloatflyacid
+  physicalDesc: reagent-physical-desc-clumpy
+  color: "#9ceb4d"
+  metabolisms:
+    Poison:
+      effects:
+      - !type:HealthChange
+        conditions:
+        - !type:OrganType
+          type: Human
+        damage:
+          types:
+            Poison: 1

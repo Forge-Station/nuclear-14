@@ -31,8 +31,8 @@
 # Stimpaks
 - type: construction
   name: stimpak
-  id: N14Stimpak
-  graph: N14Stimpak
+  id: N14StimpakDirty
+  graph: N14StimpakDirty
   startNode: start
   targetNode: stimpak
   category: construction-category-medical

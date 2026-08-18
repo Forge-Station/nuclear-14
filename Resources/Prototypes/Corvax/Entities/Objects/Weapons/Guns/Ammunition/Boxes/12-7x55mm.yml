@@ -26,6 +26,7 @@
   parent: BaseMagazineBox12-7x55mm
   id: MagazineBox12-7x55mm
   name: ammunition box (12.7x55mm)
+  categories: [HideSpawnMenu]
   components:
   - type: BallisticAmmoProvider
     proto: N14Cartridge12-7x55mm

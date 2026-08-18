@@ -17,6 +17,7 @@
     damage:
       types:
         Slash: 7
+        Radiation: 2 # Forge-add
     range: 1
   - type: Sprite
     drawdepth: Mobs
@@ -40,6 +41,7 @@
     damage:
       types:
         Slash: 7
+        Radiation: 2 # Forge-add
     range: 1
   - type: Sprite
     drawdepth: Mobs
@@ -67,6 +69,7 @@
     damage:
       types:
         Slash: 7
+        Radiation: 2 # Forge-add
     range: 1
   - type: Sprite
     drawdepth: Mobs
@@ -94,6 +97,7 @@
       types:
         Blunt: 15 # Forge-Change
         Slash: 10
+        Radiation: 5 # Forge-add
     range: 2.5
   - type: MeleeThrowOnHit
     speed: 15

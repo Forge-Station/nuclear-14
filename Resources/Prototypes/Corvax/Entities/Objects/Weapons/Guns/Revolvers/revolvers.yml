@@ -1,6 +1,8 @@
 - type: entity
   parent: [N14WeaponRevolverBase, ForgeGunConditionProfileSidearm]
   id: N14WeaponRevolver12-7x55mmRSH12
+  suffix: DO NOT SPAWN
+  categories: [HideSpawnMenu]
   components:
   - type: Sprite
     sprite: Corvax/Objects/Weapons/Guns/Revolvers/rsh12.rsi

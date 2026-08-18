@@ -1,0 +1,65 @@
+#MARK: Healing
+- type: reagent
+  id: StimpackThrombosis #Жидкость получаемая при смешивании двух видов стимпаков
+  name: reagent-name-thrombosis
+  group: Chems
+  desc: reagent-desc-thrombosis
+  physicalDesc: reagent-physical-desc-viscous
+  color: "#6d1b1b"
+  metabolisms:
+    Medicine:
+      metabolismRate: 1
+      effects:
+      - !type:HealthChange
+        damage:
+          groups:
+            Burn: -6
+            Brute: -6           
+          types:
+            Asphyxiation: 2
+            Poison: 0.25
+      - !type:ModifyBleedAmount
+        amount: -4
+      - !type:PopupMessage
+        type: Local
+        visualType: Medium
+        messages: [ "generic-reagent-effect-nauseous" ]
+        probability: 0.25
+
+- type: reagent 
+  id: DirtySuperStimpack #used in super stimpacks
+  name: reagent-name-dirty-robust-healing-mixture
+  group: Medicine
+  desc: reagent-desc-dirty-robust-healing-mixture
+  physicalDesc: reagent-physical-desc-opaque
+  color: "#934435"
+  metabolisms:
+    Medicine:
+      metabolismRate: 1
+      effects:
+      - !type:MovespeedModifier
+        walkSpeedModifier: 0.80
+        sprintSpeedModifier: 0.80
+      - !type:HealthChange
+        damage:
+          groups:
+            Burn: -30
+            Brute: -22.5
+            Airloss: -15
+          types:
+            Radiation: 0.5
+      - !type:ModifyBleedAmount
+        amount: -3
+      - !type:HealthChange # Taking 2 is more or less a guaranteed death
+        conditions:
+        - !type:ReagentThreshold
+          min: 12
+        damage:
+          groups:
+            Burn: -15
+            Brute: -11.5
+            Airloss: -7.5
+          types:
+            Radiation: 6
+            Cellular: 1.5 # permanent damage, be glad you aint dead
+  

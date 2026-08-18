@@ -10,7 +10,7 @@
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_stimpak.rsi
     heldPrefix: stimpak
   - type: Sprite
-    scale: 0.75, 0.75
+    scale: 0.80, 0.80
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_stimpak.rsi
     layers:
     - state: stimpak
@@ -26,9 +26,10 @@
   - type: ExaminableSolution
     solution: pen
   - type: Hypospray
-    onlyAffectsMobs: false
     solutionName: pen
-    transferAmount: 30
+    transferAmount: 15
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: Appearance
   - type: WelderRefinable
     refineResult:
@@ -101,7 +102,7 @@
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_stimpak.rsi
     heldPrefix: stimpak
   - type: Sprite
-    scale: 0.75, 0.75
+    scale: 0.80, 0.80
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_stimpak.rsi
     layers:
     - state: stimpak
@@ -112,16 +113,18 @@
     emptySpriteName: stimpak-empty
   - type: Hypospray
     solutionName: pen
-    transferAmount: 25
+    transferAmount: 10
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: SolutionContainerManager
     solutions:
       pen:
-        maxVol: 25
+        maxVol: 10
         reagents:
         - ReagentId: HealingMixture
-          Quantity: 25
+          Quantity: 10
   - type: Construction
-    graph: N14Stimpak
+    graph: N14StimpakDirty
     node: stimpak
 
 - type: entity
@@ -135,10 +138,10 @@
   - type: SolutionContainerManager
     solutions:
       pen:
-        maxVol: 25
+        maxVol: 10
         reagents:
         - ReagentId: DirtyStimpak
-          Quantity: 25
+          Quantity: 10
 
 - type: entity
   parent: N14ChemicalSyringe
@@ -152,7 +155,7 @@
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_superstimpak.rsi
     heldPrefix: superstimpak
   - type: Sprite
-    scale: 0.75, 0.75
+    scale: 0.80, 0.80
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_superstimpak.rsi
     layers:
     - state: superstimpak
@@ -163,14 +166,16 @@
     emptySpriteName: superstimpak-empty
   - type: Hypospray
     solutionName: pen
-    transferAmount: 25
+    transferAmount: 10
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: SolutionContainerManager
     solutions:
       pen:
-        maxVol: 25
+        maxVol: 10
         reagents:
         - ReagentId: RobustHealingMixture
-          Quantity: 25
+          Quantity: 10
 
 - type: entity
   parent: N14ChemicalSyringe
@@ -190,6 +195,8 @@
   - type: Hypospray
     solutionName: pen
     transferAmount: 15
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: SolutionContainerVisuals
     maxFillLevels: 1
     changeColor: false
@@ -220,19 +227,24 @@
   name: Jet inhaler
   description: A rare injector filled with a narcotic reagent that makes you feel as though you're speeding up. It's weaker but lasts longer than Turbo.
   components:
+  - type: Item
+    sprite: _Corvax/Objects/Specific/Medical/jet.rsi
+    heldPrefix: jet
   - type: Sprite
-    scale: 0.75, 0.75
-    sprite: _Nuclear14/Objects/Specific/Medical/ms13_drugs.rsi
+    scale: 0.80, 0.80
+    sprite: _Corvax/Objects/Specific/Medical/jet.rsi
     layers:
     - state: jet
       map: ["enum.SolutionContainerLayers.Fill"]
   - type: SolutionContainerVisuals
     maxFillLevels: 1
     changeColor: false
-    emptySpriteName: jet_used
+    emptySpriteName: jet-empty
   - type: Hypospray
     solutionName: pen
-    transferAmount: 18
+    transferAmount: 15
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: Construction # N14:TODO: Probably move this to lathe
     graph: N14JetInhaler
     node: jet
@@ -263,9 +275,12 @@
   name: Turbo inhaler
   description: A small injector filled with a narcotic reagent that makes you feel as though the world around you is slowing down. It's stronger and more dangerous than Jet.
   components:
+  - type: Item
+    sprite: _Corvax/Objects/Specific/Medical/turbo.rsi
+    heldPrefix: turbo
   - type: Sprite
-    scale: 0.75, 0.75
-    sprite: _Nuclear14/Objects/Specific/Medical/ms13_drugs.rsi
+    scale: 0.80, 0.80
+    sprite: _Corvax/Objects/Specific/Medical/turbo.rsi
     layers:
     - state: turbo
       map: ["enum.SolutionContainerLayers.Fill"]
@@ -276,6 +291,8 @@
   - type: Hypospray
     solutionName: pen
     transferAmount: 10
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: SolutionContainerManager
     solutions:
       pen:
@@ -305,19 +322,24 @@
   name: med-x
   description: A syringe filled with a powerful painkiller. Some believe that it makes you more resistant to pain.
   components:
+  - type: Item
+    sprite: _Corvax/Objects/Specific/Medical/medx.rsi
+    heldPrefix: medx
   - type: Sprite
-    scale: 0.75, 0.75
-    sprite: _Nuclear14/Objects/Specific/Medical/ms13_drugs.rsi
+    scale: 0.80, 0.80
+    sprite: _Corvax/Objects/Specific/Medical/medx.rsi
     layers:
     - state: medx
       map: ["enum.SolutionContainerLayers.Fill"]
   - type: SolutionContainerVisuals
     maxFillLevels: 1
     changeColor: false
-    emptySpriteName: medx_used
+    emptySpriteName: medx-empty
   - type: Hypospray
     solutionName: pen
     transferAmount: 20
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: SolutionContainerManager
     solutions:
       pen:
@@ -333,9 +355,12 @@
   name: hydra inhaler
   description: A bottle of Supa Yum soda with several vials attached to it. Contains a mildly potent healing chemical that comes with addictive side effects.
   components:
+  - type: Item
+    sprite: _Corvax/Objects/Specific/Medical/hydra.rsi
+    heldPrefix: hydra
   - type: Sprite
-    scale: 0.75, 0.75
-    sprite: _Nuclear14/Objects/Specific/Medical/ms13_drugs.rsi
+    scale: 0.80, 0.80
+    sprite: _Corvax/Objects/Specific/Medical/hydra.rsi
     layers:
     - state: hydra
       map: ["enum.SolutionContainerLayers.Fill"]
@@ -346,6 +371,8 @@
   - type: Hypospray
     solutionName: pen
     transferAmount: 15
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: Tag
     tags:
     - Syringe
@@ -372,19 +399,24 @@
   name: psycho syringe
   description: A syringe filled with a reagent designed to make you more violent. Legend has it that these have a military origin.
   components:
+  - type: Item
+    sprite: _Corvax/Objects/Specific/Medical/psycho.rsi
+    heldPrefix: psycho
   - type: Sprite
-    scale: 0.75, 0.75
-    sprite: _Nuclear14/Objects/Specific/Medical/ms13_drugs.rsi
+    scale: 0.80, 0.80
+    sprite: _Corvax/Objects/Specific/Medical/psycho.rsi
     layers:
     - state: psycho
       map: ["enum.SolutionContainerLayers.Fill"]
   - type: SolutionContainerVisuals
     maxFillLevels: 1
     changeColor: false
-    emptySpriteName: psycho_used
+    emptySpriteName: psycho-empty
   - type: Hypospray
     solutionName: pen
     transferAmount: 20
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: SolutionContainerManager
     solutions:
       pen:
@@ -417,7 +449,7 @@
   - type: StaticPrice
     price: 20
   - type: Sprite
-    scale: 0.75, 0.75
+    scale: 0.80, 0.80
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_medical_new.rsi
     netsync: false
     layers:
@@ -430,6 +462,8 @@
   - type: Hypospray
     solutionName: pen
     transferAmount: 20
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: SolutionContainerManager
     solutions:
       pen:
@@ -462,6 +496,8 @@
   - type: Hypospray
     solutionName: pen
     transferAmount: 10
+    onlyAffectsMobs: false
+    injectOnly: true
   - type: SolutionContainerManager
     solutions:
       pen:
@@ -547,7 +583,6 @@
     graph: N14RadAwayPhial
     node: start
     defaultTarget: fill
-
 
 - type: entity
   parent: N14JunkItemBaseBreak
@@ -652,10 +687,10 @@
   - type: SolutionContainerManager
     solutions:
       food:
-        maxVol: 15
+        maxVol: 25
         reagents:
         - ReagentId: BerserkerMixture
-          Quantity: 10
+          Quantity: 20
   - type: Food # Forge-Change
     forceFeedDelay: 1
     transferAmount: 5
@@ -691,7 +726,9 @@
       drink:
         reagents:
         - ReagentId: AntidoteMixture
-          Quantity: 100
+          Quantity: 50
+  - type: Item #Forge-change
+    size: Small
   - type: Sprite
     sprite: _Nuclear14/Objects/Specific/Medical/fallout2.rsi
     state: antidote
@@ -711,9 +748,9 @@
     maxFillLevels: 1
     changeColor: false
     emptySpriteName: powder1
-  - type: Hypospray
-    solutionName: pen
-    transferAmount: 15
+  # - type: Hypospray
+  #   solutionName: pen
+  #   transferAmount: 15
   - type: SolutionContainerManager
     solutions:
       pen:
@@ -736,10 +773,10 @@
   - type: SolutionContainerManager
     solutions:
       food:
-        maxVol: 20
+        maxVol: 25
         reagents:
         - ReagentId: HealingPoultice
-          Quantity: 5
+          Quantity: 20
 
 - type: entity
   parent: DrinkBottleGlassBaseFull
@@ -747,6 +784,8 @@
   name: Bitterdrink
   description: A bottle containing a mixture of plants to aid against poisons and radiation.
   components:
+  - type: Item #Forge-change
+    size: Small
   - type: SolutionContainerManager
     solutions:
       drink:
@@ -782,16 +821,16 @@
   name: ultra stimpak
   description: A special type of super-stimpak with an additional mixture of chemicals which makes a man near invincible at a great cost. It is widely deemed inhumane and outlawed.
   components:
-  - type: Hypospray
-    solutionName: pen
-    transferAmount: 25
+  # - type: Hypospray
+  #   solutionName: pen
+  #   transferAmount: 5
   - type: SolutionContainerManager
     solutions:
       pen:
-        maxVol: 25
+        maxVol: 10
         reagents:
         - ReagentId: UltraRobustHealingMixture
-          Quantity: 25
+          Quantity: 10
 
 - type: entity
   parent: N14HealingPowder
@@ -828,6 +867,8 @@
   name: ethanol bottle
   description: A small brown glass bottle containing ethanol. Great for disinfecting wounds.
   components:
+  - type: Item #Forge-change
+    size: Small
   - type: SolutionContainerManager
     solutions:
       drink:

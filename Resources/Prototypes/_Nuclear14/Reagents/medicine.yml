@@ -1,169 +1,158 @@
 #MARK: Healing
 - type: reagent
-  id: HealingMixture #used in regular stimpacks
-  name: reagent-name-healing-mixture
-  group: Chems
-  desc: reagent-desc-healing-mixture
-  physicalDesc: reagent-physical-desc-soothing
-  color: "#934435"
-  metabolisms:
-    Medicine:
-      effects:
-      - !type:HealthChange
-        damage:
-          groups:
-            Burn: -2.5
-            Brute: -2.5
-            Airloss: -2.5
-      - !type:ModifyBleedAmount
-        amount: -2
-      - !type:HealthChange # Bonus for poison
-        conditions:
-        - !type:ReagentThreshold
-          min: 30
-        damage:
-          groups:
-            Burn: -1.25
-            Brute: -1.25
-            Airloss: -1.25
-          types:
-            Poison: 0.3
-      - !type:HealthChange # to prevent doping
-        conditions:
-        - !type:ReagentThreshold
-          min: 50
-        damage:
-          types:
-            Poison: 1.5
-
-- type: reagent 
-  id: RobustHealingMixture #used in super stimpacks
-  name: reagent-name-robust-healing-mixture
-  group: Chems
-  desc: reagent-desc-robust-healing-mixture
-  physicalDesc: reagent-physical-desc-opaque
-  color: "#934435"
-  metabolisms:
-    Medicine:
-      effects:
-      - !type:HealthChange
-        damage:
-          groups:
-            Burn: -6.125
-            Brute: -6.125
-            Airloss: -6.125
-      - !type:ModifyBleedAmount
-        amount: -3
-      - !type:HealthChange # Taking 2 is more or less a guaranteed death
-        conditions:
-        - !type:ReagentThreshold
-          min: 30
-        damage:
-          groups:
-            Burn: -2.5
-            Brute: -2.5
-            Airloss: -2.5
-          types:
-            Poison: 4.5
-            Cellular: 0.75 # permanent damage, be glad you aint dead
-      - !type:MovespeedModifier
-        walkSpeedModifier: 0.50
-        sprintSpeedModifier: 0.50
-        conditions:
-        - !type:ReagentThreshold
-          min: 30
-      - !type:Drunk
-        conditions:
-        - !type:ReagentThreshold
-          min: 30
-
-- type: reagent
-  id: UltraRobustHealingMixture
-  name: reagent-name-ultra-robust-healing-mixture
-  group: Chems
-  desc: reagent-desc-ultra-robust-healing-mixture
-  physicalDesc: reagent-physical-desc-overpowering
-  color: "#934435"
-  metabolisms:
-    Medicine:
-      effects:
-      - !type:HealthChange
-        damage:
-          groups:
-            Burn: -12.5
-            Brute: -12.5
-            Airloss: -12.5
-            Toxin: 0.75
-      - !type:ModifyBleedAmount
-        amount: -4
-      - !type:HealthChange
-        conditions:
-        - !type:ReagentThreshold
-          min: 30
-        damage:
-          groups:
-            Burn: -15 # Temporary invincibility more or less
-            Brute: -15
-            Airloss: -15
-          types:
-            Poison: 4.5
-            Cellular: 3 # Congratulations. Still revivable, but permanently fucked
-      - !type:MovespeedModifier
-        walkSpeedModifier: 0.40
-        sprintSpeedModifier: 0.40
-        conditions:
-        - !type:ReagentThreshold
-          min: 25
-      - !type:Drunk
-        conditions:
-        - !type:ReagentThreshold
-          min: 25
-
-- type: reagent
   id: DirtyStimpak
   name: reagent-name-dirty-stimpak
-  group: Chems
+  group: Medicine
   desc: reagent-desc-dirty-stimpak
   physicalDesc: reagent-physical-desc-soothing
   color: "#934435"
   metabolisms:
     Medicine:
+      metabolismRate: 1
       effects:
       - !type:HealthChange
         damage:
           groups:
-            Burn: -1.5
-            Brute: -1.5
-            Airloss: -1.5
+            Burn: -16
+            Brute: -12
+            Airloss: -3
           types:
-            Radiation: 0.1
+            Poison: 0.25
       - !type:ModifyBleedAmount
         amount: -1
       - !type:HealthChange # to prevent doping
         conditions:
         - !type:ReagentThreshold
-          min: 30
+          min: 12
         damage:
           groups:
-            Burn: -1.0
-            Brute: -1.0
-            Airloss: -1.0
+            Burn: -8
+            Brute: -6
+            Airloss: -1.5
           types:
-            Poison: 0.2
+            Poison: 0.5
       - !type:HealthChange
         conditions:
         - !type:ReagentThreshold
-          min: 50
+          min: 20
         damage:
           types:
-            Poison: 1
+            Poison: 2
+
+- type: reagent
+  id: HealingMixture #used in regular stimpacks
+  name: reagent-name-healing-mixture
+  group: Medicine
+  desc: reagent-desc-healing-mixture
+  physicalDesc: reagent-physical-desc-soothing
+  color: "#934435"
+  metabolisms:
+    Medicine:
+      metabolismRate: 1
+      effects:
+      - !type:HealthChange
+        damage:
+          groups:
+            Burn: -20
+            Brute: -15
+            Airloss: -6
+      - !type:ModifyBleedAmount
+        amount: -2
+      - !type:HealthChange # Bonus for poison
+        conditions:
+        - !type:ReagentThreshold
+          min: 12
+        damage:
+          groups:
+            Burn: -7.5
+            Brute: -7.5
+            Airloss: -4
+          types:
+            Poison: 2
+      - !type:HealthChange # to prevent doping
+        conditions:
+        - !type:ReagentThreshold
+          min: 20
+        damage:
+          types:
+            Poison: 4
+
+- type: reagent 
+  id: RobustHealingMixture #used in super stimpacks
+  name: reagent-name-robust-healing-mixture
+  group: Medicine
+  desc: reagent-desc-robust-healing-mixture
+  physicalDesc: reagent-physical-desc-opaque
+  color: "#934435"
+  metabolisms:
+    Medicine:
+      metabolismRate: 1
+      effects:
+      - !type:MovespeedModifier
+        walkSpeedModifier: 0.80
+        sprintSpeedModifier: 0.80
+      - !type:HealthChange
+        damage:
+          groups:
+            Burn: -40
+            Brute: -30
+            Airloss: -15
+      - !type:ModifyBleedAmount
+        amount: -3
+      - !type:HealthChange # Taking 2 is more or less a guaranteed death
+        conditions:
+        - !type:ReagentThreshold
+          min: 12
+        damage:
+          groups:
+            Burn: -20
+            Brute: -15
+            Airloss: -7.5
+          types:
+            Poison: 9
+            Cellular: 1.5 # permanent damage, be glad you aint dead
+
+- type: reagent
+  id: UltraRobustHealingMixture
+  name: reagent-name-ultra-robust-healing-mixture
+  group: Medicine
+  desc: reagent-desc-ultra-robust-healing-mixture
+  physicalDesc: reagent-physical-desc-overpowering
+  color: "#934435"
+  metabolisms:
+    Medicine:
+      metabolismRate: 0.5
+      effects:
+      - !type:MovespeedModifier
+        walkSpeedModifier: 0.60
+        sprintSpeedModifier: 0.60
+      - !type:HealthChange
+        damage:
+          groups:
+            Burn: -40
+            Brute: -30
+            Airloss: -15
+      - !type:ModifyBleedAmount
+        amount: -3
+      - !type:HealthChange # Taking 2 is more or less a guaranteed death
+        conditions:
+        - !type:ReagentThreshold
+          min: 12
+        damage:
+          groups:
+            Burn: -20
+            Brute: -15
+            Airloss: -7.5
+          types:
+            Poison: 9
+            Cellular: 1.5 # permanent damage, be glad you aint dead
 
 #MARK: HealingPowder
 
 - type: reagent
   id: HealingPowder
   name: reagent-name-healing-powder
-  group: Chems
+  group: Medicine
   desc: reagent-desc-healing-powder
   physicalDesc: reagent-physical-desc-soothing
   color: "#00e5ff"
@@ -175,7 +164,7 @@
         damage:
           groups:
             Burn: -1.5
-            Brute: -1.5
+            Brute: -2
       - !type:ModifyBleedAmount
         amount: -0.5
       - !type:ChemVomit
@@ -186,7 +175,7 @@
 - type: reagent
   id: HealingPoultice
   name: reagent-name-healing-poultice
-  group: Chems
+  group: Medicine
   desc: reagent-desc-healing-poultice
   physicalDesc: reagent-physical-desc-soothing
   color: "#24b530"
@@ -198,8 +187,8 @@
         damage:
           groups:
             Burn: -3
-            Brute: -3
-            Airloss: -1
+            Brute: -4
+            Airloss: -1.5
       - !type:ModifyBleedAmount
         amount: -1
       - !type:Drunk
@@ -212,9 +201,9 @@
 # Strong overtime healing
 - type: reagent
   id: TraumaPowder
-  name: reagent-name-healing-powder
+  name: reagent-name-healing-traumapowder
   group: Medicine
-  desc: reagent-desc-healing-powder
+  desc: reagent-desc-healing-traumapowder
   physicalDesc: reagent-physical-desc-soothing
   color: "#00e5ff"
   metabolisms:
@@ -231,6 +220,48 @@
             Poison: -1
       - !type:ModifyBleedAmount
         amount: -0.5
+      - !type:ChemVomit
+        conditions:
+        - !type:ReagentThreshold
+          min: 35
+
+- type: reagent
+  id: Bitterdrink
+  name: reagent-name-bitterdrink
+  group: Chems
+  desc: reagent-desc-bitterdrink
+  physicalDesc: reagent-physical-desc-sticky
+  color: "#5c4033"
+  metabolisms:
+    Medicine:
+      metabolismRate: 0.25
+      effects:
+      - !type:HealthChange
+        conditions:
+        - !type:ReagentThreshold
+          min: 10
+          max: 20
+        damage:
+          groups:
+            Brute: -3
+            Burn: -4
+      - !type:HealthChange
+        conditions:
+        - !type:ReagentThreshold
+          max: 10
+        damage:
+          groups:
+            Brute: -1.5
+            Burn: -2
+      - !type:ChemVomit
+        conditions:
+        - !type:ReagentThreshold
+          max: 10
+        probability: 0.15
+      - !type:ChemVomit
+        conditions:
+        - !type:ReagentThreshold
+          min: 20
 
 #MARK: Poison
 - type: reagent
@@ -246,13 +277,20 @@
       effects:
       - !type:HealthChange
         conditions:
-        - !type:ReagentThreshold
-          min: 10
         damage:
           types:
             Poison: -0.2 # Forge-change
+      - !type:AdjustReagent
+        reagent: ScorpionTail
+        amount: -1.0
+      - !type:AdjustReagent
+        reagent: N14UncookedAnimalProteinsRad
+        amount: -1.0
       - !type:ChemVomit
         probability: 0.01
+        conditions:
+        - !type:ReagentThreshold
+          min: 5
 
 - type: reagent
   id: Antidote
@@ -267,11 +305,15 @@
       effects:
       - !type:GenericStatusEffect
         key: Jitter
-        time: 4.0
+        time: 6.0
         type: Remove
       - !type:GenericStatusEffect
         key: SeeingRainbows
-        time: 10.0
+        time: 6.0
+        type: Remove
+      - !type:GenericStatusEffect # Remove this block when !type:CureAddiction is functional
+        key: Drunk
+        time: 6.0
         type: Remove
       - !type:AdjustReagent
         reagent: FireToxin
@@ -285,6 +327,18 @@
       - !type:AdjustReagent
         reagent: N14UncookedAnimalProteinsRad
         amount: -3.0
+      - !type:AdjustReagent
+        reagent: ScorpionTail
+        amount: -3.0
+      - !type:AdjustReagent
+        reagent: N14LastBreathPoison
+        amount: -5.0
+      - !type:AdjustReagent
+        reagent: N14TyaguchkaToxin
+        amount: -5.0
+      - !type:AdjustReagent
+        reagent: N14ColourlessPoison
+        amount: -5.0
       - !type:HealthChange
         damage:
           types:
@@ -329,18 +383,26 @@
   group: Chems
   desc: reagent-desc-rad-x
   physicalDesc: reagent-physical-desc-soapy
-  color: "#00e5ff"
+  color: "#22c545"
   metabolisms:
     Medicine:
       metabolismRate: 0.2
       effects:
+      - !type:GenericStatusEffect
+        key: RadiationProtection
+        component: RadiationProtection
+        time: 2
+        type: Add
+        refresh: false
       - !type:HealthChange
         conditions:
-        - !type:ReagentThreshold
-          min: 30
         damage:
           types:
             Radiation: -0.25
+      - !type:Drunk
+        conditions:
+        - !type:ReagentThreshold
+          min: 30
 
 # Other
 - type: reagent
@@ -354,10 +416,30 @@
     Medicine:
       metabolismRate: 0.1 # Effectively once every 10 seconds.
       effects:
+      - !type:GenericStatusEffect
+        key: Jitter
+        time: 6.0
+        type: Remove
+      - !type:GenericStatusEffect
+        key: SeeingRainbows
+        time: 6.0
+        type: Remove
       - !type:GenericStatusEffect # Remove this block when !type:CureAddiction is functional
         key: Drunk
         time: 6.0
         type: Remove
+      - !type:AdjustReagent
+        reagent: DamageModifyingMixture
+        amount: -2.0
+      - !type:AdjustReagent
+        reagent: RobustMovespeedMixture
+        amount: -2.0
+      - !type:AdjustReagent
+        reagent: MovespeedMixture
+        amount: -2.0
+      - !type:AdjustReagent
+        reagent: Buffjet
+        amount: -2.0
       - !type:HealthChange
         damage:
           types:
@@ -427,25 +509,3 @@
       - !type:ChemVomit
         probability: 0.05
 
-- type: reagent
-  id: Bitterdrink
-  name: reagent-name-bitterdrink
-  group: Chems
-  desc: reagent-desc-bitterdrink
-  physicalDesc: reagent-physical-desc-sticky
-  color: "#ba67f5"
-  metabolisms:
-    Medicine:
-      metabolismRate: 0.1 # Effectively once every 10 seconds.
-      effects:
-      - !type:HealthChange
-        damage:
-          groups:
-            Toxin: -2.5
-          types:
-            Radiation: -1
-      - !type:ChemVomit
-        probability: 0.05
-        conditions:
-        - !type:ReagentThreshold
-          min: 25

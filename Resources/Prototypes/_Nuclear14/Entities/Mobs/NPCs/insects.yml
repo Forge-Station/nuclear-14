@@ -298,18 +298,14 @@
       melee:
         maxVol: 10
         reagents:
-        - ReagentId: Toxin
-          Quantity: 5
-        - ReagentId: Radium
-          Quantity: 5
+        - ReagentId: ScorpionTail
+          Quantity: 10
   - type: SolutionRegeneration
     solution: melee
     generated:
       reagents:
-      - ReagentId: Toxin
-        Quantity: 0.1
-      - ReagentId: Radium
-        Quantity: 0.1
+      - ReagentId: ScorpionTail
+        Quantity: 1
 
 #MARK: Barkscorpion
 - type: entity
@@ -329,14 +325,14 @@
       melee:
         maxVol: 10
         reagents:
-        - ReagentId: Toxin
+        - ReagentId: ScorpionTail
           Quantity: 10
   - type: SolutionRegeneration
     solution: melee
     generated:
       reagents:
-      - ReagentId: Toxin
-        Quantity: 0.2
+      - ReagentId: ScorpionTail
+        Quantity: 1
 
 #MARK: Cazador
 #SCARY FUCKERS, RUUUN!!

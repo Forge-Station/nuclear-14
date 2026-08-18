@@ -10,6 +10,7 @@
         - material: Cloth
           amount: 4
           doAfter: 8
+  
   - node: rags
     entity: N14ClothingUniformJumpsuitRags
 
@@ -32,6 +33,7 @@
             sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutpolicevest.rsi
             state: icon
           doAfter: 8
+
   - node: followercoat
     entity: N14ClothingOuterCoatFollowersArmored
 
@@ -47,6 +49,7 @@
         - material: Leather
           amount: 2
           doAfter: 4
+
   - node: mantle
     entity: N14ClothingNeckMantleLeather
 
@@ -61,6 +64,7 @@
         - material: Leather
           amount: 2
           doAfter: 4
+
   - node: cloak
     entity: N14ClothingNeckCloakLeather
 
@@ -78,6 +82,7 @@
             sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
             state: hide_yaoguai
           doAfter: 8
+
   - node: cloak
     entity: N14ClothingNeckCloakYaoguai
 
@@ -93,6 +98,7 @@
         - material: Cloth
           amount: 2
           doAfter: 4
+
   - node: gloves
     entity: N14ClothingHandsGlovesCloth
 
@@ -111,6 +117,7 @@
             sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
             state: pelt_nightstalker
           doAfter: 8
+
   - node: head
     entity: N14ClothingHeadHatNightstalker
 
