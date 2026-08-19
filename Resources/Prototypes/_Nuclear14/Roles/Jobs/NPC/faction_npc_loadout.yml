@@ -94,6 +94,7 @@
     gloves: N14ClothingHandsGlovesTribal
     belt: N14ClothingHandsGlovesFur
     shoes: ClothingShoesBootsRyuzo
+    backpack: N14TribalStash
 
 - type: startingGear
   id: TribalWarriorNPC
@@ -104,5 +105,6 @@
     gloves: N14ClothingHandsGlovesTribal
     shoes: N14ClothingShoesTribal
     neck: N14ClothingNeckMantleLeather
+    backpack: N14TribalStash # Forge-add
   inhand:
   - N14WastelandTribalSpear
