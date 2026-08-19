@@ -369,15 +369,6 @@
     Thread: 300
 
 - type: latheRecipe
-  id: ClothingCostumeBunnySuit
-  result: ClothingCostumeBunnySuit
-  category: N14Clothes
-  completetime: 4
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
   id: ClothingUniformDressRed
   result: ClothingUniformDressRed
   category: N14Clothes
@@ -443,24 +434,6 @@
 - type: latheRecipe
   id: ClothingUniformJumpskirtDressVictorianRed
   result: ClothingUniformJumpskirtDressVictorianRed
-  category: N14Clothes
-  completetime: 4
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingUniformJumpskirtJanimaid
-  result: ClothingUniformJumpskirtJanimaid
-  category: N14Clothes
-  completetime: 4
-  materials:
-    Cloth: 300
-    Thread: 300
-
-- type: latheRecipe
-  id: ClothingUniformJumpskirtJanimaidmini
-  result: ClothingUniformJumpskirtJanimaidmini
   category: N14Clothes
   completetime: 4
   materials:

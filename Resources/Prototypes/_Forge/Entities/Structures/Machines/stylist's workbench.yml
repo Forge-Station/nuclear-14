@@ -39,7 +39,6 @@
 
 # MARK: Одежда обитал
     - ClothingCostumeArcDress
-    - ClothingCostumeBunnySuit
     - ClothingUniformDressRed
     - ClothingUniformJumpskirtClerk
     - ClothingUniformJumpskirtDressFormalRed
@@ -48,8 +47,6 @@
     - ClothingUniformJumpskirtDressOpenShoulder
     - ClothingUniformJumpskirtDressVictorianBlack
     - ClothingUniformJumpskirtDressVictorianRed
-    - ClothingUniformJumpskirtJanimaid
-    - ClothingUniformJumpskirtJanimaidmini
     - ClothingUniformJumpskirtOldDress
     - ClothingUniformJumpskirtTacticool
     - ClothingUniformJumpsuitBarber
