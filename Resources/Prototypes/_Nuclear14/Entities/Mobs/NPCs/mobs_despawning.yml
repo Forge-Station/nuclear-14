@@ -103,6 +103,16 @@
   id: N14MobRaiderPsychoDespawning
   categories: [ HideSpawnMenu ]
 
+- type: entity
+  parent: [ N14MobRaiderHunter, N14MobDespawning ]
+  id: N14MobRRaiderPsychoHunterDespawning
+  categories: [ HideSpawnMenu ]
+  
+- type: entity
+  parent: [ N14MobRaiderSkrimisher, N14MobDespawning ]
+  id: N14MobRRaiderPsychoSkrimisherDespawning
+  categories: [ HideSpawnMenu ]
+
 # Forge-Start
 - type: entity
   parent: [ N14MobRaiderPsycho1, N14MobDespawning ]
@@ -134,14 +144,68 @@
   id: N14MobNPCRaiderPowerArmorBossDespawning
   categories: [ HideSpawnMenu ]
 
-# Forge-end
+- type: entity
+  parent: [ N14MobNPCRaiderTribeSword, N14MobDespawning ]
+  id: N14MobNPCRaiderTribeSwordDespawning
+  categories: [ HideSpawnMenu ]
 
 - type: entity
-  parent: [ N14MobRaiderHunter, N14MobDespawning ]
-  id: N14MobRRaiderPsychoHunterDespawning
+  parent: [ N14MobNPCRaiderTribeHunter, N14MobDespawning ]
+  id: N14MobNPCRaiderTribeHunterDespawning
   categories: [ HideSpawnMenu ]
-  
+
 - type: entity
-  parent: [ N14MobRaiderSkrimisher, N14MobDespawning ]
-  id: N14MobRRaiderPsychoSkrimisherDespawning
+  parent: [ N14MobChineseFighter1, N14MobDespawning ]
+  id: N14MobChineseFighter1Despawning
   categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: [ N14MobChineseFighter2, N14MobDespawning ]
+  id: N14MobChineseFighter2Despawning
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: [ N14MobChineseFighter3, N14MobDespawning ]
+  id: N14MobChineseFighter3Despawning
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: [ N14MobChinesePistol, N14MobDespawning ]
+  id: N14MobChinesePistolDespawning
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: [ N14MobChineseRifleSKS, N14MobDespawning ]
+  id: N14MobChineseRifleSKSDespawning
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: [ N14MobChineseShotgun, N14MobDespawning ]
+  id: N14MobChineseShotgunDespawning
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: [ N14MobChineseAssaultRifle, N14MobDespawning ]
+  id: N14MobChineseAssaultRifleDespawning
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: [ N14MobChineseSniperRifle, N14MobDespawning ]
+  id: N14MobChineseSniperRifleDespawning
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: [ N14MobChineseSMGAdvancedGear, N14MobDespawning ]
+  id: N14MobChineseSMGAdvancedGearDespawning
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: [ N14MobChinesePowerArmor, N14MobDespawning ]
+  id: N14MobChinesePowerArmorDespawning
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: [ N14MobChineseOfficer, N14MobDespawning ]
+  id: N14MobChineseOfficerDespawning
+  categories: [ HideSpawnMenu ]
+# Forge-end

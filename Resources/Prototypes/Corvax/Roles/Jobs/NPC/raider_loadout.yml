@@ -4,7 +4,8 @@
     jumpsuit: ClothingUniformMNKUnderGarment
     outerClothing: N14ClothingOuterPowerArmorRaiderNPC 
     head: N14ClothingHeadHelmetPowerArmorRaiderNPC
-    mask: N14ClothingMaskLiner
+    shoes: N14ClothingBootsCombatMK2
+    back: N14ClothingPowerSystemsBackRaiderNPC
     pocket1: N14CurrencyCap500 
 
 - type: startingGear
@@ -19,7 +20,6 @@
     neck: N14ClothingNeckCloakGhillie
     gloves: N14ClothingHandsGlovesCloth
     pocket1: N14MercStash
-
 
 - type: startingGear
   id: RaiderButcherNPC
@@ -77,3 +77,146 @@
     outerClothing: N14ClothingOuterCoatCombatDuster
     belt: ClothingBeltMilitary
     pocket1: N14MercStash
+
+#Племенные рейдеры.
+
+- type: startingGear
+  id: TribalWarriorSwordGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuittribalpantsnecklace
+    outerClothing: N14ClothingOuterTribalCoat
+    head: N14ClothingTribalHeadWraps
+    shoes: N14ClothingShoesTribal
+    back: N14TribalStash
+  inhand:
+  - N14TribalSword
+
+- type: startingGear
+  id: TribalWarriorHunterGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitdrylanderTribal
+    outerClothing: N14ClothingOuterCombatTribal
+    head: N14ClothingTribalShemagh
+    shoes: N14ClothingBootsLeather
+    gloves: N14ClothingHandsGlovesTribal
+    back: N14TribalStash
+
+#MARK: Китайцы
+
+- type: startingGear
+  id: ChineseFighterGear1
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitFudd
+    outerClothing: N14ClothingOuterRaiderBlastmaster
+    shoes: N14ClothingShoesJamrock
+    mask: N14ClothingMaskGreenMask
+    gloves: N14ClothingHandsGlovesTribal
+    pocket1: N14MercStash 
+  inhand:
+  - N14PoliceBaton
+
+- type: startingGear
+  id: ChineseFighterGear2
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitPreWarRelaxed
+    outerClothing: N14ClothingOuterCoatWinterArmored
+    head: ClothingHeadHatUshanka
+    shoes: ClothingShoesBootsMantis
+    gloves: N14ClothingHandsGlovesFur
+    pocket1: N14MercStash 
+  inhand:
+  - N14BrokenPipe
+    
+- type: startingGear
+  id: ChineseFighterGear3
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitBrahminFarmer
+    outerClothing: N14ClothingOuterRaiderBadlands
+    head: N14ClothingHeadHatVancouver
+    shoes: N14ClothingBootsLeather
+    pocket1: N14MercStash 
+  inhand:
+  - N14CombatKnife
+
+- type: startingGear
+  id: ChineseOfficerGearMob
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitChinese
+    outerClothing: N14ClothingOuterCoatSoldierCoat
+    head: ClothingHeadHatSyndieMAA
+    shoes: N14ClothingBootsCombatMK2
+    neck: N14ClothingNeckCloakRangerPoncho
+    pocket1: N14MercStash 
+  inhand:
+  - N14ChineseSword
+
+- type: startingGear
+  id: ChinesePistolGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitMilUniform
+    outerClothing: N14ClothingOuterCombatRaider
+    head: N14ClothingHeadHatChinese
+    shoes: N14ClothingShoesRaider
+    pocket1: N14MercStash 
+
+- type: startingGear
+  id: ChineseRifleSKSGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitMilUniform
+    outerClothing: N14ClothingOuterCombatRusted
+    head: N14ClothingHeadHatChinese
+    eyes: N14ClothingEyesGlassesWelding
+    shoes: N14ClothingBootsLeather
+    pocket1: N14MercStash 
+
+- type: startingGear
+  id: ChineseShotgunGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitChinese
+    outerClothing: N14ClothingOuterRaiderCombat1
+    head: N14ClothingHeadHatChineseHelmet
+    eyes: N14ClothingEyesGlassesWelding
+    shoes: N14ClothingBootsCombat
+    pocket1: N14MercStash 
+
+- type: startingGear
+  id: ChineseAssaultRifleGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitChinese
+    outerClothing: N14ClothingOuterVestChinese
+    head: N14ClothingHeadHatChineseHelmet
+    shoes: N14ClothingBootsLeather
+    pocket1: N14MercStash 
+
+- type: startingGear
+  id: ChineseSniperRifleGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitChinese
+    outerClothing: N14ClothingOuterVestChinese
+    head: N14ClothingHeadHatChineseHelmet
+    eyes: N14ClothingEyesGlassesWelding
+    shoes: N14ClothingBootsCombat
+    neck: N14ClothingNeckCloakGhillie
+    pocket1: N14MercStash 
+
+- type: startingGear
+  id: ChineseSMGAdvancedGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitChinese
+    outerClothing: N14ClothingOuterCombatArmorChinese
+    head: N14ClothingHeadHatChineseHelmetMk2
+    eyes: N14ClothingEyesGlassesWelding
+    hands: N14ClothingHandsGlovesBlackLeather
+    shoes: N14ClothingBootsCombatMK2
+    mask: N14ClothingMaskBlackBalaclava
+    pocket1: N14MercStash 
+
+- type: startingGear
+  id: ChinesePowerArmorGear
+  equipment:
+    jumpsuit: ClothingUniformMNKUnderGarment
+    outerClothing: N14ClothingOuterPowerArmorT51ChinaRaiderNPC
+    head: N14ClothingHeadHelmetPowerArmorT51ChinaRaiderNPC
+    shoes: N14ClothingBootsCombatMK2
+    back: N14ClothingPowerSystemsBackRaiderNPC
+    pocket1: N14CurrencyCap500 

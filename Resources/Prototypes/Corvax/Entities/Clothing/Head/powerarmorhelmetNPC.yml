@@ -9,3 +9,12 @@
     netsync: false
     sprite: Corvax/Clothing/Head/PowerArmorHelmets/t45raider.rsi
   - type: Unremoveable
+
+- type: entity
+  parent: N14ClothingHeadHelmetPowerArmorT51China
+  id: N14ClothingHeadHelmetPowerArmorT51ChinaRaiderNPC
+  categories: [ HideSpawnMenu ]
+  name: китайский силовой шлем
+  description: Васаунима?
+  components:
+  - type: Unremoveable
