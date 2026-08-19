@@ -1,0 +1,67 @@
+- type: entity
+  parent: BaseItem
+  id: N14BookLanguageBase
+  abstract: true
+  name: language textbook
+  components:
+  - type: Sprite
+    sprite: Objects/Misc/books.rsi
+    layers:
+    - state: paper
+    - state: cover_base
+      color: "#2a7b74"
+    - state: decor_wingette
+      color: "#2a7b74"
+    - state: icon_question
+  - type: Item
+    size: Normal
+    sprite: Objects/Misc/books.rsi
+  - type: Tag
+    tags:
+    - Book
+  - type: N14LanguageBook
+
+- type: entity
+  parent: N14BookLanguageBase
+  id: N14BookEnglish
+  name: english textbook
+  description: A guide for studying the English language.
+  components:
+  - type: N14LanguageBook
+    language: English
+
+- type: entity
+  parent: N14BookLanguageBase
+  id: N14BookChinese
+  name: chinese textbook
+  description: A guide for studying the Chinese language.
+  components:
+  - type: N14LanguageBook
+    language: Chinese
+
+- type: entity
+  parent: N14BookLanguageBase
+  id: N14BookLatin
+  name: latin textbook
+  description: A guide for studying the Latin language.
+  components:
+  - type: N14LanguageBook
+    language: Latin
+
+- type: entity
+  parent: N14BookLanguageBase
+  id: N14BookTribal
+  name: tribal textbook
+  description: A guide for studying the tribal language.
+  components:
+  - type: N14LanguageBook
+    language: Tribal
+
+- type: entity
+  parent: N14BookLanguageBase
+  id: N14BookRobot
+  name: binary textbook
+  description: A guide for studying the binary language.
+  components:
+  - type: N14LanguageBook
+    language: N14Robot
