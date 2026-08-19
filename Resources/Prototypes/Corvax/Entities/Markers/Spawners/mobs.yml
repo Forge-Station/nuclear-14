@@ -268,7 +268,7 @@
         - N14MobChineseFighter3
 
 - type: entity
-  name: спавнер захватчика с пистолетом 
+  name: спавнер захватчика с пистолетом
   id: N14SpawnMobNPCRaiderChinesePistol
   suffix: Рейдер, китай
   parent: MarkerBase
@@ -282,7 +282,7 @@
         - N14MobChinesePistol
 
 - type: entity
-  name: спавнер захватчика с винтовкой 
+  name: спавнер захватчика с винтовкой
   id: N14SpawnMobNPCRaiderChineseSKS
   suffix: Рейдер, китай
   parent: MarkerBase
@@ -296,7 +296,7 @@
         - N14MobChineseRifleSKS
 
 - type: entity
-  name: спавнер захватчика боевика 
+  name: спавнер захватчика боевика
   id: N14SpawnMobNPCRaiderChineseShotgun
   suffix: Рейдер, китай
   parent: MarkerBase
@@ -310,7 +310,7 @@
         - N14MobChineseShotgun
 
 - type: entity
-  name: спавнер захватчика штурмовик 
+  name: спавнер захватчика штурмовик
   id: N14SpawnMobNPCRaiderAssaultRifle
   suffix: Рейдер, китай
   parent: MarkerBase
@@ -324,7 +324,7 @@
         - N14MobChineseAssaultRifle
 
 - type: entity
-  name: спавнер захватчика снайпера 
+  name: спавнер захватчика снайпера
   id: N14SpawnMobNPCRaiderSniperRifle
   suffix: Рейдер, китай
   parent: MarkerBase
@@ -338,7 +338,7 @@
         - N14MobChineseSniperRifle
 
 - type: entity
-  name: спавнер захватчика профессионала 
+  name: спавнер захватчика профессионала
   id: N14SpawnMobNPCRaiderSMGAdvanced
   suffix: Рейдер, китай, мини-босс
   parent: MarkerBase
@@ -378,3 +378,21 @@
     - type: ConditionalSpawner
       prototypes:
         - N14MobChineseOfficer
+
+# Bramin
+
+- type: entity
+  name: спавнер вьючного брамина
+  id: N14SpawnMobBrahminCrate
+  parent: MarkerBase
+  suffix: LeLight
+  components:
+  - type: Sprite
+    layers:
+      - state: green
+      - sprite: _Nuclear14/Mobs/Animals/brahmin.rsi
+        state: brahmin-1
+      - state: ai
+  - type: ConditionalSpawner
+    prototypes:
+      - N14PackBrahminCrate
