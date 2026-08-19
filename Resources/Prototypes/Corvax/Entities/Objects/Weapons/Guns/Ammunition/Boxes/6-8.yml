@@ -26,6 +26,7 @@
   parent: BaseMagazineBox68Rifle
   id: MagazineBox68
   name: ammunition box (6.8mm)
+  categories: [HideSpawnMenu]
   components:
   - type: BallisticAmmoProvider
     proto: N14Cartridge68Rifle

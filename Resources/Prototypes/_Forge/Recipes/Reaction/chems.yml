@@ -1,0 +1,13 @@
+- type: reaction
+  id: BerserkerMixtureRecipe
+  reactants:
+    HealingPowder:
+      amount: 1
+    ExtractWhiteHorsenettle:
+      amount: 1
+    ExtractCoyoteTobacco:
+      amount: 1
+    WastelandBlood:
+      amount: 1
+  products:
+    BerserkerMixture: 4
