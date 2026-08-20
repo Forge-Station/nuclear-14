@@ -26,7 +26,11 @@
             </ScrollContainer>
         </PanelContainer>
         <!-- Bottom buttons for editing -->
-        <BoxContainer Name="EditButtons" Orientation="Horizontal" HorizontalAlignment="Right" Margin="6">
+        <!-- Forge-Change: language dropdown while writing -->
+        <BoxContainer Name="EditButtons" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="6">
+            <Label Name="LanguageLabel" VerticalAlignment="Center" Margin="0 0 6 0" Visible="False"/>
+            <OptionButton Name="LanguageSelector" MinWidth="160" Visible="False"/>
+            <Control HorizontalExpand="True"/>
             <Button Name="SaveButton" />
         </BoxContainer>
     </BoxContainer>

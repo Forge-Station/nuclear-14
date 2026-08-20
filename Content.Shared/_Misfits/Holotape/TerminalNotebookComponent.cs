@@ -1,13 +1,13 @@
 using Robust.Shared.GameObjects;
 
-// #Misfits Add - Marks a terminal as having a persistent notes notebook.
-// Notes are keyed by TerminalId and persist across round restarts.
+// #Misfits Add - Marks a terminal as having a notes notebook.
+// Forge-Change: notes are keyed by TerminalId and last for the current round only.
 
 namespace Content.Shared._Misfits.Holotape;
 
 /// <summary>
-/// Marks a terminal entity as having a persistent notes notebook.
-/// The TerminalId is the key for note storage on disk.
+/// Marks a terminal entity as having a notes notebook.
+/// The TerminalId is the in-memory key for this round's notes.
 /// </summary>
 [RegisterComponent]
 public sealed partial class TerminalNotebookComponent : Component
