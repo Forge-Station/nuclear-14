@@ -25,6 +25,7 @@
   - type: Sprite
     sprite: Corvax/Objects/Misc/books.rsi
     state: china
+
 - type: entity
   parent: N14BookLanguageBase
   id: N14BookLatin

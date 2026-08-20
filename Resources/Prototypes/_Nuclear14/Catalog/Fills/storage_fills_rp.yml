@@ -2142,9 +2142,9 @@
           amount: 1
           maxAmount: 1
         - id: N14BookChinese
-          prob: 0.008
+          prob: 0.01
         - id: N14BookRobot
-          prob: 0.008
+          prob: 0.01
 
 - type: entity
   abstract: true
