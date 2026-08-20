@@ -118,6 +118,52 @@
   items:
     - N14ClothingOuterInsectArmor 
 
+- type: loadout
+  id: N14LoadoutOuterTownGuardCoat
+  category: Outer
+  cost: 0
+  exclusive: true
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterJobRequirement
+      jobs:
+      - TownDeputy
+      - TownSheriff
+  items:
+    - N14ClothingOuterTownGuardCoat
+
+- type: loadout
+  id: N14LoadoutOuterTownGuardLight
+  category: Outer
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterJobRequirement
+      jobs:
+      - TownDeputy
+      - TownSheriff
+  items:
+    - N14ClothingOuterTownGuardLight
+
+- type: loadout
+  id: N14LoadoutOuterTownGuardRiot
+  category: Outer
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutOuter
+    - !type:CharacterJobRequirement
+      jobs:
+      - TownDeputy
+      - TownSheriff
+  items:
+    - N14ClothingOuterTownGuardRiot
+
+
 
 
 

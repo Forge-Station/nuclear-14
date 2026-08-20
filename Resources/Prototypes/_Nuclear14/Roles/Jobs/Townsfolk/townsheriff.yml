@@ -38,16 +38,18 @@
 - type: startingGear
   id: TownSheriffGear
   equipment:
-    jumpsuit: N14ClothingUniformJumpsuitTownGuardLight
+    jumpsuit: N14ClothingUniformJumpsuitSheriff # Forge-Change
     back: N14ClothingBackpackSatchelMilitary # Forge-Change
     shoes: N14ClothingBootsLeatherFilled
     id: N14IDBadgeTownSheriff
     belt: ClothingBeltRevolverWildWhisper
     pocket1: TownGuardKits
     pocket2: Handcuffs
+    outerClothing: N14ClothingOuterSheriffVest # Forge-Change
   storage: # Forge-Change
     back:
     - N14BoxPlasticFilledWastelander
+    - N14PoliceBaton # Forge-Change
 
 - type: playTimeTracker
   id: TownSheriff
