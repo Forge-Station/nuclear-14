@@ -118,7 +118,7 @@
       - Alive
       damage:
         groups:
-          Toxin: -6
+          Toxin: -8
           Airloss: -3
     - type: MindContainer
       showExamineInfo: False
@@ -220,7 +220,7 @@
       - Alive
       damage:
         groups:
-          Toxin: -6
+          Toxin: -12
           Airloss: -3
     - type: MindContainer
       showExamineInfo: False
