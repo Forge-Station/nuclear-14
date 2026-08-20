@@ -36,7 +36,8 @@ public sealed class LanguageBookSystem : SharedLanguageBookSystem
         var stages = learning.GetStages(comp.Language);
 
         // Все этапы уже пройдены — язык полностью изучен.
-        if (stages >= comp.StagesToMaster)
+        var maxStages = comp.TeachesSpeaking ? comp.StagesToMaster : comp.StagesToUnderstand;
+        if (stages >= maxStages)
         {
             _popup.PopupEntity(Loc.GetString("n14-language-book-already-mastered"), uid, user);
             return false;
@@ -77,8 +78,8 @@ public sealed class LanguageBookSystem : SharedLanguageBookSystem
         var stages = learning.GetStages(comp.Language) + 1;
         learning.AddStage(comp.Language, _timing.CurTime);
 
-        // Достигнут порог полного владения: говорить и понимать.
-        if (stages >= comp.StagesToMaster)
+        // Достигнут порог полного владения: говорить и понимать (если книга это позволяет).
+        if (comp.TeachesSpeaking && stages >= comp.StagesToMaster)
         {
             _language.AddLanguage(user, comp.Language, addSpoken: true, addUnderstood: true);
             _popup.PopupEntity(Loc.GetString("n14-language-book-mastered", ("language", LanguageName(comp.Language))),

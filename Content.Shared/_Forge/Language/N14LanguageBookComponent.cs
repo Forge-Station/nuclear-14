@@ -40,4 +40,11 @@ public sealed partial class N14LanguageBookComponent : Component
     /// </summary>
     [DataField]
     public int StagesToMaster = 10;
+
+    /// <summary>
+    ///     Разрешает ли книга научить говорить на языке. Если false — даже после всех этапов
+    ///     игрок сможет только понимать язык, но не говорить на нём.
+    /// </summary>
+    [DataField]
+    public bool TeachesSpeaking = true;
 }

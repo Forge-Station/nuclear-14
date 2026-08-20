@@ -6,13 +6,6 @@
   components:
   - type: Sprite
     sprite: Objects/Misc/books.rsi
-    layers:
-    - state: paper
-    - state: cover_base
-      color: "#2a7b74"
-    - state: decor_wingette
-      color: "#2a7b74"
-    - state: icon_question
   - type: Item
     size: Normal
     sprite: Objects/Misc/books.rsi
@@ -23,22 +16,15 @@
 
 - type: entity
   parent: N14BookLanguageBase
-  id: N14BookEnglish
-  name: english textbook
-  description: A guide for studying the English language.
-  components:
-  - type: N14LanguageBook
-    language: English
-
-- type: entity
-  parent: N14BookLanguageBase
   id: N14BookChinese
   name: chinese textbook
   description: A guide for studying the Chinese language.
   components:
   - type: N14LanguageBook
     language: Chinese
-
+  - type: Sprite
+    sprite: Corvax/Objects/Misc/books.rsi
+    state: china
 - type: entity
   parent: N14BookLanguageBase
   id: N14BookLatin
@@ -47,6 +33,9 @@
   components:
   - type: N14LanguageBook
     language: Latin
+  - type: Sprite
+    sprite: Corvax/Objects/Misc/books.rsi
+    state: latin
 
 - type: entity
   parent: N14BookLanguageBase
@@ -56,6 +45,9 @@
   components:
   - type: N14LanguageBook
     language: Tribal
+  - type: Sprite
+    sprite: Corvax/Objects/Misc/books.rsi
+    state: tribe
 
 - type: entity
   parent: N14BookLanguageBase
@@ -65,3 +57,8 @@
   components:
   - type: N14LanguageBook
     language: N14Robot
+    stagesToMaster: 5
+    teachesSpeaking: false
+  - type: Sprite
+    sprite: Corvax/Objects/Misc/books.rsi
+    state: binar
