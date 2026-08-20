@@ -67,13 +67,7 @@ public sealed partial class LanguageSystem : SharedLanguageSystem
 
     #region public api
 
-    public bool CanUnderstand(Entity<LanguageSpeakerComponent?> ent, ProtoId<LanguagePrototype> language)
-    {
-        if (language == UniversalPrototype || TryComp<UniversalLanguageSpeakerComponent>(ent, out var uni) && uni.Enabled)
-            return true;
-
-        return Resolve(ent, ref ent.Comp, logMissing: false) && ent.Comp.UnderstoodLanguages.Contains(language);
-    }
+    // Forge-Change: CanUnderstand moved to SharedLanguageSystem so the client can obfuscate paper.
 
     public bool CanSpeak(Entity<LanguageSpeakerComponent?> ent, ProtoId<LanguagePrototype> language)
     {

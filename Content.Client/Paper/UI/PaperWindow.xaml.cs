@@ -48,6 +48,10 @@ namespace Content.Client.Paper.UI
 
         public event Action<string>? OnSaved;
 
+        // Forge-Change: language dropdown while writing
+        private readonly List<string> _languageIds = new();
+        private string? _pickedLanguage;
+
         public PaperWindow()
         {
             IoCManager.InjectDependencies(this);
@@ -75,6 +79,16 @@ namespace Content.Client.Paper.UI
 
             SaveButton.Text = Loc.GetString("paper-ui-save-button",
                 ("keybind", _inputManager.GetKeyFunctionButtonString(EngineKeyFunctions.MultilineTextSubmit)));
+            // Forge-Change-Start
+            LanguageLabel.Text = Loc.GetString("paper-language-ui-language");
+            LanguageLabel.FontColorOverride = Color.FromHex("#F2F2F2");
+            LanguageSelector.OnItemSelected += args =>
+            {
+                LanguageSelector.SelectId(args.Id);
+                if (args.Id >= 0 && args.Id < _languageIds.Count)
+                    _pickedLanguage = _languageIds[args.Id];
+            };
+            // Forge-Change-End
         }
 
         /// <summary>
@@ -225,28 +239,30 @@ namespace Content.Client.Paper.UI
             var msg = new FormattedMessage();
             msg.AddMarkupPermissive(state.Text);
 
-            // For premade documents, we want to be able to edit them rather than
-            // replace them.
-            var shouldCopyText = 0 == Input.TextLength && 0 != state.Text.Length;
-            if (!wasEditing || shouldCopyText)
-            {
-                // We can get repeated messages with state.Mode == Write if another
-                // player opens the UI for reading. In this case, don't update the
-                // text input, as this player is currently writing new text and we
-                // don't want to lose any text they already input.
-                Input.TextRope = Rope.Leaf.Empty;
-                Input.CursorPosition = new TextEdit.CursorPos();
-                Input.InsertAtCursor(state.Text);
-            }
-
+            // Forge-Change: do not copy existing words into the editor (append-only).
             for (var i = 0; i <= state.StampedBy.Count * 3 + 1; i++)
             {
                 msg.AddMarkupPermissive("\r\n");
             }
             WrittenTextLabel.SetMessage(msg, _allowedTags, DefaultTextColor);
 
-            WrittenTextLabel.Visible = !isEditing && state.Text.Length > 0;
-            BlankPaperIndicator.Visible = !isEditing && state.Text.Length == 0;
+            // Forge-Change-Start: existing text stays locked; the editor is only for new writing
+            if (isEditing)
+            {
+                WrittenTextLabel.Visible = state.Text.Length > 0;
+                BlankPaperIndicator.Visible = false;
+                if (!wasEditing)
+                {
+                    Input.TextRope = Rope.Leaf.Empty;
+                    Input.CursorPosition = new TextEdit.CursorPos();
+                }
+            }
+            else
+            {
+                WrittenTextLabel.Visible = state.Text.Length > 0;
+                BlankPaperIndicator.Visible = state.Text.Length == 0;
+            }
+            // Forge-Change-End
 
             StampDisplay.RemoveAllChildren();
             StampDisplay.RemoveStamps();
@@ -291,6 +307,76 @@ namespace Content.Client.Paper.UI
             }
             return mode & _allowedResizeModes;
         }
+
+        // Forge-Change-Start: languages the local player can write this page in
+        public void SetLanguageOptions(IReadOnlyList<(string Id, string Name)> languages, string? selectedId)
+        {
+            var visible = languages.Count > 0;
+            LanguageSelector.Visible = visible;
+            LanguageLabel.Visible = visible;
+            if (!visible)
+            {
+                _languageIds.Clear();
+                _pickedLanguage = null;
+                LanguageSelector.Clear();
+                return;
+            }
+
+            var sameList = _languageIds.Count == languages.Count;
+            if (sameList)
+            {
+                for (var i = 0; i < languages.Count; i++)
+                {
+                    if (_languageIds[i] != languages[i].Id)
+                    {
+                        sameList = false;
+                        break;
+                    }
+                }
+            }
+
+            if (!sameList)
+            {
+                LanguageSelector.Clear();
+                _languageIds.Clear();
+                for (var i = 0; i < languages.Count; i++)
+                {
+                    LanguageSelector.AddItem(languages[i].Name, i);
+                    _languageIds.Add(languages[i].Id);
+                }
+            }
+
+            var toSelect = _pickedLanguage != null && _languageIds.Contains(_pickedLanguage)
+                ? _pickedLanguage
+                : selectedId;
+
+            var selected = 0;
+            for (var i = 0; i < _languageIds.Count; i++)
+            {
+                if (_languageIds[i] == toSelect)
+                {
+                    selected = i;
+                    break;
+                }
+            }
+
+            _pickedLanguage = _languageIds[selected];
+            if (LanguageSelector.SelectedId != selected)
+                LanguageSelector.SelectId(selected);
+        }
+
+        public string? GetSelectedLanguage()
+        {
+            if (!LanguageSelector.Visible)
+                return null;
+
+            var id = LanguageSelector.SelectedId;
+            if (id < 0 || id >= _languageIds.Count)
+                return null;
+
+            return _languageIds[id];
+        }
+        // Forge-Change-End
 
         private void RunOnSaved()
         {
