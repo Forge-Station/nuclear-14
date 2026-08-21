@@ -2,7 +2,7 @@ using Content.Server.DoAfter;
 using Content.Server.Language;
 using Content.Shared._Forge.Language;
 using Content.Shared.DoAfter;
-using Content.Shared.Interaction.Events;
+using Content.Shared.Examine;
 using Content.Shared.Language;
 using Content.Shared.Popups;
 using Robust.Shared.Prototypes;
@@ -26,24 +26,29 @@ public sealed class LanguageBookSystem : SharedLanguageBookSystem
     {
         base.Initialize();
         SubscribeLocalEvent<N14LanguageBookComponent, N14LanguageStudyDoAfterEvent>(OnStudyFinished);
+        SubscribeLocalEvent<N14LanguageBookComponent, ExaminedEvent>(OnExamined);
     }
 
     protected override bool TryStartStudy(Entity<N14LanguageBookComponent> book, EntityUid user)
     {
         var (uid, comp) = book;
 
-        var learning = EnsureComp<N14LanguageLearningComponent>(user);
-        var stages = learning.GetStages(comp.Language);
-
-        // Все этапы уже пройдены — язык полностью изучен.
-        var maxStages = comp.TeachesSpeaking ? comp.StagesToMaster : comp.StagesToUnderstand;
-        if (stages >= maxStages)
+        if (HasFinishedBook(user, comp))
         {
             _popup.PopupEntity(Loc.GetString("n14-language-book-already-mastered"), uid, user);
             return false;
         }
 
-        // Проверяем кулдаун между этапами.
+        var learning = EnsureComp<N14LanguageLearningComponent>(user);
+        SeedUnderstoodProgress(user, learning, comp);
+
+        var stages = learning.GetStages(comp.Language);
+        if (stages >= comp.MaxStages)
+        {
+            _popup.PopupEntity(Loc.GetString("n14-language-book-already-mastered"), uid, user);
+            return false;
+        }
+
         if (stages > 0 &&
             learning.GetLastStageTime(comp.Language) is { } last &&
             _timing.CurTime < last + TimeSpan.FromSeconds(comp.StageCooldown))
@@ -54,7 +59,7 @@ public sealed class LanguageBookSystem : SharedLanguageBookSystem
         }
 
         var doAfter = new DoAfterArgs(EntityManager, user, TimeSpan.FromSeconds(comp.StageTime),
-            new N14LanguageStudyDoAfterEvent(), uid, target: uid)
+            new N14LanguageStudyDoAfterEvent(), uid, target: uid, used: uid)
         {
             BreakOnMove = true,
             BreakOnDamage = true,
@@ -77,27 +82,94 @@ public sealed class LanguageBookSystem : SharedLanguageBookSystem
 
         var stages = learning.GetStages(comp.Language) + 1;
         learning.AddStage(comp.Language, _timing.CurTime);
+        Dirty(user, learning);
 
-        // Достигнут порог полного владения: говорить и понимать (если книга это позволяет).
         if (comp.TeachesSpeaking && stages >= comp.StagesToMaster)
         {
             _language.AddLanguage(user, comp.Language, addSpoken: true, addUnderstood: true);
             _popup.PopupEntity(Loc.GetString("n14-language-book-mastered", ("language", LanguageName(comp.Language))),
                 book, user);
+            return;
         }
-        // Достигнут порог понимания: понимать, но не говорить.
-        else if (stages >= comp.StagesToUnderstand)
+
+        if (stages == comp.StagesToUnderstand)
         {
             _language.AddLanguage(user, comp.Language, addSpoken: false, addUnderstood: true);
             _popup.PopupEntity(Loc.GetString("n14-language-book-understood", ("language", LanguageName(comp.Language))),
                 book, user);
+            return;
         }
-        else
+
+        _popup.PopupEntity(
+            Loc.GetString("n14-language-book-stage",
+                ("stage", stages),
+                ("total", comp.MaxStages),
+                ("language", LanguageName(comp.Language))),
+            book, user);
+    }
+
+    private void OnExamined(Entity<N14LanguageBookComponent> book, ref ExaminedEvent args)
+    {
+        if (!args.IsInDetailsRange)
+            return;
+
+        var name = LanguageName(book.Comp.Language);
+        args.PushMarkup(Loc.GetString("n14-language-book-examine", ("language", name)));
+
+        if (!TryComp<N14LanguageLearningComponent>(args.Examiner, out var learning))
+            return;
+
+        var stages = learning.GetStages(book.Comp.Language);
+        if (HasFinishedBook(args.Examiner, book.Comp) || stages >= book.Comp.MaxStages)
         {
-            _popup.PopupEntity(
-                Loc.GetString("n14-language-book-stage", ("stage", stages), ("language", LanguageName(comp.Language))),
-                book, user);
+            args.PushMarkup(Loc.GetString("n14-language-book-examine-done"));
+            return;
         }
+
+        if (stages > 0)
+        {
+            args.PushMarkup(Loc.GetString("n14-language-book-examine-progress",
+                ("stage", stages),
+                ("total", book.Comp.MaxStages)));
+        }
+    }
+
+    /// <summary>
+    ///     If the reader already intrinsically understands the language, skip the "learn to understand" grind.
+    /// </summary>
+    private void SeedUnderstoodProgress(EntityUid user, N14LanguageLearningComponent learning, N14LanguageBookComponent book)
+    {
+        if (!book.TeachesSpeaking)
+            return;
+
+        if (!HasIntrinsicUnderstanding(user, book.Language))
+            return;
+
+        if (learning.GetStages(book.Language) >= book.StagesToUnderstand)
+            return;
+
+        learning.StagesByLanguage[book.Language] = book.StagesToUnderstand;
+        Dirty(user, learning);
+    }
+
+    private bool HasFinishedBook(EntityUid user, N14LanguageBookComponent book)
+    {
+        if (book.TeachesSpeaking)
+            return HasIntrinsicSpeech(user, book.Language);
+
+        return HasIntrinsicUnderstanding(user, book.Language);
+    }
+
+    private bool HasIntrinsicSpeech(EntityUid user, ProtoId<LanguagePrototype> language)
+    {
+        return TryComp<LanguageKnowledgeComponent>(user, out var knowledge)
+               && knowledge.SpokenLanguages.Contains(language);
+    }
+
+    private bool HasIntrinsicUnderstanding(EntityUid user, ProtoId<LanguagePrototype> language)
+    {
+        return TryComp<LanguageKnowledgeComponent>(user, out var knowledge)
+               && knowledge.UnderstoodLanguages.Contains(language);
     }
 
     private string LanguageName(ProtoId<LanguagePrototype> language)

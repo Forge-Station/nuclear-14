@@ -54,7 +54,7 @@
   parent: N14BookLanguageBase
   id: N14BookRobot
   name: binary textbook
-  description: A guide for studying the binary language.
+  description: A guide for studying binary. Five stages teach understanding, not speech.
   components:
   - type: N14LanguageBook
     language: N14Robot

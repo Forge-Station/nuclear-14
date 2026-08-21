@@ -1,0 +1,10 @@
+ent-N14BookLanguageBase = language textbook
+    .desc = A book used to study a language.
+ent-N14BookChinese = Chinese language textbook
+    .desc = Ten stages of study: understand Chinese after five, speak it after ten.
+ent-N14BookTribal = tribal language textbook
+    .desc = Ten stages of study: understand Tribal after five, speak it after ten.
+ent-N14BookLatin = Latin language textbook
+    .desc = Ten stages of study: understand Latin after five, speak it after ten.
+ent-N14BookRobot = binary language textbook
+    .desc = Five stages of study: learn to understand binary, but not speak it.

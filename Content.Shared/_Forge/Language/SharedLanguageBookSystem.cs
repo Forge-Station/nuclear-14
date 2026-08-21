@@ -36,3 +36,4 @@ public abstract class SharedLanguageBookSystem : EntitySystem
 /// </summary>
 [Serializable, NetSerializable]
 public sealed partial class N14LanguageStudyDoAfterEvent : SimpleDoAfterEvent;
+

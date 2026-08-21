@@ -21,7 +21,7 @@ public sealed partial class N14LanguageBookComponent : Component
     ///     Длительность одного этапа изучения (DoAfter), в секундах.
     /// </summary>
     [DataField]
-    public float StageTime = 4f;
+    public float StageTime = 5f;
 
     /// <summary>
     ///     Минимальная пауза (в секундах) между завершёнными этапами изучения.
@@ -47,4 +47,9 @@ public sealed partial class N14LanguageBookComponent : Component
     /// </summary>
     [DataField]
     public bool TeachesSpeaking = true;
+
+    /// <summary>
+    ///     Сколько этапов нужно пройти, чтобы книга больше ничего не давала.
+    /// </summary>
+    public int MaxStages => TeachesSpeaking ? StagesToMaster : StagesToUnderstand;
 }
