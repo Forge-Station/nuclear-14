@@ -118,9 +118,8 @@
       amount: 1
     StimpackThrombosis:
       amount: 1
-      catalyst: true
   products:
-    StimpackThrombosis: 1
+    StimpackThrombosis: 2
 
 - type: reaction
   id: ThrombosisCatalystBase
@@ -130,9 +129,8 @@
       amount: 1
     StimpackThrombosis:
       amount: 1
-      catalyst: true
   products:
-    StimpackThrombosis: 1
+    StimpackThrombosis: 2
 
 - type: reaction
   id: ThrombosisCatalystRobust
@@ -142,9 +140,8 @@
       amount: 1
     StimpackThrombosis:
       amount: 1
-      catalyst: true
   products:
-    StimpackThrombosis: 1
+    StimpackThrombosis: 2
 
 - type: reaction
   id: ThrombosisCatalystUltra
@@ -154,9 +151,8 @@
       amount: 1
     StimpackThrombosis:
       amount: 1
-      catalyst: true
   products:
-    StimpackThrombosis: 1
+    StimpackThrombosis: 2
 
 - type: reaction
   id: ThrombosisCatalystDirtySuper
@@ -166,9 +162,8 @@
       amount: 1
     StimpackThrombosis:
       amount: 1
-      catalyst: true
   products:
-    StimpackThrombosis: 1
+    StimpackThrombosis: 2
 
 #MARK: Новые реакции
 - type: reaction

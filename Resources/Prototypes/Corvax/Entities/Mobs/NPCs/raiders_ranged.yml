@@ -870,16 +870,11 @@
       radius: 2
       energy: 1.5
       color: "#4CBB17FF"
-    - type: RadiationSource
-      intensity: 1.5
-      slope: 2
+    - type: RadiationSource # Forge-Change: reachable range (was 1.5/2 = 0.75m)
+      intensity: 3
+      slope: 1.5
     - type: RadiationReceiver
     - type: RadiationHealing
-    - type: Geiger
-      localSoundOnly: false
-      audioParameters:
-        volume: -2
-        maxDistance: 5 
     - type: MobThresholds 
       thresholds:
         0: Alive
@@ -974,16 +969,11 @@
       radius: 1.2
       energy: 2
       color: "#4CBB17FF"
-    - type: RadiationSource
-      intensity: 1
+    - type: RadiationSource # Forge-Change: strong radiation with a reachable range (was 1/2 = 0.5m)
+      intensity: 4
       slope: 2
     - type: RadiationReceiver
     - type: RadiationHealing
-    - type: Geiger
-      localSoundOnly: false
-      audioParameters:
-        volume: -2
-        maxDistance: 5  
     - type: Gun
       minAngle: 0
       maxAngle: 20

@@ -135,23 +135,18 @@
   suffix: Рейдер, китай, босс
   description: 
   components: 
-    - type: MovementSpeedModifier
-      baseWalkSpeed: 4.5
-      baseSprintSpeed: 4.5 
+    - type: MovementSpeedModifier # Forge-Change
+      baseWalkSpeed: 6
+      baseSprintSpeed: 7
     - type: PointLight
       radius: 2.5
       energy: 3
       color: "#4CBB17FF"
-    - type: RadiationSource
-      intensity: 1.5
-      slope: 6
+    - type: RadiationSource # Forge-Change: strong radiation with a reachable range (was 1.5/6 = 0.25m)
+      intensity: 5
+      slope: 2
     - type: RadiationReceiver
     - type: RadiationHealing
-    - type: Geiger
-      localSoundOnly: false
-      audioParameters:
-        volume: -2
-        maxDistance: 5 
     - type: MobThresholds
       thresholds:
         0: Alive
