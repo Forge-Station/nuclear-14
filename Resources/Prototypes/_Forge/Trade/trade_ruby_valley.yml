@@ -25,9 +25,6 @@
   components:
   - type: NcStore
     profile: TrademachineRubyValleyProfile
-  - type: AccessReader
-    access:
-    - [ "TownieShopkeeper" ]
   - type: Sprite
     sprite: _Nuclear14/Mobs/Robots/protectron.rsi
     layers:
@@ -42,12 +39,6 @@
   id: RubyBuy_Revolvers
   name: "Револьверы"
   entries:
-  - proto: N14WeaponRevolver10mm
-    price: 60
-  - proto: N14WeaponRevolver44Tribal
-    price: 100
-  - proto: N14WeaponRevolver45-70Handcannon
-    price: 160
   - proto: N14WeaponRevolver44Magnun
     price: 140
   - proto: N14WeaponRevolver44TribalUpgraded
@@ -61,13 +52,11 @@
   id: RubyBuy_Pistols
   name: "Пистолеты"
   entries:
-  - proto: N14WeaponPistol10mmPipe
-    price: 30
+  - proto: N14WeaponPistol22lr
+    price: 25
   - proto: N14WeaponPistol9mmChinese
     price: 36
   - proto: N14WeaponPistol10mm
-    price: 40
-  - proto: N14WeaponPistol22lr
     price: 40
   - proto: N14WeaponPistolWebley
     price: 60
@@ -94,52 +83,42 @@
   - proto: N14WeaponSMG45
     price: 300
   - proto: N14WeaponSMG9mmCanadian
-    price: 440
+    price: 350
   - proto: N14WeaponSMG12mm
-    price: 440
+    price: 400
 
 - type: storeCategoryStructured
   id: RubyBuy_Shotguns
   name: "Дробовики"
   entries:
-  - proto: N14WeaponShotgunPipe
-    price: 30
   - proto: N14WeaponShotgunDoubleBarrel
-    price: 50
-  - proto: N14WeaponShotgunBoomstick
-    price: 50
-  - proto: N14WeaponShotgunBloodyStick
     price: 50
   - proto: N14WeaponShotgunCaravan
     price: 50
-  - proto: N14WeaponShotgunSawedOff
-    price: 50
   - proto: N14WeaponShotgun
     price: 100
-  - proto: N14WeaponShotgunShort
-    price: 100
   - proto: N14WeaponShotgunLever
-    price: 120
+    price: 150
   - proto: N14WeaponShotgunRiot
-    price: 580
+    price: 500
   - proto: N14WeaponBlowback
-    price: 740
+    price: 600
     count: 2
 
 - type: storeCategoryStructured
   id: RubyBuy_AssaultRifles
   name: "Штурмовые винтовки"
   entries:
-  - proto: N14WeaponRifle556Pipe
-    price: 240
+  - proto: N14WeaponSniper556Tribal
+    price: 160
+  - proto: N14WeaponSniper556TribalUpgraded
+    price: 200
   - proto: N14WeaponRifle556CarbineOld
     price: 250
   - proto: N14WeaponRifle762SKS
     price: 300
   - proto: N14WeaponRifle556Service
     price: 300
-  - proto: N14WeaponRifle556Butchered
-    price: 320
   - proto: N14WeaponRifle762M14
     price: 400
   - proto: N14WeaponRifle762MarksmanCanadian
@@ -163,14 +142,6 @@
   id: RubyBuy_Rifles
   name: "Винтовки"
   entries:
-  - proto: N14WeaponSniper308PipeRifle
-    price: 40
-  - proto: N14WeaponSniper556VarmintRifle
-    price: 70
-  - proto: N14WeaponSniper556Tribal
-    price: 160
-  - proto: N14WeaponSniper556TribalUpgraded
-    price: 200
   - proto: N14WeaponSniper308LeverRifle
     price: 200
   - proto: N14WeaponSniper44LeverCarbine
@@ -239,72 +210,43 @@
   id: RubyBuy_Melee
   name: "Ближний бой"
   entries:
-  - proto: N14TrainingSword
-    price: 10
-  - proto: N14ScrapMachete
-    price: 20
-  - proto: N14LongSword
-    price: 40
   - proto: N14CombatKnife
-    price: 40
-  - proto: N14KitchenKnife
     price: 40
   - proto: N14BrassKnife
     price: 40
-  - proto: N14WastelandSpear
-    price: 40
-  - proto: N14PilumSpear
-    price: 40
-  - proto: N14WastelandPolearm
-    price: 40
-  - proto: N14GolfClub
-    price: 40
-  - proto: N14WastelandTribalJavelin
-    price: 40
-  - proto: N14PoliceBaton
-    price: 80
-  - proto: N14BaseAxe
-    price: 100
-  - proto: N14ChineseSword
-    price: 400
-  - proto: N14SledgeHammer
-    price: 500
-  - proto: N14WeaponThermospear
-    price: 1250
-    count: 1
   - proto: N14ClothingHandsKnuckles
-    price: 120
+    price: 50
     count: 2
   - proto: N14ClothingHandsKnucklesWithClaws
-    price: 180
+    price: 75
     count: 2
+  - proto: N14PoliceBaton
+    price: 80
+  - proto: N14FireAxe
+    price: 150
+  - proto: N14ChineseSword
+    price: 200
+  - proto: N14SledgeHammer
+    price: 300
+  - proto: N14WeaponThermospear
+    price: 750
+    count: 1
 
 - type: storeCategoryStructured
   id: RubyBuy_Headwear
   name: "Головные уборы"
   entries:
-  - proto: N14ClothingHeadHatArmyBeret
-    price: 10
-  - proto: N14ClothingHeadHatChinese
-    price: 10
-  - proto: N14ClothingMaskPlate
-    price: 30
-  - proto: N14ClothingHeadHatChineseHelmet
-    price: 30
-  - proto: N14ClothingMaskBreather
-    price: 30
-  - proto: N14ClothingHeadHatPrewarMilitaryHelmet
-    price: 70
   - proto: N14ClothingHeadHatCombatHelmet
-    price: 70
+    price: 100
+    count: 3
 
 - type: storeCategoryStructured
   id: RubyBuy_Armor
   name: "Броня"
   entries:
   - proto: N14ClothingOuterCombatArmor
-    price: 460
-    count: 2
+    price: 450
+    count: 3
 
 - type: storeCategoryStructured
   id: RubyBuy_PowerArmor
@@ -318,8 +260,6 @@
   id: RubyBuy_Rigs
   name: "Экипировка (РПС)"
   entries:
-  - proto: ClothingBeltRope
-    price: 150
   - proto: ClothingBeltCowboy
     price: 200
   - proto: ClothingBeltRevolver
