@@ -445,7 +445,7 @@
   - type: SpawnItemsOnUse
     items:
     # - id: ClothingBeltNCR # Forge-Change
-    # - id: N14ClothingHeadHatNCRHelmet # Forge-Change 
+    # - id: N14ClothingHeadHatNCRHelmet # Forge-Change
     # - id: N14ClothingNeckCloakNCR # Forge-Change
       - id: N14WeaponLMG
       - id: LMGMagazine556Rifle
@@ -732,7 +732,7 @@
   - type: SpawnItemsOnUse
     items:
       - id: N14ClothingOuterNCRCombatArmor
-    # - id: ClothingBeltRevolverfilled # Forge-Change 
+    # - id: ClothingBeltRevolverfilled # Forge-Change
       - id: N14WeaponRifle556Carbine
       - id: LongMagazine556Rifle
         amount: 3
@@ -1230,7 +1230,7 @@
     items:
       - id: N14WeaponLaserRifleWattz2000
       - id: N14PowerCellFocused
-        amount: 3
+        amount: 1
       - id: N14WeaponPistol12mm
       - id: N14MagazinePistol12mm
         amount: 2
@@ -1426,7 +1426,7 @@
     size: Huge
   - type: SpawnItemsOnUse # Forge-Change-Start
     items:
-      - id: N14WeaponPlasmaMultiplas 
+      - id: N14WeaponPlasmaMultiplas
       - id: N14PlasmaCartridge
         amount: 3
       - id: N14MedkitCombatFilled

@@ -1189,12 +1189,12 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14WeaponPlasmaRifleAuto
+      - id: N14WeaponPlasmaRifleUrban
       - id: N14ClothingBeltBoSWebbing
       - id: N14Stimpak
         amount: 2
       - id: N14PlasmaCartridge
-        amount: 3
+        amount: 2
       - id: N14SuperStimpak
       - id: N14BoxCardboardMREBoxKFilled
       - id: N14CleanGauze10

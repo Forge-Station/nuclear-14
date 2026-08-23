@@ -63,6 +63,8 @@ ent-BoSWashingtonScribeKits = Набор писца Братства (Вашин
 # Brotherhood Paladins
 ent-BoSMidwestPaladinKits = Набор паладина Братства (Средний Запад) (не выбран)
     .desc = Пожалуйста, возьмите только один.
+ent-BoSMidPaladinCommanderKits = Набор командира паладинов Братства (Средний Запад) (не выбран)
+    .desc = Пожалуйста, возьмите только один.
 ent-BoSWesternPaladinKits = Набор снаряжения Паладина (Запад) (не выбран)
     .desc = Содержит снаряжение для Паладина.
 ent-BoSWashingtonPaladinKits = Набор паладина Братства (Вашингтон) (не выбран)

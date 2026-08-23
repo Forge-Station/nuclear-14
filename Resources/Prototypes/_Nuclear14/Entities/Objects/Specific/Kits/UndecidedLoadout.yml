@@ -89,7 +89,7 @@
     possibleSets:
     - NCRA_GunnerSet
     - NCRA_GrenadierSet
-    - NCRA_SniperSet   
+    - NCRA_SniperSet
 
 - type: entity
   id: NCRSGTloadoutkits
@@ -241,6 +241,20 @@
     - MBoS_PalLas_Set
     - MBoS_PalBal_Set
     - MBoS_PalSni_Set
+    - MBoS_PalPla_Set
+
+- type: entity
+  id: BoSMidPaladinCommanderKits
+  name: Undecided Midwestern Paladin Commander Kit
+  parent: BaseLoadoutKit
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  - type: UndecidedLoadoutBackpack
+    possibleSets:
+    - MBoS_PalLas_Set
+    - MBoS_PalBal_Set
     - MBoS_PalPla_Set
 
 - type: entity

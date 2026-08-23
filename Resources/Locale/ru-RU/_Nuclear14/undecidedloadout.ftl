@@ -68,7 +68,7 @@ undecided-loadout-category-soldier-point-description =
 undecided-loadout-category-soldier-morale-name = Набор поднятия боевого духа
 undecided-loadout-category-soldier-morale-description =
     Ящик со всем необходимым для славного ближнего боя.
-    Содержит: 1 латный доспех НКР, 1 пластинчатую маску, 
+    Содержит: 1 латный доспех НКР, 1 пластинчатую маску,
     1 топорик, 1 боевой флагшток НКР, 1 пистолет Browning HP, 2 магазина
     (9mm Parabellum), 1 Психо, сухпаёк типа C, 1 стимпак, 1 таблетку Рад-X,
     1 набор бинтов.
@@ -96,7 +96,7 @@ undecided-loadout-category-engi-breach-description =
     Ящик со всем необходимым для вскрытия любых дверей!
     Содержит:  1 боевой дробовик,
     3 барабанных магазина 12 калибра, 1 пистолет Browning HP,
-    2 пистолетных магазина (9mm Parabellum), 
+    2 пистолетных магазина (9mm Parabellum),
     сухпаёк типа C, 1 стимпак, 1 антирад, 1 набор бинтов.
 
 # Наборы медиков НКР
@@ -104,7 +104,7 @@ undecided-loadout-category-engi-breach-description =
 undecided-loadout-category-med-surg-name = Набор медика-хирурга
 undecided-loadout-category-med-surg-description =
     Ящик со всем необходимым для заботы о других бойцах.
-    Содержит: 1 медицинский берет НКР, 1 пистолет-пулемет M3, 
+    Содержит: 1 медицинский берет НКР, 1 пистолет-пулемет M3,
     3 магазина для ПП (9mm Parabellum), 1 пистолет Browning HP, 2 пистолетных
     магазина (9mm Parabellum), сухпаёк типа C, 1 набор для ушибов,
     1 мазь, 1 пакет крови, 1 флакон антидота, 1 супер-стимпак, 1 стимпак,
@@ -131,8 +131,8 @@ undecided-loadout-category-med-combat-description =
 undecided-loadout-category-ws-gunner-name = Набор специалиста-пулемётчика
 undecided-loadout-category-ws-gunner-description =
     Ящик со всем необходимым для подавления противника.
-    Содержит: 1 ручной пулемёт М60, 3 пулеметных магазина (5.56mm), 
-    1 пистолет Browning HP, 2 пистолетных магазина (9mm Parabellum), 
+    Содержит: 1 ручной пулемёт М60, 3 пулеметных магазина (5.56mm),
+    1 пистолет Browning HP, 2 пистолетных магазина (9mm Parabellum),
     сухпаёк типа C, 1 стимпак, 1 антирад, 1 набор бинтов.
 
 undecided-loadout-category-ws-grenadier-name = Набор специалиста-гранатомётчика
@@ -152,8 +152,8 @@ undecided-loadout-category-ws-sniper-description =
 undecided-loadout-category-ws-stealth-name = Набор специалиста-инфильтратора
 undecided-loadout-category-ws-stealth-description =
     Ящик со всем необходимым для скрытных операций.
-    Содержит: 1 тёмный баллистический жилет НКР, 1 чёрная балаклава, 
-    1 ПП с глушителем, 3 магазина для ПП (9mm Parabellum), 
+    Содержит: 1 тёмный баллистический жилет НКР, 1 чёрная балаклава,
+    1 ПП с глушителем, 3 магазина для ПП (9mm Parabellum),
     1 пистолет Browning HP, 2 пистолетных магазина (9mm Parabellum),
     сухпаёк типа C, 1 стимпак, 1 антирад, 1 набор бинтов.
 
@@ -341,7 +341,7 @@ undecided-loadout-category-mbos-pal-bal-description =
 undecided-loadout-category-mbos-pal-sni-name = Набор паладина-снайпера
 undecided-loadout-category-mbos-pal-sni-description =
     Тайник с вещами паладина Среднезападного Братства.
-    Содержит: 1 Wattz 2000, 3 тяжёлые микрофьюжн-ячейки,
+    Содержит: 1 Wattz 2000, 1 тяжёлые микрофьюжн-ячейки,
     1 12.7мм пистолет, 2 магазина 12.7мм, 1 рулон бинтов,
     1 стимпак и сухпаёк типа K.
 
@@ -424,15 +424,15 @@ undecided-loadout-category-wbos-pal-las-description =
     2 плазменные ячейки, 1 рулон бинтов, 1 стимпак и сухпаёк типа K.
 
 undecided-loadout-category-washington-lord-sniper-name = Набор Командира (снайпер)
-undecided-loadout-category-washington-lord-sniper-description = 
+undecided-loadout-category-washington-lord-sniper-description =
     Содержит набор снайпера-лорда.
-    В набор входит: Wattz 3000, 3 батареи к нему, боевую аптечку, 
+    В набор входит: Wattz 3000, 3 батареи к нему, боевую аптечку,
     Сухпаёк типа К.
 
 undecided-loadout-category-washington-lord-storm-name = Набор Командира (Штурмовик)
-undecided-loadout-category-washington-lord-storm-description = 
+undecided-loadout-category-washington-lord-storm-description =
     Содержит набор штурмовика-лорда.
-    В набор входит: Автоматическую винтовку, 3 магазина к нему, боевую аптечку, 
+    В набор входит: Автоматическую винтовку, 3 магазина к нему, боевую аптечку,
     Сухпаёк типа К.
 
 
@@ -530,18 +530,18 @@ undecided-loadout-category-inquisitorcrusader-description =
 undecided-loadout-category-inquisitorplasma-name = Плазменный Набор
 undecided-loadout-category-inquisitorplasma-description =
     Плазменный набор, для самых жестоких Инквизиторов Братства.
-    В комплект входит: автоматическая плазменная винтовка с 3 батареями,
+    В комплект входит: городская плазменная винтовка с 2 батареями,
     сухпаек, набор бинтов, набор мазей, 2 стимпака и 1 супер-стимпак, а так-же разгрузочный жилет.
 
 # Коммандер СЗБС
 undecided-loadout-category-midwest-command-wattz-name = Снайперский набор
-undecided-loadout-category-midwest-command-wattz-description = 
-    В комплект входит: 1 Wattz 3000, 3 тяжёлые микроядерные батариеи, 
-    набор бинтов, 2 стимпака, сухпаёк типа К.  
+undecided-loadout-category-midwest-command-wattz-description =
+    В комплект входит: 1 Wattz 3000, 3 тяжёлые микроядерные батариеи,
+    набор бинтов, 2 стимпака, сухпаёк типа К.
 
 undecided-loadout-category-midwest-command-gatling-name = Пулемётный набор
 undecided-loadout-category-midwest-command-gatling-description =
-    В комплект входит: 1 гатлинг-лазер, 2 ядерные батареи, 
+    В комплект входит: 1 гатлинг-лазер, 2 ядерные батареи,
     набор бинтов, 2 стимпака, сухпаёк типа К.
 
 # Следователь ВП НКР

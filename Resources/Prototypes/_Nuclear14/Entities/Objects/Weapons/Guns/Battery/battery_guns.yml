@@ -743,8 +743,8 @@
   components:
   - type: Wieldable
   - type: GunWieldBonus
-    minAngle: -23
-    maxAngle: -55
+    minAngle: -15
+    maxAngle: -45
   - type: Sprite
     scale: 0.8, 0.8
     sprite: _Nuclear14/Objects/Weapons/Guns/Battery/plasma_urban_icon.rsi
@@ -933,14 +933,14 @@
           tags:
             - N14PowerCellFocused
   - type: Gun
-    fireRate: 1.5
+    fireRate: 1.2
     soundGunshot:
       collection: N14WattzGunshot
     selectedMode: SemiAuto
     availableModes:
     - SemiAuto
   - type: FollowDistance
-    backStrength: 4
+    backStrength: 6
   - type: StaticPrice
     price: 400
 
@@ -1060,4 +1060,4 @@
   - type: FollowDistance
     backStrength: 6
   - type: StaticPrice
-    price: 400 
+    price: 400

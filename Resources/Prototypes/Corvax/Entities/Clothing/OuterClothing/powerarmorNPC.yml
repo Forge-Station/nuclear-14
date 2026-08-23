@@ -70,6 +70,5 @@
   components:
     - type: Unremoveable
     - type: ClothingSpeedModifier
-      walkModifier: 4.75 
+      walkModifier: 4.75
       sprintModifier: 4.75
-    
