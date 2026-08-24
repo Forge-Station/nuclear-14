@@ -89,22 +89,21 @@
   id: TribalSkirmisherNPC
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitdrylanderTribal
-    outerClothing: N14ClothingOuterTribalArmor
+    outerClothing: N14ClothingOuterforager
     head: N14ClothingDrylanderGoggles
     gloves: N14ClothingHandsGlovesTribal
-    belt: N14ClothingHandsGlovesFur
     shoes: ClothingShoesBootsRyuzo
-    backpack: N14TribalStash
+    back: N14TribalStash # Forge-add
 
 - type: startingGear
   id: TribalWarriorNPC
   equipment:
     jumpsuit: N14ClothingUniformJumpsuittribalpantsm
-    outerClothing: N14ClothingOuterTribalArmorHeavy
-    head: N14ClothingTribalMuffaloskull
+    outerClothing: N14ClothingOuterdrylandersimple
+    head: N14ClothingTribalHood
     gloves: N14ClothingHandsGlovesTribal
     shoes: N14ClothingShoesTribal
     neck: N14ClothingNeckMantleLeather
-    backpack: N14TribalStash # Forge-add
+    back: N14TribalStash # Forge-add
   inhand:
   - N14WastelandTribalSpear

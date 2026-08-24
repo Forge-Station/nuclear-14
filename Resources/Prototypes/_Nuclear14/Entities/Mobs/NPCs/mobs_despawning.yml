@@ -113,6 +113,16 @@
   id: N14MobRRaiderPsychoSkrimisherDespawning
   categories: [ HideSpawnMenu ]
 
+- type: entity
+  parent: [ N14MobNPCRaiderTribeBerserk, N14MobDespawning ]
+  id: N14MobNPCRaiderTribeBerserkDespawning
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: [ N14MobNPCRaiderTribeElder, N14MobDespawning ]
+  id: N14MobNPCRaiderTribeElderDespawning
+  categories: [ HideSpawnMenu ]
+
 # Forge-Start
 - type: entity
   parent: [ N14MobRaiderPsycho1, N14MobDespawning ]

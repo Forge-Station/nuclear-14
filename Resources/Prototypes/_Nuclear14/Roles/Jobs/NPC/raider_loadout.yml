@@ -137,6 +137,5 @@
     mask: N14ClothingMaskBrownBalaclava
     outerClothing: N14ClothingOuterRaiderBadlands
     pocket1: N14RaiderStash
-    pocket2: Brutepack1 # Forge-Change
   inhand:
   - N14KitchenKnife
