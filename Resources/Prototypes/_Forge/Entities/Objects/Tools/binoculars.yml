@@ -27,9 +27,8 @@
   - type: Wieldable
   - type: UseDelay
     delay: 1.0
-  - type: Telescope
-    divisor: 0.06
-    lerpAmount: 0.05
+  - type: FollowDistance
+    backStrength: 1
   - type: PhysicalComposition
     materialComposition:
       Steel: 100
