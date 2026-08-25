@@ -136,7 +136,7 @@
 - type: loadout
   id: N14LoadoutOuterTownGuardLight
   category: Outer
-  cost: 1
+  cost: 3
   exclusive: true
   requirements:
     - !type:CharacterItemGroupRequirement
@@ -151,7 +151,7 @@
 - type: loadout
   id: N14LoadoutOuterTownGuardRiot
   category: Outer
-  cost: 2
+  cost: 6
   exclusive: true
   requirements:
     - !type:CharacterItemGroupRequirement

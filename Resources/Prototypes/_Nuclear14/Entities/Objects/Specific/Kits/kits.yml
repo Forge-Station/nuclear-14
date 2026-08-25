@@ -1618,8 +1618,11 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14WeaponSniperEnfield
+      - id: N14WeaponLMGAutoRifle
+      - id: Magazine308Rifle
+        amount: 2
       - id: MagazineBox308
+        amount: 2
       - id: N14CleanGauze10
       - id: N14Stimpak
         amount: 2
@@ -1637,10 +1640,12 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14WeaponSMG12mm
-      - id: N14MagazineSMG12mm
+      - id: N14WeaponSMG12mmAdvanced
+      - id: N14TopMagazineSMG12mm
         amount: 2
       - id: MagazineBox12
+        amount: 2
+      - id: N14ShieldMetalHeavy
       - id: N14CleanGauze10
       - id: N14Stimpak
         amount: 2
@@ -1658,8 +1663,8 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14WeaponRifle762M14
-      - id: Magazine762AmmoShort
+      - id: N14WeaponHMGcanadian
+      - id: Magazine762AmmoBelt
         amount: 2
       - id: MagazineBox762
       - id: N14CleanGauze10
@@ -1681,9 +1686,15 @@
     items:
       - id: N14WeaponBlowback
       - id: MagazineBox12gauge
+        amount: 3
       - id: N14CleanGauze10
+      - id: N14MedkitCombatFilled
       - id: N14Stimpak
         amount: 2
+      - id: N14Psycho
+        amount: 2
+      - id: N14MedkitCombatFilled
+      - id: N14ClothingMaskPlate
       - id: N14BoxCardboardMREBoxKFilled
 
 # Forge: KitTownGuard_Riot disabled
