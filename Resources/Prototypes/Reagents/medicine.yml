@@ -574,6 +574,11 @@
     Medicine:
       effects:
       - !type:HealthChange
+        conditions:
+        - !type:Species
+          species:
+          - GhoulGlowing
+          shouldHave: false
         damage:
           types:
             Cellular: -1

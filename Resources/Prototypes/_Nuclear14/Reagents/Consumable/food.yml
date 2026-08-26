@@ -11,6 +11,10 @@
         conditions:
         - !type:OrganType
           type: Human
+        - !type:Species
+          species:
+          - GhoulGlowing
+          shouldHave: false
         damage:
           types:
             Poison: 2
@@ -40,6 +44,18 @@
   physicalDesc: reagent-physical-desc-metallic
   color: "#FFFFE5"
   parent: Uranium
+  metabolisms:
+    Poison:
+      effects:
+      - !type:HealthChange
+        conditions:
+        - !type:Species
+          species:
+          - GhoulGlowing
+          shouldHave: false
+        damage:
+          types:
+            Radiation: 2
 
 - type: reagent
   parent: BaseDrink

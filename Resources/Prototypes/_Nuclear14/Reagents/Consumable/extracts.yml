@@ -316,6 +316,11 @@
           types:
             Poison: 0.2
             Radiation: 0.1
+        conditions:
+        - !type:Species
+          species:
+          - GhoulGlowing
+          shouldHave: false
       - !type:ChemVomit
         probability: 0.1
 
@@ -334,5 +339,10 @@
           types:
             Poison: 1
             Radiation: 0.5
+        conditions:
+        - !type:Species
+          species:
+          - GhoulGlowing
+          shouldHave: false
       - !type:ChemVomit
         probability: 0.2
