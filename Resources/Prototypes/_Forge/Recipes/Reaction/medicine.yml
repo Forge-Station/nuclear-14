@@ -226,7 +226,7 @@
       entity: N14CleanGauze1
 
 - type: reaction
-  id: CleanGauzeReaction3
+  id: CleanGauzeReaction4
   reactants:
     Fiber:
       amount: 6
@@ -237,7 +237,7 @@
       entity: N14CleanGauze1
 
 - type: reaction
-  id: CleanGauzekReaction4
+  id: CleanGauzekReaction5
   reactants:
     Fiber:
       amount: 6
@@ -248,7 +248,7 @@
       entity: N14CleanGauze1
 
 - type: reaction
-  id: CleanGauzekReaction5
+  id: CleanGauzekReaction6
   reactants:
     Fiber:
       amount: 6
