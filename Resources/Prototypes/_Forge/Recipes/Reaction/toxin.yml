@@ -15,7 +15,7 @@
 - type: reaction
   id: N14TyaguchkaToxinRecipe
   reactants:
-    CazadorVenom:
+    ScorpionTail:
       amount: 1
     N14BloatflyAcid:
       amount: 1

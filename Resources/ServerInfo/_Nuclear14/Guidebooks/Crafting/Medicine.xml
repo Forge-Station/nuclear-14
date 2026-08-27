@@ -21,6 +21,28 @@
 
 Бинты и мази для лечения ран и ожогов. Чистые материалы работают лучше грязных, но алоэ так же эффективно, как и мазь.
 
+Чтобы получить ткань на бинты вы можете разрезать одежду или выращивать хлопок. Грязный бинт у вас получится сделать через G меню в вкладке медицина.
+А чистый бинт получится сделать только на верстаке для мелких работ или с помощью этих рецептов.
+
+Волокно можно получить измельчая тряпки.
+
+Чтобы получить чистый бинт, смешайте эти ингредиенты в ёмкости.
+
+- Волокно 6u
+- Алкоголь 5u (Подойдут только жидкости из ром "Ренген", бутылка виски, бутылка водки и бутылка этанола).
+
+Или
+
+- Волокно 6u
+- Антисептик 2u
+
+Мазь встречается намного реже, пока даже возможности вырастить алоэ нету. Чтобы получить хоть какую-то мазь, смешайте эти ингредиенты в ёмкости. 
+
+- Пепел 5u
+- Экстракт нектара агавы 5u 
+- Вода 5u 
+
+
 <Box>
 <GuideEntityEmbed Entity="N14CleanGauze10"/>
 <GuideEntityEmbed Entity="N14DirtyGauze10"/>
@@ -42,6 +64,11 @@
 # Кровь и кровезаменители
 
 Используются для восполнения крови и при варке стимпаков.
+Рецепт реакции для создания пакета крови.
+
+- Физраствор 5u
+- Кровь 10u (или радиоактивная кровь 10u)
+- Антисептик 5u
 
 <Box>
 <GuideEntityEmbed Entity="Bloodpack1"/>
@@ -71,90 +98,66 @@
 <GuideEntityEmbed Entity="N14FixerPill"/>
 </Box>
 
-# Шприцы и инструменты
-
-Нужны для введения препаратов и варки стимпаков.
-
-<Box>
-<GuideEntityEmbed Entity="N14SmellingSalts"/>
-<GuideEntityEmbed Entity="N14ChemicalSyringe"/>
-</Box>
-
-## Варка стимпаков и лекарств
-
-Эти рецепты крафтятся прямо из рук, без верстака. Основное сырьё — дикие растения пустошей, которые можно собирать в боях и на грядках.
-
 # Ступка с пестиком
 
 Базовый инструмент для приготовления лекарств. Не забудьте вставить в неё мензурку или другую ёмкость!
-
-- Деревянная доска ×2
 
 <Box>
 <GuideEntityEmbed Entity="N14MortarpestleGrinder"/>
 </Box>
 
-# Лечебный порошок
+## Как получить наполненный шприц с лекарством? 
 
-Самый простой рецепт. Смешайте:
+Вам нужно смешать в одной ёмкости смешать лекарственный реагент, равное количеству, которая помещается в медипене и 10u кремния.
 
-- Брок-цвет (Broc Flower)
-- Корень ксандера (Xander Root)
+Кремний можно получить измельчая стекло.
 
-<Box>
-<GuideEntityEmbed Entity="N14FloraProduceWildBrocFlower"/>
-<GuideEntityEmbed Entity="N14FloraProduceWildXander"/>
-</Box>
+Чтобы получить заполненный медипен-стимпак, смешайте так:
 
-# Грязный стимпак
+- Стимпак 10u
+- Кремний 10u
 
-Полноценный стимпак. Потребуется:
+А заполненный медипен-антидот, так:
 
-- Брок-цвет (Broc Flower)
-- Корень ксандера (Xander Root)
-- Любой шприц
-- Пакет крови
+- Антидот 15u
+- Кремний 10u 
 
-<Box>
-<GuideEntityEmbed Entity="N14FloraProduceWildBrocFlower"/>
-<GuideEntityEmbed Entity="N14FloraProduceWildXander"/>
-<GuideEntityEmbed Entity="N14DoctorSyringe"/>
-<GuideEntityEmbed Entity="Bloodpack1"/>
-</Box>
+Таким образом можно ещё создавать - ингалятор антирада, все остальные виды стимпаков и психо.
 
-# Лечебная припарка
+У некоторых медипенов рецепт реакции немного другой.
 
-Помогает от распространённых недугов. Смешайте:
+Фосфор и масло можно получить измельчая пластик.
 
-- Брок-цвет (Broc Flower)
-- Корень ксандера (Xander Root)
-- Пещерный гриб (Cave Fungus)
-- Листья агавы (Agave)
+Чтобы получить заполненный винт, смешайте так:
 
-<Box>
-<GuideEntityEmbed Entity="N14FloraProduceWildBrocFlower"/>
-<GuideEntityEmbed Entity="N14FloraProduceWildXander"/>
-<GuideEntityEmbed Entity="N14FloraProduceWildCaveFungus"/>
-<GuideEntityEmbed Entity="N14FloraProduceWildAgave"/>
-</Box>
+- Джет 10u  
+- Фосфор 5u  
+- Масло 5u
 
-# Грязный бинт
+Чтобы получить заполненный турбо, так:
 
-Когда ничего больше не осталось:
+- Турбо 10u
+- Форсфор 5u 
+- Масло 5u 
 
-- Ткань ×2
+Есть ещё кстати уникальные рецепты.
 
-## Уникальные реакции
+Можно смешать 50u противоядия и 10u кремния получится банка противоядия с противоядием.
 
-# Пакет крови
+Этот рецепт лежит с самого начала существования сборки.. Круто.
 
-Кровезаменитель, разработанный в лабораториях Med-Tek. Создаётся в ёмкости при смешивании реагентов:
+Ну, может вам хотелось излишком целебной припарки вернуть обратно в мешочек или порошок берсека.
+Вам нужно смешать в одной ёмкости порошочный реагент и 3u волокна.
 
-- Солевой раствор ×10
-- Кровь ×10 (подойдёт и радиоактивная кровь ×10)
-- Антисептик ×5
+Волокно можно получить измельчая тряпки.
 
-В результате реакции получается готовый пакет крови.
+Думаю, тут уже всё понятно?
+
+- Целебный порошок 10u 
+- Волокно 3u 
+
+- Порошок берсерка 20u 
+- Волокно 3u
 
 ## Медицинские реагенты
 
@@ -165,10 +168,8 @@
 <GuideReagentEmbed Reagent="UltraRobustHealingMixture"/>
 <GuideReagentEmbed Reagent="DirtyStimpak"/>
 <GuideReagentEmbed Reagent="DirtySuperStimpack"/>
-<GuideReagentEmbed Reagent="StimpackThrombosis"/>
 <GuideReagentEmbed Reagent="HealingPowder"/>
 <GuideReagentEmbed Reagent="HealingPoultice"/>
-<GuideReagentEmbed Reagent="TraumaPowder"/>
 <GuideReagentEmbed Reagent="Bitterdrink"/>
 <GuideReagentEmbed Reagent="AntidoteMixture"/>
 <GuideReagentEmbed Reagent="Antidote"/>
@@ -176,5 +177,36 @@
 <GuideReagentEmbed Reagent="RadAwayDiluted"/>
 <GuideReagentEmbed Reagent="RadX"/>
 <GuideReagentEmbed Reagent="Fixer"/>
-<GuideReagentEmbed Reagent="SmellingSalts"/>
+
+## Наркотические реагенты
+
+Не беспекоитесь, они не вызывают зависимости. Серьёзно.
+Подробнее о реагентах и их рецептах — в соответствующих карточках ниже.
+<GuideReagentEmbed Reagent="BerserkerMixture"/>
+<GuideReagentEmbed Reagent="DamageModifyingMixture"/>
+<GuideReagentEmbed Reagent="MovespeedMixture"/>
+<GuideReagentEmbed Reagent="RobustMovespeedMixture"/>
+
+## Ядовитые реагенты
+
+Подробнее о реагентах и их рецептах — в соответствующих карточках ниже.
+<GuideReagentEmbed Reagent="N14LastBreathPoison"/>
+<GuideReagentEmbed Reagent="N14TyaguchkaToxin"/>
+<GuideReagentEmbed Reagent="N14ColourlessPoison"/>
+<GuideReagentEmbed Reagent="NightstalkerVenom"/>
+<GuideReagentEmbed Reagent="CazadorVenom"/>
+<GuideReagentEmbed Reagent="ScorpionTail"/>
+<GuideReagentEmbed Reagent="StimpackThrombosis"/>
+
+## Остальные реагенты
+
+Подробнее о реагентах и их рецептах — в соответствующих карточках ниже.
+<GuideReagentEmbed Reagent="Antiseptic"/>
+<GuideReagentEmbed Reagent="Wonderglue"/>
+<GuideReagentEmbed Reagent="Turpentine"/>
+<GuideReagentEmbed Reagent="Abraxocleaner"/>
+<GuideReagentEmbed Reagent="Water"/>
+<GuideReagentEmbed Reagent="WaterDirty"/>
+<GuideReagentEmbed Reagent="TableSalt"/>
+
 </Document>

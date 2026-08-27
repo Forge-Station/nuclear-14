@@ -439,6 +439,7 @@
     - N14HydroponicsToolClippers
     - N14HandLabeler
     - OreBag # Forge-add
+    - ClothingHeadHatWelding # Forge-add
     # Kitchen
     - N14DrinkNukaColaEmpty # Forge-add
     - N14JunkTincan # Forge-add
@@ -480,23 +481,23 @@
     # - N14SyringeInjectable
     - N14PillCanister
     - N14ChemistryEmptyBottle01
-    - N14PillCanisterRadX
-    - N14PillCanisterMentats
-    - N14PillCanisterBuffout
-    - N14PillCanisterCateye
-    - N14PillCanisterFixer
-    - N14JetInhaler
-    - N14TurboInhaler
-    - N14HydraInhaler
-    - N14StimpakEmpty # Forge-add
-    - N14ChemicalSyringeAntidoteEmpty
-    - N14PsychoSyringe
-    - N14RadAwayPhialEmpty
+    # - N14PillCanisterRadX # Forge-add-start
+    # - N14PillCanisterMentats
+    # - N14PillCanisterBuffout
+    # - N14PillCanisterCateye
+    # - N14PillCanisterFixer
+    # - N14JetInhaler
+    # - N14TurboInhaler
+    # - N14HydraInhaler
+    # - N14StimpakEmpty 
+    # - N14ChemicalSyringeAntidoteEmpty
+    # - N14PsychoSyringe
+    # - N14RadAwayPhialEmpty # Forge-add-end
     # Misc
-    # - N14LightTube # Forge-Change
-    # - N14LedLightTube # Forge-Change
-    # - N14SodiumLightTube # Forge-Change
-    # - N14ExteriorLightTube # Forge-Change
+    - N14LightTube
+    - N14LedLightTube
+    - N14SodiumLightTube
+    - N14ExteriorLightTube
     - N14LightBulb
     - N14LedLightBulb
     - N14Flare

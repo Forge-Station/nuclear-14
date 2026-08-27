@@ -109,7 +109,6 @@
   products:
     StimpackThrombosis: 2
 
-#MARK: Катализация тромбоза
 - type: reaction
   id: ThrombosisCatalystDirty
   impact: Medium
@@ -166,11 +165,12 @@
     StimpackThrombosis: 2
 
 #MARK: Новые реакции
+#Реакции медицины.
 - type: reaction
   id: BloodpackReaction1
   reactants:
     Saline:
-      amount: 10
+      amount: 5
     Blood:
       amount: 10
     Antiseptic:
@@ -183,7 +183,7 @@
   id: BloodpackReaction2
   reactants:
     Saline:
-      amount: 10
+      amount: 5
     WastelandBlood:
       amount: 10
     Antiseptic:
@@ -191,6 +191,153 @@
   effects:
     - !type:CreateEntityReactionEffect
       entity: Bloodpack1
+
+- type: reaction
+  id: CleanGauzeReaction1
+  reactants:
+    Fiber:
+      amount: 6
+    N14RoentgenRum:
+      amount: 5
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14CleanGauze1
+
+- type: reaction
+  id: CleanGauzeReaction2
+  reactants:
+    Fiber:
+      amount: 6
+    Whiskey:
+      amount: 5
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14CleanGauze1
+
+- type: reaction
+  id: CleanGauzeReaction3
+  reactants:
+    Fiber:
+      amount: 6
+    Vodka:
+      amount: 5
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14CleanGauze1
+
+- type: reaction
+  id: CleanGauzeReaction3
+  reactants:
+    Fiber:
+      amount: 6
+    Vodka:
+      amount: 5
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14CleanGauze1
+
+- type: reaction
+  id: CleanGauzekReaction4
+  reactants:
+    Fiber:
+      amount: 6
+    Ethanol:
+      amount: 5
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14CleanGauze1
+
+- type: reaction
+  id: CleanGauzekReaction5
+  reactants:
+    Fiber:
+      amount: 6
+    Antiseptic:
+      amount: 2
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14CleanGauze1
+
+#Стимпаки в шприце.
+- type: reaction
+  id: SuperStimpakConversion
+  reactants:
+    RobustHealingMixture:
+      amount: 10
+    Silicon:
+      amount: 10
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14SuperStimpak
+
+- type: reaction
+  id: UltraStimpakConversion
+  reactants:
+    UltraRobustHealingMixture:
+      amount: 10
+    Silicon:
+      amount: 10
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14UltraStimpak
+
+- type: reaction
+  id: DirtySuperStimpakConversion
+  reactants:
+    DirtySuperStimpack:
+      amount: 10
+    Silicon:
+      amount: 10
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14DirtySuperStimpak
+
+- type: reaction
+  id: DamageModifyingMixtureConversion
+  reactants:
+    DamageModifyingMixture:
+      amount: 20
+    Silicon:
+      amount: 10
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14Psycho
+
+#Порошки в мешочке.
+- type: reaction
+  id: HealingPowderConversion
+  reactants:
+    HealingPowder:
+      amount: 10
+    Fiber:
+      amount: 3
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14HealingPowder
+
+- type: reaction
+  id: HealingPoulticeConversion
+  reactants:
+    HealingPoultice:
+      amount: 20
+    Fiber:
+      amount: 3
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14HealingPoultice
+      
+- type: reaction
+  id: BerserkerMixtureConversion
+  reactants:
+    BerserkerMixture:
+      amount: 20
+    Fiber:
+      amount: 3
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14BerserkerPowder
+
+#MARK: Варка других реагентов.
 
 - type: reaction
   id: SmellingSaltsReaction
@@ -208,11 +355,11 @@
     HealingMixture:
       amount: 1
     ExtractMutfruit:
-      amount: 1
+      amount: 2
     NukaCola:
-      amount: 1
+      amount: 2
   products:
-    DirtySuperStimpack: 2
+    DirtySuperStimpack: 1
 
 - type: reaction
   id: DirtySuperStimpackReaction2
@@ -220,8 +367,8 @@
     HealingMixture:
       amount: 1
     ExtractMutfruit:
-      amount: 1
+      amount: 2
     IrradiatedNukaCola:
-      amount: 1
+      amount: 2
   products:
-    DirtySuperStimpack: 2
+    DirtySuperStimpack: 1

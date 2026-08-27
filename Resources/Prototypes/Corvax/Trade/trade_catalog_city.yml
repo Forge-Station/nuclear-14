@@ -559,6 +559,10 @@
     price: 5
   - proto: N14DrinkWine
     price: 5
+  - proto: N14DrinkRoentgenRum
+    price: 5
+  - proto: N14DrinkWhisky
+    price: 5    
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Fishing
@@ -585,8 +589,16 @@
     price: 5
   - proto: N14JunkAbraxoCleaner
     price: 15
+  - proto: N14JunkWonderglue
+    price: 15
+  - proto: N14JunkTurpentine
+    price: 15  
   - proto: Handcuffs
     price: 20
+  - proto: N14FoodBloatflyAcidSac
+    price: 25 
+  - proto: N14FoodFireantNectar
+    price: 25 
   - proto: RadioHandheld
     price: 75
 
@@ -1205,6 +1217,10 @@
     price: 3
   - proto: N14DrinkWine
     price: 3
+  - proto: N14DrinkRoentgenRum
+    price: 3
+  - proto: N14DrinkWhisky
+    price: 3  
 
 - type: storeCategoryStructured
   id: CaravanSell2_WeaponGrenade

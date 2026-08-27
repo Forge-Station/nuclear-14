@@ -12,7 +12,7 @@
           Quantity: 15
 
 - type: entity
-  parent: N14DoctorSyringe
+  parent: N14Stimpak
   id: N14StimpakEmpty
   suffix: пустой
   name: стимпак
