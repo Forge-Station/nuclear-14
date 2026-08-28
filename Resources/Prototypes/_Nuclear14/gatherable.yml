@@ -86,6 +86,10 @@
   oreEntity: N14FloraProduceWildAgave
 
 - type: ore
+  id: WildAloe
+  oreEntity: N14AloeSalve1
+
+- type: ore
   id: WildBananaYucca
   oreEntity: N14FloraProduceWildBananaYucca
 
@@ -115,7 +119,7 @@
 
 - type: ore
   id: WildCotton
-  oreEntity: CottonBol
+  oreEntity: N14CottonBol
 
 - type: ore
   id: WildCoyote

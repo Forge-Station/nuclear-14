@@ -414,8 +414,11 @@
     items:
     # - id: N14ClothingBeltMedicalFilled # Forge-Change
     # - id: N14ClothingHeadHatNCRHelmetMetalMedic # Forge-Change
-      - id: N14WeaponShotgun
-      - id: MagazineBox12gauge
+      - id: N14InjectionCarbine # Forge-add-start
+      - id: N14InjectionSyringe
+        amount: 3
+      - id: N14LastBreathPoisonChemistryBottle
+      - id: N14ColourlessPoisonChemistryBottle # Forge-add-end
       - id: N14WeaponPistol9mm
       - id: N14MagazinePistol9mm
         amount: 2

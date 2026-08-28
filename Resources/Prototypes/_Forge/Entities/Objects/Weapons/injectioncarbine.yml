@@ -1,0 +1,89 @@
+- type: entity
+  name: инъекционный карабин
+  parent: BaseItem
+  id: N14InjectionCarbine
+  description: Редкое самодельное оружие, стреляющее шприцами. После попадания цель страдает от пагубных эффектов, вызванных веществами, которые находятся в этих шприцах.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Guns/InjectionCarbine/injectioncarbine.rsi
+    state: base
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Guns/InjectionCarbine/injectioncarbine.rsi
+    slots: [ back, belt, suitstorage ]
+  - type: Item
+    size: Huge
+    sprite: Corvax/Objects/Weapons/Guns/InjectionCarbine/injectioncarbine.rsi
+  - type: GunRequiresWield
+  - type: Wieldable
+  - type: AmmoCounter
+  - type: MeleeWeapon
+    attackRate: 1.3333
+    damage:
+      types:
+        Blunt: 8.5
+    bluntStaminaDamageFactor: 1.25
+    swapKeys: true
+    disableHeavy: true
+    animation: WeaponArcThrust
+    wideAnimationRotation: 180
+    soundHit:
+      collection: MetalThud
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Blunt: 2.5
+  - type: Appearance
+  - type: BallisticAmmoProvider
+    whitelist:
+      tags:
+      - InjectionSyringe
+    capacity: 1
+    soundInsert:
+      path: /Audio/Weapons/Guns/Misc/arrow_nock.ogg
+  - type: Gun
+    minAngle: 0
+    maxAngle: 5
+    fireRate: 1
+    projectileSpeed: 45
+    selectedMode: SemiAuto
+    availableModes:
+    - SemiAuto
+    soundGunshot:
+      collection: BulletMiss
+    soundEmpty: null
+
+- type: entity
+  parent: BaseArrow
+  id: N14InjectionSyringe
+  name: инъекционный шприц
+  description: Используется в качестве боеприпаса для инъекционного карабина. Не очень преспособлен в качестве обычного шприца.
+  components:
+  - type: Tag
+    tags:
+    - InjectionSyringe
+  - type: Sprite
+    sprite: Objects/Specific/Chemistry/syringe.rsi
+    state: syringeproj
+  - type: Projectile
+    damage:
+      types:
+        Piercing: 5
+  - type: SolutionContainerManager
+    solutions:
+      ammo:
+        maxVol: 5
+  - type: RefillableSolution
+    solution: ammo
+  - type: InjectableSolution
+    solution: ammo
+  - type: SolutionTransfer
+    maxTransferAmount: 5
+  - type: Injector
+    solutionName: ammo
+    injectOnly: false
+    transferAmount: 5
+  - type: ExaminableSolution
+    solution: ammo
+  - type: SolutionInjectOnProjectileHit
+    transferAmount: 5
+    solution: ammo

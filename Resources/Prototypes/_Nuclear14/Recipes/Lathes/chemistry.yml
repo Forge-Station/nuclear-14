@@ -42,6 +42,14 @@
     Steel: 25
 
 - type: latheRecipe
+  id: N14InjectionSyringe
+  result: N14InjectionSyringe
+  completetime: 2
+  category: N14Chemistry
+  materials:
+    Steel: 100
+
+- type: latheRecipe
   id: N14SyringeInjectable
   result: N14DoctorSyringe
   completetime: 2

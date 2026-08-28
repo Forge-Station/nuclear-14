@@ -25,6 +25,23 @@
 
 
 - type: entityLootTable
+  id: WildAloeAll
+  entries:
+  - id: N14AloeSalve1
+    prob: 0.75
+    amount: 1
+    maxAmount: 3
+
+- type: entityLootTable
+  id: WildAloeClippers
+  entries:
+  - id: N14FloraWildAloeClippingSeed
+    prob: 0.75
+    amount: 1
+    maxAmount: 1
+
+
+- type: entityLootTable
   id: WildBananaYuccaAll
   entries:
   - id: N14FloraProduceWildBananaYucca
@@ -161,7 +178,7 @@
 - type: entityLootTable
   id: WildCottonAll
   entries:
-  - id: CottonBol
+  - id: N14CottonBol
     prob: 0.75
     amount: 1
     maxAmount: 3
@@ -169,7 +186,7 @@
 - type: entityLootTable
   id: CottonSeeds
   entries:
-  - id: CottonSeeds
+  - id: N14FloraWildCottonClippingSeed
     prob: 0.75
     amount: 1
     maxAmount: 3
