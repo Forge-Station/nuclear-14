@@ -19,11 +19,11 @@
       availableModes:
         - SemiAuto
     - type: BasicEntityAmmoProvider
-      proto: N14Cartridge44Magnum
-      capacity: 4
-      count: 4
+      proto: N14Cartridge762Rifle
+      capacity: 3
+      count: 3
     - type: RechargeBasicEntityAmmo
-      rechargeCooldown: 2
+      rechargeCooldown: 1
       rechargeSound:
         path: /Audio/Weapons/Guns/MagIn/ltrifle_magin.ogg
     - type: Loadout
@@ -93,7 +93,7 @@
       maxAngle: 20
       angleIncrease: 1
       angleDecay: 4
-      fireRate: 0.8
+      fireRate: 0.5
       soundGunshot:
         collection: N14BrushGunGunshot
       useKey: false
@@ -101,9 +101,9 @@
       availableModes:
         - SemiAuto
     - type: BasicEntityAmmoProvider
-      proto: N14Cartridge45-70
-      capacity: 4
-      count: 4
+      proto: N14Cartridge44Magnum
+      capacity: 2
+      count: 2
     - type: RechargeBasicEntityAmmo
       rechargeCooldown: 2
       rechargeSound:
@@ -163,6 +163,170 @@
       - sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/tribalhuntstick.rsi
         state: inhand-right  # Only part we change, the gun sprite.
 
+- type: entity
+  name: Дикий племенной берсерк
+  parent: N14BaseMobRaider
+  id: N14MobNPCRaiderTribeBerserk
+  suffix: Рейдер
+  description: Племенной, кто носит огнестрельное оружие, он убьёт любого не из его племени.
+  components:
+    - type: Gun
+      minAngle: 34.5
+      maxAngle: 104
+      angleIncrease: 8
+      angleDecay: 16
+      fireRate: 0.75
+      soundGunshot: /Audio/_Nuclear14/Weapons/Guns/Shotguns/N14WeaponDoubleBarrelShotgun/shot1.ogg
+      useKey: false
+      selectedMode: SemiAuto
+      availableModes:
+        - SemiAuto
+    - type: CombatMode
+    - type: BasicEntityAmmoProvider
+      proto: N14ShellShotgun20
+      capacity: 2
+      count: 2
+    - type: RechargeBasicEntityAmmo
+      rechargeCooldown: 2
+      rechargeSound:
+        path: /Audio/_Nuclear14/Weapons/Effects/Reload/Shotguns/shotgun_insert.ogg
+    - type: Loadout
+      prototypes:
+        - TribalWarriorBerserkGear
+    - type: Sprite
+      layers: # Long boring part to make sure layering is correct
+      - map: [ "enum.HumanoidVisualLayers.Chest" ]
+      - map: [ "enum.HumanoidVisualLayers.Head" ]
+      - map: [ "enum.HumanoidVisualLayers.Snout" ]
+      - map: [ "enum.HumanoidVisualLayers.Eyes" ]
+      - map: [ "enum.HumanoidVisualLayers.Face" ]
+      - map: [ "enum.HumanoidVisualLayers.RArm" ]
+      - map: [ "enum.HumanoidVisualLayers.LArm" ]
+      - map: [ "enum.HumanoidVisualLayers.RLeg" ]
+      - map: [ "enum.HumanoidVisualLayers.LLeg" ]
+      - shader: StencilClear
+        sprite: Mobs/Species/Human/parts.rsi
+      - shader: StencilMask
+        map: ["enum.HumanoidVisualLayers.StencilMask"]
+        sprite: Mobs/Customization/masking_helpers.rsi
+        state: unisex_full
+        visible: false
+      - map: ["jumpsuit"]
+      - map: ["enum.HumanoidVisualLayers.LFoot"]
+      - map: ["enum.HumanoidVisualLayers.RFoot"]
+      - map: ["enum.HumanoidVisualLayers.LHand"]
+      - map: ["enum.HumanoidVisualLayers.RHand"]
+      - map: [ "gloves" ]
+      - map: [ "shoes" ]
+      - map: [ "ears" ]
+      - map: [ "innerBelt" ]
+      - map: [ "innerNeck" ]
+      - map: [ "outerClothing" ]
+      - map: [ "eyes" ]
+      - map: [ "belt" ]
+      - map: [ "id" ]
+      - map: [ "neck" ]
+      - map: [ "back" ]
+      - map: [ "enum.HumanoidVisualLayers.FacialHair" ]
+      - map: [ "enum.HumanoidVisualLayers.Hair" ]
+      - map: [ "enum.HumanoidVisualLayers.HeadSide" ]
+      - map: [ "enum.HumanoidVisualLayers.HeadTop" ]
+      - map: [ "enum.HumanoidVisualLayers.Tail" ]
+      - map: [ "enum.HumanoidVisualLayers.Wings" ]
+      - map: [ "mask" ]
+      - map: [ "head" ]
+      - map: [ "pocket1" ]
+      - map: [ "pocket2" ]
+      - map: ["enum.HumanoidVisualLayers.Handcuffs"]
+        color: "#ffffff"
+        sprite: Objects/Misc/handcuffs.rsi
+        state: body-overlay-2
+        visible: false
+      - sprite: _Nuclear14/Objects/Weapons/Guns/Shotguns/double_shotgun.rsi
+        state: inhand-right  # Only part we change, the gun sprite.
+        
+- type: entity
+  name: Дикий племенной старейшина
+  parent: N14BaseMobRaider
+  id: N14MobNPCRaiderTribeElder
+  suffix: Рейдер
+  description: Племенной, кто носит огнестрельное оружие, он убьёт любого не из его племени.
+  components:
+    - type: Gun 
+      minAngle: 9
+      maxAngle: 18
+      angleIncrease: 3
+      angleDecay: 4
+      fireRate: 1
+      soundGunshot:
+        collection: N14RechargerRifleGunshot
+      useKey: false
+      selectedMode: SemiAuto
+      availableModes:
+        - SemiAuto
+    - type: BasicEntityAmmoProvider
+      proto: BulletLaser
+      capacity: 9
+      count: 9
+    - type: RechargeBasicEntityAmmo
+      rechargeCooldown: 2
+      rechargeSound:
+        path: /Audio/Weapons/Guns/MagIn/batrifle_magin.ogg
+    - type: Loadout
+      prototypes:
+        - TribalWarriorElderGear
+    - type: Sprite
+      layers: # Long boring part to make sure layering is correct
+      - map: [ "enum.HumanoidVisualLayers.Chest" ]
+      - map: [ "enum.HumanoidVisualLayers.Head" ]
+      - map: [ "enum.HumanoidVisualLayers.Snout" ]
+      - map: [ "enum.HumanoidVisualLayers.Eyes" ]
+      - map: [ "enum.HumanoidVisualLayers.Face" ]
+      - map: [ "enum.HumanoidVisualLayers.RArm" ]
+      - map: [ "enum.HumanoidVisualLayers.LArm" ]
+      - map: [ "enum.HumanoidVisualLayers.RLeg" ]
+      - map: [ "enum.HumanoidVisualLayers.LLeg" ]
+      - shader: StencilClear
+        sprite: Mobs/Species/Human/parts.rsi
+      - shader: StencilMask
+        map: ["enum.HumanoidVisualLayers.StencilMask"]
+        sprite: Mobs/Customization/masking_helpers.rsi
+        state: unisex_full
+        visible: false
+      - map: ["jumpsuit"]
+      - map: ["enum.HumanoidVisualLayers.LFoot"]
+      - map: ["enum.HumanoidVisualLayers.RFoot"]
+      - map: ["enum.HumanoidVisualLayers.LHand"]
+      - map: ["enum.HumanoidVisualLayers.RHand"]
+      - map: [ "gloves" ]
+      - map: [ "shoes" ]
+      - map: [ "ears" ]
+      - map: [ "innerBelt" ]
+      - map: [ "innerNeck" ]
+      - map: [ "outerClothing" ]
+      - map: [ "eyes" ]
+      - map: [ "belt" ]
+      - map: [ "id" ]
+      - map: [ "neck" ]
+      - map: [ "back" ]
+      - map: [ "enum.HumanoidVisualLayers.FacialHair" ]
+      - map: [ "enum.HumanoidVisualLayers.Hair" ]
+      - map: [ "enum.HumanoidVisualLayers.HeadSide" ]
+      - map: [ "enum.HumanoidVisualLayers.HeadTop" ]
+      - map: [ "enum.HumanoidVisualLayers.Tail" ]
+      - map: [ "enum.HumanoidVisualLayers.Wings" ]
+      - map: [ "mask" ]
+      - map: [ "head" ]
+      - map: [ "pocket1" ]
+      - map: [ "pocket2" ]
+      - map: ["enum.HumanoidVisualLayers.Handcuffs"]
+        color: "#ffffff"
+        sprite: Objects/Misc/handcuffs.rsi
+        state: body-overlay-2
+        visible: false
+      - sprite: _Nuclear14/Objects/Weapons/Guns/Battery/laser_revolver.rsi
+        state: inhand-right  # Only part we change, the gun sprite.
+        
 #MARK: Рейдеры
 
 - type: entity

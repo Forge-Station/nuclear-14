@@ -151,6 +151,38 @@
 # Raiders
 
 - type: entity
+  name: спавнер берсерка дикого племени
+  id: N14SpawnMobNPCRaiderTribeBerserk
+  suffix: Рейдер
+  parent: MarkerBase
+  components:
+    - type: Sprite
+      layers:
+        - state: green
+        - sprite: _Nuclear14/Mobs/RaidersSimpleMob/Raiders.rsi
+          state: raider_ranged
+        - state: ai
+    - type: ConditionalSpawner
+      prototypes:
+        - N14MobNPCRaiderTribeBerserk
+
+- type: entity
+  name: спавнер старейшины дикого племени
+  id: N14SpawnMobNPCRaiderTribeElder
+  suffix: Рейдер
+  parent: MarkerBase
+  components:
+    - type: Sprite
+      layers:
+        - state: green
+        - sprite: _Nuclear14/Mobs/RaidersSimpleMob/Raiders.rsi
+          state: raider_ranged
+        - state: ai
+    - type: ConditionalSpawner
+      prototypes:
+        - N14MobNPCRaiderTribeElder
+
+- type: entity
   name: спавнер стрелков дикого племени
   id: N14SpawnMobNPCRaiderTribeSkir
   suffix: Рейдер

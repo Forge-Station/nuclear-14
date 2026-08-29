@@ -24,10 +24,12 @@
 - type: startingGear
   id: RaiderButcherNPC
   equipment:
+    jumpsuit: ClothingUniformMNKUnderGarment
     outerClothing: ClothingOuterApronChemist
     shoes: ClothingShoesBootsFishing
     mask: N14ClothingMaskPlate
     gloves: ClothingHandsGlovesChemist
+    pocket1: N14MercStash
   inhand:
   - N14ripper
 
@@ -85,7 +87,7 @@
   equipment:
     jumpsuit: N14ClothingUniformJumpsuittribalpantsnecklace
     outerClothing: N14ClothingOuterTribalCoat
-    head: N14ClothingTribalHeadWraps
+    head: ClothingHeadHelmetBone
     shoes: N14ClothingShoesTribal
     back: N14TribalStash
   inhand:
@@ -95,9 +97,29 @@
   id: TribalWarriorHunterGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitdrylanderTribal
-    outerClothing: N14ClothingOuterCombatTribal
+    outerClothing: N14ClothingOuterBandito
     head: N14ClothingTribalShemagh
     shoes: N14ClothingBootsLeather
+    gloves: N14ClothingHandsGlovesTribal
+    back: N14TribalStash
+
+- type: startingGear
+  id: TribalWarriorElderGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuitdrylanderTribal
+    outerClothing: N14ClothingOuterElderwintercoat
+    head: N14ClothingHeadHatEldersDamagedSkullHelm
+    shoes: N14ClothingShoesKaligi
+    gloves: N14ClothingHandsGlovesTribal
+    back: N14TribalStash
+
+- type: startingGear
+  id: TribalWarriorBerserkGear
+  equipment:
+    jumpsuit: N14ClothingUniformJumpsuittribalpantsm
+    outerClothing: N14ClothingOuterheadtaker
+    head: N14ClothingHeadTakerwraps
+    shoes: N14ClothingShoesKaligi
     gloves: N14ClothingHandsGlovesTribal
     back: N14TribalStash
 
