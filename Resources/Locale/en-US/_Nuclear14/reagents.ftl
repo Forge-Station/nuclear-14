@@ -251,6 +251,7 @@ reagent-desc-berserker-mixture = A powder prepared from mineral plants that caus
 # Medicine
 reagent-name-healing-mixture = stimpak
 reagent-desc-healing-mixture = A mixture of reagents that makes you heal.
+
 reagent-name-dirty-stimpak = dirty stimpak
 reagent-desc-dirty-stimpak = A dirty mixture of reagents that makes you heal.
 
@@ -268,6 +269,9 @@ reagent-desc-hydra = A mixture of fungi, scorpion tail and nightstalker blood wh
 
 reagent-name-damage-resist-mixture = damage resistant mixture
 reagent-desc-damage-resist-mixture = A mixture of reagents that makes you resistant to damage.
+
+reagent-name-fiery-purgative = Fiery purgative
+reagent-desc-fiery-purgative = In addition to instantly neutralizing poisons, this drug removes radiation from the body over a period of time, while reducing stamina.
 
 reagent-name-radaway = radaway
 reagent-desc-radaway = An odd reagent that cures your radiation.

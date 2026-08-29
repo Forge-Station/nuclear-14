@@ -3,8 +3,6 @@
 
 В пустошах медицина — вопрос жизни и смерти. Здесь собраны все медицинские расходники, доступные рецепты варки лекарств и уникальные реакции, которые стоит знать каждому выжившему.
 
-## Медицинские расходники
-
 # Стимпаки
 
 Основной способ лечения в пустошах. Различаются силой и чистотой: от грязных самодельных до мощных ультра-стимпаков.
@@ -14,7 +12,6 @@
 <GuideEntityEmbed Entity="N14StimpakDirty"/>
 <GuideEntityEmbed Entity="N14SuperStimpak"/>
 <GuideEntityEmbed Entity="N14UltraStimpak"/>
-<GuideEntityEmbed Entity="N14DirtySuperStimpak"/>
 </Box>
 
 # Медицинские расходники
@@ -36,7 +33,7 @@
 - Волокно 6u
 - Антисептик 2u
 
-Мазь встречается намного реже, пока даже возможности вырастить алоэ нету. Чтобы получить хоть какую-то мазь, смешайте эти ингредиенты в ёмкости. 
+Мазь встречается намного реже, можно найти дикий куст алоэ или смешайте эти ингредиенты в ёмкости для получения тюбика мази. 
 
 - Пепел 5u
 - Экстракт нектара агавы 5u 
@@ -49,16 +46,15 @@
 <GuideEntityEmbed Entity="N14Ointment10"/>
 <GuideEntityEmbed Entity="N14AloeSalve"/>
 </Box>
-<Box>
 
 # Продвинутые медицинские расходники
 
 Такие можно найти в боевой аптечке, спросите у рейнджера, он такие на халяву получает.
 
 <Box>
+<GuideEntityEmbed Entity="MedkitCombat"/>
 <GuideEntityEmbed Entity="N14MedicatedSuture"/>
 <GuideEntityEmbed Entity="N14RegenerativeOintment"/>
-</Box>
 </Box>
 
 # Кровь и кровезаменители
@@ -91,11 +87,17 @@
 Антидоты, средства от радиации и прочие препараты.
 
 <Box>
-<GuideEntityEmbed Entity="N14Antidote"/>
 <GuideEntityEmbed Entity="N14ChemicalSyringeAntidote"/>
 <GuideEntityEmbed Entity="N14RadAwayInhaler"/>
 <GuideEntityEmbed Entity="N14RadXPill"/>
 <GuideEntityEmbed Entity="N14FixerPill"/>
+</Box>
+
+А также препараты местного ручного производства.
+
+<Box>
+<GuideEntityEmbed Entity="N14Antidote"/>
+<GuideEntityEmbed Entity="N14JunkCeramicFlaskFieryPurgative"/>
 </Box>
 
 # Ступка с пестиком
@@ -104,27 +106,34 @@
 
 <Box>
 <GuideEntityEmbed Entity="N14MortarpestleGrinder"/>
+<GuideEntityEmbed Entity="N14FoodJarBase"/>
+<GuideEntityEmbed Entity="LargeBeaker"/>
+<GuideEntityEmbed Entity="Beaker"/>
 </Box>
 
 ## Как получить наполненный шприц с лекарством? 
 
-Вам нужно смешать в одной ёмкости смешать лекарственный реагент, равное количеству, которая помещается в медипене и 10u кремния.
+Вам нужно смешать в одной ёмкости смешать лекарственный реаген в той пропорции, в которой он помещаеется в шприце и 10u кремния.
 
 Кремний можно получить измельчая стекло.
 
 Чтобы получить заполненный медипен-стимпак, смешайте так:
 
-- Стимпак 10u
+- Стимпак 10u (подойдёт любой вид стимпака)
 - Кремний 10u
+
+<GuideEntityEmbed Entity="N14Stimpak"/>
 
 А заполненный медипен-антидот, так:
 
 - Антидот 15u
 - Кремний 10u 
 
+<GuideEntityEmbed Entity="N14ChemicalSyringeAntidote"/>
+
 Таким образом можно ещё создавать - ингалятор антирада, все остальные виды стимпаков и психо.
 
-У некоторых медипенов рецепт реакции немного другой.
+У некоторых медипенов рецепт реакции немного другой!
 
 Фосфор и масло можно получить измельчая пластик.
 
@@ -134,15 +143,21 @@
 - Фосфор 5u  
 - Масло 5u
 
+<GuideEntityEmbed Entity="N14Jet"/>
+
 Чтобы получить заполненный турбо, так:
 
 - Турбо 10u
 - Форсфор 5u 
 - Масло 5u 
 
+<GuideEntityEmbed Entity="N14Turbo"/>
+
 Есть ещё кстати уникальные рецепты.
 
 Можно смешать 50u противоядия и 10u кремния получится банка противоядия с противоядием.
+
+<GuideEntityEmbed Entity="N14Antidote"/>
 
 Этот рецепт лежит с самого начала существования сборки.. Круто.
 
@@ -156,8 +171,12 @@
 - Целебный порошок 10u 
 - Волокно 3u 
 
+<GuideEntityEmbed Entity="N14HealingPowder"/>
+
 - Порошок берсерка 20u 
 - Волокно 3u
+
+<GuideEntityEmbed Entity="N14BerserkerPowder"/>
 
 ## Медицинские реагенты
 
@@ -173,6 +192,7 @@
 <GuideReagentEmbed Reagent="Bitterdrink"/>
 <GuideReagentEmbed Reagent="AntidoteMixture"/>
 <GuideReagentEmbed Reagent="Antidote"/>
+<GuideReagentEmbed Reagent="FieryPurgative"/>
 <GuideReagentEmbed Reagent="RadAway"/>
 <GuideReagentEmbed Reagent="RadAwayDiluted"/>
 <GuideReagentEmbed Reagent="RadX"/>

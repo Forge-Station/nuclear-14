@@ -372,3 +372,39 @@
       amount: 2
   products:
     DirtySuperStimpack: 1
+
+- type: reaction
+  id: FieryPurgativeReaction1
+  reactants:
+    N14RoentgenRum:
+      amount: 1
+    ExtractWhiteHorsenettle:
+      amount: 1
+    ExtractGlowpepper:
+      amount: 1
+  products:
+    FieryPurgative: 2
+
+- type: reaction
+  id: FieryPurgativeReaction2
+  reactants:
+    Whiskey:
+      amount: 1
+    ExtractWhiteHorsenettle:
+      amount: 1
+    ExtractGlowpepper:
+      amount: 1
+  products:
+    FieryPurgative: 2
+
+- type: reaction
+  id: FieryPurgativeReaction3
+  reactants:
+    Vodka:
+      amount: 1
+    ExtractWhiteHorsenettle:
+      amount: 1
+    ExtractGlowpepper:
+      amount: 1
+  products:
+    FieryPurgative: 2
