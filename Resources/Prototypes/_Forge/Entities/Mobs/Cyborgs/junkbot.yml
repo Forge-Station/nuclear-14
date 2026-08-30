@@ -1,0 +1,75 @@
+- type: entity
+  id: N14Junkbot
+  parent: N14BaseBorg
+  name: junkbot
+  components:
+  - type: Sprite
+    sprite: _Forge/Mobs/Cyborgs/junkbot.rsi
+    layers:
+    - map: ["enum.DamageStateVisualLayers.Base", "movement"]
+      state: robot
+    - state: robot_e_r
+      map: ["enum.BorgVisualLayers.Light"]
+      shader: unshaded
+      visible: false
+    - state: robot_l
+      shader: unshaded
+      map: ["light"]
+      visible: false
+    - state: robot_e_combat
+      shader: unshaded
+      map: ["combat_light"]
+      visible: false
+  - type: SpriteMovement
+    movementLayers:
+      movement:
+        state: robot_moving
+    noMovementLayers:
+      movement:
+        state: robot
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: robot
+      Critical:
+        Base: dead
+      Dead:
+        Base: dead
+  - type: CombatModeVisuals
+    layers:
+    - combat_light
+  - type: Construction
+  # Кастомный граф сборки, чтоб не использовать вспышки (я хз по поводу баланса, можно отойти на граф сборки ванильного борга с обычными вспышками если пофиг)
+    graph: N14JunktronCyborg
+    node: cyborg
+  - type: BorgTransponder
+    name: junkbot
+  # У родительского N14BaseBorg нет фракций. Нужно указать фракцию существу, чтоб на него НПС агрились.
+  - type: NpcFactionMember
+    factions:
+    - Wastelander
+  # Случайные глючные законы на спавне; N14JunkbotLaws — запасной свод.
+  - type: SiliconLawProvider
+    laws: N14JunkbotLaws
+  - type: RandomSiliconLaws
+  - type: Inventory
+    templateId: borgDutch
+  - type: FootstepModifier
+    footstepSoundCollection:
+      path: /Audio/Mecha/sound_mecha_powerloader_step.ogg
+  - type: Damageable
+    damageContainer: Silicon
+    damageModifierSet: Silicon
+
+# отладочный хламобот: спавнится с батареей и хламозитронным мозгом.
+- type: entity
+  parent: N14Junkbot
+  id: N14JunkbotDebug
+  suffix: DEBUG
+  components:
+  - type: ContainerFill
+    containers:
+      borg_brain:
+      - N14JunktronPositronicBrain
+      cell_slot:
+      - PowerCellHyper

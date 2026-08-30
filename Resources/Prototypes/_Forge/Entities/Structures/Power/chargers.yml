@@ -1,0 +1,59 @@
+# Неуязвимая, автономная док-станция для боргов. Только маппинг.
+- type: entity
+  parent: BaseStructure
+  id: N14AutonomousRobotDock
+  name: docking station
+  description: Charges robots and cyborgs with no power connection. Surprisingly spacious inside.
+  suffix: Autonomous
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    sprite: _Forge/Structures/Power/robot_dock.rsi
+    layers:
+      - state: borgcharger-u1
+        map: ["base"]
+      - state: borgcharger1
+        map: ["charging"]
+        shader: "unshaded"
+        visible: false
+  - type: Appearance
+  - type: GenericVisualizer
+    visuals:
+      enum.StorageVisuals.Open:
+        base:
+          True: { state: borgcharger-u0 }
+          False: { state: borgcharger-u1 }
+      enum.CellVisual.Light:
+        charging:
+          Off: { visible: false }
+          Empty: { visible: false }
+          Charging: { visible: true }
+          Charged: { visible: false }
+  - type: Charger
+    chargeRate: 30
+    slotId: entity_storage
+    whitelist:
+      components:
+      - BorgChassis
+      - Silicon
+      - Inventory
+  - type: EntityStorage
+    capacity: 1
+    whitelist:
+      components:
+      - BorgChassis
+  - type: ContainerContainer
+    containers:
+      entity_storage: !type:Container
+  - type: ApcPowerReceiver
+    needsPower: false
+  - type: InteractionOutline
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 10000
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]

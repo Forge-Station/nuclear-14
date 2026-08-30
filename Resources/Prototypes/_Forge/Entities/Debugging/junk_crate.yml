@@ -1,0 +1,15 @@
+- type: entity
+  parent: CrateGenericSteel
+  id: N14CrateJunkScrapDebug
+  suffix: DEBUG
+  name: scrap crate
+  components:
+  - type: StorageFill
+    contents:
+    - id: N14Scrap
+    - id: N14ScrapSteel
+    - id: N14ScrapElectronic
+    - id: N14ScrapGold
+    - id: N14ScrapBrass
+    - id: N14ScrapCopper
+    - id: N14ScrapLead
