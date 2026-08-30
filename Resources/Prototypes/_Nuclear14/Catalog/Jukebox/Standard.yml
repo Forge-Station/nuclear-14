@@ -241,3 +241,72 @@
   name: Patriotic Yankee
   path:
     path: /Audio/_Nuclear14/Music/MUS_Patriotic_Yankee.ogg
+# Additional Wasteland Music
+
+- type: jukebox
+  id: LonesomeValley
+  name: Lonesome Valley
+  path:
+    path: /Audio/_Nuclear14/Jukebox/LonesomeValley.ogg
+
+- type: jukebox
+  id: Shenandoah
+  name: Shenandoah
+  path:
+    path: /Audio/_Nuclear14/Jukebox/shenandoah.ogg
+
+- type: jukebox
+  id: StLouisBlues
+  name: St. Louis Blues
+  path:
+    path: /Audio/_Nuclear14/Jukebox/StLouisBlues.ogg
+
+- type: jukebox
+  id: WhiteHouseBlues
+  name: White House Blues
+  path:
+    path: /Audio/_Nuclear14/Jukebox/WhiteHouseBlues.ogg
+
+# Additional Fallout radio music
+
+- type: jukebox
+  id: OlManMose
+  name: Ol' Man Mose
+  path:
+    path: /Audio/_Nuclear14/Jukebox/OlManMose.ogg
+
+- type: jukebox
+  id: MisterFiveByFive
+  name: Mister Five By Five
+  path:
+    path: /Audio/_Nuclear14/Jukebox/MisterFiveByFive.ogg
+
+- type: jukebox
+  id: JustAFairWeatherFriend
+  name: Just a Fair Weather Friend
+  path:
+    path: /Audio/_Nuclear14/Jukebox/JustAFairWeatherFriend.ogg
+
+- type: jukebox
+  id: PraiseTheLordAndPassTheAmmunition
+  name: Praise the Lord and Pass the Ammunition
+  path:
+    path: /Audio/_Nuclear14/Jukebox/PraiseTheLordAndPassTheAmmunition.ogg
+
+- type: jukebox
+  id: StraightenUpAndFlyRight
+  name: Straighten Up and Fly Right
+  path:
+    path: /Audio/_Nuclear14/Jukebox/StraightenUpAndFlyRight.ogg
+
+- type: jukebox
+  id: IntoEachLifeSomeRainMustFall
+  name: Into Each Life Some Rain Must Fall
+  path:
+    path: /Audio/_Nuclear14/Jukebox/IntoEachLifeSomeRainMustFall.ogg
+
+- type: jukebox
+  id: GrandmaPlaysTheNumbers
+  name: Grandma Plays the Numbers
+  path:
+    path: /Audio/_Nuclear14/Jukebox/GrandmaPlaysTheNumbers.ogg

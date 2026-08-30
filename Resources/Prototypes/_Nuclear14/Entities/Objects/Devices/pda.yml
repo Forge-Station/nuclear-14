@@ -57,6 +57,13 @@
       maxDistance: 10
       rolloffFactor: 4
   - type: RadiationReceiver
+  - type: PipBoyRadioWearer
+  - type: CartridgeLoader
+    uiKey: enum.PdaUiKey.Key
+    preinstalled:
+      - CrewManifestCartridge
+      - NotekeeperCartridge
+      - N14PipBoyRadioCartridge
 
 - type: entity
   parent: N14BasePipboy
@@ -138,3 +145,12 @@
         - Write
   - type: PdaBorderColor
     borderColor: "#7C5D00"
+  - type: Jukebox
+
+  - type: ActivatableUI
+    key: enum.JukeboxUiKey.Key
+
+  - type: UserInterface
+    interfaces:
+      enum.JukeboxUiKey.Key:
+        type: JukeboxBoundUserInterface

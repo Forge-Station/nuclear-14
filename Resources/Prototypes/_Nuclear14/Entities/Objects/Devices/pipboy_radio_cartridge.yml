@@ -1,0 +1,17 @@
+- type: entity
+  parent: BaseItem
+  id: N14PipBoyRadioCartridge
+  name: Pip-Boy radio
+  description: A built-in radio program for the Pip-Boy.
+  components:
+  - type: Sprite
+    sprite: Objects/Devices/cartridge.rsi
+    state: cart-y
+  - type: UIFragment
+    ui: !type:PipBoyRadioUi
+  - type: Cartridge
+    programName: pipboy-radio-program-name
+    icon:
+      sprite: _Nuclear14/Structures/Misc/radiostation/tableradio.rsi
+      state: base
+  - type: PipBoyRadioCartridge
