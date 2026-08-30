@@ -1,0 +1,23 @@
+- type: entity
+  id: N14Cartridge939Rifle
+  name: cartridge (9.39mm)
+  parent: BaseCartridgeLightRifle
+  components:
+  - type: CartridgeAmmo
+    proto: N14Bullet939
+    soundEject:
+      collection: N14RifleCasingEject
+  - type: Tag
+    tags:
+      - Cartridge
+      - N14Cartridge939Rifle
+  - type: EmitSoundOnLand
+    sound:
+      collection: N14RifleCasingEject
+      params:
+        volume: -1
+  - type: EmitSoundOnCollide
+    sound:
+      collection: N14RifleCasingEject
+      params:
+        volume: -1

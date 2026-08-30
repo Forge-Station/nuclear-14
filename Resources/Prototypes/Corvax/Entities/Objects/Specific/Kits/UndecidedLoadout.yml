@@ -63,6 +63,7 @@
     - VeteranBerserkerSet
     - VeteranKebabSet
     - VeteranSuppressorSet
+    - VeteranScoutSet
 
 - type: entity
   id: LegionWarriorloadoutkits
@@ -77,6 +78,7 @@
     - WarriorHealerSet
     - WarriorFirearmSet
     - WarriorMeleeSet
+    - WarriorSpearSet
 
 - type: entity
   id: LegionRecruitloadoutkits
@@ -397,6 +399,16 @@
   - KitVeteranKebab
 
 - type: UndecidedLoadoutBackpackSet
+  id: VeteranScoutSet
+  name: undecided-loadout-category-veteran-scout-name
+  description: undecided-loadout-category-veteran-scout-description
+  sprite:
+    sprite: Corvax/Objects/Misc/kits.rsi
+    state: base
+  content:
+  - KitVeteranScout
+
+- type: UndecidedLoadoutBackpackSet
   id: WarriorBaseSet
   name: undecided-loadout-category-warrior-base-name
   description: undecided-loadout-category-warrior-base-description
@@ -445,6 +457,16 @@
     state: base
   content:
   - KitWarriorMelee
+
+- type: UndecidedLoadoutBackpackSet
+  id: WarriorSpearSet
+  name: undecided-loadout-category-warrior-spear-name
+  description: undecided-loadout-category-warrior-spear-description
+  sprite:
+    sprite: Corvax/Objects/Misc/kits.rsi
+    state: base
+  content:
+  - KitWarriorSpear
 
 - type: UndecidedLoadoutBackpackSet
   id: RecruitBaseSet

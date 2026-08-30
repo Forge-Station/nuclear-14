@@ -249,3 +249,108 @@
     sprintModifier: 0.90
   - type: StaticPrice
     price: 500
+
+- type: entity
+  name: ASVal
+  parent: N14WeaponRifleBase
+  id: N14WeaponRifleAsVal
+  description: A silent assault rifle chambered in subsonic 9.39mm. An integrated suppressor makes it deadly in close quarters, beloved by special operations across the wasteland.
+  components:
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Guns/Rifles/asval.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Guns/Rifles/asval.rsi
+    layers:
+      - state: base
+        map: ["enum.GunVisualLayers.Base"]
+      - state: mag-0
+        map: ["enum.GunVisualLayers.Mag"]
+  - type: Gun
+    minAngle: 25
+    maxAngle: 55
+    angleIncrease: 4
+    angleDecay: 12
+    fireRate: 4.5
+    projectileSpeed: 40
+    soundGunshot:
+      collection: N14PistolSpyGunshot
+    selectedMode: Fullauto
+    availableModes:
+    - Fullauto
+    - SemiAuto
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Magazine
+        startingItem: Magazine939AsVal
+        insertSound: /Audio/Weapons/Guns/MagIn/ltrifle_magin.ogg
+        ejectSound: /Audio/Weapons/Guns/MagOut/ltrifle_magout.ogg
+        priority: 2
+        whitelist:
+          tags:
+            - Magazine939AsVal
+      gun_chamber:
+        name: Chamber
+        startingItem: N14Cartridge939Rifle
+        priority: 1
+        whitelist:
+          tags:
+            - N14Cartridge939Rifle
+  - type: StaticPrice
+    price: 100
+
+- type: entity
+  name: VSS Vintorez
+  parent: N14WeaponRifleBase
+  id: N14WeaponRifleVssVintorez
+  description: A precision sniper rifle chambered in subsonic 9.39mm. Fitted with an integral suppressor and scope, it delivers accurate silent death at range. It uses 10-round magazines.
+  components:
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Guns/Rifles/vssvintorez.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Guns/Rifles/vssvintorez.rsi
+    layers:
+      - state: base
+        map: ["enum.GunVisualLayers.Base"]
+      - state: mag-0
+        map: ["enum.GunVisualLayers.Mag"]
+  - type: Gun
+    minAngle: 20
+    maxAngle: 32
+    angleIncrease: 3
+    angleDecay: 10
+    fireRate: 3
+    projectileSpeed: 40
+    soundGunshot:
+      collection: N14PistolSpyGunshot
+    selectedMode: SemiAuto
+    availableModes:
+    - SemiAuto
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Magazine
+        startingItem: Magazine939Vss
+        insertSound: /Audio/Weapons/Guns/MagIn/ltrifle_magin.ogg
+        ejectSound: /Audio/Weapons/Guns/MagOut/ltrifle_magout.ogg
+        priority: 2
+        whitelist:
+          tags:
+            - Magazine939Vss
+      gun_chamber:
+        name: Chamber
+        startingItem: N14Cartridge939Rifle
+        priority: 1
+        whitelist:
+          tags:
+            - N14Cartridge939Rifle
+  - type: StaticPrice
+    price: 100

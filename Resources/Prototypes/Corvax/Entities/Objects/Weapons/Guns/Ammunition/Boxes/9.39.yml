@@ -1,0 +1,41 @@
+- type: entity
+  abstract: true
+  parent: BaseItem
+  id: BaseMagazineBox939Rifle
+  components:
+  - type: BallisticAmmoProvider
+    mayTransfer: true
+    whitelist:
+      tags:
+        - N14Cartridge939Rifle
+    proto: N14Cartridge939Rifle
+    capacity: 20
+  - type: ContainerContainer
+    containers:
+      ballistic-ammo: !type:Container
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Guns/Ammunition/Boxes/9-39box.rsi
+    netsync: false
+  - type: MagazineVisuals
+    magState: mag
+    steps: 5
+    zeroVisible: false
+  - type: Appearance
+  - type: Butcherable # Forge-add
+    spawned:
+    - id: MaterialCardboard1
+      amount: 1
+
+- type: entity
+  parent: BaseMagazineBox939Rifle
+  id: MagazineBox939
+  name: ammunition box (9.39mm)
+  components:
+  - type: BallisticAmmoProvider
+    proto: N14Cartridge939Rifle
+  - type: Sprite
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: mag-1
+      map: ["enum.GunVisualLayers.Mag"]

@@ -1721,6 +1721,16 @@
           orGroup: Tools
           amount: 1
           maxAmount: 1
+        - id: N14ClothingHeadSackMetal
+          prob: 0.05
+        - id: N14ClothingSnowGoggles
+          prob: 0.05
+        - id: N14ClothingHeadBaron
+          prob: 0.05
+        - id: ClothingMaskGasCaptainsMask
+          prob: 0.05
+        - id: ClothingMaskGasMaskHose
+          prob: 0.05
 
 - type: entity
   abstract: true
@@ -2145,6 +2155,12 @@
           prob: 0.01
         - id: N14BookRobot
           prob: 0.01
+        - id: N14ClothingOuterReinforcedArmorKit
+          prob: 0.05
+        - id: N14ClothingOuterArmoredKit
+          prob: 0.05
+        - id: N14ClothingSnowGoggles
+          prob: 0.05
 
 - type: entity
   abstract: true

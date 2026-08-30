@@ -338,6 +338,21 @@
     damageCoefficient: 0.85
 
 - type: entity
+  parent: N14ClothingOuterLegionnaireBaseArmor
+  id: N14ClothingOuterLegionnaireVexillariusArmor
+  name: vexillarius armor
+  description: The armor of the Legion vexillarius, the standard-bearer. Decorated with the colors of the Legion.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/vexarmor.rsi
+    scale: 0.5, 0.5
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/vexarmor.rsi
+  - type: ClothingSpeedModifier
+    walkModifier: 0.95
+    sprintModifier: 0.95
+
+- type: entity
   parent: N14FalloutArmorBase
   id: N14ClothingOuterLegionnaireRecruitArmor
   name: light legionnaire armor

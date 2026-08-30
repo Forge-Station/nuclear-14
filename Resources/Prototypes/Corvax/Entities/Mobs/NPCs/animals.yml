@@ -237,3 +237,18 @@
   - type: MovementSpeedModifier
     baseWalkSpeed: 3.0
     baseSprintSpeed: 5.0
+
+# Corvax-Change-Start: Desert Radscorpion
+- type: entity
+  parent: N14MobRadscorpion
+  id: N14MobDesertRadscorpion
+  name: desert radscorpion
+  description: It's a giant desert radscorpion! Stingy sting.
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: radscorpion
+      sprite: Corvax/Mobs/Animals/desertradscorpion.rsi
+# Corvax-Change-End
