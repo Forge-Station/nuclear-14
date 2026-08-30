@@ -8,10 +8,16 @@ using Robust.Shared.Random;
 namespace Content.Server._Forge.Silicons.RandomLaws;
 
 // GenerateLaw — преимущественно калька с Ионного шторма. Велосипед изобретен потому что в Ванилле захардкожены датасеты и путь локализации.
-public sealed class GlitchedLawGenerator : EntitySystem
+public sealed class GlitchedLawGenerator
 {
-    [Dependency] private readonly IPrototypeManager _proto = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
+    private readonly IPrototypeManager _proto;
+    private readonly IRobustRandom _random;
+
+    public GlitchedLawGenerator(IPrototypeManager proto, IRobustRandom random)
+    {
+        _proto = proto;
+        _random = random;
+    }
 
     private const string Threats = "N14JunkWordThreats";
     private const string Objects = "N14JunkWordObjects";
@@ -145,7 +151,7 @@ public sealed class GlitchedLawGenerator : EntitySystem
             25 => Loc.GetString("n14-junk-law-crew-must-go", ("who", crewAll), ("area", area)),
             26 => Loc.GetString("n14-junk-law-crew-only-1", ("who", crew1), ("part", part)),
             27 => Loc.GetString("n14-junk-law-crew-only-2", ("who", crew1), ("other", crew2), ("part", part)),
-            28 => Loc.GetString("n14-junk-law-crew-only-subjects", ("adjective", adjective), ("subjects", _random.Prob(0.5f) ? objectsThreats : "PEOPLE"), ("part", part)),
+            28 => Loc.GetString("n14-junk-law-crew-only-subjects", ("adjective", adjective), ("subjects", _random.Prob(0.5f) ? objectsThreats : Loc.GetString("n14-junk-crew")), ("part", part)),
             29 => Loc.GetString("n14-junk-law-crew-must-do", ("must", must), ("part", part)),
             30 => Loc.GetString("n14-junk-law-crew-must-have", ("adjective", adjective), ("objects", objects), ("part", part)),
             31 => Loc.GetString("n14-junk-law-crew-must-eat", ("who", who), ("adjective", adjective), ("food", food), ("part", part)),

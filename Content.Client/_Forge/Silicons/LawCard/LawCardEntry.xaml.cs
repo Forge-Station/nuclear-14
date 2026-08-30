@@ -13,6 +13,10 @@ public sealed partial class LawCardEntry : PanelContainer
 {
     private SiliconLaw? _law;
 
+    // Guards against the OnTextChanged handler firing while SetLaw populates the field
+    // programmatically, which would overwrite the law's (possibly localization-key) string.
+    private bool _populating;
+
     public event Action<SiliconLaw>? OnDelete;
     public event Action? OnLawChanged;
 
@@ -22,6 +26,9 @@ public sealed partial class LawCardEntry : PanelContainer
 
         LawContent.OnTextChanged += _ =>
         {
+            if (_populating)
+                return;
+
             _law!.LawString = Rope.Collapse(LawContent.TextRope).Trim();
             UpdateValidity();
             OnLawChanged?.Invoke();
@@ -33,7 +40,9 @@ public sealed partial class LawCardEntry : PanelContainer
     public void SetLaw(SiliconLaw law, int position)
     {
         _law = law;
+        _populating = true;
         LawContent.TextRope = new Rope.Leaf(Loc.GetString(law.LawString));
+        _populating = false;
         PositionText.Text = Loc.GetString("laws-ui-law-header", ("id", position));
         UpdateValidity();
     }

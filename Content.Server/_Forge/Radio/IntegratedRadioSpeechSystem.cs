@@ -11,7 +11,10 @@ public sealed class IntegratedRadioSpeechSystem : EntitySystem
     [Dependency] private readonly RadioSystem _radio = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
 
-    private bool _broadcasting;
+    // Entities currently mid-broadcast, to stop a speaker's own radio message from
+    // recursively re-triggering its broadcast. Tracked per-entity so one speaker never
+    // suppresses another's legitimate broadcast.
+    private readonly HashSet<EntityUid> _broadcasting = new();
 
     public override void Initialize()
     {
@@ -22,17 +25,16 @@ public sealed class IntegratedRadioSpeechSystem : EntitySystem
 
     private void OnSpoke(EntityUid uid, RadioMicrophoneComponent mic, EntitySpokeEvent args)
     {
-        if (_broadcasting || !mic.Enabled || args.Channel != null)
+        if (!mic.Enabled || args.Channel != null || !_broadcasting.Add(uid))
             return;
 
-        _broadcasting = true;
         try
         {
             _radio.SendRadioMessage(uid, args.Message, _proto.Index<RadioChannelPrototype>(mic.BroadcastChannel), uid, frequency: mic.Frequency);
         }
         finally
         {
-            _broadcasting = false;
+            _broadcasting.Remove(uid);
         }
     }
 }

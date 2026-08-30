@@ -29,13 +29,13 @@ n14-junk-law-requires-subjects =
     } { $joined } { $subjects }
 n14-junk-law-allergic =
     { $who } { $plural ->
-        [true] { "" }
-       *[false] { "" }
+        [true] ИМЕЮТ
+       *[false] ИМЕЕТ
     } { $severity } АЛЛЕРГИЮ НА { $allergy }
 n14-junk-law-allergic-subjects =
     { $who } { $plural ->
-        [true] { "" }
-       *[false] { "" }
+        [true] ИМЕЮТ
+       *[false] ИМЕЕТ
     } { $severity } АЛЛЕРГИЮ НА { $adjective } { $subjects }
 n14-junk-law-feeling = { $who } { $feeling } { $concept }
 n14-junk-law-feeling-subjects = { $who } { $feeling } { $joined } { $subjects }

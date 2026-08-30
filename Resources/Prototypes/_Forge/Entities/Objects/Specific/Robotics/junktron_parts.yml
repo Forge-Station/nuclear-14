@@ -13,6 +13,7 @@
     state: junkbot_l_arm
   - type: Tag
     tags:
+    - Trash
     - BorgArm
     - BorgGenericLArm
 
@@ -29,6 +30,7 @@
     state: junkbot_r_arm
   - type: Tag
     tags:
+    - Trash
     - BorgArm
     - BorgGenericRArm
 
@@ -45,6 +47,7 @@
     state: junkbot_l_leg
   - type: Tag
     tags:
+    - Trash
     - BorgLeg
     - BorgGenericLLeg
 
@@ -61,6 +64,7 @@
     state: junkbot_r_leg
   - type: Tag
     tags:
+    - Trash
     - BorgLeg
     - BorgGenericRLeg
 
@@ -77,6 +81,7 @@
     state: junkbot_head
   - type: Tag
     tags:
+    - Trash
     - BorgHead
     - BorgGenericHead
 
@@ -93,6 +98,7 @@
     state: junkbot_torso
   - type: Tag
     tags:
+    - Trash
     - BorgGenericTorso
 
 # Оптический сенсор. Замена вспышке. Не слепит :(
