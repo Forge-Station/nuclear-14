@@ -85,6 +85,10 @@
   id: N14MobRaiderBoss
   description: Boss of all those psycho raiders you see around this area. Good luck!
   components:
+    - type: MobThresholds 
+      thresholds:
+        0: Alive
+        175: Dead  # Forge-end  
     - type: Gun
       minAngle: 10
       maxAngle: 34.5
@@ -238,7 +242,7 @@
         sprite: Objects/Misc/handcuffs.rsi
         state: body-overlay-2
         visible: false
-      - sprite: _Nuclear14/Objects/Weapons/Guns/Shotguns/double_shotgun.rsi
+      - sprite: _Nuclear14/Objects/Weapons/Guns/Snipers/piperifle.rsi
         state: inhand-right # Only part we change, the gun sprite.
 
 - type: entity
@@ -754,6 +758,10 @@
   id: N14MobEnforcerChief
   description: Rough man in fine clothes, carrying a magnum revolver.
   components:
+    - type: MobThresholds 
+      thresholds:
+        0: Alive
+        175: Dead  # Forge-end 
     - type: Gun
       minAngle: 4.5
       maxAngle: 13.5

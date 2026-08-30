@@ -33,9 +33,15 @@ public abstract partial class SharedPaperComponent : Component
     {
         public readonly string Text;
 
-        public PaperInputTextMessage(string text)
+        /// <summary>
+        /// Language the writer chose for this page. Empty keeps the paper's current language.
+        /// </summary>
+        public readonly string Language; // Forge-Change
+
+        public PaperInputTextMessage(string text, string? language = null)
         {
             Text = text;
+            Language = language ?? string.Empty; // Forge-Change
         }
     }
 

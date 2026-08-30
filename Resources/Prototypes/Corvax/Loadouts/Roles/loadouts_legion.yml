@@ -465,24 +465,24 @@
   items:
     - N14ClothingOuterLegionnairePrincepsPrimeArmor
 
-- type: loadout
-  id: LoadoutN14BerserkerPowder
-  category: Items
-  cost: 2
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - CaesarLegionDean
-        - CaesarLegionLegionnaireVeteran
-        - CaesarLegionVenator
-        - CaesarLegionLegionnaireWarrior
-        - CaesarLegionCenturion
-    - !type:CharacterDepartmentTimeRequirement
-      department: CaesarLegion
-      min: 36000
-  items:
-    - N14BerserkerPowder
+# - type: loadout
+#   id: LoadoutN14BerserkerPowder
+#   category: Items
+#   cost: 2
+#   exclusive: true
+#   requirements:
+#     - !type:CharacterJobRequirement
+#       jobs:
+#         - CaesarLegionDean
+#         - CaesarLegionLegionnaireVeteran
+#         - CaesarLegionVenator
+#         - CaesarLegionLegionnaireWarrior
+#         - CaesarLegionCenturion
+#     - !type:CharacterDepartmentTimeRequirement
+#       department: CaesarLegion
+#       min: 36000
+#   items:
+#     - N14BerserkerPowder
 
 - type: loadout
   id: LoadoutN14Sagum

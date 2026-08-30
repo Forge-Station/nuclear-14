@@ -1,6 +1,7 @@
 using System;
 using Content.Server.UserInterface;
 using Content.Shared._Misfits.Holotape;
+using Content.Shared.GameTicking;
 using Robust.Server.GameObjects;
 using Robust.Shared.GameObjects;
 using Robust.Shared.IoC;
@@ -30,7 +31,7 @@ public sealed class TerminalNotebookSystem : EntitySystem
     {
         base.Initialize();
 
-        // Initialize the persistent data store (loads from disk)
+        // Initialize the in-memory data store
         _dataStore.Initialize();
 
         // Auto-generate a deterministic terminalId from grid position on map spawn
@@ -40,14 +41,22 @@ public sealed class TerminalNotebookSystem : EntitySystem
         SubscribeLocalEvent<TerminalNotebookComponent, RequestTerminalNotesMessage>(OnRequestNotes);
         SubscribeLocalEvent<TerminalNotebookComponent, SubmitTerminalNoteMessage>(OnSubmitNote);
         SubscribeLocalEvent<TerminalNotebookComponent, DeleteTerminalNoteMessage>(OnDeleteNote);
+
+        // Forge-Change: notes must not survive into the next round.
+        SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestart);
+    }
+
+    private void OnRoundRestart(RoundRestartCleanupEvent ev)
+    {
+        _dataStore.Clear();
     }
 
     // ── MapInit: auto-generate terminal ID from position ─────────────────────
 
     /// <summary>
     /// On MapInit, if the terminal still has the default ID, generate a unique
-    /// deterministic ID based on its world grid position. This ensures the same
-    /// physical terminal gets the same note storage across round restarts.
+    /// deterministic ID based on its world grid position. Unique per terminal
+    /// within a round; notes are wiped on round restart.
     /// </summary>
     private void OnMapInit(EntityUid uid, TerminalNotebookComponent notebook, MapInitEvent args)
     {

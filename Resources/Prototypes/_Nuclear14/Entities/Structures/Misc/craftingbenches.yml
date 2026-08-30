@@ -473,7 +473,7 @@
     # - N14ClothingBackpackWaterTank # Forge-Change
     # Chemistry
     - ChemBag # Forge-add
-    - Syringe # Forge-add
+    - N14DoctorSyringe # Forge-add
     - N14Beaker
     - N14LargeBeaker
     - N14Dropper

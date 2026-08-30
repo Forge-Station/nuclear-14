@@ -101,3 +101,13 @@
   - type: Stack
     stackType: N14RegenerativeOintment
     count: 1
+
+- type: entity
+  name: пакет крови
+  description: Содержит универсальный кровезаменитель, разработанный в лабораториях Med-Tek. 
+  parent: Bloodpack
+  id: Bloodpack1
+  suffix: Single
+  components:
+  - type: Stack
+    count: 1

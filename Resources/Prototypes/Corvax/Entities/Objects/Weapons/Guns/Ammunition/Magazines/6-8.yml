@@ -35,6 +35,7 @@
   id: Magazine68Rifle
   name: "magazine (6.8mm)"
   parent: BaseMagazine68Rifle
+  categories: [HideSpawnMenu]
   components:
   - type: BallisticAmmoProvider
     proto: N14Cartridge68Rifle

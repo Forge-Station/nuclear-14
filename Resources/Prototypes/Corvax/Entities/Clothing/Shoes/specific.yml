@@ -8,3 +8,8 @@
     sprite: Corvax/Clothing/Shoes/Specific/romanshoes.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Shoes/Specific/romanshoes.rsi
+  - type: Butcherable
+    butcheringType: Knife
+    spawned:
+    - id: N14MaterialLeather1
+      amount: 2
