@@ -19,4 +19,9 @@ public sealed partial class ItemSlotRendererComponent : Component
 
     [DataField]
     public bool ErrorOnMissing = true;
+
+    // Number of extra sprite layers this renderer has appended (for multi-layer items such
+    // as soups/pies). Tracked so they can be removed precisely without touching other layers.
+    [ViewVariables]
+    public int ExtraLayers;
 }

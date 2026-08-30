@@ -9,6 +9,8 @@ using System.Numerics;
 using Content.Shared.Containers.ItemSlots;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
+using Robust.Shared.Containers;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Reflection;
 
 namespace Content.Goobstation.Client.ItemSlotRenderer;
@@ -17,6 +19,7 @@ namespace Content.Goobstation.Client.ItemSlotRenderer;
 /// Renders whatever item is inside the mapped item slot onto sprite layers of the entity.
 /// Multi-layer items (e.g. FoodSequence dishes like soups and pies) are fully copied,
 /// with extra layers added on top of the mapped layer.
+/// Updates are event-driven off item-slot changes rather than polled every frame.
 /// </summary>
 public sealed class ItemSlotRendererSystem : EntitySystem
 {
@@ -31,8 +34,16 @@ public sealed class ItemSlotRendererSystem : EntitySystem
     {
         SubscribeLocalEvent<ItemSlotRendererComponent, ComponentStartup>(OnStartup);
         SubscribeLocalEvent<ItemSlotRendererComponent, ComponentRemove>(OnRemove);
+        SubscribeLocalEvent<ItemSlotRendererComponent, EntInsertedIntoContainerMessage>(OnContainerChanged);
+        SubscribeLocalEvent<ItemSlotRendererComponent, EntRemovedFromContainerMessage>(OnContainerChanged);
 
-        _log.Info("ItemSlotRenderer system initialized");
+        // Cached prototype textures/scales become stale after a prototype hot-reload.
+        SubscribeLocalEvent<PrototypesReloadedEventArgs>(OnPrototypesReloaded);
+    }
+
+    private void OnPrototypesReloaded(PrototypesReloadedEventArgs args)
+    {
+        _protoTextureCache.Clear();
     }
 
     private void OnRemove(EntityUid uid, ItemSlotRendererComponent comp, ComponentRemove args)
@@ -65,17 +76,18 @@ public sealed class ItemSlotRendererSystem : EntitySystem
 
             comp.LayerMappings.Add((mapKey, slotId));
         }
+
+        UpdateVisuals(uid, sprite, comp);
     }
 
-    public override void Update(float frameTime)
+    private void OnContainerChanged<T>(EntityUid uid, ItemSlotRendererComponent comp, T args) where T : ContainerModifiedMessage
     {
-        base.Update(frameTime);
+        // Only react to the slots this renderer actually maps.
+        if (!comp.LayerMappings.Any(mapping => mapping.Item2 == args.Container.ID))
+            return;
 
-        var query = EntityQueryEnumerator<ItemSlotRendererComponent, SpriteComponent>();
-        while (query.MoveNext(out var uid, out var comp, out var sprite))
-        {
+        if (TryComp<SpriteComponent>(uid, out var sprite))
             UpdateVisuals(uid, sprite, comp);
-        }
     }
 
     private void UpdateVisuals(EntityUid uid, SpriteComponent sprite, ItemSlotRendererComponent comp)
@@ -88,7 +100,7 @@ public sealed class ItemSlotRendererSystem : EntitySystem
             var item = _itemSlots.GetItemOrNull(uid, slotId);
             if (item == null)
             {
-                ClearVisuals(uid, sprite, layerIndex);
+                ClearVisuals(uid, sprite, comp, layerIndex);
                 continue;
             }
 
@@ -105,8 +117,9 @@ public sealed class ItemSlotRendererSystem : EntitySystem
                     var src = (SpriteComponent.Layer) layer;
                     Texture? tex = null;
 
-                    if (src.RSI != null && !string.IsNullOrEmpty(src.State.Name))
-                        tex = src.RSI[src.State.Name].Frame0;
+                    if (src.RSI != null && !string.IsNullOrEmpty(src.State.Name)
+                        && src.RSI.TryGetState(src.State.Name, out var rsiState))
+                        tex = rsiState.Frame0;
                     else if (src.ActualState != null)
                         tex = src.ActualState.Frame0;
                     else if (src.Texture != null && src.Texture != Texture.Transparent)
@@ -127,7 +140,7 @@ public sealed class ItemSlotRendererSystem : EntitySystem
                 var meta = EntityManager.GetComponent<MetaDataComponent>(item.Value);
                 if (meta.EntityPrototype == null)
                 {
-                    ClearVisuals(uid, sprite, layerIndex);
+                    ClearVisuals(uid, sprite, comp, layerIndex);
                     continue;
                 }
 
@@ -149,7 +162,7 @@ public sealed class ItemSlotRendererSystem : EntitySystem
                     _protoTextureCache[meta.EntityPrototype.ID] = protoData;
                 }
 
-                ShrinkExtras(uid, sprite, layerIndex, 0);
+                SetExtraLayerCount(uid, sprite, comp, 0);
                 _sprite.LayerSetTexture((uid, sprite), layerIndex, protoData.Texture);
                 _sprite.LayerSetScale((uid, sprite), layerIndex, protoData.Scale);
                 _sprite.LayerSetOffset((uid, sprite), layerIndex, Vector2.Zero);
@@ -157,25 +170,16 @@ public sealed class ItemSlotRendererSystem : EntitySystem
                 continue;
             }
 
-            // Grow/shrink the extra layers so the sprite can fit every item layer.
-            var targetTotal = layerIndex + usable.Count;
-            var currentTotal = sprite.AllLayers.Count();
-            while (currentTotal < targetTotal)
-            {
-                _sprite.AddBlankLayer((uid, sprite));
-                currentTotal++;
-            }
-            while (currentTotal > targetTotal)
-            {
-                _sprite.RemoveLayer((uid, sprite), currentTotal - 1);
-                currentTotal--;
-            }
+            // Grow/shrink our own extra layers so the sprite can fit every item layer.
+            // Extras are appended at the end of the sprite and drawn on top of the mapped layer.
+            SetExtraLayerCount(uid, sprite, comp, usable.Count - 1);
+            var baseCount = sprite.AllLayers.Count() - comp.ExtraLayers;
 
             // Copy every item layer, preserving order (bowl first, contents above).
             for (var i = 0; i < usable.Count; i++)
             {
                 var (src, tex) = usable[i];
-                var dst = layerIndex + i;
+                var dst = i == 0 ? layerIndex : baseCount + (i - 1);
 
                 _sprite.LayerSetTexture((uid, sprite), dst, tex);
                 _sprite.LayerSetScale((uid, sprite), dst, itemSprite!.Scale * src.Scale);
@@ -185,9 +189,9 @@ public sealed class ItemSlotRendererSystem : EntitySystem
         }
     }
 
-    private void ClearVisuals(EntityUid uid, SpriteComponent sprite, int layerIndex)
+    private void ClearVisuals(EntityUid uid, SpriteComponent sprite, ItemSlotRendererComponent comp, int layerIndex)
     {
-        ShrinkExtras(uid, sprite, layerIndex, 0);
+        SetExtraLayerCount(uid, sprite, comp, 0);
 
         if (!sprite.TryGetLayer(layerIndex, out var layer) || layer.Texture == Texture.Transparent)
             return;
@@ -198,14 +202,22 @@ public sealed class ItemSlotRendererSystem : EntitySystem
         _sprite.LayerSetColor((uid, sprite), layerIndex, Color.White);
     }
 
-    private void ShrinkExtras(EntityUid uid, SpriteComponent sprite, int layerIndex, int extraCount)
+    /// <summary>
+    /// Adjusts the number of extra layers this renderer has appended (always at the end of the
+    /// sprite) to <paramref name="count"/>, without disturbing the entity's own base layers.
+    /// </summary>
+    private void SetExtraLayerCount(EntityUid uid, SpriteComponent sprite, ItemSlotRendererComponent comp, int count)
     {
-        var targetTotal = layerIndex + 1 + extraCount;
-        var currentTotal = sprite.AllLayers.Count();
-        while (currentTotal > targetTotal)
+        while (comp.ExtraLayers < count)
         {
-            _sprite.RemoveLayer((uid, sprite), currentTotal - 1);
-            currentTotal--;
+            _sprite.AddBlankLayer((uid, sprite));
+            comp.ExtraLayers++;
+        }
+
+        while (comp.ExtraLayers > count)
+        {
+            _sprite.RemoveLayer((uid, sprite), sprite.AllLayers.Count() - 1);
+            comp.ExtraLayers--;
         }
     }
 }

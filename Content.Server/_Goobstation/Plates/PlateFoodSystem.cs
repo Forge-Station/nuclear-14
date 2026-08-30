@@ -67,11 +67,14 @@ public sealed class PlateFoodSystem : EntitySystem
             return;
 
         var user = args.User;
+        var plate = ent.Owner;
         args.Verbs.Add(new AlternativeVerb
         {
             Act = () =>
             {
-                _food.TryFeed(user, user, food, foodComp);
+                // Re-resolve the current food when the verb fires; it may have changed
+                // or been removed while the menu was open.
+                TryEatOff(plate, user);
             },
             Icon = new SpriteSpecifier.Texture(new("/Textures/Interface/VerbIcons/cutlery.svg.192dpi.png")),
             Text = Loc.GetString("food-system-verb-eat"),

@@ -9,3 +9,4 @@ namespace Content.Goobstation.Shared.Plates;
 /// </summary>
 [RegisterComponent]
 public sealed partial class FoodPlateComponent : Component;
+
