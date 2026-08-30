@@ -541,6 +541,27 @@
   - proto: N14Gunpowder10
     amount: 10
     price: 200
+  - proto: N14Scrap
+    amount: 5
+    price: 60
+  - proto: N14ScrapSteel
+    amount: 5
+    price: 60
+  - proto: N14ScrapElectronic
+    amount: 5
+    price: 60
+  - proto: N14ScrapGold
+    amount: 5
+    price: 60
+  - proto: N14ScrapCopper
+    amount: 5
+    price: 60
+  - proto: N14ScrapBrass
+    amount: 5
+    price: 60
+  - proto: N14ScrapLead
+    amount: 5
+    price: 60
   - proto: N14Scrap1
     amount: 30
     price: 200
@@ -601,6 +622,11 @@
     price: 25 
   - proto: RadioHandheld
     price: 75
+  - proto: CableApcStack
+    amount: 10
+    price: 50
+  - proto: PowerCellSmall
+    price: 50
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Sprouts

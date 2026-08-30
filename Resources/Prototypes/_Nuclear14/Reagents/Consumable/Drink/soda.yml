@@ -31,10 +31,15 @@
     Poison:
       effects:
       - !type:HealthChange
+        conditions:
+        - !type:Species
+          species:
+          - GhoulGlowing
+          shouldHave: false
         damage:
           types:
             Radiation: 0.1
-            
+
 - type: reagent
   parent: IrradiatedNukaCola
   id: NukaColaQuantum
@@ -51,6 +56,11 @@
     Poison:
       effects:
       - !type:HealthChange
+        conditions:
+        - !type:Species
+          species:
+          - GhoulGlowing
+          shouldHave: false
         damage:
           types:
             Radiation: 0.1
@@ -133,6 +143,11 @@
     Poison:
       effects:
       - !type:HealthChange
+        conditions:
+        - !type:Species
+          species:
+          - GhoulGlowing
+          shouldHave: false
         damage:
           types:
             Radiation: 0.1
@@ -164,6 +179,11 @@
         damage:
           types:
             Radiation: 0.1
+        conditions:
+        - !type:Species
+          species:
+          - GhoulGlowing
+          shouldHave: false
       - !type:ChemVomit
         probability: 0.25
 

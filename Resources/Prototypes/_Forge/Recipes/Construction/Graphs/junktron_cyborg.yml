@@ -1,0 +1,48 @@
+# граф сборки хламобота. (вся эта фигня придумана, чтобы не крафтить вспышки из ванильной станции)
+- type: constructionGraph
+  id: N14JunktronCyborg
+  start: start
+  graph:
+  - node: start
+    entity: N14JunktronEndoskeleton
+    edges:
+
+    - to: start
+      conditions:
+      - !type:ContainerNotEmpty
+        container: part-container
+      steps:
+      - tool: Prying
+        doAfter: 0.5
+        completed:
+        - !type:EmptyAllContainers
+
+    - to: cyborg
+      steps:
+      - assemblyId: generic
+        guideString: borg-construction-guide-string
+
+      - material: Cable
+        amount: 1
+        doAfter: 1
+        store: part-container
+        
+      - tag: N14OpticalSensor
+        name: optical sensor
+        store: part-container
+        icon:
+          sprite: Objects/Weapons/Melee/flash.rsi
+          state: flash
+
+      - tag: N14OpticalSensor
+        name: second optical sensor
+        store: part-container
+        icon:
+          sprite: Objects/Weapons/Melee/flash.rsi
+          state: flash
+
+      - tool: Screwing
+        doAfter: 0.5
+
+  - node: cyborg
+    entity: N14Junkbot

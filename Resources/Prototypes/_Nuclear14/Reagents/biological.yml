@@ -34,6 +34,10 @@
         conditions:
         - !type:OrganType
           type: Bloodsucker
+        - !type:Species
+          species:
+          - GhoulGlowing
+          shouldHave: false
         damage:
           groups:
             Brute: -3
@@ -90,6 +94,10 @@
         conditions:
         - !type:OrganType
           type: Bloodsucker
+        - !type:Species
+          species:
+          - GhoulGlowing
+          shouldHave: false
         damage:
           groups:
             Brute: -3

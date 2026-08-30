@@ -1,0 +1,31 @@
+# Костыльное говно, нужное, чтоб существ в рации превращать (уже с защитой от "звуковых петель")
+- type: entity
+  abstract: true
+  id: BaseFrequencyRadio
+  components:
+  - type: RadioMicrophone
+    broadcastChannel: Handheld
+    frequency: 1330
+    toggleOnInteract: false
+  - type: RadioSpeaker
+    toggleOnInteract: false
+    channels:
+    - Handheld
+  - type: UserInterface
+    interfaces:
+      enum.HandheldRadioUiKey.Key:
+        type: HandheldRadioBoundUserInterface
+  - type: IntrinsicUI
+    uis:
+      enum.HandheldRadioUiKey.Key:
+        toggleAction: ActionN14OpenRadio
+
+- type: entity
+  id: ActionN14OpenRadio
+  name: radio
+  description: Open the radio to pick a frequency and talk on it.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: InstantAction
+    icon: { sprite: Objects/Devices/communication.rsi, state: walkietalkie }
+    event: !type:ToggleIntrinsicUIEvent { key: enum.HandheldRadioUiKey.Key }

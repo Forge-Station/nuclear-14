@@ -1,3 +1,6 @@
+- type: Tag
+  id: N14OpticalSensor
+
 #MARK: Ore
 - type: Tag
   id: N14AluminumOre
