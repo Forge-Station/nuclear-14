@@ -456,6 +456,11 @@
             Toxin: 0.5
           types:
             Radiation: 0.5
+        conditions:
+        - !type:Species
+          species:
+          - GhoulGlowing
+          shouldHave: false
       - !type:ModifyBleedAmount
         amount: 0.1
       - !type:GenericStatusEffect

@@ -14,7 +14,9 @@
   components:
   - type: Sprite
     sprite: Objects/Consumable/Food/plates.rsi
-    state: plate
+    layers:
+    - state: plate
+    - map: ["food"]
   - type: Item
     shape:
     - 0,0,1,0
@@ -54,6 +56,24 @@
     materialComposition:
       Glass: 60
   - type: SpaceGarbage
+  - type: ItemSlots
+    slots:
+      food_slot:
+        ejectOnBreak: true
+        ejectSound:
+          path: /Audio/_NC/Voice/Barks/faucet.ogg
+          params:
+            volume: -80 # effectively silent
+        whitelist:
+          components:
+          - Food
+  - type: ItemSlotRenderer
+    mapping:
+      food_slot: food
+  - type: ContainerContainer
+    containers:
+      food_slot: !type:ContainerSlot {}
+  - type: FoodPlate
   - type: Fixtures
     fixtures:
       fix1:
@@ -94,7 +114,9 @@
   components:
   - type: Sprite
     sprite: Objects/Consumable/Food/plates.rsi
-    state: plate-small
+    layers:
+    - state: plate-small
+    - map: ["food"]
   - type: Item
     storedOffset: 0,-3
 # Needs the full thing because inherting is dumb sometimes.
@@ -119,6 +141,24 @@
   - type: PhysicalComposition
     materialComposition:
       Glass: 30
+  - type: ItemSlots
+    slots:
+      food_slot:
+        ejectOnBreak: true
+        ejectSound:
+          path: /Audio/_NC/Voice/Barks/faucet.ogg
+          params:
+            volume: -80 # effectively silent
+        whitelist:
+          components:
+          - Food
+        blacklist:
+          sizes:
+          - Normal
+          - Large
+          - Huge
+          - Ginormous
+  - type: FoodPlate
 
 - type: entity
   parent: FoodPlateTrash
@@ -140,7 +180,9 @@
   components:
   - type: Sprite
     sprite: Objects/Consumable/Food/plates.rsi
-    state: plate-plastic
+    layers:
+    - state: plate-plastic
+    - map: ["food"]
   - type: Item
     shape:
     - 0,0,1,0
@@ -148,6 +190,24 @@
   - type: Tag
     tags:
     - Trash
+  - type: ItemSlots
+    slots:
+      food_slot:
+        ejectOnBreak: true
+        ejectSound:
+          path: /Audio/_NC/Voice/Barks/faucet.ogg
+          params:
+            volume: -80 # effectively silent
+        whitelist:
+          components:
+          - Food
+  - type: ItemSlotRenderer
+    mapping:
+      food_slot: food
+  - type: ContainerContainer
+    containers:
+      food_slot: !type:ContainerSlot {}
+  - type: FoodPlate
 
 - type: entity
   name: plastic plate
@@ -157,7 +217,9 @@
   components:
   - type: Sprite
     sprite: Objects/Consumable/Food/plates.rsi
-    state: plate-small-plastic
+    layers:
+    - state: plate-small-plastic
+    - map: ["food"]
   - type: Item
     shape:
     - 0,0,1,0
@@ -165,6 +227,30 @@
   - type: Tag
     tags:
     - Trash
+  - type: ItemSlots
+    slots:
+      food_slot:
+        ejectOnBreak: true
+        ejectSound:
+          path: /Audio/_NC/Voice/Barks/faucet.ogg
+          params:
+            volume: -80 # effectively silent
+        whitelist:
+          components:
+          - Food
+        blacklist:
+          sizes:
+          - Normal
+          - Large
+          - Huge
+          - Ginormous
+  - type: ItemSlotRenderer
+    mapping:
+      food_slot: food
+  - type: ContainerContainer
+    containers:
+      food_slot: !type:ContainerSlot {}
+  - type: FoodPlate
 
 # Pie Tin
 
