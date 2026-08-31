@@ -1,0 +1,159 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "sprites by Dicugg, code by Jekuzer (bochenok)",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "raiderarmorbase_Sirius_01",
+      "directions": 4
+    },
+    {
+      "name": "mask_null",
+      "directions": 4
+    },
+    {
+      "name": "APlate_raidervariety_Sirius_01",
+      "directions": 4
+    },
+    {
+      "name": "APlate_raidervariety_Sirius_02",
+      "directions": 4
+    },
+    {
+      "name": "raiderarmorbase_Sirius_02",
+      "directions": 4
+    },
+    {
+      "name": "raiderarmorbase_Sirius_02_01",
+      "directions": 4
+    },
+    {
+      "name": "raiderarmorbase_Sirius_02_02",
+      "directions": 4
+    },
+    {
+      "name": "raiderarmorbase_Sirius_02_03",
+      "directions": 4
+    },
+    {
+      "name": "poyas_raidervariety_Sirius_01",
+      "directions": 4
+    },
+    {
+      "name": "poyas_raidervariety_Sirius_01_02",
+      "directions": 4
+    },
+    {
+      "name": "poyas_raidervariety_Sirius_02",
+      "directions": 4
+    },
+    {
+      "name": "poyas_raidervariety_Sirius_02_01",
+      "directions": 4
+    },
+    {
+      "name": "poyas_raidervariety_Sirius_02_02",
+      "directions": 4
+    },
+    {
+      "name": "poyas_raidervariety_Sirius_02_03",
+      "directions": 4
+    },
+    {
+      "name": "poyas_raidervariety_Sirius_02_04",
+      "directions": 4
+    },
+    {
+      "name": "poyas_raidervariety_Sirius_02_05",
+      "directions": 4
+    },
+    {
+      "name": "poyas_raidervariety_Sirius_02_06",
+      "directions": 4
+    },
+    {
+      "name": "poyas_raidervariety_Sirius_02_07",
+      "directions": 4
+    },
+    {
+      "name": "Lsho_raidervariety_Sirius_04",
+      "directions": 4
+    },
+    {
+      "name": "Lsho_raidervariety_Sirius_05",
+      "directions": 4
+    },
+    {
+      "name": "Lsho_raidervariety_Sirius_06_01",
+      "directions": 4
+    },
+    {
+      "name": "Lsho_raidervariety_Sirius_06_02",
+      "directions": 4
+    },
+    {
+      "name": "Lsho_raidervariety_Sirius_07",
+      "directions": 4
+    },
+    {
+      "name": "Rsho_raidervariety_Sirius_04_01",
+      "directions": 4
+    },
+    {
+      "name": "Rsho_raidervariety_Sirius_05_01",
+      "directions": 4
+    },
+    {
+      "name": "Rsho_raidervariety_Sirius_06",
+      "directions": 4
+    },
+    {
+      "name": "Rsho_raidervariety_Sirius_06_03",
+      "directions": 4
+    },
+    {
+      "name": "Rsho_raidervariety_Sirius_07_01",
+      "directions": 4
+    },
+    {
+      "name": "poyas_raidervariety_Sirius_kilt",
+      "directions": 4
+    },
+    {
+      "name": "poyas_raidervariety_Sirius_kilt2",
+      "directions": 4
+    },
+    {
+      "name": "ALNoga_raidervariety_Sirius_01",
+      "directions": 4
+    },
+    {
+      "name": "ALNoga_raidervariety_Sirius_02",
+      "directions": 4
+    },
+    {
+      "name": "ARNoga_raidervariety_Sirius_01",
+      "directions": 4
+    },
+    {
+      "name": "ARNoga_raidervariety_Sirius_02",
+      "directions": 4
+    },
+    {
+      "name": "ARNoga_raidervariety_Sirius_03",
+      "directions": 4
+    },
+    {
+      "name": "ALNoga_raidervariety_Sirius_03",
+      "directions": 4
+    },
+    {
+      "name": "test",
+      "directions": 4
+    }
+  ]
+}

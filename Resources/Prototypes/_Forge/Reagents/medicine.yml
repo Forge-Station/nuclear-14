@@ -37,6 +37,10 @@
     Medicine:
       metabolismRate: 1
       effects:
+      - !type:SatiateThirst
+        factor: -5
+      - !type:SatiateHunger
+        factor: -2.5      
       - !type:MovespeedModifier
         walkSpeedModifier: 0.80
         sprintSpeedModifier: 0.80

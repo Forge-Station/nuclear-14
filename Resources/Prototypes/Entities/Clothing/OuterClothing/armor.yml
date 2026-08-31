@@ -1,4 +1,4 @@
-# Numbers for armor here largely taken from /tg/.
+﻿# Numbers for armor here largely taken from /tg/.
 # NOTE: Half of the kind of armor you're probably thinking of is in vests.yml. These should probably be merged some day.
 
 - type: entity
@@ -333,3 +333,98 @@
   - type: GroupExamine
   - type: ClothingRequiredStepTriggerImmune
     slots: WITHOUT_POCKET
+
+- type: entity
+  parent: ClothingOuterArmorBulletproof
+  id: SiriusClothingOuterArmorRaiderTrashRandom
+  name: Мусорная броня рейдера
+  suffix: Random visuals
+  components:
+  - type: Sprite
+    sprite: _Sirius/Clothing/OuterClothing/Trash_RaiderArmor.rsi
+    layers:
+    - state: raiderarmorbase_Sirius_02_01
+      map: [ "Main_TrashArmor" ]
+    - state: mask_null
+      map: [ "LShould_TrashArmor" ]
+    - state: mask_null
+      map: [ "RShould_TrashArmor" ]
+    - state: mask_null
+      map: [ "RNoga_TrashArmor" ]
+    - state: mask_null
+      map: [ "LNoga_TrashArmor" ]
+    - state: mask_null
+      map: [ "Belt_TrashArmor" ]
+  - type: Clothing
+    sprite: _Sirius/Clothing/OuterClothing/Trash_RaiderArmor.rsi
+    clothingVisuals:
+      outerClothing:
+      - state: raiderarmorbase_Sirius_02_01
+        map: [ "Main_TrashArmor" ]
+      - state: mask_null
+        map: [ "LShould_TrashArmor" ]
+      - state: mask_null
+        map: [ "RShould_TrashArmor" ]
+      - state: mask_null
+        map: [ "RNoga_TrashArmor" ]
+      - state: mask_null
+        map: [ "LNoga_TrashArmor" ]
+      - state: mask_null
+        map: [ "Belt_TrashArmor" ]
+  - type: RandomSprite
+    available:
+    - Main_TrashArmor:
+        raiderarmorbase_Sirius_01: ""
+        raiderarmorbase_Sirius_02: ""
+        raiderarmorbase_Sirius_02_01: ""
+        raiderarmorbase_Sirius_02_02: ""
+        raiderarmorbase_Sirius_02_03: ""
+        APlate_raidervariety_Sirius_01: ""
+        APlate_raidervariety_Sirius_02: ""
+      LShould_TrashArmor:
+        Lsho_raidervariety_Sirius_04: ""
+        Lsho_raidervariety_Sirius_05: ""
+        Lsho_raidervariety_Sirius_06_01: ""
+        Lsho_raidervariety_Sirius_06_02: ""
+        Lsho_raidervariety_Sirius_07: ""
+        test: ""
+      RShould_TrashArmor:
+        Rsho_raidervariety_Sirius_04_01: ""
+        Rsho_raidervariety_Sirius_05_01: ""
+        Rsho_raidervariety_Sirius_06: ""
+        Rsho_raidervariety_Sirius_06_03: ""
+        Rsho_raidervariety_Sirius_07_01: ""
+        test: ""
+      RNoga_TrashArmor:
+        ARNoga_raidervariety_Sirius_01: ""
+        ARNoga_raidervariety_Sirius_02: ""
+        ARNoga_raidervariety_Sirius_03: ""
+        mask_null: ""
+      LNoga_TrashArmor:
+        ALNoga_raidervariety_Sirius_01: ""
+        ALNoga_raidervariety_Sirius_02: ""
+        ALNoga_raidervariety_Sirius_03: ""
+        mask_null: ""
+      Belt_TrashArmor:
+        poyas_raidervariety_Sirius_kilt: ""
+        poyas_raidervariety_Sirius_kilt2: ""
+        poyas_raidervariety_Sirius_01: ""
+        poyas_raidervariety_Sirius_01_02: ""
+        poyas_raidervariety_Sirius_02: ""
+        poyas_raidervariety_Sirius_02_02: ""
+        poyas_raidervariety_Sirius_02_03: ""
+        poyas_raidervariety_Sirius_02_04: ""
+        poyas_raidervariety_Sirius_02_05: ""
+        poyas_raidervariety_Sirius_02_06: ""
+        poyas_raidervariety_Sirius_02_07: ""
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.7
+        Slash: 0.8
+        Piercing: 0.75
+        Heat: 0.75
+    priceMultiplier: 0.4
+  - type: ExplosionResistance
+    damageCoefficient: 0.8
+
