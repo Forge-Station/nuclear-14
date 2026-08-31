@@ -82,5 +82,8 @@
 - type: Tag
   id: N14BoxPlasticFilledMilitaryLegion
 
+- type: Tag 
+  id: Binoculars
+
 - type: Tag
   id: N14PowerCellFusionCellAdvansed

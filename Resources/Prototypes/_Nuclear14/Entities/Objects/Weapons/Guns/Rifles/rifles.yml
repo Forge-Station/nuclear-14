@@ -723,6 +723,7 @@
     fireRate: 3
     selectedMode: SemiAuto
     availableModes:
+    - FullAuto
     - SemiAuto
   - type: ItemSlots
     slots:

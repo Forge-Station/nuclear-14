@@ -45,7 +45,13 @@ public sealed class ColorFlashEffectSystem : SharedColorFlashEffectSystem
             sprite.Color = component.Color;
         }
 
-        RemCompDeferred<ColorFlashEffectComponent>(uid);
+        // #Forge: keep the component when the animation was interrupted (e.g. by another flash).
+        // Removing it (even deferred) lets an interrupted flash lose the stored base color,
+        // which causes the sprite to stay permanently red after taking rapid damage.
+        // Remove immediately (not deferred) so a same-frame flash can't reuse a component
+        // that is already queued for removal and then get culled mid-animation.
+        if (args.Finished)
+            RemComp<ColorFlashEffectComponent>(uid);
     }
 
     private Animation? GetDamageAnimation(EntityUid uid, Color color, SpriteComponent? sprite = null, float? animationLength = null)
@@ -123,9 +129,12 @@ public sealed class ColorFlashEffectSystem : SharedColorFlashEffectSystem
                 comp.Owner = ent;
                 comp.NetSyncEnabled = false;
                 AddComp(ent, comp);
+
+                // #Forge: capture the base color only once, so a flashed (red) sprite color
+                // is never stored as the "original" color that gets restored on completion.
+                comp.Color = sprite.Color;
             }
 
-            comp.Color = sprite.Color;
             _animation.Play((ent, player), animation, AnimationKey);
         }
     }

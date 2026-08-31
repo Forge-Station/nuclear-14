@@ -1572,7 +1572,7 @@
     items:
       - id: N14WeaponSniper308Tribal
       - id: N14TribalMachete
-      - id: MagazineBox308
+      - id: MagazineBox45-70
 
 #tribal rifle
 - type: entity
@@ -1621,18 +1621,15 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingHeadHatTownGuard
-      - id: N14ClothingOuterTownGuardCoat
-      - id: N14WeaponRifle308Battle
-      - id: ClipMagazine308Rifle
-        amount: 3
-      - id: N14WeaponRevolver44Magnun
-      - id: SpeedLoader44
+      - id: N14WeaponLMGAutoRifle
+      - id: Magazine308Rifle
+        amount: 2
+      - id: MagazineBox308
         amount: 2
       - id: N14CleanGauze10
-      - id: N14JunkCeramicFlask
-      - id: N14FoodTinC1
-      - id: N14FoodTinC2
+      - id: N14Stimpak
+        amount: 2
+      - id: N14BoxCardboardMREBoxKFilled
 
 - type: entity
   name: the Guard's patrol kit
@@ -1646,19 +1643,16 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingHeadTownGuardBrodie
-      - id: N14ClothingOuterTownGuardLight
-      - id: N14WeaponSMG12mm
-      - id: N14MagazineSMG12mm
-        amount: 3
-      - id: N14WeaponPistolWebley
-      - id: N14MagazinePistol9mm
+      - id: N14WeaponSMG12mmAdvanced
+      - id: N14TopMagazineSMG12mm
         amount: 2
-      - id: N14ClothingNeckTownGuardMantle
+      - id: MagazineBox12
+        amount: 2
+      - id: N14ShieldMetalHeavy
       - id: N14CleanGauze10
-      - id: N14JunkCeramicFlask
-      - id: N14FoodTinC1
-      - id: N14FoodTinC2
+      - id: N14Stimpak
+        amount: 2
+      - id: N14BoxCardboardMREBoxKFilled
 
 - type: entity
   name: the Guard's lawbringer kit
@@ -1672,14 +1666,14 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingHeadTownGuardBrodie
-      - id: N14ClothingOuterTownGuardLight
       - id: N14WeaponHMGcanadian
       - id: Magazine762AmmoBelt
+        amount: 2
+      - id: MagazineBox762
       - id: N14CleanGauze10
-      - id: N14JunkCeramicFlask
-      - id: N14FoodTinC1
-      - id: N14FoodTinC2
+      - id: N14Stimpak
+        amount: 2
+      - id: N14BoxCardboardMREBoxKFilled
 
 - type: entity
   name: the Guard's breacher kit
@@ -1693,39 +1687,41 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14ClothingHeadTownGuardBrodieCover
-      - id: N14ClothingOuterTownGuardRiot
       - id: N14WeaponBlowback
       - id: MagazineBox12gauge
-      - id: N14WeaponPistolWebley
-      - id: N14MagazinePistol9mm
-        amount: 2
+        amount: 3
       - id: N14CleanGauze10
-      - id: N14JunkCeramicFlask
-      - id: N14FoodTinC1
-      - id: N14FoodTinC2
+      - id: N14MedkitCombatFilled
+      - id: N14Stimpak
+        amount: 2
+      - id: N14Psycho
+        amount: 2
+      - id: N14MedkitCombatFilled
+      - id: N14ClothingMaskPlate
+      - id: N14BoxCardboardMREBoxKFilled
 
-- type: entity
-  name: the Guard's riot kit
-  parent: KitBase
-  id: KitTownGuard_Riot
-  description: A crate containing everything a Guard of The Town requires to perform their duties for the public.
-  components:
-  - type: Sprite
-    state: pointman
-  - type: Item
-    size: Huge
-  - type: SpawnItemsOnUse
-    items:
-      - id: N14ClothingHeadTownGuardBrodieVisor
-      - id: N14ClothingOuterTownGuardRiot
-      - id: N14WastelandSpear
-      - id: N14WeaponRevolver45-70Hunter
-      - id: SpeedLoader45-70
-        amount: 2
-      - id: N14ShieldMetalHeavy
-      - id: N14ClothingNeckTownGuardCloak
-      - id: N14CleanGauze10
-      - id: N14JunkCeramicFlask
-      - id: N14FoodTinC1
-      - id: N14FoodTinC2
+# Forge: KitTownGuard_Riot disabled
+#- type: entity
+#  name: the Guard's riot kit
+#  parent: KitBase
+#  id: KitTownGuard_Riot
+#  description: A crate containing everything a Guard of The Town requires to perform their duties for the public.
+#  components:
+#  - type: Sprite
+#    state: pointman
+#  - type: Item
+#    size: Huge
+#  - type: SpawnItemsOnUse
+#    items:
+#      - id: N14ClothingHeadTownGuardBrodieVisor
+#      - id: N14ClothingOuterTownGuardRiot
+#      - id: N14WastelandSpear
+#      - id: N14WeaponRevolver45-70Hunter
+#      - id: SpeedLoader45-70
+#        amount: 2
+#      - id: N14ShieldMetalHeavy
+#      - id: N14ClothingNeckTownGuardCloak
+#      - id: N14CleanGauze10
+#      - id: N14JunkCeramicFlask
+#      - id: N14FoodTinC1
+#      - id: N14FoodTinC2

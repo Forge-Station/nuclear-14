@@ -63,10 +63,21 @@
   id: N14ShieldMetalLight
   description: A sheet of metal with some bolts and welds here and there, it can protect you from some damage.
   components:
+    - type: Sprite
+      sprite: _Nuclear14/Objects/Weapons/Melee/shield_light.rsi
+      state: icon
+    - type: Item
+      sprite: _Nuclear14/Objects/Weapons/Melee/shield_light.rsi
+      heldPrefix: null
+    - type: Clothing
+      sprite: _Nuclear14/Objects/Weapons/Melee/shield_light.rsi
+      quickEquip: false
+      slots:
+      - Back
+      - suitStorage
     - type: Construction
       graph: N14LightShield
       node: start
-
 
 - type: entity
   name: heavy metal shield
@@ -76,8 +87,16 @@
   components:
     - type: Sprite
       sprite: _Nuclear14/Objects/Weapons/Melee/shield_heavy.rsi
+      state: icon
     - type: Item
       sprite: _Nuclear14/Objects/Weapons/Melee/shield_heavy.rsi
+      heldPrefix: null
+    - type: Clothing
+      sprite: _Nuclear14/Objects/Weapons/Melee/shield_heavy.rsi
+      quickEquip: false
+      slots:
+      - Back
+      - suitStorage
     - type: Destructible
       thresholds:
         - trigger:

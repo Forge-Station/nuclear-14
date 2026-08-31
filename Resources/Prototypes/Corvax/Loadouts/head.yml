@@ -1,0 +1,62 @@
+
+# Forge-Add: Town Guard / Sheriff head loadouts
+- type: loadout
+  id: N14LoadoutHeadHatTownGuard
+  category: Head
+  cost: 0
+  exclusive: true
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement
+      jobs:
+      - TownDeputy
+      - TownSheriff
+  items:
+    - N14ClothingHeadHatTownGuard
+
+- type: loadout
+  id: N14LoadoutHeadTownGuardBrodie
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement
+      jobs:
+      - TownDeputy
+      - TownSheriff
+  items:
+    - N14ClothingHeadTownGuardBrodie
+
+
+- type: loadout
+  id: N14LoadoutHeadTownGuardBrodieCover
+  category: Head
+  cost: 3
+  exclusive: true
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement
+      jobs:
+      - TownDeputy
+      - TownSheriff
+  items:
+    - N14ClothingHeadTownGuardBrodieCover
+
+- type: loadout
+  id: N14LoadoutHeadTownGuardBrodieVisor
+  category: Head
+  cost: 4
+  exclusive: true
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement
+      jobs:
+      - TownDeputy
+      - TownSheriff
+  items:
+    - N14ClothingHeadTownGuardBrodieVisor
