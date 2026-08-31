@@ -4,104 +4,76 @@
   id: N14Hatchet
   description: A tool that's just as useful as a weapon. Used for chopping things.
   components:
-  - type: Clothing
-    sprite: _Nuclear14/Objects/Weapons/Melee/hatchet.rsi
-    slots:
-    - Belt
   - type: Tag
     tags:
     - BotanyHatchet
     - Axe
-  - type: Sharp
+  - type: Item
+    sprite: _Nuclear14/Objects/Weapons/Melee/hatchet.rsi
+    size: Normal
+  - type: Clothing
+    sprite: _Nuclear14/Objects/Weapons/Melee/hatchet.rsi
+    slots:
+    - Belt
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Melee/hatchet.rsi
     state: icon
     netsync: false
-  - type: UseDelay
-  - type: EmbeddableProjectile
-    sound: /Audio/Weapons/star_hit.ogg
+  - type: MeleeWeapon
+    wideAnimationRotation: -135
+    attackRate: 0.8
+    heavyRateModifier: 0.8
+    heavyRangeModifier: 1
+    heavyDamageBaseModifier: 0.9
+    heavyStaminaCost: 5
+    range: 1
+    angle: 60
+    damage:
+      types:
+        Slash: 20
+        Piercing: 10
+    soundHit:
+      collection: MetalThud
+  - type: LandAtCursor
   - type: DamageOtherOnHit
     damage:
       types:
-        Slash: 13
-        Piercing: 7
-  - type: MeleeWeapon
-    wideAnimationRotation: -135
-    damage:
-      types:
-        Slash: 10
-        Piercing: 5
-  - type: Item
-    sprite: _Nuclear14/Objects/Weapons/Melee/hatchet.rsi
-    size: Normal
+        Slash: 30
+        Piercing: 15
+  - type: Sharp
+  - type: UseDelay
+  - type: EmbeddableProjectile
+    sound: /Audio/Weapons/star_hit.ogg
   - type: StaticPrice
     price: 20
 
 - type: entity
   name: tribal hatchet
-  parent: BaseItem
+  parent: N14Hatchet
   id: N14TribalHatchet
   description: A tool that's just as useful as a weapon. Used for chopping things.
   components:
-  - type: Clothing
-    sprite: _Nuclear14/Objects/Weapons/Melee/tribalhatchet.rsi
-    slots:
-    - Belt
   - type: Tag
     tags:
     - BotanyHatchet
     - Axe
-  - type: Sharp
+  - type: Item
+    sprite: _Nuclear14/Objects/Weapons/Melee/tribalhatchet.rsi
+    size: Normal
+  - type: Clothing
+    sprite: _Nuclear14/Objects/Weapons/Melee/tribalhatchet.rsi
+    slots:
+    - Belt
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Melee/tribalhatchet.rsi
     state: icon
     netsync: false
+  - type: Sharp
   - type: UseDelay
   - type: EmbeddableProjectile
     sound: /Audio/Weapons/star_hit.ogg
-  - type: DamageOtherOnHit
-    damage:
-      types:
-        Slash: 15
-        Piercing: 7
-  - type: MeleeWeapon
-    wideAnimationRotation: -135
-    damage:
-      types:
-        Slash: 12
-        Piercing: 7
-  - type: Item
-    sprite: _Nuclear14/Objects/Weapons/Melee/tribalhatchet.rsi
-    size: Normal
   - type: StaticPrice
     price: 25
-
-- type: entity
-  name: fireaxe
-  parent: N14BaseAxe
-  id: N14FireAxe
-  description: Truly the weapon of a madman. Who would think to fight fire with an axe?
-  components:
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Weapons/Melee/fireaxe.rsi
-    state: icon
-  - type: Clothing
-    sprite: _Nuclear14/Objects/Weapons/Melee/fireaxe.rsi
-    quickEquip: false
-    slots:
-    - Back
-    - suitStorage
-  - type: Item
-    size: Large
-  - type: MeleeWeapon
-    wideAnimationRotation: -135
-  - type: Tool
-    qualities:
-      - Prying
-  - type: ToolTileCompatible
-  - type: Prying
-  - type: StaticPrice
-    price: 30
 
 - type: entity
   name: axe
@@ -112,31 +84,80 @@
   - type: Tag
     tags:
     - FireAxe
-  - type: Sharp
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Weapons/Melee/axe.rsi
-    state: icon
-  - type: MeleeWeapon
-    wideAnimationRotation: -135
-    attackRate: 1.35
-    damage:
-      types:
-        # axes are kinda like sharp hammers, you know?
-        Blunt: 5
-        Slash: 5
-  - type: Wieldable
-  - type: IncreaseDamageOnWield
-    damage:
-      types:
-        Blunt: 2
-        Slash: 18
+  - type: Item
+    size: Large
   - type: Clothing
     sprite: _Nuclear14/Objects/Weapons/Melee/axe.rsi
     quickEquip: false
     slots:
     - Back
     - suitStorage
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Weapons/Melee/axe.rsi
+    state: icon
+  - type: Wieldable
+  - type: MeleeWeapon
+    wideAnimationRotation: -135
+    attackRate: 1.1
+    heavyRateModifier: 1.1
+    heavyRangeModifier: 1.4
+    heavyDamageBaseModifier: 1.4
+    heavyStaminaCost: 15
+    range: 1.4
+    angle: 60
+    damage:
+      types:
+        Blunt: 10
+        Slash: 5
+    soundHit:
+      collection: MetalThud
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Blunt: 20
+        Slash: 25
+  - type: Sharp
+  - type: StaticPrice
+    price: 30
+
+- type: entity
+  name: fireaxe
+  parent: N14BaseAxe
+  id: N14FireAxe
+  description: Truly the weapon of a madman. Who would think to fight fire with an axe?
+  components:
   - type: Item
     size: Large
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Weapons/Melee/fireaxe.rsi
+    state: icon
+  - type: Clothing
+    sprite: _Nuclear14/Objects/Weapons/Melee/fireaxe.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: MeleeWeapon
+    wideAnimationRotation: -135
+    attackRate: 1.2
+    heavyRateModifier: 1.2
+    heavyRangeModifier: 1.4
+    heavyDamageBaseModifier: 1.5
+    heavyStaminaCost: 20
+    range: 1.4
+    angle: 60
+    soundHit:
+      collection: MetalThud
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Blunt: 20
+        Slash: 35
+  - type: Tool
+    qualities:
+      - Prying
+      - Axing
+  - type: ToolTileCompatible
+  - type: Prying
   - type: StaticPrice
     price: 30

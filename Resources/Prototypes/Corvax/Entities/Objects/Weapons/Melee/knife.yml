@@ -1,0 +1,19 @@
+- type: entity
+  name: нож-кукри
+  parent: N14CombatKnife
+  id: N14KukriKnife
+  description: У профессионалов есть правила. Будь вежлив. Работай эффективно. Убивай каждого встречного.
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Melee/kukri_knife.rsi
+    state: icon
+  - type: MeleeWeapon
+    attackRate: 0.8
+    heavyRateModifier: 0.6
+    heavyDamageBaseModifier: 0.9
+    heavyStaminaCost: 2
+    range: 1
+  - type: ThrowingAngle
+    angle: 225
+  - type: Item
+    sprite: Objects/Weapons/Melee/kukri_knife.rsi
