@@ -17,7 +17,10 @@
     sprite: _Nuclear14/Objects/Weapons/Melee/policebaton.rsi
     state: icon
   - type: Item
-    size: Normal
+    size: Small
+    shape:
+    - 0,0,1,1
+    - 0,1,0,1
   - type: Clothing
     sprite: _Nuclear14/Objects/Weapons/Melee/policebaton.rsi
     quickEquip: false
@@ -26,6 +29,9 @@
     - suitStorage
   - type: StaticPrice
     price: 8 # Forge-Change
+  - type: Tag # Forge-Change
+    tags:
+    - Sidearm
 
 - type: entity
   name: tribal club

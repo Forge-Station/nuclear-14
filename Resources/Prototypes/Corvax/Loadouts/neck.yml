@@ -21,3 +21,47 @@
    cost: 1
    items:
      - N14ClothingNeckCloakTent
+
+ - type: loadout
+   id: N14LoadoutNeckMantleSheriff
+   category: Neck
+   cost: 2
+   exclusive: true
+   requirements:
+     - !type:CharacterItemGroupRequirement
+       group: N14LoadoutNeck
+     - !type:CharacterJobRequirement
+       jobs:
+       - TownSheriff
+   items:
+     - N14ClothingNeckMantleSheriff
+
+ - type: loadout
+   id: N14LoadoutNeckTownGuardMantle
+   category: Neck
+   cost: 2
+   exclusive: true
+   requirements:
+     - !type:CharacterItemGroupRequirement
+       group: N14LoadoutNeck
+     - !type:CharacterJobRequirement
+       jobs:
+       - TownDeputy
+       - TownSheriff
+   items:
+     - N14ClothingNeckTownGuardMantle
+
+ - type: loadout
+   id: N14LoadoutNeckTownGuardCloak
+   category: Neck
+   cost: 2
+   exclusive: true
+   requirements:
+     - !type:CharacterItemGroupRequirement
+       group: N14LoadoutNeck
+     - !type:CharacterJobRequirement
+       jobs:
+       - TownDeputy
+       - TownSheriff
+   items:
+     - N14ClothingNeckTownGuardCloak

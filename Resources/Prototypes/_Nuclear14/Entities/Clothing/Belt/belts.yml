@@ -93,6 +93,14 @@
     sprite: _Nuclear14/Clothing/Belt/ncrbelt.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/Belt/ncrbelt.rsi
+  - type: Storage # Forge-Change: allow sidearms (police baton)
+    whitelist:
+      tags:
+        - N14AmmoCell
+        - Sidearm
+      components:
+        - BallisticAmmoProvider
+        - CartridgeAmmo
   - type: Appearance
 
 - type: entity
