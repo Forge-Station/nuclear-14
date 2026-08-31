@@ -3,6 +3,10 @@ clipping-wild-agave-name = wild agave clipping
 clipping-wild-agave-noun = wild agaves clippings
 clipping-wild-agave-display-name = wild agave
 
+clipping-wild-aloe-name = wild aloe clipping
+clipping-wild-aloe-noun = wild aloe clippings
+clipping-wild-aloe-display-name = wild aloe
+
 clipping-wild-banana-yucca-name = wild banana yucca clipping
 clipping-wild-banana-yucca-noun = wild banana yucca clippings
 clipping-wild-banana-yucca-display-name = wild banana yucca
@@ -30,6 +34,10 @@ clipping-wild-cabbage-display-name = wild cabbage
 clipping-wild-carrot-name = wild carrot clipping
 clipping-wild-carrot-noun = wild carrot clippings
 clipping-wild-carrot-display-name = wild carrot
+
+clipping-wild-cotton-name = wild cotton clipping
+clipping-wild-cotton-noun = wild cotton clippings
+clipping-wild-cotton-display-name = wild cotton
 
 clipping-coyote-tobacco-name = coyote tobacco clipping
 clipping-coyote-tobacco-noun = coyote tobacco clippings

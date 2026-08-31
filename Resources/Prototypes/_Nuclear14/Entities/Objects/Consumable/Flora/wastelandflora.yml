@@ -272,6 +272,27 @@
 
 - type: entity
   parent: N14WastelandFlora
+  id: N14WastelandFloraWildAloe
+  name: wild aloe plant
+  description: An aloe plant growing wild. It looks healthy.
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Hydroponics/aloe.rsi
+    state: harvest
+  - type: OreVein
+    currentOre: WildAloe
+  - type: Gatherable
+    toolWhitelist:
+      components:
+        - Hands
+      tags:
+        - PlantSampleTaker
+    loot:
+      All: WildAloeAll
+      PlantSampleTaker: WildAloeClippers
+
+- type: entity
+  parent: N14WastelandFlora
   id: N14WastelandFloraWildCoyote
   name: wild coyote plant
   description: A coyote plant growing wild. It's healthy.

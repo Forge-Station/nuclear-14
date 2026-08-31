@@ -31,9 +31,9 @@
     onlyAffectsMobs: false
     injectOnly: true
   - type: Appearance
-  - type: WelderRefinable
+  - type: ToolRefinable #Forge-Change
     refineResult:
-    - id: SheetPlastic1
+    - id: SheetGlass1
   - type: Tag
     tags:
     - Syringe
@@ -227,6 +227,9 @@
   name: Jet inhaler
   description: A rare injector filled with a narcotic reagent that makes you feel as though you're speeding up. It's weaker but lasts longer than Turbo.
   components:
+  - type: Tag
+    tags:
+    - Syringe
   - type: Item
     sprite: _Corvax/Objects/Specific/Medical/jet.rsi
     heldPrefix: jet
@@ -248,10 +251,9 @@
   - type: Construction # N14:TODO: Probably move this to lathe
     graph: N14JetInhaler
     node: jet
-  - type: Tag
-    tags:
-    - Jet
-    - Syringe
+  - type: ToolRefinable #Forge-Add
+    refineResult:
+    - id: SheetPlastic1
 
 - type: entity
   parent: N14JetInhaler
@@ -275,6 +277,9 @@
   name: Turbo inhaler
   description: A small injector filled with a narcotic reagent that makes you feel as though the world around you is slowing down. It's stronger and more dangerous than Jet.
   components:
+  - type: Tag
+    tags:
+    - Syringe
   - type: Item
     sprite: _Corvax/Objects/Specific/Medical/turbo.rsi
     heldPrefix: turbo
@@ -297,9 +302,9 @@
     solutions:
       pen:
         maxVol: 10
-  - type: Tag
-    tags:
-    - Syringe
+  - type: ToolRefinable #Forge-Add
+    refineResult:
+    - id: SheetPlastic1
 
 - type: entity
   parent: N14TurboInhaler
@@ -349,13 +354,14 @@
           Quantity: 20
 
 - type: entity
-  parent: N14ChemicalSyringe
+  parent: DrinkBottleGlassBaseFull
   id: N14HydraInhaler
   suffix: empty
   name: hydra inhaler
   description: A bottle of Supa Yum soda with several vials attached to it. Contains a mildly potent healing chemical that comes with addictive side effects.
   components:
   - type: Item
+    size: Small
     sprite: _Corvax/Objects/Specific/Medical/hydra.rsi
     heldPrefix: hydra
   - type: Sprite
@@ -364,18 +370,11 @@
     layers:
     - state: hydra
       map: ["enum.SolutionContainerLayers.Fill"]
-  - type: SolutionContainerVisuals
-    maxFillLevels: 1
-    changeColor: false
-    emptySpriteName: hydra
-  - type: Hypospray
-    solutionName: pen
-    transferAmount: 15
-    onlyAffectsMobs: false
-    injectOnly: true
-  - type: Tag
-    tags:
-    - Syringe
+  - type: SolutionContainerManager
+    solutions:
+      drink:
+        maxVol: 50
+
 
 - type: entity
   parent: N14HydraInhaler
@@ -386,11 +385,11 @@
   components:
   - type: SolutionContainerManager
     solutions:
-      pen:
-        maxVol: 15
+      drink:
+        maxVol: 50
         reagents:
         - ReagentId: Hydra
-          Quantity: 15
+          Quantity: 50
 
 - type: entity
   parent: N14ChemicalSyringe
@@ -471,6 +470,9 @@
         reagents:
         - ReagentId: RadAway
           Quantity: 20
+  - type: ToolRefinable #Forge-Add
+    refineResult:
+    - id: SheetPlastic1
 
 #MARK: RadAway Inhaler
 - type: entity
@@ -495,13 +497,13 @@
     emptySpriteName: radawayinhaler
   - type: Hypospray
     solutionName: pen
-    transferAmount: 10
+    transferAmount: 5
     onlyAffectsMobs: false
     injectOnly: true
   - type: SolutionContainerManager
     solutions:
       pen:
-        maxVol: 30
+        maxVol: 10
 
 - type: entity
   parent: N14RadAwayInhalerBase
@@ -522,10 +524,10 @@
   - type: SolutionContainerManager
     solutions:
       pen:
-        maxVol: 30
+        maxVol: 10
         reagents:
         - ReagentId: RadAway
-          Quantity: 30
+          Quantity: 10
   - type: Construction
     graph: N14RadAwayInhaler
     node: refill
@@ -672,6 +674,25 @@
     graph: N14HealingPowder
     node: healingpowder
 
+- type: entity
+  parent: N14HealingPowder
+  id: N14HealingPoultice
+  name: healing poultice
+  description: A bag of poultice to help with all common ailments if slowly.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Specific/Medical/drugs.rsi
+    state: healingpoultice
+  - type: Item
+    sprite: _Nuclear14/Objects/Specific/Medical/drugs.rsi
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        maxVol: 25
+        reagents:
+        - ReagentId: HealingPoultice
+          Quantity: 20
+
 - type: entity # Forge-add
   name: berserker powder
   parent: BaseItem
@@ -734,49 +755,47 @@
     state: antidote
 
 - type: entity
-  parent: N14ChemicalSyringe
+  parent: N14HealingPowder
   id: N14SmellingSalts
   name: smelling salts
   description: A small glass ampoule containing smelling salts. Their smell is said to wake up even a dead ghoul.
   components:
   - type: Sprite
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_medical.rsi
-    layers:
-    - state: powder1
-      map: ["enum.SolutionContainerLayers.Fill"]
-  - type: SolutionContainerVisuals
-    maxFillLevels: 1
-    changeColor: false
-    emptySpriteName: powder1
-  # - type: Hypospray
-  #   solutionName: pen
-  #   transferAmount: 15
-  - type: SolutionContainerManager
-    solutions:
-      pen:
-        maxVol: 15
-        reagents:
-        - ReagentId: SmellingSalts
-          Quantity: 15
-
-- type: entity
-  parent: N14HealingPowder
-  id: N14HealingPoultice
-  name: healing poultice
-  description: A bag of poultice to help with all common ailments if slowly.
-  components:
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Specific/Medical/drugs.rsi
-    state: healingpoultice
+    state: powder1
   - type: Item
-    sprite: _Nuclear14/Objects/Specific/Medical/drugs.rsi
+    sprite: _Nuclear14/Objects/Specific/Medical/ms13_medical.rsi
+    size: Small
   - type: SolutionContainerManager
     solutions:
       food:
-        maxVol: 25
+        maxVol: 20
         reagents:
-        - ReagentId: HealingPoultice
-          Quantity: 20
+        - ReagentId: SmellingSalts
+          Quantity: 15
+  - type: Food # Forge-Change
+    forceFeedDelay: 1
+    transferAmount: 5
+    eatMessage: food-swallow
+    # useSound: /Audio/Items/pill.ogg
+  - type: FlavorProfile
+    ignoreReagents: []
+  - type: SolutionSpiker
+    sourceSolution: food
+  - type: Extractable
+    grindableSolutionName: food
+  - type: Damageable
+    damageContainer: Inorganic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 10
+      behaviors:
+      - !type:SpillBehavior
+        solution: food
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
 
 - type: entity
   parent: DrinkBottleGlassBaseFull

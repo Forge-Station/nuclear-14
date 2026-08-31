@@ -74,7 +74,7 @@
   - type: UndecidedLoadoutBackpack
     possibleSets:
     - NCRA_SurgeonSet
-    - NCRA_DoctorSet
+    # - NCRA_DoctorSet
     - NCRA_ComMedSet
 
 - type: entity
@@ -416,15 +416,15 @@
   content:
   - KitNCR_MedSurgeon
 
-- type: UndecidedLoadoutBackpackSet
-  id: NCRA_DoctorSet
-  name: undecided-loadout-category-med-doc-name
-  description: undecided-loadout-category-med-doc-description
-  sprite:
-    sprite: _Nuclear14/Objects/Misc/kits.rsi
-    state: medic
-  content:
-  - KitNCR_MedDoctor
+# - type: UndecidedLoadoutBackpackSet # Forge-Change
+#   id: NCRA_DoctorSet
+#   name: undecided-loadout-category-med-doc-name
+#   description: undecided-loadout-category-med-doc-description
+#   sprite:
+#     sprite: _Nuclear14/Objects/Misc/kits.rsi
+#     state: medic
+#   content:
+#   - KitNCR_MedDoctor 
 
 - type: UndecidedLoadoutBackpackSet
   id: NCRA_ComMedSet

@@ -316,3 +316,34 @@
       amount: 1
       catalyzer: true
       tag: true
+
+- type: craftRecipe
+  id: N14InjectionCarbine
+  resultProtos:
+    - N14InjectionCarbine
+  requiredWorkbench: N14WorkbenchWeaponbench
+  # requiredIntelligence: 6
+  craftTime: 10
+  items:
+    N14InjectionCarbineBlueprint:
+      amount: 1
+      catalyzer: true
+    N14JunkGunpartsAdvancedFrame:
+      amount: 1
+    N14JunkGunpartsTrigger:
+      amount: 1
+    N14JunkComponentScrew:
+      amount: 2
+    N14JunkGunpartsBolt:
+      amount: 1
+    N14JunkGunpartsStockWood:
+      amount: 1
+    N14JunkGunpartsRecoilComp:
+      amount: 1
+    N14Screwdriver:
+      amount: 1
+      catalyzer: true
+    N14Welder:
+      amount: 1
+      catalyzer: true
+      tag: true

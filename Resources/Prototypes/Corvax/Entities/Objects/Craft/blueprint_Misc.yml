@@ -29,3 +29,11 @@
   components:
     - type: STBlueprint
       blueprint: N14WeaponRifle556Pipe
+
+- type: entity
+  parent: N14BaseBlueprintPaper
+  id: N14InjectionCarbineBlueprint
+  name: чертёж инъекционного карабина
+  components:
+    - type: STBlueprint
+      blueprint: N14InjectionCarbine

@@ -31,3 +31,19 @@
         reagents:
         - ReagentId: DirtySuperStimpack
           Quantity: 10
+
+- type: entity
+  parent: N14JunkVaultCanteen
+  id: N14JunkCeramicFlaskFieryPurgative
+  name: жгучий антитоксинин
+  description: Фляга хранящая внутри себя жгучий антитоксинин.
+  components:
+  - type: Sprite
+    state: ceramic-flask
+  - type: SolutionContainerManager
+    solutions:
+      drink:
+        maxVol: 30
+        reagents:
+        - ReagentId: FieryPurgative
+          Quantity: 30
