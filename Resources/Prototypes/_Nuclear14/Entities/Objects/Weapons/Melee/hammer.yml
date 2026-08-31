@@ -45,9 +45,9 @@
     sprite: _Nuclear14/Objects/Weapons/Melee/supersledge.rsi
     state: icon
   - type: StaminaDamageOnHit
-    damage: 34
+    damage: 4
   - type: StaminaDamageOnCollide
-    damage: 34
+    damage: 4
   - type: MeleeWeapon
     damage:
       types:
