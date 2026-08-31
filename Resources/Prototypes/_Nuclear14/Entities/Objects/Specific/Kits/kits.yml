@@ -1569,7 +1569,7 @@
     items:
       - id: N14WeaponSniper308Tribal
       - id: N14TribalMachete
-      - id: MagazineBox308
+      - id: MagazineBox45-70
 
 #tribal rifle
 - type: entity
