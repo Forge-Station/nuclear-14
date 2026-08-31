@@ -143,6 +143,10 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Guns/Shotguns/sawed_off.rsi
   - type: Item
+    size: Small
+    shape:
+    - 0,0,1,1
+    - 0,1,0,1
     sprite: _Nuclear14/Objects/Weapons/Guns/Shotguns/sawed_off.rsi
   - type: Gun
     fireRate: 6

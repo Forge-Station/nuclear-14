@@ -55,6 +55,7 @@
     price: 2 # Forge-Change
   - type: Butcherable
     butcheringType: Knife
+    butcherDelay: 1
     spawned:
     - id: MaterialCloth1
       amount: 2

@@ -1,0 +1,49 @@
+- type: entity
+  parent: N14WorkbenchBase
+  id: N14RobotFabricator
+  name: robot assembly workbench
+  description: A workbench for printing junktron parts out of scrap to assemble robots.
+  components:
+  - type: Sprite
+    sprite: _Forge/Structures/Misc/robot_fabricator.rsi
+    state: icon
+  - type: Lathe
+    idleState: icon
+    runningState: icon
+    staticRecipes:
+    - N14JunktronEndoskeleton
+    - N14JunktronTorso
+    - N14JunktronHead
+    - N14JunktronLeftArm
+    - N14JunktronRightArm
+    - N14JunktronLeftLeg
+    - N14JunktronRightLeg
+    - N14OpticalSensor
+    - N14JunktronMMI
+    - N14JunktronPositronicBrain
+    - N14LawCard
+    - N14BorgModuleJunkTools
+    - N14BorgModuleJunkGardening
+    - N14BorgModuleJunkBureaucracy
+    - N14BorgModuleJunkCombat
+    - N14BorgModuleJunkManipulator
+    - N14BorgModuleJunkMining
+    - N14BorgModuleJunkMusique
+    dynamicRecipes: []
+  - type: MaterialStorage
+    materialWhiteList:
+    - Scrap
+    - ScrapElectronic
+    - ScrapSteel
+    - ScrapGold
+    - ScrapCopper
+    - ScrapBrass
+    - ScrapLead
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 10000
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]

@@ -340,6 +340,11 @@
     Poison:
       effects:
       - !type:HealthChange
+        conditions:
+        - !type:Species
+          species:
+          - GhoulGlowing
+          shouldHave: false
         damage:
           types:
             Radiation: 2

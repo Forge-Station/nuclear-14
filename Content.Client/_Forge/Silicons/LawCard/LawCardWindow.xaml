@@ -1,0 +1,18 @@
+<controls:FancyWindow
+    xmlns="https://spacestation14.io"
+    xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
+    Title="{Loc law-card-ui-title}"
+    MinSize="380 360"
+>
+    <BoxContainer Orientation="Vertical" Margin="4">
+        <ScrollContainer VerticalExpand="True" HorizontalExpand="True" HScrollEnabled="False">
+            <BoxContainer Orientation="Vertical" Name="LawContainer" Access="Public" HorizontalExpand="True" />
+        </ScrollContainer>
+        <CheckBox Name="OverwriteAccessCheck" Text="{Loc law-card-ui-overwrite-access}" Margin="0 6 0 0" />
+        <BoxContainer Orientation="Horizontal" Margin="0 6 0 0" HorizontalExpand="True">
+            <Button Name="NewLawButton" Text="{Loc law-card-ui-new-law}" />
+            <Control HorizontalExpand="True" />
+            <Button Name="Save" Text="{Loc law-card-ui-save}" Access="Public" />
+        </BoxContainer>
+    </BoxContainer>
+</controls:FancyWindow>

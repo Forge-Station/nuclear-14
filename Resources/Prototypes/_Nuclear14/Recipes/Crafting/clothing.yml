@@ -1,0 +1,99 @@
+#MARK: Uniform's
+- type: construction
+  name: wastelander rags
+  id: N14ClothingUniformJumpsuitRags # Forge-Change
+  graph: WastelanderRagsGraph
+  startNode: start
+  targetNode: rags
+  category: construction-category-clothing
+  objectType: Item
+  description: Hey, it's better than nothing.
+  icon:
+    sprite: _Nuclear14/Clothing/Uniforms/FalloutSuits/wastelanderrags.rsi
+    state: icon
+  hide: false
+
+- type: construction
+  name: Followers armored coat
+  id: N14ClothingOuterCoatFollowersArmored # Forge-Change
+  graph: CoatFollowersArmoredGraph
+  startNode: start
+  targetNode: followercoat
+  category: construction-category-clothing
+  objectType: Item
+  description: Protection for the followers.
+  icon:
+    sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutfoaarmoredcoat.rsi
+    state: icon
+  hide: false
+
+#MARK: Mantle's
+- type: construction
+  id: N14ClothingNeckMantleLeather # Forge-Change
+  name: leather mantle
+  description: A comfortable brown long mantle.
+  category: construction-category-clothing
+  objectType: Item
+  graph: LeatherMantleGraph
+  startNode: start
+  targetNode: mantle
+  icon:
+    sprite: _Nuclear14/Clothing/Neck/leathermantle.rsi
+    state: icon
+  hide: false
+
+- type: construction
+  id: N14ClothingNeckCloakLeather # Forge-Change
+  name: leather cloak
+  description: A handmade cloak, comfy and warm.
+  category: construction-category-clothing
+  objectType: Item
+  graph: LeatherCloakGraph
+  startNode: start
+  targetNode: cloak
+  icon:
+    sprite: _Nuclear14/Clothing/Neck/leathercloak.rsi
+    state: icon
+  hide: false
+
+- type: construction
+  id: N14ClothingNeckCloakYaoguai # Forge-Change
+  name: Yao Guai cloak
+  description: A handmade cloak, comfy and warm this piece comes from a dangerous Yao Guai.
+  category: construction-category-clothing
+  objectType: Item
+  graph: YaoguaiCloakGraph
+  startNode: start
+  targetNode: cloak
+  icon:
+    sprite: _Nuclear14/Clothing/Neck/yaoguai.rsi
+    state: icon
+  hide: false
+
+- type: construction
+  id: N14ClothingHandsGlovesCloth # Forge-Change
+  name: cloth gloves
+  description: A piece of cloth to tie around the hand.
+  category: construction-category-clothing
+  objectType: Item
+  graph: GlovesClothGraph
+  startNode: start
+  targetNode: gloves
+  icon:
+    sprite: _Nuclear14/Clothing/Hands/Gloves/clothgloves.rsi
+    state: icon
+  hide: false
+
+- type: construction
+  id: N14ClothingHeadHatNightstalker # Forge-Change
+  name: nightstalker hat
+  description: A warm and resistent hat made from the head of a nightstalker.
+  category: construction-category-clothing
+  objectType: Item
+  graph: NightstalkerhatGraph
+  startNode: start
+  targetNode: head
+  icon:
+    sprite: _Nuclear14/Clothing/Head/FalloutHats/nightstalkerhat.rsi
+    state: icon
+  hide: false

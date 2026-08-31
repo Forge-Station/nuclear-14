@@ -4,6 +4,7 @@
   id: N14WeaponRifleM7SpearScope
   description: Prototype of a next-generation rifle that never made it into service with the US Army. Only a few units were delivered for special operations testing just days before the Great War began. Finding one in the wasteland is a real jackpot. It uses a unique caliber, so finding ammunition for it is an even greater stroke of luck.
   suffix: DO NOT SPAWN
+  categories: [HideSpawnMenu]
   components:
   - type: Clothing
     sprite: Corvax/Objects/Weapons/Guns/Rifles/m7spearscope.rsi
@@ -58,6 +59,7 @@
   id: N14WeaponRifleM7Spear
   description: Prototype of a next-generation rifle that never made it into service with the US Army. Only a few units were delivered for special operations testing just days before the Great War began. Finding one in the wasteland is a real jackpot. It uses a unique caliber, so finding ammunition for it is an even greater stroke of luck.
   suffix: DO NOT SPAWN
+  categories: [HideSpawnMenu]
   components:
   - type: Clothing
     sprite: Corvax/Objects/Weapons/Guns/Rifles/m7spear.rsi

@@ -161,10 +161,6 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutLighters
-    - !type:CharacterDepartmentRequirement
-      inverted: true
-      departments:
-      - CaesarLegion
   items:
     - Lighter
 
@@ -175,10 +171,6 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutLighters
-    - !type:CharacterDepartmentRequirement
-      inverted: true
-      departments:
-      - CaesarLegion
   items:
     - CheapLighter
 
@@ -189,10 +181,6 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutLighters
-    - !type:CharacterDepartmentRequirement
-      inverted: true
-      departments:
-      - CaesarLegion
   items:
     - Matchbox
 

@@ -1,15 +1,56 @@
- - type: loadout
-   id: GeigerCounter
-   category: Items
-   cost: 4
-   requirements:
-   - !type:OverallTimeRequirement
-      min: 3600 # 60 min
-   - !type:CharacterDepartmentRequirement
-    inverted: true
-    departments:
-    - CaesarLegion
-    - Vault
-   items:
-     - GeigerCounter
+  - type: loadout
+    id: GeigerCounter
+    category: Items
+    cost: 4
+    requirements:
+    - !type:OverallTimeRequirement
+        min: 3600 # 60 min
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - CaesarLegion
+      - Vault
+    items:
+      - GeigerCounter
 
+  - type: loadout 
+    id: BarberScissors
+    category: Items
+    cost: 1
+    items:
+      - BarberScissors
+
+  - type: loadout 
+    id: N14DrinkSunsetSarsaparillaBottleFull
+    category: Items
+    cost: 2
+    items:
+      - N14DrinkSunsetSarsaparillaBottleFull
+
+  - type: loadout
+    id: N14DrinkNukaCola
+    category: Items
+    cost: 1
+    items:
+      - N14DrinkNukaCola
+
+  - type: loadout
+    id: BoxCandle
+    category: Items
+    cost: 1
+    items:
+      - BoxCandle
+
+  - type: loadout
+    id: PhotoCameraFilled
+    category: Items
+    cost: 1
+    items:
+      - PhotoCameraFilled
+
+  - type: loadout
+    id: d20Dice
+    category: Items
+    cost: 1
+    items:
+      - d20Dice

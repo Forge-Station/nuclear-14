@@ -1,0 +1,18 @@
+# программатор законов. По умолчанию имеет законы в строке laws. Работает на всех синтетиков.
+- type: entity
+  parent: BaseItem
+  id: N14LawCard
+  name: programmer
+  description: A handheld robot programmer. Use it in hand to edit, and on a robot with its panel open to upload.
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Specific/Robotics/programmator.rsi
+    state: icon
+  - type: LawCard
+    laws:
+    - lawString: law-n14-junkbot-1
+      order: 1
+    - lawString: law-n14-junkbot-2
+      order: 2
+    - lawString: law-n14-junkbot-3
+      order: 3

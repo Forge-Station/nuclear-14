@@ -73,3 +73,33 @@
         departments:
           - Wastelander
           - Tribe  
+
+- type: loadout
+  id: N14LoadoutUniformJumpsuitTownGuardLight
+  category: Uniform
+  cost: 0
+  exclusive: true
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutUniform
+    - !type:CharacterJobRequirement
+      jobs:
+      - TownDeputy
+      - TownSheriff
+  items:
+    - N14ClothingUniformJumpsuitTownGuardLight
+
+- type: loadout
+  id: N14LoadoutUniformJumpsuitTownGuard
+  category: Uniform
+  cost: 0
+  exclusive: true
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutUniform
+    - !type:CharacterJobRequirement
+      jobs:
+      - TownDeputy
+      - TownSheriff
+  items:
+    - N14ClothingUniformJumpsuitTownGuard

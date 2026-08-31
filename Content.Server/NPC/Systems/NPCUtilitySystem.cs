@@ -438,10 +438,11 @@ public sealed class NPCUtilitySystem : EntitySystem
             }
             case NearbyHostilesQuery:
             {
-                foreach (var ent in _npcFaction.GetNearbyHostiles(owner, vision))
-                {
-                    entities.Add(ent);
-                }
+                // Rent a scratch set from the pool so the no-alloc faction scan doesn't allocate per query.
+                var hostiles = _entPool.Get();
+                _npcFaction.GetNearbyHostiles(owner, vision, hostiles);
+                entities.UnionWith(hostiles);
+                _entPool.Return(hostiles);
                 break;
             }
             default:

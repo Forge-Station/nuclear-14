@@ -577,6 +577,14 @@
         damage:
           types:
             Cellular: -1
+      - !type:HealthChange
+        conditions:
+        - !type:Species
+          species:
+          - GhoulGlowing
+          shouldHave: false
+        damage:
+          types:
             Radiation: 1
       - !type:ChemVomit
         probability: 0.05

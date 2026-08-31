@@ -200,6 +200,7 @@
   - type: Tag #For crafting
     tags:
       - Baseball
+
 - type: entity
   parent: N14JunkItemBaseMetal
   id: N14JunkCoffeepot
@@ -210,8 +211,27 @@
     state: coffeepot
   - type: SolutionContainerManager
     solutions:
-      coffeepot:
-        maxVol: 100
+      drink:
+        maxVol: 50
+  - type: MixableSolution
+    solution: drink
+  - type: DrawableSolution
+    solution: drink
+  - type: RefillableSolution
+    solution: drink
+  - type: DrainableSolution
+    solution: drink
+  - type: SolutionTransfer
+    canChangeTransferAmount: true
+    maxTransferAmount: 50
+  - type: UserInterface
+    interfaces:
+      enum.TransferAmountUiKey.Key:
+        type: TransferAmountBoundUserInterface
+  - type: Drink
+  - type: Spillable
+    solution: drink
+  - type: Temperature
 
 - type: entity
   parent: N14JunkItemBaseMetal
@@ -228,8 +248,27 @@
     - CookPot
   - type: SolutionContainerManager
     solutions:
-      cookpot:
+      drink:
         maxVol: 100
+  - type: MixableSolution
+    solution: drink
+  - type: DrawableSolution
+    solution: drink
+  - type: RefillableSolution
+    solution: drink
+  - type: DrainableSolution
+    solution: drink
+  - type: SolutionTransfer
+    canChangeTransferAmount: true
+    maxTransferAmount: 100
+  - type: UserInterface
+    interfaces:
+      enum.TransferAmountUiKey.Key:
+        type: TransferAmountBoundUserInterface
+  - type: Drink
+  - type: Spillable
+    solution: drink
+  - type: Temperature
 
 - type: entity
   parent: N14JunkItemBaseWood
@@ -368,11 +407,31 @@
     state: teapot
   - type: SolutionContainerManager
     solutions:
-      teapot:
-        maxVol: 100
+      drink:
+        maxVol: 50
+  - type: MixableSolution
+    solution: drink
+  - type: DrawableSolution
+    solution: drink
+  - type: RefillableSolution
+    solution: drink
+  - type: DrainableSolution
+    solution: drink
+  - type: SolutionTransfer
+    canChangeTransferAmount: true
+    maxTransferAmount: 50
+  - type: UserInterface
+    interfaces:
+      enum.TransferAmountUiKey.Key:
+        type: TransferAmountBoundUserInterface
+  - type: Drink
+  - type: Spillable
+    solution: drink
+  - type: Temperature
   - type: Tag
     tags:
     - JunkKettle
+
 - type: entity
   parent: N14JunkItemBasePlastic
   id: N14JunkTimer

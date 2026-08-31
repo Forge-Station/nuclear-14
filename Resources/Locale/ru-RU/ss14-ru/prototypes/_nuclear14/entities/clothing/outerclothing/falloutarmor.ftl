@@ -73,9 +73,9 @@ ent-N14ClothingOuterLightMetalArmor = легкая металлическая б
 # Горожане 
 ent-N14ClothingOuterSheriffVest = жилет шерифа
     .desc = Жилет шерифа - символ надежды на справедливость в мире, где царит беззаконие.
-ent-N14ClothingOuterTownGuardLight = броня стражи
+ent-N14ClothingOuterTownGuardLight = лёгкая броня стражи 
     .desc = Старый кусок брони или, возможно, реплика чего либо. Всего лишь листы металла, скреплённые кожаными ремнями, но удивительно прочная вещь.
-ent-N14ClothingOuterTownGuardRiot = { ent-N14ClothingOuterTownGuardLight }
+ent-N14ClothingOuterTownGuardRiot = броня стражи 
     .desc = Старый кусок брони или, возможно, реплика чего либо, удивительно прочен. Дополнительные пластины на левом предплечье обеспечивают лучшую защиту в рукопашном бою.
 
 # Новая Калифорнийская Республика (НКР) 

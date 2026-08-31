@@ -203,8 +203,9 @@
   - type: Tag
     tags:
     - Bloodpack
-  - type: Sprite
-    state: bloodpack
+  - type: Sprite # Forge-change
+    sprite: _Nuclear14/Objects/Specific/Medical/bloodbags.rsi
+    state: radblood
   - type: Healing
     damageContainers:
       - Biological

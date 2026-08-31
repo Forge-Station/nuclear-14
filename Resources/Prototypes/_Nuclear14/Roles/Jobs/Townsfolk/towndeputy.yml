@@ -40,10 +40,12 @@
     belt: ClothingBeltRevolverfilled # Forge-Change
     pocket1: TownGuardKits
     pocket2: Handcuffs
+    outerClothing: N14ClothingOuterTownGuardCoat # Forge-Change
+    head: N14ClothingHeadHatTownGuard # Forge-Change
   storage: # Forge-Change
     back:
     - N14BoxPlasticFilledWastelander
-    - MagazineBox44
+    - N14PoliceBaton # Forge-Change
 
 - type: playTimeTracker
   id: TownDeputy

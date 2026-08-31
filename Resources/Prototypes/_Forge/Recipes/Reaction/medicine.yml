@@ -1,0 +1,227 @@
+#MARK: Реакции тромбоза
+- type: reaction
+  id: ThrombosisBaseRobust
+  impact: Medium
+  reactants:
+    HealingMixture:
+      amount: 1
+    RobustHealingMixture:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisBaseUltra
+  impact: Medium
+  reactants:
+    HealingMixture:
+      amount: 1
+    UltraRobustHealingMixture:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisBaseDirty
+  impact: Medium
+  reactants:
+    HealingMixture:
+      amount: 1
+    DirtyStimpak:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisRobustUltra
+  impact: Medium
+  reactants:
+    RobustHealingMixture:
+      amount: 1
+    UltraRobustHealingMixture:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisRobustDirty
+  impact: Medium
+  reactants:
+    RobustHealingMixture:
+      amount: 1
+    DirtyStimpak:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisUltraDirty
+  impact: Medium
+  reactants:
+    UltraRobustHealingMixture:
+      amount: 1
+    DirtyStimpak:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisBaseSuperDirty
+  impact: Medium
+  reactants:
+    HealingMixture:
+      amount: 1
+    DirtySuperStimpack:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisRobustSuperDirty
+  impact: Medium
+  reactants:
+    RobustHealingMixture:
+      amount: 1
+    DirtySuperStimpack:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisUltraSuperDirty
+  impact: Medium
+  reactants:
+    UltraRobustHealingMixture:
+      amount: 1
+    DirtySuperStimpack:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisDirtySuper
+  impact: Medium
+  reactants:
+    DirtyStimpak:
+      amount: 1
+    DirtySuperStimpack:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+#MARK: Катализация тромбоза
+- type: reaction
+  id: ThrombosisCatalystDirty
+  impact: Medium
+  reactants:
+    DirtyStimpak:
+      amount: 1
+    StimpackThrombosis:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisCatalystBase
+  impact: Medium
+  reactants:
+    HealingMixture:
+      amount: 1
+    StimpackThrombosis:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisCatalystRobust
+  impact: Medium
+  reactants:
+    RobustHealingMixture:
+      amount: 1
+    StimpackThrombosis:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisCatalystUltra
+  impact: Medium
+  reactants:
+    UltraRobustHealingMixture:
+      amount: 1
+    StimpackThrombosis:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisCatalystDirtySuper
+  impact: Medium
+  reactants:
+    DirtySuperStimpack:
+      amount: 1
+    StimpackThrombosis:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+#MARK: Новые реакции
+- type: reaction
+  id: BloodpackReaction1
+  reactants:
+    Saline:
+      amount: 10
+    Blood:
+      amount: 10
+    Antiseptic:
+      amount: 5
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: Bloodpack1
+
+- type: reaction
+  id: BloodpackReaction2
+  reactants:
+    Saline:
+      amount: 10
+    WastelandBlood:
+      amount: 10
+    Antiseptic:
+      amount: 5
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: Bloodpack1
+
+- type: reaction
+  id: SmellingSaltsReaction
+  reactants:
+    TableSalt:
+      amount: 2
+    Ethanol:
+      amount: 1
+  products:
+    SmellingSalts: 2
+
+- type: reaction
+  id: DirtySuperStimpackReaction1
+  reactants:
+    HealingMixture:
+      amount: 1
+    ExtractMutfruit:
+      amount: 1
+    NukaCola:
+      amount: 1
+  products:
+    DirtySuperStimpack: 2
+
+- type: reaction
+  id: DirtySuperStimpackReaction2
+  reactants:
+    HealingMixture:
+      amount: 1
+    ExtractMutfruit:
+      amount: 1
+    IrradiatedNukaCola:
+      amount: 1
+  products:
+    DirtySuperStimpack: 2

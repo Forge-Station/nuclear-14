@@ -8,6 +8,11 @@
     sprite: _Nuclear14/Clothing/Shoes/FalloutShoes/jamrock.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/Shoes/FalloutShoes/jamrock.rsi
+  - type: Butcherable
+    butcheringType: Knife
+    spawned:
+    - id: N14MaterialLeather1
+      amount: 1
 
 - type: entity
   parent: ClothingShoesBase
@@ -19,6 +24,11 @@
     sprite: _Nuclear14/Clothing/Shoes/FalloutShoes/blackshoes.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/Shoes/FalloutShoes/blackshoes.rsi
+  - type: Butcherable
+    butcheringType: Knife
+    spawned:
+    - id: N14MaterialLeather1
+      amount: 1
 
 - type: entity
   parent: ClothingShoesBase
@@ -30,6 +40,11 @@
     sprite: _Nuclear14/Clothing/Shoes/FalloutShoes/brownshoes.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/Shoes/FalloutShoes/brownshoes.rsi
+  - type: Butcherable
+    butcheringType: Knife
+    spawned:
+    - id: N14MaterialLeather1
+      amount: 1
 
 - type: entity
   parent: ClothingShoesBase
@@ -41,6 +56,11 @@
     sprite: _Nuclear14/Clothing/Shoes/FalloutShoes/tribalshoes.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/Shoes/FalloutShoes/tribalshoes.rsi
+  - type: Butcherable
+    butcheringType: Knife
+    spawned:
+    - id: N14MaterialLeather1
+      amount: 1
 
 - type: entity
   parent: ClothingShoesBase
@@ -52,6 +72,11 @@
     sprite: _Nuclear14/Clothing/Shoes/FalloutShoes/wastelanderrags.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/Shoes/FalloutShoes/wastelanderrags.rsi
+  - type: Butcherable
+    butcheringType: Knife
+    spawned:
+    - id: MaterialCloth1
+      amount: 2
 
 - type: entity
   parent: ClothingShoesBase
@@ -63,3 +88,10 @@
     sprite: _Nuclear14/Clothing/Shoes/FalloutShoes/raider.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/Shoes/FalloutShoes/raider.rsi
+  - type: Butcherable
+    butcheringType: Knife
+    spawned:
+    - id: N14MaterialLeather1
+      amount: 1
+    - id: MaterialCloth1
+      amount: 1
