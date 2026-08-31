@@ -77,15 +77,6 @@
   id: DrumMagazineNailGun
 
 - type: Tag
-  id: N14Cartridge939Rifle
-
-- type: Tag
-  id: Magazine939AsVal
-
-- type: Tag
-  id: Magazine939Vss
-
-- type: Tag
   id: N14CartridgeNail
 
 - type: Tag

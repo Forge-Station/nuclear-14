@@ -660,36 +660,3 @@
     N14Gunpowder: 10
 
 # Forge-Change-End
-
-# Corvax-Change-Start: 9.39
-- type: latheRecipe
-  id: Magazine939AsVal
-  result: Magazine939AsVal
-  category: N14AmmoMagazine
-  completetime: 5
-  materials:
-    Lead: 60
-    Steel: 190
-    N14Gunpowder: 60
-
-- type: latheRecipe
-  id: Magazine939Vss
-  result: Magazine939Vss
-  category: N14AmmoMagazine
-  completetime: 5
-  materials:
-    Lead: 40
-    Steel: 130
-    N14Gunpowder: 40
-
-- type: latheRecipe
-  id: MagazineBox939
-  result: MagazineBox939
-  category: N14AmmoBox
-  completetime: 5
-  materials:
-    Lead: 120
-    Steel: 180
-    N14Gunpowder: 120
-    Cardboard: 100
-# Corvax-Change-End
