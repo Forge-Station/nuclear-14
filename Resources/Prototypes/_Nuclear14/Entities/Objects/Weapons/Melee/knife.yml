@@ -15,7 +15,7 @@
     heavyRateModifier: 0.6
     heavyRangeModifier: 1
     heavyDamageBaseModifier: 0.8
-    heavyStaminaCost: 2
+    heavyStaminaCost: 5
     range: 0.8
     angle: 40
     damage:
@@ -107,6 +107,7 @@
   components:
   - type: Tag
     tags:
+    - Knife
     - CombatKnife
   - type: Item
     sprite: _Nuclear14/Objects/Weapons/Melee/combat_knife.rsi
@@ -138,6 +139,7 @@
   components:
   - type: Tag
     tags:
+    - Knife
     - CombatKnife
   - type: Item
     sprite: _Nuclear14/Objects/Weapons/Melee/tribalknife.rsi

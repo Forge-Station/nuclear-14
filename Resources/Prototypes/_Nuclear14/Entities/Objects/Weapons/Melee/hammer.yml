@@ -69,7 +69,7 @@
     attackRate: 1.2
     heavyRateModifier: 1.4
     heavyRangeModifier: 1.4
-    heavyDamageBaseModifier: 1.2
+    heavyDamageBaseModifier: 1.0
     heavyStaminaCost: 25
     range: 1.4
     angle: 60
