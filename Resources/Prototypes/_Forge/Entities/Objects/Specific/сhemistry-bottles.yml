@@ -25,3 +25,31 @@
         reagents:
         - ReagentId: NightstalkerBlood
           Quantity: 30
+
+- type: entity
+  id: N14LastBreathPoisonChemistryBottle
+  name: бутылочка с ядом "последний вздох"
+  description: Бутылочка с ядом «последнего вздоха» и бесцветного яда. Вызывает мгновенное удушье и потерю сознания при 5u.
+  parent: BaseChemistryBottleFilled
+  components:
+  - type: SolutionContainerManager
+    solutions:
+      drink:
+        maxVol: 30
+        reagents:
+        - ReagentId: N14LastBreathPoison
+          Quantity: 30
+
+- type: entity
+  id: N14ColourlessPoisonChemistryBottle
+  name: бутылочка с бесцветным ядом
+  description: Бутылочка с бесцветным ядом. Вызывает удушье, сильное отравление и потерю сознания при 5u.
+  parent: BaseChemistryBottleFilled
+  components:
+  - type: SolutionContainerManager
+    solutions:
+      drink:
+        maxVol: 30
+        reagents:
+        - ReagentId: N14ColourlessPoison
+          Quantity: 30

@@ -69,10 +69,10 @@
   flavor: leafy
   color: "#99a845"
   metabolisms:
-    Medicine:
+    Drink:
       effects:
-      - !type:ModifyBloodLevel
-        amount: 0.5
+        - !type:ModifyBloodLevel
+          amount: 2
 
 - type: reagent
   parent: BaseDrink

@@ -562,3 +562,52 @@
       Min: 1
       Max: 10
       PotencyDivisor: 25
+
+- type: seed
+  id: N14WildCotton
+  name: clipping-wild-cotton-name
+  noun: clipping-wild-cotton-noun
+  displayName: clipping-wild-cotton-display-name
+  plantRsi: Objects/Specific/Hydroponics/cotton.rsi
+  packetPrototype: N14FloraWildCottonClippingSeed
+  productPrototypes:
+    - N14CottonBol
+  lifespan: 25
+  maturation: 8
+  production: 3
+  yield: 3
+  potency: 5
+  idealLight: 8
+  growthStages: 3
+  waterConsumption: 0.60
+  chemicals:
+    Fiber:
+      Min: 1
+      Max: 10
+      PotencyDivisor: 20
+
+- type: seed
+  id: N14WildAloe
+  name: clipping-wild-aloe-name
+  noun: clipping-wild-aloe-noun
+  displayName: clipping-wild-aloe-display-name
+  plantRsi: Objects/Specific/Hydroponics/aloe.rsi
+  packetPrototype: N14FloraWildAloeClippingSeed
+  productPrototypes:
+    - N14AloeSalve1
+  lifespan: 25
+  maturation: 10
+  production: 3
+  yield: 3
+  potency: 10
+  growthStages: 5
+  waterConsumption: 0.60
+  chemicals:
+    Aloe:
+      Min: 1
+      Max: 10
+      PotencyDivisor: 10
+    Dermaline:
+      Min: 1
+      Max: 10
+      PotencyDivisor: 10

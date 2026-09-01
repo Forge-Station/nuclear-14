@@ -256,3 +256,5 @@
     count: 1
   - type: Sprite
     state: aloe1
+  - type: Produce
+    seedId: N14WildAloe

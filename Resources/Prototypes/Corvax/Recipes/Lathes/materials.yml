@@ -4,12 +4,12 @@
   category: N14Misc
   completetime: 2
   materials:
-    Cotton: 200
+    Cotton: 50
 
 - type: latheRecipe
   id: N14MaterialThread
   result: N14MaterialThread1
   category: N14Misc
-  completetime: 4
+  completetime: 1
   materials:
     Cloth: 100
