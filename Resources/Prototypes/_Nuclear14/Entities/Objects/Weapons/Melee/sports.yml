@@ -26,7 +26,7 @@
     heavyRateModifier: 1.4
     heavyRangeModifier: 1.4
     heavyDamageBaseModifier: 1.2
-    heavyStaminaCost: 15
+    heavyStaminaCost: 10
     range: 1.4
     angle: 60
     soundHit:
