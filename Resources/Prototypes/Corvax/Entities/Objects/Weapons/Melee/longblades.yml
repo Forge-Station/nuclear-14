@@ -83,9 +83,9 @@
       path: "/Audio/Weapons/smash.ogg"
       params:
         volume: -3
-    # damage:
-    #   groups:
-    #     Brute: 5
+    damage:
+      groups:
+        Brute: 5
   - type: MultiHandedItem
   - type: ItemToggleMeleeWeapon
     activatedSoundOnHit:
@@ -193,9 +193,9 @@
       path: "/Audio/Weapons/smash.ogg"
       params:
         volume: -3
-    # damage:
-    #   groups:
-    #     Brute: 5
+    damage:
+      groups:
+        Brute: 5
   - type: ItemToggleMeleeWeapon
     activatedSoundOnHit:
       path: /Audio/Weapons/Guns/Hits/energy_meat1.ogg
