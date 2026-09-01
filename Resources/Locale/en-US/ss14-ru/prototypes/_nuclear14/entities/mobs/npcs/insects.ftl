@@ -10,5 +10,7 @@ ent-N14MobRadscorpion = radscorpion
     .desc = It's a giant radscorpion! Stingy sting.
 ent-N14MobRadscorpionBark = barkscorpion
     .desc = It's a giant bark radscorpion! Stingy sting.
+ent-N14MobDesertRadscorpion = desert radscorpion
+    .desc = It's a giant desert radscorpion! Stingy sting.
 ent-N14MobCazador = cazador
     .desc = Pure hate with a stinger and wings.
