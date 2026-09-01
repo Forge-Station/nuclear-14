@@ -277,6 +277,9 @@
   - type: Sprite
     sprite: _Nuclear14/Structures/Furniture/64x64_furniture.rsi
     state: desk_wood
+  - type: Construction
+    graph: N14TableDeskWood2Graph
+    node: N14TableDeskWood2
 
 - type: entity
   parent: N14TableDeskSchool
@@ -384,6 +387,9 @@
   - type: Sprite
     sprite: _Nuclear14/Structures/Furniture/Tables/counters.rsi
     state: craft_counter
+  - type: Construction
+    graph: N14TableCounterCraftGraph
+    node: N14TableCounterCraft
 
 - type: entity
   parent: N14TableCounter
@@ -421,6 +427,9 @@
   - type: Sprite
     sprite: _Nuclear14/Structures/Furniture/Tables/counters.rsi
     state: metal_counter
+  - type: Construction
+    graph: N14TableCounterMetalGraph
+    node: N14TableCounterMetal
 
 - type: entity
   parent: N14TableCounterMetal

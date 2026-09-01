@@ -60,6 +60,9 @@
   - type: StorageFillVisualizer
     maxFillLevels: 5
     fillBaseName: food
+  - type: Construction
+    graph: N14StoreDeliCounterGraph
+    node: N14StoreDeliCounter
 
 # Wood
 - type: entity

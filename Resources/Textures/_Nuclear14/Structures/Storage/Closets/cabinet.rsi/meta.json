@@ -15,6 +15,9 @@
     },
     {
       "name": "closet_open"
+    },
+    {
+      "name": "closet_icon"
     }
   ]
 }

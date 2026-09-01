@@ -30,6 +30,9 @@
   - type: Sprite
     sprite: _Nuclear14/Structures/Furniture/rugs.rsi
     state: mat_blank
+  - type: Construction
+    graph: N14RugMatGraph
+    node: N14RugMat
 
 - type: entity
   parent: N14RugMat

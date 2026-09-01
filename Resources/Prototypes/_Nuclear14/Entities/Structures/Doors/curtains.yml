@@ -20,6 +20,9 @@
   components:
   - type: Door
     state: open
+  - type: Construction
+    graph: N14JunkCurtainOpenGraph
+    node: N14JunkCurtainOpen
   - type: Occluder
     enabled: false
   - type: Physics

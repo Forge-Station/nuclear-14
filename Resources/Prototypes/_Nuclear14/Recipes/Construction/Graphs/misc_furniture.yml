@@ -1,0 +1,290 @@
+# Curtains
+- type: constructionGraph
+  id: N14JunkCurtainOpenGraph
+  start: start
+  graph:
+    - node: start
+      actions:
+        - !type:DestroyEntity {}
+      edges:
+        - to: N14JunkCurtainOpen
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: Cloth
+              amount: 3
+              doAfter: 2
+
+    - node: N14JunkCurtainOpen
+      entity: N14JunkCurtainOpen
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: MaterialCloth1
+              amount: 3
+            - !type:DeleteEntity {}
+          steps:
+            - tool: Cutting
+              doAfter: 2
+
+# Store furniture
+- type: constructionGraph
+  id: N14StoreDeliCounterGraph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14StoreDeliCounter
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+          conditions:
+            - !type:EntityAnchored {}
+          steps:
+            - material: Steel
+              amount: 5
+              doAfter: 2
+
+    - node: N14StoreDeliCounter
+      entity: N14StoreDeliCounter
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: SheetSteel1
+              amount: 5
+            - !type:DeleteEntity {}
+          conditions:
+            - !type:EntityAnchored {}
+          steps:
+            - tool: Screwing
+              doAfter: 2
+
+# Rugs
+- type: constructionGraph
+  id: N14RugMatGraph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14RugMat
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+          steps:
+            - material: Cloth
+              amount: 3
+              doAfter: 2
+
+    - node: N14RugMat
+      entity: N14RugMat
+      edges:
+        - to: start
+          completed:
+            - !type:GivePrototype
+              prototype: MaterialCloth1
+              amount: 3
+            - !type:DeleteEntity {}
+
+# Shelves
+- type: constructionGraph
+  id: N14ShelfWood1Graph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14ShelfWood1
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+          conditions:
+            - !type:EntityAnchored {}
+          steps:
+            - material: WoodPlank
+              amount: 5
+              doAfter: 2
+
+    - node: N14ShelfWood1
+      entity: N14ShelfWood1
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: MaterialWoodPlank1
+              amount: 5
+            - !type:DeleteEntity {}
+          conditions:
+            - !type:EntityAnchored {}
+          steps:
+            - tool: Prying
+              doAfter: 10
+
+# Closets
+- type: constructionGraph
+  id: N14ClosetCabinetWoodGraph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14ClosetCabinetWood
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+          conditions:
+            - !type:EntityAnchored {}
+          steps:
+            - material: WoodPlank
+              amount: 5
+              doAfter: 2
+            - material: N14ScrapBrass
+              amount: 2
+              doAfter: 2
+
+    - node: N14ClosetCabinetWood
+      entity: N14ClosetCabinetWood
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: MaterialWoodPlank1
+              amount: 5
+            - !type:SpawnPrototype
+              prototype: N14ScrapBrass1
+              amount: 2
+            - !type:DeleteEntity {}
+          conditions:
+            - !type:EntityAnchored {}
+          steps:
+            - tool: Screwing
+              doAfter: 2
+
+# Chairs
+- type: constructionGraph
+  id: N14ChairDinerBenchGraph
+  start: start
+  graph:
+    - node: start
+      actions:
+        - !type:DestroyEntity {}
+      edges:
+        - to: N14ChairDinerBench
+          steps:
+            - material: Steel
+              amount: 2
+              doAfter: 2
+            - material: Cloth
+              amount: 1
+              doAfter: 1
+
+    - node: N14ChairDinerBench
+      entity: N14ChairDinerBench
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: SheetSteel1
+              amount: 2
+            - !type:SpawnPrototype
+              prototype: MaterialCloth1
+              amount: 1
+          steps:
+            - tool: Screwing
+              doAfter: 2
+
+# Tables
+- type: constructionGraph
+  id: N14TableDeskWood2Graph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14TableDeskWood2
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+          conditions:
+            - !type:EntityAnchored {}
+          steps:
+            - material: WoodPlank
+              amount: 4
+              doAfter: 2
+
+    - node: N14TableDeskWood2
+      entity: N14TableDeskWood2
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: MaterialWoodPlank1
+              amount: 4
+            - !type:DeleteEntity {}
+          conditions:
+            - !type:EntityAnchored {}
+          steps:
+            - tool: Screwing
+              doAfter: 2
+
+- type: constructionGraph
+  id: N14TableCounterMetalGraph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14TableCounterMetal
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+          conditions:
+            - !type:EntityAnchored {}
+          steps:
+            - material: Steel
+              amount: 2
+              doAfter: 2
+
+    - node: N14TableCounterMetal
+      entity: N14TableCounterMetal
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: SheetSteel1
+              amount: 2
+            - !type:DeleteEntity {}
+          conditions:
+            - !type:EntityAnchored {}
+          steps:
+            - tool: Screwing
+              doAfter: 2
+
+- type: constructionGraph
+  id: N14TableCounterCraftGraph
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: N14TableCounterCraft
+          completed:
+            - !type:SnapToGrid
+              southRotation: true
+          conditions:
+            - !type:EntityAnchored {}
+          steps:
+            - material: WoodPlank
+              amount: 2
+              doAfter: 2
+
+    - node: N14TableCounterCraft
+      entity: N14TableCounterCraft
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: MaterialWoodPlank1
+              amount: 2
+            - !type:DeleteEntity {}
+          conditions:
+            - !type:EntityAnchored {}
+          steps:
+            - tool: Screwing
+              doAfter: 2

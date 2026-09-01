@@ -253,6 +253,9 @@
   - type: Tag
     tags:
     - Wooden
+  - type: Construction
+    graph: N14ClosetCabinetWoodGraph
+    node: N14ClosetCabinetWood
 
 - type: entity
   parent: [ N14ClosetCabinetWood, N14TimedStorageFillDomestic ]

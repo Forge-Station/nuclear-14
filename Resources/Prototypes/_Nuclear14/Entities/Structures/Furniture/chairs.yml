@@ -320,3 +320,6 @@
   components:
   - type: Sprite
     state: diner_chair
+  - type: Construction
+    graph: N14ChairDinerBenchGraph
+    node: N14ChairDinerBench

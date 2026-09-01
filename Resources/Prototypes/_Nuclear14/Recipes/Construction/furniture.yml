@@ -454,3 +454,173 @@
     state: full
   conditions:
     - !type:TileNotBlocked
+
+# Forge-Change-Start
+# Crafted furniture
+- type: construction
+  name: curtains
+  id: N14JunkCurtainOpen
+  graph: N14JunkCurtainOpenGraph
+  startNode: start
+  targetNode: N14JunkCurtainOpen
+  category: construction-category-furniture
+  description: No privacy guaranteed.
+  icon:
+    sprite: _Nuclear14/Structures/Doors/Curtains/junkcurtain.rsi
+    state: open
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  name: deli counter
+  id: N14StoreDeliCounter
+  graph: N14StoreDeliCounterGraph
+  startNode: start
+  targetNode: N14StoreDeliCounter
+  category: construction-category-furniture
+  description: A metal counter for showing off food.
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  canRotate: true
+  icon:
+    sprite: _Nuclear14/Structures/Furniture/Store_Furniture/delistand.rsi
+    state: deli_stand
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  name: mat
+  id: N14RugMat
+  graph: N14RugMatGraph
+  startNode: start
+  targetNode: N14RugMat
+  category: construction-category-furniture
+  description: Better than the floor.
+  icon:
+    sprite: _Nuclear14/Structures/Furniture/rugs.rsi
+    state: mat_blank
+  objectType: Structure
+  placementMode: SnapgridCenter
+  hide: false
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  name: wooden shelf
+  id: N14ShelfWood1
+  graph: N14ShelfWood1Graph
+  startNode: start
+  targetNode: N14ShelfWood1
+  category: construction-category-furniture
+  description: A dusty old shelf.
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  canRotate: true
+  icon:
+    sprite: _Nuclear14/Structures/Furniture/np13_misc.rsi
+    state: shelf_wood
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  name: cabinet
+  id: N14ClosetCabinetWood
+  graph: N14ClosetCabinetWoodGraph
+  startNode: start
+  targetNode: N14ClosetCabinetWood
+  category: construction-category-furniture
+  description: An old pre-war wooden cabinet.
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  canRotate: true
+  icon:
+    sprite: _Nuclear14/Structures/Storage/Closets/cabinet.rsi
+    state: closet_icon
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  name: diner bench
+  id: N14ChairDinerBench
+  graph: N14ChairDinerBenchGraph
+  startNode: start
+  targetNode: N14ChairDinerBench
+  category: construction-category-furniture
+  description: An American Diner bench.
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  icon:
+    sprite: _Nuclear14/Structures/Furniture/chairs.rsi
+    state: diner_chair
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  name: wooden desk
+  id: N14TableDeskWood2
+  graph: N14TableDeskWood2Graph
+  startNode: start
+  targetNode: N14TableDeskWood2
+  category: construction-category-furniture
+  description: A wooden desk.
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  canRotate: true
+  icon:
+    sprite: _Nuclear14/Structures/Furniture/64x64_furniture.rsi
+    state: desk_wood
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  name: metal counter
+  id: N14TableCounterMetal
+  graph: N14TableCounterMetalGraph
+  startNode: start
+  targetNode: N14TableCounterMetal
+  category: construction-category-furniture
+  description: A cold, hard metal counter.
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  canRotate: true
+  icon:
+    sprite: _Nuclear14/Structures/Furniture/Tables/counters.rsi
+    state: metal_counter
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  name: craft counter
+  id: N14TableCounterCraft
+  graph: N14TableCounterCraftGraph
+  startNode: start
+  targetNode: N14TableCounterCraft
+  category: construction-category-furniture
+  description: This counter looks like scrap.
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  hide: false
+  canRotate: true
+  icon:
+    sprite: _Nuclear14/Structures/Furniture/Tables/counters.rsi
+    state: craft_counter
+  conditions:
+    - !type:TileNotBlocked
+# Forge-Change-End

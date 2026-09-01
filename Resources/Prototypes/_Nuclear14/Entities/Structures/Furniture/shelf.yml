@@ -155,6 +155,9 @@
     containers:
       storagebase: !type:Container
   - type: InteractionOutline
+  - type: Construction
+    graph: N14ShelfWood1Graph
+    node: N14ShelfWood1
       
 - type: entity
   parent: [ N14ShelfWood1, N14StorageFillDomestic ]
