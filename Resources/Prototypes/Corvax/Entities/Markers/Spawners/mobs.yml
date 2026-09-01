@@ -396,3 +396,18 @@
   - type: ConditionalSpawner
     prototypes:
       - N14PackBrahminCrate
+
+- type: entity
+  name: спавнер пустынного скорпиона
+  id: N14SpawnMobDesertscorp
+  parent: MarkerBase
+  components:
+  - type: Sprite
+    layers:
+      - state: green
+      - sprite: Corvax/Mobs/Animals/desertradscorpion.rsi
+        state: radscorpion
+      - state: ai
+  - type: ConditionalSpawner
+    prototypes:
+      - N14MobDesertRadscorpion

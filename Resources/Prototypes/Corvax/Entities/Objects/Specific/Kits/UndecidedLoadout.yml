@@ -398,16 +398,6 @@
   - KitVeteranKebab
 
 - type: UndecidedLoadoutBackpackSet
-  id: VeteranScoutSet
-  name: undecided-loadout-category-veteran-scout-name
-  description: undecided-loadout-category-veteran-scout-description
-  sprite:
-    sprite: Corvax/Objects/Misc/kits.rsi
-    state: base
-  content:
-  - KitVeteranScout
-
-- type: UndecidedLoadoutBackpackSet
   id: WarriorBaseSet
   name: undecided-loadout-category-warrior-base-name
   description: undecided-loadout-category-warrior-base-description
