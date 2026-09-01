@@ -82,7 +82,7 @@
         Blunt: 55
         Structural: 20
   - type: StaminaDamageOnHit
-    damage: 20
+    damage: 4
   - type: MeleeThrowOnHit
     speed: 10
     lifetime: 0.025
