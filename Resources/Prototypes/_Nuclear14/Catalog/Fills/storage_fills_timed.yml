@@ -434,10 +434,9 @@
         - id: N14BaseBallBat
           prob: 0.4
           orGroup: Weapon
-        #Forge-change
-        # - id: FireAxe
-        #   prob: 0.04
-        #   orGroup: Weapon
+        - id: FireAxe
+          prob: 0.04
+          orGroup: Weapon
         - id: N14WastelandSpear
           prob: 0.3
           orGroup: Weapon
@@ -1781,10 +1780,9 @@
         - id: N14BaseBallBat
           prob: 0.04
           orGroup: Weapon
-        #Forge-change
-        # - id: FireAxe
-        #   prob: 0.04
-        #   orGroup: Weapon
+        - id: FireAxe
+          prob: 0.04
+          orGroup: Weapon
         - id: N14WastelandSpear
           prob: 0.04
           orGroup: Weapon

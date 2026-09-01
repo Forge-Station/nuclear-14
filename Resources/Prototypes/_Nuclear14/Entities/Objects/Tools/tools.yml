@@ -290,3 +290,62 @@
     speedModifier: 2.0
   - type: BoneSaw
     speed: 0.8
+
+- type: entity
+  parent: BaseItem
+  id: N14Chainsaw
+  name: chainsaw
+  description: A very large chainsaw. Usually you use this for cutting down trees... usually.
+  components:
+  - type: Wieldable
+    wieldSound: !type:SoundPathSpecifier
+      path: /Audio/Weapons/chainsawwield.ogg
+      params:
+        volume: -3
+  - type: Sharp
+  - type: Sprite
+    sprite: Objects/Weapons/Melee/chainsaw.rsi
+    state: icon
+  - type: MeleeWeapon
+    autoAttack: true
+    angle: 0
+    wideAnimationRotation: -135
+    attackRate: 4
+    damage:
+      types:
+        Slash: 2
+        Blunt: 2
+        Structural: 4
+    soundHit:
+      path: /Audio/Weapons/chainsaw.ogg
+      params:
+        volume: -3
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Slash: 4
+        Structural: 4
+  - type: Item
+    size: Huge
+    sprite: Objects/Weapons/Melee/chainsaw.rsi
+  - type: DisarmMalus
+  - type: RefillableSolution
+    solution: Welder
+  - type: SolutionContainerManager
+    solutions:
+      Welder:
+        reagents:
+        - ReagentId: WeldingFuel
+          Quantity: 300
+        maxVol: 300
+  - type: UseDelay
+    delay: 1
+  - type: Tool
+    qualities:
+      - Sawing
+    speedModifier: 3.0
+  - type: SurgeryTool
+    startSound:
+      path: /Audio/Medical/Surgery/saw.ogg
+  - type: BoneSaw
+    speed: 0.6

@@ -30,19 +30,14 @@
     sprite: Corvax/Objects/Weapons/Melee/powerfist.rsi
     slots: [gloves]
   - type: MeleeWeapon
-    wideAnimationRotation: -135
-    attackRate: 1
-    heavyRateModifier: 1.2
-    heavyRangeModifier: 1.2
-    heavyDamageBaseModifier: 1.4
-    heavyStaminaCost: 10
-    range: 1.2
+    soundHit:
+      collection: MetalThud
+    range: 1.3
+    attackRate: 0.8
     damage:
       types:
         Blunt: 35
         Structural: 15
-    soundHit:
-      collection: MetalThud
     animation: WeaponArcFist
     wideAnimation: WeaponArcFist
     mustBeEquippedToUse: true
@@ -66,35 +61,17 @@
     sprite: Corvax/Objects/Weapons/Melee/industrialpowerfist.rsi
     slots: [gloves]
   - type: MeleeWeapon
-    wideAnimationRotation: -135
-    attackRate: 1
-    heavyRateModifier: 1
-    heavyRangeModifier: 1.2
-    heavyDamageBaseModifier: 1
-    heavyStaminaCost: 10
-    range: 1.2
+    soundHit:
+      collection: MetalThud
+    range: 1.3
+    attackRate: 0.8
     damage:
       types:
         Blunt: 15
         Slash: 25
-    soundHit:
-      collection: MetalThud
     animation: WeaponArcFist
     wideAnimation: WeaponArcFist
     mustBeEquippedToUse: true
-  - type: SolutionContainerManager
-    solutions:
-      melee:
-        maxVol: 6
-        reagents:
-        - ReagentId: Razorium
-          Quantity: 6
-  - type: SolutionRegeneration
-    solution: melee
-    generated:
-      reagents:
-      - ReagentId: Razorium
-        Quantity: 6
   - type: MeleeThrowOnHit
     speed: 10
     lifetime: 0.025
@@ -115,19 +92,14 @@
     sprite: Corvax/Objects/Weapons/Melee/knuckles.rsi
     slots: [gloves]
   - type: MeleeWeapon
-    wideAnimationRotation: -135
-    attackRate: 0.7
-    heavyRateModifier: 0.7
-    heavyRangeModifier: 1
-    heavyDamageBaseModifier: 1.2
-    heavyStaminaCost: 5
-    range: 1
-    damage:
-      types:
-        Blunt: 10
-        Structural: 10
     soundHit:
       collection: MetalThud
+    range: 1.3
+    attackRate: 0.8
+    damage:
+      types:
+        Blunt: 8
+        Structural: 8
     animation: WeaponArcFist
     wideAnimation: WeaponArcFist
     mustBeEquippedToUse: true
@@ -151,19 +123,14 @@
     sprite: Corvax/Objects/Weapons/Melee/knuckleswithclaws.rsi
     slots: [gloves]
   - type: MeleeWeapon
-    wideAnimationRotation: -135
-    attackRate: 0.7
-    heavyRateModifier: 0.7
-    heavyRangeModifier: 1
-    heavyDamageBaseModifier: 1.2
-    heavyStaminaCost: 5
-    range: 1
-    damage:
-      types:
-        Blunt: 5
-        Slash: 10
     soundHit:
       collection: MetalThud
+    range: 1.3
+    attackRate: 0.8
+    damage:
+      types:
+        Blunt: 8
+        Slash: 8
     animation: WeaponArcFist
     wideAnimation: WeaponArcFist
     mustBeEquippedToUse: true

@@ -499,10 +499,9 @@
         - id: N14BaseBallBat
           prob: 0.1
           orGroup: Weapon
-        #Forge-change
-        # - id: FireAxe
-        #   prob: 0.04
-        #   orGroup: Weapon
+        - id: FireAxe
+          prob: 0.04
+          orGroup: Weapon
         - id: N14WastelandSpear
           prob: 0.09
           orGroup: Weapon
@@ -621,10 +620,9 @@
         - id: N14BaseAxe
           prob: 0.1
           orGroup: Weapon
-        # Forge-Change
-        # - id: N14SuperSledgeHammer
-        #   prob: 0.05
-        #   orGroup: Weapon
+        - id: N14SuperSledgeHammer
+          prob: 0.05
+          orGroup: Weapon
         - id: N14TribalMachete
           prob: 0.1
           orGroup: Weapon
@@ -2179,10 +2177,9 @@
         - id: N14BaseBallBat
           prob: 0.04
           orGroup: Weapon
-        #Forge-change
-        # - id: FireAxe
-        #   prob: 0.04
-        #   orGroup: Weapon
+        - id: FireAxe
+          prob: 0.04
+          orGroup: Weapon
         - id: N14WastelandSpear
           prob: 0.04
           orGroup: Weapon

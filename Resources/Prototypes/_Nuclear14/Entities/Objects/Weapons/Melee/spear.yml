@@ -1,14 +1,12 @@
 - type: entity
-  # name: baseThrowingSpear
+  name: baseThrowingSpear
   parent: BaseItem
   id: baseThrowingSpear
-  abstract: true
-  # description: Definition of a classic. Keeping murder affordable since 200,000 BCE.
+  description: Definition of a classic. Keeping murder affordable since 200,000 BCE.
   components:
   - type: EmbeddableProjectile
     offset: 0.15,0.15
   - type: EmbedPassiveDamage
-  - type: LandAtCursor
   - type: ThrowingAngle
     angle: 225
   - type: Tag
@@ -38,15 +36,9 @@
       visible: false
   - type: MeleeWeapon
     wideAnimationRotation: -135
-    heavyRateModifier: 1.2
-    heavyRangeModifier: 1.8
-    heavyDamageBaseModifier: 1.75
-    heavyStaminaCost: 15
-    maxTargets: 1
-    range: 1.4
     damage:
       types:
-        Piercing: 30
+        Piercing: 12
     angle: 0
     animation: WeaponArcThrust
     soundHit:
@@ -54,7 +46,7 @@
   - type: DamageOtherOnHit
     damage:
       types:
-        Piercing: 60
+        Piercing: 35
   - type: Item
     size: Large
   - type: Clothing
@@ -91,30 +83,16 @@
 
 - type: entity
   name: spear
-  parent: baseThrowingSpear
+  parent: BaseItem
   id: N14WastelandSpear
   description: Definition of a classic. Keeping murder affordable since 200,000 BCE.
   components:
-  - type: Item
-    size: Large
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Weapons/Melee/spear.rsi
-    layers:
-    - state: spear
-    - state: spear1
-      map: ["enum.SolutionContainerLayers.Fill"]
-      visible: false
-  - type: Clothing
-    quickEquip: false
-    slots:
-    - back
-    - suitStorage
   - type: Wieldable
   - type: IncreaseDamageOnWield
     damage:
       types:
-        Piercing: 15
-        Slash: 5
+        Piercing: 3
+        Slash: 3
   - type: EmbeddableProjectile
     offset: 0.15,0.15
   - type: EmbedPassiveDamage
@@ -138,6 +116,33 @@
         restitution: 0.3
         friction: 0.2
   - type: Sharp
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Weapons/Melee/spear.rsi
+    layers:
+    - state: spear
+    - state: spear1
+      map: ["enum.SolutionContainerLayers.Fill"]
+      visible: false
+  - type: MeleeWeapon
+    wideAnimationRotation: -135
+    damage:
+      types:
+        Piercing: 20
+    angle: 0
+    animation: WeaponArcThrust
+    soundHit:
+      path: /Audio/Weapons/bladeslice.ogg
+  - type: DamageOtherOnHit
+    damage:
+      types:
+        Piercing: 25
+  - type: Item
+    size: Large
+  - type: Clothing
+    quickEquip: false
+    slots:
+    - back
+    - suitStorage
   - type: SolutionContainerManager
     solutions:
       melee:
@@ -205,17 +210,17 @@
   - type: MeleeWeapon
     damage:
       types:
-        Piercing: 30
-        Slash: 10
+        Piercing: 18
+        Slash: 8
   - type: DamageOtherOnHit
     damage:
       types:
-        Piercing: 50
-        Slash: 20
+        Piercing: 16
+        Slash: 6
 
 - type: entity
   name: poleaxe
-  parent: N14WastelandTribalSpear
+  parent: N14WastelandSpear
   id: N14WastelandPolearm
   description: A heavy and long pole with an axe blade attached at its end, this basic weapon can be devastating.
   components:
@@ -229,6 +234,16 @@
     sprite: _Nuclear14/Objects/Weapons/Melee/polearm.rsi
     netsync: false
     state: spear
+  - type: MeleeWeapon
+    damage:
+      types:
+        Piercing: 18
+        Slash: 12
+  - type: DamageOtherOnHit
+    damage:
+      types:
+        Piercing: 16
+        Slash: 6
   - type: StaticPrice
     price: 30
 
@@ -242,3 +257,12 @@
     sprite: _Nuclear14/Objects/Weapons/Melee/javelin.rsi
     netsync: false
     state: spear
+  - type: MeleeWeapon
+    damage:
+      types:
+        Piercing: 18
+  - type: DamageOtherOnHit
+    damage:
+      types:
+        Piercing: 36
+

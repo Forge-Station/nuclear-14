@@ -4,6 +4,15 @@
   parent: BaseItem
   id: N14PoliceBaton
   components:
+  - type: StaminaDamageOnHit
+    damage: 20
+  - type: StaminaDamageOnCollide
+    damage: 20
+  - type: MeleeWeapon
+    wideAnimationRotation: -135
+    damage:
+      types:
+        Blunt: 8
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Melee/policebaton.rsi
     state: icon
@@ -18,15 +27,6 @@
     slots:
     - belt
     - suitStorage
-  - type: StaminaDamageOnHit
-    damage: 20
-  - type: StaminaDamageOnCollide
-    damage: 20
-  - type: MeleeWeapon
-    wideAnimationRotation: -135
-    damage:
-      types:
-        Blunt: 8
   - type: StaticPrice
     price: 8 # Forge-Change
   - type: Tag # Forge-Change
@@ -38,6 +38,14 @@
   parent: BaseItem
   id: N14TribalClub
   components:
+  - type: MeleeWeapon
+    wideAnimationRotation: -135
+    damage:
+      types:
+        Blunt: 24
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Weapons/Melee/tribalclub.rsi
+    state: icon
   - type: Item
     size: Large
   - type: Clothing
@@ -46,21 +54,6 @@
     slots:
     - belt
     - suitStorage
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Weapons/Melee/tribalclub.rsi
-    state: icon
-  - type: MeleeWeapon
-    wideAnimationRotation: -135
-    attackRate: 1
-    heavyRateModifier: 1
-    heavyRangeModifier: 1
-    heavyDamageBaseModifier: 1.2
-    heavyStaminaCost: 5
-    range: 1
-    angle: 60
-    damage:
-      types:
-        Blunt: 34
   - type: StaticPrice
     price: 20
 
@@ -70,31 +63,22 @@
   parent: BaseItem
   id: N14BrokenPipe
   components:
-  - type: Item
-    size: Large
+  - type: MeleeWeapon
+    wideAnimationRotation: -135
+    damage:
+      types:
+        Blunt: 22
   - type: Sprite
     sprite: _Nuclear14/Objects/Weapons/Melee/pipe.rsi
     state: icon
+  - type: Item
+    size: Large
   - type: Clothing
     sprite: _Nuclear14/Objects/Weapons/Melee/pipe.rsi
     quickEquip: false
     slots:
     - belt
     - suitStorage
-  - type: MeleeWeapon
-    wideAnimationRotation: -135
-    attackRate: 1
-    heavyRateModifier: 1
-    heavyRangeModifier: 1
-    heavyDamageBaseModifier: 1.2
-    heavyStaminaCost: 5
-    range: 1
-    angle: 60
-    damage:
-      types:
-        Blunt: 34
-  - type: StaminaDamageOnHit
-    damage: 10
   - type: StaticPrice
     price: 10
 
@@ -104,11 +88,6 @@
   parent: BaseItem
   id: N14TrainingSword
   components:
-  - type: Item
-    size: Large
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Weapons/Melee/training_sword.rsi
-    state: icon
   - type: StaminaDamageOnHit
     damage: 12
   - type: StaminaDamageOnCollide
@@ -119,6 +98,11 @@
     damage:
       types:
         Blunt: 2
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Weapons/Melee/training_sword.rsi
+    state: icon
+  - type: Item
+    size: Large
   - type: StaticPrice
     price: 0
 
@@ -127,6 +111,15 @@
   parent: BaseItem
   id: N14TrenchClub
   components:
+  - type: MeleeWeapon
+    wideAnimationRotation: -135
+    damage:
+      types:
+        Blunt: 16
+        Piercing: 4
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Weapons/Melee/trenchclub.rsi
+    state: icon
   - type: Item
     size: Large
   - type: Clothing
@@ -135,23 +128,5 @@
     slots:
     - belt
     - suitStorage
-  - type: Sprite
-    sprite: _Nuclear14/Objects/Weapons/Melee/trenchclub.rsi
-    state: icon
-  - type: MeleeWeapon
-    wideAnimationRotation: -135
-    attackRate: 1
-    heavyRateModifier: 1
-    heavyRangeModifier: 1
-    heavyDamageBaseModifier: 1.2
-    heavyStaminaCost: 5
-    range: 1
-    angle: 60
-    damage:
-      types:
-        Blunt: 25
-        Piercing: 10
-  - type: StaminaDamageOnHit
-    damage: 10
   - type: StaticPrice
     price: 30
