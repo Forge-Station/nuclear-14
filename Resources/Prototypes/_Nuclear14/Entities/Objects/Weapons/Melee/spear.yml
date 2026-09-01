@@ -2,7 +2,6 @@
   # name: baseThrowingSpear
   parent: BaseItem
   id: baseThrowingSpear
-  abstract: true
   # description: Definition of a classic. Keeping murder affordable since 200,000 BCE.
   components:
   - type: EmbeddableProjectile

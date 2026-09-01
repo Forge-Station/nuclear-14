@@ -68,41 +68,33 @@
       params:
         variation: 0.125
         volume: -5
-  - type: MeleeWeapon
-    resistanceBypass: true
-    wideAnimationRotation: -135
-    heavyRateModifier: 1.2
-    heavyRangeModifier: 1.8
-    heavyDamageBaseModifier: 1
-    heavyStaminaCost: 20
-    maxTargets: 1
-    range: 1.4
-    angle: 0
-    animation: WeaponArcThrust
-    soundHit:
-      path: "/Audio/Weapons/smash.ogg"
-      params:
-        volume: -3
-    # damage:
-    #   groups:
-    #     Brute: 5
-  - type: MultiHandedItem
-  - type: ItemToggleMeleeWeapon
-    activatedSoundOnHit:
-      path: /Audio/Weapons/Guns/Hits/energy_meat1.ogg
-      params:
-        variation: 0.250
-        volume: -10
-    activatedSoundOnHitNoDamage:
-      path: /Audio/Weapons/Guns/Hits/energy_meat1.ogg
-      params:
-        variation: 0.250
-        volume: -12
-    deactivatedSoundOnHitNoDamage:
-      collection: MetalThud
-    activatedDamage:
+  - type: ComponentToggler
+    components:
+    - type: MeleeWeapon
+      resistanceBypass: true
+      wideAnimationRotation: -135
+      heavyRateModifier: 1.2
+      heavyRangeModifier: 2.2
+      heavyDamageBaseModifier: 1
+      heavyStaminaCost: 15
+      maxTargets: 1
+      range: 1.5
+      angle: 0
+      animation: WeaponArcThrust
+      soundHit:
+        path: /Audio/Weapons/Guns/Hits/energy_meat1.ogg
+        params:
+          variation: 0.250
+          volume: -10
+      soundNoDamage:
+        path: /Audio/Weapons/Guns/Hits/energy_meat1.ogg
+        params:
+          variation: 0.250
+          volume: -12
+      damage:
         types:
-            Heat: 55
+          Heat: 65
+  - type: MultiHandedItem
   - type: SolutionContainerManager
     solutions:
       Welder:
@@ -181,37 +173,29 @@
       params:
         variation: 0.125
         volume: -5
-  - type: MeleeWeapon
-    attackRate: 0.9
-    heavyRateModifier: 0.9
-    heavyRangeModifier: 1.4
-    heavyDamageBaseModifier: 1
-    heavyStaminaCost: 10
-    range: 1.4
-    angle: 90
-    soundHit:
-      path: "/Audio/Weapons/smash.ogg"
-      params:
-        volume: -3
-    # damage:
-    #   groups:
-    #     Brute: 5
-  - type: ItemToggleMeleeWeapon
-    activatedSoundOnHit:
-      path: /Audio/Weapons/Guns/Hits/energy_meat1.ogg
-      params:
-        variation: 0.250
-        volume: -10
-    activatedSoundOnHitNoDamage:
-      path: /Audio/Weapons/Guns/Hits/energy_meat1.ogg
-      params:
-        variation: 0.250
-        volume: -12
-    deactivatedSoundOnHitNoDamage:
-      collection: MetalThud
-    activatedDamage:
+  - type: ComponentToggler
+    components:
+    - type: MeleeWeapon
+      attackRate: 0.9
+      heavyRateModifier: 0.9
+      heavyRangeModifier: 1.4
+      heavyDamageBaseModifier: 1
+      heavyStaminaCost: 10
+      range: 1.4
+      angle: 90
+      soundHit:
+        path: /Audio/Weapons/Guns/Hits/energy_meat1.ogg
+        params:
+          variation: 0.250
+          volume: -10
+      soundNoDamage:
+        path: /Audio/Weapons/Guns/Hits/energy_meat1.ogg
+        params:
+          variation: 0.250
+          volume: -12
+      damage:
         types:
-            Heat: 40
+          Heat: 40
   - type: SolutionContainerManager
     solutions:
       Welder:
