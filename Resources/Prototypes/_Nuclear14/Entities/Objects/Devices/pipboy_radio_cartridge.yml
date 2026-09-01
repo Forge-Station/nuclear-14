@@ -15,3 +15,15 @@
       sprite: _Nuclear14/Structures/Misc/radiostation/tableradio.rsi
       state: base
   - type: PipBoyRadioCartridge
+    songs:
+      - LonesomeValley
+      - Shenandoah
+      - StLouisBlues
+      - WhiteHouseBlues
+      - OlManMose
+      - MisterFiveByFive
+      - JustAFairWeatherFriend
+      - PraiseTheLordAndPassTheAmmunition
+      - StraightenUpAndFlyRight
+      - IntoEachLifeSomeRainMustFall
+      - GrandmaPlaysTheNumbers

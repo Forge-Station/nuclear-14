@@ -27,7 +27,7 @@ public sealed partial class PipBoyRadioUi : UIFragment
         var prototypeManager =
             IoCManager.Resolve<IPrototypeManager>();
 
-        _fragment.LoadSongs(prototypeManager);
+        _fragment.SetPrototypeManager(prototypeManager);
 
         _fragment.OnSongSelected += id =>
             Send(
@@ -74,6 +74,7 @@ public sealed partial class PipBoyRadioUi : UIFragment
             return;
 
         _fragment?.UpdateState(
+            radioState.Songs,
             radioState.SelectedSongId?.Id,
             radioState.Playing,
             radioState.Paused);

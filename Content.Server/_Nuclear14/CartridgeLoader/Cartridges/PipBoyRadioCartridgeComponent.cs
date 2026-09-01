@@ -7,6 +7,9 @@ namespace Content.Server._Nuclear14.CartridgeLoader.Cartridges;
 [RegisterComponent]
 public sealed partial class PipBoyRadioCartridgeComponent : Component
 {
+    [DataField(required: true)]
+    public List<ProtoId<JukeboxPrototype>> Songs = new();
+
     [DataField]
     public ProtoId<JukeboxPrototype>? SelectedSongId;
 
@@ -18,6 +21,9 @@ public sealed partial class PipBoyRadioCartridgeComponent : Component
 
     [ViewVariables]
     public EntityUid? ListenerUid;
+
+    [ViewVariables]
+    public EntityUid? WearerUid;
     [ViewVariables]
     public bool Playing;
 

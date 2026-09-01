@@ -11,15 +11,15 @@
         VerticalExpand="True"
         SeparationOverride="4">
 
-        <Label Text="РАДИО"/>
+        <Label Text="{Loc pipboy-radio-title}"/>
 
         <Label
             Name="CurrentTrack"
-            Text="ТРЕК: ---"/>
+            Text="{Loc pipboy-radio-no-track}"/>
 
         <Label
             Name="Status"
-            Text="СТАТУС: ОСТАНОВЛЕНО"/>
+            Text="{Loc pipboy-radio-status-stopped}"/>
 
         <BoxContainer
             Orientation="Horizontal"
@@ -33,12 +33,12 @@
 
             <Button
                 Name="PlayButton"
-                Text="ИГРАТЬ"
+                Text="{Loc pipboy-radio-play}"
                 HorizontalExpand="True"/>
 
             <Button
                 Name="PauseButton"
-                Text="ПАУЗА"
+                Text="{Loc pipboy-radio-pause}"
                 HorizontalExpand="True"/>
 
             <Button
@@ -50,7 +50,7 @@
 
         <Button
             Name="StopButton"
-            Text="СТОП"
+            Text="{Loc pipboy-radio-stop}"
             HorizontalExpand="True"/>
 
         <ScrollContainer

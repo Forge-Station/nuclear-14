@@ -12,7 +12,24 @@ public sealed class PipBoyRadioWearerSystem : EntitySystem
     {
         base.Initialize();
 
+        SubscribeLocalEvent<PipBoyRadioWearerComponent, GotEquippedEvent>(OnEquipped);
         SubscribeLocalEvent<PipBoyRadioWearerComponent, GotUnequippedEvent>(OnUnequipped);
+    }
+
+    private void OnEquipped(
+        EntityUid uid,
+        PipBoyRadioWearerComponent component,
+        GotEquippedEvent args)
+    {
+        var query = EntityQueryEnumerator<PipBoyRadioCartridgeComponent>();
+
+        while (query.MoveNext(out _, out var radio))
+        {
+            if (radio.LoaderUid != uid)
+                continue;
+
+            radio.WearerUid = args.Equipee;
+        }
     }
 
     private void OnUnequipped(
@@ -23,7 +40,7 @@ public sealed class PipBoyRadioWearerSystem : EntitySystem
 
         var query = EntityQueryEnumerator<PipBoyRadioCartridgeComponent>();
 
-        while (query.MoveNext(out var cartridgeUid, out var radio))
+        while (query.MoveNext(out _, out var radio))
         {
             if (radio.LoaderUid != uid)
                 continue;
@@ -34,7 +51,9 @@ public sealed class PipBoyRadioWearerSystem : EntitySystem
             radio.AudioStream = null;
             radio.Playing = false;
             radio.Paused = false;
+            radio.PlaybackGrace = 0f;
             radio.ListenerUid = null;
+            radio.WearerUid = null;
         }
     }
 }

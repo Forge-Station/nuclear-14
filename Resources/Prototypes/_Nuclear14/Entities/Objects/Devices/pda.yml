@@ -63,6 +63,7 @@
     preinstalled:
       - CrewManifestCartridge
       - NotekeeperCartridge
+      - NewsReaderCartridge
       - N14PipBoyRadioCartridge
 
 - type: entity
@@ -145,12 +146,3 @@
         - Write
   - type: PdaBorderColor
     borderColor: "#7C5D00"
-  - type: Jukebox
-
-  - type: ActivatableUI
-    key: enum.JukeboxUiKey.Key
-
-  - type: UserInterface
-    interfaces:
-      enum.JukeboxUiKey.Key:
-        type: JukeboxBoundUserInterface

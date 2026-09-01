@@ -1,4 +1,3 @@
-using System.Linq;
 using Content.Server.CartridgeLoader;
 using Content.Shared._Nuclear14.CartridgeLoader.Cartridges;
 using Content.Shared.Audio.Jukebox;
@@ -44,6 +43,7 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
 
         var loaderUid = GetEntity(args.LoaderUid);
         component.LoaderUid = loaderUid;
+        component.ListenerUid = args.Actor;
 
         switch (message.Action)
         {
@@ -51,11 +51,11 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
                 if (message.SongId is not { } songId)
                     break;
 
-                if (!_prototypeManager.HasIndex<JukeboxPrototype>(songId))
+                if (!component.Songs.Contains(songId) ||
+                    !_prototypeManager.HasIndex<JukeboxPrototype>(songId))
                     break;
 
                 SelectSong(
-                    loaderUid,
                     component,
                     songId,
                     component.Playing);
@@ -63,7 +63,7 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
                 break;
 
             case PipBoyRadioAction.Play:
-                Play(loaderUid, component);
+                Play(component);
                 break;
 
             case PipBoyRadioAction.Pause:
@@ -95,7 +95,6 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
     }
 
     private void SelectSong(
-        EntityUid loaderUid,
         PipBoyRadioCartridgeComponent component,
         ProtoId<JukeboxPrototype> songId,
         bool startPlayback)
@@ -105,7 +104,7 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
         component.SelectedSongId = songId;
 
         if (startPlayback)
-            Play(loaderUid, component);
+            Play(component);
     }
 
     private bool SelectRelative(
@@ -114,10 +113,7 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
         int direction,
         bool startPlayback)
     {
-        var songs = _prototypeManager
-            .EnumeratePrototypes<JukeboxPrototype>()
-            .OrderBy(song => song.Name)
-            .ToList();
+        var songs = component.Songs;
 
         if (songs.Count == 0)
             return false;
@@ -125,10 +121,7 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
         var currentIndex = -1;
 
         if (component.SelectedSongId is { } currentSong)
-        {
-            currentIndex = songs.FindIndex(
-                song => song.ID == currentSong.Id);
-        }
+            currentIndex = songs.FindIndex(song => song == currentSong);
 
         int nextIndex;
 
@@ -145,23 +138,21 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
                 % songs.Count;
         }
 
-        var songId =
-            new ProtoId<JukeboxPrototype>(
-                songs[nextIndex].ID);
-
         SelectSong(
-            loaderUid,
             component,
-            songId,
+            songs[nextIndex],
             startPlayback);
 
         return true;
     }
 
     private void Play(
-        EntityUid loaderUid,
         PipBoyRadioCartridgeComponent component)
     {
+        if (component.WearerUid is not { } wearer ||
+            component.ListenerUid != wearer)
+            return;
+
         if (Exists(component.AudioStream))
         {
             _audio.SetState(
@@ -180,9 +171,8 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
                 out var jukeboxPrototype))
             return;
 
-        var listener = Transform(loaderUid).ParentUid;
-
-        if (!Exists(listener))
+        if (component.ListenerUid is not { } listener ||
+            !Exists(listener))
             return;
 
         component.AudioStream =
@@ -248,7 +238,7 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
             if (_audio.IsPlaying(component.AudioStream))
                 continue;
 
-            // Трек закончился естественно.
+            // The track finished naturally.
             component.AudioStream =
                 _audio.Stop(component.AudioStream);
 
@@ -259,7 +249,7 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
                 !Exists(loaderUid))
                 continue;
 
-            // Автоматически запускаем следующий трек.
+            // Automatically start the next track.
             SelectRelative(
                 loaderUid,
                 component,
@@ -283,6 +273,7 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
         PipBoyRadioCartridgeComponent component)
     {
         var state = new PipBoyRadioUiState(
+            component.Songs,
             component.SelectedSongId,
             component.Playing,
             component.Paused);
