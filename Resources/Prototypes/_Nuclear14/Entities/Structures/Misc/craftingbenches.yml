@@ -183,11 +183,6 @@
     - MagazineDrum545Rifle
     - 40mmGrenadeShrapnel
     # Forge-Change-End
-    # Corvax-Change-Start: 9.39
-    - Magazine939AsVal
-    - Magazine939Vss
-    - MagazineBox939
-    # Corvax-Change-End
   - type: MaterialStorageMagnetPickup
     magnetEnabled: True
     range: 1.25

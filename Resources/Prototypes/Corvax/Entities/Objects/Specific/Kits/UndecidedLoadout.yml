@@ -63,7 +63,6 @@
     - VeteranBerserkerSet
     - VeteranKebabSet
     - VeteranSuppressorSet
-    - VeteranScoutSet
 
 - type: entity
   id: LegionWarriorloadoutkits

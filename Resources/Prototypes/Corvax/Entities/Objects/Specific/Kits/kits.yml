@@ -274,33 +274,6 @@
       path: /Audio/Effects/unwrap.ogg
 
 - type: entity
-  name: veteran-scout kit
-  parent: KitBase
-  id: KitVeteranScout
-  description: "A set of Legion equipment."
-  components:
-  - type: Sprite
-    sprite: Corvax/Objects/Misc/kits.rsi
-    state: base
-  - type: Item
-    size: Huge
-  - type: SpawnItemsOnUse
-    items:
-      - id: N14Gladius
-      - id: SmokeGrenade
-        amount: 2
-      - id: N14WeaponRifleAsVal
-      - id: MagazineBox939
-      - id: Magazine939AsVal
-        amount: 1
-      - id: N14HealingPoultice
-      - id: N14Hydra
-      - id: N14CleanGauze10
-      - id: N14BoxCardboardMREBoxLegionFilled
-    sound:
-      path: /Audio/Effects/unwrap.ogg
-
-- type: entity
   name: veteran-kebab kit
   parent: KitBase
   id: KitVeteranKebab
