@@ -29,6 +29,9 @@
     state: spear
   - type: TileFrictionModifier
     modifier: 0.00001
+  - type: LandAtCursor
+  - type: ThrowingAngle
+    angle: 225
   - type: ExplodeOnTrigger
   - type: Explosive
     explosionType: Default

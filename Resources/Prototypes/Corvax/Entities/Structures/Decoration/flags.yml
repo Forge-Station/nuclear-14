@@ -32,3 +32,23 @@
   - type: Sprite
     sprite: Corvax/Structures/Decoration/flags_64x64.rsi
     state: woodlandflag
+
+- type: entity
+  parent: N14DecorationFlagFlammable
+  id: N14FlagRubina
+  name: Флаг Рубина
+  description: Флаг в цветах Рубина.
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/flag4.rsi
+    state: rubby
+
+- type: entity
+  parent: N14DecorationFlagFlammable
+  id: N14FlagNevada
+  name: Флаг Невады
+  description: Флаг в цветах Невады.
+  components:
+  - type: Sprite
+    sprite: Corvax/Structures/Decoration/flag4.rsi
+    state: nevada
