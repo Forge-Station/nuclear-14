@@ -29,7 +29,6 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
         PipBoyRadioCartridgeComponent component,
         CartridgeUiReadyEvent args)
     {
-        component.LoaderUid = args.Loader;
         UpdateUiState(args.Loader, component);
     }
 
@@ -42,7 +41,6 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
             return;
 
         var loaderUid = GetEntity(args.LoaderUid);
-        component.LoaderUid = loaderUid;
         component.ListenerUid = args.Actor;
 
         switch (message.Action)
@@ -220,11 +218,12 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
         base.Update(frameTime);
 
         var query =
-            EntityQueryEnumerator<PipBoyRadioCartridgeComponent>();
+            EntityQueryEnumerator<PipBoyRadioCartridgeComponent, CartridgeComponent>();
 
         while (query.MoveNext(
                    out _,
-                   out var component))
+                   out var component,
+                   out var cartridge))
         {
             if (!component.Playing)
                 continue;
@@ -245,7 +244,7 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
             component.Playing = false;
             component.Paused = false;
 
-            if (component.LoaderUid is not { } loaderUid ||
+            if (cartridge.LoaderUid is not { } loaderUid ||
                 !Exists(loaderUid))
                 continue;
 

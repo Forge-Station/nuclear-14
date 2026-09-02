@@ -17,9 +17,6 @@ public sealed partial class PipBoyRadioCartridgeComponent : Component
     public EntityUid? AudioStream;
 
     [ViewVariables]
-    public EntityUid? LoaderUid;
-
-    [ViewVariables]
     public EntityUid? ListenerUid;
 
     [ViewVariables]

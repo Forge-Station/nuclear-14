@@ -1,4 +1,5 @@
 using Content.Server._Nuclear14.CartridgeLoader.Cartridges;
+using Content.Shared.CartridgeLoader;
 using Content.Shared.Inventory.Events;
 using Robust.Shared.Audio.Systems;
 
@@ -21,11 +22,11 @@ public sealed class PipBoyRadioWearerSystem : EntitySystem
         PipBoyRadioWearerComponent component,
         GotEquippedEvent args)
     {
-        var query = EntityQueryEnumerator<PipBoyRadioCartridgeComponent>();
+        var query = EntityQueryEnumerator<PipBoyRadioCartridgeComponent, CartridgeComponent>();
 
-        while (query.MoveNext(out _, out var radio))
+        while (query.MoveNext(out _, out var radio, out var cartridge))
         {
-            if (radio.LoaderUid != uid)
+            if (cartridge.LoaderUid != uid)
                 continue;
 
             radio.WearerUid = args.Equipee;
@@ -38,11 +39,11 @@ public sealed class PipBoyRadioWearerSystem : EntitySystem
         GotUnequippedEvent args)
     {
 
-        var query = EntityQueryEnumerator<PipBoyRadioCartridgeComponent>();
+        var query = EntityQueryEnumerator<PipBoyRadioCartridgeComponent, CartridgeComponent>();
 
-        while (query.MoveNext(out _, out var radio))
+        while (query.MoveNext(out _, out var radio, out var cartridge))
         {
-            if (radio.LoaderUid != uid)
+            if (cartridge.LoaderUid != uid)
                 continue;
 
             if (radio.AudioStream is { } stream && Exists(stream))
