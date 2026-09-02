@@ -64,3 +64,12 @@
   components:
   - type: Sprite
     sprite: Corvax/Clothing/Neck/falloutMWBSPaladinshoulderpad.rsi
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckMWBSPaladinShoulderPadMasterBlack
+  name: черная накидка паладина
+  description: Простая, но красивая накидка для хороших паладинов черного цвета.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSPaladinShoulderPadMasterBlack.rsi

@@ -288,3 +288,15 @@
         - BoSMidSquire
   items:
     - N14ClothingNeckCloakTentBOS
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSPaladinShoulderPadMasterBlack
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladin
+  items:
+    - N14ClothingNeckMWBSPaladinShoulderPadMasterBlack
