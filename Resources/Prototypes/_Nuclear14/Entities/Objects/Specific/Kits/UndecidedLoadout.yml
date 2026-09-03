@@ -156,7 +156,7 @@
 # Forge: RangerTrailmanSet disabled
 # Forge: RangerSMGSet disabled
 # Forge: VeteranRangerAssault disabled
-# Forge: KitVeteranRangerMarksmanSet disabled
+# Forge: VeteranRangerMarksmanSet disabled
 
 # Brotherhood Initiates
 - type: entity
