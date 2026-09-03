@@ -300,8 +300,8 @@
         - BoSMidPaladin
   items:
     - N14ClothingNeckMWBSPaladinShoulderPadMasterBlack
-
-    - type: loadout
+    
+- type: loadout
   id: LoadoutClothingNeckMWBSKnightShoulderPadOrange
   category: Neck
   cost: 1
