@@ -88,8 +88,8 @@
         damage: 15
       behaviors:
       - !type:TriggerBehavior
+  - type: LandAtCursor # Forge-Change
 
-    
 - type: entity
   name: Baseball grenade
   description: Hollowed out baseball filled with explosives that explodes on impact.
@@ -134,6 +134,7 @@
   - type: Construction
     graph: N14BaseballNade
     node: baseballnade
+  - type: LandAtCursor # Forge-Change
 
 - type: entity
   name: Tin-nade
@@ -165,6 +166,7 @@
   - type: Construction
     graph: N14TinNade
     node: TinNade
+  - type: LandAtCursor # Forge-Change
 
 - type: entity
   name: Nuka-nade
@@ -205,6 +207,7 @@
   - type: Construction
     graph: N14NukaNade
     node: NukaNade
+  - type: LandAtCursor # Forge-Change
 
 - type: entity #should spawn fire only when it was activated and then thrown, but when its not activated it just breaks and spills welding fuel. 
   name: Nuka cocktail
@@ -283,6 +286,7 @@
           Quantity: 30
   - type: Spillable
     solution: drink
+  - type: LandAtCursor # Forge-Change
 
 - type: entity
   parent: GrenadeBase
@@ -312,6 +316,7 @@
   - type: ContainerContainer
     containers:
       cluster-payload: !type:Container
+  - type: LandAtCursor # Forge-Change
 
 - type: entity
   parent: GrenadeBase
@@ -341,6 +346,7 @@
   - type: ContainerContainer
     containers:
       cluster-payload: !type:Container
+  - type: LandAtCursor # Forge-Change
 
 - type: entity
   parent: GrenadeBase
@@ -368,6 +374,7 @@
       cluster-payload: !type:Container
   - type: OnUseTimerTrigger
     delay: 10
+  - type: LandAtCursor # Forge-Change
 
 - type: entity
   parent: GrenadeBase
@@ -393,6 +400,7 @@
   - type: ContainerContainer
     containers:
       cluster-payload: !type:Container
+  - type: LandAtCursor # Forge-Change
 
 - type: entity
   parent: GrenadeBase
@@ -432,6 +440,7 @@
           path: /Audio/Effects/snap.ogg
   - type: Damageable
     damageContainer: Inorganic
+  - type: LandAtCursor # Forge-Change
 
 - type: entity
   name: cryo grenade
@@ -467,3 +476,4 @@
       reagents:
       - ReagentId: Fresium
         Quantity: 15
+  - type: LandAtCursor # Forge-Change

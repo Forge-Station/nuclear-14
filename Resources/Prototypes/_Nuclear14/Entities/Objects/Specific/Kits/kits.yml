@@ -964,53 +964,9 @@
     sound:
       path: /Audio/Effects/unwrap.ogg
 
-- type: entity
-  name: veteran ranger assault kit
-  parent: KitBase
-  id: KitAssaultRangerVeteran
-  description: A cache containing the belongings of a Veteran Ranger.
-  components:
-  - type: Sprite
-    state: rifleman
-  - type: Item
-    size: Huge
-  - type: SpawnItemsOnUse
-    items:
-    # - id: ClothingBeltNCR # Forge-Change
-      - id: N14WeaponRifle556Carbine
-      - id: LongMagazine556Rifle
-        amount: 4
-      - id: MagazineBox556
-      - id: N14Stimpak
-        amount: 2
-      - id: N14BoxCardboardMREBoxKFilled
-    # - id: N14CombatKnife # Forge-Change
-    sound:
-      path: /Audio/Effects/unwrap.ogg
+# Forge: KitAssaultRangerVeteran disabled
 
-- type: entity
-  name: veteran ranger marksman kit
-  parent: KitBase
-  id: KitMarksmanRangerVeteran
-  description: A cache containing the belongings of a Veteran Ranger.
-  components:
-  - type: Sprite
-    state: marksman
-  - type: Item
-    size: Huge
-  - type: SpawnItemsOnUse
-    items:
-    # - id: ClothingBeltNCR # Forge-Change
-      - id: N14WeaponRifle762Marksman
-      - id: Magazine762Rifle
-        amount: 4
-      - id: MagazineBox762
-      - id: N14Stimpak
-        amount: 2
-      - id: N14BoxCardboardMREBoxKFilled
-    # - id: N14CombatKnife # Forge-Change
-    sound:
-      path: /Audio/Effects/unwrap.ogg
+# Forge: KitMarksmanRangerVeteran disabled
 
 # Brotherhood Midwestern Chapter Kits
 # MBoS Initiate & Squire Kits

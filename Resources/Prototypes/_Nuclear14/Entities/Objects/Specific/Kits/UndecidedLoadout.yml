@@ -146,17 +146,17 @@
     state: rifleman
   - type: UndecidedLoadoutBackpack
     possibleSets:
-    - RangerServiceSet
-    - RangerRiflemanSet
-    - RangerMarksmanSet
-    - RangerCQBSet
-    - RangerTrailmanSet
-    - RangerSMGSet # Forge-Change
     - VeteranRangerServiceSet
     - VeteranRangerRiflemanSet
     - VeteranRangerHeavySniperSet
-    - VeteranRangerAssaultSet
-    - VeteranRangerMarksmanSet
+# Forge: RangerServiceSet disabled
+# Forge: RangerRiflemanSet disabled
+# Forge: RangerMarksmanSet disabled
+# Forge: RangerCQBSet disabled
+# Forge: RangerTrailmanSet disabled
+# Forge: RangerSMGSet disabled
+# Forge: VeteranRangerAssault disabled
+# Forge: KitVeteranRangerMarksmanSet disabled
 
 # Brotherhood Initiates
 - type: entity
