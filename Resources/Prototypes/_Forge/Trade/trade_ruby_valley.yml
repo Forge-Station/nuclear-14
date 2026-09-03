@@ -1,0 +1,473 @@
+# Торготрон Руби-Вэлли
+# Отдельный торгомат в виде протектрона. Ассортимент — копия городского
+# (caravan_buy2) с изменениями, цены базовые увеличены в 2 раза.
+
+# ----------------------------
+# Профиль и сам торгомат
+# ----------------------------
+- type: ncStoreProfile
+  id: TrademachineRubyValleyProfile
+  buy:
+  - ruby_buy
+  sell:
+  - caravan_sell2
+  barter:
+  - BarterPresetCityCurrency
+  contracts: PresetRubyValleyBazar
+  theme: TradeUiThemeWasteland
+
+- type: entity
+  id: TrademachineRubyValley
+  parent: Trademachine
+  name: Торготрон Руби-Вэлли
+  description: Торговый автомат в виде протектрона. Выбирай, плати, забирай.
+  suffix: vendor, Ruby Valley
+  components:
+  - type: NcStore
+    profile: TrademachineRubyValleyProfile
+  - type: Sprite
+    sprite: _Nuclear14/Mobs/Robots/protectron.rsi
+    layers:
+    - state: icon
+      map: ["enum.VendingMachineVisualLayers.Base"]
+
+# ----------------------------
+# ruby_buy (категории продажи)
+# ----------------------------
+
+- type: storeCategoryStructured
+  id: RubyBuy_Revolvers
+  name: "Револьверы"
+  entries:
+  - proto: N14WeaponRevolver44Magnun
+    price: 140
+  - proto: N14WeaponRevolver44TribalUpgraded
+    price: 160
+  - proto: N14WeaponRevolver45-70Hunter
+    price: 320
+  - proto: N14WeaponRevolver45-70HandcannonUpgraded
+    price: 340
+
+- type: storeCategoryStructured
+  id: RubyBuy_Pistols
+  name: "Пистолеты"
+  entries:
+  - proto: N14WeaponPistol22lr
+    price: 25
+  - proto: N14WeaponPistol9mmChinese
+    price: 36
+  - proto: N14WeaponPistol10mm
+    price: 40
+  - proto: N14WeaponPistolWebley
+    price: 60
+  - proto: N14WeaponPistol12mm
+    price: 70
+  - proto: N14WeaponPistol45Colt
+    price: 90
+  - proto: N14WeaponLaserPistol
+    price: 120
+
+- type: storeCategoryStructured
+  id: RubyBuy_SMGs
+  name: "Пистолеты-пулеметы"
+  entries:
+  - proto: N14WeaponSMG12mmPipe
+    price: 125
+  - proto: N14WeaponSMG10mmPipe
+    price: 150
+  - proto: N14WeaponSMGNAil
+    price: 200
+    count: 2    
+  - proto: N14WeaponSMG9mm
+    price: 260
+  - proto: N14WeaponSMG45
+    price: 300
+  - proto: N14WeaponSMG9mmCanadian
+    price: 350
+  - proto: N14WeaponSMG12mm
+    price: 400
+
+- type: storeCategoryStructured
+  id: RubyBuy_Shotguns
+  name: "Дробовики"
+  entries:
+  - proto: N14WeaponShotgunDoubleBarrel
+    price: 50
+  - proto: N14WeaponShotgunCaravan
+    price: 50
+  - proto: N14WeaponShotgun
+    price: 100
+  - proto: N14WeaponShotgunLever
+    price: 150
+  - proto: N14WeaponShotgunRiot
+    price: 500
+  - proto: N14WeaponBlowback
+    price: 600
+    count: 2
+
+- type: storeCategoryStructured
+  id: RubyBuy_AssaultRifles
+  name: "Штурмовые винтовки"
+  entries:
+  - proto: N14WeaponSniper556Tribal
+    price: 160
+  - proto: N14WeaponSniper556TribalUpgraded
+    price: 200
+  - proto: N14WeaponRifle556CarbineOld
+    price: 250
+  - proto: N14WeaponRifle762SKS
+    price: 300
+  - proto: N14WeaponRifle556Service
+    price: 300
+  - proto: N14WeaponRifle762M14
+    price: 400
+  - proto: N14WeaponRifle762MarksmanCanadian
+    price: 400
+  - proto: N14WeaponRifle556R91
+    price: 420
+  - proto: N14WeaponRifle762Fal
+    price: 500
+    count: 2
+  - proto: N14WeaponRifleAk112
+    price: 600
+    count: 2
+  - proto: N14WeaponRifle556Carbine
+    price: 650
+    count: 1
+  - proto: N14WeaponRifle762Chinese
+    price: 700
+    count: 1
+
+- type: storeCategoryStructured
+  id: RubyBuy_Rifles
+  name: "Винтовки"
+  entries:
+  - proto: N14WeaponSniper308LeverRifle
+    price: 200
+  - proto: N14WeaponSniper44LeverCarbine
+    price: 200
+  - proto: N14WeaponSniperHunting
+    price: 250
+  - proto: N14WeaponSniper308Ross
+    price: 250
+  - proto: N14WeaponSniperEnfield
+    price: 400
+  - proto: N14WeaponSniper45-70BrushGun
+    price: 600
+    count: 2
+  - proto: N14WeaponRifle308SniperRifle
+    price: 640
+    count: 3
+
+- type: storeCategoryStructured
+  id: RubyBuy_EnergyWeapons
+  name: "Энергооружие"
+  entries:
+  - proto: N14WeaponLaserRifleMakeshift
+    price: 150
+  - proto: N14WeaponLaserRevolver
+    price: 160
+  - proto: N14WeaponPlasmaRifleCrude
+    price: 300
+  - proto: N14WeaponLaserRifleCrude
+    price: 400
+
+- type: storeCategoryStructured
+  id: RubyBuy_Grenade
+  name: "Взрывчатка"
+  entries:
+  - proto: N14NukaCocktail
+    price: 60
+  - proto: SmokeGrenade
+    price: 100
+    count: 5
+  - proto: GrenadeFlashBang
+    price: 100
+  - proto: GrenadeShrapnel
+    price: 160
+    count: 10
+  - proto: N14Dynamite
+    price: 200
+    count: 20
+  - proto: C4
+    price: 300
+    count: 5
+
+- type: storeCategoryStructured
+  id: RubyBuy_Ammo
+  name: "Патроны"
+  entries:
+  - proto: N14PowerCellSmall
+    price: 150
+  - proto: N14PowerCellHigh
+    price: 250
+    count: 15
+  - proto: N14PlasmaCartridge
+    price: 300
+    count: 12
+
+- type: storeCategoryStructured
+  id: RubyBuy_Melee
+  name: "Ближний бой"
+  entries:
+  - proto: N14CombatKnife
+    price: 40
+  - proto: N14BrassKnife
+    price: 40
+  - proto: N14ClothingHandsKnuckles
+    price: 50
+    count: 2
+  - proto: N14ClothingHandsKnucklesWithClaws
+    price: 75
+    count: 2
+  - proto: N14PoliceBaton
+    price: 80
+  - proto: N14FireAxe
+    price: 150
+  - proto: N14ChineseSword
+    price: 200
+  - proto: N14SledgeHammer
+    price: 300
+  - proto: N14WeaponThermospear
+    price: 750
+    count: 1
+
+- type: storeCategoryStructured
+  id: RubyBuy_Headwear
+  name: "Головные уборы"
+  entries:
+  - proto: N14ClothingHeadHatCombatHelmet
+    price: 100
+    count: 3
+
+- type: storeCategoryStructured
+  id: RubyBuy_Armor
+  name: "Броня"
+  entries:
+  - proto: N14ClothingOuterCombatArmor
+    price: 450
+    count: 3
+
+- type: storeCategoryStructured
+  id: RubyBuy_PowerArmor
+  name: "Силовая броня"
+  entries:
+  - proto: N14AssemblyHolodiskClothingOuterPowerArmorT45
+    price: 6000
+    count: 1
+
+- type: storeCategoryStructured
+  id: RubyBuy_Rigs
+  name: "Экипировка (РПС)"
+  entries:
+  - proto: ClothingBeltCowboy
+    price: 200
+  - proto: ClothingBeltRevolver
+    price: 200
+  - proto: ClothingBeltMilitary
+    price: 200
+
+- type: storeCategoryStructured
+  id: RubyBuy_Medical
+  name: "Медицина"
+  entries:
+  - proto: N14HealingPowder
+    price: 25
+  - proto: N14Jet
+    price: 30
+  - proto: N14RadAwayBloodbag
+    price: 40
+  - proto: N14DirtyGauze10
+    amount: 10
+    price: 50
+  - proto: N14Antidote
+    price: 50
+  - proto: N14HealingPoultice
+    price: 50
+    count: 10 
+  - proto: N14StimpakDirty
+    price: 50
+  - proto: N14Med-X
+    price: 75
+  - proto: N14CleanGauze10
+    amount: 10
+    price: 100
+  - proto: N14Ointment10
+    amount: 10
+    price: 100
+  - proto: N14Turbo
+    price: 100
+  - proto: N14Stimpak
+    price: 100
+  - proto: N14Psycho
+    price: 125
+    count: 10 
+  - proto: N14BuffjetCanisterFilled
+    price: 150
+  - proto: N14CateyeCanisterFilled
+    price: 300
+    count: 5
+  - proto: N14HandheldHealthAnalyzer
+    price: 350
+
+- type: storeCategoryStructured
+  id: RubyBuy_Materials
+  name: "Материалы"
+  entries:
+  - proto: SheetSteel
+    amount: 30
+    price: 300
+  - proto: SheetPlastic
+    amount: 30
+    price: 300
+  - proto: N14IngotLead20
+    amount: 40
+    price: 500
+  - proto: N14Gunpowder10
+    amount: 30
+    price: 400
+  - proto: N14Scrap1
+    amount: 30
+    price: 200
+
+- type: storeCategoryStructured
+  id: RubyBuy_Alcohol
+  name: "Алкоголь"
+  entries:
+  - proto: N14DrinkGammagulpBeer
+    price: 10
+  - proto: DrinkVodkaBottleFull
+    price: 10
+  - proto: DrinkGinBottleFull
+    price: 10
+  - proto: DrinkCognacBottleFull
+    price: 10
+  - proto: N14DrinkWine
+    price: 10
+
+- type: storeCategoryStructured
+  id: RubyBuy_Fishing
+  name: "Рыбалка"
+  entries:
+  - proto: FishingRod
+    price: 180
+  - proto: FishingRodGoon
+    price: 250
+  - proto: FishingRodGolden
+    price: 1300
+
+- type: storeCategoryStructured
+  id: RubyBuy_Misc
+  name: "Разное"
+  entries:
+  - proto: N14JunkDuctTape
+    price: 10
+  - proto: GlowstickYellow
+    price: 10
+  - proto: Flare
+    price: 10
+  - proto: CrayonBox
+    price: 10
+  - proto: N14JunkAbraxoCleaner
+    price: 30
+  - proto: Handcuffs
+    price: 40
+  - proto: RadioHandheld
+    price: 150
+
+- type: storeCategoryStructured
+  id: RubyBuy_Sprouts
+  name: "Ростки"
+  entries:
+  - proto: N14FloraWildAgaveClippingSeed
+    price: 10
+  - proto: N14FloraWildBananaYuccaClippingSeed
+    price: 10
+  - proto: N14FloraWildBarrelCactusClippingSeed
+    price: 10
+  - proto: N14FloraWildBlackberryClippingSeed
+    price: 10
+  - proto: N14FloraWildBrocFlowerClippingSeed
+    price: 10
+  - proto: N14FloraWildBuffaloGourdClippingSeed
+    price: 10
+  - proto: N14FloraWildCabbageClippingSeed
+    price: 10
+  - proto: N14FloraWildCarrotClippingSeed
+    price: 10
+  - proto: N14FloraWildCoyoteTobaccoClippingSeed
+    price: 10
+  - proto: N14FloraDaturaClippingSeed
+    price: 10
+  - proto: N14FloraWildGlowpepperClippingSeed
+    price: 10
+  - proto: N14FloraWildMaizeClippingSeed
+    price: 10
+  - proto: N14FloraWildHoneyMesquiteClippingSeed
+    price: 10
+  - proto: N14FloraWildMutfruitClippingSeed
+    price: 10
+  - proto: N14FloraWildNettleClippingSeed
+    price: 10
+  - proto: N14FloraWildOnionClippingSeed
+    price: 10
+  - proto: N14FloraWildPinyonClippingSeed
+    price: 10
+  - proto: N14FloraWildPricklyPearClippingSeed
+    price: 10
+  - proto: N14FloraWildRazorgrainClippingSeed
+    price: 10
+  - proto: N14FloraWildStarlightBerryClippingSeed
+    price: 10
+  - proto: N14FloraWildTarberryClippingSeed
+    price: 10
+  - proto: N14FloraWildTatoClippingSeed
+    price: 10
+  - proto: N14FloraWildWhiteHorsenettleClippingSeed
+    price: 10
+  - proto: N14FloraWildXanderRootClippingSeed
+    price: 10
+  - proto: CottonSeeds
+    price: 10
+
+- type: storePresetStructured
+  id: ruby_buy
+  currency: Caps
+  categories:
+  - RubyBuy_Revolvers
+  - RubyBuy_Pistols
+  - RubyBuy_SMGs
+  - RubyBuy_Shotguns
+  - RubyBuy_AssaultRifles
+  - RubyBuy_Rifles
+  - RubyBuy_EnergyWeapons
+  - RubyBuy_Ammo
+  - RubyBuy_Grenade
+  - RubyBuy_Melee
+  - RubyBuy_Headwear
+  - RubyBuy_Armor
+  - RubyBuy_PowerArmor
+  - RubyBuy_Rigs
+  - RubyBuy_Medical
+  - RubyBuy_Materials
+  - RubyBuy_Alcohol
+  - RubyBuy_Fishing
+  - RubyBuy_Misc
+  - RubyBuy_Sprouts
+
+# ----------------------------
+# Контракты: только караванные и повседневные
+# ----------------------------
+- type: storeContractsPreset
+  id: PresetRubyValleyBazar
+  contractOffers:
+    maxVisible: 10
+    groups:
+    - pool: BazarEverydayOrders
+      minVisible: 3
+      maxVisible: 4
+      fillWeight: 5
+    - pool: BazarCaravanOrders
+      minVisible: 2
+      maxVisible: 3
+      fillWeight: 3

@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "license": "CC-BY-NC-SA-3.0",
+  "copyright": "created by BARON and rozycosmic",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "jet"
+    },
+    {
+      "name": "jet-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "jet-inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "jet-empty"
+    },
+    {
+      "name": "jet-empty-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "jet-empty-inhand-right",
+      "directions": 4
+    }
+  ]
+}

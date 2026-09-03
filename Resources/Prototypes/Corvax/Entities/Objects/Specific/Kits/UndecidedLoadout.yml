@@ -77,6 +77,7 @@
     - WarriorHealerSet
     - WarriorFirearmSet
     - WarriorMeleeSet
+    - WarriorSpearSet
 
 - type: entity
   id: LegionRecruitloadoutkits
@@ -445,6 +446,16 @@
     state: base
   content:
   - KitWarriorMelee
+
+- type: UndecidedLoadoutBackpackSet
+  id: WarriorSpearSet
+  name: undecided-loadout-category-warrior-spear-name
+  description: undecided-loadout-category-warrior-spear-description
+  sprite:
+    sprite: Corvax/Objects/Misc/kits.rsi
+    state: base
+  content:
+  - KitWarriorSpear
 
 - type: UndecidedLoadoutBackpackSet
   id: RecruitBaseSet

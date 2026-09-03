@@ -67,3 +67,55 @@
         orGroup: StashAmmo      
     sound:
       path: /Audio/Items/can_open3.ogg
+
+- type: entity
+  name: сумка племени
+  parent: BaseItem
+  id: N14TribalStash
+  description: Небольшая cумка, в которой могут скрываться богатства или просто мусор. Узнаешь только, когда откроешь.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/Sacks/daesack.rsi
+    state: icon
+  - type: Item
+    size: Small
+  - type: StaticPrice
+    price: 0
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14FloraProduceWildBrocFlower
+        prob: 0.25
+        amount: 5
+        orGroup: FloraProduceN14
+      - id: N14FloraProduceWildXander
+        prob: 0.25
+        amount: 5
+        orGroup: FloraProduceN14       
+      - id: N14FloraProduceWildAgave
+        prob: 0.25
+        amount: 5
+        orGroup: FloraProduceN14
+      - id: N14FloraProduceWildCaveFungus
+        prob: 0.25
+        amount: 5
+        orGroup: FloraProduceN14
+      - id: N14AloeSalve
+        prob: 0.2
+        orGroup: StashMeds
+      - id: N14DirtyGauze10
+        prob: 0.25
+        orGroup: StashMeds
+      - id: N14HealingPowder
+        prob: 0.15
+        orGroup: StashMeds
+      - id: N14Bitterdrink
+        prob: 0.1
+        orGroup: StashMeds
+      - id: N14StimpakDirty
+        prob: 0.2
+        orGroup: StashMeds
+      - id: N14HealingPoultice
+        prob: 0.1
+        orGroup: StashMeds     
+    sound:
+      path: /Audio/Items/can_open3.ogg

@@ -541,6 +541,27 @@
   - proto: N14Gunpowder10
     amount: 10
     price: 200
+  - proto: N14Scrap
+    amount: 5
+    price: 60
+  - proto: N14ScrapSteel
+    amount: 5
+    price: 60
+  - proto: N14ScrapElectronic
+    amount: 5
+    price: 60
+  - proto: N14ScrapGold
+    amount: 5
+    price: 60
+  - proto: N14ScrapCopper
+    amount: 5
+    price: 60
+  - proto: N14ScrapBrass
+    amount: 5
+    price: 60
+  - proto: N14ScrapLead
+    amount: 5
+    price: 60
   - proto: N14Scrap1
     amount: 30
     price: 200
@@ -559,6 +580,10 @@
     price: 5
   - proto: N14DrinkWine
     price: 5
+  - proto: N14DrinkRoentgenRum
+    price: 5
+  - proto: N14DrinkWhisky
+    price: 5    
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Fishing
@@ -585,16 +610,31 @@
     price: 5
   - proto: N14JunkAbraxoCleaner
     price: 15
+  - proto: N14JunkWonderglue
+    price: 15
+  - proto: N14JunkTurpentine
+    price: 15  
   - proto: Handcuffs
     price: 20
+  - proto: N14FoodBloatflyAcidSac
+    price: 25 
+  - proto: N14FoodFireantNectar
+    price: 25 
   - proto: RadioHandheld
     price: 75
+  - proto: CableApcStack
+    amount: 10
+    price: 50
+  - proto: PowerCellSmall
+    price: 50
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Sprouts
   name: "Ростки"
   entries:
   - proto: N14FloraWildAgaveClippingSeed
+    price: 5
+  - proto: N14FloraWildAloeClippingSeed
     price: 5
   - proto: N14FloraWildBananaYuccaClippingSeed
     price: 5
@@ -642,7 +682,7 @@
     price: 5
   - proto: N14FloraWildXanderRootClippingSeed
     price: 5
-  - proto: CottonSeeds
+  - proto: N14FloraWildCottonClippingSeed
     price: 5
 
 - type: storePresetStructured
@@ -1205,6 +1245,10 @@
     price: 3
   - proto: N14DrinkWine
     price: 3
+  - proto: N14DrinkRoentgenRum
+    price: 3
+  - proto: N14DrinkWhisky
+    price: 3  
 
 - type: storeCategoryStructured
   id: CaravanSell2_WeaponGrenade

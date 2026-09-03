@@ -252,3 +252,23 @@
       seedId: N14WildXander
     - type: Sprite
       sprite: _Nuclear14/Objects/Specific/Hydroponics/xander.rsi
+
+- type: entity
+  parent: N14SeedBase
+  id: N14FloraWildCottonClippingSeed
+  name: wild cotton clipping
+  components:
+    - type: Seed
+      seedId: N14WildCotton
+    - type: Sprite
+      sprite: Objects/Specific/Hydroponics/cotton.rsi
+
+- type: entity
+  parent: N14SeedBase
+  id: N14FloraWildAloeClippingSeed
+  name: wild aloe clipping
+  components:
+    - type: Seed
+      seedId: N14WildAloe
+    - type: Sprite
+      sprite: Objects/Specific/Hydroponics/aloe.rsi

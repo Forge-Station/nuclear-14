@@ -174,10 +174,13 @@ reagent-name-nightstalker-venom = яд ночного охотника
 reagent-desc-nightstalker-venom = Яд ночного охотника из тёмных уголков пустоши. Не столь смертелен, как яд казадора, но всё равно заставит вас пасть на колени и молить о пощаде.
 reagent-name-cazador-venom = яд казадора
 reagent-desc-cazador-venom = Яд казадора — самый страшный кошмар всех, кто блуждает по пустошам. Быстрая смерть практически неизбежна. Бегите, если можете!
-
+reagent-name-thrombosis = тромбоз
+reagent-desc-thrombosis = Различные стимпаки вступили в реакцию и коагулировали, образуя густую жидкость и сгусток при попадании в организм.
 # Chems
 reagent-name-healing-powder = целебный порошок
 reagent-desc-healing-powder = Порошок, приготовленный из измельченных растений.
+reagent-name-healing-traumapowder = травматин
+reagent-desc-healing-traumapowder = Непонятная смесь растений.
 reagent-name-antidote-mixture = противоядие
 reagent-desc-antidote-mixture = Противоядие, приготовленное из хвоста радскорпиона и воды.
 reagent-name-antidote = антидот
@@ -190,13 +193,18 @@ reagent-name-smelling-salts = нюхательная соль
 reagent-desc-smelling-salts = Зернистая смесь камней с невероятно сильным запахом.
 reagent-name-mourning-poultice = траурная припарка
 reagent-desc-mourning-poultice = Смесь ядовитых измельченных растений, используемая в племенных церемониях. Говорят, что она позволяет увидеть богов.
+reagent-name-berserker-mixture = порошок берсерка
+reagent-desc-berserker-mixture = Порошок, приготовленный из измельченных растений, которые вызывают выброс адреналина в кровь.
+
 # Medicine
 reagent-name-healing-mixture = стимпак
 reagent-desc-healing-mixture = Смесь реагентов, которая помогает вам излечиться.
-reagent-name-dirty-stimpak = грязный стимпак
+reagent-name-dirty-stimpak = самодельный стимпак
 reagent-desc-dirty-stimpak = Грязная смесь реагентов, которая помогает вам излечиться.
 reagent-name-robust-healing-mixture = супер стимпак
 reagent-desc-robust-healing-mixture = Смесь реагентов, которая ускоряет заживление ран.
+reagent-name-dirty-robust-healing-mixture = самодельный супер стимпак
+reagent-desc-dirty-robust-healing-mixture = Смесь реагентов, которая ускоряет заживление ран.
 reagent-name-ultra-robust-healing-mixture = ультра стимпак
 reagent-desc-ultra-robust-healing-mixture = Смесь реагентов, которая заставляет вас исцеляться быстрее, чем вы можете это почувствовать, однако она имеет серьезные побочные эффекты.
 reagent-name-damage-resist-mixture = защитная смесь
@@ -205,6 +213,8 @@ reagent-name-hydra = гидра
 reagent-desc-hydra = Адская смесь экстракта грибов, хвоста радскорпиона и крови ночного охотника. Поднимает на ноги даже мертвеца, но будьте осторожны: боль адская, а привыкание – как у гуля к радиации.
 reagent-name-diluted-radaway = разбавленный антирадин
 reagent-desc-diluted-radaway = Сэкономили на антирадине? Что ж, этот разбавленный коктейльчик всё же выведет радиацию... когда-нибудь. Запаситесь терпением, или лучше найдите что-то покрепче.
+reagent-name-fiery-purgative = жгучий антитоксин
+reagent-desc-fiery-purgative = Помимо мгновенной нейтрализации ядов, данный препарат в течение некоторого времени способствует выведению из организма радиации, уменьшая при этом выносливость.
 reagent-name-buffjet = баффаут-джет
 reagent-desc-buffjet = Джет и Баффаут в одном флаконе! Адреналин бьёт ключом, мир размывается, а вы готовы свернуть горы... или хотя бы добежать до ближайшего поселения, пока не отпустило.
 reagent-name-bufftats = баффаут-ментаты
@@ -243,11 +253,11 @@ reagent-desc-damage-mod-mixture = Чувствуете, как мышцы нал
 # Products
 reagent-name-abraxocleaner = чистящее средство Абраксо
 reagent-desc-abraxocleaner = Универсальное моющее средство, производившееся довоенной компанией Абраксодайн Кемикал - одним из филиалов РобКо.
-reagent-name-wonderglue = Чудо-клей
+reagent-name-wonderglue = чудо-клей
 reagent-desc-wonderglue = Не нюхайте.
-reagent-name-turpentine = Скипидар
+reagent-name-turpentine = скипидар
 reagent-desc-turpentine = Представляет собой жидкую смесь различных эфирных масел, получаемых из смол хвойных деревьев. Является органическим растворителем.
-reagent-name-antiseptic = Антисептик
+reagent-name-antiseptic = антисептик
 reagent-desc-antiseptic = Чистящий раствор, сделанный из Чистящего средства "Абраксо" и небольшого количества Медицинского спирта.
 # Ores, Metals, Materials
 materials-gunpowder = порох
@@ -290,7 +300,13 @@ reagent-desc-dung = Навоз животных. Созревает для пр�
 reagent-name-sulfur = сера
 reagent-desc-sulfur = Молотая сера в порошкообразном виде. Вам стоит надеть противогаз при работе с ним.
 # Other
-reagent-name-scorpiontail = хвост скорпиона
-reagent-desc-scorpiontail = Хвост скорпиона. Острый.
+reagent-name-lastbreath-poison = яд "последний вздох"
+reagent-desc-lastbreath-poison = Изысканный яд, который после попадания в организм убивает цель от асфиксии.
+reagent-name-tyaguchka-toxin = яд "тягучка"
+reagent-desc-tyaguchka-toxin = Не путайте с "трясучкой". Этот яд служит для замедленния жертвы.
+reagent-name-colourlesspoison = бесцветный яд
+reagent-desc-colourlesspoison = Мощный токсин созданный из сочетании самых смертоностных ядов.
+reagent-name-scorpiontail = яд скорпиона
+reagent-desc-scorpiontail = Яд скорпиона. Можно из него сделать противоядие.
 compost-mixing-success = компостная смесь
 mixing-verb-composting = Смесь компоста.

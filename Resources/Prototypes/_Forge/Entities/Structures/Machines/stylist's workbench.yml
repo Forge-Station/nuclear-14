@@ -1,0 +1,205 @@
+- type: entity
+  parent: N14WorkbenchBase
+  id: N14StylistWorkbench
+  description: Верстак, оборудованный рабочими инструментами для изготовления изделий.
+  name: верстак стилиста
+  components:
+  - type: Sprite
+    sprite: _Corvax/Structures/Misc/workbenches.rsi
+    state: design_table
+  - type: MaterialStorage
+    whitelist:
+      tags:
+      - Sheet
+      - RawMaterial
+      - Ingot
+      - RawLeather
+      - Ore 
+  - type: Lathe
+    idleState: icon
+    runningState: icon # change this
+    staticRecipes:
+
+# MARK: Other
+    - BarberScissors
+    - N14MaterialLeather
+    - N14MaterialThread
+
+# MARK: Пак MNK
+    - ClothingUniformMNKOfficeSkirt
+    - ClothingUniformMNKUnderGarment
+    - ClothingUniformMNKGymBra
+    - ClothingUniformMNKDressBlack
+    - ClothingUniformMNKBlackOveralls
+    - ClothingUniformMNKBlackShoulder
+    - ClothingUniformMNKTracksuitBlack
+    - ClothingOuterCoatMNKWhiteHoodie
+    - ClothingOuterCoatMNKBlackTopCoat
+    - ClothingOuterCoatMNKBlackJacket
+
+# MARK: Одежда обитал
+    - ClothingCostumeArcDress
+    - ClothingUniformDressRed
+    - ClothingUniformJumpskirtClerk
+    - ClothingUniformJumpskirtDressFormalRed
+    - ClothingUniformJumpskirtDressGothic
+    - ClothingUniformJumpskirtDressLacyGown
+    - ClothingUniformJumpskirtDressOpenShoulder
+    - ClothingUniformJumpskirtDressVictorianBlack
+    - ClothingUniformJumpskirtDressVictorianRed
+    - ClothingUniformJumpskirtOldDress
+    - ClothingUniformJumpskirtTacticool
+    - ClothingUniformJumpsuitBarber
+    - ClothingUniformJumpsuitBartenderNt
+    - ClothingUniformJumpsuitBartenderOrion
+    - ClothingUniformJumpsuitClerk
+    - ClothingUniformJumpsuitColorGrey
+    - ClothingUniformJumpsuitCossack
+    - ClothingUniformJumpsuitFlannel
+    - ClothingUniformJumpsuitGreyShirt
+    - ClothingUniformJumpsuitJeansBrown
+    - ClothingUniformJumpsuitKilt
+    - ClothingUniformJumpsuitLibrarianOrion
+    - ClothingUniformJumpsuitOperative
+    - ClothingUniformJumpsuitSuitAristocratic
+    - ClothingUniformJumpsuitSuitAristocraticTuxedo
+    - ClothingUniformJumpsuitSuitBrown
+    - ClothingUniformJumpsuitSuitBrownAlt
+    - ClothingUniformJumpsuitSuitBrownMob
+    - ClothingUniformJumpsuitTurtleneckGrey
+    - ClothingOuterUnathiRobe
+    - N14ClothingUniformJumpsuitDetectiveAlt
+    - N14ClothingUniformJumpsuitBartenderAlt
+    - N14ClothingUniformJumpsuitRDFormal
+    - N14ClothingUniformJumpsuitSettlerRags
+    - N14ClothingUniformJumpsuitCheckered
+    - N14ClothingUniformJumpsuitWastelandDoc
+    - N14ClothingUniformJumpsuitMerc
+    - N14ClothingUniformJumpsuitMerchant
+    - N14ClothingUniformJumpsuitTrader
+    - N14ClothingUniformJumpsuitCaravan
+    - N14ClothingUniformJumpsuitMechanic
+    - N14ClothingUniformJumpsuitPreWarRelaxed
+    - N14ClothingUniformJumpsuitPreWarCasual
+    - N14ClothingUniformJumpsuitManagerSuit
+    - N14ClothingUniformJumpsuitPreWarManager
+    - N14ClothingUniformJumpsuitBlueSuit
+    - N14ClothingUniformJumpsuitPreWarLumberjack
+    - N14ClothingUniformJumpsuitCombat
+    - N14ClothingUniformJumpsuitTribal
+    - N14ClothingUniformJumpsuitWarriorTribal
+    - N14ClothingUniformJumpsuitdrylanderTribal
+    - N14ClothingUniformJumpsuittribalpantsf
+    - N14ClothingUniformJumpsuittribalpantsm
+    - N14ClothingUniformJumpsuittribalpantsnecklace
+    - N14ClothingUniformJumpsuitBrahminFarmer
+    - N14ClothingUniformJumpsuitFollowers
+    - N14ClothingUniformJumpsuitCowboyBrown
+    - N14ClothingUniformJumpsuitCowboyGrey
+    - N14ClothingUniformJumpsuitFudd
+    - N14ClothingUniformJumpsuitMilUniform
+    - N14ClothingUniformJumpsuitChinese
+    - N14ClothingUniformJumpsuitVancouver
+    - N14ClothingUniformJumpskirtDressBlack
+    - N14ClothingUniformJumpskirtDressBlue
+    - N14ClothingUniformJumpskirtSundress
+    - N14ClothingUniformJumpskirtWastelandDoc
+    - N14ClothingUniformJumpskirtMerc
+    - N14ClothingUniformJumpskirtTribal
+    - N14ClothingUniformJumpskirtRDFormal
+    - N14ClothingUniformJumpskirtAsylumDress
+
+# MARK: Верхнее
+
+    - ClothingOuterCoatBomber
+    - ClothingOuterCoatHyenhSweater
+    - ClothingOuterCoatInspector
+    - ClothingOuterCoatJacketBiker
+    - ClothingOuterCoatJacketJamrock
+    - ClothingOuterCoatJacketLeather
+    - ClothingOuterCoatJacketLettermanBrown
+    - ClothingOuterCoatLeatherJacket
+    - ClothingOuterCoatMNKBlackTopCoat
+    - ClothingOuterWinterCoat
+    - ClothingOuterWinterCoatLong
+    - N14ClothingOuterCoatLab
+    - N14ClothingOuterJacketBomber
+
+# MARK: Сапожки обитал
+
+    - N14ClothingShoesJamrock
+    - N14ClothingShoesBlack
+    - N14ClothingShoesBrown
+    - N14ClothingShoesTribal
+    - N14ClothingBootsBlack
+    - N14ClothingBootsCowboy
+    - N14ClothingBootsLeather
+    - N14ClothingBootsMountie
+
+# MARK: Перчатки обитал
+
+    - N14ClothingHandsGlovesBlackBiker
+    - N14ClothingHandsGlovesBrownBiker
+    - N14ClothingHandsGlovesBlackLeather
+    - N14ClothingHandsGlovesLeather
+    - N14ClothingHandsGlovesMountie
+    - N14ClothingHandsGlovesDriver
+    - N14ClothingHandsGlovesFur
+    - N14ClothingHandsGlovesTribal
+    - N14ClothingHandsGlovesCloth
+
+# MARK: Шапки обитал
+    - ClothingHeadCourier
+    - ClothingHeadHatBowSmall
+    - ClothingHeadHatBrownFlatcap
+    - ClothingHeadHatFedoraBlack
+    - ClothingHeadHatFedoraBrown
+    - ClothingHeadHatFedoraChoc
+    - ClothingHeadHatGreyFlatcap
+    - ClothingHeadHatTacticalMaidHeadband
+    - ClothingHeadHatUshanka
+    - N14ClothingHeadHatBaseball
+    - N14ClothingHeadHatTrucker
+    - N14ClothingHeadHatDeputy
+    - N14ClothingHeadHatSheriff
+    - N14ClothingHeadHatCowboyGrey
+    - N14ClothingHeadHatCowboyGreyBanded
+    - N14ClothingHeadHatCowboyBrown
+    - N14ClothingHeadHatHeadscarf
+    - N14ClothingHeadHatBeanie
+    - N14ClothingHeadHatArmyBeret
+    - N14ClothingHeadHatArmyBeretAirborne
+    - N14ClothingHeadHatArmyBeretSpecial
+    - N14ClothingHeadHatArmyCap
+    - N14ClothingHeadHatBandit
+    - N14ClothingHeadHatTribalOutcastHood
+    - N14ClothingDrylanderGoggles
+    - N14ClothingHeadTakerwraps
+    - N14ClothingTribalHeadWraps
+    - N14ClothingTribalHood
+    - N14ClothingTribalShamanHat
+    - N14ClothingTribalShemagh
+    - N14ClothingHeadHatMountie
+    - N14ClothingHeadHatChinese
+
+# MARK: Очки
+    - ClothingEyesGlasses3D
+    - ClothingEyesGlassesCheapSunglassesAviator
+    - ClothingEyesGlassesCheapSunglassesBig
+    - ClothingEyesGlassesEthereal
+    - ClothingEyesGlassesMonocle
+    - ClothingEyesGlassesOutlawGlasses
+    - ClothingEyesGlassesPanto
+    - ClothingEyesGlassesSecurityBig
+    - ClothingEyesHudBeer
+
+# MARK: Шея
+    - ClothingNeckCloakRedHood
+    - ClothingNeckScarfStripedBlack
+    - ClothingNeckScarfStripedBlue
+    - ClothingNeckScarfStripedBrown
+    - ClothingNeckScarfStripedGreen
+    - ClothingNeckStoleChaplain
+    - ClothingNeckTieBowTie
+    - ClothingNeckTieColor
+    - ClothingNeckUnathiMantle

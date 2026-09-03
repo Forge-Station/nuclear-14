@@ -1,0 +1,37 @@
+- type: reaction
+  id: N14LastBreathPoisonRecipe
+  reactants:
+    NightstalkerBlood:
+      amount: 1
+    CazadorVenom:
+      amount: 1
+    ExtractDatura:
+      amount: 1
+    ExtractWhiteHorsenettle:
+      amount: 1
+  products:
+    N14LastBreathPoison : 2
+
+- type: reaction
+  id: N14TyaguchkaToxinRecipe
+  reactants:
+    ScorpionTail:
+      amount: 1
+    N14BloatflyAcid:
+      amount: 1
+    Wonderglue:
+      amount: 1
+  products:
+    N14TyaguchkaToxin : 3
+
+- type: reaction
+  id: N14ColourlessPoisonRecipe
+  reactants:
+    ScorpionTail:
+      amount: 1
+    CazadorVenom:
+      amount: 1
+    Antiseptic:
+      amount: 1
+  products:
+    N14ColourlessPoison : 2

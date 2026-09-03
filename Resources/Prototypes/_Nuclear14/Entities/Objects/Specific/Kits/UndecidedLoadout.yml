@@ -74,7 +74,7 @@
   - type: UndecidedLoadoutBackpack
     possibleSets:
     - NCRA_SurgeonSet
-    - NCRA_DoctorSet
+    # - NCRA_DoctorSet
     - NCRA_ComMedSet
 
 - type: entity
@@ -289,7 +289,7 @@
     - TownGuard_Patr_Set
     - TownGuard_Lawb_Set
     - TownGuard_Brea_Set
-    - TownGuard_Riot_Set
+    #- TownGuard_Riot_Set
 
 # Here do the individual ALREADY DECIDED kits start
 # NCRA Cadet Kits
@@ -416,15 +416,15 @@
   content:
   - KitNCR_MedSurgeon
 
-- type: UndecidedLoadoutBackpackSet
-  id: NCRA_DoctorSet
-  name: undecided-loadout-category-med-doc-name
-  description: undecided-loadout-category-med-doc-description
-  sprite:
-    sprite: _Nuclear14/Objects/Misc/kits.rsi
-    state: medic
-  content:
-  - KitNCR_MedDoctor
+# - type: UndecidedLoadoutBackpackSet # Forge-Change
+#   id: NCRA_DoctorSet
+#   name: undecided-loadout-category-med-doc-name
+#   description: undecided-loadout-category-med-doc-description
+#   sprite:
+#     sprite: _Nuclear14/Objects/Misc/kits.rsi
+#     state: medic
+#   content:
+#   - KitNCR_MedDoctor 
 
 - type: UndecidedLoadoutBackpackSet
   id: NCRA_ComMedSet
@@ -993,12 +993,13 @@
   content:
   - KitTownGuard_Brea
 
-- type: UndecidedLoadoutBackpackSet
-  id: TownGuard_Riot_Set
-  name: undecided-loadout-category-town-riot-name
-  description: undecided-loadout-category-town-riot-description
-  sprite:
-    sprite: _Nuclear14/Objects/Misc/kits.rsi
-    state: rifleman
-  content:
-  - KitTownGuard_Riot
+# Forge: TownGuard_Riot_Set disabled (KitTownGuard_Riot disabled)
+#- type: UndecidedLoadoutBackpackSet
+#  id: TownGuard_Riot_Set
+#  name: undecided-loadout-category-town-riot-name
+#  description: undecided-loadout-category-town-riot-description
+#  sprite:
+#    sprite: _Nuclear14/Objects/Misc/kits.rsi
+#    state: rifleman
+#  content:
+#  - KitTownGuard_Riot

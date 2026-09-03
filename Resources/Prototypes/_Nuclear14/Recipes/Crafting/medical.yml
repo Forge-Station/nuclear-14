@@ -31,8 +31,8 @@
 # Stimpaks
 - type: construction
   name: stimpak
-  id: N14Stimpak
-  graph: N14Stimpak
+  id: N14StimpakDirty
+  graph: N14StimpakDirty
   startNode: start
   targetNode: stimpak
   category: construction-category-medical
@@ -53,7 +53,7 @@
   category: construction-category-medical
   objectType: Item
   description: A jet inhaler with a RadAway phial screwed on top of it. Two puffs away from being rad free.
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Objects/Specific/Medical/radinhaler.rsi
     state: radawayinhaler
@@ -99,7 +99,7 @@
   targetNode: jet
   category: construction-category-medical
   description: A jet inhaler. Smells like farts, speeds things up.
-  hide: false
+  hide: true
   icon:
     sprite: _Nuclear14/Objects/Specific/Medical/drugs.rsi
     state: jet

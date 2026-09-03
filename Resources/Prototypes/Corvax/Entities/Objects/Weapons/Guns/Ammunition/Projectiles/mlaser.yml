@@ -28,3 +28,18 @@
   impactFlash:
     sprite: Corvax/Objects/Weapons/Guns/Ammunition/projectiles/projectileslas.rsi
     state: impact_electro
+
+- type: hitscan
+  id: LaserElectroGauss
+  damage:
+    types:
+      Heat: 60
+  muzzleFlash:
+    sprite: Corvax/Objects/Weapons/Guns/Ammunition/projectiles/projectileslas.rsi
+    state: muzzle_electro
+  travelFlash:
+    sprite: Corvax/Objects/Weapons/Guns/Ammunition/projectiles/projectileslas.rsi
+    state: electrobeam
+  impactFlash:
+    sprite: Corvax/Objects/Weapons/Guns/Ammunition/projectiles/projectileslas.rsi
+    state: impact_electro

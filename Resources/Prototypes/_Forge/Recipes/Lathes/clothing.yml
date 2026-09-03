@@ -1,0 +1,1357 @@
+# MARK: Одежда обитал
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitDetectiveAlt
+  result: N14ClothingUniformJumpsuitDetectiveAlt
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitBartenderAlt
+  result: N14ClothingUniformJumpsuitBartenderAlt
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitRDFormal
+  result: N14ClothingUniformJumpsuitRDFormal
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitSettlerRags
+  result: N14ClothingUniformJumpsuitSettlerRags
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitCheckered
+  result: N14ClothingUniformJumpsuitCheckered
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitWastelandDoc
+  result: N14ClothingUniformJumpsuitWastelandDoc
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitMerc
+  result: N14ClothingUniformJumpsuitMerc
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitMerchant
+  result: N14ClothingUniformJumpsuitMerchant
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitTrader
+  result: N14ClothingUniformJumpsuitTrader
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitCaravan
+  result: N14ClothingUniformJumpsuitCaravan
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitMechanic
+  result: N14ClothingUniformJumpsuitMechanic
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitPreWarRelaxed
+  result: N14ClothingUniformJumpsuitPreWarRelaxed
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitPreWarCasual
+  result: N14ClothingUniformJumpsuitPreWarCasual
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitManagerSuit
+  result: N14ClothingUniformJumpsuitManagerSuit
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitPreWarManager
+  result: N14ClothingUniformJumpsuitPreWarManager
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitBlueSuit
+  result: N14ClothingUniformJumpsuitBlueSuit
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitPreWarLumberjack
+  result: N14ClothingUniformJumpsuitPreWarLumberjack
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitCombat
+  result: N14ClothingUniformJumpsuitCombat
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitTribal
+  result: N14ClothingUniformJumpsuitTribal
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitWarriorTribal
+  result: N14ClothingUniformJumpsuitWarriorTribal
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitdrylanderTribal
+  result: N14ClothingUniformJumpsuitdrylanderTribal
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuittribalpantsf
+  result: N14ClothingUniformJumpsuittribalpantsf
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuittribalpantsm
+  result: N14ClothingUniformJumpsuittribalpantsm
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuittribalpantsnecklace
+  result: N14ClothingUniformJumpsuittribalpantsnecklace
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitBrahminFarmer
+  result: N14ClothingUniformJumpsuitBrahminFarmer
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitFollowers
+  result: N14ClothingUniformJumpsuitFollowers
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitCowboyBrown
+  result: N14ClothingUniformJumpsuitCowboyBrown
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitCowboyGrey
+  result: N14ClothingUniformJumpsuitCowboyGrey
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitFudd
+  result: N14ClothingUniformJumpsuitFudd
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitMilUniform
+  result: N14ClothingUniformJumpsuitMilUniform
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitChinese
+  result: N14ClothingUniformJumpsuitChinese
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitVancouver
+  result: N14ClothingUniformJumpsuitVancouver
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpskirtDressBlack
+  result: N14ClothingUniformJumpskirtDressBlack
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpskirtDressBlue
+  result: N14ClothingUniformJumpskirtDressBlue
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpskirtSundress
+  result: N14ClothingUniformJumpskirtSundress
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpskirtWastelandDoc
+  result: N14ClothingUniformJumpskirtWastelandDoc
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpskirtMerc
+  result: N14ClothingUniformJumpskirtMerc
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpskirtTribal
+  result: N14ClothingUniformJumpskirtTribal
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpskirtRDFormal
+  result: N14ClothingUniformJumpskirtRDFormal
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingUniformJumpskirtAsylumDress
+  result: N14ClothingUniformJumpskirtAsylumDress
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingCostumeArcDress
+  result: ClothingCostumeArcDress
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformDressRed
+  result: ClothingUniformDressRed
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpskirtClerk
+  result: ClothingUniformJumpskirtClerk
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpskirtDressFormalRed
+  result: ClothingUniformJumpskirtDressFormalRed
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpskirtDressGothic
+  result: ClothingUniformJumpskirtDressGothic
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpskirtDressLacyGown
+  result: ClothingUniformJumpskirtDressLacyGown
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpskirtDressOpenShoulder
+  result: ClothingUniformJumpskirtDressOpenShoulder
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpskirtDressVictorianBlack
+  result: ClothingUniformJumpskirtDressVictorianBlack
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpskirtDressVictorianRed
+  result: ClothingUniformJumpskirtDressVictorianRed
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpskirtOldDress
+  result: ClothingUniformJumpskirtOldDress
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpskirtTacticool
+  result: ClothingUniformJumpskirtTacticool
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpsuitBarber
+  result: ClothingUniformJumpsuitBarber
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpsuitBartenderNt
+  result: ClothingUniformJumpsuitBartenderNt
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpsuitBartenderOrion
+  result: ClothingUniformJumpsuitBartenderOrion
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpsuitClerk
+  result: ClothingUniformJumpsuitClerk
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpsuitCossack
+  result: ClothingUniformJumpsuitCossack
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpsuitFlannel
+  result: ClothingUniformJumpsuitFlannel
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpsuitGreyShirt
+  result: ClothingUniformJumpsuitGreyShirt
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpsuitJeansBrown
+  result: ClothingUniformJumpsuitJeansBrown
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpsuitKilt
+  result: ClothingUniformJumpsuitKilt
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpsuitLibrarianOrion
+  result: ClothingUniformJumpsuitLibrarianOrion
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpsuitSuitAristocratic
+  result: ClothingUniformJumpsuitSuitAristocratic
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpsuitSuitAristocraticTuxedo
+  result: ClothingUniformJumpsuitSuitAristocraticTuxedo
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpsuitSuitBrown
+  result: ClothingUniformJumpsuitSuitBrown
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpsuitSuitBrownAlt
+  result: ClothingUniformJumpsuitSuitBrownAlt
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpsuitSuitBrownMob
+  result: ClothingUniformJumpsuitSuitBrownMob
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformJumpsuitTurtleneckGrey
+  result: ClothingUniformJumpsuitTurtleneckGrey
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformMNKOfficeSkirt
+  result: ClothingUniformMNKOfficeSkirt
+  category: N14Clothes
+  completetime: 3
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformMNKUnderGarment
+  result: ClothingUniformMNKUnderGarment
+  category: N14Clothes
+  completetime: 2
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformMNKGymBra
+  result: ClothingUniformMNKGymBra
+  category: N14Clothes
+  completetime: 2
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformMNKDressBlack
+  result: ClothingUniformMNKDressBlack
+  category: N14Clothes
+  completetime: 3
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformMNKBlackOveralls
+  result: ClothingUniformMNKBlackOveralls
+  category: N14Clothes
+  completetime: 3
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformMNKBlackShoulder
+  result: ClothingUniformMNKBlackShoulder
+  category: N14Clothes
+  completetime: 3
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingUniformMNKTracksuitBlack
+  result: ClothingUniformMNKTracksuitBlack
+  category: N14Clothes
+  completetime: 3
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingOuterCoatMNKWhiteHoodie
+  result: ClothingOuterCoatMNKWhiteHoodie
+  category: N14Clothes
+  completetime: 3
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingOuterCoatMNKBlackJacket
+  result: ClothingOuterCoatMNKBlackJacket
+  category: N14Clothes
+  completetime: 3
+  materials:
+    Cloth: 300
+    Thread: 300
+
+# MARK: Вверхняя одежда
+
+- type: latheRecipe
+  id: ClothingOuterUnathiRobe
+  result: ClothingOuterUnathiRobe
+  category: N14Clothes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingOuterCoatBomber
+  result: ClothingOuterCoatBomber
+  category: N14Outerwear
+  completetime: 4
+  materials:
+    Leather: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingOuterCoatHyenhSweater
+  result: ClothingOuterCoatHyenhSweater
+  category: N14Outerwear
+  completetime: 3
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingOuterCoatInspector
+  result: ClothingOuterCoatInspector
+  category: N14Outerwear
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingOuterCoatJacketBiker
+  result: ClothingOuterCoatJacketBiker
+  category: N14Outerwear
+  completetime: 4
+  materials:
+    Leather: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingOuterCoatJacketJamrock
+  result: ClothingOuterCoatJacketJamrock
+  category: N14Outerwear
+  completetime: 4
+  materials:
+    Leather: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingOuterCoatJacketLeather
+  result: ClothingOuterCoatJacketLeather
+  category: N14Outerwear
+  completetime: 4
+  materials:
+    Leather: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingOuterCoatJacketLettermanBrown
+  result: ClothingOuterCoatJacketLettermanBrown
+  category: N14Outerwear
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingOuterCoatLeatherJacket
+  result: ClothingOuterCoatLeatherJacket
+  category: N14Outerwear
+  completetime: 4
+  materials:
+    Leather: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingOuterCoatMNKBlackTopCoat
+  result: ClothingOuterCoatMNKBlackTopCoat
+  category: N14Outerwear
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: ClothingOuterWinterCoatLong
+  result: ClothingOuterWinterCoatLong
+  category: N14Outerwear
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingOuterCoatLab
+  result: N14ClothingOuterCoatLab
+  category: N14Outerwear
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingOuterJacketBomber
+  result: N14ClothingOuterJacketBomber
+  category: N14Outerwear
+  completetime: 4
+  materials:
+    Leather: 300
+    Thread: 300
+
+# MARK: Сапожки обитал
+
+- type: latheRecipe
+  id: N14ClothingShoesJamrock
+  result: N14ClothingShoesJamrock
+  category: N14Shoes
+  completetime: 4
+  materials:
+    Leather: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingShoesBlack
+  result: N14ClothingShoesBlack
+  category: N14Shoes
+  completetime: 4
+  materials:
+    Leather: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingShoesBrown
+  result: N14ClothingShoesBrown
+  category: N14Shoes
+  completetime: 4
+  materials:
+    Leather: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingShoesTribal
+  result: N14ClothingShoesTribal
+  category: N14Shoes
+  completetime: 4
+  materials:
+    Cloth: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingBootsBlack
+  result: N14ClothingBootsBlack
+  category: N14Shoes
+  completetime: 4
+  materials:
+    Leather: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingBootsCowboy
+  result: N14ClothingBootsCowboy
+  category: N14Shoes
+  completetime: 4
+  materials:
+    Leather: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingBootsLeather
+  result: N14ClothingBootsLeather
+  category: N14Shoes
+  completetime: 4
+  materials:
+    Leather: 300
+    Thread: 300
+
+- type: latheRecipe
+  id: N14ClothingBootsMountie
+  result: N14ClothingBootsMountie
+  category: N14Shoes
+  completetime: 4
+  materials:
+    Leather: 300
+    Thread: 300
+
+# MARK: Шапки обитал
+
+- type: latheRecipe
+  id: N14ClothingHeadHatBaseball
+  result: N14ClothingHeadHatBaseball
+  category: N14Hats
+  completetime: 3
+  materials:
+    Cloth: 200
+
+- type: latheRecipe
+  id: N14ClothingHeadHatTrucker
+  result: N14ClothingHeadHatTrucker
+  category: N14Hats
+  completetime: 3
+  materials:
+    Cloth: 200
+
+- type: latheRecipe
+  id: N14ClothingHeadHatDeputy
+  result: N14ClothingHeadHatDeputy
+  category: N14Hats
+  completetime: 4
+  materials:
+    Leather: 200
+    Cloth: 100
+
+- type: latheRecipe
+  id: N14ClothingHeadHatSheriff
+  result: N14ClothingHeadHatSheriff
+  category: N14Hats
+  completetime: 4
+  materials:
+    Leather: 200
+    Cloth: 100
+
+- type: latheRecipe
+  id: N14ClothingHeadHatCowboyGrey
+  result: N14ClothingHeadHatCowboyGrey
+  category: N14Hats
+  completetime: 4
+  materials:
+    Leather: 200
+    Cloth: 100
+
+- type: latheRecipe
+  id: N14ClothingHeadHatCowboyGreyBanded
+  result: N14ClothingHeadHatCowboyGreyBanded
+  category: N14Hats
+  completetime: 4
+  materials:
+    Leather: 200
+    Cloth: 100
+    Steel: 100
+
+- type: latheRecipe
+  id: N14ClothingHeadHatCowboyBrown
+  result: N14ClothingHeadHatCowboyBrown
+  category: N14Hats
+  completetime: 4
+  materials:
+    Leather: 200
+    Cloth: 100
+
+- type: latheRecipe
+  id: N14ClothingHeadHatHeadscarf
+  result: N14ClothingHeadHatHeadscarf
+  category: N14Hats
+  completetime: 2
+  materials:
+    Cloth: 100
+
+- type: latheRecipe
+  id: N14ClothingHeadHatBeanie
+  result: N14ClothingHeadHatBeanie
+  category: N14Hats
+  completetime: 2
+  materials:
+    Cloth: 100
+
+- type: latheRecipe
+  id: N14ClothingHeadHatArmyBeret
+  result: N14ClothingHeadHatArmyBeret
+  category: N14Hats
+  completetime: 3
+  materials:
+    Cloth: 100
+
+- type: latheRecipe
+  id: N14ClothingHeadHatArmyBeretAirborne
+  result: N14ClothingHeadHatArmyBeretAirborne
+  category: N14Hats
+  completetime: 3
+  materials:
+    Cloth: 100
+
+- type: latheRecipe
+  id: N14ClothingHeadHatArmyBeretSpecial
+  result: N14ClothingHeadHatArmyBeretSpecial
+  category: N14Hats
+  completetime: 3
+  materials:
+    Cloth: 100
+
+- type: latheRecipe
+  id: N14ClothingHeadHatArmyCap
+  result: N14ClothingHeadHatArmyCap
+  category: N14Hats
+  completetime: 3
+  materials:
+    Cloth: 100
+
+- type: latheRecipe
+  id: N14ClothingHeadHatBandit
+  result: N14ClothingHeadHatBandit
+  category: N14Hats
+  completetime: 3
+  materials:
+    Leather: 100
+    Cloth: 100
+
+- type: latheRecipe
+  id: N14ClothingHeadHatTribalOutcastHood
+  result: N14ClothingHeadHatTribalOutcastHood
+  category: N14Hats
+  completetime: 3
+  materials:
+    Leather: 100
+    Cloth: 100
+
+- type: latheRecipe
+  id: N14ClothingDrylanderGoggles
+  result: N14ClothingDrylanderGoggles
+  category: N14Hats
+  completetime: 3
+  materials:
+    Cloth: 100
+    Glass: 100
+
+- type: latheRecipe
+  id: N14ClothingHeadTakerwraps
+  result: N14ClothingHeadTakerwraps
+  category: N14Hats
+  completetime: 3
+  materials:
+    Cloth: 100
+    Leather: 100
+
+- type: latheRecipe
+  id: N14ClothingTribalHeadWraps
+  result: N14ClothingTribalHeadWraps
+  category: N14Hats
+  completetime: 2
+  materials:
+    Cloth: 100
+
+- type: latheRecipe
+  id: N14ClothingTribalHood
+  result: N14ClothingTribalHood
+  category: N14Hats
+  completetime: 3
+  materials:
+    Cloth: 100
+
+- type: latheRecipe
+  id: N14ClothingTribalShamanHat
+  result: N14ClothingTribalShamanHat
+  category: N14Hats
+  completetime: 3
+  materials:
+    Leather: 100
+    Cloth: 100
+
+- type: latheRecipe
+  id: N14ClothingTribalShemagh
+  result: N14ClothingTribalShemagh
+  category: N14Hats
+  completetime: 2
+  materials:
+    Cloth: 100
+
+- type: latheRecipe
+  id: N14ClothingHeadHatMountie
+  result: N14ClothingHeadHatMountie
+  category: N14Hats
+  completetime: 4
+  materials:
+    Leather: 200
+    Cloth: 100
+
+- type: latheRecipe
+  id: N14ClothingHeadHatChinese
+  result: N14ClothingHeadHatChinese
+  category: N14Hats
+  completetime: 3
+  materials:
+    Cloth: 100
+
+- type: latheRecipe
+  id: ClothingHeadCourier
+  result: ClothingHeadCourier
+  category: N14Hats
+  completetime: 3
+  materials:
+    Cloth: 100
+
+- type: latheRecipe
+  id: ClothingHeadHatBowSmall
+  result: ClothingHeadHatBowSmall
+  category: N14Hats
+  completetime: 2
+  materials:
+    Cloth: 100
+
+- type: latheRecipe
+  id: ClothingHeadHatBrownFlatcap
+  result: ClothingHeadHatBrownFlatcap
+  category: N14Hats
+  completetime: 3
+  materials:
+    Cloth: 100
+
+- type: latheRecipe
+  id: ClothingHeadHatFedoraBlack
+  result: ClothingHeadHatFedoraBlack
+  category: N14Hats
+  completetime: 4
+  materials:
+    Leather: 200
+    Cloth: 100
+
+- type: latheRecipe
+  id: ClothingHeadHatFedoraBrown
+  result: ClothingHeadHatFedoraBrown
+  category: N14Hats
+  completetime: 4
+  materials:
+    Leather: 200
+    Cloth: 100
+
+- type: latheRecipe
+  id: ClothingHeadHatFedoraChoc
+  result: ClothingHeadHatFedoraChoc
+  category: N14Hats
+  completetime: 4
+  materials:
+    Leather: 200
+    Cloth: 100
+
+- type: latheRecipe
+  id: ClothingHeadHatGreyFlatcap
+  result: ClothingHeadHatGreyFlatcap
+  category: N14Hats
+  completetime: 3
+  materials:
+    Cloth: 100
+
+- type: latheRecipe
+  id: ClothingHeadHatTacticalMaidHeadband
+  result: ClothingHeadHatTacticalMaidHeadband
+  category: N14Hats
+  completetime: 2
+  materials:
+    Cloth: 100
+
+- type: latheRecipe
+  id: ClothingHeadHatUshanka
+  result: ClothingHeadHatUshanka
+  category: N14Hats
+  completetime: 3
+  materials:
+    Leather: 100
+    Cloth: 100
+
+# MARK: Перчатки обитал
+
+- type: latheRecipe
+  id: N14ClothingHandsGlovesBlackBiker
+  result: N14ClothingHandsGlovesBlackBiker
+  category: N14Gloves
+  completetime: 3
+  materials:
+    Leather: 100
+
+- type: latheRecipe
+  id: N14ClothingHandsGlovesBrownBiker
+  result: N14ClothingHandsGlovesBrownBiker
+  category: N14Gloves
+  completetime: 3
+  materials:
+    Leather: 100
+
+- type: latheRecipe
+  id: N14ClothingHandsGlovesBlackLeather
+  result: N14ClothingHandsGlovesBlackLeather
+  category: N14Gloves
+  completetime: 3
+  materials:
+    Leather: 100
+
+- type: latheRecipe
+  id: N14ClothingHandsGlovesLeather
+  result: N14ClothingHandsGlovesLeather
+  category: N14Gloves
+  completetime: 3
+  materials:
+    Leather: 100
+
+- type: latheRecipe
+  id: N14ClothingHandsGlovesMountie
+  result: N14ClothingHandsGlovesMountie
+  category: N14Gloves
+  completetime: 3
+  materials:
+    Leather: 100
+
+- type: latheRecipe
+  id: N14ClothingHandsGlovesDriver
+  result: N14ClothingHandsGlovesDriver
+  category: N14Gloves
+  completetime: 3
+  materials:
+    Leather: 100
+
+- type: latheRecipe
+  id: N14ClothingHandsGlovesFur
+  result: N14ClothingHandsGlovesFur
+  category: N14Gloves
+  completetime: 3
+  materials:
+    Leather: 100
+    Cloth: 100
+
+- type: latheRecipe
+  id: N14ClothingHandsGlovesTribal
+  result: N14ClothingHandsGlovesTribal
+  category: N14Gloves
+  completetime: 2
+  materials:
+    Leather: 100
+
+- type: latheRecipe
+  id: N14ClothingHandsGlovesCloth
+  result: N14ClothingHandsGlovesCloth
+  category: N14Gloves
+  completetime: 2
+  materials:
+    Cloth: 100
+
+# MARK: Очки обитал
+
+- type: latheRecipe
+  id: ClothingEyesGlasses3D
+  result: ClothingEyesGlasses3D
+  category: N14Eyes
+  completetime: 2
+  materials:
+    Glass: 100
+    Plastic: 100
+
+- type: latheRecipe
+  id: ClothingEyesGlassesCheapSunglassesAviator
+  result: ClothingEyesGlassesCheapSunglassesAviator
+  category: N14Eyes
+  completetime: 2
+  materials:
+    Glass: 100
+    Plastic: 100
+
+- type: latheRecipe
+  id: ClothingEyesGlassesCheapSunglassesBig
+  result: ClothingEyesGlassesCheapSunglassesBig
+  category: N14Eyes
+  completetime: 2
+  materials:
+    Glass: 100
+    Plastic: 100
+
+- type: latheRecipe
+  id: ClothingEyesGlassesEthereal
+  result: ClothingEyesGlassesEthereal
+  category: N14Eyes
+  completetime: 2
+  materials:
+    Glass: 100
+    Plastic: 100
+
+- type: latheRecipe
+  id: ClothingEyesGlassesMonocle
+  result: ClothingEyesGlassesMonocle
+  category: N14Eyes
+  completetime: 2
+  materials:
+    Glass: 100
+    Plastic: 50
+
+- type: latheRecipe
+  id: ClothingEyesGlassesOutlawGlasses
+  result: ClothingEyesGlassesOutlawGlasses
+  category: N14Eyes
+  completetime: 2
+  materials:
+    Glass: 100
+    Plastic: 100
+
+- type: latheRecipe
+  id: ClothingEyesGlassesPanto
+  result: ClothingEyesGlassesPanto
+  category: N14Eyes
+  completetime: 2
+  materials:
+    Glass: 100
+    Plastic: 100
+
+- type: latheRecipe
+  id: ClothingEyesGlassesSecurityBig
+  result: ClothingEyesGlassesSecurityBig
+  category: N14Eyes
+  completetime: 2
+  materials:
+    Glass: 100
+    Plastic: 100
+
+- type: latheRecipe
+  id: ClothingEyesHudBeer
+  result: ClothingEyesHudBeer
+  category: N14Eyes
+  completetime: 3
+  materials:
+    Glass: 100
+    Plastic: 100
+    Steel: 50
+
+# MARK: Шея
+
+- type: latheRecipe
+  id: ClothingNeckCloakRedHood
+  result: ClothingNeckCloakRedHood
+  category: N14Neck
+  completetime: 3
+  materials:
+    Cloth: 200
+    Thread: 200
+
+- type: latheRecipe
+  id: ClothingNeckStoleChaplain
+  result: ClothingNeckStoleChaplain
+  category: N14Neck
+  completetime: 3
+  materials:
+    Cloth: 200
+    Thread: 200
+
+- type: latheRecipe
+  id: ClothingNeckTieBowTie
+  result: ClothingNeckTieBowTie
+  category: N14Neck
+  completetime: 2
+  materials:
+    Cloth: 100
+    Thread: 100
+
+- type: latheRecipe
+  id: ClothingNeckTieColor
+  result: ClothingNeckTieColor
+  category: N14Neck
+  completetime: 2
+  materials:
+    Cloth: 100
+    Thread: 100
+
+- type: latheRecipe
+  id: ClothingNeckUnathiMantle
+  result: ClothingNeckUnathiMantle
+  category: N14Neck
+  completetime: 3
+  materials:
+    Cloth: 200
+    Thread: 200

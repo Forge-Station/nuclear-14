@@ -1,0 +1,81 @@
+- type: reagent
+  id: N14LastBreathPoison
+  name: reagent-name-lastbreath-poison
+  group: Toxins
+  desc: reagent-desc-lastbreath-poison
+  physicalDesc: reagent-physical-desc-pungent
+  color: "#6b0007"
+  metabolisms:
+    Poison:
+      metabolismRate: 1
+      effects:
+      - !type:HealthChange
+        damage:
+          types:
+            Poison: 3
+            Asphyxiation: 20  
+      - !type:GenericStatusEffect
+        key: Muted
+        component: Muted
+      - !type:GenericStatusEffect
+        conditions:
+        - !type:ReagentThreshold
+          reagent: Antidote
+          max: 0.01
+        key: Drowsiness
+        time: 10
+        type: Remove  
+
+- type: reagent
+  id: N14TyaguchkaToxin
+  name: reagent-name-tyaguchka-toxin
+  group: Toxins
+  desc: reagent-desc-tyaguchka-toxin
+  physicalDesc: reagent-physical-desc-opaque
+  flavor: bitter
+  color: "#77b58e"
+  metabolisms:
+    Poison:
+      metabolismRate: 0.2
+      effects:
+      - !type:MovespeedModifier
+        walkSpeedModifier: 0.4
+        sprintSpeedModifier: 0.4
+      - !type:HealthChange
+        damage:
+          types:
+            Poison: 0.5
+      - !type:GenericStatusEffect
+        conditions:
+        - !type:ReagentThreshold
+          reagent: Antidote
+          max: 0.01
+        key: Drowsiness
+        time: 10
+        type: Remove  
+
+- type: reagent
+  id: N14ColourlessPoison
+  name: reagent-name-colourlesspoison
+  group: Toxins
+  desc: reagent-desc-colourlesspoison
+  flavor: bitter
+  color: "#dddcdc"
+  physicalDesc: reagent-physical-desc-opaque
+  metabolisms:
+    Poison:
+      metabolismRate: 0.5
+      effects:
+      - !type:HealthChange
+        damage:
+          types:
+            Poison: 6
+            Asphyxiation: 7
+      - !type:GenericStatusEffect
+        conditions:
+        - !type:ReagentThreshold
+          reagent: Antidote
+          max: 0.01
+        key: Drowsiness
+        time: 10
+        type: Remove

@@ -1049,7 +1049,7 @@
   - type: Sprite
     sprite: Objects/Specific/Hydroponics/aloe.rsi
   - type: Produce
-    seedId: aloe
+    seedId: N14WildAloe
   - type: Extractable
     grindableSolutionName: food
   - type: Tag
@@ -1679,7 +1679,7 @@
     spawnedPrototype: MaterialCotton1
     spawnCount: 2
   - type: Produce
-    seedId: cotton
+    seedId: N14WildCotton
   - type: Tag
     tags:
     - ClothMade

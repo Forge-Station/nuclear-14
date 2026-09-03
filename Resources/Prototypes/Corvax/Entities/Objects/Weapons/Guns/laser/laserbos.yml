@@ -90,3 +90,53 @@
     backStrength: 4
   - type: StaticPrice
     price: 300
+
+- type: entity
+  name: gauss rifle
+  parent: [ N14BaseWeaponPowerCellMedium, ForgeGunConditionProfileLaser ]
+  id: N14WeaponGaussRifle
+  description: This is a sniper rifle that uses the principle of magnetic induction to accelerate a ferromagnetic projectile placed in the barrel. It is characterized by high damage output, long range, and lethality.
+  components:
+  - type: Wieldable
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Guns/Laser/gaussrifle.rsi
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Guns/Laser/gaussrifle.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: MagazineVisuals
+    magState: mag
+    steps: 5
+    zeroVisible: true
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Magazine
+        startingItem: N14PowerCellFusionCellAdvansed
+        insertSound: /Audio/Weapons/Guns/MagIn/batrifle_magin.ogg
+        ejectSound: /Audio/Weapons/Guns/MagOut/batrifle_magout.ogg
+        whitelist:
+          tags:
+            - N14PowerCellFusionCellAdvansed
+  - type: Gun
+    fireRate: 0.8
+    soundGunshot:
+      collection: N14GaussGunshot
+    selectedMode: SemiAuto
+    availableModes:
+    - SemiAuto
+    minAngle: 1.5
+    maxAngle: 8
+    angleIncrease: 1
+    angleDecay: 15
+  - type: FollowDistance
+    backStrength: 1
+  - type: HeldSpeedModifier
+    walkModifier: 0.78
+    sprintModifier: 0.78
+

@@ -1,0 +1,125 @@
+#MARK: Healing
+- type: reagent
+  id: StimpackThrombosis #Жидкость получаемая при смешивании двух видов стимпаков
+  name: reagent-name-thrombosis
+  group: Chems
+  desc: reagent-desc-thrombosis
+  physicalDesc: reagent-physical-desc-viscous
+  color: "#6d1b1b"
+  metabolisms:
+    Medicine:
+      metabolismRate: 1
+      effects:
+      - !type:HealthChange
+        damage:
+          groups:
+            Burn: -6
+            Brute: -6           
+          types:
+            Asphyxiation: 2
+            Poison: 0.25
+      - !type:ModifyBleedAmount
+        amount: -4
+      - !type:PopupMessage
+        type: Local
+        visualType: Medium
+        messages: [ "generic-reagent-effect-nauseous" ]
+        probability: 0.25
+
+- type: reagent 
+  id: DirtySuperStimpack #used in super stimpacks
+  name: reagent-name-dirty-robust-healing-mixture
+  group: Medicine
+  desc: reagent-desc-dirty-robust-healing-mixture
+  physicalDesc: reagent-physical-desc-opaque
+  color: "#934435"
+  metabolisms:
+    Medicine:
+      metabolismRate: 1
+      effects:
+      - !type:MovespeedModifier
+        walkSpeedModifier: 0.80
+        sprintSpeedModifier: 0.80
+      - !type:HealthChange
+        damage:
+          groups:
+            Burn: -30
+            Brute: -22.5
+            Airloss: -15
+          types:
+            Radiation: 0.5
+      - !type:ModifyBleedAmount
+        amount: -3
+      - !type:HealthChange # Taking 2 is more or less a guaranteed death
+        conditions:
+        - !type:ReagentThreshold
+          min: 12
+        damage:
+          groups:
+            Burn: -15
+            Brute: -11.5
+            Airloss: -7.5
+          types:
+            Radiation: 6
+            Cellular: 1.5 # permanent damage, be glad you aint dead
+
+- type: reagent
+  id: FieryPurgative
+  name: reagent-name-fiery-purgative
+  group: Medicine
+  desc: reagent-desc-fiery-purgative
+  physicalDesc: reagent-physical-desc-oily
+  color: "#1d3d22"
+  metabolisms:
+    Medicine:
+      metabolismRate: 0.25 
+      effects:
+      - !type:HealthChange
+        damage:
+          groups:
+            Toxin: -0.35
+      - !type:SatiateHunger
+        factor: -2.5
+      - !type:AdjustReagent
+        reagent: FireToxin
+        amount: -3.0
+      - !type:AdjustReagent
+        reagent: NightstalkerVenom
+        amount: -3.0
+      - !type:AdjustReagent
+        reagent: CazadorVenom
+        amount: -3.0
+      - !type:AdjustReagent
+        reagent: N14UncookedAnimalProteinsRad
+        amount: -3.0
+      - !type:AdjustReagent
+        reagent: ScorpionTail
+        amount: -3.0
+      - !type:HealthChange
+        conditions:
+        - !type:ReagentThreshold
+          min: 20
+        damage:
+          groups:
+            Brute: 2
+      - !type:Jitter
+        conditions:
+        - !type:ReagentThreshold
+          min: 20
+      - !type:PopupMessage
+        conditions:
+        - !type:ReagentThreshold
+          min: 20
+        type: Local
+        visualType: Medium
+        messages: [ "generic-reagent-effect-nauseous" ]
+        probability: 0.2
+      - !type:ChemVomit
+        conditions:
+        - !type:ReagentThreshold
+          min: 20
+        probability: 0.02
+      - !type:Drunk
+        conditions:
+        - !type:ReagentThreshold
+          min: 15

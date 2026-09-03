@@ -1,0 +1,165 @@
+# Лом собирать очень нудно и неинтересно (на данный момент), поэтому такие солевые цены.
+- type: latheRecipe
+  id: N14JunktronEndoskeleton
+  result: N14JunktronEndoskeleton
+  category: Robotics
+  completetime: 3
+  materials:
+    ScrapSteel: 300
+    ScrapElectronic: 100
+
+- type: latheRecipe
+  id: N14OpticalSensor
+  result: N14OpticalSensor
+  category: Robotics
+  completetime: 2
+  materials:
+    ScrapElectronic: 25
+
+- type: latheRecipe
+  id: N14JunktronMMI
+  result: N14JunktronMMI
+  category: Robotics
+  completetime: 3
+  materials:
+    ScrapElectronic: 150
+    ScrapGold: 50
+    ScrapSteel: 100
+
+- type: latheRecipe
+  id: N14JunktronPositronicBrain
+  result: N14JunktronPositronicBrain
+  category: Robotics
+  completetime: 3
+  materials:
+    ScrapElectronic: 300
+    ScrapGold: 50
+
+- type: latheRecipe
+  id: N14LawCard
+  result: N14LawCard
+  category: Robotics
+  completetime: 2
+  materials:
+    ScrapElectronic: 50
+
+- type: latheRecipe
+  id: N14BorgModuleJunkTools
+  result: N14BorgModuleJunkTools
+  category: Robotics
+  completetime: 3
+  materials:
+    ScrapSteel: 250
+    ScrapElectronic: 150
+
+- type: latheRecipe
+  id: N14BorgModuleJunkGardening
+  result: N14BorgModuleJunkGardening
+  category: Robotics
+  completetime: 3
+  materials:
+    ScrapSteel: 150
+    ScrapElectronic: 150
+    ScrapBrass: 100
+
+- type: latheRecipe
+  id: N14BorgModuleJunkBureaucracy
+  result: N14BorgModuleJunkBureaucracy
+  category: Robotics
+  completetime: 3
+  materials:
+    ScrapElectronic: 200
+    ScrapCopper: 100
+
+- type: latheRecipe
+  id: N14BorgModuleJunkCombat
+  result: N14BorgModuleJunkCombat
+  category: Robotics
+  completetime: 4
+  materials:
+    ScrapSteel: 300
+    ScrapElectronic: 300
+    ScrapGold: 100
+
+- type: latheRecipe
+  id: N14BorgModuleJunkManipulator
+  result: N14BorgModuleJunkManipulator
+  category: Robotics
+  completetime: 3
+  materials:
+    ScrapSteel: 200
+    ScrapElectronic: 100
+
+- type: latheRecipe
+  id: N14BorgModuleJunkMining
+  result: N14BorgModuleJunkMining
+  category: Robotics
+  completetime: 3
+  materials:
+    ScrapSteel: 300
+    ScrapElectronic: 100
+    ScrapLead: 100
+
+- type: latheRecipe
+  id: N14BorgModuleJunkMusique
+  result: N14BorgModuleJunkMusique
+  category: Robotics
+  completetime: 3
+  materials:
+    ScrapSteel: 200
+    ScrapElectronic: 150
+    ScrapBrass: 100
+
+- type: latheRecipe
+  id: N14JunktronTorso
+  result: N14JunktronTorso
+  category: Robotics
+  completetime: 2
+  materials:
+    ScrapSteel: 150
+    ScrapElectronic: 50
+
+- type: latheRecipe
+  id: N14JunktronHead
+  result: N14JunktronHead
+  category: Robotics
+  completetime: 2
+  materials:
+    ScrapElectronic: 100
+    ScrapGold: 25
+
+- type: latheRecipe
+  id: N14JunktronLeftArm
+  result: N14JunktronLeftArm
+  category: Robotics
+  completetime: 2
+  materials:
+    ScrapSteel: 100
+    ScrapCopper: 50
+
+- type: latheRecipe
+  id: N14JunktronRightArm
+  result: N14JunktronRightArm
+  category: Robotics
+  completetime: 2
+  materials:
+    ScrapSteel: 100
+    ScrapBrass: 50
+
+- type: latheRecipe
+  id: N14JunktronLeftLeg
+  result: N14JunktronLeftLeg
+  category: Robotics
+  completetime: 2
+  materials:
+    ScrapSteel: 100
+    ScrapLead: 50
+
+- type: latheRecipe
+  id: N14JunktronRightLeg
+  result: N14JunktronRightLeg
+  category: Robotics
+  completetime: 2
+  materials:
+    ScrapSteel: 100
+    ScrapLead: 50

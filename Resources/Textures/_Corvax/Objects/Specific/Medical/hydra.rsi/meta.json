@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "license": "CC-BY-NC-SA-3.0",
+  "copyright": "created by BARON and rozycosmic",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "hydra"
+    },
+    {
+      "name": "hydra-inhand-left",
+      "directions": 4
+    },
+    {
+      "name": "hydra-inhand-right",
+      "directions": 4
+    }
+  ]
+}

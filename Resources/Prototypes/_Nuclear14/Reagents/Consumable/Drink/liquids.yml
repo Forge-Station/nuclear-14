@@ -32,6 +32,11 @@
     Poison:
       effects:
       - !type:HealthChange
+        conditions:
+        - !type:Species
+          species:
+          - GhoulGlowing
+          shouldHave: false
         damage:
           types:
             Radiation: 0.25
@@ -51,6 +56,11 @@
     Poison:
       effects:
       - !type:HealthChange
+        conditions:
+        - !type:Species
+          species:
+          - GhoulGlowing
+          shouldHave: false
         damage:
           types:
             Radiation: 1 # You really shouldn't drink this.

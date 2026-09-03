@@ -1,0 +1,29 @@
+{
+    "version": 1,
+    "license": "CC-BY-NC-SA-3.0",
+    "copyright": "Reference taken from https://github.com/Mojave-Sun/mojave-sun-13/blob/3c9fc470595d3106ca57e858239e8f0822630137/mojave/icons/mob/ms13robots.dmi. Redrawn by @yanos42.",
+    "size": {
+        "x": 32,
+        "y": 32
+    },
+    "states": [
+        {
+            "name": "junkbot_head"
+        },
+        {
+            "name": "junkbot_torso"
+        },
+        {
+            "name": "junkbot_l_arm"
+        },
+        {
+            "name": "junkbot_r_arm"
+        },
+        {
+            "name": "junkbot_l_leg"
+        },
+        {
+            "name": "junkbot_r_leg"
+        }
+    ]
+}

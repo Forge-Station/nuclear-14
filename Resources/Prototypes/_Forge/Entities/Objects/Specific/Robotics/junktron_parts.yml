@@ -1,0 +1,213 @@
+# детальки для хламобота.
+
+- type: entity
+  id: N14JunktronLeftArm
+  parent: BaseBorgArmLeft
+  name: junktron left arm
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_l_arm
+  - type: Icon
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_l_arm
+  - type: Tag
+    tags:
+    - Trash
+    - BorgArm
+    - BorgGenericLArm
+
+- type: entity
+  id: N14JunktronRightArm
+  parent: BaseBorgArmRight
+  name: junktron right arm
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_r_arm
+  - type: Icon
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_r_arm
+  - type: Tag
+    tags:
+    - Trash
+    - BorgArm
+    - BorgGenericRArm
+
+- type: entity
+  id: N14JunktronLeftLeg
+  parent: BaseBorgLegLeft
+  name: junktron left leg
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_l_leg
+  - type: Icon
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_l_leg
+  - type: Tag
+    tags:
+    - Trash
+    - BorgLeg
+    - BorgGenericLLeg
+
+- type: entity
+  id: N14JunktronRightLeg
+  parent: BaseBorgLegRight
+  name: junktron right leg
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_r_leg
+  - type: Icon
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_r_leg
+  - type: Tag
+    tags:
+    - Trash
+    - BorgLeg
+    - BorgGenericRLeg
+
+- type: entity
+  id: N14JunktronHead
+  parent: BaseBorgHead
+  name: junktron head
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_head
+  - type: Icon
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_head
+  - type: Tag
+    tags:
+    - Trash
+    - BorgHead
+    - BorgGenericHead
+
+- type: entity
+  id: N14JunktronTorso
+  parent: BaseBorgTorso
+  name: junktron torso
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_torso
+  - type: Icon
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_parts.rsi
+    state: junkbot_torso
+  - type: Tag
+    tags:
+    - Trash
+    - BorgGenericTorso
+
+# Оптический сенсор. Замена вспышке. Не слепит :(
+- type: entity
+  id: N14OpticalSensor
+  parent: BaseItem
+  name: optical sensor
+  description: A salvaged optical sensor. Used in place of a flash when assembling junktron robots.
+  components:
+  - type: Sprite
+    sprite: Objects/Weapons/Melee/flash.rsi
+    state: flash
+  - type: Item
+    size: Small
+  - type: Tag
+    tags:
+    - N14OpticalSensor
+
+# Кустарный эндоскелет: аналог CyborgEndoskeleton, но со своим графом N14JunktronCyborg.
+- type: entity
+  id: N14JunktronEndoskeleton
+  parent: CyborgEndoskeleton
+  name: makeshift endoskeleton
+  description: A crude frame that junktron robots are built on.
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_endoskeleton.rsi
+    state: robo_suit
+  - type: ItemMapper
+    sprite: _Forge/Objects/Specific/Robotics/junkbot_endoskeleton.rsi
+    mapLayers:
+      junkbot_l_arm+o:
+        whitelist:
+          tags:
+          - BorgGenericLArm
+      junkbot_r_arm+o:
+        whitelist:
+          tags:
+          - BorgGenericRArm
+      junkbot_l_leg+o:
+        whitelist:
+          tags:
+          - BorgGenericLLeg
+      junkbot_r_leg+o:
+        whitelist:
+          tags:
+          - BorgGenericRLeg
+      junkbot_head+o:
+        whitelist:
+          tags:
+          - BorgGenericHead
+      junkbot_torso+o:
+        whitelist:
+          tags:
+          - BorgGenericTorso
+  - type: Construction
+    graph: N14JunktronCyborg
+    node: start
+    defaultTarget: cyborg
+    containers:
+    - part-container
+    - cell_slot
+
+# Упрощенный в плане стейтов спрайтов ММИ.
+- type: entity
+  id: N14JunktronMMI
+  parent: MMI
+  name: junk-machine interface
+  description: A crude man-machine interface cobbled together from scrap. Lets a biological brain pilot a junkbot.
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Specific/Robotics/junktron_mmi.rsi
+    layers:
+    - state: inactive
+      map: ["enum.MMIVisualLayers.Base"]
+    - state: active
+      map: ["enum.MMIVisualLayers.Brain"]
+      visible: false
+  - type: MMI
+    noBrainState: inactive
+    hasMindState: active
+    noMindState: active
+  - type: LanguageKnowledge
+    speaks:
+    - English
+    - Chinese
+    - Latin
+    - RobotTalk
+    understands:
+    - English
+    - Chinese
+    - Latin
+    - RobotTalk
+
+# Кустарный позитронный мозг. Нужен, чтоб вставить свой красивый спрайт кустарного позитронного мозга.
+- type: entity
+  id: N14JunktronPositronicBrain
+  parent: PositronicBrain
+  name: junktron positronic brain
+  description: A salvaged artificial brain assembled from scrap electronics. Surprisingly, it thinks.
+  components:
+  - type: LanguageKnowledge
+    speaks:
+    - English
+    - Chinese
+    - Latin
+    - RobotTalk
+    understands:
+    - English
+    - Chinese
+    - Latin
+    - RobotTalk

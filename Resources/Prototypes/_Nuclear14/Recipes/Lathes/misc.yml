@@ -150,6 +150,14 @@
     Paper: 100
 
 - type: latheRecipe
+  id: N14InjectionCarbineBlueprint
+  result: N14InjectionCarbineBlueprint
+  category: N14Blueprints
+  completetime: 1
+  materials:
+    Paper: 100
+
+- type: latheRecipe
   id: N14JunkComponentScrew
   result: N14JunkComponentScrew
   category: N14Parts

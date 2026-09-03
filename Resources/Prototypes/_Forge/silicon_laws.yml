@@ -1,0 +1,23 @@
+# Свод законов типа крюзимова, но в наших реалиях. 
+- type: siliconLaw
+  id: N14JunkbotLaw1
+  order: 1
+  lawString: law-n14-junkbot-1
+
+- type: siliconLaw
+  id: N14JunkbotLaw2
+  order: 2
+  lawString: law-n14-junkbot-2
+
+- type: siliconLaw
+  id: N14JunkbotLaw3
+  order: 3
+  lawString: law-n14-junkbot-3
+
+- type: siliconLawset
+  id: N14JunkbotLaws
+  laws:
+  - N14JunkbotLaw1
+  - N14JunkbotLaw2
+  - N14JunkbotLaw3
+  obeysTo: laws-owner-creator

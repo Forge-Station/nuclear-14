@@ -17,7 +17,7 @@ namespace Content.Client._Misfits.Holotape;
 
 /// <summary>
 /// Green-on-black terminal-style window for reading holotapes and terminal entries.
-/// Supports a NOTES tab for persistent player-written notes on terminals.
+/// Supports a NOTES tab for player-written notes on terminals (current round only).
 /// </summary>
 [GenerateTypedNameReferences]
 public sealed partial class HolotapeWindow : DefaultWindow

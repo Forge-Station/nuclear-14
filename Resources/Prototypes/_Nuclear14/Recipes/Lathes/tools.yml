@@ -239,3 +239,13 @@
   completetime: 2
   materials:
     Plastic: 100
+# Forge add start
+- type: latheRecipe
+  id: Binoculars
+  result: Binoculars
+  category: N14Tools
+  completetime: 4
+  materials:
+    Steel: 100
+    Glass: 50
+# Forge add start

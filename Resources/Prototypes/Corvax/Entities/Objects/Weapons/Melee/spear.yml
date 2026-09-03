@@ -1,5 +1,5 @@
 - type: entity
-  parent: Spear
+  parent: baseThrowingSpear
   id: N14PilumSpear
   name: pilum
   description: An ancient spear of the Roman Empire, now used by the Legion.
@@ -8,14 +8,14 @@
     sprite: Corvax/Objects/Weapons/Melee/pilum.rsi
     netsync: false
     state: spear
-  - type: DamageOtherOnHit
-    damage:
-      types:
-        Piercing: 35
-  - type: MeleeWeapon
-    damage:
-      types:
-        Piercing: 24
+  # - type: DamageOtherOnHit
+  #   damage:
+  #     types:
+  #       Piercing: 35
+  # - type: MeleeWeapon
+  #   damage:
+  #     types:
+  #       Piercing: 24
 
 - type: entity
   name: Thunder spear
@@ -29,6 +29,9 @@
     state: spear
   - type: TileFrictionModifier
     modifier: 0.00001
+  - type: LandAtCursor
+  - type: ThrowingAngle
+    angle: 225
   - type: ExplodeOnTrigger
   - type: Explosive
     explosionType: Default

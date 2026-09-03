@@ -18,13 +18,13 @@
   products:
     AntidoteMixture: 2
 
-- type: reaction
+- type: reaction #Forge-change
   id: AntidoteMixtureConversion
   reactants:
     AntidoteMixture:
-      amount: 100
+      amount: 50
     Silicon:
-      amount: 20 # 2 grinded glass
+      amount: 10 # 2 grinded glass
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14Antidote
@@ -39,15 +39,13 @@
   products:
     Antidote: 2
 
-- type: reaction
+- type: reaction #Forge-change
   id: AntidoteConversion
   reactants:
     Antidote:
       amount: 15
-    Oil:
-      amount: 5
-    Phosphorus:
-      amount: 5
+    Silicon:
+      amount: 10
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14ChemicalSyringeAntidote
@@ -64,16 +62,16 @@
   products:
     RadAway: 3
 
-- type: reaction
-  id: RadAwayPhialConversion
+- type: reaction #Forge-change
+  id: RadAwayInhalerConversion
   reactants:
     RadAway:
-      amount: 30
+      amount: 10
     Silicon:
       amount: 10
   effects:
     - !type:CreateEntityReactionEffect
-      entity: N14RadAwayPhial
+      entity: N14RadAwayInhaler
 
 - type: reaction
   id: RadAwayDiluted
@@ -98,33 +96,31 @@
     - !type:CreateEntityReactionEffect
       entity: N14RadAwayBloodbag
 
-- type: reaction
-  id: Stimpak
+- type: reaction #Forge-change
+  id: DirtyStimpak1
   reactants:
     ExtractBroc:
-      amount: 2
+      amount: 1
     ExtractXander:
-      amount: 2
+      amount: 1
     Blood:
-      amount: 2
+      amount: 1
   products:
-    HealingMixture: 1
+    DirtyStimpak: 1
 
 - type: reaction
-  id: StimpakConversion
+  id: StimpakConversion #Forge-change
   reactants:
     HealingMixture:
-      amount: 25
-    Oil: # Plastic contains 5u of Oil and 5u of Phosphorus
-      amount: 5
-    Phosphorus:
-      amount: 5
+      amount: 10
+    Silicon:
+      amount: 10
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14Stimpak
 
 - type: reaction
-  id: DirtyStimpak
+  id: DirtyStimpak2
   reactants:
     ExtractBroc:
       amount: 1
@@ -136,29 +132,26 @@
     DirtyStimpak: 1
 
 - type: reaction
-  id: DirtyStimpakConversion
+  id: DirtyStimpakConversion #Forge-change
   reactants:
     DirtyStimpak:
-      amount: 25
-    Oil:
-      amount: 5
-    Phosphorus:
-      amount: 5
+      amount: 10
+    Silicon:
+      amount: 10
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14StimpakDirty
 
-- type: reaction
+- type: reaction #Forge-change
   id: Bitterdrink
+  minTemp: 373.15 # 100 degrees Celcius.
   reactants:
-    ExtractBroc:
-      amount: 1
-    ExtractXander:
+    HealingPowder:
       amount: 1
     Water:
       amount: 1
   products:
-    Bitterdrink: 1
+    Bitterdrink: 2
 
 - type: reaction
   id: N14Ointment1

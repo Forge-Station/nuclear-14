@@ -1,0 +1,410 @@
+#MARK: Реакции тромбоза
+- type: reaction
+  id: ThrombosisBaseRobust
+  impact: Medium
+  reactants:
+    HealingMixture:
+      amount: 1
+    RobustHealingMixture:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisBaseUltra
+  impact: Medium
+  reactants:
+    HealingMixture:
+      amount: 1
+    UltraRobustHealingMixture:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisBaseDirty
+  impact: Medium
+  reactants:
+    HealingMixture:
+      amount: 1
+    DirtyStimpak:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisRobustUltra
+  impact: Medium
+  reactants:
+    RobustHealingMixture:
+      amount: 1
+    UltraRobustHealingMixture:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisRobustDirty
+  impact: Medium
+  reactants:
+    RobustHealingMixture:
+      amount: 1
+    DirtyStimpak:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisUltraDirty
+  impact: Medium
+  reactants:
+    UltraRobustHealingMixture:
+      amount: 1
+    DirtyStimpak:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisBaseSuperDirty
+  impact: Medium
+  reactants:
+    HealingMixture:
+      amount: 1
+    DirtySuperStimpack:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisRobustSuperDirty
+  impact: Medium
+  reactants:
+    RobustHealingMixture:
+      amount: 1
+    DirtySuperStimpack:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisUltraSuperDirty
+  impact: Medium
+  reactants:
+    UltraRobustHealingMixture:
+      amount: 1
+    DirtySuperStimpack:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisDirtySuper
+  impact: Medium
+  reactants:
+    DirtyStimpak:
+      amount: 1
+    DirtySuperStimpack:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisCatalystDirty
+  impact: Medium
+  reactants:
+    DirtyStimpak:
+      amount: 1
+    StimpackThrombosis:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisCatalystBase
+  impact: Medium
+  reactants:
+    HealingMixture:
+      amount: 1
+    StimpackThrombosis:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisCatalystRobust
+  impact: Medium
+  reactants:
+    RobustHealingMixture:
+      amount: 1
+    StimpackThrombosis:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisCatalystUltra
+  impact: Medium
+  reactants:
+    UltraRobustHealingMixture:
+      amount: 1
+    StimpackThrombosis:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+- type: reaction
+  id: ThrombosisCatalystDirtySuper
+  impact: Medium
+  reactants:
+    DirtySuperStimpack:
+      amount: 1
+    StimpackThrombosis:
+      amount: 1
+  products:
+    StimpackThrombosis: 2
+
+#MARK: Новые реакции
+#Реакции медицины.
+- type: reaction
+  id: BloodpackReaction1
+  reactants:
+    Saline:
+      amount: 5
+    Blood:
+      amount: 10
+    Antiseptic:
+      amount: 5
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: Bloodpack1
+
+- type: reaction
+  id: BloodpackReaction2
+  reactants:
+    Saline:
+      amount: 5
+    WastelandBlood:
+      amount: 10
+    Antiseptic:
+      amount: 5
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: Bloodpack1
+
+- type: reaction
+  id: CleanGauzeReaction1
+  reactants:
+    Fiber:
+      amount: 6
+    N14RoentgenRum:
+      amount: 5
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14CleanGauze1
+
+- type: reaction
+  id: CleanGauzeReaction2
+  reactants:
+    Fiber:
+      amount: 6
+    Whiskey:
+      amount: 5
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14CleanGauze1
+
+- type: reaction
+  id: CleanGauzeReaction3
+  reactants:
+    Fiber:
+      amount: 6
+    Vodka:
+      amount: 5
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14CleanGauze1
+
+- type: reaction
+  id: CleanGauzeReaction4
+  reactants:
+    Fiber:
+      amount: 6
+    Vodka:
+      amount: 5
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14CleanGauze1
+
+- type: reaction
+  id: CleanGauzekReaction5
+  reactants:
+    Fiber:
+      amount: 6
+    Ethanol:
+      amount: 5
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14CleanGauze1
+
+- type: reaction
+  id: CleanGauzekReaction6
+  reactants:
+    Fiber:
+      amount: 6
+    Antiseptic:
+      amount: 2
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14CleanGauze1
+
+#Стимпаки в шприце.
+- type: reaction
+  id: SuperStimpakConversion
+  reactants:
+    RobustHealingMixture:
+      amount: 10
+    Silicon:
+      amount: 10
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14SuperStimpak
+
+- type: reaction
+  id: UltraStimpakConversion
+  reactants:
+    UltraRobustHealingMixture:
+      amount: 10
+    Silicon:
+      amount: 10
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14UltraStimpak
+
+- type: reaction
+  id: DirtySuperStimpakConversion
+  reactants:
+    DirtySuperStimpack:
+      amount: 10
+    Silicon:
+      amount: 10
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14DirtySuperStimpak
+
+- type: reaction
+  id: DamageModifyingMixtureConversion
+  reactants:
+    DamageModifyingMixture:
+      amount: 20
+    Silicon:
+      amount: 10
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14Psycho
+
+#Порошки в мешочке.
+- type: reaction
+  id: HealingPowderConversion
+  reactants:
+    HealingPowder:
+      amount: 10
+    Fiber:
+      amount: 3
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14HealingPowder
+
+- type: reaction
+  id: HealingPoulticeConversion
+  reactants:
+    HealingPoultice:
+      amount: 20
+    Fiber:
+      amount: 3
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14HealingPoultice
+      
+- type: reaction
+  id: BerserkerMixtureConversion
+  reactants:
+    BerserkerMixture:
+      amount: 20
+    Fiber:
+      amount: 3
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: N14BerserkerPowder
+
+#MARK: Варка других реагентов.
+
+- type: reaction
+  id: SmellingSaltsReaction
+  reactants:
+    TableSalt:
+      amount: 2
+    Ethanol:
+      amount: 1
+  products:
+    SmellingSalts: 2
+
+- type: reaction
+  id: DirtySuperStimpackReaction1
+  reactants:
+    HealingMixture:
+      amount: 1
+    ExtractMutfruit:
+      amount: 2
+    NukaCola:
+      amount: 2
+  products:
+    DirtySuperStimpack: 1
+
+- type: reaction
+  id: DirtySuperStimpackReaction2
+  reactants:
+    HealingMixture:
+      amount: 1
+    ExtractMutfruit:
+      amount: 2
+    IrradiatedNukaCola:
+      amount: 2
+  products:
+    DirtySuperStimpack: 1
+
+- type: reaction
+  id: FieryPurgativeReaction1
+  reactants:
+    N14RoentgenRum:
+      amount: 1
+    ExtractWhiteHorsenettle:
+      amount: 1
+    ExtractGlowpepper:
+      amount: 1
+  products:
+    FieryPurgative: 2
+
+- type: reaction
+  id: FieryPurgativeReaction2
+  reactants:
+    Whiskey:
+      amount: 1
+    ExtractWhiteHorsenettle:
+      amount: 1
+    ExtractGlowpepper:
+      amount: 1
+  products:
+    FieryPurgative: 2
+
+- type: reaction
+  id: FieryPurgativeReaction3
+  reactants:
+    Vodka:
+      amount: 1
+    ExtractWhiteHorsenettle:
+      amount: 1
+    ExtractGlowpepper:
+      amount: 1
+  products:
+    FieryPurgative: 2

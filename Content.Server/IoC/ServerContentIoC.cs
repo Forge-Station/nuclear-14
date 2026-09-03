@@ -83,7 +83,7 @@ namespace Content.Server.IoC
             IoCManager.Register<PlayerRateLimitManager>();
             IoCManager.Register<SharedPlayerRateLimitManager, PlayerRateLimitManager>();
             IoCManager.Register<MappingManager>();
-            IoCManager.Register<TerminalNotesDataStore>(); // #Misfits Add - Persistent terminal notes storage
+            IoCManager.Register<TerminalNotesDataStore>(); // #Misfits Add - In-memory terminal notes storage (round-scoped)
         }
     }
 }

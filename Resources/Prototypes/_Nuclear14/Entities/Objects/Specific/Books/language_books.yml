@@ -1,0 +1,65 @@
+- type: entity
+  parent: BaseItem
+  id: N14BookLanguageBase
+  abstract: true
+  name: language textbook
+  components:
+  - type: Sprite
+    sprite: Objects/Misc/books.rsi
+  - type: Item
+    size: Normal
+    sprite: Objects/Misc/books.rsi
+  - type: Tag
+    tags:
+    - Book
+  - type: N14LanguageBook
+
+- type: entity
+  parent: N14BookLanguageBase
+  id: N14BookChinese
+  name: chinese textbook
+  description: A guide for studying the Chinese language.
+  components:
+  - type: N14LanguageBook
+    language: Chinese
+  - type: Sprite
+    sprite: Corvax/Objects/Misc/books.rsi
+    state: china
+
+- type: entity
+  parent: N14BookLanguageBase
+  id: N14BookLatin
+  name: latin textbook
+  description: A guide for studying the Latin language.
+  components:
+  - type: N14LanguageBook
+    language: Latin
+  - type: Sprite
+    sprite: Corvax/Objects/Misc/books.rsi
+    state: latin
+
+- type: entity
+  parent: N14BookLanguageBase
+  id: N14BookTribal
+  name: tribal textbook
+  description: A guide for studying the tribal language.
+  components:
+  - type: N14LanguageBook
+    language: Tribal
+  - type: Sprite
+    sprite: Corvax/Objects/Misc/books.rsi
+    state: tribe
+
+- type: entity
+  parent: N14BookLanguageBase
+  id: N14BookRobot
+  name: binary textbook
+  description: A guide for studying binary. Five stages teach understanding, not speech.
+  components:
+  - type: N14LanguageBook
+    language: N14Robot
+    stagesToMaster: 5
+    teachesSpeaking: false
+  - type: Sprite
+    sprite: Corvax/Objects/Misc/books.rsi
+    state: binar

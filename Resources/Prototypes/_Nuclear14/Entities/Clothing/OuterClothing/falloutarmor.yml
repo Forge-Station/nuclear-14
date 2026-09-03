@@ -1907,12 +1907,12 @@
   - type: Armor
     modifiers:
       coefficients:
-        Blunt: 0.825
-        Slash: 0.725
-        Piercing: 0.825
-        Heat: 0.875
+        Blunt: 0.8
+        Slash: 0.8
+        Piercing: 0.75
+        Heat: 0.8
   - type: ExplosionResistance
-    damageCoefficient: 0.85
+    damageCoefficient: 0.8
   - type: StaticPrice
     price: 50
 
@@ -1929,10 +1929,10 @@
   - type: Armor
     modifiers:
       coefficients:
-        Blunt: 0.775
-        Slash: 0.675
-        Piercing: 0.775
-        Heat: 0.825
+        Blunt: 0.7
+        Slash: 0.7
+        Piercing: 0.65
+        Heat: 0.7
   - type: ClothingSpeedModifier
-    walkModifier: 0.975
-    sprintModifier: 0.975
+    walkModifier: 0.9
+    sprintModifier: 0.9

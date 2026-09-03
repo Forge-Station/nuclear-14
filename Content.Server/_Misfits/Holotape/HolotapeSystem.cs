@@ -159,7 +159,7 @@ public sealed class HolotapeSystem : EntitySystem
     /// <summary>
     /// When a terminal with its own HolotapeDataComponent is clicked and
     /// the ActivatableUI opens, send the terminal's own content to the viewer.
-    /// If the terminal has a TerminalNotebookComponent, include persisted notes.
+    /// If the terminal has a TerminalNotebookComponent, include this round's notes.
     /// </summary>
     private void OnTerminalUIOpen(EntityUid uid, HolotapeDataComponent comp, AfterActivatableUIOpenEvent args)
     {

@@ -195,3 +195,60 @@
         Base: tribal
       Dead:
         Base: tribal-dead
+
+- type: entity
+  parent: N14MobBrahmin
+  id: N14PackBrahminCrate
+  name: pack brahmin
+  description: A brahmin fitted with a crate strapped to its back. It can carry your supplies — and walk with you.
+  components:
+  - type: N14PackBrahminCrate
+  - type: HTN
+    rootTask:
+      task: N14PackCrateCompound
+    blackboard:
+      FollowRange: !type:Single
+        1.5
+      FollowCloseRange: !type:Single
+        1.0
+  - type: EntityStorage
+    capacity: 30
+  - type: EntityStorageVisuals
+    stateDoorOpen: open
+    stateDoorClosed: closed
+  - type: ContainerContainer
+    containers:
+      entity_storage: !type:Container
+        ents: []
+  - type: Appearance
+  - type: Sprite
+    drawdepth: BelowFloor
+    scale: 1.25, 1.25
+    layers:
+    - map: ["enum.DamageStateVisualLayers.Base"]
+      state: brahmin-2
+      sprite: _Nuclear14/Mobs/Animals/brahmin.rsi
+    - map: ["enum.StorageVisualLayers.Base"]
+      state: base
+      sprite: Corvax/Structures/Storage/footlockerforbrahmin.rsi
+    - map: ["enum.StorageVisualLayers.Door"]
+      state: closed
+      sprite: Corvax/Structures/Storage/footlockerforbrahmin.rsi
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 3.0
+    baseSprintSpeed: 5.0
+
+# Corvax-Change-Start: Desert Radscorpion
+- type: entity
+  parent: N14MobRadscorpion
+  id: N14MobDesertRadscorpion
+  name: desert radscorpion
+  description: It's a giant desert radscorpion! Stingy sting.
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: radscorpion
+      sprite: Corvax/Mobs/Animals/desertradscorpion.rsi
+# Corvax-Change-End

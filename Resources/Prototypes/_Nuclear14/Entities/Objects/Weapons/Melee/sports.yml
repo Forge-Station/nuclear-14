@@ -4,39 +4,46 @@
   id: N14BaseBallBat
   description: A robust baseball bat.
   components:
+  - type: Tag
+    tags:
+    - BaseballBat
+  - type: Item
+    size: Large
   - type: Sprite
     sprite: Objects/Weapons/Melee/baseball_bat.rsi
     state: icon
-  - type: MeleeWeapon
-    wideAnimationRotation: -135
-    damage:
-      types:
-        Blunt: 15
-    soundHit:
-      collection: MetalThud
-  - type: Wieldable
-  - type: IncreaseDamageOnWield
-    damage:
-      types:
-        Blunt: 10
-  - type: Item
-    size: Large
-  - type: Tool
-    qualities:
-    - Rolling
-    speedModifier: 0.75 # a bit unwieldly but does the job
   - type: Clothing
     quickEquip: false
     slots:
     - back
+  - type: Wieldable
+  - type: MeleeWeapon
+    damage:
+      types:
+        Blunt: 30
+    wideAnimationRotation: -135
+    attackRate: 1.2
+    heavyRateModifier: 1.4
+    heavyRangeModifier: 1.4
+    heavyDamageBaseModifier: 1.2
+    heavyStaminaCost: 10
+    range: 1.4
+    angle: 60
+    soundHit:
+      collection: MetalThud
+  - type: IncreaseDamageOnWield
+    damage:
+      types:
+        Blunt: 15
+  - type: Tool
+    qualities:
+    - Rolling
+    speedModifier: 0.75 # a bit unwieldly but does the job
   - type: Construction
     graph: WoodenBat
     node: bat
   - type: UseDelay
     delay: 1
-  - type: Tag
-    tags:
-    - BaseballBat
   - type: StaticPrice
     price: 0
 
@@ -72,7 +79,7 @@
     attackRate: 0.7
     damage:
       types:
-        Blunt: 5
+        Blunt: 15
     angle: 0
     animation: WeaponArcThrust
   - type: Wieldable

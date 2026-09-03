@@ -12,34 +12,16 @@
           Quantity: 15
 
 - type: entity
-  parent: N14ChemicalSyringe
+  parent: N14Stimpak
   id: N14StimpakEmpty
   suffix: пустой
-  name: Стимпак
+  name: стимпак
   description: Шприц, наполненный чудесной смесью медицинских реагентов. Спасет жизнь даже в самых критических ситуациях. В Пустоши стимпаки - это настоящая валюта.
   components:
-  - type: StaticPrice
-    price: 15
-  - type: Item
-    sprite: _Nuclear14/Objects/Specific/Medical/ms13_stimpak.rsi
-    heldPrefix: stimpak
-  - type: Sprite
-    scale: 0.75, 0.75
-    sprite: _Nuclear14/Objects/Specific/Medical/ms13_stimpak.rsi
-    layers:
-    - state: stimpak
-      map: ["enum.SolutionContainerLayers.Fill"]
-  - type: SolutionContainerVisuals
-    maxFillLevels: 1
-    changeColor: false
-    emptySpriteName: stimpak-empty
-  - type: Hypospray
-    solutionName: pen
-    transferAmount: 25
   - type: SolutionContainerManager
     solutions:
       pen:
-        maxVol: 25
+        maxVol: 10
   - type: Construction
-    graph: N14Stimpak
+    graph: N14StimpakDirty
     node: stimpak

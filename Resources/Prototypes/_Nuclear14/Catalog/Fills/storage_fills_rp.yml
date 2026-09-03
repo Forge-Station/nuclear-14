@@ -499,9 +499,10 @@
         - id: N14BaseBallBat
           prob: 0.1
           orGroup: Weapon
-        - id: FireAxe
-          prob: 0.04
-          orGroup: Weapon
+        #Forge-change
+        # - id: FireAxe
+        #   prob: 0.04
+        #   orGroup: Weapon
         - id: N14WastelandSpear
           prob: 0.09
           orGroup: Weapon
@@ -620,9 +621,10 @@
         - id: N14BaseAxe
           prob: 0.1
           orGroup: Weapon
-        - id: N14SuperSledgeHammer
-          prob: 0.05
-          orGroup: Weapon
+        # Forge-Change
+        # - id: N14SuperSledgeHammer
+        #   prob: 0.05
+        #   orGroup: Weapon
         - id: N14TribalMachete
           prob: 0.1
           orGroup: Weapon
@@ -1721,6 +1723,16 @@
           orGroup: Tools
           amount: 1
           maxAmount: 1
+        - id: N14ClothingHeadSackMetal
+          prob: 0.05
+        - id: N14ClothingSnowGoggles
+          prob: 0.05
+        - id: N14ClothingHeadBaron
+          prob: 0.05
+        - id: ClothingMaskGasCaptainsMask
+          prob: 0.05
+        - id: ClothingMaskGasMaskHose
+          prob: 0.05
 
 - type: entity
   abstract: true
@@ -2141,6 +2153,16 @@
           orGroup: Consumables
           amount: 1
           maxAmount: 1
+        - id: N14BookChinese
+          prob: 0.01
+        - id: N14BookRobot
+          prob: 0.01
+        - id: N14ClothingOuterReinforcedArmorKit
+          prob: 0.05
+        - id: N14ClothingOuterArmoredKit
+          prob: 0.05
+        - id: N14ClothingSnowGoggles
+          prob: 0.05
 
 - type: entity
   abstract: true
@@ -2173,9 +2195,10 @@
         - id: N14BaseBallBat
           prob: 0.04
           orGroup: Weapon
-        - id: FireAxe
-          prob: 0.04
-          orGroup: Weapon
+        #Forge-change
+        # - id: FireAxe
+        #   prob: 0.04
+        #   orGroup: Weapon
         - id: N14WastelandSpear
           prob: 0.04
           orGroup: Weapon

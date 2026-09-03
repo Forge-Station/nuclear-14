@@ -428,3 +428,8 @@
   id: N14MinigunGunshot
   files:
   - /Audio/_Nuclear14/Weapons/Guns/Heavy/N14WeaponMinigun/shot1.ogg
+
+- type: soundCollection
+  id: N14GaussGunshot
+  files:
+  - /Audio/_Nuclear14/Weapons/Guns/Battery/N14WeaponGauss/shot1.ogg
