@@ -73,3 +73,12 @@
   components:
   - type: Sprite
     sprite: Corvax/Clothing/Neck/MWBSPaladinShoulderPadMasterBlack.rsi
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckMWBSKnightShoulderPadOrange
+  name: оранжевая повязка
+  description: Яркая повязка для брони с эмблемой Средне-западного братства на плече.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSKnightShoulderPadOrange.rsi

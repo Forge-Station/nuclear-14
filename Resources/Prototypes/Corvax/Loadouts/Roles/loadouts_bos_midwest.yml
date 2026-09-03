@@ -300,3 +300,15 @@
         - BoSMidPaladin
   items:
     - N14ClothingNeckMWBSPaladinShoulderPadMasterBlack
+
+    - type: loadout
+  id: LoadoutClothingNeckMWBSKnightShoulderPadOrange
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidKnight
+  items:
+    - N14ClothingNeckMWBSKnightShoulderPadOrange
