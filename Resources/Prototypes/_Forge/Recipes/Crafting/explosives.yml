@@ -1,0 +1,13 @@
+- type: construction
+  name: взрывная стрела
+  id: ArrowExplosive
+  graph: ArrowExplosive
+  startNode: start
+  targetNode: arrowexplosive
+  category: construction-category-explosives
+  objectType: Item
+  description: Стрела с привязанной на конце гранатой, взрывается при ударном контакте.
+  icon:
+    sprite: Objects/Weapons/Guns/Projectiles/arrows.rsi
+    state: tip
+  hide: false

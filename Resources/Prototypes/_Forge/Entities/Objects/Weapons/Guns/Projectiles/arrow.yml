@@ -1,0 +1,35 @@
+- type: entity
+  parent: BaseArrow
+  id: ArrowExplosive
+  name: взрывная стрела
+  description: Стрела с привязанной на конце гранатой, взрывается при ударном контакте.
+  components:
+  - type: Sprite
+    layers:
+    - state: tail
+      color: red
+    - state: rod
+      color: brown
+    - state: tip
+    - state: solution1
+      map: ["enum.SolutionContainerLayers.Fill"]
+      visible: false
+  - type: Construction
+    graph: ArrowExplosive
+    node: arrowexplosive
+  - type: Projectile
+    deleteOnCollide: false
+    damage:
+      types:
+        Piercing: 15
+  - type: TriggerOnCollide
+    fixtureID: projectile
+  - type: ExplodeOnTrigger
+  - type: Explosive
+    explosionType: Default
+    maxIntensity: 3
+    intensitySlope: 10
+    totalIntensity: 30
+    canCreateVacuum: false
+    maxTileBreak: 0
+    tileBreakScale: 0
