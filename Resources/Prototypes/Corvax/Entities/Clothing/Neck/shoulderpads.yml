@@ -82,3 +82,31 @@
   components:
   - type: Sprite
     sprite: Corvax/Clothing/Neck/MWBSKnightShoulderPadOrange.rsi
+
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckMWBSInquisitorShoulderPadyoung
+  name: наплечник юного палача
+  description: Темная накидка с гладким наплечником. Еще не обсросшая зубами и не испачканная кровью, еще не повидала своих первых жертв.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSInquisitorShoulderPadyoung.rsi
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckMWBSInquisitorShoulderPadslayer
+  name: наплечник палача
+  description: Острые зубы на наплечнике - символ жестокости, которой должен обладать каждый инквизитор.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSInquisitorShoulderPadslayer.rsi
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckMWBSInquisitorShoulderPadmajorslayer
+  name: наплечник старшего палача
+  description: Такой наплечник может носить только тот, кто смог перевоспитать или отправить на тот свет не одну сотню людей. Целых два ряда острейших зубов говорят о множестве жертв.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSInquisitorShoulderPadmajorslayer.rsi

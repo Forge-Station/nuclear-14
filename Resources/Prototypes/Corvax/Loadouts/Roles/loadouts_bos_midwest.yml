@@ -312,3 +312,48 @@
         - BoSMidKnight
   items:
     - N14ClothingNeckMWBSKnightShoulderPadOrange
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSInquisitorShoulderPadyoung
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidInquisitor
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidInquisitor
+      min: 60
+  items:
+    - N14ClothingNeckMWBSInquisitorShoulderPadyoung    
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSInquisitorShoulderPadslayer
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidInquisitor
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidInquisitor
+      min: 3000
+  items:
+    - N14ClothingNeckMWBSInquisitorShoulderPadslayer    
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSInquisitorShoulderPadmajorslayer
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidInquisitor
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidInquisitor
+      min: 6000
+  items:
+    - N14ClothingNeckMWBSInquisitorShoulderPadmajorslayer    
