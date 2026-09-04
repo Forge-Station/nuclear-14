@@ -74,6 +74,13 @@
   - type: Damageable
     damageContainer: Biological
     damageModifierSet: Ghoul
+  - type: PassiveDamage
+    damage:
+      types:
+        Heat: -0.07
+        Radiation: -0.05
+      groups:
+        Brute: -0.07
   - type: RadiationReceiver
   - type: RadiationHealing
   - type: MobThresholds
@@ -171,6 +178,13 @@
   - type: Damageable
     damageContainer: Biological
     damageModifierSet: GhoulGlowing
+  - type: PassiveDamage
+    damage:
+      types:
+        Heat: -0.07
+        Radiation: -0.1
+      groups:
+        Brute: -0.07
   - type: RadiationReceiver
   - type: RadiationHealing
   - type: MobThresholds
