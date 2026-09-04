@@ -1,5 +1,14 @@
 - type: gameMap
   id: Sunnyvale
+  weatherWeights:
+    Hail: 0
+    Sandstorm: 0
+    SandstormHeavy: 0
+    SandstormHeavyExtreme: 0
+    SnowfallLight: 0
+    SnowfallMedium: 0
+    SnowfallHeavy: 0
+    SnowfallHeavyExtreme: 0
   mapName: 'Саннивейл'
   mapPath: /Maps/Corvax/CorvaxSunnyvaleSurface.yml # Forge-Change
   minPlayers: 0

@@ -8,11 +8,11 @@
     params:
       loop: true
       volume: -6
-  duration: 150
+  duration: 180
   radioactive: true
-  rads: 1.25
+  rads: 1
   showMessage: true
-  chance: 2
+  chance: 1
   sender: weather-announcement
   message: weather-radioactive-particles
 
@@ -30,7 +30,7 @@
   radioactive: true
   rads: 0.75
   showMessage: true
-  chance: 2
+  chance: 1
   sender: weather-announcement
   message: weather-radioactive-rain
 
@@ -46,6 +46,7 @@
       volume: -6
   duration: 180
   radioactive: true
+  rads: 1
   showMessage: true
   chance: 1
   sender: weather-announcement

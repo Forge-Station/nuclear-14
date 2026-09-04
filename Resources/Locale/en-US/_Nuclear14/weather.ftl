@@ -1,9 +1,8 @@
-weather-announcement = The weather is changing.
+weather-announcement = Weather Service
 weather-ashfall = Ashfall is approaching.
 weather-ashfall-light = Ashfall is approaching.
 weather-ashfall-heavy = Heavy ashfall is approaching.
 weather-default = The weather is clearing up.
-weather-fallout = Fallout is approaching.
 weather-hail = Hail is approaching.
 weather-rain = Rain is approaching.
 weather-sandstorm = Sandstorm is approaching.
@@ -16,3 +15,5 @@ weather-storm = Storm is approaching.
 
 weather-sandstorm-extreme = Extreme sandstorm is approaching.
 weather-snowfall-extreme = Extreme snowfall is approaching.
+weather-radioactive-particles = Radioactive fallout is approaching. Seek shelter immediately.
+weather-radioactive-rain = Radioactive rain is approaching. Seek shelter immediately.

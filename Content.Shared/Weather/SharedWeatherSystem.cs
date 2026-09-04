@@ -13,12 +13,11 @@ namespace Content.Shared.Weather;
 public abstract class SharedWeatherSystem : EntitySystem
 {
     [Dependency] protected readonly IGameTiming Timing = default!;
-    [Dependency] protected readonly IMapManager MapManager = default!;
+    [Dependency] protected readonly SharedMapSystem MapManager = default!;
     [Dependency] protected readonly IPrototypeManager ProtoMan = default!;
     [Dependency] private readonly ITileDefinitionManager _tileDefManager = default!;
     [Dependency] private readonly MetaDataSystem _metadata = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly SharedMapSystem _mapSystem = default!;
     [Dependency] private readonly SharedRoofSystem _roof = default!;
 
     private EntityQuery<BlockWeatherComponent> _blockQuery;
@@ -54,7 +53,7 @@ public abstract class SharedWeatherSystem : EntitySystem
         if (!tileDef.Weather)
             return false;
 
-        var anchoredEntities = _mapSystem.GetAnchoredEntitiesEnumerator(uid, grid, tileRef.GridIndices);
+        var anchoredEntities = MapManager.GetAnchoredEntitiesEnumerator(uid, grid, tileRef.GridIndices);
 
         while (anchoredEntities.MoveNext(out var ent))
         {
@@ -156,7 +155,7 @@ public abstract class SharedWeatherSystem : EntitySystem
     /// </summary>
     public void SetWeather(MapId mapId, WeatherPrototype? proto, TimeSpan? endTime)
     {
-        if (!_mapSystem.TryGetMap(mapId, out var mapUid))
+        if (!MapManager.TryGetMap(mapId, out var mapUid))
             return;
 
         var weatherComp = EnsureComp<WeatherComponent>(mapUid.Value);
