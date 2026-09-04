@@ -110,3 +110,55 @@
   components:
   - type: Sprite
     sprite: Corvax/Clothing/Neck/MWBSInquisitorShoulderPadmajorslayer.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, ClothingOuterFoldableBaseOpened]
+  id: N14ClothingNeckMWBSCommanderShoulderPadorange
+  name: оранжевая командирская накидка
+  description: Золоченая накидка с цепью. Знак того, что вы можете вести своих братьев по правильному пути к великой цели.
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-verb
+    foldVerbText: unfold-verb
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSCommanderShoulderPadorange.rsi 
+
+- type: entity
+  parent: [ClothingNeckBase, ClothingOuterFoldableBaseOpened]
+  id: N14ClothingNeckMWBSCommanderShoulderPadwhite
+  name: белая командирская накидка
+  description: Золоченая накидка с цепью. Знак того, что вы можете вести своих братьев по правильному пути к великой цели.
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-verb
+    foldVerbText: unfold-verb
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSCommanderShoulderPadwhite.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, ClothingOuterFoldableBaseOpened]
+  id: N14ClothingNeckMWBSCommanderShoulderPadblue
+  name: голубая командирская накидка
+  description: Золоченая накидка с цепью. Знак того, что вы можете вести своих братьев по правильному пути к великой цели.
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-verb
+    foldVerbText: unfold-verb
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSCommanderShoulderPadblue.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, ClothingOuterFoldableBaseOpened]
+  id: N14ClothingNeckMWBSCommanderShoulderPadblack
+  name: чёрная командирская накидка
+  description: Золоченая накидка с цепью. Знак того, что вы можете вести своих братьев по правильному пути к великой цели.
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-verb
+    foldVerbText: unfold-verb
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSCommanderShoulderPadblack.rsi

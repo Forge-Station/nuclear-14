@@ -356,4 +356,64 @@
       tracker: BoSMidInquisitor
       min: 6000
   items:
-    - N14ClothingNeckMWBSInquisitorShoulderPadmajorslayer    
+    - N14ClothingNeckMWBSInquisitorShoulderPadmajorslayer   
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSCommanderShoulderPadorange
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladinCommander
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladinCommander
+      min: 3000
+  items:
+    - N14ClothingNeckMWBSCommanderShoulderPadorange   
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSCommanderShoulderPadwhite
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladinCommander
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladinCommander
+      min: 3000
+  items:
+    - N14ClothingNeckMWBSCommanderShoulderPadwhite   
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSCommanderShoulderPadblue
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladinCommander
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladinCommander
+      min: 3000
+  items:
+    - N14ClothingNeckMWBSCommanderShoulderPadblue   
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSCommanderShoulderPadblack
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladinCommander
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladinCommander
+      min: 3000
+  items:
+    - N14ClothingNeckMWBSCommanderShoulderPadblack
