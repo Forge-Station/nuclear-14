@@ -74,6 +74,8 @@
   - type: Damageable
     damageContainer: Biological
     damageModifierSet: Ghoul
+  - type: Bloodstream
+    bloodReagent: WastelandBlood
   - type: PassiveDamage
     damage:
       types:
@@ -178,6 +180,8 @@
   - type: Damageable
     damageContainer: Biological
     damageModifierSet: GhoulGlowing
+  - type: Bloodstream
+    bloodReagent: WastelandBlood
   - type: PassiveDamage
     damage:
       types:
