@@ -54,6 +54,9 @@
   id: N14KitchenKnife
   description: A general purpose chef's knife. Good for preparing food before and after it's alive.
   components:
+  - type: Tag
+    tags:
+    - Knife
   - type: Item
     sprite: _Nuclear14/Objects/Weapons/Melee/kitchen_knife.rsi
   - type: Sprite
@@ -75,6 +78,9 @@
   id: N14ButchersCleaver
   description: "A huge blade used for hackin', whackin', and choppin' up meat."
   components:
+  - type: Tag
+    tags:
+    - Knife
   - type: Item
     sprite: _Nuclear14/Objects/Weapons/Melee/cleaver.rsi
   - type: Sprite
@@ -170,6 +176,10 @@
   id: N14BrassKnife
   description: Homemade brass knife with a cross-guard.
   components:
+  - type: Tag
+    tags:
+    - Knife
+    - CombatKnife
   - type: Item
     sprite: _Nuclear14/Objects/Weapons/Melee/brass_knife.rsi
   - type: Sprite
