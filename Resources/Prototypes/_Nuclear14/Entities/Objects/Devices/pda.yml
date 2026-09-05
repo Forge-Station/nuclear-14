@@ -57,6 +57,14 @@
       maxDistance: 10
       rolloffFactor: 4
   - type: RadiationReceiver
+  - type: PipBoyRadioWearer
+  - type: CartridgeLoader
+    uiKey: enum.PdaUiKey.Key
+    preinstalled:
+      - CrewManifestCartridge
+      - NotekeeperCartridge
+      - NewsReaderCartridge
+      - N14PipBoyRadioCartridge
 
 - type: entity
   parent: N14BasePipboy

@@ -1,0 +1,69 @@
+<n14:PipBoyRadioUiFragment
+    xmlns:n14="clr-namespace:Content.Client._Nuclear14.CartridgeLoader.Cartridges"
+    xmlns="https://spacestation14.io"
+    Margin="4">
+
+    <PanelContainer StyleClasses="BackgroundDark"/>
+
+    <BoxContainer
+        Orientation="Vertical"
+        HorizontalExpand="True"
+        VerticalExpand="True"
+        SeparationOverride="4">
+
+        <Label Text="{Loc pipboy-radio-title}"/>
+
+        <Label
+            Name="CurrentTrack"
+            Text="{Loc pipboy-radio-no-track}"/>
+
+        <Label
+            Name="Status"
+            Text="{Loc pipboy-radio-status-stopped}"/>
+
+        <BoxContainer
+            Orientation="Horizontal"
+            HorizontalExpand="True"
+            SeparationOverride="4">
+
+            <Button
+                Name="PreviousButton"
+                Text="◀"
+                HorizontalExpand="True"/>
+
+            <Button
+                Name="PlayButton"
+                Text="{Loc pipboy-radio-play}"
+                HorizontalExpand="True"/>
+
+            <Button
+                Name="PauseButton"
+                Text="{Loc pipboy-radio-pause}"
+                HorizontalExpand="True"/>
+
+            <Button
+                Name="NextButton"
+                Text="▶"
+                HorizontalExpand="True"/>
+
+        </BoxContainer>
+
+        <Button
+            Name="StopButton"
+            Text="{Loc pipboy-radio-stop}"
+            HorizontalExpand="True"/>
+
+        <ScrollContainer
+            HorizontalExpand="True"
+            VerticalExpand="True">
+
+            <BoxContainer
+                Name="SongContainer"
+                Orientation="Vertical"
+                HorizontalExpand="True"/>
+
+        </ScrollContainer>
+
+    </BoxContainer>
+
+</n14:PipBoyRadioUiFragment>

@@ -1,0 +1,31 @@
+- files: ["LonesomeValley.ogg"]
+  license: "Custom"
+  copyright: "Traditional song performed by David Miller (The Blind Soldier). The composition and this historical recording are identified as public domain on the source page. Re-encoded to OGG."
+  source: "https://commons.wikimedia.org/wiki/File:LonesomeValley.ogg"
+
+- files: ["StLouisBlues.ogg"]
+  license: "Custom"
+  copyright: "St. Louis Blues by W. C. Handy, performed by the Original Dixieland Jazz Band with Al Bernard (1921). The composition and recording are public domain. Re-encoded to OGG."
+  source: "https://commons.wikimedia.org/wiki/File:OriginalDixielandJazzBandwithAlBernard_StLouisBlues.ogg"
+
+- files: ["WhiteHouseBlues.ogg"]
+  license: "Custom"
+  copyright: "Traditional song performed by Charlie Poole and the North Carolina Ramblers (recorded in 1926). The composition and this historical recording are identified as public domain on the source page. Re-encoded to OGG."
+  source: "https://commons.wikimedia.org/wiki/File:WhiteHouseBlues.ogg"
+
+- files: ["shenandoah.ogg"]
+  license: "Custom"
+  copyright: "Traditional song performed by the Singing Sergeants of the United States Air Force Band. The composition, arrangement, performance, and recording are identified as public domain on the source page. Re-encoded to OGG."
+  source: "https://commons.wikimedia.org/wiki/File:Shenandoah.ogg"
+
+- files:
+  - "GrandmaPlaysTheNumbers.ogg"
+  - "IntoEachLifeSomeRainMustFall.ogg"
+  - "JustAFairWeatherFriend.ogg"
+  - "MisterFiveByFive.ogg"
+  - "OlManMose.ogg"
+  - "PraiseTheLordAndPassTheAmmunition.ogg"
+  - "StraightenUpAndFlyRight.ogg"
+  license: "Custom"
+  copyright: "Fallout OST tracks © Bethesda Softworks / ZeniMax Media Inc. All rights reserved. Used without official license, for non-commercial fan purposes only. Will be removed upon request from the rights holder."
+  source: "https://fallout.bethesda.net/"
