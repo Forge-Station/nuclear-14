@@ -1,4 +1,5 @@
 using Content.Server.Interaction;
+using Content.Server.Weather;
 
 namespace Content.Server.NPC.HTN.Preconditions;
 
@@ -6,6 +7,7 @@ public sealed partial class TargetInLOSPrecondition : HTNPrecondition
 {
     [Dependency] private readonly IEntityManager _entManager = default!;
     private InteractionSystem _interaction = default!;
+    private WeatherSystem _weather = default!;
 
     [DataField("targetKey")]
     public string TargetKey = "Target";
@@ -17,6 +19,7 @@ public sealed partial class TargetInLOSPrecondition : HTNPrecondition
     {
         base.Initialize(sysManager);
         _interaction = sysManager.GetEntitySystem<InteractionSystem>();
+        _weather = sysManager.GetEntitySystem<WeatherSystem>();
     }
 
     public override bool IsMet(NPCBlackboard blackboard)
@@ -28,6 +31,7 @@ public sealed partial class TargetInLOSPrecondition : HTNPrecondition
 
         var range = blackboard.GetValueOrDefault<float>(RangeKey, _entManager);
 
-        return _interaction.InRangeUnobstructed(owner, target, range);
+        return _weather.CanSeeThroughWeather(owner, target) &&
+            _interaction.InRangeUnobstructed(owner, target, range);
     }
 }

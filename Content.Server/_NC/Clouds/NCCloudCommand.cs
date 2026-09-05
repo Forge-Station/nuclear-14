@@ -14,7 +14,6 @@ namespace Content.Server._NC.Clouds;
 public sealed class NCCloudCommand : IConsoleCommand
 {
     [Dependency] private readonly IEntityManager _entManager = default!;
-    [Dependency] private readonly IMapManager _mapManager = default!;
 
     public string Command => "nccloud";
 
@@ -60,7 +59,7 @@ public sealed class NCCloudCommand : IConsoleCommand
 
         if (!cloudSystem.TryGetCloudLayer(mapId, out var mapUid, out var component))
         {
-            if (!_mapManager.MapExists(mapId))
+            if (!_entManager.System<SharedMapSystem>().MapExists(mapId))
             {
                 shell.WriteError(Loc.GetString("cmd-nccloud-error-map-missing", ("mapId", mapId)));
             }
