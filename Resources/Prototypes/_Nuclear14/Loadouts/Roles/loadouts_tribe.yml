@@ -62,56 +62,58 @@
 - type: loadout
   id: N14ClothingOuterBandito
   category: Outer
-  cost: 1
+  cost: 3
   exclusive: true
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement
-      departments:
-        - Tribe
+    - !type:CharacterJobRequirement
+      jobs: &tribalWastelanderJobs
+        - TribalElder
+        - TribalHealer
+        - TribalFarmer
+        - Tribal
+        - Wastelander
+        - Survivor
   items:
     - N14ClothingOuterBandito
 
 - type: loadout
   id: N14ClothingOuterforager
   category: Outer
-  cost: 1
+  cost: 3
   exclusive: true
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement
-      departments:
-        - Tribe
+    - !type:CharacterJobRequirement
+      jobs: *tribalWastelanderJobs
   items:
     - N14ClothingOuterforager
 
 - type: loadout
   id: N14ClothingOuterheadtaker
   category: Outer
-  cost: 1
+  cost: 3
   exclusive: true
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement
-      departments:
-        - Tribe
+    - !type:CharacterJobRequirement
+      jobs: *tribalWastelanderJobs
   items:
     - N14ClothingOuterheadtaker
 
 - type: loadout
   id: N14ClothingOuterhunter
   category: Outer
-  cost: 1
+  cost: 3
   exclusive: true
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement
-      departments:
-        - Tribe
+    - !type:CharacterJobRequirement
+      jobs: *tribalWastelanderJobs
   items:
     - N14ClothingOuterhunter
 
@@ -132,14 +134,13 @@
 - type: loadout
   id: N14ClothingOutershaman
   category: Outer
-  cost: 1
+  cost: 3
   exclusive: true
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement
-      departments:
-        - Tribe
+    - !type:CharacterJobRequirement
+      jobs: *tribalWastelanderJobs
   items:
     - N14ClothingOutershaman
 
@@ -194,9 +195,8 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutHead
-    - !type:CharacterDepartmentRequirement
-      departments:
-        - Tribe
+    - !type:CharacterJobRequirement
+      jobs: *tribalWastelanderJobs
   items:
     - N14ClothingTribalHeadWraps
 
@@ -208,9 +208,8 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutHead
-    - !type:CharacterDepartmentRequirement
-      departments:
-        - Tribe
+    - !type:CharacterJobRequirement
+      jobs: *tribalWastelanderJobs
   items:
     - N14ClothingTribalHood
 
@@ -222,9 +221,8 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutHead
-    - !type:CharacterDepartmentRequirement
-      departments:
-        - Tribe
+    - !type:CharacterJobRequirement
+      jobs: *tribalWastelanderJobs
   items:
     - N14ClothingTribalShamanHat
 
@@ -236,9 +234,8 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutHead
-    - !type:CharacterDepartmentRequirement
-      departments:
-        - Tribe
+    - !type:CharacterJobRequirement
+      jobs: *tribalWastelanderJobs
   items:
     - N14ClothingTribalShemagh
 
@@ -250,9 +247,8 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutHead
-    - !type:CharacterDepartmentRequirement
-      departments:
-        - Tribe
+    - !type:CharacterJobRequirement
+      jobs: *tribalWastelanderJobs
   items:
     - N14ClothingTribalHunterHood
 
@@ -329,13 +325,12 @@
 - type: loadout
   id: N14ClothingTribalShamanHeadband
   category: Head
-  cost: 1
+  cost: 2
   exclusive: true
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutHead
-    - !type:CharacterDepartmentRequirement
-      departments:
-        - Tribe
+    - !type:CharacterJobRequirement
+      jobs: *tribalWastelanderJobs
   items:
     - N14ClothingTribalShamanHeadband
