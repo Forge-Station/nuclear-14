@@ -62,15 +62,30 @@
       100: Dead
     showOverlays: false
   - type: Stamina
-    critThreshold: 20
+    critThreshold: 180
   - type: Destructible
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 400
+        damage: 225
       behaviors:
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          N14Scrap1:
+            min: 1
+            max: 5
+          N14ScrapElectronic1:
+            min: 6
+            max: 8
+          N14ScrapCopper1:
+            min: 2
+            max: 4
+      - !type:EmptyAllContainersBehaviour
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
   - type: MobMover
   - type: Body
     prototype: Bot
@@ -194,6 +209,8 @@
   # Forge-Change-Start
     - map: ["enum.DamageStateVisualLayers.Base", "movement"]
       state: icon
+  - type: MeleeWeapon
+    resistanceBypass: true
     # - state: icon # change me
     #   map: ["enum.BorgVisualLayers.Light"]
     #   shader: unshaded

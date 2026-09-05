@@ -146,17 +146,17 @@
     state: rifleman
   - type: UndecidedLoadoutBackpack
     possibleSets:
-    - RangerServiceSet
-    - RangerRiflemanSet
-    - RangerMarksmanSet
-    - RangerCQBSet
-    - RangerTrailmanSet
-    - RangerSMGSet # Forge-Change
     - VeteranRangerServiceSet
     - VeteranRangerRiflemanSet
     - VeteranRangerHeavySniperSet
-    - VeteranRangerAssaultSet
-    - VeteranRangerMarksmanSet
+# Forge: RangerServiceSet disabled
+# Forge: RangerRiflemanSet disabled
+# Forge: RangerMarksmanSet disabled
+# Forge: RangerCQBSet disabled
+# Forge: RangerTrailmanSet disabled
+# Forge: RangerSMGSet disabled
+# Forge: VeteranRangerAssault disabled
+# Forge: VeteranRangerMarksmanSet disabled
 
 # Brotherhood Initiates
 - type: entity
@@ -643,25 +643,26 @@
   content:
   - KitHeavySniperRangerVeteran
 
-- type: UndecidedLoadoutBackpackSet
-  id: VeteranRangerAssaultSet
-  name: undecided-loadout-category-veteran-ranger-assault-name
-  description: undecided-loadout-category-veteran-ranger-assault-description
-  sprite:
-    sprite: _Nuclear14/Objects/Misc/kits.rsi
-    state: rifleman
-  content:
-  - KitAssaultRangerVeteran
+# Forge disable
+# - type: UndecidedLoadoutBackpackSet
+#   id: VeteranRangerAssaultSet
+#   name: undecided-loadout-category-veteran-ranger-assault-name
+#   description: undecided-loadout-category-veteran-ranger-assault-description
+#   sprite:
+#     sprite: _Nuclear14/Objects/Misc/kits.rsi
+#     state: rifleman
+#   content:
+#   - KitAssaultRangerVeteran
 
-- type: UndecidedLoadoutBackpackSet
-  id: VeteranRangerMarksmanSet
-  name: undecided-loadout-category-veteran-ranger-marksman-name
-  description: undecided-loadout-category-veteran-ranger-marksman-description
-  sprite:
-    sprite: _Nuclear14/Objects/Misc/kits.rsi
-    state: marksman
-  content:
-  - KitMarksmanRangerVeteran
+# - type: UndecidedLoadoutBackpackSet
+#   id: VeteranRangerMarksmanSet
+#   name: undecided-loadout-category-veteran-ranger-marksman-name
+#   description: undecided-loadout-category-veteran-ranger-marksman-description
+#   sprite:
+#     sprite: _Nuclear14/Objects/Misc/kits.rsi
+#     state: marksman
+#   content:
+#   - KitMarksmanRangerVeteran
 
 # MBoS Initiate
 - type: UndecidedLoadoutBackpackSet
