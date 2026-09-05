@@ -162,3 +162,70 @@
     foldVerbText: unfold-verb
   - type: Sprite
     sprite: Corvax/Clothing/Neck/MWBSCommanderShoulderPadblack.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, ClothingOuterFoldableBaseOpened]
+  id: N14ClothingNeckMWBSScriberMantle
+  name: пустая мантия
+  description: Такая же пустая, как и твоя голова знаниями. Эта мантия говорит о том, что ты пока не выбрал свою специализацию.
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-verb
+    foldVerbText: unfold-verb
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSScriberMantle.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, ClothingOuterFoldableBaseOpened]
+  id: N14ClothingNeckMWBSScriberMantleEngineer
+  name: мантия инженера
+  description: Она говорит о том, что с техникой обращаешься на "ты".
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-verb
+    foldVerbText: unfold-verb
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSScriberMantleEngineer.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, ClothingOuterFoldableBaseOpened]
+  id: N14ClothingNeckMWBSScriberMantleMedic
+  name: мантия медика
+  description: Только для тех, кто умеет правильно держать скальпель в руке.
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-verb
+    foldVerbText: unfold-verb
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSScriberMantleMedic.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, ClothingOuterFoldableBaseOpened]
+  id: N14ClothingNeckMWBSScriberMantlePolevoy
+  name: мантия полевика
+  description: Такие мантии носят писари, которые умеют обращаться с оружием и могут за себя постоять.
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-verb
+    foldVerbText: unfold-verb
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSScriberMantlePolevoy.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, ClothingOuterFoldableBaseOpened]
+  id: N14ClothingNeckMWBSScriberMantleDirector
+  name: мантия руководителя
+  description: Ее может носить только писарь-руководитель, настоящий хранитель знаний.
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-verb
+    foldVerbText: unfold-verb
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSScriberMantleDirector.rsi
+
+

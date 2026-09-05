@@ -417,3 +417,68 @@
       min: 3000
   items:
     - N14ClothingNeckMWBSCommanderShoulderPadblack
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSScriberMantle
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidScribe
+   
+  items:
+    - N14ClothingNeckMWBSScriberMantle
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSScriberMantleEngineer
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidScribe
+   
+  items:
+    - N14ClothingNeckMWBSScriberMantleEngineer
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSScriberMantleMedic
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidScribe
+   
+  items:
+    - N14ClothingNeckMWBSScriberMantleMedic
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSScriberMantlePolevoy
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidScribe
+   
+  items:
+    - N14ClothingNeckMWBSScriberMantlePolevoy
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSScriberMantleDirector
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidScribe
+   
+  items:
+    - N14ClothingNeckMWBSScriberMantleDirector
