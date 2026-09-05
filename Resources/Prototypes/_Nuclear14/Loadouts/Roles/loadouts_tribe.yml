@@ -67,6 +67,7 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    #forge-start-change
     - !type:CharacterJobRequirement
       jobs: &tribalWastelanderJobs
         - TribalElder
@@ -74,7 +75,7 @@
         - TribalFarmer
         - Tribal
         - Wastelander
-        - Survivor
+    #forge-end-change
   items:
     - N14ClothingOuterBandito
 
