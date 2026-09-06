@@ -402,6 +402,9 @@
 - type: Tag
   id: N14Grenade
 
+- type: Tag # forge-add
+  id: TinNade
+
 - type: Tag
   id: N14Missile
 

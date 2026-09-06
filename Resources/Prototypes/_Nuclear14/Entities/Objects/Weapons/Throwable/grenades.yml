@@ -163,6 +163,9 @@
   - type: RandomTimerTrigger
     min: 1
     max: 5
+  - type: Tag
+    tags:
+    - TinNade
   - type: Construction
     graph: N14TinNade
     node: TinNade

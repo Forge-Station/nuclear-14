@@ -1,0 +1,23 @@
+- type: constructionGraph
+  id: ArrowExplosive
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: arrowexplosive
+          steps:
+            - tag: Arrow
+              icon:
+                sprite: Objects/Weapons/Guns/Projectiles/arrows.rsi
+                state: tip
+              name: arrow
+              doAfter: 2
+            - tag: TinNade
+              icon:
+                sprite: _Nuclear14/Objects/Weapons/Grenades/TincanNade.rsi
+                state: icon
+              name: tin grenade
+              doAfter: 3
+
+    - node: arrowexplosive
+      entity: ArrowExplosive
