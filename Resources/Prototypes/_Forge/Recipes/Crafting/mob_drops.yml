@@ -1,0 +1,35 @@
+- type: construction
+  name: construction-name-n14-sinew-restraints
+  id: N14SinewCuffs
+  graph: N14SinewCuffs
+  startNode: start
+  targetNode: sinewCuffs
+  category: construction-category-tools
+  description: construction-desc-n14-sinew-restraints
+  icon: { sprite: _Nuclear14/Objects/Misc/mob_drops.rsi, state: sinewcuff }
+  objectType: Item
+  hide: false
+
+- type: construction
+  name: construction-name-n14-canine-hat
+  id: N14ClothingHeadHatAnimal
+  graph: N14CanineHatAnimalDropsGraph
+  startNode: start
+  targetNode: canineHat
+  category: construction-category-clothing
+  description: construction-desc-n14-canine-hat
+  icon: { sprite: _Nuclear14/Clothing/Head/FalloutHats/animalhat.rsi, state: icon }
+  objectType: Item
+  hide: false
+
+- type: construction
+  name: construction-name-n14-tribal-knife
+  id: N14TribalKnife
+  graph: N14TribalKnifeGraph
+  startNode: start
+  targetNode: tribalKnife
+  category: construction-category-weapons
+  description: construction-desc-n14-tribal-knife
+  icon: { sprite: _Nuclear14/Objects/Weapons/Melee/tribalknife.rsi, state: icon }
+  objectType: Item
+  hide: false

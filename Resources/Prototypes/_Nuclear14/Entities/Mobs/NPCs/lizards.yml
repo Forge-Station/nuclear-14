@@ -54,6 +54,20 @@
       amount: 3
     - id: N14MaterialHideGecko
       amount: 1
+    #forge-start-change
+    - id: N14MaterialBone1
+      amount: 1
+      prob: 0.75
+    - id: N14MaterialSinew1
+      amount: 1
+      prob: 0.75
+    - id: N14FoodEggGecko
+      amount: 1
+      prob: 0.15
+    - id: N14FoodEggGeckoFertilized
+      amount: 1
+      prob: 0.05
+    #forge-end-change
   #- type: Reproductive
     #breedChance: 0.05
     #birthPopup: reproductive-laid-egg-popup
@@ -101,6 +115,14 @@
       amount: 3
     - id: N14MaterialHideGeckoFire
       amount: 1
+    #forge-start-change
+    - id: N14FoodEggGecko
+      amount: 1
+      prob: 0.15
+    - id: N14FoodEggGeckoFertilized
+      amount: 1
+      prob: 0.05
+    #forge-end-change
   # - type: Reproductive
     # breedChance: 0.05
     # birthPopup: reproductive-laid-egg-popup
@@ -188,6 +210,14 @@
       amount: 3
     - id: N14MaterialHideGeckoGolden
       amount: 1
+    #forge-start-change
+    - id: N14FoodEggGecko
+      amount: 1
+      prob: 0.15
+    - id: N14FoodEggGeckoFertilized
+      amount: 1
+      prob: 0.05
+    #forge-end-change
   # - type: Reproductive
     # breedChance: 0.05
     # birthPopup: reproductive-laid-egg-popup
@@ -335,6 +365,18 @@
     spawned:
     - id: N14MaterialNightstalkerPelt
       amount: 1
+    #forge-start-change
+    - id: N14MaterialBone1
+      amount: 2
+    - id: N14MaterialSinew1
+      amount: 1
+    - id: N14FoodEggNightstalker
+      amount: 1
+      prob: 0.15
+    - id: N14FoodEggNightstalkerFertilized
+      amount: 1
+      prob: 0.05
+    #forge-end-change
   - type: DamageStateVisuals
     states:
       Alive:
@@ -522,6 +564,23 @@
       amount: 8
     - id: N14MaterialRawLeather1
       amount: 6
+    #forge-start-change
+    - id: N14MaterialDeathclawHide
+      amount: 1
+    - id: N14MaterialDeathclawClaw
+      amount: 2
+      prob: 0.75
+    - id: N14MaterialBone1
+      amount: 4
+    - id: N14MaterialSinew1
+      amount: 3
+    - id: N14FoodEggDeathclaw
+      amount: 1
+      prob: 0.15
+    - id: N14FoodEggDeathclawFertilized
+      amount: 1
+      prob: 0.05
+    #forge-end-change
 
 #MARK: Albino Deathclaw
 - type: entity

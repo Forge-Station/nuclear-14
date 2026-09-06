@@ -31,12 +31,11 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
     state: hide_brahmin
-  - type: Tag
-    tags:
-      - RawLeather
+  #forge-start-change
   - type: PhysicalComposition
     materialComposition:
-      RawLeather: 400
+      N14Hide: 400
+  #forge-end-change
   - type: Material
   - type: Item
     size: Normal
@@ -63,6 +62,11 @@
     - hide_brahmin_1
     - hide_brahmin_2
   - type: Appearance
+  #forge-start-change
+  - type: Tag
+    tags:
+      - N14WholeHide
+  #forge-end-change
   - type: StaticPrice # Forge-Change
     price: 1 # PH
 
@@ -86,10 +90,12 @@
   - type: Tag
     tags:
       - NightstalkerPelt
-      - RawLeather # Forge-Change
+      #forge-add
+      - N14WholeHide
   - type: PhysicalComposition
     materialComposition:
-      RawLeather: 300
+      #forge-change
+      N14Hide: 300
   - type: StaticPrice # Forge-Change
     price: 30
 
@@ -104,10 +110,12 @@
   - type: Tag
     tags:
       - YaoguaiHide
-      - RawLeather
+      #forge-add
+      - N14WholeHide
   - type: PhysicalComposition
     materialComposition:
-      RawLeather: 600
+      #forge-change
+      N14Hide: 600
   - type: StaticPrice # Forge-Change
     price: 50
 
@@ -120,13 +128,15 @@
   - type: Sprite
     sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
     state: hide_gecko
+  #forge-start-change
   - type: Tag
     tags:
       - GeckoHide # Forge-Change
-      - RawLeather
+  #forge-end-change
   - type: PhysicalComposition
     materialComposition:
-      RawLeather: 600
+      #forge-change
+      N14Hide: 600
   - type: Craftable # Forge-Change
   - type: StaticPrice # Forge-Change
     price: 3

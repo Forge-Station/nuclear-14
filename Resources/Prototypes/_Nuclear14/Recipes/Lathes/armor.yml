@@ -76,6 +76,9 @@
   materials:
     AntChitin: 300
     Cloth: 450
+    #forge-start-change
+    N14Sinew: 200
+    #forge-end-change
 
 - type: latheRecipe
   id: N14ClothingOuterPainspike
@@ -93,9 +96,11 @@
   category: N14Armor
   completetime: 8
   materials:
-    Cloth: 500
-    Leather: 500
-    Wood: 2000
+    #forge-start-change
+    N14Hide: 800
+    N14Bone: 500
+    N14Sinew: 300
+    #forge-end-change
 
 - type: latheRecipe
   id: N14ClothingOuterInsectArmor
@@ -106,6 +111,10 @@
     # AntChitin: 600
     Exoskeleton: 300
     Cloth: 350
+    #forge-start-change
+    N14Bone: 200
+    N14Sinew: 200
+    #forge-end-change
 
 - type: latheRecipe
   id: N14ClothingOuterMetalArmor

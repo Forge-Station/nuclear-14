@@ -1,0 +1,31 @@
+- type: material
+  id: N14Bone
+  stackEntity: N14MaterialBone1
+  name: materials-n14-bone
+  icon: { sprite: _Nuclear14/Objects/Misc/mob_drops.rsi, state: bone }
+  color: "#d8d1b5"
+  price: 0.01
+
+- type: material
+  id: N14Sinew
+  stackEntity: N14MaterialSinew1
+  name: materials-n14-sinew
+  icon: { sprite: _Nuclear14/Objects/Misc/mob_drops.rsi, state: sinew }
+  color: "#9e433d"
+  price: 0.01
+
+- type: material
+  id: N14Hide
+  stackEntity: N14MaterialHide1
+  name: materials-n14-hide
+  icon: { sprite: _Nuclear14/Objects/Misc/mob_drops.rsi, state: hide_generic }
+  color: "#8b5a3c"
+  price: 0.01
+
+- type: material
+  id: N14DeathclawClaw
+  stackEntity: N14MaterialDeathclawClaw
+  name: materials-n14-deathclaw-claw
+  icon: { sprite: _Nuclear14/Objects/Misc/mob_drops.rsi, state: bone_claw }
+  color: "#c8bea5"
+  price: 0.15

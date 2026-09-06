@@ -1,0 +1,31 @@
+- type: stack
+  id: N14Bone
+  name: bones
+  icon: { sprite: _Nuclear14/Objects/Misc/mob_drops.rsi, state: bone_3 }
+  spawn: N14MaterialBone1
+  maxCount: 10
+  itemSize: 1
+
+- type: stack
+  id: N14Sinew
+  name: sinew
+  icon: { sprite: _Nuclear14/Objects/Misc/mob_drops.rsi, state: sinew }
+  spawn: N14MaterialSinew1
+  maxCount: 10
+  itemSize: 1
+
+- type: stack
+  id: N14HumanSkin
+  name: human skin
+  icon: { sprite: _Nuclear14/Objects/Misc/mob_drops.rsi, state: skin_human_3 }
+  spawn: N14MaterialHumanSkin1
+  maxCount: 3
+  itemSize: 1
+
+- type: stack
+  id: N14Hide
+  name: hide pieces
+  icon: { sprite: _Nuclear14/Objects/Misc/mob_drops.rsi, state: hide_generic }
+  spawn: N14MaterialHide1
+  maxCount: 30
+  itemSize: 1

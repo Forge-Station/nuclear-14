@@ -1,0 +1,233 @@
+- type: entity
+  parent: N14MaterialBaseHide
+  id: N14MaterialDogHide
+  name: dog hide
+  description: A ragged hide cut from a wasteland dog.
+  components:
+  - type: Sprite
+    state: hide_dog
+  - type: PhysicalComposition
+    materialComposition:
+      N14Hide: 200
+  - type: Tag
+    tags:
+    - N14DogHide
+    - N14WholeHide
+  - type: StaticPrice
+    price: 3
+
+- type: entity
+  parent: N14MaterialBaseHide
+  id: N14MaterialGenericHide
+  name: animal hide
+  description: A rough hide taken from a wasteland animal.
+  components:
+  - type: Sprite
+    state: hide_generic
+  - type: PhysicalComposition
+    materialComposition:
+      N14Hide: 300
+  - type: Tag
+    tags:
+    - N14WholeHide
+  - type: StaticPrice
+    price: 4
+
+- type: entity
+  parent: N14MaterialBaseHide
+  id: N14MaterialDeathclawHide
+  name: deathclaw hide
+  description: An exceptionally thick hide covered in hardened scales.
+  components:
+  - type: Sprite
+    state: hide_deathclaw
+  - type: PhysicalComposition
+    materialComposition:
+      N14Hide: 800
+  - type: Tag
+    tags:
+    - N14WholeHide
+  - type: StaticPrice
+    price: 25
+
+- type: entity
+  parent: N14MaterialBaseHide
+  id: N14MaterialBighornerPelt
+  name: bighorner pelt
+  description: A warm and heavy pelt from a bighorner.
+  components:
+  - type: Sprite
+    state: pelt_bighorner
+  - type: PhysicalComposition
+    materialComposition:
+      N14Hide: 500
+  - type: Tag
+    tags:
+    - N14WholeHide
+  - type: StaticPrice
+    price: 8
+
+- type: entity
+  parent: BaseItem
+  id: N14MaterialBone
+  name: bones
+  description: Cleaned animal bones suitable for wasteland crafting.
+  suffix: Full, 10
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+    state: bone_3
+    layers:
+    - state: bone_3
+      map: ["base"]
+  - type: Stack
+    stackType: N14Bone
+    count: 10
+    baseLayer: base
+    layerStates:
+    - bone
+    - bone_2
+    - bone_3
+  - type: Appearance
+  - type: Item
+    size: Small
+  - type: Material
+  - type: Tag
+    tags:
+    - RawMaterial
+  - type: PhysicalComposition
+    materialComposition:
+      N14Bone: 100
+  - type: StaticPrice
+    price: 1
+
+- type: entity
+  parent: N14MaterialBone
+  id: N14MaterialBone1
+  suffix: Single
+  components:
+  - type: Stack
+    count: 1
+
+- type: entity
+  parent: BaseItem
+  id: N14MaterialDeathclawClaw
+  name: deathclaw claw
+  description: A massive curved claw taken from a deathclaw.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+    state: bone_claw
+  - type: Item
+    size: Small
+  - type: Material
+  - type: PhysicalComposition
+    materialComposition:
+      N14DeathclawClaw: 100
+  - type: Tag
+    tags:
+    - RawMaterial
+    - N14DeathclawClaw
+  - type: StaticPrice
+    price: 15
+
+- type: entity
+  parent: BaseItem
+  id: N14MaterialSinew
+  name: sinew
+  description: Tough animal tendons useful as natural cordage.
+  suffix: Full, 10
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+    state: sinew
+  - type: Stack
+    stackType: N14Sinew
+    count: 10
+  - type: Item
+    size: Tiny
+  - type: Material
+  - type: Tag
+    tags:
+    - RawMaterial
+  - type: PhysicalComposition
+    materialComposition:
+      N14Sinew: 100
+  - type: StaticPrice
+    price: 1
+
+- type: entity
+  parent: N14MaterialSinew
+  id: N14MaterialSinew1
+  suffix: Single
+  components:
+  - type: Stack
+    count: 1
+
+- type: entity
+  parent: N14MaterialBaseHide
+  id: N14MaterialHumanSkin
+  name: human skin
+  description: A gruesome stack of preserved human skin.
+  suffix: Full, 3
+  components:
+  - type: Sprite
+    state: skin_human_3
+    layers:
+    - state: skin_human_3
+      map: ["base"]
+  - type: Stack
+    stackType: N14HumanSkin
+    count: 3
+    baseLayer: base
+    layerStates:
+    - skin_human_2
+    - skin_human_3
+  - type: Appearance
+  - type: PhysicalComposition
+    materialComposition:
+      N14Hide: 100
+  - type: Tag
+    tags:
+    - N14WholeHide
+  - type: StaticPrice
+    price: 5
+
+- type: entity
+  parent: N14MaterialHumanSkin
+  id: N14MaterialHumanSkin1
+  suffix: Single
+  components:
+  - type: Stack
+    count: 1
+
+- type: entity
+  parent: Handcuffs
+  id: N14SinewCuffs
+  name: sinew restraints
+  description: Crude restraints woven from tough animal sinew.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+    state: sinewcuff
+  - type: Item
+    size: Small
+  - type: Handcuff
+    breakoutTime: 4
+    cuffedRSI: Objects/Misc/cablecuffs.rsi
+    bodyIconState: body-overlay
+    color: "#8c4f35"
+    startCuffSound:
+      path: /Audio/Items/Handcuffs/rope_start.ogg
+    endCuffSound:
+      path: /Audio/Items/Handcuffs/rope_end.ogg
+    startUncuffSound:
+      path: /Audio/Items/Handcuffs/rope_start.ogg
+    endUncuffSound:
+      path: /Audio/Items/Handcuffs/rope_breakout.ogg
+    startBreakoutSound:
+      path: /Audio/Items/Handcuffs/rope_takeoff.ogg
+    uncuffEasierWhenLarge: true
+  - type: Construction
+    graph: N14SinewCuffs
+    node: sinewCuffs
