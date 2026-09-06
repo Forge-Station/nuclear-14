@@ -208,6 +208,17 @@
       amount: 1
     - id: N14MaterialRawLeather1
       amount: 2
+    #forge-start-change
+    - id: N14MaterialDogHide
+      amount: 1
+      prob: 0.75
+    - id: N14MaterialBone1
+      amount: 2
+      prob: 0.75
+    - id: N14MaterialSinew1
+      amount: 1
+      prob: 0.75
+    #forge-end-change
  #- type: Reproductive
    #breedChance: 0.05
    #birthPopup: reproductive-birth-popup
@@ -267,6 +278,12 @@
       amount: 1
     - id: N14FoodMeatYaoguai
       amount: 2
+    #forge-start-change
+    - id: N14MaterialBone1
+      amount: 4
+    - id: N14MaterialSinew1
+      amount: 2
+    #forge-end-change
   - type: DamageStateVisuals
     states:
       Alive:
@@ -340,6 +357,12 @@
     - id: N14MaterialBrahminHide1
       amount: 1
       prob: 0.95
+    #forge-start-change
+    - id: N14MaterialBone1
+      amount: 3
+    - id: N14MaterialSinew1
+      amount: 2
+    #forge-end-change
   - type: SolutionContainerManager
     solutions:
       udder:
@@ -407,6 +430,14 @@
       amount: 4
     - id: N14MaterialRawLeather1
       amount: 4
+    #forge-start-change
+    - id: N14MaterialBighornerPelt
+      amount: 1
+    - id: N14MaterialBone1
+      amount: 3
+    - id: N14MaterialSinew1
+      amount: 2
+    #forge-end-change
   - type: MeleeWeapon
     altDisarm: false
     hidden: true
@@ -478,6 +509,15 @@
       amount: 4
     - id: N14MaterialRawLeather1
       amount: 4
+    #forge-start-change
+    - id: N14MaterialGenericHide
+      amount: 1
+      prob: 0.75
+    - id: N14MaterialBone1
+      amount: 2
+    - id: N14MaterialSinew1
+      amount: 1
+    #forge-end-change
   - type: MeleeWeapon
     altDisarm: false
     hidden: true
@@ -545,6 +585,15 @@
     spawned:
     - id: N14FoodMeatRadstag
       amount: 4
+    #forge-start-change
+    - id: N14MaterialGenericHide
+      amount: 1
+      prob: 0.75
+    - id: N14MaterialBone1
+      amount: 2
+    - id: N14MaterialSinew1
+      amount: 1
+    #forge-end-change
   - type: MeleeWeapon
     altDisarm: false
     hidden: true

@@ -76,6 +76,11 @@
     # Ammo
     - ArrowRegular # Forge-add
     # Melee
+    #forge-start-change
+    - N14WastelandTribalSpear
+    - N14TribalBigClubDecorated
+    - N14TribalSword
+    #forge-end-change
     - N14ScrapMachete
     - N14WastelandSpear
     - N14WastelandTribalJavelin
@@ -249,6 +254,8 @@
       - RawMaterial
       - Ingot
       - RawLeather # move it to the tanning machine
+      #forge-add
+      - N14WholeHide
   - type: Lathe
     idleState: icon
     runningState: icon # change this
@@ -259,6 +266,9 @@
     - N14ClothingOuterLeatherArmor
     - N14ClothingOuterChitinArmor
     - N14ClothingOuterPainspike
+    #forge-start-change
+    - N14ClothingOuterTribalArmor
+    #forge-end-change
     - N14ClothingOuterTribalArmorHeavy
     - N14ClothingOuterInsectArmor
     - N14ClothingOuterMetalArmor
@@ -280,6 +290,9 @@
     - MaterialCloth # Forge-add
     - N14MaterialThread # Forge-add
     - N14MaterialLeather
+    #forge-start-change
+    - N14MaterialLeatherFromHide
+    #forge-end-change
     - ClothingBeltQuiver # In misc.yml
     - ClothingBeltQuiverSpear
 

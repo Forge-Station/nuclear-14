@@ -1,0 +1,30 @@
+- type: entity
+  parent: BaseItem
+  id: N14MaterialHide
+  name: hide pieces
+  description: Pieces of untreated animal hide suitable for tanning or tribal crafting.
+  suffix: Full, 30
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+    state: hide_generic
+  - type: Stack
+    stackType: N14Hide
+    count: 30
+  - type: Item
+    size: Small
+  - type: Material
+  - type: Tag
+    tags:
+    - RawMaterial
+  - type: PhysicalComposition
+    materialComposition:
+      N14Hide: 100
+
+- type: entity
+  parent: N14MaterialHide
+  id: N14MaterialHide1
+  suffix: Single
+  components:
+  - type: Stack
+    count: 1

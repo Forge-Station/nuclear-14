@@ -1126,10 +1126,28 @@
     price: 10
   - proto: N14MaterialAntChitin1
     price: 10
+  - proto: N14MaterialDogHide
+    price: 12
+  - proto: N14MaterialGenericHide
+    price: 18
+  - proto: N14MaterialBrahminHide1
+    price: 24
   - proto: N14MaterialHideGecko
-    price: 20
+    price: 25
+  - proto: N14MaterialBighornerPelt
+    price: 32
+  - proto: N14MaterialNightstalkerPelt
+    price: 35
+  - proto: N14MaterialDeathclawClaw
+    price: 35
   - proto: N14MaterialHideGeckoFire
-    price: 20
+    price: 40
+  - proto: N14MaterialHideGeckoGolden
+    price: 50
+  - proto: N14MaterialYaoguaiHide
+    price: 55
+  - proto: N14MaterialDeathclawHide
+    price: 80
   - proto: N14FoodFireantNectar
     price: 20
   - proto: N14FoodMeatGeckoGolden
@@ -1140,11 +1158,11 @@
     price: 25
   - proto: N14FoodMeatRadlurkClaw
     price: 25
+  - proto: N14FoodEggGecko
+    price: 15
+  - proto: N14FoodEggNightstalker
+    price: 25
   - proto: N14FoodEggDeathclaw
-    price: 40
-  - proto: N14MaterialYaoguaiHide
-    price: 40
-  - proto: N14MaterialNightstalkerPelt
     price: 40
   - proto: N14FoodCazadorAcidSac
     price: 45

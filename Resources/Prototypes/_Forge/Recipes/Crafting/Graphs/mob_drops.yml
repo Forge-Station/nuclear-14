@@ -1,0 +1,48 @@
+- type: constructionGraph
+  id: N14SinewCuffs
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: sinewCuffs
+      steps:
+      - material: N14Sinew
+        amount: 3
+        doAfter: 4
+  - node: sinewCuffs
+    entity: N14SinewCuffs
+
+- type: constructionGraph
+  id: N14CanineHatAnimalDropsGraph
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: canineHat
+      steps:
+      - tag: N14DogHide
+        name: dog hide
+        icon:
+          sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+          state: hide_dog
+      - material: N14Sinew
+        amount: 2
+        doAfter: 4
+  - node: canineHat
+    entity: N14ClothingHeadHatAnimal
+
+- type: constructionGraph
+  id: N14TribalKnifeGraph
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: tribalKnife
+      steps:
+      - material: N14Bone
+        amount: 2
+      - material: N14Sinew
+        amount: 1
+        doAfter: 4
+  - node: tribalKnife
+    entity: N14TribalKnife

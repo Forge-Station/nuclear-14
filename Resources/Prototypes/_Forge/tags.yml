@@ -13,3 +13,12 @@
 
 - type: Tag
   id: InjectionSyringe
+
+- type: Tag
+  id: N14DogHide
+
+- type: Tag
+  id: N14WholeHide
+
+- type: Tag
+  id: N14DeathclawClaw

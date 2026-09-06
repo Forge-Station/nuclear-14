@@ -1,0 +1,45 @@
+- type: latheRecipe
+  id: N14ClothingOuterTribalArmor
+  result: N14ClothingOuterTribalArmor
+  category: N14Armor
+  completetime: 8
+  materials:
+    N14Hide: 300
+    N14Bone: 300
+    N14Sinew: 200
+
+- type: latheRecipe
+  id: N14WastelandTribalSpear
+  result: N14WastelandTribalSpear
+  completetime: 8
+  materials:
+    N14DeathclawClaw: 100
+    N14Sinew: 200
+    Wood: 200
+
+- type: latheRecipe
+  id: N14TribalBigClubDecorated
+  result: N14TribalBigClubDecorated
+  completetime: 10
+  materials:
+    N14Bone: 500
+    N14Sinew: 300
+    Wood: 500
+
+- type: latheRecipe
+  id: N14TribalSword
+  result: N14TribalSword
+  completetime: 8
+  materials:
+    N14Bone: 300
+    N14Sinew: 200
+    Wood: 200
+
+- type: latheRecipe
+  id: N14MaterialLeatherFromHide
+  name: recipe-name-n14-leather-from-hide
+  result: N14MaterialLeather1
+  category: N14Misc
+  completetime: 2
+  materials:
+    N14Hide: 100
