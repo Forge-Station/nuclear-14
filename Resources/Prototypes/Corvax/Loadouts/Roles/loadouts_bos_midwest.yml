@@ -288,3 +288,411 @@
         - BoSMidSquire
   items:
     - N14ClothingNeckCloakTentBOS
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSPaladinShoulderPadMasterBlack
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladin
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladin
+      min: 60000
+  items:
+    - N14ClothingNeckMWBSPaladinShoulderPadMasterBlack
+    
+- type: loadout
+  id: LoadoutClothingNeckMWBSKnightShoulderPadOrange
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidKnight
+  items:
+    - N14ClothingNeckMWBSKnightShoulderPadOrange
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSInquisitorShoulderPadyoung
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidInquisitor
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidInquisitor
+      min: 60
+  items:
+    - N14ClothingNeckMWBSInquisitorShoulderPadyoung    
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSInquisitorShoulderPadslayer
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidInquisitor
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidInquisitor
+      min: 3000
+  items:
+    - N14ClothingNeckMWBSInquisitorShoulderPadslayer    
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSInquisitorShoulderPadmajorslayer
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidInquisitor
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidInquisitor
+      min: 6000
+  items:
+    - N14ClothingNeckMWBSInquisitorShoulderPadmajorslayer   
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSCommanderShoulderPadorange
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladinCommander
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladinCommander
+      min: 3000
+  items:
+    - N14ClothingNeckMWBSCommanderShoulderPadorange   
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSCommanderShoulderPadwhite
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladinCommander
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladinCommander
+      min: 3000
+  items:
+    - N14ClothingNeckMWBSCommanderShoulderPadwhite   
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSCommanderShoulderPadblue
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladinCommander
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladinCommander
+      min: 3000
+  items:
+    - N14ClothingNeckMWBSCommanderShoulderPadblue   
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSCommanderShoulderPadblack
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladinCommander
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladinCommander
+      min: 3000
+  items:
+    - N14ClothingNeckMWBSCommanderShoulderPadblack
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSScriberMantle
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidScribe
+   
+  items:
+    - N14ClothingNeckMWBSScriberMantle
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSScriberMantleEngineer
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidScribe
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidScribe
+      min: 1800
+   
+  items:
+    - N14ClothingNeckMWBSScriberMantleEngineer
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSScriberMantleMedic
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidScribe
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidScribe
+      min: 1800
+   
+  items:
+    - N14ClothingNeckMWBSScriberMantleMedic
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSScriberMantlePolevoy
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidScribe
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidScribe
+      min: 1800
+   
+  items:
+    - N14ClothingNeckMWBSScriberMantlePolevoy
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSScriberMantleDirector
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidScribe
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidScribe
+      min: 6000
+   
+  items:
+    - N14ClothingNeckMWBSScriberMantleDirector
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSPaladinChain
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladin
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladin
+      min: 60
+  items:
+    - N14ClothingNeckMWBSPaladinChain
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSPaladinShoulderPaDBlack
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladin
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladin
+      min: 600
+  items:
+    - N14ClothingNeckMWBSPaladinShoulderPaDBlack
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSPaladinShoulderPaDOrange
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladin
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladin
+      min: 600
+  items:
+    - N14ClothingNeckMWBSPaladinShoulderPaDOrange
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSPaladinShoulderPaDBlue
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladin
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladin
+      min: 600
+  items:
+    - N14ClothingNeckMWBSPaladinShoulderPaDBlue
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSPaladinShoulderPaDChainWhite
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladin
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladin
+      min: 3000
+  items:
+    - N14ClothingNeckMWBSPaladinShoulderPaDChainWhite
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSPaladinShoulderPaDChainOrange
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladin
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladin
+      min: 3000
+  items:
+    - N14ClothingNeckMWBSPaladinShoulderPaDChainOrange
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSPaladinShoulderPaDChainBlack
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladin
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladin
+      min: 3000
+  items:
+    - N14ClothingNeckMWBSPaladinShoulderPaDChainBlack
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSPaladinShoulderPaDChainBlue
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladin
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladin
+      min: 3000
+  items:
+    - N14ClothingNeckMWBSPaladinShoulderPaDChainBlue
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSPaladinShoulderPaDChainGoldWhite
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladin
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladin
+      min: 6000
+  items:
+    - N14ClothingNeckMWBSPaladinShoulderPaDChainGoldWhite
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSPaladinShoulderPaDChainGoldBlack
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladin
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladin
+      min: 6000
+  items:
+    - N14ClothingNeckMWBSPaladinShoulderPaDChainGoldBlack
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSPaladinShoulderPaDChainGoldOrange
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladin
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladin
+      min: 6000
+  items:
+    - N14ClothingNeckMWBSPaladinShoulderPaDChainGoldOrange
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSPaladinShoulderPaDChainGoldBlue
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladin
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMidPaladin
+      min: 6000
+  items:
+    - N14ClothingNeckMWBSPaladinShoulderPaDChainGoldBlue
+
+- type: loadout
+  id: LoadoutClothingNeckMWBSShoulderPadPatriot
+  category: Neck
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - BoSMidPaladinCommander
+        - BoSMidPaladin
+        - BoSMidKnight
+        - BoSMidScribe
+        - BoSMidInquisitor
+    - !type:CharacterPlaytimeRequirement
+      tracker: BoSMid
+      min: 30000
+  items:
+    - N14ClothingNeckMWBSShoulderPadPatriot
