@@ -1,0 +1,122 @@
+- type: entity
+  id: QuestBoard
+  name: доска заданий
+  description: Объявления о работе и заданиях в округе. Может быть что-то интересное?
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Transform
+    anchored: true
+  - type: Clickable
+  - type: InteractionOutline
+  - type: Physics
+    bodyType: Static
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.45,-0.45,0.45,0.45"
+        density: 60
+        mask:
+        - MachineMask
+        layer:
+        - MidImpassable
+        - LowImpassable
+  - type: Sprite
+    drawdepth: Overdoors
+    sprite: _Nuclear14/Structures/Wallmounts/noticeboard.rsi
+    layers:
+    - state: noticeboard
+  - type: Damageable
+    damageContainer: Inorganic
+    damageModifierSet: Metallic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 150
+      behaviors:
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          SheetSteel1:
+            min: 1
+            max: 2
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+  - type: Tag
+    tags:
+    - Structure
+  - type: QuestBoard
+  - type: ActivatableUI
+    key: enum.QuestBoardUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.QuestBoardUiKey.Key:
+        type: QuestBoardBoundUserInterface
+
+- type: entity
+  id: QuestSignpost
+  name: указатель выхода
+  description: Светящийся знак. Что-то подсказывает, что нужно идти именно туда.
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Transform
+    anchored: true
+    noRot: true
+  - type: Clickable
+  - type: InteractionOutline
+  - type: Physics
+    bodyType: Static
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.20,-0.45,0.20,0.45"
+        density: 20
+        mask:
+        - MachineMask
+        layer:
+        - MidImpassable
+  - type: Sprite
+    drawdepth: Overdoors
+    sprite: _Nuclear14/Structures/Wallmounts/noticeboard.rsi
+    layers:
+    - state: noticeboard
+  - type: PointLight
+    radius: 3.0
+    energy: 2.0
+    color: "#00ff88"
+    enabled: true
+  - type: QuestSignpost
+
+- type: entity
+  id: QuestInvisibleWall
+  name: невидимая стена
+  description: Ты не должен это видеть.
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Transform
+    anchored: true
+  - type: Physics
+    bodyType: Static
+    canCollide: true
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.5,-0.5,0.5,0.5"
+        density: 100
+        hard: true
+        mask:
+        - FullTileMask
+        layer:
+        - WallLayer
+  - type: Airtight
