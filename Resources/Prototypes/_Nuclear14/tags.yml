@@ -12,6 +12,9 @@
   id: Bomb
 
 - type: Tag
+  id: BottleCap
+
+- type: Tag
   id: ComposterCompatible
 
 - type: Tag
