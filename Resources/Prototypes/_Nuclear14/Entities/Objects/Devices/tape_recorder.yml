@@ -1,0 +1,94 @@
+- type: entity
+  parent: BaseItem
+  id: N14TapeRecorder
+  name: tape recorder
+  description: A portable recording device that can record speech and play it back. Requires a cassette tape.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Devices/tape_recorder.rsi
+    layers:
+    - state: taperecorder_empty
+    - state: taperecorder_idle
+      map: ["tape"]
+      visible: false
+  - type: Item
+    size: Small
+  - type: TapeRecorder
+  - type: ActiveListener
+    range: 4
+  - type: UseDelay
+    delay: 1
+  - type: Speech
+  - type: ItemSlots
+    slots:
+      cassette_tape:
+        priority: 4
+        whitelist:
+          components:
+          - FitsInTapeRecorder
+  - type: ContainerContainer
+    containers:
+      cassette_tape: !type:ContainerSlot
+  - type: Appearance
+  - type: GenericVisualizer
+    visuals:
+      enum.TapeRecorderVisuals.Mode:
+        tape:
+          Stopped: { state: "taperecorder_idle" }
+          Playing: { state: "taperecorder_playing" }
+          Recording: { state: "taperecorder_recording" }
+          Rewinding: { state: "taperecorder_rewinding" }
+      enum.TapeRecorderVisuals.TapeInserted:
+        tape:
+          True: { visible: true }
+          False: { visible: false }
+  - type: ActivatableUI
+    key: enum.TapeRecorderUIKey.Key
+    inHandsOnly: true
+    requireActiveHand: false
+  - type: UserInterface
+    interfaces:
+      enum.TapeRecorderUIKey.Key:
+        type: TapeRecorderBoundUserInterface
+  - type: LanguageSpeaker
+  - type: LanguageKnowledge
+    speaks:
+    - English
+    understands:
+    - English
+
+- type: entity
+  parent: BaseItem
+  id: N14CassetteTape
+  name: cassette tape
+  description: A cassette tape that can be played in a tape recorder.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Devices/cassette_tapes.rsi
+    layers:
+    - state: tape_greyscale
+      map: [ "enum.DamageStateVisualLayers.Base" ]
+    - state: tape_ribbonoverlay
+      map: [ "enum.ToggleVisuals.Layer" ]
+      visible: false
+  - type: Item
+    size: Tiny
+  - type: Damageable
+  - type: TapeCassette
+    maxCapacity: 180
+    repairWhitelist:
+      tags:
+      - Screwdriver
+      - Write
+  - type: FitsInTapeRecorder
+  - type: Appearance
+  - type: GenericVisualizer
+    visuals:
+      enum.ToggleVisuals.Toggled:
+        enum.ToggleVisuals.Layer:
+          True: { visible: true }
+          False: { visible: false }
+  - type: RandomSprite
+    available:
+    - enum.DamageStateVisualLayers.Base:
+        tape_greyscale: Rainbow
