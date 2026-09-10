@@ -1,6 +1,6 @@
-using Content.Shared._N14.TapeRecorder;
+﻿using Content.Shared.ADT.TapeRecorder;
 
-namespace Content.Client._N14.TapeRecorder;
+namespace Content.Client.ADT.TapeRecorder;
 
 /// <summary>
 /// Required for client side prediction stuff

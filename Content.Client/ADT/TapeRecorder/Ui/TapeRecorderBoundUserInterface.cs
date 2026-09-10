@@ -1,9 +1,9 @@
-using Content.Shared._N14.TapeRecorder.Components;
-using Content.Shared._N14.TapeRecorder.Events;
+﻿using Content.Shared.ADT.TapeRecorder.Components;
+using Content.Shared.ADT.TapeRecorder.Events;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 
-namespace Content.Client._N14.TapeRecorder.Ui;
+namespace Content.Client.ADT.TapeRecorder.Ui;
 
 public sealed class TapeRecorderBoundUserInterface(EntityUid owner, Enum uiKey) : BoundUserInterface(owner, uiKey)
 {

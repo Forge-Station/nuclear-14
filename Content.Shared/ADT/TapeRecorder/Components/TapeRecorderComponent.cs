@@ -1,11 +1,11 @@
-using Robust.Shared.Audio;
+﻿using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 using Robust.Shared.Utility;
 
-namespace Content.Shared._N14.TapeRecorder.Components;
+namespace Content.Shared.ADT.TapeRecorder.Components;
 
 [RegisterComponent, NetworkedComponent, Access(typeof(SharedTapeRecorderSystem))]
 [AutoGenerateComponentState, AutoGenerateComponentPause]
@@ -58,7 +58,7 @@ public sealed partial class TapeRecorderComponent : Component
     /// What sound is used when play mode is activated
     /// </summary>
     [DataField]
-    public SoundSpecifier PlaySound = new SoundPathSpecifier("/Audio/_Nuclear14/Items/Taperecorder/taperecorder_play.ogg")
+    public SoundSpecifier PlaySound = new SoundPathSpecifier("/Audio/ADT/Items/Taperecorder/taperecorder_play.ogg")
     {
         Params = AudioParams.Default.WithVolume(-2f).WithMaxDistance(3f)
     };
@@ -67,7 +67,7 @@ public sealed partial class TapeRecorderComponent : Component
     /// What sound is used when stop mode is activated
     /// </summary>
     [DataField]
-    public SoundSpecifier StopSound = new SoundPathSpecifier("/Audio/_Nuclear14/Items/Taperecorder/taperecorder_stop.ogg")
+    public SoundSpecifier StopSound = new SoundPathSpecifier("/Audio/ADT/Items/Taperecorder/taperecorder_stop.ogg")
     {
         Params = AudioParams.Default.WithVolume(-2f).WithMaxDistance(3f)
     };
@@ -76,7 +76,7 @@ public sealed partial class TapeRecorderComponent : Component
     /// What sound is used when rewind mode is activated
     /// </summary>
     [DataField]
-    public SoundSpecifier RewindSound = new SoundPathSpecifier("/Audio/_Nuclear14/Items/Taperecorder/taperecorder_rewind.ogg")
+    public SoundSpecifier RewindSound = new SoundPathSpecifier("/Audio/ADT/Items/Taperecorder/taperecorder_rewind.ogg")
     {
         Params = AudioParams.Default.WithVolume(-2f).WithMaxDistance(3f)
     };

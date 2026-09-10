@@ -1,6 +1,6 @@
-using Robust.Shared.GameStates;
+﻿using Robust.Shared.GameStates;
 
-namespace Content.Shared._N14.TapeRecorder.Components;
+namespace Content.Shared.ADT.TapeRecorder.Components;
 
 /// <summary>
 /// Added to tape records that are updating, winding or rewinding the tape.

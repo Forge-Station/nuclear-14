@@ -1,4 +1,4 @@
-using Content.Server.Chat.Systems;
+﻿using Content.Server.Chat.Systems;
 using Content.Server.Hands.Systems;
 using Content.Server.Language;
 using Content.Server.Paper;
@@ -8,15 +8,15 @@ using Content.Shared.Language;
 using Content.Shared.Language.Systems;
 using Content.Shared.Paper;
 using Content.Shared.Speech;
-using Content.Shared._N14.TapeRecorder;
-using Content.Shared._N14.TapeRecorder.Components;
-using Content.Shared._N14.TapeRecorder.Events;
+using Content.Shared.ADT.TapeRecorder;
+using Content.Shared.ADT.TapeRecorder.Components;
+using Content.Shared.ADT.TapeRecorder.Events;
 using Content.Shared._NC.Speech.Synthesis.Components;
 using Content.Shared._NC.TTS;
 using Robust.Shared.Prototypes;
 using System.Text;
 
-namespace Content.Server._N14.TapeRecorder;
+namespace Content.Server.ADT.TapeRecorder;
 
 public sealed class TapeRecorderSystem : SharedTapeRecorderSystem
 {

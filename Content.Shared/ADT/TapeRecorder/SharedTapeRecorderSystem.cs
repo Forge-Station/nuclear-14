@@ -1,4 +1,4 @@
-using Content.Shared.Containers.ItemSlots;
+﻿using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Damage;
 using Content.Shared.Destructible;
 using Content.Shared.DoAfter;
@@ -6,8 +6,8 @@ using Content.Shared.Examine;
 using Content.Shared.Interaction;
 using Content.Shared.Labels.Components;
 using Content.Shared.Tag;
-using Content.Shared._N14.TapeRecorder.Components;
-using Content.Shared._N14.TapeRecorder.Events;
+using Content.Shared.ADT.TapeRecorder.Components;
+using Content.Shared.ADT.TapeRecorder.Events;
 using Content.Shared.Toggleable;
 using Content.Shared.UserInterface;
 using Content.Shared.Whitelist;
@@ -18,7 +18,7 @@ using Robust.Shared.Timing;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
-namespace Content.Shared._N14.TapeRecorder;
+namespace Content.Shared.ADT.TapeRecorder;
 
 public abstract class SharedTapeRecorderSystem : EntitySystem
 {

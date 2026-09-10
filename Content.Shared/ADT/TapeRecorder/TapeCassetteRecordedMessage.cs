@@ -1,9 +1,9 @@
-using Content.Shared.Language;
+﻿using Content.Shared.Language;
 using Content.Shared.Speech;
 using Content.Shared._NC.TTS;
 using Robust.Shared.Prototypes;
 
-namespace Content.Shared._N14.TapeRecorder;
+namespace Content.Shared.ADT.TapeRecorder;
 
 /// <summary>
 /// Every chat event recorded on a tape is saved in this format

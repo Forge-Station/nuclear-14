@@ -5,7 +5,7 @@
   description: A portable recording device that can record speech and play it back. Requires a cassette tape.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Objects/Devices/tape_recorder.rsi
+    sprite: _ADT/Objects/Devices/tape_recorder.rsi
     layers:
     - state: taperecorder_empty
     - state: taperecorder_idle
@@ -64,7 +64,7 @@
   description: A cassette tape that can be played in a tape recorder.
   components:
   - type: Sprite
-    sprite: _Nuclear14/Objects/Devices/cassette_tapes.rsi
+    sprite: _ADT/Objects/Devices/cassette_tapes.rsi
     layers:
     - state: tape_greyscale
       map: [ "enum.DamageStateVisualLayers.Base" ]

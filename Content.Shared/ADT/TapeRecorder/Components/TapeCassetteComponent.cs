@@ -1,7 +1,7 @@
-using Content.Shared.Whitelist;
+﻿using Content.Shared.Whitelist;
 using Robust.Shared.GameStates;
 
-namespace Content.Shared._N14.TapeRecorder.Components;
+namespace Content.Shared.ADT.TapeRecorder.Components;
 
 // TODO: add things client needs for ui to networked state
 [RegisterComponent, NetworkedComponent, Access(typeof(SharedTapeRecorderSystem))]

@@ -1,8 +1,8 @@
-using Content.Shared.DoAfter;
-using Content.Shared._N14.TapeRecorder.Components;
+﻿using Content.Shared.DoAfter;
+using Content.Shared.ADT.TapeRecorder.Components;
 using Robust.Shared.Serialization;
 
-namespace Content.Shared._N14.TapeRecorder.Events;
+namespace Content.Shared.ADT.TapeRecorder.Events;
 
 [Serializable, NetSerializable]
 public sealed partial class TapeCassetteRepairDoAfterEvent : SimpleDoAfterEvent;
