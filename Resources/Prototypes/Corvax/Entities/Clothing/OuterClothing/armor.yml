@@ -350,7 +350,7 @@
     sprite: Corvax/Clothing/OuterClothing/Armor/vexarmor.rsi
   - type: ClothingSpeedModifier
     walkModifier: 1.05
-    sprintModifier: 1.05ы
+    sprintModifier: 1.05
 
 - type: entity
   parent: N14FalloutArmorBase
