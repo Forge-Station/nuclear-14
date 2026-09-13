@@ -1692,14 +1692,14 @@
       - id: MagazineBox12gauge
         amount: 3
       - id: N14CleanGauze10
-      - id: N14MedkitCombatFilled
       - id: N14Stimpak
         amount: 2
       - id: N14Psycho
         amount: 2
-      - id: N14MedkitCombatFilled
       - id: N14ClothingMaskPlate
       - id: N14BoxCardboardMREBoxKFilled
+        amount: 1
+      - id: N14MedkitCombatFilled # Forge-Change
 
 # Forge: KitTownGuard_Riot disabled
 #- type: entity

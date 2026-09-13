@@ -243,7 +243,7 @@
     damage:
       types:
         Slash: 50
-        Blunt: 15
+        Blunt: 18
         Structural: 25
     soundHit:
       path: /Audio/Weapons/bladeslice.ogg
