@@ -165,6 +165,17 @@
     Wood: 150
     N14Brass: 150
 
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponRifle308Battle
+  result: N14WeaponRifle308Battle
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 650
+    N14Iron: 300
+    N14Brass: 100
 
 # Tier: T4
 - type: latheRecipe

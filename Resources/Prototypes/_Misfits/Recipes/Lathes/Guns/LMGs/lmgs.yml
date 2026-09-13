@@ -28,6 +28,19 @@
     N14Iron: 400
     N14Brass: 150
 
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponRifleAk112pn
+  result: N14WeaponRifleAk112pn
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 15
+  materials:
+    Steel: 1000
+    N14Iron: 450
+    Wood: 100
+    N14Brass: 200
+    N14Silver: 75
 
 # Tier: T4
 - type: latheRecipe

@@ -36,20 +36,17 @@
   suffix: NCRT1
   description: |-
     Стандартный бланк требования квартермейстера НКР на базовое личное оружие и охотничьи винтовки. Оружие 1-го уровня.
-    Содержит: пистолет Browning HP, пистолет 10 мм, пистолет 22lr, револьвер 9 мм, револьвер 10 мм, охотничья винтовка, винтовка Ли Энфилда, дробовик, рычажной дробовик, варминт-винтовка
+    Содержит: пистолет .45, боевая винтовка, пистолет Browning HP, пистолет-пулемёт M3, охотничья винтовка, дробовик,
   components:
   - type: Blueprint
     recipes:
+    - N14WeaponPistol45Colt
     - N14WeaponPistol9mm
-    - N14WeaponPistol10mm
-    - N14WeaponPistol22lr
-    - N14WeaponRevolver9mm
-    - N14WeaponRevolver10mm
+    - N14WeaponSMG9mm
     - N14WeaponSniperHunting
-    - N14WeaponSniperEnfield
     - N14WeaponShotgun
-    - N14WeaponShotgunLever
-    - N14WeaponSniper556VarmintRifle
+    - N14WeaponRifle556Service
+    - N14WeaponRifle556Butchered
 
 - type: entity
   parent: N14BlueprintBase
@@ -58,21 +55,18 @@
   suffix: NCRT2
   description: |-
     Схемы штатного вооружения армии НКР для стандартного пехотного снаряжения. Оружие 2-го уровня.
-    Содержит: пистолет .45, боевая винтовка, боевая винтовка с прицелом, R-91, пистолет-пулемёт M3, пистолет-пулемёт Томпсона, боевой дробовик, полицейский дробовик, медвежье ружьё, карабин стрелка
+    Содержит: боевая винтовка с прицелом, R-91, пистолет-пулемёт Томпсона, боевой дробовик, полицейский дробовик, медвежье ружьё, карабин стрелка
   components:
   - type: Blueprint
     recipes:
+    - N14WeaponRevolver44Magnun
     - N14WeaponSniper44LeverCarbine
-    - N14WeaponPistol45Colt
-    - N14WeaponRifle556Service
     - N14WeaponRifle556ServiceScoped
-    - N14WeaponRifle556R91
-    - N14WeaponSMG9mm
     - N14WeaponSMG45
     - N14WeaponShotgunAuto
     - N14WeaponShotgunRiot
-    - N14WeaponSniper45-70BrushGun
-    - N14WeaponRifle762Marksman
+    - N14WeaponRifle308Battle
+    - N14WeaponRifle762Fal
 
 - type: entity
   parent: N14BlueprintBase
@@ -85,16 +79,12 @@
   components:
   - type: Blueprint
     recipes:
-    - N14WeaponRifle556Scout
+    - N14WeaponRifle308SniperRifle
+    - N14WeaponRevolver45-70Hunter
+    - N14WeaponRifle762Marksman
+    - N14WeaponSniper45-70BrushGun
     - N14WeaponRifle556Carbine
-    - N14WeaponRifle762Fal
-    - N14WeaponRifle308Battle
-    - N14WeaponSMG10mm
-    - N14WeaponSMG12mm
-    - N14WeaponRevolver44Magnun
-    - N14WeaponDesertEagle44
-    - N14WeaponRevolver45-70RangerSequoia
-    - N14WeaponShotgunChinese
+    - N14WeaponLMG
 
 - type: entity
   parent: N14BlueprintBase
@@ -107,12 +97,11 @@
   components:
   - type: Blueprint
     recipes:
+    - N14WeaponRevolver45-70RangerSequoia
+    - N14WeaponRifle556Scout
     - N14WeaponSniper50NCRRifle
     - N14WeaponLMGAutoRifle
-    - N14WeaponLMG
-    - N14WeaponSMG12mmAdvanced
-    - N14WeaponRevolver45-70Hunter
-    - N14WeaponMinigun
+    - N14WeaponRifleGrenade
 
 # --- NCR Armor ---
 - type: entity
@@ -330,17 +319,13 @@
   suffix: LegionT1
   description: |-
     Грубые схемы оружия, нацарапанные на пергаменте. Базовое племенное оружие для новобранцев и рабов. Оружие 1-го уровня.
-    Содержит: племенной нож, племенная булава, сломанная труба, доска с гвоздями, копьё, племенной револьвер, обрез, винтовка с рычажным затвором, пистолет-пулемёт 9 мм, самодельный пистолет-пулемёт 12 мм, гладиус
+    Содержит: племенная булава, копьё, племенной револьвер, обрез, винтовка с рычажным затвором, пистолет-пулемёт 9 мм, самодельный пистолет-пулемёт 12 мм, гладиус
   components:
   - type: Blueprint
     recipes:
-    - N14TribalKnife
     - N14TribalClub
-    - N14BrokenPipe
-    - N14NailBoard
     - N14WastelandSpear
-    - N14WeaponRevolver44Tribal
-    - N14WeaponShotgunSawedOff
+    - N14WeaponBlowback
     - N14WeaponShotgunLever
     - N14WeaponSMG9mm
     - N14WeaponSMG12mmPipe
@@ -359,16 +344,11 @@
   - type: Blueprint
     recipes:
     - N14TribalMachete
-    - N14Machete
     - N14TribalHatchet
-    - N14TribalSword
-    - N14WeaponShotgunDoubleBarrel
-    - N14WeaponShotgunPipe
     - N14TrenchClub
     - N14WeaponSniper308Ross
     - N14WeaponSniper308Tribal
     - N14WeaponSMG10mm
-    - N14WeaponBlowback
     - N14MacheteGladius
     - N14WeaponRevolver44TribalUpgradedExtra
     - N14BaseBallBat
@@ -388,7 +368,6 @@
     - N14LongSword
     - N14SledgeHammer
     - N14TribalBigClub
-    - N14WeaponRevolver45-70Handcannon
     - N14WeaponLauncherGrenade
     - N14WeaponShotgunCanadian
     - N14WeaponSMG12mm
@@ -593,7 +572,6 @@
   components:
   - type: Blueprint
     recipes:
-    - N14WeaponPlasmaPistol
     - N14WeaponPistol9mmChinese
     - N14WeaponPlasmaRifleCrude
     - N14WeaponSMG9mmCanadian
@@ -612,8 +590,8 @@
   components:
   - type: Blueprint
     recipes:
+    - N14WeaponPlasmaPistol
     - N14WeaponRevolverWebley
-    - N14WeaponRifle308Battle
     - N14WeaponSMG12mmAdvancedCanadian
     - N14WeaponPlasmaRifle
     - N14BPWashingtonBosWeaponPlasmaGrenade
@@ -632,7 +610,6 @@
     - N14WeaponRifle762Chinese
     - N14WeaponRifle556Carbine
     - N14WeaponPlasmaRifleUrban
-    - N14WeaponRifle308SniperRifle
     - N14WeaponPlasmaDefender
 
 - type: entity
@@ -770,7 +747,7 @@
   suffix: WestBoST3
   description: |-
     Продвинутые схемы оружия из арсенала паладинов Западного Братства. Оружие 3-го уровня.
-    Содержит: городская плазменная винтовка, автоматическая лазерная винтовка, усовершенствованный пистолет-пулемёт 12 мм, автомат АК-112ПН, бозар
+    Содержит: городская плазменная винтовка, автоматическая лазерная винтовка, усовершенствованный пистолет-пулемёт 12 мм, автомат АК-112П
   components:
   - type: Blueprint
     recipes:
@@ -778,7 +755,6 @@
     - N14WeaponLaserRifleAuto
     - N14WeaponSMG12mmAdvanced
     - N14WeaponRifleAk112pn
-    - N14WeaponRifleBozarGRA
 
 - type: entity
   parent: N14BlueprintBase
@@ -792,7 +768,6 @@
   - type: Blueprint
     recipes:
     - N14WeaponPlasmaMultiplas
-    - N14WeaponGaussRifle
     - N14WeaponLaserRifleYk42b
     - N14WeaponLaserRiflePrototypeAER14
 
@@ -912,7 +887,6 @@
     - N14CeremonialSword
     - N14WeaponLaserRifle
     - N14WeaponRifle556Carbine
-    - N14WeaponRifle762Fal
     - N14WeaponRifle308SniperRifle
 
 - type: entity
@@ -927,7 +901,6 @@
   - type: Blueprint
     recipes:
     - N14WeaponPlasmaRifleAuto
-    - N14WeaponLaserRifleWattz2000
     - N14WeaponLMG
     - N14WeaponMinigun
     - N14WeaponLaserRifleAuto
@@ -945,8 +918,7 @@
     recipes:
     - N14WeaponLauncherGrenade
     - N14WeaponLaserGatling
-    - N14WeaponLaserRifleWattz3000
-    - N14WeaponPlasmaCaster
+    - N14WeaponLaserRifleWattz2000
 
 # --- Midwest BoS Armor ---
 - type: entity
@@ -1049,12 +1021,11 @@
   - type: Blueprint
     recipes:
     - N14WeaponPistol9mm
+    - N14WeaponSMG9mm
     - N14WeaponPistol10mm
-    - N14WeaponPistol22lr
-    - N14WeaponRevolver9mm
     - N14CombatKnife
     - N14WeaponShotgunDoubleBarrel
-    - N14WeaponShotgun
+    - N14WeaponShotgunCaravan
     - N14WeaponSniperHunting
 
 - type: entity
@@ -1068,14 +1039,12 @@
   components:
   - type: Blueprint
     recipes:
+    - N14WeaponShotgun
     - N14WeaponPistol45Colt
-    - N14WeaponPistolWebley
-    - N14WeaponRifle556Service
+    - N14WeaponRevolver44Magnun
     - N14WeaponRifle556R91
     - N14Machete
     - N14Hatchet
-    - N14WeaponShotgunCaravan
-    - N14WeaponSMG9mm
     - N14WeaponSniper44LeverCarbine
 
 - type: entity
@@ -1089,10 +1058,10 @@
   components:
   - type: Blueprint
     recipes:
-    - N14WeaponRevolver44Magnun
-    - N14WeaponDesertEagle44
-    - N14WeaponRifle762Marksman
-    - N14WeaponRifle308Battle
+    - N14WeaponRevolverWebley
+    - N14WeaponRifle762Canadian
+    - N14WeaponRifle762MarksmanChinese
+    - N14WeaponRifle556Carbine
     - N14WeaponSMG10mm
     - N14WeaponSMG45
     - N14WeaponShotgunAuto
@@ -1109,11 +1078,10 @@
   components:
   - type: Blueprint
     recipes:
-    - N14WeaponRifle556Carbine
-    - N14WeaponSMG12mm
+    - N14WeaponHMGcanadian
     - N14WeaponSniper45-70BrushGun
     - N14WeaponRevolver45-70Hunter
-    - N14WeaponSniper308LeverRifle
+    - N14WeaponLMGBren
 
 # --- Town Armor ---
 - type: entity

@@ -99,6 +99,18 @@
 
 # Tier: T2
 - type: latheRecipe
+  id: N14WeaponSMGNAil
+  result: N14WeaponSMGNAil
+  category: N14WeaponSMGs
+  requiresBlueprint: true
+  completetime: 9
+  materials:
+    Steel: 300
+    N14Iron: 150
+    N14Brass: 50
+
+# Tier: T2
+- type: latheRecipe
   id: N14WeaponSMG9mmCanadian
   result: N14WeaponSMG9mmCanadian
   category: N14WeaponSMGs

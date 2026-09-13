@@ -169,6 +169,18 @@
     N14Iron: 100
     Wood: 150
 
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponRifleAk112
+  result: N14WeaponRifleAk112
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 13
+  materials:
+    Steel: 700
+    N14Iron: 300
+    Wood: 100
+    N14Brass: 150
 
 # Tier: T3
 - type: latheRecipe
@@ -180,18 +192,6 @@
   materials:
     Steel: 600
     N14Iron: 250
-    N14Brass: 100
-
-# Tier: T3
-- type: latheRecipe
-  id: N14WeaponRifle308Battle
-  result: N14WeaponRifle308Battle
-  category: N14WeaponRifles
-  requiresBlueprint: true
-  completetime: 12
-  materials:
-    Steel: 650
-    N14Iron: 300
     N14Brass: 100
 
 # Tier: T3
@@ -241,3 +241,16 @@
     Steel: 500
     N14Iron: 200
     N14Brass: 100
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponRifleBozarGRA
+  result: N14WeaponRifleBozarGRA
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 16
+  materials:
+    Steel: 1100
+    N14Iron: 500
+    N14Brass: 250
+    N14Silver: 100

@@ -27,3 +27,41 @@
     Glass: 150
     N14Iron: 250
     Circuitry: 100
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponRifleM7Spear
+  result: N14WeaponRifleM7Spear
+  category: N14WeaponSnipers
+  requiresBlueprint: true
+  completetime: 13
+  materials:
+    Steel: 700
+    N14Iron: 300
+    N14Brass: 150
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponRifleM7SpearScope
+  result: N14WeaponRifleM7SpearScope
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 13
+  materials:
+    Steel: 750
+    Glass: 100
+    N14Iron: 300
+    N14Brass: 150
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponRevolver12-7x55mmRSH12
+  result: N14WeaponRevolver12-7x55mmRSH12
+  category: N14WeaponRevolvers
+  requiresBlueprint: true
+  completetime: 13
+  materials:
+    Steel: 700
+    N14Iron: 350
+    N14Brass: 200
+    N14Silver: 75
