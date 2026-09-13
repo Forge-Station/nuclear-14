@@ -182,6 +182,9 @@
   - proto: N14WeaponRifle762Chinese
     price: 350
     count: 5
+  - proto: N14WeaponRifle762AK47
+    price: 350
+    count: 5
   - proto: N14WeaponRifle762Fal
     price: 350
   - proto: N14WeaponRifle556Carbine
@@ -854,6 +857,8 @@
   - proto: N14WeaponRifle556R91
     price: 120
   - proto: N14WeaponRifle762Chinese
+    price: 200
+  - proto: N14WeaponRifle762AK47
     price: 200
   - proto: N14WeaponRifle556CarbineOld
     price: 125

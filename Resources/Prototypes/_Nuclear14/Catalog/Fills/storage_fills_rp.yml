@@ -2241,6 +2241,9 @@
         - id: N14WeaponRifle762Chinese
           prob: 0.05
           orGroup: Weapon
+        - id: N14WeaponRifle762AK47
+          prob: 0.05
+          orGroup: Weapon
         - id: N14WeaponRifle762Marksman
           prob: 0.07
           orGroup: Weapon

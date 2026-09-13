@@ -38,6 +38,9 @@
   id: MagazineDrum545Rifle
 
 - type: Tag
+  id: Magazine762RifleAK47
+
+- type: Tag
   id: N14Cartridge545Rifle
 
 - type: Tag

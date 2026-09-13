@@ -302,6 +302,34 @@
       path: /Audio/Effects/unwrap.ogg
 
 - type: entity
+  name: veteran-swordsman kit
+  parent: KitBase
+  id: KitVeteranSwordsman
+  description: "A set of Legion equipment."
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Misc/kits.rsi
+    state: base
+  - type: Item
+    size: Huge
+  - type: SpawnItemsOnUse
+    items:
+      - id: N14BumperSword
+      - id: N14LegionnaireShield
+      - id: Bola
+        amount: 2
+      - id: N14BerserkerPowder
+        amount: 2
+      - id: N14DirtySuperStimpak
+      - id: N14HealingPoultice
+        amount: 2
+      - id: N14Hydra
+      - id: N14MedkitFilled
+      - id: N14BoxCardboardMREBoxLegionFilled
+    sound:
+      path: /Audio/Effects/unwrap.ogg
+
+- type: entity
   name: warrior-base kit
   parent: KitBase
   id: KitWarriorBase
@@ -314,7 +342,7 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14TribalMachete
+      - id: N14LegionMachere
       - id: N14LegionnaireBuckler
       - id: N14WeaponShotgunLever
       - id: MagazineBox20gauge
@@ -365,7 +393,7 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14TribalMachete
+      - id: N14LegionMachere
       - id: ClothingBeltMedical
       - id: N14MortarpestleGrinder
       - id: LargeBeaker
@@ -398,7 +426,7 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14TribalMachete
+      - id: N14LegionMachere
       - id: N14WeaponSMG10mm
       - id: MagazineBox10mm
       - id: N14MagazineSMG10mm
@@ -477,7 +505,7 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14TribalMachete
+      - id: N14LegionMachere
       - id: N14WeaponSMG9mm
       - id: N14MagazineSMG9mm
         amount: 2
@@ -531,7 +559,7 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14TribalMachete
+      - id: N14LegionMachere
       - id: N14WeaponShotgunBloodyStick
       - id: MagazineBox12gauge
       - id: N14LegionnaireBuckler
