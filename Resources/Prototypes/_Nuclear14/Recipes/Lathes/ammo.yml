@@ -379,16 +379,6 @@
     N14Gunpowder: 60
 
 - type: latheRecipe
-  id: Magazine762RifleAK47
-  result: Magazine762RifleAK47
-  category: N14AmmoMagazine
-  completetime: 5
-  materials:
-    Lead: 60
-    Steel: 190
-    N14Gunpowder: 60
-
-- type: latheRecipe
   id: Magazine762AmmoBelt
   result: Magazine762AmmoBelt
   category: N14AmmoMagazine

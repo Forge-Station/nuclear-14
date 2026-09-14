@@ -43,47 +43,6 @@
     proto: N14Cartridge762Rifle
 
 - type: entity
-  id: BaseMagazine762RifleAK47
-  name: "ak magazine (7.62mm)"
-  parent: BaseItem
-  abstract: true
-  components:
-  - type: Tag
-    tags:
-      - Magazine762RifleAK47
-  - type: BallisticAmmoProvider
-    mayTransfer: true
-    whitelist:
-      tags:
-        - N14Cartridge762Rifle
-    proto: N14Cartridge762Rifle
-    capacity: 30
-  - type: ContainerContainer
-    containers:
-      ballistic-ammo: !type:Container
-  - type: Sprite
-    netsync: false
-    sprite: Corvax/Objects/Weapons/Guns/Ammunition/Magazines/5.45/ak47mag.rsi
-    layers:
-    - state: base
-      map: ["enum.GunVisualLayers.Base"]
-    - state: mag-1
-      map: ["enum.GunVisualLayers.Mag"]
-  - type: MagazineVisuals
-    magState: mag
-    steps: 2
-    zeroVisible: false
-  - type: Appearance
-
-- type: entity
-  id: Magazine762RifleAK47
-  name: "ak magazine (7.62mm)"
-  parent: BaseMagazine762RifleAK47
-  components:
-  - type: BallisticAmmoProvider
-    proto: N14Cartridge762Rifle
-
-- type: entity
   id: Magazine762AmmoBelt
   name: "ammo belt (7.62mm)"
   parent: BaseMagazine762Rifle

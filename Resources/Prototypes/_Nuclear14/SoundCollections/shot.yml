@@ -131,11 +131,6 @@
   - /Audio/_Nuclear14/Weapons/Guns/Rifles/N14WeaponChineseRifle/shot2.ogg
 
 - type: soundCollection
-  id: N14AK47Gunshot
-  files:
-  - /Audio/_Nuclear14/Weapons/Guns/Rifles/N14WeaponRifle762AK47/shot1.ogg
-
-- type: soundCollection
   id: N14CarbineGunshot
   files:
   - /Audio/_Nuclear14/Weapons/Guns/Rifles/N14WeaponCarbine/shot1.ogg
