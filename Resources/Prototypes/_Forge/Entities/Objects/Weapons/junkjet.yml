@@ -1,5 +1,5 @@
 - type: entity
-  name: Хламотрон
+  name: хламотрон
   parent: BaseItem
   id: JunkCannon
   description: Легендарная инженерная мысль - превратить мусор в боеприпасы. Работает шумно, но смертельно.
