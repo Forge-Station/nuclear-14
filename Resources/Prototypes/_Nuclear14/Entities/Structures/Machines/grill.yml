@@ -1,5 +1,8 @@
 - type: entity
-  id: N14CookingStove
+  # Forge-Change-Start
+  abstract: true
+  id: N14CookingStoveBase
+  # Forge-Change-End
   parent: KitchenElectricGrill
   name: stove
   description: A pre-war stove for cooking things.
@@ -39,6 +42,38 @@
           Medium: { visible: true, state: stove_on }
           High: { visible: true, state: stove_on }
 
+# Forge-Change-Start
+- type: entity
+  id: N14CookingStove
+  parent: N14CookingStoveBase
+  components:
+  - type: Microwave
+    capacity: 10
+  - type: ActivatableUI
+    key: enum.MicrowaveUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.MicrowaveUiKey.Key:
+        type: MicrowaveBoundUserInterface
+  - type: ApcPowerReceiver
+    powerLoad: 400
+  - type: ContainerContainer
+    containers:
+      microwave_entity_container: !type:Container
+      machine_board: !type:Container
+      machine_parts: !type:Container
+  - type: EmptyOnMachineDeconstruct
+    containers:
+    - microwave_entity_container
+  - type: Explosive
+    explosionType: Default
+    maxIntensity: 10
+    totalIntensity: 5
+    intensitySlope: 5
+    canCreateVacuum: false
+    deleteAfterExplosion: false
+# Forge-Change-End
+
 - type: entity
   id: N14CookingStoveWide
   parent: N14CookingStove
@@ -61,7 +96,7 @@
 
 
 - type: entity
-  parent: N14CookingStove
+  parent: N14CookingStoveBase # Forge-Change
   id: N14KitchenGrill
   name: propane grill
   description: A microwave? No, a real man cooks steaks on a grill!
