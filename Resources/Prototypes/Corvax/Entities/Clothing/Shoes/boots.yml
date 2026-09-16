@@ -20,3 +20,10 @@
   - type: Clothing
     sprite: Corvax/Clothing/Shoes/Boots/centurionboots.rsi
   - type: NoSlip
+    - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.925
+        Slash: 0.925
+        Piercing: 0.95
+        Heat: 0.95
