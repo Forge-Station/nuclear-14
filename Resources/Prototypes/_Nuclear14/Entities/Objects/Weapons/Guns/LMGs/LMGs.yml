@@ -363,3 +363,69 @@
         whitelist:
           tags:
             - N14Cartridge308Rifle
+
+- type: entity
+  name: PKM
+  parent: [ BaseWeaponRifle, ForgeGunConditionProfileLMG ]
+  id: N14WeaponLMGpkm
+  description: A pre-war soviet general-purpose machine gun, chambered in 7.62mm ammunition.
+  components:
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Guns/Machineguns/pkm.rsi
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Guns/Machineguns/pkm.rsi
+    layers:
+      - state: base
+        map: ["enum.GunVisualLayers.Base"]
+      - state: mag-0
+        map: ["enum.GunVisualLayers.Mag"]
+  - type: Item
+    size: Huge
+    sprite: Corvax/Objects/Weapons/Guns/Machineguns/pkm.rsi
+  - type: Wieldable
+  - type: GunRequiresWield
+  - type: GunWieldBonus
+    minAngle: -22 # Forge-Change
+    maxAngle: -49 # Forge-Change
+  - type: Gun
+    minAngle: 24
+    maxAngle: 60
+    angleIncrease: 4
+    angleDecay: 20
+    fireRate: 3.5
+    soundGunshot:
+      collection: N14LMGGunshot
+    selectedMode: FullAuto
+    availableModes:
+    - FullAuto
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Magazine
+        startingItem: Magazine762PKMBox
+        insertSound: /Audio/Weapons/Guns/MagIn/ltrifle_magin.ogg
+        ejectSound: /Audio/Weapons/Guns/MagOut/ltrifle_magout.ogg
+        priority: 2
+        whitelist:
+          tags:
+            - Magazine762PKMBox
+      gun_chamber:
+        name: Chamber
+        startingItem: N14Cartridge762Rifle
+        priority: 1
+        whitelist:
+          tags:
+            - N14Cartridge762Rifle
+  - type: ClothingSpeedModifier
+    walkModifier: 0.95
+    sprintModifier: 0.95
+  - type: HeldSpeedModifier
+  - type: MagazineVisuals
+    magState: mag
+    steps: 1
+    zeroVisible: true
+  - type: Appearance
+  - type: FollowDistance
+    backStrength: 6
+  - type: StaticPrice
+    price: 500

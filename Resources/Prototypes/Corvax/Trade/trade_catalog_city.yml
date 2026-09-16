@@ -210,6 +210,9 @@
   - proto: N14WeaponLMGchinese
     price: 1600
     count: 2
+  - proto: N14WeaponLMGpkm
+    price: 1700
+    count: 1
   - proto: N14WeaponLMGBren
     price: 1800
     count: 2
