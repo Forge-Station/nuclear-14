@@ -19,7 +19,7 @@
     sprite: Corvax/Clothing/Hands/Gloves/centuriongloves.rsi
   - type: Clothing
     sprite: Corvax/Clothing/Hands/Gloves/centuriongloves.rsi
-      - type: Armor
+  - type: Armor
     modifiers:
       coefficients:
         Blunt: 0.925
