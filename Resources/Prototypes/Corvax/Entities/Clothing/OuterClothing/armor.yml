@@ -784,6 +784,17 @@
     sprite: Corvax/Clothing/OuterClothing/Armor/legioduster.rsi
 
 - type: entity
+  parent: N14ClothingOuterLegionnaireReconnaissanceArmor
+  id: N14ClothingOuterLegionnaireDusterMk2
+  name: legionary duster mk2
+  description: "Duster with a bull symbol, reinforced for veteran legionnaires."
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/legiodustermk2.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/legiodustermk2.rsi
+
+- type: entity
   parent: N14FalloutArmorBase
   id: N14ClothingOuterTireArmor
   name: tire armor

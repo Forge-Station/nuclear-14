@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "license": "All Rights Reserved",
+  "license": "CC-BY-SA-3.0",
   "copyright": "Maden by bane_556",
   "size": {
     "x": 32,
@@ -12,10 +12,6 @@
     },
     {
       "name": "equipped-HELMET",
-      "directions": 4
-    },
-    {
-      "name": "alt-equipped-HELMET",
       "directions": 4
     }
   ]

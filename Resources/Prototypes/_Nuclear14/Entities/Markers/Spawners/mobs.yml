@@ -881,6 +881,21 @@
       - N14MobRobotHostileEyebot # Forge-Change
 
 - type: entity
+  name: Sentrybot Spawner
+  id: N14SpawnMobSentrybot
+  parent: MarkerBase
+  components:
+  - type: Sprite
+    layers:
+      - state: green
+      - sprite: Corvax/Mobs/Robots/Sentrybot.rsi
+        state: sentrybot
+      - state: ai
+  - type: ConditionalSpawner
+    prototypes:
+      - N14MobRobotHostileSentrybot # Forge-Change
+
+- type: entity
   name: Spore Plant Spawner
   id: N14SpawnMobSporePlant
   parent: MarkerBase
