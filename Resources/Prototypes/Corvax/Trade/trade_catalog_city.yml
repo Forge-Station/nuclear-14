@@ -632,7 +632,7 @@
   - proto: N14MaterialRadscorpionTail
     price: 65
   - proto: N14NightstalkerBloodChemistryBottle
-    price: 25
+    price: 45
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Sprouts
