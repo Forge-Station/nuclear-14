@@ -331,7 +331,7 @@
     - N14ClothingHeadHatPrincepsGalea
 
 - type: loadout
-  id: LoadoutHeadHatPrincepsPrime
+  id: LoadoutHeadGaleaPrincepsPrime
   category: Head
   cost: 2
   exclusive: true
@@ -339,6 +339,24 @@
     - !type:CharacterJobRequirement
       jobs:
         - CaesarLegionDean
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 72000
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionDean
+      min: 144000
+  items:
+    - N14ClothingHeadHatPrincepsPrimeGalea
+
+- type: loadout
+  id: LoadoutHeadHatPrincepsPrime
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionLegionnaireVeteran
     - !type:CharacterDepartmentTimeRequirement
       department: CaesarLegion
       min: 144000

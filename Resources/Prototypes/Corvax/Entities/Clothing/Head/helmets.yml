@@ -360,6 +360,17 @@
     - Hair
 
 - type: entity
+  parent: N14ClothingHeadHatPrincepsGalea
+  id: N14ClothingHeadHatPrincepsPrimeGalea
+  name: princeps prime galea
+  description: "The wearers of this helmet act as the first line in the bellum"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/primeprincepsgalea.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/primeprincepsgalea.rsi
+
+- type: entity
   parent: ClothingHeadEVAHelmetBase
   id: N14ClothingHeadHelmetChinaStealth
   name: шлем стелс-брони
