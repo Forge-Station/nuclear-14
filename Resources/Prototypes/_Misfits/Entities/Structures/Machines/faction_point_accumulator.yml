@@ -1,0 +1,29 @@
+- type: entity
+  parent: [ BaseMachinePowered, ConstructibleMachine ]
+  id: N14FactionPointAccumulator
+  name: faction point accumulator
+  description: Passively accumulates faction research points while powered and near a research workbench.
+  components:
+  - type: Sprite
+    sprite: Structures/Machines/server.rsi
+    state: server
+  - type: FactionPointSource
+    faction: NCR
+    pointsPerSecond: 5
+    radius: 3
+  - type: ApcPowerReceiver
+    powerLoad: 500
+  - type: Machine
+    board: N14FactionPointAccumulatorCircuitboard
+
+- type: entity
+  parent: BaseMachineCircuitboard
+  id: N14FactionPointAccumulatorCircuitboard
+  name: faction point accumulator machine board
+  description: A machine printed circuit board for a faction point accumulator.
+  components:
+  - type: MachineBoard
+    prototype: N14FactionPointAccumulator
+    requirements:
+      MatterBin: 1
+      Capacitor: 2

@@ -39,7 +39,7 @@ public sealed partial class LatheMenu : DefaultWindow
 
     public List<ProtoId<LatheCategoryPrototype>>? Categories;
 
-    public ProtoId<LatheCategoryPrototype>? CurrentCategory;
+        public ProtoId<LatheCategoryPrototype>? CurrentCategory;
 
     public EntityUid Entity;
 

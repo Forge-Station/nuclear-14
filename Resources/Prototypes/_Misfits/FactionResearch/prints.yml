@@ -1,0 +1,587 @@
+- type: factionResearchPrint
+  id: N14PrintNCRWeaponsT1
+  faction: NCR
+  tier: 1
+  cost: 1000
+  item: N14BlueprintNCRWeaponsT1
+
+- type: factionResearchPrint
+  id: N14PrintNCRWeaponsT2
+  faction: NCR
+  tier: 2
+  cost: 2500
+  item: N14BlueprintNCRWeaponsT2
+
+- type: factionResearchPrint
+  id: N14PrintNCRWeaponsT3
+  faction: NCR
+  tier: 3
+  cost: 5000
+  item: N14BlueprintNCRWeaponsT3
+
+- type: factionResearchPrint
+  id: N14PrintNCRWeaponsT4
+  faction: NCR
+  tier: 4
+  cost: 10000
+  item: N14BlueprintNCRWeaponsT4
+
+- type: factionResearchPrint
+  id: N14PrintNCRArmorT1
+  faction: NCR
+  tier: 1
+  cost: 1000
+  item: N14BlueprintNCRArmorT1
+
+- type: factionResearchPrint
+  id: N14PrintNCRArmorT2
+  faction: NCR
+  tier: 2
+  cost: 2500
+  item: N14BlueprintNCRArmorT2
+
+- type: factionResearchPrint
+  id: N14PrintNCRArmorT3
+  faction: NCR
+  tier: 3
+  cost: 5000
+  item: N14BlueprintNCRArmorT3
+
+- type: factionResearchPrint
+  id: N14PrintNCRArmorT4
+  faction: NCR
+  tier: 4
+  cost: 10000
+  item: N14BlueprintNCRArmorT4
+
+- type: factionResearchPrint
+  id: N14PrintNCRAmmoT1
+  faction: NCR
+  tier: 1
+  cost: 1000
+  item: N14BlueprintNCRAmmoT1
+
+- type: factionResearchPrint
+  id: N14PrintNCRAmmoT2
+  faction: NCR
+  tier: 2
+  cost: 2500
+  item: N14BlueprintNCRAmmoT2
+
+- type: factionResearchPrint
+  id: N14PrintNCRAmmoT3
+  faction: NCR
+  tier: 3
+  cost: 5000
+  item: N14BlueprintNCRAmmoT3
+
+- type: factionResearchPrint
+  id: N14PrintNCRAmmoT4
+  faction: NCR
+  tier: 4
+  cost: 10000
+  item: N14BlueprintNCRAmmoT4
+
+- type: factionResearchPrint
+  id: N14PrintLegionWeaponsT1
+  faction: CaesarLegion
+  tier: 1
+  cost: 1000
+  item: N14BlueprintLegionWeaponsT1
+
+- type: factionResearchPrint
+  id: N14PrintLegionWeaponsT2
+  faction: CaesarLegion
+  tier: 2
+  cost: 2500
+  item: N14BlueprintLegionWeaponsT2
+
+- type: factionResearchPrint
+  id: N14PrintLegionWeaponsT3
+  faction: CaesarLegion
+  tier: 3
+  cost: 5000
+  item: N14BlueprintLegionWeaponsT3
+
+- type: factionResearchPrint
+  id: N14PrintLegionWeaponsT4
+  faction: CaesarLegion
+  tier: 4
+  cost: 10000
+  item: N14BlueprintLegionWeaponsT4
+
+- type: factionResearchPrint
+  id: N14PrintLegionArmorT1
+  faction: CaesarLegion
+  tier: 1
+  cost: 1000
+  item: N14BlueprintLegionArmorT1
+
+- type: factionResearchPrint
+  id: N14PrintLegionArmorT2
+  faction: CaesarLegion
+  tier: 2
+  cost: 2500
+  item: N14BlueprintLegionArmorT2
+
+- type: factionResearchPrint
+  id: N14PrintLegionArmorT3
+  faction: CaesarLegion
+  tier: 3
+  cost: 5000
+  item: N14BlueprintLegionArmorT3
+
+- type: factionResearchPrint
+  id: N14PrintLegionArmorT4
+  faction: CaesarLegion
+  tier: 4
+  cost: 10000
+  item: N14BlueprintLegionArmorT4
+
+- type: factionResearchPrint
+  id: N14PrintLegionAmmoT1
+  faction: CaesarLegion
+  tier: 1
+  cost: 1000
+  item: N14BlueprintLegionAmmoT1
+
+- type: factionResearchPrint
+  id: N14PrintLegionAmmoT2
+  faction: CaesarLegion
+  tier: 2
+  cost: 2500
+  item: N14BlueprintLegionAmmoT2
+
+- type: factionResearchPrint
+  id: N14PrintLegionAmmoT3
+  faction: CaesarLegion
+  tier: 3
+  cost: 5000
+  item: N14BlueprintLegionAmmoT3
+
+- type: factionResearchPrint
+  id: N14PrintLegionAmmoT4
+  faction: CaesarLegion
+  tier: 4
+  cost: 10000
+  item: N14BlueprintLegionAmmoT4
+
+- type: factionResearchPrint
+  id: N14PrintWashingtonBosWeaponsT1
+  faction: BrotherhoodWashington
+  tier: 1
+  cost: 1000
+  item: N14BlueprintWashingtonBosWeaponsT1
+
+- type: factionResearchPrint
+  id: N14PrintWashingtonBosWeaponsT2
+  faction: BrotherhoodWashington
+  tier: 2
+  cost: 2500
+  item: N14BlueprintWashingtonBosWeaponsT2
+
+- type: factionResearchPrint
+  id: N14PrintWashingtonBosWeaponsT3
+  faction: BrotherhoodWashington
+  tier: 3
+  cost: 5000
+  item: N14BlueprintWashingtonBosWeaponsT3
+
+- type: factionResearchPrint
+  id: N14PrintWashingtonBosWeaponsT4
+  faction: BrotherhoodWashington
+  tier: 4
+  cost: 10000
+  item: N14BlueprintWashingtonBosWeaponsT4
+
+- type: factionResearchPrint
+  id: N14PrintWashingtonBosArmorT1
+  faction: BrotherhoodWashington
+  tier: 1
+  cost: 1000
+  item: N14BlueprintWashingtonBosArmorT1
+
+- type: factionResearchPrint
+  id: N14PrintWashingtonBosArmorT2
+  faction: BrotherhoodWashington
+  tier: 2
+  cost: 2500
+  item: N14BlueprintWashingtonBosArmorT2
+
+- type: factionResearchPrint
+  id: N14PrintWashingtonBosArmorT3
+  faction: BrotherhoodWashington
+  tier: 3
+  cost: 5000
+  item: N14BlueprintWashingtonBosArmorT3
+
+- type: factionResearchPrint
+  id: N14PrintWashingtonBosArmorT4
+  faction: BrotherhoodWashington
+  tier: 4
+  cost: 10000
+  item: N14BlueprintWashingtonBosArmorT4
+
+- type: factionResearchPrint
+  id: N14PrintWestBosWeaponsT1
+  faction: BrotherhoodWest
+  tier: 1
+  cost: 1000
+  item: N14BlueprintWestBosWeaponsT1
+
+- type: factionResearchPrint
+  id: N14PrintWestBosWeaponsT2
+  faction: BrotherhoodWest
+  tier: 2
+  cost: 2500
+  item: N14BlueprintWestBosWeaponsT2
+
+- type: factionResearchPrint
+  id: N14PrintWestBosWeaponsT3
+  faction: BrotherhoodWest
+  tier: 3
+  cost: 5000
+  item: N14BlueprintWestBosWeaponsT3
+
+- type: factionResearchPrint
+  id: N14PrintWestBosWeaponsT4
+  faction: BrotherhoodWest
+  tier: 4
+  cost: 10000
+  item: N14BlueprintWestBosWeaponsT4
+
+- type: factionResearchPrint
+  id: N14PrintWestBosArmorT1
+  faction: BrotherhoodWest
+  tier: 1
+  cost: 1000
+  item: N14BlueprintWestBosArmorT1
+
+- type: factionResearchPrint
+  id: N14PrintWestBosArmorT2
+  faction: BrotherhoodWest
+  tier: 2
+  cost: 2500
+  item: N14BlueprintWestBosArmorT2
+
+- type: factionResearchPrint
+  id: N14PrintWestBosArmorT3
+  faction: BrotherhoodWest
+  tier: 3
+  cost: 5000
+  item: N14BlueprintWestBosArmorT3
+
+- type: factionResearchPrint
+  id: N14PrintWestBosArmorT4
+  faction: BrotherhoodWest
+  tier: 4
+  cost: 10000
+  item: N14BlueprintWestBosArmorT4
+
+- type: factionResearchPrint
+  id: N14PrintMidWestBosWeaponsT1
+  faction: BrotherhoodMidwest
+  tier: 1
+  cost: 1000
+  item: N14BlueprintMidWestBosWeaponsT1
+
+- type: factionResearchPrint
+  id: N14PrintMidWestBosWeaponsT2
+  faction: BrotherhoodMidwest
+  tier: 2
+  cost: 2500
+  item: N14BlueprintMidWestBosWeaponsT2
+
+- type: factionResearchPrint
+  id: N14PrintMidWestBosWeaponsT3
+  faction: BrotherhoodMidwest
+  tier: 3
+  cost: 5000
+  item: N14BlueprintMidWestBosWeaponsT3
+
+- type: factionResearchPrint
+  id: N14PrintMidWestBosWeaponsT4
+  faction: BrotherhoodMidwest
+  tier: 4
+  cost: 10000
+  item: N14BlueprintMidWestBosWeaponsT4
+
+- type: factionResearchPrint
+  id: N14PrintMidWestBosArmorT1
+  faction: BrotherhoodMidwest
+  tier: 1
+  cost: 1000
+  item: N14BlueprintMidWestBosArmorT1
+
+- type: factionResearchPrint
+  id: N14PrintMidWestBosArmorT2
+  faction: BrotherhoodMidwest
+  tier: 2
+  cost: 2500
+  item: N14BlueprintMidWestBosArmorT2
+
+- type: factionResearchPrint
+  id: N14PrintMidWestBosArmorT3
+  faction: BrotherhoodMidwest
+  tier: 3
+  cost: 5000
+  item: N14BlueprintMidWestBosArmorT3
+
+- type: factionResearchPrint
+  id: N14PrintMidWestBosArmorT4
+  faction: BrotherhoodMidwest
+  tier: 4
+  cost: 10000
+  item: N14BlueprintMidWestBosArmorT4
+
+- type: factionResearchPrint
+  id: N14PrintTownWeaponsT1
+  faction: Townsfolk
+  tier: 1
+  cost: 1000
+  item: N14BlueprintTownWeaponsT1
+
+- type: factionResearchPrint
+  id: N14PrintTownWeaponsT2
+  faction: Townsfolk
+  tier: 2
+  cost: 2500
+  item: N14BlueprintTownWeaponsT2
+
+- type: factionResearchPrint
+  id: N14PrintTownWeaponsT3
+  faction: Townsfolk
+  tier: 3
+  cost: 5000
+  item: N14BlueprintTownWeaponsT3
+
+- type: factionResearchPrint
+  id: N14PrintTownWeaponsT4
+  faction: Townsfolk
+  tier: 4
+  cost: 10000
+  item: N14BlueprintTownWeaponsT4
+
+- type: factionResearchPrint
+  id: N14PrintTownArmorT1
+  faction: Townsfolk
+  tier: 1
+  cost: 1000
+  item: N14BlueprintTownArmorT1
+
+- type: factionResearchPrint
+  id: N14PrintTownArmorT2
+  faction: Townsfolk
+  tier: 2
+  cost: 2500
+  item: N14BlueprintTownArmorT2
+
+- type: factionResearchPrint
+  id: N14PrintTownArmorT3
+  faction: Townsfolk
+  tier: 3
+  cost: 5000
+  item: N14BlueprintTownArmorT3
+
+- type: factionResearchPrint
+  id: N14PrintTownArmorT4
+  faction: Townsfolk
+  tier: 4
+  cost: 10000
+  item: N14BlueprintTownArmorT4
+
+- type: factionResearchPrint
+  id: N14PrintTownAmmoT1
+  faction: Townsfolk
+  tier: 1
+  cost: 1000
+  item: N14BlueprintTownAmmoT1
+
+- type: factionResearchPrint
+  id: N14PrintTownAmmoT2
+  faction: Townsfolk
+  tier: 2
+  cost: 2500
+  item: N14BlueprintTownAmmoT2
+
+- type: factionResearchPrint
+  id: N14PrintTownAmmoT3
+  faction: Townsfolk
+  tier: 3
+  cost: 5000
+  item: N14BlueprintTownAmmoT3
+
+- type: factionResearchPrint
+  id: N14PrintTownAmmoT4
+  faction: Townsfolk
+  tier: 4
+  cost: 10000
+  item: N14BlueprintTownAmmoT4
+
+- type: factionResearchPrint
+  id: N14PrintVaultWeaponsT1
+  faction: Vault
+  tier: 1
+  cost: 1000
+  item: N14BlueprintVaultWeaponsT1
+
+- type: factionResearchPrint
+  id: N14PrintVaultWeaponsT2
+  faction: Vault
+  tier: 2
+  cost: 2500
+  item: N14BlueprintVaultWeaponsT2
+
+- type: factionResearchPrint
+  id: N14PrintVaultWeaponsT3
+  faction: Vault
+  tier: 3
+  cost: 5000
+  item: N14BlueprintVaultWeaponsT3
+
+- type: factionResearchPrint
+  id: N14PrintVaultWeaponsT4
+  faction: Vault
+  tier: 4
+  cost: 10000
+  item: N14BlueprintVaultWeaponsT4
+
+- type: factionResearchPrint
+  id: N14PrintVaultArmorT1
+  faction: Vault
+  tier: 1
+  cost: 1000
+  item: N14BlueprintVaultArmorT1
+
+- type: factionResearchPrint
+  id: N14PrintVaultArmorT2
+  faction: Vault
+  tier: 2
+  cost: 2500
+  item: N14BlueprintVaultArmorT2
+
+- type: factionResearchPrint
+  id: N14PrintVaultArmorT3
+  faction: Vault
+  tier: 3
+  cost: 5000
+  item: N14BlueprintVaultArmorT3
+
+- type: factionResearchPrint
+  id: N14PrintVaultArmorT4
+  faction: Vault
+  tier: 4
+  cost: 10000
+  item: N14BlueprintVaultArmorT4
+
+- type: factionResearchPrint
+  id: N14PrintVaultAmmoT1
+  faction: Vault
+  tier: 1
+  cost: 1000
+  item: N14BlueprintVaultAmmoT1
+
+- type: factionResearchPrint
+  id: N14PrintVaultAmmoT2
+  faction: Vault
+  tier: 2
+  cost: 2500
+  item: N14BlueprintVaultAmmoT2
+
+- type: factionResearchPrint
+  id: N14PrintVaultAmmoT3
+  faction: Vault
+  tier: 3
+  cost: 5000
+  item: N14BlueprintVaultAmmoT3
+
+- type: factionResearchPrint
+  id: N14PrintVaultAmmoT4
+  faction: Vault
+  tier: 4
+  cost: 10000
+  item: N14BlueprintVaultAmmoT4
+
+- type: factionResearchPrint
+  id: N14PrintTribeWeaponsT1
+  faction: Tribe
+  tier: 1
+  cost: 1000
+  item: N14BlueprintTribeWeaponsT1
+
+- type: factionResearchPrint
+  id: N14PrintTribeWeaponsT2
+  faction: Tribe
+  tier: 2
+  cost: 2500
+  item: N14BlueprintTribeWeaponsT2
+
+- type: factionResearchPrint
+  id: N14PrintTribeWeaponsT3
+  faction: Tribe
+  tier: 3
+  cost: 5000
+  item: N14BlueprintTribeWeaponsT3
+
+- type: factionResearchPrint
+  id: N14PrintTribeWeaponsT4
+  faction: Tribe
+  tier: 4
+  cost: 10000
+  item: N14BlueprintTribeWeaponsT4
+
+- type: factionResearchPrint
+  id: N14PrintTribeArmorT1
+  faction: Tribe
+  tier: 1
+  cost: 1000
+  item: N14BlueprintTribeArmorT1
+
+- type: factionResearchPrint
+  id: N14PrintTribeArmorT2
+  faction: Tribe
+  tier: 2
+  cost: 2500
+  item: N14BlueprintTribeArmorT2
+
+- type: factionResearchPrint
+  id: N14PrintTribeArmorT3
+  faction: Tribe
+  tier: 3
+  cost: 5000
+  item: N14BlueprintTribeArmorT3
+
+- type: factionResearchPrint
+  id: N14PrintTribeArmorT4
+  faction: Tribe
+  tier: 4
+  cost: 10000
+  item: N14BlueprintTribeArmorT4
+
+- type: factionResearchPrint
+  id: N14PrintTribeAmmoT1
+  faction: Tribe
+  tier: 1
+  cost: 1000
+  item: N14BlueprintTribeAmmoT1
+
+- type: factionResearchPrint
+  id: N14PrintTribeAmmoT2
+  faction: Tribe
+  tier: 2
+  cost: 2500
+  item: N14BlueprintTribeAmmoT2
+
+- type: factionResearchPrint
+  id: N14PrintTribeAmmoT3
+  faction: Tribe
+  tier: 3
+  cost: 5000
+  item: N14BlueprintTribeAmmoT3
+
+- type: factionResearchPrint
+  id: N14PrintTribeAmmoT4
+  faction: Tribe
+  tier: 4
+  cost: 10000
+  item: N14BlueprintTribeAmmoT4
