@@ -1,5 +1,6 @@
 using Content.Shared._Forge.ResourceExtractor;
 using Content.Shared.Maps;
+using Robust.Shared.Configuration;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Maths;
@@ -18,18 +19,46 @@ namespace Content.Server._Forge.ResourceExtractor;
 public sealed class ResourceExtractorSpawnEventSystem : EntitySystem
 {
     [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly IConfigurationManager _cfg = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
 
-    private ResourceExtractorSettingsPrototype Settings =>
-        _prototypes.Index<ResourceExtractorSettingsPrototype>(ResourceExtractorSettingsPrototype.DefaultId);
+    private int _maxEventsPerProduction;
+    private int _maxEventSpawnsPerProduction;
+    private int _maxEventOperationsPerTick;
+    private int _maxEventSpawnRadius;
+    private float _maxTelegraphDuration;
+
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        Subs.CVar(_cfg, ResourceExtractorCVars.MaxEventsPerProduction,
+            value => _maxEventsPerProduction = value, true);
+        Subs.CVar(_cfg, ResourceExtractorCVars.MaxEventSpawnsPerProduction,
+            value => _maxEventSpawnsPerProduction = value, true);
+        Subs.CVar(_cfg, ResourceExtractorCVars.MaxEventOperationsPerTick,
+            value => _maxEventOperationsPerTick = value, true);
+        Subs.CVar(_cfg, ResourceExtractorCVars.MaxEventSpawnRadius,
+            value => _maxEventSpawnRadius = value, true);
+        Subs.CVar(_cfg, ResourceExtractorCVars.MaxTelegraphDuration,
+            value => _maxTelegraphDuration = value, true);
+    }
 
     public bool ValidateEvents(ResourceExtractorProductionPrototype production, out string? error)
     {
-        if (production.Events.Count > Settings.MaxEventsPerProduction)
+        if (_maxEventsPerProduction < 0 || _maxEventSpawnsPerProduction <= 0 ||
+            !float.IsFinite(_maxTelegraphDuration) || _maxTelegraphDuration <= 0f ||
+            _maxEventSpawnRadius <= 0)
+        {
+            error = "resource extractor event CVars are invalid";
+            return false;
+        }
+
+        if (production.Events.Count > _maxEventsPerProduction)
         {
             error = $"production {production.ID} defines {production.Events.Count} events; " +
-                    $"the global limit is {Settings.MaxEventsPerProduction}";
+                    $"the global limit is {_maxEventsPerProduction}";
             return false;
         }
 
@@ -43,10 +72,10 @@ public sealed class ResourceExtractorSpawnEventSystem : EntitySystem
             }
 
             totalSpawns += spawnEvent.Amount;
-            if (totalSpawns > Settings.MaxEventSpawnsPerProduction)
+            if (totalSpawns > _maxEventSpawnsPerProduction)
             {
                 error = $"production {production.ID} can spawn {totalSpawns} event entities per cycle; " +
-                        $"the global limit is {Settings.MaxEventSpawnsPerProduction}";
+                        $"the global limit is {_maxEventSpawnsPerProduction}";
                 return false;
             }
 
@@ -57,17 +86,17 @@ public sealed class ResourceExtractorSpawnEventSystem : EntitySystem
             }
 
             if (spawnEvent.TelegraphDuration <= TimeSpan.Zero ||
-                spawnEvent.TelegraphDuration > Settings.MaxTelegraphDuration)
+                spawnEvent.TelegraphDuration.TotalSeconds > _maxTelegraphDuration)
             {
                 error = $"production {production.ID} has telegraph duration {spawnEvent.TelegraphDuration}; " +
-                        $"the allowed range is greater than zero and at most {Settings.MaxTelegraphDuration}";
+                        $"the allowed range is greater than zero and at most {_maxTelegraphDuration} seconds";
                 return false;
             }
 
-            if (spawnEvent.SpawnRadius < 1 || spawnEvent.SpawnRadius > Settings.MaxEventSpawnRadius)
+            if (spawnEvent.SpawnRadius < 1 || spawnEvent.SpawnRadius > _maxEventSpawnRadius)
             {
                 error = $"production {production.ID} has spawn radius {spawnEvent.SpawnRadius}; " +
-                        $"the allowed range is 1 to {Settings.MaxEventSpawnRadius}";
+                        $"the allowed range is 1 to {_maxEventSpawnRadius}";
                 return false;
             }
 
@@ -88,8 +117,14 @@ public sealed class ResourceExtractorSpawnEventSystem : EntitySystem
         return true;
     }
 
-    public void RollEvents(EntityUid extractor, ResourceExtractorProductionPrototype production)
+    public bool RollEvents(
+        EntityUid extractor,
+        ResourceExtractorProductionPrototype production,
+        out string? error)
     {
+        if (!ValidateEvents(production, out error))
+            return false;
+
         var reservedTiles = new HashSet<Vector2i>();
         foreach (var spawnEvent in production.Events)
         {
@@ -116,13 +151,16 @@ public sealed class ResourceExtractorSpawnEventSystem : EntitySystem
                 pending.SpawnAt = _timing.CurTime + spawnEvent.TelegraphDuration;
             }
         }
+
+        error = null;
+        return true;
     }
 
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
 
-        var remainingBudget = Settings.MaxEventOperationsPerTick;
+        var remainingBudget = Math.Max(0, _maxEventOperationsPerTick);
         var query = EntityQueryEnumerator<ResourceExtractorBurrowEffectComponent>();
         while (remainingBudget > 0 && query.MoveNext(out var uid, out var component))
         {

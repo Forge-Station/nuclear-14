@@ -4,6 +4,7 @@ using Content.Shared._Forge.ResourceExtractor;
 using Content.Shared.Storage;
 using Content.Shared.Storage.EntitySystems;
 using Robust.Server.GameObjects;
+using Robust.Shared.Configuration;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
@@ -15,6 +16,7 @@ public sealed class ResourceExtractorSystem : SharedResourceExtractorSystem
     [Dependency] private readonly ResourceExtractorFuelSystem _fuel = default!;
     [Dependency] private readonly ResourceExtractorOutputSystem _output = default!;
     [Dependency] private readonly ResourceExtractorSpawnEventSystem _spawnEvents = default!;
+    [Dependency] private readonly IConfigurationManager _cfg = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
     [Dependency] private readonly SharedStorageSystem _storage = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
@@ -23,13 +25,61 @@ public sealed class ResourceExtractorSystem : SharedResourceExtractorSystem
     [Dependency] private readonly IGameTiming _timing = default!;
 
     private bool _invalidSettingsLogged;
+    private int _maxOutputOperationsPerTick;
+    private int _maxAllowedBatchSize;
+    private int _maxSpawnedEntitiesPerTick;
+    private int _maxEventsPerProduction;
+    private int _maxEventSpawnsPerProduction;
+    private int _maxEventOperationsPerTick;
+    private int _maxEventSpawnRadius;
+    private float _maxTelegraphDuration;
+    private float _minExtractionDuration;
+    private float _outputRetryPeriod;
+    private float _uiUpdatePeriod;
+    private float _fuelEpsilon;
 
-    private ResourceExtractorSettingsPrototype Settings =>
-        _prototypes.Index<ResourceExtractorSettingsPrototype>(ResourceExtractorSettingsPrototype.DefaultId);
+    private ResourceExtractorSettings Settings => new(
+        _maxOutputOperationsPerTick,
+        _maxAllowedBatchSize,
+        _maxSpawnedEntitiesPerTick,
+        _maxEventsPerProduction,
+        _maxEventSpawnsPerProduction,
+        _maxEventOperationsPerTick,
+        _maxEventSpawnRadius,
+        _maxTelegraphDuration,
+        _minExtractionDuration,
+        _outputRetryPeriod,
+        _uiUpdatePeriod,
+        _fuelEpsilon);
 
     public override void Initialize()
     {
         base.Initialize();
+
+        Subs.CVar(_cfg, ResourceExtractorCVars.MaxOutputOperationsPerTick,
+            value => _maxOutputOperationsPerTick = value, true);
+        Subs.CVar(_cfg, ResourceExtractorCVars.MaxAllowedBatchSize,
+            value => _maxAllowedBatchSize = value, true);
+        Subs.CVar(_cfg, ResourceExtractorCVars.MaxSpawnedEntitiesPerTick,
+            value => _maxSpawnedEntitiesPerTick = value, true);
+        Subs.CVar(_cfg, ResourceExtractorCVars.MaxEventsPerProduction,
+            value => _maxEventsPerProduction = value, true);
+        Subs.CVar(_cfg, ResourceExtractorCVars.MaxEventSpawnsPerProduction,
+            value => _maxEventSpawnsPerProduction = value, true);
+        Subs.CVar(_cfg, ResourceExtractorCVars.MaxEventOperationsPerTick,
+            value => _maxEventOperationsPerTick = value, true);
+        Subs.CVar(_cfg, ResourceExtractorCVars.MaxEventSpawnRadius,
+            value => _maxEventSpawnRadius = value, true);
+        Subs.CVar(_cfg, ResourceExtractorCVars.MaxTelegraphDuration,
+            value => _maxTelegraphDuration = value, true);
+        Subs.CVar(_cfg, ResourceExtractorCVars.MinExtractionDuration,
+            value => _minExtractionDuration = value, true);
+        Subs.CVar(_cfg, ResourceExtractorCVars.OutputRetryPeriod,
+            value => _outputRetryPeriod = value, true);
+        Subs.CVar(_cfg, ResourceExtractorCVars.UiUpdatePeriod,
+            value => _uiUpdatePeriod = value, true);
+        Subs.CVar(_cfg, ResourceExtractorCVars.FuelEpsilon,
+            value => _fuelEpsilon = value, true);
 
         SubscribeLocalEvent<ResourceExtractorComponent, MapInitEvent>(OnMapInit);
         SubscribeLocalEvent<ResourceExtractorComponent, AnchorStateChangedEvent>(OnAnchorChanged);
@@ -44,17 +94,12 @@ public sealed class ResourceExtractorSystem : SharedResourceExtractorSystem
     private void OnMapInit(EntityUid uid, ResourceExtractorComponent component, MapInitEvent args)
     {
         component.UserEnabled = false;
-
-        if (!ValidateSettings(Settings) || !ValidateConfiguration(uid, component, Settings))
-        {
-            SetStopped(uid, component, ResourceExtractorStatus.InvalidConfiguration, clearUserLatch: true);
-            return;
-        }
-
+        // Cross-component validation must wait until startup is complete. In
+        // particular, the fuel solution is not guaranteed to exist at MapInit.
         SetStopped(uid, component, ResourceExtractorStatus.Off, clearUserLatch: true);
     }
 
-    private bool ValidateSettings(ResourceExtractorSettingsPrototype settings)
+    private bool ValidateSettings(ResourceExtractorSettings settings)
     {
         if (settings.MaxOutputOperationsPerTick > 0 &&
             settings.MaxAllowedBatchSize > 0 &&
@@ -63,10 +108,10 @@ public sealed class ResourceExtractorSystem : SharedResourceExtractorSystem
             settings.MaxEventSpawnsPerProduction > 0 &&
             settings.MaxEventOperationsPerTick > 0 &&
             settings.MaxEventSpawnRadius > 0 &&
-            settings.MaxTelegraphDuration > TimeSpan.Zero &&
-            settings.MinExtractionDuration > TimeSpan.Zero &&
-            settings.OutputRetryPeriod > TimeSpan.Zero &&
-            settings.UiUpdatePeriod > TimeSpan.Zero &&
+            float.IsFinite(settings.MaxTelegraphDuration) && settings.MaxTelegraphDuration > 0f &&
+            float.IsFinite(settings.MinExtractionDuration) && settings.MinExtractionDuration > 0f &&
+            float.IsFinite(settings.OutputRetryPeriod) && settings.OutputRetryPeriod > 0f &&
+            float.IsFinite(settings.UiUpdatePeriod) && settings.UiUpdatePeriod > 0f &&
             float.IsFinite(settings.FuelEpsilon) && settings.FuelEpsilon >= 0f)
         {
             return true;
@@ -74,7 +119,7 @@ public sealed class ResourceExtractorSystem : SharedResourceExtractorSystem
 
         if (!_invalidSettingsLogged)
         {
-            Log.Error("Resource extractor settings are invalid. Extractors will remain disabled until the YAML is fixed.");
+            Log.Error("Resource extractor CVars are invalid. Extractors will remain disabled until the server configuration is fixed.");
             _invalidSettingsLogged = true;
         }
 
@@ -84,9 +129,9 @@ public sealed class ResourceExtractorSystem : SharedResourceExtractorSystem
     private bool ValidateConfiguration(
         EntityUid uid,
         ResourceExtractorComponent component,
-        ResourceExtractorSettingsPrototype settings)
+        ResourceExtractorSettings settings)
     {
-        if (component.ExtractionDuration < settings.MinExtractionDuration ||
+        if (component.ExtractionDuration < TimeSpan.FromSeconds(settings.MinExtractionDuration) ||
             !float.IsFinite(component.FuelConsumptionRate) ||
             component.FuelConsumptionRate <= 0f ||
             !HasComp<StorageComponent>(uid))
@@ -251,7 +296,9 @@ public sealed class ResourceExtractorSystem : SharedResourceExtractorSystem
             return ResourceExtractorStatus.Unanchored;
         if (_fuel.IsClogged(uid))
             return ResourceExtractorStatus.Clogged;
-        if (!_fuel.HasFuel(uid, Settings.FuelEpsilon))
+        if (!float.IsFinite(_fuelEpsilon) || _fuelEpsilon < 0f)
+            return ResourceExtractorStatus.InvalidConfiguration;
+        if (!_fuel.HasFuel(uid, _fuelEpsilon))
             return ResourceExtractorStatus.NoFuel;
         if (checkOutput && !_output.HasAnyCapacity(uid))
             return ResourceExtractorStatus.OutputFull;
@@ -274,7 +321,7 @@ public sealed class ResourceExtractorSystem : SharedResourceExtractorSystem
         UpdateActiveExtractors(frameTime, settings);
     }
 
-    private void UpdateActiveExtractors(float frameTime, ResourceExtractorSettingsPrototype settings)
+    private void UpdateActiveExtractors(float frameTime, ResourceExtractorSettings settings)
     {
         var query = EntityQueryEnumerator<ActiveResourceExtractorComponent, ResourceExtractorComponent>();
         while (query.MoveNext(out var uid, out _, out var component))
@@ -337,7 +384,7 @@ public sealed class ResourceExtractorSystem : SharedResourceExtractorSystem
             }
 
             component.UiUpdateAccumulator += frameTime;
-            var uiUpdatePeriod = (float) settings.UiUpdatePeriod.TotalSeconds;
+            var uiUpdatePeriod = settings.UiUpdatePeriod;
             if (component.UiUpdateAccumulator >= uiUpdatePeriod)
             {
                 component.UiUpdateAccumulator %= uiUpdatePeriod;
@@ -357,7 +404,7 @@ public sealed class ResourceExtractorSystem : SharedResourceExtractorSystem
         UpdateUi(uid, component);
     }
 
-    private void ProcessPendingOutputOperations(ResourceExtractorSettingsPrototype settings)
+    private void ProcessPendingOutputOperations(ResourceExtractorSettings settings)
     {
         var remainingOperations = settings.MaxOutputOperationsPerTick;
         var remainingEntities = settings.MaxSpawnedEntitiesPerTick;
@@ -388,7 +435,7 @@ public sealed class ResourceExtractorSystem : SharedResourceExtractorSystem
 
             if (pending.WaitingForCapacity)
             {
-                pending.NextCapacityRetry = _timing.CurTime + settings.OutputRetryPeriod;
+                pending.NextCapacityRetry = _timing.CurTime + TimeSpan.FromSeconds(settings.OutputRetryPeriod);
                 if (!_output.HasAnyCapacity(uid))
                     continue;
 
@@ -401,6 +448,7 @@ public sealed class ResourceExtractorSystem : SharedResourceExtractorSystem
                 if (!_output.TryCreateBatch(
                         uid,
                         component.Production,
+                        settings.MaxAllowedBatchSize,
                         pending.Batch,
                         out var error))
                 {
@@ -423,7 +471,7 @@ public sealed class ResourceExtractorSystem : SharedResourceExtractorSystem
             {
                 case ResourceExtractorCommitResult.OutputFull:
                     pending.WaitingForCapacity = true;
-                    pending.NextCapacityRetry = _timing.CurTime + settings.OutputRetryPeriod;
+                    pending.NextCapacityRetry = _timing.CurTime + TimeSpan.FromSeconds(settings.OutputRetryPeriod);
                     SetMotorStopped(uid, component, ResourceExtractorStatus.OutputFull);
                     continue;
                 case ResourceExtractorCommitResult.InvalidConfiguration:
@@ -436,9 +484,16 @@ public sealed class ResourceExtractorSystem : SharedResourceExtractorSystem
             pending.Batch.Clear();
             component.ExtractionProgress = TimeSpan.Zero;
             RemComp<PendingResourceExtractorOperationComponent>(uid);
-            _spawnEvents.RollEvents(
-                uid,
-                _prototypes.Index<ResourceExtractorProductionPrototype>(component.Production));
+            if (!_spawnEvents.RollEvents(
+                    uid,
+                    _prototypes.Index<ResourceExtractorProductionPrototype>(component.Production),
+                    out var eventError))
+            {
+                Log.Error($"Resource extractor event failed on {ToPrettyString(uid)}: {eventError}.");
+                SetStopped(uid, component, ResourceExtractorStatus.InvalidConfiguration, clearUserLatch: true);
+                UpdateUi(uid, component);
+                continue;
+            }
 
             if (component.UserEnabled)
                 ResumeMachine(uid, component);
@@ -505,4 +560,18 @@ public sealed class ResourceExtractorSystem : SharedResourceExtractorSystem
                 (float) component.ExtractionDuration.TotalSeconds,
                 pendingCount));
     }
+
+    private readonly record struct ResourceExtractorSettings(
+        int MaxOutputOperationsPerTick,
+        int MaxAllowedBatchSize,
+        int MaxSpawnedEntitiesPerTick,
+        int MaxEventsPerProduction,
+        int MaxEventSpawnsPerProduction,
+        int MaxEventOperationsPerTick,
+        int MaxEventSpawnRadius,
+        float MaxTelegraphDuration,
+        float MinExtractionDuration,
+        float OutputRetryPeriod,
+        float UiUpdatePeriod,
+        float FuelEpsilon);
 }

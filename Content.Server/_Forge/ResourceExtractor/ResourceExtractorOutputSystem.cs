@@ -59,9 +59,13 @@ public sealed class ResourceExtractorOutputSystem : EntitySystem
     public bool TryCreateBatch(
         EntityUid uid,
         ProtoId<ResourceExtractorProductionPrototype> productionId,
+        int maxAllowedBatchSize,
         List<EntProtoId> batch,
         out string? error)
     {
+        if (!ValidateProduction(productionId, maxAllowedBatchSize, out error))
+            return false;
+
         if (!_prototypes.TryIndex(productionId, out var production) ||
             !_prototypes.TryIndex<EntityTablePrototype>(production.OutputTable, out var table))
         {
