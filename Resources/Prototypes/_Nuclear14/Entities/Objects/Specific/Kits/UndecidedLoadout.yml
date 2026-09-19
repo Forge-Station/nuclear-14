@@ -171,6 +171,7 @@
     possibleSets:
     - MBoS_IniLas_Set
     - MBoS_IniBal_Set
+    - MBoS_IniStTr_Set
 
 - type: entity
   id: BoSWashingtonInitSet
@@ -198,6 +199,8 @@
     possibleSets:
     - MBoS_KniLas_Set
     - MBoS_KniBal_Set
+    - MBoS_KniStTr_Set
+    - MBoS_KniSnip_Set
 
 - type: entity
   id: BoSWashingtonKnightSet
@@ -685,6 +688,16 @@
   content:
   - KitMBoS_IniBal
 
+- type: UndecidedLoadoutBackpackSet
+  id: MBoS_IniStTr_Set
+  name: undecided-loadout-category-mbos-init-sttr-name
+  description: undecided-loadout-category-mbos-init-sttr-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitMBoS_IniStTr
+
 # MBoS Knight
 - type: UndecidedLoadoutBackpackSet
   id: MBoS_KniLas_Set
@@ -705,6 +718,26 @@
     state: rifleman
   content:
   - KitMBoS_KniBal
+
+- type: UndecidedLoadoutBackpackSet
+  id: MBoS_KniStTr_Set
+  name: undecided-loadout-category-mbos-kni-sttr-name
+  description: undecided-loadout-category-mbos-kni-sttr-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitMBoS_KniStTr
+
+- type: UndecidedLoadoutBackpackSet
+  id: MBoS_KniSnip_Set
+  name: undecided-loadout-category-mbos-kni-snip-name
+  description: undecided-loadout-category-mbos-kni-snip-description
+  sprite:
+    sprite: _Nuclear14/Objects/Misc/kits.rsi
+    state: rifleman
+  content:
+  - KitMBoS_KniSnip
 
 # MBoS Scribes
 - type: UndecidedLoadoutBackpackSet
