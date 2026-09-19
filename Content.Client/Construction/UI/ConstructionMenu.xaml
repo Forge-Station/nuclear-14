@@ -10,8 +10,7 @@
         <Control MinSize="10 0"/>
         <BoxContainer Orientation="Vertical" HorizontalExpand="True" SizeFlagsStretchRatio="0.6">
             <Control>
-                <!-- Forge-Change -->
-                <BoxContainer Orientation="Horizontal" HorizontalAlignment="Left">
+                <BoxContainer Orientation="Horizontal" Align="Center">
                     <TextureRect Name="TargetTexture" HorizontalAlignment="Right" Stretch="Keep"/>
                     <Control MinSize="10 0"/>
                     <BoxContainer Orientation="Vertical">
