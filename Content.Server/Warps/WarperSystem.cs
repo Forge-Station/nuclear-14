@@ -51,9 +51,28 @@ public class WarperSystem : EntitySystem
             return;
 
         args.Handled = true;
-        TryTravel(uid, component, args.User, true);
+        TryTravel(uid, component, args.User, delayCompleted: true);
     }
 
+    /// <summary>
+    /// Проверяет место назначения и запускает задержку перехода либо перемещает пользователя.
+    /// Вызывается как при взаимодействии с лестницей, так и после завершения DoAfter:
+    /// в обоих случаях user — инициатор взаимодействия (args.User), а uid — сама лестница.
+    /// После ожидания место назначения и состояние его карты проверяются заново.
+    /// При отмене DoAfter этот метод повторно не вызывается.
+    /// </summary>
+    /// <param name="uid">Лестница или другой объект с WarperComponent, с которым взаимодействовали.</param>
+    /// <param name="component">Компонент этого объекта с ID места назначения и длительностью задержки.</param>
+    /// <param name="user">Перемещаемый персонаж; также получатель сообщений об ошибках.</param>
+    /// <param name="delayCompleted">
+    /// True только при завершении DoAfter: пропускает повторный запуск ожидания, но не проверки назначения.
+    /// При нулевой задержке или взаимодействии призрака переход выполняется сразу.
+    /// </param>
+    /// <remarks>
+    /// Перенос и обнуление скорости сохраняют прежнюю логику OnInteractHand.
+    /// Если в момент перехода user тянет объект, сначала переносится этот объект, затем user,
+    /// после чего восстанавливается перетаскивание. Объект, отпущенный во время ожидания, не переносится.
+    /// </remarks>
     private void TryTravel(EntityUid uid, WarperComponent component, EntityUid user, bool delayCompleted = false)
     {
         /// Forge-Change-End
