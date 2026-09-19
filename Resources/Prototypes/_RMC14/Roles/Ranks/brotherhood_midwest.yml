@@ -1,0 +1,36 @@
+# Forge-Change
+- type: rank
+  id: BoSMidSquire
+  name: rmc14-rank-name-bos-mid-squire
+
+- type: rank
+  id: BoSMidSeniorSquire
+  name: rmc14-rank-name-bos-mid-senior-squire
+
+- type: rank
+  id: BoSMidJuniorScribe
+  name: rmc14-rank-name-bos-mid-junior-scribe
+
+- type: rank
+  id: BoSMidScribe
+  name: rmc14-rank-name-bos-mid-scribe
+
+- type: rank
+  id: BoSMidJuniorKnight
+  name: rmc14-rank-name-bos-mid-junior-knight
+
+- type: rank
+  id: BoSMidKnight
+  name: rmc14-rank-name-bos-mid-knight
+
+- type: rank
+  id: BoSMidSeniorKnight
+  name: rmc14-rank-name-bos-mid-senior-knight
+
+- type: rank
+  id: BoSMidJuniorPaladin
+  name: rmc14-rank-name-bos-mid-junior-paladin
+
+- type: rank
+  id: BoSMidPaladin
+  name: rmc14-rank-name-bos-mid-paladin

@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Content.Server.Administration.Logs;
 using Content.Server.Administration.Managers;
+using Content.Shared._RMC14.Roles.Ranks; // Forge-Change
 using Content.Shared.Administration.Logs;
 using Content.Shared.Clothing.Loadouts.Systems;
 using Content.Shared.Database;
@@ -47,6 +48,7 @@ namespace Content.Server.Database
                 .Include(p => p.Profiles).ThenInclude(h => h.Jobs)
                 .Include(p => p.Profiles).ThenInclude(h => h.Antags)
                 .Include(p => p.Profiles).ThenInclude(h => h.Traits)
+                .Include(p => p.Profiles).ThenInclude(h => h.RankPreferences) // Forge-Change
                 .Include(p => p.Profiles).ThenInclude(h => h.Loadouts)
                 .AsSingleQuery()
                 .SingleOrDefaultAsync(p => p.UserId == userId.UserId, cancel);
@@ -108,6 +110,7 @@ namespace Content.Server.Database
                 .Include(p => p.Jobs)
                 .Include(p => p.Antags)
                 .Include(p => p.Traits)
+                .Include(p => p.RankPreferences) // Forge-Change
                 .Include(p => p.Loadouts)
                 .AsSplitQuery()
                 .SingleOrDefault(h => h.Slot == slot);
@@ -216,6 +219,11 @@ namespace Content.Server.Database
             var jobs = profile.Jobs.ToDictionary(j => j.JobName, j => (JobPriority) j.Priority);
             var antags = profile.Antags.Select(a => a.AntagName);
             var traits = profile.Traits.Select(t => t.TraitName);
+            // Forge-Change-Start
+            var rankPreferences = profile.RankPreferences.ToDictionary(
+                rank => new ProtoId<JobPrototype>(rank.JobName),
+                rank => new ProtoId<RankPrototype>(rank.RankName));
+            // Forge-Change-End
             var loadouts = profile.Loadouts.Select(Shared.Clothing.Loadouts.Systems.Loadout (l) => l);
 
             var sex = Sex.Male;
@@ -284,6 +292,7 @@ namespace Content.Server.Database
                     markings
                 ),
                 spawnPriority,
+                rankPreferences, // Forge-Change
                 jobs,
                 clothing,
                 backpack,
@@ -354,6 +363,16 @@ namespace Content.Server.Database
                 humanoid.TraitPreferences
                         .Select(t => new Trait { TraitName = t })
             );
+
+            // Forge-Change-Start
+            profile.RankPreferences.Clear();
+            profile.RankPreferences.AddRange(
+                humanoid.RankPreferences.Select(rank => new ProfileRankPreference
+                {
+                    JobName = rank.Key.Id,
+                    RankName = rank.Value.Id,
+                }));
+            // Forge-Change-End
 
             profile.Loadouts.Clear();
             profile.Loadouts.AddRange(humanoid.LoadoutPreferences

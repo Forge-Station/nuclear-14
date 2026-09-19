@@ -928,6 +928,38 @@ namespace Content.Server.Database.Migrations.Sqlite
                     b.ToTable("profile", (string)null);
                 });
 
+            // Forge-Change-Start
+            modelBuilder.Entity("Content.Server.Database.ProfileRankPreference", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("profile_rank_preference_id");
+
+                    b.Property<string>("JobName")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("job_name");
+
+                    b.Property<int>("ProfileId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("profile_id");
+
+                    b.Property<string>("RankName")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("rank_name");
+
+                    b.HasKey("Id")
+                        .HasName("PK_profile_rank_preference");
+
+                    b.HasIndex("ProfileId", "JobName")
+                        .IsUnique();
+
+                    b.ToTable("profile_rank_preference", (string)null);
+                });
+            // Forge-Change-End
+
             modelBuilder.Entity("Content.Server.Database.RoleWhitelist", b =>
                 {
                     b.Property<Guid>("PlayerUserId")
@@ -1672,6 +1704,20 @@ namespace Content.Server.Database.Migrations.Sqlite
                     b.Navigation("Preference");
                 });
 
+            // Forge-Change-Start
+            modelBuilder.Entity("Content.Server.Database.ProfileRankPreference", b =>
+                {
+                    b.HasOne("Content.Server.Database.Profile", "Profile")
+                        .WithMany("RankPreferences")
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_profile_rank_preference_profile_profile_id");
+
+                    b.Navigation("Profile");
+                });
+            // Forge-Change-End
+
             modelBuilder.Entity("Content.Server.Database.RoleWhitelist", b =>
                 {
                     b.HasOne("Content.Server.Database.Player", "Player")
@@ -1956,6 +2002,8 @@ namespace Content.Server.Database.Migrations.Sqlite
                     b.Navigation("Jobs");
 
                     b.Navigation("Loadouts");
+
+                    b.Navigation("RankPreferences"); // Forge-Change
 
                     b.Navigation("Traits");
                 });

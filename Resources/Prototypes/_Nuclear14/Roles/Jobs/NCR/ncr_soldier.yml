@@ -6,6 +6,18 @@
   name: job-name-ncr-soldier
   description: job-description-ncr-soldier
   playTimeTracker: NCRSoldier
+  ranks: # Forge-Change
+    - rank: NCRCorporal
+      requirements:
+        - !type:CharacterPlaytimeRequirement
+          tracker: NCRSoldier
+          min: 144000 # 2400 minutes
+    - rank: NCRPrivateFirstClass
+      requirements:
+        - !type:CharacterPlaytimeRequirement
+          tracker: NCRSoldier
+          min: 72000 # 1200 minutes
+    - rank: NCRPrivate
   requirements:
     - !type:CharacterSpeciesRequirement
       species:
