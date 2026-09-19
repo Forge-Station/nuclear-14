@@ -202,6 +202,8 @@
     - MBoS_KniStTr_Set
     - MBoS_KniSnip_Set
 
+#forge-add 
+
 - type: entity
   id: BoSWashingtonKnightSet
   name: Undecided Washington Knight Kit

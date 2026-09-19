@@ -1086,6 +1086,8 @@
       - id: N14CleanGauze10
       - id: N14BoxCardboardMREBoxKFilled
 
+#forge-add
+
 # MBoS Knight & Senior Knight kits
 - type: entity
   name: Brotherhood Knight laser kit
@@ -1130,7 +1132,7 @@
       - id: N14BoxCardboardMREBoxKFilled
 
 - type: entity
-  name: Brotherhood Knight ballistic kit
+  name: Brotherhood Knight Stoormtrooper kit
   parent: KitBase
   id: KitMBoS_KniStTr
   description: A crate containing everything a member of the Brotherhood might need.
@@ -1155,6 +1157,8 @@
       - id: N14CleanGauze10
       - id: N14BoxCardboardMREBoxKFilled
 
+#forge-add
+
 - type: entity
   name: Brotherhood Knight sniper kit
   parent: KitBase
@@ -1176,6 +1180,7 @@
       - id: N14CleanGauze10
       - id: N14BoxCardboardMREBoxKFilled
       - id: Binoculars
+#forge-add
 
 # MBoS Scribe Medic Kit
 - type: entity
