@@ -16,6 +16,14 @@
       amount: 1
     - id: N14MaterialRawLeather1
       amount: 2
+    # Forge-Change-Start
+    - id: ForgeAnimalGenericHide
+      amount: 1
+    - id: ForgeAnimalBone2
+      amount: 1
+    - id: ForgeAnimalSinew
+      amount: 2
+    # Forge-Change-End
   - type: MovementSpeedModifier
     baseWalkSpeed : 3.5
     baseSprintSpeed : 7
