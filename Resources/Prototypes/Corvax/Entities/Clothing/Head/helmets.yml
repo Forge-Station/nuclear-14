@@ -335,6 +335,42 @@
     altPrefix: alt
 
 - type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatPrincepsGalea
+  name: princeps galea
+  description: "A protective helmet with a transverse crest."
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/princepsgalea.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/princepsgalea.rsi
+  - type: HelmetToggle
+    altPrefix: alt        # RSI должен иметь стейт "alt-equipped-HELMET"
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.8
+        Slash: 0.8
+        Piercing: 0.8
+        Heat: 0.8
+  - type: ExplosionResistance
+    damageCoefficient: 0.90
+  - type: HideLayerClothing
+    slots:
+    - Hair
+
+- type: entity
+  parent: N14ClothingHeadHatPrincepsGalea
+  id: N14ClothingHeadHatPrincepsPrimeGalea
+  name: princeps prime galea
+  description: "The wearers of this helmet act as the first line in the bellum"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/primeprincepsgalea.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/primeprincepsgalea.rsi
+
+- type: entity
   parent: ClothingHeadEVAHelmetBase
   id: N14ClothingHeadHelmetChinaStealth
   name: шлем стелс-брони
@@ -515,8 +551,11 @@
   components:
   - type: Sprite
     sprite: Corvax/Clothing/Head/Helmets/doghelmet.rsi
+
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/doghelmet.rsi
+  - type: HelmetToggle
+    altPrefix: alt
   - type: Armor
     modifiers:
       coefficients:
@@ -645,3 +684,24 @@
         Slash: 0.95
         Piercing: 0.90
         Heat: 0.9
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatScavengerHelmet
+  name: scavenger helmet
+  description: A battered helmet cobbled together from scrap by wasteland scavengers.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/scavengerhelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/scavengerhelmet.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.95
+        Slash: 0.95
+        Piercing: 0.90
+        Heat: 0.95
+  - type: HideLayerClothing
+    slots:
+    - Hair
