@@ -292,6 +292,13 @@ undecided-loadout-category-mbos-init-bal-description =
     Содержит: 1 старый карабин, 3 магазина 5.56, 1 AEP-7, 2 энергоячейки,
     1 рулон бинтов и сухпаёк типа K.
 
+undecided-loadout-category-mbos-init-sttr-name = Набор послушника (штурмовик)
+undecided-loadout-category-mbos-init-sttr-description =
+    Тайник с вещами послушника Среднезападного Братства.
+    Содержит: 1 пистолет пулемёт М3, 3 магазина ПП (9mm Parabellum), 1 AEP-7, 2 энергоячейки, 
+    лёгкий металлический щит, 9 лома, 15 стали,
+    1 рулон бинтов и сухпаёк типа K.
+
 undecided-loadout-category-mbos-kni-las-name = Набор рыцаря (лазеры)
 undecided-loadout-category-mbos-kni-las-description =
     Тайник с вещами рыцаря Среднезападного Братства.
@@ -303,6 +310,19 @@ undecided-loadout-category-mbos-kni-bal-description =
     Тайник с вещами рыцаря Среднезападного Братства.
     Содержит: 1 штурмовой карабин, 3 магазина 5.56, 1 AEP-7, 2 энергоячейки,
     1 рулон бинтов и сухпаёк типа K.
+
+undecided-loadout-category-mbos-kni-sttr-name = Набор рыцаря (штурмовик)
+undecided-loadout-category-mbos-kni-sttr-description =
+    Тайник с вещами рыцаря Среднезападного Братства.
+    Содержит: 1 пистолет-пулемёт 10мм, 3 магазина пп(10mm auto), 1 AEP-7, 
+    2 энергоячейки, тяжелый металлический щит, 15 лома, 25 стали,
+    1 рулон бинтов и сухпаёк типа K.
+
+undecided-loadout-category-mbos-kni-snip-name = Набор рыцаря (снайпер)
+undecided-loadout-category-mbos-kni-snip-description =
+    Тайник с вещами рыцаря Среднезападного Братства.
+    Содержит: 1 F1, 2 коробки патронов 308, 1 AEP-7, 2 энергоячейки,
+    1 рулон бинтов, 1 бинокль и сухпаёк типа K.
 
 undecided-loadout-category-mbos-scribe-medic-name = Набор писаря-медика
 undecided-loadout-category-mbos-scribe-medic-description =
