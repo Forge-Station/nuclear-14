@@ -21,8 +21,8 @@
     attackRate: 1.0
     damage:
       types:
-        Blunt: 35 #Fogre change
-        Structural: 15 #Fogre change
+        Blunt: 35 #Forge change
+        Structural: 15 #Forge change
     animation: WeaponArcFist
     wideAnimation: WeaponArcFist
     mustBeEquippedToUse: true
