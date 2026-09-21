@@ -98,6 +98,15 @@
     sprite: _Nuclear14/Objects/Misc/identification.rsi
     state: passport
 
+- type: entity
+  parent: N14IDPassportBlank
+  id: N14IDCardWastelander
+  name: ent-N14IDCardWastelander
+  description: ent-N14IDCardWastelander.desc
+  components:
+  - type: Sprite
+    state: passport_photo
+
 #- type: entity
 #  parent: N14IDPassport
 #  id: N14IDPassportCaravan

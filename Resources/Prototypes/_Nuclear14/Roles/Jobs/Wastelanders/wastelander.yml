@@ -19,6 +19,7 @@
 - type: startingGear
   id: WastelanderGear
   equipment:
+    id: N14IDCardWastelander
     jumpsuit: N14ClothingUniformJumpsuitRags
     back: N14ClothingBackpackExplorer # Forge-Change
     shoes: N14ClothingShoesRags
