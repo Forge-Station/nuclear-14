@@ -65,3 +65,15 @@
        - TownSheriff
    items:
      - N14ClothingNeckTownGuardCloak
+
+ - type: loadout
+   id: N14ClothingNeckCapeStranger
+   category: Neck
+   cost: 2
+   exclusive: true
+   customColorTint: true
+   requirements:
+   - !type:CharacterItemGroupRequirement
+    group: N14LoadoutNeck
+   items:
+     - N14ClothingNeckCapeStranger
