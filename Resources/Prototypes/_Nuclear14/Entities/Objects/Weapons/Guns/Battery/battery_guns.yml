@@ -987,7 +987,7 @@
     maxAngle: 12
     angleIncrease: 4
     angleDecay: 12
-    fireRate: 3 #Fogre change
+    fireRate: 2.5 #Forge change
     soundGunshot:
       collection: N14PlasmaCasterGunshot
     selectedMode: FullAuto
