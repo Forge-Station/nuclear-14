@@ -39,6 +39,12 @@
     containers:
       gun_magazine: !type:ContainerSlot
   - type: Craftable
+  - type: MeleeWeapon # Forge-Change
+    attackRate: 2
+    damage:
+      types:
+        Blunt: 10
+    bluntStaminaDamageFactor: 1.25
 
 - type: entity
   id: N14BaseWeaponPowerCellSmall
@@ -62,6 +68,12 @@
     maxAngle: 9
     angleIncrease: 0.5
     angleDecay: 4
+  - type: MeleeWeapon # Forge-Change
+    attackRate: 2
+    damage:
+      types:
+        Blunt: 5
+    bluntStaminaDamageFactor: 1.25
 
 - type: entity
   id: N14BaseWeaponPowerCellMedium

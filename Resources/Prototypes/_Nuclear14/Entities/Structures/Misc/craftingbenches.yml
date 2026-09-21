@@ -312,6 +312,8 @@
     - N14MiningDrill
     - N14HandheldRadio
     #Misc
+    - N14TapeRecorder
+    - N14CassetteTape
     - N14FlashlightLantern
     - N14GlowstickRed
     - N14CleanGauze1

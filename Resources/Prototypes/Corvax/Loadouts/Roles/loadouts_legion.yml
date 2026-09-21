@@ -302,7 +302,6 @@
   requirements:
     - !type:CharacterJobRequirement
       jobs:
-        - CaesarLegionDean
         - CaesarLegionLegionnaireVeteran
     - !type:CharacterDepartmentTimeRequirement
       department: CaesarLegion
@@ -314,7 +313,7 @@
     - N14ClothingHeadHatPrinceps
 
 - type: loadout
-  id: LoadoutHeadHatPrincepsPrime
+  id: LoadoutHeadGaleaPrinceps
   category: Head
   cost: 2
   exclusive: true
@@ -322,6 +321,42 @@
     - !type:CharacterJobRequirement
       jobs:
         - CaesarLegionDean
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 72000
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionDean
+      min: 108000
+  items:
+    - N14ClothingHeadHatPrincepsGalea
+
+- type: loadout
+  id: LoadoutHeadGaleaPrincepsPrime
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionDean
+    - !type:CharacterDepartmentTimeRequirement
+      department: CaesarLegion
+      min: 72000
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionDean
+      min: 144000
+  items:
+    - N14ClothingHeadHatPrincepsPrimeGalea
+
+- type: loadout
+  id: LoadoutHeadHatPrincepsPrime
+  category: Head
+  cost: 2
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - CaesarLegionLegionnaireVeteran
     - !type:CharacterDepartmentTimeRequirement
       department: CaesarLegion
       min: 144000
@@ -439,8 +474,8 @@
   requirements:
     - !type:CharacterJobRequirement
       jobs:
-        - CaesarLegionDean
         - CaesarLegionLegionnaireVeteran
+        - CaesarLegionDean
     - !type:CharacterDepartmentTimeRequirement
       department: CaesarLegion
       min: 72000
@@ -464,6 +499,8 @@
       min: 144000
   items:
     - N14ClothingOuterLegionnairePrincepsPrimeArmor
+
+
 
 # - type: loadout
 #   id: LoadoutN14BerserkerPowder
@@ -656,20 +693,16 @@
     - M14ClothingNeckLegionMantle
 
 - type: loadout
-  id: LoadoutN14BerserkerPowder
-  category: Items
-  cost: 2
+  id: LoadoutLegionVenatorOuterLegionnaireDusterMk2
+  category: Outer
+  cost: 4
   exclusive: true
   requirements:
     - !type:CharacterJobRequirement
       jobs:
-        - CaesarLegionDean
-        - CaesarLegionLegionnaireVeteran
         - CaesarLegionVenator
-        - CaesarLegionLegionnaireWarrior
-        - CaesarLegionCenturion
-    - !type:CharacterDepartmentTimeRequirement
-      department: CaesarLegion
+    - !type:CharacterPlaytimeRequirement
+      tracker: CaesarLegionVenator
       min: 36000
   items:
-    - N14BerserkerPowder
+    - N14ClothingOuterLegionnaireDusterMk2

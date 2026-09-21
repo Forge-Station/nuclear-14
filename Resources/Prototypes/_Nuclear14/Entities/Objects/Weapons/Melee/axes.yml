@@ -151,8 +151,8 @@
   - type: IncreaseDamageOnWield
     damage:
       types:
-        Blunt: 20
-        Slash: 35
+        Blunt: 15 # Forge-Change
+        Slash: 20 # Forge-Change
   - type: Tool
     qualities:
       - Prying

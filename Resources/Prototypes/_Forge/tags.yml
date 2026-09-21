@@ -13,3 +13,21 @@
 
 - type: Tag
   id: InjectionSyringe
+
+- type: Tag
+  id: ForgeLootSinew
+
+- type: Tag
+  id: ForgeLootBone
+
+- type: Tag
+  id: ForgeDogHide
+
+- type: Tag
+  id: ForgeDeathclawHide
+
+- type: Tag
+  id: ForgePigratHide
+
+- type: Tag
+  id: ForgeHumanSkinLarge

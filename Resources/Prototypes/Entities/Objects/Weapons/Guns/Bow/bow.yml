@@ -90,6 +90,3 @@
         base:
           True: { state: wielded }
           False: { state: unwielded }
-  - type: Construction
-    graph: ImprovisedBow
-    node: ImprovisedBow

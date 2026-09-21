@@ -14,6 +14,12 @@
   - type: StaticPrice
     price: 100
   - type: Craftable
+  - type: MeleeWeapon # Forge-Change
+    attackRate: 1.3333
+    damage:
+      types:
+        Blunt: 10
+    bluntStaminaDamageFactor: 1.25
 
 - type: entity
   name: 10mm SMG

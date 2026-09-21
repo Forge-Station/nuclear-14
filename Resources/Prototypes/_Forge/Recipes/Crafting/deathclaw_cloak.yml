@@ -1,0 +1,33 @@
+- type: construction
+  id: ForgeDeathclawCloak
+  name: плащ из когтя смерти
+  description: Тяжёлый плащ из шкуры когтя смерти, сшитый крепкими сухожилиями.
+  graph: ForgeDeathclawCloak
+  startNode: start
+  targetNode: cloak
+  category: construction-category-clothing
+  icon:
+    sprite: _Forge/Clothing/Neck/deathclaw_cloak.rsi
+    state: icon
+  objectType: Item
+  hide: false
+
+- type: constructionGraph
+  id: ForgeDeathclawCloak
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: cloak
+      steps:
+      - tag: ForgeDeathclawHide
+        name: шкура когтя смерти
+        icon:
+          sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+          state: hide_deathclaw
+        doAfter: 5
+      - material: ForgeAnimalSinew
+        amount: 2
+        doAfter: 5
+  - node: cloak
+    entity: ForgeClothingNeckCloakDeathclaw

@@ -1,0 +1,16 @@
+- type: entity
+  parent: ClothingHeadBase
+  id: ForgeClothingHumanSkinHat
+  name: шапка из человеческой кожи
+  description: Грубая шапка из человеческой кожи, скреплённая сухожилиями.
+  components:
+  - type: Sprite
+    sprite: _Forge/Clothing/Head/human_skin_hat.rsi
+    state: icon
+  - type: Clothing
+    sprite: _Forge/Clothing/Head/human_skin_hat.rsi
+    slots:
+    - head
+  - type: Construction
+    graph: ForgeHumanSkinHat
+    node: hat

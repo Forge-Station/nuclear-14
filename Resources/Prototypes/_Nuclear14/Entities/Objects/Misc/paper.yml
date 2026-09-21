@@ -311,3 +311,9 @@
     sprite: _Nuclear14/Structures/Misc/magazines.rsi
     layers:
     - state: magazine_live
+
+- type: entity
+  parent: Paper
+  id: N14TapeRecorderTranscript
+  name: record transcript
+  description: A transcript of a cassette recording.

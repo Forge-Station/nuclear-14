@@ -16,5 +16,18 @@
         Base: cathaggis
       Dead:
         Base: cathaggis_dead
+    # Forge-Change-Start
+  - type: Butcherable # Forge-Change-Comp
+    spawned:
+    - id: FoodMeat
+      amount: 3
+    - id: ForgeAnimalGenericHide
+      amount: 1
+    - id: ForgeAnimalBone
+      amount: 1
+    - id: ForgeAnimalSinew
+      amount: 1
+      prob: 0.5
+  # Forge-Change-End
   - type: RandomMetadata
     nameSegments: [names_N14shopkeep_cat_RU] # Forge-Change
