@@ -200,3 +200,44 @@
     - !type:CharacterDepartmentRequirement
         departments:
           - Wastelander
+
+- type: loadout
+  id: N14ClothingHeadMarksmanHood
+  category: Head
+  cost: 2
+  exclusive: true
+  items:
+    - N14ClothingHeadMarksmanHood
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander
+          - CaesarLegion
+
+- type: loadout
+  id: N14ClothingHeadSackMetal
+  category: Head
+  cost: 2
+  exclusive: true
+  items:
+    - N14ClothingHeadSackMetal
+  requirements:
+    - !type:CharacterItemGroupRequirement
+      group: N14LoadoutHead
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    - !type:CharacterDepartmentRequirement
+        departments:
+          - Wastelander

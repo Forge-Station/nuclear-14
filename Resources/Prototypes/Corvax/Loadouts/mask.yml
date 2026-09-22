@@ -35,7 +35,7 @@
 - type: loadout
   id: ClothingMaskGasCaptainsMask
   category: Mask
-  cost: 1
+  cost: 2
   exclusive: true
   items:
     - ClothingMaskGasCaptainsMask
@@ -52,7 +52,7 @@
 - type: loadout
   id: ClothingMaskGasFire
   category: Mask
-  cost: 1
+  cost: 2
   exclusive: true
   items:
     - ClothingMaskGasFire
@@ -69,7 +69,7 @@
 - type: loadout
   id: N14ClothingMaskSkirmisher
   category: Mask
-  cost: 1
+  cost: 2
   exclusive: true
   items:
     - N14ClothingMaskSkirmisher
@@ -86,7 +86,7 @@
 - type: loadout
   id: N14ClothingMaskHockey
   category: Mask
-  cost: 1
+  cost: 2
   exclusive: true
   items:
     - N14ClothingMaskHockey
@@ -103,7 +103,7 @@
 - type: loadout
   id: ClothingMaskGasMiner
   category: Mask
-  cost: 1
+  cost: 2
   exclusive: true
   items:
     - ClothingMaskGasMiner
