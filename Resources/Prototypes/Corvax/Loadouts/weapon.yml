@@ -508,26 +508,6 @@
     - N14TrenchClub
 
 - type: loadout
-  id: N14ShovelZappy
-  category: Weapons
-  cost: 2
-  requirements:
-    - !type:CharacterItemGroupRequirement
-      group: N14LoadoutGuns
-    - !type:CharacterDepartmentRequirement # Forge-Change
-      inverted: true
-      departments:
-      - Vault
-    - !type:CharacterJobRequirement # Forge-Change
-      inverted: true
-      jobs:
-      - BoSMidSerf
-      - CaesarLegionSlave
-      - NCRPisoner
-  items:
-    - N14ShovelZappy
-
-- type: loadout
   id: N14BaseAxe
   category: Weapons
   cost: 5
