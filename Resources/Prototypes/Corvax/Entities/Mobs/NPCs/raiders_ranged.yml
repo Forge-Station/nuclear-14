@@ -244,7 +244,7 @@
         visible: false
       - sprite: _Nuclear14/Objects/Weapons/Guns/Shotguns/double_shotgun.rsi
         state: inhand-right  # Only part we change, the gun sprite.
-        
+
 - type: entity
   name: Дикий племенной старейшина
   parent: N14BaseMobRaider
@@ -252,7 +252,7 @@
   suffix: Рейдер
   description: Племенной, кто носит огнестрельное оружие, он убьёт любого не из его племени.
   components:
-    - type: Gun 
+    - type: Gun
       minAngle: 9
       maxAngle: 18
       angleIncrease: 3
@@ -326,7 +326,7 @@
         visible: false
       - sprite: _Nuclear14/Objects/Weapons/Guns/Battery/laser_revolver.rsi
         state: inhand-right  # Only part we change, the gun sprite.
-        
+
 #MARK: Рейдеры
 
 - type: entity
@@ -336,10 +336,18 @@
   suffix: Рейдер
   description: Через час те из вас, кто останется в живых, будут завидовать мертвым!
   components:
+    - type: ToolRefinable
+      qualityNeeded: Prying
+      refineTime: 20
+      refineFuel: 0
+      refineResult:
+      - id: N14BrokenPowerArmorRaider
+        prob: 1
+        amount: 1
     - type: MobThresholds
       thresholds:
         0: Alive
-        250: Dead        
+        250: Dead
     - type: Gun
       minAngle: 0
       maxAngle: 20
@@ -425,7 +433,7 @@
     - type: MobThresholds
       thresholds:
         0: Alive
-        150: Dead  
+        150: Dead
     - type: Gun
       minAngle: 0
       maxAngle: 10
@@ -445,7 +453,7 @@
     - type: RechargeBasicEntityAmmo
       rechargeCooldown: 3
       rechargeSound:
-        path: /Audio/Weapons/Guns/MagIn/ltrifle_magin.ogg      
+        path: /Audio/Weapons/Guns/MagIn/ltrifle_magin.ogg
     - type: Loadout
       prototypes:
         - MercenaryHeavySniperNPC
@@ -511,7 +519,7 @@
     - type: MobThresholds # Forge-Change
       thresholds:
         0: Alive
-        200: Dead  
+        200: Dead
     - type: Gun
       minAngle: 1
       maxAngle: 10
@@ -594,7 +602,7 @@
   parent: N14BaseMobRaiderGhoul
   id: N14MobChinesePistol
   suffix: Рейдер, китай
-  description: 
+  description:
   components:
     - type: Gun #Mobs currently cannot bolt a gun, so we have to simulate them firing it
       minAngle: 6
@@ -676,15 +684,15 @@
   parent: N14BaseMobRaiderGhoul
   id: N14MobChineseRifleSKS
   suffix: Рейдер, китай
-  description: 
+  description:
   components:
-    - type: MovementSpeedModifier 
-      baseWalkSpeed: 4                         
-      baseSprintSpeed: 5.125 
-    - type: MobThresholds 
+    - type: MovementSpeedModifier
+      baseWalkSpeed: 4
+      baseSprintSpeed: 5.125
+    - type: MobThresholds
       thresholds:
         0: Alive
-        125: Dead      
+        125: Dead
     - type: Gun
       minAngle: 4.5
       maxAngle: 13.5
@@ -765,15 +773,15 @@
   parent: N14BaseMobRaiderGhoul
   id: N14MobChineseShotgun
   suffix: Рейдер, китай
-  description: 
+  description:
   components:
     - type: MovementSpeedModifier # Forge-Start
-      baseWalkSpeed: 4                         
-      baseSprintSpeed: 5.4  
-    - type: MobThresholds 
+      baseWalkSpeed: 4
+      baseSprintSpeed: 5.4
+    - type: MobThresholds
       thresholds:
         0: Alive
-        150: Dead # Forge-end   
+        150: Dead # Forge-end
     - type: Gun
       minAngle: 34.5
       maxAngle: 104
@@ -854,15 +862,15 @@
   parent: N14BaseMobRaiderGhoul
   id: N14MobChineseAssaultRifle
   suffix: Рейдер, китай
-  description: 
+  description:
   components:
-    - type: MovementSpeedModifier 
-      baseWalkSpeed: 4                         
-      baseSprintSpeed: 5.125 
-    - type: MobThresholds 
+    - type: MovementSpeedModifier
+      baseWalkSpeed: 4
+      baseSprintSpeed: 5.125
+    - type: MobThresholds
       thresholds:
         0: Alive
-        150: Dead      
+        150: Dead
     - type: Gun
       minAngle: 4.5
       maxAngle: 13.5
@@ -943,7 +951,7 @@
   parent: N14BaseMobRaiderGhoul
   id: N14MobChineseSniperRifle
   suffix: Рейдер, китай
-  description: 
+  description:
   components:
     - type: Gun
       minAngle: 4.5
@@ -1025,11 +1033,11 @@
   parent: N14BaseMobRaiderGhoulGlowing
   id: N14MobChineseSMGAdvancedGear
   suffix: Рейдер, китай, мини-босс
-  description: 
+  description:
   components:
     - type: MovementSpeedModifier # Forge-start
-      baseWalkSpeed: 4                         
-      baseSprintSpeed: 5.625 
+      baseWalkSpeed: 4
+      baseSprintSpeed: 5.625
     - type: PointLight
       radius: 2
       energy: 1.5
@@ -1039,7 +1047,7 @@
       slope: 1.5
     - type: RadiationReceiver
     - type: RadiationHealing
-    - type: MobThresholds 
+    - type: MobThresholds
       thresholds:
         0: Alive
         200: Dead  # Forge-end
@@ -1125,10 +1133,18 @@
   suffix: Рейдер, китай, босс
   description: "МОЯ РАЗБОМБИТЬ ТВОЙ СТОЛИЦА, БАМ-БАМ-БАМ!"
   components:
+    - type: ToolRefinable
+      qualityNeeded: Prying
+      refineTime: 20
+      refineFuel: 0
+      refineResult:
+      - id: N14BrokenPowerArmorT51China
+        prob: 1
+        amount: 1
     - type: MobThresholds
       thresholds:
         0: Alive
-        250: Dead   
+        250: Dead
     - type: PointLight
       radius: 1.2
       energy: 2
