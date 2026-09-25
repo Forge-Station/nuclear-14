@@ -46,6 +46,7 @@
     outerClothing: N14ClothingOuterMBoSPaladinArmor
     hands: N14ClothingHandsGlovesCombat
     pocket1: BoSMidwestPaladinKits
+    pocket2: N14CurrencyBoSDollar100 # Forge-Change
     id: N14IDBrotherhoodHolotagCommander
     ears: N14ClothingHeadsetBOSMidwest
     belt: ClothingBeltMilitary

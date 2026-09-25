@@ -448,3 +448,80 @@
   stackEntity: N14CurrencyLegionDenarius
   icon: { sprite: /Textures/_Nuclear14/Objects/Misc/currency.rsi, state: denarius3 }
   price: 4 # Forge-Change
+
+#BoS Dollars
+- type: entity
+  parent: N14CurrencyCap
+  id: N14CurrencyBoSDollar
+  name: чеки братства
+  description: Это банкноты, которые выпускаются Среднезападным Братством Стали.
+  components:
+  - type: Cash
+  - type: PhysicalComposition
+    materialComposition:
+      BosCredit: 1
+  - type: Stack
+    stackType: BoSDollar
+    count: 1
+    baseLayer: base
+    layerStates:
+    - bos
+    - bos2
+    - bos3
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/currency.rsi
+    state: bos3
+    layers:
+    - state: prewar
+      map: ["base"]
+
+- type: stack
+  id: BoSDollar
+  name: BoS dollars
+  icon: { sprite: /Textures/_Nuclear14/Objects/Misc/currency.rsi, state: bos }
+  spawn: N14CurrencyBoSDollar
+  maxCount: 1000
+
+- type: entity
+  parent: N14CurrencyBoSDollar
+  id: N14CurrencyBoSDollar10
+  suffix: 10
+  components:
+  - type: Icon
+    sprite: _Nuclear14/Objects/Misc/currency.rsi
+    state: bos
+  - type: Stack
+    count: 10
+
+- type: entity
+  parent: N14CurrencyBoSDollar
+  id: N14CurrencyBoSDollar50
+  suffix: 50
+  components:
+  - type: Icon
+    sprite: _Nuclear14/Objects/Misc/currency.rsi
+    state: bos2
+  - type: Stack
+    count: 50
+
+- type: entity
+  parent: N14CurrencyBoSDollar
+  id: N14CurrencyBoSDollar100
+  suffix: 100
+  components:
+  - type: Icon
+    sprite: _Nuclear14/Objects/Misc/currency.rsi
+    state: bos2
+  - type: Stack
+    count: 100
+
+- type: entity
+  parent: N14CurrencyBoSDollar
+  id: N14CurrencyBoSDollar500
+  suffix: 500
+  components:
+  - type: Icon
+    sprite: _Nuclear14/Objects/Misc/currency.rsi
+    state: bos3
+  - type: Stack
+    count: 500 #Forge-add
