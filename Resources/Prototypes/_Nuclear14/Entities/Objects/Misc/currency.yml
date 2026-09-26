@@ -459,7 +459,7 @@
   - type: Cash
   - type: PhysicalComposition
     materialComposition:
-      BosCredit: 1
+      bosCredit: 1
   - type: Stack
     stackType: BoSDollar
     count: 1
@@ -524,4 +524,12 @@
     sprite: _Nuclear14/Objects/Misc/currency.rsi
     state: bos3
   - type: Stack
-    count: 500 #Forge-add
+    count: 500 
+    
+- type: material
+  id: BoSCredit
+  name: bosCredit
+  unit: materials-unit-bill
+  stackEntity: N14CurrencyBoSDollar
+  icon: { sprite: /Textures/_Nuclear14/Objects/Misc/currency.rsi, state: bos3 }
+  price: 0.5 #Forge-add
