@@ -6,6 +6,13 @@
   name: job-name-bos-mid-paladin
   description: job-description-bos-mid-paladin
   playTimeTracker: BoSMidPaladin
+  ranks: # Forge-Change
+    - rank: BoSMidPaladin
+      requirements:
+        - !type:CharacterPlaytimeRequirement
+          tracker: BoSMidPaladin
+          min: 144000 # 2400 minutes
+    - rank: BoSMidJuniorPaladin
   requirements:
     - !type:CharacterSpeciesRequirement
       species:

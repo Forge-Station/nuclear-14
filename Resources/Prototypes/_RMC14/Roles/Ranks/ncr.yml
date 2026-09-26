@@ -1,0 +1,44 @@
+# Forge-Change
+- type: rank
+  id: NCRPrivate
+  name: rmc14-rank-name-ncr-private
+
+- type: rank
+  id: NCRPrivateFirstClass
+  name: rmc14-rank-name-ncr-private-first-class
+
+- type: rank
+  id: NCRCorporal
+  name: rmc14-rank-name-ncr-corporal
+
+- type: rank
+  id: NCRSergeant
+  name: rmc14-rank-name-ncr-sergeant
+
+- type: rank
+  id: NCRSeniorSergeant
+  name: rmc14-rank-name-ncr-senior-sergeant
+
+- type: rank
+  id: NCRMasterSergeant
+  name: rmc14-rank-name-ncr-master-sergeant
+
+- type: rank
+  id: NCRSergeantMajor
+  name: rmc14-rank-name-ncr-sergeant-major
+
+- type: rank
+  id: NCRJuniorLieutenant
+  name: rmc14-rank-name-ncr-junior-lieutenant
+
+- type: rank
+  id: NCRLieutenant
+  name: rmc14-rank-name-ncr-lieutenant
+
+- type: rank
+  id: NCRCaptain
+  name: rmc14-rank-name-ncr-captain
+
+- type: rank
+  id: NCRMajor
+  name: rmc14-rank-name-ncr-major
