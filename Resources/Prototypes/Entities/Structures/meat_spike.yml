@@ -60,3 +60,17 @@
   # - type: GuideHelp
     # guides:
     # - Chef
+
+- type: entity
+  id: KitchenSpikeFrame
+  parent: BaseStructure
+  name: meat spike frame
+  description: An unfinished meat spike. Weld it and tighten the bolts with a wrench.
+  components:
+  - type: Sprite
+    sprite: Structures/meat_spike.rsi
+    state: spike
+  - type: Construction
+    graph: MeatSpike
+    node: frame
+    defaultTarget: MeatSpike
