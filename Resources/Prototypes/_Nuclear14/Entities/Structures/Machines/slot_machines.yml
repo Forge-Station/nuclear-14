@@ -1,0 +1,87 @@
+#MARK: Base
+- type: entity
+  id: N14BaseSlotMachine
+  parent: BaseMachinePowered
+  name: slot machine
+  abstract: true
+  description: Gambling for the antisocial.
+  components:
+  - type: Transform
+    noRot: true
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 200
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalGlassBreak
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+  - type: Electrified
+    enabled: false
+    usesApcPower: true
+  - type: PointLight
+    enabled: false
+    castShadows: false
+    radius: 2
+    energy: 1.5
+    offset: 0, 0.25
+    mask: /Textures/Effects/LightMasks/cone.png
+    autoRot: true
+  - type: LitOnPowered
+  - type: ApcPowerReceiver
+    powerLoad: 200
+  - type: Repairable
+    doAfterDelay: 8
+  - type: Anchorable
+  - type: ContainerContainer
+    containers:
+      money: !type:ContainerSlot
+        showEnts: false
+        occludes: true
+        ent: null
+  - type: ItemSlots
+    slots:
+      money:
+        name: caps
+        whitelist:
+          tags:
+          - BottleCap
+  - type: SlotMachine
+    doAfterTime: 4.565
+  - type: DoAfter
+
+- type: entity
+  id: N14SlotMachine
+  parent: N14BaseSlotMachine
+  name: игральный автомат
+  description: Это старый, кое-как отремонтированный игральный автомат. Одна игра стоит 50 крышек.
+  components:
+  - type: Sprite
+    noRot: true
+    sprite: _Nuclear14/Structures/Machines/slotmachines/slotmachine.rsi
+    layers:
+      - state: slotmachine
+      - state: slotmachine_spin
+        visible: false
+        map: ["slotmachine_spin"]
+      - state: panel
+        map: ["enum.WiresVisualLayers.MaintenancePanel"]
+  - type: WiresPanel
+  - type: WiresVisuals
+  - type: Wires
+    layoutId: SlotMachine
+    boardName: wires-board-name-slot-machine
+  - type: GenericVisualizer
+    visuals:
+      enum.SlotMachineVisuals.Spinning:
+        slotmachine_spin:
+          True: { visible: true }
+          False: { visible: false }
+  - type: Appearance
+  - type: UserInterface
+    interfaces:
+      enum.WiresUiKey.Key:
+        type: WiresBoundUserInterface
