@@ -844,19 +844,19 @@
   - type: Armor
     modifiers:
       coefficients:
-        Blunt: 0.8
+        Blunt: 0.7
         Slash: 0.7
-        Piercing: 0.75
+        Piercing: 0.675
         Heat: 0.8
     priceMultiplier: 0.6
   - type: ExplosionResistance
-    damageCoefficient: 0.75
+    damageCoefficient: 0.7
   - type: Reflect
-    reflectProb: 0.05
+    reflectProb: 0.15
     spread: 150
   - type: ClothingSpeedModifier
-    walkModifier: 0.95
-    sprintModifier: 0.95
+    walkModifier: 0.90
+    sprintModifier: 0.90
 
 # Forge-Delete-Start
 # - type: entity
