@@ -6,14 +6,34 @@
       actions:
         - !type:DeleteEntity {}
       edges:
-        - to: MeatSpike
+        - to: frame
           completed:
             - !type:SnapToGrid
               southRotation: true
           steps:
             - material: Steel
               amount: 15
-              doAfter: 2
+              doAfter: 5
+    - node: frame
+      entity: KitchenSpikeFrame
+      edges:
+        - to: MeatSpike
+          steps:
+            - material: MetalRod
+              amount: 5
+              doAfter: 3
+            - tool: Welding
+              doAfter: 5
+            - tool: Anchoring
+              doAfter: 3
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: SheetSteel1
+              amount: 15
+          steps:
+            - tool: Screwing
+              doAfter: 1
     - node: MeatSpike
       entity: KitchenSpike
       edges:
@@ -22,6 +42,9 @@
             - !type:SpawnPrototype
               prototype: SheetSteel1
               amount: 15
+            - !type:SpawnPrototype
+              prototype: PartRodMetal1
+              amount: 5
           steps:
             - tool: Screwing
               doAfter: 1
