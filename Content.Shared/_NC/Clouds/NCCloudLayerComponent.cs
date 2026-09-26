@@ -126,6 +126,29 @@ public sealed partial class NCCloudLayerComponent : Component
     [DataField]
     public bool StartActive;
 
+    // Weather prestaging + ambient modulation config fields.
+
+    /// <summary>
+    ///     When true, CloudWeatherSystem will automatically start/stop cloud
+    ///     events in response to active weather on this map entity.
+    /// </summary>
+    [DataField]
+    public bool WeatherLinkEnabled = false;
+
+    /// <summary>
+    ///     Target ambient light tint color at full cloud opacity.
+    ///     Client-side CloudAmbientSystem lerps MapLightComponent toward this.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public Color OvercastAmbientTint = Color.FromHex("#606070");
+
+    /// <summary>
+    ///     Maximum blend factor (0–1) toward <see cref="OvercastAmbientTint"/> when
+    ///     CurrentOpacity is 1.0. Scales linearly with opacity.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public float OvercastAmbientBlend = 0.35f;
+
     /// <summary>
     ///     True while the cloud event is currently active or fading.
     /// </summary>

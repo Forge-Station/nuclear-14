@@ -1,88 +1,77 @@
 #! Corvax-Change
 
-# - type: weather
-#   id: Ashfall
-#   sprite:
-#     sprite: /Textures/Effects/weather.rsi
-#     state: ashfall
-#   sound:
-#     path: /Audio/Effects/Weather/snowstorm_weak.ogg
-#     params:
-#       loop: true
-#       volume: -6
-#   temperature: 330
-#   duration: 500
-#   message: weather-ashfall
+- type: weather
+  id: Ashfall
+  sprite:
+    sprite: /Textures/Effects/weather.rsi
+    state: ashfall
+  sound:
+    path: /Audio/Effects/Weather/snowstorm_weak.ogg
+    params:
+      loop: true
+      volume: -6
+  temperature: 330
+  duration: 500
+  chance: 1
+  visibilityClearRadius: 5
+  visibilityClearBuffer: 2
+  message: weather-ashfall
 
-# - type: weather
-#   id: AshfallLight
-#   sprite:
-#     sprite: /Textures/Effects/weather.rsi
-#     state: ashfall_light
-#   sound:
-#     path: /Audio/Effects/Weather/snowstorm_weak.ogg
-#     params:
-#       loop: true
-#       volume: -6
-#   temperature: 320
-#   duration: 500
-#   message: weather-ashfall-light
+- type: weather
+  id: AshfallLight
+  sprite:
+    sprite: /Textures/Effects/weather.rsi
+    state: ashfall_light
+  sound:
+    path: /Audio/Effects/Weather/snowstorm_weak.ogg
+    params:
+      loop: true
+      volume: -6
+  temperature: 320
+  duration: 500
+  chance: 1
+  message: weather-ashfall-light
 
-# - type: weather
-#   id: AshfallHeavy
-#   sprite:
-#     sprite: /Textures/Effects/weather.rsi
-#     state: ashfall_heavy
-#   sound:
-#     path: /Audio/Effects/Weather/snowstorm.ogg
-#     params:
-#       loop: true
-#       volume: -6
-#   temperature: 340
-#   duration: 20
-#   chance: 0
-#   showMessage: true
-#   sender: weather-announcement
-#   message: weather-ashfall-heavy
+- type: weather
+  id: AshfallHeavy
+  sprite:
+    sprite: /Textures/Effects/weather.rsi
+    state: ashfall_heavy
+  sound:
+    path: /Audio/Effects/Weather/snowstorm.ogg
+    params:
+      loop: true
+      volume: -6
+  temperature: 340
+  duration: 500
+  chance: 1
+  visibilityClearRadius: 8
+  visibilityClearBuffer: 2
+  showMessage: true
+  sender: weather-announcement
+  message: weather-ashfall-heavy
 
 - type: weather
   id: Default
-  duration: 2400 # Forvax-Change
-  chance: 100 # Forvax-Change
+  duration: 3600
+  chance: 0 # calm periods are handled by WeatherSystem's random delay
   message: weather-default
 
-# - type: weather
-#   id: Fallout
-#   sprite:
-#     sprite: /Textures/Effects/weather.rsi
-#     state: fallout
-#   sound:
-#     path: /Audio/Effects/Weather/snowstorm_weak.ogg
-#     params:
-#       loop: true
-#       volume: -6
-#   temperature: 340
-#   duration: 500
-#   chance: 0
-#   showMessage: true
-#   sender: weather-announcement
-#   message: weather-fallout
-#   radioactive: true
-
-# - type: weather
-#   id: Hail
-#   sprite:
-#     sprite: /Textures/Effects/weather.rsi
-#     state: hail
-#   sound:
-#     path:
-#       /Audio/Effects/Weather/rain.ogg
-#     params:
-#       loop: true
-#       volume: -6
-#   temperature: 300
-#   duration: 500
-#   message: weather-hail
+- type: weather
+  id: Hail
+  sprite:
+    sprite: /Textures/Effects/weather.rsi
+    state: hail
+  sound:
+    path:
+      /Audio/Effects/Weather/rain.ogg
+    params:
+      loop: true
+      volume: -6
+  temperature: 300
+  duration: 500
+  chance: 0 # Enabled by the Juneau map's weatherWeights.
+  message: weather-hail
 
 - type: weather
   id: Rain
@@ -95,8 +84,8 @@
       loop: true
       volume: -6
   temperature: 300
-  duration: 250
-  chance: 2
+  duration: 600
+  chance: 1
   message: weather-rain
 
 - type: soundCollection
@@ -105,82 +94,90 @@
     - /Audio/Effects/Weather/rain.ogg
     - /Audio/Effects/Weather/rain2.ogg
 
-# - type: weather
-#   id: Sandstorm
-#   sprite:
-#     sprite: /Textures/Effects/weather.rsi
-#     state: sandstorm
-#   sound:
-#     path: /Audio/Effects/Weather/snowstorm_weak.ogg
-#     params:
-#       loop: true
-#       volume: -6
-#   temperature: 320
-#   duration: 500
-#   chance: 0
-#   message: weather-sandstorm
+- type: weather
+  id: Sandstorm
+  sprite:
+    sprite: /Textures/Effects/weather.rsi
+    state: sandstorm
+  sound:
+    path: /Audio/Effects/Weather/snowstorm_weak.ogg
+    params:
+      loop: true
+      volume: -6
+  temperature: 320
+  duration: 500
+  chance: 1
+  visibilityClearRadius: 8
+  visibilityClearBuffer: 2
+  message: weather-sandstorm
 
-# - type: weather
-#   id: SandstormHeavy
-#   sprite:
-#     sprite: /Textures/Effects/weather.rsi
-#     state: sandstorm_heavy
-#   sound:
-#     path: /Audio/Effects/Weather/snowstorm.ogg
-#     params:
-#       loop: true
-#       volume: -6
-#   temperature: 330
-#   duration: 500
-#   chance: 0
-#   showMessage: true
-#   sender: weather-announcement
-#   message: weather-sandstorm-heavy
+- type: weather
+  id: SandstormHeavy
+  sprite:
+    sprite: /Textures/Effects/weather.rsi
+    state: sandstorm_heavy
+  sound:
+    path: /Audio/Effects/Weather/snowstorm.ogg
+    params:
+      loop: true
+      volume: -6
+  temperature: 330
+  duration: 500
+  chance: 1
+  visibilityClearRadius: 6
+  visibilityClearBuffer: 2
+  showMessage: true
+  sender: weather-announcement
+  message: weather-sandstorm-heavy
 
-# - type: weather
-#   id: SnowfallLight
-#   sprite:
-#     sprite: /Textures/Effects/weather.rsi
-#     state: snowfall_light
-#   sound:
-#     path: /Audio/Effects/Weather/snowstorm_weak.ogg
-#     params:
-#       loop: true
-#       volume: -6
-#   temperature: 280
-#   duration: 500
-#   message: weather-snowfall-light
+- type: weather
+  id: SnowfallLight
+  sprite:
+    sprite: /Textures/Effects/weather.rsi
+    state: snowfall_light
+  sound:
+    path: /Audio/Effects/Weather/snowstorm_weak.ogg
+    params:
+      loop: true
+      volume: -6
+  temperature: 280
+  duration: 500
+  chance: 0 # Enabled by the Juneau map's weatherWeights.
+  message: weather-snowfall-light
 
-# - type: weather
-#   id: SnowfallMedium
-#   sprite:
-#     sprite: /Textures/Effects/weather.rsi
-#     state: snowfall_med
-#   sound:
-#     path: /Audio/Effects/Weather/snowstorm_weak.ogg
-#     params:
-#       loop: true
-#       volume: -6
-#   temperature: 270
-#   duration: 500
-#   message: weather-snowfall-medium
+- type: weather
+  id: SnowfallMedium
+  sprite:
+    sprite: /Textures/Effects/weather.rsi
+    state: snowfall_med
+  sound:
+    path: /Audio/Effects/Weather/snowstorm_weak.ogg
+    params:
+      loop: true
+      volume: -6
+  temperature: 270
+  duration: 500
+  chance: 0 # Enabled by the Juneau map's weatherWeights.
+  message: weather-snowfall-medium
 
-# - type: weather
-#   id: SnowfallHeavy
-#   sprite:
-#     sprite: /Textures/Effects/weather.rsi
-#     state: snowfall_heavy
-#   sound:
-#     path: /Audio/Effects/Weather/snowstorm.ogg
-#     params:
-#       loop: true
-#       volume: -6
-#   temperature: 260
-#   duration: 500
-#   chance: 0
-#   showMessage: true
-#   sender: weather-announcement
-#   message: weather-snowfall-heavy
+- type: weather
+  id: SnowfallHeavy
+  sprite:
+    sprite: /Textures/Effects/weather.rsi
+    state: snowfall_heavy
+  sound:
+    path: /Audio/Effects/Weather/snowstorm.ogg
+    params:
+      loop: true
+      volume: -6
+  temperature: 260
+  duration: 500
+  chance: 0 # Enabled by the Juneau map's weatherWeights.
+  visibilityClearRadius: 6
+  visibilityClearBuffer: 2
+  showMessage: true
+  sender: weather-announcement
+  message: weather-snowfall-heavy
 
 - type: weather
   id: Storm
@@ -193,7 +190,7 @@
       loop: true
       volume: -6
   temperature: 310
-  duration: 250
+  duration: 600
   showMessage: true
   chance: 1
   sender: weather-announcement

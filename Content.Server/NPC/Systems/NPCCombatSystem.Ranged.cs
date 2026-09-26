@@ -1,4 +1,5 @@
 using Content.Server.NPC.Components;
+using Content.Server.Weather;
 using Content.Shared.CombatMode;
 using Content.Shared.Interaction;
 using Content.Shared.Weapons.Ranged.Components;
@@ -14,6 +15,7 @@ public sealed partial class NPCCombatSystem
     [Dependency] private readonly SharedCombatModeSystem _combat = default!;
     [Dependency] private readonly RotateToFaceSystem _rotate = default!;
     [Dependency] private readonly MapSystem _map = default!;
+    [Dependency] private readonly WeatherSystem _weather = default!;
 
     private EntityQuery<CombatModeComponent> _combatQuery;
     private EntityQuery<NPCSteeringComponent> _steeringQuery;
@@ -135,7 +137,8 @@ public sealed partial class NPCCombatSystem
             {
                 comp.LOSAccumulator += UnoccludedCooldown;
                 // For consistency with NPC steering.
-                comp.TargetInLOS = _interaction.InRangeUnobstructed(uid, comp.Target, distance + 0.1f);
+                comp.TargetInLOS = _weather.CanSeeThroughWeather(uid, comp.Target) &&
+                    _interaction.InRangeUnobstructed(uid, comp.Target, distance + 0.1f);
             }
 
             if (!comp.TargetInLOS)

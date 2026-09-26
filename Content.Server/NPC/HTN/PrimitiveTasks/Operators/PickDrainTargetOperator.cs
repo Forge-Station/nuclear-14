@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Content.Server.LifeDrainer;
 using Content.Server.NPC.Pathfinding;
 using Content.Server.NPC.Systems;
+using Content.Server.Weather;
 using NpcFactionSystem = Content.Shared.NPC.Systems.NpcFactionSystem;
 
 
@@ -15,6 +16,7 @@ public sealed partial class PickDrainTargetOperator : HTNOperator
     private LifeDrainerSystem _drainer = default!;
     private NpcFactionSystem _faction = default!;
     private PathfindingSystem _pathfinding = default!;
+    private WeatherSystem _weather = default!;
 
     private EntityQuery<LifeDrainerComponent> _drainerQuery;
     private EntityQuery<TransformComponent> _xformQuery;
@@ -37,6 +39,7 @@ public sealed partial class PickDrainTargetOperator : HTNOperator
         _drainer = sysMan.GetEntitySystem<LifeDrainerSystem>();
         _faction = sysMan.GetEntitySystem<NpcFactionSystem>();
         _pathfinding = sysMan.GetEntitySystem<PathfindingSystem>();
+        _weather = sysMan.GetEntitySystem<WeatherSystem>();
 
         _drainerQuery = _entMan.GetEntityQuery<LifeDrainerComponent>();
         _xformQuery = _entMan.GetEntityQuery<TransformComponent>();
@@ -54,7 +57,9 @@ public sealed partial class PickDrainTargetOperator : HTNOperator
         // find crit psionics nearby
         foreach (var target in _faction.GetNearbyHostiles(owner, range))
         {
-            if (!_drainer.CanDrain(ent, target) || !_xformQuery.TryComp(target, out var xform))
+            if (!_weather.CanSeeThroughWeather(owner, target) ||
+                !_drainer.CanDrain(ent, target) ||
+                !_xformQuery.TryComp(target, out var xform))
                 continue;
 
             // pathfind to the first crit psionic in range to start draining

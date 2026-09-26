@@ -33,6 +33,14 @@ public sealed partial class StencilOverlay : Overlay
     private IRenderTexture? _blep;
 
     private readonly ShaderInstance _shader;
+    private readonly ShaderInstance _weatherDrawShader;
+
+    // Stencil mask throttle: while the view is static the roofed-tile
+    // stencil mask only needs rebuilding at 4 Hz to catch tile/roof changes, instead
+    // of every frame. Any view change rebuilds it, since the mask is screen space.
+    private TimeSpan _nextStencilUpdate;
+    private Matrix3x2 _lastStencilMatrix;
+    private MapId? _lastStencilMap;
 
     public StencilOverlay(ParallaxSystem parallax, SharedTransformSystem transform, SpriteSystem sprite, WeatherSystem weather)
     {
@@ -43,6 +51,7 @@ public sealed partial class StencilOverlay : Overlay
         _weather = weather;
         IoCManager.InjectDependencies(this);
         _shader = _protoManager.Index<ShaderPrototype>("WorldGradientCircle").InstanceUnique();
+        _weatherDrawShader = _protoManager.Index<ShaderPrototype>("WeatherDraw").InstanceUnique();
     }
 
     protected override void Draw(in OverlayDrawArgs args)
@@ -54,6 +63,7 @@ public sealed partial class StencilOverlay : Overlay
         {
             _blep?.Dispose();
             _blep = _clyde.CreateRenderTarget(args.Viewport.Size, new RenderTargetFormatParameters(RenderTargetColorFormat.Rgba8Srgb), name: "weather-stencil");
+            _lastStencilMap = null;
         }
 
         if (_entManager.TryGetComponent<WeatherComponent>(mapUid, out var comp))
@@ -73,12 +83,15 @@ public sealed partial class StencilOverlay : Overlay
         if (_entManager.TryGetComponent<NCCloudLayerComponent>(mapUid, out var cloudLayer))
         {
             DrawCloudLayer(args, cloudLayer, invMatrix);
+            // Other overlays share this render target and can overwrite the weather mask.
+            _lastStencilMap = null;
         }
         // NC - Clouds
 
         if (_entManager.TryGetComponent<RestrictedRangeComponent>(mapUid, out var restrictedRangeComponent))
         {
             DrawRestrictedRange(args, restrictedRangeComponent, invMatrix);
+            _lastStencilMap = null;
         }
 
         args.WorldHandle.UseShader(null);
