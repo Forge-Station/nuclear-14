@@ -630,6 +630,12 @@
     price: 50
   - proto: PowerCellSmall
     price: 50
+  - proto: N14Ethanol
+    price: 15
+  - proto: N14MaterialRadscorpionTail
+    price: 65
+  - proto: N14NightstalkerBloodChemistryBottle
+    price: 35
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Sprouts
