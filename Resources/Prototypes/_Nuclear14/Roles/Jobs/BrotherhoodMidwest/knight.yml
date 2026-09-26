@@ -38,6 +38,7 @@
     head: N14ClothingHeadHatBrotherhoodMidwestHelmet
     outerClothing: N14ClothingOuterMBoSKnightArmor
     pocket1: BoSMidwestKnightSet
+    pocket2: N14CurrencyBoSDollar10
     hands: N14ClothingHandsGlovesCombat
     id: N14IDBrotherhoodHolotagKnight
     belt: ClothingBeltMilitary

@@ -38,6 +38,7 @@
     head: N14ClothingHeadHatArmyCap
     outerClothing: N14ClothingOuterMBoSInitiateArmor
     pocket1: BoSMidwestInitSet
+    pocket2: N14CurrencyBoSDollar10
     id: N14IDBrotherhoodHolotagSquire
     belt: ClothingBeltMilitary
   storage: # Forge-Change
