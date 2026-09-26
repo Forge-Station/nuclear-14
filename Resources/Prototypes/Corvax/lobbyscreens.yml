@@ -57,3 +57,9 @@
   background: /Textures/Corvax/LobbyScreens/me_and_the_brothers.png
   name: Me and the brothers
   artist: baohe
+
+- type: lobbyBackground
+  id: NCNain
+  background: /Textures/Corvax/LobbyScreens/nain.png
+  name: NaiN
+  artist: NaiN
