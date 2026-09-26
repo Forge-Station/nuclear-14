@@ -14,14 +14,14 @@
             - material: Steel
               amount: 15
               doAfter: 5
-            - material: MetalRod
-              amount: 5
-              doAfter: 3
     - node: frame
       entity: KitchenSpikeFrame
       edges:
         - to: MeatSpike
           steps:
+            - material: MetalRod
+              amount: 5
+              doAfter: 3
             - tool: Welding
               doAfter: 5
             - tool: Anchoring
@@ -31,9 +31,6 @@
             - !type:SpawnPrototype
               prototype: SheetSteel1
               amount: 15
-            - !type:SpawnPrototype
-              prototype: PartRodMetal1
-              amount: 5
           steps:
             - tool: Screwing
               doAfter: 1
