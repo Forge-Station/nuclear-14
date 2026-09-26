@@ -85,8 +85,6 @@
       edges:
         - to: Repaired
           steps:
-            - material: N14Iron
-              amount: 10
             - tool: SprayPainting
               doAfter: 3
 
@@ -175,8 +173,6 @@
       edges:
         - to: Repaired
           steps:
-            - material: N14Iron
-              amount: 10
             - tool: SprayPainting
               doAfter: 3
 
@@ -493,12 +489,10 @@
       edges:
         - to: Repaired
           steps:
-            - material: N14Iron
-              amount: 10
             - tool: SprayPainting
               doAfter: 3
     - node: Repaired
-      entity: N14ClothingOuterPowerArmorRaider
+      entity: N14ClothingOuterPowerArmorT45
 
 # ==========  КОМПОНЕНТЫ ПОЧИНКИ (подкладки / пластины)  ==========
 - type: constructionGraph

@@ -336,14 +336,6 @@
   suffix: Рейдер
   description: Через час те из вас, кто останется в живых, будут завидовать мертвым!
   components:
-    - type: ToolRefinable
-      qualityNeeded: Prying
-      refineTime: 20
-      refineFuel: 0
-      refineResult:
-      - id: N14BrokenPowerArmorRaider
-        prob: 1
-        amount: 1
     - type: MobThresholds
       thresholds:
         0: Alive
@@ -1133,14 +1125,6 @@
   suffix: Рейдер, китай, босс
   description: "МОЯ РАЗБОМБИТЬ ТВОЙ СТОЛИЦА, БАМ-БАМ-БАМ!"
   components:
-    - type: ToolRefinable
-      qualityNeeded: Prying
-      refineTime: 20
-      refineFuel: 0
-      refineResult:
-      - id: N14BrokenPowerArmorT51China
-        prob: 1
-        amount: 1
     - type: MobThresholds
       thresholds:
         0: Alive
