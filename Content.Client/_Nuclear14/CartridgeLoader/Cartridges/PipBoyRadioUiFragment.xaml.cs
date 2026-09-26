@@ -15,6 +15,7 @@ public sealed partial class PipBoyRadioUiFragment : BoxContainer
     public event Action? OnStop;
     public event Action? OnPrevious;
     public event Action? OnNext;
+    public event Action<float>? OnVolumeChanged;
 
     private readonly Dictionary<string, string> _songs = new();
     private readonly Dictionary<string, Button> _songButtons = new();
@@ -41,6 +42,12 @@ public sealed partial class PipBoyRadioUiFragment : BoxContainer
         PauseButton.OnPressed += _ =>
             OnPause?.Invoke();
 
+        VolumeSlider.OnValueChanged += args =>
+        {
+            UpdateVolumeLabel(args.Value);
+            OnVolumeChanged?.Invoke(args.Value / 100f);
+        };
+
         StopButton.OnPressed += _ =>
             OnStop?.Invoke();
     }
@@ -49,6 +56,11 @@ public sealed partial class PipBoyRadioUiFragment : BoxContainer
         IPrototypeManager prototypeManager)
     {
         _prototypeManager = prototypeManager;
+    }
+
+    private void UpdateVolumeLabel(float percent)
+    {
+        VolumeLabel.Text = Loc.GetString("pipboy-radio-volume", ("volume", (int) MathF.Round(percent)));
     }
 
     private void LoadSongs(
@@ -92,8 +104,15 @@ public sealed partial class PipBoyRadioUiFragment : BoxContainer
         IReadOnlyList<ProtoId<JukeboxPrototype>> songIds,
         string? selectedSong,
         bool playing,
-        bool paused)
+        bool paused,
+        float volume)
     {
+        if (!VolumeSlider.Grabbed)
+        {
+            VolumeSlider.SetValueWithoutEvent(volume * 100f);
+            UpdateVolumeLabel(VolumeSlider.Value);
+        }
+
         if (_songButtons.Count == 0)
             LoadSongs(songIds);
         foreach (var (id, button) in _songButtons)

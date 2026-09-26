@@ -1,0 +1,18 @@
+- type: entity
+  parent: NanoChatCartridge
+  id: N14PipBoyNanoChatCartridge
+  components:
+  - type: Cartridge
+    programName: pipboy-vaultchat-program-name
+    icon:
+      sprite: _Nuclear14/Interface/pipboy_programs.rsi
+      state: nanochat
+
+- type: entity
+  parent: NotekeeperCartridge
+  id: N14PipBoyNotekeeperCartridge
+  components:
+  - type: Cartridge
+    icon:
+      sprite: _Nuclear14/Interface/pipboy_programs.rsi
+      state: notes

@@ -53,6 +53,15 @@
             Text="{Loc pipboy-radio-stop}"
             HorizontalExpand="True"/>
 
+        <Label Name="VolumeLabel"/>
+        <Slider
+            Name="VolumeSlider"
+            MinValue="0"
+            MaxValue="100"
+            Value="100"
+            Rounded="True"
+            HorizontalExpand="True"/>
+
         <ScrollContainer
             HorizontalExpand="True"
             VerticalExpand="True">

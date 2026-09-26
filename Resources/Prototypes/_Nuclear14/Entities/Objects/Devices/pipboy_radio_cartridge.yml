@@ -1,8 +1,8 @@
 - type: entity
   parent: BaseItem
   id: N14PipBoyRadioCartridge
-  name: Pip-Boy radio
-  description: A built-in radio program for the Pip-Boy.
+  name: Pip-Boy player
+  description: A built-in music player for the Pip-Boy.
   components:
   - type: Sprite
     sprite: Objects/Devices/cartridge.rsi
@@ -12,8 +12,8 @@
   - type: Cartridge
     programName: pipboy-radio-program-name
     icon:
-      sprite: _Nuclear14/Structures/Misc/radiostation/tableradio.rsi
-      state: base
+      sprite: _Nuclear14/Interface/pipboy_programs.rsi
+      state: player
   - type: PipBoyRadioCartridge
     songs:
       - LonesomeValley
@@ -27,3 +27,60 @@
       - StraightenUpAndFlyRight
       - IntoEachLifeSomeRainMustFall
       - GrandmaPlaysTheNumbers
+      - AKissToBuildADreamOn
+      - AintThatAKickInTheHead
+      - AmericanSwing
+      - BigIron
+      - JingleJangleJingle
+      - JoeCool
+      - JohnnyGuitar
+      - SomethingsGottaGive
+      - BillieHolidayCrazy
+      - BillieHolidayEasy
+      - BobCrosbyHappy
+      - BobCrosbyWay
+      - ColePorterAnything
+      - DannyKayeCivilization
+      - GenericBoogie
+      - GenericFox
+      - GenericJazzy
+      - GenericSunning
+      - GenericSwing
+      - InkspotsIDont
+      - RoyBrownButcher
+      - RoyBrownMighty
+      - TexBenekeGuy
+      - AlRexHydrogenBomd
+      - MitchMillerImLookingOverAFourLeafClover
+      - TennesseeErnieFordSixteenTons
+      - BattleHymnOfTheRepublic
+      - HannyWilliamsTheYellowRoseOfTexas
+      - EltonBrittUraniumFever
+      - TerribleTomBossNigger
+      - DionTheWanderer
+      - FrankSinatraThatsLife
+      - PatrioticAmerica
+      - BattleHymn
+      - PatrioticDixie
+      - PatrioticMontezuma
+      - PatrioticPresidential
+      - PatrioticStars
+      - PatrioticWashington
+      - PatrioticYankee
+      - ADiffReal
+      - AggAss
+      - AutEqu
+      - DosHighUmb
+      - DrozAlone
+      - DrozLeisure
+      - SunbeamEvery
+      - KCHaxors
+      - SunbeamLaser
+      - IanMarhaba
+      - PTMinute
+      - SunbeamPhoron
+      - NymphsForest
+      - GhirScratch
+      - JukeShiba
+      - SpaceAsshowl
+      - AmieSuperpos

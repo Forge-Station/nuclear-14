@@ -28,6 +28,7 @@
   id: N14IDCardVault
   name: vault ID card
   components:
+  - type: NanoChatCard
   - type: Sprite
     sprite: _Nuclear14/Objects/Misc/tapes_cards.rsi
     scale: 0.7, 0.7

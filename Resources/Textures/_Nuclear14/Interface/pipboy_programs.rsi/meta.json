@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "license": "License not specified",
+  "copyright": "Icons supplied by the project contributor; original author not specified.",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "nanochat"
+    },
+    {
+      "name": "notes"
+    },
+    {
+      "name": "radio"
+    },
+    {
+      "name": "player"
+    }
+  ]
+}

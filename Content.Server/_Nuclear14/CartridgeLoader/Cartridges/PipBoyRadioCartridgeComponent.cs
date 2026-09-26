@@ -1,5 +1,4 @@
 using Content.Shared.Audio.Jukebox;
-using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server._Nuclear14.CartridgeLoader.Cartridges;
@@ -13,6 +12,9 @@ public sealed partial class PipBoyRadioCartridgeComponent : Component
     [DataField]
     public ProtoId<JukeboxPrototype>? SelectedSongId;
 
+    [DataField]
+    public float Volume = 1f;
+
     [ViewVariables]
     public EntityUid? AudioStream;
 
@@ -21,12 +23,12 @@ public sealed partial class PipBoyRadioCartridgeComponent : Component
 
     [ViewVariables]
     public EntityUid? WearerUid;
+
     [ViewVariables]
     public bool Playing;
 
     [ViewVariables]
     public bool Paused;
-
 
     [ViewVariables]
     public float PlaybackGrace;
