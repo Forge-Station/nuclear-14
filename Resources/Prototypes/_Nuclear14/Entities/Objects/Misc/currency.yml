@@ -527,9 +527,9 @@
     count: 500 
     
 - type: material
-  id: BoSCredit
+  id: bosCredit
   name: bosCredit
   unit: materials-unit-bill
   stackEntity: N14CurrencyBoSDollar
   icon: { sprite: /Textures/_Nuclear14/Objects/Misc/currency.rsi, state: bos3 }
-  price: 0.5 #Forge-add
+  price: 1 #Forge-add
