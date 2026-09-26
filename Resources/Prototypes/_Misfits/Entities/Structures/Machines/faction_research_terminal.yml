@@ -1,0 +1,46 @@
+- type: entity
+  id: N14FactionResearchTerminal
+  name: faction research terminal
+  description: A terminal for researching faction blueprints and converting items into research points.
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Physics
+    bodyType: Static
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.4,-0.2,0.4,0.2"
+        density: 500
+        mask:
+          - TabletopMachineMask
+  - type: Clickable
+  - type: InteractionOutline
+  - type: Rotatable
+  - type: Sprite
+    drawdepth: SmallObjects
+    sprite: _Nuclear14/Structures/Machines/access_terminal.rsi
+    layers:
+      - state: icon
+  - type: Appearance
+  - type: FactionResearch
+  - type: ContainerContainer
+    containers:
+      storagebase: !type:Container
+  - type: Storage
+    maxItemSize: Ginormous
+    grid:
+    - 0,0,9,6
+  - type: ActivatableUI
+    key: enum.FactionResearchUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.FactionResearchUiKey.Key:
+        type: FactionResearchBoundUserInterface
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+  - type: ApcPowerReceiver
+    needsPower: false
+  - type: Anchorable

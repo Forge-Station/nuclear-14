@@ -1,0 +1,15 @@
+# Faction armor lathe recipes: WestBoS - ears
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingHeadsetBOSWest
+  result: N14ClothingHeadsetBOSWest
+  category: N14ClothingEars
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Steel: 75
+    N14Brass: 75
+    Circuitry: 75

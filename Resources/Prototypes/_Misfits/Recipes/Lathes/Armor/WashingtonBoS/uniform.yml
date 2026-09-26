@@ -1,0 +1,47 @@
+# Faction armor lathe recipes: WashingtonBoS - uniform
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitBOSWashingtonFieldScribe
+  result: N14ClothingUniformJumpsuitBOSWashingtonFieldScribe
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Cloth: 125
+    Thread: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitWBoSAcolyte
+  result: N14ClothingUniformJumpsuitWBoSAcolyte
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Cloth: 125
+    Thread: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitWBoSClassic
+  result: N14ClothingUniformJumpsuitWBoSClassic
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Cloth: 125
+    Thread: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitWBoSLord
+  result: N14ClothingUniformJumpsuitWBoSLord
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Cloth: 150
+    Thread: 100

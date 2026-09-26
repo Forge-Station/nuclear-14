@@ -1,0 +1,127 @@
+# Faction armor lathe recipes: Tribe - outer
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterTribalArmor
+  result: N14ClothingOuterTribalArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Leather: 100
+    Cloth: 75
+    Thread: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterdrylandersimple
+  result: N14ClothingOuterdrylandersimple
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 100
+    Thread: 75
+    Leather: 50
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterBandito
+  result: N14ClothingOuterBandito
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 7
+  materials:
+    Leather: 175
+    Cloth: 125
+    Thread: 100
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterforager
+  result: N14ClothingOuterforager
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 7
+  materials:
+    Leather: 150
+    Cloth: 150
+    Thread: 100
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterhunter
+  result: N14ClothingOuterhunter
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 7
+  materials:
+    Leather: 175
+    Cloth: 125
+    Thread: 100
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterponcho
+  result: N14ClothingOuterponcho
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Cloth: 200
+    Thread: 125
+    Leather: 50
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterCombatTribal
+  result: N14ClothingOuterCombatTribal
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 14
+  materials:
+    Leather: 300
+    Steel: 200
+    Cloth: 175
+    Thread: 150
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterheadtaker
+  result: N14ClothingOuterheadtaker
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 11
+  materials:
+    Leather: 275
+    N14Iron: 100
+    Cloth: 175
+    Thread: 125
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOutershaman
+  result: N14ClothingOutershaman
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Cloth: 250
+    Thread: 175
+    Leather: 150
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterRadArmor
+  result: N14ClothingOuterRadArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 18
+  materials:
+    Leather: 400
+    Steel: 300
+    N14Iron: 200
+    Cloth: 200
+    Thread: 150

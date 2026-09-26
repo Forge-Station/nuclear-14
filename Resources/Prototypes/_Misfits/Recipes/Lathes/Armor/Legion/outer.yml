@@ -1,0 +1,277 @@
+# Faction armor lathe recipes: Legion - outer
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterLegionnaireBaseArmor
+  result: N14ClothingOuterLegionnaireBaseArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Leather: 200
+    Cloth: 150
+    Thread: 100
+    N14Iron: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterLegionnaireRecruitArmor
+  result: N14ClothingOuterLegionnaireRecruitArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Leather: 100
+    Cloth: 75
+    Thread: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterLegionnaireTriariumArmor
+  result: N14ClothingOuterLegionnaireTriariumArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Leather: 175
+    Cloth: 125
+    Thread: 75
+    N14Iron: 50
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterLegionnaireArmorGastat
+  result: N14ClothingOuterLegionnaireArmorGastat
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Leather: 250
+    Cloth: 175
+    Thread: 125
+    N14Iron: 100
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterLegionnaireArmorPrimeGastat
+  result: N14ClothingOuterLegionnaireArmorPrimeGastat
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Leather: 250
+    Cloth: 175
+    Thread: 125
+    N14Iron: 100
+    N14Gold: 25
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterLegionnaireVeteranArmorVeteranGastat
+  result: N14ClothingOuterLegionnaireVeteranArmorVeteranGastat
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 11
+  materials:
+    Steel: 150
+    Leather: 275
+    Cloth: 200
+    Thread: 150
+    N14Iron: 100
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterLegionnaireVexillariusArmor
+  result: N14ClothingOuterLegionnaireVexillariusArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 9
+  materials:
+    Leather: 225
+    Cloth: 175
+    Thread: 125
+    N14Iron: 75
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterDeanLegionnaireRecruitArmor
+  result: N14ClothingOuterDeanLegionnaireRecruitArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 14
+  materials:
+    Steel: 300
+    Leather: 250
+    Cloth: 200
+    Thread: 150
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterDeanLegionnaireVeteranArmor
+  result: N14ClothingOuterDeanLegionnaireVeteranArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 18
+  materials:
+    Steel: 500
+    Leather: 350
+    Cloth: 300
+    Thread: 200
+    N14Iron: 200
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterLegionnaireDuster
+  result: N14ClothingOuterLegionnaireDuster
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Leather: 300
+    Cloth: 200
+    Thread: 125
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterLegionnaireLightReconnaissanceArmor
+  result: N14ClothingOuterLegionnaireLightReconnaissanceArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Leather: 275
+    Cloth: 225
+    Thread: 150
+    N14Iron: 100
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterLegionnairePrincepsPrimeArmor
+  result: N14ClothingOuterLegionnairePrincepsPrimeArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 15
+  materials:
+    Steel: 400
+    N14Gold: 50
+    Leather: 300
+    Cloth: 225
+    Thread: 150
+    N14Iron: 150
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterLegionnaireVeteranArmor
+  result: N14ClothingOuterLegionnaireVeteranArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Leather: 300
+    Steel: 200
+    Cloth: 200
+    Thread: 150
+    N14Iron: 100
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterCinderCenturionArmor
+  result: N14ClothingOuterCinderCenturionArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 25
+  materials:
+    Steel: 850
+    N14Iron: 300
+    Leather: 400
+    Cloth: 250
+    Thread: 200
+    N14Gold: 75
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterConquerorCenturionArmor
+  result: N14ClothingOuterConquerorCenturionArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 25
+  materials:
+    Steel: 850
+    N14Iron: 300
+    Leather: 400
+    Cloth: 250
+    Thread: 200
+    N14Gold: 75
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterDeanLegionnairePrimeArmor
+  result: N14ClothingOuterDeanLegionnairePrimeArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 20
+  materials:
+    Steel: 600
+    Leather: 400
+    Cloth: 300
+    Thread: 225
+    N14Iron: 250
+    N14Gold: 50
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterHeavyCenturionArmor
+  result: N14ClothingOuterHeavyCenturionArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 25
+  materials:
+    Steel: 800
+    Leather: 400
+    N14Iron: 300
+    Cloth: 250
+    Thread: 200
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterLegionnaireAssassinArmor
+  result: N14ClothingOuterLegionnaireAssassinArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 18
+  materials:
+    Steel: 600
+    N14Iron: 200
+    Leather: 300
+    Cloth: 200
+    Thread: 150
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterLegionnaireAssassinPrimeArmor
+  result: N14ClothingOuterLegionnaireAssassinPrimeArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 20
+  materials:
+    Steel: 700
+    N14Iron: 250
+    Leather: 350
+    Cloth: 225
+    Thread: 150
+    N14Gold: 50
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterLegionnaireReconnaissanceArmor
+  result: N14ClothingOuterLegionnaireReconnaissanceArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 11
+  materials:
+    Leather: 275
+    Cloth: 200
+    Thread: 150
+    N14Iron: 75

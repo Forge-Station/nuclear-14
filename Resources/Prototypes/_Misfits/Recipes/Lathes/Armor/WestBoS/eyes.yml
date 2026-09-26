@@ -1,0 +1,15 @@
+# Faction armor lathe recipes: WestBoS - eyes
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingEyesGlassesMachinegun
+  result: N14ClothingEyesGlassesMachinegun
+  category: N14ClothingEyes
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Steel: 50
+    Glass: 50
+    Circuitry: 25

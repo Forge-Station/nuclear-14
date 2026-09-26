@@ -1,0 +1,45 @@
+# Faction armor lathe recipes: Vault - outer
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterVaultSecVest
+  result: N14ClothingOuterVaultSecVest
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Cloth: 125
+    Thread: 100
+    Plastic: 50
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterCombatArmorMK2
+  result: N14ClothingOuterCombatArmorMK2
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 20
+  materials:
+    Steel: 700
+    Cloth: 350
+    Thread: 250
+    Circuitry: 100
+    ScrapElectronic: 75
+    Plastic: 50
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterMarineArmor
+  result: N14ClothingOuterMarineArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 25
+  materials:
+    Steel: 900
+    Cloth: 400
+    Thread: 275
+    Circuitry: 150
+    ScrapElectronic: 100
+    N14Iron: 100

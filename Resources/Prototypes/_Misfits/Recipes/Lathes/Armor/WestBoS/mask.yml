@@ -1,0 +1,14 @@
+# Faction armor lathe recipes: WestBoS - mask
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T2
+- type: latheRecipe
+  id: ClothingMaskGasBrootherWestern
+  result: ClothingMaskGasBrootherWestern
+  category: N14ClothingMask
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Steel: 100
+    Glass: 50

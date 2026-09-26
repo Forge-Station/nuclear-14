@@ -1,0 +1,91 @@
+# Faction armor lathe recipes: NCR - uniform
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingMPUniformNCRDesert
+  result: N14ClothingMPUniformNCRDesert
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 150
+    Thread: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingMPUniformNCRSnow
+  result: N14ClothingMPUniformNCRSnow
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 150
+    Thread: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOfficerUniformNCRDesert
+  result: N14ClothingOfficerUniformNCRDesert
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Cloth: 160
+    Thread: 110
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOfficerUniformNCRSnow
+  result: N14ClothingOfficerUniformNCRSnow
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Cloth: 160
+    Thread: 110
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitNCRMP
+  result: N14ClothingUniformJumpsuitNCRMP
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 150
+    Thread: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingUniformNCR
+  result: N14ClothingUniformNCR
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 150
+    Thread: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingUniformNCRCFUniform
+  result: N14ClothingUniformNCRCFUniform
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Cloth: 160
+    Thread: 110
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingUniformNCRSnow
+  result: N14ClothingUniformNCRSnow
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 150
+    Thread: 100

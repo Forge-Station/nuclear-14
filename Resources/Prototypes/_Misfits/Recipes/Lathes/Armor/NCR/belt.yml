@@ -1,0 +1,49 @@
+# Faction armor lathe recipes: NCR - belt
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: ClothingBeltNCR
+  result: ClothingBeltNCR
+  category: N14ClothingBelt
+  requiresBlueprint: true
+  completetime: 2
+  materials:
+    Leather: 80
+    Thread: 40
+
+# Tier: T1
+- type: latheRecipe
+  id: ClothingBeltNCRBandolier
+  result: ClothingBeltNCRBandolier
+  category: N14ClothingBelt
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Leather: 120
+    Cloth: 60
+    Thread: 40
+
+# Tier: T1
+- type: latheRecipe
+  id: ClothingBeltNCRHarness
+  result: ClothingBeltNCRHarness
+  category: N14ClothingBelt
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Leather: 100
+    Thread: 50
+    N14Iron: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: ClothingBeltNCRPouches
+  result: ClothingBeltNCRPouches
+  category: N14ClothingBelt
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Leather: 100
+    Thread: 60

@@ -1,0 +1,45 @@
+# Weapon lathe recipes: Melee spears / polearms
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Material pattern (melee): Steel / Wood / Cloth / Leather / N14Iron.
+# Tier is metadata only (comment): T1 = makeshift, T2 = common, T3 = quality.
+# Note: N14WastelandSpear and N14WastelandTribalJavelin already have recipes
+# in _Nuclear14/Recipes/Lathes/weapons.yml.
+
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WastelandTribalSpear
+  result: N14WastelandTribalSpear
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 9
+  materials:
+    Steel: 150
+    Wood: 300
+    Leather: 50
+
+
+# Tier: T2
+- type: latheRecipe
+  id: N14WastelandFlagSpear
+  result: N14WastelandFlagSpear
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 150
+    Wood: 300
+    Cloth: 100
+
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WastelandPolearm
+  result: N14WastelandPolearm
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 400
+    N14Iron: 150
+    Wood: 400

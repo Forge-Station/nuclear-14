@@ -1,0 +1,15 @@
+# Faction armor lathe recipes: Legion - shoes
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingShoesKaligi
+  result: N14ClothingShoesKaligi
+  category: N14ClothingShoes
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Leather: 75
+    Cloth: 50
+    Thread: 25

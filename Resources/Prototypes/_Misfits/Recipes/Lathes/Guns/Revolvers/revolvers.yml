@@ -1,0 +1,160 @@
+# Weapon lathe recipes: Revolvers
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Material pattern (ballistic): Steel / Scrap / Wood / N14Iron / N14Brass.
+# Tier is metadata only (comment): T1 = makeshift/basic, T2 = common, T3 = quality, T4 = unique.
+
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponRevolver9mm
+  result: N14WeaponRevolver9mm
+  category: N14WeaponRevolvers
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Steel: 100
+    N14Iron: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponRevolver10mm
+  result: N14WeaponRevolver10mm
+  category: N14WeaponRevolvers
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Steel: 125
+    N14Iron: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponRevolverWebley
+  result: N14WeaponRevolverWebley
+  category: N14WeaponRevolvers
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Steel: 100
+    N14Iron: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponRevolver44Tribal
+  result: N14WeaponRevolver44Tribal
+  category: N14WeaponRevolvers
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Steel: 75
+    Wood: 50
+
+
+# Tier: T2
+- type: latheRecipe
+  id: N14WeaponRevolver44Magnun
+  result: N14WeaponRevolver44Magnun
+  category: N14WeaponRevolvers
+  requiresBlueprint: true
+  completetime: 7
+  materials:
+    Steel: 200
+    N14Iron: 100
+    N14Brass: 25
+
+# Tier: T2
+- type: latheRecipe
+  id: N14WeaponRevolver44TribalUpgraded
+  result: N14WeaponRevolver44TribalUpgraded
+  category: N14WeaponRevolvers
+  requiresBlueprint: true
+  completetime: 7
+  materials:
+    Steel: 150
+    N14Iron: 75
+
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponRevolver44MagnumCaptain
+  result: N14WeaponRevolver44MagnumCaptain
+  category: N14WeaponRevolvers
+  requiresBlueprint: true
+  completetime: 9
+  materials:
+    Steel: 350
+    N14Iron: 150
+    N14Brass: 75
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponRevolver44TribalUpgradedExtra
+  result: N14WeaponRevolver44TribalUpgradedExtra
+  category: N14WeaponRevolvers
+  requiresBlueprint: true
+  completetime: 9
+  materials:
+    Steel: 300
+    N14Iron: 150
+    N14Brass: 50
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponRevolver45-70Hunter
+  result: N14WeaponRevolver45-70Hunter
+  category: N14WeaponRevolvers
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 400
+    N14Iron: 200
+    N14Brass: 100
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponRevolver45-70WildWhisper
+  result: N14WeaponRevolver45-70WildWhisper
+  category: N14WeaponRevolvers
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 400
+    N14Iron: 200
+    N14Brass: 100
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponRevolver45-70Handcannon
+  result: N14WeaponRevolver45-70Handcannon
+  category: N14WeaponRevolvers
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 400
+    N14Iron: 200
+    N14Brass: 100
+
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponRevolver45-70RangerSequoia
+  result: N14WeaponRevolver45-70RangerSequoia
+  category: N14WeaponRevolvers
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 600
+    N14Iron: 300
+    N14Brass: 150
+    N14Silver: 50
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponRevolver45-70HandcannonUpgraded
+  result: N14WeaponRevolver45-70HandcannonUpgraded
+  category: N14WeaponRevolvers
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 550
+    N14Iron: 300
+    N14Brass: 150

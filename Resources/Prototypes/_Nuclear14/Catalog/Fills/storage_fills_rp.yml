@@ -391,6 +391,14 @@
   components:
     - type: StorageFill
       contents:
+        - id: N14FactionResearchDisk500
+          prob: 0.03
+        - id: N14FactionResearchDisk1000
+          prob: 0.02
+        - id: N14FactionResearchDisk2500
+          prob: 0.01
+        - id: N14FactionResearchDisk5000
+          prob: 0.003
         - id: CigCartonRed
           prob: 0.01
         - id: CigCartonBlack

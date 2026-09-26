@@ -1,0 +1,111 @@
+# Faction armor lathe recipes: NCR - neck
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingNeckCloakGhillie
+  result: N14ClothingNeckCloakGhillie
+  category: N14ClothingNeck
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 120
+    Thread: 80
+    Leather: 60
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingNeckCloakNCR
+  result: N14ClothingNeckCloakNCR
+  category: N14ClothingNeck
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 120
+    Thread: 80
+    Leather: 60
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingNeckCloakNCRSnow
+  result: N14ClothingNeckCloakNCRSnow
+  category: N14ClothingNeck
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 120
+    Thread: 80
+    Leather: 60
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingNeckCloakNCRWoods
+  result: N14ClothingNeckCloakNCRWoods
+  category: N14ClothingNeck
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 120
+    Thread: 80
+    Leather: 60
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingNeckCloakTentHoodNCR
+  result: N14ClothingNeckCloakTentHoodNCR
+  category: N14ClothingNeck
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 120
+    Thread: 80
+    Leather: 40
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingNeckMantleNCR
+  result: N14ClothingNeckMantleNCR
+  category: N14ClothingNeck
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Cloth: 120
+    Thread: 80
+    Leather: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingNeckNCRMPCoat
+  result: N14ClothingNeckNCRMPCoat
+  category: N14ClothingNeck
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Cloth: 200
+    Thread: 150
+    Leather: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingNeckNCRShoulderPad
+  result: N14ClothingNeckNCRShoulderPad
+  category: N14ClothingNeck
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Cloth: 100
+    Thread: 60
+    Leather: 40
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingNeckNCRShoulderPadFlag
+  result: N14ClothingNeckNCRShoulderPadFlag
+  category: N14ClothingNeck
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Cloth: 100
+    Thread: 60
+    Leather: 40

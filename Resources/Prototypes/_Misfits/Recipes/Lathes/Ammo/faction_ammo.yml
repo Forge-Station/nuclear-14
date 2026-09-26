@@ -1,0 +1,117 @@
+# Legacy faction ammo / grenade recipes kept from the blueprint system.
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Tier is metadata only (comment).
+
+# Tier: T3
+- type: latheRecipe
+  id: N14BPLegionAmmo40mmGrenade
+  result: 40mmGrenadeFrag
+  category: N14Ammo
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Steel: 200
+    N14Gunpowder: 250
+    N14Iron: 100
+
+# Tier: T4
+- type: latheRecipe
+  id: N14BPLegionAmmo40mmGrenadeIncendiary
+  result: 40mmGrenadeFire
+  category: N14Ammo
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 250
+    N14Gunpowder: 300
+    N14Iron: 150
+    Plastic: 50
+
+# Tier: T4
+- type: latheRecipe
+  id: N14BPLegionAmmoMissile
+  result: CartridgeMissile
+  category: N14Ammo
+  requiresBlueprint: true
+  completetime: 15
+  materials:
+    Steel: 500
+    N14Gunpowder: 400
+    N14Iron: 200
+    Circuitry: 50
+
+# Tier: T4
+- type: latheRecipe
+  id: N14BPVaultAmmoPlasmaCartridge
+  result: N14PlasmaCartridge
+  category: N14Ammo
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Glass: 275
+    Circuitry: 200
+    ScrapElectronic: 150
+    Plastic: 50
+
+# Tier: T3
+- type: latheRecipe
+  id: N14BPVaultAmmoPlasmaCell
+  result: N14PlasmaCartridge
+  category: N14Ammo
+  requiresBlueprint: true
+  completetime: 9
+  materials:
+    Glass: 175
+    Circuitry: 125
+    ScrapElectronic: 75
+
+# Tier: T4
+- type: latheRecipe
+  id: N14BPVaultAmmoPowerCellAdvanced
+  result: N14PowerCellAdvanced
+  category: N14Ammo
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Glass: 250
+    Circuitry: 200
+    ScrapElectronic: 125
+    Plastic: 50
+
+# Tier: T3
+- type: latheRecipe
+  id: N14BPVaultAmmoPowerCellHigh
+  result: N14PowerCellHigh
+  category: N14Ammo
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Glass: 150
+    Circuitry: 100
+    ScrapElectronic: 75
+    Plastic: 25
+
+# Tier: T2
+- type: latheRecipe
+  id: N14BPVaultAmmoPowerCellSmall
+  result: N14PowerCellSmall
+  category: N14Ammo
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Glass: 75
+    Circuitry: 50
+    ScrapElectronic: 25
+
+# Tier: T2
+- type: latheRecipe
+  id: N14BPWashingtonBosWeaponPlasmaGrenade
+  result: N14PlasmaGrenade
+  category: N14Weapons
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Steel: 100
+    Glass: 75
+    Circuitry: 50
+    ScrapElectronic: 25

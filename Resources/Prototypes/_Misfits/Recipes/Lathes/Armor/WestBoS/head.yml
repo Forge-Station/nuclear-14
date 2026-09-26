@@ -1,0 +1,82 @@
+# Faction armor lathe recipes: WestBoS - head
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatBeretknighBoS
+  result: N14ClothingHeadHatBeretknighBoS
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Cloth: 75
+    Thread: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatCapPaladin
+  result: N14ClothingHeadHatCapPaladin
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Cloth: 75
+    Thread: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatCapScout
+  result: N14ClothingHeadHatCapScout
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Cloth: 75
+    Thread: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatCapkhighBoS
+  result: N14ClothingHeadHatCapkhighBoS
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Cloth: 75
+    Thread: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatCapkhighbluBoS
+  result: N14ClothingHeadHatCapkhighbluBoS
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Cloth: 75
+    Thread: 50
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingHeadHatBrotherCapralHelmet
+  result: N14ClothingHeadHatBrotherCapralHelmet
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Steel: 175
+    N14Iron: 75
+    Leather: 50
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingHeadHatBrotherHelmet
+  result: N14ClothingHeadHatBrotherHelmet
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Steel: 175
+    N14Iron: 75
+    Leather: 50

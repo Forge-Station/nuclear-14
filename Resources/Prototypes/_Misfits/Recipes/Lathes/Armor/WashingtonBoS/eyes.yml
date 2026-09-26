@@ -1,0 +1,15 @@
+# Faction armor lathe recipes: WashingtonBoS - eyes
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingEyesGlassesWBoS
+  result: N14ClothingEyesGlassesWBoS
+  category: N14ClothingEyes
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Steel: 50
+    Glass: 50
+    Circuitry: 25

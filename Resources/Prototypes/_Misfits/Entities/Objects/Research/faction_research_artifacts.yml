@@ -1,0 +1,83 @@
+- type: entity
+  parent: BaseItem
+  id: N14ResearchArtifactBase
+  abstract: true
+  name: research artifact
+  description: A piece of salvageable tech. Convert it at a faction research bench for research points.
+  components:
+  - type: Item
+    size: Normal
+  - type: StaticPrice
+    price: 1000
+  - type: PointLight
+    radius: 1.4
+    energy: 2
+    color: "#ffd9a3"
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi
+    layers:
+    - map: ["base"]
+
+- type: entity
+  parent: N14ResearchArtifactBase
+  id: N14ResearchArtifactDiscard
+  name: wrecked junk
+  components:
+  - type: StaticPrice
+    price: 500
+  - type: RandomSprite
+    available:
+    - base:
+        gear_large: ""
+        board_1: ""
+        capacitor_1: ""
+        duct_tape: ""
+        fuse_1: ""
+
+- type: entity
+  parent: N14ResearchArtifactBase
+  id: N14ResearchArtifactEnergy
+  name: wrecked energy weapon
+  components:
+  - type: StaticPrice
+    price: 2500
+  - type: RandomSprite
+    available:
+    - base:
+        capacitor_2: ""
+        diode_1: ""
+        resistor_1: ""
+        lenses: ""
+        flux: ""
+
+- type: entity
+  parent: N14ResearchArtifactBase
+  id: N14ResearchArtifactBallistic
+  name: wrecked firearm
+  components:
+  - type: StaticPrice
+    price: 2000
+  - type: RandomSprite
+    available:
+    - base:
+        barrel: ""
+        bolt: ""
+        receiver: ""
+        riflestock: ""
+        scope: ""
+
+- type: entity
+  parent: N14ResearchArtifactBase
+  id: N14ResearchArtifactArmor
+  name: wrecked armor plating
+  components:
+  - type: StaticPrice
+    price: 3000
+  - type: RandomSprite
+    available:
+    - base:
+        advancedframe: ""
+        frame: ""
+        iron: ""
+        alloys: ""
+        mould: ""

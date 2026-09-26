@@ -1,0 +1,443 @@
+# Faction armor lathe recipes: NCR - outer
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterNCRCorrectional
+  result: N14ClothingOuterNCRCorrectional
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Cloth: 150
+    Thread: 100
+    Leather: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterNCRMPArmorWest
+  result: N14ClothingOuterNCRMPArmorWest
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 7
+  materials:
+    Cloth: 180
+    Thread: 120
+    Leather: 100
+    Steel: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterNCRTrenchCoat
+  result: N14ClothingOuterNCRTrenchCoat
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Cloth: 200
+    Thread: 150
+    Leather: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterNCRVest
+  result: N14ClothingOuterNCRVest
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Cloth: 150
+    Thread: 100
+    Leather: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterNCRVestCoatBlack
+  result: N14ClothingOuterNCRVestCoatBlack
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Cloth: 180
+    Thread: 120
+    Leather: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterNCRVestSnow
+  result: N14ClothingOuterNCRVestSnow
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Cloth: 150
+    Thread: 100
+    Leather: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterNCRVestWoods
+  result: N14ClothingOuterNCRVestWoods
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Cloth: 150
+    Thread: 100
+    Leather: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterNCRVestpaddedWeb
+  result: N14ClothingOuterNCRVestpaddedWeb
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Cloth: 150
+    Thread: 100
+    Leather: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterNCRVestpaddedWebSnow
+  result: N14ClothingOuterNCRVestpaddedWebSnow
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Cloth: 150
+    Thread: 100
+    Leather: 75
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterNCRCFvest
+  result: N14ClothingOuterNCRCFvest
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Cloth: 200
+    Thread: 150
+    Leather: 100
+    Steel: 75
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterNCRCombatArmor
+  result: N14ClothingOuterNCRCombatArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 15
+  materials:
+    Steel: 400
+    Cloth: 300
+    Thread: 200
+    Leather: 150
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterNCRCombatArmorSnow
+  result: N14ClothingOuterNCRCombatArmorSnow
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 15
+  materials:
+    Steel: 400
+    Cloth: 300
+    Thread: 200
+    Leather: 150
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterNCRPlateDesert
+  result: N14ClothingOuterNCRPlateDesert
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 200
+    Cloth: 200
+    Thread: 150
+    Leather: 100
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterNCRPlateWoods
+  result: N14ClothingOuterNCRPlateWoods
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 200
+    Cloth: 200
+    Thread: 150
+    Leather: 100
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterNCRVeteranArmor
+  result: N14ClothingOuterNCRVeteranArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 11
+  materials:
+    Steel: 300
+    Cloth: 250
+    Thread: 175
+    Leather: 150
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterNCRVeteranArmorSnow
+  result: N14ClothingOuterNCRVeteranArmorSnow
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 11
+  materials:
+    Steel: 300
+    Cloth: 250
+    Thread: 175
+    Leather: 150
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterRangerArmor
+  result: N14ClothingOuterRangerArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Leather: 300
+    Cloth: 250
+    Thread: 175
+    Steel: 150
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterRangerArmorOld
+  result: N14ClothingOuterRangerArmorOld
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Leather: 300
+    Cloth: 250
+    Thread: 175
+    Steel: 150
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterRangerCoat
+  result: N14ClothingOuterRangerCoat
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 14
+  materials:
+    Leather: 350
+    Cloth: 300
+    Thread: 200
+    Steel: 200
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterRangerVest
+  result: N14ClothingOuterRangerVest
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Leather: 300
+    Cloth: 250
+    Thread: 175
+    Steel: 150
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterNCRCombatArmorMK2
+  result: N14ClothingOuterNCRCombatArmorMK2
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 20
+  materials:
+    Steel: 700
+    Cloth: 400
+    Thread: 250
+    Leather: 200
+    Circuitry: 50
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterNCRCombatArmorMK2Snow
+  result: N14ClothingOuterNCRCombatArmorMK2Snow
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 20
+  materials:
+    Steel: 700
+    Cloth: 400
+    Thread: 250
+    Leather: 200
+    Circuitry: 50
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterNCRCombatVeteranArmor
+  result: N14ClothingOuterNCRCombatVeteranArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 17
+  materials:
+    Steel: 550
+    Cloth: 350
+    Thread: 225
+    Leather: 175
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterNCRCombatVeteranArmorSnow
+  result: N14ClothingOuterNCRCombatVeteranArmorSnow
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 17
+  materials:
+    Steel: 550
+    Cloth: 350
+    Thread: 225
+    Leather: 175
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterRangerArmorB
+  result: N14ClothingOuterRangerArmorB
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 15
+  materials:
+    Leather: 350
+    Cloth: 275
+    Thread: 200
+    Steel: 175
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterRangerCoyote
+  result: N14ClothingOuterRangerCoyote
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 15
+  materials:
+    Leather: 350
+    Cloth: 275
+    Thread: 200
+    Steel: 175
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterRangerDuster
+  result: N14ClothingOuterRangerDuster
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Leather: 300
+    Cloth: 300
+    Thread: 200
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterRangerRedwood
+  result: N14ClothingOuterRangerRedwood
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 15
+  materials:
+    Leather: 350
+    Cloth: 275
+    Thread: 200
+    Steel: 175
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterRangerScorpion
+  result: N14ClothingOuterRangerScorpion
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 15
+  materials:
+    Leather: 350
+    Cloth: 275
+    Thread: 200
+    Steel: 175
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterPowerArmorT45NCR
+  result: N14ClothingOuterPowerArmorT45NCR
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 28
+  materials:
+    Steel: 1200
+    N14Iron: 500
+    Circuitry: 150
+    ScrapElectronic: 100
+    N14Brass: 100
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterPowerArmorT51NCR
+  result: N14ClothingOuterPowerArmorT51NCR
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 30
+  materials:
+    Steel: 1500
+    N14Iron: 600
+    Circuitry: 200
+    ScrapElectronic: 150
+    N14Brass: 100
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterRangerCombat
+  result: N14ClothingOuterRangerCombat
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 20
+  materials:
+    Steel: 600
+    Leather: 400
+    Cloth: 350
+    Thread: 250
+    N14Iron: 100
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterRangerCombatDesert
+  result: N14ClothingOuterRangerCombatDesert
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 20
+  materials:
+    Steel: 600
+    Leather: 400
+    Cloth: 350
+    Thread: 250
+    N14Iron: 100
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterRangerElite
+  result: N14ClothingOuterRangerElite
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 22
+  materials:
+    Steel: 700
+    Leather: 450
+    Cloth: 350
+    Thread: 250
+    N14Iron: 150

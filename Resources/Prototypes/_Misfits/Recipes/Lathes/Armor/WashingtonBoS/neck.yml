@@ -1,0 +1,23 @@
+# Faction armor lathe recipes: WashingtonBoS - neck
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingNeckCloakBrotherhoodWashington
+  result: N14ClothingNeckCloakBrotherhoodWashington
+  category: N14ClothingNeck
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Leather: 60
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingNeckMantleBrotherhoodWashington
+  result: N14ClothingNeckMantleBrotherhoodWashington
+  category: N14ClothingNeck
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Leather: 50

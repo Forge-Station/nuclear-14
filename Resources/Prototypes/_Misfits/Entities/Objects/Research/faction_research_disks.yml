@@ -1,0 +1,45 @@
+- type: entity
+  parent: BaseItem
+  id: N14FactionResearchDiskBase
+  name: faction research disk
+  description: A data disk holding faction research points. Convert it at a faction research bench.
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Research/researchdisk.rsi
+    state: icon
+  - type: Item
+    size: Tiny
+  - type: FactionResearchValue
+    pointsOverride: 500
+
+- type: entity
+  parent: N14FactionResearchDiskBase
+  id: N14FactionResearchDisk500
+  suffix: "500"
+  components:
+  - type: FactionResearchValue
+    pointsOverride: 500
+
+- type: entity
+  parent: N14FactionResearchDiskBase
+  id: N14FactionResearchDisk1000
+  suffix: "1000"
+  components:
+  - type: FactionResearchValue
+    pointsOverride: 1000
+
+- type: entity
+  parent: N14FactionResearchDiskBase
+  id: N14FactionResearchDisk2500
+  suffix: "2500"
+  components:
+  - type: FactionResearchValue
+    pointsOverride: 2500
+
+- type: entity
+  parent: N14FactionResearchDiskBase
+  id: N14FactionResearchDisk5000
+  suffix: "5000"
+  components:
+  - type: FactionResearchValue
+    pointsOverride: 5000

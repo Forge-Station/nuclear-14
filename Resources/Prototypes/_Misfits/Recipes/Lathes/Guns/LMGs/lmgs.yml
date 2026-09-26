@@ -1,0 +1,93 @@
+# Weapon lathe recipes: Machine guns (LMG/HMG)
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Material pattern (ballistic heavy): Steel / N14Iron / N14Brass / N14Silver.
+# Tier is metadata only (comment): T3 = quality, T4 = unique.
+
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponLMG
+  result: N14WeaponLMG
+  category: N14WeaponLMGs
+  requiresBlueprint: true
+  completetime: 14
+  materials:
+    Steel: 800
+    N14Iron: 350
+    N14Brass: 150
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponLMGchinese
+  result: N14WeaponLMGchinese
+  category: N14WeaponLMGs
+  requiresBlueprint: true
+  completetime: 14
+  materials:
+    Steel: 850
+    N14Iron: 400
+    N14Brass: 150
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponRifleAk112pn
+  result: N14WeaponRifleAk112pn
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 15
+  materials:
+    Steel: 1000
+    N14Iron: 450
+    Wood: 100
+    N14Brass: 200
+    N14Silver: 75
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponLMGAutoRifle
+  result: N14WeaponLMGAutoRifle
+  category: N14WeaponLMGs
+  requiresBlueprint: true
+  completetime: 17
+  materials:
+    Steel: 1000
+    N14Iron: 500
+    N14Brass: 250
+    N14Silver: 75
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponHMGcanadian
+  result: N14WeaponHMGcanadian
+  category: N14WeaponLMGs
+  requiresBlueprint: true
+  completetime: 18
+  materials:
+    Steel: 1100
+    N14Iron: 550
+    N14Brass: 250
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponLMGBren
+  result: N14WeaponLMGBren
+  category: N14WeaponLMGs
+  requiresBlueprint: true
+  completetime: 17
+  materials:
+    Steel: 1000
+    N14Iron: 500
+    N14Brass: 250
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponM60GPMG
+  result: N14WeaponM60GPMG
+  category: N14WeaponLMGs
+  requiresBlueprint: true
+  completetime: 18
+  materials:
+    Steel: 1200
+    N14Iron: 600
+    N14Brass: 300
+    N14Silver: 100

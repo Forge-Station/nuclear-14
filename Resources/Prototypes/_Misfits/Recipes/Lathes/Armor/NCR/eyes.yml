@@ -1,0 +1,16 @@
+# Faction armor lathe recipes: NCR - eyes
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingEyesNCRNVGs
+  result: N14ClothingEyesNCRNVGs
+  category: N14ClothingEyes
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 100
+    Glass: 100
+    Circuitry: 100
+    ScrapElectronic: 50

@@ -1,0 +1,79 @@
+# Weapon lathe recipes: Melee long blades
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Material pattern (melee): Steel / Wood / Leather / N14Iron / N14Brass.
+# Tier is metadata only (comment): T1 = makeshift, T2 = common, T3 = quality, T4 = unique.
+# Note: N14ScrapMachete and N14LongSword already have recipes in _Nuclear14/Recipes/Lathes/weapons.yml.
+
+
+# Tier: T2
+- type: latheRecipe
+  id: N14Machete
+  result: N14Machete
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 200
+    Leather: 50
+
+
+# Tier: T1
+- type: latheRecipe
+  id: N14TribalSword
+  result: N14TribalSword
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 9
+  materials:
+    Steel: 150
+    Wood: 100
+    Leather: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14TribalMachete
+  result: N14TribalMachete
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 9
+  materials:
+    Steel: 125
+    Wood: 100
+    Leather: 50
+
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ChineseSword
+  result: N14ChineseSword
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 11
+  materials:
+    Steel: 300
+    N14Iron: 100
+    Leather: 50
+
+# Tier: T3
+- type: latheRecipe
+  id: N14CeremonialSword
+  result: N14CeremonialSword
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 400
+    N14Brass: 150
+    Leather: 100
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ripper
+  result: N14ripper
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 13
+  materials:
+    Steel: 500
+    N14Iron: 250
+    N14Brass: 100

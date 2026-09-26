@@ -1,0 +1,173 @@
+# Weapon lathe recipes: Corvax-exclusive melee
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Material pattern (melee): Steel / Wood / Leather / N14Iron / N14Brass.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14Whip
+  result: N14Whip
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Cloth: 200
+    Leather: 100
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingHandsPowerFist
+  result: N14ClothingHandsPowerFist
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 13
+  materials:
+    Steel: 500
+    N14Iron: 250
+    Circuitry: 100
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingHandsIndusrialPowerFist
+  result: N14ClothingHandsIndusrialPowerFist
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 14
+  materials:
+    Steel: 600
+    N14Iron: 300
+    Circuitry: 150
+
+# Tier: T2
+- type: latheRecipe
+  id: N14PilumSpear
+  result: N14PilumSpear
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 200
+    N14Iron: 100
+    Wood: 350
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WastelandThunderspear
+  result: N14WastelandThunderspear
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 300
+    N14Brass: 150
+    Circuitry: 50
+    Wood: 350
+
+# Tier: T2
+- type: latheRecipe
+  id: N14LegionnaireShield
+  result: N14LegionnaireShield
+  category: N14Shield
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 100
+    Wood: 400
+    Leather: 100
+
+# Tier: T2
+- type: latheRecipe
+  id: N14LegionnaireBuckler
+  result: N14LegionnaireBuckler
+  category: N14Shield
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 100
+    Wood: 250
+    Leather: 75
+
+# Tier: T2
+- type: latheRecipe
+  id: N14Gladius
+  result: N14Gladius
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 11
+  materials:
+    Steel: 300
+    N14Iron: 100
+    Leather: 50
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponThermospear
+  result: N14WeaponThermospear
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 300
+    N14Brass: 150
+    Wood: 300
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponKebab
+  result: N14WeaponKebab
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Steel: 150
+    Wood: 300
+    Leather: 50
+
+# Tier: T4
+- type: latheRecipe
+  id: N14BLadeOfTheEast
+  result: N14BLadeOfTheEast
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 14
+  materials:
+    Steel: 600
+    N14Iron: 300
+    N14Brass: 200
+    N14Silver: 75
+
+# Tier: T3
+- type: latheRecipe
+  id: N14Chainsaw
+  result: N14Chainsaw
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 14
+  materials:
+    Steel: 600
+    N14Iron: 300
+    N14Brass: 100
+    Circuitry: 100
+
+# Tier: T3
+- type: latheRecipe
+  id: N14MacheteGladius
+  result: N14MacheteGladius
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 400
+    N14Iron: 150
+    N14Brass: 75
+    Leather: 100
+
+# Tier: T2
+- type: latheRecipe
+  id: N14KukriKnife
+  result: N14KukriKnife
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 9
+  materials:
+    Steel: 150
+    Leather: 50

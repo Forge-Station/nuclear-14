@@ -1,0 +1,14 @@
+# Faction armor lathe recipes: MidWestBoS - belt
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingBeltBoSWebbing
+  result: N14ClothingBeltBoSWebbing
+  category: N14ClothingBelt
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Leather: 100
+    Steel: 50

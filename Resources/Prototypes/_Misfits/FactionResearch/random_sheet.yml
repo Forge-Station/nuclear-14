@@ -1,0 +1,43 @@
+- type: entity
+  parent: BaseItem
+  id: N14RandomSheetBase
+  name: research sheet
+  description: A randomly rolled research sheet. Place it in a workbench storage to unlock a recipe.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi
+    state: board_1
+  - type: Item
+    size: Small
+  - type: Blueprint
+    recipes: []
+
+- type: randomResearchSheet
+  id: N14RandomResearchSheet
+  recipes:
+  - N14WeaponPistol9mm
+  - N14WeaponPistol10mm
+  - N14WeaponPistol45Colt
+  - N14WeaponSMG9mm
+  - N14WeaponSMG10mm
+  - N14WeaponShotgun
+  - N14WeaponShotgunDoubleBarrel
+  - N14WeaponRifle556R91
+  - N14WeaponSniperHunting
+  - N14WeaponRevolver9mm
+  - N14Machete
+  - N14Hatchet
+  - N14CombatKnife
+  - N14ClothingOuterLeatherArmor
+
+- type: randomResearchSheet
+  id: N14RandomArmorSheet
+  recipes:
+  - N14ClothingOuterNCRVestSnow
+  - N14ClothingOuterNCRVestWoods
+  - N14ClothingOuterNCRVestCoatBlack
+  - N14ClothingOuterRangerVest
+  - N14ClothingOuterRangerCoat
+  - N14ClothingOuterNCRCombatArmor
+  - N14ClothingOuterTribalArmor
+  - N14ClothingOuterLeatherArmor

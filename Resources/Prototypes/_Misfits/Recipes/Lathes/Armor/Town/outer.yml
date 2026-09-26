@@ -1,0 +1,107 @@
+# Faction armor lathe recipes: Town - outer
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterVestLeather
+  result: N14ClothingOuterVestLeather
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Leather: 100
+    Cloth: 75
+    Thread: 50
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterPoliceVest
+  result: N14ClothingOuterPoliceVest
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Cloth: 200
+    Thread: 150
+    Leather: 100
+    Steel: 75
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterTownGuardLight
+  result: N14ClothingOuterTownGuardLight
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Leather: 175
+    Cloth: 150
+    Thread: 125
+    Steel: 100
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterPoliceCombat
+  result: N14ClothingOuterPoliceCombat
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 275
+    Cloth: 200
+    Thread: 150
+    Leather: 150
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterSheriffVest
+  result: N14ClothingOuterSheriffVest
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Leather: 250
+    Steel: 200
+    Cloth: 175
+    Thread: 125
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterTownGuardRiot
+  result: N14ClothingOuterTownGuardRiot
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 300
+    Leather: 200
+    Cloth: 200
+    Thread: 150
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterCombatArmor
+  result: N14ClothingOuterCombatArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 18
+  materials:
+    Steel: 600
+    Cloth: 300
+    Thread: 200
+    Leather: 200
+    Circuitry: 50
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingScavengerHeavyArmor
+  result: N14ClothingScavengerHeavyArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 16
+  materials:
+    Steel: 500
+    Leather: 250
+    Scrap: 200
+    N14Iron: 150

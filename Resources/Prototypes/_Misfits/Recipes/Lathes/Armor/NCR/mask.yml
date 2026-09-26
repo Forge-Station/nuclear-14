@@ -1,0 +1,15 @@
+# Faction armor lathe recipes: NCR - mask
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingMaskPlate
+  result: N14ClothingMaskPlate
+  category: N14ClothingMask
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Steel: 75
+    Cloth: 50
+    Thread: 30

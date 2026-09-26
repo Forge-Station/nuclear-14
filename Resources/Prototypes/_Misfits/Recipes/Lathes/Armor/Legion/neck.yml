@@ -1,0 +1,38 @@
+# Faction armor lathe recipes: Legion - neck
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: M14ClothingNeckLegionMantle
+  result: M14ClothingNeckLegionMantle
+  category: N14ClothingNeck
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 100
+    Thread: 75
+    Leather: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingNeckCapeLegion
+  result: N14ClothingNeckCapeLegion
+  category: N14ClothingNeck
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Cloth: 125
+    Thread: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingNeckCapeLegionSagum
+  result: N14ClothingNeckCapeLegionSagum
+  category: N14ClothingNeck
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Cloth: 125
+    Thread: 100
+    Leather: 50

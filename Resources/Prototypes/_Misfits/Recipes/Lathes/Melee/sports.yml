@@ -1,0 +1,37 @@
+# Weapon lathe recipes: Melee sports equipment
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Material pattern (melee): Steel / Wood / Cloth.
+# Tier is metadata only (comment): T1 = makeshift.
+
+
+# Tier: T1
+- type: latheRecipe
+  id: N14BaseBallBat
+  result: N14BaseBallBat
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Wood: 300
+    Cloth: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14PoolCue
+  result: N14PoolCue
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Wood: 250
+
+# Tier: T1
+- type: latheRecipe
+  id: N14GolfClub
+  result: N14GolfClub
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Steel: 100
+    Wood: 200

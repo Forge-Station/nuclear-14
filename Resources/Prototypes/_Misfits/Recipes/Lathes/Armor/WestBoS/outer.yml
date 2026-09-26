@@ -1,0 +1,86 @@
+# Faction armor lathe recipes: WestBoS - outer
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterRecruitWesternArmor
+  result: N14ClothingOuterRecruitWesternArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 7
+  materials:
+    Cloth: 100
+    Thread: 75
+    Steel: 75
+    Leather: 50
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterKnightWesternArmor
+  result: N14ClothingOuterKnightWesternArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 300
+    Cloth: 200
+    Thread: 150
+    Leather: 125
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterPowerArmorT45West
+  result: N14ClothingOuterPowerArmorT45West
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 28
+  materials:
+    Steel: 1200
+    N14Iron: 500
+    Circuitry: 150
+    ScrapElectronic: 100
+    N14Brass: 100
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterPowerArmorT51
+  result: N14ClothingOuterPowerArmorT51
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 35
+  materials:
+    Steel: 1800
+    N14Iron: 600
+    Circuitry: 300
+    ScrapElectronic: 250
+    N14Brass: 125
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterPowerArmorT51BC
+  result: N14ClothingOuterPowerArmorT51BC
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 35
+  materials:
+    Steel: 1800
+    N14Iron: 600
+    Circuitry: 300
+    ScrapElectronic: 250
+    N14Brass: 125
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterPowerArmorT51Elder
+  result: N14ClothingOuterPowerArmorT51Elder
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 40
+  materials:
+    Steel: 2000
+    N14Iron: 700
+    Circuitry: 350
+    ScrapElectronic: 300
+    N14Brass: 150
+    N14Gold: 50

@@ -1,0 +1,121 @@
+# Faction armor lathe recipes: WashingtonBoS - outer
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterBrotherhoodWashingtonCoat
+  result: N14ClothingOuterBrotherhoodWashingtonCoat
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 7
+  materials:
+    Cloth: 200
+    Thread: 150
+    Leather: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterWBoSAcolyteCoat
+  result: N14ClothingOuterWBoSAcolyteCoat
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Cloth: 125
+    Thread: 100
+    Leather: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingOuterWBoSScripterCoat
+  result: N14ClothingOuterWBoSScripterCoat
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Cloth: 125
+    Thread: 100
+    Leather: 75
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterWBoSKnightBattleArmor
+  result: N14ClothingOuterWBoSKnightBattleArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 300
+    Cloth: 200
+    Thread: 150
+    Leather: 125
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingOuterWBoSKnightBattleArmorKilt
+  result: N14ClothingOuterWBoSKnightBattleArmorKilt
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 300
+    Cloth: 225
+    Thread: 175
+    Leather: 125
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterPowerArmorRaider
+  result: N14ClothingOuterPowerArmorRaider
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 25
+  materials:
+    Steel: 1000
+    N14Iron: 400
+    Circuitry: 150
+    ScrapElectronic: 100
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingOuterWBoSReconBattleArmor
+  result: N14ClothingOuterWBoSReconBattleArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 17
+  materials:
+    Steel: 500
+    Cloth: 275
+    Thread: 200
+    Leather: 175
+    Circuitry: 75
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterPowerArmorWBoSPowerArmor
+  result: N14ClothingOuterPowerArmorWBoSPowerArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 40
+  materials:
+    Steel: 1800
+    N14Iron: 600
+    Circuitry: 300
+    ScrapElectronic: 250
+    N14Brass: 125
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterWBoSLordBattleArmor
+  result: N14ClothingOuterWBoSLordBattleArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 22
+  materials:
+    Steel: 700
+    Cloth: 350
+    Thread: 250
+    Leather: 200
+    Circuitry: 125
+    ScrapElectronic: 75

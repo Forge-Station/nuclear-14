@@ -1,0 +1,111 @@
+# Weapon lathe recipes: Melee blunt (hammers, clubs, batons)
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Material pattern (melee): Steel / Wood / Leather / N14Iron / N14Brass.
+# Tier is metadata only (comment): T1 = makeshift, T2 = common, T3 = quality, T4 = unique.
+
+
+# Tier: T2
+- type: latheRecipe
+  id: N14SledgeHammer
+  result: N14SledgeHammer
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 11
+  materials:
+    Steel: 350
+    N14Iron: 100
+    Wood: 200
+
+# Tier: T4
+- type: latheRecipe
+  id: N14SuperSledgeHammer
+  result: N14SuperSledgeHammer
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 15
+  materials:
+    Steel: 700
+    N14Iron: 400
+    N14Brass: 150
+
+# Tier: T2
+- type: latheRecipe
+  id: N14TribalBigClub
+  result: N14TribalBigClub
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 200
+    Wood: 300
+    Leather: 50
+
+# Tier: T3
+- type: latheRecipe
+  id: N14TribalBigClubDecorated
+  result: N14TribalBigClubDecorated
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 300
+    Wood: 300
+    N14Brass: 100
+    Leather: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14NailBoard
+  result: N14NailBoard
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Wood: 300
+    N14Iron: 50
+
+
+# Tier: T1
+- type: latheRecipe
+  id: N14PoliceBaton
+  result: N14PoliceBaton
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 7
+  materials:
+    Steel: 150
+    N14Iron: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14TribalClub
+  result: N14TribalClub
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Wood: 200
+    Leather: 25
+
+# Tier: T1
+- type: latheRecipe
+  id: N14BrokenPipe
+  result: N14BrokenPipe
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Steel: 150
+
+
+# Tier: T2
+- type: latheRecipe
+  id: N14TrenchClub
+  result: N14TrenchClub
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 9
+  materials:
+    Steel: 250
+    N14Iron: 50
+    Wood: 100

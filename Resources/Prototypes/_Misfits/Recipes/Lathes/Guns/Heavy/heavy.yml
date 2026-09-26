@@ -1,0 +1,70 @@
+# Weapon lathe recipes: Heavy weapons (launchers / miniguns)
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Material pattern (heavy): Steel / N14Iron / N14Brass / N14Silver / Circuitry / ScrapElectronic.
+# Tier is metadata only (comment): T2 = common, T3 = quality, T4 = unique.
+
+
+# Tier: T2
+- type: latheRecipe
+  id: N14WeaponRifleGrenade
+  result: N14WeaponRifleGrenade
+  category: N14WeaponHeavy
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 400
+    N14Iron: 200
+    N14Brass: 100
+
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponLauncherGrenade
+  result: N14WeaponLauncherGrenade
+  category: N14WeaponHeavy
+  requiresBlueprint: true
+  completetime: 15
+  materials:
+    Steel: 800
+    N14Iron: 400
+    N14Brass: 150
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponMinigun
+  result: N14WeaponMinigun
+  category: N14WeaponHeavy
+  requiresBlueprint: true
+  completetime: 17
+  materials:
+    Steel: 1200
+    N14Iron: 600
+    N14Brass: 250
+
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponMinigunAvenger
+  result: N14WeaponMinigunAvenger
+  category: N14WeaponHeavy
+  requiresBlueprint: true
+  completetime: 20
+  materials:
+    Steel: 1800
+    N14Iron: 800
+    N14Brass: 350
+    N14Silver: 100
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponLauncherMissile
+  result: N14WeaponLauncherMissile
+  category: N14WeaponHeavy
+  requiresBlueprint: true
+  completetime: 18
+  materials:
+    Steel: 1600
+    N14Iron: 700
+    N14Brass: 300
+    Circuitry: 200
+    ScrapElectronic: 200

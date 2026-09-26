@@ -1,0 +1,31 @@
+# Weapon lathe recipes: Melee knives
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Material pattern (melee): Steel / Wood / Leather.
+# Tier is metadata only (comment): T1 = makeshift, T2 = common.
+# Note: N14KitchenKnife, N14ButchersCleaver and N14BrassKnife already have recipes
+# in _Nuclear14/Recipes/Lathes/ (cooking.yml / weapons.yml).
+
+
+# Tier: T1
+- type: latheRecipe
+  id: N14TribalKnife
+  result: N14TribalKnife
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 7
+  materials:
+    Steel: 100
+    Wood: 50
+    Leather: 25
+
+
+# Tier: T2
+- type: latheRecipe
+  id: N14CombatKnife
+  result: N14CombatKnife
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 9
+  materials:
+    Steel: 150
+    Leather: 50

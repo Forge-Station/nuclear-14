@@ -1,0 +1,40 @@
+# Faction armor lathe recipes: NCR - back
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingBackpackNCR
+  result: N14ClothingBackpackNCR
+  category: N14ClothingBack
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Cloth: 150
+    Thread: 100
+    Leather: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingBackpackSatchelNCR
+  result: N14ClothingBackpackSatchelNCR
+  category: N14ClothingBack
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 100
+    Thread: 60
+    Leather: 80
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingBackpackRadioNCR
+  result: N14ClothingBackpackRadioNCR
+  category: N14ClothingBack
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Steel: 100
+    Cloth: 150
+    Thread: 100
+    Circuitry: 50

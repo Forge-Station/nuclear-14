@@ -1,0 +1,14 @@
+# Faction armor lathe recipes: Legion - belt
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: ClothingBeltRope
+  result: ClothingBeltRope
+  category: N14ClothingBelt
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Thread: 100
+    Cloth: 50

@@ -1,0 +1,183 @@
+# Faction armor lathe recipes: NCR - head
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatNCRBeretMedic
+  result: N14ClothingHeadHatNCRBeretMedic
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Cloth: 75
+    Thread: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatNCRBeretOfficer
+  result: N14ClothingHeadHatNCRBeretOfficer
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Cloth: 75
+    Thread: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatNCRHelmet
+  result: N14ClothingHeadHatNCRHelmet
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Cloth: 100
+    Thread: 80
+    Steel: 75
+    Leather: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatNCRHelmetMetalGhillie
+  result: N14ClothingHeadHatNCRHelmetMetalGhillie
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 7
+  materials:
+    Steel: 120
+    Cloth: 75
+    Thread: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatNCRHelmetMetalMedic
+  result: N14ClothingHeadHatNCRHelmetMetalMedic
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Steel: 120
+    Cloth: 75
+    Thread: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatNCRHelmetMetalMilitaryPolice
+  result: N14ClothingHeadHatNCRHelmetMetalMilitaryPolice
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Steel: 150
+    Cloth: 75
+    Thread: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatNCRHelmetMetalSnow
+  result: N14ClothingHeadHatNCRHelmetMetalSnow
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Steel: 120
+    Cloth: 75
+    Thread: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatNCRHelmetMetalWoods
+  result: N14ClothingHeadHatNCRHelmetMetalWoods
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Steel: 120
+    Cloth: 75
+    Thread: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatNCRHelmetSnow
+  result: N14ClothingHeadHatNCRHelmetSnow
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Cloth: 100
+    Thread: 80
+    Steel: 75
+    Leather: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatNCRMPCap
+  result: N14ClothingHeadHatNCRMPCap
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Cloth: 80
+    Thread: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHeadHatNCRSidecap
+  result: N14ClothingHeadHatNCRSidecap
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Cloth: 80
+    Thread: 50
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingHeadHatRanger
+  result: N14ClothingHeadHatRanger
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Leather: 100
+    Cloth: 60
+    Thread: 50
+
+# Tier: T2
+- type: latheRecipe
+  id: N14ClothingHeadHatRangerB
+  result: N14ClothingHeadHatRangerB
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Leather: 100
+    Cloth: 60
+    Thread: 50
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingHeadHatNCRCombatHelmet
+  result: N14ClothingHeadHatNCRCombatHelmet
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Steel: 250
+    Cloth: 100
+    Thread: 75
+    Glass: 75
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingHeadHatNCRCombatHelmetSnow
+  result: N14ClothingHeadHatNCRCombatHelmetSnow
+  category: N14ClothingHead
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Steel: 250
+    Cloth: 100
+    Thread: 75
+    Glass: 75

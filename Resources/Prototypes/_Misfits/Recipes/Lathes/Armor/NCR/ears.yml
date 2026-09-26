@@ -1,0 +1,15 @@
+# Faction armor lathe recipes: NCR - ears
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingHeadsetNCR
+  result: N14ClothingHeadsetNCR
+  category: N14ClothingEars
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Steel: 75
+    N14Brass: 75
+    Circuitry: 75

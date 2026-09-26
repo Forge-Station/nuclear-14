@@ -1,0 +1,18 @@
+# Weapon lathe recipes: Flamethrowers
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Material pattern (heavy): Steel / N14Iron / N14Brass / Plastic.
+# Tier is metadata only (comment): T3 = quality.
+
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponFlamer
+  result: N14WeaponFlamer
+  category: N14WeaponFlamers
+  requiresBlueprint: true
+  completetime: 14
+  materials:
+    Steel: 600
+    N14Iron: 300
+    N14Brass: 100
+    Plastic: 75

@@ -1,0 +1,50 @@
+# Weapon lathe recipes: Melee axes
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Material pattern (melee): Steel / Wood.
+# Tier is metadata only (comment): T1 = makeshift, T2 = common.
+
+
+# Tier: T1
+- type: latheRecipe
+  id: N14Hatchet
+  result: N14Hatchet
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Steel: 150
+    Wood: 150
+
+# Tier: T1
+- type: latheRecipe
+  id: N14TribalHatchet
+  result: N14TribalHatchet
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Steel: 125
+    Wood: 150
+
+
+# Tier: T2
+- type: latheRecipe
+  id: N14BaseAxe
+  result: N14BaseAxe
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 250
+    Wood: 250
+
+# Tier: T2
+- type: latheRecipe
+  id: N14FireAxe
+  result: N14FireAxe
+  category: N14WeaponMelee
+  requiresBlueprint: true
+  completetime: 11
+  materials:
+    Steel: 300
+    Wood: 200

@@ -1,0 +1,256 @@
+# Weapon lathe recipes: Rifles
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Material pattern (ballistic): Steel / Scrap / Wood / Glass / N14Iron / N14Brass.
+# Tier is metadata only (comment): T1 = makeshift/basic, T2 = common, T3 = quality, T4 = unique.
+
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponRifle556Pipe
+  result: N14WeaponRifle556Pipe
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Steel: 200
+    Scrap: 100
+    Wood: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponSniper556VarmintRifle
+  result: N14WeaponSniper556VarmintRifle
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Steel: 200
+    Wood: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponRifle556Service
+  result: N14WeaponRifle556Service
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 9
+  materials:
+    Steel: 250
+    Wood: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponRifle556CarbineOld
+  result: N14WeaponRifle556CarbineOld
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 9
+  materials:
+    Steel: 250
+    Wood: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponRifle762SKS
+  result: N14WeaponRifle762SKS
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 9
+  materials:
+    Steel: 250
+    N14Iron: 100
+    Wood: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponSniper556Tribal
+  result: N14WeaponSniper556Tribal
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Steel: 200
+    Wood: 150
+
+
+# Tier: T2
+- type: latheRecipe
+  id: N14WeaponRifle556ServiceScoped
+  result: N14WeaponRifle556ServiceScoped
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 350
+    Glass: 75
+    Wood: 100
+
+# Tier: T2
+- type: latheRecipe
+  id: N14WeaponRifle556R91
+  result: N14WeaponRifle556R91
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 400
+    N14Iron: 150
+    Wood: 100
+
+# Tier: T2
+- type: latheRecipe
+  id: N14WeaponRifle762Chinese
+  result: N14WeaponRifle762Chinese
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 400
+    N14Iron: 150
+    Wood: 75
+
+# Tier: T2
+- type: latheRecipe
+  id: N14WeaponRifle762M14
+  result: N14WeaponRifle762M14
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 400
+    N14Iron: 150
+    Wood: 100
+
+# Tier: T2
+- type: latheRecipe
+  id: N14WeaponRifle556Carbine
+  result: N14WeaponRifle556Carbine
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 450
+    N14Iron: 150
+    Wood: 50
+
+# Tier: T2
+- type: latheRecipe
+  id: N14WeaponRifle762Marksman
+  result: N14WeaponRifle762Marksman
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 11
+  materials:
+    Steel: 450
+    N14Iron: 200
+    Wood: 100
+
+# Tier: T2
+- type: latheRecipe
+  id: N14WeaponRifle762Canadian
+  result: N14WeaponRifle762Canadian
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 450
+    N14Iron: 150
+    Wood: 100
+
+# Tier: T2
+- type: latheRecipe
+  id: N14WeaponSniper556TribalUpgraded
+  result: N14WeaponSniper556TribalUpgraded
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 9
+  materials:
+    Steel: 350
+    N14Iron: 100
+    Wood: 150
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponRifleAk112
+  result: N14WeaponRifleAk112
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 13
+  materials:
+    Steel: 700
+    N14Iron: 300
+    Wood: 100
+    N14Brass: 150
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponRifle556Scout
+  result: N14WeaponRifle556Scout
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 600
+    N14Iron: 250
+    N14Brass: 100
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponRifle556EM2
+  result: N14WeaponRifle556EM2
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 650
+    N14Iron: 250
+    N14Brass: 150
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponRifle762Fal
+  result: N14WeaponRifle762Fal
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 13
+  materials:
+    Steel: 700
+    N14Iron: 300
+    N14Brass: 150
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponRifle762MarksmanCanadian
+  result: N14WeaponRifle762MarksmanCanadian
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 13
+  materials:
+    Steel: 700
+    N14Iron: 300
+    N14Brass: 150
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponRifle556Butchered
+  result: N14WeaponRifle556Butchered
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 10
+  materials:
+    Steel: 500
+    N14Iron: 200
+    N14Brass: 100
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponRifleBozarGRA
+  result: N14WeaponRifleBozarGRA
+  category: N14WeaponRifles
+  requiresBlueprint: true
+  completetime: 16
+  materials:
+    Steel: 1100
+    N14Iron: 500
+    N14Brass: 250
+    N14Silver: 100

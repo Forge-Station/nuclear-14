@@ -1,0 +1,172 @@
+# Weapon lathe recipes: Shotguns
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Material pattern (ballistic): Steel / Scrap / Wood / N14Iron / N14Brass.
+# Tier is metadata only (comment): T1 = makeshift/basic, T2 = common, T3 = quality, T4 = unique.
+
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponShotgun
+  result: N14WeaponShotgun
+  category: N14WeaponShotguns
+  requiresBlueprint: true
+  completetime: 7
+  materials:
+    Steel: 150
+    Wood: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponShotgunDoubleBarrel
+  result: N14WeaponShotgunDoubleBarrel
+  category: N14WeaponShotguns
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Steel: 125
+    Wood: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponShotgunSawedOff
+  result: N14WeaponShotgunSawedOff
+  category: N14WeaponShotguns
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Steel: 125
+    Wood: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponShotgunShort
+  result: N14WeaponShotgunShort
+  category: N14WeaponShotguns
+  requiresBlueprint: true
+  completetime: 7
+  materials:
+    Steel: 150
+    Wood: 50
+
+# Tier: T1
+- type: latheRecipe
+  id: N14WeaponShotgunPipe
+  result: N14WeaponShotgunPipe
+  category: N14WeaponShotguns
+  requiresBlueprint: true
+  completetime: 6
+  materials:
+    Steel: 150
+    Scrap: 100
+    Wood: 75
+
+
+# Tier: T2
+- type: latheRecipe
+  id: N14WeaponShotgunCaravan
+  result: N14WeaponShotgunCaravan
+  category: N14WeaponShotguns
+  requiresBlueprint: true
+  completetime: 8
+  materials:
+    Steel: 250
+    N14Iron: 100
+    Wood: 75
+
+# Tier: T2
+- type: latheRecipe
+  id: N14WeaponShotgunLever
+  result: N14WeaponShotgunLever
+  category: N14WeaponShotguns
+  requiresBlueprint: true
+  completetime: 9
+  materials:
+    Steel: 300
+    N14Iron: 100
+    Wood: 100
+
+# Tier: T2
+- type: latheRecipe
+  id: N14WeaponShotgunChinese
+  result: N14WeaponShotgunChinese
+  category: N14WeaponShotguns
+  requiresBlueprint: true
+  completetime: 9
+  materials:
+    Steel: 300
+    N14Iron: 125
+
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponShotgunAuto
+  result: N14WeaponShotgunAuto
+  category: N14WeaponShotguns
+  requiresBlueprint: true
+  completetime: 11
+  materials:
+    Steel: 500
+    N14Iron: 200
+    N14Brass: 100
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponShotgunRiot
+  result: N14WeaponShotgunRiot
+  category: N14WeaponShotguns
+  requiresBlueprint: true
+  completetime: 11
+  materials:
+    Steel: 550
+    N14Iron: 250
+    N14Brass: 100
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponBlowback
+  result: N14WeaponBlowback
+  category: N14WeaponShotguns
+  requiresBlueprint: true
+  completetime: 12
+  materials:
+    Steel: 600
+    N14Iron: 250
+    N14Brass: 150
+
+# Tier: T3
+- type: latheRecipe
+  id: N14WeaponShotgunCanadian
+  result: N14WeaponShotgunCanadian
+  category: N14WeaponShotguns
+  requiresBlueprint: true
+  completetime: 11
+  materials:
+    Steel: 550
+    N14Iron: 250
+    N14Brass: 100
+
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponShotgunBoomstick
+  result: N14WeaponShotgunBoomstick
+  category: N14WeaponShotguns
+  requiresBlueprint: true
+  completetime: 13
+  materials:
+    Steel: 800
+    N14Iron: 400
+    N14Brass: 200
+    N14Silver: 75
+
+# Tier: T4
+- type: latheRecipe
+  id: N14WeaponShotgunBloodyStick
+  result: N14WeaponShotgunBloodyStick
+  category: N14WeaponShotguns
+  requiresBlueprint: true
+  completetime: 13
+  materials:
+    Steel: 750
+    N14Iron: 400
+    N14Brass: 200

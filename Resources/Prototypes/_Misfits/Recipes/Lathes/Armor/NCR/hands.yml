@@ -1,0 +1,15 @@
+# Faction armor lathe recipes: NCR - hands
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingHandsGlovesNCR
+  result: N14ClothingHandsGlovesNCR
+  category: N14ClothingHands
+  requiresBlueprint: true
+  completetime: 3
+  materials:
+    Cloth: 75
+    Thread: 50
+    Leather: 50

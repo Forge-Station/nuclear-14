@@ -1,0 +1,14 @@
+# Faction armor lathe recipes: WashingtonBoS - mask
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T3
+- type: latheRecipe
+  id: N14ClothingMaskGasWBoSRecon
+  result: N14ClothingMaskGasWBoSRecon
+  category: N14ClothingMask
+  requiresBlueprint: true
+  completetime: 7
+  materials:
+    Steel: 100
+    Glass: 50

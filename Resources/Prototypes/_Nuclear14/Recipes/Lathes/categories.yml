@@ -15,6 +15,50 @@
   name: lathe-category-armor
 
 - type: latheCategory
+  id: N14ClothingHead
+  name: lathe-category-clothing-head
+
+- type: latheCategory
+  id: N14ClothingOuter
+  name: lathe-category-clothing-outer
+
+- type: latheCategory
+  id: N14ClothingUniform
+  name: lathe-category-clothing-uniform
+
+- type: latheCategory
+  id: N14ClothingHands
+  name: lathe-category-clothing-hands
+
+- type: latheCategory
+  id: N14ClothingShoes
+  name: lathe-category-clothing-shoes
+
+- type: latheCategory
+  id: N14ClothingMask
+  name: lathe-category-clothing-mask
+
+- type: latheCategory
+  id: N14ClothingNeck
+  name: lathe-category-clothing-neck
+
+- type: latheCategory
+  id: N14ClothingEyes
+  name: lathe-category-clothing-eyes
+
+- type: latheCategory
+  id: N14ClothingEars
+  name: lathe-category-clothing-ears
+
+- type: latheCategory
+  id: N14ClothingBelt
+  name: lathe-category-clothing-belt
+
+- type: latheCategory
+  id: N14ClothingBack
+  name: lathe-category-clothing-back
+
+- type: latheCategory
   id: N14Containers
   name: lathe-category-containers
 
@@ -73,6 +117,34 @@
 - type: latheCategory
   id: N14WeaponSMGs
   name: lathe-category-weapons-smgs
+
+- type: latheCategory
+  id: N14WeaponShotguns
+  name: lathe-category-weapons-shotguns
+
+- type: latheCategory
+  id: N14WeaponSnipers
+  name: lathe-category-weapons-snipers
+
+- type: latheCategory
+  id: N14WeaponLMGs
+  name: lathe-category-weapons-lmgs
+
+- type: latheCategory
+  id: N14WeaponEnergy
+  name: lathe-category-weapons-energy
+
+- type: latheCategory
+  id: N14WeaponRevolvers
+  name: lathe-category-weapons-revolvers
+
+- type: latheCategory
+  id: N14WeaponHeavy
+  name: lathe-category-weapons-heavy
+
+- type: latheCategory
+  id: N14WeaponFlamers
+  name: lathe-category-weapons-flamers
 
 - type: latheCategory
   id: N14Identification

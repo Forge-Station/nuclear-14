@@ -1,0 +1,69 @@
+# Faction armor lathe recipes: WestBoS - uniform
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingUniformBosReconWest
+  result: N14ClothingUniformBosReconWest
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 100
+    Thread: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitBOSWest
+  result: N14ClothingUniformJumpsuitBOSWest
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 100
+    Thread: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitBOSWestKnight
+  result: N14ClothingUniformJumpsuitBOSWestKnight
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 100
+    Thread: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitBOSWestPaladin
+  result: N14ClothingUniformJumpsuitBOSWestPaladin
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 5
+  materials:
+    Cloth: 125
+    Thread: 100
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitBOSWestScout
+  result: N14ClothingUniformJumpsuitBOSWestScout
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 100
+    Thread: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitBOSWestScribe
+  result: N14ClothingUniformJumpsuitBOSWestScribe
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 100
+    Thread: 75

@@ -1,0 +1,58 @@
+# Faction armor lathe recipes: MidWestBoS - uniform
+# Plain latheRecipes unlocked by blueprints (requiresBlueprint).
+# Materials/tiers reused from the legacy faction blueprints.
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingUniformBosRecon
+  result: N14ClothingUniformBosRecon
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 100
+    Thread: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitBOSFieldScribe
+  result: N14ClothingUniformJumpsuitBOSFieldScribe
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 100
+    Thread: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitBOSGreen
+  result: N14ClothingUniformJumpsuitBOSGreen
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 100
+    Thread: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitBOSScribe
+  result: N14ClothingUniformJumpsuitBOSScribe
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 100
+    Thread: 75
+
+# Tier: T1
+- type: latheRecipe
+  id: N14ClothingUniformJumpsuitInquisitorBOS
+  result: N14ClothingUniformJumpsuitInquisitorBOS
+  category: N14ClothingUniform
+  requiresBlueprint: true
+  completetime: 4
+  materials:
+    Cloth: 100
+    Thread: 75
