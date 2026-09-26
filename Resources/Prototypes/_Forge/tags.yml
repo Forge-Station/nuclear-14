@@ -31,3 +31,9 @@
 
 - type: Tag
   id: ForgeHumanSkinLarge
+
+- type: Tag
+  id: N14PowerArmorPadding
+
+- type: Tag
+  id: N14PowerArmorPlate

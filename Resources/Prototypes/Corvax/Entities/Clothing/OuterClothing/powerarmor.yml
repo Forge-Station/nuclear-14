@@ -10,6 +10,9 @@
     sprite: Corvax/Clothing/OuterClothing/PowerArmor/t51china.rsi
     equipDelay: 3
     unequipDelay: 6
+  - type: Construction
+    graph: N14BrokenPowerArmorT51China
+    node: Repaired
   - type: ToggleableClothing
     clothingPrototypes:
       head: N14ClothingHeadHelmetPowerArmorT51China
