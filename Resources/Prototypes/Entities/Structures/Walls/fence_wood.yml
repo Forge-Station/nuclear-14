@@ -1,5 +1,5 @@
 - type: entity
-  parent: BaseStructure
+  parent: [ BaseStructure, ForgeBaseFlammableWoodLight ] # Forge-Change: surface fire integration
   id: BaseFenceWood
   name: wooden fence
   description: Wooden piece of fencing. I hope there is babushka's garden behind it.

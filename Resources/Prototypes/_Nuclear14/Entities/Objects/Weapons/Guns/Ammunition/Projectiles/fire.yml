@@ -37,6 +37,8 @@
         - LowImpassable
         hard: False
   - type: Projectile
+    # The flame front passes through mobs; SurfaceFireTrail still removes it at blocking tiles.
+    deleteOnCollide: false # Forge-Change
     impactEffect: BulletImpactEffect
     damage:
       types:
@@ -50,6 +52,15 @@
     energy: 7.0
   - type: IgniteOnCollide
     fireStacks: 0.30
+    count: 16 # Forge-Change
+  # Forge-Add-Start
+  - type: SurfaceFireTrail
+    firePrototype: ForgeSurfaceFire
+    tilesToSkip: 1
+    maxTiles: 8
+    duration: 20
+    intensity: 1
+  # Forge-Add-End
   - type: TimedDespawn
     lifetime: 10
 
@@ -62,7 +73,18 @@
   - type: IgniteOnCollide
     fireStacks: 0.40
   - type: TimedDespawn
-    lifetime: 0.1
+    # Range is capped by SurfaceFireTrail.maxTiles; lifetime only gives the projectile enough travel time.
+    lifetime: 0.5 # Forge-Change
+
+# Forge-Add-Start
+- type: entity
+  id: FireProjectileFlamer
+  parent: FireProjectile
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: SurfaceFireTrail
+    maxTiles: 5
+# Forge-Add-End
     
 - type: entity
   id: FireProjectileShort

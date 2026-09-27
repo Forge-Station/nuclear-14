@@ -1,5 +1,5 @@
 - type: entity
-  parent: BaseStructure
+  parent: [ BaseStructure, ForgeBaseFlammableWoodLight ] # Forge-Change: surface fire integration
   id: N14ChalkboardFloor
   name: Chalkboard
   description: A dusty chalkboard
