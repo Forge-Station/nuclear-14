@@ -1,4 +1,5 @@
 - type: entity
+  parent: ForgeBaseFlammableWoodLight # Forge-Change: surface fire integration
   id: N14NoticeBoard
   name: notice board
   description: Something important to post?

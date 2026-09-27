@@ -111,7 +111,7 @@
 # Wood walls
 - type: entity
   id: N14WallWoodFrame
-  parent: Barricade
+  parent: [ Barricade, ForgeBaseFlammableWoodLight ] # Forge-Change: surface fire integration
   name: wooden wall Frame
   description: A frame for building into a wall.
   components:
@@ -139,7 +139,7 @@
           collection: WoodDestroyHeavy
 
 - type: entity
-  parent: BaseWall
+  parent: [ BaseWall, ForgeBaseFlammableWoodHeavy ] # Forge-Change: surface fire integration
   id: N14WallWoodWhite
   name: wooden wall
   components:
@@ -171,7 +171,7 @@
     base: wood
 
 - type: entity
-  parent: BaseStructureDynamic
+  parent: [ BaseStructureDynamic, ForgeBaseFlammableWoodLight ] # Forge-Change: surface fire integration
   id: N14WallWoodWhiteFrame
   name: wall frame
   description: Part of a wooden wall supporting the structure.
