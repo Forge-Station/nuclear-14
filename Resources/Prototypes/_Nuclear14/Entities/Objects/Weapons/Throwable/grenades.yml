@@ -29,7 +29,7 @@
     fireSpread: false
     canResistFire: false
     alwaysCombustible: true
-    canExtinguish: false 
+    canExtinguish: false
     damage:
       types:
         Heat: 1
@@ -58,31 +58,31 @@
         damage: 1
       behaviors:
       - !type:PlaySoundBehavior
-        sound: "/Audio/_Nuclear14/Weapons/Effects/Wpn_dynam_fuse.ogg" 
+        sound: "/Audio/_Nuclear14/Weapons/Effects/Wpn_dynam_fuse.ogg"
     - trigger:
         !type:DamageTrigger
         damage: 4
       behaviors:
       - !type:PlaySoundBehavior
-        sound: "/Audio/_Nuclear14/Weapons/Effects/Wpn_dynam_fuse.ogg" 
+        sound: "/Audio/_Nuclear14/Weapons/Effects/Wpn_dynam_fuse.ogg"
     - trigger:
         !type:DamageTrigger
         damage: 7
       behaviors:
       - !type:PlaySoundBehavior
-        sound: "/Audio/_Nuclear14/Weapons/Effects/Wpn_dynam_fuse.ogg" 
+        sound: "/Audio/_Nuclear14/Weapons/Effects/Wpn_dynam_fuse.ogg"
     - trigger:
         !type:DamageTrigger
         damage: 10
       behaviors:
       - !type:PlaySoundBehavior
-        sound: "/Audio/_Nuclear14/Weapons/Effects/Wpn_dynam_fuse.ogg" 
+        sound: "/Audio/_Nuclear14/Weapons/Effects/Wpn_dynam_fuse.ogg"
     - trigger:
         !type:DamageTrigger
         damage: 13
       behaviors:
       - !type:PlaySoundBehavior
-        sound: "/Audio/_Nuclear14/Weapons/Effects/Wpn_dynam_fuse.ogg" 
+        sound: "/Audio/_Nuclear14/Weapons/Effects/Wpn_dynam_fuse.ogg"
     - trigger:
         !type:DamageTrigger
         damage: 15
@@ -90,6 +90,7 @@
       - !type:TriggerBehavior
   - type: LandAtCursor # Forge-Change
 
+# Forge-Add-Start
 - type: entity
   name: Baseball grenade
   description: Hollowed out baseball filled with explosives that explodes on impact.
@@ -209,15 +210,47 @@
     node: NukaNade
   - type: LandAtCursor # Forge-Change
 
-- type: entity #should spawn fire only when it was activated and then thrown, but when its not activated it just breaks and spills welding fuel. 
+- type: entity
+  parent: N14DrinkNukaColaEmpty
+  id: N14NukaCocktailEmpty
+  name: unfinished Nuka cocktail
+  description: A Nuka-Cola bottle fitted with an igniter and a wick. It still needs fuel.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Weapons/Grenades/NukaCocktail.rsi
+    state: icon
+  - type: SolutionContainerManager
+    solutions:
+      drink:
+        maxVol: 50
+  - type: Construction
+    graph: N14NukaCocktail
+    node: empty
+    defaultTarget: cocktail
+  - type: Tag
+    tags:
+    - Trash # Do not allow an unfinished cocktail to start another recipe.
+# Forge-Add-End
+
+- type: entity #should spawn fire only when it was activated and then thrown, but when its not activated it just breaks and spills welding fuel.
   name: Nuka cocktail
   description: Nuka-Cola bottle filled with flammable fuel.
   parent: IgnitableGrenadeBase
   id: N14NukaCocktail
   components:
   - type: Sprite
-    sprite: _Nuclear14/Objects/Weapons/Grenades/NukaCocktail.rsi  
+    sprite: _Nuclear14/Objects/Weapons/Grenades/NukaCocktail.rsi
   - type: ExplodeOnTrigger
+  # Forge-Add-Start
+  - type: SurfaceFireOnTrigger
+    firePrototype: ForgeSurfaceFire
+    shape: Circle
+    radius: 2
+    duration: 30
+    intensity: 1.25
+    stopAtObstacles: true
+  # Forge-Add-End
   - type: Explosive # Weak explosion in a small/medium radius. Ignites surrounding entities.
     explosionType: FireBomb
     maxIntensity: 2
@@ -233,29 +266,29 @@
   - type: Destructible
     thresholds:
     - trigger:
-        !type:DamageGroupTrigger  
-        damageGroup: Burn 
+        !type:DamageGroupTrigger
+        damageGroup: Burn
         damage: 1
       behaviors:
       - !type:PlaySoundBehavior
-        sound: "/Audio/_Nuclear14/Weapons/Effects/Wpn_dynam_fuse.ogg" 
+        sound: "/Audio/_Nuclear14/Weapons/Effects/Wpn_dynam_fuse.ogg"
     - trigger:
-        !type:DamageGroupTrigger  
-        damageGroup: Burn 
+        !type:DamageGroupTrigger
+        damageGroup: Burn
         damage: 10
       behaviors:
       - !type:PlaySoundBehavior
-        sound: "/Audio/_Nuclear14/Weapons/Effects/Wpn_dynam_fuse.ogg" 
+        sound: "/Audio/_Nuclear14/Weapons/Effects/Wpn_dynam_fuse.ogg"
     - trigger:
-        !type:DamageGroupTrigger  
-        damageGroup: Burn 
+        !type:DamageGroupTrigger
+        damageGroup: Burn
         damage: 15
       behaviors:
       - !type:PlaySoundBehavior
-        sound: "/Audio/_Nuclear14/Weapons/Effects/Wpn_dynam_fuse.ogg" 
+        sound: "/Audio/_Nuclear14/Weapons/Effects/Wpn_dynam_fuse.ogg"
     - trigger:
-        !type:DamageGroupTrigger  
-        damageGroup: Burn 
+        !type:DamageGroupTrigger
+        damageGroup: Burn
         damage: 20
       behaviors:
       - !type:TriggerBehavior
@@ -266,7 +299,7 @@
       - !type:TriggerBehavior
     - trigger:
         !type:DamageGroupTrigger #20 brute damage which means wasnt set on fire, so no reason to set on fire, it should only splash some welding fuel
-        damageGroup: Brute 
+        damageGroup: Brute
         damage: 20
       behaviors:
       - !type:PlaySoundBehavior
@@ -281,12 +314,18 @@
   - type: SolutionContainerManager
     solutions:
       drink:
+        maxVol: 50 # Forge-Change
         reagents:
         - ReagentId: WeldingFuel
-          Quantity: 30
+          Quantity: 50 # Forge-Change
   - type: Spillable
     solution: drink
   - type: LandAtCursor # Forge-Change
+  # Forge-Add-Start
+  - type: Construction
+    graph: N14NukaCocktail
+    node: cocktail
+  # Forge-Add-End
 
 - type: entity
   parent: GrenadeBase
@@ -295,7 +334,7 @@
   description: Powerful plasma grenade.
   components:
   - type: Sprite
-    sprite:  _Nuclear14/Objects/Weapons/Grenades/PlasmaGrenade.rsi  
+    sprite:  _Nuclear14/Objects/Weapons/Grenades/PlasmaGrenade.rsi
     layers:
     - state: icon
       map: ["enum.TriggerVisualLayers.Base"]
@@ -325,7 +364,7 @@
   description: Caution, hot!
   components:
   - type: Sprite
-    sprite: _Nuclear14/Objects/Weapons/Grenades/KettleBomb.rsi 
+    sprite: _Nuclear14/Objects/Weapons/Grenades/KettleBomb.rsi
     layers:
     - state: icon
       map: ["enum.TriggerVisualLayers.Base"]
@@ -355,7 +394,7 @@
   description: BIG POP POP!
   components:
   - type: Sprite
-    sprite: _Nuclear14/Objects/Weapons/Grenades/FirecrackerFull.rsi  
+    sprite: _Nuclear14/Objects/Weapons/Grenades/FirecrackerFull.rsi
     layers:
     - state: icon
       map: ["enum.TriggerVisualLayers.Base"]
@@ -383,7 +422,7 @@
   description: POP POP!
   components:
   - type: Sprite
-    sprite: _Nuclear14/Objects/Weapons/Grenades/FirecrackerHalf.rsi  
+    sprite: _Nuclear14/Objects/Weapons/Grenades/FirecrackerHalf.rsi
     layers:
     - state: icon
       map: ["enum.TriggerVisualLayers.Base"]
@@ -394,7 +433,7 @@
     velocity: 2
   - type: EmitSoundOnTrigger
     sound:
-      path: "/Audio/Effects/snap.ogg" 
+      path: "/Audio/Effects/snap.ogg"
   - type: Damageable
     damageContainer: Inorganic
   - type: ContainerContainer
@@ -409,7 +448,7 @@
   description: POP POP!
   components:
   - type: Sprite
-    sprite: _Nuclear14/Objects/Weapons/Grenades/Firecracker.rsi  
+    sprite: _Nuclear14/Objects/Weapons/Grenades/Firecracker.rsi
     layers:
     - state: icon
       map: ["enum.TriggerVisualLayers.Base"]

@@ -57,6 +57,7 @@
   - type: BlockWeather
   - type: Climbable
     range: 0.05
+  - type: SurfaceFirePassThrough # Forge-Add
 
 - type: entity
   parent: N14HalfWallBase
@@ -285,7 +286,7 @@
     base: vault
     
 - type: entity
-  parent: N14HalfWallBase
+  parent: [ N14HalfWallBase, ForgeBaseFlammableWoodHeavy ] # Forge-Change: surface fire integration
   id: N14WallWoodHalf
   name: wood wall
   components:

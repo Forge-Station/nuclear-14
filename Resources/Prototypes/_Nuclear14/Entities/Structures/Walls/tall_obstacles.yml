@@ -35,7 +35,7 @@
         density: 1000
         
 - type: entity
-  parent: N14BaseTallObstacle
+  parent: [ N14BaseTallObstacle, ForgeBaseFlammableWoodHeavy ] # Forge-Change: surface fire integration
   id: N14BarricadeWoodTall
   name: wooden barricade
   suffix: tall

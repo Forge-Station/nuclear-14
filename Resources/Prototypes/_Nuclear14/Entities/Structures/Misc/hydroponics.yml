@@ -1,6 +1,6 @@
 # Compost box
 - type: entity
-  parent: BaseStructure
+  parent: [ BaseStructure, ForgeBaseFlammableWoodLight ] # Forge-Change: surface fire integration
   id: N14CompostBox
   name: compost box
   description: Insert animal dung in here to produce compost.
