@@ -60,6 +60,13 @@ public sealed partial class PipBoyRadioUi : UIFragment
                     PipBoyRadioAction.Previous),
                 userInterface);
 
+        _fragment.OnVolumeChanged += volume =>
+            Send(
+                new PipBoyRadioUiMessageEvent(
+                    PipBoyRadioAction.SetVolume,
+                    volume: volume),
+                userInterface);
+
         _fragment.OnNext += () =>
             Send(
                 new PipBoyRadioUiMessageEvent(
@@ -77,7 +84,8 @@ public sealed partial class PipBoyRadioUi : UIFragment
             radioState.Songs,
             radioState.SelectedSongId?.Id,
             radioState.Playing,
-            radioState.Paused);
+            radioState.Paused,
+            radioState.Volume);
     }
 
     private static void Send(

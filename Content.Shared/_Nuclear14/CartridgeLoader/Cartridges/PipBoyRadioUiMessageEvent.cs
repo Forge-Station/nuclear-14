@@ -10,13 +10,16 @@ public sealed class PipBoyRadioUiMessageEvent : CartridgeMessageEvent
 {
     public readonly PipBoyRadioAction Action;
     public readonly ProtoId<JukeboxPrototype>? SongId;
+    public readonly float Volume;
 
     public PipBoyRadioUiMessageEvent(
         PipBoyRadioAction action,
-        ProtoId<JukeboxPrototype>? songId = null)
+        ProtoId<JukeboxPrototype>? songId = null,
+        float volume = 1f)
     {
         Action = action;
         SongId = songId;
+        Volume = volume;
     }
 }
 
@@ -28,5 +31,6 @@ public enum PipBoyRadioAction
     Pause,
     Stop,
     Previous,
-    Next
+    Next,
+    SetVolume
 }

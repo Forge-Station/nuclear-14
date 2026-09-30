@@ -11,16 +11,19 @@ public sealed class PipBoyRadioUiState : BoundUserInterfaceState
     public readonly ProtoId<JukeboxPrototype>? SelectedSongId;
     public readonly bool Playing;
     public readonly bool Paused;
+    public readonly float Volume;
 
     public PipBoyRadioUiState(
         List<ProtoId<JukeboxPrototype>> songs,
         ProtoId<JukeboxPrototype>? selectedSongId,
         bool playing,
-        bool paused)
+        bool paused,
+        float volume)
     {
         Songs = songs;
         SelectedSongId = selectedSongId;
         Playing = playing;
         Paused = paused;
+        Volume = volume;
     }
 }

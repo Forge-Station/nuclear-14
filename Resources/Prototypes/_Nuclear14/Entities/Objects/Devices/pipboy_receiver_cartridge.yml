@@ -1,0 +1,20 @@
+- type: entity
+  parent: BaseItem
+  id: N14PipBoyReceiverCartridge
+  name: Pip-Boy radio receiver
+  description: A built-in radio receiver for the Pip-Boy.
+  components:
+  - type: Sprite
+    sprite: Objects/Devices/cartridge.rsi
+    state: cart-y
+  - type: UIFragment
+    ui: !type:PipBoyReceiverUi
+  - type: Cartridge
+    programName: pipboy-receiver-program-name
+    icon:
+      sprite: _Nuclear14/Interface/pipboy_programs.rsi
+      state: radio
+  - type: PipBoyReceiverCartridge
+    channels:
+    - Bazar
+    - Wasteland

@@ -9,6 +9,7 @@
     <BoxContainer Orientation="Vertical" HorizontalExpand="True">
         <!--Heading-->
         <BoxContainer SetHeight="26" Margin="4 2 8 0" Orientation="Horizontal">
+            <Label Name="PipBoyHeading" Text="PIP-BOY / ROBCO" Margin="16 0 0 0" Visible="False"/>
             <Control HorizontalExpand="True"/>
             <TextureButton Name="CloseButton" StyleClasses="windowCloseButton"
                            VerticalAlignment="Center" Margin="0 4 4 0"/>
@@ -25,7 +26,7 @@
         </Control>
         <!--Footer-->
         <BoxContainer Orientation="Horizontal" SetHeight="28">
-            <Label Text="{Loc 'comp-pda-ui-footer'}" StyleClasses="PdaWindowFooterText" Margin="32 0 0 6"/>
+            <Label Name="ManufacturerLabel" Text="{Loc 'comp-pda-ui-footer'}" StyleClasses="PdaWindowFooterText" Margin="32 0 0 6"/>
         </BoxContainer>
     </BoxContainer>
 </pda:PdaWindow>
