@@ -37,6 +37,7 @@
     back: N14ClothingBackpackSatchelMilitary # Forge-Change
     shoes: N14ClothingBootsLeatherFilled
     pocket1: BoSMidwestScribeKits
+    pocket2: N14CurrencyBoSDollar50 # Forge-Change
     id: N14IDBrotherhoodHolotag
     ears: N14ClothingHeadsetBOSMidwestLightScribe
   storage: # Forge-Change

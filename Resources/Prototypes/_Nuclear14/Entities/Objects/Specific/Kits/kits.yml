@@ -1206,6 +1206,9 @@
       - id: N14ClothingOuterBrotherhoodMidwestMedicalScribeRobes
       - id: ClothingHandsGlovesChemist
       - id: N14BoxCardboardMREBoxKFilled
+      - id: MedkitCombat
+      - id: N14Ethanol
+      - id: N14Antidote #Forge-change
 
 # MBoS Scribe Field Kit
 - type: entity
@@ -1220,8 +1223,8 @@
     size: Huge
   - type: SpawnItemsOnUse
     items:
-      - id: N14WeaponLaserPistol
-      - id: N14PowerCellSmall
+      - id: N14WeaponLaserRevolver
+      - id: N14PowerCellHigh
         amount: 2
       - id: N14CleanGauze10
       - id: N14Ointment10
@@ -1229,6 +1232,8 @@
       - id: N14ClothingBeltBoSWebbing
       - id: N14ClothingOuterBrotherhoodMidwestFieldScribeCoat
       - id: N14BoxCardboardMREBoxKFilled
+      - id: N14Stimpak
+      - id: N14RadAwayBloodbag #Forge-change
 
 # MBoS Scribe Engineer Kit
 - type: entity
@@ -1253,6 +1258,11 @@
       - id: ClothingHandsGlovesColorYellow
       - id: N14ClothingBeltUtilityFilled
       - id: N14BoxCardboardMREBoxKFilled
+      - id: RemoteSignaller
+      - id: SheetSteel10
+        amount: 2
+      - id: SheetGlass10
+        amount: 2 #Forge-change
 
 # MBoS Paladin Kits
 - type: entity
