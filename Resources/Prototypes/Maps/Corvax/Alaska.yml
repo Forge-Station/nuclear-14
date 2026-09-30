@@ -6,6 +6,15 @@
 
 - type: gameMap
   id: Juneau
+  weatherWeights:
+    Hail: 1
+    Sandstorm: 0
+    SandstormHeavy: 0
+    SandstormHeavyExtreme: 0
+    SnowfallLight: 1
+    SnowfallMedium: 1
+    SnowfallHeavy: 1
+    SnowfallHeavyExtreme: 1
   mapName: 'Джуно'
   mapPath: /Maps/Corvax/Juneau.yml
   minPlayers: 0

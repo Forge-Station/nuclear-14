@@ -11,6 +11,12 @@
 
 - type: gameMap
   id: Wendover
+  weatherWeights:
+    Hail: 0
+    SnowfallLight: 0
+    SnowfallMedium: 0
+    SnowfallHeavy: 0
+    SnowfallHeavyExtreme: 0
   mapName: 'Уэндовер'
   mapPath: /Maps/Corvax/Wendover.yml
   minPlayers: 0

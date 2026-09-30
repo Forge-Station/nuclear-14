@@ -7,6 +7,7 @@ using Content.Server.NPC.Queries.Queries;
 using Content.Server.Nutrition.Components;
 using Content.Server.Nutrition.EntitySystems;
 using Content.Server.Storage.Components;
+using Content.Server.Weather;
 using Content.Shared.Examine;
 using Content.Shared.Fluids.Components;
 using Content.Shared.Hands.Components;
@@ -48,6 +49,7 @@ public sealed class NPCUtilitySystem : EntitySystem
     [Dependency] private readonly WeldableSystem _weldable = default!;
     [Dependency] private readonly ExamineSystemShared _examine = default!;
     [Dependency] private readonly EntityWhitelistSystem _whitelistSystem = default!;
+    [Dependency] private readonly WeatherSystem _weather = default!;
 
     private EntityQuery<PuddleComponent> _puddleQuery;
     private EntityQuery<TransformComponent> _xformQuery;
@@ -301,12 +303,18 @@ public sealed class NPCUtilitySystem : EntitySystem
             {
                 var radius = blackboard.GetValueOrDefault<float>(blackboard.GetVisionRadiusKey(EntityManager), EntityManager);
 
-                return _examine.InRangeUnOccluded(owner, targetUid, radius + 0.5f, null) ? 1f : 0f;
+                return _weather.CanSeeThroughWeather(owner, targetUid) &&
+                    _examine.InRangeUnOccluded(owner, targetUid, radius + 0.5f, null)
+                        ? 1f
+                        : 0f;
             }
             case TargetInLOSOrCurrentCon:
             {
                 var radius = blackboard.GetValueOrDefault<float>(blackboard.GetVisionRadiusKey(EntityManager), EntityManager);
                 const float bufferRange = 0.5f;
+
+                if (!_weather.CanSeeThroughWeather(owner, targetUid))
+                    return 0f;
 
                 if (blackboard.TryGetValue<EntityUid>("Target", out var currentTarget, EntityManager) &&
                     currentTarget == targetUid &&
@@ -441,7 +449,11 @@ public sealed class NPCUtilitySystem : EntitySystem
                 // Rent a scratch set from the pool so the no-alloc faction scan doesn't allocate per query.
                 var hostiles = _entPool.Get();
                 _npcFaction.GetNearbyHostiles(owner, vision, hostiles);
-                entities.UnionWith(hostiles);
+                foreach (var hostile in hostiles)
+                {
+                    if (_weather.CanSeeThroughWeather(owner, hostile))
+                        entities.Add(hostile);
+                }
                 _entPool.Return(hostiles);
                 break;
             }

@@ -11,6 +11,12 @@
 
 - type: gameMap
   id: Yuma
+  weatherWeights:
+    Hail: 0
+    SnowfallLight: 0
+    SnowfallMedium: 0
+    SnowfallHeavy: 0
+    SnowfallHeavyExtreme: 0
   mapName: 'Юма'
   mapPath: /Maps/Corvax/Yuma.yml
   minPlayers: 0
