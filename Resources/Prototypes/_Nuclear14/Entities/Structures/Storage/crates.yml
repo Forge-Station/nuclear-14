@@ -280,7 +280,7 @@
 
 # Wooden
 - type: entity
-  parent: CrateGeneric
+  parent: [ CrateGeneric, ForgeBaseFlammableWoodLight ] # Forge-Change: surface fire integration
   id: N14CrateWooden
   name: wooden crate
   components:
@@ -339,7 +339,7 @@
 
 # Breakable Crates (deconstruct or destroy)
 - type: entity
-  parent: BaseStructureDynamic
+  parent: [ BaseStructureDynamic, ForgeBaseFlammableWoodLight ] # Forge-Change: surface fire integration
   id: N14CrateBreakBase
   name: wooden crate
   description: A wooden crate for storage.

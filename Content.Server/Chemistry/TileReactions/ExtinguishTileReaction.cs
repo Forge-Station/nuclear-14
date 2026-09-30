@@ -1,4 +1,5 @@
 using Content.Server.Atmos.EntitySystems;
+using Content.Server._Forge.Fire; // Forge-Change: surface fire uses tile extinguishing reactions.
 using Content.Shared.Atmos;
 using Content.Shared.Chemistry.Reaction;
 using Content.Shared.Chemistry.Reagent;
@@ -20,6 +21,12 @@ namespace Content.Server.Chemistry.TileReactions
                 return FixedPoint2.Zero;
 
             var atmosphereSystem = EntitySystem.Get<AtmosphereSystem>();
+            // Forge-Add-Start
+            var surfaceFireSystem = EntitySystem.Get<SurfaceFireSystem>();
+
+            // Surface fire is independent from atmospheric hotspots, so always try to extinguish it.
+            surfaceFireSystem.ExtinguishAt(tile, reactVolume);
+            // Forge-Add-End
 
             var environment = atmosphereSystem.GetTileMixture(tile.GridUid, null, tile.GridIndices, true);
 

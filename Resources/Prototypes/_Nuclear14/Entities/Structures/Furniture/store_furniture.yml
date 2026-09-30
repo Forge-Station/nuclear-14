@@ -63,7 +63,7 @@
 
 # Wood
 - type: entity
-  parent: BaseStructure
+  parent: [ BaseStructure, ForgeBaseFlammableWoodLight ] # Forge-Change: surface fire integration
   id: N14StoreFruitstand
   suffix: empty
   name: fruit stand

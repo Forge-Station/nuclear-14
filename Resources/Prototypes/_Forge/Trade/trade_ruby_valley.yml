@@ -177,7 +177,8 @@
   name: "Взрывчатка"
   entries:
   - proto: N14NukaCocktail
-    price: 60
+    price: 240
+    count: 2
   - proto: SmokeGrenade
     price: 100
     count: 5
@@ -205,6 +206,17 @@
   - proto: N14PlasmaCartridge
     price: 300
     count: 12
+  - proto: N14FlamerTank
+    price: 200
+    count: 4
+
+- type: storeCategoryStructured
+  id: RubyBuy_HeavyWeapons
+  name: "Тяжёлое оружие"
+  entries:
+  - proto: N14WeaponFlamer
+    price: 1600
+    count: 1
 
 - type: storeCategoryStructured
   id: RubyBuy_Melee
@@ -374,6 +386,9 @@
     price: 40
   - proto: RadioHandheld
     price: 150
+  - proto: FireExtinguisher
+    price: 50
+    count: 4
 
 - type: storeCategoryStructured
   id: RubyBuy_Sprouts
@@ -441,6 +456,7 @@
   - RubyBuy_AssaultRifles
   - RubyBuy_Rifles
   - RubyBuy_EnergyWeapons
+  - RubyBuy_HeavyWeapons
   - RubyBuy_Ammo
   - RubyBuy_Grenade
   - RubyBuy_Melee
