@@ -1,7 +1,7 @@
 - type: construction
   id: ForgeHumanSkinHat
-  name: шапка из человеческой кожи
-  description: Грубая шапка из человеческой кожи, скреплённая сухожилиями.
+  name: маска из человеческой кожи
+  description: Грубая маска из человеческой кожи, скреплённая сухожилиями.
   graph: ForgeHumanSkinHat
   startNode: start
   targetNode: hat

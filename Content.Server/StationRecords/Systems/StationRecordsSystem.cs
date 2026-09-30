@@ -59,8 +59,8 @@ public sealed class StationRecordsSystem : SharedStationRecordsSystem
             || !_prototypeManager.HasIndex<JobPrototype>(jobId))
             return;
 
-        if (!_inventory.TryGetSlotEntity(player, "id", out var idUid))
-            return;
+        // Characters without an ID still need a record for the crew manifest.
+        _inventory.TryGetSlotEntity(player, "id", out var idUid);
 
         TryComp<FingerprintComponent>(player, out var fingerprintComponent);
         TryComp<DnaComponent>(player, out var dnaComponent);
@@ -69,7 +69,7 @@ public sealed class StationRecordsSystem : SharedStationRecordsSystem
         if (!string.IsNullOrEmpty(profile.Customspeciename))
             specie = profile.Customspeciename;
 
-        CreateGeneralRecord(station, idUid.Value, profile.Name, profile.Age, specie, profile.Gender, jobId, fingerprintComponent?.Fingerprint, dnaComponent?.DNA, profile, records);
+        CreateGeneralRecord(station, idUid, profile.Name, profile.Age, specie, profile.Gender, jobId, fingerprintComponent?.Fingerprint, dnaComponent?.DNA, profile, records);
     }
 
 

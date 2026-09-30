@@ -639,6 +639,9 @@
   name: canine hat
   description: Made from a dog-like creature, this wild looking hat will keep your head warm and safe.
   components:
+  - type: Construction
+    graph: ForgeDogHideHat
+    node: hat
   - type: Sprite
     sprite: _Nuclear14/Clothing/Head/FalloutHats/animalhat.rsi
   - type: Clothing

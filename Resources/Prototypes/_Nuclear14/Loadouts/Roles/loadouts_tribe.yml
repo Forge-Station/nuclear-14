@@ -124,9 +124,8 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
-    - !type:CharacterDepartmentRequirement
-      departments:
-        - Tribe
+    - !type:CharacterJobRequirement
+      jobs: *tribalWastelanderJobs
   items:
     - N14ClothingOuterponcho
 
@@ -180,9 +179,8 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutHead
-    - !type:CharacterDepartmentRequirement
-      departments:
-        - Tribe
+    - !type:CharacterJobRequirement
+      jobs: *tribalWastelanderJobs
   items:
     - N14ClothingHeadTakerwraps
 

@@ -6,7 +6,9 @@
   components:
   - type: Sprite
     sprite: _Forge/Objects/Weapons/Melee/bone_knife.rsi
-    state: icon
+    layers:
+    - state: icon
+      offset: 0, -0.125
   - type: Construction
     graph: ForgeBoneKnife
     node: knife
