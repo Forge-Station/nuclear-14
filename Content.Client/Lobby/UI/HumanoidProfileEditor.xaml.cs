@@ -897,6 +897,7 @@ namespace Content.Client.Lobby.UI
             JobList.DisposeAllChildren();
             _jobCategories.Clear();
             _jobPriorities.Clear();
+            _rankPreferences.Clear(); // Forge-Change
             var firstCategory = true;
 
             // Get all displayed departments
@@ -1019,13 +1020,17 @@ namespace Content.Client.Lobby.UI
                         SetDirty();
                     };
 
+                    var rankOptions = CreateRankOptions(job); // Forge-Change
+
                     _jobPriorities.Add((job.ID, selector));
                     jobContainer.AddChild(selector);
+                    jobContainer.AddChild(rankOptions); // Forge-Change
                     category.AddChild(jobContainer);
                 }
             }
 
             UpdateJobPriorities();
+            UpdateRankPreferenceControls(); // Forge-Change
         }
 
         private void UpdateRoleRequirements()
@@ -2776,7 +2781,8 @@ namespace Content.Client.Lobby.UI
             RemoveSuperfluousLoadouts(); // Forge-Change
             RemoveSponsorLoadouts(); // Forge-Change
 
-            UpdateRoleRequirements();
+            RefreshJobs(); // Forge-Change
+            EnsureJobRequirementsValid(); // Forge-Change
             UpdateTraits(TraitsShowUnusableButton.Pressed);
             UpdateLoadouts(LoadoutsShowUnusableButton.Pressed);
         }

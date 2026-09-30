@@ -66,6 +66,12 @@ namespace Content.Server.Database
                 .HasIndex(p => new { HumanoidProfileId = p.ProfileId, p.TraitName })
                 .IsUnique();
 
+            // Forge-Change-Start
+            modelBuilder.Entity<ProfileRankPreference>()
+                .HasIndex(p => new { HumanoidProfileId = p.ProfileId, p.JobName })
+                .IsUnique();
+            // Forge-Change-End
+
             modelBuilder.Entity<Loadout>()
                 .HasIndex(p => new { HumanoidProfileId = p.ProfileId, p.LoadoutName })
                 .IsUnique();
@@ -386,7 +392,7 @@ namespace Content.Server.Database
         public List<Profile> Profiles { get; } = new();
     }
 
-    public class Profile
+    public partial class Profile // Forge-Change
     {
         public int Id { get; set; }
         public int Slot { get; set; }

@@ -6,6 +6,13 @@
   name: job-name-ncr-medic
   description: job-description-ncr-medic
   playTimeTracker: NCRDoctor
+  ranks: # Forge-Change
+    - rank: NCRSergeant
+      requirements:
+        - !type:CharacterPlaytimeRequirement
+          tracker: NCRDoctor
+          min: 144000 # 2400 minutes
+    - rank: NCRCorporal
   requirements:
     - !type:CharacterSpeciesRequirement
       species:
