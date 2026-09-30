@@ -41,6 +41,22 @@
     Glass: 100
 
 - type: latheRecipe
+  id: N14Spoon
+  result: Spoon
+  completetime: 0.4
+  category: N14Kitchen
+  materials:
+    Steel: 100
+
+- type: latheRecipe
+  id: N14Fork
+  result: Fork
+  completetime: 0.4
+  category: N14Kitchen
+  materials:
+    Steel: 100
+
+- type: latheRecipe
   id: N14DrinkShotGlass
   result: DrinkShotGlass
   completetime: 0.4
@@ -62,7 +78,7 @@
   completetime: 0.8
   category: N14Kitchen
   materials:
-    Glass: 100
+    Steel: 100
 
 - type: latheRecipe
   id: N14FoodPlateSmall
@@ -70,7 +86,15 @@
   completetime: 0.4
   category: N14Kitchen
   materials:
-    Glass: 50
+    Steel: 50
+
+- type: latheRecipe
+  id: N14DrinkShaker
+  result: DrinkShaker
+  completetime: 0.8
+  category: N14Kitchen
+  materials:
+    Steel: 100
 
 - type: latheRecipe
   id: N14FoodPlatePlastic
@@ -94,7 +118,7 @@
   completetime: 0.8
   category: N14Kitchen
   materials:
-    Glass: 100
+    Wood: 100
 
 - type: latheRecipe
   id: N14FoodPlateTin
@@ -123,6 +147,30 @@
 - type: latheRecipe
   id: N14JunkCoffeepot
   result: N14JunkCoffeepot
+  completetime: 0.4
+  category: N14Kitchen
+  materials:
+    Steel: 100
+
+- type: latheRecipe
+  id: N14RollingPin
+  result: N14RollingPin
+  completetime: 2
+  category: N14Kitchen
+  materials:
+    Wood: 200
+
+- type: latheRecipe
+  id: N14BarSpoon
+  result: BarSpoon
+  completetime: 0.4
+  category: N14Kitchen
+  materials:
+    Steel: 100
+
+- type: latheRecipe
+  id: N14DrinkJigger
+  result: DrinkJigger
   completetime: 0.4
   category: N14Kitchen
   materials:

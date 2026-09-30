@@ -1,6 +1,7 @@
 ﻿- type: construction
   name: metal rod
   id: MetalRod
+  hide: false
   graph: MetalRod
   startNode: start
   targetNode: MetalRod

@@ -721,6 +721,7 @@
 #misc
 - type: construction
   id: MeatSpike
+  hide: false
   name: meat spike
   description: A spike found in kitchens butchering animals.
   graph: MeatSpike
