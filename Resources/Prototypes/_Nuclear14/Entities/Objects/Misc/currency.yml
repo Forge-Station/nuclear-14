@@ -49,6 +49,7 @@
   - type: Tag
     tags:
       - Currency
+      - BottleCap
   - type: Stack
     stackType: Caps
     count: 1
@@ -145,6 +146,9 @@
   name: pre-war money
   description: Wads of useless paper. Make it rain!
   components:
+  - type: Tag
+    tags:
+      - Currency
   - type: PhysicalComposition
     materialComposition:
       Credit: 0
@@ -229,6 +233,9 @@
   name: NCR dollar
   description: Wads of paper, these ones bear the insignia of the NCR. Make it rain!
   components:
+  - type: Tag
+    tags:
+      - Currency
   - type: Cash
   - type: PhysicalComposition
     materialComposition:
@@ -306,6 +313,9 @@
   name: aureus
   description: A gold coin used by the legion and tribes as currency.
   components:
+  - type: Tag
+    tags:
+      - Currency
   - type: PhysicalComposition
     materialComposition:
       LegionAurei: 1
@@ -382,6 +392,9 @@
   name: denarius
   description: A silver coin used by the legion and tribes as currency.
   components:
+  - type: Tag
+    tags:
+      - Currency
   - type: PhysicalComposition
     materialComposition:
       LegionDenarius: 1
