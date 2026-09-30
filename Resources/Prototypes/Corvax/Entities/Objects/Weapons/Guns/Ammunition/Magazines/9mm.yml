@@ -1,0 +1,30 @@
+- type: entity
+  id: N14MagazineSMG9mmP90
+  name: P90 magazine (9mm)
+  parent: N14BaseMagazine9mmPistol
+  components:
+  - type: Tag
+    tags:
+      - N14MagazineSMG9mmP90
+  - type: BallisticAmmoProvider
+    whitelist:
+      tags:
+        - N14CartridgePistol9
+    capacity: 50
+    proto: N14CartridgePistol9
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Ammunition/Magazine/Pistol/smg_mag_top_mounted.rsi
+    layers:
+      - state: base
+        map: ["enum.GunVisualLayers.Base"]
+      - state: mag-unshaded-1
+        map: ["enum.GunVisualLayers.MagUnshaded"]
+        shader: unshaded
+  - type: MagazineVisuals
+    magState: mag
+    steps: 6
+    zeroVisible: false
+  - type: Appearance
+  - type: ContainerContainer
+    containers:
+      ballistic-ammo: !type:Container
