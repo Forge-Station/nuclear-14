@@ -70,3 +70,12 @@
   components:
     - type: STBlueprint
       blueprint: N14ClothingOuterNCRCombatArmorMK2Recipe
+
+- type: entity
+  parent: N14BaseBlueprintPaper
+  id: N14ClothingHeadHatNCRCombatHelmetBlueprint
+  name: чертёж боевого шлема НКР
+  suffix: Craft, NCR
+  components:
+    - type: STBlueprint
+      blueprint: N14ClothingHeadHatNCRCombatHelmetRecipe
