@@ -124,6 +124,12 @@
   abstract: true
   description: A helmet offering advanced protection.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentHelmetMK2
   - type: Armor
     modifiers:
       coefficients:
@@ -163,6 +169,12 @@
   name: combat helmet
   description: A ballistic helmet of the pre-war era.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentHelmetMK2
   - type: Armor
     modifiers:
       coefficients:
@@ -189,6 +201,12 @@
   name: combat helmet MK2
   description: An advanced ballistic helmet of the pre-war era.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentHelmetMK2
   - type: Armor
     modifiers:
       coefficients:
@@ -204,6 +222,12 @@
   name: marine helmet
   description: An extremely advanced combat helmet.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentHelmetMK2
   - type: Sprite
     sprite: _Nuclear14/Clothing/Head/FalloutHelmets/marinehelmet.rsi
   - type: Clothing

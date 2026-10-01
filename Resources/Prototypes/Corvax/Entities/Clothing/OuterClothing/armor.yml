@@ -4,6 +4,12 @@
   name: legate armor
   description: "Armor with truly good protection, for important people."
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/legatearmor.rsi
   - type: Clothing
@@ -26,6 +32,12 @@
   name: сenturion heavy armor
   description: "Heavy armor assembled from captured pieces of power armor of defeated enemies."
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/centurionheavyarmor.rsi
   - type: Clothing
@@ -53,6 +65,12 @@
   name: сenturion conqueror armor
   description: "Smelted armor is issued only to particularly distinguished centurions"
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/centurionconquerorarmor.rsi
   - type: Clothing
@@ -78,6 +96,12 @@
   name: сenturion cinder armor
   description: "The broad armor offers excellent protection for the wearer, despite being assembled from various types of armor; the pauldrons appear to be taken from a rather rare set of power armor."
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/centurioncinderarmor.rsi
   - type: Clothing
@@ -103,6 +127,12 @@
   name: heavy legionary armor
   description: "The heavy version of legionary armor slows down the wearer, but gives good protection from external threats."
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK2
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/deanveteranarmor.rsi
   - type: Clothing
@@ -213,6 +243,12 @@
   name: heavy legionary armor
   description: "The heavy version of legionary armor slows down the wearer, but gives good protection from external threats."
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK2
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/deanprimearmor.rsi
   - type: Clothing
@@ -235,6 +271,12 @@
   name: heavy legionary armor
   description: "The heavy version of legionary armor slows down the wearer, but gives good protection from external threats."
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK2
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/deanrecruitarmor.rsi
   - type: Clothing
@@ -257,6 +299,12 @@
   name: armor of a legionnaire-veteran
   description: "Good armor for combat, does not slow down the wearer and makes it easy to maneuver."
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 2
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK1
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/veteranarmor.rsi
   - type: Clothing
@@ -403,6 +451,12 @@
   name: armor of the knight of the western brotherhood
   description: Excellent armor produced by the Western Brotherhood. It looks like the designer was based on a power
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK2
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/boskiharmor.rsi
   - type: Clothing
@@ -423,6 +477,12 @@
   name: armor of the squire of the western brotherhood
   description: Lightweight, comfortable armor designed for protection and high mobility
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 2
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK1
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/bossqiarmor.rsi
   - type: Clothing
@@ -526,6 +586,12 @@
   parent: N14FalloutArmorBase
   id: N14ClothingOuterBOSInquisitorBattleArmor
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 2
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK1
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/InquisitorArmor.rsi
   - type: Clothing
@@ -568,6 +634,12 @@
   name: комплект патрульной брони рейнджера "Редвуд"
   description: Модифицированная версия патрульной боевой брони, поверх которой надета тёмно-коричневая кожаная куртка. Используется рейндерами НКР, патрулирующими густые районы и горные перевалы Калифорнии. Комплект обеспечивает хорошую защиту, при этом не ограничивая движения.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 2
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK1
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/RangerJacketArmor.rsi
   - type: Clothing
@@ -657,6 +729,12 @@
   parent: N14FalloutArmorBase
   id: N14ClothingOuterWBoSKnightBattleArmor
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 2
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK1
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/wbosknightarmor.rsi
   - type: Clothing
@@ -703,6 +781,12 @@
   parent: N14ClothingOuterBase
   id: N14ClothingOuterWBoSLordBattleArmor
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/wboslordarmor.rsi
   - type: Clothing
@@ -727,6 +811,12 @@
   parent: N14ClothingOuterWBoSKnightBattleArmor
   id: N14ClothingOuterWBoSReconBattleArmor
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK2
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/wbosreconarmor.rsi
   - type: Clothing
@@ -757,6 +847,12 @@
   name: элитная броня пустынного рейнджера
   description: Модифицированный штурмовой комплект брони спецназа Морской Пехоты, который использовался довоенными "Морскими Котиками". Теперь служит роду Аквиллий, как реликвия прошлого, сохраняющая дух старой Америки. На всей броне виднеются следы боя, вмятины на пластинах, сажа от взрывов, отверстия на тренче от пуль, всё это следствие десятков лет сражений за свободу тех, кто не может защитить себя сам в пустынях Невады. Когда угнетённые видят силуэт в этой броне, они знают что их не оставят погибать.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/ranger_dust_armor.rsi
   - type: Clothing
@@ -818,6 +914,12 @@
   name: heavy steel armor
   description: "Made from scrap metal and steel, it has a leather lining."
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 2
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK1
   - type: Sprite
     sprite: Corvax/Clothing/OuterClothing/Armor/heavysteelarmor.rsi
   - type: Clothing
@@ -926,3 +1028,34 @@
         Slash: 0.80
         Piercing: 0.85
         Heat: 0.85
+
+- type: entity
+  parent: N14FalloutArmorBase
+  id: N14ClothingOuterLegionnaireHeavyArmor
+  name: тяжёлая легионерская броня
+  description: Сделана из самой тяжелой и защищёной бронепластины, которую только смогли добыть на пустошах.
+  components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/pretorianarmor.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/pretorianarmor.rsi
+  - type: ClothingSpeedModifier
+    walkModifier: 0.9
+    sprintModifier: 0.9
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.55
+        Slash: 0.55
+        Piercing: 0.6
+        Heat: 0.55
+  - type: ExplosionResistance
+    damageCoefficient: 0.65
+  - type: StaminaDamageResistance
+    coefficient: 0.85

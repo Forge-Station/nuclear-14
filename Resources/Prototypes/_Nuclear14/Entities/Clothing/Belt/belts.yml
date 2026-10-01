@@ -177,7 +177,7 @@
       tags:
         - Spear
     grid:
-    - 0,0,7,3
+    - 0,0,7,7
     maxItemSize: Large
   # - type: Appearance
   # - type: StorageContainerVisuals
