@@ -26,6 +26,8 @@
   alwaysUseSpawner: true
   icon: "JobIconBosMCommander" # Forge-Change
   supervisors: job-supervisors-bos-mid-commander
+  access:
+  - RadioBroadcast
   accessGroups:
   - BOSMidwest
   special:
