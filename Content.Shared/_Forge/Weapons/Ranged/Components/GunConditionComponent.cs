@@ -2,9 +2,7 @@ using Content.Shared.Tools;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 
-
 namespace Content.Shared._Forge.Weapons.Ranged.Components;
-
 
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class GunConditionComponent : Component
@@ -139,4 +137,25 @@ public sealed partial class GunConditionRepairToolComponent : Component
     /// </summary>
     [DataField]
     public int Uses = 1;
+
+    /// <summary>Доля максимальной прочности за ремонт; null использует штатный ремкомплект.</summary>
+    [DataField]
+    public float? RepairFraction;
+
+    /// <summary>Максимальная доля прочности, доступная этому инструменту.</summary>
+    [DataField]
+    public float RepairLimit = 1f;
+
+    /// <summary>Минимальная доля прочности для начала ремонта этим инструментом.</summary>
+    [DataField]
+    public float RepairMinimum;
+
+    [DataField]
+    public ProtoId<ToolQualityPrototype>? RepairQuality;
+
+    [DataField]
+    public float RepairFuel;
+
+    [DataField]
+    public float RepairTime = 4f;
 }

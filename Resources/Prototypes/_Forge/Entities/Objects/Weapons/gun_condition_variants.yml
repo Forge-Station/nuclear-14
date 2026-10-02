@@ -10,6 +10,8 @@
   id: ForgeGunConditionProfileSidearm
   abstract: true
   components:
+  - type: Damageable
+    damageContainer: Inorganic
   - type: GunCondition
     # Состояние
     maxCondition: 100       # максимум прочности
@@ -35,6 +37,8 @@
   id: ForgeGunConditionProfileSMG
   abstract: true
   components:
+  - type: Damageable
+    damageContainer: Inorganic
   - type: GunCondition
     # Состояние
     maxCondition: 100       # максимум прочности
@@ -60,6 +64,8 @@
   id: ForgeGunConditionProfileShotgun
   abstract: true
   components:
+  - type: Damageable
+    damageContainer: Inorganic
   - type: GunCondition
     # Состояние
     maxCondition: 100       # максимум прочности
@@ -85,10 +91,12 @@
   id: ForgeGunConditionProfileAssault
   abstract: true
   components:
+  - type: Damageable
+    damageContainer: Inorganic
   - type: GunCondition
     # Состояние
-    maxCondition: 100       # максимум прочности
-    condition: 100          # прочность при спавне
+    maxCondition: 150       # максимум прочности
+    condition: 150          # прочность при спавне
     brokenThreshold: 0      # при скольки ломается
     # Пороги износа (от лучшего к худшему)
     wornThreshold: 70       # потёртое
@@ -110,6 +118,8 @@
   id: ForgeGunConditionProfileSniper
   abstract: true
   components:
+  - type: Damageable
+    damageContainer: Inorganic
   - type: GunCondition
     # Состояние
     maxCondition: 100       # максимум прочности
@@ -135,10 +145,12 @@
   id: ForgeGunConditionProfileLMG
   abstract: true
   components:
+  - type: Damageable
+    damageContainer: Inorganic
   - type: GunCondition
     # Состояние
-    maxCondition: 100       # максимум прочности
-    condition: 100          # прочность при спавне
+    maxCondition: 200       # максимум прочности
+    condition: 200          # прочность при спавне
     brokenThreshold: 0      # при скольки ломается
     # Пороги износа (от лучшего к худшему)
     wornThreshold: 70       # потёртое
@@ -160,10 +172,12 @@
   id: ForgeGunConditionProfileMinigun
   abstract: true
   components:
+  - type: Damageable
+    damageContainer: Inorganic
   - type: GunCondition
     # Состояние
-    maxCondition: 100       # максимум прочности
-    condition: 100          # прочность при спавне
+    maxCondition: 200       # максимум прочности
+    condition: 200          # прочность при спавне
     brokenThreshold: 0      # при скольки ломается
     # Пороги износа (от лучшего к худшему)
     wornThreshold: 70       # потёртое
@@ -185,6 +199,8 @@
   id: ForgeGunConditionProfileLauncher
   abstract: true
   components:
+  - type: Damageable
+    damageContainer: Inorganic
   - type: GunCondition
     # Состояние
     maxCondition: 100       # максимум прочности
@@ -210,6 +226,8 @@
   id: ForgeGunConditionProfileAMR
   abstract: true
   components:
+  - type: Damageable
+    damageContainer: Inorganic
   - type: GunCondition
     # Состояние
     maxCondition: 100       # максимум прочности
@@ -235,6 +253,8 @@
   id: ForgeGunConditionProfileAMRPipe
   abstract: true
   components:
+  - type: Damageable
+    damageContainer: Inorganic
   - type: GunCondition
     # Состояние
     maxCondition: 100       # максимум прочности
@@ -260,6 +280,8 @@
   id: ForgeGunConditionProfilePistolPipe
   abstract: true
   components:
+  - type: Damageable
+    damageContainer: Inorganic
   - type: GunCondition
     # Состояние
     maxCondition: 100       # максимум прочности
@@ -285,6 +307,8 @@
   id: ForgeGunConditionProfileLaser
   abstract: true
   components:
+  - type: Damageable
+    damageContainer: Inorganic
   - type: GunCondition
     # Состояние
     maxCondition: 100       # максимум прочности
@@ -310,10 +334,12 @@
   id: ForgeGunConditionProfileLaserLMG
   abstract: true
   components:
+  - type: Damageable
+    damageContainer: Inorganic
   - type: GunCondition
     # Состояние
-    maxCondition: 100       # максимум прочности
-    condition: 100          # прочность при спавне
+    maxCondition: 200       # максимум прочности
+    condition: 200          # прочность при спавне
     brokenThreshold: 0      # при скольки ломается
     # Пороги износа (от лучшего к худшему)
     wornThreshold: 70       # потёртое
@@ -334,6 +360,8 @@
   id: ForgeGunConditionProfileSMGPipe
   abstract: true
   components:
+  - type: Damageable
+    damageContainer: Inorganic
   - type: GunCondition
     # Состояние
     maxCondition: 100       # максимум прочности

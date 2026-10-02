@@ -11,3 +11,7 @@ gun-condition-state-worn = изношенное
 gun-condition-state-damaged = повреждённое
 gun-condition-state-critical = критическое
 gun-condition-state-broken = сломано
+
+gun-condition-repair-limit = Этот инструмент не подходит для текущего состояния оружия.
+gun-condition-repair-tool-examine = Восстанавливает { $amount }% прочности оружия за применение при состоянии от { $minimum }% до { $limit }%.
+gun-condition-repair-tool-uses = Осталось применений для ремонта: { $uses }.
