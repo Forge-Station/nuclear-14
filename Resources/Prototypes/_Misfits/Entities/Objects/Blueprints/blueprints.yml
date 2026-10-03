@@ -1,0 +1,1115 @@
+# Blueprint item entities for the tiered faction crafting system.
+# Players find these in the world and place them in workbenches to unlock
+# faction-specific recipes. Each blueprint is tied to a faction, tier, and
+# workbench type (Weapons/Armor).
+
+# Abstract parent for all blueprint items
+- type: entity
+  parent: BaseItem
+  id: N14BlueprintBase
+  abstract: true
+  name: чертёж
+  description: Довоенный чертёж, содержащий производственные схемы.
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Misc/blueprint.rsi
+    state: blueprint
+  - type: Item
+    size: Tiny
+    shape:
+    - 0,0,1,0
+  - type: Tag
+    tags:
+    - Document
+  - type: Blueprint
+    recipes: []
+
+# =====================================================================
+# NCR BLUEPRINTS
+# =====================================================================
+
+# --- NCR Weapons ---
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintNCRWeaponsT1
+  name: Схема базового стрелкового вооружения НКР
+  suffix: NCRT1
+  description: |-
+    Стандартный бланк требования квартермейстера НКР на базовое личное оружие и охотничьи винтовки. Оружие 1-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponPistol45Colt
+    - N14WeaponPistol9mm
+    - N14WeaponSMG9mm
+    - N14WeaponSniperHunting
+    - N14WeaponShotgun
+    - N14WeaponRifle556Service
+    - N14WeaponRifle556Butchered
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintNCRWeaponsT2
+  name: Схема военного стрелкового вооружения НКР
+  suffix: NCRT2
+  description: |-
+    Схемы штатного вооружения армии НКР для стандартного пехотного снаряжения. Оружие 2-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponRevolver44Magnun
+    - N14WeaponSniper44LeverCarbine
+    - N14WeaponRifle556ServiceScoped
+    - N14WeaponSMG45
+    - N14WeaponShotgunAuto
+    - N14WeaponShotgunRiot
+    - N14WeaponRifle308Battle
+    - N14WeaponRifle762Fal
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintNCRWeaponsT3
+  name: Схема вооружения рейнджеров НКР
+  suffix: NCRT3
+  description: |-
+    Секретные схемы снаряжения рейнджеров НКР. Содержит образцы оружия ветеранов. Оружие 3-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponRifle308SniperRifle
+    - N14WeaponRevolver45-70Hunter
+    - N14WeaponRifle762Marksman
+    - N14WeaponSniper45-70BrushGun
+    - N14WeaponRifle556Carbine
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintNCRWeaponsT4
+  name: Схема элитного вооружения НКР
+  suffix: NCRT4
+  description: |-
+    Секретные схемы тяжелого вооружения НКР. Доступны только элитным подразделениям. Оружие 4-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponLMG
+    - N14WeaponRifle556Scout
+    - N14WeaponSniper50NCRRifle
+    - N14WeaponLMGAutoRifle
+    - N14WeaponRifleGrenade
+
+# --- NCR Armor ---
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintNCRArmorT1
+  name: Лекало базовой брони НКР
+  suffix: NCRT1
+  description: |-
+    Лекала стандартного снаряжения НКР для новобранцев. Броня 1-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterNCRVestSnow
+    - N14ClothingOuterNCRVestWoods
+    - N14ClothingNeckCloakNCRWoods
+    - N14ClothingNeckCloakNCR
+    - N14ClothingNeckCloakNCRSnow
+    - N14ClothingNeckNCRShoulderPad
+    - N14ClothingNeckMantleNCR
+    - N14ClothingNeckNCRShoulderPadFlag
+    - ClothingBeltNCRHarness
+    - ClothingBeltNCRBandolier
+    - ClothingBeltNCRPouches
+    - ClothingBeltNCR
+    - N14ClothingNeckCloakTentHoodNCR
+    - N14ClothingOuterNCRVestpaddedWeb
+    - N14ClothingOuterNCRVestpaddedWebSnow
+    - N14ClothingOuterNCRVest
+    - N14ClothingHeadHatNCRHelmet
+    - N14ClothingHeadHatNCRHelmetSnow
+    - N14ClothingOuterNCRVestCoatBlack
+    - N14ClothingOuterNCRMPArmorWest
+    - N14ClothingOuterNCRTrenchCoat
+    - N14ClothingHeadHatNCRHelmetMetalMilitaryPolice
+    - N14ClothingHeadHatNCRHelmetMetalMedic
+    - N14ClothingHeadHatNCRHelmetMetalWoods
+    - N14ClothingHeadHatNCRHelmetMetalSnow
+    - N14ClothingHeadHatNCRHelmetMetalGhillie
+    - N14ClothingNeckCloakGhillie
+    - N14ClothingBootsLeather
+    - N14ClothingUniformNCR
+    - N14ClothingUniformNCRSnow
+    - N14ClothingMPUniformNCRDesert
+    - N14ClothingMPUniformNCRSnow
+    - N14ClothingOfficerUniformNCRDesert
+    - N14ClothingUniformJumpsuitNCRMP
+    - N14ClothingOfficerUniformNCRSnow
+    - N14ClothingUniformNCRCFUniform
+    - N14ClothingOuterNCRCorrectional
+    - N14ClothingBackpackNCR
+    - N14ClothingBackpackSatchelNCR
+    - N14ClothingHeadHatNCRMPCap
+    - N14ClothingHeadHatNCRSidecap
+    - N14ClothingHeadHatNCRBeretMedic
+    - N14ClothingHeadHatNCRBeretOfficer
+    - N14ClothingHandsGlovesNCR
+    - N14ClothingHeadHatRangerB
+    - N14ClothingHeadHatRanger
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintNCRArmorT2
+  name: Лекало пехотной брони НКР
+  suffix: NCRT2
+  description: |-
+    Лекала усиленной брони НКР для передовых частей. Броня 2-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterNCRPlateDesert
+    - N14ClothingOuterNCRCFvest
+    - N14ClothingOuterNCRCombatArmor
+    - N14ClothingOuterRangerVest
+    - N14ClothingOuterRangerCoat
+    - N14ClothingMaskPlate
+    - N14ClothingOuterRangerArmor
+    - N14ClothingOuterNCRCombatArmorSnow
+    - N14ClothingOuterRangerArmorOld
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintNCRArmorT3
+  name: Схема боевой брони НКР
+  suffix: NCRT3
+  description: |-
+    Планы производства боевой брони НКР. Защита уровня рейнджеров. Броня 3-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingBackpackRadioNCR
+    - N14ClothingOuterRangerDuster
+    - N14ClothingOuterNCRCombatArmorMK2
+    - N14ClothingOuterRangerArmorB
+    - N14ClothingOuterNCRCombatArmorMK2Snow
+    - N14ClothingHeadHatNCRCombatHelmet
+    - N14ClothingHeadHatNCRCombatHelmetSnow
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintNCRArmorT4
+  name: Схема элитной брони НКР
+  suffix: NCRT4
+  description: |-
+    Секретные чертежи силовой брони НКР и брони элитных рейнджеров. Броня 4-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterRangerCombatDesert
+    - N14ClothingOuterRangerCombat
+    - N14ClothingEyesNCRNVGs
+    - N14ClothingHeadsetNCR
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintLegionWeaponsT1
+  name: Схемы оружия рабов Легиона
+  suffix: LegionT1
+  description: |-
+    Грубые схемы оружия, нацарапанные на пергаменте. Базовое племенное оружие для новобранцев и рабов. Оружие 1-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14TribalClub
+    - N14WastelandSpear
+    - N14WeaponShotgunLever
+    - N14WeaponSMG9mm
+    - N14WeaponSMG12mmPipe
+    - N14Gladius
+    - N14WeaponRevolver44TribalUpgraded
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintLegionWeaponsT2
+  name: Арсенал легионера Легиона
+  suffix: LegionT2
+  description: |-
+    Военные планы для стандартного снаряжения легионера. Кованое оружие во славу Цезаря. Оружие 2-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14TribalMachete
+    - N14TribalHatchet
+    - N14TrenchClub
+    - N14WeaponSniper308Ross
+    - N14WeaponSniper308Tribal
+    - N14WeaponSMG10mm
+    - N14MacheteGladius
+    - N14WeaponRevolver44TribalUpgradedExtra
+    - N14BaseBallBat
+    - N14WeaponBlowback
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintLegionWeaponsT3
+  name: Боевые схемы ветеранов Легиона
+  suffix: LegionT3
+  description: |-
+    Проверенные в боях конструкции оружия, передаваемые среди ветеранов Легиона. Оружие 3-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14CeremonialSword
+    - N14LongSword
+    - N14SledgeHammer
+    - N14TribalBigClub
+    - N14WeaponRifleGrenade
+    - N14WeaponShotgunCanadian
+    - N14WeaponSMG12mm
+    - N14WeaponSniper308TribalUpgraded
+    - N14WeaponKebab
+    - N14WeaponRevolver45-70HandcannonUpgraded
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintLegionWeaponsT4
+  name: Военные планы легата Легиона
+  suffix: LegionT4
+  description: |-
+    Личные чертежи оружия легата Легиона. Только величайшие воины могут владеть этим оружием. Оружие 4-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponLMGchinese
+    - N14SuperSledgeHammer
+    - N14TribalBigClubDecorated
+    - N14ripper
+    - N14WastelandPolearm
+    - N14WeaponThermospear
+
+# --- Legion Armor ---
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintLegionArmorT1
+  name: Обмотки новобранца Легиона
+  suffix: LegionT1
+  description: |-
+    Инструкции по созданию брони новобранца Легиона из подручных материалов. Броня 1-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterLegionnaireRecruitArmor
+    - N14ClothingOuterLegionnaireBaseArmor
+    - N14ClothingShoesKaligi
+    - N14ClothingShoesTribal
+    - N14ClothingHandsGlovesTribal
+    - N14LegionnaireBuckler
+    - N14LegionnaireShield
+    - N14ClothingUniformJumpsuitLegionnaire
+    - N14ClothingUniformJumpsuitLegionnaireOther
+    - N14ClothingHeadHatVenator
+    - M14ClothingNeckLegionMantle
+    - N14ClothingNeckCapeLegion
+    - N14ClothingNeckCapeLegionSagum
+    - ClothingBeltQuiverSpear
+    - ClothingBeltRope
+    - N14ClothingHeadHatAnimal
+    - N14ClothingHeadHatNightstalker
+    - N14ClothingHeadHatLightBaseballHelmet
+    - N14ClothingHeadHatDog
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintLegionArmorT2
+  name: Лекало брони легионера Легиона
+  suffix: LegionT2
+  description: |-
+    Лекала брони для стандартных легионеров, одобренные центурионом. Броня 2-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterLegionnaireVexillariusArmor
+    - N14ClothingOuterLegionnaireVeteranArmor
+    - N14ClothingHeadHatBaseballHelmet
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintLegionArmorT3
+  name: Схема брони ветерана Легиона
+  suffix: LegionT3
+  description: |-
+    Конструкции брони ветеранов Легиона с использованием трофейного военного снаряжения. Броня 3-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterDeanLegionnaireRecruitArmor
+    - N14ClothingHeadHatDeanRecruitHelmet
+    - N14ClothingOuterLegionnaireDuster
+    - N14ClothingOuterLegionnaireLightReconnaissanceArmor
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintLegionArmorT4
+  name: Шедевр брони центуриона Легиона
+  suffix: LegionT4
+  description: |-
+    Драгоценные чертежи брони центурионов Легиона, созданной из фрагментов силовой брони побежденных врагов. Броня 4-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterLegionnaireReconnaissanceArmor
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintWashingtonBosWeaponsT1
+  name: Схемы оружия послушника Вашингтонского БС
+  suffix: WashingtonBoST1
+  description: |-
+    Базовые руководства Вашингтонского Братства по сборке оружия для новых послушников. Оружие 1-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponPistol9mmChinese
+    - N14WeaponPlasmaRifleCrude
+    - N14WeaponSMG9mmCanadian
+    - N14WeaponSMG10mmChinese
+    - N14WeaponRifle762SKS
+    - N14WeaponRifle762M14
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintWashingtonBosWeaponsT2
+  name: Арсенал рыцаря Вашингтонского БС
+  suffix: WashingtonBoST2
+  description: |-
+    Военные спецификации оружия уровня рыцаря Вашингтонского Братства. Оружие 2-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponPlasmaPistol
+    - N14WeaponRevolverWebley
+    - N14WeaponSMG12mmAdvancedCanadian
+    - N14WeaponPlasmaRifle
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintWashingtonBosWeaponsT3
+  name: Планы арсенала паладина Вашингтонского БС
+  suffix: WashingtonBoST3
+  description: |-
+    Продвинутые схемы оружия из арсенала паладинов Вашингтонского Братства. Оружие 3-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponRifle762Chinese
+    - N14WeaponRifle556Carbine
+    - N14WeaponPlasmaRifleUrban
+    - N14WeaponPlasmaDefender
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintWashingtonBosWeaponsT4
+  name: Чертежи хранилища старейшины Вашингтонского БС
+  suffix: WashingtonBoST4
+  description: |-
+    Довоенные прототипы оружия, извлеченные из архивов Вашингтонского Братства. Оружие 4-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponPlasmaMultiplas
+    - N14WeaponPlasmaCaster
+    - N14WeaponSniper50Pipe
+    - N14WeaponLMGchinese
+
+# --- Washington BoS Armor ---
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintWashingtonBosArmorT1
+  name: Лекала униформы послушника Вашингтонского БС
+  suffix: WashingtonBoST1
+  description: |-
+    Лекала униформы и снаряжения для новичков Вашингтонского Братства. Броня 1-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingEyesGlassesWBoS
+    - N14ClothingOuterWBoSAcolyteCoat
+    - N14ClothingOuterWBoSScripterCoat
+    - N14ClothingNeckMantleBrotherhoodWashington
+    - N14ClothingNeckCloakBrotherhoodWashington
+    - N14ClothingUniformJumpsuitWBoSClassic
+    - N14ClothingUniformJumpsuitWBoSLord
+    - N14ClothingUniformJumpsuitWBoSAcolyte
+    - N14ClothingOuterBrotherhoodWashingtonCoat
+    - N14ClothingUniformJumpsuitBOSWashingtonFieldScribe
+    - N14ClothingHeadHatWBoSBeret
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintWashingtonBosArmorT2
+  name: Схема боевой брони рыцаря Вашингтонского БС
+  suffix: WashingtonBoST2
+  description: |-
+    Планы сборки боевой брони рыцарей Вашингтонского Братства. Броня 2-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterWBoSKnightBattleArmor
+    - N14ClothingHeadHatWBoSBattleHelmet
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintWashingtonBosArmorT3
+  name: Схема разведывательной брони Вашингтонского БС
+  suffix: WashingtonBoST3
+  description: |-
+    Конструкции разведывательной брони Вашингтонского Братства из трофейного снаряжения. Броня 3-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterWBoSReconBattleArmor
+    - N14ClothingMaskGasWBoSRecon
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintWashingtonBosArmorT4
+  name: Чертежи силовой брони лорда Вашингтонского БС
+  suffix: WashingtonBoST4
+  description: |-
+    Драгоценные чертежи силовой и командной брони лордов Вашингтонского Братства. Броня 4-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterPowerArmorRaider
+
+# =====================================================================
+# WEST BOS BLUEPRINTS
+# =====================================================================
+
+# --- West BoS Weapons ---
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintWestBosWeaponsT1
+  name: Схемы оружия послушника Западного БС
+  suffix: WestBoST1
+  description: |-
+    Базовые руководства Западного Братства по сборке оружия для новых послушников. Оружие 1-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponPlasmaRifleCrude
+    - N14WeaponPistol45Colt
+    - N14WeaponLaserRifleCrude
+    - N14WeaponLaserPistol
+    - N14WeaponSniperEnfield
+    - N14WeaponRifle762M14
+    - N14WeaponSMG10mm
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintWestBosWeaponsT2
+  name: Арсенал рыцаря Западного БС
+  suffix: WestBoST2
+  description: |-
+    Военные спецификации оружия уровня рыцаря Западного Братства. Оружие 2-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponPlasmaPistol
+    - N14WeaponBlowback
+    - N14WeaponRifleAk112
+    - N14WeaponPlasmaRifle
+    - N14WeaponLaserRifle
+    - N14WeaponLaserMagnetoPistol
+    - N14WeaponRifle308SniperRifle
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintWestBosWeaponsT3
+  name: Планы арсенала паладина Западного БС
+  suffix: WestBoST3
+  description: |-
+    Продвинутые схемы оружия из арсенала паладинов Западного Братства. Оружие 3-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponPlasmaRifleUrban
+    - N14WeaponLaserRifleAuto
+    - N14WeaponSMG12mmAdvanced
+    - N14WeaponRifleAk112pn
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintWestBosWeaponsT4
+  name: Чертежи хранилища старейшины Западного БС
+  suffix: WestBoST4
+  description: |-
+    Довоенные прототипы оружия, извлеченные из архивов Западного Братства. Оружие 4-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponPlasmaMultiplas
+    - N14WeaponLMGBren
+    - N14WeaponLaserRiflePrototypeAER14
+
+# --- West BoS Armor ---
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintWestBosArmorT1
+  name: Лекала униформы послушника Западного БС
+  suffix: WestBoST1
+  description: |-
+    Лекала униформы и снаряжения для новичков Западного Братства. Броня 1-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterRecruitWesternArmor
+    - N14ClothingUniformBosReconWest
+    - N14ClothingHeadHatBeretknighBoS
+    - N14ClothingHeadHatCapScout
+    - N14ClothingHeadHatCapPaladin
+    - N14ClothingHeadHatBrotherhoodFieldCap
+    - N14ClothingHeadHatCapkhighBoS
+    - N14ClothingUniformJumpsuitBOSWestScribe
+    - N14ClothingBeltBoSWesternKhignht
+    - N14ClothingEyesGlassesMachinegun
+    - N14ClothingBeltBosLeatherunl
+    - N14ClothingUniformJumpsuitBOSWestScout
+    - N14ClothingUniformJumpsuitBOSWest
+    - N14ClothingUniformJumpsuitBOSWestPaladin
+    - N14ClothingHeadHatCapkhighbluBoS
+    - N14ClothingUniformJumpsuitBOSWestKnight
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintWestBosArmorT2
+  name: Схема боевой брони рыцаря Западного БС
+  suffix: WestBoST2
+  description: |-
+    Планы сборки боевой брони рыцарей Западного Братства. Броня 2-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - ClothingMaskGasBrootherWestern
+    - N14ClothingOuterKnightWesternArmor
+    - N14ClothingHeadHatBrotherCapralHelmet
+    - N14ClothingHeadHatBrotherHelmet
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintWestBosArmorT3
+  name: Схема силовой брони Западного БС
+  suffix: WestBoST3
+  description: |-
+    Конструкции силовой брони из арсенала Западного Братства. Броня 3-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterPowerArmorT45
+    - N14ClothingHeadsetBOSWest
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintWestBosArmorT4
+  name: Чертежи силовой брони старейшины Западного БС
+  suffix: WestBoST4
+  description: |-
+    Драгоценные чертежи силовой брони высшего командования Западного Братства. Броня 4-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterPowerArmorT51
+    - N14ClothingOuterPowerArmorT45West
+
+# =====================================================================
+# MIDWEST BOS BLUEPRINTS
+# =====================================================================
+
+# --- Midwest BoS Weapons ---
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintMidWestBosWeaponsT1
+  name: Схемы оружия послушника Среднезападного БС
+  suffix: MidWestBoST1
+  description: |-
+    Базовые руководства Среднезападного Братства по сборке оружия для новых послушников. Оружие 1-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponShotgun
+    - N14WeaponRifle556CarbineOld
+    - N14WeaponSniper308TribalUpgraded
+    - N14WeaponPistol12mm
+    - N14WeaponLaserPistol
+    - N14WeaponSMG12mm
+    - N14WeaponLaserRifleCrude
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintMidWestBosWeaponsT2
+  name: Арсенал рыцаря Среднезападного БС
+  suffix: MidWestBoST2
+  description: |-
+    Военные спецификации оружия уровня рыцаря Среднезападного Братства. Оружие 2-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponRevolver45-70Hunter
+    - N14WeaponPlasmaRifleUrban
+    - N14WeaponShotgunAuto
+    - N14CeremonialSword
+    - N14WeaponLaserRifle
+    - N14WeaponRifle556Carbine
+    - N14WeaponRifle308SniperRifle
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintMidWestBosWeaponsT3
+  name: Планы арсенала паладина Среднезападного БС
+  suffix: MidWestBoST3
+  description: |-
+    Продвинутые схемы оружия из арсенала паладинов Среднезападного Братства. Оружие 3-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponPlasmaRifleAuto
+    - N14WeaponLMG
+    - N14WeaponMinigun
+    - N14WeaponLaserRifleAuto
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintMidWestBosWeaponsT4
+  name: Чертежи хранилища старейшины Среднезападного БС
+  suffix: MidWestBoST4
+  description: |-
+    Довоенные прототипы оружия, извлеченные из архивов Среднезападного Братства. Оружие 4-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponRifleGrenade
+    - N14WeaponLMGBren
+    - N14WeaponLauncherMissile
+    - N14WeaponLaserRiflePrototypeAER14
+
+# --- Midwest BoS Armor ---
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintMidWestBosArmorT1
+  name: Лекала униформы послушника Среднезападного БС
+  suffix: MidWestBoST1
+  description: |-
+    Лекала униформы и снаряжения для новичков Среднезападного Братства. Броня 1-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingHeadHatBoSInquisitorCap
+    - N14ClothingHeadHatBoSInquisitorHat
+    - N14ClothingHeadHatBoSInquisitorBlackHat
+    - N14ClothingHeadHatBrotherhoodFieldCap
+    - N14ClothingHeadHatArmyCap
+    - N14ClothingHeadHatBanganeBoS
+    - N14ClothingUniformJumpsuitBOSFieldScribe
+    - N14ClothingUniformJumpsuitBOSScribe
+    - N14ClothingUniformJumpsuitInquisitorBOS
+    - N14ClothingOuterMBoSSquireArmor
+    - N14ClothingOuterMBoSInitiateArmor
+    - N14ClothingUniformBosRecon
+    - N14ClothingUniformJumpsuitBOSGreen
+    - N14ClothingOuterMidwestBoSCoat
+    - N14ClothingOuterBrotherhoodMidwestFieldScribeCoat
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintMidWestBosArmorT2
+  name: Схема боевой брони рыцаря Среднезападного БС
+  suffix: MidWestBoST2
+  description: |-
+    Планы сборки боевой брони рыцарей Среднезападного Братства. Броня 2-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterBOSInquisitorCoat
+    - N14ClothingHeadHatBrotherhoodMidwestHelmet
+    - N14ClothingOuterMBoSKnightArmor
+    - N14ClothingOuterMidwestArmor
+    - N14ClothingOuterBrotherhoodMedicalScribeRobes
+    - N14ClothingBeltBoSWebbing
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintMidWestBosArmorT3
+  name: Схема брони паладина Среднезападного БС
+  suffix: MidWestBoST3
+  description: |-
+    Конструкции боевой и силовой брони из арсенала Среднезападного Братства. Броня 3-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterMBoSPaladinArmor
+    - N14ClothingOuterMidwestArmorMK2
+    - N14ClothingOuterMBoSSeniorKArmor
+    - N14ClothingOuterBOSInquisitorBattleArmor
+    - N14ClothingHeadsetBOSMidwest
+    - N14ClothingHeadHatBrotherhoodMidwestHelmetVeteran
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintMidWestBosArmorT4
+  name: Чертежи силовой брони старейшины Среднезападного БС
+  suffix: MidWestBoST4
+  description: |-
+    Драгоценные чертежи силовой брони высшего командования Среднезападного Братства. Броня 4-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterMidwestReconArmor
+    - N14ClothingHeadHatBrotherhoodMidwestHelmetRecon
+
+# =====================================================================
+# TOWNSFOLK BLUEPRINTS
+# =====================================================================
+
+# --- Town Weapons ---
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintTownWeaponsT1
+  name: Каталог пустошного торговца
+  suffix: TownT1
+  description: |-
+    Потертый каталог караванного торговца, в котором перечислено распространенное оружие Пустоши. Оружие 1-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponPistol9mm
+    - N14WeaponSMG9mm
+    - N14WeaponPistol10mm
+    - N14CombatKnife
+    - N14WeaponShotgunDoubleBarrel
+    - N14WeaponShotgunCaravan
+    - N14WeaponSniperHunting
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintTownWeaponsT2
+  name: Руководство по вооружению ополчения
+  suffix: TownT2
+  description: |-
+    Руководство по снаряжению городского ополчения с типовыми конструкциями военного оружия. Оружие 2-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponShotgun
+    - N14WeaponPistol45Colt
+    - N14WeaponRevolver44Magnun
+    - N14WeaponRifle556R91
+    - N14Machete
+    - N14Hatchet
+    - N14WeaponSniper44LeverCarbine
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintTownWeaponsT3
+  name: Проспект торговцев оружием
+  suffix: TownT3
+  description: |-
+    Каталог оружия торговцев оружием с продвинутым оружием гражданского рынка. Оружие 3-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponRevolverWebley
+    - N14WeaponRifle762Canadian
+    - N14WeaponRifle762MarksmanChinese
+    - N14WeaponRifle556Carbine
+    - N14WeaponSMG10mm
+    - N14WeaponSMG45
+    - N14WeaponShotgunAuto
+    - N14SledgeHammer
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintTownWeaponsT4
+  name: Каталог довоенного торговца оружием
+  suffix: TownT4
+  description: |-
+    Редкий довоенный каталог торговца оружием с дорогим гражданским огнестрельным оружием. Оружие 4-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponHMGcanadian
+    - N14WeaponSniper45-70BrushGun
+    - N14WeaponRevolver45-70Hunter
+    - N14WeaponLMGBren
+
+# --- Town Armor ---
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintTownArmorT1
+  name: Руководство портного Пустоши
+  suffix: TownT1
+  description: |-
+    Простое руководство по созданию базовой защитной экипировки из материалов Пустоши. Броня 1-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterVestLeather
+    - N14ClothingOuterChitinArmor
+    - N14ClothingOuterLightLeatherArmor
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintTownArmorT2
+  name: Лекало брони городской стражи
+  suffix: TownT2
+  description: |-
+    Лекала брони, используемые городской стражей и помощниками шерифа. Броня 2-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterPoliceVest
+    - N14ClothingOuterTownGuardLight
+    - N14ClothingOuterReinforcedLeatherArmor
+    - N14ClothingOuterLeatherArmor
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintTownArmorT3
+  name: Руководство по довоенной безопасности
+  suffix: TownT3
+  description: |-
+    Спецификации брони довоенной охранной компании, найденные в разрушенном офисе. Броня 3-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterTownGuardRiot
+    - N14ClothingOuterPoliceCombat
+    - N14ClothingOuterSheriffVest
+    - N14ClothingOuterMetalArmor
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintVaultWeaponsT1
+  name: Руководство по безопасности Vault-Tec
+  suffix: VaultT1
+  description: |-
+    Стандартное руководство по снаряжению службы безопасности Vault-Tec. Оружие 1-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponPistol10mm
+    - N14PoliceBaton
+    - N14WeaponLaserPistol
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintVaultWeaponsT2
+  name: Продвинутые протоколы безопасности Vault-Tec
+  suffix: VaultT2
+  description: |-
+    Секретные протоколы безопасности Vault-Tec с продвинутыми спецификациями оружия. Оружие 2-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponSMG10mm
+    - N14WeaponLaserPistolRecharger
+    - N14WeaponLaserRifleRecharger
+    - N14CombatKnife
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintVaultWeaponsT3
+  name: Файл энергетического оружия R&D Vault-Tec
+  suffix: VaultT3
+  description: |-
+    Прототипы энергетического оружия исследований и разработок Vault-Tec. Оружие 3-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponPlasmaPistol
+    - N14WeaponLaserRifle
+    - N14WeaponPlasmaDefender
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintVaultWeaponsT4
+  name: Архив экспериментального оружия Vault-Tec
+  suffix: VaultT4
+  description: |-
+    Секретные исследования экспериментального оружия Vault-Tec. Никогда не должно было покинуть убежище. Оружие 4-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponPlasmaRifle
+    - N14WeaponLaserRifleAuto
+
+# --- Vault Armor ---
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintVaultArmorT1
+  name: Руководство по комбинезону Vault-Tec
+  suffix: VaultT1
+  description: |-
+    Руководство по усилению стандартного комбинезона Vault-Tec. Броня 1-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterVaultSecVest
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintVaultArmorT2
+  name: Спецификация брони безопасности Vault-Tec
+  suffix: VaultT2
+  description: |-
+    Спецификации брони отдела безопасности Vault-Tec. Броня 2-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterLightLeatherArmor
+    - N14ClothingOuterReinforcedLeatherArmor
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintVaultArmorT3
+  name: Схема боевой брони Vault-Tec
+  suffix: VaultT3
+  description: |-
+    Довоенная сборка боевой брони из базы данных оружейной убежища. Броня 3-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterVaultTecCombatArmor
+    - N14ClothingOuterPoliceCombat
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintVaultArmorT4
+  name: Проект экспериментальной брони Vault-Tec
+  suffix: VaultT4
+  description: |-
+    Прототипы экспериментальной брони Vault-Tec из научного отдела. Броня 4-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterCombatArmorMK2
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintTribeWeaponsT1
+  name: Племенные охотничьи учения
+  suffix: TribeT1
+  description: |-
+    Знания, переданные племенными старейшинами, о создании базовых охотничьих инструментов. Оружие 1-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14TribalKnife
+    - N14TribalClub
+    - N14WastelandSpear
+    - N14WeaponRevolver44Tribal
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintTribeWeaponsT2
+  name: Ремесло племенного воина
+  suffix: TribeT2
+  description: |-
+    Воинские традиции создания племенного оружия из природных материалов. Оружие 2-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14TribalMachete
+    - N14TribalHatchet
+    - N14TribalSword
+    - N14WeaponRevolver44TribalUpgraded
+    - N14WeaponPistol10mmPipe
+    - N14WeaponShotgunPipe
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintTribeWeaponsT3
+  name: Военные знания племенного старейшины
+  suffix: TribeT3
+  description: |-
+    Древние племенные военные знания для создания величайшего оружия. Оружие 3-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponRevolver44TribalUpgradedExtra
+    - N14WeaponRevolver45-70Handcannon
+    - N14TribalBigClub
+    - N14WastelandTribalSpear
+    - N14WeaponSMG12mmPipe
+    - N14WeaponRifle556Pipe
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintTribeWeaponsT4
+  name: Священные тексты племенного шамана
+  suffix: TribeT4
+  description: |-
+    Самое священное знание племени о создании оружия, охраняемое шаманами. Оружие 4-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14WeaponRevolver45-70HandcannonUpgraded
+    - N14TribalBigClubDecorated
+    - N14WastelandPolearm
+    - N14WeaponSniper50Pipe
+    - N14SuperSledgeHammer
+
+# --- Tribe Armor ---
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintTribeArmorT1
+  name: Руководство по дублению шкур
+  suffix: TribeT1
+  description: |-
+    Племенные знания о дублении шкур и создании базовой брони. Броня 1-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterTribalArmor
+    - N14ClothingOuterdrylandersimple
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintTribeArmorT2
+  name: Ремесло брони племенного воина
+  suffix: TribeT2
+  description: |-
+    Воинские традиции создания боевой племенной брони. Броня 2-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterBandito
+    - N14ClothingOuterforager
+    - N14ClothingOuterhunter
+    - N14ClothingOuterponcho
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintTribeArmorT3
+  name: Броня племенного чемпиона
+  suffix: TribeT3
+  description: |-
+    Броня племенных чемпионов, усиленная трофейными довоенными материалами. Броня 3-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterTribalArmorHeavy
+    - N14ClothingOuterheadtaker
+    - N14ClothingOutershaman
+    - N14ClothingOuterCombatTribal
+
+- type: entity
+  parent: N14BlueprintBase
+  id: N14BlueprintTribeArmorT4
+  name: Священная броня племенного старейшины
+  suffix: TribeT4
+  description: |-
+    Самые почитаемые конструкции брони племенных старейшин, сочетающие древнюю мудрость с трофейными технологиями. Броня 4-го уровня.
+  components:
+  - type: Blueprint
+    recipes:
+    - N14ClothingOuterRadArmor
+    - N14ClothingOuterInsectArmor
