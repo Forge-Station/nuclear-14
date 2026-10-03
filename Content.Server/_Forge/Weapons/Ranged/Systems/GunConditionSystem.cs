@@ -268,7 +268,7 @@ public sealed class GunConditionSystem : SharedGunConditionSystem
     {
         var doAfter = new DoAfterArgs(EntityManager, user, ent.Comp.UnjamTime, new GunConditionUnjamDoAfterEvent(), ent, target: ent)
         {
-            BreakOnDamage = false,
+            BreakOnDamage = true,
             BreakOnMove = false,
             NeedHand = true,
             RequireCanInteract = true,

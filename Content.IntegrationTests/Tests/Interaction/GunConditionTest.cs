@@ -9,9 +9,10 @@ namespace Content.IntegrationTests.Tests.Interaction;
 
 public sealed class GunConditionTest : InteractionTest
 {
-    [TestCase(false)]
-    [TestCase(true)]
-    public async Task UnjamWhileMovingAndTakingDamage(bool cancelByDropping)
+    [TestCase(false, false)]
+    [TestCase(true, false)]
+    [TestCase(false, true)]
+    public async Task UnjamAllowsMovementButCancelsOnDamageOrDrop(bool cancelByDropping, bool takeDamage)
     {
         await SpawnTarget("ForgeWeaponRifleGestio");
         await Pickup();
@@ -32,17 +33,20 @@ public sealed class GunConditionTest : InteractionTest
         {
             var transform = SEntMan.GetComponent<TransformComponent>(SPlayer);
             SEntMan.System<SharedTransformSystem>().SetCoordinates(SPlayer, transform.Coordinates.Offset(new Vector2(1f, 0f)));
-            var hit = new DamageSpecifier();
-            hit.DamageDict.Add("Blunt", FixedPoint2.New(10));
-            SEntMan.System<DamageableSystem>().TryChangeDamage(SPlayer, hit, ignoreResistances: true);
+            if (takeDamage)
+            {
+                var hit = new DamageSpecifier();
+                hit.DamageDict.Add("Blunt", FixedPoint2.New(10));
+                SEntMan.System<DamageableSystem>().TryChangeDamage(SPlayer, hit, ignoreResistances: true);
+            }
         });
         await RunTicks(5);
-        Assert.That(SEntMan.HasComponent<GunUnjammingComponent>(SPlayer), Is.True);
+        Assert.That(SEntMan.HasComponent<GunUnjammingComponent>(SPlayer), Is.EqualTo(!takeDamage));
         if (cancelByDropping)
             await Drop();
         await AwaitDoAfters();
         await RunTicks(5);
-        Assert.That(condition.Jammed, Is.EqualTo(cancelByDropping));
+        Assert.That(condition.Jammed, Is.EqualTo(cancelByDropping || takeDamage));
         Assert.That(SEntMan.HasComponent<GunUnjammingComponent>(SPlayer), Is.False);
         Assert.That(speed.CurrentSprintSpeed, Is.EqualTo(speed.BaseSprintSpeed).Within(0.001f));
     }
