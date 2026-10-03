@@ -12,8 +12,8 @@
   requiresBlueprint: true
   completetime: 8
   materials:
-    Steel: 150
-    Wood: 150
+    Steel: 600
+    Wood: 600
 
 # Tier: T1
 - type: latheRecipe
@@ -23,8 +23,8 @@
   requiresBlueprint: true
   completetime: 8
   materials:
-    Steel: 125
-    Wood: 150
+    Steel: 500
+    Wood: 600
 
 
 # Tier: T2
@@ -35,8 +35,8 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Steel: 250
-    Wood: 250
+    Steel: 1000
+    Wood: 1000
 
 # Tier: T2
 - type: latheRecipe
@@ -46,5 +46,5 @@
   requiresBlueprint: true
   completetime: 11
   materials:
-    Steel: 300
-    Wood: 200
+    Steel: 1200
+    Wood: 800

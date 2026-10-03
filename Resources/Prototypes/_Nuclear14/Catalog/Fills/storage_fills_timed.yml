@@ -4,6 +4,14 @@
   components:
     - type: TimedStorageFill
       contents:
+        - id: N14ResearchArtifactDiscard
+          prob: 0.12
+        - id: N14ResearchArtifactBallistic
+          prob: 0.12
+        - id: N14ResearchArtifactEnergy
+          prob: 0.12
+        - id: N14ResearchArtifactArmor
+          prob: 0.12
         - id: Pen
           prob: 0.04
         - id: N14CombatKnife
@@ -339,6 +347,14 @@
   components:
     - type: TimedStorageFill
       contents:
+        - id: N14ResearchArtifactDiscard
+          prob: 0.12
+        - id: N14ResearchArtifactBallistic
+          prob: 0.12
+        - id: N14ResearchArtifactEnergy
+          prob: 0.12
+        - id: N14ResearchArtifactArmor
+          prob: 0.12
         - id: CigCartonRed
           prob: 0.01
         - id: CigCartonBlack
@@ -1013,6 +1029,14 @@
   components:
     - type: TimedStorageFill
       contents:
+        - id: N14ResearchArtifactDiscard
+          prob: 0.12
+        - id: N14ResearchArtifactBallistic
+          prob: 0.12
+        - id: N14ResearchArtifactEnergy
+          prob: 0.12
+        - id: N14ResearchArtifactArmor
+          prob: 0.12
         - id: N14Ethanol
           prob: 0.05
         - id: Pen
@@ -1466,6 +1490,14 @@
   components:
     - type: TimedStorageFill
       contents:
+        - id: N14ResearchArtifactDiscard
+          prob: 0.12
+        - id: N14ResearchArtifactBallistic
+          prob: 0.12
+        - id: N14ResearchArtifactEnergy
+          prob: 0.12
+        - id: N14ResearchArtifactArmor
+          prob: 0.12
         - id: N14Ethanol
           prob: 0.05
         - id: N14FoodBlamcomaccheese
@@ -1756,6 +1788,14 @@
   components:
     - type: TimedStorageFill
       contents:
+        - id: N14ResearchArtifactDiscard
+          prob: 0.12
+        - id: N14ResearchArtifactBallistic
+          prob: 0.12
+        - id: N14ResearchArtifactEnergy
+          prob: 0.12
+        - id: N14ResearchArtifactArmor
+          prob: 0.12
         - id: GeigerCounter
           prob: 0.02
         - id: N14DirtyGauze10
@@ -2115,6 +2155,14 @@
   components:
     - type: TimedStorageFill
       contents:
+        - id: N14ResearchArtifactDiscard
+          prob: 0.12
+        - id: N14ResearchArtifactBallistic
+          prob: 0.12
+        - id: N14ResearchArtifactEnergy
+          prob: 0.12
+        - id: N14ResearchArtifactArmor
+          prob: 0.12
         - id: GeigerCounter
           prob: 0.02
         - id: N14DirtyGauze10
@@ -2206,6 +2254,14 @@
   components:
     - type: TimedStorageFill
       contents:
+        - id: N14ResearchArtifactDiscard
+          prob: 0.12
+        - id: N14ResearchArtifactBallistic
+          prob: 0.12
+        - id: N14ResearchArtifactEnergy
+          prob: 0.12
+        - id: N14ResearchArtifactArmor
+          prob: 0.12
         - id: N14DrinkNukaColaCherry
           prob: 0.2
           orGroup: Drinks
@@ -2356,6 +2412,14 @@
   components:
     - type: TimedStorageFill
       contents:
+        - id: N14ResearchArtifactDiscard
+          prob: 0.12
+        - id: N14ResearchArtifactBallistic
+          prob: 0.12
+        - id: N14ResearchArtifactEnergy
+          prob: 0.12
+        - id: N14ResearchArtifactArmor
+          prob: 0.12
         - id: N14FloraWildAgaveClippingSeed
           prob: 0.05
         - id: N14FloraWildBananaYuccaClippingSeed
@@ -2405,6 +2469,14 @@
   components:
     - type: TimedStorageFill
       contents:
+        - id: N14ResearchArtifactDiscard
+          prob: 0.12
+        - id: N14ResearchArtifactBallistic
+          prob: 0.12
+        - id: N14ResearchArtifactEnergy
+          prob: 0.12
+        - id: N14ResearchArtifactArmor
+          prob: 0.12
         - id: N14CurrencyCap10
           prob: 0.4
           orGroup: Currency
@@ -2448,6 +2520,14 @@
   components:
     - type: TimedStorageFill
       contents:
+        - id: N14ResearchArtifactDiscard
+          prob: 0.12
+        - id: N14ResearchArtifactBallistic
+          prob: 0.12
+        - id: N14ResearchArtifactEnergy
+          prob: 0.12
+        - id: N14ResearchArtifactArmor
+          prob: 0.12
         - id: N14CurrencyCap10
           prob: 0.4
           orGroup: Currency

@@ -10,6 +10,6 @@
   requiresBlueprint: true
   completetime: 4
   materials:
-    Steel: 75
-    Cloth: 50
-    Thread: 30
+    Steel: 300
+    Cloth: 200
+    Thread: 120

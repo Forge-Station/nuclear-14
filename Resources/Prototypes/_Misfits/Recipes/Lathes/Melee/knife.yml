@@ -14,9 +14,9 @@
   requiresBlueprint: true
   completetime: 7
   materials:
-    Steel: 100
-    Wood: 50
-    Leather: 25
+    Steel: 400
+    Wood: 200
+    Leather: 100
 
 
 # Tier: T2
@@ -27,5 +27,5 @@
   requiresBlueprint: true
   completetime: 9
   materials:
-    Steel: 150
-    Leather: 50
+    Steel: 600
+    Leather: 200

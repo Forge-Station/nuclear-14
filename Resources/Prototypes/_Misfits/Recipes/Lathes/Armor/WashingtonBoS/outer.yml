@@ -10,9 +10,9 @@
   requiresBlueprint: true
   completetime: 7
   materials:
-    Cloth: 200
-    Thread: 150
-    Leather: 100
+    Cloth: 800
+    Thread: 600
+    Leather: 400
 
 # Tier: T1
 - type: latheRecipe
@@ -22,9 +22,9 @@
   requiresBlueprint: true
   completetime: 6
   materials:
-    Cloth: 125
-    Thread: 100
-    Leather: 75
+    Cloth: 500
+    Thread: 400
+    Leather: 300
 
 # Tier: T1
 - type: latheRecipe
@@ -34,9 +34,9 @@
   requiresBlueprint: true
   completetime: 6
   materials:
-    Cloth: 125
-    Thread: 100
-    Leather: 75
+    Cloth: 500
+    Thread: 400
+    Leather: 300
 
 # Tier: T2
 - type: latheRecipe
@@ -46,10 +46,10 @@
   requiresBlueprint: true
   completetime: 12
   materials:
-    Steel: 300
-    Cloth: 200
-    Thread: 150
-    Leather: 125
+    Steel: 1200
+    Cloth: 800
+    Thread: 600
+    Leather: 500
 
 # Tier: T2
 - type: latheRecipe
@@ -59,10 +59,10 @@
   requiresBlueprint: true
   completetime: 12
   materials:
-    Steel: 300
-    Cloth: 225
-    Thread: 175
-    Leather: 125
+    Steel: 1200
+    Cloth: 900
+    Thread: 700
+    Leather: 500
 
 # Tier: T3
 - type: latheRecipe
@@ -72,10 +72,10 @@
   requiresBlueprint: true
   completetime: 25
   materials:
-    Steel: 1000
-    N14Iron: 400
-    Circuitry: 150
-    ScrapElectronic: 100
+    Steel: 4000
+    N14Iron: 1600
+    Circuitry: 600
+    ScrapElectronic: 400
 
 # Tier: T3
 - type: latheRecipe
@@ -85,11 +85,11 @@
   requiresBlueprint: true
   completetime: 17
   materials:
-    Steel: 500
-    Cloth: 275
-    Thread: 200
-    Leather: 175
-    Circuitry: 75
+    Steel: 2000
+    Cloth: 1100
+    Thread: 800
+    Leather: 700
+    Circuitry: 300
 
 # Tier: T4
 - type: latheRecipe
@@ -99,11 +99,11 @@
   requiresBlueprint: true
   completetime: 40
   materials:
-    Steel: 1800
-    N14Iron: 600
-    Circuitry: 300
-    ScrapElectronic: 250
-    N14Brass: 125
+    Steel: 7200
+    N14Iron: 2400
+    Circuitry: 1200
+    ScrapElectronic: 1000
+    N14Brass: 500
 
 # Tier: T4
 - type: latheRecipe
@@ -113,9 +113,9 @@
   requiresBlueprint: true
   completetime: 22
   materials:
-    Steel: 700
-    Cloth: 350
-    Thread: 250
-    Leather: 200
-    Circuitry: 125
-    ScrapElectronic: 75
+    Steel: 2800
+    Cloth: 1400
+    Thread: 1000
+    Leather: 800
+    Circuitry: 500
+    ScrapElectronic: 300

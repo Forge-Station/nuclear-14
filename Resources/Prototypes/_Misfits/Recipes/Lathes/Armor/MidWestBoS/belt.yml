@@ -10,5 +10,5 @@
   requiresBlueprint: true
   completetime: 3
   materials:
-    Leather: 100
-    Steel: 50
+    Leather: 400
+    Steel: 200

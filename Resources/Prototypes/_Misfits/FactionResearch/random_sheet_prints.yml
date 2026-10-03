@@ -7,14 +7,14 @@
   cost: 1000
   randomSheet: N14RandomResearchSheet
 
-- type: factionResearchPrint
-  id: N14FactionResearchPrintArmorSheetNCR
-  name: faction-research-random-armor-sheet
-  category: faction-research-category-random
-  faction: NCR
-  tier: 1
-  cost: 1000
-  randomSheet: N14RandomArmorSheet
+# - type: factionResearchPrint
+#   id: N14FactionResearchPrintArmorSheetNCR
+#   name: faction-research-random-armor-sheet
+#   category: faction-research-category-random
+#   faction: NCR
+#   tier: 1
+#   cost: 1000
+#   randomSheet: N14RandomArmorSheet
 
 - type: factionResearchPrint
   id: N14FactionResearchPrintWeaponSheetCaesarLegion
@@ -25,14 +25,14 @@
   cost: 1000
   randomSheet: N14RandomResearchSheet
 
-- type: factionResearchPrint
-  id: N14FactionResearchPrintArmorSheetCaesarLegion
-  name: faction-research-random-armor-sheet
-  category: faction-research-category-random
-  faction: CaesarLegion
-  tier: 1
-  cost: 1000
-  randomSheet: N14RandomArmorSheet
+# - type: factionResearchPrint
+#   id: N14FactionResearchPrintArmorSheetCaesarLegion
+#   name: faction-research-random-armor-sheet
+#   category: faction-research-category-random
+#   faction: CaesarLegion
+#   tier: 1
+#   cost: 1000
+#   randomSheet: N14RandomArmorSheet
 
 - type: factionResearchPrint
   id: N14FactionResearchPrintWeaponSheetBrotherhoodWashington
@@ -43,14 +43,14 @@
   cost: 1000
   randomSheet: N14RandomResearchSheet
 
-- type: factionResearchPrint
-  id: N14FactionResearchPrintArmorSheetBrotherhoodWashington
-  name: faction-research-random-armor-sheet
-  category: faction-research-category-random
-  faction: BrotherhoodWashington
-  tier: 1
-  cost: 1000
-  randomSheet: N14RandomArmorSheet
+# - type: factionResearchPrint
+#   id: N14FactionResearchPrintArmorSheetBrotherhoodWashington
+#   name: faction-research-random-armor-sheet
+#   category: faction-research-category-random
+#   faction: BrotherhoodWashington
+#   tier: 1
+#   cost: 1000
+#   randomSheet: N14RandomArmorSheet
 
 - type: factionResearchPrint
   id: N14FactionResearchPrintWeaponSheetBrotherhoodWest
@@ -61,14 +61,14 @@
   cost: 1000
   randomSheet: N14RandomResearchSheet
 
-- type: factionResearchPrint
-  id: N14FactionResearchPrintArmorSheetBrotherhoodWest
-  name: faction-research-random-armor-sheet
-  category: faction-research-category-random
-  faction: BrotherhoodWest
-  tier: 1
-  cost: 1000
-  randomSheet: N14RandomArmorSheet
+# - type: factionResearchPrint
+#   id: N14FactionResearchPrintArmorSheetBrotherhoodWest
+#   name: faction-research-random-armor-sheet
+#   category: faction-research-category-random
+#   faction: BrotherhoodWest
+#   tier: 1
+#   cost: 1000
+#   randomSheet: N14RandomArmorSheet
 
 - type: factionResearchPrint
   id: N14FactionResearchPrintWeaponSheetBrotherhoodMidwest
@@ -79,14 +79,14 @@
   cost: 1000
   randomSheet: N14RandomResearchSheet
 
-- type: factionResearchPrint
-  id: N14FactionResearchPrintArmorSheetBrotherhoodMidwest
-  name: faction-research-random-armor-sheet
-  category: faction-research-category-random
-  faction: BrotherhoodMidwest
-  tier: 1
-  cost: 1000
-  randomSheet: N14RandomArmorSheet
+# - type: factionResearchPrint
+#   id: N14FactionResearchPrintArmorSheetBrotherhoodMidwest
+#   name: faction-research-random-armor-sheet
+#   category: faction-research-category-random
+#   faction: BrotherhoodMidwest
+#   tier: 1
+#   cost: 1000
+#   randomSheet: N14RandomArmorSheet
 
 - type: factionResearchPrint
   id: N14FactionResearchPrintWeaponSheetTownsfolk
@@ -97,14 +97,14 @@
   cost: 1000
   randomSheet: N14RandomResearchSheet
 
-- type: factionResearchPrint
-  id: N14FactionResearchPrintArmorSheetTownsfolk
-  name: faction-research-random-armor-sheet
-  category: faction-research-category-random
-  faction: Townsfolk
-  tier: 1
-  cost: 1000
-  randomSheet: N14RandomArmorSheet
+# - type: factionResearchPrint
+#   id: N14FactionResearchPrintArmorSheetTownsfolk
+#   name: faction-research-random-armor-sheet
+#   category: faction-research-category-random
+#   faction: Townsfolk
+#   tier: 1
+#   cost: 1000
+#   randomSheet: N14RandomArmorSheet
 
 - type: factionResearchPrint
   id: N14FactionResearchPrintWeaponSheetVault
@@ -115,14 +115,14 @@
   cost: 1000
   randomSheet: N14RandomResearchSheet
 
-- type: factionResearchPrint
-  id: N14FactionResearchPrintArmorSheetVault
-  name: faction-research-random-armor-sheet
-  category: faction-research-category-random
-  faction: Vault
-  tier: 1
-  cost: 1000
-  randomSheet: N14RandomArmorSheet
+# - type: factionResearchPrint
+#   id: N14FactionResearchPrintArmorSheetVault
+#   name: faction-research-random-armor-sheet
+#   category: faction-research-category-random
+#   faction: Vault
+#   tier: 1
+#   cost: 1000
+#   randomSheet: N14RandomArmorSheet
 
 - type: factionResearchPrint
   id: N14FactionResearchPrintWeaponSheetTribe
@@ -133,11 +133,11 @@
   cost: 1000
   randomSheet: N14RandomResearchSheet
 
-- type: factionResearchPrint
-  id: N14FactionResearchPrintArmorSheetTribe
-  name: faction-research-random-armor-sheet
-  category: faction-research-category-random
-  faction: Tribe
-  tier: 1
-  cost: 1000
-  randomSheet: N14RandomArmorSheet
+# - type: factionResearchPrint
+#   id: N14FactionResearchPrintArmorSheetTribe
+#   name: faction-research-random-armor-sheet
+#   category: faction-research-category-random
+#   faction: Tribe
+#   tier: 1
+#   cost: 1000
+#   randomSheet: N14RandomArmorSheet

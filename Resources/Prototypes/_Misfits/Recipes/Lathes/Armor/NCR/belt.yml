@@ -10,8 +10,8 @@
   requiresBlueprint: true
   completetime: 2
   materials:
-    Leather: 80
-    Thread: 40
+    Leather: 320
+    Thread: 160
 
 # Tier: T1
 - type: latheRecipe
@@ -21,9 +21,9 @@
   requiresBlueprint: true
   completetime: 3
   materials:
-    Leather: 120
-    Cloth: 60
-    Thread: 40
+    Leather: 480
+    Cloth: 240
+    Thread: 160
 
 # Tier: T1
 - type: latheRecipe
@@ -33,9 +33,9 @@
   requiresBlueprint: true
   completetime: 3
   materials:
-    Leather: 100
-    Thread: 50
-    N14Iron: 50
+    Leather: 400
+    Thread: 200
+    N14Iron: 200
 
 # Tier: T1
 - type: latheRecipe
@@ -45,5 +45,5 @@
   requiresBlueprint: true
   completetime: 3
   materials:
-    Leather: 100
-    Thread: 60
+    Leather: 400
+    Thread: 240

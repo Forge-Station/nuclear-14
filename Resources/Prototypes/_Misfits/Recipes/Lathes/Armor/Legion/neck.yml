@@ -10,9 +10,9 @@
   requiresBlueprint: true
   completetime: 4
   materials:
-    Cloth: 100
-    Thread: 75
-    Leather: 50
+    Cloth: 400
+    Thread: 300
+    Leather: 200
 
 # Tier: T1
 - type: latheRecipe
@@ -22,8 +22,8 @@
   requiresBlueprint: true
   completetime: 5
   materials:
-    Cloth: 125
-    Thread: 75
+    Cloth: 500
+    Thread: 300
 
 # Tier: T1
 - type: latheRecipe
@@ -33,6 +33,6 @@
   requiresBlueprint: true
   completetime: 5
   materials:
-    Cloth: 125
-    Thread: 100
-    Leather: 50
+    Cloth: 500
+    Thread: 400
+    Leather: 200

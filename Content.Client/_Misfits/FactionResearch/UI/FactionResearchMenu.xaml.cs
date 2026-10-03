@@ -68,16 +68,22 @@ public sealed partial class FactionResearchMenu : FancyWindow
                 HorizontalExpand = true,
             };
 
+            var costText = print.Learned
+                ? Loc.GetString("faction-research-learned")
+                : print.Cost.ToString();
+
             row.AddChild(new Label
             {
-                Text = $"{print.Name} - {print.Cost}",
+                Text = $"{print.Name} - {costText}",
                 HorizontalExpand = true,
             });
 
             var button = new Button
             {
-                Text = Loc.GetString("faction-research-buy"),
-                Disabled = !print.Available,
+                Text = print.Locked
+                    ? Loc.GetString("faction-research-locked")
+                    : Loc.GetString("faction-research-buy"),
+                Disabled = !print.Available || print.Locked,
             };
             var id = print.Id;
             button.OnPressed += _ => OnPrint?.Invoke(id);

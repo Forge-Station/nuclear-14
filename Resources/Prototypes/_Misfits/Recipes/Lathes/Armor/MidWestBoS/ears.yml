@@ -10,6 +10,6 @@
   requiresBlueprint: true
   completetime: 5
   materials:
-    Steel: 75
-    N14Brass: 75
-    Circuitry: 75
+    Steel: 300
+    N14Brass: 300
+    Circuitry: 300

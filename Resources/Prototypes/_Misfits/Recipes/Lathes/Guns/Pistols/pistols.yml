@@ -12,9 +12,9 @@
   requiresBlueprint: true
   completetime: 5
   materials:
-    Steel: 100
-    Scrap: 75
-    Wood: 50
+    Steel: 400
+    Scrap: 300
+    Wood: 200
 
 # Tier: T1
 - type: latheRecipe
@@ -24,8 +24,8 @@
   requiresBlueprint: true
   completetime: 5
   materials:
-    Steel: 100
-    Scrap: 50
+    Steel: 400
+    Scrap: 200
 
 # Tier: T1
 - type: latheRecipe
@@ -35,8 +35,8 @@
   requiresBlueprint: true
   completetime: 5
   materials:
-    Steel: 125
-    Scrap: 50
+    Steel: 500
+    Scrap: 200
 
 # Tier: T1
 - type: latheRecipe
@@ -46,8 +46,8 @@
   requiresBlueprint: true
   completetime: 4
   materials:
-    Steel: 75
-    Scrap: 50
+    Steel: 300
+    Scrap: 200
 
 # Tier: T1
 - type: latheRecipe
@@ -57,8 +57,8 @@
   requiresBlueprint: true
   completetime: 5
   materials:
-    Steel: 100
-    N14Iron: 50
+    Steel: 400
+    N14Iron: 200
 
 # Tier: T1
 - type: latheRecipe
@@ -68,8 +68,8 @@
   requiresBlueprint: true
   completetime: 5
   materials:
-    Steel: 125
-    N14Iron: 50
+    Steel: 500
+    N14Iron: 200
 
 # Tier: T1
 - type: latheRecipe
@@ -79,9 +79,9 @@
   requiresBlueprint: true
   completetime: 6
   materials:
-    Steel: 200
-    N14Iron: 75
-    Wood: 25
+    Steel: 800
+    N14Iron: 300
+    Wood: 100
 
 
 # Tier: T2
@@ -92,9 +92,9 @@
   requiresBlueprint: true
   completetime: 7
   materials:
-    Steel: 200
-    N14Iron: 100
-    Wood: 50
+    Steel: 800
+    N14Iron: 400
+    Wood: 200
 
 
 # Tier: T3
@@ -105,9 +105,9 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Steel: 350
-    N14Iron: 150
-    N14Brass: 50
+    Steel: 1400
+    N14Iron: 600
+    N14Brass: 200
 
 # Tier: T3
 - type: latheRecipe
@@ -117,9 +117,9 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Steel: 400
-    N14Iron: 150
-    N14Brass: 50
+    Steel: 1600
+    N14Iron: 600
+    N14Brass: 200
 
 
 # Tier: T4
@@ -130,7 +130,7 @@
   requiresBlueprint: true
   completetime: 12
   materials:
-    Steel: 500
-    N14Iron: 200
-    N14Brass: 100
-    N14Silver: 50
+    Steel: 2000
+    N14Iron: 800
+    N14Brass: 400
+    N14Silver: 200

@@ -10,5 +10,5 @@
   requiresBlueprint: true
   completetime: 3
   materials:
-    Thread: 100
-    Cloth: 50
+    Thread: 400
+    Cloth: 200

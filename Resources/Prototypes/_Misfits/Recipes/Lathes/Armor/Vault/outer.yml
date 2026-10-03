@@ -10,9 +10,9 @@
   requiresBlueprint: true
   completetime: 6
   materials:
-    Cloth: 125
-    Thread: 100
-    Plastic: 50
+    Cloth: 500
+    Thread: 400
+    Plastic: 200
 
 # Tier: T4
 - type: latheRecipe
@@ -22,12 +22,12 @@
   requiresBlueprint: true
   completetime: 20
   materials:
-    Steel: 700
-    Cloth: 350
-    Thread: 250
-    Circuitry: 100
-    ScrapElectronic: 75
-    Plastic: 50
+    Steel: 2800
+    Cloth: 1400
+    Thread: 1000
+    Circuitry: 400
+    ScrapElectronic: 300
+    Plastic: 200
 
 # Tier: T4
 - type: latheRecipe
@@ -37,9 +37,24 @@
   requiresBlueprint: true
   completetime: 25
   materials:
-    Steel: 900
-    Cloth: 400
-    Thread: 275
-    Circuitry: 150
-    ScrapElectronic: 100
-    N14Iron: 100
+    Steel: 3600
+    Cloth: 1600
+    Thread: 1100
+    Circuitry: 600
+    ScrapElectronic: 400
+    N14Iron: 400
+
+# Tier: T4
+- type: latheRecipe
+  id: N14ClothingOuterVaultTecCombatArmor
+  result: N14ClothingOuterVaultTecCombatArmor
+  category: N14ClothingOuter
+  requiresBlueprint: true
+  completetime: 22
+  materials:
+    Steel: 3200
+    Cloth: 1500
+    Thread: 1050
+    Circuitry: 500
+    ScrapElectronic: 350
+    Plastic: 250

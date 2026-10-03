@@ -1,7 +1,7 @@
 - type: entity
   id: N14FactionResearchTerminal
-  name: faction research terminal
-  description: A terminal for researching faction blueprints and converting items into research points.
+  name: стол исследования
+  description: Верстак с инструментами для изучения и исследования новый чертежей.
   placement:
     mode: SnapgridCenter
   components:
@@ -21,7 +21,7 @@
   - type: Rotatable
   - type: Sprite
     drawdepth: SmallObjects
-    sprite: _Nuclear14/Structures/Machines/access_terminal.rsi
+    sprite: _Forge/Structures/Misc/research_terminal.rsi
     layers:
       - state: icon
   - type: Appearance

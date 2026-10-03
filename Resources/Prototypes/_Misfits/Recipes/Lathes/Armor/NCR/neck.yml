@@ -10,9 +10,9 @@
   requiresBlueprint: true
   completetime: 4
   materials:
-    Cloth: 120
-    Thread: 80
-    Leather: 60
+    Cloth: 480
+    Thread: 320
+    Leather: 240
 
 # Tier: T1
 - type: latheRecipe
@@ -22,9 +22,9 @@
   requiresBlueprint: true
   completetime: 4
   materials:
-    Cloth: 120
-    Thread: 80
-    Leather: 60
+    Cloth: 480
+    Thread: 320
+    Leather: 240
 
 # Tier: T1
 - type: latheRecipe
@@ -34,9 +34,9 @@
   requiresBlueprint: true
   completetime: 4
   materials:
-    Cloth: 120
-    Thread: 80
-    Leather: 60
+    Cloth: 480
+    Thread: 320
+    Leather: 240
 
 # Tier: T1
 - type: latheRecipe
@@ -46,9 +46,9 @@
   requiresBlueprint: true
   completetime: 4
   materials:
-    Cloth: 120
-    Thread: 80
-    Leather: 60
+    Cloth: 480
+    Thread: 320
+    Leather: 240
 
 # Tier: T1
 - type: latheRecipe
@@ -58,9 +58,9 @@
   requiresBlueprint: true
   completetime: 4
   materials:
-    Cloth: 120
-    Thread: 80
-    Leather: 40
+    Cloth: 480
+    Thread: 320
+    Leather: 160
 
 # Tier: T1
 - type: latheRecipe
@@ -70,9 +70,9 @@
   requiresBlueprint: true
   completetime: 3
   materials:
-    Cloth: 120
-    Thread: 80
-    Leather: 50
+    Cloth: 480
+    Thread: 320
+    Leather: 200
 
 # Tier: T1
 - type: latheRecipe
@@ -82,9 +82,9 @@
   requiresBlueprint: true
   completetime: 5
   materials:
-    Cloth: 200
-    Thread: 150
-    Leather: 75
+    Cloth: 800
+    Thread: 600
+    Leather: 300
 
 # Tier: T1
 - type: latheRecipe
@@ -94,9 +94,9 @@
   requiresBlueprint: true
   completetime: 3
   materials:
-    Cloth: 100
-    Thread: 60
-    Leather: 40
+    Cloth: 400
+    Thread: 240
+    Leather: 160
 
 # Tier: T1
 - type: latheRecipe
@@ -106,6 +106,6 @@
   requiresBlueprint: true
   completetime: 3
   materials:
-    Cloth: 100
-    Thread: 60
-    Leather: 40
+    Cloth: 400
+    Thread: 240
+    Leather: 160

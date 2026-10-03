@@ -12,8 +12,8 @@
   requiresBlueprint: true
   completetime: 5
   materials:
-    Steel: 100
-    N14Iron: 50
+    Steel: 400
+    N14Iron: 200
 
 # Tier: T1
 - type: latheRecipe
@@ -23,8 +23,8 @@
   requiresBlueprint: true
   completetime: 5
   materials:
-    Steel: 125
-    N14Iron: 50
+    Steel: 500
+    N14Iron: 200
 
 # Tier: T1
 - type: latheRecipe
@@ -34,8 +34,8 @@
   requiresBlueprint: true
   completetime: 5
   materials:
-    Steel: 100
-    N14Iron: 50
+    Steel: 400
+    N14Iron: 200
 
 # Tier: T1
 - type: latheRecipe
@@ -45,8 +45,8 @@
   requiresBlueprint: true
   completetime: 4
   materials:
-    Steel: 75
-    Wood: 50
+    Steel: 300
+    Wood: 200
 
 
 # Tier: T2
@@ -57,9 +57,9 @@
   requiresBlueprint: true
   completetime: 7
   materials:
-    Steel: 200
-    N14Iron: 100
-    N14Brass: 25
+    Steel: 800
+    N14Iron: 400
+    N14Brass: 100
 
 # Tier: T2
 - type: latheRecipe
@@ -69,8 +69,8 @@
   requiresBlueprint: true
   completetime: 7
   materials:
-    Steel: 150
-    N14Iron: 75
+    Steel: 600
+    N14Iron: 300
 
 
 # Tier: T3
@@ -81,9 +81,9 @@
   requiresBlueprint: true
   completetime: 9
   materials:
-    Steel: 350
-    N14Iron: 150
-    N14Brass: 75
+    Steel: 1400
+    N14Iron: 600
+    N14Brass: 300
 
 # Tier: T3
 - type: latheRecipe
@@ -93,9 +93,9 @@
   requiresBlueprint: true
   completetime: 9
   materials:
-    Steel: 300
-    N14Iron: 150
-    N14Brass: 50
+    Steel: 1200
+    N14Iron: 600
+    N14Brass: 200
 
 # Tier: T3
 - type: latheRecipe
@@ -105,9 +105,9 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Steel: 400
-    N14Iron: 200
-    N14Brass: 100
+    Steel: 1600
+    N14Iron: 800
+    N14Brass: 400
 
 # Tier: T3
 - type: latheRecipe
@@ -117,9 +117,9 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Steel: 400
-    N14Iron: 200
-    N14Brass: 100
+    Steel: 1600
+    N14Iron: 800
+    N14Brass: 400
 
 # Tier: T3
 - type: latheRecipe
@@ -129,9 +129,9 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Steel: 400
-    N14Iron: 200
-    N14Brass: 100
+    Steel: 1600
+    N14Iron: 800
+    N14Brass: 400
 
 
 # Tier: T4
@@ -142,10 +142,10 @@
   requiresBlueprint: true
   completetime: 12
   materials:
-    Steel: 600
-    N14Iron: 300
-    N14Brass: 150
-    N14Silver: 50
+    Steel: 2400
+    N14Iron: 1200
+    N14Brass: 600
+    N14Silver: 200
 
 # Tier: T4
 - type: latheRecipe
@@ -155,6 +155,6 @@
   requiresBlueprint: true
   completetime: 12
   materials:
-    Steel: 550
-    N14Iron: 300
-    N14Brass: 150
+    Steel: 2200
+    N14Iron: 1200
+    N14Brass: 600

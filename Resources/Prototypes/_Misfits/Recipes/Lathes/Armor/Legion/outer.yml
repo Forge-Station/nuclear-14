@@ -10,10 +10,10 @@
   requiresBlueprint: true
   completetime: 8
   materials:
-    Leather: 200
-    Cloth: 150
-    Thread: 100
-    N14Iron: 75
+    Leather: 800
+    Cloth: 600
+    Thread: 400
+    N14Iron: 300
 
 # Tier: T1
 - type: latheRecipe
@@ -23,9 +23,9 @@
   requiresBlueprint: true
   completetime: 5
   materials:
-    Leather: 100
-    Cloth: 75
-    Thread: 50
+    Leather: 400
+    Cloth: 300
+    Thread: 200
 
 # Tier: T1
 - type: latheRecipe
@@ -35,10 +35,10 @@
   requiresBlueprint: true
   completetime: 6
   materials:
-    Leather: 175
-    Cloth: 125
-    Thread: 75
-    N14Iron: 50
+    Leather: 700
+    Cloth: 500
+    Thread: 300
+    N14Iron: 200
 
 # Tier: T2
 - type: latheRecipe
@@ -48,10 +48,10 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Leather: 250
-    Cloth: 175
-    Thread: 125
-    N14Iron: 100
+    Leather: 1000
+    Cloth: 700
+    Thread: 500
+    N14Iron: 400
 
 # Tier: T2
 - type: latheRecipe
@@ -61,11 +61,11 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Leather: 250
-    Cloth: 175
-    Thread: 125
-    N14Iron: 100
-    N14Gold: 25
+    Leather: 1000
+    Cloth: 700
+    Thread: 500
+    N14Iron: 400
+    N14Gold: 100
 
 # Tier: T2
 - type: latheRecipe
@@ -75,11 +75,11 @@
   requiresBlueprint: true
   completetime: 11
   materials:
-    Steel: 150
-    Leather: 275
-    Cloth: 200
-    Thread: 150
-    N14Iron: 100
+    Steel: 600
+    Leather: 1100
+    Cloth: 800
+    Thread: 600
+    N14Iron: 400
 
 # Tier: T2
 - type: latheRecipe
@@ -89,10 +89,10 @@
   requiresBlueprint: true
   completetime: 9
   materials:
-    Leather: 225
-    Cloth: 175
-    Thread: 125
-    N14Iron: 75
+    Leather: 900
+    Cloth: 700
+    Thread: 500
+    N14Iron: 300
 
 # Tier: T3
 - type: latheRecipe
@@ -102,10 +102,10 @@
   requiresBlueprint: true
   completetime: 14
   materials:
-    Steel: 300
-    Leather: 250
-    Cloth: 200
-    Thread: 150
+    Steel: 1200
+    Leather: 1000
+    Cloth: 800
+    Thread: 600
 
 # Tier: T3
 - type: latheRecipe
@@ -115,11 +115,11 @@
   requiresBlueprint: true
   completetime: 18
   materials:
-    Steel: 500
-    Leather: 350
-    Cloth: 300
-    Thread: 200
-    N14Iron: 200
+    Steel: 2000
+    Leather: 1400
+    Cloth: 1200
+    Thread: 800
+    N14Iron: 800
 
 # Tier: T3
 - type: latheRecipe
@@ -129,9 +129,9 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Leather: 300
-    Cloth: 200
-    Thread: 125
+    Leather: 1200
+    Cloth: 800
+    Thread: 500
 
 # Tier: T3
 - type: latheRecipe
@@ -141,10 +141,10 @@
   requiresBlueprint: true
   completetime: 12
   materials:
-    Leather: 275
-    Cloth: 225
-    Thread: 150
-    N14Iron: 100
+    Leather: 1100
+    Cloth: 900
+    Thread: 600
+    N14Iron: 400
 
 # Tier: T3
 - type: latheRecipe
@@ -154,12 +154,12 @@
   requiresBlueprint: true
   completetime: 15
   materials:
-    Steel: 400
-    N14Gold: 50
-    Leather: 300
-    Cloth: 225
-    Thread: 150
-    N14Iron: 150
+    Steel: 1600
+    N14Gold: 200
+    Leather: 1200
+    Cloth: 900
+    Thread: 600
+    N14Iron: 600
 
 # Tier: T3
 - type: latheRecipe
@@ -169,11 +169,11 @@
   requiresBlueprint: true
   completetime: 12
   materials:
-    Leather: 300
-    Steel: 200
-    Cloth: 200
-    Thread: 150
-    N14Iron: 100
+    Leather: 1200
+    Steel: 800
+    Cloth: 800
+    Thread: 600
+    N14Iron: 400
 
 # Tier: T4
 - type: latheRecipe
@@ -183,12 +183,12 @@
   requiresBlueprint: true
   completetime: 25
   materials:
-    Steel: 850
-    N14Iron: 300
-    Leather: 400
-    Cloth: 250
-    Thread: 200
-    N14Gold: 75
+    Steel: 3400
+    N14Iron: 1200
+    Leather: 1600
+    Cloth: 1000
+    Thread: 800
+    N14Gold: 300
 
 # Tier: T4
 - type: latheRecipe
@@ -198,12 +198,12 @@
   requiresBlueprint: true
   completetime: 25
   materials:
-    Steel: 850
-    N14Iron: 300
-    Leather: 400
-    Cloth: 250
-    Thread: 200
-    N14Gold: 75
+    Steel: 3400
+    N14Iron: 1200
+    Leather: 1600
+    Cloth: 1000
+    Thread: 800
+    N14Gold: 300
 
 # Tier: T4
 - type: latheRecipe
@@ -213,12 +213,12 @@
   requiresBlueprint: true
   completetime: 20
   materials:
-    Steel: 600
-    Leather: 400
-    Cloth: 300
-    Thread: 225
-    N14Iron: 250
-    N14Gold: 50
+    Steel: 2400
+    Leather: 1600
+    Cloth: 1200
+    Thread: 900
+    N14Iron: 1000
+    N14Gold: 200
 
 # Tier: T4
 - type: latheRecipe
@@ -228,11 +228,11 @@
   requiresBlueprint: true
   completetime: 25
   materials:
-    Steel: 800
-    Leather: 400
-    N14Iron: 300
-    Cloth: 250
-    Thread: 200
+    Steel: 3200
+    Leather: 1600
+    N14Iron: 1200
+    Cloth: 1000
+    Thread: 800
 
 # Tier: T4
 - type: latheRecipe
@@ -242,11 +242,11 @@
   requiresBlueprint: true
   completetime: 18
   materials:
-    Steel: 600
-    N14Iron: 200
-    Leather: 300
-    Cloth: 200
-    Thread: 150
+    Steel: 2400
+    N14Iron: 800
+    Leather: 1200
+    Cloth: 800
+    Thread: 600
 
 # Tier: T4
 - type: latheRecipe
@@ -256,12 +256,12 @@
   requiresBlueprint: true
   completetime: 20
   materials:
-    Steel: 700
-    N14Iron: 250
-    Leather: 350
-    Cloth: 225
-    Thread: 150
-    N14Gold: 50
+    Steel: 2800
+    N14Iron: 1000
+    Leather: 1400
+    Cloth: 900
+    Thread: 600
+    N14Gold: 200
 
 # Tier: T4
 - type: latheRecipe
@@ -271,7 +271,7 @@
   requiresBlueprint: true
   completetime: 11
   materials:
-    Leather: 275
-    Cloth: 200
-    Thread: 150
-    N14Iron: 75
+    Leather: 1100
+    Cloth: 800
+    Thread: 600
+    N14Iron: 300

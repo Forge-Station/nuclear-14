@@ -10,8 +10,8 @@
   requiresBlueprint: true
   completetime: 4
   materials:
-    Cloth: 75
-    Thread: 50
+    Cloth: 300
+    Thread: 200
 
 # Tier: T2
 - type: latheRecipe
@@ -21,9 +21,9 @@
   requiresBlueprint: true
   completetime: 8
   materials:
-    Steel: 175
-    N14Iron: 75
-    Leather: 50
+    Steel: 700
+    N14Iron: 300
+    Leather: 200
 
 # Tier: T4
 - type: latheRecipe
@@ -33,7 +33,7 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Steel: 300
-    N14Iron: 100
-    Circuitry: 50
-    Cloth: 100
+    Steel: 1200
+    N14Iron: 400
+    Circuitry: 200
+    Cloth: 400

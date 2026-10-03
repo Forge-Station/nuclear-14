@@ -10,7 +10,7 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Steel: 100
-    Glass: 100
-    Circuitry: 100
-    ScrapElectronic: 50
+    Steel: 400
+    Glass: 400
+    Circuitry: 400
+    ScrapElectronic: 200

@@ -5,6 +5,7 @@
   description: A data disk holding faction research points. Convert it at a faction research bench.
   components:
   - type: Sprite
+    scale: 0.7, 0.7
     sprite: Objects/Specific/Research/researchdisk.rsi
     state: icon
   - type: Item
@@ -15,7 +16,8 @@
 - type: entity
   parent: N14FactionResearchDiskBase
   id: N14FactionResearchDisk500
-  suffix: "500"
+  name: диск исследования 500
+  description: На диске фломастером написано "500 очков".
   components:
   - type: FactionResearchValue
     pointsOverride: 500
@@ -23,7 +25,8 @@
 - type: entity
   parent: N14FactionResearchDiskBase
   id: N14FactionResearchDisk1000
-  suffix: "1000"
+  name: диск исследования 1000
+  description: На диске фломастером написано "1000 очков".
   components:
   - type: FactionResearchValue
     pointsOverride: 1000
@@ -31,7 +34,8 @@
 - type: entity
   parent: N14FactionResearchDiskBase
   id: N14FactionResearchDisk2500
-  suffix: "2500"
+  name: диск исследования 2500
+  description: На диске фломастером написано "2500 очков".
   components:
   - type: FactionResearchValue
     pointsOverride: 2500
@@ -39,7 +43,8 @@
 - type: entity
   parent: N14FactionResearchDiskBase
   id: N14FactionResearchDisk5000
-  suffix: "5000"
+  name: диск исследования 5000
+  description: На диске фломастером написано "5000 очков".
   components:
   - type: FactionResearchValue
     pointsOverride: 5000

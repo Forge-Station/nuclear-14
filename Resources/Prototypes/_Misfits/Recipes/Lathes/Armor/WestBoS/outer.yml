@@ -10,10 +10,10 @@
   requiresBlueprint: true
   completetime: 7
   materials:
-    Cloth: 100
-    Thread: 75
-    Steel: 75
-    Leather: 50
+    Cloth: 400
+    Thread: 300
+    Steel: 300
+    Leather: 200
 
 # Tier: T2
 - type: latheRecipe
@@ -23,10 +23,10 @@
   requiresBlueprint: true
   completetime: 12
   materials:
-    Steel: 300
-    Cloth: 200
-    Thread: 150
-    Leather: 125
+    Steel: 1200
+    Cloth: 800
+    Thread: 600
+    Leather: 500
 
 # Tier: T3
 - type: latheRecipe
@@ -36,11 +36,11 @@
   requiresBlueprint: true
   completetime: 28
   materials:
-    Steel: 1200
-    N14Iron: 500
-    Circuitry: 150
-    ScrapElectronic: 100
-    N14Brass: 100
+    Steel: 4800
+    N14Iron: 2000
+    Circuitry: 600
+    ScrapElectronic: 400
+    N14Brass: 400
 
 # Tier: T4
 - type: latheRecipe
@@ -50,11 +50,11 @@
   requiresBlueprint: true
   completetime: 35
   materials:
-    Steel: 1800
-    N14Iron: 600
-    Circuitry: 300
-    ScrapElectronic: 250
-    N14Brass: 125
+    Steel: 7200
+    N14Iron: 2400
+    Circuitry: 1200
+    ScrapElectronic: 1000
+    N14Brass: 500
 
 # Tier: T4
 - type: latheRecipe
@@ -64,11 +64,11 @@
   requiresBlueprint: true
   completetime: 35
   materials:
-    Steel: 1800
-    N14Iron: 600
-    Circuitry: 300
-    ScrapElectronic: 250
-    N14Brass: 125
+    Steel: 7200
+    N14Iron: 2400
+    Circuitry: 1200
+    ScrapElectronic: 1000
+    N14Brass: 500
 
 # Tier: T4
 - type: latheRecipe
@@ -78,9 +78,9 @@
   requiresBlueprint: true
   completetime: 40
   materials:
-    Steel: 2000
-    N14Iron: 700
-    Circuitry: 350
-    ScrapElectronic: 300
-    N14Brass: 150
-    N14Gold: 50
+    Steel: 8000
+    N14Iron: 2800
+    Circuitry: 1400
+    ScrapElectronic: 1200
+    N14Brass: 600
+    N14Gold: 200

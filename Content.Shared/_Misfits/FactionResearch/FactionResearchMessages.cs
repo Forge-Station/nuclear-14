@@ -50,6 +50,8 @@ public sealed class FactionResearchPrintState
     public int Tier;
     public int Cost;
     public bool Available;
+    public bool Learned;
+    public bool Locked;
 }
 
 [Serializable, NetSerializable]

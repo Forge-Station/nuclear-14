@@ -10,6 +10,6 @@
   requiresBlueprint: true
   completetime: 3
   materials:
-    Steel: 50
-    Glass: 50
-    Circuitry: 25
+    Steel: 200
+    Glass: 200
+    Circuitry: 100

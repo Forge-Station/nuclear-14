@@ -10,7 +10,7 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Steel: 250
-    Leather: 150
-    Cloth: 100
-    Thread: 50
+    Steel: 1000
+    Leather: 600
+    Cloth: 400
+    Thread: 200

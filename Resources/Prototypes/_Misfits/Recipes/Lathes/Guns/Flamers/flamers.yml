@@ -12,7 +12,7 @@
   requiresBlueprint: true
   completetime: 14
   materials:
-    Steel: 600
-    N14Iron: 300
-    N14Brass: 100
-    Plastic: 75
+    Steel: 2400
+    N14Iron: 1200
+    N14Brass: 400
+    Plastic: 300

@@ -1,12 +1,12 @@
 - type: entity
   parent: BaseItem
   id: N14RandomSheetBase
-  name: research sheet
-  description: A randomly rolled research sheet. Place it in a workbench storage to unlock a recipe.
+  name: случайная бумага
+  description: Может, мы что-нибудь фигня там есть?
   components:
   - type: Sprite
-    sprite: _Nuclear14/Objects/Misc/crafting_junk.rsi
-    state: board_1
+    sprite: _Forge/Objects/Misc/blueprint.rsi
+    state: blueprint
   - type: Item
     size: Small
   - type: Blueprint
@@ -15,29 +15,187 @@
 - type: randomResearchSheet
   id: N14RandomResearchSheet
   recipes:
+  - N14WeaponLaserPistol
+  - N14WeaponLaserRevolver
+  - N14WeaponLaserRifleCrude
+  - N14WeaponLaserRifleMakeshift
+  - N14WeaponPlasmaRifleCrude
+  - N14WeaponPlasmaPistol
+  - N14WeaponLaserRifle
+  - N14WeaponPlasmaRifle
+  - N14WeaponPlasmaDefender
+  - N14WeaponLaserMagnetoPistol
+  - N14WeaponPlasmaRifleUrban
+  - N14WeaponLaserPistolRecharger
+  - N14WeaponLaserRifleRecharger
+  - N14WeaponLaserRifleAuto
+  - N14WeaponLaserRifleWattz2000
+  - N14WeaponPlasmaRifleAuto
+  - N14WeaponLaserRiflePrototypeAER14
+  - N14WeaponPlasmaMultiplas
+  - N14WeaponLaserRifleWattz3000
+  - N14WeaponPlasmaCaster
+  - N14WeaponLaserGatling
+  - N14WeaponLaserRifleYk42b
+  - N14WeaponGaussRifle
+  - N14WeaponFlamer
+  - JunkCannon
+  - N14InjectionCarbine
+  - N14WeaponRifleM7Spear
+  - N14WeaponRifleM7SpearScope
+  - N14WeaponRevolver12-7x55mmRSH12
+  - N14WeaponRifleGrenade
+  - N14WeaponLauncherGrenade
+  - N14WeaponMinigun
+  - N14WeaponMinigunAvenger
+  - N14WeaponLauncherMissile
+  - N14WeaponLMG
+  - N14WeaponLMGchinese
+  - N14WeaponRifleAk112pn
+  - N14WeaponLMGAutoRifle
+  - N14WeaponHMGcanadian
+  - N14WeaponLMGBren
+  - N14WeaponM60GPMG
+  - N14WeaponPistol10mmPipe
   - N14WeaponPistol9mm
   - N14WeaponPistol10mm
+  - N14WeaponPistol22lr
+  - N14WeaponPistolWebley
+  - N14WeaponPistol9mmChinese
+  - N14WeaponPistol12mm
   - N14WeaponPistol45Colt
-  - N14WeaponSMG9mm
-  - N14WeaponSMG10mm
+  - N14WeaponPistol9mmSpy
+  - N14WeaponDesertEagle44
+  - N14WeaponLaserdotDesertEagle44
+  - N14WeaponRevolver9mm
+  - N14WeaponRevolver10mm
+  - N14WeaponRevolverWebley
+  - N14WeaponRevolver44Tribal
+  - N14WeaponRevolver44Magnun
+  - N14WeaponRevolver44TribalUpgraded
+  - N14WeaponRevolver44MagnumCaptain
+  - N14WeaponRevolver44TribalUpgradedExtra
+  - N14WeaponRevolver45-70Hunter
+  - N14WeaponRevolver45-70WildWhisper
+  - N14WeaponRevolver45-70Handcannon
+  - N14WeaponRevolver45-70RangerSequoia
+  - N14WeaponRevolver45-70HandcannonUpgraded
+  - N14WeaponRifle556Pipe
+  - N14WeaponSniper556VarmintRifle
+  - N14WeaponRifle556Service
+  - N14WeaponRifle556CarbineOld
+  - N14WeaponRifle762SKS
+  - N14WeaponSniper556Tribal
+  - N14WeaponRifle556ServiceScoped
+  - N14WeaponRifle556R91
+  - N14WeaponRifle762Chinese
+  - N14WeaponRifle762M14
+  - N14WeaponRifle556Carbine
+  - N14WeaponRifle762Marksman
+  - N14WeaponRifle762Canadian
+  - N14WeaponSniper556TribalUpgraded
+  - N14WeaponRifleAk112
+  - N14WeaponRifle556Scout
+  - N14WeaponRifle556EM2
+  - N14WeaponRifle762Fal
+  - N14WeaponRifle762MarksmanCanadian
+  - N14WeaponRifle556Butchered
+  - N14WeaponRifleBozarGRA
   - N14WeaponShotgun
   - N14WeaponShotgunDoubleBarrel
-  - N14WeaponRifle556R91
+  - N14WeaponShotgunSawedOff
+  - N14WeaponShotgunShort
+  - N14WeaponShotgunPipe
+  - N14WeaponShotgunCaravan
+  - N14WeaponShotgunLever
+  - N14WeaponShotgunChinese
+  - N14WeaponShotgunAuto
+  - N14WeaponShotgunRiot
+  - N14WeaponBlowback
+  - N14WeaponShotgunCanadian
+  - N14WeaponShotgunBoomstick
+  - N14WeaponShotgunBloodyStick
+  - N14WeaponSMG9mm
+  - N14WeaponSMG10mm
+  - N14WeaponSMG10mmPipe
+  - N14WeaponSMG12mmPipe
+  - N14WeaponSMG45
+  - N14WeaponSMG12mm
+  - N14WeaponSMG10mmSuppressed
+  - N14WeaponSMG10mmChinese
+  - N14WeaponSMGNAil
+  - N14WeaponSMG9mmCanadian
+  - N14WeaponSMG9mminfiltrator
+  - N14WeaponSMG12mmAdvanced
+  - N14WeaponSMG12mmAdvancedCanadian
+  - N14WeaponSMG12mmAdvancedChinese
+  - N14WeaponSniper308PipeRifle
   - N14WeaponSniperHunting
-  - N14WeaponRevolver9mm
-  - N14Machete
+  - N14WeaponSniper44LeverCarbine
+  - N14WeaponSniper308Tribal
+  - N14WeaponSniperEnfield
+  - N14WeaponSniper44LeverShortCarbine
+  - N14WeaponSniper308LeverRifle
+  - N14WeaponSniper308TribalUpgraded
+  - N14WeaponSniper45-70BrushGun
+  - N14WeaponSniper308Canadian
+  - N14WeaponSniper308Ross
+  - N14WeaponRifle762MarksmanChinese
+  - N14WeaponRifle308SniperRifle
+  - N14WeaponRifle308Battle
+  - N14WeaponSniper50AntiMateriel
+  - N14WeaponSniper50NCRRifle
+  - N14WeaponSniper50Pipe
   - N14Hatchet
+  - N14TribalHatchet
+  - N14BaseAxe
+  - N14FireAxe
+  - N14SledgeHammer
+  - N14SuperSledgeHammer
+  - N14TribalBigClub
+  - N14TribalBigClubDecorated
+  - N14NailBoard
+  - N14PoliceBaton
+  - N14TribalClub
+  - N14BrokenPipe
+  - N14TrenchClub
+  - N14Whip
+  - N14ClothingHandsPowerFist
+  - N14ClothingHandsIndusrialPowerFist
+  - N14PilumSpear
+  - N14WastelandThunderspear
+  - N14LegionnaireShield
+  - N14LegionnaireBuckler
+  - N14Gladius
+  - N14WeaponThermospear
+  - N14WeaponKebab
+  - N14BLadeOfTheEast
+  - N14Chainsaw
+  - N14MacheteGladius
+  - N14KukriKnife
+  - N14TribalKnife
   - N14CombatKnife
-  - N14ClothingOuterLeatherArmor
+  - N14Machete
+  - N14TribalSword
+  - N14TribalMachete
+  - N14ChineseSword
+  - N14CeremonialSword
+  - N14ripper
+  - N14WastelandTribalSpear
+  - N14WastelandFlagSpear
+  - N14WastelandPolearm
+  - N14BaseBallBat
+  - N14PoolCue
+  - N14GolfClub
 
-- type: randomResearchSheet
-  id: N14RandomArmorSheet
-  recipes:
-  - N14ClothingOuterNCRVestSnow
-  - N14ClothingOuterNCRVestWoods
-  - N14ClothingOuterNCRVestCoatBlack
-  - N14ClothingOuterRangerVest
-  - N14ClothingOuterRangerCoat
-  - N14ClothingOuterNCRCombatArmor
-  - N14ClothingOuterTribalArmor
-  - N14ClothingOuterLeatherArmor
+# - type: randomResearchSheet
+#   id: N14RandomArmorSheet
+#   recipes:
+#   - N14ClothingOuterNCRVestSnow
+#   - N14ClothingOuterNCRVestWoods
+#   - N14ClothingOuterNCRVestCoatBlack
+#   - N14ClothingOuterRangerVest
+#   - N14ClothingOuterRangerCoat
+#   - N14ClothingOuterNCRCombatArmor
+#   - N14ClothingOuterTribalArmor
+#   - N14ClothingOuterLeatherArmor

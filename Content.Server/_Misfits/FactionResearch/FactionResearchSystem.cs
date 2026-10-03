@@ -169,11 +169,19 @@ public sealed class FactionResearchSystem : EntitySystem
         if (print.Faction != faction.Value)
             return;
 
-        var points = GetPoints(component, faction.Value);
-        if (points < print.Cost)
-            return;
+        var learned = print.RandomSheet == null && component.LearnedPrints.Contains(print.ID);
 
-        component.Points[faction.Value] = points - print.Cost;
+        if (!learned)
+        {
+            if (!IsTierUnlocked(component, print))
+                return;
+
+            var points = GetPoints(component, faction.Value);
+            if (points < print.Cost)
+                return;
+
+            component.Points[faction.Value] = points - print.Cost;
+        }
 
         if (print.RandomSheet is { } sheetConfig)
         {
@@ -187,10 +195,56 @@ public sealed class FactionResearchSystem : EntitySystem
         else if (print.Item is { } item)
         {
             Spawn(item, Transform(uid).Coordinates);
+            _audio.PlayPvs(FaxSound, uid);
+            component.LearnedPrints.Add(print.ID);
         }
 
         Dirty(uid, component);
         UpdateUi(uid, component, args.Actor);
+    }
+
+    private static string GetPrintGroup(FactionResearchPrintPrototype print)
+    {
+        var id = print.Item is { } item ? item.Id : print.ID;
+
+        if (id.Contains("Armor", StringComparison.Ordinal))
+            return "Armor";
+
+        if (id.Contains("Weapons", StringComparison.Ordinal))
+            return "Weapons";
+
+        return id;
+    }
+
+    /// <summary>
+    /// Non-random prints of tier N&gt;1 require the previous tier (N-1) of the same group for the same
+    /// faction to be learned on this bench. Learned prints are always unlocked.
+    /// </summary>
+    private bool IsTierUnlocked(FactionResearchComponent component, FactionResearchPrintPrototype print)
+    {
+        if (print.RandomSheet != null)
+            return true;
+
+        if (component.LearnedPrints.Contains(print.ID))
+            return true;
+
+        if (print.Tier <= 1)
+            return true;
+
+        var group = GetPrintGroup(print);
+        foreach (var learnedId in component.LearnedPrints)
+        {
+            if (!_proto.TryIndex(learnedId, out FactionResearchPrintPrototype? learned))
+                continue;
+
+            if (learned.Faction != print.Faction || learned.Tier != print.Tier - 1)
+                continue;
+
+            if (GetPrintGroup(learned) == group)
+                return true;
+        }
+
+        return false;
     }
 
     private void OnConvert(EntityUid uid, FactionResearchComponent component, FactionResearchConvertMessage args)
@@ -282,6 +336,9 @@ public sealed class FactionResearchSystem : EntitySystem
                 if (print.Faction != faction.Value)
                     continue;
 
+                var learned = print.RandomSheet == null && component.LearnedPrints.Contains(print.ID);
+                var unlocked = IsTierUnlocked(component, print);
+
                 state.Prints.Add(new FactionResearchPrintState
                 {
                     Id = print.ID,
@@ -291,7 +348,9 @@ public sealed class FactionResearchSystem : EntitySystem
                     Category = print.Category is { } category ? Loc.GetString(category) : string.Empty,
                     Tier = print.Tier,
                     Cost = print.Cost,
-                    Available = state.Points >= print.Cost,
+                    Learned = learned,
+                    Locked = !learned && !unlocked,
+                    Available = learned || (unlocked && state.Points >= print.Cost),
                 });
             }
         }

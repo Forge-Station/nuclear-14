@@ -14,9 +14,9 @@
   requiresBlueprint: true
   completetime: 9
   materials:
-    Steel: 150
-    Wood: 300
-    Leather: 50
+    Steel: 600
+    Wood: 1200
+    Leather: 200
 
 
 # Tier: T2
@@ -27,9 +27,9 @@
   requiresBlueprint: true
   completetime: 10
   materials:
-    Steel: 150
-    Wood: 300
-    Cloth: 100
+    Steel: 600
+    Wood: 1200
+    Cloth: 400
 
 
 # Tier: T3
@@ -40,6 +40,6 @@
   requiresBlueprint: true
   completetime: 12
   materials:
-    Steel: 400
-    N14Iron: 150
-    Wood: 400
+    Steel: 1600
+    N14Iron: 600
+    Wood: 1600

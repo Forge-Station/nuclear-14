@@ -10,5 +10,5 @@
   requiresBlueprint: true
   completetime: 7
   materials:
-    Steel: 100
-    Glass: 50
+    Steel: 400
+    Glass: 200

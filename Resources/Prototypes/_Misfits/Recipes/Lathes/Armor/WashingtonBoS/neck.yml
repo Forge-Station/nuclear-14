@@ -10,7 +10,7 @@
   requiresBlueprint: true
   completetime: 5
   materials:
-    Leather: 60
+    Leather: 240
 
 # Tier: T1
 - type: latheRecipe
@@ -20,4 +20,4 @@
   requiresBlueprint: true
   completetime: 4
   materials:
-    Leather: 50
+    Leather: 200

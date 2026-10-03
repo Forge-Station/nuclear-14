@@ -12,8 +12,8 @@
   requiresBlueprint: true
   completetime: 6
   materials:
-    Wood: 300
-    Cloth: 50
+    Wood: 1200
+    Cloth: 200
 
 # Tier: T1
 - type: latheRecipe
@@ -23,7 +23,7 @@
   requiresBlueprint: true
   completetime: 5
   materials:
-    Wood: 250
+    Wood: 1000
 
 # Tier: T1
 - type: latheRecipe
@@ -33,5 +33,5 @@
   requiresBlueprint: true
   completetime: 6
   materials:
-    Steel: 100
-    Wood: 200
+    Steel: 400
+    Wood: 800
