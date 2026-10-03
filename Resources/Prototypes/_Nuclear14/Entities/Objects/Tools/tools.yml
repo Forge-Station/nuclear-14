@@ -55,6 +55,11 @@
   id: N14Screwdriver
   description: Industrial grade torque in a small screwdriving package.
   components:
+  - type: GunConditionRepairTool
+    uses: -1
+    repairFraction: 0.02
+    repairLimit: 0.30
+    repairTime: 5
   - type: Sprite
     sprite: _Nuclear14/Objects/Tools/screwdriver.rsi
     netsync: false
@@ -90,6 +95,13 @@
   id: N14Wrench
   description: 'A common tool for assembly and disassembly. Remember: righty tighty, lefty loosey.'
   components:
+  - type: GunConditionRepairTool
+    uses: -1
+    repairFraction: 0.02
+    repairMinimum: 0.30
+    repairLimit: 0.60
+    repairTime: 5
+    repairQuality: Anchoring
   - type: Sprite
     sprite: _Nuclear14/Objects/Tools/wrench.rsi
     state: icon

@@ -285,6 +285,10 @@
   name: duct tape
   description: A roll of sticky duct tape.
   components:
+  - type: GunConditionRepairTool
+    uses: 1
+    repairFraction: 0.03
+    repairTime: 4
   - type: Sprite
     state: duct_tape
   - type: Tag
@@ -545,6 +549,10 @@
   name: Wonderglue
   description: A bottle of old Wonderglue.
   components:
+  - type: GunConditionRepairTool
+    uses: 1
+    repairFraction: 0.03
+    repairTime: 4
   - type: Sprite
     state: wonderglue
   - type: Tag
