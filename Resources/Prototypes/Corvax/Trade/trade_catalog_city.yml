@@ -318,9 +318,6 @@
   - proto: 40mmGrenadeSmoke
     price: 50
     count: 5
-  - proto: 40mmGrenadeFire
-    price: 100
-    count: 10
   - proto: 40mmGrenadeFrag
     price: 150
     count: 20
@@ -368,7 +365,7 @@
     price: 300
     count: 2
   - proto: N14SuperSledgeHammer
-    price: 500
+    price: 600
     count: 1
 
 - type: storeCategoryStructured
@@ -545,7 +542,7 @@
     price: 100
     count: 5
   - proto: N14SuperStimpak
-    price: 175
+    price: 200
     count: 10
   - proto: N14CateyeCanisterFilled
     count: 5
