@@ -54,24 +54,6 @@
           Bloody: { sprite: Structures/meat_spike.rsi, state: spikebloody }
           BloodyHumanoid: { sprite: _Forge/Structures/meat_spike.rsi, state: spikebloodyhuman }
           # Forge-Change-End
-  - type: Construction
-    graph: MeatSpike
-    node: MeatSpike
   # - type: GuideHelp
     # guides:
     # - Chef
-
-- type: entity
-  id: KitchenSpikeFrame
-  parent: BaseStructure
-  name: meat spike frame
-  description: An unfinished meat spike. Add metal rods, weld it and tighten the bolts with a wrench.
-  components:
-  - type: InteractionOutline
-  - type: Sprite
-    sprite: Structures/meat_spike.rsi
-    state: spike
-  - type: Construction
-    graph: MeatSpike
-    node: frame
-    defaultTarget: MeatSpike
