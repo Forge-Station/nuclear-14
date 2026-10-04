@@ -79,10 +79,10 @@
   - type: Sprite
     sprite: /Textures/_Corvax/Structures/Decoration/flora.rsi #Forge-change
     state: tree_timber
-  - type: Gatherable
-    toolWhitelist:
-      tags:
-        - Saw
+#  - type: Gatherable Forge-change
+#    toolWhitelist:
+#      tags:
+#        - Saw
   - type: OreVein
     oreChance: 1.0
     currentOre: WoodPlank
@@ -106,11 +106,11 @@
             variation: 0.05
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
-      - !type:SpawnEntitiesBehavior
-        spawn:
-          MaterialWoodPlank1:
-            min: 1
-            max: 1
+      # - !type:SpawnEntitiesBehavior Forge-change
+      #   spawn:
+      #     MaterialWoodPlank1:
+      #       min: 1
+      #       max: 1
   - type: Stack
     stackType: N14Timber
     count: 1

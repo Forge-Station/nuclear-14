@@ -2,16 +2,19 @@
   name: инъекционный карабин
   parent: BaseItem
   id: N14InjectionCarbine
-  description: Редкое самодельное оружие, стреляющее шприцами. После попадания цель страдает от пагубных эффектов, вызванных веществами, которые находятся в этих шприцах.
+  description: Cамодельное оружие, стреляющее шприцами. После попадания цель страдает от пагубных эффектов, вызванных веществами, которые находятся в этих шприцах.
   components:
   - type: Sprite
     sprite: Corvax/Objects/Weapons/Guns/InjectionCarbine/injectioncarbine.rsi
     state: base
   - type: Clothing
     sprite: Corvax/Objects/Weapons/Guns/InjectionCarbine/injectioncarbine.rsi
-    slots: [ back, belt, suitstorage ]
+    slots: [ back, suitstorage ]
   - type: Item
     size: Huge
+    shape:
+    - 0,0,3,1
+    - 0,1,0,1
     sprite: Corvax/Objects/Weapons/Guns/InjectionCarbine/injectioncarbine.rsi
   - type: GunRequiresWield
   - type: Wieldable
@@ -58,6 +61,8 @@
   name: инъекционный шприц
   description: Используется в качестве боеприпаса для инъекционного карабина. Не очень преспособлен в качестве обычного шприца.
   components:
+  - type: Item
+    size: Tiny
   - type: Tag
     tags:
     - InjectionSyringe
