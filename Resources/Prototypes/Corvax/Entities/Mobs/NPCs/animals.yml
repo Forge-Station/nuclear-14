@@ -4,6 +4,7 @@
   name: brahdo
   description: "Neigh? That thing has too many legs... Think it bites? Might ride it. Might eat it."
   components:
+  - type: ProximityNPC # Forge-Change: sleep distant brahdo and inherited variants
   - type: Sprite
     drawdepth: Mobs
     layers:
