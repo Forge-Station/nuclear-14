@@ -18,6 +18,7 @@
     access: [["RadioBroadcast"]]
   - type: CommunicationsConsole
     title: comms-console-announcement-title-radio-broadcast
+    delay: 3600
     canShuttle: false
     global: true
   - type: Computer
