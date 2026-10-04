@@ -8,11 +8,13 @@ using Content.Server.Destructible;
 using Content.Server.NPC.Systems;
 using Content.Shared.Access.Components;
 using Content.Shared.Administration;
+using Content.Shared.CCVar; // Forge-Change
 using Content.Shared.Climbing.Components;
 using Content.Shared.Doors.Components;
 using Content.Shared.NPC;
 using Robust.Server.Player;
 using Robust.Shared.Enums;
+using Robust.Shared.Configuration; // Forge-Change
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Physics;
@@ -41,6 +43,7 @@ namespace Content.Server.NPC.Pathfinding
          */
 
         [Dependency] private readonly IAdminManager _adminManager = default!;
+        [Dependency] private readonly IConfigurationManager _configManager = default!; // Forge-Change
         [Dependency] private readonly IGameTiming _timing = default!;
         [Dependency] private readonly IParallelManager _parallel = default!;
         [Dependency] private readonly IPlayerManager _playerManager = default!;
@@ -89,6 +92,7 @@ namespace Content.Server.NPC.Pathfinding
             _xformQuery = GetEntityQuery<TransformComponent>();
 
             _playerManager.PlayerStatusChanged += OnPlayerChange;
+            Subs.CVar(_configManager, CCVars.NPCPathfindingProfile, SetProfileEnabled, true); // Forge-Change
             InitializeGrid();
             SubscribeNetworkEvent<RequestPathfindingDebugMessage>(OnBreadcrumbs);
         }
@@ -109,9 +113,16 @@ namespace Content.Server.NPC.Pathfinding
                 MaxDegreeOfParallelism = _parallel.ParallelProcessCount,
             };
 
+            // Forge-Change-Start: time grid rebuilds and path searches when profiling is enabled.
+            var profiling = _profileEnabled;
+            var gridStart = profiling ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
             UpdateGrid(options);
+            var gridMs = profiling ? System.Diagnostics.Stopwatch.GetElapsedTime(gridStart).TotalMilliseconds : 0;
+            var searchStart = profiling ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
+            // Forge-Change-End
             _stopwatch.Restart();
-            var amount = Math.Min(PathTickLimit, _pathRequests.Count);
+            var queued = _pathRequests.Count; // Forge-Change
+            var amount = Math.Min(PathTickLimit, queued);
             var results = ArrayPool<PathResult>.Shared.Rent(amount);
 
 
@@ -148,6 +159,7 @@ namespace Content.Server.NPC.Pathfinding
             });
 
             var offset = 0;
+            var completed = 0; // Forge-Change
 
             // then, single-threaded cleanup.
             for (var i = 0; i < amount; i++)
@@ -168,6 +180,7 @@ namespace Content.Server.NPC.Pathfinding
                     case PathResult.PartialPath:
                     case PathResult.Path:
                     case PathResult.NoPath:
+                        completed++; // Forge-Change
                         SendDebug(path);
                         // Don't use RemoveSwap because we still want to try and process them in order.
                         _pathRequests.RemoveAt(resultIndex);
@@ -181,6 +194,11 @@ namespace Content.Server.NPC.Pathfinding
             }
 
             ArrayPool<PathResult>.Shared.Return(results);
+
+            // Forge-Change-Start
+            if (profiling)
+                RecordProfile(gridMs, System.Diagnostics.Stopwatch.GetElapsedTime(searchStart).TotalMilliseconds, queued, completed);
+            // Forge-Change-End
         }
 
         /// <summary>

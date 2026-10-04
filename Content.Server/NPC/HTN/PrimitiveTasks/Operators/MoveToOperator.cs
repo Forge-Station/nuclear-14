@@ -120,6 +120,16 @@ public sealed partial class MoveToOperator : HTNOperator, IHtnConditionalShutdow
 
         if (path.Result != PathResult.Path)
         {
+            // Forge-Change: stop retaliation if the player cannot be reached.
+            if (path.Result == PathResult.NoPath && !cancelToken.IsCancellationRequested)
+                ForgetUnreachableAttacker(blackboard);
+            return (false, null);
+        }
+
+        // Forge-Change: an existing route can still be an unreasonable detour around a wall.
+        if (_pathfind.ExceedsPlayerChaseDetour(owner, xform.Coordinates, targetCoordinates, path.Path))
+        {
+            ForgetUnreachableAttacker(blackboard);
             return (false, null);
         }
 
@@ -175,6 +185,10 @@ public sealed partial class MoveToOperator : HTNOperator, IHtnConditionalShutdow
         {
             return HTNOperatorStatus.Finished;
         }
+
+        // Forge-Change: steering can lose a previously valid path.
+        if (steering.Status == SteeringStatus.NoPath)
+            ForgetUnreachableAttacker(blackboard);
 
         return steering.Status switch
         {

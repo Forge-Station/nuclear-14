@@ -339,6 +339,9 @@
   id: N14MobBrahmin
   description: Moo? Wonder if I can eat that.
   components:
+  - type: ProximityNPC # Forge-Change: sleep distant Wendover NPCs
+  - type: NPCRetaliation # Forge-Change: pursue players who damage NPCs from beyond vision range
+    attackMemoryLength: 30 # Forge-Change
   - type: Sprite
     drawdepth: Mobs
     scale: 1.25, 1.25

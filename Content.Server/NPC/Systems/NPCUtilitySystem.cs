@@ -31,7 +31,7 @@ namespace Content.Server.NPC.Systems;
 /// <summary>
 /// Handles utility queries for NPCs.
 /// </summary>
-public sealed class NPCUtilitySystem : EntitySystem
+public sealed partial class NPCUtilitySystem : EntitySystem
 {
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly ContainerSystem _container = default!;
@@ -81,6 +81,16 @@ public sealed class NPCUtilitySystem : EntitySystem
         var weh = _proto.Index<UtilityQueryPrototype>(proto);
         var ents = _entPool.Get();
 
+        // Forge-Change-Start: remembered attackers enter the normal query before its filters.
+        EntityUid? retaliationTarget = null;
+        if ((proto == "NearbyMeleeTargets" || proto == "NearbyGunTargets") &&
+            _retaliation.TryGetPlayerAttacker(blackboard.GetValue<EntityUid>(NPCBlackboard.Owner), out var attacker))
+        {
+            retaliationTarget = attacker;
+            ents.Add(attacker);
+        }
+        // Forge-Change-End
+
         foreach (var query in weh.Query)
         {
             switch (query)
@@ -93,6 +103,16 @@ public sealed class NPCUtilitySystem : EntitySystem
                     break;
             }
         }
+
+        // Forge-Change-Start: prioritize retaliation only after filters and considerations pass.
+        if (retaliationTarget is {} target && ents.Contains(target) &&
+            CanSelectRetaliationTarget(blackboard, target, weh))
+        {
+            blackboard.Remove<EntityUid>(NPCBlackboard.UtilityTarget);
+            _entPool.Return(ents);
+            return new UtilityResult(new Dictionary<EntityUid, float> { [target] = 1f });
+        }
+        // Forge-Change-End
 
         if (ents.Count == 0)
         {
@@ -157,7 +177,8 @@ public sealed class NPCUtilitySystem : EntitySystem
         }
     }
 
-    private float GetScore(NPCBlackboard blackboard, EntityUid targetUid, UtilityConsideration consideration)
+    private float GetScore(NPCBlackboard blackboard, EntityUid targetUid, UtilityConsideration consideration,
+        float? retaliationDistance = null) // Forge-Change
     {
         var owner = blackboard.GetValue<EntityUid>(NPCBlackboard.Owner);
         switch (consideration)
@@ -274,7 +295,8 @@ public sealed class NPCUtilitySystem : EntitySystem
                     return 0f;
                 }
 
-                return Math.Clamp(distance / radius, 0f, 1f);
+                // Forge-Change: a remembered attacker is not penalized for exceeding normal vision.
+                return retaliationDistance.HasValue ? 0f : Math.Clamp(distance / radius, 0f, 1f);
             }
             case TargetAmmoCon:
             {
@@ -300,12 +322,14 @@ public sealed class NPCUtilitySystem : EntitySystem
             case TargetInLOSCon:
             {
                 var radius = blackboard.GetValueOrDefault<float>(blackboard.GetVisionRadiusKey(EntityManager), EntityManager);
+                radius = Math.Max(radius, retaliationDistance ?? radius); // Forge-Change: preserve occlusion checks at extended range.
 
                 return _examine.InRangeUnOccluded(owner, targetUid, radius + 0.5f, null) ? 1f : 0f;
             }
             case TargetInLOSOrCurrentCon:
             {
                 var radius = blackboard.GetValueOrDefault<float>(blackboard.GetVisionRadiusKey(EntityManager), EntityManager);
+                radius = Math.Max(radius, retaliationDistance ?? radius); // Forge-Change: preserve current-target and occlusion rules.
                 const float bufferRange = 0.5f;
 
                 if (blackboard.TryGetValue<EntityUid>("Target", out var currentTarget, EntityManager) &&
