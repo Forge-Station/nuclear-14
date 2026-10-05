@@ -14,7 +14,7 @@
         damage:
           groups:
             Burn: -6
-            Brute: -6           
+            Brute: -6
           types:
             Asphyxiation: 2
             Poison: 0.25
@@ -26,7 +26,7 @@
         messages: [ "generic-reagent-effect-nauseous" ]
         probability: 0.25
 
-- type: reagent 
+- type: reagent
   id: DirtySuperStimpack #used in super stimpacks
   name: reagent-name-dirty-robust-healing-mixture
   group: Medicine
@@ -72,12 +72,12 @@
   color: "#1d3d22"
   metabolisms:
     Medicine:
-      metabolismRate: 0.25 
+      metabolismRate: 0.2
       effects:
       - !type:HealthChange
         damage:
           groups:
-            Toxin: -0.35
+            Toxin: -0.70
       - !type:SatiateHunger
         factor: -2.5
       - !type:AdjustReagent

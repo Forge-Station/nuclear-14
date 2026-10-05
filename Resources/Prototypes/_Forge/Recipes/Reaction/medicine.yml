@@ -325,7 +325,7 @@
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14HealingPoultice
-      
+
 - type: reaction
   id: BerserkerMixtureConversion
   reactants:
@@ -338,6 +338,16 @@
       entity: N14BerserkerPowder
 
 #MARK: Варка других реагентов.
+
+- type: reaction
+  id: SmellingSaltsReaction
+  reactants:
+    TableSalt:
+      amount: 2
+    Vodka:
+      amount: 1
+  products:
+    SmellingSalts: 2
 
 - type: reaction
   id: SmellingSaltsReaction
