@@ -38,13 +38,22 @@
   categories: [ HideSpawnMenu ]
   components:
   - type: IgniteOnCollide
-    fireStacks: 10
+    fireStacks: 8 # Forge-Change
+  # Forge-Add-Start
+  - type: SurfaceFireOnTrigger
+    firePrototype: ForgeSurfaceFire
+    shape: Circle
+    radius: 1
+    duration: 25
+    intensity: 1.25
+    stopAtObstacles: true
+  # Forge-Add-End
   - type: ExplodeOnTrigger
   - type: Explosive
-    explosionType: Default
-    maxIntensity: 8 # max 30 per tile
+    explosionType: FireBomb # Forge-Change
+    maxIntensity: 4 # Forge-Change
     intensitySlope: 6
-    totalIntensity: 15 # 60 total damage to distribute over tiles
+    totalIntensity: 10 # Forge-Change
     maxTileBreak: 0
 
 - type: entity

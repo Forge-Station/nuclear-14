@@ -1,0 +1,81 @@
+# Forge material profiles for entities that participate in the surface-fire loop.
+# Do not apply these automatically based on names, tags, or damage modifier sets.
+
+- type: entity
+  id: ForgeBaseFlammableWoodLight
+  abstract: true
+  components:
+  - type: Flammable
+    fireSpread: true
+    alwaysCombustible: true
+    firestacksOnIgnite: 2
+    firestackFade: -0.12
+    damage:
+      types:
+        Heat: 1.5
+  - type: Appearance
+  - type: FireVisuals
+    sprite: _RMC14/Effects/fire.rsi
+    normalState: red_1
+    alternateState: red_2
+  - type: Reactive
+    groups:
+      Extinguish: [ Touch ]
+  - type: FirePropagation
+    spreadFireStacks: 0.35
+    incomingMultiplier: 1.25
+    ignitionThreshold: 1
+    maximumIncomingStacksPerTick: 0.6
+
+- type: entity
+  id: ForgeBaseFlammableWoodHeavy
+  abstract: true
+  components:
+  - type: Flammable
+    fireSpread: true
+    alwaysCombustible: true
+    firestacksOnIgnite: 2
+    firestackFade: -0.08
+    damage:
+      types:
+        Heat: 1
+  - type: Appearance
+  - type: FireVisuals
+    sprite: _RMC14/Effects/fire.rsi
+    normalState: red_2
+    alternateState: red_3
+  - type: Reactive
+    groups:
+      Extinguish: [ Touch ]
+  - type: FirePropagation
+    spreadFireStacks: 0.25
+    incomingMultiplier: 0.75
+    ignitionThreshold: 1.5
+    maximumIncomingStacksPerTick: 0.5
+
+# The shell can be metal and keep its normal resistances; this profile represents burning contents.
+- type: entity
+  id: ForgeBaseFlammableFuelContainer
+  abstract: true
+  components:
+  - type: Flammable
+    fireSpread: true
+    alwaysCombustible: true
+    firestacksOnIgnite: 2
+    firestackFade: -0.05
+    damage:
+      types:
+        Heat: 3
+  - type: Appearance
+  - type: FireVisuals
+    sprite: _RMC14/Effects/fire.rsi
+    normalState: red_3
+    alternateState: red_4
+  - type: Reactive
+    groups:
+      Extinguish: [ Touch ]
+  - type: FirePropagation
+    spreadFireStacks: 0.5
+    incomingMultiplier: 1.5
+    ignitionThreshold: 0.75
+    maximumIncomingStacksPerTick: 0.75

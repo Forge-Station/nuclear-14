@@ -209,10 +209,21 @@ public sealed class SmokeSystem : EntitySystem
             OnReactionAttempt(entity, ref args.Event);
     }
 
+    // Forge-Change-Start: optional lifecycle controls for persistent surface vapor.
     /// <summary>
     /// Sets up a smoke component for spreading.
+    /// Forge-Change: the optional lifecycle flags let persistent surface vapor reuse smoke chemistry
+    /// without enabling edge spreading, one-shot tile reactions, or timed despawn.
     /// </summary>
-    public void StartSmoke(EntityUid uid, Solution solution, float duration, int spreadAmount, SmokeComponent? component = null)
+    public void StartSmoke(
+        EntityUid uid,
+        Solution solution,
+        float duration,
+        int spreadAmount,
+        SmokeComponent? component = null,
+        bool reactOnTile = true,
+        bool timedDespawn = true,
+        bool activateSpread = true)
     {
         if (!Resolve(uid, ref component))
             return;
@@ -222,7 +233,10 @@ public sealed class SmokeSystem : EntitySystem
         component.TransferRate = solution.Volume / duration;
         TryAddSolution(uid, solution);
         Dirty(uid, component);
-        EnsureComp<ActiveEdgeSpreaderComponent>(uid);
+        if (activateSpread)
+            EnsureComp<ActiveEdgeSpreaderComponent>(uid);
+        else
+            RemComp<ActiveEdgeSpreaderComponent>(uid);
 
         if (TryComp<PhysicsComponent>(uid, out var body) && TryComp<FixturesComponent>(uid, out var fixtures))
         {
@@ -232,12 +246,21 @@ public sealed class SmokeSystem : EntitySystem
             _broadphase.RegenerateContacts(uid, body, fixtures, xform);
         }
 
-        var timer = EnsureComp<TimedDespawnComponent>(uid);
-        timer.Lifetime = duration;
+        if (timedDespawn)
+        {
+            var timer = EnsureComp<TimedDespawnComponent>(uid);
+            timer.Lifetime = duration;
+        }
+        else
+        {
+            RemComp<TimedDespawnComponent>(uid);
+        }
 
         // The tile reaction happens here because it only occurs once.
-        ReactOnTile(uid, component);
+        if (reactOnTile)
+            ReactOnTile(uid, component);
     }
+    // Forge-Change-End
 
     /// <summary>
     /// Does the relevant smoke reactions for an entity.
