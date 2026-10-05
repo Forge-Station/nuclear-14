@@ -350,7 +350,7 @@
     SmellingSalts: 2
 
 - type: reaction
-  id: SmellingSaltsReaction
+  id: SmellingSaltsReactionEthanol
   reactants:
     TableSalt:
       amount: 2

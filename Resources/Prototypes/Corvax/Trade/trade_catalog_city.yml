@@ -362,7 +362,7 @@
   - proto: N14SledgeHammer
     price: 250
   - proto: N14BumperSword
-    price: 300
+    price: 450
     count: 2
   - proto: N14SuperSledgeHammer
     price: 600
@@ -679,8 +679,6 @@
     price: 80
   - proto: N14InjectionCarbine
     count: 2
-    price: 100
-  - proto: MuteToxinChemistryBottle
     price: 100
   - proto: N14ColourlessPoisonChemistryBottle
     price: 300

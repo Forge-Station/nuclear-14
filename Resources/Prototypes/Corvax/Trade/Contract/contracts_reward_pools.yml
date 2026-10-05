@@ -255,7 +255,7 @@
     count: 1
     weight: 1
   - type: Item
-    prototype: N14WeaponLaserRifleAuto
+    prototype: N14WeaponLaserRifle
     count: 1
     weight: 1
 
