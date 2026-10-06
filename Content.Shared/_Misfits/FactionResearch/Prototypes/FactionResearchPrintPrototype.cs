@@ -15,6 +15,14 @@ public sealed partial class FactionResearchPrintPrototype : IPrototype
     [DataField]
     public LocId? Category;
 
+    /// <summary>
+    /// Tier-chain group key. Prints sharing the same faction + group form one progression:
+    /// tier N requires tier N-1 of the same group to be learned. If empty, the group is derived
+    /// from <see cref="Item"/>'s id (Weapons/Armor) for backwards compatibility.
+    /// </summary>
+    [DataField]
+    public string Group = string.Empty;
+
     [DataField(required: true)]
     public ProtoId<DepartmentPrototype> Faction;
 

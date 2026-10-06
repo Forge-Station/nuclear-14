@@ -12,7 +12,7 @@
                   VerticalExpand="True">
         <PanelContainer Margin="4 4 4 0" MinHeight="52" HorizontalExpand="True">
             <BoxContainer Orientation="Horizontal" HorizontalExpand="True" Margin="10 8 10 8" SeparationOverride="8">
-                <Label Name="PointsLabel" StyleClasses="LabelHeading" HorizontalExpand="True" VerticalAlignment="Center"/>
+                <Label Name="PointsLabel" StyleClasses="LabelHeading" HorizontalExpand="True" VerticalAlignment="Center" Align="Center"/>
             </BoxContainer>
         </PanelContainer>
         <PanelContainer Margin="4 4 4 4" VerticalExpand="True" HorizontalExpand="True">

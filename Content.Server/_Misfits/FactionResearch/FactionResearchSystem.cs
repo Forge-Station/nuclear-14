@@ -31,9 +31,7 @@ public sealed class FactionResearchSystem : EntitySystem
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
     [Dependency] private readonly PopupSystem _popup = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly RandomResearchSheetSystem _sheet = default!;
     [Dependency] private readonly IPlayerManager _player = default!;
     private static readonly SoundPathSpecifier FaxSound = new("/Audio/Machines/printer.ogg");
     private readonly Dictionary<EntityUid, EntityUid> _tabsUsers = new();
@@ -185,10 +183,9 @@ public sealed class FactionResearchSystem : EntitySystem
 
         if (print.RandomSheet is { } sheetConfig)
         {
-            var count = _sheet.Count(sheetConfig);
-            if (count > 0)
+            if (_proto.TryIndex(sheetConfig, out RandomResearchSheetPrototype? pool) && pool.Sheet is { } sheet)
             {
-                Spawn(_sheet.GetProto(sheetConfig, _random.Next(count)), Transform(uid).Coordinates);
+                Spawn(sheet, Transform(uid).Coordinates);
                 _audio.PlayPvs(FaxSound, uid);
             }
         }
@@ -205,6 +202,9 @@ public sealed class FactionResearchSystem : EntitySystem
 
     private static string GetPrintGroup(FactionResearchPrintPrototype print)
     {
+        if (!string.IsNullOrEmpty(print.Group))
+            return print.Group;
+
         var id = print.Item is { } item ? item.Id : print.ID;
 
         if (id.Contains("Armor", StringComparison.Ordinal))

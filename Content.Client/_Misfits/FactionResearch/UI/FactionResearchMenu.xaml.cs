@@ -59,7 +59,12 @@ public sealed partial class FactionResearchMenu : FancyWindow
             if (print.Tier != lastTier)
             {
                 lastTier = print.Tier;
-                PrintList.AddChild(new Label { Text = Loc.GetString("faction-research-tier", ("tier", print.Tier)) });
+                PrintList.AddChild(new Label
+                {
+                    Text = Loc.GetString("faction-research-tier", ("tier", print.Tier)),
+                    StyleClasses = { "LabelSubText" },
+                    HorizontalAlignment = Control.HAlignment.Center,
+                });
             }
 
             var row = new BoxContainer

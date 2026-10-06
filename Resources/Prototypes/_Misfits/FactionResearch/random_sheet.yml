@@ -1,8 +1,9 @@
 - type: entity
   parent: BaseItem
   id: N14RandomSheetBase
-  name: случайная бумага
-  description: Может, мы что-нибудь фигня там есть?
+  abstract: true
+  name: случайный чертёж
+  description: Здесь изображён подробный чертёж изготовления оружия.
   components:
   - type: Sprite
     sprite: _Forge/Objects/Misc/blueprint.rsi
@@ -11,9 +12,24 @@
     size: Small
   - type: Blueprint
     recipes: []
+  - type: EmitSoundOnPickup
+    sound: /Audio/SimpleStation14/Items/Handling/paper_pickup.ogg
+  - type: EmitSoundOnDrop
+    sound: /Audio/SimpleStation14/Items/Handling/paper_drop.ogg
+  - type: EmitSoundOnLand
+    sound: /Audio/SimpleStation14/Items/Handling/paper_drop.ogg
+
+- type: entity
+  parent: N14RandomSheetBase
+  id: N14RandomSheetWeapon
+  suffix: weapon
+  components:
+  - type: RandomBlueprint
+    pool: N14RandomResearchSheet
 
 - type: randomResearchSheet
   id: N14RandomResearchSheet
+  sheet: N14RandomSheetWeapon
   recipes:
   - N14WeaponLaserPistol
   - N14WeaponLaserRevolver
@@ -38,7 +54,6 @@
   - N14WeaponLaserGatling
   - N14WeaponLaserRifleYk42b
   - N14WeaponGaussRifle
-  - N14WeaponFlamer
   - JunkCannon
   - N14InjectionCarbine
   - N14WeaponRifleM7Spear
@@ -188,14 +203,14 @@
   - N14PoolCue
   - N14GolfClub
 
-# - type: randomResearchSheet
-#   id: N14RandomArmorSheet
-#   recipes:
-#   - N14ClothingOuterNCRVestSnow
-#   - N14ClothingOuterNCRVestWoods
-#   - N14ClothingOuterNCRVestCoatBlack
-#   - N14ClothingOuterRangerVest
-#   - N14ClothingOuterRangerCoat
-#   - N14ClothingOuterNCRCombatArmor
-#   - N14ClothingOuterTribalArmor
-#   - N14ClothingOuterLeatherArmor
+- type: randomResearchSheet
+  id: N14RandomArmorSheet
+  recipes:
+  - N14ClothingOuterNCRVestSnow
+  - N14ClothingOuterNCRVestWoods
+  - N14ClothingOuterNCRVestCoatBlack
+  - N14ClothingOuterRangerVest
+  - N14ClothingOuterRangerCoat
+  - N14ClothingOuterNCRCombatArmor
+  - N14ClothingOuterTribalArmor
+  - N14ClothingOuterLeatherArmor

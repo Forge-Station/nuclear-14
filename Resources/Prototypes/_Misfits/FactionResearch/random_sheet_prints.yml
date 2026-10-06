@@ -1,11 +1,11 @@
-- type: factionResearchPrint
-  id: N14FactionResearchPrintWeaponSheetNCR
-  name: faction-research-random-sheet
-  category: faction-research-category-random
-  faction: NCR
-  tier: 1
-  cost: 1000
-  randomSheet: N14RandomResearchSheet
+# - type: factionResearchPrint
+#   id: N14FactionResearchPrintWeaponSheetNCR
+#   name: faction-research-random-sheet
+#   category: faction-research-category-random
+#   faction: NCR
+#   tier: 1
+#   cost: 2500
+#   randomSheet: N14RandomResearchSheet
 
 # - type: factionResearchPrint
 #   id: N14FactionResearchPrintArmorSheetNCR
@@ -13,17 +13,17 @@
 #   category: faction-research-category-random
 #   faction: NCR
 #   tier: 1
-#   cost: 1000
+#   cost: 2500
 #   randomSheet: N14RandomArmorSheet
 
-- type: factionResearchPrint
-  id: N14FactionResearchPrintWeaponSheetCaesarLegion
-  name: faction-research-random-sheet
-  category: faction-research-category-random
-  faction: CaesarLegion
-  tier: 1
-  cost: 1000
-  randomSheet: N14RandomResearchSheet
+# - type: factionResearchPrint
+#   id: N14FactionResearchPrintWeaponSheetCaesarLegion
+#   name: faction-research-random-sheet
+#   category: faction-research-category-random
+#   faction: CaesarLegion
+#   tier: 1
+#   cost: 2500
+#   randomSheet: N14RandomResearchSheet
 
 # - type: factionResearchPrint
 #   id: N14FactionResearchPrintArmorSheetCaesarLegion
@@ -31,17 +31,17 @@
 #   category: faction-research-category-random
 #   faction: CaesarLegion
 #   tier: 1
-#   cost: 1000
+#   cost: 2500
 #   randomSheet: N14RandomArmorSheet
 
-- type: factionResearchPrint
-  id: N14FactionResearchPrintWeaponSheetBrotherhoodWashington
-  name: faction-research-random-sheet
-  category: faction-research-category-random
-  faction: BrotherhoodWashington
-  tier: 1
-  cost: 1000
-  randomSheet: N14RandomResearchSheet
+# - type: factionResearchPrint
+#   id: N14FactionResearchPrintWeaponSheetBrotherhoodWashington
+#   name: faction-research-random-sheet
+#   category: faction-research-category-random
+#   faction: BrotherhoodWashington
+#   tier: 1
+#   cost: 2500
+#   randomSheet: N14RandomResearchSheet
 
 # - type: factionResearchPrint
 #   id: N14FactionResearchPrintArmorSheetBrotherhoodWashington
@@ -49,17 +49,17 @@
 #   category: faction-research-category-random
 #   faction: BrotherhoodWashington
 #   tier: 1
-#   cost: 1000
+#   cost: 2500
 #   randomSheet: N14RandomArmorSheet
 
-- type: factionResearchPrint
-  id: N14FactionResearchPrintWeaponSheetBrotherhoodWest
-  name: faction-research-random-sheet
-  category: faction-research-category-random
-  faction: BrotherhoodWest
-  tier: 1
-  cost: 1000
-  randomSheet: N14RandomResearchSheet
+# - type: factionResearchPrint
+#   id: N14FactionResearchPrintWeaponSheetBrotherhoodWest
+#   name: faction-research-random-sheet
+#   category: faction-research-category-random
+#   faction: BrotherhoodWest
+#   tier: 1
+#   cost: 2500
+#   randomSheet: N14RandomResearchSheet
 
 # - type: factionResearchPrint
 #   id: N14FactionResearchPrintArmorSheetBrotherhoodWest
@@ -67,17 +67,17 @@
 #   category: faction-research-category-random
 #   faction: BrotherhoodWest
 #   tier: 1
-#   cost: 1000
+#   cost: 2500
 #   randomSheet: N14RandomArmorSheet
 
-- type: factionResearchPrint
-  id: N14FactionResearchPrintWeaponSheetBrotherhoodMidwest
-  name: faction-research-random-sheet
-  category: faction-research-category-random
-  faction: BrotherhoodMidwest
-  tier: 1
-  cost: 1000
-  randomSheet: N14RandomResearchSheet
+# - type: factionResearchPrint
+#   id: N14FactionResearchPrintWeaponSheetBrotherhoodMidwest
+#   name: faction-research-random-sheet
+#   category: faction-research-category-random
+#   faction: BrotherhoodMidwest
+#   tier: 1
+#   cost: 2500
+#   randomSheet: N14RandomResearchSheet
 
 # - type: factionResearchPrint
 #   id: N14FactionResearchPrintArmorSheetBrotherhoodMidwest
@@ -85,17 +85,17 @@
 #   category: faction-research-category-random
 #   faction: BrotherhoodMidwest
 #   tier: 1
-#   cost: 1000
+#   cost: 2500
 #   randomSheet: N14RandomArmorSheet
 
-- type: factionResearchPrint
-  id: N14FactionResearchPrintWeaponSheetTownsfolk
-  name: faction-research-random-sheet
-  category: faction-research-category-random
-  faction: Townsfolk
-  tier: 1
-  cost: 1000
-  randomSheet: N14RandomResearchSheet
+# - type: factionResearchPrint
+#   id: N14FactionResearchPrintWeaponSheetTownsfolk
+#   name: faction-research-random-sheet
+#   category: faction-research-category-random
+#   faction: Townsfolk
+#   tier: 1
+#   cost: 2500
+#   randomSheet: N14RandomResearchSheet
 
 # - type: factionResearchPrint
 #   id: N14FactionResearchPrintArmorSheetTownsfolk
@@ -103,17 +103,17 @@
 #   category: faction-research-category-random
 #   faction: Townsfolk
 #   tier: 1
-#   cost: 1000
+#   cost: 2500
 #   randomSheet: N14RandomArmorSheet
 
-- type: factionResearchPrint
-  id: N14FactionResearchPrintWeaponSheetVault
-  name: faction-research-random-sheet
-  category: faction-research-category-random
-  faction: Vault
-  tier: 1
-  cost: 1000
-  randomSheet: N14RandomResearchSheet
+# - type: factionResearchPrint
+#   id: N14FactionResearchPrintWeaponSheetVault
+#   name: faction-research-random-sheet
+#   category: faction-research-category-random
+#   faction: Vault
+#   tier: 1
+#   cost: 2500
+#   randomSheet: N14RandomResearchSheet
 
 # - type: factionResearchPrint
 #   id: N14FactionResearchPrintArmorSheetVault
@@ -121,17 +121,17 @@
 #   category: faction-research-category-random
 #   faction: Vault
 #   tier: 1
-#   cost: 1000
+#   cost: 2500
 #   randomSheet: N14RandomArmorSheet
 
-- type: factionResearchPrint
-  id: N14FactionResearchPrintWeaponSheetTribe
-  name: faction-research-random-sheet
-  category: faction-research-category-random
-  faction: Tribe
-  tier: 1
-  cost: 1000
-  randomSheet: N14RandomResearchSheet
+# - type: factionResearchPrint
+#   id: N14FactionResearchPrintWeaponSheetTribe
+#   name: faction-research-random-sheet
+#   category: faction-research-category-random
+#   faction: Tribe
+#   tier: 1
+#   cost: 2500
+#   randomSheet: N14RandomResearchSheet
 
 # - type: factionResearchPrint
 #   id: N14FactionResearchPrintArmorSheetTribe
@@ -139,5 +139,5 @@
 #   category: faction-research-category-random
 #   faction: Tribe
 #   tier: 1
-#   cost: 1000
+#   cost: 2500
 #   randomSheet: N14RandomArmorSheet

@@ -2,6 +2,7 @@
   id: N14PrintNCRWeaponsT1
   faction: NCR
   tier: 1
+  group: Weapons
   cost: 2500
   item: N14BlueprintNCRWeaponsT1
 
@@ -9,6 +10,7 @@
   id: N14PrintNCRWeaponsT2
   faction: NCR
   tier: 2
+  group: Weapons
   cost: 6250
   item: N14BlueprintNCRWeaponsT2
 
@@ -16,6 +18,7 @@
   id: N14PrintNCRWeaponsT3
   faction: NCR
   tier: 3
+  group: Weapons
   cost: 12500
   item: N14BlueprintNCRWeaponsT3
 
@@ -23,6 +26,7 @@
   id: N14PrintNCRWeaponsT4
   faction: NCR
   tier: 4
+  group: Weapons
   cost: 25000
   item: N14BlueprintNCRWeaponsT4
 
@@ -30,6 +34,7 @@
   id: N14PrintNCRArmorT1
   faction: NCR
   tier: 1
+  group: Armor
   cost: 2500
   item: N14BlueprintNCRArmorT1
 
@@ -37,6 +42,7 @@
   id: N14PrintNCRArmorT2
   faction: NCR
   tier: 2
+  group: Armor
   cost: 6250
   item: N14BlueprintNCRArmorT2
 
@@ -44,6 +50,7 @@
   id: N14PrintNCRArmorT3
   faction: NCR
   tier: 3
+  group: Armor
   cost: 12500
   item: N14BlueprintNCRArmorT3
 
@@ -51,6 +58,7 @@
   id: N14PrintNCRArmorT4
   faction: NCR
   tier: 4
+  group: Armor
   cost: 25000
   item: N14BlueprintNCRArmorT4
 
@@ -58,6 +66,7 @@
   id: N14PrintLegionWeaponsT1
   faction: CaesarLegion
   tier: 1
+  group: Weapons
   cost: 2500
   item: N14BlueprintLegionWeaponsT1
 
@@ -65,6 +74,7 @@
   id: N14PrintLegionWeaponsT2
   faction: CaesarLegion
   tier: 2
+  group: Weapons
   cost: 6250
   item: N14BlueprintLegionWeaponsT2
 
@@ -72,6 +82,7 @@
   id: N14PrintLegionWeaponsT3
   faction: CaesarLegion
   tier: 3
+  group: Weapons
   cost: 12500
   item: N14BlueprintLegionWeaponsT3
 
@@ -79,6 +90,7 @@
   id: N14PrintLegionWeaponsT4
   faction: CaesarLegion
   tier: 4
+  group: Weapons
   cost: 25000
   item: N14BlueprintLegionWeaponsT4
 
@@ -86,6 +98,7 @@
   id: N14PrintLegionArmorT1
   faction: CaesarLegion
   tier: 1
+  group: Armor
   cost: 2500
   item: N14BlueprintLegionArmorT1
 
@@ -93,6 +106,7 @@
   id: N14PrintLegionArmorT2
   faction: CaesarLegion
   tier: 2
+  group: Armor
   cost: 6250
   item: N14BlueprintLegionArmorT2
 
@@ -100,6 +114,7 @@
   id: N14PrintLegionArmorT3
   faction: CaesarLegion
   tier: 3
+  group: Armor
   cost: 12500
   item: N14BlueprintLegionArmorT3
 
@@ -107,6 +122,7 @@
   id: N14PrintLegionArmorT4
   faction: CaesarLegion
   tier: 4
+  group: Armor
   cost: 25000
   item: N14BlueprintLegionArmorT4
 
@@ -114,6 +130,7 @@
   id: N14PrintWashingtonBosWeaponsT1
   faction: BrotherhoodWashington
   tier: 1
+  group: Weapons
   cost: 2500
   item: N14BlueprintWashingtonBosWeaponsT1
 
@@ -121,6 +138,7 @@
   id: N14PrintWashingtonBosWeaponsT2
   faction: BrotherhoodWashington
   tier: 2
+  group: Weapons
   cost: 6250
   item: N14BlueprintWashingtonBosWeaponsT2
 
@@ -128,6 +146,7 @@
   id: N14PrintWashingtonBosWeaponsT3
   faction: BrotherhoodWashington
   tier: 3
+  group: Weapons
   cost: 12500
   item: N14BlueprintWashingtonBosWeaponsT3
 
@@ -135,6 +154,7 @@
   id: N14PrintWashingtonBosWeaponsT4
   faction: BrotherhoodWashington
   tier: 4
+  group: Weapons
   cost: 25000
   item: N14BlueprintWashingtonBosWeaponsT4
 
@@ -142,6 +162,7 @@
   id: N14PrintWashingtonBosArmorT1
   faction: BrotherhoodWashington
   tier: 1
+  group: Armor
   cost: 2500
   item: N14BlueprintWashingtonBosArmorT1
 
@@ -149,6 +170,7 @@
   id: N14PrintWashingtonBosArmorT2
   faction: BrotherhoodWashington
   tier: 2
+  group: Armor
   cost: 6250
   item: N14BlueprintWashingtonBosArmorT2
 
@@ -156,6 +178,7 @@
   id: N14PrintWashingtonBosArmorT3
   faction: BrotherhoodWashington
   tier: 3
+  group: Armor
   cost: 12500
   item: N14BlueprintWashingtonBosArmorT3
 
@@ -163,6 +186,7 @@
   id: N14PrintWashingtonBosArmorT4
   faction: BrotherhoodWashington
   tier: 4
+  group: Armor
   cost: 25000
   item: N14BlueprintWashingtonBosArmorT4
 
@@ -170,6 +194,7 @@
   id: N14PrintWestBosWeaponsT1
   faction: BrotherhoodWest
   tier: 1
+  group: Weapons
   cost: 2500
   item: N14BlueprintWestBosWeaponsT1
 
@@ -177,6 +202,7 @@
   id: N14PrintWestBosWeaponsT2
   faction: BrotherhoodWest
   tier: 2
+  group: Weapons
   cost: 6250
   item: N14BlueprintWestBosWeaponsT2
 
@@ -184,6 +210,7 @@
   id: N14PrintWestBosWeaponsT3
   faction: BrotherhoodWest
   tier: 3
+  group: Weapons
   cost: 12500
   item: N14BlueprintWestBosWeaponsT3
 
@@ -191,6 +218,7 @@
   id: N14PrintWestBosWeaponsT4
   faction: BrotherhoodWest
   tier: 4
+  group: Weapons
   cost: 25000
   item: N14BlueprintWestBosWeaponsT4
 
@@ -198,6 +226,7 @@
   id: N14PrintWestBosArmorT1
   faction: BrotherhoodWest
   tier: 1
+  group: Armor
   cost: 2500
   item: N14BlueprintWestBosArmorT1
 
@@ -205,6 +234,7 @@
   id: N14PrintWestBosArmorT2
   faction: BrotherhoodWest
   tier: 2
+  group: Armor
   cost: 6250
   item: N14BlueprintWestBosArmorT2
 
@@ -212,6 +242,7 @@
   id: N14PrintWestBosArmorT3
   faction: BrotherhoodWest
   tier: 3
+  group: Armor
   cost: 12500
   item: N14BlueprintWestBosArmorT3
 
@@ -219,6 +250,7 @@
   id: N14PrintWestBosArmorT4
   faction: BrotherhoodWest
   tier: 4
+  group: Armor
   cost: 25000
   item: N14BlueprintWestBosArmorT4
 
@@ -226,6 +258,7 @@
   id: N14PrintMidWestBosWeaponsT1
   faction: BrotherhoodMidwest
   tier: 1
+  group: Weapons
   cost: 2500
   item: N14BlueprintMidWestBosWeaponsT1
 
@@ -233,6 +266,7 @@
   id: N14PrintMidWestBosWeaponsT2
   faction: BrotherhoodMidwest
   tier: 2
+  group: Weapons
   cost: 6250
   item: N14BlueprintMidWestBosWeaponsT2
 
@@ -240,6 +274,7 @@
   id: N14PrintMidWestBosWeaponsT3
   faction: BrotherhoodMidwest
   tier: 3
+  group: Weapons
   cost: 12500
   item: N14BlueprintMidWestBosWeaponsT3
 
@@ -247,6 +282,7 @@
   id: N14PrintMidWestBosWeaponsT4
   faction: BrotherhoodMidwest
   tier: 4
+  group: Weapons
   cost: 25000
   item: N14BlueprintMidWestBosWeaponsT4
 
@@ -254,6 +290,7 @@
   id: N14PrintMidWestBosArmorT1
   faction: BrotherhoodMidwest
   tier: 1
+  group: Armor
   cost: 2500
   item: N14BlueprintMidWestBosArmorT1
 
@@ -261,6 +298,7 @@
   id: N14PrintMidWestBosArmorT2
   faction: BrotherhoodMidwest
   tier: 2
+  group: Armor
   cost: 6250
   item: N14BlueprintMidWestBosArmorT2
 
@@ -268,6 +306,7 @@
   id: N14PrintMidWestBosArmorT3
   faction: BrotherhoodMidwest
   tier: 3
+  group: Armor
   cost: 12500
   item: N14BlueprintMidWestBosArmorT3
 
@@ -275,6 +314,7 @@
   id: N14PrintMidWestBosArmorT4
   faction: BrotherhoodMidwest
   tier: 4
+  group: Armor
   cost: 25000
   item: N14BlueprintMidWestBosArmorT4
 
@@ -282,6 +322,7 @@
   id: N14PrintTownWeaponsT1
   faction: Townsfolk
   tier: 1
+  group: Weapons
   cost: 2500
   item: N14BlueprintTownWeaponsT1
 
@@ -289,6 +330,7 @@
   id: N14PrintTownWeaponsT2
   faction: Townsfolk
   tier: 2
+  group: Weapons
   cost: 6250
   item: N14BlueprintTownWeaponsT2
 
@@ -296,6 +338,7 @@
   id: N14PrintTownWeaponsT3
   faction: Townsfolk
   tier: 3
+  group: Weapons
   cost: 12500
   item: N14BlueprintTownWeaponsT3
 
@@ -303,6 +346,7 @@
   id: N14PrintTownWeaponsT4
   faction: Townsfolk
   tier: 4
+  group: Weapons
   cost: 25000
   item: N14BlueprintTownWeaponsT4
 
@@ -310,6 +354,7 @@
   id: N14PrintTownArmorT1
   faction: Townsfolk
   tier: 1
+  group: Armor
   cost: 2500
   item: N14BlueprintTownArmorT1
 
@@ -317,6 +362,7 @@
   id: N14PrintTownArmorT2
   faction: Townsfolk
   tier: 2
+  group: Armor
   cost: 6250
   item: N14BlueprintTownArmorT2
 
@@ -324,6 +370,7 @@
   id: N14PrintTownArmorT3
   faction: Townsfolk
   tier: 3
+  group: Armor
   cost: 12500
   item: N14BlueprintTownArmorT3
 
@@ -331,6 +378,7 @@
   id: N14PrintVaultWeaponsT1
   faction: Vault
   tier: 1
+  group: Weapons
   cost: 2500
   item: N14BlueprintVaultWeaponsT1
 
@@ -338,6 +386,7 @@
   id: N14PrintVaultWeaponsT2
   faction: Vault
   tier: 2
+  group: Weapons
   cost: 6250
   item: N14BlueprintVaultWeaponsT2
 
@@ -345,6 +394,7 @@
   id: N14PrintVaultWeaponsT3
   faction: Vault
   tier: 3
+  group: Weapons
   cost: 12500
   item: N14BlueprintVaultWeaponsT3
 
@@ -352,6 +402,7 @@
   id: N14PrintVaultWeaponsT4
   faction: Vault
   tier: 4
+  group: Weapons
   cost: 25000
   item: N14BlueprintVaultWeaponsT4
 
@@ -359,6 +410,7 @@
   id: N14PrintVaultArmorT1
   faction: Vault
   tier: 1
+  group: Armor
   cost: 2500
   item: N14BlueprintVaultArmorT1
 
@@ -366,6 +418,7 @@
   id: N14PrintVaultArmorT2
   faction: Vault
   tier: 2
+  group: Armor
   cost: 6250
   item: N14BlueprintVaultArmorT2
 
@@ -373,6 +426,7 @@
   id: N14PrintVaultArmorT3
   faction: Vault
   tier: 3
+  group: Armor
   cost: 12500
   item: N14BlueprintVaultArmorT3
 
@@ -380,6 +434,7 @@
   id: N14PrintVaultArmorT4
   faction: Vault
   tier: 4
+  group: Armor
   cost: 25000
   item: N14BlueprintVaultArmorT4
 
@@ -387,6 +442,7 @@
   id: N14PrintTribeWeaponsT1
   faction: Tribe
   tier: 1
+  group: Weapons
   cost: 2500
   item: N14BlueprintTribeWeaponsT1
 
@@ -394,6 +450,7 @@
   id: N14PrintTribeWeaponsT2
   faction: Tribe
   tier: 2
+  group: Weapons
   cost: 6250
   item: N14BlueprintTribeWeaponsT2
 
@@ -401,6 +458,7 @@
   id: N14PrintTribeWeaponsT3
   faction: Tribe
   tier: 3
+  group: Weapons
   cost: 12500
   item: N14BlueprintTribeWeaponsT3
 
@@ -408,6 +466,7 @@
   id: N14PrintTribeWeaponsT4
   faction: Tribe
   tier: 4
+  group: Weapons
   cost: 25000
   item: N14BlueprintTribeWeaponsT4
 
@@ -415,6 +474,7 @@
   id: N14PrintTribeArmorT1
   faction: Tribe
   tier: 1
+  group: Armor
   cost: 2500
   item: N14BlueprintTribeArmorT1
 
@@ -422,6 +482,7 @@
   id: N14PrintTribeArmorT2
   faction: Tribe
   tier: 2
+  group: Armor
   cost: 6250
   item: N14BlueprintTribeArmorT2
 
@@ -429,6 +490,7 @@
   id: N14PrintTribeArmorT3
   faction: Tribe
   tier: 3
+  group: Armor
   cost: 12500
   item: N14BlueprintTribeArmorT3
 
@@ -436,6 +498,7 @@
   id: N14PrintTribeArmorT4
   faction: Tribe
   tier: 4
+  group: Armor
   cost: 25000
   item: N14BlueprintTribeArmorT4
 
