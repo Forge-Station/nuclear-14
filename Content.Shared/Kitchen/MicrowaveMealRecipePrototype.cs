@@ -16,6 +16,10 @@ namespace Content.Shared.Kitchen
         [IdDataField]
         public string ID { get; private set; } = default!;
 
+        /// <summary>Category used to organize recipes; older recipes default to Other.</summary>
+        [DataField("group")]
+        public string Group { get; private set; } = "Other";
+
         [DataField("name")]
         private string _name = string.Empty;
 

@@ -1,5 +1,6 @@
 - type: microwaveMealRecipe
   id: N14RecipeMeatRad
+  group: Meat
   name: irradiated meat recipe
   result: N14FoodMeatCooked
   time: 15
@@ -8,6 +9,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSteakBrahmin
+  group: Meat
   name: brahmin steak recipe
   result: N14FoodMeatBrahminCooked
   time: 15
@@ -16,6 +18,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCutletBrahmin
+  group: Meat
   name: brahmin cutlet recipe
   result: N14FoodMeatBrahminCutletCooked
   time: 5
@@ -24,6 +27,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSteakBighorner
+  group: Meat
   name: bighorner steak recipe
   result: N14FoodMeatBighornerCooked
   time: 15
@@ -32,6 +36,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCutletBighorner
+  group: Meat
   name: bighorner cutlet recipe
   result: N14FoodMeatBighornerCutletCooked
   time: 5
@@ -40,6 +45,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSteakRadstag
+  group: Meat
   name: radstag steak recipe
   result: N14FoodMeatRadstagCooked
   time: 15
@@ -48,6 +54,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCutletRadstag
+  group: Meat
   name: radstag cutlet recipe
   result: N14FoodMeatRadstagCutletCooked
   time: 5
@@ -56,6 +63,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSteakGecko
+  group: Meat
   name: gecko steak recipe
   result: N14FoodMeatGeckoCooked
   time: 15
@@ -64,6 +72,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSteakYaoguai
+  group: Meat
   name: yao-guai steak recipe
   result: N14FoodMeatYaoguaiCooked
   time: 15
@@ -72,6 +81,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCutletYaoguai
+  group: Meat
   name: yao-guai cutlet recipe
   result: N14FoodMeatYaoguaiCutletCooked
   time: 5
@@ -80,6 +90,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSteakRadscorpion
+  group: Meat
   name: radscorpion steak recipe
   result: N14FoodMeatRadscorpionCooked
   time: 15
@@ -88,6 +99,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCutletRadscorpion
+  group: Meat
   name: radscorpion cutlet recipe
   result: N14FoodMeatRadscorpionCutletCooked
   time: 5
@@ -96,6 +108,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeRadscorpionLeg
+  group: Meat
   name: boiled radscorpion leg recipe
   result: N14FoodMeatRadscorpionLegBoiled
   time: 20
@@ -106,6 +119,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeClawMirelurk
+  group: Meat
   name: mirelurk claw recipe
   result: N14FoodMeatMirelurkClawCooked
   time: 15
@@ -114,6 +128,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeClawRadlurk
+  group: Meat
   name: radlurk claw recipe
   result: N14FoodMeatRadlurkClawCooked
   time: 15
@@ -122,6 +137,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeRadroachFillet
+  group: Meat
   name: radroach fillet recipe
   result: N14FoodMeatRadroachFilletCooked
   time: 15
@@ -132,6 +148,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBun
+  group: Bread
   name: bun recipe
   result: N14CookedFoodBreadBun
   time: 5
@@ -142,6 +159,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeAppendixBurger
+  group: Burgers
   name: appendix burger recipe
   result: N14CookedFoodBurgerAppendix
   time: 10
@@ -151,6 +169,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBaconBurger
+  group: Burgers
   name: bacon burger recipe
   result: N14CookedFoodBurgerBacon
   time: 10
@@ -162,6 +181,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBearger
+  group: Burgers
   name: bearger recipe
   result: N14CookedFoodBurgerBear
   time: 10
@@ -172,6 +192,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBigBiteBurger
+  group: Burgers
   name: big bite burger recipe
   result: N14CookedFoodBurgerBig
   time: 15
@@ -184,6 +205,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBrainBurger
+  group: Burgers
   name: brain burger recipe
   result: N14CookedFoodBurgerBrain
   time: 10
@@ -193,6 +215,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCheeseburger
+  group: Burgers
   name: cheeseburger recipe
   result: N14CookedFoodBurgerCheese
   time: 10
@@ -203,6 +226,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeChickenSandwich
+  group: Burgers
   name: chicken sandwich recipe
   result: N14CookedFoodBurgerChicken
   time: 10
@@ -214,6 +238,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCrabBurger
+  group: Burgers
   name: crab burger recipe
   result: N14CookedFoodBurgerCrab
   time: 10
@@ -233,6 +258,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeFiveBurger
+  group: Burgers
   name: five alarm burger recipe
   result: N14CookedFoodBurgerFive
   time: 10
@@ -243,6 +269,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBurgerMcguffin
+  group: Burgers
   name: McGuffin recipe
   result: N14CookedFoodBurgerMcguffin
   time: 10
@@ -253,6 +280,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBurgerMcrib
+  group: Burgers
   name: BBQ rib sandwich recipe
   result: N14CookedFoodBurgerMcrib
   time: 10
@@ -263,6 +291,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipePlainBurger
+  group: Burgers
   name: plain burger recipe
   result: N14CookedFoodBurgerPlain
   time: 10
@@ -272,6 +301,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeRatBurger
+  group: Burgers
   name: rat burger recipe
   result: N14CookedFoodBurgerRat
   time: 10
@@ -281,6 +311,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSuperBiteBurger
+  group: Burgers
   name: super bite burger recipe
   result: N14CookedFoodBurgerSuper
   time: 25
@@ -295,6 +326,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTofuBurger
+  group: Burgers
   name: tofu burger recipe
   result: N14CookedFoodBurgerTofu
   time: 10
@@ -306,6 +338,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBananaBread
+  group: Bread
   name: banana bread recipe
   result: N14CookedFoodBreadBanana
   time: 15
@@ -315,6 +348,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCornbread
+  group: Bread
   name: cornbread recipe
   result: N14CookedFoodBreadCorn
   time: 10
@@ -323,6 +357,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCreamCheeseBread
+  group: Bread
   name: cream cheese bread recipe
   result: N14CookedFoodBreadCreamcheese
   time: 15
@@ -334,6 +369,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeMeatBread
+  group: Bread
   name: meat bread recipe
   result: N14CookedFoodBreadMeat
   time: 15
@@ -344,6 +380,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBread
+  group: Bread
   name: bread recipe
   result: N14CookedFoodBreadPlain
   time: 10
@@ -352,6 +389,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeRadroll
+  group: Bread
   name: radroll recipe
   result: N14CookedFoodBreadRadroll
   time: 15
@@ -361,6 +399,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSpiderMeatBread
+  group: Bread
   name: scorpion bread recipe
   result: N14CookedFoodBreadMeatRadscorp
   time: 15
@@ -371,6 +410,7 @@
 
 - type: microwaveMealRecipe
   id: N14TofuBread
+  group: Bread
   name: tofu bread recipe
   result: N14CookedFoodBreadTofu
   time: 15
@@ -393,6 +433,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeButteredToast
+  group: Breakfast
   name: buttered toast recipe
   result: N14CookedFoodBreadButteredToast
   time: 5
@@ -402,6 +443,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeFrenchToast
+  group: Breakfast
   name: french toast recipe
   result: N14CookedFoodBreadFrenchToast
   time: 5
@@ -413,6 +455,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeGarlicBread
+  group: Bread
   name: garlic bread slice recipe
   result: N14CookedFoodBreadGarlicSlice
   time: 5
@@ -423,6 +466,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTwoBreadSlice
+  group: Bread
   name: two slice recipe
   result: N14CookedFoodBreadTwoSlice
   time: 5
@@ -434,6 +478,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeOnionRings
+  group: Snacks
   name: onion rings recipe
   result: N14CookedFoodOnionRings
   time: 15
@@ -445,6 +490,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeMargheritaPizza
+  group: Pizza
   name: margherita pizza recipe
   result: N14CookedFoodPizzaMargherita
   time: 30
@@ -455,6 +501,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeMushroomPizza
+  group: Pizza
   name: mushroom pizza recipe
   result: N14CookedFoodPizzaMushroom
   time: 30
@@ -464,6 +511,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeMeatPizza
+  group: Pizza
   name: meat pizza recipe
   result: N14CookedFoodPizzaMeat
   time: 30
@@ -475,6 +523,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeVegetablePizza
+  group: Pizza
   name: vegetable pizza recipe
   result: N14CookedFoodPizzaVegetable
   time: 30
@@ -488,6 +537,7 @@
 #Italian
 - type: microwaveMealRecipe
   id: N14RecipeBoiledSpaghetti
+  group: Pasta
   name: boiled spaghetti recipe
   result: N14CookedFoodNoodlesBoiled
   time: 15
@@ -499,6 +549,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipePastaTomato
+  group: Pasta
   name: pasta tomato recipe
   result: N14CookedFoodNoodles
   time: 10
@@ -518,6 +569,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeButterNoodles
+  group: Pasta
   name: butter noodles recipe
   result: N14CookedFoodNoodlesButter
   time: 10
@@ -527,6 +579,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeChowMein
+  group: Pasta
   name: chow mein recipe
   result: N14CookedFoodNoodlesChowmein
   time: 10
@@ -539,6 +592,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeOatmeal
+  group: Breakfast
   name: oatmeal recipe
   result: N14CookedFoodOatmeal
   time: 15
@@ -550,6 +604,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBoiledRice
+  group: Rice
   name: boiled rice recipe
   result: N14CookedFoodRiceBoiled
   time: 15
@@ -561,6 +616,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeRicePudding
+  group: Desserts
   name: rice pudding recipe
   result: N14CookedFoodRicePudding
   time: 15
@@ -573,6 +629,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeRiceRoadkill
+  group: Rice
   name: roadkill rice recipe
   result: N14CookedFoodRiceRoadkill
   time: 15
@@ -582,6 +639,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeRiceGumbo
+  group: Rice
   name: black-eyed gumbo recipe
   result: N14CookedFoodRiceGumbo
   time: 15
@@ -592,6 +650,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeEggRice
+  group: Rice
   name: egg-fried rice recipe
   result: N14CookedFoodRiceEgg
   time: 15
@@ -629,6 +688,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeNettleSoup
+  group: Soups
   name: nettle soup recipe
   result: N14CookedFoodSoupNettle
   time: 10
@@ -642,6 +702,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeEyeballSoup
+  group: Soups
   name: eyeball soup recipe
   result: N14CookedFoodSoupEyeball
   time: 10
@@ -655,6 +716,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeOnionSoup
+  group: Soups
   name: onion soup recipe
   result: N14CookedFoodSoupOnion
   time: 10
@@ -667,6 +729,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeMushroomSoup
+  group: Soups
   name: mushroom soup recipe
   result: N14CookedFoodSoupMushroom
   time: 10
@@ -679,6 +742,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeStewSoup
+  group: Soups
   name: stew recipe
   result: N14CookedFoodSoupStew
   time: 10
@@ -693,6 +757,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTatoSoup
+  group: Soups
   name: tato soup recipe
   result: N14CookedFoodSoupTato
   time: 10
@@ -704,6 +769,7 @@
 
 - type: microwaveMealRecipe
   id: N14CookedRecipeBloodtatoSoup
+  group: Soups
   name: bloodtato soup recipe
   result: N14CookedFoodSoupBloodtato
   time: 10
@@ -715,6 +781,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeMutieSoup
+  group: Soups
   name: mutie soup recipe
   result: N14CookedFoodSoupMutie
   time: 10
@@ -726,6 +793,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeVegetableSoup
+  group: Soups
   name: vegetable soup recipe
   result: N14CookedFoodSoupVegetable
   time: 10
@@ -742,6 +810,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeMutfruitPie
+  group: Pies
   name: mutfruit pie recipe
   result: N14CookedFoodPieMutfruit
   time: 15
@@ -752,6 +821,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBaklava
+  group: Pies
   name: baklava recipe
   result: N14CookedFoodPieBaklava
   time: 15
@@ -762,6 +832,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBlackberryPie
+  group: Pies
   name: blackberry pie recipe
   result: N14CookedFoodPieBlackberry
   time: 15
@@ -772,6 +843,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeMeatPie
+  group: Pies
   name: meat pie recipe
   result: N14CookedFoodPieMeat
   time: 15
@@ -784,6 +856,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCocoTart
+  group: Pies
   name: chocolate lava tart recipe
   result: N14CookedFoodTartCoco
   time: 15
@@ -799,6 +872,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCubanCarp
+  group: Seafood
   name: Cuban carp recipe
   result: N14CookedFoodMealCubancarp #this will have to be changed someday
   time: 15
@@ -810,6 +884,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSashimi
+  group: Seafood
   name: sashimi recipe
   result: N14CookedFoodMealSashimi
   time: 15
@@ -820,6 +895,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeLoadedBakedPotato
+  group: Vegetables
   name: loaded baked potato recipe
   result: N14CookedFoodMealPotatoLoaded
   time: 15
@@ -829,6 +905,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeFries
+  group: Snacks
   name: fries recipe
   result: N14CookedFoodMealFries
   time: 15
@@ -839,6 +916,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCheesyFries
+  group: Snacks
   name: cheesy fries recipe
   result: N14CookedFoodMealFriesCheesy
   time: 15
@@ -850,6 +928,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCarrotFries
+  group: Snacks
   name: carrot fries recipe
   result: N14CookedFoodMealFriesCarrot
   time: 15
@@ -860,6 +939,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipePopcorn
+  group: Snacks
   name: popcorn recipe
   result: N14FoodSnackPopcorn
   time: 20
@@ -868,6 +948,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipePancake
+  group: Breakfast
   name: pancake recipe
   result: N14CookedFoodBakedPancake
   time: 5
@@ -878,6 +959,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBlueberryPancake
+  group: Breakfast
   name: tarberry pancake recipe #N14 change
   result: N14CookedFoodBakedPancakeBb
   time: 5
@@ -890,6 +972,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeWaffles
+  group: Breakfast
   name: waffle recipe
   result: N14CookedFoodBakedWaffle
   time: 10
@@ -901,6 +984,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeWaffleSoy
+  group: Breakfast
   name: soy waffle recipe
   result: N14CookedFoodBakedWaffleSoy
   time: 10
@@ -912,6 +996,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCookie
+  group: Cookies
   name: cookie recipe
   result: N14CookedFoodBakedCookie
   time: 5
@@ -924,6 +1009,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSugarCookie
+  group: Cookies
   name: sugar cookie recipe
   result: N14CookedFoodBakedCookieSugar
   time: 5
@@ -935,6 +1021,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeRaisinCookie
+  group: Cookies
   name: raisin cookie recipe
   result: N14CookedFoodBakedCookieRaisin
   time: 5
@@ -946,6 +1033,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCookieOatmeal
+  group: Cookies
   name: oatmeal cookie recipe
   result: N14CookedFoodBakedCookieOatmeal
   time: 5
@@ -957,6 +1045,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeChocolateChipPancake
+  group: Breakfast
   name: chocolate chip pancake recipe
   result: N14CookedFoodBakedPancakeCc
   time: 5
@@ -969,6 +1058,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeMutfruitCake
+  group: Cakes
   name: mutfruit cake recipe
   result: N14CookedFoodCakeMutfruit
   time: 5
@@ -978,6 +1068,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCarrotCake
+  group: Cakes
   name: carrot cake recipe
   result: N14CookedFoodCakeCarrot
   time: 5
@@ -987,6 +1078,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTarberryCake
+  group: Cakes
   name: tarberry cake recipe #N14 change
   result: N14CookedFoodCakeTarberry
   time: 5
@@ -996,6 +1088,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCheeseCake
+  group: Cakes
   name: cheese cake recipe
   result: N14CookedFoodCakeCheese
   time: 5
@@ -1007,6 +1100,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipePumpkinCake
+  group: Cakes
   name: pumpkin cake recipe
   result: N14CookedFoodCakePumpkin
   time: 5
@@ -1016,6 +1110,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCake
+  group: Cakes
   name: cake recipe
   result: N14CookedFoodCakePlain
   time: 15
@@ -1024,6 +1119,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBirthdayCake
+  group: Cakes
   name: birthday cake recipe
   result: N14CookedFoodCakeBirthday
   time: 5
@@ -1034,6 +1130,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeChocolateCake
+  group: Cakes
   name: chocolate cake recipe
   result: N14CookedFoodCakeChocolate
   time: 5
@@ -1043,6 +1140,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBrainCake
+  group: Cakes
   name: brain cake recipe
   result: N14CookedFoodCakeBrain
   time: 15
@@ -1052,6 +1150,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeDumplings
+  group: Dumplings
   name: dumplings recipe
   result: N14CookedFoodBakedDumplings
   time: 15
@@ -1063,6 +1162,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBrownies
+  group: Desserts
   name: brownie recipe
   result: N14CookedFoodBakedBrownieBatch
   time: 25
@@ -1076,6 +1176,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeHotChili
+  group: Soups
   name: hot chili recipe
   result: N14CookedFoodSoupChiliHot
   time: 20
@@ -1088,6 +1189,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeQueso
+  group: Snacks
   name: queso recipe
   result: N14CookedFoodMealQueso
   time: 15
@@ -1099,6 +1201,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeRibs
+  group: Meat
   name: BBQ ribs recipe
   result: N14CookedFoodMealRibs
   time: 15
@@ -1110,6 +1213,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeEnchiladas
+  group: Mexican
   name: enchiladas recipe
   result: N14CookedFoodMealEnchiladas
   time: 20
@@ -1121,6 +1225,7 @@
 # SALADS: These should be moved out of the microwave as soon as possible
 - type: microwaveMealRecipe
   id: N14RecipeHerbSalad
+  group: Salads
   name: herb salad recipe
   result: N14CookedFoodSaladHerb
   time: 5
@@ -1131,6 +1236,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeColeslaw
+  group: Salads
   name: coleslaw recipe
   result: N14CookedFoodSaladColeslaw
   time: 5
@@ -1143,6 +1249,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCaesarSalad
+  group: Salads
   name: caesar salad recipe
   result: N14CookedFoodSaladCaesar
   time: 5
@@ -1157,6 +1264,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeKimchiSalad
+  group: Salads
   name: kimchi salad recipe
   result: N14CookedFoodSaladKimchi
   time: 5
@@ -1170,6 +1278,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeFruitSalad
+  group: Salads
   name: fruit salad recipe
   result: N14CookedFoodSaladFruit
   time: 5
@@ -1182,6 +1291,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeJungleSalad
+  group: Salads
   name: jungle salad recipe
   result: N14CookedFoodSaladJungle
   time: 5
@@ -1260,6 +1370,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeFoodMealSoftTaco
+  group: Mexican
   name: soft taco recipe
   result: N14CookedFoodMealSoftTaco
   time: 10
@@ -1281,6 +1392,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCannabisButter
+  group: Ingredients
   name: cannabis butter recipe
   result: N14FoodCannabisButter
   time: 15
@@ -1290,6 +1402,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCannabisBrownies
+  group: Desserts
   name: cannabis brownie recipe
   result: N14CookedFoodBakedCannabisBrownieBatch
   time: 25
@@ -1303,6 +1416,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCornInButter
+  group: Vegetables
   name: corn in butter recipe
   result: N14CookedFoodMealCornInButter
   time: 10
@@ -1313,6 +1427,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTacoShell
+  group: Ingredients
   name: taco shell recipe
   result: N14CookedFoodTacoShell
   time: 5
@@ -1321,6 +1436,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTacoMeat
+  group: Mexican
   name: meat taco recipe
   result: N14CookedFoodTacoMeat
   time: 10
@@ -1331,6 +1447,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTacoChicken
+  group: Mexican
   name: chicken taco recipe
   result: N14CookedFoodTacoChicken
   time: 10
@@ -1353,6 +1470,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTacoRat
+  group: Mexican
   name: rat taco recipe
   result: N14CookedFoodTacoRat
   time: 10
@@ -1363,6 +1481,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTacoMeatSupreme
+  group: Mexican
   name: meat taco supreme recipe
   result: N14CookedFoodTacoMeatSupreme
   time: 10
@@ -1376,6 +1495,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTacoChickenSupreme
+  group: Mexican
   name: chicken taco supreme recipe #N14 change, I guess someone upstream was sleepy
   result: N14CookedFoodTacoChickenSupreme
   time: 10
