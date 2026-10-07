@@ -17,7 +17,7 @@
   startingGear: BoSWashingtonPaladinGear
   alwaysUseSpawner: true
   icon: "JobIconbosWPaladin"
-  supervisors: job-name-bos-wash
+  supervisors: job-supervisors-bos-wash # Forge-Chang
   access:
   - WashingtonInitiate
   - WashingtonKnight

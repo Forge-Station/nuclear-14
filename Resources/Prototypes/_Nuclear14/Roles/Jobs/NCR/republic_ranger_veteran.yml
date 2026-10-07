@@ -17,7 +17,7 @@
   - !type:CharacterWhitelistRequirement
   startingGear: NCRRangerVeteranGear
   icon: "JobIconNcrVeteranRanger" # Forge-Change
-  supervisors: ent-job-supervisors-ncr # Forge-Change
+  supervisors: job-supervisors-ncr-ranger # Forge-Chang # Forge-Change
   requireAdminNotify: true
   access:
   - RadioBroadcast

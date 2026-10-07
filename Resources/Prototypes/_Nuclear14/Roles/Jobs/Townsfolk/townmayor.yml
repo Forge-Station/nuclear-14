@@ -16,7 +16,7 @@
     min: 36000 # 10 hours
   startingGear: TownMayorGear
   icon: "JobIconTownMayor" # Forge-Change
-  supervisors: job-supervisors-townsfolk
+  supervisors: job-supervisors-town-mayor # Forge-Chang
   alwaysUseSpawner: true # Forge-Change
   access:
   - RadioBroadcast

@@ -17,7 +17,7 @@
   startingGear: BoSWashingtonScribeGear
   alwaysUseSpawner: true
   icon: "JobIconbosWScriptor"
-  supervisors: job-name-bos-wash
+  supervisors: job-supervisors-bos-wash # Forge-Chang
   access:
   - WashingtonInitiate
   - WashingtonScribe
