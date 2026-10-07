@@ -5,11 +5,11 @@
   description: job-description-raider
   playTimeTracker: Raider
   requirements:
+  - !type:CharacterOverallTimeRequirement
+    min: 90000 # 25 hours
   - !type:CharacterWhitelistRequirement
   - !type:MinPlayersRequirement
     min: 40
-  - !type:CharacterOverallTimeRequirement
-    min: 90000 # 25 hours
   startingGear: RaiderGear
   alwaysUseSpawner: true
   icon: "JobIconRaider"

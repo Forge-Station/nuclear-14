@@ -7,17 +7,17 @@
   description: job-description-ncr-mp-investegator
   playTimeTracker: NCRMPinvestigator
   requirements:
-    - !type:CharacterWhitelistRequirement
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement
-      department: NCR
-      min: 108000 # 30 hours
-    - !type:CharacterPlaytimeRequirement
-      tracker: NCROfficer
-      min: 64800 # 18 hours
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: NCR
+    min: 108000 # 30 hours
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCROfficer
+    min: 64800 # 18 hours
+  - !type:CharacterWhitelistRequirement
   startingGear: NCRMPinvestigatorGear
   alwaysUseSpawner: true
   icon: "JobIconNCRMPInvestegator"

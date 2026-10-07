@@ -5,12 +5,12 @@
   description: job-description-bos-west-knight
   playTimeTracker: BoSWestKnight
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-    - !type:CharacterDepartmentTimeRequirement
-      department: BrotherhoodWest
-      min: 18000 # 5 hours
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+  - !type:CharacterDepartmentTimeRequirement
+    department: BrotherhoodWest
+    min: 18000 # 5 hours
   startingGear: BoSWestKnightGear
   alwaysUseSpawner: true
   icon: "JobIconBosMKnight"

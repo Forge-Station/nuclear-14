@@ -7,13 +7,13 @@
   description: job-description-ncr-soldier
   playTimeTracker: NCRSoldier
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement
-      department: NCR
-      min: 10800 # 3 hours Corvax-Change
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: NCR
+    min: 10800 # 3 hours Corvax-Change
   startingGear: NCRSoldierGear
   icon: "JobIconNcrSoldier" # Forge-Change
   supervisors: job-supervisors-ncr

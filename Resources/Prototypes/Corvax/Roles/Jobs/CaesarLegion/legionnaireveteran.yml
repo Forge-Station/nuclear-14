@@ -5,9 +5,6 @@
   description: job-description-caesar-legionnaire-veteran
   playTimeTracker: CaesarLegionLegionnaireVeteran
   requirements:
-  - !type:CharacterDepartmentTimeRequirement
-    department: CaesarLegion
-    min: 36000 # 10 hours
   - !type:CharacterSpeciesRequirement
     species:
     - Human
@@ -15,6 +12,9 @@
     sex: Male
   - !type:CharacterGenderRequirement
     gender: Male
+  - !type:CharacterDepartmentTimeRequirement
+    department: CaesarLegion
+    min: 36000 # 10 hours
   startingGear: CaesarLegionLegionnaireVeteranGear
   alwaysUseSpawner: true
   icon: "JobIconlegionerVeteran"

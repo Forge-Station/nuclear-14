@@ -5,10 +5,6 @@
   description: job-description-caesar-legion-venator
   playTimeTracker: CaesarLegionVenator
   requirements:
-  - !type:CharacterDepartmentTimeRequirement
-     department: CaesarLegion
-     min: 43200 #12 hours тест
-  - !type:CharacterWhitelistRequirement
   - !type:CharacterSpeciesRequirement
     species:
     - Human
@@ -16,6 +12,10 @@
     sex: Male
   - !type:CharacterGenderRequirement
     gender: Male
+  - !type:CharacterDepartmentTimeRequirement
+    department: CaesarLegion
+    min: 43200 #12 hours тест
+  - !type:CharacterWhitelistRequirement
   startingGear: CaesarLegionVenatorGear
   alwaysUseSpawner: true
   icon: "JobIconlegionerVenator"

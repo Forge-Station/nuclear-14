@@ -2,16 +2,16 @@
   id: VaultDweller
   name: job-name-vault-dweller
   description: job-description-vault-dweller
-  requirements:
-  - !type:MinPlayersRequirement
-    min: 20 # Forge-Change
-  - !type:CharacterSpeciesRequirement
-    species:
-    - Human
   setPreference: true
   overrideConsoleVisibility: true
   canBeAntag: false
   playTimeTracker: VaultDweller
+  requirements:
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+  - !type:MinPlayersRequirement
+    min: 20 # Forge-Change
   startingGear: VaultDwellerGear
   alwaysUseSpawner: true
   icon: "JobIconVaulDweller" # Forge-Change

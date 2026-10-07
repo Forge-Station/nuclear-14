@@ -5,15 +5,15 @@
   description: job-description-bos-west-elder-comm
   playTimeTracker: BoSWestElderCommander
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-    - !type:CharacterDepartmentTimeRequirement
-      department: BrotherhoodWest
-      min: 216000 # 60 hours
-    - !type:CharacterPlaytimeRequirement
-      tracker: BoSWestPaladin
-      min: 43200 # 12 hours
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+  - !type:CharacterDepartmentTimeRequirement
+    department: BrotherhoodWest
+    min: 216000 # 60 hours
+  - !type:CharacterPlaytimeRequirement
+    tracker: BoSWestPaladin
+    min: 43200 # 12 hours
   startingGear: BoSWestElderCommanderGear
   alwaysUseSpawner: true
   icon: "JobIconBosMCommander"

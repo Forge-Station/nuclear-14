@@ -5,13 +5,13 @@
   description: job-description-caesar-legion-slave
   playTimeTracker: CaesarLegionSlave
   requirements:
-  - !type:MinPlayersRequirement
-    min: 60
   - !type:CharacterSpeciesRequirement
     species:
     - Human
   - !type:CharacterOverallTimeRequirement
     min: 3600
+  - !type:MinPlayersRequirement
+    min: 60
   startingGear: CaesarLegionSlaveGear
   alwaysUseSpawner: true
   icon: "JobIconLegionSlave"

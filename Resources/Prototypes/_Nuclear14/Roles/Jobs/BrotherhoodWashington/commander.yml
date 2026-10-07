@@ -7,16 +7,16 @@
   description: job-description-bos-washington-commander
   playTimeTracker: BoSWashingtonCommander
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-    - !type:CharacterPlaytimeRequirement # Forge-Add
-      tracker: BoSWashingtonCommander
-      min: 1080000 # (Admin Only Test)
-    - !type:CharacterDepartmentTimeRequirement
-      department: BrotherhoodWashington
-      min: 72000 #20 hours
-    - !type:CharacterWhitelistRequirement # Forge-Add
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+  - !type:CharacterDepartmentTimeRequirement
+    department: BrotherhoodWashington
+    min: 72000 #20 hours
+  - !type:CharacterPlaytimeRequirement # Forge-Add
+    tracker: BoSWashingtonCommander
+    min: 1080000 # (Admin Only Test)
+  - !type:CharacterWhitelistRequirement # Forge-Add
   startingGear: BoSWashingtonCommanderGear
   alwaysUseSpawner: true
   icon: "JobIconbosWCommander"

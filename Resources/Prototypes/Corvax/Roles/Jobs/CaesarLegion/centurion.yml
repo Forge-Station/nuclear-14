@@ -5,12 +5,6 @@
   description: job-description-caesar-legion-centurion
   playTimeTracker: CaesarLegionCenturion
   requirements:
-  - !type:CharacterDepartmentTimeRequirement
-      department: CaesarLegion
-      min: 216000 # 60 hours
-  - !type:CharacterPlaytimeRequirement
-      tracker: CaesarLegionDean
-      min: 43200 # 12 hours
   - !type:CharacterSpeciesRequirement
     species:
     - Human
@@ -18,6 +12,12 @@
     sex: Male
   - !type:CharacterGenderRequirement
     gender: Male
+  - !type:CharacterDepartmentTimeRequirement
+    department: CaesarLegion
+    min: 216000 # 60 hours
+  - !type:CharacterPlaytimeRequirement
+    tracker: CaesarLegionDean
+    min: 43200 # 12 hours
   startingGear: CaesarLegionCenturionGear
   alwaysUseSpawner: true
   icon: "JobIconlegionerCenturion"

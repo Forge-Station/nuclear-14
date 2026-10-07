@@ -4,6 +4,8 @@
   name: job-name-ranger-chief
   description: job-description-ranger-chief
   playTimeTracker: RangerChief
+  requirements:
+  - !type:CharacterWhitelistRequirement
   weight: 20
   startingGear: RangerChiefGear
   icon: "JobIconCaptain"
@@ -17,8 +19,6 @@
       - type: NpcFactionMember
         factions:
           - Rangers
-  requirements:
-    - !type:CharacterWhitelistRequirement
 
 - type: startingGear
   id: RangerChiefGear

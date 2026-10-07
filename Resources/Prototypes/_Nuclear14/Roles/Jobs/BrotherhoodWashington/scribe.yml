@@ -7,13 +7,13 @@
   description: job-description-bos-washington-scribe
   playTimeTracker: BoSWashingtonScribe
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement
-      department: BrotherhoodWashington
-      min: 28800 # Forge-Change (8 hours)
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: BrotherhoodWashington
+    min: 28800 # Forge-Change (8 hours)
   startingGear: BoSWashingtonScribeGear
   alwaysUseSpawner: true
   icon: "JobIconbosWScriptor"

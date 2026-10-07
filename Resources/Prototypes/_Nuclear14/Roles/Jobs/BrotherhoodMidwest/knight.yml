@@ -7,13 +7,13 @@
   description: job-description-bos-mid-knight
   playTimeTracker: BoSMidKnight
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement
-      department: BrotherhoodMidwest
-      min: 18000 # 5 hours
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: BrotherhoodMidwest
+    min: 18000 # 5 hours
   startingGear: BoSMidKnightGear
   alwaysUseSpawner: true
   icon: "JobIconBosMKnight" # Forge-Change

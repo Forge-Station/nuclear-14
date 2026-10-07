@@ -21,3 +21,8 @@ job-supervisors-wastelander = не умереть от радтаракана.
 job-supervisors-townsfolk = подчиняться мэру города.
 job-supervisors-raider = вы верны лишь своему оружию и жажде наживы.
 job-supervisors-followers = помогать нуждающимся и делиться знаниями для возрождения цивилизации.
+
+job-supervisors-bos-wash-initiate = старшие по званию в Вашингтонском Братстве Стали
+job-supervisors-bos-wash-knight = паладины Вашингтонского Братства Стали
+job-supervisors-bos-wash = командир вашего бункера
+job-supervisors-bos-wash-commander = Старейшина и ваш долг

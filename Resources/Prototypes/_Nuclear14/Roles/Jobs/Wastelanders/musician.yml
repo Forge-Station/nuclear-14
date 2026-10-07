@@ -7,8 +7,8 @@
   description: job-description-waste-musician
   playTimeTracker: WastelandMusician
   requirements:
-    - !type:CharacterOverallTimeRequirement
-      min: 999999
+  - !type:CharacterOverallTimeRequirement
+    min: 999999
   startingGear: WastelandMusicianGear
   icon: "JobIconMusician"
   supervisors: job-supervisors-hire

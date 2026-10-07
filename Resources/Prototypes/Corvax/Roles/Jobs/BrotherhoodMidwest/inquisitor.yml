@@ -7,17 +7,17 @@
   description: job-description-bos-mid-inquisitor
   playTimeTracker: BoSMidInquisitor
   requirements:
-    - !type:CharacterWhitelistRequirement
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement
-      department: BrotherhoodMidwest
-      min: 108000 # 30 hours
-    - !type:CharacterPlaytimeRequirement 
-      tracker: BoSMidPaladinCommander
-      min: 64800 # 18 hours
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: BrotherhoodMidwest
+    min: 108000 # 30 hours
+  - !type:CharacterPlaytimeRequirement
+    tracker: BoSMidPaladinCommander
+    min: 64800 # 18 hours
+  - !type:CharacterWhitelistRequirement
   startingGear: BoSMidInquisitorGear
   alwaysUseSpawner: true
   icon: "JobIconBosMPaladin"
@@ -39,7 +39,7 @@
   id: BoSMidInquisitorGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitInquisitorBOS
-    back: N14ClothingBackpackMilitary 
+    back: N14ClothingBackpackMilitary
     shoes: N14ClothingBootsCombatFilled
     head:  N14ClothingHeadHatBoSInquisitorCap
     outerClothing: N14ClothingOuterBOSInquisitorCoat
@@ -47,7 +47,7 @@
     gloves: N14ClothingHandsGlovesCombat
     id: N14IDBrotherhoodHolotagPaladin
     ears: N14ClothingHeadsetBOSMidwest
-  storage: 
+  storage:
     back:
     - N14BoxPlasticFilledMilitary
 

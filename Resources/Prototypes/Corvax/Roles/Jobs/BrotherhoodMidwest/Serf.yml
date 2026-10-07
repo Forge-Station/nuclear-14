@@ -6,14 +6,14 @@
   description: job-description-bos-mid-Serf
   playTimeTracker: BoSMidSerf
   requirements:
-    - !type:MinPlayersRequirement
-      min: 40
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterOverallTimeRequirement
-      min: 3600
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterOverallTimeRequirement
+    min: 3600
+  - !type:MinPlayersRequirement
+    min: 40
   startingGear: BoSMidSerfGear
   alwaysUseSpawner: true
   icon: "JobIconRabMBos"

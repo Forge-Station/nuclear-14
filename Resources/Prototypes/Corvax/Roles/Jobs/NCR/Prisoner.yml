@@ -7,14 +7,14 @@
   description: job-description-ncr-prisoner
   playTimeTracker: NCRPisoner
   requirements:
-    - !type:MinPlayersRequirement
-      min: 55
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterOverallTimeRequirement
-      min: 3600
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterOverallTimeRequirement
+    min: 3600
+  - !type:MinPlayersRequirement
+    min: 55
   startingGear: NCRPisonerGear
   icon: "JobIconNCRPrisoner"
   supervisors: job-supervisors-ncr-prisoners

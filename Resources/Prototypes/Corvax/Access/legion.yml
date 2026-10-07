@@ -24,7 +24,7 @@
 
 - type: accessLevel
   id: CaesarLegion
-  name: id-card-access-level-west
+  name: id-card-access-level-legion
 
 - type: accessGroup
   id: CaesarLegion

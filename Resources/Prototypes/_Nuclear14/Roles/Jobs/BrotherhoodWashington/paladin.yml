@@ -7,13 +7,13 @@
   description: job-description-bos-washington-paladin
   playTimeTracker: BoSWashingtonPaladin
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-    - !type:CharacterDepartmentTimeRequirement
-      department: BrotherhoodWashington
-      min: 32400 # Forge-Change (9 hours)
-    - !type:CharacterWhitelistRequirement # Forge-Add
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+  - !type:CharacterDepartmentTimeRequirement
+    department: BrotherhoodWashington
+    min: 32400 # Forge-Change (9 hours)
+  - !type:CharacterWhitelistRequirement # Forge-Add
   startingGear: BoSWashingtonPaladinGear
   alwaysUseSpawner: true
   icon: "JobIconbosWPaladin"

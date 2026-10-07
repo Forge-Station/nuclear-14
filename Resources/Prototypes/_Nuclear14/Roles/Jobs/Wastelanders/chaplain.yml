@@ -7,13 +7,13 @@
   description: job-description-chaplain
   playTimeTracker: WastelandChaplain
   requirements:
-    - !type:CharacterSpeciesRequirement # Forge-Add
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement # Forge-Add
-      department: Townsfolk
-      min: 7200 # 2 hours
+  - !type:CharacterSpeciesRequirement # Forge-Add
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement # Forge-Add
+    department: Townsfolk
+    min: 7200 # 2 hours
   startingGear: WastelandChaplainGear
   icon: "JobIconWastelandChaplain" # Forge-Change
   supervisors: job-supervisors-townsfolk

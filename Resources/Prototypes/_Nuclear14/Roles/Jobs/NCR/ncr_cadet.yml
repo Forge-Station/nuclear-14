@@ -7,12 +7,12 @@
   description: job-description-ncr-cadet
   playTimeTracker: NCRCadet
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterOverallTimeRequirement
-      min: 3600
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterOverallTimeRequirement
+    min: 3600
   startingGear: NCRCadetGear
   icon: "JobIconNcrCadet" # Forge-Change
   supervisors: job-supervisors-ncr

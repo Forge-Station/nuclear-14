@@ -1,0 +1,12 @@
+id-card-access-level-legion = Легион Цезаря
+id-card-access-level-legion-centurion = Центурион Легиона
+id-card-access-level-legion-dean = Декан Легиона
+id-card-access-level-legion-recruit = Легионер-рекрут
+id-card-access-level-legion-veteran = Легионер-ветеран
+id-card-access-level-legion-warrior = Легионер-воин
+id-card-access-level-legion-venator = Венатор Легиона
+id-card-access-level-west = Западное Братство Стали
+id-card-access-level-west-elder-commander = Старейшина ЗБС
+id-card-access-level-west-paladin = Паладин ЗБС
+id-card-access-level-west-knight = Рыцарь ЗБС
+id-card-access-level-west-scribe = Скриптер ЗБС

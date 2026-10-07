@@ -4,6 +4,8 @@
   name: job-name-ranger-ranking
   description: job-description-ranger-ranking
   playTimeTracker: Ranger
+  requirements:
+  - !type:CharacterWhitelistRequirement
   startingGear: RangerGear
   icon: "JobIconSecurityOfficer"
   supervisors: job-supervisors-ranger-veteran
@@ -18,8 +20,6 @@
       - type: NpcFactionMember
         factions:
           - Rangers
-  requirements:
-    - !type:CharacterWhitelistRequirement
 
 - type: startingGear
   id: RangerGear
