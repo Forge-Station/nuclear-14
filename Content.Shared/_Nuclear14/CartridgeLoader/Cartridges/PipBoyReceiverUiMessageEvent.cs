@@ -1,3 +1,4 @@
+/// Forge-Change-Start
 using Content.Shared.CartridgeLoader;
 using Content.Shared.Radio;
 using Robust.Shared.Prototypes;
@@ -13,3 +14,4 @@ public sealed class PipBoyReceiverUiMessageEvent(
     public readonly ProtoId<RadioChannelPrototype>? Channel = channel;
     public readonly bool? Enabled = enabled;
 }
+/// Forge-Change-End

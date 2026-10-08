@@ -1,3 +1,4 @@
+/// Forge-Change-Start
 using System.Linq;
 using System.Numerics;
 using Robust.Client.Graphics;
@@ -159,3 +160,4 @@ public sealed partial class PdaMenu
             control.OnChildAdded += ApplyPipBoyControlStyle;
     }
 }
+/// Forge-Change-End

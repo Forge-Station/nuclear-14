@@ -1,3 +1,4 @@
+/// Forge-Change-Start
 using Content.Shared.Radio;
 using Robust.Shared.Prototypes;
 
@@ -9,3 +10,4 @@ public sealed partial class PipBoyReceiverCartridgeComponent : Component
     [DataField(required: true)]
     public List<ProtoId<RadioChannelPrototype>> Channels = new();
 }
+/// Forge-Change-End

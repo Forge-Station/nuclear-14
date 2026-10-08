@@ -1,8 +1,12 @@
 - type: entity
   parent: BaseItem
   id: N14PipBoyRadioCartridge
+  # Forge-Change-Del name: Pip-Boy radio
+  # Forge-Change-Del description: A built-in radio program for the Pip-Boy.
+  # Forge-Change-Start
   name: Pip-Boy player
   description: A built-in music player for the Pip-Boy.
+  # Forge-Change-End
   components:
   - type: Sprite
     sprite: Objects/Devices/cartridge.rsi
@@ -12,8 +16,12 @@
   - type: Cartridge
     programName: pipboy-radio-program-name
     icon:
+      # Forge-Change-Del sprite: _Nuclear14/Structures/Misc/radiostation/tableradio.rsi
+      # Forge-Change-Del state: base
+      # Forge-Change-Start
       sprite: _Nuclear14/Interface/pipboy_programs.rsi
       state: player
+      # Forge-Change-End
   - type: PipBoyRadioCartridge
     songs:
       - LonesomeValley
@@ -27,6 +35,7 @@
       - StraightenUpAndFlyRight
       - IntoEachLifeSomeRainMustFall
       - GrandmaPlaysTheNumbers
+      # Forge-Change-Start
       - AKissToBuildADreamOn
       - AintThatAKickInTheHead
       - AmericanSwing
@@ -84,3 +93,4 @@
       - JukeShiba
       - SpaceAsshowl
       - AmieSuperpos
+      # Forge-Change-End

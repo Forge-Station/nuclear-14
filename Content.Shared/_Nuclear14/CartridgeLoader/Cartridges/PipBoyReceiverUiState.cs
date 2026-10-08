@@ -1,3 +1,4 @@
+/// Forge-Change-Start
 using Content.Shared.Radio;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
@@ -14,3 +15,4 @@ public sealed class PipBoyReceiverUiState(
     public readonly string SelectedChannel = selectedChannel;
     public readonly bool Enabled = enabled;
 }
+/// Forge-Change-End

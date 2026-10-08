@@ -198,6 +198,7 @@ public sealed class RadioDeviceSystem : EntitySystem
     }
     #endregion
 
+    /// Forge-Change-Start
     /// <summary>
     /// Tunes a receiver's channel and frequency together, dropping the previous channel.
     /// </summary>
@@ -221,6 +222,7 @@ public sealed class RadioDeviceSystem : EntitySystem
         }
     }
 
+    /// Forge-Change-End
     private void OnExamine(EntityUid uid, RadioMicrophoneComponent component, ExaminedEvent args)
     {
         if (!args.IsInDetailsRange)

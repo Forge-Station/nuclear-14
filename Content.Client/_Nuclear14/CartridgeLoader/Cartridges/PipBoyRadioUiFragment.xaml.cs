@@ -15,6 +15,7 @@ public sealed partial class PipBoyRadioUiFragment : BoxContainer
     public event Action? OnStop;
     public event Action? OnPrevious;
     public event Action? OnNext;
+    /// Forge-Change
     public event Action<float>? OnVolumeChanged;
 
     private readonly Dictionary<string, string> _songs = new();
@@ -42,12 +43,14 @@ public sealed partial class PipBoyRadioUiFragment : BoxContainer
         PauseButton.OnPressed += _ =>
             OnPause?.Invoke();
 
+        /// Forge-Change-Start
         VolumeSlider.OnValueChanged += args =>
         {
             UpdateVolumeLabel(args.Value);
             OnVolumeChanged?.Invoke(args.Value / 100f);
         };
 
+        /// Forge-Change-End
         StopButton.OnPressed += _ =>
             OnStop?.Invoke();
     }
@@ -56,11 +59,13 @@ public sealed partial class PipBoyRadioUiFragment : BoxContainer
         IPrototypeManager prototypeManager)
     {
         _prototypeManager = prototypeManager;
+    /// Forge-Change-Start
     }
 
     private void UpdateVolumeLabel(float percent)
     {
         VolumeLabel.Text = Loc.GetString("pipboy-radio-volume", ("volume", (int) MathF.Round(percent)));
+    /// Forge-Change-End
     }
 
     private void LoadSongs(
@@ -104,15 +109,20 @@ public sealed partial class PipBoyRadioUiFragment : BoxContainer
         IReadOnlyList<ProtoId<JukeboxPrototype>> songIds,
         string? selectedSong,
         bool playing,
+        /// Forge-Change-Del bool paused)
+        /// Forge-Change-Start
         bool paused,
         float volume)
+        /// Forge-Change-End
     {
+        /// Forge-Change-Start
         if (!VolumeSlider.Grabbed)
         {
             VolumeSlider.SetValueWithoutEvent(volume * 100f);
             UpdateVolumeLabel(VolumeSlider.Value);
         }
 
+        /// Forge-Change-End
         if (_songButtons.Count == 0)
             LoadSongs(songIds);
         foreach (var (id, button) in _songButtons)

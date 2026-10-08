@@ -1,3 +1,4 @@
+/// Forge-Change-Start
 using Content.Server.CartridgeLoader;
 using Content.Server.Radio.Components;
 using Content.Server.Radio.EntitySystems;
@@ -51,3 +52,4 @@ public sealed class PipBoyReceiverCartridgeSystem : EntitySystem
             new PipBoyReceiverUiState(component.Channels, microphone.BroadcastChannel, speaker.Enabled));
     }
 }
+/// Forge-Change-End

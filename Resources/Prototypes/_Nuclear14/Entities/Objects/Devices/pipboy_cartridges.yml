@@ -1,8 +1,9 @@
+# Forge-Change-Start
 - type: entity
   parent: NanoChatCartridge
   id: N14PipBoyNanoChatCartridge
   components:
-  - type: Cartridge
+  - type: Cartridge # Forge-Change-Comp
     programName: pipboy-vaultchat-program-name
     icon:
       sprite: _Nuclear14/Interface/pipboy_programs.rsi
@@ -12,7 +13,8 @@
   parent: NotekeeperCartridge
   id: N14PipBoyNotekeeperCartridge
   components:
-  - type: Cartridge
+  - type: Cartridge # Forge-Change-Comp
     icon:
       sprite: _Nuclear14/Interface/pipboy_programs.rsi
       state: notes
+# Forge-Change-End

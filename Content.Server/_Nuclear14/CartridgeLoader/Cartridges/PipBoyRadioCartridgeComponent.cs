@@ -1,4 +1,5 @@
 using Content.Shared.Audio.Jukebox;
+/// Forge-Change-Del using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 
 namespace Content.Server._Nuclear14.CartridgeLoader.Cartridges;
@@ -12,9 +13,11 @@ public sealed partial class PipBoyRadioCartridgeComponent : Component
     [DataField]
     public ProtoId<JukeboxPrototype>? SelectedSongId;
 
+    /// Forge-Change-Start
     [DataField]
     public float Volume = 1f;
 
+    /// Forge-Change-End
     [ViewVariables]
     public EntityUid? AudioStream;
 

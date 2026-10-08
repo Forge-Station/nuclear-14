@@ -1,3 +1,4 @@
+/// Forge-Change-Start
 using Content.Client.UserInterface.Fragments;
 using Content.Shared._Nuclear14.CartridgeLoader.Cartridges;
 using Content.Shared.CartridgeLoader;
@@ -74,3 +75,4 @@ public sealed partial class PipBoyReceiverUi : UIFragment
         _userInterface.SendMessage(new CartridgeUiMessage(message));
     }
 }
+/// Forge-Change-End

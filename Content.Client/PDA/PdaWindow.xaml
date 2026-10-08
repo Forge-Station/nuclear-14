@@ -1,4 +1,5 @@
-﻿<pda:PdaWindow  xmlns="https://spacestation14.io"
+﻿<!-- Forge-Change-Start -->
+<pda:PdaWindow  xmlns="https://spacestation14.io"
                 xmlns:pda="clr-namespace:Content.Client.PDA"
                 MouseFilter="Stop">
     <PanelContainer Name="Background" Access="Public" StyleClasses="PdaBackgroundRect" />
@@ -30,3 +31,8 @@
         </BoxContainer>
     </BoxContainer>
 </pda:PdaWindow>
+<!-- Forge-Change-End -->
+
+<!-- Forge-Change-Del: исходные строки до изменений
+            <Label Text="{Loc 'comp-pda-ui-footer'}" StyleClasses="PdaWindowFooterText" Margin="32 0 0 6"/>
+-->
