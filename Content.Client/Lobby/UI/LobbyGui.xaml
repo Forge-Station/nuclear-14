@@ -22,8 +22,14 @@
                 <BoxContainer Name="LeftSide" Orientation="Vertical" SeparationOverride="4" HorizontalExpand="True">
                     <Control Name="DefaultState" VerticalExpand="True">
                         <BoxContainer Name="TopLeft" Orientation="Vertical">
+                            <!-- Forge-Change-Del
                             <PanelContainer StyleClasses="NewVegasPanel" Name="LeftSideTop" HorizontalAlignment="Left">
+                            -->
+                            <!-- Forge-Change -->
+                            <PanelContainer StyleClasses="LobbyThemePanel" Name="LeftSideTop" HorizontalAlignment="Left">
                                 <BoxContainer Orientation="Vertical" SeparationOverride="6">
+                                    <!-- Forge-Change -->
+                                    <Button Name="ThemeButton" HorizontalAlignment="Left" />
                                     <BoxContainer Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 3" SeparationOverride="6">
                                         <info:LinkBanner Name="LinkBanner" />
                                         <Button Name="WikiButton" Text="{Loc 'ui-lobby-wiki-button'}" />
@@ -50,10 +56,18 @@
                         <!-- Left Bot Panel -->
                         <BoxContainer Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" SeparationOverride="4">
                             <info:DevInfoBanner Name="DevInfoBanner" VerticalExpand="false" Margin="3 3 3 3" />
+                            <!-- Forge-Change-Del
                             <PanelContainer StyleClasses="NewVegasPanel">
+                            -->
+                            <!-- Forge-Change -->
+                            <PanelContainer StyleClasses="LobbyThemePanel">
                                 <RichTextLabel Name="LobbySong" Access="Public" HorizontalAlignment="Center" />
                             </PanelContainer>
+                            <!-- Forge-Change-Del
                             <PanelContainer StyleClasses="NewVegasPanel">
+                            -->
+                            <!-- Forge-Change -->
+                            <PanelContainer StyleClasses="LobbyThemePanel">
                                 <RichTextLabel Name="LobbyBackground" Access="Public" HorizontalAlignment="Center" />
                             </PanelContainer>
                         </BoxContainer>
@@ -63,8 +77,14 @@
                     <Control Access="Public" Visible="False" Name="CharacterSetupState" VerticalExpand="True" />
                 </BoxContainer>
                 <!-- Right Panel -->
+                <!-- Forge-Change-Del
                 <PanelContainer Name="RightSide" StyleClasses="NewVegasPanel" HorizontalAlignment="Right" VerticalExpand="True"
                                 VerticalAlignment="Stretch">
+                -->
+                <!-- Forge-Change-Start -->
+                <PanelContainer Name="RightSide" StyleClasses="LobbyThemePanel" HorizontalAlignment="Right" VerticalExpand="True"
+                                VerticalAlignment="Stretch">
+                <!-- Forge-Change-End -->
                     <BoxContainer Orientation="Vertical" HorizontalExpand="True">
                         <!-- Top row -->
                         <BoxContainer Orientation="Horizontal" MinSize="0 40" Name="HeaderContainer" Access="Public"

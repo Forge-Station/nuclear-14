@@ -8,6 +8,12 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Prototypes;
+/// Forge-Change-Start
+using Content.Client.Resources;
+using Content.Shared.CCVar;
+using Robust.Client.Graphics;
+using Robust.Shared.Configuration;
+/// Forge-Change-End
 
 namespace Content.Client.Lobby.UI
 {
@@ -22,6 +28,8 @@ namespace Content.Client.Lobby.UI
         private readonly IPrototypeManager _protomanager;
 
         private readonly Button _createNewCharacterButton;
+        /// Forge-Change
+        private readonly StyleBoxTexture _classicBackground;
 
         public event Action<int>? SelectCharacter;
         public event Action<int>? DeleteCharacter;
@@ -38,9 +46,21 @@ namespace Content.Client.Lobby.UI
             _entManager = entManager;
             _protomanager = protoManager;
 
+            /// Forge-Change-Start
+            _classicBackground = new StyleBoxTexture
+            {
+                Texture = resourceCache.GetTexture("/Textures/Interface/Nano/button.svg.96dpi.png"),
+                Modulate = new Color(37, 37, 42),
+            };
+            _classicBackground.SetPatchMargin(StyleBox.Margin.All, 10);
+
+            /// Forge-Change-End
             // A local stylesheet also covers tabs and character controls created after opening the editor.
-            Stylesheet = StyleNewVegas.CharacterSetupStylesheet(
-                UserInterfaceManager.Stylesheet!);
+            /// Forge-Change-Del
+            // Stylesheet = StyleNewVegas.CharacterSetupStylesheet(
+            // UserInterfaceManager.Stylesheet!);
+            /// Forge-Change
+            ApplyTheme();
 
             _createNewCharacterButton = new Button
             {
@@ -58,6 +78,20 @@ namespace Content.Client.Lobby.UI
             RulesButton.OnPressed += _ => new RulesAndInfoWindow().Open();
 
             StatsButton.OnPressed += _ => new PlaytimeStatsWindow().OpenCentered();
+        /// Forge-Change-Start
+        }
+
+        public void ApplyTheme()
+        {
+            var enabled = IoCManager.Resolve<IConfigurationManager>().GetCVar(CCVars.LobbyNewVegasTheme);
+            Stylesheet = enabled
+                ? StyleNewVegas.CharacterSetupStylesheet(UserInterfaceManager.Stylesheet!)
+                : null;
+            BackgroundPanel.PanelOverride = enabled ? null : _classicBackground;
+            var color = enabled ? StyleNewVegas.Amber : StyleNano.NanoGold;
+            ((StyleBoxFlat) HeaderDivider.PanelOverride!).BackgroundColor = color;
+            ((StyleBoxFlat) SidebarDivider.PanelOverride!).BackgroundColor = color;
+        /// Forge-Change-End
         }
 
         /// <summary>

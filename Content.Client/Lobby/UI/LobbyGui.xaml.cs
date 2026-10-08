@@ -9,6 +9,10 @@ using Robust.Client.State;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.XAML;
 using Robust.Client.UserInterface.Controls;
+/// Forge-Change-Start
+using Content.Shared.CCVar;
+using Robust.Shared.Configuration;
+/// Forge-Change-End
 
 namespace Content.Client.Lobby.UI
 {
@@ -17,15 +21,30 @@ namespace Content.Client.Lobby.UI
     {
         [Dependency] private readonly IClientConsoleHost _consoleHost = default!;
 
+        /// Forge-Change-Start
+        [Dependency] private readonly IConfigurationManager _configuration = default!;
+
+        /// Forge-Change-End
         private SponsorWindow? _sponsorWindow; // Forge-Change
 
         public LobbyGui()
         {
             RobustXamlLoader.Load(this);
             IoCManager.InjectDependencies(this);
-            ApplyLobbyStyle(DefaultState);
-            ApplyLobbyStyle(RightSide);
-            Chat.ChatWindowPanel.AddStyleClass("NewVegasPanel");
+            /// Forge-Change-Del
+            // ApplyLobbyStyle(DefaultState);
+            // ApplyLobbyStyle(RightSide);
+            // Chat.ChatWindowPanel.AddStyleClass("NewVegasPanel");
+            /// Forge-Change-Start
+            ApplyTheme();
+            ThemeButton.OnPressed += _ =>
+            {
+                _configuration.SetCVar(CCVars.LobbyNewVegasTheme,
+                    !_configuration.GetCVar(CCVars.LobbyNewVegasTheme));
+                _configuration.SaveToFile();
+                ApplyTheme();
+            };
+            /// Forge-Change-End
             SetAnchorPreset(MainContainer, LayoutPreset.Wide);
             SetAnchorPreset(Background, LayoutPreset.Wide);
 
@@ -41,30 +60,79 @@ namespace Content.Client.Lobby.UI
             SponsorButton.OnPressed += _ => OpenSponsorWindow(); // Forge-Change
         }
 
-        private static void ApplyLobbyStyle(Control control)
+        /// Forge-Change-Del
+        // private static void ApplyLobbyStyle(Control control)
+        /// Forge-Change-Start
+        private void ApplyTheme()
+        {
+            var enabled = _configuration.GetCVar(CCVars.LobbyNewVegasTheme);
+            ApplyLobbyStyle(DefaultState, enabled);
+            ApplyLobbyStyle(RightSide, enabled);
+            SetThemeClass(Chat.ChatWindowPanel, "NewVegasPanel", enabled);
+            StartTime.FontColorOverride = enabled ? StyleNewVegas.Amber : Color.DarkGray;
+            ThemeButton.Text = Loc.GetString(enabled
+                ? "ui-lobby-theme-new-vegas"
+                : "ui-lobby-theme-classic");
+        }
+
+        private static void SetThemeClass(Control control, string styleClass, bool enabled)
+        {
+            if (enabled)
+                control.AddStyleClass(styleClass);
+            else
+                control.RemoveStyleClass(styleClass);
+        }
+
+        private static void ApplyLobbyStyle(Control control, bool enabled)
+        /// Forge-Change-End
         {
             if (control is Button button)
             {
-                button.AddStyleClass("NewVegasButton");
-                button.Label.AddStyleClass("NewVegasText");
+                /// Forge-Change-Del
+                // button.AddStyleClass("NewVegasButton");
+                // button.Label.AddStyleClass("NewVegasText");
+                /// Forge-Change-Start
+                SetThemeClass(button, "NewVegasButton", enabled);
+                SetThemeClass(button.Label, "NewVegasText", enabled);
+                /// Forge-Change-End
             }
+            /// Forge-Change-Start
+
+            if (control.HasStyleClass("LobbyThemePanel"))
+            {
+                SetThemeClass(control, "NewVegasPanel", enabled);
+                SetThemeClass(control, "AngleRect", !enabled);
+            }
+
+            if (control is HLine line)
+                line.Color = enabled ? StyleNewVegas.Amber : StyleNano.NanoGold;
+            /// Forge-Change-End
 
             if (control is NanoHeading)
             {
                 foreach (var child in control.Children)
                 {
                     if (child is PanelContainer panel)
-                        panel.PanelOverride = StyleNewVegas.HeadingBox();
+                        /// Forge-Change-Del
+                        // panel.PanelOverride = StyleNewVegas.HeadingBox();
+                        /// Forge-Change
+                        panel.PanelOverride = enabled ? StyleNewVegas.HeadingBox() : null;
                 }
             }
 
             if (control is Label label &&
                 (label.HasStyleClass(StyleNano.StyleClassLabelHeading) ||
                  label.HasStyleClass(StyleNano.StyleClassLabelHeadingBigger)))
-                label.FontColorOverride = StyleNewVegas.HeadingColor;
+                /// Forge-Change-Del
+                // label.FontColorOverride = StyleNewVegas.HeadingColor;
+                /// Forge-Change
+                label.FontColorOverride = enabled ? StyleNewVegas.HeadingColor : null;
 
             foreach (var child in control.Children)
-                ApplyLobbyStyle(child);
+                /// Forge-Change-Del
+                // ApplyLobbyStyle(child);
+                /// Forge-Change
+                ApplyLobbyStyle(child, enabled);
         }
 
         // Forge-Change: open (or focus) the sponsorship window.
