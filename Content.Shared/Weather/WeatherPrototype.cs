@@ -71,6 +71,7 @@ public sealed partial class WeatherPrototype : IPrototype
     [ViewVariables(VVAccess.ReadWrite), DataField]
     public int Chance = 1;
 
+    /// Forge-Change-Start
     /// <summary>
     /// Radius around the viewer where the weather overlay should be masked out.
     /// Used for dense weather that limits long-range sight without obscuring
@@ -85,4 +86,5 @@ public sealed partial class WeatherPrototype : IPrototype
     [ViewVariables(VVAccess.ReadWrite), DataField("visibilityClearBuffer")]
     public float VisibilityClearBuffer = 1f;
 
+    /// Forge-Change-End
 }

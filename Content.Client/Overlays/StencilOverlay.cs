@@ -33,6 +33,7 @@ public sealed partial class StencilOverlay : Overlay
     private IRenderTexture? _blep;
 
     private readonly ShaderInstance _shader;
+    /// Forge-Change-Start
     private readonly ShaderInstance _weatherDrawShader;
 
     // Stencil mask throttle: while the view is static the roofed-tile
@@ -41,6 +42,7 @@ public sealed partial class StencilOverlay : Overlay
     private TimeSpan _nextStencilUpdate;
     private Matrix3x2 _lastStencilMatrix;
     private MapId? _lastStencilMap;
+    /// Forge-Change-End
 
     public StencilOverlay(ParallaxSystem parallax, SharedTransformSystem transform, SpriteSystem sprite, WeatherSystem weather)
     {
@@ -51,6 +53,7 @@ public sealed partial class StencilOverlay : Overlay
         _weather = weather;
         IoCManager.InjectDependencies(this);
         _shader = _protoManager.Index<ShaderPrototype>("WorldGradientCircle").InstanceUnique();
+        /// Forge-Change
         _weatherDrawShader = _protoManager.Index<ShaderPrototype>("WeatherDraw").InstanceUnique();
     }
 
@@ -63,6 +66,7 @@ public sealed partial class StencilOverlay : Overlay
         {
             _blep?.Dispose();
             _blep = _clyde.CreateRenderTarget(args.Viewport.Size, new RenderTargetFormatParameters(RenderTargetColorFormat.Rgba8Srgb), name: "weather-stencil");
+            /// Forge-Change
             _lastStencilMap = null;
         }
 
@@ -83,14 +87,17 @@ public sealed partial class StencilOverlay : Overlay
         if (_entManager.TryGetComponent<NCCloudLayerComponent>(mapUid, out var cloudLayer))
         {
             DrawCloudLayer(args, cloudLayer, invMatrix);
+            /// Forge-Change-Start
             // Other overlays share this render target and can overwrite the weather mask.
             _lastStencilMap = null;
+            /// Forge-Change-End
         }
         // NC - Clouds
 
         if (_entManager.TryGetComponent<RestrictedRangeComponent>(mapUid, out var restrictedRangeComponent))
         {
             DrawRestrictedRange(args, restrictedRangeComponent, invMatrix);
+            /// Forge-Change
             _lastStencilMap = null;
         }
 

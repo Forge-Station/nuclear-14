@@ -126,6 +126,7 @@ public sealed partial class NCCloudLayerComponent : Component
     [DataField]
     public bool StartActive;
 
+    /// Forge-Change-Start
     // Weather prestaging + ambient modulation config fields.
 
     /// <summary>
@@ -149,6 +150,7 @@ public sealed partial class NCCloudLayerComponent : Component
     [DataField, AutoNetworkedField]
     public float OvercastAmbientBlend = 0.35f;
 
+    /// Forge-Change-End
     /// <summary>
     ///     True while the cloud event is currently active or fading.
     /// </summary>

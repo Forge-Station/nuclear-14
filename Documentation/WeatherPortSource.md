@@ -1,3 +1,4 @@
+<!-- Forge-Change-Start -->
 # Weather port source
 
 The weather, cloud integration, visibility and radiation changes were adapted from
@@ -10,3 +11,4 @@ notices; the local license files remain unchanged. The imported
 `Resources/Audio/_Nuclear14/Weather/sandstorm_loop.ogg` comes from upstream's
 `Resources/Audio/_Misfits/N14/Weather/sandstorm_loop.ogg`; renaming it does not
 grant a new license for that asset.
+<!-- Forge-Change-End -->

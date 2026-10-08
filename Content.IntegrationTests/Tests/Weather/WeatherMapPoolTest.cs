@@ -1,3 +1,4 @@
+/// Forge-Change-Start
 using Content.Server.Maps;
 using Content.Shared.Weather;
 using Robust.Shared.Prototypes;
@@ -63,3 +64,4 @@ public sealed class WeatherMapPoolTest
         await pair.CleanReturnAsync();
     }
 }
+/// Forge-Change-End

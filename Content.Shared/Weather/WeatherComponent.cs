@@ -25,10 +25,12 @@ public sealed partial class WeatherData
     [NonSerialized]
     public EntityUid? Stream;
 
+    /// Forge-Change-Start
     // Audio BFS throttle; only recompute occlusion 4×/sec instead of every tick.
     [NonSerialized]
     public float AudioBFSAccumulator;
 
+    /// Forge-Change-End
     /// <summary>
     /// When the weather started if relevant.
     /// </summary>

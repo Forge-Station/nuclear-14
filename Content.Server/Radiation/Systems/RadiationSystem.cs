@@ -1,4 +1,5 @@
 ﻿using Content.Server.Radiation.Components;
+/// Forge-Change
 using Content.Server.Radiation.Events;
 using Content.Shared.Radiation.Components;
 using Content.Shared.Radiation.Events;
@@ -41,6 +42,7 @@ public sealed partial class RadiationSystem : EntitySystem
         RaiseLocalEvent(uid, msg);
     }
 
+    /// Forge-Change-Start
     public void IrradiateReceiver(Entity<RadiationReceiverComponent> entity, float radsPerSecond, float time)
     {
         entity.Comp.CurrentRadiation = MathF.Max(entity.Comp.CurrentRadiation, radsPerSecond);
@@ -52,6 +54,7 @@ public sealed partial class RadiationSystem : EntitySystem
         RaiseLocalEvent(new RadiationSystemUpdatedEvent());
     }
 
+    /// Forge-Change-End
     public void SetSourceEnabled(Entity<RadiationSourceComponent?> entity, bool val)
     {
         if (!Resolve(entity, ref entity.Comp, false))

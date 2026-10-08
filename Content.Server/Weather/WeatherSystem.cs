@@ -1,22 +1,30 @@
 using Content.Server.Administration;
+/// Forge-Change
 using Content.Server.Chat.Systems;
 using Content.Server.GameTicking;
 using Content.Server.Maps;
+/// Forge-Change-Start
 using Content.Server.Radiation.Components;
 using Content.Server.Radiation.Systems;
+/// Forge-Change-End
 using Content.Shared.Administration;
+/// Forge-Change
 using Content.Shared._N14.Weather;
 using Content.Shared.CCVar;
+/// Forge-Change-Start
 using Content.Shared.Ghost;
 using Content.Shared.GameTicking;
 using Content.Shared.Light.Components;
+/// Forge-Change-End
 using Content.Shared.Weather;
 using Robust.Shared.Configuration;
 using Robust.Shared.Console;
 using Robust.Shared.GameStates;
 using Robust.Shared.Map;
+/// Forge-Change-Start
 using Robust.Shared.Map.Components;
 using Robust.Shared.Maths;
+/// Forge-Change-End
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using System.Linq;
@@ -28,10 +36,15 @@ public sealed class WeatherSystem : SharedWeatherSystem
     [Dependency] private readonly GameTicker _gameTicker = default!;
     [Dependency] private readonly IConfigurationManager _config = default!;
     [Dependency] private readonly IConsoleHost _console = default!;
+    /// Forge-Change-Del [Dependency] private readonly IMapManager _map = default!;
+    /// Forge-Change
     [Dependency] private readonly ChatSystem _chat = default!;
     [Dependency] private readonly IPrototypeManager _prototype = default!;
+    /// Forge-Change
     [Dependency] private readonly RadiationSystem _radiation = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
+    /// Forge-Change-Del [Dependency] private readonly SharedMapSystem _mapSystem = default!;
+    /// Forge-Change-Start
     [Dependency] private readonly SharedTransformSystem _transform = default!;
 
     private const float WeatherEffectInterval = 1f;
@@ -47,12 +60,15 @@ public sealed class WeatherSystem : SharedWeatherSystem
     private readonly Dictionary<(EntityUid MapUid, string ProtoId), float> _effectAccumulators = new();
     private readonly Dictionary<MapId, GameMapPrototype> _loadedGameMaps = new();
     private TimeSpan? _nextRandomWeatherTime;
+    /// Forge-Change-End
 
     public override void Initialize()
     {
         base.Initialize();
+        /// Forge-Change-Start
         SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestart);
         SubscribeLocalEvent<PostGameMapLoad>(OnGameMapLoaded);
+        /// Forge-Change-End
         SubscribeLocalEvent<WeatherComponent, ComponentGetState>(OnWeatherGetState);
         _console.RegisterCommand("weather",
             Loc.GetString("cmd-weather-desc"),
@@ -63,6 +79,7 @@ public sealed class WeatherSystem : SharedWeatherSystem
             Loc.GetString("cmd-randomweather-desc"),
             Loc.GetString("cmd-randomweather-help"),
             RandomWeatherCommand);
+        /// Forge-Change-Start
         _console.RegisterCommand("nextweather",
             Loc.GetString("cmd-nextweather-desc"),
             Loc.GetString("cmd-nextweather-help"),
@@ -79,14 +96,18 @@ public sealed class WeatherSystem : SharedWeatherSystem
     private void OnGameMapLoaded(PostGameMapLoad ev)
     {
         _loadedGameMaps[ev.Map] = ev.GameMap;
+        /// Forge-Change-End
     }
 
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
 
+        /// Forge-Change-Del if (_config.GetCVar(CCVars.AutoWeather) && _gameTicker.RunLevel == GameRunLevel.InRound && !WeatherRunning())
+        /// Forge-Change
         if (!_config.GetCVar(CCVars.AutoWeather) || _gameTicker.RunLevel != GameRunLevel.InRound)
         {
+            /// Forge-Change-Start
             _nextRandomWeatherTime = null;
             return;
         }
@@ -106,19 +127,25 @@ public sealed class WeatherSystem : SharedWeatherSystem
         if (Timing.CurTime >= _nextRandomWeatherTime.Value)
         {
             _nextRandomWeatherTime = null;
+            /// Forge-Change-End
             var (weather, map) = SetRandomWeather();
 
             if (weather != null)
             {
+                /// Forge-Change-Del Logger.InfoS("weather", $"Randomizing weather to {weather.ID} on map {map}");
+                /// Forge-Change-Start
                 Log.Info($"Randomizing weather to {weather.ID} on map {map}");
             }
             else
             {
                 ScheduleNextRandomWeather();
+                /// Forge-Change-End
             }
         }
     }
 
+    /// Forge-Change-Del private bool WeatherRunning()
+    /// Forge-Change-Start
     protected override void Run(EntityUid uid, WeatherData weather, WeatherPrototype weatherProto, float frameTime)
     {
         base.Run(uid, weather, weatherProto, frameTime);
@@ -246,15 +273,22 @@ public sealed class WeatherSystem : SharedWeatherSystem
     }
 
     private bool WeatherEventRunning()
+    /// Forge-Change-End
     {
         var query = EntityQueryEnumerator<WeatherComponent>();
+        /// Forge-Change-Del while (query.MoveNext(out var uid, out var comp))
+        /// Forge-Change
         while (query.MoveNext(out _, out var comp))
         {
+            /// Forge-Change-Del if (comp.Weather.Count > 0)
+            /// Forge-Change
             foreach (var (protoId, _) in comp.Weather)
             {
+                /// Forge-Change-Start
                 if (protoId == DefaultWeatherPrototype)
                     continue;
 
+                /// Forge-Change-End
                 return true;
             }
         }
@@ -283,6 +317,8 @@ public sealed class WeatherSystem : SharedWeatherSystem
         if (!MapManager.MapExists(mapId))
             return;
 
+        /// Forge-Change-Del if (!_mapSystem.TryGetMap(mapId, out var mapUid))
+        /// Forge-Change
         if (!MapManager.TryGetMap(mapId, out var mapUid))
             return;
 
@@ -327,6 +363,7 @@ public sealed class WeatherSystem : SharedWeatherSystem
         }
     }
 
+    /// Forge-Change-Start
     [AdminCommand(AdminFlags.Admin)]
     private void NextWeatherCommand(IConsoleShell shell, string argStr, string[] args)
     {
@@ -392,8 +429,14 @@ public sealed class WeatherSystem : SharedWeatherSystem
         return found;
     }
 
+    /// Forge-Change-End
     private (WeatherPrototype?, MapId) SetRandomWeather()
     {
+        /// Forge-Change-Del var weather = RandomWeather();
+        /// Forge-Change-Del if (weather != null) {
+            /// Forge-Change-Del MapId map = GetMainMap();
+            /// Forge-Change-Del SetWeather(map, weather, null);
+        /// Forge-Change-Start
         var map = GetMainMap();
         if (map == MapId.Nullspace)
             return (null, map);
@@ -403,11 +446,16 @@ public sealed class WeatherSystem : SharedWeatherSystem
         if (weather != null)
         {
             SetWeather(map, weather, GetRandomWeatherEndTime(weather));
+        /// Forge-Change-End
             return (weather, map);
         }
         return (weather, MapId.Nullspace);
     }
 
+    /// Forge-Change-Del /**
+     /// Forge-Change-Del * Try to guess the main map on which weather effects should be applied.
+     /// Forge-Change-Del */
+    /// Forge-Change-Start
     private void ScheduleNextRandomWeather()
     {
         var delay = _random.NextFloat(
@@ -440,46 +488,63 @@ public sealed class WeatherSystem : SharedWeatherSystem
     /// <summary>
     /// Prefer the round's main map, falling back to the first map for standalone maps.
     /// </summary>
+    /// Forge-Change-End
     private MapId GetMainMap()
     {
+        /// Forge-Change-Del foreach (var mapId in _map.GetAllMapIds().OrderBy(id => id.GetHashCode()))
+        /// Forge-Change-Start
         if (_gameTicker.DefaultMap != MapId.Nullspace && MapManager.MapExists(_gameTicker.DefaultMap))
             return _gameTicker.DefaultMap;
 
         foreach (var mapId in MapManager.GetAllMapIds().OrderBy(id => id.GetHashCode()))
+        /// Forge-Change-End
         {
             return mapId;
         }
         return MapId.Nullspace;
     }
 
+    /// Forge-Change-Del private WeatherPrototype? RandomWeather()
+    /// Forge-Change
     private WeatherPrototype? RandomWeather(GameMapPrototype? gameMap)
     {
         int totalChance = 0;
         foreach (var proto in _prototype.EnumeratePrototypes<WeatherPrototype>())
         {
+            /// Forge-Change-Del totalChance += proto.Chance;
+            /// Forge-Change-Start
             var weight = gameMap?.GetWeatherWeight(proto) ?? Math.Max(0, proto.Chance);
             if (weight <= 0)
                 continue;
 
             totalChance += weight;
+            /// Forge-Change-End
         }
+        /// Forge-Change-Start
 
         if (totalChance <= 0)
             return null;
+        /// Forge-Change-End
 
         int tgtChance = _random.Next(totalChance);
         int curr = 0;
         foreach (var proto in _prototype.EnumeratePrototypes<WeatherPrototype>())
         {
+            /// Forge-Change-Del if (curr <= tgtChance && tgtChance < curr + proto.Chance)
+            /// Forge-Change-Start
             var weight = gameMap?.GetWeatherWeight(proto) ?? Math.Max(0, proto.Chance);
             if (weight <= 0)
                 continue;
 
             if (curr <= tgtChance && tgtChance < curr + weight)
+            /// Forge-Change-End
                 return proto;
+            /// Forge-Change-Del curr += proto.Chance;
+            /// Forge-Change
             curr += weight;
         }
         return null;
+    /// Forge-Change-Start
     }
 
     private static string FormatWeatherTime(TimeSpan time)
@@ -494,6 +559,7 @@ public sealed class WeatherSystem : SharedWeatherSystem
             return $"{time.Minutes}m {time.Seconds}s";
 
         return $"{time.Seconds}s";
+    /// Forge-Change-End
     }
 
     private CompletionResult WeatherCompletion(IConsoleShell shell, string[] args)

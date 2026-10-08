@@ -6,6 +6,7 @@
 
 - type: gameMap
   id: Juneau
+  # Forge-Change-Start
   weatherWeights:
     Hail: 1
     Sandstorm: 0
@@ -15,6 +16,7 @@
     SnowfallMedium: 1
     SnowfallHeavy: 1
     SnowfallHeavyExtreme: 1
+  # Forge-Change-End
   mapName: 'Джуно'
   mapPath: /Maps/Corvax/Juneau.yml
   minPlayers: 0

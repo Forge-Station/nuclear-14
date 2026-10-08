@@ -7,6 +7,7 @@ cmd-weather-error-unknown-proto = Unknown Weather prototype!
 cmd-weather-error-wrong-time = Time is in the wrong format!
 
 cmd-randomweather-desc = Randomly set the current weather
+# Forge-Change-Start
 
 cmd-nextweather-desc = Shows when the next automatic weather event will happen.
 cmd-nextweather-help = nextweather
@@ -18,3 +19,4 @@ cmd-nextweather-active = Active weather: {$weather} ({$state}); {$ending}.
 cmd-nextweather-active-ending = ending in {$time}
 cmd-nextweather-active-indefinite = no scheduled end time
 cmd-nextweather-active-note = The next automatic weather event will be scheduled after active weather clears.
+# Forge-Change-End

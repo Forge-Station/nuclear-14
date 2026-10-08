@@ -1,3 +1,4 @@
+/// Forge-Change-Start
 using Content.Shared.Weather;
 using Robust.Shared.Prototypes;
 
@@ -18,3 +19,4 @@ public sealed partial class GameMapPrototype
         return Math.Max(0, WeatherWeights.GetValueOrDefault(weather.ID, weather.Chance));
     }
 }
+/// Forge-Change-End

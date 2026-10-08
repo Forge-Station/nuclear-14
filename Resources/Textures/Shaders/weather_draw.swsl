@@ -1,3 +1,4 @@
+// Forge-Change-Start
 uniform sampler2D MASK_TEXTURE;
 
 uniform highp vec2 position;
@@ -32,3 +33,4 @@ void fragment() {
 
     COLOR = color;
 }
+// Forge-Change-End

@@ -1,4 +1,5 @@
 using Content.Server.NPC.Components;
+/// Forge-Change
 using Content.Server.Weather;
 using Content.Shared.CombatMode;
 using Content.Shared.Interaction;
@@ -15,6 +16,7 @@ public sealed partial class NPCCombatSystem
     [Dependency] private readonly SharedCombatModeSystem _combat = default!;
     [Dependency] private readonly RotateToFaceSystem _rotate = default!;
     [Dependency] private readonly MapSystem _map = default!;
+    /// Forge-Change
     [Dependency] private readonly WeatherSystem _weather = default!;
 
     private EntityQuery<CombatModeComponent> _combatQuery;
@@ -137,8 +139,11 @@ public sealed partial class NPCCombatSystem
             {
                 comp.LOSAccumulator += UnoccludedCooldown;
                 // For consistency with NPC steering.
+                /// Forge-Change-Del comp.TargetInLOS = _interaction.InRangeUnobstructed(uid, comp.Target, distance + 0.1f);
+                /// Forge-Change-Start
                 comp.TargetInLOS = _weather.CanSeeThroughWeather(uid, comp.Target) &&
                     _interaction.InRangeUnobstructed(uid, comp.Target, distance + 0.1f);
+                /// Forge-Change-End
             }
 
             if (!comp.TargetInLOS)
