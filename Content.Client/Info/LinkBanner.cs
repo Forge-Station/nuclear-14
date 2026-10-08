@@ -19,8 +19,11 @@ namespace Content.Client.Info
         {
             var buttons = new BoxContainer
             {
+                /// Forge-Change-Del Orientation = LayoutOrientation.Horizontal
+                /// Forge-Change-Start
                 Orientation = LayoutOrientation.Horizontal,
                 SeparationOverride = 6
+                /// Forge-Change-End
             };
             AddChild(buttons);
 

@@ -1,3 +1,4 @@
+<!-- Forge-Change-Start -->
 <lobbyUi:LobbyGui
     xmlns="https://spacestation14.io"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -131,3 +132,26 @@
         </ScrollContainer>
     </BoxContainer>
 </lobbyUi:LobbyGui>
+<!-- Forge-Change-End -->
+
+<!-- Forge-Change-Del: исходные строки до изменений
+    <BoxContainer Name="MainContainer" VerticalExpand="True" HorizontalExpand="True" Orientation="Horizontal"
+                  Margin="10 10 10 10" SeparationOverride="2">
+        <SplitContainer State="Auto" ResizeMode="NotResizable" HorizontalExpand="True">
+                        <!- - Left Top Panel - ->
+                        <PanelContainer StyleClasses="AngleRect" HorizontalAlignment="Left" Name="LeftSideTop"
+                                        VerticalAlignment="Top">
+                            <BoxContainer Orientation="Vertical" HorizontalAlignment="Center" MaxWidth="800">
+                                <info:LinkBanner Name="LinkBanner" VerticalExpand="false" HorizontalAlignment="Center"
+                                <controls:StripeBack>
+                                    <BoxContainer Orientation="Horizontal" SeparationOverride="6" Margin="3 3 3 3">
+                                               Align="Left"
+                                               FontColorOverride="{x:Static maths:Color.DarkGray}"
+                                </controls:StripeBack>
+                        <PanelContainer StyleClasses="AngleRect">
+                        <PanelContainer StyleClasses="AngleRect">
+            <PanelContainer Name="RightSide" StyleClasses="AngleRect" HorizontalAlignment="Right" VerticalExpand="True"
+                    <controls:HLine Color="{x:Static style:StyleNano.NanoGold}" Thickness="2" />
+                    <BoxContainer Orientation="Horizontal" MinSize="0 40" HorizontalAlignment="Right">
+                    <controls:HLine Color="{x:Static style:StyleNano.NanoGold}" Thickness="2" Access="Public" />
+-->
