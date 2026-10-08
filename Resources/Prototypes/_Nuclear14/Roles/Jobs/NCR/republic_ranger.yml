@@ -7,6 +7,15 @@
   description: job-description-ncr-ranger
   playTimeTracker: NCRRanger
   requirements:
+    # Forge-Change-Del - !type:CharacterSpeciesRequirement
+      # Forge-Change-Del species:
+      # Forge-Change-Del - Human
+      # Forge-Change-Del - Ghoul
+    # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
+      # Forge-Change-Del department: NCR
+      # Forge-Change-Del min: 7200 # 20 hours as NCR
+    # Forge-Change-Del - !type:CharacterWhitelistRequirement
+  # Forge-Change-Start
   - !type:CharacterSpeciesRequirement
     species:
     - Human
@@ -15,6 +24,7 @@
     department: NCR
     min: 7200 # 20 hours as NCR
   - !type:CharacterWhitelistRequirement
+  # Forge-Change-End
   startingGear: NCRRangerGear
   icon: "JobIconNcrRanger" # Forge-Change
   supervisors: job-supervisors-ncr-ranger

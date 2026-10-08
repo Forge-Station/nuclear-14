@@ -7,6 +7,15 @@
   description: job-description-ncr-prisoner
   playTimeTracker: NCRPisoner
   requirements:
+    # Forge-Change-Del - !type:MinPlayersRequirement
+      # Forge-Change-Del min: 55
+    # Forge-Change-Del - !type:CharacterSpeciesRequirement
+      # Forge-Change-Del species:
+      # Forge-Change-Del - Human
+      # Forge-Change-Del - Ghoul
+    # Forge-Change-Del - !type:CharacterOverallTimeRequirement
+      # Forge-Change-Del min: 3600
+  # Forge-Change-Start
   - !type:CharacterSpeciesRequirement
     species:
     - Human
@@ -15,6 +24,7 @@
     min: 3600
   - !type:MinPlayersRequirement
     min: 55
+  # Forge-Change-End
   startingGear: NCRPisonerGear
   icon: "JobIconNCRPrisoner"
   supervisors: job-supervisors-ncr-prisoners

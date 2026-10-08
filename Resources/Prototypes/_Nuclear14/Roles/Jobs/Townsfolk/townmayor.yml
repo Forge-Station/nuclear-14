@@ -7,6 +7,14 @@
   description: job-description-townmayor
   playTimeTracker: TownMayor
   requirements:
+    # Forge-Change-Del - !type:CharacterSpeciesRequirement
+      # Forge-Change-Del species:
+      # Forge-Change-Del - Human
+      # Forge-Change-Del - Ghoul
+    # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
+      # Forge-Change-Del department: Townsfolk
+      # Forge-Change-Del min: 36000 # 10 hours
+  # Forge-Change-Start
   - !type:CharacterSpeciesRequirement
     species:
     - Human
@@ -14,8 +22,11 @@
   - !type:CharacterDepartmentTimeRequirement
     department: Townsfolk
     min: 36000 # 10 hours
+  # Forge-Change-End
   startingGear: TownMayorGear
   icon: "JobIconTownMayor" # Forge-Change
+  # Forge-Change-Del supervisors: job-supervisors-townsfolk
+  # Forge-Change
   supervisors: job-supervisors-town-mayor # Forge-Chang
   alwaysUseSpawner: true # Forge-Change
   access:

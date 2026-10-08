@@ -7,6 +7,14 @@
   description: job-description-bos-mid-paladin
   playTimeTracker: BoSMidPaladin
   requirements:
+    # Forge-Change-Del - !type:CharacterSpeciesRequirement
+      # Forge-Change-Del species:
+      # Forge-Change-Del - Human
+      # Forge-Change-Del - Ghoul
+    # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
+      # Forge-Change-Del department: BrotherhoodMidwest
+      # Forge-Change-Del min: 54000 # 15 hours
+  # Forge-Change-Start
   - !type:CharacterSpeciesRequirement
     species:
     - Human
@@ -14,6 +22,7 @@
   - !type:CharacterDepartmentTimeRequirement
     department: BrotherhoodMidwest
     min: 54000 # 15 hours
+  # Forge-Change-End
   startingGear: BoSMidPaladinGear
   alwaysUseSpawner: true
   icon: "JobIconBosMPaladin" # Forge-Change

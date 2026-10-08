@@ -1,3 +1,27 @@
+# Forge-Change-Del job-supervisors-bos-mid = подчиняться командиру Среднезападного Братства Стали.
+# Forge-Change-Del job-supervisors-bos-mid-Serf = подчиняйтесь своему надзирателю и членам фракциям, или попытайтесь сбежать бескровно
+# Forge-Change-Del job-supervisors-bos-washington-elder = выполнить вашу миссию!
+# Forge-Change-Del job-supervisors-bos-washington = следовать за своим старейшиной к победе!
+# Forge-Change-Del job-supervisors-bos-washington-recruit = подчиняться старшим по званию в вашем отделении.
+# Forge-Change-Del job-supervisors-caravan = подчиняться главе каравана.
+# Forge-Change-Del job-supervisors-caravan-leader = продать все ваши товары с максимальной наценкой.
+# Forge-Change-Del job-supervisors-ncr = подчиняться офицеру Новой Калифорнийской Республики.
+# Forge-Change-Del job-supervisors-ncr-mp = следить за соблюдением устава и законом на аванпосту
+# Forge-Change-Del job-supervisors-ncr-nco = подчиняться офицеру Новой Калифорнийской Республики, затем сержанту.
+# Forge-Change-Del job-supervisors-ncr-captain = подчиняться капитану Новой Калифорнийской Республики.
+# Forge-Change-Del job-supervisors-ncr-prisoners = Служить фракции и слушать надзитареля, или попытаться бескровно и тихо сбежать
+# Forge-Change-Del job-supervisors-ranger = подчиняться рейнджеру.
+# Forge-Change-Del job-supervisors-veteran-ranger = подчиняться ветерану-рейнджеру.
+# Forge-Change-Del job-supervisors-chief-ranger = подчиняться главному рейнджеру.
+# Forge-Change-Del job-supervisors-tribal = подчиняться старейшине племени.
+# Forge-Change-Del job-supervisors-tribal-elder = вести своё племя к светлому будущему.
+# Forge-Change-Del job-supervisors-overseer = подчиняться смотрителю убежища.
+# Forge-Change-Del job-supervisors-vault-overseer = поддерживать функционирование вверенного вам убежища, руководя своими подчинёнными. А также, по возможности, не допустить смерти резидентов.
+# Forge-Change-Del job-supervisors-wastelander = не умереть от радтаракана.
+# Forge-Change-Del job-supervisors-townsfolk = подчиняться мэру города.
+# Forge-Change-Del job-supervisors-raider = вы верны лишь своему оружию и жажде наживы.
+# Forge-Change-Del job-supervisors-followers = помогать нуждающимся и делиться знаниями для возрождения цивилизации.
+# Forge-Change-Start
 job-supervisors-bos-mid = командиру Среднезападного Братства Стали
 job-supervisors-bos-mid-Serf = своему надзирателю и членам Среднезападного Братства Стали
 job-supervisors-bos-washington-elder = никому
@@ -26,3 +50,4 @@ job-supervisors-bos-wash-initiate = старшим по званию в Ваши
 job-supervisors-bos-wash-knight = паладинам Вашингтонского Братства Стали
 job-supervisors-bos-wash = командиру вашего бункера
 job-supervisors-bos-wash-commander = старейшине Вашингтонского Братства Стали
+# Forge-Change-End

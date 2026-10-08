@@ -7,6 +7,17 @@
   description: job-description-townsheriff
   playTimeTracker: TownSheriff
   requirements:
+    # Forge-Change-Del - !type:CharacterSpeciesRequirement
+      # Forge-Change-Del species:
+      # Forge-Change-Del - Human
+      # Forge-Change-Del - Ghoul
+    # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
+      # Forge-Change-Del department: Townsfolk
+      # Forge-Change-Del min: 28800 # 8 hours
+    # Forge-Change-Del - !type:CharacterPlaytimeRequirement # Forge-Add
+      # Forge-Change-Del tracker: TownDeputy
+      # Forge-Change-Del min: 14400 # 4 hours
+  # Forge-Change-Start
   - !type:CharacterSpeciesRequirement
     species:
     - Human
@@ -17,6 +28,7 @@
   - !type:CharacterPlaytimeRequirement # Forge-Add
     tracker: TownDeputy
     min: 14400 # 4 hours
+  # Forge-Change-End
   startingGear: TownSheriffGear
   icon: "JobIconTownSheriff" # Forge-Change
   supervisors: job-supervisors-townsfolk

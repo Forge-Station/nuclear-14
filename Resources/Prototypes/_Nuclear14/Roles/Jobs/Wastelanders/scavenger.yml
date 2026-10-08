@@ -7,8 +7,12 @@
   description: job-description-scavenger
   playTimeTracker: WastelandScavenger
   requirements:
+    # Forge-Change-Del - !type:CharacterOverallTimeRequirement
+      # Forge-Change-Del min: 999999
+  # Forge-Change-Start
   - !type:CharacterOverallTimeRequirement
     min: 999999
+  # Forge-Change-End
   startingGear: ScavengerGear
   icon: "JobIconJanitor"
   supervisors: job-supervisors-wastelander

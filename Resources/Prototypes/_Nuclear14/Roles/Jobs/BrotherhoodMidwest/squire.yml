@@ -7,6 +7,15 @@
   description: job-description-bos-mid-squire
   playTimeTracker: BoSMidSquire
   requirements:
+    # Forge-Change-Del - !type:CharacterLogicOrRequirement
+      # Forge-Change-Del requirements:
+        # Forge-Change-Del - !type:CharacterSpeciesRequirement
+          # Forge-Change-Del species:
+            # Forge-Change-Del - Human
+            # Forge-Change-Del - Ghoul
+    # Forge-Change-Del - !type:CharacterOverallTimeRequirement
+      # Forge-Change-Del min: 3600
+  # Forge-Change-Start
   - !type:CharacterOverallTimeRequirement
     min: 3600
   - !type:CharacterLogicOrRequirement
@@ -15,6 +24,7 @@
       species:
       - Human
       - Ghoul
+  # Forge-Change-End
   startingGear: BoSMidSquireGear
   alwaysUseSpawner: true
   icon: "JobIconBosMSquire" # Forge-Change

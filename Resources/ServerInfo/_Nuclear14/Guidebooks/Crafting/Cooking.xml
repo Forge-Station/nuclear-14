@@ -1,3 +1,4 @@
+<!-- Forge-Change-Start -->
 <Document>
 # Готовка
 
@@ -65,3 +66,8 @@
 <GuideFoodGroupEmbed/>
 
 </Document>
+<!-- Forge-Change-End -->
+
+<!-- Forge-Change-Del: исходные строки до изменений
+Заглушка
+-->

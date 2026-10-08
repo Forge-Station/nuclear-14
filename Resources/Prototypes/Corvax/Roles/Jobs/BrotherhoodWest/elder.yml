@@ -5,6 +5,16 @@
   description: job-description-bos-west-elder-comm
   playTimeTracker: BoSWestElderCommander
   requirements:
+    # Forge-Change-Del - !type:CharacterSpeciesRequirement
+      # Forge-Change-Del species:
+      # Forge-Change-Del - Human
+    # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
+      # Forge-Change-Del department: BrotherhoodWest
+      # Forge-Change-Del min: 216000 # 60 hours
+    # Forge-Change-Del - !type:CharacterPlaytimeRequirement
+      # Forge-Change-Del tracker: BoSWestPaladin
+      # Forge-Change-Del min: 43200 # 12 hours
+  # Forge-Change-Start
   - !type:CharacterSpeciesRequirement
     species:
     - Human
@@ -14,6 +24,7 @@
   - !type:CharacterPlaytimeRequirement
     tracker: BoSWestPaladin
     min: 43200 # 12 hours
+  # Forge-Change-End
   startingGear: BoSWestElderCommanderGear
   alwaysUseSpawner: true
   icon: "JobIconBosMCommander"

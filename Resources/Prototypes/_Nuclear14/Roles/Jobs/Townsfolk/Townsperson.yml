@@ -7,12 +7,20 @@
   description: job-description-townsperson
   playTimeTracker: Townsperson
   requirements:
+    # Forge-Change-Del - !type:CharacterSpeciesRequirement
+      # Forge-Change-Del species:
+      # Forge-Change-Del - Human
+      # Forge-Change-Del - Ghoul
+    # Forge-Change-Del - !type:CharacterOverallTimeRequirement
+      # Forge-Change-Del min: 3600 # 1 hour
+  # Forge-Change-Start
   - !type:CharacterSpeciesRequirement
     species:
     - Human
     - Ghoul
   - !type:CharacterOverallTimeRequirement
     min: 3600 # 1 hour
+  # Forge-Change-End
   startingGear: TownspersonGear
   icon: "JobIconTownPerson" # Forge-Change
   supervisors: job-supervisors-townsfolk

@@ -5,6 +5,12 @@
   description: job-description-caesar-legion-centurion
   playTimeTracker: CaesarLegionCenturion
   requirements:
+  # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
+      # Forge-Change-Del department: CaesarLegion
+      # Forge-Change-Del min: 216000 # 60 hours
+  # Forge-Change-Del - !type:CharacterPlaytimeRequirement
+      # Forge-Change-Del tracker: CaesarLegionDean
+      # Forge-Change-Del min: 43200 # 12 hours
   - !type:CharacterSpeciesRequirement
     species:
     - Human
@@ -12,12 +18,14 @@
     sex: Male
   - !type:CharacterGenderRequirement
     gender: Male
+  # Forge-Change-Start
   - !type:CharacterDepartmentTimeRequirement
     department: CaesarLegion
     min: 216000 # 60 hours
   - !type:CharacterPlaytimeRequirement
     tracker: CaesarLegionDean
     min: 43200 # 12 hours
+  # Forge-Change-End
   startingGear: CaesarLegionCenturionGear
   alwaysUseSpawner: true
   icon: "JobIconlegionerCenturion"

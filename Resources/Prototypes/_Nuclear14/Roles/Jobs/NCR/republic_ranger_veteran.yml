@@ -7,6 +7,15 @@
   description: job-description-ncr-ranger-veteran
   playTimeTracker: NCRRangerVeteran
   requirements:
+    # Forge-Change-Del - !type:CharacterSpeciesRequirement
+      # Forge-Change-Del species:
+      # Forge-Change-Del - Human
+      # Forge-Change-Del - Ghoul
+    # Forge-Change-Del - !type:CharacterPlaytimeRequirement
+      # Forge-Change-Del tracker: NCRRanger
+      # Forge-Change-Del min: 216000 # 60 hours as NCR
+    # Forge-Change-Del - !type:CharacterWhitelistRequirement
+  # Forge-Change-Start
   - !type:CharacterSpeciesRequirement
     species:
     - Human
@@ -15,8 +24,11 @@
     tracker: NCRRanger
     min: 216000 # 60 hours as NCR
   - !type:CharacterWhitelistRequirement
+  # Forge-Change-End
   startingGear: NCRRangerVeteranGear
   icon: "JobIconNcrVeteranRanger" # Forge-Change
+  # Forge-Change-Del supervisors: ent-job-supervisors-ncr # Forge-Change
+  # Forge-Change
   supervisors: job-supervisors-ncr-ranger # Forge-Chang # Forge-Change
   requireAdminNotify: true
   access:

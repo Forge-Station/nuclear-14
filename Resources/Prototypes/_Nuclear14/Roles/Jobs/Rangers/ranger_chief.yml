@@ -4,8 +4,10 @@
   name: job-name-ranger-chief
   description: job-description-ranger-chief
   playTimeTracker: RangerChief
+  # Forge-Change-Start
   requirements:
   - !type:CharacterWhitelistRequirement
+  # Forge-Change-End
   weight: 20
   startingGear: RangerChiefGear
   icon: "JobIconCaptain"
@@ -19,6 +21,8 @@
       - type: NpcFactionMember
         factions:
           - Rangers
+  # Forge-Change-Del requirements:
+    # Forge-Change-Del - !type:CharacterWhitelistRequirement
 
 - type: startingGear
   id: RangerChiefGear

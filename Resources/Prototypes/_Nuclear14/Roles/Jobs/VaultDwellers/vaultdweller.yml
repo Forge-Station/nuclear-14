@@ -2,16 +2,24 @@
   id: VaultDweller
   name: job-name-vault-dweller
   description: job-description-vault-dweller
+  # Forge-Change-Del requirements:
+  # Forge-Change-Del - !type:MinPlayersRequirement
+    # Forge-Change-Del min: 20 # Forge-Change
+  # Forge-Change-Del - !type:CharacterSpeciesRequirement
+    # Forge-Change-Del species:
+    # Forge-Change-Del - Human
   setPreference: true
   overrideConsoleVisibility: true
   canBeAntag: false
   playTimeTracker: VaultDweller
+  # Forge-Change-Start
   requirements:
   - !type:CharacterSpeciesRequirement
     species:
     - Human
   - !type:MinPlayersRequirement
     min: 20 # Forge-Change
+  # Forge-Change-End
   startingGear: VaultDwellerGear
   alwaysUseSpawner: true
   icon: "JobIconVaulDweller" # Forge-Change

@@ -7,6 +7,14 @@
   description: job-description-ncr-medic
   playTimeTracker: NCRDoctor
   requirements:
+    # Forge-Change-Del - !type:CharacterSpeciesRequirement
+      # Forge-Change-Del species:
+      # Forge-Change-Del - Human
+      # Forge-Change-Del - Ghoul
+    # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
+      # Forge-Change-Del department: NCR
+      # Forge-Change-Del min: 10800 # 3 hours Corvax-Change
+  # Forge-Change-Start
   - !type:CharacterSpeciesRequirement
     species:
     - Human
@@ -14,6 +22,7 @@
   - !type:CharacterDepartmentTimeRequirement
     department: NCR
     min: 10800 # 3 hours Corvax-Change
+  # Forge-Change-End
   startingGear: NCRMedicGear
   icon: "JobIconNcrMedic" # Forge-Change
   supervisors: job-supervisors-ncr

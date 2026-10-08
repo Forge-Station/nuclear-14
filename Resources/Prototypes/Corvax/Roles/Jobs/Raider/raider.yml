@@ -5,11 +5,15 @@
   description: job-description-raider
   playTimeTracker: Raider
   requirements:
+  # Forge-Change-Start
   - !type:CharacterOverallTimeRequirement
     min: 90000 # 25 hours
+  # Forge-Change-End
   - !type:CharacterWhitelistRequirement
   - !type:MinPlayersRequirement
     min: 40
+  # Forge-Change-Del - !type:CharacterOverallTimeRequirement
+    # Forge-Change-Del min: 90000 # 25 hours
   startingGear: RaiderGear
   alwaysUseSpawner: true
   icon: "JobIconRaider"

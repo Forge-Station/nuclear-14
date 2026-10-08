@@ -2,19 +2,29 @@
   id: VaultDoctor
   name: job-name-vault-doctor
   description: job-description-vault-doctor
+  # Forge-Change-Start
   setPreference: true
   overrideConsoleVisibility: true
   canBeAntag: false
   playTimeTracker: VaultDoctor
+  # Forge-Change-End
   requirements:
+  # Forge-Change-Del - !type:MinPlayersRequirement
+    # Forge-Change-Del min: 20 # Forge-Change
   - !type:CharacterSpeciesRequirement
     species:
     - Human
   - !type:CharacterDepartmentTimeRequirement
     department: Vault
     min: 7200 # 2 hours
+  # Forge-Change-Del setPreference: true
+  # Forge-Change-Del overrideConsoleVisibility: true
+  # Forge-Change-Del canBeAntag: false
+  # Forge-Change-Del playTimeTracker: VaultDoctor
+  # Forge-Change-Start
   - !type:MinPlayersRequirement
     min: 20 # Forge-Change
+  # Forge-Change-End
   startingGear: VaultDoctorGear
   alwaysUseSpawner: true
   icon: "JobIconVaultMedic" # Forge-Change
