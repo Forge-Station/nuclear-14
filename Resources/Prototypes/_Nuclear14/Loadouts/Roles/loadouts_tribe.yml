@@ -124,8 +124,13 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutOuter
+    # Forge-Change-Del - !type:CharacterDepartmentRequirement
+      # Forge-Change-Del departments:
+        # Forge-Change-Del - Tribe
+    # Forge-Change-Start
     - !type:CharacterJobRequirement
       jobs: *tribalWastelanderJobs
+    # Forge-Change-End
   items:
     - N14ClothingOuterponcho
 
@@ -179,8 +184,13 @@
   requirements:
     - !type:CharacterItemGroupRequirement
       group: N14LoadoutHead
+    # Forge-Change-Del - !type:CharacterDepartmentRequirement
+      # Forge-Change-Del departments:
+        # Forge-Change-Del - Tribe
+    # Forge-Change-Start
     - !type:CharacterJobRequirement
       jobs: *tribalWastelanderJobs
+    # Forge-Change-End
   items:
     - N14ClothingHeadTakerwraps
 
