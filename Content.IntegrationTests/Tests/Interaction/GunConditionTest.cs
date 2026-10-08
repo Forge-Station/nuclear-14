@@ -1,3 +1,4 @@
+/// Forge-Change-Start
 using System.Numerics;
 using Content.Shared._Forge.Weapons.Ranged.Components;
 using Content.Shared.Damage;
@@ -156,3 +157,4 @@ public sealed class GunConditionTest : InteractionTest
         Assert.That(condition.Condition, Is.EqualTo(45f).Within(0.001f));
     }
 }
+/// Forge-Change-End
