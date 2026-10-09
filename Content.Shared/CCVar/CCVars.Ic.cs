@@ -17,7 +17,7 @@ public sealed partial class CCVars
         CVarDef.Create("ic.flavor_text", true, CVar.SERVER | CVar.REPLICATED);
 
     /// <summary>
-    ///     Adds a period at the end of a sentence if the sentence ends in a letter.
+    ///     Adds missing terminal punctuation to local speech, whispers, and radio messages before accents.
     /// </summary>
     public static readonly CVarDef<bool> ChatPunctuation =
         CVarDef.Create("ic.punctuation", true, CVar.SERVER);

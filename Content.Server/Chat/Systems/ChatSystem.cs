@@ -238,12 +238,11 @@ public sealed partial class ChatSystem : SharedChatSystem
         var language = languageOverride ?? _language.GetLanguage(source);
 
         bool shouldCapitalize = (desiredType != InGameICChatType.Emote);
-        bool shouldPunctuate = _configurationManager.GetCVar(CCVars.ChatPunctuation);
         // Capitalizing the word I only happens in English, so we check language here
         bool shouldCapitalizeTheWordI = (!CultureInfo.CurrentCulture.IsNeutralCulture && CultureInfo.CurrentCulture.Parent.Name == "en")
             || (CultureInfo.CurrentCulture.IsNeutralCulture && CultureInfo.CurrentCulture.Name == "en");
 
-        message = SanitizeInGameICMessage(source, message, out var emoteStr, shouldCapitalize, shouldPunctuate, shouldCapitalizeTheWordI);
+        message = SanitizeInGameICMessage(source, message, out var emoteStr, shouldCapitalize, shouldCapitalizeTheWordI);
 
         // Was there an emote in the message? If so, send it.
         if (player != null && emoteStr != message && emoteStr != null)
@@ -414,7 +413,7 @@ public sealed partial class ChatSystem : SharedChatSystem
             return;
 
         // The original message
-        var message = TransformSpeech(source, FormattedMessage.RemoveMarkup(originalMessage), language);
+        var message = TransformSpeech(source, PrepareSpeechMessage(originalMessage), language);
 
         if (message.Length == 0)
             return;
@@ -441,7 +440,7 @@ public sealed partial class ChatSystem : SharedChatSystem
         // The chat message wrapped in a "x says y" string
         var wrappedMessage = WrapPublicMessage(source, name, message, language: language);
         // The chat message obfuscated via language obfuscation
-        var obfuscated = SanitizeInGameICMessage(source, _language.ObfuscateSpeech(message, language), out var emoteStr, true, _configurationManager.GetCVar(CCVars.ChatPunctuation), (!CultureInfo.CurrentCulture.IsNeutralCulture && CultureInfo.CurrentCulture.Parent.Name == "en") || (CultureInfo.CurrentCulture.IsNeutralCulture && CultureInfo.CurrentCulture.Name == "en"));
+        var obfuscated = SanitizeInGameICMessage(source, _language.ObfuscateSpeech(message, language), out var emoteStr, true, (!CultureInfo.CurrentCulture.IsNeutralCulture && CultureInfo.CurrentCulture.Parent.Name == "en") || (CultureInfo.CurrentCulture.IsNeutralCulture && CultureInfo.CurrentCulture.Name == "en"));
         // The language-obfuscated message wrapped in a "x says y" string
         var wrappedObfuscated = WrapPublicMessage(source, name, obfuscated, language: language);
 
@@ -487,7 +486,7 @@ public sealed partial class ChatSystem : SharedChatSystem
         if (!_actionBlocker.CanSpeak(source) && !ignoreActionBlocker)
             return;
 
-        var message = TransformSpeech(source, FormattedMessage.RemoveMarkup(originalMessage), language);
+        var message = TransformSpeech(source, PrepareSpeechMessage(originalMessage), language);
         if (message.Length == 0)
             return;
 
@@ -507,7 +506,7 @@ public sealed partial class ChatSystem : SharedChatSystem
         }
         name = FormattedMessage.EscapeText(name);
 
-        var languageObfuscatedMessage = SanitizeInGameICMessage(source, _language.ObfuscateSpeech(message, language), out var emoteStr, true, _configurationManager.GetCVar(CCVars.ChatPunctuation), (!CultureInfo.CurrentCulture.IsNeutralCulture && CultureInfo.CurrentCulture.Parent.Name == "en") || (CultureInfo.CurrentCulture.IsNeutralCulture && CultureInfo.CurrentCulture.Name == "en"));
+        var languageObfuscatedMessage = SanitizeInGameICMessage(source, _language.ObfuscateSpeech(message, language), out var emoteStr, true, (!CultureInfo.CurrentCulture.IsNeutralCulture && CultureInfo.CurrentCulture.Parent.Name == "en") || (CultureInfo.CurrentCulture.IsNeutralCulture && CultureInfo.CurrentCulture.Name == "en"));
 
         foreach (var (session, data) in GetRecipients(source, Transform(source).GridUid == null ? 0.3f : WhisperMuffledRange))
         {
@@ -788,7 +787,7 @@ public sealed partial class ChatSystem : SharedChatSystem
     }
 
     // ReSharper disable once InconsistentNaming
-    private string SanitizeInGameICMessage(EntityUid source, string message, out string? emoteStr, bool capitalize = true, bool punctuate = false, bool capitalizeTheWordI = true)
+    private string SanitizeInGameICMessage(EntityUid source, string message, out string? emoteStr, bool capitalize = true, bool capitalizeTheWordI = true)
     {
         var newMessage = message.Trim();
         newMessage = SanitizeMessageReplaceWords(newMessage);
@@ -797,8 +796,6 @@ public sealed partial class ChatSystem : SharedChatSystem
             newMessage = SanitizeMessageCapital(newMessage);
         if (capitalizeTheWordI)
             newMessage = SanitizeMessageCapitalizeTheWordI(newMessage, "i");
-        if (punctuate)
-            newMessage = SanitizeMessagePeriod(newMessage);
 
         _sanitizer.TrySanitizeOutSmilies(newMessage, source, out newMessage, out emoteStr);
 
@@ -844,14 +841,41 @@ public sealed partial class ChatSystem : SharedChatSystem
             .Select(p => p.Channel);
     }
 
-    private string SanitizeMessagePeriod(string message)
+    private string PrepareSpeechMessage(string message)
     {
-        if (string.IsNullOrEmpty(message))
+        message = FormattedMessage.RemoveMarkup(message);
+        return _configurationManager.GetCVar(CCVars.ChatPunctuation)
+            ? SanitizeMessagePeriod(message)
+            : message;
+    }
+
+    /// <summary>
+    /// Adds missing terminal punctuation while preserving existing punctuation and interrupted speech.
+    /// </summary>
+    public static string SanitizeMessagePeriod(string message)
+    {
+        message = message.TrimEnd();
+        var last = message.Length - 1;
+
+        // Look inside closing quotes and brackets before deciding whether punctuation is missing.
+        while (last >= 0 && (char.IsWhiteSpace(message[last]) ||
+               message[last] is '"' or '\'' or '»' or '”' or '’' or ')' or ']' or '}'))
+        {
+            last--;
+        }
+
+        if (last < 0)
             return message;
-        // Adds a period if the last character is a letter.
-        if (char.IsLetter(message[^1]))
-            message += ".";
-        return message;
+
+        var ending = message[last];
+        if (char.IsPunctuation(ending))
+            return message;
+
+        // Do not turn symbol-only messages into spoken sentences.
+        if (!message.Any(char.IsLetterOrDigit))
+            return message;
+
+        return message + ".";
     }
 
     [ValidatePrototypeId<ReplacementAccentPrototype>]

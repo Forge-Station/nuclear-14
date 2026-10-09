@@ -28,6 +28,25 @@
 
 - type: entity
   parent: N14BookLanguageBase
+  id: N14BookSpanish
+  name: Spanish language textbook
+  description: "Ten stages of study: understand Spanish after five, speak it after ten."
+  components:
+  - type: N14LanguageBook
+    language: Spanish
+  - type: Sprite
+    sprite: Objects/Misc/books.rsi
+    layers:
+    - state: paper
+    - state: cover_base
+      color: "#AA151B"
+    - state: decor_middle
+      color: "#F1BF00"
+    - state: icon_text
+      color: "#F1BF00"
+
+- type: entity
+  parent: N14BookLanguageBase
   id: N14BookLatin
   name: latin textbook
   description: A guide for studying the Latin language.
