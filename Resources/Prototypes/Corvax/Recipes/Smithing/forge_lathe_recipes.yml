@@ -1,0 +1,128 @@
+#MARK: Legion Forge Lathe Recipes
+
+# Bloomery: melt scrap + steel into a dirty bloom (and crude kulons).
+- type: latheRecipe
+  id: N14ForgeDirtyBloom
+  result: N14ForgeDirtyBloom
+  completetime: 8
+  materials:
+    Scrap: 200
+    Steel: 1000
+
+# Bloomery: cast crude neck kulons, worked later on the anvil.
+- type: latheRecipe
+  id: N14ForgeCulonV1
+  result: N14ForgeCulonV1
+  completetime: 8
+  materials:
+    ScrapGold: 1500
+
+- type: latheRecipe
+  id: N14ForgeCulonV2
+  result: N14ForgeCulonV2
+  completetime: 8
+  materials:
+    RawUranium: 500
+    Thread: 300
+
+# Workbench: split a forged torso plate into armor halves (0.5 plate per craft).
+- type: latheRecipe
+  id: N14ForgeForgedArmPlate
+  result: N14ForgeForgedArmPlate
+  completetime: 5
+  materials:
+    N14ForgedTorsoplate: 500
+
+- type: latheRecipe
+  id: N14ForgeForgedLegPlate
+  result: N14ForgeForgedLegPlate
+  completetime: 5
+  materials:
+    N14ForgedTorsoplate: 500
+
+- type: latheRecipe
+  id: N14ForgeForgedArmPlateV2
+  result: N14ForgeForgedArmPlateV2
+  completetime: 5
+  materials:
+    N14ForgedTorsoplateV2: 500
+
+- type: latheRecipe
+  id: N14ForgeForgedLegPlateV2
+  result: N14ForgeForgedLegPlateV2
+  completetime: 5
+  materials:
+    N14ForgedTorsoplateV2: 500
+
+- type: latheRecipe
+  id: N14ForgeForgedArmPlateV3
+  result: N14ForgeForgedArmPlateV3
+  completetime: 5
+  materials:
+    N14ForgedTorsoplateV3: 500
+
+- type: latheRecipe
+  id: N14ForgeForgedLegPlateV3
+  result: N14ForgeForgedLegPlateV3
+  completetime: 5
+  materials:
+    N14ForgedTorsoplateV3: 500
+
+# Decoration bench: craft decorative top/bottom pieces from cloth.
+- type: latheRecipe
+  id: N14ForgeDecorationTop
+  result: N14ForgeDecorationTop
+  completetime: 5ы
+  materials:
+    Cloth: 1000
+
+- type: latheRecipe
+  id: N14ForgeDecorationBottom
+  result: N14ForgeDecorationBottom
+  completetime: 5
+  materials:
+    Cloth: 1000
+# Bloomery variants
+- type: latheRecipe
+  id: N14ForgeDirtyBloomV2
+  result: N14ForgeDirtyBloomV2
+  completetime: 8
+  materials:
+    Scrap: 200
+    Steel: 1000
+
+- type: latheRecipe
+  id: N14ForgeDirtyBloomV3
+  result: N14ForgeDirtyBloomV3
+  completetime: 8
+  materials:
+    Scrap: 200
+    Steel: 1000
+
+- type: latheRecipe
+  id: N14ForgeDecorationTopV2
+  result: N14ForgeDecorationTopV2
+  completetime: 5
+  materials:
+    Cloth: 1000
+
+- type: latheRecipe
+  id: N14ForgeDecorationBottomV2
+  result: N14ForgeDecorationBottomV2
+  completetime: 5
+  materials:
+    Cloth: 1000
+
+- type: latheRecipe
+  id: N14ForgeDecorationTopV3
+  result: N14ForgeDecorationTopV3
+  completetime: 5
+  materials:
+    Cloth: 1000
+
+- type: latheRecipe
+  id: N14ForgeDecorationBottomV3
+  result: N14ForgeDecorationBottomV3
+  completetime: 5
+  materials:
+    Cloth: 1000

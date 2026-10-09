@@ -1,0 +1,719 @@
+#MARK: Legion Forge Items (Materials & Smelted Parts)
+
+# Dirty bloom (грязная крица) — hammered on the anvil until clean.
+- type: entity
+  parent: BaseItem
+  id: N14ForgeDirtyBloom
+  name: dirty bloom
+  description: A lump of crude iron bloom straight from the bloomery. Needs to be hammered clean on an anvil.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/blooms/bloomdirtyM.rsi
+    state: icon
+  - type: Item
+    size: Small
+  - type: N14ForgeItem
+  - type: N14ForgeBloom
+  - type: Stack
+    stackType: N14ForgeBloom
+    count: 1
+
+# Clean bloom (варёная крица) — ready for the furnace.
+- type: entity
+  parent: BaseItem
+  id: N14ForgeBloom
+  name: clean bloom
+  description: A clean lump of wrought iron, ready to be cooked in a furnace.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/blooms/bloomM.rsi
+    state: icon
+  - type: Item
+    size: Small
+  - type: N14ForgeItem
+  - type: N14ForgeBloom
+    clean: true
+  - type: Stack
+    stackType: N14ForgeBloom
+    count: 1
+
+# Base for flat forged plates (тарелки).
+- type: entity
+  parent: BaseItem
+  id: N14ForgePlateBase
+  abstract: true
+  components:
+  - type: Sprite
+    layers:
+    - state: plate
+  - type: Item
+    size: Small
+  - type: N14ForgeItem
+
+# Flat plate (тарелка) — furnace result, welded in 4x to make a torso plate.
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgePlate
+  name: metal plate
+  description: A flat forged metal plate, fresh from the furnace. Several of these can be welded together.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plate.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: Plate
+  - type: Stack
+    stackType: N14ForgePlate
+    count: 1
+
+# Forged (quenched) flat plate — result of quenching a heated plate. Cannot be welded.
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeForgedPlate
+  name: quenched metal plate
+  description: A flat metal plate that has been quenched while hot. It has a hardened edge.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plate.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: Plate
+
+# Torso plate (сваренная плита) — welded 4x flat plates.
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeTorsoplate
+  name: torso plate
+  description: A wide vertical plate welded together from flat plates. Forged into a torso piece on an anvil.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/torsoplate.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: TorsoPlate
+
+# Arm plate (вертикальная половина).
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeArmPlate
+  name: arm plate
+  description: A narrow vertical metal plate, to be forged into an arm piece.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/armplate.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: ArmPlate
+
+# Leg plate (горизонтальная половина).
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeLegPlate
+  name: leg plate
+  description: A wide horizontal metal plate, to be forged into a leg piece.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/legplate.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: LegPlate
+
+# Forged (кованые) variants — welded plates cooked in the furnace.
+# Quenching a heated forged plate later marks it tempered (same prototype/sprite).
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeForgedTorsoplate
+  name: forged torso plate
+  description: A torso plate forged in a furnace. Ready for the anvil.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedtorsoplate.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: TorsoPlate
+    variant: Forged
+  - type: Material
+  - type: PhysicalComposition
+    materialComposition:
+      N14ForgedTorsoplate: 1000
+  - type: Tag
+    tags:
+    - N14ForgeForgedTorsoplate
+
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeForgedArmPlate
+  name: forged arm plate
+  description: An arm plate forged in a furnace.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedarmplate.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: ArmPlate
+    variant: Forged
+
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeForgedLegPlate
+  name: forged leg plate
+  description: A leg plate forged in a furnace.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedlegplate.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: LegPlate
+    variant: Forged
+
+# Decorations for the mannequin (top / bottom).
+- type: entity
+  parent: BaseItem
+  id: N14ForgeDecorationBase
+  abstract: true
+  components:
+  - type: Item
+    size: Small
+  - type: N14ForgeItem
+  - type: N14ForgeDecoration
+  - type: Appearance
+  - type: GenericVisualizer
+    visuals:
+      enum.N14ForgePartVisuals.Stage:
+        enum.N14ForgePartVisualLayer.Layer:
+          Icon: { state: icon }
+          OnDummy: { state: ondummy }
+
+- type: entity
+  parent: N14ForgeDecorationBase
+  id: N14ForgeDecorationTop
+  name: armor decoration (top)
+  description: An ornate piece meant to decorate the top of a suit of armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Monstruum.rsi/decorations/top.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+    drawdepth: Mobs
+  - type: N14ForgeDecoration
+    top: true
+
+- type: entity
+  parent: N14ForgeDecorationBase
+  id: N14ForgeDecorationBottom
+  name: armor decoration (bottom)
+  description: An ornate piece meant to decorate the bottom of a suit of armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Monstruum.rsi/decorations/bottom.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+    drawdepth: Mobs
+  - type: N14ForgeDecoration
+    top: false
+
+# Crude kulons (кулоны) — forged at the bloomery, worked on an anvil:
+# a blacksmith hammer turns them into clothing (wearable), a sledgehammer after that imbues special properties.
+- type: entity
+  parent: BaseItem
+  id: N14ForgeCulonBase
+  abstract: true
+  name: crude kulon
+  components:
+  - type: Item
+    size: Small
+  - type: N14ForgeItem
+  - type: N14ForgeCulon
+  - type: Butcherable
+    butcheringType: Knife
+    spawned: []
+# Worked and final kulons are neck clothing entities (like ClothingNeckPin*).
+# ClothingNeckBase provides quickEquip (Z to wear) + the neck slot;
+# the per-variant Clothing block below just adds the RSI with the equipped-NECK state.
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ForgeCulonClothingBase
+  abstract: true
+  name: worked kulon
+  components:
+  - type: N14ForgeItem
+  - type: N14ForgeCulon
+  - type: Butcherable
+    butcheringType: Knife
+    spawned: []
+# Crude (необработанный) — can't be worn until worked.
+- type: entity
+  parent: N14ForgeCulonBase
+  id: N14ForgeCulonV1
+  name: crude kulon
+  description: A crude iron amulet straight from the bloomery. Work it on an anvil to make it wearable and imbue it.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/ForgeCulonV1.rsi
+    state: icon
+    scale: 0.6, 0.6
+
+- type: entity
+  parent: N14ForgeCulonBase
+  id: N14ForgeCulonV2
+  name: crude kulon
+  description: A crude iron amulet straight from the bloomery. Work it on an anvil to make it wearable and imbue it.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/ForgeCulonV2.rsi
+    state: icon
+    scale: 0.7, 0.7
+
+# Worked (обработанный молотом) — clothing, can now be worn as a necklace.
+- type: entity
+  parent: N14ForgeCulonClothingBase
+  id: N14ForgeCulonV1Worked
+  name: worked kulon
+  description: A shaped iron amulet, worked on an anvil. It can now be worn.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/ForgeCulonV1.rsi
+    state: icon
+    scale: 0.6, 0.6
+  - type: Clothing
+    sprite: Corvax/Clothing/Neck/ForgeCulonV1
+    clothingVisuals:
+      neck:
+      - state: equipped-NECK
+
+- type: entity
+  parent: N14ForgeCulonClothingBase
+  id: N14ForgeCulonV2Worked
+  name: worked kulon
+  description: A shaped iron amulet, worked on an anvil. It can now be worn.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/ForgeCulonV2.rsi
+    state: icon
+    scale: 0.7, 0.7
+  - type: Clothing
+    sprite: Corvax/Clothing/Neck/ForgeCulonV2
+    clothingVisuals:
+      neck:
+      - state: equipped-NECK
+
+# Final (обработанный кувалдой) — imbued with special properties.
+- type: entity
+  parent: N14ForgeCulonV1Worked
+  id: N14ForgeCulonV1Final
+  name: reflecting kulon
+  description: A worked iron amulet that reflects incoming bullets with a small chance.
+  components:
+  - type: Reflect
+    reflectProb: 0.05
+    innate: true
+    reflects:
+    - NonEnergy
+
+- type: entity
+  parent: N14ForgeCulonV2Worked
+  id: N14ForgeCulonV2Final
+  name: swift kulon
+  description: A worked iron amulet that makes the wearer move faster.
+  components:
+  - type: ClothingSpeedModifier
+    walkModifier: 1.05
+    sprintModifier: 1.05
+
+# Variant blooms V2/V3 (for alternate armor sets)
+- type: entity
+  parent: N14ForgeBloom
+  id: N14ForgeBloomV2
+  name: clean bloom (V2)
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/blooms/bloomK.rsi
+    state: icon
+  - type: N14ForgeBloom
+    clean: true
+    set: Kratos
+
+- type: entity
+  parent: N14ForgeBloom
+  id: N14ForgeBloomV3
+  name: clean bloom (V3)
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/blooms/bloomB.rsi
+    state: icon
+  - type: N14ForgeBloom
+    clean: true
+    set: Bull
+
+- type: entity
+  parent: BaseItem
+  id: N14ForgeDirtyBloomV2
+  name: dirty bloom (V2)
+  description: A lump of crude iron bloom straight from the bloomery. Needs to be hammered clean on an anvil.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/blooms/bloomdirtyK.rsi
+    state: icon
+  - type: Item
+    size: Small
+  - type: N14ForgeItem
+  - type: N14ForgeBloom
+    set: Kratos
+
+- type: entity
+  parent: BaseItem
+  id: N14ForgeDirtyBloomV3
+  name: dirty bloom (V3)
+  description: A lump of crude iron bloom straight from the bloomery. Needs to be hammered clean on an anvil.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/blooms/bloomdirtyB.rsi
+    state: icon
+  - type: Item
+    size: Small
+  - type: N14ForgeItem
+  - type: N14ForgeBloom
+    set: Bull
+
+
+# V2 plates
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgePlateV2
+  name: metal plate (V2)
+  description: A flat forged metal plate for V2 armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plateV2.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: Plate
+    set: Kratos
+  - type: Stack
+    stackType: N14ForgePlate
+    count: 1
+
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeForgedPlateV2
+  name: forged metal plate (V2)
+  description: A quenched flat forged metal plate for V2 armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plateV2.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: Plate
+    variant: Forged
+    set: Kratos
+  - type: Stack
+    stackType: N14ForgePlate
+    count: 1
+
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeTemperedPlateV2
+  name: tempered metal plate (V2)
+  description: A tempered flat forged metal plate for V2 armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plateV2.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: Plate
+    variant: Tempered
+    set: Kratos
+  - type: Stack
+    stackType: N14ForgePlate
+    count: 1
+
+# V2 welded/forged armor plates
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeTorsoplateV2
+  name: torso plate (V2)
+  description: A wide vertical plate welded together from flat plates. Forged into a torso piece on an anvil.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/torsoplateV2.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: TorsoPlate
+    set: Kratos
+
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeArmPlateV2
+  name: arm plate (V2)
+  description: A narrow vertical metal plate, to be forged into an arm piece.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/armplateV2.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: ArmPlate
+    set: Kratos
+
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeLegPlateV2
+  name: leg plate (V2)
+  description: A wide horizontal metal plate, to be forged into a leg piece.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/legplateV2.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: LegPlate
+    set: Kratos
+
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeForgedTorsoplateV2
+  name: forged torso plate (V2)
+  description: A torso plate forged in a furnace. Ready for the anvil.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedtorsoplateV2.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: TorsoPlate
+    variant: Forged
+    set: Kratos
+  - type: Material
+  - type: PhysicalComposition
+    materialComposition:
+      N14ForgedTorsoplateV2: 1000
+  - type: Tag
+    tags:
+    - N14ForgeForgedTorsoplate
+
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeForgedArmPlateV2
+  name: forged arm plate (V2)
+  description: An arm plate forged in a furnace.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedarmplateV2.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: ArmPlate
+    variant: Forged
+    set: Kratos
+
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeForgedLegPlateV2
+  name: forged leg plate (V2)
+  description: A leg plate forged in a furnace.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedlegplateV2.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: LegPlate
+    variant: Forged
+    set: Kratos
+
+# V3 plates
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgePlateV3
+  name: metal plate (V3)
+  description: A flat forged metal plate for V3 armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plateV3.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: Plate
+    set: Bull
+  - type: Stack
+    stackType: N14ForgePlate
+    count: 1
+
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeForgedPlateV3
+  name: forged metal plate (V3)
+  description: A quenched flat forged metal plate for V3 armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plateV3.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: Plate
+    variant: Forged
+    set: Bull
+  - type: Stack
+    stackType: N14ForgePlate
+    count: 1
+
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeTemperedPlateV3
+  name: tempered metal plate (V3)
+  description: A tempered flat forged metal plate for V3 armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/plateV3.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: Plate
+    variant: Tempered
+    set: Bull
+  - type: Stack
+    stackType: N14ForgePlate
+    count: 1
+
+# V3 welded/forged armor plates
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeTorsoplateV3
+  name: torso plate (V3)
+  description: A wide vertical plate welded together from flat plates. Forged into a torso piece on an anvil.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/torsoplateV3.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: TorsoPlate
+    set: Bull
+
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeArmPlateV3
+  name: arm plate (V3)
+  description: A narrow vertical metal plate, to be forged into an arm piece.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/armplateV3.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: ArmPlate
+    set: Bull
+
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeLegPlateV3
+  name: leg plate (V3)
+  description: A wide horizontal metal plate, to be forged into a leg piece.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/legplateV3.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: LegPlate
+    set: Bull
+
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeForgedTorsoplateV3
+  name: forged torso plate (V3)
+  description: A torso plate forged in a furnace. Ready for the anvil.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedtorsoplateV3.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: TorsoPlate
+    variant: Forged
+    set: Bull
+  - type: Material
+  - type: PhysicalComposition
+    materialComposition:
+      N14ForgedTorsoplateV3: 1000
+  - type: Tag
+    tags:
+    - N14ForgeForgedTorsoplate
+
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeForgedArmPlateV3
+  name: forged arm plate (V3)
+  description: An arm plate forged in a furnace.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedarmplateV3.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: ArmPlate
+    variant: Forged
+    set: Bull
+
+- type: entity
+  parent: N14ForgePlateBase
+  id: N14ForgeForgedLegPlateV3
+  name: forged leg plate (V3)
+  description: A leg plate forged in a furnace.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/MATERIALS/forgedlegplateV3.rsi
+    state: plate
+  - type: N14ForgePlate
+    plateType: LegPlate
+    variant: Forged
+    set: Bull
+
+- type: entity
+  parent: N14ForgeDecorationBase
+  id: N14ForgeDecorationTopV2
+  name: armor decoration (top) V2
+  description: An ornate piece meant to decorate the top of a suit of armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Kratos.rsi/decorations/top.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+    drawdepth: Mobs
+  - type: N14ForgeDecoration
+    top: true
+
+- type: entity
+  parent: N14ForgeDecorationBase
+  id: N14ForgeDecorationBottomV2
+  name: armor decoration (bottom) V2
+  description: An ornate piece meant to decorate the bottom of a suit of armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Kratos.rsi/decorations/bottom.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+    drawdepth: Mobs
+  - type: N14ForgeDecoration
+    top: false
+
+- type: entity
+  parent: N14ForgeDecorationBase
+  id: N14ForgeDecorationTopV3
+  name: armor decoration (top) V3
+  description: An ornate piece meant to decorate the top of a suit of armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Bull.rsi/decorations/top.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+    drawdepth: Mobs
+  - type: N14ForgeDecoration
+    top: true
+
+- type: entity
+  parent: N14ForgeDecorationBase
+  id: N14ForgeDecorationBottomV3
+  name: armor decoration (bottom) V3
+  description: An ornate piece meant to decorate the bottom of a suit of armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/ARMORPARTS/Bull.rsi/decorations/bottom.rsi
+    layers:
+    - map: ["enum.N14ForgePartVisualLayer.Layer"]
+      state: icon
+    drawdepth: Mobs
+  - type: N14ForgeDecoration
+    top: false

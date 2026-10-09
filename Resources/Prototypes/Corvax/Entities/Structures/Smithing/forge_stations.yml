@@ -1,0 +1,309 @@
+#MARK: Legion Forge Stations (Smithing)
+
+# Shared base for forge stations.
+- type: entity
+  parent: BaseStructure
+  id: N14ForgeStationBase
+  abstract: true
+  components:
+  - type: InteractionOutline
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.25,-0.25,0.25,0.25"
+        density: 190
+        mask:
+        - MachineMask
+        layer:
+        - MachineLayer
+  - type: N14ForgeItem
+
+# The anvil.
+- type: entity
+  parent: N14ForgeStationBase
+  id: N14ForgeAnvil
+  name: anvil
+  description: A heavy smithing anvil. Blooms and metal plates are shaped here.
+  placement:
+    mode: PlaceFree
+  components:
+  - type: Transform
+    anchored: false
+  - type: Physics
+    bodyType: Static
+    canCollide: true
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/anvil.rsi
+    state: anvil
+    offset: 0, 0
+  - type: PlaceableSurface
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+            bounds: "0,-0.6,0.6,0.6"
+        mask:
+        - TableMask
+        layer:
+        - TableLayer
+  - type: N14ForgeAnvil
+  - type: Tag
+    tags:
+    - N14ForgeStation
+
+# The bloomery (house furnace for melting scrap into a bloom).
+- type: entity
+  parent: N14ForgeStationBase
+  id: N14ForgeBloomery
+  name: bloomery
+  description: A primitive bloomery furnace used to melt scrap and steel into a raw bloom.
+  placement:
+    mode: PlaceFree
+  components:
+  - type: Transform
+    anchored: false
+  - type: Physics
+    bodyType: Static
+    canCollide: true
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/bloomery.rsi
+    state: bloomery
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.25,-0.45,0.25,0.45"
+        density: 1000
+        mask:
+        - MachineMask
+        layer:
+        - MachineLayer
+  - type: PointLight
+    offset: "-0.13, 0"
+    color: "#f05e1b"
+    radius: 3
+    energy: 3
+  - type: ActivatableUI
+    key: enum.LatheUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.LatheUiKey.Key:
+        type: LatheBoundUserInterface
+  - type: ExtensionCableReceiver
+  - type: ApcPowerReceiver
+    needsPower: false
+  - type: MaterialStorage
+    whitelist:
+      tags:
+      - RawMaterial
+      - Ore
+      - Scrap
+      - Sheet
+  - type: Lathe
+    idleState: icon
+    runningState: icon
+    staticRecipes:
+    - N14ForgeDirtyBloom
+    - N14ForgeDirtyBloomV2
+    - N14ForgeDirtyBloomV3
+    - N14ForgeCulonV1
+    - N14ForgeCulonV2
+
+# The furnace (печь) — cooks a clean bloom into a flat plate and welded plates into forged plates.
+- type: entity
+  parent: N14ForgeStationBase
+  id: N14ForgeFurnace
+  name: furnace
+  description: A hot furnace used to cook a clean bloom into a flat plate and welded plates into forged ones.
+  placement:
+    mode: PlaceFree
+  components:
+  - type: Transform
+    anchored: false
+  - type: Physics
+    bodyType: Static
+    canCollide: true
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/furnace.rsi
+    layers:
+    - map: ["enum.N14ForgeFurnaceVisuals.Cooking"]
+      state: empty
+  - type: Appearance
+  - type: GenericVisualizer
+    visuals:
+      enum.N14ForgeFurnaceVisuals.Cooking:
+        enum.N14ForgeFurnaceVisuals.Cooking:
+          Idle: { state: empty }
+          Cooking: { state: furnace }
+  - type: PointLight
+    offset: "-0.13, 0"
+    color: "#f05e1b"
+    radius: 3
+    energy: 3
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.25,-0.45,0.25,0.45"
+        density: 1000
+        mask:
+        - MachineMask
+        layer:
+        - MachineLayer
+  - type: ContainerContainer
+  - type: N14ForgeFurnace
+    cookTime: 20
+    coalCost: 5
+
+# The gorn (горн) — heats plates for quenching.
+- type: entity
+  parent: N14ForgeStationBase
+  id: N14ForgeGorn
+  name: forge hearth
+  description: A hot forge hearth used to heat metal plates before quenching.
+  placement:
+    mode: PlaceFree
+  components:
+  - type: Transform
+    anchored: false
+  - type: Physics
+    bodyType: Static
+    canCollide: true
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/gorn.rsi
+    state: gorn
+  - type: PointLight
+    offset: "-0.13, 0"
+    color: "#f05e1b"
+    radius: 3
+    energy: 3
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.25,-0.45,0.25,0.45"
+        density: 1000
+        mask:
+        - MachineMask
+        layer:
+        - MachineLayer
+  - type: ContainerContainer
+  - type: N14ForgeGorn
+    heatTime: 60
+    coalCost: 5
+
+# The workbench (станок) — splits forged torso plates into armor halves (0.5 plate per craft).
+- type: entity
+  parent: N14ForgeStationBase
+  id: N14ForgeWorkbench
+  name: metal workbench
+  description: A heavy workbench used to split forged torso plates into armor halves.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/becnh.rsi
+    state: bench
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.25,-0.45,0.25,0.45"
+        density: 1000
+        mask:
+        - MachineMask
+        layer:
+        - MachineLayer
+  - type: ActivatableUI
+    key: enum.LatheUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.LatheUiKey.Key:
+        type: LatheBoundUserInterface
+  - type: ExtensionCableReceiver
+  - type: ApcPowerReceiver
+    needsPower: false
+  - type: MaterialStorage
+    whitelist:
+      tags:
+      - N14ForgeForgedTorsoplate
+  - type: Lathe
+    idleState: icon
+    runningState: icon
+    staticRecipes:
+    - N14ForgeForgedArmPlate
+    - N14ForgeForgedLegPlate
+    - N14ForgeForgedArmPlateV2
+    - N14ForgeForgedLegPlateV2
+    - N14ForgeForgedArmPlateV3
+    - N14ForgeForgedLegPlateV3
+
+# The decoration bench (верстак украшений) — produces top & bottom decorations.
+- type: entity
+  parent: N14ForgeStationBase
+  id: N14ForgeDecorationBench
+  name: decoration workbench
+  description: A workbench for crafting decorative parts for armor.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/decorationbench.rsi
+    state: decorationbench
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.1,-0.1,1,0.3"
+        density: 190
+        mask:
+        - MachineMask
+        layer:
+        - MachineLayer
+  - type: ActivatableUI
+    key: enum.LatheUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.LatheUiKey.Key:
+        type: LatheBoundUserInterface
+  - type: ExtensionCableReceiver
+  - type: ApcPowerReceiver
+    needsPower: false
+  - type: MaterialStorage
+    whitelist:
+      tags:
+      - Sheet
+      - RawMaterial
+      - Ingot
+      - Ore
+      - Scrap
+  - type: Lathe
+    idleState: icon
+    runningState: icon
+    staticRecipes:
+    - N14ForgeDecorationTop
+    - N14ForgeDecorationBottom
+    - N14ForgeDecorationTopV2
+    - N14ForgeDecorationBottomV2
+    - N14ForgeDecorationTopV3
+    - N14ForgeDecorationBottomV3
+
+# The mannequin (манекен) — mounts the armor parts.
+- type: entity
+  parent: N14ForgeStationBase
+  id: N14ForgeDummy
+  name: armor mannequin
+  description: A wooden mannequin used to assemble forged armor parts into a full suit.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/LegionForge/dummy.rsi
+    state: dummy
+  - type: N14ForgeDummy
+  - type: UserInterface
+    interfaces:
+      enum.N14ForgeMiniGameUiKey.Key:
+        type: N14ForgeMiniGameBoundUserInterface

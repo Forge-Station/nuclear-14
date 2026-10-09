@@ -39,3 +39,6 @@ tool-quality-axing-tool-name = Fireaxe
 
 tool-quality-n14-gun-maintenance-name = Firearm maintenance
 tool-quality-n14-gun-maintenance-tool-name = Maintenance toolbox
+
+tool-quality-n14-blacksmithing-name = Blacksmithing
+tool-quality-n14-blacksmithing-tool-name = Blacksmith hammer

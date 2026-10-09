@@ -25,3 +25,6 @@ tool-quality-digging-tool-name = Лопата
 
 tool-quality-n14-gun-maintenance-name = Обслуживание оружия
 tool-quality-n14-gun-maintenance-tool-name = Ящик обслуживания
+
+tool-quality-n14-blacksmithing-name = Кузнечное дело
+tool-quality-n14-blacksmithing-tool-name = Кузнечный молот
