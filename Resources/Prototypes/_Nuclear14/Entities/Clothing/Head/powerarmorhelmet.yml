@@ -4,6 +4,7 @@
   name: t-45 power armor helmet
   description: An old helmet used with T-45 Power Armor suits. It's amazing these still exist.
   components:
+  - type: HyposprayBlocker
   - type: Sprite
     netsync: false
     sprite: _Nuclear14/Clothing/Head/PowerArmorHelmets/t45.rsi
@@ -76,6 +77,7 @@
   name: t-51 power armor helmet
   description: An old helmet used with T-51 Power Armor suits. It looks more advanced than your common everyday T-45.
   components:
+  - type: HyposprayBlocker
   - type: Sprite
     netsync: false
     sprite: _Nuclear14/Clothing/Head/PowerArmorHelmets/t51.rsi
@@ -148,6 +150,7 @@
   name: t-60 power armor helmet
   description: An old helmet used with T-60 Power Armor suits, very similar to the T-45.
   components:
+  - type: HyposprayBlocker
   - type: Sprite
     netsync: false
     sprite: _Nuclear14/Clothing/Head/PowerArmorHelmets/t60.rsi
@@ -220,6 +223,7 @@
   name: X-01 power armor helmet
   description: An advanced helmet used with X-01 Power Armor suits.
   components:
+  - type: HyposprayBlocker
   - type: Sprite
     netsync: false
     sprite: _Nuclear14/Clothing/Head/PowerArmorHelmets/x01.rsi
@@ -362,6 +366,7 @@
   name: t-51bc power armor helmet
   description: The pinnacle of pre-war technology appropriated by the Brotherhood of Steel. Commonly worn by Paladin Commanders.
   components:
+  - type: HyposprayBlocker
   - type: Sprite
     netsync: false
     sprite: _Nuclear14/Clothing/Head/PowerArmorHelmets/t51bc.rsi
@@ -430,6 +435,7 @@
   name: t-45 NCR power armor helmet
   description: Originally existing as T-45d power armor that was recovered by and repurposed for the use within NCR.
   components:
+  - type: HyposprayBlocker
   - type: Sprite
     netsync: false
     sprite: _Nuclear14/Clothing/Head/PowerArmorHelmets/t45ncr.rsi

@@ -1,0 +1,33 @@
+- type: construction
+  id: ForgeHumanSkinHat
+  name: шапка из человеческой кожи
+  description: Грубая шапка из человеческой кожи, скреплённая сухожилиями.
+  graph: ForgeHumanSkinHat
+  startNode: start
+  targetNode: hat
+  category: construction-category-clothing
+  icon:
+    sprite: _Forge/Clothing/Head/human_skin_hat.rsi
+    state: icon
+  objectType: Item
+  hide: false
+
+- type: constructionGraph
+  id: ForgeHumanSkinHat
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: hat
+      steps:
+      - tag: ForgeHumanSkinLarge
+        name: крупный фрагмент человеческой кожи
+        icon:
+          sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+          state: skin_human_3
+        doAfter: 3
+      - material: ForgeAnimalSinew
+        amount: 1
+        doAfter: 5
+  - node: hat
+    entity: ForgeClothingHumanSkinHat

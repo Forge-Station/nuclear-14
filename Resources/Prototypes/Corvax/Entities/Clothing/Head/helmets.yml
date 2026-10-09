@@ -4,6 +4,12 @@
   name: helmet legate
   description: "A large helmet with a transverse crest and a face protection plate."
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentHelmetMK2
   - type: Sprite
     sprite: Corvax/Clothing/Head/Helmets/legatehelmet.rsi
   - type: Clothing
@@ -29,6 +35,12 @@
   name: centurion galea
   description: "A protective helmet with a transverse crest."
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentHelmetMK2
   - type: Sprite
     sprite: Corvax/Clothing/Head/Helmets/centurionhelmet.rsi
   - type: Clothing
@@ -54,6 +66,12 @@
   name: centurion conqueror galea
   description: "A protective helmet with a transverse crest."
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentHelmetMK2
   - type: Sprite
     sprite: Corvax/Clothing/Head/Helmets/centurionconquerorhelmet.rsi
   - type: Clothing
@@ -79,6 +97,12 @@
   name: centurion cinder galea
   description: "A richly decorated galley, white lines are visible on its scarlet crest."
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentHelmetMK2
   - type: Sprite
     sprite: Corvax/Clothing/Head/Helmets/centurioncinderhelmet.rsi
   - type: Clothing
@@ -104,6 +128,12 @@
   name: galea
   description: "A protective helmet with a transverse crest."
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentHelmetMK2
   - type: Sprite
     sprite: Corvax/Clothing/Head/Helmets/veteranhelmet.rsi
   - type: Clothing
@@ -129,6 +159,12 @@
   name: galea
   description: "A protective helmet with a transverse crest."
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentHelmetMK2
   - type: Sprite
     sprite: Corvax/Clothing/Head/Helmets/primehelmet.rsi
   - type: Clothing
@@ -154,6 +190,12 @@
   name: galea
   description: "A protective helmet with a transverse crest."
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentHelmetMK2
   - type: Sprite
     sprite: Corvax/Clothing/Head/Helmets/recruithelmet.rsi
   - type: Clothing
@@ -179,6 +221,12 @@
   name: baseball helmet
   description: "A helmet designed for playing baseball. Strike!"
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentHelmetMK2
   - type: Sprite
     sprite: Corvax/Clothing/Head/Helmets/baseballhelmet.rsi
     layers:
@@ -335,6 +383,48 @@
     altPrefix: alt
 
 - type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatPrincepsGalea
+  name: princeps galea
+  description: "A protective helmet with a transverse crest."
+  components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentHelmetMK2
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/princepsgalea.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/princepsgalea.rsi
+  - type: HelmetToggle
+    altPrefix: alt        # RSI должен иметь стейт "alt-equipped-HELMET"
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.8
+        Slash: 0.8
+        Piercing: 0.8
+        Heat: 0.8
+  - type: ExplosionResistance
+    damageCoefficient: 0.90
+  - type: HideLayerClothing
+    slots:
+    - Hair
+
+- type: entity
+  parent: N14ClothingHeadHatPrincepsGalea
+  id: N14ClothingHeadHatPrincepsPrimeGalea
+  name: princeps prime galea
+  description: "The wearers of this helmet act as the first line in the bellum"
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/primeprincepsgalea.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/primeprincepsgalea.rsi
+
+- type: entity
   parent: ClothingHeadEVAHelmetBase
   id: N14ClothingHeadHelmetChinaStealth
   name: шлем стелс-брони
@@ -423,6 +513,12 @@
   name: NCR combat helmet
   description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentHelmetMK2
   - type: Sprite
     sprite: Corvax/Clothing/Head/Helmets/falloutNCRcombathelmet.rsi
   - type: Clothing
@@ -515,8 +611,11 @@
   components:
   - type: Sprite
     sprite: Corvax/Clothing/Head/Helmets/doghelmet.rsi
+
   - type: Clothing
     sprite: Corvax/Clothing/Head/Helmets/doghelmet.rsi
+  - type: HelmetToggle
+    altPrefix: alt
   - type: Armor
     modifiers:
       coefficients:
@@ -645,3 +744,24 @@
         Slash: 0.95
         Piercing: 0.90
         Heat: 0.9
+
+- type: entity
+  parent: ClothingHeadBase
+  id: N14ClothingHeadHatScavengerHelmet
+  name: scavenger helmet
+  description: A battered helmet cobbled together from scrap by wasteland scavengers.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Head/Helmets/scavengerhelmet.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/Head/Helmets/scavengerhelmet.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.95
+        Slash: 0.95
+        Piercing: 0.90
+        Heat: 0.95
+  - type: HideLayerClothing
+    slots:
+    - Hair

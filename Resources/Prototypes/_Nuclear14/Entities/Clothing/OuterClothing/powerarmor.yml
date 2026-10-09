@@ -4,6 +4,12 @@
   name: t-45 power armor
   description: An old suit of T-45 Power Armor. It's amazing these still exist.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t45.rsi
   - type: Clothing
@@ -66,6 +72,9 @@
   - type: Reflect
     reflectProb: 0.1
     spread: 150
+  - type: Construction # Forge-add
+    graph: N14BrokenPowerArmorT45
+    node: Repaired
   - type: EmitsSoundOnMove # Forge-Change
     soundCollection:
       collection: N14FootstepPowerArmor
@@ -81,10 +90,19 @@
   name: t-51 power armor
   description: An old suit of T-51 Power Armor. It looks more advanced than your common everyday T-45.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t51.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t51.rsi
+  - type: Construction
+    graph: N14BrokenPowerArmorT51
+    node: Repaired
   - type: Armor
     modifiers:
       coefficients:
@@ -122,10 +140,19 @@
   name: t-60 power armor
   description: A suit of T-60 Power Armor. The T-60 series of power armor was designed to eventually replace the T-51 as the pinnacle of powered armor technology. It however suffered from a minor drawback in its armor placement, making it somewhat less armored.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t60.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t60.rsi
+  - type: Construction
+    graph: N14BrokenPowerArmorT60
+    node: Repaired
   - type: Armor
     modifiers:
       coefficients:
@@ -189,6 +216,12 @@
   name: X-01 power armor
   description: A rare, bulky, and advanced suit of power armor. It includes partial hermetic sealing that helps protect against radiation!
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/advanced1.rsi
   - type: Clothing
@@ -232,6 +265,12 @@
   name: X-02 power armor
   description: A mass-produced version of the original APA. It sports less plating but is easier to repair and maintain.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/advanced2.rsi
   - type: Clothing
@@ -278,6 +317,12 @@
   name: hellfire power armor
   description: A deep black suit of Enclave-manufactured heavy power armor based on pre-war designs such as the T-51 and improving off of data gathered by post-war designs such as the X-01. Most commonly fielded on the East Coast, no suit rivals its strength.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/hellfire.rsi
   - type: Clothing
@@ -319,10 +364,19 @@
   name: raider power armor
   description: Terrifying, robust, spiky. Everything a Raider needs in a power armor suit.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/raider.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/raider.rsi
+  - type: Construction
+    graph: N14BrokenPowerArmorRaider
+    node: Repaired
   - type: Armor
     modifiers:
       coefficients:
@@ -365,6 +419,12 @@
   name: midwest power armor
   description: A unknown model of power armor manufactured by the Midwest Brotherhood. It supports a lighter plating than the normal but is more ergonomic, allowing easier movement.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/midwest.rsi
   - type: Clothing
@@ -406,6 +466,12 @@
   name: midwest commander power armor
   description: A unknown model of power armor manufactured by the Midwest Brotherhood. This modified version is commonly used by high-ranking Midwest Brotherhood of Steel Paladins.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/midwestcommander.rsi
   - type: Clothing
@@ -454,6 +520,12 @@
   name: t-51bc paladin commander
   description: The pinnacle of pre-war technology appropriated by the Brotherhood of Steel. Commonly worn by Paladin Commanders.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t51bc.rsi
   - type: Clothing
@@ -503,6 +575,9 @@
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t45ncr.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t45ncr.rsi
+  - type: Construction #Forge-add
+    graph: N14BrokenPowerArmorT45NCR
+    node: Repaired
   # - type: Armor #Forge-start
   #   modifiers:
   #     coefficients:
@@ -544,6 +619,12 @@
   name: t-51bc "the canadian shield"
   description: The pinnacle of pre-war technology, appropriated by the RCMP.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/canadianshield.rsi
   - type: Clothing
@@ -577,6 +658,12 @@
   name: modified T-51 power armor
   description: A modified set of T-51 power armor, it seems to have some slight upgrades over the pre-war model and is in the colours of the Washington Brotherhood.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t51wash.rsi
   - type: Clothing
@@ -620,6 +707,12 @@
   name: elite T-51 power armor
   description: A set of T-51 with some upgrades over the pre-war design and painjob made by the Washington Brotherhood. It even has pouches!
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/PowerArmor/t51washelite.rsi
   - type: Clothing

@@ -54,22 +54,35 @@
   - type: RandomSiliconLaws
   - type: Inventory
     templateId: borgDutch
+  - type: Hands
+    showInHands: true
   - type: FootstepModifier
     footstepSoundCollection:
       path: /Audio/Mecha/sound_mecha_powerloader_step.ogg
+      params:
+        volume: -6
   - type: Damageable
     damageContainer: Silicon
     damageModifierSet: Silicon
 
-# отладочный хламобот: спавнится с батареей и хламозитронным мозгом.
+# Раундстартовый хламоборг для роли из лобби.
 - type: entity
+  id: PlayerN14Junkbot
   parent: N14Junkbot
-  id: N14JunkbotDebug
-  suffix: DEBUG
+  suffix: Battery, Modules
   components:
   - type: ContainerFill
     containers:
       borg_brain:
       - N14JunktronPositronicBrain
+      borg_module:
+      - N14BorgModuleJunkCombat
+      - N14BorgModuleJunkManipulator
+      - N14BorgModuleJunkTools
+  - type: ItemSlots
+    slots:
       cell_slot:
-      - PowerCellHyper
+        name: power-cell-slot-component-slot-name-default
+        startingItem: PowerCellHyper
+  - type: RandomMetadata
+    nameSegments: [names_borg]

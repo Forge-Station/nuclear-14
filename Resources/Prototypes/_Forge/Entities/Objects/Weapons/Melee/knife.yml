@@ -1,0 +1,12 @@
+- type: entity
+  parent: N14TribalKnife
+  id: ForgeBoneKnife
+  name: костяной нож
+  description: Самодельный нож из заточенной кости с деревянной рукоятью, скреплённой сухожилиями.
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Weapons/Melee/bone_knife.rsi
+    state: icon
+  - type: Construction
+    graph: ForgeBoneKnife
+    node: knife

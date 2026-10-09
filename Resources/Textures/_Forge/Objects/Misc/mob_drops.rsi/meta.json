@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "copyright": "hide_radstag generated with OpenAI image generation for Forge-Station. hide_pigrat, hide_molerat and hide_radhog supplied by the contributor.",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "hide_radstag"
+    },
+    {
+      "name": "hide_pigrat"
+    },
+    {
+      "name": "hide_molerat"
+    },
+    {
+      "name": "hide_radhog"
+    }
+  ]
+}

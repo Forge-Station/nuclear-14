@@ -1,0 +1,33 @@
+- type: construction
+  id: ForgeBoneKnife
+  name: костяной нож
+  description: Самодельный нож из заточенной кости с деревянной рукоятью, скреплённой сухожилиями.
+  graph: ForgeBoneKnife
+  startNode: start
+  targetNode: knife
+  category: construction-category-weapons
+  icon:
+    sprite: _Forge/Objects/Weapons/Melee/bone_knife.rsi
+    state: icon
+  objectType: Item
+  hide: false
+
+- type: constructionGraph
+  id: ForgeBoneKnife
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: knife
+      steps:
+      - material: WoodPlank
+        amount: 1
+        doAfter: 2
+      - material: ForgeAnimalBone
+        amount: 2
+        doAfter: 4
+      - material: ForgeAnimalSinew
+        amount: 1
+        doAfter: 4
+  - node: knife
+    entity: ForgeBoneKnife

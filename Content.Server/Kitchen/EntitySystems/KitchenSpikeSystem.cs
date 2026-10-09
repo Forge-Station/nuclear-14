@@ -7,6 +7,7 @@ using Content.Shared.Damage;
 using Content.Shared.Database;
 using Content.Shared.DoAfter;
 using Content.Shared.DragDrop;
+using Content.Shared.Humanoid; /// Forge-Change
 using Content.Shared.IdentityManagement;
 using Content.Shared.Interaction;
 using Content.Shared.Interaction.Events;
@@ -152,6 +153,7 @@ namespace Content.Server.Kitchen.EntitySystems
             component.MeatSource1p = Loc.GetString("comp-kitchen-spike-remove-meat", ("victim", victimUid));
             component.MeatSource0 = Loc.GetString("comp-kitchen-spike-remove-meat-last", ("victim", victimUid));
             component.Victim = Name(victimUid);
+            component.HumanoidVictim = HasComp<HumanoidAppearanceComponent>(victimUid); /// Forge-Change
 
             UpdateAppearance(uid, null, component);
 
@@ -202,7 +204,15 @@ namespace Content.Server.Kitchen.EntitySystems
             if (!Resolve(uid, ref component, ref appearance, false))
                 return;
 
-            _appearance.SetData(uid, KitchenSpikeVisuals.Status, component.PrototypesToSpawn?.Count > 0 ? KitchenSpikeStatus.Bloody : KitchenSpikeStatus.Empty, appearance);
+            /// Forge-Change-Start
+            var status = KitchenSpikeStatus.Empty;
+            if (component.PrototypesToSpawn?.Count > 0)
+                status = component.HumanoidVictim ? KitchenSpikeStatus.BloodyHumanoid : KitchenSpikeStatus.Bloody;
+            else
+                component.HumanoidVictim = false;
+
+            _appearance.SetData(uid, KitchenSpikeVisuals.Status, status, appearance);
+            /// Forge-Change-End
         }
 
         private bool Spikeable(EntityUid uid, EntityUid userUid, EntityUid victimUid,

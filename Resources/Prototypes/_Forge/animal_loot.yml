@@ -1,0 +1,373 @@
+# Кости
+
+- type: entity
+  parent: BaseItem
+  id: ForgeAnimalBone
+  name: кости
+  description: Прочные кости, оставшиеся после разделки.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+    layers:
+    - state: bone
+      map: ["base"]
+  - type: Stack
+    stackType: ForgeAnimalBone
+    count: 1
+    baseLayer: base
+    layerStates:
+    - bone
+    - bone
+    - bone_2
+    - bone_2
+    - bone_3
+  - type: Appearance
+  - type: Item
+    size: Small
+  - type: Tag
+    tags:
+    - ForgeLootBone
+- type: stack
+  id: ForgeAnimalBone
+  name: кости
+  icon: { sprite: _Nuclear14/Objects/Misc/mob_drops.rsi, state: bone }
+  spawn: ForgeAnimalBone
+  maxCount: 5
+
+# Варианты начального количества одной общей стопки.
+- type: entity
+  parent: ForgeAnimalBone
+  id: ForgeAnimalBone2
+  suffix: 2
+  components:
+  - type: Stack
+    count: 2
+
+- type: entity
+  parent: ForgeAnimalBone
+  id: ForgeAnimalBone3
+  suffix: 4
+  components:
+  - type: Stack
+    count: 4
+
+- type: entity
+  parent: BaseItem
+  id: ForgeAnimalClaw
+  name: костяной коготь
+  description: Крепкий коготь животного.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+    state: bone_claw
+  - type: Item
+    size: Small
+  - type: Tag
+    tags:
+    - ForgeLootBone
+
+# Сухожилия
+
+- type: entity
+  parent: BaseItem
+  id: ForgeAnimalSinew
+  name: сухожилия
+  description: Сухожилия, извлечённые из туши животного.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+    layers:
+    - state: sinew
+      map: ["base"]
+  - type: Stack
+    stackType: ForgeAnimalSinew
+    count: 1
+    baseLayer: base
+    layerStates:
+    - sinew
+    - sinewcuff
+    - sinewcuff
+    - sinewcuff
+    - sinewcuff
+  - type: Appearance
+  - type: Item
+    size: Small
+  - type: Tag
+    tags:
+    - ForgeLootSinew
+
+- type: stack
+  id: ForgeAnimalSinew
+  name: сухожилия
+  icon: { sprite: _Nuclear14/Objects/Misc/mob_drops.rsi, state: sinew }
+  spawn: ForgeAnimalSinew
+  maxCount: 5
+
+- type: entity
+  parent: Zipties
+  id: ForgeAnimalSinewCuff
+  name: петля из сухожилий
+  description: Петля из сухожилий для связывания рук. Рвётся при снятии.
+  components:
+  - type: Handcuff
+    brokenPrototype: ForgeAnimalSinewCuffBroken
+    startCuffSound:
+      path: /Audio/Items/Handcuffs/rope_start.ogg
+    endCuffSound:
+      path: /Audio/Items/Handcuffs/rope_end.ogg
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+    state: sinewcuff
+  - type: Item
+    size: Small
+  - type: Construction
+    graph: ForgeSinewCuff
+    node: cuff
+
+- type: entity
+  parent: BaseItem
+  id: ForgeAnimalSinewCuffBroken
+  name: порванная петля из сухожилий
+  description: Обрывки сухожилий. Связать ими кого-нибудь уже не получится.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+    state: sinew
+  - type: Item
+    size: Small
+  - type: Tag
+    tags:
+    - Trash
+
+# Шкуры
+
+- type: entity
+  parent: BaseItem
+  id: ForgeAnimalDogHide
+  name: собачья шкура
+  description: Шкура, снятая с собаки.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+    state: hide_dog
+  - type: Item
+    size: Normal
+  - type: Tag
+    tags:
+    - ForgeDogHide
+    - RawLeather
+  - type: PhysicalComposition
+    materialComposition:
+      RawLeather: 200
+  - type: Material
+
+- type: entity
+  parent: BaseItem
+  id: ForgeAnimalGenericHide
+  name: шкура животного
+  description: Необработанная шкура животного.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+    state: hide_generic
+  - type: Item
+    size: Normal
+  - type: Tag
+    tags:
+    - RawLeather
+  - type: PhysicalComposition
+    materialComposition:
+      RawLeather: 200
+  - type: Material
+
+- type: entity
+  parent: ForgeAnimalGenericHide
+  id: ForgeAnimalPigratHide
+  name: шкура свинокрыса
+  description: Необработанная шкура свинокрыса.
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Misc/mob_drops.rsi
+    state: hide_pigrat
+  - type: Tag
+    tags:
+    - RawLeather
+    - ForgePigratHide
+
+- type: entity
+  parent: ForgeAnimalGenericHide
+  id: ForgeAnimalMoleratHide
+  name: шкура кротокрыса
+  description: Необработанная шкура кротокрыса.
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Misc/mob_drops.rsi
+    state: hide_molerat
+
+- type: entity
+  parent: ForgeAnimalGenericHide
+  id: ForgeAnimalRadhogHide
+  name: шкура радкабана
+  description: Необработанная шкура радкабана.
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Misc/mob_drops.rsi
+    state: hide_radhog
+
+- type: entity
+  parent: ForgeAnimalGenericHide
+  id: ForgeAnimalRadstagHide
+  name: шкура радоленя
+  description: Необработанная шкура радоленя с пятнистым мехом.
+  components:
+  - type: Sprite
+    sprite: _Forge/Objects/Misc/mob_drops.rsi
+    state: hide_radstag
+
+- type: entity
+  parent: BaseItem
+  id: ForgeAnimalDeathclawHide
+  name: шкура когтя смерти
+  description: Плотная шкура когтя смерти.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+    state: hide_deathclaw
+  - type: Item
+    size: Normal
+  - type: Tag
+    tags:
+    - RawLeather
+    - ForgeDeathclawHide
+  - type: PhysicalComposition
+    materialComposition:
+      RawLeather: 800
+  - type: Material
+
+- type: entity
+  parent: BaseItem
+  id: ForgeAnimalBighornerPelt
+  name: шкура толсторога
+  description: Мохнатая шкура толсторога.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+    state: pelt_bighorner
+  - type: Item
+    size: Normal
+  - type: Tag
+    tags:
+    - RawLeather
+  - type: PhysicalComposition
+    materialComposition:
+      RawLeather: 400
+  - type: Material
+
+# Человеческая кожа
+
+- type: entity
+  parent: BaseItem
+  id: ForgeHumanSkin2
+  name: человеческая кожа
+  description: Фрагмент человеческой кожи.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+    state: skin_human_2
+  - type: Item
+    size: Small
+  - type: Tag
+    tags:
+    - RawLeather
+  - type: PhysicalComposition
+    materialComposition:
+      RawLeather: 100
+  - type: Material
+
+- type: entity
+  parent: BaseItem
+  id: ForgeHumanSkin3
+  name: человеческая кожа
+  description: Крупный фрагмент человеческой кожи.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+    state: skin_human_3
+  - type: Item
+    size: Normal
+  - type: Tag
+    tags:
+    - RawLeather
+    - ForgeHumanSkinLarge
+  - type: PhysicalComposition
+    materialComposition:
+      RawLeather: 200
+  - type: Material
+
+# Муравьи
+
+- type: entity
+  parent: FoodBase
+  id: ForgeFoodAntBrain
+  name: мозг муравья
+  description: Небольшой мозг гигантского муравья. Выглядит неаппетитно.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Consumable/Food/pre-war.rsi
+    state: ant_brain
+  - type: FlavorProfile
+    flavors:
+    - meaty
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        maxVol: 10
+        reagents:
+        - ReagentId: Nutriment
+          Quantity: 3
+  - type: Item
+    size: Small
+
+- type: entity
+  parent: N14FoodEggBase
+  id: ForgeFoodAntEgg
+  name: яйцо гигантского муравья
+  description: Крупное яйцо с мягкой оболочкой.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Consumable/Food/pre-war.rsi
+    state: ant_egg
+  - type: FlavorProfile
+    flavors:
+    - egg
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        maxVol: 10
+        reagents:
+        - ReagentId: Nutriment
+          Quantity: 4
+  - type: Item
+    size: Small
+
+- type: entity
+  parent: FoodBase
+  id: ForgeFoodAntMeat
+  name: сырое мясо муравья
+  description: Кусок мяса гигантского муравья, извлечённый из-под хитинового панциря.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Objects/Consumable/Food/pre-war.rsi
+    state: ant_meat
+  - type: FlavorProfile
+    flavors:
+    - meaty
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        maxVol: 15
+        reagents:
+        - ReagentId: Nutriment
+          Quantity: 5
+  - type: Item
+    size: Small

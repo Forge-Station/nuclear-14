@@ -22,6 +22,8 @@
   icon: "JobIconbosWCommander"
   supervisors: job-supervisors-bos-wash-commander
   requireAdminNotify: true
+  access:
+  - RadioBroadcast
   accessGroups:
   - BOSWashington
   special:

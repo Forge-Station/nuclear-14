@@ -61,8 +61,6 @@
       0: Alive
       100: Dead
     showOverlays: false
-  - type: Stamina
-    critThreshold: 180
   - type: Destructible
     thresholds:
     - trigger:
@@ -150,7 +148,11 @@
     animation: WeaponArcPunch
     damage:
       groups:
-        Brute: 5
+        Brute: 14
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      400: Dead
 # Forge-Add-Start
   - type: HTN
     rootTask:
@@ -199,7 +201,7 @@
   - type: MobThresholds
     thresholds:
       0: Alive
-      200: Dead # Forge-Change
+      400: Dead # Forge-Change
   - type: MovementSpeedModifier
     baseWalkSpeed : 3
     baseSprintSpeed : 6
@@ -365,6 +367,10 @@
   # Forge-Change-Start
     - map: ["enum.DamageStateVisualLayers.Base", "movement"]
       state: icon
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      300: Dead
     # - state: icon # change me
     #   map: ["enum.BorgVisualLayers.Light"]
     #   shader: unshaded
@@ -393,7 +399,7 @@
     animation: WeaponArcPunch
     damage:
       types:
-        Pierce: 5
+        Pierce: 10
 
 - type: entity
   parent: N14MobRobotHostileMrHandyClaw
@@ -424,7 +430,7 @@
     animation: WeaponArcPunch
     damage:
       types:
-        Slash: 3
+        Slash: 7
     attackRate: 0.5
 
 - type: entity
@@ -550,6 +556,10 @@
   # Forge-Change-Start
     - map: ["enum.DamageStateVisualLayers.Base", "movement"]
       state: icon
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      300: Dead
     # - state: icon # change me
     #   map: ["enum.BorgVisualLayers.Light"]
     #   shader: unshaded
@@ -570,7 +580,7 @@
     maxAngle: 12
     angleIncrease: 2
     angleDecay: 4
-    fireRate: 1
+    fireRate: 0.8
     soundGunshot:
       collection: N14RechargerRifleGunshot
     useKey: false
@@ -642,3 +652,85 @@
     rechargeCooldown: 2
     rechargeSound:
       path: /Audio/Weapons/Guns/MagIn/batrifle_magin.ogg
+
+- type: entity
+  parent: N14MobRobotHostile
+  id: N14MobRobotHostileSentrybot
+  name: Sentry Bot
+  description: A pre-war military sentry bot, wielding a crude laser rifle in one arm and a minigun in the other.
+  suffix: hostile, dual
+  components:
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      600: Dead
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 600
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          N14Scrap1:
+            min: 1
+            max: 5
+          N14ScrapElectronic1:
+            min: 6
+            max: 8
+          N14ScrapCopper1:
+            min: 2
+            max: 4
+          N14CurrencyCap:
+            min: 200
+            max: 300
+      - !type:EmptyAllContainersBehaviour
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+  - type: HTN
+    rootTask:
+      task: N14RangedHostileCompound
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 0.3
+    baseSprintSpeed: 0.7
+  - type: Sprite
+    sprite: Corvax/Mobs/Robots/Sentrybot.rsi
+    noRot: false
+    layers:
+    - map: ["enum.DamageStateVisualLayers.Base", "movement"]
+      state: sentrybot
+  - type: SpriteMovement
+    movementLayers:
+      movement:
+        state: sentrybot
+    noMovementLayers:
+      movement:
+        state: sentrybot
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: sentrybot
+      Dead:
+        Base: dead
+  - type: Gun #Mobs currently cannot bolt a gun, so we have to simulate them firing it
+    minAngle: 4
+    maxAngle: 12
+    angleIncrease: 2
+    angleDecay: 8
+    fireRate: 4
+    soundGunshot:
+      collection: N14LaserAutoRifleGunshot
+    useKey: false
+    selectedMode: FullAuto
+    availableModes:
+      - FullAuto
+  - type: AlternatingEntityAmmoProvider # Fires the laser rifle and the minigun alternately
+    protoA: BulletLaser
+    protoB: N14Bullet5mm
+    soundA:
+      collection: N14LaserAutoRifleGunshot
+    soundB:
+      collection: N14MinigunGunshot

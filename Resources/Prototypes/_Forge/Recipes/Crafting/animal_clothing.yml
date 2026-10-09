@@ -1,0 +1,33 @@
+- type: construction
+  id: ForgeDogHideHat
+  name: шапка из псины
+  description: Шапка из шкуры зверя - не только согреет в холод, но и наделит силой и свирепостью своего прежнего владельца.
+  graph: ForgeDogHideHat
+  startNode: start
+  targetNode: hat
+  category: construction-category-clothing
+  icon:
+    sprite: _Nuclear14/Clothing/Head/FalloutHats/animalhat.rsi
+    state: icon
+  objectType: Item
+  hide: false
+
+- type: constructionGraph
+  id: ForgeDogHideHat
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: hat
+      steps:
+      - tag: ForgeDogHide
+        name: собачья шкура
+        icon:
+          sprite: _Nuclear14/Objects/Misc/mob_drops.rsi
+          state: hide_dog
+        doAfter: 3
+      - material: ForgeAnimalSinew
+        amount: 1
+        doAfter: 5
+  - node: hat
+    entity: N14ClothingHeadHatAnimal

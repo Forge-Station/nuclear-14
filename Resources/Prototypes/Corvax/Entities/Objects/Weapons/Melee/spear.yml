@@ -56,3 +56,6 @@
       - !type:ExplodeBehavior
   - type: Damageable
     damageContainer: Inorganic
+  - type: Construction # Forge-add
+    graph: N14WastelandThunderspear
+    node: thunderspear

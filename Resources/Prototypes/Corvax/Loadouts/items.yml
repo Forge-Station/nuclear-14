@@ -13,14 +13,14 @@
     items:
       - GeigerCounter
 
-  - type: loadout 
+  - type: loadout
     id: BarberScissors
     category: Items
     cost: 1
     items:
       - BarberScissors
 
-  - type: loadout 
+  - type: loadout
     id: N14DrinkSunsetSarsaparillaBottleFull
     category: Items
     cost: 2
@@ -54,3 +54,93 @@
     cost: 1
     items:
       - d20Dice
+
+  - type: loadout
+    id: N14Jet
+    category: Items
+    cost: 2
+    requirements:
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - CaesarLegion
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    items:
+      - N14Jet
+
+  - type: loadout
+    id: N14HealingPowder
+    category: Items
+    cost: 2
+    items:
+      - N14HealingPowder
+
+  - type: loadout
+    id: N14Turbo
+    category: Items
+    cost: 3
+    requirements:
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - CaesarLegion
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    items:
+      - N14Turbo
+
+  - type: loadout
+    id: N14Psycho
+    category: Items
+    cost: 3
+    requirements:
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - CaesarLegion
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    items:
+      - N14Psycho
+
+  - type: loadout
+    id: N14StimpakDirty
+    category: Items
+    cost: 3
+    requirements:
+    - !type:CharacterDepartmentRequirement
+      inverted: true
+      departments:
+      - CaesarLegion
+      - Vault
+    - !type:CharacterJobRequirement # Forge-Change
+      inverted: true
+      jobs:
+      - BoSMidSerf
+      - CaesarLegionSlave
+      - NCRPisoner
+    items:
+      - N14StimpakDirty
+
+  - type: loadout
+    id: N14HealingPoultice
+    category: Items
+    cost: 3
+    items:
+      - N14HealingPoultice

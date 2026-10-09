@@ -8,7 +8,6 @@
           steps:
             - material: N14Paper
               amount: 2
-              doAfter: 2
     - node: cardboard
       entity: MaterialCardboard1
 

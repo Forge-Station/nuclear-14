@@ -19,6 +19,8 @@
   icon: "JobIconBosMCommander"
   supervisors: job-supervisors-bos-west-elder
   canBeAntag: false
+  access:
+  - RadioBroadcast
   accessGroups:
   - BoSWest
   special:

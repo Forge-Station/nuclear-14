@@ -24,6 +24,7 @@
   supervisors: job-name-caesar-legion
   canBeAntag: false
   access:
+  - RadioBroadcast
   - CaesarLegionCenturion
   - CaesarLegion
   - CaesarLegionDean

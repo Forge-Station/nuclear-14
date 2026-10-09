@@ -1,6 +1,9 @@
 ent-N14Junkbot = хламоборг
     .desc = Кустарный робот, собранный из лома на коленке. У него тоже есть чувства.
-ent-N14JunkbotDebug = хламоборг
-    .desc = Кустарный робот, собранный из лома на коленке. У него тоже есть чувства.
+ent-PlayerN14Junkbot = { ent-N14Junkbot }
+    .desc = { ent-N14Junkbot.desc }
+    .suffix = Батарея, Модули
+ent-N14SpawnPointJunkbot = хламоборг
+    .desc = { ent-SpawnPointJobBase.desc }
 ent-ActionN14OpenRadio = рация
     .desc = Использовать рацию.

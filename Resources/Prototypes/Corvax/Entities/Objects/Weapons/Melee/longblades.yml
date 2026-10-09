@@ -355,3 +355,57 @@
       types:
         Slash: 50
 
+- type: entity
+  parent: BaseItem
+  id: N14BumperSword
+  name: bumpersword
+  description: "A heavy sword for brave and strog legionnaire"
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Melee/bumpersword.rsi
+    layers:
+    - state: icon
+  - type: Item
+    sprite: Corvax/Objects/Weapons/Melee/bumpersword.rsi
+    size: Huge
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Melee/bumpersword.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: MeleeWeapon
+    damage:
+      types:
+        Slash: 50
+        Blunt: 15
+        Structural: 25
+    soundHit:
+      path: /Audio/Weapons/bladeslice.ogg
+  - type: MultiHandedItem
+
+- type: entity
+  parent: N14Machete
+  id: N14LegionMachere
+  name: machete
+  description: Made from various scraps, used only by legionnaires.
+  components:
+  - type: Tag
+    tags:
+    - N14Gladius
+  - type: Item
+    sprite: Corvax/Objects/Weapons/Melee/machetelegion.rsi
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Melee/machetelegion.rsi
+    quickEquip: false
+    slots:
+    - Belt
+    - Back
+    - suitStorage
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Melee/machetelegion.rsi
+    state: icon
+    scale: 0.92, 0.92
+  - type: MeleeWeapon
+    soundHit:
+        path: /Audio/Weapons/bladeslice.ogg
