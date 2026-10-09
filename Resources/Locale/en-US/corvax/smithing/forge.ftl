@@ -26,6 +26,7 @@ n14-forge-dummy-slot-taken = This slot is already occupied.
 n14-forge-dummy-wrong-part = This part cannot be mounted on the mannequin.
 n14-forge-dummy-mix-error = You cannot mix regular and tempered parts.
 n14-forge-dummy-set-error = You cannot mix parts from different armor sets.
+n14-forge-dummy-limit-reached = The limit of forged armor sets has been reached ({ $limit } max)!
 n14-forge-dummy-need-leather = This part has no leather strapped to it. Click it with leather first.
 n14-forge-minigame-title = Assembling the armor
 n14-forge-minigame-hint = Hold and drag all 4 pieces onto the torso. Stay out of the red zones!

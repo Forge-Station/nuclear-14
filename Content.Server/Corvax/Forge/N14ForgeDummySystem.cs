@@ -8,6 +8,7 @@ using Content.Shared.Item;
 using Content.Shared.Verbs;
 using Robust.Server.GameObjects;
 using Robust.Shared.Containers;
+using Robust.Shared.Maths;
 
 namespace Content.Server.Corvax.Forge;
 
@@ -17,6 +18,12 @@ namespace Content.Server.Corvax.Forge;
 /// </summary>
 public sealed class N14ForgeDummySystem : EntitySystem
 {
+    /// <summary>
+    ///     Maximum number of forged Legion armor sets that may exist at the same time.
+    ///     Old sets that are destroyed or dismantled free up a slot.
+    /// </summary>
+    private const int MaxArmorSets = 3;
+
     [Dependency] private readonly PopupSystem _popup = default!;
     [Dependency] private readonly SharedHandsSystem _hands = default!;
     [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
@@ -106,6 +113,13 @@ public sealed class N14ForgeDummySystem : EntitySystem
                 return;
             }
 
+            // Limit the number of forged armor sets in existence.
+            if (CountForgeArmor() >= MaxArmorSets)
+            {
+                _popup.PopupEntity(Loc.GetString("n14-forge-dummy-limit-reached", ("limit", MaxArmorSets)), uid, args.User);
+                return;
+            }
+
             if (!TryMountPart(uid, component, args.Used, part, args.User, out var error))
             {
                 _popup.PopupEntity(error!, uid, args.User);
@@ -192,6 +206,16 @@ public sealed class N14ForgeDummySystem : EntitySystem
     private void CompleteArmor(EntityUid uid, N14ForgeDummyComponent component, EntityUid user)
     {
         // All 7 slots filled -> claim the armor.
+
+        // The kit limit is still enforced at the last moment: a mannequin that was
+        // fully assembled before the limit was reached is refused and disassembled.
+        if (CountForgeArmor() >= MaxArmorSets)
+        {
+            _popup.PopupEntity(Loc.GetString("n14-forge-dummy-limit-reached", ("limit", MaxArmorSets)), uid, user);
+            UnmountAll(uid, component, user);
+            return;
+        }
+
         var tempered = component.TemperedLock == true;
         var armorProto = component.SetLock switch
         {
@@ -224,6 +248,52 @@ public sealed class N14ForgeDummySystem : EntitySystem
         Dirty(uid, component);
 
         _popup.PopupEntity(Loc.GetString("n14-forge-dummy-claimed"), uid, user);
+    }
+
+    /// <summary>
+    ///     How many forged Legion armor sets currently exist in the world.
+    ///     All final variants (base/V2/V3, normal/tempered) share <see cref="N14ForgePowerArmorComponent"/>.
+    /// </summary>
+    private int CountForgeArmor()
+    {
+        var count = 0;
+        var query = EntityQueryEnumerator<N14ForgePowerArmorComponent>();
+        while (query.MoveNext(out _, out _))
+            count++;
+        return count;
+    }
+
+    /// <summary>
+    ///     Returns all mounted parts to the dummy's location and resets the dummy,
+    ///     used when the kit limit blocks the claim.
+    /// </summary>
+    private void UnmountAll(EntityUid dummy, N14ForgeDummyComponent component, EntityUid user)
+    {
+        _ = user;
+        foreach (var mounted in GetMounted(component))
+        {
+            if (mounted is not { } part || !Exists(part))
+                continue;
+
+            _transform.SetLocalRotation(Transform(part), Angle.Zero);
+            _transform.SetCoordinates(part, Transform(dummy).Coordinates);
+
+            if (TryComp<N14ForgeArmorPartComponent>(part, out var partComp))
+            {
+                partComp.Stage = N14ForgePartStage.Icon;
+                Dirty(part, partComp);
+                _appearance.SetData(part, N14ForgePartVisuals.Stage, N14ForgePartStage.Icon);
+            }
+        }
+
+        component.ArmRight = null;
+        component.ArmLeft = null;
+        component.LegRight = null;
+        component.LegLeft = null;
+        component.Torso = null;
+        component.DecorationTop = null;
+        component.DecorationBottom = null;
+        Dirty(dummy, component);
     }
 
     /// <summary>

@@ -26,6 +26,7 @@ n14-forge-dummy-slot-taken = Это место уже занято.
 n14-forge-dummy-wrong-part = Эту деталь нельзя установить на манекен.
 n14-forge-dummy-mix-error = Нельзя смешивать обычные и закалённые детали.
 n14-forge-dummy-set-error = Нельзя смешивать детали разных комплектов брони.
+n14-forge-dummy-limit-reached = Лимит изготовленных комплектов брони исчерпан ({ $limit } макс.)!
 n14-forge-dummy-need-leather = К этой детали ещё не привязана кожа. Кликните по ней кожей.
 n14-forge-minigame-title = Сборка доспеха
 n14-forge-minigame-hint = Зажимом мыши перетащите все 4 детали к торсу. Не задевайте красные зоны!
