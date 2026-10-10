@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Text.RegularExpressions;
+using Content.Shared._RMC14.Roles.Ranks; // Forge-Change
 using Content.Shared.CCVar;
 using Content.Shared.Clothing.Loadouts.Prototypes;
 using Content.Shared.Clothing.Loadouts.Systems;
@@ -144,6 +145,7 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
         string? cyborgName,
         HumanoidCharacterAppearance appearance,
         SpawnPriorityPreference spawnPriority,
+        Dictionary<ProtoId<JobPrototype>, ProtoId<RankPrototype>> rankPreferences, // Forge-Change
         Dictionary<string, JobPriority> jobPriorities,
         ClothingPreference clothing,
         BackpackPreference backpack,
@@ -168,6 +170,7 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
         CyborgName = cyborgName;
         Appearance = appearance;
         SpawnPriority = spawnPriority;
+        _rankPreferences = rankPreferences; // Forge-Change
         _jobPriorities = jobPriorities;
         Clothing = clothing;
         Backpack = backpack;
@@ -196,6 +199,7 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
             other.CyborgName,
             other.Appearance.Clone(),
             other.SpawnPriority,
+            new Dictionary<ProtoId<JobPrototype>, ProtoId<RankPrototype>>(other.RankPreferences), // Forge-Change
             new Dictionary<string, JobPriority>(other.JobPriorities),
             other.Clothing,
             other.Backpack,
@@ -408,6 +412,8 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
             && PreferenceUnavailable == other.PreferenceUnavailable
             && SpawnPriority == other.SpawnPriority
             && _jobPriorities.SequenceEqual(other._jobPriorities)
+            && _rankPreferences.Count == other._rankPreferences.Count // Forge-Change
+            && _rankPreferences.All(pair => other._rankPreferences.GetValueOrDefault(pair.Key) == pair.Value) // Forge-Change
             && _antagPreferences.SequenceEqual(other._antagPreferences)
             && _traitPreferences.SequenceEqual(other._traitPreferences)
             && LoadoutPreferences.SequenceEqual(other.LoadoutPreferences)
@@ -529,6 +535,14 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
                 _ => false
             }));
 
+        // Forge-Change-Start
+        var ranks = new Dictionary<ProtoId<JobPrototype>, ProtoId<RankPrototype>>(RankPreferences
+            .Where(pair =>
+                prototypeManager.TryIndex(pair.Key, out JobPrototype? job) &&
+                job.Ranks?.Any(assignment => assignment.Rank == pair.Value) == true &&
+                prototypeManager.HasIndex(pair.Value)));
+        // Forge-Change-End
+
         var antags = AntagPreferences
             .Where(id => prototypeManager.TryIndex<AntagPrototype>(id, out var antag) && antag.SetPreference)
             .Distinct()
@@ -559,6 +573,14 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
         {
             _jobPriorities.Add(job, priority);
         }
+
+        // Forge-Change-Start
+        _rankPreferences.Clear();
+        foreach (var (job, rank) in ranks)
+        {
+            _rankPreferences.Add(job, rank);
+        }
+        // Forge-Change-End
 
         PreferenceUnavailable = prefsUnavailableMode;
 
@@ -619,6 +641,7 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
     {
         var hashCode = new HashCode();
         hashCode.Add(_jobPriorities);
+        hashCode.Add(_rankPreferences); // Forge-Change
         hashCode.Add(_antagPreferences);
         hashCode.Add(_traitPreferences);
         hashCode.Add(_loadoutPreferences);

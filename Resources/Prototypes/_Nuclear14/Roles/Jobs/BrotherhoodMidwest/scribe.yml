@@ -6,6 +6,13 @@
   name: job-name-bos-mid-scribe
   description: job-description-bos-mid-scribe
   playTimeTracker: BoSMidScribe
+  ranks: # Forge-Change
+    - rank: BoSMidScribe
+      requirements:
+        - !type:CharacterPlaytimeRequirement
+          tracker: BoSMidScribe
+          min: 72000 # 1200 minutes
+    - rank: BoSMidJuniorScribe
   requirements:
     - !type:CharacterSpeciesRequirement
       species:
