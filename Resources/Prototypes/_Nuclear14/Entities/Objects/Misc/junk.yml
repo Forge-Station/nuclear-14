@@ -285,6 +285,12 @@
   name: duct tape
   description: A roll of sticky duct tape.
   components:
+  # Forge-Change-Start
+  - type: GunConditionRepairTool # Forge-Change-Comp
+    uses: 1
+    repairFraction: 0.03
+    repairTime: 4
+  # Forge-Change-End
   - type: Sprite
     state: duct_tape
   - type: Tag
@@ -545,6 +551,12 @@
   name: Wonderglue
   description: A bottle of old Wonderglue.
   components:
+  # Forge-Change-Start
+  - type: GunConditionRepairTool # Forge-Change-Comp
+    uses: 1
+    repairFraction: 0.03
+    repairTime: 4
+  # Forge-Change-End
   - type: Sprite
     state: wonderglue
   - type: Tag

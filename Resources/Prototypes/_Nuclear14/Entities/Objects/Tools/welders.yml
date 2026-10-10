@@ -3,6 +3,16 @@
   parent: Welder
   id: N14Welder
   components:
+  # Forge-Change-Start
+  - type: GunConditionRepairTool # Forge-Change-Comp
+    uses: -1
+    repairFraction: 0.02
+    repairMinimum: 0.60
+    repairLimit: 0.90
+    repairTime: 5
+    repairQuality: Welding
+    repairFuel: 1
+  # Forge-Change-End
   - type: Sprite
     sprite: _Nuclear14/Objects/Tools/welder.rsi
     layers:
