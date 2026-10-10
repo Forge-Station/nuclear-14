@@ -18,11 +18,11 @@
     inverted: true
     departments:
     - Tribe
-  - !type:CharacterJobRequirement
-    jobs:
-    - NCRRanger
-    - NCRRangerVeteran
-    - Followers # Forge-Change
+  # Forge-Change-Del - !type:CharacterJobRequirement
+    # Forge-Change-Del jobs:
+    # Forge-Change-Del - NCRRanger
+    # Forge-Change-Del - NCRRangerVeteran
+    # Forge-Change-Del - Followers # Forge-Change
   functions:
   - !type:TraitModifyLanguages
     languagesSpoken:

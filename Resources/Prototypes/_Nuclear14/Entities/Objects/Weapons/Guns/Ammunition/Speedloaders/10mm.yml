@@ -8,6 +8,9 @@
     tags:
       - SpeedLoader10
   - type: SpeedLoader
+  - type: ToolRefinable
+    refineResult:
+    - id: SheetSteel1
   - type: BallisticAmmoProvider
     whitelist:
       tags:

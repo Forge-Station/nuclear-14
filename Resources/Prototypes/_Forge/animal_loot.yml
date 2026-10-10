@@ -217,12 +217,16 @@
 - type: entity
   parent: ForgeAnimalGenericHide
   id: ForgeAnimalRadstagHide
-  name: шкура радоленя
-  description: Необработанная шкура радоленя с пятнистым мехом.
+  name: шкура рад-оленя
+  description: Необработанная шкура рад-оленя с пятнистым мехом.
   components:
   - type: Sprite
     sprite: _Forge/Objects/Misc/mob_drops.rsi
     state: hide_radstag
+  - type: Tag
+    tags:
+    - RawLeather
+    - ForgeRadstagHide
 
 - type: entity
   parent: BaseItem
@@ -258,6 +262,7 @@
   - type: Tag
     tags:
     - RawLeather
+    - ForgeBighornerPelt
   - type: PhysicalComposition
     materialComposition:
       RawLeather: 400
