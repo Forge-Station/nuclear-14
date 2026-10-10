@@ -72,7 +72,7 @@
 - type: latheRecipe
   id: N14ForgeDecorationTop
   result: N14ForgeDecorationTop
-  completetime: 5ы
+  completetime: 5
   materials:
     Cloth: 1000
 
