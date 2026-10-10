@@ -76,6 +76,7 @@
         Slash: 0.8
         Piercing: 0.75
         Heat: 0.8
+        Caustic: 0.75
     priceMultiplier: 0.5
   - type: ExplosionResistance
     damageCoefficient: 0.85
@@ -169,7 +170,7 @@
     walkModifier: 0.95
     sprintModifier: 0.95
   - type: StaticPrice # Forge-Add
-    price: 25 
+    price: 25
 
 - type: entity
   parent: N14FalloutArmorBase

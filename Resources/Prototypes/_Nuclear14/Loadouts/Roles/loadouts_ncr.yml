@@ -282,6 +282,21 @@
   items:
     - ClothingNeckPinNCRChiefPhysician
 
+- type: loadout
+  id: LoadoutClothingNeckStethoscope
+  category: Roles
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRMedic # Forge-Change
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRDoctor # Forge-Change
+      min: 72000 # 20 hours veterancy unlock
+  items:
+    - ClothingNeckStethoscope
+
 # MARK: Cosmetic NCR
 
 # Forge-Delete-Start
@@ -298,7 +313,7 @@
 #         - NCRWS # Forge-Change
 #   items:
 #     - N14ClothingHeadHatNCRHelmetMetalSnow
-# Forge-Delete-End 
+# Forge-Delete-End
 
 - type: loadout
   id: LoadoutNCRWoodsHelmet
@@ -417,7 +432,7 @@
 
 - type: loadout
   id: LoadoutNCRCloakNCR
-  category: Neck 
+  category: Neck
   cost: 1
   exclusive: true
   requirements:
@@ -470,7 +485,7 @@
     - !type:CharacterJobRequirement # Forge-Change
       jobs:
         - NCREngineer # Forge-Change
-        - NCRMedic # Forge-Change      
+        - NCRMedic # Forge-Change
         - NCRSoldier
         - NCRSGT
         - NCRWS # Forge-Change
@@ -486,9 +501,65 @@
     - !type:CharacterJobRequirement # Forge-Change
       jobs:
         - NCREngineer # Forge-Change
-        - NCRMedic # Forge-Change  
+        - NCRMedic # Forge-Change
         - NCRSoldier
         - NCRSGT
         - NCRWS # Forge-Change
   items:
     - N14ClothingMaskBrownBalaclava
+
+# MARK: Medic cosmetics # Forge-Add
+
+- type: loadout
+  id: LoadoutNCRMedicHeadMirror
+  category: Head
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRMedic
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRDoctor
+      min: 72000 # 20 hours veterancy unlock
+  items:
+    - ClothingHeadMirror
+
+- type: loadout
+  id: LoadoutNCRMedicBeret
+  category: Head
+  cost: 1
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRMedic
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRDoctor
+      min: 36000 # 10 hours veterancy unlock
+  items:
+    - N14ClothingHeadHatNCRBeretMedic
+
+- type: loadout
+  id: LoadoutNCRMedicHelmet2
+  category: Head
+  cost: 0
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRMedic
+  items:
+    - N14ClothingHeadHatNCRHelmetMetalMedicDesert
+
+- type: loadout
+  id: LoadoutNCRMedicHelmet3
+  category: Head
+  cost: 0
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRMedic
+  items:
+    - N14ClothingHeadHatNCRHelmetMetalMedicSnow

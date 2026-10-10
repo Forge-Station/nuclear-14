@@ -97,6 +97,12 @@
   - type: ClothingSpeedModifier
     walkModifier: 0.9
     sprintModifier: 0.9
+  - type: Gun #Forge-add
+    minAngle: 2
+    maxAngle: 8
+    angleIncrease: 2
+    angleDecay: 8
+    fireRate: 8
   - type: HeldSpeedModifier
   - type: StaticPrice
     price: 800
@@ -116,12 +122,12 @@
         map: ["enum.GunVisualLayers.Mag"]
   - type: Item
     sprite: _Nuclear14/Objects/Weapons/Guns/Heavy/avengerminigun.rsi
-  - type: Gun
+  - type: Gun #Forge-change
     minAngle: 2
     maxAngle: 8
-    angleIncrease: 2
-    angleDecay: 8
-    fireRate: 8
+    angleIncrease: 1
+    angleDecay: 6
+    fireRate: 10
   - type: HeldSpeedModifier
     walkModifier: 0.8
     sprintModifier: 0.8

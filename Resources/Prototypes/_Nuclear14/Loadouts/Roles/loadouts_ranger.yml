@@ -213,6 +213,7 @@
       jobs:
         - NCRRanger
         - NCRRangerVeteran
+        - NCRMedic
   items:
     - N14MedkitCombatFilled
 
