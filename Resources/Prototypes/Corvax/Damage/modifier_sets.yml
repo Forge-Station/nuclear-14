@@ -17,3 +17,18 @@
   id: FullRadiationProtection
   coefficients:
     Radiation: 0.0
+
+- type: damageModifierSet
+  id: GiantSwamper
+  coefficients:
+    Blunt: 0.75
+    Slash: 0.75
+    Piercing: 0.75
+    Heat: 0.75
+    Cold: 0.85
+    Shock: 0.85
+    Poison: 0.85
+    Radiation: 0.0
+    Asphyxiation: 0.85
+    Bloodloss: 0.85
+    Cellular: 0.85

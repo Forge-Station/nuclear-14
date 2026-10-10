@@ -31,6 +31,7 @@
     - !type:EntSelector { id: FishExocoetidae }  # Аэро-акула (Пласталь)
     - !type:EntSelector { id: FishOctopus }      # Осьминог (Чернила)
     - !type:EntSelector { id: FishTropic }       # Кислотный угорь
+    - !type:EntSelector { id: MobLongLeggedCrab } # Босс-краб
 
 # Таблица обычной рыбы (Еда и базовые ресурсы)
 - type: entityTable
@@ -91,6 +92,9 @@
     - !type:EntSelector
       id: FishBomb
       weight: 2      # Взрывчатка
+    - !type:EntSelector
+      id: MobLongLeggedCrab # Краб Босс
+      weight: 2
     - !type:EntSelector
       id: FishExocoetidae
       weight: 1      # Пласталь (Очень редко)

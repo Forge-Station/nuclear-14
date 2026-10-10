@@ -383,6 +383,81 @@
     sprite: Corvax/Mobs/Fish/cancer
 
 - type: entity
+  id: MobLongLeggedCrab
+  parent: N14MobSwamper
+  name: Огромный болотный краб
+  description: Огромный болотник, который вылезает из воды и яростно бросается на ближайших людей.
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    scale: 2.0, 2.0
+    layers:
+    - map: ["enum.DamageStateVisualLayers.Base"]
+      state: swamper
+      sprite: Corvax/Mobs/Animals/swamper.rsi
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: swamper
+      Critical:
+        Base: swamper
+      Dead:
+        Base: dead
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.7
+        density: 120
+        mask:
+        - MobMask
+        layer:
+        - MobLayer
+  - type: Fish
+    difficulty: 0.15
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      500: Dead
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 2
+    baseSprintSpeed: 3
+  - type: MeleeWeapon
+    altDisarm: false
+    hidden: true
+    attackRate: 1
+    range: 2.5
+    soundHit:
+      path: /Audio/Weapons/Xeno/alien_claw_flesh3.ogg
+    angle: 60
+    animation: WeaponArcClaw
+    wideAnimation: WeaponArcClaw
+    damage:
+      types:
+        Slash: 15
+        Piercing: 25
+        Radiation: 5
+  - type: Damageable
+    damageContainer: Biological
+    damageModifierSet: GiantSwamper
+  - type: Butcherable
+    spawned:
+    - id: N14FoodMeatGiantSwamperClaw
+      amount: 1
+
+- type: entity
+  id: N14FoodMeatGiantSwamperClaw
+  parent: N14FoodMeatRadRaw
+  name: клешня гигантского болотника
+  description: Огромная клешня болотника. Торговцы готовы дорого заплатить за такой трофей.
+  components:
+  - type: Sprite
+    state: mirelurkclaw
+  - type: StaticPrice
+    price: 150
+
+- type: entity
   id: FishBone
   parent: BaseFishWhite
   name: рыба-скелет

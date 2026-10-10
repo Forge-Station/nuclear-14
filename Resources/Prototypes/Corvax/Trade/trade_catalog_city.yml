@@ -1295,6 +1295,8 @@
     price: 20
   - proto: FishTropic
     price: 35
+  - proto: N14FoodMeatGiantSwamperClaw
+    price: 150
 
 - type: storeCategoryStructured
   id: CaravanSell2_Ore
