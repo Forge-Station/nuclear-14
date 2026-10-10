@@ -23,3 +23,10 @@
     ref: 1
     op: Keep
     func: NotEqual
+# Forge-Change-Start
+
+- type: shader
+  id: WeatherDraw
+  kind: source
+  path: "/Textures/Shaders/weather_draw.swsl"
+# Forge-Change-End

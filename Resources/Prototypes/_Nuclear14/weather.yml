@@ -1,20 +1,41 @@
 #! Corvax-Change
 
-# - type: weather
-#   id: SandstormHeavyExtreme
-#   sprite:
-#     sprite: /Textures/Effects/weather.rsi
-#     state: sandstorm_heavy
-#   sound:
-#     path: /Audio/Effects/Weather/snowstorm.ogg
-#     params:
-#       loop: true
-#       volume: -6
-#   temperature: 400 #
-#   duration: 60
-#   showMessage: true
-#   sender: weather-announcement
-#   message: weather-sandstorm-extreme
+# Forge-Change-Del # - type: weather
+# Forge-Change-Del #   id: SandstormHeavyExtreme
+# Forge-Change-Del #   sprite:
+# Forge-Change-Del #     sprite: /Textures/Effects/weather.rsi
+# Forge-Change-Del #     state: sandstorm_heavy
+# Forge-Change-Del #   sound:
+# Forge-Change-Del #     path: /Audio/Effects/Weather/snowstorm.ogg
+# Forge-Change-Del #     params:
+# Forge-Change-Del #       loop: true
+# Forge-Change-Del #       volume: -6
+# Forge-Change-Del #   temperature: 400 #
+# Forge-Change-Del #   duration: 60
+# Forge-Change-Del #   showMessage: true
+# Forge-Change-Del #   sender: weather-announcement
+# Forge-Change-Del #   message: weather-sandstorm-extreme
+# Forge-Change-Start
+# Restore a sandstorm weather prototype and point it at the imported Fallout loop.
+- type: weather
+  id: SandstormHeavyExtreme
+  sprite:
+    sprite: /Textures/Effects/weather.rsi
+    state: sandstorm_heavy
+  sound:
+    path: /Audio/_Nuclear14/Weather/sandstorm_loop.ogg
+    params:
+      loop: true
+      volume: -6
+  temperature: 400
+  duration: 600
+  chance: 1
+  visibilityClearRadius: 5
+  visibilityClearBuffer: 2
+  showMessage: true
+  sender: weather-announcement
+  message: weather-sandstorm-extreme
+# Forge-Change-End
 
 - type: weather
   id: SnowfallHeavyExtreme
@@ -27,7 +48,14 @@
       loop: true
       volume: -6
   temperature: 2 # -
-  duration: 60
+  # Forge-Change-Del duration: 60
+  # Forge-Change-Start
+  duration: 600
+  visibilityClearRadius: 5
+  visibilityClearBuffer: 2
+  # Forge-Change-End
   showMessage: true
+  # Forge-Change
+  chance: 0 # Enabled by the Juneau map's weatherWeights.
   sender: weather-announcement
   message: weather-snowfall-extreme

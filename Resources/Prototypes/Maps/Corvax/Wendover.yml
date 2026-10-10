@@ -11,6 +11,14 @@
 
 - type: gameMap
   id: Wendover
+  # Forge-Change-Start
+  weatherWeights:
+    Hail: 0
+    SnowfallLight: 0
+    SnowfallMedium: 0
+    SnowfallHeavy: 0
+    SnowfallHeavyExtreme: 0
+  # Forge-Change-End
   mapName: 'Уэндовер'
   mapPath: /Maps/Corvax/Wendover.yml
   minPlayers: 0
