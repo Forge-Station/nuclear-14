@@ -1,0 +1,48 @@
+- type: entity
+  id: N14WorkbenchResearch
+  name: верстак для исследования
+  description: Верстак с инструментами для изучения и исследования новых чертежей.
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Physics
+    bodyType: Static
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.1,-0.1,1,0.3"
+        density: 190
+        mask:
+        - MachineMask
+        layer:
+        - MachineLayer
+  - type: Clickable
+  - type: InteractionOutline
+  - type: Rotatable
+  - type: Sprite
+    drawdepth: SmallObjects
+    sprite: _Forge/Structures/Misc/research_terminal.rsi
+    layers:
+      - state: icon
+  - type: Appearance
+  - type: FactionResearch
+  - type: ContainerContainer
+    containers:
+      storagebase: !type:Container
+  - type: Storage
+    maxItemSize: Ginormous
+    grid:
+    - 0,0,9,6
+  - type: ActivatableUI
+    key: enum.FactionResearchUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.FactionResearchUiKey.Key:
+        type: FactionResearchBoundUserInterface
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+  - type: ApcPowerReceiver
+    needsPower: false
+  - type: Anchorable
