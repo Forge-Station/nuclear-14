@@ -4,14 +4,18 @@
   description: job-description-vault-security
   playTimeTracker: VaultSecurity
   requirements:
-  - !type:MinPlayersRequirement
-    min: 20 # Forge-Change
+  # Forge-Change-Del - !type:MinPlayersRequirement
+    # Forge-Change-Del min: 20 # Forge-Change
   - !type:CharacterSpeciesRequirement
     species:
     - Human
   - !type:CharacterDepartmentTimeRequirement
     department: Vault
     min: 18000 # 5 hours
+  # Forge-Change-Start
+  - !type:MinPlayersRequirement
+    min: 20 # Forge-Change
+  # Forge-Change-End
   setPreference: true
   overrideConsoleVisibility: true
   canBeAntag: false

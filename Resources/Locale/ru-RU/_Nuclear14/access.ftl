@@ -1,4 +1,6 @@
-id-card-access-level-townie-person = Горожанин
+# Forge-Change-Del id-card-access-level-townie-person = Горожанин
+# Forge-Change
+id-card-access-level-townie-person = Общие зоны города
 id-card-access-level-townie-sheriff = Городская тюрьма
 id-card-access-level-townie-mayor = Офис мэра
 id-card-access-level-townie-shopkeeper = Городской магазин
@@ -42,4 +44,6 @@ id-card-access-level-washington-knight = Оружейная Братства
 id-card-access-level-washington-scribe = Лаборатории Братства
 id-card-access-level-washington-initiate = Ворота Братства
 
-id-card-access-level-followers-apocalypse = Последователи Апокалипсиса
+# Forge-Change-Del id-card-access-level-followers-apocalypse = Последователи Апокалипсиса
+# Forge-Change
+id-card-access-level-followers-apocalypse = Помещения Последователей Апокалипсиса

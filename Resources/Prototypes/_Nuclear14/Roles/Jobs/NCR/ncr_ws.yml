@@ -7,16 +7,28 @@
   description: job-description-ncr-ws
   playTimeTracker: NCRWS
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement
-      department: NCR
-      min: 36000 # 10 hours Corvax-Change
-    - !type:CharacterPlaytimeRequirement # Corvax-Add
-      tracker: NCRSoldier
-      min: 18000 # 5 hours
+    # Forge-Change-Del - !type:CharacterSpeciesRequirement
+      # Forge-Change-Del species:
+      # Forge-Change-Del - Human
+      # Forge-Change-Del - Ghoul
+    # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
+      # Forge-Change-Del department: NCR
+      # Forge-Change-Del min: 36000 # 10 hours Corvax-Change
+    # Forge-Change-Del - !type:CharacterPlaytimeRequirement # Corvax-Add
+      # Forge-Change-Del tracker: NCRSoldier
+      # Forge-Change-Del min: 18000 # 5 hours
+  # Forge-Change-Start
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: NCR
+    min: 36000 # 10 hours Corvax-Change
+  - !type:CharacterPlaytimeRequirement # Corvax-Add
+    tracker: NCRSoldier
+    min: 18000 # 5 hours
+  # Forge-Change-End
   startingGear: NCRWSGear
   icon: "JobIconNcrSpec" # Forge-Change
   supervisors: job-supervisors-ncr

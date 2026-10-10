@@ -7,13 +7,22 @@
   description: job-description-bos-washington-knight
   playTimeTracker: BoSWashingtonKnight
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement
-      department: BrotherhoodWashington
-      min: 21600 # Forge-Change (6 hours)
+    # Forge-Change-Del - !type:CharacterSpeciesRequirement
+      # Forge-Change-Del species:
+      # Forge-Change-Del - Human
+      # Forge-Change-Del - Ghoul
+    # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
+      # Forge-Change-Del department: BrotherhoodWashington
+      # Forge-Change-Del min: 21600 # Forge-Change (6 hours)
+  # Forge-Change-Start
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: BrotherhoodWashington
+    min: 21600 # Forge-Change (6 hours)
+  # Forge-Change-End
   startingGear: BoSWashingtonKnightGear
   alwaysUseSpawner: true
   icon: "JobIconbosWKnight"

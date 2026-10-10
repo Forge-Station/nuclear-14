@@ -24,7 +24,9 @@
 
 - type: accessLevel
   id: CaesarLegion
-  name: id-card-access-level-west
+  # Forge-Change-Del name: id-card-access-level-west
+  # Forge-Change
+  name: id-card-access-level-legion
 
 - type: accessGroup
   id: CaesarLegion

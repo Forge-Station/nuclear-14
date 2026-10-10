@@ -7,17 +7,30 @@
   description: job-description-ncr-mp-investegator
   playTimeTracker: NCRMPinvestigator
   requirements:
-    - !type:CharacterWhitelistRequirement
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement
-      department: NCR
-      min: 108000 # 30 hours
-    - !type:CharacterPlaytimeRequirement
-      tracker: NCROfficer
-      min: 64800 # 18 hours
+    # Forge-Change-Del - !type:CharacterWhitelistRequirement
+    # Forge-Change-Del - !type:CharacterSpeciesRequirement
+      # Forge-Change-Del species:
+      # Forge-Change-Del - Human
+      # Forge-Change-Del - Ghoul
+    # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
+      # Forge-Change-Del department: NCR
+      # Forge-Change-Del min: 108000 # 30 hours
+    # Forge-Change-Del - !type:CharacterPlaytimeRequirement
+      # Forge-Change-Del tracker: NCROfficer
+      # Forge-Change-Del min: 64800 # 18 hours
+  # Forge-Change-Start
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: NCR
+    min: 108000 # 30 hours
+  - !type:CharacterPlaytimeRequirement
+    tracker: NCROfficer
+    min: 64800 # 18 hours
+  - !type:CharacterWhitelistRequirement
+  # Forge-Change-End
   startingGear: NCRMPinvestigatorGear
   alwaysUseSpawner: true
   icon: "JobIconNCRMPInvestegator"

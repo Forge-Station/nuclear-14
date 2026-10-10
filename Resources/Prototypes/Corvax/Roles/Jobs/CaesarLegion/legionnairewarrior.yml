@@ -5,9 +5,9 @@
   description: job-description-caesar-legionnaire-warrior
   playTimeTracker: CaesarLegionLegionnaireWarrior
   requirements:
-  - !type:CharacterDepartmentTimeRequirement
-    department: CaesarLegion
-    min: 10800 # 3 hours
+  # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
+    # Forge-Change-Del department: CaesarLegion
+    # Forge-Change-Del min: 10800 # 3 hours
   - !type:CharacterSpeciesRequirement
     species:
     - Human
@@ -15,6 +15,11 @@
     sex: Male
   - !type:CharacterGenderRequirement
     gender: Male
+  # Forge-Change-Start
+  - !type:CharacterDepartmentTimeRequirement
+    department: CaesarLegion
+    min: 10800 # 3 hours
+  # Forge-Change-End
   startingGear: CaesarLegionLegionnaireWarriorGear
   alwaysUseSpawner: true
   icon: "JobIconlegionerWarrior"

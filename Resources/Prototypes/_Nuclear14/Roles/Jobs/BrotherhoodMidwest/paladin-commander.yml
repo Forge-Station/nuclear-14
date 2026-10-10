@@ -7,21 +7,36 @@
   description: job-description-bos-mid-paladin-comm
   playTimeTracker: BoSMidPaladinCommander
   requirements:
+  # Forge-Change-Start
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+  - !type:CharacterDepartmentTimeRequirement
+    department: BrotherhoodMidwest
+    min: 216000 # 60 hours Corvax-Change
+  - !type:CharacterPlaytimeRequirement # Corvax-Add
+    tracker: BoSMidPaladin
+    min: 43200 # 12 hours
+  - !type:CharacterLogicOrRequirement
+    requirements:
+  # Forge-Change-End
     - !type:CharacterSpeciesRequirement
       species:
       - Human
-    - !type:CharacterDepartmentTimeRequirement
-      department: BrotherhoodMidwest
-      min: 216000 # 60 hours Corvax-Change
-    - !type:CharacterPlaytimeRequirement # Corvax-Add
-      tracker: BoSMidPaladin
-      min: 43200 # 12 hours
-    - !type:CharacterLogicOrRequirement
-      requirements:
-        - !type:CharacterSpeciesRequirement
-          species:
-            - Human
-            - Ghoul
+    # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
+      # Forge-Change-Del department: BrotherhoodMidwest
+      # Forge-Change-Del min: 216000 # 60 hours Corvax-Change
+    # Forge-Change-Del - !type:CharacterPlaytimeRequirement # Corvax-Add
+      # Forge-Change-Del tracker: BoSMidPaladin
+      # Forge-Change-Del min: 43200 # 12 hours
+    # Forge-Change-Del - !type:CharacterLogicOrRequirement
+      # Forge-Change-Del requirements:
+        # Forge-Change-Del - !type:CharacterSpeciesRequirement
+          # Forge-Change-Del species:
+            # Forge-Change-Del - Human
+            # Forge-Change-Del - Ghoul
+      # Forge-Change
+      - Ghoul
   startingGear: BoSMidPaladinCommanderGear
   alwaysUseSpawner: true
   icon: "JobIconBosMCommander" # Forge-Change

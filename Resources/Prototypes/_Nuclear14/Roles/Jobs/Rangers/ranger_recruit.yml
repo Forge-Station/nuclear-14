@@ -4,6 +4,10 @@
   name: job-name-ranger-recruit
   description: job-description-ranger-recruit
   playTimeTracker: RangerRecruit
+  # Forge-Change-Start
+  requirements:
+  - !type:CharacterWhitelistRequirement
+  # Forge-Change-End
   startingGear: RangerRecruitGear
   icon: "JobIconSecurityOfficer"
   supervisors: job-supervisors-ranger
@@ -17,8 +21,8 @@
       - type: NpcFactionMember
         factions:
           - Rangers
-  requirements:
-    - !type:CharacterWhitelistRequirement
+  # Forge-Change-Del requirements:
+    # Forge-Change-Del - !type:CharacterWhitelistRequirement
 
 - type: startingGear
   id: RangerRecruitGear

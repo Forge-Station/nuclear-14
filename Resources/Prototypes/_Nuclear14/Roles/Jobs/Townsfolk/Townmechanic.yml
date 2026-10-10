@@ -7,13 +7,22 @@
   description: job-description-townmechanic
   playTimeTracker: TownMechanic
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement
-      department: Townsfolk
-      min: 7200 # 2 hours
+    # Forge-Change-Del - !type:CharacterSpeciesRequirement
+      # Forge-Change-Del species:
+      # Forge-Change-Del - Human
+      # Forge-Change-Del - Ghoul
+    # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
+      # Forge-Change-Del department: Townsfolk
+      # Forge-Change-Del min: 7200 # 2 hours
+  # Forge-Change-Start
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: Townsfolk
+    min: 7200 # 2 hours
+  # Forge-Change-End
   startingGear: TownMechanicGear
   icon: "JobIconTownMechanic" # Forge-Change
   supervisors: job-supervisors-townsfolk

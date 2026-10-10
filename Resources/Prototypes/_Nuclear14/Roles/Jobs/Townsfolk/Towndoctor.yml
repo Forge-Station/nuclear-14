@@ -7,13 +7,22 @@
   description: job-description-towndoctor
   playTimeTracker: TownDoctor
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement
-      department: Townsfolk
-      min: 7200
+    # Forge-Change-Del - !type:CharacterSpeciesRequirement
+      # Forge-Change-Del species:
+      # Forge-Change-Del - Human
+      # Forge-Change-Del - Ghoul
+    # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
+      # Forge-Change-Del department: Townsfolk
+      # Forge-Change-Del min: 7200
+  # Forge-Change-Start
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: Townsfolk
+    min: 7200
+  # Forge-Change-End
   startingGear: TownDoctorGear
   icon: "JobIconTownMedic" # Forge-Change
   supervisors: job-supervisors-townsfolk

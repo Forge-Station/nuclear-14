@@ -7,13 +7,22 @@
   description: job-description-tribal-elder
   playTimeTracker: TribalElder
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement
-      department: Tribe
-      min: 14400 # 4 hours
+    # Forge-Change-Del - !type:CharacterSpeciesRequirement
+      # Forge-Change-Del species:
+      # Forge-Change-Del - Human
+      # Forge-Change-Del - Ghoul
+    # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
+      # Forge-Change-Del department: Tribe
+      # Forge-Change-Del min: 14400 # 4 hours
+  # Forge-Change-Start
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: Tribe
+    min: 14400 # 4 hours
+  # Forge-Change-End
   startingGear: TribalElderGear
   alwaysUseSpawner: true
   icon: "JobIconTribalLeader" # Forge-Change

@@ -7,13 +7,22 @@
   description: job-description-farmer
   playTimeTracker: TribalFarmer
   requirements:
-    - !type:CharacterSpeciesRequirement
-      species:
-      - Human
-      - Ghoul
-    - !type:CharacterDepartmentTimeRequirement
-      department: Tribe
-      min: 7200 # 2 hours
+    # Forge-Change-Del - !type:CharacterSpeciesRequirement
+      # Forge-Change-Del species:
+      # Forge-Change-Del - Human
+      # Forge-Change-Del - Ghoul
+    # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
+      # Forge-Change-Del department: Tribe
+      # Forge-Change-Del min: 7200 # 2 hours
+  # Forge-Change-Start
+  - !type:CharacterSpeciesRequirement
+    species:
+    - Human
+    - Ghoul
+  - !type:CharacterDepartmentTimeRequirement
+    department: Tribe
+    min: 7200 # 2 hours
+  # Forge-Change-End
   startingGear: TribalFarmerGear
   alwaysUseSpawner: true
   icon: "JobIconTribalFarmer" # Forge-Change

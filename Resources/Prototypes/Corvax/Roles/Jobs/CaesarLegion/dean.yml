@@ -5,12 +5,12 @@
   description: job-description-caesar-legion-dean
   playTimeTracker: CaesarLegionDean
   requirements:
-  - !type:CharacterDepartmentTimeRequirement
-    department: CaesarLegion
-    min: 72000 # 20 hours
-  - !type:CharacterPlaytimeRequirement
-      tracker: CaesarLegionLegionnaireVeteran
-      min: 18000 # 5 hours
+  # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
+    # Forge-Change-Del department: CaesarLegion
+    # Forge-Change-Del min: 72000 # 20 hours
+  # Forge-Change-Del - !type:CharacterPlaytimeRequirement
+      # Forge-Change-Del tracker: CaesarLegionLegionnaireVeteran
+      # Forge-Change-Del min: 18000 # 5 hours
   - !type:CharacterSpeciesRequirement
     species:
     - Human
@@ -18,6 +18,14 @@
     sex: Male
   - !type:CharacterGenderRequirement
     gender: Male
+  # Forge-Change-Start
+  - !type:CharacterDepartmentTimeRequirement
+    department: CaesarLegion
+    min: 72000 # 20 hours
+  - !type:CharacterPlaytimeRequirement
+    tracker: CaesarLegionLegionnaireVeteran
+    min: 18000 # 5 hours
+  # Forge-Change-End
   startingGear: CaesarLegionDeanGear
   alwaysUseSpawner: true
   icon: "JobIconlegionerDean"
