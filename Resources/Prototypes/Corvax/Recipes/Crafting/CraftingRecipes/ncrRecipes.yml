@@ -85,8 +85,8 @@
     N14IngotIron1:
       amount: 10
     SprayPainter:
-      amount: 1   
-      catalyzer: true 
+      amount: 1
+      catalyzer: true
 
 - type: craftRecipe
   id: N14ClothingOuterPowerArmorAdvanced1NCRRecipe
@@ -140,7 +140,7 @@
     N14ClothingOuterNCRCombatArmorBlueprint:
       amount: 1
       catalyzer: true
-    N14ClothingOuterCombatArmor:
+    N14ComponentArmorPlateMK1:
       amount: 1
     MaterialCloth1:
       amount: 2
@@ -159,9 +159,28 @@
     N14ClothingOuterNCRCombatArmorMK2Blueprint:
       amount: 1
       catalyzer: true
-    N14ClothingOuterCombatArmorMK2:
+    N14ComponentArmorPlateMK2:
       amount: 1
     MaterialCloth1:
       amount: 3
     N14MaterialThread1:
       amount: 4
+
+- type: craftRecipe
+  id: N14ClothingHeadHatNCRCombatHelmetRecipe
+  resultProtos:
+    - N14ClothingHeadHatBrotherhoodMidwestHelmetVeteran
+  requiredWorkbench: N14WorkbenchArmorbench
+  availableFaction:
+    - NCR
+  craftTime: 7.5
+  items:
+    N14ClothingHeadHatNCRCombatHelmetBlueprint:
+      amount: 1
+      catalyzer: true
+    N14ComponentHelmetMK2:
+      amount: 1
+    MaterialCloth1:
+      amount: 1
+    N14MaterialThread1:
+      amount: 2

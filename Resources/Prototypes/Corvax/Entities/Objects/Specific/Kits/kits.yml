@@ -46,9 +46,7 @@
       - id: N14WeaponLMGchinese
       - id: Magazine762AmmoBelt
         amount: 2
-      - id: N14WeaponPistol45Colt
-      - id: N14MagazinePistol45
-        amount: 2
+      - id: N14ClothingHandsPowerFistCenturion
       - id: N14HealingPoultice
         amount: 2
       - id: N14CleanGauze10

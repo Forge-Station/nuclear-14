@@ -24,6 +24,7 @@
   requireAdminNotify: true
   alwaysUseSpawner: true
   access:
+  - RadioBroadcast
   - NCR
   - NCRSGT
   - NCRMedic

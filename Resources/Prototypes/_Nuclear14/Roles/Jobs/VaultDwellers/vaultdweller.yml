@@ -4,7 +4,7 @@
   description: job-description-vault-dweller
   requirements:
   - !type:MinPlayersRequirement
-    min: 40
+    min: 20 # Forge-Change
   - !type:CharacterSpeciesRequirement
     species:
     - Human

@@ -15,6 +15,7 @@ namespace Content.Client.Weather;
 
 public sealed class WeatherSystem : SharedWeatherSystem
 {
+    private static readonly TimeSpan AudioOcclusionInterval = TimeSpan.FromSeconds(0.25); // #Forge-Change
     [Dependency] private readonly IPlayerManager _playerManager = default!;
     [Dependency] private readonly AudioSystem _audio = default!;
     [Dependency] private readonly MapSystem _mapSystem = default!;
@@ -48,15 +49,34 @@ public sealed class WeatherSystem : SharedWeatherSystem
         if (!Timing.IsFirstTimePredicted || weatherProto.Sound == null)
             return;
 
-        weather.Stream ??= _audio.PlayGlobal(weatherProto.Sound, Filter.Local(), true)?.Entity;
+        // #Forge-Change-Start: recalculate occlusion immediately when creating a new stream.
+        if (weather.Stream == null)
+        {
+            weather.Stream = _audio.PlayGlobal(weatherProto.Sound, Filter.Local(), true)?.Entity;
+            weather.NextAudioOcclusionUpdate = TimeSpan.Zero;
+        }
+        // #Forge-Change-End
         if (!TryComp(weather.Stream, out AudioComponent? comp))
             return;
 
-        var occlusion = 0f;
 
-        // Work out tiles nearby to determine volume.
-        if (TryComp<MapGridComponent>(entXform.GridUid, out var grid))
+        // #Forge-Change-Start: reuse occlusion between updates, recalculating at 4 Hz.
+        var occlusion = comp.Occlusion;
+
+        // Keep gain/fades updating every tick, but only run the tile BFS at 4 Hz.
+        // A new listener, grid or stream needs an immediate calculation.
+        if (!TryComp<MapGridComponent>(entXform.GridUid, out var grid))
         {
+            occlusion = 0f;
+            weather.AudioOcclusionGrid = null;
+        }
+        else if (Timing.CurTime >= weather.NextAudioOcclusionUpdate
+                 || weather.AudioOcclusionEntity != ent
+                 || weather.AudioOcclusionGrid != entXform.GridUid)
+        {
+            weather.NextAudioOcclusionUpdate = Timing.CurTime + AudioOcclusionInterval;
+            weather.AudioOcclusionEntity = ent;
+            weather.AudioOcclusionGrid = entXform.GridUid;
             TryComp(entXform.GridUid, out RoofComponent? roofComp);
             var gridId = entXform.GridUid.Value;
             // FloodFill to the nearest tile and use that for audio.
@@ -114,6 +134,7 @@ public sealed class WeatherSystem : SharedWeatherSystem
                 occlusion = 3f;
             }
         }
+        // #Forge-Change-End
 
         var alpha = GetPercent(weather, uid);
         alpha *= SharedAudioSystem.VolumeToGain(weatherProto.Sound.Params.Volume);
@@ -132,6 +153,7 @@ public sealed class WeatherSystem : SharedWeatherSystem
         // TODO: Fades (properly)
         weather.Stream = _audio.Stop(weather.Stream);
         weather.Stream = _audio.PlayGlobal(weatherProto.Sound, Filter.Local(), true)?.Entity;
+        weather.NextAudioOcclusionUpdate = TimeSpan.Zero; // #Forge-Change: the replacement stream has no cached occlusion.
         return true;
     }
 

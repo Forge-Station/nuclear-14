@@ -64,3 +64,287 @@
   components:
   - type: Sprite
     sprite: Corvax/Clothing/Neck/falloutMWBSPaladinshoulderpad.rsi
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckMWBSPaladinShoulderPadMasterBlack
+  name: накидка мастера разведки
+  description: Эту накидку могут носить только те паладины, которые смогли доказать свое мастерство в разведке.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSPaladinShoulderPadMasterBlack.rsi
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckMWBSKnightShoulderPadOrange
+  name: оранжевая повязка
+  description: Яркая повязка для брони с эмблемой Средне-западного братства на плече.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSKnightShoulderPadOrange.rsi
+
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckMWBSInquisitorShoulderPadyoung
+  name: наплечник инквизитора
+  description: Темная накидка с гладким наплечником.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSInquisitorShoulderPadyoung.rsi
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckMWBSInquisitorShoulderPadslayer
+  name: наплечник палача
+  description: Острые зубы на наплечнике - символ жестокости, которой должен обладать каждый инквизитор.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSInquisitorShoulderPadslayer.rsi
+
+- type: entity
+  parent: ClothingNeckBase
+  id: N14ClothingNeckMWBSInquisitorShoulderPadmajorslayer
+  name: наплечник карателя
+  description: Такой наплечник может носить только тот, кто смог перевоспитать или отправить на тот свет не одну сотню людей. Целых два ряда острейших зубов говорят о множестве жертв.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSInquisitorShoulderPadmajorslayer.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, ClothingOuterFoldableBaseOpened]
+  id: N14ClothingNeckMWBSCommanderShoulderPadorange
+  name: оранжевая командирская накидка
+  description: Золочёная накидка с цепью. Знак того, что вы можете вести своих братьев по правильному пути к великой цели.
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-verb
+    foldVerbText: unfold-verb
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSCommanderShoulderPadorange.rsi 
+
+- type: entity
+  parent: [ClothingNeckBase, ClothingOuterFoldableBaseOpened]
+  id: N14ClothingNeckMWBSCommanderShoulderPadwhite
+  name: белая командирская накидка
+  description: Золочёная накидка с цепью. Знак того, что вы можете вести своих братьев по правильному пути к великой цели.
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-verb
+    foldVerbText: unfold-verb
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSCommanderShoulderPadwhite.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, ClothingOuterFoldableBaseOpened]
+  id: N14ClothingNeckMWBSCommanderShoulderPadblue
+  name: голубая командирская накидка
+  description: Золочёная накидка с цепью. Знак того, что вы можете вести своих братьев по правильному пути к великой цели.
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-verb
+    foldVerbText: unfold-verb
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSCommanderShoulderPadblue.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, ClothingOuterFoldableBaseOpened]
+  id: N14ClothingNeckMWBSCommanderShoulderPadblack
+  name: чёрная командирская накидка
+  description: Золочёная накидка с цепью. Знак того, что вы можете вести своих братьев по правильному пути к великой цели.
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-verb
+    foldVerbText: unfold-verb
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSCommanderShoulderPadblack.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, ClothingOuterFoldableBaseOpened]
+  id: N14ClothingNeckMWBSScriberMantle
+  name: пустая мантия
+  description: Такая же пустая, как и твоя голова знаниями.
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-verb
+    foldVerbText: unfold-verb
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSScriberMantle.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, ClothingOuterFoldableBaseOpened]
+  id: N14ClothingNeckMWBSScriberMantleEngineer
+  name: мантия инженера
+  description: Она говорит о том, что с техникой обращаешься на "ты".
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-verb
+    foldVerbText: unfold-verb
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSScriberMantleEngineer.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, ClothingOuterFoldableBaseOpened]
+  id: N14ClothingNeckMWBSScriberMantleMedic
+  name: мантия медика
+  description: Только для тех, кто умеет правильно держать скальпель в руке.
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-verb
+    foldVerbText: unfold-verb
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSScriberMantleMedic.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, ClothingOuterFoldableBaseOpened]
+  id: N14ClothingNeckMWBSScriberMantlePolevoy
+  name: мантия полевика
+  description: Такие мантии носят писари, которые умеют обращаться с оружием и могут за себя постоять.
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-verb
+    foldVerbText: unfold-verb
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSScriberMantlePolevoy.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, ClothingOuterFoldableBaseOpened]
+  id: N14ClothingNeckMWBSScriberMantleDirector
+  name: мантия руководителя
+  description: Ее может носить только писарь-руководитель, настоящий хранитель знаний.
+  components:
+  - type: Foldable
+    canFoldInsideContainer: true
+    unfoldVerbText: fold-verb
+    foldVerbText: unfold-verb
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSScriberMantleDirector.rsi
+
+- type: entity
+  parent: [ClothingNeckBase]
+  id: N14ClothingNeckMWBSPaladinChain
+  name: цепь
+  description: Самое скучное, что можно было придумать. Но некоторым такое нравится.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSPaladinChain.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, N14ClothingNeckMWBSShoulderPadFlag]
+  id: N14ClothingNeckMWBSPaladinShoulderPaDBlue
+  name: голубой наплечный плащ паладина СЗБС
+  description: Простая, но красивая накидка для хороших паладинов голубого цвета.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSPaladinShoulderPadBlue.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, N14ClothingNeckMWBSShoulderPadFlag]
+  id: N14ClothingNeckMWBSPaladinShoulderPaDOrange
+  name: оранжевый наплечный плащ паладина СЗБС
+  description: Простая, но красивая накидка для хороших паладинов оранжевого цвета.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSPaladinShoulderPadOrange.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, N14ClothingNeckMWBSShoulderPadFlag]
+  id: N14ClothingNeckMWBSPaladinShoulderPaDBlack
+  name: чёрный наплечный плащ паладина СЗБС
+  description: Простая, но красивая накидка для хороших паладинов чёрного цвета.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSPaladinShoulderPadBlack.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, N14ClothingNeckMWBSShoulderPadFlag]
+  id: N14ClothingNeckMWBSPaladinShoulderPaDChainWhite
+  name: белая цепная накидка
+  description: Большая накидка с цепью. Знак того, что на вас можно положиться.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSPaladinShoulderPadChainWhite.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, N14ClothingNeckMWBSShoulderPadFlag]
+  id: N14ClothingNeckMWBSPaladinShoulderPaDChainBlue
+  name: голубая цепная накидка
+  description: Большая накидка с цепью. Знак того, что на вас можно положиться.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSPaladinShoulderPadChainBlue.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, N14ClothingNeckMWBSShoulderPadFlag]
+  id: N14ClothingNeckMWBSPaladinShoulderPaDChainOrange
+  name: оранжевая цепная накидка
+  description: Большая накидка с цепью. Знак того, что на вас можно положиться.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSPaladinShoulderPadChainOrange.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, N14ClothingNeckMWBSShoulderPadFlag]
+  id: N14ClothingNeckMWBSPaladinShoulderPaDChainBlack
+  name: чёрная цепная накидка
+  description: Большая накидка с цепью. Знак того, что на вас можно положиться.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSPaladinShoulderPadChainBlack.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, N14ClothingNeckMWBSShoulderPadFlag]
+  id: N14ClothingNeckMWBSPaladinShoulderPaDChainGoldWhite
+  name: белая золочёная накидка
+  description: Сложная накидка с золотым теснением. Ее достойны лучшие из лучших паладинов СЗБС.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSPaladinShoulderPadChainGoldWhite.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, N14ClothingNeckMWBSShoulderPadFlag]
+  id: N14ClothingNeckMWBSPaladinShoulderPaDChainGoldBlue
+  name: голубая золочёная накидка
+  description: Сложная накидка с золотым теснением. Ее достойны лучшие из лучших паладинов СЗБС.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSPaladinShoulderPadChainGoldBlue.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, N14ClothingNeckMWBSShoulderPadFlag]
+  id: N14ClothingNeckMWBSPaladinShoulderPaDChainGoldOrange
+  name: оранжевая золочёная накидка
+  description: Сложная накидка с золотым теснением. Ее достойны лучшие из лучших паладинов СЗБС.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSPaladinShoulderPadChainGoldOrange.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, N14ClothingNeckMWBSShoulderPadFlag]
+  id: N14ClothingNeckMWBSPaladinShoulderPaDChainGoldBlack
+  name: чёрная золочёная накидка
+  description: Сложная накидка с золотым теснением. Ее достойны лучшие из лучших паладинов СЗБС.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSPaladinShoulderPadChainGoldBlack.rsi
+
+- type: entity
+  parent: [ClothingNeckBase, N14ClothingNeckMWBSShoulderPadFlag]
+  id: N14ClothingNeckMWBSShoulderPadPatriot
+  name: накидка СЗБС
+  description: Ничего особенного, зато при параде и видно, насколько сильно вы любите Братство.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/Neck/MWBSShoulderPadPatriot
+
+    
+
+

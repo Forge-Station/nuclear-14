@@ -291,7 +291,7 @@ undecided-loadout-category-mbos-kni-bal-description =
     cells, 1 roll of gauze, and 1 K ration MRE.
 
 undecided-loadout-category-mbos-kni-snip-name = Knight Sniper Kit
-undecided-loadout-category-mbos-kni-bal-description =
+undecided-loadout-category-mbos-kni-snip-description =
     A cache containing belongings of a Midwestern chapter Knight.
     Includes 1 F1, 2 308 boxes , 1 AEP-7, 2 energy
     cells, 1 roll of gauze,binoculars, and 1 K ration MRE.

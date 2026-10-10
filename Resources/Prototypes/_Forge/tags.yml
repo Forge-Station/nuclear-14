@@ -37,3 +37,12 @@
 
 - type: Tag
   id: ForgeBighornerPelt
+
+- type: Tag
+  id: N14PowerArmorPadding
+
+- type: Tag
+  id: N14PowerArmorPlate
+
+- type: Tag
+  id: N14TinNade

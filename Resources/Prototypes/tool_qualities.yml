@@ -34,6 +34,13 @@
   icon: { sprite: Objects/Tools/welder.rsi, state: icon }
 
 - type: tool
+  id: SprayPainting
+  name: tool-quality-spray-painting-name
+  toolName: tool-quality-spray-painting-tool-name
+  spawn: SprayPainter
+  icon: { sprite: Objects/Tools/spray_painter.rsi, state: spray_painter }
+
+- type: tool
   id: Pulsing
   name: tool-quality-pulsing-name
   toolName: tool-quality-pulsing-tool-name

@@ -54,9 +54,6 @@
           Bloody: { sprite: Structures/meat_spike.rsi, state: spikebloody }
           BloodyHumanoid: { sprite: _Forge/Structures/meat_spike.rsi, state: spikebloodyhuman }
           # Forge-Change-End
-  - type: Construction
-    graph: MeatSpike
-    node: MeatSpike
   # - type: GuideHelp
     # guides:
     # - Chef

@@ -12,7 +12,7 @@
   id: WaterFiltered
   reactants:
     Charcoal:
-      amount: 1
+      amount: 0.5
     WaterDirty:
       amount: 1
   products:

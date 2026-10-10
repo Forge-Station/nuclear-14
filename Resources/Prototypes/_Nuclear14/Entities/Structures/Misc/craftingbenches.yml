@@ -450,16 +450,22 @@
     - N14JunkTincan # Forge-add
     - N14ButchersCleaver
     - N14KitchenKnife
-    - N14DrinkMug
+    - N14RollingPin
     - N14DrinkMugMetal
+    - N14Spoon
+    - N14Fork
     - N14DrinkGlass
     - N14DrinkShotGlass
     - N14DrinkGlassCoupeShaped
+    - N14DrinkShaker
+    - N14BarSpoon
+    - N14DrinkJigger
     - N14FoodPlate
     - N14FoodPlateSmall
     - N14FoodPlatePlastic
     - N14FoodPlateSmallPlastic
     - N14FoodPlateTin
+    - N14FoodBowlBig
     - N14FoodKebabSkewer
     - N14JunkCookpot
     - N14JunkCoffeepot
@@ -477,6 +483,7 @@
     # - N14WeaponSprayNozzle # Forge-Change
     # - N14ClothingBackpackWaterTank # Forge-Change
     # Chemistry
+    - Medkit
     - ChemBag # Forge-add
     - N14DoctorSyringe # Forge-add
     - N14InjectionSyringe # Forge-add

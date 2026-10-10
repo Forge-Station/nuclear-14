@@ -105,11 +105,20 @@ namespace Content.Client.Chat.UI
 
         protected abstract Control BuildBubble(ChatMessage message, string speechStyleClass, Color? fontColor = null);
 
+        // #Forge-Change-Start: the chat controller advances lifetime even when Visible=false,
+        // because hidden controls do not receive FrameUpdate from the UI manager.
+        public bool AdvanceLifetime(float frameTime)
+        {
+            _timeLeft -= frameTime;
+            return _entityManager.Deleted(_senderEntity) || _timeLeft <= 0;
+        }
+        // #Forge-Change-End
+
         protected override void FrameUpdate(FrameEventArgs args)
         {
             base.FrameUpdate(args);
 
-            _timeLeft -= args.DeltaSeconds;
+            // #Forge-Change: lifetime is advanced by ChatUIController, independently of visibility.
             if (_entityManager.Deleted(_senderEntity) || _timeLeft <= 0)
             {
                 // Timer spawn to prevent concurrent modification exception.
