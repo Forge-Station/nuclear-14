@@ -71,6 +71,8 @@
   metabolisms:
     Drink:
       effects:
+        - !type:SatiateThirst
+          factor: 2
         - !type:ModifyBloodLevel
           amount: 2
 

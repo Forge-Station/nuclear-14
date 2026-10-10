@@ -169,7 +169,7 @@
 - type: craftRecipe
   id: N14ClothingHeadHatNCRCombatHelmetRecipe
   resultProtos:
-    - N14ClothingHeadHatBrotherhoodMidwestHelmetVeteran
+    - N14ClothingHeadHatNCRCombatHelmet
   requiredWorkbench: N14WorkbenchArmorbench
   availableFaction:
     - NCR

@@ -9,7 +9,7 @@
     tags:
     - Brutepack
   - type: Sprite
-    scale: 0.7, 0.7
+    scale: 0.8, 0.8
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_medical.rsi
     layers:
     - state: stitch1
@@ -51,7 +51,7 @@
 
 - type: entity
   name: продвинутая мазь
-  description: Используется для лечения даже самых неприятных ожогов. 
+  description: Используется для лечения даже самых неприятных ожогов.
   parent: BaseHealingItem
   id: N14RegenerativeOintment
   suffix: Full
@@ -60,7 +60,7 @@
     tags:
     - Ointment
   - type: Sprite
-    scale: 0.7, 0.7
+    scale: 0.8, 0.8
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_medical_new.rsi
     layers:
     - state: ointment1
@@ -104,7 +104,7 @@
 
 - type: entity
   name: пакет крови
-  description: Содержит универсальный кровезаменитель, разработанный в лабораториях Med-Tek. 
+  description: Содержит универсальный кровезаменитель, разработанный в лабораториях Med-Tek.
   parent: Bloodpack
   id: Bloodpack1
   suffix: Single

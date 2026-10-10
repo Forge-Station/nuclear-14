@@ -344,13 +344,14 @@
     # - id: N14ClothingOuterCoatLab # Forge-Change
     # - id: N14ClothingBeltMedicalFilled # Forge-Change
     # - id: N14ClothingHandsGlovesNitrile # Forge-Change
-      - id: N14ClothingHeadHatNCRBeretMedic
-      - id: N14WeaponSMG9mm
-      - id: N14MagazineSMG9mm
+    # - id: N14ClothingHeadHatNCRBeretMedic # Forge-Change
+      - id: N14WeaponSMG45
+      - id: Magazine45SubMachineGun
         amount: 3
-      - id: N14WeaponPistol9mm
-      - id: N14MagazinePistol9mm
-        amount: 2
+    # - id: N14WeaponPistol9mm # Forge-Change
+    # - id: N14MagazinePistol9mm # Forge-Change
+    #   amount: 2
+      - id: Portafib # Forge-add
       - id: N14SuperStimpak
       - id: Brutepack
       - id: N14Ointment10
@@ -448,7 +449,7 @@
   - type: SpawnItemsOnUse
     items:
     # - id: ClothingBeltNCR # Forge-Change
-    # - id: N14ClothingHeadHatNCRHelmet # Forge-Change 
+    # - id: N14ClothingHeadHatNCRHelmet # Forge-Change
     # - id: N14ClothingNeckCloakNCR # Forge-Change
       - id: N14WeaponLMG
       - id: LMGMagazine556Rifle
@@ -735,7 +736,7 @@
   - type: SpawnItemsOnUse
     items:
       - id: N14ClothingOuterNCRCombatArmor
-    # - id: ClothingBeltRevolverfilled # Forge-Change 
+    # - id: ClothingBeltRevolverfilled # Forge-Change
       - id: N14WeaponRifle556Carbine
       - id: LongMagazine556Rifle
         amount: 3
@@ -1015,7 +1016,7 @@
 #     sound:
 #       path: /Audio/Effects/unwrap.ogg
  #Forge: disable
- 
+
 # Brotherhood Midwestern Chapter Kits
 # MBoS Initiate & Squire Kits
 - type: entity
@@ -1509,7 +1510,7 @@
     size: Huge
   - type: SpawnItemsOnUse # Forge-Change-Start
     items:
-      - id: N14WeaponPlasmaMultiplas 
+      - id: N14WeaponPlasmaMultiplas
       - id: N14PlasmaCartridge
         amount: 3
       - id: N14MedkitCombatFilled

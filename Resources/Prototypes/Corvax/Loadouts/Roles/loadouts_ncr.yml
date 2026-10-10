@@ -37,6 +37,21 @@
     - N14ClothingOuterNCRVeteranArmor
 
 - type: loadout
+  id: LoadoutClothingOuterNCRCoatLabArmored
+  category: Outer
+  cost: 4
+  exclusive: true
+  requirements:
+    - !type:CharacterJobRequirement
+      jobs:
+        - NCRMedic
+    - !type:CharacterPlaytimeRequirement
+      tracker: NCRDoctor
+      min: 72000 # 20 hours veterancy unlock
+  items:
+    - N14ClothingOuterNCRCoatLabArmored
+
+- type: loadout
   id: LoadoutClothingOuterNCRCombatVeteranArmor
   category: Outer
   cost: 4

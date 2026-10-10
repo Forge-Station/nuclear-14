@@ -612,12 +612,12 @@
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Alcohol
-  name: "Алкоголь"
+  name: "Напитки"
   entries:
   - proto: N14DrinkGammagulpBeer
     price: 5
   - proto: DrinkVodkaBottleFull
-    price: 5
+    price: 15
   - proto: DrinkGinBottleFull
     price: 5
   - proto: DrinkCognacBottleFull
@@ -625,9 +625,11 @@
   - proto: N14DrinkWine
     price: 5
   - proto: N14DrinkRoentgenRum
-    price: 5
+    price: 15
   - proto: N14DrinkWhisky
-    price: 5
+    price: 15
+  - proto: N14DrinkNukaCola
+    price: 10
 
 - type: storeCategoryStructured
   id: CaravanBuy2_Fishing
@@ -1319,7 +1321,7 @@
 
 - type: storeCategoryStructured
   id: CaravanSell2_Alcohol
-  name: "Алкоголь"
+  name: "Напитки"
   entries:
   - proto: N14DrinkGammagulpBeer
     price: 3

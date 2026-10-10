@@ -1,0 +1,24 @@
+# Костная мука — удобрение, получаемое при перемалывании костей.
+- type: reagent
+  id: BoneMeal
+  name: reagent-name-bone-meal
+  group: Botanical
+  desc: reagent-desc-bone-meal
+  flavor: bitter
+  color: "#e4dcc8"
+  physicalDesc: reagent-physical-desc-powdery
+  plantMetabolism:
+  - !type:PlantAdjustNutrition
+    amount: 4
+  - !type:PlantAdjustHealth
+    amount: 0.2
+  - !type:PlantAffectGrowth
+    amount: 1
+  - !type:PlantDiethylamine {}
+  metabolisms:
+    Poison:
+      effects:
+      - !type:HealthChange
+        damage:
+          types:
+            Poison: 0.05

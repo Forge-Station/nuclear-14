@@ -547,6 +547,27 @@
     damageCoefficient: 0.9
 
 - type: entity
+  parent: N14ClothingOuterNCRVeteranArmor
+  id: N14ClothingOuterNCRCoatLabArmored
+  name: укреплённый халат врача НКР
+  description: Халат, который используют врачи НКР. Под ним находится пуленепробиваемый жилет.
+  components:
+  - type: Sprite
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRarmorcoatlab.rsi
+  - type: Clothing
+    sprite: Corvax/Clothing/OuterClothing/Armor/falloutNCRarmorcoatlab.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.8
+        Slash: 0.8
+        Piercing: 0.75
+        Heat: 0.75
+        Caustic: 0.75
+  - type: ExplosionResistance
+    damageCoefficient: 0.9
+
+- type: entity
   parent: N14ClothingOuterNCRVeteranArmor # _Nuclear14/Entities/Clothing/OuterClothing/falloutarmor.yml
   id: N14ClothingOuterNCRVeteranArmorSnow
   components:

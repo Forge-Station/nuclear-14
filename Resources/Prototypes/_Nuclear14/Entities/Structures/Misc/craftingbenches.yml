@@ -73,6 +73,7 @@
     staticRecipes: # Guns or melee weapons related only.
     # Guns
     - BowImprovised
+    - WeaponFlareGun # Forge-add
     # Ammo
     - ArrowRegular # Forge-add
     # Melee
@@ -153,6 +154,7 @@
     - N14TopMagazineSMG12mm
     - MagazineBox12
     # - N14ShellShotgun12
+    - ShellShotgunFlare # Forge-add
     - N14MagazineShotgun12
     - MagazineBox12gauge
     # - N14ShellShotgun20
@@ -502,7 +504,7 @@
     # - N14JetInhaler
     # - N14TurboInhaler
     # - N14HydraInhaler
-    # - N14StimpakEmpty 
+    # - N14StimpakEmpty
     # - N14ChemicalSyringeAntidoteEmpty
     # - N14PsychoSyringe
     # - N14RadAwayPhialEmpty # Forge-add-end

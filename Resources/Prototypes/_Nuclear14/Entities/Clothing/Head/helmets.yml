@@ -429,7 +429,7 @@
     sprite: _Nuclear14/Clothing/Head/FalloutHelmets/ncrhelmetmp.rsi
 
 - type: entity
-  parent: N14ClothingHeadHatBaseHelmetWithHair 
+  parent: N14ClothingHeadHatBaseHelmetWithHair
   id: N14ClothingHeadHatNCRHelmetMetalMedic
   name: NCR medic helmet
   description: A rounded NCR helmet offering some protection, worn by Field Medics.
@@ -438,6 +438,28 @@
     sprite: _Nuclear14/Clothing/Head/FalloutHelmets/ncrhelmetmedic.rsi
   - type: Clothing
     sprite: _Nuclear14/Clothing/Head/FalloutHelmets/ncrhelmetmedic.rsi
+
+- type: entity # Forge-Add
+  parent: N14ClothingHeadHatNCRHelmetMetalMedic
+  id: N14ClothingHeadHatNCRHelmetMetalMedicDesert
+  name: NCR medic helmet
+  description: A rounded NCR helmet offering some protection, worn by Field Medics.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Clothing/Head/FalloutHelmets/ncrhelmetmedic2.rsi
+  - type: Clothing
+    sprite: _Nuclear14/Clothing/Head/FalloutHelmets/ncrhelmetmedic2.rsi
+
+- type: entity # Forge-Add
+  parent: N14ClothingHeadHatNCRHelmetMetalMedic
+  id: N14ClothingHeadHatNCRHelmetMetalMedicSnow
+  name: NCR medic helmet
+  description: A rounded NCR helmet offering some protection, worn by Field Medics.
+  components:
+  - type: Sprite
+    sprite: _Nuclear14/Clothing/Head/FalloutHelmets/ncrhelmetmedic3.rsi
+  - type: Clothing
+    sprite: _Nuclear14/Clothing/Head/FalloutHelmets/ncrhelmetmedic3.rsi
 
 - type: entity
   parent: N14ClothingHeadHatBaseHelmetMK2

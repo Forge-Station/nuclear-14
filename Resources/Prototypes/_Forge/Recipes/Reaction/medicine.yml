@@ -193,10 +193,23 @@
       entity: Bloodpack1
 
 - type: reaction
+  id: BloodpackReaction3
+  reactants:
+    ExtractCabbage:
+      amount: 10
+    WastelandBlood:
+      amount: 10
+    Antiseptic:
+      amount: 5
+  effects:
+    - !type:CreateEntityReactionEffect
+      entity: Bloodpack1
+
+- type: reaction
   id: CleanGauzeReaction1
   reactants:
     Fiber:
-      amount: 6
+      amount: 10
     N14RoentgenRum:
       amount: 5
   effects:
@@ -207,7 +220,7 @@
   id: CleanGauzeReaction2
   reactants:
     Fiber:
-      amount: 6
+      amount: 10
     Whiskey:
       amount: 5
   effects:
@@ -218,7 +231,7 @@
   id: CleanGauzeReaction3
   reactants:
     Fiber:
-      amount: 6
+      amount: 10
     Vodka:
       amount: 5
   effects:
@@ -229,7 +242,7 @@
   id: CleanGauzeReaction4
   reactants:
     Fiber:
-      amount: 6
+      amount: 10
     Vodka:
       amount: 5
   effects:
@@ -240,7 +253,7 @@
   id: CleanGauzekReaction5
   reactants:
     Fiber:
-      amount: 6
+      amount: 10
     Ethanol:
       amount: 5
   effects:
@@ -251,7 +264,7 @@
   id: CleanGauzekReaction6
   reactants:
     Fiber:
-      amount: 6
+      amount: 10
     Antiseptic:
       amount: 2
   effects:
@@ -310,7 +323,7 @@
     HealingPowder:
       amount: 10
     Fiber:
-      amount: 3
+      amount: 5
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14HealingPowder
@@ -321,7 +334,7 @@
     HealingPoultice:
       amount: 20
     Fiber:
-      amount: 3
+      amount: 5
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14HealingPoultice
@@ -332,7 +345,7 @@
     BerserkerMixture:
       amount: 20
     Fiber:
-      amount: 3
+      amount: 5
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14BerserkerPowder
@@ -369,7 +382,7 @@
     NukaCola:
       amount: 2
   products:
-    DirtySuperStimpack: 1
+    DirtySuperStimpack: 2
 
 - type: reaction
   id: DirtySuperStimpackReaction2
@@ -381,7 +394,7 @@
     IrradiatedNukaCola:
       amount: 2
   products:
-    DirtySuperStimpack: 1
+    DirtySuperStimpack: 2
 
 - type: reaction
   id: FieryPurgativeReaction1
