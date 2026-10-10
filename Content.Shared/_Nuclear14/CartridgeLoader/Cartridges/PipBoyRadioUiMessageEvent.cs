@@ -10,13 +10,21 @@ public sealed class PipBoyRadioUiMessageEvent : CartridgeMessageEvent
 {
     public readonly PipBoyRadioAction Action;
     public readonly ProtoId<JukeboxPrototype>? SongId;
+    /// Forge-Change
+    public readonly float Volume;
 
     public PipBoyRadioUiMessageEvent(
         PipBoyRadioAction action,
-        ProtoId<JukeboxPrototype>? songId = null)
+        /// Forge-Change-Del ProtoId<JukeboxPrototype>? songId = null)
+        /// Forge-Change-Start
+        ProtoId<JukeboxPrototype>? songId = null,
+        float volume = 1f)
+        /// Forge-Change-End
     {
         Action = action;
         SongId = songId;
+        /// Forge-Change
+        Volume = volume;
     }
 }
 
@@ -28,5 +36,9 @@ public enum PipBoyRadioAction
     Pause,
     Stop,
     Previous,
-    Next
+    /// Forge-Change-Del Next
+    /// Forge-Change-Start
+    Next,
+    SetVolume
+    /// Forge-Change-End
 }

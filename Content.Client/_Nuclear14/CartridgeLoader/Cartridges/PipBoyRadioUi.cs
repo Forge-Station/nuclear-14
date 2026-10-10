@@ -60,6 +60,15 @@ public sealed partial class PipBoyRadioUi : UIFragment
                     PipBoyRadioAction.Previous),
                 userInterface);
 
+        /// Forge-Change-Start
+        _fragment.OnVolumeChanged += volume =>
+            Send(
+                new PipBoyRadioUiMessageEvent(
+                    PipBoyRadioAction.SetVolume,
+                    volume: volume),
+                userInterface);
+
+        /// Forge-Change-End
         _fragment.OnNext += () =>
             Send(
                 new PipBoyRadioUiMessageEvent(
@@ -77,7 +86,11 @@ public sealed partial class PipBoyRadioUi : UIFragment
             radioState.Songs,
             radioState.SelectedSongId?.Id,
             radioState.Playing,
-            radioState.Paused);
+            /// Forge-Change-Del radioState.Paused);
+            /// Forge-Change-Start
+            radioState.Paused,
+            radioState.Volume);
+            /// Forge-Change-End
     }
 
     private static void Send(

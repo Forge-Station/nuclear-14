@@ -23,6 +23,8 @@
     state: pda
   - type: PdaBorderColor
     borderColor: "#717059"
+    # Forge-Change
+    pipBoyTheme: true # Set false to restore the original PDA interface.
   - type: Clothing
     quickEquip: false
     slots:
@@ -58,13 +60,35 @@
       rolloffFactor: 4
   - type: RadiationReceiver
   - type: PipBoyRadioWearer
+  # Forge-Change-Start
+  - type: RadioSpeaker # Forge-Change-Comp
+    channels:
+    - Bazar
+    enabled: false
+    toggleOnInteract: false
+    IsSpeaker: true
+  - type: RadioMicrophone # Forge-Change-Comp
+    broadcastChannel: Bazar
+    frequency: 6996
+    enabled: false
+    toggleOnInteract: false
+  - type: Speech # Forge-Change-Comp
+    speechVerb: Robotic
+  - type: TTS # Forge-Change-Comp
+  # Forge-Change-End
   - type: CartridgeLoader
     uiKey: enum.PdaUiKey.Key
     preinstalled:
       - CrewManifestCartridge
-      - NotekeeperCartridge
-      - NewsReaderCartridge
+      # Forge-Change-Del - NotekeeperCartridge
+      # Forge-Change-Del - NewsReaderCartridge
+      # Forge-Change
+      - N14PipBoyNotekeeperCartridge
       - N14PipBoyRadioCartridge
+      # Forge-Change-Start
+      - N14PipBoyReceiverCartridge
+      - N14PipBoyNanoChatCartridge
+      # Forge-Change-End
 
 - type: entity
   parent: N14BasePipboy
