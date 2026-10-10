@@ -1,0 +1,36 @@
+# Legion Forge: forged torso plates as a material at the workbench.
+# One plate = 1000 units; each workbench craft (arm/leg half) costs 500 (0.5 of a plate).
+# No stackEntity on purpose: the material can never be ejected back out.
+- type: material
+  id: N14ForgedTorsoplate
+  name: materials-n14-forged-torsoplate
+  unit: materials-unit-n14-plate
+  icon: { sprite: /Textures/Corvax/Objects/Specific/LegionForge/MATERIALS/forgedtorsoplate.rsi, state: plate }
+  color: "#8B7D6B"
+  price: 0.05
+
+- type: material
+  id: N14ForgedTorsoplateV2
+  name: materials-n14-forged-torsoplate-v2
+  unit: materials-unit-n14-plate
+  icon: { sprite: /Textures/Corvax/Objects/Specific/LegionForge/MATERIALS/forgedtorsoplateV2.rsi, state: plate }
+  color: "#8B7D6B"
+  price: 0.05
+
+- type: material
+  id: N14ForgedTorsoplateV3
+  name: materials-n14-forged-torsoplate-v3
+  unit: materials-unit-n14-plate
+  icon: { sprite: /Textures/Corvax/Objects/Specific/LegionForge/MATERIALS/forgedtorsoplateV3.rsi, state: plate }
+  color: "#8B7D6B"
+  price: 0.05
+
+# Cotton material for forge craft chain (lathe weaving, strapping).
+- type: material
+  id: Cotton
+  stackEntity: MaterialCotton1
+  name: materials-cotton
+  unit: materials-unit-bunch
+  icon: { sprite: /Textures/Objects/Materials/materials.rsi, state: cotton  }
+  color: "#ffffff"
+  price: 0.01
