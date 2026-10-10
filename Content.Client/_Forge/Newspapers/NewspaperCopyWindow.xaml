@@ -1,0 +1,15 @@
+<newspaper:NewspaperCopyWindow xmlns="https://spacestation14.io"
+ xmlns:newspaper="clr-namespace:Content.Client._Forge.Newspapers"
+ MouseFilter="Stop" Resizable="True" MinSize="300 300" SetSize="1000 770">
+ <BoxContainer Orientation="Vertical">
+  <BoxContainer Orientation="Horizontal" Margin="4 0 4 4">
+   <Button Name="SideButton" Text="{Loc newspaper-show-back}"/>
+   <Control HorizontalExpand="True"/>
+   <CheckBox Name="FitPageButton" Text="{Loc newspaper-fit-page}" Pressed="True" Margin="0 0 8 0"/>
+   <PanelContainer StyleClasses="AngleRect"><TextureButton Name="CloseButton" StyleClasses="windowCloseButton"/></PanelContainer>
+  </BoxContainer>
+  <ScrollContainer Name="ScrollingContents" HorizontalExpand="True" VerticalExpand="True" HScrollEnabled="True">
+   <newspaper:NewspaperPage Name="PageView" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+  </ScrollContainer>
+ </BoxContainer>
+</newspaper:NewspaperCopyWindow>
