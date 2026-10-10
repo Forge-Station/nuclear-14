@@ -20,7 +20,7 @@ public partial class PdaWindow
         AccentV.Visible = false;
         PipBoyHeading.Visible = true;
         PipBoyHeading.FontColorOverride = Color.FromHex(accent);
-        ManufacturerLabel.Text = "PERSONAL INFORMATION PROCESSOR";
+        ManufacturerLabel.Text = Loc.GetString("pipboy-theme-manufacturer");
         ManufacturerLabel.FontColorOverride = Color.FromHex(muted);
         ContentBorder.PanelOverride = new StyleBoxFlat { BackgroundColor = Color.FromHex(muted) };
         ContentBackground.PanelOverride = new StyleBoxFlat { BackgroundColor = Color.FromHex("#11140E") };

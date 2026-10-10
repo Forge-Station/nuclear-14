@@ -14,8 +14,7 @@ public sealed partial class PdaMenu
 
     private bool _pipBoyLayoutInitialized;
     private bool _pipBoyGreen;
-    private Button? _greenButton;
-    private Button? _amberButton;
+    private PipBoyColorSettings? _colorSettings;
     public event Action<bool>? OnPipBoyColorChanged;
 
     /// <summary>
@@ -78,8 +77,7 @@ public sealed partial class PdaMenu
         if (!_pipBoyLayoutInitialized)
             InitializePipBoyLayout();
 
-        _greenButton!.Pressed = green;
-        _amberButton!.Pressed = !green;
+        _colorSettings!.SetColor(green);
         ApplyPipBoyControlStyle(this);
     }
 
@@ -100,30 +98,12 @@ public sealed partial class PdaMenu
         AddressLabel.Orphan();
         ContentFooter.RemoveAllChildren();
         ContentFooter.Margin = new Thickness(10, 0, 10, 0);
-        ContentFooter.AddChild(new Label { Text = "ROBCO INDUSTRIES / PIP-BOY", HorizontalExpand = true });
+        ContentFooter.AddChild(new Label { Text = Loc.GetString("pipboy-theme-brand"), HorizontalExpand = true });
         ContentFooter.AddChild(AddressLabel);
         AccessRingtoneButton.Visible = false;
-        var colors = new BoxContainer
-        {
-            Orientation = BoxContainer.LayoutOrientation.Horizontal,
-            SeparationOverride = 8,
-            Margin = new Thickness(8),
-            Visible = false,
-        };
-        var colorButton = new PdaSettingsButton
-        {
-            Text = Loc.GetString("pipboy-theme-color"),
-            Description = Loc.GetString("pipboy-theme-color-description"),
-        };
-        colorButton.OnPressed += _ => colors.Visible = !colors.Visible;
-        _greenButton = new Button { Text = Loc.GetString("pipboy-theme-green"), ToggleMode = true, HorizontalExpand = true };
-        _amberButton = new Button { Text = Loc.GetString("pipboy-theme-amber"), ToggleMode = true, HorizontalExpand = true };
-        _greenButton.OnPressed += _ => SelectPipBoyColor(true);
-        _amberButton.OnPressed += _ => SelectPipBoyColor(false);
-        colors.AddChild(_greenButton);
-        colors.AddChild(_amberButton);
-        Settings.AddChild(colorButton);
-        Settings.AddChild(colors);
+        _colorSettings = new PipBoyColorSettings();
+        _colorSettings.OnColorSelected += SelectPipBoyColor;
+        Settings.AddChild(_colorSettings);
     }
 
     private static StyleBoxFlat PipBoyBox(string background, string border)
