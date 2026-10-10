@@ -325,7 +325,7 @@
   effects:
     - !type:CreateEntityReactionEffect
       entity: N14HealingPoultice
-      
+
 - type: reaction
   id: BerserkerMixtureConversion
   reactants:
@@ -341,6 +341,16 @@
 
 - type: reaction
   id: SmellingSaltsReaction
+  reactants:
+    TableSalt:
+      amount: 2
+    Vodka:
+      amount: 1
+  products:
+    SmellingSalts: 2
+
+- type: reaction
+  id: SmellingSaltsReactionEthanol
   reactants:
     TableSalt:
       amount: 2

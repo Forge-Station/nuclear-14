@@ -5,5 +5,7 @@ ent-N14MobRobotAssaultronHostile = Assaultron
     .desc = Horrifying.
 ent-N14MobRobotProtectronHostile = Protectron
     .desc = A common protectron looking for a fight.
+ent-N14MobRobotHostileMilitarySentrybot = Military Sentry Bot
+    .desc = A pre-war military sentry bot running heavy combat protocols. It locks onto its target and launches a slow missile.
 ent-N14MobRobotMrHandyClaw = Mr Handy
     .desc = A domestic Mr Handy model with a claw attachment.

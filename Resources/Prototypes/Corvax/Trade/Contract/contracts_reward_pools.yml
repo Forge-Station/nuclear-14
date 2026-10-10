@@ -89,10 +89,6 @@
   id: caravan_medium
   entries:
   - type: Item
-    prototype: N14Stimpak
-    count: { min: 2, max: 4 }
-    weight: 2
-  - type: Item
     prototype: N14WeaponShotgun
     count: 1
     weight: 1
@@ -129,11 +125,11 @@
     count: 1
     weight: 2
   - type: Item
-    prototype: N14RadAwayInhaler
+    prototype: N14Stimpak
     count: { min: 2, max: 3 }
     weight: 2
   - type: Item
-    prototype: N14Antidote
+    prototype: N14StimpakDirty
     count: { min: 2, max: 3 }
     weight: 2
   - type: Item
@@ -227,12 +223,12 @@
     count: 1
     weight: 1
   - type: Item
-    prototype: N14RadAwayInhaler
-    count: { min: 3, max: 5 }
+    prototype: N14Stimpak
+    count: { min: 2, max: 4 }
     weight: 4
   - type: Item
-    prototype: N14ChemicalSyringeAntidote
-    count: { min: 3, max: 5 }
+    prototype: N14StimpakDirty
+    count: { min: 2, max: 4 }
     weight: 4
   - type: Item
     prototype: N14ClothingOuterCombatArmorMK2
@@ -247,10 +243,6 @@
     count: 1
     weight: 1
   - type: Item
-    prototype: N14WeaponShotgunAuto
-    count: 1
-    weight: 1
-  - type: Item
     prototype: N14WeaponRifle762MarksmanChinese
     count: 1
     weight: 1
@@ -260,6 +252,10 @@
     weight: 1
   - type: Item
     prototype: JunkCannon
+    count: 1
+    weight: 1
+  - type: Item
+    prototype: N14WeaponLaserRifle
     count: 1
     weight: 1
 

@@ -24,7 +24,7 @@
       enum.StrippingUiKey.Key:
         type: StrippableBoundUserInterface
       enum.HandheldRadioUiKey.Key:
-        type: HandheldRadioBoundUserInterface
+        type: JunkbotRadioBoundUserInterface
   - type: WiresPanel
     openDelay: 6
   - type: Lock

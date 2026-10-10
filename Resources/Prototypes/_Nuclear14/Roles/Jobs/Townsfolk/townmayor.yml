@@ -18,6 +18,8 @@
   icon: "JobIconTownMayor" # Forge-Change
   supervisors: job-supervisors-townsfolk
   alwaysUseSpawner: true # Forge-Change
+  access:
+  - RadioBroadcast
   accessGroups:
   - Townie
   special:

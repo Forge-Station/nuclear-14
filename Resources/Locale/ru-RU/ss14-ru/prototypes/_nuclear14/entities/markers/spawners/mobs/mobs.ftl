@@ -185,6 +185,9 @@ ent-N14SpawnMobRobobrain = спавнер робомозга
 ent-N14SpawnMobEyebot = спавнер робоглаза
     .suffix = { ent-N14MobRobotHostileMelee.suffix }
     .desc = { ent-MarkerBase.desc }
+ent-N14SpawnMobSentrybot = спавнер робота-часового
+    .suffix = { ent-N14MobRobotHostileSentrybot.suffix }
+    .desc = { ent-MarkerBase.desc }
 
 # Гуль 
 ent-N14SpawnMobFeralGhoul = спавнер дикого гуля

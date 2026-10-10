@@ -1,0 +1,57 @@
+# Forge: armor plates and helmet items.
+
+- type: entity
+  parent: BaseItem
+  id: N14ComponentArmorPlateMK1
+  name: бронепластина МК1
+  description: Усиленная бронепластина первого поколения.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/modification_kit.rsi
+    layers:
+    - state: box
+    - state: gear
+  - type: Item
+    size: Normal
+
+- type: entity
+  parent: BaseItem
+  id: N14ComponentArmorPlateMK2
+  name: бронепластина МК2
+  description: Усиленная бронепластина второго поколения.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/modification_kit.rsi
+    layers:
+    - state: box
+    - state: gear
+  - type: Item
+    size: Normal
+
+- type: entity
+  parent: BaseItem
+  id: N14ComponentArmorPlateMK3
+  name: бронепластина МК3
+  description: Усиленная бронепластина третьего поколения.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/modification_kit.rsi
+    layers:
+    - state: box
+    - state: gear
+  - type: Item
+    size: Normal
+
+- type: entity
+  parent: BaseItem
+  id: N14ComponentHelmetMK2
+  name: подкладка шлема МК2
+  description: Защитный элемент шлема второго поколения.
+  components:
+  - type: Sprite
+    sprite: Corvax/Objects/Specific/modification_kit.rsi
+    layers:
+    - state: box
+    - state: shield
+  - type: Item
+    size: Normal

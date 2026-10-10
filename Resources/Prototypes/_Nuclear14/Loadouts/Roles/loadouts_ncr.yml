@@ -81,20 +81,20 @@
   items:
     - ClothingNeckPinNCRCorporal
 
-- type: loadout
-  id: LoadoutNCRPinCorporalNCRWS # Forge-Change
-  category: Roles
-  cost: 1
-  exclusive: true
-  requirements:
-    - !type:CharacterJobRequirement
-      jobs:
-        - NCRWS
-    - !type:CharacterPlaytimeRequirement
-      tracker: NCRWS
-      min: 144000 # 40 hours veterancy unlock
-  items:
-    - ClothingNeckPinNCRCorporal
+# - type: loadout
+#   id: LoadoutNCRPinCorporalNCRWS # Forge-Change
+#   category: Roles
+#   cost: 1
+#   exclusive: true
+#   requirements:
+#     - !type:CharacterJobRequirement
+#       jobs:
+#         - NCRWS
+#     - !type:CharacterPlaytimeRequirement
+#       tracker: NCRWS
+#       min: 144000 # 40 hours veterancy unlock
+#   items:
+#     - ClothingNeckPinNCRCorporal
 
 - type: loadout
   id: LoadoutNCRPinSpecialistSoldier # Forge-Change

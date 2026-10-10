@@ -1,0 +1,33 @@
+- type: construction
+  id: ForgePigratCloak
+  name: плащ из свинокрыса
+  description: Плащ из шкуры свинокрыса, сшитый крепкими сухожилиями.
+  graph: ForgePigratCloak
+  startNode: start
+  targetNode: cloak
+  category: construction-category-clothing
+  icon:
+    sprite: _Forge/Clothing/Neck/pigrat_cloak.rsi
+    state: icon
+  objectType: Item
+  hide: false
+
+- type: constructionGraph
+  id: ForgePigratCloak
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: cloak
+      steps:
+      - tag: ForgePigratHide
+        name: шкура свинокрыса
+        icon:
+          sprite: _Forge/Objects/Misc/mob_drops.rsi
+          state: hide_pigrat
+        doAfter: 3
+      - material: ForgeAnimalSinew
+        amount: 2
+        doAfter: 5
+  - node: cloak
+    entity: ForgeClothingPigratCloak

@@ -635,6 +635,12 @@
   name: Midwest Brotherhood medical Scribe coat
   description: A finely made robe affixed with leather worn by medical Scribes, a symbol of the Brotherhood emblazoned across the chest and back.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 2
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK1
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Coats/midwestbosmedicalscribe.rsi
   - type: Clothing
@@ -827,6 +833,12 @@
   name: preventor paded jacket
   description: A winter leather jacket with internal armor layers, the regular piece of armor used by the vancouver law enforcers and preventors.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Coats/armoredjacket.rsi
   - type: Clothing

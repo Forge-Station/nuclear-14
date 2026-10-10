@@ -3,6 +3,7 @@ using Content.Shared.Destructible;
 using Content.Shared.Mining;
 using Content.Shared.Random;
 using Content.Shared.Random.Helpers;
+using Content.Shared.Stacks;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
@@ -34,11 +35,19 @@ public sealed class MiningSystem : EntitySystem
         if (proto.OreEntity == null)
             return;
 
+        // Forge: scale the ore yield by the stack size so a whole stack of ore pays out fully.
+        var stackCount = 1;
+        if (TryComp<StackComponent>(uid, out var stackComp))
+            stackCount = Math.Max(1, stackComp.Count);
+
         var coords = Transform(uid).Coordinates;
-        var toSpawn = _random.Next(proto.MinOreYield, proto.MaxOreYield);
-        for (var i = 0; i < toSpawn; i++)
+        for (var i = 0; i < stackCount; i++)
         {
-            Spawn(proto.OreEntity, coords.Offset(_random.NextVector2(0.2f)));
+            var toSpawn = _random.Next(proto.MinOreYield, proto.MaxOreYield);
+            for (var j = 0; j < toSpawn; j++)
+            {
+                Spawn(proto.OreEntity, coords.Offset(_random.NextVector2(0.2f)));
+            }
         }
     }
 

@@ -4,6 +4,8 @@
   description: job-description-vault-security
   playTimeTracker: VaultSecurity
   requirements:
+  - !type:MinPlayersRequirement
+    min: 20 # Forge-Change
   - !type:CharacterSpeciesRequirement
     species:
     - Human

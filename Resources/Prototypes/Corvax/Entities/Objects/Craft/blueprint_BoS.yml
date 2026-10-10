@@ -34,3 +34,12 @@
   components:
     - type: STBlueprint
       blueprint: N14ClothingOuterMidwestArmorMK2Recipe
+
+- type: entity
+  parent: N14BaseBlueprintPaper
+  id: N14ClothingHeadHatBrotherhoodMidwestHelmetVeteranBlueprint
+  name: чертёж боевого шлема ветерана Среднезападного Братства
+  suffix: Craft, BoS
+  components:
+    - type: STBlueprint
+      blueprint: N14ClothingHeadHatBrotherhoodMidwestHelmetVeteranRecipe

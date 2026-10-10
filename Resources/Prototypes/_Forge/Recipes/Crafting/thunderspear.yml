@@ -1,0 +1,15 @@
+# Forge: craftable thunder spear (explosives category).
+
+- type: construction
+  name: Thunder spear
+  id: N14WastelandThunderspear
+  graph: N14WastelandThunderspear
+  startNode: start
+  targetNode: thunderspear
+  category: construction-category-explosives
+  objectType: Item
+  description: A short spear rigged with a tin-nade. Handle with care.
+  icon:
+    sprite: Corvax/Objects/Weapons/Melee/thunderspear.rsi
+    state: spear
+  hide: false

@@ -1,0 +1,14 @@
+- type: entity
+  id: N14SpawnPointJunkbot
+  parent: SpawnPointJobBase
+  name: junkbot
+  components:
+  - type: SpawnPoint
+    job_id: Junkbot
+  - type: Sprite
+    layers:
+    - state: green
+    - sprite: _Forge/Mobs/Cyborgs/junkbot.rsi
+      state: robot
+    - sprite: _Forge/Mobs/Cyborgs/junkbot.rsi
+      state: robot_e_r

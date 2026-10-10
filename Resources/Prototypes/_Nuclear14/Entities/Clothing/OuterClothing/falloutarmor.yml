@@ -177,6 +177,12 @@
   name: combat armor
   description: A suit of combat armor that's used in combat.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 2
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK1
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombat.rsi
   - type: Clothing
@@ -198,6 +204,12 @@
   name: combat armor
   description: A suit of combat armor that's used in combat. This one bears a hastily added trade mark of the Blue Line Caravan corp.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 2
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK1
   - type: Armor
     modifiers:
       coefficients:
@@ -213,6 +225,12 @@
   name: combat armor mk2
   description: A suit of combat armor that's used in combat. It looks stronger than basic combat armor.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK2
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatmk2.rsi
   - type: Clothing
@@ -234,6 +252,12 @@
   name: combat armor mk2
   description: A suit of combat armor that's used in combat. It looks stronger than basic combat armor. This one bears a hastily added trade mark of the Blue Line Caravan corp.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK2
   - type: Armor
     modifiers:
       coefficients:
@@ -249,6 +273,12 @@
   name: marine armor
   description: An extremely advanced piece of combat armor, the strongest you can find.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutmarinearmor.rsi
   - type: Clothing
@@ -305,6 +335,12 @@
   name: enclave peacekeeper vest
   description: A bulletproof vest used by Enclave 'peacekeepers'. Pfft. Yeah, right.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutpeacekeeper.rsi
   - type: Clothing
@@ -522,6 +558,12 @@
   name: raider combat armor
   description: An armor piece infamously used by raiders of all kinds in combat.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 2
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK1
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatraider1.rsi
   - type: Clothing
@@ -540,6 +582,12 @@
   name: raider combat armor mk2
   description: An armor piece infamously used by Raiders of all kinds in combat, this one seems to hold some pieces of a salvaged mk2 combat armor.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK2
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutcombatraider2.rsi
   - type: Clothing
@@ -710,6 +758,12 @@
   name: sheriff vest
   description: The sheriff needs a good piece of armor to protect themselves from the dangers of the wasteland.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 2
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK1
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutsheriffvest.rsi
   - type: Clothing
@@ -844,19 +898,19 @@
   - type: Armor
     modifiers:
       coefficients:
-        Blunt: 0.8
+        Blunt: 0.7
         Slash: 0.7
-        Piercing: 0.75
-        Heat: 0.8
+        Piercing: 0.675
+        Heat: 0.7
     priceMultiplier: 0.6
   - type: ExplosionResistance
-    damageCoefficient: 0.75
+    damageCoefficient: 0.7
   - type: Reflect
     reflectProb: 0.05
     spread: 150
   - type: ClothingSpeedModifier
-    walkModifier: 0.95
-    sprintModifier: 0.95
+    walkModifier: 0.92
+    sprintModifier: 0.92
 
 # Forge-Delete-Start
 # - type: entity
@@ -1025,6 +1079,12 @@
   name: customized ranger patrol armor
   description: A customized and moderately-worn suit of patrol ranger armor. A sun-worn thick olive duster is worn over the armor.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 2
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK1
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutrangersuitb.rsi
   - type: Clothing
@@ -1093,6 +1153,12 @@
   name: ranger combat armor
   description: The Rangers combat armor consists of a pre-war L.A.P.D. riot suit under a duster with rodeo jeans. Considered one of the most prestigious suits of armor to earn and wear while in service of the NCR Rangers.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutrangercombat.rsi
   - type: Clothing
@@ -1147,6 +1213,12 @@
   name: elite ranger combat armor
   description: A customized and well-worn suit of riot gear with parts of the suit reinforced with leather armor and slain Centurion armor pieces by the wearer. A sniper's veil is wrapped around the neck.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutrangerelite.rsi
   - type: Clothing
@@ -1168,6 +1240,12 @@
   name: worn elite ranger combat armor
   description: Worn riot gear granted to Rangers who served as law bringers for times of great unrest. This armor is a testament to the reach and power of the Republic and its will to bring peace to the lawlessness of the wasteland.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutrangerelite.rsi
   - type: Clothing
@@ -1189,6 +1267,12 @@
   name: spider ranger combat armor
   description: A customised and faded suit of riot gear, reminiscient of that found near Hopeville in the Divide, with a pair of wrist mounted ammo pouches for easy access to spare munitions with a pair of stripes down the back made from a fire-proof material.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 10
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK3
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutrangerspider.rsi
   - type: Clothing
@@ -1256,6 +1340,12 @@
   name: captain combat armor
   description: A suit of combat armor used by the Captains in the Washington Brotherhood of Steel.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK2
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutboscaptain.rsi
   - type: Clothing
@@ -1298,6 +1388,12 @@
   name: brotherhood combat armor mk3
   description: Meticulously worked on by the Washington Scribes, its near unrecognisable from its original state.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK2
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutbosmk3armor.rsi
   - type: Clothing
@@ -1369,6 +1465,12 @@
   name: knight armor
   description: A suit of combat armor used by the Washington Brotherhood's Knights. Almost identical to pre-war sets issued to the military.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 2
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK1
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/BoS_Wash/KnightArmor.rsi
   - type: Clothing
@@ -1417,6 +1519,12 @@
   name: paladin armor
   description: A suit of sturdy armor used by the Washington Brotherhood's Paladins. Seems to cover almost every inch of one's torso.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK2
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/BoS_Wash/PaladinArmor.rsi
   - type: Clothing
@@ -1476,6 +1584,12 @@
   name: midwest BoS recon armor
   description: A suit of recon armor manufactured by the Midwest Brotherhood, reserved for only higher ranked members.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK2
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutmidbosreconarmor.rsi
   - type: Clothing
@@ -1550,6 +1664,12 @@
   name: knight armor
   description: A suit of combat armor used by the Midwestern Brotherhood's Knights. Almost identical to pre-war sets issued to the military.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 2
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK1
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/BoS_Midw/KnightArmor.rsi
   - type: Clothing
@@ -1598,6 +1718,12 @@
   name: paladin armor
   description: A suit of sturdy armor used by the Midwestern Brotherhood's Paladins. Seems to have been forged by artificers for WAR!
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK2
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/BoS_Midw/PaladinArmor.rsi
   - type: Clothing
@@ -1677,6 +1803,12 @@
   name: radscorpion armor
   description: A suit of handmade armor made of pieces of exoskeleton from radscorpions.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK2
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutradarmor.rsi
   - type: Clothing
@@ -1762,6 +1894,12 @@
   name: RCMP armored vest
   description: A bulletproof vest used by the Canadian Mounties of the RCMP.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 2
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK1
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutmountievest.rsi
   - type: Clothing
@@ -1783,6 +1921,12 @@
   name: RCMP combat armor
   description: A suit of combat armor that's used in combat, this one is a post-war model produced by the RCMP.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK2
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutmountiearmor.rsi
   - type: Clothing
@@ -1806,6 +1950,12 @@
   name: chinese combat armor
   description: A bulletproof vest combined with knee pads, mostly used by chinese commandos and special forces.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK2
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutchinesearmor.rsi
   - type: Clothing
@@ -1827,6 +1977,12 @@
   name: chinese armored vest
   description: A light bulletproof vest, mostly used by regular chinese infantry.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 2
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK1
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/falloutchinesevest.rsi
   - type: Clothing
@@ -1922,6 +2078,12 @@
   name: the Guard's armor
   description: An old piece of armor or maybe a replica of one, surprisingly sturdy thing. Additional plating over the left arm for extra protection in melee combat.
   components:
+  - type: ToolRefinable
+    qualityNeeded: Prying
+    refineTime: 5
+    refineFuel: 0
+    refineResult:
+    - id: N14ComponentArmorPlateMK2
   - type: Sprite
     sprite: _Nuclear14/Clothing/OuterClothing/Armor/townarmorriot.rsi
   - type: Clothing

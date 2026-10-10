@@ -9,5 +9,7 @@
       amount: 1
     WastelandBlood:
       amount: 1
+    BerserkerMixture:
+      amount: 1
   products:
     BerserkerMixture: 4

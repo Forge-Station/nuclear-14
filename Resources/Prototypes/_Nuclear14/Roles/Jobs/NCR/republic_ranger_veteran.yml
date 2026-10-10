@@ -20,6 +20,7 @@
   supervisors: ent-job-supervisors-ncr # Forge-Change
   requireAdminNotify: true
   access:
+  - RadioBroadcast
   - NCR
   - NCRSGT
   - NCRMedic
