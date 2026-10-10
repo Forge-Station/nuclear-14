@@ -1,0 +1,12 @@
+- type: entity
+  parent: Paper
+  id: N14RecycledPaperSheet
+  name: recycled paper
+  description: A coarse sheet with visible fibers and flecks of recycled pulp.
+  components:
+  - type: PaperSurface
+    appearance:
+      profile: N14RecycledPaper
+      wear: 0.5
+      fibers: 1
+      impurities: 1
