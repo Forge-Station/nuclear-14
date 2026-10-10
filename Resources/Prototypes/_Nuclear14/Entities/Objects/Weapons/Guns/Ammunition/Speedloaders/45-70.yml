@@ -8,6 +8,9 @@
     tags:
       - SpeedLoader45-70
   - type: SpeedLoader
+  - type: ToolRefinable
+    refineResult:
+    - id: SheetSteel1
   - type: BallisticAmmoProvider
     whitelist:
       tags:
@@ -50,6 +53,9 @@
     tags:
     - SpeedLoaderInternal
   - type: SpeedLoader
+  - type: ToolRefinable
+    refineResult:
+    - id: SheetSteel1
   - type: BallisticAmmoProvider
     whitelist:
       tags:
