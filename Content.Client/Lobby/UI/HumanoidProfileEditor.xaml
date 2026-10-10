@@ -1,46 +1,33 @@
+<!-- Forge-Change-Start -->
 <BoxContainer xmlns="https://spacestation14.io"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:humanoid="clr-namespace:Content.Client.Humanoid"
     xmlns:cc="clr-namespace:Content.Client.Administration.UI.CustomControls"
-    xmlns:prefUi="clr-namespace:Content.Client.Lobby.UI"
     xmlns:ui="clr-namespace:Content.Client.UserInterface.Controls"
     HorizontalExpand="True">
     <!-- Left side -->
     <BoxContainer Orientation="Vertical" Margin="10 10 10 10" HorizontalExpand="True">
-        <!-- Middle container -->
+        <!-- Name and actions share the same top inset and control spacing. -->
         <BoxContainer Orientation="Horizontal" SeparationOverride="10">
-            <!-- Name box-->
-            <BoxContainer Orientation="Vertical">
-                <prefUi:HighlightedContainer>
-                    <BoxContainer Orientation="Vertical">
-                        <prefUi:HighlightedContainer>
-                            <BoxContainer Orientation="Vertical">
-                                <BoxContainer Orientation="Horizontal" VerticalExpand="True">
-                                    <Label Text="{Loc 'humanoid-profile-editor-name-label'}" />
-                                    <LineEdit Name="NameEdit" MinSize="270 0" VerticalAlignment="Center" Margin="5 0 0 0" />
-                                    <Button Name="NameRandomize" Text="{Loc 'humanoid-profile-editor-name-random-button'}" />
-                                </BoxContainer>
-                                <Button Name="RandomizeEverything" HorizontalAlignment="Center" HorizontalExpand="False"
-                                    MaxWidth="256" Text="{Loc 'humanoid-profile-editor-randomize-everything-button'}" />
-                                <RichTextLabel Name="WarningLabel" HorizontalExpand="False" VerticalExpand="True"
-                                    MaxWidth="425" HorizontalAlignment="Left" />
-                            </BoxContainer>
-                        </prefUi:HighlightedContainer>
-                    </BoxContainer>
-                </prefUi:HighlightedContainer>
+            <BoxContainer Orientation="Vertical" Margin="10" SeparationOverride="6">
+                <BoxContainer Orientation="Horizontal" SeparationOverride="6">
+                    <Label Text="{Loc 'humanoid-profile-editor-name-label'}" VerticalAlignment="Center" />
+                    <LineEdit Name="NameEdit" MinSize="270 0" VerticalAlignment="Center" />
+                    <Button Name="NameRandomize" Text="{Loc 'humanoid-profile-editor-name-random-button'}" />
+                </BoxContainer>
+                <Button Name="RandomizeEverything" HorizontalAlignment="Left" HorizontalExpand="False"
+                        Text="{Loc 'humanoid-profile-editor-randomize-everything-button'}" />
+                <RichTextLabel Name="WarningLabel" HorizontalExpand="False" VerticalExpand="True"
+                               MaxWidth="425" HorizontalAlignment="Left" />
             </BoxContainer>
             <!-- Import/Export -->
-            <BoxContainer Orientation="Vertical">
-                <prefUi:HighlightedContainer>
-                    <BoxContainer Orientation="Horizontal" SeparationOverride="5">
-                        <Button Name="ImportButton" Text="{Loc 'humanoid-profile-editor-import-button'}"/>
-                        <Button Name="ExportButton" Text="{Loc 'humanoid-profile-editor-export-button'}"/>
-                        <Button Name="SaveButton" Text="{Loc 'humanoid-profile-editor-save-button'}" />
-                        <Button Name="ResetButton" Disabled="True" Text="{Loc 'humanoid-profile-editor-reset-button'}"/>
-                        <Button Name="ExportImageButton" Text="{Loc 'humanoid-profile-editor-export-image-button'}"/> <!-- Corvax-Change -->
-                        <Button Name="OpenImagesButton" Text="{Loc 'humanoid-profile-editor-open-image-button'}"/> <!-- Corvax-Change -->
-                    </BoxContainer>
-                </prefUi:HighlightedContainer>
+            <BoxContainer Orientation="Horizontal" Margin="10" VerticalAlignment="Top" SeparationOverride="6">
+                <Button Name="ImportButton" Text="{Loc 'humanoid-profile-editor-import-button'}" />
+                <Button Name="ExportButton" Text="{Loc 'humanoid-profile-editor-export-button'}" />
+                <Button Name="SaveButton" Text="{Loc 'humanoid-profile-editor-save-button'}" />
+                <Button Name="ResetButton" Disabled="True" Text="{Loc 'humanoid-profile-editor-reset-button'}" />
+                <Button Name="ExportImageButton" Text="{Loc 'humanoid-profile-editor-export-image-button'}" />
+                <Button Name="OpenImagesButton" Text="{Loc 'humanoid-profile-editor-open-image-button'}" />
             </BoxContainer>
         </BoxContainer>
         <Control MinHeight="10" />
@@ -246,3 +233,31 @@
         </BoxContainer>
     </BoxContainer>
 </BoxContainer>
+<!-- Forge-Change-End -->
+
+<!-- Forge-Change-Del: исходные строки до изменений
+    xmlns:prefUi="clr-namespace:Content.Client.Lobby.UI"
+        <!- - Middle container - ->
+            <!- - Name box- ->
+            <BoxContainer Orientation="Vertical">
+                <prefUi:HighlightedContainer>
+                    <BoxContainer Orientation="Vertical">
+                        <prefUi:HighlightedContainer>
+                            <BoxContainer Orientation="Vertical">
+                                <BoxContainer Orientation="Horizontal" VerticalExpand="True">
+                                    <Label Text="{Loc 'humanoid-profile-editor-name-label'}" />
+                                    <LineEdit Name="NameEdit" MinSize="270 0" VerticalAlignment="Center" Margin="5 0 0 0" />
+                                <Button Name="RandomizeEverything" HorizontalAlignment="Center" HorizontalExpand="False"
+                                    MaxWidth="256" Text="{Loc 'humanoid-profile-editor-randomize-everything-button'}" />
+                        </prefUi:HighlightedContainer>
+                </prefUi:HighlightedContainer>
+            <BoxContainer Orientation="Vertical">
+                <prefUi:HighlightedContainer>
+                    <BoxContainer Orientation="Horizontal" SeparationOverride="5">
+                        <Button Name="ImportButton" Text="{Loc 'humanoid-profile-editor-import-button'}"/>
+                        <Button Name="ExportButton" Text="{Loc 'humanoid-profile-editor-export-button'}"/>
+                        <Button Name="ResetButton" Disabled="True" Text="{Loc 'humanoid-profile-editor-reset-button'}"/>
+                        <Button Name="ExportImageButton" Text="{Loc 'humanoid-profile-editor-export-image-button'}"/> <!- - Corvax-Change - ->
+                        <Button Name="OpenImagesButton" Text="{Loc 'humanoid-profile-editor-open-image-button'}"/> <!- - Corvax-Change - ->
+                </prefUi:HighlightedContainer>
+-->

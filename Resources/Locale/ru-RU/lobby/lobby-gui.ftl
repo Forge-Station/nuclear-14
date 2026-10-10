@@ -7,3 +7,8 @@ ui-lobby-observe-button = Наблюдать
 ui-lobby-ready-up-button = Готовность
 ui-lobby-online-players-block = Текущие игроки
 ui-lobby-server-info-block = Серверная информация
+# Forge-Change-Start
+
+ui-lobby-wiki-button = Вики
+ui-lobby-website-button = Сайт
+# Forge-Change-End
