@@ -1,0 +1,60 @@
+- type: entity
+  name: P90
+  parent: N14WeaponSMG9mm
+  id: N14P90
+  description: The FN P90 is a personal defense weapon, also classified as a submachine gun, designed and manufactured by FN Herstal in Belgium.
+  components:
+  - type: Clothing
+    sprite: Corvax/Objects/Weapons/Guns/SMGs/p90.rsi
+    quickEquip: false
+    slots:
+    - Back
+    - suitStorage
+  - type: Item # Forge-Change
+    size: Large
+    shape:
+    - 0,0,2,1
+    - 0,1,0,1
+  - type: Sprite
+    sprite: Corvax/Objects/Weapons/Guns/SMGs/p90.rsi
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: mag-0
+      map: ["enum.GunVisualLayers.Mag"]
+  - type: Gun
+    fireRate: 9.5
+    soundGunshot:
+      collection: N14Pistol9mmGunshot
+    selectedMode: Fullauto
+    availableModes:
+    - Fullauto
+    minAngle: 4
+    maxAngle: 20
+    angleIncrease: 2
+    angleDecay: 16
+  - type: ChamberMagazineAmmoProvider
+    soundRack:
+      path: /Audio/_Nuclear14/Weapons/Effects/Reload/SMGs/smg_cock.ogg
+  - type: GunWieldBonus
+    minAngle: -3
+    maxAngle: -15
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Magazine
+        startingItem: N14MagazineSMG9mmP90
+        insertSound: /Audio/_Nuclear14/Weapons/Effects/Reload/SMGs/smg_magin.ogg
+        ejectSound: /Audio/_Nuclear14/Weapons/Effects/Reload/SMGs/smg_magout.ogg
+        whitelist:
+          tags:
+            - N14MagazineSMG9mmP90
+      gun_chamber:
+        name: Chamber
+        startingItem: N14CartridgePistol9
+        priority: 1
+        whitelist:
+          tags:
+            - N14CartridgePistol9
+  - type: StaticPrice
+    price: 200
