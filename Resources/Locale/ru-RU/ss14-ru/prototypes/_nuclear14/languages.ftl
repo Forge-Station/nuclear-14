@@ -6,6 +6,10 @@ language-Chinese-name = Китайский
 language-Chinese-description = Вы понимаете и говорите на китайском языке. Благодаря обучению или вашей предыстории.
 chat-language-Chinese-name = К
 
+language-Spanish-name = Испанский
+language-Spanish-description = Вы понимаете и говорите на испанском языке. Благодаря обучению или вашей предыстории.
+chat-language-Spanish-name = И
+
 language-Tribal-name = Язык племени
 language-Tribal-description = Вы понимаете и говорите на местном языке племени. Благодаря обучению или вашей предыстории.
 chat-language-Tribal-name = П

@@ -10,6 +10,17 @@
     - Chinese
 
 - type: trait
+  id: LanguageSpanish
+  category: Speech
+  points: -3
+  functions:
+  - !type:TraitModifyLanguages
+    languagesSpoken:
+    - Spanish
+    languagesUnderstood:
+    - Spanish
+
+- type: trait
   id: LanguageTribal
   category: Speech
   points: -3
