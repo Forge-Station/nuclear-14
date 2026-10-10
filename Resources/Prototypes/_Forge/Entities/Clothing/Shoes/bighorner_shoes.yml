@@ -1,0 +1,13 @@
+- type: entity
+  parent: ClothingShoesBase
+  id: ForgeClothingShoesBighorner
+  name: туфли из толсторога
+  description: Мягкие мохнатые туфли из шкуры толсторога. Уютный островок комфорта на пыльных дорогах Пустоши.
+  components:
+  - type: Sprite
+    sprite: _Forge/Clothing/Shoes/bighorner_shoes.rsi
+  - type: Clothing
+    sprite: _Forge/Clothing/Shoes/bighorner_shoes.rsi
+  - type: Construction
+    graph: ForgeBighornerShoes
+    node: shoes

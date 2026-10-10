@@ -31,3 +31,9 @@
 
 - type: Tag
   id: ForgeHumanSkinLarge
+
+- type: Tag
+  id: ForgeRadstagHide
+
+- type: Tag
+  id: ForgeBighornerPelt
