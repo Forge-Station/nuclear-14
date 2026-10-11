@@ -29,7 +29,7 @@
 - type: entity
   id: N14LastBreathPoisonChemistryBottle
   name: бутылочка с ядом "последний вздох"
-  description: Бутылочка с ядом «последнего вздоха» и бесцветного яда. Вызывает мгновенное удушье и потерю сознания при 5u.
+  description: Бутылочка с ядом «последнего вздоха» и бесцветного яда. Вызывает сильное удушье и немоту.
   parent: BaseChemistryBottleFilled
   components:
   - type: SolutionContainerManager
@@ -43,7 +43,7 @@
 - type: entity
   id: N14ColourlessPoisonChemistryBottle
   name: бутылочка с бесцветным ядом
-  description: Бутылочка с бесцветным ядом. Вызывает удушье, сильное отравление и потерю сознания при 5u.
+  description: Бутылочка с бесцветным ядом. Вызывает удушье и отравление.
   parent: BaseChemistryBottleFilled
   components:
   - type: SolutionContainerManager
@@ -52,4 +52,18 @@
         maxVol: 30
         reagents:
         - ReagentId: N14ColourlessPoison
+          Quantity: 30
+
+- type: entity
+  id: N14TyaguchkaToxinChemistryBottle
+  name: бутылочка с ядом "тягучка"
+  description: Бутылочка с ядом "тягучка". Вызывает сильную слабость в конечностях.
+  parent: BaseChemistryBottleFilled
+  components:
+  - type: SolutionContainerManager
+    solutions:
+      drink:
+        maxVol: 30
+        reagents:
+        - ReagentId: N14TyaguchkaToxin
           Quantity: 30

@@ -411,25 +411,23 @@
     state: medic
   - type: Item
     size: Huge
-  - type: SpawnItemsOnUse
+  - type: SpawnItemsOnUse # Forge-Change
     items:
     # - id: N14ClothingBeltMedicalFilled # Forge-Change
     # - id: N14ClothingHeadHatNCRHelmetMetalMedic # Forge-Change
       - id: N14InjectionCarbine # Forge-add-start
       - id: N14InjectionSyringe
-        amount: 3
+        amount: 4
       - id: N14LastBreathPoisonChemistryBottle
       - id: N14ColourlessPoisonChemistryBottle # Forge-add-end
       - id: N14WeaponPistol9mm
       - id: N14MagazinePistol9mm
         amount: 2
       - id: N14ChemicalSyringeAntidote
+        amount: 2
       - id: N14BoxCardboardMREBoxCFilled
       - id: N14Stimpak
-        amount: 2
-      - id: N14RadAwayBloodbag
       - id: N14CleanGauze10
-        amount: 2
     # - id: N14Flare # Forge-Change
     sound:
       path: /Audio/Effects/unwrap.ogg

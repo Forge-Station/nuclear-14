@@ -13,7 +13,7 @@
         damage:
           types:
             Poison: 3
-            Asphyxiation: 20  
+            Asphyxiation: 20
       - !type:GenericStatusEffect
         key: Muted
         component: Muted
@@ -24,7 +24,7 @@
           max: 0.01
         key: Drowsiness
         time: 10
-        type: Remove  
+        type: Remove
 
 - type: reagent
   id: N14TyaguchkaToxin
@@ -44,7 +44,7 @@
       - !type:HealthChange
         damage:
           types:
-            Poison: 0.5
+            Poison: 1
       - !type:GenericStatusEffect
         conditions:
         - !type:ReagentThreshold
@@ -52,7 +52,7 @@
           max: 0.01
         key: Drowsiness
         time: 10
-        type: Remove  
+        type: Remove
 
 - type: reagent
   id: N14ColourlessPoison

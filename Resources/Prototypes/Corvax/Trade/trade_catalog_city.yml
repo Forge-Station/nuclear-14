@@ -680,13 +680,16 @@
     count: 10
     price: 80
   - proto: N14InjectionCarbine
-    count: 2
+    count: 1
     price: 100
+  - proto: N14TyaguchkaToxinChemistryBottle
+    price: 200
+    count: 1
   - proto: N14ColourlessPoisonChemistryBottle
-    price: 300
+    price: 500
     count: 2
   - proto: N14LastBreathPoisonChemistryBottle
-    price: 300
+    price: 500
     count: 2
 
 - type: storeCategoryStructured
