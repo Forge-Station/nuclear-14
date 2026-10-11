@@ -1,7 +1,7 @@
-using Content.Shared.Corvax.Forge;
+using Content.Shared.Corvax.Forge.MiniGame;
 using Robust.Client.UserInterface;
 
-namespace Content.Client.Corvax.Forge;
+namespace Content.Client.Corvax.Forge.MiniGame;
 
 /// <summary>
 ///     Client side of the armor-assembly minigame opened on the mannequin.

@@ -1,9 +1,8 @@
-using Content.Shared.Corvax.Forge;
 using Robust.Shared.Containers;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization;
 
-namespace Content.Shared.Corvax.Forge;
+namespace Content.Shared.Corvax.Forge.Heater;
 
 /// <summary>
 ///     The forge furnace (печь). Accepts a clean bloom and cooks it into a plate (тарелка).
@@ -109,43 +108,6 @@ public sealed partial class N14ForgeGornComponent : Component
 
     [ViewVariables, AutoNetworkedField]
     public bool Heating;
-}
-
-/// <summary>
-///     The mannequin (манекен). Holds up to 7 forge parts: 5 armor pieces + top &amp; bottom decorations.
-///     When all slots are filled simply crafted armor (or tempered armor if all parts are tempered) can be claimed.
-/// </summary>
-[RegisterComponent, NetworkedComponent]
-public sealed partial class N14ForgeDummyComponent : Component
-{
-    public EntityUid? ArmRight;
-    public EntityUid? ArmLeft;
-    public EntityUid? LegRight;
-    public EntityUid? LegLeft;
-    public EntityUid? Torso;
-    public EntityUid? DecorationTop;
-    public EntityUid? DecorationBottom;
-
-    /// <summary>
-    ///     Whether mixed tempered/normal parts are not allowed. Locked once the first armor part is mounted,
-    ///     all subsequent armor parts must match.
-    /// </summary>
-    public bool? TemperedLock;
-
-    public N14ForgeArmorSet? SetLock;
-
-    /// <summary>
-    ///     The player who started the armor-assembly minigame and should receive the finished armor.
-    ///     Null when no minigame is in progress.
-    /// </summary>
-    public EntityUid? MiniGameUser;
-
-    /// <summary>
-    ///     Whether all 7 required slots are filled.
-    /// </summary>
-    public bool IsComplete =>
-        ArmRight != null && ArmLeft != null && LegRight != null && LegLeft != null &&
-        Torso != null && DecorationTop != null && DecorationBottom != null;
 }
 
 [Serializable, NetSerializable]

@@ -1,10 +1,10 @@
 using Content.Server.Popups;
-using Content.Shared.Corvax.Forge;
-using Content.Shared.DoAfter;
+using Content.Shared.Corvax.Forge.Anvil;
+using Content.Shared.Corvax.Forge.Welding;
 using Content.Shared.Stacks;
 using Robust.Shared.Random;
 
-namespace Content.Server.Corvax.Forge;
+namespace Content.Server.Corvax.Forge.Welding;
 
 /// <summary>
 ///     Welding 4 flat plates (тарелки) into a single torso plate (сваренная плита).

@@ -1,5 +1,7 @@
 using Content.Server.Popups;
-using Content.Shared.Corvax.Forge;
+using Content.Shared.Corvax.Forge.Anvil;
+using Content.Shared.Corvax.Forge.Dummy;
+using Content.Shared.Corvax.Forge.Welding;
 using Content.Shared.DoAfter;
 using Content.Shared.Examine;
 using Content.Shared.Interaction;
@@ -15,7 +17,7 @@ using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
-namespace Content.Server.Corvax.Forge;
+namespace Content.Server.Corvax.Forge.Anvil;
 
 /// <summary>
 ///     Handles everything done on the anvil:
@@ -24,10 +26,6 @@ namespace Content.Server.Corvax.Forge;
 public sealed class N14ForgeAnvilSystem : EntitySystem
 {
     private const string LeatherProtoId = "N14MaterialLeather1";
-    private const string BlacksmithApronProto = "ClothingOuterApronChemist";
-    private const string BlacksmithGlovesProto = "ClothingHandsGlovesChemist";
-    private const string OuterClothingSlot = "outerClothing";
-    private const string GlovesSlot = "gloves";
 
     [Dependency] private readonly PopupSystem _popup = default!;
     [Dependency] private readonly TagSystem _tag = default!;
@@ -83,8 +81,8 @@ public sealed class N14ForgeAnvilSystem : EntitySystem
         Dirty(uid, progressComp);
 
         // Forge sparks + sound (on the bloom, not the hammer).
-        Spawn("N14ForgeSparks", Transform(uid).Coordinates);
-        _audio.PlayPvs(new SoundPathSpecifier("/Audio/Corvax/Effects/anvil_hit.ogg"), uid);
+        Spawn(N14ForgeConstants.SparksProto, Transform(uid).Coordinates);
+        _audio.PlayPvs(new SoundPathSpecifier(N14ForgeConstants.AnvilHitSound), uid);
 
         if (progressComp.Progress >= 100f)
         {
@@ -165,8 +163,8 @@ public sealed class N14ForgeAnvilSystem : EntitySystem
 
         // Forge sparks + sound. Played on the new part instead of the deleted plate,
         // otherwise the sound is cut off the moment the plate is removed.
-        Spawn("N14ForgeSparks", coords);
-        _audio.PlayPvs(new SoundPathSpecifier("/Audio/Corvax/Effects/anvil_hit.ogg"), newPart);
+        Spawn(N14ForgeConstants.SparksProto, coords);
+        _audio.PlayPvs(new SoundPathSpecifier(N14ForgeConstants.AnvilHitSound), newPart);
 
         Del(uid);
         args.Handled = true;
@@ -287,8 +285,8 @@ public sealed class N14ForgeAnvilSystem : EntitySystem
         _appearance.SetData(uid, N14ForgePartVisuals.Stage, component.Stage);
 
         // Forge sparks + sound.
-        Spawn("N14ForgeSparks", Transform(uid).Coordinates);
-        _audio.PlayPvs(new SoundPathSpecifier("/Audio/Corvax/Effects/anvil_hit.ogg"), uid);
+        Spawn(N14ForgeConstants.SparksProto, Transform(uid).Coordinates);
+        _audio.PlayPvs(new SoundPathSpecifier(N14ForgeConstants.AnvilHitSound), uid);
         args.Handled = true;
     }
 
@@ -356,10 +354,10 @@ public sealed class N14ForgeAnvilSystem : EntitySystem
     /// </summary>
     private bool RequireForgeGear(EntityUid user, EntityUid target)
     {
-        if (_inventory.TryGetSlotEntity(user, OuterClothingSlot, out var apron)
-            && MetaData(apron.Value).EntityPrototype?.ID == BlacksmithApronProto
-            && _inventory.TryGetSlotEntity(user, GlovesSlot, out var gloves)
-            && MetaData(gloves.Value).EntityPrototype?.ID == BlacksmithGlovesProto)
+        if (_inventory.TryGetSlotEntity(user, N14ForgeConstants.OuterClothingSlot, out var apron)
+            && MetaData(apron.Value).EntityPrototype?.ID == N14ForgeConstants.BlacksmithApronProto
+            && _inventory.TryGetSlotEntity(user, N14ForgeConstants.GlovesSlot, out var gloves)
+            && MetaData(gloves.Value).EntityPrototype?.ID == N14ForgeConstants.BlacksmithGlovesProto)
         {
             return true;
         }

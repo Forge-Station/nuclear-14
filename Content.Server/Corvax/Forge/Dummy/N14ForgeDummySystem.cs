@@ -1,6 +1,9 @@
 using System.Numerics;
 using Content.Server.Popups;
-using Content.Shared.Corvax.Forge;
+using Content.Shared.Corvax.Forge.Anvil;
+using Content.Shared.Corvax.Forge.Armor;
+using Content.Shared.Corvax.Forge.Dummy;
+using Content.Shared.Corvax.Forge.MiniGame;
 using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
@@ -10,7 +13,7 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Containers;
 using Robust.Shared.Maths;
 
-namespace Content.Server.Corvax.Forge;
+namespace Content.Server.Corvax.Forge.Dummy;
 
 /// <summary>
 ///     The mannequin: mounts armor parts and top/bottom decorations,
@@ -231,17 +234,11 @@ public sealed class N14ForgeDummySystem : EntitySystem
 
         foreach (var mounted in GetMounted(component))
         {
-            if (mounted != null && Exists(mounted.Value))
-                Del(mounted.Value);
+            if (mounted is { } part && Exists(part))
+                Del(part);
         }
 
-        component.ArmRight = null;
-        component.ArmLeft = null;
-        component.LegRight = null;
-        component.LegLeft = null;
-        component.Torso = null;
-        component.DecorationTop = null;
-        component.DecorationBottom = null;
+        component.ClearSlots();
         component.TemperedLock = null;
         component.SetLock = null;
         component.MiniGameUser = null;
@@ -286,13 +283,7 @@ public sealed class N14ForgeDummySystem : EntitySystem
             }
         }
 
-        component.ArmRight = null;
-        component.ArmLeft = null;
-        component.LegRight = null;
-        component.LegLeft = null;
-        component.Torso = null;
-        component.DecorationTop = null;
-        component.DecorationBottom = null;
+        component.ClearSlots();
         Dirty(dummy, component);
     }
 

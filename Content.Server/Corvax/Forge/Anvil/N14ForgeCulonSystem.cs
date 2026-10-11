@@ -1,5 +1,5 @@
 using Content.Server.Popups;
-using Content.Shared.Corvax.Forge;
+using Content.Shared.Corvax.Forge.Anvil;
 using Content.Shared.Interaction;
 using Content.Shared.Inventory;
 using Content.Shared.Tag;
@@ -8,7 +8,7 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Random;
 
-namespace Content.Server.Corvax.Forge;
+namespace Content.Server.Corvax.Forge.Anvil;
 
 /// <summary>
 ///     Handles working crude kulons on an anvil, by analogy with armor parts:
@@ -24,10 +24,6 @@ public sealed class N14ForgeCulonSystem : EntitySystem
     private const string CulonV2 = "N14ForgeCulonV2";
     private const string CulonV2Worked = "N14ForgeCulonV2Worked";
     private const string CulonV2Final = "N14ForgeCulonV2Final";
-    private const string BlacksmithApronProto = "ClothingOuterApronChemist";
-    private const string BlacksmithGlovesProto = "ClothingHandsGlovesChemist";
-    private const string OuterClothingSlot = "outerClothing";
-    private const string GlovesSlot = "gloves";
 
     [Dependency] private readonly PopupSystem _popup = default!;
     [Dependency] private readonly TagSystem _tag = default!;
@@ -73,7 +69,7 @@ public sealed class N14ForgeCulonSystem : EntitySystem
             if (!RequireForgeGear(args.User, uid))
                 return;
 
-            Forge(uid, args, id == CulonV1Worked ? CulonV1Final : CulonV2Final, "n14-forge-culon-upgraded");
+            AddKulonProgress(uid, args, id == CulonV1Worked ? CulonV1Final : CulonV2Final, "n14-forge-culon-upgraded");
             return;
         }
 
@@ -90,15 +86,16 @@ public sealed class N14ForgeCulonSystem : EntitySystem
             if (!RequireForgeGear(args.User, uid))
                 return;
 
-            Forge(uid, args, id == CulonV1 ? CulonV1Worked : CulonV2Worked, "n14-forge-culon-worked");
+            AddKulonProgress(uid, args, id == CulonV1 ? CulonV1Worked : CulonV2Worked, "n14-forge-culon-worked");
             return;
         }
     }
 
     /// <summary>
-    ///     One hammer hit: adds 5-20% progress, then swaps the prototype once the kulon is done.
+    ///     Adds 5-20% progress for a single hammer/sledgehammer hit and, once the kulon reaches 100%,
+    ///     replaces it with the next stage (<paramref name="newProto"/>).
     /// </summary>
-    private void Forge(EntityUid uid, InteractUsingEvent args, string newProto, string finishedLoc)
+    private void AddKulonProgress(EntityUid uid, InteractUsingEvent args, string newProto, string finishedLoc)
     {
         var progressComp = EnsureComp<N14ForgeCulonProgressComponent>(uid);
         progressComp.Progress += _random.Next(5, 21);
@@ -108,8 +105,8 @@ public sealed class N14ForgeCulonSystem : EntitySystem
         // Not forged yet: sparks + sound + progress popup, keep hammering.
         if (progressComp.Progress < 100f)
         {
-            Spawn("N14ForgeSparks", Transform(uid).Coordinates);
-            _audio.PlayPvs(new SoundPathSpecifier("/Audio/Corvax/Effects/anvil_hit.ogg"), uid);
+            Spawn(N14ForgeConstants.SparksProto, Transform(uid).Coordinates);
+            _audio.PlayPvs(new SoundPathSpecifier(N14ForgeConstants.AnvilHitSound), uid);
             _popup.PopupEntity(Loc.GetString("n14-forge-culon-progress", ("progress", (int)progressComp.Progress)), uid, args.User);
             return;
         }
@@ -125,8 +122,8 @@ public sealed class N14ForgeCulonSystem : EntitySystem
         var replacement = Spawn(newProto, coords);
 
         // Forge sparks + sound (on the replacement, so the sound is not cut off).
-        Spawn("N14ForgeSparks", coords);
-        _audio.PlayPvs(new SoundPathSpecifier("/Audio/Corvax/Effects/anvil_hit.ogg"), replacement);
+        Spawn(N14ForgeConstants.SparksProto, coords);
+        _audio.PlayPvs(new SoundPathSpecifier(N14ForgeConstants.AnvilHitSound), replacement);
         Del(old);
         return replacement;
     }
@@ -137,10 +134,10 @@ public sealed class N14ForgeCulonSystem : EntitySystem
     /// </summary>
     private bool RequireForgeGear(EntityUid user, EntityUid target)
     {
-        if (_inventory.TryGetSlotEntity(user, OuterClothingSlot, out var apron)
-            && MetaData(apron.Value).EntityPrototype?.ID == BlacksmithApronProto
-            && _inventory.TryGetSlotEntity(user, GlovesSlot, out var gloves)
-            && MetaData(gloves.Value).EntityPrototype?.ID == BlacksmithGlovesProto)
+        if (_inventory.TryGetSlotEntity(user, N14ForgeConstants.OuterClothingSlot, out var apron)
+            && MetaData(apron.Value).EntityPrototype?.ID == N14ForgeConstants.BlacksmithApronProto
+            && _inventory.TryGetSlotEntity(user, N14ForgeConstants.GlovesSlot, out var gloves)
+            && MetaData(gloves.Value).EntityPrototype?.ID == N14ForgeConstants.BlacksmithGlovesProto)
         {
             return true;
         }

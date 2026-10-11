@@ -1,9 +1,9 @@
-using Content.Shared.Corvax.Forge;
+using Content.Shared.Corvax.Forge.Armor;
 using Content.Shared.Inventory;
 using Content.Shared.Inventory.Events;
 using Robust.Shared.Containers;
 
-namespace Content.Server.Corvax.Forge;
+namespace Content.Server.Corvax.Forge.Armor;
 
 /// <summary>
 ///     Handles the automatic power armor gauntlets of the forged Legion armor.
@@ -15,7 +15,7 @@ namespace Content.Server.Corvax.Forge;
 public sealed class N14ForgeArmorSystem : EntitySystem
 {
     private const string GauntletsProto = "N14ClothingPAGauntlets";
-    private const string GlovesSlot = "gloves";
+    private const string GauntletContainerId = "N14ForgeGauntletContainer";
 
     [Dependency] private readonly InventorySystem _inventory = default!;
     [Dependency] private readonly SharedContainerSystem _container = default!;
@@ -50,7 +50,7 @@ public sealed class N14ForgeArmorSystem : EntitySystem
         var wearer = args.Equipee;
 
         // The gloves slot already holds our gauntlets or foreign power armor gauntlets - nothing to do.
-        if (_inventory.TryGetSlotEntity(wearer, GlovesSlot, out var current))
+        if (_inventory.TryGetSlotEntity(wearer, N14ForgeConstants.GlovesSlot, out var current))
         {
             if (current.Value == gauntlet)
                 return;
@@ -61,10 +61,10 @@ public sealed class N14ForgeArmorSystem : EntitySystem
 
         // Throw the previously worn gloves on the ground.
         if (current != null)
-            _inventory.TryUnequip(wearer, GlovesSlot, force: true, silent: true);
+            _inventory.TryUnequip(wearer, N14ForgeConstants.GlovesSlot, force: true, silent: true);
 
         // Move our gauntlets out of the armor into the gloves slot.
-        _inventory.TryEquip(wearer, gauntlet, GlovesSlot, force: true);
+        _inventory.TryEquip(wearer, gauntlet, N14ForgeConstants.GlovesSlot, force: true);
     }
 
     private void OnUnequipped(EntityUid uid, N14ForgePowerArmorComponent component, GotUnequippedEvent args)
@@ -77,7 +77,7 @@ public sealed class N14ForgeArmorSystem : EntitySystem
 
         // If our gauntlets are still worn, stash them back into the armor instead of dropping them.
         if (component.Container is { } container
-            && _inventory.TryGetSlotEntity(args.Equipee, GlovesSlot, out var current)
+            && _inventory.TryGetSlotEntity(args.Equipee, N14ForgeConstants.GlovesSlot, out var current)
             && current.Value == gauntlet)
         {
             _container.Insert(gauntlet, container, force: true);
@@ -100,7 +100,7 @@ public sealed class N14ForgeArmorSystem : EntitySystem
     {
         component.Container ??= _container.EnsureContainer<ContainerSlot>(
             uid,
-            N14ForgePowerArmorComponent.DefaultGauntletContainerId);
+            GauntletContainerId);
 
         // We already know about our gauntlets - just make sure they are stashed.
         if (component.Gauntlets is { } existing && Exists(existing))

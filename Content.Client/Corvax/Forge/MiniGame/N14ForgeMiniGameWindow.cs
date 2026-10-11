@@ -10,7 +10,7 @@ using Robust.Client.UserInterface.CustomControls;
 using Robust.Shared.Input;
 using Robust.Shared.Maths;
 
-namespace Content.Client.Corvax.Forge;
+namespace Content.Client.Corvax.Forge.MiniGame;
 
 /// <summary>
 ///     Window hosting the armor-assembly minigame: drag the 4 limb pieces onto the torso.
