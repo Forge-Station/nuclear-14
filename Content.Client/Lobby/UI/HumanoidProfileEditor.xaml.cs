@@ -148,6 +148,7 @@ namespace Content.Client.Lobby.UI
             _controller = UserInterfaceManager.GetUIController<LobbyUIController>();
             _gameTicker = _entManager.System<ClientGameTicker>();
             _gameTicker.JobRestrictionsUpdated += RefreshJobs;
+            _entManager.System<Content.Client._RMC14.Roles.Ranks.RankSystem>().PreferencesUpdated += RefreshJobs; // #Forge-Change
 
             // Forge-Change-Start
             ExportImageButton.OnPressed += args =>
@@ -897,7 +898,7 @@ namespace Content.Client.Lobby.UI
             JobList.DisposeAllChildren();
             _jobCategories.Clear();
             _jobPriorities.Clear();
-            _rankPreferences.Clear(); // Forge-Change
+            _rankSelectors.Clear(); // #Forge-Change
             var firstCategory = true;
 
             // Get all displayed departments
@@ -1020,17 +1021,17 @@ namespace Content.Client.Lobby.UI
                         SetDirty();
                     };
 
-                    var rankOptions = CreateRankOptions(job); // Forge-Change
+                    var rankLabel = CreateRankOptions(job); // #Forge-Change
 
                     _jobPriorities.Add((job.ID, selector));
                     jobContainer.AddChild(selector);
-                    jobContainer.AddChild(rankOptions); // Forge-Change
+                    jobContainer.AddChild(rankLabel); // #Forge-Change
                     category.AddChild(jobContainer);
                 }
             }
 
             UpdateJobPriorities();
-            UpdateRankPreferenceControls(); // Forge-Change
+            UpdateRankSelectors(); // #Forge-Change
         }
 
         private void UpdateRoleRequirements()
@@ -1315,6 +1316,7 @@ namespace Content.Client.Lobby.UI
 
             _cfgManager.UnsubValueChanged(CCVars.GameLoadoutsEnabled, LoadoutsChanged);
             _gameTicker.JobRestrictionsUpdated -= RefreshJobs;
+            _entManager.System<Content.Client._RMC14.Roles.Ranks.RankSystem>().PreferencesUpdated -= RefreshJobs; // #Forge-Change
         }
 
         private void SetAge(int newAge)
@@ -2781,8 +2783,8 @@ namespace Content.Client.Lobby.UI
             RemoveSuperfluousLoadouts(); // Forge-Change
             RemoveSponsorLoadouts(); // Forge-Change
 
-            RefreshJobs(); // Forge-Change
-            EnsureJobRequirementsValid(); // Forge-Change
+            RefreshJobs(); // #Forge-Change
+            EnsureJobRequirementsValid(); // #Forge-Change
             UpdateTraits(TraitsShowUnusableButton.Pressed);
             UpdateLoadouts(LoadoutsShowUnusableButton.Pressed);
         }

@@ -1,7 +1,8 @@
-# Forge-Change
+#Forge-Change
 rmc14-rank-component-examine = { CAPITALIZE(SUBJECT($user)) } имеет звание [color=white]{ $rank }[/color].
 rmc14-rank-card-examine = На ID-карте указано звание [color=white]{ $rank }[/color].
-rmc14-humanoid-profile-editor-rank-auto = Автовыбор звания
+rmc14-humanoid-profile-editor-rank-auto = Автовыбор
+rmc14-rank-choice-lifetime = Выбор звания сохраняется до перезапуска сервера, включая переподключения. При автовыборе назначается наивысшее доступное звание.
 
 rmc14-rank-name-ncr-private = рядовой
 rmc14-rank-name-ncr-private-first-class = рядовой первого класса

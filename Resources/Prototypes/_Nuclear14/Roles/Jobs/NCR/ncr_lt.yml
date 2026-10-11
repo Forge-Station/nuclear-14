@@ -6,7 +6,8 @@
   name: job-name-ncr-lt
   description: job-description-ncr-lt
   playTimeTracker: NCROfficer
-  ranks: # Forge-Change
+  #Forge-Change-Start
+  ranks:
     - rank: NCRMajor
       requirements:
         - !type:CharacterPlaytimeRequirement
@@ -23,6 +24,7 @@
           tracker: NCROfficer
           min: 72000 # 1200 minutes
     - rank: NCRJuniorLieutenant
+  #Forge-Change-End
   requirements:
     - !type:CharacterSpeciesRequirement
       species:

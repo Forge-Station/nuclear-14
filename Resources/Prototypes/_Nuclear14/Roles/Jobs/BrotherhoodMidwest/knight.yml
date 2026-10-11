@@ -6,7 +6,8 @@
   name: job-name-bos-mid-knight
   description: job-description-bos-mid-knight
   playTimeTracker: BoSMidKnight
-  ranks: # Forge-Change
+  #Forge-Change-Start
+  ranks:
     - rank: BoSMidSeniorKnight
       requirements:
         - !type:CharacterPlaytimeRequirement
@@ -18,6 +19,7 @@
           tracker: BoSMidKnight
           min: 72000 # 1200 minutes
     - rank: BoSMidJuniorKnight
+  #Forge-Change-End
   requirements:
     - !type:CharacterSpeciesRequirement
       species:

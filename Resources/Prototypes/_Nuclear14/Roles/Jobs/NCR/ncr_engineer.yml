@@ -6,7 +6,8 @@
   name: job-name-ncr-engineer
   description: job-description-ncr-engineer
   playTimeTracker: NCREngineer
-  ranks: # Forge-Change
+  #Forge-Change-Start
+  ranks:
     - rank: NCRCorporal
       requirements:
         - !type:CharacterPlaytimeRequirement
@@ -18,6 +19,7 @@
           tracker: NCREngineer
           min: 72000 # 1200 minutes
     - rank: NCRPrivate
+  #Forge-Change-End
   requirements:
     - !type:CharacterSpeciesRequirement
       species:

@@ -1,7 +1,8 @@
-# Forge-Change
+#Forge-Change
 rmc14-rank-component-examine = { CAPITALIZE(SUBJECT($user)) } holds the rank of [color=white]{ $rank }[/color].
 rmc14-rank-card-examine = The ID card displays the rank of [color=white]{ $rank }[/color].
-rmc14-humanoid-profile-editor-rank-auto = Auto rank
+rmc14-humanoid-profile-editor-rank-auto = Auto
+rmc14-rank-choice-lifetime = Your rank choice lasts until the server restarts, including reconnects. Auto selects the highest available rank.
 
 rmc14-rank-name-ncr-private = Private
 rmc14-rank-name-ncr-private-first-class = Private First Class

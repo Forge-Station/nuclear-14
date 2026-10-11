@@ -1,4 +1,4 @@
-// Forge-Change
+// #Forge-Change
 using Content.Shared._RMC14.Roles.Ranks;
 
 // Keep rank data separate from the upstream job prototype.
