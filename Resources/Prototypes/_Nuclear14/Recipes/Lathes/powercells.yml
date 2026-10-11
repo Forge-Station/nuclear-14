@@ -11,7 +11,7 @@
 
 - type: latheRecipe
   id: N14PowerCellHigh
-  result: N14PowerCellHighPrinted
+  result: N14PowerCellHigh
   category: Parts
   completetime: 10
   materials:
