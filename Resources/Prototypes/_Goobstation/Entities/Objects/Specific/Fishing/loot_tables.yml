@@ -93,15 +93,14 @@
       id: FishBomb
       weight: 2      # Взрывчатка
     - !type:EntSelector
-      id: MobLongLeggedCrab # Краб Босс
-      weight: 2
-    - !type:EntSelector
       id: FishExocoetidae
       weight: 1      # Пласталь (Очень редко)
     - !type:EntSelector
       id: FishGold
       weight: 1      # Золото (Джекпот)
-
+    - !type:EntSelector
+      id: MobLongLeggedCrab # Краб Босс
+      weight: 0.1
 
 # Items from Water
 - type: entityTable
