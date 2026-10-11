@@ -63,11 +63,6 @@
   - type: MultiHandedItem
   - type: PowerCellDraw
     useRate: 100
-  - type: Clothing # Forge-Add
-    slots:
-    - BACK
-    sprite: Objects/Specific/Medical/defib.rsi
-    equippedState: fill
 
 - type: entity
   id: DefibrillatorEmpty
