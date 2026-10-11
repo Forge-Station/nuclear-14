@@ -322,6 +322,16 @@
     - DoorElectronics
     - MagazineBoxNail # Forge-Change
     - DrumMagazineNailGun # Forge-Change
+    #Электроника # Forge-Add
+    - HydroponicsTrayMachineCircuitboard
+    - HotplateMachineCircuitboard
+    - MicrowaveMachineCircuitboard
+    - ReagentGrinderMachineCircuitboard
+    - MaterialReclaimerMachineCircuitboard
+    - CellRechargerCircuitboard
+    - PowerCageRechargerCircuitboard
+    - N14PowerCellMedium
+    - N14PowerCellHigh
 
 - type: entity
   parent: BaseStructure
@@ -610,6 +620,9 @@
     # Other
     - Charcoal
     - CharcoalToCoal
+  - type: MaterialStorageMagnetPickup
+    magnetEnabled: True
+    range: 1.25
 
 - type: entity
   parent: N14WorkbenchBase

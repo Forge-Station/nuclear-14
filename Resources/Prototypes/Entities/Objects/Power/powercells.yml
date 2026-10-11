@@ -173,6 +173,22 @@
     maxCharge: 1080
     startingCharge: 0
 
+- type: entity # Forge-Add
+  parent: PowerCellMedium
+  id: N14PowerCellMedium
+
+- type: entity # Forge-Add
+  parent: PowerCellMediumPrinted
+  id: N14PowerCellMediumPrinted
+
+- type: entity # Forge-Add
+  parent: PowerCellHigh
+  id: N14PowerCellHigh
+
+- type: entity # Forge-Add
+  parent: PowerCellHighPrinted
+  id: N14PowerCellHighPrinted
+
 - type: entity
   name: hyper-capacity power cell
   description: A rechargeable standardized power cell. This one looks like a rare and powerful prototype.
