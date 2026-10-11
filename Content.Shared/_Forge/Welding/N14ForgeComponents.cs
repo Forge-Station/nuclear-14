@@ -1,7 +1,7 @@
 using Content.Shared.DoAfter;
 using Robust.Shared.Serialization;
 
-namespace Content.Shared.Corvax.Forge.Welding;
+namespace Content.Shared._Forge.Welding;
 
 /// <summary>
 ///     DoAfter for welding 4 flat plates into a torso plate.

@@ -1,9 +1,9 @@
-using Content.Shared.Corvax.Forge.Armor;
+using Content.Shared._Forge.Armor;
 using Content.Shared.Inventory;
 using Content.Shared.Inventory.Events;
 using Robust.Shared.Containers;
 
-namespace Content.Server.Corvax.Forge.Armor;
+namespace Content.Server._Forge.Armor;
 
 /// <summary>
 ///     Handles the automatic power armor gauntlets of the forged Legion armor.

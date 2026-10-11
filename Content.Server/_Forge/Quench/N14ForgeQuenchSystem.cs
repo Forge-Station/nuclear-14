@@ -1,9 +1,9 @@
 using Content.Server.Popups;
-using Content.Shared.Corvax.Forge.Anvil;
-using Content.Shared.Corvax.Forge.Quench;
+using Content.Shared._Forge.Anvil;
+using Content.Shared._Forge.Quench;
 using Content.Shared.Interaction;
 
-namespace Content.Server.Corvax.Forge.Quench;
+namespace Content.Server._Forge.Quench;
 
 /// <summary>
 ///     Quenching: a heated forged plate clicked on water becomes закалённая.

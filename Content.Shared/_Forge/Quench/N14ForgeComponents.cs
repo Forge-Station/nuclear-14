@@ -1,7 +1,7 @@
 using Robust.Shared.GameObjects;
 using Robust.Shared.GameStates;
 
-namespace Content.Shared.Corvax.Forge.Quench;
+namespace Content.Shared._Forge.Quench;
 
 /// <summary>
 ///     Heated marker applied when a plate/part is heated in the gorn.

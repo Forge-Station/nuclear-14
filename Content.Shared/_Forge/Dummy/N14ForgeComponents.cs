@@ -1,9 +1,9 @@
-using Content.Shared.Corvax.Forge.Anvil;
+using Content.Shared._Forge.Anvil;
 using Robust.Shared.GameObjects;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization;
 
-namespace Content.Shared.Corvax.Forge.Dummy;
+namespace Content.Shared._Forge.Dummy;
 
 /// <summary>
 ///     The mannequin (манекен). Holds up to 7 forge parts: 5 armor pieces + top &amp; bottom decorations.

@@ -1,5 +1,5 @@
 using Content.Server.Popups;
-using Content.Shared.Corvax.Forge.Anvil;
+using Content.Shared._Forge.Anvil;
 using Content.Shared.Interaction;
 using Content.Shared.Inventory;
 using Content.Shared.Tag;
@@ -8,7 +8,7 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Random;
 
-namespace Content.Server.Corvax.Forge.Anvil;
+namespace Content.Server._Forge.Anvil;
 
 /// <summary>
 ///     Handles working crude kulons on an anvil, by analogy with armor parts:

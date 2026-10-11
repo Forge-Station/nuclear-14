@@ -1,4 +1,4 @@
-namespace Content.Shared.Corvax.Forge;
+namespace Content.Shared._Forge;
 
 /// <summary>
 ///     Shared system providing helpers for the Legion Forge crafting chain.

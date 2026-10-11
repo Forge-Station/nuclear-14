@@ -3,7 +3,7 @@ using Robust.Shared.GameObjects;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization;
 
-namespace Content.Shared.Corvax.Forge.Anvil;
+namespace Content.Shared._Forge.Anvil;
 
 /// <summary>
 ///     Lives on the anvil. Tracks how many arms/legs have been forged

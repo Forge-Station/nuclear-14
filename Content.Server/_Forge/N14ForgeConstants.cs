@@ -1,4 +1,4 @@
-namespace Content.Server.Corvax.Forge;
+namespace Content.Server._Forge;
 
 /// <summary>
 ///     Shared string constants for the Legion Forge systems:

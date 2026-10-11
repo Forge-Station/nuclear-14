@@ -2,7 +2,7 @@ using Robust.Shared.Containers;
 using Robust.Shared.GameObjects;
 using Robust.Shared.GameStates;
 
-namespace Content.Shared.Corvax.Forge.Armor;
+namespace Content.Shared._Forge.Armor;
 
 /// <summary>
 ///     Marks the finished forged Legion armor.

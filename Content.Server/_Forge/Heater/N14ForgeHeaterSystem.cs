@@ -1,8 +1,8 @@
 using System.Numerics;
 using Content.Server.Popups;
-using Content.Shared.Corvax.Forge.Anvil;
-using Content.Shared.Corvax.Forge.Heater;
-using Content.Shared.Corvax.Forge.Quench;
+using Content.Shared._Forge.Anvil;
+using Content.Shared._Forge.Heater;
+using Content.Shared._Forge.Quench;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Examine;
 using Content.Shared.Hands.EntitySystems;
@@ -14,7 +14,7 @@ using Robust.Shared.GameStates;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
 
-namespace Content.Server.Corvax.Forge.Heater;
+namespace Content.Server._Forge.Heater;
 
 /// <summary>
 ///     Handles the furnace (печь) and the gorn (горн).

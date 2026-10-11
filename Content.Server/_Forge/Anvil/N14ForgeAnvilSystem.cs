@@ -1,7 +1,7 @@
 using Content.Server.Popups;
-using Content.Shared.Corvax.Forge.Anvil;
-using Content.Shared.Corvax.Forge.Dummy;
-using Content.Shared.Corvax.Forge.Welding;
+using Content.Shared._Forge.Anvil;
+using Content.Shared._Forge.Dummy;
+using Content.Shared._Forge.Welding;
 using Content.Shared.DoAfter;
 using Content.Shared.Examine;
 using Content.Shared.Interaction;
@@ -17,7 +17,7 @@ using Robust.Shared.GameObjects;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
-namespace Content.Server.Corvax.Forge.Anvil;
+namespace Content.Server._Forge.Anvil;
 
 /// <summary>
 ///     Handles everything done on the anvil:

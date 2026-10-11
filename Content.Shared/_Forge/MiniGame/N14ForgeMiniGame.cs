@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization;
 
-namespace Content.Shared.Corvax.Forge.MiniGame;
+namespace Content.Shared._Forge.MiniGame;
 
 /// <summary>
 ///     BUI key for the armor-assembly minigame opened on the mannequin.

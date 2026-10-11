@@ -2,7 +2,7 @@ using Robust.Shared.Containers;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization;
 
-namespace Content.Shared.Corvax.Forge.Heater;
+namespace Content.Shared._Forge.Heater;
 
 /// <summary>
 ///     The forge furnace (печь). Accepts a clean bloom and cooks it into a plate (тарелка).

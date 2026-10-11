@@ -1,7 +1,7 @@
 using Robust.Shared.GameObjects;
 using Robust.Shared.GameStates;
 
-namespace Content.Shared.Corvax.Forge;
+namespace Content.Shared._Forge;
 
 /// <summary>
 ///     Root marker for all items and stations that belong to the Legion Forge crafting chain.

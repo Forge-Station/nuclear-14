@@ -1,9 +1,9 @@
 using System.Numerics;
 using Content.Server.Popups;
-using Content.Shared.Corvax.Forge.Anvil;
-using Content.Shared.Corvax.Forge.Armor;
-using Content.Shared.Corvax.Forge.Dummy;
-using Content.Shared.Corvax.Forge.MiniGame;
+using Content.Shared._Forge.Anvil;
+using Content.Shared._Forge.Armor;
+using Content.Shared._Forge.Dummy;
+using Content.Shared._Forge.MiniGame;
 using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
@@ -13,7 +13,7 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Containers;
 using Robust.Shared.Maths;
 
-namespace Content.Server.Corvax.Forge.Dummy;
+namespace Content.Server._Forge.Dummy;
 
 /// <summary>
 ///     The mannequin: mounts armor parts and top/bottom decorations,
