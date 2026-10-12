@@ -17,6 +17,7 @@ public sealed partial class CCVars
         CVarDef.Create("ic.flavor_text", true, CVar.SERVER | CVar.REPLICATED);
 
     /// <summary>
+    /// Forge-Change
     ///     Adds missing terminal punctuation to local speech, whispers, and radio messages before accents.
     /// </summary>
     public static readonly CVarDef<bool> ChatPunctuation =

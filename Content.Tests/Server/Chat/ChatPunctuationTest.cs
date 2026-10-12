@@ -1,3 +1,4 @@
+/// Forge-Change-Start
 using Content.Server.Chat.Systems;
 using NUnit.Framework;
 
@@ -35,3 +36,4 @@ public sealed class ChatPunctuationTest
         Assert.That(ChatSystem.SanitizeMessagePeriod(actual), Is.EqualTo(actual));
     }
 }
+/// Forge-Change-End

@@ -242,6 +242,7 @@ public sealed partial class ChatSystem : SharedChatSystem
         bool shouldCapitalizeTheWordI = (!CultureInfo.CurrentCulture.IsNeutralCulture && CultureInfo.CurrentCulture.Parent.Name == "en")
             || (CultureInfo.CurrentCulture.IsNeutralCulture && CultureInfo.CurrentCulture.Name == "en");
 
+        /// Forge-Change
         message = SanitizeInGameICMessage(source, message, out var emoteStr, shouldCapitalize, shouldCapitalizeTheWordI);
 
         // Was there an emote in the message? If so, send it.
@@ -413,6 +414,7 @@ public sealed partial class ChatSystem : SharedChatSystem
             return;
 
         // The original message
+        /// Forge-Change
         var message = TransformSpeech(source, PrepareSpeechMessage(originalMessage), language);
 
         if (message.Length == 0)
@@ -440,6 +442,7 @@ public sealed partial class ChatSystem : SharedChatSystem
         // The chat message wrapped in a "x says y" string
         var wrappedMessage = WrapPublicMessage(source, name, message, language: language);
         // The chat message obfuscated via language obfuscation
+        /// Forge-Change
         var obfuscated = SanitizeInGameICMessage(source, _language.ObfuscateSpeech(message, language), out var emoteStr, true, (!CultureInfo.CurrentCulture.IsNeutralCulture && CultureInfo.CurrentCulture.Parent.Name == "en") || (CultureInfo.CurrentCulture.IsNeutralCulture && CultureInfo.CurrentCulture.Name == "en"));
         // The language-obfuscated message wrapped in a "x says y" string
         var wrappedObfuscated = WrapPublicMessage(source, name, obfuscated, language: language);
@@ -486,6 +489,7 @@ public sealed partial class ChatSystem : SharedChatSystem
         if (!_actionBlocker.CanSpeak(source) && !ignoreActionBlocker)
             return;
 
+        /// Forge-Change
         var message = TransformSpeech(source, PrepareSpeechMessage(originalMessage), language);
         if (message.Length == 0)
             return;
@@ -506,6 +510,7 @@ public sealed partial class ChatSystem : SharedChatSystem
         }
         name = FormattedMessage.EscapeText(name);
 
+        /// Forge-Change
         var languageObfuscatedMessage = SanitizeInGameICMessage(source, _language.ObfuscateSpeech(message, language), out var emoteStr, true, (!CultureInfo.CurrentCulture.IsNeutralCulture && CultureInfo.CurrentCulture.Parent.Name == "en") || (CultureInfo.CurrentCulture.IsNeutralCulture && CultureInfo.CurrentCulture.Name == "en"));
 
         foreach (var (session, data) in GetRecipients(source, Transform(source).GridUid == null ? 0.3f : WhisperMuffledRange))
@@ -786,6 +791,7 @@ public sealed partial class ChatSystem : SharedChatSystem
         return !_chatManager.MessageCharacterLimit(player, message);
     }
 
+    /// Forge-Change-Start
     // ReSharper disable once InconsistentNaming
     private string SanitizeInGameICMessage(EntityUid source, string message, out string? emoteStr, bool capitalize = true, bool capitalizeTheWordI = true)
     {
@@ -801,6 +807,7 @@ public sealed partial class ChatSystem : SharedChatSystem
 
         return newMessage;
     }
+    /// Forge-Change-End
 
     private string SanitizeInGameOOCMessage(string message)
     {
@@ -841,6 +848,7 @@ public sealed partial class ChatSystem : SharedChatSystem
             .Select(p => p.Channel);
     }
 
+    /// Forge-Change-Start
     private string PrepareSpeechMessage(string message)
     {
         message = FormattedMessage.RemoveMarkup(message);
@@ -877,6 +885,8 @@ public sealed partial class ChatSystem : SharedChatSystem
 
         return message + ".";
     }
+
+    /// Forge-Change-End
 
     [ValidatePrototypeId<ReplacementAccentPrototype>]
     public const string ChatSanitize_Accent = "chatsanitize";

@@ -1,3 +1,4 @@
+# Forge-Change-Start
 # Ported from Misfit-Sanctuary/nuclear-14, commit 6db0d0c39ca28951269a0225751af3f354795357.
 - type: language
   id: Spanish
@@ -78,3 +79,4 @@
     - pero
     - hasta
     - luego
+# Forge-Change-End

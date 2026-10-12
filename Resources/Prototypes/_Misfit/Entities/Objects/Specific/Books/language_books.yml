@@ -1,3 +1,4 @@
+# Forge-Change-Start
 - type: entity
   parent: N14BookLanguageBase
   id: N14BookSpanish
@@ -16,3 +17,4 @@
       color: "#F1BF00"
     - state: icon_text
       color: "#F1BF00"
+# Forge-Change-End
