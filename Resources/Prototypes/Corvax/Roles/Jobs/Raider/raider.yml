@@ -12,8 +12,6 @@
   - !type:CharacterWhitelistRequirement
   - !type:MinPlayersRequirement
     min: 40
-  # Forge-Change-Del - !type:CharacterOverallTimeRequirement
-    # Forge-Change-Del min: 90000 # 25 hours
   startingGear: RaiderGear
   alwaysUseSpawner: true
   icon: "JobIconRaider"

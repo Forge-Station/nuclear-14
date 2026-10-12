@@ -5,12 +5,6 @@
   description: job-description-bos-west-scribe
   playTimeTracker: BoSWestScribe
   requirements:
-    # Forge-Change-Del - !type:CharacterSpeciesRequirement
-      # Forge-Change-Del species:
-      # Forge-Change-Del - Human
-    # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
-      # Forge-Change-Del department: BrotherhoodWest
-      # Forge-Change-Del min: 18000 # 5 hours
   # Forge-Change-Start
   - !type:CharacterSpeciesRequirement
     species:

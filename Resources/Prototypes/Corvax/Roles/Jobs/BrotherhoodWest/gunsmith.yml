@@ -5,13 +5,6 @@
   description: job-description-bos-west-gunsmith
   playTimeTracker: BoSWestGunsmith
   requirements:
-    # Forge-Change-Del - !type:CharacterLogicOrRequirement
-      # Forge-Change-Del requirements:
-        # Forge-Change-Del - !type:CharacterSpeciesRequirement
-          # Forge-Change-Del species:
-            # Forge-Change-Del - Human
-    # Forge-Change-Del - !type:CharacterOverallTimeRequirement
-      # Forge-Change-Del min: 3600
   # Forge-Change-Start
   - !type:CharacterOverallTimeRequirement
     min: 3600

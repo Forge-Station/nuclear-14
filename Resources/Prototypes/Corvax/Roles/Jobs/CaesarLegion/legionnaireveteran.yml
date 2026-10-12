@@ -5,9 +5,6 @@
   description: job-description-caesar-legionnaire-veteran
   playTimeTracker: CaesarLegionLegionnaireVeteran
   requirements:
-  # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
-    # Forge-Change-Del department: CaesarLegion
-    # Forge-Change-Del min: 36000 # 10 hours
   - !type:CharacterSpeciesRequirement
     species:
     - Human

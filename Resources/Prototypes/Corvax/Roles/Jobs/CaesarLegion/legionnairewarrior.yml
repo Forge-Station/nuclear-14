@@ -5,9 +5,6 @@
   description: job-description-caesar-legionnaire-warrior
   playTimeTracker: CaesarLegionLegionnaireWarrior
   requirements:
-  # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
-    # Forge-Change-Del department: CaesarLegion
-    # Forge-Change-Del min: 10800 # 3 hours
   - !type:CharacterSpeciesRequirement
     species:
     - Human

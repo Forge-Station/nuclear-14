@@ -5,10 +5,6 @@
   description: job-description-caesar-legion-venator
   playTimeTracker: CaesarLegionVenator
   requirements:
-  # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
-     # Forge-Change-Del department: CaesarLegion
-     # Forge-Change-Del min: 43200 #12 hours тест
-  # Forge-Change-Del - !type:CharacterWhitelistRequirement
   - !type:CharacterSpeciesRequirement
     species:
     - Human

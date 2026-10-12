@@ -21,8 +21,6 @@
       - type: NpcFactionMember
         factions:
           - Rangers
-  # Forge-Change-Del requirements:
-    # Forge-Change-Del - !type:CharacterWhitelistRequirement
 
 - type: startingGear
   id: RangerChiefGear

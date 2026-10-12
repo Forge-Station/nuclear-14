@@ -7,14 +7,6 @@
   description: job-description-bos-washington-initiate
   playTimeTracker: BoSWashingtonInitiate
   requirements:
-    # Forge-Change-Del - !type:CharacterLogicOrRequirement
-      # Forge-Change-Del requirements:
-        # Forge-Change-Del - !type:CharacterSpeciesRequirement
-          # Forge-Change-Del species:
-            # Forge-Change-Del - Human
-            # Forge-Change-Del - Ghoul
-    # Forge-Change-Del - !type:CharacterOverallTimeRequirement
-      # Forge-Change-Del min: 21600 # Forge-Change (6 hours)
   # Forge-Change-Start
   - !type:CharacterOverallTimeRequirement
     min: 21600 # Forge-Change (6 hours)

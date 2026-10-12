@@ -7,17 +7,6 @@
   description: job-description-bos-mid-inquisitor
   playTimeTracker: BoSMidInquisitor
   requirements:
-    # Forge-Change-Del - !type:CharacterWhitelistRequirement
-    # Forge-Change-Del - !type:CharacterSpeciesRequirement
-      # Forge-Change-Del species:
-      # Forge-Change-Del - Human
-      # Forge-Change-Del - Ghoul
-    # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
-      # Forge-Change-Del department: BrotherhoodMidwest
-      # Forge-Change-Del min: 108000 # 30 hours
-    # Forge-Change-Del - !type:CharacterPlaytimeRequirement
-      # Forge-Change-Del tracker: BoSMidPaladinCommander
-      # Forge-Change-Del min: 64800 # 18 hours
   # Forge-Change-Start
   - !type:CharacterSpeciesRequirement
     species:
@@ -52,9 +41,7 @@
   id: BoSMidInquisitorGear
   equipment:
     jumpsuit: N14ClothingUniformJumpsuitInquisitorBOS
-    # Forge-Change-Del back: N14ClothingBackpackMilitary
-    # Forge-Change
-    back: N14ClothingBackpackMilitary
+    back: N14ClothingBackpackMilitary # Forge-Change
     shoes: N14ClothingBootsCombatFilled
     head:  N14ClothingHeadHatBoSInquisitorCap
     outerClothing: N14ClothingOuterBOSInquisitorCoat
@@ -62,9 +49,7 @@
     gloves: N14ClothingHandsGlovesCombat
     id: N14IDBrotherhoodHolotagPaladin
     ears: N14ClothingHeadsetBOSMidwest
-  # Forge-Change-Del storage:
-  # Forge-Change
-  storage:
+  storage: # Forge-Change
     back:
     - N14BoxPlasticFilledMilitary
 

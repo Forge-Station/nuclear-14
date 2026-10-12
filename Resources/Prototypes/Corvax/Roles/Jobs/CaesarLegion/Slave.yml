@@ -5,8 +5,6 @@
   description: job-description-caesar-legion-slave
   playTimeTracker: CaesarLegionSlave
   requirements:
-  # Forge-Change-Del - !type:MinPlayersRequirement
-    # Forge-Change-Del min: 60
   - !type:CharacterSpeciesRequirement
     species:
     - Human

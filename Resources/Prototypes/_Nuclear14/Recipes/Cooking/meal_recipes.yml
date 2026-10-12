@@ -1,7 +1,6 @@
 - type: microwaveMealRecipe
   id: N14RecipeMeatRad
-  # Forge-Change
-  group: Meat
+  group: Meat # Forge-Change
   name: irradiated meat recipe
   result: N14FoodMeatCooked
   time: 15
@@ -10,8 +9,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSteakBrahmin
-  # Forge-Change
-  group: Meat
+  group: Meat # Forge-Change
   name: brahmin steak recipe
   result: N14FoodMeatBrahminCooked
   time: 15
@@ -20,8 +18,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCutletBrahmin
-  # Forge-Change
-  group: Meat
+  group: Meat # Forge-Change
   name: brahmin cutlet recipe
   result: N14FoodMeatBrahminCutletCooked
   time: 5
@@ -30,8 +27,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSteakBighorner
-  # Forge-Change
-  group: Meat
+  group: Meat # Forge-Change
   name: bighorner steak recipe
   result: N14FoodMeatBighornerCooked
   time: 15
@@ -40,8 +36,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCutletBighorner
-  # Forge-Change
-  group: Meat
+  group: Meat # Forge-Change
   name: bighorner cutlet recipe
   result: N14FoodMeatBighornerCutletCooked
   time: 5
@@ -50,8 +45,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSteakRadstag
-  # Forge-Change
-  group: Meat
+  group: Meat # Forge-Change
   name: radstag steak recipe
   result: N14FoodMeatRadstagCooked
   time: 15
@@ -60,8 +54,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCutletRadstag
-  # Forge-Change
-  group: Meat
+  group: Meat # Forge-Change
   name: radstag cutlet recipe
   result: N14FoodMeatRadstagCutletCooked
   time: 5
@@ -70,8 +63,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSteakGecko
-  # Forge-Change
-  group: Meat
+  group: Meat # Forge-Change
   name: gecko steak recipe
   result: N14FoodMeatGeckoCooked
   time: 15
@@ -80,8 +72,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSteakYaoguai
-  # Forge-Change
-  group: Meat
+  group: Meat # Forge-Change
   name: yao-guai steak recipe
   result: N14FoodMeatYaoguaiCooked
   time: 15
@@ -90,8 +81,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCutletYaoguai
-  # Forge-Change
-  group: Meat
+  group: Meat # Forge-Change
   name: yao-guai cutlet recipe
   result: N14FoodMeatYaoguaiCutletCooked
   time: 5
@@ -100,8 +90,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSteakRadscorpion
-  # Forge-Change
-  group: Meat
+  group: Meat # Forge-Change
   name: radscorpion steak recipe
   result: N14FoodMeatRadscorpionCooked
   time: 15
@@ -110,8 +99,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCutletRadscorpion
-  # Forge-Change
-  group: Meat
+  group: Meat # Forge-Change
   name: radscorpion cutlet recipe
   result: N14FoodMeatRadscorpionCutletCooked
   time: 5
@@ -120,8 +108,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeRadscorpionLeg
-  # Forge-Change
-  group: Meat
+  group: Meat # Forge-Change
   name: boiled radscorpion leg recipe
   result: N14FoodMeatRadscorpionLegBoiled
   time: 20
@@ -132,8 +119,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeClawMirelurk
-  # Forge-Change
-  group: Meat
+  group: Meat # Forge-Change
   name: mirelurk claw recipe
   result: N14FoodMeatMirelurkClawCooked
   time: 15
@@ -142,8 +128,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeClawRadlurk
-  # Forge-Change
-  group: Meat
+  group: Meat # Forge-Change
   name: radlurk claw recipe
   result: N14FoodMeatRadlurkClawCooked
   time: 15
@@ -152,8 +137,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeRadroachFillet
-  # Forge-Change
-  group: Meat
+  group: Meat # Forge-Change
   name: radroach fillet recipe
   result: N14FoodMeatRadroachFilletCooked
   time: 15
@@ -164,8 +148,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBun
-  # Forge-Change
-  group: Bread
+  group: Bread # Forge-Change
   name: bun recipe
   result: N14CookedFoodBreadBun
   time: 5
@@ -176,8 +159,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeAppendixBurger
-  # Forge-Change
-  group: Burgers
+  group: Burgers # Forge-Change
   name: appendix burger recipe
   result: N14CookedFoodBurgerAppendix
   time: 10
@@ -187,8 +169,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBaconBurger
-  # Forge-Change
-  group: Burgers
+  group: Burgers # Forge-Change
   name: bacon burger recipe
   result: N14CookedFoodBurgerBacon
   time: 10
@@ -200,8 +181,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBearger
-  # Forge-Change
-  group: Burgers
+  group: Burgers # Forge-Change
   name: bearger recipe
   result: N14CookedFoodBurgerBear
   time: 10
@@ -212,8 +192,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBigBiteBurger
-  # Forge-Change
-  group: Burgers
+  group: Burgers # Forge-Change
   name: big bite burger recipe
   result: N14CookedFoodBurgerBig
   time: 15
@@ -226,8 +205,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBrainBurger
-  # Forge-Change
-  group: Burgers
+  group: Burgers # Forge-Change
   name: brain burger recipe
   result: N14CookedFoodBurgerBrain
   time: 10
@@ -237,8 +215,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCheeseburger
-  # Forge-Change
-  group: Burgers
+  group: Burgers # Forge-Change
   name: cheeseburger recipe
   result: N14CookedFoodBurgerCheese
   time: 10
@@ -249,8 +226,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeChickenSandwich
-  # Forge-Change
-  group: Burgers
+  group: Burgers # Forge-Change
   name: chicken sandwich recipe
   result: N14CookedFoodBurgerChicken
   time: 10
@@ -262,8 +238,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCrabBurger
-  # Forge-Change
-  group: Burgers
+  group: Burgers # Forge-Change
   name: crab burger recipe
   result: N14CookedFoodBurgerCrab
   time: 10
@@ -283,8 +258,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeFiveBurger
-  # Forge-Change
-  group: Burgers
+  group: Burgers # Forge-Change
   name: five alarm burger recipe
   result: N14CookedFoodBurgerFive
   time: 10
@@ -295,8 +269,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBurgerMcguffin
-  # Forge-Change
-  group: Burgers
+  group: Burgers # Forge-Change
   name: McGuffin recipe
   result: N14CookedFoodBurgerMcguffin
   time: 10
@@ -307,8 +280,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBurgerMcrib
-  # Forge-Change
-  group: Burgers
+  group: Burgers # Forge-Change
   name: BBQ rib sandwich recipe
   result: N14CookedFoodBurgerMcrib
   time: 10
@@ -319,8 +291,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipePlainBurger
-  # Forge-Change
-  group: Burgers
+  group: Burgers # Forge-Change
   name: plain burger recipe
   result: N14CookedFoodBurgerPlain
   time: 10
@@ -330,8 +301,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeRatBurger
-  # Forge-Change
-  group: Burgers
+  group: Burgers # Forge-Change
   name: rat burger recipe
   result: N14CookedFoodBurgerRat
   time: 10
@@ -341,8 +311,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSuperBiteBurger
-  # Forge-Change
-  group: Burgers
+  group: Burgers # Forge-Change
   name: super bite burger recipe
   result: N14CookedFoodBurgerSuper
   time: 25
@@ -357,8 +326,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTofuBurger
-  # Forge-Change
-  group: Burgers
+  group: Burgers # Forge-Change
   name: tofu burger recipe
   result: N14CookedFoodBurgerTofu
   time: 10
@@ -370,8 +338,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBananaBread
-  # Forge-Change
-  group: Bread
+  group: Bread # Forge-Change
   name: banana bread recipe
   result: N14CookedFoodBreadBanana
   time: 15
@@ -381,8 +348,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCornbread
-  # Forge-Change
-  group: Bread
+  group: Bread # Forge-Change
   name: cornbread recipe
   result: N14CookedFoodBreadCorn
   time: 10
@@ -391,8 +357,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCreamCheeseBread
-  # Forge-Change
-  group: Bread
+  group: Bread # Forge-Change
   name: cream cheese bread recipe
   result: N14CookedFoodBreadCreamcheese
   time: 15
@@ -404,8 +369,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeMeatBread
-  # Forge-Change
-  group: Bread
+  group: Bread # Forge-Change
   name: meat bread recipe
   result: N14CookedFoodBreadMeat
   time: 15
@@ -416,8 +380,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBread
-  # Forge-Change
-  group: Bread
+  group: Bread # Forge-Change
   name: bread recipe
   result: N14CookedFoodBreadPlain
   time: 10
@@ -426,8 +389,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeRadroll
-  # Forge-Change
-  group: Bread
+  group: Bread # Forge-Change
   name: radroll recipe
   result: N14CookedFoodBreadRadroll
   time: 15
@@ -437,8 +399,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSpiderMeatBread
-  # Forge-Change
-  group: Bread
+  group: Bread # Forge-Change
   name: scorpion bread recipe
   result: N14CookedFoodBreadMeatRadscorp
   time: 15
@@ -449,8 +410,7 @@
 
 - type: microwaveMealRecipe
   id: N14TofuBread
-  # Forge-Change
-  group: Bread
+  group: Bread # Forge-Change
   name: tofu bread recipe
   result: N14CookedFoodBreadTofu
   time: 15
@@ -473,8 +433,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeButteredToast
-  # Forge-Change
-  group: Breakfast
+  group: Breakfast # Forge-Change
   name: buttered toast recipe
   result: N14CookedFoodBreadButteredToast
   time: 5
@@ -484,8 +443,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeFrenchToast
-  # Forge-Change
-  group: Breakfast
+  group: Breakfast # Forge-Change
   name: french toast recipe
   result: N14CookedFoodBreadFrenchToast
   time: 5
@@ -497,8 +455,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeGarlicBread
-  # Forge-Change
-  group: Bread
+  group: Bread # Forge-Change
   name: garlic bread slice recipe
   result: N14CookedFoodBreadGarlicSlice
   time: 5
@@ -509,8 +466,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTwoBreadSlice
-  # Forge-Change
-  group: Bread
+  group: Bread # Forge-Change
   name: two slice recipe
   result: N14CookedFoodBreadTwoSlice
   time: 5
@@ -522,8 +478,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeOnionRings
-  # Forge-Change
-  group: Snacks
+  group: Snacks # Forge-Change
   name: onion rings recipe
   result: N14CookedFoodOnionRings
   time: 15
@@ -535,8 +490,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeMargheritaPizza
-  # Forge-Change
-  group: Pizza
+  group: Pizza # Forge-Change
   name: margherita pizza recipe
   result: N14CookedFoodPizzaMargherita
   time: 30
@@ -547,8 +501,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeMushroomPizza
-  # Forge-Change
-  group: Pizza
+  group: Pizza # Forge-Change
   name: mushroom pizza recipe
   result: N14CookedFoodPizzaMushroom
   time: 30
@@ -558,8 +511,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeMeatPizza
-  # Forge-Change
-  group: Pizza
+  group: Pizza # Forge-Change
   name: meat pizza recipe
   result: N14CookedFoodPizzaMeat
   time: 30
@@ -571,8 +523,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeVegetablePizza
-  # Forge-Change
-  group: Pizza
+  group: Pizza # Forge-Change
   name: vegetable pizza recipe
   result: N14CookedFoodPizzaVegetable
   time: 30
@@ -586,8 +537,7 @@
 #Italian
 - type: microwaveMealRecipe
   id: N14RecipeBoiledSpaghetti
-  # Forge-Change
-  group: Pasta
+  group: Pasta # Forge-Change
   name: boiled spaghetti recipe
   result: N14CookedFoodNoodlesBoiled
   time: 15
@@ -599,8 +549,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipePastaTomato
-  # Forge-Change
-  group: Pasta
+  group: Pasta # Forge-Change
   name: pasta tomato recipe
   result: N14CookedFoodNoodles
   time: 10
@@ -620,8 +569,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeButterNoodles
-  # Forge-Change
-  group: Pasta
+  group: Pasta # Forge-Change
   name: butter noodles recipe
   result: N14CookedFoodNoodlesButter
   time: 10
@@ -631,8 +579,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeChowMein
-  # Forge-Change
-  group: Pasta
+  group: Pasta # Forge-Change
   name: chow mein recipe
   result: N14CookedFoodNoodlesChowmein
   time: 10
@@ -645,8 +592,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeOatmeal
-  # Forge-Change
-  group: Breakfast
+  group: Breakfast # Forge-Change
   name: oatmeal recipe
   result: N14CookedFoodOatmeal
   time: 15
@@ -658,8 +604,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBoiledRice
-  # Forge-Change
-  group: Rice
+  group: Rice # Forge-Change
   name: boiled rice recipe
   result: N14CookedFoodRiceBoiled
   time: 15
@@ -671,8 +616,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeRicePudding
-  # Forge-Change
-  group: Desserts
+  group: Desserts # Forge-Change
   name: rice pudding recipe
   result: N14CookedFoodRicePudding
   time: 15
@@ -685,8 +629,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeRiceRoadkill
-  # Forge-Change
-  group: Rice
+  group: Rice # Forge-Change
   name: roadkill rice recipe
   result: N14CookedFoodRiceRoadkill
   time: 15
@@ -696,8 +639,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeRiceGumbo
-  # Forge-Change
-  group: Rice
+  group: Rice # Forge-Change
   name: black-eyed gumbo recipe
   result: N14CookedFoodRiceGumbo
   time: 15
@@ -708,8 +650,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeEggRice
-  # Forge-Change
-  group: Rice
+  group: Rice # Forge-Change
   name: egg-fried rice recipe
   result: N14CookedFoodRiceEgg
   time: 15
@@ -747,8 +688,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeNettleSoup
-  # Forge-Change
-  group: Soups
+  group: Soups # Forge-Change
   name: nettle soup recipe
   result: N14CookedFoodSoupNettle
   time: 10
@@ -762,8 +702,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeEyeballSoup
-  # Forge-Change
-  group: Soups
+  group: Soups # Forge-Change
   name: eyeball soup recipe
   result: N14CookedFoodSoupEyeball
   time: 10
@@ -777,8 +716,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeOnionSoup
-  # Forge-Change
-  group: Soups
+  group: Soups # Forge-Change
   name: onion soup recipe
   result: N14CookedFoodSoupOnion
   time: 10
@@ -791,8 +729,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeMushroomSoup
-  # Forge-Change
-  group: Soups
+  group: Soups # Forge-Change
   name: mushroom soup recipe
   result: N14CookedFoodSoupMushroom
   time: 10
@@ -805,8 +742,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeStewSoup
-  # Forge-Change
-  group: Soups
+  group: Soups # Forge-Change
   name: stew recipe
   result: N14CookedFoodSoupStew
   time: 10
@@ -821,8 +757,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTatoSoup
-  # Forge-Change
-  group: Soups
+  group: Soups # Forge-Change
   name: tato soup recipe
   result: N14CookedFoodSoupTato
   time: 10
@@ -834,8 +769,7 @@
 
 - type: microwaveMealRecipe
   id: N14CookedRecipeBloodtatoSoup
-  # Forge-Change
-  group: Soups
+  group: Soups # Forge-Change
   name: bloodtato soup recipe
   result: N14CookedFoodSoupBloodtato
   time: 10
@@ -847,8 +781,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeMutieSoup
-  # Forge-Change
-  group: Soups
+  group: Soups # Forge-Change
   name: mutie soup recipe
   result: N14CookedFoodSoupMutie
   time: 10
@@ -860,8 +793,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeVegetableSoup
-  # Forge-Change
-  group: Soups
+  group: Soups # Forge-Change
   name: vegetable soup recipe
   result: N14CookedFoodSoupVegetable
   time: 10
@@ -878,8 +810,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeMutfruitPie
-  # Forge-Change
-  group: Pies
+  group: Pies # Forge-Change
   name: mutfruit pie recipe
   result: N14CookedFoodPieMutfruit
   time: 15
@@ -890,8 +821,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBaklava
-  # Forge-Change
-  group: Pies
+  group: Pies # Forge-Change
   name: baklava recipe
   result: N14CookedFoodPieBaklava
   time: 15
@@ -902,8 +832,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBlackberryPie
-  # Forge-Change
-  group: Pies
+  group: Pies # Forge-Change
   name: blackberry pie recipe
   result: N14CookedFoodPieBlackberry
   time: 15
@@ -914,8 +843,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeMeatPie
-  # Forge-Change
-  group: Pies
+  group: Pies # Forge-Change
   name: meat pie recipe
   result: N14CookedFoodPieMeat
   time: 15
@@ -928,8 +856,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCocoTart
-  # Forge-Change
-  group: Pies
+  group: Pies # Forge-Change
   name: chocolate lava tart recipe
   result: N14CookedFoodTartCoco
   time: 15
@@ -945,8 +872,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCubanCarp
-  # Forge-Change
-  group: Seafood
+  group: Seafood # Forge-Change
   name: Cuban carp recipe
   result: N14CookedFoodMealCubancarp #this will have to be changed someday
   time: 15
@@ -958,8 +884,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSashimi
-  # Forge-Change
-  group: Seafood
+  group: Seafood # Forge-Change
   name: sashimi recipe
   result: N14CookedFoodMealSashimi
   time: 15
@@ -970,8 +895,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeLoadedBakedPotato
-  # Forge-Change
-  group: Vegetables
+  group: Vegetables # Forge-Change
   name: loaded baked potato recipe
   result: N14CookedFoodMealPotatoLoaded
   time: 15
@@ -981,8 +905,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeFries
-  # Forge-Change
-  group: Snacks
+  group: Snacks # Forge-Change
   name: fries recipe
   result: N14CookedFoodMealFries
   time: 15
@@ -993,8 +916,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCheesyFries
-  # Forge-Change
-  group: Snacks
+  group: Snacks # Forge-Change
   name: cheesy fries recipe
   result: N14CookedFoodMealFriesCheesy
   time: 15
@@ -1006,8 +928,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCarrotFries
-  # Forge-Change
-  group: Snacks
+  group: Snacks # Forge-Change
   name: carrot fries recipe
   result: N14CookedFoodMealFriesCarrot
   time: 15
@@ -1018,8 +939,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipePopcorn
-  # Forge-Change
-  group: Snacks
+  group: Snacks # Forge-Change
   name: popcorn recipe
   result: N14FoodSnackPopcorn
   time: 20
@@ -1028,8 +948,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipePancake
-  # Forge-Change
-  group: Breakfast
+  group: Breakfast # Forge-Change
   name: pancake recipe
   result: N14CookedFoodBakedPancake
   time: 5
@@ -1040,8 +959,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBlueberryPancake
-  # Forge-Change
-  group: Breakfast
+  group: Breakfast # Forge-Change
   name: tarberry pancake recipe #N14 change
   result: N14CookedFoodBakedPancakeBb
   time: 5
@@ -1054,8 +972,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeWaffles
-  # Forge-Change
-  group: Breakfast
+  group: Breakfast # Forge-Change
   name: waffle recipe
   result: N14CookedFoodBakedWaffle
   time: 10
@@ -1067,8 +984,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeWaffleSoy
-  # Forge-Change
-  group: Breakfast
+  group: Breakfast # Forge-Change
   name: soy waffle recipe
   result: N14CookedFoodBakedWaffleSoy
   time: 10
@@ -1080,8 +996,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCookie
-  # Forge-Change
-  group: Cookies
+  group: Cookies # Forge-Change
   name: cookie recipe
   result: N14CookedFoodBakedCookie
   time: 5
@@ -1094,8 +1009,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeSugarCookie
-  # Forge-Change
-  group: Cookies
+  group: Cookies # Forge-Change
   name: sugar cookie recipe
   result: N14CookedFoodBakedCookieSugar
   time: 5
@@ -1107,8 +1021,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeRaisinCookie
-  # Forge-Change
-  group: Cookies
+  group: Cookies # Forge-Change
   name: raisin cookie recipe
   result: N14CookedFoodBakedCookieRaisin
   time: 5
@@ -1120,8 +1033,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCookieOatmeal
-  # Forge-Change
-  group: Cookies
+  group: Cookies # Forge-Change
   name: oatmeal cookie recipe
   result: N14CookedFoodBakedCookieOatmeal
   time: 5
@@ -1133,8 +1045,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeChocolateChipPancake
-  # Forge-Change
-  group: Breakfast
+  group: Breakfast # Forge-Change
   name: chocolate chip pancake recipe
   result: N14CookedFoodBakedPancakeCc
   time: 5
@@ -1147,8 +1058,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeMutfruitCake
-  # Forge-Change
-  group: Cakes
+  group: Cakes # Forge-Change
   name: mutfruit cake recipe
   result: N14CookedFoodCakeMutfruit
   time: 5
@@ -1158,8 +1068,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCarrotCake
-  # Forge-Change
-  group: Cakes
+  group: Cakes # Forge-Change
   name: carrot cake recipe
   result: N14CookedFoodCakeCarrot
   time: 5
@@ -1169,8 +1078,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTarberryCake
-  # Forge-Change
-  group: Cakes
+  group: Cakes # Forge-Change
   name: tarberry cake recipe #N14 change
   result: N14CookedFoodCakeTarberry
   time: 5
@@ -1180,8 +1088,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCheeseCake
-  # Forge-Change
-  group: Cakes
+  group: Cakes # Forge-Change
   name: cheese cake recipe
   result: N14CookedFoodCakeCheese
   time: 5
@@ -1193,8 +1100,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipePumpkinCake
-  # Forge-Change
-  group: Cakes
+  group: Cakes # Forge-Change
   name: pumpkin cake recipe
   result: N14CookedFoodCakePumpkin
   time: 5
@@ -1204,8 +1110,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCake
-  # Forge-Change
-  group: Cakes
+  group: Cakes # Forge-Change
   name: cake recipe
   result: N14CookedFoodCakePlain
   time: 15
@@ -1214,8 +1119,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBirthdayCake
-  # Forge-Change
-  group: Cakes
+  group: Cakes # Forge-Change
   name: birthday cake recipe
   result: N14CookedFoodCakeBirthday
   time: 5
@@ -1226,8 +1130,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeChocolateCake
-  # Forge-Change
-  group: Cakes
+  group: Cakes # Forge-Change
   name: chocolate cake recipe
   result: N14CookedFoodCakeChocolate
   time: 5
@@ -1237,8 +1140,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBrainCake
-  # Forge-Change
-  group: Cakes
+  group: Cakes # Forge-Change
   name: brain cake recipe
   result: N14CookedFoodCakeBrain
   time: 15
@@ -1248,8 +1150,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeDumplings
-  # Forge-Change
-  group: Dumplings
+  group: Dumplings # Forge-Change
   name: dumplings recipe
   result: N14CookedFoodBakedDumplings
   time: 15
@@ -1261,8 +1162,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeBrownies
-  # Forge-Change
-  group: Desserts
+  group: Desserts # Forge-Change
   name: brownie recipe
   result: N14CookedFoodBakedBrownieBatch
   time: 25
@@ -1276,8 +1176,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeHotChili
-  # Forge-Change
-  group: Soups
+  group: Soups # Forge-Change
   name: hot chili recipe
   result: N14CookedFoodSoupChiliHot
   time: 20
@@ -1290,8 +1189,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeQueso
-  # Forge-Change
-  group: Snacks
+  group: Snacks # Forge-Change
   name: queso recipe
   result: N14CookedFoodMealQueso
   time: 15
@@ -1303,8 +1201,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeRibs
-  # Forge-Change
-  group: Meat
+  group: Meat # Forge-Change
   name: BBQ ribs recipe
   result: N14CookedFoodMealRibs
   time: 15
@@ -1316,8 +1213,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeEnchiladas
-  # Forge-Change
-  group: Mexican
+  group: Mexican # Forge-Change
   name: enchiladas recipe
   result: N14CookedFoodMealEnchiladas
   time: 20
@@ -1329,8 +1225,7 @@
 # SALADS: These should be moved out of the microwave as soon as possible
 - type: microwaveMealRecipe
   id: N14RecipeHerbSalad
-  # Forge-Change
-  group: Salads
+  group: Salads # Forge-Change
   name: herb salad recipe
   result: N14CookedFoodSaladHerb
   time: 5
@@ -1341,8 +1236,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeColeslaw
-  # Forge-Change
-  group: Salads
+  group: Salads # Forge-Change
   name: coleslaw recipe
   result: N14CookedFoodSaladColeslaw
   time: 5
@@ -1355,8 +1249,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCaesarSalad
-  # Forge-Change
-  group: Salads
+  group: Salads # Forge-Change
   name: caesar salad recipe
   result: N14CookedFoodSaladCaesar
   time: 5
@@ -1371,8 +1264,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeKimchiSalad
-  # Forge-Change
-  group: Salads
+  group: Salads # Forge-Change
   name: kimchi salad recipe
   result: N14CookedFoodSaladKimchi
   time: 5
@@ -1386,8 +1278,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeFruitSalad
-  # Forge-Change
-  group: Salads
+  group: Salads # Forge-Change
   name: fruit salad recipe
   result: N14CookedFoodSaladFruit
   time: 5
@@ -1400,8 +1291,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeJungleSalad
-  # Forge-Change
-  group: Salads
+  group: Salads # Forge-Change
   name: jungle salad recipe
   result: N14CookedFoodSaladJungle
   time: 5
@@ -1480,8 +1370,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeFoodMealSoftTaco
-  # Forge-Change
-  group: Mexican
+  group: Mexican # Forge-Change
   name: soft taco recipe
   result: N14CookedFoodMealSoftTaco
   time: 10
@@ -1503,8 +1392,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCannabisButter
-  # Forge-Change
-  group: Ingredients
+  group: Ingredients # Forge-Change
   name: cannabis butter recipe
   result: N14FoodCannabisButter
   time: 15
@@ -1514,8 +1402,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCannabisBrownies
-  # Forge-Change
-  group: Desserts
+  group: Desserts # Forge-Change
   name: cannabis brownie recipe
   result: N14CookedFoodBakedCannabisBrownieBatch
   time: 25
@@ -1529,8 +1416,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeCornInButter
-  # Forge-Change
-  group: Vegetables
+  group: Vegetables # Forge-Change
   name: corn in butter recipe
   result: N14CookedFoodMealCornInButter
   time: 10
@@ -1541,8 +1427,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTacoShell
-  # Forge-Change
-  group: Ingredients
+  group: Ingredients # Forge-Change
   name: taco shell recipe
   result: N14CookedFoodTacoShell
   time: 5
@@ -1551,8 +1436,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTacoMeat
-  # Forge-Change
-  group: Mexican
+  group: Mexican # Forge-Change
   name: meat taco recipe
   result: N14CookedFoodTacoMeat
   time: 10
@@ -1563,8 +1447,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTacoChicken
-  # Forge-Change
-  group: Mexican
+  group: Mexican # Forge-Change
   name: chicken taco recipe
   result: N14CookedFoodTacoChicken
   time: 10
@@ -1587,8 +1470,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTacoRat
-  # Forge-Change
-  group: Mexican
+  group: Mexican # Forge-Change
   name: rat taco recipe
   result: N14CookedFoodTacoRat
   time: 10
@@ -1599,8 +1481,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTacoMeatSupreme
-  # Forge-Change
-  group: Mexican
+  group: Mexican # Forge-Change
   name: meat taco supreme recipe
   result: N14CookedFoodTacoMeatSupreme
   time: 10
@@ -1614,8 +1495,7 @@
 
 - type: microwaveMealRecipe
   id: N14RecipeTacoChickenSupreme
-  # Forge-Change
-  group: Mexican
+  group: Mexican # Forge-Change
   name: chicken taco supreme recipe #N14 change, I guess someone upstream was sleepy
   result: N14CookedFoodTacoChickenSupreme
   time: 10

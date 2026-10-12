@@ -5,12 +5,6 @@
   description: job-description-caesar-legion-centurion
   playTimeTracker: CaesarLegionCenturion
   requirements:
-  # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
-      # Forge-Change-Del department: CaesarLegion
-      # Forge-Change-Del min: 216000 # 60 hours
-  # Forge-Change-Del - !type:CharacterPlaytimeRequirement
-      # Forge-Change-Del tracker: CaesarLegionDean
-      # Forge-Change-Del min: 43200 # 12 hours
   - !type:CharacterSpeciesRequirement
     species:
     - Human

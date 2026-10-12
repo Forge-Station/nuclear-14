@@ -7,16 +7,6 @@
   description: job-description-ncr-sgt
   playTimeTracker: NCRNCO
   requirements:
-    # Forge-Change-Del - !type:CharacterSpeciesRequirement
-      # Forge-Change-Del species:
-      # Forge-Change-Del - Human
-      # Forge-Change-Del - Ghoul
-    # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
-      # Forge-Change-Del department: NCR
-      # Forge-Change-Del min: 72000 # 20 hours Corvax-Change
-    # Forge-Change-Del - !type:CharacterPlaytimeRequirement # Corvax-Add
-      # Forge-Change-Del tracker: NCRSoldier
-      # Forge-Change-Del min: 36000 # 10 hours
   # Forge-Change-Start
   - !type:CharacterSpeciesRequirement
     species:

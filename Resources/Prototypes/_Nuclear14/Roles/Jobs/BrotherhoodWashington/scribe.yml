@@ -7,13 +7,6 @@
   description: job-description-bos-washington-scribe
   playTimeTracker: BoSWashingtonScribe
   requirements:
-    # Forge-Change-Del - !type:CharacterSpeciesRequirement
-      # Forge-Change-Del species:
-      # Forge-Change-Del - Human
-      # Forge-Change-Del - Ghoul
-    # Forge-Change-Del - !type:CharacterDepartmentTimeRequirement
-      # Forge-Change-Del department: BrotherhoodWashington
-      # Forge-Change-Del min: 28800 # Forge-Change (8 hours)
   # Forge-Change-Start
   - !type:CharacterSpeciesRequirement
     species:
@@ -26,9 +19,7 @@
   startingGear: BoSWashingtonScribeGear
   alwaysUseSpawner: true
   icon: "JobIconbosWScriptor"
-  # Forge-Change-Del supervisors: job-name-bos-wash
-  # Forge-Change
-  supervisors: job-supervisors-bos-wash # Forge-Chang
+  supervisors: job-supervisors-bos-wash # Forge-Change
   access:
   - WashingtonInitiate
   - WashingtonScribe
