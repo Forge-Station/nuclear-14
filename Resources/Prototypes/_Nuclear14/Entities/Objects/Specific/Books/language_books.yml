@@ -29,8 +29,8 @@
 - type: entity
   parent: N14BookLanguageBase
   id: N14BookSpanish
-  name: Spanish language textbook
-  description: "Ten stages of study: understand Spanish after five, speak it after ten."
+  name: spanish textbook
+  description: A guide for studying the Spanish language.
   components:
   - type: N14LanguageBook
     language: Spanish
