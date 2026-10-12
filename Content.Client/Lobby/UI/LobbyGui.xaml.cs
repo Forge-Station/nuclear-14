@@ -34,10 +34,6 @@ namespace Content.Client.Lobby.UI
             RobustXamlLoader.Load(this);
             IoCManager.InjectDependencies(this);
             /// Forge-Change-Start
-            /// Forge-Change-Del
-            // ApplyLobbyStyle(DefaultState);
-            // ApplyLobbyStyle(RightSide);
-            // Chat.ChatWindowPanel.AddStyleClass("NewVegasPanel");
             ApplyTheme();
             ThemeButton.OnPressed += _ =>
             {
@@ -62,11 +58,9 @@ namespace Content.Client.Lobby.UI
             LeaveButton.OnPressed += _ => _consoleHost.ExecuteCommand("disconnect");
             OptionsButton.OnPressed += _ => UserInterfaceManager.GetUIController<OptionsUIController>().ToggleWindow();
             SponsorButton.OnPressed += _ => OpenSponsorWindow(); // Forge-Change
-        /// Forge-Change-Start
         }
 
-        /// Forge-Change-Del
-        // private static void ApplyLobbyStyle(Control control)
+        /// Forge-Change-Start
         private void ApplyTheme()
         {
             var enabled = _configuration.GetCVar(CCVars.LobbyNewVegasTheme);
@@ -91,9 +85,6 @@ namespace Content.Client.Lobby.UI
         {
             if (control is Button button)
             {
-                /// Forge-Change-Del
-                // button.AddStyleClass("NewVegasButton");
-                // button.Label.AddStyleClass("NewVegasText");
                 SetThemeClass(button, "NewVegasButton", enabled);
                 SetThemeClass(button.Label, "NewVegasText", enabled);
             }
@@ -112,8 +103,6 @@ namespace Content.Client.Lobby.UI
                 foreach (var child in control.Children)
                 {
                     if (child is PanelContainer panel)
-                        /// Forge-Change-Del
-                        // panel.PanelOverride = StyleNewVegas.HeadingBox();
                         panel.PanelOverride = enabled ? StyleNewVegas.HeadingBox() : null;
                 }
             }
@@ -121,16 +110,12 @@ namespace Content.Client.Lobby.UI
             if (control is Label label &&
                 (label.HasStyleClass(StyleNano.StyleClassLabelHeading) ||
                  label.HasStyleClass(StyleNano.StyleClassLabelHeadingBigger)))
-                /// Forge-Change-Del
-                // label.FontColorOverride = StyleNewVegas.HeadingColor;
                 label.FontColorOverride = enabled ? StyleNewVegas.HeadingColor : null;
 
             foreach (var child in control.Children)
-                /// Forge-Change-Del
-                // ApplyLobbyStyle(child);
                 ApplyLobbyStyle(child, enabled);
-        /// Forge-Change-End
         }
+        /// Forge-Change-End
 
         // Forge-Change: open (or focus) the sponsorship window.
         private void OpenSponsorWindow()

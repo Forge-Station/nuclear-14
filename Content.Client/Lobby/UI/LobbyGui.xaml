@@ -23,13 +23,11 @@
                 <BoxContainer Name="LeftSide" Orientation="Vertical" SeparationOverride="4" HorizontalExpand="True">
                     <Control Name="DefaultState" VerticalExpand="True">
                         <BoxContainer Name="TopLeft" Orientation="Vertical">
-                            <!-- Forge-Change-Del
-                            <PanelContainer StyleClasses="NewVegasPanel" Name="LeftSideTop" HorizontalAlignment="Left">
-                            -->
-                            <!-- Forge-Change -->
+
+
                             <PanelContainer StyleClasses="LobbyThemePanel" Name="LeftSideTop" HorizontalAlignment="Left">
                                 <BoxContainer Orientation="Vertical" SeparationOverride="6">
-                                    <!-- Forge-Change -->
+
                                     <Button Name="ThemeButton" HorizontalAlignment="Left" />
                                     <BoxContainer Orientation="Horizontal" HorizontalAlignment="Left" Margin="0 3" SeparationOverride="6">
                                         <info:LinkBanner Name="LinkBanner" />
@@ -57,17 +55,13 @@
                         <!-- Left Bot Panel -->
                         <BoxContainer Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" SeparationOverride="4">
                             <info:DevInfoBanner Name="DevInfoBanner" VerticalExpand="false" Margin="3 3 3 3" />
-                            <!-- Forge-Change-Del
-                            <PanelContainer StyleClasses="NewVegasPanel">
-                            -->
-                            <!-- Forge-Change -->
+
+
                             <PanelContainer StyleClasses="LobbyThemePanel">
                                 <RichTextLabel Name="LobbySong" Access="Public" HorizontalAlignment="Center" />
                             </PanelContainer>
-                            <!-- Forge-Change-Del
-                            <PanelContainer StyleClasses="NewVegasPanel">
-                            -->
-                            <!-- Forge-Change -->
+
+
                             <PanelContainer StyleClasses="LobbyThemePanel">
                                 <RichTextLabel Name="LobbyBackground" Access="Public" HorizontalAlignment="Center" />
                             </PanelContainer>
@@ -78,14 +72,11 @@
                     <Control Access="Public" Visible="False" Name="CharacterSetupState" VerticalExpand="True" />
                 </BoxContainer>
                 <!-- Right Panel -->
-                <!-- Forge-Change-Del
-                <PanelContainer Name="RightSide" StyleClasses="NewVegasPanel" HorizontalAlignment="Right" VerticalExpand="True"
-                                VerticalAlignment="Stretch">
-                -->
-                <!-- Forge-Change-Start -->
+
+
                 <PanelContainer Name="RightSide" StyleClasses="LobbyThemePanel" HorizontalAlignment="Right" VerticalExpand="True"
                                 VerticalAlignment="Stretch">
-                <!-- Forge-Change-End -->
+
                     <BoxContainer Orientation="Vertical" HorizontalExpand="True">
                         <!-- Top row -->
                         <BoxContainer Orientation="Horizontal" MinSize="0 40" Name="HeaderContainer" Access="Public"
@@ -133,25 +124,3 @@
     </BoxContainer>
 </lobbyUi:LobbyGui>
 <!-- Forge-Change-End -->
-
-<!-- Forge-Change-Del: исходные строки до изменений
-    <BoxContainer Name="MainContainer" VerticalExpand="True" HorizontalExpand="True" Orientation="Horizontal"
-                  Margin="10 10 10 10" SeparationOverride="2">
-        <SplitContainer State="Auto" ResizeMode="NotResizable" HorizontalExpand="True">
-                        <!- - Left Top Panel - ->
-                        <PanelContainer StyleClasses="AngleRect" HorizontalAlignment="Left" Name="LeftSideTop"
-                                        VerticalAlignment="Top">
-                            <BoxContainer Orientation="Vertical" HorizontalAlignment="Center" MaxWidth="800">
-                                <info:LinkBanner Name="LinkBanner" VerticalExpand="false" HorizontalAlignment="Center"
-                                <controls:StripeBack>
-                                    <BoxContainer Orientation="Horizontal" SeparationOverride="6" Margin="3 3 3 3">
-                                               Align="Left"
-                                               FontColorOverride="{x:Static maths:Color.DarkGray}"
-                                </controls:StripeBack>
-                        <PanelContainer StyleClasses="AngleRect">
-                        <PanelContainer StyleClasses="AngleRect">
-            <PanelContainer Name="RightSide" StyleClasses="AngleRect" HorizontalAlignment="Right" VerticalExpand="True"
-                    <controls:HLine Color="{x:Static style:StyleNano.NanoGold}" Thickness="2" />
-                    <BoxContainer Orientation="Horizontal" MinSize="0 40" HorizontalAlignment="Right">
-                    <controls:HLine Color="{x:Static style:StyleNano.NanoGold}" Thickness="2" Access="Public" />
--->
