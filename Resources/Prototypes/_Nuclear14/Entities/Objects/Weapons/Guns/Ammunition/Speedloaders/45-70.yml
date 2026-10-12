@@ -11,6 +11,7 @@
   - type: ToolRefinable
     refineResult:
     - id: SheetSteel1
+      prob: 0.3
   - type: BallisticAmmoProvider
     whitelist:
       tags:
@@ -56,6 +57,7 @@
   - type: ToolRefinable
     refineResult:
     - id: SheetSteel1
+      prob: 0.4
   - type: BallisticAmmoProvider
     whitelist:
       tags:
