@@ -1,19 +1,43 @@
 using Content.Shared._Forge.Weapons.Ranged.Components;
 using Content.Shared.DoAfter;
 using Content.Shared.Examine;
+using Content.Shared.Movement.Components;
+using Content.Shared.Movement.Systems;
 using Content.Shared.Weapons.Ranged.Systems;
 using Robust.Shared.Serialization;
 
-
 namespace Content.Shared._Forge.Weapons.Ranged.Systems;
-
 
 public abstract class SharedGunConditionSystem : EntitySystem
 {
+    [Dependency] private readonly MovementSpeedModifierSystem _movement = default!;
+
     public override void Initialize()
     {
+        SubscribeLocalEvent<GunUnjammingComponent, ComponentStartup>(OnUnjammingStartup);
+        SubscribeLocalEvent<GunUnjammingComponent, ComponentShutdown>(OnUnjammingShutdown);
+        SubscribeLocalEvent<GunUnjammingComponent, RefreshMovementSpeedModifiersEvent>(OnUnjammingSpeed);
         SubscribeLocalEvent<GunConditionComponent, AttemptShootEvent>(OnAttemptShoot);
         SubscribeLocalEvent<GunConditionComponent, ExaminedEvent>(OnExamined);
+    }
+
+    private void OnUnjammingStartup(Entity<GunUnjammingComponent> ent, ref ComponentStartup args)
+    {
+        _movement.RefreshMovementSpeedModifiers(ent);
+    }
+
+    private void OnUnjammingShutdown(Entity<GunUnjammingComponent> ent, ref ComponentShutdown args)
+    {
+        _movement.RefreshMovementSpeedModifiers(ent);
+    }
+
+    private void OnUnjammingSpeed(Entity<GunUnjammingComponent> ent, ref RefreshMovementSpeedModifiersEvent args)
+    {
+        if (ent.Comp.LifeStage >= ComponentLifeStage.Stopping ||
+            !TryComp<MovementSpeedModifierComponent>(ent, out var speed) || speed.BaseSprintSpeed <= 0f)
+            return;
+
+        args.ModifySpeed(1f, Math.Min(1f, speed.BaseWalkSpeed / speed.BaseSprintSpeed), bypassImmunity: true);
     }
 
     private void OnAttemptShoot(Entity<GunConditionComponent> ent, ref AttemptShootEvent args)
@@ -89,20 +113,6 @@ public abstract class SharedGunConditionSystem : EntitySystem
 
     protected float GetConditionPercent(GunConditionComponent component) => GetConditionFraction(component) * 100f;
 
-    protected float GetConditionReserve(GunConditionComponent component)
-        => Math.Max(0f, component.Condition - component.BrokenThreshold);
-
-    protected float GetConditionReserveMax(GunConditionComponent component)
-        => Math.Max(0f, component.MaxCondition - component.BrokenThreshold);
-
-    protected int? GetEstimatedShotsToBreak(GunConditionComponent component)
-    {
-        if (component.WearPerShot <= 0f)
-            return null;
-
-        return (int) Math.Ceiling(GetConditionReserve(component) / component.WearPerShot);
-    }
-
     protected (float Start, float Peak) GetJamThresholds(GunConditionComponent component)
     {
         var start = component.JamStart;
@@ -164,8 +174,8 @@ public abstract class SharedGunConditionSystem : EntitySystem
     }
 }
 
-[Serializable, NetSerializable,]
+[Serializable, NetSerializable]
 public sealed partial class GunConditionRepairDoAfterEvent : SimpleDoAfterEvent;
 
-[Serializable, NetSerializable,]
+[Serializable, NetSerializable]
 public sealed partial class GunConditionUnjamDoAfterEvent : SimpleDoAfterEvent;
