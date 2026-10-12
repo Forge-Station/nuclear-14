@@ -52,7 +52,6 @@ public sealed class WeatherSystem : SharedWeatherSystem
         if (!TryComp(weather.Stream, out AudioComponent? comp))
             return;
 
-        /// Forge-Change-Del var occlusion = 0f;
         /// Forge-Change-Start
         // Throttle audio occlusion BFS to 4 Hz instead of every tick.
         // The BFS flood-fill allocates new Queue+HashSet each run; per-tick was wasteful
@@ -67,7 +66,6 @@ public sealed class WeatherSystem : SharedWeatherSystem
         /// Forge-Change-End
 
         // Work out tiles nearby to determine volume.
-        /// Forge-Change-Del if (TryComp<MapGridComponent>(entXform.GridUid, out var grid))
         /// Forge-Change
         if (runBFS && TryComp<MapGridComponent>(entXform.GridUid, out var grid))
         {

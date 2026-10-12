@@ -34,7 +34,6 @@ public sealed partial class TargetInLOSPrecondition : HTNPrecondition
 
         var range = blackboard.GetValueOrDefault<float>(RangeKey, _entManager);
 
-        /// Forge-Change-Del return _interaction.InRangeUnobstructed(owner, target, range);
         /// Forge-Change-Start
         return _weather.CanSeeThroughWeather(owner, target) &&
             _interaction.InRangeUnobstructed(owner, target, range);

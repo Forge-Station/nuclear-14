@@ -305,7 +305,6 @@ public sealed class NPCUtilitySystem : EntitySystem
             {
                 var radius = blackboard.GetValueOrDefault<float>(blackboard.GetVisionRadiusKey(EntityManager), EntityManager);
 
-                /// Forge-Change-Del return _examine.InRangeUnOccluded(owner, targetUid, radius + 0.5f, null) ? 1f : 0f;
                 /// Forge-Change-Start
                 return _weather.CanSeeThroughWeather(owner, targetUid) &&
                     _examine.InRangeUnOccluded(owner, targetUid, radius + 0.5f, null)
@@ -456,7 +455,6 @@ public sealed class NPCUtilitySystem : EntitySystem
                 // Rent a scratch set from the pool so the no-alloc faction scan doesn't allocate per query.
                 var hostiles = _entPool.Get();
                 _npcFaction.GetNearbyHostiles(owner, vision, hostiles);
-                /// Forge-Change-Del entities.UnionWith(hostiles);
                 /// Forge-Change-Start
                 foreach (var hostile in hostiles)
                 {

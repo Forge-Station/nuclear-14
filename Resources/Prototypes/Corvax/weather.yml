@@ -8,17 +8,11 @@
     params:
       loop: true
       volume: -6
-  # Forge-Change-Del duration: 150
-  # Forge-Change
-  duration: 180
+  duration: 180 # Forge-Change
   radioactive: true
-  # Forge-Change-Del rads: 1.25
-  # Forge-Change
-  rads: 1
+  rads: 1 # Forge-Change
   showMessage: true
-  # Forge-Change-Del chance: 2
-  # Forge-Change
-  chance: 1
+  chance: 1 # Forge-Change
   sender: weather-announcement
   message: weather-radioactive-particles
 
@@ -36,9 +30,7 @@
   radioactive: true
   rads: 0.75
   showMessage: true
-  # Forge-Change-Del chance: 2
-  # Forge-Change
-  chance: 1
+  chance: 1 # Forge-Change
   sender: weather-announcement
   message: weather-radioactive-rain
 
@@ -54,8 +46,7 @@
       volume: -6
   duration: 180
   radioactive: true
-  # Forge-Change
-  rads: 1
+  rads: 1 # Forge-Change
   showMessage: true
   chance: 1
   sender: weather-announcement

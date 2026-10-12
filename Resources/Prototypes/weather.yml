@@ -1,18 +1,5 @@
 #! Corvax-Change
 
-# Forge-Change-Del # - type: weather
-# Forge-Change-Del #   id: Ashfall
-# Forge-Change-Del #   sprite:
-# Forge-Change-Del #     sprite: /Textures/Effects/weather.rsi
-# Forge-Change-Del #     state: ashfall
-# Forge-Change-Del #   sound:
-# Forge-Change-Del #     path: /Audio/Effects/Weather/snowstorm_weak.ogg
-# Forge-Change-Del #     params:
-# Forge-Change-Del #       loop: true
-# Forge-Change-Del #       volume: -6
-# Forge-Change-Del #   temperature: 330
-# Forge-Change-Del #   duration: 500
-# Forge-Change-Del #   message: weather-ashfall
 # Forge-Change-Start
 - type: weather
   id: Ashfall
@@ -32,19 +19,6 @@
   message: weather-ashfall
 # Forge-Change-End
 
-# Forge-Change-Del # - type: weather
-# Forge-Change-Del #   id: AshfallLight
-# Forge-Change-Del #   sprite:
-# Forge-Change-Del #     sprite: /Textures/Effects/weather.rsi
-# Forge-Change-Del #     state: ashfall_light
-# Forge-Change-Del #   sound:
-# Forge-Change-Del #     path: /Audio/Effects/Weather/snowstorm_weak.ogg
-# Forge-Change-Del #     params:
-# Forge-Change-Del #       loop: true
-# Forge-Change-Del #       volume: -6
-# Forge-Change-Del #   temperature: 320
-# Forge-Change-Del #   duration: 500
-# Forge-Change-Del #   message: weather-ashfall-light
 # Forge-Change-Start
 - type: weather
   id: AshfallLight
@@ -62,22 +36,6 @@
   message: weather-ashfall-light
 # Forge-Change-End
 
-# Forge-Change-Del # - type: weather
-# Forge-Change-Del #   id: AshfallHeavy
-# Forge-Change-Del #   sprite:
-# Forge-Change-Del #     sprite: /Textures/Effects/weather.rsi
-# Forge-Change-Del #     state: ashfall_heavy
-# Forge-Change-Del #   sound:
-# Forge-Change-Del #     path: /Audio/Effects/Weather/snowstorm.ogg
-# Forge-Change-Del #     params:
-# Forge-Change-Del #       loop: true
-# Forge-Change-Del #       volume: -6
-# Forge-Change-Del #   temperature: 340
-# Forge-Change-Del #   duration: 20
-# Forge-Change-Del #   chance: 0
-# Forge-Change-Del #   showMessage: true
-# Forge-Change-Del #   sender: weather-announcement
-# Forge-Change-Del #   message: weather-ashfall-heavy
 # Forge-Change-Start
 - type: weather
   id: AshfallHeavy
@@ -101,45 +59,12 @@
 
 - type: weather
   id: Default
-  # Forge-Change-Del duration: 2400 # Forvax-Change
-  # Forge-Change-Del chance: 100 # Forvax-Change
   # Forge-Change-Start
   duration: 3600
   chance: 0 # calm periods are handled by WeatherSystem's random delay
   # Forge-Change-End
   message: weather-default
 
-# Forge-Change-Del # - type: weather
-# Forge-Change-Del #   id: Fallout
-# Forge-Change-Del #   sprite:
-# Forge-Change-Del #     sprite: /Textures/Effects/weather.rsi
-# Forge-Change-Del #     state: fallout
-# Forge-Change-Del #   sound:
-# Forge-Change-Del #     path: /Audio/Effects/Weather/snowstorm_weak.ogg
-# Forge-Change-Del #     params:
-# Forge-Change-Del #       loop: true
-# Forge-Change-Del #       volume: -6
-# Forge-Change-Del #   temperature: 340
-# Forge-Change-Del #   duration: 500
-# Forge-Change-Del #   chance: 0
-# Forge-Change-Del #   showMessage: true
-# Forge-Change-Del #   sender: weather-announcement
-# Forge-Change-Del #   message: weather-fallout
-# Forge-Change-Del #   radioactive: true
-# Forge-Change-Del # - type: weather
-# Forge-Change-Del #   id: Hail
-# Forge-Change-Del #   sprite:
-# Forge-Change-Del #     sprite: /Textures/Effects/weather.rsi
-# Forge-Change-Del #     state: hail
-# Forge-Change-Del #   sound:
-# Forge-Change-Del #     path:
-# Forge-Change-Del #       /Audio/Effects/Weather/rain.ogg
-# Forge-Change-Del #     params:
-# Forge-Change-Del #       loop: true
-# Forge-Change-Del #       volume: -6
-# Forge-Change-Del #   temperature: 300
-# Forge-Change-Del #   duration: 500
-# Forge-Change-Del #   message: weather-hail
 # Forge-Change-Start
 - type: weather
   id: Hail
@@ -169,8 +94,6 @@
       loop: true
       volume: -6
   temperature: 300
-  # Forge-Change-Del duration: 250
-  # Forge-Change-Del chance: 2
   # Forge-Change-Start
   duration: 600
   chance: 1
@@ -183,20 +106,6 @@
     - /Audio/Effects/Weather/rain.ogg
     - /Audio/Effects/Weather/rain2.ogg
 
-# Forge-Change-Del # - type: weather
-# Forge-Change-Del #   id: Sandstorm
-# Forge-Change-Del #   sprite:
-# Forge-Change-Del #     sprite: /Textures/Effects/weather.rsi
-# Forge-Change-Del #     state: sandstorm
-# Forge-Change-Del #   sound:
-# Forge-Change-Del #     path: /Audio/Effects/Weather/snowstorm_weak.ogg
-# Forge-Change-Del #     params:
-# Forge-Change-Del #       loop: true
-# Forge-Change-Del #       volume: -6
-# Forge-Change-Del #   temperature: 320
-# Forge-Change-Del #   duration: 500
-# Forge-Change-Del #   chance: 0
-# Forge-Change-Del #   message: weather-sandstorm
 # Forge-Change-Start
 - type: weather
   id: Sandstorm
@@ -216,22 +125,6 @@
   message: weather-sandstorm
 # Forge-Change-End
 
-# Forge-Change-Del # - type: weather
-# Forge-Change-Del #   id: SandstormHeavy
-# Forge-Change-Del #   sprite:
-# Forge-Change-Del #     sprite: /Textures/Effects/weather.rsi
-# Forge-Change-Del #     state: sandstorm_heavy
-# Forge-Change-Del #   sound:
-# Forge-Change-Del #     path: /Audio/Effects/Weather/snowstorm.ogg
-# Forge-Change-Del #     params:
-# Forge-Change-Del #       loop: true
-# Forge-Change-Del #       volume: -6
-# Forge-Change-Del #   temperature: 330
-# Forge-Change-Del #   duration: 500
-# Forge-Change-Del #   chance: 0
-# Forge-Change-Del #   showMessage: true
-# Forge-Change-Del #   sender: weather-announcement
-# Forge-Change-Del #   message: weather-sandstorm-heavy
 # Forge-Change-Start
 - type: weather
   id: SandstormHeavy
@@ -253,19 +146,6 @@
   message: weather-sandstorm-heavy
 # Forge-Change-End
 
-# Forge-Change-Del # - type: weather
-# Forge-Change-Del #   id: SnowfallLight
-# Forge-Change-Del #   sprite:
-# Forge-Change-Del #     sprite: /Textures/Effects/weather.rsi
-# Forge-Change-Del #     state: snowfall_light
-# Forge-Change-Del #   sound:
-# Forge-Change-Del #     path: /Audio/Effects/Weather/snowstorm_weak.ogg
-# Forge-Change-Del #     params:
-# Forge-Change-Del #       loop: true
-# Forge-Change-Del #       volume: -6
-# Forge-Change-Del #   temperature: 280
-# Forge-Change-Del #   duration: 500
-# Forge-Change-Del #   message: weather-snowfall-light
 # Forge-Change-Start
 - type: weather
   id: SnowfallLight
@@ -283,19 +163,6 @@
   message: weather-snowfall-light
 # Forge-Change-End
 
-# Forge-Change-Del # - type: weather
-# Forge-Change-Del #   id: SnowfallMedium
-# Forge-Change-Del #   sprite:
-# Forge-Change-Del #     sprite: /Textures/Effects/weather.rsi
-# Forge-Change-Del #     state: snowfall_med
-# Forge-Change-Del #   sound:
-# Forge-Change-Del #     path: /Audio/Effects/Weather/snowstorm_weak.ogg
-# Forge-Change-Del #     params:
-# Forge-Change-Del #       loop: true
-# Forge-Change-Del #       volume: -6
-# Forge-Change-Del #   temperature: 270
-# Forge-Change-Del #   duration: 500
-# Forge-Change-Del #   message: weather-snowfall-medium
 # Forge-Change-Start
 - type: weather
   id: SnowfallMedium
@@ -313,22 +180,6 @@
   message: weather-snowfall-medium
 # Forge-Change-End
 
-# Forge-Change-Del # - type: weather
-# Forge-Change-Del #   id: SnowfallHeavy
-# Forge-Change-Del #   sprite:
-# Forge-Change-Del #     sprite: /Textures/Effects/weather.rsi
-# Forge-Change-Del #     state: snowfall_heavy
-# Forge-Change-Del #   sound:
-# Forge-Change-Del #     path: /Audio/Effects/Weather/snowstorm.ogg
-# Forge-Change-Del #     params:
-# Forge-Change-Del #       loop: true
-# Forge-Change-Del #       volume: -6
-# Forge-Change-Del #   temperature: 260
-# Forge-Change-Del #   duration: 500
-# Forge-Change-Del #   chance: 0
-# Forge-Change-Del #   showMessage: true
-# Forge-Change-Del #   sender: weather-announcement
-# Forge-Change-Del #   message: weather-snowfall-heavy
 # Forge-Change-Start
 - type: weather
   id: SnowfallHeavy
@@ -361,9 +212,7 @@
       loop: true
       volume: -6
   temperature: 310
-  # Forge-Change-Del duration: 250
-  # Forge-Change
-  duration: 600
+  duration: 600 # Forge-Change
   showMessage: true
   chance: 1
   sender: weather-announcement

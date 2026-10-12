@@ -60,7 +60,6 @@ public sealed partial class PickDrainTargetOperator : HTNOperator
         // find crit psionics nearby
         foreach (var target in _faction.GetNearbyHostiles(owner, range))
         {
-            /// Forge-Change-Del if (!_drainer.CanDrain(ent, target) || !_xformQuery.TryComp(target, out var xform))
             /// Forge-Change-Start
             if (!_weather.CanSeeThroughWeather(owner, target) ||
                 !_drainer.CanDrain(ent, target) ||

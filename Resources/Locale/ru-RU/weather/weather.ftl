@@ -4,8 +4,6 @@ cmd-weather-hint = Прототип погоды
 
 cmd-weather-error-no-arguments = Недостаточно аргументов!
 cmd-weather-error-unknown-proto = Неизвестный прототип погоды!
-# Forge-Change-Del cmd-weather-error-wrong-time = Неправильный формат времени!
-# Forge-Change-Start
 cmd-weather-error-wrong-time = Неправильный формат времени!
 
 cmd-nextweather-desc = Показывает время до следующего автоматического погодного события.
@@ -18,4 +16,3 @@ cmd-nextweather-active = Активная погода: {$weather} ({$state}); {
 cmd-nextweather-active-ending = закончится через {$time}
 cmd-nextweather-active-indefinite = время окончания не задано
 cmd-nextweather-active-note = Следующее погодное событие будет запланировано после завершения текущей погоды.
-# Forge-Change-End

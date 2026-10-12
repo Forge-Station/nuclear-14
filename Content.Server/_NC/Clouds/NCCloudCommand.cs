@@ -14,7 +14,6 @@ namespace Content.Server._NC.Clouds;
 public sealed class NCCloudCommand : IConsoleCommand
 {
     [Dependency] private readonly IEntityManager _entManager = default!;
-    /// Forge-Change-Del [Dependency] private readonly IMapManager _mapManager = default!;
 
     public string Command => "nccloud";
 
@@ -60,7 +59,6 @@ public sealed class NCCloudCommand : IConsoleCommand
 
         if (!cloudSystem.TryGetCloudLayer(mapId, out var mapUid, out var component))
         {
-            /// Forge-Change-Del if (!_mapManager.MapExists(mapId))
             /// Forge-Change
             if (!_entManager.System<SharedMapSystem>().MapExists(mapId))
             {

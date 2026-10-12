@@ -43,7 +43,6 @@ public sealed partial class CCVars
 
     /** If enabled, automatically set weather. */
     public static readonly CVarDef<bool> AutoWeather =
-        /// Forge-Change-Del CVarDef.Create("weather.auto", false, CVar.SERVERONLY); // Corvax-Change
         /// Forge-Change
         CVarDef.Create("weather.auto", true, CVar.SERVERONLY); // Corvax-Change
 
