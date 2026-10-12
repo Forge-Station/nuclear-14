@@ -18,8 +18,10 @@
         reagents:
         - ReagentId: Nutriment
           Quantity: 10
+        # Forge-Change-Start
         - ReagentId: N14RadParticleFood
           Quantity: 1
+        # Forge-Change-End
   - type: Item
     sprite: _Nuclear14/Objects/Consumable/Food/pre-war.rsi
     heldPrefix: packet
@@ -72,8 +74,10 @@
           Quantity: 2
         - ReagentId: Theobromine
           Quantity: 3
+        # Forge-Change-Start
         - ReagentId: N14RadParticleFood
           Quantity: 1
+        # Forge-Change-End
 
 - type: entity
   name: Cram
@@ -117,7 +121,7 @@
   name: canned dog food
   description: A can of beef stew meant for dogs.
   components:
-  - type: SolutionContainerManager
+  - type: SolutionContainerManager # Forge-Change-Comp
     solutions:
       food:
         maxVol: 20
@@ -153,7 +157,7 @@
   name: Dinki Di Dog Food
   description: A can of Gen-u-ine premium dog food, a worthy meal for any road warrior canine or not.
   components:
-  - type: SolutionContainerManager
+  - type: SolutionContainerManager # Forge-Change-Comp
     solutions:
       food:
         maxVol: 20
