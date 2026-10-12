@@ -1,0 +1,55 @@
+- type: entity
+  parent: Jug
+  id: N14JugBlood
+  name: кувшин (крови)
+  description: Используется для хранения очень большого количества химических веществ или растворов. Пить из него крайне не рекомендуется.
+  categories: [ HideSpawnMenu ]
+  components:
+    - type: SolutionContainerManager
+      solutions:
+        beaker:
+          reagents:
+            - ReagentId: Blood
+              Quantity: 200
+
+- type: entity
+  parent: Jug
+  id: N14JugAntiseptic
+  name: кувшин (антисептика)
+  description: Используется для хранения очень большого количества химических веществ или растворов. Пить из него крайне не рекомендуется.
+  categories: [ HideSpawnMenu ]
+  components:
+    - type: SolutionContainerManager
+      solutions:
+        beaker:
+          reagents:
+            - ReagentId: Antiseptic
+              Quantity: 200
+
+- type: entity
+  parent: Jug
+  id: N14JugExtractXander
+  name: кувшин (экстракт корня зандера)
+  description: Используется для хранения очень большого количества химических веществ или растворов. Пить из него крайне не рекомендуется.
+  categories: [ HideSpawnMenu ]
+  components:
+    - type: SolutionContainerManager
+      solutions:
+        beaker:
+          reagents:
+            - ReagentId: ExtractXander
+              Quantity: 200
+
+- type: entity
+  parent: Jug
+  id: N14JugExtractBroc
+  name: кувшин (экстракт цветка брокка)
+  description: Используется для хранения очень большого количества химических веществ или растворов. Пить из него крайне не рекомендуется.
+  categories: [ HideSpawnMenu ]
+  components:
+    - type: SolutionContainerManager
+      solutions:
+        beaker:
+          reagents:
+            - ReagentId: ExtractBroc
+              Quantity: 200

@@ -339,29 +339,31 @@
     state: medic
   - type: Item
     size: Huge
-  - type: SpawnItemsOnUse
+  - type: SpawnItemsOnUse #Forge-Change
     items:
-    # - id: N14ClothingOuterCoatLab # Forge-Change
-    # - id: N14ClothingBeltMedicalFilled # Forge-Change
-    # - id: N14ClothingHandsGlovesNitrile # Forge-Change
-    # - id: N14ClothingHeadHatNCRBeretMedic # Forge-Change
+    # - id: N14ClothingOuterCoatLab
+    # - id: N14ClothingBeltMedicalFilled
+    # - id: N14ClothingHandsGlovesNitrile
+    # - id: N14ClothingHeadHatNCRBeretMedic #
       - id: N14WeaponSMG45
       - id: Magazine45SubMachineGun
         amount: 3
-    # - id: N14WeaponPistol9mm # Forge-Change
-    # - id: N14MagazinePistol9mm # Forge-Change
+    # - id: N14WeaponPistol9mm
+    # - id: N14MagazinePistol9mm
     #   amount: 2
-      - id: Defibrillator # Forge-add
+      - id: Defibrillator
+      - id: N14MedicatedSuture
+      - id: N14RegenerativeOintment
       - id: N14SuperStimpak
-      - id: Brutepack
-      - id: N14Ointment10
+    # - id: Brutepack
+    # - id: N14Ointment10
       - id: Bloodpack
-      - id: N14Antidote
+    # - id: N14Antidote
       - id: N14BoxCardboardMREBoxCFilled
       - id: N14Stimpak
-      - id: N14RadAwayBloodbag
+    # - id: N14RadAwayBloodbag
       - id: N14CleanGauze10
-        amount: 2
+      # amount: 2
     # - id: N14Flare # Forge-Change
     sound:
       path: /Audio/Effects/unwrap.ogg
@@ -376,28 +378,36 @@
     state: medic
   - type: Item
     size: Huge
-  - type: SpawnItemsOnUse
+  - type: SpawnItemsOnUse # Forge-Change
     items:
-    # - id: N14ClothingBeltMedicalFilled # Forge-Change
-    # - id: N14ClothingHandsGlovesNitrile # Forge-Change
-      - id: N14ClothingHeadHatNCRBeretMedic
-      - id: N14WeaponSMG9mm
-      - id: N14MagazineSMG9mm
-        amount: 3
-      - id: N14WeaponPistol9mm
-      - id: N14MagazinePistol9mm
+    # - id: N14ClothingBeltMedicalFilled
+    # - id: N14ClothingHandsGlovesNitrile
+    # - id: N14ClothingHeadHatNCRBeretMedic
+      - id: N14WeaponPistol45Colt
+      - id: N14MagazinePistol45
         amount: 2
-      - id: Brutepack
-      - id: N14Ointment10
-      - id: Bloodpack
-      - id: N14Antidote
+      - id: N14JugBlood
+        amount: 2
+      - id: LargeBeaker
+      - id: N14MortarpestleGrinder
+      - id: N14JugAntiseptic
+      - id: N14JugExtractXander
+      - id: N14JugExtractBroc
+      - id: SheetGlass
+    # - id: N14WeaponPistol9mm
+    # - id: N14MagazinePistol9mm
+    #   amount: 2
+    # - id: Brutepack
+    # - id: N14Ointment10
+    # - id: Bloodpack
+    # - id: N14Antidote
       - id: N14BoxCardboardMREBoxCFilled
       - id: N14Stimpak
-        amount: 2
-      - id: N14RadAwayBloodbag
+        #amount: 2
+    # - id: N14RadAwayBloodbag
       - id: N14CleanGauze10
-        amount: 2
-    # - id: N14Flare # Forge-Change
+        #amount: 2
+    # - id: N14Flare
     sound:
       path: /Audio/Effects/unwrap.ogg
 

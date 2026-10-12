@@ -1,6 +1,6 @@
 - type: entity
   name: медицинская нить
-  description: Нить, пропитанная антисептиком, для зашивания ран. Используется для лечения кровотечений и повреждений конечностей.
+  description: Нить, пропитанная лекарством, для зашивания ран. Используется для лечения кровотечений и повреждений конечностей.
   parent: BaseHealingItem
   id: N14MedicatedSuture
   suffix: Full
@@ -9,7 +9,7 @@
     tags:
     - Brutepack
   - type: Sprite
-    scale: 0.8, 0.8
+    scale: 0.9, 0.9
     sprite: _Nuclear14/Objects/Specific/Medical/ms13_medical.rsi
     layers:
     - state: stitch1
