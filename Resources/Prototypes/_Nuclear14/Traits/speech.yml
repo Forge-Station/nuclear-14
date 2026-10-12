@@ -13,16 +13,13 @@
   id: LanguageTribal
   category: Speech
   points: -3
+  # Forge-Change-Start
   requirements:
   - !type:CharacterDepartmentRequirement
     inverted: true
     departments:
     - Tribe
-  # Forge-Change-Del - !type:CharacterJobRequirement
-    # Forge-Change-Del jobs:
-    # Forge-Change-Del - NCRRanger
-    # Forge-Change-Del - NCRRangerVeteran
-    # Forge-Change-Del - Followers # Forge-Change
+  # Forge-Change-End
   functions:
   - !type:TraitModifyLanguages
     languagesSpoken:
