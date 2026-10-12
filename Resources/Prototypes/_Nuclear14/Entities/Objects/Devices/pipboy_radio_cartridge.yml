@@ -1,8 +1,6 @@
 - type: entity
   parent: BaseItem
   id: N14PipBoyRadioCartridge
-  # Forge-Change-Del name: Pip-Boy radio
-  # Forge-Change-Del description: A built-in radio program for the Pip-Boy.
   # Forge-Change-Start
   name: Pip-Boy player
   description: A built-in music player for the Pip-Boy.
@@ -16,8 +14,6 @@
   - type: Cartridge
     programName: pipboy-radio-program-name
     icon:
-      # Forge-Change-Del sprite: _Nuclear14/Structures/Misc/radiostation/tableradio.rsi
-      # Forge-Change-Del state: base
       # Forge-Change-Start
       sprite: _Nuclear14/Interface/pipboy_programs.rsi
       state: player

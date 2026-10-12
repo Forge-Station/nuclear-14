@@ -28,7 +28,6 @@
   id: N14IDCardVault
   name: vault ID card
   components:
-  # Forge-Change
   - type: NanoChatCard # Forge-Change-Comp
   - type: Sprite
     sprite: _Nuclear14/Objects/Misc/tapes_cards.rsi

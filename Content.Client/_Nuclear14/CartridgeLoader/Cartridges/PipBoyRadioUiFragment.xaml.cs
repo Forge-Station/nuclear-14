@@ -59,14 +59,14 @@ public sealed partial class PipBoyRadioUiFragment : BoxContainer
         IPrototypeManager prototypeManager)
     {
         _prototypeManager = prototypeManager;
-    /// Forge-Change-Start
     }
 
+    /// Forge-Change-Start
     private void UpdateVolumeLabel(float percent)
     {
         VolumeLabel.Text = Loc.GetString("pipboy-radio-volume", ("volume", (int) MathF.Round(percent)));
-    /// Forge-Change-End
     }
+    /// Forge-Change-End
 
     private void LoadSongs(
         IEnumerable<ProtoId<JukeboxPrototype>> songIds)
@@ -109,7 +109,6 @@ public sealed partial class PipBoyRadioUiFragment : BoxContainer
         IReadOnlyList<ProtoId<JukeboxPrototype>> songIds,
         string? selectedSong,
         bool playing,
-        /// Forge-Change-Del bool paused)
         /// Forge-Change-Start
         bool paused,
         float volume)

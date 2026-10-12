@@ -23,8 +23,7 @@
     state: pda
   - type: PdaBorderColor
     borderColor: "#717059"
-    # Forge-Change
-    pipBoyTheme: true # Set false to restore the original PDA interface.
+    pipBoyTheme: true # Set false to restore the original PDA interface. # Forge-Change
   - type: Clothing
     quickEquip: false
     slots:
@@ -74,16 +73,12 @@
     toggleOnInteract: false
   - type: Speech # Forge-Change-Comp
     speechVerb: Robotic
-  - type: TTS # Forge-Change-Comp
-  # Forge-Change-End
+  - type: TTS # Forge-Change-Comp-End
   - type: CartridgeLoader
     uiKey: enum.PdaUiKey.Key
     preinstalled:
       - CrewManifestCartridge
-      # Forge-Change-Del - NotekeeperCartridge
-      # Forge-Change-Del - NewsReaderCartridge
-      # Forge-Change
-      - N14PipBoyNotekeeperCartridge
+      - N14PipBoyNotekeeperCartridge # Forge-Change
       - N14PipBoyRadioCartridge
       # Forge-Change-Start
       - N14PipBoyReceiverCartridge

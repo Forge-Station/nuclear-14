@@ -1,8 +1,6 @@
-# Forge-Change-Del pipboy-radio-program-name = Radio
 # Forge-Change
 pipboy-radio-program-name = Player
 
-# Forge-Change-Del pipboy-radio-title = RADIO
 # Forge-Change
 pipboy-radio-title = PLAYER
 pipboy-radio-play = PLAY

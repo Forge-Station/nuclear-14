@@ -84,7 +84,6 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
 
             case PipBoyRadioAction.Previous:
                 SelectRelative(
-                    /// Forge-Change-Del loaderUid,
                     component,
                     -1,
                     component.Playing);
@@ -92,7 +91,6 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
 
             case PipBoyRadioAction.Next:
                 SelectRelative(
-                    /// Forge-Change-Del loaderUid,
                     component,
                     1,
                     component.Playing);
@@ -115,8 +113,6 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
             Play(component);
     }
 
-    /// Forge-Change-Del private bool SelectRelative(
-        /// Forge-Change-Del EntityUid loaderUid,
     /// Forge-Change
     private void SelectRelative(
         PipBoyRadioCartridgeComponent component,
@@ -126,7 +122,6 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
         var songs = component.Songs;
 
         if (songs.Count == 0)
-            /// Forge-Change-Del return false;
             /// Forge-Change
             return;
 
@@ -154,7 +149,6 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
             component,
             songs[nextIndex],
             startPlayback);
-        /// Forge-Change-Del return true;
     }
 
     private void Play(
@@ -190,7 +184,6 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
             _audio.PlayGlobal(
                 jukeboxPrototype.Path,
                 listener,
-                /// Forge-Change-Del AudioParams.Default
                 /// Forge-Change
                 AudioParams.Default.WithVolume(SharedAudioSystem.GainToVolume(component.Volume))
             )?.Entity;
@@ -265,7 +258,6 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
 
             // Automatically start the next track.
             SelectRelative(
-                /// Forge-Change-Del loaderUid,
                 component,
                 1,
                 true);
@@ -290,7 +282,6 @@ public sealed class PipBoyRadioCartridgeSystem : EntitySystem
             component.Songs,
             component.SelectedSongId,
             component.Playing,
-            /// Forge-Change-Del component.Paused);
             /// Forge-Change-Start
             component.Paused,
             component.Volume);

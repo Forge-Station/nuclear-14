@@ -86,7 +86,6 @@ public sealed partial class PipBoyRadioUi : UIFragment
             radioState.Songs,
             radioState.SelectedSongId?.Id,
             radioState.Playing,
-            /// Forge-Change-Del radioState.Paused);
             /// Forge-Change-Start
             radioState.Paused,
             radioState.Volume);

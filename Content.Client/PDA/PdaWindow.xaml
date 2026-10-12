@@ -32,7 +32,3 @@
     </BoxContainer>
 </pda:PdaWindow>
 <!-- Forge-Change-End -->
-
-<!-- Forge-Change-Del: исходные строки до изменений
-            <Label Text="{Loc 'comp-pda-ui-footer'}" StyleClasses="PdaWindowFooterText" Margin="32 0 0 6"/>
--->

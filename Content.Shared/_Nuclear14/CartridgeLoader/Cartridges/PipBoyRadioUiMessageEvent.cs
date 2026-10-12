@@ -15,7 +15,6 @@ public sealed class PipBoyRadioUiMessageEvent : CartridgeMessageEvent
 
     public PipBoyRadioUiMessageEvent(
         PipBoyRadioAction action,
-        /// Forge-Change-Del ProtoId<JukeboxPrototype>? songId = null)
         /// Forge-Change-Start
         ProtoId<JukeboxPrototype>? songId = null,
         float volume = 1f)
@@ -36,7 +35,6 @@ public enum PipBoyRadioAction
     Pause,
     Stop,
     Previous,
-    /// Forge-Change-Del Next
     /// Forge-Change-Start
     Next,
     SetVolume

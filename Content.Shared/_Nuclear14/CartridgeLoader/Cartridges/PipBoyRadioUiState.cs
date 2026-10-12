@@ -18,7 +18,6 @@ public sealed class PipBoyRadioUiState : BoundUserInterfaceState
         List<ProtoId<JukeboxPrototype>> songs,
         ProtoId<JukeboxPrototype>? selectedSongId,
         bool playing,
-        /// Forge-Change-Del bool paused)
         /// Forge-Change-Start
         bool paused,
         float volume)
