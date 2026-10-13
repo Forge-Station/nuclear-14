@@ -19,7 +19,7 @@
   # Forge-Change-End
   startingGear: NCRRangerVeteranGear
   icon: "JobIconNcrVeteranRanger" # Forge-Change
-  supervisors: job-supervisors-ncr-ranger # Forge-Change
+  supervisors: job-supervisors-ncr # Forge-Change
   requireAdminNotify: true
   access:
   - RadioBroadcast
