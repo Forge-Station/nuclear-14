@@ -1,4 +1,3 @@
-# Forge-Change-Start
 - type: trait
   id: LanguageSpanish
   category: Speech
@@ -9,4 +8,3 @@
     - Spanish
     languagesUnderstood:
     - Spanish
-# Forge-Change-End
