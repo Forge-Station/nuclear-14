@@ -4,6 +4,9 @@ trait-description-LanguageTribal = You can understand and speak the local Tribal
 trait-name-LanguageChinese = Chinese Language
 trait-description-LanguageChinese = You can understand and speak the Chinese language. Whether through learning or backstory.
 
+trait-name-LanguageSpanish = Spanish Language
+trait-description-LanguageSpanish = You can understand and speak the Spanish language, whether through learning or backstory.
+
 trait-name-N14SignLanguage = Sign Language
 trait-description-N14SignLanguage =
     You can understand and use a basic & generally accepted sign language.
