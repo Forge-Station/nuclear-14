@@ -59,6 +59,8 @@ public sealed class StationRecordsSystem : SharedStationRecordsSystem
             || !_prototypeManager.HasIndex<JobPrototype>(jobId))
             return;
 
+        /// Forge-Change-Del if (!_inventory.TryGetSlotEntity(player, "id", out var idUid))
+            /// Forge-Change-Del return;
         /// Forge-Change-Start
         // Characters without an ID still need a record for the crew manifest.
         _inventory.TryGetSlotEntity(player, "id", out var idUid);
@@ -71,6 +73,7 @@ public sealed class StationRecordsSystem : SharedStationRecordsSystem
         if (!string.IsNullOrEmpty(profile.Customspeciename))
             specie = profile.Customspeciename;
 
+        /// Forge-Change-Del CreateGeneralRecord(station, idUid.Value, profile.Name, profile.Age, specie, profile.Gender, jobId, fingerprintComponent?.Fingerprint, dnaComponent?.DNA, profile, records);
         /// Forge-Change
         CreateGeneralRecord(station, idUid, profile.Name, profile.Age, specie, profile.Gender, jobId, fingerprintComponent?.Fingerprint, dnaComponent?.DNA, profile, records);
     }
