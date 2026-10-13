@@ -25,3 +25,15 @@
 - type: latheCategory
   id: N14Neck
   name: lathe-category-neck
+
+- type: latheCategory
+  id: N14RobotUpgrades
+  name: lathe-category-n14-robot-upgrades
+
+- type: latheCategory
+  id: N14RobotParts
+  name: lathe-category-n14-robot-parts
+
+- type: latheCategory
+  id: N14RobotModules
+  name: lathe-category-n14-robot-modules
