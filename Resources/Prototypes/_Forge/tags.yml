@@ -33,6 +33,12 @@
   id: ForgeHumanSkinLarge
 
 - type: Tag
+  id: ForgeRadstagHide
+
+- type: Tag
+  id: ForgeBighornerPelt
+
+- type: Tag
   id: N14PowerArmorPadding
 
 - type: Tag

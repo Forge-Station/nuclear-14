@@ -6,11 +6,8 @@
   components:
   - type: Sprite
     sprite: _Forge/Clothing/Head/human_skin_hat.rsi
-    state: icon
   - type: Clothing
     sprite: _Forge/Clothing/Head/human_skin_hat.rsi
-    slots:
-    - head
   - type: Construction
     graph: ForgeHumanSkinHat
     node: hat
