@@ -333,6 +333,9 @@
   desc: reagent-desc-extract-fungusrad
   physicalDesc: reagent-physical-desc-fizzy
   color: "#4eff3b"
+  plantMetabolism:
+  - !type:PlantAdjustMutationLevel
+    amount: 1
   metabolisms:
     Poison:
       effects:
