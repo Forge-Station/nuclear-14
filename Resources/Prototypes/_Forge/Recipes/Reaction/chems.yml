@@ -14,6 +14,17 @@
   products:
     BerserkerMixture: 4
 
+# Хи-хи-хихи. - Salniy
+- type: reaction
+  id: BerserkerMixtureRecipe2
+  reactants:
+    HealingPowder:
+      amount: 1
+    DamageModifyingMixture:
+      amount: 0.4
+  products:
+    BerserkerMixture: 1
+
 - type: reaction
   id: N14MovespeedMixtureInJet
   reactants:
