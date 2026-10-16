@@ -32,6 +32,6 @@ jobs:
     - name: Publish changelog
       run: Tools/actions_changelogs_since_last_run.py
       env:
-        CHANGELOG_DIR: Resources/Changelog/Nuclear14.yml
+        CHANGELOG_DIR: Resources/Changelog/Forge.yml
         CHANGELOG_WEBHOOK: ${{ secrets.CHANGELOG_WEBHOOK }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
