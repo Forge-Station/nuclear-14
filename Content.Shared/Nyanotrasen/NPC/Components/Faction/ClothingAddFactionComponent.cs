@@ -1,5 +1,4 @@
 using Content.Shared.NPC.Prototypes;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 
 
 namespace Content.Shared.Nyanotrasen.NPC.Components.Faction

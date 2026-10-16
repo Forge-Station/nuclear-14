@@ -2,7 +2,6 @@ using Content.Shared.DoAfter;
 using Content.Shared.InteractionVerbs.Events;
 using Robust.Shared.Audio;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Array;
 using Robust.Shared.Utility;
 
 #pragma warning disable CS0618 // Type or member is obsolete

@@ -19,6 +19,7 @@ using Robust.Server.Player;
 using Robust.Shared.Player;
 using Robust.Shared.Configuration;
 using Content.Shared.CCVar;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.Mood;
 

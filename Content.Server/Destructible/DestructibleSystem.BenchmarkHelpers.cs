@@ -1,4 +1,5 @@
 using Content.Shared.Damage;
+using Content.Shared.Damage.Components;
 
 namespace Content.Server.Destructible;
 

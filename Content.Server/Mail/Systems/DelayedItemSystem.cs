@@ -1,6 +1,7 @@
 using Content.Shared.Damage;
 using Content.Shared.Hands;
 using Robust.Shared.Containers;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.Mail.Systems;
 

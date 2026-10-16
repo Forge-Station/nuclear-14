@@ -2,6 +2,7 @@ using Content.Server.Damage.Components;
 using Content.Shared.CombatMode.Pacification;
 using Content.Shared.Damage;
 using Content.Shared.Throwing;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.Damage.Systems
 {

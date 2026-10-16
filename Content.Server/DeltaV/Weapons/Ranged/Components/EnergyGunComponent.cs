@@ -1,5 +1,4 @@
 using Robust.Shared.Prototypes;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 using Content.Server.DeltaV.Weapons.Ranged.Systems;
 
 namespace Content.Server.DeltaV.Weapons.Ranged.Components;

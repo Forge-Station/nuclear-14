@@ -26,6 +26,7 @@ using Content.Shared.Alert;
 using Content.Shared.NPC.Components;
 using Content.Shared.NPC.Systems;
 using Content.Shared.Rounding;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.Psionics;
 

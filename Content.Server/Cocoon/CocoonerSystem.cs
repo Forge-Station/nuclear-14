@@ -19,6 +19,7 @@ using Robust.Shared.Random;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Storage;
 using Robust.Shared.Utility;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.Cocoon
 {

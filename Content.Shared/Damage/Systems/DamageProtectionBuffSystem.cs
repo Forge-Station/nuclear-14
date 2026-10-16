@@ -1,4 +1,5 @@
-﻿using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Shared.Damage.Systems;
 

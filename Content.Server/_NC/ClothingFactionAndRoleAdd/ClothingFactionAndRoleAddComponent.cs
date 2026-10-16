@@ -1,6 +1,5 @@
 using Content.Shared.Roles;
 using Content.Shared.NPC.Prototypes;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 
 
 namespace Content.Server._NC.ClothingFactionAndRoleAdd

@@ -11,6 +11,7 @@ using Content.Shared.Interaction;
 using Content.Shared.Interaction.Events;
 using Content.Shared.Popups;
 using Content.Shared.Stacks;
+using Content.Shared.Damage.Components;
 
 namespace Content.Server.Silicon.BlindHealing;
 

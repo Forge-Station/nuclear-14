@@ -13,6 +13,7 @@ using Content.Shared.Random;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Shared.Effects;
 using Content.Shared.Stunnable;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Shared.Damage.Systems;
 

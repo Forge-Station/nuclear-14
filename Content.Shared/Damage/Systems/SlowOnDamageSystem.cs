@@ -5,6 +5,7 @@ using Content.Shared.FixedPoint;
 using Content.Shared.Inventory;
 using Content.Shared.Movement.Systems;
 using Content.Shared.StatusEffectNew;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Shared.Damage.Systems;
 

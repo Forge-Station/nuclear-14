@@ -2,7 +2,6 @@ using Content.Shared.ReverseEngineering;
 using Content.Shared.Construction.Prototypes;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 using Robust.Shared.Audio;
 
 namespace Content.Server.ReverseEngineering;

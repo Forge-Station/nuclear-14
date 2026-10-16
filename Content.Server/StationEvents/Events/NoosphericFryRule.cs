@@ -19,6 +19,7 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Psionics.Glimmer;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map.Components;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.StationEvents.Events;
 

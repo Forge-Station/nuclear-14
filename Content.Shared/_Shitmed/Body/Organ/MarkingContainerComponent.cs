@@ -2,7 +2,6 @@
 // I will do that at some point, for now I just want the funny surgery to work lol.
 using Robust.Shared.GameStates;
 using Content.Shared.Humanoid.Markings;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 
 namespace Content.Shared._Shitmed.Body.Organ;
 

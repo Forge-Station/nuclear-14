@@ -43,6 +43,8 @@ using Content.Server.Mail.Components;
 using Content.Shared.Chat;
 using Content.Shared.Mail;
 using Timer = Robust.Shared.Timing.Timer;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.Mail.Systems
 {

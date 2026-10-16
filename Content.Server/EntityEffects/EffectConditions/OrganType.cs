@@ -2,7 +2,6 @@ using Content.Server.Body.Components;
 using Content.Shared.Body.Prototypes;
 using Content.Shared.EntityEffects;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 
 namespace Content.Server.EntityEffects.EffectConditions;
 

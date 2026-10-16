@@ -2,7 +2,6 @@ using Content.Shared.Anomaly.Effects.Components;
 using Content.Shared.Atmos;
 using Content.Shared.Damage;
 using Robust.Shared.Audio;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 using Content.Shared.Explosion;
 using Robust.Shared.Prototypes;
 

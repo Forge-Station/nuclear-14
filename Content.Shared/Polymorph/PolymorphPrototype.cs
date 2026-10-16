@@ -1,7 +1,6 @@
 using Robust.Shared.Audio;
 using Content.Shared.Storage; // Corvax-Change
 using Robust.Shared.Prototypes;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Array;
 
 namespace Content.Shared.Polymorph;
 

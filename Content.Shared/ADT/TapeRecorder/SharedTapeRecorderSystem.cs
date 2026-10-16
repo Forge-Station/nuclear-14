@@ -1,4 +1,4 @@
-﻿using Content.Shared.Containers.ItemSlots;
+using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Damage;
 using Content.Shared.Destructible;
 using Content.Shared.DoAfter;
@@ -17,6 +17,7 @@ using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Shared.ADT.TapeRecorder;
 

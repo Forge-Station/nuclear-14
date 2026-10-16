@@ -1,6 +1,7 @@
 using Content.Shared.Damage.Components;
 using Robust.Shared.Containers;
 using Robust.Shared.Timing;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Shared.Damage.Systems;
 

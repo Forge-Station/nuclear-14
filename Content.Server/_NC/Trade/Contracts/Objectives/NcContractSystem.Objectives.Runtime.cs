@@ -12,6 +12,8 @@ using Content.Shared.Movement.Pulling.Events;
 using Content.Shared.Objectives.Components;
 using Content.Shared.Tag;
 using Robust.Shared.Timing;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 
 
 namespace Content.Server._NC.Trade;

@@ -4,7 +4,6 @@ using JetBrains.Annotations;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.Manager;
 using Content.Shared.Implants;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Set;
 using Content.Shared.Actions;
 using Content.Server.Abilities.Psionics;
 using Content.Shared.Psionics;
@@ -22,6 +21,7 @@ using Content.Shared.Damage.Components;
 using Content.Shared.NPC.Systems;
 using Content.Shared.Weapons.Melee;
 using Robust.Shared.Audio;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.Traits;
 

@@ -5,6 +5,8 @@ using Content.Shared.Damage;
 using Content.Shared.FixedPoint;
 using Content.Shared.Movement.Components;
 using Robust.Shared.GameObjects;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 
 namespace Content.IntegrationTests.Tests.Interaction;
 

@@ -10,7 +10,7 @@ namespace Content.Shared._Goobstation.Clothing.Systems;
 public abstract class SharedPoweredSealableClothingSystem : EntitySystem
 {
     [Dependency] private readonly SharedPopupSystem _popupSystem = default!;
-    [Dependency] private readonly SharedPowerCellSystem _powerCellSystem = default!;
+    [Dependency] private readonly PowerCellSystem _powerCellSystem = default!;
 
     public override void Initialize()
     {

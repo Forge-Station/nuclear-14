@@ -15,6 +15,8 @@ using Robust.Server.Audio;
 using Robust.Shared.Audio;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.Medical.CPR;
 

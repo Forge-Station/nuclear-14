@@ -7,6 +7,7 @@ using Content.Shared.Timing;
 using Content.Shared.UserInterface;
 using Robust.Server.Audio;
 using Robust.Server.GameObjects;
+using Content.Shared.Timing.Systems;
 
 namespace Content.Server._Forge.Photo;
 

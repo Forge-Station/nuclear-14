@@ -3,6 +3,7 @@ using Content.Shared.Timing;
 using Content.Server.Explosion.EntitySystems; // Why is trigger under explosions by the way? Even doors already use it.
 using Content.Server.Electrocution;
 using Robust.Shared.Containers;
+using Content.Shared.Timing.Systems;
 
 namespace Content.Server.ShockCollar;
 

@@ -2,6 +2,7 @@ using Content.Shared.Damage;
 using Content.Shared.Damage.Prototypes;
 using Content.Shared.Mobs.Systems;
 using Robust.Shared.Prototypes;
+using Content.Shared.Damage.Systems;
 namespace Content.Server._Shitmed.DelayedDeath;
 
 public partial class DelayedDeathSystem : EntitySystem

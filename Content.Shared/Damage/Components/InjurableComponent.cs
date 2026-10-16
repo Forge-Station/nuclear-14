@@ -3,6 +3,7 @@ using Content.Shared.Mobs;
 using Content.Shared.StatusIcon;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
+using Content.Shared.Damage.Components;
 
 namespace Content.Shared.Damage.Components;
 

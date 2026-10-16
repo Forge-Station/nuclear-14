@@ -18,6 +18,7 @@ using Content.Shared.HealthExaminable;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Utility;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.Vampiric
 {

@@ -9,6 +9,8 @@ using Content.Shared.Projectiles;
 using Content.Shared.Weapons.Melee;
 using Content.Shared.Weapons.Melee.Events;
 using Robust.Shared.Timing;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 
 
 namespace Content.Shared._NC.Trade;

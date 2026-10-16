@@ -1,5 +1,4 @@
 using Robust.Shared.GameStates;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 
 
 namespace Content.Shared._NC.TTS;

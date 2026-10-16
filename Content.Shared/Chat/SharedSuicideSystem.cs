@@ -3,6 +3,8 @@ using Content.Shared.Damage.Prototypes;
 using Content.Shared.Mobs.Components;
 using Robust.Shared.Prototypes;
 using System.Linq;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Shared.Chat;
 

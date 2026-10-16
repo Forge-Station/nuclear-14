@@ -3,7 +3,6 @@ using Content.Server.Polymorph.Systems;
 using Content.Shared.EntityEffects;
 using Content.Shared.Polymorph;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 using System.Linq; // Corvax-Change
 
 namespace Content.Server.EntityEffects.Effects;

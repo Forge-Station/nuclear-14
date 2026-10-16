@@ -5,6 +5,7 @@ using Content.Shared.Movement.Systems;
 using Content.Shared._N14.Radiation.Components;
 using Content.Shared.Radiation.Events;
 using Robust.Shared.Maths;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server._N14.Radiation;
 

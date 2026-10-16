@@ -1,4 +1,4 @@
-﻿using Content.Server.Body.Components;
+using Content.Server.Body.Components;
 using Content.Server.Body.Systems;
 using Content.Server.DoAfter;
 using Content.Server.Hands.Systems;
@@ -24,6 +24,8 @@ using Content.Shared.WhiteDream.BloodCult.UI;
 using Robust.Server.Audio;
 using Robust.Server.GameObjects;
 using Robust.Shared.Prototypes;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.WhiteDream.BloodCult.BloodRites;
 

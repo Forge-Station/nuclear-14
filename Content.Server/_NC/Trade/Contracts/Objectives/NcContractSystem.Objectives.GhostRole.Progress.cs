@@ -5,6 +5,8 @@ using Content.Shared.FixedPoint;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Movement.Pulling.Components;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 
 
 namespace Content.Server._NC.Trade;

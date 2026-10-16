@@ -14,6 +14,7 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Player;
 using Robust.Shared.Utility;
 using Content.Shared.NPC.Systems;
+using Content.Shared.Damage.Systems;
 
 
 namespace Content.Server.LifeDrainer;

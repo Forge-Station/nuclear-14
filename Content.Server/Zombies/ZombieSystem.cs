@@ -30,6 +30,7 @@ using Robust.Shared.Timing;
 using Content.Server.Ghost.Roles.Components;
 using Content.Shared.Medical;
 using Content.Shared.Construction.Steps;
+using Content.Shared.Damage.Components;
 
 namespace Content.Server.Zombies
 {

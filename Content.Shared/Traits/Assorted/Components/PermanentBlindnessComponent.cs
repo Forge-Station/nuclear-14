@@ -1,6 +1,6 @@
 using Robust.Shared.GameStates;
 
-namespace Content.Shared.Traits.Assorted;
+namespace Content.Shared.Traits.Assorted.Components;
 
 /// <summary>
 /// This is used for making something blind forever.

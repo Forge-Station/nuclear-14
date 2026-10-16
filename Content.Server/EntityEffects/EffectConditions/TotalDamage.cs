@@ -2,6 +2,7 @@ using Content.Shared.EntityEffects;
 using Content.Shared.Damage;
 using Content.Shared.FixedPoint;
 using Robust.Shared.Prototypes;
+using Content.Shared.Damage.Components;
 
 namespace Content.Server.EntityEffects.EffectConditions;
 

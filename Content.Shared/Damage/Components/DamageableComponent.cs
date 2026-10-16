@@ -7,6 +7,7 @@ using Content.Shared.StatusIcon;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
+using Content.Shared.Damage.Components;
 
 namespace Content.Shared.Damage.Components;
 

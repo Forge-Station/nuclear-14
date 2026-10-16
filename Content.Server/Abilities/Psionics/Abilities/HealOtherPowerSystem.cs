@@ -15,6 +15,8 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Psionics.Glimmer;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.Abilities.Psionics;
 

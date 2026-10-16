@@ -1,6 +1,5 @@
 using System.Threading;
 using Content.Shared.Tools;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 
 namespace Content.Shared.Nyanotrasen.Digging;
 

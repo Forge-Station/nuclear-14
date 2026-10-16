@@ -22,6 +22,7 @@ using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
+using Content.Shared.Traits.Assorted.Components;
 
 namespace Content.Shared.Flash;
 

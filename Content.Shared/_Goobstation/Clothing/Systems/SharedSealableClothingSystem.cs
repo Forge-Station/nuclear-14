@@ -31,7 +31,7 @@ public abstract class SharedSealableClothingSystem : EntitySystem
     [Dependency] private readonly SharedDoAfterSystem _doAfterSystem = default!;
     [Dependency] private readonly SharedInteractionSystem _interactionSystem = default!;
     [Dependency] private readonly SharedPopupSystem _popupSystem = default!;
-    [Dependency] private readonly SharedPowerCellSystem _powerCellSystem = default!;
+    [Dependency] private readonly PowerCellSystem _powerCellSystem = default!;
     [Dependency] private readonly ToggleableClothingSystem _toggleableSystem = default!;
 
     public override void Initialize()

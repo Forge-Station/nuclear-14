@@ -8,6 +8,7 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Damage.Prototypes;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
+using Content.Shared.Damage.Systems;
 namespace Content.Shared._Shitmed.Body.Vascular;
 
 public sealed class VascularSystem : EntitySystem

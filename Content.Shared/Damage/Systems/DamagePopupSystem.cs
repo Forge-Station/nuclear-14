@@ -1,6 +1,7 @@
 using Content.Shared.Damage.Components;
 using Content.Shared.Interaction;
 using Content.Shared.Popups;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Shared.Damage.Systems;
 

@@ -1,5 +1,6 @@
 using Content.Shared.Damage;
 using Content.Shared.Trigger.Components.Effects;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Shared.Trigger.Systems;
 

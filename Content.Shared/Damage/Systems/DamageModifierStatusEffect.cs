@@ -1,5 +1,6 @@
 using Content.Shared.Damage.Components;
 using Content.Shared.StatusEffectNew;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Shared.Damage.Systems;
 

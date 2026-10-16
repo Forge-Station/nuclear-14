@@ -1,6 +1,8 @@
 using Content.Shared.Damage;
 using Content.Shared.InteractionVerbs;
 using Robust.Shared.Serialization;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.InteractionVerbs.Actions;
 

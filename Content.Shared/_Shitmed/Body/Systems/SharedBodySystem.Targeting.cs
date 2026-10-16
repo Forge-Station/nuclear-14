@@ -22,6 +22,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Content.Shared.Inventory;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 
 // Namespace has set accessors, leaving it on the default.
 namespace Content.Shared.Body.Systems;

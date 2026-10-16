@@ -8,6 +8,7 @@ using Content.Shared.Stealth.Components;
 using Content.Server.Psionics;
 using Content.Shared.Actions.Events;
 using Robust.Shared.Audio.Systems;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.Abilities.Psionics
 {

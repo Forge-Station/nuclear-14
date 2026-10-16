@@ -17,6 +17,7 @@ using Robust.Shared.Enums;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Random;
+using Content.Shared.Damage.Components;
 
 namespace Content.Server.Chat;
 public sealed partial class TelepathicChatSystem

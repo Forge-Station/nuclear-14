@@ -26,6 +26,7 @@ using Content.Shared.Abilities.Psionics;
 using Content.Shared.Language.Components;
 using Content.Shared.Nutrition.Components;
 using Robust.Shared.Enums;
+using Content.Shared.Damage.Components;
 
 namespace Content.Server.Cloning;
 

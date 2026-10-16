@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Content.Server.EUI;
 using Content.Server.Ghost;
 using Content.Server.Mind;
@@ -8,6 +8,8 @@ using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.WhiteDream.BloodCult.BloodCultist;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.WhiteDream.BloodCult.Runes.Revive;
 

@@ -2,6 +2,7 @@ using Content.Server.Explosion.EntitySystems;
 using Content.Shared.Timing;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Timing;
+using Content.Shared.Timing.Systems;
 
 namespace Content.Server.IgnitionSource;
 

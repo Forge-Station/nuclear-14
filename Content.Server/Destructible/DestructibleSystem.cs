@@ -21,6 +21,7 @@ using JetBrains.Annotations;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
+using Content.Shared.Damage.Components;
 
 namespace Content.Server.Destructible;
 

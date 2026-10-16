@@ -7,7 +7,6 @@ using Content.Shared._NC.CameraFollow.EntitySystems;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 
 namespace Content.Shared._NC.CameraFollow.Components;
 /// <summary>

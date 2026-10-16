@@ -22,6 +22,7 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Map;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.Psionics.Glimmer;
 

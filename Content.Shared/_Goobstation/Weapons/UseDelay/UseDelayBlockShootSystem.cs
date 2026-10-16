@@ -1,5 +1,6 @@
 using Content.Shared.Timing;
 using Content.Shared.Weapons.Ranged.Systems;
+using Content.Shared.Timing.Systems;
 
 namespace Content.Shared._Goobstation.Weapons.UseDelay;
 

@@ -6,6 +6,7 @@ using Content.Shared.Popups;
 using Content.Shared.Examine;
 using Robust.Shared.Utility;
 using Robust.Shared.Random;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.Ghoul;
 

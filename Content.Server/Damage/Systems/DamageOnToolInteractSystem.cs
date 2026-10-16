@@ -6,6 +6,7 @@ using Content.Shared.Interaction;
 using Content.Shared.Tools.Components;
 using Content.Shared.Tools.Systems;
 using ItemToggleComponent = Content.Shared.Item.ItemToggle.Components.ItemToggleComponent;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.Damage.Systems
 {

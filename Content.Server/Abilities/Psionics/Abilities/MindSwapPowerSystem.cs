@@ -12,6 +12,7 @@ using Content.Server.Psionics;
 using Content.Server.GameTicking;
 using Content.Shared.Mind;
 using Content.Shared.Actions.Events;
+using Content.Shared.Damage.Components;
 
 namespace Content.Server.Abilities.Psionics
 {

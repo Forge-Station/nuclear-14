@@ -15,6 +15,8 @@ using Content.Server.Atmos.EntitySystems;
 using Content.Shared.Throwing;
 using Content.Server.Chemistry.Containers.EntitySystems;
 using Content.Server.Fluids.EntitySystems;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.Abilities.Psionics;
 

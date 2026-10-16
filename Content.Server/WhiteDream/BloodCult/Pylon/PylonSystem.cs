@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Numerics;
 using Content.Server.Popups;
 using Content.Shared.Damage;
@@ -18,6 +18,7 @@ using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Player;
 using Robust.Shared.Random;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.WhiteDream.BloodCult.Pylon;
 

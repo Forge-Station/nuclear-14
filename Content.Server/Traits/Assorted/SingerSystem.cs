@@ -20,6 +20,7 @@ using Content.Shared.UserInterface;
 using Content.Shared.Zombies;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.Traits.Assorted;
 

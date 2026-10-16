@@ -11,7 +11,7 @@ namespace Content.Shared.Materials;
 
 public abstract class SharedMaterialSiloSystem : EntitySystem
 {
-    [Dependency] protected readonly SharedDeviceLinkSystem DeviceLink = default!;
+    [Dependency] protected readonly DeviceLinkSystem DeviceLink = default!;
 
     [Dependency] private readonly SharedPowerReceiverSystem _powerReceiver = default!;
     [Dependency] private readonly SharedMaterialStorageSystem _materialStorage = default!;

@@ -14,6 +14,7 @@ using Content.Shared.Traits.Assorted.Components;
 using Robust.Server.GameObjects;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
+using Content.Shared.Damage.Components;
 
 namespace Content.Server.Medical;
 /// <summary>

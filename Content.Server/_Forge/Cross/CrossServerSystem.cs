@@ -18,6 +18,7 @@ using Content.Shared.Rotation;
 using Content.Shared.Standing;
 using Robust.Shared.Containers;
 using Robust.Shared.Timing;
+using Content.Shared.Damage.Systems;
 
 
 namespace Content.Server._Forge.Cross;

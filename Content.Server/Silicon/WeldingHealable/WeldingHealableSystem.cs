@@ -11,6 +11,8 @@ using Content.Shared._Shitmed.Targeting;
 using Content.Shared.Body.Systems;
 using Content.Shared.Tools.Components;
 using SharedToolSystem = Content.Shared.Tools.Systems.SharedToolSystem;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Server.Silicon.WeldingHealable;
 

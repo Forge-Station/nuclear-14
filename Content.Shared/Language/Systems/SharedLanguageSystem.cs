@@ -24,7 +24,7 @@ public abstract class SharedLanguageSystem : EntitySystem
     public static LanguagePrototype Universal { get; private set; } = default!;
 
     [Dependency] protected readonly IPrototypeManager _prototype = default!;
-    [Dependency] protected readonly SharedGameTicker _ticker = default!;
+    [Dependency] protected readonly GameTicker _ticker = default!;
 
     public override void Initialize()
     {

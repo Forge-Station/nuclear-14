@@ -14,6 +14,7 @@ using Robust.Shared.Physics.Components;
 using Robust.Shared.Prototypes;
 using System.Numerics;
 using Robust.Shared.Network;
+using Content.Shared.Damage.Systems;
 
 namespace Content.Shared.SegmentedEntity;
 

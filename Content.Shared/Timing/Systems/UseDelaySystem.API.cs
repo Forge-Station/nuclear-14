@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using Content.Shared.Timing.Components;
 using JetBrains.Annotations;
 using Robust.Shared.Utility;
+using Content.Shared.Timing.Systems;
 
 namespace Content.Shared.Timing.Systems;
 

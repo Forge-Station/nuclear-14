@@ -2,6 +2,8 @@
 using Content.Shared.Body.Organ;
 using Content.Shared._Shitmed.Body.Organ;
 using Content.Shared.FixedPoint;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 
 // Namespace has set accessors, leaving it on the default.
 namespace Content.Shared.Body.Systems;
