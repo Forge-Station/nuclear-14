@@ -33,5 +33,5 @@ jobs:
       run: Tools/actions_changelogs_since_last_run.py
       env:
         CHANGELOG_DIR: Resources/Changelog/Forge.yml
-        CHANGELOG_WEBHOOK: ${{ secrets.CHANGELOG_WEBHOOK }}
+        CHANGELOG_WEBHOOK: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
