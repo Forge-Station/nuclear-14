@@ -5,10 +5,8 @@ namespace Content.Shared.Abilities.Psionics
     [RegisterComponent]
     public sealed partial class PsionicInvisibilityUsedComponent : Component
     {
-        [ValidatePrototypeId<EntityPrototype>]
         public const string PsionicInvisibilityUsedActionPrototype = "ActionPsionicInvisibilityUsed";
-        [DataField("psionicInvisibilityUsedActionId",
-        customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
+        [DataField("psionicInvisibilityUsedActionId")]
         public string? PsionicInvisibilityUsedActionId = "ActionPsionicInvisibilityUsed";
 
         [DataField("psionicInvisibilityUsedActionEntity")]

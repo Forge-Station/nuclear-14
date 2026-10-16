@@ -13,7 +13,7 @@ public sealed partial class Polymorph : EntityEffect
     /// <summary>
     ///     What polymorph prototype is used on effect
     /// </summary>
-    [DataField("prototype", customTypeSerializer:typeof(PrototypeIdSerializer<PolymorphPrototype>))]
+    [DataField("prototype")]
     public string PolymorphPrototype { get; set; }
 
     protected override string? ReagentEffectGuidebookText(IPrototypeManager prototype, IEntitySystemManager entSys)

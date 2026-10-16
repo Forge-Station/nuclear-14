@@ -11,10 +11,8 @@ namespace Content.Shared.Abilities.Psionics
         [DataField("prototype")]
         public string Prototype = "MobObserverTelegnostic";
         public InstantActionComponent? TelegnosisPowerAction = null;
-        [ValidatePrototypeId<EntityPrototype>]
         public const string TelegnosisActionPrototype = "ActionTelegnosis";
-        [DataField("telegnosisActionId",
-        customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
+        [DataField("telegnosisActionId")]
         public string? TelegnosisActionId = "ActionTelegnosis";
 
         [DataField("telegnosisActionEntity")]

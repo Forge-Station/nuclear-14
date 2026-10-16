@@ -12,7 +12,7 @@ namespace Content.Shared.Flight;
 [RegisterComponent, NetworkedComponent(), AutoGenerateComponentState]
 public sealed partial class FlightComponent : Component
 {
-    [DataField(customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
+    [DataField]
     public string? ToggleAction = "ActionToggleFlight";
 
     [DataField, AutoNetworkedField]

@@ -13,7 +13,7 @@ public sealed partial class UpgradePowerSupplyRampingComponent : Component
     /// <summary>
     ///     The machine part that affects the power supply ramping
     /// </summary>
-    [DataField(customTypeSerializer: typeof(PrototypeIdSerializer<MachinePartPrototype>))]
+    [DataField]
     public string MachinePartRampRate = "Capacitor";
 
     /// <summary>

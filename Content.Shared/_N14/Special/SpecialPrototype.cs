@@ -42,7 +42,7 @@ namespace Content.Shared._N14.Special
         [DataField("setPreference")]
         public bool SetPreference { get; } = true;
 
-        [DataField("icon", customTypeSerializer: typeof(PrototypeIdSerializer<StatusIconPrototype>))]
+        [DataField("icon")]
         public string Icon { get; } = "JobIconUnknown";
 
         [DataField("order")]

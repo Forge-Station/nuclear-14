@@ -13,10 +13,10 @@ namespace Content.Server.ReverseEngineering;
 [RegisterComponent]
 public sealed partial class ReverseEngineeringMachineComponent : Component
 {
-    [DataField("diskPrototype", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
+    [DataField("diskPrototype")]
     public string DiskPrototype = "TechnologyDisk";
 
-    [DataField("machinePartScanBonus", customTypeSerializer: typeof(PrototypeIdSerializer<MachinePartPrototype>))]
+    [DataField("machinePartScanBonus")]
     public string MachinePartScanBonus = "MatterBin"; // DeltaV Code: Change part checked for bonus to MatterBin as it is what is used in the crafting recipe
 
     /// <summary>
@@ -25,7 +25,7 @@ public sealed partial class ReverseEngineeringMachineComponent : Component
     public int ScanBonus = 1;
 
 
-    [DataField("machinePartDangerAversionScore", customTypeSerializer: typeof(PrototypeIdSerializer<MachinePartPrototype>))]
+    [DataField("machinePartDangerAversionScore")]
     public string MachinePartDangerAversionScore = "Manipulator";
 
     /// <summary>

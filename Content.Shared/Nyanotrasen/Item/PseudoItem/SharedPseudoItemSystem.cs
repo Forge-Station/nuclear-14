@@ -25,9 +25,7 @@ public abstract partial class SharedPseudoItemSystem : EntitySystem
     [Dependency] private readonly SharedPopupSystem _popupSystem = default!;
     [Dependency] private readonly SharedActionsSystem _actions = default!;
 
-    [ValidatePrototypeId<TagPrototype>]
     private const string PreventTag = "PreventLabel";
-    [ValidatePrototypeId<EntityPrototype>]
     private const string SleepActionId = "ActionSleep"; // The action used for sleeping inside bags. Currently uses the default sleep action (same as beds)
 
     public override void Initialize()

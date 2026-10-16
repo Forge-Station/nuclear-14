@@ -17,7 +17,7 @@ namespace Content.Server._NC.ClothingFactionAndRoleAdd
         /// ID of the fraction that needs to be added or removed when the corresponding clothing is equipped or removed.
         /// </summary>
         [ViewVariables(VVAccess.ReadWrite),
-         DataField("faction", customTypeSerializer: typeof(PrototypeIdSerializer<NpcFactionPrototype>))]
+         DataField("faction")]
         public string Faction = default!;
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Content.Server._NC.ClothingFactionAndRoleAdd
         /// If you do not specify a role, then only a faction will be added to the player.
         /// </summary>
         [ViewVariables(VVAccess.ReadWrite),
-         DataField("role", customTypeSerializer: typeof(PrototypeIdSerializer<JobPrototype>))]
+         DataField("role")]
         public string JobId = default!;
     }
 }

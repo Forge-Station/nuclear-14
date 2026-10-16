@@ -34,7 +34,7 @@ public sealed partial class EnergyWeaponFireMode
     /// <summary>
     /// The projectile prototype associated with this firing mode
     /// </summary>
-    [DataField("proto", required: true, customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
+    [DataField("proto", required: true)]
     public string Prototype = default!;
 
     /// <summary>

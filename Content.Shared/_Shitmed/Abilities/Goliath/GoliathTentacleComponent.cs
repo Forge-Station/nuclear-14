@@ -10,7 +10,7 @@ namespace Content.Shared._Shitmed.GoliathTentacle;
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
 public sealed partial class GoliathTentacleComponent : Component
 {
-    //[DataField(customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
+    //[DataField]
     //public string? Action = "ActionGoliathTentacleCrew";
 
     [DataField, AutoNetworkedField]

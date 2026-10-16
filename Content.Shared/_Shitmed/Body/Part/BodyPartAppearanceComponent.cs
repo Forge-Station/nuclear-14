@@ -25,7 +25,7 @@ public sealed partial class BodyPartAppearanceComponent : Component
     ///     ID of this custom base layer. Must be a <see cref="HumanoidSpeciesSpriteLayer"/>.
     ///     I don't actually know if these serializer props are necessary. I just lifted this from MS14 lol.
     /// </summary>
-    [DataField(customTypeSerializer: typeof(PrototypeIdSerializer<HumanoidSpeciesSpriteLayer>)), AutoNetworkedField]
+    [DataField(), AutoNetworkedField]
     public string? ID { get; set; }
 
     /// <summary>

@@ -22,7 +22,6 @@ public sealed class MindShieldSystem : EntitySystem
     [Dependency] private readonly TagSystem _tag = default!;
     [Dependency] private readonly PopupSystem _popupSystem = default!;
 
-    [ValidatePrototypeId<TagPrototype>]
     public const string MindShieldTag = "MindShield";
 
     public override void Initialize()

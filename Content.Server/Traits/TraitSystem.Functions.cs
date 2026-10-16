@@ -117,7 +117,7 @@ public sealed partial class TraitAddActions : TraitFunction
 [UsedImplicitly]
 public sealed partial class TraitAddImplant : TraitFunction
 {
-    [DataField(customTypeSerializer: typeof(PrototypeIdHashSetSerializer<EntityPrototype>))]
+    [DataField]
     [AlwaysPushInheritance]
     public HashSet<string> Implants { get; private set; } = new();
 

@@ -26,9 +26,7 @@ public sealed class StationGoalPaperSystem : EntitySystem
 
     private static readonly Regex StationIdRegex = new(@".*-(\d+)$");
 
-    [ValidatePrototypeId<WeightedRandomPrototype>]
     private const string RandomPrototype = "StationGoals";
-    [ValidatePrototypeId<DatasetPrototype>]
     private const string RandomSignature = "names_last";
 
     public override void Initialize()

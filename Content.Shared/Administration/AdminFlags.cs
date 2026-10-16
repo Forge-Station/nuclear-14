@@ -91,29 +91,9 @@ namespace Content.Shared.Administration
 
 
         /// <summary>
-        ///     Lets you Massban, on SS14.Admin
-        /// </summary>
-        MassBan = 1 << 15,
-
-        /// <summary>
-        /// Allows you to remain hidden from adminwho except to other admins with this flag.
-        /// </summary>
-        Stealth = 1 << 16,
-
-        ///<summary>
-		/// Allows you to use Admin chat
-		///</summary>
-		Adminchat = 1 << 17,
-
-        ///<summary>
-        /// Permits the visibility of Pii in game and on SS14 Admin
-        ///</summary>
-        Pii = 1 << 18,
-
-        /// <summary>
         /// DeltaV - The ability to whitelist people. Either this permission or +BAN is required for remove.
         /// </summary>
-        Whitelist = 1 << 20,
+        Whitelist = 1 << 22, // DeltaV - moved from bit 20, upstream took it for AdminWho
 
         /// <summary>
         ///     Lets you Massban, on SS14.Admin

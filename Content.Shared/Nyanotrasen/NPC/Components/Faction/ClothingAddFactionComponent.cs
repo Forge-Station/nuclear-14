@@ -16,7 +16,7 @@ namespace Content.Shared.Nyanotrasen.NPC.Components.Faction
         /// Faction added
         /// </summary>
         [ViewVariables(VVAccess.ReadWrite),
-         DataField("faction", required: true, customTypeSerializer:typeof(PrototypeIdSerializer<NpcFactionPrototype>))]
+         DataField("faction", required: true)]
         public string Faction = "";
     }
 }

@@ -18,9 +18,3 @@ public sealed partial class BankClientComponent : Component
     [DataField, AutoNetworkedField]
     public int Balance;
 }
-
-/// <summary>
-/// Raised on an entity with <see cref="BankClientComponent"/> when the bank's balance is updated.
-/// </summary>
-[ByRefEvent]
-public record struct BankBalanceUpdatedEvent(EntityUid Station, int Balance);

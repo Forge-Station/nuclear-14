@@ -202,7 +202,7 @@ public partial record struct ExplosionAnomalySettings()
     /// <summary>
     ///     The explosion prototype to spawn
     /// </summary>
-    [DataField(customTypeSerializer: typeof(PrototypeIdSerializer<ExplosionPrototype>))]
+    [DataField]
     public string? ExplosionPrototype = default!;
 
     /// <summary>
@@ -223,7 +223,7 @@ public partial record struct ExplosionAnomalySettings()
     /// <summary>
     ///     The explosion prototype to spawn on Supercrit
     /// </summary>
-    [DataField(customTypeSerializer: typeof(PrototypeIdSerializer<ExplosionPrototype>))]
+    [DataField]
     public string? SupercritExplosionPrototype = default!;
 
     /// <summary>

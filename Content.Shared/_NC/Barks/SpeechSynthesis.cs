@@ -13,7 +13,7 @@ public sealed partial class SpeechSynthesisComponent : Component
     /// A voice prototype for barks.
     /// </summary>
     [ViewVariables(VVAccess.ReadWrite)]
-    [DataField("voice", customTypeSerializer: typeof(PrototypeIdSerializer<BarkPrototype>))]
+    [DataField("voice")]
     public string? VoicePrototypeId { get; set; }
 
     /// <summary>

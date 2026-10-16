@@ -34,6 +34,6 @@ public sealed partial class ReverseEngineeringComponent : Component
     /// A new item that should be given back by the reverse engineering machine instead of this one.
     /// E.g., NT aligned versions of syndicate items.
     /// </summary>
-    [DataField("newItem", customTypeSerializer:typeof(PrototypeIdSerializer<EntityPrototype>))]
+    [DataField("newItem")]
     public string? NewItem;
 }

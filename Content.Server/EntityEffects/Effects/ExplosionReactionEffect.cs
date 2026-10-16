@@ -14,7 +14,7 @@ public sealed partial class ExplosionReactionEffect : EntityEffect
     /// <summary>
     ///     The type of explosion. Determines damage types and tile break chance scaling.
     /// </summary>
-    [DataField(required: true, customTypeSerializer: typeof(PrototypeIdSerializer<ExplosionPrototype>))]
+    [DataField(required: true)]
     [JsonIgnore]
     public string ExplosionType = default!;
 

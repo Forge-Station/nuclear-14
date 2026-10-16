@@ -11,7 +11,7 @@ namespace Content.Server.EntityEffects.EffectConditions;
 /// </summary>
 public sealed partial class OrganType : EntityEffectCondition
 {
-    [DataField(required: true, customTypeSerializer: typeof(PrototypeIdSerializer<MetabolizerTypePrototype>))]
+    [DataField(required: true)]
     public string Type = default!;
 
     /// <summary>

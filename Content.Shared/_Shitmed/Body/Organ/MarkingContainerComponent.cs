@@ -9,7 +9,7 @@ namespace Content.Shared._Shitmed.Body.Organ;
 [RegisterComponent, NetworkedComponent]
 public sealed partial class MarkingContainerComponent : Component
 {
-    [DataField(required: true, customTypeSerializer: typeof(PrototypeIdSerializer<MarkingPrototype>))]
+    [DataField(required: true)]
     public string Marking = default!;
 
 }

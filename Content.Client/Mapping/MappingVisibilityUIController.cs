@@ -21,13 +21,10 @@ public sealed class MappingVisibilityUIController : UIController
 
     private MappingVisibilityWindow? _window;
 
-    [ValidatePrototypeId<TagPrototype>]
     private const string WallTag = "Wall";
 
-    [ValidatePrototypeId<TagPrototype>]
     private const string CableTag = "Cable";
 
-    [ValidatePrototypeId<TagPrototype>]
     private const string DisposalTag = "Disposal";
 
     public void ToggleWindow()

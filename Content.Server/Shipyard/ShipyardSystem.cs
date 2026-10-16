@@ -24,7 +24,6 @@ public sealed class ShipyardSystem : EntitySystem
     [Dependency] private readonly ShuttleSystem _shuttle = default!;
     [Dependency] private readonly StationSystem _station = default!;
 
-    [ValidatePrototypeId<TagPrototype>]
     public string DockTag = "DockShipyard";
 
     public bool Enabled;

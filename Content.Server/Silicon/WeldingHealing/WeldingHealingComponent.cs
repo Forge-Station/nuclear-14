@@ -18,7 +18,7 @@ public sealed partial class WeldingHealingComponent : Component
     [DataField(required: true)]
     public DamageSpecifier Damage;
 
-    [DataField(customTypeSerializer:typeof(PrototypeIdSerializer<ToolQualityPrototype>))]
+    [DataField]
     public string QualityNeeded = "Welding";
 
     /// <summary>

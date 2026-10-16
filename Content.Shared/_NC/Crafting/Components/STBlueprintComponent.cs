@@ -18,7 +18,7 @@ namespace Content.Shared._NC.Crafting.Components
     [RegisterComponent]
     public sealed partial class STBlueprintComponent : Component
     {
-        [DataField("blueprint", customTypeSerializer: typeof(PrototypeIdSerializer<CraftingPrototype>))]
+        [DataField("blueprint")]
         public string? BlueprintId = null;
     }
 }

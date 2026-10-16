@@ -35,7 +35,7 @@ public sealed partial class AreaReactionEffect : EntityEffect
     /// <summary>
     /// The entity prototype that will be spawned as the effect.
     /// </summary>
-    [DataField("prototypeId", required: true, customTypeSerializer:typeof(PrototypeIdSerializer<EntityPrototype>))]
+    [DataField("prototypeId", required: true)]
     private string _prototypeId = default!;
 
     /// <summary>

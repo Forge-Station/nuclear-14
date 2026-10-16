@@ -180,7 +180,7 @@ public sealed partial class TTSTab : Control
         if (profile == null)
             return;
 
-        _selectedVoiceId = profile.Voice;
+        _selectedVoiceId = profile.TtsVoice; // Corvax-TTS: renamed, upstream took Voice for emote sounds
 
         _allVoices = _prototypeManager
             .EnumeratePrototypes<TTSVoicePrototype>()
