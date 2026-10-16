@@ -6,3 +6,10 @@ Entries:
   id: 1
   time: '2026-10-16T20:10:51.0000000+00:00'
   url: https://github.com/Forge-Station/nuclear-14/pull/551
+- author: Sh1ntra
+  changes:
+    - type: Add
+      message: Автоотправка ченжлогов дискорд вебхуком
+  id: 2
+  time: '2026-10-16T20:47:17.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/552
