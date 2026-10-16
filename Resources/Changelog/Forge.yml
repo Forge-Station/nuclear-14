@@ -1,1 +1,8 @@
-Entries: []
+Entries:
+- author: Sh1ntra
+  changes:
+    - type: Add
+      message: Added fun :D
+  id: 1
+  time: '2026-10-16T20:10:51.0000000+00:00'
+  url: https://github.com/Forge-Station/nuclear-14/pull/551
