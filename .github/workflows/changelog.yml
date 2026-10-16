@@ -6,7 +6,7 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.FORGE_TOKEN }}
-  CHANGELOG_DIR: Resources/Changelog/NuclearForge.yml
+  CHANGELOG_DIR: Resources/Changelog/Forge.yml
   PR_NUMBER: ${{ github.event.number }}
 
 jobs:
