@@ -1,4 +1,4 @@
-﻿using Robust.Shared.Prototypes;
+using Robust.Shared.Prototypes;
 
 namespace Content.Shared.Mood;
 
@@ -16,7 +16,7 @@ public sealed partial class MoodEffectPrototype : IPrototype
     /// <summary>
     ///     If they already have an effect with the same category, the new one will replace the old one.
     /// </summary>
-    [DataField, ValidatePrototypeId<MoodCategoryPrototype>]
+    [DataField]
     public string? Category;
 
     /// <summary>

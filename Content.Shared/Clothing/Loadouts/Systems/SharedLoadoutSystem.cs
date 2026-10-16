@@ -13,12 +13,13 @@ using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Serialization;
+using Content.Shared.Station.Systems;
 
 namespace Content.Shared.Clothing.Loadouts.Systems;
 
 public sealed class SharedLoadoutSystem : EntitySystem
 {
-    [Dependency] private readonly SharedStationSpawningSystem _station = default!;
+    [Dependency] private readonly StationSpawningSystem _station = default!;
     [Dependency] private readonly IPrototypeManager _prototype = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly InventorySystem _inventory = default!;

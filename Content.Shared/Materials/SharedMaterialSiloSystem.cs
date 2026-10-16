@@ -6,6 +6,7 @@ using Content.Shared.Power;
 using Content.Shared.Power.EntitySystems;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
+using Content.Shared.DeviceLinking.Systems;
 
 namespace Content.Shared.Materials;
 
@@ -31,10 +32,10 @@ public abstract class SharedMaterialSiloSystem : EntitySystem
 
         SubscribeLocalEvent<MaterialSiloComponent, NewLinkEvent>(OnNewLink);
         SubscribeLocalEvent<MaterialSiloComponent, PowerChangedEvent>(OnPowerChanged);
-        SubscribeLocalEvent<MaterialSiloUtilizerComponent, PortDisconnectedEvent>(OnPortDisconnected);
+        SubscribeLocalEvent<MaterialSiloUtilizerComponent, SinkPortDisconnectedEvent>(OnPortDisconnected);
     }
 
-    private void OnPortDisconnected(Entity<MaterialSiloUtilizerComponent> ent, ref PortDisconnectedEvent args)
+    private void OnPortDisconnected(Entity<MaterialSiloUtilizerComponent> ent, ref SinkPortDisconnectedEvent args)
     {
         if (args.Port != SinkPort)
             return;
