@@ -9,7 +9,7 @@ namespace Content.Server.EntityEffects.Effects.PlantMetabolism;
 
 [UsedImplicitly]
 [DataDefinition]
-public sealed partial class RobustHarvest : EntityEffect
+public sealed partial class RobustHarvest : LegacyEntityEffect
 {
     [DataField]
     public int PotencyLimit = 50;

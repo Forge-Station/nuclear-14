@@ -8,7 +8,7 @@ using Robust.Shared.Map;
 namespace Content.Client.Shuttles.BUI;
 
 [UsedImplicitly]
-public sealed class ShuttleConsoleBoundUserInterface : BoundUserInterface
+public sealed partial class ShuttleConsoleBoundUserInterface : BoundUserInterface // Frontier: extended by _NF partial
 {
     [ViewVariables]
     private ShuttleConsoleWindow? _window;

@@ -13,7 +13,7 @@ using Content.Shared.Language.Events;
 
 namespace Content.Server.EntityEffects.Effects;
 
-public sealed partial class MakeSentient : EntityEffect
+public sealed partial class MakeSentient : LegacyEntityEffect
 {
     protected override string? ReagentEffectGuidebookText(IPrototypeManager prototype, IEntitySystemManager entSys)
         => Loc.GetString("reagent-effect-guidebook-make-sentient", ("chance", Probability));

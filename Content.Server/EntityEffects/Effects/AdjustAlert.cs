@@ -5,7 +5,7 @@ using Robust.Shared.Timing;
 
 namespace Content.Server.EntityEffects.Effects;
 
-public sealed partial class AdjustAlert : EntityEffect
+public sealed partial class AdjustAlert : LegacyEntityEffect
 {
     /// <summary>
     /// The specific Alert that will be adjusted

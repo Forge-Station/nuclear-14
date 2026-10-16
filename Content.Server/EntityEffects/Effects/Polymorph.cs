@@ -7,7 +7,7 @@ using System.Linq; // Corvax-Change
 
 namespace Content.Server.EntityEffects.Effects;
 
-public sealed partial class Polymorph : EntityEffect
+public sealed partial class Polymorph : LegacyEntityEffect
 {
     /// <summary>
     ///     What polymorph prototype is used on effect

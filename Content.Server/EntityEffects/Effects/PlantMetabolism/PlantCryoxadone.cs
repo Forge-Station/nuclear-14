@@ -8,7 +8,7 @@ namespace Content.Server.EntityEffects.Effects.PlantMetabolism;
 
 [UsedImplicitly]
 [DataDefinition]
-public sealed partial class PlantCryoxadone : EntityEffect
+public sealed partial class PlantCryoxadone : LegacyEntityEffect
 {
     public override void Effect(EntityEffectBaseArgs args)
     {

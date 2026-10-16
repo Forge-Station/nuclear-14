@@ -7,7 +7,7 @@ namespace Content.Server.EntityEffects.Effects.PlantMetabolism;
 
 [UsedImplicitly]
 [DataDefinition]
-public sealed partial class PlantPhalanximine : EntityEffect
+public sealed partial class PlantPhalanximine : LegacyEntityEffect
 {
     public override void Effect(EntityEffectBaseArgs args)
     {
